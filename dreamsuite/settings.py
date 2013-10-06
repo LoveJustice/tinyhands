@@ -33,6 +33,11 @@ INSTALLED_APPS = (
     'south',
 )
 
+import django.conf.global_settings as DEFAULT_SETTINGS
+TEMPLATE_CONTEXT_PROCESSORS = DEFAULT_SETTINGS.TEMPLATE_CONTEXT_PROCESSORS + (
+    'django.core.context_processors.request',
+)
+
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',

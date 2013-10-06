@@ -5,6 +5,24 @@
 {% block body_class %}{% if interceptionrecord %}interceptionrecord_update{% else %}interceptionrecord_create{% endif%}{% endblock %}
 
 {% block head %}
+<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script>
+function calculateTotal() {
+    var total = 0;
+    $('input[type="checkbox"]').each(function(id, elem) {
+        var value = $(elem).next('.red-flag').text();
+        console.log(value);
+        if (value && $(elem).prop('checked')) {
+            total += parseInt(value);
+        }
+    });
+    $('#calculated-total').text(total);
+}
+$(document).ready(function() {
+    $('input[type="checkbox"]').click(calculateTotal);
+    calculateTotal();
+});
+</script>
 <style>
 td {
     vertical-align: middle !important;
@@ -13,7 +31,8 @@ td {
     text-align: center;
 }
 .container {
-    background-color: #EDE1AE;
+    background-image: url({{ STATIC_URL }}images/irf-background.png);
+    background-size: 100%;
     border: 1px solid #888;
     box-shadow: 2px 2px 2px black; padding: 50px;
     color: black !important;
@@ -21,18 +40,54 @@ td {
 table, td, tr, thead, th, tbody {
     border-color: black !important;
 }
+th {
+    text-align: center;
+}
+label {
+    display: inline !important;
+}
+.bg-danger {
+    background-color: rgba(128, 0, 0, 0.2) !important; 
+    padding: 8px;
+}
+.text-danger {
+    color: #800000 !important;
+}
+.text-success {
+    color: #4F6128 !important;
+}
+.red-flag {
+    background-image: url({{ STATIC_URL }}images/red-flag.png);
+    color: #EADC9F;
+    font-size: 13px;
+    font-weight: bold;
+    line-height: 32px;
+    width: 32px;
+    height: 31px;
+    text-align: center;
+    display: inline-block;
+    vertical-align: middle;
+}
+.green-light {
+    background-image: url({{ STATIC_URL }}images/green-light.png);
+    width: 15px;
+    height: 15px;
+    display: inline-block;
+    vertical-align: middle;
+}
+label {
+    color: #800000 !important;
+}
 </style>
 {% endblock %}
 
 {% block content %}
 <form method="POST" class="row">{% csrf_token %}
     <div class="row">
-        <div class="col-sm-1">
-            <img class="img-thumbnail" alt="Tiny Hands Logo" style="width: 64px; height: 64px" />
-        </div>
-        <div class="col-sm-5">
-            <h2>Interception Record Form (IRF)</h3>
-            <p class="lead">Version 2.1 Tiny Hands Nepal</p>
+        <div class="col-sm-6">
+            <img class="pull-left" style="margin-right: 20px" width="100" src="{{ STATIC_URL }}images/logo.png" alt="Tiny Hands Logo" />
+            <h2>Interception Record Form (IRF)<br/>
+            Version 2.1 <span class="text-danger">Tiny Hands Nepal</span></h2>
         </div>
         <div class="col-sm-6">
             <p class="bg-danger">You will find instructions for each section in the pink boxes like this</p>
@@ -60,14 +115,14 @@ table, td, tr, thead, th, tbody {
             Use this Questioning Protocol to guide your investigation. Record each answer and Red Flag by checking the appropriate boxes.
         </p>
         <p class="text-danger">
-            Red Flags: Each Red Flag is designated by a certain number of points. Although you will make the final decision,
+            <span class="red-flag"></span> Red Flags: Each Red Flag is designated by a certain number of points. Although you will make the final decision,
             a rough guideline is that if you have more than 50 Red Flag Points you should intercept the girl.
         </p>
         <p class="text-success">
-            Green Lights: This symbol is a green light, indicating that you should cease questioning and allow the girl to proceed on her way to India. 
+            <span class="green-light"></span> Green Lights: This symbol is a green light, indicating that you should cease questioning and allow the girl to proceed on her way to India. 
         </p>
     </div>
-    <table class="table table-bordered">
+    <table class="table table-bordered" style="margin-bottom: 0">
         <thead>
             <tr>
                 <th>Question</th>
@@ -78,49 +133,385 @@ table, td, tr, thead, th, tbody {
         </thead>
         <tbody>
             <tr>
-                <td rowspan="5" class="center">Who is in the group?</td>
-                <td rowspan="2" class="center">Alone</td>
+                <td rowspan="5" class="center">
+                    <strong>Who is in the group?</strong>
+                </td>
+                <td rowspan="2" class="center">
+                    <strong>1.1</strong>
+                    {{ form.who_in_group.0 }}
+                    {{ form.who_in_group.choice.0.label_tag }}</td>
                 <td class="center">"Are you meeting someone in India?"</td>
                 <td>
-                    {{ form.drugged_or_drowsy }} Girl appears drugged or drowsy<br/>
-                    {{ form.meeting_someone_across_border }} Is meeting someone just across border<br/>
-                    {{ form.seen_in_last_month_in_nepal }} Meeting someone she's just seen in Nepal in the last month
+                    <strong>3.1</strong>
+                    {{ form.drugged_or_drowsy }}
+                    <span class="red-flag">{{ form.drugged_or_drowsy.field.weight }}</span>
+                    {{ form.drugged_or_drowsy.label_tag }}<br/>
+
+
+                    <strong>3.2</strong>
+                    {{ form.meeting_someone_across_border }}
+                    <span class="red-flag">{{ form.meeting_someone_across_border.field.weight }}</span>
+                    {{ form.meeting_someone_across_border.label_tag }}<br/>
+
+                    <strong>3.3</strong>
+                    {{ form.seen_in_last_month_in_nepal }}
+                    <span class="red-flag">{{ form.seen_in_last_month_in_nepal.field.weight }}</span>
+                    {{ form.seen_in_last_month_in_nepal.label_tag }}
                 </td>
             </tr>
             <tr>
                 <td class="center">Was she traveling with someone earlier?</td>
-                <td>{{ form.traveling_with_someone_not_with_her }} Was travelling with someone not with her</td>
+                <td>
+                    <strong>3.4</strong>
+                    {{ form.traveling_with_someone_not_with_her }}
+                    <span class="red-flag">{{ form.traveling_with_someone_not_with_her.field.weight }}</span>
+                    {{ form.traveling_with_someone_not_with_her.label_tag }}
+                </td>
             </tr>
             <tr>
                 <td rowspan="2" class="center">
-                    Husband / Wife<br/>
-                    {{ form.wife_under_18 }} Wife is under 18
+                    <strong>1.2</strong>
+                    {{ form.who_in_group.1 }}
+                    {{ form.who_in_group.choice.1.label_tag }}<br/>
+
+                    <strong>3.5</strong>
+                    {{ form.wife_under_18 }}
+                    <span class="red-flag">{{ form.wife_under_18.field.weight }}</span>
+                    {{ form.wife_under_18.label_tag }}
                 </td>
                 <td class="center">Ask when she was married</td>
                 <td>
-                    {{ form.married_in_past_2_weeks }} Married in the past 2 weeks<br/>
-                    {{ form.married_in_past_2_8_weeks }} Married within the past 2-8 weeks
+                    <strong>3.6</strong>
+                    {{ form.married_in_past_2_weeks }}
+                    <span class="red-flag">{{ form.married_in_past_2_weeks.field.weight }}</span>
+                    {{ form.married_in_past_2_weeks.label_tag }}<br/>
+
+                    <strong>3.7</strong>
+                    {{ form.married_in_past_2_8_weeks }}
+                    <span class="red-flag">{{ form.married_in_past_2_8_weeks.field.weight }}</span>
+                    {{ form.married_in_past_2_8_weeks.label_tag }}
                 </td>
             </tr>
             <tr>
                 <td class="center">Ask when they met</td>
                 <td>
-                    {{ form.less_than_2_weeks_before_eloping }} Less than 2 weeks before eloping<br/>
-                    {{ form.between_2_12_weeks_before_eloping }} 2-12 weeks before eloping
+                    <strong>3.8</strong>
+                    {{ form.less_than_2_weeks_before_eloping }}
+                    <span class="red-flag">{{ form.less_than_2_weeks_before_eloping.field.weight }}</span>
+                    {{ form.less_than_2_weeks_before_eloping.label_tag }}<br/>
+
+                    <strong>3.9</strong>
+                    {{ form.between_2_12_weeks_before_eloping }}
+                    <span class="red-flag">{{ form.between_2_12_weeks_before_eloping.field.weight }}</span>
+                    {{ form.between_2_12_weeks_before_eloping.label_tag }}
                 </td>
             </tr>
             <tr>
                 <td class="center">
-                    Own brother, sister / relative
+                    <strong>1.3</strong>
+                    {{ form.who_in_group.2 }}
+                    {{ form.who_in_group.choice.2.label_tag }}<br/>
                 </td>
                 <td class="center">Check citizenship cards</td>
                 <td>
-                    {{ form.caste_not_same_as_relative }} Caste not the same as alleged relative
+                    <strong>3.10</strong>
+                    {{ form.caste_not_same_as_relative }}
+                    <span class="red-flag">{{ form.caste_not_same_as_relative.field.weight }}</span>
+                    {{ form.caste_not_same_as_relative.label_tag }}
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4" class="bg-danger center">
+                    If there is more than one person in the group, separate them at this point.<br/>
+                    <strong>3.11</strong>
+                    {{ form.caught_in_lie }}
+                    <span class="red-flag">{{ form.caught_in_lie.field.weight }}</span>
+                    {{ form.caught_in_lie.label_tag }}
+
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="9" class="center">
+                    <strong>Where are you going, and for what?</strong></br>
+
+                    <strong>3.12</strong>
+                    {{ form.doesnt_know_going_to_india }}
+                    <span class="red-flag">{{ form.doesnt_know_going_to_india.field.weight }}</span>
+                    {{ form.doesnt_know_going_to_india.label_tag }}<br/>
+
+                    <strong>3.13</strong>
+                    {{ form.running_away_over_18 }}
+                    <span class="red-flag">{{ form.running_away_over_18.field.weight }}</span>
+                    {{ form.running_away_over_18.label_tag }}<br/>
+
+                    <strong>3.14</strong>
+                    {{ form.running_away_under_18 }}
+                    <span class="red-flag">{{ form.running_away_under_18.field.weight }}</span>
+                    {{ form.running_away_under_18.label_tag }}
+                </td>
+                <td rowspan="2" class="center">
+                    <strong>2.1</strong>
+                    {{ form.where_going.0 }}
+                    {{ form.where_going.choice.0.label_tag }}<br/>
+                
+                    <strong>3.15</strong>
+                    {{ form.going_to_gulf_for_work }}
+                    <span class="red-flag">{{ form.going_to_gulf_for_work.field.weight }}</span>
+                    {{ form.going_to_gulf_for_work.label_tag }}
+                </td>
+                <td class="center">Check documents</td>
+                <td>
+                    <strong>3.16</strong>
+                    {{ form.no_address_in_india }}
+                    <span class="red-flag">{{ form.no_address_in_india.field.weight }}</span>
+                    {{ form.no_address_in_india.label_tag }}<br/>
+
+                    <strong>3.17</strong>
+                    {{ form.no_company_phone }}
+                    <span class="red-flag">{{ form.no_company_phone.field.weight }}</span>
+                    {{ form.no_company_phone.label_tag }}<br/>
+
+                    <strong>3.18</strong>
+                    {{ form.no_appointment_letter }}
+                    <span class="red-flag">{{ form.no_appointment_letter.field.weight }}</span>
+                    {{ form.no_appointment_letter.label_tag }}<br/>
+
+                    <strong>3.19</strong>
+                    {{ form.valid_gulf_country_visa }}
+                    <span class="red-flag">{{ form.valid_gulf_country_visa.field.weight }}</span>
+                    {{ form.valid_gulf_country_visa.label_tag }}<br/>
+
+                    <strong>3.20</strong>
+                    {{ form.passport_with_broker }}
+                    <span class="red-flag">{{ form.passport_with_broker.field.weight }}</span>
+                    {{ form.passport_with_broker.label_tag }}
+                </td>
+            </tr>
+            <tr>
+                <td class="center">Call job place</td>
+                <td>
+                    <strong>3.21</strong>
+                    {{ form.not_real_job }}
+                    <span class="red-flag">{{ form.not_real_job.field.weight }}</span>
+                    {{ form.not_real_job.label_tag }}<br/>
+
+                    <strong>3.22</strong>
+                    {{ form.couldnt_confirm_job }}
+                    <span class="red-flag">{{ form.couldnt_confirm_job.field.weight }}</span>
+                    {{ form.couldnt_confirm_job.label_tag }}<br/>
+
+                    <p class="text-success"><span class="green-light"></span> Job Confirmed</p>
+                </td>
+            </tr>
+            <tr>
+                <td class="center">
+                    <strong>2.2</strong>
+                    {{ form.where_going.1 }}
+                    {{ form.where_going.choice.1.label_tag }}
+                </td>
+                <td class="center">Check bags</td>
+                <td>
+                    <strong>3.23</strong>
+                    {{ form.no_bags_long_trip }}
+                    <span class="red-flag">{{ form.no_bags_long_trip.field.weight }}</span>
+                    {{ form.no_bags_long_trip.label_tag }}
+                </td>
+            </tr>
+            <tr>
+                <td class="center">
+                    <strong>2.3</strong>
+                    {{ form.where_going.2 }}
+                    {{ form.where_going.choice.2.label_tag }}
+                </td>
+                <td class="center">Check to see if bags are empty</td>
+                <td>
+                    <strong>3.24</strong>
+                    {{ form.shopping_overnight_stuff_in_bags }}
+                    <span class="red-flag">{{ form.shopping_overnight_stuff_in_bags.field.weight }}</span>
+                    {{ form.shopping_overnight_stuff_in_bags.label_tag }}
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="2" class="center">
+                    <strong>2.4</strong>
+                    {{ form.where_going.3 }}
+                    {{ form.where_going.choice.3.label_tag }}
+                </td>
+                <td class="center">Check documents</td>
+                <td>
+                    <strong>3.25</strong>
+                    {{ form.no_enrollment_docs }}
+                    <span class="red-flag">{{ form.no_enrollment_docs.field.weight }}</span>
+                    {{ form.no_enrollment_docs.label_tag }}<br/>
+
+                    <strong>3.26</strong>
+                    {{ form.doesnt_know_school_name }}
+                    <span class="red-flag">{{ form.doesnt_know_school_name.field.weight }}</span>
+                    {{ form.doesnt_know_school_name.label_tag }}<br/>
+
+                    <strong>3.27</strong>
+                    {{ form.no_school_phone }}
+                    <span class="red-flag">{{ form.no_school_phone.field.weight }}</span>
+                    {{ form.no_school_phone.label_tag }}<br/>
+
+                    <p class="text-success"><span class="green-light"></span> Valid ID card or enrollment documents</p>
+                </td>
+            </tr>
+            <tr>
+                <td class="center">Call School</td>
+                <td>
+                    <p class="text-success"><span class="green-light"></span> Enrollment Confirmed</p>
+
+                    <strong>3.28</strong>
+                    {{ form.not_enrolled_in_school }}
+                    <span class="red-flag">{{ form.not_enrolled_in_school.field.weight }}</span>
+                    {{ form.not_enrolled_in_school.label_tag }}
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="3" class="center">
+                    <strong>2.5</strong>
+                    {{ form.where_going.4 }}
+                    {{ form.where_going.choice.4.label_tag }}
+                </td>
+                <td class="center">Ask which hospital, doctor</td>
+                <td>
+                    <strong>3.29</strong>
+                    {{ form.reluctant_treatment_info }}
+                    <span class="red-flag">{{ form.reluctant_treatment_info.field.weight }}</span>
+                    {{ form.reluctant_treatment_info.label_tag }}
+                </td>
+            </tr>
+            <tr>
+                <td class="center">Check documents</td>
+                <td>
+                    <strong>3.30</strong>
+                    {{ form.no_medical_documents }}
+                    <span class="red-flag">{{ form.no_medical_documents.field.weight }}</span>
+                    {{ form.no_medical_documents.label_tag }}<br/>
+
+                    <strong>3.31</strong>
+                    {{ form.fake_medical_documents }}
+                    <span class="red-flag">{{ form.fake_medical_documents.field.weight }}</span>
+                    {{ form.fake_medical_documents.label_tag }}<br/>
+
+                    <p class="text-success"><span class="green-light"></span> Valid Documents (Referring Doctor's report, prescription, x-ray, etc.)</p>
+                </td>
+            </tr>
+            <tr>
+                <td class="center">Call doctor</td>
+                <td>
+                    <p class="text-success"><span class="green-light"></span> Enrollment Confirmed</p>
+
+                    <strong>3.32</strong>
+                    {{ form.no_medical_appointment }}
+                    <span class="red-flag">{{ form.no_medical_appointment.field.weight }}</span>
+                    {{ form.no_medical_appointment.label_tag }}
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4" class="bg-danger center">
+                    Only proceed if there have been 20 red flag points and no green lights.
                 </td>
             </tr>
         </tbody>
     </table>
-    <input type="submit" class="btn btn-primary btn-lg" value="{% if interceptionrecord %}Update{% else %}Create{% endif%}" />
+    <table class="table table-bordered">
+        <tbody>
+            <tr>
+                <td class="center">
+                    <strong>Where are you from?</strong><br/>
+                    Ask her to describe in detail
+                </td>
+                <td colspan="2">
+                    <strong>3.33</strong>
+                    {{ form.doesnt_know_villiage_details }}
+                    <span class="red-flag">{{ form.doesnt_know_villiage_details.field.weight }}</span>
+                    {{ form.doesnt_know_villiage_details.label_tag }}
+                </td>
+                <td>
+                    <strong>3.34</strong>
+                    {{ form.reluctant_villiage_info }}
+                    <span class="red-flag">{{ form.reluctant_villiage_info.field.weight }}</span>
+                    {{ form.reluctant_villiage_info.label_tag }}
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="2" class="center">
+                    <strong>"Who is your family?"</strong><br/>
+                    Ask for family contact info
+                </td>
+                <td rowspan="2">
+                    <strong>3.35</strong>
+                    {{ form.reluctant_family_info }}
+                    <span class="red-flag">{{ form.reluctant_family_info.field.weight }}</span>
+                    {{ form.reluctant_family_info.label_tag }}<br/>
+
+                    <strong>3.36</strong>
+                    {{ form.refuses_family_info }}
+                    <span class="red-flag">{{ form.refuses_family_info.field.weight }}</span>
+                    {{ form.refuses_family_info.label_tag }}
+                </td>
+                <td>
+                    <strong>Under 18 years old</strong>
+                </td>
+                <td>
+                    <strong>18 years or older</strong>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>3.37</strong>
+                    {{ form.under_18_cant_contact_family }}
+                    <span class="red-flag">{{ form.under_18_cant_contact_family.field.weight }}</span>
+                    {{ form.under_18_cant_contact_family.label_tag }}<br/>
+
+                    <strong>3.38</strong>
+                    {{ form.under_18_family_doesnt_know }}
+                    <span class="red-flag">{{ form.under_18_family_doesnt_know.field.weight }}</span>
+                    {{ form.under_18_family_doesnt_know.label_tag }}<br/>
+
+                    <strong>3.39</strong>
+                    {{ form.under_18_family_unwilling }}
+                    <span class="red-flag">{{ form.under_18_family_unwilling.field.weight }}</span>
+                    {{ form.under_18_family_unwilling.label_tag }}
+                </td>
+                <td>
+                    <strong>3.40</strong>
+                    {{ form.over_18_family_doesnt_know }}
+                    <span class="red-flag">{{ form.over_18_family_doesnt_know.field.weight }}</span>
+                    {{ form.over_18_family_doesnt_know.label_tag }}<br/>
+
+                    <strong>3.41</strong>
+                    {{ form.over_18_family_unwilling }}
+                    <span class="red-flag">{{ form.over_18_family_unwilling.field.weight }}</span>
+                    {{ form.over_18_family_unwilling.label_tag }}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="row">
+        <div class="col-sm-8">
+            Which family member did you talk to? 
+            <strong>4.1</strong> {{ form.talked_to_brother }} {{ form.talked_to_brother.label_tag }}&nbsp;&nbsp;&nbsp;
+            <strong>4.2</strong> {{ form.talked_to_sister }} {{ form.talked_to_sister.label_tag }}&nbsp;&nbsp;&nbsp;
+            <strong>4.3</strong> {{ form.talked_to_father }} {{ form.talked_to_father.label_tag }}<br/>
+            <strong>4.4</strong> {{ form.talked_to_mother }} {{ form.talked_to_mother.label_tag }}&nbsp;&nbsp;&nbsp;
+            <strong>4.5</strong> {{ form.talked_to_grandparent }} {{ form.talked_to_grandparent.label_tag }}&nbsp;&nbsp;&nbsp;
+            <strong>4.6</strong> {{ form.talked_to_aunt_uncle }} {{ form.talked_to_aunt_uncle.label_tag }}<br/>
+            <strong>4.7</strong>&nbsp;{{ form.talked_to_other }} {{ form.talked_to_other.label_tag }} {{ form.talked_to_other_value }}
+        </div>
+        <div class="col-sm-2">
+            <strong>5.0</strong> {{ form.reported_total_red_flags.label_tag }} {{ form.reported_total_red_flags }}
+        </div>
+        <div class="col-sm-2">
+            <strong>Calculated Total Red Flag Points: <span id="calculated-total">0</span></strong>
+        </div>
+    </div>
+
+
+    <input type="submit" style="margin-top: 20px" class="pull-right btn btn-primary btn-lg" value="{% if interceptionrecord %}Update{% else %}Create{% endif%}" />
 </form>
+{{ form.errors }}
 {% endblock %}
 

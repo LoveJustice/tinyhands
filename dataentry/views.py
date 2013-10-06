@@ -4,6 +4,7 @@ from django.views.generic import ListView, CreateView, UpdateView
 from django.contrib.auth.decorators import login_required
 from dataentry.models import InterceptionRecord
 from braces.views import LoginRequiredMixin
+from dataentry.forms import InterceptionRecordForm
 
 
 @login_required
@@ -17,9 +18,11 @@ class InterceptionRecordListView(LoginRequiredMixin, ListView):
 
 class InterceptionRecordCreateView(LoginRequiredMixin, CreateView):
     model = InterceptionRecord
+    form_class = InterceptionRecordForm
     success_url = reverse_lazy('interceptionrecord_list')
 
 
 class InterceptionRecordUpdateView(LoginRequiredMixin, UpdateView):
     model = InterceptionRecord
+    form_class = InterceptionRecordForm
     success_url = reverse_lazy('interceptionrecord_list')

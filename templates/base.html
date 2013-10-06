@@ -41,7 +41,7 @@
             </li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
-            <li>Hello {{ request.user.get_full_name }}</a></li>
+            <li><a>Hello {{ request.user.get_full_name }}</a></li>
             <li><a href="{% url 'logout' %}">Logout</a></li>
         </ul>
         {% endif %}

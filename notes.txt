@@ -1,0 +1,8 @@
+system admin
+pickering site
+salesforce for donation management, in charge of that
+apex - like java
+manages domains, company in lincoln that provides hosting for the floor99, also server for quickbooks
+tom neilson owns floor99
+full control of servers
+windows server 2008 r2
