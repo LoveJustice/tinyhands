@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load bootstrap %}
+
+{% block title %}All IRFs{% endblock %}
+
+{% block body_class %}interceptionrecord_list{% endblock %}
+
+
+{% block content %}
+<h1>All IRFs</h1>
+{% if interceptionrecord_list %}
+<table class="table table-striped table-condensed">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>&nbsp;</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for irf in interceptionrecord_list %}
+        <tr>
+            <td>{{ irf.pk }}</td>
+            <td><a class="btn btn-sm btn-primary" href="{% url 'interceptionrecord_update' irf.pk %}">Edit</a></td>
+        </tr>
+        {% endfor %}
+    </tbody> 
+</table>
+{% endif %}
+<p class="pull-right"><a class="btn btn-success" href="{% url 'interceptionrecord_create' %}">Input A New IRF</a></p>
+{% endblock %}

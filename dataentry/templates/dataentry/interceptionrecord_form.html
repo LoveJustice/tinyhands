@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block title %}{% if interceptionrecord %}Edit IRF{% else %}Create IRF{% endif%}{% endblock %}
+
+{% block body_class %}{% if interceptionrecord %}interceptionrecord_update{% else %}interceptionrecord_create{% endif%}{% endblock %}
+
+{% block head %}
+<style>
+td {
+    vertical-align: middle !important;
+}
+.center {
+    text-align: center;
+}
+.container {
+    background-color: #EDE1AE;
+    border: 1px solid #888;
+    box-shadow: 2px 2px 2px black; padding: 50px;
+    color: black !important;
+}
+table, td, tr, thead, th, tbody {
+    border-color: black !important;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<form method="POST" class="row">{% csrf_token %}
+    <div class="row">
+        <div class="col-sm-1">
+            <img class="img-thumbnail" alt="Tiny Hands Logo" style="width: 64px; height: 64px" />
+        </div>
+        <div class="col-sm-5">
+            <h2>Interception Record Form (IRF)</h3>
+            <p class="lead">Version 2.1 Tiny Hands Nepal</p>
+        </div>
+        <div class="col-sm-6">
+            <p class="bg-danger">You will find instructions for each section in the pink boxes like this</p>
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <td>
+                            IRF #: {{ form.irf_number }}<br/>
+                            Time: {{ form.time }}
+                        </td>
+                        <td>
+                            # of victims: {{ form.irf_number }}<br/>
+                            # of traffickers: {{ form.time }}
+                        </td>
+                        <td>
+                            Location: {{ form.location }}<br/>
+                            Staff Name: {{ form.staff_name }}
+                        </td>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="bg-danger">
+        <p><strong>Instructions:</strong>
+            Use this Questioning Protocol to guide your investigation. Record each answer and Red Flag by checking the appropriate boxes.
+        </p>
+        <p class="text-danger">
+            Red Flags: Each Red Flag is designated by a certain number of points. Although you will make the final decision,
+            a rough guideline is that if you have more than 50 Red Flag Points you should intercept the girl.
+        </p>
+        <p class="text-success">
+            Green Lights: This symbol is a green light, indicating that you should cease questioning and allow the girl to proceed on her way to India. 
+        </p>
+    </div>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Question</th>
+                <th>Answer</th>
+                <th>Action</th>
+                <th>Red Flag</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td rowspan="5" class="center">Who is in the group?</td>
+                <td rowspan="2" class="center">Alone</td>
+                <td class="center">"Are you meeting someone in India?"</td>
+                <td>
+                    {{ form.drugged_or_drowsy }} Girl appears drugged or drowsy<br/>
+                    {{ form.meeting_someone_across_border }} Is meeting someone just across border<br/>
+                    {{ form.seen_in_last_month_in_nepal }} Meeting someone she's just seen in Nepal in the last month
+                </td>
+            </tr>
+            <tr>
+                <td class="center">Was she traveling with someone earlier?</td>
+                <td>{{ form.traveling_with_someone_not_with_her }} Was travelling with someone not with her</td>
+            </tr>
+            <tr>
+                <td rowspan="2" class="center">
+                    Husband / Wife<br/>
+                    {{ form.wife_under_18 }} Wife is under 18
+                </td>
+                <td class="center">Ask when she was married</td>
+                <td>
+                    {{ form.married_in_past_2_weeks }} Married in the past 2 weeks<br/>
+                    {{ form.married_in_past_2_8_weeks }} Married within the past 2-8 weeks
+                </td>
+            </tr>
+            <tr>
+                <td class="center">Ask when they met</td>
+                <td>
+                    {{ form.less_than_2_weeks_before_eloping }} Less than 2 weeks before eloping<br/>
+                    {{ form.between_2_12_weeks_before_eloping }} 2-12 weeks before eloping
+                </td>
+            </tr>
+            <tr>
+                <td class="center">
+                    Own brother, sister / relative
+                </td>
+                <td class="center">Check citizenship cards</td>
+                <td>
+                    {{ form.caste_not_same_as_relative }} Caste not the same as alleged relative
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <input type="submit" class="btn btn-primary btn-lg" value="{% if interceptionrecord %}Update{% else %}Create{% endif%}" />
+</form>
+{% endblock %}
+

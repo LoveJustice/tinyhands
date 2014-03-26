@@ -1,8 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
 from django.utils import timezone
-from django.core import validators
-import re
 
 
 class AccountManager(BaseUserManager):
@@ -66,12 +64,21 @@ models.BooleanField.set_weight = set_weight
 
 
 class InterceptionRecord(models.Model):
+    irf_number = models.IntegerField(null=True, blank=True)
+    time = models.CharField(max_length=255, blank=True)
+
+    number_of_victims = models.IntegerField(null=True, blank=True)
+    number_of_traffickers = models.IntegerField(null=True, blank=True)
+
+    location = models.CharField(max_length=255, blank=True)
+    staff_name = models.CharField(max_length=255, blank=True)
+
     WHO_IN_GROUP_CHOICES = (
         (0, 'Alone'),
         (1, 'Husband / Wife'),
         (2, 'Own brother, sister / relative'),
     )
-    who_in_group = models.IntegerField('Who is in the group?', choices=WHO_IN_GROUP_CHOICES)
+    who_in_group = models.IntegerField('Who is in the group?', choices=WHO_IN_GROUP_CHOICES, null=True, blank=True)
 
     drugged_or_drowsy = models.BooleanField().set_weight(40)
     meeting_someone_across_border = models.BooleanField().set_weight(30)
