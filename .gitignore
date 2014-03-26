@@ -1,0 +1,10 @@
+*.swp
+*.swo
+*.pyc
+*.sqlite
+*.sqlite3
+*.sqlitebak
+*.stackdump
+env
+backups
+.coverage
