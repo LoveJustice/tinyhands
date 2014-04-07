@@ -222,7 +222,7 @@ class InterceptionRecord(models.Model):
     type_india_trafficking = models.BooleanField('India Trafficking', default=False)
     type_indian_circus = models.BooleanField('Indian Circus', default=False)
     type_runaway = models.BooleanField('Runaway', default=False)
-    trafficker_taken_into_custody = models.CharField('Was any trafficker taken into police custody? If yes, write the # from the table above:', max_length=255, default='')
+    trafficker_taken_into_custody = models.CharField('Was any trafficker taken into police custody? If yes, write the # from the table above:', max_length=255, default='', blank=True)
     how_sure_was_trafficking = models.CharField('How sure are you that it was trafficking case?', max_length=5, default='', blank=True)
 
     has_signature = models.BooleanField('Scanned form has signature?', default=False)
