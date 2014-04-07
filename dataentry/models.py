@@ -104,8 +104,8 @@ class InterceptionRecord(models.Model):
     where_going = models.CharField('Where are you going, and for what?', choices=WHERE_GOING_CHOICES, blank=True, max_length=30)
 
     doesnt_know_going_to_india = models.BooleanField("Doesn't know she's going to India", default=False).set_weight(90)
-    running_away_over_18 = models.BooleanField('Running away from home (18 years or older, default=False)').set_weight(20)
-    running_away_under_18 = models.BooleanField('Running away from home (under 18 years old, default=False)').set_weight(50)
+    running_away_over_18 = models.BooleanField('Running away from home (18 years or older)', default=False).set_weight(20)
+    running_away_under_18 = models.BooleanField('Running away from home (under 18 years old)', default=False).set_weight(50)
     going_to_gulf_for_work = models.BooleanField('Going to Gulf for work through India', default=False).set_weight(55)
     no_address_in_india = models.BooleanField('No address in India', default=False).set_weight(15)
     no_company_phone = models.BooleanField('No company phone number', default=False).set_weight(20)
