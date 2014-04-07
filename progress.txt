@@ -9,6 +9,11 @@ Wednesday April 2
 + some other work 
 
 Week 2
-10:15am - 
+Monday April 7: 10:15am - 2pm
+Wednesday April 9: 9:30am
 
 
+Todo:
+remove the button and just add an image image, have clear, change, etc buttons over the image
+view,change,delete
+make all radio button checkboxes on the form

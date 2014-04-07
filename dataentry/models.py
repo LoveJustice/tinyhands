@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
+from imagekit.models import ImageSpecField
+from imagekit.processors import ResizeToFill
 from django.utils import timezone
 
 
@@ -207,6 +209,26 @@ class InterceptionRecord(models.Model):
     noticed_carrying_a_baby = models.BooleanField('Carrying a baby', default=False)
     noticed_on_the_phone = models.BooleanField('On the phone', default=False)
 
+    # Procedures
+    call_subcommittee_chair = models.BooleanField('Call Subcommittee Chair', default=False)
+    call_thn_to_cross_check = models.BooleanField('Call THN to cross-check the names (6223856)', default=False)
+    name_come_up_before_yes = models.BooleanField('Yes', default=False)
+    name_come_up_before_no = models.BooleanField('No', default=False)
+    name_come_up_before_yes_value = models.CharField('If yes, write the # from the table above:', max_length=255, blank=True)
+    scan_and_submit_same_day = models.BooleanField('Scan and submit to THN the same day', default=False)
+
+    # Type of Intercept
+    type_gulf_countries = models.BooleanField('Gulf Countries', default=False)
+    type_india_trafficking = models.BooleanField('India Trafficking', default=False)
+    type_indian_circus = models.BooleanField('Indian Circus', default=False)
+    type_runaway = models.BooleanField('Runaway', default=False)
+    trafficker_taken_into_custody = models.CharField('Was any trafficker taken into police custody? If yes, write the # from the table above:', max_length=255, default='')
+    how_sure_was_trafficking = models.CharField('How sure are you that it was trafficking case?', max_length=5, default='', blank=True)
+
+    has_signature = models.BooleanField('Scanned form has signature?', default=False)
+
+    scanned_form = models.FileField('Attach scanned copy of form (pdf or image)', upload_to='scanned_forms', default='', blank=True)
+
     def calculate_total(self):
         total = 0
         for field in self._meta.fields:
@@ -224,6 +246,11 @@ class Interceptee(models.Model):
         (0, 'Victim'),
         (1, 'Trafficker'),
     ]
+    photo = models.ImageField(upload_to='interceptee_photos', default='', blank=True)
+    photo_thumbnail = ImageSpecField(source='photo',
+                                     processors=[ResizeToFill(200, 200)],
+                                     format='JPEG',
+                                     options={'quality': 80})
     interception_record = models.ForeignKey(InterceptionRecord, related_name='interceptees')
     kind = models.IntegerField(choices=KIND_CHOICES)
     full_name = models.CharField(max_length=255, blank=True)

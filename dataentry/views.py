@@ -19,15 +19,19 @@ class InterceptionRecordListView(LoginRequiredMixin, ListView):
 
 class IntercepteeInline(InlineFormSet):
     model = Interceptee
+    extra = 12
+    max_num = 12
 
 
 class InterceptionRecordCreateView(LoginRequiredMixin, CreateWithInlinesView):
     model = InterceptionRecord
     form_class = InterceptionRecordForm
     success_url = reverse_lazy('interceptionrecord_list')
+    inlines = [IntercepteeInline]
 
 
 class InterceptionRecordUpdateView(LoginRequiredMixin, UpdateWithInlinesView):
     model = InterceptionRecord
     form_class = InterceptionRecordForm
     success_url = reverse_lazy('interceptionrecord_list')
+    inlines = [IntercepteeInline]

@@ -28,8 +28,10 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'dataentry',
+    'widget_tweaks',
     'bootstrapform',
+    'imagekit',
+    'dataentry',
     'south',
 )
 
@@ -88,3 +90,6 @@ TEMPLATE_LOADERS = (
 TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, "templates"),
 )
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'

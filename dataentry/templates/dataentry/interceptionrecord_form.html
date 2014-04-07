@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load widget_tweaks %}
 
 {% block title %}{% if interceptionrecord %}Edit IRF{% else %}Create IRF{% endif%}{% endblock %}
 
@@ -11,7 +12,6 @@ function calculateTotal() {
     var total = 0;
     $('input[type="checkbox"]').each(function(id, elem) {
         var value = $(elem).next('.red-flag').text();
-        console.log(value);
         if (value && $(elem).prop('checked')) {
             total += parseInt(value);
         }
@@ -21,6 +21,15 @@ function calculateTotal() {
 $(document).ready(function() {
     $('input[type="checkbox"]').click(calculateTotal);
     calculateTotal();
+    var resize = function() {
+        $('.photo').each(function() {
+            var width = $(this).width();
+            $(this).height(width);
+            $(this).css('line-height', width + 'px');
+        });
+    };
+    $(window).resize(resize);
+    resize();
 });
 </script>
 <style>
@@ -89,11 +98,42 @@ label {
 label {
     color: #800000 !important;
 }
+.interceptee-form {
+    background-color: white;
+}
+.interceptee-form input, .interceptee-form select {
+    width: 100%;
+    padding: 11px 4px;
+}
+.interceptee-form td {
+    padding: 0 !important;
+}
+
+.photo {
+    border: 1px solid #444;
+    width: 100%;
+    height: 100%;
+    margin-bottom: 21px;
+    text-align: center;
+    line-height: 100%;
+}
+.photo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.signature-box {
+    border: 1px solid #444;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 20px;
+}
 </style>
 {% endblock %}
 
 {% block content %}
-<form method="POST" class="row">{% csrf_token %}
+<form enctype="multipart/form-data" method="POST" class="row">{% csrf_token %}
     <div class="row form-page">
         <div class="row">
             <div class="col-sm-6">
@@ -628,38 +668,119 @@ label {
             </tbody>
         </table>
 
-        {{ interceptee_formset.management_form }}
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>V<br><small>victim</small><br/>T<br/><small>trafficker</small></th>
-                    <th>Full Name</th>
-                    <th>Age</th>
-                    <th>District</th>
-                    <th>VDC</th>
-                    <th>Phone Contact</th>
-                    <th>Relation to...</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for interceptee_form in interceptee_formset %}
-                    <tr>
-                        <td>{{ interceptee_form.kind }}</td>
-                        <td>{{ interceptee_form.full_name }}</td>
-                        <td>{{ interceptee_form.age }}</td>
-                        <td>{{ interceptee_form.district }}</td>
-                        <td>{{ interceptee_form.vdc }}</td>
-                        <td>{{ interceptee_form.phone_contact }}</td>
-                        <td>{{ interceptee_form.relation_to }}</td>
-                    </tr>
+        {{ inlines.0.management_form }}
+        <div class="row">
+            <div class="col-sm-10">
+                <table class="table table-bordered interceptee-form">
+                    <thead>
+                        <tr>
+                            <th>V<br><small>victim</small><br/>T<br/><small>trafficker</small></th>
+                            <th>Full Name</th>
+                            <th>Age</th>
+                            <th>District</th>
+                            <th>VDC</th>
+                            <th>Phone Contact</th>
+                            <th>Relation to...</th>
+                            <th>Photo Upload</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for interceptee_form in inlines.0 %}
+                            <tr>
+                                <td style="width: 7%">{{ interceptee_form.id }} {{ interceptee_form.kind }}</td>
+                                <td>{{ interceptee_form.full_name }}</td>
+                                <td style="width: 7%">{{ interceptee_form.age }}</td>
+                                <td>{{ interceptee_form.district }}</td>
+                                <td>{{ interceptee_form.vdc }}</td>
+                                <td>{{ interceptee_form.phone_contact }}</td>
+                                <td>{{ interceptee_form.relation_to }}</td>
+                                <td style="width: 20%">{{ interceptee_form.photo }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <p class="bg-danger">You must complete each of these procedures for this IRF to be 
+                        considered correctly filled out. Tick each box to indicate that 
+                        you have completed the procedure.</p>
+
+                        <h3 class="text-center">Procedures</h3>
+                        <strong>8.1</strong>&nbsp;{{ form.call_subcommittee_chair }} {{ form.call_subcommittee_chair.label_tag }}<br/>
+                        <strong>8.2</strong>&nbsp;{{ form.call_thn_to_cross_check }} {{ form.call_thn_to_cross_check.label_tag }}<br/>
+                        Had any name come up before?
+                        {{ form.name_come_up_before_yes }} {{ form.name_come_up_before_yes.label_tag }} {{ form.name_come_up_before_no }} {{ form.name_come_up_before_no.label_tag }} <br/>
+                        {{ form.name_come_up_before_yes_value.label_tag }}  {{ form.name_come_up_before_yes_value }}
+                        <strong>8.3</strong>&nbsp;{{ form.scan_and_submit_same_day }} {{ form.scan_and_submit_same_day.label_tag }}
+
+                        <p class="bg-danger" style="margin-top: 40px">
+                        {{ form.scanned_form.label_tag }} {{ form.scanned_form }}
+                        </p>
+                    </div>
+                    <div class="col-sm-6">
+                        <h3 class="text-center">Type of Intercept</h3>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <strong>9.1</strong>&nbsp;{{ form.type_gulf_countries }} {{ form.type_gulf_countries.label_tag }}
+                            </div>
+                            <div class="col-sm-6">
+                                <strong>9.2</strong>&nbsp;{{ form.type_gulf_countries }} {{ form.type_gulf_countries.label_tag }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <strong>9.3</strong>&nbsp;{{ form.type_indian_circus }} {{ form.type_indian_circus.label_tag }}
+                            </div>
+                            <div class="col-sm-6">
+                                <strong>9.4</strong>&nbsp;{{ form.type_runaway }} {{ form.type_runaway.label_tag }}
+                            </div>
+                        </div>
+
+                        <strong>9.6</strong>&nbsp;{{ form.trafficker_taken_into_custody.label_tag }} {{ form.trafficker_taken_into_custody }}<br/>
+                        <strong>9.7</strong>&nbsp;{{ form.how_sure_was_trafficking.label_tag }}<br/>
+                        <strong>Rate from 1-5</strong> <small>1 = not at all sure, 5 = absolutely sure</small> {{ form.how_sure_was_trafficking|attr:'style: width: 60px' }}
+
+                        <div class="signature-box text-center">
+                            <p><strong>I certify that I have followed procedures and filled out this form correctly, completely, and accurately.</strong></p>
+
+                            <p><em><input style="width: 100%" type="text" disabled="disabled" value="Does the original form have a valid signature?"/></em></p>
+                            {{ form.has_signature }} {{ form.has_signature.label_tag }}
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-2">
+                {% for interceptee_form in inlines.0|slice:":6" %}
+                    <div class="photo">
+                        {% if interceptee_form.instance.photo_thumbnail %}
+                            <img src="{{ interceptee_form.instance.photo_thumbnail.url }}" />
+                        {% else %}
+                            PHOTO {{ forloop.counter }}
+                        {% endif %}
+                    </div>
                 {% endfor %}
-            </tbody>
-        </table>
+            </div>
+        </div>
+        <div class="row">
+            {% for interceptee_form in inlines.0|slice:"6:" %}
+                <div class="col-sm-2">
+                    <div class="photo">
+                        {% if interceptee_form.photo_thumbnail.url %}
+                            <img class="img-thumbnail" src="{{ interceptee_form.photo_thumbnail.url }}" />
+                        {% else %}
+                            PHOTO {{ forloop.counter|add:"6" }}
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
     </div>
 
+    {{ form.errors }}
     <input type="submit" style="margin-top: 20px" class="pull-right btn btn-primary btn-lg" value="{% if interceptionrecord %}Update{% else %}Create{% endif%}" />
 </form>
 
-{{ form.errors }}
 {% endblock %}
 
