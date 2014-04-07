@@ -252,7 +252,7 @@ class Interceptee(models.Model):
                                      format='JPEG',
                                      options={'quality': 80})
     interception_record = models.ForeignKey(InterceptionRecord, related_name='interceptees')
-    kind = models.IntegerField(choices=KIND_CHOICES)
+    kind = models.IntegerField(choices=KIND_CHOICES, null=True, blank=True)
     full_name = models.CharField(max_length=255, blank=True)
     age = models.PositiveIntegerField(null=True, blank=True)
     district = models.CharField(max_length=255, blank=True)
