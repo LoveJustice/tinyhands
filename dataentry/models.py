@@ -153,6 +153,60 @@ class InterceptionRecord(models.Model):
 
     reported_total_red_flags = models.IntegerField('Reported Total Red Flag Points:', null=True, blank=True)
 
+    # How did you make interception?
+    contact_noticed = models.BooleanField('Contact', default=False)
+    contact_hotel_owner = models.BooleanField('Hotel owner', default=False)
+    contact_rickshaw_driver = models.BooleanField('Rickshaw driver', default=False)
+    contact_taxi_driver = models.BooleanField('Taxi driver', default=False)
+    contact_bus_driver = models.BooleanField('Bus driver', default=False)
+    contact_church_member = models.BooleanField('Church member', default=False)
+    contact_other_ngo = models.BooleanField('Other NGO', default=False)
+    contact_police = models.BooleanField('Police', default=False)
+    contact_subcommittee_member = models.BooleanField('Subcommittee member', default=False)
+    contact_other = models.BooleanField('Other', default=False)
+    contact_other_value = models.CharField(max_length=255, blank=True)
+
+    # Did you pay this contact for the information?
+    contact_paid_no = models.BooleanField('No', default=False)
+    contact_paid_yes = models.BooleanField('Yes', default=False)
+    contact_paid_how_much = models.CharField('How much?', max_length=255, blank=True)
+
+    staff_noticed = models.BooleanField('Staff', default=False)
+    staff_who_noticed = models.CharField('Staff who noticed:', max_length=255, blank=True)
+
+    # What was the sign that made you stop the girl for questioning? (check all that apply below)
+
+    # Manner
+    noticed_hesitant = models.BooleanField('Hesitant', default=False)
+    noticed_nervous_or_afraid = models.BooleanField('Nervous or afraid', default=False)
+    noticed_hurrying = models.BooleanField('Hurrying', default=False)
+    noticed_drugged_or_drowsy = models.BooleanField('Drugged or drowsy', default=False)
+
+    # Attire
+    noticed_new_clothes = models.BooleanField('New clothes', default=False)
+    noticed_dirty_clothes = models.BooleanField('Dirty clothes', default=False)
+    noticed_carrying_full_bags = models.BooleanField('Carrying Full bags', default=False)
+    noticed_village_dress = models.BooleanField('Village Dress', default=False)
+
+    # Appearance
+    noticed_indian_looking = models.BooleanField('Indian looking', default=False)
+    noticed_typical_village_look = models.BooleanField('Typical village look', default=False)
+    noticed_looked_like_agent = models.BooleanField('Looked like agent', default=False)
+    noticed_caste_difference = models.BooleanField('Caste difference', default=False)
+    noticed_young_looking = models.BooleanField('Young looking', default=False)
+
+    # Action
+    noticed_waiting_sitting = models.BooleanField('Waiting / sitting', default=False)
+    noticed_walking_to_border = models.BooleanField('Walking to border', default=False)
+    noticed_roaming_around = models.BooleanField('Roaming around', default=False)
+    noticed_exiting_vehicle = models.BooleanField('Exiting vehicle', default=False)
+    noticed_heading_to_vehicle = models.BooleanField('Heading to vehicle', default=False)
+    noticed_in_a_vehicle = models.BooleanField('In a vehicle', default=False)
+    noticed_in_a_rickshaw = models.BooleanField('In a rickshaw', default=False)
+    noticed_in_a_cart = models.BooleanField('In a cart', default=False)
+    noticed_carrying_a_baby = models.BooleanField('Carrying a baby', default=False)
+    noticed_on_the_phone = models.BooleanField('On the phone', default=False)
+
     def calculate_total(self):
         total = 0
         for field in self._meta.fields:
@@ -164,3 +218,17 @@ class InterceptionRecord(models.Model):
 
         return total
 
+
+class Interceptee(models.Model):
+    KIND_CHOICES = [
+        (0, 'Victim'),
+        (1, 'Trafficker'),
+    ]
+    interception_record = models.ForeignKey(InterceptionRecord, related_name='interceptees')
+    kind = models.IntegerField(choices=KIND_CHOICES)
+    full_name = models.CharField(max_length=255, blank=True)
+    age = models.PositiveIntegerField(null=True, blank=True)
+    district = models.CharField(max_length=255, blank=True)
+    vdc = models.CharField(max_length=255, blank=True)
+    phone_contact = models.CharField(max_length=255, blank=True)
+    relation_to = models.CharField(max_length=255, blank=True)

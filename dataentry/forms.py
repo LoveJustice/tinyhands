@@ -1,5 +1,6 @@
 from django import forms
-from dataentry.models import InterceptionRecord
+from dataentry.models import InterceptionRecord, Interceptee
+from django.forms.models import inlineformset_factory
 
 
 class InterceptionRecordForm(forms.ModelForm):
@@ -29,3 +30,5 @@ class InterceptionRecordForm(forms.ModelForm):
                 if hasattr(model_field, 'weight'):
                     field.weight = model_field.weight
 
+
+IntercepteeFormSet = inlineformset_factory(InterceptionRecord, Interceptee, extra=12)
