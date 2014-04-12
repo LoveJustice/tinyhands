@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block tab_block %}
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="{% url 'account_list' %}">Accounts</a></li>
+        <li><a href="{% url 'permissions_matrix' %}">Access Control</a></li>
+    </ul>
+    {% block content %}
+    {% endblock %}
+{% endblock %}

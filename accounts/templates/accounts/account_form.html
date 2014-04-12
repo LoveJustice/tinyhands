@@ -1,0 +1,128 @@
+{% extends "accounts/account_base.html" %}
+{% load bootstrap %}
+
+{% block title %}Edit {{ form.instance.get_full_name }}'s Account{% endblock %}
+
+{% block body_class %}account_update{% endblock %}
+
+{% block head %}
+<style>
+.bg-success {
+    background-color: #008924 !important;
+}
+.bg-danger {
+    background-color: #A80000 !important;
+}
+button.btn {
+    width: 75px;
+    height: 50px;
+}
+table {
+    width: 250px !important;
+    float: left;
+    margin-right: 20px;
+}
+table, th, td {
+    border: 2px solid #ddd;
+}
+th, td {
+    text-align: center;
+}
+</style>
+{% endblock %}
+{% block foot %}
+<script>
+$(document).ready(function() {
+    $('input[type="checkbox"]').each(function() {
+        if ($(this).prop('checked')) {
+            $(this).parents('td').addClass('bg-success');
+        }
+        else {
+            $(this).parents('td').addClass('bg-danger');
+        }
+    });
+    $('input[type="checkbox"]').click(function() {
+        if ($(this).parents('td').hasClass('bg-danger')) {
+            $(this).parents('td').removeClass('bg-danger').addClass('bg-success');
+        }
+        else if ($(this).parents('td').hasClass('bg-success')) {
+            $(this).parents('td').removeClass('bg-success').addClass('bg-danger');
+        }
+    });
+});
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Edit {{ form.instance.get_full_name }}'s Account</h1>
+    <div class="row">
+        <form method="POST" class="col-md-6">{% csrf_token %}
+            {{ form.email|bootstrap }}
+            {{ form.first_name|bootstrap }}
+            {{ form.last_name|bootstrap }}
+            <div class="clearfix">
+                <table class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th colspan="3">Interception Record Forms</th>
+                        </tr>
+                        <tr>
+                            <th>View</th>
+                            <th>Add</th>
+                            <th>Edit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{ form.permission_irf_view }}</td>
+                            <td>{{ form.permission_irf_add }}</td>
+                            <td>{{ form.permission_irf_edit }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th colspan="3">Victim Interview Forms</th>
+                        </tr>
+                        <tr>
+                            <th>View</th>
+                            <th>Add</th>
+                            <th>Edit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{ form.permission_vif_view }}</td>
+                            <td>{{ form.permission_vif_add }}</td>
+                            <td>{{ form.permission_vif_edit }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th colspan="3">Account Management</th>
+                        </tr>
+                        <tr>
+                            <th>View</th>
+                            <th>Add</th>
+                            <th>Edit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{ form.permission_accounts_view }}</td>
+                            <td>{{ form.permission_accounts_add }}</td>
+                            <td>{{ form.permission_accounts_edit }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <input type="submit" class="clear btn btn-primary btn-lg" value="Update" />
+        </form>
+    </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,100 @@
+{% extends "accounts/account_base.html" %}
+{% load bootstrap %}
+
+{% block title %}Permissions Matrix{% endblock %}
+
+{% block body_class %}permissions_matrix{% endblock %}
+
+{% block head %}
+<style>
+.bg-success {
+    background-color: #008924 !important;
+}
+.bg-danger {
+    background-color: #A80000 !important;
+}
+button.btn {
+    width: 75px;
+    height: 50px;
+}
+table {
+}
+table, th, td {
+    border: 2px solid #ddd;
+}
+th, td {
+    text-align: center;
+}
+</style>
+{% endblock %}
+{% block foot %}
+<script>
+$(document).ready(function() {
+    $('input[type="checkbox"]').each(function() {
+        if ($(this).prop('checked')) {
+            $(this).parents('td').addClass('bg-success');
+        }
+        else {
+            $(this).parents('td').addClass('bg-danger');
+        }
+    });
+    $('input[type="checkbox"]').click(function() {
+        if ($(this).parents('td').hasClass('bg-danger')) {
+            $(this).parents('td').removeClass('bg-danger').addClass('bg-success');
+        }
+        else if ($(this).parents('td').hasClass('bg-success')) {
+            $(this).parents('td').removeClass('bg-success').addClass('bg-danger');
+        }
+    });
+});
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Access Control</h1>
+    <form method="POST" class="row">{% csrf_token %}
+        {{ formset.management_form }}
+        <table class="table table-condensed">
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th colspan="3">Interception Record Forms</th>
+                    <th colspan="3">Victim Interview Forms</th>
+                    <th colspan="3">Account Management</th>
+                </tr>
+                <tr>
+                    <th>&nbsp;</th>
+                    <th>Add</th>
+                    <th>Edit</th>
+                    <th>View</th>
+                    <th>Add</th>
+                    <th>Edit</th>
+                    <th>View</th>
+                    <th>Add</th>
+                    <th>Edit</th>
+                    <th>View</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for form in formset %}
+{{ form.errors }}
+                    <tr>
+                        <td>{{ form.id }}{{ form.instance.get_full_name }}</td>
+                        <td>{{ form.permission_irf_view }}</td>
+                        <td>{{ form.permission_irf_add }}</td>
+                        <td>{{ form.permission_irf_edit }}</td>
+                        <td>{{ form.permission_vif_view }}</td>
+                        <td>{{ form.permission_vif_add }}</td>
+                        <td>{{ form.permission_vif_edit }}</td>
+                        <td>{{ form.permission_accounts_view }}</td>
+                        <td>{{ form.permission_accounts_add }}</td>
+                        <td>{{ form.permission_accounts_edit }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <input type="submit" class="clear btn btn-primary btn-lg" value="Update" />
+    </form>
+</div>
+{% endblock %}

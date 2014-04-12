@@ -33,15 +33,11 @@
     <div class="collapse navbar-collapse navbar-header-collapse">
         {% if request.user.is_authenticated %}
         <ul class="nav navbar-nav">
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Data Entry <b class="caret"></b></a>
-                <ul class="dropdown-menu">
-                    <li><a href="{% url 'interceptionrecord_list' %}">Interception Record Forms</a></li>
-                </ul>
-            </li>
+            <li><a href="{% url 'interceptionrecord_list' %}">Interception Record Forms</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
             <li><a>Hello {{ request.user.get_full_name }}</a></li>
+            <li><a href="{% url 'account_list' %}">Accounts and Permissions</a></li>
             <li><a href="{% url 'logout' %}">Logout</a></li>
         </ul>
         {% endif %}
@@ -49,11 +45,13 @@
 </nav>
 
 <div class="container">
-{% block content %}{% endblock %}
+{% block tab_block %}{% endblock %}
 </div>
 
 <script src="{{ STATIC_URL }}jquery.js"></script>
 <script src="{{ STATIC_URL }}bootstrap.js"></script>
+{% block foot %}
+{% endblock %}
 
 </body>
 </html>

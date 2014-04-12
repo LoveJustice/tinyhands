@@ -17,3 +17,6 @@ Todo:
 remove the button and just add an image image, have clear, change, etc buttons over the image
 view,change,delete
 make all radio button checkboxes on the form
+
+Week 3
+Monday April 14: 1:00pm - 

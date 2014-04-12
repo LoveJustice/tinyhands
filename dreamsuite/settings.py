@@ -16,7 +16,7 @@ TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
 
-AUTH_USER_MODEL = 'dataentry.Account'
+AUTH_USER_MODEL = 'accounts.Account'
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_URL = '/logout/'
@@ -32,6 +32,7 @@ INSTALLED_APPS = (
     'bootstrapform',
     'imagekit',
     'dataentry',
+    'accounts',
     'south',
 )
 
