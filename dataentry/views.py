@@ -4,7 +4,7 @@ from django.views.generic import ListView
 from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSet
 from django.contrib.auth.decorators import login_required
 from dataentry.models import InterceptionRecord, Interceptee
-from dataentry.mixins import PermissionsRequiredMixin
+from accounts.mixins import PermissionsRequiredMixin
 from braces.views import LoginRequiredMixin
 from dataentry.forms import InterceptionRecordForm
 
