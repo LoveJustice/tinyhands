@@ -9,7 +9,7 @@
     <link href="{{ STATIC_URL }}style.css" rel="stylesheet" media="screen">
     {% block head %}{% endblock %}
 </head>
-<body class="{% block body_class %}{% endblock %}">
+<body class="{% block body_class %}default{% endblock %}">
 
 {% if messages %}
 <div class="alert-container">
@@ -27,18 +27,22 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="{% url 'home' %}">Tiny Hands</a>
+        <a class="navbar-brand" style="margin-top: -10px" href="{% url 'home' %}"><img src="{{ STATIC_URL }}images/tiny-hands-logo.png" alt="Tiny Hands" /></a>
     </div>
 
     <div class="collapse navbar-collapse navbar-header-collapse">
         {% if request.user.is_authenticated %}
         <ul class="nav navbar-nav">
-            <li><a href="{% url 'interceptionrecord_list' %}">Interception Record Forms</a></li>
+            <li><a href="{% url 'interceptionrecord_list' %}">Forms</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
-            <li><a>Hello {{ request.user.get_full_name }}</a></li>
-            <li><a href="{% url 'account_list' %}">Accounts and Permissions</a></li>
-            <li><a href="{% url 'logout' %}">Logout</a></li>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Hello {{ request.user.get_full_name }}<b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li><a href="{% url 'account_list' %}">Accounts and Permissions</a></li>
+                    <li><a href="{% url 'logout' %}">Logout</a></li>
+                </ul>
+            </li>
         </ul>
         {% endif %}
     </div><!-- /.navbar-collapse -->
@@ -50,6 +54,7 @@
 
 <script src="{{ STATIC_URL }}jquery.js"></script>
 <script src="{{ STATIC_URL }}bootstrap.js"></script>
+<script src="{{ STATIC_URL }}all-pages.js"></script>
 {% block foot %}
 {% endblock %}
 

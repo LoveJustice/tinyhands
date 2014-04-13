@@ -12,6 +12,7 @@ class CreateAccountForm(forms.ModelForm):
             'email',
             'first_name',
             'last_name',
+            'user_designation',
             'permission_irf_view',
             'permission_irf_add',
             'permission_irf_edit',
@@ -21,6 +22,7 @@ class CreateAccountForm(forms.ModelForm):
             'permission_accounts_view',
             'permission_accounts_add',
             'permission_accounts_edit',
+            'permission_accounts_defaults',
         ]
 
     def clean_password2(self):

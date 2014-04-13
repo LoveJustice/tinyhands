@@ -3,6 +3,17 @@
 {% block title %}Home{% endblock %}
 {% block body_class %}home{% endblock %}
 
+{% block head %}
+<style>
+body {
+    background-image: url({{ STATIC_URL }}images/home-placeholder-image.jpg);
+    background-repeat: no-repeat;
+    background-position: top center;
+    background-size: 100%;
+}
+</style>
+{% endblock %}
+
 {% block content %}
 <h1>Welcome to the Tiny Hands Dream Suite!</h1>
 {% endblock %}

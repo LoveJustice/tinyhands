@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "dataentry/dataentry_base.html" %}
 {% load widget_tweaks %}
 
 {% block title %}{% if interceptionrecord %}Edit IRF{% else %}Create IRF{% endif%}{% endblock %}
@@ -47,6 +47,7 @@ td {
     padding: 50px;
     color: black !important;
     margin-bottom: 32px;
+    margin-top: 20px;
 }
 table, td, tr, thead, th, tbody {
     border-color: black !important;

@@ -4,6 +4,7 @@ from django.utils import timezone
 
 
 class DefaultPermissionsSet(models.Model):
+    name = models.CharField(max_length=255, unique=True)
     permission_irf_view = models.BooleanField(default=False)
     permission_irf_add = models.BooleanField(default=False)
     permission_irf_edit = models.BooleanField(default=False)
@@ -13,6 +14,10 @@ class DefaultPermissionsSet(models.Model):
     permission_accounts_view = models.BooleanField(default=False)
     permission_accounts_add = models.BooleanField(default=False)
     permission_accounts_edit = models.BooleanField(default=False)
+    permission_accounts_defaults = models.BooleanField(default=False)
+
+    def __unicode__(self):
+        return self.name
 
 
 class AccountManager(BaseUserManager):
@@ -44,6 +49,8 @@ class Account(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
 
+    user_designation = models.ForeignKey(DefaultPermissionsSet, related_name='accounts')
+
     permission_irf_view = models.BooleanField(default=False)
     permission_irf_add = models.BooleanField(default=False)
     permission_irf_edit = models.BooleanField(default=False)
@@ -53,6 +60,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
     permission_accounts_view = models.BooleanField(default=False)
     permission_accounts_add = models.BooleanField(default=False)
     permission_accounts_edit = models.BooleanField(default=False)
+    permission_accounts_defaults = models.BooleanField(default=False)
 
     date_joined = models.DateTimeField(default=timezone.now)
 

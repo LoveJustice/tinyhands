@@ -2,8 +2,14 @@
 
 {% block tab_block %}
     <ul class="nav nav-tabs">
-        <li class="active"><a href="{% url 'account_list' %}">Accounts</a></li>
-        <li><a href="{% url 'permissions_matrix' %}">Access Control</a></li>
+        {% url 'account_list' as account_list_url %}
+        <li{% if request.path == account_list_url %} class="active"{% endif %}><a href="{{ account_list_url }}">Accounts</a></li>
+
+        {% url 'permissions_matrix' as permissions_matrix_url %}
+        <li{% if request.path == permissions_matrix_url %} class="active"{% endif %}><a href="{{ permissions_matrix_url }}">Access Control</a></li>
+
+        {% url 'access_defaults' as access_defaults_url %}
+        <li{% if request.path == access_defaults_url %} class="active"{% endif %}><a href="{{ access_defaults_url }}">Access Defaults</a></li>
     </ul>
     {% block content %}
     {% endblock %}

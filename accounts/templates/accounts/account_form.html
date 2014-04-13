@@ -1,26 +1,19 @@
 {% extends "accounts/account_base.html" %}
 {% load bootstrap %}
 
-{% block title %}Edit {{ form.instance.get_full_name }}'s Account{% endblock %}
+{% block title %}{% if account %}Edit {{ account.get_full_name }}'s Account{% else %}Create New Account{% endif %}{% endblock %}
 
-{% block body_class %}account_update{% endblock %}
+{% block body_class %}account_form{% endblock %}
 
 {% block head %}
 <style>
-.bg-success {
-    background-color: #008924 !important;
+input[type="checkbox"] {
+    display: none;
 }
-.bg-danger {
-    background-color: #A80000 !important;
-}
-button.btn {
-    width: 75px;
-    height: 50px;
+label {
+    width: 100% !important;
 }
 table {
-    width: 250px !important;
-    float: left;
-    margin-right: 20px;
 }
 table, th, td {
     border: 2px solid #ddd;
@@ -28,39 +21,38 @@ table, th, td {
 th, td {
     text-align: center;
 }
+td {
+    width: 75px !important;
+}
+table {
+    width: 250px !important;
+}
 </style>
-{% endblock %}
-{% block foot %}
-<script>
-$(document).ready(function() {
-    $('input[type="checkbox"]').each(function() {
-        if ($(this).prop('checked')) {
-            $(this).parents('td').addClass('bg-success');
-        }
-        else {
-            $(this).parents('td').addClass('bg-danger');
-        }
-    });
-    $('input[type="checkbox"]').click(function() {
-        if ($(this).parents('td').hasClass('bg-danger')) {
-            $(this).parents('td').removeClass('bg-danger').addClass('bg-success');
-        }
-        else if ($(this).parents('td').hasClass('bg-success')) {
-            $(this).parents('td').removeClass('bg-success').addClass('bg-danger');
-        }
-    });
-});
-</script>
 {% endblock %}
 
 {% block content %}
 <div class="container">
-    <h1>Edit {{ form.instance.get_full_name }}'s Account</h1>
+    {% if account %}
+    <h1>Edit {{ account.get_full_name }}'s Account</h1>
+    {% else %}
+    <h1>Create New Account</h1>
+    {% endif %}
     <div class="row">
+        {% comment %}
+        <form method="POST" class="permissions-delete-form float-right" action="{% url 'access_defaults_delete' form.instance.pk %}">
+            {% csrf_token %}
+            <input type="submit" class="btn btn-danger btn-xs" value="X" />
+        </form>
+        {% endcomment %}
         <form method="POST" class="col-md-6">{% csrf_token %}
             {{ form.email|bootstrap }}
             {{ form.first_name|bootstrap }}
             {{ form.last_name|bootstrap }}
+            {{ form.user_designation|bootstrap }}
+            {% if not account %}
+                {{ form.password1|bootstrap }}
+                {{ form.password2|bootstrap }}
+            {% endif %}
             <div class="clearfix">
                 <table class="table table-condensed">
                     <thead>
@@ -75,9 +67,9 @@ $(document).ready(function() {
                     </thead>
                     <tbody>
                         <tr>
-                            <td>{{ form.permission_irf_view }}</td>
-                            <td>{{ form.permission_irf_add }}</td>
-                            <td>{{ form.permission_irf_edit }}</td>
+                            <td><label class="btn"><span class="yesno"></span>{{ form.permission_irf_view }}</label></td>
+                            <td><label class="btn"><span class="yesno"></span>{{ form.permission_irf_add }}</label></td>
+                            <td><label class="btn"><span class="yesno"></span>{{ form.permission_irf_edit }}</label></td>
                         </tr>
                     </tbody>
                 </table>
@@ -94,33 +86,35 @@ $(document).ready(function() {
                     </thead>
                     <tbody>
                         <tr>
-                            <td>{{ form.permission_vif_view }}</td>
-                            <td>{{ form.permission_vif_add }}</td>
-                            <td>{{ form.permission_vif_edit }}</td>
+                            <td><label class="btn"><span class="yesno"></span>{{ form.permission_vif_view }}</label></td>
+                            <td><label class="btn"><span class="yesno"></span>{{ form.permission_vif_add }}</label></td>
+                            <td><label class="btn"><span class="yesno"></span>{{ form.permission_vif_edit }}</label></td>
                         </tr>
                     </tbody>
                 </table>
                 <table class="table table-condensed">
                     <thead>
                         <tr>
-                            <th colspan="3">Account Management</th>
+                            <th colspan="4">Account Management</th>
                         </tr>
                         <tr>
                             <th>View</th>
                             <th>Add</th>
                             <th>Edit</th>
+                            <th>Edit<br/>Defaults</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>{{ form.permission_accounts_view }}</td>
-                            <td>{{ form.permission_accounts_add }}</td>
-                            <td>{{ form.permission_accounts_edit }}</td>
+                            <td><label class="btn"><span class="yesno"></span>{{ form.permission_accounts_view }}</label></td>
+                            <td><label class="btn"><span class="yesno"></span>{{ form.permission_accounts_add }}</label></td>
+                            <td><label class="btn"><span class="yesno"></span>{{ form.permission_accounts_edit }}</label></td>
+                            <td><label class="btn"><span class="yesno"></span>{{ form.permission_accounts_defaults }}</label></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-            <input type="submit" class="clear btn btn-primary btn-lg" value="Update" />
+            <input type="submit" class="clear btn btn-primary btn-lg" value="{% if account %}Update{% else %}Create{% endif %}" />
         </form>
     </div>
 </div>

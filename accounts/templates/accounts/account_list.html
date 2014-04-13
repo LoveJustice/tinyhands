@@ -7,7 +7,7 @@
 
 
 {% block content %}
-<h2>All Accounts</h2>
+<h1>All Accounts</h1>
 {% if account_list %}
 <table class="table table-striped table-condensed">
 
@@ -16,6 +16,9 @@
             <th>Email</th>
             <th>First Name</th>
             <th>Last Name</th>
+            <th>User Designation</th>
+            <th>Date Created</th>
+            <th>Last Login</th>
             <th>&nbsp;</th>
         </tr>
     </thead>
@@ -25,6 +28,9 @@
             <td>{{ account.email }}</td>
             <td>{{ account.first_name }}</td>
             <td>{{ account.last_name }}</td>
+            <td>{{ account.user_designation }}</td>
+            <td>{{ account.date_joined }}</td>
+            <td>{{ account.last_login }}</td>
             <td><a class="btn btn-sm btn-primary" href="{% url 'account_update' account.pk %}">Edit</a></td>
         </tr>
         {% endfor %}
