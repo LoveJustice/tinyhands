@@ -27,7 +27,24 @@ var DREAMSUITE = {
 
     account_form: function() {
         setUpPermissionsCheckboxes();
+        $('option:contains("---------")').remove();
+        $('select').change(function() {
+            for (var i=0; i<window.defaultPermissionSets.length; i++) {
+                var set = window.defaultPermissionSets[i];
+                if (set.id === parseInt($(this).val())) {
+                    for (var key in set) {
+                        var toBe = set[key];
+                        var $checkbox = $('#id_' + key);
+                        var current = !!$checkbox.prop('checked');
+                        if (toBe !== current) {
+                            $checkbox.trigger('click');
+                        }
+                    }
+                }
+            }
+        });
     },
+
     access_control: function() {
         setUpPermissionsCheckboxes();
         $('option:contains("---------")').remove();
@@ -48,6 +65,7 @@ var DREAMSUITE = {
             }
         });
     },
+
     access_defaults: function() {
         setUpPermissionsCheckboxes();
         $('#add-another').click(function() {

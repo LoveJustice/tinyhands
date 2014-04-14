@@ -34,6 +34,11 @@ class AccountCreateView(
     success_url = reverse_lazy('account_list')
     permissions_required = ['permission_accounts_manage']
 
+    def get_context_data(self, **kwargs):
+        context = super(AccountCreateView, self).get_context_data(**kwargs)
+        context['default_permissions_sets'] = json.dumps(list(DefaultPermissionsSet.objects.values()))
+        return context
+
 
 class AccountUpdateView(
         LoginRequiredMixin,
@@ -55,6 +60,11 @@ class AccountUpdateView(
         'permission_accounts_manage',
     ]
     permissions_required = ['permission_accounts_manage']
+
+    def get_context_data(self, **kwargs):
+        context = super(AccountUpdateView, self).get_context_data(**kwargs)
+        context['default_permissions_sets'] = json.dumps(list(DefaultPermissionsSet.objects.values()))
+        return context
 
 
 class AccessControlView(
