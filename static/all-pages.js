@@ -27,7 +27,6 @@ var DREAMSUITE = {
 
     account_form: function() {
         setUpPermissionsCheckboxes();
-        $('option:contains("---------")').remove();
         $('select').change(function() {
             for (var i=0; i<window.defaultPermissionSets.length; i++) {
                 var set = window.defaultPermissionSets[i];
