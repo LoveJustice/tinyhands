@@ -19,10 +19,7 @@ class CreateAccountForm(forms.ModelForm):
             'permission_vif_view',
             'permission_vif_add',
             'permission_vif_edit',
-            'permission_accounts_view',
-            'permission_accounts_add',
-            'permission_accounts_edit',
-            'permission_accounts_defaults',
+            'permission_accounts_manage',
         ]
 
     def clean_password2(self):

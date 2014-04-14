@@ -11,13 +11,13 @@ class DefaultPermissionsSet(models.Model):
     permission_vif_view = models.BooleanField(default=False)
     permission_vif_add = models.BooleanField(default=False)
     permission_vif_edit = models.BooleanField(default=False)
-    permission_accounts_view = models.BooleanField(default=False)
-    permission_accounts_add = models.BooleanField(default=False)
-    permission_accounts_edit = models.BooleanField(default=False)
-    permission_accounts_defaults = models.BooleanField(default=False)
+    permission_accounts_manage = models.BooleanField(default=False)
 
     def __unicode__(self):
         return self.name
+
+    def is_used_by_accounts(self):
+        return self.accounts.count() > 0
 
 
 class AccountManager(BaseUserManager):
@@ -57,10 +57,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
     permission_vif_view = models.BooleanField(default=False)
     permission_vif_add = models.BooleanField(default=False)
     permission_vif_edit = models.BooleanField(default=False)
-    permission_accounts_view = models.BooleanField(default=False)
-    permission_accounts_add = models.BooleanField(default=False)
-    permission_accounts_edit = models.BooleanField(default=False)
-    permission_accounts_defaults = models.BooleanField(default=False)
+    permission_accounts_manage = models.BooleanField(default=False)
 
     date_joined = models.DateTimeField(default=timezone.now)
 

@@ -23,15 +23,30 @@ function setUpPermissionsCheckboxes() {
     });
 }
 
-
 var DREAMSUITE = {
 
     account_form: function() {
         setUpPermissionsCheckboxes();
     },
-    permissions_matrix: function() {
+    access_control: function() {
         setUpPermissionsCheckboxes();
         $('option:contains("---------")').remove();
+        $('select').change(function() {
+            var rowIdx = parseInt($(this).parents('td').find('input').val()) - 1;
+            for (var i=0; i<window.defaultPermissionSets.length; i++) {
+                var set = window.defaultPermissionSets[i];
+                if (set.id === parseInt($(this).val())) {
+                    for (var key in set) {
+                        var toBe = set[key];
+                        var $checkbox = $('#id_form-' + rowIdx + '-' + key);
+                        var current = !!$checkbox.prop('checked');
+                        if (toBe !== current) {
+                            $checkbox.trigger('click');
+                        }
+                    }
+                }
+            }
+        });
     },
     access_defaults: function() {
         setUpPermissionsCheckboxes();
@@ -53,6 +68,8 @@ var DREAMSUITE = {
                 event.preventDefault();
             }
         });
+
+        $('.in-use-button').tooltip();
     },
     default: function() {}
 

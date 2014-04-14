@@ -1,3 +1,4 @@
 from django.contrib import admin
+from dataentry.models import InterceptionRecord
 
-# Register your models here.
+admin.site.register(InterceptionRecord)

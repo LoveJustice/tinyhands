@@ -1,3 +1,5 @@
+import json
+
 from django.shortcuts import render
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
@@ -20,7 +22,7 @@ class AccountListView(
         PermissionsRequiredMixin,
         ListView):
     model = Account
-    permissions_required = ['permission_accounts_view']
+    permissions_required = ['permission_accounts_manage']
 
 
 class AccountCreateView(
@@ -30,7 +32,7 @@ class AccountCreateView(
     model = Account
     form_class = CreateAccountForm
     success_url = reverse_lazy('account_list')
-    permissions_required = ['permission_accounts_add']
+    permissions_required = ['permission_accounts_manage']
 
 
 class AccountUpdateView(
@@ -50,22 +52,19 @@ class AccountUpdateView(
         'permission_vif_view',
         'permission_vif_add',
         'permission_vif_edit',
-        'permission_accounts_view',
-        'permission_accounts_add',
-        'permission_accounts_edit',
-        'permission_accounts_defaults',
+        'permission_accounts_manage',
     ]
-    permissions_required = ['permission_accounts_edit']
+    permissions_required = ['permission_accounts_manage']
 
 
-class PermissionsMatrixView(
+class AccessControlView(
         LoginRequiredMixin,
         PermissionsRequiredMixin,
         ModelFormSetView):
     model = Account
-    template_name = 'accounts/permissions_matrix.html'
+    template_name = 'accounts/access_control.html'
     success_url = reverse_lazy('account_list')
-    permissions_required = ['permission_accounts_edit']
+    permissions_required = ['permission_accounts_manage']
     extra = 0
     fields = [
         'user_designation',
@@ -75,11 +74,13 @@ class PermissionsMatrixView(
         'permission_vif_view',
         'permission_vif_add',
         'permission_vif_edit',
-        'permission_accounts_view',
-        'permission_accounts_add',
-        'permission_accounts_edit',
-        'permission_accounts_defaults',
+        'permission_accounts_manage',
     ]
+
+    def get_context_data(self, **kwargs):
+        context = ModelFormSetView.get_context_data(self, **kwargs)
+        context['default_permissions_sets'] = json.dumps(list(DefaultPermissionsSet.objects.values()))
+        return context
 
 
 class AccessDefaultsView(
@@ -89,7 +90,7 @@ class AccessDefaultsView(
     model = DefaultPermissionsSet
     template_name = 'accounts/access_defaults.html'
     success_url = reverse_lazy('account_list')
-    permissions_required = ['permission_accounts_defaults']
+    permissions_required = ['permission_accounts_manage']
     extra = 0
     fields = [
         'name',
@@ -99,17 +100,17 @@ class AccessDefaultsView(
         'permission_vif_view',
         'permission_vif_add',
         'permission_vif_edit',
-        'permission_accounts_view',
-        'permission_accounts_add',
-        'permission_accounts_edit',
-        'permission_accounts_defaults',
+        'permission_accounts_manage',
     ]
 
 
+#TODO Currently this view doesn't check to make sure the permission set is
+# unused by accounts.  The button to go here is grayed out, but that wouldn't
+# stop someone who was bent on deleting.  Come back to this someday.
 class AccessDefaultsDeleteView(
         LoginRequiredMixin,
         PermissionsRequiredMixin,
         DeleteView):
     model = DefaultPermissionsSet
-    permissions_required = ['permission_accounts_defaults']
+    permissions_required = ['permission_accounts_manage']
     success_url = reverse_lazy('access_defaults')
