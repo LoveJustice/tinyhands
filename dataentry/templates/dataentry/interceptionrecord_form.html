@@ -1,5 +1,6 @@
 {% extends "dataentry/dataentry_base.html" %}
 {% load widget_tweaks %}
+{% load bootstrap %}
 
 {% block title %}{% if interceptionrecord %}Edit IRF{% else %}Create IRF{% endif%}{% endblock %}
 
@@ -123,6 +124,11 @@ label {
     width: 100%;
     height: 100%;
 }
+.interceptee-number {
+    position: absolute;
+    left: 88px;
+    margin-top: -2px;
+}
 
 .signature-box {
     border: 1px solid #444;
@@ -130,17 +136,24 @@ label {
     margin-bottom: 10px;
     padding: 20px;
 }
+.form-group {
+    margin-bottom: 0 !important;
+}
+.help-block {
+    margin-bottom: 0 !important;
+}
 </style>
 {% endblock %}
 
 {% block content %}
+    {{ form.errors }}
 <form enctype="multipart/form-data" method="POST" class="row">{% csrf_token %}
     <div class="row form-page">
         <div class="row">
             <div class="col-sm-6">
                 <img class="pull-left" style="margin-right: 20px" width="100" src="{{ STATIC_URL }}images/logo.png" alt="Tiny Hands Logo" />
                 <h2>Interception Record Form (IRF)<br/>
-                Version 2.1 <span class="text-danger">Tiny Hands Nepal</span></h2>
+                Version 2.3 <span class="text-danger">Tiny Hands Nepal</span></h2>
             </div>
             <div class="col-sm-6">
                 <p class="bg-danger">You will find instructions for each section in the pink boxes like this</p>
@@ -148,16 +161,16 @@ label {
                     <tbody>
                         <tr>
                             <td>
-                                IRF #: {{ form.irf_number }}<br/>
-                                Time: {{ form.time }}
+                                {{ form.irf_number|bootstrap }}<br/>
+                                {{ form.date_time_of_interception|bootstrap }}
                             </td>
                             <td>
-                                # of victims: {{ form.number_of_victims }}<br/>
-                                # of traffickers: {{ form.number_of_traffickers }}
+                                {{ form.number_of_victims|bootstrap }}<br/>
+                                {{ form.number_of_traffickers|bootstrap }}
                             </td>
                             <td>
-                                Location: {{ form.location }}<br/>
-                                Staff Name: {{ form.staff_name }}
+                                {{ form.location|bootstrap }}<br/>
+                                {{ form.staff_name|bootstrap }}
                             </td>
                     </tbody>
                 </table>
@@ -191,8 +204,8 @@ label {
                     </td>
                     <td rowspan="2" class="center">
                         <strong>1.1</strong>
-                        {{ form.who_in_group.0 }}
-                        {{ form.who_in_group.choice.0.label_tag }}</td>
+                        {{ form.who_in_group_alone }}
+                        {{ form.who_in_group_alone.label_tag }}</td>
                     <td class="center">"Are you meeting someone in India?"</td>
                     <td>
                         <strong>3.1</strong>
@@ -224,8 +237,8 @@ label {
                 <tr>
                     <td rowspan="2" class="center">
                         <strong>1.2</strong>
-                        {{ form.who_in_group.1 }}
-                        {{ form.who_in_group.choice.1.label_tag }}<br/>
+                        {{ form.who_in_group_husbandwife }}
+                        {{ form.who_in_group_husbandwife.label_tag }}
 
                         <strong>3.5</strong>
                         {{ form.wife_under_18 }}
@@ -262,8 +275,8 @@ label {
                 <tr>
                     <td class="center">
                         <strong>1.3</strong>
-                        {{ form.who_in_group.2 }}
-                        {{ form.who_in_group.choice.2.label_tag }}<br/>
+                        {{ form.who_in_group_relative }}
+                        {{ form.who_in_group_relative.label_tag }}
                     </td>
                     <td class="center">Check citizenship cards</td>
                     <td>
@@ -276,95 +289,110 @@ label {
                 <tr>
                     <td colspan="4" class="bg-danger center">
                         If there is more than one person in the group, separate them at this point.<br/>
-                        <strong>3.11</strong>
-                        {{ form.caught_in_lie }}
-                        <span class="red-flag">{{ form.caught_in_lie.field.weight }}</span>
-                        {{ form.caught_in_lie.label_tag }}
-
+                        <div class="pull-left" style="margin-left: 80px;">
+                            <strong>3.11</strong>
+                            {{ form.caught_in_lie }}
+                            <span class="red-flag">{{ form.caught_in_lie.field.weight }}</span>
+                            {{ form.caught_in_lie.label_tag }}
+                        </div>
+                        <div class="pull-right" style="margin-right: 80px;">
+                            <strong>3.12</strong>
+                            {{ form.other_red_flag }}
+                            <span class="red-flag">&nbsp;</span>
+                            {{ form.other_red_flag.label_tag }}
+                            {{ form.other_red_flag_value }}
+                        </div>
                     </td>
                 </tr>
                 <tr>
                     <td rowspan="9" class="center">
                         <strong>Where are you going, and for what?</strong></br>
 
-                        <strong>3.12</strong>
+                        <strong>3.13</strong>
                         {{ form.doesnt_know_going_to_india }}
                         <span class="red-flag">{{ form.doesnt_know_going_to_india.field.weight }}</span>
                         {{ form.doesnt_know_going_to_india.label_tag }}<br/>
 
-                        <strong>3.13</strong>
+                        <strong>3.14</strong>
                         {{ form.running_away_over_18 }}
                         <span class="red-flag">{{ form.running_away_over_18.field.weight }}</span>
                         {{ form.running_away_over_18.label_tag }}<br/>
 
-                        <strong>3.14</strong>
+                        <strong>3.15</strong>
                         {{ form.running_away_under_18 }}
                         <span class="red-flag">{{ form.running_away_under_18.field.weight }}</span>
                         {{ form.running_away_under_18.label_tag }}
                     </td>
                     <td rowspan="2" class="center">
                         <strong>2.1</strong>
-                        {{ form.where_going.0 }}
-                        {{ form.where_going.choice.0.label_tag }}<br/>
+                        {{ form.where_going_job }}
+                        {{ form.where_going_job.label_tag }}
+                        <br/>
                     
-                        <strong>3.15</strong>
+                        <strong>3.16</strong>
                         {{ form.going_to_gulf_for_work }}
                         <span class="red-flag">{{ form.going_to_gulf_for_work.field.weight }}</span>
                         {{ form.going_to_gulf_for_work.label_tag }}
                     </td>
                     <td class="center">Check documents</td>
                     <td>
-                        <strong>3.16</strong>
+                        <strong>3.17</strong>
                         {{ form.no_address_in_india }}
                         <span class="red-flag">{{ form.no_address_in_india.field.weight }}</span>
                         {{ form.no_address_in_india.label_tag }}<br/>
 
-                        <strong>3.17</strong>
+                        <strong>3.18</strong>
                         {{ form.no_company_phone }}
                         <span class="red-flag">{{ form.no_company_phone.field.weight }}</span>
                         {{ form.no_company_phone.label_tag }}<br/>
 
-                        <strong>3.18</strong>
+                        <strong>3.19</strong>
                         {{ form.no_appointment_letter }}
                         <span class="red-flag">{{ form.no_appointment_letter.field.weight }}</span>
                         {{ form.no_appointment_letter.label_tag }}<br/>
 
-                        <strong>3.19</strong>
+                        <strong>3.20</strong>
                         {{ form.valid_gulf_country_visa }}
                         <span class="red-flag">{{ form.valid_gulf_country_visa.field.weight }}</span>
                         {{ form.valid_gulf_country_visa.label_tag }}<br/>
 
-                        <strong>3.20</strong>
+                        <strong>3.21</strong>
                         {{ form.passport_with_broker }}
                         <span class="red-flag">{{ form.passport_with_broker.field.weight }}</span>
-                        {{ form.passport_with_broker.label_tag }}
+                        {{ form.passport_with_broker.label_tag }}<br/>
+
+                        <strong>3.22</strong>
+                        {{ form.job_too_good_to_be_true }}
+                        <span class="red-flag">{{ form.job_too_good_to_be_true.field.weight }}</span>
+                        {{ form.job_too_good_to_be_true.label_tag }}
                     </td>
                 </tr>
                 <tr>
                     <td class="center">Call job place</td>
                     <td>
-                        <strong>3.21</strong>
+                        <strong>3.23</strong>
                         {{ form.not_real_job }}
                         <span class="red-flag">{{ form.not_real_job.field.weight }}</span>
                         {{ form.not_real_job.label_tag }}<br/>
 
-                        <strong>3.22</strong>
+                        <strong>3.24</strong>
                         {{ form.couldnt_confirm_job }}
                         <span class="red-flag">{{ form.couldnt_confirm_job.field.weight }}</span>
                         {{ form.couldnt_confirm_job.label_tag }}<br/>
 
                         <p class="text-success"><span class="green-light"></span> Job Confirmed</p>
+                        <p class="text-success"><span class="green-light"></span> Going back to same job she was working previously</p>
                     </td>
                 </tr>
                 <tr>
                     <td class="center">
                         <strong>2.2</strong>
-                        {{ form.where_going.1 }}
-                        {{ form.where_going.choice.1.label_tag }}
+                        {{ form.where_going_visit }}
+                        {{ form.where_going_visit.label_tag }}
                     </td>
                     <td class="center">Check bags</td>
                     <td>
-                        <strong>3.23</strong>
+                        <strong>3.25</strong>
                         {{ form.no_bags_long_trip }}
                         <span class="red-flag">{{ form.no_bags_long_trip.field.weight }}</span>
                         {{ form.no_bags_long_trip.label_tag }}
@@ -373,12 +401,12 @@ label {
                 <tr>
                     <td class="center">
                         <strong>2.3</strong>
-                        {{ form.where_going.2 }}
-                        {{ form.where_going.choice.2.label_tag }}
+                        {{ form.where_going_shopping }}
+                        {{ form.where_going_shopping.label_tag }}
                     </td>
                     <td class="center">Check to see if bags are empty</td>
                     <td>
-                        <strong>3.24</strong>
+                        <strong>3.26</strong>
                         {{ form.shopping_overnight_stuff_in_bags }}
                         <span class="red-flag">{{ form.shopping_overnight_stuff_in_bags.field.weight }}</span>
                         {{ form.shopping_overnight_stuff_in_bags.label_tag }}
@@ -387,22 +415,22 @@ label {
                 <tr>
                     <td rowspan="2" class="center">
                         <strong>2.4</strong>
-                        {{ form.where_going.3 }}
-                        {{ form.where_going.choice.3.label_tag }}
+                        {{ form.where_going_study }}
+                        {{ form.where_going_study.label_tag }}
                     </td>
                     <td class="center">Check documents</td>
                     <td>
-                        <strong>3.25</strong>
+                        <strong>3.27</strong>
                         {{ form.no_enrollment_docs }}
                         <span class="red-flag">{{ form.no_enrollment_docs.field.weight }}</span>
                         {{ form.no_enrollment_docs.label_tag }}<br/>
 
-                        <strong>3.26</strong>
+                        <strong>3.28</strong>
                         {{ form.doesnt_know_school_name }}
                         <span class="red-flag">{{ form.doesnt_know_school_name.field.weight }}</span>
                         {{ form.doesnt_know_school_name.label_tag }}<br/>
 
-                        <strong>3.27</strong>
+                        <strong>3.29</strong>
                         {{ form.no_school_phone }}
                         <span class="red-flag">{{ form.no_school_phone.field.weight }}</span>
                         {{ form.no_school_phone.label_tag }}<br/>
@@ -415,7 +443,7 @@ label {
                     <td>
                         <p class="text-success"><span class="green-light"></span> Enrollment Confirmed</p>
 
-                        <strong>3.28</strong>
+                        <strong>3.30</strong>
                         {{ form.not_enrolled_in_school }}
                         <span class="red-flag">{{ form.not_enrolled_in_school.field.weight }}</span>
                         {{ form.not_enrolled_in_school.label_tag }}
@@ -424,12 +452,12 @@ label {
                 <tr>
                     <td rowspan="3" class="center">
                         <strong>2.5</strong>
-                        {{ form.where_going.4 }}
-                        {{ form.where_going.choice.4.label_tag }}
+                        {{ form.where_going_treatment }}
+                        {{ form.where_going_treatment.label_tag }}
                     </td>
                     <td class="center">Ask which hospital, doctor</td>
                     <td>
-                        <strong>3.29</strong>
+                        <strong>3.31</strong>
                         {{ form.reluctant_treatment_info }}
                         <span class="red-flag">{{ form.reluctant_treatment_info.field.weight }}</span>
                         {{ form.reluctant_treatment_info.label_tag }}
@@ -438,12 +466,12 @@ label {
                 <tr>
                     <td class="center">Check documents</td>
                     <td>
-                        <strong>3.30</strong>
+                        <strong>3.32</strong>
                         {{ form.no_medical_documents }}
                         <span class="red-flag">{{ form.no_medical_documents.field.weight }}</span>
                         {{ form.no_medical_documents.label_tag }}<br/>
 
-                        <strong>3.31</strong>
+                        <strong>3.33</strong>
                         {{ form.fake_medical_documents }}
                         <span class="red-flag">{{ form.fake_medical_documents.field.weight }}</span>
                         {{ form.fake_medical_documents.label_tag }}<br/>
@@ -456,7 +484,7 @@ label {
                     <td>
                         <p class="text-success"><span class="green-light"></span> Enrollment Confirmed</p>
 
-                        <strong>3.32</strong>
+                        <strong>3.34</strong>
                         {{ form.no_medical_appointment }}
                         <span class="red-flag">{{ form.no_medical_appointment.field.weight }}</span>
                         {{ form.no_medical_appointment.label_tag }}
@@ -464,7 +492,7 @@ label {
                 </tr>
                 <tr>
                     <td colspan="4" class="bg-danger center">
-                        Only proceed if there have been 20 red flag points and no green lights.
+                        Only proceed if there have been at least 20 red flag points and no green lights.
                     </td>
                 </tr>
             </tbody>
@@ -477,13 +505,13 @@ label {
                         Ask her to describe in detail
                     </td>
                     <td colspan="2">
-                        <strong>3.33</strong>
+                        <strong>3.35</strong>
                         {{ form.doesnt_know_villiage_details }}
                         <span class="red-flag">{{ form.doesnt_know_villiage_details.field.weight }}</span>
                         {{ form.doesnt_know_villiage_details.label_tag }}
                     </td>
                     <td>
-                        <strong>3.34</strong>
+                        <strong>3.36</strong>
                         {{ form.reluctant_villiage_info }}
                         <span class="red-flag">{{ form.reluctant_villiage_info.field.weight }}</span>
                         {{ form.reluctant_villiage_info.label_tag }}
@@ -495,12 +523,12 @@ label {
                         Ask for family contact info
                     </td>
                     <td rowspan="2">
-                        <strong>3.35</strong>
+                        <strong>3.37</strong>
                         {{ form.reluctant_family_info }}
                         <span class="red-flag">{{ form.reluctant_family_info.field.weight }}</span>
                         {{ form.reluctant_family_info.label_tag }}<br/>
 
-                        <strong>3.36</strong>
+                        <strong>3.38</strong>
                         {{ form.refuses_family_info }}
                         <span class="red-flag">{{ form.refuses_family_info.field.weight }}</span>
                         {{ form.refuses_family_info.label_tag }}
@@ -514,28 +542,28 @@ label {
                 </tr>
                 <tr>
                     <td>
-                        <strong>3.37</strong>
+                        <strong>3.39</strong>
                         {{ form.under_18_cant_contact_family }}
                         <span class="red-flag">{{ form.under_18_cant_contact_family.field.weight }}</span>
                         {{ form.under_18_cant_contact_family.label_tag }}<br/>
 
-                        <strong>3.38</strong>
+                        <strong>3.40</strong>
                         {{ form.under_18_family_doesnt_know }}
                         <span class="red-flag">{{ form.under_18_family_doesnt_know.field.weight }}</span>
                         {{ form.under_18_family_doesnt_know.label_tag }}<br/>
 
-                        <strong>3.39</strong>
+                        <strong>3.41</strong>
                         {{ form.under_18_family_unwilling }}
                         <span class="red-flag">{{ form.under_18_family_unwilling.field.weight }}</span>
                         {{ form.under_18_family_unwilling.label_tag }}
                     </td>
                     <td>
-                        <strong>3.40</strong>
+                        <strong>3.42</strong>
                         {{ form.over_18_family_doesnt_know }}
                         <span class="red-flag">{{ form.over_18_family_doesnt_know.field.weight }}</span>
                         {{ form.over_18_family_doesnt_know.label_tag }}<br/>
 
-                        <strong>3.41</strong>
+                        <strong>3.43</strong>
                         {{ form.over_18_family_unwilling }}
                         <span class="red-flag">{{ form.over_18_family_unwilling.field.weight }}</span>
                         {{ form.over_18_family_unwilling.label_tag }}
@@ -635,7 +663,7 @@ label {
                         <strong>7.2</strong>&nbsp;{{ form.noticed_hesitant }}              {{ form.noticed_hesitant.label_tag }}<br/>
                         <strong>7.3</strong>&nbsp;{{ form.noticed_nervous_or_afraid }}     {{ form.noticed_nervous_or_afraid.label_tag }}<br/>
                         <strong>7.4</strong>&nbsp;{{ form.noticed_hurrying }}              {{ form.noticed_hurrying.label_tag }}<br/>
-                        <strong>7.5</strong>&nbsp;{{ form.noticed_drugged_or_drowsy }}     {{ form.noticed_drugged_or_drowsy.label_tag }}
+                        <strong>7.5</strong>&nbsp;{{ form.noticed_drugged_or_drowsy }}     {{ form.noticed_drugged_or_drowsy.label_tag }}<br/>
                     </td>
                     <td>
                         <strong>7.6</strong>&nbsp;{{ form.noticed_new_clothes }}           {{ form.noticed_new_clothes.label_tag }}<br/>
@@ -643,26 +671,31 @@ label {
                         <strong>7.8</strong>&nbsp;{{ form.noticed_carrying_full_bags }}    {{ form.noticed_carrying_full_bags.label_tag }}<br/>
                         <strong>7.9</strong>&nbsp;{{ form.noticed_village_dress }}         {{ form.noticed_village_dress.label_tag }}
                     </td>
-                    <td>
+                    <td rowspan="2">
                         <strong>7.10</strong>&nbsp;{{ form.noticed_indian_looking }}       {{ form.noticed_indian_looking.label_tag }}<br/>
                         <strong>7.11</strong>&nbsp;{{ form.noticed_typical_village_look }} {{ form.noticed_typical_village_look.label_tag }}<br/>
                         <strong>7.12</strong>&nbsp;{{ form.noticed_looked_like_agent }}    {{ form.noticed_looked_like_agent.label_tag }}<br/>
                         <strong>7.13</strong>&nbsp;{{ form.noticed_caste_difference }}     {{ form.noticed_caste_difference.label_tag }}<br/>
                         <strong>7.14</strong>&nbsp;{{ form.noticed_young_looking }}        {{ form.noticed_young_looking.label_tag }}
                     </td>
-                    <td>
+                    <td rowspan="2">
                         <strong>7.15</strong>&nbsp;{{ form.noticed_waiting_sitting }}      {{ form.noticed_waiting_sitting.label_tag }}<br/>
                         <strong>7.16</strong>&nbsp;{{ form.noticed_walking_to_border }}    {{ form.noticed_walking_to_border.label_tag }}<br/>
                         <strong>7.17</strong>&nbsp;{{ form.noticed_roaming_around }}       {{ form.noticed_roaming_around.label_tag }}<br/>
                         <strong>7.18</strong>&nbsp;{{ form.noticed_exiting_vehicle }}      {{ form.noticed_exiting_vehicle.label_tag }}<br/>
                         <strong>7.19</strong>&nbsp;{{ form.noticed_heading_to_vehicle }}   {{ form.noticed_heading_to_vehicle.label_tag }}<br/>
                     </td>
-                    <td>
+                    <td rowspan="2">
                         <strong>7.20</strong>&nbsp;{{ form.noticed_in_a_vehicle }}         {{ form.noticed_in_a_vehicle.label_tag }}<br/>
                         <strong>7.21</strong>&nbsp;{{ form.noticed_in_a_rickshaw }}        {{ form.noticed_in_a_rickshaw.label_tag }}<br/>
                         <strong>7.22</strong>&nbsp;{{ form.noticed_in_a_cart }}            {{ form.noticed_in_a_cart.label_tag }}<br/>
                         <strong>7.23</strong>&nbsp;{{ form.noticed_carrying_a_baby }}      {{ form.noticed_carrying_a_baby.label_tag }}<br/>
                         <strong>7.24</strong>&nbsp;{{ form.noticed_on_the_phone }}         {{ form.noticed_on_the_phone.label_tag }}
+                    </td>
+                </tr>
+                <tr class="bg-primary">
+                    <td colspan="2">
+                        <strong>7.25</strong>&nbsp;{{ form.noticed_other_sign }}&nbsp;{{ form.noticed_other_sign.label_tag }}&nbsp;{{ form.noticed_other_sign_value|attr:"style: width: 60%" }}
                     </td>
                 </tr>
 
@@ -677,6 +710,7 @@ label {
                         <tr>
                             <th>V<br><small>victim</small><br/>T<br/><small>trafficker</small></th>
                             <th>Full Name</th>
+                            <th>F<br><small>Female</small><br/>M<br/><small>Male</small></th>
                             <th>Age</th>
                             <th>District</th>
                             <th>VDC</th>
@@ -688,8 +722,12 @@ label {
                     <tbody>
                         {% for interceptee_form in inlines.0 %}
                             <tr>
-                                <td style="width: 7%">{{ interceptee_form.id }} {{ interceptee_form.kind }}</td>
+                                <td style="width: 7%">
+                                    <span class="interceptee-number">{{ forloop.counter }}</span>
+                                    {{ interceptee_form.id }} {{ interceptee_form.kind }}
+                                </td>
                                 <td>{{ interceptee_form.full_name }}</td>
+                                <td>{{ interceptee_form.gender }}</td>
                                 <td style="width: 7%">{{ interceptee_form.age }}</td>
                                 <td>{{ interceptee_form.district }}</td>
                                 <td>{{ interceptee_form.vdc }}</td>
@@ -722,18 +760,31 @@ label {
                         <h3 class="text-center">Type of Intercept</h3>
                         <div class="row">
                             <div class="col-sm-6">
-                                <strong>9.1</strong>&nbsp;{{ form.type_gulf_countries }} {{ form.type_gulf_countries.label_tag }}
+                                <strong>9.1</strong>
+                                {{ form.interception_type.0 }}
+                                {{ form.interception_type.choice.0.label_tag }}<br/>
                             </div>
                             <div class="col-sm-6">
-                                <strong>9.2</strong>&nbsp;{{ form.type_gulf_countries }} {{ form.type_gulf_countries.label_tag }}
+                                <strong>9.2</strong>
+                                {{ form.interception_type.1 }}
+                                {{ form.interception_type.choice.1.label_tag }}<br/>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-6">
-                                <strong>9.3</strong>&nbsp;{{ form.type_indian_circus }} {{ form.type_indian_circus.label_tag }}
+                                <strong>9.3</strong>
+                                {{ form.interception_type.2 }}
+                                {{ form.interception_type.choice.2.label_tag }}<br/>
                             </div>
                             <div class="col-sm-6">
-                                <strong>9.4</strong>&nbsp;{{ form.type_runaway }} {{ form.type_runaway.label_tag }}
+                                <strong>9.4</strong>
+                                {{ form.interception_type.3 }}
+                                {{ form.interception_type.choice.3.label_tag }}<br/>
+                            </div>
+                            <div class="col-sm-6">
+                                <strong>9.5</strong>
+                                {{ form.interception_type.4 }}
+                                {{ form.interception_type.choice.4.label_tag }}<br/>
                             </div>
                         </div>
 
@@ -779,7 +830,6 @@ label {
         </div>
     </div>
 
-    {{ form.errors }}
     <input type="submit" style="margin-top: 20px" class="pull-right btn btn-primary btn-lg" value="{% if interceptionrecord %}Update{% else %}Create{% endif%}" />
 </form>
 

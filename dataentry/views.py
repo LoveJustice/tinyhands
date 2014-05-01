@@ -3,10 +3,10 @@ from django.core.urlresolvers import reverse_lazy
 from django.views.generic import ListView
 from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSet
 from django.contrib.auth.decorators import login_required
-from dataentry.models import InterceptionRecord, Interceptee
+from dataentry.models import VictimInterview, InterceptionRecord, Interceptee
 from accounts.mixins import PermissionsRequiredMixin
 from braces.views import LoginRequiredMixin
-from dataentry.forms import InterceptionRecordForm
+from dataentry.forms import InterceptionRecordForm, VictimInterviewForm
 
 
 @login_required
@@ -48,3 +48,32 @@ class InterceptionRecordUpdateView(
     success_url = reverse_lazy('interceptionrecord_list')
     inlines = [IntercepteeInline]
     permissions_required = ['permission_irf_edit']
+
+
+class VictimInterviewListView(
+        LoginRequiredMixin,
+        PermissionsRequiredMixin,
+        ListView):
+    model = VictimInterview
+    permissions_required = ['permission_vif_view']
+
+
+class VictimInterviewCreateView(
+        LoginRequiredMixin,
+        PermissionsRequiredMixin,
+        CreateWithInlinesView):
+    model = VictimInterview
+    form_class = VictimInterviewForm
+    success_url = reverse_lazy('victiminterview_list')
+    permissions_required = ['permission_vif_add']
+
+
+class VictimInterviewUpdateView(
+        LoginRequiredMixin,
+        PermissionsRequiredMixin,
+        UpdateWithInlinesView):
+    model = VictimInterview
+    form_class = VictimInterviewForm
+    success_url = reverse_lazy('victiminterview_list')
+    inlines = [IntercepteeInline]
+    permissions_required = ['permission_vif_edit']

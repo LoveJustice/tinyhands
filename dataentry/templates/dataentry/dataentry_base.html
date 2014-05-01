@@ -5,10 +5,8 @@
         {% url 'interceptionrecord_list' as interceptionrecord_list_url %}
         <li{% if request.path == interceptionrecord_list_url %} class="active"{% endif %}><a href="{{ interceptionrecord_list_url }}">IRFs</a></li>
 
-        {% comment %}
-        {% url 'interceptionrecord_list' as interceptionrecord_list_url %}
-        <li{% if request.path != interceptionrecord_list_url %} class="active"{% endif %}><a href="{{ interceptionrecord_list_url }}">VIFs</a></li>
-        {% endcomment %}
+        {% url 'victiminterview_list' as victiminterview_list_url %}
+        <li{% if request.path != victiminterview_list_url %} class="active"{% endif %}><a href="{{ victiminterview_list_url }}">VIFs</a></li>
     </ul>
     {% block content %}
     {% endblock %}

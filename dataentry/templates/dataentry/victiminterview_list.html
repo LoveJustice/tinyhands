@@ -1,0 +1,39 @@
+{% extends "dataentry/dataentry_base.html" %}
+{% load bootstrap %}
+
+{% block title %}All VIFs{% endblock %}
+
+{% block body_class %}victiminterview_list{% endblock %}
+
+
+{% block content %}
+<h1>All VIFs</h1>
+{% if victiminterview_list %}
+<table class="table table-striped table-condensed">
+    <thead>
+        <tr>
+            <th>Warnings</th>
+            <th>IRF #</th>
+            <th>Date/Time<br/>of Intercept</th>
+            <th>Entered By</th>
+            <th># of victims</th>
+            <th># of traffickers</th>
+            <th>&nbsp;</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for vif in victiminterview_list %}
+        <tr>
+            <td>{{ vif.has_warnings }}</td>
+            <td>{{ vif.vif_number }}</td>
+            <td>{{ vif.entered_by }}</td>
+            <td>{{ vif.number_of_victims }}</td>
+            <td>{{ vif.number_of_traffickers }}</td>
+            <td><a class="btn btn-sm btn-primary" href="{% url 'victiminterview_update' vif.pk %}">Edit</a></td>
+        </tr>
+        {% endfor %}
+    </tbody> 
+</table>
+{% endif %}
+<p class="pull-right"><a class="btn btn-success" href="{% url 'victiminterview_create' %}">Input A New VIF</a></p>
+{% endblock %}

@@ -1,0 +1,228 @@
+{% extends "dataentry/dataentry_base.html" %}
+{% load widget_tweaks %}
+{% load bootstrap %}
+
+{% block title %}{% if victiminterview %}Edit VIF{% else %}Create VIF{% endif%}{% endblock %}
+
+{% block body_class %}{% if victiminterview %}victiminterview_update{% else %}victiminterview_create{% endif%}{% endblock %}
+
+{% block head %}
+<style>
+.label-inside-field {
+    position: relative;
+}
+.label-inside-field label {
+    position: absolute;
+    left: 2px;
+    top: 2px;
+}
+.label-inside-field input {
+    text-align: right;
+    padding: 8px;
+}
+.radio-select {
+    float: left;
+    padding: 10px;
+}
+.black-box {
+    border-left: 2px solid black;
+    border-right: 2px solid black;
+    border-bottom: 2px solid black;
+    padding: 4px;
+}
+.black-box-top {
+    border-top: 2px solid black;
+}
+.blue-box {
+    background-color: #003366;
+    color: white;
+}
+form {
+    background-color: #DFE0FE;
+    padding: 40px;
+    color: black;
+}
+.col-sm-4 {
+    padding: 0 !important;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+    {{ form.errors }}
+<div class="container">
+<form enctype="multipart/form-data" method="POST">{% csrf_token %}
+    <div class="row">
+        <div class="col-sm-6">
+            <img class="pull-left" style="margin-right: 20px" width="100" src="{{ STATIC_URL }}images/logo.png" alt="Tiny Hands Logo" />
+            <h2>Victim Interview Form (VIF)<br/>
+            Version 2.0 <span class="text-danger">Tiny Hands Nepal</span></h2>
+        </div>
+        <div class="col-sm-6">
+            <p class="bg-danger">You will find instructions for each section in the pink boxes like this</p>
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <td>
+                            {{ form.vif_number|bootstrap }}<br/>
+                            {{ form.date_time|bootstrap }}
+                        </td>
+                        <td>
+                            {{ form.number_of_victims|bootstrap }}<br/>
+                            {{ form.number_of_traffickers|bootstrap }}
+                        </td>
+                        <td>
+                            {{ form.location|bootstrap }}<br/>
+                            {{ form.interviewer|bootstrap }}
+                        </td>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-4">
+            <div class="blue-box black-box black-box-top">
+                <h1>1. Victim &amp; Family Information</h1>
+            </div>
+            <div class="black-box clearfix">
+                <strong>1.1</strong>{{ form.victim_name.label_tag }}
+                {{ form.victim_name }}
+                <strong>1.2</strong>{{ form.victim_gender.label_tag }}
+                {% for choice in form.victim_gender %}
+                    <div class="radio-select">{{ choice }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="black-box clearfix">
+                <h2>1.3 Victim's Recent Address</h2>
+                <div class="label-inside-field">
+                    {{ form.victim_address_district.label_tag }}{{ form.victim_address_district }}
+                </div>
+                <div class="label-inside-field">
+                    {{ form.victim_address_vdc.label_tag }}{{ form.victim_address_vdc }}
+                </div>
+                <div class="label-inside-field">
+                    {{ form.victim_address_ward.label_tag }}{{ form.victim_address_ward }}
+                </div>
+                <div class="label-inside-field">
+                    {{ form.victim_phone.label_tag }}{{ form.victim_phone }}
+                </div>
+            </div>
+
+            <div class="black-box clearfix">
+                <div class="label-inside-field">
+                    {{ form.victim_age.label_tag }}{{ form.victim_age }}
+                </div>
+                <div class="label-inside-field">
+                    {{ form.victim_height.label_tag }}{{ form.victim_height }}
+                </div>
+                <div class="label-inside-field">
+                    {{ form.victim_weight.label_tag }}{{ form.victim_weight }}
+                </div>
+            </div>
+
+            <div class="black-box clearfix">
+                <h2>1.7 Caste</h2>
+            </div>
+            <div class="black-box clearfix">
+                {% for choice in form.victim_caste %}
+                    <div class="radio-select">{{ choice }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="black-box clearfix">
+                <h2>1.8 What is your occupation?</h2>
+            </div>
+            <div class="black-box clearfix">
+                {% for choice in form.victim_occupation %}
+                    <div class="radio-select">{{ choice }}</div>
+                {% endfor %}
+            </div>
+            <div class="black-box clearfix">
+                <h2>1.9 Marital Status</h2>
+            </div>
+            <div class="black-box clearfix">
+                {% for choice in form.victim_marital_status %}
+                    <div class="radio-select">{{ choice }}</div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="black-box black-box-top clearfix">
+                <h2>1.10 With whom do you live?</h2>
+            </div>
+            <div class="black-box clearfix">
+                {{ form.victim_lives_with_own_parents }}     {{ form.victim_lives_with_own_parents.label_tag }}
+                {{ form.victim_lives_with_husband }}         {{ form.victim_lives_with_husband.label_tag }}
+                {{ form.victim_lives_with_husbands_family }} {{ form.victim_lives_with_husbands_family.label_tag }}
+                {{ form.victim_lives_with_friends }}         {{ form.victim_lives_with_friends.label_tag }}
+                {{ form.victim_lives_with_alone }}           {{ form.victim_lives_with_alone.label_tag }}
+                {{ form.victim_lives_with_other_relative }}  {{ form.victim_lives_with_other_relative.label_tag }}
+                {{ form.victim_lives_with_other }}           {{ form.victim_lives_with_other.label_tag }}              {{ form.victim_lives_with_other_value }}
+            </div>
+            <div class="black-box clearfix">
+                <h2>1.11 How many people are in your (own) family?</h2>
+                {{ form.victim_num_in_family }}
+            </div>
+
+            <div class="black-box clearfix">
+                <h2>1.12 Who is your primary guardian?</h2>
+            </div>
+            <div class="black-box clearfix">
+                {% for choice in form.victim_primary_guardian %}
+                    <div class="radio-select">{{ choice }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="black-box clearfix">
+                <h2>1.13 Guardian's Address</h2>
+                <div class="label-inside-field">
+                    {{ form.victim_address_district.label_tag }}{{ form.victim_address_district }}
+                </div>
+                <div class="label-inside-field">
+                    {{ form.victim_address_vdc.label_tag }}{{ form.victim_address_vdc }}
+                </div>
+                <div class="label-inside-field">
+                    {{ form.victim_address_ward.label_tag }}{{ form.victim_address_ward }}
+                </div>
+                <div class="label-inside-field">
+                    {{ form.victim_phone.label_tag }}{{ form.victim_phone }}
+                </div>
+            </div>
+
+            <div class="black-box clearfix">
+                <h2>1.14 What is parents' marital status?</h2>
+            </div>
+            <div class="black-box clearfix">
+                {% for choice in form.victim_parents_marital_status %}
+                    <div class="radio-select">{{ choice }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="black-box clearfix">
+                <h2>1.15 Education Level</h2>
+            </div>
+            <div class="black-box clearfix">
+                {% for choice in form.victim_education_level %}
+                    <div class="radio-select">{{ choice }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="black-box clearfix">
+                <h2>1.16 Is the victim literate?</h2>
+                {% for choice in form.victim_is_literate %}
+                    <div class="radio-select">{{ choice }}</div>
+                {% endfor %}
+            </div>
+
+        </div>
+        <div class="col-sm-4">
+        </div>
+    </div>
+
+    <input type="submit" style="margin-top: 20px" class="pull-right btn btn-primary btn-lg" value="{% if interceptionrecord %}Update{% else %}Create{% endif%}" />
+</form>
+</div>
+
+{% endblock %}
+
