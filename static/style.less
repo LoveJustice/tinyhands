@@ -1,0 +1,224 @@
+body {
+    padding-top: 70px;
+}
+
+.navbar {
+    padding-right: 20px;
+}
+
+body#interceptionrecord_create, body#interceptionrecord_update {
+    td {
+        vertical-align: middle;
+    }
+    .center {
+        text-align: center;
+    }
+    .form-page {
+        background-image: url(/static/images/irf-background.png);
+        background-size: 100%;
+        border: 1px solid #888;
+        box-shadow: 2px 2px 2px black;
+        padding: 50px;
+        color: black;
+        margin-bottom: 32px;
+        margin-top: 20px;
+    }
+    table, td, tr, thead, th, tbody {
+        border-color: black;
+    }
+    th {
+        text-align: center;
+    }
+    label {
+        display: inline;
+        color: #800000;
+    }
+    .bg-danger {
+        background-color: rgba(128, 0, 0, 0.2);
+        padding: 8px;
+    }
+    .bg-success {
+        background-color: rgba(0, 128, 0, 0.2);
+        padding: 8px;
+    }
+    .bg-primary {
+        background-color: rgba(0, 0, 128, 0.3);
+        padding: 8px;
+        color: black;
+    }
+    .text-danger {
+        color: #800000;
+    }
+    .text-success {
+        color: #4F6128;
+    }
+    .red-flag {
+        background-image: url(/static/images/red-flag.png);
+        color: #EADC9F;
+        font-size: 13px;
+        font-weight: bold;
+        line-height: 32px;
+        width: 32px;
+        height: 31px;
+        text-align: center;
+        display: inline-block;
+        vertical-align: middle;
+    }
+    .green-light {
+        background-image: url(/static/images/green-light.png);
+        width: 15px;
+        height: 15px;
+        display: inline-block;
+        vertical-align: middle;
+    }
+    .interceptee-form {
+        background-color: white;
+    }
+    .interceptee-form input, .interceptee-form select {
+        width: 100%;
+        padding: 11px 4px;
+    }
+    .interceptee-form td {
+        padding: 0;
+    }
+
+    .photo {
+        border: 1px solid #444;
+        width: 100%;
+        height: 100%;
+        margin-bottom: 21px;
+        text-align: center;
+        line-height: 100%;
+    }
+    .photo img {
+        display: block;
+        width: 100%;
+        height: 100%;
+    }
+    .interceptee-number {
+        position: absolute;
+        left: 88px;
+        margin-top: -2px;
+    }
+
+    .signature-box {
+        border: 1px solid #444;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        padding: 20px;
+    }
+    .form-group {
+        margin-bottom: 0;
+    }
+    .help-block {
+        margin-bottom: 0;
+    }
+}
+
+@vif-blue: #003366;
+body#victiminterview_create, body#victiminterview_update {
+    .form-page {
+        font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
+        font-size: 18px;
+        background-image: url(/static/images/vif-background1.jpg);
+        background-size: 100%;
+        border: 1px solid #888;
+        box-shadow: 2px 2px 2px black;
+        padding: 30px;
+        color: @vif-blue;
+        margin-bottom: 32px;
+        margin-top: 20px;
+    }
+    .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8 {
+        padding: 4px;
+        input[type="text"] {
+            width: 100%;
+        }
+    }
+    .major-column {
+        padding: 0;
+    }
+    small {
+        font-size: 14px;
+        color: black;
+    }
+    label {
+        color: black;
+        font-size: 18px;
+    }
+    .section-number {
+        color: @vif-blue;
+        font-weight: bold;
+        text-shadow: -1px 0 0 @vif-blue, 1px 1px 0 #888;
+    }
+    .label-inside-field {
+        position: relative;
+    }
+    .label-inside-field label {
+        position: absolute;
+        left: 2px;
+        top: 2px;
+    }
+    .label-inside-field input {
+        text-align: right;
+        padding: 8px;
+    }
+    .checkbox-group, .radio-group {
+        label {
+            display: inline;
+        }
+    }
+    .right-col-border {
+        border-right: 2px solid black;
+    }
+    .black-box {
+        border-left: 2px solid black;
+        border-right: 2px solid black;
+        border-bottom: 2px solid black;
+        h2 {
+            color: black;
+            font-size: 22px;
+            font-weight: bold;
+            margin: 2px 4px;
+        }
+    }
+    .black-box-top {
+        border-top: 2px solid black;
+    }
+    .blue-box {
+        background-color: @vif-blue;
+        h1 {
+            color: white;
+            font-size: 22px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin: 2px 4px;
+            text-align: center;
+        }
+    }
+    .table-bordered {
+        tr, th, td {
+            border: 1px solid black;
+        }
+    }
+    .blue-arrow, .red-arrow {
+        color: black;
+        font-weight: bold;
+        font-size: 16px;
+        background-size: 100% 100%;
+        padding: 10px;
+        padding-left: 40px;
+        padding-right: 24px;
+        width: 100%;
+        height: 100%;
+        margin-left: -10px;
+        margin-right: -10px;
+        white-space: nowrap;
+    }
+    .blue-arrow {
+        background-image: url(/static/images/blue-arrow.png);
+    }
+    .red-arrow {
+        background-image: url(/static/images/red-arrow.png);
+    }
+}

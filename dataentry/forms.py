@@ -119,16 +119,46 @@ IntercepteeFormSet = inlineformset_factory(InterceptionRecord, Interceptee, extr
 
 
 class VictimInterviewForm(forms.ModelForm):
+    victim_gender = forms.ChoiceField(choices=VictimInterview.GENDER_CHOICES, widget=forms.RadioSelect)
+    victim_caste = forms.ChoiceField(choices=VictimInterview.CASTE_CHOICES, widget=forms.RadioSelect)
+
+    victim_occupation = forms.ChoiceField(choices=VictimInterview.OCCUPATION_CHOICES, widget=forms.RadioSelect)
+
+    victim_marital_status = forms.ChoiceField(choices=VictimInterview.MARITAL_STATUS_CHOICES, widget=forms.RadioSelect)
+
+    victim_primary_guardian = forms.ChoiceField(choices=VictimInterview.GUARDIAN_CHOICES, widget=forms.RadioSelect)
+
+    victim_parents_marital_status = forms.ChoiceField(choices=VictimInterview.PARENTS_MARITAL_STATUS_CHOICES, widget=forms.RadioSelect)
+
+    victim_where_going_region = forms.ChoiceField(choices=VictimInterview.WHERE_GOING_REGION_CHOICES, widget=forms.RadioSelect)
+    victim_where_going = forms.ChoiceField(choices=VictimInterview.WHERE_GOING_CHOICES, widget=forms.RadioSelect)
+
+    victim_education_level = forms.ChoiceField(choices=VictimInterview.EDUCATION_LEVEL_CHOICES, widget=forms.RadioSelect)
+
+    victim_is_literate = forms.ChoiceField(choices=VictimInterview.BOOL_CHOICES, widget=forms.RadioSelect)
+
+    manpower_involved = forms.ChoiceField(choices=VictimInterview.BOOL_CHOICES, widget=forms.RadioSelect)
+
+    victim_recruited_in_village = forms.ChoiceField(choices=VictimInterview.BOOL_CHOICES, widget=forms.RadioSelect)
+
+    brokers_relation_to_victim = forms.ChoiceField(choices=VictimInterview.BROKERS_RELATION_CHOICES, widget=forms.RadioSelect)
+
+    victim_how_met_broker = forms.ChoiceField(choices=VictimInterview.HOW_MET_BROKER_CHOICES, widget=forms.RadioSelect)
+
+    victim_how_expense_was_paid = forms.ChoiceField(choices=VictimInterview.HOW_EXPENSE_WAS_PAID_CHOICES, widget=forms.RadioSelect)
+
+    broker_works_in_job_location = forms.ChoiceField(choices=VictimInterview.BROKER_WORKS_CHOICES, widget=forms.RadioSelect)
+
+    victim_first_time_crossing_border = forms.ChoiceField(choices=VictimInterview.BOOL_CHOICES, widget=forms.RadioSelect)
+
+    victim_primary_means_of_travel = forms.ChoiceField(choices=VictimInterview.PRIMARY_MEANS_OF_TRAVEL_CHOICES, widget=forms.RadioSelect)
+
+    victim_stayed_somewhere_between = forms.ChoiceField(choices=VictimInterview.BOOL_CHOICES, widget=forms.RadioSelect)
 
     class Meta:
         model = VictimInterview
-        widgets = {
-            'victim_gender': forms.RadioSelect,
-            'victim_caste': forms.RadioSelect,
-            'victim_occupation': forms.RadioSelect,
-            'victim_marital_status': forms.RadioSelect,
-            'victim_primary_guardian': forms.RadioSelect,
-            'victim_parents_marital_status': forms.RadioSelect,
-            'victim_education_level': forms.RadioSelect,
-            'victim_is_literate': forms.RadioSelect,
-        }
+    #TypedChoiceField(coerce=lambda x: x == 'True', choices=((False, 'No'), (True, 'Yes')), widget=forms.RadioSelect)
+
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault('label_suffix', '')
+        super(VictimInterviewForm, self).__init__(*args, **kwargs)

@@ -4,12 +4,29 @@
     <title>Tiny Hands Dream Suite {% block title %}{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="{{ STATIC_URL }}images/favicon.ico">
-
     <link href="{{ STATIC_URL }}bootstrap.css" rel="stylesheet" media="screen">
-    <link href="{{ STATIC_URL }}style.css" rel="stylesheet" media="screen">
+
+    <link rel="stylesheet/less" type="text/css" href="{{ STATIC_URL }}style.less" />
+    <script>
+        less = {
+            env: "development",
+            async: false,
+            fileAsync: false,
+            poll: 200,
+            functions: {},
+            dumpLineNumbers: "comments",
+            relativeUrls: false
+        };
+    </script>
+    <script src="{{ STATIC_URL }}less.js"></script>
+
     {% block head %}{% endblock %}
 </head>
-<body class="{% block body_class %}default{% endblock %}">
+{% comment %}
+Add a class to the body tag that is the same as the url's name.  We can then check this
+in the Javascript and run code unique to the current page.
+{% endcomment %}
+<body id="{{ request.resolver_match.url_name }}">
 
 {% if messages %}
 <div class="alert-container">

@@ -221,17 +221,17 @@ class Interceptee(models.Model):
 
 
 class VictimInterview(models.Model):
-    vif_number = models.IntegerField(null=True, blank=True)
-    date_time = models.DateTimeField(null=True, blank=True)
+    vif_number = models.IntegerField('VIF #:', null=True, blank=True)
+    date_time = models.DateTimeField('Date/Time:', null=True, blank=True)
 
-    number_of_victims = models.IntegerField(null=True, blank=True)
-    number_of_traffickers = models.IntegerField(null=True, blank=True)
+    number_of_victims = models.IntegerField('# of victims:', null=True, blank=True)
+    number_of_traffickers = models.IntegerField('# of traffickers', null=True, blank=True)
 
     location = models.CharField(max_length=255, blank=True)
     interviewer = models.CharField(max_length=255, blank=True)
 
     # 1. Victim & Family Information
-    victim_name = models.CharField(max_length=255, blank=True)
+    victim_name = models.CharField('Name', max_length=255, blank=True)
 
     BOOL_CHOICES = [
         (False, 'No'),
@@ -242,7 +242,7 @@ class VictimInterview(models.Model):
         ('male', 'Male'),
         ('female', 'Female'),
     ]
-    victim_gender = models.CharField(choices=GENDER_CHOICES, max_length=12, blank=True)
+    victim_gender = models.CharField('Gender', choices=GENDER_CHOICES, max_length=12)
 
     victim_address_district = models.CharField('District', max_length=255, blank=True)
     victim_address_vdc = models.CharField('VDC', max_length=255, blank=True)
@@ -254,15 +254,15 @@ class VictimInterview(models.Model):
 
     CASTE_CHOICES = [
         ('magar', 'Magar'),
-        ('brahmin', 'Brahmin'),
-        ('tamang', 'Tamang'),
-
         ('jaisi', 'Jaisi'),
-        ('chhetri', 'Chhetri'),
-        ('mongolian', 'Mongolian'),
-
         ('thakuri', 'Thakuri'),
+
+        ('brahmin', 'Brahmin'),
+        ('chhetri', 'Chhetri'),
         ('newar', 'Newar'),
+
+        ('tamang', 'Tamang'),
+        ('mongolian', 'Mongolian'),
         ('muslim', 'Muslim'),
 
         ('madeshi/terai', 'Madeshi / Terai Ethnic Group'),
@@ -321,16 +321,17 @@ class VictimInterview(models.Model):
     ]
     victim_primary_guardian = models.CharField('Who is your primary guardian?', choices=GUARDIAN_CHOICES, max_length=50, blank=True)
 
-    victim_guardian_address_district = models.CharField('Name', max_length=255, blank=True)
+    victim_guardian_address_district = models.CharField('District', max_length=255, blank=True)
     victim_guardian_address_vdc = models.CharField('VDC', max_length=255, blank=True)
     victim_guardian_address_ward = models.CharField('Ward #', max_length=255, blank=True)
-    victim_guardian_address_phone = models.CharField('Phone #', max_length=255, blank=True)
+    victim_guardian_phone = models.CharField('Phone #', max_length=255, blank=True)
 
     PARENTS_MARITAL_STATUS_CHOICES = [
         ('single', 'Single'),
         ('married', 'Married'),
         ('widow', 'Widow'),
         ('father-has-other-wives', 'My father has other wives'),
+        ('separated', 'Separated (Legally married)'),
         ('divorced', 'Divorced'),
     ]
     victim_parents_marital_status = models.CharField('What is parents\' marital status?', choices=PARENTS_MARITAL_STATUS_CHOICES, max_length=50, blank=True)
@@ -372,28 +373,25 @@ class VictimInterview(models.Model):
     migration_plans_other = models.BooleanField('Other', default=False)
     migration_plans_other_value = models.CharField(max_length=255, blank=True)
 
-    PRIMARY_MOTIVE_CHOICES = [
-        ('support-myself', 'Support myself'),
-        ('support-family', 'Support family'),
-        ('personal-debt', 'Personal Debt'),
-        ('family-debt', 'Family Debt'),
-        ('love/marriage', 'Love / Marriage'),
-        ('bad-home-marriage', 'Bad home / marriage'),
-        ('get-an-education', 'Get an education'),
-        ('tour-travel', 'Tour / Travel'),
-        ('didnt-know', 'Didn\'t know I was going abroad'),
-        ('other', 'Other'),
-    ]
-    victim_primary_motivation = models.CharField('Primary motive to go abroad?', choices=PRIMARY_MOTIVE_CHOICES, max_length=50, blank=True)
-    victim_primary_motivation_other_value = models.CharField('Other', max_length=255, blank=True)
+    primary_motivation_support_myself = models.BooleanField('Support myself', default=False)
+    primary_motivation_support_family = models.BooleanField('Support family', default=False)
+    primary_motivation_personal_debt = models.BooleanField('Personal Debt', default=False)
+    primary_motivation_family_debt = models.BooleanField('Family Debt', default=False)
+    primary_motivation_love_marriage = models.BooleanField('Love / Marriage', default=False)
+    primary_motivation_bad_home_marriage = models.BooleanField('Bad home / marriage', default=False)
+    primary_motivation_get_an_education = models.BooleanField('Get an education', default=False)
+    primary_motivation_tour_travel = models.BooleanField('Tour / Travel', default=False)
+    primary_motivation_didnt_know = models.BooleanField('Didn\'t know I was going abroad', default=False)
+    primary_motivation_other = models.BooleanField('Other', default=False)
+    primary_motivation_other_value = models.CharField(max_length=255, blank=True)
 
-    WHERE_GOING_CHOICES = [
+    WHERE_GOING_REGION_CHOICES = [
         ('india', 'India'),
         ('gulf-other', 'Gulf / Other'),
     ]
-    victim_where_going = models.CharField('Where were you going?', choices=WHERE_GOING_CHOICES, max_length=255, blank=True)
+    victim_where_going_region = models.CharField('Where were you going?', choices=WHERE_GOING_REGION_CHOICES, max_length=255, blank=True)
 
-    WHERE_GOING_INDIA_CHOICES = [
+    WHERE_GOING_CHOICES = [
         ('delhi', 'Delhi'),
         ('mumbai', 'Mumbai'),
         ('surat', 'Surat'),
@@ -402,12 +400,8 @@ class VictimInterview(models.Model):
         ('pune', 'Pune'),
         ('jaipur', 'Jaipur'),
         ('bihar', 'Bihar'),
-        ('did-not-know', 'Did Not Know'),
-        ('other', 'Other'),
-    ]
-    victim_where_going_india = models.CharField(choices=WHERE_GOING_INDIA_CHOICES, max_length=255, blank=True)
-
-    WHERE_GOING_GULF_OTHER_CHOICES = [
+        ('did-not-know-india', 'Did Not Know'),
+        ('other-india', 'Other'),
         ('lebanon', 'Lebanon'),
         ('dubai', 'Dubai'),
         ('malaysia', 'Malaysia'),
@@ -415,30 +409,132 @@ class VictimInterview(models.Model):
         ('saudi-arabia', 'Saudi Arabia'),
         ('kuwait', 'Kuwait'),
         ('qatar', 'Qatar'),
-        ('did-not-know', 'Did Not Know'),
+        ('did-not-know-gulf', 'Did Not Know'),
+        ('other-gulf', 'Other'),
+    ]
+    victim_where_going = models.CharField(choices=WHERE_GOING_CHOICES, max_length=255, blank=True)
+    victim_where_going_other_gulf_value = models.CharField(max_length=255, blank=True)
+    victim_where_going_other_india_value = models.CharField(max_length=255, blank=True)
+
+    manpower_involved = models.BooleanField('Was a manpower involved?', default=False)
+    victim_recruited_in_village = models.BooleanField('Did someone recruit you in your village and persuade you to abroad?', default=False)
+
+    BROKERS_RELATION_CHOICES = [
+        ('own-dad', 'Own dad'),
+        ('own-mom', 'Own mom'),
+        ('own-uncle', 'Own uncle'),
+        ('own-aunt', 'Own aunt'),
+        ('own-bro', 'Own bro'),
+        ('own-sister', 'Own sister'),
+        ('other-relative', 'Other relative'),
+        ('friend', 'Friend'),
+        ('agent', 'Agent'),
+        ('husband', 'Husband'),
+        ('boyfriend', 'Boyfriend'),
+        ('neighbor', 'Neighbor'),
+        ('recently-met', 'Recently met'),
+        ('contractor', 'Contractor'),
         ('other', 'Other'),
     ]
-    victim_where_going_gulf_other = models.CharField(choices=WHERE_GOING_INDIA_CHOICES, max_length=255, blank=True)
+    brokers_relation_to_victim = models.CharField('Broker\'s Relation to victim', choices=BROKERS_RELATION_CHOICES, max_length=255, blank=True)
+    brokers_relation_to_victim_other_value = models.CharField(max_length=255, blank=True)
 
-    #manpower_involved = models.BooleanField('Was a manpower involved?', default=False)
-    #victim_recruited_in_village = models.BooleanField('Did someone recruit you in your village and persuade you to abroad?', default=False)
+    victim_married_to_broker_years = models.PositiveIntegerField('Years', null=True, blank=True)
+    victim_married_to_broker_months = models.PositiveIntegerField('Months', null=True, blank=True)
 
-    #BROKERS_RELATION_CHOICES = [
-    #    ('own-dad', 'Owndad'),
-    #    ('own-mom', 'Ownmom'),
-    #    ('own-uncle', 'Ownuncle'),
-    #    ('own-aunt', 'Ownaunt'),
-    #    ('own-bro', 'Ownbro'),
-    #    ('own-sister', 'Ownsister'),
-    #    ('other-relative', 'Otherrelative'),
-    #    ('friend', 'Friend'),
-    #    ('agent', 'Agent'),
-    #    ('husband', 'Husband'),
-    #    ('boyfriend', 'Boyfriend'),
-    #    ('neighbor', 'Neighbor'),
-    #    ('recently-met', 'Recentlymet'),
-    #    ('contractor', 'Contractor'),
-    #    ('other', 'Other'),
-    #]
-    #brokers_relation_to_victim = models.CharField('Broker\'s Relation to victim', choices=BROKERS_RELATION_CHOICES, max_length=255, blank=True)
-    #brokers_relation_to_victim_other_value = models.CharField
+    HOW_MET_BROKER_CHOICES = [
+        ('broker-from-community', 'Broker is from my community'),
+        ('at-work', 'At work'),
+        ('at-school', 'At school'),
+        ('job-advertisement', 'Job advertisement'),
+        ('he-approached-me', 'He approached me'),
+        ('through-friends', 'Through friends'),
+        ('through-family', 'Through family'),
+        ('at-wedding', 'At Wedding'),
+        ('in-vehicle', 'In a Vehicle'),
+        ('in-hospital', 'In a Hospital'),
+        ('went-myself', 'Went to him myself'),
+        ('called-mobile', 'Called my mobile'),
+        ('other', 'Other'),
+    ]
+    victim_how_met_broker = models.CharField('How did you meet the broker?', choices=HOW_MET_BROKER_CHOICES, max_length=255, blank=True)
+    victim_how_met_broker_other_value = models.CharField(max_length=255, blank=True)
+    victim_how_met_broker_mobile_explanation = models.TextField(blank=True)
+
+    victim_how_long_known_broker_years = models.PositiveIntegerField('Years', null=True, blank=True)
+    victim_how_long_known_broker_months = models.PositiveIntegerField('Months', null=True, blank=True)
+
+    HOW_EXPENSE_WAS_PAID_CHOICES = [
+        ('i-paid-myself', 'I paid the expenses myself'),
+        ('broker-paid', 'The broker paid all the expenses'),
+        ('gave-money-to-broker', 'I gave a sum of money to the broker'),
+        ('broker-paid-and-must-repay', 'The broker paid the expenses and I have to pay him back'),
+    ]
+    victim_how_expense_was_paid = models.CharField(choices=HOW_EXPENSE_WAS_PAID_CHOICES, max_length=255, blank=True)
+    victim_how_expense_was_paid_amount = models.DecimalField('Amount', max_digits=10, decimal_places=2)
+
+    BROKER_WORKS_CHOICES = [
+        ('no', 'No'),
+        ('yes', 'Yes'),
+        ('dont-know', 'Don\'t Know'),
+    ]
+    broker_works_in_job_location = models.CharField(max_length=255, choices=BROKER_WORKS_CHOICES, blank=True)
+    amount_victim_would_earn = models.DecimalField('Amount', max_digits=10, decimal_places=2)
+
+    number_broker_made_similar_promises_to = models.PositiveIntegerField(null=True, blank=True)
+
+    victim_first_time_crossing_border = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
+
+    PRIMARY_MEANS_OF_TRAVEL_CHOICES = [
+        ('tourist-bus', 'Tourist Bus'),
+        ('motorbike', 'Motorbike'),
+        ('private-car', 'Private Car'),
+        ('local-bus', 'Local Bus'),
+        ('microbus', 'Microbus'),
+        ('plane', 'Plane'),
+        ('other', 'Other'),
+    ]
+    victim_primary_means_of_travel = models.CharField('Primary means of travel?', choices=PRIMARY_MEANS_OF_TRAVEL_CHOICES, max_length=255, blank=True)
+    victim_primary_means_of_travel_other_value = models.CharField(max_length=255, blank=True)
+
+    victim_stayed_somewhere_between = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
+
+    victim_how_long_stayed_between_days = models.PositiveIntegerField(null=True, blank=True)
+    victim_how_long_stayed_between_start_date = models.DateField(blank=True)
+
+    victim_was_hidden = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
+    victim_was_hidden_explanation = models.TextField(blank=True)
+
+    victim_was_free_to_go_out = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
+    victim_was_free_to_go_out_explanation = models.TextField(blank=True)
+
+    how_many_others_in_situation = models.PositiveIntegerField(null=True, blank=True)
+
+    others_in_situation_age_of_youngest = models.PositiveIntegerField(null=True, blank=True)
+
+    passport_made_no_passport_made = models.BooleanField('No passport made', default=False)
+    passport_made_real_passport_made = models.BooleanField('Real passport made', default=False)
+    passport_made_false_name = models.BooleanField('Passport included a false name', default=False)
+    passport_made_false_info = models.BooleanField('Passport included other false info', default=False)
+    passport_made_was_fake = models.BooleanField('Passport was fake', default=False)
+
+    victim_passport_with_broker = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
+
+    abuse_happened_sexual_harassment = models.BooleanField('Sexual Harassment', default=False)
+    abuse_happened_sexual_abuse = models.BooleanField('Sexual Abuse', default=False)
+    abuse_happened_physical_abuse = models.BooleanField('Physical Abuse', default=False)
+    abuse_happened_threats = models.BooleanField('Threats', default=False)
+    abuse_happened_denied_food = models.BooleanField('Denied Proper Food', default=False)
+    abuse_happened_forced_drugs = models.BooleanField('Forced to take Drugs', default=False)
+
+    abuse_happened_by_whom = models.TextField('By whom?', blank=True)
+    abuse_happened_explanation = models.TextField('Explain', blank=True)
+
+    TRAVELED_WITH_BROKER_COMPANION_CHOICES = [
+        ('yes', 'Yes'),
+        ('no', 'No'),
+        ('broker-took-to-border', 'Broker took me to border'),
+    ]
+    broker_works_in_job_location = models.CharField(max_length=255, choices=BROKER_WORKS_CHOICES, blank=True)
+    amount_victim_would_earn = models.DecimalField('Amount', max_digits=10, decimal_places=2)
+

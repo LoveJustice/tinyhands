@@ -2,153 +2,15 @@
 {% load widget_tweaks %}
 {% load bootstrap %}
 
-{% block title %}{% if interceptionrecord %}Edit IRF{% else %}Create IRF{% endif%}{% endblock %}
-
-{% block body_class %}{% if interceptionrecord %}interceptionrecord_update{% else %}interceptionrecord_create{% endif%}{% endblock %}
-
 {% block head %}
-<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
-<script>
-function calculateTotal() {
-    var total = 0;
-    $('input[type="checkbox"]').each(function(id, elem) {
-        var value = $(elem).next('.red-flag').text();
-        if (value && $(elem).prop('checked')) {
-            total += parseInt(value);
-        }
-    });
-    $('#calculated-total').text(total);
-}
-$(document).ready(function() {
-    $('input[type="checkbox"]').click(calculateTotal);
-    calculateTotal();
-    var resize = function() {
-        $('.photo').each(function() {
-            var width = $(this).width();
-            $(this).height(width);
-            $(this).css('line-height', width + 'px');
-        });
-    };
-    $(window).resize(resize);
-    resize();
-});
-</script>
-<style>
-td {
-    vertical-align: middle !important;
-}
-.center {
-    text-align: center;
-}
-.form-page {
-    background-image: url({{ STATIC_URL }}images/irf-background.png);
-    background-size: 100%;
-    border: 1px solid #888;
-    box-shadow: 2px 2px 2px black;
-    padding: 50px;
-    color: black !important;
-    margin-bottom: 32px;
-    margin-top: 20px;
-}
-table, td, tr, thead, th, tbody {
-    border-color: black !important;
-}
-th {
-    text-align: center;
-}
-label {
-    display: inline !important;
-}
-.bg-danger {
-    background-color: rgba(128, 0, 0, 0.2) !important; 
-    padding: 8px;
-}
-.bg-success {
-    background-color: rgba(0, 128, 0, 0.2) !important; 
-    padding: 8px;
-}
-.bg-primary {
-    background-color: rgba(0, 0, 128, 0.3) !important; 
-    padding: 8px;
-    color: black !important;
-}
-.text-danger {
-    color: #800000 !important;
-}
-.text-success {
-    color: #4F6128 !important;
-}
-.red-flag {
-    background-image: url({{ STATIC_URL }}images/red-flag.png);
-    color: #EADC9F;
-    font-size: 13px;
-    font-weight: bold;
-    line-height: 32px;
-    width: 32px;
-    height: 31px;
-    text-align: center;
-    display: inline-block;
-    vertical-align: middle;
-}
-.green-light {
-    background-image: url({{ STATIC_URL }}images/green-light.png);
-    width: 15px;
-    height: 15px;
-    display: inline-block;
-    vertical-align: middle;
-}
-label {
-    color: #800000 !important;
-}
-.interceptee-form {
-    background-color: white;
-}
-.interceptee-form input, .interceptee-form select {
-    width: 100%;
-    padding: 11px 4px;
-}
-.interceptee-form td {
-    padding: 0 !important;
-}
-
-.photo {
-    border: 1px solid #444;
-    width: 100%;
-    height: 100%;
-    margin-bottom: 21px;
-    text-align: center;
-    line-height: 100%;
-}
-.photo img {
-    display: block;
-    width: 100%;
-    height: 100%;
-}
-.interceptee-number {
-    position: absolute;
-    left: 88px;
-    margin-top: -2px;
-}
-
-.signature-box {
-    border: 1px solid #444;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    padding: 20px;
-}
-.form-group {
-    margin-bottom: 0 !important;
-}
-.help-block {
-    margin-bottom: 0 !important;
-}
 </style>
 {% endblock %}
 
 {% block content %}
-    {{ form.errors }}
-<form enctype="multipart/form-data" method="POST" class="row">{% csrf_token %}
-    <div class="row form-page">
+{{ form.errors }}
+<form enctype="multipart/form-data" method="POST">{% csrf_token %}
+    <div class="form-page">
+
         <div class="row">
             <div class="col-sm-6">
                 <img class="pull-left" style="margin-right: 20px" width="100" src="{{ STATIC_URL }}images/logo.png" alt="Tiny Hands Logo" />
@@ -176,6 +38,7 @@ label {
                 </table>
             </div>
         </div>
+
         <div class="bg-danger">
             <p><strong>Instructions:</strong>
                 Use this Questioning Protocol to guide your investigation. Record each answer and Red Flag by checking the appropriate boxes.
@@ -834,4 +697,3 @@ label {
 </form>
 
 {% endblock %}
-

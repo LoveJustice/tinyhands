@@ -88,6 +88,33 @@ var DREAMSUITE = {
 
         $('.in-use-button').tooltip();
     },
+
+    interceptionrecord_form: function() {
+        function calculateTotal() {
+            var total = 0;
+            $('input[type="checkbox"]').each(function(id, elem) {
+                var value = $(elem).next('.red-flag').text();
+                if (value && $(elem).prop('checked')) {
+                    total += parseInt(value);
+                }
+            });
+            $('#calculated-total').text(total);
+        }
+        $(document).ready(function() {
+            $('input[type="checkbox"]').click(calculateTotal);
+            calculateTotal();
+            var resize = function() {
+                $('.photo').each(function() {
+                    var width = $(this).width();
+                    $(this).height(width);
+                    $(this).css('line-height', width + 'px');
+                });
+            };
+            $(window).resize(resize);
+            resize();
+        });
+    },
+
     default: function() {}
 
 };
@@ -98,7 +125,7 @@ $(document).ready(function() {
         $('.alert').slideUp();
     }, 4000);
 
-    var bodyClass = $('body').attr('class');
+    var bodyClass = $('body').attr('id');
     if (bodyClass in DREAMSUITE) {
         DREAMSUITE[bodyClass]();
     }
