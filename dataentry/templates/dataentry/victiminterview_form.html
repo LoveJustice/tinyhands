@@ -375,7 +375,7 @@
                 <div class="blue-box black-box black-box-top">
                     <h1>3. Recruitment Process</h1>
                 </div>
-                <div class="black-box clearfix" style="padding: 0 4px 10px;">
+                <div class="black-box padded-box">
                     <div class="radio-group pull-right">{{ form.manpower_involved.0 }} {{ form.manpower_involved.0.label_tag }}</div>
                     <h2><span class="section-number">3.1</span> Was a manpower involved?</h2>
                     <div class="radio-group" style="margin-top: 10px">
@@ -386,7 +386,7 @@
                     </div>
                 </div>
 
-                <div class="black-box clearfix" style="padding: 0 4px 10px;">
+                <div class="black-box padded-box">
                     <h2>
                         <span class="section-number">3.2</span>
                         Did someone recruit you in your village and persuade you go abroad?
@@ -512,7 +512,7 @@
                 <div class="blue-box black-box black-box-top">
                     <h1>4. Travel and Transit</h1>
                 </div>
-                <div class="black-box clearfix" style="padding: 0 4px 10px;">
+                <div class="black-box padded-box">
                     <h2><span class="section-number">4.1</span> 1st time crossing border?</h2>
                     {% for choice in form.victim_first_time_crossing_border %}
                         <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
@@ -537,16 +537,634 @@
                     </div>
                 </div>
 
-                <div class="black-box clearfix" style="padding: 0 4px 10px;">
+                <div class="black-box padded-box">
                     <h2><span class="section-number">4.3</span> Did you stay somewhere between your village and the border?</h2>
                     {% for choice in form.victim_first_time_crossing_border %}
                         <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
                     {% endfor %}
+
+                    <span class="blue-arrow">LB - Transit Hideout</span>
                 </div>
 
+                <div class="black-box padded-box">
+                    <h2><span class="section-number">4.4</span> For how long did you stay?</h2>
+                </div>
+                <div class="black-box">
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>{{ form.victim_how_long_stayed_between_days.label_tag }}</td>
+                                <td>{{ form.victim_how_long_stayed_between_days|add_class:"full-width" }}</td>
+                                <td>{{ form.victim_how_long_stayed_between_start_date.label_tag }}</td>
+                                <td>{{ form.victim_how_long_stayed_between_start_date|add_class:"full-width" }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="black-box padded-box">
+                    <div class="radio-group pull-right">{{ form.victim_was_hidden.0 }} {{ form.victim_was_hidden.0.label_tag }}</div>
+                    <h2><span class="section-number">4.5</span> Was any attempt made to hide your presence there?</h2>
+                    <div class="radio-group" style="margin-top: 10px">
+                        {{ form.victim_was_hidden.1 }}
+                        {{ form.victim_was_hidden.1.label_tag }} Explain
+                        {{ form.victim_was_hidden_explanation }}
+                    </div>
+                </div>
+
+                <div class="black-box padded-box">
+                    <div class="radio-group pull-right">{{ form.victim_was_free_to_go_out.0 }} {{ form.victim_was_free_to_go_out.0.label_tag }}</div>
+                    <h2><span class="section-number">4.6</span> Were you free to go out?</h2>
+                    <div class="radio-group" style="margin-top: 10px">
+                        {{ form.victim_was_free_to_go_out.1 }}
+                        {{ form.victim_was_free_to_go_out.1.label_tag }} Explain
+                        {{ form.victim_was_free_to_go_out_explanation }}
+                    </div>
+                </div>
+
+                <div class="black-box clearfix">
+                    <h2><span class="section-number">4.7</span> Besides those you were intercepted with, how many others were with you who were in a similar situation?</h2>
+                    {{ form.how_many_others_in_situation|add_class:"pull-right" }}
+                </div>
+
+                <div class="black-box clearfix">
+                    <h2><span class="section-number">4.8</span> What was the age of the youngest?</h2>
+                    {{ form.others_in_situation_age_of_youngest|add_class:"pull-right" }}
+                </div>
+
+                <div class="black-box padded-box">
+                    <h2><span class="section-number">4.9</span> Was a passport made for you?</h2>
+
+                    <div class="col-sm-6">
+                        <div class="checkbox-group">{{ form.passport_made_no_passport_made }}   {{ form.passport_made_no_passport_made.label_tag }}</div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="checkbox-group">{{ form.passport_made_real_passport_made }} {{ form.passport_made_real_passport_made.label_tag }}</div>
+                    </div>
+                    <div class="checkbox-group">{{ form.passport_made_false_name }}         {{ form.passport_made_false_name.label_tag }}</div>
+                    <div class="checkbox-group">{{ form.passport_made_false_info }}         {{ form.passport_made_false_info.label_tag }}</div>
+                    <div class="checkbox-group">{{ form.passport_made_was_fake }}           {{ form.passport_made_was_fake.label_tag }}</div>
+
+                    <div class="text-center">
+                        <span class="blue-arrow">LB - Passport</span>
+                        <span class="red-arrow">PB - Passport</span>
+                    </div>
+                </div>
+
+                <div class="black-box clearfix">
+                    <div class="pull-right">
+                    {% for choice in form.victim_passport_with_broker %}
+                        <div class="col-sm-6">
+                            <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                        </div>
+                    {% endfor %}
+                    </div>
+                    <h2><span class="section-number">4.10</span> Is your passport or a work permit with a broker?</h2>
+                </div>
+
+                <div class="black-box padded-box">
+                    <div class="clearfix">
+                        <div class="col-sm-7">
+                            <h2><span class="section-number">4.11</span> Did these take place on the way?</h2>
+                            <div class="checkbox-group">{{ form.abuse_happened_sexual_harassment }}  {{ form.abuse_happened_sexual_harassment.label_tag }}</div>
+                            <div class="checkbox-group">{{ form.abuse_happened_sexual_abuse }}       {{ form.abuse_happened_sexual_abuse.label_tag }}</div>
+                            <div class="checkbox-group">{{ form.abuse_happened_physical_abuse }}     {{ form.abuse_happened_physical_abuse.label_tag }}</div>
+                            <div class="checkbox-group">{{ form.abuse_happened_threats }}            {{ form.abuse_happened_threats.label_tag }}</div>
+                            <div class="checkbox-group">{{ form.abuse_happened_denied_food }}        {{ form.abuse_happened_denied_food.label_tag }}</div>
+                            <div class="checkbox-group">{{ form.abuse_happened_forced_drugs }}       {{ form.abuse_happened_forced_drugs.label_tag }}</div>
+                        </div>
+                        <div class="col-sm-5">
+                            <div class="label-inside-field">{{ form.abuse_happened_by_whom|attr:"rows:8" }}            {{ form.abuse_happened_by_whom.label_tag }}</div>
+                        </div>
+                    </div>
+
+                    <div class="label-inside-field">{{ form.abuse_happened_explanation|attr:"rows:3" }}        {{ form.abuse_happened_explanation.label_tag }}</div>
+                </div>
+
+                <div class="black-box padded-box">
+                    <h2>
+                        <span class="section-number">4.12</span>
+                        Did you travel to the border with a companion who was appointed by the broker to take you across?
+                    </h2>
+                    <div class="radio-group" style="margin-top: 10px">
+                        {{ form.victim_traveled_with_broker_companion.0 }}
+                        {{ form.victim_traveled_with_broker_companion.0.label_tag }}
+                        <span class="red-arrow">PB - Companion</span>
+                    </div>
+                    <div class="radio-group" style="margin-top: 10px">
+                        {{ form.victim_traveled_with_broker_companion.1 }}
+                        {{ form.victim_traveled_with_broker_companion.1.label_tag }}
+                        <small>(Skip the rest of this section)</small>
+                    </div>
+                    <div class="radio-group" style="margin-top: 10px">
+                        {{ form.victim_traveled_with_broker_companion.2 }}
+                        {{ form.victim_traveled_with_broker_companion.2.label_tag }}
+                        <small>(Skip the rest of this section)</small>
+                    </div>
+                </div>
+
+                <div class="black-box padded-box">
+                    <h2>
+                        <span class="section-number">4.13</span>
+                        Where did the broker meet up with the companion?
+                    </h2>
+                    <div class="text-center">
+                        <span class="blue-arrow">LB - Nepal Meet Point</span>
+                    </div>
+                </div>
             </div>
 
             <div class="col-sm-4 major-column">
+
+                <div class="black-box black-box-top padded-box">
+                    <h2><span class="section-number">4.14</span> Was the companion with you when intercepted?</h2>
+                    {% for choice in form.companion_with_when_intercepted %}
+                        <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="black-box padded-box">
+                    <h2>
+                        <span class="section-number">4.15</span>
+                        If No, were you planning to meet him/her again in India?
+                        <div class="radio-group pull-right">
+                            {{ form.planning_to_meet_companion_later.0 }}
+                            {{ form.planning_to_meet_companion_later.0.label_tag }}
+                        </div>
+                    </h2>
+                    <div class="radio-group" style="margin-top: 10px">
+                        {{ form.planning_to_meet_companion_later.1 }}
+                        {{ form.planning_to_meet_companion_later.1.label_tag }} - Where?
+                        <span class="blue-arrow">LB - India Meet Point</span>
+                    </div>
+                </div>
+
+                <div class="black-box padded-box">
+                    <h2><span class="section-number">4.16</span>
+                        Did money change hands between broker and the companion?
+                    </h2>
+
+                    <div class="col-sm-6">
+                        <div class="radio-group">{{ form.money_changed_hands_broker_companion.0 }}  {{ form.money_changed_hands_broker_companion.0.label_tag }}</div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="radio-group">{{ form.money_changed_hands_broker_companion.1 }}  {{ form.money_changed_hands_broker_companion.1.label_tag }}</div>
+                    </div>
+
+                    {% for choice in form.money_changed_hands_broker_companion|slice:"2:" %}
+                        <div class="radio-group">{{ choice }}  {{ choice.label_tag }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="blue-box black-box" style="padding-top: 1px">
+                    <h1>5. Destination &amp; India Contact</h1>
+                </div>
+                <div class="black-box padded-box clearfix">
+                    <h2><span class="section-number">5.1</span> 
+                        Did the broker / companion arrange someone to meet you after crossing the border?
+                    </h2>
+                    {% for choice in form.who_meeting_at_border %}
+                        <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="black-box padded-box">
+                    <h2><span class="section-number">5.2</span>
+                        Do you know any details about the place you were headed to in India?
+                    </h2>
+                    {% for choice in form.victim_knew_details_about_destination %}
+                        <div class="radio-group pull-left">{{ choice }} {{ choice.label_tag }}</div>
+                    {% endfor %}
+
+                    <span class="blue-arrow">LB - Destination</span>
+                </div>
+
+                <div class="black-box padded-box">
+                    <h2><span class="section-number">5.3</span>
+                        Besides the broker and the companion, is there any other person or place you know of involved in the business of sending girls overseas?
+                    </h2>
+                </div>
+
+                <div class="black-box padded-box clearfix">
+                    <div class="col-sm-7">
+                        <p>Someone you were supposed to be meeting in India who may be involved in bringing girls to India</p>
+                    </div>
+                    <div class="col-sm-5">
+                        {% for choice in form.other_involved_person_in_india %}
+                            <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                        {% endfor %}
+                        <span class="red-arrow">PB - Indian Trafficker</span>
+                    </div>
+                </div>
+
+                <div class="black-box padded-box clearfix">
+                    <div class="col-sm-7">
+                        <p>A contact of a &quot;Husband Trafficker&quot;</p>
+                    </div>
+                    <div class="col-sm-5">
+                        {% for choice in form.other_involved_husband_trafficker %}
+                            <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                        {% endfor %}
+                        <span class="red-arrow">PB - Contact of Husband</span>
+                    </div>
+                </div>
+
+                <div class="black-box padded-box clearfix">
+                    <div class="col-sm-7">
+                        <p>Someone the recruiter or companion met along the way who works with them</p>
+                    </div>
+                    <div class="col-sm-5">
+                        {% for choice in form.other_involved_someone_met_along_the_way %}
+                            <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                        {% endfor %}
+                        <span class="red-arrow">PB - ______ of Recruiter or Companion</span>
+                    </div>
+                </div>
+
+                <div class="black-box padded-box clearfix">
+                    <div class="col-sm-7">
+                        <p>Someone involved in trafficking that you heard about along the way or before you came to the border</p>
+                    </div>
+                    <div class="col-sm-5">
+                        {% for choice in form.other_involved_someone_involved_in_trafficking %}
+                            <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                        {% endfor %}
+                        <span class="red-arrow">PB - Known Trafficker</span>
+                    </div>
+                </div>
+
+                <div class="black-box padded-box clearfix">
+                    <div class="col-sm-7">
+                        <p>Some place involved in trafficking that you heard about along the way or before you came to the border</p>
+                    </div>
+                    <div class="col-sm-5">
+                        {% for choice in form.other_involved_place_involved_in_trafficking %}
+                            <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                        {% endfor %}
+                        <span class="blue-arrow">LB - Known Location</span>
+                    </div>
+                </div>
+
+                <div class="black-box padded-box clearfix">
+                    <div class="pull-right">
+                    {% for choice in form.victim_has_worked_in_sex_industry %}
+                        <div class="col-sm-6">
+                            <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                        </div>
+                    {% endfor %}
+                    </div>
+                    <h2><span class="section-number">5.4</span> Have you ever worked in the sex industry?</h2>
+                </div>
+
+                <div class="black-box padded-box clearfix">
+                    <div class="pull-right">
+                    {% for choice in form.victim_place_worked_involved_sending_girls_overseas %}
+                        <div class="col-sm-6">
+                            <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                        </div>
+                    {% endfor %}
+                    </div>
+                    <h2><span class="section-number">5.5</span> Was the place you worked involved in sending girls overseas?</h2>
+                    <span class="blue-arrow">LB - Sex Industry</span>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="form-page">
+        <div class="row">
+            <div class="col-sm-4 major-column">
+
+                <div class="blue-box black-box black-box-top">
+                    <h1>6. Awareness &amp; Assessment</h1>
+                </div>
+
+                <div class="black-box padded-box">
+                    <h2>
+                        <span class="section-number">6.1</span>
+                        Before you were intercepted, were you aware that girls going abroad are often deceived and end up in very exploitative situations?
+                    </h2>
+                    {% for choice in form.awareness_before_interception %}
+                        <div class="radio-group"> {{ choice }} {{ choice.label_tag }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="black-box padded-box">
+                    <h2>
+                        <span class="section-number">6.2</span>
+                        Do you think you would've been trafficked if you hadn't been intercepted by Tiny Hands?
+                    </h2>
+                    {% for choice in form.attitude_towards_tiny_hands %}
+                        <div class="radio-group"> {{ choice }} {{ choice.label_tag }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="black-box padded-box">
+                    <h2>
+                        <span class="section-number">6.3</span>
+                        Had you heard about the gospel of Jesus before coming to TH?
+                    </h2>
+                    {% for choice in form.victim_heard_gospel %}
+                        <div class="radio-group"> {{ choice }} {{ choice.label_tag }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="black-box padded-box">
+                    <h2>
+                        <span class="section-number">6.4</span>
+                        If she wasn't already a believer, what does she believe now?
+                    </h2>
+                    {% for choice in form.victim_beliefs_now %}
+                        <div class="radio-group"> {{ choice }} {{ choice.label_tag }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="black-box padded-box">
+                    <h2>
+                        <span class="section-number">6.5</span>
+                        How would you rate the work that Tiny Hands is doing on a scale of 1-10 (1 being the worst and 10 being the best), in each area:
+                    </h2>
+
+                    {{ form.tiny_hands_rating_border_staff.label_tag }}
+                    {{ form.tiny_hands_rating_border_staff }}
+
+                    {{ form.tiny_hands_rating_shelter_staff.label_tag }}
+                    {{ form.tiny_hands_rating_shelter_staff }}
+
+                    {{ form.tiny_hands_rating_trafficking_awareness.label_tag }}
+                    {{ form.tiny_hands_rating_trafficking_awareness }}
+
+                    {{ form.tiny_hands_rating_shelter_accommodations.label_tag }}
+                    {{ form.tiny_hands_rating_shelter_accommodations }}
+                </div>
+
+                <div class="black-box clearfix">
+                    <h2><span class="section-number">6.6</span> 
+                        How can we serve you and others like you better?
+                    </h2>
+                    {{ form.how_can_we_serve_you_better|add_class:"full-width" }}
+                </div>
+
+            </div>
+            <div class="col-sm-4 major-column">
+                <div class="blue-box black-box black-box-top">
+                    <h1>7. Home Situation Assessment</h1>
+                </div>
+
+                <div class="black-box padded-box">
+                    Ask questions like &quot;tell me about your home
+                    life,&quot; but don't ask directly about abuse unless the
+                    victim brings it up.
+                </div>
+
+                <div class="black-box padded-box clearfix">
+                    <div class="pull-right">
+                    {% for choice in form.victim_has_worked_in_sex_industry %}
+                        <div class="col-sm-6">
+                            <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                        </div>
+                    {% endfor %}
+                    </div>
+                    <h2><span class="section-number">7.1</span>
+                        Did your guardian know you were travelling to India?
+                    </h2>
+                </div>
+
+                <div class="black-box padded-box clearfix">
+                    <div class="pull-right">
+                    {% for choice in form.family_pressured_victim %}
+                        <div class="col-sm-6">
+                            <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                        </div>
+                    {% endfor %}
+                    <div class="alarm-box">1</div>
+                    </div>
+                    <h2><span class="section-number">7.2</span>
+                        Did your family/guardian pressure you in any way to accept the broker's offer?
+                    </h2>
+                </div>
+
+                <div class="black-box padded-box clearfix">
+                    <div class="pull-right">
+                    {% for choice in form.family_will_try_sending_again %}
+                        <div class="col-sm-6">
+                            <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                        </div>
+                    {% endfor %}
+                    <div class="alarm-box">3</div>
+                    </div>
+                    <h2><span class="section-number">7.3</span>
+                        If they attempted to send you abroad, do you think they will try to send you overseas again?
+                    </h2>
+                </div>
+
+                <div class="black-box padded-box clearfix">
+                    <div class="pull-right">
+                    {% for choice in form.victim_feels_safe_at_home %}
+                        <div class="col-sm-6">
+                            <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                        </div>
+                    {% endfor %}
+                    <div class="alarm-box">4</div>
+                    </div>
+                    <h2><span class="section-number">7.4</span>
+                        Do you feel safe at home with your guardian?
+                    </h2>
+                </div>
+
+                <div class="black-box padded-box clearfix">
+                    <div class="pull-right">
+                    {% for choice in form.victim_wants_to_go_home %}
+                        <div class="col-sm-6">
+                            <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                        </div>
+                    {% endfor %}
+                    <div class="alarm-box">4</div>
+                    </div>
+                    <h2><span class="section-number">7.5</span>
+                        Do you want to go home?
+                    </h2>
+                </div>
+
+                <div class="black-box padded-box clearfix">
+                    <h2><span class="section-number">7.6</span>
+                        Is victim subject to any of the following by someone in her home?
+                    </h2>
+                </div>
+
+                <div class="black-box padded-box clearfix">
+                    Sexual Abuse {{ form.victim_home_had_sexual_abuse }}
+                    <div class="alarm-box">4</div>
+                    <div class="alarm-box">10</div>
+                </div>
+
+                <div class="black-box padded-box clearfix">
+                    Physical Abuse {{ form.victim_home_had_physical_abuse }}
+                    <div class="alarm-box">6</div>
+                </div>
+
+                <div class="black-box padded-box clearfix">
+                    Emotional Abuse {{ form.victim_home_had_emotional_abuse }}
+                    <div class="alarm-box">2</div>
+                </div>
+
+                <div class="black-box padded-box clearfix">
+                    <h2><span class="section-number">7.7</span>
+                        Does guardian drink alcohol?
+                    </h2>
+                    {% for choice in form.victim_guardian_drinks_alcohol %}
+                        <div class="col-sm-6">
+                            <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                        </div>
+                    {% endfor %}
+                    <div class="alarm-box">1</div>
+                </div>
+
+                <div class="black-box padded-box clearfix">
+                    <h2><span class="section-number">7.8</span>
+                        Does guardian use drugs
+                    </h2>
+                    {% for choice in form.victim_guardian_drinks_alcohol %}
+                        <div class="col-sm-6">
+                            <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                        </div>
+                    {% endfor %}
+                    <div class="alarm-box">2</div>
+                    <div class="alarm-box">6</div>
+                </div>
+
+                <div class="black-box padded-box clearfix">
+                    <h2><span class="section-number">7.9</span>
+                        Economic Situation of Family
+                    </h2>
+                    {% for choice in form.victim_family_economic_situation %}
+                        <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                    {% endfor %}
+                    <div class="alarm-box">7</div>
+                </div>
+
+                <div class="black-box padded-box clearfix">
+                    <div class="pull-right">
+                    {% for choice in form.victim_had_suicidal_thoughts %}
+                        <div class="col-sm-6">
+                            <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                        </div>
+                    {% endfor %}
+                    <div class="alarm-box">7</div>
+                    </div>
+                    <h2><span class="section-number">7.10</span>
+                        Did she express any suicidal thoughts at any point?
+                    </h2>
+                </div>
+
+                <div class="black-box padded-box clearfix">
+                    <h2>
+                        Total Home Situational Alarms
+                    </h2>
+                    <div class="alarm-box">?</div>
+                    {{ form.reported_total_situational_alarms }}
+                    <p>If a victim had 10 or more total Home Situational Alarms, it would be better not to send her home. However, if the girl is a minor, you will need to discuss her options with her parents.</p>
+                </div>
+
+                <div class="black-box padded-box clearfix text-center">
+                    <h2>
+                        <em>Use the chart below to guide your recommendation in question 8.3 in the next section.</em>
+                    </h2>
+                </div>
+
+            </div>
+            <div class="col-sm-4 major-column">
+
+                <div class="blue-box black-box black-box-top">
+                    <h1>8. Interviewer Evaluation</h1>
+                </div>
+
+                <div class="black-box padded-box">
+                    <h2><span class="section-number">8.1</span>
+                        Has any legal action been taken against any of the traffickers?
+                    </h2>
+                    <div class="col-sm-3">
+                        <div class="radio-group">
+                            {{ form.legal_action_against_traffickers.0 }}
+                            {{ form.legal_action_against_traffickers.0.label_tag }}
+                        </div>
+                    </div>
+                    <div class="col-sm-9">
+                        <div class="radio-group">
+                            {{ form.legal_action_against_traffickers.1 }}
+                            {{ form.legal_action_against_traffickers.1.label_tag }}
+                            {{ form.legal_action_fir_against_value }}
+                        </div>
+                    </div>
+                    <div class="radio-group">{{ form.legal_action_against_traffickers.2 }} {{ form.legal_action_against_traffickers.2.label_tag }} {{ form.legal_action_dofe_against_value }}</div>
+                </div>
+
+                <div class="black-box clearfix">
+                    <h2><span class="section-number">8.2</span>
+                        If no, what's the main reason?
+                    </h2>
+                </div>
+                <div class="black-box padded-box">
+                    <div class="checkbox-group">{{ form.reason_no_legal_no_trafficking_suspected }} {{ form.reason_no_legal_no_trafficking_suspected.label_tag }}</div>
+                    <div class="checkbox-group">{{ form.reason_no_legal_not_enough_info }}          {{ form.reason_no_legal_not_enough_info.label_tag }}</div>
+                    <div class="checkbox-group">{{ form.reason_no_legal_victims_own_people }}       {{ form.reason_no_legal_victims_own_people.label_tag }}</div>
+                    <div class="checkbox-group">{{ form.reason_no_legal_girl_going_herself }}       {{ form.reason_no_legal_girl_going_herself.label_tag }}</div>
+                    <div class="checkbox-group">{{ form.reason_no_legal_ran_away }}                 {{ form.reason_no_legal_ran_away.label_tag }}</div>
+                    <div class="checkbox-group">{{ form.reason_no_legal_victim_afraid_reputation }} {{ form.reason_no_legal_victim_afraid_reputation.label_tag }}</div>
+                    <div class="checkbox-group">{{ form.reason_no_legal_victim_afraid_safety }}     {{ form.reason_no_legal_victim_afraid_safety.label_tag }}</div>
+                    <div class="checkbox-group">{{ form.reason_no_legal_family_afraid_reputation }} {{ form.reason_no_legal_family_afraid_reputation.label_tag }}</div>
+                    <div class="checkbox-group">{{ form.reason_no_legal_family_afraid_safety }}     {{ form.reason_no_legal_family_afraid_safety.label_tag }}</div>
+                    <div class="checkbox-group">{{ form.reason_no_legal_police_bribed }}            {{ form.reason_no_legal_police_bribed.label_tag }}</div>
+                    <div class="checkbox-group">{{ form.reason_no_legal_victim_family_bribed }}     {{ form.reason_no_legal_victim_family_bribed.label_tag }}</div>
+                    <div class="checkbox-group">
+                        {{ form.reason_no_legal_interference_by_powerful_people }}
+                        {{ form.reason_no_legal_interference_by_powerful_people.label_tag }}
+                        {{ form.reason_no_legal_interference_by_powerful_people_value }}
+                    </div>
+                    <div class="checkbox-group">
+                        {{ form.reason_no_legal_other }}
+                        {{ form.reason_no_legal_other.label_tag }}
+                        {{ form.reason_no_legal_other_value }}
+                    </div>
+                </div>
+
+                <div class="black-box padded-box">
+                    <h2><span class="section-number">8.3</span>
+                        What is your recommendation about where she should go?
+                    </h2>
+                    {% for choice in form.interviewer_recommendation %}
+                        <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                    {% endfor %}
+                    <label>Contact THN's Aftercare Coordinator</label>
+                </div>
+
+                <div class="black-box padded-box clearfix">
+                    <h2><span class="section-number">8.4</span>
+                        Were there more people and places that you believe were
+                        involved in trafficking in addition to those recorded
+                        in the Information Boxes on the previous page?
+                    </h2>
+                    {% for choice in form.other_people_and_places_involved %}
+                        <div class="col-sm-6">
+                            <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                        </div>
+                    {% endfor %}
+                    <p> - If so, make sure you use an Additional Information Boxes Form and attach it to this form!</p>
+                </div>
+
+                <div class="black-box clearfix">
+                    {{ form.has_signature }}
+                    {{ form.has_signature.label_tag }}
+                </div>
+
+                <div class="black-box clearfix">
+                    <div class="label-inside-field">
+                        {{ form.case_notes|attr:"rows:7" }}
+                        {{ form.case_notes.label_tag }}
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>

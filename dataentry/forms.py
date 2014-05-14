@@ -1,4 +1,5 @@
 from django import forms
+from django.db import models
 from dataentry.models import InterceptionRecord, Interceptee, VictimInterview
 from django.forms.models import inlineformset_factory
 from django.core.exceptions import ValidationError
@@ -118,46 +119,19 @@ IntercepteeFormSet = inlineformset_factory(InterceptionRecord, Interceptee, extr
 #  self.cleaned_data.get('contact_paid_how_much')
 
 
+# Make all fields with choices radio selects
+def make_choice_widgets_radio(f):
+    if f.choices != []:
+        return forms.ChoiceField(choices=f.choices, widget=forms.RadioSelect, required=not f.blank)
+    else:
+        return f.formfield()
+
+
 class VictimInterviewForm(forms.ModelForm):
-    victim_gender = forms.ChoiceField(choices=VictimInterview.GENDER_CHOICES, widget=forms.RadioSelect)
-    victim_caste = forms.ChoiceField(choices=VictimInterview.CASTE_CHOICES, widget=forms.RadioSelect)
-
-    victim_occupation = forms.ChoiceField(choices=VictimInterview.OCCUPATION_CHOICES, widget=forms.RadioSelect)
-
-    victim_marital_status = forms.ChoiceField(choices=VictimInterview.MARITAL_STATUS_CHOICES, widget=forms.RadioSelect)
-
-    victim_primary_guardian = forms.ChoiceField(choices=VictimInterview.GUARDIAN_CHOICES, widget=forms.RadioSelect)
-
-    victim_parents_marital_status = forms.ChoiceField(choices=VictimInterview.PARENTS_MARITAL_STATUS_CHOICES, widget=forms.RadioSelect)
-
-    victim_where_going_region = forms.ChoiceField(choices=VictimInterview.WHERE_GOING_REGION_CHOICES, widget=forms.RadioSelect)
-    victim_where_going = forms.ChoiceField(choices=VictimInterview.WHERE_GOING_CHOICES, widget=forms.RadioSelect)
-
-    victim_education_level = forms.ChoiceField(choices=VictimInterview.EDUCATION_LEVEL_CHOICES, widget=forms.RadioSelect)
-
-    victim_is_literate = forms.ChoiceField(choices=VictimInterview.BOOL_CHOICES, widget=forms.RadioSelect)
-
-    manpower_involved = forms.ChoiceField(choices=VictimInterview.BOOL_CHOICES, widget=forms.RadioSelect)
-
-    victim_recruited_in_village = forms.ChoiceField(choices=VictimInterview.BOOL_CHOICES, widget=forms.RadioSelect)
-
-    brokers_relation_to_victim = forms.ChoiceField(choices=VictimInterview.BROKERS_RELATION_CHOICES, widget=forms.RadioSelect)
-
-    victim_how_met_broker = forms.ChoiceField(choices=VictimInterview.HOW_MET_BROKER_CHOICES, widget=forms.RadioSelect)
-
-    victim_how_expense_was_paid = forms.ChoiceField(choices=VictimInterview.HOW_EXPENSE_WAS_PAID_CHOICES, widget=forms.RadioSelect)
-
-    broker_works_in_job_location = forms.ChoiceField(choices=VictimInterview.BROKER_WORKS_CHOICES, widget=forms.RadioSelect)
-
-    victim_first_time_crossing_border = forms.ChoiceField(choices=VictimInterview.BOOL_CHOICES, widget=forms.RadioSelect)
-
-    victim_primary_means_of_travel = forms.ChoiceField(choices=VictimInterview.PRIMARY_MEANS_OF_TRAVEL_CHOICES, widget=forms.RadioSelect)
-
-    victim_stayed_somewhere_between = forms.ChoiceField(choices=VictimInterview.BOOL_CHOICES, widget=forms.RadioSelect)
+    formfield_callback = make_choice_widgets_radio
 
     class Meta:
         model = VictimInterview
-    #TypedChoiceField(coerce=lambda x: x == 'True', choices=((False, 'No'), (True, 'Yes')), widget=forms.RadioSelect)
 
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('label_suffix', '')

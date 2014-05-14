@@ -1,0 +1,4 @@
+For VIF add validation on these:
+2.1 required
+2.2 required
+2.3 required

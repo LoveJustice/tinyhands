@@ -221,8 +221,8 @@ class Interceptee(models.Model):
 
 
 class VictimInterview(models.Model):
-    vif_number = models.IntegerField('VIF #:', null=True, blank=True)
-    date_time = models.DateTimeField('Date/Time:', null=True, blank=True)
+    vif_number = models.IntegerField('VIF #:')
+    date_time = models.DateTimeField('Date/Time:')
 
     number_of_victims = models.IntegerField('# of victims:', null=True, blank=True)
     number_of_traffickers = models.IntegerField('# of traffickers', null=True, blank=True)
@@ -231,7 +231,7 @@ class VictimInterview(models.Model):
     interviewer = models.CharField(max_length=255, blank=True)
 
     # 1. Victim & Family Information
-    victim_name = models.CharField('Name', max_length=255, blank=True)
+    victim_name = models.CharField('Name', max_length=255)
 
     BOOL_CHOICES = [
         (False, 'No'),
@@ -417,7 +417,7 @@ class VictimInterview(models.Model):
     victim_where_going_other_india_value = models.CharField(max_length=255, blank=True)
 
     manpower_involved = models.BooleanField('Was a manpower involved?', default=False)
-    victim_recruited_in_village = models.BooleanField('Did someone recruit you in your village and persuade you to abroad?', default=False)
+    victim_recruited_in_village = models.BooleanField('Did someone recruit you in your village and persuade you to abroad?', choices=BOOL_CHOICES)
 
     BROKERS_RELATION_CHOICES = [
         ('own-dad', 'Own dad'),
@@ -479,9 +479,11 @@ class VictimInterview(models.Model):
         ('dont-know', 'Don\'t Know'),
     ]
     broker_works_in_job_location = models.CharField(max_length=255, choices=BROKER_WORKS_CHOICES, blank=True)
-    amount_victim_would_earn = models.DecimalField('Amount', max_digits=10, decimal_places=2)
+    amount_victim_would_earn = models.DecimalField('Amount', max_digits=10, decimal_places=2, null=True, blank=True)
 
     number_broker_made_similar_promises_to = models.PositiveIntegerField(null=True, blank=True)
+
+    # Section 4
 
     victim_first_time_crossing_border = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
 
@@ -494,13 +496,13 @@ class VictimInterview(models.Model):
         ('plane', 'Plane'),
         ('other', 'Other'),
     ]
-    victim_primary_means_of_travel = models.CharField('Primary means of travel?', choices=PRIMARY_MEANS_OF_TRAVEL_CHOICES, max_length=255, blank=True)
+    victim_primary_means_of_travel = models.CharField('Primary means of travel?', choices=PRIMARY_MEANS_OF_TRAVEL_CHOICES, max_length=255)
     victim_primary_means_of_travel_other_value = models.CharField(max_length=255, blank=True)
 
-    victim_stayed_somewhere_between = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
+    victim_stayed_somewhere_between = models.BooleanField(choices=BOOL_CHOICES)
 
-    victim_how_long_stayed_between_days = models.PositiveIntegerField(null=True, blank=True)
-    victim_how_long_stayed_between_start_date = models.DateField(blank=True)
+    victim_how_long_stayed_between_days = models.PositiveIntegerField('Days', null=True, blank=True)
+    victim_how_long_stayed_between_start_date = models.DateField('Start Date', blank=True)
 
     victim_was_hidden = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
     victim_was_hidden_explanation = models.TextField(blank=True)
@@ -535,6 +537,304 @@ class VictimInterview(models.Model):
         ('no', 'No'),
         ('broker-took-to-border', 'Broker took me to border'),
     ]
-    broker_works_in_job_location = models.CharField(max_length=255, choices=BROKER_WORKS_CHOICES, blank=True)
-    amount_victim_would_earn = models.DecimalField('Amount', max_digits=10, decimal_places=2)
+    victim_traveled_with_broker_companion = models.CharField(max_length=255, choices=TRAVELED_WITH_BROKER_COMPANION_CHOICES, blank=True)
 
+    companion_with_when_intercepted = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
+    planning_to_meet_companion_later = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
+
+    MONEY_CHANGED_HANDS_BROKER_COMPANION_CHOICES = [
+        ('no', 'No'),
+        ('dont-know', 'Don\'t know'),
+        ('broker-gave-money', 'Broker gave money to the companion'),
+        ('companion-gave-money', 'Companion gave money to the broker'),
+    ]
+    money_changed_hands_broker_companion = models.CharField(max_length=255, choices=MONEY_CHANGED_HANDS_BROKER_COMPANION_CHOICES, blank=True)
+
+    # 5. Destination & India Contact
+
+    WHO_MEETING_AT_BORDER_CHOICES = [
+        ('yes', 'Yes'),
+        ('no', 'No'),
+        ('meeting-broker', 'Meeting Broker'),
+        ('meeting-companion', 'Meeting Companion'),
+    ]
+    who_meeting_at_border = models.CharField(max_length=255, choices=WHO_MEETING_AT_BORDER_CHOICES)
+
+    victim_knew_details_about_destination = models.BooleanField(choices=BOOL_CHOICES)
+
+    other_involved_person_in_india = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
+    other_involved_husband_trafficker = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
+    other_involved_someone_met_along_the_way = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
+    other_involved_someone_involved_in_trafficking = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
+    other_involved_place_involved_in_trafficking = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
+
+    victim_has_worked_in_sex_industry = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
+
+    victim_place_worked_involved_sending_girls_overseas = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
+
+    # 6. Awareness & Assessment
+
+    AWARENESS_CHOICES = [
+        ('had-heard-didnt-know', 'Had heard, but never knew how bad it was until I was interception by TH'),
+        ('didnt-think-was-happening', 'Knew how bad it was, but didn\'t think that was happening to her'),
+        ('never-head', 'Had never heard about it'),
+    ]
+    awareness_before_interception = models.CharField(choices=AWARENESS_CHOICES, max_length=255)
+
+    ATTITUDE_CHOICES = [
+        ('yes-thankful', 'Yes, thankful to TH for saving her'),
+        ('no-blames', 'No, blames Tiny Hands for stopping her'),
+        ('doesnt-know', 'Doesn\'t Know'),
+    ]
+    attitude_towards_tiny_hands = models.CharField(choices=ATTITUDE_CHOICES, max_length=255)
+
+    GOSPEL_HEARD_CHOICES = [
+        ('never-heard', 'No, I have never heard'),
+        ('heard-name-only', 'Has heard the name only'),
+        ('had-heard-never-believed', 'Had heard the gospel but never believed'),
+        ('already-believer', 'Was already a believer'),
+    ]
+    victim_heard_gospel = models.CharField(choices=GOSPEL_HEARD_CHOICES, max_length=255)
+
+    GOSPEL_HEARD_CHOICES = [
+        ('doesnt-believe', 'Doesn\'t believe in Jesus'),
+        ('believes-no-church', 'Believes in Jesus, but doesn\'t plan to go to church'),
+        ('believes-and-church', 'Believes in Jesus and plans to go to church'),
+    ]
+    victim_beliefs_now = models.CharField(choices=GOSPEL_HEARD_CHOICES, max_length=255, blank=True)
+
+    tiny_hands_rating_border_staff = models.PositiveIntegerField('Border Staff polite and respectful')
+    tiny_hands_rating_shelter_staff = models.PositiveIntegerField('Shelter Staff polite and respectful')
+    tiny_hands_rating_trafficking_awareness = models.PositiveIntegerField('Trafficking Awareness')
+    tiny_hands_rating_shelter_accommodations = models.PositiveIntegerField('Shelter Accommodations')
+
+    how_can_we_serve_you_better = models.TextField(blank=True)
+
+    # Section 7
+
+    guardian_knew_was_travelling_to_india = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
+    family_pressured_victim = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
+    family_will_try_sending_again = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
+    victim_feels_safe_at_home = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
+    victim_wants_to_go_home = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
+
+    VICTIM_ABUSE_CHOICES = [
+        ('never', 'Never'),
+        ('rarely-minor', 'Rarely / Minor'),
+        ('frequent-severe', 'Frequent / Severe'),
+    ]
+    victim_home_had_sexual_abuse = models.CharField(choices=VICTIM_ABUSE_CHOICES, max_length=40, blank=True)
+    victim_home_had_physical_abuse = models.CharField(choices=VICTIM_ABUSE_CHOICES, max_length=40, blank=True)
+    victim_home_had_emotional_abuse = models.CharField(choices=VICTIM_ABUSE_CHOICES, max_length=40, blank=True)
+
+    GUARDIAN_FREQUENCY_CHOICES = [
+        ('never', 'Never'),
+        ('occasionally', 'Occasionally'),
+        ('all-the-time', 'All the time'),
+    ]
+    victim_guardian_drinks_alcohol = models.CharField(choices=GUARDIAN_FREQUENCY_CHOICES, max_length=40, blank=True)
+    victim_guardian_uses_drugs = models.CharField(choices=GUARDIAN_FREQUENCY_CHOICES, max_length=40, blank=True)
+
+    ECONIMIC_SITUATION_CHOICES = [
+        ('no-basic-needs', 'Unable to meet basic needs'),
+        ('only-basic-needs', 'Able to meet only basic needs, but it is very difficult'),
+        ('basic-needs-plus', 'Comfortably meet basic needs, and can afford to buy some non-essential goods/services'),
+        ('wealthy', 'Wealthy'),
+    ]
+    victim_family_economic_situation = models.CharField(choices=ECONIMIC_SITUATION_CHOICES, max_length=40, blank=True)
+
+    victim_had_suicidal_thoughts = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
+
+    reported_total_situational_alarms = models.PositiveIntegerField(blank=True, null=True)
+
+    LEGAL_ACTION_CHOICES = [
+        ('no', 'No'),
+        ('fir-filed', 'FIR filed against'),
+        ('dofe-complaint', 'DoFE complaint against'),
+    ]
+    legal_action_against_traffickers = models.CharField(choices=LEGAL_ACTION_CHOICES, max_length=40)
+    legal_action_fir_against_value = models.CharField(max_length=255, blank=True)
+    legal_action_dofe_against_value = models.CharField(max_length=255, blank=True)
+
+    reason_no_legal_no_trafficking_suspected = models.BooleanField('No trafficking suspected', blank=True)
+    reason_no_legal_not_enough_info = models.BooleanField('Police say not enough information', blank=True)
+    reason_no_legal_victims_own_people = models.BooleanField('Trafficker is victim\'s own people', blank=True)
+    reason_no_legal_girl_going_herself = models.BooleanField('She was going herself', blank=True)
+    reason_no_legal_ran_away = models.BooleanField('Trafficker ran away', blank=True)
+    reason_no_legal_victim_afraid_reputation = models.BooleanField('Victim afraid of reputation', blank=True)
+    reason_no_legal_victim_afraid_safety = models.BooleanField('Victim afraid for her safety', blank=True)
+    reason_no_legal_family_afraid_reputation = models.BooleanField('Family afraid of reputation', blank=True)
+    reason_no_legal_family_afraid_safety = models.BooleanField('Family afraid for her safety', blank=True)
+    reason_no_legal_police_bribed = models.BooleanField('Police bribed by trafficker', blank=True)
+    reason_no_legal_victim_family_bribed = models.BooleanField('Victim / family bribed by trafficker', blank=True)
+
+    reason_no_legal_interference_by_powerful_people = models.BooleanField('Interference by powerful people', blank=True)
+    reason_no_legal_interference_by_powerful_people_value = models.CharField(max_length=255, blank=True)
+
+    reason_no_legal_other = models.BooleanField('Other', blank=True)
+    reason_no_legal_other_value = models.CharField(max_length=255, blank=True)
+
+    INTERVIEWER_RECOMMENDATION_CHOICES = [
+        ('send-to-guardians', 'Plan to send the girl home to stay with her guardians'),
+        ('send-to-relatives', 'Plan to send the girl to stay with other relatives'),
+        ('find-another-place', 'Tiny Hands needs to help her find another place to go'),
+    ]
+    interviewer_recommendation = models.CharField(choices=INTERVIEWER_RECOMMENDATION_CHOICES, max_length=40, blank=True)
+
+    other_people_and_places_involved = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
+
+    has_signature = models.BooleanField('Scanned form has signature')
+
+    case_notes = models.TextField('Case Notes', blank=True)
+
+
+class VictimInterviewPersonBox(models.Model):
+    BOOL_CHOICES = [
+        (False, 'No'),
+        (True, 'Yes'),
+    ]
+
+    GENDER_CHOICES = [
+        ('male', 'Male'),
+        ('female', 'Female'),
+    ]
+
+    who_is_this_boss_of = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
+    who_is_this_coworker_of = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
+    who_is_this_own_relative_of = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
+    who_is_this_broker = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
+    who_is_this_companion = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
+
+    who_is_this_india_trafficker = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
+    who_is_this_contact_of_husband = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
+    who_is_this_known_trafficker = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
+    who_is_this_manpower = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
+    who_is_this_passport = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
+    who_is_this_sex_industry = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
+
+    name = models.CharField('Name', max_length=255, blank=True)
+
+    gender = models.CharField('Gender', choices=GENDER_CHOICES, max_length=12)
+
+    address_district = models.CharField('District', max_length=255, blank=True)
+    address_vdc = models.CharField('VDC', max_length=255, blank=True)
+    address_ward = models.CharField('Ward #', max_length=255, blank=True)
+    phone = models.CharField('Phone #', max_length=255, blank=True)
+    age = models.CharField('Age', max_length=255, blank=True)
+    height = models.CharField('Height(ft)', max_length=255, blank=True)
+    weight = models.CharField('Weight(kg)', max_length=255, blank=True)
+
+    PHYSICAL_DESCRIPTION_CHOICES = [
+        ('kirat', 'Kirat'),
+        ('sherpa', 'Sherpa'),
+        ('madeshi', 'Madeshi'),
+        ('pahadi', 'Pahadi'),
+        ('newari', 'Newari'),
+    ]
+    physical_description = models.CharField('Physical Description', max_length=255, choices=PHYSICAL_DESCRIPTION_CHOICES, blank=True)
+
+    appearance_other = models.CharField(max_length=255)
+
+    OCCUPATION_CHOICES = [
+        ('none', 'None'),
+
+        ('agent', 'Agent (taking girls to India)'),
+        ('business-owner', 'Business owner'),
+        ('other', 'Other'),
+
+        ('wage-labor', 'Wage labor'),
+        ('job-in-india', 'Job in India'),
+        ('job-in-gulf', 'Job in Gulf'),
+        ('farmer', 'Farmer'),
+        ('teacher', 'Teacher'),
+
+        ('police', 'Police'),
+        ('army', 'Army'),
+        ('guard', 'Guard'),
+        ('cook', 'Cook'),
+        ('driver', 'Driver'),
+    ]
+    occupation = models.CharField('What is this person\'s occupation?', choices=OCCUPATION_CHOICES, max_length=50, blank=True)
+
+    POLITICAL_PARTY_CHOICES = [
+        ('congress', 'Congress'),
+        ('maoist', 'Maoist'),
+        ('umn', 'UMN'),
+        ('forum', 'Forum'),
+        ('tarai-madesh', 'Tarai Madesh'),
+        ('shadbawona', 'Shadbawona'),
+        ('raprapha-nepal-thruhat', 'Raprapha Nepal Thruhat'),
+        ('nepal-janadikarik-forum', 'Nepal Janadikarik Forum'),
+        ('loktantrak-party', 'Loktantrak Party'),
+        ('dont-know', 'Don\'t Know'),
+        ('other', 'Other'),
+    ]
+    political_party = models.CharField('Member of a political Party?', max_length=255, choices=POLITICAL_PARTY_CHOICES, blank=True)
+    where_spends_time = models.TextField('Where does he spend most of his time? How can we get ahlod of or find him?', blank=True)
+
+    # Which do you believe about him?
+    interviewer_believes_has_trafficked_many_girls = models.BooleanField(default=False)
+    interviewer_believes_has_trafficked_some_girls = models.BooleanField(default=False)
+    interviewer_believes_is_trafficker = models.BooleanField(default=False)
+    interviewer_believes_is_not_trafficker = models.BooleanField(default=False)
+
+    victim_believes_has_trafficked_many_girls = models.BooleanField(default=False)
+    victim_believes_has_trafficked_some_girls = models.BooleanField(default=False)
+    victim_believes_is_trafficker = models.BooleanField(default=False)
+    victim_believes_is_not_trafficker = models.BooleanField(default=False)
+
+    associated_with_place = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
+    associated_with_place_value = models.IntegerField(blank=True, null=True)
+
+
+class VictimInterviewLocationBox(models.Model):
+    BOOL_CHOICES = [
+        (False, 'No'),
+        (True, 'Yes'),
+    ]
+
+    which_place_india_meetpoint = models.BooleanField('India Meet Point', default=False)
+    which_place_manpower = models.BooleanField('Manpower', default=False)
+    which_place_transit_hideout = models.BooleanField('Transit Hideout', default=False)
+    which_place_destination = models.BooleanField('Destination', default=False)
+    which_place_passport = models.BooleanField('Passport', default=False)
+    which_place_nepal_meet_point = models.BooleanField('Nepal Meet Point', default=False)
+    which_place_known_location = models.BooleanField('Known Location', default=False)
+    
+    what_kind_place_persons_house = models.BooleanField('Person\'s House', default=False)
+    what_kind_place_bus_station = models.BooleanField('Bus station', default=False)
+    what_kind_place_train_station = models.BooleanField('Train station', default=False)
+    what_kind_place_shop = models.BooleanField('Shop', default=False)
+    what_kind_place_factory = models.BooleanField('Factory', default=False)
+    what_kind_place_brothel = models.BooleanField('Brothel', default=False)
+    what_kind_place_hotel = models.BooleanField('Hotel', default=False)
+
+    vdc = models.CharField(max_length=255, blank=True)
+    district = models.CharField(max_length=255, blank=True)
+    signboard = models.CharField(max_length=255, blank=True)
+    location_in_town = models.CharField(max_length=255, blank=True)
+
+    phone = models.CharField('Phone #', max_length=255, blank=True)
+    color = models.CharField(max_length=255, blank=True)
+    number_of_levels = models.CharField('# of Levels', max_length=255, blank=True)
+    compound_wall = models.CharField(max_length=255, blank=True)
+    gate_color = models.CharField(max_length=255, blank=True)
+    roof_type = models.CharField(max_length=255, blank=True)
+    roof_color = models.CharField(max_length=255, blank=True)
+    person_in_charge = models.CharField(max_length=255, blank=True)
+    nearby_landmarks = models.CharField(max_length=255, blank=True)
+    nearby_signboards = models.CharField(max_length=255, blank=True)
+    other = models.CharField(max_length=255, blank=True)
+
+    interviewer_believes_trafficked_many_girls = models.BooleanField(default=False)
+    interviewer_believes_trafficked_some_girls = models.BooleanField(default=False)
+    interviewer_believes_suspect_used_for_trafficking = models.BooleanField(default=False)
+    interviewer_believes_not_used_for_trafficking = models.BooleanField(default=False)
+
+    victim_believes_trafficked_many_girls = models.BooleanField(default=False)
+    victim_believes_trafficked_some_girls = models.BooleanField(default=False)
+    victim_believes_suspect_used_for_trafficking = models.BooleanField(default=False)
+    victim_believes_not_used_for_trafficking = models.BooleanField(default=False)
+
+    associated_with_place = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
+    associated_with_place_value = models.IntegerField(blank=True, null=True)

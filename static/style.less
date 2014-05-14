@@ -159,7 +159,8 @@ body#victiminterview_create, body#victiminterview_update {
         left: 2px;
         top: 2px;
     }
-    .label-inside-field input {
+    .label-inside-field input, .label-inside-field textarea {
+        width: 100%;
         text-align: right;
         padding: 8px;
     }
@@ -176,6 +177,7 @@ body#victiminterview_create, body#victiminterview_update {
         border-right: 2px solid black;
         border-bottom: 2px solid black;
         h2 {
+            display: inline;
             color: black;
             font-size: 22px;
             font-weight: bold;
@@ -195,6 +197,9 @@ body#victiminterview_create, body#victiminterview_update {
             margin: 2px 4px;
             text-align: center;
         }
+    }
+    .padded-box {
+        padding: 2px 4px 10px;
     }
     .table-bordered {
         tr, th, td {
@@ -220,5 +225,41 @@ body#victiminterview_create, body#victiminterview_update {
     }
     .red-arrow {
         background-image: url(/static/images/red-arrow.png);
+    }
+    .full-width {
+        width: 100%;
+    }
+}
+
+@warning-yellow: #FED228;
+.alarm-box {
+    position: relative;
+    display: inline-block;
+    padding-left: 22px;
+    padding-right: 6px;
+    text-align: right;
+    background-color: black;
+    color: @warning-yellow;
+    &:before {
+        color: black;
+        position: absolute;
+        content:"!";
+        z-index: 1000;
+        left: 9px;
+        top: 4px;
+        font-weight: bold;
+        font-size: 10px;
+    }
+    &:after {
+        content:" ";
+        position: absolute;
+        z-index: 500;
+        top: 3px;
+        left: 4px;
+        border-top: 0px solid transparent;
+        border-left: 7px solid transparent;
+        border-right: 7px solid transparent;
+        border-bottom: 14px solid @warning-yellow;
+
     }
 }
