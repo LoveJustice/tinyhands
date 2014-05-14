@@ -471,7 +471,7 @@ class VictimInterview(models.Model):
         ('broker-paid-and-must-repay', 'The broker paid the expenses and I have to pay him back'),
     ]
     victim_how_expense_was_paid = models.CharField(choices=HOW_EXPENSE_WAS_PAID_CHOICES, max_length=255, blank=True)
-    victim_how_expense_was_paid_amount = models.DecimalField('Amount', max_digits=10, decimal_places=2)
+    victim_how_expense_was_paid_amount = models.DecimalField('Amount', max_digits=10, decimal_places=2, null=True, blank=True)
 
     BROKER_WORKS_CHOICES = [
         ('no', 'No'),
