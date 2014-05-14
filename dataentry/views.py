@@ -75,5 +75,4 @@ class VictimInterviewUpdateView(
     model = VictimInterview
     form_class = VictimInterviewForm
     success_url = reverse_lazy('victiminterview_list')
-    inlines = [IntercepteeInline]
     permissions_required = ['permission_vif_edit']
