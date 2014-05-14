@@ -9,17 +9,17 @@ class Migration(SchemaMigration):
 
     def forwards(self, orm):
 
-        # Changing field 'VictimInterview.victim_how_expense_was_paid_amount'
-        db.alter_column(u'dataentry_victiminterview', 'victim_how_expense_was_paid_amount', self.gf('django.db.models.fields.DecimalField')(null=True, max_digits=10, decimal_places=2))
+        # Changing field 'VictimInterview.victim_how_long_stayed_between_start_date'
+        db.alter_column(u'dataentry_victiminterview', 'victim_how_long_stayed_between_start_date', self.gf('django.db.models.fields.DateField')(null=True))
 
     def backwards(self, orm):
 
-        # User chose to not deal with backwards NULL issues for 'VictimInterview.victim_how_expense_was_paid_amount'
-        raise RuntimeError("Cannot reverse this migration. 'VictimInterview.victim_how_expense_was_paid_amount' and its values cannot be restored.")
+        # User chose to not deal with backwards NULL issues for 'VictimInterview.victim_how_long_stayed_between_start_date'
+        raise RuntimeError("Cannot reverse this migration. 'VictimInterview.victim_how_long_stayed_between_start_date' and its values cannot be restored.")
         
         # The following code is provided here to aid in writing a correct migration
-        # Changing field 'VictimInterview.victim_how_expense_was_paid_amount'
-        db.alter_column(u'dataentry_victiminterview', 'victim_how_expense_was_paid_amount', self.gf('django.db.models.fields.DecimalField')(max_digits=10, decimal_places=2))
+        # Changing field 'VictimInterview.victim_how_long_stayed_between_start_date'
+        db.alter_column(u'dataentry_victiminterview', 'victim_how_long_stayed_between_start_date', self.gf('django.db.models.fields.DateField')())
 
     models = {
         u'accounts.account': {
@@ -347,7 +347,7 @@ class Migration(SchemaMigration):
             'victim_how_long_known_broker_months': ('django.db.models.fields.PositiveIntegerField', [], {'null': 'True', 'blank': 'True'}),
             'victim_how_long_known_broker_years': ('django.db.models.fields.PositiveIntegerField', [], {'null': 'True', 'blank': 'True'}),
             'victim_how_long_stayed_between_days': ('django.db.models.fields.PositiveIntegerField', [], {'null': 'True', 'blank': 'True'}),
-            'victim_how_long_stayed_between_start_date': ('django.db.models.fields.DateField', [], {'blank': 'True'}),
+            'victim_how_long_stayed_between_start_date': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
             'victim_how_met_broker': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'victim_how_met_broker_mobile_explanation': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'victim_how_met_broker_other_value': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),

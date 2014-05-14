@@ -502,7 +502,7 @@ class VictimInterview(models.Model):
     victim_stayed_somewhere_between = models.BooleanField(choices=BOOL_CHOICES)
 
     victim_how_long_stayed_between_days = models.PositiveIntegerField('Days', null=True, blank=True)
-    victim_how_long_stayed_between_start_date = models.DateField('Start Date', blank=True)
+    victim_how_long_stayed_between_start_date = models.DateField('Start Date', null=True, blank=True)
 
     victim_was_hidden = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
     victim_was_hidden_explanation = models.TextField(blank=True)
