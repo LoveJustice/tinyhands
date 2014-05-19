@@ -1538,10 +1538,19 @@
             </div>
         </div>
     </div>
+    <div id="footer">
+        <nav class="navbar navbar-default navbar-fixed-bottom">
+            <div class="container">
+                <div class="navbar-inner navbar-content-center">
+                    <input type="submit" class="pull-right btn btn-primary navbar-btn btn-lg" value="Submit" />
+                </div>
+            </div>
+        </nav>
+    </div>
 
-    <input type="submit" style="margin-top: 20px" class="pull-right btn btn-primary btn-lg" value="{% if interceptionrecord %}Update{% else %}Create{% endif%}" />
 </form>
-</div>
 
 {% endblock %}
 
+{% block sticky_footer %}
+{% endblock %}
