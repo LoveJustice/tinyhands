@@ -834,6 +834,376 @@
 
     <div class="form-page">
         <div class="row">
+            {{ inlines.0.management_form }}
+            {% for pb_form in inlines.0 %}
+            <div class="col-sm-4" style="padding: 20px">
+                <div class="person-box person-box-top row">
+                    <div class="col-sm-5">
+                        <div class="red-border-right red-border-bottom inner smaller">
+                            <h2>Who is this?</h2>
+                            <div class="checkbox-group">
+                                {{ pb_form.who_is_this_boss_of }} {{ pb_form.who_is_this_boss_of.label_tag }}
+                            </div>
+                            <div class="checkbox-group">
+                                {{ pb_form.who_is_this_coworker_of }} {{ pb_form.who_is_this_coworker_of.label_tag }}
+                            </div>
+                            <div class="checkbox-group">
+                                {{ pb_form.who_is_this_own_relative_of }} {{ pb_form.who_is_this_own_relative_of.label_tag }}
+                            </div>
+                        </div>
+                        <div class="red-border-right inner">
+                            <div class="checkbox-group">
+                                {{ pb_form.who_is_this_broker }} {{ pb_form.who_is_this_broker.label_tag }}
+                            </div>
+                            <div class="checkbox-group">
+                                {{ pb_form.who_is_this_companion }} {{ pb_form.who_is_this_companion.label_tag }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-7">
+                        <div class="inner">
+                            <div class="person-box-number">PB{{ forloop.counter }}</div>
+                            <div class="checkbox-group">
+                                {{ pb_form.who_is_this_india_trafficker }} {{ pb_form.who_is_this_india_trafficker.label_tag }}
+                            </div>
+                            <div class="checkbox-group">
+                                {{ pb_form.who_is_this_contact_of_husband }} {{ pb_form.who_is_this_contact_of_husband.label_tag }}
+                            </div>
+                            <div class="checkbox-group">
+                                {{ pb_form.who_is_this_known_trafficker }} {{ pb_form.who_is_this_known_trafficker.label_tag }}
+                            </div>
+                            <div class="checkbox-group">
+                                {{ pb_form.who_is_this_manpower }} {{ pb_form.who_is_this_manpower.label_tag }}
+                            </div>
+                            <div class="checkbox-group">
+                                {{ pb_form.who_is_this_passport }} {{ pb_form.who_is_this_passport.label_tag }}
+                            </div>
+                            <div class="checkbox-group">
+                                {{ pb_form.who_is_this_sex_industry }} {{ pb_form.who_is_this_sex_industry.label_tag }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="person-box row">
+                    <label class="blending-into-input-label">Name</label>
+
+                    <div class="inline-radio-group">
+                        {{ pb_form.gender.label_tag }}
+                        {% for choice in pb_form.gender %}
+                            {{ choice }}
+                        {% endfor %}
+                    </div>
+
+                    {{ pb_form.name }}
+                    <div class="col-sm-6">
+                        <div class="label-inside-field">
+                            {{ pb_form.address_district.label_tag }}{{ pb_form.address_district }}
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="label-inside-field">
+                            {{ pb_form.address_vdc.label_tag }}{{ pb_form.address_vdc }}
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="label-inside-field">
+                            {{ pb_form.address_ward.label_tag }}{{ pb_form.address_ward }}
+                        </div>
+                    </div>
+                    <div class="col-sm-8">
+                        <div class="label-inside-field">
+                            {{ pb_form.phone.label_tag }}{{ pb_form.phone }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="person-box row">
+                    <div class="col-sm-4">
+                        <div class="label-inside-field">
+                            {{ pb_form.age.label_tag }}{{ pb_form.age }}
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="label-inside-field">
+                            {{ pb_form.height.label_tag }}{{ pb_form.height }}
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="label-inside-field">
+                            {{ pb_form.weight.label_tag }}{{ pb_form.weight }}
+                        </div>
+                    </div>
+                </div>
+                <div class="person-box row">
+                    <h2>Physical Description</h2>
+                    {% for choice in pb_form.physical_description %}
+                        <div class="inline-radio-group">
+                            {{ choice }}
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div class="person-box row">
+                    <h2>Appearance Other <small>(hairstyle, facial hair, mouth, nose, eyes, glasses, tattoos, birth marks, etc.)</small></h2>
+                    {{ pb_form.appearance_other }}
+                </div>
+
+                <div class="person-box row">
+                    <h2>What is this person's occupation?</h2>
+                    <div class="inline-radio-group">{{ pb_form.occupation.0 }} {{ pb_form.occupation.0.label_tag }}</div>
+                </div>
+                <div class="person-box row">
+                    <div class="col-sm-4">
+                        {% for choice in pb_form.occupation|slice:"1:4" %}
+                            <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                        {% endfor %}
+                        {{ pb_form.occupation_other_value }}
+                    </div>
+                    <div class="col-sm-4">
+                        {% for choice in pb_form.occupation|slice:"4:9" %}
+                            <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                        {% endfor %}
+                    </div>
+                    <div class="col-sm-4">
+                        {% for choice in pb_form.occupation|slice:"9:14" %}
+                            <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="person-box row">
+                    <h2>Member of a political Party?</h2>
+                    <div class="inline-radio-group">{{ pb_form.political_party.0 }} {{ pb_form.political_party.0.label_tag }}</div>
+                </div>
+                <div class="person-box row">
+                    <div class="col-sm-4">
+                        {% for choice in pb_form.political_party|slice:"1:6" %}
+                            <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                        {% endfor %}
+                    </div>
+                    <div class="col-sm-8">
+                        {% for choice in pb_form.political_party|slice:"6:" %}
+                            <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                        {% endfor %}
+                        {{ pb_form.political_party_other_value }}
+                    </div>
+                </div>
+
+                <div class="person-box row">
+                    <h2>Where does he spend most of his time? How can we get ahold of or find him?</h2>
+                    {{ pb_form.where_spends_time|attr:"rows:2" }}
+                </div>
+
+                <div class="person-box row">
+                    <h2>Which do you believe about him?</h2>
+                    <div class="clearfix">
+                        <div class="pull-left">
+                            {{ pb_form.interviewer_believes_has_trafficked_many_girls }}
+                            <br/>
+                            {{ pb_form.interviewer_believes_has_trafficked_some_girls }}
+                            <br/>
+                            {{ pb_form.interviewer_believes_is_trafficker }}
+                            <br/>
+                            {{ pb_form.interviewer_believes_is_not_trafficker }}
+                        </div>
+                        <div class="pull-right">
+                            {{ pb_form.victim_believes_has_trafficked_many_girls }}
+                            <br/>
+                            {{ pb_form.victim_believes_has_trafficked_some_girls }}
+                            <br/>
+                            {{ pb_form.victim_believes_is_trafficker }}
+                            <br/>
+                            {{ pb_form.victim_believes_is_not_trafficker }}
+                        </div>
+                        <div class="text-center">
+                            Definitely trafficked many girls
+                            <br/>
+                            Has trafficked some girls
+                            <br/>
+                            Suspect he's a trafficker
+                            <br/>
+                            Don't believe he's a trafficker
+                        </div>
+                    </div>
+                </div>
+
+                <div class="person-box row">
+                    <h2>Is this person associated with any of the places below?</h2>
+                    {% for choice in pb_form.associated_with_place %}
+                        <div class="inline-radio-group">
+                            {{ choice }}
+                        </div>
+                    {% endfor %}
+                    <span class="blue-arrow">LB# {{ pb_form.associated_with_place_value }}</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="row">
+            {{ inlines.1.management_form }}
+            {% for lb_form in inlines.1 %}
+            <div class="col-sm-6" style="padding: 20px">
+                <div class="location-box location-box-top row">
+                    <div class="col-sm-4">
+                        <div class="location-box-number">LB{{ forloop.counter }}</div>
+                        <h2 style="margin-left: -10px">Which place?</h2>
+                        <div class="checkbox-group">{{ lb_form.which_place_india_meetpoint }} {{ lb_form.which_place_india_meetpoint.label_tag }}</div>
+                        <div class="checkbox-group">{{ lb_form.which_place_manpower }} {{ lb_form.which_place_manpower.label_tag }}</div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="checkbox-group">{{ lb_form.which_place_transit_hideout }} {{ lb_form.which_place_transit_hideout.label_tag }}</div>
+                        <div class="checkbox-group">{{ lb_form.which_place_destination }} {{ lb_form.which_place_destination.label_tag }}</div>
+                        <div class="checkbox-group">{{ lb_form.which_place_passport }} {{ lb_form.which_place_passport.label_tag }}</div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="checkbox-group">{{ lb_form.which_place_nepal_meet_point }} {{ lb_form.which_place_nepal_meet_point.label_tag }}</div>
+                        <div class="checkbox-group">{{ lb_form.which_place_known_location }} {{ lb_form.which_place_known_location.label_tag }}</div>
+                        <div class="checkbox-group">{{ lb_form.which_place_sex_industry }} {{ lb_form.which_place_sex_industry.label_tag }}</div>
+                    </div>
+                </div>
+
+                <div class="location-box row">
+                    <div class="inner">
+                        <h2>What kind of place is it?</h2>
+                        <div class="inline-checkbox-group">{{ lb_form.what_kind_place_persons_house }} {{ lb_form.what_kind_place_persons_house.label_tag }}</div>
+                        <div class="inline-checkbox-group">{{ lb_form.what_kind_place_bus_station }} {{ lb_form.what_kind_place_bus_station.label_tag }}</div>
+                        <div class="inline-checkbox-group">{{ lb_form.what_kind_place_train_station }} {{ lb_form.what_kind_place_train_station.label_tag }}</div>
+                        <div class="inline-checkbox-group">{{ lb_form.what_kind_place_shop }} {{ lb_form.what_kind_place_shop.label_tag }}</div>
+                        <div class="inline-checkbox-group">{{ lb_form.what_kind_place_factory }} {{ lb_form.what_kind_place_factory.label_tag }}</div>
+                        <div class="inline-checkbox-group">{{ lb_form.what_kind_place_brothel }} {{ lb_form.what_kind_place_brothel.label_tag }}</div>
+                        <div class="inline-checkbox-group">{{ lb_form.what_kind_place_hotel }} {{ lb_form.what_kind_place_hotel.label_tag }}</div>
+                    </div>
+                </div>
+
+                <div class="location-box row">
+                    <div class="col-sm-8 blue-border-right">
+                        <div class="col-sm-6">
+                            <div class="label-inside-field">
+                                {{ lb_form.vdc.label_tag }}{{ lb_form.vdc }}
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="label-inside-field">
+                                {{ lb_form.district.label_tag }}{{ lb_form.district }}
+                            </div>
+                        </div>
+
+                        <div class="col-sm-5">
+                            <div class="label-inside-field">
+                                {{ lb_form.signboard.label_tag }}{{ lb_form.signboard }}
+                            </div>
+                        </div>
+                        <div class="col-sm-7">
+                            <div class="label-inside-field">
+                                {{ lb_form.location_in_town.label_tag }}{{ lb_form.location_in_town }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="label-inside-field">
+                            {{ lb_form.phone.label_tag }}{{ lb_form.phone }}
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="label-inside-field">
+                                {{ lb_form.color.label_tag }}{{ lb_form.color }}
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="label-inside-field">
+                                {{ lb_form.number_of_levels.label_tag }}{{ lb_form.number_of_levels }}
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="location-box row">
+                    <div class="inner">
+                        <div class="col-sm-6">
+                            <div class="label-inside-field">
+                                {{ lb_form.compound_wall.label_tag }}{{ lb_form.compound_wall }}
+                            </div>
+                            <div class="label-inside-field">
+                                {{ lb_form.gate_color.label_tag }}{{ lb_form.gate_color }}
+                            </div>
+                            <div class="label-inside-field">
+                                {{ lb_form.roof_type.label_tag }}{{ lb_form.roof_type }}
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="label-inside-field">
+                                {{ lb_form.roof_color.label_tag }}{{ lb_form.roof_color }}
+                            </div>
+                            <div class="label-inside-field">
+                                {{ lb_form.person_in_charge.label_tag }}{{ lb_form.person_in_charge }}
+                            </div>
+                            <div class="label-inside-field">
+                                {{ lb_form.nearby_landmarks.label_tag }}{{ lb_form.nearby_landmarks }}
+                            </div>
+                        </div>
+
+                        <div class="col-sm-8">
+                            <h2>Which do you agree with about this place?</h2>
+                            <div class="clearfix">
+                                <div class="pull-left">
+                                    {{ lb_form.interviewer_believes_trafficked_many_girls }}
+                                    <br/>
+                                    {{ lb_form.interviewer_believes_trafficked_some_girls }}
+                                    <br/>
+                                    {{ lb_form.interviewer_believes_suspect_used_for_trafficking }}
+                                    <br/>
+                                    {{ lb_form.interviewer_believes_not_used_for_trafficking }}
+                                </div>
+                                <div class="pull-right">
+
+                                    {{ lb_form.victim_believes_trafficked_many_girls }}
+                                    <br/>
+                                    {{ lb_form.victim_believes_trafficked_some_girls }}
+                                    <br/>
+                                    {{ lb_form.victim_believes_suspect_used_for_trafficking }}
+                                    <br/>
+                                    {{ lb_form.victim_believes_not_used_for_trafficking }}
+                                </div>
+                                <div class="text-center">
+                                    Definitely trafficked many girls
+                                    <br/>
+                                    Has trafficked some girls
+                                    <br/>
+                                    Suspect he's a trafficker
+                                    <br/>
+                                    Don't believe he's a trafficker
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="label-inside-field">
+                                {{ lb_form.nearby_signboards.label_tag }}{{ lb_form.nearby_signboards }}
+                            </div>
+                            <div class="label-inside-field">
+                                {{ lb_form.other.label_tag }}{{ lb_form.other }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="location-box row">
+                    <h2>Do you know of anyone involved with trafficking who is associated with this place?</h2>
+                    {% for choice in lb_form.associated_with_person %}
+                        <div class="inline-radio-group">
+                            {{ choice }}
+                        </div>
+                    {% endfor %}
+                    <span class="red-arrow">PB# {{ lb_form.associated_with_person_value }}</span>
+                </div>
+
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="form-page">
+        <div class="row">
             <div class="col-sm-4 major-column">
 
                 <div class="blue-box black-box black-box-top">

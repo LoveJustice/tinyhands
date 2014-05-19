@@ -1,6 +1,12 @@
 from django import forms
 from django.db import models
-from dataentry.models import InterceptionRecord, Interceptee, VictimInterview
+from dataentry.models import (
+    VictimInterview,
+    InterceptionRecord,
+    Interceptee,
+    VictimInterviewPersonBox,
+    VictimInterviewLocationBox
+)
 from django.forms.models import inlineformset_factory
 from django.core.exceptions import ValidationError
 
@@ -122,6 +128,7 @@ IntercepteeFormSet = inlineformset_factory(InterceptionRecord, Interceptee, extr
 # Make all fields with choices radio selects
 def make_choice_widgets_radio(f):
     if f.choices != []:
+        print f.choices
         return forms.ChoiceField(choices=f.choices, widget=forms.RadioSelect, required=not f.blank)
     else:
         return f.formfield()
@@ -136,3 +143,34 @@ class VictimInterviewForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('label_suffix', '')
         super(VictimInterviewForm, self).__init__(*args, **kwargs)
+
+
+class VictimInterviewPersonBoxForm(forms.ModelForm):
+    # This doesn't work with the extra_views CreateWithInlinesView sadly so we have to do it manually
+    #formfield_callback = make_choice_widgets_radio
+
+    gender = forms.ChoiceField(choices=VictimInterviewPersonBox.GENDER_CHOICES, widget=forms.RadioSelect)
+    physical_description = forms.ChoiceField(choices=VictimInterviewPersonBox.PHYSICAL_DESCRIPTION_CHOICES, widget=forms.RadioSelect)
+    occupation = forms.ChoiceField(choices=VictimInterviewPersonBox.OCCUPATION_CHOICES, widget=forms.RadioSelect)
+    political_party = forms.ChoiceField(choices=VictimInterviewPersonBox.POLITICAL_PARTY_CHOICES, widget=forms.RadioSelect)
+    associated_with_place = forms.ChoiceField(choices=VictimInterviewPersonBox.BOOL_CHOICES, widget=forms.RadioSelect)
+
+    class Meta:
+        model = VictimInterviewPersonBox
+
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault('label_suffix', '')
+        super(VictimInterviewPersonBoxForm, self).__init__(*args, **kwargs)
+
+
+class VictimInterviewLocationBoxForm(forms.ModelForm):
+    #formfield_callback = make_choice_widgets_radio
+    associated_with = forms.ChoiceField(choices=VictimInterviewPersonBox.BOOL_CHOICES, widget=forms.RadioSelect)
+    associated_with_person = forms.ChoiceField(choices=VictimInterviewLocationBox.BOOL_CHOICES, widget=forms.RadioSelect)
+
+    class Meta:
+        model = VictimInterviewLocationBox
+
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault('label_suffix', '')
+        super(VictimInterviewLocationBoxForm, self).__init__(*args, **kwargs)

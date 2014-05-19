@@ -699,18 +699,20 @@ class VictimInterviewPersonBox(models.Model):
         ('female', 'Female'),
     ]
 
-    who_is_this_boss_of = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
-    who_is_this_coworker_of = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
-    who_is_this_own_relative_of = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
-    who_is_this_broker = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
-    who_is_this_companion = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
+    victim_interview = models.ForeignKey(VictimInterview, related_name='person_boxes')
 
-    who_is_this_india_trafficker = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
-    who_is_this_contact_of_husband = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
-    who_is_this_known_trafficker = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
-    who_is_this_manpower = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
-    who_is_this_passport = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
-    who_is_this_sex_industry = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
+    who_is_this_boss_of = models.BooleanField('boss of...', default=False)
+    who_is_this_coworker_of = models.BooleanField('co-worker of...', default=False)
+    who_is_this_own_relative_of = models.BooleanField('own relative of...', default=False)
+    who_is_this_broker = models.BooleanField('Broker', default=False)
+    who_is_this_companion = models.BooleanField('Companion', default=False)
+
+    who_is_this_india_trafficker = models.BooleanField('India Trafficker', default=False)
+    who_is_this_contact_of_husband = models.BooleanField('Contact of Husband', default=False)
+    who_is_this_known_trafficker = models.BooleanField('Known Trafficker', default=False)
+    who_is_this_manpower = models.BooleanField('Manpower', default=False)
+    who_is_this_passport = models.BooleanField('Passport', default=False)
+    who_is_this_sex_industry = models.BooleanField('Sex Industry', default=False)
 
     name = models.CharField('Name', max_length=255, blank=True)
 
@@ -755,6 +757,7 @@ class VictimInterviewPersonBox(models.Model):
         ('driver', 'Driver'),
     ]
     occupation = models.CharField('What is this person\'s occupation?', choices=OCCUPATION_CHOICES, max_length=50, blank=True)
+    occupation_other_value = models.CharField(max_length=255, blank=True)
 
     POLITICAL_PARTY_CHOICES = [
         ('congress', 'Congress'),
@@ -770,6 +773,8 @@ class VictimInterviewPersonBox(models.Model):
         ('other', 'Other'),
     ]
     political_party = models.CharField('Member of a political Party?', max_length=255, choices=POLITICAL_PARTY_CHOICES, blank=True)
+    political_party_other_value = models.CharField(max_length=255, blank=True)
+
     where_spends_time = models.TextField('Where does he spend most of his time? How can we get ahlod of or find him?', blank=True)
 
     # Which do you believe about him?
@@ -793,6 +798,8 @@ class VictimInterviewLocationBox(models.Model):
         (True, 'Yes'),
     ]
 
+    victim_interview = models.ForeignKey(VictimInterview, related_name='location_boxes')
+
     which_place_india_meetpoint = models.BooleanField('India Meet Point', default=False)
     which_place_manpower = models.BooleanField('Manpower', default=False)
     which_place_transit_hideout = models.BooleanField('Transit Hideout', default=False)
@@ -800,7 +807,8 @@ class VictimInterviewLocationBox(models.Model):
     which_place_passport = models.BooleanField('Passport', default=False)
     which_place_nepal_meet_point = models.BooleanField('Nepal Meet Point', default=False)
     which_place_known_location = models.BooleanField('Known Location', default=False)
-    
+    which_place_sex_industry = models.BooleanField('Sex Industry', default=False)
+
     what_kind_place_persons_house = models.BooleanField('Person\'s House', default=False)
     what_kind_place_bus_station = models.BooleanField('Bus station', default=False)
     what_kind_place_train_station = models.BooleanField('Train station', default=False)
@@ -836,5 +844,5 @@ class VictimInterviewLocationBox(models.Model):
     victim_believes_suspect_used_for_trafficking = models.BooleanField(default=False)
     victim_believes_not_used_for_trafficking = models.BooleanField(default=False)
 
-    associated_with_place = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
-    associated_with_place_value = models.IntegerField(blank=True, null=True)
+    associated_with_person = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
+    associated_with_person_value = models.IntegerField(blank=True, null=True)

@@ -3,10 +3,21 @@ from django.core.urlresolvers import reverse_lazy
 from django.views.generic import ListView
 from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSet
 from django.contrib.auth.decorators import login_required
-from dataentry.models import VictimInterview, InterceptionRecord, Interceptee
+from dataentry.models import (
+    VictimInterview,
+    InterceptionRecord,
+    Interceptee,
+    VictimInterviewPersonBox,
+    VictimInterviewLocationBox
+)
 from accounts.mixins import PermissionsRequiredMixin
 from braces.views import LoginRequiredMixin
-from dataentry.forms import InterceptionRecordForm, VictimInterviewForm
+from dataentry.forms import (
+    InterceptionRecordForm,
+    VictimInterviewForm,
+    VictimInterviewPersonBoxForm,
+    VictimInterviewLocationBoxForm,
+)
 
 
 @login_required
@@ -50,6 +61,26 @@ class InterceptionRecordUpdateView(
     permissions_required = ['permission_irf_edit']
 
 
+class PersonBoxInline(InlineFormSet):
+    model = VictimInterviewPersonBox
+    extra = 3
+
+    def get_factory_kwargs(self):
+        kwargs = super(PersonBoxInline, self).get_factory_kwargs()
+        kwargs['form'] = VictimInterviewPersonBoxForm
+        return kwargs
+
+
+class LocationBoxInline(InlineFormSet):
+    model = VictimInterviewLocationBox
+    extra = 2
+
+    def get_factory_kwargs(self):
+        kwargs = super(LocationBoxInline, self).get_factory_kwargs()
+        kwargs['form'] = VictimInterviewLocationBoxForm
+        return kwargs
+
+
 class VictimInterviewListView(
         LoginRequiredMixin,
         PermissionsRequiredMixin,
@@ -65,6 +96,7 @@ class VictimInterviewCreateView(
     model = VictimInterview
     form_class = VictimInterviewForm
     success_url = reverse_lazy('victiminterview_list')
+    inlines = [PersonBoxInline, LocationBoxInline]
     permissions_required = ['permission_vif_add']
 
 
@@ -75,4 +107,5 @@ class VictimInterviewUpdateView(
     model = VictimInterview
     form_class = VictimInterviewForm
     success_url = reverse_lazy('victiminterview_list')
+    inlines = [PersonBoxInline, LocationBoxInline]
     permissions_required = ['permission_vif_edit']
