@@ -18,9 +18,10 @@
             relativeUrls: false
         };
     </script>
-    <script src="{{ STATIC_URL }}less.js"></script>
 
     {% block head %}{% endblock %}
+
+    <script src="{{ STATIC_URL }}less.js"></script>
 </head>
 {% comment %}
 Add a class to the body tag that is the same as the url's name.  We can then check this
