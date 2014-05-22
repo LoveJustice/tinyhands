@@ -53,6 +53,11 @@ class InterceptionRecordCreateView(
     inlines = [IntercepteeInline]
     permissions_required = ['permission_irf_add']
 
+    def forms_valid(self, form, inlines):
+        form.instance.form_entered_by = self.request.user
+        form.instance.date_form_received = date.today()
+        return super(InterceptionRecordCreateView, self).forms_valid(form, inlines)
+
 
 class InterceptionRecordUpdateView(
         LoginRequiredMixin,

@@ -33,6 +33,7 @@ INSTALLED_APPS = (
     'imagekit',
     'dataentry',
     'accounts',
+    'util',
     'south',
 )
 

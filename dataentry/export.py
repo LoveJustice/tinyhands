@@ -1,3 +1,32 @@
+BORDER_STATION_NAMES = {
+    'BHW': 'Bhairahwa',
+    'NPJ': 'Nepalgunj',
+    'PRS': 'Nawalparasi',
+    'DNG': 'Dang',
+    'JNK': 'Janakpur',
+    'GRG': 'Gaurigunj',
+    'GLR': 'Guleria',
+    'MHN': 'Mahendranagar',
+    'DHD': 'Dhangadi',
+    'MLW': 'Malangwa',
+    'BRT': 'Biratnagar',
+    'BHD': 'Bhadrapur',
+    'GLC': 'Galchhi',
+    'BGN': 'Birgunj',
+    'MGL': 'Mugling',
+    'NRG': 'Narayanghat',
+    'HTD': 'Hetauda',
+    'KVT': 'Kakarvitta',
+    'PST': 'Pashupatinagar',
+    'CND': 'Chandrauta',
+    'KTM': 'Kathmandu',
+    'TKP': 'Tikapur',
+    'GAR': 'Gaur',
+    'SLG': 'Siliguri',
+    'LHN': 'Lahan',
+}
+
+
 irf_headers = [
     "IRF Number",
     "Station",
@@ -133,125 +162,215 @@ def text_if_true(condition, text):
         return ''
 
 
+def get_station_name_from_irf_number(irf_number):
+    return BORDER_STATION_NAMES[irf_number[:3]]
+
+
 def get_irf_export_rows(irfs):
     rows = []
     rows.append(irf_headers)
 
     for irf in irfs:
         row = []
-        row.extend([
-            irf.irf_number,
-            irf.date_time_of_interception,
-            irf.number_of_victims,
-            irf.number_of_traffickers,
+        for interceptee in irf.interceptees.all():
+            # One row for each victim, with all these beginning fields duplicated for all of them
 
-            irf.location,
-            irf.staff_name,
+            # If this is a trafficker, don't put them on their own row, put them at the end
+            if interceptee.kind == 't':
+                continue
 
-            text_if_true(irf.who_in_group_alone, "Traveling Alone"),
-            text_if_true(irf.who_in_group_husbandwife, "Traveling with Husband/Wife"),
-            text_if_true(irf.who_in_group_relative, "Traveling with own brother, sister/relative"),
-            text_if_true(irf.where_going_job, "Going for a Job Going for visit / family / returning Home"),
-            text_if_true(irf.where_going_visit, "Going for Shopping"),
-            text_if_true(irf.where_going_shopping, "Going to Study"),
-            text_if_true(irf.where_going_treatment, "Going for Treatment"),
+            row.extend([
+                irf.irf_number,
 
-            text_if_true(irf.drugged_or_drowsy, "Appears drugged or drowsy"),
-            text_if_true(irf.meeting_someone_across_border, "Is meeting someone just across border"),
-            text_if_true(irf.seen_in_last_month_in_nepal, "Meeting someone he/she's seen in Nepal"),
-            text_if_true(irf.traveling_with_someone_not_with_her, "Was traveling with someone not with him/her"),
-            text_if_true(irf.wife_under_18, "Wife is under 18"),
-            text_if_true(irf.married_in_past_2_weeks, "Was married in the past two weeks"),
-            text_if_true(irf.married_in_past_2_8_weeks, "Was married within the past 2-8 weeks"),
-            text_if_true(irf.less_than_2_weeks_before_eloping, "Met less than 2 weeks before eloping"),
-            text_if_true(irf.between_2_12_weeks_before_eloping, "Met 2 - 12 weeks before eloping"),
-            text_if_true(irf.caste_not_same_as_relative, "Caste not the same as alleged relative"),
-            text_if_true(irf.caught_in_lie, "Caught in a lie or contradiction"),
+                get_station_name_from_irf_number(irf.irf_number),
 
-            text_if_true(irf.other_red_flag, irf.other_red_flag_value),
+                irf.date_time_of_interception,
+                irf.number_of_victims,
+                irf.number_of_traffickers,
 
-            text_if_true(irf.doesnt_know_going_to_india, "Doesn't know he/she's going to India"),
-            text_if_true(irf.running_away_over_18, "Running away from home (over 18)"),
-            text_if_true(irf.running_away_under_18, "Running away from home (under 18)"),
-            text_if_true(irf.going_to_gulf_for_work, "Going to Gulf for work through India"),
-            text_if_true(irf.no_address_in_india, "Going for job, no address in India"),
-            text_if_true(irf.no_company_phone, "Going for job, no company phone number"),
-            text_if_true(irf.no_appointment_letter, "Going for job, no appointment letter"),
-            text_if_true(irf.valid_gulf_country_visa, "Has a valid Gulf country visa in passport"),
-            text_if_true(irf.passport_with_broker, "Passport is with a broker"),
-            text_if_true(irf.job_too_good_to_be_true, "Job is too good to be true"),
-            text_if_true(irf.not_real_job, "Called, not a real job"),
-            text_if_true(irf.couldnt_confirm_job, "Called, could not confirm job"),
-            text_if_true(irf.no_bags_long_trip, "No bags though claim to be going for a long time"),
-            text_if_true(irf.shopping_overnight_stuff_in_bags, "Shopping - stuff for overnight stay in bags"),
-            text_if_true(irf.no_enrollment_docs, "Going to study, no documentation of enrollment"),
-            text_if_true(irf.doesnt_know_school_name, "Going to study, does not know school's name and location"),
-            text_if_true(irf.no_school_phone, "Going to study, no phone number for school"),
-            text_if_true(irf.not_enrolled_in_school, "Called, not enrolled in school"),
-            text_if_true(irf.reluctant_treatment_info, "Reluctant to give info about treatment"),
-            text_if_true(irf.no_medical_documents, "Going for treatment, doesn't have medical documents"),
-            text_if_true(irf.fake_medical_documents, "Going for treatment, fake medical documents"),
-            text_if_true(irf.no_medical_appointment, "Called doctor, no medical appointment"),
-            text_if_true(irf.doesnt_know_villiage_details, "Doesn't know details about village"),
-            text_if_true(irf.reluctant_villiage_info, "Reluctant to give info about village"),
-            text_if_true(irf.reluctant_family_info, "Reluctant to give family info"),
-            text_if_true(irf.refuses_family_info, "Will not give family info"),
-            text_if_true(irf.under_18_cant_contact_family, "Under 18, no family contact established"),
-            text_if_true(irf.under_18_family_doesnt_know, "Under 18, family doesn't know he/she's going"),
-            text_if_true(irf.under_18_family_unwilling, "Under 18, family unwilling to let him/her go"),
-            text_if_true(irf.over_18_family_doesnt_know, "Over 18, family doesn't know he/she is going"),
-            text_if_true(irf.over_18_family_unwilling, "Over 18, family unwilling to let him/her go"),
-        ])
+                irf.location,
+                irf.staff_name,
 
-        # Get the first two family members marked as true, (I'm guessing there will usually only be one or two
-        family_members_talked_to = []
-        for field, text in [
-            ('talked_to_brother', 'Own brother'),
-            ('talked_to_sister', 'Own sister'),
-            ('talked_to_father', 'Own father'),
-            ('talked_to_mother', 'Own mother'),
-            ('talked_to_grandparent', 'Own grandparent'),
-            ('talked_to_aunt_uncle', 'Own aunt / uncle')
-        ]:
-            if getattr(irf, field):
-                family_members_talked_to.append(text)
-        # But just in case add two blanks to the end
-        family_members_talked_to.extend(['']*2)
+                text_if_true(irf.who_in_group_alone, "Traveling Alone"),
+                text_if_true(irf.who_in_group_husbandwife, "Traveling with Husband/Wife"),
+                text_if_true(irf.who_in_group_relative, "Traveling with own brother, sister/relative"),
+                text_if_true(irf.where_going_job, "Going for a Job"),
+                text_if_true(irf.where_going_visit, "Going for visit / family / returning Home"),
+                text_if_true(irf.where_going_shopping, "Going for Shopping"),
+                text_if_true(irf.where_going_study, "Going to Study"),
+                text_if_true(irf.where_going_treatment, "Going for Treatment"),
 
-        row.extend(family_members_talked_to[:2])
+                text_if_true(irf.drugged_or_drowsy, "Appears drugged or drowsy"),
+                text_if_true(irf.meeting_someone_across_border, "Is meeting someone just across border"),
+                text_if_true(irf.seen_in_last_month_in_nepal, "Meeting someone he/she's seen in Nepal"),
+                text_if_true(irf.traveling_with_someone_not_with_her, "Was traveling with someone not with him/her"),
+                text_if_true(irf.wife_under_18, "Wife is under 18"),
+                text_if_true(irf.married_in_past_2_weeks, "Was married in the past two weeks"),
+                text_if_true(irf.married_in_past_2_8_weeks, "Was married within the past 2-8 weeks"),
+                text_if_true(irf.less_than_2_weeks_before_eloping, "Met less than 2 weeks before eloping"),
+                text_if_true(irf.between_2_12_weeks_before_eloping, "Met 2 - 12 weeks before eloping"),
+                text_if_true(irf.caste_not_same_as_relative, "Caste not the same as alleged relative"),
+                text_if_true(irf.caught_in_lie, "Caught in a lie or contradiction"),
 
-        row.extend([
-            0,  # computed red flags
-            irf.reported_total_red_flags or 0,
-        ])
+                text_if_true(irf.other_red_flag, irf.other_red_flag_value),
+
+                text_if_true(irf.doesnt_know_going_to_india, "Doesn't know he/she's going to India"),
+                text_if_true(irf.running_away_over_18, "Running away from home (over 18)"),
+                text_if_true(irf.running_away_under_18, "Running away from home (under 18)"),
+                text_if_true(irf.going_to_gulf_for_work, "Going to Gulf for work through India"),
+                text_if_true(irf.no_address_in_india, "Going for job, no address in India"),
+                text_if_true(irf.no_company_phone, "Going for job, no company phone number"),
+                text_if_true(irf.no_appointment_letter, "Going for job, no appointment letter"),
+                text_if_true(irf.valid_gulf_country_visa, "Has a valid Gulf country visa in passport"),
+                text_if_true(irf.passport_with_broker, "Passport is with a broker"),
+                text_if_true(irf.job_too_good_to_be_true, "Job is too good to be true"),
+                text_if_true(irf.not_real_job, "Called, not a real job"),
+                text_if_true(irf.couldnt_confirm_job, "Called, could not confirm job"),
+                text_if_true(irf.no_bags_long_trip, "No bags though claim to be going for a long time"),
+                text_if_true(irf.shopping_overnight_stuff_in_bags, "Shopping - stuff for overnight stay in bags"),
+                text_if_true(irf.no_enrollment_docs, "Going to study, no documentation of enrollment"),
+                text_if_true(irf.doesnt_know_school_name, "Going to study, does not know school's name and location"),
+                text_if_true(irf.no_school_phone, "Going to study, no phone number for school"),
+                text_if_true(irf.not_enrolled_in_school, "Called, not enrolled in school"),
+                text_if_true(irf.reluctant_treatment_info, "Reluctant to give info about treatment"),
+                text_if_true(irf.no_medical_documents, "Going for treatment, doesn't have medical documents"),
+                text_if_true(irf.fake_medical_documents, "Going for treatment, fake medical documents"),
+                text_if_true(irf.no_medical_appointment, "Called doctor, no medical appointment"),
+                text_if_true(irf.doesnt_know_villiage_details, "Doesn't know details about village"),
+                text_if_true(irf.reluctant_villiage_info, "Reluctant to give info about village"),
+                text_if_true(irf.reluctant_family_info, "Reluctant to give family info"),
+                text_if_true(irf.refuses_family_info, "Will not give family info"),
+                text_if_true(irf.under_18_cant_contact_family, "Under 18, no family contact established"),
+                text_if_true(irf.under_18_family_doesnt_know, "Under 18, family doesn't know he/she's going"),
+                text_if_true(irf.under_18_family_unwilling, "Under 18, family unwilling to let him/her go"),
+                text_if_true(irf.over_18_family_doesnt_know, "Over 18, family doesn't know he/she is going"),
+                text_if_true(irf.over_18_family_unwilling, "Over 18, family unwilling to let him/her go"),
+            ])
+
+            # Get the first two family members marked as true, (I'm guessing there will usually only be one or two
+            family_members_talked_to = []
+            for field, text in [
+                ('talked_to_brother', 'Own brother'),
+                ('talked_to_sister', 'Own sister'),
+                ('talked_to_father', 'Own father'),
+                ('talked_to_mother', 'Own mother'),
+                ('talked_to_grandparent', 'Own grandparent'),
+                ('talked_to_aunt_uncle', 'Own aunt / uncle'),
+                ('talked_to_other', irf.talked_to_other_value),
+            ]:
+                if getattr(irf, field):
+                    family_members_talked_to.append(text)
+            # But just in case add two blanks to the end
+            family_members_talked_to.extend(['']*2)
+
+            row.extend(family_members_talked_to[:2])
+
+            row.extend([
+                irf.reported_total_red_flags or 0,
+                irf.calculate_total_red_flags(),
+            ])
+
+            if irf.contact_noticed:
+                row.append('Interception made as a result of a contact')
+            elif irf.staff_noticed:
+                row.append('Interception made as a result of staff')
+
+            contacts = []
+            for field, text in [
+                ('contact_hotel_owner', 'Hotel owner'),
+                ('contact_rickshaw_driver', 'Rickshaw driver'),
+                ('contact_taxi_driver', 'Taxi driver'),
+                ('contact_bus_driver', 'Bus driver'),
+                ('contact_church_member', 'Church member'),
+                ('contact_other_ngo', 'Other NGO'),
+                ('contact_police', 'Police'),
+                ('contact_subcommittee_member', 'Subcommittee member'),
+                ('contact_other_value', irf.contact_other_value),
+            ]:
+                if getattr(irf, field):
+                    contacts.append(text)
+            contacts.extend(['']*2)
+            row.extend(contacts[:2])
+
+            if irf.contact_paid:
+                row.append('Paid the contact')
+            else:
+                row.append('')
+
+            row.append(irf.contact_paid_how_much)
+
+            row.append(irf.staff_who_noticed)
+
+            row.extend([
+                text_if_true(irf.noticed_hesitant, 'Noticed they were hesitant'),
+                text_if_true(irf.noticed_nervous_or_afraid, 'Noticed they were nervous or afraid'),
+                text_if_true(irf.noticed_hurrying, 'Noticed they were hurrying'),
+                text_if_true(irf.noticed_drugged_or_drowsy, 'Noticed they were drugged or drowsy'),
+                text_if_true(irf.noticed_new_clothes, 'Noticed they were wearing new clothes'),
+                text_if_true(irf.noticed_dirty_clothes, 'Noticed they had dirty clothes'),
+                text_if_true(irf.noticed_carrying_full_bags, 'Noticed they were carrying full bags'),
+                text_if_true(irf.noticed_village_dress, 'Noticed they were wearing village dress'),
+                text_if_true(irf.noticed_indian_looking, 'Noticed that they looked Indian'),
+                text_if_true(irf.noticed_typical_village_look, 'Noticed they had a typical village look'),
+                text_if_true(irf.noticed_looked_like_agent, 'Noticed they looked like an agent'),
+                text_if_true(irf.noticed_caste_difference, 'Noticed their caste was different'),
+                text_if_true(irf.noticed_young_looking, 'Noticed that they looked young'),
+                text_if_true(irf.noticed_waiting_sitting, 'Noticed that they were sitting/waiting'),
+                text_if_true(irf.noticed_walking_to_border, 'Noticed they were walking to the border'),
+                text_if_true(irf.noticed_roaming_around, 'Noticed they were roaming around'),
+                text_if_true(irf.noticed_exiting_vehicle, 'Noticed them exiting a vehicle'),
+                text_if_true(irf.noticed_heading_to_vehicle, 'Noticed them heading into a vehicle'),
+                text_if_true(irf.noticed_in_a_vehicle, 'Noticed them in a vehicle'),
+                text_if_true(irf.noticed_in_a_rickshaw, 'Noticed them in a rickshaw'),
+                text_if_true(irf.noticed_in_a_cart, 'Noticed them in a cart'),
+                text_if_true(irf.noticed_carrying_a_baby, 'Noticed them carrying a baby'),
+                text_if_true(irf.noticed_on_the_phone, 'Noticed them on the phone'),
+                text_if_true(irf.noticed_other_sign_value, irf.noticed_other_sign_value),
+                text_if_true(irf.call_subcommittee_chair, 'Called Subcommitte Chair'),
+                text_if_true(irf.call_thn_to_cross_check, 'Called THN to cross-check names'),
+                text_if_true(irf.name_come_up_before_yes_value, 'Names came up before'),
+                text_if_true(irf.scan_and_submit_same_day, 'Scanned and submitted same day'),
+                irf.get_interception_type_display(),
+                text_if_true(irf.trafficker_taken_into_custody, 'Trafficker taken into police custody'),
+            ])
+
+            # TODO get name of trafficker taken into custody
+
+            irf.get_how_sure_was_trafficking_display()
+
+            if irf.has_signature:
+                row.append('Form is signed')
+            else:
+                row.append('Form is not signed')
+
+            row.append(interceptee.full_name)
+
+            if interceptee.gender == 'm':
+                row.append('Male')
+            else:
+                row.append('Female')
+
+            row.extend([
+                interceptee.age,
+                interceptee.district,
+                interceptee.vdc,
+                interceptee.phone_contact,
+                interceptee.relation_to,
+            ])
+
+            for i, interceptee in enumerate(irf.interceptees.all()):
+                # Now list all of the traffickers but not victims
+                if interceptee.kind == 'v':
+                    continue
+
+                row.extend([
+                    interceptee.age,
+                    interceptee.district,
+                    interceptee.vdc,
+                    interceptee.phone_contact,
+                    interceptee.relation_to,
+                ])
+
+            rows.append(row)
 
     return rows
-
-
-BORDER_STATION_NAMES = [
-    ('BHW', 'Bhairahwa'),
-    ('NPJ', 'Nepalgunj'),
-    ('PRS', 'Nawalparasi'),
-    ('DNG', 'Dang'),
-    ('JNK', 'Janakpur'),
-    ('GRG', 'Gaurigunj'),
-    ('GLR', 'Guleria'),
-    ('MHN', 'Mahendranagar'),
-    ('DHD', 'Dhangadi'),
-    ('MLW', 'Malangwa'),
-    ('BRT', 'Biratnagar'),
-    ('BHD', 'Bhadrapur'),
-    ('GLC', 'Galchhi'),
-    ('BGN', 'Birgunj'),
-    ('MGL', 'Mugling'),
-    ('NRG', 'Narayanghat'),
-    ('HTD', 'Hetauda'),
-    ('KVT', 'Kakarvitta'),
-    ('PST', 'Pashupatinagar'),
-    ('CND', 'Chandrauta'),
-    ('KTM', 'Kathmandu'),
-    ('TKP', 'Tikapur'),
-    ('GAR', 'Gaur'),
-    ('SLG', 'Siliguri'),
-    ('LHN', 'Lahan'),
-]

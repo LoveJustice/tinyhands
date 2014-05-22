@@ -1,14 +1,36 @@
 {% extends "dataentry/dataentry_base.html" %}
 {% load widget_tweaks %}
 {% load bootstrap %}
+{% load unslugify %}
 
 {% block head %}
 </style>
 {% endblock %}
 
 {% block content %}
-{{ form.errors }}
-<form enctype="multipart/form-data" method="POST">{% csrf_token %}
+
+<div class="errors-for-popups" style="display: none">
+    {{ form.errors }}
+</div>
+
+
+{% for form in inlines.0 %}
+{% if form.errors %}
+{{ forloop.counter }} {{ form.errors }}
+{% endif %}
+{% endfor %}
+
+{% if form.errors %}
+<div class="alert alert-danger no-remove" style="margin-top: 20px">
+    {% for id, errors in form.errors.items %}
+        {% for error in errors %}
+        <p><strong>{{ id|unslugify }}:</strong> {{ error }}</p>
+        {% endfor %}
+    {% endfor %}
+</div>
+{% endif %}
+
+<form enctype="multipart/form-data" method="POST" id="interception-record-form">{% csrf_token %}
     <div class="form-page">
 
         <div class="row">
@@ -18,21 +40,60 @@
                 Version 2.3 <span class="text-danger">Tiny Hands Nepal</span></h2>
             </div>
             <div class="col-sm-6">
-                <p class="bg-danger">You will find instructions for each section in the pink boxes like this</p>
-                <table class="table table-bordered">
+                <p class="bg-danger" style="margin-bottom: 0">You will find instructions for each section in the pink boxes like this</p>
+                <table class="table table-bordered top-data-area">
                     <tbody>
                         <tr>
                             <td>
-                                {{ form.irf_number|bootstrap }}<br/>
-                                {{ form.date_time_of_interception|bootstrap }}
+                                {{ form.irf_number.label_tag }}
                             </td>
                             <td>
-                                {{ form.number_of_victims|bootstrap }}<br/>
-                                {{ form.number_of_traffickers|bootstrap }}
+                                <div style="width: 75px">
+                                    {{ form.irf_number }}
+                                </div>
                             </td>
                             <td>
-                                {{ form.location|bootstrap }}<br/>
-                                {{ form.staff_name|bootstrap }}
+                                <div style="width: 70px">
+                                    <small>{{ form.number_of_victims.label_tag }}</small>
+                                </div>
+                            </td>
+                            <td>
+                                <div style="width: 40px">
+                                    {{ form.number_of_victims }}
+                                </div>
+                            </td>
+                            <td>
+                                {{ form.location.label_tag }}
+                            </td>
+                            <td>
+                                {{ form.location }}
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                {{ form.date_time_of_interception.label_tag }}
+                            </td>
+                            <td>
+                                <div style="width: 75px">
+                                    {{ form.date_time_of_interception|attr:"data-placement: bottom" }}
+                                </div>
+                            </td>
+                            <td>
+                                <div style="width: 70px">
+                                    {{ form.number_of_traffickers.label_tag }}
+                                </div>
+                            </td>
+                            <td>
+                                <div style="width: 40px">
+                                    {{ form.number_of_traffickers|attr:"data-placement: bottom" }}
+                                </div>
+                            </td>
+                            <td>
+                                {{ form.staff_name.label_tag }}
+                            </td>
+                            <td>
+                                {{ form.staff_name|attr:"data-placement: bottom" }}
                             </td>
                     </tbody>
                 </table>
@@ -54,44 +115,49 @@
         <table class="table table-bordered" style="margin-bottom: 0">
             <thead>
                 <tr>
-                    <th>Question</th>
-                    <th>Answer</th>
+                    <th style="width: 16%">Question</th>
+                    <th style="width: 20%">Answer</th>
                     <th>Action</th>
-                    <th>Red Flag</th>
+                    <th style="width: 45%">Red Flag</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td rowspan="5" class="center">
-                        <strong>Who is in the group?</strong>
-                    </td>
-                    <td rowspan="2" class="center">
-                        <strong>1.1</strong>
-                        {{ form.who_in_group_alone }}
-                        {{ form.who_in_group_alone.label_tag }}</td>
-                    <td class="center">"Are you meeting someone in India?"</td>
-                    <td>
+                        <h3>Who is in the group?</h3>
+
                         <strong>3.1</strong>
                         {{ form.drugged_or_drowsy }}
                         <span class="red-flag">{{ form.drugged_or_drowsy.field.weight }}</span>
                         {{ form.drugged_or_drowsy.label_tag }}<br/>
 
 
-                        <strong>3.2</strong>
+                    </td>
+                    <td rowspan="2" class="center blue-choice">
+                        <strong>1.1</strong>
+                        {{ form.who_in_group_alone }}
+                        {{ form.who_in_group_alone.label_tag }}</td>
+                    <td class="center">
+                        <strong>"Are you meeting someone in India?"</strong>
+                    </td>
+                    <td>
+                        <strong>3.3</strong>
                         {{ form.meeting_someone_across_border }}
                         <span class="red-flag">{{ form.meeting_someone_across_border.field.weight }}</span>
                         {{ form.meeting_someone_across_border.label_tag }}<br/>
 
-                        <strong>3.3</strong>
+                        <strong>3.4</strong>
                         {{ form.seen_in_last_month_in_nepal }}
                         <span class="red-flag">{{ form.seen_in_last_month_in_nepal.field.weight }}</span>
                         {{ form.seen_in_last_month_in_nepal.label_tag }}
                     </td>
                 </tr>
                 <tr>
-                    <td class="center">Was she traveling with someone earlier?</td>
+                    <td class="center">
+                        <strong>Was she traveling with someone earlier?</strong>
+                    </td>
                     <td>
-                        <strong>3.4</strong>
+                        <strong>3.5</strong>
                         {{ form.traveling_with_someone_not_with_her }}
                         <span class="red-flag">{{ form.traveling_with_someone_not_with_her.field.weight }}</span>
                         {{ form.traveling_with_someone_not_with_her.label_tag }}
@@ -99,16 +165,20 @@
                 </tr>
                 <tr>
                     <td rowspan="2" class="center">
-                        <strong>1.2</strong>
-                        {{ form.who_in_group_husbandwife }}
-                        {{ form.who_in_group_husbandwife.label_tag }}
+                        <div class="blue-choice">
+                            <strong>1.2</strong>
+                            {{ form.who_in_group_husbandwife }}
+                            {{ form.who_in_group_husbandwife.label_tag }}
+                        </div>
 
-                        <strong>3.5</strong>
+                        <strong>3.2</strong>
                         {{ form.wife_under_18 }}
                         <span class="red-flag">{{ form.wife_under_18.field.weight }}</span>
                         {{ form.wife_under_18.label_tag }}
                     </td>
-                    <td class="center">Ask when she was married</td>
+                    <td class="center">
+                        <strong>Ask when she was married</strong>
+                    </td>
                     <td>
                         <strong>3.6</strong>
                         {{ form.married_in_past_2_weeks }}
@@ -122,7 +192,9 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="center">Ask when they met</td>
+                    <td class="center">
+                        <strong>Ask when they met</strong>
+                    </td>
                     <td>
                         <strong>3.8</strong>
                         {{ form.less_than_2_weeks_before_eloping }}
@@ -136,12 +208,14 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="center">
+                    <td class="center blue-choice">
                         <strong>1.3</strong>
                         {{ form.who_in_group_relative }}
                         {{ form.who_in_group_relative.label_tag }}
                     </td>
-                    <td class="center">Check citizenship cards</td>
+                    <td class="center">
+                        <strong>Check citizenship cards</strong>
+                    </td>
                     <td>
                         <strong>3.10</strong>
                         {{ form.caste_not_same_as_relative }}
@@ -169,7 +243,7 @@
                 </tr>
                 <tr>
                     <td rowspan="9" class="center">
-                        <strong>Where are you going, and for what?</strong></br>
+                        <h3>Where are you going, and for what?</h3>
 
                         <strong>3.13</strong>
                         {{ form.doesnt_know_going_to_india }}
@@ -187,17 +261,20 @@
                         {{ form.running_away_under_18.label_tag }}
                     </td>
                     <td rowspan="2" class="center">
-                        <strong>2.1</strong>
-                        {{ form.where_going_job }}
-                        {{ form.where_going_job.label_tag }}
-                        <br/>
+                        <div class="blue-choice">
+                            <strong>2.1</strong>
+                            {{ form.where_going_job }}
+                            {{ form.where_going_job.label_tag }}
+                        </div>
                     
                         <strong>3.16</strong>
                         {{ form.going_to_gulf_for_work }}
                         <span class="red-flag">{{ form.going_to_gulf_for_work.field.weight }}</span>
                         {{ form.going_to_gulf_for_work.label_tag }}
                     </td>
-                    <td class="center">Check documents</td>
+                    <td class="center">
+                        <strong>Check documents</strong>
+                    </td>
                     <td>
                         <strong>3.17</strong>
                         {{ form.no_address_in_india }}
@@ -231,7 +308,9 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="center">Call job place</td>
+                    <td class="center">
+                        <strong>Call job place</strong>
+                    </td>
                     <td>
                         <strong>3.23</strong>
                         {{ form.not_real_job }}
@@ -248,12 +327,14 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="center">
+                    <td class="center blue-choice">
                         <strong>2.2</strong>
                         {{ form.where_going_visit }}
                         {{ form.where_going_visit.label_tag }}
                     </td>
-                    <td class="center">Check bags</td>
+                    <td class="center">
+                        <strong>Check bags</strong>
+                    </td>
                     <td>
                         <strong>3.25</strong>
                         {{ form.no_bags_long_trip }}
@@ -262,12 +343,14 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="center">
+                    <td class="center blue-choice">
                         <strong>2.3</strong>
                         {{ form.where_going_shopping }}
                         {{ form.where_going_shopping.label_tag }}
                     </td>
-                    <td class="center">Check to see if bags are empty</td>
+                    <td class="center">
+                        <strong>Check to see if bags are empty</strong>
+                    </td>
                     <td>
                         <strong>3.26</strong>
                         {{ form.shopping_overnight_stuff_in_bags }}
@@ -276,12 +359,14 @@
                     </td>
                 </tr>
                 <tr>
-                    <td rowspan="2" class="center">
+                    <td rowspan="2" class="center blue-choice">
                         <strong>2.4</strong>
                         {{ form.where_going_study }}
                         {{ form.where_going_study.label_tag }}
                     </td>
-                    <td class="center">Check documents</td>
+                    <td class="center">
+                        <strong>Check documents</strong>
+                    </td>
                     <td>
                         <strong>3.27</strong>
                         {{ form.no_enrollment_docs }}
@@ -302,7 +387,9 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="center">Call School</td>
+                    <td class="center">
+                        <strong>Call School</strong>
+                    </td>
                     <td>
                         <p class="text-success"><span class="green-light"></span> Enrollment Confirmed</p>
 
@@ -313,12 +400,14 @@
                     </td>
                 </tr>
                 <tr>
-                    <td rowspan="3" class="center">
+                    <td rowspan="3" class="center blue-choice">
                         <strong>2.5</strong>
                         {{ form.where_going_treatment }}
                         {{ form.where_going_treatment.label_tag }}
                     </td>
-                    <td class="center">Ask which hospital, doctor</td>
+                    <td class="center">
+                        <strong>Ask which hospital, doctor</strong>
+                    </td>
                     <td>
                         <strong>3.31</strong>
                         {{ form.reluctant_treatment_info }}
@@ -327,7 +416,9 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="center">Check documents</td>
+                    <td class="center">
+                        <strong>Check documents</strong>
+                    </td>
                     <td>
                         <strong>3.32</strong>
                         {{ form.no_medical_documents }}
@@ -343,7 +434,9 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="center">Call doctor</td>
+                    <td class="center">
+                        <strong>Call doctor</strong>
+                    </td>
                     <td>
                         <p class="text-success"><span class="green-light"></span> Enrollment Confirmed</p>
 
@@ -363,9 +456,9 @@
         <table class="table table-bordered">
             <tbody>
                 <tr>
-                    <td class="center">
-                        <strong>Where are you from?</strong><br/>
-                        Ask her to describe in detail
+                    <td class="center" style="width: 25%">
+                        <h3>Where are you from?</h3>
+                        <strong>Ask her to describe in detail</strong>
                     </td>
                     <td colspan="2">
                         <strong>3.35</strong>
@@ -380,12 +473,16 @@
                         {{ form.reluctant_villiage_info.label_tag }}
                     </td>
                 </tr>
+            </tbody>
+        </table>
+        <table class="table table-bordered">
+            <tbody>
                 <tr>
-                    <td rowspan="2" class="center">
-                        <strong>"Who is your family?"</strong><br/>
-                        Ask for family contact info
+                    <td rowspan="2" class="center" style="width: 25%">
+                        <h3>"Who is your family?"</h3>
+                        <strong>Ask for family contact info</strong>
                     </td>
-                    <td rowspan="2">
+                    <td rowspan="2" style="width: 18%">
                         <strong>3.37</strong>
                         {{ form.reluctant_family_info }}
                         <span class="red-flag">{{ form.reluctant_family_info.field.weight }}</span>
@@ -396,10 +493,10 @@
                         <span class="red-flag">{{ form.refuses_family_info.field.weight }}</span>
                         {{ form.refuses_family_info.label_tag }}
                     </td>
-                    <td>
+                    <td class="text-center">
                         <strong>Under 18 years old</strong>
                     </td>
-                    <td>
+                    <td class="text-center" style="width: 25%">
                         <strong>18 years or older</strong>
                     </td>
                 </tr>
@@ -434,19 +531,19 @@
                 </tr>
             </tbody>
         </table>
-        <div class="row">
+        <div class="row first-page-footer">
             <div class="col-sm-8">
                 Which family member did you talk to? 
-                <strong>4.1</strong> {{ form.talked_to_brother }} {{ form.talked_to_brother.label_tag }}&nbsp;&nbsp;&nbsp;
-                <strong>4.2</strong> {{ form.talked_to_sister }} {{ form.talked_to_sister.label_tag }}&nbsp;&nbsp;&nbsp;
-                <strong>4.3</strong> {{ form.talked_to_father }} {{ form.talked_to_father.label_tag }}<br/>
-                <strong>4.4</strong> {{ form.talked_to_mother }} {{ form.talked_to_mother.label_tag }}&nbsp;&nbsp;&nbsp;
-                <strong>4.5</strong> {{ form.talked_to_grandparent }} {{ form.talked_to_grandparent.label_tag }}&nbsp;&nbsp;&nbsp;
-                <strong>4.6</strong> {{ form.talked_to_aunt_uncle }} {{ form.talked_to_aunt_uncle.label_tag }}<br/>
-                <strong>4.7</strong>&nbsp;{{ form.talked_to_other }} {{ form.talked_to_other.label_tag }} {{ form.talked_to_other_value }}
+                <strong>4.1</strong> {{ form.talked_to_brother }} {{ form.talked_to_brother.label_tag }}
+                <strong>4.2</strong> {{ form.talked_to_sister }} {{ form.talked_to_sister.label_tag }}<br/>
+                <strong>4.3</strong> {{ form.talked_to_father }} {{ form.talked_to_father.label_tag }}
+                <strong>4.4</strong> {{ form.talked_to_mother }} {{ form.talked_to_mother.label_tag }}
+                <strong>4.5</strong> {{ form.talked_to_grandparent }} {{ form.talked_to_grandparent.label_tag }}<br/>
+                <strong>4.6</strong> {{ form.talked_to_aunt_uncle }} {{ form.talked_to_aunt_uncle.label_tag }}
+                <strong>4.7</strong> {{ form.talked_to_other }} {{ form.talked_to_other.label_tag }} {{ form.talked_to_other_value }}
             </div>
             <div class="col-sm-2">
-                <strong>5.0</strong> {{ form.reported_total_red_flags.label_tag }} {{ form.reported_total_red_flags }}
+                <strong>5.0 {{ form.reported_total_red_flags.label }} {{ form.reported_total_red_flags|attr:"style: width: 50px" }}</strong>
             </div>
             <div class="col-sm-2">
                 <strong>Calculated Total Red Flag Points: <span id="calculated-total">0</span></strong>
@@ -470,34 +567,34 @@
                 </tr>
             </tbody>
         </table>
-        <table class="table table-bordered">
+        <table class="table table-bordered contact-intercepted">
             <tbody>
                 <tr>
-                    <td colspan="4" class="bg-success">
+                    <td colspan="4">
                         <strong>6.0</strong>&nbsp;{{ form.contact_noticed }}  {{ form.contact_noticed.label_tag }}
                     </td>
                 </tr>
-                <tr class="bg-success">
-                    <td>
+                <tr>
+                    <td style="width: 20%">
                         <strong>6.1</strong>&nbsp;{{ form.contact_hotel_owner }}          {{ form.contact_hotel_owner.label_tag }}<br/>
                         <strong>6.2</strong>&nbsp;{{ form.contact_rickshaw_driver }}      {{ form.contact_rickshaw_driver.label_tag }}<br/>
                         <strong>6.3</strong>&nbsp;{{ form.contact_taxi_driver }}          {{ form.contact_taxi_driver.label_tag }}
                     </td>
-                    <td>
+                    <td style="width: 20%">
                         <strong>6.4</strong>&nbsp;{{ form.contact_bus_driver }}           {{ form.contact_bus_driver.label_tag }}<br/>
                         <strong>6.5</strong>&nbsp;{{ form.contact_church_member }}        {{ form.contact_church_member.label_tag }}<br/>
                         <strong>6.6</strong>&nbsp;{{ form.contact_other_ngo }}            {{ form.contact_other_ngo.label_tag }}
                     </td>
-                    <td>
+                    <td style="width: 25%">
                         <strong>6.7</strong>&nbsp;{{ form.contact_police }}               {{ form.contact_police.label_tag }}<br/>
                         <strong>6.8</strong>&nbsp;{{ form.contact_subcommittee_member }}  {{ form.contact_subcommittee_member.label_tag }}<br/>
-                        <strong>6.9</strong>&nbsp;{{ form.contact_other }}&nbsp;{{ form.contact_other.label_tag }}&nbsp;{{ form.contact_other_value }}
+                        <strong>6.9</strong> {{ form.contact_other }} {{ form.contact_other.label_tag }} {{ form.contact_other_value|attr:"style: width: 160px" }}
                     </td>
-                    <td>
+                    <td class="contact-paid">
                         Did you pay this contact for the information?<br/>
-                        <strong>6.10</strong>&nbsp;{{ form.contact_paid_no }}               {{ form.contact_paid_no.label_tag }}&nbsp;&nbsp;&nbsp;
-                        <strong>6.11</strong>&nbsp;{{ form.contact_paid_yes }}               {{ form.contact_paid_yes.label_tag }}&nbsp;&nbsp;&nbsp;
-                        {{ form.contact_paid_how_much.label_tag }}  {{ form.contact_paid_how_much }}
+                        <strong>6.10</strong> {{ form.contact_paid.0 }} {{ form.contact_paid.0.label_tag }}
+                        <strong>6.11</strong> {{ form.contact_paid.1 }} {{ form.contact_paid.1.label_tag }}
+                        {{ form.contact_paid_how_much.label }}  {{ form.contact_paid_how_much|attr:"style: width: 70px" }}
                     </td>
                 </tr>
             </tbody>
@@ -505,23 +602,32 @@
         <table class="table table-bordered">
             <tbody>
                 <tr>
-                    <td colspan="5" class="bg-primary">
+                    <td class="bg-danger center">
+                        Only proceed if there have been at least 20 red flag points and no green lights.
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-bordered staff-intercepted">
+            <tbody>
+                <tr>
+                    <td colspan="5">
                         <strong>7.0</strong>&nbsp;{{ form.staff_noticed }}  {{ form.staff_noticed.label_tag }}
                     </td>
                 </tr>
-                <tr class="bg-primary">
+                <tr>
                     <td colspan="5">
                         <strong>7.1</strong>&nbsp;{{ form.staff_who_noticed.label_tag }} {{ form.staff_who_noticed }}
                         What was the sign that made you stop the girl for questioning? (check all that apply below)
                     </td>
                 </tr>
-                <tr class="bg-primary">
+                <tr>
                     <th>Manner</th>
                     <th>Attire</th>
                     <th>Appearance</th>
                     <th colspan="2">Action</th>
                 </tr>
-                <tr class="bg-primary">
+                <tr>
                     <td>
                         <strong>7.2</strong>&nbsp;{{ form.noticed_hesitant }}              {{ form.noticed_hesitant.label_tag }}<br/>
                         <strong>7.3</strong>&nbsp;{{ form.noticed_nervous_or_afraid }}     {{ form.noticed_nervous_or_afraid.label_tag }}<br/>
@@ -556,7 +662,7 @@
                         <strong>7.24</strong>&nbsp;{{ form.noticed_on_the_phone }}         {{ form.noticed_on_the_phone.label_tag }}
                     </td>
                 </tr>
-                <tr class="bg-primary">
+                <tr>
                     <td colspan="2">
                         <strong>7.25</strong>&nbsp;{{ form.noticed_other_sign }}&nbsp;{{ form.noticed_other_sign.label_tag }}&nbsp;{{ form.noticed_other_sign_value|attr:"style: width: 60%" }}
                     </td>
@@ -564,6 +670,7 @@
 
             </tbody>
         </table>
+        <br/>
 
         {{ inlines.0.management_form }}
         <div class="row">
@@ -601,7 +708,8 @@
                         {% endfor %}
                     </tbody>
                 </table>
-                <div class="row">
+        <br/>
+                <div class="row last-form-area">
                     <div class="col-sm-6">
                         <p class="bg-danger">You must complete each of these procedures for this IRF to be 
                         considered correctly filled out. Tick each box to indicate that 
@@ -611,59 +719,53 @@
                         <strong>8.1</strong>&nbsp;{{ form.call_subcommittee_chair }} {{ form.call_subcommittee_chair.label_tag }}<br/>
                         <strong>8.2</strong>&nbsp;{{ form.call_thn_to_cross_check }} {{ form.call_thn_to_cross_check.label_tag }}<br/>
                         Had any name come up before?
-                        {{ form.name_come_up_before_yes }} {{ form.name_come_up_before_yes.label_tag }} {{ form.name_come_up_before_no }} {{ form.name_come_up_before_no.label_tag }} <br/>
-                        {{ form.name_come_up_before_yes_value.label_tag }}  {{ form.name_come_up_before_yes_value }}
+                        {{ form.name_come_up_before.1 }} {{ form.name_come_up_before.1.label_tag }} {{ form.name_come_up_before.0 }} {{ form.name_come_up_before.0.label_tag }} <br/>
+                        {{ form.name_come_up_before_yes_value.label_tag }}  {{ form.name_come_up_before_yes_value|attr:"style: width: 100px" }}<br/>
                         <strong>8.3</strong>&nbsp;{{ form.scan_and_submit_same_day }} {{ form.scan_and_submit_same_day.label_tag }}
-
-                        <p class="bg-danger" style="margin-top: 40px">
-                        {{ form.scanned_form.label_tag }} {{ form.scanned_form }}
-                        </p>
                     </div>
                     <div class="col-sm-6">
-                        <h3 class="text-center">Type of Intercept</h3>
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <strong>9.1</strong>
-                                {{ form.interception_type.0 }}
-                                {{ form.interception_type.choice.0.label_tag }}<br/>
-                            </div>
-                            <div class="col-sm-6">
-                                <strong>9.2</strong>
-                                {{ form.interception_type.1 }}
-                                {{ form.interception_type.choice.1.label_tag }}<br/>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <strong>9.3</strong>
-                                {{ form.interception_type.2 }}
-                                {{ form.interception_type.choice.2.label_tag }}<br/>
-                            </div>
-                            <div class="col-sm-6">
-                                <strong>9.4</strong>
-                                {{ form.interception_type.3 }}
-                                {{ form.interception_type.choice.3.label_tag }}<br/>
-                            </div>
-                            <div class="col-sm-6">
-                                <strong>9.5</strong>
-                                {{ form.interception_type.4 }}
-                                {{ form.interception_type.choice.4.label_tag }}<br/>
-                            </div>
-                        </div>
+                        <h3 style="margin-top: 0" class="text-center">Type of Intercept</h3>
+                        <span class="checkbox-group">
+                            <strong>9.1</strong>
+                            {{ form.interception_type.0 }}
+                            {{ form.interception_type.choice.0.label_tag }}
+                        </span>
+                        <span class="checkbox-group">
+                            <strong>9.2</strong>
+                            {{ form.interception_type.1 }}
+                            {{ form.interception_type.choice.1.label_tag }}
+                        </span>
+                        <br/>
+                        <span class="checkbox-group">
+                            <strong>9.3</strong>
+                            {{ form.interception_type.2 }}
+                            {{ form.interception_type.choice.2.label_tag }}
+                        </span>
+                        <span class="checkbox-group">
+                            <strong>9.4</strong>
+                            {{ form.interception_type.3 }}
+                            {{ form.interception_type.choice.3.label_tag }}
+                        </span>
+                        <span class="checkbox-group">
+                            <strong>9.5</strong>
+                            {{ form.interception_type.4 }}
+                            {{ form.interception_type.choice.4.label_tag }}
+                        </span>
+                        <br/>
 
-                        <strong>9.6</strong>&nbsp;{{ form.trafficker_taken_into_custody.label_tag }} {{ form.trafficker_taken_into_custody }}<br/>
+                        <strong>9.6</strong> <label>Was any trafficker taken into police custody?<br/>If yes, write the # from the table above:</label> {{ form.trafficker_taken_into_custody|attr:"style: width: 100px" }}<br/>
                         <strong>9.7</strong>&nbsp;{{ form.how_sure_was_trafficking.label_tag }}<br/>
                         <strong>Rate from 1-5</strong> <small>1 = not at all sure, 5 = absolutely sure</small> {{ form.how_sure_was_trafficking|attr:'style: width: 60px' }}
 
                         <div class="signature-box text-center">
-                            <p><strong>I certify that I have followed procedures and filled out this form correctly, completely, and accurately.</strong></p>
+                            <p><strong>I certify that I have followed procedures and filled<br/>out this form correctly, completely, and accurately.</strong></p>
 
-                            <p><em><input style="width: 100%" type="text" disabled="disabled" value="Does the original form have a valid signature?"/></em></p>
                             {{ form.has_signature }} {{ form.has_signature.label_tag }}
-
-
                         </div>
                     </div>
+                </div>
+                <div class="bg-danger clearfix">
+                    <div class="pull-left" style="margin-right: 20px">{{ form.scanned_form.label_tag }}</div> {{ form.scanned_form|add_class:"pull-left" }}
                 </div>
             </div>
             <div class="col-sm-2">
@@ -680,7 +782,7 @@
         </div>
         <div class="row">
             {% for interceptee_form in inlines.0|slice:"6:" %}
-                <div class="col-sm-2">
+                <div class="col-sm-2 pull-right">
                     <div class="photo">
                         {% if interceptee_form.photo_thumbnail.url %}
                             <img class="img-thumbnail" src="{{ interceptee_form.photo_thumbnail.url }}" />
@@ -693,7 +795,17 @@
         </div>
     </div>
 
-    <input type="submit" style="margin-top: 20px" class="pull-right btn btn-primary btn-lg" value="{% if interceptionrecord %}Update{% else %}Create{% endif%}" />
+    <div id="footer">
+        <nav class="navbar navbar-default navbar-fixed-bottom">
+            <div class="container">
+                <div class="navbar-inner navbar-content-center">
+                    <input type="submit" class="pull-right btn btn-primary navbar-btn btn-lg" value="Submit" />
+                </div>
+            </div>
+        </nav>
+    </div>
+
+
 </form>
 
 {% endblock %}

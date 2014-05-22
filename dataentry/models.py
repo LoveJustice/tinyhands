@@ -12,10 +12,15 @@ models.BooleanField.set_weight = set_weight
 
 
 class InterceptionRecord(models.Model):
+    BOOL_CHOICES = [
+        (False, 'No'),
+        (True, 'Yes'),
+    ]
+
     form_entered_by = models.ForeignKey(Account, related_name='irfs_entered')
     date_form_received = models.DateTimeField()
 
-    irf_number = models.IntegerField('IRF #:')
+    irf_number = models.CharField('IRF #:', max_length=20)
     date_time_of_interception = models.DateTimeField('Date/Time:')
 
     number_of_victims = models.IntegerField('# of victims:')
@@ -116,8 +121,7 @@ class InterceptionRecord(models.Model):
     contact_other_value = models.CharField(max_length=255, blank=True)
 
     # Did you pay this contact for the information?
-    contact_paid_no = models.BooleanField('No', default=False)
-    contact_paid_yes = models.BooleanField('Yes', default=False)
+    contact_paid = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
     contact_paid_how_much = models.CharField('How much?', max_length=255, blank=True)
 
     staff_noticed = models.BooleanField('Staff', default=False)
@@ -161,8 +165,7 @@ class InterceptionRecord(models.Model):
     # Procedures
     call_subcommittee_chair = models.BooleanField('Call Subcommittee Chair', default=False)
     call_thn_to_cross_check = models.BooleanField('Call THN to cross-check the names (6223856)', default=False)
-    name_come_up_before_yes = models.BooleanField('Yes', default=False)
-    name_come_up_before_no = models.BooleanField('No', default=False)
+    name_come_up_before = models.NullBooleanField(choices=BOOL_CHOICES)
     name_come_up_before_yes_value = models.CharField('If yes, write the # from the table above:', max_length=255, blank=True)
     scan_and_submit_same_day = models.BooleanField('Scan and submit to THN the same day', default=False)
 
@@ -176,14 +179,23 @@ class InterceptionRecord(models.Model):
     ]
     interception_type = models.CharField(max_length=30, choices=INTERCEPT_TYPE_CHOICES, blank=True)
 
-    trafficker_taken_into_custody = models.CharField('Was any trafficker taken into police custody? If yes, write the # from the table above:', max_length=255, default='', blank=True)
-    how_sure_was_trafficking = models.CharField('How sure are you that it was trafficking case?', max_length=5, default='', blank=True)
+    trafficker_taken_into_custody = models.CharField(max_length=255, default='', blank=True)
+    HOW_SURE_TRAFFICKING_CHOICES = [
+        (1, '1 - Not at all sure'),
+        (2, '2 - Unsure but suspects it'),
+        (3, '3 - Somewhat sure'),
+        (4, '4 - Very sure'),
+        (5, '5 - Absolutely sure'),
+    ]
+    how_sure_was_trafficking = models.IntegerField(
+        'How sure are you that it was trafficking case?',
+        choices=HOW_SURE_TRAFFICKING_CHOICES, null=True, blank=True)
 
     has_signature = models.BooleanField('Scanned form has signature?', default=False)
 
     scanned_form = models.FileField('Attach scanned copy of form (pdf or image)', upload_to='scanned_forms', default='', blank=True)
 
-    def calculate_total(self):
+    def calculate_total_red_flags(self):
         total = 0
         for field in self._meta.fields:
             if type(field) == models.BooleanField:
@@ -218,6 +230,9 @@ class Interceptee(models.Model):
     vdc = models.CharField(max_length=255, blank=True)
     phone_contact = models.CharField(max_length=255, blank=True)
     relation_to = models.CharField(max_length=255, blank=True)
+
+    class Meta:
+        ordering = ['id']
 
 
 class VictimInterview(models.Model):

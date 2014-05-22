@@ -89,13 +89,19 @@ var DREAMSUITE = {
         $('.in-use-button').tooltip();
     },
 
-    interceptionrecord_form: function() {
+    interceptionrecord_create: function() {
+        this.interceptionrecord_update();
+    },
+
+    interceptionrecord_update: function() {
         function calculateTotal() {
             var total = 0;
             $('input[type="checkbox"]').each(function(id, elem) {
-                var value = $(elem).next('.red-flag').text();
-                if (value && $(elem).prop('checked')) {
-                    total += parseInt(value);
+                var value = $.trim($(elem).next('.red-flag').text());
+                if (value !== '') {
+                    if ($(elem).prop('checked')) {
+                        total += parseInt(value);
+                    }
                 }
             });
             $('#calculated-total').text(total);
@@ -112,7 +118,37 @@ var DREAMSUITE = {
             };
             $(window).resize(resize);
             resize();
+
+            // Highlight fields with errors
+            $('.errors-for-popups .errorlist').first().children().each(function() {
+                var pieces = $(this).html().split('<', 2);
+                var form_control_id = 'id_' + pieces[0];
+
+                var errors = [];
+                $(this).find('li').each(function() {
+                    errors.push($(this).text());
+                });
+
+                var $elem = $('#' + form_control_id)
+                    .attr('data-toggle', 'tooltip')
+                    .attr('title', errors.join(', '))
+                ;
+                var opts = { trigger: 'manual' };
+                if (!$elem.is('[data-placement]')) {
+                    opts.placement = 'top';
+                }
+                else {
+                    opts.placement = $.trim($elem.data('placement'));
+                    $elem.attr('data-placement', '');
+                }
+                console.log(opts);
+
+                $elem.tooltip(opts).tooltip('show');
+            });
+
+            
         });
+
     },
 
     default: function() {}
@@ -122,7 +158,7 @@ var DREAMSUITE = {
 $(document).ready(function() {
     $('.alert').slideDown();
     setTimeout(function() {
-        $('.alert').slideUp();
+        $('.alert').not('.no-remove').slideUp();
     }, 4000);
 
     var bodyClass = $('body').attr('id');

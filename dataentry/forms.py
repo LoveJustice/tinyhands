@@ -19,8 +19,21 @@ class InterceptionRecordForm(forms.ModelForm):
         required=False
     )
 
+    contact_paid = forms.ChoiceField(
+        choices=InterceptionRecord.BOOL_CHOICES,
+        widget=forms.RadioSelect(),
+        required=False
+    )
+
+    name_come_up_before = forms.ChoiceField(
+        choices=InterceptionRecord.BOOL_CHOICES,
+        widget=forms.RadioSelect(),
+        required=False
+    )
+
     class Meta:
         model = InterceptionRecord
+        exclude = ['form_entered_by', 'date_form_received']
 
     def __init__(self, *args, **kwargs):
 
@@ -89,18 +102,6 @@ class InterceptionRecordForm(forms.ModelForm):
         ):
             raise ValidationError("Either Contact (6.0) or Staff (7.0) must be chosen for how interception was made.")
         return self.cleaned_data.get('contact_noticed')
-
-    def clean_contact_hotel_owner(self):
-        print self.cleaned_data.get('contact_noticed')
-        print self.cleaned_data.get('contact_hotel_owner')
-        print self.cleaned_data.get('contact_rickshaw_driver')
-        print self.cleaned_data.get('contact_taxi_driver')
-        print self.cleaned_data.get('contact_bus_driver')
-        print self.cleaned_data.get('contact_church_member')
-        print self.cleaned_data.get('contact_other_ngo')
-        print self.cleaned_data.get('contact_police')
-        print self.cleaned_data.get('contact_subcommittee_member')
-        print self.cleaned_data.get('contact_other')
 
         if self.cleaned_data.get('contact_noticed') and not (
             self.cleaned_data.get('contact_hotel_owner') or

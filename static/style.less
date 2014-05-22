@@ -6,16 +6,49 @@ body {
     padding-right: 20px;
 }
 
-body#interceptionrecord_create, body#interceptionrecord_update {
+#interception-record-form {
+    width: 1140px;
+    .tooltip-inner {
+        background-color: #a00000 !important;
+        font-weight: normal;
+        font-size: 13px;
+        border: 1px solid black;
+    }
+    font-family: "PT Serif", serif;
+    font-size: 15px;
+    h2 {
+        font-size: 26px !important;
+        font-weight: bold;
+    }
     td {
         vertical-align: middle;
+    }
+    p {
+        margin-bottom: 0px !important;
+    }
+    strong {
     }
     .center {
         text-align: center;
     }
+    label {
+        display: inline;
+        color: #800000;
+        font-size: 16px;
+    }
+    h3 {
+        font-weight: bold;
+        font-size: 22px;
+    }
+
+    .blue-choice, .blue-choice label {
+        font-size: 20px;
+        font-weight: bold;
+        color: #003366;
+    }
     .form-page {
         background-image: url(/static/images/irf-background.png);
-        background-size: 100%;
+        background-size: 117%;
         border: 1px solid #888;
         box-shadow: 2px 2px 2px black;
         padding: 50px;
@@ -25,13 +58,16 @@ body#interceptionrecord_create, body#interceptionrecord_update {
     }
     table, td, tr, thead, th, tbody {
         border-color: black;
+        border: 2px solid #444;
+    }
+    table {
+        margin-bottom: 0;
     }
     th {
+        font-weight: bold;
         text-align: center;
-    }
-    label {
-        display: inline;
-        color: #800000;
+        font-size: 17px;
+        padding: 0;
     }
     .bg-danger {
         background-color: rgba(128, 0, 0, 0.2);
@@ -52,17 +88,33 @@ body#interceptionrecord_create, body#interceptionrecord_update {
     .text-success {
         color: #4F6128;
     }
+    .top-data-area {
+        margin-bottom: 0;
+        font-size: 16px;
+        label {
+            color: black;
+            font-size: 15px;
+        }
+        input {
+            width: 100%;
+        }
+    }
+    td {
+        padding: 0 4px;
+    }
     .red-flag {
         background-image: url(/static/images/red-flag.png);
         color: #EADC9F;
         font-size: 13px;
         font-weight: bold;
-        line-height: 32px;
-        width: 32px;
-        height: 31px;
+        line-height: 24px;
+        width: 25px;
+        height: 24px;
+        background-size: 100%;
         text-align: center;
         display: inline-block;
         vertical-align: middle;
+        margin: -4px;
     }
     .green-light {
         background-image: url(/static/images/green-light.png);
@@ -70,6 +122,34 @@ body#interceptionrecord_create, body#interceptionrecord_update {
         height: 15px;
         display: inline-block;
         vertical-align: middle;
+    }
+    .first-page-footer {
+        font-size: 20px;
+        label {
+            color: black;
+            margin-right: 26px;
+        }
+    }
+    .contact-intercepted {
+        background-color: rgba(150, 153, 120, 0.7);
+        label {
+            font-size: 16px;
+            color: black;
+        }
+    }
+    .contact-paid {
+        label {
+            font-size: 16px;
+            color: black;
+            margin-right: 12px;
+        }
+    }
+    .staff-intercepted {
+        background-color: rgba(163, 173, 195, 0.7);
+        label {
+            font-size: 16px;
+            color: black;
+        }
     }
     .interceptee-form {
         background-color: white;
@@ -80,6 +160,11 @@ body#interceptionrecord_create, body#interceptionrecord_update {
     }
     .interceptee-form td {
         padding: 0;
+    }
+    .checkbox-group, .radio-group {
+        label {
+            display: inline;
+        }
     }
 
     .photo {
@@ -105,12 +190,276 @@ body#interceptionrecord_create, body#interceptionrecord_update {
         border: 1px solid #444;
         margin-top: 10px;
         margin-bottom: 10px;
-        padding: 20px;
+        padding: 10px;
     }
     .form-group {
         margin-bottom: 0;
     }
     .help-block {
         margin-bottom: 0;
+    }
+
+    .last-form-area {
+        label {
+            color: black;
+        }
+    }
+}
+
+@vif-blue: #003366;
+@vif-red: #800000;
+#victim-interview-form {
+    width: 1140px;
+    .form-page {
+        font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
+        font-size: 18px;
+        background-image: url(/static/images/vif-background1.jpg);
+        background-size: 100%;
+        border: 1px solid #888;
+        box-shadow: 2px 2px 2px black;
+        padding: 30px;
+        color: @vif-blue;
+        margin-bottom: 32px;
+        margin-top: 20px;
+    }
+    .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8 {
+        padding: 4px;
+        input[type="text"] {
+            width: 100%;
+        }
+    }
+    .major-column {
+        padding: 0;
+    }
+    small {
+        font-size: 14px;
+        color: black;
+    }
+    label {
+        color: black;
+        font-size: 18px;
+    }
+    .section-number {
+        color: @vif-blue;
+        font-weight: bold;
+        text-shadow: -1px 0 0 @vif-blue, 1px 1px 0 #888;
+    }
+    .label-inside-field {
+        position: relative;
+    }
+    .label-inside-field label {
+        position: absolute;
+        left: 2px;
+        top: 2px;
+    }
+    .label-inside-field input, .label-inside-field textarea {
+        width: 100%;
+        text-align: right;
+        padding: 8px;
+    }
+    .checkbox-group, .radio-group {
+        label {
+            display: inline;
+        }
+    }
+    .inline-checkbox-group, .inline-radio-group {
+        display: inline-block;
+        * {
+            margin-bottom: 0;
+        }
+        label {
+            margin-right: 4px;
+        }
+    }
+    .blending-into-input-label {
+        position: relative;
+        z-index: 100;
+        background-color: white;
+        border: 1px solid black;
+        border-bottom: none;
+        padding: 2px 8px;
+        margin-bottom: -2px;
+    }
+    .right-col-border {
+        border-right: 2px solid black;
+    }
+    .black-box {
+        border-left: 2px solid black;
+        border-right: 2px solid black;
+        border-bottom: 2px solid black;
+        h2 {
+            display: inline;
+            color: black;
+            font-size: 22px;
+            font-weight: bold;
+            margin: 2px 4px;
+        }
+    }
+    .black-box-top {
+        border-top: 2px solid black;
+    }
+
+    .person-box {
+        position: relative;
+        background-color: #C8C8D2;
+        border-left: 2px solid @vif-red;
+        border-right: 2px solid @vif-red;
+        border-bottom: 2px solid @vif-red;
+        .person-box-number {
+            border: 2px solid #CCCCFF;
+            width: 40px;
+            text-align: center;
+            color: white;
+            background-color: @vif-red;
+            opacity: 0.8;
+            position: absolute;
+            right: 4px;
+            top: -8px;
+            padding: 3px 0;
+            font-size: 17px;
+        }
+        .inner {
+            padding: 4px;
+        }
+        .smaller, .smaller label  {
+            font-size: 90%;
+        }
+        .col-sm-5, .col-sm-6, .col-sm-7 {
+            padding: 0;
+        }
+        h2 {
+            display: inline;
+            color: black;
+            font-size: 19px;
+            font-weight: bold;
+            margin: 2px 4px;
+        }
+    }
+    .person-box-top {
+        border-top: 2px solid @vif-red;
+    }
+    .red-border-right {
+        border-right: 2px solid @vif-red;
+    }
+    .red-border-bottom {
+        border-bottom: 2px solid @vif-red;
+    }
+
+    .location-box {
+        background-color: #CbD2EA;
+        border-left: 2px solid @vif-blue;
+        border-right: 2px solid @vif-blue;
+        border-bottom: 2px solid @vif-blue;
+        .location-box-number {
+            border: 2px solid #CCCCFF;
+            width: 40px;
+            text-align: center;
+            color: white;
+            background-color: @vif-blue;
+            opacity: 0.8;
+            display: inline-block;
+            position: relative;
+            left: -12px;
+            padding: 3px 0;
+            font-size: 17px;
+        }
+        .inner {
+            padding: 4px;
+        }
+        .smaller, .smaller label  {
+            font-size: 90%;
+        }
+        .col-sm-5, .col-sm-6, .col-sm-7 {
+            padding: 0;
+        }
+        h2 {
+            display: inline;
+            color: black;
+            font-size: 19px;
+            font-weight: bold;
+            margin: 2px 4px;
+        }
+    }
+    .location-box-top {
+        border-top: 2px solid @vif-blue;
+    }
+    .blue-border-right {
+        border-right: 2px solid @vif-blue;
+    }
+
+    .blue-box {
+        background-color: @vif-blue;
+        h1 {
+            color: white;
+            font-size: 22px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin: 2px 4px;
+            text-align: center;
+        }
+    }
+    .padded-box {
+        padding: 2px 4px 10px;
+    }
+    .table-bordered {
+        tr, th, td {
+            border: 1px solid black;
+        }
+    }
+    .blue-arrow, .red-arrow {
+        color: black;
+        font-weight: bold;
+        font-size: 16px;
+        background-size: 100% 100%;
+        padding: 10px;
+        padding-left: 40px;
+        padding-right: 24px;
+        width: 100%;
+        height: 100%;
+        margin-left: -10px;
+        margin-right: -10px;
+        white-space: nowrap;
+    }
+    .blue-arrow {
+        background-image: url(/static/images/blue-arrow.png);
+    }
+    .red-arrow {
+        background-image: url(/static/images/red-arrow.png);
+    }
+    .full-width {
+        width: 100%;
+    }
+}
+
+@warning-yellow: #FED228;
+.alarm-box {
+    position: relative;
+    display: inline-block;
+    padding-left: 22px;
+    padding-right: 6px;
+    text-align: right;
+    background-color: black;
+    color: @warning-yellow;
+    &:before {
+        color: black;
+        position: absolute;
+        content:"!";
+        z-index: 1000;
+        left: 9px;
+        top: 4px;
+        font-weight: bold;
+        font-size: 10px;
+    }
+    &:after {
+        content:" ";
+        position: absolute;
+        z-index: 500;
+        top: 3px;
+        left: 4px;
+        border-top: 0px solid transparent;
+        border-left: 7px solid transparent;
+        border-right: 7px solid transparent;
+        border-bottom: 14px solid @warning-yellow;
+
     }
 }
