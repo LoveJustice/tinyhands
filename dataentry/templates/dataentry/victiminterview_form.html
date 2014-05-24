@@ -40,18 +40,25 @@
                     <h1>1. Victim &amp; Family Information</h1>
                 </div>
                 <div class="black-box clearfix">
-                    <span class="section-number">1.1</span>
-                    {{ form.victim_name.label_tag }}
-                    {{ form.victim_name }}
+                    <div class="pull-right">
+                        <div class="inline-radio-group">
+                            <span class="section-number label-like">1.2</span>
+                            <label for="{{ form.victim_gender.auto_id }}">
+                                Gender
+                            </label>
+                            {% for choice in form.victim_gender %}
+                                {{ choice }}
+                            {% endfor %}
+                        </div>
+                    </div>
 
-                    <br/>
+                    <label class="blending-into-input-label"
+                           for="{{ form.victim_name.auto_id }}">
+                        <span class="section-number">1.1</span>
+                        {{ form.victim_name.label }}
+                    </label>
 
-                    <span class="section-number label-like">1.2</span>
-                    {{ form.victim_gender.label_tag }}
-                    <br/>
-                    {% for choice in form.victim_gender %}
-                        <div class="radio-select">{{ choice }}</div>
-                    {% endfor %}
+                    {{ form.victim_name|attr:"style: padding: 4px" }}
                 </div>
 
                 <div class="black-box clearfix">
@@ -81,20 +88,29 @@
                 <div class="black-box clearfix">
                     <div class="col-sm-4">
                         <div class="label-inside-field">
-                            <span class="section-number">1.4</span>
-                            {{ form.victim_age.label_tag }}{{ form.victim_age }}
+                            <label for="{{ form.victim_age.auto_id }}">
+                                <span class="section-number">1.4</span>
+                                {{ form.victim_age.label }}
+                            </label>
+                            {{ form.victim_age|attr:"style: padding-top: 24px" }}
                         </div>
                     </div>
                     <div class="col-sm-4">
                         <div class="label-inside-field">
-                            <span class="section-number">1.5</span>
-                            {{ form.victim_height.label_tag }}{{ form.victim_height }}
+                            <label for="{{ form.victim_height.auto_id }}">
+                                <span class="section-number">1.5</span>
+                                {{ form.victim_height.label }}
+                            </label>
+                            {{ form.victim_height|attr:"style: padding-top: 24px" }}
                         </div>
                     </div>
                     <div class="col-sm-4">
                         <div class="label-inside-field">
-                            <span class="section-number">1.6</span>
-                            {{ form.victim_weight.label_tag }}{{ form.victim_weight }}
+                            <label for="{{ form.victim_weight.auto_id }}">
+                                <span class="section-number">1.6</span>
+                                {{ form.victim_weight.label }}
+                            </label>
+                            {{ form.victim_weight|attr:"style: padding-top: 24px" }}
                         </div>
                     </div>
                 </div>
@@ -118,17 +134,21 @@
                             <div class="radio-group">{{ choice }}  {{ choice.label_tag }}</div>
                         {% endfor %}
                     </div>
+
+                        <label class="blending-into-input-label pull-right">
+                            {{ form.victim_caste.11 }}  {{ form.victim_caste.11.label_tag }}
+                        </label>
+                        {{ form.victim_caste_other_value|add_class:"pull-right"|attr:"style:width: 140px; clear:right" }}
+
                     <div class="radio-group">{{ form.victim_caste.9 }}  {{ form.victim_caste.9.label_tag }}</div>
                     <div class="radio-group">{{ form.victim_caste.10 }}  {{ form.victim_caste.10.label_tag }}</div>
-                    <div class="radio-group">{{ form.victim_caste.11 }}  {{ form.victim_caste.11.label_tag }}</div>
-                    {{ form.victim_caste_other_value }}
                 </div>
 
                 <div class="black-box clearfix">
                     <h2><span class="section-number">1.8</span> What is your occupation?</h2>
                 </div>
                 <div class="black-box clearfix">
-                    <div class="col-sm-6 right-col-border">
+                    <div class="col-sm-6">
                         {% for choice in form.victim_occupation|slice:":7" %}
                             <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
                         {% endfor %}
@@ -157,7 +177,7 @@
                 </div>
             </div>
             <div class="col-sm-4 major-column">
-                <div class="black-box black-box-top clearfix">
+                <div class="black-box black-box-top padded-box clearfix">
                     <h2><span class="section-number">1.10</span> With whom do you live?</h2>
                 </div>
                 <div class="black-box clearfix">
@@ -170,15 +190,28 @@
                     <div class="col-sm-6">
                         <div class="checkbox-group">{{ form.victim_lives_with_alone }}           {{ form.victim_lives_with_alone.label_tag }}</div>
                         <div class="checkbox-group">{{ form.victim_lives_with_other_relative }}  {{ form.victim_lives_with_other_relative.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.victim_lives_with_other }}           {{ form.victim_lives_with_other.label_tag }}              {{ form.victim_lives_with_other_value }}</div>
+                        <div class="label-inside-field inline-checkbox-group">
+                            <label for="{{ form.victim_lives_with_other.auto_id }}">
+                                {{ form.victim_lives_with_other }}
+                                {{ form.victim_lives_with_other.label }}
+                            </label>
+                            {{ form.victim_lives_with_other_value|attr:"style: padding-top: 20px" }}
+                        </div>
                     </div>
                 </div>
                 <div class="black-box clearfix">
-                    <h2><span class="section-number">1.11</span> How many people are in your (own) family?</h2>
-                    {{ form.victim_num_in_family }}
+                    <div class="col-sm-8">
+                        <h2>
+                            <span class="section-number">1.11</span>
+                            How many people<br/>are in your (own) family?
+                        </h2>
+                    </div>
+                    <div class="col-sm-4">
+                        {{ form.victim_num_in_family|attr:"style: width: 100%; height: 50px; text-align: center" }}
+                    </div>
                 </div>
 
-                <div class="black-box clearfix">
+                <div class="black-box padded-box clearfix">
                     <h2><span class="section-number">1.12</span> Who is your primary guardian?</h2>
                 </div>
                 <div class="black-box clearfix">
@@ -194,7 +227,7 @@
                     </div>
                 </div>
 
-                <div class="black-box clearfix">
+                <div class="black-box padded-box clearfix">
                     <h2><span class="section-number">1.13</span> Guardian's Address</h2>
                         <div class="col-sm-6">
                             <div class="label-inside-field">
@@ -219,11 +252,11 @@
                         </div>
                 </div>
 
-                <div class="black-box clearfix">
+                <div class="black-box padded-box clearfix">
                     <h2><span class="section-number">1.14</span> What is parents' marital status?</h2>
                 </div>
                 <div class="black-box clearfix">
-                    <div class="col-sm-4 right-col-border">
+                    <div class="col-sm-4">
                         {% for choice in form.victim_parents_marital_status|slice:":3" %}
                             <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
                         {% endfor %}
@@ -235,7 +268,7 @@
                     </div>
                 </div>
 
-                <div class="black-box clearfix">
+                <div class="black-box padded-box clearfix">
                     <h2><span class="section-number">1.15</span> Education Level</h2>
                 </div>
                 <div class="black-box clearfix">
@@ -252,13 +285,16 @@
                 </div>
 
 
-                <div class="black-box clearfix">
-                    <h2>1.16 Is the victim literate?</h2>
-                    {% for choice in form.victim_is_literate %}
-                        <div class="col-sm-6">
-                            <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
-                        </div>
-                    {% endfor %}
+                <div class="black-box padded-box clearfix">
+                    <h2>
+                        <span class="section-number">1.16</span>
+                        Is the victim literate?
+                    </h2>
+                    <div class="inline-radio-group">
+                        {% for choice in form.victim_is_literate %}
+                            {{ choice }} {{ choice.label_tag }}
+                        {% endfor %}
+                    </div>
                 </div>
 
             </div>
@@ -289,8 +325,22 @@
                         <div class="checkbox-group">{{ form.migration_plans_job_laborer }}            {{ form.migration_plans_job_laborer.label_tag }}</div>
                         <div class="checkbox-group">{{ form.migration_plans_job_brothel }}            {{ form.migration_plans_job_brothel.label_tag }}</div>
                         <div class="checkbox-group">{{ form.migration_plans_job_household }}          {{ form.migration_plans_job_household.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.migration_plans_job_other }}              {{ form.migration_plans_job_other.label_tag }} {{ form.migration_plans_job_value }}</div>
-                        <div class="checkbox-group">{{ form.migration_plans_other }}                  {{ form.migration_plans_other.label_tag }} {{ form.migration_plans_other_value }}</div>
+
+                        <div class="label-inside-field inline-checkbox-group">
+                            <label for="{{ form.migration_plans_job_other.auto_id }}">
+                                {{ form.migration_plans_job_other }}
+                                {{ form.migration_plans_job_other.label }}
+                            </label>
+                            {{ form.migration_plans_job_value|attr:"style: padding-top: 20px" }}
+                        </div>
+
+                        <div class="label-inside-field inline-checkbox-group">
+                            <label for="{{ form.migration_plans_other.auto_id }}">
+                                {{ form.migration_plans_other }}
+                                {{ form.migration_plans_other.label }}
+                            </label>
+                            {{ form.migration_plans_other_value|attr:"style: padding-top: 20px" }}
+                        </div>
                     </div>
                 </div>
 
@@ -310,7 +360,14 @@
                         <div class="checkbox-group">{{ form.primary_motivation_get_an_education }} {{ form.primary_motivation_get_an_education.label_tag }}</div>
                         <div class="checkbox-group">{{ form.primary_motivation_tour_travel }} {{ form.primary_motivation_tour_travel.label_tag }}</div>
                         <div class="checkbox-group">{{ form.primary_motivation_didnt_know }} {{ form.primary_motivation_didnt_know.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.primary_motivation_other }} {{ form.primary_motivation_other.label_tag }} {{ form.primary_motivation_other_value }}</div>
+
+                        <div class="label-inside-field inline-checkbox-group">
+                            <label for="{{ form.primary_motivation_other.auto_id }}">
+                                {{ form.primary_motivation_other }}
+                                {{ form.primary_motivation_other.label }}
+                            </label>
+                            {{ form.primary_motivation_other_value|attr:"style: padding-top: 20px" }}
+                        </div>
                     </div>
                 </div>
 
@@ -318,10 +375,10 @@
                     <h2><span class="section-number">2.3</span> Where were you going?</h2>
                 </div>
                 <div class="black-box clearfix">
-                    <div class="col-sm-6 right-col-border">
+                    <div class="col-sm-6 right-col-border text-center">
                         <div class="checkbox-group">{{ form.victim_where_going_region.0 }} {{ form.victim_where_going_region.0.label_tag }}</div>
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col-sm-6 text-center">
                         <div class="checkbox-group">{{ form.victim_where_going_region.1 }} {{ form.victim_where_going_region.1.label_tag }}</div>
                     </div>
                 </div>
@@ -338,8 +395,12 @@
                             {% endfor %}
                         </div>
                         <div class="radio-group">{{ form.victim_where_going.8 }} {{ form.victim_where_going.8.label_tag }}</div>
-                        <div class="radio-group">{{ form.victim_where_going.9 }} {{ form.victim_where_going.9.label_tag }}</div>
-                        {{ form.victim_where_going_other_india_value }}
+
+                        <div class="label-inside-field inline-radio-group">
+                            {{ form.victim_where_going.9 }}
+                            {{ form.victim_where_going.9.label }}
+                            {{ form.victim_where_going_other_india_value|attr:"style: padding-top: 20px" }}
+                        </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="col-sm-6" style="padding: 0">
@@ -360,8 +421,12 @@
                             <div class="radio-group">{{ form.victim_where_going.16 }} {{ form.victim_where_going.16.label_tag }}</div>
                         </div>
                         <div class="radio-group">{{ form.victim_where_going.17 }} {{ form.victim_where_going.17.label_tag }}</div>
-                        <div class="radio-group">{{ form.victim_where_going.18 }} {{ form.victim_where_going.18.label_tag }}</div>
-                        {{ form.victim_where_going_other_gulf_value }}
+
+                        <div class="label-inside-field inline-radio-group">
+                            {{ form.victim_where_going.18 }}
+                            {{ form.victim_where_going.18.label }}
+                            {{ form.victim_where_going_other_gulf_value|attr:"style: padding-top: 20px" }}
+                        </div>
                     </div>
                 </div>
             </div>
