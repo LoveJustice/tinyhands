@@ -1,35 +1,48 @@
-function setUpErrorPopups() {
-    $('.errors-for-popups .errorlist').first().children().each(function() {
-        var pieces = $(this).html().split('<', 2);
-        var form_control_id = pieces[0];
+function setUpValidationPopup(elem, kind) {
+    var id = $(elem).data('id');
+    var message = $(elem).data('message');
 
-        var errors = [];
-        $(this).find('li').each(function() {
-            errors.push($(this).text());
-        });
+    if (kind === 'error') {
+        message = 'Error: ' + message;
+    }
+    if (kind === 'warning') {
+        message = 'Warning: ' + message;
+    }
 
-        var $elem = $('#id_' + form_control_id);
-        if ($elem.length === 0) {
-            $elem = $('[name="'+form_control_id+'"]').eq(0);
-        }
+    var $elem = $('#id_' + id);
+    if ($elem.length === 0) {
+        $elem = $('[name="'+id+'"]').eq(0);
+    }
 
-        $elem
-            .attr('data-toggle', 'tooltip')
-            .attr('title', errors.join(', '))
-        ;
+    $elem.attr('data-toggle', 'tooltip').attr('title', message);
 
 
-        var opts = { trigger: 'manual' };
-        if (!$elem.is('[data-placement]')) {
-            opts.placement = 'top';
-        }
-        else {
-            opts.placement = $.trim($elem.data('placement'));
-            $elem.attr('data-placement', '');
-        }
-        console.log(opts);
+    var opts = { trigger: 'manual' };
+    if (!$elem.is('[data-placement]')) {
+        opts.placement = 'top';
+    }
+    else {
+        opts.placement = $.trim($elem.data('placement'));
+        $elem.attr('data-placement', '');
+    }
 
-        $elem.tooltip(opts).tooltip('show');
+    $elem.tooltip(opts).tooltip('show');
+}
+
+
+function setUpValidationPopups() {
+    $('.error-for-popup').each(function() {
+        console.log(this);
+        setUpValidationPopup(this, 'error');
+    });
+    $('.warning-for-popup').each(function() {
+        console.log(this);
+        setUpValidationPopup(this, 'warning');
+    });
+
+    $('.tooltip-inner').each(function() {
+        var kind = $(this).text().split(':')[0].toLowerCase();
+        $(this).addClass('kind-' + kind);
     });
 }
 
@@ -154,7 +167,7 @@ var DREAMSUITE = {
             $(window).resize(resize);
             resize();
 
-            setUpErrorPopups();
+            setUpValidationPopups();
         });
 
     },
@@ -177,7 +190,7 @@ var DREAMSUITE = {
             $('input[type="radio"]').click(calculateTotal);
             calculateTotal();
 
-            setUpErrorPopups();
+            setUpValidationPopups();
         });
     },
 

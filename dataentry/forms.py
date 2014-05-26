@@ -31,6 +31,11 @@ class InterceptionRecordForm(forms.ModelForm):
         required=False
     )
 
+    ignore_warnings = forms.ChoiceField(
+        widget=forms.CheckboxInput(),
+        required=False
+    )
+
     class Meta:
         model = InterceptionRecord
         exclude = ['form_entered_by', 'date_form_received']
@@ -48,11 +53,15 @@ class InterceptionRecordForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super(InterceptionRecordForm, self).clean()
+        self.has_warnings = False
 
         self.at_least_one_box_checked_on_page_one(cleaned_data)
         self.box_six_or_seven_must_be_checked(cleaned_data)
         self.if_box_six_checked_at_least_one_from_six_one_to_six_nine_must_be_checked(cleaned_data)
         self.if_box_six_other_is_checked_the_other_value_must_be_present(cleaned_data)
+
+        if not cleaned_data.get('override_warnings'):
+            self.ensure_some_red_flags_checked(cleaned_data)
 
         return cleaned_data
 
@@ -132,6 +141,58 @@ class InterceptionRecordForm(forms.ModelForm):
         if cleaned_data.get('contact_other') and not cleaned_data.get('contact_other_value'):
             self._errors['contact_other_value'] = self.error_class(
                 ['Other chosen for Contact but the kind is not specified.'])
+
+    def ensure_some_red_flags_checked(self, cleaned_data):
+        if not (
+            cleaned_data.get('drugged_or_drowsy') or
+            cleaned_data.get('meeting_someone_across_border') or
+            cleaned_data.get('seen_in_last_month_in_nepal') or
+            cleaned_data.get('traveling_with_someone_not_with_her') or
+            cleaned_data.get('wife_under_18') or
+            cleaned_data.get('married_in_past_2_weeks') or
+            cleaned_data.get('married_in_past_2_8_weeks') or
+            cleaned_data.get('less_than_2_weeks_before_eloping') or
+            cleaned_data.get('between_2_12_weeks_before_eloping') or
+            cleaned_data.get('caste_not_same_as_relative') or
+            cleaned_data.get('caught_in_lie') or
+            cleaned_data.get('other_red_flag') or
+            cleaned_data.get('doesnt_know_going_to_india') or
+            cleaned_data.get('running_away_over_18') or
+            cleaned_data.get('running_away_under_18') or
+            cleaned_data.get('going_to_gulf_for_work') or
+            cleaned_data.get('no_address_in_india') or
+            cleaned_data.get('no_company_phone') or
+            cleaned_data.get('no_appointment_letter') or
+            cleaned_data.get('valid_gulf_country_visa') or
+            cleaned_data.get('passport_with_broker') or
+            cleaned_data.get('job_too_good_to_be_true') or
+            cleaned_data.get('not_real_job') or
+            cleaned_data.get('couldnt_confirm_job') or
+            cleaned_data.get('no_bags_long_trip') or
+            cleaned_data.get('shopping_overnight_stuff_in_bags') or
+            cleaned_data.get('no_enrollment_docs') or
+            cleaned_data.get('doesnt_know_school_name') or
+            cleaned_data.get('no_school_phone') or
+            cleaned_data.get('not_enrolled_in_school') or
+            cleaned_data.get('reluctant_treatment_info') or
+            cleaned_data.get('no_medical_documents') or
+            cleaned_data.get('fake_medical_documents') or
+            cleaned_data.get('no_medical_appointment') or
+            cleaned_data.get('doesnt_know_villiage_details') or
+            cleaned_data.get('reluctant_villiage_info') or
+            cleaned_data.get('reluctant_family_info') or
+            cleaned_data.get('refuses_family_info') or
+            cleaned_data.get('under_18_cant_contact_family') or
+            cleaned_data.get('under_18_family_doesnt_know') or
+            cleaned_data.get('under_18_family_unwilling') or
+            cleaned_data.get('over_18_family_doesnt_know') or
+            cleaned_data.get('over_18_family_unwilling')
+        ):
+            error = self.error_class(['No red flags are checked.'])
+            error.is_warning = True
+            self.has_warnings = True
+            self._errors['drugged_or_drowsy'] = error
+
 
 
 IntercepteeFormSet = inlineformset_factory(InterceptionRecord, Interceptee, extra=12)

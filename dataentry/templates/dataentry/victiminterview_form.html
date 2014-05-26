@@ -7,9 +7,32 @@
 
 {% block content %}
 
-<div class="errors-for-popups" style="display: none">
-    {{ form.errors }}
+<div style="display: none">
+{% for id, errors in form.errors.items %}
+    {% if not errors.is_warning %}
+        <div class="error-for-popup" data-id="{{ id }}" data-message="{{ errors.0 }}"></div>
+    {% endif %}
+{% endfor %}
+
+{% for id, errors in form.errors.items %}
+    {% if errors.is_warning %}
+        <div class="warning-for-popup" data-id="{{ id }}" data-message="{{ errors.0 }}"></div>
+    {% endif %}
+{% endfor %}
 </div>
+
+{% if form.errors %}
+<div class="alert alert-danger no-remove" style="margin-top: 20px">
+    <h3>These errors will prevent the form from being saved</h3>
+    {% for id, errors in form.errors.items %}
+        {% if not errors.is_warning %}
+            {% for error in errors %}
+            <p><strong>{{ id|unslugify }}:</strong> {{ error }}</p>
+            {% endfor %}
+        {% endif %}
+    {% endfor %}
+</div>
+{% endif %}
 
 {% for form in inlines.0 %}
 {% if form.errors %}
@@ -21,16 +44,6 @@
 {{ forloop.counter }} {{ form.errors }}
 {% endif %}
 {% endfor %}
-
-{% if form.errors %}
-<div class="alert alert-danger no-remove" style="margin-top: 20px">
-    {% for id, errors in form.errors.items %}
-        {% for error in errors %}
-        <p><strong>{{ id|unslugify }}:</strong> {{ error }}</p>
-        {% endfor %}
-    {% endfor %}
-</div>
-{% endif %}
 
 <form enctype="multipart/form-data" method="POST" id="victim-interview-form">{% csrf_token %}
     <div class="form-page">
