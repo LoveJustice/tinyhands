@@ -431,7 +431,7 @@ class VictimInterview(models.Model):
     victim_where_going_other_gulf_value = models.CharField(max_length=255, blank=True)
     victim_where_going_other_india_value = models.CharField(max_length=255, blank=True)
 
-    manpower_involved = models.BooleanField('Was a manpower involved?', default=False)
+    manpower_involved = models.BooleanField('Was a manpower involved?', default=False, choices=BOOL_CHOICES)
     victim_recruited_in_village = models.BooleanField('Did someone recruit you in your village and persuade you to abroad?', choices=BOOL_CHOICES)
 
     BROKERS_RELATION_CHOICES = [
@@ -590,7 +590,7 @@ class VictimInterview(models.Model):
     # 6. Awareness & Assessment
 
     AWARENESS_CHOICES = [
-        ('had-heard-didnt-know', 'Had heard, but never knew how bad it was until I was interception by TH'),
+        ('had-heard-didnt-know', 'Had heard, but never knew how bad it was until I was intercepted by TH'),
         ('didnt-think-was-happening', 'Knew how bad it was, but didn\'t think that was happening to her'),
         ('never-head', 'Had never heard about it'),
     ]

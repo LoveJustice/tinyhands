@@ -6,6 +6,10 @@ body {
     padding-right: 20px;
 }
 
+.mbs {  // margin bottom small
+    margin-bottom: 4px;
+}
+
 #interception-record-form {
     width: 1140px;
     .tooltip-inner {
@@ -218,7 +222,7 @@ body {
         border: 1px solid #888;
         box-shadow: 2px 2px 2px black;
         padding: 30px;
-        color: @vif-blue;
+        color: black;
         margin-bottom: 32px;
         margin-top: 20px;
     }
@@ -252,10 +256,15 @@ body {
         left: 2px;
         top: 2px;
     }
-    .label-inside-field input[type="text"], .label-inside-field textarea {
-        width: 100%;
-        text-align: right;
-        padding: 8px;
+    .label-inside-field {
+        input[type="text"], input[type="number"], textarea {
+            width: 100%;
+            text-align: right;
+            padding: 8px;
+        }
+        textarea {
+            text-align: left;
+        }
     }
     .checkbox-group, .radio-group {
         label {
@@ -284,6 +293,7 @@ body {
         border-right: 2px solid black;
     }
     .black-box {
+        position: relative;
         border-left: 2px solid black;
         border-right: 2px solid black;
         border-bottom: 2px solid black;
@@ -426,6 +436,15 @@ body {
     .red-arrow {
         background-image: url(/static/images/red-arrow.png);
     }
+    .fat-arrow {
+        position: absolute;
+        display: inline-block;
+        width: 130px;
+        height: 80px;
+        padding: 20px;
+        padding-left: 30px;
+        padding-right: 0;
+    }
     .full-width {
         width: 100%;
     }
@@ -462,4 +481,9 @@ body {
         border-bottom: 14px solid @warning-yellow;
 
     }
+}
+.alarm-box-container {
+    border: 1px solid black;
+    padding: 1px;
+    padding-right: 0;
 }
