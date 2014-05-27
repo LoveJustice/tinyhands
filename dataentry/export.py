@@ -163,7 +163,7 @@ def text_if_true(condition, text):
 
 
 def get_station_name_from_irf_number(irf_number):
-    return BORDER_STATION_NAMES[irf_number[:3]]
+    return BORDER_STATION_NAMES.get(irf_number, '')[:3]
 
 
 def get_irf_export_rows(irfs):

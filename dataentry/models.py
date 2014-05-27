@@ -23,6 +23,9 @@ class InterceptionRecord(models.Model):
     irf_number = models.CharField('IRF #:', max_length=20)
     date_time_of_interception = models.DateTimeField('Date/Time:')
 
+    date_time_entered_into_system = models.DateTimeField(auto_now_add=True)
+    date_time_last_updated = models.DateTimeField(auto_now=True)
+
     number_of_victims = models.IntegerField('# of victims:', null=True, blank=True)
     number_of_traffickers = models.IntegerField('# of traffickers', null=True, blank=True)
 
@@ -248,6 +251,9 @@ class VictimInterview(models.Model):
 
     vif_number = models.CharField('VIF #:', max_length=20)
     date_time = models.DateTimeField('Date/Time:')
+
+    date_time_entered_into_system = models.DateTimeField(auto_now_add=True)
+    date_time_last_updated = models.DateTimeField(auto_now=True)
 
     number_of_victims = models.IntegerField('# of victims:', null=True, blank=True)
     number_of_traffickers = models.IntegerField('# of traffickers', null=True, blank=True)
