@@ -214,10 +214,8 @@ $(document).ready(function() {
         $('.alert').not('.no-remove').slideUp();
     }, 4000);
 
-    $('input[id*=date]').datepicker({
-        dateFormat: 'yy-mm-dd',
-        changeMonth: true,
-        changeYear: true
+    $('input[id*=date]').datetimepicker({
+        format:'m/d/Y H:i'
     });
 
     var bodyClass = $('body').attr('id');
