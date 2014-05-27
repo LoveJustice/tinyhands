@@ -137,6 +137,13 @@ def make_choice_widgets_radio(f):
 
 class VictimInterviewForm(forms.ModelForm):
     formfield_callback = make_choice_widgets_radio
+    statement_read_before_beginning = forms.BooleanField(required=True)
+
+    # These are needed so we can set required=True
+    victim_recruited_in_village = forms.ChoiceField(choices=VictimInterview.BOOL_CHOICES, widget=forms.RadioSelect, required=True)
+    victim_stayed_somewhere_between = forms.ChoiceField(choices=VictimInterview.BOOL_CHOICES, widget=forms.RadioSelect, required=True)
+    victim_knew_details_about_destination = forms.ChoiceField(choices=VictimInterview.BOOL_CHOICES, widget=forms.RadioSelect, required=True)
+    has_signature = forms.ChoiceField(choices=VictimInterview.BOOL_CHOICES, widget=forms.RadioSelect, required=True)
 
     class Meta:
         model = VictimInterview
@@ -145,16 +152,58 @@ class VictimInterviewForm(forms.ModelForm):
         kwargs.setdefault('label_suffix', '')
         super(VictimInterviewForm, self).__init__(*args, **kwargs)
 
+    def clean(self):
+        cleaned_data = super(VictimInterviewForm, self).clean()
+
+        if not (
+            cleaned_data.get('migration_plans_education') or
+            cleaned_data.get('migration_plans_travel_tour') or
+            cleaned_data.get('migration_plans_shopping') or
+            cleaned_data.get('migration_plans_eloping') or
+            cleaned_data.get('migration_plans_arranged_marriage') or
+            cleaned_data.get('migration_plans_meet_own_family') or
+            cleaned_data.get('migration_plans_visit_brokers_home') or
+            cleaned_data.get('migration_plans_medical_treatment') or
+            cleaned_data.get('migration_plans_job_broker_did_not_say') or
+            cleaned_data.get('migration_plans_job_baby_care') or
+            cleaned_data.get('migration_plans_job_factory') or
+            cleaned_data.get('migration_plans_job_hotel') or
+            cleaned_data.get('migration_plans_job_shop') or
+            cleaned_data.get('migration_plans_job_laborer') or
+            cleaned_data.get('migration_plans_job_brothel') or
+            cleaned_data.get('migration_plans_job_household') or
+            cleaned_data.get('migration_plans_job_other') or
+            cleaned_data.get('migration_plans_job_value') or
+            cleaned_data.get('migration_plans_other')
+        ):
+            self._errors['migration_plans_education'] = self.error_class(["At least one choice must be selected."])
+
+        if not (
+            cleaned_data.get('primary_motivation_support_myself') or
+            cleaned_data.get('primary_motivation_support_family') or
+            cleaned_data.get('primary_motivation_personal_debt') or
+            cleaned_data.get('primary_motivation_family_debt') or
+            cleaned_data.get('primary_motivation_love_marriage') or
+            cleaned_data.get('primary_motivation_bad_home_marriage') or
+            cleaned_data.get('primary_motivation_get_an_education') or
+            cleaned_data.get('primary_motivation_tour_travel') or
+            cleaned_data.get('primary_motivation_didnt_know') or
+            cleaned_data.get('primary_motivation_other')
+        ):
+            self._errors['primary_motivation_support_myself'] = self.error_class(["At least one choice must be selected."])
+
+        return cleaned_data
+
 
 class VictimInterviewPersonBoxForm(forms.ModelForm):
     # This doesn't work with the extra_views CreateWithInlinesView sadly so we have to do it manually
     #formfield_callback = make_choice_widgets_radio
 
-    gender = forms.ChoiceField(choices=VictimInterviewPersonBox.GENDER_CHOICES, widget=forms.RadioSelect)
-    physical_description = forms.ChoiceField(choices=VictimInterviewPersonBox.PHYSICAL_DESCRIPTION_CHOICES, widget=forms.RadioSelect)
-    occupation = forms.ChoiceField(choices=VictimInterviewPersonBox.OCCUPATION_CHOICES, widget=forms.RadioSelect)
-    political_party = forms.ChoiceField(choices=VictimInterviewPersonBox.POLITICAL_PARTY_CHOICES, widget=forms.RadioSelect)
-    associated_with_place = forms.ChoiceField(choices=VictimInterviewPersonBox.BOOL_CHOICES, widget=forms.RadioSelect)
+    gender = forms.ChoiceField(choices=VictimInterviewPersonBox.GENDER_CHOICES, widget=forms.RadioSelect, required=False)
+    physical_description = forms.ChoiceField(choices=VictimInterviewPersonBox.PHYSICAL_DESCRIPTION_CHOICES, widget=forms.RadioSelect, required=False)
+    occupation = forms.ChoiceField(choices=VictimInterviewPersonBox.OCCUPATION_CHOICES, widget=forms.RadioSelect, required=False)
+    political_party = forms.ChoiceField(choices=VictimInterviewPersonBox.POLITICAL_PARTY_CHOICES, widget=forms.RadioSelect, required=False)
+    associated_with_place = forms.ChoiceField(choices=VictimInterviewPersonBox.BOOL_CHOICES, widget=forms.RadioSelect, required=False)
 
     class Meta:
         model = VictimInterviewPersonBox
@@ -165,9 +214,7 @@ class VictimInterviewPersonBoxForm(forms.ModelForm):
 
 
 class VictimInterviewLocationBoxForm(forms.ModelForm):
-    #formfield_callback = make_choice_widgets_radio
-    associated_with = forms.ChoiceField(choices=VictimInterviewPersonBox.BOOL_CHOICES, widget=forms.RadioSelect)
-    associated_with_person = forms.ChoiceField(choices=VictimInterviewLocationBox.BOOL_CHOICES, widget=forms.RadioSelect)
+    associated_with_person = forms.ChoiceField(choices=VictimInterviewLocationBox.BOOL_CHOICES, widget=forms.RadioSelect, required=False)
 
     class Meta:
         model = VictimInterviewLocationBox

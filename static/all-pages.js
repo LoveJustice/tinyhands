@@ -1,3 +1,38 @@
+function setUpErrorPopups() {
+    $('.errors-for-popups .errorlist').first().children().each(function() {
+        var pieces = $(this).html().split('<', 2);
+        var form_control_id = pieces[0];
+
+        var errors = [];
+        $(this).find('li').each(function() {
+            errors.push($(this).text());
+        });
+
+        var $elem = $('#id_' + form_control_id);
+        if ($elem.length === 0) {
+            $elem = $('[name="'+form_control_id+'"]').eq(0);
+        }
+
+        $elem
+            .attr('data-toggle', 'tooltip')
+            .attr('title', errors.join(', '))
+        ;
+
+
+        var opts = { trigger: 'manual' };
+        if (!$elem.is('[data-placement]')) {
+            opts.placement = 'top';
+        }
+        else {
+            opts.placement = $.trim($elem.data('placement'));
+            $elem.attr('data-placement', '');
+        }
+        console.log(opts);
+
+        $elem.tooltip(opts).tooltip('show');
+    });
+}
+
 function setUpPermissionsCheckboxes() {
     $('input[type="checkbox"]').each(function() {
         var $label = $(this).parents('label');
@@ -119,36 +154,31 @@ var DREAMSUITE = {
             $(window).resize(resize);
             resize();
 
-            // Highlight fields with errors
-            $('.errors-for-popups .errorlist').first().children().each(function() {
-                var pieces = $(this).html().split('<', 2);
-                var form_control_id = 'id_' + pieces[0];
-
-                var errors = [];
-                $(this).find('li').each(function() {
-                    errors.push($(this).text());
-                });
-
-                var $elem = $('#' + form_control_id)
-                    .attr('data-toggle', 'tooltip')
-                    .attr('title', errors.join(', '))
-                ;
-                var opts = { trigger: 'manual' };
-                if (!$elem.is('[data-placement]')) {
-                    opts.placement = 'top';
-                }
-                else {
-                    opts.placement = $.trim($elem.data('placement'));
-                    $elem.attr('data-placement', '');
-                }
-                console.log(opts);
-
-                $elem.tooltip(opts).tooltip('show');
-            });
-
-            
+            setUpErrorPopups();
         });
 
+    },
+
+    victiminterview_create: function() {
+        this.victiminterview_update();
+    },
+    victiminterview_update: function() {
+        function calculateTotal() {
+            var total = 0;
+            $('.alarm-box').each(function(id, elem) {
+                var $radio = $(elem).parents('.alarm-box-container').find('input');
+                if ($radio.is(':checked')) {
+                    total += parseInt($(elem).text());
+                }
+            });
+            $('#calculated-total').text(total);
+        }
+        $(document).ready(function() {
+            $('input[type="radio"]').click(calculateTotal);
+            calculateTotal();
+
+            setUpErrorPopups();
+        });
     },
 
     default: function() {}
@@ -160,6 +190,12 @@ $(document).ready(function() {
     setTimeout(function() {
         $('.alert').not('.no-remove').slideUp();
     }, 4000);
+
+    $('input[id*=date]').datepicker({
+        dateFormat: 'yy-mm-dd',
+        changeMonth: true,
+        changeYear: true
+    });
 
     var bodyClass = $('body').attr('id');
     if (bodyClass in DREAMSUITE) {

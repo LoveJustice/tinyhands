@@ -214,6 +214,12 @@ body {
 @vif-red: #800000;
 #victim-interview-form {
     width: 1140px;
+    .tooltip-inner {
+        background-color: #a00000 !important;
+        font-weight: normal;
+        font-size: 13px;
+        border: 1px solid black;
+    }
     .form-page {
         font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
         font-size: 18px;
@@ -225,6 +231,32 @@ body {
         color: black;
         margin-bottom: 32px;
         margin-top: 20px;
+    }
+    .header-area {
+        h2 {
+            font-family: "PT Serif", serif;
+            font-weight: bold;
+            font-size: 28px;
+        }
+    }
+    .top-data-area {
+        margin-bottom: 0;
+        font-family: "PT Serif", serif;
+        font-size: 16px;
+        white-space: nowrap;
+        label {
+            color: black;
+            font-size: 18px;
+            margin-bottom: 0;
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+        }
+        td {
+            padding: 0 2px;
+            vertical-align: middle;
+        }
     }
     .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8 {
         padding: 4px;
@@ -259,8 +291,8 @@ body {
     .label-inside-field {
         input[type="text"], input[type="number"], textarea {
             width: 100%;
-            text-align: right;
             padding: 8px;
+            padding-top: 20px;
         }
         textarea {
             text-align: left;
@@ -486,4 +518,22 @@ body {
     border: 1px solid black;
     padding: 1px;
     padding-right: 0;
+}
+
+.interviewer-believes-box {
+    background-image: url(/static/images/interviewer.png);
+    background-repeat: no-repeat;
+    background-position: 2px;
+    padding-left: 18px;
+    border: 1px solid black;
+    margin: 2px;
+}
+.victim-believes-box {
+    background-image: url(/static/images/victim.png);
+    background-repeat: no-repeat;
+    background-position: 18px;
+    padding-right: 18px;
+    padding-left: 4px;
+    border: 1px solid black;
+    margin: 2px;
 }

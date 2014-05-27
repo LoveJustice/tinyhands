@@ -1,37 +1,117 @@
 {% extends "dataentry/dataentry_base.html" %}
 {% load widget_tweaks %}
 {% load bootstrap %}
+{% load unslugify %}
 
 {% block title %}{% if victiminterview %}Edit{% else %}Create{% endif%} VIF{% endblock %}
 
 {% block content %}
-{{ form.errors }}
+
+<div class="errors-for-popups" style="display: none">
+    {{ form.errors }}
+</div>
+
+{% for form in inlines.0 %}
+{% if form.errors %}
+{{ forloop.counter }} {{ form.errors }}
+{% endif %}
+{% endfor %}
+{% for form in inlines.1 %}
+{% if form.errors %}
+{{ forloop.counter }} {{ form.errors }}
+{% endif %}
+{% endfor %}
+
+{% if form.errors %}
+<div class="alert alert-danger no-remove" style="margin-top: 20px">
+    {% for id, errors in form.errors.items %}
+        {% for error in errors %}
+        <p><strong>{{ id|unslugify }}:</strong> {{ error }}</p>
+        {% endfor %}
+    {% endfor %}
+</div>
+{% endif %}
+
 <form enctype="multipart/form-data" method="POST" id="victim-interview-form">{% csrf_token %}
     <div class="form-page">
         <div class="row">
-            <div class="col-sm-6">
+            <div class="col-sm-6 header-area">
                 <img class="pull-left" style="margin-right: 20px" width="100" src="{{ STATIC_URL }}images/logo.png" alt="Tiny Hands Logo" />
                 <h2>Victim Interview Form (VIF)<br/>
                 Version 2.0 <span class="text-danger">Tiny Hands Nepal</span></h2>
             </div>
             <div class="col-sm-6">
-                <table class="table table-bordered">
+                <table class="table table-bordered top-data-area">
                     <tbody>
                         <tr>
                             <td>
-                                {{ form.vif_number|bootstrap }}<br/>
-                                {{ form.date_time|bootstrap }}
+                                {{ form.vif_number.label_tag }}
                             </td>
                             <td>
-                                {{ form.number_of_victims|bootstrap }}<br/>
-                                {{ form.number_of_traffickers|bootstrap }}
+                                <div style="width: 100px">
+                                    {{ form.vif_number }}
+                                </div>
                             </td>
                             <td>
-                                {{ form.location|bootstrap }}<br/>
-                                {{ form.interviewer|bootstrap }}
+                                <label># of<br/>Victims</label>
+                            </td>
+                            <td>
+                                <div style="width: 50px">
+                                    {{ form.number_of_victims }}
+                                </div>
+                            </td>
+                            <td>
+                                {{ form.location.label_tag }}
+                            </td>
+                            <td>
+                                    {{ form.location }}
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <label>Date/<br/>Time</label>
+                            </td>
+                            <td>
+                                <div style="width: 100px">
+                                    {{ form.date_time|attr:"data-placement: bottom" }}
+                                </div>
+                            </td>
+                            <td>
+                                <label># of<br/>Traffickers</label>
+                            </td>
+                            <td>
+                                <div style="width: 50px">
+                                    {{ form.number_of_traffickers|attr:"data-placement: bottom" }}
+                                </div>
+                            </td>
+                            <td>
+                                {{ form.interviewer.label_tag }}
+                            </td>
+                            <td>
+                                    {{ form.interviewer|attr:"data-placement: bottom" }}
                             </td>
                     </tbody>
                 </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="clearfix mbs">
+                <label>
+                    Was statement read to the participant before beginning the interview?
+                    <br/>
+                    {{ form.statement_read_before_beginning|attr:"data-placement: left" }}
+                    Check the box if this question on form is signed
+                </label>
+            </div>
+
+            <div class="clearfix mbs">
+                <label>
+                    Permission to use photograph?
+                    <br/>
+                    {{ form.permission_to_use_photograph }}
+                    Check the box if this question on form is signed
+                </label>
             </div>
         </div>
         <div class="row">
@@ -58,7 +138,7 @@
                         {{ form.victim_name.label }}
                     </label>
 
-                    {{ form.victim_name|attr:"style: padding: 4px" }}
+                    {{ form.victim_name|attr:"style: padding: 4px"|attr:"data-placement: left" }}
                 </div>
 
                 <div class="black-box clearfix">
@@ -154,10 +234,15 @@
                         {% endfor %}
                     </div>
                     <div class="col-sm-6">
-                        {% for choice in form.victim_occupation|slice:"7:" %}
+                        {% for choice in form.victim_occupation|slice:"7:12" %}
                             <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
                         {% endfor %}
-                        {{ form.victim_occupation_other_value }}
+
+                        <div class="label-inside-field inline-radio-group">
+                            {{ form.victim_occupation.12 }}
+                            {{ form.victim_occupation.12.label }}
+                            {{ form.victim_occupation_other_value }}
+                        </div>
                     </div>
                 </div>
                 <div class="black-box clearfix">
@@ -195,7 +280,7 @@
                                 {{ form.victim_lives_with_other }}
                                 {{ form.victim_lives_with_other.label }}
                             </label>
-                            {{ form.victim_lives_with_other_value|attr:"style: padding-top: 20px" }}
+                            {{ form.victim_lives_with_other_value }}
                         </div>
                     </div>
                 </div>
@@ -331,7 +416,7 @@
                                 {{ form.migration_plans_job_other }}
                                 {{ form.migration_plans_job_other.label }}
                             </label>
-                            {{ form.migration_plans_job_value|attr:"style: padding-top: 20px" }}
+                            {{ form.migration_plans_job_value }}
                         </div>
 
                         <div class="label-inside-field inline-checkbox-group">
@@ -339,7 +424,7 @@
                                 {{ form.migration_plans_other }}
                                 {{ form.migration_plans_other.label }}
                             </label>
-                            {{ form.migration_plans_other_value|attr:"style: padding-top: 20px" }}
+                            {{ form.migration_plans_other_value }}
                         </div>
                     </div>
                 </div>
@@ -366,7 +451,7 @@
                                 {{ form.primary_motivation_other }}
                                 {{ form.primary_motivation_other.label }}
                             </label>
-                            {{ form.primary_motivation_other_value|attr:"style: padding-top: 20px" }}
+                            {{ form.primary_motivation_other_value }}
                         </div>
                     </div>
                 </div>
@@ -399,7 +484,7 @@
                         <div class="label-inside-field inline-radio-group">
                             {{ form.victim_where_going.9 }}
                             {{ form.victim_where_going.9.label }}
-                            {{ form.victim_where_going_other_india_value|attr:"style: padding-top: 20px" }}
+                            {{ form.victim_where_going_other_india_value }}
                         </div>
                     </div>
                     <div class="col-sm-6">
@@ -425,7 +510,7 @@
                         <div class="label-inside-field inline-radio-group">
                             {{ form.victim_where_going.18 }}
                             {{ form.victim_where_going.18.label }}
-                            {{ form.victim_where_going_other_gulf_value|attr:"style: padding-top: 20px" }}
+                            {{ form.victim_where_going_other_gulf_value }}
                         </div>
                     </div>
                 </div>
@@ -489,7 +574,7 @@
                         <div class="label-inside-field inline-radio-group">
                             {{ form.brokers_relation_to_victim.14 }}
                             {{ form.brokers_relation_to_victim.14.label }}
-                            {{ form.brokers_relation_to_victim_other_value|attr:"style: padding-top: 20px" }}
+                            {{ form.brokers_relation_to_victim_other_value }}
                         </div>
                     </div>
                 </div>
@@ -502,10 +587,10 @@
                         </h2>
                     </div>
                     <div class="label-inside-field pull-right">
-                        {{ form.victim_married_to_broker_years.label_tag }}{{ form.victim_married_to_broker_years|attr:"style: width: 130px; height: 40px" }}
+                        {{ form.victim_married_to_broker_years.label_tag }}{{ form.victim_married_to_broker_years|attr:"style: width: 130px" }}
                     </div>
                     <div class="label-inside-field pull-right">
-                        {{ form.victim_married_to_broker_months.label_tag }}{{ form.victim_married_to_broker_months|attr:"style: width: 130px; height: 40px" }}
+                        {{ form.victim_married_to_broker_months.label_tag }}{{ form.victim_married_to_broker_months|attr:"style: width: 130px" }}
                     </div>
                 </div>
 
@@ -589,10 +674,10 @@
                 </div>
 
                 <div class="black-box padded-box clearfix">
-                    <h2><span class="section-number">3.10</span> If going for a job, how much did the broker say you'd be earning per month(NRS)?</h2>
                     <div class="pull-right label-inside-field">
-                        {{ form.amount_victim_would_earn.label_tag }}{{ form.amount_victim_would_earn|attr:"style: height: 30px" }}
+                        {{ form.amount_victim_would_earn.label_tag }}{{ form.amount_victim_would_earn|attr:"style: width: 100px" }}
                     </div>
+                    <h2><span class="section-number">3.10</span> If going for a job, how much did the broker say you'd be earning per month(NRS)?</h2>
                 </div>
 
                 <div class="black-box padded-box clearfix">
@@ -639,7 +724,7 @@
                 <div class="black-box padded-box">
                     <h2><span class="section-number">4.3</span> Did you stay somewhere between your village and the border?</h2>
                     <div class="inline-radio-group">
-                        {% for choice in form.victim_first_time_crossing_border %}
+                        {% for choice in form.victim_stayed_somewhere_between %}
                             {{ choice }} {{ choice.label_tag }}
                         {% endfor %}
                     </div>
@@ -949,6 +1034,7 @@
         <div class="row">
             {{ inlines.0.management_form }}
             {% for pb_form in inlines.0 %}
+            {{ pb_form.id }}
             <div class="col-sm-4" style="padding: 20px">
                 <div class="person-box person-box-top row">
                     <div class="col-sm-5">
@@ -1067,18 +1153,22 @@
                     <div class="inline-radio-group">{{ pb_form.occupation.0 }} {{ pb_form.occupation.0.label_tag }}</div>
                 </div>
                 <div class="person-box row">
-                    <div class="col-sm-4">
-                        {% for choice in pb_form.occupation|slice:"1:4" %}
+                    <div class="col-sm-4" style="width: 40%">
+                        {% for choice in pb_form.occupation|slice:"1:3" %}
                             <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
                         {% endfor %}
-                        {{ pb_form.occupation_other_value }}
+                        <div class="label-inside-field">
+                            {{ pb_form.occupation.3 }}
+                            {{ pb_form.occupation.3.label_tag }}
+                            {{ pb_form.occupation_other_value }}
+                        </div>
                     </div>
                     <div class="col-sm-4">
                         {% for choice in pb_form.occupation|slice:"4:9" %}
                             <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
                         {% endfor %}
                     </div>
-                    <div class="col-sm-4">
+                    <div class="col-sm-4" style="width: 25%">
                         {% for choice in pb_form.occupation|slice:"9:14" %}
                             <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
                         {% endfor %}
@@ -1090,28 +1180,36 @@
                     <div class="inline-radio-group">{{ pb_form.political_party.0 }} {{ pb_form.political_party.0.label_tag }}</div>
                 </div>
                 <div class="person-box row">
-                    <div class="col-sm-4">
+                    <div class="col-sm-4" style="width: 39%">
                         {% for choice in pb_form.political_party|slice:"1:6" %}
                             <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
                         {% endfor %}
                     </div>
-                    <div class="col-sm-8">
-                        {% for choice in pb_form.political_party|slice:"6:" %}
+                    <div class="col-sm-8" style="width: 60%">
+                        {% for choice in pb_form.political_party|slice:"6:9" %}
                             <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
                         {% endfor %}
+
+                        <label class="blending-into-input-label">{{ pb_form.political_party.10 }} {{ pb_form.political_party.10.label_tag }}</label>
+
+                        <div class="inline-radio-group">
+                            {{ pb_form.political_party.9 }}
+                            {{ pb_form.political_party.9.label_tag }}
+                        </div>
+
                         {{ pb_form.political_party_other_value }}
                     </div>
                 </div>
 
                 <div class="person-box row">
                     <h2>Where does he spend most of his time? How can we get ahold of or find him?</h2>
-                    {{ pb_form.where_spends_time|attr:"rows:2" }}
+                    {{ pb_form.where_spends_time|attr:"rows:2"|add_class:"full-width" }}
                 </div>
 
                 <div class="person-box row">
-                    <h2>Which do you believe about him?</h2>
+                    <h2 style="margin-left: 40px">Which do you believe about him?</h2>
                     <div class="clearfix">
-                        <div class="pull-left">
+                        <div class="pull-left interviewer-believes-box">
                             {{ pb_form.interviewer_believes_has_trafficked_many_girls }}
                             <br/>
                             {{ pb_form.interviewer_believes_has_trafficked_some_girls }}
@@ -1120,7 +1218,7 @@
                             <br/>
                             {{ pb_form.interviewer_believes_is_not_trafficker }}
                         </div>
-                        <div class="pull-right">
+                        <div class="pull-right victim-believes-box">
                             {{ pb_form.victim_believes_has_trafficked_many_girls }}
                             <br/>
                             {{ pb_form.victim_believes_has_trafficked_some_girls }}
@@ -1148,7 +1246,7 @@
                             {{ choice }}
                         </div>
                     {% endfor %}
-                    <span class="blue-arrow">LB# {{ pb_form.associated_with_place_value }}</span>
+                    <span class="blue-arrow">LB# {{ pb_form.associated_with_place_value|attr:"style: width: 40px" }}</span>
                 </div>
             </div>
             {% endfor %}
@@ -1157,6 +1255,7 @@
         <div class="row">
             {{ inlines.1.management_form }}
             {% for lb_form in inlines.1 %}
+            {{ lb_form.id }}
             <div class="col-sm-6" style="padding: 20px">
                 <div class="location-box location-box-top row">
                     <div class="col-sm-4">
@@ -1260,7 +1359,7 @@
                         <div class="col-sm-8">
                             <h2>Which do you agree with about this place?</h2>
                             <div class="clearfix">
-                                <div class="pull-left">
+                                <div class="pull-left interviewer-believes-box">
                                     {{ lb_form.interviewer_believes_trafficked_many_girls }}
                                     <br/>
                                     {{ lb_form.interviewer_believes_trafficked_some_girls }}
@@ -1269,7 +1368,7 @@
                                     <br/>
                                     {{ lb_form.interviewer_believes_not_used_for_trafficking }}
                                 </div>
-                                <div class="pull-right">
+                                <div class="pull-right victim-believes-box">
 
                                     {{ lb_form.victim_believes_trafficked_many_girls }}
                                     <br/>
@@ -1307,9 +1406,8 @@
                             {{ choice }}
                         </div>
                     {% endfor %}
-                    <span class="red-arrow">PB# {{ lb_form.associated_with_person_value }}</span>
+                    <span class="red-arrow">PB# {{ lb_form.associated_with_person_value|attr:"style: width: 40px" }}</span>
                 </div>
-
             </div>
             {% endfor %}
         </div>
@@ -1370,22 +1468,22 @@
                     </h2>
 
                     <div class="clearfix mbs">
-                    {{ form.tiny_hands_rating_border_staff|attr:"style: width: 70px"|add_class:"pull-right" }}
+                    {{ form.tiny_hands_rating_border_staff|attr:"style: width: 70px"|add_class:"pull-right"|attr:"data-placement: left" }}
                     {{ form.tiny_hands_rating_border_staff.label_tag }}
                     </div>
 
                     <div class="clearfix mbs">
-                    {{ form.tiny_hands_rating_shelter_staff|attr:"style: width: 70px"|add_class:"pull-right" }}
+                    {{ form.tiny_hands_rating_shelter_staff|attr:"style: width: 70px"|add_class:"pull-right"|attr:"data-placement: left" }}
                     {{ form.tiny_hands_rating_shelter_staff.label_tag }}
                     </div>
 
                     <div class="clearfix mbs">
-                    {{ form.tiny_hands_rating_trafficking_awareness|attr:"style: width: 70px"|add_class:"pull-right" }}
+                    {{ form.tiny_hands_rating_trafficking_awareness|attr:"style: width: 70px"|add_class:"pull-right"|attr:"data-placement: left" }}
                     {{ form.tiny_hands_rating_trafficking_awareness.label_tag }}
                     </div>
 
                     <div class="clearfix mbs">
-                    {{ form.tiny_hands_rating_shelter_accommodations|attr:"style: width: 70px"|add_class:"pull-right" }}
+                    {{ form.tiny_hands_rating_shelter_accommodations|attr:"style: width: 70px"|add_class:"pull-right"|attr:"data-placement: left" }}
                     {{ form.tiny_hands_rating_shelter_accommodations.label_tag }}
                     </div>
                 </div>
@@ -1491,19 +1589,57 @@
                 </div>
 
                 <div class="black-box padded-box clearfix">
-                    Sexual Abuse {{ form.victim_home_had_sexual_abuse }}
-                    <div class="alarm-box">4</div>
-                    <div class="alarm-box">10</div>
+                    <div class="col-sm-2">
+                        <label>Sexual Abuse</label>
+                    </div>
+                    <div class="col-sm-9 col-sm-offset-1">
+                        {{ form.victim_home_had_sexual_abuse.0 }}
+                        {{ form.victim_home_had_sexual_abuse.0.label_tag }}
+                        <span class="alarm-box-container">
+                            {{ form.victim_home_had_sexual_abuse.1 }}
+                            {{ form.victim_home_had_sexual_abuse.1.label_tag }}
+                            <div class="alarm-box">4</div>
+                        </span>
+                        <span class="alarm-box-container">
+                            {{ form.victim_home_had_sexual_abuse.2 }}
+                            {{ form.victim_home_had_sexual_abuse.2.label_tag }}
+                            <div class="alarm-box">10</div>
+                        </span>
+                    </div>
                 </div>
 
                 <div class="black-box padded-box clearfix">
-                    Physical Abuse {{ form.victim_home_had_physical_abuse }}
-                    <div class="alarm-box">6</div>
+                    <div class="col-sm-2">
+                        <label>Physical Abuse</label>
+                    </div>
+                    <div class="col-sm-9 col-sm-offset-1">
+                        {{ form.victim_home_had_physical_abuse.0 }}
+                        {{ form.victim_home_had_physical_abuse.0.label_tag }}
+                        {{ form.victim_home_had_physical_abuse.1 }}
+                        {{ form.victim_home_had_physical_abuse.1.label_tag }}
+                        <span class="alarm-box-container">
+                            {{ form.victim_home_had_physical_abuse.2 }}
+                            {{ form.victim_home_had_physical_abuse.2.label_tag }}
+                            <div class="alarm-box">6</div>
+                        </span>
+                    </div>
                 </div>
 
                 <div class="black-box padded-box clearfix">
-                    Emotional Abuse {{ form.victim_home_had_emotional_abuse }}
-                    <div class="alarm-box">2</div>
+                    <div class="col-sm-2">
+                        <label>Emotional Abuse</label>
+                    </div>
+                    <div class="col-sm-9 col-sm-offset-1">
+                        {{ form.victim_home_had_emotional_abuse.0 }}
+                        {{ form.victim_home_had_emotional_abuse.0.label_tag }}
+                        {{ form.victim_home_had_emotional_abuse.1 }}
+                        {{ form.victim_home_had_emotional_abuse.1.label_tag }}
+                        <span class="alarm-box-container">
+                            {{ form.victim_home_had_emotional_abuse.2 }}
+                            {{ form.victim_home_had_emotional_abuse.2.label_tag }}
+                            <div class="alarm-box">2</div>
+                        </span>
+                    </div>
                 </div>
 
                 <div class="black-box padded-box clearfix">
@@ -1580,15 +1716,26 @@
                         Total Home Situational Alarms
                     </h2>
                     <div class="alarm-box">?</div>
-                    {{ form.reported_total_situational_alarms }}
+                        
+                    <div>
+                        <label>Calculated Alarms:
+                            <span id="calculated-total"></span>
+                        </label>
+                    </div>
+                    <div>
+                        <label>Reported Alarms:</label>
+                        {{ form.reported_total_situational_alarms|attr:"style: width: 60px" }}
+                    </div>
                     <p>If a victim had 10 or more total Home Situational Alarms, it would be better not to send her home. However, if the girl is a minor, you will need to discuss her options with her parents.</p>
                 </div>
 
+                {% comment %}
                 <div class="black-box padded-box clearfix text-center">
                     <h2>
                         <em>Use the chart below to guide your recommendation in question 8.3 in the next section.</em>
                     </h2>
                 </div>
+                {% endcomment %}
 
             </div>
             <div class="col-sm-4 major-column">
@@ -1647,7 +1794,7 @@
                             {{ form.reason_no_legal_other }}
                             {{ form.reason_no_legal_other.label }}
                         </label>
-                        {{ form.victim_where_going_other_india_value|attr:"style: padding-top: 20px" }}
+                        {{ form.victim_where_going_other_india_value }}
                     </div>
                 </div>
 
@@ -1679,14 +1826,18 @@
                     </div>
                 </div>
 
-                <div class="black-box clearfix">
-                    {{ form.has_signature }}
-                    {{ form.has_signature.label_tag }}
+                <div class="black-box padded-box clearfix">
+                    <label>Is there a signature on the original form?
+                    <div class="inline-radio-group">
+                        {% for choice in form.has_signature %}
+                            {{ choice }} {{ choice.label_tag }}
+                        {% endfor %}
+                    </div>
                 </div>
 
                 <div class="black-box clearfix">
                     <div class="label-inside-field">
-                        {{ form.case_notes|attr:"rows:7" }}
+                        {{ form.case_notes|attr:"rows:14" }}
                         {{ form.case_notes.label_tag }}
                     </div>
                 </div>
@@ -1705,5 +1856,8 @@
     </div>
 
 </form>
+<br/>
+<br/>
+<br/>
 
 {% endblock %}

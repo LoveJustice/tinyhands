@@ -236,18 +236,6 @@ class Interceptee(models.Model):
 
 
 class VictimInterview(models.Model):
-    vif_number = models.IntegerField('VIF #:')
-    date_time = models.DateTimeField('Date/Time:')
-
-    number_of_victims = models.IntegerField('# of victims:', null=True, blank=True)
-    number_of_traffickers = models.IntegerField('# of traffickers', null=True, blank=True)
-
-    location = models.CharField(max_length=255, blank=True)
-    interviewer = models.CharField(max_length=255, blank=True)
-
-    # 1. Victim & Family Information
-    victim_name = models.CharField('Name', max_length=255)
-
     BOOL_CHOICES = [
         (False, 'No'),
         (True, 'Yes'),
@@ -257,6 +245,22 @@ class VictimInterview(models.Model):
         ('male', 'Male'),
         ('female', 'Female'),
     ]
+
+    vif_number = models.CharField('VIF #:', max_length=20)
+    date_time = models.DateTimeField('Date/Time:')
+
+    number_of_victims = models.IntegerField('# of victims:', null=True, blank=True)
+    number_of_traffickers = models.IntegerField('# of traffickers', null=True, blank=True)
+
+    location = models.CharField(max_length=255, blank=True)
+    interviewer = models.CharField(max_length=255, blank=True)
+
+    statement_read_before_beginning = models.BooleanField('Check the box if form is signed')
+    permission_to_use_photograph = models.BooleanField('Check the box if form is signed', default=False)
+
+    # 1. Victim & Family Information
+    victim_name = models.CharField('Name', max_length=255)
+
     victim_gender = models.CharField('Gender', choices=GENDER_CHOICES, max_length=12)
 
     victim_address_district = models.CharField('District', max_length=255, blank=True)
@@ -404,7 +408,7 @@ class VictimInterview(models.Model):
         ('india', 'India'),
         ('gulf-other', 'Gulf / Other'),
     ]
-    victim_where_going_region = models.CharField('Where were you going?', choices=WHERE_GOING_REGION_CHOICES, max_length=255, blank=True)
+    victim_where_going_region = models.CharField('Where were you going?', choices=WHERE_GOING_REGION_CHOICES, max_length=255)
 
     WHERE_GOING_CHOICES = [
         ('delhi', 'Delhi'),
@@ -731,7 +735,7 @@ class VictimInterviewPersonBox(models.Model):
 
     name = models.CharField('Name', max_length=255, blank=True)
 
-    gender = models.CharField('Gender', choices=GENDER_CHOICES, max_length=12)
+    gender = models.CharField('Gender', choices=GENDER_CHOICES, max_length=12, blank=True)
 
     address_district = models.CharField('District', max_length=255, blank=True)
     address_vdc = models.CharField('VDC', max_length=255, blank=True)
@@ -750,7 +754,7 @@ class VictimInterviewPersonBox(models.Model):
     ]
     physical_description = models.CharField('Physical Description', max_length=255, choices=PHYSICAL_DESCRIPTION_CHOICES, blank=True)
 
-    appearance_other = models.CharField(max_length=255)
+    appearance_other = models.CharField(max_length=255, blank=True)
 
     OCCUPATION_CHOICES = [
         ('none', 'None'),
