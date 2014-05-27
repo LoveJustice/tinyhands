@@ -3,8 +3,6 @@
 
 {% block title %}{% if account %}Edit {{ account.get_full_name }}'s Account{% else %}Create New Account{% endif %}{% endblock %}
 
-{% block body_class %}account_form{% endblock %}
-
 {% block head %}
 <style>
 input[type="checkbox"] {
@@ -54,10 +52,6 @@ window.defaultPermissionSets = JSON.parse('{{ default_permissions_sets|safe }}')
             {{ form.first_name|bootstrap }}
             {{ form.last_name|bootstrap }}
             {{ form.user_designation|bootstrap }}
-            {% if not account %}
-                {{ form.password1|bootstrap }}
-                {{ form.password2|bootstrap }}
-            {% endif %}
             <div class="clearfix">
                 <table class="table table-condensed">
                     <thead>

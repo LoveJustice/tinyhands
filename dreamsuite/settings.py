@@ -1,3 +1,5 @@
+from private import SECRET_KEY, POSTMARK_API_KEY
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -6,8 +8,18 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'rcvkf6*ivi7jva*rwi-#ite^x@rq54bhe28j%^0t2unveo)lcd'
+SERVER_EMAIL = 'david@lessboring.com'
+EMAIL_HOST = 'smtp.postmarkapp.com'
+
+EMAIL_PORT = 25
+EMAIL_HOST_USER = POSTMARK_API_KEY
+EMAIL_HOST_PASSWORD = POSTMARK_API_KEY
+EMAIL_USE_TLS = True
+
+ADMIN_EMAIL_SENDER = SERVER_EMAIL
+DEFAULT_FROM_EMAIL = SERVER_EMAIL
+SITE_DOMAIN = 'dreamsuite.lessboring.com'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True

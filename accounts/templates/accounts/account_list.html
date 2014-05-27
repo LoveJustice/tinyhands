@@ -31,7 +31,18 @@
             <td>{{ account.user_designation }}</td>
             <td>{{ account.date_joined }}</td>
             <td>{{ account.last_login }}</td>
-            <td><a class="btn btn-sm btn-primary" href="{% url 'account_update' account.pk %}">Edit</a></td>
+            <td><a class="btn btn-sm btn-primary" href="{% url 'account_update' account.pk %}">Edit</a>
+            {% if not account.has_usable_password %}
+            <form method="post" 
+                    style="display: inline"
+                    action="{% url 'account_resend_activation_email' account.pk %}">
+                {% csrf_token %}
+                <input type="submit"
+                        class="btn btn-sm btn-primary"
+                        value="Resend Activation Email" />
+            </td>
+            </form>
+            {% endif %}
         </tr>
         {% endfor %}
     </tbody> 

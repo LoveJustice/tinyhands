@@ -76,7 +76,10 @@ function setUpPermissionsCheckboxes() {
 
 var DREAMSUITE = {
 
-    account_form: function() {
+    account_create: function() {
+        this.account_update();
+    },
+    account_update: function() {
         setUpPermissionsCheckboxes();
         $('select').change(function() {
             for (var i=0; i<window.defaultPermissionSets.length; i++) {

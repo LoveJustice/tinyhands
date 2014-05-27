@@ -1,15 +1,17 @@
 import json
 
-from django.shortcuts import render
+from django.contrib.auth import authenticate, login
+from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse_lazy
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, RedirectView
 from django.contrib.auth.decorators import login_required
 from braces.views import LoginRequiredMixin
 from extra_views import ModelFormSetView
 
+from util.functions import get_object_or_None
 from accounts.models import Account, DefaultPermissionsSet
 from accounts.mixins import PermissionsRequiredMixin
-from accounts.forms import CreateAccountForm
+from accounts.forms import CreateUnactivatedAccountForm, AccountActivateForm
 
 
 @login_required
@@ -30,7 +32,7 @@ class AccountCreateView(
         PermissionsRequiredMixin,
         CreateView):
     model = Account
-    form_class = CreateAccountForm
+    form_class = CreateUnactivatedAccountForm
     success_url = reverse_lazy('account_list')
     permissions_required = ['permission_accounts_manage']
 
@@ -38,6 +40,44 @@ class AccountCreateView(
         context = super(AccountCreateView, self).get_context_data(**kwargs)
         context['default_permissions_sets'] = json.dumps(list(DefaultPermissionsSet.objects.values()))
         return context
+
+
+class AccountActivateView(UpdateView):
+    model = Account
+    template_name = 'accounts/account_activate.html'
+    success_url = reverse_lazy('home')
+    form_class = AccountActivateForm
+
+    def get_object(self):
+        return get_object_or_None(Account, activation_key=self.kwargs['activation_key'])
+
+    def get_context_data(self, **kwargs):
+        context = super(AccountActivateView, self).get_context_data(**kwargs)
+        if self.object is None or self.object.has_usable_password():
+            context['invalid_key'] = True
+        return context
+
+    def form_valid(self, form):
+        self.object = form.save()
+        account = authenticate(username=self.object.email,
+                               password=self.request.POST['password1'])
+        login(self.request, account)
+        return super(AccountActivateView, self).form_valid(form)
+
+
+class AccountResendActivationEmailView(
+        LoginRequiredMixin,
+        PermissionsRequiredMixin,
+        RedirectView):
+    model = Account
+    permanent = False
+    permissions_required = ['permission_accounts_manage']
+    url = reverse_lazy('account_list')
+
+    def post(self, request, *args, **kwargs):
+        account = get_object_or_404(Account, pk=self.kwargs['pk'])
+        account.send_activation_email()
+        return super(AccountResendActivationEmailView, self).post(request, *args, **kwargs)
 
 
 class AccountUpdateView(

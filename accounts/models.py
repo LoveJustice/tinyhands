@@ -1,6 +1,12 @@
+import string
+import random
+
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
 from django.utils import timezone
+
+from templated_email import send_templated_mail
+from dreamsuite.settings import ADMIN_EMAIL_SENDER, SITE_DOMAIN
 
 
 class DefaultPermissionsSet(models.Model):
@@ -61,6 +67,13 @@ class Account(AbstractBaseUser, PermissionsMixin):
 
     date_joined = models.DateTimeField(default=timezone.now)
 
+    activation_key = models.CharField(
+        max_length=40,
+        default=(lambda:
+                 ''.join(random.choice(string.ascii_letters + string.digits)
+                         for i in range(40)))
+    )
+
     objects = AccountManager()
 
     USERNAME_FIELD = 'email'
@@ -84,3 +97,14 @@ class Account(AbstractBaseUser, PermissionsMixin):
 
     def email_user(self, subject, message, from_email=None):
         pass
+
+    def send_activation_email(self):
+        send_templated_mail(
+            template_name='new_user_password_link',
+            from_email=ADMIN_EMAIL_SENDER,
+            recipient_list=[self.email],
+            context={
+                'site': SITE_DOMAIN,
+                'account': self,
+            }
+        )
