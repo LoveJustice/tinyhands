@@ -10,23 +10,33 @@
 {% block content %}
 
 <div style="display: none">
-{% for id, errors in form.errors.items %}
-    {% if not errors.is_warning %}
-        <div class="error-for-popup" data-id="{{ id }}" data-message="{{ errors.0 }}"></div>
-    {% endif %}
-{% endfor %}
+    {% for id, errors in form.errors.items %}
+        {% if not errors.is_warning %}
+            <div class="error-for-popup" data-id="{{ id }}" data-message="{{ errors.0 }}"></div>
+        {% endif %}
+    {% endfor %}
 
-{% for id, errors in form.errors.items %}
-    {% if errors.is_warning %}
-        <div class="warning-for-popup" data-id="{{ id }}" data-message="{{ errors.0 }}"></div>
-    {% endif %}
-{% endfor %}
+    {% for form in inlines.0 %}
+        {% with form_idx=forloop.counter0 %}
+            {% for id, errors in form.errors.items %}
+                {% if not errors.is_warning %}
+                <div class="error-for-popup" data-id="interceptees-{{ form_idx }}-{{ id }}" data-message="{{ errors.0 }}"></div>
+                {% endif %}
+            {% endfor %}
+        {% endwith %}
+    {% endfor %}
+
+    {% for id, errors in form.errors.items %}
+        {% if errors.is_warning %}
+            <div class="warning-for-popup" data-id="{{ id }}" data-message="{{ errors.0 }}"></div>
+        {% endif %}
+    {% endfor %}
 </div>
 
 {% if form.errors and form.has_warnings and not form.ignore_warnings.value %}
     <div class="alert alert-warning no-remove" style="margin-top: 20px">
         <h3>These warnings will not prevent the form from being saved, but may indicate a problem with the form</h3>
-        <p>If you are sure that you want to submit the form with warnings, fix any errors and submit the form again.</p>
+        <p>If you are sure that you want to submit the form with warnings, fix any errors, check the "Ignore warnings" box next to the submit button, and submit the form again.</p>
         {% for id, errors in form.errors.items %}
             {% if errors.is_warning %}
                 {% for error in errors %}
@@ -37,8 +47,7 @@
     </div>
 {% endif %}
 
-{% if form.errors %}
-<div class="alert alert-danger no-remove" style="margin-top: 20px">
+<div id="error-box" class="alert alert-danger no-remove" style="margin-top: 20px">
     <h3>These errors will prevent the form from being saved</h3>
     {% for id, errors in form.errors.items %}
         {% if not errors.is_warning %}
@@ -47,15 +56,18 @@
             {% endfor %}
         {% endif %}
     {% endfor %}
+
+    {% for form in inlines.0 %}
+        {% if form.errors %}
+            <h4 style="margin-top: 10px">For Interceptee #{{ forloop.counter }}:</h4>
+            {% for id, errors in form.errors.items %}
+                {% for error in errors %}
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;<strong>{{ id|unslugify }}:</strong> {{ error }}</p>
+                {% endfor %}
+            {% endfor %}
+        {% endif %}
+    {% endfor %}
 </div>
-{% endif %}
-
-
-{% for form in inlines.0 %}
-{% if form.errors %}
-{{ forloop.counter }} {{ form.errors }}
-{% endif %}
-{% endfor %}
 
 
 <form enctype="multipart/form-data" method="POST" id="interception-record-form">{% csrf_token %}
@@ -744,12 +756,12 @@
                         you have completed the procedure.</p>
 
                         <h3 class="text-center">Procedures</h3>
-                        <strong>8.1</strong>&nbsp;{{ form.call_subcommittee_chair }} {{ form.call_subcommittee_chair.label_tag }}<br/>
-                        <strong>8.2</strong>&nbsp;{{ form.call_thn_to_cross_check }} {{ form.call_thn_to_cross_check.label_tag }}<br/>
+                        <strong>8.1</strong>&nbsp;{{ form.call_subcommittee_chair|attr:"data-placement: left" }} {{ form.call_subcommittee_chair.label_tag }}<br/>
+                        <strong>8.2</strong>&nbsp;{{ form.call_thn_to_cross_check|attr:"data-placement: left" }} {{ form.call_thn_to_cross_check.label_tag }}<br/>
                         Had any name come up before?
                         {{ form.name_come_up_before.1 }} {{ form.name_come_up_before.1.label_tag }} {{ form.name_come_up_before.0 }} {{ form.name_come_up_before.0.label_tag }} <br/>
-                        {{ form.name_come_up_before_yes_value.label_tag }}  {{ form.name_come_up_before_yes_value|attr:"style: width: 100px" }}<br/>
-                        <strong>8.3</strong>&nbsp;{{ form.scan_and_submit_same_day }} {{ form.scan_and_submit_same_day.label_tag }}
+                        {{ form.name_come_up_before_yes_value.label_tag }}  {{ form.name_come_up_before_yes_value|attr:"style: width: 100px"|attr:"data-placement: bottom" }}<br/>
+                        <strong>8.3</strong>&nbsp;{{ form.scan_and_submit_same_day|attr:"data-placement: bottom" }} {{ form.scan_and_submit_same_day.label_tag }}
                     </div>
                     <div class="col-sm-6">
                         <h3 style="margin-top: 0" class="text-center">Type of Intercept</h3>
@@ -841,5 +853,8 @@
 
 
 </form>
+<br/>
+<br/>
+<br/>
 
 {% endblock %}

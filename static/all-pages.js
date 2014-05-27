@@ -1,5 +1,8 @@
 function setUpValidationPopup(elem, kind) {
     var id = $(elem).data('id');
+    if (id == 'ignore_warnings') {
+        return;
+    }
     var message = $(elem).data('message');
 
     if (kind === 'error') {
@@ -170,6 +173,10 @@ var DREAMSUITE = {
             setUpValidationPopups();
         });
 
+        // A hack but it works
+        if ($('#error-box p').length === 0) {
+            $('#error-box').remove();
+        }
     },
 
     victiminterview_create: function() {

@@ -121,7 +121,7 @@ class InterceptionRecord(models.Model):
     contact_other_value = models.CharField(max_length=255, blank=True)
 
     # Did you pay this contact for the information?
-    contact_paid = models.BooleanField(choices=BOOL_CHOICES)
+    contact_paid = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
     contact_paid_how_much = models.CharField('How much?', max_length=255, blank=True)
 
     staff_noticed = models.BooleanField('Staff', default=False)
@@ -165,7 +165,7 @@ class InterceptionRecord(models.Model):
     # Procedures
     call_subcommittee_chair = models.BooleanField('Call Subcommittee Chair', default=False)
     call_thn_to_cross_check = models.BooleanField('Call THN to cross-check the names (6223856)', default=False)
-    name_come_up_before = models.NullBooleanField(choices=BOOL_CHOICES)
+    name_come_up_before = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
     name_come_up_before_yes_value = models.CharField('If yes, write the # from the table above:', max_length=255, blank=True)
     scan_and_submit_same_day = models.BooleanField('Scan and submit to THN the same day', default=False)
 
@@ -189,7 +189,7 @@ class InterceptionRecord(models.Model):
     ]
     how_sure_was_trafficking = models.IntegerField(
         'How sure are you that it was trafficking case?',
-        choices=HOW_SURE_TRAFFICKING_CHOICES, null=True, blank=True)
+        choices=HOW_SURE_TRAFFICKING_CHOICES)
 
     has_signature = models.BooleanField('Scanned form has signature?', default=False)
 
@@ -224,8 +224,8 @@ class Interceptee(models.Model):
     interception_record = models.ForeignKey(InterceptionRecord, related_name='interceptees')
     kind = models.CharField(max_length=4, choices=KIND_CHOICES)
     full_name = models.CharField(max_length=255)
-    gender = models.CharField(max_length=4, choices=GENDER_CHOICES)
-    age = models.PositiveIntegerField()
+    gender = models.CharField(max_length=4, choices=GENDER_CHOICES, blank=True)
+    age = models.PositiveIntegerField(null=True, blank=True)
     district = models.CharField(max_length=255, blank=True)
     vdc = models.CharField(max_length=255, blank=True)
     phone_contact = models.CharField(max_length=255, blank=True)

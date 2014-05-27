@@ -22,7 +22,7 @@ class InterceptionRecordForm(forms.ModelForm):
     contact_paid = forms.ChoiceField(
         choices=InterceptionRecord.BOOL_CHOICES,
         widget=forms.RadioSelect(),
-        required=True
+        required=False
     )
 
     name_come_up_before = forms.ChoiceField(
@@ -31,8 +31,7 @@ class InterceptionRecordForm(forms.ModelForm):
         required=False
     )
 
-    ignore_warnings = forms.ChoiceField(
-        widget=forms.CheckboxInput(),
+    ignore_warnings = forms.BooleanField(
         required=False
     )
 
@@ -47,9 +46,12 @@ class InterceptionRecordForm(forms.ModelForm):
         for field_name, field in self.fields.iteritems():
 
             if type(field) == forms.fields.BooleanField:
-                model_field = InterceptionRecord._meta.get_field_by_name(field_name)[0]
-                if hasattr(model_field, 'weight'):
-                    field.weight = model_field.weight
+                try:
+                    model_field = InterceptionRecord._meta.get_field_by_name(field_name)[0]
+                    if hasattr(model_field, 'weight'):
+                        field.weight = model_field.weight
+                except:
+                    pass  # Don't worry about this for nonmodel fields like ignore_warnings
 
     def clean(self):
         cleaned_data = super(InterceptionRecordForm, self).clean()
@@ -59,9 +61,16 @@ class InterceptionRecordForm(forms.ModelForm):
         self.box_six_or_seven_must_be_checked(cleaned_data)
         self.if_box_six_checked_at_least_one_from_six_one_to_six_nine_must_be_checked(cleaned_data)
         self.if_box_six_other_is_checked_the_other_value_must_be_present(cleaned_data)
+        self.if_box_7_1_ensure_7_2(cleaned_data)
+        self.if_contact_noticed_ensure_contact_paid(cleaned_data)
+        self.if_8_2_ensure_number_specified(cleaned_data)
 
-        if not cleaned_data.get('override_warnings'):
+        if not cleaned_data.get('ignore_warnings'):
             self.ensure_some_red_flags_checked(cleaned_data)
+            self.ensure_some_noticing_reason_checked(cleaned_data)
+            self.ensure_8_1_2_3_checked(cleaned_data)
+            self.ensure_at_least_one_of_9_1_through_9_5_are_checked(cleaned_data)
+            self.ensure_signature_on_form(cleaned_data)
 
         return cleaned_data
 
@@ -113,8 +122,6 @@ class InterceptionRecordForm(forms.ModelForm):
         ):
             self._errors['who_in_group_alone'] = self.error_class(['At least one choice must be selected.'])
 
-        self.box_six_or_seven_must_be_checked(cleaned_data)
-
     def box_six_or_seven_must_be_checked(self, cleaned_data):
         if not (
                 cleaned_data.get('contact_noticed') or
@@ -141,6 +148,21 @@ class InterceptionRecordForm(forms.ModelForm):
         if cleaned_data.get('contact_other') and not cleaned_data.get('contact_other_value'):
             self._errors['contact_other_value'] = self.error_class(
                 ['Other chosen for Contact but the kind is not specified.'])
+
+    def if_contact_noticed_ensure_contact_paid(self, cleaned_data):
+        if cleaned_data.get('contact_noticed') and not cleaned_data.get('contact_paid'):
+            self._errors['contact_paid'] = self.error_class(
+                ['Contact noticed chosen but paid not specified.'])
+
+    def if_8_2_ensure_number_specified(self, cleaned_data):
+        if cleaned_data.get('name_come_up_before') and not cleaned_data.get('name_come_up_before_yes_value'):
+            self._errors['name_come_up_before_yes_value'] = self.error_class(
+                ['Name came up specified but no number given.'])
+
+    def if_box_7_1_ensure_7_2(self, cleaned_data):
+        if cleaned_data.get('staff_noticed') and not cleaned_data.get('staff_who_noticed'):
+            self._errors['staff_who_noticed'] = self.error_class(
+                ['Staff noticed chosen but name not specified.'])
 
     def ensure_some_red_flags_checked(self, cleaned_data):
         if not (
@@ -193,14 +215,73 @@ class InterceptionRecordForm(forms.ModelForm):
             self.has_warnings = True
             self._errors['drugged_or_drowsy'] = error
 
+    def ensure_some_noticing_reason_checked(self, cleaned_data):
+        if cleaned_data.get('staff_noticed') and not (
+            cleaned_data.get('noticed_hesitant') or
+            cleaned_data.get('noticed_nervous_or_afraid') or
+            cleaned_data.get('noticed_hurrying') or
+            cleaned_data.get('noticed_drugged_or_drowsy') or
+            cleaned_data.get('noticed_new_clothes') or
+            cleaned_data.get('noticed_dirty_clothes') or
+            cleaned_data.get('noticed_carrying_full_bags') or
+            cleaned_data.get('noticed_village_dress') or
+            cleaned_data.get('noticed_indian_looking') or
+            cleaned_data.get('noticed_typical_village_look') or
+            cleaned_data.get('noticed_looked_like_agent') or
+            cleaned_data.get('noticed_caste_difference') or
+            cleaned_data.get('noticed_young_looking') or
+            cleaned_data.get('noticed_waiting_sitting') or
+            cleaned_data.get('noticed_walking_to_border') or
+            cleaned_data.get('noticed_roaming_around') or
+            cleaned_data.get('noticed_exiting_vehicle') or
+            cleaned_data.get('noticed_heading_to_vehicle') or
+            cleaned_data.get('noticed_in_a_vehicle') or
+            cleaned_data.get('noticed_in_a_rickshaw') or
+            cleaned_data.get('noticed_in_a_cart') or
+            cleaned_data.get('noticed_carrying_a_baby') or
+            cleaned_data.get('noticed_on_the_phone') or
+            cleaned_data.get('noticed_other_sign')
+        ):
+            error = self.error_class(['Staff Noticed (7.0) is checked, but no reason is checked (7.2 - 7.25).'])
+            error.is_warning = True
+            self.has_warnings = True
+            self._errors['staff_noticed'] = error
+
+    def ensure_8_1_2_3_checked(self, cleaned_data):
+        if not cleaned_data.get('call_subcommittee_chair'):
+            error = self.error_class(['Procedure not followed.'])
+            error.is_warning = True
+            self.has_warnings = True
+            self._errors['call_subcommittee_chair'] = error
+
+        if not cleaned_data.get('call_thn_to_cross_check'):
+            error = self.error_class(['Procedure not followed.'])
+            error.is_warning = True
+            self.has_warnings = True
+            self._errors['call_thn_to_cross_check'] = error
+
+        if not cleaned_data.get('scan_and_submit_same_day'):
+            error = self.error_class(['Procedure not followed.'])
+            error.is_warning = True
+            self.has_warnings = True
+            self._errors['scan_and_submit_same_day'] = error
+
+    def ensure_at_least_one_of_9_1_through_9_5_are_checked(self, cleaned_data):
+        if not cleaned_data.get('interception_type'):
+            error = self.error_class(['Field should be included, though not required.'])
+            error.is_warning = True
+            self.has_warnings = True
+            self._errors['interception_type'] = error
+
+    def ensure_signature_on_form(self, cleaned_data):
+        if not cleaned_data.get('has_signature'):
+            error = self.error_class(['Form should be signed, though not required.'])
+            error.is_warning = True
+            self.has_warnings = True
+            self._errors['has_signature'] = error
 
 
 IntercepteeFormSet = inlineformset_factory(InterceptionRecord, Interceptee, extra=12)
-
-#  cleaned_data.get('contact_other_value') or
-#  cleaned_data.get('contact_paid_no') or
-#  cleaned_data.get('contact_paid_yes') or
-#  cleaned_data.get('contact_paid_how_much')
 
 
 # Make all fields with choices radio selects
