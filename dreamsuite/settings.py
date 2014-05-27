@@ -19,7 +19,7 @@ EMAIL_USE_TLS = True
 ADMIN_EMAIL_SENDER = SERVER_EMAIL
 DEFAULT_FROM_EMAIL = SERVER_EMAIL
 SITE_DOMAIN = 'dreamsuite.lessboring.com'
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
