@@ -23,8 +23,8 @@ class InterceptionRecord(models.Model):
     irf_number = models.CharField('IRF #:', max_length=20)
     date_time_of_interception = models.DateTimeField('Date/Time:')
 
-    number_of_victims = models.IntegerField('# of victims:')
-    number_of_traffickers = models.IntegerField('# of traffickers')
+    number_of_victims = models.IntegerField('# of victims:', null=True, blank=True)
+    number_of_traffickers = models.IntegerField('# of traffickers', null=True, blank=True)
 
     location = models.CharField('Location:', max_length=255)
     staff_name = models.CharField('Staff Name:', max_length=255)
@@ -121,7 +121,7 @@ class InterceptionRecord(models.Model):
     contact_other_value = models.CharField(max_length=255, blank=True)
 
     # Did you pay this contact for the information?
-    contact_paid = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
+    contact_paid = models.BooleanField(choices=BOOL_CHOICES)
     contact_paid_how_much = models.CharField('How much?', max_length=255, blank=True)
 
     staff_noticed = models.BooleanField('Staff', default=False)

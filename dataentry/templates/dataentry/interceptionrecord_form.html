@@ -20,8 +20,19 @@
 {% endif %}
 {% endfor %}
 
+<div class="alert alert-warning no-remove" style="margin-top: 20px">
+    <h3>These warnings will not prevent the form from being saved, but may indicate a problem with the form</h3>
+    <p>If you are sure that you want to submit the form with warnings, fix any errors and submit the form again.</p>
+    {% for id, errors in form.warnings.items %}
+        {% for error in errors %}
+        <p><strong>{{ id|unslugify }}:</strong> {{ error }}</p>
+        {% endfor %}
+    {% endfor %}
+</div>
+
 {% if form.errors %}
 <div class="alert alert-danger no-remove" style="margin-top: 20px">
+    <h3>These errors will prevent the form from being saved</h3>
     {% for id, errors in form.errors.items %}
         {% for error in errors %}
         <p><strong>{{ id|unslugify }}:</strong> {{ error }}</p>
@@ -588,7 +599,7 @@
                     <td style="width: 25%">
                         <strong>6.7</strong>&nbsp;{{ form.contact_police }}               {{ form.contact_police.label_tag }}<br/>
                         <strong>6.8</strong>&nbsp;{{ form.contact_subcommittee_member }}  {{ form.contact_subcommittee_member.label_tag }}<br/>
-                        <strong>6.9</strong> {{ form.contact_other }} {{ form.contact_other.label_tag }} {{ form.contact_other_value|attr:"style: width: 160px" }}
+                        <strong>6.9</strong> {{ form.contact_other }} {{ form.contact_other.label_tag }} {{ form.contact_other_value|attr:"style: width: 160px"|attr:"data-placement: bottom" }}
                     </td>
                     <td class="contact-paid">
                         Did you pay this contact for the information?<br/>
@@ -799,6 +810,7 @@
         <nav class="navbar navbar-default navbar-fixed-bottom">
             <div class="container">
                 <div class="navbar-inner navbar-content-center">
+                    <input type="submit" class="pull-right btn btn-primary navbar-btn btn-lg" value="Submit" />
                     <input type="submit" class="pull-right btn btn-primary navbar-btn btn-lg" value="Submit" />
                 </div>
             </div>
