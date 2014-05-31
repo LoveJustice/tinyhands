@@ -72,7 +72,7 @@ class InterceptionRecordUpdateView(
 
 class PersonBoxInline(InlineFormSet):
     model = VictimInterviewPersonBox
-    extra = 3
+    extra = 12
 
     def get_factory_kwargs(self):
         kwargs = super(PersonBoxInline, self).get_factory_kwargs()
@@ -82,7 +82,7 @@ class PersonBoxInline(InlineFormSet):
 
 class LocationBoxInline(InlineFormSet):
     model = VictimInterviewLocationBox
-    extra = 2
+    extra = 8
 
     def get_factory_kwargs(self):
         kwargs = super(LocationBoxInline, self).get_factory_kwargs()
@@ -118,6 +118,12 @@ class VictimInterviewUpdateView(
     success_url = reverse_lazy('victiminterview_list')
     inlines = [PersonBoxInline, LocationBoxInline]
     permissions_required = ['permission_vif_edit']
+
+    def num_pbs(self):
+        return self.object.person_boxes.count()
+
+    def num_lbs(self):
+        return self.object.location_boxes.count()
 
 
 class InterceptionRecordCSVExportView(
