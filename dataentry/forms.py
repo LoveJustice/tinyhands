@@ -11,12 +11,6 @@ from django.forms.models import inlineformset_factory
 from django.core.exceptions import ValidationError
 
 # Django forms for some reason use 1,2,3 for values for NullBooleanField
-NULL_BOOLEAN_CHOICES = [
-    (1, 'Unspecified'),
-    (2, 'No'),
-    (3, 'Yes'),
-]
-
 BOOLEAN_CHOICES = [
     (False, 'No'),
     (True, 'Yes'),
@@ -30,14 +24,20 @@ def make_null_boolean_fields_radio(f):
         return f.formfield()
 
 
-
 class InterceptionRecordForm(forms.ModelForm):
-    formfield_callback = make_null_boolean_fields_radio
+    #formfield_callback = make_null_boolean_fields_radio
 
-    interception_type = forms.ChoiceField(
+    name_come_up_before_yes = forms.BooleanField()
+    name_come_up_before_no = forms.BooleanField()
+    name_come_up_before = forms.MultipleChoiceField(
+        choices=BOOLEAN_CHOICES,
+        widget=forms.CheckboxSelectMultiple
+    )
+
+
+    interception_type = forms.MultipleChoiceField(
         choices=InterceptionRecord.INTERCEPT_TYPE_CHOICES,
-        widget=forms.RadioSelect(),
-        required=False
+        widget=forms.CheckboxSelectMultiple
     )
 
     ignore_warnings = forms.BooleanField(
