@@ -421,8 +421,10 @@ vif_headers = [
     "3.1 Involvement of Manpower",
     "3.2 Recruited from Village",
     "3.3 Broker's Relation to Victim",
+    "Broker's Relation Other",
     "3.4 Duration of Marriage to Broker",
     "3.5 Met Broker",
+    "Met Broker Other",
     "3.6 Explanation if by mobile",
     "3.7 Length of time known Broker",
     "3.8 How Expenses Were Paid",
@@ -437,6 +439,7 @@ vif_headers = [
     "4.5 Transit Hide",
     "Transit Hide Explanation",
     "4.6 Transit Free",
+    "Transit Free Explanation",
     "4.7 Number of Others",
     "4.8 Age of Youngest",
     "4.9 Passport Made",
@@ -444,7 +447,8 @@ vif_headers = [
     "4.11 Sexual Harassment",
     "Sexual Abuse",
     "Physical Abuse",
-    "Threats Denied Proper Food",
+    "Threats",
+    "Denied Proper Food",
     "Forced to Take Drugs",
     "Person Responsible",
     "Explanation of Abuse",
@@ -613,6 +617,59 @@ def get_meeting_at_border(vif):
         return 'Planning to meet Companion after crossing the border'
 
 
+def get_victim_home_had_sexual_abuse(vif):
+    if vif.victim_home_had_sexual_abuse_never:
+        return 'Sexual abuse never takes place at home'
+    if vif.victim_home_had_sexual_abuse_rarely:
+        return 'Minor or rare sexual abuse takes place at home'
+    if vif.victim_home_had_sexual_abuse_frequently:
+        return 'Sever or frequent sexual abuse takes place at home'
+
+
+def get_victim_home_had_physical_abuse(vif):
+    if vif.victim_home_had_physical_abuse_never:
+        return 'Physical abuse never takes place at home'
+    if vif.victim_home_had_physical_abuse_rarely:
+        return 'Minor or rare sexual abuse takes place at home'
+    if vif.victim_home_had_physical_abuse_frequently:
+        return 'Sever or frequent physical abuse takes place at home'
+
+
+def get_victim_home_had_emotional_abuse(vif):
+    if vif.victim_home_had_emotional_abuse_never:
+        return 'Emotional abuse never takes place at home'
+    if vif.victim_home_had_emotional_abuse_rarely:
+        return 'Minor or rare emotional abuse takes place at home'
+    if vif.victim_home_had_emotional_abuse_frequently:
+        return 'Sever or frequent emotional abuse takes place at home'
+
+
+def get_victim_guardian_drinks_alcohol(vif):
+    if vif.victim_guardian_drinks_alcohol_never:
+        return 'Guardian never drinks alcohol'
+    if vif.victim_guardian_drinks_alcohol_occasionally:
+        return 'Guardian occasionally drinks alcohol'
+    if vif.victim_guardian_drinks_alcohol_all_the_time:
+        return 'Guardian drinks alcohol all the time'
+
+
+def get_victim_guardian_uses_drugs(vif):
+    if vif.victim_guardian_uses_drugs_never:
+        return 'Guardian never uses drugs'
+    if vif.victim_guardian_uses_drugs_occasionally:
+        return 'Guardian occasionally uses drugs'
+    if vif.victim_guardian_uses_drugs_all_the_time:
+        return 'Guardian uses drugs all the time'
+
+
+def get_legal_action_against_traffickers(vif):
+    if vif.legal_action_against_traffickers_no:
+        return 'No legal action has been taken'
+    if vif.legal_action_against_traffickers_fir_filed:
+        return 'An FIR has been filed'
+    if vif.legal_action_against_traffickers_dofe_complaint:
+        return 'A DoFE complaint has been filed'
+
 
 def get_nullable_choice_text(value, text_true, text_false):
     if value is None:
@@ -712,8 +769,8 @@ def get_vif_export_rows(vifs):
             "Known Broker for %d Years and %d Months" % (
                 vif.victim_how_long_known_broker_years,
                 vif.victim_how_long_known_broker_months
-            )
-            if vif.victim_how_long_known_broker_years and vif.victim_how_long_known_broker_months else '',
+            ) if vif.victim_how_long_known_broker_years and vif.victim_how_long_known_broker_months else '',
+
             get_victim_how_expense_was_paid(vif),
 
             get_broker_works_in_job_location(vif),
@@ -798,8 +855,85 @@ def get_vif_export_rows(vifs):
                 'The sex industry location was sending girls overseas',
                 'The sex industry location was not sending girls overseas',
             ),
+
+            get_checkbox_group_value(vif, 'awareness_before_interception'),
+            get_checkbox_group_value(vif, 'attitude_towards_tiny_hands'),
+            get_checkbox_group_value(vif, 'victim_heard_gospel'),
+            get_checkbox_group_value(vif, 'victim_beliefs_now'),
+
+            vif.tiny_hands_rating_border_staff,
+            vif.tiny_hands_rating_shelter_staff,
+            vif.tiny_hands_rating_trafficking_awareness,
+            vif.tiny_hands_rating_shelter_accommodations,
+            vif.how_can_we_serve_you_better,
+
+            get_nullable_choice_text(
+                vif.guardian_knew_was_travelling_to_india,
+                'Guardian knew they were travelling to India',
+                'Guardian didn\'t know they were travelling to India',
+            ),
+
+            get_nullable_choice_text(
+                vif.family_pressured_victim,
+                'Family/Guardian pressured them to accept Broker\'s offer',
+                'Family/Guardian didn\'t pressure them',
+            ),
+
+            get_nullable_choice_text(
+                vif.family_will_try_sending_again,
+                'Think family/guardian will attempt to send them overseas again',
+                'Don\'t think family/guardian will attempt to send them overseas again',
+            ),
+
+            get_nullable_choice_text(
+                vif.victim_feels_safe_at_home,
+                'Feels safe at home with guardian',
+                'Does not feel safe at home with guardian',
+            ),
+
+            get_nullable_choice_text(
+                vif.victim_wants_to_go_home,
+                'Wants to go home',
+                'Does not want to go home',
+            ),
+
+            get_victim_home_had_sexual_abuse(vif),
+            get_victim_home_had_physical_abuse(vif),
+            get_victim_home_had_emotional_abuse(vif),
+            get_victim_guardian_drinks_alcohol(vif),
+            get_victim_guardian_uses_drugs(vif),
+
+            get_checkbox_group_value(vif, 'victim_family_economic_situation'),
+
+            get_nullable_choice_text(
+                vif.victim_had_suicidal_thoughts,
+                'They expressed suicidal thoughts',
+                'They did not express any suicidal thoughts',
+            ),
+
+            'not yet implemented',
+
+            vif.reported_total_situational_alarms,
+
+            get_legal_action_against_traffickers(vif),
+            vif.legal_action_fir_against_value or vif.legal_action_dofe_against_value or '',
+
+            get_checkbox_group_value(vif, 'reason_no_legal'),
+            vif.reason_no_legal_interference_value,
+            vif.reason_no_legal_other_value,
+
+            get_checkbox_group_value(vif, 'interviewer_recommendation'),
+
+            get_nullable_choice_text(
+                vif.other_people_and_places_involved,
+                'There are other people or places they know of involved in trafficking',
+                'There are not any other people or places they know of involved in trafficking',
+            ),
+
+            'Form is signed by staff' if vif.has_signature else 'Form is not signed by staff',
+
+            vif.case_notes,
         ])
         rows.append(row)
-        continue
 
     return rows

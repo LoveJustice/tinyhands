@@ -541,13 +541,24 @@ class VictimInterview(models.Model):
     victim_has_worked_in_sex_industry = models.NullBooleanField(null=True)
     victim_place_worked_involved_sending_girls_overseas = models.NullBooleanField(null=True)
 
-    """
     # 6. Awareness & Assessment
 
-    awareness_before_interception = models.CharField(max_length=255)
-    attitude_towards_tiny_hands = models.CharField(max_length=255)
-    victim_heard_gospel = models.CharField(max_length=255)
-    victim_beliefs_now = models.CharField(max_length=255, blank=True)
+    awareness_before_interception_had_heard_not_how_bad = models.BooleanField('Had heard, but never knew how bad it was until I was intercepted by TH', default=False)
+    awareness_before_interception_knew_how_bad_not_happening_to_her = models.BooleanField('Knew how bad it was, but didn\'t think that was happening to her', default=False)
+    awareness_before_interception_never_heard = models.BooleanField('Had never heard about it', default=False)
+
+    attitude_towards_tiny_hands_thankful = models.BooleanField('Yes, thankful to TH for saving her', default=False)
+    attitude_towards_tiny_hands_blames = models.BooleanField('No, blames Tiny Hands for stopping her', default=False)
+    attitude_towards_tiny_hands_doesnt_know = models.BooleanField('Doesn\'t Know', default=False)
+
+    victim_heard_gospel_no = models.BooleanField('No, I have never heard', default=False)
+    victim_heard_gospel_heard_name_only = models.BooleanField('Has heard the name only', default=False)
+    victim_heard_gospel_heard_but_never_believed = models.BooleanField('Had heard the gospel but never believed', default=False)
+    victim_heard_gospel_already_believer = models.BooleanField('Was already a believer', default=False)
+
+    victim_beliefs_now_doesnt_believe = models.BooleanField('Doesn\'t believe in Jesus', default=False)
+    victim_beliefs_now_believes_no_church = models.BooleanField('Believes in Jesus, but doesn\'t plan to go to church', default=False)
+    victim_beliefs_now_believes_and_church = models.BooleanField('Believes in Jesus and plans to go to church', default=False)
 
     tiny_hands_rating_border_staff = models.PositiveIntegerField('Border Staff polite and respectful')
     tiny_hands_rating_shelter_staff = models.PositiveIntegerField('Shelter Staff polite and respectful')
@@ -564,30 +575,60 @@ class VictimInterview(models.Model):
     victim_feels_safe_at_home = models.NullBooleanField(null=True)
     victim_wants_to_go_home = models.NullBooleanField(null=True)
 
-    victim_home_had_sexual_abuse = models.CharField(max_length=255, blank=True)
-    victim_home_had_physical_abuse = models.CharField(max_length=255, blank=True)
-    victim_home_had_emotional_abuse = models.CharField(max_length=255, blank=True)
+    victim_home_had_sexual_abuse_never = models.BooleanField('Never', default=False)
+    victim_home_had_sexual_abuse_rarely = models.BooleanField('Rarely / Minor', default=False)
+    victim_home_had_sexual_abuse_frequently = models.BooleanField('Frequent / Severe', default=False)
 
-    victim_guardian_drinks_alcohol = models.CharField(max_length=255, blank=True)
-    victim_guardian_uses_drugs = models.CharField(max_length=255, blank=True)
+    victim_home_had_physical_abuse_never = models.BooleanField('Never', default=False)
+    victim_home_had_physical_abuse_rarely = models.BooleanField('Rarely / Minor', default=False)
+    victim_home_had_physical_abuse_frequently = models.BooleanField('Frequent / Severe', default=False)
 
-    victim_family_economic_situation = models.CharField(max_length=255, blank=True)
+    victim_home_had_emotional_abuse_never = models.BooleanField('Never', default=False)
+    victim_home_had_emotional_abuse_rarely = models.BooleanField('Rarely / Minor', default=False)
+    victim_home_had_emotional_abuse_frequently = models.BooleanField('Frequent / Severe', default=False)
+
+    victim_guardian_drinks_alcohol_never = models.BooleanField('Never', default=False)
+    victim_guardian_drinks_alcohol_occasionally = models.BooleanField('Occasionally', default=False)
+    victim_guardian_drinks_alcohol_all_the_time = models.BooleanField('All the time', default=False)
+
+    victim_guardian_uses_drugs_never = models.BooleanField('Never', default=False)
+    victim_guardian_uses_drugs_occasionally = models.BooleanField('Occasionally', default=False)
+    victim_guardian_uses_drugs_all_the_time = models.BooleanField('All the time', default=False)
+
+    victim_family_economic_situation_no_basic_needs = models.BooleanField('Unable to meet basic needs', default=False)
+    victim_family_economic_situation_difficult_basic_needs = models.BooleanField('Able to meet only basic needs, but it is very difficult', default=False)
+    victim_family_economic_situation_comfortable_basic_needs = models.BooleanField('Comfortably meet basic needs, and can afford to buy some non-essential goods/services', default=False)
+    victim_family_economic_situation_wealthy = models.BooleanField('Wealthy', default=False)
 
     victim_had_suicidal_thoughts = models.NullBooleanField(null=True)
 
     reported_total_situational_alarms = models.PositiveIntegerField(blank=True, null=True)
 
-    legal_action_against_traffickers = models.CharField(max_length=255)
+    legal_action_against_traffickers_no = models.BooleanField('No', default=False)
+    legal_action_against_traffickers_fir_filed = models.BooleanField('FIR filed against', default=False)
+    legal_action_against_traffickers_dofe_complaint = models.BooleanField('DoFE complaint against', default=False)
     legal_action_fir_against_value = models.CharField(max_length=255, blank=True)
     legal_action_dofe_against_value = models.CharField(max_length=255, blank=True)
 
-    reason_no_legal_interference_by_powerful_people_value = models.CharField(max_length=255, blank=True)
-
-    reason_no_legal = models.CharField(max_length=255)
+    reason_no_legal_no_trafficking_suspected = models.BooleanField('No trafficking suspected', default=False)
+    reason_no_legal_police_not_enough_info = models.BooleanField('Police say not enough information', default=False)
+    reason_no_legal_trafficker_is_own_people = models.BooleanField('Trafficker is victim\'s own people', default=False)
+    reason_no_legal_she_was_going_herself = models.BooleanField('She was going herself', default=False)
+    reason_no_legal_trafficker_ran_away = models.BooleanField('Trafficker ran away', default=False)
+    reason_no_legal_victim_afraid_of_reputation = models.BooleanField('Victim afraid of reputation', default=False)
+    reason_no_legal_victim_afraid_for_safety = models.BooleanField('Victim afraid for her safety', default=False)
+    reason_no_legal_family_afraid_of_reputation = models.BooleanField('Family afraid of reputation', default=False)
+    reason_no_legal_family_afraid_for_safety = models.BooleanField('Family afraid for her safety', default=False)
+    reason_no_legal_police_bribed = models.BooleanField('Police bribed by trafficker', default=False)
+    reason_no_legal_victim_family_bribed = models.BooleanField('Victim / family bribed by trafficker', default=False)
+    reason_no_legal_interference_by_powerful_people = models.BooleanField('Interference by powerful people', default=False)
+    reason_no_legal_other = models.BooleanField('Other', default=False)
     reason_no_legal_interference_value = models.CharField(max_length=255, blank=True)
     reason_no_legal_other_value = models.CharField(max_length=255, blank=True)
 
-    interviewer_recommendation = models.CharField(max_length=255, blank=True)
+    interviewer_recommendation_send_home = models.BooleanField('Plan to send the girl home to stay with her guardians', default=False)
+    interviewer_recommendation_send_to_other_relatives = models.BooleanField('Plan to send the girl to stay with other relatives', default=False)
+    interviewer_recommendation_find_other_place = models.BooleanField('Tiny Hands needs to help her find another place to go', default=False)
 
     other_people_and_places_involved = models.NullBooleanField(null=True)
 
@@ -596,7 +637,6 @@ class VictimInterview(models.Model):
     case_notes = models.TextField('Case Notes', blank=True)
 
     scanned_form = models.FileField('Attach scanned copy of form (pdf or image)', upload_to='scanned_vif_forms', default='', blank=True)
-    """
 
 
 class VictimInterviewPersonBox(models.Model):
@@ -608,7 +648,7 @@ class VictimInterviewPersonBox(models.Model):
     victim_interview = models.ForeignKey(VictimInterview, related_name='person_boxes')
 
     who_is_this_relationship = models.CharField(max_length=255, blank=True)
-    
+
     who_is_this_role = models.CharField(max_length=255, blank=True)
 
     name = models.CharField('Name', max_length=255, blank=True)

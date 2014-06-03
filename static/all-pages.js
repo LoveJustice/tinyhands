@@ -200,6 +200,9 @@ var DREAMSUITE = {
 
         setUpValidationPopups();
 
+        // Well, this was supposed to be used to allow restricting
+        // a group of checkboxes to a certain number of checks, but
+        // now every group only requires one. heh heh heh
         var checkboxManagers = {};
         $.each([
             ['victim_caste', 1],
@@ -314,9 +317,13 @@ $(document).ready(function() {
         $('.alert').not('.no-remove').slideUp();
     }, 4000);
 
-    $('input[id*=date]').datetimepicker({
+    $('input[id*=date]').not('#id_victim_how_long_stayed_between_start_date').datetimepicker({
         format:'m/d/Y H:i',
         step: 30
+    });
+
+    $('#id_victim_how_long_stayed_between_start_date').datetimepicker({
+        format:'m/d/Y'
     });
 
     var bodyClass = $('body').attr('id');

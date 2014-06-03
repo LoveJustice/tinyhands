@@ -1081,7 +1081,7 @@
         </div>
     </div>
 
-                {% comment %}
+    {% comment %}
     {{ inlines.0.management_form }}
     {{ inlines.1.management_form }}
 
@@ -1149,6 +1149,7 @@
             {% endif %}
         {% endif %}
     {% endif %}
+    {% endcomment %}
 
     <div class="form-page">
         <div class="row">
@@ -1158,48 +1159,45 @@
                     <h1>6. Awareness &amp; Assessment</h1>
                 </div>
 
-                <div class="black-box padded-box">
+                <div class="black-box padded-box padded-box checkbox-group-marker" id="awareness_before_interception">
                     <h2>
                         <span class="section-number">6.1</span>
                         Before you were intercepted, were you aware that girls going abroad are often deceived and end up in very exploitative situations?
-                        <abbr class="max-allowed">(1)</abbr>
                     </h2>
-                    {% for choice in form.awareness_before_interception %}
-                        <div class="checkbox-group"> {{ choice }} {{ choice.label_tag }}</div>
-                    {% endfor %}
+                    <div class="checkbox-group">{{ form.awareness_before_interception_had_heard_not_how_bad }} {{ form.awareness_before_interception_had_heard_not_how_bad.label_tag }}</div>
+                    <div class="checkbox-group">{{ form.awareness_before_interception_knew_how_bad_not_happening_to_her }} {{ form.awareness_before_interception_knew_how_bad_not_happening_to_her.label_tag }}</div>
+                    <div class="checkbox-group">{{ form.awareness_before_interception_never_heard }} {{ form.awareness_before_interception_never_heard.label_tag }}</div>
                 </div>
 
-                <div class="black-box padded-box">
+                <div class="black-box padded-box padded-box checkbox-group-marker" id="attitude_towards_tiny_hands">
                     <h2>
                         <span class="section-number">6.2</span>
                         Do you think you would've been trafficked if you hadn't been intercepted by Tiny Hands?
-                        <abbr class="max-allowed">(1)</abbr>
                     </h2>
-                    {% for choice in form.attitude_towards_tiny_hands %}
-                        <div class="checkbox-group"> {{ choice }} {{ choice.label_tag }}</div>
-                    {% endfor %}
+                    <div class="checkbox-group">{{ form.attitude_towards_tiny_hands_thankful }} {{ form.attitude_towards_tiny_hands_thankful.label_tag }}</div>
+                    <div class="checkbox-group">{{ form.attitude_towards_tiny_hands_blames }} {{ form.attitude_towards_tiny_hands_blames.label_tag }}</div>
+                    <div class="checkbox-group">{{ form.attitude_towards_tiny_hands_doesnt_know }} {{ form.attitude_towards_tiny_hands_doesnt_know.label_tag }}</div>
                 </div>
 
-                <div class="black-box padded-box">
+                <div class="black-box padded-box padded-box checkbox-group-marker" id="victim_heard_gospel">
                     <h2>
                         <span class="section-number">6.3</span>
                         Had you heard about the gospel of Jesus before coming to TH?
-                        <abbr class="max-allowed">(1)</abbr>
                     </h2>
-                    {% for choice in form.victim_heard_gospel %}
-                        <div class="checkbox-group"> {{ choice }} {{ choice.label_tag }}</div>
-                    {% endfor %}
+                    <div class="checkbox-group">{{ form.victim_heard_gospel_no }} {{ form.victim_heard_gospel_no.label_tag }}</div>
+                    <div class="checkbox-group">{{ form.victim_heard_gospel_heard_name_only }} {{ form.victim_heard_gospel_heard_name_only.label_tag }}</div>
+                    <div class="checkbox-group">{{ form.victim_heard_gospel_heard_but_never_believed }} {{ form.victim_heard_gospel_heard_but_never_believed.label_tag }}</div>
+                    <div class="checkbox-group">{{ form.victim_heard_gospel_already_believer }} {{ form.victim_heard_gospel_already_believer.label_tag }}</div>
                 </div>
 
-                <div class="black-box padded-box">
+                <div class="black-box padded-box padded-box checkbox-group-marker" id="victim_beliefs_now">
                     <h2>
                         <span class="section-number">6.4</span>
                         If she wasn't already a believer, what does she believe now?
-                        <abbr class="max-allowed">(1)</abbr>
                     </h2>
-                    {% for choice in form.victim_beliefs_now %}
-                        <div class="checkbox-group"> {{ choice }} {{ choice.label_tag }}</div>
-                    {% endfor %}
+                    <div class="checkbox-group">{{ form.victim_beliefs_now_doesnt_believe }} {{ form.victim_beliefs_now_doesnt_believe.label_tag }}</div>
+                    <div class="checkbox-group">{{ form.victim_beliefs_now_believes_no_church }} {{ form.victim_beliefs_now_believes_no_church.label_tag }}</div>
+                    <div class="checkbox-group">{{ form.victim_beliefs_now_believes_and_church }} {{ form.victim_beliefs_now_believes_and_church.label_tag }}</div>
                 </div>
 
                 <div class="black-box padded-box">
@@ -1248,7 +1246,7 @@
                     victim brings it up.
                 </div>
 
-                <div class="black-box padded-box clearfix">
+                <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="guardian_knew_was_travelling_to_india">
                     <h2><span class="section-number">7.1</span>
                         Did your guardian know you were travelling to India?
                     </h2>
@@ -1259,7 +1257,7 @@
                     </div>
                 </div>
 
-                <div class="black-box padded-box clearfix">
+                <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="family_pressured_victim">
                     <h2>
                         <span class="section-number">7.2</span>
                         Did your family/guardian pressure you in any way to accept the broker's offer?
@@ -1274,7 +1272,7 @@
                     </span>
                 </div>
 
-                <div class="black-box padded-box clearfix">
+                <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="family_will_try_sending_again">
                     <h2><span class="section-number">7.3</span>
                         If they attempted to send you abroad, do you think they will try to send you overseas again?
                     </h2>
@@ -1291,7 +1289,7 @@
                     </span>
                 </div>
 
-                <div class="black-box padded-box clearfix">
+                <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="victim_feels_safe_at_home">
                     <h2><span class="section-number">7.4</span>
                         Do you feel safe at home with your guardian?
                     </h2>
@@ -1306,7 +1304,7 @@
                     </span>
                 </div>
 
-                <div class="black-box padded-box clearfix">
+                <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="victim_wants_to_go_home">
                     <h2><span class="section-number">7.5</span>
                         Do you want to go home?
                     </h2>
@@ -1329,117 +1327,117 @@
                     </h2>
                 </div>
 
-                <div class="black-box padded-box clearfix">
+                <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="victim_home_had_sexual_abuse">
                     <div class="col-sm-2">
                         <label>Sexual Abuse</label>
                     </div>
                     <div class="col-sm-9 col-sm-offset-1">
-                        {{ form.victim_home_had_sexual_abuse.0 }}
-                        {{ form.victim_home_had_sexual_abuse.0.label_tag }}
+                        {{ form.victim_home_had_sexual_abuse_never }}
+                        {{ form.victim_home_had_sexual_abuse_never.label_tag }}
+
                         <span class="alarm-box-container">
-                            {{ form.victim_home_had_sexual_abuse.1 }}
-                            {{ form.victim_home_had_sexual_abuse.1.label_tag }}
+                            {{ form.victim_home_had_sexual_abuse_rarely }}
+                            {{ form.victim_home_had_sexual_abuse_rarely.label_tag }}
                             <div class="alarm-box">4</div>
                         </span>
+                        <br/>
                         <span class="alarm-box-container">
-                            {{ form.victim_home_had_sexual_abuse.2 }}
-                            {{ form.victim_home_had_sexual_abuse.2.label_tag }}
+                            {{ form.victim_home_had_sexual_abuse_frequently }}
+                            {{ form.victim_home_had_sexual_abuse_frequently.label_tag }}
                             <div class="alarm-box">10</div>
                         </span>
                     </div>
                 </div>
 
-                <div class="black-box padded-box clearfix">
+                <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="victim_home_had_physical_abuse">
                     <div class="col-sm-2">
                         <label>Physical Abuse</label>
                     </div>
                     <div class="col-sm-9 col-sm-offset-1">
-                        {{ form.victim_home_had_physical_abuse.0 }}
-                        {{ form.victim_home_had_physical_abuse.0.label_tag }}
-                        {{ form.victim_home_had_physical_abuse.1 }}
-                        {{ form.victim_home_had_physical_abuse.1.label_tag }}
+                        {{ form.victim_home_had_physical_abuse_never }}
+                        {{ form.victim_home_had_physical_abuse_never.label_tag }}
+                        {{ form.victim_home_had_physical_abuse_rarely }}
+                        {{ form.victim_home_had_physical_abuse_rarely.label_tag }}
+                        <br/>
                         <span class="alarm-box-container">
-                            {{ form.victim_home_had_physical_abuse.2 }}
-                            {{ form.victim_home_had_physical_abuse.2.label_tag }}
+                            {{ form.victim_home_had_physical_abuse_frequently }}
+                            {{ form.victim_home_had_physical_abuse_frequently.label_tag }}
                             <div class="alarm-box">6</div>
                         </span>
                     </div>
                 </div>
 
-                <div class="black-box padded-box clearfix">
+                <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="victim_home_had_emotional_abuse">
                     <div class="col-sm-2">
                         <label>Emotional Abuse</label>
                     </div>
                     <div class="col-sm-9 col-sm-offset-1">
-                        {{ form.victim_home_had_emotional_abuse.0 }}
-                        {{ form.victim_home_had_emotional_abuse.0.label_tag }}
-                        {{ form.victim_home_had_emotional_abuse.1 }}
-                        {{ form.victim_home_had_emotional_abuse.1.label_tag }}
+                        {{ form.victim_home_had_emotional_abuse_never }}
+                        {{ form.victim_home_had_emotional_abuse_never.label_tag }}
+                        {{ form.victim_home_had_emotional_abuse_rarely }}
+                        {{ form.victim_home_had_emotional_abuse_rarely.label_tag }}
+                        <br/>
                         <span class="alarm-box-container">
-                            {{ form.victim_home_had_emotional_abuse.2 }}
-                            {{ form.victim_home_had_emotional_abuse.2.label_tag }}
+                            {{ form.victim_home_had_emotional_abuse_frequently }}
+                            {{ form.victim_home_had_emotional_abuse_frequently.label_tag }}
                             <div class="alarm-box">2</div>
                         </span>
                     </div>
                 </div>
 
-                <div class="black-box padded-box clearfix">
+                <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="victim_guardian_drinks_alcohol">
                     <h2><span class="section-number">7.7</span>
                         Does guardian drink alcohol?
                     </h2>
 
                     <br/>
-
-                    {{ form.victim_guardian_drinks_alcohol.0 }}
-                    {{ form.victim_guardian_drinks_alcohol.0.label_tag }}
-                    {{ form.victim_guardian_drinks_alcohol.1 }}
-                    {{ form.victim_guardian_drinks_alcohol.1.label_tag }}
-
+                    {{ form.victim_guardian_drinks_alcohol_never }}
+                    {{ form.victim_guardian_drinks_alcohol_never.label_tag }}
+                    {{ form.victim_guardian_drinks_alcohol_occasionally }}
+                    {{ form.victim_guardian_drinks_alcohol_occasionally.label_tag }}
                     <span class="alarm-box-container">
-                        {{ form.victim_guardian_drinks_alcohol.2 }}
-                        {{ form.victim_guardian_drinks_alcohol.2.label_tag }}
+                        {{ form.victim_guardian_drinks_alcohol_all_the_time }}
+                        {{ form.victim_guardian_drinks_alcohol_all_the_time.label_tag }}
                         <div class="alarm-box">1</div>
                     </span>
                 </div>
 
-                <div class="black-box padded-box clearfix">
+                <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="victim_guardian_uses_drugs">
                     <h2><span class="section-number">7.8</span>
                         Does guardian use drugs
                     </h2>
-                    {{ form.victim_guardian_uses_drugs.0 }}
-                    {{ form.victim_guardian_uses_drugs.0.label_tag }}
+                    {{ form.victim_guardian_uses_drugs_never }}
+                    {{ form.victim_guardian_uses_drugs_never.label_tag }}
 
+                    <br/>
                     <span class="alarm-box-container">
-                        {{ form.victim_guardian_uses_drugs.1 }}
-                        {{ form.victim_guardian_uses_drugs.1.label_tag }}
+                        {{ form.victim_guardian_uses_drugs_occasionally }}
+                        {{ form.victim_guardian_uses_drugs_occasionally.label_tag }}
                         <div class="alarm-box">2</div>
                     </span>
 
                     <span class="alarm-box-container">
-                        {{ form.victim_guardian_uses_drugs.2 }}
-                        {{ form.victim_guardian_uses_drugs.2.label_tag }}
+                        {{ form.victim_guardian_uses_drugs_all_the_time }}
+                        {{ form.victim_guardian_uses_drugs_all_the_time.label_tag }}
                         <div class="alarm-box">6</div>
                     </span>
                 </div>
 
-                <div class="black-box padded-box clearfix">
+                <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="victim_family_economic_situation">
                     <h2><span class="section-number">7.9</span>
                         Economic Situation of Family
-                        <abbr class="max-allowed">(1)</abbr>
                     </h2>
-
+                    <br/>
                     <span class="alarm-box-container">
-                        {{ form.victim_family_economic_situation.0 }}
-                        {{ form.victim_family_economic_situation.0.label_tag }}
+                        {{ form.victim_family_economic_situation_no_basic_needs }} {{ form.victim_family_economic_situation_no_basic_needs.label_tag }}
                         <div class="alarm-box">7</div>
                     </span>
-
-                    {% for choice in form.victim_family_economic_situation|slice:"1:" %}
-                        <div class="checkbox-group">{{ choice }} {{ choice.label_tag }}</div>
-                    {% endfor %}
+                    <div class="checkbox-group">{{ form.victim_family_economic_situation_difficult_basic_needs }} {{ form.victim_family_economic_situation_difficult_basic_needs.label_tag }}</div>
+                    <div class="checkbox-group">{{ form.victim_family_economic_situation_comfortable_basic_needs }} {{ form.victim_family_economic_situation_comfortable_basic_needs.label_tag }}</div>
+                    <div class="checkbox-group">{{ form.victim_family_economic_situation_wealthy }} {{ form.victim_family_economic_situation_wealthy.label_tag }}</div>
                 </div>
 
-                <div class="black-box padded-box clearfix">
+                <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="victim_had_suicidal_thoughts">
                     <h2><span class="section-number">7.10</span>
                         Did she express any suicidal thoughts at any point?
                     </h2>
@@ -1478,62 +1476,66 @@
                     <h1>8. Interviewer Evaluation</h1>
                 </div>
 
-                <div class="black-box padded-box">
+                <div class="black-box padded-box padded-box checkbox-group-marker" id="legal_action_against_traffickers">
                     <h2><span class="section-number">8.1</span>
                         Has any legal action been taken against any of the traffickers?<span class="required">*</span>
-                        <abbr class="max-allowed">(1)</abbr>
                     </h2>
                     <div class="inline-checkbox-group">
-                        {{ form.legal_action_against_traffickers.0 }}
-                        {{ form.legal_action_against_traffickers.0.label_tag }}
+                        {{ form.legal_action_against_traffickers_no }} {{ form.legal_action_against_traffickers_no.label_tag }}
                         <span class="alarm-box-container">
-                            {{ form.legal_action_against_traffickers.1 }}
-                            {{ form.legal_action_against_traffickers.1.label_tag }}
+                            {{ form.legal_action_against_traffickers_fir_filed }} {{ form.legal_action_against_traffickers_fir_filed.label_tag }}
                             {{ form.legal_action_fir_against_value|attr:"style: width: 140px" }}
                         </span>
                         <span class="alarm-box-container">
-                            {{ form.legal_action_against_traffickers.2 }}
-                            {{ form.legal_action_against_traffickers.2.label_tag }}
+                            {{ form.legal_action_against_traffickers_dofe_complaint }} {{ form.legal_action_against_traffickers_dofe_complaint.label_tag }}
                             {{ form.legal_action_dofe_against_value|attr:"style: width: 140px" }}
                         </span>
                     </div>
                 </div>
 
-                <div class="black-box clearfix">
+                <div class="black-box clearfix padded-box">
                     <h2><span class="section-number">8.2</span>
                         If no, what's the main reason?
-                        <abbr class="max-allowed">(2)</abbr>
                     </h2>
                 </div>
-                <div class="black-box padded-box">
-                    {% for choice in form.reason_no_legal|slice:":11" %}
-                    <div class="checkbox-group">{{ choice }}</div>
-                    {% endfor %}
+                <div class="black-box padded-box checkbox-group-marker" id="reason_no_legal">
+                    <div class="checkbox-group">{{ form.reason_no_legal_no_trafficking_suspected }} {{ form.reason_no_legal_no_trafficking_suspected.label_tag }}</div>
+                    <div class="checkbox-group">{{ form.reason_no_legal_police_not_enough_info }} {{ form.reason_no_legal_police_not_enough_info.label_tag }}</div>
+                    <div class="checkbox-group">{{ form.reason_no_legal_trafficker_is_own_people }} {{ form.reason_no_legal_trafficker_is_own_people.label_tag }}</div>
+                    <div class="checkbox-group">{{ form.reason_no_legal_she_was_going_herself }} {{ form.reason_no_legal_she_was_going_herself.label_tag }}</div>
+                    <div class="checkbox-group">{{ form.reason_no_legal_trafficker_ran_away }} {{ form.reason_no_legal_trafficker_ran_away.label_tag }}</div>
+                    <div class="checkbox-group">{{ form.reason_no_legal_victim_afraid_of_reputation }} {{ form.reason_no_legal_victim_afraid_of_reputation.label_tag }}</div>
+                    <div class="checkbox-group">{{ form.reason_no_legal_victim_afraid_for_safety }} {{ form.reason_no_legal_victim_afraid_for_safety.label_tag }}</div>
+                    <div class="checkbox-group">{{ form.reason_no_legal_family_afraid_of_reputation }} {{ form.reason_no_legal_family_afraid_of_reputation.label_tag }}</div>
+                    <div class="checkbox-group">{{ form.reason_no_legal_family_afraid_for_safety }} {{ form.reason_no_legal_family_afraid_for_safety.label_tag }}</div>
+                    <div class="checkbox-group">{{ form.reason_no_legal_police_bribed }} {{ form.reason_no_legal_police_bribed.label_tag }}</div>
+                    <div class="checkbox-group">{{ form.reason_no_legal_victim_family_bribed }} {{ form.reason_no_legal_victim_family_bribed.label_tag }}</div>
                     <div class="alarm-box-container">
                         <div class="checkbox-group">
-                            {{ form.reason_no_legal.11 }}
+                            {{ form.reason_no_legal_interference_by_powerful_people }} {{ form.reason_no_legal_interference_by_powerful_people.label_tag }}
                             <br/>
                             Who? {{ form.reason_no_legal_interference_value|attr:"style: width: 300px" }}
                         </div>
                     </div>
                     <div class="label-inside-field inline-checkbox-group full-width">
-                        {{ form.reason_no_legal.12 }}
+                        <label>
+                        {{ form.reason_no_legal_other }} {{ form.reason_no_legal_other.label }}
+                        </label>
                         {{ form.reason_no_legal_other_value }}
                     </div>
                 </div>
 
-                <div class="black-box padded-box">
+                <div class="black-box padded-box padded-box checkbox-group-marker" id="interviewer_recommendation">
                     <h2><span class="section-number">8.3</span>
                         What is your recommendation about where she should go?
-                        <abbr class="max-allowed">(1)</abbr>
                     </h2>
-                    {% for choice in form.interviewer_recommendation %}
-                        <div class="checkbox-group">{{ choice }}</div>
-                    {% endfor %}
+                    <div class="checkbox-group">{{ form.interviewer_recommendation_send_home }} {{ form.interviewer_recommendation_send_home.label_tag }}</div>
+                    <div class="checkbox-group">{{ form.interviewer_recommendation_send_to_other_relatives }} {{ form.interviewer_recommendation_send_to_other_relatives.label_tag }}</div>
+                    <div class="checkbox-group">{{ form.interviewer_recommendation_find_other_place }} {{ form.interviewer_recommendation_find_other_place.label_tag }}</div>
                     <label style="margin-left: 20px">Contact THN's Aftercare Coordinator</label>
                 </div>
 
-                <div class="black-box padded-box clearfix">
+                <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="other_people_and_places_involved">
                     <h2>
                         <span class="section-number">8.4</span>
                         Were there more people and places that you believe were
@@ -1571,7 +1573,6 @@
             </div>
         </div>
     </div>
-    {% endcomment %}
 
     <div id="footer">
         <nav class="navbar navbar-default navbar-fixed-bottom">

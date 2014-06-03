@@ -38,6 +38,8 @@
         {% endfor %}
     </tbody> 
 </table>
+{% else %}
+<p>There are not yet any VIFs in the database.</p>
 {% endif %}
 <p class="pull-right"><a class="btn btn-success" href="{% url 'victiminterview_create' %}">Input A New VIF</a></p>
 {% endblock %}

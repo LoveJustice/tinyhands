@@ -420,52 +420,6 @@ class VictimInterviewForm(forms.ModelForm):
         required=False
     )
 
-    """
-    AWARENESS_CHOICES = [
-        ('Had heard, but never knew how bad it was until I was intercepted by TH', 'Had heard, but never knew how bad it was until I was intercepted by TH'),
-        ('Knew how bad it was, but didn\'t think that was happening to her', 'Knew how bad it was, but didn\'t think that was happening to her'),
-        ('Had never heard about it', 'Had never heard about it'),
-    ]
-    awareness_before_interception = forms.MultipleChoiceField(
-        choices=AWARENESS_CHOICES,
-        widget=forms.CheckboxSelectMultiple,
-        required=True
-    )
-
-    ATTITUDE_CHOICES = [
-        ('Yes, thankful to TH for saving her', 'Yes, thankful to TH for saving her'),
-        ('No, blames Tiny Hands for stopping her', 'No, blames Tiny Hands for stopping her'),
-        ('Doesn\'t know', 'Doesn\'t Know'),
-    ]
-    attitude_towards_tiny_hands = forms.MultipleChoiceField(
-        choices=AWARENESS_CHOICES,
-        widget=forms.CheckboxSelectMultiple,
-        required=True
-    )
-
-    GOSPEL_HEARD_CHOICES = [
-        ('No, I have never heard', 'No, I have never heard'),
-        ('Has heard the name only', 'Has heard the name only'),
-        ('Had heard the gospel but never believed', 'Had heard the gospel but never believed'),
-        ('Was already a believer', 'Was already a believer'),
-    ]
-    victim_heard_gospel = forms.MultipleChoiceField(
-        choices=GOSPEL_HEARD_CHOICES,
-        widget=forms.CheckboxSelectMultiple,
-        required=True
-    )
-
-    VICTIM_BELIEFS_NOW_CHOICES = [
-        ('Doesn\'t believe in Jesus', 'Doesn\'t believe in Jesus'),
-        ('Believes in Jesus, but doesn\'t plan to go to church', 'Believes in Jesus, but doesn\'t plan to go to church'),
-        ('Believes in Jesus and plans to go to church', 'Believes in Jesus and plans to go to church'),
-    ]
-    victim_beliefs_now = forms.MultipleChoiceField(
-        choices=VICTIM_BELIEFS_NOW_CHOICES,
-        widget=forms.CheckboxSelectMultiple,
-        required=False
-    )
-
     guardian_knew_was_travelling_to_india = forms.MultipleChoiceField(
         choices=BOOLEAN_CHOICES,
         widget=forms.CheckboxSelectMultiple,
@@ -496,103 +450,8 @@ class VictimInterviewForm(forms.ModelForm):
         required=False
     )
 
-    VICTIM_ABUSE_CHOICES = [
-        ('Never', 'Never'),
-        ('Rarely / Minor', 'Rarely / Minor'),
-        ('Frequent / Severe', 'Frequent / Severe'),
-    ]
-    victim_home_had_sexual_abuse = forms.MultipleChoiceField(
-        choices=VICTIM_ABUSE_CHOICES,
-        widget=forms.CheckboxSelectMultiple,
-        required=False
-    )
-
-    victim_home_had_physical_abuse = forms.MultipleChoiceField(
-        choices=VICTIM_ABUSE_CHOICES,
-        widget=forms.CheckboxSelectMultiple,
-        required=False
-    )
-
-    victim_home_had_emotional_abuse = forms.MultipleChoiceField(
-        choices=VICTIM_ABUSE_CHOICES,
-        widget=forms.CheckboxSelectMultiple,
-        required=False
-    )
-
-    GUARDIAN_FREQUENCY_CHOICES = [
-        ('Never', 'Never'),
-        ('Occasionally', 'Occasionally'),
-        ('All the time', 'All the time'),
-    ]
-    victim_guardian_drinks_alcohol = forms.MultipleChoiceField(
-        choices=GUARDIAN_FREQUENCY_CHOICES,
-        widget=forms.CheckboxSelectMultiple,
-        required=False
-    )
-
-    victim_guardian_uses_drugs = forms.MultipleChoiceField(
-        choices=GUARDIAN_FREQUENCY_CHOICES,
-        widget=forms.CheckboxSelectMultiple,
-        required=False
-    )
-
-    ECONOMIC_SITUATION_CHOICES = [
-        ('Unable to meet basic needs', 'Unable to meet basic needs'),
-        ('Able to meet only basic needs, but it is very difficult', 'Able to meet only basic needs, but it is very difficult'),
-        ('Comfortably meet basic needs, and can afford to buy some non-essential goods/services', 'Comfortably meet basic needs, and can afford to buy some non-essential goods/services'),
-        ('Wealthy', 'Wealthy'),
-    ]
-    victim_family_economic_situation = forms.MultipleChoiceField(
-        choices=ECONOMIC_SITUATION_CHOICES,
-        widget=forms.CheckboxSelectMultiple,
-        required=False
-    )
-
     victim_had_suicidal_thoughts = forms.MultipleChoiceField(
         choices=BOOLEAN_CHOICES,
-        widget=forms.CheckboxSelectMultiple,
-        required=False
-    )
-
-    LEGAL_ACTION_CHOICES = [
-        ('No', 'No'),
-        ('FIR filed against', 'FIR filed against'),
-        ('DoFE complaint against', 'DoFE complaint against'),
-    ]
-    legal_action_against_traffickers = forms.MultipleChoiceField(
-        choices=LEGAL_ACTION_CHOICES,
-        widget=forms.CheckboxSelectMultiple,
-        required=True
-    )
-
-    REASON_NO_LEGAL_CHOICES = [
-        ('No trafficking suspected', 'No trafficking suspected'),
-        ('Police say not enough information', 'Police say not enough information'),
-        ('Trafficker is victim\'s own people', 'Trafficker is victim\'s own people'),
-        ('She was going herself', 'She was going herself'),
-        ('Trafficker ran away', 'Trafficker ran away'),
-        ('Victim afraid of reputation', 'Victim afraid of reputation'),
-        ('Victim afraid for her safety', 'Victim afraid for her safety'),
-        ('Family afraid of reputation', 'Family afraid of reputation'),
-        ('Family afraid for her safety', 'Family afraid for her safety'),
-        ('Police bribed by trafficker', 'Police bribed by trafficker'),
-        ('Victim / family bribed by trafficker', 'Victim / family bribed by trafficker'),
-        ('Interference by powerful people', 'Interference by powerful people'),
-        ('Other', 'Other'),
-    ]
-    reason_no_legal = forms.MultipleChoiceField(
-        choices=REASON_NO_LEGAL_CHOICES,
-        widget=forms.CheckboxSelectMultiple,
-        required=False
-    )
-
-    INTERVIEWER_RECOMMENDATION_CHOICES = [
-        ('Plan to send the girl home to stay with her guardians', 'Plan to send the girl home to stay with her guardians'),
-        ('Plan to send the girl to stay with other relatives', 'Plan to send the girl to stay with other relatives'),
-        ('Tiny Hands needs to help her find another place to go', 'Tiny Hands needs to help her find another place to go'),
-    ]
-    interviewer_recommendation = forms.MultipleChoiceField(
-        choices=INTERVIEWER_RECOMMENDATION_CHOICES,
         widget=forms.CheckboxSelectMultiple,
         required=False
     )
@@ -602,7 +461,6 @@ class VictimInterviewForm(forms.ModelForm):
         widget=forms.CheckboxSelectMultiple,
         required=False
     )
-    """
 
     class Meta:
         model = VictimInterview
@@ -616,6 +474,9 @@ class VictimInterviewForm(forms.ModelForm):
             if (
                 isinstance(field.widget, forms.CheckboxSelectMultiple) and
                 field.choices == BOOLEAN_CHOICES
+                or
+                field_name == 'victim_was_hidden' or
+                field_name == 'victim_was_free_to_go_out'
             ):
                 initial = self.initial.get(field_name)
                 if initial is not None:
@@ -629,6 +490,9 @@ class VictimInterviewForm(forms.ModelForm):
             if (
                 isinstance(field.widget, forms.CheckboxSelectMultiple) and
                 field.choices == BOOLEAN_CHOICES
+                or
+                field_name == 'victim_was_hidden' or
+                field_name == 'victim_was_free_to_go_out'
             ):
                 if len(cleaned_data[field_name]) > 0:
                     cleaned_data[field_name] = bool(cleaned_data[field_name][0])
@@ -639,6 +503,7 @@ class VictimInterviewForm(forms.ModelForm):
             'primary_motivation',
             'migration_plans',
             'victim_where_going',
+            'meeting_at_border',
         ]:
             if not self.at_least_one_checked(cleaned_data, field_name_start):
                 self._errors[field_name_start] = self.error_class(['One box must be checked.'])
