@@ -257,7 +257,7 @@ class VictimInterview(models.Model):
     location = models.CharField(max_length=255, blank=True)
     interviewer = models.CharField(max_length=255, blank=True)
 
-    statement_read_before_beginning = models.BooleanField('Check the box if form is signed')
+    statement_read_before_beginning = models.BooleanField('Check the box if form is signed', default=False)
     permission_to_use_photograph = models.BooleanField('Check the box if form is signed', default=False)
 
     # 1. Victim & Family Information
@@ -273,56 +273,193 @@ class VictimInterview(models.Model):
     victim_height = models.CharField('Height(ft)', max_length=255, blank=True)
     victim_weight = models.CharField('Weight(kg)', max_length=255, blank=True)
 
-    victim_caste = models.CharField('Caste', max_length=255, blank=True)
+    victim_caste_magar = models.BooleanField('Magar', default=False)
+    victim_caste_jaisi = models.BooleanField('Jaisi', default=False)
+    victim_caste_thakuri = models.BooleanField('Thakuri', default=False)
+    victim_caste_brahmin = models.BooleanField('Brahmin', default=False)
+    victim_caste_chhetri = models.BooleanField('Chhetri', default=False)
+    victim_caste_newar = models.BooleanField('Newar', default=False)
+    victim_caste_tamang = models.BooleanField('Tamang', default=False)
+    victim_caste_mongolian = models.BooleanField('Mongolian', default=False)
+    victim_caste_muslim = models.BooleanField('Muslim', default=False)
+    victim_caste_madeshi_terai = models.BooleanField('Madeshi / Terai Ethnic Group', default=False)
+    victim_caste_dalit = models.BooleanField('Dalit / under-priviledged', default=False)
+    victim_caste_other = models.BooleanField('Other', default=False)
+    victim_caste_other_value = models.CharField(max_length=255, blank=True)
 
-    victim_occupation = models.CharField('What is your occupation?', max_length=255, blank=True)
+    victim_occupation_unemployed = models.BooleanField('Unemployed', default=False)
+    victim_occupation_farmer = models.BooleanField('Farmer', default=False)
+    victim_occupation_wage_laborer = models.BooleanField('Wage-laborer', default=False)
+    victim_occupation_business_owner = models.BooleanField('Business Owner', default=False)
+    victim_occupation_migrant_worker = models.BooleanField('Migrant Worker', default=False)
+    victim_occupation_tailoring = models.BooleanField('Tailoring', default=False)
+    victim_occupation_housewife = models.BooleanField('Housewife', default=False)
+    victim_occupation_animal_husbandry = models.BooleanField('Animal Husbandry', default=False)
+    victim_occupation_domestic_work = models.BooleanField('Domestic Work', default=False)
+    victim_occupation_shopkeeper = models.BooleanField('Shopkeeper', default=False)
+    victim_occupation_hotel = models.BooleanField('Hotel', default=False)
+    victim_occupation_factory = models.BooleanField('Factory', default=False)
+    victim_occupation_other = models.BooleanField('Other', default=False)
+    victim_occupation_other_value = models.CharField(max_length=255, blank=True)
 
-    victim_marital_status = models.CharField('Marital Status', max_length=50, blank=True)
+    victim_marital_status_single = models.BooleanField('Single', default=False)
+    victim_marital_status_married = models.BooleanField('Married', default=False)
+    victim_marital_status_widow = models.BooleanField('Widow', default=False)
+    victim_marital_status_divorced = models.BooleanField('Divorced', default=False)
+    victim_marital_status_husband_has_other_wives = models.BooleanField('Husband has other wives', default=False)
+    victim_marital_status_abandoned_by_husband = models.BooleanField('Abandoned by husband', default=False)
 
-    victim_lives_with = models.CharField(max_length=255, blank=True)
+    victim_lives_with_own_parents = models.BooleanField('Own Parent(s)', default=False)
+    victim_lives_with_husband = models.BooleanField('Husband', default=False)
+    victim_lives_with_husbands_family = models.BooleanField('Husband\'s family', default=False)
+    victim_lives_with_friends = models.BooleanField('Friends', default=False)
+    victim_lives_with_alone = models.BooleanField('Alone', default=False)
+    victim_lives_with_other_relative = models.BooleanField('Other Relative', default=False)
+    victim_lives_with_other = models.BooleanField('Other', default=False)
+    victim_lives_with_other_value = models.CharField(max_length=255, blank=True)
 
     victim_num_in_family = models.IntegerField('How many people are in your (own) family?', null=True, blank=True)
 
-    victim_primary_guardian = models.CharField('Who is your primary guardian?', max_length=255, blank=True)
+    victim_primary_guardian_own_parents = models.BooleanField('Own Parent(s)', default=False)
+    victim_primary_guardian_husband = models.BooleanField('Husband', default=False)
+    victim_primary_guardian_other_relative = models.BooleanField('Other Relative', default=False)
+    victim_primary_guardian_non_relative = models.BooleanField('Non-relative', default=False)
+    victim_primary_guardian_no_one = models.BooleanField('No one (I have no guardian)', default=False)
 
     victim_guardian_address_district = models.CharField('District', max_length=255, blank=True)
     victim_guardian_address_vdc = models.CharField('VDC', max_length=255, blank=True)
     victim_guardian_address_ward = models.CharField('Ward #', max_length=255, blank=True)
     victim_guardian_phone = models.CharField('Phone #', max_length=255, blank=True)
 
-    victim_parents_marital_status = models.CharField('What is parents\' marital status?', max_length=255, blank=True)
+    victim_parents_marital_status_single = models.BooleanField('Single', default=False)
+    victim_parents_marital_status_married = models.BooleanField('Married', default=False)
+    victim_parents_marital_status_widow = models.BooleanField('Widow', default=False)
+    victim_parents_marital_status_father_has_other_wives = models.BooleanField('My father has other wives', default=False)
+    victim_parents_marital_separated = models.BooleanField('Separated (Legally married)', default=False)
+    victim_parents_marital_divorced = models.BooleanField('Divorced', default=False)
 
-    victim_education_level = models.CharField('Education Level', max_length=255, blank=True)
+    victim_education_level_none = models.BooleanField('None', default=False)
+    victim_education_level_informal = models.BooleanField('Only informal (adult)', default=False)
+    victim_education_level_primary = models.BooleanField('Primary only', default=False)
+    victim_education_level_grade_4_8 = models.BooleanField('Grade 4-8', default=False)
+    victim_education_level_grade_9_10 = models.BooleanField('Grade 9-10', default=False)
+    victim_education_level_slc = models.BooleanField('SLC', default=False)
+    victim_education_level_11_12 = models.BooleanField('11-12', default=False)
+    victim_education_level_bachelors = models.BooleanField('Bachelors', default=False)
+    victim_education_level_masters = models.BooleanField('Masters', default=False)
 
     victim_is_literate = models.NullBooleanField('Is the victim literate?', null=True)
 
     # 2. Migration Plans
-    migration_plans = models.CharField(max_length=255)
-    migration_plans_second = models.BooleanField(max_length=255, blank=True)
+    migration_plans_education = models.BooleanField('Education', default=False)
+    migration_plans_travel_tour = models.BooleanField('Travel / Tour', default=False)
+    migration_plans_shopping = models.BooleanField('Shopping', default=False)
+    migration_plans_eloping = models.BooleanField('Eloping', default=False)
+    migration_plans_arranged_marriage = models.BooleanField('Arranged Marriage', default=False)
+    migration_plans_meet_own_family = models.BooleanField('Meet your own family', default=False)
+    migration_plans_visit_brokers_home = models.BooleanField('Visit broker\'s home', default=False)
+    migration_plans_medical_treatment = models.BooleanField('Medical treatment', default=False)
+    migration_plans_job_broker_didnt_say = models.BooleanField('Job - Broker did not say what job', default=False)
+    migration_plans_job_baby_care = models.BooleanField('Job - Baby Care', default=False)
+    migration_plans_job_factory = models.BooleanField('Job - Factory', default=False)
+    migration_plans_job_hotel = models.BooleanField('Job - Hotel', default=False)
+    migration_plans_job_shop = models.BooleanField('Job - Shop', default=False)
+    migration_plans_job_laborer = models.BooleanField('Job - Laborer', default=False)
+    migration_plans_job_brothel = models.BooleanField('Job - Brothel', default=False)
+    migration_plans_job_household = models.BooleanField('Job - Household', default=False)
+    migration_plans_job_other = models.BooleanField('Job - Other', default=False)
+    migration_plans_other = models.BooleanField('Other', default=False)
+    migration_plans_job_other_value = models.CharField(max_length=255, blank=True)
+    migration_plans_other_value = models.CharField(max_length=255, blank=True)
 
-    primary_motivation = models.CharField(max_length=255)
+    primary_motivation_support_myself = models.BooleanField('Support myself', default=False)
+    primary_motivation_support_family = models.BooleanField('Support family', default=False)
+    primary_motivation_personal_debt = models.BooleanField('Personal Debt', default=False)
+    primary_motivation_family_debt = models.BooleanField('Family Debt', default=False)
+    primary_motivation_love_marriage = models.BooleanField('Love / Marriage', default=False)
+    primary_motivation_bad_home_marriage = models.BooleanField('Bad home / marriage', default=False)
+    primary_motivation_get_education = models.BooleanField('Get an education', default=False)
+    primary_motivation_tour_travel = models.BooleanField('Tour / Travel', default=False)
+    primary_motivation_didnt_know = models.BooleanField('Didn\'t know I was going abroad', default=False)
+    primary_motivation_other = models.BooleanField('Other', default=False)
+    primary_motivation_other_value = models.CharField(max_length=255, blank=True)
 
-    victim_where_going = models.CharField(max_length=255)
+    victim_where_going_india = models.BooleanField('India', default=False)
+    victim_where_going_gulf = models.BooleanField('Gulf / Other', default=False)
+    victim_where_going_delhi = models.BooleanField('Delhi', default=False)
+    victim_where_going_mumbai = models.BooleanField('Mumbai', default=False)
+    victim_where_going_surat = models.BooleanField('Surat', default=False)
+    victim_where_going_rajastan = models.BooleanField('Rajastan', default=False)
+    victim_where_going_kolkata = models.BooleanField('Kolkata', default=False)
+    victim_where_going_pune = models.BooleanField('Pune', default=False)
+    victim_where_going_jaipur = models.BooleanField('Jaipur', default=False)
+    victim_where_going_bihar = models.BooleanField('Bihar', default=False)
+    victim_where_going_india_didnt_know = models.BooleanField('Did Not Know', default=False)
+    victim_where_going_india_other = models.BooleanField('Other', default=False)
+    victim_where_going_india_other_value = models.CharField(max_length=255, blank=True)
+    victim_where_going_lebanon = models.BooleanField('Lebanon', default=False)
+    victim_where_going_dubai = models.BooleanField('Dubai', default=False)
+    victim_where_going_malaysia = models.BooleanField('Malaysia', default=False)
+    victim_where_going_oman = models.BooleanField('Oman', default=False)
+    victim_where_going_saudi_arabia = models.BooleanField('Saudi Arabia', default=False)
+    victim_where_going_kuwait = models.BooleanField('Kuwait', default=False)
+    victim_where_going_qatar = models.BooleanField('Qatar', default=False)
+    victim_where_going_gulf_didnt_know = models.BooleanField('Did Not Know', default=False)
+    victim_where_going_gulf_other = models.BooleanField('Other', default=False)
+    victim_where_going_gulf_other_value = models.CharField(max_length=255, blank=True)
 
     manpower_involved = models.NullBooleanField('Was a manpower involved?', null=True)
     victim_recruited_in_village = models.BooleanField('Did someone recruit you in your village and persuade you to abroad?')
 
-    brokers_relation_to_victim = models.CharField('Broker\'s Relation to victim', max_length=255, blank=True)
+    brokers_relation_to_victim_own_dad = models.BooleanField('Own dad', default=False)
+    brokers_relation_to_victim_own_mom = models.BooleanField('Own mom', default=False)
+    brokers_relation_to_victim_own_uncle = models.BooleanField('Own uncle', default=False)
+    brokers_relation_to_victim_own_aunt = models.BooleanField('Own aunt', default=False)
+    brokers_relation_to_victim_own_bro = models.BooleanField('Own bro', default=False)
+    brokers_relation_to_victim_own_sister = models.BooleanField('Own sister', default=False)
+    brokers_relation_to_victim_own_other_relative = models.BooleanField('Other relative', default=False)
+    brokers_relation_to_victim_friend = models.BooleanField('Friend', default=False)
+    brokers_relation_to_victim_agent = models.BooleanField('Agent', default=False)
+    brokers_relation_to_victim_husband = models.BooleanField('Husband', default=False)
+    brokers_relation_to_victim_boyfriend = models.BooleanField('Boyfriend', default=False)
+    brokers_relation_to_victim_neighbor = models.BooleanField('Neighbor', default=False)
+    brokers_relation_to_victim_recently_met = models.BooleanField('Recently met', default=False)
+    brokers_relation_to_victim_contractor = models.BooleanField('Contractor', default=False)
+    brokers_relation_to_victim_other = models.BooleanField('Other', default=False)
+    brokers_relation_to_victim_other_value = models.CharField(max_length=255, blank=True)
 
     victim_married_to_broker_years = models.PositiveIntegerField('Years', null=True, blank=True)
     victim_married_to_broker_months = models.PositiveIntegerField('Months', null=True, blank=True)
 
-    victim_how_met_broker = models.CharField('How did you meet the broker?', max_length=255, blank=True)
+    victim_how_met_broker_from_community = models.BooleanField('Broker is from my community', default=False)
+    victim_how_met_broker_at_work = models.BooleanField('At work', default=False)
+    victim_how_met_broker_at_school = models.BooleanField('At school', default=False)
+    victim_how_met_broker_job_advertisement = models.BooleanField('Job advertisement', default=False)
+    victim_how_met_broker_he_approached_me = models.BooleanField('He approached me', default=False)
+    victim_how_met_broker_through_friends = models.BooleanField('Through friends', default=False)
+    victim_how_met_broker_through_family = models.BooleanField('Through family', default=False)
+    victim_how_met_broker_at_wedding = models.BooleanField('At Wedding', default=False)
+    victim_how_met_broker_in_a_vehicle = models.BooleanField('In a Vehicle', default=False)
+    victim_how_met_broker_in_a_hospital = models.BooleanField('In a Hospital', default=False)
+    victim_how_met_broker_went_myself = models.BooleanField('Went to him myself', default=False)
+    victim_how_met_broker_called_my_mobile = models.BooleanField('Called my mobile', default=False)
+    victim_how_met_broker_other = models.BooleanField('Other', default=False)
+    victim_how_met_broker_other_value = models.CharField(max_length=255, blank=True)
 
     victim_how_met_broker_mobile_explanation = models.TextField(blank=True)
 
     victim_how_long_known_broker_years = models.PositiveIntegerField('Years', null=True, blank=True)
     victim_how_long_known_broker_months = models.PositiveIntegerField('Months', null=True, blank=True)
 
-    victim_how_expense_was_paid = models.CharField(max_length=255, blank=True)
+    victim_how_expense_was_paid_paid_myself = models.BooleanField('I paid the expenses myself', default=False)
+    victim_how_expense_was_paid_broker_paid_all = models.BooleanField('The broker paid all the expenses', default=False)
+    victim_how_expense_was_paid_gave_money_to_broker = models.BooleanField('I gave a sum of money to the broker', default=False)
+    victim_how_expense_was_paid_broker_gave_loan = models.BooleanField('The broker paid the expenses and I have to pay him back', default=False)
     victim_how_expense_was_paid_amount = models.DecimalField('Amount', max_digits=10, decimal_places=2, null=True, blank=True)
 
-    broker_works_in_job_location = models.CharField(max_length=255, blank=True)
+    broker_works_in_job_location_no = models.BooleanField('No', default=False)
+    broker_works_in_job_location_yes = models.BooleanField('Yes', default=False)
+    broker_works_in_job_location_dont_know = models.BooleanField('Don\'t Know', default=False)
 
     amount_victim_would_earn = models.DecimalField('Amount', max_digits=10, decimal_places=2, null=True, blank=True)
 
@@ -332,7 +469,14 @@ class VictimInterview(models.Model):
 
     victim_first_time_crossing_border = models.NullBooleanField(null=True)
 
-    victim_primary_means_of_travel = models.CharField('Primary means of travel?', max_length=255)
+    victim_primary_means_of_travel_tourist_bus = models.BooleanField('Tourist Bus', default=False)
+    victim_primary_means_of_travel_motorbike = models.BooleanField('Motorbike', default=False)
+    victim_primary_means_of_travel_private_car = models.BooleanField('Private Car', default=False)
+    victim_primary_means_of_travel_local_bus = models.BooleanField('Local Bus', default=False)
+    victim_primary_means_of_travel_microbus = models.BooleanField('Microbus', default=False)
+    victim_primary_means_of_travel_plane = models.BooleanField('Plane', default=False)
+    victim_primary_means_of_travel_other = models.BooleanField('Other', default=False)
+    victim_primary_means_of_travel_other_value = models.CharField(max_length=255, blank=True)
 
     victim_stayed_somewhere_between = models.BooleanField()
 
@@ -349,24 +493,43 @@ class VictimInterview(models.Model):
 
     others_in_situation_age_of_youngest = models.PositiveIntegerField(null=True, blank=True)
 
-    passport_made = models.CharField(max_length=255, blank=True)
+    passport_made_no_passport_made = models.BooleanField('No passport made', default=False)
+    passport_made_real_passport_made = models.BooleanField('Real passport made', default=False)
+    passport_made_passport_included_false_name = models.BooleanField('Passport included a false name', default=False)
+    passport_made_passport_included_other_false_info = models.BooleanField('Passport included other false info', default=False)
+    passport_made_passport_was_fake = models.BooleanField('Passport was fake', default=False)
 
     victim_passport_with_broker = models.NullBooleanField(null=True)
 
-    abuse_happened = models.CharField(max_length=255, blank=True)
+    abuse_happened_sexual_harassment = models.BooleanField('Sexual Harassment', default=False)
+    abuse_happened_sexual_abuse = models.BooleanField('Sexual Abuse', default=False)
+    abuse_happened_physical_abuse = models.BooleanField('Physical Abuse', default=False)
+    abuse_happened_threats = models.BooleanField('Threats', default=False)
+    abuse_happened_denied_proper_food = models.BooleanField('Denied Proper Food', default=False)
+    abuse_happened_forced_to_take_drugs = models.BooleanField('Forced to take Drugs', default=False)
     abuse_happened_by_whom = models.TextField('By whom?', blank=True)
     abuse_happened_explanation = models.TextField('Explain', blank=True)
 
-    victim_traveled_with_broker_companion = models.CharField(max_length=255, blank=True)
+    victim_traveled_with_broker_companion_yes = models.BooleanField('Yes', default=False)
+    victim_traveled_with_broker_companion_no = models.BooleanField('No', default=False)
+    victim_traveled_with_broker_companion_broker_took_me_to_border = models.BooleanField('Broker took me to border', default=False)
 
     companion_with_when_intercepted = models.NullBooleanField(null=True)
     planning_to_meet_companion_later = models.NullBooleanField(null=True)
 
-    money_changed_hands_broker_companion = models.CharField(max_length=255, blank=True)
+    money_changed_hands_broker_companion_no = models.BooleanField('No', default=False)
+    money_changed_hands_broker_companion_dont_know = models.BooleanField('Don\'t know', default=False)
+    money_changed_hands_broker_companion_broker_gave_money = models.BooleanField('Broker gave money to the companion', default=False)
+    money_changed_hands_broker_companion_companion_gave_money = models.BooleanField('Companion gave money to the broker', default=False)
+
 
     # 5. Destination & India Contact
 
-    who_meeting_at_border = models.CharField(max_length=255)
+    meeting_at_border_yes = models.BooleanField('Yes', default=False)
+    meeting_at_border_no = models.BooleanField('No', default=False)
+    meeting_at_border_meeting_broker = models.BooleanField('Meeting Broker', default=False)
+    meeting_at_border_meeting_companion = models.BooleanField('Meeting Companion', default=False)
+
 
     victim_knew_details_about_destination = models.BooleanField()
 
@@ -378,6 +541,7 @@ class VictimInterview(models.Model):
     victim_has_worked_in_sex_industry = models.NullBooleanField(null=True)
     victim_place_worked_involved_sending_girls_overseas = models.NullBooleanField(null=True)
 
+    """
     # 6. Awareness & Assessment
 
     awareness_before_interception = models.CharField(max_length=255)
@@ -432,6 +596,7 @@ class VictimInterview(models.Model):
     case_notes = models.TextField('Case Notes', blank=True)
 
     scanned_form = models.FileField('Attach scanned copy of form (pdf or image)', upload_to='scanned_vif_forms', default='', blank=True)
+    """
 
 
 class VictimInterviewPersonBox(models.Model):

@@ -162,7 +162,7 @@ def text_if_true(condition, text):
         return ''
 
 
-def get_station_name_from_irf_number(irf_number):
+def get_station_name_from_number(irf_number):
     return BORDER_STATION_NAMES.get(irf_number, '')[:3]
 
 
@@ -182,7 +182,7 @@ def get_irf_export_rows(irfs):
             row.extend([
                 irf.irf_number,
 
-                get_station_name_from_irf_number(irf.irf_number),
+                get_station_name_from_number(irf.irf_number),
 
                 irf.date_time_of_interception,
                 irf.number_of_victims,
@@ -413,6 +413,7 @@ vif_headers = [
     "1.15 Education Level",
     "1.16 Literacy",
     "2.1 Purpose of Going Abroad",
+    "Other Job Abroad",
     "Other Reason for Going Abroad",
     "2.2 Motive for Going Abroad",
     "Other Motive",
@@ -545,6 +546,82 @@ for i in range(1, 5+1):
 """
 
 
+def get_checkbox_group_value(instance, field_name_start):
+    for field in instance._meta.fields:
+        if field.name.startswith(field_name_start):
+            if getattr(instance, field.name):
+                return field.verbose_name
+    return ''
+
+
+def get_victim_where_going(instance):
+    if instance.victim_where_going_india_other_value:
+        return instance.victim_where_going_india_other_value
+    if instance.victim_where_going_gulf_other_value:
+        return instance.victim_where_going_gulf_other_value
+    return get_checkbox_group_value(instance, 'victim_where_going')
+
+
+def get_victim_how_expense_was_paid(vif):
+    if vif.victim_how_expense_was_paid_paid_myself:
+        return 'They paid the expenses themselves'
+    if vif.victim_how_expense_was_paid_broker_paid_all:
+        return 'Broker paid the expenses'
+    if vif.victim_how_expense_was_paid_gave_money_to_broker:
+        return 'They gave %s to the Broker' % vif.victim_how_expense_was_paid_amount
+    if vif.victim_how_expense_was_paid_broker_gave_loan:
+        return 'Broker paid %s and they have to pay them back' % vif.victim_how_expense_was_paid_amount
+
+
+def get_broker_works_in_job_location(vif):
+    if vif.broker_works_in_job_location_no:
+        return 'Broker does not work in the same place'
+    if vif.broker_works_in_job_location_yes:
+        return 'Broker works in the same place'
+    if vif.broker_works_in_job_location_dont_know:
+        return 'Don\'t know if the broker works in the same place'
+
+
+def get_victim_traveled_with_broker_companion(vif):
+    if vif.victim_traveled_with_broker_companion_yes:
+        'Traveled with a companion'
+    if vif.victim_traveled_with_broker_companion_no:
+        'Did not travel with a companion'
+    if vif.victim_traveled_with_broker_companion_broker_took_me_to_border:
+        'Broker took them to the border'
+
+
+def get_money_changed_hands_broker_companion(vif):
+    if vif.money_changed_hands_broker_companion_no:
+        return 'Money did not change hands between either'
+    if vif.money_changed_hands_broker_companion_dont_know:
+        return 'Don\'t know if money changed hands'
+    if vif.money_changed_hands_broker_companion_broker_gave_money:
+        return 'Broker gave money to the Companion'
+    if vif.money_changed_hands_broker_companion_companion_gave_money:
+        return 'Companion gave money to the Broker'
+
+
+def get_meeting_at_border(vif):
+    if vif.meeting_at_border_yes:
+        return 'Was planning to meet someone after crossing the border'
+    if vif.meeting_at_border_no:
+        return 'Was not planning on meeting anyone after crossing the border'
+    if vif.meeting_at_border_meeting_broker:
+        return 'Planning to meet Broker after crossing the border'
+    if vif.meeting_at_border_meeting_companion:
+        return 'Planning to meet Companion after crossing the border'
+
+
+
+def get_nullable_choice_text(value, text_true, text_false):
+    if value is None:
+        return ''
+    if value:
+        return text_true
+    return text_false
+
+
 def get_vif_export_rows(vifs):
     rows = []
     rows.append(vif_headers)
@@ -554,7 +631,7 @@ def get_vif_export_rows(vifs):
 
         row.extend([
             vif.vif_number,
-            get_station_name_from_irf_number(vif.vif_number),
+            get_station_name_from_number(vif.vif_number),
 
             vif.date_time,
             vif.number_of_victims,
@@ -575,302 +652,154 @@ def get_vif_export_rows(vifs):
             vif.victim_age,
             vif.victim_height,
             vif.victim_weight,
-            vif.get_victim_caste_display(),
-        ])
-        if vif.victim_occupation_other_value:
-            row.append(vif.victim_occupation_other_value)
-        else:
-            row.append(vif.get_victim_occupation_display())
 
-        # Make this a multiselect
-        if vif.victim_occupation_other_value:
-            row.append(vif.victim_occupation_other_value)
-        else:
-            row.append(vif.get_victim_occupation_display())
+            get_checkbox_group_value(vif, 'victim_caste'),
+            vif.victim_caste_other_value,
 
-        row.append(vif.get_victim_marital_status_display())
+            get_checkbox_group_value(vif, 'victim_occupation'),
+            vif.victim_occupation_other_value,
 
-        lives_with = []
-        for field, text in [
-            ('victim_lives_with_own_parents',     'Own Parent(s)'),
-            ('victim_lives_with_husband',         'Husband'),
-            ('victim_lives_with_husbands_family', 'Husband\'s family'),
-            ('victim_lives_with_friends',         'Friends'),
-            ('victim_lives_with_alone',           'Alone'),
-            ('victim_lives_with_other_relative',  'Other Relative'),
-            ('victim_lives_with_other',           vif.victim_lives_with_other_value),
-        ]:
-            if getattr(vif, field):
-                lives_with.append(text)
-        lives_with.extend(['']*2)
-        row.extend(lives_with[:2])
+            get_checkbox_group_value(vif, 'victim_marital_status'),
 
-        row.extend([
+            get_checkbox_group_value(vif, 'victim_lives_with'),
+            vif.victim_lives_with_other_value,
+
             vif.victim_num_in_family,
-            vif.get_victim_primary_guardian_display(),
+
+            get_checkbox_group_value(vif, 'victim_primary_guardian'),
+
             vif.victim_guardian_address_district,
             vif.victim_guardian_address_vdc,
             vif.victim_guardian_address_ward,
             vif.victim_guardian_phone,
-            vif.get_victim_parents_marital_status_display(),
-            vif.get_victim_education_level_display(),
-        ])
 
-        if vif.victim_is_literate:
-            row.append('Literate')
-        else:
-            row.append('Illiterate')
+            get_checkbox_group_value(vif, 'victim_parents_marital_status'),
 
-        migration_plans = []
-        for field, text in [
-            ('migration_plans_education',               'Education'),
-            ('migration_plans_travel_tour',             'Travel / Tour'),
-            ('migration_plans_shopping',                'Shopping'),
-            ('migration_plans_eloping',                 'Eloping'),
-            ('migration_plans_arranged_marriage',       'Arranged Marriage'),
-            ('migration_plans_meet_own_family',         'Meet your own family'),
-            ('migration_plans_visit_brokers_home',      'Visit broker\'s home'),
-            ('migration_plans_medical_treatment',       'Medical treatment'),
-            ('migration_plans_job_broker_did_not_say',  'Job - Broker did not say what job'),
-            ('migration_plans_job_baby_care',           'Job - Baby Care'),
-            ('migration_plans_job_factory',             'Job - Factory'),
-            ('migration_plans_job_hotel',               'Job - Hotel'),
-            ('migration_plans_job_shop',                'Job - Shop'),
-            ('migration_plans_job_laborer',             'Job - Laborer'),
-            ('migration_plans_job_brothel',             'Job - Brothel'),
-            ('migration_plans_job_household',           'Job - Household'),
-            ('migration_plans_job_other',               vif.migration_plans_job_value),
-            ('migration_plans_other',                   vif.migration_plans_other_value),
-        ]:
-            if getattr(vif, field):
-                migration_plans.append(text)
-        migration_plans.extend(['']*2)
-        row.extend(migration_plans[:2])
+            get_checkbox_group_value(vif, 'victim_education_level'),
 
-        primary_motivations = []
-        for field, text in [
-            ('primary_motivation_support_myself', 'Support myself'),
-            ('primary_motivation_support_family', 'Support family'),
-            ('primary_motivation_personal_debt', 'Personal Debt'),
-            ('primary_motivation_family_debt', 'Family Debt'),
-            ('primary_motivation_love_marriage', 'Love / Marriage'),
-            ('primary_motivation_bad_home_marriage', 'Bad home / marriage'),
-            ('primary_motivation_get_an_education', 'Get an education'),
-            ('primary_motivation_tour_travel', 'Tour / Travel'),
-            ('primary_motivation_didnt_know', 'Didn\'t know I was going abroad'),
-            ('primary_motivation_other', vif.primary_motivation_other_value),
-        ]:
-            if getattr(vif, field):
-                primary_motivations.append(text)
-        primary_motivations.extend(['']*2)
-        row.extend(primary_motivations[:2])
+            'Literate' if vif.victim_is_literate else 'Illiterate',
 
-        where_going = vif.get_victim_where_going_region_display() + ' '
-        if vif.victim_where_going_other_gulf_value:
-            where_going += vif.victim_where_going_other_gulf_value
-        elif vif.victim_where_going_other_india_value:
-            where_going += vif.victim_where_going_other_india_value
-        else:
-            where_going += vif.get_victim_where_going_display()
-        row.append(where_going)
-        if vif.manpower_involved:
-            row.append('Manpower was involved')
-        else:
-            row.append('Manpower was not involved')
+            get_checkbox_group_value(vif, 'migration_plans'),
+            vif.migration_plans_job_other_value,
+            vif.migration_plans_other_value,
 
-        if vif.victim_recruited_in_village:
-            row.append('Was not recruited from village')
-        else:
-            row.append('Was recruited from village')
+            get_checkbox_group_value(vif, 'primary_motivation'),
+            vif.primary_motivation_other_value,
 
-        if vif.brokers_relation_to_victim_other_value:
-            row.append(vif.brokers_relation_to_victim_other_value)
-        else:
-            row.append(vif.get_brokers_relation_to_victim_display())
+            get_victim_where_going(vif),
 
-        if vif.victim_married_to_broker_years and vif.victim_married_to_broker_months:
-            row.append("Married to Broker for %d years and %d months" % (
+            get_nullable_choice_text(
+                vif.manpower_involved,
+                'Manpower was involved',
+                'Manpower was not involved'
+            ),
+
+            'Was not recruited from village' if vif.victim_recruited_in_village else 'Was recruited from village',
+
+            get_checkbox_group_value(vif, 'brokers_relation_to_victim'),
+            vif.brokers_relation_to_victim_other_value,
+
+            "Married to Broker for %d years and %d months" % (
                 vif.victim_married_to_broker_years,
                 vif.victim_married_to_broker_months
-            ))
-        else:
-            row.append('')
+            ) if vif.victim_married_to_broker_years and vif.victim_married_to_broker_months else '',
 
-        if vif.victim_how_met_broker_other_value:
-            row.append(vif.victim_how_met_broker_other_value)
-        else:
-            row.append(vif.get_victim_how_met_broker_display())
+            get_checkbox_group_value(vif, 'victim_how_met_broker'),
+            vif.victim_how_met_broker_other_value,
 
-        row.append(vif.victim_how_met_broker_mobile_explanation)
+            vif.victim_how_met_broker_mobile_explanation,
 
-        if vif.victim_how_long_known_broker_years and vif.victim_how_long_known_broker_months:
-            row.append("Known Broker for %d Years and %d Months" % (
+            "Known Broker for %d Years and %d Months" % (
                 vif.victim_how_long_known_broker_years,
                 vif.victim_how_long_known_broker_months
-            ))
+            )
+            if vif.victim_how_long_known_broker_years and vif.victim_how_long_known_broker_months else '',
+            get_victim_how_expense_was_paid(vif),
 
-        if vif.victim_how_expense_was_paid == 'i-paid-myself':
-            row.append('They paid the expenses themselves')
-        if vif.victim_how_expense_was_paid == 'broker-paid':
-            row.append('Broker paid the expenses')
-        if vif.victim_how_expense_was_paid == 'gave-money-to-broker':
-            row.append('They gave %s to the Broker' % vif.victim_how_expense_was_paid_amount)
-        if vif.victim_how_expense_was_paid == 'broker-paid-and-must-repay':
-            row.append('Broker paid %s and they have to pay them back' % vif.victim_how_expense_was_paid_amount)
+            get_broker_works_in_job_location(vif),
 
+            'Broker said they would be earning %s per month' % vif.amount_victim_would_earn,
+            'Broker made similar promises to %s other(s)' % vif.number_broker_made_similar_promises_to,
 
+            get_nullable_choice_text(
+                vif.victim_first_time_crossing_border,
+                'First time crossing the border',
+                'Not their first time crossing the border'
+            ),
 
+            get_checkbox_group_value(vif, 'victim_primary_means_of_travel'),
+            vif.victim_primary_means_of_travel_other_value,
 
-        
+            'Stayed somewhere in transit' if vif.victim_stayed_somewhere_between else 'Did not stay anywhere in transit',
 
+            'Stayed for %s days starting on %s' % (
+                vif.victim_how_long_stayed_between_days,
+                vif.victim_how_long_stayed_between_start_date
+            ) if vif.victim_how_long_stayed_between_days and vif.victim_how_long_stayed_between_start_date else '',
 
+            'Was kept hidden' if vif.victim_was_hidden else '',
+            vif.victim_was_hidden_explanation,
 
+            'Was not free to go outside' if vif.victim_was_free_to_go_out else '',
+            vif.victim_was_free_to_go_out_explanation,
 
+            vif.how_many_others_in_situation,
 
+            vif.others_in_situation_age_of_youngest,
 
+            get_checkbox_group_value(vif, 'passport_made'),
 
+            'Passport or work permit are with the Broker' if vif.victim_passport_with_broker else '',
+
+            'Sexual Harassment' if vif.abuse_happened_sexual_harassment else '',
+            'Sexual Abuse' if vif.abuse_happened_sexual_abuse else '',
+            'Physical Abuse' if vif.abuse_happened_physical_abuse else '',
+            'Threats' if vif.abuse_happened_threats else '',
+            'Denied Proper Food' if vif.abuse_happened_denied_proper_food else '',
+            'Forced to Take Drugs' if vif.abuse_happened_forced_to_take_drugs else '',
+
+            vif.abuse_happened_by_whom,
+            vif.abuse_happened_explanation,
+
+            get_victim_traveled_with_broker_companion(vif),
+
+            get_nullable_choice_text(
+                vif.companion_with_when_intercepted,
+                'Intercepted with Companion',
+                'Companion was not with them at interception'
+            ),
+            get_nullable_choice_text(
+                vif.planning_to_meet_companion_later,
+                'Planning to meet Companion in India',
+                'Not planning to meet Companion in India'
+            ),
+
+            get_money_changed_hands_broker_companion(vif),
+
+            # 5. Destination & India Contact
+
+            get_meeting_at_border(vif),
+
+            'Know details about destination' if vif.victim_knew_details_about_destination else 'Don\'t know details about destination',
+
+            'Knows of someone in India who sends girls overseas' if vif.other_involved_person_in_india else '',
+            'Knows of a "husband trafficker" who sends girls overseas' if vif.other_involved_husband_trafficker else '',
+            'Knows of a contact of the recruiter/companion who sends girls overseas' if vif.other_involved_someone_met_along_the_way else '',
+            'Knows of someone involved in trafficking' if vif.other_involved_someone_involved_in_trafficking else '',
+            'Knows of a place involved in trafficking' if vif.other_involved_place_involved_in_trafficking else '',
+
+            get_nullable_choice_text(
+                vif.victim_has_worked_in_sex_industry,
+                'They previously worked in the sex industry',
+                'They did not previously work in the sex industry',
+            ),
+            get_nullable_choice_text(
+                vif.victim_place_worked_involved_sending_girls_overseas,
+                'The sex industry location was sending girls overseas',
+                'The sex industry location was not sending girls overseas',
+            ),
+        ])
         rows.append(row)
-
-
-
-
         continue
 
-    
-    
-    
-    
-    
-    
-    
-
-
-
-
-        # Get the first two family members marked as true, (I'm guessing there will usually only be one or two
-        family_members_talked_to = []
-        for field, text in [
-            ('talked_to_brother', 'Own brother'),
-            ('talked_to_sister', 'Own sister'),
-            ('talked_to_father', 'Own father'),
-            ('talked_to_mother', 'Own mother'),
-            ('talked_to_grandparent', 'Own grandparent'),
-            ('talked_to_aunt_uncle', 'Own aunt / uncle'),
-            ('talked_to_other', vif.talked_to_other_value),
-        ]:
-            if getattr(vif, field):
-                family_members_talked_to.append(text)
-        # But just in case add two blanks to the end
-        family_members_talked_to.extend(['']*2)
-
-        row.extend(family_members_talked_to[:2])
-
-        row.extend([
-            vif.reported_total_red_flags or 0,
-            vif.calculate_total_red_flags(),
-        ])
-
-        if vif.contact_noticed:
-            row.append('Interception made as a result of a contact')
-        elif vif.staff_noticed:
-            row.append('Interception made as a result of staff')
-
-        contacts = []
-        for field, text in [
-            ('contact_hotel_owner', 'Hotel owner'),
-            ('contact_rickshaw_driver', 'Rickshaw driver'),
-            ('contact_taxi_driver', 'Taxi driver'),
-            ('contact_bus_driver', 'Bus driver'),
-            ('contact_church_member', 'Church member'),
-            ('contact_other_ngo', 'Other NGO'),
-            ('contact_police', 'Police'),
-            ('contact_subcommittee_member', 'Subcommittee member'),
-            ('contact_other_value', vif.contact_other_value),
-        ]:
-            if getattr(vif, field):
-                contacts.append(text)
-        contacts.extend(['']*2)
-        row.extend(contacts[:2])
-
-        if vif.contact_paid:
-            row.append('Paid the contact')
-        else:
-            row.append('')
-
-        row.append(vif.contact_paid_how_much)
-
-        row.append(vif.staff_who_noticed)
-
-        row.extend([
-            text_if_true(vif.noticed_hesitant, 'Noticed they were hesitant'),
-            text_if_true(vif.noticed_nervous_or_afraid, 'Noticed they were nervous or afraid'),
-            text_if_true(vif.noticed_hurrying, 'Noticed they were hurrying'),
-            text_if_true(vif.noticed_drugged_or_drowsy, 'Noticed they were drugged or drowsy'),
-            text_if_true(vif.noticed_new_clothes, 'Noticed they were wearing new clothes'),
-            text_if_true(vif.noticed_dirty_clothes, 'Noticed they had dirty clothes'),
-            text_if_true(vif.noticed_carrying_full_bags, 'Noticed they were carrying full bags'),
-            text_if_true(vif.noticed_village_dress, 'Noticed they were wearing village dress'),
-            text_if_true(vif.noticed_indian_looking, 'Noticed that they looked Indian'),
-            text_if_true(vif.noticed_typical_village_look, 'Noticed they had a typical village look'),
-            text_if_true(vif.noticed_looked_like_agent, 'Noticed they looked like an agent'),
-            text_if_true(vif.noticed_caste_difference, 'Noticed their caste was different'),
-            text_if_true(vif.noticed_young_looking, 'Noticed that they looked young'),
-            text_if_true(vif.noticed_waiting_sitting, 'Noticed that they were sitting/waiting'),
-            text_if_true(vif.noticed_walking_to_border, 'Noticed they were walking to the border'),
-            text_if_true(vif.noticed_roaming_around, 'Noticed they were roaming around'),
-            text_if_true(vif.noticed_exiting_vehicle, 'Noticed them exiting a vehicle'),
-            text_if_true(vif.noticed_heading_to_vehicle, 'Noticed them heading into a vehicle'),
-            text_if_true(vif.noticed_in_a_vehicle, 'Noticed them in a vehicle'),
-            text_if_true(vif.noticed_in_a_rickshaw, 'Noticed them in a rickshaw'),
-            text_if_true(vif.noticed_in_a_cart, 'Noticed them in a cart'),
-            text_if_true(vif.noticed_carrying_a_baby, 'Noticed them carrying a baby'),
-            text_if_true(vif.noticed_on_the_phone, 'Noticed them on the phone'),
-            text_if_true(vif.noticed_other_sign_value, vif.noticed_other_sign_value),
-            text_if_true(vif.call_subcommittee_chair, 'Called Subcommitte Chair'),
-            text_if_true(vif.call_thn_to_cross_check, 'Called THN to cross-check names'),
-            text_if_true(vif.name_come_up_before_yes_value, 'Names came up before'),
-            text_if_true(vif.scan_and_submit_same_day, 'Scanned and submitted same day'),
-            vif.get_interception_type_display(),
-            text_if_true(vif.trafficker_taken_into_custody, 'Trafficker taken into police custody'),
-        ])
-
-        # TODO get name of trafficker taken into custody
-
-        vif.get_how_sure_was_trafficking_display()
-
-        if vif.has_signature:
-            row.append('Form is signed')
-        else:
-            row.append('Form is not signed')
-
-        row.append(interceptee.full_name)
-
-        if interceptee.gender == 'm':
-            row.append('Male')
-        else:
-            row.append('Female')
-
-        row.extend([
-            interceptee.age,
-            interceptee.district,
-            interceptee.vdc,
-            interceptee.phone_contact,
-            interceptee.relation_to,
-        ])
-
-        for i, interceptee in enumerate(vif.interceptees.all()):
-            # Now list all of the traffickers but not victims
-            if interceptee.kind == 'v':
-                continue
-
-            row.extend([
-                interceptee.age,
-                interceptee.district,
-                interceptee.vdc,
-                interceptee.phone_contact,
-                interceptee.relation_to,
-            ])
-
-
     return rows
-

@@ -11,6 +11,18 @@ from django.forms.models import inlineformset_factory
 from django.core.exceptions import ValidationError
 from django.utils.html import mark_safe
 
+
+""" In this form we have three types of problem fields:
+
+1. Boolean Fields that must be rendered as Yes/No checkboxes and allow users to
+only select one and uncheck their answer if it is optional
+
+2. Sets of checkboxes that must be constrained to a certain number of choices
+
+3. 
+"""
+
+
 # Django forms for some reason use 1,2,3 for values for NullBooleanField
 BOOLEAN_CHOICES = [
     (False, 'No'),
@@ -295,132 +307,10 @@ IntercepteeFormSet = inlineformset_factory(InterceptionRecord, Interceptee, extr
 
 
 class VictimInterviewForm(forms.ModelForm):
-    victim_gender = forms.MultipleChoiceField(
+    victim_gender = forms.ChoiceField(
         choices=VictimInterview.GENDER_CHOICES,
-        widget=forms.CheckboxSelectMultiple,
+        widget=forms.RadioSelect,
         required=True
-    )
-
-    CASTE_CHOICES = [
-        ('Magar', 'Magar'),
-        ('Jaisi', 'Jaisi'),
-        ('Thakuri', 'Thakuri'),
-
-        ('Brahmin', 'Brahmin'),
-        ('Chhetri', 'Chhetri'),
-        ('Newar', 'Newar'),
-
-        ('Tamang', 'Tamang'),
-        ('Mongolian', 'Mongolian'),
-        ('Muslim', 'Muslim'),
-
-        ('Madeshi / Terai Ethnic Group', 'Madeshi / Terai Ethnic Group'),
-        ('Dalit / under-priviledged', 'Dalit / under-priviledged'),
-
-        ('Other', 'Other'),
-    ]
-    victim_caste = forms.MultipleChoiceField(
-        choices=CASTE_CHOICES,
-        widget=forms.CheckboxSelectMultiple,
-        required=False
-    )
-    victim_caste_other_value = forms.CharField(required=False)
-
-    OCCUPATION_CHOICES = [
-        ('Unemployed', 'Unemployed'),
-        ('Farmer', 'Farmer'),
-        ('Wage-laborer', 'Wage-laborer'),
-        ('Business Owner', 'Business Owner'),
-        ('Migrant Worker', 'Migrant Worker'),
-        ('Tailoring', 'Tailoring'),
-        ('Housewife', 'Housewife'),
-        ('Animal Husbandry', 'Animal Husbandry'),
-        ('Domestic Work', 'Domestic Work'),
-        ('Shopkeeper', 'Shopkeeper'),
-        ('Hotel', 'Hotel'),
-        ('Factory', 'Factory'),
-        ('Other', 'Other'),
-    ]
-    victim_occupation = forms.MultipleChoiceField(
-        choices=OCCUPATION_CHOICES,
-        widget=forms.CheckboxSelectMultiple,
-        required=False
-    )
-    victim_occupation_other_value = forms.CharField(max_length=255, required=False)
-
-    MARITAL_STATUS_CHOICES = [
-        ('single', 'Single'),
-        ('married', 'Married'),
-        ('widow', 'Widow'),
-        ('divorced', 'Divorced'),
-        ('husband-has-other-wives', 'Husband has other wives'),
-        ('abandoned-by-husband', 'Abandoned by husband'),
-    ]
-    victim_marital_status = forms.MultipleChoiceField(
-        choices=MARITAL_STATUS_CHOICES,
-        widget=forms.CheckboxSelectMultiple,
-        required=False
-    )
-
-
-    LIVES_WITH_CHOICES = [
-      ('Own Parent(s)', 'Own Parent(s)'),
-      ('Husband', 'Husband'),
-      ('Husband\'s family', 'Husband\'s family'),
-      ('Friends', 'Friends'),
-      ('Alone', 'Alone'),
-      ('Other Relative', 'Other Relative'),
-      ('Other', 'Other'),
-    ]
-    victim_lives_with = forms.MultipleChoiceField(
-        choices=LIVES_WITH_CHOICES,
-        widget=forms.CheckboxSelectMultiple,
-        required=False
-    )
-    victim_lives_with_other_value = forms.CharField(required=False)
-
-    GUARDIAN_CHOICES = [
-        ('Own Parent(s)', 'Own Parent(s)'),
-        ('Husband', 'Husband'),
-        ('Other Relative', 'Other Relative'),
-        ('Non-relative', 'Non-relative'),
-        ('No one (I have no guardian)', 'No one (I have no guardian)'),
-    ]
-    victim_primary_guardian = forms.MultipleChoiceField(
-        choices=GUARDIAN_CHOICES,
-        widget=forms.CheckboxSelectMultiple,
-        required=False
-    )
-
-    PARENTS_MARITAL_STATUS_CHOICES = [
-        ('Single', 'Single'),
-        ('Married', 'Married'),
-        ('Widow', 'Widow'),
-        ('My father has other wives', 'My father has other wives'),
-        ('Separated (Legally married)', 'Separated (Legally married)'),
-        ('Divorced', 'Divorced'),
-    ]
-    victim_parents_marital_status = forms.MultipleChoiceField(
-        choices=PARENTS_MARITAL_STATUS_CHOICES,
-        widget=forms.CheckboxSelectMultiple,
-        required=False
-    )
-
-    EDUCATION_LEVEL_CHOICES = [
-        ('None', 'None'),
-        ('Only informal (adult)', 'Only informal (adult)'),
-        ('Primary only', 'Primary only'),
-        ('Grade 4-8', 'Grade 4-8'),
-        ('Grade 9-10', 'Grade 9-10'),
-        ('SLC', 'SLC'),
-        ('11-12', '11-12'),
-        ('Bachelors', 'Bachelors'),
-        ('Masters', 'Masters'),
-    ]
-    victim_education_level = forms.MultipleChoiceField(
-        choices=EDUCATION_LEVEL_CHOICES,
-        widget=forms.CheckboxSelectMultiple,
-        required=False
     )
 
     victim_is_literate = forms.MultipleChoiceField(
@@ -428,84 +318,6 @@ class VictimInterviewForm(forms.ModelForm):
         widget=forms.CheckboxSelectMultiple,
         required=False
     )
-
-    MIGRATION_PLANS_CHOICES = [
-        ('Education', 'Education'),
-        ('Travel / Tour', 'Travel / Tour'),
-        ('Shopping', 'Shopping'),
-        ('Eloping', 'Eloping'),
-        ('Arranged Marriage', 'Arranged Marriage'),
-        ('Meet your own family', 'Meet your own family'),
-        ("Visit broker\'s home", "Visit broker\'s home"),
-        ('Medical treatment', 'Medical treatment'),
-        ('Job - Broker did not say what job', 'Job - Broker did not say what job'),
-        ('Job - Baby Care', 'Job - Baby Care'),
-        ('Job - Factory', 'Job - Factory'),
-        ('Job - Hotel', 'Job - Hotel'),
-        ('Job - Shop', 'Job - Shop'),
-        ('Job - Laborer', 'Job - Laborer'),
-        ('Job - Brothel', 'Job - Brothel'),
-        ('Job - Household', 'Job - Household'),
-        ('Job - Other', 'Job - Other'),
-        ('Other', 'Other'),
-    ]
-    migration_plans = forms.MultipleChoiceField(
-        choices=MIGRATION_PLANS_CHOICES,
-        widget=forms.CheckboxSelectMultiple,
-        required=True
-    )
-    migration_plans_job_other_value = forms.CharField(required=False)
-    migration_plans_other_value = forms.CharField(required=False)
-
-    PRIMARY_MOTIVATION_CHOICES = [
-        ('Support myself', 'Support myself'),
-        ('Support family', 'Support family'),
-        ('Personal Debt', 'Personal Debt'),
-        ('Family Debt', 'Family Debt'),
-        ('Love / Marriage', 'Love / Marriage'),
-        ('Bad home / marriage', 'Bad home / marriage'),
-        ('Get an education', 'Get an education'),
-        ('Tour / Travel', 'Tour / Travel'),
-        ("Didn't know I was going abroad", "Didn't know I was going abroad"),
-        ('Other', 'Other'),
-    ]
-    primary_motivation = forms.MultipleChoiceField(
-        choices=PRIMARY_MOTIVATION_CHOICES,
-        widget=forms.CheckboxSelectMultiple,
-        required=True
-    )
-    primary_motivation_other_value = forms.CharField(max_length=255, required=False)
-
-    WHERE_GOING_CHOICES = [
-        ('India', 'India'),
-        ('Gulf / Other', 'Gulf / Other'),
-        ('Delhi', 'Delhi'),
-        ('Mumbai', 'Mumbai'),
-        ('Surat', 'Surat'),
-        ('Rajastan', 'Rajastan'),
-        ('Kolkata', 'Kolkata'),
-        ('Pune', 'Pune'),
-        ('Jaipur', 'Jaipur'),
-        ('Bihar', 'Bihar'),
-        ('Did Not Know', 'Did Not Know'),
-        ('Other', 'Other'),
-        ('Lebanon', 'Lebanon'),
-        ('Dubai', 'Dubai'),
-        ('Malaysia', 'Malaysia'),
-        ('Oman', 'Oman'),
-        ('Saudi Arabia', 'Saudi Arabia'),
-        ('Kuwait', 'Kuwait'),
-        ('Qatar', 'Qatar'),
-        ('Did Not Know', 'Did Not Know'),
-        ('Other', 'Other'),
-    ]
-    victim_where_going = forms.MultipleChoiceField(
-        choices=WHERE_GOING_CHOICES,
-        widget=forms.CheckboxSelectMultiple,
-        required=True
-    )
-    victim_where_going_other_gulf_value = forms.CharField(required=False)
-    victim_where_going_other_india_value = forms.CharField(required=False)
 
     manpower_involved = forms.MultipleChoiceField(
         choices=BOOLEAN_CHOICES,
@@ -519,96 +331,11 @@ class VictimInterviewForm(forms.ModelForm):
         required=True
     )
 
-    BROKERS_RELATION_CHOICES = [
-        ('Own dad', 'Own dad'),
-        ('Own mom', 'Own mom'),
-        ('Own uncle', 'Own uncle'),
-        ('Own aunt', 'Own aunt'),
-        ('Own bro', 'Own bro'),
-        ('Own sister', 'Own sister'),
-        ('Other relative', 'Other relative'),
-        ('Friend', 'Friend'),
-        ('Agent', 'Agent'),
-        ('Husband', 'Husband'),
-        ('Boyfriend', 'Boyfriend'),
-        ('Neighbor', 'Neighbor'),
-        ('Recently met', 'Recently met'),
-        ('Contractor', 'Contractor'),
-        ('Other', 'Other'),
-    ]
-    brokers_relation_to_victim = forms.MultipleChoiceField(
-        choices=BROKERS_RELATION_CHOICES,
-        widget=forms.CheckboxSelectMultiple,
-        required=False
-    )
-    brokers_relation_to_victim_other_value = forms.CharField(required=False)
-
-    HOW_MET_BROKER_CHOICES = [
-        ('Broker is from my community', 'Broker is from my community'),
-        ('At work', 'At work'),
-        ('At school', 'At school'),
-        ('Job advertisement', 'Job advertisement'),
-        ('He approached me', 'He approached me'),
-        ('Through friends', 'Through friends'),
-        ('Through family', 'Through family'),
-        ('At Wedding', 'At Wedding'),
-        ('In a Vehicle', 'In a Vehicle'),
-        ('In a Hospital', 'In a Hospital'),
-        ('Went to him myself', 'Went to him myself'),
-        ('Called my mobile', 'Called my mobile'),
-        ('Other', 'Other'),
-    ]
-    victim_how_met_broker = forms.MultipleChoiceField(
-        choices=HOW_MET_BROKER_CHOICES,
-        widget=forms.CheckboxSelectMultiple,
-        required=False
-    )
-    victim_how_met_broker_other_value = forms.CharField(required=False)
-
-    HOW_EXPENSE_WAS_PAID_CHOICES = [
-        ('I paid the expenses myself', 'I paid the expenses myself'),
-        ('The broker paid all the expenses', 'The broker paid all the expenses'),
-        ('I gave a sum of money to the broker', 'I gave a sum of money to the broker'),
-        ('The broker paid the expenses and I have to pay him back', 'The broker paid the expenses and I have to pay him back'),
-    ]
-    victim_how_expense_was_paid = forms.MultipleChoiceField(
-        choices=HOW_EXPENSE_WAS_PAID_CHOICES,
-        widget=forms.CheckboxSelectMultiple,
-        required=False
-    )
-
-    BROKER_WORKS_CHOICES = [
-        ('No', 'No'),
-        ('Yes', 'Yes'),
-        ("Don\'t know", "Don\'t Know"),
-    ]
-    broker_works_in_job_location = forms.MultipleChoiceField(
-        choices=BROKER_WORKS_CHOICES,
-        widget=forms.CheckboxSelectMultiple,
-        required=False
-    )
-
     victim_first_time_crossing_border = forms.MultipleChoiceField(
         choices=BOOLEAN_CHOICES,
         widget=forms.CheckboxSelectMultiple,
         required=False
     )
-
-    PRIMARY_MEANS_OF_TRAVEL_CHOICES = [
-        ('Tourist Bus', 'Tourist Bus'),
-        ('Motorbike', 'Motorbike'),
-        ('Private Car', 'Private Car'),
-        ('Local Bus', 'Local Bus'),
-        ('Microbus', 'Microbus'),
-        ('Plane', 'Plane'),
-        ('Other', 'Other'),
-    ]
-    victim_primary_means_of_travel = forms.MultipleChoiceField(
-        choices=PRIMARY_MEANS_OF_TRAVEL_CHOICES,
-        widget=forms.CheckboxSelectMultiple,
-        required=True
-    )
-    victim_primary_means_of_travel_other_value = forms.CharField(required=False)
 
     victim_stayed_somewhere_between = forms.MultipleChoiceField(
         choices=BOOLEAN_CHOICES,
@@ -627,47 +354,8 @@ class VictimInterviewForm(forms.ModelForm):
         required=False
     )
 
-    PASSPORT_MADE_CHOICES = [
-        ('No passport made', 'No passport made'),
-        ('Real passport made', 'Real passport made'),
-        ('Passport included a false name', 'Passport included a false name'),
-        ('Passport included other false info', 'Passport included other false info'),
-        ('Passport was fake', 'Passport was fake'),
-    ]
-    passport_made = forms.MultipleChoiceField(
-        choices=PASSPORT_MADE_CHOICES,
-        widget=forms.CheckboxSelectMultiple,
-        required=False
-    )
-
     victim_passport_with_broker = forms.MultipleChoiceField(
         choices=BOOLEAN_CHOICES,
-        widget=forms.CheckboxSelectMultiple,
-        required=False
-    )
-
-    ABUSE_HAPPENED_CHOICES = [
-        ('Sexual Harassment', 'Sexual Harassment'),
-        ('Sexual Abuse', 'Sexual Abuse'),
-        ('Physical Abuse', 'Physical Abuse'),
-        ('Threats', 'Threats'),
-        ('Denied Proper Food', 'Denied Proper Food'),
-        ('Forced to take Drugs', 'Forced to take Drugs'),
-    ]
-    abuse_happened = forms.MultipleChoiceField(
-        choices=ABUSE_HAPPENED_CHOICES,
-        widget=forms.CheckboxSelectMultiple,
-        required=False
-    )
-
-    TRAVELED_WITH_BROKER_COMPANION_CHOICES = [
-        ('yes', 'Yes'),
-        ('no', 'No'),
-        ('broker-took-to-border', 'Broker took me to border'),
-    ]
-
-    victim_traveled_with_broker_companion = forms.MultipleChoiceField(
-        choices=TRAVELED_WITH_BROKER_COMPANION_CHOICES,
         widget=forms.CheckboxSelectMultiple,
         required=False
     )
@@ -682,30 +370,6 @@ class VictimInterviewForm(forms.ModelForm):
         choices=BOOLEAN_CHOICES,
         widget=forms.CheckboxSelectMultiple,
         required=False
-    )
-
-    MONEY_CHANGED_HANDS_BROKER_COMPANION_CHOICES = [
-        ('No', 'No'),
-        ('Don\'t know', 'Don\'t know'),
-        ('Broker gave money to the companion', 'Broker gave money to the companion'),
-        ('Companion gave money to the broker', 'Companion gave money to the broker'),
-    ]
-    money_changed_hands_broker_companion = forms.MultipleChoiceField(
-        choices=MONEY_CHANGED_HANDS_BROKER_COMPANION_CHOICES,
-        widget=forms.CheckboxSelectMultiple,
-        required=False
-    )
-
-    WHO_MEETING_AT_BORDER_CHOICES = [
-        ('Yes', 'Yes'),
-        ('No', 'No'),
-        ('Meeting Broker', 'Meeting Broker'),
-        ('Meeting Companion', 'Meeting Companion'),
-    ]
-    who_meeting_at_border = forms.MultipleChoiceField(
-        choices=WHO_MEETING_AT_BORDER_CHOICES,
-        widget=forms.CheckboxSelectMultiple,
-        required=True
     )
 
     victim_knew_details_about_destination = forms.MultipleChoiceField(
@@ -756,6 +420,7 @@ class VictimInterviewForm(forms.ModelForm):
         required=False
     )
 
+    """
     AWARENESS_CHOICES = [
         ('Had heard, but never knew how bad it was until I was intercepted by TH', 'Had heard, but never knew how bad it was until I was intercepted by TH'),
         ('Knew how bad it was, but didn\'t think that was happening to her', 'Knew how bad it was, but didn\'t think that was happening to her'),
@@ -937,8 +602,7 @@ class VictimInterviewForm(forms.ModelForm):
         widget=forms.CheckboxSelectMultiple,
         required=False
     )
-
-    # These are needed so we can set required=True
+    """
 
     class Meta:
         model = VictimInterview
@@ -953,12 +617,9 @@ class VictimInterviewForm(forms.ModelForm):
                 isinstance(field.widget, forms.CheckboxSelectMultiple) and
                 field.choices == BOOLEAN_CHOICES
             ):
-                initial = self.initial[field_name]
-                self.initial[field_name] = [unicode(initial)]
-
-        self.initial['victim_gender'] = [self.initial['victim_gender']]
-
-        print self.initial['migration_plans']
+                initial = self.initial.get(field_name)
+                if initial is not None:
+                    self.initial[field_name] = [unicode(initial)]
 
     def clean(self):
         cleaned_data = super(VictimInterviewForm, self).clean()
@@ -974,17 +635,23 @@ class VictimInterviewForm(forms.ModelForm):
                 else:
                     cleaned_data[field_name] = None
 
-        cleaned_data['victim_gender'] = cleaned_data['victim_gender'][0]
-
-        #for field in self._meta.fields:
-        #    if isinstance(field.widget, forms.CheckboxSelectMultiple):
-        #        import ipdb; ipdb.set_trace() 
-
-
-        if not cleaned_data.get('has_signature'):
-            self._errors['has_signature'] = self.error_class(["The form must be signed."])
+        for field_name_start in [
+            'primary_motivation',
+            'migration_plans',
+            'victim_where_going',
+        ]:
+            if not self.at_least_one_checked(cleaned_data, field_name_start):
+                self._errors[field_name_start] = self.error_class(['One box must be checked.'])
 
         return cleaned_data
+
+    def at_least_one_checked(self, cleaned_data, field_name_start):
+        for field_name in cleaned_data.keys():
+            if field_name.startswith(field_name_start):
+                if isinstance(self.fields[field_name].widget, forms.CheckboxInput):
+                    if cleaned_data[field_name]:
+                        return True
+        return False
 
 
 class VictimInterviewPersonBoxForm(forms.ModelForm):

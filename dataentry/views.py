@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.core.urlresolvers import reverse_lazy
-from django.views.generic import ListView, View, CreateView
+from django.views.generic import ListView, View, CreateView, UpdateView
 from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSet
 from django.contrib.auth.decorators import login_required
 from dataentry.models import (
@@ -101,7 +101,8 @@ class VictimInterviewListView(
 class VictimInterviewCreateView(
         LoginRequiredMixin,
         PermissionsRequiredMixin,
-        CreateWithInlinesView):
+        #CreateWithInlinesView):
+        CreateView):
     model = VictimInterview
     form_class = VictimInterviewForm
     success_url = reverse_lazy('victiminterview_list')
@@ -112,7 +113,8 @@ class VictimInterviewCreateView(
 class VictimInterviewUpdateView(
         LoginRequiredMixin,
         PermissionsRequiredMixin,
-        UpdateWithInlinesView):
+        #UpdateWithInlinesView):
+        UpdateView):
     model = VictimInterview
     form_class = VictimInterviewForm
     success_url = reverse_lazy('victiminterview_list')

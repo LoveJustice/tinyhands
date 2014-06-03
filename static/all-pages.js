@@ -15,6 +15,9 @@ function setUpValidationPopup(elem, kind) {
     var $elem = $('#id_' + id);
     if ($elem.length === 0) {
         $elem = $('[name="'+id+'"]').eq(0);
+        if ($elem.length === 0) {
+            $elem = $('#' + id).eq(0);
+        }
     }
 
     $elem.attr('data-toggle', 'tooltip').attr('title', message);
@@ -199,32 +202,35 @@ var DREAMSUITE = {
 
         var checkboxManagers = {};
         $.each([
-            ['victim_gender', 1],
-            ['victim_caste', 2],
-            ['victim_occupation', 2],
+            ['victim_caste', 1],
+            ['victim_occupation', 1],
             ['victim_marital_status', 1],
-            ['victim_lives_with', 2],
+            ['victim_lives_with', 1],
+            ['victim_is_literate', 1],
             ['victim_primary_guardian', 1],
             ['victim_parents_marital_status', 1],
             ['victim_education_level', 1],
-            ['migration_plans', 2],
-            ['primary_motivation', 2],
+            ['migration_plans', 1],
+            ['primary_motivation', 1],
             ['victim_where_going', 1],
             ['manpower_involved', 1],
             ['victim_recruited_in_village', 1],
-            ['brokers_relation_to_victim', 2],
-            ['victim_how_met_broker', 2],
+            ['brokers_relation_to_victim', 1],
+            ['victim_how_met_broker', 1],
             ['victim_how_expense_was_paid', 1],
             ['broker_works_in_job_location', 1],
             ['victim_first_time_crossing_border', 1],
-            ['victim_primary_means_of_travel', 2],
+            ['victim_primary_means_of_travel', 1],
             ['victim_stayed_somewhere_between', 1],
             ['victim_was_hidden', 1],
             ['victim_was_free_to_go_out', 1],
             ['passport_made', 1],
             ['victim_passport_with_broker', 1],
             ['victim_traveled_with_broker_companion', 1],
-            ['who_meeting_at_border', 1],
+            ['companion_with_when_intercepted', 1],
+            ['planning_to_meet_companion_later', 1],
+            ['money_changed_hands_broker_companion', 1],
+            ['meeting_at_border', 1],
             ['victim_knew_details_about_destination', 1],
             ['other_involved_person_in_india', 1],
             ['other_involved_husband_trafficker', 1],
@@ -250,27 +256,29 @@ var DREAMSUITE = {
             ['victim_family_economic_situation', 1],
             ['victim_had_suicidal_thoughts', 1],
             ['legal_action_against_traffickers', 1],
-            ['reason_no_legal', 2],
+            ['reason_no_legal', 1],
             ['interviewer_recommendation', 1],
-            ['other_people_and_places_involved', 1],
-            ['', 1]
+            ['other_people_and_places_involved', 1]
         ], function(i, checkboxAttrs) {
             var name = checkboxAttrs[0];
             var maxAllowedChecked = checkboxAttrs[1];
             checkboxManagers[name] = {
                 name: name,
                 maxAllowedChecked: maxAllowedChecked,
-                checkedOrder: $.makeArray($('input[name="'+name+'"]:checked'))
+                checkedOrder: $.makeArray($('#'+name+' input[type="checkbox"]:checked'))
             };
         });
 
         $('input[type="checkbox"]').click(function() {
             var name = $(this).attr('name');
+            if (!(name in checkboxManagers)) {
+                name = $(this).parents('.checkbox-group-marker').attr('id');
+            }
             var manager = checkboxManagers[name];
 
             if (manager) {
                 if ($(this).is(':checked')) {
-                    var numberChecked = $('input[name="'+name+'"]:checked').length;
+                    var numberChecked = $('#'+name+' input[type="checkbox"]:checked').length;
                     if (numberChecked > manager.maxAllowedChecked) {
                         var last = manager.checkedOrder.shift();
                         $(last).attr('checked', null);
