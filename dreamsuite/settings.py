@@ -83,13 +83,18 @@ DATABASES = {
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kathmandu'
 
-USE_I18N = True
+# Use Django translation system?
+USE_I18N = False
 
-USE_L10N = True
+# Use Django internationalization system?
+USE_L10N = False
 
 USE_TZ = True
+
+DATETIME_FORMAT = "n.j.Y g:iA"
+DATE_FORMAT = "n.j.Y" 
 
 
 # Static files (CSS, JavaScript, Images)

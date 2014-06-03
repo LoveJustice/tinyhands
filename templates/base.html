@@ -59,6 +59,9 @@ in the Javascript and run code unique to the current page.
                 <li><a href="{% url 'interceptionrecord_list' %}">Forms</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
+                <li>
+                <a href="#">Nepal Time: {% now "n.j.Y g:iA" %}</a>
+                </li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Hello {{ request.user.get_full_name }}<b class="caret"></b></a>
                     <ul class="dropdown-menu">

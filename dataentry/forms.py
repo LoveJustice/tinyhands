@@ -10,23 +10,32 @@ from dataentry.models import (
 from django.forms.models import inlineformset_factory
 from django.core.exceptions import ValidationError
 
+# Django forms for some reason use 1,2,3 for values for NullBooleanField
+NULL_BOOLEAN_CHOICES = [
+    (1, 'Unspecified'),
+    (2, 'No'),
+    (3, 'Yes'),
+]
+
+BOOLEAN_CHOICES = [
+    (False, 'No'),
+    (True, 'Yes'),
+]
+
+
+def make_null_boolean_fields_radio(f):
+    if isinstance(f, models.NullBooleanField):
+        return forms.ChoiceField(choices=NULL_BOOLEAN_CHOICES, widget=forms.RadioSelect, initial=1)
+    else:
+        return f.formfield()
+
+
 
 class InterceptionRecordForm(forms.ModelForm):
+    formfield_callback = make_null_boolean_fields_radio
 
     interception_type = forms.ChoiceField(
         choices=InterceptionRecord.INTERCEPT_TYPE_CHOICES,
-        widget=forms.RadioSelect(),
-        required=False
-    )
-
-    contact_paid = forms.ChoiceField(
-        choices=InterceptionRecord.BOOL_CHOICES,
-        widget=forms.RadioSelect(),
-        required=False
-    )
-
-    name_come_up_before = forms.ChoiceField(
-        choices=InterceptionRecord.BOOL_CHOICES,
         widget=forms.RadioSelect(),
         required=False
     )
@@ -298,10 +307,9 @@ class VictimInterviewForm(forms.ModelForm):
     statement_read_before_beginning = forms.BooleanField(required=True)
 
     # These are needed so we can set required=True
-    victim_recruited_in_village = forms.ChoiceField(choices=VictimInterview.BOOL_CHOICES, widget=forms.RadioSelect, required=True)
-    victim_stayed_somewhere_between = forms.ChoiceField(choices=VictimInterview.BOOL_CHOICES, widget=forms.RadioSelect, required=True)
-    victim_knew_details_about_destination = forms.ChoiceField(choices=VictimInterview.BOOL_CHOICES, widget=forms.RadioSelect, required=True)
-    has_signature = forms.ChoiceField(choices=VictimInterview.BOOL_CHOICES, widget=forms.RadioSelect, required=True)
+    victim_recruited_in_village = forms.ChoiceField(choices=BOOLEAN_CHOICES, widget=forms.RadioSelect, required=True)
+    victim_stayed_somewhere_between = forms.ChoiceField(choices=BOOLEAN_CHOICES, widget=forms.RadioSelect, required=True)
+    victim_knew_details_about_destination = forms.ChoiceField(choices=BOOLEAN_CHOICES, widget=forms.RadioSelect, required=True)
 
     class Meta:
         model = VictimInterview
@@ -350,6 +358,9 @@ class VictimInterviewForm(forms.ModelForm):
         ):
             self._errors['primary_motivation_support_myself'] = self.error_class(["At least one choice must be selected."])
 
+        if not cleaned_data.get('has_signature'):
+            self._errors['has_signature'] = self.error_class(["The form must be signed."])
+
         return cleaned_data
 
 
@@ -361,7 +372,7 @@ class VictimInterviewPersonBoxForm(forms.ModelForm):
     physical_description = forms.ChoiceField(choices=VictimInterviewPersonBox.PHYSICAL_DESCRIPTION_CHOICES, widget=forms.RadioSelect, required=False)
     occupation = forms.ChoiceField(choices=VictimInterviewPersonBox.OCCUPATION_CHOICES, widget=forms.RadioSelect, required=False)
     political_party = forms.ChoiceField(choices=VictimInterviewPersonBox.POLITICAL_PARTY_CHOICES, widget=forms.RadioSelect, required=False)
-    associated_with_place = forms.ChoiceField(choices=VictimInterviewPersonBox.BOOL_CHOICES, widget=forms.RadioSelect, required=False)
+    associated_with_place = forms.ChoiceField(widget=forms.RadioSelect, required=False)
 
     class Meta:
         model = VictimInterviewPersonBox
@@ -372,7 +383,7 @@ class VictimInterviewPersonBoxForm(forms.ModelForm):
 
 
 class VictimInterviewLocationBoxForm(forms.ModelForm):
-    associated_with_person = forms.ChoiceField(choices=VictimInterviewLocationBox.BOOL_CHOICES, widget=forms.RadioSelect, required=False)
+    associated_with_person = forms.ChoiceField(widget=forms.RadioSelect, required=False)
 
     class Meta:
         model = VictimInterviewLocationBox

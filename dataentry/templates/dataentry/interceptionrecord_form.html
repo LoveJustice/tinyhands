@@ -632,8 +632,22 @@
                     </td>
                     <td class="contact-paid">
                         Did you pay this contact for the information?<br/>
-                        <strong>6.10</strong> {{ form.contact_paid.0 }} {{ form.contact_paid.0.label_tag }}
-                        <strong>6.11</strong> {{ form.contact_paid.1 }} {{ form.contact_paid.1.label_tag }}
+                        <strong>6.10</strong> {{ form.contact_paid.1 }} {{ form.contact_paid.1.label_tag }}
+                        <strong>6.11</strong> {{ form.contact_paid.2 }} {{ form.contact_paid.2.label_tag }}
+                        {{ form.contact_paid.0 }} {{ form.contact_paid.0.label_tag }}
+                        <br/>
+                        
+                        &nbsp;
+                        &nbsp;
+                        &nbsp;
+                        &nbsp;
+                        &nbsp;
+                        &nbsp;
+                        &nbsp;
+                        &nbsp;
+                        &nbsp;
+                        &nbsp;
+                        &nbsp;
                         {{ form.contact_paid_how_much.label }}  {{ form.contact_paid_how_much|attr:"style: width: 70px" }}
                     </td>
                 </tr>
@@ -759,7 +773,10 @@
                         <strong>8.1</strong>&nbsp;{{ form.call_subcommittee_chair|attr:"data-placement: left" }} {{ form.call_subcommittee_chair.label_tag }}<br/>
                         <strong>8.2</strong>&nbsp;{{ form.call_thn_to_cross_check|attr:"data-placement: left" }} {{ form.call_thn_to_cross_check.label_tag }}<br/>
                         Had any name come up before?
-                        {{ form.name_come_up_before.1 }} {{ form.name_come_up_before.1.label_tag }} {{ form.name_come_up_before.0 }} {{ form.name_come_up_before.0.label_tag }} <br/>
+                        {{ form.name_come_up_before.0 }} {{ form.name_come_up_before.0.label_tag }}
+                        {{ form.name_come_up_before.1 }} {{ form.name_come_up_before.1.label_tag }}
+                        {{ form.name_come_up_before.2 }} {{ form.name_come_up_before.2.label_tag }}
+                        <br/>
                         {{ form.name_come_up_before_yes_value.label_tag }}  {{ form.name_come_up_before_yes_value|attr:"style: width: 100px"|attr:"data-placement: bottom" }}<br/>
                         <strong>8.3</strong>&nbsp;{{ form.scan_and_submit_same_day|attr:"data-placement: bottom" }} {{ form.scan_and_submit_same_day.label_tag }}
                     </div>

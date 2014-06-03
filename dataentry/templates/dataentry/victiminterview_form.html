@@ -1524,12 +1524,9 @@
                 </div>
 
                 <div class="black-box padded-box clearfix">
-                    <label>Is there a signature on the original form?
-                    <div class="inline-radio-group">
-                        {% for choice in form.has_signature %}
-                            {{ choice }} {{ choice.label_tag }}
-                        {% endfor %}
-                    </div>
+                    <label>
+                    {{ form.has_signature }}
+                    Is there a signature on the original form?
                 </div>
 
                 <div class="black-box clearfix">

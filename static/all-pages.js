@@ -215,7 +215,9 @@ $(document).ready(function() {
     }, 4000);
 
     $('input[id*=date]').datetimepicker({
-        format:'m/d/Y H:i'
+        format:'m/d/Y H:i',
+        hours12: true,
+        step: 15
     });
 
     var bodyClass = $('body').attr('id');

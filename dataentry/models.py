@@ -4,6 +4,12 @@ from imagekit.processors import ResizeToFill
 
 from accounts.models import Account
 
+NULL_BOOLEAN_CHOICES = [
+    (None, 'Unspecified'),
+    (False, 'No'),
+    (True, 'Yes'),
+]
+
 
 def set_weight(self, weight):
     self.weight = weight
@@ -12,11 +18,6 @@ models.BooleanField.set_weight = set_weight
 
 
 class InterceptionRecord(models.Model):
-    BOOL_CHOICES = [
-        (False, 'No'),
-        (True, 'Yes'),
-    ]
-
     form_entered_by = models.ForeignKey(Account, related_name='irfs_entered')
     date_form_received = models.DateTimeField()
 
@@ -124,7 +125,7 @@ class InterceptionRecord(models.Model):
     contact_other_value = models.CharField(max_length=255, blank=True)
 
     # Did you pay this contact for the information?
-    contact_paid = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
+    contact_paid = models.NullBooleanField(choices=NULL_BOOLEAN_CHOICES, null=True, default=None)
     contact_paid_how_much = models.CharField('How much?', max_length=255, blank=True)
 
     staff_noticed = models.BooleanField('Staff', default=False)
@@ -168,7 +169,7 @@ class InterceptionRecord(models.Model):
     # Procedures
     call_subcommittee_chair = models.BooleanField('Call Subcommittee Chair', default=False)
     call_thn_to_cross_check = models.BooleanField('Call THN to cross-check the names (6223856)', default=False)
-    name_come_up_before = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
+    name_come_up_before = models.NullBooleanField(choices=NULL_BOOLEAN_CHOICES, null=True, default=None)
     name_come_up_before_yes_value = models.CharField('If yes, write the # from the table above:', max_length=255, blank=True)
     scan_and_submit_same_day = models.BooleanField('Scan and submit to THN the same day', default=False)
 
@@ -239,11 +240,6 @@ class Interceptee(models.Model):
 
 
 class VictimInterview(models.Model):
-    BOOL_CHOICES = [
-        (False, 'No'),
-        (True, 'Yes'),
-    ]
-
     GENDER_CHOICES = [
         ('male', 'Male'),
         ('female', 'Female'),
@@ -374,7 +370,7 @@ class VictimInterview(models.Model):
     ]
     victim_education_level = models.CharField('Education Level', choices=EDUCATION_LEVEL_CHOICES, max_length=50, blank=True)
 
-    victim_is_literate = models.NullBooleanField('Is the victim literate?',  choices=BOOL_CHOICES, null=True)
+    victim_is_literate = models.NullBooleanField('Is the victim literate?', choices=NULL_BOOLEAN_CHOICES, null=True, default=None)
 
     # 2. Migration Plans
     migration_plans_education = models.BooleanField('Education', default=False)
@@ -441,8 +437,8 @@ class VictimInterview(models.Model):
     victim_where_going_other_gulf_value = models.CharField(max_length=255, blank=True)
     victim_where_going_other_india_value = models.CharField(max_length=255, blank=True)
 
-    manpower_involved = models.BooleanField('Was a manpower involved?', default=False, choices=BOOL_CHOICES)
-    victim_recruited_in_village = models.BooleanField('Did someone recruit you in your village and persuade you to abroad?', choices=BOOL_CHOICES)
+    manpower_involved = models.BooleanField('Was a manpower involved?')
+    victim_recruited_in_village = models.BooleanField('Did someone recruit you in your village and persuade you to abroad?')
 
     BROKERS_RELATION_CHOICES = [
         ('own-dad', 'Own dad'),
@@ -510,7 +506,7 @@ class VictimInterview(models.Model):
 
     # Section 4
 
-    victim_first_time_crossing_border = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
+    victim_first_time_crossing_border = models.NullBooleanField(choices=NULL_BOOLEAN_CHOICES, null=True, default=None)
 
     PRIMARY_MEANS_OF_TRAVEL_CHOICES = [
         ('tourist-bus', 'Tourist Bus'),
@@ -524,15 +520,15 @@ class VictimInterview(models.Model):
     victim_primary_means_of_travel = models.CharField('Primary means of travel?', choices=PRIMARY_MEANS_OF_TRAVEL_CHOICES, max_length=255)
     victim_primary_means_of_travel_other_value = models.CharField(max_length=255, blank=True)
 
-    victim_stayed_somewhere_between = models.BooleanField(choices=BOOL_CHOICES)
+    victim_stayed_somewhere_between = models.BooleanField()
 
     victim_how_long_stayed_between_days = models.PositiveIntegerField('Days', null=True, blank=True)
     victim_how_long_stayed_between_start_date = models.DateField('Start Date', null=True, blank=True)
 
-    victim_was_hidden = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
+    victim_was_hidden = models.NullBooleanField(choices=NULL_BOOLEAN_CHOICES, null=True, default=None)
     victim_was_hidden_explanation = models.TextField(blank=True)
 
-    victim_was_free_to_go_out = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
+    victim_was_free_to_go_out = models.NullBooleanField(choices=NULL_BOOLEAN_CHOICES, null=True, default=None)
     victim_was_free_to_go_out_explanation = models.TextField(blank=True)
 
     how_many_others_in_situation = models.PositiveIntegerField(null=True, blank=True)
@@ -545,7 +541,7 @@ class VictimInterview(models.Model):
     passport_made_false_info = models.BooleanField('Passport included other false info', default=False)
     passport_made_was_fake = models.BooleanField('Passport was fake', default=False)
 
-    victim_passport_with_broker = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
+    victim_passport_with_broker = models.NullBooleanField(choices=NULL_BOOLEAN_CHOICES, null=True, default=None)
 
     abuse_happened_sexual_harassment = models.BooleanField('Sexual Harassment', default=False)
     abuse_happened_sexual_abuse = models.BooleanField('Sexual Abuse', default=False)
@@ -564,8 +560,8 @@ class VictimInterview(models.Model):
     ]
     victim_traveled_with_broker_companion = models.CharField(max_length=255, choices=TRAVELED_WITH_BROKER_COMPANION_CHOICES, blank=True)
 
-    companion_with_when_intercepted = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
-    planning_to_meet_companion_later = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
+    companion_with_when_intercepted = models.NullBooleanField(choices=NULL_BOOLEAN_CHOICES, null=True, default=None)
+    planning_to_meet_companion_later = models.NullBooleanField(choices=NULL_BOOLEAN_CHOICES, null=True, default=None)
 
     MONEY_CHANGED_HANDS_BROKER_COMPANION_CHOICES = [
         ('no', 'No'),
@@ -585,17 +581,17 @@ class VictimInterview(models.Model):
     ]
     who_meeting_at_border = models.CharField(max_length=255, choices=WHO_MEETING_AT_BORDER_CHOICES)
 
-    victim_knew_details_about_destination = models.BooleanField(choices=BOOL_CHOICES)
+    victim_knew_details_about_destination = models.BooleanField()
 
-    other_involved_person_in_india = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
-    other_involved_husband_trafficker = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
-    other_involved_someone_met_along_the_way = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
-    other_involved_someone_involved_in_trafficking = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
-    other_involved_place_involved_in_trafficking = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
+    other_involved_person_in_india = models.NullBooleanField(choices=NULL_BOOLEAN_CHOICES, null=True, default=None)
+    other_involved_husband_trafficker = models.NullBooleanField(choices=NULL_BOOLEAN_CHOICES, null=True, default=None)
+    other_involved_someone_met_along_the_way = models.NullBooleanField(choices=NULL_BOOLEAN_CHOICES, null=True, default=None)
+    other_involved_someone_involved_in_trafficking = models.NullBooleanField(choices=NULL_BOOLEAN_CHOICES, null=True, default=None)
+    other_involved_place_involved_in_trafficking = models.NullBooleanField(choices=NULL_BOOLEAN_CHOICES, null=True, default=None)
 
-    victim_has_worked_in_sex_industry = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
+    victim_has_worked_in_sex_industry = models.NullBooleanField(choices=NULL_BOOLEAN_CHOICES, null=True, default=None)
 
-    victim_place_worked_involved_sending_girls_overseas = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
+    victim_place_worked_involved_sending_girls_overseas = models.NullBooleanField(choices=NULL_BOOLEAN_CHOICES, null=True, default=None)
 
     # 6. Awareness & Assessment
 
@@ -637,11 +633,11 @@ class VictimInterview(models.Model):
 
     # Section 7
 
-    guardian_knew_was_travelling_to_india = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
-    family_pressured_victim = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
-    family_will_try_sending_again = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
-    victim_feels_safe_at_home = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
-    victim_wants_to_go_home = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
+    guardian_knew_was_travelling_to_india = models.NullBooleanField(choices=NULL_BOOLEAN_CHOICES, null=True, default=None)
+    family_pressured_victim = models.NullBooleanField(choices=NULL_BOOLEAN_CHOICES, null=True, default=None)
+    family_will_try_sending_again = models.NullBooleanField(choices=NULL_BOOLEAN_CHOICES, null=True, default=None)
+    victim_feels_safe_at_home = models.NullBooleanField(choices=NULL_BOOLEAN_CHOICES, null=True, default=None)
+    victim_wants_to_go_home = models.NullBooleanField(choices=NULL_BOOLEAN_CHOICES, null=True, default=None)
 
     VICTIM_ABUSE_CHOICES = [
         ('never', 'Never'),
@@ -668,7 +664,7 @@ class VictimInterview(models.Model):
     ]
     victim_family_economic_situation = models.CharField(choices=ECONIMIC_SITUATION_CHOICES, max_length=40, blank=True)
 
-    victim_had_suicidal_thoughts = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
+    victim_had_suicidal_thoughts = models.NullBooleanField(choices=NULL_BOOLEAN_CHOICES, null=True, default=None)
 
     reported_total_situational_alarms = models.PositiveIntegerField(blank=True, null=True)
 
@@ -706,19 +702,14 @@ class VictimInterview(models.Model):
     ]
     interviewer_recommendation = models.CharField(choices=INTERVIEWER_RECOMMENDATION_CHOICES, max_length=40, blank=True)
 
-    other_people_and_places_involved = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
+    other_people_and_places_involved = models.NullBooleanField(choices=NULL_BOOLEAN_CHOICES, null=True, default=None)
 
-    has_signature = models.BooleanField('Scanned form has signature')
+    has_signature = models.BooleanField('Scanned form has signature', default=False)
 
     case_notes = models.TextField('Case Notes', blank=True)
 
 
 class VictimInterviewPersonBox(models.Model):
-    BOOL_CHOICES = [
-        (False, 'No'),
-        (True, 'Yes'),
-    ]
-
     GENDER_CHOICES = [
         ('male', 'Male'),
         ('female', 'Female'),
@@ -813,16 +804,11 @@ class VictimInterviewPersonBox(models.Model):
     victim_believes_is_trafficker = models.BooleanField(default=False)
     victim_believes_is_not_trafficker = models.BooleanField(default=False)
 
-    associated_with_place = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
+    associated_with_place = models.NullBooleanField(choices=NULL_BOOLEAN_CHOICES, null=True, default=None)
     associated_with_place_value = models.IntegerField(blank=True, null=True)
 
 
 class VictimInterviewLocationBox(models.Model):
-    BOOL_CHOICES = [
-        (False, 'No'),
-        (True, 'Yes'),
-    ]
-
     victim_interview = models.ForeignKey(VictimInterview, related_name='location_boxes')
 
     which_place_india_meetpoint = models.BooleanField('India Meet Point', default=False)
@@ -869,5 +855,5 @@ class VictimInterviewLocationBox(models.Model):
     victim_believes_suspect_used_for_trafficking = models.BooleanField(default=False)
     victim_believes_not_used_for_trafficking = models.BooleanField(default=False)
 
-    associated_with_person = models.NullBooleanField(choices=BOOL_CHOICES, null=True)
+    associated_with_person = models.NullBooleanField(choices=NULL_BOOLEAN_CHOICES, null=True, default=None)
     associated_with_person_value = models.IntegerField(blank=True, null=True)
