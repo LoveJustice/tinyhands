@@ -303,13 +303,652 @@ def make_choice_widgets_radio(f):
 
 
 class VictimInterviewForm(forms.ModelForm):
-    formfield_callback = make_choice_widgets_radio
-    statement_read_before_beginning = forms.BooleanField(required=True)
+    victim_gender = forms.MultipleChoiceField(
+        choices=VictimInterview.GENDER_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=True
+    )
+
+    CASTE_CHOICES = [
+        ('Magar', 'Magar'),
+        ('Jaisi', 'Jaisi'),
+        ('Thakuri', 'Thakuri'),
+
+        ('Brahmin', 'Brahmin'),
+        ('Chhetri', 'Chhetri'),
+        ('Newar', 'Newar'),
+
+        ('Tamang', 'Tamang'),
+        ('Mongolian', 'Mongolian'),
+        ('Muslim', 'Muslim'),
+
+        ('Madeshi / Terai Ethnic Group', 'Madeshi / Terai Ethnic Group'),
+        ('Dalit / under-priviledged', 'Dalit / under-priviledged'),
+
+        ('Other', 'Other'),
+    ]
+    victim_caste = forms.MultipleChoiceField(
+        choices=CASTE_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+    victim_caste_other_value = forms.CharField(required=False)
+
+    OCCUPATION_CHOICES = [
+        ('Unemployed', 'Unemployed'),
+        ('Farmer', 'Farmer'),
+        ('Wage-laborer', 'Wage-laborer'),
+        ('Business Owner', 'Business Owner'),
+        ('Migrant Worker', 'Migrant Worker'),
+        ('Tailoring', 'Tailoring'),
+        ('Housewife', 'Housewife'),
+        ('Animal Husbandry', 'Animal Husbandry'),
+        ('Domestic Work', 'Domestic Work'),
+        ('Shopkeeper', 'Shopkeeper'),
+        ('Hotel', 'Hotel'),
+        ('Factory', 'Factory'),
+        ('Other', 'Other'),
+    ]
+    victim_occupation = forms.MultipleChoiceField(
+        choices=OCCUPATION_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+    victim_occupation_other_value = forms.CharField(max_length=255, required=False)
+
+    MARITAL_STATUS_CHOICES = [
+        ('single', 'Single'),
+        ('married', 'Married'),
+        ('widow', 'Widow'),
+        ('divorced', 'Divorced'),
+        ('husband-has-other-wives', 'Husband has other wives'),
+        ('abandoned-by-husband', 'Abandoned by husband'),
+    ]
+    victim_marital_status = forms.MultipleChoiceField(
+        choices=MARITAL_STATUS_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+
+
+    LIVES_WITH_CHOICES = [
+      ('Own Parent(s)', 'Own Parent(s)'),
+      ('Husband', 'Husband'),
+      ('Husband\'s family', 'Husband\'s family'),
+      ('Friends', 'Friends'),
+      ('Alone', 'Alone'),
+      ('Other Relative', 'Other Relative'),
+      ('Other', 'Other'),
+    ]
+    victim_lives_with = forms.MultipleChoiceField(
+        choices=LIVES_WITH_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+    victim_lives_with_other_value = forms.CharField(required=False)
+
+    GUARDIAN_CHOICES = [
+        ('Own Parent(s)', 'Own Parent(s)'),
+        ('Husband', 'Husband'),
+        ('Other Relative', 'Other Relative'),
+        ('Non-relative', 'Non-relative'),
+        ('No one (I have no guardian)', 'No one (I have no guardian)'),
+    ]
+    victim_primary_guardian = forms.MultipleChoiceField(
+        choices=GUARDIAN_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+
+    PARENTS_MARITAL_STATUS_CHOICES = [
+        ('Single', 'Single'),
+        ('Married', 'Married'),
+        ('Widow', 'Widow'),
+        ('My father has other wives', 'My father has other wives'),
+        ('Separated (Legally married)', 'Separated (Legally married)'),
+        ('Divorced', 'Divorced'),
+    ]
+    victim_parents_marital_status = forms.MultipleChoiceField(
+        choices=PARENTS_MARITAL_STATUS_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+
+    EDUCATION_LEVEL_CHOICES = [
+        ('None', 'None'),
+        ('Only informal (adult)', 'Only informal (adult)'),
+        ('Primary only', 'Primary only'),
+        ('Grade 4-8', 'Grade 4-8'),
+        ('Grade 9-10', 'Grade 9-10'),
+        ('SLC', 'SLC'),
+        ('11-12', '11-12'),
+        ('Bachelors', 'Bachelors'),
+        ('Masters', 'Masters'),
+    ]
+    victim_education_level = forms.MultipleChoiceField(
+        choices=EDUCATION_LEVEL_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+
+    victim_is_literate = forms.MultipleChoiceField(
+        choices=BOOLEAN_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+
+    MIGRATION_PLANS_CHOICES = [
+        ('Education', 'Education'),
+        ('Travel / Tour', 'Travel / Tour'),
+        ('Shopping', 'Shopping'),
+        ('Eloping', 'Eloping'),
+        ('Arranged Marriage', 'Arranged Marriage'),
+        ('Meet your own family', 'Meet your own family'),
+        ("Visit broker\'s home", "Visit broker\'s home"),
+        ('Medical treatment', 'Medical treatment'),
+        ('Job - Broker did not say what job', 'Job - Broker did not say what job'),
+        ('Job - Baby Care', 'Job - Baby Care'),
+        ('Job - Factory', 'Job - Factory'),
+        ('Job - Hotel', 'Job - Hotel'),
+        ('Job - Shop', 'Job - Shop'),
+        ('Job - Laborer', 'Job - Laborer'),
+        ('Job - Brothel', 'Job - Brothel'),
+        ('Job - Household', 'Job - Household'),
+        ('Job - Other', 'Job - Other'),
+        ('Other', 'Other'),
+    ]
+    migration_plans = forms.MultipleChoiceField(
+        choices=MIGRATION_PLANS_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+    migration_plans_job_other_value = forms.CharField(required=False)
+    migration_plans_other_value = forms.CharField(required=False)
+
+    PRIMARY_MOTIVATION_CHOICES = [
+        ('Support myself', 'Support myself'),
+        ('Support family', 'Support family'),
+        ('Personal Debt', 'Personal Debt'),
+        ('Family Debt', 'Family Debt'),
+        ('Love / Marriage', 'Love / Marriage'),
+        ('Bad home / marriage', 'Bad home / marriage'),
+        ('Get an education', 'Get an education'),
+        ('Tour / Travel', 'Tour / Travel'),
+        ("Didn't know I was going abroad", "Didn't know I was going abroad"),
+        ('Other', 'Other'),
+    ]
+    primary_motivation = forms.MultipleChoiceField(
+        choices=PRIMARY_MOTIVATION_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+    primary_motivation_other_value = forms.CharField(max_length=255, required=False)
+
+    WHERE_GOING_CHOICES = [
+        ('India', 'India'),
+        ('Gulf / Other', 'Gulf / Other'),
+        ('Delhi', 'Delhi'),
+        ('Mumbai', 'Mumbai'),
+        ('Surat', 'Surat'),
+        ('Rajastan', 'Rajastan'),
+        ('Kolkata', 'Kolkata'),
+        ('Pune', 'Pune'),
+        ('Jaipur', 'Jaipur'),
+        ('Bihar', 'Bihar'),
+        ('Did Not Know', 'Did Not Know'),
+        ('Other', 'Other'),
+        ('Lebanon', 'Lebanon'),
+        ('Dubai', 'Dubai'),
+        ('Malaysia', 'Malaysia'),
+        ('Oman', 'Oman'),
+        ('Saudi Arabia', 'Saudi Arabia'),
+        ('Kuwait', 'Kuwait'),
+        ('Qatar', 'Qatar'),
+        ('Did Not Know', 'Did Not Know'),
+        ('Other', 'Other'),
+    ]
+    victim_where_going = forms.MultipleChoiceField(
+        choices=WHERE_GOING_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+    victim_where_going_other_gulf_value = forms.CharField(required=False)
+    victim_where_going_other_india_value = forms.CharField(required=False)
+
+    manpower_involved = forms.MultipleChoiceField(
+        choices=BOOLEAN_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+
+    victim_recruited_in_village = forms.MultipleChoiceField(
+        choices=BOOLEAN_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=True
+    )
+
+    BROKERS_RELATION_CHOICES = [
+        ('Own dad', 'Own dad'),
+        ('Own mom', 'Own mom'),
+        ('Own uncle', 'Own uncle'),
+        ('Own aunt', 'Own aunt'),
+        ('Own bro', 'Own bro'),
+        ('Own sister', 'Own sister'),
+        ('Other relative', 'Other relative'),
+        ('Friend', 'Friend'),
+        ('Agent', 'Agent'),
+        ('Husband', 'Husband'),
+        ('Boyfriend', 'Boyfriend'),
+        ('Neighbor', 'Neighbor'),
+        ('Recently met', 'Recently met'),
+        ('Contractor', 'Contractor'),
+        ('Other', 'Other'),
+    ]
+    brokers_relation_to_victim = forms.MultipleChoiceField(
+        choices=BROKERS_RELATION_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+    brokers_relation_to_victim_other_value = forms.CharField(required=False)
+
+    HOW_MET_BROKER_CHOICES = [
+        ('Broker is from my community', 'Broker is from my community'),
+        ('At work', 'At work'),
+        ('At school', 'At school'),
+        ('Job advertisement', 'Job advertisement'),
+        ('He approached me', 'He approached me'),
+        ('Through friends', 'Through friends'),
+        ('Through family', 'Through family'),
+        ('At Wedding', 'At Wedding'),
+        ('In a Vehicle', 'In a Vehicle'),
+        ('In a Hospital', 'In a Hospital'),
+        ('Went to him myself', 'Went to him myself'),
+        ('Called my mobile', 'Called my mobile'),
+        ('Other', 'Other'),
+    ]
+    victim_how_met_broker = forms.MultipleChoiceField(
+        choices=HOW_MET_BROKER_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+    victim_how_met_broker_other_value = forms.CharField(required=False)
+
+    HOW_EXPENSE_WAS_PAID_CHOICES = [
+        ('I paid the expenses myself', 'I paid the expenses myself'),
+        ('The broker paid all the expenses', 'The broker paid all the expenses'),
+        ('I gave a sum of money to the broker', 'I gave a sum of money to the broker'),
+        ('The broker paid the expenses and I have to pay him back', 'The broker paid the expenses and I have to pay him back'),
+    ]
+    victim_how_expense_was_paid = forms.MultipleChoiceField(
+        choices=HOW_EXPENSE_WAS_PAID_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+
+    BROKER_WORKS_CHOICES = [
+        ('No', 'No'),
+        ('Yes', 'Yes'),
+        ("Don\'t know", "Don\'t Know"),
+    ]
+    broker_works_in_job_location = forms.MultipleChoiceField(
+        choices=BROKER_WORKS_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+
+    victim_first_time_crossing_border = forms.MultipleChoiceField(
+        choices=BOOLEAN_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+
+    PRIMARY_MEANS_OF_TRAVEL_CHOICES = [
+        ('Tourist Bus', 'Tourist Bus'),
+        ('Motorbike', 'Motorbike'),
+        ('Private Car', 'Private Car'),
+        ('Local Bus', 'Local Bus'),
+        ('Microbus', 'Microbus'),
+        ('Plane', 'Plane'),
+        ('Other', 'Other'),
+    ]
+    victim_primary_means_of_travel = forms.MultipleChoiceField(
+        choices=PRIMARY_MEANS_OF_TRAVEL_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=True
+    )
+    victim_primary_means_of_travel_other_value = forms.CharField(required=False)
+
+    victim_stayed_somewhere_between = forms.MultipleChoiceField(
+        choices=BOOLEAN_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=True
+    )
+
+    victim_was_hidden = forms.MultipleChoiceField(
+        choices=BOOLEAN_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+    victim_was_free_to_go_out = forms.MultipleChoiceField(
+        choices=BOOLEAN_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+
+    PASSPORT_MADE_CHOICES = [
+        ('No passport made', 'No passport made'),
+        ('Real passport made', 'Real passport made'),
+        ('Passport included a false name', 'Passport included a false name'),
+        ('Passport included other false info', 'Passport included other false info'),
+        ('Passport was fake', 'Passport was fake'),
+    ]
+    passport_made = forms.MultipleChoiceField(
+        choices=PASSPORT_MADE_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+
+    victim_passport_with_broker = forms.MultipleChoiceField(
+        choices=BOOLEAN_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+
+    ABUSE_HAPPENED_CHOICES = [
+        ('Sexual Harassment', 'Sexual Harassment'),
+        ('Sexual Abuse', 'Sexual Abuse'),
+        ('Physical Abuse', 'Physical Abuse'),
+        ('Threats', 'Threats'),
+        ('Denied Proper Food', 'Denied Proper Food'),
+        ('Forced to take Drugs', 'Forced to take Drugs'),
+    ]
+    abuse_happened = forms.MultipleChoiceField(
+        choices=ABUSE_HAPPENED_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+
+    TRAVELED_WITH_BROKER_COMPANION_CHOICES = [
+        ('yes', 'Yes'),
+        ('no', 'No'),
+        ('broker-took-to-border', 'Broker took me to border'),
+    ]
+
+    victim_traveled_with_broker_companion = forms.MultipleChoiceField(
+        choices=TRAVELED_WITH_BROKER_COMPANION_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+    
+    companion_with_when_intercepted = forms.MultipleChoiceField(
+        choices=BOOLEAN_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+
+
+    planning_to_meet_companion_later = forms.MultipleChoiceField(
+        choices=BOOLEAN_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+
+    MONEY_CHANGED_HANDS_BROKER_COMPANION_CHOICES = [
+        ('No', 'No'),
+        ('Don\'t know', 'Don\'t know'),
+        ('Broker gave money to the companion', 'Broker gave money to the companion'),
+        ('Companion gave money to the broker', 'Companion gave money to the broker'),
+    ]
+    money_changed_hands_broker_companion = forms.MultipleChoiceField(
+        choices=MONEY_CHANGED_HANDS_BROKER_COMPANION_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+
+    WHO_MEETING_AT_BORDER_CHOICES = [
+        ('Yes', 'Yes'),
+        ('No', 'No'),
+        ('Meeting Broker', 'Meeting Broker'),
+        ('Meeting Companion', 'Meeting Companion'),
+    ]
+    who_meeting_at_border = forms.MultipleChoiceField(
+        choices=WHO_MEETING_AT_BORDER_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=True
+    )
+
+    victim_knew_details_about_destination = forms.MultipleChoiceField(
+        choices=BOOLEAN_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=True
+    )
+
+    other_involved_person_in_india = forms.MultipleChoiceField(
+        choices=BOOLEAN_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+
+    other_involved_husband_trafficker = forms.MultipleChoiceField(
+        choices=BOOLEAN_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+
+    other_involved_someone_met_along_the_way = forms.MultipleChoiceField(
+        choices=BOOLEAN_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+
+    other_involved_someone_involved_in_trafficking = forms.MultipleChoiceField(
+        choices=BOOLEAN_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+
+    other_involved_place_involved_in_trafficking = forms.MultipleChoiceField(
+        choices=BOOLEAN_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+
+    victim_has_worked_in_sex_industry = forms.MultipleChoiceField(
+        choices=BOOLEAN_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+
+    victim_place_worked_involved_sending_girls_overseas = forms.MultipleChoiceField(
+        choices=BOOLEAN_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+
+
+    AWARENESS_CHOICES = [
+        ('Had heard, but never knew how bad it was until I was intercepted by TH', 'Had heard, but never knew how bad it was until I was intercepted by TH'),
+        ('Knew how bad it was, but didn\'t think that was happening to her', 'Knew how bad it was, but didn\'t think that was happening to her'),
+        ('Had never heard about it', 'Had never heard about it'),
+    ]
+    awareness_before_interception = forms.MultipleChoiceField(
+        choices=AWARENESS_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=True
+    )
+
+    ATTITUDE_CHOICES = [
+        ('Yes, thankful to TH for saving her', 'Yes, thankful to TH for saving her'),
+        ('No, blames Tiny Hands for stopping her', 'No, blames Tiny Hands for stopping her'),
+        ('Doesn\'t know', 'Doesn\'t Know'),
+    ]
+    attitude_towards_tiny_hands = forms.MultipleChoiceField(
+        choices=AWARENESS_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=True
+    )
+
+    GOSPEL_HEARD_CHOICES = [
+        ('No, I have never heard', 'No, I have never heard'),
+        ('Has heard the name only', 'Has heard the name only'),
+        ('Had heard the gospel but never believed', 'Had heard the gospel but never believed'),
+        ('Was already a believer', 'Was already a believer'),
+    ]
+    victim_heard_gospel = forms.MultipleChoiceField(
+        choices=GOSPEL_HEARD_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=True
+    )
+
+    VICTIM_BELIEFS_NOW_CHOICES = [
+        ('Doesn\'t believe in Jesus', 'Doesn\'t believe in Jesus'),
+        ('Believes in Jesus, but doesn\'t plan to go to church', 'Believes in Jesus, but doesn\'t plan to go to church'),
+        ('Believes in Jesus and plans to go to church', 'Believes in Jesus and plans to go to church'),
+    ]
+    victim_beliefs_now = forms.MultipleChoiceField(
+        choices=VICTIM_BELIEFS_NOW_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+
+    guardian_knew_was_travelling_to_india = forms.MultipleChoiceField(
+        choices=BOOLEAN_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+
+    family_pressured_victim = forms.MultipleChoiceField(
+        choices=BOOLEAN_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+
+    family_will_try_sending_again = forms.MultipleChoiceField(
+        choices=BOOLEAN_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+
+    victim_feels_safe_at_home = forms.MultipleChoiceField(
+        choices=BOOLEAN_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+
+    victim_wants_to_go_home = forms.MultipleChoiceField(
+        choices=BOOLEAN_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+
+    VICTIM_ABUSE_CHOICES = [
+        ('Never', 'Never'),
+        ('Rarely / Minor', 'Rarely / Minor'),
+        ('Frequent / Severe', 'Frequent / Severe'),
+    ]
+    victim_home_had_sexual_abuse = forms.MultipleChoiceField(
+        choices=VICTIM_ABUSE_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+
+    victim_home_had_physical_abuse = forms.MultipleChoiceField(
+        choices=VICTIM_ABUSE_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+
+    victim_home_had_emotional_abuse = forms.MultipleChoiceField(
+        choices=VICTIM_ABUSE_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+
+    GUARDIAN_FREQUENCY_CHOICES = [
+        ('Never', 'Never'),
+        ('Occasionally', 'Occasionally'),
+        ('All the time', 'All the time'),
+    ]
+    victim_guardian_drinks_alcohol = forms.MultipleChoiceField(
+        choices=GUARDIAN_FREQUENCY_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+
+    victim_guardian_uses_drugs = forms.MultipleChoiceField(
+        choices=GUARDIAN_FREQUENCY_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+
+    ECONOMIC_SITUATION_CHOICES = [
+        ('Unable to meet basic needs', 'Unable to meet basic needs'),
+        ('Able to meet only basic needs, but it is very difficult', 'Able to meet only basic needs, but it is very difficult'),
+        ('Comfortably meet basic needs, and can afford to buy some non-essential goods/services', 'Comfortably meet basic needs, and can afford to buy some non-essential goods/services'),
+        ('Wealthy', 'Wealthy'),
+    ]
+    victim_family_economic_situation = forms.MultipleChoiceField(
+        choices=ECONOMIC_SITUATION_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+
+    victim_had_suicidal_thoughts = forms.MultipleChoiceField(
+        choices=BOOLEAN_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+
+    LEGAL_ACTION_CHOICES = [
+        ('No', 'No'),
+        ('FIR filed against', 'FIR filed against'),
+        ('DoFE complaint against', 'DoFE complaint against'),
+    ]
+    legal_action_against_traffickers = forms.MultipleChoiceField(
+        choices=LEGAL_ACTION_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=True
+    )
+
+    REASON_NO_LEGAL_CHOICES = [
+        ('No trafficking suspected', 'No trafficking suspected'),
+        ('Police say not enough information', 'Police say not enough information'),
+        ('Trafficker is victim\'s own people', 'Trafficker is victim\'s own people'),
+        ('She was going herself', 'She was going herself'),
+        ('Trafficker ran away', 'Trafficker ran away'),
+        ('Victim afraid of reputation', 'Victim afraid of reputation'),
+        ('Victim afraid for her safety', 'Victim afraid for her safety'),
+        ('Family afraid of reputation', 'Family afraid of reputation'),
+        ('Family afraid for her safety', 'Family afraid for her safety'),
+        ('Police bribed by trafficker', 'Police bribed by trafficker'),
+        ('Victim / family bribed by trafficker', 'Victim / family bribed by trafficker'),
+        ('Interference by powerful people', 'Interference by powerful people'),
+        ('Other', 'Other'),
+    ]
+    reason_no_legal = forms.MultipleChoiceField(
+        choices=REASON_NO_LEGAL_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+
+    INTERVIEWER_RECOMMENDATION_CHOICES = [
+        ('Plan to send the girl home to stay with her guardians', 'Plan to send the girl home to stay with her guardians'),
+        ('Plan to send the girl to stay with other relatives', 'Plan to send the girl to stay with other relatives'),
+        ('Tiny Hands needs to help her find another place to go', 'Tiny Hands needs to help her find another place to go'),
+    ]
+    interviewer_recommendation = forms.MultipleChoiceField(
+        choices=INTERVIEWER_RECOMMENDATION_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+
+    other_people_and_places_involved = forms.MultipleChoiceField(
+        choices=BOOLEAN_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
 
     # These are needed so we can set required=True
-    victim_recruited_in_village = forms.ChoiceField(choices=BOOLEAN_CHOICES, widget=forms.RadioSelect, required=True)
-    victim_stayed_somewhere_between = forms.ChoiceField(choices=BOOLEAN_CHOICES, widget=forms.RadioSelect, required=True)
-    victim_knew_details_about_destination = forms.ChoiceField(choices=BOOLEAN_CHOICES, widget=forms.RadioSelect, required=True)
 
     class Meta:
         model = VictimInterview
@@ -365,13 +1004,118 @@ class VictimInterviewForm(forms.ModelForm):
 
 
 class VictimInterviewPersonBoxForm(forms.ModelForm):
-    # This doesn't work with the extra_views CreateWithInlinesView sadly so we have to do it manually
-    #formfield_callback = make_choice_widgets_radio
+    WHO_IS_THIS_CHOICES = [
+        ('boss of...', 'boss of...'),
+        ('co-worker of...', 'co-worker of...'),
+        ('own relative of...', 'own relative of...'),
+    ]
+    who_is_this_relationship = forms.MultipleChoiceField(
+        choices=WHO_IS_THIS_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
 
-    gender = forms.ChoiceField(choices=VictimInterviewPersonBox.GENDER_CHOICES, widget=forms.RadioSelect, required=False)
-    physical_description = forms.ChoiceField(choices=VictimInterviewPersonBox.PHYSICAL_DESCRIPTION_CHOICES, widget=forms.RadioSelect, required=False)
-    occupation = forms.ChoiceField(choices=VictimInterviewPersonBox.OCCUPATION_CHOICES, widget=forms.RadioSelect, required=False)
-    political_party = forms.ChoiceField(choices=VictimInterviewPersonBox.POLITICAL_PARTY_CHOICES, widget=forms.RadioSelect, required=False)
+    WHO_IS_THIS_ROLE_CHOICES = [
+        ('Broker', 'Broker'),
+        ('Companion', 'Companion'),
+        ('India Trafficker', 'India Trafficker'),
+        ('Contact of Husband', 'Contact of Husband'),
+        ('Known Trafficker', 'Known Trafficker'),
+        ('Manpower', 'Manpower'),
+        ('Passport', 'Passport'),
+        ('Sex Industry', 'Sex Industry'),
+    ]
+    who_is_this_role = forms.MultipleChoiceField(
+        choices=WHO_IS_THIS_ROLE_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+
+    gender = forms.MultipleChoiceField(
+        choices=VictimInterviewPersonBox.GENDER_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+
+    PHYSICAL_DESCRIPTION_CHOICES = [
+        ('Kirat', 'Kirat'),
+        ('Sherpa', 'Sherpa'),
+        ('Madeshi', 'Madeshi'),
+        ('Pahadi', 'Pahadi'),
+        ('Newari', 'Newari'),
+    ]
+    physical_description = forms.MultipleChoiceField(
+        choices=PHYSICAL_DESCRIPTION_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+
+    OCCUPATION_CHOICES = [
+        ('None', 'None'),
+        ('Agent (taking girls to India)', 'Agent (taking girls to India)'),
+        ('Business owner', 'Business owner'),
+        ('Other', 'Other'),
+        ('Wage labor', 'Wage labor'),
+        ('Job in India', 'Job in India'),
+        ('Job in Gulf', 'Job in Gulf'),
+        ('Farmer', 'Farmer'),
+        ('Teacher', 'Teacher'),
+        ('Police', 'Police'),
+        ('Army', 'Army'),
+        ('Guard', 'Guard'),
+        ('Cook', 'Cook'),
+        ('Driver', 'Driver'),
+    ]
+    occupation = forms.MultipleChoiceField(
+        choices=OCCUPATION_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+
+    POLITICAL_PARTY_CHOICES = [
+        ('Congress', 'Congress'),
+        ('Maoist', 'Maoist'),
+        ('UMN', 'UMN'),
+        ('Forum', 'Forum'),
+        ('Tarai Madesh', 'Tarai Madesh'),
+        ('Shadbawona', 'Shadbawona'),
+        ('Raprapha Nepal Thruhat', 'Raprapha Nepal Thruhat'),
+        ('Nepal Janadikarik Forum', 'Nepal Janadikarik Forum'),
+        ('Loktantrak Party', 'Loktantrak Party'),
+        ('Don\'t Know', 'Don\'t Know'),
+        ('Other', 'Other'),
+    ]
+    political_party = forms.MultipleChoiceField(
+        choices=POLITICAL_PARTY_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+
+    INTERVIEWER_BELIEVES_CHOICES = [
+        ('Interviewer believes they have definitely trafficked many girls', 'Interviewer believes they have definitely trafficked many girls'),
+        ('Interviewer believes they have trafficked some girls', 'Interviewer believes they have trafficked some girls'),
+        ('Interviewer suspects they are a trafficker', 'Interviewer suspects they are a trafficker'),
+        ('Interviewer doesn\'t believe they are a trafficker', 'Interviewer doesn\'t believe they are a trafficker'),
+    ]
+    interviewer_believes = forms.MultipleChoiceField(
+        choices=INTERVIEWER_BELIEVES_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+
+    VICTIM_BELIEVES_CHOICES = [
+        ('Victim believes this location is definitely used to traffic many victims', 'Victim believes this location is definitely used to traffic many victims'),
+        ('Victim believes this location has been used repeatedly to traffic some victims', 'Victim believes this location has been used repeatedly to traffic some victims'),
+        ('Victim suspects this location has been used for trafficking', 'Victim suspects this location has been used for trafficking'),
+        ('Victim does not believe this location is used for trafficking', 'Victim does not believe this location is used for trafficking'),
+    ]
+    victim_believes = forms.MultipleChoiceField(
+        choices=VICTIM_BELIEVES_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+
+
     associated_with_place = forms.ChoiceField(widget=forms.RadioSelect, required=False)
 
     class Meta:

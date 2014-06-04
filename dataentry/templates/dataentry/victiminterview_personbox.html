@@ -7,46 +7,24 @@
         <div class="col-sm-5">
             <div class="red-border-right red-border-bottom inner smaller">
                 <h2>Who is this?</h2>
-                <div class="checkbox-group">
-                    {{ pb_form.who_is_this_boss_of }} {{ pb_form.who_is_this_boss_of.label_tag }}
-                </div>
-                <div class="checkbox-group">
-                    {{ pb_form.who_is_this_coworker_of }} {{ pb_form.who_is_this_coworker_of.label_tag }}
-                </div>
-                <div class="checkbox-group">
-                    {{ pb_form.who_is_this_own_relative_of }} {{ pb_form.who_is_this_own_relative_of.label_tag }}
-                </div>
+                {% for choice in pb_form.who_is_this_relationship %}
+                    <div class="checkbox-group">{{ choice }}</div>
+                {% endfor %}
+
             </div>
             <div class="red-border-right inner">
-                <div class="checkbox-group">
-                    {{ pb_form.who_is_this_broker }} {{ pb_form.who_is_this_broker.label_tag }}
-                </div>
-                <div class="checkbox-group">
-                    {{ pb_form.who_is_this_companion }} {{ pb_form.who_is_this_companion.label_tag }}
-                </div>
+
+                {% for choice in pb_form.who_is_this_role|slice:":2" %}
+                    <div class="checkbox-group">{{ choice }}</div>
+                {% endfor %}
             </div>
         </div>
         <div class="col-sm-7">
             <div class="inner">
                 <div class="person-box-number">PB{{ counter }}</div>
-                <div class="checkbox-group">
-                    {{ pb_form.who_is_this_india_trafficker }} {{ pb_form.who_is_this_india_trafficker.label_tag }}
-                </div>
-                <div class="checkbox-group">
-                    {{ pb_form.who_is_this_contact_of_husband }} {{ pb_form.who_is_this_contact_of_husband.label_tag }}
-                </div>
-                <div class="checkbox-group">
-                    {{ pb_form.who_is_this_known_trafficker }} {{ pb_form.who_is_this_known_trafficker.label_tag }}
-                </div>
-                <div class="checkbox-group">
-                    {{ pb_form.who_is_this_manpower }} {{ pb_form.who_is_this_manpower.label_tag }}
-                </div>
-                <div class="checkbox-group">
-                    {{ pb_form.who_is_this_passport }} {{ pb_form.who_is_this_passport.label_tag }}
-                </div>
-                <div class="checkbox-group">
-                    {{ pb_form.who_is_this_sex_industry }} {{ pb_form.who_is_this_sex_industry.label_tag }}
-                </div>
+                {% for choice in pb_form.who_is_this_role|slice:"2:" %}
+                    <div class="checkbox-group">{{ choice }}</div>
+                {% endfor %}
             </div>
         </div>
     </div>
@@ -54,7 +32,7 @@
     <div class="person-box row">
         <label class="blending-into-input-label">Name</label>
 
-        <div class="inline-radio-group">
+        <div class="inline-checkbox-group">
             {{ pb_form.gender.label_tag }}
             {% for choice in pb_form.gender %}
                 {{ choice }}
@@ -104,9 +82,7 @@
     <div class="person-box row">
         <h2>Physical Description</h2>
         {% for choice in pb_form.physical_description %}
-            <div class="inline-radio-group">
-                {{ choice }}
-            </div>
+            <div class="inline-checkbox-group">{{ choice }}</div>
         {% endfor %}
     </div>
 
@@ -117,12 +93,12 @@
 
     <div class="person-box row">
         <h2>What is this person's occupation?</h2>
-        <div class="inline-radio-group">{{ pb_form.occupation.0 }} {{ pb_form.occupation.0.label_tag }}</div>
+        <div class="inline-checkbox-group">{{ pb_form.occupation.0 }} {{ pb_form.occupation.0.label_tag }}</div>
     </div>
     <div class="person-box row">
         <div class="col-sm-4" style="width: 40%">
             {% for choice in pb_form.occupation|slice:"1:3" %}
-                <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                <div class="checkbox-group">{{ choice }} {{ choice.label_tag }}</div>
             {% endfor %}
             <div class="label-inside-field">
                 {{ pb_form.occupation.3 }}
@@ -132,34 +108,34 @@
         </div>
         <div class="col-sm-4">
             {% for choice in pb_form.occupation|slice:"4:9" %}
-                <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                <div class="checkbox-group">{{ choice }} {{ choice.label_tag }}</div>
             {% endfor %}
         </div>
         <div class="col-sm-4" style="width: 25%">
             {% for choice in pb_form.occupation|slice:"9:14" %}
-                <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                <div class="checkbox-group">{{ choice }} {{ choice.label_tag }}</div>
             {% endfor %}
         </div>
     </div>
 
     <div class="person-box row">
         <h2>Member of a political Party?</h2>
-        <div class="inline-radio-group">{{ pb_form.political_party.0 }} {{ pb_form.political_party.0.label_tag }}</div>
+        <div class="inline-checkbox-group">{{ pb_form.political_party.0 }} {{ pb_form.political_party.0.label_tag }}</div>
     </div>
     <div class="person-box row">
         <div class="col-sm-4" style="width: 39%">
             {% for choice in pb_form.political_party|slice:"1:6" %}
-                <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                <div class="checkbox-group">{{ choice }} {{ choice.label_tag }}</div>
             {% endfor %}
         </div>
         <div class="col-sm-8" style="width: 60%">
             {% for choice in pb_form.political_party|slice:"6:9" %}
-                <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                <div class="checkbox-group">{{ choice }} {{ choice.label_tag }}</div>
             {% endfor %}
 
             <label class="blending-into-input-label">{{ pb_form.political_party.10 }} {{ pb_form.political_party.10.label_tag }}</label>
 
-            <div class="inline-radio-group">
+            <div class="inline-checkbox-group">
                 {{ pb_form.political_party.9 }}
                 {{ pb_form.political_party.9.label_tag }}
             </div>
@@ -177,22 +153,16 @@
         <h2 style="margin-left: 40px">Which do you believe about him?</h2>
         <div class="clearfix">
             <div class="pull-left interviewer-believes-box">
-                {{ pb_form.interviewer_believes_has_trafficked_many_girls }}
-                <br/>
-                {{ pb_form.interviewer_believes_has_trafficked_some_girls }}
-                <br/>
-                {{ pb_form.interviewer_believes_is_trafficker }}
-                <br/>
-                {{ pb_form.interviewer_believes_is_not_trafficker }}
+                {% for choice in pb_form.interviewer_believes %}
+                    {{ choice }}
+                    <br/>
+                {% endfor %}
             </div>
             <div class="pull-right victim-believes-box">
-                {{ pb_form.victim_believes_has_trafficked_many_girls }}
-                <br/>
-                {{ pb_form.victim_believes_has_trafficked_some_girls }}
-                <br/>
-                {{ pb_form.victim_believes_is_trafficker }}
-                <br/>
-                {{ pb_form.victim_believes_is_not_trafficker }}
+                {% for choice in pb_form.victim_believes %}
+                    {{ choice }}
+                    <br/>
+                {% endfor %}
             </div>
             <div class="text-center">
                 Definitely trafficked many girls
@@ -209,7 +179,7 @@
     <div class="person-box row">
         <h2>Is this person associated with any of the places below?</h2>
         {% for choice in pb_form.associated_with_place %}
-            <div class="inline-radio-group">
+            <div class="inline-checkbox-group">
                 {{ choice }}
             </div>
         {% endfor %}

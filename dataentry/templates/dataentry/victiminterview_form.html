@@ -58,7 +58,7 @@
                     <tbody>
                         <tr>
                             <td>
-                                {{ form.vif_number.label_tag }}
+                                {{ form.vif_number.label_tag }}<span class="required">*</span>
                             </td>
                             <td>
                                 <div style="width: 100px">
@@ -83,7 +83,7 @@
 
                         <tr>
                             <td>
-                                <label>Date/<br/>Time</label>
+                                <label>Date/<br/>Time<span class="required">*</span></label>
                             </td>
                             <td>
                                 <div style="width: 100px">
@@ -111,7 +111,7 @@
         <div class="row">
             <div class="clearfix mbs">
                 <label>
-                    Was statement read to the participant before beginning the interview?
+                    Was statement read to the participant before beginning the interview?<span class="required">*</span>
                     <br/>
                     {{ form.statement_read_before_beginning|attr:"data-placement: left" }}
                     Check the box if this question on form is signed
@@ -137,7 +137,7 @@
                         <div class="inline-radio-group">
                             <span class="section-number label-like">1.2</span>
                             <label for="{{ form.victim_gender.auto_id }}">
-                                Gender
+                                Gender<span class="required">*</span>
                             </label>
                             {% for choice in form.victim_gender %}
                                 {{ choice }}
@@ -148,7 +148,7 @@
                     <label class="blending-into-input-label"
                            for="{{ form.victim_name.auto_id }}">
                         <span class="section-number">1.1</span>
-                        {{ form.victim_name.label }}
+                        {{ form.victim_name.label }}<span class="required">*</span>
                     </label>
 
                     {{ form.victim_name|attr:"style: padding: 4px"|attr:"data-placement: left" }}
@@ -214,17 +214,17 @@
                 <div class="black-box clearfix">
                     <div class="col-sm-4">
                         {% for choice in form.victim_caste|slice:":3" %}
-                            <div class="radio-group">{{ choice }}  {{ choice.label_tag }}</div>
+                            <div class="checkbox-group">{{ choice }}  {{ choice.label_tag }}</div>
                         {% endfor %}
                     </div>
                     <div class="col-sm-4">
                         {% for choice in form.victim_caste|slice:"3:6" %}
-                            <div class="radio-group">{{ choice }}  {{ choice.label_tag }}</div>
+                            <div class="checkbox-group">{{ choice }}  {{ choice.label_tag }}</div>
                         {% endfor %}
                     </div>
                     <div class="col-sm-4">
                         {% for choice in form.victim_caste|slice:"6:9" %}
-                            <div class="radio-group">{{ choice }}  {{ choice.label_tag }}</div>
+                            <div class="checkbox-group">{{ choice }}  {{ choice.label_tag }}</div>
                         {% endfor %}
                     </div>
 
@@ -233,8 +233,8 @@
                         </label>
                         {{ form.victim_caste_other_value|add_class:"pull-right"|attr:"style:width: 140px; clear:right" }}
 
-                    <div class="radio-group">{{ form.victim_caste.9 }}  {{ form.victim_caste.9.label_tag }}</div>
-                    <div class="radio-group">{{ form.victim_caste.10 }}  {{ form.victim_caste.10.label_tag }}</div>
+                    <div class="checkbox-group">{{ form.victim_caste.9 }}  {{ form.victim_caste.9.label_tag }}</div>
+                    <div class="checkbox-group">{{ form.victim_caste.10 }}  {{ form.victim_caste.10.label_tag }}</div>
                 </div>
 
                 <div class="black-box clearfix">
@@ -243,15 +243,15 @@
                 <div class="black-box clearfix">
                     <div class="col-sm-6">
                         {% for choice in form.victim_occupation|slice:":7" %}
-                            <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                            <div class="checkbox-group">{{ choice }} {{ choice.label_tag }}</div>
                         {% endfor %}
                     </div>
                     <div class="col-sm-6">
                         {% for choice in form.victim_occupation|slice:"7:12" %}
-                            <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                            <div class="checkbox-group">{{ choice }} {{ choice.label_tag }}</div>
                         {% endfor %}
 
-                        <div class="label-inside-field inline-radio-group">
+                        <div class="label-inside-field inline-checkbox-group">
                             {{ form.victim_occupation.12 }}
                             {{ form.victim_occupation.12.label }}
                             {{ form.victim_occupation_other_value }}
@@ -264,12 +264,12 @@
                 <div class="black-box clearfix">
                     <div class="col-sm-6 right-col-border">
                         {% for choice in form.victim_marital_status|slice:":4" %}
-                            <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                            <div class="checkbox-group">{{ choice }} {{ choice.label_tag }}</div>
                         {% endfor %}
                     </div>
                     <div class="col-sm-6">
                         {% for choice in form.victim_marital_status|slice:"4:" %}
-                            <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                            <div class="checkbox-group">{{ choice }} {{ choice.label_tag }}</div>
                         {% endfor %}
                     </div>
                 </div>
@@ -280,19 +280,16 @@
                 </div>
                 <div class="black-box clearfix">
                     <div class="col-sm-6 right-col-border">
-                        <div class="checkbox-group">{{ form.victim_lives_with_own_parents }}     {{ form.victim_lives_with_own_parents.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.victim_lives_with_husband }}         {{ form.victim_lives_with_husband.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.victim_lives_with_husbands_family }} {{ form.victim_lives_with_husbands_family.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.victim_lives_with_friends }}         {{ form.victim_lives_with_friends.label_tag }}</div>
+                        {% for choice in form.victim_lives_with|slice:":4" %}
+                            {{ choice }}
+                        {% endfor %}
                     </div>
                     <div class="col-sm-6">
-                        <div class="checkbox-group">{{ form.victim_lives_with_alone }}           {{ form.victim_lives_with_alone.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.victim_lives_with_other_relative }}  {{ form.victim_lives_with_other_relative.label_tag }}</div>
+                        {% for choice in form.victim_lives_with|slice:"4:6" %}
+                            {{ choice }}
+                        {% endfor %}
                         <div class="label-inside-field inline-checkbox-group">
-                            <label for="{{ form.victim_lives_with_other.auto_id }}">
-                                {{ form.victim_lives_with_other }}
-                                {{ form.victim_lives_with_other.label }}
-                            </label>
+                            {{ form.victim_lives_with.6 }}
                             {{ form.victim_lives_with_other_value }}
                         </div>
                     </div>
@@ -315,12 +312,12 @@
                 <div class="black-box clearfix">
                     <div class="col-sm-6 right-col-border">
                         {% for choice in form.victim_primary_guardian|slice:":3" %}
-                            <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                            <div class="checkbox-group">{{ choice }} {{ choice.label_tag }}</div>
                         {% endfor %}
                     </div>
                     <div class="col-sm-6">
                         {% for choice in form.victim_primary_guardian|slice:"3:" %}
-                            <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                            <div class="checkbox-group">{{ choice }} {{ choice.label_tag }}</div>
                         {% endfor %}
                     </div>
                 </div>
@@ -356,12 +353,12 @@
                 <div class="black-box clearfix">
                     <div class="col-sm-4">
                         {% for choice in form.victim_parents_marital_status|slice:":3" %}
-                            <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                            <div class="checkbox-group">{{ choice }} {{ choice.label_tag }}</div>
                         {% endfor %}
                     </div>
                     <div class="col-sm-8">
                         {% for choice in form.victim_parents_marital_status|slice:"3:" %}
-                            <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                            <div class="checkbox-group">{{ choice }} {{ choice.label_tag }}</div>
                         {% endfor %}
                     </div>
                 </div>
@@ -372,12 +369,12 @@
                 <div class="black-box clearfix">
                     <div class="col-sm-6 right-col-border">
                         {% for choice in form.victim_education_level|slice:":4" %}
-                            <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                            <div class="checkbox-group">{{ choice }} {{ choice.label_tag }}</div>
                         {% endfor %}
                     </div>
                     <div class="col-sm-6">
                         {% for choice in form.victim_education_level|slice:"4:" %}
-                            <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                            <div class="checkbox-group">{{ choice }} {{ choice.label_tag }}</div>
                         {% endfor %}
                     </div>
                 </div>
@@ -388,7 +385,7 @@
                         <span class="section-number">1.16</span>
                         Is the victim literate?
                     </h2>
-                    <div class="inline-radio-group">
+                    <div class="inline-checkbox-group">
                         {% for choice in form.victim_is_literate %}
                             {{ choice }} {{ choice.label_tag }}
                         {% endfor %}
@@ -401,128 +398,105 @@
                     <h1>2. Migration Plans</h1>
                 </div>
                 <div class="black-box clearfix">
-                    <h2><span class="section-number">2.1</span> What was the main thing which you were going abroad to do?</h2>
+                    <h2><span class="section-number">2.1</span> What was the main thing which you were going abroad to do?<span class="required">*</span></h2>
                 </div>
                 <div class="black-box clearfix">
-                    <div class="col-sm-7" style="border-right: 2px solid black">
-                        <div class="checkbox-group">{{ form.migration_plans_education }}              {{ form.migration_plans_education.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.migration_plans_travel_tour }}            {{ form.migration_plans_travel_tour.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.migration_plans_shopping }}               {{ form.migration_plans_shopping.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.migration_plans_eloping }}                {{ form.migration_plans_eloping.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.migration_plans_arranged_marriage }}      {{ form.migration_plans_arranged_marriage.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.migration_plans_meet_own_family }}        {{ form.migration_plans_meet_own_family.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.migration_plans_visit_brokers_home }}     {{ form.migration_plans_visit_brokers_home.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.migration_plans_medical_treatment }}      {{ form.migration_plans_medical_treatment.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.migration_plans_job_broker_did_not_say }} {{ form.migration_plans_job_broker_did_not_say.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.migration_plans_job_baby_care }}          {{ form.migration_plans_job_baby_care.label_tag }}</div>
+
+                    <div class="col-sm-7 right-col-border">
+                        {% for choice in form.migration_plans|slice:":10" %}
+                            {{ choice }}
+                        {% endfor %}
                     </div>
                     <div class="col-sm-5">
-                        <div class="checkbox-group">{{ form.migration_plans_job_factory }}            {{ form.migration_plans_job_factory.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.migration_plans_job_hotel }}              {{ form.migration_plans_job_hotel.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.migration_plans_job_shop }}               {{ form.migration_plans_job_shop.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.migration_plans_job_laborer }}            {{ form.migration_plans_job_laborer.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.migration_plans_job_brothel }}            {{ form.migration_plans_job_brothel.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.migration_plans_job_household }}          {{ form.migration_plans_job_household.label_tag }}</div>
-
+                        {% for choice in form.migration_plans|slice:"10:16" %}
+                            {{ choice }}
+                        {% endfor %}
                         <div class="label-inside-field inline-checkbox-group">
-                            <label for="{{ form.migration_plans_job_other.auto_id }}">
-                                {{ form.migration_plans_job_other }}
-                                {{ form.migration_plans_job_other.label }}
-                            </label>
-                            {{ form.migration_plans_job_value }}
+                            {{ form.migration_plans.16 }}
+                            {{ form.migration_plans_job_other_value }}
                         </div>
-
                         <div class="label-inside-field inline-checkbox-group">
-                            <label for="{{ form.migration_plans_other.auto_id }}">
-                                {{ form.migration_plans_other }}
-                                {{ form.migration_plans_other.label }}
-                            </label>
+                            {{ form.migration_plans.17 }}
                             {{ form.migration_plans_other_value }}
                         </div>
                     </div>
                 </div>
 
                 <div class="black-box clearfix">
-                    <h2><span class="section-number">2.2</span> Primary motive to go abroad?</h2>
+                    <h2><span class="section-number">2.2</span> Primary motive to go abroad?<span class="required">*</span></h2>
                 </div>
                 <div class="black-box clearfix">
-                    <div class="col-sm-6" style="border-right: 2px solid black">
-                        <div class="checkbox-group">{{ form.primary_motivation_support_myself }} {{ form.primary_motivation_support_myself.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.primary_motivation_support_family }} {{ form.primary_motivation_support_family.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.primary_motivation_personal_debt }} {{ form.primary_motivation_personal_debt.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.primary_motivation_family_debt }} {{ form.primary_motivation_family_debt.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.primary_motivation_love_marriage }} {{ form.primary_motivation_love_marriage.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.primary_motivation_bad_home_marriage }} {{ form.primary_motivation_bad_home_marriage.label_tag }}</div>
+                    <div class="col-sm-6 right-col-border">
+                        {% for choice in form.primary_motivation|slice:":6" %}
+                            {{ choice }}
+                        {% endfor %}
                     </div>
                     <div class="col-sm-6">
-                        <div class="checkbox-group">{{ form.primary_motivation_get_an_education }} {{ form.primary_motivation_get_an_education.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.primary_motivation_tour_travel }} {{ form.primary_motivation_tour_travel.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.primary_motivation_didnt_know }} {{ form.primary_motivation_didnt_know.label_tag }}</div>
+                        {% for choice in form.primary_motivation|slice:"6:9" %}
+                            {{ choice }}
+                        {% endfor %}
 
                         <div class="label-inside-field inline-checkbox-group">
-                            <label for="{{ form.primary_motivation_other.auto_id }}">
-                                {{ form.primary_motivation_other }}
-                                {{ form.primary_motivation_other.label }}
-                            </label>
+                            {{ form.primary_motivation.9 }}
                             {{ form.primary_motivation_other_value }}
                         </div>
                     </div>
                 </div>
 
                 <div class="black-box clearfix">
-                    <h2><span class="section-number">2.3</span> Where were you going?</h2>
+                    <h2><span class="section-number">2.3</span> Where were you going?<span class="required">*</span></h2>
                 </div>
                 <div class="black-box clearfix">
                     <div class="col-sm-6 right-col-border text-center">
-                        <div class="checkbox-group">{{ form.victim_where_going_region.0 }} {{ form.victim_where_going_region.0.label_tag }}</div>
+                        <div class="checkbox-group">{{ form.victim_where_going.0 }} {{ form.victim_where_going.0.label_tag }}</div>
                     </div>
                     <div class="col-sm-6 text-center">
-                        <div class="checkbox-group">{{ form.victim_where_going_region.1 }} {{ form.victim_where_going_region.1.label_tag }}</div>
+                        <div class="checkbox-group">{{ form.victim_where_going.1 }} {{ form.victim_where_going.1.label_tag }}</div>
                     </div>
                 </div>
                 <div class="black-box clearfix">
                     <div class="col-sm-6 right-col-border">
                         <div class="col-sm-6" style="padding: 0">
-                            {% for choice in form.victim_where_going|slice:":4" %}
-                                <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                            {% for choice in form.victim_where_going|slice:"2:6" %}
+                                <div class="checkbox-group">{{ choice }} {{ choice.label_tag }}</div>
                             {% endfor %}
                         </div>
                         <div class="col-sm-6" style="padding: 0">
-                            {% for choice in form.victim_where_going|slice:"4:8" %}
-                                <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                            {% for choice in form.victim_where_going|slice:"6:10" %}
+                                <div class="checkbox-group">{{ choice }} {{ choice.label_tag }}</div>
                             {% endfor %}
                         </div>
-                        <div class="radio-group">{{ form.victim_where_going.8 }} {{ form.victim_where_going.8.label_tag }}</div>
+                        <div class="checkbox-group">{{ form.victim_where_going.10 }} {{ form.victim_where_going.10.label_tag }}</div>
 
-                        <div class="label-inside-field inline-radio-group">
-                            {{ form.victim_where_going.9 }}
-                            {{ form.victim_where_going.9.label }}
+                        <div class="label-inside-field inline-checkbox-group">
+                            {{ form.victim_where_going.11 }}
+                            {{ form.victim_where_going.11.label }}
                             {{ form.victim_where_going_other_india_value }}
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="col-sm-6" style="padding: 0">
-                            {% for choice in form.victim_where_going|slice:"10:12" %}
-                                <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
-                            {% endfor %}
-                        </div>
-                        <div class="col-sm-6" style="padding: 0">
                             {% for choice in form.victim_where_going|slice:"12:14" %}
-                                <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                                <div class="checkbox-group">{{ choice }} {{ choice.label_tag }}</div>
                             {% endfor %}
                         </div>
-                        <div class="radio-group">{{ form.victim_where_going.14 }} {{ form.victim_where_going.14.label_tag }}</div>
                         <div class="col-sm-6" style="padding: 0">
-                            <div class="radio-group">{{ form.victim_where_going.15 }} {{ form.victim_where_going.15.label_tag }}</div>
+                            {% for choice in form.victim_where_going|slice:"14:16" %}
+                                <div class="checkbox-group">{{ choice }} {{ choice.label_tag }}</div>
+                            {% endfor %}
+                        </div>
+                        <div class="checkbox-group">{{ form.victim_where_going.16 }} {{ form.victim_where_going.16.label_tag }}</div>
+                        <div class="col-sm-6" style="padding: 0">
+                            <div class="checkbox-group">{{ form.victim_where_going.17 }} {{ form.victim_where_going.17.label_tag }}</div>
                         </div>
                         <div class="col-sm-6" style="padding: 0">
-                            <div class="radio-group">{{ form.victim_where_going.16 }} {{ form.victim_where_going.16.label_tag }}</div>
+                            <div class="checkbox-group">{{ form.victim_where_going.18 }} {{ form.victim_where_going.18.label_tag }}</div>
                         </div>
-                        <div class="radio-group">{{ form.victim_where_going.17 }} {{ form.victim_where_going.17.label_tag }}</div>
+                        <div class="checkbox-group">{{ form.victim_where_going.19 }} {{ form.victim_where_going.19.label_tag }}</div>
 
-                        <div class="label-inside-field inline-radio-group">
-                            {{ form.victim_where_going.18 }}
-                            {{ form.victim_where_going.18.label }}
+                        <div class="label-inside-field inline-checkbox-group">
+                            {{ form.victim_where_going.20 }}
+                            {{ form.victim_where_going.20.label }}
                             {{ form.victim_where_going_other_gulf_value }}
                         </div>
                     </div>
@@ -539,9 +513,9 @@
                     <h1>3. Recruitment Process</h1>
                 </div>
                 <div class="black-box padded-box">
-                    <div class="radio-group pull-right" style="margin-right: 4px">{{ form.manpower_involved.0 }} {{ form.manpower_involved.0.label_tag }}</div>
+                    <div class="checkbox-group pull-right" style="margin-right: 4px">{{ form.manpower_involved.0 }} {{ form.manpower_involved.0.label_tag }}</div>
                     <h2><span class="section-number">3.1</span> Was a manpower involved?</h2>
-                    <div class="radio-group" style="margin-top: 10px">
+                    <div class="checkbox-group" style="margin-top: 10px">
                         {{ form.manpower_involved.1 }}
                         {{ form.manpower_involved.1.label_tag }}
                         <span class="blue-arrow">LB - Manpower</span>
@@ -552,16 +526,14 @@
                 <div class="black-box padded-box">
                     <h2>
                         <span class="section-number">3.2</span>
-                        Did someone recruit you in your village and persuade you go abroad?
+                        Did someone recruit you in your village and persuade you go abroad?<span class="required">*</span>
                     </h2>
-                    <div class="radio-group" style="margin-top: 10px">
+                    <div class="checkbox-group" style="margin-top: 10px">
                         {{ form.victim_recruited_in_village.0 }}
-                        {{ form.victim_recruited_in_village.0.label_tag }}
                         <small>(Skip the rest of this section)</small>
                     </div>
-                    <div class="radio-group" style="margin-top: 10px">
+                    <div class="checkbox-group" style="margin-top: 10px">
                         {{ form.victim_recruited_in_village.1 }}
-                        {{ form.victim_recruited_in_village.1.label_tag }}
                         <span class="red-arrow">PB - for each Broker</span>
                     </div>
                 </div>
@@ -572,19 +544,19 @@
                 <div class="black-box clearfix">
                     <div class="col-sm-4">
                         {% for choice in form.brokers_relation_to_victim|slice:":6" %}
-                            <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                            <div class="checkbox-group">{{ choice }} {{ choice.label_tag }}</div>
                         {% endfor %}
                     </div>
                     <div class="col-sm-4">
                         {% for choice in form.brokers_relation_to_victim|slice:"6:11" %}
-                            <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                            <div class="checkbox-group">{{ choice }} {{ choice.label_tag }}</div>
                         {% endfor %}
                     </div>
                     <div class="col-sm-4">
                         {% for choice in form.brokers_relation_to_victim|slice:"11:14" %}
-                            <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                            <div class="checkbox-group">{{ choice }} {{ choice.label_tag }}</div>
                         {% endfor %}
-                        <div class="label-inside-field inline-radio-group">
+                        <div class="label-inside-field inline-checkbox-group">
                             {{ form.brokers_relation_to_victim.14 }}
                             {{ form.brokers_relation_to_victim.14.label }}
                             {{ form.brokers_relation_to_victim_other_value }}
@@ -613,14 +585,14 @@
                 <div class="black-box clearfix">
                     <div class="col-sm-6">
                         {% for choice in form.victim_how_met_broker|slice:":7" %}
-                            <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                            <div class="checkbox-group">{{ choice }} {{ choice.label_tag }}</div>
                         {% endfor %}
                     </div>
                     <div class="col-sm-6">
                         {% for choice in form.victim_how_met_broker|slice:"7:12" %}
-                            <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                            <div class="checkbox-group">{{ choice }} {{ choice.label_tag }}</div>
                         {% endfor %}
-                        <div class="label-inside-field inline-radio-group">
+                        <div class="label-inside-field inline-checkbox-group">
                             {{ form.victim_how_met_broker.12 }}
                             {{ form.victim_how_met_broker.12.label }}
                             {{ form.victim_how_met_broker_other_value|attr:"style: padding-top: 20px; height: 80px" }}
@@ -659,7 +631,7 @@
                     <h2><span class="section-number">3.8</span> How was the expense for taking you abroad paid for?</h2>
                     <div style="padding: 6px">
                     {% for choice in form.victim_how_expense_was_paid|slice:":2" %}
-                        <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                        <div class="checkbox-group">{{ choice }} {{ choice.label_tag }}</div>
                     {% endfor %}
                     </div>
 
@@ -671,7 +643,7 @@
                         </div>
                         <div style="width: 260px">
                             {% for choice in form.victim_how_expense_was_paid|slice:"2:" %}
-                                <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                                <div class="checkbox-group">{{ choice }} {{ choice.label_tag }}</div>
                             {% endfor %}
                         </div>
                     </div>
@@ -679,7 +651,7 @@
 
                 <div class="black-box padded-box clearfix">
                     <h2><span class="section-number">3.9</span> If you were going for a job, does the broker work in the same job in the same place?</h2>
-                    <div class="inline-radio-group">
+                    <div class="inline-checkbox-group">
                         {% for choice in form.broker_works_in_job_location %}
                             {{ choice }} {{ choice.label_tag }}
                         {% endfor %}
@@ -708,25 +680,25 @@
                     <h2><span class="section-number">4.1</span> 1st time crossing border?</h2>
                     <div class="pull-right" style="width: 80px">
                         {% for choice in form.victim_first_time_crossing_border reversed %}
-                            <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                            <div class="checkbox-group">{{ choice }} {{ choice.label_tag }}</div>
                         {% endfor %}
                     </div>
                 </div>
 
                 <div class="black-box clearfix">
-                    <h2><span class="section-number">4.2</span> Primary means of travel?</h2>
+                    <h2><span class="section-number">4.2</span> Primary means of travel?<span class="required">*</span></h2>
                     <div class="col-sm-4">
                         {% for choice in form.victim_primary_means_of_travel|slice:":3" %}
-                            <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                            <div class="checkbox-group">{{ choice }} {{ choice.label_tag }}</div>
                         {% endfor %}
                     </div>
                     <div class="col-sm-4">
                         {% for choice in form.victim_primary_means_of_travel|slice:"3:6" %}
-                            <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                            <div class="checkbox-group">{{ choice }} {{ choice.label_tag }}</div>
                         {% endfor %}
                     </div>
                     <div class="col-sm-4">
-                        <div class="label-inside-field inline-radio-group">
+                        <div class="label-inside-field inline-checkbox-group">
                             {{ form.victim_primary_means_of_travel.6 }}
                             {{ form.victim_primary_means_of_travel.6.label }}
                             {{ form.victim_primary_means_of_travel_other_value|attr:"style: padding-top: 20px; height: 80px" }}
@@ -735,8 +707,8 @@
                 </div>
 
                 <div class="black-box padded-box">
-                    <h2><span class="section-number">4.3</span> Did you stay somewhere between your village and the border?</h2>
-                    <div class="inline-radio-group">
+                    <h2><span class="section-number">4.3</span> Did you stay somewhere between your village and the border?<span class="required">*</span></h2>
+                    <div class="inline-checkbox-group">
                         {% for choice in form.victim_stayed_somewhere_between %}
                             {{ choice }} {{ choice.label_tag }}
                         {% endfor %}
@@ -763,8 +735,8 @@
 
                 <div class="black-box">
                     <h2><span class="section-number">4.5</span> Was any attempt made to hide your presence there?</h2>
-                    <div class="inline-radio-group">{{ form.victim_was_hidden.0 }} {{ form.victim_was_hidden.0.label_tag }}</div>
-                    <div class="label-inside-field inline-radio-group">
+                    <div class="inline-checkbox-group">{{ form.victim_was_hidden.0 }} {{ form.victim_was_hidden.0.label_tag }}</div>
+                    <div class="label-inside-field inline-checkbox-group">
                         {{ form.victim_was_hidden.1 }}
                         <label style="{{ form.victim_was_hidden.auto_id }}">
                             {{ form.victim_was_hidden.1.label }}<br/>Explain
@@ -775,8 +747,8 @@
 
                 <div class="black-box">
                     <h2><span class="section-number">4.6</span> Were you free to go out?</h2>
-                    <div class="inline-radio-group">{{ form.victim_was_free_to_go_out.1 }} {{ form.victim_was_free_to_go_out.1.label_tag }}</div>
-                    <div class="label-inside-field inline-radio-group">
+                    <div class="inline-checkbox-group">{{ form.victim_was_free_to_go_out.1 }} {{ form.victim_was_free_to_go_out.1.label_tag }}</div>
+                    <div class="label-inside-field inline-checkbox-group">
                         {{ form.victim_was_free_to_go_out.0 }}
                         <label style="{{ form.victim_was_free_to_go_out.auto_id }}">
                             {{ form.victim_was_free_to_go_out.0.label }}<br/>Explain
@@ -799,14 +771,14 @@
                     <h2><span class="section-number">4.9</span> Was a passport made for you?</h2>
 
                     <div class="col-sm-6">
-                        <div class="checkbox-group">{{ form.passport_made_no_passport_made }}   {{ form.passport_made_no_passport_made.label_tag }}</div>
+                        <div class="checkbox-group">{{ form.passport_made.0 }}</div>
                     </div>
                     <div class="col-sm-6">
-                        <div class="checkbox-group">{{ form.passport_made_real_passport_made }} {{ form.passport_made_real_passport_made.label_tag }}</div>
+                        <div class="checkbox-group">{{ form.passport_made.1 }}</div>
                     </div>
-                    <div class="checkbox-group">{{ form.passport_made_false_name }}         {{ form.passport_made_false_name.label_tag }}</div>
-                    <div class="checkbox-group">{{ form.passport_made_false_info }}         {{ form.passport_made_false_info.label_tag }}</div>
-                    <div class="checkbox-group">{{ form.passport_made_was_fake }}           {{ form.passport_made_was_fake.label_tag }}</div>
+                    {% for choice in form.passport_made|slice:"2:" %}
+                        <div class="checkbox-group">{{ choice }}</div>
+                    {% endfor %}
 
                     <div class="text-center">
                         <span class="blue-arrow">LB - Passport</span>
@@ -816,7 +788,7 @@
 
                 <div class="black-box clearfix">
                     <h2><span class="section-number">4.10</span> Is your passport or a work permit with a broker?</h2>
-                    <div class="inline-radio-group">
+                    <div class="inline-checkbox-group">
                         {% for choice in form.victim_passport_with_broker %}
                             {{ choice }} {{ choice.label_tag }}
                         {% endfor %}
@@ -827,12 +799,9 @@
                     <div class="clearfix">
                         <div class="col-sm-7">
                             <h2><span class="section-number">4.11</span> Did these take place on the way?</h2>
-                            <div class="checkbox-group">{{ form.abuse_happened_sexual_harassment }}  {{ form.abuse_happened_sexual_harassment.label_tag }}</div>
-                            <div class="checkbox-group">{{ form.abuse_happened_sexual_abuse }}       {{ form.abuse_happened_sexual_abuse.label_tag }}</div>
-                            <div class="checkbox-group">{{ form.abuse_happened_physical_abuse }}     {{ form.abuse_happened_physical_abuse.label_tag }}</div>
-                            <div class="checkbox-group">{{ form.abuse_happened_threats }}            {{ form.abuse_happened_threats.label_tag }}</div>
-                            <div class="checkbox-group">{{ form.abuse_happened_denied_food }}        {{ form.abuse_happened_denied_food.label_tag }}</div>
-                            <div class="checkbox-group">{{ form.abuse_happened_forced_drugs }}       {{ form.abuse_happened_forced_drugs.label_tag }}</div>
+                            {% for choice in form.abuse_happened %}
+                            <div class="checkbox-group">{{ choice }}</div>
+                            {% endfor %}
                         </div>
                         <div class="col-sm-5">
                             <div class="label-inside-field">{{ form.abuse_happened_by_whom|attr:"rows:8" }}            {{ form.abuse_happened_by_whom.label_tag }}</div>
@@ -847,17 +816,17 @@
                         <span class="section-number">4.12</span>
                         Did you travel to the border with a companion who was appointed by the broker to take you across?
                     </h2>
-                    <div class="radio-group" style="margin-top: 10px">
+                    <div class="checkbox-group" style="margin-top: 10px">
                         {{ form.victim_traveled_with_broker_companion.0 }}
                         {{ form.victim_traveled_with_broker_companion.0.label_tag }}
                         <span class="red-arrow">PB - Companion</span>
                     </div>
-                    <div class="radio-group" style="margin-top: 10px">
+                    <div class="checkbox-group" style="margin-top: 10px">
                         {{ form.victim_traveled_with_broker_companion.1 }}
                         {{ form.victim_traveled_with_broker_companion.1.label_tag }}
                         <small>(Skip the rest of this section)</small>
                     </div>
-                    <div class="radio-group" style="margin-top: 10px">
+                    <div class="checkbox-group" style="margin-top: 10px">
                         {{ form.victim_traveled_with_broker_companion.2 }}
                         {{ form.victim_traveled_with_broker_companion.2.label_tag }}
                         <small>(Skip the rest of this section)</small>
@@ -880,7 +849,7 @@
                 <div class="black-box black-box-top padded-box clearfix">
                     <div class="pull-right" style="width: 80px">
                         {% for choice in form.companion_with_when_intercepted reversed %}
-                            <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                            <div class="checkbox-group">{{ choice }} {{ choice.label_tag }}</div>
                         {% endfor %}
                     </div>
                     <div style="width: 260px">
@@ -896,11 +865,11 @@
                         <span class="section-number">4.15</span>
                         If No, were you planning to<br/>meet him/her again in India?
                     </h2>
-                    <div class="inline-radio-group">
+                    <div class="inline-checkbox-group">
                         {{ form.planning_to_meet_companion_later.0 }}
                         {{ form.planning_to_meet_companion_later.0.label_tag }}
                     </div>
-                    <div class="radio-group" style="margin-top: 10px">
+                    <div class="checkbox-group" style="margin-top: 10px">
                         {{ form.planning_to_meet_companion_later.1 }}
                         {{ form.planning_to_meet_companion_later.1.label_tag }} - Where?
                         <span class="blue-arrow">LB - India Meet Point</span>
@@ -912,7 +881,7 @@
                         Did money change hands between broker and the companion?
                     </h2>
 
-                    <div class="inline-radio-group">
+                    <div class="inline-checkbox-group">
                     {% for choice in form.money_changed_hands_broker_companion %}
                         {{ choice }}  {{ choice.label_tag }}
                     {% endfor %}
@@ -925,14 +894,14 @@
                 <div class="black-box padded-box">
                     <h2>
                         <span class="section-number">5.1</span> 
-                        Did the broker / companion arrange someone to meet you after crossing the border?
+                        Did the broker / companion arrange someone to meet you after crossing the border?<span class="required">*</span>
                     </h2>
-                    <div class="inline-radio-group">
+                    <div class="inline-checkbox-group">
                         {% for choice in form.who_meeting_at_border|slice:":2" %}
                             {{ choice }} {{ choice.label_tag }}
                         {% endfor %}
                     </div>
-                    <div class="inline-radio-group">
+                    <div class="inline-checkbox-group">
                         {% for choice in form.who_meeting_at_border|slice:"2:" %}
                             {{ choice }} {{ choice.label_tag }}
                         {% endfor %}
@@ -942,9 +911,9 @@
                 <div class="black-box padded-box">
                     <h2>
                         <span class="section-number">5.2</span>
-                        Do you know any details about the place you were headed to in India?
+                        Do you know any details about the place you were headed to in India?<span class="required">*</span>
                     </h2>
-                    <div class="inline-radio-group">
+                    <div class="inline-checkbox-group">
                     {% for choice in form.victim_knew_details_about_destination %}
                         {{ choice }} {{ choice.label_tag }}
                     {% endfor %}
@@ -966,7 +935,7 @@
                     <div class="col-sm-5">
                         <br/>
                         {% for choice in form.other_involved_person_in_india reversed %}
-                            <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                            <div class="checkbox-group">{{ choice }} {{ choice.label_tag }}</div>
                         {% endfor %}
                         <span style="top: 16px; right: -10px" class="red-arrow fat-arrow">PB - Indian<br/>Trafficker</span>
                     </div>
@@ -978,7 +947,7 @@
                     </div>
                     <div class="col-sm-5" style="padding-top: 10px">
                         {% for choice in form.other_involved_husband_trafficker %}
-                            <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                            <div class="checkbox-group">{{ choice }} {{ choice.label_tag }}</div>
                         {% endfor %}
                         <span style="top: 0px; right: -10px" class="red-arrow fat-arrow">PB - Contact<br/>of Husband</span>
                     </div>
@@ -990,7 +959,7 @@
                     </div>
                     <div class="col-sm-5" style="padding-top: 24px">
                         {% for choice in form.other_involved_someone_met_along_the_way %}
-                            <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                            <div class="checkbox-group">{{ choice }} {{ choice.label_tag }}</div>
                         {% endfor %}
                         <span style="top: 0; right: -10px; height: 110px" class="red-arrow fat-arrow">PB - ______ <br/>of Recruiter<br/>or Companion</span>
                     </div>
@@ -1002,7 +971,7 @@
                     </div>
                     <div class="col-sm-5" style="padding-top: 42px">
                         {% for choice in form.other_involved_someone_involved_in_trafficking %}
-                            <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                            <div class="checkbox-group">{{ choice }} {{ choice.label_tag }}</div>
                         {% endfor %}
                         <span style="top: 30px; right: -10px" class="red-arrow fat-arrow">PB - Known<br/>Trafficker</span>
                     </div>
@@ -1014,7 +983,7 @@
                     </div>
                     <div class="col-sm-5" style="padding-top: 42px">
                         {% for choice in form.other_involved_place_involved_in_trafficking %}
-                            <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                            <div class="checkbox-group">{{ choice }} {{ choice.label_tag }}</div>
                         {% endfor %}
                         <span style="top: 30px; right: -10px" class="blue-arrow fat-arrow">LB - Known<br/>Location</span>
                     </div>
@@ -1022,7 +991,7 @@
 
                 <div class="black-box padded-box clearfix">
                     <h2><span class="section-number">5.4</span> Have you ever worked in the sex industry?</h2>
-                    <div class="inline-radio-group">
+                    <div class="inline-checkbox-group">
                     {% for choice in form.victim_has_worked_in_sex_industry %}
                         {{ choice }} {{ choice.label_tag }}
                     {% endfor %}
@@ -1031,7 +1000,7 @@
 
                 <div class="black-box padded-box clearfix">
                     <h2><span class="section-number">5.5</span> Was the place you worked involved in sending girls overseas?</h2>
-                    <div class="inline-radio-group">
+                    <div class="inline-checkbox-group">
                     {% for choice in form.victim_place_worked_involved_sending_girls_overseas %}
                         {{ choice }} {{ choice.label_tag }}
                     {% endfor %}
@@ -1042,6 +1011,7 @@
             </div>
         </div>
     </div>
+
     {{ inlines.0.management_form }}
     {{ inlines.1.management_form }}
 
@@ -1124,7 +1094,7 @@
                         Before you were intercepted, were you aware that girls going abroad are often deceived and end up in very exploitative situations?
                     </h2>
                     {% for choice in form.awareness_before_interception %}
-                        <div class="radio-group"> {{ choice }} {{ choice.label_tag }}</div>
+                        <div class="checkbox-group"> {{ choice }} {{ choice.label_tag }}</div>
                     {% endfor %}
                 </div>
 
@@ -1134,7 +1104,7 @@
                         Do you think you would've been trafficked if you hadn't been intercepted by Tiny Hands?
                     </h2>
                     {% for choice in form.attitude_towards_tiny_hands %}
-                        <div class="radio-group"> {{ choice }} {{ choice.label_tag }}</div>
+                        <div class="checkbox-group"> {{ choice }} {{ choice.label_tag }}</div>
                     {% endfor %}
                 </div>
 
@@ -1144,7 +1114,7 @@
                         Had you heard about the gospel of Jesus before coming to TH?
                     </h2>
                     {% for choice in form.victim_heard_gospel %}
-                        <div class="radio-group"> {{ choice }} {{ choice.label_tag }}</div>
+                        <div class="checkbox-group"> {{ choice }} {{ choice.label_tag }}</div>
                     {% endfor %}
                 </div>
 
@@ -1154,7 +1124,7 @@
                         If she wasn't already a believer, what does she believe now?
                     </h2>
                     {% for choice in form.victim_beliefs_now %}
-                        <div class="radio-group"> {{ choice }} {{ choice.label_tag }}</div>
+                        <div class="checkbox-group"> {{ choice }} {{ choice.label_tag }}</div>
                     {% endfor %}
                 </div>
 
@@ -1208,7 +1178,7 @@
                     <h2><span class="section-number">7.1</span>
                         Did your guardian know you were travelling to India?
                     </h2>
-                    <div class="inline-radio-group">
+                    <div class="inline-checkbox-group">
                     {% for choice in form.victim_has_worked_in_sex_industry %}
                         {{ choice }} {{ choice.label_tag }}
                     {% endfor %}
@@ -1390,7 +1360,7 @@
                     </span>
 
                     {% for choice in form.victim_family_economic_situation|slice:"1:" %}
-                        <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                        <div class="checkbox-group">{{ choice }} {{ choice.label_tag }}</div>
                     {% endfor %}
                 </div>
 
@@ -1426,14 +1396,6 @@
                     <p>If a victim had 10 or more total Home Situational Alarms, it would be better not to send her home. However, if the girl is a minor, you will need to discuss her options with her parents.</p>
                 </div>
 
-                {% comment %}
-                <div class="black-box padded-box clearfix text-center">
-                    <h2>
-                        <em>Use the chart below to guide your recommendation in question 8.3 in the next section.</em>
-                    </h2>
-                </div>
-                {% endcomment %}
-
             </div>
             <div class="col-sm-4 major-column">
 
@@ -1443,9 +1405,9 @@
 
                 <div class="black-box padded-box">
                     <h2><span class="section-number">8.1</span>
-                        Has any legal action been taken against any of the traffickers?
+                        Has any legal action been taken against any of the traffickers?<span class="required">*</span>
                     </h2>
-                    <div class="inline-radio-group">
+                    <div class="inline-checkbox-group">
                         {{ form.legal_action_against_traffickers.0 }}
                         {{ form.legal_action_against_traffickers.0.label_tag }}
                         <span class="alarm-box-container">
@@ -1467,31 +1429,19 @@
                     </h2>
                 </div>
                 <div class="black-box padded-box">
-                    <div class="checkbox-group">{{ form.reason_no_legal_no_trafficking_suspected }} {{ form.reason_no_legal_no_trafficking_suspected.label_tag }}</div>
-                    <div class="checkbox-group">{{ form.reason_no_legal_not_enough_info }}          {{ form.reason_no_legal_not_enough_info.label_tag }}</div>
-                    <div class="checkbox-group">{{ form.reason_no_legal_victims_own_people }}       {{ form.reason_no_legal_victims_own_people.label_tag }}</div>
-                    <div class="checkbox-group">{{ form.reason_no_legal_girl_going_herself }}       {{ form.reason_no_legal_girl_going_herself.label_tag }}</div>
-                    <div class="checkbox-group">{{ form.reason_no_legal_ran_away }}                 {{ form.reason_no_legal_ran_away.label_tag }}</div>
-                    <div class="checkbox-group">{{ form.reason_no_legal_victim_afraid_reputation }} {{ form.reason_no_legal_victim_afraid_reputation.label_tag }}</div>
-                    <div class="checkbox-group">{{ form.reason_no_legal_victim_afraid_safety }}     {{ form.reason_no_legal_victim_afraid_safety.label_tag }}</div>
-                    <div class="checkbox-group">{{ form.reason_no_legal_family_afraid_reputation }} {{ form.reason_no_legal_family_afraid_reputation.label_tag }}</div>
-                    <div class="checkbox-group">{{ form.reason_no_legal_family_afraid_safety }}     {{ form.reason_no_legal_family_afraid_safety.label_tag }}</div>
-                    <div class="checkbox-group">{{ form.reason_no_legal_police_bribed }}            {{ form.reason_no_legal_police_bribed.label_tag }}</div>
-                    <div class="checkbox-group">{{ form.reason_no_legal_victim_family_bribed }}     {{ form.reason_no_legal_victim_family_bribed.label_tag }}</div>
+                    {% for choice in form.reason_no_legal|slice:":11" %}
+                    <div class="checkbox-group">{{ choice }}</div>
+                    {% endfor %}
                     <div class="alarm-box-container">
                         <div class="checkbox-group">
-                            {{ form.reason_no_legal_interference_by_powerful_people }}
-                            {{ form.reason_no_legal_interference_by_powerful_people.label_tag }}
+                            {{ form.reason_no_legal.11 }}
                             <br/>
-                            Who? {{ form.reason_no_legal_interference_by_powerful_people_value|attr:"style: width: 300px" }}
+                            Who? {{ form.reason_no_legal_interference_value|attr:"style: width: 300px" }}
                         </div>
                     </div>
-                    <div class="label-inside-field inline-radio-group full-width">
-                        <label>
-                            {{ form.reason_no_legal_other }}
-                            {{ form.reason_no_legal_other.label }}
-                        </label>
-                        {{ form.victim_where_going_other_india_value }}
+                    <div class="label-inside-field inline-checkbox-group full-width">
+                        {{ form.reason_no_legal.12 }}
+                        {{ form.reason_no_legal_other_value }}
                     </div>
                 </div>
 
@@ -1500,7 +1450,7 @@
                         What is your recommendation about where she should go?
                     </h2>
                     {% for choice in form.interviewer_recommendation %}
-                        <div class="radio-group">{{ choice }} {{ choice.label_tag }}</div>
+                        <div class="checkbox-group">{{ choice }}</div>
                     {% endfor %}
                     <label style="margin-left: 20px">Contact THN's Aftercare Coordinator</label>
                 </div>
@@ -1515,7 +1465,7 @@
 
                     <br/>
 
-                    <div class="inline-radio-group">
+                    <div class="inline-checkbox-group">
                         {% for choice in form.other_people_and_places_involved %}
                             {{ choice }} {{ choice.label_tag }}
                         {% endfor %}
@@ -1526,7 +1476,11 @@
                 <div class="black-box padded-box clearfix">
                     <label>
                     {{ form.has_signature }}
-                    Is there a signature on the original form?
+                    Signature is on the original form<span class="required">*</span>
+                </div>
+                <div class="black-box padded-box clearfix">
+                    {{ form.scanned_form.label_tag }}
+                    {{ form.scanned_form }}
                 </div>
 
                 <div class="black-box clearfix">
@@ -1539,6 +1493,7 @@
             </div>
         </div>
     </div>
+
     <div id="footer">
         <nav class="navbar navbar-default navbar-fixed-bottom">
             <div class="container">
