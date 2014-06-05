@@ -74,14 +74,15 @@
     <div class="form-page">
 
         <div class="row">
-            <div class="col-sm-6">
-                <img class="pull-left" style="margin-right: 20px" width="100" src="{{ STATIC_URL }}images/logo.png" alt="Tiny Hands Logo" />
-                <h2>Interception Record Form (IRF)<br/>
+            <div class="col-sm-5">
+                <br/>
+                <img class="pull-left" style="margin-right: 10px" width="100" src="{{ STATIC_URL }}images/logo.png" alt="Tiny Hands Logo" />
+                <h2 style="white-space: nowrap">Interception Record Form (IRF)<br/>
                 Version 2.3 <span class="text-danger">Tiny Hands Nepal</span></h2>
             </div>
-            <div class="col-sm-6">
-                <p class="bg-danger" style="margin-bottom: 0">You will find instructions for each section in the pink boxes like this</p>
-                <table class="table table-bordered top-data-area">
+            <div class="col-sm-7">
+                <p class="bg-danger" style="margin-bottom: 0; margin-left: 80px">You will find instructions for each section in the pink boxes like this</p>
+                <table class="table table-bordered top-data-area" style="margin-left: 30px">
                     <tbody>
                         <tr>
                             <td>
@@ -93,7 +94,7 @@
                                 </div>
                             </td>
                             <td>
-                                <div style="width: 70px">
+                                <div style="width: 65px">
                                     <small>{{ form.number_of_victims.label_tag }}</small>
                                 </div>
                             </td>
@@ -120,8 +121,8 @@
                                 </div>
                             </td>
                             <td>
-                                <div style="width: 70px">
-                                    {{ form.number_of_traffickers.label_tag }}
+                                <div style="width: 65px">
+                                    <small>{{ form.number_of_traffickers.label_tag }}</small>
                                 </div>
                             </td>
                             <td>
@@ -152,7 +153,7 @@
                 <span class="green-light"></span> Green Lights: This symbol is a green light, indicating that you should cease questioning and allow the girl to proceed on her way to India. 
             </p>
         </div>
-        <table class="table table-bordered" style="margin-bottom: 0">
+        <table class="table table-bordered" style="margin-bottom: 0" id="red_flags">
             <thead>
                 <tr>
                     <th style="width: 16%">Question</th>
@@ -478,12 +479,12 @@
                         <strong>Call doctor</strong>
                     </td>
                     <td>
-                        <p class="text-success"><span class="green-light"></span> Enrollment Confirmed</p>
-
                         <strong>3.34</strong>
                         {{ form.no_medical_appointment }}
                         <span class="red-flag">{{ form.no_medical_appointment.field.weight }}</span>
                         {{ form.no_medical_appointment.label_tag }}
+
+                        <p class="text-success"><span class="green-light"></span> Doctor confirms appointment</p>
                     </td>
                 </tr>
                 <tr>
@@ -572,15 +573,16 @@
             </tbody>
         </table>
         <div class="row first-page-footer">
-            <div class="col-sm-8">
+            <div class="col-sm-8 checkbox-group-marker" id="talked_to_family_member">
                 Which family member did you talk to? 
-                <strong>4.1</strong> {{ form.talked_to_brother }} {{ form.talked_to_brother.label_tag }}
-                <strong>4.2</strong> {{ form.talked_to_sister }} {{ form.talked_to_sister.label_tag }}<br/>
-                <strong>4.3</strong> {{ form.talked_to_father }} {{ form.talked_to_father.label_tag }}
-                <strong>4.4</strong> {{ form.talked_to_mother }} {{ form.talked_to_mother.label_tag }}
-                <strong>4.5</strong> {{ form.talked_to_grandparent }} {{ form.talked_to_grandparent.label_tag }}<br/>
-                <strong>4.6</strong> {{ form.talked_to_aunt_uncle }} {{ form.talked_to_aunt_uncle.label_tag }}
-                <strong>4.7</strong> {{ form.talked_to_other }} {{ form.talked_to_other.label_tag }} {{ form.talked_to_other_value }}
+                <strong>4.1</strong> {{ form.talked_to_family_member_brother }}     {{ form.talked_to_family_member_brother.label_tag }}
+                <strong>4.2</strong> {{ form.talked_to_family_member_sister }}      {{ form.talked_to_family_member_sister.label_tag }}<br/>
+                <strong>4.3</strong> {{ form.talked_to_family_member_father }}      {{ form.talked_to_family_member_father.label_tag }}
+                <strong>4.4</strong> {{ form.talked_to_family_member_mother }}      {{ form.talked_to_family_member_mother.label_tag }}
+                <strong>4.5</strong> {{ form.talked_to_family_member_grandparent }} {{ form.talked_to_family_member_grandparent.label_tag }}<br/>
+                <strong>4.6</strong> {{ form.talked_to_family_member_aunt_uncle }}  {{ form.talked_to_family_member_aunt_uncle.label_tag }}
+                <strong>4.7</strong> {{ form.talked_to_family_member_other }}       {{ form.talked_to_family_member_other.label_tag }} 
+                {{ form.talked_to_family_member_other_value|attr:"style: margin-left: -20px" }}
             </div>
             <div class="col-sm-2">
                 <strong>5.0 {{ form.reported_total_red_flags.label }} {{ form.reported_total_red_flags|attr:"style: width: 50px" }}</strong>
@@ -614,40 +616,28 @@
                         <strong>6.0</strong>&nbsp;{{ form.contact_noticed }}  {{ form.contact_noticed.label_tag }}
                     </td>
                 </tr>
-                <tr>
+                <tr class="checkbox-group-marker" id="which_contact">
                     <td style="width: 20%">
-                        <strong>6.1</strong>&nbsp;{{ form.contact_hotel_owner }}          {{ form.contact_hotel_owner.label_tag }}<br/>
-                        <strong>6.2</strong>&nbsp;{{ form.contact_rickshaw_driver }}      {{ form.contact_rickshaw_driver.label_tag }}<br/>
-                        <strong>6.3</strong>&nbsp;{{ form.contact_taxi_driver }}          {{ form.contact_taxi_driver.label_tag }}
+                        <strong>6.1</strong>&nbsp;{{ form.which_contact_hotel_owner }}          {{ form.which_contact_hotel_owner.label_tag }}<br/>
+                        <strong>6.2</strong>&nbsp;{{ form.which_contact_rickshaw_driver }}      {{ form.which_contact_rickshaw_driver.label_tag }}<br/>
+                        <strong>6.3</strong>&nbsp;{{ form.which_contact_taxi_driver }}          {{ form.which_contact_taxi_driver.label_tag }}
                     </td>
                     <td style="width: 20%">
-                        <strong>6.4</strong>&nbsp;{{ form.contact_bus_driver }}           {{ form.contact_bus_driver.label_tag }}<br/>
-                        <strong>6.5</strong>&nbsp;{{ form.contact_church_member }}        {{ form.contact_church_member.label_tag }}<br/>
-                        <strong>6.6</strong>&nbsp;{{ form.contact_other_ngo }}            {{ form.contact_other_ngo.label_tag }}
+                        <strong>6.4</strong>&nbsp;{{ form.which_contact_bus_driver }}           {{ form.which_contact_bus_driver.label_tag }}<br/>
+                        <strong>6.5</strong>&nbsp;{{ form.which_contact_church_member }}        {{ form.which_contact_church_member.label_tag }}<br/>
+                        <strong>6.6</strong>&nbsp;{{ form.which_contact_other_ngo }}            {{ form.which_contact_other_ngo.label_tag }}
                     </td>
                     <td style="width: 25%">
-                        <strong>6.7</strong>&nbsp;{{ form.contact_police }}               {{ form.contact_police.label_tag }}<br/>
-                        <strong>6.8</strong>&nbsp;{{ form.contact_subcommittee_member }}  {{ form.contact_subcommittee_member.label_tag }}<br/>
-                        <strong>6.9</strong> {{ form.contact_other }} {{ form.contact_other.label_tag }} {{ form.contact_other_value|attr:"style: width: 160px"|attr:"data-placement: bottom" }}
+                        <strong>6.7</strong>&nbsp;{{ form.which_contact_police }}               {{ form.which_contact_police.label_tag }}<br/>
+                        <strong>6.8</strong>&nbsp;{{ form.which_contact_subcommittee_member }}  {{ form.which_contact_subcommittee_member.label_tag }}<br/>
+                        <strong>6.9</strong>      {{ form.which_contact_other }}                {{ form.which_contact_other.label_tag }} 
+                                                  {{ form.which_contact_other_value|attr:"style: width: 160px"|attr:"data-placement: bottom" }}
                     </td>
-                    <td class="contact-paid">
+                    <td class="contact-paid checkbox-group-member" id="contact_paid">
                         Did you pay this contact for the information?<br/>
                         <strong>6.10</strong> {{ form.contact_paid.1 }} {{ form.contact_paid.1.label_tag }}
                         <strong>6.11</strong> {{ form.contact_paid.2 }} {{ form.contact_paid.2.label_tag }}
                         {{ form.contact_paid.0 }} {{ form.contact_paid.0.label_tag }}
-                        <br/>
-                        
-                        &nbsp;
-                        &nbsp;
-                        &nbsp;
-                        &nbsp;
-                        &nbsp;
-                        &nbsp;
-                        &nbsp;
-                        &nbsp;
-                        &nbsp;
-                        &nbsp;
-                        &nbsp;
                         {{ form.contact_paid_how_much.label }}  {{ form.contact_paid_how_much|attr:"style: width: 70px" }}
                     </td>
                 </tr>
@@ -762,7 +752,7 @@
                         {% endfor %}
                     </tbody>
                 </table>
-        <br/>
+                <br/>
                 <div class="row last-form-area">
                     <div class="col-sm-6">
                         <p class="bg-danger">You must complete each of these procedures for this IRF to be 
@@ -773,45 +763,40 @@
                         <strong>8.1</strong>&nbsp;{{ form.call_subcommittee_chair|attr:"data-placement: left" }} {{ form.call_subcommittee_chair.label_tag }}<br/>
                         <strong>8.2</strong>&nbsp;{{ form.call_thn_to_cross_check|attr:"data-placement: left" }} {{ form.call_thn_to_cross_check.label_tag }}<br/>
                         Had any name come up before?
-                        {{ form.name_come_up_before.0 }} {{ form.name_come_up_before.0.label_tag }}
-                        {{ form.name_come_up_before.1 }} {{ form.name_come_up_before.1.label_tag }}
+                        {{ form.name_came_up_before.0 }} {{ form.name_came_up_before.0.label_tag }}
+                        {{ form.name_came_up_before.1 }} {{ form.name_came_up_before.1.label_tag }}
                         <br/>
-                        {{ form.name_come_up_before_yes_value.label_tag }}  {{ form.name_come_up_before_yes_value|attr:"style: width: 100px"|attr:"data-placement: bottom" }}<br/>
+                        {{ form.name_came_up_before_value.label_tag }}  {{ form.name_came_up_before_value|attr:"style: width: 100px"|attr:"data-placement: bottom" }}<br/>
                         <strong>8.3</strong>&nbsp;{{ form.scan_and_submit_same_day|attr:"data-placement: bottom" }} {{ form.scan_and_submit_same_day.label_tag }}
                     </div>
                     <div class="col-sm-6">
                         <h3 style="margin-top: 0" class="text-center">Type of Intercept</h3>
                         <span class="checkbox-group">
                             <strong>9.1</strong>
-                            {{ form.interception_type.0 }}
-                            {{ form.interception_type.choice.0.label_tag }}
+                            {{ form.interception_type_gulf_countries }} {{ form.interception_type_gulf_countries.label_tag }}
                         </span>
                         <span class="checkbox-group">
                             <strong>9.2</strong>
-                            {{ form.interception_type.1 }}
-                            {{ form.interception_type.choice.1.label_tag }}
+                            {{ form.interception_type_india_trafficking }} {{ form.interception_type_india_trafficking.label_tag }}
                         </span>
                         <br/>
                         <span class="checkbox-group">
                             <strong>9.3</strong>
-                            {{ form.interception_type.2 }}
-                            {{ form.interception_type.choice.2.label_tag }}
+                            {{ form.interception_type_unsafe_migration }} {{ form.interception_type_unsafe_migration.label_tag }}
                         </span>
                         <span class="checkbox-group">
                             <strong>9.4</strong>
-                            {{ form.interception_type.3 }}
-                            {{ form.interception_type.choice.3.label_tag }}
+                            {{ form.interception_type_circus }} {{ form.interception_type_circus.label_tag }}
                         </span>
                         <span class="checkbox-group">
                             <strong>9.5</strong>
-                            {{ form.interception_type.4 }}
-                            {{ form.interception_type.choice.4.label_tag }}
+                            {{ form.interception_type_runaway }} {{ form.interception_type_runaway.label_tag }}
                         </span>
                         <br/>
 
                         <strong>9.6</strong> <label>Was any trafficker taken into police custody?<br/>If yes, write the # from the table above:</label> {{ form.trafficker_taken_into_custody|attr:"style: width: 100px" }}<br/>
                         <strong>9.7</strong>&nbsp;{{ form.how_sure_was_trafficking.label_tag }}<br/>
-                        <strong>Rate from 1-5</strong> <small>1 = not at all sure, 5 = absolutely sure</small> {{ form.how_sure_was_trafficking|attr:'style: width: 60px' }}
+                        <strong>Rate from 1-5</strong> <small>(1 = not at all sure, 5 = absolutely sure)</small> {{ form.how_sure_was_trafficking|attr:'style: width: 40px' }}
 
                         <div class="signature-box text-center">
                             <p><strong>I certify that I have followed procedures and filled<br/>out this form correctly, completely, and accurately.</strong></p>

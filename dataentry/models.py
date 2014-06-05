@@ -27,8 +27,8 @@ class InterceptionRecord(models.Model):
     date_time_entered_into_system = models.DateTimeField(auto_now_add=True)
     date_time_last_updated = models.DateTimeField(auto_now=True)
 
-    number_of_victims = models.IntegerField('# of victims:', null=True, blank=True)
-    number_of_traffickers = models.IntegerField('# of traffickers', null=True, blank=True)
+    number_of_victims = models.PositiveIntegerField('# of victims:', null=True, blank=True)
+    number_of_traffickers = models.PositiveIntegerField('# of traffickers', null=True, blank=True)
 
     location = models.CharField('Location:', max_length=255)
     staff_name = models.CharField('Staff Name:', max_length=255)
@@ -100,32 +100,32 @@ class InterceptionRecord(models.Model):
     over_18_family_doesnt_know = models.BooleanField('Family members do not know she is going to India', default=False).set_weight(15)
     over_18_family_unwilling = models.BooleanField('Family members unwilling to let her go', default=False).set_weight(20)
 
-    talked_to_brother = models.BooleanField('Own brother', default=False)
-    talked_to_sister = models.BooleanField('Own sister', default=False)
-    talked_to_father = models.BooleanField('Own father', default=False)
-    talked_to_mother = models.BooleanField('Own mother', default=False)
-    talked_to_grandparent = models.BooleanField('Own grandparent', default=False)
-    talked_to_aunt_uncle = models.BooleanField('Own aunt / uncle', default=False)
-    talked_to_other = models.BooleanField('Other', default=False)
-    talked_to_other_value = models.CharField(max_length=255, blank=True)
+    talked_to_family_member_brother = models.BooleanField('Own brother', default=False)
+    talked_to_family_member_sister = models.BooleanField('Own sister', default=False)
+    talked_to_family_member_father = models.BooleanField('Own father', default=False)
+    talked_to_family_member_mother = models.BooleanField('Own mother', default=False)
+    talked_to_family_member_grandparent = models.BooleanField('Own grandparent', default=False)
+    talked_to_family_member_aunt_uncle = models.BooleanField('Own aunt / uncle', default=False)
+    talked_to_family_member_other = models.BooleanField('Other', default=False)
+    talked_to_family_member_other_value = models.CharField(max_length=255, blank=True)
 
     reported_total_red_flags = models.IntegerField('Reported Total Red Flag Points:', null=True, blank=True)
 
     # How did you make interception?
     contact_noticed = models.BooleanField('Contact', default=False)
-    contact_hotel_owner = models.BooleanField('Hotel owner', default=False)
-    contact_rickshaw_driver = models.BooleanField('Rickshaw driver', default=False)
-    contact_taxi_driver = models.BooleanField('Taxi driver', default=False)
-    contact_bus_driver = models.BooleanField('Bus driver', default=False)
-    contact_church_member = models.BooleanField('Church member', default=False)
-    contact_other_ngo = models.BooleanField('Other NGO', default=False)
-    contact_police = models.BooleanField('Police', default=False)
-    contact_subcommittee_member = models.BooleanField('Subcommittee member', default=False)
-    contact_other = models.BooleanField('Other', default=False)
-    contact_other_value = models.CharField(max_length=255, blank=True)
+    which_contact_hotel_owner = models.BooleanField('Hotel owner', default=False)
+    which_contact_rickshaw_driver = models.BooleanField('Rickshaw driver', default=False)
+    which_contact_taxi_driver = models.BooleanField('Taxi driver', default=False)
+    which_contact_bus_driver = models.BooleanField('Bus driver', default=False)
+    which_contact_church_member = models.BooleanField('Church member', default=False)
+    which_contact_other_ngo = models.BooleanField('Other NGO', default=False)
+    which_contact_police = models.BooleanField('Police', default=False)
+    which_contact_subcommittee_member = models.BooleanField('Subcommittee member', default=False)
+    which_contact_other = models.BooleanField('Other', default=False)
+    which_contact_other_value = models.CharField(max_length=255, blank=True)
 
     # Did you pay this contact for the information?
-    contact_paid = models.NullBooleanField(choices=NULL_BOOLEAN_CHOICES, null=True)
+    contact_paid = models.NullBooleanField(null=True)
     contact_paid_how_much = models.CharField('How much?', max_length=255, blank=True)
 
     staff_noticed = models.BooleanField('Staff', default=False)
@@ -169,21 +169,17 @@ class InterceptionRecord(models.Model):
     # Procedures
     call_subcommittee_chair = models.BooleanField('Call Subcommittee Chair', default=False)
     call_thn_to_cross_check = models.BooleanField('Call THN to cross-check the names (6223856)', default=False)
-    name_come_up_before = models.NullBooleanField(choices=NULL_BOOLEAN_CHOICES, null=True)
-    name_come_up_before_yes_value = models.CharField('If yes, write the # from the table above:', max_length=255, blank=True)
+    name_came_up_before = models.NullBooleanField(null=True)
+    name_came_up_before_value = models.PositiveIntegerField('If yes, write the # from the table above:', null=True, blank=True)
     scan_and_submit_same_day = models.BooleanField('Scan and submit to THN the same day', default=False)
 
-    # Type of Intercept
-    INTERCEPT_TYPE_CHOICES = [
-        ('gulf-countries', 'Gulf Countries'),
-        ('india-trafficking', 'India Trafficking'),
-        ('unsafe-migration', 'Unsafe Migration'),
-        ('circus', 'Circus'),
-        ('runaway', 'Runaway'),
-    ]
-    interception_type = models.CharField(max_length=30, choices=INTERCEPT_TYPE_CHOICES, blank=True)
+    interception_type_gulf_countries = models.BooleanField('Gulf Countries', default=False)
+    interception_type_india_trafficking = models.BooleanField('India Trafficking', default=False)
+    interception_type_unsafe_migration = models.BooleanField('Unsafe Migration', default=False)
+    interception_type_circus = models.BooleanField('Circus', default=False)
+    interception_type_runaway = models.BooleanField('Runaway', default=False)
 
-    trafficker_taken_into_custody = models.CharField(max_length=255, default='', blank=True)
+    trafficker_taken_into_custody = models.PositiveIntegerField(null=True, blank=True)
     HOW_SURE_TRAFFICKING_CHOICES = [
         (1, '1 - Not at all sure'),
         (2, '2 - Unsure but suspects it'),
@@ -246,13 +242,13 @@ class VictimInterview(models.Model):
     ]
 
     vif_number = models.CharField('VIF #', max_length=20)
-    date_time = models.DateTimeField('Date/Time')
+    date = models.DateTimeField('Date')
 
     date_time_entered_into_system = models.DateTimeField(auto_now_add=True)
     date_time_last_updated = models.DateTimeField(auto_now=True)
 
-    number_of_victims = models.IntegerField('# of victims', null=True, blank=True)
-    number_of_traffickers = models.IntegerField('# of traffickers', null=True, blank=True)
+    number_of_victims = models.PositiveIntegerField('# of victims', null=True, blank=True)
+    number_of_traffickers = models.PositiveIntegerField('# of traffickers', null=True, blank=True)
 
     location = models.CharField(max_length=255, blank=True)
     interviewer = models.CharField(max_length=255, blank=True)
@@ -384,29 +380,31 @@ class VictimInterview(models.Model):
     primary_motivation_other = models.BooleanField('Other', default=False)
     primary_motivation_other_value = models.CharField(max_length=255, blank=True)
 
-    victim_where_going_india = models.BooleanField('India', default=False)
-    victim_where_going_gulf = models.BooleanField('Gulf / Other', default=False)
-    victim_where_going_delhi = models.BooleanField('Delhi', default=False)
-    victim_where_going_mumbai = models.BooleanField('Mumbai', default=False)
-    victim_where_going_surat = models.BooleanField('Surat', default=False)
-    victim_where_going_rajastan = models.BooleanField('Rajastan', default=False)
-    victim_where_going_kolkata = models.BooleanField('Kolkata', default=False)
-    victim_where_going_pune = models.BooleanField('Pune', default=False)
-    victim_where_going_jaipur = models.BooleanField('Jaipur', default=False)
-    victim_where_going_bihar = models.BooleanField('Bihar', default=False)
-    victim_where_going_india_didnt_know = models.BooleanField('Did Not Know', default=False)
-    victim_where_going_india_other = models.BooleanField('Other', default=False)
-    victim_where_going_india_other_value = models.CharField(max_length=255, blank=True)
-    victim_where_going_lebanon = models.BooleanField('Lebanon', default=False)
-    victim_where_going_dubai = models.BooleanField('Dubai', default=False)
-    victim_where_going_malaysia = models.BooleanField('Malaysia', default=False)
-    victim_where_going_oman = models.BooleanField('Oman', default=False)
-    victim_where_going_saudi_arabia = models.BooleanField('Saudi Arabia', default=False)
-    victim_where_going_kuwait = models.BooleanField('Kuwait', default=False)
-    victim_where_going_qatar = models.BooleanField('Qatar', default=False)
-    victim_where_going_gulf_didnt_know = models.BooleanField('Did Not Know', default=False)
-    victim_where_going_gulf_other = models.BooleanField('Other', default=False)
-    victim_where_going_gulf_other_value = models.CharField(max_length=255, blank=True)
+    victim_where_going_region_india = models.BooleanField('India', default=False)
+    victim_where_going_region_gulf = models.BooleanField('Gulf / Other', default=False)
+
+    victim_where_going_india_delhi = models.BooleanField('Delhi', default=False)
+    victim_where_going_india_mumbai = models.BooleanField('Mumbai', default=False)
+    victim_where_going_india_surat = models.BooleanField('Surat', default=False)
+    victim_where_going_india_rajastan = models.BooleanField('Rajastan', default=False)
+    victim_where_going_india_kolkata = models.BooleanField('Kolkata', default=False)
+    victim_where_going_india_pune = models.BooleanField('Pune', default=False)
+    victim_where_going_india_jaipur = models.BooleanField('Jaipur', default=False)
+    victim_where_going_india_bihar = models.BooleanField('Bihar', default=False)
+    victim_where_going_india_india_didnt_know = models.BooleanField('Did Not Know', default=False)
+    victim_where_going_india_india_other = models.BooleanField('Other', default=False)
+    victim_where_going_india_india_other_value = models.CharField(max_length=255, blank=True)
+
+    victim_where_going_gulf_lebanon = models.BooleanField('Lebanon', default=False)
+    victim_where_going_gulf_dubai = models.BooleanField('Dubai', default=False)
+    victim_where_going_gulf_malaysia = models.BooleanField('Malaysia', default=False)
+    victim_where_going_gulf_oman = models.BooleanField('Oman', default=False)
+    victim_where_going_gulf_saudi_arabia = models.BooleanField('Saudi Arabia', default=False)
+    victim_where_going_gulf_kuwait = models.BooleanField('Kuwait', default=False)
+    victim_where_going_gulf_qatar = models.BooleanField('Qatar', default=False)
+    victim_where_going_gulf_gulf_didnt_know = models.BooleanField('Did Not Know', default=False)
+    victim_where_going_gulf_gulf_other = models.BooleanField('Other', default=False)
+    victim_where_going_gulf_gulf_other_value = models.CharField(max_length=255, blank=True)
 
     manpower_involved = models.NullBooleanField('Was a manpower involved?', null=True)
     victim_recruited_in_village = models.BooleanField('Did someone recruit you in your village and persuade you to abroad?')
@@ -560,10 +558,11 @@ class VictimInterview(models.Model):
     victim_beliefs_now_believes_no_church = models.BooleanField('Believes in Jesus, but doesn\'t plan to go to church', default=False)
     victim_beliefs_now_believes_and_church = models.BooleanField('Believes in Jesus and plans to go to church', default=False)
 
-    tiny_hands_rating_border_staff = models.PositiveIntegerField('Border Staff polite and respectful')
-    tiny_hands_rating_shelter_staff = models.PositiveIntegerField('Shelter Staff polite and respectful')
-    tiny_hands_rating_trafficking_awareness = models.PositiveIntegerField('Trafficking Awareness')
-    tiny_hands_rating_shelter_accommodations = models.PositiveIntegerField('Shelter Accommodations')
+    RATING_CHOICES = [(i, i) for i in range(1, 11)]
+    tiny_hands_rating_border_staff = models.PositiveIntegerField('Border Staff polite and respectful', choices=RATING_CHOICES)
+    tiny_hands_rating_shelter_staff = models.PositiveIntegerField('Shelter Staff polite and respectful', choices=RATING_CHOICES)
+    tiny_hands_rating_trafficking_awareness = models.PositiveIntegerField('Trafficking Awareness', choices=RATING_CHOICES)
+    tiny_hands_rating_shelter_accommodations = models.PositiveIntegerField('Shelter Accommodations', choices=RATING_CHOICES)
 
     how_can_we_serve_you_better = models.TextField(blank=True)
 
@@ -647,7 +646,9 @@ class VictimInterviewPersonBox(models.Model):
 
     victim_interview = models.ForeignKey(VictimInterview, related_name='person_boxes')
 
-    who_is_this_relationship = models.CharField(max_length=255, blank=True)
+    who_is_this_relationship_boss_of = models.BooleanField('boss of...', default=False)
+    who_is_this_relationship_coworker_of = models.BooleanField('co-worker of...', default=False)
+    who_is_this_relationship_own_relative_of = models.BooleanField('own relative of...', default=False)
 
     who_is_this_role = models.CharField(max_length=255, blank=True)
 

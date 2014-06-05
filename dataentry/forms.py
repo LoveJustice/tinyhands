@@ -12,44 +12,84 @@ from django.core.exceptions import ValidationError
 from django.utils.html import mark_safe
 
 
-""" In this form we have three types of problem fields:
-
-1. Boolean Fields that must be rendered as Yes/No checkboxes and allow users to
-only select one and uncheck their answer if it is optional
-
-2. Sets of checkboxes that must be constrained to a certain number of choices
-
-3. 
-"""
-
-
-# Django forms for some reason use 1,2,3 for values for NullBooleanField
 BOOLEAN_CHOICES = [
     (False, 'No'),
     (True, 'Yes'),
 ]
 
 
-def make_null_boolean_fields_radio(f):
-    if isinstance(f, models.NullBooleanField):
-        return forms.ChoiceField(choices=NULL_BOOLEAN_CHOICES, widget=forms.RadioSelect, initial=1)
-    else:
-        return f.formfield()
+class DreamSuitePaperForm(forms.ModelForm):
+    class Meta:
+        model = VictimInterview
+
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault('label_suffix', '')
+        super(DreamSuitePaperForm, self).__init__(*args, **kwargs)
+
+        for field_name in self.fields:
+            field = self.fields[field_name]
+            if (
+                isinstance(field.widget, forms.CheckboxSelectMultiple) and
+                field.choices == BOOLEAN_CHOICES
+                or
+                field_name == 'victim_was_hidden' or
+                field_name == 'victim_was_free_to_go_out'
+            ):
+                initial = self.initial.get(field_name)
+                if initial is not None:
+                    self.initial[field_name] = [unicode(initial)]
+
+    def clean(self):
+        cleaned_data = super(DreamSuitePaperForm, self).clean()
+
+        for field_name in cleaned_data.keys():
+            field = self.fields[field_name]
+            if (
+                isinstance(field.widget, forms.CheckboxSelectMultiple) and
+                field.choices == BOOLEAN_CHOICES
+                or
+                field_name == 'victim_was_hidden' or
+                field_name == 'victim_was_free_to_go_out'
+            ):
+                if len(cleaned_data[field_name]) > 0:
+                    cleaned_data[field_name] = bool(cleaned_data[field_name][0])
+                else:
+                    cleaned_data[field_name] = None
+
+        for field_name_start in [
+            'talked_to',
+
+            'primary_motivation',
+            'migration_plans',
+            'victim_where_going',
+            'victim_primary_means_of_travel',
+            'meeting_at_border',
+            'awareness_before_interception',
+            'attitude_towards_tiny_hands',
+            'victim_heard_gospel',
+        ]:
+            if not self.at_least_one_checked(cleaned_data, field_name_start):
+                self._errors[field_name_start] = self.error_class(['This field is required.'])
+
+        return cleaned_data
+
+    def at_least_one_checked(self, cleaned_data, field_name_start):
+        for field_name in cleaned_data.keys():
+            if field_name.startswith(field_name_start):
+                if isinstance(self.fields[field_name].widget, forms.CheckboxInput):
+                    if cleaned_data[field_name]:
+                        return True
+        return False
 
 
-class InterceptionRecordForm(forms.ModelForm):
-    #formfield_callback = make_null_boolean_fields_radio
-
-    name_come_up_before_yes = forms.BooleanField()
-    name_come_up_before_no = forms.BooleanField()
-    name_come_up_before = forms.MultipleChoiceField(
+class InterceptionRecordForm(DreamSuitePaperForm):
+    contact_paid = forms.MultipleChoiceField(
         choices=BOOLEAN_CHOICES,
         widget=forms.CheckboxSelectMultiple
     )
 
-
-    interception_type = forms.MultipleChoiceField(
-        choices=InterceptionRecord.INTERCEPT_TYPE_CHOICES,
+    name_came_up_before = forms.MultipleChoiceField(
+        choices=BOOLEAN_CHOICES,
         widget=forms.CheckboxSelectMultiple
     )
 
@@ -63,10 +103,8 @@ class InterceptionRecordForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
 
-        kwargs.setdefault('label_suffix', '')
         super(InterceptionRecordForm, self).__init__(*args, **kwargs)
         for field_name, field in self.fields.iteritems():
-
             if type(field) == forms.fields.BooleanField:
                 try:
                     model_field = InterceptionRecord._meta.get_field_by_name(field_name)[0]
@@ -93,6 +131,12 @@ class InterceptionRecordForm(forms.ModelForm):
             self.ensure_8_1_2_3_checked(cleaned_data)
             self.ensure_at_least_one_of_9_1_through_9_5_are_checked(cleaned_data)
             self.ensure_signature_on_form(cleaned_data)
+
+        for field_name_start in [
+            'talked_to_family_member',
+        ]:
+            if not self.at_least_one_checked(cleaned_data, field_name_start):
+                self._errors[field_name_start] = self.error_class(['This field is required.'])
 
         return cleaned_data
 
@@ -142,7 +186,7 @@ class InterceptionRecordForm(forms.ModelForm):
             cleaned_data.get('fake_medical_documents') or
             cleaned_data.get('no_medical_appointment')
         ):
-            self._errors['who_in_group_alone'] = self.error_class(['At least one choice must be selected.'])
+            self._errors['red_flags'] = self.error_class(['At least one red flag must be checked.'])
 
     def box_six_or_seven_must_be_checked(self, cleaned_data):
         if not (
@@ -153,22 +197,22 @@ class InterceptionRecordForm(forms.ModelForm):
 
     def if_box_six_checked_at_least_one_from_six_one_to_six_nine_must_be_checked(self, cleaned_data):
         if cleaned_data.get('contact_noticed') and not (
-            cleaned_data.get('contact_hotel_owner') or
-            cleaned_data.get('contact_rickshaw_driver') or
-            cleaned_data.get('contact_taxi_driver') or
-            cleaned_data.get('contact_bus_driver') or
-            cleaned_data.get('contact_church_member') or
-            cleaned_data.get('contact_other_ngo') or
-            cleaned_data.get('contact_police') or
-            cleaned_data.get('contact_subcommittee_member') or
-            cleaned_data.get('contact_other')
+            cleaned_data.get('which_contact_hotel_owner') or
+            cleaned_data.get('which_contact_rickshaw_driver') or
+            cleaned_data.get('which_contact_taxi_driver') or
+            cleaned_data.get('which_contact_bus_driver') or
+            cleaned_data.get('which_contact_church_member') or
+            cleaned_data.get('which_contact_other_ngo') or
+            cleaned_data.get('which_contact_police') or
+            cleaned_data.get('which_contact_subcommittee_member') or
+            cleaned_data.get('which_contact_other')
         ):
             self._errors['contact_noticed'] = self.error_class(
                 ['Contact (6.0) chosen for how interception was made, but a specific kind was not specified (6.1-6.9).'])
 
     def if_box_six_other_is_checked_the_other_value_must_be_present(self, cleaned_data):
-        if cleaned_data.get('contact_other') and not cleaned_data.get('contact_other_value'):
-            self._errors['contact_other_value'] = self.error_class(
+        if cleaned_data.get('which_contact_other') and not cleaned_data.get('which_contact_other_value'):
+            self._errors['which_contact_other_value'] = self.error_class(
                 ['Other chosen for Contact but the kind is not specified.'])
 
     def if_contact_noticed_ensure_contact_paid(self, cleaned_data):
@@ -177,8 +221,8 @@ class InterceptionRecordForm(forms.ModelForm):
                 ['Contact noticed chosen but paid not specified.'])
 
     def if_8_2_ensure_number_specified(self, cleaned_data):
-        if cleaned_data.get('name_come_up_before') and not cleaned_data.get('name_come_up_before_yes_value'):
-            self._errors['name_come_up_before_yes_value'] = self.error_class(
+        if cleaned_data.get('name_came_up_before') and not cleaned_data.get('name_came_up_before_yes_value'):
+            self._errors['name_came_up_before_yes_value'] = self.error_class(
                 ['Name came up specified but no number given.'])
 
     def if_box_7_1_ensure_7_2(self, cleaned_data):
@@ -306,7 +350,13 @@ class InterceptionRecordForm(forms.ModelForm):
 IntercepteeFormSet = inlineformset_factory(InterceptionRecord, Interceptee, extra=12)
 
 
-class VictimInterviewForm(forms.ModelForm):
+class VictimInterviewForm(DreamSuitePaperForm):
+    statement_read_before_beginning = forms.ChoiceField(
+        widget=forms.CheckboxInput,
+        required=True,
+        error_messages={'invalid_choice': 'This box must be checked.'}
+    )
+
     victim_gender = forms.ChoiceField(
         choices=VictimInterview.GENDER_CHOICES,
         widget=forms.RadioSelect,
@@ -462,68 +512,37 @@ class VictimInterviewForm(forms.ModelForm):
         required=False
     )
 
+    has_signature = forms.ChoiceField(
+        widget=forms.CheckboxInput,
+        required=True,
+        error_messages={'invalid_choice': 'This box must be checked.'}
+    )
+
     class Meta:
         model = VictimInterview
 
-    def __init__(self, *args, **kwargs):
-        kwargs.setdefault('label_suffix', '')
-        super(VictimInterviewForm, self).__init__(*args, **kwargs)
-
-        for field_name in self.fields:
-            field = self.fields[field_name]
-            if (
-                isinstance(field.widget, forms.CheckboxSelectMultiple) and
-                field.choices == BOOLEAN_CHOICES
-                or
-                field_name == 'victim_was_hidden' or
-                field_name == 'victim_was_free_to_go_out'
-            ):
-                initial = self.initial.get(field_name)
-                if initial is not None:
-                    self.initial[field_name] = [unicode(initial)]
-
     def clean(self):
         cleaned_data = super(VictimInterviewForm, self).clean()
-
-        for field_name in cleaned_data.keys():
-            field = self.fields[field_name]
-            if (
-                isinstance(field.widget, forms.CheckboxSelectMultiple) and
-                field.choices == BOOLEAN_CHOICES
-                or
-                field_name == 'victim_was_hidden' or
-                field_name == 'victim_was_free_to_go_out'
-            ):
-                if len(cleaned_data[field_name]) > 0:
-                    cleaned_data[field_name] = bool(cleaned_data[field_name][0])
-                else:
-                    cleaned_data[field_name] = None
 
         for field_name_start in [
             'primary_motivation',
             'migration_plans',
             'victim_where_going',
+            'victim_primary_means_of_travel',
             'meeting_at_border',
+            'awareness_before_interception',
+            'attitude_towards_tiny_hands',
+            'victim_heard_gospel',
+            'legal_action_against_traffickers',
         ]:
             if not self.at_least_one_checked(cleaned_data, field_name_start):
-                self._errors[field_name_start] = self.error_class(['One box must be checked.'])
+                self._errors[field_name_start] = self.error_class(['This field is required.'])
 
         return cleaned_data
-
-    def at_least_one_checked(self, cleaned_data, field_name_start):
-        for field_name in cleaned_data.keys():
-            if field_name.startswith(field_name_start):
-                if isinstance(self.fields[field_name].widget, forms.CheckboxInput):
-                    if cleaned_data[field_name]:
-                        return True
-        return False
 
 
 class VictimInterviewPersonBoxForm(forms.ModelForm):
     WHO_IS_THIS_CHOICES = [
-        ('boss of...', 'boss of...'),
-        ('co-worker of...', 'co-worker of...'),
-        ('own relative of...', 'own relative of...'),
     ]
     who_is_this_relationship = forms.MultipleChoiceField(
         choices=WHO_IS_THIS_CHOICES,

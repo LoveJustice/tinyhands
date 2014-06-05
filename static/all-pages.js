@@ -74,6 +74,60 @@ function setUpPermissionsCheckboxes() {
         }
     });
 }
+function setUpLimitedChoicesCheckboxGroups() {
+    // Well, this was supposed to be used to allow restricting
+    // a group of checkboxes to a certain number of checks, but
+    // now every group only requires one. heh heh heh
+
+    // To add a new checkbox group, add the class checkbox-group-marker and an id that contains the common starting string of each checkbox field.  For example, if you had talked_to_brother,  talked_to_sister, and talked_to_aunt in a group, putting in an id of "talked_to" would make that a group
+    //
+    // This commented out block almost works but breaks if something clears checkboxes other than this manager
+    //var checkboxManagers = {};
+    //$('.checkbox-group-marker').each(function(i, elem) {
+    //    var name = $(elem).attr('id');
+    //    var maxAllowedChecked = $(elem).data('max') || 1;
+    //    checkboxManagers[name] = {
+    //        name: name,
+    //        maxAllowedChecked: maxAllowedChecked,
+    //        checkedOrder: $.makeArray($('#'+name+' input[type="checkbox"]:checked'))
+    //    };
+    //});
+
+    //$('input[type="checkbox"]').click(function() {
+    //    var name = $(this).attr('name');
+    //    if (!(name in checkboxManagers)) {
+    //        name = $(this).parents('.checkbox-group-marker').attr('id');
+    //    }
+    //    var manager = checkboxManagers[name];
+
+    //    if (manager) {
+    //        if ($(this).is(':checked')) {
+    //            var numberChecked = $('#'+name+' input[type="checkbox"]:checked').length;
+    //            if (numberChecked === 0) {
+    //                manager.checkedOrder = [];
+    //            }
+    //            else if (numberChecked > manager.maxAllowedChecked) {
+    //                var last = manager.checkedOrder.shift();
+    //                $(last).attr('checked', null);
+    //            }
+    //            manager.checkedOrder.push(this);
+    //        }
+    //        else {
+    //            manager.checkedOrder.splice(
+    //                manager.checkedOrder.indexOf(this), 1);
+    //        }
+    //    }
+    //});
+
+    // This simpler version just limits it to one checkbox since thats all we have right now
+    $('input[type="checkbox"]').click(function() {
+        var $container = $(this).parents('.checkbox-group-marker').eq(0);
+        if ($container.length === 0) {
+            return;
+        }
+        $container.find('input[type="checkbox"]').not(this).attr('checked', null);
+    });
+}
 
 var DREAMSUITE = {
 
@@ -175,6 +229,17 @@ var DREAMSUITE = {
 
         setUpValidationPopups();
 
+        setUpLimitedChoicesCheckboxGroups();
+        $('#id_contact_noticed').click(function() {
+            $('#id_staff_noticed').attr('checked', null);
+            $('input[id*="id_noticed_"]').attr('checked', null);
+        });
+        $('#id_staff_noticed').click(function() {
+            $('#id_contact_noticed').attr('checked', null);
+            $('input[id*="id_which_contact_"]').attr('checked', null);
+            $('#contact_paid').find('input[type="checkbox"]').attr('checked', null);
+        });
+
         // A hack but it works
         if ($('#error-box p').length === 0) {
             $('#error-box').remove();
@@ -195,105 +260,32 @@ var DREAMSUITE = {
             });
             $('#calculated-total').text(total);
         }
-        $('input[type="radio"]').click(calculateTotal);
+        $('input[type="checkbox"]').click(calculateTotal);
         calculateTotal();
 
         setUpValidationPopups();
 
-        // Well, this was supposed to be used to allow restricting
-        // a group of checkboxes to a certain number of checks, but
-        // now every group only requires one. heh heh heh
-        var checkboxManagers = {};
-        $.each([
-            ['victim_caste', 1],
-            ['victim_occupation', 1],
-            ['victim_marital_status', 1],
-            ['victim_lives_with', 1],
-            ['victim_is_literate', 1],
-            ['victim_primary_guardian', 1],
-            ['victim_parents_marital_status', 1],
-            ['victim_education_level', 1],
-            ['migration_plans', 1],
-            ['primary_motivation', 1],
-            ['victim_where_going', 1],
-            ['manpower_involved', 1],
-            ['victim_recruited_in_village', 1],
-            ['brokers_relation_to_victim', 1],
-            ['victim_how_met_broker', 1],
-            ['victim_how_expense_was_paid', 1],
-            ['broker_works_in_job_location', 1],
-            ['victim_first_time_crossing_border', 1],
-            ['victim_primary_means_of_travel', 1],
-            ['victim_stayed_somewhere_between', 1],
-            ['victim_was_hidden', 1],
-            ['victim_was_free_to_go_out', 1],
-            ['passport_made', 1],
-            ['victim_passport_with_broker', 1],
-            ['victim_traveled_with_broker_companion', 1],
-            ['companion_with_when_intercepted', 1],
-            ['planning_to_meet_companion_later', 1],
-            ['money_changed_hands_broker_companion', 1],
-            ['meeting_at_border', 1],
-            ['victim_knew_details_about_destination', 1],
-            ['other_involved_person_in_india', 1],
-            ['other_involved_husband_trafficker', 1],
-            ['other_involved_someone_met_along_the_way', 1],
-            ['other_involved_someone_involved_in_trafficking', 1],
-            ['other_involved_place_involved_in_trafficking', 1],
-            ['victim_has_worked_in_sex_industry', 1],
-            ['victim_place_worked_involved_sending_girls_overseas', 1],
-            ['awareness_before_interception', 1],
-            ['attitude_towards_tiny_hands', 1],
-            ['victim_heard_gospel', 1],
-            ['victim_beliefs_now', 1],
-            ['guardian_knew_was_travelling_to_india', 1],
-            ['family_pressured_victim', 1],
-            ['family_will_try_sending_again', 1],
-            ['victim_feels_safe_at_home', 1],
-            ['victim_wants_to_go_home', 1],
-            ['victim_home_had_sexual_abuse', 1],
-            ['victim_home_had_physical_abuse', 1],
-            ['victim_home_had_emotional_abuse', 1],
-            ['victim_guardian_drinks_alcohol', 1],
-            ['victim_guardian_uses_drugs', 1],
-            ['victim_family_economic_situation', 1],
-            ['victim_had_suicidal_thoughts', 1],
-            ['legal_action_against_traffickers', 1],
-            ['reason_no_legal', 1],
-            ['interviewer_recommendation', 1],
-            ['other_people_and_places_involved', 1]
-        ], function(i, checkboxAttrs) {
-            var name = checkboxAttrs[0];
-            var maxAllowedChecked = checkboxAttrs[1];
-            checkboxManagers[name] = {
-                name: name,
-                maxAllowedChecked: maxAllowedChecked,
-                checkedOrder: $.makeArray($('#'+name+' input[type="checkbox"]:checked'))
-            };
+        setUpLimitedChoicesCheckboxGroups();
+
+        $('#id_victim_where_going_region_india').click(function() {
+            $('#id_victim_where_going_region_gulf').attr('checked', null);
+            $('input[id*="id_victim_where_going_gulf_"]').attr('checked', null);
+        });
+        $('#id_victim_where_going_region_gulf').click(function() {
+            $('#id_victim_where_going_region_india').attr('checked', null);
+            $('input[id*="id_victim_where_going_india_"]').attr('checked', null);
+        });
+        $('#victim_where_going_gulf').find('input[type="checkbox"]').click(function() {
+            $('#id_victim_where_going_region_gulf').attr('checked', 'checked');
+            $('#id_victim_where_going_region_india').attr('checked', null);
+            $('input[id*="id_victim_where_going_india_"]').attr('checked', null);
+        });
+        $('#victim_where_going_india').find('input[type="checkbox"]').click(function() {
+            $('#id_victim_where_going_region_india').attr('checked', 'checked');
+            $('#id_victim_where_going_region_gulf').attr('checked', null);
+            $('input[id*="id_victim_where_going_gulf_"]').attr('checked', null);
         });
 
-        $('input[type="checkbox"]').click(function() {
-            var name = $(this).attr('name');
-            if (!(name in checkboxManagers)) {
-                name = $(this).parents('.checkbox-group-marker').attr('id');
-            }
-            var manager = checkboxManagers[name];
-
-            if (manager) {
-                if ($(this).is(':checked')) {
-                    var numberChecked = $('#'+name+' input[type="checkbox"]:checked').length;
-                    if (numberChecked > manager.maxAllowedChecked) {
-                        var last = manager.checkedOrder.shift();
-                        $(last).attr('checked', null);
-                    }
-                    manager.checkedOrder.push(this);
-                }
-                else {
-                    manager.checkedOrder.splice(
-                        manager.checkedOrder.indexOf(this), 1);
-                }
-            }
-        });
 
         // Allow user to hover over the numbers in parens next to some fields to 
         // learn that that is how many may be checked.
