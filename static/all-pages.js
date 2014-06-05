@@ -243,15 +243,15 @@ var DREAMSUITE = {
         setUpValidationPopups();
 
         setUpLimitedChoicesCheckboxGroups();
-        $('#id_contact_noticed').click(function() {
-            $('#id_staff_noticed').attr('checked', null);
-            $('input[id*="id_noticed_"]').attr('checked', null);
-        });
-        $('#id_staff_noticed').click(function() {
-            $('#id_contact_noticed').attr('checked', null);
-            $('input[id*="id_which_contact_"]').attr('checked', null);
-            $('#contact_paid').find('input[type="checkbox"]').attr('checked', null);
-        });
+        //$('#id_contact_noticed').click(function() {
+        //    $('#id_staff_noticed').attr('checked', null);
+        //    $('input[id*="id_noticed_"]').attr('checked', null);
+        //});
+        //$('#id_staff_noticed').click(function() {
+        //    $('#id_contact_noticed').attr('checked', null);
+        //    $('input[id*="id_which_contact_"]').attr('checked', null);
+        //    $('#contact_paid').find('input[type="checkbox"]').attr('checked', null);
+        //});
 
         // A hack but it works
         if ($('#error-box p').length === 0) {
