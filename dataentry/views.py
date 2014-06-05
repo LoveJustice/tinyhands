@@ -101,8 +101,7 @@ class VictimInterviewListView(
 class VictimInterviewCreateView(
         LoginRequiredMixin,
         PermissionsRequiredMixin,
-        #CreateWithInlinesView):
-        CreateView):
+        CreateWithInlinesView):
     model = VictimInterview
     form_class = VictimInterviewForm
     success_url = reverse_lazy('victiminterview_list')
@@ -113,8 +112,7 @@ class VictimInterviewCreateView(
 class VictimInterviewUpdateView(
         LoginRequiredMixin,
         PermissionsRequiredMixin,
-        #UpdateWithInlinesView):
-        UpdateView):
+        UpdateWithInlinesView):
     model = VictimInterview
     form_class = VictimInterviewForm
     success_url = reverse_lazy('victiminterview_list')

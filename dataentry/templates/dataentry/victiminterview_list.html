@@ -17,7 +17,7 @@
             <th>Staff Name</th>
             <th># of victims</th>
             <th># of traffickers</th>
-            <th>Date/Time<br/>of Interview</th>
+            <th>Date<br/>of Interview</th>
             <th>Date/Time<br/>Entered Into System</th>
             <th>Date/Time<br/>Last Edited</th>
             <th>&nbsp;</th>
@@ -30,7 +30,7 @@
             <td>{{ vif.staff_name }}</td>
             <td>{{ vif.number_of_victims }}</td>
             <td>{{ vif.number_of_traffickers }}</td>
-            <td>{{ vif.date_time }}</td>
+            <td>{{ vif.date }}</td>
             <td>{{ vif.date_time_entered_into_system }}</td>
             <td>{{ vif.date_time_last_updated }}</td>
             <td><a class="btn btn-sm btn-primary" href="{% url 'victiminterview_update' vif.pk %}">Edit</a></td>

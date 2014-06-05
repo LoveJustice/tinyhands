@@ -7,24 +7,24 @@
         <div class="col-sm-5">
             <div class="red-border-right red-border-bottom inner smaller">
                 <h2>Who is this?</h2>
-                {% for choice in pb_form.who_is_this_relationship %}
-                    <div class="checkbox-group">{{ choice }}</div>
-                {% endfor %}
-
+                <div class="checkbox-group">{{ pb_form.who_is_this_relationship_boss_of }} {{ pb_form.who_is_this_relationship_boss_of.label_tag }}</div>
+                <div class="checkbox-group">{{ pb_form.who_is_this_relationship_coworker_of }} {{ pb_form.who_is_this_relationship_coworker_of.label_tag }}</div>
+                <div class="checkbox-group">{{ pb_form.who_is_this_relationship_own_relative_of }} {{ pb_form.who_is_this_relationship_own_relative_of.label_tag }}</div>
             </div>
             <div class="red-border-right inner">
-
-                {% for choice in pb_form.who_is_this_role|slice:":2" %}
-                    <div class="checkbox-group">{{ choice }}</div>
-                {% endfor %}
+                <div class="checkbox-group">{{ pb_form.who_is_this_role_broker }} {{ pb_form.who_is_this_role_broker.label_tag }}</div>
+                <div class="checkbox-group">{{ pb_form.who_is_this_role_companion }} {{ pb_form.who_is_this_role_companion.label_tag }}</div>
             </div>
         </div>
         <div class="col-sm-7">
             <div class="inner">
                 <div class="person-box-number">PB{{ counter }}</div>
-                {% for choice in pb_form.who_is_this_role|slice:"2:" %}
-                    <div class="checkbox-group">{{ choice }}</div>
-                {% endfor %}
+                <div class="checkbox-group">{{ pb_form.who_is_this_role_india_trafficker }} {{ pb_form.who_is_this_role_india_trafficker.label_tag }}</div>
+                <div class="checkbox-group">{{ pb_form.who_is_this_role_contact_of_husband }} {{ pb_form.who_is_this_role_contact_of_husband.label_tag }}</div>
+                <div class="checkbox-group">{{ pb_form.who_is_this_role_known_trafficker }} {{ pb_form.who_is_this_role_known_trafficker.label_tag }}</div>
+                <div class="checkbox-group">{{ pb_form.who_is_this_role_manpower }} {{ pb_form.who_is_this_role_manpower.label_tag }}</div>
+                <div class="checkbox-group">{{ pb_form.who_is_this_role_passport }} {{ pb_form.who_is_this_role_passport.label_tag }}</div>
+                <div class="checkbox-group">{{ pb_form.who_is_this_role_sex_industry }} {{ pb_form.who_is_this_role_sex_industry.label_tag }}</div>
             </div>
         </div>
     </div>
@@ -81,9 +81,11 @@
     </div>
     <div class="person-box row">
         <h2>Physical Description</h2>
-        {% for choice in pb_form.physical_description %}
-            <div class="inline-checkbox-group">{{ choice }}</div>
-        {% endfor %}
+        <div class="inline-checkbox-group">{{ pb_form.physical_description_kirat }} {{ pb_form.physical_description_kirat.label_tag }}</div>
+        <div class="inline-checkbox-group">{{ pb_form.physical_description_sherpa }} {{ pb_form.physical_description_sherpa.label_tag }}</div>
+        <div class="inline-checkbox-group">{{ pb_form.physical_description_madeshi }} {{ pb_form.physical_description_madeshi.label_tag }}</div>
+        <div class="inline-checkbox-group">{{ pb_form.physical_description_pahadi }} {{ pb_form.physical_description_pahadi.label_tag }}</div>
+        <div class="inline-checkbox-group">{{ pb_form.physical_description_newari }} {{ pb_form.physical_description_newari.label_tag }}</div>
     </div>
 
     <div class="person-box row">
@@ -93,51 +95,54 @@
 
     <div class="person-box row">
         <h2>What is this person's occupation?</h2>
-        <div class="inline-checkbox-group">{{ pb_form.occupation.0 }} {{ pb_form.occupation.0.label_tag }}</div>
+        <div class="inline-checkbox-group">{{ pb_form.occupation_none }} {{ pb_form.occupation_none.label_tag }}</div>
     </div>
     <div class="person-box row">
         <div class="col-sm-4" style="width: 40%">
-            {% for choice in pb_form.occupation|slice:"1:3" %}
-                <div class="checkbox-group">{{ choice }} {{ choice.label_tag }}</div>
-            {% endfor %}
+        <div class="checkbox-group">{{ pb_form.occupation_agent }} {{ pb_form.occupation_agent.label_tag }}</div>
+        <div class="checkbox-group">{{ pb_form.occupation_business_owner }} {{ pb_form.occupation_business_owner.label_tag }}</div>
             <div class="label-inside-field">
-                {{ pb_form.occupation.3 }}
-                {{ pb_form.occupation.3.label_tag }}
+                <label>{{ pb_form.occupation_other }} {{ pb_form.occupation_other.label }}</label>
                 {{ pb_form.occupation_other_value }}
             </div>
         </div>
         <div class="col-sm-4">
-            {% for choice in pb_form.occupation|slice:"4:9" %}
-                <div class="checkbox-group">{{ choice }} {{ choice.label_tag }}</div>
-            {% endfor %}
+            <div class="checkbox-group">{{ pb_form.occupation_wage_labor }} {{ pb_form.occupation_wage_labor.label_tag }}</div>
+            <div class="checkbox-group">{{ pb_form.occupation_job_in_india }} {{ pb_form.occupation_job_in_india.label_tag }}</div>
+            <div class="checkbox-group">{{ pb_form.occupation_job_in_gulf }} {{ pb_form.occupation_job_in_gulf.label_tag }}</div>
+            <div class="checkbox-group">{{ pb_form.occupation_farmer }} {{ pb_form.occupation_farmer.label_tag }}</div>
+            <div class="checkbox-group">{{ pb_form.occupation_teacher }} {{ pb_form.occupation_teacher.label_tag }}</div>
         </div>
         <div class="col-sm-4" style="width: 25%">
-            {% for choice in pb_form.occupation|slice:"9:14" %}
-                <div class="checkbox-group">{{ choice }} {{ choice.label_tag }}</div>
-            {% endfor %}
+            <div class="checkbox-group">{{ pb_form.occupation_police }} {{ pb_form.occupation_police.label_tag }}</div>
+            <div class="checkbox-group">{{ pb_form.occupation_army }} {{ pb_form.occupation_army.label_tag }}</div>
+            <div class="checkbox-group">{{ pb_form.occupation_guard }} {{ pb_form.occupation_guard.label_tag }}</div>
+            <div class="checkbox-group">{{ pb_form.occupation_cook }} {{ pb_form.occupation_cook.label_tag }}</div>
+            <div class="checkbox-group">{{ pb_form.occupation_driver }} {{ pb_form.occupation_driver.label_tag }}</div>
         </div>
     </div>
 
     <div class="person-box row">
         <h2>Member of a political Party?</h2>
-        <div class="inline-checkbox-group">{{ pb_form.political_party.0 }} {{ pb_form.political_party.0.label_tag }}</div>
+        <div class="inline-checkbox-group">{{ pb_form.political_party_congress }} {{ pb_form.political_party_congress.label_tag }}</div>
     </div>
     <div class="person-box row">
         <div class="col-sm-4" style="width: 39%">
-            {% for choice in pb_form.political_party|slice:"1:6" %}
-                <div class="checkbox-group">{{ choice }} {{ choice.label_tag }}</div>
-            {% endfor %}
+        <div class="checkbox-group">{{ pb_form.political_party_maoist }} {{ pb_form.political_party_maoist.label_tag }}</div>
+        <div class="checkbox-group">{{ pb_form.political_party_umn }} {{ pb_form.political_party_umn.label_tag }}</div>
+        <div class="checkbox-group">{{ pb_form.political_party_forum }} {{ pb_form.political_party_forum.label_tag }}</div>
+        <div class="checkbox-group">{{ pb_form.political_party_tarai_madesh }} {{ pb_form.political_party_tarai_madesh.label_tag }}</div>
+        <div class="checkbox-group">{{ pb_form.political_party_shadbawona }} {{ pb_form.political_party_shadbawona.label_tag }}</div>
         </div>
         <div class="col-sm-8" style="width: 60%">
-            {% for choice in pb_form.political_party|slice:"6:9" %}
-                <div class="checkbox-group">{{ choice }} {{ choice.label_tag }}</div>
-            {% endfor %}
+        <div class="checkbox-group">{{ pb_form.political_party_rnt }} {{ pb_form.political_party_rnt.label_tag }}</div>
+        <div class="checkbox-group">{{ pb_form.political_party_njf }} {{ pb_form.political_party_njf.label_tag }}</div>
+        <div class="checkbox-group">{{ pb_form.political_party_loktantrak }} {{ pb_form.political_party_loktantrak.label_tag }}</div>
 
-            <label class="blending-into-input-label">{{ pb_form.political_party.10 }} {{ pb_form.political_party.10.label_tag }}</label>
+        <label class="blending-into-input-label">{{ pb_form.political_party_other }} {{ pb_form.political_party_other.label_tag }}</label>
 
             <div class="inline-checkbox-group">
-                {{ pb_form.political_party.9 }}
-                {{ pb_form.political_party.9.label_tag }}
+                {{ pb_form.political_party_dont_know }} {{ pb_form.political_party_dont_know.label_tag }}
             </div>
 
             {{ pb_form.political_party_other_value }}
@@ -153,16 +158,16 @@
         <h2 style="margin-left: 40px">Which do you believe about him?</h2>
         <div class="clearfix">
             <div class="pull-left interviewer-believes-box">
-                {% for choice in pb_form.interviewer_believes %}
-                    {{ choice }}
-                    <br/>
-                {% endfor %}
+                {{ pb_form.interviewer_believes_definitely_trafficked }} <br/>
+                {{ pb_form.interviewer_believes_have_trafficked }} <br/>
+                {{ pb_form.interviewer_believes_suspects_trafficked }} <br/>
+                {{ pb_form.interviewer_believes_not_trafficker }}
             </div>
             <div class="pull-right victim-believes-box">
-                {% for choice in pb_form.victim_believes %}
-                    {{ choice }}
-                    <br/>
-                {% endfor %}
+                {{ pb_form.victim_believes_definitely_trafficked }} <br/>
+                {{ pb_form.victim_believes_have_trafficked }} <br/>
+                {{ pb_form.victim_believes_suspects_trafficked }} <br/>
+                {{ pb_form.victim_believes_not_trafficker }}
             </div>
             <div class="text-center">
                 Definitely trafficked many girls

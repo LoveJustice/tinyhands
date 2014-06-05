@@ -8,431 +8,19 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Deleting field 'InterceptionRecord.talked_to_father'
-        db.delete_column(u'dataentry_interceptionrecord', 'talked_to_father')
 
-        # Deleting field 'InterceptionRecord.contact_other_ngo'
-        db.delete_column(u'dataentry_interceptionrecord', 'contact_other_ngo')
-
-        # Deleting field 'InterceptionRecord.interception_type'
-        db.delete_column(u'dataentry_interceptionrecord', 'interception_type')
-
-        # Deleting field 'InterceptionRecord.contact_church_member'
-        db.delete_column(u'dataentry_interceptionrecord', 'contact_church_member')
-
-        # Deleting field 'InterceptionRecord.talked_to_mother'
-        db.delete_column(u'dataentry_interceptionrecord', 'talked_to_mother')
-
-        # Deleting field 'InterceptionRecord.contact_police'
-        db.delete_column(u'dataentry_interceptionrecord', 'contact_police')
-
-        # Deleting field 'InterceptionRecord.contact_subcommittee_member'
-        db.delete_column(u'dataentry_interceptionrecord', 'contact_subcommittee_member')
-
-        # Deleting field 'InterceptionRecord.talked_to_other'
-        db.delete_column(u'dataentry_interceptionrecord', 'talked_to_other')
-
-        # Deleting field 'InterceptionRecord.name_come_up_before_yes_value'
-        db.delete_column(u'dataentry_interceptionrecord', 'name_come_up_before_yes_value')
-
-        # Deleting field 'InterceptionRecord.contact_other'
-        db.delete_column(u'dataentry_interceptionrecord', 'contact_other')
-
-        # Deleting field 'InterceptionRecord.talked_to_sister'
-        db.delete_column(u'dataentry_interceptionrecord', 'talked_to_sister')
-
-        # Deleting field 'InterceptionRecord.contact_rickshaw_driver'
-        db.delete_column(u'dataentry_interceptionrecord', 'contact_rickshaw_driver')
-
-        # Deleting field 'InterceptionRecord.talked_to_grandparent'
-        db.delete_column(u'dataentry_interceptionrecord', 'talked_to_grandparent')
-
-        # Deleting field 'InterceptionRecord.name_come_up_before'
-        db.delete_column(u'dataentry_interceptionrecord', 'name_come_up_before')
-
-        # Deleting field 'InterceptionRecord.contact_hotel_owner'
-        db.delete_column(u'dataentry_interceptionrecord', 'contact_hotel_owner')
-
-        # Deleting field 'InterceptionRecord.contact_bus_driver'
-        db.delete_column(u'dataentry_interceptionrecord', 'contact_bus_driver')
-
-        # Deleting field 'InterceptionRecord.talked_to_brother'
-        db.delete_column(u'dataentry_interceptionrecord', 'talked_to_brother')
-
-        # Deleting field 'InterceptionRecord.contact_other_value'
-        db.delete_column(u'dataentry_interceptionrecord', 'contact_other_value')
-
-        # Deleting field 'InterceptionRecord.talked_to_other_value'
-        db.delete_column(u'dataentry_interceptionrecord', 'talked_to_other_value')
-
-        # Deleting field 'InterceptionRecord.contact_taxi_driver'
-        db.delete_column(u'dataentry_interceptionrecord', 'contact_taxi_driver')
-
-        # Deleting field 'InterceptionRecord.talked_to_aunt_uncle'
-        db.delete_column(u'dataentry_interceptionrecord', 'talked_to_aunt_uncle')
-
-        # Adding field 'InterceptionRecord.talked_to_family_member_brother'
-        db.add_column(u'dataentry_interceptionrecord', 'talked_to_family_member_brother',
-                      self.gf('django.db.models.fields.BooleanField')(default=False),
-                      keep_default=False)
-
-        # Adding field 'InterceptionRecord.talked_to_family_member_sister'
-        db.add_column(u'dataentry_interceptionrecord', 'talked_to_family_member_sister',
-                      self.gf('django.db.models.fields.BooleanField')(default=False),
-                      keep_default=False)
-
-        # Adding field 'InterceptionRecord.talked_to_family_member_father'
-        db.add_column(u'dataentry_interceptionrecord', 'talked_to_family_member_father',
-                      self.gf('django.db.models.fields.BooleanField')(default=False),
-                      keep_default=False)
-
-        # Adding field 'InterceptionRecord.talked_to_family_member_mother'
-        db.add_column(u'dataentry_interceptionrecord', 'talked_to_family_member_mother',
-                      self.gf('django.db.models.fields.BooleanField')(default=False),
-                      keep_default=False)
-
-        # Adding field 'InterceptionRecord.talked_to_family_member_grandparent'
-        db.add_column(u'dataentry_interceptionrecord', 'talked_to_family_member_grandparent',
-                      self.gf('django.db.models.fields.BooleanField')(default=False),
-                      keep_default=False)
-
-        # Adding field 'InterceptionRecord.talked_to_family_member_aunt_uncle'
-        db.add_column(u'dataentry_interceptionrecord', 'talked_to_family_member_aunt_uncle',
-                      self.gf('django.db.models.fields.BooleanField')(default=False),
-                      keep_default=False)
-
-        # Adding field 'InterceptionRecord.talked_to_family_member_other'
-        db.add_column(u'dataentry_interceptionrecord', 'talked_to_family_member_other',
-                      self.gf('django.db.models.fields.BooleanField')(default=False),
-                      keep_default=False)
-
-        # Adding field 'InterceptionRecord.talked_to_family_member_other_value'
-        db.add_column(u'dataentry_interceptionrecord', 'talked_to_family_member_other_value',
-                      self.gf('django.db.models.fields.CharField')(default='', max_length=255, blank=True),
-                      keep_default=False)
-
-        # Adding field 'InterceptionRecord.which_contact_hotel_owner'
-        db.add_column(u'dataentry_interceptionrecord', 'which_contact_hotel_owner',
-                      self.gf('django.db.models.fields.BooleanField')(default=False),
-                      keep_default=False)
-
-        # Adding field 'InterceptionRecord.which_contact_rickshaw_driver'
-        db.add_column(u'dataentry_interceptionrecord', 'which_contact_rickshaw_driver',
-                      self.gf('django.db.models.fields.BooleanField')(default=False),
-                      keep_default=False)
-
-        # Adding field 'InterceptionRecord.which_contact_taxi_driver'
-        db.add_column(u'dataentry_interceptionrecord', 'which_contact_taxi_driver',
-                      self.gf('django.db.models.fields.BooleanField')(default=False),
-                      keep_default=False)
-
-        # Adding field 'InterceptionRecord.which_contact_bus_driver'
-        db.add_column(u'dataentry_interceptionrecord', 'which_contact_bus_driver',
-                      self.gf('django.db.models.fields.BooleanField')(default=False),
-                      keep_default=False)
-
-        # Adding field 'InterceptionRecord.which_contact_church_member'
-        db.add_column(u'dataentry_interceptionrecord', 'which_contact_church_member',
-                      self.gf('django.db.models.fields.BooleanField')(default=False),
-                      keep_default=False)
-
-        # Adding field 'InterceptionRecord.which_contact_other_ngo'
-        db.add_column(u'dataentry_interceptionrecord', 'which_contact_other_ngo',
-                      self.gf('django.db.models.fields.BooleanField')(default=False),
-                      keep_default=False)
-
-        # Adding field 'InterceptionRecord.which_contact_police'
-        db.add_column(u'dataentry_interceptionrecord', 'which_contact_police',
-                      self.gf('django.db.models.fields.BooleanField')(default=False),
-                      keep_default=False)
-
-        # Adding field 'InterceptionRecord.which_contact_subcommittee_member'
-        db.add_column(u'dataentry_interceptionrecord', 'which_contact_subcommittee_member',
-                      self.gf('django.db.models.fields.BooleanField')(default=False),
-                      keep_default=False)
-
-        # Adding field 'InterceptionRecord.which_contact_other'
-        db.add_column(u'dataentry_interceptionrecord', 'which_contact_other',
-                      self.gf('django.db.models.fields.BooleanField')(default=False),
-                      keep_default=False)
-
-        # Adding field 'InterceptionRecord.which_contact_other_value'
-        db.add_column(u'dataentry_interceptionrecord', 'which_contact_other_value',
-                      self.gf('django.db.models.fields.CharField')(default='', max_length=255, blank=True),
-                      keep_default=False)
-
-        # Adding field 'InterceptionRecord.name_came_up_before'
-        db.add_column(u'dataentry_interceptionrecord', 'name_came_up_before',
-                      self.gf('django.db.models.fields.NullBooleanField')(null=True, blank=True),
-                      keep_default=False)
-
-        # Adding field 'InterceptionRecord.name_came_up_before_value'
-        db.add_column(u'dataentry_interceptionrecord', 'name_came_up_before_value',
-                      self.gf('django.db.models.fields.PositiveIntegerField')(null=True, blank=True),
-                      keep_default=False)
-
-        # Adding field 'InterceptionRecord.interception_type_gulf_countries'
-        db.add_column(u'dataentry_interceptionrecord', 'interception_type_gulf_countries',
-                      self.gf('django.db.models.fields.BooleanField')(default=False),
-                      keep_default=False)
-
-        # Adding field 'InterceptionRecord.interception_type_india_trafficking'
-        db.add_column(u'dataentry_interceptionrecord', 'interception_type_india_trafficking',
-                      self.gf('django.db.models.fields.BooleanField')(default=False),
-                      keep_default=False)
-
-        # Adding field 'InterceptionRecord.interception_type_unsafe_migration'
-        db.add_column(u'dataentry_interceptionrecord', 'interception_type_unsafe_migration',
-                      self.gf('django.db.models.fields.BooleanField')(default=False),
-                      keep_default=False)
-
-        # Adding field 'InterceptionRecord.interception_type_circus'
-        db.add_column(u'dataentry_interceptionrecord', 'interception_type_circus',
-                      self.gf('django.db.models.fields.BooleanField')(default=False),
-                      keep_default=False)
-
-        # Adding field 'InterceptionRecord.interception_type_runaway'
-        db.add_column(u'dataentry_interceptionrecord', 'interception_type_runaway',
-                      self.gf('django.db.models.fields.BooleanField')(default=False),
-                      keep_default=False)
-
-
-        # Changing field 'InterceptionRecord.number_of_traffickers'
-        db.alter_column(u'dataentry_interceptionrecord', 'number_of_traffickers', self.gf('django.db.models.fields.PositiveIntegerField')(null=True))
-
-        # Changing field 'InterceptionRecord.trafficker_taken_into_custody'
-        db.alter_column(u'dataentry_interceptionrecord', 'trafficker_taken_into_custody', self.gf('django.db.models.fields.PositiveIntegerField')(null=True))
-
-        # Changing field 'InterceptionRecord.number_of_victims'
-        db.alter_column(u'dataentry_interceptionrecord', 'number_of_victims', self.gf('django.db.models.fields.PositiveIntegerField')(null=True))
-        # Deleting field 'VictimInterview.date_time'
-        db.delete_column(u'dataentry_victiminterview', 'date_time')
-
-        # Adding field 'VictimInterview.date'
-        db.add_column(u'dataentry_victiminterview', 'date',
-                      self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime(2014, 6, 5, 0, 0)),
-                      keep_default=False)
-
-
-        # Changing field 'VictimInterview.number_of_traffickers'
-        db.alter_column(u'dataentry_victiminterview', 'number_of_traffickers', self.gf('django.db.models.fields.PositiveIntegerField')(null=True))
-
-        # Changing field 'VictimInterview.number_of_victims'
-        db.alter_column(u'dataentry_victiminterview', 'number_of_victims', self.gf('django.db.models.fields.PositiveIntegerField')(null=True))
+        # Changing field 'VictimInterview.date'
+        db.alter_column(u'dataentry_victiminterview', 'date', self.gf('django.db.models.fields.DateField')())
 
     def backwards(self, orm):
-        # Adding field 'InterceptionRecord.talked_to_father'
-        db.add_column(u'dataentry_interceptionrecord', 'talked_to_father',
-                      self.gf('django.db.models.fields.BooleanField')(default=False),
-                      keep_default=False)
 
-        # Adding field 'InterceptionRecord.contact_other_ngo'
-        db.add_column(u'dataentry_interceptionrecord', 'contact_other_ngo',
-                      self.gf('django.db.models.fields.BooleanField')(default=False),
-                      keep_default=False)
-
-        # Adding field 'InterceptionRecord.interception_type'
-        db.add_column(u'dataentry_interceptionrecord', 'interception_type',
-                      self.gf('django.db.models.fields.CharField')(default='', max_length=30, blank=True),
-                      keep_default=False)
-
-        # Adding field 'InterceptionRecord.contact_church_member'
-        db.add_column(u'dataentry_interceptionrecord', 'contact_church_member',
-                      self.gf('django.db.models.fields.BooleanField')(default=False),
-                      keep_default=False)
-
-        # Adding field 'InterceptionRecord.talked_to_mother'
-        db.add_column(u'dataentry_interceptionrecord', 'talked_to_mother',
-                      self.gf('django.db.models.fields.BooleanField')(default=False),
-                      keep_default=False)
-
-        # Adding field 'InterceptionRecord.contact_police'
-        db.add_column(u'dataentry_interceptionrecord', 'contact_police',
-                      self.gf('django.db.models.fields.BooleanField')(default=False),
-                      keep_default=False)
-
-        # Adding field 'InterceptionRecord.contact_subcommittee_member'
-        db.add_column(u'dataentry_interceptionrecord', 'contact_subcommittee_member',
-                      self.gf('django.db.models.fields.BooleanField')(default=False),
-                      keep_default=False)
-
-        # Adding field 'InterceptionRecord.talked_to_other'
-        db.add_column(u'dataentry_interceptionrecord', 'talked_to_other',
-                      self.gf('django.db.models.fields.BooleanField')(default=False),
-                      keep_default=False)
-
-        # Adding field 'InterceptionRecord.name_come_up_before_yes_value'
-        db.add_column(u'dataentry_interceptionrecord', 'name_come_up_before_yes_value',
-                      self.gf('django.db.models.fields.CharField')(default='', max_length=255, blank=True),
-                      keep_default=False)
-
-        # Adding field 'InterceptionRecord.contact_other'
-        db.add_column(u'dataentry_interceptionrecord', 'contact_other',
-                      self.gf('django.db.models.fields.BooleanField')(default=False),
-                      keep_default=False)
-
-        # Adding field 'InterceptionRecord.talked_to_sister'
-        db.add_column(u'dataentry_interceptionrecord', 'talked_to_sister',
-                      self.gf('django.db.models.fields.BooleanField')(default=False),
-                      keep_default=False)
-
-        # Adding field 'InterceptionRecord.contact_rickshaw_driver'
-        db.add_column(u'dataentry_interceptionrecord', 'contact_rickshaw_driver',
-                      self.gf('django.db.models.fields.BooleanField')(default=False),
-                      keep_default=False)
-
-        # Adding field 'InterceptionRecord.talked_to_grandparent'
-        db.add_column(u'dataentry_interceptionrecord', 'talked_to_grandparent',
-                      self.gf('django.db.models.fields.BooleanField')(default=False),
-                      keep_default=False)
-
-        # Adding field 'InterceptionRecord.name_come_up_before'
-        db.add_column(u'dataentry_interceptionrecord', 'name_come_up_before',
-                      self.gf('django.db.models.fields.NullBooleanField')(null=True, blank=True),
-                      keep_default=False)
-
-        # Adding field 'InterceptionRecord.contact_hotel_owner'
-        db.add_column(u'dataentry_interceptionrecord', 'contact_hotel_owner',
-                      self.gf('django.db.models.fields.BooleanField')(default=False),
-                      keep_default=False)
-
-        # Adding field 'InterceptionRecord.contact_bus_driver'
-        db.add_column(u'dataentry_interceptionrecord', 'contact_bus_driver',
-                      self.gf('django.db.models.fields.BooleanField')(default=False),
-                      keep_default=False)
-
-        # Adding field 'InterceptionRecord.talked_to_brother'
-        db.add_column(u'dataentry_interceptionrecord', 'talked_to_brother',
-                      self.gf('django.db.models.fields.BooleanField')(default=False),
-                      keep_default=False)
-
-        # Adding field 'InterceptionRecord.contact_other_value'
-        db.add_column(u'dataentry_interceptionrecord', 'contact_other_value',
-                      self.gf('django.db.models.fields.CharField')(default='', max_length=255, blank=True),
-                      keep_default=False)
-
-        # Adding field 'InterceptionRecord.talked_to_other_value'
-        db.add_column(u'dataentry_interceptionrecord', 'talked_to_other_value',
-                      self.gf('django.db.models.fields.CharField')(default='', max_length=255, blank=True),
-                      keep_default=False)
-
-        # Adding field 'InterceptionRecord.contact_taxi_driver'
-        db.add_column(u'dataentry_interceptionrecord', 'contact_taxi_driver',
-                      self.gf('django.db.models.fields.BooleanField')(default=False),
-                      keep_default=False)
-
-        # Adding field 'InterceptionRecord.talked_to_aunt_uncle'
-        db.add_column(u'dataentry_interceptionrecord', 'talked_to_aunt_uncle',
-                      self.gf('django.db.models.fields.BooleanField')(default=False),
-                      keep_default=False)
-
-        # Deleting field 'InterceptionRecord.talked_to_family_member_brother'
-        db.delete_column(u'dataentry_interceptionrecord', 'talked_to_family_member_brother')
-
-        # Deleting field 'InterceptionRecord.talked_to_family_member_sister'
-        db.delete_column(u'dataentry_interceptionrecord', 'talked_to_family_member_sister')
-
-        # Deleting field 'InterceptionRecord.talked_to_family_member_father'
-        db.delete_column(u'dataentry_interceptionrecord', 'talked_to_family_member_father')
-
-        # Deleting field 'InterceptionRecord.talked_to_family_member_mother'
-        db.delete_column(u'dataentry_interceptionrecord', 'talked_to_family_member_mother')
-
-        # Deleting field 'InterceptionRecord.talked_to_family_member_grandparent'
-        db.delete_column(u'dataentry_interceptionrecord', 'talked_to_family_member_grandparent')
-
-        # Deleting field 'InterceptionRecord.talked_to_family_member_aunt_uncle'
-        db.delete_column(u'dataentry_interceptionrecord', 'talked_to_family_member_aunt_uncle')
-
-        # Deleting field 'InterceptionRecord.talked_to_family_member_other'
-        db.delete_column(u'dataentry_interceptionrecord', 'talked_to_family_member_other')
-
-        # Deleting field 'InterceptionRecord.talked_to_family_member_other_value'
-        db.delete_column(u'dataentry_interceptionrecord', 'talked_to_family_member_other_value')
-
-        # Deleting field 'InterceptionRecord.which_contact_hotel_owner'
-        db.delete_column(u'dataentry_interceptionrecord', 'which_contact_hotel_owner')
-
-        # Deleting field 'InterceptionRecord.which_contact_rickshaw_driver'
-        db.delete_column(u'dataentry_interceptionrecord', 'which_contact_rickshaw_driver')
-
-        # Deleting field 'InterceptionRecord.which_contact_taxi_driver'
-        db.delete_column(u'dataentry_interceptionrecord', 'which_contact_taxi_driver')
-
-        # Deleting field 'InterceptionRecord.which_contact_bus_driver'
-        db.delete_column(u'dataentry_interceptionrecord', 'which_contact_bus_driver')
-
-        # Deleting field 'InterceptionRecord.which_contact_church_member'
-        db.delete_column(u'dataentry_interceptionrecord', 'which_contact_church_member')
-
-        # Deleting field 'InterceptionRecord.which_contact_other_ngo'
-        db.delete_column(u'dataentry_interceptionrecord', 'which_contact_other_ngo')
-
-        # Deleting field 'InterceptionRecord.which_contact_police'
-        db.delete_column(u'dataentry_interceptionrecord', 'which_contact_police')
-
-        # Deleting field 'InterceptionRecord.which_contact_subcommittee_member'
-        db.delete_column(u'dataentry_interceptionrecord', 'which_contact_subcommittee_member')
-
-        # Deleting field 'InterceptionRecord.which_contact_other'
-        db.delete_column(u'dataentry_interceptionrecord', 'which_contact_other')
-
-        # Deleting field 'InterceptionRecord.which_contact_other_value'
-        db.delete_column(u'dataentry_interceptionrecord', 'which_contact_other_value')
-
-        # Deleting field 'InterceptionRecord.name_came_up_before'
-        db.delete_column(u'dataentry_interceptionrecord', 'name_came_up_before')
-
-        # Deleting field 'InterceptionRecord.name_came_up_before_value'
-        db.delete_column(u'dataentry_interceptionrecord', 'name_came_up_before_value')
-
-        # Deleting field 'InterceptionRecord.interception_type_gulf_countries'
-        db.delete_column(u'dataentry_interceptionrecord', 'interception_type_gulf_countries')
-
-        # Deleting field 'InterceptionRecord.interception_type_india_trafficking'
-        db.delete_column(u'dataentry_interceptionrecord', 'interception_type_india_trafficking')
-
-        # Deleting field 'InterceptionRecord.interception_type_unsafe_migration'
-        db.delete_column(u'dataentry_interceptionrecord', 'interception_type_unsafe_migration')
-
-        # Deleting field 'InterceptionRecord.interception_type_circus'
-        db.delete_column(u'dataentry_interceptionrecord', 'interception_type_circus')
-
-        # Deleting field 'InterceptionRecord.interception_type_runaway'
-        db.delete_column(u'dataentry_interceptionrecord', 'interception_type_runaway')
-
-
-        # Changing field 'InterceptionRecord.number_of_traffickers'
-        db.alter_column(u'dataentry_interceptionrecord', 'number_of_traffickers', self.gf('django.db.models.fields.IntegerField')(null=True))
-
-        # Changing field 'InterceptionRecord.trafficker_taken_into_custody'
-        db.alter_column(u'dataentry_interceptionrecord', 'trafficker_taken_into_custody', self.gf('django.db.models.fields.CharField')(max_length=255))
-
-        # Changing field 'InterceptionRecord.number_of_victims'
-        db.alter_column(u'dataentry_interceptionrecord', 'number_of_victims', self.gf('django.db.models.fields.IntegerField')(null=True))
-
-        # User chose to not deal with backwards NULL issues for 'VictimInterview.date_time'
-        raise RuntimeError("Cannot reverse this migration. 'VictimInterview.date_time' and its values cannot be restored.")
-        
-        # The following code is provided here to aid in writing a correct migration        # Adding field 'VictimInterview.date_time'
-        db.add_column(u'dataentry_victiminterview', 'date_time',
-                      self.gf('django.db.models.fields.DateTimeField')(),
-                      keep_default=False)
-
-        # Deleting field 'VictimInterview.date'
-        db.delete_column(u'dataentry_victiminterview', 'date')
-
-
-        # Changing field 'VictimInterview.number_of_traffickers'
-        db.alter_column(u'dataentry_victiminterview', 'number_of_traffickers', self.gf('django.db.models.fields.IntegerField')(null=True))
-
-        # Changing field 'VictimInterview.number_of_victims'
-        db.alter_column(u'dataentry_victiminterview', 'number_of_victims', self.gf('django.db.models.fields.IntegerField')(null=True))
+        # Changing field 'VictimInterview.date'
+        db.alter_column(u'dataentry_victiminterview', 'date', self.gf('django.db.models.fields.DateTimeField')())
 
     models = {
         u'accounts.account': {
             'Meta': {'object_name': 'Account'},
-            'activation_key': ('django.db.models.fields.CharField', [], {'default': "'y9TW9pW9EPnqbC21ncMbnMEJ3bzW9a5MsRPm0040'", 'max_length': '40'}),
+            'activation_key': ('django.db.models.fields.CharField', [], {'default': "'8hDkmRn5dNyA9w6vjILkYQhExmb9m1ZIoAIfjXXJ'", 'max_length': '40'}),
             'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
             'email': ('django.db.models.fields.EmailField', [], {'unique': 'True', 'max_length': '255'}),
             'first_name': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
@@ -667,7 +255,7 @@ class Migration(SchemaMigration):
             'brokers_relation_to_victim_recently_met': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'case_notes': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'companion_with_when_intercepted': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'blank': 'True'}),
-            'date': ('django.db.models.fields.DateTimeField', [], {}),
+            'date': ('django.db.models.fields.DateField', [], {}),
             'date_time_entered_into_system': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'date_time_last_updated': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
             'family_pressured_victim': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'blank': 'True'}),
@@ -818,7 +406,7 @@ class Migration(SchemaMigration):
             'victim_heard_gospel_heard_but_never_believed': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'victim_heard_gospel_heard_name_only': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'victim_heard_gospel_no': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'victim_height': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
+            'victim_height': ('django.db.models.fields.PositiveIntegerField', [], {'max_length': '255', 'blank': 'True'}),
             'victim_home_had_emotional_abuse_frequently': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'victim_home_had_emotional_abuse_never': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'victim_home_had_emotional_abuse_rarely': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
@@ -918,30 +506,30 @@ class Migration(SchemaMigration):
             'victim_was_free_to_go_out_explanation': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'victim_was_hidden': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'blank': 'True'}),
             'victim_was_hidden_explanation': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-            'victim_weight': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
-            'victim_where_going_bihar': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'victim_where_going_delhi': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'victim_where_going_dubai': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'victim_where_going_gulf': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'victim_weight': ('django.db.models.fields.PositiveIntegerField', [], {'max_length': '255', 'blank': 'True'}),
             'victim_where_going_gulf_didnt_know': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'victim_where_going_gulf_dubai': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'victim_where_going_gulf_kuwait': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'victim_where_going_gulf_lebanon': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'victim_where_going_gulf_malaysia': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'victim_where_going_gulf_oman': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'victim_where_going_gulf_other': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'victim_where_going_gulf_other_value': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
-            'victim_where_going_india': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'victim_where_going_gulf_qatar': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'victim_where_going_gulf_saudi_arabia': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'victim_where_going_india_bihar': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'victim_where_going_india_delhi': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'victim_where_going_india_didnt_know': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'victim_where_going_india_jaipur': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'victim_where_going_india_kolkata': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'victim_where_going_india_mumbai': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'victim_where_going_india_other': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'victim_where_going_india_other_value': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
-            'victim_where_going_jaipur': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'victim_where_going_kolkata': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'victim_where_going_kuwait': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'victim_where_going_lebanon': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'victim_where_going_malaysia': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'victim_where_going_mumbai': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'victim_where_going_oman': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'victim_where_going_pune': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'victim_where_going_qatar': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'victim_where_going_rajastan': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'victim_where_going_saudi_arabia': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'victim_where_going_surat': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'victim_where_going_india_pune': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'victim_where_going_india_rajastan': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'victim_where_going_india_surat': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'victim_where_going_region_gulf': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'victim_where_going_region_india': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'vif_number': ('django.db.models.fields.CharField', [], {'max_length': '20'})
         },
         u'dataentry.victiminterviewlocationbox': {
@@ -994,27 +582,69 @@ class Migration(SchemaMigration):
             'address_district': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'address_vdc': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'address_ward': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
-            'age': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
+            'age': ('django.db.models.fields.PositiveIntegerField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
             'appearance_other': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'associated_with_place': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'blank': 'True'}),
             'associated_with_place_value': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'gender': ('django.db.models.fields.CharField', [], {'max_length': '12', 'blank': 'True'}),
-            'height': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
+            'height': ('django.db.models.fields.PositiveIntegerField', [], {'max_length': '255', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'interviewer_believes': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
+            'interviewer_believes_definitely_trafficked': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'interviewer_believes_have_trafficked': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'interviewer_believes_not_trafficker': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'interviewer_believes_suspects_trafficked': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
-            'occupation': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
+            'occupation_agent': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'occupation_army': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'occupation_business_owner': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'occupation_cook': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'occupation_driver': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'occupation_farmer': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'occupation_guard': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'occupation_job_in_gulf': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'occupation_job_in_india': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'occupation_none': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'occupation_other': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'occupation_other_value': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
+            'occupation_police': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'occupation_teacher': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'occupation_wage_labor': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'phone': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
-            'physical_description': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
-            'political_party': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
+            'physical_description_kirat': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'physical_description_madeshi': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'physical_description_newari': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'physical_description_pahadi': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'physical_description_sherpa': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'political_party_congress': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'political_party_dont_know': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'political_party_forum': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'political_party_loktantrak': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'political_party_maoist': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'political_party_njf': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'political_party_other': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'political_party_other_value': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
-            'victim_believes': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
+            'political_party_rnt': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'political_party_shadbawona': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'political_party_tarai_madesh': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'political_party_umn': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'victim_believes_definitely_trafficked': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'victim_believes_have_trafficked': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'victim_believes_not_trafficker': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'victim_believes_suspects_trafficked': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'victim_interview': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'person_boxes'", 'to': u"orm['dataentry.VictimInterview']"}),
-            'weight': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
+            'weight': ('django.db.models.fields.PositiveIntegerField', [], {'max_length': '255', 'blank': 'True'}),
             'where_spends_time': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-            'who_is_this_relationship': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
-            'who_is_this_role': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'})
+            'who_is_this_relationship_boss_of': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'who_is_this_relationship_coworker_of': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'who_is_this_relationship_own_relative_of': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'who_is_this_role_broker': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'who_is_this_role_companion': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'who_is_this_role_contact_of_husband': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'who_is_this_role_india_trafficker': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'who_is_this_role_known_trafficker': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'who_is_this_role_manpower': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'who_is_this_role_passport': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'who_is_this_role_sex_industry': ('django.db.models.fields.BooleanField', [], {'default': 'False'})
         }
     }
 

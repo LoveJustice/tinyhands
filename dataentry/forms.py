@@ -56,21 +56,6 @@ class DreamSuitePaperForm(forms.ModelForm):
                 else:
                     cleaned_data[field_name] = None
 
-        for field_name_start in [
-            'talked_to',
-
-            'primary_motivation',
-            'migration_plans',
-            'victim_where_going',
-            'victim_primary_means_of_travel',
-            'meeting_at_border',
-            'awareness_before_interception',
-            'attitude_towards_tiny_hands',
-            'victim_heard_gospel',
-        ]:
-            if not self.at_least_one_checked(cleaned_data, field_name_start):
-                self._errors[field_name_start] = self.error_class(['This field is required.'])
-
         return cleaned_data
 
     def at_least_one_checked(self, cleaned_data, field_name_start):
@@ -351,8 +336,7 @@ IntercepteeFormSet = inlineformset_factory(InterceptionRecord, Interceptee, extr
 
 
 class VictimInterviewForm(DreamSuitePaperForm):
-    statement_read_before_beginning = forms.ChoiceField(
-        widget=forms.CheckboxInput,
+    statement_read_before_beginning = forms.BooleanField(
         required=True,
         error_messages={'invalid_choice': 'This box must be checked.'}
     )
@@ -512,14 +496,41 @@ class VictimInterviewForm(DreamSuitePaperForm):
         required=False
     )
 
-    has_signature = forms.ChoiceField(
-        widget=forms.CheckboxInput,
+    has_signature = forms.BooleanField(
         required=True,
         error_messages={'invalid_choice': 'This box must be checked.'}
     )
 
     class Meta:
         model = VictimInterview
+
+    def __init__(self, *args, **kwargs):
+        super(VictimInterviewForm, self).__init__(*args, **kwargs)
+        # Determine the number of pbs and lbs. I can't come up with a better way than this
+        self.num_pbs = 0
+        self.num_lbs = 0
+        for field_name, value in self.data.iteritems():
+            if self.data[field_name]:
+                if field_name.startswith('person_boxes-'):
+                    try:
+                        which = int(field_name.split('-')[1])
+                        if which + 1 > self.num_pbs:
+                            self.num_pbs = which + 1
+                    except:
+                        pass
+                if field_name.startswith('location_boxes-'):
+                    try:
+                        which = int(field_name.split('-')[1])
+                        if which + 1 > self.num_lbs:
+                            self.num_lbs = which + 1
+                    except:
+                        pass
+        self.box_pages_needed = max(
+            1,
+            (self.num_pbs - 1) / 3 + 1,
+            (self.num_lbs - 1) / 2 + 1
+        )
+        print self.box_pages_needed
 
     def clean(self):
         cleaned_data = super(VictimInterviewForm, self).clean()
@@ -541,132 +552,47 @@ class VictimInterviewForm(DreamSuitePaperForm):
         return cleaned_data
 
 
-class VictimInterviewPersonBoxForm(forms.ModelForm):
-    WHO_IS_THIS_CHOICES = [
-    ]
-    who_is_this_relationship = forms.MultipleChoiceField(
-        choices=WHO_IS_THIS_CHOICES,
-        widget=forms.CheckboxSelectMultiple,
-        required=False
-    )
-
-    WHO_IS_THIS_ROLE_CHOICES = [
-        ('Broker', 'Broker'),
-        ('Companion', 'Companion'),
-        ('India Trafficker', 'India Trafficker'),
-        ('Contact of Husband', 'Contact of Husband'),
-        ('Known Trafficker', 'Known Trafficker'),
-        ('Manpower', 'Manpower'),
-        ('Passport', 'Passport'),
-        ('Sex Industry', 'Sex Industry'),
-    ]
-    who_is_this_role = forms.MultipleChoiceField(
-        choices=WHO_IS_THIS_ROLE_CHOICES,
-        widget=forms.CheckboxSelectMultiple,
-        required=False
-    )
+class VictimInterviewPersonBoxForm(DreamSuitePaperForm):
 
     gender = forms.MultipleChoiceField(
         choices=VictimInterviewPersonBox.GENDER_CHOICES,
         widget=forms.CheckboxSelectMultiple,
         required=False
     )
-
-    PHYSICAL_DESCRIPTION_CHOICES = [
-        ('Kirat', 'Kirat'),
-        ('Sherpa', 'Sherpa'),
-        ('Madeshi', 'Madeshi'),
-        ('Pahadi', 'Pahadi'),
-        ('Newari', 'Newari'),
-    ]
-    physical_description = forms.MultipleChoiceField(
-        choices=PHYSICAL_DESCRIPTION_CHOICES,
+    associated_with_place = forms.MultipleChoiceField(
+        choices=BOOLEAN_CHOICES,
         widget=forms.CheckboxSelectMultiple,
         required=False
     )
-
-    OCCUPATION_CHOICES = [
-        ('None', 'None'),
-        ('Agent (taking girls to India)', 'Agent (taking girls to India)'),
-        ('Business owner', 'Business owner'),
-        ('Other', 'Other'),
-        ('Wage labor', 'Wage labor'),
-        ('Job in India', 'Job in India'),
-        ('Job in Gulf', 'Job in Gulf'),
-        ('Farmer', 'Farmer'),
-        ('Teacher', 'Teacher'),
-        ('Police', 'Police'),
-        ('Army', 'Army'),
-        ('Guard', 'Guard'),
-        ('Cook', 'Cook'),
-        ('Driver', 'Driver'),
-    ]
-    occupation = forms.MultipleChoiceField(
-        choices=OCCUPATION_CHOICES,
-        widget=forms.CheckboxSelectMultiple,
-        required=False
-    )
-
-    POLITICAL_PARTY_CHOICES = [
-        ('Congress', 'Congress'),
-        ('Maoist', 'Maoist'),
-        ('UMN', 'UMN'),
-        ('Forum', 'Forum'),
-        ('Tarai Madesh', 'Tarai Madesh'),
-        ('Shadbawona', 'Shadbawona'),
-        ('Raprapha Nepal Thruhat', 'Raprapha Nepal Thruhat'),
-        ('Nepal Janadikarik Forum', 'Nepal Janadikarik Forum'),
-        ('Loktantrak Party', 'Loktantrak Party'),
-        ('Don\'t Know', 'Don\'t Know'),
-        ('Other', 'Other'),
-    ]
-    political_party = forms.MultipleChoiceField(
-        choices=POLITICAL_PARTY_CHOICES,
-        widget=forms.CheckboxSelectMultiple,
-        required=False
-    )
-
-    INTERVIEWER_BELIEVES_CHOICES = [
-        ('Interviewer believes they have definitely trafficked many girls', 'Interviewer believes they have definitely trafficked many girls'),
-        ('Interviewer believes they have trafficked some girls', 'Interviewer believes they have trafficked some girls'),
-        ('Interviewer suspects they are a trafficker', 'Interviewer suspects they are a trafficker'),
-        ('Interviewer doesn\'t believe they are a trafficker', 'Interviewer doesn\'t believe they are a trafficker'),
-    ]
-    interviewer_believes = forms.MultipleChoiceField(
-        choices=INTERVIEWER_BELIEVES_CHOICES,
-        widget=forms.CheckboxSelectMultiple,
-        required=False
-    )
-
-    VICTIM_BELIEVES_CHOICES = [
-        ('Victim believes this location is definitely used to traffic many victims', 'Victim believes this location is definitely used to traffic many victims'),
-        ('Victim believes this location has been used repeatedly to traffic some victims', 'Victim believes this location has been used repeatedly to traffic some victims'),
-        ('Victim suspects this location has been used for trafficking', 'Victim suspects this location has been used for trafficking'),
-        ('Victim does not believe this location is used for trafficking', 'Victim does not believe this location is used for trafficking'),
-    ]
-    victim_believes = forms.MultipleChoiceField(
-        choices=VICTIM_BELIEVES_CHOICES,
-        widget=forms.CheckboxSelectMultiple,
-        required=False
-    )
-
-
-    associated_with_place = forms.ChoiceField(widget=forms.RadioSelect, required=False)
 
     class Meta:
         model = VictimInterviewPersonBox
 
     def __init__(self, *args, **kwargs):
-        kwargs.setdefault('label_suffix', '')
         super(VictimInterviewPersonBoxForm, self).__init__(*args, **kwargs)
+        initial = self.initial.get('gender')
+        if initial is not None:
+            self.initial['gender'] = [unicode(initial)]
+
+    def clean(self):
+        cleaned_data = super(VictimInterviewPersonBoxForm, self).clean()
+        if len(cleaned_data.get('gender', [])) > 0:
+            cleaned_data['gender'] = cleaned_data['gender'][0]
+        else:
+            cleaned_data['gender'] = ''
+
+        return cleaned_data
 
 
-class VictimInterviewLocationBoxForm(forms.ModelForm):
-    associated_with_person = forms.ChoiceField(widget=forms.RadioSelect, required=False)
+class VictimInterviewLocationBoxForm(DreamSuitePaperForm):
+    associated_with_person = forms.MultipleChoiceField(
+        choices=BOOLEAN_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
 
     class Meta:
         model = VictimInterviewLocationBox
 
     def __init__(self, *args, **kwargs):
-        kwargs.setdefault('label_suffix', '')
         super(VictimInterviewLocationBoxForm, self).__init__(*args, **kwargs)

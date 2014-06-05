@@ -1,3 +1,16 @@
+function makeDateTimePickers(selector) {
+    $(selector).datetimepicker({
+        format:'m/d/Y H:i',
+        step: 30
+    });
+}
+function makeDatePickers(selector) {
+    $(selector).datetimepicker({
+        format:'m/d/Y',
+        timepicker: false
+    });
+}
+
 function setUpValidationPopup(elem, kind) {
     var id = $(elem).data('id');
     if (id == 'ignore_warnings') {
@@ -244,6 +257,10 @@ var DREAMSUITE = {
         if ($('#error-box p').length === 0) {
             $('#error-box').remove();
         }
+
+        $('.photo-upload-button').click(function() {
+            $(this).parents('td').find('input').click();
+        });
     },
 
     victiminterview_create: function() {
@@ -297,6 +314,22 @@ var DREAMSUITE = {
                 'At most ' + count + ' may be checked.'
             );
         });
+
+        makeDatePickers('#id_date, #id_victim_how_long_stayed_between_start_date');
+
+        var pagesNeeded = parseInt($('.pages-needed').data('pages-needed'));
+        for (var i=1; i<=4; i++) {
+            if (i > pagesNeeded) {
+                $('.box-page.page-' + i).hide();
+                $('.box-page.page-' + i).addClass('hidden');
+            }
+        }
+        $('.add-another-sheet').click(function(event) {
+            event.preventDefault();
+            var $nextPage = $('.box-page.hidden').eq(0);
+            $nextPage.removeClass('hidden');
+            $nextPage.slideDown();
+        });
     },
 
     default: function() {}
@@ -308,15 +341,6 @@ $(document).ready(function() {
     setTimeout(function() {
         $('.alert').not('.no-remove').slideUp();
     }, 4000);
-
-    $('input[id*=date]').not('#id_victim_how_long_stayed_between_start_date').datetimepicker({
-        format:'m/d/Y H:i',
-        step: 30
-    });
-
-    $('#id_victim_how_long_stayed_between_start_date').datetimepicker({
-        format:'m/d/Y'
-    });
 
     var bodyClass = $('body').attr('id');
     if (bodyClass in DREAMSUITE) {

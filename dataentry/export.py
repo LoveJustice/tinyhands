@@ -162,8 +162,8 @@ def text_if_true(condition, text):
         return ''
 
 
-def get_station_name_from_number(irf_number):
-    return BORDER_STATION_NAMES.get(irf_number, '')[:3]
+def get_station_name_from_number(form_number):
+    return BORDER_STATION_NAMES.get(form_number[:3], '')
 
 
 def get_irf_export_rows(irfs):
@@ -380,7 +380,7 @@ def get_irf_export_rows(irfs):
 vif_headers = [
     "VIF Number",
     "Station",
-    "Date/Time",
+    "Date",
     "Number of Victims",
     "Number of Traffickers",
     "Location",
@@ -497,57 +497,55 @@ vif_headers = [
     "8.4 More People or Places Involved in Trafficking",
     "Staff Signature on Form",
     "Case Notes",
-    "PB1 - Relationship",
-    "PB1 - Role",
-    "PB1 - Gender",
-    "PB1 - Name",
-    "PB1 - District",
-    "PB1 - VDC",
-    "PB1 - Ward",
-    "PB1 - Phone",
-    "PB1 - Age",
-    "PB1 - Height",
-    "PB1 - Weight",
-    "PB1 - Physical Description",
-    "PB1 - Appearance",
-    "PB1 - Occupation",
-    "PB1 - Other Occupation",
-    "PB1 - Political Affiliation",
-    "PB1 - How to Locate/Contact",
-    "PB1 - Interviewer Believes",
-    "PB1 - Victim Believes",
-    "PB1 - Association with Locations",
-    "LB1 - Place",
-    "LB1 - Type of Place",
-    "LB1 - VDC",
-    "LB1 - District",
-    "LB1 - Phone",
-    "LB1 - Signboard LB1 - Location in Town",
-    "LB1 - Color",
-    "LB1 - Levels",
-    "LB1 - Compound",
-    "LB1 - Wall",
-    "LB1 - Roof Color",
-    "LB1 - Gate Color",
-    "LB1 - Person in Charge",
-    "LB1 - Roof Type LB1 - Nearby Landmarks",
-    "LB1 - Nearby Signboards LB1 - Other",
-    "LB1 - Interviewer Believes",
-    "LB1 - Victim Believes",
-    "LB1 - Association with People",
 ]
-"""
-for i in range(1, 5+1):
-    irf_headers.extend([
-        "Trafficker 1 Name",
-        "Trafficker 1 Gender ",
-        "Trafficker 1 Age",
-        "Trafficker 1 District",
-        "Trafficker 1 VDC",
-        "Trafficker 1 Phone",
-        "Trafficker 1 Relationship to...",
-    ])
-"""
+
+vif_pb_headers = [
+    "PB%d - Relationship",
+    "PB%d - Role",
+    "PB%d - Gender",
+    "PB%d - Name",
+    "PB%d - District",
+    "PB%d - VDC",
+    "PB%d - Ward",
+    "PB%d - Phone",
+    "PB%d - Age",
+    "PB%d - Height",
+    "PB%d - Weight",
+    "PB%d - Physical Description",
+    "PB%d - Appearance",
+    "PB%d - Occupation",
+    "PB%d - Other Occupation",
+    "PB%d - Political Affiliation",
+    "PB%d - How to Locate/Contact",
+    "PB%d - Interviewer Believes",
+    "PB%d - Victim Believes",
+    "PB%d - Association with Locations",
+]
+vif_lb_headers = [
+    "LB%d - Place",
+    "LB%d - Type of Place",
+    "LB%d - VDC",
+    "LB%d - District",
+    "LB%d - Phone",
+    "LB%d - Signboard LB1 - Location in Town",
+    "LB%d - Color",
+    "LB%d - Levels",
+    "LB%d - Compound",
+    "LB%d - Wall",
+    "LB%d - Roof Color",
+    "LB%d - Gate Color",
+    "LB%d - Person in Charge",
+    "LB%d - Roof Type LB1 - Nearby Landmarks",
+    "LB%d - Nearby Signboards LB1 - Other",
+    "LB%d - Interviewer Believes",
+    "LB%d - Victim Believes",
+    "LB%d - Association with People",
+]
+
+for i in range(1, 9+1):
+    vif_headers.extend([header % i for header in vif_pb_headers])
+    if i != 9:
+        vif_headers.extend([header % i for header in vif_lb_headers])
 
 
 def get_checkbox_group_value(instance, field_name_start):
@@ -690,7 +688,7 @@ def get_vif_export_rows(vifs):
             vif.vif_number,
             get_station_name_from_number(vif.vif_number),
 
-            vif.date_time,
+            vif.date,
             vif.number_of_victims,
             vif.number_of_traffickers,
 

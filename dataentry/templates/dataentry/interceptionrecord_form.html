@@ -730,7 +730,7 @@
                             <th>VDC</th>
                             <th>Phone Contact</th>
                             <th>Relation to...</th>
-                            <th>Photo Upload</th>
+                            <th>Photo<br/>Upload</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -747,7 +747,10 @@
                                 <td>{{ interceptee_form.vdc }}</td>
                                 <td>{{ interceptee_form.phone_contact }}</td>
                                 <td>{{ interceptee_form.relation_to }}</td>
-                                <td style="width: 20%">{{ interceptee_form.photo }}</td>
+                                <td>
+                                    <button type="button" class="photo-upload-button" style="width: 100%; font-size: 30px; color: #444"><i class="glyphicon glyphicon-picture"></i></button>
+                                    {{ interceptee_form.photo|attr:"style: display: none" }}
+                                </td>
                             </tr>
                         {% endfor %}
                     </tbody>

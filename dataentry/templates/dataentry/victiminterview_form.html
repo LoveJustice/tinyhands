@@ -521,13 +521,13 @@
                                 <div class="checkbox-group">{{ form.victim_where_going_india_jaipur }} {{ form.victim_where_going_india_jaipur.label_tag }}</div>
                                 <div class="checkbox-group">{{ form.victim_where_going_india_bihar }} {{ form.victim_where_going_india_bihar.label_tag }}</div>
                             </div>
-                            <div class="checkbox-group">{{ form.victim_where_going_india_india_didnt_know }} {{ form.victim_where_going_india_india_didnt_know.label_tag }}</div>
+                            <div class="checkbox-group">{{ form.victim_where_going_india_didnt_know }} {{ form.victim_where_going_india_didnt_know.label_tag }}</div>
 
                             <div class="label-inside-field inline-checkbox-group">
                                 <label>
-                                    {{ form.victim_where_going_india_india_other }} {{ form.victim_where_going_india_india_other.label }}
+                                    {{ form.victim_where_going_india_other }} {{ form.victim_where_going_india_other.label }}
                                 </label>
-                                {{ form.victim_where_going_india_india_other_value }}
+                                {{ form.victim_where_going_india_other_value }}
                             </div>
                         </div>
                         <div class="col-sm-6" id="victim_where_going_gulf">
@@ -1081,11 +1081,12 @@
         </div>
     </div>
 
-    {% comment %}
     {{ inlines.0.management_form }}
     {{ inlines.1.management_form }}
 
-    <div class="form-page">
+    <div class="pages-needed" data-pages-needed="{{ form.box_pages_needed }}"></div>
+
+    <div class="form-page box-page page-1">
         <div class="row">
             {% for pb_form in inlines.0|slice:"0:3" %}
                 {% include "dataentry/victiminterview_personbox.html" with pb_form=pb_form counter=forloop.counter %}
@@ -1097,59 +1098,57 @@
             {% endfor %}
         </div>
         <div class="clearfix">
-            <a href="#" class="btn btn-primary pull-right">Yes</a>
+            <button type="button" class="btn btn-primary pull-right add-another-sheet btn-lg" style="margin-top: 12px">Yes</button>
             <h3 class="pull-left">Did you need to use an Additional Information sheet for extra PBs or LBs?</h3>
         </div>
     </div>
 
-    {% if view.num_pbs > 3 or view.num_lbs > 2 %}
-        <div class="form-page">
-            <div class="row">
-                {% for pb_form in inlines.0|slice:"3:6" %}
-                    {% include "dataentry/victiminterview_personbox.html" with pb_form=pb_form counter=forloop.counter %}
-                {% endfor %}
-            </div>
-            <div class="row">
-                {% for lb_form in inlines.1|slice:"2:4" %}
-                    {% include "dataentry/victiminterview_locationbox.html" with lb_form=lb_form counter=forloop.counter %}
-                {% endfor %}
-            </div>
-            <h3>Did you need to use an Additional Information sheet for extra PBs or LBs?</h3>
+    <div class="form-page box-page page-2">
+        <div class="row">
+            {% for pb_form in inlines.0|slice:"3:6" %}
+                {% include "dataentry/victiminterview_personbox.html" with pb_form=pb_form counter=forloop.counter|add:"3" %}
+            {% endfor %}
         </div>
+        <div class="row">
+            {% for lb_form in inlines.1|slice:"2:4" %}
+                {% include "dataentry/victiminterview_locationbox.html" with lb_form=lb_form counter=forloop.counter|add:"2" %}
+            {% endfor %}
+        </div>
+        <div class="clearfix">
+            <button type="button" class="btn btn-primary pull-right add-another-sheet btn-lg" style="margin-top: 12px">Yes</button>
+            <h3 class="pull-left">Did you need to use an Additional Information sheet for extra PBs or LBs?</h3>
+        </div>
+    </div>
 
-        {% if view.num_pbs > 6 or view.num_lbs > 4 %}
-            <div class="form-page">
-                <div class="row">
-                    {% for pb_form in inlines.0|slice:"6:9" %}
-                        {% include "dataentry/victiminterview_personbox.html" with pb_form=pb_form counter=forloop.counter %}
-                    {% endfor %}
-                </div>
-                <div class="row">
-                    {% for lb_form in inlines.1|slice:"4:6" %}
-                        {% include "dataentry/victiminterview_locationbox.html" with lb_form=lb_form counter=forloop.counter %}
-                    {% endfor %}
-                </div>
-                <h3>Did you need to use an Additional Information sheet for extra PBs or LBs?</h3>
-            </div>
+    <div class="form-page box-page page-3">
+        <div class="row">
+            {% for pb_form in inlines.0|slice:"6:9" %}
+                {% include "dataentry/victiminterview_personbox.html" with pb_form=pb_form counter=forloop.counter|add:"6" %}
+            {% endfor %}
+        </div>
+        <div class="row">
+            {% for lb_form in inlines.1|slice:"4:6" %}
+                {% include "dataentry/victiminterview_locationbox.html" with lb_form=lb_form counter=forloop.counter|add:"4" %}
+            {% endfor %}
+        </div>
+        <div class="clearfix">
+            <button type="button" class="btn btn-primary pull-right add-another-sheet btn-lg" style="margin-top: 12px">Yes</button>
+            <h3 class="pull-left">Did you need to use an Additional Information sheet for extra PBs or LBs?</h3>
+        </div>
+    </div>
 
-            {% if view.num_pbs > 9 or view.num_lbs > 6 %}
-                <div class="form-page">
-                    <div class="row">
-                        {% for pb_form in inlines.0|slice:"9:12" %}
-                            {% include "dataentry/victiminterview_personbox.html" with pb_form=pb_form counter=forloop.counter %}
-                        {% endfor %}
-                    </div>
-                    <div class="row">
-                        {% for lb_form in inlines.1|slice:"6:8" %}
-                            {% include "dataentry/victiminterview_locationbox.html" with lb_form=lb_form counter=forloop.counter %}
-                        {% endfor %}
-                    </div>
-                    <h3>Did you need to use an Additional Information sheet for extra PBs or LBs?</h3>
-                </div>
-            {% endif %}
-        {% endif %}
-    {% endif %}
-    {% endcomment %}
+    <div class="form-page box-page page-4">
+        <div class="row">
+            {% for pb_form in inlines.0|slice:"9:12" %}
+                {% include "dataentry/victiminterview_personbox.html" with pb_form=pb_form counter=forloop.counter|add:"9" %}
+            {% endfor %}
+        </div>
+        <div class="row">
+            {% for lb_form in inlines.1|slice:"6:8" %}
+                {% include "dataentry/victiminterview_locationbox.html" with lb_form=lb_form counter=forloop.counter|add:"6" %}
+            {% endfor %}
+        </div>
+    </div>
 
     <div class="form-page">
         <div class="row">
