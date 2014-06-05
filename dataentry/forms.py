@@ -9,6 +9,7 @@ from dataentry.models import (
 )
 from django.forms.models import inlineformset_factory
 from django.core.exceptions import ValidationError
+from django.utils.html import mark_safe
 
 # Django forms for some reason use 1,2,3 for values for NullBooleanField
 BOOLEAN_CHOICES = [
@@ -293,15 +294,6 @@ class InterceptionRecordForm(forms.ModelForm):
 IntercepteeFormSet = inlineformset_factory(InterceptionRecord, Interceptee, extra=12)
 
 
-# Make all fields with choices radio selects
-def make_choice_widgets_radio(f):
-    if f.choices != []:
-        print f.choices
-        return forms.ChoiceField(choices=f.choices, widget=forms.RadioSelect, required=not f.blank)
-    else:
-        return f.formfield()
-
-
 class VictimInterviewForm(forms.ModelForm):
     victim_gender = forms.MultipleChoiceField(
         choices=VictimInterview.GENDER_CHOICES,
@@ -460,7 +452,7 @@ class VictimInterviewForm(forms.ModelForm):
     migration_plans = forms.MultipleChoiceField(
         choices=MIGRATION_PLANS_CHOICES,
         widget=forms.CheckboxSelectMultiple,
-        required=False
+        required=True
     )
     migration_plans_job_other_value = forms.CharField(required=False)
     migration_plans_other_value = forms.CharField(required=False)
@@ -480,7 +472,7 @@ class VictimInterviewForm(forms.ModelForm):
     primary_motivation = forms.MultipleChoiceField(
         choices=PRIMARY_MOTIVATION_CHOICES,
         widget=forms.CheckboxSelectMultiple,
-        required=False
+        required=True
     )
     primary_motivation_other_value = forms.CharField(max_length=255, required=False)
 
@@ -510,7 +502,7 @@ class VictimInterviewForm(forms.ModelForm):
     victim_where_going = forms.MultipleChoiceField(
         choices=WHERE_GOING_CHOICES,
         widget=forms.CheckboxSelectMultiple,
-        required=False
+        required=True
     )
     victim_where_going_other_gulf_value = forms.CharField(required=False)
     victim_where_going_other_india_value = forms.CharField(required=False)
@@ -625,12 +617,12 @@ class VictimInterviewForm(forms.ModelForm):
     )
 
     victim_was_hidden = forms.MultipleChoiceField(
-        choices=BOOLEAN_CHOICES,
+        choices=[(False, 'No'), (True, mark_safe('Yes <br/> Explain'))],
         widget=forms.CheckboxSelectMultiple,
         required=False
     )
     victim_was_free_to_go_out = forms.MultipleChoiceField(
-        choices=BOOLEAN_CHOICES,
+        choices=[(False, mark_safe('No <br/> Explain')), (True, 'Yes')],
         widget=forms.CheckboxSelectMultiple,
         required=False
     )
@@ -679,13 +671,12 @@ class VictimInterviewForm(forms.ModelForm):
         widget=forms.CheckboxSelectMultiple,
         required=False
     )
-    
+
     companion_with_when_intercepted = forms.MultipleChoiceField(
         choices=BOOLEAN_CHOICES,
         widget=forms.CheckboxSelectMultiple,
         required=False
     )
-
 
     planning_to_meet_companion_later = forms.MultipleChoiceField(
         choices=BOOLEAN_CHOICES,
@@ -764,7 +755,6 @@ class VictimInterviewForm(forms.ModelForm):
         widget=forms.CheckboxSelectMultiple,
         required=False
     )
-
 
     AWARENESS_CHOICES = [
         ('Had heard, but never knew how bad it was until I was intercepted by TH', 'Had heard, but never knew how bad it was until I was intercepted by TH'),
@@ -957,45 +947,39 @@ class VictimInterviewForm(forms.ModelForm):
         kwargs.setdefault('label_suffix', '')
         super(VictimInterviewForm, self).__init__(*args, **kwargs)
 
+        for field_name in self.fields:
+            field = self.fields[field_name]
+            if (
+                isinstance(field.widget, forms.CheckboxSelectMultiple) and
+                field.choices == BOOLEAN_CHOICES
+            ):
+                initial = self.initial[field_name]
+                self.initial[field_name] = [unicode(initial)]
+
+        self.initial['victim_gender'] = [self.initial['victim_gender']]
+
+        print self.initial['migration_plans']
+
     def clean(self):
         cleaned_data = super(VictimInterviewForm, self).clean()
 
-        if not (
-            cleaned_data.get('migration_plans_education') or
-            cleaned_data.get('migration_plans_travel_tour') or
-            cleaned_data.get('migration_plans_shopping') or
-            cleaned_data.get('migration_plans_eloping') or
-            cleaned_data.get('migration_plans_arranged_marriage') or
-            cleaned_data.get('migration_plans_meet_own_family') or
-            cleaned_data.get('migration_plans_visit_brokers_home') or
-            cleaned_data.get('migration_plans_medical_treatment') or
-            cleaned_data.get('migration_plans_job_broker_did_not_say') or
-            cleaned_data.get('migration_plans_job_baby_care') or
-            cleaned_data.get('migration_plans_job_factory') or
-            cleaned_data.get('migration_plans_job_hotel') or
-            cleaned_data.get('migration_plans_job_shop') or
-            cleaned_data.get('migration_plans_job_laborer') or
-            cleaned_data.get('migration_plans_job_brothel') or
-            cleaned_data.get('migration_plans_job_household') or
-            cleaned_data.get('migration_plans_job_other') or
-            cleaned_data.get('migration_plans_job_value') or
-            cleaned_data.get('migration_plans_other')
-        ):
-            self._errors['migration_plans_education'] = self.error_class(["At least one choice must be selected."])
+        for field_name in cleaned_data.keys():
+            field = self.fields[field_name]
+            if (
+                isinstance(field.widget, forms.CheckboxSelectMultiple) and
+                field.choices == BOOLEAN_CHOICES
+            ):
+                if len(cleaned_data[field_name]) > 0:
+                    cleaned_data[field_name] = bool(cleaned_data[field_name][0])
+                else:
+                    cleaned_data[field_name] = None
 
-        if not (
-            cleaned_data.get('primary_motivation_support_myself') or
-            cleaned_data.get('primary_motivation_support_family') or
-            cleaned_data.get('primary_motivation_personal_debt') or
-            cleaned_data.get('primary_motivation_family_debt') or
-            cleaned_data.get('primary_motivation_love_marriage') or
-            cleaned_data.get('primary_motivation_bad_home_marriage') or
-            cleaned_data.get('primary_motivation_get_an_education') or
-            cleaned_data.get('primary_motivation_tour_travel') or
-            cleaned_data.get('primary_motivation_didnt_know') or
-            cleaned_data.get('primary_motivation_other')
-        ):
-            self._errors['primary_motivation_support_myself'] = self.error_class(["At least one choice must be selected."])
+        cleaned_data['victim_gender'] = cleaned_data['victim_gender'][0]
+
+        #for field in self._meta.fields:
+        #    if isinstance(field.widget, forms.CheckboxSelectMultiple):
+        #        import ipdb; ipdb.set_trace() 
+
 
         if not cleaned_data.get('has_signature'):
             self._errors['has_signature'] = self.error_class(["The form must be signed."])

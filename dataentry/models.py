@@ -231,7 +231,7 @@ class Interceptee(models.Model):
     gender = models.CharField(max_length=4, choices=GENDER_CHOICES, blank=True)
     age = models.PositiveIntegerField(null=True, blank=True)
     district = models.CharField(max_length=255, blank=True)
-    vdc = models.CharField(max_length=255, blank=True)
+    vdc = models.CharField('VDC', max_length=255, blank=True)
     phone_contact = models.CharField(max_length=255, blank=True)
     relation_to = models.CharField(max_length=255, blank=True)
 
@@ -443,8 +443,6 @@ class VictimInterviewPersonBox(models.Model):
     victim_interview = models.ForeignKey(VictimInterview, related_name='person_boxes')
 
     who_is_this_relationship = models.CharField(max_length=255, blank=True)
-
-
     
     who_is_this_role = models.CharField(max_length=255, blank=True)
 
@@ -501,7 +499,7 @@ class VictimInterviewLocationBox(models.Model):
     what_kind_place_brothel = models.BooleanField('Brothel', default=False)
     what_kind_place_hotel = models.BooleanField('Hotel', default=False)
 
-    vdc = models.CharField(max_length=255, blank=True)
+    vdc = models.CharField('VDC', max_length=255, blank=True)
     district = models.CharField(max_length=255, blank=True)
     signboard = models.CharField(max_length=255, blank=True)
     location_in_town = models.CharField(max_length=255, blank=True)
