@@ -153,6 +153,7 @@
                 <span class="green-light"></span> Green Lights: This symbol is a green light, indicating that you should cease questioning and allow the girl to proceed on her way to India. 
             </p>
         </div>
+        <div style="width: 100px" id="first_page_area"></div>
         <table class="table table-bordered" style="margin-bottom: 0" id="red_flags">
             <thead>
                 <tr>
@@ -616,24 +617,28 @@
                         <strong>6.0</strong>&nbsp;{{ form.contact_noticed }}  {{ form.contact_noticed.label_tag }}
                     </td>
                 </tr>
-                <tr class="checkbox-group-marker" id="which_contact">
-                    <td style="width: 20%">
-                        <strong>6.1</strong>&nbsp;{{ form.which_contact_hotel_owner }}          {{ form.which_contact_hotel_owner.label_tag }}<br/>
-                        <strong>6.2</strong>&nbsp;{{ form.which_contact_rickshaw_driver }}      {{ form.which_contact_rickshaw_driver.label_tag }}<br/>
-                        <strong>6.3</strong>&nbsp;{{ form.which_contact_taxi_driver }}          {{ form.which_contact_taxi_driver.label_tag }}
+                <tr>
+                    <td style="width: 67%" class="checkbox-group-marker" id="which_contact">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <strong>6.1</strong>&nbsp;{{ form.which_contact_hotel_owner }}          {{ form.which_contact_hotel_owner.label_tag }}<br/>
+                                <strong>6.2</strong>&nbsp;{{ form.which_contact_rickshaw_driver }}      {{ form.which_contact_rickshaw_driver.label_tag }}<br/>
+                                <strong>6.3</strong>&nbsp;{{ form.which_contact_taxi_driver }}          {{ form.which_contact_taxi_driver.label_tag }}
+                            </div>
+                            <div class="col-sm-4" style="margin-left: -16px">
+                                <strong>6.4</strong>&nbsp;{{ form.which_contact_bus_driver }}           {{ form.which_contact_bus_driver.label_tag }}<br/>
+                                <strong>6.5</strong>&nbsp;{{ form.which_contact_church_member }}        {{ form.which_contact_church_member.label_tag }}<br/>
+                                <strong>6.6</strong>&nbsp;{{ form.which_contact_other_ngo }}            {{ form.which_contact_other_ngo.label_tag }}
+                            </div>
+                            <div class="col-sm-4" style="white-space: nowrap; margin-left: -36px">
+                                <strong>6.7</strong>&nbsp;{{ form.which_contact_police }}               {{ form.which_contact_police.label_tag }}<br/>
+                                <strong>6.8</strong>&nbsp;{{ form.which_contact_subcommittee_member }}  {{ form.which_contact_subcommittee_member.label_tag }}<br/>
+                                <strong>6.9</strong>      {{ form.which_contact_other }}                {{ form.which_contact_other.label_tag }} 
+                                                        {{ form.which_contact_other_value|attr:"style: width: 160px"|attr:"data-placement: bottom" }}
+                            </div>
+                        </div>
                     </td>
-                    <td style="width: 20%">
-                        <strong>6.4</strong>&nbsp;{{ form.which_contact_bus_driver }}           {{ form.which_contact_bus_driver.label_tag }}<br/>
-                        <strong>6.5</strong>&nbsp;{{ form.which_contact_church_member }}        {{ form.which_contact_church_member.label_tag }}<br/>
-                        <strong>6.6</strong>&nbsp;{{ form.which_contact_other_ngo }}            {{ form.which_contact_other_ngo.label_tag }}
-                    </td>
-                    <td style="width: 25%">
-                        <strong>6.7</strong>&nbsp;{{ form.which_contact_police }}               {{ form.which_contact_police.label_tag }}<br/>
-                        <strong>6.8</strong>&nbsp;{{ form.which_contact_subcommittee_member }}  {{ form.which_contact_subcommittee_member.label_tag }}<br/>
-                        <strong>6.9</strong>      {{ form.which_contact_other }}                {{ form.which_contact_other.label_tag }} 
-                                                  {{ form.which_contact_other_value|attr:"style: width: 160px"|attr:"data-placement: bottom" }}
-                    </td>
-                    <td class="contact-paid checkbox-group-member" id="contact_paid">
+                    <td class="contact-paid checkbox-group-marker" id="contact_paid">
                         Did you pay this contact for the information?<br/>
                         <strong>6.10</strong> {{ form.contact_paid.1 }} {{ form.contact_paid.1.label_tag }}
                         <strong>6.11</strong> {{ form.contact_paid.2 }} {{ form.contact_paid.2.label_tag }}
@@ -652,7 +657,7 @@
                 </tr>
             </tbody>
         </table>
-        <table class="table table-bordered staff-intercepted">
+        <table class="table table-bordered staff-intercepted checkbox-group-marker" id="noticed">
             <tbody>
                 <tr>
                     <td colspan="5">
@@ -719,7 +724,7 @@
         {{ inlines.0.management_form }}
         <div class="row">
             <div class="col-sm-10">
-                <table class="table table-bordered interceptee-form">
+                <table class="table table-bordered interceptee-form" id="interceptees" data-placement="left">
                     <thead>
                         <tr>
                             <th>V<br><small>victim</small><br/>T<br/><small>trafficker</small></th>
@@ -748,8 +753,10 @@
                                 <td>{{ interceptee_form.phone_contact }}</td>
                                 <td>{{ interceptee_form.relation_to }}</td>
                                 <td>
-                                    <button type="button" class="photo-upload-button" style="width: 100%; font-size: 30px; color: #444"><i class="glyphicon glyphicon-picture"></i></button>
-                                    {{ interceptee_form.photo|attr:"style: display: none" }}
+                                    <button type="button" class="photo-upload-button" style="width: 100%; font-size: 30px"><i class="glyphicon glyphicon-picture"></i></button>
+                                    <div class="photo-manip-controls" style="display: none">
+                                    {{ interceptee_form.photo }}
+                                    </div>
                                 </td>
                             </tr>
                         {% endfor %}
@@ -774,28 +781,29 @@
                     </div>
                     <div class="col-sm-6">
                         <h3 style="margin-top: 0" class="text-center">Type of Intercept</h3>
-                        <span class="checkbox-group">
-                            <strong>9.1</strong>
-                            {{ form.interception_type_gulf_countries }} {{ form.interception_type_gulf_countries.label_tag }}
-                        </span>
-                        <span class="checkbox-group">
-                            <strong>9.2</strong>
-                            {{ form.interception_type_india_trafficking }} {{ form.interception_type_india_trafficking.label_tag }}
-                        </span>
-                        <br/>
-                        <span class="checkbox-group">
-                            <strong>9.3</strong>
-                            {{ form.interception_type_unsafe_migration }} {{ form.interception_type_unsafe_migration.label_tag }}
-                        </span>
-                        <span class="checkbox-group">
-                            <strong>9.4</strong>
-                            {{ form.interception_type_circus }} {{ form.interception_type_circus.label_tag }}
-                        </span>
-                        <span class="checkbox-group">
-                            <strong>9.5</strong>
-                            {{ form.interception_type_runaway }} {{ form.interception_type_runaway.label_tag }}
-                        </span>
-                        <br/>
+                        <div class="checkbox-group-marker" id="interception_type">
+                            <span class="checkbox-group">
+                                <strong>9.1</strong>
+                                {{ form.interception_type_gulf_countries }} {{ form.interception_type_gulf_countries.label_tag }}
+                            </span>
+                            <span class="checkbox-group">
+                                <strong>9.2</strong>
+                                {{ form.interception_type_india_trafficking }} {{ form.interception_type_india_trafficking.label_tag }}
+                            </span>
+                            <br/>
+                            <span class="checkbox-group">
+                                <strong>9.3</strong>
+                                {{ form.interception_type_unsafe_migration }} {{ form.interception_type_unsafe_migration.label_tag }}
+                            </span>
+                            <span class="checkbox-group">
+                                <strong>9.4</strong>
+                                {{ form.interception_type_circus }} {{ form.interception_type_circus.label_tag }}
+                            </span>
+                            <span class="checkbox-group">
+                                <strong>9.5</strong>
+                                {{ form.interception_type_runaway }} {{ form.interception_type_runaway.label_tag }}
+                            </span>
+                        </div>
 
                         <strong>9.6</strong> <label>Was any trafficker taken into police custody?<br/>If yes, write the # from the table above:</label> {{ form.trafficker_taken_into_custody|attr:"style: width: 100px" }}<br/>
                         <strong>9.7</strong>&nbsp;{{ form.how_sure_was_trafficking.label_tag }}<br/>
@@ -814,26 +822,24 @@
             </div>
             <div class="col-sm-2">
                 {% for interceptee_form in inlines.0|slice:":6" %}
-                    <div class="photo">
-                        {% if interceptee_form.instance.photo_thumbnail %}
-                            <img src="{{ interceptee_form.instance.photo_thumbnail.url }}" />
+                    <a target="_blank" class="photo" id="photo-{{ forloop.counter0 }}" {% if interceptee_form.instance.photo_thumbnail %} href="{{ interceptee_form.instance.photo.url }}">
+                            <img class="img-thumbnail" src="{{ interceptee_form.instance.photo_thumbnail.url }}" />
                         {% else %}
-                            PHOTO {{ forloop.counter }}
+                            >PHOTO {{ forloop.counter }}
                         {% endif %}
-                    </div>
+                    </a>
                 {% endfor %}
             </div>
         </div>
         <div class="row">
             {% for interceptee_form in inlines.0|slice:"6:" %}
                 <div class="col-sm-2 pull-right">
-                    <div class="photo">
-                        {% if interceptee_form.photo_thumbnail.url %}
-                            <img class="img-thumbnail" src="{{ interceptee_form.photo_thumbnail.url }}" />
+                    <a target="_blank" class="photo" id="photo-{{ forloop.counter0|add:"6" }}" {% if interceptee_form.instance.photo_thumbnail %} href="{{ interceptee_form.instance.photo.url }}">
+                        <img class="img-thumbnail" src="{{ interceptee_form.photo_thumbnail.url }}" />
                         {% else %}
-                            PHOTO {{ forloop.counter|add:"6" }}
+                            >PHOTO {{ forloop.counter|add:"6" }}
                         {% endif %}
-                    </div>
+                    </a>
                 </div>
             {% endfor %}
         </div>

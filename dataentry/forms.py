@@ -52,9 +52,13 @@ class DreamSuitePaperForm(forms.ModelForm):
                 field_name == 'victim_was_free_to_go_out'
             ):
                 if len(cleaned_data[field_name]) > 0:
-                    cleaned_data[field_name] = bool(cleaned_data[field_name][0])
-                else:
-                    cleaned_data[field_name] = None
+                    value = cleaned_data[field_name][0]
+                    if value == "True":
+                        cleaned_data[field_name] = True
+                    elif value == "False":
+                        cleaned_data[field_name] = False
+                    else:
+                        cleaned_data[field_name] = None
 
         return cleaned_data
 
@@ -70,12 +74,14 @@ class DreamSuitePaperForm(forms.ModelForm):
 class InterceptionRecordForm(DreamSuitePaperForm):
     contact_paid = forms.MultipleChoiceField(
         choices=BOOLEAN_CHOICES,
-        widget=forms.CheckboxSelectMultiple
+        widget=forms.CheckboxSelectMultiple,
+        required=False
     )
 
     name_came_up_before = forms.MultipleChoiceField(
         choices=BOOLEAN_CHOICES,
-        widget=forms.CheckboxSelectMultiple
+        widget=forms.CheckboxSelectMultiple,
+        required=False
     )
 
     ignore_warnings = forms.BooleanField(
@@ -102,6 +108,7 @@ class InterceptionRecordForm(DreamSuitePaperForm):
         cleaned_data = super(InterceptionRecordForm, self).clean()
         self.has_warnings = False
 
+        self.ensure_at_least_one_interceptee(cleaned_data)
         self.at_least_one_box_checked_on_page_one(cleaned_data)
         self.box_six_or_seven_must_be_checked(cleaned_data)
         self.if_box_six_checked_at_least_one_from_six_one_to_six_nine_must_be_checked(cleaned_data)
@@ -117,13 +124,18 @@ class InterceptionRecordForm(DreamSuitePaperForm):
             self.ensure_at_least_one_of_9_1_through_9_5_are_checked(cleaned_data)
             self.ensure_signature_on_form(cleaned_data)
 
-        for field_name_start in [
-            'talked_to_family_member',
-        ]:
-            if not self.at_least_one_checked(cleaned_data, field_name_start):
-                self._errors[field_name_start] = self.error_class(['This field is required.'])
+        #for field_name_start in []:
+        #    if not self.at_least_one_checked(cleaned_data, field_name_start):
+        #        self._errors[field_name_start] = self.error_class(['This field is required.'])
 
         return cleaned_data
+
+    def ensure_at_least_one_interceptee(self, cleaned_data):
+        if len([
+            (key, value) for key, value in self.data.items()
+                if key.startswith('interceptees') and key.endswith('name') and value != u''
+        ]) == 0:
+            self._errors['interceptees'] = self.error_class(['At least one interceptee must be listed.'])
 
     def at_least_one_box_checked_on_page_one(self, cleaned_data):
         if not (
@@ -171,7 +183,7 @@ class InterceptionRecordForm(DreamSuitePaperForm):
             cleaned_data.get('fake_medical_documents') or
             cleaned_data.get('no_medical_appointment')
         ):
-            self._errors['red_flags'] = self.error_class(['At least one red flag must be checked.'])
+            self._errors['first_page_area'] = self.error_class(['At least one box must be checked on the first page.'])
 
     def box_six_or_seven_must_be_checked(self, cleaned_data):
         if not (
@@ -201,14 +213,17 @@ class InterceptionRecordForm(DreamSuitePaperForm):
                 ['Other chosen for Contact but the kind is not specified.'])
 
     def if_contact_noticed_ensure_contact_paid(self, cleaned_data):
-        if cleaned_data.get('contact_noticed') and not cleaned_data.get('contact_paid'):
+        if cleaned_data.get('contact_noticed') and cleaned_data.get('contact_paid') == []:
             self._errors['contact_paid'] = self.error_class(
                 ['Contact noticed chosen but paid not specified.'])
 
     def if_8_2_ensure_number_specified(self, cleaned_data):
-        if cleaned_data.get('name_came_up_before') and not cleaned_data.get('name_came_up_before_yes_value'):
-            self._errors['name_came_up_before_yes_value'] = self.error_class(
-                ['Name came up specified but no number given.'])
+        if cleaned_data.get('call_thn_to_cross_check') and cleaned_data.get('name_came_up_before') == []:
+            self._errors['name_came_up_before'] = self.error_class(
+                ['This field is required.'])
+        if cleaned_data.get('call_thn_to_cross_check') and cleaned_data.get('name_came_up_before') and not cleaned_data.get('name_came_up_before_value'):
+            self._errors['name_came_up_before'] = self.error_class(
+                ['A number must be given.'])
 
     def if_box_7_1_ensure_7_2(self, cleaned_data):
         if cleaned_data.get('staff_noticed') and not cleaned_data.get('staff_who_noticed'):
@@ -264,7 +279,7 @@ class InterceptionRecordForm(DreamSuitePaperForm):
             error = self.error_class(['No red flags are checked.'])
             error.is_warning = True
             self.has_warnings = True
-            self._errors['drugged_or_drowsy'] = error
+            self._errors['red_flags'] = error
 
     def ensure_some_noticing_reason_checked(self, cleaned_data):
         if cleaned_data.get('staff_noticed') and not (

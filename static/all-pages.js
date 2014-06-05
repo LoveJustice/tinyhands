@@ -260,7 +260,18 @@ var DREAMSUITE = {
 
         $('.photo-upload-button').click(function() {
             $(this).parents('td').find('input').click();
+            
         });
+        $('.photo-upload-button').parents('td').find('input[type="file"]').change(function(event) {
+            $(this).parents('td').find('button').addClass('btn-success', 'btn-inverse').attr('title', $(this).val());
+        });
+        //$('.photo-manip-controls').each(function() {
+        //    var href = $(this).find('a').attr('href');
+        //    var id = $(this).find('input').attr('name').split('-')[1];
+        //    $('#photo-' + id).append(
+
+        //});
+        makeDateTimePickers('#id_date_time_of_interception');
     },
 
     victiminterview_create: function() {
