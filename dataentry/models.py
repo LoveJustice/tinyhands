@@ -266,8 +266,8 @@ class VictimInterview(models.Model):
     victim_address_ward = models.CharField('Ward #', max_length=255, blank=True)
     victim_phone = models.CharField('Phone #', max_length=255, blank=True)
     victim_age = models.CharField('Age', max_length=255, blank=True)
-    victim_height = models.PositiveIntegerField('Height(ft)', max_length=255, blank=True)
-    victim_weight = models.PositiveIntegerField('Weight(kg)', max_length=255, blank=True)
+    victim_height = models.PositiveIntegerField('Height(ft)', null=True, blank=True)
+    victim_weight = models.PositiveIntegerField('Weight(kg)', null=True, blank=True)
 
     victim_caste_magar = models.BooleanField('Magar', default=False)
     victim_caste_jaisi = models.BooleanField('Jaisi', default=False)
@@ -667,9 +667,9 @@ class VictimInterviewPersonBox(models.Model):
     address_vdc = models.CharField('VDC', max_length=255, blank=True)
     address_ward = models.CharField('Ward #', max_length=255, blank=True)
     phone = models.CharField('Phone #', max_length=255, blank=True)
-    age = models.PositiveIntegerField('Age', max_length=255, null=True, blank=True)
-    height = models.PositiveIntegerField('Height(ft)', max_length=255, blank=True)
-    weight = models.PositiveIntegerField('Weight(kg)', max_length=255, blank=True)
+    age = models.PositiveIntegerField('Age', null=True, blank=True)
+    height = models.PositiveIntegerField('Height(ft)', null=True, blank=True)
+    weight = models.PositiveIntegerField('Weight(kg)', null=True, blank=True)
 
     physical_description_kirat = models.BooleanField('Kirat', default=False)
     physical_description_sherpa = models.BooleanField('Sherpa', default=False)
