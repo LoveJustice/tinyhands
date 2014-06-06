@@ -343,6 +343,21 @@ var DREAMSUITE = {
         });
     },
 
+    victiminterview_detail: function() {
+        this.victiminterview_update();
+
+        var $form = $('#victim-interview-form');
+        $form.find('input, button, select, textarea').attr('disabled', 'disabled');
+        $('#footer').hide();
+    },
+    interceptionrecord_detail: function() {
+        this.interceptionrecord_update();
+
+        var $form = $('#interception-record-form');
+        $form.find('input, button, select, textarea').attr('disabled', 'disabled');
+        $('#footer').hide();
+    },
+
     default: function() {}
 
 };

@@ -1,3 +1,4 @@
+from django.core.exceptions import ImproperlyConfigured, PermissionDenied
 from django.shortcuts import render
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic import ListView, View, CreateView, UpdateView
@@ -31,10 +32,8 @@ def home(request):
 
 class InterceptionRecordListView(
         LoginRequiredMixin,
-        PermissionsRequiredMixin,
         ListView):
     model = InterceptionRecord
-    permissions_required = ['permission_irf_view']
 
 
 class IntercepteeInline(InlineFormSet):
@@ -70,6 +69,13 @@ class InterceptionRecordUpdateView(
     permissions_required = ['permission_irf_edit']
 
 
+class InterceptionRecordDetailView(InterceptionRecordUpdateView):
+    permissions_required = ['permission_irf_view']
+
+    def post(self, request, *args, **kwargs):
+        raise PermissionDenied
+
+
 class PersonBoxInline(InlineFormSet):
     model = VictimInterviewPersonBox
     extra = 12
@@ -92,10 +98,8 @@ class LocationBoxInline(InlineFormSet):
 
 class VictimInterviewListView(
         LoginRequiredMixin,
-        PermissionsRequiredMixin,
         ListView):
     model = VictimInterview
-    permissions_required = ['permission_vif_view']
 
 
 class VictimInterviewCreateView(
@@ -119,11 +123,12 @@ class VictimInterviewUpdateView(
     inlines = [PersonBoxInline, LocationBoxInline]
     permissions_required = ['permission_vif_edit']
 
-    def num_pbs(self):
-        return self.object.person_boxes.count()
 
-    def num_lbs(self):
-        return self.object.location_boxes.count()
+class VictimInterviewDetailView(VictimInterviewUpdateView):
+    permissions_required = ['permission_vif_view']
+
+    def post(self, request, *args, **kwargs):
+        raise PermissionDenied
 
 
 class InterceptionRecordCSVExportView(
