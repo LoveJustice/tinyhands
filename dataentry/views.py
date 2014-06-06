@@ -162,7 +162,7 @@ class VictimInterviewCSVExportView(
         response['Content-Disposition'] = 'attachment; filename=vif-all-data-%d-%d-%d.csv' % (today.year, today.month, today.day)
 
         writer = csv.writer(response)
-        vifs = VictimInterview.objects.all()
+        vifs = VictimInterview.objects.select_related('person_boxes').select_related('location_boxes').all()
         csv_rows = export.get_vif_export_rows(vifs)
         writer.writerows(csv_rows)
 

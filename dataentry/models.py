@@ -647,9 +647,9 @@ class VictimInterviewPersonBox(models.Model):
 
     victim_interview = models.ForeignKey(VictimInterview, related_name='person_boxes')
 
-    who_is_this_relationship_boss_of = models.BooleanField('boss of...', default=False)
-    who_is_this_relationship_coworker_of = models.BooleanField('co-worker of...', default=False)
-    who_is_this_relationship_own_relative_of = models.BooleanField('own relative of...', default=False)
+    who_is_this_relationship_boss_of = models.BooleanField('Boss of...', default=False)
+    who_is_this_relationship_coworker_of = models.BooleanField('Co-worker of...', default=False)
+    who_is_this_relationship_own_relative_of = models.BooleanField('Own relative of...', default=False)
 
     who_is_this_role_broker = models.BooleanField('Broker', default=False)
     who_is_this_role_companion = models.BooleanField('Companion', default=False)

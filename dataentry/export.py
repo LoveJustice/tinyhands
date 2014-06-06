@@ -507,19 +507,27 @@ vif_pb_headers = [
 vif_lb_headers = [
     "LB%d - Place",
     "LB%d - Type of Place",
+
     "LB%d - VDC",
     "LB%d - District",
     "LB%d - Phone",
-    "LB%d - Signboard LB1 - Location in Town",
+
+    "LB%d - Signboard",
+    "LB%d - Location in Town",
     "LB%d - Color",
+
     "LB%d - Levels",
-    "LB%d - Compound",
-    "LB%d - Wall",
+    "LB%d - Compound Wall",
     "LB%d - Roof Color",
+
     "LB%d - Gate Color",
     "LB%d - Person in Charge",
-    "LB%d - Roof Type LB1 - Nearby Landmarks",
-    "LB%d - Nearby Signboards LB1 - Other",
+    "LB%d - Roof Type",
+
+    "LB%d - Nearby Landmarks",
+    "LB%d - Nearby Signboards",
+    "LB%d - Other",
+
     "LB%d - Interviewer Believes",
     "LB%d - Victim Believes",
     "LB%d - Association with People",
@@ -907,6 +915,62 @@ def get_vif_export_rows(vifs):
 
             vif.case_notes,
         ])
+
+        pbs = list(vif.person_boxes.all())
+        lbs = list(vif.location_boxes.all())
+
+        for (pb, lb) in zip(pbs, lbs):
+            row.extend([
+                get_checkbox_group_value(pb, 'who_is_this_relationship'),
+                get_checkbox_group_value(pb, 'who_is_this_role'),
+                pb.get_gender_display(),
+                pb.name,
+                pb.address_district,
+                pb.address_vdc,
+                pb.address_ward,
+                pb.phone,
+                pb.age,
+                pb.height,
+                pb.weight,
+                get_checkbox_group_value(pb, 'physical_description'),
+                pb.appearance_other,
+                get_checkbox_group_value(pb, 'occupation'),
+                pb.occupation_other_value,
+                get_checkbox_group_value(pb, 'political_party'),
+                pb.where_spends_time,
+                get_checkbox_group_value(pb, 'interviewer_believes'),
+                get_checkbox_group_value(pb, 'victim_believes'),
+                'Associated with LB %d' % pb.associated_with_place_value if pb.associated_with_place_value is not None else '',
+
+                get_checkbox_group_value(lb, 'which_place'),
+                get_checkbox_group_value(lb, 'what_kind_place'),
+
+                lb.vdc,
+                lb.district,
+                lb.phone,
+
+                lb.signboard,
+                lb.location_in_town,
+                lb.color,
+
+                lb.compound_wall,
+                lb.number_of_levels,
+                lb.roof_color,
+
+                lb.gate_color,
+                lb.person_in_charge,
+                lb.roof_type,
+
+                lb.nearby_landmarks,
+                lb.nearby_signboards,
+                lb.other,
+
+                get_checkbox_group_value(pb, 'interviewer_believes'),
+                get_checkbox_group_value(pb, 'victim_believes'),
+
+                'Associated with PB %d' % lb.associated_with_person_value if lb.associated_with_person_value is not None else '',
+            ])
+
         rows.append(row)
 
     return rows
