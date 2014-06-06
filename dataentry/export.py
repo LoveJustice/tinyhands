@@ -163,7 +163,15 @@ def text_if_true(condition, text):
 
 
 def get_station_name_from_number(form_number):
-    return BORDER_STATION_NAMES.get(form_number[:3], '')
+    return BORDER_STATION_NAMES.get(form_number[:3].upper(), '')
+
+
+def get_checkbox_group_value(instance, field_name_start):
+    for field in instance._meta.fields:
+        if field.name.startswith(field_name_start):
+            if getattr(instance, field.name):
+                return field.verbose_name
+    return ''
 
 
 def get_irf_export_rows(irfs):
@@ -245,25 +253,10 @@ def get_irf_export_rows(irfs):
                 text_if_true(irf.under_18_family_unwilling, "Under 18, family unwilling to let him/her go"),
                 text_if_true(irf.over_18_family_doesnt_know, "Over 18, family doesn't know he/she is going"),
                 text_if_true(irf.over_18_family_unwilling, "Over 18, family unwilling to let him/her go"),
+
+                get_checkbox_group_value(irf, 'talked_to'),
+                irf.talked_to_family_member_other_value,
             ])
-
-            # Get the first two family members marked as true, (I'm guessing there will usually only be one or two
-            family_members_talked_to = []
-            for field, text in [
-                ('talked_to_brother', 'Own brother'),
-                ('talked_to_sister', 'Own sister'),
-                ('talked_to_father', 'Own father'),
-                ('talked_to_mother', 'Own mother'),
-                ('talked_to_grandparent', 'Own grandparent'),
-                ('talked_to_aunt_uncle', 'Own aunt / uncle'),
-                ('talked_to_other', irf.talked_to_other_value),
-            ]:
-                if getattr(irf, field):
-                    family_members_talked_to.append(text)
-            # But just in case add two blanks to the end
-            family_members_talked_to.extend(['']*2)
-
-            row.extend(family_members_talked_to[:2])
 
             row.extend([
                 irf.reported_total_red_flags or 0,
@@ -275,22 +268,10 @@ def get_irf_export_rows(irfs):
             elif irf.staff_noticed:
                 row.append('Interception made as a result of staff')
 
-            contacts = []
-            for field, text in [
-                ('contact_hotel_owner', 'Hotel owner'),
-                ('contact_rickshaw_driver', 'Rickshaw driver'),
-                ('contact_taxi_driver', 'Taxi driver'),
-                ('contact_bus_driver', 'Bus driver'),
-                ('contact_church_member', 'Church member'),
-                ('contact_other_ngo', 'Other NGO'),
-                ('contact_police', 'Police'),
-                ('contact_subcommittee_member', 'Subcommittee member'),
-                ('contact_other_value', irf.contact_other_value),
-            ]:
-                if getattr(irf, field):
-                    contacts.append(text)
-            contacts.extend(['']*2)
-            row.extend(contacts[:2])
+            row.extend([
+                get_checkbox_group_value(irf, 'which_contact'),
+                irf.which_contact_other_value,
+            ])
 
             if irf.contact_paid:
                 row.append('Paid the contact')
@@ -326,17 +307,19 @@ def get_irf_export_rows(irfs):
                 text_if_true(irf.noticed_carrying_a_baby, 'Noticed them carrying a baby'),
                 text_if_true(irf.noticed_on_the_phone, 'Noticed them on the phone'),
                 text_if_true(irf.noticed_other_sign_value, irf.noticed_other_sign_value),
+
                 text_if_true(irf.call_subcommittee_chair, 'Called Subcommitte Chair'),
                 text_if_true(irf.call_thn_to_cross_check, 'Called THN to cross-check names'),
-                text_if_true(irf.name_come_up_before_yes_value, 'Names came up before'),
+                text_if_true(irf.name_came_up_before, 'Names came up before'),
+                irf.name_came_up_before_value,
                 text_if_true(irf.scan_and_submit_same_day, 'Scanned and submitted same day'),
-                irf.get_interception_type_display(),
+                get_checkbox_group_value(irf, 'interception_type'),
                 text_if_true(irf.trafficker_taken_into_custody, 'Trafficker taken into police custody'),
             ])
 
-            # TODO get name of trafficker taken into custody
+            row.append(irf.trafficker_taken_into_custody)
 
-            irf.get_how_sure_was_trafficking_display()
+            row.append(irf.get_how_sure_was_trafficking_display())
 
             if irf.has_signature:
                 row.append('Form is signed')
@@ -546,14 +529,6 @@ for i in range(1, 9+1):
     vif_headers.extend([header % i for header in vif_pb_headers])
     if i != 9:
         vif_headers.extend([header % i for header in vif_lb_headers])
-
-
-def get_checkbox_group_value(instance, field_name_start):
-    for field in instance._meta.fields:
-        if field.name.startswith(field_name_start):
-            if getattr(instance, field.name):
-                return field.verbose_name
-    return ''
 
 
 def get_victim_where_going(instance):

@@ -180,6 +180,7 @@ class InterceptionRecord(models.Model):
     interception_type_runaway = models.BooleanField('Runaway', default=False)
 
     trafficker_taken_into_custody = models.PositiveIntegerField(null=True, blank=True)
+
     HOW_SURE_TRAFFICKING_CHOICES = [
         (1, '1 - Not at all sure'),
         (2, '2 - Unsure but suspects it'),
