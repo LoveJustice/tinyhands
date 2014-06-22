@@ -179,7 +179,7 @@ class InterceptionRecord(models.Model):
     interception_type_circus = models.BooleanField('Circus', default=False)
     interception_type_runaway = models.BooleanField('Runaway', default=False)
 
-    trafficker_taken_into_custody = models.PositiveIntegerField(null=True, blank=True)
+    trafficker_taken_into_custody = models.CharField(max_length=20, null=True, blank=True)
 
     HOW_SURE_TRAFFICKING_CHOICES = [
         (1, '1 - Not at all sure'),
@@ -252,7 +252,7 @@ class VictimInterview(models.Model):
     number_of_traffickers = models.PositiveIntegerField('# of traffickers', null=True, blank=True)
 
     location = models.CharField(max_length=255, blank=True)
-    interviewer = models.CharField(max_length=255, blank=True)
+    interviewer = models.CharField(max_length=255)
 
     statement_read_before_beginning = models.BooleanField('Check the box if form is signed', default=False)
     permission_to_use_photograph = models.BooleanField('Check the box if form is signed', default=False)

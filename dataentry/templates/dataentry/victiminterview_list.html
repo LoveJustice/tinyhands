@@ -18,7 +18,7 @@
         <thead>
             <tr>
                 <th>IRF #</th>
-                <th>Staff Name</th>
+                <th>Interviewer</th>
                 <th># of victims</th>
                 <th># of traffickers</th>
                 <th>Date<br/>of Interview</th>
@@ -31,7 +31,7 @@
             {% for vif in victiminterview_list %}
             <tr>
                 <td>{{ vif.vif_number }}</td>
-                <td>{{ vif.staff_name }}</td>
+                <td>{{ vif.interviewer }}</td>
                 <td>{{ vif.number_of_victims }}</td>
                 <td>{{ vif.number_of_traffickers }}</td>
                 <td>{{ vif.date }}</td>

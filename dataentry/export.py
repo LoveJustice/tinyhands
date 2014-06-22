@@ -1,3 +1,5 @@
+from django.db import models
+
 BORDER_STATION_NAMES = {
     'BHW': 'Bhairahwa',
     'NPJ': 'Nepalgunj',
@@ -145,13 +147,13 @@ irf_headers = [
 
 for i in range(1, 5+1):
     irf_headers.extend([
-        "Trafficker 1 Name",
-        "Trafficker 1 Gender ",
-        "Trafficker 1 Age",
-        "Trafficker 1 District",
-        "Trafficker 1 VDC",
-        "Trafficker 1 Phone",
-        "Trafficker 1 Relationship to...",
+        "Trafficker %d Name" % i,
+        "Trafficker %d Gender " % i,
+        "Trafficker %d Age" % i,
+        "Trafficker %d District" % i,
+        "Trafficker %d VDC" % i,
+        "Trafficker %d Phone" % i,
+        "Trafficker %d Relationship to..." % i,
     ])
 
 
@@ -169,8 +171,12 @@ def get_station_name_from_number(form_number):
 def get_checkbox_group_value(instance, field_name_start):
     for field in instance._meta.fields:
         if field.name.startswith(field_name_start):
-            if getattr(instance, field.name):
-                return field.verbose_name
+            value = getattr(instance, field.name)
+            if value:
+                if isinstance(field, models.BooleanField):
+                    return field.verbose_name
+                else:
+                    return value
     return ''
 
 
@@ -179,13 +185,14 @@ def get_irf_export_rows(irfs):
     rows.append(irf_headers)
 
     for irf in irfs:
-        row = []
         for interceptee in irf.interceptees.all():
             # One row for each victim, with all these beginning fields duplicated for all of them
 
             # If this is a trafficker, don't put them on their own row, put them at the end
             if interceptee.kind == 't':
                 continue
+
+            row = []
 
             row.extend([
                 irf.irf_number,
@@ -326,7 +333,7 @@ def get_irf_export_rows(irfs):
             else:
                 row.append('Form is not signed')
 
-            row.append(interceptee.full_name)
+            row.append(interceptee.full_name or '')
 
             if interceptee.gender == 'm':
                 row.append('Male')
@@ -346,6 +353,12 @@ def get_irf_export_rows(irfs):
                 if interceptee.kind == 'v':
                     continue
 
+                row.append(interceptee.full_name or '')
+
+                if interceptee.gender == 'm':
+                    row.append('Male')
+                else:
+                    row.append('Female')
                 row.extend([
                     interceptee.age,
                     interceptee.district,
@@ -357,7 +370,6 @@ def get_irf_export_rows(irfs):
             rows.append(row)
 
     return rows
-
 
 
 vif_headers = [
@@ -539,12 +551,18 @@ for i in range(1, 9+1):
         vif_headers.extend([header % i for header in vif_lb_headers])
 
 
-def get_victim_where_going(instance):
-    if instance.victim_where_going_india_other_value:
-        return instance.victim_where_going_india_other_value
-    if instance.victim_where_going_gulf_other_value:
-        return instance.victim_where_going_gulf_other_value
-    return get_checkbox_group_value(instance, 'victim_where_going')
+def get_victim_where_going(vif):
+    if vif.victim_where_going_region_india:
+        if vif.victim_where_going_india_didnt_know or vif.victim_where_going_india_other:
+            return 'India'
+        else:
+            return get_checkbox_group_value(vif, 'victim_where_going_india')
+
+    elif vif.victim_where_going_region_gulf:
+        if vif.victim_where_going_gulf_didnt_know or vif.victim_where_going_gulf_other:
+            return 'Gulf / Other'
+        else:
+            return get_checkbox_group_value(vif, 'victim_where_going_gulf')
 
 
 def get_victim_how_expense_was_paid(vif):
@@ -756,7 +774,7 @@ def get_vif_export_rows(vifs):
 
             get_broker_works_in_job_location(vif),
 
-            'Broker said they would be earning %s per month' % vif.amount_victim_would_earn,
+            'Broker said they would be earning %s per month' % vif.amount_victim_would_earn if vif.amount_victim_would_earn else '',
             'Broker made similar promises to %s other(s)' % vif.number_broker_made_similar_promises_to,
 
             get_nullable_choice_text(

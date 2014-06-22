@@ -59,6 +59,8 @@ class DreamSuitePaperForm(forms.ModelForm):
                         cleaned_data[field_name] = False
                     else:
                         cleaned_data[field_name] = None
+                else:
+                    cleaned_data[field_name] = None
 
         return cleaned_data
 
@@ -333,7 +335,11 @@ class InterceptionRecordForm(DreamSuitePaperForm):
             self._errors['scan_and_submit_same_day'] = error
 
     def ensure_at_least_one_of_9_1_through_9_5_are_checked(self, cleaned_data):
-        if not cleaned_data.get('interception_type'):
+        if not (cleaned_data.get('interception_type_gulf_countries') or
+                cleaned_data.get('interception_type_india_trafficking') or
+                cleaned_data.get('interception_type_unsafe_migration') or
+                cleaned_data.get('interception_type_circus') or
+                cleaned_data.get('interception_type_runaway')):
             error = self.error_class(['Field should be included, though not required.'])
             error.is_warning = True
             self.has_warnings = True
