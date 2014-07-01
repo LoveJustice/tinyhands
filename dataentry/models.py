@@ -207,6 +207,9 @@ class InterceptionRecord(models.Model):
 
         return total
 
+    class Meta:
+        ordering = ['-date_time_last_updated']
+
 
 class Interceptee(models.Model):
     KIND_CHOICES = [
@@ -237,6 +240,11 @@ class Interceptee(models.Model):
 
 
 class VictimInterview(models.Model):
+
+    class Meta:
+        ordering = ['-date_time_last_updated']
+
+
     GENDER_CHOICES = [
         ('male', 'Male'),
         ('female', 'Female'),
@@ -603,6 +611,36 @@ class VictimInterview(models.Model):
     victim_had_suicidal_thoughts = models.NullBooleanField(null=True)
 
     reported_total_situational_alarms = models.PositiveIntegerField(blank=True, null=True)
+
+    def get_calculated_situational_alarms(self):
+        total = 0
+        if self.family_pressured_victim is True:
+            total += 1
+        if self.family_will_try_sending_again is True:
+            total += 3
+        if self.victim_feels_safe_at_home is False:
+            total += 4
+        if self.victim_wants_to_go_home is False:
+            total += 4
+        if self.victim_home_had_sexual_abuse_rarely is True:
+            total += 4
+        if self.victim_home_had_sexual_abuse_frequently is True:
+            total += 10
+        if self.victim_home_had_physical_abuse_frequently is True:
+            total += 6
+        if self.victim_home_had_emotional_abuse_frequently is True:
+            total += 2
+        if self.victim_guardian_drinks_alcohol_all_the_time is True:
+            total += 1
+        if self.victim_guardian_uses_drugs_occasionally is True:
+            total += 2
+        if self.victim_guardian_uses_drugs_all_the_time is True:
+            total += 6
+        if self.victim_family_economic_situation_no_basic_needs is True:
+            total += 7
+        if self.victim_had_suicidal_thoughts is True:
+            total += 7
+        return total
 
     legal_action_against_traffickers_no = models.BooleanField('No', default=False)
     legal_action_against_traffickers_fir_filed = models.BooleanField('FIR filed against', default=False)

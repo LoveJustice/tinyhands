@@ -34,6 +34,7 @@ class InterceptionRecordListView(
         LoginRequiredMixin,
         ListView):
     model = InterceptionRecord
+    paginate_by = 20
 
 
 class IntercepteeInline(InlineFormSet):
@@ -100,6 +101,7 @@ class VictimInterviewListView(
         LoginRequiredMixin,
         ListView):
     model = VictimInterview
+    paginate_by = 20
 
 
 class VictimInterviewCreateView(

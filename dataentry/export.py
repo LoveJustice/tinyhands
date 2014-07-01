@@ -733,7 +733,11 @@ def get_vif_export_rows(vifs):
 
             get_checkbox_group_value(vif, 'victim_education_level'),
 
-            'Literate' if vif.victim_is_literate else 'Illiterate',
+            get_nullable_choice_text(
+                vif.victim_is_literate,
+                'Literate',
+                'Illiterate'
+            ),
 
             get_checkbox_group_value(vif, 'migration_plans'),
             vif.migration_plans_job_other_value,
@@ -775,7 +779,7 @@ def get_vif_export_rows(vifs):
             get_broker_works_in_job_location(vif),
 
             'Broker said they would be earning %s per month' % vif.amount_victim_would_earn if vif.amount_victim_would_earn else '',
-            'Broker made similar promises to %s other(s)' % vif.number_broker_made_similar_promises_to,
+            'Broker made similar promises to %s other(s)' % vif.number_broker_made_similar_promises_to if vif.number_broker_made_similar_promises_to else '',
 
             get_nullable_choice_text(
                 vif.victim_first_time_crossing_border,
@@ -910,9 +914,8 @@ def get_vif_export_rows(vifs):
                 'They did not express any suicidal thoughts',
             ),
 
-            'not yet implemented',
-
             vif.reported_total_situational_alarms,
+            vif.get_calculated_situational_alarms(),
 
             get_legal_action_against_traffickers(vif),
             vif.legal_action_fir_against_value or vif.legal_action_dofe_against_value or '',

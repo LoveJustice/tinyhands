@@ -1,5 +1,6 @@
 {% extends "dataentry/dataentry_base.html" %}
 {% load bootstrap %}
+{% load times %}
 
 {% block title %}All VIFs{% endblock %}
 
@@ -55,6 +56,37 @@
 {% endif %}
 
 {% if request.user.permission_vif_add %}
-    <p class="pull-right"><a class="btn btn-success" href="{% url 'victiminterview_create' %}">Input A New VIF</a></p>
+
+<div id="footer">
+    <nav class="navbar navbar-default navbar-fixed-bottom">
+        <div class="container">
+            <div class="navbar-inner navbar-content-center">
+                <a class="pull-right btn btn-success navbar-btn" href="{% url 'victiminterview_create' %}">Input A New VIF</a>
+            </div>
+            <ul class="pagination pull-left" style="margin: 10px !important">
+                {% if page_obj.has_previous %}
+                    <li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+                {% else %}
+                    <li class="disabled"><a href="">&laquo;</a></li>
+                {% endif %}
+
+                {% for i in page_obj.paginator.num_pages|times %}
+                <li{% if page_obj.number == i|add:"1" %} class="active"{% endif %}>
+                    <a href="?page={{ i|add:"1" }}">{{ i|add:"1" }}</a>
+                </li>
+                {% endfor %}
+
+                {% if page_obj.has_next %} 
+                    <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+                {% else %}
+                    <li class="disabled"><a href="">&raquo;</a></li>
+                {% endif %}
+                
+            </ul>
+        </div>
+    </nav>
+</div>
+
+
 {% endif %}
 {% endblock %}
