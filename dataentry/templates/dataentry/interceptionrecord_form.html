@@ -8,6 +8,14 @@
 {% endblock %}
 
 {% block content %}
+{% if not interceptionrecord %}
+<div class="well well-sm pull-right" style="margin-top: -40px">
+    Resume an incomplete IRF:
+    <select id="saved-for-later-list">
+        <option>--------</option>
+    </select>
+</div>
+{% endif %}
 
 <div style="display: none">
     {% for id, errors in form.errors.items %}
@@ -854,6 +862,9 @@
         <nav class="navbar navbar-default navbar-fixed-bottom">
             <div class="container">
                 <div class="navbar-inner navbar-content-center">
+                    {% if not interceptionrecord %}
+                        <button type="button" id="save-for-later" class="pull-left btn btn-warning navbar-btn btn-lg">Save for later</button>
+                    {% endif %}
                     <input type="submit" class="pull-right btn btn-primary navbar-btn btn-lg" value="Submit" />
                     {% if form.errors %}
                         <div class="checkbox navbar-btn pull-right" style="margin-top: 16px; margin-right: 20px">

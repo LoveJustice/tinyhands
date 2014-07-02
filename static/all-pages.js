@@ -142,6 +142,48 @@ function setUpLimitedChoicesCheckboxGroups() {
     });
 }
 
+
+function setUpResumeIncompleteFormSystem(which) {
+    var storedForms = JSON.parse(localStorage.getItem('saved-'+which+'s') || '{}');
+    for (var formNumber in storedForms) {
+        var formData = storedForms[formNumber];
+        $('#saved-for-later-list').append(
+            $('<option value="'+formData+'">'+formNumber+'</option>')
+        );
+    }
+
+    $('#saved-for-later-list').change(function() {
+        $('form').deserialize($(this).val());
+    });
+
+    $('#save-for-later').click(function() {
+        var formNumber = $('#id_'+which+'_number').val();
+        if (!formNumber) {
+            alert('Please enter a '+which.toUpperCase()+' # to save this form for later.');
+            return;
+        }
+        var storedForms = JSON.parse(localStorage.getItem('saved-'+which+'s') || '{}');
+        storedForms[formNumber] = $('form').serialize();
+        localStorage.setItem('saved-'+which+'s', JSON.stringify(storedForms));
+
+        alert('This form has been saved for later.  Come back to the '+which.toUpperCase()+' create page and select the '+which.toUpperCase()+' number from the top dropdown to resume entering data.');
+        window.location.href = '/data-entry/'+which+'s/';
+    });
+}
+
+
+function clearCompletedForms(which) {
+    var storedForms = JSON.parse(localStorage.getItem('saved-'+which+'s') || '{}');
+    $('.'+which+'-number').each(function() {
+        var num = $(this).text();
+        if (num in storedForms) {
+            delete storedForms[num];
+        }
+    });
+    localStorage.setItem('saved-'+which+'s', JSON.stringify(storedForms));
+}
+
+
 var DREAMSUITE = {
 
     account_create: function() {
@@ -211,8 +253,13 @@ var DREAMSUITE = {
         $('.in-use-button').tooltip();
     },
 
+    interceptionrecord_list: function() {
+        clearCompletedForms('irf');
+    },
     interceptionrecord_create: function() {
         this.interceptionrecord_update();
+
+        setUpResumeIncompleteFormSystem('irf');
     },
 
     interceptionrecord_update: function() {
@@ -279,8 +326,13 @@ var DREAMSUITE = {
         //});
     },
 
+    victiminterview_list: function() {
+        clearCompletedForms('vif');
+    },
     victiminterview_create: function() {
         this.victiminterview_update();
+
+        setUpResumeIncompleteFormSystem('vif');
     },
     victiminterview_update: function() {
         function calculateTotal() {
@@ -295,6 +347,10 @@ var DREAMSUITE = {
         }
         $('input[type="checkbox"]').click(calculateTotal);
         calculateTotal();
+
+        if ($('#error-box p').length === 0) {
+            $('#error-box').remove();
+        }
 
         setUpValidationPopups();
 

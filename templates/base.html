@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Tiny Hands Dream Suite {% block title %}{% endblock %}</title>
+    <title>{% block title %}{% endblock %} | Tiny Hands Dream Suite</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="{{ STATIC_URL }}images/favicon.ico">
     <link href="{{ STATIC_URL }}bootstrap.css" rel="stylesheet" media="screen">
@@ -84,6 +84,7 @@ in the Javascript and run code unique to the current page.
 <script src="{{ STATIC_URL }}jquery.js"></script>
 <script src="{{ STATIC_URL }}datetimepicker/jquery.datetimepicker.js"></script>
 <script src="{{ STATIC_URL }}bootstrap.js"></script>
+<script src="{{ STATIC_URL }}jquery.deserialize.js"></script>
 {% block foot %}
 {% endblock %}
 <script src="{{ STATIC_URL }}all-pages.js"></script>

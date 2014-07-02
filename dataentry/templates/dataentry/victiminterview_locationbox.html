@@ -2,20 +2,20 @@
 {% load bootstrap %}
 
 {{ lb_form.id }}
-<div class="col-sm-6" style="padding: 20px">
+<div class="col-xs-6" style="padding: 20px">
     <div class="location-box location-box-top row checkbox-group-marker" id="which_place-{{ counter }}">
-        <div class="col-sm-4">
+        <div class="col-xs-4">
             <div class="location-box-number">LB{{ counter }}</div>
             <h2 style="margin-left: -10px">Which place?</h2>
             <div class="checkbox-group">{{ lb_form.which_place_india_meetpoint }} {{ lb_form.which_place_india_meetpoint.label_tag }}</div>
             <div class="checkbox-group">{{ lb_form.which_place_manpower }} {{ lb_form.which_place_manpower.label_tag }}</div>
         </div>
-        <div class="col-sm-4">
+        <div class="col-xs-4">
             <div class="checkbox-group">{{ lb_form.which_place_transit_hideout }} {{ lb_form.which_place_transit_hideout.label_tag }}</div>
             <div class="checkbox-group">{{ lb_form.which_place_destination }} {{ lb_form.which_place_destination.label_tag }}</div>
             <div class="checkbox-group">{{ lb_form.which_place_passport }} {{ lb_form.which_place_passport.label_tag }}</div>
         </div>
-        <div class="col-sm-4">
+        <div class="col-xs-4">
             <div class="checkbox-group">{{ lb_form.which_place_nepal_meet_point }} {{ lb_form.which_place_nepal_meet_point.label_tag }}</div>
             <div class="checkbox-group">{{ lb_form.which_place_known_location }} {{ lb_form.which_place_known_location.label_tag }}</div>
             <div class="checkbox-group">{{ lb_form.which_place_sex_industry }} {{ lb_form.which_place_sex_industry.label_tag }}</div>
@@ -36,39 +36,39 @@
     </div>
 
     <div class="location-box row">
-        <div class="col-sm-8 blue-border-right">
-            <div class="col-sm-6">
+        <div class="col-xs-8 blue-border-right">
+            <div class="col-xs-6">
                 <div class="label-inside-field">
                     {{ lb_form.vdc.label_tag }}{{ lb_form.vdc }}
                 </div>
             </div>
-            <div class="col-sm-6">
+            <div class="col-xs-6">
                 <div class="label-inside-field">
                     {{ lb_form.district.label_tag }}{{ lb_form.district }}
                 </div>
             </div>
 
-            <div class="col-sm-5">
+            <div class="col-xs-5">
                 <div class="label-inside-field">
                     {{ lb_form.signboard.label_tag }}{{ lb_form.signboard }}
                 </div>
             </div>
-            <div class="col-sm-7">
+            <div class="col-xs-7">
                 <div class="label-inside-field">
                     {{ lb_form.location_in_town.label_tag }}{{ lb_form.location_in_town }}
                 </div>
             </div>
         </div>
-        <div class="col-sm-4">
+        <div class="col-xs-4">
             <div class="label-inside-field">
                 {{ lb_form.phone.label_tag }}{{ lb_form.phone }}
             </div>
-            <div class="col-sm-6">
+            <div class="col-xs-6">
                 <div class="label-inside-field">
                     {{ lb_form.color.label_tag }}{{ lb_form.color }}
                 </div>
             </div>
-            <div class="col-sm-6">
+            <div class="col-xs-6">
                 <div class="label-inside-field">
                     {{ lb_form.number_of_levels.label_tag }}{{ lb_form.number_of_levels }}
                 </div>
@@ -79,7 +79,7 @@
 
     <div class="location-box row">
         <div class="inner">
-            <div class="col-sm-6">
+            <div class="col-xs-6">
                 <div class="label-inside-field">
                     {{ lb_form.compound_wall.label_tag }}{{ lb_form.compound_wall }}
                 </div>
@@ -90,7 +90,7 @@
                     {{ lb_form.roof_type.label_tag }}{{ lb_form.roof_type }}
                 </div>
             </div>
-            <div class="col-sm-6">
+            <div class="col-xs-6">
                 <div class="label-inside-field">
                     {{ lb_form.roof_color.label_tag }}{{ lb_form.roof_color }}
                 </div>
@@ -102,7 +102,7 @@
                 </div>
             </div>
 
-            <div class="col-sm-8">
+            <div class="col-xs-8">
                 <h2>Which do you agree with about this place?</h2>
                 <div class="clearfix">
                     <div class="pull-left interviewer-believes-box checkbox-group-marker" id="lb_interviewer_believes-{{ counter }}">
@@ -135,7 +135,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-4">
+            <div class="col-xs-4">
                 <div class="label-inside-field">
                     {{ lb_form.nearby_signboards.label_tag }}{{ lb_form.nearby_signboards }}
                 </div>

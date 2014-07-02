@@ -2,7 +2,7 @@
 {% load bootstrap %}
 
 {{ pb_form.id }}
-<div class="col-sm-4" style="padding: 20px">
+<div class="col-xs-4" style="padding: 20px">
     <div class="person-box person-box-top row" style="height: 158px">
         <div class="red-border-right red-border-bottom inner smaller pull-left checkbox-group-marker" id="who_is_this_relationship-{{ counter }}" style="width: 150px">
             <h2>Who is this?</h2>
@@ -38,22 +38,22 @@
         </div>
 
         {{ pb_form.name }}
-        <div class="col-sm-6">
+        <div class="col-xs-6">
             <div class="label-inside-field">
                 {{ pb_form.address_district.label_tag }}{{ pb_form.address_district }}
             </div>
         </div>
-        <div class="col-sm-6">
+        <div class="col-xs-6">
             <div class="label-inside-field">
                 {{ pb_form.address_vdc.label_tag }}{{ pb_form.address_vdc }}
             </div>
         </div>
-        <div class="col-sm-4">
+        <div class="col-xs-4">
             <div class="label-inside-field">
                 {{ pb_form.address_ward.label_tag }}{{ pb_form.address_ward }}
             </div>
         </div>
-        <div class="col-sm-8">
+        <div class="col-xs-8">
             <div class="label-inside-field">
                 {{ pb_form.phone.label_tag }}{{ pb_form.phone }}
             </div>
@@ -61,17 +61,17 @@
     </div>
 
     <div class="person-box row">
-        <div class="col-sm-4">
+        <div class="col-xs-4">
             <div class="label-inside-field">
                 {{ pb_form.age.label_tag }}{{ pb_form.age }}
             </div>
         </div>
-        <div class="col-sm-4">
+        <div class="col-xs-4">
             <div class="label-inside-field">
                 {{ pb_form.height.label_tag }}{{ pb_form.height }}
             </div>
         </div>
-        <div class="col-sm-4">
+        <div class="col-xs-4">
             <div class="label-inside-field">
                 {{ pb_form.weight.label_tag }}{{ pb_form.weight }}
             </div>
@@ -97,7 +97,7 @@
             <div class="inline-checkbox-group">{{ pb_form.occupation_none }} {{ pb_form.occupation_none.label_tag }}</div>
         </div>
         <div class="person-box row">
-            <div class="col-sm-4" style="width: 40%">
+            <div class="col-xs-4" style="width: 40%">
             <div class="checkbox-group">{{ pb_form.occupation_agent }} {{ pb_form.occupation_agent.label_tag }}</div>
             <div class="checkbox-group">{{ pb_form.occupation_business_owner }} {{ pb_form.occupation_business_owner.label_tag }}</div>
                 <div class="label-inside-field">
@@ -105,14 +105,14 @@
                     {{ pb_form.occupation_other_value }}
                 </div>
             </div>
-            <div class="col-sm-4">
+            <div class="col-xs-4">
                 <div class="checkbox-group">{{ pb_form.occupation_wage_labor }} {{ pb_form.occupation_wage_labor.label_tag }}</div>
                 <div class="checkbox-group">{{ pb_form.occupation_job_in_india }} {{ pb_form.occupation_job_in_india.label_tag }}</div>
                 <div class="checkbox-group">{{ pb_form.occupation_job_in_gulf }} {{ pb_form.occupation_job_in_gulf.label_tag }}</div>
                 <div class="checkbox-group">{{ pb_form.occupation_farmer }} {{ pb_form.occupation_farmer.label_tag }}</div>
                 <div class="checkbox-group">{{ pb_form.occupation_teacher }} {{ pb_form.occupation_teacher.label_tag }}</div>
             </div>
-            <div class="col-sm-4" style="width: 25%">
+            <div class="col-xs-4" style="width: 25%">
                 <div class="checkbox-group">{{ pb_form.occupation_police }} {{ pb_form.occupation_police.label_tag }}</div>
                 <div class="checkbox-group">{{ pb_form.occupation_army }} {{ pb_form.occupation_army.label_tag }}</div>
                 <div class="checkbox-group">{{ pb_form.occupation_guard }} {{ pb_form.occupation_guard.label_tag }}</div>
@@ -128,14 +128,14 @@
             <div class="inline-checkbox-group">{{ pb_form.political_party_congress }} {{ pb_form.political_party_congress.label_tag }}</div>
         </div>
         <div class="person-box row">
-            <div class="col-sm-4" style="width: 39%">
+            <div class="col-xs-4" style="width: 39%">
             <div class="checkbox-group">{{ pb_form.political_party_maoist }} {{ pb_form.political_party_maoist.label_tag }}</div>
             <div class="checkbox-group">{{ pb_form.political_party_umn }} {{ pb_form.political_party_umn.label_tag }}</div>
             <div class="checkbox-group">{{ pb_form.political_party_forum }} {{ pb_form.political_party_forum.label_tag }}</div>
             <div class="checkbox-group">{{ pb_form.political_party_tarai_madesh }} {{ pb_form.political_party_tarai_madesh.label_tag }}</div>
             <div class="checkbox-group">{{ pb_form.political_party_shadbawona }} {{ pb_form.political_party_shadbawona.label_tag }}</div>
             </div>
-            <div class="col-sm-8" style="width: 60%">
+            <div class="col-xs-8" style="width: 60%">
             <div class="checkbox-group">{{ pb_form.political_party_rnt }} {{ pb_form.political_party_rnt.label_tag }}</div>
             <div class="checkbox-group">{{ pb_form.political_party_njf }} {{ pb_form.political_party_njf.label_tag }}</div>
             <div class="checkbox-group">{{ pb_form.political_party_loktantrak }} {{ pb_form.political_party_loktantrak.label_tag }}</div>

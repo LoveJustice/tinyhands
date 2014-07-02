@@ -7,22 +7,45 @@
 
 {% block content %}
 
-<div style="display: none">
-{% for id, errors in form.errors.items %}
-    {% if not errors.is_warning %}
-        <div class="error-for-popup" data-id="{{ id }}" data-message="{{ errors.0 }}"></div>
-    {% endif %}
-{% endfor %}
+{% if not interceptionrecord %}
+<div class="well well-sm pull-right" style="margin-top: -40px">
+    Resume an incomplete VIF:
+    <select id="saved-for-later-list">
+        <option>--------</option>
+    </select>
+</div>
+{% endif %}
 
-{% for id, errors in form.errors.items %}
-    {% if errors.is_warning %}
-        <div class="warning-for-popup" data-id="{{ id }}" data-message="{{ errors.0 }}"></div>
-    {% endif %}
-{% endfor %}
+<div style="display: none">
+    {% for id, errors in form.errors.items %}
+        {% if not errors.is_warning %}
+            <div class="error-for-popup" data-id="{{ id }}" data-message="{{ errors.0 }}"></div>
+        {% endif %}
+    {% endfor %}
+
+    {% for id, errors in form.errors.items %}
+        {% if errors.is_warning %}
+            <div class="warning-for-popup" data-id="{{ id }}" data-message="{{ errors.0 }}"></div>
+        {% endif %}
+    {% endfor %}
 </div>
 
+{% if form.errors and form.has_warnings and not form.ignore_warnings.value %}
+    <div class="alert alert-warning no-remove" style="margin-top: 20px">
+        <h3>These warnings will not prevent the form from being saved, but may indicate a problem with the form</h3>
+        <p>If you are sure that you want to submit the form with warnings, fix any errors, check the "Ignore warnings" box next to the submit button, and submit the form again.</p>
+        {% for id, errors in form.errors.items %}
+            {% if errors.is_warning %}
+                {% for error in errors %}
+                <p><strong>{{ id|unslugify }}:</strong> {{ error }}</p>
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endif %}
+
 {% if form.errors %}
-<div class="alert alert-danger no-remove" style="margin-top: 20px">
+<div id="error-box" class="alert alert-danger no-remove" style="margin-top: 20px">
     <h3>These errors will prevent the form from being saved</h3>
     {% for id, errors in form.errors.items %}
         {% if not errors.is_warning %}
@@ -1207,7 +1230,7 @@
                 <div class="black-box padded-box">
                     <h2>
                         <span class="section-number">6.5</span>
-                        How would you rate the work that Tiny Hands is doing on a scale of 1-10 (1 being the worst and 10 being the best), in each area:<span class="required">*</span>
+                        How would you rate the work that Tiny Hands is doing on a scale of 1-10 (1 being the worst and 10 being the best), in each area:
                     </h2>
 
                     <div class="clearfix mbs">
@@ -1582,8 +1605,16 @@
         <nav class="navbar navbar-default navbar-fixed-bottom">
             <div class="container">
                 <div class="navbar-inner navbar-content-center">
-                    <!--<button type="button" id="save-for-later" class="pull-left btn btn-warning navbar-btn btn-lg">Save for later</button>-->
+                    {% if not victiminterview %}
+                        <button type="button" id="save-for-later" class="pull-left btn btn-warning navbar-btn btn-lg">Save for later</button>
+                    {% endif %}
                     <input type="submit" class="pull-right btn btn-primary navbar-btn btn-lg" value="Submit" />
+                    {% if form.errors %}
+                        <div class="checkbox navbar-btn pull-right" style="margin-top: 16px; margin-right: 20px">
+                            {{ form.ignore_warnings }}
+                            {{ form.ignore_warnings.label_tag }}
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </nav>

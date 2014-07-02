@@ -522,6 +522,30 @@ class VictimInterviewForm(DreamSuitePaperForm):
         error_messages={'invalid_choice': 'This box must be checked.'}
     )
 
+    victim_where_going_region_india = forms.BooleanField(label='India', required=False)
+    victim_where_going_region_gulf = forms.BooleanField(label='Gulf / Other', required=False)
+
+    victim_where_going_india_delhi = forms.BooleanField(label='Delhi', required=False)
+    victim_where_going_india_mumbai = forms.BooleanField(label='Mumbai', required=False)
+    victim_where_going_india_surat = forms.BooleanField(label='Surat', required=False)
+    victim_where_going_india_rajastan = forms.BooleanField(label='Rajastan', required=False)
+    victim_where_going_india_kolkata = forms.BooleanField(label='Kolkata', required=False)
+    victim_where_going_india_pune = forms.BooleanField(label='Pune', required=False)
+    victim_where_going_india_jaipur = forms.BooleanField(label='Jaipur', required=False)
+    victim_where_going_india_bihar = forms.BooleanField(label='Bihar', required=False)
+    victim_where_going_india_didnt_know = forms.BooleanField(label='Did Not Know', required=False)
+    victim_where_going_india_other = forms.BooleanField(label='Other', required=False)
+
+    victim_where_going_gulf_lebanon = forms.BooleanField(label='Lebanon', required=False)
+    victim_where_going_gulf_dubai = forms.BooleanField(label='Dubai', required=False)
+    victim_where_going_gulf_malaysia = forms.BooleanField(label='Malaysia', required=False)
+    victim_where_going_gulf_oman = forms.BooleanField(label='Oman', required=False)
+    victim_where_going_gulf_saudi_arabia = forms.BooleanField(label='Saudi Arabia', required=False)
+    victim_where_going_gulf_kuwait = forms.BooleanField(label='Kuwait', required=False)
+    victim_where_going_gulf_qatar = forms.BooleanField(label='Qatar', required=False)
+    victim_where_going_gulf_didnt_know = forms.BooleanField(label='Did Not Know', required=False)
+    victim_where_going_gulf_other = forms.BooleanField(label='Other', required=False)
+
     class Meta:
         model = VictimInterview
 
@@ -555,11 +579,11 @@ class VictimInterviewForm(DreamSuitePaperForm):
 
     def clean(self):
         cleaned_data = super(VictimInterviewForm, self).clean()
+        self.has_warnings = False
 
         for field_name_start in [
             'primary_motivation',
             'migration_plans',
-            'victim_where_going',
             'victim_primary_means_of_travel',
             'meeting_at_border',
             'awareness_before_interception',
@@ -570,7 +594,30 @@ class VictimInterviewForm(DreamSuitePaperForm):
             if not self.at_least_one_checked(cleaned_data, field_name_start):
                 self._errors[field_name_start] = self.error_class(['This field is required.'])
 
+        if not cleaned_data.get('ignore_warnings'):
+            self.ensure_victim_where_going(cleaned_data)
+            self.ensure_tiny_hands_rating(cleaned_data)
+
         return cleaned_data
+
+    def ensure_victim_where_going(self, cleaned_data):
+        if not self.at_least_one_checked(cleaned_data, 'victim_where_going'):
+            error = self.error_class(['Field should be included, though not required.'])
+            error.is_warning = True
+            self.has_warnings = True
+            self._errors['victim_where_going'] = error
+
+    def ensure_tiny_hands_rating(self, cleaned_data):
+        for field_name in [
+                'tiny_hands_rating_border_staff',
+                'tiny_hands_rating_shelter_staff',
+                'tiny_hands_rating_trafficking_awareness',
+                'tiny_hands_rating_shelter_accommodations']:
+            if not cleaned_data.get(field_name):
+                error = self.error_class(['Field should be included, though not required.'])
+                error.is_warning = True
+                self.has_warnings = True
+                self._errors[field_name] = error
 
 
 class VictimInterviewPersonBoxForm(DreamSuitePaperForm):
