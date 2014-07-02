@@ -517,6 +517,10 @@ class VictimInterviewForm(DreamSuitePaperForm):
         required=False
     )
 
+    ignore_warnings = forms.BooleanField(
+        required=False
+    )
+
     has_signature = forms.BooleanField(
         required=True,
         error_messages={'invalid_choice': 'This box must be checked.'}
