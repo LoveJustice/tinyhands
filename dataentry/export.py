@@ -173,7 +173,7 @@ def get_checkbox_group_value(instance, field_name_start):
         if field.name.startswith(field_name_start):
             value = getattr(instance, field.name)
             if value:
-                if isinstance(field, models.BooleanField):
+                if isinstance(field, models.BooleanField) or isinstance(field, models.NullBooleanField):
                     return field.verbose_name
                 else:
                     return value
