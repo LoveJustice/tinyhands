@@ -940,6 +940,7 @@ def get_vif_export_rows(vifs):
         lbs = list(vif.location_boxes.all())
 
         for idx in range(max(len(pbs), len(lbs))):
+            print idx
             try:
                 pb = pbs[idx]
                 row.extend([
@@ -962,10 +963,10 @@ def get_vif_export_rows(vifs):
                     pb.where_spends_time,
                     get_checkbox_group_value(pb, 'interviewer_believes'),
                     get_checkbox_group_value(pb, 'victim_believes'),
-                    'Associated with PB %d' % pb.associated_with_person_value if pb.associated_with_person_value is not None else '',
+                    'Associated with LB %d' % pb.associated_with_place_value if pb.associated_with_place_value is not None else '',
                 ])
             except:
-                pass
+                row.extend(['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''])
 
             try:
                 lb = lbs[idx]
@@ -996,10 +997,10 @@ def get_vif_export_rows(vifs):
                     get_checkbox_group_value(pb, 'interviewer_believes'),
                     get_checkbox_group_value(pb, 'victim_believes'),
 
-                    'Associated with LB %d' % lb.associated_with_place_value if lb.associated_with_place_value is not None else '',
+                    'Associated with PB %d' % lb.associated_with_person_value if lb.associated_with_person_value is not None else '',
                 ])
             except:
-                pass
+                row.extend(['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''])
 
         rows.append(row)
 
