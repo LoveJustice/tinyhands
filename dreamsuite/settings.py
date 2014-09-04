@@ -40,7 +40,6 @@ INSTALLED_APPS = (
     'dataentry',
     'accounts',
     'util',
-    'south',
 )
 
 import django.conf.global_settings as DEFAULT_SETTINGS

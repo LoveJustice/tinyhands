@@ -46,6 +46,9 @@ class AccountManager(BaseUserManager):
         u.save(using=self._db)
         return u
 
+def make_activation_key():
+    return ''.join(random.choice(string.ascii_letters + string.digits)
+                   for i in range(40))
 
 class Account(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=255, unique=True)
@@ -69,10 +72,9 @@ class Account(AbstractBaseUser, PermissionsMixin):
 
     activation_key = models.CharField(
         max_length=40,
-        default=(lambda:
-                 ''.join(random.choice(string.ascii_letters + string.digits)
-                         for i in range(40)))
+        default=make_activation_key
     )
+    
 
     objects = AccountManager()
 
