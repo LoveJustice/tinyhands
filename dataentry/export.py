@@ -798,7 +798,7 @@ def get_vif_export_rows(vifs):
             'Was kept hidden' if vif.victim_was_hidden else '',
             vif.victim_was_hidden_explanation,
 
-            'Was free to go outside' if vif.victim_was_free_to_go_out else '',
+            'Was free to go outside' if vif.victim_was_free_to_go_out else 'Was not free to go outside',
             vif.victim_was_free_to_go_out_explanation,
 
             vif.how_many_others_in_situation,
