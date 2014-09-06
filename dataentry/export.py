@@ -967,7 +967,7 @@ def get_vif_export_rows(vifs):
                 ])
             except:
                 row.extend(['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''])
-
+                
             try:
                 lb = lbs[idx]
                 row.extend([
@@ -994,8 +994,8 @@ def get_vif_export_rows(vifs):
                     lb.nearby_signboards,
                     lb.other,
 
-                    get_checkbox_group_value(pb, 'interviewer_believes'),
-                    get_checkbox_group_value(pb, 'victim_believes'),
+                    get_checkbox_group_value(lb, 'interviewer_believes'),
+                    get_checkbox_group_value(lb, 'victim_believes'),
 
                     'Associated with PB %d' % lb.associated_with_person_value if lb.associated_with_person_value is not None else '',
                 ])
