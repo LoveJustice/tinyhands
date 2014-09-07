@@ -4,6 +4,7 @@ from dataentry.views import *
 urlpatterns = patterns('dataentry.views',
     url(r'^irfs/$', InterceptionRecordListView.as_view(), name='interceptionrecord_list'),
     url(r'^irfs/(?P<pk>\d+)/$', InterceptionRecordDetailView.as_view(), name='interceptionrecord_detail'),
+    url(r'^irfs/search/$', InterceptionRecordListView.as_view(), name="interceptionrecord_list"),
     url(r'^irfs/create/$', InterceptionRecordCreateView.as_view(), name='interceptionrecord_create'),
     url(r'^irfs/update/(?P<pk>\d+)/$', InterceptionRecordUpdateView.as_view(), name='interceptionrecord_update'),
     url(r'^irfs/export/$', InterceptionRecordCSVExportView.as_view(), name='interceptionrecord_csv_export'),

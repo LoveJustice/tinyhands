@@ -23,6 +23,7 @@ from datetime import date
 from dataentry import export
 from django.http import HttpResponse
 import csv
+import re
 
 
 @login_required
@@ -35,7 +36,21 @@ class InterceptionRecordListView(
         ListView):
     model = InterceptionRecord
     paginate_by = 20
-
+    
+    def get_queryset(self):
+        try:
+            value = self.request.GET['search_value']
+        except:
+            value = ''
+        if (value != ''):
+	    print value
+            #work more on finding the correct model attributes
+	    #object_list = self.model.objects.filter(name__icontains = value)
+            object_list = self.model.objects.filter(irf_number__icontains = value)
+	else:
+	    print "you lose charlie"
+            object_list = self.model.objects.all()
+        return object_list
 
 class IntercepteeInline(InlineFormSet):
     model = Interceptee
