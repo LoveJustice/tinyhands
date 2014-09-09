@@ -70,6 +70,8 @@ class Account(AbstractBaseUser, PermissionsMixin):
 
     date_joined = models.DateTimeField(default=timezone.now)
 
+    alerts = models.ManyToManyField(Alert)
+
     activation_key = models.CharField(
         max_length=40,
         default=make_activation_key
@@ -110,3 +112,14 @@ class Account(AbstractBaseUser, PermissionsMixin):
                 'account': self,
             }
         )
+
+class Alert(models.Model):
+    code=models.charField(max_length=255,unique=True)
+    email_template=models.charField(max_length=255)
+
+    accounts = models.ManyToManyField(Account)
+
+    def __unicode__(self):
+        return self.code
+
+    
