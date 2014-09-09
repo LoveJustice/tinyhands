@@ -52,6 +52,13 @@ class InterceptionRecordListView(
             object_list = self.model.objects.all()
         return object_list
 
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super(InterceptionRecordListView, self).get_context_data(**kwargs)
+        # Check if database is empty to change message in search page
+        context['database_empty'] = self.model.objects.count()==0
+        return context
+
 class IntercepteeInline(InlineFormSet):
     model = Interceptee
     extra = 12
