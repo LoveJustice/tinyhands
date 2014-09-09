@@ -43,10 +43,14 @@ class InterceptionRecordListView(
         except:
             value = ''
         if (value != ''):
-	    print value
-            #work more on finding the correct model attributes
-	    #object_list = self.model.objects.filter(name__icontains = value)
-            object_list = self.model.objects.filter(irf_number__icontains = value)
+            if(value.isnumeric()):
+                print "Number"
+                object_list = self.model.objects.filter(irf_number__icontains = value)
+            else:
+                print "String"
+                #work more on finding the correct model attributes
+                object_list = self.model.objects.filter(staff_name__icontains = value)
+            
 	else:
 	    print "you lose charlie"
             object_list = self.model.objects.all()
@@ -118,6 +122,24 @@ class VictimInterviewListView(
     model = VictimInterview
     paginate_by = 20
 
+    def get_queryset(self):
+        try:
+            value = self.request.GET['search_value']
+        except:
+            value = ''
+        if (value != ''):
+            if(value.isnumeric()):
+                print "Number"
+                object_list = self.model.objects.filter(irf_number__icontains = value)
+            else:
+                print "String"
+                #work more on finding the correct model attributes                                                                                                                                                  
+                object_list = self.model.objects.filter(staff_name__icontains = value)
+
+        else:
+            print "you lose charlie"
+            object_list = self.model.objects.all()
+        return object_list
 
 class VictimInterviewCreateView(
         LoginRequiredMixin,
