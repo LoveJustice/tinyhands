@@ -43,14 +43,21 @@ class InterceptionRecordListView(
         except:
             value = ''
         if (value != ''):
-	    print value
-            #work more on finding the correct model attributes
-	    #object_list = self.model.objects.filter(name__icontains = value)
-            object_list = self.model.objects.filter(irf_number__icontains = value)
-	else:
-	    print "you lose charlie"
+            if(value.isnumeric()):
+                object_list = self.model.objects.filter(irf_number__icontains = value)
+            else:
+                #work more on finding the correct model attributes
+                object_list = self.model.objects.filter(staff_name__icontains = value)
+        else:
             object_list = self.model.objects.all()
         return object_list
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super(InterceptionRecordListView, self).get_context_data(**kwargs)
+        # Check if database is empty to change message in search page
+        context['database_empty'] = self.model.objects.count()==0
+        return context
 
 class IntercepteeInline(InlineFormSet):
     model = Interceptee
@@ -118,6 +125,27 @@ class VictimInterviewListView(
     model = VictimInterview
     paginate_by = 20
 
+    def get_queryset(self):
+        try:
+            value = self.request.GET['search_value']
+        except:
+            value = ''
+        if (value != ''):
+            if(value.isnumeric()):
+                object_list = self.model.objects.filter(vif_number__icontains = value)
+            else:
+                #work more on finding the correct model attributes                                                                                                                                                  
+                object_list = self.model.objects.filter(interviewer__icontains = value)
+        else:
+            object_list = self.model.objects.all()
+        return object_list
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super(VictimInterviewListView, self).get_context_data(**kwargs)
+        # Check if database is empty to change message in search page
+        context['database_empty'] = self.model.objects.count()==0
+        return context
 
 class VictimInterviewCreateView(
         LoginRequiredMixin,

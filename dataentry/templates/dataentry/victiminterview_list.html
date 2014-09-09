@@ -49,7 +49,11 @@
         </tbody> 
     </table>
     {% else %}
-    <p>There are not yet any VIFs in the database.</p>
+        {% if database_empty %}
+            <p>There are not yet any VIFs in the database. </p>
+        {% else %}
+            <p>There are no matching VIFs you are looking for</p>
+        {% endif %}
     {% endif %}
 {% else %}
     <h1>VIFs</h1>
