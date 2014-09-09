@@ -44,15 +44,11 @@ class InterceptionRecordListView(
             value = ''
         if (value != ''):
             if(value.isnumeric()):
-                print "Number"
                 object_list = self.model.objects.filter(irf_number__icontains = value)
             else:
-                print "String"
                 #work more on finding the correct model attributes
                 object_list = self.model.objects.filter(staff_name__icontains = value)
-            
-	else:
-	    print "you lose charlie"
+        else:
             object_list = self.model.objects.all()
         return object_list
 
@@ -129,17 +125,20 @@ class VictimInterviewListView(
             value = ''
         if (value != ''):
             if(value.isnumeric()):
-                print "Number"
-                object_list = self.model.objects.filter(irf_number__icontains = value)
+                object_list = self.model.objects.filter(vif_number__icontains = value)
             else:
-                print "String"
                 #work more on finding the correct model attributes                                                                                                                                                  
-                object_list = self.model.objects.filter(staff_name__icontains = value)
-
+                object_list = self.model.objects.filter(interviewer__icontains = value)
         else:
-            print "you lose charlie"
             object_list = self.model.objects.all()
         return object_list
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super(VictimInterviewListView, self).get_context_data(**kwargs)
+        # Check if database is empty to change message in search page
+        context['database_empty'] = self.model.objects.count()==0
+        return context
 
 class VictimInterviewCreateView(
         LoginRequiredMixin,
