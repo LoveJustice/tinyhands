@@ -662,6 +662,8 @@ def get_victim_guardian_uses_drugs(vif):
 def get_legal_action_against_traffickers(vif):
     if vif.legal_action_against_traffickers_no:
         return 'No legal action has been taken'
+    if vif.legal_action_against_traffickers_fir_filed and vif.legal_action_against_traffickers_dofe_complaint:
+        return 'An FIR and a DoFE have both been filed'
     if vif.legal_action_against_traffickers_fir_filed:
         return 'An FIR has been filed'
     if vif.legal_action_against_traffickers_dofe_complaint:
