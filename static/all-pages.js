@@ -135,7 +135,7 @@ function setUpLimitedChoicesCheckboxGroups() {
     // This simpler version just limits it to one checkbox since thats all we have right now
     $('input[type="checkbox"]').click(function() {
         var $container = $(this).parents('.checkbox-group-marker').eq(0);
-        if ($container.length === 0) {
+        if ($container.length === 0 || $(this).parents('.multiple-checkboxes-allowed').eq(0).length !== 0) {
             return;
         }
         $container.find('input[type="checkbox"]').not(this).attr('checked', null);

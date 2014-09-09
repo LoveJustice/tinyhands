@@ -664,6 +664,8 @@ def get_victim_guardian_uses_drugs(vif):
 def get_legal_action_against_traffickers(vif):
     if vif.legal_action_against_traffickers_no:
         return 'No legal action has been taken'
+    if vif.legal_action_against_traffickers_fir_filed and vif.legal_action_against_traffickers_dofe_complaint:
+        return 'An FIR and a DoFE have both been filed'
     if vif.legal_action_against_traffickers_fir_filed:
         return 'An FIR has been filed'
     if vif.legal_action_against_traffickers_dofe_complaint:
@@ -800,7 +802,7 @@ def get_vif_export_rows(vifs):
             'Was kept hidden' if vif.victim_was_hidden else '',
             vif.victim_was_hidden_explanation,
 
-            'Was free to go outside' if vif.victim_was_free_to_go_out else '',
+            'Was free to go outside' if vif.victim_was_free_to_go_out else 'Was not free to go outside',
             vif.victim_was_free_to_go_out_explanation,
 
             vif.how_many_others_in_situation,
@@ -969,7 +971,7 @@ def get_vif_export_rows(vifs):
                 ])
             except:
                 row.extend(['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''])
-
+                
             try:
                 lb = lbs[idx]
                 row.extend([
@@ -996,8 +998,8 @@ def get_vif_export_rows(vifs):
                     lb.nearby_signboards,
                     lb.other,
 
-                    get_checkbox_group_value(pb, 'interviewer_believes'),
-                    get_checkbox_group_value(pb, 'victim_believes'),
+                    get_checkbox_group_value(lb, 'interviewer_believes'),
+                    get_checkbox_group_value(lb, 'victim_believes'),
 
                     'Associated with PB %d' % lb.associated_with_person_value if lb.associated_with_person_value is not None else '',
                 ])
