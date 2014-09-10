@@ -32,7 +32,8 @@ BORDER_STATION_NAMES = {
 irf_headers = [
     "IRF Number",
     "Station",
-    "Date/Time",
+    "Date/Time of Interception",
+    "Date/Time Entered into System",
     "Number of Victims",
     "Number of Traffickers",
     "Location",
@@ -198,6 +199,7 @@ def get_irf_export_rows(irfs):
                 get_station_name_from_number(irf.irf_number),
 
                 irf.date_time_of_interception,
+                irf.date_time_entered_into_system,
                 irf.number_of_victims,
                 irf.number_of_traffickers,
 
