@@ -918,7 +918,7 @@ def get_vif_export_rows(vifs):
             vif.get_calculated_situational_alarms(),
 
             get_legal_action_against_traffickers(vif),
-            vif.legal_action_fir_against_value or vif.legal_action_dofe_against_value or '',
+            vif.legal_action_fir_against_value + ", " + vif.legal_action_dofe_against_value or '',
 
             get_checkbox_group_value(vif, 'reason_no_legal'),
             vif.reason_no_legal_interference_value,
