@@ -69,9 +69,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
     permission_accounts_manage = models.BooleanField(default=False)
 
     date_joined = models.DateTimeField(default=timezone.now)
-
-    alerts = models.ManyToManyField(Alert)
-
+    
     activation_key = models.CharField(
         max_length=40,
         default=make_activation_key
@@ -114,10 +112,14 @@ class Account(AbstractBaseUser, PermissionsMixin):
         )
 
 class Alert(models.Model):
-    code=models.charField(max_length=255,unique=True)
-    email_template=models.charField(max_length=255)
+    code=models.CharField(max_length=255,unique=True)
+    email_template=models.CharField(max_length=255)
 
     accounts = models.ManyToManyField(Account)
+
+    class Meta:
+        verbose_name = 'alert'
+        verbose_name_plural = 'alertss'
 
     def __unicode__(self):
         return self.code
