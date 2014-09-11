@@ -134,11 +134,8 @@ function setUpLimitedChoicesCheckboxGroups() {
 
     // This simpler version just limits it to one checkbox since thats all we have right now
     $('input[type="checkbox"]').click(function() {
-	var $groupContainer = $(this).parents('inline-checkbox-group');
         var $container = $(this).parents('.checkbox-group-marker').eq(0);
         if ($(this).parent().parent().hasClass('multiple-checkboxes-allowed')){
-	    console.log("Multi Box");
-	    console.log($groupContainer.find('input[type="checkbox"]', '.single-checkbox-allowed'));
 	    $container.find('input[type="checkbox"]').each(function () {
 		if($(this).parent().hasClass('single-checkbox-allowed')) {
 		    $(this).attr('checked', null);
@@ -148,16 +145,13 @@ function setUpLimitedChoicesCheckboxGroups() {
 	}
 
 	else if ($(this).parent().hasClass('single-checkbox-allowed')) {
-	    console.log("Single Box");
 	    $container.find('input[type="checkbox"]').not(this).attr('checked', null);
 	    return;
 	}
 	else if ($container.length === 0) {
-	    console.log("In the length == 0 one")
             return;
         }
-        //$container.find('input[type="checkbox"]').not(this).attr('checked', null);
-	console.log("didn't work");
+        $container.find('input[type="checkbox"]').not(this).attr('checked', null);
     });
 }
 
