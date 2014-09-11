@@ -765,6 +765,19 @@ class VictimInterviewPersonBox(models.Model):
     associated_with_place_value = models.IntegerField(blank=True, null=True)
 
 
+class GeoCodeLocation(models.Model):
+    place_name = models.CharField(max_length=255)
+    latitude = models.FloatField()
+    longitude = models.FloatField()
+    LEVEL_CHOICES = [
+        ('S', 'State'),
+        ('D', 'District'),
+        ('V', 'VDC'),
+        ('C', 'City'),
+    ]
+    level = models.TextField(choices=LEVEL_CHOICES,max_length=5)
+
+
 class VictimInterviewLocationBox(models.Model):
     victim_interview = models.ForeignKey(VictimInterview, related_name='location_boxes')
 
@@ -789,6 +802,7 @@ class VictimInterviewLocationBox(models.Model):
     district = models.CharField(max_length=255, blank=True)
     signboard = models.CharField(max_length=255, blank=True)
     location_in_town = models.CharField(max_length=255, blank=True)
+    geolocation = models.ForeignKey(GeoCodeLocation, related_name='geolocation')
 
     phone = models.CharField('Phone #', max_length=255, blank=True)
     color = models.CharField(max_length=255, blank=True)

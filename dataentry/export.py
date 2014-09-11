@@ -32,7 +32,8 @@ BORDER_STATION_NAMES = {
 irf_headers = [
     "IRF Number",
     "Station",
-    "Date/Time",
+    "Date/Time of Interception",
+    "Date/Time Entered into System",
     "Number of Victims",
     "Number of Traffickers",
     "Location",
@@ -198,6 +199,7 @@ def get_irf_export_rows(irfs):
                 get_station_name_from_number(irf.irf_number),
 
                 irf.date_time_of_interception,
+                irf.date_time_entered_into_system,
                 irf.number_of_victims,
                 irf.number_of_traffickers,
 
@@ -663,7 +665,7 @@ def get_legal_action_against_traffickers(vif):
     if vif.legal_action_against_traffickers_no:
         return 'No legal action has been taken'
     if vif.legal_action_against_traffickers_fir_filed and vif.legal_action_against_traffickers_dofe_complaint:
-        return 'An FIR and a DoFE have both been filed'
+        return 'An FIR and a DoFE complaint have both been filed'
     if vif.legal_action_against_traffickers_fir_filed:
         return 'An FIR has been filed'
     if vif.legal_action_against_traffickers_dofe_complaint:
@@ -918,7 +920,7 @@ def get_vif_export_rows(vifs):
             vif.get_calculated_situational_alarms(),
 
             get_legal_action_against_traffickers(vif),
-            vif.legal_action_fir_against_value or vif.legal_action_dofe_against_value or '',
+            vif.legal_action_fir_against_value + ", " + vif.legal_action_dofe_against_value or '',
 
             get_checkbox_group_value(vif, 'reason_no_legal'),
             vif.reason_no_legal_interference_value,

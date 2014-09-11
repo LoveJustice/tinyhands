@@ -1,4 +1,4 @@
-{% extends "dataentry/dataentry_base.html" %}
+x`{% extends "dataentry/dataentry_base.html" %}
 {% load widget_tweaks %}
 {% load bootstrap %}
 {% load unslugify %}
@@ -1503,20 +1503,24 @@
                     <h1>8. Interviewer Evaluation</h1>
                 </div>
 
-                <div class="black-box padded-box padded-box checkbox-group-marker multiple-checkboxes-allowed" id="legal_action_against_traffickers">
+                <div class="black-box padded-box padded-box checkbox-group-marker" id="legal_action_against_traffickers">
                     <h2><span class="section-number">8.1</span>
                         Has any legal action been taken against any of the traffickers?<span class="required">*</span>
                     </h2>
                     <div class="inline-checkbox-group">
+		     <span class="single-checkbox-allowed">
                         {{ form.legal_action_against_traffickers_no }} {{ form.legal_action_against_traffickers_no.label_tag }}
-                        <span class="alarm-box-container">
+		      </span>
+			<span class="multiple-checkboxes-allowed">
+                          <span class="alarm-box-container">
                             {{ form.legal_action_against_traffickers_fir_filed }} {{ form.legal_action_against_traffickers_fir_filed.label_tag }}
                             {{ form.legal_action_fir_against_value|attr:"style: width: 140px" }}
-                        </span>
-                        <span class="alarm-box-container">
+                          </span>
+                          <span class="alarm-box-container">
                             {{ form.legal_action_against_traffickers_dofe_complaint }} {{ form.legal_action_against_traffickers_dofe_complaint.label_tag }}
                             {{ form.legal_action_dofe_against_value|attr:"style: width: 140px" }}
-                        </span>
+                          </span>
+			</span>
                     </div>
                 </div>
 
