@@ -119,7 +119,7 @@ class Alert(models.Model):
 
     class Meta:
         verbose_name = 'alert'
-        verbose_name_plural = 'alertss'
+        verbose_name_plural = 'alerts'
 
     def __unicode__(self):
         return self.code
