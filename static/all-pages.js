@@ -145,7 +145,6 @@ function setUpLimitedChoicesCheckboxGroups() {
 	    });
 	    return;
 	}
-
 	else if ($selectedBox.parent().hasClass('single-checkbox-allowed')) {
 	    $container.find('input[type="checkbox"]').not(this).attr('checked', null);
 	    return;
@@ -154,7 +153,6 @@ function setUpLimitedChoicesCheckboxGroups() {
             return;
         }
 	$container.find('input[type="checkbox"]').not(this).attr('checked', null);
-	
     });
 }
 
