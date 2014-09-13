@@ -136,7 +136,7 @@ function setUpLimitedChoicesCheckboxGroups() {
     $('input[type="checkbox"]').click(function() {
         var $selectedBox = $(this);
 	var $container = $selectedBox.parents('.checkbox-group-marker').eq(0);
-	if ($selectedBox.parent().parent().hasClass('multiple-checkboxes-allowed')){	  
+	if ($selectedBox.parent().hasClass('multiple-checkboxes-allowed')){
 	    $container.find('input[type="checkbox"]').each(function () {
 		var $currentBox = $(this);
 		if($currentBox.parent().hasClass('single-checkbox-allowed')) {
