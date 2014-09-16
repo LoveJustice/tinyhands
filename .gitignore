@@ -9,3 +9,6 @@ env
 backups
 .coverage
 media
+.#*
+\#*#
+*~

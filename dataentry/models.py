@@ -777,6 +777,9 @@ class GeoCodeLocation(models.Model):
     ]
     level = models.TextField(choices=LEVEL_CHOICES,max_length=5)
 
+    def __unicode__(self):
+        return self.place_name
+
 
 class VictimInterviewLocationBox(models.Model):
     victim_interview = models.ForeignKey(VictimInterview, related_name='location_boxes')
