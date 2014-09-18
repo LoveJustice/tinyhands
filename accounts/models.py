@@ -97,8 +97,16 @@ class Account(AbstractBaseUser, PermissionsMixin):
     def get_full_name(self):
         return self.first_name + ' ' + self.last_name
 
-    def email_user(self, subject, message, from_email=None):
-        pass
+    def email_user(self, template, context=[]):
+        send_templated_mail(
+            template_name=template,
+            from_email=ADMIN_EMAIL_SENDER,
+            recipient_list=[self.email],
+            context={
+                'site': SITE_DOMAIN,
+                'account': self,
+            }
+        )
 
     def send_activation_email(self):
         send_templated_mail(
@@ -124,4 +132,10 @@ class Alert(models.Model):
     def __unicode__(self):
         return self.code
 
-    
+    def email_accounts(self):
+        import ipdb
+        ipdb.set_trace()
+        context = {'hello':'hi'}
+        accounts = self.accounts.all()
+        for account in accounts:
+            account.email_user(self, self.email_template, context)
