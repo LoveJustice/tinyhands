@@ -46,6 +46,7 @@ INSTALLED_APPS = (
     'dataentry',
     'accounts',
     'util',
+    'rest_framework',
 )
 
 import django.conf.global_settings as DEFAULT_SETTINGS

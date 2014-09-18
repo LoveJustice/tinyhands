@@ -14,4 +14,5 @@ urlpatterns = patterns('dataentry.views',
     url(r'^vifs/create/$', VictimInterviewCreateView.as_view(), name='victiminterview_create'),
     url(r'^vifs/update/(?P<pk>\d+)/$', VictimInterviewUpdateView.as_view(), name='victiminterview_update'),
     url(r'^vifs/export/$', VictimInterviewCSVExportView.as_view(), name='victiminterview_csv_export'),
+    url(r'^api/test/$', PersonLookupAPIView.as_view()),
 )

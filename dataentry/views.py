@@ -22,6 +22,12 @@ from dataentry.forms import (
 from datetime import date
 from dataentry import export
 from django.http import HttpResponse
+
+from rest_framework import status
+from rest_framework.decorators import api_view
+from rest_framework.views import APIView
+from rest_framework.response import Response
+
 import csv
 import re
 
@@ -212,3 +218,10 @@ class VictimInterviewCSVExportView(
         writer.writerows(csv_rows)
 
         return response
+
+
+class PersonLookupAPIView(
+        APIView):
+    
+    def get(self, *args, **kwargs):
+        return Response({"Dustin":"Da Man"})
