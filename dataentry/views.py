@@ -31,33 +31,50 @@ def home(request):
     return render(request, 'home.html', locals())
 
 
-class InterceptionRecordListView(
-        LoginRequiredMixin,
-        ListView):
-    model = InterceptionRecord
-    paginate_by = 20
-    
+class SearchFormsMixin(object):
+
+    Name = None
+    Number = None
+
+    def __init__(self, *args, **kw):
+        for key, value in kw.iteritems():
+            if(value == "name"):
+                self.Name = key
+            elif(value == "number"):
+                self.Number = key
+
     def get_queryset(self):
         try:
             value = self.request.GET['search_value']
         except:
             value = ''
         if (value != ''):
-            if(value.isnumeric()):
-                object_list = self.model.objects.filter(irf_number__icontains = value)
+            if(re.match('\w+\d+$', value)):
+                object_list = self.model.objects.filter(**{self.Number :value})
             else:
-                #work more on finding the correct model attributes
-                object_list = self.model.objects.filter(staff_name__icontains = value)
+                object_list = self.model.objects.filter(**{self.Name :value})
         else:
             object_list = self.model.objects.all()
         return object_list
 
+
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
-        context = super(InterceptionRecordListView, self).get_context_data(**kwargs)
+        context = super(SearchFormsMixin, self).get_context_data(**kwargs)
         # Check if database is empty to change message in search page
         context['database_empty'] = self.model.objects.count()==0
         return context
+    
+class InterceptionRecordListView(
+        LoginRequiredMixin,
+	SearchFormsMixin,
+        ListView):
+    model = InterceptionRecord
+    paginate_by = 20
+
+    def __init__(self, *args, **kw):
+        #passes what to search by to SearchFormsMixin
+        super(InterceptionRecordListView, self).__init__(irf_number__icontains = "number", staff_name__icontains = "name")
 
 class IntercepteeInline(InlineFormSet):
     model = Interceptee
@@ -121,31 +138,14 @@ class LocationBoxInline(InlineFormSet):
 
 class VictimInterviewListView(
         LoginRequiredMixin,
+        SearchFormsMixin,
         ListView):
     model = VictimInterview
     paginate_by = 20
-
-    def get_queryset(self):
-        try:
-            value = self.request.GET['search_value']
-        except:
-            value = ''
-        if (value != ''):
-            if(value.isnumeric()):
-                object_list = self.model.objects.filter(vif_number__icontains = value)
-            else:
-                #work more on finding the correct model attributes                                                                                                                                                  
-                object_list = self.model.objects.filter(interviewer__icontains = value)
-        else:
-            object_list = self.model.objects.all()
-        return object_list
-
-    def get_context_data(self, **kwargs):
-        # Call the base implementation first to get a context
-        context = super(VictimInterviewListView, self).get_context_data(**kwargs)
-        # Check if database is empty to change message in search page
-        context['database_empty'] = self.model.objects.count()==0
-        return context
+    
+    def __init__(self, *args, **kwargs):
+        #passes what to search by to SearchFormsMixin
+        super(VictimInterviewListView, self).__init__(vif_number__icontains = "number", interviewer__icontains = "name")
 
 class VictimInterviewCreateView(
         LoginRequiredMixin,
