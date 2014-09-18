@@ -121,14 +121,15 @@ class Account(AbstractBaseUser, PermissionsMixin):
 
 class AlertManager(models.Manager):
     def send_alert(self, code):
-        self.objects.get(code=code).email_accounts()
+        Alert.alert_objects.get(code=code).email_accounts()
 
 class Alert(models.Model):
     code=models.CharField(max_length=255,unique=True)
     email_template=models.CharField(max_length=255)
 
     accounts = models.ManyToManyField(Account)
-    objects=AlertManager()
+    objects = models.Manager()
+    alert_objects = AlertManager()
 
     class Meta:
         verbose_name = 'alert'

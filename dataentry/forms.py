@@ -628,7 +628,7 @@ class VictimInterviewForm(DreamSuitePaperForm):
                 self._errors[field_name] = error
 
     def save(self, commit=True):
-        instance = super(MyForm, self).save(commit)
+        instance = super(VictimInterviewForm, self).save(commit)
 
         #alert stuff
         self.check_for_alerts(self.cleaned_data)
@@ -641,7 +641,7 @@ class VictimInterviewForm(DreamSuitePaperForm):
 
     def hideyowives(self, cleaned_data):
         if cleaned_data.get('manpower_involved') and cleaned_data.get('victim_recruited_in_village'):
-            Alert.objects.send_alert("Hide yo wives!")            
+            Alert.alert_objects.send_alert("Hide yo wives!")
         
 class VictimInterviewPersonBoxForm(DreamSuitePaperForm):
 
