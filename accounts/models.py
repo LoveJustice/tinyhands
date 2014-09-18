@@ -97,15 +97,15 @@ class Account(AbstractBaseUser, PermissionsMixin):
     def get_full_name(self):
         return self.first_name + ' ' + self.last_name
 
-    def email_user(self, template, context=[]):
+    def email_user(self, template, alert, context={}):
+        context['site'] = SITE_DOMAIN
+        context['account'] = self
+        context['alert'] = alert
         send_templated_mail(
             template_name=template,
             from_email=ADMIN_EMAIL_SENDER,
             recipient_list=[self.email],
-            context={
-                'site': SITE_DOMAIN,
-                'account': self,
-            }
+            context=context
         )
 
     def send_activation_email(self):
@@ -119,11 +119,16 @@ class Account(AbstractBaseUser, PermissionsMixin):
             }
         )
 
+class AlertManager(models.Manager):
+    def send_alert(self, code):
+        self.objects.get(code=code).email_accounts()
+
 class Alert(models.Model):
     code=models.CharField(max_length=255,unique=True)
     email_template=models.CharField(max_length=255)
 
     accounts = models.ManyToManyField(Account)
+    objects=AlertManager()
 
     class Meta:
         verbose_name = 'alert'
@@ -133,9 +138,7 @@ class Alert(models.Model):
         return self.code
 
     def email_accounts(self):
-        import ipdb
-        ipdb.set_trace()
-        context = {'hello':'hi'}
+        
         accounts = self.accounts.all()
         for account in accounts:
-            account.email_user(self, self.email_template, context)
+            account.email_user(self.email_template, self)

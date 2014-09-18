@@ -1,12 +1,16 @@
-{% block subject %}{{ account.first_name }}, your new Tiny Hands Dreamsuite account is ready!{% endblock %}
+`{% block subject %}{{ account.first_name }}, your new Tiny Hands Dreamsuite account is ready!{% endblock %}
 
 {% block html %}
 <p>Hello {{ account.first_name }},</p>
 
-<p>An admin has created a new account for you on the Tiny Hands Dreamsuite.  Click the link below to finalize your account by setting a password:</p>
-<p><a href="http://{{ site }}{% url 'account_activate' account.activation_key %}">http://{{ site }}{% url 'account_activate' account.activation_key %}</a></p>
+
+<h1>{{ alert.code  }} </h1>
+
+
+<p><Hide yo wives!</p>
+<h1>You've been alerted!</h1>
 
 <p>Cheers,</p>
-<p>The Tiny Hands Admins</p>
+<p>The neighborhood watch</p>
 
 {% endblock %}

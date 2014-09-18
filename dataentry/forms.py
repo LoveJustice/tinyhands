@@ -11,6 +11,8 @@ from django.forms.models import inlineformset_factory
 from django.core.exceptions import ValidationError
 from django.utils.html import mark_safe
 
+from accounts.models import Alert
+
 
 BOOLEAN_CHOICES = [
     (False, 'No'),
@@ -601,6 +603,8 @@ class VictimInterviewForm(DreamSuitePaperForm):
         if not cleaned_data.get('ignore_warnings'):
             self.ensure_victim_where_going(cleaned_data)
             self.ensure_tiny_hands_rating(cleaned_data)
+            
+        self.check_for_alerts(cleaned_data)
 
         return cleaned_data
 
@@ -623,7 +627,22 @@ class VictimInterviewForm(DreamSuitePaperForm):
                 self.has_warnings = True
                 self._errors[field_name] = error
 
+    def save(self, commit=True):
+        instance = super(MyForm, self).save(commit)
 
+        #alert stuff
+        self.check_for_alerts(self.cleaned_data)
+
+        return instance
+
+    def check_for_alerts(self, cleaned_data):
+        self.hideyowives(cleaned_data)
+
+
+    def hideyowives(self, cleaned_data):
+        if cleaned_data.get('manpower_involved') and cleaned_data.get('victim_recruited_in_village'):
+            Alert.objects.send_alert("Hide yo wives!")            
+        
 class VictimInterviewPersonBoxForm(DreamSuitePaperForm):
 
     gender = forms.MultipleChoiceField(
