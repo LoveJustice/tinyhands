@@ -1,0 +1,4 @@
+{% block subject %}{{ account.first_name }}, a new trafficker has been identified!{% endblock %}
+
+{% block html %}
+{% endblock %}

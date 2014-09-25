@@ -132,7 +132,18 @@ class InterceptionRecordForm(DreamSuitePaperForm):
         #    if not self.at_least_one_checked(cleaned_data, field_name_start):
         #        self._errors[field_name_start] = self.error_class(['This field is required.'])
 
+        self.check_for_alerts(cleaned_data)
+
         return cleaned_data
+
+    def check_for_alerts(self, cleaned_data):
+        self.identified_trafficker(cleaned_data)
+
+    def identified_trafficker(self, cleaned_data):
+        if cleaned_data.get('kind') == "Trafficker" and cleaned_data.get('photo') and cleaned_data.get('how_sure_was_trafficking') >= 4:
+            Alert.alert_objects.send_alert("Identified Trafficker")
+        elif cleaned_data.get('photo') and InterceptionRecord.calculate_total_red_flags() >= 400:
+            Alert.alert_objects.send_alert("Identified Trafficker")
 
     def ensure_at_least_one_interceptee(self, cleaned_data):
         if len([
@@ -636,13 +647,9 @@ class VictimInterviewForm(DreamSuitePaperForm):
         return instance
 
     def check_for_alerts(self, cleaned_data):
-        self.hideyowives(cleaned_data)
+        pass
 
 
-    def hideyowives(self, cleaned_data):
-        if cleaned_data.get('manpower_involved') and cleaned_data.get('victim_recruited_in_village'):
-            Alert.alert_objects.send_alert("Hide yo wives!")
-        
 class VictimInterviewPersonBoxForm(DreamSuitePaperForm):
 
     gender = forms.MultipleChoiceField(
