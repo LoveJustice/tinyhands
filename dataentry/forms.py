@@ -132,18 +132,7 @@ class InterceptionRecordForm(DreamSuitePaperForm):
         #    if not self.at_least_one_checked(cleaned_data, field_name_start):
         #        self._errors[field_name_start] = self.error_class(['This field is required.'])
 
-        self.check_for_alerts(cleaned_data)
-
         return cleaned_data
-
-    def check_for_alerts(self, cleaned_data):
-        self.identified_trafficker(cleaned_data)
-
-    def identified_trafficker(self, cleaned_data):
-        if cleaned_data.get('kind') == "Trafficker" and cleaned_data.get('photo') and cleaned_data.get('how_sure_was_trafficking') >= 4:
-            Alert.alert_objects.send_alert("Identified Trafficker")
-        elif cleaned_data.get('photo') and InterceptionRecord.calculate_total_red_flags() >= 400:
-            Alert.alert_objects.send_alert("Identified Trafficker")
 
     def ensure_at_least_one_interceptee(self, cleaned_data):
         if len([
@@ -614,8 +603,6 @@ class VictimInterviewForm(DreamSuitePaperForm):
         if not cleaned_data.get('ignore_warnings'):
             self.ensure_victim_where_going(cleaned_data)
             self.ensure_tiny_hands_rating(cleaned_data)
-            
-        self.check_for_alerts(cleaned_data)
 
         return cleaned_data
 
@@ -637,17 +624,6 @@ class VictimInterviewForm(DreamSuitePaperForm):
                 error.is_warning = True
                 self.has_warnings = True
                 self._errors[field_name] = error
-
-    def save(self, commit=True):
-        instance = super(VictimInterviewForm, self).save(commit)
-
-        #alert stuff
-        self.check_for_alerts(self.cleaned_data)
-
-        return instance
-
-    def check_for_alerts(self, cleaned_data):
-        pass
 
 
 class VictimInterviewPersonBoxForm(DreamSuitePaperForm):
