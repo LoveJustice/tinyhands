@@ -1,4 +1,4 @@
-from django.db import models
+ from django.db import models
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
 
@@ -764,6 +764,23 @@ class VictimInterviewPersonBox(models.Model):
 
     associated_with_place = models.NullBooleanField(null=True)
     associated_with_place_value = models.IntegerField(blank=True, null=True)
+
+
+class District(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __unicode__(self):
+        return self.place_name
+
+
+class VDC(models.Model):
+    name = models.CharField(max_length=255)
+    latitude = models.FloatField()
+    longitude = models.FloatField()
+    district = models.ForeignKey(District, related_name='name',null=True)
+
+    def __unicode__(self):
+        return self.place_name
 
 
 class GeoCodeLocation(models.Model):
