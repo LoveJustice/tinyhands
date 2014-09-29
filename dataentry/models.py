@@ -777,7 +777,7 @@ class VDC(models.Model):
     name = models.CharField(max_length=255)
     latitude = models.FloatField()
     longitude = models.FloatField()
-    district = models.ForeignKey(District, related_name='name',null=True)
+    district = models.ForeignKey(District, related_name='district_name',null=True)
 
     def __unicode__(self):
         return self.place_name

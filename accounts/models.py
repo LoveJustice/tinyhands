@@ -120,8 +120,8 @@ class Account(AbstractBaseUser, PermissionsMixin):
         )
 
 class AlertManager(models.Manager):
-    def send_alert(self, code):
-        Alert.alert_objects.get(code=code).email_accounts()
+    def send_alert(self, code, context={}):
+        Alert.alert_objects.get(code=code).email_accounts(context)
 
 class Alert(models.Model):
     code=models.CharField(max_length=255,unique=True)
@@ -138,8 +138,8 @@ class Alert(models.Model):
     def __unicode__(self):
         return self.code
 
-    def email_accounts(self):
+    def email_accounts(self, context={}):
         
         accounts = self.accounts.all()
         for account in accounts:
-            account.email_user(self.email_template, self)
+            account.email_user(self.email_template, self, context)
