@@ -30,6 +30,7 @@ from rest_framework.response import Response
 
 import csv
 import re
+from alert_checkers import IRFAlertChecker
 
 
 @login_required
@@ -99,6 +100,8 @@ class InterceptionRecordCreateView(
     permissions_required = ['permission_irf_add']
 
     def forms_valid(self, form, inlines):
+
+        IRFAlertChecker(form,inlines).check_them()
         form.instance.form_entered_by = self.request.user
         form.instance.date_form_received = date.today()
         return super(InterceptionRecordCreateView, self).forms_valid(form, inlines)
@@ -113,6 +116,11 @@ class InterceptionRecordUpdateView(
     success_url = reverse_lazy('interceptionrecord_list')
     inlines = [IntercepteeInline]
     permissions_required = ['permission_irf_edit']
+
+    def forms_valid(self, form, inlines):
+        IRFAlertChecker(form,inlines).check_them()
+        return super(InterceptionRecordUpdateView, self).forms_valid(form, inlines)
+
 
 
 class InterceptionRecordDetailView(InterceptionRecordUpdateView):
