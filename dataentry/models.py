@@ -1,8 +1,9 @@
-from django.db import models
+ from django.db import models
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
 
 from accounts.models import Account
+
 
 NULL_BOOLEAN_CHOICES = [
     (None, ''),
@@ -765,6 +766,23 @@ class VictimInterviewPersonBox(models.Model):
     associated_with_place_value = models.IntegerField(blank=True, null=True)
 
 
+class District(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __unicode__(self):
+        return self.place_name
+
+
+class VDC(models.Model):
+    name = models.CharField(max_length=255)
+    latitude = models.FloatField()
+    longitude = models.FloatField()
+    district = models.ForeignKey(District, related_name='name',null=True)
+
+    def __unicode__(self):
+        return self.place_name
+
+
 class GeoCodeLocation(models.Model):
     place_name = models.CharField(max_length=255)
     latitude = models.FloatField()
@@ -776,6 +794,9 @@ class GeoCodeLocation(models.Model):
         ('C', 'City'),
     ]
     level = models.TextField(choices=LEVEL_CHOICES,max_length=5)
+
+    def __unicode__(self):
+        return self.place_name
 
 
 class VictimInterviewLocationBox(models.Model):
