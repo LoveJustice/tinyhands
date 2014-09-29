@@ -6,7 +6,7 @@ class TestModels(WebTest):
 
     def test_interception_record_model(self):
         record = InterceptionRecord(
-            who_in_group=0,
+            who_in_group_alone=0,
             drugged_or_drowsy=True,
             meeting_someone_across_border=True
         )
