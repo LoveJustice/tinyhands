@@ -1,5 +1,5 @@
 from django.contrib import admin
-from dataentry.models import InterceptionRecord, VictimInterview, GeoCodeLocation
+from dataentry.models import InterceptionRecord, VictimInterview,District, VDC
 
 
 class InterceptionRecordAdmin(admin.ModelAdmin):
@@ -13,12 +13,20 @@ class VictimInterviewAdmin(admin.ModelAdmin):
     search_fields = ['vif_number', 'interviewer']
     list_display = ['vif_number', 'interviewer', 'number_of_victims', 'number_of_traffickers', 'date', 'date_time_entered_into_system', 'date_time_last_updated']
 
-class GeoCodeLocationAdmin(admin.ModelAdmin):
-	model = GeoCodeLocation
-	search_fields = ['place_name', 'latitude', 'longitude', 'level']
-	list_display = ['place_name', 'latitude', 'longitude', 'level']
+
+class DistrictAdmin(admin.ModelAdmin):
+	model = District
+	search_fields = ['name']
+	list_display = ['name']
+
+
+class VDCAdmin(admin.ModelAdmin):
+	model = VDC
+	search_fields = ['name','latitude','longitude','district','cannonical_name']
+	list_display = ['name','latitude','longitude','district','cannonical_name']
 
 admin.site.register(InterceptionRecord, InterceptionRecordAdmin)
 admin.site.register(VictimInterview)
-admin.site.register(GeoCodeLocation)
+admin.site.register(District)
+admin.site.register(VDC)
 
