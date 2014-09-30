@@ -10,4 +10,4 @@ class TestModels(WebTest):
             drugged_or_drowsy=True,
             meeting_someone_across_border=True
         )
-        self.assertEqual(record.calculate_total(), 70)
+        self.assertEqual(record.calculate_total_red_flags(), 70)
