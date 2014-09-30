@@ -32,10 +32,6 @@ class IRFAlertChecker(object):
             E-mail should include IRF number, trafficker's name, photo, and the reason for the alert.
         '''
 
-        import ipdb
-        ipdb.set_trace()
-        interceptee_data = self.interceptees.cleaned_data
-
 
         '''
             for loop through the traffickers
