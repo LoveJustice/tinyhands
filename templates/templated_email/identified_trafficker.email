@@ -1,4 +1,10 @@
-{% block subject %}{{ account.first_name }}, a new trafficker has been identified!{% endblock %}
+{% block subject %}{{ account.first_name }}, a new trafficker has been identified on IRF#{{ irf.irf_number }}!{% endblock %}
 
 {% block html %}
+E-mail should include IRF number, trafficker's name, photo, and the reason for the alert.
+
+We have found someone of interest on the interception record {{ irf.irf_number }}
+
+
 {% endblock %}
+

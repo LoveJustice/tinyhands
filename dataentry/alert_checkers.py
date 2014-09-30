@@ -14,7 +14,7 @@ class VIFAlertChecker(object):
 class IRFAlertChecker(object):
 
     def __init__(self, form, inlines):
-        self.IRF_form = form
+        self.irf = form
         self.interceptees = inlines[0]
         self.IRF_data = form.cleaned_data
 
@@ -24,25 +24,17 @@ class IRFAlertChecker(object):
     def identified_trafficker(self):
         '''
         Email Alerts to Investigators:
-
             Any time there is photo of a trafficker on the IRF and the response to question 9.7 is a 4 or a 5
-
             OR any time there is a photo of a trafficker and the Red Flag points calculated by the computer is 400 or higher.
-
             E-mail should include IRF number, trafficker's name, photo, and the reason for the alert.
         '''
 
 
-        '''
-            for loop through the traffickers
-            if trafficker and a photo, add to list.
-            if len of list > 0, check red flags and check response to question 9.7
-            send email with context of traffickers
-        '''
+        trafficker_list = []
+        for person in self.interceptees:
+            if person.cleaned_data.get("kind")=='t' and person.cleaned_data.get('photo') not in [None,'']:
+                trafficker_list.append(person)
 
-
-        if self.IRF_data.get('how_sure_was_trafficking') >= 4:
-            Alert.alert_objects.send_alert("Identified Trafficker", context={ "form" : self.IRF_form, "traffickers" : interceptee_data })
-        elif interceptee_data[0].get('photo') != '' and self.IRF_form.instance.calculate_total_red_flags() >= 400:
-            Alert.alert_objects.send_alert("Identified Trafficker")
-
+        if len(trafficker_list) > 0:
+            if (self.IRF_data.get('how_sure_was_trafficking') >= 4) or (self.irf.instance.calculate_total_red_flags() >= 400):
+                Alert.alert_objects.send_alert("Identified Trafficker", context={ "irf" : self.irf, "traffickers_list" : trafficker_list })
