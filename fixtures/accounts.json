@@ -115,5 +115,30 @@
         "email": "HanSolo@MFalcon.com", 
         "permission_irf_edit": false
     }
+},
+{
+    "pk": 4, 
+    "model": "accounts.account", 
+    "fields": {
+        "groups": [], 
+        "first_name": "Ben", 
+        "last_name": "Duggan", 
+        "permission_accounts_manage": true, 
+        "permission_irf_add": true, 
+        "permission_irf_view": true, 
+        "user_designation": 1, 
+        "is_active": true, 
+        "permission_vif_add": true, 
+        "permission_vif_view": true, 
+        "permission_vif_edit": true, 
+        "is_superuser": true, 
+        "is_staff": true, 
+        "last_login": "2014-05-05T13:25:25.906Z", 
+        "date_joined": "2014-04-16T17:23:25.607Z", 
+        "user_permissions": [], 
+        "password": "pbkdf2_sha256$12000$8ZCPPIQ7CQ03$O1jHHloj0TECobjh2C6zpZSbnK9LaoDxeKFe79nlWOE=", 
+        "email": "benaduggan@gmail.com", 
+        "permission_irf_edit": true
+    }
 }
 ]

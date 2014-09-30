@@ -69,7 +69,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
     permission_accounts_manage = models.BooleanField(default=False)
 
     date_joined = models.DateTimeField(default=timezone.now)
-
+    
     activation_key = models.CharField(
         max_length=40,
         default=make_activation_key
@@ -97,8 +97,16 @@ class Account(AbstractBaseUser, PermissionsMixin):
     def get_full_name(self):
         return self.first_name + ' ' + self.last_name
 
-    def email_user(self, subject, message, from_email=None):
-        pass
+    def email_user(self, template, alert, context={}):
+        context['site'] = SITE_DOMAIN
+        context['account'] = self
+        context['alert'] = alert
+        send_templated_mail(
+            template_name=template,
+            from_email=ADMIN_EMAIL_SENDER,
+            recipient_list=[self.email],
+            context=context
+        )
 
     def send_activation_email(self):
         send_templated_mail(
@@ -110,3 +118,28 @@ class Account(AbstractBaseUser, PermissionsMixin):
                 'account': self,
             }
         )
+
+class AlertManager(models.Manager):
+    def send_alert(self, code, context={}):
+        Alert.alert_objects.get(code=code).email_accounts(context)
+
+class Alert(models.Model):
+    code=models.CharField(max_length=255,unique=True)
+    email_template=models.CharField(max_length=255)
+
+    accounts = models.ManyToManyField(Account)
+    objects = models.Manager()
+    alert_objects = AlertManager()
+
+    class Meta:
+        verbose_name = 'alert'
+        verbose_name_plural = 'alerts'
+
+    def __unicode__(self):
+        return self.code
+
+    def email_accounts(self, context={}):
+        
+        accounts = self.accounts.all()
+        for account in accounts:
+            account.email_user(self.email_template, self, context)

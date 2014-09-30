@@ -1,0 +1,13 @@
+[
+{
+    "fields": {
+        "code": "Identified Trafficker",
+        "accounts": [
+            4
+        ],
+        "email_template": "identified_trafficker"
+    },
+    "model": "accounts.alert",
+    "pk": 1
+}
+]
