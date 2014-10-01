@@ -9,5 +9,27 @@
     },
     "model": "accounts.alert",
     "pk": 1
+},
+{
+    "fields": {
+        "code": "fir filed against",
+        "accounts": [
+            4
+        ],
+        "email_template": "fir_filed_against"
+    },
+    "model": "accounts.alert",
+    "pk": 2
+},
+{
+    "fields": {
+        "code": "dofe complaint against",
+        "accounts": [
+            4
+        ],
+        "email_template": "dofe_complaint_against"
+    },
+    "model": "accounts.alert",
+    "pk": 3
 }
 ]
