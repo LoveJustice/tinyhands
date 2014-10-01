@@ -30,7 +30,7 @@ from rest_framework.response import Response
 
 import csv
 import re
-from alert_checkers import IRFAlertChecker
+from alert_checkers import IRFAlertChecker, VIFAlertChecker
 
 
 @login_required
@@ -171,6 +171,13 @@ class VictimInterviewCreateView(
     inlines = [PersonBoxInline, LocationBoxInline]
     permissions_required = ['permission_vif_add']
 
+    def forms_valid(self, form, inlines):
+        VIFAlertChecker(form,inlines).check_them()
+        form.instance.form_entered_by = self.request.user
+        form.instance.date_form_received = date.today()
+        return super(VictimInterviewCreateView, self).forms_valid(form, inlines)
+
+
 
 class VictimInterviewUpdateView(
         LoginRequiredMixin,
@@ -181,6 +188,10 @@ class VictimInterviewUpdateView(
     success_url = reverse_lazy('victiminterview_list')
     inlines = [PersonBoxInline, LocationBoxInline]
     permissions_required = ['permission_vif_edit']
+
+    def forms_valid(self, form, inlines):
+        VIFAlertChecker(form,inlines).check_them()
+        return super(VictimInterviewUpdateView, self).forms_valid(form, inlines)
 
 
 class VictimInterviewDetailView(VictimInterviewUpdateView):
