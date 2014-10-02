@@ -13,31 +13,30 @@ class VIFAlertChecker(object):
         self.ten_or_more_case_points()
 
     def fir_filed_against(self):
-        '''
+        """
         - Any time a VIF is submitted with the box checked for "FIR filed against __" on question 8.1. E-mail should
         include VIF number, which type of case has been filed and the name of the person it has been filed against.
-        '''
-        # import ipdb
-        # ipdb.set_trace()
+        """
+
         if self.vif.cleaned_data.get("legal_action_against_traffickers_fir_filed") and self.vif.cleaned_data.get("legal_action_fir_against_value") != '':
             Alert.alert_objects.send_alert("fir filed against", context={"vif": self.vif.instance})
 
     def dofe_complaint_against(self):
-        '''
+        """
         Any time a VIF is submitted with the box checked for "DoFE complaint against __" on question 8.1. E-mail should
         include VIF number, which type of case has been filed and the name of the person it has been filed against.
-        '''
-        # import ipdb
-        # ipdb.set_trace()
+        """
+
         if self.vif.cleaned_data.get("legal_action_against_traffickers_dofe_complaint") and self.vif.cleaned_data.get("legal_action_dofe_against_value") != '':
             Alert.alert_objects.send_alert("dofe complaint against", context={"vif": self.vif.instance})
 
     def ten_or_more_case_points(self):
-        '''
+        """
         Any time there are 10 or more Strength of Case points. E-mail should include VIF number, the number of SoC
         points and whether or not a legal case has been filed.
-        '''
+        """
         pass
+
 
 class IRFAlertChecker(object):
 
@@ -48,22 +47,22 @@ class IRFAlertChecker(object):
 
     def check_them(self):
         self.identified_trafficker()
+        self.trafficker_name_match()
 
     def trafficker_name_match(self):
-        '''
+        """
         - Any time there is a trafficker name match from a separate interception. E-mail should include form number that
         was submitted, form number that the match came from, and the name and all personal identifiers from both forms.
-        '''
+        """
         pass
 
     def identified_trafficker(self):
-        '''
+        """
         Email Alerts to Investigators:
             Any time there is photo of a trafficker on the IRF and the response to question 9.7 is a 4 or a 5
-            OR any time there is a photo of a trafficker and the Red Flag points calculated by the computer is 400 or higher.
-            E-mail should include IRF number, trafficker's name, photo, and the reason for the alert.
-        '''
-
+            OR any time there is a photo of a trafficker and the Red Flag points calculated by the computer is 400 or
+            higher. E-mail should include IRF number, traffickers name, photo, and the reason for the alert.
+        """
 
         trafficker_list = []
         for person in self.interceptees:
