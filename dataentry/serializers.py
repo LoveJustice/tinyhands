@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from dataentry.models import GeoCodeLocation
+from dataentry.models import District, VDC
 
 
 class DistrictSerializer(serializers.ModelSerializer):

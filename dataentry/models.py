@@ -777,26 +777,11 @@ class VDC(models.Model):
     name = models.CharField(max_length=255)
     latitude = models.FloatField()
     longitude = models.FloatField()
-    district = models.ForeignKey(District, related_name='district_name',null=True)
+    district = models.ForeignKey(District,null=False)
+    cannonical_name = models.ForeignKey('self')
 
     def __unicode__(self):
-        return self.place_name
-
-
-class GeoCodeLocation(models.Model):
-    place_name = models.CharField(max_length=255)
-    latitude = models.FloatField()
-    longitude = models.FloatField()
-    LEVEL_CHOICES = [
-        ('S', 'State'),
-        ('D', 'District'),
-        ('V', 'VDC'),
-        ('C', 'City'),
-    ]
-    level = models.TextField(choices=LEVEL_CHOICES,max_length=5)
-
-    def __unicode__(self):
-        return self.place_name
+        return self.name
 
 
 class VictimInterviewLocationBox(models.Model):
@@ -823,7 +808,8 @@ class VictimInterviewLocationBox(models.Model):
     district = models.CharField(max_length=255, blank=True)
     signboard = models.CharField(max_length=255, blank=True)
     location_in_town = models.CharField(max_length=255, blank=True)
-    geolocation = models.ForeignKey(GeoCodeLocation, related_name='geolocation')
+    district_geocodelocation = models.ForeignKey(District)
+    vdc_geocodelocation = models.ForeignKey(VDC)
 
     phone = models.CharField('Phone #', max_length=255, blank=True)
     color = models.CharField(max_length=255, blank=True)

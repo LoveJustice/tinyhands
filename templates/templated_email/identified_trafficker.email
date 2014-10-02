@@ -1,10 +1,36 @@
-{% block subject %}{{ account.first_name }}, a new trafficker has been identified on IRF#{{ irf.irf_number }}!{% endblock %}
+{% block subject %}{{ account.first_name }}, a new trafficker may have been identified on IRF#{{ irf.irf_number }}!{% endblock %}
 
 {% block html %}
-E-mail should include IRF number, trafficker's name, photo, and the reason for the alert.
+<h1>Alert on IRF#: {{ irf.irf_number }}</h1>
 
-We have found someone of interest on the interception record {{ irf.irf_number }}
+    <p class="descriptionOfAlert">
+        The trafficker(s) listed below had pictures attached to the form and the red flag points totalled above 400 or the response to question 9.7 is a 4 or a 5
+    </p>
 
+<h3>Traffickers:</h3>
+{% for person in trafficker_list %}
+
+    <table>
+        <thead>
+            <th></th>
+            <th>Name</th>
+            <th>District</th>
+            <th>VDC</th>
+            <th>Phone contact</th>
+        </thead>
+        <tr>
+            <td>Insert photo here</td>
+            <td>{{ person.full_name }}</td>
+            <td>{{ person.district }}</td>
+            <td>{{ person.vdc }}</td>
+            <td>{{ person.phone_contact }}</td>
+        </tr>
+    </table>
+
+<br/>
+
+    <a href="{{ request.get_host }}{% url 'interceptionrecord_detail' irf.id %}">Link to Interception Record Form</a>
+
+{% endfor %}
 
 {% endblock %}
-
