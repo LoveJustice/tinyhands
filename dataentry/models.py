@@ -770,7 +770,7 @@ class District(models.Model):
     name = models.CharField(max_length=255)
 
     def __unicode__(self):
-        return self.place_name
+        return self.name
 
 
 class VDC(models.Model):
@@ -778,7 +778,7 @@ class VDC(models.Model):
     latitude = models.FloatField()
     longitude = models.FloatField()
     district = models.ForeignKey(District,null=False)
-    cannonical_name = models.ForeignKey('self')
+    cannonical_name = models.ForeignKey('self',null=True,blank=True)
 
     def __unicode__(self):
         return self.name
