@@ -14,14 +14,18 @@ def match_location(district_name=None,vdc_name=None):
 def match_district(locationName):
     districtNames = [district.name for district in District.objects.all()]
     matches = process.extractBests(locationName, districtNames, score_cutoff=70, limit=1)
-    return District.objects.get(name=matches[0][0])
+    if(len(matches) > 0):
+        return District.objects.get(name=matches[0][0])
+    else:
+        return None
 
-def match_vdc(vdcName):
+def match_vdc(vdc_name):
     vdcNames = [vdc.name for vdc in VDC.objects.all()]
-    vdcCanonicalNames = [vdc.cannonical_name for vdc in VDC.objects.all() if vdc.cannonical_name is not None]
-    vdcNames.extend(vdcCanonicalNames)
-    matches = process.extractBests(vdcName, vdcNames, score_cutoff=70, limit=1)
-    return VDC.objects.get(name=matches[0][0])
+    matches = process.extractBests(vdc_name, vdcNames, score_cutoff=70, limit=1)
+    if(len(matches) > 0):
+        return VDC.objects.get(name=matches[0][0])
+    else:
+        return None
 
 def match_vdc_district(vdc_name, district_name):
     #code to match vdc and district
