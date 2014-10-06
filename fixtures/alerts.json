@@ -12,26 +12,16 @@
 },
 {
     "fields": {
-        "code": "fir filed against",
+        "code": "fir and dofe against",
         "accounts": [
             4
         ],
-        "email_template": "fir_filed_against"
+        "email_template": "fir_and_dofe_against"
     },
     "model": "accounts.alert",
     "pk": 2
 },
-{
-    "fields": {
-        "code": "dofe complaint against",
-        "accounts": [
-            4
-        ],
-        "email_template": "dofe_complaint_against"
-    },
-    "model": "accounts.alert",
-    "pk": 3
-},
+
 {
     "fields": {
         "code": "strength of case",
@@ -41,6 +31,6 @@
         "email_template": "ten_or_more_case_points"
     },
     "model": "accounts.alert",
-    "pk": 4
+    "pk": 3
 }
 ]

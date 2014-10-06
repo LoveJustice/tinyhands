@@ -1,36 +1,47 @@
-{% block subject %}{{ account.first_name }}, a new trafficker may have been identified on IRF#{{ irf.irf_number }}!{% endblock %}
+{% block subject %}{{ account.first_name }}, Investigations Alert for IRF#{{ irf.irf_number }}!{% endblock %}
 
 {% block html %}
-<h1>Alert on IRF#: {{ irf.irf_number }}</h1>
+    <h3>Attention: Investigations Team,</h3>
 
     <p class="descriptionOfAlert">
-        The trafficker(s) listed below had pictures attached to the form and the red flag points totalled above 400 or the response to question 9.7 is a 4 or a 5
+        This auto alert has been generated because IRF#{{ irf.irf_number }} was submitted with
+        {% if both %}
+            {{ red_flags }} Red Flag points and a certainty rating of {{ certainty_points }}
+        {% endif %}
+        {% if flags %}
+            {{ red_flags }} Red Flag points
+        {% endif %}
+
+        {% if how_sure %}
+            a certainty rating of {{ certainty_points }}
+        {% endif %}
+        <br/>
+
+        The interception occurred at {{ irf.location }} at {{ irf.date_time_of_interception.time }} on {{ irf.date_time_of_interception.date }}.
     </p>
 
-<h3>Traffickers:</h3>
-{% for person in trafficker_list %}
-
-    <table>
+<h3>The following trafficker(s) were listed on the form:</h3>
+<table>
         <thead>
-            <th></th>
             <th>Name</th>
-            <th>District</th>
-            <th>VDC</th>
             <th>Phone contact</th>
+            <th>Photo</th>
         </thead>
+        {% for person in trafficker_list %}
         <tr>
-            <td>Insert photo here</td>
             <td>{{ person.full_name }}</td>
-            <td>{{ person.district }}</td>
-            <td>{{ person.vdc }}</td>
             <td>{{ person.phone_contact }}</td>
+            <td><img src="{{ site }}/{{ person.photo }}"/></td>
         </tr>
+        {% endfor %}
     </table>
 
 <br/>
 
-    <a href="{{ request.get_host }}{% url 'interceptionrecord_detail' irf.id %}">Link to Interception Record Form</a>
+{% if trafficker_in_custody != '' %}
+    <p>According to the form, {{ trafficker_in_custody }} was taken into custody</p>
+{% endif %}
 
-{% endfor %}
+<p>To view the IRF click here: <a href="{{ site }}/{% url 'interceptionrecord_detail' irf.id %}">Link to Interception Record Form</a></p>
 
 {% endblock %}

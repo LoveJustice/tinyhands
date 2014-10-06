@@ -6,6 +6,17 @@ E-mail should include VIF number, which type of case has been filed and the name
 <h1>VIF#: {{ vif.vif_number }}</h1>
 
 
-{% endblock %}
+Message Subject: Legal Alert for [VIF#]
 
-legal_action_dofe_against_value
+Attention: Case Manager,
+
+This auto alert has been generated for [VIF number] which was completed on [VIF date] and includes [#] Strength of Case points.
+
+According to the form {either "an FIR was filed against [name from 8.1 box 1]"
+and/or "a DoFE Complaint was filed against [name from 8.1 box 2]"
+
+or "no legal action has been taken against the trafficker(s) because [response to 8.2]"}.
+
+To view the VIF click here: [link to form].
+
+{% endblock %}
