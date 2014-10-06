@@ -1,0 +1,11 @@
+{% block subject %}{{ account.first_name }}, a DoFE complaint has been filed against {{ vif.legal_action_fir_against_value }} on IRF#{{ vif.vif_number }}!{% endblock %}
+
+{% block html %}
+E-mail should include VIF number, which type of case has been filed and the name of the person it has been filed against.
+
+<h1>VIF#: {{ vif.vif_number }}</h1>
+
+
+{% endblock %}
+
+legal_action_dofe_against_value

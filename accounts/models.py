@@ -125,7 +125,7 @@ class AlertManager(models.Manager):
 
 class Alert(models.Model):
     code=models.CharField(max_length=255,unique=True)
-    email_template=models.CharField(max_length=255)
+    email_template= models.CharField(max_length=255)
 
     accounts = models.ManyToManyField(Account)
     objects = models.Manager()
@@ -142,4 +142,4 @@ class Alert(models.Model):
         
         accounts = self.accounts.all()
         for account in accounts:
-            account.email_user(self.email_template, self, context)
+            account.email_user("alerts/" + self.email_template, self, context)
