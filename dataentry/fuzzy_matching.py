@@ -1,4 +1,4 @@
-from fuzzywuzzy import process
+from fuzzywuzzy import process, fuzz
 from dataentry.models import District, VDC
 
 def match_location(district_name=None,vdc_name=None):
@@ -28,5 +28,13 @@ def match_vdc(vdc_name):
         return None
 
 def match_vdc_district(vdc_name, district_name):
-    #code to match vdc and district
-    return None
+    locations = [vdc.name+", "+vdc.district.name for vdc in VDC.objects.all()]
+    name = vdc_name + ", " + district_name
+    matches = process.extractBests(name, locations, score_cutoff=70, limit=1)
+    if(len(matches) > 0 ):
+        names = matches[0][0].split(", ")
+        vdc = VDC.objects.get(name=names[0])
+        district = vdc.district
+        return (vdc, district)
+    else:
+        return None

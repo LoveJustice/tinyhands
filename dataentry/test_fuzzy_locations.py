@@ -7,15 +7,15 @@ class FuzzyLocationMatchingTest(TestCase):
     fixtures = ['geo-code-locations.json']
 
     def test_district_matching_works(self):
-        original = District.objects.all()[0].name
-        match = match_location(district_name=original)
-        self.assertEquals(original,match.name)
+        original = District.objects.all()[0]
+        match = match_location(district_name=original.name)
+        self.assertEquals(original,match)
 
     def test_district_match_found_if_one_character_off(self):
-        original = District.objects.all()[0].name
-        close_name = original + "s"
+        original = District.objects.all()[0]
+        close_name = original.name + "s"
         match = match_location(district_name=close_name)
-        self.assertEquals(original,match.name)
+        self.assertEquals(original,match)
 
     def test_no_district_match_on_bad_name(self):
         name = "xyzxyz"
@@ -23,17 +23,24 @@ class FuzzyLocationMatchingTest(TestCase):
         self.assertEquals(district_match, None)
 
     def test_vdc_matching_works(self):
-        original = VDC.objects.all()[0].name
-        match = match_location(vdc_name=original)
-        self.assertEquals(original, match.name)
+        original = VDC.objects.all()[0]
+        match = match_location(vdc_name=original.name)
+        self.assertEquals(original, match)
 
     def test_vdc_match_found_if_one_character_off(self):
-        original = VDC.objects.all()[0].name
-        close_name = original + "s"
+        original = VDC.objects.all()[0]
+        close_name = original.name + "s"
         match = match_location(vdc_name=close_name)
-        self.assertEquals(original, match.name)
+        self.assertEquals(original, match)
 
     def test_no_vdc_match_on_bad_name(self):
         name = "xyzxyz"
         match = match_location(vdc_name=name)
         self.assertEquals(match, None)
+
+    def test_vdc_and_district_matching_works(self):
+        vdc = VDC.objects.all()[0]
+        match = match_location(district_name=vdc.district.name, vdc_name=vdc.name)
+        self.assertEquals(vdc, match[0])
+        self.assertEquals(vdc.district, match[1])
+        
