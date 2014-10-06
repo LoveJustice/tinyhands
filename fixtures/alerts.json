@@ -31,5 +31,16 @@
     },
     "model": "accounts.alert",
     "pk": 3
+},
+{
+    "fields": {
+        "code": "strength of case",
+        "accounts": [
+            4
+        ],
+        "email_template": "ten_or_more_case_points"
+    },
+    "model": "accounts.alert",
+    "pk": 4
 }
 ]

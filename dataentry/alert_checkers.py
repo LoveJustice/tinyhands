@@ -35,6 +35,10 @@ class VIFAlertChecker(object):
         Any time there are 10 or more Strength of Case points. E-mail should include VIF number, the number of SoC
         points and whether or not a legal case has been filed.
         """
+
+        if self.vif.instance.calculate_strength_of_case_points() > 10:
+            Alert.alert_objects.send_alert("strength of case", context={"vif": self.vif.instance, "points" : self.vif.instance.calculate_strength_of_case_points() })
+
         pass
 
 

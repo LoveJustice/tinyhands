@@ -427,7 +427,7 @@ class VictimInterview(models.Model):
     brokers_relation_to_victim_own_sister = models.BooleanField('Own sister', default=False)
     brokers_relation_to_victim_own_other_relative = models.BooleanField('Other relative', default=False)
     brokers_relation_to_victim_friend = models.BooleanField('Friend', default=False)
-    brokers_relation_to_victim_agent = models.BooleanField('Agent', default=False)
+    brokers_relation_to_victim_agent = models.BooleanField('Agent', default=False).set_weight(2)
     brokers_relation_to_victim_husband = models.BooleanField('Husband', default=False)
     brokers_relation_to_victim_boyfriend = models.BooleanField('Boyfriend', default=False)
     brokers_relation_to_victim_neighbor = models.BooleanField('Neighbor', default=False)
@@ -461,7 +461,7 @@ class VictimInterview(models.Model):
 
     victim_how_expense_was_paid_paid_myself = models.BooleanField('I paid the expenses myself', default=False)
     victim_how_expense_was_paid_broker_paid_all = models.BooleanField('The broker paid all the expenses', default=False)
-    victim_how_expense_was_paid_gave_money_to_broker = models.BooleanField('I gave a sum of money to the broker', default=False)
+    victim_how_expense_was_paid_gave_money_to_broker = models.BooleanField('I gave a sum of money to the broker', default=False).set_weight(2)
     victim_how_expense_was_paid_broker_gave_loan = models.BooleanField('The broker paid the expenses and I have to pay him back', default=False)
     victim_how_expense_was_paid_amount = models.DecimalField('Amount', max_digits=10, decimal_places=2, null=True, blank=True)
 
@@ -503,18 +503,18 @@ class VictimInterview(models.Model):
 
     passport_made_no_passport_made = models.BooleanField('No passport made', default=False)
     passport_made_real_passport_made = models.BooleanField('Real passport made', default=False)
-    passport_made_passport_included_false_name = models.BooleanField('Passport included a false name', default=False)
-    passport_made_passport_included_other_false_info = models.BooleanField('Passport included other false info', default=False)
-    passport_made_passport_was_fake = models.BooleanField('Passport was fake', default=False)
+    passport_made_passport_included_false_name = models.BooleanField('Passport included a false name', default=False).set_weight(3)
+    passport_made_passport_included_other_false_info = models.BooleanField('Passport included other false info', default=False).set_weight(3)
+    passport_made_passport_was_fake = models.BooleanField('Passport was fake', default=False).set_weight(5)
 
     victim_passport_with_broker = models.NullBooleanField(null=True)
 
-    abuse_happened_sexual_harassment = models.BooleanField('Sexual Harassment', default=False)
-    abuse_happened_sexual_abuse = models.BooleanField('Sexual Abuse', default=False)
-    abuse_happened_physical_abuse = models.BooleanField('Physical Abuse', default=False)
-    abuse_happened_threats = models.BooleanField('Threats', default=False)
-    abuse_happened_denied_proper_food = models.BooleanField('Denied Proper Food', default=False)
-    abuse_happened_forced_to_take_drugs = models.BooleanField('Forced to take Drugs', default=False)
+    abuse_happened_sexual_harassment = models.BooleanField('Sexual Harassment', default=False).set_weight(5)
+    abuse_happened_sexual_abuse = models.BooleanField('Sexual Abuse', default=False).set_weight(9)
+    abuse_happened_physical_abuse = models.BooleanField('Physical Abuse', default=False).set_weight(5)
+    abuse_happened_threats = models.BooleanField('Threats', default=False).set_weight(4)
+    abuse_happened_denied_proper_food = models.BooleanField('Denied Proper Food', default=False).set_weight(4)
+    abuse_happened_forced_to_take_drugs = models.BooleanField('Forced to take Drugs', default=False).set_weight(9)
     abuse_happened_by_whom = models.TextField('By whom?', blank=True)
     abuse_happened_explanation = models.TextField('Explain', blank=True)
 
@@ -527,8 +527,8 @@ class VictimInterview(models.Model):
 
     money_changed_hands_broker_companion_no = models.BooleanField('No', default=False)
     money_changed_hands_broker_companion_dont_know = models.BooleanField('Don\'t know', default=False)
-    money_changed_hands_broker_companion_broker_gave_money = models.BooleanField('Broker gave money to the companion', default=False)
-    money_changed_hands_broker_companion_companion_gave_money = models.BooleanField('Companion gave money to the broker', default=False)
+    money_changed_hands_broker_companion_broker_gave_money = models.BooleanField('Broker gave money to the companion', default=False).set_weight(3)
+    money_changed_hands_broker_companion_companion_gave_money = models.BooleanField('Companion gave money to the broker', default=False).set_weight(3)
 
 
     # 5. Destination & India Contact
@@ -612,6 +612,37 @@ class VictimInterview(models.Model):
     victim_had_suicidal_thoughts = models.NullBooleanField(null=True)
 
     reported_total_situational_alarms = models.PositiveIntegerField(blank=True, null=True)
+
+    def calculate_strength_of_case_points(self):
+            total = 0
+            for field in self._meta.fields:
+                if type(field) == models.BooleanField:
+                    value = getattr(self, field.name)
+                    if value is True:
+                        if hasattr(field, 'weight'):
+                            total += field.weight
+            import ipdb
+            ipdb.set_trace()
+
+            if self.victim_how_expense_was_paid_broker_gave_loan > 0:
+                total += (2 + (self.victim_how_expense_was_paid_broker_gave_loan//20000))
+            if self.number_broker_made_similar_promises_to and self.victim_how_expense_was_paid_amount > 0:
+                total += int(self.victim_how_expense_was_paid_amount)
+            if self.how_many_others_in_situation > 0:
+                total += self.how_many_others_in_situation
+            if self.others_in_situation_age_of_youngest > 0:
+                total += (20 - self.others_in_situation_age_of_youngest)
+
+
+            if self.victim_was_hidden:
+                total += 5
+            if not self.victim_was_free_to_go_out:
+                total += 5
+            if not self.companion_with_when_intercepted:
+                total += 3
+            if self.victim_place_worked_involved_sending_girls_overseas:
+                total += 7
+            return total
 
     def get_calculated_situational_alarms(self):
         total = 0
@@ -752,14 +783,14 @@ class VictimInterviewPersonBox(models.Model):
 
     # Which do you believe about him?
 
-    interviewer_believes_definitely_trafficked = models.BooleanField('Interviewer believes they have definitely trafficked many girls', default=False)
-    interviewer_believes_have_trafficked = models.BooleanField('Interviewer believes they have trafficked some girls', default=False)
-    interviewer_believes_suspects_trafficked = models.BooleanField('Interviewer suspects they are a trafficker', default=False)
+    interviewer_believes_definitely_trafficked = models.BooleanField('Interviewer believes they have definitely trafficked many girls', default=False).set_weight(2)
+    interviewer_believes_have_trafficked = models.BooleanField('Interviewer believes they have trafficked some girls', default=False).set_weight(2)
+    interviewer_believes_suspects_trafficked = models.BooleanField('Interviewer suspects they are a trafficker', default=False).set_weight(2)
     interviewer_believes_not_trafficker = models.BooleanField('Interviewer doesn\'t believe they are a trafficker', default=False)
 
-    victim_believes_definitely_trafficked = models.BooleanField('Victim believes they have definitely trafficked many girls', default=False)
-    victim_believes_have_trafficked = models.BooleanField('Victim believes they have trafficked some girls', default=False)
-    victim_believes_suspects_trafficked = models.BooleanField('Victim suspects they are a trafficker', default=False)
+    victim_believes_definitely_trafficked = models.BooleanField('Victim believes they have definitely trafficked many girls', default=False).set_weight(2)
+    victim_believes_have_trafficked = models.BooleanField('Victim believes they have trafficked some girls', default=False).set_weight(2)
+    victim_believes_suspects_trafficked = models.BooleanField('Victim suspects they are a trafficker', default=False).set_weight(2)
     victim_believes_not_trafficker = models.BooleanField('Victim doesn\'t believe they are a trafficker', default=False)
 
     associated_with_place = models.NullBooleanField(null=True)
@@ -801,7 +832,7 @@ class VictimInterviewLocationBox(models.Model):
     what_kind_place_train_station = models.BooleanField('Train station', default=False)
     what_kind_place_shop = models.BooleanField('Shop', default=False)
     what_kind_place_factory = models.BooleanField('Factory', default=False)
-    what_kind_place_brothel = models.BooleanField('Brothel', default=False)
+    what_kind_place_brothel = models.BooleanField('Brothel', default=False).set_weight(2)
     what_kind_place_hotel = models.BooleanField('Hotel', default=False)
 
     vdc = models.CharField('VDC', max_length=255, blank=True)
@@ -823,14 +854,14 @@ class VictimInterviewLocationBox(models.Model):
     nearby_signboards = models.CharField(max_length=255, blank=True)
     other = models.CharField(max_length=255, blank=True)
 
-    interviewer_believes_trafficked_many_girls = models.BooleanField('Interviewer believes this location is definitely used to traffic many victims', default=False)
-    interviewer_believes_trafficked_some_girls = models.BooleanField('Interviewer believes this location has been used repeatedly to traffic some victims', default=False)
-    interviewer_believes_suspect_used_for_trafficking = models.BooleanField('Interviewer suspects this location has been used for trafficking', default=False)
+    interviewer_believes_trafficked_many_girls = models.BooleanField('Interviewer believes this location is definitely used to traffic many victims', default=False).set_weight(2)
+    interviewer_believes_trafficked_some_girls = models.BooleanField('Interviewer believes this location has been used repeatedly to traffic some victims', default=False).set_weight(2)
+    interviewer_believes_suspect_used_for_trafficking = models.BooleanField('Interviewer suspects this location has been used for trafficking', default=False).set_weight(2)
     interviewer_believes_not_used_for_trafficking = models.BooleanField('Interviewer does not believe this location is used for trafficking', default=False)
 
-    victim_believes_trafficked_many_girls = models.BooleanField('Victim believes this location is definitely used to traffic many victims', default=False)
-    victim_believes_trafficked_some_girls = models.BooleanField('Victim believes this location has been used repeatedly to traffic some victims', default=False)
-    victim_believes_suspect_used_for_trafficking = models.BooleanField('Victim suspects this location has been used for trafficking', default=False)
+    victim_believes_trafficked_many_girls = models.BooleanField('Victim believes this location is definitely used to traffic many victims', default=False).set_weight(2)
+    victim_believes_trafficked_some_girls = models.BooleanField('Victim believes this location has been used repeatedly to traffic some victims', default=False).set_weight(2)
+    victim_believes_suspect_used_for_trafficking = models.BooleanField('Victim suspects this location has been used for trafficking', default=False).set_weight(2)
     victim_believes_not_used_for_trafficking = models.BooleanField('Victim does not believe this location is used for trafficking', default=False)
 
     associated_with_person = models.NullBooleanField(null=True)
