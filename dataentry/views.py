@@ -9,7 +9,9 @@ from dataentry.models import (
     InterceptionRecord,
     Interceptee,
     VictimInterviewPersonBox,
-    VictimInterviewLocationBox
+    VictimInterviewLocationBox,
+    District,
+    VDC
 )
 from accounts.mixins import PermissionsRequiredMixin
 from braces.views import LoginRequiredMixin
@@ -27,6 +29,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from dataentry.serializers import DistrictSerializer, VDCSerializer
 
 import csv
 import re
@@ -239,8 +242,21 @@ class VictimInterviewCSVExportView(
         return response
 
 
-class PersonLookupAPIView(
+class GeoCodeDistrictAPIView(
         APIView):
     
-    def get(self, *args, **kwargs):
-        return Response({"Dustin":"Da Man"})
+    def get(self,request, id):
+        district = District.objects.get(pk=id)
+        serializer = DistrictSerializer(district)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    @api_view(['GET'])
+    def get_district_with_ajax(request, id):
+        district = District.objects.get(name="Achham")
+        serializer = DistrictSerializer(distrcit,data=request.DATA)
+        if serializer.is_valid():
+            serializer.object.name = District.objects.filter(name="Achham")
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
