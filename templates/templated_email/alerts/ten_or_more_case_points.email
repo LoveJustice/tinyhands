@@ -1,22 +1,17 @@
-{% block subject %}{{ account.first_name }}, a DoFE complaint has been filed against {{ vif. }} on IRF#{{ vif.vif_number }}!{% endblock %}
+{% block subject %}{{ account.first_name }}, Legal Alert for VIF#:{{ vif.vif_number}}!{% endblock %}
 
 {% block html %}
-E-mail should include VIF number, which type of case has been filed and the name of the person it has been filed against.
+    <p>Attention: Case Manager,</p>
 
-<h1>VIF#: {{ vif.vif_number }}</h1>
+    <p>This auto alert has been generated for VIF#:{{ vif.vif_number}} which was completed on {{ vif.date.date }} and includes {{ points }} Strength of Case points.</p>
 
+    {% if legal_case == True %}
+        {% if both %}<p>A DoFE and FIR have been filed against the trafficker(s)</p>{% endif %}
+        {% if fir %}<p>A FIR has been filed have been filed against the trafficker(s)</p>{% endif %}
+        {% if dofe %}<p>A DoFE has been filed have been filed against the trafficker(s)</p>{% endif %}
+    {% else %}
+        <p>No legal action has been taken against the trafficker(s) because {{ reason_for_no }}</p>
+    {% endif %}
 
-Message Subject: Legal Alert for [VIF#]
-
-Attention: Case Manager,
-
-This auto alert has been generated for [VIF number] which was completed on [VIF date] and includes [#] Strength of Case points.
-
-According to the form {either "an FIR was filed against [name from 8.1 box 1]"
-and/or "a DoFE Complaint was filed against [name from 8.1 box 2]"
-
-or "no legal action has been taken against the trafficker(s) because [response to 8.2]"}.
-
-To view the VIF click here: [link to form].
-
+    <p>To view the VIF click here: <a href="{{ site }}/{% url 'victiminterview_detail' vif.id %}">Link to Victim Interview Form</a></p>
 {% endblock %}

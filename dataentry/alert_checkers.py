@@ -1,4 +1,3 @@
-import ipdb
 from accounts.models import Alert
 
 
@@ -29,17 +28,18 @@ class VIFAlertChecker(object):
         if dofe and dofe_value != '':
             Alert.alert_objects.send_alert("fir and dofe against", context={"vif": self.vif.instance, "dofe": True, "points": points, "dofe_value": dofe_value})
 
-
     def ten_or_more_case_points(self):
         """
         Any time there are 10 or more Strength of Case points. E-mail should include VIF number, the number of SoC
         points and whether or not a legal case has been filed.
         """
+        fir = self.vif.cleaned_data.get("legal_action_against_traffickers_fir_filed")
+        dofe = self.vif.cleaned_data.get("legal_action_against_traffickers_dofe_complaint")
+        reason_for_no = self.vif.instance.get_reason_for_no()
+        points = self.vif.instance.calculate_strength_of_case_points()
 
         if self.vif.instance.calculate_strength_of_case_points() > 10:
-            Alert.alert_objects.send_alert("strength of case",
-                                           context={"vif": self.vif.instance, "points": self.vif.instance.calculate_strength_of_case_points()})
-
+            Alert.alert_objects.send_alert("strength of case", context={"vif": self.vif.instance, "points": points, "fir": fir, "dofe": dofe, "reason_for_no": reason_for_no})
         pass
 
 
@@ -74,7 +74,7 @@ class IRFAlertChecker(object):
 
         trafficker_in_custody = self.IRF_data.get("trafficker_taken_into_custody")
         trafficker_name = ''
-        if trafficker_in_custody != None and int(self.IRF_data.get("trafficker_taken_into_custody")) < len([there for there in self.interceptees.cleaned_data if there]):
+        if trafficker_in_custody is not None and int(self.IRF_data.get("trafficker_taken_into_custody")) < len([there for there in self.interceptees.cleaned_data if there]):
             trafficker_name = self.interceptees.cleaned_data[int(self.IRF_data.get("trafficker_taken_into_custody")) - 1].get("full_name")
 
         red_flags = self.irf.instance.calculate_total_red_flags()

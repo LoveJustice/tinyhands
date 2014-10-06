@@ -621,9 +621,6 @@ class VictimInterview(models.Model):
                     if value is True:
                         if hasattr(field, 'weight'):
                             total += field.weight
-            import ipdb
-            ipdb.set_trace()
-
             if self.victim_how_expense_was_paid_broker_gave_loan > 0:
                 total += (2 + (self.victim_how_expense_was_paid_broker_gave_loan//20000))
             if self.number_broker_made_similar_promises_to and self.victim_how_expense_was_paid_amount > 0:
@@ -632,8 +629,6 @@ class VictimInterview(models.Model):
                 total += self.how_many_others_in_situation
             if self.others_in_situation_age_of_youngest > 0:
                 total += (20 - self.others_in_situation_age_of_youngest)
-
-
             if self.victim_was_hidden:
                 total += 5
             if not self.victim_was_free_to_go_out:
@@ -695,6 +690,35 @@ class VictimInterview(models.Model):
     reason_no_legal_other = models.BooleanField('Other', default=False)
     reason_no_legal_interference_value = models.CharField(max_length=255, blank=True)
     reason_no_legal_other_value = models.CharField(max_length=255, blank=True)
+
+    def get_reason_for_no(self):
+        if self.reason_no_legal_no_trafficking_suspected:
+            return 'no trafficking suspected'
+        if self.reason_no_legal_police_not_enough_info:
+            return 'police say not enough information'
+        if self.reason_no_legal_trafficker_is_own_people:
+            return 'trafficker is victim\'s own people'
+        if self.reason_no_legal_she_was_going_herself:
+            return 'she was going herself'
+        if self.reason_no_legal_trafficker_ran_away:
+            return 'trafficker ran away'
+        if self.reason_no_legal_victim_afraid_of_reputation:
+            return 'victim afraid of reputation'
+        if self.reason_no_legal_victim_afraid_for_safety:
+            return 'victim afraid for her safety'
+        if self.reason_no_legal_family_afraid_of_reputation:
+            return 'family afraid of reputation'
+        if self.reason_no_legal_family_afraid_for_safety:
+            return 'family afraid for her safety'
+        if self.reason_no_legal_police_bribed:
+            return 'police bribed by trafficker'
+        if self.reason_no_legal_victim_family_bribed:
+            return 'victim / family bribed by trafficker'
+        if self.reason_no_legal_interference_by_powerful_people:
+            return self.reason_no_legal_interference_value
+        if self.reason_no_legal_other:
+            return self.reason_no_legal_other_value
+        return "nothing"
 
     interviewer_recommendation_send_home = models.BooleanField('Plan to send the girl home to stay with her guardians', default=False)
     interviewer_recommendation_send_to_other_relatives = models.BooleanField('Plan to send the girl to stay with other relatives', default=False)
