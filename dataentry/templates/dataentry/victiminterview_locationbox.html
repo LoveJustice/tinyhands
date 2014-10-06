@@ -1,6 +1,19 @@
 {% load widget_tweaks %}
 {% load bootstrap %}
 
+<script type="text/html" id="geocode-form">
+    <form action="" method="get"> 
+        <input type="text"> 
+        <input type="submit" value="Search"> 
+    </form> 
+    <ul>
+        <li>stuff</li>
+        <li>stuff</li>
+        <li>stuff</li>
+    </ul>
+
+</script>
+
 {{ lb_form.id }}
 <div class="col-xs-6" style="padding: 20px">
     <div class="location-box location-box-top row checkbox-group-marker" id="which_place-{{ counter }}">
