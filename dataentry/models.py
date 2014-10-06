@@ -193,7 +193,7 @@ class InterceptionRecord(models.Model):
         'How sure are you that it was trafficking case?',
         choices=HOW_SURE_TRAFFICKING_CHOICES)
 
-    has_signature = models.BooleanField('Scanned form has signature?')
+    has_signature = models.BooleanField('Scanned form has signature?', default=False)
 
     scanned_form = models.FileField('Attach scanned copy of form (pdf or image)', upload_to='scanned_irf_forms', default='', blank=True)
 
@@ -417,7 +417,7 @@ class VictimInterview(models.Model):
     victim_where_going_gulf_other_value = models.CharField(max_length=255, blank=True)
 
     manpower_involved = models.NullBooleanField('Was a manpower involved?', null=True)
-    victim_recruited_in_village = models.BooleanField('Did someone recruit you in your village and persuade you to abroad?')
+    victim_recruited_in_village = models.BooleanField('Did someone recruit you in your village and persuade you to abroad?', default="False")
 
     brokers_relation_to_victim_own_dad = models.BooleanField('Own dad', default=False)
     brokers_relation_to_victim_own_mom = models.BooleanField('Own mom', default=False)
@@ -486,7 +486,7 @@ class VictimInterview(models.Model):
     victim_primary_means_of_travel_other = models.BooleanField('Other', default=False)
     victim_primary_means_of_travel_other_value = models.CharField(max_length=255, blank=True)
 
-    victim_stayed_somewhere_between = models.BooleanField()
+    victim_stayed_somewhere_between = models.BooleanField(default=False)
 
     victim_how_long_stayed_between_days = models.PositiveIntegerField('Days', null=True, blank=True)
     victim_how_long_stayed_between_start_date = models.DateField('Start Date', null=True, blank=True)
@@ -539,7 +539,7 @@ class VictimInterview(models.Model):
     meeting_at_border_meeting_companion = models.BooleanField('Meeting Companion', default=False)
 
 
-    victim_knew_details_about_destination = models.BooleanField()
+    victim_knew_details_about_destination = models.BooleanField(default=False)
 
     other_involved_person_in_india = models.NullBooleanField(null=True)
     other_involved_husband_trafficker = models.NullBooleanField(null=True)
@@ -702,7 +702,7 @@ class VictimInterview(models.Model):
 
     other_people_and_places_involved = models.NullBooleanField(null=True)
 
-    has_signature = models.BooleanField('Scanned form has signature')
+    has_signature = models.BooleanField('Scanned form has signature', default=False)
 
     case_notes = models.TextField('Case Notes', blank=True)
 
