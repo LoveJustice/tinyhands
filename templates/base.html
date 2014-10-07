@@ -27,6 +27,7 @@
     {% block head %}{% endblock %}
 
     <script src="{{ STATIC_URL }}less.js"></script>
+    <script src="{{ STATIC_URL }}jquery.js"></script>
 </head>
 {% comment %}
 Add a class to the body tag that is the same as the url's name.  We can then check this
@@ -81,7 +82,7 @@ in the Javascript and run code unique to the current page.
 {% block sticky_footer %}
 {% endblock %}
 
-<script src="{{ STATIC_URL }}jquery.js"></script>
+
 <script src="{{ STATIC_URL }}datetimepicker/jquery.datetimepicker.js"></script>
 <script src="{{ STATIC_URL }}bootstrap.js"></script>
 <script src="{{ STATIC_URL }}jquery.deserialize.js"></script>

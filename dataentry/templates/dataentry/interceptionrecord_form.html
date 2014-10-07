@@ -4,7 +4,6 @@
 {% load unslugify %}
 
 {% block head %}
-</style>
 {% endblock %}
 
 {% block content %}
@@ -761,7 +760,7 @@
                                     <span class="interceptee-number">{{ forloop.counter }}</span>
                                     {{ interceptee_form.id }} {{ interceptee_form.kind }}
                                 </td>
-                                <td>{{ interceptee_form.full_name }}</td>
+                                <td>{{ interceptee_form.full_name|attr:"data-fuzzy-ui:name"}}</td>
                                 <td>{{ interceptee_form.gender }}</td>
                                 <td style="width: 7%">{{ interceptee_form.age }}</td>
                                 <td>{{ interceptee_form.district }}</td>
@@ -885,5 +884,5 @@
 <br/>
 <br/>
 <br/>
-
+{% include "dataentry/fuzzymatching-ui.html" %}
 {% endblock %}
