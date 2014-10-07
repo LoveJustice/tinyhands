@@ -7,17 +7,29 @@ function setPopovers(id)
 	        placement:'bottom',
 	        container: 'body',
 	    });
-	    $(element).bind('keyup',function (){
-	    	if(!$('.popover').hasClass('in'))
-	    	{
-				$(this).popover('show');
-			}
-	    });
 	    $(element).blur(function() {
 	    	if($('.popover').hasClass('in'))
 	    	{
 		    	$(this).popover('hide');
 			}	
+	    });
+	    $(element).keyup(function(){
+		if(!$('.popover').hasClass('in'))
+	    	{
+		    $(this).popover('show');
+		}
+		
+		input = $(element).val();
+		if(input !== ""){
+		    $.ajax({
+			url: "/data-entry/geocodelocation/district/",
+			data: "district="+input,
+			
+		    }).done(function(data){
+			console.log(data)
+		    });
+		}
+		
 	    });
 	});
 }

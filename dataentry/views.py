@@ -34,7 +34,7 @@ from dataentry.serializers import DistrictSerializer, VDCSerializer
 import csv
 import re
 from alert_checkers import IRFAlertChecker, VIFAlertChecker
-
+from fuzzy_matching import match_location
 
 @login_required
 def home(request):
@@ -245,13 +245,20 @@ class VictimInterviewCSVExportView(
 class GeoCodeDistrictAPIView(
         APIView):
     
-    def get(self,request, id):
-        district = District.objects.get(pk=id)
-        serializer = DistrictSerializer(district)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    def get(self,request):
+        value = request.QUERY_PARAMS['district']
+        matches = match_location(district_name=value)
+        print(matches)
+        if(matches):
+            serializer = DistrictSerializer(matches)
+            return Response(serializer.data)
+        else:
+            print("HERE")
+            return Response({"id": "-1","name":"None"})
 
     @api_view(['GET'])
     def get_district_with_ajax(request, id):
+        print("HELLO")
         district = District.objects.get(name="Achham")
         serializer = DistrictSerializer(distrcit,data=request.DATA)
         if serializer.is_valid():
@@ -260,3 +267,15 @@ class GeoCodeDistrictAPIView(
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class GeoCodeVdcAPIView(APIView):
+    
+    def get(self, request):
+        value = request.QUERY_PARAMS['vdc']
+        matches = match_location(vdc_name=value)
+        if(matches):
+            serializer = VDCSerializer(matches)
+            return Response(serializer.data)
+        else:
+            return Response({"id": "-1","name":"None"})
