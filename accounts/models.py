@@ -25,6 +25,10 @@ class DefaultPermissionsSet(models.Model):
     def is_used_by_accounts(self):
         return self.accounts.count() > 0
 
+    def email_accounts(self, alert, context={}):
+        accounts = self.accounts.all()
+        for account in accounts:
+            account.email_user("alerts/" + alert.email_template, alert, context)
 
 class AccountManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -69,12 +73,12 @@ class Account(AbstractBaseUser, PermissionsMixin):
     permission_accounts_manage = models.BooleanField(default=False)
 
     date_joined = models.DateTimeField(default=timezone.now)
-    
+
     activation_key = models.CharField(
         max_length=40,
         default=make_activation_key
     )
-    
+
 
     objects = AccountManager()
 
@@ -121,14 +125,13 @@ class Account(AbstractBaseUser, PermissionsMixin):
 
 class AlertManager(models.Manager):
     def send_alert(self, code, context={}):
-        Alert.alert_objects.get(code=code).email_accounts(context)
+        Alert.alert_objects.get(code=code).email_permisisons_set(context)
 
 class Alert(models.Model):
     code=models.CharField(max_length=255,unique=True)
     email_template= models.CharField(max_length=255)
 
-    accounts = models.ManyToManyField(Account)
-    objects = models.Manager()
+    permissions_group = models.ManyToManyField(DefaultPermissionsSet)
     alert_objects = AlertManager()
 
     class Meta:
@@ -138,8 +141,6 @@ class Alert(models.Model):
     def __unicode__(self):
         return self.code
 
-    def email_accounts(self, context={}):
-        
-        accounts = self.accounts.all()
-        for account in accounts:
-            account.email_user("alerts/" + self.email_template, self, context)
+    def email_permisisons_set(self,context={}):
+        for x in self.permissions_group.all():
+            x.email_accounts(self,context)
