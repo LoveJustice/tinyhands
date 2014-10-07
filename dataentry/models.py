@@ -4,7 +4,6 @@ from imagekit.processors import ResizeToFill
 
 from accounts.models import Account
 
-
 NULL_BOOLEAN_CHOICES = [
     (None, ''),
     (False, 'No'),
