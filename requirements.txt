@@ -24,6 +24,7 @@ mccabe==0.2.1
 pep8==1.5.0
 pilkit==1.1.6
 pyflakes==0.8
+python-Levenshtein==0.11.2
 six==1.6.1
 waitress==0.8.8
 wsgiref==0.1.2
