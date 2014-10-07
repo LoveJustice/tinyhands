@@ -248,12 +248,10 @@ class GeoCodeDistrictAPIView(
     def get(self,request):
         value = request.QUERY_PARAMS['district']
         matches = match_location(district_name=value)
-        print(matches)
         if(matches):
             serializer = DistrictSerializer(matches)
             return Response(serializer.data)
         else:
-            print("HERE")
             return Response({"id": "-1","name":"None"})
 
     @api_view(['GET'])

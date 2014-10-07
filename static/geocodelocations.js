@@ -14,34 +14,42 @@ function setPopovers(id)
 			}	
 	    });
 	    $(element).keyup(function(){
-        var unorderedList = $("#popover-location-info");
-        unorderedList.empty();
-            
-		if(!$('.popover').hasClass('in'))
-	    	{
-		    $(this).popover('show');
-		}
-		
-		input = $(element).val();
-		if(input !== ""){
-		    $.ajax({
-			url: "/data-entry/geocodelocation/district/",
-			data: "district="+input,
-			
-		    }).done(function(data){
-                console.log(data);
-                if (data.id != -1) {
-                    for (i in data) {
-                        unorderedList.append($('<div></div>').append(data[i].name));
-                    }
-                    console.log(unorderedList);
-                }
-		    });
-		}
-		
+
+            if(!$('.popover').hasClass('in'))
+                {
+                $(this).popover('show');
+            }
+
+            input = $(element).val();
+            if(element.id.indexOf("district") > 0){
+                callFuzzyApi(input, "district");
+            }else{
+                callFuzzyApi(input, "vdc");
+            }
 	    });
 	});
 }
+
+function callFuzzyApi(input, locationType){
+    var unorderedList = $("#popover-location-info");
+    
+    if(input !== ""){
+	$.ajax({
+	    url: "/data-entry/geocodelocation/"+locationType+"/",
+	    data: locationType+"="+input,
+	}).done(function(data){
+        unorderedList.empty();
+        console.log(data);
+        if (data.id != -1) {
+            for (i in data) {
+                unorderedList.append($('<div></div>').append(data[i].name));
+            }
+            console.log(unorderedList);
+        }
+	});
+     }
+}
+
 setPopovers("#id_location");
 setPopovers("[id$=address_district]");
 setPopovers("[id$=address_vdc]");
