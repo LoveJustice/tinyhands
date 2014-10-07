@@ -8,6 +8,9 @@
 {% endblock %}
 
 {% block content %}
+
+{% include "dataentry/popover.html" %}
+
 {% if not interceptionrecord %}
 <div class="well well-sm pull-right" style="margin-top: -40px">
     Resume an incomplete IRF:

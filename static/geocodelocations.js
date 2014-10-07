@@ -21,5 +21,8 @@ function setPopovers(id)
 	    });
 	});
 }
+setPopovers("#id_location");
+setPopovers("[id$=-address_district]");
+setPopovers("[id$=-address_vdc]");
 setPopovers("[id$=-vdc]");
 setPopovers("[id$=-district]");
