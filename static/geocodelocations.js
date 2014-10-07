@@ -14,6 +14,9 @@ function setPopovers(id)
 			}	
 	    });
 	    $(element).keyup(function(){
+        var unorderedList = $("#popover-location-info");
+        unorderedList.empty();
+            
 		if(!$('.popover').hasClass('in'))
 	    	{
 		    $(this).popover('show');
@@ -26,7 +29,13 @@ function setPopovers(id)
 			data: "district="+input,
 			
 		    }).done(function(data){
-			console.log(data)
+                console.log(data);
+                if (data.id != -1) {
+                    for (i in data) {
+                        unorderedList.append($('<div></div>').append(data[i].name));
+                    }
+                    console.log(unorderedList);
+                }
 		    });
 		}
 		
