@@ -14,25 +14,33 @@ function setPopovers(id)
 			}	
 	    });
 	    $(element).keyup(function(){
+		
 		if(!$('.popover').hasClass('in'))
 	    	{
 		    $(this).popover('show');
 		}
 		
 		input = $(element).val();
-		if(input !== ""){
-		    $.ajax({
-			url: "/data-entry/geocodelocation/district/",
-			data: "district="+input,
-			
-		    }).done(function(data){
-			console.log(data)
-		    });
+		if(element.id.indexOf("district") > 0){
+		    callFuzzyApi(input, "district");
+		}else{
+		    callFuzzyApi(input, "vdc");
 		}
-		
 	    });
 	});
 }
+
+function callFuzzyApi(input, locationType){
+    if(input !== ""){
+	$.ajax({
+	    url: "/data-entry/geocodelocation/"+locationType+"/",
+	    data: locationType+"="+input,
+	}).done(function(data){
+	    console.log(data)
+	});
+     }
+}
+
 setPopovers("#id_location");
 setPopovers("[id$=address_district]");
 setPopovers("[id$=address_vdc]");
