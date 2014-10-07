@@ -74,7 +74,12 @@ class IRFAlertChecker(object):
 
         trafficker_in_custody = self.IRF_data.get("trafficker_taken_into_custody")
         trafficker_name = ''
-        if trafficker_in_custody is not None and int(self.IRF_data.get("trafficker_taken_into_custody")) < len([there for there in self.interceptees.cleaned_data if there]):
+
+
+        taken_into_custody = 0
+        if self.IRF_data.get("trafficker_taken_into_custody")=='':
+            taken_into_custody = self.IRF_data.get("trafficker_taken_into_custody")
+        if trafficker_in_custody is not None and taken_into_custody < len([there for there in self.interceptees.cleaned_data if there]):
             trafficker_name = self.interceptees.cleaned_data[int(self.IRF_data.get("trafficker_taken_into_custody")) - 1].get("full_name")
 
         red_flags = self.irf.instance.calculate_total_red_flags()
