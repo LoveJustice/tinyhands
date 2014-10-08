@@ -45,6 +45,7 @@ window.defaultPermissionSets = JSON.parse('{{ default_permissions_sets|safe }}')
                     <th colspan="3">Interception Record Forms</th>
                     <th colspan="3">Victim Interview Forms</th>
                     <th>Accounts</th>
+                    <th>Alerts</th>
                 </tr>
                 <tr>
                     <th>User</th>
@@ -55,6 +56,7 @@ window.defaultPermissionSets = JSON.parse('{{ default_permissions_sets|safe }}')
                     <th>Add</th>
                     <th>Edit</th>
                     <th>Manage</th>
+                    <th>Can Receive</th>
                 </tr>
             </thead>
             <tbody>
@@ -73,6 +75,7 @@ window.defaultPermissionSets = JSON.parse('{{ default_permissions_sets|safe }}')
                         <td><label class="btn"><span class="yesno"></span>{{ form.permission_vif_add }}</label></td>
                         <td><label class="btn"><span class="yesno"></span>{{ form.permission_vif_edit }}</label></td>
                         <td><label class="btn"><span class="yesno"></span>{{ form.permission_accounts_manage }}</label></td>
+                        <td><label class="btn"><span class="yesno"></span>{{ form.permission_receive_email }}</label></td>
                     </tr>
                 {% endfor %}
             </tbody>

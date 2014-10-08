@@ -587,11 +587,11 @@ def get_broker_works_in_job_location(vif):
 
 def get_victim_traveled_with_broker_companion(vif):
     if vif.victim_traveled_with_broker_companion_yes:
-        'Traveled with a companion'
+        return 'Traveled with a companion'
     if vif.victim_traveled_with_broker_companion_no:
-        'Did not travel with a companion'
+        return 'Did not travel with a companion'
     if vif.victim_traveled_with_broker_companion_broker_took_me_to_border:
-        'Broker took them to the border'
+        return 'Broker took them to the border'
 
 
 def get_money_changed_hands_broker_companion(vif):

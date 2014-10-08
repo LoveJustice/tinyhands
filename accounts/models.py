@@ -28,7 +28,9 @@ class DefaultPermissionsSet(models.Model):
     def email_accounts(self, alert, context={}):
         accounts = self.accounts.all()
         for account in accounts:
-            account.email_user("alerts/" + alert.email_template, alert, context)
+            if account.permission_receive_email:
+                account.email_user("alerts/" + alert.email_template, alert, context)
+
 
 class AccountManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -50,9 +52,11 @@ class AccountManager(BaseUserManager):
         u.save(using=self._db)
         return u
 
+
 def make_activation_key():
     return ''.join(random.choice(string.ascii_letters + string.digits)
                    for i in range(40))
+
 
 class Account(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=255, unique=True)
@@ -71,6 +75,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
     permission_vif_add = models.BooleanField(default=False)
     permission_vif_edit = models.BooleanField(default=False)
     permission_accounts_manage = models.BooleanField(default=False)
+    permission_receive_email = models.BooleanField(default=False)
 
     date_joined = models.DateTimeField(default=timezone.now)
 
@@ -123,9 +128,11 @@ class Account(AbstractBaseUser, PermissionsMixin):
             }
         )
 
+
 class AlertManager(models.Manager):
     def send_alert(self, code, context={}):
         Alert.alert_objects.get(code=code).email_permisisons_set(context)
+
 
 class Alert(models.Model):
     code=models.CharField(max_length=255,unique=True)
