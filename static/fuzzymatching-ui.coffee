@@ -10,14 +10,14 @@ list_of_names = [
   "Dustin Waldro"
 ]
 list_of_pics = [
-  "http://localhost:8000/media/interceptee_photos/doge.png"
-  "http://localhost:8000/media/interceptee_photos/doge.png"
-  "http://localhost:8000/media/interceptee_photos/doge.png"
-  "http://localhost:8000/media/interceptee_photos/doge.png"
-  "http://localhost:8000/media/interceptee_photos/38503_1144682394791_1729508_n.jpg"
-  "http://localhost:8000/media/interceptee_photos/38503_1144682394791_1729508_n.jpg"
-  "http://localhost:8000/media/interceptee_photos/38503_1144682394791_1729508_n.jpg"
-  "http://localhost:8000/media/interceptee_photos/38503_1144682394791_1729508_n.jpg"
+  "/media/interceptee_photos/doge.png"
+  "/media/interceptee_photos/doge.png"
+  "/media/interceptee_photos/doge.png"
+  "/media/interceptee_photos/doge.png"
+  "/media/interceptee_photos/38503_1144682394791_1729508_n.jpg"
+  "/media/interceptee_photos/38503_1144682394791_1729508_n.jpg"
+  "/media/interceptee_photos/38503_1144682394791_1729508_n.jpg"
+  "/media/interceptee_photos/38503_1144682394791_1729508_n.jpg"
 ]
 $ ->
   $ui = $("#fuzzymatching-ui")
@@ -49,7 +49,7 @@ setupInputHandlers = ($ui) ->
     $ui.find("img").attr("src", "")
     $ui.show()
   # When clicking away, hide
-  $("*").click (e) ->
+  $(document).click (e) ->
     if !$(e.target).attr("data-fuzzy-ui")
       $ui.hide()
 

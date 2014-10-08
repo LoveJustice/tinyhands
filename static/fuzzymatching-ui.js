@@ -6,7 +6,7 @@
 
   list_of_names = ["Justin Northworth", "Justin North", "Justice Northwood", "Justyn Northwerth", "Dustin Waldo", "Dustin Waldron", "Dusty Waldy", "Dustin Waldro"];
 
-  list_of_pics = ["http://localhost:8000/media/interceptee_photos/doge.png", "http://localhost:8000/media/interceptee_photos/doge.png", "http://localhost:8000/media/interceptee_photos/doge.png", "http://localhost:8000/media/interceptee_photos/doge.png", "http://localhost:8000/media/interceptee_photos/38503_1144682394791_1729508_n.jpg", "http://localhost:8000/media/interceptee_photos/38503_1144682394791_1729508_n.jpg", "http://localhost:8000/media/interceptee_photos/38503_1144682394791_1729508_n.jpg", "http://localhost:8000/media/interceptee_photos/38503_1144682394791_1729508_n.jpg"];
+  list_of_pics = ["/media/interceptee_photos/doge.png", "/media/interceptee_photos/doge.png", "/media/interceptee_photos/doge.png", "/media/interceptee_photos/doge.png", "/media/interceptee_photos/38503_1144682394791_1729508_n.jpg", "/media/interceptee_photos/38503_1144682394791_1729508_n.jpg", "/media/interceptee_photos/38503_1144682394791_1729508_n.jpg", "/media/interceptee_photos/38503_1144682394791_1729508_n.jpg"];
 
   $(function() {
     var $items, $ui;
@@ -43,7 +43,7 @@
       $ui.find("img").attr("src", "");
       return $ui.show();
     });
-    $("*").click(function(e) {
+    $(document).click(function(e) {
       if (!$(e.target).attr("data-fuzzy-ui")) {
         return $ui.hide();
       }
