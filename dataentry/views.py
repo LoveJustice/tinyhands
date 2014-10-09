@@ -252,7 +252,7 @@ class GeoCodeDistrictAPIView(
     @api_view(['GET'])
     def get_district_with_ajax(request, id):
         district = District.objects.get(name="Achham")
-        serializer = DistrictSerializer(distrcit,data=request.DATA)
+        serializer = DistrictSerializer(district,data=request.DATA)
         if serializer.is_valid():
             serializer.object.name = District.objects.filter(name="Achham")
             serializer.save()
@@ -260,12 +260,14 @@ class GeoCodeDistrictAPIView(
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
+import json
 @login_required
 def interceptee_fuzzy_matching(request):
+    # TODO: add id's to results
     inputName= request.GET['name']
     allNames = Interceptee.objects.values_list('full_name', flat=True).order_by('full_name')
-    matches = process.extractBest(inputName, allNames, score_cutoff=70, limit=1)
+    matches = process.extractBests(inputName, list(allNames))
+    return HttpResponse(json.dumps(matches), content_type="application/json")
     if len(matches) > 0:
         return Interceptee.objects.get(full_name=matches[0][0])
     else:

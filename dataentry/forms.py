@@ -23,6 +23,7 @@ BOOLEAN_CHOICES = [
 class DreamSuitePaperForm(forms.ModelForm):
     class Meta:
         model = VictimInterview
+        exclude = []
 
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('label_suffix', '')
@@ -355,7 +356,7 @@ class InterceptionRecordForm(DreamSuitePaperForm):
             self._errors['has_signature'] = error
 
 
-IntercepteeFormSet = inlineformset_factory(InterceptionRecord, Interceptee, extra=12)
+IntercepteeFormSet = inlineformset_factory(InterceptionRecord, Interceptee, exclude=[], extra=12)
 
 
 class VictimInterviewForm(DreamSuitePaperForm):
@@ -554,6 +555,7 @@ class VictimInterviewForm(DreamSuitePaperForm):
 
     class Meta:
         model = VictimInterview
+        exclude = []
 
     def __init__(self, *args, **kwargs):
         super(VictimInterviewForm, self).__init__(*args, **kwargs)
@@ -641,6 +643,7 @@ class VictimInterviewPersonBoxForm(DreamSuitePaperForm):
 
     class Meta:
         model = VictimInterviewPersonBox
+        exclude = []
 
     def __init__(self, *args, **kwargs):
         super(VictimInterviewPersonBoxForm, self).__init__(*args, **kwargs)
@@ -667,6 +670,7 @@ class VictimInterviewLocationBoxForm(DreamSuitePaperForm):
 
     class Meta:
         model = VictimInterviewLocationBox
+        exclude = []
 
     def __init__(self, *args, **kwargs):
         super(VictimInterviewLocationBoxForm, self).__init__(*args, **kwargs)

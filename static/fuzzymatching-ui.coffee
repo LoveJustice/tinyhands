@@ -59,18 +59,30 @@ setupInputHandlers = ($ui) ->
       search $(this).val(), $ui
 
 search = (input, $ui) ->
+  $.get $ui.data("ajax"), {name: input}, (data) ->
+    results = []
+    data.forEach (item) ->
+      results.push({id: 1, name: item[0], score: item[1]})
+    display_results(results, $ui)
+
+search_old = (input, $ui) ->
   $button = $cur_input.parent().parent().find(".photo-upload-button")
   $button.prop("disabled", false)
   $button.children().css("color", "")
   f = new Fuse(list_of_names, {includeScore: true})
   result = f.search(input)
   results = ({id: item.item, name: list_of_names[item.item], score: item.score} for item in result)
+  console.log(results)
+  display_results(results, $ui)
+
+display_results = (results, $ui) ->
   $ul = $ui.find("ul")
   $ul.children().remove()
   if results.length > 0
-    for item in results.slice(0,4)
+    for item in results.slice(0, 6)
       $span = $("<span>").addClass("name").text(item.name)
-      $li = $("<li>").attr("id", item.id).text("(#{Math.round((1-item.score)*100)}) ").append($span)
+#      $li = $("<li>").attr("id", item.id).text("(#{Math.round((1-item.score)*100)}) ").append($span)
+      $li = $("<li>").attr("id", item.id).text("(#{item.score})").append($span)
       $ul.append($li)
   else
       $li = $("<li>").text("Type to search for matches")
