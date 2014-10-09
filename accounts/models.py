@@ -18,6 +18,8 @@ class DefaultPermissionsSet(models.Model):
     permission_vif_add = models.BooleanField(default=False)
     permission_vif_edit = models.BooleanField(default=False)
     permission_accounts_manage = models.BooleanField(default=False)
+    permission_receive_email = models.BooleanField(default=False)
+
 
     def __unicode__(self):
         return self.name
@@ -131,7 +133,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
 
 class AlertManager(models.Manager):
     def send_alert(self, code, context={}):
-        Alert.alert_objects.get(code=code).email_permisisons_set(context)
+        Alert.objects.get(code=code).email_permisisons_set(context)
 
 
 class Alert(models.Model):
@@ -139,7 +141,7 @@ class Alert(models.Model):
     email_template= models.CharField(max_length=255)
 
     permissions_group = models.ManyToManyField(DefaultPermissionsSet)
-    alert_objects = AlertManager()
+    objects = AlertManager()
 
     class Meta:
         verbose_name = 'alert'
