@@ -86,7 +86,6 @@ class Account(AbstractBaseUser, PermissionsMixin):
         default=make_activation_key
     )
 
-
     objects = AccountManager()
 
     USERNAME_FIELD = 'email'
@@ -133,12 +132,12 @@ class Account(AbstractBaseUser, PermissionsMixin):
 
 class AlertManager(models.Manager):
     def send_alert(self, code, context={}):
-        Alert.objects.get(code=code).email_permisisons_set(context)
+        Alert.objects.get(code=code).email_permissions_set(context)
 
 
 class Alert(models.Model):
-    code=models.CharField(max_length=255,unique=True)
-    email_template= models.CharField(max_length=255)
+    code = models.CharField(max_length=255,unique=True)
+    email_template = models.CharField(max_length=255)
 
     permissions_group = models.ManyToManyField(DefaultPermissionsSet)
     objects = AlertManager()
@@ -150,6 +149,6 @@ class Alert(models.Model):
     def __unicode__(self):
         return self.code
 
-    def email_permisisons_set(self,context={}):
+    def email_permissions_set(self,context={}):
         for x in self.permissions_group.all():
             x.email_accounts(self,context)
