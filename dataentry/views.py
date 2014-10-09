@@ -254,18 +254,6 @@ class GeoCodeDistrictAPIView(
         else:
             return Response({"id": "-1","name":"None"})
 
-    @api_view(['GET'])
-    def get_district_with_ajax(request, id):
-        print("HELLO")
-        district = District.objects.get(name="Achham")
-        serializer = DistrictSerializer(distrcit,data=request.DATA)
-        if serializer.is_valid():
-            serializer.object.name = District.objects.filter(name="Achham")
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 class GeoCodeVdcAPIView(APIView):
     
