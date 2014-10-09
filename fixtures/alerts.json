@@ -1,10 +1,10 @@
 [
 {
     "fields": {
-        "code": "Identified Trafficker",
-        "accounts": [
-            4
+        "permissions_group": [
+            1
         ],
+        "code": "Identified Trafficker",
         "email_template": "identified_trafficker"
     },
     "model": "accounts.alert",
@@ -12,22 +12,21 @@
 },
 {
     "fields": {
-        "code": "fir and dofe against",
-        "accounts": [
-            4
+        "permissions_group": [
+            1
         ],
+        "code": "fir and dofe against",
         "email_template": "fir_and_dofe_against"
     },
     "model": "accounts.alert",
     "pk": 2
 },
-
 {
     "fields": {
-        "code": "strength of case",
-        "accounts": [
-            4
+        "permissions_group": [
+            1
         ],
+        "code": "strength of case",
         "email_template": "ten_or_more_case_points"
     },
     "model": "accounts.alert",

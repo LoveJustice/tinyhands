@@ -9,7 +9,8 @@
         "permission_irf_view": true, 
         "permission_vif_edit": true, 
         "permission_vif_view": true, 
-        "permission_irf_edit": true, 
+        "permission_irf_edit": true,
+        "permission_receive_email": false,
         "name": "Super Administrator"
     }
 },
@@ -23,7 +24,8 @@
         "permission_irf_view": true, 
         "permission_vif_edit": true, 
         "permission_vif_view": true, 
-        "permission_irf_edit": true, 
+        "permission_irf_edit": true,
+        "permission_receive_email": false,
         "name": "Field Staff"
     }
 },
@@ -37,7 +39,8 @@
         "permission_irf_view": true, 
         "permission_vif_edit": false, 
         "permission_vif_view": true, 
-        "permission_irf_edit": false, 
+        "permission_irf_edit": false,
+        "permission_receive_email": false,
         "name": "Summer Intern"
     }
 },
@@ -63,7 +66,8 @@
         "user_permissions": [], 
         "password": "pbkdf2_sha256$12000$Ei2Lq9GYzqGB$T37ao7VIlbJP6vGoAludQXYpmQXDZ7tQ/Glm0lMr97c=", 
         "email": "dvcolgan@gmail.com", 
-        "permission_irf_edit": true
+        "permission_irf_edit": true,
+        "permission_receive_email": false
     }
 },
 {
@@ -88,7 +92,8 @@
         "user_permissions": [], 
         "password": "pbkdf2_sha256$12000$QQMqDzpT0AYu$CBXVUxplmqbsv3pki1WRmFJjzQtCX1PH+m+wAAuZ33Q=", 
         "email": "andrew.fennig@gmail.com", 
-        "permission_irf_edit": true
+        "permission_irf_edit": true,
+        "permission_receive_email": false
     }
 },
 {

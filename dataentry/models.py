@@ -791,7 +791,7 @@ class VictimInterviewPersonBox(models.Model):
 
     political_party_congress = models.BooleanField('Congress', default=False)
     political_party_maoist = models.BooleanField('Maoist', default=False)
-    political_party_umn = models.BooleanField('UMN', default=False)
+    political_party_uml = models.BooleanField('UML', default=False)
     political_party_forum = models.BooleanField('Forum', default=False)
     political_party_tarai_madesh = models.BooleanField('Tarai Madesh', default=False)
     political_party_shadbawona = models.BooleanField('Shadbawona', default=False)
