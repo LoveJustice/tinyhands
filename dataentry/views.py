@@ -34,7 +34,7 @@ from dataentry.serializers import DistrictSerializer, VDCSerializer
 import csv
 import re
 from alert_checkers import IRFAlertChecker, VIFAlertChecker
-
+from fuzzywuzzy import process, fuzz
 
 @login_required
 def home(request):
@@ -244,7 +244,6 @@ class VictimInterviewCSVExportView(
 
 class GeoCodeDistrictAPIView(
         APIView):
-    
     def get(self,request, id):
         district = District.objects.get(pk=id)
         serializer = DistrictSerializer(district)
@@ -260,3 +259,14 @@ class GeoCodeDistrictAPIView(
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@login_required
+def interceptee_fuzzy_matching(request):
+    inputName= request.GET['name']
+    allNames = Interceptee.objects.values_list('full_name', flat=True).order_by('full_name')
+    matches = process.extractBest(inputName, allNames, score_cutoff=70, limit=1)
+    if len(matches) > 0:
+        return Interceptee.objects.get(full_name=matches[0][0])
+    else:
+        return None

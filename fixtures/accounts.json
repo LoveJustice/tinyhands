@@ -170,5 +170,32 @@
         "email": "rszemplinski22@gmail.com",
         "permission_irf_edit": true
     }
+},
+{
+        "pk": 6,
+        "model": "accounts.account",
+        "fields": {
+            "permission_irf_edit": true,
+            "date_joined": "2014-10-09T19:11:22.843Z",
+            "email": "josh_wilhelm@taylor.edu",
+            "password": "pbkdf2_sha256$12000$KK2mdMoRCwTl$bq4OWd2ohsyXyQzOnGO87E8tLZK2b2J0hyzcpf54EDw=",
+            "user_permissions": [],
+            "activation_key": "NHnSX5nfFtCNMteXg8aFTDGHQk02tXywk2v98B7l",
+            "permission_receive_email": false,
+            "last_login": "2014-10-09T19:12:50.530Z",
+            "is_staff": false,
+            "is_superuser": false,
+            "permission_vif_edit": true,
+            "permission_vif_view": true,
+            "permission_vif_add": true,
+            "is_active": true,
+            "user_designation": 1,
+            "permission_irf_view": true,
+            "permission_irf_add": true,
+            "permission_accounts_manage": true,
+            "last_name": "Wilhelm",
+            "first_name": "Josh",
+            "groups": []
+        }
 }
 ]
