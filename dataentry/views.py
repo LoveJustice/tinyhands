@@ -1,6 +1,7 @@
 from django.core.exceptions import ImproperlyConfigured, PermissionDenied
 from django.shortcuts import render
 from django.core.urlresolvers import reverse_lazy
+from django.core import serializers
 from django.views.generic import ListView, View, CreateView, UpdateView
 from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSet
 from django.contrib.auth.decorators import login_required
@@ -265,10 +266,8 @@ import json
 def interceptee_fuzzy_matching(request):
     # TODO: add id's to results
     inputName= request.GET['name']
-    allNames = Interceptee.objects.values_list('full_name', flat=True).order_by('full_name')
-    matches = process.extractBests(inputName, list(allNames))
-    return HttpResponse(json.dumps(matches), content_type="application/json")
-    if len(matches) > 0:
-        return Interceptee.objects.get(full_name=matches[0][0])
-    else:
-        return None
+    all_people = Interceptee.objects.all()
+    # people_dict = serializers.serialize("json", all_people[0])
+    people_dict = {serializers.serialize("json", [obj]):obj.full_name for obj in all_people }
+    matches = process.extractBests(inputName, people_dict, limit = 10)
+    return HttpResponse(matches, content_type="application/json")
