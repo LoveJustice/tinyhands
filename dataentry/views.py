@@ -34,6 +34,7 @@ from dataentry.serializers import DistrictSerializer, VDCSerializer
 
 import csv
 import re
+import json
 from alert_checkers import IRFAlertChecker, VIFAlertChecker
 from fuzzywuzzy import process, fuzz
 
@@ -261,13 +262,11 @@ class GeoCodeDistrictAPIView(
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-import json
+
 @login_required
 def interceptee_fuzzy_matching(request):
-    # TODO: add id's to results
     inputName= request.GET['name']
     all_people = Interceptee.objects.all()
-    # people_dict = serializers.serialize("json", all_people[0])
     people_dict = {serializers.serialize("json", [obj]):obj.full_name for obj in all_people }
     matches = process.extractBests(inputName, people_dict, limit = 10)
-    return HttpResponse(matches, content_type="application/json")
+    return HttpResponse(json.dumps(matches), content_type="application/json")
