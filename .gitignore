@@ -8,7 +8,7 @@
 env
 backups
 .coverage
-media
+# for now in dev we check in /media
 .#*
 \#*#
 *~
