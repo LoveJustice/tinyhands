@@ -47,7 +47,8 @@ function callFuzzyApi(input, locationType, element){
 		    unorderedList.find(".fuzzymatches").each(function(){
 			$(this).click(function(){
 			    $(element).val($(this).text());
-			});
+			}).css('cursor','pointer');
+			
 		    });
 		}
             }
