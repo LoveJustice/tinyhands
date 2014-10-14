@@ -190,5 +190,31 @@
         "email": "andrew_smith3@taylor.edu",
         "permission_irf_edit": true
     }
+},
+{
+    "pk": 7,
+    "model": "accounts.account",
+    "fields": {
+        "groups": [],
+        "first_name": "Bryant",
+        "last_name": "Sell",
+        "permission_accounts_manage": true,
+        "permission_irf_add": true,
+        "permission_irf_view": true,
+        "user_designation": 1,
+        "is_active": true,
+        "permission_vif_add": true,
+        "permission_vif_view": true,
+        "permission_vif_edit": true,
+        "is_superuser": true,
+        "is_staff": true,
+        "last_login": "2014-05-05T13:25:25.906Z",
+        "date_joined": "2014-04-16T17:23:25.607Z",
+        "activation_key": "1nwyDyaxiTVVJETHz0KP9BtJhK9K6rLsh16P0RYC",
+        "user_permissions": [],
+        "password": "pbkdf2_sha256$12000$Z4qzQJspalML$qbpj+tV0VJX009Lbv75Zbviok7eYuAUfmWu3jxwgUG0=",
+        "email": "bryant_sell@taylor.edu",
+        "permission_irf_edit": true
+    }
 }
 ]
