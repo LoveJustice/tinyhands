@@ -31,5 +31,16 @@
     },
     "model": "accounts.alert",
     "pk": 3
+},
+{
+    "fields": {
+        "permissions_group": [
+            1
+        ],
+        "code": "Name Match",
+        "email_template": "trafficker_name_match"
+    },
+    "model": "accounts.alert",
+    "pk": 5
 }
 ]

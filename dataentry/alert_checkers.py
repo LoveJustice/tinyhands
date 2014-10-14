@@ -1,4 +1,9 @@
+from django.core import serializers
 from accounts.models import Alert
+from fuzzywuzzy import process
+from dataentry import serializers
+from dataentry.models import Interceptee
+import json
 
 
 class VIFAlertChecker(object):
@@ -22,11 +27,11 @@ class VIFAlertChecker(object):
         points = self.vif.instance.calculate_strength_of_case_points()
 
         if (fir and fir_value != '') and (dofe and dofe_value != ''):
-            Alert.alert_objects.send_alert("fir and dofe against", context={"vif": self.vif.instance, "both": True, "points": points, "fir_value": fir_value, "dofe_value": dofe_value})
+            Alert.objects.send_alert("fir and dofe against", context={"vif": self.vif.instance, "both": True, "points": points, "fir_value": fir_value, "dofe_value": dofe_value})
         if fir and fir_value != '':
-            Alert.alert_objects.send_alert("fir and dofe against", context={"vif": self.vif.instance, "fir": True, "fir_value": fir_value, "points": points})
+            Alert.objects.send_alert("fir and dofe against", context={"vif": self.vif.instance, "fir": True, "fir_value": fir_value, "points": points})
         if dofe and dofe_value != '':
-            Alert.alert_objects.send_alert("fir and dofe against", context={"vif": self.vif.instance, "dofe": True, "points": points, "dofe_value": dofe_value})
+            Alert.objects.send_alert("fir and dofe against", context={"vif": self.vif.instance, "dofe": True, "points": points, "dofe_value": dofe_value})
 
     def ten_or_more_case_points(self):
         """
@@ -39,7 +44,7 @@ class VIFAlertChecker(object):
         points = self.vif.instance.calculate_strength_of_case_points()
 
         if self.vif.instance.calculate_strength_of_case_points() > 10:
-            Alert.alert_objects.send_alert("strength of case", context={"vif": self.vif.instance, "points": points, "fir": fir, "dofe": dofe, "reason_for_no": reason_for_no})
+            Alert.objects.send_alert("strength of case", context={"vif": self.vif.instance, "points": points, "fir": fir, "dofe": dofe, "reason_for_no": reason_for_no})
         pass
 
 
@@ -58,7 +63,30 @@ class IRFAlertChecker(object):
         - Any time there is a trafficker name match from a separate interception. E-mail should include form number that
         was submitted, form number that the match came from, and the name and all personal identifiers from both forms.
         """
-        pass
+        all_people = Interceptee.objects.all()
+        people_list = [person.full_name for person in all_people]
+        import ipdb
+        ipdb.set_trace()
+        matches = []
+        trafficker_list = []
+        for person in self.interceptees:
+            if person.cleaned_data.get("kind") == 't':
+                trafficker_list.append(person.instance)
+        if len(trafficker_list) > 0:
+            for trafficker in trafficker_list:
+                matches.append(process.extractBests(trafficker.full_name, people_list, score_cutoff=90, limit=10))
+
+        trafficker_in_custody = self.IRF_data.get("trafficker_taken_into_custody")
+        trafficker_name = ''
+        taken_into_custody = 0
+        if self.IRF_data.get("trafficker_taken_into_custody")=='':
+            taken_into_custody = self.IRF_data.get("trafficker_taken_into_custody")
+        if trafficker_in_custody is not None and taken_into_custody < len([there for there in self.interceptees.cleaned_data if there]):
+            trafficker_name = self.interceptees.cleaned_data[int(self.IRF_data.get("trafficker_taken_into_custody")) - 1].get("full_name")
+
+        ipdb.set_trace()
+        if len(matches) > 0:
+            Alert.objects.send_alert("Name Match", context={"irf": self.irf.instance, "matches": matches, "trafficker_in_custody": trafficker_name})
 
     def identified_trafficker(self):
         """
@@ -86,14 +114,14 @@ class IRFAlertChecker(object):
         certainty_points = self.IRF_data.get('how_sure_was_trafficking')
         if len(trafficker_list) > 0:
             if (certainty_points >= 4) and (red_flags >= 400):
-                Alert.alert_objects.send_alert("Identified Trafficker", context={"irf": self.irf.instance, "trafficker_list": trafficker_list, "both": True,
+                Alert.objects.send_alert("Identified Trafficker", context={"irf": self.irf.instance, "trafficker_list": trafficker_list, "both": True,
                                                                                  "trafficker_in_custody": trafficker_name, "red_flags": red_flags,
                                                                                  "certainty_points": certainty_points})
                 return
             if certainty_points >= 4:
-                Alert.alert_objects.send_alert("Identified Trafficker", context={"irf": self.irf.instance, "trafficker_list": trafficker_list, "how_sure": True,
+                Alert.objects.send_alert("Identified Trafficker", context={"irf": self.irf.instance, "trafficker_list": trafficker_list, "how_sure": True,
                                                                                  "trafficker_in_custody": trafficker_name,
                                                                                  "certainty_points": certainty_points})
             if red_flags >= 400:
-                Alert.alert_objects.send_alert("Identified Trafficker", context={"irf": self.irf.instance, "trafficker_list": trafficker_list, "flags": True,
+                Alert.objects.send_alert("Identified Trafficker", context={"irf": self.irf.instance, "trafficker_list": trafficker_list, "flags": True,
                                                                                  "trafficker_in_custody": trafficker_name, "red_flags": red_flags})

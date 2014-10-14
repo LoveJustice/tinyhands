@@ -1,31 +1,40 @@
-{% block subject %}{{ account.first_name }}, a DoFE complaint has been filed against {{ vif.legal_action_fir_against_value }} on IRF#{{ vif.vif_number }}!{% endblock %}
+{% block subject %}{{ account.first_name }}, Investigations Alert for IRF#{{ irf.irf_number }}!{% endblock %}
 
 {% block html %}
-E-mail should include VIF number, which type of case has been filed and the name of the person it has been filed against.
+<h3>Attention: Investigations Team,</h3>
 
-<h1>VIF#: {{ vif.vif_number }}</h1>
+    <p class="descriptionOfAlert">
+        This auto alert has been generated because IRF#{{ irf.irf_number }} had a name match!
 
+        The interception occurred at {{ irf.location }} at {{ irf.date_time_of_interception.time }} on {{ irf.date_time_of_interception.date }}.
+    </p>
+
+<h3>The following trafficker(s) on the form had a name match with 90% or higher certainty:</h3>
+<table>
+        <thead>
+            <th>Name</th>
+            <th>Phone contact</th>
+            <th>Photo</th>
+        </thead>
+        {% for person in matches %}
+        <tr>
+            <td>{{ person.full_name }}</td>
+            <td>{{ person.phone_contact }}</td>
+            <td><img src="{{ site }}/{{ person.photo }}"/></td>
+        </tr>
+        {% endfor %}
+    </table>
+
+<br/>
+
+{% if trafficker_in_custody != '' %}
+    <p>According to the form, {{ trafficker_in_custody }} was taken into custody</p>
+{% endif %}
+
+<p>To view the IRF click here: <a href="{{ site }}/{% url 'interceptionrecord_detail' irf.id %}">Link to Interception Record Form</a></p>
 
 {% endblock %}
 
-legal_action_dofe_against_value
 
-
-Message Subject: Investigations Alert for [IRF#]
-
-Attention: Investigations Team,
-
-        This auto alert has been generated because IRF#{{ irf.irf_number }} was submitted with
-
-        "the information of repeat trafficker [trafficker name] who also appeared on
-        [IRF # or VIF # of previous match]"}.
-
-        The interception occurred at {{ irf.location }} at {{ irf.date_time_of_interception.time }} on {{ irf.date_time_of_interception.date }}.
-
-
- The following trafficker(s) were listed on the form: [Trafficker 1] - [Trafficker 1's Phone Number] - [Trafficker 1's Photo]
-[Trafficker 2] - [Trafficker 2's Phone Number] - [Trafficker 1's Photo]
-
-[If there is a response to 9.6, then...] According to the form, [Trafficker name corresponding to the number in 9.6] was taken into police custody.
-
-To view the IRF click here: [link to form]
+Any time there is a trafficker name match from a separate interception.
+E-mail should include form number that was submitted, form number that the match came from, and the name and all personal identifiers from both forms.

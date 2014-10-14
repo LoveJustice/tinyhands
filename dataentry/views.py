@@ -76,7 +76,7 @@ class SearchFormsMixin(object):
         # Check if database is empty to change message in search page
         context['database_empty'] = self.model.objects.count()==0
         return context
-    
+
 class InterceptionRecordListView(
         LoginRequiredMixin,
 	SearchFormsMixin,
@@ -161,7 +161,7 @@ class VictimInterviewListView(
         ListView):
     model = VictimInterview
     paginate_by = 20
-    
+
     def __init__(self, *args, **kwargs):
         #passes what to search by to SearchFormsMixin
         super(VictimInterviewListView, self).__init__(vif_number__icontains = "number", interviewer__icontains = "name")
