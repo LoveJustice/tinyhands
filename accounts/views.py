@@ -112,7 +112,9 @@ class AccountUpdateView(
 class AccountDeleteView(
     LoginRequiredMixin,
     DeleteView):
+
     model = Account
+    success_url = reverse_lazy('account_list')
 
     def get_object(self, queryset=None):
         """ Hook to ensure object is owned by request.user. """
