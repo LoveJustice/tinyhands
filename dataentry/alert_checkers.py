@@ -86,14 +86,14 @@ class IRFAlertChecker(object):
         certainty_points = self.IRF_data.get('how_sure_was_trafficking')
         if len(trafficker_list) > 0:
             if (certainty_points >= 4) and (red_flags >= 400):
-                Alert.alert_objects.send_alert("Identified Trafficker", context={"irf": self.irf.instance, "trafficker_list": trafficker_list, "both": True,
+                Alert.objects.send_alert("Identified Trafficker", context={"irf": self.irf.instance, "trafficker_list": trafficker_list, "both": True,
                                                                                  "trafficker_in_custody": trafficker_name, "red_flags": red_flags,
                                                                                  "certainty_points": certainty_points})
                 return
             if certainty_points >= 4:
-                Alert.alert_objects.send_alert("Identified Trafficker", context={"irf": self.irf.instance, "trafficker_list": trafficker_list, "how_sure": True,
+                Alert.objects.send_alert("Identified Trafficker", context={"irf": self.irf.instance, "trafficker_list": trafficker_list, "how_sure": True,
                                                                                  "trafficker_in_custody": trafficker_name,
                                                                                  "certainty_points": certainty_points})
             if red_flags >= 400:
-                Alert.alert_objects.send_alert("Identified Trafficker", context={"irf": self.irf.instance, "trafficker_list": trafficker_list, "flags": True,
+                Alert.objects.send_alert("Identified Trafficker", context={"irf": self.irf.instance, "trafficker_list": trafficker_list, "flags": True,
                                                                                  "trafficker_in_custody": trafficker_name, "red_flags": red_flags})

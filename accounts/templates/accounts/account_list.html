@@ -32,6 +32,9 @@
             <td>{{ account.date_joined }}</td>
             <td>{{ account.last_login }}</td>
             <td><a class="btn btn-sm btn-primary" href="{% url 'account_update' account.pk %}">Edit</a>
+            {% if account.is_staff and account.is_active %}
+            <td><a class="btn btn-sm btn-danger" href="{%  url 'account_delete' account.pk %}">Delete</a>
+            {% end if  %}
             {% if not account.has_usable_password %}
             <form method="post" 
                     style="display: inline"
