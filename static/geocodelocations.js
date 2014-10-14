@@ -14,6 +14,7 @@ function setPopovers(id)
 			}	
 	    });
 	    $(element).keyup(function(){
+		console.log("Testing...");
 
             if(!$('.popover').hasClass('in'))
                 {
@@ -22,30 +23,34 @@ function setPopovers(id)
 
             input = $(element).val();
             if(element.id.indexOf("district") > 0){
-                callFuzzyApi(input, "district");
+                var fuzzyText = callFuzzyApi(input, "district", element);
             }else{
-                callFuzzyApi(input, "vdc");
-            }
+                var fuzzyText = callFuzzyApi(input, "vdc", element);
+	    }
 	    });
 	});
 }
 
-function callFuzzyApi(input, locationType){
+function callFuzzyApi(input, locationType, element){
     var unorderedList = $("#popover-location-info");
-    
     if(input !== ""){
 	$.ajax({
 	    url: "/data-entry/geocodelocation/"+locationType+"/",
 	    data: locationType+"="+input,
 	}).done(function(data){
-        unorderedList.empty();
-        console.log(data);
-        if (data.id != -1) {
-            for (i in data) {
-                unorderedList.append($('<div></div>').append(data[i].name));
+            unorderedList.empty();
+            //console.log(data);
+            if (data.id != -1) {
+		for (i in data) {
+		    //Add event for these divs that will extract the text from the div
+		    unorderedList.append($('<div class="fuzzymatches"></div>').append(data[i].name));
+		    unorderedList.find(".fuzzymatches").each(function(){
+			$(this).click(function(){
+			    $(element).val($(this).text());
+			});
+		    });
+		}
             }
-            console.log(unorderedList);
-        }
 	});
      }
 }
