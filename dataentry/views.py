@@ -74,7 +74,8 @@ class SearchFormsMixin(object):
         # Check if database is empty to change message in search page
         context['database_empty'] = self.model.objects.count()==0
         return context
-    
+
+
 class InterceptionRecordListView(
         LoginRequiredMixin,
 	SearchFormsMixin,
@@ -85,6 +86,7 @@ class InterceptionRecordListView(
     def __init__(self, *args, **kw):
         #passes what to search by to SearchFormsMixin
         super(InterceptionRecordListView, self).__init__(irf_number__icontains = "number", staff_name__icontains = "name")
+
 
 class IntercepteeInline(InlineFormSet):
     model = Interceptee
