@@ -671,7 +671,6 @@ def get_legal_action_against_traffickers(vif):
     if vif.legal_action_against_traffickers_dofe_complaint:
         return 'A DoFE complaint has been filed'
 
-
 def get_nullable_choice_text(value, text_true, text_false):
     if value is None:
         return ''
@@ -679,6 +678,12 @@ def get_nullable_choice_text(value, text_true, text_false):
         return text_true
     return text_false
 
+def get_dependant_nullable_choice_text(value_depend, value, text_true, text_false):
+    if value_depend is None:
+        return ''
+    if value_depend:
+        return get_nullable_choice_text(value, text_true, text_false)
+    return ''
 
 def get_vif_export_rows(vifs):
     rows = []
@@ -855,7 +860,8 @@ def get_vif_export_rows(vifs):
                 'They previously worked in the sex industry',
                 'They did not previously work in the sex industry',
             ),
-            get_nullable_choice_text(
+            get_dependant_nullable_choice_text(
+                vif.victim_has_worked_in_sex_industry,
                 vif.victim_place_worked_involved_sending_girls_overseas,
                 'The sex industry location was sending girls overseas',
                 'The sex industry location was not sending girls overseas',
