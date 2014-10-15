@@ -15,12 +15,14 @@
             <th>Name</th>
             <th>Phone contact</th>
             <th>Photo</th>
+            <th>Matched to</th>
         </thead>
-        {% for person in matches %}
+        {% for person in traffickers_matches %}
         <tr>
             <td>{{ person.full_name }}</td>
             <td>{{ person.phone_contact }}</td>
             <td><img src="{{ site }}/{{ person.photo }}"/></td>
+            <td>{{
         </tr>
         {% endfor %}
     </table>
