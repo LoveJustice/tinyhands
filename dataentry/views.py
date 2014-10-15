@@ -77,9 +77,10 @@ class SearchFormsMixin(object):
         context['database_empty'] = self.model.objects.count()==0
         return context
 
+
 class InterceptionRecordListView(
         LoginRequiredMixin,
-	SearchFormsMixin,
+        SearchFormsMixin,
         ListView):
     model = InterceptionRecord
     paginate_by = 20
@@ -87,6 +88,7 @@ class InterceptionRecordListView(
     def __init__(self, *args, **kw):
         #passes what to search by to SearchFormsMixin
         super(InterceptionRecordListView, self).__init__(irf_number__icontains = "number", staff_name__icontains = "name")
+
 
 class IntercepteeInline(InlineFormSet):
     model = Interceptee
