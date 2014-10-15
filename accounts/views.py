@@ -5,6 +5,7 @@ from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, RedirectView
 from django.contrib.auth.decorators import login_required
+from django.http import Http404
 from braces.views import LoginRequiredMixin
 from extra_views import ModelFormSetView
 
@@ -106,6 +107,19 @@ class AccountUpdateView(
         context = super(AccountUpdateView, self).get_context_data(**kwargs)
         context['default_permissions_sets'] = json.dumps(list(DefaultPermissionsSet.objects.values()))
         return context
+
+
+class AccountDeleteView(
+    LoginRequiredMixin,
+    DeleteView):
+
+    model = Account
+    success_url = reverse_lazy('account_list')
+
+    def get_object(self, queryset=None):
+        """ Hook to ensure object is owned by request.user. """
+        obj = super(AccountDeleteView, self).get_object()
+        return obj
 
 
 class AccessControlView(
