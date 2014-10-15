@@ -43,6 +43,16 @@
                     {% if request.user.permission_vif_edit %}
                         <a class="btn btn-sm btn-primary" href="{% url 'victiminterview_update' vif.pk %}">Edit</a>
                     {% endif %}
+                    {% if request.user.is_superuser %}
+                        <form method="post"
+                            style="display: inline"
+                            action="{% url 'victiminterview_delete' vif.pk %}">
+                            {% csrf_token %}
+                            <input type="submit"
+                                class="btn btn-sm btn-danger"
+                                value="Delete" />
+                        </form>
+                    {% endif %}
                 </td>
             </tr>
             {% endfor %}

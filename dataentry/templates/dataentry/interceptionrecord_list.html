@@ -43,6 +43,16 @@
                     {% if request.user.permission_irf_edit %}
                         <a class="btn btn-sm btn-primary" href="{% url 'interceptionrecord_update' irf.pk %}">Edit</a>
                     {% endif %}
+                    {% if request.user.is_superuser %}
+                        <form method="post"
+                            style="display: inline"
+                            action="{% url 'interceptionrecord_delete' irf.pk %}">
+                            {% csrf_token %}
+                            <input type="submit"
+                                class="btn btn-sm btn-danger"
+                                value="Delete" />
+                        </form>
+                    {% endif %}
                 </td>
             </tr>
             {% endfor %}

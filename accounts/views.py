@@ -3,9 +3,10 @@ import json
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse_lazy
+from django.contrib import messages
+from django.http import Http404
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, RedirectView
 from django.contrib.auth.decorators import login_required
-from django.http import Http404
 from braces.views import LoginRequiredMixin
 from extra_views import ModelFormSetView
 
@@ -110,7 +111,6 @@ class AccountUpdateView(
 
 
 class AccountDeleteView(
-    LoginRequiredMixin,
     DeleteView):
 
     model = Account
