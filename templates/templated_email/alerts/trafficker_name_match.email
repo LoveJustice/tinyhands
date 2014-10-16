@@ -1,0 +1,31 @@
+{% block subject %}{{ account.first_name }}, a DoFE complaint has been filed against {{ vif.legal_action_fir_against_value }} on IRF#{{ vif.vif_number }}!{% endblock %}
+
+{% block html %}
+E-mail should include VIF number, which type of case has been filed and the name of the person it has been filed against.
+
+<h1>VIF#: {{ vif.vif_number }}</h1>
+
+
+{% endblock %}
+
+legal_action_dofe_against_value
+
+
+Message Subject: Investigations Alert for [IRF#]
+
+Attention: Investigations Team,
+
+        This auto alert has been generated because IRF#{{ irf.irf_number }} was submitted with
+
+        "the information of repeat trafficker [trafficker name] who also appeared on
+        [IRF # or VIF # of previous match]"}.
+
+        The interception occurred at {{ irf.location }} at {{ irf.date_time_of_interception.time }} on {{ irf.date_time_of_interception.date }}.
+
+
+ The following trafficker(s) were listed on the form: [Trafficker 1] - [Trafficker 1's Phone Number] - [Trafficker 1's Photo]
+[Trafficker 2] - [Trafficker 2's Phone Number] - [Trafficker 1's Photo]
+
+[If there is a response to 9.6, then...] According to the form, [Trafficker name corresponding to the number in 9.6] was taken into police custody.
+
+To view the IRF click here: [link to form]

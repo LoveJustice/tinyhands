@@ -18,12 +18,20 @@ class DefaultPermissionsSet(models.Model):
     permission_vif_add = models.BooleanField(default=False)
     permission_vif_edit = models.BooleanField(default=False)
     permission_accounts_manage = models.BooleanField(default=False)
+    permission_receive_email = models.BooleanField(default=False)
+
 
     def __unicode__(self):
         return self.name
 
     def is_used_by_accounts(self):
         return self.accounts.count() > 0
+
+    def email_accounts(self, alert, context={}):
+        accounts = self.accounts.all()
+        for account in accounts:
+            if account.permission_receive_email:
+                account.email_user("alerts/" + alert.email_template, alert, context)
 
 
 class AccountManager(BaseUserManager):
@@ -46,9 +54,11 @@ class AccountManager(BaseUserManager):
         u.save(using=self._db)
         return u
 
+
 def make_activation_key():
     return ''.join(random.choice(string.ascii_letters + string.digits)
                    for i in range(40))
+
 
 class Account(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=255, unique=True)
@@ -67,6 +77,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
     permission_vif_add = models.BooleanField(default=False)
     permission_vif_edit = models.BooleanField(default=False)
     permission_accounts_manage = models.BooleanField(default=False)
+    permission_receive_email = models.BooleanField(default=False)
 
     date_joined = models.DateTimeField(default=timezone.now)
 
@@ -74,7 +85,6 @@ class Account(AbstractBaseUser, PermissionsMixin):
         max_length=40,
         default=make_activation_key
     )
-    
 
     objects = AccountManager()
 
@@ -97,8 +107,16 @@ class Account(AbstractBaseUser, PermissionsMixin):
     def get_full_name(self):
         return self.first_name + ' ' + self.last_name
 
-    def email_user(self, subject, message, from_email=None):
-        pass
+    def email_user(self, template, alert, context={}):
+        context['site'] = SITE_DOMAIN
+        context['account'] = self
+        context['alert'] = alert
+        send_templated_mail(
+            template_name=template,
+            from_email=ADMIN_EMAIL_SENDER,
+            recipient_list=[self.email],
+            context=context
+        )
 
     def send_activation_email(self):
         send_templated_mail(
@@ -110,3 +128,27 @@ class Account(AbstractBaseUser, PermissionsMixin):
                 'account': self,
             }
         )
+
+
+class AlertManager(models.Manager):
+    def send_alert(self, code, context={}):
+        Alert.objects.get(code=code).email_permissions_set(context)
+
+
+class Alert(models.Model):
+    code = models.CharField(max_length=255,unique=True)
+    email_template = models.CharField(max_length=255)
+
+    permissions_group = models.ManyToManyField(DefaultPermissionsSet)
+    objects = AlertManager()
+
+    class Meta:
+        verbose_name = 'alert'
+        verbose_name_plural = 'alerts'
+
+    def __unicode__(self):
+        return self.code
+
+    def email_permissions_set(self,context={}):
+        for x in self.permissions_group.all():
+            x.email_accounts(self,context)

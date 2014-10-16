@@ -63,6 +63,30 @@ function setUpValidationPopups() {
     });
 }
 
+/*
+function hide55when54unchecked() {
+    $('#id_victim_has_worked_in_sex_industry_0').click(function(){
+        $('#victim_place_worked_involved_sending_girls_overseas').css("visibility",'hidden');
+        //clear vif 5.5 selections
+        $("#id_victim_place_worked_involved_sending_girls_overseas_1").prop('checked', false);
+        $("#id_victim_place_worked_involved_sending_girls_overseas_0").prop('checked', false);
+    });
+
+    $('#id_victim_has_worked_in_sex_industry_1').click(function(){
+        var yesBox = $('#id_victim_has_worked_in_sex_industry_1');
+        var checked = yesBox.is(":checked");
+        if(checked){
+            $('#victim_place_worked_involved_sending_girls_overseas').css("visibility",'visible');
+        }
+        else{
+            $('#victim_place_worked_involved_sending_girls_overseas').css("visibility",'hidden');
+            //clear vif 5.5 selections
+            $("#id_victim_place_worked_involved_sending_girls_overseas_1").prop('checked', false);
+            $("#id_victim_place_worked_involved_sending_girls_overseas_0").prop('checked', false);
+        }
+    });
+} */
+
 function setUpPermissionsCheckboxes() {
     $('input[type="checkbox"]').each(function() {
         var $label = $(this).parents('label');
@@ -134,11 +158,25 @@ function setUpLimitedChoicesCheckboxGroups() {
 
     // This simpler version just limits it to one checkbox since thats all we have right now
     $('input[type="checkbox"]').click(function() {
-        var $container = $(this).parents('.checkbox-group-marker').eq(0);
-        if ($container.length === 0) {
+        var $selectedBox = $(this);
+	var $container = $selectedBox.parents('.checkbox-group-marker').eq(0);
+	if ($selectedBox.parent().hasClass('multiple-checkboxes-allowed')){
+	    $container.find('input[type="checkbox"]').each(function () {
+		var $currentBox = $(this);
+		if($currentBox.parent().hasClass('single-checkbox-allowed')) {
+		    $currentBox.attr('checked', null);
+		}
+	    });
+	    return;
+	}
+	else if ($selectedBox.parent().hasClass('single-checkbox-allowed')) {
+	    $container.find('input[type="checkbox"]').not(this).attr('checked', null);
+	    return;
+	}
+	else if ($container.length === 0) {
             return;
         }
-        $container.find('input[type="checkbox"]').not(this).attr('checked', null);
+	$container.find('input[type="checkbox"]').not(this).attr('checked', null);
     });
 }
 
@@ -353,6 +391,8 @@ var DREAMSUITE = {
         }
 
         setUpValidationPopups();
+
+        //hide55when54unchecked();
 
         setUpLimitedChoicesCheckboxGroups();
 

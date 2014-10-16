@@ -11,6 +11,8 @@ from django.forms.models import inlineformset_factory
 from django.core.exceptions import ValidationError
 from django.utils.html import mark_safe
 
+from accounts.models import Alert
+
 
 BOOLEAN_CHOICES = [
     (False, 'No'),

@@ -32,7 +32,8 @@ BORDER_STATION_NAMES = {
 irf_headers = [
     "IRF Number",
     "Station",
-    "Date/Time",
+    "Date/Time of Interception",
+    "Date/Time Entered into System",
     "Number of Victims",
     "Number of Traffickers",
     "Location",
@@ -177,6 +178,8 @@ def get_checkbox_group_value(instance, field_name_start):
                     return field.verbose_name
     return ''
 
+from django.utils.timezone import localtime
+
 
 def get_irf_export_rows(irfs):
     rows = []
@@ -196,8 +199,8 @@ def get_irf_export_rows(irfs):
                 irf.irf_number,
 
                 get_station_name_from_number(irf.irf_number),
-
-                irf.date_time_of_interception,
+                localtime(irf.date_time_of_interception),
+                localtime(irf.date_time_entered_into_system),
                 irf.number_of_victims,
                 irf.number_of_traffickers,
 
@@ -585,11 +588,11 @@ def get_broker_works_in_job_location(vif):
 
 def get_victim_traveled_with_broker_companion(vif):
     if vif.victim_traveled_with_broker_companion_yes:
-        'Traveled with a companion'
+        return 'Traveled with a companion'
     if vif.victim_traveled_with_broker_companion_no:
-        'Did not travel with a companion'
+        return 'Did not travel with a companion'
     if vif.victim_traveled_with_broker_companion_broker_took_me_to_border:
-        'Broker took them to the border'
+        return 'Broker took them to the border'
 
 
 def get_money_changed_hands_broker_companion(vif):
@@ -662,6 +665,8 @@ def get_victim_guardian_uses_drugs(vif):
 def get_legal_action_against_traffickers(vif):
     if vif.legal_action_against_traffickers_no:
         return 'No legal action has been taken'
+    if vif.legal_action_against_traffickers_fir_filed and vif.legal_action_against_traffickers_dofe_complaint:
+        return 'An FIR and a DoFE complaint have both been filed'
     if vif.legal_action_against_traffickers_fir_filed:
         return 'An FIR has been filed'
     if vif.legal_action_against_traffickers_dofe_complaint:
@@ -916,7 +921,7 @@ def get_vif_export_rows(vifs):
             vif.get_calculated_situational_alarms(),
 
             get_legal_action_against_traffickers(vif),
-            vif.legal_action_fir_against_value or vif.legal_action_dofe_against_value or '',
+            vif.legal_action_fir_against_value + ", " + vif.legal_action_dofe_against_value or '',
 
             get_checkbox_group_value(vif, 'reason_no_legal'),
             vif.reason_no_legal_interference_value,
