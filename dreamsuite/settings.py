@@ -1,4 +1,5 @@
 from private import SECRET_KEY
+from django.contrib import messages
 
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -86,6 +87,10 @@ DATETIME_FORMAT = "n.j.Y g:iA"
 DATE_FORMAT = "n.j.Y" 
 
 STATIC_URL = '/static/'
+
+MESSAGE_TAGS = {
+    messages.constants.ERROR: 'danger'    # Fix up for Bootstrap.
+}
 
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',

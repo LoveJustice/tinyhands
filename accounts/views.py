@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login
 from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse_lazy
 from django.contrib import messages
-from django.http import Http404
+from django.http import HttpResponseRedirect
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, RedirectView
 from django.contrib.auth.decorators import login_required
 from braces.views import LoginRequiredMixin
@@ -110,16 +110,18 @@ class AccountUpdateView(
         return context
 
 
-class AccountDeleteView(
-    DeleteView):
+class AccountDeleteView(DeleteView):
 
     model = Account
     success_url = reverse_lazy('account_list')
 
-    def get_object(self, queryset=None):
-        """ Hook to ensure object is owned by request.user. """
-        obj = super(AccountDeleteView, self).get_object()
-        return obj
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if self.request.user.is_superuser:
+            self.object.delete()
+        else:
+            messages.error(request, "You have no power here!!!")
+        return HttpResponseRedirect(self.success_url)
 
 
 class AccessControlView(

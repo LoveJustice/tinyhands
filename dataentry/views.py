@@ -2,7 +2,7 @@ from django.core.exceptions import ImproperlyConfigured, PermissionDenied
 from django.shortcuts import render
 from django.core.urlresolvers import reverse_lazy
 from django.contrib import messages
-from django.http import Http404
+from django.http import HttpResponseRedirect
 from django.views.generic import ListView, View, DeleteView, CreateView, UpdateView
 from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSet
 from django.contrib.auth.decorators import login_required
@@ -139,9 +139,13 @@ class InterceptionRecordDeleteView(DeleteView):
     model = InterceptionRecord
     success_url = reverse_lazy('interceptionrecord_list')
 
-    def get_object(self, queryset=None):
-        obj = super(VictimInterviewDeleteView, self).get_object()
-        return obj
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if self.request.user.is_superuser:
+            self.object.delete()
+        else:
+            messages.error(request, "You have no power here!!!")
+        return HttpResponseRedirect(self.success_url)
 
 
 class PersonBoxInline(InlineFormSet):
@@ -219,9 +223,13 @@ class VictimInterviewDeleteView(DeleteView):
     model = VictimInterview
     success_url = reverse_lazy('victiminterview_list')
 
-    def get_object(self, queryset=None):
-        obj = super(VictimInterviewDeleteView, self).get_object()
-        return obj
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if self.request.user.is_superuser:
+            self.object.delete()
+        else:
+            messages.error(request, "You have no power here!!!")
+        return HttpResponseRedirect(self.success_url)
 
 
 class InterceptionRecordCSVExportView(
