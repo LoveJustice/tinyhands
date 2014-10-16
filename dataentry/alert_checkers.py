@@ -26,10 +26,13 @@ class VIFAlertChecker(object):
 
         if (fir and fir_value != '') and (dofe and dofe_value != ''):
             Alert.objects.send_alert("fir and dofe against", context={"vif": self.vif.instance, "both": True, "points": points, "fir_value": fir_value, "dofe_value": dofe_value})
+            return
         if fir and fir_value != '':
             Alert.objects.send_alert("fir and dofe against", context={"vif": self.vif.instance, "fir": True, "fir_value": fir_value, "points": points})
+            return
         if dofe and dofe_value != '':
             Alert.objects.send_alert("fir and dofe against", context={"vif": self.vif.instance, "dofe": True, "points": points, "dofe_value": dofe_value})
+        return
 
     def ten_or_more_case_points(self):
         """
@@ -43,7 +46,7 @@ class VIFAlertChecker(object):
 
         if self.vif.instance.calculate_strength_of_case_points() > 10:
             Alert.objects.send_alert("strength of case", context={"vif": self.vif.instance, "points": points, "fir": fir, "dofe": dofe, "reason_for_no": reason_for_no})
-        pass
+        return
 
 
 class IRFAlertChecker(object):
