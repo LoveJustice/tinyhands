@@ -460,9 +460,10 @@ class VictimInterview(models.Model):
 
     victim_how_expense_was_paid_paid_myself = models.BooleanField('I paid the expenses myself', default=False)
     victim_how_expense_was_paid_broker_paid_all = models.BooleanField('The broker paid all the expenses', default=False)
-    victim_how_expense_was_paid_gave_money_to_broker = models.BooleanField('I gave a sum of money to the broker', default=False).set_weight(2)
+    victim_how_expense_was_paid_gave_money_to_broker = models.BooleanField('I gave a sum of money to the broker', default=False)
     victim_how_expense_was_paid_broker_gave_loan = models.BooleanField('The broker paid the expenses and I have to pay him back', default=False)
     victim_how_expense_was_paid_amount = models.DecimalField('Amount', max_digits=10, decimal_places=2, null=True, blank=True)
+    victim_how_expense_was_paid_broker_gave_loan = models.BooleanField('The broker paid the expenses and I have to pay him back', default=False)
 
     broker_works_in_job_location_no = models.BooleanField('No', default=False)
     broker_works_in_job_location_yes = models.BooleanField('Yes', default=False)
