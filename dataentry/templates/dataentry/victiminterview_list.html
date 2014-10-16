@@ -44,14 +44,8 @@
                         <a class="btn btn-sm btn-primary" href="{% url 'victiminterview_update' vif.pk %}">Edit</a>
                     {% endif %}
                     {% if request.user.is_superuser %}
-                        <form method="post"
-                            style="display: inline"
-                            action="{% url 'victiminterview_delete' vif.pk %}">
-                            {% csrf_token %}
-                            <input type="submit"
-                                class="btn btn-sm btn-danger"
-                                value="Delete" />
-                        </form>
+                        {% include "delete_modal_forms.html" with form=vif url_string="victiminterview_delete"%}
+                        <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#modal-{{ vif.pk }}">Delete</button>
                     {% endif %}
                 </td>
             </tr>

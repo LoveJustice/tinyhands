@@ -44,14 +44,8 @@
                         <a class="btn btn-sm btn-primary" href="{% url 'interceptionrecord_update' irf.pk %}">Edit</a>
                     {% endif %}
                     {% if request.user.is_superuser %}
-                        <form method="post"
-                            style="display: inline"
-                            action="{% url 'interceptionrecord_delete' irf.pk %}">
-                            {% csrf_token %}
-                            <input type="submit"
-                                class="btn btn-sm btn-danger"
-                                value="Delete" />
-                        </form>
+                        {% include "delete_modal_forms.html" with form=irf url_string="interceptionrecord_delete"%}
+                        <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#modal-{{ irf.pk }}">Delete</button>
                     {% endif %}
                 </td>
             </tr>
