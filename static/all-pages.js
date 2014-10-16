@@ -63,6 +63,30 @@ function setUpValidationPopups() {
     });
 }
 
+/*
+function hide55when54unchecked() {
+    $('#id_victim_has_worked_in_sex_industry_0').click(function(){
+        $('#victim_place_worked_involved_sending_girls_overseas').css("visibility",'hidden');
+        //clear vif 5.5 selections
+        $("#id_victim_place_worked_involved_sending_girls_overseas_1").prop('checked', false);
+        $("#id_victim_place_worked_involved_sending_girls_overseas_0").prop('checked', false);
+    });
+
+    $('#id_victim_has_worked_in_sex_industry_1').click(function(){
+        var yesBox = $('#id_victim_has_worked_in_sex_industry_1');
+        var checked = yesBox.is(":checked");
+        if(checked){
+            $('#victim_place_worked_involved_sending_girls_overseas').css("visibility",'visible');
+        }
+        else{
+            $('#victim_place_worked_involved_sending_girls_overseas').css("visibility",'hidden');
+            //clear vif 5.5 selections
+            $("#id_victim_place_worked_involved_sending_girls_overseas_1").prop('checked', false);
+            $("#id_victim_place_worked_involved_sending_girls_overseas_0").prop('checked', false);
+        }
+    });
+} */
+
 function setUpPermissionsCheckboxes() {
     $('input[type="checkbox"]').each(function() {
         var $label = $(this).parents('label');
@@ -367,6 +391,8 @@ var DREAMSUITE = {
         }
 
         setUpValidationPopups();
+
+        //hide55when54unchecked();
 
         setUpLimitedChoicesCheckboxGroups();
 
