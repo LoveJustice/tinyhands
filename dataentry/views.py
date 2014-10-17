@@ -265,3 +265,23 @@ class GeoCodeVdcAPIView(APIView):
             return Response(serializer.data)
         else:
             return Response({"id": "-1","name":"None"})
+
+
+class VDCAdminView(
+        LoginRequiredMixin,
+        PermissionsRequiredMixin,
+        SearchFormsMixin,
+        ListView):
+    model = VDC
+    template_name = "dataentry/vdc_admin_page.html"
+    permissions_required = ['permission_irf_edit']
+    paginate_by = 20
+
+    def __init__(self, *args, **kwargs):
+        super(VDCAdminView, self).__init__(name__icontains = "name")
+
+    def get_context_data(self, **kwargs):
+        context = super(VDCAdminView, self).get_context_data(**kwargs)
+        context['lower_limit'] = context['page_obj'].number - 5
+        context['upper_limit'] = context['page_obj'].number + 5
+        return context

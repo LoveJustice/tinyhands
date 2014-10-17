@@ -16,4 +16,6 @@ urlpatterns = patterns('dataentry.views',
     url(r'^vifs/export/$', VictimInterviewCSVExportView.as_view(), name='victiminterview_csv_export'),
     url(r'^geocodelocation/district/$', GeoCodeDistrictAPIView.as_view()),
     url(r'^geocodelocation/vdc/$', GeoCodeVdcAPIView.as_view()),
+    url(r'^geocodelocations/vdc-admin/$',VDCAdminView.as_view(), name='vdc_admin_page'),
+    url(r'^geocodelocations/vdc-admin/search/$',VDCAdminView.as_view()),
 )

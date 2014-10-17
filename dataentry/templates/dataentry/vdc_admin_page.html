@@ -1,0 +1,82 @@
+{% extends "dataentry/dataentry_base.html" %}
+{% load widget_tweaks %}
+{% load bootstrap %}
+{% load unslugify %}
+{% load times %}
+
+{% block content %}
+
+<link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/1.10.3/css/jquery.dataTables.css">
+<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="http://cdn.datatables.net/1.10.3/js/jquery.dataTables.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+    x=$('#vdc_table');
+    x.dataTable();
+} );
+</script>
+
+<table id="vdc_table" class="table table-striped">
+	<thead>
+        <tr>
+            <th>Name</th>
+            <th>Latitude</th>
+            <th>Longitude</th>
+            <th>District</th>
+            <th>Cannonical Name</th>
+            <th>Verified</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+	{% for vdc in vdc_list %}
+		{% url 'interceptionrecord_list' as vdc_edit %}
+		<tr>
+		<td>{{ vdc.name }} </td>
+		<td>{{ vdc.get_latitude }} </td>
+	    <td>{{ vdc.get_longitude }} </td>
+	    <td>{{ vdc.get_district }} </td>
+	    <td>{{ vdc.get_cannonical_name }} </td>
+	    <td ></td>
+	    <td><a class="btn btn-warning pull-left" href="">Edit</a>
+	    <a class="btn btn-danger pull-right" href="">Delete</a></td>
+		</tr>
+	{% empty %}
+		<tr>
+		<td>There are currently no VDCs entered</td>
+		<tr>
+	{% endfor %}
+</table>
+
+<div id="footer">
+    <nav class="navbar navbar-default navbar-fixed-bottom">
+        <div class="container">
+
+            <ul class="pagination pull-left" style="margin: 10px !important">
+                {% if page_obj.has_previous %}
+                    <li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+                {% else %}
+                    <li class="disabled"><a href="">&laquo;</a></li>
+                {% endif %}
+
+                {% for i in page_obj.paginator.num_pages|times %}
+                {% if i >= lower_limit and i <= upper_limit %}
+                <li {% if page_obj.number == i|add:"1" %} class="active"{% endif %}>
+                    <a href="?page={{ i|add:"1" }}">{{ i|add:"1" }}</a>
+                </li>
+                {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %} 
+                    <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+                {% else %}
+                    <li class="disabled"><a href="">&raquo;</a></li>
+                {% endif %}
+                
+            </ul>
+        </div>
+    </nav>
+</div>
+
+{% endblock %}
