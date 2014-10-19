@@ -26,7 +26,7 @@ class VDCAdmin(admin.ModelAdmin):
 	list_display = ['name','latitude','longitude','district','cannonical_name']
 
 admin.site.register(InterceptionRecord, InterceptionRecordAdmin)
-admin.site.register(VictimInterview)
+admin.site.register(VictimInterview, VictimInterviewAdmin)
 admin.site.register(District)
 admin.site.register(VDC)
 
