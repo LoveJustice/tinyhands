@@ -74,20 +74,20 @@ class SearchFormsMixin(object):
         # Call the base implementation first to get a context
         context = super(SearchFormsMixin, self).get_context_data(**kwargs)
         # Check if database is empty to change message in search page
-        context['database_empty'] = self.model.objects.count()==0
+        context['database_empty'] = self.model.objects.count() == 0
         return context
 
 
 class InterceptionRecordListView(
         LoginRequiredMixin,
-	SearchFormsMixin,
+        SearchFormsMixin,
         ListView):
     model = InterceptionRecord
     paginate_by = 20
 
     def __init__(self, *args, **kw):
         #passes what to search by to SearchFormsMixin
-        super(InterceptionRecordListView, self).__init__(irf_number__icontains = "number", staff_name__icontains = "name")
+        super(InterceptionRecordListView, self).__init__(irf_number__icontains="number", staff_name__icontains="name")
 
 
 class IntercepteeInline(InlineFormSet):
@@ -176,10 +176,10 @@ class VictimInterviewListView(
         ListView):
     model = VictimInterview
     paginate_by = 20
-    
+
     def __init__(self, *args, **kwargs):
         #passes what to search by to SearchFormsMixin
-        super(VictimInterviewListView, self).__init__(vif_number__icontains = "number", interviewer__icontains = "name")
+        super(VictimInterviewListView, self).__init__(vif_number__icontains="number", interviewer__icontains="name")
 
 
 class VictimInterviewCreateView(
@@ -274,7 +274,7 @@ class VictimInterviewCSVExportView(
 
 class GeoCodeDistrictAPIView(
         APIView):
-    
+
     def get(self,request, id):
         district = District.objects.get(pk=id)
         serializer = DistrictSerializer(district)
@@ -283,7 +283,7 @@ class GeoCodeDistrictAPIView(
     @api_view(['GET'])
     def get_district_with_ajax(request, id):
         district = District.objects.get(name="Achham")
-        serializer = DistrictSerializer(distrcit,data=request.DATA)
+        serializer = DistrictSerializer(district,data=request.DATA)
         if serializer.is_valid():
             serializer.object.name = District.objects.filter(name="Achham")
             serializer.save()
