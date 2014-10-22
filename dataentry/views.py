@@ -17,6 +17,7 @@ from accounts.mixins import PermissionsRequiredMixin
 from braces.views import LoginRequiredMixin
 from dataentry.forms import (
     InterceptionRecordForm,
+    IntercepteeForm,
     VictimInterviewForm,
     VictimInterviewPersonBoxForm,
     VictimInterviewLocationBoxForm,
@@ -91,6 +92,10 @@ class IntercepteeInline(InlineFormSet):
     extra = 12
     max_num = 12
 
+    def get_factory_kwargs(self):
+        kwargs = super(IntercepteeInline, self).get_factory_kwargs()
+        kwargs['form'] = IntercepteeForm
+        return kwargs
 
 class InterceptionRecordCreateView(
         LoginRequiredMixin,

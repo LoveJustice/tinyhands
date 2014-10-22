@@ -359,6 +359,31 @@ class InterceptionRecordForm(DreamSuitePaperForm):
             self.has_warnings = True
             self._errors['has_signature'] = error
 
+class IntercepteeForm(DreamSuitePaperForm):
+    class Meta:
+        model = Interceptee
+        exclude = ('district','vdc')
+    
+    def __init__(self,*args, **kwargs):
+        super(IntercepteeForm, self).__init__(*args, **kwargs)
+        self.fields['district'] = DistrictField()
+        self.fields['vdc'] = forms.CharField()
+        try:
+            self.fields['district'].initial = self.instance.district
+        except:
+            pass
+        try:
+           self.fields['vdc'].initial = self.instance.vdc
+        except:
+            pass
+
+    def save(self, commit=True):
+        district = District.objects.get(name=self.cleaned_data['district'])
+        vdc = VDC.objects.get(name=self.cleaned_data['vdc'])
+        self.instance.vdc = vdc
+        self.instance.district = district
+        return super(IntercepteeForm, self).save(commit)
+
 IntercepteeFormSet = inlineformset_factory(InterceptionRecord, Interceptee, extra=12)
 
 class VictimInterviewForm(DreamSuitePaperForm):
