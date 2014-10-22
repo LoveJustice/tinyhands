@@ -103,6 +103,18 @@ window.defaultPermissionSets = JSON.parse('{{ default_permissions_sets|safe }}')
                         </tr>
                     </tbody>
                 </table>
+                <table class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th>VDC Management</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><label class="btn"><span class="yesno"></span>{{ form.permission_vdc_manage }}</label></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
             <input type="submit" class="clear btn btn-primary btn-lg" value="{% if account %}Update{% else %}Create{% endif %}" />
         </form>

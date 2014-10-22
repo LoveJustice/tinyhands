@@ -8,7 +8,7 @@
 
         <li{% if 'irfs' in request.path %} class="active"{% endif %}><a href="{{ interceptionrecord_list_url }}">IRFs</a></li>
         <li{% if 'vifs' in request.path %} class="active"{% endif %}><a href="{{ victiminterview_list_url }}">VIFs</a></li>
-        {% if request.user.permission_vif_edit %}
+        {% if request.user.permission_vdc_manage %}
         <li{% if 'vdc-admin' in request.path %} class="active"{% endif %}><a href="{{ vdc_admin_page_url }}">Edit VDCs</a></li>
         {% endif %}
     

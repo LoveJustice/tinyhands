@@ -17,6 +17,7 @@ class CreateUnactivatedAccountForm(forms.ModelForm):
             'permission_vif_add',
             'permission_vif_edit',
             'permission_accounts_manage',
+            'permission_vdc_manage',
         ]
 
     def clean_password2(self):
