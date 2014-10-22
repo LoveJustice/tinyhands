@@ -63,6 +63,12 @@ function setUpValidationPopups() {
     });
 }
 
+function photoSelect() {
+    $('.photo-manip-controls').click();
+    console.log("Test...1.2.3");
+
+}
+
 /*
 function hide55when54unchecked() {
     $('#id_victim_has_worked_in_sex_industry_0').click(function(){
@@ -462,6 +468,19 @@ var DREAMSUITE = {
     default: function() {}
 
 };
+
+function reloadPhotos() {
+    var photoString = "";
+    var pathString = "";
+    $('.btn-success.photo-upload-button').each(function(){
+        console.log(this.parentNode.parentNode.childNodes[1].childNodes[3].name);
+        photoString = photoString + "/" + this.parentNode.parentNode.childNodes[1].childNodes[3].name;
+        pathString = pathString + "/" + this.title;
+        //localStorage.setItem("item", "TestString");
+    });
+    localStorage.setItem("pathList", pathString);
+    localStorage.setItem("photoList", photoString);
+}
 
 $(document).ready(function() {
     $('.alert').slideDown();
