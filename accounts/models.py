@@ -18,6 +18,7 @@ class DefaultPermissionsSet(models.Model):
     permission_vif_add = models.BooleanField(default=False)
     permission_vif_edit = models.BooleanField(default=False)
     permission_accounts_manage = models.BooleanField(default=False)
+    permission_vdc_manage = models.BooleanField(default=False)
 
     def __unicode__(self):
         return self.name
@@ -67,6 +68,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
     permission_vif_add = models.BooleanField(default=False)
     permission_vif_edit = models.BooleanField(default=False)
     permission_accounts_manage = models.BooleanField(default=False)
+    permission_vdc_manage = models.BooleanField(default=False)
 
     date_joined = models.DateTimeField(default=timezone.now)
     

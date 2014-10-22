@@ -4,14 +4,19 @@
     <ul class="nav nav-tabs">
         {% url 'interceptionrecord_list' as interceptionrecord_list_url %}
         {% url 'victiminterview_list' as victiminterview_list_url %}
+        {% url 'vdc_admin_page' as vdc_admin_page_url %}
 
         <li{% if 'irfs' in request.path %} class="active"{% endif %}><a href="{{ interceptionrecord_list_url }}">IRFs</a></li>
         <li{% if 'vifs' in request.path %} class="active"{% endif %}><a href="{{ victiminterview_list_url }}">VIFs</a></li>
+        {% if request.user.permission_vdc_manage %}
+        <li{% if 'vdc-admin' in request.path %} class="active"{% endif %}><a href="{{ vdc_admin_page_url }}">Edit VDCs</a></li>
+        {% endif %}
     
-    {% if 'search' in request.path %}
+    {% if 'search' in request.path or 'vdc-admin' in request.path %}
         <form class="navbar-form navbar-right"
         {% if 'irfs' in request.path %} action="/data-entry/irfs/search/" {% endif %}
         {% if 'vifs' in request.path %} action="/data-entry/vifs/search/" {% endif %}
+        {% if 'vdc-admin' in request.path %} action="/data-entry/geocodelocations/vdc-admin/search/" {% endif %}
         method="get" role="search">{% csrf_token %}
             <div class="form-group">
               <input type="text" class="form-control" name="search_value" placeholder="Search">

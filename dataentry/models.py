@@ -17,6 +17,7 @@ def set_weight(self, weight):
     return self
 models.BooleanField.set_weight = set_weight
 
+
 class District(models.Model):
     name = models.CharField(max_length=255)
 
@@ -33,6 +34,30 @@ class VDC(models.Model):
 
     def __unicode__(self):
         return self.name
+
+    @property
+    def get_cannonical_vdc(self):
+        if self.cannonical_name:
+            return self.cannonical_name.name
+        return self.name
+
+    @property
+    def get_latitude(self):
+        if self.cannonical_name:
+            return self.cannonical_name.latitude
+        return self.latitude
+
+    @property
+    def get_longitude(self):
+        if self.cannonical_name:
+            return self.cannonical_name.longitude
+        return self.longitude
+
+    @property
+    def get_district(self):
+        if self.cannonical_name:
+            return self.cannonical_name.district
+        return self.district
 
 
 class InterceptionRecord(models.Model):
