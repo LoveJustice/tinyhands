@@ -364,7 +364,7 @@ class IntercepteeForm(DreamSuitePaperForm):
     def __init__(self,*args, **kwargs):
         super(IntercepteeForm, self).__init__(*args, **kwargs)
         self.fields['district'] = DistrictField()
-        self.fields['vdc'] = forms.VDCField()
+        self.fields['vdc'] = VDCField()
         try:
             self.fields['district'].initial = self.instance.district
         except:
