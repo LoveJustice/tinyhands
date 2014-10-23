@@ -768,7 +768,7 @@
                                 <td>{{ interceptee_form.phone_contact }}</td>
                                 <td>{{ interceptee_form.relation_to }}</td>
                                 <td>
-                                    <button type="button" class="photo-upload-button" style="width: 100%; font-size: 30px"><i class="glyphicon glyphicon-picture"></i></button>
+                                    <button type="button" class="photo-upload-button" onclick="photoSelect()" style="width: 100%; font-size: 30px"><i class="glyphicon glyphicon-picture"></i></button>
                                     <div class="photo-manip-controls" style="display: none">
                                     {{ interceptee_form.photo }}
                                     </div>
@@ -867,7 +867,7 @@
                     {% if not interceptionrecord %}
                         <button type="button" id="save-for-later" class="pull-left btn btn-warning navbar-btn btn-lg">Save for later</button>
                     {% endif %}
-                    <input type="submit" class="pull-right btn btn-primary navbar-btn btn-lg" value="Submit" />
+                    <input type="submit" class="pull-right btn btn-primary navbar-btn btn-lg" onclick="reloadPhotos" value="Submit" />
                     {% if form.errors %}
                         <div class="checkbox navbar-btn pull-right" style="margin-top: 16px; margin-right: 20px">
                             {{ form.ignore_warnings }}
