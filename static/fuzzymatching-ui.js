@@ -24,7 +24,7 @@
       return $button.children().css("color", "grey");
     });
     return $ui.on("mouseover", "li", function() {
-      return $ui.find("img").attr("src", list_of_pics[this.id]);
+      return $ui.find("img").attr("src", "/media/" + ($(this).data("photo"))).show();
     });
   });
 
@@ -40,7 +40,7 @@
         left: $this.offset().left
       });
       search($this.val(), $ui);
-      $ui.find("img").attr("src", "");
+      $ui.find("img").attr("src", "").hide();
       return $ui.show();
     });
     $(document).click(function(e) {
@@ -63,12 +63,16 @@
       var results;
       results = [];
       data.forEach(function(item) {
+        var obj;
+        obj = JSON.parse(item[2])[0];
         return results.push({
-          id: 1,
+          id: obj.pk,
           name: item[0],
-          score: item[1]
+          score: item[1],
+          photo: obj.fields.photo
         });
       });
+      console.log(results);
       return display_results(results, $ui);
     });
   };
@@ -109,7 +113,7 @@
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         item = _ref[_i];
         $span = $("<span>").addClass("name").text(item.name);
-        $li = $("<li>").attr("id", item.id).text("(" + item.score + ")").append($span);
+        $li = $("<li>").attr("id", item.id).text("(" + item.score + ")").data("photo", item.photo).append($span);
         _results.push($ul.append($li));
       }
       return _results;

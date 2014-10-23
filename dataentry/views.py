@@ -105,6 +105,8 @@ class InterceptionRecordCreateView(
     permissions_required = ['permission_irf_add']
 
     def forms_valid(self, form, inlines):
+        import pdb
+        pdb.set_trace()
 
         IRFAlertChecker(form,inlines).check_them()
         form.instance.form_entered_by = self.request.user
@@ -121,6 +123,11 @@ class InterceptionRecordUpdateView(
     success_url = reverse_lazy('interceptionrecord_list')
     inlines = [IntercepteeInline]
     permissions_required = ['permission_irf_edit']
+
+    def post(self, request, pk):
+        # print(request)
+        # raw_input("slkdfjadsklj")
+        return super(InterceptionRecordUpdateView, self).post(request)
 
     def forms_valid(self, form, inlines):
         IRFAlertChecker(form,inlines).check_them()
@@ -268,5 +275,8 @@ def interceptee_fuzzy_matching(request):
     inputName= request.GET['name']
     all_people = Interceptee.objects.all()
     people_dict = {serializers.serialize("json", [obj]):obj.full_name for obj in all_people }
-    matches = process.extractBests(inputName, people_dict, limit = 10)
+    matches = process.extractBests(inputName, people_dict, limit = 10, score_cutoff=70)
     return HttpResponse(json.dumps(matches), content_type="application/json")
+
+def modal(request):
+    return render(request, "dataentry/matching_modal.html")
