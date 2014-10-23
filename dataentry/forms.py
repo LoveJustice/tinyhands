@@ -9,7 +9,7 @@ from dataentry.models import (
     District,
     VDC
 )
-from dataentry.validators import validate_district
+from dataentry.fields import DistrictField, VDCField
 from django.forms.models import inlineformset_factory
 from django.core.exceptions import ValidationError
 from django.utils.html import mark_safe
@@ -20,9 +20,6 @@ BOOLEAN_CHOICES = [
     (False, 'No'),
     (True, 'Yes'),
 ]
-
-class DistrictField(forms.CharField):
-    default_validators = [validate_district]
        
 class DreamSuitePaperForm(forms.ModelForm):
     class Meta:
@@ -367,7 +364,7 @@ class IntercepteeForm(DreamSuitePaperForm):
     def __init__(self,*args, **kwargs):
         super(IntercepteeForm, self).__init__(*args, **kwargs)
         self.fields['district'] = DistrictField()
-        self.fields['vdc'] = forms.CharField()
+        self.fields['vdc'] = forms.VDCField()
         try:
             self.fields['district'].initial = self.instance.district
         except:
@@ -581,9 +578,9 @@ class VictimInterviewForm(DreamSuitePaperForm):
     victim_where_going_gulf_other = forms.BooleanField(label='Other', required=False)
     
     victim_address_district = DistrictField(label='District')
-    victim_address_vdc = forms.CharField(label='VDC')
+    victim_address_vdc = VDCField(label='VDC')
     victim_guardian_address_district = DistrictField(label='District')
-    victim_guardian_address_vdc = forms.CharField(label='VDC')
+    victim_guardian_address_vdc = VDCField(label='VDC')
 
 
     class Meta:
@@ -617,14 +614,22 @@ class VictimInterviewForm(DreamSuitePaperForm):
             (self.num_lbs - 1) / 2 + 1
         )
         print self.box_pages_needed
-        if self.instance.victim_address_district:
+        try:
             self.fields['victim_address_district'].initial = self.instance.victim_address_district
-        if self.instance.victim_address_vdc:
+        except:
+            pass
+        try: 
             self.fields['victim_address_vdc'].initial = self.instance.victim_address_vdc
-        if self.instance.victim_guardian_address_district:
+        except:
+            pass
+        try:
             self.fields['victim_guardian_address_district'].initial = self.instance.victim_guardian_address_district
-        if self.instance.victim_guardian_address_vdc:
+        except: 
+            pass
+        try:
             self.fields['victim_guardian_address_vdc'].initial = self.instance.victim_guardian_address_vdc
+        except:
+            pass
 
     def save(self, commit=True):
         victim_address_district = District.objects.get(name=self.cleaned_data['victim_address_district'])
@@ -704,7 +709,7 @@ class VictimInterviewPersonBoxForm(DreamSuitePaperForm):
         if initial is not None:
             self.initial['gender'] = [unicode(initial)]
         self.fields['address_district'] = DistrictField(label="District")
-        self.fields['address_vdc'] = forms.CharField(label="VDC")
+        self.fields['address_vdc'] = VDCField(label="VDC")
         try:
             self.fields['address_district'].initial = self.instance.address_district
         except:
@@ -745,7 +750,7 @@ class VictimInterviewLocationBoxForm(DreamSuitePaperForm):
     def __init__(self, *args, **kwargs):
         super(VictimInterviewLocationBoxForm, self).__init__(*args, **kwargs)
         self.fields['district'] = DistrictField(label="District")
-        self.fields['vdc'] = forms.CharField(label="VDC")
+        self.fields['vdc'] = VDCField(label="VDC")
         try:
             self.fields['district'].initial = self.instance.district
         except:

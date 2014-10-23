@@ -7,3 +7,8 @@ def validate_district(value):
     except ObjectDoesNotExist:
         raise ValidationError("%s is not a valid district" % value)
 
+def validate_vdc(value):
+    try:
+        VDC = VDC.objects.get(name=value)
+    except ObjectDoesNotExist:
+        raise ValidationError("%s is not a valid VDC" % value)
