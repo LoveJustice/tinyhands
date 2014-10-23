@@ -36,7 +36,7 @@ class VDC(models.Model):
         return self.name
 
     @property
-    def get_cannonical_vdc(self):
+    def get_cannonical_name(self):
         if self.cannonical_name:
             return self.cannonical_name.name
         return self.name
