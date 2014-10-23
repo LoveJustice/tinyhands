@@ -33,8 +33,14 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from dataentry.serializers import DistrictSerializer, VDCSerializer
 
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
+
+from django.conf import settings
+
 import csv
 import re
+import os
 from alert_checkers import IRFAlertChecker, VIFAlertChecker
 
 
@@ -96,9 +102,51 @@ class IntercepteeInline(InlineFormSet):
     max_num = 12
 
 
+class IRFImageAssociationMixin(object):
+
+    def forms_invalid(self, form, inlines):
+
+        for name, file in self.request.FILES.iteritems():
+            match = re.match(r"interceptees-(\d+)-photo", name)
+            irf_num = self.request.POST.get("irf_number")
+
+            try:
+                extension = file.name.split(".")[-1]
+            except Exception:
+                extension = None
+
+            if match is not None and irf_num is not None and extension is not None:
+                interceptee_index = match.group(1)
+                filename = "unassociated_photos/irf-photo-%s-index-%s.%s" % (
+                    irf_num,
+                    interceptee_index,
+                    extension
+                )
+                default_storage.save(filename, ContentFile(file.read()))
+
+        return super(IRFImageAssociationMixin, self).forms_invalid(form, inlines)
+
+    def forms_valid(self, form, inlines):
+
+        import ipdb
+        ipdb.set_trace()
+        interceptees = inlines[0]
+        for interceptee in interceptees:
+            image_path = settings.BASE_DIR + "/media/unassociated_photos/irf-photo-%s-index-%d.%s" % (
+                form.instance.irf_number,
+                11,
+                ".JPG"
+            )
+            if os.path.isfile(image_path):
+                interceptee.instance.photo = image_path
+                interceptee.save()
+        return super(IRFImageAssociationMixin, self).forms_valid(form, inlines)
+
+
 class InterceptionRecordCreateView(
         LoginRequiredMixin,
         PermissionsRequiredMixin,
+        IRFImageAssociationMixin,
         CreateWithInlinesView):
     model = InterceptionRecord
     form_class = InterceptionRecordForm
@@ -117,17 +165,13 @@ class InterceptionRecordCreateView(
 class InterceptionRecordUpdateView(
         LoginRequiredMixin,
         PermissionsRequiredMixin,
+        IRFImageAssociationMixin,
         UpdateWithInlinesView):
     model = InterceptionRecord
     form_class = InterceptionRecordForm
     success_url = reverse_lazy('interceptionrecord_list')
     inlines = [IntercepteeInline]
     permissions_required = ['permission_irf_edit']
-
-    def dispatch(self, request, *args, **kwargs):
-        import ipdb
-        ipdb.set_trace()
-        return super(InterceptionRecordUpdateView, self).dispatch(request, *args, **kwargs)
 
     def forms_valid(self, form, inlines):
         IRFAlertChecker(form,inlines).check_them()
