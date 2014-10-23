@@ -6,21 +6,24 @@ from dataentry.models import (
     Interceptee,
     VictimInterviewPersonBox,
     VictimInterviewLocationBox,
-    VDC,
+    District,
+    VDC
 )
+from dataentry.validators import validate_district
 from django.forms.models import inlineformset_factory
 from django.core.exceptions import ValidationError
 from django.utils.html import mark_safe
 
 from accounts.models import Alert
 
-
 BOOLEAN_CHOICES = [
     (False, 'No'),
     (True, 'Yes'),
 ]
 
-
+class DistrictField(forms.CharField):
+    default_validators = [validate_district]
+       
 class DreamSuitePaperForm(forms.ModelForm):
     class Meta:
         model = VictimInterview
@@ -96,6 +99,7 @@ class InterceptionRecordForm(DreamSuitePaperForm):
     class Meta:
         model = InterceptionRecord
         exclude = ['form_entered_by', 'date_form_received']
+
 
     def __init__(self, *args, **kwargs):
 
@@ -355,9 +359,32 @@ class InterceptionRecordForm(DreamSuitePaperForm):
             self.has_warnings = True
             self._errors['has_signature'] = error
 
+class IntercepteeForm(DreamSuitePaperForm):
+    class Meta:
+        model = Interceptee
+        exclude = ('district','vdc')
+    
+    def __init__(self,*args, **kwargs):
+        super(IntercepteeForm, self).__init__(*args, **kwargs)
+        self.fields['district'] = DistrictField()
+        self.fields['vdc'] = forms.CharField()
+        try:
+            self.fields['district'].initial = self.instance.district
+        except:
+            pass
+        try:
+           self.fields['vdc'].initial = self.instance.vdc
+        except:
+            pass
+
+    def save(self, commit=True):
+        district = District.objects.get(name=self.cleaned_data['district'])
+        vdc = VDC.objects.get(name=self.cleaned_data['vdc'])
+        self.instance.vdc = vdc
+        self.instance.district = district
+        return super(IntercepteeForm, self).save(commit)
 
 IntercepteeFormSet = inlineformset_factory(InterceptionRecord, Interceptee, extra=12)
-
 
 class VictimInterviewForm(DreamSuitePaperForm):
     statement_read_before_beginning = forms.BooleanField(
@@ -552,9 +579,16 @@ class VictimInterviewForm(DreamSuitePaperForm):
     victim_where_going_gulf_qatar = forms.BooleanField(label='Qatar', required=False)
     victim_where_going_gulf_didnt_know = forms.BooleanField(label='Did Not Know', required=False)
     victim_where_going_gulf_other = forms.BooleanField(label='Other', required=False)
+    
+    victim_address_district = DistrictField(label='District')
+    victim_address_vdc = forms.CharField(label='VDC')
+    victim_guardian_address_district = DistrictField(label='District')
+    victim_guardian_address_vdc = forms.CharField(label='VDC')
+
 
     class Meta:
         model = VictimInterview
+        exclude = ('victim_address_district', 'victim_guardian_address_district', 'victim_address_vdc', 'victim_guardian_address_vdc')
 
     def __init__(self, *args, **kwargs):
         super(VictimInterviewForm, self).__init__(*args, **kwargs)
@@ -583,6 +617,26 @@ class VictimInterviewForm(DreamSuitePaperForm):
             (self.num_lbs - 1) / 2 + 1
         )
         print self.box_pages_needed
+        if self.instance.victim_address_district:
+            self.fields['victim_address_district'].initial = self.instance.victim_address_district
+        if self.instance.victim_address_vdc:
+            self.fields['victim_address_vdc'].initial = self.instance.victim_address_vdc
+        if self.instance.victim_guardian_address_district:
+            self.fields['victim_guardian_address_district'].initial = self.instance.victim_guardian_address_district
+        if self.instance.victim_guardian_address_vdc:
+            self.fields['victim_guardian_address_vdc'].initial = self.instance.victim_guardian_address_vdc
+
+    def save(self, commit=True):
+        victim_address_district = District.objects.get(name=self.cleaned_data['victim_address_district'])
+        victim_address_vdc = VDC.objects.get(name=self.cleaned_data['victim_address_vdc'])
+        victim_guardian_address_district = District.objects.get(name=self.cleaned_data['victim_guardian_address_district'])
+        victim_guardian_address_vdc = VDC.objects.get(name=self.cleaned_data['victim_guardian_address_vdc'])
+        self.instance.victim_address_district = victim_address_district
+        self.instance.victim_address_vdc = victim_address_vdc
+        self.instance.victim_guardian_address_district = victim_guardian_address_district
+        self.instance.victim_guardian_address_vdc = victim_guardian_address_vdc
+        return super(VictimInterviewForm, self).save(commit)
+        
 
     def clean(self):
         cleaned_data = super(VictimInterviewForm, self).clean()
@@ -604,7 +658,7 @@ class VictimInterviewForm(DreamSuitePaperForm):
         if not cleaned_data.get('ignore_warnings'):
             self.ensure_victim_where_going(cleaned_data)
             self.ensure_tiny_hands_rating(cleaned_data)
-
+            
         return cleaned_data
 
     def ensure_victim_where_going(self, cleaned_data):
@@ -642,12 +696,30 @@ class VictimInterviewPersonBoxForm(DreamSuitePaperForm):
 
     class Meta:
         model = VictimInterviewPersonBox
+        exclude = ('address_district', 'address_vdc')
 
     def __init__(self, *args, **kwargs):
         super(VictimInterviewPersonBoxForm, self).__init__(*args, **kwargs)
         initial = self.initial.get('gender')
         if initial is not None:
             self.initial['gender'] = [unicode(initial)]
+        self.fields['address_district'] = DistrictField(label="District")
+        self.fields['address_vdc'] = forms.CharField(label="VDC")
+        try:
+            self.fields['address_district'].initial = self.instance.address_district
+        except:
+            pass
+        try:
+           self.fields['address_vdc'].initial = self.instance.address_vdc
+        except:
+            pass
+
+    def save(self, commit=True):
+        address_district = District.objects.get(name=self.cleaned_data['address_district'])
+        address_vdc = VDC.objects.get(name=self.cleaned_data['address_vdc'])
+        self.instance.address_vdc = address_vdc
+        self.instance.address_district = address_district
+        return super(VictimInterviewPersonBoxForm, self).save(commit)
 
     def clean(self):
         cleaned_data = super(VictimInterviewPersonBoxForm, self).clean()
@@ -668,7 +740,24 @@ class VictimInterviewLocationBoxForm(DreamSuitePaperForm):
 
     class Meta:
         model = VictimInterviewLocationBox
+        exclude = ('district','vdc')
 
     def __init__(self, *args, **kwargs):
         super(VictimInterviewLocationBoxForm, self).__init__(*args, **kwargs)
+        self.fields['district'] = DistrictField(label="District")
+        self.fields['vdc'] = forms.CharField(label="VDC")
+        try:
+            self.fields['district'].initial = self.instance.district
+        except:
+            pass
+        try:
+           self.fields['vdc'].initial = self.instance.vdc
+        except:
+            pass
 
+    def save(self, commit=True):
+        district = District.objects.get(name=self.cleaned_data['district'])
+        vdc = VDC.objects.get(name=self.cleaned_data['vdc'])
+        self.instance.vdc = vdc
+        self.instance.district = district
+        return super(VictimInterviewLocationBoxForm, self).save(commit)
