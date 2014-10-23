@@ -124,6 +124,11 @@ class InterceptionRecordUpdateView(
     inlines = [IntercepteeInline]
     permissions_required = ['permission_irf_edit']
 
+    def dispatch(self, request, *args, **kwargs):
+        import ipdb
+        ipdb.set_trace()
+        return super(InterceptionRecordUpdateView, self).dispatch(request, *args, **kwargs)
+
     def forms_valid(self, form, inlines):
         IRFAlertChecker(form,inlines).check_them()
         return super(InterceptionRecordUpdateView, self).forms_valid(form, inlines)
@@ -203,6 +208,7 @@ class VictimInterviewUpdateView(
         LoginRequiredMixin,
         PermissionsRequiredMixin,
         UpdateWithInlinesView):
+
     model = VictimInterview
     form_class = VictimInterviewForm
     success_url = reverse_lazy('victiminterview_list')
@@ -210,7 +216,7 @@ class VictimInterviewUpdateView(
     permissions_required = ['permission_vif_edit']
 
     def forms_valid(self, form, inlines):
-        VIFAlertChecker(form,inlines).check_them()
+        VIFAlertChecker(form, inlines).check_them()
         return super(VictimInterviewUpdateView, self).forms_valid(form, inlines)
 
 
