@@ -32,6 +32,10 @@
             <td>{{ account.date_joined }}</td>
             <td>{{ account.last_login }}</td>
             <td><a class="btn btn-sm btn-primary" href="{% url 'account_update' account.pk %}">Edit</a>
+            {% if user.is_superuser and account != user %}
+            {% include "delete_modal_users.html" with account=account %}
+            <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#modal-{{ account.pk }}">Delete</button>
+            {% endif  %}
             {% if not account.has_usable_password %}
             <form method="post" 
                     style="display: inline"
@@ -40,9 +44,9 @@
                 <input type="submit"
                         class="btn btn-sm btn-primary"
                         value="Resend Activation Email" />
-            </td>
             </form>
             {% endif %}
+            </td>
         </tr>
         {% endfor %}
     </tbody> 

@@ -128,12 +128,17 @@ class InterceptionRecordForm(DreamSuitePaperForm):
             self.ensure_8_1_2_3_checked(cleaned_data)
             self.ensure_at_least_one_of_9_1_through_9_5_are_checked(cleaned_data)
             self.ensure_signature_on_form(cleaned_data)
+        self.get_pictures(cleaned_data)
 
         #for field_name_start in []:
         #    if not self.at_least_one_checked(cleaned_data, field_name_start):
         #        self._errors[field_name_start] = self.error_class(['This field is required.'])
 
         return cleaned_data
+
+    def get_pictures(self, cleaned_data):
+            import ipdb
+            ipdb.set_trace()
 
     def ensure_at_least_one_interceptee(self, cleaned_data):
         if len([

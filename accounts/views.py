@@ -3,6 +3,8 @@ import json
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse_lazy
+from django.contrib import messages
+from django.http import HttpResponseRedirect
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, RedirectView
 from django.contrib.auth.decorators import login_required
 from braces.views import LoginRequiredMixin
@@ -106,6 +108,20 @@ class AccountUpdateView(
         context = super(AccountUpdateView, self).get_context_data(**kwargs)
         context['default_permissions_sets'] = json.dumps(list(DefaultPermissionsSet.objects.values()))
         return context
+
+
+class AccountDeleteView(DeleteView):
+
+    model = Account
+    success_url = reverse_lazy('account_list')
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if self.request.user.is_superuser:
+            self.object.delete()
+        else:
+            messages.error(request, "You have no power here!!!")
+        return HttpResponseRedirect(self.success_url)
 
 
 class AccessControlView(

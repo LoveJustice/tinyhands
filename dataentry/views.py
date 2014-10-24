@@ -2,7 +2,9 @@ from django.core.exceptions import ImproperlyConfigured, PermissionDenied
 from django.shortcuts import render
 from django.core.urlresolvers import reverse_lazy
 from django.core import serializers
-from django.views.generic import ListView, View, CreateView, UpdateView
+from django.contrib import messages
+from django.http import HttpResponseRedirect
+from django.views.generic import ListView, View, DeleteView, CreateView, UpdateView
 from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSet
 from django.contrib.auth.decorators import login_required
 from dataentry.models import (
@@ -74,7 +76,7 @@ class SearchFormsMixin(object):
         # Call the base implementation first to get a context
         context = super(SearchFormsMixin, self).get_context_data(**kwargs)
         # Check if database is empty to change message in search page
-        context['database_empty'] = self.model.objects.count()==0
+        context['database_empty'] = self.model.objects.count() == 0
         return context
 
 
@@ -87,7 +89,7 @@ class InterceptionRecordListView(
 
     def __init__(self, *args, **kw):
         #passes what to search by to SearchFormsMixin
-        super(InterceptionRecordListView, self).__init__(irf_number__icontains = "number", staff_name__icontains = "name")
+        super(InterceptionRecordListView, self).__init__(irf_number__icontains="number", staff_name__icontains="name")
 
 
 class IntercepteeInline(InlineFormSet):
@@ -129,12 +131,25 @@ class InterceptionRecordUpdateView(
         return super(InterceptionRecordUpdateView, self).forms_valid(form, inlines)
 
 
-
 class InterceptionRecordDetailView(InterceptionRecordUpdateView):
     permissions_required = ['permission_irf_view']
 
     def post(self, request, *args, **kwargs):
         raise PermissionDenied
+
+
+class InterceptionRecordDeleteView(DeleteView):
+
+    model = InterceptionRecord
+    success_url = reverse_lazy('interceptionrecord_list')
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if self.request.user.is_superuser:
+            self.object.delete()
+        else:
+            messages.error(request, "You have no power here!!!")
+        return HttpResponseRedirect(self.success_url)
 
 
 class PersonBoxInline(InlineFormSet):
@@ -166,7 +181,8 @@ class VictimInterviewListView(
 
     def __init__(self, *args, **kwargs):
         #passes what to search by to SearchFormsMixin
-        super(VictimInterviewListView, self).__init__(vif_number__icontains = "number", interviewer__icontains = "name")
+        super(VictimInterviewListView, self).__init__(vif_number__icontains="number", interviewer__icontains="name")
+
 
 class VictimInterviewCreateView(
         LoginRequiredMixin,
@@ -183,7 +199,6 @@ class VictimInterviewCreateView(
         form.instance.form_entered_by = self.request.user
         form.instance.date_form_received = date.today()
         return super(VictimInterviewCreateView, self).forms_valid(form, inlines)
-
 
 
 class VictimInterviewUpdateView(
@@ -206,6 +221,19 @@ class VictimInterviewDetailView(VictimInterviewUpdateView):
 
     def post(self, request, *args, **kwargs):
         raise PermissionDenied
+
+
+class VictimInterviewDeleteView(DeleteView):
+    model = VictimInterview
+    success_url = reverse_lazy('victiminterview_list')
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if self.request.user.is_superuser:
+            self.object.delete()
+        else:
+            messages.error(request, "You have no power here!!!")
+        return HttpResponseRedirect(self.success_url)
 
 
 class InterceptionRecordCSVExportView(
@@ -246,8 +274,7 @@ class VictimInterviewCSVExportView(
         return response
 
 
-class GeoCodeDistrictAPIView(
-        APIView):
+class GeoCodeDistrictAPIView(APIView):
     def get(self,request, id):
         district = District.objects.get(pk=id)
         serializer = DistrictSerializer(district)
