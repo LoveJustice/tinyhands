@@ -766,3 +766,8 @@ class VictimInterviewLocationBoxForm(DreamSuitePaperForm):
         self.instance.vdc = vdc
         self.instance.district = district
         return super(VictimInterviewLocationBoxForm, self).save(commit)
+
+class VDCForm():
+    class Meta:
+        model = VDC
+        fields = ['name','lattitude','longitude','cannonical_name','district']

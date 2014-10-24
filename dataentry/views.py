@@ -21,10 +21,12 @@ from dataentry.forms import (
     VictimInterviewForm,
     VictimInterviewPersonBoxForm,
     VictimInterviewLocationBoxForm,
+    VDCForm,
 )
 from datetime import date
 from dataentry import export
 from django.http import HttpResponse
+from django.template.loader import render_to_string
 
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -291,3 +293,21 @@ class VDCAdminView(
         context['upper_limit'] = context['page_obj'].number + 5
         context['database_empty'] = self.model.objects.count()==0
         return context
+
+class VDCAdminUpdate(
+        LoginRequiredMixin,
+        PermissionsRequiredMixin,
+        UpdateView):
+    model = VDC
+    form_class = VDCForm
+    template_name = "dataentry/vdc_admin_update.html"
+    permissions_required = ['permission_vdc_manage']
+    
+    def dispatch(self, *args, **kwargs):
+        self.vdc_id = kwargs['pk']
+        return super(VDCAdminUpdate, self).dispatch(*args, **kwargs)
+    
+    def form_valid(self, form):
+        form.save()
+        vdc = VDC.objects.get(id=self.vdc_id)
+        return HttpResponse(render_to_string('dataentry/vdc_admin_update.html', {'vdc': vdc}))

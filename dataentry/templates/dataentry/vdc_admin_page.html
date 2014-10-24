@@ -27,8 +27,7 @@
 	    <td style="text-align:center">{{ vdc.get_district }} </td>
 	    <td style="text-align:center">{{ vdc.get_cannonical_name }} </td>
 	    <td style="text-align:center"></td>
-	    <td><a class="btn btn-warning pull-left" style="margin-right:-35px" href="">Edit</a>
-	    <a class="btn btn-danger pull-right" href="">Delete</a></td>
+	    <td><a class="btn btn-warning pull-left" style="margin-right:-35px" href="{% url 'vdc_admin_update' vdc.id %}" data-target="#modal" data-toggle="modal" data-tooltip>Edit</a></td>
 		</tr>
 	{% empty %}
 		{% if database_empty %}
@@ -72,5 +71,7 @@
         </div>
     </nav>
 </div>
+
+<div class="modal fade" id="modal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"></div>
 
 {% endblock %}
