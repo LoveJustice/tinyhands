@@ -41,6 +41,7 @@ from django.conf import settings
 import csv
 import re
 import os
+import shutil
 from alert_checkers import IRFAlertChecker, VIFAlertChecker
 
 
@@ -127,19 +128,25 @@ class IRFImageAssociationMixin(object):
         return super(IRFImageAssociationMixin, self).forms_invalid(form, inlines)
 
     def forms_valid(self, form, inlines):
-
-        import ipdb
-        ipdb.set_trace()
         interceptees = inlines[0]
-        for interceptee in interceptees:
-            image_path = settings.BASE_DIR + "/media/unassociated_photos/irf-photo-%s-index-%d.%s" % (
-                form.instance.irf_number,
-                11,
-                ".JPG"
-            )
-            if os.path.isfile(image_path):
-                interceptee.instance.photo = image_path
-                interceptee.save()
+
+        image_paths = os.listdir(settings.BASE_DIR + '/media/unassociated_photos/')
+        for path in image_paths:
+            match = re.match(r"irf-photo-(.*)-index-(\d+)\.(.*)", path)
+            if match is not None:
+                irf_number = match.group(1)
+                interceptee_index = int(match.group(2))
+                extension = match.group(3)
+                full_image_path = settings.BASE_DIR + '/media/unassociated_photos/' + path
+                dest_image_path = settings.BASE_DIR + '/media/interceptee_photos/' + path
+                if form.instance.irf_number != irf_number:
+                    continue
+                try:
+                    interceptee = interceptees[interceptee_index]
+                    shutil.move(full_image_path, dest_image_path)
+                    interceptee.instance.photo = dest_image_path
+                except IndexError:
+                    continue
         return super(IRFImageAssociationMixin, self).forms_valid(form, inlines)
 
 
