@@ -34,9 +34,16 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from dataentry.serializers import DistrictSerializer, VDCSerializer
 
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
+
+from django.conf import settings
+
 import csv
 import re
 import json
+import os
+import shutil
 from alert_checkers import IRFAlertChecker, VIFAlertChecker
 from fuzzywuzzy import process, fuzz
 
@@ -98,9 +105,57 @@ class IntercepteeInline(InlineFormSet):
     max_num = 12
 
 
+class IRFImageAssociationMixin(object):
+
+    def forms_invalid(self, form, inlines):
+
+        for name, file in self.request.FILES.iteritems():
+            match = re.match(r"interceptees-(\d+)-photo", name)
+            irf_num = self.request.POST.get("irf_number")
+
+            try:
+                extension = file.name.split(".")[-1]
+            except Exception:
+                extension = None
+
+            if match is not None and irf_num is not None and extension is not None:
+                interceptee_index = match.group(1)
+                filename = "unassociated_photos/irf-photo-%s-index-%s.%s" % (
+                    irf_num,
+                    interceptee_index,
+                    extension
+                )
+                default_storage.save(filename, ContentFile(file.read()))
+
+        return super(IRFImageAssociationMixin, self).forms_invalid(form, inlines)
+
+    def forms_valid(self, form, inlines):
+        interceptees = inlines[0]
+
+        image_paths = os.listdir(settings.BASE_DIR + '/media/unassociated_photos/')
+        for path in image_paths:
+            match = re.match(r"irf-photo-(.*)-index-(\d+)\.(.*)", path)
+            if match is not None:
+                irf_number = match.group(1)
+                interceptee_index = int(match.group(2))
+                extension = match.group(3)
+                full_image_path = settings.BASE_DIR + '/media/unassociated_photos/' + path
+                dest_image_path = settings.BASE_DIR + '/media/interceptee_photos/' + path
+                if form.instance.irf_number != irf_number:
+                    continue
+                try:
+                    interceptee = interceptees[interceptee_index]
+                    shutil.move(full_image_path, dest_image_path)
+                    interceptee.instance.photo = dest_image_path
+                except IndexError:
+                    continue
+        return super(IRFImageAssociationMixin, self).forms_valid(form, inlines)
+
+
 class InterceptionRecordCreateView(
         LoginRequiredMixin,
         PermissionsRequiredMixin,
+        IRFImageAssociationMixin,
         CreateWithInlinesView):
     model = InterceptionRecord
     form_class = InterceptionRecordForm
@@ -119,6 +174,7 @@ class InterceptionRecordCreateView(
 class InterceptionRecordUpdateView(
         LoginRequiredMixin,
         PermissionsRequiredMixin,
+        IRFImageAssociationMixin,
         UpdateWithInlinesView):
     model = InterceptionRecord
     form_class = InterceptionRecordForm
@@ -205,6 +261,7 @@ class VictimInterviewUpdateView(
         LoginRequiredMixin,
         PermissionsRequiredMixin,
         UpdateWithInlinesView):
+
     model = VictimInterview
     form_class = VictimInterviewForm
     success_url = reverse_lazy('victiminterview_list')
@@ -212,7 +269,7 @@ class VictimInterviewUpdateView(
     permissions_required = ['permission_vif_edit']
 
     def forms_valid(self, form, inlines):
-        VIFAlertChecker(form,inlines).check_them()
+        VIFAlertChecker(form, inlines).check_them()
         return super(VictimInterviewUpdateView, self).forms_valid(form, inlines)
 
 
