@@ -14,7 +14,8 @@ from dataentry.models import (
     VictimInterviewPersonBox,
     VictimInterviewLocationBox,
     District,
-    VDC
+    VDC,
+    BorderStation
 )
 from accounts.mixins import PermissionsRequiredMixin
 from braces.views import LoginRequiredMixin
@@ -40,7 +41,6 @@ from django.core.files.base import ContentFile
 from django.conf import settings
 
 import csv
-import re
 import json
 import os
 import shutil
@@ -54,6 +54,7 @@ def home(request):
 
 class SearchFormsMixin(object):
 
+    #will equal name of field to search
     Name = None
     Number = None
 
@@ -70,10 +71,9 @@ class SearchFormsMixin(object):
         except:
             value = ''
         if (value != ''):
-            if(re.match('\w+\d+$', value)):
-                object_list = self.model.objects.filter(**{self.Number :value})
-            else:
-                object_list = self.model.objects.filter(**{self.Name :value})
+            number_list = self.model.objects.filter(**{self.Number :value})
+            name_list = self.model.objects.filter(**{self.Name :value})
+            object_list = number_list | name_list
         else:
             object_list = self.model.objects.all()
         return object_list

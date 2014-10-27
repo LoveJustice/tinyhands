@@ -97,7 +97,7 @@ class IRFAlertChecker(object):
         ipdb.set_trace()
         if len(matches) > 0:
             Alert.objects.send_alert("Name Match", context={"irf": self.irf.instance, "matches": matches, "trafficker_in_custody": trafficker_name})
-                    traffickers_and_their_matches[trafficker.full_name] = process.extractBests(trafficker.full_name, people_dict, score_cutoff=89, limit=10)
+            traffickers_and_their_matches[trafficker.full_name] = process.extractBests(trafficker.full_name, people_dict, score_cutoff=89, limit=10)
         if len({person for person in traffickers_and_their_matches if len(traffickers_and_their_matches[person]) > 0}) > 0:
             Alert.objects.send_alert("Name Match", context={"irf": self.irf.instance, "traffickers_matches": traffickers_and_their_matches, "trafficker_in_custody": trafficker_in_custody})
             return True
