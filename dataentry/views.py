@@ -349,6 +349,13 @@ class GeoCodeDistrictAPIView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+class StationCodeAPIView(APIView):
+    
+    def get(self, request):
+        codes = BorderStation.objects.all().values_list("station_code", flat=True)
+        return Response(codes, status=status.HTTP_200_OK);
+
+
 @login_required
 def interceptee_fuzzy_matching(request):
     inputName= request.GET['name']
