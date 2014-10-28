@@ -34,7 +34,7 @@ $ ->
     $button.children().css("color", "grey")
   # Hover image
   $ui.on "mouseover", "li", ->
-    $ui.find("img").attr("src", list_of_pics[this.id])
+    $ui.find("img").attr("src", "/media/#{$(this).data("photo")}").show()
 
 
 
@@ -46,7 +46,7 @@ setupInputHandlers = ($ui) ->
     $cur_input = $this
     $ui.css({top: $this.offset().top+$this.outerHeight()+15, left: $this.offset().left})
     search $this.val(), $ui
-    $ui.find("img").attr("src", "")
+    $ui.find("img").attr("src", "").hide()
     $ui.show()
   # When clicking away, hide
   $(document).click (e) ->
@@ -62,7 +62,9 @@ search = (input, $ui) ->
   $.get $ui.data("ajax"), {name: input}, (data) ->
     results = []
     data.forEach (item) ->
-      results.push({id: 1, name: item[0], score: item[1]})
+      obj = JSON.parse(item[2])[0]
+      results.push({id: obj.pk, name: item[0], score: item[1], photo: obj.fields.photo})
+    console.log results
     display_results(results, $ui)
 
 search_old = (input, $ui) ->
@@ -82,7 +84,7 @@ display_results = (results, $ui) ->
     for item in results.slice(0, 6)
       $span = $("<span>").addClass("name").text(item.name)
 #      $li = $("<li>").attr("id", item.id).text("(#{Math.round((1-item.score)*100)}) ").append($span)
-      $li = $("<li>").attr("id", item.id).text("(#{item.score})").append($span)
+      $li = $("<li>").attr("id", item.id).text("(#{item.score})").data("photo", item.photo).append($span)
       $ul.append($li)
   else
       $li = $("<li>").text("Type to search for matches")
