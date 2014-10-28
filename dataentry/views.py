@@ -71,9 +71,14 @@ class SearchFormsMixin(object):
         except:
             value = ''
         if (value != ''):
-            number_list = self.model.objects.filter(**{self.Number :value})
-            name_list = self.model.objects.filter(**{self.Name :value})
-            object_list = number_list | name_list
+            code = value[:3]
+            stations = BorderStation.objects.filter(station_code__startswith=code)
+            if(len(stations) != 0):
+                object_list = self.model.objects.filter(**{self.Number :value})
+                if(len(object_list) == 0):
+                    object_list = self.model.objects.filter(**{self.Name :value})
+            else:
+                object_list = self.model.objects.filter(**{self.Name :value})
         else:
             object_list = self.model.objects.all()
         return object_list
