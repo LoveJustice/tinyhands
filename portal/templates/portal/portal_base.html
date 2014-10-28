@@ -1,39 +1,30 @@
 {% extends "base.html" %}
 
 {% block head %}
-<head>
-    <style type="text/css">
-      html, body, #map-canvas { height: 100%; margin: 0; padding: 0;}
-    </style>
     <script type="text/javascript"
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyChNFPd_bOOnk59AkeKM862OqN80Lvp56g">
     </script>
-    <script type="text/javascript">
-      function initialize() {
-        var mapOptions = {
-          center: { lat: -34.397, lng: 150.644},
-          zoom: 8
-        };
-        var map = new google.maps.Map(document.getElementById('map-canvas'),
-            mapOptions);
-      }
-      google.maps.event.addDomListener(window, 'load', initialize);
-    </script>
+
     <style>
-      #map-canvas {
-        height: 100%;
-        margin: 0px;
-        padding: 0px
+      html, body, #map-canvas {
+          margin: 0px;
+          padding: 0px;
       }
+    .container {
+        width: 100%;
+        padding: 0;
+        margin-top: 50px;
+    }
     </style>
-  </head>
 {% endblock %}
 
-{% block title %}Dreamsuite Dashboard{% endblock %}
+{% block title %}Dreamsuite Dash{% endblock %}
 
 {% block tab_block %}
 
     {% block content %}
+
     {% endblock %}
+     <script type="text/javascript" src="{{ STATIC_URL }}portal.js"></script>
 {% endblock %}
 
