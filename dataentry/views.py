@@ -14,7 +14,8 @@ from dataentry.models import (
     VictimInterviewPersonBox,
     VictimInterviewLocationBox,
     District,
-    VDC
+    VDC,
+    BorderStation
 )
 from accounts.mixins import PermissionsRequiredMixin
 from braces.views import LoginRequiredMixin
@@ -40,7 +41,6 @@ from django.core.files.base import ContentFile
 from django.conf import settings
 
 import csv
-import re
 import json
 import os
 import shutil
@@ -54,6 +54,7 @@ def home(request):
 
 class SearchFormsMixin(object):
 
+    #will equal name of field to search
     Name = None
     Number = None
 
@@ -70,8 +71,12 @@ class SearchFormsMixin(object):
         except:
             value = ''
         if (value != ''):
-            if(re.match('\w+\d+$', value)):
+            code = value[:3]
+            stations = BorderStation.objects.filter(station_code__startswith=code)
+            if(len(stations) != 0):
                 object_list = self.model.objects.filter(**{self.Number :value})
+                if(len(object_list) == 0):
+                    object_list = self.model.objects.filter(**{self.Name :value})
             else:
                 object_list = self.model.objects.filter(**{self.Name :value})
         else:
@@ -347,6 +352,13 @@ class GeoCodeDistrictAPIView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class StationCodeAPIView(APIView):
+    
+    def get(self, request):
+        codes = BorderStation.objects.all().values_list("station_code", flat=True)
+        return Response(codes, status=status.HTTP_200_OK);
 
 
 @login_required

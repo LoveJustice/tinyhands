@@ -16,6 +16,10 @@ def set_weight(self, weight):
     return self
 models.BooleanField.set_weight = set_weight
 
+class BorderStation(models.Model):
+    station_code = models.CharField(max_length=3)
+    station_name = models.CharField(max_length=100)
+
 
 class InterceptionRecord(models.Model):
     form_entered_by = models.ForeignKey(Account, related_name='irfs_entered')
