@@ -46,6 +46,7 @@ INSTALLED_APPS = (
     'imagekit',
     'dataentry',
     'accounts',
+    'portal',
     'util',
     'rest_framework',
 )
