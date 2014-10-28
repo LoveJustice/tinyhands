@@ -5,6 +5,7 @@
 *.sqlite3
 *.sqlitebak
 *.stackdump
+media/
 env
 backups
 .coverage
