@@ -16,12 +16,21 @@
         };
         var map = new google.maps.Map(document.getElementById('map-canvas'),
             mapOptions);
+
+        var x=document.getElementById('map-canvas');
+          x.style.width = window.innerWidth+"px";
+          x.style.height = window.innerHeight+"px";
       }
       google.maps.event.addDomListener(window, 'load', initialize);
     </script>
     <style>
-      #map-canvas {
-        height: 100%;
+      .container{
+          width: 100%;
+          margin: 0px;
+          margin-top: 50px;
+          padding: 0px
+      }
+      #map-canvas{
         margin: 0px;
         padding: 0px
       }
@@ -31,9 +40,10 @@
 
 {% block title %}Dreamsuite Dashboard{% endblock %}
 
-{% block tab_block %}
 
+
+{% block tab_block %}
+        <div id="map-canvas"></div>
     {% block content %}
     {% endblock %}
 {% endblock %}
-
