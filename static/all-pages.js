@@ -469,6 +469,11 @@ var DREAMSUITE = {
 
 };
 
+function formDropDownSelect(){
+    console.log("It works...");
+    //Add a drop down list for IRF and VIF
+}
+
 function reloadPhotos() {
     var photoString = "";
     var pathString = "";
@@ -493,4 +498,3 @@ $(document).ready(function() {
         DREAMSUITE[bodyClass]();
     }
 });
-

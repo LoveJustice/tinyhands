@@ -49,8 +49,8 @@ in the Javascript and run code unique to the current page.
         <div class="collapse navbar-collapse navbar-header-collapse">
             {% if request.user.is_authenticated %}
             <ul class="nav navbar-nav">
-                <li><a href="{% url 'interceptionrecord_list' %}">Forms</a></li>
                 <li><a href="{% url 'main_dashboard' %}">Dashboard</a></li>
+                <li id="formButton" onmouseover="formDropDownSelect()"><a href="{% url 'interceptionrecord_list' %}">Forms</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li>
