@@ -211,14 +211,56 @@ class InterceptionRecord(models.Model):
         ordering = ['-date_time_last_updated']
 
 
-class Interceptee(models.Model):
+class District(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __unicode__(self):
+        return self.name
+
+
+class VDC(models.Model):
+    name = models.CharField(max_length=255)
+    latitude = models.FloatField()
+    longitude = models.FloatField()
+    district = models.ForeignKey(District,null=False)
+    cannonical_name = models.ForeignKey('self',null=True,blank=True)
+
+    def __unicode__(self):
+        return self.name
+
+
+class Person(models.Model):
+    GENDER_CHOICES = [
+        ('female','Female'),
+        ('male', 'Male'),
+    ]
+    gender = models.CharField(max_length=4, choices=GENDER_CHOICES, blank=True)
+    district = models.ManyToManyField(District)
+    vdc = models.ManyToManyField(VDC)
+    canonical_name = models.OneToOneField("Name", related_name="+")
+    canonical_phone = models.OneToOneField("Phone", related_name="+")
+    canonical_age = models.OneToOneField("Age", related_name="+")
+
+
+class Name(models.Model):
+    value = models.CharField(max_length=255)
+    person = models.ForeignKey(Person, related_name="names")
+
+
+class Phone(models.Model):
+    value = models.CharField(max_length=255, blank=True)
+    person = models.ForeignKey(Person, related_name="phone_numbers")
+
+
+class Age(models.Model):
+    value = models.PositiveIntegerField("age", null=True, blank=True)
+    person = models.ForeignKey(Person, related_name="ages")
+
+
+class Interceptee(Person):
     KIND_CHOICES = [
         ('v', 'Victim'),
         ('t', 'Trafficker'),
-    ]
-    GENDER_CHOICES = [
-        ('f', 'F'),
-        ('m', 'M'),
     ]
     photo = models.ImageField(upload_to='interceptee_photos', default='', blank=True)
     photo_thumbnail = ImageSpecField(source='photo',
@@ -227,28 +269,16 @@ class Interceptee(models.Model):
                                      options={'quality': 80})
     interception_record = models.ForeignKey(InterceptionRecord, related_name='interceptees')
     kind = models.CharField(max_length=4, choices=KIND_CHOICES)
-    full_name = models.CharField(max_length=255)
-    gender = models.CharField(max_length=4, choices=GENDER_CHOICES, blank=True)
-    age = models.PositiveIntegerField(null=True, blank=True)
-    district = models.CharField(max_length=255, blank=True)
-    vdc = models.CharField('VDC', max_length=255, blank=True)
-    phone_contact = models.CharField(max_length=255, blank=True)
     relation_to = models.CharField(max_length=255, blank=True)
 
     class Meta:
         ordering = ['id']
 
 
-class VictimInterview(models.Model):
+class VictimInterview(Person):
 
     class Meta:
         ordering = ['-date_time_last_updated']
-
-
-    GENDER_CHOICES = [
-        ('male', 'Male'),
-        ('female', 'Female'),
-    ]
 
     vif_number = models.CharField('VIF #', max_length=20)
     date = models.DateField('Date')
@@ -266,15 +296,7 @@ class VictimInterview(models.Model):
     permission_to_use_photograph = models.BooleanField('Check the box if form is signed', default=False)
 
     # 1. Victim & Family Information
-    victim_name = models.CharField('Name', max_length=255)
-
-    victim_gender = models.CharField('Gender', choices=GENDER_CHOICES, max_length=12)
-
-    victim_address_district = models.CharField('District', max_length=255, blank=True)
-    victim_address_vdc = models.CharField('VDC', max_length=255, blank=True)
     victim_address_ward = models.CharField('Ward #', max_length=255, blank=True)
-    victim_phone = models.CharField('Phone #', max_length=255, blank=True)
-    victim_age = models.CharField('Age', max_length=255, blank=True)
     victim_height = models.PositiveIntegerField('Height(ft)', null=True, blank=True)
     victim_weight = models.PositiveIntegerField('Weight(kg)', null=True, blank=True)
 
@@ -733,12 +755,7 @@ class VictimInterview(models.Model):
     scanned_form = models.FileField('Attach scanned copy of form (pdf or image)', upload_to='scanned_vif_forms', default='', blank=True)
 
 
-class VictimInterviewPersonBox(models.Model):
-    GENDER_CHOICES = [
-        ('male', 'Male'),
-        ('female', 'Female'),
-    ]
-
+class VictimInterviewPersonBox(Person):
     victim_interview = models.ForeignKey(VictimInterview, related_name='person_boxes')
 
     who_is_this_relationship_boss_of = models.BooleanField('Boss of...', default=False)
@@ -754,15 +771,7 @@ class VictimInterviewPersonBox(models.Model):
     who_is_this_role_passport = models.BooleanField('Passport', default=False)
     who_is_this_role_sex_industry = models.BooleanField('Sex Industry', default=False)
 
-    name = models.CharField('Name', max_length=255, blank=True)
-
-    gender = models.CharField('Gender', choices=GENDER_CHOICES, max_length=12, blank=True)
-
-    address_district = models.CharField('District', max_length=255, blank=True)
-    address_vdc = models.CharField('VDC', max_length=255, blank=True)
     address_ward = models.CharField('Ward #', max_length=255, blank=True)
-    phone = models.CharField('Phone #', max_length=255, blank=True)
-    age = models.PositiveIntegerField('Age', null=True, blank=True)
     height = models.PositiveIntegerField('Height(ft)', null=True, blank=True)
     weight = models.PositiveIntegerField('Weight(kg)', null=True, blank=True)
 
@@ -819,24 +828,6 @@ class VictimInterviewPersonBox(models.Model):
 
     associated_with_place = models.NullBooleanField(null=True)
     associated_with_place_value = models.IntegerField(blank=True, null=True)
-
-
-class District(models.Model):
-    name = models.CharField(max_length=255)
-
-    def __unicode__(self):
-        return self.name
-
-
-class VDC(models.Model):
-    name = models.CharField(max_length=255)
-    latitude = models.FloatField()
-    longitude = models.FloatField()
-    district = models.ForeignKey(District,null=False)
-    cannonical_name = models.ForeignKey('self',null=True,blank=True)
-
-    def __unicode__(self):
-        return self.name
 
 
 class VictimInterviewLocationBox(models.Model):

@@ -351,7 +351,9 @@ class GeoCodeDistrictAPIView(APIView):
 
 @login_required
 def interceptee_fuzzy_matching(request):
-    inputName= request.GET['name']
+    # add aditional filters for age and phone #?
+    if 'name' in request.GET:
+        inputName = request.GET['name']
     all_people = Interceptee.objects.all()
     people_dict = {serializers.serialize("json", [obj]):obj.full_name for obj in all_people }
     matches = process.extractBests(inputName, people_dict, limit = 10)
