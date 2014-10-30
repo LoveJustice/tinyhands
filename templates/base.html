@@ -28,6 +28,8 @@
 
     <script src="{{ STATIC_URL }}less.js"></script>
     <script src="{{ STATIC_URL }}jquery.js"></script>
+
+    {% block afterhead %}{% endblock %}
 </head>
 {% comment %}
 Add a class to the body tag that is the same as the url's name.  We can then check this

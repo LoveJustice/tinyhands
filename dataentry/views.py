@@ -366,5 +366,7 @@ def interceptee_fuzzy_matching(request):
     matches = process.extractBests(inputName, people_dict, limit = 10, score_cutoff=70)
     return HttpResponse(json.dumps(matches), content_type="application/json")
 
-def modal(request):
+@login_required
+def matching_modal(request):
+    #return HttpResponse()
     return render(request, "dataentry/matching_modal.html")

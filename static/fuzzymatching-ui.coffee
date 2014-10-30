@@ -24,7 +24,7 @@ $ ->
   setupInputHandlers($ui)
   $items = $ui.find('li')
   # When you click on a name, insert it
-  $ui.on "click", "li", ->
+  $ui.on "click", "li.person", ->
     $this = $(this)
     name = $this.children(".name").text()
     console.log name
@@ -33,7 +33,7 @@ $ ->
     $button.prop("disabled", true)
     $button.children().css("color", "grey")
   # Hover image
-  $ui.on "mouseover", "li", ->
+  $ui.on "mouseover", "li.person", ->
     $ui.find("img").attr("src", "/media/#{$(this).data("photo")}").show()
 
 
@@ -45,12 +45,13 @@ setupInputHandlers = ($ui) ->
     $this = $(this)
     $cur_input = $this
     $ui.css({top: $this.offset().top+$this.outerHeight()+15, left: $this.offset().left})
-    search $this.val(), $ui
+    search $this.val(), $ui if $this.val().length > 0
     $ui.find("img").attr("src", "").hide()
     $ui.show()
   # When clicking away, hide
   $(document).click (e) ->
-    if !$(e.target).attr("data-fuzzy-ui")
+    $target = $(e.target)
+    if !$target.attr("data-fuzzy-ui") and e.target.id != 'fuzzymatching-ui' and $target.parents('#fuzzymatching-ui').length == 0
       $ui.hide()
 
   # Searching
@@ -84,7 +85,7 @@ display_results = (results, $ui) ->
     for item in results.slice(0, 6)
       $span = $("<span>").addClass("name").text(item.name)
 #      $li = $("<li>").attr("id", item.id).text("(#{Math.round((1-item.score)*100)}) ").append($span)
-      $li = $("<li>").attr("id", item.id).text("(#{item.score})").data("photo", item.photo).append($span)
+      $li = $("<li class='person'>").attr("id", item.id).text("(#{item.score})").data("photo", item.photo).append($span)
       $ul.append($li)
   else
       $li = $("<li>").text("Type to search for matches")

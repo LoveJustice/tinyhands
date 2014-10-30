@@ -760,15 +760,15 @@
                                     <span class="interceptee-number">{{ forloop.counter }}</span>
                                     {{ interceptee_form.id }} {{ interceptee_form.kind }}
                                 </td>
-                                <td>{{ interceptee_form.full_name|attr:"data-fuzzy-ui:name"}}</td>
+                                <td><input id="fuzzy_name" type="text" data-fuzzy-ui="name"/>{{ interceptee_form.full_name|attr:"style:display:none"}}</td>
                                 <td>{{ interceptee_form.gender }}</td>
-                                <td style="width: 7%">{{ interceptee_form.age }}</td>
+                                <td style="width: 7%"><input id="fuzzy_age" type="number"/>{{ interceptee_form.age|attr:"style:display:none" }}</td>
                                 <td>{{ interceptee_form.district }}</td>
-                                <td>{{ interceptee_form.vdc }}</td>
-                                <td>{{ interceptee_form.phone_contact }}</td>
+                                <td><input type="text" id="fuzzy_vdc"/>{{ interceptee_form.vdc|attr:"style:display:none" }}</td>
+                                <td><input id="fuzzy_phone_contact" type="text"/>{{ interceptee_form.phone_contact|attr:"style:display:none" }}</td>
                                 <td>{{ interceptee_form.relation_to }}</td>
                                 <td>
-                                    <button type="button" class="photo-upload-button" onclick="photoSelect()" style="width: 100%; font-size: 30px"><i class="glyphicon glyphicon-picture"></i></button>
+                                    <button type="button" class="photo-upload-button" style="width: 100%; font-size: 30px"><i class="glyphicon glyphicon-picture"></i></button>
                                     <div class="photo-manip-controls" style="display: none">
                                     {{ interceptee_form.photo }}
                                     </div>
@@ -885,4 +885,5 @@
 <br/>
 <br/>
 {% include "dataentry/fuzzymatching-ui.html" %}
+{% include "dataentry/matching_modal.html" %}
 {% endblock %}

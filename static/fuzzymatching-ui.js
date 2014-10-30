@@ -13,7 +13,7 @@
     $ui = $("#fuzzymatching-ui");
     setupInputHandlers($ui);
     $items = $ui.find('li');
-    $ui.on("click", "li", function() {
+    $ui.on("click", "li.person", function() {
       var $button, $this, name;
       $this = $(this);
       name = $this.children(".name").text();
@@ -23,7 +23,7 @@
       $button.prop("disabled", true);
       return $button.children().css("color", "grey");
     });
-    return $ui.on("mouseover", "li", function() {
+    return $ui.on("mouseover", "li.person", function() {
       return $ui.find("img").attr("src", "/media/" + ($(this).data("photo"))).show();
     });
   });
@@ -39,12 +39,16 @@
         top: $this.offset().top + $this.outerHeight() + 15,
         left: $this.offset().left
       });
-      search($this.val(), $ui);
+      if ($this.val().length > 0) {
+        search($this.val(), $ui);
+      }
       $ui.find("img").attr("src", "").hide();
       return $ui.show();
     });
     $(document).click(function(e) {
-      if (!$(e.target).attr("data-fuzzy-ui")) {
+      var $target;
+      $target = $(e.target);
+      if (!$target.attr("data-fuzzy-ui") && e.target.id !== 'fuzzymatching-ui' && $target.parents('#fuzzymatching-ui').length === 0) {
         return $ui.hide();
       }
     });
@@ -113,7 +117,7 @@
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         item = _ref[_i];
         $span = $("<span>").addClass("name").text(item.name);
-        $li = $("<li>").attr("id", item.id).text("(" + item.score + ")").data("photo", item.photo).append($span);
+        $li = $("<li class='person'>").attr("id", item.id).text("(" + item.score + ")").data("photo", item.photo).append($span);
         _results.push($ul.append($li));
       }
       return _results;
