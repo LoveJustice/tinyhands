@@ -11,6 +11,7 @@ from dataentry.models import (
     VictimInterview,
     InterceptionRecord,
     Interceptee,
+    Person,
     VictimInterviewPersonBox,
     VictimInterviewLocationBox,
     District,
@@ -32,7 +33,8 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from dataentry.serializers import DistrictSerializer, VDCSerializer
+from rest_framework.renderers import JSONRenderer
+from dataentry.serializers import DistrictSerializer, VDCSerializer, IntercepteeSerializer
 
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
@@ -362,9 +364,12 @@ def interceptee_fuzzy_matching(request):
     if 'name' in request.GET:
         inputName = request.GET['name']
     all_people = Interceptee.objects.all()
-    people_dict = {serializers.serialize("json", [obj]):obj.full_name for obj in all_people }
+    people_dict = {
+        JSONRenderer().render(IntercepteeSerializer([obj]).data):
+        obj.canonical_name.value for obj in all_people
+    }
     matches = process.extractBests(inputName, people_dict, limit = 10, score_cutoff=70)
-    return HttpResponse(json.dumps(matches), content_type="application/json")
+    return HttpResponse(matches, content_type="application/json")
 
 def modal(request):
     return render(request, "dataentry/matching_modal.html")
