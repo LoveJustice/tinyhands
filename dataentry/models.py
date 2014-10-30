@@ -19,7 +19,10 @@ models.BooleanField.set_weight = set_weight
 class BorderStation(models.Model):
     station_code = models.CharField(max_length=3)
     station_name = models.CharField(max_length=100)
-
+    date_established = models.DateField(null=True)
+    has_shelter = models.BooleanField(default=False)
+    latitude = models.FloatField(null=True)
+    longitude = models.FloatField(null=True)
 
 class InterceptionRecord(models.Model):
     form_entered_by = models.ForeignKey(Account, related_name='irfs_entered')
