@@ -235,8 +235,8 @@ class Person(models.Model):
         ('male', 'Male'),
     ]
     gender = models.CharField(max_length=4, choices=GENDER_CHOICES, blank=True)
-    district = models.ManyToManyField(District)
-    vdc = models.ManyToManyField(VDC)
+    districts = models.ManyToManyField(District, related_name="+")
+    vdcs = models.ManyToManyField(VDC, related_name="+")
     canonical_name = models.OneToOneField("Name", related_name="+")
     canonical_phone = models.OneToOneField("Phone", related_name="+")
     canonical_age = models.OneToOneField("Age", related_name="+")
