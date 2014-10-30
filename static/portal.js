@@ -12,7 +12,7 @@ function initialize() {
         mapOptions);
 
     var kmlLayer = new google.maps.KmlLayer({
-        url: 'static/KML/3238.kml',
+        url: 'https://docs.google.com/uc?authuser=0&id=0Bz3L11M8_D-MbWkwT2R5ZDVOUms&export=download',
         suppressInfoWindows: true,
         map: map
     });
