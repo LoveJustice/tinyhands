@@ -6,6 +6,10 @@
 
 {% block content %}
 
+<!-- Modal -->
+<div class="modal fade" id="modal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" tabindex="-1"></div>
+<!-- /.modal -->
+
 <table id="vdc_table" class="table table-striped">
 	<thead>
         <tr>
@@ -27,7 +31,7 @@
 	    <td style="text-align:center">{{ vdc.get_district }} </td>
 	    <td style="text-align:center">{{ vdc.get_cannonical_name }} </td>
 	    <td style="text-align:center"></td>
-	    <td><a class="btn btn-warning pull-left" style="margin-right:-35px" href="{% url 'vdc_admin_update' vdc.id %}" data-target="#modal" data-toggle="modal" data-tooltip>Edit</a></td>
+	    <td><a id="vdc_update_link" class="btn btn-warning pull-left" style="margin-right:-35px" href="{% url 'vdc_admin_update' vdc.id %}" data-target="#modal" >Edit</a></td>
 		</tr>
 	{% empty %}
 		{% if database_empty %}
@@ -71,7 +75,5 @@
         </div>
     </nav>
 </div>
-
-<div class="modal fade" id="modal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"></div>
 
 {% endblock %}

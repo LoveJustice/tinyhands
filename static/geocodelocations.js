@@ -4,13 +4,29 @@ var largestPopoverButtonWidth = null;
 function setPopovers(id)
 {
 	$(id).each(function(index, element) {
+        if($(element).attr('id').indexOf("-vdc") != -1 || $(element).attr('id').indexOf("address_vdc") != -1){
+            nameOfForm = "#geocode-vdc-form";
+        }
+        else{
+            nameOfForm = "#geocode-district-form";
+        }
 	    $(element).popover({
-	        content: $("#geocode-form").html(),
+	        content: $(nameOfForm).html(),
 	        html:true,
 	        placement:'bottom',
 	        container: 'body',
+            trigger: 'focus',
 	    });
+        $(element).on('shown.bs.popover', function(){
+            $("#vdc_create_page").click(
+                    function(e){
+                        e.preventDefault();
+                        $("#modal").load(this.href, function(){$("#modal").modal("show");
+                    });
+            });
+        });
 	    $(element).blur(function() {
+            return;
 	    	if($('.popover').hasClass('in'))
 	    	{
 		    	$(this).popover('hide');

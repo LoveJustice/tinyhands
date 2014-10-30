@@ -303,11 +303,25 @@ class VDCAdminUpdate(
     template_name = "dataentry/vdc_admin_update.html"
     permissions_required = ['permission_vdc_manage']
     
-    def dispatch(self, *args, **kwargs):
+    def dispatch(self, request, *args, **kwargs):
         self.vdc_id = kwargs['pk']
-        return super(VDCAdminUpdate, self).dispatch(*args, **kwargs)
+        return super(VDCAdminUpdate, self).dispatch(request, *args, **kwargs)
     
     def form_valid(self, form):
         form.save()
         vdc = VDC.objects.get(id=self.vdc_id)
         return HttpResponse(render_to_string('dataentry/vdc_admin_update.html', {'vdc': vdc}))
+    
+
+class VDCCreateView(
+        LoginRequiredMixin,
+        PermissionsRequiredMixin,
+        CreateView):
+    model = VDC
+    form_class = VDCForm
+    template_name = "dataentry/vdc_create_page.html"
+    permissions_required = ['permission_vif_add','permission_irf_add']
+    
+    def forms_valid(self, form):
+        super(VDCCreateView, self).forms_valid(form)
+        return HttpResponse(render_to_string('dataentry/vdc_create_page.html'))

@@ -70,6 +70,10 @@
 {% endif %}
 {% endfor %}
 
+<!-- Modal -->
+<div class="modal fade" id="modal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" tabindex="-1"></div>
+<!-- /.modal -->
+
 <form enctype="multipart/form-data" method="POST" id="victim-interview-form" autocomplete="off">{% csrf_token %}
     <div class="form-page">
         <div class="row">
@@ -589,7 +593,7 @@
             </div>
         </div>
     </div>
-
+    
     <div class="form-page">
         <div class="row">
             <div class="col-xs-4 major-column">
