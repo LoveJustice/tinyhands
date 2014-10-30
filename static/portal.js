@@ -4,17 +4,24 @@
 function initialize() {
     var mapOptions = {
       center: { lat: 28.394857, lng: 84.124008},
-      zoom: 8
+      zoom: 8,
+      streetViewControl: false
     };
 
     var map = new google.maps.Map(document.getElementById('map-canvas'),
         mapOptions);
+
+    var kmlLayer = new google.maps.KmlLayer({
+        url: 'static/KML/3238.kml',
+        suppressInfoWindows: true,
+        map: map
+    });
 }
 
 function resizeMap() {
-    var mapcanv = document.getElementById('map-canvas');
-    mapcanv.style.width = window.innerWidth+"px";
-    mapcanv.style.height = (window.innerHeight-50)+"px";
+    var map_canvas = document.getElementById('map-canvas');
+    map_canvas.style.width = window.innerWidth+"px";
+    map_canvas.style.height = (window.innerHeight-50)+"px";
 }
 
 $( window ).resize(function() {
