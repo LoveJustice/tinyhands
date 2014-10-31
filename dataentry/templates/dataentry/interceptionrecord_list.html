@@ -9,8 +9,20 @@
 
 {% block content %}
 {% if request.user.permission_irf_view %}
-    <p class="pull-right" style="margin-top: 30px"><a class="btn btn-primary" href="{% url 'interceptionrecord_csv_export' %}">Export as CSV</a></p>
-{% endif %}
+
+    <form class="form-inline pull-right" style="margin: 20px">
+        <div class="form-group">
+            <input type="text" class="form-control" name="search_value" placeholder="Search">
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-default" style="margin-right: 10px">Search</button>
+        </div>
+        <div class="form-group">
+            <a class="btn btn-primary" href="{% url 'interceptionrecord_csv_export' %}">Export as CSV</a>
+        </div>
+    </form>
+
+    {% endif %}
 
 {% if request.user.permission_irf_view %}
     <h1>All IRFs</h1>
