@@ -4,7 +4,7 @@ with open("thnstations.kml") as f:
     xmldict = xmltodict.parse(f.read())
     outfile = open('border_stations.json', 'w')
     list_of_placemarks = xmldict['kml']['Document']['Folder']['Placemark']
-    count = 0
+    count = 1
     json_string = "[\n"
     for station in list_of_placemarks:
         both = xmldict['kml']['Document']['Folder']['Placemark'][count]['name'].split()
@@ -14,10 +14,13 @@ with open("thnstations.kml") as f:
         latitude = float(xmldict['kml']['Document']['Folder']['Placemark'][count]["LookAt"]['latitude'])
         json_station = ("{\n"
                        "    \"pk\": %d,\n"
-                       "    \"name\": \"%s\",\n"
-                       "    \"code\": \"%s\",\n"
-                       "    \"longitude\": %f,\n"
-                       "    \"latitude\": %f\n"
+                       "    \"model\": \"dataentry.borderstation\",\n"
+                       "    \"fields\":{\n"
+                       "        \"station_name\": \"%s\",\n"
+                       "        \"station_code\": \"%s\",\n"
+                       "        \"longitude\": %f,\n"
+                       "        \"latitude\": %f\n"
+                       "    }\n"
                        "},\n"
                        ) % (count, name, station_code, longitude, latitude)
         count += 1
