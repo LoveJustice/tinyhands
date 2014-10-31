@@ -1,0 +1,170 @@
+[
+{
+    "pk": 0,
+    "name": "Bhadrapur",
+    "code": "BHD",
+    "longitude": 88.097090,
+    "latitude": 26.541659
+},
+{
+    "pk": 1,
+    "name": "Bhairahwa",
+    "code": "BHW",
+    "longitude": 83.458280,
+    "latitude": 27.500376
+},
+{
+    "pk": 2,
+    "name": "Biratnagar",
+    "code": "BRT",
+    "longitude": 87.283300,
+    "latitude": 26.483300
+},
+{
+    "pk": 3,
+    "name": "Birgunj",
+    "code": "BGN",
+    "longitude": 84.884865,
+    "latitude": 27.012136
+},
+{
+    "pk": 4,
+    "name": "Chandrauta",
+    "code": "CND",
+    "longitude": 82.864487,
+    "latitude": 27.649022
+},
+{
+    "pk": 5,
+    "name": "Dang",
+    "code": "DNG",
+    "longitude": 82.513100,
+    "latitude": 27.856200
+},
+{
+    "pk": 6,
+    "name": "Dhangadi",
+    "code": "DHD",
+    "longitude": 80.600000,
+    "latitude": 28.683300
+},
+{
+    "pk": 7,
+    "name": "Dhunche",
+    "code": "DHU",
+    "longitude": 85.283300,
+    "latitude": 28.116700
+},
+{
+    "pk": 8,
+    "name": "Galchhi",
+    "code": "GLC",
+    "longitude": 85.000000,
+    "latitude": 27.795830
+},
+{
+    "pk": 9,
+    "name": "Gaur",
+    "code": "GAR",
+    "longitude": 85.276631,
+    "latitude": 26.756088
+},
+{
+    "pk": 10,
+    "name": "Guleria",
+    "code": "GLR",
+    "longitude": 81.333330,
+    "latitude": 28.233333
+},
+{
+    "pk": 11,
+    "name": "Hetauda",
+    "code": "HTD",
+    "longitude": 85.028461,
+    "latitude": 27.429388
+},
+{
+    "pk": 12,
+    "name": "Janakpur",
+    "code": "JNK",
+    "longitude": 85.772619,
+    "latitude": 26.632329
+},
+{
+    "pk": 13,
+    "name": "Kakarvitta",
+    "code": "KVT",
+    "longitude": 88.154000,
+    "latitude": 26.647778
+},
+{
+    "pk": 14,
+    "name": "Lahan",
+    "code": "LHN",
+    "longitude": 86.490996,
+    "latitude": 26.708671
+},
+{
+    "pk": 15,
+    "name": "Mahendranagar",
+    "code": "MHN",
+    "longitude": 80.165191,
+    "latitude": 28.987146
+},
+{
+    "pk": 16,
+    "name": "Malangwa",
+    "code": "MLW",
+    "longitude": 85.562224,
+    "latitude": 26.844450
+},
+{
+    "pk": 17,
+    "name": "Mugling",
+    "code": "MGL",
+    "longitude": 84.560133,
+    "latitude": 27.855934
+},
+{
+    "pk": 18,
+    "name": "Narayanghat",
+    "code": "NRG",
+    "longitude": 84.420417,
+    "latitude": 27.697837
+},
+{
+    "pk": 19,
+    "name": "Nawalparasi",
+    "code": "PRS",
+    "longitude": 83.889681,
+    "latitude": 27.649340
+},
+{
+    "pk": 20,
+    "name": "Nepalgunj",
+    "code": "NPJ",
+    "longitude": 81.611877,
+    "latitude": 28.037322
+},
+{
+    "pk": 21,
+    "name": "Siliguri",
+    "code": "SLG",
+    "longitude": 88.426874,
+    "latitude": 26.708382
+},
+{
+    "pk": 22,
+    "name": "Tatopani",
+    "code": "TTP",
+    "longitude": 85.929959,
+    "latitude": 27.979742
+},
+{
+    "pk": 23,
+    "name": "Tikapur",
+    "code": "TKP",
+    "longitude": 81.133300,
+    "latitude": 28.500000
+}
+]
