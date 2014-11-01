@@ -223,5 +223,32 @@
         "permission_irf_edit": true,
         "permission_receive_email": false
     }
+},
+{
+    "pk": 18, 
+    "model": "accounts.account", 
+    "fields": {
+        "groups": [], 
+        "first_name": "Justin", 
+        "last_name": "Southworth", 
+        "permission_accounts_manage": true, 
+        "permission_irf_add": true, 
+        "permission_irf_view": true, 
+        "user_designation": 1, 
+        "is_active": true, 
+        "permission_vif_add": true, 
+        "permission_vif_view": true, 
+        "permission_vif_edit": true, 
+        "is_superuser": true, 
+        "is_staff": true, 
+        "last_login": "2014-05-05T13:25:25.906Z", 
+        "date_joined": "2014-04-16T17:23:25.607Z", 
+        "user_permissions": [], 
+        "password": "pbkdf2_sha256$12000$iIFUI6IOiNL9$Y/S92rKQ+vgcicSqfoZQB22aqN9qde+Ct5G2GILymr4=", 
+        "email": "justin_southworth@taylor.edu", 
+        "permission_irf_edit": true,
+        "permission_receive_email": false
+    }
 }
+
 ]
