@@ -11,6 +11,7 @@ function initialize() {
     var map = new google.maps.Map(document.getElementById('map-canvas'),
         mapOptions);
 
+    
     var kmlLayer = new google.maps.KmlLayer({
         url: 'https://docs.google.com/uc?authuser=0&id=0Bz3L11M8_D-MbWkwT2R5ZDVOUms&export=download',
         suppressInfoWindows: true,
