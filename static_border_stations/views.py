@@ -1,3 +1,24 @@
 from django.shortcuts import render
 
-# Create your views here.
+from django.views.generic import CreateView
+
+from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSet
+
+from accounts.mixins import PermissionsRequiredMixin
+from braces.views import LoginRequiredMixin
+
+class PersonInline(InlineFormSet):
+    model=Person
+
+class LocationInline(InlineFormSet):
+    model=Location
+
+class StaticBorderStationsCreateView (
+        LoginRequiredMixin,
+        PermissionsRequiredMixin,
+        CreateWithInlinesView):
+    model = BorderStation
+    form_class = BorderStationForm
+    success_url = reverse_lazy('home')
+    inlines = [PersonInline, LocationInline]
+    permissions_required = ['permission_border_stations_add']
