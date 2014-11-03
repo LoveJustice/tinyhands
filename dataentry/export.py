@@ -1,33 +1,5 @@
 from django.db import models
-
-BORDER_STATION_NAMES = {
-    'BHW': 'Bhairahwa',
-    'NPJ': 'Nepalgunj',
-    'PRS': 'Nawalparasi',
-    'DNG': 'Dang',
-    'JNK': 'Janakpur',
-    'GRG': 'Gaurigunj',
-    'GLR': 'Guleria',
-    'MHN': 'Mahendranagar',
-    'DHD': 'Dhangadi',
-    'MLW': 'Malangwa',
-    'BRT': 'Biratnagar',
-    'BHD': 'Bhadrapur',
-    'GLC': 'Galchhi',
-    'BGN': 'Birgunj',
-    'MGL': 'Mugling',
-    'NRG': 'Narayanghat',
-    'HTD': 'Hetauda',
-    'KVT': 'Kakarvitta',
-    'PST': 'Pashupatinagar',
-    'CND': 'Chandrauta',
-    'KTM': 'Kathmandu',
-    'TKP': 'Tikapur',
-    'GAR': 'Gaur',
-    'SLG': 'Siliguri',
-    'LHN': 'Lahan',
-}
-
+from models import BorderStation
 
 irf_headers = [
     "IRF Number",
@@ -166,9 +138,8 @@ def text_if_true(condition, text):
 
 
 def get_station_name_from_number(form_number):
-    return BORDER_STATION_NAMES.get(form_number[:3].upper(), '')
-
-
+    return BorderStation.objects.get(station_code=form_number[:3].upper()).station_name   
+    
 def get_checkbox_group_value(instance, field_name_start):
     for field in instance._meta.fields:
         if field.name.startswith(field_name_start):
