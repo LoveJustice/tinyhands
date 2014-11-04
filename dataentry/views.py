@@ -27,7 +27,7 @@ from dataentry.forms import (
 )
 from datetime import date
 from dataentry import export
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -363,13 +363,13 @@ def interceptee_fuzzy_matching(request):
     # add aditional filters for age and phone #?
     if 'name' in request.GET:
         inputName = request.GET['name']
-    all_people = Interceptee.objects.all()
-    people_dict = {
-        JSONRenderer().render(IntercepteeSerializer([obj]).data):
-        obj.canonical_name.value for obj in all_people
-    }
-    matches = process.extractBests(inputName, people_dict, limit = 10, score_cutoff=70)
-    return HttpResponse(matches, content_type="application/json")
+    else:
+        return JsonResponse({
+            'success':False,
+            'data':"You must pass a paramater"
+        })
+    matches = Interceptee.objects.fuzzy_match_on(inputName)
+    return JsonResponse({'success':True,'data':matches})
 
 def modal(request):
     return render(request, "dataentry/matching_modal.html")
