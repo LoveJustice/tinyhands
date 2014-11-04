@@ -8,13 +8,17 @@ function initialize() {
     var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 
     function getContentString(borderStation){
-        return borderStation.fields.station_name + ' '  + borderStation.fields.station_code;
+	return '<div>' +
+	    '<h3>'+borderStation.fields.station_name+'</h3>' +
+	    '<p>'+borderStation.fields.station_code+'</p>' +
+	    '</div>';	    
     }
 
     $.get("/portal/get_border_stations",function(data,status){
         console.log(data);
         var border_stations = data;
-        for(station=0;station<data.length;station++){
+        var infowindow = new google.maps.InfoWindow({});
+	for(station=0;station<data.length;station++){
             var myLatlng = new google.maps.LatLng(data[station].fields.latitude,data[station].fields.longitude);
             console.log(myLatlng)
             var marker = new google.maps.Marker({
@@ -24,8 +28,8 @@ function initialize() {
             });
             google.maps.event.addListener(marker, 'click', (function(marker, station) {
                 return function() {
-                    var infowindow = new google.maps.InfoWindow({ });
-                    infowindow.setContent(getContentString(data[station]));
+                    infowindow.close();
+		    infowindow.setContent(getContentString(data[station]));
                     infowindow.open(map, marker);
                 }
             })(marker, station));
