@@ -101,6 +101,9 @@ class AccountUpdateView(
         'permission_vif_edit',
         'permission_accounts_manage',
         'permission_receive_email',
+        'permission_border_stations_view',
+        'permission_border_stations_add',
+        'permission_border_stations_edit',
     ]
     permissions_required = ['permission_accounts_manage']
 
@@ -143,6 +146,9 @@ class AccessControlView(
         'permission_vif_edit',
         'permission_accounts_manage',
         'permission_receive_email',
+        'permission_border_stations_view',
+        'permission_border_stations_add',
+        'permission_border_stations_edit',
     ]
 
     def get_context_data(self, **kwargs):
@@ -169,6 +175,9 @@ class AccessDefaultsView(
         'permission_vif_add',
         'permission_vif_edit',
         'permission_accounts_manage',
+        'permission_border_stations_view',
+        'permission_border_stations_add',
+        'permission_border_stations_edit',
     ]
 
 
