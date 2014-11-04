@@ -46,8 +46,10 @@ INSTALLED_APPS = (
     'imagekit',
     'dataentry',
     'accounts',
+    'portal',
     'util',
     'rest_framework',
+    'static_border_stations',
 )
 
 import django.conf.global_settings as DEFAULT_SETTINGS
