@@ -1,5 +1,5 @@
 from django.core.exceptions import ImproperlyConfigured, PermissionDenied
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.core.urlresolvers import reverse_lazy
 from django.core import serializers
 from django.contrib import messages
@@ -49,7 +49,7 @@ from fuzzywuzzy import process, fuzz
 
 @login_required
 def home(request):
-    return render(request, 'home.html', locals())
+    return redirect("main_dashboard")
 
 
 class SearchFormsMixin(object):

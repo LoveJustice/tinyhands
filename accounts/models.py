@@ -19,7 +19,9 @@ class DefaultPermissionsSet(models.Model):
     permission_vif_edit = models.BooleanField(default=False)
     permission_accounts_manage = models.BooleanField(default=False)
     permission_receive_email = models.BooleanField(default=False)
-
+    permission_border_stations_view = models.BooleanField(default=False)
+    permission_border_stations_add = models.BooleanField(default=False)
+    permission_border_stations_edit = models.BooleanField(default=False)
 
     def __unicode__(self):
         return self.name
@@ -78,7 +80,10 @@ class Account(AbstractBaseUser, PermissionsMixin):
     permission_vif_edit = models.BooleanField(default=False)
     permission_accounts_manage = models.BooleanField(default=False)
     permission_receive_email = models.BooleanField(default=False)
-
+    permission_border_stations_view = models.BooleanField(default=False)
+    permission_border_stations_add = models.BooleanField(default=False)
+    permission_border_stations_edit = models.BooleanField(default=False)
+    
     date_joined = models.DateTimeField(default=timezone.now)
 
     activation_key = models.CharField(
@@ -128,7 +133,6 @@ class Account(AbstractBaseUser, PermissionsMixin):
                 'account': self,
             }
         )
-
 
 class AlertManager(models.Manager):
     def send_alert(self, code, context={}):

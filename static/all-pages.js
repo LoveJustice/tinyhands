@@ -493,4 +493,3 @@ $(document).ready(function() {
         DREAMSUITE[bodyClass]();
     }
 });
-
