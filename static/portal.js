@@ -17,7 +17,9 @@ function initialize() {
     $.get("/portal/get_border_stations",function(data,status){
         console.log(data);
         var border_stations = data;
-        var infowindow = new google.maps.InfoWindow({});
+        var infowindow = new google.maps.InfoWindow({
+            maxWidth: 400
+        });
 	for(station=0;station<data.length;station++){
             var myLatlng = new google.maps.LatLng(data[station].fields.latitude,data[station].fields.longitude);
             console.log(myLatlng)
@@ -29,7 +31,7 @@ function initialize() {
             google.maps.event.addListener(marker, 'click', (function(marker, station) {
                 return function() {
                     infowindow.close();
-		    infowindow.setContent(getContentString(data[station]));
+		            infowindow.setContent(getContentString(data[station]));
                     infowindow.open(map, marker);
                 }
             })(marker, station));
