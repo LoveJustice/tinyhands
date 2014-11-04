@@ -27,5 +27,5 @@ class StaticBorderStationsCreateView (
     model = BorderStation
     form_class = BorderStationForm
     success_url = reverse_lazy('home')
-    inlines = [PersonInline, LocationInline]
+    #inlines = [PersonInline, LocationInline]
     permissions_required = ['permission_border_stations_add']
