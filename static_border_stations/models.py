@@ -7,10 +7,10 @@ class Person(models.Model):
     last_name = models.CharField(max_length=255, blank=True)
     receives_money_distribution_form = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
-    border_station = models.ForeignKey(BorderStation)
+    border_station = models.ForeignKey(BorderStation, null=False, default=1)
 
 class Location(models.Model):
     name = models.CharField(max_length=255, blank=True)
     latitude = models.FloatField(null=True)
     longitude = models.FloatField(null=True)
-    border_station = models.ForeignKey(BorderStation)
+    border_station = models.ForeignKey(BorderStation, null=False, default=1)
