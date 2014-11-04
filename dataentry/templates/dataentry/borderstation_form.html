@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% load bootstrap %}
+
+{% block tab_block %}
+<h1>Details</h1>
+<form method="POST">
+    {% csrf_token %}
+    <!--{{ form|bootstrap }}-->
+    <div class="row">
+        <div class="col-sm-6">
+            {{form.station_name|bootstrap}}
+        </div>
+        <div class="col-sm-6">
+            {{form.station_code|bootstrap}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            {{form.date_established|bootstrap}}
+        </div>
+        <div class="col-sm-6">
+            {{form.has_shelter|bootstrap}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            {{form.latitude|bootstrap}}
+        </div>
+        <div class="col-sm-6">
+            {{form.longitude|bootstrap}}
+        </div>
+    </div>
+
+    <input type="submit" class="btn btn-primary" value="Create" />
+</form>
+{% endblock %}

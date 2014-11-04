@@ -52,9 +52,10 @@ in the Javascript and run code unique to the current page.
             <ul class="nav navbar-nav">
                 <li><a href="#" class="dropdown-toggle" data-toggle="dropdown">Forms</a></li>
                 <li class="dropdown">
-                    <a href="{% url 'borderstations_create' %}">Stations<b class="caret"></b></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Stations<b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         {% for station in borderstations %}
+                            <li><a href="#">Here's a station.</a></li>
                         {% endfor %}
                         <li><a href="{% url 'borderstations_create' %}">Create Station</a></li>
                     </ul>

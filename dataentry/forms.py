@@ -5,7 +5,8 @@ from dataentry.models import (
     InterceptionRecord,
     Interceptee,
     VictimInterviewPersonBox,
-    VictimInterviewLocationBox
+    VictimInterviewLocationBox,
+    BorderStation
 )
 from django.forms.models import inlineformset_factory
 from django.core.exceptions import ValidationError
@@ -680,3 +681,8 @@ class VictimInterviewLocationBoxForm(DreamSuitePaperForm):
 
     def __init__(self, *args, **kwargs):
         super(VictimInterviewLocationBoxForm, self).__init__(*args, **kwargs)
+        
+        
+class BorderStationForm(forms.ModelForm):
+    class Meta:
+        model = BorderStation
