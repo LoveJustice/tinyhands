@@ -770,4 +770,4 @@ class VictimInterviewLocationBoxForm(DreamSuitePaperForm):
 class VDCForm(forms.ModelForm):
     class Meta:
         model = VDC
-        fields = ['name','latitude','longitude','cannonical_name','district']
+        fields = ['name','latitude','longitude','cannonical_name','district','verified']

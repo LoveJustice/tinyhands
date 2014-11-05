@@ -30,8 +30,14 @@
 	    <td style="text-align:center">{{ vdc.get_longitude }} </td>
 	    <td style="text-align:center">{{ vdc.get_district }} </td>
 	    <td style="text-align:center">{{ vdc.get_cannonical_name }} </td>
-	    <td style="text-align:center"></td>
-	    <td><a id="vdc_update_link" class="btn btn-warning pull-left" style="margin-right:-35px" href="{% url 'vdc_admin_update' vdc.id %}" data-target="#modal" >Edit</a></td>
+	    <td style="text-align:center">
+            {% if vdc.is_verified %}
+                Yes
+            {% else %}
+                No
+            {% endif %}
+        </td>
+	    <td><a id="vdc_update_link" class="btn btn-warning pull-left" style="margin-right:-35px" href="{% url 'vdc_admin_update' vdc.id %}" data-target="#modal"  >Edit</a></td>
 		</tr>
 	{% empty %}
 		{% if database_empty %}

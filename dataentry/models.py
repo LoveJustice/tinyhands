@@ -31,6 +31,7 @@ class VDC(models.Model):
     longitude = models.FloatField()
     district = models.ForeignKey(District,null=False)
     cannonical_name = models.ForeignKey('self',null=True,blank=True)
+    verified = models.BooleanField(default=False)
 
     def __unicode__(self):
         return self.name
@@ -58,6 +59,10 @@ class VDC(models.Model):
         if self.cannonical_name:
             return self.cannonical_name.district
         return self.district
+    
+    @property
+    def is_verified(self):
+        return self.verified
 
 
 class InterceptionRecord(models.Model):
