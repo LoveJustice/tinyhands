@@ -271,7 +271,7 @@
 },
 {
     "fields": {
-        "person": 2,
+        "person": 3,
         "value": "John"
     },
     "model": "dataentry.name",

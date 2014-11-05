@@ -1,37 +1,17 @@
 $cur_input = ""
-list_of_names = [
-  "Justin Northworth"
-  "Justin North"
-  "Justice Northwood"
-  "Justyn Northwerth"
-  "Dustin Waldo"
-  "Dustin Waldron"
-  "Dusty Waldy"
-  "Dustin Waldro"
-]
-list_of_pics = [
-  "/media/interceptee_photos/doge.png"
-  "/media/interceptee_photos/doge.png"
-  "/media/interceptee_photos/doge.png"
-  "/media/interceptee_photos/doge.png"
-  "/media/interceptee_photos/38503_1144682394791_1729508_n.jpg"
-  "/media/interceptee_photos/38503_1144682394791_1729508_n.jpg"
-  "/media/interceptee_photos/38503_1144682394791_1729508_n.jpg"
-  "/media/interceptee_photos/38503_1144682394791_1729508_n.jpg"
-]
 $ ->
+  $modal = $('#matching_modal')
   $ui = $("#fuzzymatching-ui")
   setupInputHandlers($ui)
-  $items = $ui.find('li')
-  # When you click on a name, insert it
+  # When you click on a name, show the modal
   $ui.on "click", "li.person", ->
     $this = $(this)
-    name = $this.children(".name").text()
-    console.log name
-    $cur_input.val(name)
-    $button = $cur_input.parent().parent().find(".photo-upload-button")
-    $button.prop("disabled", true)
-    $button.children().css("color", "grey")
+    $modal.modal()
+#    name = $this.children(".name").text()
+#    $cur_input.val(name)
+#    $button = $cur_input.parent().parent().find(".photo-upload-button")
+#    $button.prop("disabled", true)
+#    $button.children().css("color", "grey")
   # Hover image
   $ui.on "mouseover", "li.person", ->
     $ui.find("img").attr("src", "/media/#{$(this).data("photo")}").show()
@@ -57,26 +37,19 @@ setupInputHandlers = ($ui) ->
   # Searching
   $fuzzy_ui_eles.keyup (e) ->
     if e.which not in [16, 17, 37, 38, 39, 40]
+      console.log "searching"
       search $(this).val(), $ui
 
 search = (input, $ui) ->
+  console.log $ui.data("ajax"), {name: input}
   $.get $ui.data("ajax"), {name: input}, (data) ->
-    results = []
-    data.forEach (item) ->
-      obj = JSON.parse(item[2])[0]
-      results.push({id: obj.pk, name: item[0], score: item[1], photo: obj.fields.photo})
-    console.log results
-    display_results(results, $ui)
-
-search_old = (input, $ui) ->
-  $button = $cur_input.parent().parent().find(".photo-upload-button")
-  $button.prop("disabled", false)
-  $button.children().css("color", "")
-  f = new Fuse(list_of_names, {includeScore: true})
-  result = f.search(input)
-  results = ({id: item.item, name: list_of_names[item.item], score: item.score} for item in result)
-  console.log(results)
-  display_results(results, $ui)
+    if data.success
+      results = []
+      data.data.forEach (item) ->
+        console.log item
+        obj = JSON.parse(item[2])[0]
+        results.push({id: obj.id, name: item[0], score: item[1], photo: obj.photo})
+      display_results(results, $ui)
 
 display_results = (results, $ui) ->
   $ul = $ui.find("ul")
@@ -84,7 +57,6 @@ display_results = (results, $ui) ->
   if results.length > 0
     for item in results.slice(0, 6)
       $span = $("<span>").addClass("name").text(item.name)
-#      $li = $("<li>").attr("id", item.id).text("(#{Math.round((1-item.score)*100)}) ").append($span)
       $li = $("<li class='person'>").attr("id", item.id).text("(#{item.score})").data("photo", item.photo).append($span)
       $ul.append($li)
   else

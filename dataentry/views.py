@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.core.urlresolvers import reverse_lazy
 from django.core import serializers
 from django.contrib import messages
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.views.generic import ListView, View, DeleteView, CreateView, UpdateView
 from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSet
 from django.contrib.auth.decorators import login_required
@@ -43,11 +43,10 @@ from django.conf import settings
 
 import csv
 import re
-import json
 import os
 import shutil
 from alert_checkers import IRFAlertChecker, VIFAlertChecker
-from fuzzywuzzy import process, fuzz
+from fuzzywuzzy import process
 
 @login_required
 def home(request):
@@ -360,18 +359,38 @@ class GeoCodeDistrictAPIView(APIView):
 
 @login_required
 def interceptee_fuzzy_matching(request):
-    # add aditional filters for age and phone #?
+    # add additional filters for age and phone #?
     if 'name' in request.GET:
         inputName = request.GET['name']
+    else:
+        return JsonResponse({
+            "success": False,
+            "data": "You must pass parameter 'id'"
+        })
     all_people = Interceptee.objects.all()
+    print IntercepteeSerializer(all_people[0]).data, '\n\n'
     people_dict = {
         JSONRenderer().render(IntercepteeSerializer([obj]).data):
         obj.canonical_name.value for obj in all_people
     }
-    matches = process.extractBests(inputName, people_dict, limit = 10, score_cutoff=70)
-    return HttpResponse(matches, content_type="application/json")
+    matches = process.extractBests(inputName, people_dict, limit=10)#, score_cutoff=70)
+    print matches
+    return JsonResponse({
+        "success": True,
+        "data": matches
+    })
 
 @login_required
-def matching_modal(request):
-    #return HttpResponse()
-    return render(request, "dataentry/matching_modal.html")
+def matching_modal(request, id):
+    if not id:
+        return HttpResponse("You must pass parameter 'id'<br/>Example: /matching_modal/1")
+    person = Interceptee.objects.get(pk=id)
+    name = request.GET['name'] if 'name' in request.GET else None
+    phone = request.GET['phone'] if 'phone' in request.GET else None
+    age = request.GET['age'] if 'age' in request.GET else None
+    return render(request, "dataentry/matching_modal.html", {
+        "person": person,
+        "form_name": name,
+        "form_phone": phone,
+        "form_age": age
+    })

@@ -1,5 +1,15 @@
+{% extends "base.html" %}
+{% block tab_block %}
+{# Setting up view vars for js#}
+<script type="text/javascript">
+    window.person = {
+        name: "{{ person.canonical_name }}",
+        phone: "{{ person.canonical_phone }}",
+        age: "{{ person.canonical_age }}"
+    };
+</script>
 <!-- .modal -->
-<div class="modal fade">
+<div id="matching_modal" class="modal fade">
     <!-- /.modal-dialog -->
     <div class="modal-dialog modal-lg">
         <!-- .modal-content -->
@@ -9,133 +19,79 @@
                 <h4 class="modal-title">Please select the correct attributes&hellip;</h4>
             </div>
             <div class="modal-body">
-
                 <div class="row">
                     <div class="col-lg-3">
-                        <div class="well well-sm">
-                            <div id="name">Frank Sinatra</div>
-                            <img id="photo" class="img-responsive img-rounded" src="/media/interceptee_photos/frank_sinatra.jpg"/>
-                            <address>
-                                <strong>Taylor University</strong><br/>
-                                236 W. Reade Ave<br/>
-                                Upland, IN 46989<br/>
-                                <abbr title="Phone">P:</abbr>(31)-8456-6435
-                            </address>
+                        <div id="canonical_info" class="well well-sm">
+                            <img id="photo" class="img-responsive img-rounded" src="{{ person.photo.url }}"/><br/>
+                            <strong>Canonical information:</strong>
+                            <div id="name"><span>Name:</span> {{ person.canonical_name }}</div>
+                            <div id="age"><span>Age:</span> {{ person.canonical_age }}</div>
+                            <div id="phone"><span>Phone:</span> {{ person.canonical_phone }}</div>
                         </div>
                     </div>
                     <div class="col-lg-9">
                         <div class="row">
                             <div class="attribute col-lg-6">
-                                <h3>Relation</h3>
+                                <h3>Name</h3>
                                 <label>Form:</label>
 
-                                <div id="name" class="entered input-group">
-                                    <span class="form-control">Frank Sintra</span>
-                                    <span class="input-group-btn"><button class="btn btn-default">&#10003;</button></span>
+                                <div id="form_name" class="entered input-group">
+                                    <span class="form-control">{% if form_name != None %}{{ form_name }}{% else %}Name not entered{% endif %}</span>
+                                    <span class="input-group-btn"><button class="btn btn-default{% if form_name == None %} disabled{% endif %}">&#10003;</button></span>
                                 </div>
                                 <label>Matches:</label>
                                 <ul class="matched list-unstyled list-input-group">
+                                    {% for name in person.names.all %}
                                     <li class="input-group">
-                                        <span class="form-control">Frankie Sinatra</span>
-                                        <span class="input-group-btn"><button class="btn btn-default">&#10003;</button></span>
+                                        <span class="form-control">{{ name }}</span>
+                                        <span class="input-group-btn">
+                                            <button class="btn {% if name == person.canonical_name %}btn-success disabled{% else %}btn-default{% endif %}">&#10003;</button>
+                                        </span>
                                     </li>
-                                    <li class="input-group">
-                                        <span class="form-control">Frank Sinatra</span>
-                                        <span class="input-group-btn"><button class="btn btn-success disabled">&#10003;</button></span>
-                                    </li>
-                                    <li class="input-group">
-                                        <span class="form-control">Frank Sintara</span>
-                                        <span class="input-group-btn"><button class="btn btn-default">&#10003;</button></span>
-                                    </li>
+                                    {% endfor %}
                                 </ul>
                             </div>
                             <div class="attribute col-lg-6">
                                 <h3>Phone Number</h3>
                                 <label>Form:</label>
 
-                                <div id="phone" class="entered input-group">
-                                    <span class="form-control">(31)-8456-6435</span>
-                                    <span class="input-group-btn"><button class="btn btn-success disabled">&#10003;</button></span>
+                                <div id="form_phone" class="entered input-group">
+                                    <span class="form-control">{% if form_phone != None %}{{ form_phone }}{% else %}Phone number not entered{% endif %}</span>
+                                    <span class="input-group-btn"><button class="btn btn-default{% if form_phone == None %} disabled{% endif %}">&#10003;</button></span>
                                 </div>
                                 <label>Matches:</label>
                                 <ul class="matched list-unstyled list-input-group">
                                     {# NOTE: Nepal numbers are odd. Check here for ref http://www.howtocallabroad.com/nepal/ #}
+                                    {% for phone in person.phone_numbers.all %}
                                     <li class="input-group">
-                                        <span class="form-control">(85)-8973-5451</span>
-                                        <span class="input-group-btn"><button class="btn btn-default">&#10003;</button></span>
+                                        <span class="form-control">{{ phone }}</span>
+                                        <span class="input-group-btn">
+                                            <button class="btn {% if phone == person.canonical_phone %} btn-success disabled{% else %}btn-default{% endif %}">&#10003;</button>
+                                        </span>
                                     </li>
-                                    <li class="input-group">
-                                        <span class="form-control">(84)-6315-5644</span>
-                                        <span class="input-group-btn"><button class="btn btn-default">&#10003;</button></span>
-                                    </li>
-                                    <li class="input-group">
-                                        <span class="form-control">(31)-8456-6435</span>
-                                        <span class="input-group-btn"><button class="btn btn-success disabled">&#10003;</button></span>
-                                    </li>
-                                    <li class="input-group">
-                                        <span class="form-control">(46)-3477-3618</span>
-                                        <span class="input-group-btn"><button class="btn btn-default">&#10003;</button></span>
-                                    </li>
-                                    <li class="input-group">
-                                        <span class="form-control">(64)-1302-0004</span>
-                                        <span class="input-group-btn"><button class="btn btn-default">&#10003;</button></span>
-                                    </li>
-                                    <li class="input-group">
-                                        <span class="form-control">(84)-7518-1050</span>
-                                        <span class="input-group-btn"><button class="btn btn-default">&#10003;</button></span>
-                                    </li>
+                                    {% endfor %}
                                 </ul>
                             </div>
+                        </div>
+                        <div class="row">
                             <div class="attribute col-lg-6">
                                 <h3>Age</h3>
                                 <label>Form:</label>
 
-                                <div id="age" class="entered input-group">
-                                    <span class="form-control">36</span>
-                                    <span class="input-group-btn"><button class="btn btn-default">&#10003;</button></span>
+                                <div id="form_age" class="entered input-group">
+                                    <span class="form-control">{% if form_age != None %}{{ form_age }}{% else %}Age not entered{% endif %}</span>
+                                    <span class="input-group-btn"><button class="btn btn-default{% if form_age == None %} disabled{% endif %}">&#10003;</button></span>
                                 </div>
                                 <label>Matches:</label>
                                 <ul class="matched list-unstyled list-input-group">
+                                    {% for age in person.ages.all %}
                                     <li class="input-group">
-                                        <span class="form-control">37</span>
-                                        <span class="input-group-btn"><button class="btn btn-success disabled">&#10003;</button></span>
+                                        <span class="form-control">{{ age }}</span>
+                                        <span class="input-group-btn">
+                                            <button class="btn {% if age == person.canonical_age %}btn-success disabled{% else %}btn-default{% endif %}">&#10003;</button>
+                                        </span>
                                     </li>
-                                    <li class="input-group">
-                                        <span class="form-control">35</span>
-                                        <span class="input-group-btn"><button class="btn btn-default">&#10003;</button></span>
-                                    </li>
-                                    <li class="input-group">
-                                        <span class="form-control">34</span>
-                                        <span class="input-group-btn"><button class="btn btn-default">&#10003;</button></span>
-                                    </li>
-                                    <li class="input-group">
-                                        <span class="form-control">33</span>
-                                        <span class="input-group-btn"><button class="btn btn-default">&#10003;</button></span>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="attribute col-lg-6">
-                                <h3>Relation</h3>
-                                <label>Form:</label>
-
-                                <div id="relation" class="entered input-group">
-                                    <span class="form-control">Jesuus</span>
-                                    <span class="input-group-btn"><button class="btn btn-default">&#10003;</button></span>
-                                </div>
-                                <label>Matches:</label>
-                                <ul class="matched list-unstyled list-input-group">
-                                    <li class="input-group">
-                                        <span class="form-control">Jeezus</span>
-                                        <span class="input-group-btn"><button class="btn btn-default">&#10003;</button></span>
-                                    </li>
-                                    <li class="input-group">
-                                        <span class="form-control">Jesuus</span>
-                                        <span class="input-group-btn"><button class="btn btn-default">&#10003;</button></span>
-                                    </li>
-                                    <li class="input-group">
-                                        <span class="form-control">Jesus</span>
-                                        <span class="input-group-btn"><button class="btn btn-success disabled">&#10003;</button></span>
-                                    </li>
+                                    {% endfor %}
                                 </ul>
                             </div>
                         </div>
@@ -151,5 +107,11 @@
     </div>
     <!-- /.modal-dialog -->
 </div><!-- /.modal -->
+
+{% endblock %}
+{% block head %}
 <link rel="stylesheet/less" type="text/css" href="/static/matching_modal.less"/>
+    {% endblock %}
+{% block afterhead %}
 <script src="{{ STATIC_URL }}matching_modal.js"></script>
+{% endblock %}

@@ -241,20 +241,32 @@ class Person(models.Model):
     canonical_phone = models.OneToOneField("Phone", related_name="+")
     canonical_age = models.OneToOneField("Age", related_name="+")
 
+    def __unicode__(self):
+        return "Name: {}, Age: {}, Gender: {}, Phone: {}".format(self.canonical_name, self.canonical_age, self.gender, self.canonical_phone)
+
 
 class Name(models.Model):
     value = models.CharField(max_length=255)
     person = models.ForeignKey(Person, related_name="names")
+
+    def __unicode__(self):
+        return self.value
 
 
 class Phone(models.Model):
     value = models.CharField(max_length=255, blank=True)
     person = models.ForeignKey(Person, related_name="phone_numbers")
 
+    def __unicode__(self):
+        return self.value
+
 
 class Age(models.Model):
     value = models.PositiveIntegerField("age", null=True, blank=True)
     person = models.ForeignKey(Person, related_name="ages")
+
+    def __unicode__(self):
+        return str(self.value)
 
 
 class Interceptee(Person):
@@ -273,6 +285,9 @@ class Interceptee(Person):
 
     class Meta:
         ordering = ['id']
+
+    def __unicode__(self):
+        return super(Interceptee, self).__unicode__() + ", Kind: {}, Relation To: {}".format(self.kind, self.relation_to)
 
 
 class VictimInterview(Person):
