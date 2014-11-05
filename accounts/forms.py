@@ -17,11 +17,8 @@ class CreateUnactivatedAccountForm(forms.ModelForm):
             'permission_vif_add',
             'permission_vif_edit',
             'permission_accounts_manage',
-<<<<<<< HEAD
             'permission_receive_email',
-=======
             'permission_vdc_manage',
->>>>>>> fuzzy_geocode_matching
         ]
 
     def clean_password2(self):

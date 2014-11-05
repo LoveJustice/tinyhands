@@ -100,11 +100,8 @@ class AccountUpdateView(
         'permission_vif_add',
         'permission_vif_edit',
         'permission_accounts_manage',
-<<<<<<< HEAD
         'permission_receive_email',
-=======
         'permission_vdc_manage',
->>>>>>> fuzzy_geocode_matching
     ]
     permissions_required = ['permission_accounts_manage']
 
@@ -146,11 +143,8 @@ class AccessControlView(
         'permission_vif_add',
         'permission_vif_edit',
         'permission_accounts_manage',
-<<<<<<< HEAD
         'permission_receive_email',
-=======
         'permission_vdc_manage',
->>>>>>> fuzzy_geocode_matching
     ]
 
     def get_context_data(self, **kwargs):

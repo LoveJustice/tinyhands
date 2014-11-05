@@ -70,6 +70,7 @@ in the Javascript and run code unique to the current page.
                     <ul class="dropdown-menu">
                         {% if request.user.permission_accounts_manage %}
                         <li><a href="{% url 'account_list' %}">Accounts and Permissions</a></li>
+                        {% endif %}
                         {% if request.user.permission_vdc_manage %}
                         <li><a href="{% url 'vdc_admin_page' %}">Edit VDCs</a></li>
                         {% endif %}

@@ -75,13 +75,9 @@ class SearchFormsMixin(object):
         except:
             value = ''
         if (value != ''):
-<<<<<<< HEAD
             code = value[:3]
             stations = BorderStation.objects.filter(station_code__startswith=code)
             if(len(stations) != 0):
-=======
-            if(re.match('\w+\d+$', value) and self.model != VDC):
->>>>>>> fuzzy_geocode_matching
                 object_list = self.model.objects.filter(**{self.Number :value})
                 if(len(object_list) == 0):
                     object_list = self.model.objects.filter(**{self.Name :value})
@@ -347,7 +343,7 @@ class VictimInterviewCSVExportView(
 
         return response
 
-
+    
 class GeoCodeDistrictAPIView(
         APIView):
     
