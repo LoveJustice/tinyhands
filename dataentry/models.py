@@ -1,6 +1,7 @@
 from django.db import models
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
+from fuzzywuzzy import process, utils, fuzz, string_processing
 
 from accounts.models import Account
 
@@ -237,9 +238,9 @@ class Person(models.Model):
     gender = models.CharField(max_length=4, choices=GENDER_CHOICES, blank=True)
     districts = models.ManyToManyField(District, related_name="+")
     vdcs = models.ManyToManyField(VDC, related_name="+")
-    canonical_name = models.OneToOneField("Name", related_name="+")
-    canonical_phone = models.OneToOneField("Phone", related_name="+")
-    canonical_age = models.OneToOneField("Age", related_name="+")
+    canonical_name = models.ForeignKey("Name", related_name="+")
+    canonical_phone = models.ForeignKey("Phone", related_name="+")
+    canonical_age = models.ForeignKey("Age", related_name="+")
 
     def __unicode__(self):
         return "Name: {}, Age: {}, Gender: {}, Phone: {}".format(self.canonical_name, self.canonical_age, self.gender, self.canonical_phone)
@@ -269,6 +270,63 @@ class Age(models.Model):
         return str(self.value)
 
 
+class IntercepteeManager(models.Manager):
+    def fuzzy_match_on(self, inputName=None, inputAge=None, inputPhone=None):
+        def custom_processor(items, force_ascii=False):
+            item_list = []
+            for item in items:
+                if item is None:
+                    item_list.append("")
+                if force_ascii:
+                    item = asciidammit(item)
+                string_out = string_processing.StringProcessor.replace_non_letters_non_numbers_with_whitespace(item)
+                string_out = string_processing.StringProcessor.to_lower_case(string_out)
+                string_out = string_processing.StringProcessor.strip(string_out)
+                item_list.append(string_out)
+            return item_list
+
+        def custom_scorer(query, processed, force_ascii=True):
+            item_list = []
+            for item in processed:
+                p1 = utils.full_process(query, force_ascii=force_ascii)
+                p2 = utils.full_process(item, force_ascii=force_ascii)
+                if not utils.validate_string(p1):
+                    item_list.append(0)
+                if not utils.validate_string(p2):
+                    item_list.append(0)
+                # should we look at partials?
+                try_partial = True
+                unbase_scale = .95
+                partial_scale = .90
+                base = fuzz.ratio(p1, p2)
+                len_ratio = float(max(len(p1), len(p2))) / min(len(p1), len(p2))
+                # if strings are similar length, don't use partials
+                if len_ratio < 1.5:
+                    try_partial = False
+                # if one string is much much shorter than the other
+                if len_ratio > 8:
+                    partial_scale = .6
+                if try_partial:
+                    partial = partial_ratio(p1, p2) * partial_scale
+                    ptsor = partial_token_sort_ratio(p1, p2, force_ascii=force_ascii) \
+                            * unbase_scale * partial_scale
+                    ptser = partial_token_set_ratio(p1, p2, force_ascii=force_ascii) \
+                            * unbase_scale * partial_scale
+                    item_list.append(int(max(base, partial, ptsor, ptser)))
+                else:
+                    tsor = fuzz.token_sort_ratio(p1, p2, force_ascii=force_ascii) * unbase_scale
+                    tser = fuzz.token_set_ratio(p1, p2, force_ascii=force_ascii) * unbase_scale
+                    item_list.append(int(max(base, tsor, tser)))
+            return item_list
+
+        interceptees = Interceptee.objects.all()
+        interceptee_dict = {
+            interceptee:interceptee.names.values_list('value', flat=True) for interceptee in interceptees
+        }
+        matches = process.extractBests(inputName, interceptee_dict, processor=custom_processor, scorer=custom_scorer, limit = 10, score_cutoff = 70)
+        return matches
+
+
 class Interceptee(Person):
     KIND_CHOICES = [
         ('v', 'Victim'),
@@ -282,6 +340,7 @@ class Interceptee(Person):
     interception_record = models.ForeignKey(InterceptionRecord, related_name='interceptees')
     kind = models.CharField(max_length=4, choices=KIND_CHOICES)
     relation_to = models.CharField(max_length=255, blank=True)
+    objects = IntercepteeManager()
 
     class Meta:
         ordering = ['id']

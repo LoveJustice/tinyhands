@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.core.urlresolvers import reverse_lazy
 from django.core import serializers
 from django.contrib import messages
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.views.generic import ListView, View, DeleteView, CreateView, UpdateView
 from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSet
 from django.contrib.auth.decorators import login_required
@@ -27,7 +27,6 @@ from dataentry.forms import (
 )
 from datetime import date
 from dataentry import export
-from django.http import HttpResponse
 
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -43,6 +42,7 @@ from django.conf import settings
 
 import csv
 import re
+import json
 import os
 import shutil
 from alert_checkers import IRFAlertChecker, VIFAlertChecker
@@ -364,21 +364,11 @@ def interceptee_fuzzy_matching(request):
         inputName = request.GET['name']
     else:
         return JsonResponse({
-            "success": False,
-            "data": "You must pass parameter 'id'"
+            'success':False,
+            'data':"You must pass a paramater"
         })
-    all_people = Interceptee.objects.all()
-    print IntercepteeSerializer(all_people[0]).data, '\n\n'
-    people_dict = {
-        JSONRenderer().render(IntercepteeSerializer([obj]).data):
-        obj.canonical_name.value for obj in all_people
-    }
-    matches = process.extractBests(inputName, people_dict, limit=10)#, score_cutoff=70)
-    print matches
-    return JsonResponse({
-        "success": True,
-        "data": matches
-    })
+    matches = Interceptee.objects.fuzzy_match_on(inputName)
+    return JsonResponse({'success':True,'data':matches})
 
 @login_required
 def matching_modal(request, id):
