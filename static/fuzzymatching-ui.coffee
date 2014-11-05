@@ -1,22 +1,4 @@
 $cur_input = ""
-$ ->
-  $modal = $('#matching_modal')
-  $ui = $("#fuzzymatching-ui")
-  setupInputHandlers($ui)
-  # When you click on a name, show the modal
-  $ui.on "click", "li.person", ->
-    $this = $(this)
-    $modal.modal()
-#    name = $this.children(".name").text()
-#    $cur_input.val(name)
-#    $button = $cur_input.parent().parent().find(".photo-upload-button")
-#    $button.prop("disabled", true)
-#    $button.children().css("color", "grey")
-  # Hover image
-  $ui.on "mouseover", "li.person", ->
-    $ui.find("img").attr("src", "/media/#{$(this).data("photo")}").show()
-
-
 
 setupInputHandlers = ($ui) ->
   $fuzzy_ui_eles = $("[data-fuzzy-ui]")
@@ -36,29 +18,63 @@ setupInputHandlers = ($ui) ->
 
   # Searching
   $fuzzy_ui_eles.keyup (e) ->
-    if e.which not in [16, 17, 37, 38, 39, 40]
-      console.log "searching"
+    if e.which not in [16, 17, 18, 37, 38, 39, 40]
       search $(this).val(), $ui
 
 search = (input, $ui) ->
-  console.log $ui.data("ajax"), {name: input}
   $.get $ui.data("ajax"), {name: input}, (data) ->
     if data.success
       results = []
-      data.data.forEach (item) ->
-        console.log item
-        obj = JSON.parse(item[2])[0]
-        results.push({id: obj.id, name: item[0], score: item[1], photo: obj.photo})
+      data.data.forEach (group) ->
+        names = group[1]
+        scores = group[2]
+        id = group[0]
+        photo = group[3]
+        $.each names, (idx) ->
+          results.push {
+            id: id,
+            name: names[idx],
+            score: scores[idx],
+            photo: photo
+          }
       display_results(results, $ui)
 
 display_results = (results, $ui) ->
   $ul = $ui.find("ul")
   $ul.children().remove()
   if results.length > 0
-    for item in results.slice(0, 6)
+    for item in results.sort((a, b) ->
+        return b.score - a.score)
       $span = $("<span>").addClass("name").text(item.name)
       $li = $("<li class='person'>").attr("id", item.id).text("(#{item.score})").data("photo", item.photo).append($span)
       $ul.append($li)
   else
       $li = $("<li>").text("Type to search for matches")
       $ul.append($li)
+
+
+$ ->
+  $modal = $('#matching_modal')
+  $ui = $("#fuzzymatching-ui")
+  setupInputHandlers($ui)
+  # When you click on a name, show the modal
+  $ui.on "click", "li.person", ->
+    $this = $(this)
+    url = dutils.urls.resolve('matching_modal', { id: this.id })
+    $row = $cur_input.parents('tr')
+    name = $row.find('#fuzzy_name').val()
+    phone = $row.find('#fuzzy_phone_contact').val()
+    age = $row.find('#fuzzy_age').val()
+    built_url = "#{url}?name=#{name}&phone=#{phone}&age=#{age}"
+    console.log built_url
+    $modal.load built_url, ->
+      $modal.modal()
+#    name = $this.children(".name").text()
+#    $cur_input.val(name)
+#    $button = $cur_input.parent().parent().find(".photo-upload-button")
+#    $button.prop("disabled", true)
+#    $button.children().css("color", "grey")
+  # Hover image
+  $ui.on "mouseover", "li.person", ->
+    $ui.find("img").attr("src", "#{$(this).data("photo")}").show()
+

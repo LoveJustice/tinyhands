@@ -4,21 +4,6 @@
 
   $cur_input = "";
 
-  $(function() {
-    var $modal, $ui;
-    $modal = $('#matching_modal');
-    $ui = $("#fuzzymatching-ui");
-    setupInputHandlers($ui);
-    $ui.on("click", "li.person", function() {
-      var $this;
-      $this = $(this);
-      return $modal.modal();
-    });
-    return $ui.on("mouseover", "li.person", function() {
-      return $ui.find("img").attr("src", "/media/" + ($(this).data("photo"))).show();
-    });
-  });
-
   setupInputHandlers = function($ui) {
     var $fuzzy_ui_eles;
     $fuzzy_ui_eles = $("[data-fuzzy-ui]");
@@ -45,32 +30,32 @@
     });
     return $fuzzy_ui_eles.keyup(function(e) {
       var _ref;
-      if ((_ref = e.which) !== 16 && _ref !== 17 && _ref !== 37 && _ref !== 38 && _ref !== 39 && _ref !== 40) {
-        console.log("searching");
+      if ((_ref = e.which) !== 16 && _ref !== 17 && _ref !== 18 && _ref !== 37 && _ref !== 38 && _ref !== 39 && _ref !== 40) {
         return search($(this).val(), $ui);
       }
     });
   };
 
   search = function(input, $ui) {
-    console.log($ui.data("ajax"), {
-      name: input
-    });
     return $.get($ui.data("ajax"), {
       name: input
     }, function(data) {
       var results;
       if (data.success) {
         results = [];
-        data.data.forEach(function(item) {
-          var obj;
-          console.log(item);
-          obj = JSON.parse(item[2])[0];
-          return results.push({
-            id: obj.id,
-            name: item[0],
-            score: item[1],
-            photo: obj.photo
+        data.data.forEach(function(group) {
+          var id, names, photo, scores;
+          names = group[1];
+          scores = group[2];
+          id = group[0];
+          photo = group[3];
+          return $.each(names, function(idx) {
+            return results.push({
+              id: id,
+              name: names[idx],
+              score: scores[idx],
+              photo: photo
+            });
           });
         });
         return display_results(results, $ui);
@@ -83,7 +68,9 @@
     $ul = $ui.find("ul");
     $ul.children().remove();
     if (results.length > 0) {
-      _ref = results.slice(0, 6);
+      _ref = results.sort(function(a, b) {
+        return b.score - a.score;
+      });
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         item = _ref[_i];
@@ -97,5 +84,31 @@
       return $ul.append($li);
     }
   };
+
+  $(function() {
+    var $modal, $ui;
+    $modal = $('#matching_modal');
+    $ui = $("#fuzzymatching-ui");
+    setupInputHandlers($ui);
+    $ui.on("click", "li.person", function() {
+      var $row, $this, age, built_url, name, phone, url;
+      $this = $(this);
+      url = dutils.urls.resolve('matching_modal', {
+        id: this.id
+      });
+      $row = $cur_input.parents('tr');
+      name = $row.find('#fuzzy_name').val();
+      phone = $row.find('#fuzzy_phone_contact').val();
+      age = $row.find('#fuzzy_age').val();
+      built_url = "" + url + "?name=" + name + "&phone=" + phone + "&age=" + age;
+      console.log(built_url);
+      return $modal.load(built_url, function() {
+        return $modal.modal();
+      });
+    });
+    return $ui.on("mouseover", "li.person", function() {
+      return $ui.find("img").attr("src", "" + ($(this).data("photo"))).show();
+    });
+  });
 
 }).call(this);

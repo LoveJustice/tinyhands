@@ -26,7 +26,7 @@
     var $buttons;
     checkForCanon();
     $buttons = $('.input-group button');
-    $buttons.click(function() {
+    return $buttons.click(function() {
       var $button_to_uncheck, $matching_spans, $text, $text_span, $this;
       $this = $(this);
       $button_to_uncheck = $this.parents('.attribute').find('button.btn-success');
@@ -36,7 +36,6 @@
       $matching_spans = $this.parents('.attribute').find("span:contains(" + $text + ")");
       return toggleState($matching_spans.siblings().children('button'));
     });
-    return $('.modal').modal();
   });
 
 }).call(this);

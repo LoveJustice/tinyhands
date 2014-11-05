@@ -362,19 +362,14 @@ def interceptee_fuzzy_matching(request):
     phone = request.GET['phone'] if 'phone' in request.GET else None
     age = request.GET['age'] if 'age' in request.GET else None
     matches = Interceptee.objects.fuzzy_match_on(name, age, phone)
-    print matches
-    print matches[0]
-    print matches[0][2]
-    print JSONRenderer().render(IntercepteeSerializer([matches[0][2]]).data)
 
-    jsonified_matches = []
-    for tup in matches:
-        interceptee = tup[2]
-        json = JSONRenderer().render(IntercepteeSerializer([interceptee]).data)
-        jsonified_matches.append((tup[0], tup[1], json))
+    modified_matches = []
+    for interceptee_group in matches:
+        modified_matches.append((interceptee_group[2].id, interceptee_group[0], interceptee_group[1], interceptee_group[2].photo.url))
+
     return JsonResponse({
         'success': True,
-        'data': jsonified_matches
+        'data': modified_matches
     })
 
 
@@ -383,9 +378,10 @@ def matching_modal(request, id):
     if not id:
         return HttpResponse("You must pass parameter 'id'<br/>Example: /matching_modal/1")
     person = Interceptee.objects.get(pk=id)
-    name = request.GET['name'] if 'name' in request.GET else None
-    phone = request.GET['phone'] if 'phone' in request.GET else None
-    age = request.GET['age'] if 'age' in request.GET else None
+    GET = request.GET
+    name = GET['name'] if 'name' in GET and GET['name'] else None
+    phone = GET['phone'] if 'phone' in GET and GET['phone'] else None
+    age = GET['age'] if 'age' in GET and GET['age'] else None
     return render(request, "dataentry/matching_modal.html", {
         "person": person,
         "form_name": name,

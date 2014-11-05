@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 
+{% block head %}
+<link rel="stylesheet/less" type="text/css" href="{{ STATIC_URL }}matching_modal.less"/>
+{% endblock %}
+
 {% block tab_block %}
     <ul class="nav nav-tabs">
         {% url 'interceptionrecord_list' as interceptionrecord_list_url %}
@@ -23,5 +27,6 @@
 
     {% block content %}
     {% endblock %}
+    <div id="matching_modal" class="modal fade"></div>
 {% endblock %}
 

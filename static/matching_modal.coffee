@@ -32,4 +32,4 @@ $ ->
     $matching_spans = $this.parents('.attribute').find("span:contains(#{$text})")
 
     toggleState $matching_spans.siblings().children('button')
-  $('.modal').modal()
+#  $('.modal').modal()

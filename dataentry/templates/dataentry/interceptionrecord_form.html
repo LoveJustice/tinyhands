@@ -3,9 +3,6 @@
 {% load bootstrap %}
 {% load unslugify %}
 
-{% block head %}
-{% endblock %}
-
 {% block content %}
 
 {% include "dataentry/popover.html" %}
@@ -885,5 +882,6 @@
 <br/>
 <br/>
 {% include "dataentry/fuzzymatching-ui.html" %}
-{% include "dataentry/matching_modal.html" %}
+{#{% include "dataentry/matching_modal.html" %}#}
+
 {% endblock %}

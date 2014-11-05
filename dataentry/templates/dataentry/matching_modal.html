@@ -1,5 +1,3 @@
-{% extends "base.html" %}
-{% block tab_block %}
 {# Setting up view vars for js#}
 <script type="text/javascript">
     window.person = {
@@ -8,9 +6,9 @@
         age: "{{ person.canonical_age }}"
     };
 </script>
-<!-- .modal -->
-<div id="matching_modal" class="modal fade">
-    <!-- /.modal-dialog -->
+<script src="{{ STATIC_URL }}matching_modal.js"></script>
+
+    <!-- .modal-dialog -->
     <div class="modal-dialog modal-lg">
         <!-- .modal-content -->
         <div class="modal-content">
@@ -106,12 +104,3 @@
         <!-- /.modal-content -->
     </div>
     <!-- /.modal-dialog -->
-</div><!-- /.modal -->
-
-{% endblock %}
-{% block head %}
-<link rel="stylesheet/less" type="text/css" href="/static/matching_modal.less"/>
-    {% endblock %}
-{% block afterhead %}
-<script src="{{ STATIC_URL }}matching_modal.js"></script>
-{% endblock %}
