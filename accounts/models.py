@@ -18,10 +18,14 @@ class DefaultPermissionsSet(models.Model):
     permission_vif_add = models.BooleanField(default=False)
     permission_vif_edit = models.BooleanField(default=False)
     permission_accounts_manage = models.BooleanField(default=False)
+<<<<<<< HEAD
     permission_receive_email = models.BooleanField(default=False)
     permission_border_stations_view = models.BooleanField(default=False)
     permission_border_stations_add = models.BooleanField(default=False)
     permission_border_stations_edit = models.BooleanField(default=False)
+=======
+    permission_vdc_manage = models.BooleanField(default=False)
+>>>>>>> fuzzy_geocode_matching
 
     def __unicode__(self):
         return self.name
@@ -79,10 +83,16 @@ class Account(AbstractBaseUser, PermissionsMixin):
     permission_vif_add = models.BooleanField(default=False)
     permission_vif_edit = models.BooleanField(default=False)
     permission_accounts_manage = models.BooleanField(default=False)
+<<<<<<< HEAD
     permission_receive_email = models.BooleanField(default=False)
     permission_border_stations_view = models.BooleanField(default=False)
     permission_border_stations_add = models.BooleanField(default=False)
     permission_border_stations_edit = models.BooleanField(default=False)
+=======
+    permission_vdc_manage = models.BooleanField(default=False)
+
+    date_joined = models.DateTimeField(default=timezone.now)
+>>>>>>> fuzzy_geocode_matching
     
     date_joined = models.DateTimeField(default=timezone.now)
 
