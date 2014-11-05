@@ -1,52 +1,46 @@
-from django.core.exceptions import ImproperlyConfigured, PermissionDenied
+from datetime import date
+import csv
+import re
+import os
+import shutil
+
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import render
 from django.core.urlresolvers import reverse_lazy
-from django.core import serializers
 from django.contrib import messages
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from django.views.generic import ListView, View, DeleteView, CreateView, UpdateView
+from django.views.generic import ListView, View, DeleteView
 from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSet
 from django.contrib.auth.decorators import login_required
+from braces.views import LoginRequiredMixin
+from rest_framework import status
+from rest_framework.decorators import api_view
+from rest_framework.renderers import JSONRenderer
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
+from django.conf import settings
+
 from dataentry.models import (
     VictimInterview,
     InterceptionRecord,
     Interceptee,
-    Person,
     VictimInterviewPersonBox,
     VictimInterviewLocationBox,
-    District,
-    VDC
+    District
 )
 from accounts.mixins import PermissionsRequiredMixin
-from braces.views import LoginRequiredMixin
 from dataentry.forms import (
     InterceptionRecordForm,
     VictimInterviewForm,
     VictimInterviewPersonBoxForm,
     VictimInterviewLocationBoxForm,
 )
-from datetime import date
 from dataentry import export
-
-from rest_framework import status
-from rest_framework.decorators import api_view
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework.renderers import JSONRenderer
-from dataentry.serializers import DistrictSerializer, VDCSerializer, IntercepteeSerializer
-
-from django.core.files.storage import default_storage
-from django.core.files.base import ContentFile
-
-from django.conf import settings
-
-import csv
-import re
-import json
-import os
-import shutil
+from dataentry.serializers import DistrictSerializer, IntercepteeSerializer
 from alert_checkers import IRFAlertChecker, VIFAlertChecker
-from fuzzywuzzy import process
+
 
 @login_required
 def home(request):
@@ -54,15 +48,14 @@ def home(request):
 
 
 class SearchFormsMixin(object):
-
     Name = None
     Number = None
 
     def __init__(self, *args, **kw):
         for key, value in kw.iteritems():
-            if(value == "name"):
+            if (value == "name"):
                 self.Name = key
-            elif(value == "number"):
+            elif (value == "number"):
                 self.Number = key
 
     def get_queryset(self):
@@ -71,10 +64,10 @@ class SearchFormsMixin(object):
         except:
             value = ''
         if (value != ''):
-            if(re.match('\w+\d+$', value)):
-                object_list = self.model.objects.filter(**{self.Number :value})
+            if (re.match('\w+\d+$', value)):
+                object_list = self.model.objects.filter(**{self.Number: value})
             else:
-                object_list = self.model.objects.filter(**{self.Name :value})
+                object_list = self.model.objects.filter(**{self.Name: value})
         else:
             object_list = self.model.objects.all()
         return object_list
@@ -89,14 +82,14 @@ class SearchFormsMixin(object):
 
 
 class InterceptionRecordListView(
-        LoginRequiredMixin,
-        SearchFormsMixin,
-        ListView):
+    LoginRequiredMixin,
+    SearchFormsMixin,
+    ListView):
     model = InterceptionRecord
     paginate_by = 20
 
     def __init__(self, *args, **kw):
-        #passes what to search by to SearchFormsMixin
+        # passes what to search by to SearchFormsMixin
         super(InterceptionRecordListView, self).__init__(irf_number__icontains="number", staff_name__icontains="name")
 
 
@@ -107,7 +100,6 @@ class IntercepteeInline(InlineFormSet):
 
 
 class IRFImageAssociationMixin(object):
-
     def forms_invalid(self, form, inlines):
 
         for name, file in self.request.FILES.iteritems():
@@ -154,10 +146,10 @@ class IRFImageAssociationMixin(object):
 
 
 class InterceptionRecordCreateView(
-        LoginRequiredMixin,
-        PermissionsRequiredMixin,
-        IRFImageAssociationMixin,
-        CreateWithInlinesView):
+    LoginRequiredMixin,
+    PermissionsRequiredMixin,
+    IRFImageAssociationMixin,
+    CreateWithInlinesView):
     model = InterceptionRecord
     form_class = InterceptionRecordForm
     success_url = reverse_lazy('interceptionrecord_list')
@@ -166,19 +158,20 @@ class InterceptionRecordCreateView(
 
     def forms_valid(self, form, inlines):
         import pdb
+
         pdb.set_trace()
 
-        IRFAlertChecker(form,inlines).check_them()
+        IRFAlertChecker(form, inlines).check_them()
         form.instance.form_entered_by = self.request.user
         form.instance.date_form_received = date.today()
         return super(InterceptionRecordCreateView, self).forms_valid(form, inlines)
 
 
 class InterceptionRecordUpdateView(
-        LoginRequiredMixin,
-        PermissionsRequiredMixin,
-        IRFImageAssociationMixin,
-        UpdateWithInlinesView):
+    LoginRequiredMixin,
+    PermissionsRequiredMixin,
+    IRFImageAssociationMixin,
+    UpdateWithInlinesView):
     model = InterceptionRecord
     form_class = InterceptionRecordForm
     success_url = reverse_lazy('interceptionrecord_list')
@@ -191,7 +184,7 @@ class InterceptionRecordUpdateView(
         return super(InterceptionRecordUpdateView, self).post(request)
 
     def forms_valid(self, form, inlines):
-        IRFAlertChecker(form,inlines).check_them()
+        IRFAlertChecker(form, inlines).check_them()
         return super(InterceptionRecordUpdateView, self).forms_valid(form, inlines)
 
 
@@ -203,7 +196,6 @@ class InterceptionRecordDetailView(InterceptionRecordUpdateView):
 
 
 class InterceptionRecordDeleteView(DeleteView):
-
     model = InterceptionRecord
     success_url = reverse_lazy('interceptionrecord_list')
 
@@ -237,21 +229,21 @@ class LocationBoxInline(InlineFormSet):
 
 
 class VictimInterviewListView(
-        LoginRequiredMixin,
-        SearchFormsMixin,
-        ListView):
+    LoginRequiredMixin,
+    SearchFormsMixin,
+    ListView):
     model = VictimInterview
     paginate_by = 20
 
     def __init__(self, *args, **kwargs):
-        #passes what to search by to SearchFormsMixin
+        # passes what to search by to SearchFormsMixin
         super(VictimInterviewListView, self).__init__(vif_number__icontains="number", interviewer__icontains="name")
 
 
 class VictimInterviewCreateView(
-        LoginRequiredMixin,
-        PermissionsRequiredMixin,
-        CreateWithInlinesView):
+    LoginRequiredMixin,
+    PermissionsRequiredMixin,
+    CreateWithInlinesView):
     model = VictimInterview
     form_class = VictimInterviewForm
     success_url = reverse_lazy('victiminterview_list')
@@ -259,17 +251,16 @@ class VictimInterviewCreateView(
     permissions_required = ['permission_vif_add']
 
     def forms_valid(self, form, inlines):
-        VIFAlertChecker(form,inlines).check_them()
+        VIFAlertChecker(form, inlines).check_them()
         form.instance.form_entered_by = self.request.user
         form.instance.date_form_received = date.today()
         return super(VictimInterviewCreateView, self).forms_valid(form, inlines)
 
 
 class VictimInterviewUpdateView(
-        LoginRequiredMixin,
-        PermissionsRequiredMixin,
-        UpdateWithInlinesView):
-
+    LoginRequiredMixin,
+    PermissionsRequiredMixin,
+    UpdateWithInlinesView):
     model = VictimInterview
     form_class = VictimInterviewForm
     success_url = reverse_lazy('victiminterview_list')
@@ -302,9 +293,9 @@ class VictimInterviewDeleteView(DeleteView):
 
 
 class InterceptionRecordCSVExportView(
-        LoginRequiredMixin,
-        PermissionsRequiredMixin,
-        View):
+    LoginRequiredMixin,
+    PermissionsRequiredMixin,
+    View):
     permissions_required = ['permission_irf_view']
 
     def get(self, *args, **kwargs):
@@ -321,9 +312,9 @@ class InterceptionRecordCSVExportView(
 
 
 class VictimInterviewCSVExportView(
-        LoginRequiredMixin,
-        PermissionsRequiredMixin,
-        View):
+    LoginRequiredMixin,
+    PermissionsRequiredMixin,
+    View):
     permissions_required = ['permission_vif_view']
 
     def get(self, *args, **kwargs):
@@ -340,7 +331,7 @@ class VictimInterviewCSVExportView(
 
 
 class GeoCodeDistrictAPIView(APIView):
-    def get(self,request, id):
+    def get(self, request, id):
         district = District.objects.get(pk=id)
         serializer = DistrictSerializer(district)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -348,7 +339,7 @@ class GeoCodeDistrictAPIView(APIView):
     @api_view(['GET'])
     def get_district_with_ajax(request, id):
         district = District.objects.get(name="Achham")
-        serializer = DistrictSerializer(district,data=request.DATA)
+        serializer = DistrictSerializer(district, data=request.DATA)
         if serializer.is_valid():
             serializer.object.name = District.objects.filter(name="Achham")
             serializer.save()
@@ -360,15 +351,32 @@ class GeoCodeDistrictAPIView(APIView):
 @login_required
 def interceptee_fuzzy_matching(request):
     # add additional filters for age and phone #?
-    if 'name' in request.GET:
-        inputName = request.GET['name']
-    else:
+    if 'name' not in request.GET\
+        and 'phone' not in request.GET\
+        and 'age' not in request.GET:
         return JsonResponse({
-            'success':False,
-            'data':"You must pass a paramater"
+            'success': False,
+            'data': "You must pass at least one parameter"
         })
-    matches = Interceptee.objects.fuzzy_match_on(inputName)
-    return JsonResponse({'success':True,'data':matches})
+    name = request.GET['name'] if 'name' in request.GET else None
+    phone = request.GET['phone'] if 'phone' in request.GET else None
+    age = request.GET['age'] if 'age' in request.GET else None
+    matches = Interceptee.objects.fuzzy_match_on(name, age, phone)
+    print matches
+    print matches[0]
+    print matches[0][2]
+    print JSONRenderer().render(IntercepteeSerializer([matches[0][2]]).data)
+
+    jsonified_matches = []
+    for tup in matches:
+        interceptee = tup[2]
+        json = JSONRenderer().render(IntercepteeSerializer([interceptee]).data)
+        jsonified_matches.append((tup[0], tup[1], json))
+    return JsonResponse({
+        'success': True,
+        'data': jsonified_matches
+    })
+
 
 @login_required
 def matching_modal(request, id):

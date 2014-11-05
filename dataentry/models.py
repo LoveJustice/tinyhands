@@ -1,9 +1,12 @@
 from django.db import models
+from fuzzywuzzy.fuzz import partial_ratio, partial_token_sort_ratio, partial_token_set_ratio
+from fuzzywuzzy.utils import asciidammit
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
 from fuzzywuzzy import process, utils, fuzz, string_processing
 
 from accounts.models import Account
+
 
 NULL_BOOLEAN_CHOICES = [
     (None, ''),
@@ -15,6 +18,8 @@ NULL_BOOLEAN_CHOICES = [
 def set_weight(self, weight):
     self.weight = weight
     return self
+
+
 models.BooleanField.set_weight = set_weight
 
 
@@ -223,8 +228,8 @@ class VDC(models.Model):
     name = models.CharField(max_length=255)
     latitude = models.FloatField()
     longitude = models.FloatField()
-    district = models.ForeignKey(District,null=False)
-    cannonical_name = models.ForeignKey('self',null=True,blank=True)
+    district = models.ForeignKey(District, null=False)
+    cannonical_name = models.ForeignKey('self', null=True, blank=True)
 
     def __unicode__(self):
         return self.name
@@ -232,7 +237,7 @@ class VDC(models.Model):
 
 class Person(models.Model):
     GENDER_CHOICES = [
-        ('female','Female'),
+        ('female', 'Female'),
         ('male', 'Male'),
     ]
     gender = models.CharField(max_length=4, choices=GENDER_CHOICES, blank=True)
@@ -271,59 +276,61 @@ class Age(models.Model):
 
 
 class IntercepteeManager(models.Manager):
-    def fuzzy_match_on(self, inputName=None, inputAge=None, inputPhone=None):
-        def custom_processor(items, force_ascii=False):
-            item_list = []
-            for item in items:
-                if item is None:
-                    item_list.append("")
-                if force_ascii:
-                    item = asciidammit(item)
-                string_out = string_processing.StringProcessor.replace_non_letters_non_numbers_with_whitespace(item)
-                string_out = string_processing.StringProcessor.to_lower_case(string_out)
-                string_out = string_processing.StringProcessor.strip(string_out)
-                item_list.append(string_out)
-            return item_list
+    def _custom_processor(self, items, force_ascii=False):
+        # full_process from fuzzywuzzy modified to accept lists as values in a dict
+        item_list = []
+        for item in items:
+            if item is None:
+                item_list.append("")
+            if force_ascii:
+                item = asciidammit(item)
+            string_out = string_processing.StringProcessor.replace_non_letters_non_numbers_with_whitespace(item)
+            string_out = string_processing.StringProcessor.to_lower_case(string_out)
+            string_out = string_processing.StringProcessor.strip(string_out)
+            item_list.append(string_out)
+        return item_list
 
-        def custom_scorer(query, processed, force_ascii=True):
-            item_list = []
-            for item in processed:
-                p1 = utils.full_process(query, force_ascii=force_ascii)
-                p2 = utils.full_process(item, force_ascii=force_ascii)
-                if not utils.validate_string(p1):
-                    item_list.append(0)
-                if not utils.validate_string(p2):
-                    item_list.append(0)
-                # should we look at partials?
-                try_partial = True
-                unbase_scale = .95
-                partial_scale = .90
-                base = fuzz.ratio(p1, p2)
-                len_ratio = float(max(len(p1), len(p2))) / min(len(p1), len(p2))
-                # if strings are similar length, don't use partials
-                if len_ratio < 1.5:
-                    try_partial = False
-                # if one string is much much shorter than the other
-                if len_ratio > 8:
-                    partial_scale = .6
-                if try_partial:
-                    partial = partial_ratio(p1, p2) * partial_scale
-                    ptsor = partial_token_sort_ratio(p1, p2, force_ascii=force_ascii) \
-                            * unbase_scale * partial_scale
-                    ptser = partial_token_set_ratio(p1, p2, force_ascii=force_ascii) \
-                            * unbase_scale * partial_scale
-                    item_list.append(int(max(base, partial, ptsor, ptser)))
-                else:
-                    tsor = fuzz.token_sort_ratio(p1, p2, force_ascii=force_ascii) * unbase_scale
-                    tser = fuzz.token_set_ratio(p1, p2, force_ascii=force_ascii) * unbase_scale
-                    item_list.append(int(max(base, tsor, tser)))
-            return item_list
+    def _custom_scorer(self, query, processed, force_ascii=True):
+        # WRatio from fuzzywuzzy modified to accept lists as values in a dict
+        item_list = []
+        for item in processed:
+            p1 = utils.full_process(query, force_ascii=force_ascii)
+            p2 = utils.full_process(item, force_ascii=force_ascii)
+            if not utils.validate_string(p1):
+                item_list.append(0)
+            if not utils.validate_string(p2):
+                item_list.append(0)
+            # should we look at partials?
+            try_partial = True
+            unbase_scale = .95
+            partial_scale = .90
+            base = fuzz.ratio(p1, p2)
+            len_ratio = float(max(len(p1), len(p2))) / min(len(p1), len(p2))
+            # if strings are similar length, don't use partials
+            if len_ratio < 1.5:
+                try_partial = False
+            # if one string is much much shorter than the other
+            if len_ratio > 8:
+                partial_scale = .6
+            if try_partial:
+                partial = partial_ratio(p1, p2) * partial_scale
+                ptsor = partial_token_sort_ratio(p1, p2, force_ascii=force_ascii) \
+                        * unbase_scale * partial_scale
+                ptser = partial_token_set_ratio(p1, p2, force_ascii=force_ascii) \
+                        * unbase_scale * partial_scale
+                item_list.append(int(max(base, partial, ptsor, ptser)))
+            else:
+                tsor = fuzz.token_sort_ratio(p1, p2, force_ascii=force_ascii) * unbase_scale
+                tser = fuzz.token_set_ratio(p1, p2, force_ascii=force_ascii) * unbase_scale
+                item_list.append(int(max(base, tsor, tser)))
+        return item_list
 
+    def fuzzy_match_on(self, input_name=None, input_age=None, input_phone=None):
         interceptees = Interceptee.objects.all()
         interceptee_dict = {
-            interceptee:interceptee.names.values_list('value', flat=True) for interceptee in interceptees
+            interceptee: list(interceptee.names.values_list('value', flat=True)) for interceptee in interceptees
         }
-        matches = process.extractBests(inputName, interceptee_dict, processor=custom_processor, scorer=custom_scorer, limit = 10, score_cutoff = 70)
+        matches = process.extractBests(input_name, interceptee_dict, processor=self._custom_processor, scorer=self._custom_scorer, limit=10, score_cutoff=70)
         return matches
 
 
@@ -350,7 +357,6 @@ class Interceptee(Person):
 
 
 class VictimInterview(Person):
-
     class Meta:
         ordering = ['-date_time_last_updated']
 
@@ -634,7 +640,6 @@ class VictimInterview(Person):
     meeting_at_border_meeting_broker = models.BooleanField('Meeting Broker', default=False)
     meeting_at_border_meeting_companion = models.BooleanField('Meeting Companion', default=False)
 
-
     victim_knew_details_about_destination = models.BooleanField(default=False)
 
     other_involved_person_in_india = models.NullBooleanField(null=True)
@@ -710,30 +715,30 @@ class VictimInterview(Person):
     reported_total_situational_alarms = models.PositiveIntegerField(blank=True, null=True)
 
     def calculate_strength_of_case_points(self):
-            total = 0
-            for field in self._meta.fields:
-                if type(field) == models.BooleanField:
-                    value = getattr(self, field.name)
-                    if value is True:
-                        if hasattr(field, 'weight'):
-                            total += field.weight
-            if self.victim_how_expense_was_paid_broker_gave_loan > 0:
-                total += (2 + (self.victim_how_expense_was_paid_broker_gave_loan//20000))
-            if self.number_broker_made_similar_promises_to and self.victim_how_expense_was_paid_amount > 0:
-                total += int(self.victim_how_expense_was_paid_amount)
-            if self.how_many_others_in_situation > 0:
-                total += self.how_many_others_in_situation
-            if self.others_in_situation_age_of_youngest > 0:
-                total += (20 - self.others_in_situation_age_of_youngest)
-            if self.victim_was_hidden:
-                total += 5
-            if not self.victim_was_free_to_go_out:
-                total += 5
-            if not self.companion_with_when_intercepted:
-                total += 3
-            if self.victim_place_worked_involved_sending_girls_overseas:
-                total += 7
-            return total
+        total = 0
+        for field in self._meta.fields:
+            if type(field) == models.BooleanField:
+                value = getattr(self, field.name)
+                if value is True:
+                    if hasattr(field, 'weight'):
+                        total += field.weight
+        if self.victim_how_expense_was_paid_broker_gave_loan > 0:
+            total += (2 + (self.victim_how_expense_was_paid_broker_gave_loan // 20000))
+        if self.number_broker_made_similar_promises_to and self.victim_how_expense_was_paid_amount > 0:
+            total += int(self.victim_how_expense_was_paid_amount)
+        if self.how_many_others_in_situation > 0:
+            total += self.how_many_others_in_situation
+        if self.others_in_situation_age_of_youngest > 0:
+            total += (20 - self.others_in_situation_age_of_youngest)
+        if self.victim_was_hidden:
+            total += 5
+        if not self.victim_was_free_to_go_out:
+            total += 5
+        if not self.companion_with_when_intercepted:
+            total += 3
+        if self.victim_place_worked_involved_sending_girls_overseas:
+            total += 7
+        return total
 
     def get_calculated_situational_alarms(self):
         total = 0
