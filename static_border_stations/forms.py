@@ -5,9 +5,15 @@ from django.core.exceptions import ValidationError
 from static_border_stations.models import Person,Location
 
         
-class PersonForm(forms.ModelForm):
+class StaffForm(forms.ModelForm):
     class Meta:
         model = Person
+        title = 'Staff'
+        
+class CommitteeMemberForm(forms.ModelForm):
+    class Meta:
+        model = Person
+        title = 'Committee Members'
         
 class LocationForm(forms.ModelForm):
     class Meta:

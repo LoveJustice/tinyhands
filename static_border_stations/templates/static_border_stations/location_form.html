@@ -1,0 +1,16 @@
+{% load bootstrap %}
+<h1>Locations</h1>
+<hr/>
+<div class="row">
+    <div class="col-sm-12">
+        {{location_form.name|bootstrap}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-6">
+        {{location_form.latitude|bootstrap}}
+    </div>
+    <div class="col-sm-6">
+        {{location_form.longitude|bootstrap}}
+    </div>
+</div>

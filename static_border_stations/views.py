@@ -14,18 +14,29 @@ from dataentry.models import BorderStation
 from static_border_stations.forms import *
 from dataentry.forms import BorderStationForm
 
-class PersonInline(InlineFormSet):
+class StaffInline(InlineFormSet):
     model=Person
+    form = StaffForm
+    title = 'Staff'
+    extra = 1
+
+class CommitteeMemberInline(InlineFormSet):
+    model=Person
+    form = CommitteeMemberForm
+    title = 'Committee Members'
+    extra = 1
 
 class LocationInline(InlineFormSet):
     model=Location
+    extra = 1
 
 class StaticBorderStationsCreateView (
         LoginRequiredMixin,
         PermissionsRequiredMixin,
         CreateWithInlinesView):
     model = BorderStation
+    template_name = 'static_border_stations/static_border_stations_base.html'
     form_class = BorderStationForm
     success_url = reverse_lazy('home')
-    #inlines = [PersonInline, LocationInline]
+    inlines = [StaffInline, CommitteeMemberInline, LocationInline]
     permissions_required = ['permission_border_stations_add']

@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% load bootstrap %}
+
+{% block tab_block %}
+{% include "static_border_stations/borderstation_form.html" %}
+
+{{ inlines.0.management_form }}
+{{ inlines.1.management_form }}
+{% for staff_form in inlines.0 %}
+    {% include "static_border_stations/person_form.html" with person_form=staff_form %}
+{% endfor %}
+{% for cm_form in inlines.1 %}
+    {% include "static_border_stations/person_form.html" with person_form=cm_form %}
+{% endfor %}
+{% for location_form in inlines.2 %}
+    {% include "static_border_stations/location_form.html" with location_form=location_form %}
+{% endfor %}
+
+{% endblock %}
