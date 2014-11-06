@@ -51,15 +51,20 @@ in the Javascript and run code unique to the current page.
             {% if request.user.is_authenticated %}
             <ul class="nav navbar-nav">
                 <li><a href="{% url 'interceptionrecord_list' %}">Forms</a></li>
+                {% if request.user.permission_border_stations_view %}
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Stations<b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                        {% for station in borderstations %}
-                            <li><a href="#">Here's a station.</a></li>
+                        {% for station in border_stations %}
+                        <!-- link address needs to be changed once we have edit/viewing working -->
+                        <li><a href="#">{{station.station_name }}</a></li>
                         {% endfor %}
+                        {% if request.user.permission_border_stations_add %}
                         <li><a href="{% url 'borderstations_create' %}">Create Station</a></li>
+                        {% endif %}
                     </ul>
                 </li>
+                {% endif %}
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li>
@@ -89,6 +94,8 @@ in the Javascript and run code unique to the current page.
 {% endif %}
 {% block tab_block %}{% endblock %}
 </div>
+
+
 
 {% block sticky_footer %}
 {% endblock %}
