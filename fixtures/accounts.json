@@ -11,6 +11,10 @@
         "permission_vif_view": true, 
         "permission_irf_edit": true,
         "permission_receive_email": false,
+        "permission_border_stations_view": true,
+        "permission_border_stations_add": true,
+        "permission_border_stations_edit": true,
+        "permission_vdc_manage":true,
         "name": "Super Administrator"
     }
 },
@@ -26,6 +30,10 @@
         "permission_vif_view": true, 
         "permission_irf_edit": true,
         "permission_receive_email": false,
+        "permission_border_stations_view": true,
+        "permission_border_stations_add": true,
+        "permission_border_stations_edit": true,
+        "permission_vdc_manage":true,
         "name": "Field Staff"
     }
 },
@@ -41,6 +49,10 @@
         "permission_vif_view": true, 
         "permission_irf_edit": false,
         "permission_receive_email": false,
+        "permission_border_stations_view": true,
+        "permission_border_stations_add": true,
+        "permission_border_stations_edit": true,
+        "permission_vdc_manage":true,
         "name": "Summer Intern"
     }
 },
@@ -67,7 +79,11 @@
         "password": "pbkdf2_sha256$12000$Ei2Lq9GYzqGB$T37ao7VIlbJP6vGoAludQXYpmQXDZ7tQ/Glm0lMr97c=", 
         "email": "dvcolgan@gmail.com", 
         "permission_irf_edit": true,
-        "permission_receive_email": false
+        "permission_receive_email": false,
+        "permission_border_stations_view": true,
+        "permission_border_stations_add": true,
+        "permission_border_stations_edit": true,
+        "permission_vdc_manage":true
     }
 },
 {
@@ -93,7 +109,11 @@
         "password": "pbkdf2_sha256$12000$QQMqDzpT0AYu$CBXVUxplmqbsv3pki1WRmFJjzQtCX1PH+m+wAAuZ33Q=", 
         "email": "andrew.fennig@gmail.com", 
         "permission_irf_edit": true,
-        "permission_receive_email": false
+        "permission_receive_email": false,
+        "permission_border_stations_view": true,
+        "permission_border_stations_add": true,
+        "permission_border_stations_edit": true,
+        "permission_vdc_manage":true
     }
 },
 {
@@ -118,7 +138,12 @@
         "user_permissions": [], 
         "password": "pbkdf2_sha256$12000$rsU5KfzgIYSf$H1D0ZgCHMNHDV8Y63JntnoloKIiNZEWbGM0gqGqPVWQ=", 
         "email": "HanSolo@MFalcon.com", 
-        "permission_irf_edit": false
+        "permission_irf_edit": false,
+        "permission_receive_email": false,
+        "permission_border_stations_view": true,
+        "permission_border_stations_add": true,
+        "permission_border_stations_edit": true,
+        "permission_vdc_manage":true
     }
 },
 {
@@ -143,7 +168,12 @@
         "user_permissions": [], 
         "password": "pbkdf2_sha256$12000$8ZCPPIQ7CQ03$O1jHHloj0TECobjh2C6zpZSbnK9LaoDxeKFe79nlWOE=", 
         "email": "benaduggan@gmail.com", 
-        "permission_irf_edit": true
+        "permission_irf_edit": true,
+        "permission_receive_email": false,
+        "permission_border_stations_view": true,
+        "permission_border_stations_add": true,
+        "permission_border_stations_edit": true,
+        "permission_vdc_manage":true
     }
 },
 {
@@ -168,7 +198,12 @@
         "user_permissions": [],
         "password": "pbkdf2_sha256$12000$Ei2Lq9GYzqGB$T37ao7VIlbJP6vGoAludQXYpmQXDZ7tQ/Glm0lMr97c=",
         "email": "rszemplinski22@gmail.com",
-        "permission_irf_edit": true
+        "permission_irf_edit": true,
+        "permission_receive_email": false,
+        "permission_border_stations_view": true,
+        "permission_border_stations_add": true,
+        "permission_border_stations_edit": true,
+        "permission_vdc_manage":true
     }
 },
 {
@@ -195,7 +230,12 @@
             "permission_accounts_manage": true,
             "last_name": "Wilhelm",
             "first_name": "Josh",
-            "groups": []
+            "groups": [],
+            "permission_receive_email": false,
+            "permission_border_stations_view": true,
+            "permission_border_stations_add": true,
+            "permission_border_stations_edit": true,
+            "permission_vdc_manage":true
         }
 },
 {
@@ -221,7 +261,11 @@
         "password": "pbkdf2_sha256$12000$Ei2Lq9GYzqGB$T37ao7VIlbJP6vGoAludQXYpmQXDZ7tQ/Glm0lMr97c=", 
         "email": "tnurkkala@cse.taylor.edu", 
         "permission_irf_edit": true,
-        "permission_receive_email": false
+        "permission_receive_email": false,
+        "permission_border_stations_view": true,
+        "permission_border_stations_add": true,
+        "permission_border_stations_edit": true,
+        "permission_vdc_manage":true
     }
 },
 {
@@ -247,7 +291,11 @@
         "password": "pbkdf2_sha256$12000$iIFUI6IOiNL9$Y/S92rKQ+vgcicSqfoZQB22aqN9qde+Ct5G2GILymr4=", 
         "email": "justin_southworth@taylor.edu", 
         "permission_irf_edit": true,
-        "permission_receive_email": false
+        "permission_receive_email": false,
+        "permission_border_stations_view": true,
+        "permission_border_stations_add": true,
+        "permission_border_stations_edit": true,
+        "permission_vdc_manage":true
 	}
 },
 {
@@ -272,7 +320,42 @@
         "user_permissions": [],
         "password": "pbkdf2_sha256$12000$08ATKEmg0hpl$szBXuVriGgTVuJSTPx2D+wmzOl2evJAjwXsa0ben76Q=",
         "email": "andrew_smith3@taylor.edu",
-        "permission_irf_edit": true
+        "permission_irf_edit": true,
+        "permission_receive_email": false,
+        "permission_border_stations_view": true,
+        "permission_border_stations_add": true,
+        "permission_border_stations_edit": true,
+        "permission_vdc_manage":true
     }
+},
+{
+    "pk": 20, 
+    "model": "accounts.account", 
+    "fields": {
+        "groups": [], 
+        "first_name": "Dustin", 
+        "last_name": "Waldron", 
+        "permission_accounts_manage": true, 
+        "permission_irf_add": true, 
+        "permission_irf_view": true, 
+        "user_designation": 1, 
+        "is_active": true, 
+        "permission_vif_add": true, 
+        "permission_vif_view": true, 
+        "permission_vif_edit": true, 
+        "is_superuser": true, 
+        "is_staff": true, 
+        "last_login": "2014-05-05T13:25:25.906Z", 
+        "date_joined": "2014-04-16T17:23:25.607Z", 
+        "user_permissions": [], 
+        "password": "pbkdf2_sha256$12000$Ei2Lq9GYzqGB$T37ao7VIlbJP6vGoAludQXYpmQXDZ7tQ/Glm0lMr97c=", 
+        "email": "dustin_waldron@taylor.edu", 
+        "permission_irf_edit": true,
+        "permission_receive_email": false,
+        "permission_border_stations_view": true,
+        "permission_border_stations_add": true,
+        "permission_border_stations_edit": true,
+        "permission_vdc_manage":true
+	}
 }
 ]

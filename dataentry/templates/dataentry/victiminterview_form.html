@@ -1,4 +1,4 @@
-x`{% extends "dataentry/dataentry_base.html" %}
+{% extends "dataentry/dataentry_base.html" %}
 {% load widget_tweaks %}
 {% load bootstrap %}
 {% load unslugify %}
@@ -70,7 +70,11 @@ x`{% extends "dataentry/dataentry_base.html" %}
 {% endif %}
 {% endfor %}
 
-<form enctype="multipart/form-data" method="POST" id="victim-interview-form">{% csrf_token %}
+<!-- Modal -->
+<div class="modal fade" id="modal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" tabindex="-1"></div>
+<!-- /.modal -->
+
+<form enctype="multipart/form-data" method="POST" id="victim-interview-form" autocomplete="off">{% csrf_token %}
     <div class="form-page">
         <div class="row">
             <div class="col-xs-6 header-area">
@@ -589,7 +593,7 @@ x`{% extends "dataentry/dataentry_base.html" %}
             </div>
         </div>
     </div>
-
+    
     <div class="form-page">
         <div class="row">
             <div class="col-xs-4 major-column">

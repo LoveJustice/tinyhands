@@ -101,6 +101,7 @@ class AccountUpdateView(
         'permission_vif_edit',
         'permission_accounts_manage',
         'permission_receive_email',
+        'permission_vdc_manage',
     ]
     permissions_required = ['permission_accounts_manage']
 
@@ -143,6 +144,7 @@ class AccessControlView(
         'permission_vif_edit',
         'permission_accounts_manage',
         'permission_receive_email',
+        'permission_vdc_manage',
     ]
 
     def get_context_data(self, **kwargs):
@@ -169,6 +171,7 @@ class AccessDefaultsView(
         'permission_vif_add',
         'permission_vif_edit',
         'permission_accounts_manage',
+        'permission_vdc_manage',
     ]
 
 
