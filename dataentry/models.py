@@ -24,6 +24,53 @@ class BorderStation(models.Model):
     latitude = models.FloatField(null=True)
     longitude = models.FloatField(null=True)
 
+class District(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __unicode__(self):
+        return self.name
+
+
+class VDC(models.Model):
+    name = models.CharField(max_length=255)
+    latitude = models.FloatField()
+    longitude = models.FloatField()
+    district = models.ForeignKey(District,null=False)
+    cannonical_name = models.ForeignKey('self',null=True,blank=True)
+    verified = models.BooleanField(default=False)
+
+    def __unicode__(self):
+        return self.name
+
+    @property
+    def get_cannonical_name(self):
+        if self.cannonical_name:
+            return self.cannonical_name.name
+        return self.name
+
+    @property
+    def get_latitude(self):
+        if self.cannonical_name:
+            return self.cannonical_name.latitude
+        return self.latitude
+
+    @property
+    def get_longitude(self):
+        if self.cannonical_name:
+            return self.cannonical_name.longitude
+        return self.longitude
+
+    @property
+    def get_district(self):
+        if self.cannonical_name:
+            return self.cannonical_name.district
+        return self.district
+    
+    @property
+    def is_verified(self):
+        return self.verified
+
+
 class InterceptionRecord(models.Model):
     form_entered_by = models.ForeignKey(Account, related_name='irfs_entered')
     date_form_received = models.DateTimeField()
@@ -237,8 +284,8 @@ class Interceptee(models.Model):
     full_name = models.CharField(max_length=255)
     gender = models.CharField(max_length=4, choices=GENDER_CHOICES, blank=True)
     age = models.PositiveIntegerField(null=True, blank=True)
-    district = models.CharField(max_length=255, blank=True)
-    vdc = models.CharField('VDC', max_length=255, blank=True)
+    district = models.ForeignKey(District)
+    vdc = models.ForeignKey(VDC)
     phone_contact = models.CharField(max_length=255, blank=True)
     relation_to = models.CharField(max_length=255, blank=True)
 
@@ -277,8 +324,8 @@ class VictimInterview(models.Model):
 
     victim_gender = models.CharField('Gender', choices=GENDER_CHOICES, max_length=12)
 
-    victim_address_district = models.CharField('District', max_length=255, blank=True)
-    victim_address_vdc = models.CharField('VDC', max_length=255, blank=True)
+    victim_address_district = models.ForeignKey(District, related_name="victim_address_district");
+    victim_address_vdc = models.ForeignKey(VDC, related_name="victim_address_vdc");
     victim_address_ward = models.CharField('Ward #', max_length=255, blank=True)
     victim_phone = models.CharField('Phone #', max_length=255, blank=True)
     victim_age = models.CharField('Age', max_length=255, blank=True)
@@ -338,8 +385,8 @@ class VictimInterview(models.Model):
     victim_primary_guardian_non_relative = models.BooleanField('Non-relative', default=False)
     victim_primary_guardian_no_one = models.BooleanField('No one (I have no guardian)', default=False)
 
-    victim_guardian_address_district = models.CharField('District', max_length=255, blank=True)
-    victim_guardian_address_vdc = models.CharField('VDC', max_length=255, blank=True)
+    victim_guardian_address_district = models.ForeignKey(District)
+    victim_guardian_address_vdc = models.ForeignKey(VDC)
     victim_guardian_address_ward = models.CharField('Ward #', max_length=255, blank=True)
     victim_guardian_phone = models.CharField('Phone #', max_length=255, blank=True)
 
@@ -765,8 +812,8 @@ class VictimInterviewPersonBox(models.Model):
 
     gender = models.CharField('Gender', choices=GENDER_CHOICES, max_length=12, blank=True)
 
-    address_district = models.CharField('District', max_length=255, blank=True)
-    address_vdc = models.CharField('VDC', max_length=255, blank=True)
+    address_district = models.ForeignKey(District)
+    address_vdc = models.ForeignKey(VDC)
     address_ward = models.CharField('Ward #', max_length=255, blank=True)
     phone = models.CharField('Phone #', max_length=255, blank=True)
     age = models.PositiveIntegerField('Age', null=True, blank=True)
@@ -828,24 +875,6 @@ class VictimInterviewPersonBox(models.Model):
     associated_with_place_value = models.IntegerField(blank=True, null=True)
 
 
-class District(models.Model):
-    name = models.CharField(max_length=255)
-
-    def __unicode__(self):
-        return self.name
-
-
-class VDC(models.Model):
-    name = models.CharField(max_length=255)
-    latitude = models.FloatField()
-    longitude = models.FloatField()
-    district = models.ForeignKey(District,null=False)
-    cannonical_name = models.ForeignKey('self',null=True,blank=True)
-
-    def __unicode__(self):
-        return self.name
-
-
 class VictimInterviewLocationBox(models.Model):
     victim_interview = models.ForeignKey(VictimInterview, related_name='location_boxes')
 
@@ -866,12 +895,10 @@ class VictimInterviewLocationBox(models.Model):
     what_kind_place_brothel = models.BooleanField('Brothel', default=False).set_weight(2)
     what_kind_place_hotel = models.BooleanField('Hotel', default=False)
 
-    vdc = models.CharField('VDC', max_length=255, blank=True)
-    district = models.CharField(max_length=255, blank=True)
     signboard = models.CharField(max_length=255, blank=True)
     location_in_town = models.CharField(max_length=255, blank=True)
-    district_geocodelocation = models.ForeignKey(District)
-    vdc_geocodelocation = models.ForeignKey(VDC)
+    district = models.ForeignKey(District)
+    vdc = models.ForeignKey(VDC)
 
     phone = models.CharField('Phone #', max_length=255, blank=True)
     color = models.CharField(max_length=255, blank=True)

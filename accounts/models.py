@@ -22,6 +22,7 @@ class DefaultPermissionsSet(models.Model):
     permission_border_stations_view = models.BooleanField(default=False)
     permission_border_stations_add = models.BooleanField(default=False)
     permission_border_stations_edit = models.BooleanField(default=False)
+    permission_vdc_manage = models.BooleanField(default=False)
 
     def __unicode__(self):
         return self.name
@@ -83,7 +84,8 @@ class Account(AbstractBaseUser, PermissionsMixin):
     permission_border_stations_view = models.BooleanField(default=False)
     permission_border_stations_add = models.BooleanField(default=False)
     permission_border_stations_edit = models.BooleanField(default=False)
-    
+    permission_vdc_manage = models.BooleanField(default=False)
+
     date_joined = models.DateTimeField(default=timezone.now)
 
     activation_key = models.CharField(

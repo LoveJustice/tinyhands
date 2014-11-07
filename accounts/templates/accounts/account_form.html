@@ -107,11 +107,13 @@ window.defaultPermissionSets = JSON.parse('{{ default_permissions_sets|safe }}')
                     <thead>
                         <tr>
                             <th>Alerts</th>
+                            <th>VDC Management</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td><label class="btn"><span class="yesno"></span>{{ form.permission_receive_email }}</label></td>
+                            <td><label class="btn"><span class="yesno"></span>{{ form.permission_vdc_manage }}</label></td>
                         </tr>
                     </tbody>
                 </table>

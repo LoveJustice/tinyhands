@@ -11,14 +11,10 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='victiminterviewpersonbox',
-            name='political_party_umn',
-        ),
         migrations.AddField(
-            model_name='victiminterviewpersonbox',
-            name='political_party_uml',
-            field=models.BooleanField(default=False, verbose_name=b'UML'),
+            model_name='vdc',
+            name='verified',
+            field=models.BooleanField(default=False),
             preserve_default=True,
         ),
     ]
