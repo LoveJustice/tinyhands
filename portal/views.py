@@ -13,3 +13,4 @@ def main_dashboard(request):
 def get_border_stations(request):
     border_stations = serializers.serialize("json", BorderStation.objects.all())
     return HttpResponse(border_stations, content_type="application/json")
+
