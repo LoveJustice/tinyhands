@@ -2,12 +2,12 @@
 {
     "fields": {
         "kind": "v",
-        "district": "asdf",
+        "district": 1,
         "phone_contact": "adsf",
         "photo": "",
         "age": 2,
         "interception_record": 2,
-        "vdc": "asdf",
+        "vdc": 1,
         "full_name": "no errors",
         "gender": "f",
         "relation_to": "asdf"
@@ -18,12 +18,12 @@
 {
     "fields": {
         "kind": "t",
-        "district": "SDAFSDA",
+        "district": 1,
         "phone_contact": "ASDFD",
         "photo": "interceptee_photos/Human-Trafficker-11.jpg",
         "age": 4,
         "interception_record": 3,
-        "vdc": "ASDAF",
+        "vdc": 1,
         "full_name": "AADSF",
         "gender": "f",
         "relation_to": "FSD"
@@ -34,12 +34,12 @@
 {
     "fields": {
         "kind": "t",
-        "district": "sdafadsf",
+        "district": 1,
         "phone_contact": "asdfasdf",
         "photo": "interceptee_photos/Human-Trafficker-11_RcHoWH0.jpg",
         "age": 4,
         "interception_record": 4,
-        "vdc": "asdfsdfds",
+        "vdc": 1,
         "full_name": "asdfd",
         "gender": "m",
         "relation_to": "sdfas"
@@ -50,12 +50,12 @@
 {
     "fields": {
         "kind": "t",
-        "district": "sdafsad",
+        "district": 1,
         "phone_contact": "asdsd",
         "photo": "interceptee_photos/Human-Trafficker-11_hph53hS.jpg",
         "age": 4,
         "interception_record": 5,
-        "vdc": "asdfasd",
+        "vdc": 1,
         "full_name": "wadsewrgerw",
         "gender": "m",
         "relation_to": "asdfds"
@@ -66,12 +66,12 @@
 {
     "fields": {
         "kind": "t",
-        "district": "sfasdf",
+        "district": 1,
         "phone_contact": "asdfds",
         "photo": "",
         "age": 3,
         "interception_record": 6,
-        "vdc": "asdfsd",
+        "vdc": 1,
         "full_name": "sdf",
         "gender": "f",
         "relation_to": "asdfd"
