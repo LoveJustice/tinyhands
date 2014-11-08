@@ -26,7 +26,6 @@ function setPopovers(id)
             });
         });
 	    $(element).blur(function() {
-            return;
 	    	if($('.popover').hasClass('in'))
 	    	{
 		    	$(this).popover('hide');

@@ -47,6 +47,7 @@ window.defaultPermissionSets = JSON.parse('{{ default_permissions_sets|safe }}')
                     <th>Accounts</th>
                     <th>Alerts</th>
                     <th>VDC</th>
+                    <th>Budget</th>
                 </tr>
                 <tr>
                     <th>User</th>
@@ -58,6 +59,7 @@ window.defaultPermissionSets = JSON.parse('{{ default_permissions_sets|safe }}')
                     <th>Edit</th>
                     <th>Manage</th>
                     <th>Can Receive</th>
+                    <th>Manage</th>
                     <th>Manage</th>
                 </tr>
             </thead>
@@ -79,6 +81,7 @@ window.defaultPermissionSets = JSON.parse('{{ default_permissions_sets|safe }}')
                         <td><label class="btn"><span class="yesno"></span>{{ form.permission_accounts_manage }}</label></td>
                         <td><label class="btn"><span class="yesno"></span>{{ form.permission_receive_email }}</label></td>
                         <td><label class="btn"><span class="yesno"></span>{{ form.permission_vdc_manage }}</label></td>
+                        <td><label class="btn"><span class="yesno"></span>{{ form.permission_budget_manage }}</label></td>
                     </tr>
                 {% endfor %}
             </tbody>
