@@ -6,7 +6,7 @@ from dataentry.models import (
     Interceptee,
     VictimInterviewPersonBox,
     VictimInterviewLocationBox,
-    BorderStation
+    BorderStation,
     District,
     VDC
 )
@@ -765,6 +765,9 @@ class BorderStationForm(forms.ModelForm):
         widgets = {
             'date_established': forms.TextInput(attrs={'placeholder': '12/31/12'}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super(BorderStationForm, self).__init__(*args, **kwargs)
         self.fields['district'] = DistrictField(label="District")
         self.fields['vdc'] = VDCField(label="VDC")
         try:
