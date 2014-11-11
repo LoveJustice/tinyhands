@@ -53,7 +53,6 @@ function getInterceptionCount(borderStation) {
 function getBorderStations(map){
     $.get("/portal/get_border_stations",function(data,status){
         var infowindow = new google.maps.InfoWindow({});
-        console.log(data);
         for(var station=0;station<data.length;station++){
             var myLatlng = new google.maps.LatLng(data[station].fields.latitude,data[station].fields.longitude);
             var marker = new google.maps.Marker({
