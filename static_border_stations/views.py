@@ -36,3 +36,14 @@ class StaticBorderStationsCreateView (
     success_url = reverse_lazy('home')
     inlines = [StaffInline, CommitteeMemberInline, LocationInline]
     permissions_required = ['permission_border_stations_add']
+    
+class StaticBorderStationsUpdateView (
+        LoginRequiredMixin,
+        PermissionsRequiredMixin,
+        UpdateWithInlinesView):
+    model = BorderStation
+    template_name = 'static_border_stations/static_border_stations_base.html'
+    form_class = BorderStationForm
+    success_url = reverse_lazy('home')
+    inlines = [StaffInline, CommitteeMemberInline, LocationInline]
+    permissions_required = ['permission_border_stations_edit']

@@ -4,41 +4,58 @@
 
 {% block tab_block %}
 <form method="POST">
-	{% csrf_token %}
-<div class="row">
-	{% include "static_border_stations/borderstation_form.html" %}
-</div>
-{{ inlines.0.management_form }}
-{{ inlines.1.management_form }}
-{{ inlines.2.management_form }}
-<div class="row">
-	<h1>Staff</h1>
-	{% for staff_form in inlines.0 %}
-	<div id='{{staff_form.prefix}}'>
-	    {% include "static_border_stations/person_form.html" with person_form=staff_form %}
-	</div>
-	{% endfor %}
-</div>
-<div class="row">
-	<h1>Committee Member</h1>
-	{% for cm_form in inlines.1 %}
-	<div id='{{cm_form.prefix}}'>
-	    {% include "static_border_stations/person_form.html" with person_form=cm_form %}
-	</div>
-	{% endfor %}
-</div>
-<div class="row">
-	<h1>Locations</h1>
-	{% for location_form in inlines.2 %}
-	<div id='{{location_form.prefix}}'>
-	    {% include "static_border_stations/location_form.html" with location_form=location_form %}
-	</div>
-	{% endfor %}
-</div>
-<br/>
-<div class="row">
-	<input type="submit" class="pull-right btn btn-primary btn-lg" value="Create" />
-</div>
+        {% csrf_token %}
+    <div class="row">
+        {% include "static_border_stations/borderstation_form.html" %}
+    </div>
+    {{ inlines.0.management_form }}
+    {{ inlines.1.management_form }}
+    {{ inlines.2.management_form }}
+    <h1>Staff</h1>
+    {% for staff_form in inlines.0 %}
+        {% include "static_border_stations/person_form.html" with person_form=staff_form %}
+    {% endfor %}
+    <h1>Committee Member</h1>
+    {% for cm_form in inlines.1 %}
+        {% include "static_border_stations/person_form.html" with person_form=cm_form %}
+    {% endfor %}
+    <h1>Locations</h1>
+    {% for location_form in inlines.2 %}
+        {% include "static_border_stations/location_form.html" with location_form=location_form %}
+    {% endfor %}
+    <div class="row">
+        <h1>Staff</h1>
+        {% for staff_form in inlines.0 %}
+        <div id='{{staff_form.prefix}}'>
+            {% include "static_border_stations/person_form.html" with person_form=staff_form %}
+        </div>
+        {% endfor %}
+    </div>
+    <div class="row">
+        <h1>Committee Member</h1>
+        {% for cm_form in inlines.1 %}
+        <div id='{{cm_form.prefix}}'>
+            {% include "static_border_stations/person_form.html" with person_form=cm_form %}
+        </div>
+        {% endfor %}
+    </div>
+    <div class="row">
+        <h1>Locations</h1>
+        {% for location_form in inlines.2 %}
+        <div id='{{location_form.prefix}}'>
+            {% include "static_border_stations/location_form.html" with location_form=location_form %}
+        </div>
+        {% endfor %}
+    </div>
+    <br/>
+    <div class="row">
+        {% url 'borderstations_create' as borderstations_create_url %}
+        {% if request.path == borderstations_create_url %}
+        <input type="submit" class="pull-right btn btn-primary navbar-btn btn-lg" value="Create" />
+        {% else %}
+        <input type="submit" class="pull-right btn btn-primary navbar-btn btn-lg" value="Update" />
+        {% endif %}
+    </div>
 </form>
 <script type="text/javascript">
    $(function() {
