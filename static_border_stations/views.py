@@ -16,14 +16,10 @@ from dataentry.forms import BorderStationForm
 
 class StaffInline(InlineFormSet):
     model=Person
-    form = StaffForm
-    title = 'Staff'
     extra = 1
 
 class CommitteeMemberInline(InlineFormSet):
     model=Person
-    form = CommitteeMemberForm
-    title = 'Committee Members'
     extra = 1
 
 class LocationInline(InlineFormSet):
