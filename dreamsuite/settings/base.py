@@ -1,8 +1,9 @@
-from private import SECRET_KEY
+from dreamsuite.private import SECRET_KEY
 from django.contrib import messages
+from unipath import Path
 
 import os
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+BASE_DIR = Path(__file__).ancestor(3)
 
 SERVER_EMAIL = 'DreamSuiteAdmin@tinyhands.org'
 EMAIL_HOST = 'smtpcorp.com'
@@ -14,18 +15,16 @@ EMAIL_USE_TLS = True
 
 ADMIN_EMAIL_SENDER = SERVER_EMAIL
 DEFAULT_FROM_EMAIL = SERVER_EMAIL
-SITE_DOMAIN = 'tinyhandsdreamsuite.org'
 #EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-DEBUG = True
+DEBUG = False
+TEMPLATE_DEBUG = False
 
 SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
 
 STATICFILES_DIRS = (
-	os.path.join(SITE_ROOT, '../static/'),
+	os.path.join(SITE_ROOT, '../../static/'),
 )
-
-TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
 
@@ -86,7 +85,7 @@ USE_L10N = False
 USE_TZ = True
 
 DATETIME_FORMAT = "n.j.Y g:iA"
-DATE_FORMAT = "n.j.Y" 
+DATE_FORMAT = "n.j.Y"
 
 STATIC_URL = '/static/'
 

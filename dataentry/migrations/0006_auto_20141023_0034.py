@@ -69,4 +69,14 @@ class Migration(migrations.Migration):
             name='address_vdc',
             field=models.ForeignKey(to='dataentry.VDC'),
         ),
+        migrations.RemoveField(
+            model_name='victiminterviewpersonbox',
+            name='political_party_umn',
+        ),
+        migrations.AddField(
+            model_name='victiminterviewpersonbox',
+            name='political_party_uml',
+            field=models.BooleanField(default=False, verbose_name=b'UML'),
+            preserve_default=True,
+        ),
     ]
