@@ -22,6 +22,11 @@
 {% for location_form in inlines.2 %}
     {% include "static_border_stations/location_form.html" with location_form=location_form %}
 {% endfor %}
+{% url 'borderstations_create' as borderstations_create_url %}
+{% if request.path == borderstations_create_url %}
 <input type="submit" class="pull-right btn btn-primary navbar-btn btn-lg" value="Create" />
+{% else %}
+<input type="submit" class="pull-right btn btn-primary navbar-btn btn-lg" value="Update" />
+{% endif %}
 </form>
 {% endblock %}
