@@ -8,18 +8,18 @@ from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineForm
 from accounts.mixins import PermissionsRequiredMixin
 from braces.views import LoginRequiredMixin
 
-from static_border_stations.models import Person,Location
+from static_border_stations.models import Staff,CommitteeMember,Location
 from dataentry.models import BorderStation
 
 from static_border_stations.forms import *
 from dataentry.forms import BorderStationForm
 
 class StaffInline(InlineFormSet):
-    model=Person
+    model=Staff
     extra = 1
 
 class CommitteeMemberInline(InlineFormSet):
-    model=Person
+    model=CommitteeMember
     extra = 1
 
 class LocationInline(InlineFormSet):
