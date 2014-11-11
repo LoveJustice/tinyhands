@@ -22,6 +22,7 @@
             relativeUrls: false
         };
     </script>
+
     {% endcomment %}
 
     {% block head %}{% endblock %}
@@ -65,6 +66,15 @@ in the Javascript and run code unique to the current page.
                     </ul>
                 </li>
                 {% endif %}
+                <li><a href="{% url 'main_dashboard' %}">Dashboard</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Forms<span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                    <li><a href="{% url 'interceptionrecord_list' %}">IRFs</a></li>
+                    <li><a href="{% url 'victiminterview_list' %}">VIFs</a></li>
+                    </ul>
+                </li>
+
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li>
@@ -75,6 +85,9 @@ in the Javascript and run code unique to the current page.
                     <ul class="dropdown-menu">
                         {% if request.user.permission_accounts_manage %}
                         <li><a href="{% url 'account_list' %}">Accounts and Permissions</a></li>
+                        {% endif %}
+                        {% if request.user.permission_vdc_manage %}
+                            <li><a href="{% url 'vdc_admin_page' %}">Edit VDCs</a></li>
                         {% endif %}
                         <li><a href="{% url 'logout' %}">Logout</a></li>
                     </ul>
@@ -110,5 +123,9 @@ in the Javascript and run code unique to the current page.
 <script src="{{ STATIC_URL }}all-pages.js"></script>
 <script src="{{ STATIC_URL }}geocodelocations.js"></script>
 <script src="{{ STATIC_URL }}station-suggestions.js"></script>
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}datatables/css/jquery.dataTables.css">
+<script src="{{ STATIC_URL }}datatables/js/jquery.dataTables.min.js"></script>
+<script src="{{ STATIC_URL }}vdc-datatable.js"></script>
+
 </body>
 </html>

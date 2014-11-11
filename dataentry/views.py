@@ -1,5 +1,5 @@
 from django.core.exceptions import ImproperlyConfigured, PermissionDenied
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.core.urlresolvers import reverse_lazy
 from django.core import serializers
 from django.contrib import messages
@@ -21,13 +21,16 @@ from accounts.mixins import PermissionsRequiredMixin
 from braces.views import LoginRequiredMixin
 from dataentry.forms import (
     InterceptionRecordForm,
+    IntercepteeForm,
     VictimInterviewForm,
     VictimInterviewPersonBoxForm,
     VictimInterviewLocationBoxForm,
+    VDCForm,
 )
 from datetime import date
 from dataentry import export
 from django.http import HttpResponse
+from django.template.loader import render_to_string
 
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -46,10 +49,11 @@ import os
 import shutil
 from alert_checkers import IRFAlertChecker, VIFAlertChecker
 from fuzzywuzzy import process, fuzz
+from fuzzy_matching import match_location
 
 @login_required
 def home(request):
-    return render(request, 'home.html', locals())
+    return redirect("main_dashboard")
 
 
 class SearchFormsMixin(object):
@@ -109,6 +113,10 @@ class IntercepteeInline(InlineFormSet):
     extra = 12
     max_num = 12
 
+    def get_factory_kwargs(self):
+        kwargs = super(IntercepteeInline, self).get_factory_kwargs()
+        kwargs['form'] = IntercepteeForm
+        return kwargs
 
 class IRFImageAssociationMixin(object):
 
@@ -335,24 +343,83 @@ class VictimInterviewCSVExportView(
 
         return response
 
-
-class GeoCodeDistrictAPIView(APIView):
-    def get(self,request, id):
-        district = District.objects.get(pk=id)
-        serializer = DistrictSerializer(district)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-    @api_view(['GET'])
-    def get_district_with_ajax(request, id):
-        district = District.objects.get(name="Achham")
-        serializer = DistrictSerializer(district,data=request.DATA)
-        if serializer.is_valid():
-            serializer.object.name = District.objects.filter(name="Achham")
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+class GeoCodeDistrictAPIView(
+        APIView):
+    
+    def get(self,request):
+        value = request.QUERY_PARAMS['district']
+        matches = match_location(district_name=value)
+        if(matches):
+            serializer = DistrictSerializer(matches)
+            return Response(serializer.data)
         else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"id": "-1","name":"None"})
 
+
+class GeoCodeVdcAPIView(APIView):
+    
+    def get(self, request):
+        value = request.QUERY_PARAMS['vdc']
+        matches = match_location(vdc_name=value)
+        if(matches):
+            serializer = VDCSerializer(matches)
+            return Response(serializer.data)
+        else:
+            return Response({"id": "-1","name":"None"})
+
+
+class VDCAdminView(
+        LoginRequiredMixin,
+        PermissionsRequiredMixin,
+        SearchFormsMixin,
+        ListView):
+    model = VDC
+    template_name = "dataentry/vdc_admin_page.html"
+    permissions_required = ['permission_vdc_manage']
+    paginate_by = 20
+
+    def __init__(self, *args, **kwargs):
+        super(VDCAdminView, self).__init__(name__icontains = "name")
+
+    def get_context_data(self, **kwargs):
+        context = super(VDCAdminView, self).get_context_data(**kwargs)
+        context['lower_limit'] = context['page_obj'].number - 5
+        context['upper_limit'] = context['page_obj'].number + 5
+        context['database_empty'] = self.model.objects.count()==0
+        return context
+
+class VDCAdminUpdate(
+        LoginRequiredMixin,
+        PermissionsRequiredMixin,
+        UpdateView):
+    model = VDC
+    form_class = VDCForm
+    template_name = "dataentry/vdc_admin_update.html"
+    permissions_required = ['permission_vdc_manage']
+    
+    def dispatch(self, request, *args, **kwargs):
+        self.vdc_id = kwargs['pk']
+        return super(VDCAdminUpdate, self).dispatch(request, *args, **kwargs)
+    
+    def form_valid(self, form):
+        form.save()
+        vdc = VDC.objects.get(id=self.vdc_id)
+        return HttpResponse(render_to_string('dataentry/vdc_admin_update_success.html'))
+
+
+class VDCCreateView(
+        LoginRequiredMixin,
+        PermissionsRequiredMixin,
+        CreateView):
+    model = VDC
+    form_class = VDCForm
+    template_name = "dataentry/vdc_create_page.html"
+    permissions_required = ['permission_vif_add','permission_irf_add']
+    
+    def form_valid(self, form):
+        form.save()
+        return HttpResponse(render_to_string('dataentry/vdc_create_success.html'))
 
 class StationCodeAPIView(APIView):
     

@@ -104,6 +104,7 @@ class AccountUpdateView(
         'permission_border_stations_view',
         'permission_border_stations_add',
         'permission_border_stations_edit',
+        'permission_vdc_manage',
     ]
     permissions_required = ['permission_accounts_manage']
 
@@ -149,6 +150,7 @@ class AccessControlView(
         'permission_border_stations_view',
         'permission_border_stations_add',
         'permission_border_stations_edit',
+        'permission_vdc_manage',
     ]
 
     def get_context_data(self, **kwargs):
@@ -178,6 +180,7 @@ class AccessDefaultsView(
         'permission_border_stations_view',
         'permission_border_stations_add',
         'permission_border_stations_edit',
+        'permission_vdc_manage',
     ]
 
 
