@@ -11,18 +11,6 @@
     {{ inlines.0.management_form }}
     {{ inlines.1.management_form }}
     {{ inlines.2.management_form }}
-    <h1>Staff</h1>
-    {% for staff_form in inlines.0 %}
-        {% include "static_border_stations/person_form.html" with person_form=staff_form %}
-    {% endfor %}
-    <h1>Committee Member</h1>
-    {% for cm_form in inlines.1 %}
-        {% include "static_border_stations/person_form.html" with person_form=cm_form %}
-    {% endfor %}
-    <h1>Locations</h1>
-    {% for location_form in inlines.2 %}
-        {% include "static_border_stations/location_form.html" with location_form=location_form %}
-    {% endfor %}
     <div class="row">
         <h1>Staff</h1>
         {% for staff_form in inlines.0 %}
