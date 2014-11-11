@@ -57,7 +57,7 @@ in the Javascript and run code unique to the current page.
                     <ul class="dropdown-menu">
                         {% for station in border_stations %}
                         <!-- link address needs to be changed once we have edit/viewing working -->
-                        <li><a href="#">{{station.station_name }}</a></li>
+                        <li><a href="{% url 'borderstations_update' station.pk %}">{{station.station_name }}</a></li>
                         {% endfor %}
                         {% if request.user.permission_border_stations_add %}
                         <li><a href="{% url 'borderstations_create' %}">Create Station</a></li>
