@@ -5,49 +5,71 @@
 {% block tab_block %}
 <form method="POST">
 	{% csrf_token %}
-{% include "static_border_stations/borderstation_form.html" %}
-
+<div class="row">
+	{% include "static_border_stations/borderstation_form.html" %}
+</div>
 {{ inlines.0.management_form }}
 {{ inlines.1.management_form }}
 {{ inlines.2.management_form }}
-<h1>Staff</h1>
-{% for staff_form in inlines.0 %}
-<div id='{{staff_form.prefix}}'>
-    {% include "static_border_stations/person_form.html" with person_form=staff_form %}
+<div class="row">
+	<h1>Staff</h1>
+	{% for staff_form in inlines.0 %}
+	<div id='{{staff_form.prefix}}'>
+	    {% include "static_border_stations/person_form.html" with person_form=staff_form %}
+	</div>
+	{% endfor %}
 </div>
-{% endfor %}
-<h1>Committee Member</h1>
-{% for cm_form in inlines.1 %}
-<div id='{{cm_form.prefix}}'>
-    {% include "static_border_stations/person_form.html" with person_form=cm_form %}
+<div class="row">
+	<h1>Committee Member</h1>
+	{% for cm_form in inlines.1 %}
+	<div id='{{cm_form.prefix}}'>
+	    {% include "static_border_stations/person_form.html" with person_form=cm_form %}
+	</div>
+	{% endfor %}
 </div>
-{% endfor %}
-<h1>Locations</h1>
-{% for location_form in inlines.2 %}
-<div id='{{location_form.prefix}}'>
-    {% include "static_border_stations/location_form.html" with location_form=location_form %}
+<div class="row">
+	<h1>Locations</h1>
+	{% for location_form in inlines.2 %}
+	<div id='{{location_form.prefix}}'>
+	    {% include "static_border_stations/location_form.html" with location_form=location_form %}
+	</div>
+	{% endfor %}
 </div>
-{% endfor %}
-<input type="submit" class="pull-right btn btn-primary navbar-btn btn-lg" value="Create" />
+<br/>
+<div class="row">
+	<input type="submit" class="pull-right btn btn-primary btn-lg" value="Create" />
+</div>
 </form>
 <script type="text/javascript">
    $(function() {
        {% for formset in inlines.0 %}
        $('div#{{ formset.prefix }}').formset({
            prefix: '{{ formset.prefix }}',
-           formCssClass: 'dynamic-formset{{ forloop.counter }}'
+           formCssClass: 'dynamic-formset{{ forloop.counter }}',
+           addText: '+ Add Another Staff',
+           deleteText: 'Remove Staff',
+           addCssClass: 'add-row btn btn-success pull-right',          // CSS class applied to the add link
+           deleteCssClass: 'delete-row btn btn-danger',
        });
        {% endfor %}
        {% for formset in inlines.1 %}
        $('div#{{ formset.prefix }}').formset({
            prefix: '{{ formset.prefix }}',
-           formCssClass: 'dynamic-formset{{ forloop.counter }}'
+           formCssClass: 'dynamic-formset{{ forloop.counter }}',
+           addText: '+ Add Another Committee Member',
+           deleteText: 'Remove Committee Member',
+           addCssClass: 'add-row btn btn-success pull-right',
+           deleteCssClass: 'delete-row btn btn-danger',
        });
        {% endfor %}
        {% for formset in inlines.2 %}
        $('div#{{ formset.prefix }}').formset({
            prefix: '{{ formset.prefix }}',
-           formCssClass: 'dynamic-formset{{ forloop.counter }}'
+           formCssClass: 'dynamic-formset{{ forloop.counter }}',
+           addText: '+ Add Another Location',
+           deleteText: 'Remove Location',
+           addCssClass: 'add-row btn btn-success pull-right',
+           deleteCssClass: 'delete-row btn btn-danger',
        });
        {% endfor %}
    })
