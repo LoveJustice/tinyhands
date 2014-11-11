@@ -22,6 +22,8 @@ setupInputHandlers = ($ui) ->
       search $(this).val(), $ui
 
 search = (input, $ui) ->
+  if input.length == 0
+    return
   $.get $ui.data("ajax"), {name: input}, (data) ->
     if data.success
       results = []
@@ -59,16 +61,17 @@ $ ->
   setupInputHandlers($ui)
   # When you click on a name, show the modal
   $ui.on "click", "li.person", ->
+    $ui.hide()
     $this = $(this)
-    url = dutils.urls.resolve('matching_modal', { id: this.id })
+    url = dutils.urls.resolve('matching_modal', id: this.id)
     $row = $cur_input.parents('tr')
-    name = $row.find('#fuzzy_name').val()
-    phone = $row.find('#fuzzy_phone_contact').val()
-    age = $row.find('#fuzzy_age').val()
+    name = encodeURIComponent $row.find('#fuzzy_name').val()
+    phone = encodeURIComponent $row.find('#fuzzy_phone_contact').val()
+    age = encodeURIComponent $row.find('#fuzzy_age').val()
     built_url = "#{url}?name=#{name}&phone=#{phone}&age=#{age}"
-    console.log built_url
     $modal.load built_url, ->
       $modal.modal()
+      init()
 #    name = $this.children(".name").text()
 #    $cur_input.val(name)
 #    $button = $cur_input.parent().parent().find(".photo-upload-button")
@@ -77,4 +80,3 @@ $ ->
   # Hover image
   $ui.on "mouseover", "li.person", ->
     $ui.find("img").attr("src", "#{$(this).data("photo")}").show()
-

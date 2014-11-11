@@ -297,9 +297,9 @@ class IntercepteeManager(models.Manager):
             p1 = utils.full_process(query, force_ascii=force_ascii)
             p2 = utils.full_process(item, force_ascii=force_ascii)
             if not utils.validate_string(p1):
-                item_list.append(0)
+                continue
             if not utils.validate_string(p2):
-                item_list.append(0)
+                continue
             # should we look at partials?
             try_partial = True
             unbase_scale = .95

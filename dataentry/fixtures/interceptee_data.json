@@ -50323,7 +50323,7 @@
 {
     "fields": {
         "vdcs": [],
-        "canonical_age": 5,
+        "canonical_age": 22,
         "gender": "male",
         "districts": [],
         "canonical_name": 5,
@@ -50874,7 +50874,7 @@
             19,
             23
         ],
-        "photo": "",
+        "photo": "interceptee_photos/doge.png",
         "interception_record": 1,
         "districts": [
             3,
@@ -50889,7 +50889,7 @@
     "fields": {
         "kind": "t",
         "vdcs": [],
-        "photo": "",
+        "photo": "interceptee_photos/doge.png",
         "interception_record": 1,
         "districts": [],
         "relation_to": "Rick Astley"
@@ -50901,7 +50901,7 @@
     "fields": {
         "kind": "v",
         "vdcs": [],
-        "photo": "",
+        "photo": "interceptee_photos/doge.png",
         "interception_record": 1,
         "districts": [],
         "relation_to": "Avicii"

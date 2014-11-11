@@ -9,6 +9,7 @@ from django.shortcuts import render
 from django.core.urlresolvers import reverse_lazy
 from django.contrib import messages
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, View, DeleteView
 from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSet
 from django.contrib.auth.decorators import login_required
@@ -28,8 +29,8 @@ from dataentry.models import (
     Interceptee,
     VictimInterviewPersonBox,
     VictimInterviewLocationBox,
-    District
-)
+    District,
+    Name, Phone, Age)
 from accounts.mixins import PermissionsRequiredMixin
 from dataentry.forms import (
     InterceptionRecordForm,
@@ -372,19 +373,73 @@ def interceptee_fuzzy_matching(request):
         'data': modified_matches
     })
 
+from easydict import EasyDict as edict
+def getDict(post, name):
+    dic = {}
+    for k in post.keys():
+        # In case you call it on something that isn't a dict
+        if k == name:
+            return post.get(name)
+        if k.startswith(name):
+            rest = k[len(name):]
+            # Get attribute name
+            attribute = [p[:-1] for p in rest.split('[')][1]
+            # Add info to attribute
+            dic[attribute] = post.get(k)
+    return edict(dic)
 
 @login_required
+@csrf_exempt
 def matching_modal(request, id):
     if not id:
         return HttpResponse("You must pass parameter 'id'<br/>Example: /matching_modal/1")
     person = Interceptee.objects.get(pk=id)
     GET = request.GET
-    name = GET['name'] if 'name' in GET and GET['name'] else None
-    phone = GET['phone'] if 'phone' in GET and GET['phone'] else None
-    age = GET['age'] if 'age' in GET and GET['age'] else None
-    return render(request, "dataentry/matching_modal.html", {
-        "person": person,
-        "form_name": name,
-        "form_phone": phone,
-        "form_age": age
-    })
+    if GET:
+        name = GET['name'] if 'name' in GET and GET['name'] else None
+        phone = GET['phone'] if 'phone' in GET and GET['phone'] else None
+        age = GET['age'] if 'age' in GET and GET['age'] else None
+        return render(request, "dataentry/matching_modal.html", {
+            "person": person,
+            "form_name": name,
+            "form_phone": phone,
+            "form_age": age
+        })
+    POST = request.POST
+    print POST
+
+    if POST:
+        try:
+            name = getDict(POST, 'canonical_name')
+            phone = getDict(POST, 'canonical_phone')
+            age = getDict(POST, 'canonical_age')
+            print "Changing values to:", name.value, phone.value, age.value
+            if name.create == 'false':
+                person.canonical_name_id = int(name.value)
+            else:
+                person.canonical_name = Name.objects.create(value=name.value, person=person)
+            if phone.create == 'false':
+                person.canonical_phone_id = int(phone.value)
+            else:
+                person.canonical_phone = Phone.objects.create(value=phone.value, person=person)
+            if age.create == 'false':
+                person.canonical_age_id = int(age.value)
+            else:
+                existing_age = Age.objects.filter(value=age.value)
+                if not existing_age:
+                    new_age = Age.objects.create(value=age.value)
+                    person.ages.add(new_age)
+                else:
+                    person.ages.add(existing_age[0])
+                person.canonical_age = new_age
+            person.save()
+        except Exception as e:
+            print e
+    return HttpResponse("Person saved successfully.")
+    # if POST:
+    #     print POST
+    #     return HttpResponse('sdfsd')
+
+
+def matching_modal_test(request):
+    return render(request, "dataentry/matching_modal_test.html")

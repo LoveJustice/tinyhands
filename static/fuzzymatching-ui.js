@@ -37,6 +37,9 @@
   };
 
   search = function(input, $ui) {
+    if (input.length === 0) {
+      return;
+    }
     return $.get($ui.data("ajax"), {
       name: input
     }, function(data) {
@@ -92,18 +95,19 @@
     setupInputHandlers($ui);
     $ui.on("click", "li.person", function() {
       var $row, $this, age, built_url, name, phone, url;
+      $ui.hide();
       $this = $(this);
       url = dutils.urls.resolve('matching_modal', {
         id: this.id
       });
       $row = $cur_input.parents('tr');
-      name = $row.find('#fuzzy_name').val();
-      phone = $row.find('#fuzzy_phone_contact').val();
-      age = $row.find('#fuzzy_age').val();
+      name = encodeURIComponent($row.find('#fuzzy_name').val());
+      phone = encodeURIComponent($row.find('#fuzzy_phone_contact').val());
+      age = encodeURIComponent($row.find('#fuzzy_age').val());
       built_url = "" + url + "?name=" + name + "&phone=" + phone + "&age=" + age;
-      console.log(built_url);
       return $modal.load(built_url, function() {
-        return $modal.modal();
+        $modal.modal();
+        return init();
       });
     });
     return $ui.on("mouseover", "li.person", function() {
