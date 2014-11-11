@@ -268,8 +268,8 @@ class Phone(models.Model):
 
 
 class Age(models.Model):
-    value = models.PositiveIntegerField("age", null=True, blank=True)
-    person = models.ForeignKey(Person, related_name="ages")
+    value = models.PositiveIntegerField("age", unique=True, null=True, blank=True)
+    person = models.ManyToManyField(Person, related_name="ages")
 
     def __unicode__(self):
         return str(self.value)
