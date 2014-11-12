@@ -46,6 +46,7 @@ INSTALLED_APPS = (
     'dataentry',
     'accounts',
     'portal',
+    'budget',
     'util',
     'rest_framework',
     'static_border_stations',

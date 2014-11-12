@@ -1,3 +1,4 @@
+{% load bootstrap %}
 <div class="modal-dialog modal-sm">
     <div class="modal-content">
         <form id="vdc_create_form" method="post" class="form" role="form" action="{% url 'vdc_create_page' %}">
@@ -20,16 +21,15 @@
                             {% endfor %} 
                         </ul> 
                         {% endif %} 
-                        {{ field.label_tag }} 
-                        {{ field }} 
+                        {{ field | bootstrap }}
                         {% if field.help_text %}
                         <div class="form-helptext">{{ field.help_text }}</div>
                         {% endif %} 
                     </div>
                     {% endfor %} 
                 </div> 
-                <div class="modal-footer"> 
-                    <input id="vdc_create_button" type="submit" class="btn btn-primary" value="Save" style="margin-bottom: 5px;" /> 
+                <div class="modal-footer" style="text-align:center">
+                    <input id="vdc_create_button" type="submit" class="btn btn-primary" value="Save" style="margin-bottom: 5px;" />
                 </div>
             </div>
         </form>
