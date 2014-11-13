@@ -13,7 +13,6 @@ from dataentry.models import BorderStation
 
 from static_border_stations.forms import *
 from dataentry.forms import BorderStationForm
-import ipdb
 
 class FormSetForStations(InlineFormSet):
 
