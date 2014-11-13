@@ -18,10 +18,10 @@ class FormSetForStations(InlineFormSet):
 
     def __init__(self, *args, **kwargs):
         super(FormSetForStations, self).__init__(*args, **kwargs)
-        if(self.request.path.find('create') > -1):
-            self.extra = 1
-        else:
+        if(self.request.path.find('create') == -1 and self.request.path.find('update') == -1):
             self.extra = 0
+        else:
+            self.extra = 1
         return 
 
 class StaffInline(FormSetForStations):
