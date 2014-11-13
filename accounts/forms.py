@@ -19,6 +19,7 @@ class CreateUnactivatedAccountForm(forms.ModelForm):
             'permission_accounts_manage',
             'permission_receive_email',
             'permission_vdc_manage',
+            'permission_budget_manage',
         ]
 
     def clean_password2(self):
