@@ -14,17 +14,24 @@ from dataentry.models import BorderStation
 from static_border_stations.forms import *
 from dataentry.forms import BorderStationForm
 
-class StaffInline(InlineFormSet):
+class FormSetForStations(InlineFormSet):
+
+    def __init__(self, *args, **kwargs):
+        super(FormSetForStations, self).__init__(*args, **kwargs)
+        if(self.request.path.find('create') > -1):
+            self.extra = 1
+        else:
+            self.extra = 0
+        return 
+
+class StaffInline(FormSetForStations):
     model=Staff
-    extra = 1
 
-class CommitteeMemberInline(InlineFormSet):
+class CommitteeMemberInline(FormSetForStations):
     model=CommitteeMember
-    extra = 1
 
-class LocationInline(InlineFormSet):
+class LocationInline(FormSetForStations):
     model=Location
-    extra = 1
 
 class StaticBorderStationsCreateView (
         LoginRequiredMixin,
