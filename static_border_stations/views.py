@@ -47,3 +47,9 @@ class StaticBorderStationsUpdateView (
     success_url = reverse_lazy('home')
     inlines = [StaffInline, CommitteeMemberInline, LocationInline]
     permissions_required = ['permission_border_stations_edit']
+    
+class StaticBorderStationsDetailView(StaticBorderStationsUpdateView):
+    permissions_required = ['permission_border_stations_view']
+    
+    def post(self, request, *args, **kwargs):
+        raise PermissionDenied
