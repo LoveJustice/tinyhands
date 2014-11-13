@@ -74,6 +74,7 @@ in the Javascript and run code unique to the current page.
                         {% if request.user.permission_vdc_manage %}
                             <li><a href="{% url 'vdc_admin_page' %}">Edit VDCs</a></li>
                         {% endif %}
+                        <li><a href="{% url 'budget_create' %}">Calculate Your Budgets</a></li>
                         <li><a href="{% url 'logout' %}">Logout</a></li>
                     </ul>
                 </li>
