@@ -14,8 +14,8 @@
     {
         var options = $.extend({}, $.fn.formset.defaults, opts),
             flatExtraClasses = options.extraClasses.join(' '),
-            totalForms = $('#id_' + options.prefix + '-TOTAL_FORMS'),
-            maxForms = $('#id_' + options.prefix + '-MAX_NUM_FORMS'),
+            totalForms = $('#id_' + options.prefix.slice(0,-2) + '-TOTAL_FORMS'),
+            maxForms = $('#id_' + options.prefix.slice(0,-2) + '-MAX_NUM_FORMS'),
             childElementSelector = 'input,select,textarea,label,div',
             $$ = $(this),
 
@@ -27,6 +27,7 @@
             },
 
             updateElementIndex = function(elem, prefix, ndx) {
+                prefix = prefix.slice(0,-2);
                 var idRegex = new RegExp(prefix + '-(\\d+|__prefix__)-'),
                     replacement = prefix + '-' + ndx + '-';
                 if (elem.attr("for")) elem.attr("for", elem.attr("for").replace(idRegex, replacement));
@@ -166,26 +167,31 @@
                 addButton = buttonRow.find('a');
             } else {
                 // Otherwise, insert it immediately after the last form:
-                $$.filter(':last').after('<a class="' + options.addCssClass + '" href="javascript:void(0)">' + options.addText + '</a>');
-                addButton = $$.filter(':last').next();
-                if (hideAddButton) addButton.hide();
+                if($('.'+options.addCssClass.split(" ").join(".")).length == 0){
+                    $('#'+options.prefix.slice(0,-2)+'-'+(totalForms.val()-1)).filter(':last').after('<a class="' + options.addCssClass + '" href="javascript:void(0)">' + options.addText + '</a>');
+                    addButton = $('#'+options.prefix.slice(0,-2)+'-'+(totalForms.val()-1)).filter(':last').next();
+                    if (hideAddButton) addButton.hide();
+                }
             }
-            addButton.click(function() {
-                var formCount = parseInt(totalForms.val()),
-                    row = options.formTemplate.clone(true).removeClass('formset-custom-template'),
-                    buttonRow = $($(this).parents('tr.' + options.formCssClass + '-add').get(0) || this);
-                applyExtraClasses(row, formCount);
-                row.insertBefore(buttonRow).show();
-                row.find(childElementSelector).each(function() {
-                    updateElementIndex($(this), options.prefix, formCount);
+            if(addButton){
+                addButton.click(function() {
+                    var formCount = parseInt(totalForms.val()),
+                        row = options.formTemplate.clone(true).removeClass('formset-custom-template'),
+                        buttonRow = $($(this).parents('tr.' + options.formCssClass + '-add').get(0) || this);
+                    applyExtraClasses(row, formCount);
+                    row.insertBefore(buttonRow).show();
+                    row.find(childElementSelector).each(function() {
+                        updateElementIndex($(this), options.prefix, formCount);
+                    });
+                    totalForms.val(formCount + 1);
+                    // Check if we've exceeded the maximum allowed number of forms:
+                    if (!showAddButton()) buttonRow.hide();
+                    // If a post-add callback was supplied, call it with the added form:
+                    if (options.added) options.added(row);
+                    return false;
                 });
-                totalForms.val(formCount + 1);
-                // Check if we've exceeded the maximum allowed number of forms:
-                if (!showAddButton()) buttonRow.hide();
-                // If a post-add callback was supplied, call it with the added form:
-                if (options.added) options.added(row);
-                return false;
-            });
+            }
+            
         }
 
         return $$;

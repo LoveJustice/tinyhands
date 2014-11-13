@@ -757,17 +757,6 @@ class VictimInterviewLocationBoxForm(DreamSuitePaperForm):
 
     def __init__(self, *args, **kwargs):
         super(VictimInterviewLocationBoxForm, self).__init__(*args, **kwargs)
-        
-        
-class BorderStationForm(forms.ModelForm):
-    class Meta:
-        model = BorderStation
-        widgets = {
-            'date_established': forms.TextInput(attrs={'placeholder': '12/31/12'}),
-        }
-
-    def __init__(self, *args, **kwargs):
-        super(BorderStationForm, self).__init__(*args, **kwargs)
         self.fields['district'] = DistrictField(label="District")
         self.fields['vdc'] = VDCField(label="VDC")
         try:
@@ -785,6 +774,13 @@ class BorderStationForm(forms.ModelForm):
         self.instance.vdc = vdc
         self.instance.district = district
         return super(VictimInterviewLocationBoxForm, self).save(commit)
+        
+class BorderStationForm(forms.ModelForm):
+    class Meta:
+        model = BorderStation
+        widgets = {
+            'date_established': forms.TextInput(attrs={'placeholder': '12/31/12'}),
+        }
 
 class VDCForm(forms.ModelForm):
     class Meta:

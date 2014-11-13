@@ -50,31 +50,31 @@
        {% for formset in inlines.0 %}
        $('div#{{ formset.prefix }}').formset({
            prefix: '{{ formset.prefix }}',
-           formCssClass: 'dynamic-formset{{ forloop.counter }}',
+           formCssClass: 'staff-formset{{ forloop.counter }}',
            addText: '+ Add Another Staff',
            deleteText: 'Remove Staff',
-           addCssClass: 'add-row btn btn-success pull-right',          // CSS class applied to the add link
-           deleteCssClass: 'delete-row btn btn-danger',
+           addCssClass: 'add-staff btn btn-success pull-right',
+           deleteCssClass: 'delete-staff btn btn-danger',
        });
        {% endfor %}
        {% for formset in inlines.1 %}
        $('div#{{ formset.prefix }}').formset({
            prefix: '{{ formset.prefix }}',
-           formCssClass: 'dynamic-formset{{ forloop.counter }}',
+           formCssClass: 'cm-formset{{ forloop.counter }}',
            addText: '+ Add Another Committee Member',
            deleteText: 'Remove Committee Member',
-           addCssClass: 'add-row btn btn-success pull-right',
-           deleteCssClass: 'delete-row btn btn-danger',
+           addCssClass: 'add-cm btn btn-success pull-right',
+           deleteCssClass: 'delete-cm btn btn-danger',
        });
        {% endfor %}
        {% for formset in inlines.2 %}
        $('div#{{ formset.prefix }}').formset({
            prefix: '{{ formset.prefix }}',
-           formCssClass: 'dynamic-formset{{ forloop.counter }}',
+           formCssClass: 'location-formset{{ forloop.counter }}',
            addText: '+ Add Another Location',
            deleteText: 'Remove Location',
-           addCssClass: 'add-row btn btn-success pull-right',
-           deleteCssClass: 'delete-row btn btn-danger',
+           addCssClass: 'add-loc btn btn-success pull-right',
+           deleteCssClass: 'delete-loc btn btn-danger',
        });
        {% endfor %}
    })
