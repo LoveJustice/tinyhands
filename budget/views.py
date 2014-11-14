@@ -1,5 +1,6 @@
 from braces.views import LoginRequiredMixin
 from django.core.urlresolvers import reverse_lazy
+from django.views.generic import ListView
 from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSet
 # from budget.models import InterceptionRecordListView
 from accounts.mixins import PermissionsRequiredMixin
@@ -19,3 +20,9 @@ class BudgetCalcCreateView(
     form_class = BorderStationBudgetCalculationForm
     success_url = reverse_lazy('home')
     inlines = [OtherBudgetItemCostFormInline]
+
+
+class BudgetCalcListView(
+        LoginRequiredMixin,
+        ListView):
+    model = BorderStationBudgetCalculation
