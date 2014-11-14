@@ -90,7 +90,7 @@ class BorderStationBudgetCalculation(models.Model):
 class OtherBudgetItemCost(models.Model):
     name = models.CharField(max_length=255)
     cost = models.PositiveIntegerField()
-    
+
     BUDGET_FORM_SECTION_CHOICES = [
         (1, 'Travel'),
         (2, 'Miscellaneous'),
@@ -98,3 +98,4 @@ class OtherBudgetItemCost(models.Model):
         (4, 'Supplies'),
     ]
     form_section = models.IntegerField(BUDGET_FORM_SECTION_CHOICES)
+    budget_item_parent = models.ForeignKey(BorderStationBudgetCalculation)
