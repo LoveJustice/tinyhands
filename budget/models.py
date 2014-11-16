@@ -1,8 +1,9 @@
 from django.db import models
+from accounts.models import Account
 from dataentry.models import BorderStation
 
 class BorderStationBudgetCalculationForm(models.Model):
-    form_entered_by = models.ForeignKey(Account)
+    form_entered_by = models.ForeignKey(Account, related_name=)
     date_created = models.DateTimeField()
     
     form_updated_by = models.ForeignKey(Account)
