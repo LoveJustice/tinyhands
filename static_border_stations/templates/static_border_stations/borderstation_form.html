@@ -1,0 +1,27 @@
+{% load bootstrap %}
+<h1>Details</h1>
+<hr/>
+<div class="row">
+    <div class="col-sm-6">
+        {{form.station_name|bootstrap}}
+    </div>
+    <div class="col-sm-6">
+        {{form.station_code|bootstrap}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-6">
+        {{form.date_established|bootstrap}}
+    </div>
+    <div class="col-sm-6" style="margin: 20px 0px;">
+        {{form.has_shelter|bootstrap}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-6">
+        {{form.latitude|bootstrap}}
+    </div>
+    <div class="col-sm-6">
+        {{form.longitude|bootstrap}}
+    </div>
+</div>

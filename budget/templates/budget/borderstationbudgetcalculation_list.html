@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load bootstrap %}
+
+{% block title %}All Budget Calculation Forms{% endblock %}
+
+{% block body_class %}budgetcalculation_list{% endblock %}
+
+{% block tab_block %}
+    {% block content %}
+    <h1>All Budget Calculations</h1>
+    {% if borderstationbudgetcalculation_list %}
+    <table class="table table-striped table-condensed">
+
+        <thead>
+            <tr>
+                <th>Station</th>
+                <th>Station Code</th>
+                <th>Entered By</th>
+                <th>&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for form in borderstationbudgetcalculation_list %}
+            <tr>
+                <td>{{ form.border_station.station_name }}</td>
+                <td>{{ form.border_station.station_code }}</td>
+                <td>{{ form.form_entered_by }}</td>
+                <td style="text-align: right">
+                    <a href="{% url "budget_detail" form.id %}" class="btn btn-sm btn-primary">View</a>
+                    <a href="{% url "budget_update" form.id %}" class="btn btn-sm btn-primary">Edit</a>
+                    {% if request.user.is_superuser %}
+                        {% include "delete_modal_forms.html" with form=form url_string="budget_delete"%}
+                        <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#modal-{{ form.pk }}">Delete</button>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+    <p class="pull-right"><a class="btn btn-success" href="{% url 'budget_create' %}">Create A New Budget Calculation Form</a></p>
+    {% endblock %}
+{% endblock %}

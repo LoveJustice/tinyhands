@@ -1,5 +1,5 @@
-from django.core.exceptions import ImproperlyConfigured, PermissionDenied
-from django.shortcuts import render, redirect
+from django.core.exceptions import PermissionDenied
+from django.shortcuts import redirect
 from django.core.urlresolvers import reverse_lazy
 from django.core import serializers
 from django.contrib import messages
@@ -7,13 +7,13 @@ from django.http import HttpResponseRedirect
 from django.views.generic import ListView, View, DeleteView, CreateView, UpdateView
 from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSet
 from django.contrib.auth.decorators import login_required
+import re
 from dataentry.models import (
     VictimInterview,
     InterceptionRecord,
     Interceptee,
     VictimInterviewPersonBox,
     VictimInterviewLocationBox,
-    District,
     VDC,
     BorderStation
 )
@@ -33,7 +33,6 @@ from django.http import HttpResponse
 from django.template.loader import render_to_string
 
 from rest_framework import status
-from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from dataentry.serializers import DistrictSerializer, VDCSerializer

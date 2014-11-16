@@ -464,6 +464,13 @@ var DREAMSUITE = {
         $form.find('input, button, select, textarea').attr('disabled', 'disabled');
         $('#footer').hide();
     },
+    budget_detail: function() {
+        //this.interceptionrecord_update();
+
+        var $form = $('#budget-calc-form');
+        $form.find('input, button, select, textarea').attr('disabled', 'disabled');
+        $('#footer').hide();
+    },
 
     default: function() {}
 
