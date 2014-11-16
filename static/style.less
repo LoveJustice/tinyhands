@@ -558,3 +558,34 @@ abbr {
     border: 1px solid black;
     margin: 2px;
 }
+
+/**
+* Horizontal Type Line Behind Text
+* Inspired by this discussion @ CSS-Tricks: http://css-tricks.com/forums/topic/css-trick-for-a-horizontal-type-line-behind-text/#post-151970
+* Available on jsFiddle: http://jsfiddle.net/ericrasch/jAXXA/
+* Available on Dabblet: http://dabblet.com/gist/2045198
+* Available on GitHub Gist: https://gist.github.com/2045198
+*/
+h2.background {
+    font: 20px sans-serif;
+    margin-top: 30px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+
+    &:before {
+        border-top: 2px solid #dfdfdf;
+        content:"";
+        margin: 0 auto; /* this centers the line to the full width specified */
+        position: absolute; /* positioning must be absolute here, and relative positioning must be applied to the parent */
+        top: 50%; left: 0; right: 0; bottom: 0;
+        width: 95%;
+        z-index: -1;
+    }
+
+    span {
+        /* to hide the lines from behind the text, you have to set the background color the same as the container */
+        background: #fff;
+        padding: 0 15px;
+    }
+}
