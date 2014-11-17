@@ -6,10 +6,15 @@ from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineForm
 from rest_framework.exceptions import PermissionDenied
 from budget.forms import BorderStationBudgetCalculationForm
 from budget.models import BorderStationBudgetCalculation, OtherBudgetItemCost
+from static_border_stations.models import Staff, BorderStation
 
 
 class OtherBudgetItemCostFormInline(InlineFormSet):
     model = OtherBudgetItemCost
+
+
+class BorderStationSetInline(InlineFormSet):
+    model = BorderStation.staff_set
 
 
 class BudgetCalcCreateView(
