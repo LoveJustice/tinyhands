@@ -52,6 +52,26 @@ in the Javascript and run code unique to the current page.
             {% if request.user.is_authenticated %}
             <ul class="nav navbar-nav">
                 <li><a href="{% url 'main_dashboard' %}">Dashboard</a></li>
+                {% if request.user.permission_border_stations_view %}
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Stations<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        {% if request.user.permission_border_stations_add %}
+                        <li><a href="{% url 'borderstations_create' %}">Create Station</a></li>
+                        <hr style="margin: 4px"/>
+                        {% endif %}
+                        {% for station in border_stations %}
+                        {% if request.user.permission_border_stations_edit %}
+                        <li><a href="{% url 'borderstations_update' station.pk %}">{{station.station_name }}</a></li>
+                        {% endif %}
+                        {% if request.user.permission_border_stations_view and not request.user.permission_border_stations_edit %}
+                        <li><a href="{% url 'borderstations_view' station.pk %}">{{station.station_name }}</a></li>
+                        {% endif %}
+                        {% endfor %}
+                    </ul>
+                </li>
+                {% endif %}
+
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Forms<span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
@@ -93,6 +113,8 @@ in the Javascript and run code unique to the current page.
 {% block tab_block %}{% endblock %}
 </div>
 
+
+
 {% block sticky_footer %}
 {% endblock %}
 
@@ -100,6 +122,7 @@ in the Javascript and run code unique to the current page.
 <script src="{{ STATIC_URL }}datetimepicker/jquery.datetimepicker.js"></script>
 <script src="{{ STATIC_URL }}bootstrap.js"></script>
 <script src="{{ STATIC_URL }}jquery.deserialize.js"></script>
+<script src="{{ STATIC_URL }}jquery.formset.js"></script>
 {% block foot %}
 {% endblock %}
 <script src="{{ STATIC_URL }}all-pages.js"></script>

@@ -21,10 +21,11 @@ DEBUG = False
 TEMPLATE_DEBUG = False
 
 SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
-
-STATICFILES_DIRS = (
-	os.path.join(SITE_ROOT, '../../static/'),
+FIXTURE_DIRS = (
+   (os.path.join(SITE_ROOT, '../../fixtures/'),)
 )
+
+STATICFILES_DIRS = (os.path.join(SITE_ROOT, '../../static/'),)
 
 ALLOWED_HOSTS = []
 
@@ -100,6 +101,8 @@ TEMPLATE_LOADERS = (
 TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, "templates"),
 )
+
+TEMPLATE_CONTEXT_PROCESSORS += ("dataentry.context_processors.border_stations_processor", )
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
