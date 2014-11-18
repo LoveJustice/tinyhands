@@ -16,7 +16,6 @@
 
      <form id="budget-calc-form" method="post">
         {% csrf_token %}
-        {{ inlines.0.management_form }}
 
         <div class="form-page">
             <div class="row">
@@ -259,9 +258,6 @@
                     {{ form.miscellaneous_number_of_intercepts_last_month|bootstrap }}
                     {{ form.miscellaneous_number_of_intercepts_last_month_multiplier|bootstrap }}
 
-                    {% for field in form.inlines.0 %}
-                        {{ field|bootstrap }}
-                    {% endfor %}
                 </div>
             </div>
 
@@ -272,41 +268,6 @@
     </div>
      </form>
 
-    <script type="text/javascript">
-        /* Allows for the creation of more or less items */
-        $(function() {
-            {% for formset in inlines.0 %}
-            $('div#{{ formset.prefix }}').formset({
-               prefix: '{{ formset.prefix }}',
-               formCssClass: 'staff-formset{{ forloop.counter }}',
-               addText: '+ Add Another Staff',
-               deleteText: 'Remove Staff',
-               addCssClass: 'add-staff btn btn-success pull-right',
-               deleteCssClass: 'delete-staff btn btn-danger',
-            });
-            {% endfor %}
-            {% for formset in inlines.1 %}
-            $('div#{{ formset.prefix }}').formset({
-               prefix: '{{ formset.prefix }}',
-               formCssClass: 'cm-formset{{ forloop.counter }}',
-               addText: '+ Add Another Committee Member',
-               deleteText: 'Remove Committee Member',
-               addCssClass: 'add-cm btn btn-success pull-right',
-               deleteCssClass: 'delete-cm btn btn-danger',
-            });
-            {% endfor %}
-            {% for formset in inlines.2 %}
-            $('div#{{ formset.prefix }}').formset({
-               prefix: '{{ formset.prefix }}',
-               formCssClass: 'location-formset{{ forloop.counter }}',
-               addText: '+ Add Another Location',
-               deleteText: 'Remove Location',
-               addCssClass: 'add-loc btn btn-success pull-right',
-               deleteCssClass: 'delete-loc btn btn-danger',
-            });
-            {% endfor %}
-        })
-    </script>
 
 
     {% endblock %}

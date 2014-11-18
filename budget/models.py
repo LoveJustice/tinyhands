@@ -4,9 +4,6 @@ from dataentry.models import BorderStation
 
 
 class BorderStationBudgetCalculation(models.Model):
-    form_entered_by = models.ForeignKey(Account, related_name="form_entered_by_account")
-    form_updated_by = models.ForeignKey(Account, related_name="form_updated_by_account")
-
     date_time_entered = models.DateTimeField(auto_now_add=True)
     date_time_last_updated = models.DateTimeField(auto_now=True)
 

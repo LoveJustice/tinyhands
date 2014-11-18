@@ -15,7 +15,6 @@
             <tr>
                 <th>Station</th>
                 <th>Station Code</th>
-                <th>Entered By</th>
                 <th>&nbsp;</th>
             </tr>
         </thead>
@@ -24,7 +23,6 @@
             <tr>
                 <td>{{ form.border_station.station_name }}</td>
                 <td>{{ form.border_station.station_code }}</td>
-                <td>{{ form.form_entered_by }}</td>
                 <td style="text-align: right">
                     <a href="{% url "budget_detail" form.id %}" class="btn btn-sm btn-primary">View</a>
                     <a href="{% url "budget_update" form.id %}" class="btn btn-sm btn-primary">Edit</a>
