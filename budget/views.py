@@ -13,7 +13,6 @@ class OtherBudgetItemCostFormInline(InlineFormSet):
     model = OtherBudgetItemCost
 
 
-
 class BudgetCalcCreateView(
         LoginRequiredMixin,
         CreateWithInlinesView):

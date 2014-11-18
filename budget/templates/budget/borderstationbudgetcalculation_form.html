@@ -22,6 +22,7 @@
             <div class="row">
                 <div class="col-md-4">
                     Station Name: {{ form.instance.border_station.station_name }} ({{ form.instance.border_station.station_code }})
+                    {{ form.border_station|bootstrap }}
                 </div>
 
                 <div class="col-md-2">
@@ -111,7 +112,7 @@
                     {{ form.awareness_sign_boards_boolean|bootstrap }}
                     {{ form.awareness_sign_boards|bootstrap }}
 
-                    {%  for field in inlines.0 %}
+                    {%  for field in inlines.1 %}
                         {{ field|bootstrap }}
                     {% endfor %}
                 </div>
@@ -143,7 +144,7 @@
                     {{ form.supplies_flashlights_boolean|bootstrap }}
                     {{ form.supplies_flashlights_amount|bootstrap }}
 
-                    {%  for field in inlines.0 %}
+                    {%  for field in inlines.2 %}
                         {{ field|bootstrap }}
                     {% endfor %}
                 </div>
@@ -273,6 +274,43 @@
 
         </div>
      </form>
+
+    <script type="text/javascript">
+        /* Allows for the creation of more or less staff/committee members */
+        $(function() {
+            {% for formset in inlines.0 %}
+            $('div#{{ formset.prefix }}').formset({
+               prefix: '{{ formset.prefix }}',
+               formCssClass: 'staff-formset{{ forloop.counter }}',
+               addText: '+ Add Another Staff',
+               deleteText: 'Remove Staff',
+               addCssClass: 'add-staff btn btn-success pull-right',
+               deleteCssClass: 'delete-staff btn btn-danger',
+            });
+            {% endfor %}
+            {% for formset in inlines.1 %}
+            $('div#{{ formset.prefix }}').formset({
+               prefix: '{{ formset.prefix }}',
+               formCssClass: 'cm-formset{{ forloop.counter }}',
+               addText: '+ Add Another Committee Member',
+               deleteText: 'Remove Committee Member',
+               addCssClass: 'add-cm btn btn-success pull-right',
+               deleteCssClass: 'delete-cm btn btn-danger',
+            });
+            {% endfor %}
+            {% for formset in inlines.2 %}
+            $('div#{{ formset.prefix }}').formset({
+               prefix: '{{ formset.prefix }}',
+               formCssClass: 'location-formset{{ forloop.counter }}',
+               addText: '+ Add Another Location',
+               deleteText: 'Remove Location',
+               addCssClass: 'add-loc btn btn-success pull-right',
+               deleteCssClass: 'delete-loc btn btn-danger',
+            });
+            {% endfor %}
+        })
+    </script>
+
 
     {% endblock %}
 {% endblock %}

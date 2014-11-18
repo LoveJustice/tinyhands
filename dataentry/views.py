@@ -281,8 +281,9 @@ class VictimInterviewUpdateView(
     permissions_required = ['permission_vif_edit']
 
     def forms_valid(self, form, inlines):
+        super(VictimInterviewUpdateView, self).forms_valid(form, inlines)
         VIFAlertChecker(form, inlines).check_them()
-        return super(VictimInterviewUpdateView, self).forms_valid(form, inlines)
+        return
 
 
 class VictimInterviewDetailView(VictimInterviewUpdateView):

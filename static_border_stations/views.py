@@ -1,3 +1,4 @@
+from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse_lazy
 
 
@@ -11,6 +12,7 @@ from dataentry.models import BorderStation
 from static_border_stations.forms import *
 from dataentry.forms import BorderStationForm
 
+
 class FormSetForStations(InlineFormSet):
 
     def __init__(self, *args, **kwargs):
@@ -21,14 +23,18 @@ class FormSetForStations(InlineFormSet):
             self.extra = 1
         return 
 
+
 class StaffInline(FormSetForStations):
-    model=Staff
+    model = Staff
+
 
 class CommitteeMemberInline(FormSetForStations):
-    model=CommitteeMember
+    model = CommitteeMember
+
 
 class LocationInline(FormSetForStations):
-    model=Location
+    model = Location
+
 
 class StaticBorderStationsCreateView (
         LoginRequiredMixin,
@@ -40,7 +46,8 @@ class StaticBorderStationsCreateView (
     success_url = reverse_lazy('home')
     inlines = [StaffInline, CommitteeMemberInline, LocationInline]
     permissions_required = ['permission_border_stations_add']
-    
+
+
 class StaticBorderStationsUpdateView (
         LoginRequiredMixin,
         PermissionsRequiredMixin,
@@ -51,6 +58,7 @@ class StaticBorderStationsUpdateView (
     success_url = reverse_lazy('home')
     inlines = [StaffInline, CommitteeMemberInline, LocationInline]
     permissions_required = ['permission_border_stations_edit']
+
 
 class StaticBorderStationsDetailView(StaticBorderStationsUpdateView):
     permissions_required = ['permission_border_stations_view']
