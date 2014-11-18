@@ -4,6 +4,9 @@
 {% load humanize %}
 {% load unslugify %}
 
+<script type='text/javascript' src='static/knockout.js'></script>
+<script type='text/javascript' src='static/budget.js'></script>
+
 {% block title %}Budget Calculation{% endblock %}
 
 {% block tab_block %}
@@ -63,12 +66,13 @@
 
                     We need to render this from the static station model
                     {{ inlines.0 }}
+                    <!--Meet Devon at one PM-->
                 </div>
                 <div class="col-md-6">
                     <h2 class="background"><span>Shelter</span></h2>
-                    {{ form.shelter_rent|bootstrap }}
-                    {{ form.shelter_water|bootstrap }}
-                    {{ form.shelter_electricity|bootstrap }}
+                        <td>{{ form.shelter_rent|bootstrap}}</td>
+                        <td>{{ form.shelter_water|bootstrap }}</td>
+                        <td>{{ form.shelter_electricity|bootstrap }}</td>
                     {{ form.shelter_shelter_startup|bootstrap }}
                     {{ form.shelter_shelter_startup_amount|bootstrap }}
                     {{ form.shelter_shelter_two|bootstrap }}
