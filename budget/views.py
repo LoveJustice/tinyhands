@@ -14,7 +14,17 @@ class OtherBudgetItemCostFormInline(InlineFormSet):
 
 
 class BorderStationSetInline(InlineFormSet):
-    model = BorderStation.staff_set
+    model = BorderStation
+
+
+class StaffInline(InlineFormSet):
+    model = Staff
+    extra = 12
+
+    def get_factory_kwargs(self):
+        kwargs = super(StaffInline, self).get_factory_kwargs()
+        kwargs['form'] = BorderStationBudgetCalculationForm
+        return kwargs
 
 
 class BudgetCalcCreateView(
@@ -24,7 +34,7 @@ class BudgetCalcCreateView(
     template_name = 'budget/borderstationbudgetcalculation_form.html'
     form_class = BorderStationBudgetCalculationForm
     success_url = reverse_lazy('budget_list')
-    inlines = [OtherBudgetItemCostFormInline]
+    inlines = [StaffInline]
 
 
 class BudgetCalcListView(

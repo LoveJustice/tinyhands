@@ -58,11 +58,11 @@
 
             <div class="row">
                 <div class="col-md-6">
-                    {{ inlines.0.management_form }}
                     <h2 class="background"><span>Staff Salaries</span></h2>
-
-                    We need to render this from the static station model
-                    {{ inlines.0 }}
+                    {{ inlines.0.management_form }}
+                    {% for staff_inline in inlines.0 %}
+                        <div>{{ staff_inline }}</div>
+                    {% endfor %}
                 </div>
                 <div class="col-md-6">
                     <h2 class="background"><span>Shelter</span></h2>
@@ -119,9 +119,12 @@
                     {{ form.awareness_awareness_party|bootstrap }}
                     {{ form.awareness_sign_boards_boolean|bootstrap }}
                     {{ form.awareness_sign_boards|bootstrap }}
-
                 </div>
-                <div class="col-md-6">
+
+            </div>
+
+            <div class="row">
+               <div class="col-md-6">
                     <h2 class="background"><span>Administration</span></h2>
                     {{ form.administration_number_of_intercepts_last_month|bootstrap }}
                     {{ form.administration_number_of_intercepts_last_month_multiplier|bootstrap }}
@@ -132,7 +135,6 @@
                     {{ form.administration_booth_amount|bootstrap }}
                     {{ form.administration_registration|bootstrap }}
                     {{ form.administration_registration_amount|bootstrap }}
-
                 </div>
                 <div class="col-md-6">
                     <h2 class="background"><span>Supplies</span></h2>
