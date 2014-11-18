@@ -1,6 +1,3 @@
-/**
- * Created by jwarren on 11/17/14.
- */
 /*!
  * Knockout JavaScript library v3.2.0
  * (c) Steven Sanderson - http://knockoutjs.com/

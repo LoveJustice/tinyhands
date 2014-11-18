@@ -19,6 +19,7 @@
             <div class="row">
                 <div class="col-md-4">
                     Station Name: {{ form.instance.border_station.station_name }} ({{ form.instance.border_station.station_code }})
+                    {{ form.instance.border_station.staff_set.all }}
                 </div>
 
                 <div class="col-md-2">
