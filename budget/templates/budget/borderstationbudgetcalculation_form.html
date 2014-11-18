@@ -112,9 +112,6 @@
                     {{ form.awareness_sign_boards_boolean|bootstrap }}
                     {{ form.awareness_sign_boards|bootstrap }}
 
-                    {%  for field in inlines.1 %}
-                        {{ field|bootstrap }}
-                    {% endfor %}
                 </div>
             </div>
 
@@ -144,9 +141,6 @@
                     {{ form.supplies_flashlights_boolean|bootstrap }}
                     {{ form.supplies_flashlights_amount|bootstrap }}
 
-                    {%  for field in inlines.2 %}
-                        {{ field|bootstrap }}
-                    {% endfor %}
                 </div>
             </div>
 
@@ -264,19 +258,22 @@
                     <h2 class="background"><span>Miscellaneous</span></h2>
                     {{ form.miscellaneous_number_of_intercepts_last_month|bootstrap }}
                     {{ form.miscellaneous_number_of_intercepts_last_month_multiplier|bootstrap }}
-                    {%  for field in inlines.0 %}
+
+                    {% for field in form.inlines.0 %}
                         {{ field|bootstrap }}
-
                     {% endfor %}
-
                 </div>
             </div>
 
         </div>
+        <div class="row">
+
+            <input type="submit" class="pull-right btn btn-primary navbar-btn btn-lg" value="Create" />
+    </div>
      </form>
 
     <script type="text/javascript">
-        /* Allows for the creation of more or less staff/committee members */
+        /* Allows for the creation of more or less items */
         $(function() {
             {% for formset in inlines.0 %}
             $('div#{{ formset.prefix }}').formset({

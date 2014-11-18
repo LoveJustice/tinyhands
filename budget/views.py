@@ -20,7 +20,7 @@ class BudgetCalcCreateView(
     template_name = 'budget/borderstationbudgetcalculation_form.html'
     form_class = BorderStationBudgetCalculationForm
     success_url = reverse_lazy('budget_list')
-    inlines = [OtherBudgetItemCostFormInline]
+    inlines = [OtherBudgetItemCostFormInline,OtherBudgetItemCostFormInline, OtherBudgetItemCostFormInline]
 
 
 class BudgetCalcListView(
@@ -35,7 +35,7 @@ class BudgetCalcUpdateView(
     model = BorderStationBudgetCalculation
     form_class = BorderStationBudgetCalculationForm
     success_url = reverse_lazy('budget_list')
-    inlines = [OtherBudgetItemCostFormInline]
+    inlines = [OtherBudgetItemCostFormInline,OtherBudgetItemCostFormInline, OtherBudgetItemCostFormInline]
 
 
 class BudgetCalcDetailView(BudgetCalcUpdateView, LoginRequiredMixin):
