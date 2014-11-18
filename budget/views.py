@@ -13,9 +13,6 @@ class OtherBudgetItemCostFormInline(InlineFormSet):
     model = OtherBudgetItemCost
 
 
-class BorderStationSetInline(InlineFormSet):
-    model = BorderStation.staff_set
-
 
 class BudgetCalcCreateView(
         LoginRequiredMixin,
