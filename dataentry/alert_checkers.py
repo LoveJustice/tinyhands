@@ -1,9 +1,7 @@
 from django.core import serializers
 from accounts.models import Alert
 from fuzzywuzzy import process
-from dataentry import serializers
 from dataentry.models import Interceptee
-import json
 
 
 class VIFAlertChecker(object):
@@ -69,20 +67,20 @@ class IRFAlertChecker(object):
         was submitted, form number that the match came from, and the name and all personal identifiers from both forms.
         """
         all_people = Interceptee.objects.all()
-        people_list = [person.full_name for person in all_people]
         matches = []
-        trafficker_list = []
         people_dict = {obj: obj.full_name for obj in all_people}
         trafficker_list = []
-        trafficker_in_custody = self.trafficker_in_custody()
-        traffickers_and_their_matches = {}
 
         for person in self.interceptees:
             if person.cleaned_data.get("kind") == 't':
                 trafficker_list.append(person.instance)
+        traffickers_and_their_matches = {}
         if len(trafficker_list) > 0:
             for trafficker in trafficker_list:
-                matches.append(process.extractBests(trafficker.full_name, people_list, score_cutoff=90, limit=10))
+                    traffickers_and_their_matches[trafficker.full_name] = process.extractBests(trafficker.full_name, people_dict, score_cutoff=89, limit = 10)
+        trafficker_in_custody = self.trafficker_in_custody()
+        if len({person for person in traffickers_and_their_matches if len(traffickers_and_their_matches[person])>0}) > 0:
+            Alert.objects.send_alert("Name Match", context={"irf": self.irf.instance, "traffickers_matches": traffickers_and_their_matches, "trafficker_in_custody": trafficker_in_custody})
 
         trafficker_in_custody = self.IRF_data.get("trafficker_taken_into_custody")
         trafficker_name = ''
