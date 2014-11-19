@@ -59,11 +59,6 @@ class StaticBorderStationsUpdateView (
     inlines = [StaffInline, CommitteeMemberInline, LocationInline]
     permissions_required = ['permission_border_stations_edit']
 
-    def post(self, request, *args, **kwargs):
-        import ipdb
-        ipdb.set_trace()
-        return super(StaticBorderStationsUpdateView, self).post(request)
-
 
 class StaticBorderStationsDetailView(StaticBorderStationsUpdateView):
     permissions_required = ['permission_border_stations_view']
