@@ -4,13 +4,14 @@
 {% load humanize %}
 {% load unslugify %}
 
-<script type='text/javascript' src='static/knockout.js'></script>
-<script type='text/javascript' src='static/budget.js'></script>
+
+
 
 {% block title %}Budget Calculation{% endblock %}
 
 {% block tab_block %}
     {% block content %}
+        <script type="text/javascript" src="http://knockoutjs.com/downloads/knockout-3.2.0.js"></script>
 
      <h1 style="font-size: 25px; text-align: center">Tiny Hands Nepal - Border Monitoring Station Budget Calculation Form</h1>
 
@@ -66,17 +67,22 @@
 
                     We need to render this from the static station model
                     {{ inlines.0 }}
-                    <!--Meet Devon at one PM-->
                 </div>
                 <div class="col-md-6">
                     <h2 class="background"><span>Shelter</span></h2>
-                        <td>{{ form.shelter_rent|bootstrap}}</td>
-                        <td>{{ form.shelter_water|bootstrap }}</td>
-                        <td>{{ form.shelter_electricity|bootstrap }}</td>
-                    {{ form.shelter_shelter_startup|bootstrap }}
-                    {{ form.shelter_shelter_startup_amount|bootstrap }}
-                    {{ form.shelter_shelter_two|bootstrap }}
-                    {{ form.shelter_shelter_two_amount|bootstrap }}
+                    {{ form.shelter_rent|attr:"data-bind:value: shelterRent"|bootstrap }}
+                    {{ form.shelter_water|attr:"data-bind:value: shelterWater"|bootstrap }}
+                    {{ form.shelter_electricity|attr:"data-bind:value: shelterElectricity"|bootstrap }}
+                    {{ form.shelter_shelter_startup|attr:"data-bind:checked: shelterStartupBool"|bootstrap }}
+                    {{ form.shelter_shelter_startup_amount|attr:"data-bind:value: shelterStartupAmount"|bootstrap }}
+                    {{ form.shelter_shelter_two|attr:"data-bind:checked: shelterTwoBool"|bootstrap }}
+                    {{ form.shelter_shelter_two_amount|attr:"data-bind:value: shelterTwoAmount"|bootstrap }}
+
+                    <label>Shelter Checkbox Total</label>
+                    The checkbox total is <span data-bind="text: shelterCheckboxTotal"></span><br/>
+
+                    <label for="shelterTotal">Shelter TOTAL</label>
+                    The total is <span data-bind="text: shelterTotal"></span>
                 </div>
                 <div class="col-md-6">
                     <h2 class="background"><span>Communication</span></h2>
@@ -91,12 +97,15 @@
                 </div>
                 <div class="col-md-6">
                     <h2 class="background"><span>Food & Gas</span></h2>
-                    {{ form.food_and_gas_number_of_intercepted_girls|bootstrap }}
-                    {{ form.food_and_gas_number_of_intercepted_girls_multiplier_before|bootstrap }}
-                    {{ form.food_and_gas_number_of_intercepted_girls_multiplier_after|bootstrap }}
-                    {{ form.food_and_gas_limbo_girls_multiplier|bootstrap }}
-                    {{ form.food_and_gas_number_of_limbo_girls|bootstrap }}
-                    {{ form.food_and_gas_number_of_days|bootstrap }}
+                    {{ form.food_and_gas_number_of_intercepted_girls|attr:"data-bind:value: foodGasNumberOfGirls"|bootstrap }}
+                    {{ form.food_and_gas_number_of_intercepted_girls_multiplier_before|attr:"data-bind:value: foodGasMultiplierBefore"|bootstrap }}
+                    {{ form.food_and_gas_number_of_intercepted_girls_multiplier_after|attr:"data-bind:value: foodGasMultiplierAfter"|bootstrap }}
+                    {{ form.food_and_gas_limbo_girls_multiplier|attr:"data-bind:value: limboMultiplier"|bootstrap }}
+                    {{ form.food_and_gas_number_of_limbo_girls|attr:"data-bind:value: limboNumberOfGirls"|bootstrap }}
+                    {{ form.food_and_gas_number_of_days|attr:"data-bind:value: limboNumberOfDays"|bootstrap }}
+
+                    <label for="shelterTotal">Intercepted TOTAL</label>
+                    The total is <span data-bind="text: foodGasInterceptedGirls"></span><br/>
 
                 </div>
             </div>
@@ -255,7 +264,56 @@
                 </div>
             </div>
         </div>
+     <script type='text/javascript'>
+
+         function shelterViewModel() {
+             //Shelter Section
+             this.firstName = "TOTAL";
+             this.shelterRent = ko.observable(0);
+             this.shelterWater = ko.observable(0);
+             this.shelterElectricity = ko.observable(0);
+             this.shelterTotal = ko.pureComputed(function(){
+                return parseFloat(this.shelterRent()) + parseFloat(this.shelterWater()) + parseFloat(this.shelterElectricity());
+             }, this);
+
+             this.shelterCheckboxTotal = ko.pureComputed(function(){
+                 var totalAmount = 0;
+                 if(this.shelterStartupBool()) {
+                     totalAmount += parseFloat(this.shelterStartupAmount());
+                 }
+                 if(this.shelterTwoBool()) {
+                     totalAmount += parseFloat(this.shelterTwoAmount());
+                 }
+                 return totalAmount;
+             }, this);
+
+             this.shelterStartupBool = ko.observable(false);
+             this.shelterStartupAmount = ko.observable(71800);
+             this.shelterTwoBool = ko.observable(false);
+             this.shelterTwoAmount = ko.observable(36800);
+
+             //Food and Gas Section
+             this.foodGasNumberOfGirls = ko.observable(0);
+             this.foodGasMultiplierBefore = ko.observable(100);
+             this.foodGasMultiplierAfter = ko.observable(3);
+             this.limboNumberOfGirls = ko.observable(0);
+             this.limboMultiplier = ko.observable(100);
+             this.limboNumberOfDays = ko.observable(1);
+             this.foodGasInterceptedGirls = ko.pureComputed(function(){
+                 return parseFloat(this.foodGasMultiplierBefore()) * parseFloat(this.foodGasNumberOfGirls()) * parseFloat(this.foodGasMultiplierAfter());
+             }, this);
+             this.foodGasLimboGirls = ko.pureComputed(function(){
+                 
+             }, this);
+         }
+
+         ko.applyBindings(new shelterViewModel());
+
+     </script>
      </form>
+
+
+
 
     {% endblock %}
 {% endblock %}
