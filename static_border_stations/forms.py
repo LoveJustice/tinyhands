@@ -1,4 +1,5 @@
 from django import forms
+from dataentry.models import BorderStation
 
 from static_border_stations.models import Staff, CommitteeMember, Location
 
@@ -6,7 +7,6 @@ from static_border_stations.models import Staff, CommitteeMember, Location
 class StaffForm(forms.ModelForm):
     class Meta:
         model = Staff
-        exclude = []
 
 
 class CommitteeMemberForm(forms.ModelForm):
