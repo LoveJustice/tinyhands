@@ -69,10 +69,9 @@
                     <h2 class="background"><span>Staff Salaries</span></h2>
 
                     We need to render this from the static station model
-<<<<<<< HEAD
+
                     {{ inlines.0 }}
-=======
->>>>>>> af9f03905e45be39ee4e9ea3fb2a39ce6405f6a8
+
                 </div>
                 <div class="col-md-6">
                     <h2 class="background"><span>Shelter</span></h2>
@@ -85,25 +84,27 @@
                     {{ form.shelter_shelter_two_amount|attr:"data-bind:value: shelterTwoAmount"|bootstrap }}
 
                     <label>Shelter Checkbox Total</label>
-                    The checkbox total is <span data-bind="text: shelterCheckboxTotal"></span><br/>
+                    <p>The checkbox total is <span data-bind="text: shelterCheckboxTotal"></span><br/></p>
 
                     <label for="shelterTotal">Shelter TOTAL</label>
-                    The total is <span data-bind="text: shelterTotal"></span>
+                    <p>The total is <span data-bind="text: shelterTotal"></span><p/>
                 </div>
-                
+
             </div>
 
             <div class="row">
                 <div class="col-md-6">
                     <h2 class="background"><span>Communication</span></h2>
-                    {{ form.communication_chair|bootstrap }}
-                    {{ form.communication_chair_amount|bootstrap }}
-                    {{ form.communication_manager|bootstrap }}
-                    {{ form.communication_manager_amount|bootstrap }}
-                    {{ form.communication_number_of_staff_with_walkie_talkies|bootstrap }}
-                    {{ form.communication_number_of_staff_with_walkie_talkies_multiplier|bootstrap }}
-                    {{ form.communication_each_staff|bootstrap }}
-                    {{ form.communication_each_staff_multiplier|bootstrap }}
+                    {{ form.communication_chair|attr:"data-bind:checked: commChairBool"|bootstrap }}
+                    {{ form.communication_chair_amount|attr:"data-bind:value: commChairAmount"|bootstrap }}
+                    {{ form.communication_manager|attr:"data-bind:checked: commManagerBool"|bootstrap }}
+                    {{ form.communication_manager_amount|attr:"data-bind:value: commManagerAmount"|bootstrap }}
+                    {{ form.communication_number_of_staff_with_walkie_talkies|attr:"data-bind:value: commNumberOfStaffWt"|bootstrap }}
+                    {{ form.communication_number_of_staff_with_walkie_talkies_multiplier|attr:"data-bind:value: commNumberOfStaffWtMultiplier"|bootstrap }}
+                    {{ form.communication_each_staff|attr:"data-bind:value: commEachStaffWt"|bootstrap }}
+                    {{ form.communication_each_staff_multiplier|attr:"data-bind:value: commEachStaffWtMultiplier"|bootstrap }}
+                    <label>TOTAL COMM</label>
+                    <p>The total is <span data-bind="text: commTotal"></span><br/></p>
                 </div>
                 <div class="col-md-6">
                     <h2 class="background"><span>Food & Gas</span></h2>
@@ -114,8 +115,15 @@
                     {{ form.food_and_gas_number_of_limbo_girls|attr:"data-bind:value: limboNumberOfGirls"|bootstrap }}
                     {{ form.food_and_gas_number_of_days|attr:"data-bind:value: limboNumberOfDays"|bootstrap }}
 
-                    <label for="shelterTotal">Intercepted TOTAL</label>
-                    The total is <span data-bind="text: foodGasInterceptedGirls"></span><br/>
+                    <label>Intercepted TOTAL</label>
+                    <p>The total is <span data-bind="text: foodGasInterceptedGirls"></span><br/></p>
+
+                    <label>Intercepted TOTAL</label>
+                    <p>The total is <span data-bind="text: foodGasLimboGirls"></span><br/></p>
+
+                    <label>TOTAL FOOD</label>
+                    <p>The total is <span data-bind="text: foodTotal"></span><br/></p>
+
 
                     <h2 class="background"><span>Awareness</span></h2>
                     {{ form.awareness_contact_cards|bootstrap }}
@@ -225,12 +233,12 @@
                         <tbody>
                             <tr>
                                 <td class="warning">Shelter</td>
-                                <td class="warning"></td>
+                                <td class="warning"><p data-bind="text: shelterTotal"></p></td>
                                 <td class="active"></td>
                             </tr>
                             <tr>
                                 <td class="warning">Food</td>
-                                <td class="warning"></td>
+                                <td class="warning"><p data-bind="text: foodTotal"></p></td>
                                 <td class="active"></td>
                             </tr>
                             <tr class="warning">
@@ -283,17 +291,12 @@
         </div>
 
      <script type='text/javascript'>
-
          function shelterViewModel() {
              //Shelter Section
              this.firstName = "TOTAL";
              this.shelterRent = ko.observable(0);
              this.shelterWater = ko.observable(0);
              this.shelterElectricity = ko.observable(0);
-             this.shelterTotal = ko.pureComputed(function(){
-                return parseFloat(this.shelterRent()) + parseFloat(this.shelterWater()) + parseFloat(this.shelterElectricity());
-             }, this);
-
              this.shelterCheckboxTotal = ko.pureComputed(function(){
                  var totalAmount = 0;
                  if(this.shelterStartupBool()) {
@@ -305,6 +308,9 @@
                  return totalAmount;
              }, this);
 
+             this.shelterTotal = ko.pureComputed(function(){
+                return parseFloat(this.shelterRent()) + parseFloat(this.shelterWater()) + parseFloat(this.shelterElectricity()) + parseFloat(this.shelterCheckboxTotal());
+             }, this);
              this.shelterStartupBool = ko.observable(false);
              this.shelterStartupAmount = ko.observable(71800);
              this.shelterTwoBool = ko.observable(false);
@@ -321,7 +327,43 @@
                  return parseFloat(this.foodGasMultiplierBefore()) * parseFloat(this.foodGasNumberOfGirls()) * parseFloat(this.foodGasMultiplierAfter());
              }, this);
              this.foodGasLimboGirls = ko.pureComputed(function(){
-                 
+                 return parseFloat(this.limboMultiplier()) * parseFloat(this.limboNumberOfGirls()) * parseFloat(this.limboNumberOfDays());
+             }, this);
+             this.foodTotal = ko.computed(function() {
+                 return parseFloat(this.foodGasInterceptedGirls()) + parseFloat(this.foodGasLimboGirls());
+             }, this);
+
+             //Communication section
+             this.commChairBool = ko.observable(false);
+             this.commChairAmount = ko.observable(1000);
+             this.commManagerBool = ko.observable(false);
+             this.commManagerAmount = ko.observable(1000);
+             this.commNumberOfStaffWt = ko.observable(0);
+             this.commNumberOfStaffWtMultiplier = ko.observable(100);
+             this.commEachStaffWt = ko.observable(0);
+             this.commEachStaffWtMultiplier = ko.observable(300);
+             this.commManagerTotal = ko.computed(function() {
+                 var amount = 0;
+
+                 if(this.commChairBool()) {
+                     amount += parseFloat(this.commChairAmount());
+                 }
+                 if(this.commManagerBool()) {
+                     amount += parseFloat(this.commChairAmount());
+                 }
+                 return amount;
+             }, this);
+
+             this.commNumberOfStaffTotal = ko.computed(function() {
+                 return parseFloat(this.commNumberOfStaffWt()) * parseFloat(this.commNumberOfStaffWtMultiplier());
+             }, this);
+
+             this.commEachStaffTotal = ko.computed(function() {
+                 return parseFloat(this.commEachStaffWt()) * parseFloat(this.commEachStaffWtMultiplier());
+             }, this);
+
+             this.commTotal = ko.computed(function() {
+                 return parseFloat(this.commManagerTotal()) + parseFloat(this.commNumberOfStaffTotal()) + parseFloat(this.commEachStaffTotal());
              }, this);
          }
 
