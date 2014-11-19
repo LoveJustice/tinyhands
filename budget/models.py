@@ -31,6 +31,7 @@ class BorderStationBudgetCalculation(models.Model):
     travel_last_months_expense_for_sending_girls_home = models.PositiveIntegerField(default=0)
     travel_motorbike = models.BooleanField('Motorbike', default=False)
     travel_motorbike_amount = models.PositiveIntegerField(default=60000)
+    travel_plus_other = models.PositiveIntegerField(default=0)
 
 
     administration_number_of_intercepts_last_month = models.PositiveIntegerField('# of intercepts last month', default=0)

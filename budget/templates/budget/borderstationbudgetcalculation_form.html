@@ -15,11 +15,15 @@
 
      <h1 style="font-size: 25px; text-align: center">Tiny Hands Nepal - Border Monitoring Station Budget Calculation Form</h1>
 
-     <form id="budget-calc-form" method="post"> {% csrf_token %}
+     <form id="budget-calc-form" method="post">
+        {% csrf_token %}
+        {{ inlines.0.management_form }}
+
         <div class="form-page">
             <div class="row">
                 <div class="col-md-4">
                     Station Name: {{ form.instance.border_station.station_name }} ({{ form.instance.border_station.station_code }})
+                    {{ form.border_station|bootstrap }}
                 </div>
 
                 <div class="col-md-2">
@@ -62,11 +66,13 @@
 
             <div class="row">
                 <div class="col-md-6">
-                    {{ inlines.0.management_form }}
                     <h2 class="background"><span>Staff Salaries</span></h2>
 
                     We need to render this from the static station model
+<<<<<<< HEAD
                     {{ inlines.0 }}
+=======
+>>>>>>> af9f03905e45be39ee4e9ea3fb2a39ce6405f6a8
                 </div>
                 <div class="col-md-6">
                     <h2 class="background"><span>Shelter</span></h2>
@@ -84,6 +90,10 @@
                     <label for="shelterTotal">Shelter TOTAL</label>
                     The total is <span data-bind="text: shelterTotal"></span>
                 </div>
+                
+            </div>
+
+            <div class="row">
                 <div class="col-md-6">
                     <h2 class="background"><span>Communication</span></h2>
                     {{ form.communication_chair|bootstrap }}
@@ -107,6 +117,16 @@
                     <label for="shelterTotal">Intercepted TOTAL</label>
                     The total is <span data-bind="text: foodGasInterceptedGirls"></span><br/>
 
+                    <h2 class="background"><span>Awareness</span></h2>
+                    {{ form.awareness_contact_cards|bootstrap }}
+                    {{ form.awareness_contact_cards_boolean_amount|bootstrap }}
+                    {{ form.awareness_contact_cards_amount|bootstrap }}
+                    {{ form.awareness_awareness_party_boolean|bootstrap }}
+                    {{ form.awareness_awareness_party|bootstrap }}
+                    {{ form.awareness_sign_boards_boolean|bootstrap }}
+                    {{ form.awareness_sign_boards|bootstrap }}
+
+
                 </div>
             </div>
 
@@ -122,31 +142,9 @@
                     {{ form.travel_last_months_expense_for_sending_girls_home|bootstrap }}
                     {{ form.travel_motorbike|bootstrap }}
                     {{ form.travel_motorbike_amount|bootstrap }}
+                    {{ form.travel_plus_other|bootstrap }}
                 </div>
-                <div class="col-md-6">
-                    <h2 class="background"><span>Awareness</span></h2>
-                    {{ form.awareness_contact_cards|bootstrap }}
-                    {{ form.awareness_contact_cards_boolean_amount|bootstrap }}
-                    {{ form.awareness_contact_cards_amount|bootstrap }}
-                    {{ form.awareness_awareness_party_boolean|bootstrap }}
-                    {{ form.awareness_awareness_party|bootstrap }}
-                    {{ form.awareness_sign_boards_boolean|bootstrap }}
-                    {{ form.awareness_sign_boards|bootstrap }}
 
-                </div>
-                <div class="col-md-6">
-                    <h2 class="background"><span>Administration</span></h2>
-                    {{ form.administration_number_of_intercepts_last_month|bootstrap }}
-                    {{ form.administration_number_of_intercepts_last_month_multiplier|bootstrap }}
-                    {{ form.administration_number_of_intercepts_last_month_adder|bootstrap }}
-                    {{ form.administration_number_of_meetings_per_month|bootstrap }}
-                    {{ form.administration_number_of_meetings_per_month_multiplier|bootstrap }}
-                    {{ form.administration_booth|bootstrap }}
-                    {{ form.administration_booth_amount|bootstrap }}
-                    {{ form.administration_registration|bootstrap }}
-                    {{ form.administration_registration_amount|bootstrap }}
-
-                </div>
                 <div class="col-md-6">
                     <h2 class="background"><span>Supplies</span></h2>
                     {{ form.supplies_walkie_talkies_boolean|bootstrap }}
@@ -157,27 +155,26 @@
                     {{ form.supplies_binoculars_amount|bootstrap }}
                     {{ form.supplies_flashlights_boolean|bootstrap }}
                     {{ form.supplies_flashlights_amount|bootstrap }}
+
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-md-6">
-                    <h2 class="background"><span>Medical</span></h2>
-                    {{ form.medical_last_months_expense|bootstrap }}
-                </div>
-            </div>
+                    <h2 class="background"><span>Administration</span></h2>
 
-            <div class="row">
+                    {{ form.administration_number_of_intercepts_last_month|bootstrap }}
+                    {{ form.administration_number_of_intercepts_last_month_multiplier|bootstrap }}
+                    {{ form.administration_number_of_intercepts_last_month_adder|bootstrap }}
+                    {{ form.administration_number_of_meetings_per_month|bootstrap }}
+                    {{ form.administration_number_of_meetings_per_month_multiplier|bootstrap }}
+                    {{ form.administration_booth|bootstrap }}
+                    {{ form.administration_booth_amount|bootstrap }}
+                    {{ form.administration_registration|bootstrap }}
+                    {{ form.administration_registration_amount|bootstrap }}
+                </div>
                 <div class="col-md-6">
-                    <h2 class="background"><span>Miscellaneous</span></h2>
-                    {{ form.miscellaneous_number_of_intercepts_last_month|bootstrap }}
-                    {{ form.miscellaneous_number_of_intercepts_last_month_multiplier|bootstrap }}
-                </div>
-            </div>
-
-            <div class="row">
-
-                <div class="col-md-4 col-md-offset-7">
+                    <h2 class="background"><span></span></h2>
                     <table class="table table-bordered table-hover">
                         <thead>
                             <tr>
@@ -263,7 +260,28 @@
                     </table>
                 </div>
             </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <h2 class="background"><span>Medical</span></h2>
+                    {{ form.medical_last_months_expense|bootstrap }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <h2 class="background"><span>Miscellaneous</span></h2>
+                    {{ form.miscellaneous_number_of_intercepts_last_month|bootstrap }}
+                    {{ form.miscellaneous_number_of_intercepts_last_month_multiplier|bootstrap }}
+
+                    {% for field in form.inlines.0 %}
+                        {{ field|bootstrap }}
+                    {% endfor %}
+                </div>
+            </div>
+
         </div>
+
      <script type='text/javascript'>
 
          function shelterViewModel() {
@@ -312,6 +330,49 @@
      </script>
      </form>
 
+
+
+        <div class="row">
+
+            <input type="submit" class="pull-right btn btn-primary navbar-btn btn-lg" value="Create" />
+    </div>
+     </form>
+
+    <script type="text/javascript">
+        /* Allows for the creation of more or less items */
+        $(function() {
+            {% for formset in inlines.0 %}
+            $('div#{{ formset.prefix }}').formset({
+               prefix: '{{ formset.prefix }}',
+               formCssClass: 'staff-formset{{ forloop.counter }}',
+               addText: '+ Add Another Staff',
+               deleteText: 'Remove Staff',
+               addCssClass: 'add-staff btn btn-success pull-right',
+               deleteCssClass: 'delete-staff btn btn-danger',
+            });
+            {% endfor %}
+            {% for formset in inlines.1 %}
+            $('div#{{ formset.prefix }}').formset({
+               prefix: '{{ formset.prefix }}',
+               formCssClass: 'cm-formset{{ forloop.counter }}',
+               addText: '+ Add Another Committee Member',
+               deleteText: 'Remove Committee Member',
+               addCssClass: 'add-cm btn btn-success pull-right',
+               deleteCssClass: 'delete-cm btn btn-danger',
+            });
+            {% endfor %}
+            {% for formset in inlines.2 %}
+            $('div#{{ formset.prefix }}').formset({
+               prefix: '{{ formset.prefix }}',
+               formCssClass: 'location-formset{{ forloop.counter }}',
+               addText: '+ Add Another Location',
+               deleteText: 'Remove Location',
+               addCssClass: 'add-loc btn btn-success pull-right',
+               deleteCssClass: 'delete-loc btn btn-danger',
+            });
+            {% endfor %}
+        })
+    </script>
 
 
 
