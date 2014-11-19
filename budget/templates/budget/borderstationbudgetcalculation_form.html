@@ -124,13 +124,15 @@
 
 
                     <h2 class="background"><span>Awareness</span></h2>
-                    {{ form.awareness_contact_cards|bootstrap }}
-                    {{ form.awareness_contact_cards_boolean_amount|bootstrap }}
-                    {{ form.awareness_contact_cards_amount|bootstrap }}
-                    {{ form.awareness_awareness_party_boolean|bootstrap }}
-                    {{ form.awareness_awareness_party|bootstrap }}
-                    {{ form.awareness_sign_boards_boolean|bootstrap }}
-                    {{ form.awareness_sign_boards|bootstrap }}
+                    {{ form.awareness_contact_cards|attr:"data-bind:checked: awarenessContactCardsBool"|bootstrap }}
+                    {% comment %}{{ form.awareness_contact_cards_boolean_amount|attr:"data-bind:value: foodGasNumberOfGirls"|bootstrap }}{% endcomment %}
+                    {{ form.awareness_contact_cards_amount|attr:"data-bind:value: awarenessContactCardsAmount"|bootstrap }}
+                    {{ form.awareness_awareness_party_boolean|attr:"data-bind:checked: awarenessAwarenessPartyBool"|bootstrap }}
+                    {{ form.awareness_awareness_party|attr:"data-bind:value: awarenessAwarenessPartyAmount"|bootstrap }}
+                    {{ form.awareness_sign_boards_boolean|attr:"data-bind:checked: awarenessSignBoardsBool"|bootstrap }}
+                    {{ form.awareness_sign_boards|attr:"data-bind:value: awarenessSignBoardsAmount"|bootstrap }}
+                    <label>TOTAL AWARENESS</label>
+                    <p>The total is <span data-bind="text: awarenessTotal"></span><br/></p>
 
 
                 </div>
@@ -139,29 +141,32 @@
             <div class="row">
                 <div class="col-md-6">
                     <h2 class="background"><span>Travel</span></h2>
-                    {{ form.travel_chair_with_bike|bootstrap }}
-                    {{ form.travel_chair_with_bike_amount|bootstrap }}
-                    {{ form.travel_manager_with_bike|bootstrap }}
-                    {{ form.travel_manager_with_bike_amount|bootstrap }}
-                    {{ form.travel_number_of_staff_using_bikes|bootstrap }}
-                    {{ form.travel_number_of_staff_using_bikes_multiplier|bootstrap }}
-                    {{ form.travel_last_months_expense_for_sending_girls_home|bootstrap }}
-                    {{ form.travel_motorbike|bootstrap }}
-                    {{ form.travel_motorbike_amount|bootstrap }}
-                    {{ form.travel_plus_other|bootstrap }}
+                    {{ form.travel_chair_with_bike|attr:"data-bind:checked: travelChairWithBikeBool"|bootstrap }}
+                    {{ form.travel_chair_with_bike_amount|attr:"data-bind:value: travelChairWithBikeAmount"|bootstrap }}
+                    {{ form.travel_manager_with_bike|attr:"data-bind:checked: travelManagerWithBikeBool"|bootstrap }}
+                    {{ form.travel_manager_with_bike_amount|attr:"data-bind:value: travelManagerWithBikeAmount"|bootstrap }}
+                    {{ form.travel_number_of_staff_using_bikes|attr:"data-bind:value: travelNumberOfStaffUsingBikes"|bootstrap }}
+                    {{ form.travel_number_of_staff_using_bikes_multiplier|attr:"data-bind:value: travelNumberOfStaffUsingBikesMultiplier"|bootstrap }}
+                    {{ form.travel_last_months_expense_for_sending_girls_home|attr:"data-bind:value: travelSendingGirlsHomeExpense"|bootstrap }}
+                    {{ form.travel_motorbike|attr:"data-bind:checked: travelMotorbikeBool"|bootstrap }}
+                    {{ form.travel_motorbike_amount|attr:"data-bind:value: travelMotorbikeAmount"|bootstrap }}
+                    {{ form.travel_plus_other|attr:"data-bind:value: travelOther"|bootstrap }}
+                    <label>TOTAL TRAVEL</label>
+                    <p>The total is <span data-bind="text: travelTotal"></span><br/></p>
                 </div>
 
                 <div class="col-md-6">
                     <h2 class="background"><span>Supplies</span></h2>
-                    {{ form.supplies_walkie_talkies_boolean|bootstrap }}
-                    {{ form.supplies_walkie_talkies_amount|bootstrap }}
-                    {{ form.supplies_recorders_boolean|bootstrap }}
-                    {{ form.supplies_recorders_amount|bootstrap }}
-                    {{ form.supplies_binoculars_boolean|bootstrap }}
-                    {{ form.supplies_binoculars_amount|bootstrap }}
-                    {{ form.supplies_flashlights_boolean|bootstrap }}
-                    {{ form.supplies_flashlights_amount|bootstrap }}
-
+                    {{ form.supplies_walkie_talkies_boolean|attr:"data-bind:checked: suppliesWalkieTalkiesBool"|bootstrap }}
+                    {{ form.supplies_walkie_talkies_amount|attr:"data-bind:value: suppliesWalkieTalkiesAmount"|bootstrap }}
+                    {{ form.supplies_recorders_boolean|attr:"data-bind:checked: suppliesRecordersBool"|bootstrap }}
+                    {{ form.supplies_recorders_amount|attr:"data-bind:value: suppliesRecordersAmount"|bootstrap }}
+                    {{ form.supplies_binoculars_boolean|attr:"data-bind:checked: suppliesBinocularsBool"|bootstrap }}
+                    {{ form.supplies_binoculars_amount|attr:"data-bind:value: suppliesBinocularsAmount"|bootstrap }}
+                    {{ form.supplies_flashlights_boolean|attr:"data-bind:checked: suppliesFlashlightsBool"|bootstrap }}
+                    {{ form.supplies_flashlights_amount|attr:"data-bind:value: suppliesFlashlightsAmount"|bootstrap }}
+                    <label>TOTAL AWARENESS</label>
+                    <p>The total is <span data-bind="text: suppliesTotal"></span><br/></p>
                 </div>
             </div>
 
@@ -169,15 +174,23 @@
                 <div class="col-md-6">
                     <h2 class="background"><span>Administration</span></h2>
 
-                    {{ form.administration_number_of_intercepts_last_month|bootstrap }}
-                    {{ form.administration_number_of_intercepts_last_month_multiplier|bootstrap }}
-                    {{ form.administration_number_of_intercepts_last_month_adder|bootstrap }}
-                    {{ form.administration_number_of_meetings_per_month|bootstrap }}
-                    {{ form.administration_number_of_meetings_per_month_multiplier|bootstrap }}
-                    {{ form.administration_booth|bootstrap }}
-                    {{ form.administration_booth_amount|bootstrap }}
-                    {{ form.administration_registration|bootstrap }}
-                    {{ form.administration_registration_amount|bootstrap }}
+                    {{ form.administration_number_of_intercepts_last_month|attr:"data-bind:value: adminNumberOfInterceptionsLastMonth"|bootstrap }}
+                    {{ form.administration_number_of_intercepts_last_month_multiplier|attr:"data-bind:value: adminNumberOfInterceptionsLastMonthMultiplier"|bootstrap }}
+                    {{ form.administration_number_of_intercepts_last_month_adder|attr:"data-bind:value: adminNumberOfInterceptionsLastMonthAdder"|bootstrap }}
+                    {{ form.administration_number_of_meetings_per_month|attr:"data-bind:value: adminNumberOfMeetingsPerMonth"|bootstrap }}
+                    {{ form.administration_number_of_meetings_per_month_multiplier|attr:"data-bind:value: adminNumberOfMeetingsPerMonthMultiplier"|bootstrap }}
+                    {{ form.administration_booth|attr:"data-bind:checked: adminBoothBool"|bootstrap }}
+                    {{ form.administration_booth_amount|attr:"data-bind:value: adminBoothAmount"|bootstrap }}
+                    {{ form.administration_registration|attr:"data-bind:checked: adminRegistrationBool"|bootstrap }}
+                    {{ form.administration_registration_amount|attr:"data-bind:value: adminRegistrationAmount"|bootstrap }}
+                    <label>Stationary</label>
+                    <p>The total is <span data-bind="text: adminStationaryTotal"></span><br/></p>
+                    <label>Meetings</label>
+                    <p>The total is <span data-bind="text: adminMeetingsTotal"></span><br/></p>
+                    <label>Booth Rental</label>
+                    <p>The total is <span data-bind="text: adminBoothRentalTotal"></span><br/></p>
+                    <label>ADMIN TOTAL</label>
+                    <p>The total is <span data-bind="text: adminTotal"></span><br/></p>
                 </div>
                 <div class="col-md-6">
                     <table class="table table-bordered table-hover">
@@ -199,7 +212,7 @@
                             </tr>
                             <tr>
                                 <td>Travel</td>
-                                <td></td>
+                                <td><p data-bind="text: travelTotal"></p></td>
                                 <td class="active"></td>
                             </tr>
                             <tr>
@@ -286,9 +299,6 @@
 
      <script type='text/javascript' src="{{ STATIC_URL }}budget.js"></script>
      </form>
-
-
-
         <div class="row">
 
             <input type="submit" class="pull-right btn btn-primary navbar-btn btn-lg" value="Create" />
