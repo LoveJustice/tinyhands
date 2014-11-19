@@ -5,7 +5,7 @@ from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
 from fuzzywuzzy import process, utils, fuzz, string_processing
 
-from accounts.models import Account
+from accounts.models import Account, Setting
 
 
 NULL_BOOLEAN_CHOICES = [
@@ -364,9 +364,29 @@ class IntercepteeManager(models.Manager):
     def fuzzy_match_on(self, input_name=None, input_age=None, input_phone=None):
         interceptees = Interceptee.objects.all()
         interceptee_dict = {
-            interceptee: list(interceptee.names.values_list('value', flat=True)) for interceptee in interceptees
+           interceptee: list(interceptee.names.values_list('value', flat=True)) for interceptee in interceptees
         }
-        matches = process.extractBests(input_name, interceptee_dict, processor=self._custom_processor, scorer=self._custom_scorer, limit=10, score_cutoff=70)
+        fuzzy_limit = Setting.objects.get_by_keyword("Fuzzy-Limit")
+        fuzzy_cutoff = Setting.objects.get_by_keyword("Fuzzy-Score-Cutoff")
+        matches = process.extractBests(input_name, interceptee_dict, processor=self._custom_processor, scorer=self._custom_scorer, limit=fuzzy_limit, score_cutoff=fuzzy_cutoff)
+        if input_age != None:
+            for score_idx in range(len(matches)):
+                match = Interceptee.objects.get(pk=matches[score_idx][2].id)
+                age_list=list(match.ages.values_list('value', flat=True))
+                for idx in range(len(age_list)):
+                    if int(input_age) == age_list[idx]:
+                        scores = matches[score_idx][1]
+                        for score in range(len(scores)):
+                            matches[score_idx][1][score]+=Setting.objects.get_by_keyword("Fuzzy-Age-Weight")
+        if input_age != None:
+            for score_idx in range(len(matches)):
+                match = Interceptee.objects.get(pk=matches[score_idx][2].id)
+                phone_list=list(match.phone_numbers.values_list('value', flat=True))
+                for idx in range(len(phone_list)):
+                    if input_phone == phone_list[idx]:
+                        scores = matches[score_idx][1]
+                        for score in range(len(scores)):
+                            matches[score_idx][1][score]+=Setting.objects.get_by_keyword("Fuzzy-Phone-Number-Weight")
         return matches
 
 

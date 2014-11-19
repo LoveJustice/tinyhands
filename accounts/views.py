@@ -8,10 +8,11 @@ from django.http import HttpResponseRedirect
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, RedirectView
 from django.contrib.auth.decorators import login_required
 from braces.views import LoginRequiredMixin
+
 from extra_views import ModelFormSetView
 
 from util.functions import get_object_or_None
-from accounts.models import Account, DefaultPermissionsSet
+from accounts.models import Account, DefaultPermissionsSet, Setting
 from accounts.mixins import PermissionsRequiredMixin
 from accounts.forms import CreateUnactivatedAccountForm, AccountActivateForm
 
@@ -194,3 +195,17 @@ class AccessDefaultsDeleteView(
     model = DefaultPermissionsSet
     permissions_required = ['permission_accounts_manage']
     success_url = reverse_lazy('access_defaults')
+
+
+class FuzzyMatchingSettingsView(
+        LoginRequiredMixin,
+        PermissionsRequiredMixin,
+        ModelFormSetView):
+    model = Setting
+    template_name = 'accounts/fuzzy_matching_settings.html'
+    success_url = reverse_lazy('fuzzy_matching_settings')
+    permissions_required = ['permission_accounts_manage']
+    extra = 0
+    fields = [
+        'value',
+    ]

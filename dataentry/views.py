@@ -454,7 +454,6 @@ class StationCodeAPIView(APIView):
 
 @login_required
 def interceptee_fuzzy_matching(request):
-    # add additional filters for age and phone #?
     if 'name' not in request.GET\
         and 'phone' not in request.GET\
         and 'age' not in request.GET:
@@ -469,7 +468,7 @@ def interceptee_fuzzy_matching(request):
 
     modified_matches = []
     for interceptee_group in matches:
-        modified_matches.append((interceptee_group[2].id, interceptee_group[0], interceptee_group[1], interceptee_group[2].photo.url))
+        modified_matches.append(interceptee_group[2].id, interceptee_group[0], interceptee_group[1], interceptee_group[2].photo.url)
 
     return JsonResponse({
         'success': True,
