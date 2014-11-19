@@ -22,6 +22,60 @@ def set_weight(self, weight):
 
 models.BooleanField.set_weight = set_weight
 
+class BorderStation(models.Model):
+    station_code = models.CharField(max_length=3)
+    station_name = models.CharField(max_length=100)
+    date_established = models.DateField(null=True)
+    has_shelter = models.BooleanField(default=False)
+    latitude = models.FloatField(null=True)
+    longitude = models.FloatField(null=True)
+
+class District(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __unicode__(self):
+        return self.name
+
+
+class VDC(models.Model):
+    name = models.CharField(max_length=255)
+    latitude = models.FloatField()
+    longitude = models.FloatField()
+    district = models.ForeignKey(District,null=False)
+    cannonical_name = models.ForeignKey('self',null=True,blank=True)
+    verified = models.BooleanField(default=False)
+
+    def __unicode__(self):
+        return self.name
+
+    @property
+    def get_cannonical_name(self):
+        if self.cannonical_name:
+            return self.cannonical_name.name
+        return self.name
+
+    @property
+    def get_latitude(self):
+        if self.cannonical_name:
+            return self.cannonical_name.latitude
+        return self.latitude
+
+    @property
+    def get_longitude(self):
+        if self.cannonical_name:
+            return self.cannonical_name.longitude
+        return self.longitude
+
+    @property
+    def get_district(self):
+        if self.cannonical_name:
+            return self.cannonical_name.district
+        return self.district
+    
+    @property
+    def is_verified(self):
+        return self.verified
+
 
 class InterceptionRecord(models.Model):
     form_entered_by = models.ForeignKey(Account, related_name='irfs_entered')
@@ -217,24 +271,6 @@ class InterceptionRecord(models.Model):
         ordering = ['-date_time_last_updated']
 
 
-class District(models.Model):
-    name = models.CharField(max_length=255)
-
-    def __unicode__(self):
-        return self.name
-
-
-class VDC(models.Model):
-    name = models.CharField(max_length=255)
-    latitude = models.FloatField()
-    longitude = models.FloatField()
-    district = models.ForeignKey(District, null=False)
-    cannonical_name = models.ForeignKey('self', null=True, blank=True)
-
-    def __unicode__(self):
-        return self.name
-
-
 class Person(models.Model):
     GENDER_CHOICES = [
         ('female', 'Female'),
@@ -376,6 +412,8 @@ class VictimInterview(Person):
     permission_to_use_photograph = models.BooleanField('Check the box if form is signed', default=False)
 
     # 1. Victim & Family Information
+    victim_address_district = models.ForeignKey(District, related_name="victim_address_district")
+    victim_address_vdc = models.ForeignKey(VDC, related_name="victim_address_vdc")
     victim_address_ward = models.CharField('Ward #', max_length=255, blank=True)
     victim_height = models.PositiveIntegerField('Height(ft)', null=True, blank=True)
     victim_weight = models.PositiveIntegerField('Weight(kg)', null=True, blank=True)
@@ -433,8 +471,8 @@ class VictimInterview(Person):
     victim_primary_guardian_non_relative = models.BooleanField('Non-relative', default=False)
     victim_primary_guardian_no_one = models.BooleanField('No one (I have no guardian)', default=False)
 
-    victim_guardian_address_district = models.CharField('District', max_length=255, blank=True)
-    victim_guardian_address_vdc = models.CharField('VDC', max_length=255, blank=True)
+    victim_guardian_address_district = models.ForeignKey(District)
+    victim_guardian_address_vdc = models.ForeignKey(VDC)
     victim_guardian_address_ward = models.CharField('Ward #', max_length=255, blank=True)
     victim_guardian_phone = models.CharField('Phone #', max_length=255, blank=True)
 
@@ -565,7 +603,6 @@ class VictimInterview(Person):
     victim_how_expense_was_paid_gave_money_to_broker = models.BooleanField('I gave a sum of money to the broker', default=False)
     victim_how_expense_was_paid_broker_gave_loan = models.BooleanField('The broker paid the expenses and I have to pay him back', default=False)
     victim_how_expense_was_paid_amount = models.DecimalField('Amount', max_digits=10, decimal_places=2, null=True, blank=True)
-    victim_how_expense_was_paid_broker_gave_loan = models.BooleanField('The broker paid the expenses and I have to pay him back', default=False)
 
     broker_works_in_job_location_no = models.BooleanField('No', default=False)
     broker_works_in_job_location_yes = models.BooleanField('Yes', default=False)
@@ -715,30 +752,30 @@ class VictimInterview(Person):
     reported_total_situational_alarms = models.PositiveIntegerField(blank=True, null=True)
 
     def calculate_strength_of_case_points(self):
-        total = 0
-        for field in self._meta.fields:
-            if type(field) == models.BooleanField:
-                value = getattr(self, field.name)
-                if value is True:
-                    if hasattr(field, 'weight'):
-                        total += field.weight
-        if self.victim_how_expense_was_paid_broker_gave_loan > 0:
-            total += (2 + (self.victim_how_expense_was_paid_broker_gave_loan // 20000))
-        if self.number_broker_made_similar_promises_to and self.victim_how_expense_was_paid_amount > 0:
-            total += int(self.victim_how_expense_was_paid_amount)
-        if self.how_many_others_in_situation > 0:
-            total += self.how_many_others_in_situation
-        if self.others_in_situation_age_of_youngest > 0:
-            total += (20 - self.others_in_situation_age_of_youngest)
-        if self.victim_was_hidden:
-            total += 5
-        if not self.victim_was_free_to_go_out:
-            total += 5
-        if not self.companion_with_when_intercepted:
-            total += 3
-        if self.victim_place_worked_involved_sending_girls_overseas:
-            total += 7
-        return total
+            total = 0
+            for field in self._meta.fields:
+                if type(field) == models.BooleanField:
+                    value = getattr(self, field.name)
+                    if value is True:
+                        if hasattr(field, 'weight'):
+                            total += field.weight
+            if self.victim_how_expense_was_paid_broker_gave_loan > 0:
+                total += (2 + (self.victim_how_expense_was_paid_broker_gave_loan//20000))
+            if self.number_broker_made_similar_promises_to and self.victim_how_expense_was_paid_amount > 0:
+                total += int(self.victim_how_expense_was_paid_amount)
+            if self.how_many_others_in_situation > 0:
+                total += self.how_many_others_in_situation
+            if self.others_in_situation_age_of_youngest > 0:
+                total += (20 - self.others_in_situation_age_of_youngest)
+            if self.victim_was_hidden:
+                total += 5
+            if not self.victim_was_free_to_go_out:
+                total += 5
+            if not self.companion_with_when_intercepted:
+                total += 3
+            if self.victim_place_worked_involved_sending_girls_overseas:
+                total += 7
+            return total
 
     def get_calculated_situational_alarms(self):
         total = 0
@@ -848,8 +885,10 @@ class VictimInterviewPersonBox(Person):
     who_is_this_role_known_trafficker = models.BooleanField('Known Trafficker', default=False)
     who_is_this_role_manpower = models.BooleanField('Manpower', default=False)
     who_is_this_role_passport = models.BooleanField('Passport', default=False)
-    who_is_this_role_sex_industry = models.BooleanField('Sex Industry', default=False)
+    who_is_this_role_sex_industry = models.BooleanField('Sex Industry', default=False)  
 
+    address_district = models.ForeignKey(District)
+    address_vdc = models.ForeignKey(VDC)
     address_ward = models.CharField('Ward #', max_length=255, blank=True)
     height = models.PositiveIntegerField('Height(ft)', null=True, blank=True)
     weight = models.PositiveIntegerField('Weight(kg)', null=True, blank=True)
@@ -929,12 +968,10 @@ class VictimInterviewLocationBox(models.Model):
     what_kind_place_brothel = models.BooleanField('Brothel', default=False).set_weight(2)
     what_kind_place_hotel = models.BooleanField('Hotel', default=False)
 
-    vdc = models.CharField('VDC', max_length=255, blank=True)
-    district = models.CharField(max_length=255, blank=True)
     signboard = models.CharField(max_length=255, blank=True)
     location_in_town = models.CharField(max_length=255, blank=True)
-    district_geocodelocation = models.ForeignKey(District)
-    vdc_geocodelocation = models.ForeignKey(VDC)
+    district = models.ForeignKey(District)
+    vdc = models.ForeignKey(VDC)
 
     phone = models.CharField('Phone #', max_length=255, blank=True)
     color = models.CharField(max_length=255, blank=True)

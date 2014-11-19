@@ -6,7 +6,8 @@ from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, Permis
 from django.utils import timezone
 
 from templated_email import send_templated_mail
-from dreamsuite.settings import ADMIN_EMAIL_SENDER, SITE_DOMAIN
+from django.conf import settings
+
 
 
 class DefaultPermissionsSet(models.Model):
@@ -19,7 +20,10 @@ class DefaultPermissionsSet(models.Model):
     permission_vif_edit = models.BooleanField(default=False)
     permission_accounts_manage = models.BooleanField(default=False)
     permission_receive_email = models.BooleanField(default=False)
-
+    permission_border_stations_view = models.BooleanField(default=False)
+    permission_border_stations_add = models.BooleanField(default=False)
+    permission_border_stations_edit = models.BooleanField(default=False)
+    permission_vdc_manage = models.BooleanField(default=False)
 
     def __unicode__(self):
         return self.name
@@ -78,6 +82,10 @@ class Account(AbstractBaseUser, PermissionsMixin):
     permission_vif_edit = models.BooleanField(default=False)
     permission_accounts_manage = models.BooleanField(default=False)
     permission_receive_email = models.BooleanField(default=False)
+    permission_border_stations_view = models.BooleanField(default=False)
+    permission_border_stations_add = models.BooleanField(default=False)
+    permission_border_stations_edit = models.BooleanField(default=False)
+    permission_vdc_manage = models.BooleanField(default=False)
 
     date_joined = models.DateTimeField(default=timezone.now)
 
@@ -108,12 +116,12 @@ class Account(AbstractBaseUser, PermissionsMixin):
         return self.first_name + ' ' + self.last_name
 
     def email_user(self, template, alert, context={}):
-        context['site'] = SITE_DOMAIN
+        context['site'] = settings.SITE_DOMAIN
         context['account'] = self
         context['alert'] = alert
         send_templated_mail(
             template_name=template,
-            from_email=ADMIN_EMAIL_SENDER,
+            from_email=settings.ADMIN_EMAIL_SENDER,
             recipient_list=[self.email],
             context=context
         )
@@ -121,14 +129,13 @@ class Account(AbstractBaseUser, PermissionsMixin):
     def send_activation_email(self):
         send_templated_mail(
             template_name='new_user_password_link',
-            from_email=ADMIN_EMAIL_SENDER,
+            from_email=settings.ADMIN_EMAIL_SENDER,
             recipient_list=[self.email],
             context={
-                'site': SITE_DOMAIN,
+                'site': settings.SITE_DOMAIN,
                 'account': self,
             }
         )
-
 
 class AlertManager(models.Manager):
     def send_alert(self, code, context={}):
