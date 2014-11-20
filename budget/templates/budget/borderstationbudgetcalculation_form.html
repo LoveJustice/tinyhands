@@ -67,9 +67,7 @@
                 <div class="col-md-6">
                     <h2 class="background"><span>Staff Salaries</span></h2>
                     We need to render this from the static station model
-
                     {{ form2 }}
-
                 </div>
                 <div class="col-md-6">
                     <h2 class="background"><span>Shelter</span></h2>
@@ -80,10 +78,8 @@
                     {{ form.shelter_shelter_startup_amount|attr:"data-bind:value: shelterStartupAmount"|bootstrap }}
                     {{ form.shelter_shelter_two|attr:"data-bind:checked: shelterTwoBool"|bootstrap }}
                     {{ form.shelter_shelter_two_amount|attr:"data-bind:value: shelterTwoAmount"|bootstrap }}
-
                     <label>Shelter Checkbox Total</label>
                     <p>The checkbox total is <span data-bind="text: shelterCheckboxTotal"></span><br/></p>
-
                     <label for="shelterTotal">Shelter TOTAL</label>
                     <p>The total is <span data-bind="text: shelterTotal"></span><p/>
                 </div>
@@ -112,17 +108,13 @@
                     {{ form.food_and_gas_limbo_girls_multiplier|attr:"data-bind:value: limboMultiplier"|bootstrap }}
                     {{ form.food_and_gas_number_of_limbo_girls|attr:"data-bind:value: limboNumberOfGirls"|bootstrap }}
                     {{ form.food_and_gas_number_of_days|attr:"data-bind:value: limboNumberOfDays"|bootstrap }}
-
                     <label>Intercepted TOTAL</label>
                     <p>The total is <span data-bind="text: foodGasInterceptedGirls"></span><br/></p>
-
                     <label>Intercepted TOTAL</label>
                     <p>The total is <span data-bind="text: foodGasLimboGirls"></span><br/></p>
-
                     <label>TOTAL FOOD</label>
                     <p>The total is <span data-bind="text: foodTotal"></span><br/></p>
-
-
+                    
                     <h2 class="background"><span>Awareness</span></h2>
                     {{ form.awareness_contact_cards|attr:"data-bind:checked: awarenessContactCardsBool"|bootstrap }}
                     {% comment %}{{ form.awareness_contact_cards_boolean_amount|attr:"data-bind:value: foodGasNumberOfGirls"|bootstrap }}{% endcomment %}
@@ -222,7 +214,7 @@
                             </tr>
                             <tr>
                                 <td>Medical</td>
-                                <td></td>
+                                <td><p data-bind="text: medicalExpense"></p></td>
                                 <td class="active"></td>
                             </tr>
                             <tr>
@@ -282,7 +274,7 @@
             <div class="row">
                 <div class="col-md-6">
                     <h2 class="background"><span>Medical</span></h2>
-                    {{ form.medical_last_months_expense|bootstrap }}
+                    {{ form.medical_last_months_expense|attr:"data-bind:value: medicalExpense"|bootstrap }}
                 </div>
             </div>
 

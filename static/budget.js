@@ -1,4 +1,10 @@
 function budgetViewModel() {
+    //Medical Section
+    this.medicalExpense = ko.observable(0);
+    this.medicalTotal = ko.computed(function() {
+        return parseFloat(this.medicalExpense());
+    }, this);
+
     //Administration Section
     this.adminNumberOfInterceptionsLastMonth = ko.observable(0);
     this.adminNumberOfInterceptionsLastMonthMultiplier = ko.observable(20);
