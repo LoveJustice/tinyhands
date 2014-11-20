@@ -778,6 +778,7 @@ class VictimInterviewLocationBoxForm(DreamSuitePaperForm):
 class BorderStationForm(forms.ModelForm):
     class Meta:
         model = BorderStation
+        exclude = []
         widgets = {
             'date_established': forms.TextInput(attrs={'placeholder': '12/31/12'}),
         }
