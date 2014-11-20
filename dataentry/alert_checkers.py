@@ -70,8 +70,6 @@ class IRFAlertChecker(object):
         """
         all_people = Interceptee.objects.all()
         people_list = [person.full_name for person in all_people]
-        import ipdb
-        ipdb.set_trace()
         matches = []
         trafficker_list = []
         people_dict = {obj: obj.full_name for obj in all_people}
@@ -94,7 +92,6 @@ class IRFAlertChecker(object):
         if trafficker_in_custody is not None and taken_into_custody < len([there for there in self.interceptees.cleaned_data if there]):
             trafficker_name = self.interceptees.cleaned_data[int(self.IRF_data.get("trafficker_taken_into_custody")) - 1].get("full_name")
 
-        ipdb.set_trace()
         if len(matches) > 0:
             Alert.objects.send_alert("Name Match", context={"irf": self.irf.instance, "matches": matches, "trafficker_in_custody": trafficker_name})
             traffickers_and_their_matches[trafficker.full_name] = process.extractBests(trafficker.full_name, people_dict, score_cutoff=89, limit=10)

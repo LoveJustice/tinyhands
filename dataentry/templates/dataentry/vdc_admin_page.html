@@ -1,0 +1,85 @@
+{% extends "dataentry/dataentry_base.html" %}
+{% load widget_tweaks %}
+{% load bootstrap %}
+{% load unslugify %}
+{% load times %}
+
+{% block content %}
+
+<!-- Modal -->
+<div class="modal fade" id="modal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" tabindex="-1"></div>
+<!-- /.modal -->
+
+<table id="vdc_table" class="table table-striped">
+	<thead>
+        <tr>
+            <th style="text-align:center">Name</th>
+            <th style="text-align:center">Latitude</th>
+            <th style="text-align:center">Longitude</th>
+            <th style="text-align:center">District</th>
+            <th style="text-align:center">Cannonical Name</th>
+            <th style="text-align:center">Verified</th>
+            <th></th>
+        </tr>
+    </thead>
+	{% for vdc in vdc_list %}
+		{% url 'interceptionrecord_list' as vdc_edit %}
+		<tr>
+		<td style="text-align:center">{{ vdc.name }} </td>
+		<td style="text-align:center">{{ vdc.get_latitude }} </td>
+	    <td style="text-align:center">{{ vdc.get_longitude }} </td>
+	    <td style="text-align:center">{{ vdc.get_district }} </td>
+	    <td style="text-align:center">{{ vdc.get_cannonical_name }} </td>
+	    <td style="text-align:center">
+            {% if vdc.is_verified %}
+                Yes
+            {% else %}
+                No
+            {% endif %}
+        </td>
+	    <td><a id="vdc_update_link" class="btn btn-warning pull-left" style="margin-right:-35px" href="{% url 'vdc_admin_update' vdc.id %}" data-target="#modal"  >Edit</a></td>
+		</tr>
+	{% empty %}
+		{% if database_empty %}
+			<tr>
+			<td colspan="12">There are currently no VDCs entered in the database</td>
+			<tr>
+		{% else %}
+			<tr>
+			<td colspan="12">There are no VDCs that match that query</td>
+			<tr>
+		{% endif %}
+	{% endfor %}
+</table>
+
+<div id="footer">
+    <nav class="navbar navbar-default navbar-fixed-bottom">
+        <div class="container">
+
+            <ul class="pagination pull-left" style="margin: 10px !important">
+                {% if page_obj.has_previous %}
+                    <li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+                {% else %}
+                    <li class="disabled"><a href="">&laquo;</a></li>
+                {% endif %}
+
+                {% for i in page_obj.paginator.num_pages|times %}
+                {% if i >= lower_limit and i <= upper_limit %}
+                <li {% if page_obj.number == i|add:"1" %} class="active"{% endif %}>
+                    <a href="?page={{ i|add:"1" }}">{{ i|add:"1" }}</a>
+                </li>
+                {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %} 
+                    <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+                {% else %}
+                    <li class="disabled"><a href="">&raquo;</a></li>
+                {% endif %}
+                
+            </ul>
+        </div>
+    </nav>
+</div>
+
+{% endblock %}

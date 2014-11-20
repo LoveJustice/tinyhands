@@ -1,0 +1,17 @@
+{% load bootstrap %}
+<hr/>
+{{location_form.id}}
+{{ location_form.DELETE }}
+<div class="row">
+    <div class="col-sm-12">
+        {{location_form.name|bootstrap}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-6">
+        {{location_form.latitude|bootstrap}}
+    </div>
+    <div class="col-sm-6">
+        {{location_form.longitude|bootstrap}}
+    </div>
+</div>
