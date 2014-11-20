@@ -101,10 +101,10 @@
 
                         <div class="row">
                             <div class="col-lg-3">
-                                {{ form.shelter_shelter_startup|attr:"data-bind:checked: shelterTwoBool"|bootstrap }}
+                                {{ form.shelter_shelter_startup|attr:"data-bind:checked: shelterStartupBool"|bootstrap }}
                             </div>
                             <div class="col-lg-3">
-                                {{ form.shelter_shelter_startup_amount|attr:"data-bind:value: shelterTwoAmount"|attr:"class: form-control" }}
+                                {{ form.shelter_shelter_startup_amount|attr:"data-bind:value: shelterStartupAmount"|attr:"class: form-control" }}
                             </div>
                             <div class="col-lg-2 col-lg-offset-2">
                                 |_________
@@ -158,15 +158,7 @@
                         <div class="col-lg-2">
                             {{ form.food_and_gas_number_of_intercepted_girls|attr:"data-bind:value: foodGasNumberOfGirls"|attr:"class: form-control" }}
                         </div>
-                        <div class="col-lg-1" style="padding: 0; margin: 0">
-                            <h4 style="text-align: center">*</h4>
-                        </div>
-                        <div class="col-lg-2">
-                            {{ form.food_and_gas_number_of_intercepted_girls|attr:"data-bind:value: foodGasNumberOfGirls"|attr:"class: form-control" }}
-                        </div>
-                        <div class="col-lg-2">
-                            |_________
-                        </div>
+
                     </div>
 
                     <div class="row">
@@ -179,33 +171,38 @@
                         </div>
 
                         <div class="col-lg-2">
-                            {{ form.food_and_gas_limbo_girls_multiplier|attr:"data-bind:value: foodGasMultiplierBefore"|attr:"class: form-control" }}
+                            {{ form.food_and_gas_limbo_girls_multiplier|attr:"data-bind:value: limboMultiplier"|attr:"class: form-control" }}
                         </div>
                         <div class="col-lg-1" style="padding: 0; margin: 0">
                             <h4 style="text-align: center">*</h4>
                         </div>
                         <div class="col-lg-2">
-                            {{ form.food_and_gas_number_of_limbo_girls|attr:"data-bind:value: foodGasNumberOfGirls"|attr:"class: form-control" }}
+                            {{ form.food_and_gas_number_of_limbo_girls|attr:"data-bind:value: limboNumberOfGirls"|attr:"class: form-control" }}
                         </div>
                         <div class="col-lg-1" style="padding: 0; margin: 0">
                             <h4 style="text-align: center">*</h4>
                         </div>
                         <div class="col-lg-2">
-                            {{ form.food_and_gas_number_of_days|attr:"data-bind:value: foodGasNumberOfGirls"|attr:"class: form-control" }}
-                        </div>
-                        <div class="col-lg-2">
-                            |_________
+                            {{ form.food_and_gas_number_of_days|attr:"data-bind:value: limboNumberOfDays"|attr:"class: form-control" }}
                         </div>
                     </div>
 
-                    <label>Intercepted TOTAL</label>
-                    <p>The total is <span data-bind="text: foodGasInterceptedGirls"></span><br/></p>
-
-                    <label>Limbo TOTAL</label>
-                    <p>The total is <span data-bind="text: foodGasLimboGirls"></span><br/></p>
-
                     <div class="row" style="text-align: center">
-                        <div class="col-lg-offset-10">
+                        <div class="col-lg-4">
+                            <u><p>|<span data-bind="text: foodGasInterceptedGirls"></span>|<br/></p></u>
+                            <label>Intercepted TOTAL</label>
+                        </div>
+                        <div class="col-lg-1" style="padding: 0; margin: 0">
+                            <h4 style="text-align: center">+</h4>
+                        </div>
+                        <div class="col-lg-3">
+                            <u><p>|<span data-bind="text: foodGasLimboGirls"></span>|<br/></p></u>
+                            <label>Limbo TOTAL</label>
+                        </div>
+                        <div class="col-lg-1" style="padding: 0; margin: 0">
+                            <h4 style="text-align: center">=</h4>
+                        </div>
+                        <div class="col-lg-3">
                             <u><p>|<span data-bind="text: foodTotal"></span>|<br/></p></u>
                             <label>TOTAL FOOD</label>
                         </div>
@@ -221,7 +218,7 @@
                         <div class="col-lg-5">
                             <div class="row" style="padding-bottom: 20px">
                                 <div class="col-lg-1"  style="padding:0;">
-                                    |{{ form.communication_chair|attr:"data-bind:checked: commChairBool" }}
+                                    {{ form.communication_chair|attr:"data-bind:checked: commChairBool" }}
                                 </div>
                                 <div class="col-lg-5" style="padding-left:0;">
                                     {{ form.communication_chair_amount|attr:"data-bind:value: commChairAmount"|attr:"class: form-control"}}
@@ -234,7 +231,7 @@
                         <div class="col-lg-5">
                             <div class="row">
                                 <div class="col-lg-1" style="padding:0;">
-                                    |{{ form.communication_manager|attr:"data-bind:checked: commManagerBool" }}
+                                    {{ form.communication_manager|attr:"data-bind:checked: commManagerBool" }}
                                 </div>
                                 <div class="col-lg-5" style="padding-left:0;">
                                     {{ form.communication_manager_amount|attr:"data-bind:value: commManagerAmount"|attr:"class: form-control" }}
@@ -255,13 +252,13 @@
                             <strong>{{ form.communication_number_of_staff_with_walkie_talkies.label }}</strong>
                         </div>
                         <div class="col-lg-1" style="padding: 0; margin: 0">
-                            <h2 style="text-align: center;">*</h2>
+                            <h4 style="text-align: center">*</h4>
                         </div>
                         <div class="col-lg-3">
                             {{ form.communication_number_of_staff_with_walkie_talkies_multiplier|attr:"data-bind:value: commNumberOfStaffWtMultiplier"|attr:"class: form-control" }}
                         </div>
                         <div class="col-lg-1" style="padding: 0; margin: 0">
-                            <h2 style="text-align: center">=</h2>
+                            <h4 style="text-align: center">=</h4>
                         </div>
                         <div class="col-lg-2">
                             |_________
@@ -276,13 +273,13 @@
                             <strong>{{ form.communication_each_staff.label }}</strong>
                         </div>
                         <div class="col-lg-1" style="padding: 0; margin: 0">
-                            <h2 style="text-align: center">*</h2>
+                            <h4 style="text-align: center">*</h4>
                         </div>
                         <div class="col-lg-3">
                             {{ form.communication_each_staff_multiplier|attr:"data-bind:value: commEachStaffWtMultiplier"|attr:"class: form-control" }}
                         </div>
                         <div class="col-lg-1" style="padding: 0; margin: 0">
-                            <h2 style="text-align: center">=</h2>
+                            <h4 style="text-align: center">=</h4>
                         </div>
                         <div class="col-lg-2">
                             |_________
@@ -313,18 +310,94 @@
             <div class="row">
                 <div class="col-md-6">
                     <h2 class="background"><span>Travel</span></h2>
-                    {{ form.travel_chair_with_bike|attr:"data-bind:checked: travelChairWithBikeBool"|bootstrap }}
-                    {{ form.travel_chair_with_bike_amount|attr:"data-bind:value: travelChairWithBikeAmount"|bootstrap }}
-                    {{ form.travel_manager_with_bike|attr:"data-bind:checked: travelManagerWithBikeBool"|bootstrap }}
-                    {{ form.travel_manager_with_bike_amount|attr:"data-bind:value: travelManagerWithBikeAmount"|bootstrap }}
-                    {{ form.travel_number_of_staff_using_bikes|attr:"data-bind:value: travelNumberOfStaffUsingBikes"|bootstrap }}
-                    {{ form.travel_number_of_staff_using_bikes_multiplier|attr:"data-bind:value: travelNumberOfStaffUsingBikesMultiplier"|bootstrap }}
-                    {{ form.travel_last_months_expense_for_sending_girls_home|attr:"data-bind:value: travelSendingGirlsHomeExpense"|bootstrap }}
-                    {{ form.travel_motorbike|attr:"data-bind:checked: travelMotorbikeBool"|bootstrap }}
-                    {{ form.travel_motorbike_amount|attr:"data-bind:value: travelMotorbikeAmount"|bootstrap }}
-                    {{ form.travel_plus_other|attr:"data-bind:value: travelOther"|bootstrap }}
-                    <label>TOTAL TRAVEL</label>
-                    <p>The total is <span data-bind="text: travelTotal"></span><br/></p>
+
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="row" style="padding-bottom: 20px">
+                                <div class="col-lg-1"  style="padding:0;">
+                                    {{ form.travel_chair_with_bike|attr:"data-bind:checked: travelChairWithBikeBool" }}
+                                </div>
+                                <div class="col-lg-5" style="padding-left:0;">
+                                    {{ form.travel_chair_with_bike_amount|attr:"data-bind:value: travelChairWithBikeAmount"|attr:"class: form-control"}}
+                                </div>
+                                <div class="col-lg-5" style="padding-left:0;">
+                                    <strong>{{ form.travel_chair_with_bike.label }}</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-5">
+                            <div class="row">
+                                <div class="col-lg-1" style="padding:0;">
+                                    {{ form.travel_manager_with_bike|attr:"data-bind:checked: travelManagerWithBikeBool" }}
+                                </div>
+                                <div class="col-lg-5" style="padding-left:0;">
+                                    {{ form.travel_manager_with_bike_amount|attr:"data-bind:value: travelManagerWithBikeAmount"|attr:"class: form-control" }}
+                                </div>
+                                <div class="col-lg-6" style="padding-left:0;">
+                                    <strong>{{ form.travel_manager_with_bike.label }}</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            |_________
+                        </div>
+                    </div>
+
+
+
+                    <div class="row">
+                        <div class="col-lg-5">
+                            {{ form.travel_number_of_staff_using_bikes|attr:"data-bind:value: travelNumberOfStaffUsingBikes"|attr:"class: form-control" }}
+                            <strong>{{ form.travel_number_of_staff_using_bikes.label }}</strong>
+                        </div>
+                        <div class="col-lg-1" style="padding: 0; margin: 0">
+                            <h4 style="text-align: center">*</h4>
+                        </div>
+                        <div class="col-lg-3">
+                            {{ form.travel_number_of_staff_using_bikes_multiplier|attr:"data-bind:value: travelNumberOfStaffUsingBikesMultiplier"|attr:"class: form-control" }}
+                        </div>
+                        <div class="col-lg-1" style="padding: 0; margin: 0">
+                            <h4 style="text-align: center">=</h4>
+                        </div>
+                        <div class="col-lg-2">
+                            |_________
+                        </div>
+                    </div>
+
+                    <div class="row" style="padding: 10px;margin: 10px 10px 10px 10px" >
+                        {{ form.travel_last_months_expense_for_sending_girls_home|attr:"data-bind:value: travelSendingGirlsHomeExpense"|bootstrap_horizontal:'col-lg-10'  }}
+                    </div>
+
+
+                    <div class="row">
+                        <div class="col-lg-2">
+                            {{ form.travel_motorbike|attr:"data-bind:checked: travelMotorbikeBool"|bootstrap }}
+                        </div>
+
+                        <div class="col-lg-3">
+                            {{ form.travel_motorbike_amount|attr:"data-bind:value: travelMotorbikeAmount"|attr:"class: form-control" }}
+                        </div>
+                        <div class="col-lg-1" style="padding: 0; margin: 0">
+                            <h4 style="text-align: center">+</h4>
+                        </div>
+                        <div class="col-lg-3">
+                            {{ form.travel_plus_other|attr:"data-bind:value: travelOther"|attr:"class: form-control" }}
+                        </div>
+                        <div class="col-lg-1" style="padding: 0; margin: 0">
+                            <h4 style="text-align: center">=</h4>
+                        </div>
+                        <div class="col-lg-2">
+                            |_________
+                        </div>
+                    </div>
+
+                    <div class="row" style="text-align: center">
+                        <div class="col-lg-offset-10">
+                            <u><p><span data-bind="text: travelTotal"></span><br/></p></u>
+                            <label>TOTAL TRAVEL</label>
+                        </div>
+                    </div>
+
                 </div>
 
                 <div class="col-md-6">
