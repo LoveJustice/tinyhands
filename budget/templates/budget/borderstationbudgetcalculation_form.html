@@ -71,58 +71,233 @@
                     {{ form2 }}
 
                 </div>
+
+
+
+
+
                 <div class="col-md-6">
                     <h2 class="background"><span>Shelter</span></h2>
-                    {{ form.shelter_rent|attr:"data-bind:value: shelterRent"|bootstrap }}
-                    {{ form.shelter_water|attr:"data-bind:value: shelterWater"|bootstrap }}
-                    {{ form.shelter_electricity|attr:"data-bind:value: shelterElectricity"|bootstrap }}
-                    {{ form.shelter_shelter_startup|attr:"data-bind:checked: shelterStartupBool"|bootstrap }}
-                    {{ form.shelter_shelter_startup_amount|attr:"data-bind:value: shelterStartupAmount"|bootstrap }}
-                    {{ form.shelter_shelter_two|attr:"data-bind:checked: shelterTwoBool"|bootstrap }}
-                    {{ form.shelter_shelter_two_amount|attr:"data-bind:value: shelterTwoAmount"|bootstrap }}
+                        <div class="row">
+                            <div class="col-lg-2">
+                                {{ form.shelter_rent|attr:"data-bind:value: shelterRent"|attr:"class: form-control" }}
+                            </div>
+                            <div class="col-lg-1" style="padding: 0; margin: 0">
+                                <h4 style="text-align: center">+</h4>
+                            </div>
+                            <div class="col-lg-2">
+                                {{ form.shelter_water|attr:"data-bind:value: shelterWater"|attr:"class: form-control" }}
+                            </div>
+                            <div class="col-lg-1" style="padding: 0; margin: 0">
+                                <h4 style="text-align: center">+</h4>
+                            </div>
+                            <div class="col-lg-2">
+                                {{ form.shelter_electricity|attr:"data-bind:value: shelterElectricity"|attr:"class: form-control" }}
+                            </div>
+                            <div class="col-lg-2">
+                                |_________
+                            </div>
+                        </div>
 
-                    <label>Shelter Checkbox Total</label>
-                    <p>The checkbox total is <span data-bind="text: shelterCheckboxTotal"></span><br/></p>
+                        <div class="row">
+                            <div class="col-lg-3">
+                                {{ form.shelter_shelter_startup|attr:"data-bind:checked: shelterTwoBool"|bootstrap }}
+                            </div>
+                            <div class="col-lg-3">
+                                {{ form.shelter_shelter_startup_amount|attr:"data-bind:value: shelterTwoAmount"|attr:"class: form-control" }}
+                            </div>
+                            <div class="col-lg-2 col-lg-offset-2">
+                                |_________
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-3">
+                                {{ form.shelter_shelter_two|attr:"data-bind:checked: shelterTwoBool"|bootstrap }}
+                            </div>
+                            <div class="col-lg-3">
+                                {{ form.shelter_shelter_two_amount|attr:"data-bind:value: shelterTwoAmount"|attr:"class: form-control" }}
+                            </div>
+                            <div class="col-lg-2 col-lg-offset-2">
+                                |_________
+                            </div>
+                        </div>
 
-                    <label for="shelterTotal">Shelter TOTAL</label>
-                    <p>The total is <span data-bind="text: shelterTotal"></span><p/>
+
+                        <div class="row" style="text-align: center">
+                            <div class="col-lg-offset-6">
+                                <u><p>|<span data-bind="text: shelterCheckboxTotal">|<br/></p></u>
+                            <label>Shelter Checkbox Total</label>
+                            </div>
+                        </div>
+                        <div class="row" style="text-align: center">
+                            <div class="col-lg-offset-6">
+                                <u><p>|<span data-bind="text: shelterTotal"></span>|<br/></p></u>
+                            <label for="shelterTotal">Shelter TOTAL</label>
+                            </div>
+                        </div>
+
+
+
                 </div>
+
+                <div class="col-lg-6 col-lg-offset-6">
+                    <h2 class="background"><span>Food & Gas</span></h2>
+                    <div class="row">
+                        <div class="col-lg-2">
+                            <strong>Intercepted Girls</strong>
+                        </div>
+                        <div class="col-lg-1" style="padding: 0; margin: 0">
+                            <h4 style="text-align: center">=</h4>
+                        </div>
+                        <div class="col-lg-2">
+                            {{ form.food_and_gas_number_of_intercepted_girls_multiplier_before|attr:"data-bind:value: foodGasMultiplierBefore"|attr:"class: form-control" }}
+                        </div>
+                        <div class="col-lg-1" style="padding: 0; margin: 0">
+                            <h4 style="text-align: center">*</h4>
+                        </div>
+                        <div class="col-lg-2">
+                            {{ form.food_and_gas_number_of_intercepted_girls|attr:"data-bind:value: foodGasNumberOfGirls"|attr:"class: form-control" }}
+                        </div>
+                        <div class="col-lg-1" style="padding: 0; margin: 0">
+                            <h4 style="text-align: center">*</h4>
+                        </div>
+                        <div class="col-lg-2">
+                            {{ form.food_and_gas_number_of_intercepted_girls|attr:"data-bind:value: foodGasNumberOfGirls"|attr:"class: form-control" }}
+                        </div>
+                        <div class="col-lg-2">
+                            |_________
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-2">
+                            <strong>Limbo Girls</strong>
+                        </div>
+
+                        <div class="col-lg-1" style="padding: 0; margin: 0">
+                            <h4 style="text-align: center">=</h4>
+                        </div>
+
+                        <div class="col-lg-2">
+                            {{ form.food_and_gas_limbo_girls_multiplier|attr:"data-bind:value: foodGasMultiplierBefore"|attr:"class: form-control" }}
+                        </div>
+                        <div class="col-lg-1" style="padding: 0; margin: 0">
+                            <h4 style="text-align: center">*</h4>
+                        </div>
+                        <div class="col-lg-2">
+                            {{ form.food_and_gas_number_of_limbo_girls|attr:"data-bind:value: foodGasNumberOfGirls"|attr:"class: form-control" }}
+                        </div>
+                        <div class="col-lg-1" style="padding: 0; margin: 0">
+                            <h4 style="text-align: center">*</h4>
+                        </div>
+                        <div class="col-lg-2">
+                            {{ form.food_and_gas_number_of_days|attr:"data-bind:value: foodGasNumberOfGirls"|attr:"class: form-control" }}
+                        </div>
+                        <div class="col-lg-2">
+                            |_________
+                        </div>
+                    </div>
+
+                    <label>Intercepted TOTAL</label>
+                    <p>The total is <span data-bind="text: foodGasInterceptedGirls"></span><br/></p>
+
+                    <label>Limbo TOTAL</label>
+                    <p>The total is <span data-bind="text: foodGasLimboGirls"></span><br/></p>
+
+                    <div class="row" style="text-align: center">
+                        <div class="col-lg-offset-10">
+                            <u><p>|<span data-bind="text: foodTotal"></span>|<br/></p></u>
+                            <label>TOTAL FOOD</label>
+                        </div>
+                    </div>
+                 </div>
 
             </div>
 
             <div class="row">
                 <div class="col-md-6">
                     <h2 class="background"><span>Communication</span></h2>
-                    {{ form.communication_chair|attr:"data-bind:checked: commChairBool"|bootstrap }}
-                    {{ form.communication_chair_amount|attr:"data-bind:value: commChairAmount"|bootstrap }}
-                    {{ form.communication_manager|attr:"data-bind:checked: commManagerBool"|bootstrap }}
-                    {{ form.communication_manager_amount|attr:"data-bind:value: commManagerAmount"|bootstrap }}
-                    {{ form.communication_number_of_staff_with_walkie_talkies|attr:"data-bind:value: commNumberOfStaffWt"|bootstrap }}
-                    {{ form.communication_number_of_staff_with_walkie_talkies_multiplier|attr:"data-bind:value: commNumberOfStaffWtMultiplier"|bootstrap }}
-                    {{ form.communication_each_staff|attr:"data-bind:value: commEachStaffWt"|bootstrap }}
-                    {{ form.communication_each_staff_multiplier|attr:"data-bind:value: commEachStaffWtMultiplier"|bootstrap }}
-                    <label>TOTAL COMM</label>
-                    <p>The total is <span data-bind="text: commTotal"></span><br/></p>
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="row" style="padding-bottom: 20px">
+                                <div class="col-lg-1"  style="padding:0;">
+                                    |{{ form.communication_chair|attr:"data-bind:checked: commChairBool" }}
+                                </div>
+                                <div class="col-lg-5" style="padding-left:0;">
+                                    {{ form.communication_chair_amount|attr:"data-bind:value: commChairAmount"|attr:"class: form-control"}}
+                                </div>
+                                <div class="col-lg-5" style="padding-left:0;">
+                                    <strong>{{ form.communication_chair.label }}</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-5">
+                            <div class="row">
+                                <div class="col-lg-1" style="padding:0;">
+                                    |{{ form.communication_manager|attr:"data-bind:checked: commManagerBool" }}
+                                </div>
+                                <div class="col-lg-5" style="padding-left:0;">
+                                    {{ form.communication_manager_amount|attr:"data-bind:value: commManagerAmount"|attr:"class: form-control" }}
+                                </div>
+                                <div class="col-lg-6" style="padding-left:0;">
+                                    <strong>{{ form.communication_manager_amount.label }}</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            |_________
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-5">
+                            {{ form.communication_number_of_staff_with_walkie_talkies|attr:"data-bind:value: commNumberOfStaffWt"|attr:"class: form-control" }}
+                            <strong>{{ form.communication_number_of_staff_with_walkie_talkies.label }}</strong>
+                        </div>
+                        <div class="col-lg-1" style="padding: 0; margin: 0">
+                            <h2 style="text-align: center;">*</h2>
+                        </div>
+                        <div class="col-lg-3">
+                            {{ form.communication_number_of_staff_with_walkie_talkies_multiplier|attr:"data-bind:value: commNumberOfStaffWtMultiplier"|attr:"class: form-control" }}
+                        </div>
+                        <div class="col-lg-1" style="padding: 0; margin: 0">
+                            <h2 style="text-align: center">=</h2>
+                        </div>
+                        <div class="col-lg-2">
+                            |_________
+                        </div>
+                    </div>
+
+
+
+                    <div class="row">
+                        <div class="col-lg-5">
+                            {{ form.communication_each_staff|attr:"data-bind:value: commEachStaffWt"|attr:"class: form-control" }}
+                            <strong>{{ form.communication_each_staff.label }}</strong>
+                        </div>
+                        <div class="col-lg-1" style="padding: 0; margin: 0">
+                            <h2 style="text-align: center">*</h2>
+                        </div>
+                        <div class="col-lg-3">
+                            {{ form.communication_each_staff_multiplier|attr:"data-bind:value: commEachStaffWtMultiplier"|attr:"class: form-control" }}
+                        </div>
+                        <div class="col-lg-1" style="padding: 0; margin: 0">
+                            <h2 style="text-align: center">=</h2>
+                        </div>
+                        <div class="col-lg-2">
+                            |_________
+                        </div>
+                    </div>
+                    <div class="row" style="text-align: center">
+                        <div class="col-lg-offset-10">
+                            <u><p>|<span data-bind="text: commTotal"></span>|<br/></p></u>
+                            <label>TOTAL COMM</label>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-md-6">
-                    <h2 class="background"><span>Food & Gas</span></h2>
-                    {{ form.food_and_gas_number_of_intercepted_girls|attr:"data-bind:value: foodGasNumberOfGirls"|bootstrap }}
-                    {{ form.food_and_gas_number_of_intercepted_girls_multiplier_before|attr:"data-bind:value: foodGasMultiplierBefore"|bootstrap }}
-                    {{ form.food_and_gas_number_of_intercepted_girls_multiplier_after|attr:"data-bind:value: foodGasMultiplierAfter"|bootstrap }}
-                    {{ form.food_and_gas_limbo_girls_multiplier|attr:"data-bind:value: limboMultiplier"|bootstrap }}
-                    {{ form.food_and_gas_number_of_limbo_girls|attr:"data-bind:value: limboNumberOfGirls"|bootstrap }}
-                    {{ form.food_and_gas_number_of_days|attr:"data-bind:value: limboNumberOfDays"|bootstrap }}
-
-                    <label>Intercepted TOTAL</label>
-                    <p>The total is <span data-bind="text: foodGasInterceptedGirls"></span><br/></p>
-
-                    <label>Intercepted TOTAL</label>
-                    <p>The total is <span data-bind="text: foodGasLimboGirls"></span><br/></p>
-
-                    <label>TOTAL FOOD</label>
-                    <p>The total is <span data-bind="text: foodTotal"></span><br/></p>
 
 
+                <div class="col-lg-6">
                     <h2 class="background"><span>Awareness</span></h2>
                     {{ form.awareness_contact_cards|bootstrap }}
                     {{ form.awareness_contact_cards_boolean_amount|bootstrap }}
@@ -131,10 +306,10 @@
                     {{ form.awareness_awareness_party|bootstrap }}
                     {{ form.awareness_sign_boards_boolean|bootstrap }}
                     {{ form.awareness_sign_boards|bootstrap }}
+                </div>
 
 
                 </div>
-            </div>
 
             <div class="row">
                 <div class="col-md-6">
