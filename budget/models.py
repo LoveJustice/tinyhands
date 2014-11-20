@@ -12,7 +12,7 @@ class BorderStationBudgetCalculation(models.Model):
     communication_chair = models.BooleanField(default=False)
     communication_chair_amount = models.PositiveIntegerField('for chair', default=1000)
     communication_manager = models.BooleanField(default=False)
-    communication_manager_amount = models.PositiveIntegerField('for manager (if station has manager)', default=1000)
+    communication_manager_amount = models.PositiveIntegerField('for manager', default=1000)
     communication_number_of_staff_with_walkie_talkies = models.PositiveIntegerField('# of staff with walkie-talkies', default=0)
     communication_number_of_staff_with_walkie_talkies_multiplier = models.PositiveIntegerField(default=100)
     communication_each_staff = models.PositiveIntegerField('each staff', default=0)

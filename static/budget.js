@@ -1,4 +1,20 @@
 function budgetViewModel() {
+    //Total Section
+    this.foodAndShelterTotal = ko.pureComputed(function() {
+        return parseFloat(this.foodTotal()) + parseFloat(this.shelterTotal());
+    }, this);
+    this.bunchTotal = ko.pureComputed(function() {
+        return parseFloat(this.commTotal()) + parseFloat(this.travelTotal()) + parseFloat(this.adminTotal()) +
+            parseFloat(this.medicalTotal());
+    }, this);
+    this.stationTotal = ko.pureComputed(function() {
+        return parseFloat(this.foodAndShelterTotal()) + parseFloat(this.bunchTotal()) +
+            parseFloat(this.awarenessTotal()) + parseFloat(this.suppliesTotal());
+    }, this);
+
+    //Misc Section
+    this.miscTotal = 0;
+
     //Medical Section
     this.medicalExpense = ko.observable(0);
     this.medicalTotal = ko.computed(function() {
@@ -44,7 +60,7 @@ function budgetViewModel() {
     this.travelNumberOfStaffUsingBikesMultiplier = ko.observable(1000);
     this.travelSendingGirlsHomeExpense = ko.observable(0);
     this.travelMotorbikeBool = ko.observable(false);
-    this.travelMotorbikeAmount = ko.observable(0);
+    this.travelMotorbikeAmount = ko.observable(60000);
     this.travelOther = ko.observable(0);
     this.travelTotal = ko.computed(function() {
         var amount = 0;
