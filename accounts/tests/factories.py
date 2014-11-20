@@ -1,5 +1,5 @@
-from factory.django import DjangoModelFactory
 import factory
+from factory.django import DjangoModelFactory
 
 from accounts.models import Account
 from accounts.models import DefaultPermissionsSet
@@ -7,7 +7,8 @@ from accounts.models import DefaultPermissionsSet
 class SuperUserDesignation(DjangoModelFactory):
     class Meta:
         model = DefaultPermissionsSet
-        
+
+    name = "Super User"
     permission_irf_view = True
     permission_irf_add = True
     permission_irf_edit = True
@@ -24,7 +25,8 @@ class SuperUserDesignation(DjangoModelFactory):
 class ViewUserDesignation(DjangoModelFactory):
     class Meta:
         model = DefaultPermissionsSet
-        
+
+    name = "View User"
     permission_irf_view = True
     permission_vif_view = True
     permission_border_stations_view = True
@@ -32,7 +34,8 @@ class ViewUserDesignation(DjangoModelFactory):
 class AddUserDesignation(DjangoModelFactory):
     class Meta:
         model = DefaultPermissionsSet
-        
+
+    name = "Add User"
     permission_irf_view = True
     permission_irf_add = True
     permission_vif_view = True
@@ -45,9 +48,9 @@ class UserFactory(DjangoModelFactory):
         model = Account
         abstract = True
         
-    email = "test@test.edu"
-    first_name = "test"
-    last_name = "test"
+    email = factory.Sequence(lambda n: 'test{0}@test.com'.format(n))
+    first_name = factory.Sequence(lambda n: 'test{0}'.format(n))
+    last_name = factory.Sequence(lambda n: 'test{0}'.format(n))
 
 class SuperUserFactory(UserFactory):
     permission_irf_view = True
