@@ -1,5 +1,13 @@
 {% load bootstrap %}
-<h1>Details</h1>
+<div class="row">
+    <div class="col-lg-6">
+        <h1>Details</h1>
+    </div>
+    <div class="col-lg-6">
+        <a class="btn btn-success pull-right" href="{% url 'budget_create' form.instance.id %}" style="height: 100%">Create A New Budget Calculation Form</a>
+    </div>
+</div>
+
 <hr/>
 <div class="row">
     <div class="col-sm-6">

@@ -1,38 +1,60 @@
 from braces.views import LoginRequiredMixin
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse_lazy
-from django.views.generic import ListView, DeleteView, CreateView
-from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSet
-from extra_views.generic import GenericInlineFormSet
-from rest_framework.exceptions import PermissionDenied
+from django.forms.models import modelformset_factory
+from django.shortcuts import get_object_or_404, render, redirect
+from django.views.generic import ListView, DeleteView
 from budget.forms import BorderStationBudgetCalculationForm
 from budget.models import BorderStationBudgetCalculation, OtherBudgetItemCost
-from dataentry.forms import BorderStationForm
-from static_border_stations.forms import StaffForm
 from static_border_stations.models import Staff, BorderStation
-from static_border_stations.views import StaffInline
 
 
-class OtherBudgetItemCostFormInline(InlineFormSet):
-    model = OtherBudgetItemCost
+@login_required
+def budget_calc_create(request, pk):
+    border_station = get_object_or_404(BorderStation, pk=pk)
+    border_station_staff = border_station.staff_set.all()
+    form = BorderStationBudgetCalculationForm()
+
+    StaffFormSet = modelformset_factory(model=Staff, extra=0)
+
+    if request.method == "POST":
+        staff_formset = StaffFormSet(request.POST or None, queryset=border_station_staff)
+        form = BorderStationBudgetCalculationForm(request.POST)
+        import ipdb
+        ipdb.set_trace()
+        if form.is_valid() and staff_formset.is_valid():
+            form.instance.border_station = border_station
+            form.save()
+            staff_formset.save()
+            return redirect("budget_list")
+
+    staff_formset = StaffFormSet(queryset=border_station_staff)
+    return render(request, 'budget/borderstationbudgetcalculation_form.html', locals())
 
 
-class BudgetCalcCreateView(CreateWithInlinesView, LoginRequiredMixin):
-    model = BorderStation
-    template_name = 'budget/borderstationbudgetcalculation_form.html'
-    second_form_class = BorderStationForm
-    form_class = BorderStationBudgetCalculationForm
-    success_url = reverse_lazy('budget_list')
+@login_required
+def budget_calc_update(request, pk):
+    budget_calc = get_object_or_404(BorderStationBudgetCalculation, pk=pk)
+    form = BorderStationBudgetCalculationForm(instance=budget_calc)
 
-    def get_context_data(self, **kwargs):
-        context = super(BudgetCalcCreateView, self).get_context_data(**kwargs)
-        context['form2'] = self.second_form_class()
-        context['form'] = self.form_class()
-        return context
+    border_station = budget_calc.border_station
+    border_station_staff = border_station.staff_set.all()
+    StaffFormSet = modelformset_factory(model=Staff, extra=0)
 
+    if request.method == "POST":
+        staff_formset = StaffFormSet(request.POST or None, queryset=border_station_staff)
+        form = BorderStationBudgetCalculationForm(request.POST, instance=budget_calc)
+        import ipdb
+        ipdb.set_trace()
+        if form.is_valid() and staff_formset.is_valid():
+            form.instance.border_station = border_station
+            form.save()
+            staff_formset.save()
+            return redirect("budget_list")
 
-class BorderStationSetInline(InlineFormSet):
-    model = BorderStation
+    staff_formset = StaffFormSet(queryset=border_station_staff)
+    return render(request, 'budget/borderstationbudgetcalculation_form.html', locals())
 
 
 class BudgetCalcListView(
@@ -41,21 +63,24 @@ class BudgetCalcListView(
     model = BorderStationBudgetCalculation
 
 
-class BudgetCalcUpdateView(
-        LoginRequiredMixin,
-        UpdateWithInlinesView):
-    model = BorderStationBudgetCalculation
-    form_class = BorderStationBudgetCalculationForm
-    success_url = reverse_lazy('budget_list')
+@login_required
+def budget_calc_view(request, pk):
+    budget_calc = get_object_or_404(BorderStationBudgetCalculation, pk=pk)
+    form = BorderStationBudgetCalculationForm(instance=budget_calc)
 
+    import ipdb
+    ipdb.set_trace()
 
-class BudgetCalcDetailView(BudgetCalcUpdateView, LoginRequiredMixin):
-    def post(self, request, *args, **kwargs):
-        raise PermissionDenied
+    border_station = budget_calc.border_station
+    border_station_staff = border_station.staff_set.all()
+
+    StaffFormSet = modelformset_factory(model=Staff, extra=0)
+    staff_formset = StaffFormSet(queryset=border_station_staff)
+
+    return render(request, 'budget/borderstationbudgetcalculation_form.html', locals())
 
 
 class BudgetCalcDeleteView(DeleteView, LoginRequiredMixin):
-
     model = BorderStationBudgetCalculation
     success_url = reverse_lazy('budget_list')
 
