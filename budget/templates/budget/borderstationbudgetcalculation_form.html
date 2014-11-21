@@ -17,16 +17,13 @@
 
      <form id="budget-calc-form" method="post">
         {% csrf_token %}
-            {{ form.errors }}
-            {{ form.non_field_errors }}
+        <!-- First Table Thing -->
         <div class="form-page">
             <div class="row">
                 <div class="col-md-4">
-                    Station Name: {{ border_station.station_name }} ({{ border_station.station_code }})
                 </div>
 
                 <div class="col-md-2">
-                    Date Submitted: {{ form.instance.date_time_entered|date:"D. M. Y."}}
                 </div>
 
                 <div class="col-md-4 col-md-offset-7">
@@ -62,12 +59,12 @@
                     </table>
                 </div>
             </div>
+            <!-- End First Table Thingy -->
 
+            <!-- Shelter -->
             <div class="row">
                 <div class="col-md-6">
                     <h2 class="background"><span>Staff Salaries</span></h2>
-
-
                     {{ staff_formset.management_form }}
                     {% for staff_form in staff_formset %}
                         {% for hidden in staff_form.hidden_fields %}
@@ -82,227 +79,215 @@
                         {{ staff_form.instance.last_name }}
                         {{ staff_form.salary|bootstrap }}
                     {% endfor %}
-
-
+                    We need to render this from the static station model
                 </div>
                 <div class="col-md-6">
                     <h2 class="background"><span>Shelter</span></h2>
                     <div class="row">
-                        <div class="col-lg-2">
+                        <div class="col-lg-2 input-with-text calc-form-input-no-width" style="width: 100px; padding: 0">
                             {{ form.shelter_rent|attr:"data-bind:value: shelterRent"|attr:"class: form-control" }}
+                            <small>Rent</small>
                         </div>
-                        <div class="col-lg-1" style="padding: 0; margin: 0">
+                        <div class="col-lg-1 form-symbol" style="padding: 0">
                             <h4 style="text-align: center">+</h4>
                         </div>
-                        <div class="col-lg-2">
+                        <div class="col-lg-2 input-with-text calc-form-input-no-width" style="width: 100px; padding: 0">
                             {{ form.shelter_water|attr:"data-bind:value: shelterWater"|attr:"class: form-control" }}
+                            <small>Water</small>
                         </div>
-                        <div class="col-lg-1" style="padding: 0; margin: 0">
+                        <div class="col-lg-1 form-symbol" style="padding: 0">
                             <h4 style="text-align: center">+</h4>
                         </div>
-                        <div class="col-lg-2">
+                        <div class="col-lg-2 input-with-text calc-form-input-no-width" style="width: 100px; padding: 0">
                             {{ form.shelter_electricity|attr:"data-bind:value: shelterElectricity"|attr:"class: form-control" }}
+                            <small>Electricity</small>
                         </div>
-                        <div class="col-lg-2">
-                            |_________
+                        <div class="col-lg-1 form-symbol" style="padding: 0">
+                            <h4 style="text-align: center">=</h4>
+                        </div>
+                        <div class="col-lg-1 pull-right input-group" style="width: 100px; text-align: center; padding: 0">
+                            <div class="input-group-addon">$</div>
+                            <input class="form-control text-center" data-bind="value: utilTotal" disabled="disabled"/>
                         </div>
                     </div>
 
-                    <div class="row">
-                        <div class="col-lg-3">
-                            {{ form.shelter_shelter_startup|attr:"data-bind:checked: shelterStartupBool"|bootstrap }}
+                    <div class="row" style="margin-top: 30px; text-align: center">
+                        <div class="col-lg-2" style="margin-top: 5px; width: 50px">
+                            {{ form.shelter_shelter_startup|attr:"data-bind:checked: shelterStartupBool" }}
                         </div>
-                        <div class="col-lg-3">
+                        <div class="col-lg-2 input-with-text" style="width: 100px; padding: 0">
                             {{ form.shelter_shelter_startup_amount|attr:"data-bind:value: shelterStartupAmount"|attr:"class: form-control" }}
+                            <small>Shelter Startup</small>
                         </div>
-                        <div class="col-lg-2 col-lg-offset-2">
-                            |_________
+                        <div class="col-lg-2" style="margin-top: 5px; width: 50px">
+                            {{ form.shelter_shelter_two|attr:"data-bind:checked: shelterTwoBool" }}
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-3">
-                            {{ form.shelter_shelter_two|attr:"data-bind:checked: shelterTwoBool"|bootstrap }}
-                        </div>
-                        <div class="col-lg-3">
+                        <div class="col-lg-2 input-with-text" style="width: 100px; padding: 0">
                             {{ form.shelter_shelter_two_amount|attr:"data-bind:value: shelterTwoAmount"|attr:"class: form-control" }}
+                            <small>Shelter 2</small>
                         </div>
-                        <div class="col-lg-2 col-lg-offset-2">
-                            |_________
+                        <div class="col-lg-1" style="padding: 0">
+                            <h4 style="text-align: center">=</h4>
+                        </div>
+                        <div class="col-lg-1 pull-right input-group" style="width: 100px; text-align: center; padding: 0">
+                            <div class="input-group-addon">$</div>
+                            <input class="form-control text-center" data-bind="value: shelterCheckboxTotal" disabled="disabled"/>
                         </div>
                     </div>
 
-
-                    <div class="row" style="text-align: center">
-                        <div class="col-lg-offset-6">
-                            <u><p>|<span data-bind="text: shelterCheckboxTotal">|<br/></p></u>
-                        <label>Shelter Checkbox Total</label>
-                        </div>
-                    </div>
-                    <div class="row" style="text-align: center">
-                        <div class="col-lg-offset-6">
-                            <u><p>|<span data-bind="text: shelterTotal"></span>|<br/></p></u>
-                        <label for="shelterTotal">Shelter TOTAL</label>
-                        </div>
+                    <div class="row center" style="margin-top: 20px; padding-right: 200px; padding-left: 200px; text-align: center">
+                        <label>Shelter Total</label>
+                        <input class="form-control text-center" data-bind="value: shelterTotal" disabled="disabled"/>
                     </div>
                 </div>
+                <!-- End Shelter -->
+
+                <!-- Food & Gas -->
                 <div class="col-lg-6 col-lg-offset-6">
                     <h2 class="background"><span>Food & Gas</span></h2>
                     <div class="row">
-                        <div class="col-lg-2">
+                        <div class="col-lg-2 text-center">
                             <strong>Intercepted Girls</strong>
                         </div>
-                        <div class="col-lg-1" style="padding: 0; margin: 0">
+                        <div class="col-lg-1 form-symbol">
                             <h4 style="text-align: center">=</h4>
                         </div>
-                        <div class="col-lg-2">
+                        <div class="col-lg-2 calc-form-input">
                             {{ form.food_and_gas_number_of_intercepted_girls_multiplier_before|attr:"data-bind:value: foodGasMultiplierBefore"|attr:"class: form-control" }}
                         </div>
-                        <div class="col-lg-1" style="padding: 0; margin: 0">
+                        <div class="col-lg-1 form-symbol">
                             <h4 style="text-align: center">*</h4>
                         </div>
-                        <div class="col-lg-2">
+                        <div class="col-lg-2 calc-form-input input-with-text">
                             {{ form.food_and_gas_number_of_intercepted_girls|attr:"data-bind:value: foodGasNumberOfGirls"|attr:"class: form-control" }}
+                            <small># of Girls</small>
                         </div>
-                        <div class="col-lg-2">
-                            {{ form.food_and_gas_number_of_intercepted_girls_multiplier_after|attr:"data-bind:value: foodGasNumberOfGirls"|attr:"class: form-control" }}
+                         <div class="col-lg-1 form-symbol">
+                            <h4 style="text-align: center">*</h4>
                         </div>
-
+                        <div class="col-lg-2 calc-form-input">
+                            {{ form.food_and_gas_number_of_intercepted_girls_multiplier_after|attr:"data-bind: value: foodGasMultiplierAfter"|attr:"class: form-control" }}
+                        </div>
+                        <div class="col-lg-1 form-symbol">
+                            <h4 style="text-align: center">=</h4>
+                        </div>
+                        <div class="col-lg-2 pull-right input-group" style="padding: 0">
+                            <div class="input-group-addon">$</div>
+                            <input class="form-control text-center" data-bind="value: foodGasInterceptedGirls" disabled="disabled"/>
+                        </div>
                     </div>
 
-                    <div class="row">
-                        <div class="col-lg-2">
+                    <div class="row" style="margin-top: 20px">
+                        <div class="col-lg-2 text-center">
                             <strong>Limbo Girls</strong>
                         </div>
-
-                        <div class="col-lg-1" style="padding: 0; margin: 0">
+                        <div class="col-lg-1 form-symbol">
                             <h4 style="text-align: center">=</h4>
                         </div>
-
-                        <div class="col-lg-2">
+                        <div class="col-lg-2 calc-form-input">
                             {{ form.food_and_gas_limbo_girls_multiplier|attr:"data-bind:value: limboMultiplier"|attr:"class: form-control" }}
                         </div>
-                        <div class="col-lg-1" style="padding: 0; margin: 0">
+                        <div class="col-lg-1 form-symbol">
                             <h4 style="text-align: center">*</h4>
                         </div>
-                        <div class="col-lg-2">
+                        <div class="col-lg-2 calc-form-input input-with-text">
                             {{ form.food_and_gas_number_of_limbo_girls|attr:"data-bind:value: limboNumberOfGirls"|attr:"class: form-control" }}
+                            <small># of Girls</small>
                         </div>
-                        <div class="col-lg-1" style="padding: 0; margin: 0">
+                        <div class="col-lg-1 form-symbol">
                             <h4 style="text-align: center">*</h4>
                         </div>
-                        <div class="col-lg-2">
+                        <div class="col-lg-2 calc-form-input input-with-text">
                             {{ form.food_and_gas_number_of_days|attr:"data-bind:value: limboNumberOfDays"|attr:"class: form-control" }}
+                            <small># of Days</small>
+                        </div>
+                        <div class="col-lg-1 form-symbol">
+                            <h4 style="text-align: center">=</h4>
+                        </div>
+                        <div class="col-lg-2 pull-right input-group" style="padding: 0">
+                            <div class="input-group-addon">$</div>
+                            <input class="form-control text-center" data-bind="value: foodGasLimboGirls" disabled="disabled"/>
                         </div>
                     </div>
 
-                    <div class="row" style="text-align: center">
-                        <div class="col-lg-4">
-                            <u><p>|<span data-bind="text: foodGasInterceptedGirls"></span>|<br/></p></u>
-                            <label>Intercepted TOTAL</label>
-                        </div>
-                        <div class="col-lg-1" style="padding: 0; margin: 0">
-                            <h4 style="text-align: center">+</h4>
-                        </div>
-                        <div class="col-lg-3">
-                            <u><p>|<span data-bind="text: foodGasLimboGirls"></span>|<br/></p></u>
-                            <label>Limbo TOTAL</label>
-                        </div>
-                        <div class="col-lg-1" style="padding: 0; margin: 0">
-                            <h4 style="text-align: center">=</h4>
-                        </div>
-                        <div class="col-lg-3">
-                            <u><p>|<span data-bind="text: foodTotal"></span>|<br/></p></u>
-                            <label>TOTAL FOOD</label>
-                        </div>
+                    <div class="row center" style="margin-top: 20px; padding-right: 200px; padding-left: 200px; text-align: center">
+                        <label>Total Food</label>
+                        <input class="form-control text-center" data-bind="value: foodTotal" disabled="disabled"/>
                     </div>
                  </div>
             </div>
+            <!-- End Food & Gas -->
 
+            <!-- Communication -->
             <div class="row">
                 <div class="col-md-6">
                     <h2 class="background"><span>Communication</span></h2>
                     <div class="row">
-                        <div class="col-lg-5">
-                            <div class="row" style="padding-bottom: 20px">
-                                <div class="col-lg-1"  style="padding:0;">
-                                    {{ form.communication_chair|attr:"data-bind:checked: commChairBool" }}
-                                </div>
-                                <div class="col-lg-5" style="padding-left:0;">
-                                    {{ form.communication_chair_amount|attr:"data-bind:value: commChairAmount"|attr:"class: form-control"}}
-                                </div>
-                                <div class="col-lg-5" style="padding-left:0;">
-                                    <strong>{{ form.communication_chair.label }}</strong>
-                                </div>
-                            </div>
+                        <div class="col-md-6 form-inline">
+                            <span style="padding-right: 10px">{{ form.communication_chair | attr:"data-bind: checked: commChairBool"}}</span>
+                            {{ form.communication_chair_amount | attr:"class: form-control" | attr:"style: width: 100px" | attr:"data-bind:value: commChairAmount"}}
+                            <span style="padding-left: 10px"><small>for chair</small></span>
                         </div>
-                        <div class="col-lg-5">
-                            <div class="row">
-                                <div class="col-lg-1" style="padding:0;">
-                                    {{ form.communication_manager|attr:"data-bind:checked: commManagerBool" }}
-                                </div>
-                                <div class="col-lg-5" style="padding-left:0;">
-                                    {{ form.communication_manager_amount|attr:"data-bind:value: commManagerAmount"|attr:"class: form-control" }}
-                                </div>
-                                <div class="col-lg-6" style="padding-left:0;">
-                                    <strong>{{ form.communication_manager_amount.label }}</strong>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-2">
-                            |_________
+                        <div class="col-md-6 form-inline">
+                            <span style="padding-right: 10px">{{ form.communication_manager | attr:"data-bind: checked: commManagerBool" }}</span>
+                            {{ form.communication_manager_amount | attr:"class: form-control" | attr:"style: width: 100px" | attr:"data-bind:value: commManagerAmount" }}
+                            <span style="padding-left: 10px;"><small>for manager</small></span>
                         </div>
                     </div>
 
-                    <div class="row">
-                        <div class="col-lg-5">
+                    <div class="row" style="margin-top: 20px">
+                        <div class="col-lg-5 calc-form-input-no-width input-with-text" style="width: 200px">
                             {{ form.communication_number_of_staff_with_walkie_talkies|attr:"data-bind:value: commNumberOfStaffWt"|attr:"class: form-control" }}
-                            <strong>{{ form.communication_number_of_staff_with_walkie_talkies.label }}</strong>
+                            <small># of staff with walkie-talkies</small>
                         </div>
-                        <div class="col-lg-1" style="padding: 0; margin: 0">
+                        <div class="col-lg-1 form-symbol" style="padding: 0; margin: 0">
                             <h4 style="text-align: center">*</h4>
                         </div>
-                        <div class="col-lg-3">
+                        <div class="col-lg-3 calc-form-input-no-width">
                             {{ form.communication_number_of_staff_with_walkie_talkies_multiplier|attr:"data-bind:value: commNumberOfStaffWtMultiplier"|attr:"class: form-control" }}
                         </div>
-                        <div class="col-lg-1" style="padding: 0; margin: 0">
+                        <div class="col-lg-1 form-symbol" style="padding: 0; margin: 0">
                             <h4 style="text-align: center">=</h4>
                         </div>
-                        <div class="col-lg-2">
-                            |_________
+                        <div class="col-lg-2 calc-form-input-no-width pull-right input-group">
+                            <div class="input-group-addon">$</div>
+                            <input class="form-control text-center" data-bind="value: commNumberOfStaffTotal" disabled="disabled"/>
                         </div>
                     </div>
 
 
 
-                    <div class="row">
-                        <div class="col-lg-5">
+                    <div class="row" style="margin-top: 20px;">
+                        <div class="col-lg-5 calc-form-input-no-width input-with-text" style="width: 200px">
                             {{ form.communication_each_staff|attr:"data-bind:value: commEachStaffWt"|attr:"class: form-control" }}
-                            <strong>{{ form.communication_each_staff.label }}</strong>
+                            <small>Each Staff</small>
                         </div>
-                        <div class="col-lg-1" style="padding: 0; margin: 0">
+                        <div class="col-lg-1 form-symbol" style="padding: 0; margin: 0">
                             <h4 style="text-align: center">*</h4>
                         </div>
-                        <div class="col-lg-3">
+                        <div class="col-lg-3 calc-form-input-no-width">
                             {{ form.communication_each_staff_multiplier|attr:"data-bind:value: commEachStaffWtMultiplier"|attr:"class: form-control" }}
                         </div>
-                        <div class="col-lg-1" style="padding: 0; margin: 0">
+                        <div class="col-lg-1 form-symbol" style="padding: 0; margin: 0">
                             <h4 style="text-align: center">=</h4>
                         </div>
-                        <div class="col-lg-2">
-                            |_________
+                        <div class="col-lg-2 calc-form-input-no-width pull-right input-group">
+                            <div class="input-group-addon">$</div>
+                            <input class="form-control text-center" data-bind="value: commEachStaffTotal" disabled="disabled"/>
                         </div>
                     </div>
-                    <div class="row" style="text-align: center">
-                        <div class="col-lg-offset-10">
-                            <u><p>|<span data-bind="text: commTotal"></span>|<br/></p></u>
-                            <label>TOTAL COMM</label>
-                        </div>
+                    <div class="row center" style="margin-top: 20px; padding-right: 200px; padding-left: 200px; text-align: center">
+                        <label>Total Communcation</label>
+                        <input class="form-control text-center" data-bind="value: commTotal" disabled="disabled"/>
                     </div>
                 </div>
+                <!-- End Communication -->
+
+                <!-- Awareness -->
                 <div class="col-lg-6">
                     <h2 class="background"><span>Awareness</span></h2>
                     <div class="row">
-                        <div class="col-lg-4 col-lg-offset-4">
+                        <div class="col-lg-4 col-lg-offset-2">
                             {{ form.awareness_contact_cards|attr:"data-bind:checked: awarenessContactCardsBool"|bootstrap }}
                         </div>
                         <div class="col-lg-4">
@@ -311,7 +296,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-lg-4 col-lg-offset-4">
+                        <div class="col-lg-4 col-lg-offset-2">
                             {{ form.awareness_awareness_party_boolean|attr:"data-bind:checked: awarenessAwarenessPartyBool"|bootstrap }}
                         </div>
                         <div class="col-lg-4">
@@ -319,7 +304,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-lg-4 col-lg-offset-4">
+                        <div class="col-lg-4 col-lg-offset-2">
                             {{ form.awareness_sign_boards_boolean|attr:"data-bind:checked: awarenessSignBoardsBool"|bootstrap }}
                         </div>
                         <div class="col-lg-4">
@@ -327,111 +312,100 @@
                         </div>
                     </div>
 
-                    <div class="row" style="text-align: center">
-                        <div class="col-lg-offset-10">
-                            <u><p><span data-bind="text: awarenessTotal"></span><br/></p></u>
-                            <label>TOTAL AWARENESS</label>
-                        </div>
+                    <div class="row center" style="margin-top: 20px; padding-right: 200px; padding-left: 200px; text-align: center">
+                        <label>Total Awareness</label>
+                        <input class="form-control text-center" data-bind="value: awarenessTotal" disabled="disabled"/>
                     </div>
                 </div>
             </div>
+            <!-- End Awareness -->
 
+            <!-- Travel -->
             <div class="row">
                 <div class="col-md-6">
                     <h2 class="background"><span>Travel</span></h2>
 
                     <div class="row">
-                        <div class="col-lg-5">
-                            <div class="row" style="padding-bottom: 20px">
-                                <div class="col-lg-1"  style="padding:0;">
-                                    {{ form.travel_chair_with_bike|attr:"data-bind:checked: travelChairWithBikeBool" }}
-                                </div>
-                                <div class="col-lg-5" style="padding-left:0;">
-                                    {{ form.travel_chair_with_bike_amount|attr:"data-bind:value: travelChairWithBikeAmount"|attr:"class: form-control"}}
-                                </div>
-                                <div class="col-lg-5" style="padding-left:0;">
-                                    <strong>{{ form.travel_chair_with_bike.label }}</strong>
-                                </div>
-                            </div>
+                        <div class="col-md-6 form-inline">
+                            <span style="padding-right: 10px">{{ form.travel_chair_with_bike | attr:"data-bind: checked: travelChairWithBikeBool"}}</span>
+                            {{ form.travel_chair_with_bike_amount | attr:"class: form-control" | attr:"style: width: 100px" | attr:"data-bind:value: travelChairWithBikeAmount"}}
+                            <span style="padding-left: 10px"><small>for chair</small></span>
                         </div>
-                        <div class="col-lg-5">
-                            <div class="row">
-                                <div class="col-lg-1" style="padding:0;">
-                                    {{ form.travel_manager_with_bike|attr:"data-bind:checked: travelManagerWithBikeBool" }}
-                                </div>
-                                <div class="col-lg-5" style="padding-left:0;">
-                                    {{ form.travel_manager_with_bike_amount|attr:"data-bind:value: travelManagerWithBikeAmount"|attr:"class: form-control" }}
-                                </div>
-                                <div class="col-lg-6" style="padding-left:0;">
-                                    <strong>{{ form.travel_manager_with_bike.label }}</strong>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-2">
-                            |_________
+                        <div class="col-md-6 form-inline">
+                            <span style="padding-right: 10px">{{ form.travel_manager_with_bike | attr:"data-bind: checked: travelManagerWithBikeBool" }}</span>
+                            {{ form.travel_manager_with_bike_amount | attr:"class: form-control" | attr:"style: width: 100px" | attr:"data-bind:value: travelManagerWithBikeAmount" }}
+                            <span style="padding-left: 10px;"><small>for manager</small></span>
                         </div>
                     </div>
 
-
-
-                    <div class="row">
-                        <div class="col-lg-5">
+                    <div class="row" style="margin-top: 20px; padding-left: 15px">
+                        <div class="col-lg-5 calc-form-input-no-width input-with-text" style="width: 150px">
                             {{ form.travel_number_of_staff_using_bikes|attr:"data-bind:value: travelNumberOfStaffUsingBikes"|attr:"class: form-control" }}
-                            <strong>{{ form.travel_number_of_staff_using_bikes.label }}</strong>
+                            <small># of staff using bikes</small>
                         </div>
-                        <div class="col-lg-1" style="padding: 0; margin: 0">
+                        <div class="col-lg-1 form-symbol" style="padding: 0; margin: 0">
                             <h4 style="text-align: center">*</h4>
                         </div>
-                        <div class="col-lg-3">
+                        <div class="col-lg-3 calc-form-input-no-width">
                             {{ form.travel_number_of_staff_using_bikes_multiplier|attr:"data-bind:value: travelNumberOfStaffUsingBikesMultiplier"|attr:"class: form-control" }}
                         </div>
-                        <div class="col-lg-1" style="padding: 0; margin: 0">
+                        <div class="col-lg-1 form-symbol" style="padding: 0; margin: 0">
                             <h4 style="text-align: center">=</h4>
                         </div>
-                        <div class="col-lg-2">
-                            |_________
+                        <div class="col-lg-2 pull-right input-group" style="padding: 0">
+                            <div class="input-group-addon">$</div>
+                            <input class="form-control text-center" data-bind="value: travelNumberOfStaffUsingBikesTotal" disabled="disabled"/>
                         </div>
                     </div>
 
-                    <div class="row" style="padding: 10px;margin: 10px 10px 10px 10px" >
-                        {{ form.travel_last_months_expense_for_sending_girls_home|attr:"data-bind:value: travelSendingGirlsHomeExpense"|bootstrap_horizontal:'col-lg-10'  }}
+                    <div class="row form-inline" style="margin-top: 30px">
+                        <div class="col-lg-11">
+                            <span><strong>Last month's expense for sending girls home: </strong></span>
+                            {{ form.travel_last_months_expense_for_sending_girls_home|attr:"data-bind:value: travelSendingGirlsHomeExpense"|attr:"class: form-control"|attr:"style: width: 150px" }}
+                        </div>
+                        <div class="col-lg-1 form-symbol">
+                            <h4 style="text-align: center">=</h4>
+                        </div>
                     </div>
 
 
-                    <div class="row">
+                    <div class="row" style="margin-top: 30px; padding-left: 15px">
                         <div class="col-lg-2">
-                            {{ form.travel_motorbike|attr:"data-bind:checked: travelMotorbikeBool"|bootstrap }}
+                            {{ form.travel_motorbike|attr:"data-bind:checked: travelMotorbikeBool" }}
                         </div>
-
-                        <div class="col-lg-3">
+                        <div class="col-lg-3 calc-form-input-no-width input-with-text">
                             {{ form.travel_motorbike_amount|attr:"data-bind:value: travelMotorbikeAmount"|attr:"class: form-control" }}
+                            <small>Motorbike</small>
                         </div>
-                        <div class="col-lg-1" style="padding: 0; margin: 0">
+                        <div class="col-lg-1 form-symbol">
                             <h4 style="text-align: center">+</h4>
                         </div>
-                        <div class="col-lg-3">
+                        <div class="col-lg-3 calc-form-input-no-width input-with-text">
                             {{ form.travel_plus_other|attr:"data-bind:value: travelOther"|attr:"class: form-control" }}
+                            <small>Other</small>
                         </div>
-                        <div class="col-lg-1" style="padding: 0; margin: 0">
+                        <div class="col-lg-1 form-symbol">
                             <h4 style="text-align: center">=</h4>
                         </div>
-                        <div class="col-lg-2">
-                            |_________
+                        <div class="col-lg-2 pull-right input-group" style="padding: 0">
+                            <div class="input-group-addon">$</div>
+                            <input class="form-control text-center" data-bind="value: travelNumberOfStaffUsingBikesTotal" disabled="disabled"/>
                         </div>
                     </div>
 
-                    <div class="row" style="text-align: center">
-                        <div class="col-lg-offset-10">
-                            <u><p><span data-bind="text: travelTotal"></span><br/></p></u>
-                            <label>TOTAL TRAVEL</label>
-                        </div>
+                    <div class="row center" style="margin-top: 20px; padding-right: 200px; padding-left: 200px; text-align: center">
+                        <label>Total Travel</label>
+                        <input class="form-control text-center" data-bind="value: travelTotal" disabled="disabled"/>
                     </div>
 
                 </div>
+                <!-- End Travel -->
+
+                <!-- Supplies -->
                 <div class="col-md-6">
                     <h2 class="background"><span>Supplies</span></h2>
                     <div class="row">
-                        <div class="col-lg-4 col-lg-offset-4">
+                        <div class="col-lg-4 col-lg-offset-2">
                             {{ form.supplies_walkie_talkies_boolean|attr:"data-bind:checked: suppliesWalkieTalkiesBool"|bootstrap }}
                         </div>
                         <div class="col-lg-4">
@@ -439,7 +413,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-lg-4 col-lg-offset-4">
+                        <div class="col-lg-4 col-lg-offset-2">
                             {{ form.supplies_recorders_boolean|attr:"data-bind:checked: suppliesRecordersBool"|bootstrap }}
                         </div>
                         <div class="col-lg-4">
@@ -447,7 +421,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-lg-4 col-lg-offset-4">
+                        <div class="col-lg-4 col-lg-offset-2">
                             {{ form.supplies_binoculars_boolean|attr:"data-bind:checked: suppliesBinocularsBool"|bootstrap }}
                         </div>
                         <div class="col-lg-4">
@@ -455,7 +429,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-lg-4 col-lg-offset-4">
+                        <div class="col-lg-4 col-lg-offset-2">
                             {{ form.supplies_flashlights_boolean|attr:"data-bind:checked: suppliesFlashlightsBool"|bootstrap }}
                         </div>
                         <div class="col-lg-4">
@@ -463,37 +437,94 @@
                         </div>
                     </div>
 
-                    <div class="row" style="text-align: center">
-                        <div class="col-lg-offset-10">
-                            <u><p><span data-bind="text: suppliesTotal"></span><br/></p></u>
-                            <label>TOTAL SUPPLIES</label>
-                        </div>
+                    <div class="row center" style="margin-top: 20px; padding-right: 200px; padding-left: 200px; text-align: center">
+                        <label>Total Supplies</label>
+                        <input class="form-control text-center" data-bind="value: suppliesTotal" disabled="disabled"/>
                     </div>
                 </div>
             </div>
+            <!-- End Supplies -->
 
+            <!-- Administration -->
             <div class="row">
                 <div class="col-md-6">
                     <h2 class="background"><span>Administration</span></h2>
+                    <div class="row">
+                        <div class="col-md-2 input-with-text calc-form-input-no-width">
+                            {{ form.administration_number_of_intercepts_last_month|attr:"data-bind:value: adminNumberOfInterceptionsLastMonth"|attr:"class: form-control" }}
+                            <small># of intercepts last month</small>
+                        </div>
+                        <div class="col-md-1 form-symbol">
+                            <h4 style="text-align: center">*</h4>
+                        </div>
+                        <div class="col-md-2 calc-form-input-no-width">
+                            {{ form.administration_number_of_intercepts_last_month_multiplier|attr:"data-bind:value: adminNumberOfInterceptionsLastMonthMultiplier"|attr:"class: form-control" }}
+                        </div>
+                        <div class="col-md-1 form-symbol">
+                            <h4 style="text-align: center">+</h4>
+                        </div>
+                        <div class="col-md-2 calc-form-input-no-width">
+                            {{ form.administration_number_of_intercepts_last_month_adder|attr:"data-bind:value: adminNumberOfInterceptionsLastMonthAdder"|attr:"class: form-control" }}
+                        </div>
+                        <div class="col-md-1 form-symbol">
+                            <h4 style="text-align: center">=</h4>
+                        </div>
+                        <div class="col-lg-2 pull-right input-group" style="width: 150px; padding: 0">
+                            <div class="input-group-addon">$</div>
+                            <input class="form-control text-center" data-bind="value: adminStationaryTotal" disabled="disabled"/>
+                        </div>
+                    </div>
+                    <div class="row row-padding" >
+                        <div class="col-md-2 input-with-text calc-form-input-no-width">
+                            {{ form.administration_number_of_meetings_per_month|attr:"data-bind:value: adminNumberOfMeetingsPerMonth"|attr:"class: form-control" }}
+                            <small># of meetings per month</small>
+                        </div>
+                        <div class="col-md-1 form-symbol">
+                            <h4 style="text-align: center">*</h4>
+                        </div>
+                        <div class="col-md-2 calc-form-input-no-width">
+                            {{ form.administration_number_of_meetings_per_month_multiplier|attr:"data-bind:value: adminNumberOfMeetingsPerMonthMultiplier"|attr:"class: form-control" }}
+                        </div>
+                        <div class="col-md-1 form-symbol">
+                            <h4 style="text-align: center">=</h4>
+                        </div>
+                        <div class="col-lg-2 pull-right input-group" style="width: 150px; padding: 0">
+                            <div class="input-group-addon">$</div>
+                            <input class="form-control text-center" data-bind="value: adminMeetingsTotal" disabled="disabled"/>
+                        </div>
+                    </div>
+                    <div class="row row-padding">
+                        <div class="col-lg-2" style="margin-top: 7px; width: 50px">
+                            <small>{{ form.administration_booth|attr:"data-bind:checked: adminBoothBool" }}</small>
+                        </div>
+                        <div class="col-lg-2 input-with-text" style="width: 100px; padding: 0">
+                            {{ form.administration_booth_amount|attr:"data-bind:value: adminBoothAmount"|attr:"class: form-control" }}
+                            <small>Booth</small>
+                        </div>
+                        <div class="col-lg-2" style="margin-top: 7px; width: 50px">
+                            {{ form.administration_registration|attr:"data-bind:checked: adminRegistrationBool" }}
+                        </div>
+                        <div class="col-lg-2 input-with-text" style="widthL 100px; padding: 0">
+                            {{ form.administration_registration_amount|attr:"data-bind:value: adminRegistrationAmount"|attr:"class: form-control"}}
+                            <small>Registration</small>
+                        </div>
+                        <div class="col-md-1 form-symbol">
+                            <h4 style="text-align: center">=</h4>
+                        </div>
+                        <div class="col-lg-2 pull-right input-group" style="width: 150px; padding: 0">
+                            <div class="input-group-addon">$</div>
+                            <input class="form-control text-center" data-bind="value: adminBoothRentalTotal" disabled="disabled"/>
+                        </div>
+                    </div>
 
-                    {{ form.administration_number_of_intercepts_last_month|attr:"data-bind:value: adminNumberOfInterceptionsLastMonth"|bootstrap }}
-                    {{ form.administration_number_of_intercepts_last_month_multiplier|attr:"data-bind:value: adminNumberOfInterceptionsLastMonthMultiplier"|bootstrap }}
-                    {{ form.administration_number_of_intercepts_last_month_adder|attr:"data-bind:value: adminNumberOfInterceptionsLastMonthAdder"|bootstrap }}
-                    {{ form.administration_number_of_meetings_per_month|attr:"data-bind:value: adminNumberOfMeetingsPerMonth"|bootstrap }}
-                    {{ form.administration_number_of_meetings_per_month_multiplier|attr:"data-bind:value: adminNumberOfMeetingsPerMonthMultiplier"|bootstrap }}
-                    {{ form.administration_booth|attr:"data-bind:checked: adminBoothBool"|bootstrap }}
-                    {{ form.administration_booth_amount|attr:"data-bind:value: adminBoothAmount"|bootstrap }}
-                    {{ form.administration_registration|attr:"data-bind:checked: adminRegistrationBool"|bootstrap }}
-                    {{ form.administration_registration_amount|attr:"data-bind:value: adminRegistrationAmount"|bootstrap }}
-                    <label>Stationary</label>
-                    <p>The total is <span data-bind="text: adminStationaryTotal"></span><br/></p>
-                    <label>Meetings</label>
-                    <p>The total is <span data-bind="text: adminMeetingsTotal"></span><br/></p>
-                    <label>Booth Rental</label>
-                    <p>The total is <span data-bind="text: adminBoothRentalTotal"></span><br/></p>
-                    <label>ADMIN TOTAL</label>
-                    <p>The total is <span data-bind="text: adminTotal"></span><br/></p>
+                    <div class="row center" style="margin-top: 20px; padding-right: 200px; padding-left: 200px; text-align: center">
+                        <label>Total Admininstration</label>
+                        <input class="form-control text-center" data-bind="value: adminTotal" disabled="disabled"/>
+                    </div>
                 </div>
+                <!-- End Administration -->
+
+                <!-- Total Table -->
                 <div class="col-md-6">
                     <table class="table table-bordered table-hover">
                         <thead>
@@ -580,29 +611,66 @@
                     </table>
                 </div>
             </div>
+            <!-- End Table -->
 
+            <!-- Medical -->
             <div class="row">
                 <div class="col-md-6">
                     <h2 class="background"><span>Medical</span></h2>
-                    {{ form.medical_last_months_expense|attr:"data-bind:value: medicalExpense"|bootstrap }}
+                    <div class="row form-inline">
+                        <div class="col-md-5 pull-left input-with-text" style="width: 270px">
+                            {{ form.medical_last_months_expense|attr:"data-bind:value: medicalExpense"|attr:"class: form-control text-center" }}
+                            <small>Last month's medical expense</small>
+                        </div>
+                        <div class="col-md-1 form-symbol">
+                            <h4 style="text-align: center">=</h4>
+                        </div>
+                        <div class="col-md-6" style="width: 260px">
+                            <input class="form-control text-center pull-right" data-bind="value: medicalTotal" disabled="disabled"/>
+                        </div>
+                    </div>
                 </div>
             </div>
+            <!-- End Medical -->
 
+            <!-- Miscellaneous -->
             <div class="row">
                 <div class="col-md-6">
                     <h2 class="background"><span>Miscellaneous</span></h2>
-                    {{ form.miscellaneous_number_of_intercepts_last_month|bootstrap }}
-                    {{ form.miscellaneous_number_of_intercepts_last_month_multiplier|bootstrap }}
-
+                    <div class="row">
+                        <div class="col-lg-2 input-with-text calc-form-input-no-width">
+                            {{ form.miscellaneous_number_of_intercepts_last_month|attr:"class: form-control"|attr:"data-bind:value: miscNumberOfIntercepts" }}
+                            <small># of intercepts last month</small>
+                        </div>
+                        <div class="col-lg-1 form-symbol">
+                            <h4 style="text-align: center">*</h4>
+                        </div>
+                        <div class="col-lg-2 calc-form-input-no-width">
+                            {{ form.miscellaneous_number_of_intercepts_last_month_multiplier|attr:"class: form-control"|attr:"data-bind:value: miscNumberOfInterceptsMult" }}
+                        </div>
+                        <div class="col-lg-1 form-symbol">
+                            <h4 style="text-align: center">=</h4>
+                        </div>
+                        <div class="col-lg-2 pull-right input-group" style="padding: 0">
+                            <div class="input-group-addon">$</div>
+                            <input class="form-control text-center" data-bind="value: miscMaximum" disabled="disabled"/>
+                        </div>
+                    </div>
+                    <div class="row center" style="margin-top: 20px; padding-right: 200px; padding-left: 200px; text-align: center">
+                        <label>Total Miscellaneous</label>
+                        <input class="form-control text-center" data-bind="value: miscTotal" disabled="disabled"/>
+                    </div>
                 </div>
             </div>
+            <!-- End Miscellaneous -->
 
         </div>
 
+
      <script type='text/javascript' src="{{ STATIC_URL }}budget.js"></script>
-    <div class="row">
-        <input type="submit" class="pull-right btn btn-primary navbar-btn btn-lg" value="Create" />
-    </div>
+        <div class="row">
+            <input type="submit" class="pull-right btn btn-primary navbar-btn btn-lg" value="Create" />
+        </div>
      </form>
 
 
