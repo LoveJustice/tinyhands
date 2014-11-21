@@ -74,10 +74,19 @@
                         {{ staff_form.border_station|attr:"hidden: true"}}
                         {{ staff_form.email|attr:"hidden: true" }}
                         {{ staff_form.first_name|attr:"hidden: true" }}
-                        {{ staff_form.email|attr:"hidden: true" }}
-                        {{ staff_form.instance.first_name }}
-                        {{ staff_form.instance.last_name }}
-                        {{ staff_form.salary|bootstrap }}
+                        {{ staff_form.last_name|attr:"hidden: true" }}
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <h3>
+                                    {{ staff_form.instance.first_name }}
+                                    {{ staff_form.instance.last_name }}
+                                </h3>
+                            </div>
+                            <div class="col-lg-8">
+                                {{ staff_form.salary|bootstrap }}
+                            </div>
+                        </div>
+
                     {% endfor %}
                     We need to render this from the static station model
                 </div>
