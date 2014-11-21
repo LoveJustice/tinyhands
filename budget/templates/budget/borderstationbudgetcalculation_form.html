@@ -805,11 +805,11 @@ function budgetViewModel() {
 
     //Awareness Section
     this.awarenessContactCardsBool = ko.observable(false);
-    this.awarenessContactCardsAmount = ko.observable(4000);
+    this.awarenessContactCardsAmount = ko.observable({{ form.instance.awareness_contact_cards_amount }});
     this.awarenessAwarenessPartyBool = ko.observable(false);
-    this.awarenessAwarenessPartyAmount = ko.observable(0);
+    this.awarenessAwarenessPartyAmount = ko.observable(0{{ form.instance.awareness_awareness_party }});
     this.awarenessSignBoardsBool = ko.observable(false);
-    this.awarenessSignBoardsAmount = ko.observable(0);
+    this.awarenessSignBoardsAmount = ko.observable({{ form.instance.awareness_sign_boards }});
     this.awarenessTotal = ko.computed(function() {
         var amount = 0;
         if(this.awarenessContactCardsBool()) {
@@ -826,9 +826,9 @@ function budgetViewModel() {
 
     //Shelter Section
     this.firstName = "TOTAL";
-    this.shelterRent = ko.observable(0);
-    this.shelterWater = ko.observable(0);
-    this.shelterElectricity = ko.observable(0);
+    this.shelterRent = ko.observable({{ form.instance.shelter_rent }});
+    this.shelterWater = ko.observable({{ form.instance.shelter_water }});
+    this.shelterElectricity = ko.observable({{ form.instance.shelter_electricity }});
     this.utilTotal = ko.pureComputed(function() {
         return parseFloat(this.shelterRent()) + parseFloat(this.shelterElectricity()) + parseFloat(this.shelterWater());
     }, this);
@@ -846,17 +846,17 @@ function budgetViewModel() {
         return parseFloat(this.shelterRent()) + parseFloat(this.shelterWater()) + parseFloat(this.shelterElectricity()) + parseFloat(this.shelterCheckboxTotal());
     }, this);
     this.shelterStartupBool = ko.observable(false);
-    this.shelterStartupAmount = ko.observable(71800);
+    this.shelterStartupAmount = ko.observable({{ form.instance.shelter_shelter_startup_amount }});
     this.shelterTwoBool = ko.observable(false);
-    this.shelterTwoAmount = ko.observable(36800);
+    this.shelterTwoAmount = ko.observable({{ form.instance.shelter_shelter_two_amount }});
 
     //Food and Gas Section
-    this.foodGasNumberOfGirls = ko.observable(0);
-    this.foodGasMultiplierBefore = ko.observable(100);
-    this.foodGasMultiplierAfter = ko.observable(3);
-    this.limboNumberOfGirls = ko.observable(0);
-    this.limboMultiplier = ko.observable(100);
-    this.limboNumberOfDays = ko.observable(1);
+    this.foodGasNumberOfGirls = ko.observable({{ form.instance.food_and_gas_number_of_intercepted_girls }});
+    this.foodGasMultiplierBefore = ko.observable({{ form.instance.food_and_gas_number_of_intercepted_girls_multiplier_before }});
+    this.foodGasMultiplierAfter = ko.observable({{ form.instance.food_and_gas_number_of_intercepted_girls_multiplier_after }});
+    this.limboNumberOfGirls = ko.observable({{ form.instance.food_and_gas_number_of_limbo_girls }});
+    this.limboMultiplier = ko.observable({{ form.instance.food_and_gas_limbo_girls_multiplier }});
+    this.limboNumberOfDays = ko.observable({{ form.instance.food_and_gas_number_of_days }});
     this.foodGasInterceptedGirls = ko.pureComputed(function () {
         return parseFloat(this.foodGasMultiplierBefore()) * parseFloat(this.foodGasNumberOfGirls()) * parseFloat(this.foodGasMultiplierAfter());
     }, this);
