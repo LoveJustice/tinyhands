@@ -13,7 +13,14 @@ function budgetViewModel() {
     }, this);
 
     //Misc Section
-    this.miscTotal = 0;
+    this.miscNumberOfIntercepts = ko.observable(0);
+    this.miscNumberOfInterceptsMult = ko.observable(300);
+    this.miscMaximum = ko.computed(function() {
+        return parseFloat(this.miscNumberOfIntercepts()) * parseFloat(this.miscNumberOfInterceptsMult());
+    }, this);
+    this.miscTotal = ko.computed(function() {
+        return parseFloat(this.miscMaximum());
+    }, this);
 
     //Medical Section
     this.medicalExpense = ko.observable(0);
@@ -62,6 +69,9 @@ function budgetViewModel() {
     this.travelMotorbikeBool = ko.observable(false);
     this.travelMotorbikeAmount = ko.observable(60000);
     this.travelOther = ko.observable(0);
+    this.travelNumberOfStaffUsingBikesTotal = ko.computed(function() {
+        return parseFloat(this.travelNumberOfStaffUsingBikes()) * parseFloat(this.travelNumberOfStaffUsingBikesMultiplier());
+    }, this);
     this.travelTotal = ko.computed(function() {
         var amount = 0;
         if(this.travelChairWithBikeBool()) {
@@ -130,6 +140,9 @@ function budgetViewModel() {
     this.shelterRent = ko.observable(0);
     this.shelterWater = ko.observable(0);
     this.shelterElectricity = ko.observable(0);
+    this.utilTotal = ko.pureComputed(function() {
+        return parseFloat(this.shelterRent()) + parseFloat(this.shelterElectricity()) + parseFloat(this.shelterWater());
+    }, this);
     this.shelterCheckboxTotal = ko.pureComputed(function () {
         var totalAmount = 0;
         if (this.shelterStartupBool()) {
