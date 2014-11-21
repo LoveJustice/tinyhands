@@ -30,6 +30,7 @@ def budget_calc_create(request, pk):
             return redirect("budget_list")
 
     staff_formset = StaffFormSet(queryset=border_station_staff)
+    submit_type = "Create"
     return render(request, 'budget/borderstationbudgetcalculation_form.html', locals())
 
 
@@ -45,8 +46,6 @@ def budget_calc_update(request, pk):
     if request.method == "POST":
         staff_formset = StaffFormSet(request.POST or None, queryset=border_station_staff)
         form = BorderStationBudgetCalculationForm(request.POST, instance=budget_calc)
-        import ipdb
-        ipdb.set_trace()
         if form.is_valid() and staff_formset.is_valid():
             form.instance.border_station = border_station
             form.save()
@@ -54,6 +53,8 @@ def budget_calc_update(request, pk):
             return redirect("budget_list")
 
     staff_formset = StaffFormSet(queryset=border_station_staff)
+
+    submit_type = "Update"
     return render(request, 'budget/borderstationbudgetcalculation_form.html', locals())
 
 
@@ -68,8 +69,6 @@ def budget_calc_view(request, pk):
     budget_calc = get_object_or_404(BorderStationBudgetCalculation, pk=pk)
     form = BorderStationBudgetCalculationForm(instance=budget_calc)
 
-    import ipdb
-    ipdb.set_trace()
 
     border_station = budget_calc.border_station
     border_station_staff = border_station.staff_set.all()

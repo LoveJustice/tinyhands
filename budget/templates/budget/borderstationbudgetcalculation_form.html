@@ -677,9 +677,14 @@
 
 
      <script type='text/javascript' src="{{ STATIC_URL }}budget.js"></script>
+
+
+
+     {% if submit_type %}
         <div class="row">
-            <input type="submit" class="pull-right btn btn-primary navbar-btn btn-lg" value="Create" />
+            <input type="submit" class="pull-right btn btn-primary navbar-btn btn-lg" value="{{ submit_type }}" />
         </div>
+     {% endif %}
      </form>
 
 
