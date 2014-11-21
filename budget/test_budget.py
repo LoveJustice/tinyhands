@@ -13,10 +13,6 @@ class TestModels(TestCase):
         print (resp.status_code)
         self.assertEqual(resp.status_code, 302 or 200)
 
-        resp = self.client.get('/budget/budget_calculations/create/')
-        print (resp.status_code)
-        self.assertEqual(resp.status_code, 200 or 302)
-
     # def test_valid_data(self):
     #     form = models.BorderStationBudgetCalculation({
     #         'name': "Turanga Leela",
