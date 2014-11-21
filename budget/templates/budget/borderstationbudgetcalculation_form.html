@@ -718,15 +718,15 @@ function budgetViewModel() {
     }, this);
 
     //Administration Section
-    this.adminNumberOfInterceptionsLastMonth = ko.observable(0);
-    this.adminNumberOfInterceptionsLastMonthMultiplier = ko.observable(20);
-    this.adminNumberOfInterceptionsLastMonthAdder = ko.observable(1000);
-    this.adminNumberOfMeetingsPerMonth = ko.observable(0);
-    this.adminNumberOfMeetingsPerMonthMultiplier = ko.observable(600);
-    this.adminBoothBool = ko.observable(false);
-    this.adminBoothAmount = ko.observable(30000);
-    this.adminRegistrationBool = ko.observable(false);
-    this.adminRegistrationAmount = ko.observable(2000);
+    this.adminNumberOfInterceptionsLastMonth = ko.observable({{ form.instance.administration_number_of_intercepts_last_month }});
+    this.adminNumberOfInterceptionsLastMonthMultiplier = ko.observable({{ form.instance.administration_number_of_intercepts_last_month_multiplier }});
+    this.adminNumberOfInterceptionsLastMonthAdder = ko.observable({{ form.instance.administration_number_of_intercepts_last_month_adder }});
+    this.adminNumberOfMeetingsPerMonth = ko.observable({{ form.instance.administration_number_of_meetings_per_month }});
+    this.adminNumberOfMeetingsPerMonthMultiplier = ko.observable({{ form.instance.administration_number_of_meetings_per_month_multiplier }});
+    this.adminBoothBool = ko.observable({{ form.instance.administration_booth }});
+    this.adminBoothAmount = ko.observable({{ form.instance.administration_booth_amount }});
+    this.adminRegistrationBool = ko.observable({{ form.instance.administration_registration }});
+    this.adminRegistrationAmount = ko.observable({{ form.instance.administration_registration_amount }});
     this.adminStationaryTotal = ko.computed(function() {
         return (parseFloat(this.adminNumberOfInterceptionsLastMonth()) * parseFloat(this.adminNumberOfInterceptionsLastMonthMultiplier())) + parseFloat(this.adminNumberOfInterceptionsLastMonthAdder());
     }, this);
@@ -748,16 +748,16 @@ function budgetViewModel() {
     }, this);
 
     //Travel Section
-    this.travelChairWithBikeBool = ko.observable(false);
-    this.travelChairWithBikeAmount = ko.observable(2000);
-    this.travelManagerWithBikeBool = ko.observable(false);
-    this.travelManagerWithBikeAmount = ko.observable(2000);
-    this.travelNumberOfStaffUsingBikes = ko.observable(0);
-    this.travelNumberOfStaffUsingBikesMultiplier = ko.observable(1000);
-    this.travelSendingGirlsHomeExpense = ko.observable(0);
-    this.travelMotorbikeBool = ko.observable(false);
-    this.travelMotorbikeAmount = ko.observable(60000);
-    this.travelOther = ko.observable(0);
+    this.travelChairWithBikeBool = ko.observable({{ form.instance.travel_chair_with_bike }});
+    this.travelChairWithBikeAmount = ko.observable({{ form.instance.travel_chair_with_bike_amount }});
+    this.travelManagerWithBikeBool = ko.observable({{ form.instance.travel_manager_with_bike }});
+    this.travelManagerWithBikeAmount = ko.observable({{ form.instance.travel_manager_with_bike_amount }});
+    this.travelNumberOfStaffUsingBikes = ko.observable({{ form.instance.travel_number_of_staff_using_bikes }});
+    this.travelNumberOfStaffUsingBikesMultiplier = ko.observable({{ form.instance.travel_number_of_staff_using_bikes_multiplier }});
+    this.travelSendingGirlsHomeExpense = ko.observable({{ form.instance.travel_last_months_expense_for_sending_girls_home }});
+    this.travelMotorbikeBool = ko.observable({{ form.instance.travel_motorbike }});
+    this.travelMotorbikeAmount = ko.observable({{ form.instance.travel_motorbike_amount }});
+    this.travelOther = ko.observable({{ form.instance.travel_plus_other }});
     this.travelNumberOfStaffUsingBikesTotal = ko.computed(function() {
         return parseFloat(this.travelNumberOfStaffUsingBikes()) * parseFloat(this.travelNumberOfStaffUsingBikesMultiplier());
     }, this);
@@ -778,14 +778,14 @@ function budgetViewModel() {
     }, this);
 
     //Supplies Section
-    this.suppliesWalkieTalkiesBool = ko.observable(false);
-    this.suppliesWalkieTalkiesAmount = ko.observable(0);
-    this.suppliesRecordersBool = ko.observable(false);
-    this.suppliesRecordersAmount = ko.observable(0);
-    this.suppliesBinocularsBool = ko.observable(false);
-    this.suppliesBinocularsAmount = ko.observable(0);
-    this.suppliesFlashlightsBool = ko.observable(false);
-    this.suppliesFlashlightsAmount = ko.observable(0);
+    this.suppliesWalkieTalkiesBool = ko.observable({{ form.instance.supplies_walkie_talkies_boolean }});
+    this.suppliesWalkieTalkiesAmount = ko.observable({{ form.instance.supplies_walkie_talkies_amount }});
+    this.suppliesRecordersBool = ko.observable({{ form.instance.supplies_recorders_boolean }});
+    this.suppliesRecordersAmount = ko.observable({{ form.instance.supplies_recorders_amount }});
+    this.suppliesBinocularsBool = ko.observable({{ form.instance.supplies_binoculars_boolean }});
+    this.suppliesBinocularsAmount = ko.observable({{ form.instance.supplies_binoculars_amount }});
+    this.suppliesFlashlightsBool = ko.observable({{ form.instance.supplies_flashlights_boolean }});
+    this.suppliesFlashlightsAmount = ko.observable({{ form.instance.supplies_flashlights_amount }});
     this.suppliesTotal = ko.computed(function() {
         var amount = 0;
         if(this.suppliesWalkieTalkiesBool()) {
@@ -868,14 +868,14 @@ function budgetViewModel() {
     }, this);
 
     //Communication section
-    this.commChairBool = ko.observable(false);
-    this.commChairAmount = ko.observable(1000);
-    this.commManagerBool = ko.observable(false);
-    this.commManagerAmount = ko.observable(1000);
-    this.commNumberOfStaffWt = ko.observable(0);
-    this.commNumberOfStaffWtMultiplier = ko.observable(100);
-    this.commEachStaffWt = ko.observable(0);
-    this.commEachStaffWtMultiplier = ko.observable(300);
+    this.commChairBool = ko.observable({{ form.instance.communication_chair }});
+    this.commChairAmount = ko.observable({{ form.instance.communication_chair_amount }});
+    this.commManagerBool = ko.observable({{ form.instance.communication_manager }});
+    this.commManagerAmount = ko.observable({{ form.instance.communication_manager_amount }});
+    this.commNumberOfStaffWt = ko.observable({{ form.instance.communication_number_of_staff_with_walkie_talkies }});
+    this.commNumberOfStaffWtMultiplier = ko.observable({{ form.instance.communication_number_of_staff_with_walkie_talkies_multiplier }});
+    this.commEachStaffWt = ko.observable({{ form.instance.communication_each_staff }});
+    this.commEachStaffWtMultiplier = ko.observable({{ form.instance.communication_each_staff_multiplier }});
     this.commManagerTotal = ko.computed(function () {
         var amount = 0;
 
