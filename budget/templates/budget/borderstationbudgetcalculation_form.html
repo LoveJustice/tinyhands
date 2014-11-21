@@ -780,7 +780,7 @@ function budgetViewModel() {
     //Supplies Section
     this.suppliesWalkieTalkiesBool = ko.observable({{ form.instance.supplies_walkie_talkies_boolean }});
     this.suppliesWalkieTalkiesAmount = ko.observable({{ form.instance.supplies_walkie_talkies_amount }});
-    this.suppliesRecordersBool = ko.observable({{ form.instance.supplies_recorders_boolean }});
+    this.suppliesRecordersBool = ko.observable({% if form.instance.supplies_recorders_boolean %}true{% else %}false{% endif %});
     this.suppliesRecordersAmount = ko.observable({{ form.instance.supplies_recorders_amount }});
     this.suppliesBinocularsBool = ko.observable({{ form.instance.supplies_binoculars_boolean }});
     this.suppliesBinocularsAmount = ko.observable({{ form.instance.supplies_binoculars_amount }});
@@ -807,7 +807,7 @@ function budgetViewModel() {
     this.awarenessContactCardsBool = ko.observable(false);
     this.awarenessContactCardsAmount = ko.observable({{ form.instance.awareness_contact_cards_amount }});
     this.awarenessAwarenessPartyBool = ko.observable(false);
-    this.awarenessAwarenessPartyAmount = ko.observable(0{{ form.instance.awareness_awareness_party }});
+    this.awarenessAwarenessPartyAmount = ko.observable({{ form.instance.awareness_awareness_party }});
     this.awarenessSignBoardsBool = ko.observable(false);
     this.awarenessSignBoardsAmount = ko.observable({{ form.instance.awareness_sign_boards }});
     this.awarenessTotal = ko.computed(function() {
