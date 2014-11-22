@@ -95,5 +95,5 @@ class OtherBudgetItemCost(models.Model):
         (3, 'Awareness'),
         (4, 'Supplies'),
     ]
-    form_section = models.IntegerField(BUDGET_FORM_SECTION_CHOICES)
-    budget_item_parent = models.ForeignKey(BorderStationBudgetCalculation)
+    form_section = models.IntegerField(BUDGET_FORM_SECTION_CHOICES, blank=True, null=True)
+    budget_item_parent = models.ForeignKey(BorderStationBudgetCalculation, blank=True, null=True)
