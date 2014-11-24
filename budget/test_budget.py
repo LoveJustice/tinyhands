@@ -14,6 +14,25 @@ class TestModels(TestCase):
         self.assertEqual(resp.status_code, 302 or 200)
 
     # def test_valid_data(self):
+        # budget_form = self.app.get(reverse('budget_create'))
+        # budget_form.form['email'] = 'dvcolgan@gmail.com'
+        # redirect = account_edit.save()
+        # self.assertEquals(redirect.status_int, 304)
+        # account_list = redirect.follow()
+
+        # original = Account.objects.all()[0]
+        # self.client.get(reverse('login'))
+        #
+        # resp = self.client.get('/portal/dashboard/')
+        # self.client.get(reverse('login'))
+        # print(resp.status_code)
+        # self.assertEqual(resp.status_code, 302)
+
+
+
+
+
+
     #     form = models.BorderStationBudgetCalculation({
     #         'name': "Turanga Leela",
     #         'email': "leela@example.com",
