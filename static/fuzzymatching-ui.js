@@ -89,7 +89,7 @@
   };
 
   $(function() {
-    var $modal, $ui;
+    var $modal, $popover_button, $ui;
     $modal = $('#matching_modal');
     $ui = $("#fuzzymatching-ui");
     setupInputHandlers($ui);
@@ -110,8 +110,21 @@
         return init();
       });
     });
-    return $ui.on("mouseover", "li.person", function() {
+    $ui.on("mouseover", "li.person", function() {
       return $ui.find("img").attr("src", "" + ($(this).data("photo"))).show();
+    });
+    $popover_button = $("button.show-matches");
+    $popover_button.popover({
+      content: $("#fuzzymatching-ui2").html(),
+      html: true,
+      animation: false,
+      placement: "bottom",
+      trigger: "click"
+    });
+    return $popover_button.on("shown.bs.popover", function() {
+      var $popover;
+      $popover = $(this).siblings(".popover").children(".popover-content");
+      return $popover.html("<a href=\"#\">hi</a>");
     });
   });
 

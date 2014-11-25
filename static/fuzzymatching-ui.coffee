@@ -80,3 +80,13 @@ $ ->
   # Hover image
   $ui.on "mouseover", "li.person", ->
     $ui.find("img").attr("src", "#{$(this).data("photo")}").show()
+  $popover_button = $("button.show-matches")
+  $popover_button.popover
+    content: $("#fuzzymatching-ui2").html()
+    html: true
+    animation: false
+    placement: "bottom"
+    trigger: "click"
+  $popover_button.on "shown.bs.popover", ->
+    $popover = $(this).siblings(".popover").children(".popover-content")
+    $popover.html("<a href=\"#\">hi</a>")
