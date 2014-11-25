@@ -11,7 +11,7 @@
 <!-- http://www.reportlab.com/software/documentation/             -->
 
 <!DOCTYPE document SYSTEM "rml.dtd">
-<document filename="hello.pdf">
+<document filename="test.pdf">
 
     <template showBoundary="0">
         <!--define a 'frame' into which the content will flow.-->
@@ -37,8 +37,10 @@
     </story>
 </document>
 
+<!--
     <form action="/getPDF/" method="get"
     <input type="text" name="q"
     <br
     <input type="submit" value="Make a PDF"
 </form>
+-->
