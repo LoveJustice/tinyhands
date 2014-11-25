@@ -21,10 +21,11 @@ DEBUG = False
 TEMPLATE_DEBUG = False
 
 SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
-
-STATICFILES_DIRS = (
-	os.path.join(SITE_ROOT, '../../static/'),
+FIXTURE_DIRS = (
+   (os.path.join(SITE_ROOT, '../../fixtures/'),)
 )
+
+STATICFILES_DIRS = (os.path.join(SITE_ROOT, '../../static/'),)
 
 ALLOWED_HOSTS = []
 
@@ -40,6 +41,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     'widget_tweaks',
     'bootstrapform',
     'imagekit',

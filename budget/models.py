@@ -4,18 +4,15 @@ from dataentry.models import BorderStation
 
 
 class BorderStationBudgetCalculation(models.Model):
-    form_entered_by = models.ForeignKey(Account, related_name="form_entered_by_account")
-    form_updated_by = models.ForeignKey(Account, related_name="form_updated_by_account")
-
     date_time_entered = models.DateTimeField(auto_now_add=True)
     date_time_last_updated = models.DateTimeField(auto_now=True)
 
     border_station = models.ForeignKey(BorderStation)
-    
+
     communication_chair = models.BooleanField(default=False)
     communication_chair_amount = models.PositiveIntegerField('for chair', default=1000)
     communication_manager = models.BooleanField(default=False)
-    communication_manager_amount = models.PositiveIntegerField('for manager (if station has manager)', default=1000)
+    communication_manager_amount = models.PositiveIntegerField('for manager', default=1000)
     communication_number_of_staff_with_walkie_talkies = models.PositiveIntegerField('# of staff with walkie-talkies', default=0)
     communication_number_of_staff_with_walkie_talkies_multiplier = models.PositiveIntegerField(default=100)
     communication_each_staff = models.PositiveIntegerField('each staff', default=0)
@@ -31,6 +28,7 @@ class BorderStationBudgetCalculation(models.Model):
     travel_last_months_expense_for_sending_girls_home = models.PositiveIntegerField(default=0)
     travel_motorbike = models.BooleanField('Motorbike', default=False)
     travel_motorbike_amount = models.PositiveIntegerField(default=60000)
+    travel_plus_other = models.PositiveIntegerField(default=0)
 
 
     administration_number_of_intercepts_last_month = models.PositiveIntegerField('# of intercepts last month', default=0)

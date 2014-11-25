@@ -91,6 +91,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=255)),
                 ('cost', models.PositiveIntegerField()),
                 ('form_section', models.IntegerField(verbose_name=[(1, b'Travel'), (2, b'Miscellaneous'), (3, b'Awareness'), (4, b'Supplies')])),
+                ('budget_item_parent', models.ForeignKey(to='budget.BorderStationBudgetCalculation')),
             ],
             options={
             },
