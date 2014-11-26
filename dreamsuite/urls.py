@@ -30,5 +30,5 @@ urlpatterns = patterns('',
     url(r'^interceptee_fuzzy_matching/', 'dataentry.views.interceptee_fuzzy_matching', name='interceptee_fuzzy_matching'),
 
     url(r'^pdf/$', budget.views.search_form),
-    url(r'^getPDF/$', budget.views.getPDF),
+    url(r'^getPDF/(?P<pk>\d+)$', budget.views.MoneyDistributionFormPDFView.as_view()),
 ) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

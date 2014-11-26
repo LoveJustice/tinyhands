@@ -1,13 +1,23 @@
+import StringIO
 from braces.views import LoginRequiredMixin
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ImproperlyConfigured
 from django.core.urlresolvers import reverse_lazy
 from django.forms.models import modelformset_factory
-from django.shortcuts import get_object_or_404, render, redirect
-from django.views.generic import ListView, DeleteView
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, render, redirect, render_to_response
+from django.template import Template, Context
+from django.template.loader import render_to_string
+from django.views.generic import ListView, DeleteView, View
 from budget.forms import BorderStationBudgetCalculationForm
 from budget.models import BorderStationBudgetCalculation, OtherBudgetItemCost
 from static_border_stations.models import Staff, BorderStation
+
+from z3c.rml import rml2pdf, document
+from lxml import etree
+from reportlab import *
+import preppy
 
 
 @login_required
@@ -63,80 +73,62 @@ class BudgetCalcListView(
         ListView):
     model = BorderStationBudgetCalculation
 
-from django.shortcuts import render_to_response
-from django.http import HttpResponse
-from django.template import Template, Context
-
-# Colgan's, more or less
-from z3c.rml import rml2pdf, document
-from lxml import etree
-import StringIO
-
-from reportlab import *
-import preppy
-
 def search_form(request):
     return render_to_response('search_form.html')
-"""
-buf = StringIO()
-rml = render_to_string(self.template_name, self.get_context_data()
 
-buf.write(rml)
-buf.seek(0)
-root = etree.parse(buf).getroot()
-doc = document.Document(root)
+class PDFView(View):
 
-response = HttpResponse(content_type='application/pdf')
-response['Content-Disposition'] = \
-    "filename=%s" % self.get_filename()
-doc.process(response)
-"""
+    filename = 'report.pdf'
+    template_name = ''
 
+    def get_filename(self):
+        return self.filename
 
+    def get_context_data(self):
+        return {}
 
-def getPDF(request):
-    """Returns PDF as a binary stream."""
+    def dispatch(self, request, *args, **kwargs):
+        if self.template_name == '':
+            raise ImproperlyConfigured(
+                "A template_name must be specified for the rml template.")
 
-    if 'q' in request.GET:
-
-        rml = getRML(request.GET['q'])
-
+        # Use StringIO and not cStringIO because cStringIO can't accept unicode characters
         buf = StringIO.StringIO()
-        # etree = ET.etree()
+        rml = render_to_string(self.template_name, self.get_context_data())
 
         buf.write(rml)
         buf.seek(0)
-
         root = etree.parse(buf).getroot()
-        # TODO: Figure out what this is...
         doc = document.Document(root)
 
         response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = "attachment; filename=PDFPDFPDF.pdf"
+        response['Content-Disposition'] = "filename=%s" % self.get_filename()
         doc.process(response)
+
         return response
-'''
-        rml = getRML(request.GET['q'])
 
-        buf = cStringIO.StringIO()
+class MoneyDistributionFormPDFView(PDFView):
+    template_name = 'budget/test.rml'
+    filename = 'Monthly-Money-Distribution-Form.pdf'
 
-        #create the pdf
-        # rml2pdf.go(rml, outputFileName=buf)
-        buf.reset()
-        pdfData = buf.read()
+    def get_context_data(self):
+        # application = LoanApplication.objects.get(
+            # pk=self.kwargs['application_id'])
 
-        #send the response
-        response = HttpResponse(mimetype='application/pdf')
-        response.write(pdfData)
-        response['Content-Disposition'] = 'attachment; filename=output.pdf'
-        return response
-'''
+        station = BorderStation.objects.get(pk=self.kwargs['pk'])
+
+        return {
+            'name': station.station_name,
+            #'interest_rate_100': application.interest_rate * 100,
+            #'loan_amount_in_words': to_card(application.loan.amount),
+        }
 
 def getRML(name):
-    """We used django template to write the RML, but you could use any other
+    """
+    We used django template to write the RML, but you could use any other
     template language of your choice.
     """
-    t = Template(open('test.rml').read())
+    t = Template(open('budget/templates/budget/test.rml').read())
     c = Context({"name": name})
     rml = t.render(c)
     #django templates are unicode, and so need to be encoded to utf-8
