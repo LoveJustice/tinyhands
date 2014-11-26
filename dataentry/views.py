@@ -468,7 +468,7 @@ def interceptee_fuzzy_matching(request):
 
     modified_matches = []
     for interceptee_group in matches:
-        modified_matches.append(interceptee_group[2].id, interceptee_group[0], interceptee_group[1], interceptee_group[2].photo.url)
+        modified_matches.append((interceptee_group[2].id, interceptee_group[0], interceptee_group[1], interceptee_group[2].photo.url))
 
     return JsonResponse({
         'success': True,
@@ -530,9 +530,9 @@ def matching_modal(request, id):
                 existing_age = Age.objects.filter(value=age.value)
                 if not existing_age:
                     new_age = Age.objects.create(value=age.value)
-                    person.ages.add(new_age)
                 else:
-                    person.ages.add(existing_age[0])
+                    new_age = existing_age[0]
+                person.ages.add(new_age)
                 person.canonical_age = new_age
             person.save()
         except Exception as e:
