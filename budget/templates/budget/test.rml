@@ -1,0 +1,46 @@
+<!-- This is very simple RML template for illustrative purposes.  -->
+<!--                                                              -->
+<!-- A basic RML template has three sections.  The 'template'     -->
+<!-- section is where you define fixed position elements, along   -->
+<!-- with 'frames' containing  flowing text.  The 'stylesheet'    -->
+<!-- section contains re-useable text style definitions.  The     -->
+<!-- 'story' section contains the text and graphics which fill    -->
+<!-- up the frames defined in the template section.               -->
+<!--                                                              -->
+<!-- For more information, please read the documentation at       -->
+<!-- http://www.reportlab.com/software/documentation/             -->
+
+<!DOCTYPE document SYSTEM "rml.dtd">
+<document filename="test.pdf">
+
+    <template showBoundary="0">
+        <!--define a 'frame' into which the content will flow.-->
+        <pageTemplate id="main">
+             <frame id="first" x1="50" y1="200" width="450" height="300"/>
+        </pageTemplate>
+    </template>
+
+    <stylesheet>
+        <!-- define a text style -->
+        <paraStyle name="textstyle1" fontName="Helvetica" fontSize="24" leading="24" />
+    </stylesheet>
+
+    <story>
+       <!--The elements in this section will fill up the frames -->
+       <!--defined in the <template> section above.             -->
+       <!--The text inside double hashes is replaced dynamically-->
+       <!--inside Default.aspx-->
+        <para style="textstyle1">
+             Welcome <b>{{name}}</b>, to the world of RML!
+        </para>
+
+    </story>
+</document>
+
+<!--
+    <form action="/getPDF/" method="get"
+    <input type="text" name="q"
+    <br
+    <input type="submit" value="Make a PDF"
+</form>
+-->
