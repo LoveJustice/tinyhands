@@ -1,0 +1,103 @@
+#fuzzymatching-ui {
+    // width: 500px;
+    height: 200px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    // box-shadow: inset 0 0 5px black;
+    border-radius: 5px;
+    padding: 10px;
+    display: none;
+}
+
+.fuzzymatching-list {
+    > ul {
+        margin-bottom: 0;
+        > li:hover {
+            background: #ccc;
+            cursor: pointer;
+        }
+    }
+}
+
+.fuzzymatching-pic {
+    height: 100%;
+    float: right;
+    margin-left: 20px;
+    img {
+        height: 100%;
+        display:none;
+    }
+}
+
+.arrow_box {
+    position: relative;
+    background: #eee;
+    border: 3px solid #000;
+}
+
+.arrow_box:after, .arrow_box:before {
+    bottom: 100%;
+    left: 25px;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+}
+
+.arrow_box:after {
+    border-color: rgba(238, 238, 238, 0);
+    border-bottom-color: #eee;
+    border-width: 10px;
+    margin-left: -10px;
+}
+
+.arrow_box:before {
+    border-color: rgba(0, 0, 0, 0);
+    border-bottom-color: #000;
+    border-width: 14px;
+    margin-left: -14px;
+}
+
+
+
+
+
+
+
+@bg-color: #5cb85c;
+@hl-color: lighten(@bg-color, 35%);
+button.show-matches { position: relative; }
+button.show-matches.pulse::before {
+    content: "Show";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 10px 16px;
+    opacity: 0;
+    background: -webkit-gradient(radial, center center, 0px, center center, 200%, color-stop(0%, @hl-color), color-stop(200%, @bg-color));
+    background: -webkit-radial-gradient(center center, circle closest-side, @hl-color, @bg-color 200%);
+    background: -moz-radial-gradient(center center, circle closest-side, @hl-color, @bg-color 200%);
+    background: radial-gradient(center center, circle closest-side, @hl-color, @bg-color 200%);
+
+    -webkit-animation: pulse 1s ease alternate infinite;
+    animation: pulse 1s ease alternate infinite;
+}
+
+button.show-matches > * {
+    position: relative;
+}
+
+@keyframes pulse {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@-webkit-keyframes pulse {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}

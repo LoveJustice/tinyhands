@@ -1,6 +1,10 @@
 {% extends "base.html" %}
-
 {% block head %}
+    <script type="text/javascript">
+        window.fuzzy_ajax_url = "{% url 'interceptee_fuzzy_matching' %}";
+    </script>
+
+    <link rel="stylesheet/less" type="text/css" href="{{ STATIC_URL }}fuzzymatching-ui.less"/>
     <link rel="stylesheet/less" type="text/css" href="{{ STATIC_URL }}matching_modal.less"/>
 {% endblock %}
 

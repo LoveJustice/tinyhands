@@ -763,7 +763,7 @@
                                 </td>
                                 <td><input id="fuzzy_name" type="text" data-fuzzy-ui="name"/>{{ interceptee_form.full_name|attr:"style:display:none"}}</td>
                                 <td>{{ interceptee_form.gender }}</td>
-                                <td style="width: 7%"><input id="fuzzy_age" type="number"/>{{ interceptee_form.age|attr:"style:display:none" }}</td>
+                                <td style="width: 7%"><input id="fuzzy_age" type="number" min="0"/>{{ interceptee_form.age|attr:"style:display:none" }}</td>
                                 <td>{{ interceptee_form.district }}</td>
                                 <td><input type="text" id="fuzzy_vdc"/>{{ interceptee_form.vdc|attr:"style:display:none" }}</td>
                                 <td><input id="fuzzy_phone_contact" type="text"/>{{ interceptee_form.phone_contact|attr:"style:display:none" }}</td>
