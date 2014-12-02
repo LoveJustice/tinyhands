@@ -30,19 +30,16 @@ def budget_calc_create(request, pk):
 
     StaffFormSet = modelformset_factory(model=Staff, extra=0)
 
-    # travel_items_formset = formset_factory(OtherBudgetItemCostForm, extra=1)
-    # misc_items_formset = formset_factory(OtherBudgetItemCostForm, extra=1)
-    # awareness_items_formset = formset_factory(OtherBudgetItemCostForm, extra=1)
-    # supplies_items_formset = formset_factory(OtherBudgetItemCostForm, extra=1)
+    # misc_items_formset = modelformset_factory(model=OtherBudgetItemCost, extra=1)
+
 
     if request.method == "POST":
         staff_formset = StaffFormSet(request.POST, queryset=border_station_staff)
         form = BorderStationBudgetCalculationForm(request.POST)
-
-        # travel_items_formset = travel_items_formset(request.POST)
         # misc_items_formset = misc_items_formset(request.POST)
-        # awareness_items_formset = awareness_items_formset(request.POST)
-        # supplies_items_formset = supplies_items_formset(request.POST)
+
+        import ipdb
+        ipdb.set_trace()
 
         if form.is_valid() and staff_formset.is_valid():
             form.instance.border_station = border_station
