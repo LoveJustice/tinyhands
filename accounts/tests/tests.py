@@ -1,10 +1,10 @@
 from django.test import TestCase
 from django_webtest import WebTest
 from django.core.urlresolvers import reverse_lazy, reverse
-import json
+#import json
 from accounts.tests.factories import *
 from accounts.models import Account, Alert
-from dataentry.models import BorderStation
+#from dataentry.models import BorderStation
 
 
 class TestModels(WebTest):
