@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django_webtest import WebTest
-from django.core.urlresolvers import reverse_lazy, reverse
+from django.core.urlresolvers import reverse
 import json
 
 from accounts.tests.factories import *
@@ -14,40 +14,58 @@ class BorderStationModelsTests(WebTest):
     def setUp(self):
         BorderStation.objects.get_or_create(station_name="Test Station", station_code="TS1")
         self.superuser = SuperUserFactory.create()
+        self.adduser = AddUserFactory.create()
         self.viewuser = ViewUserFactory.create()
-        print(Account.objects.all())
         
-    """
-    def test_account_permission_work(self):
-        account_list = self.app.get(reverse('account_list'), user=self.superuser)
-        self.assertEquals(account_list.status_int, 200)
+    # Ensure proper Superuser Permissions
+    def test_can_get_create_borderstation_page_as_superuser(self):
+        url = reverse("borderstations_create")
+        page = self.app.get(url, user=self.superuser)
+        self.assertEquals(page.status_int, 200)
         
-        account_list = self.app.get(reverse('account_list'), user=self.viewuser)
-        self.assertEquals(account_list.status_int, 403)
+    def test_can_get_update_borderstation_page_as_superuser(self):
+        url = reverse("borderstations_update", args=[1])
+        page = self.app.get(url, user=self.superuser)
+        self.assertEquals(page.status_int, 200)
         
-        account_edit = account_list.click('Edit')
-        account_edit.form['email'] = 'dvcolgan@gmail.com'
-        redirect = account_edit.save()
-        self.assertEquals(redirect.status_int, 304)
-        account_list = redirect.follow()
-    """
-    
-    
-    """
-    For Bryant
-    def test_get_empty_create_borderstation_page(self):
-        url = reverse_lazy("borderstations_create")
-        print(url)
-        response = self.client.get(url)
-        print(response.status_code)
-        print(response.content)
-        self.assertEquals(response.status_code, 200)
-        data = json.loads(response.content)
-        self.assertEquals(len(data), 1)
+    def test_can_get_view_borderstation_page_as_superuser(self):
+        url = reverse("borderstations_view", args=[1])
+        page = self.app.get(url, user=self.superuser)
+        self.assertEquals(page.status_int, 200)
         
-    def test_get_view_borderstation_page(self):
-        url = reverse_lazy("borderstations_view", args=[1])
-        print(url)
-        response = self.client.get(url)
-        print(response.status_code)
-    """
+    def test_superuser_borderstation_create(self):
+        url = reverse("borderstations_create")
+        form = self.app.get(url, user=self.superuser).form
+        print(form)
+        
+    # Ensure proper Adduser Permissions
+    def test_can_get_create_borderstation_page_as_adduser(self):
+        url = reverse("borderstations_create")
+        page = self.app.get(url, user=self.adduser)
+        self.assertEquals(page.status_int, 200)
+        
+    def test_can_get_update_borderstation_page_as_adduser(self):
+        url = reverse("borderstations_update", args=[1])
+        page = self.app.get(url, user=self.adduser, expect_errors=True)
+        self.assertEquals(page.status_int, 403)
+        
+    def test_can_get_view_borderstation_page_as_adduser(self):
+        url = reverse("borderstations_view", args=[1])
+        page = self.app.get(url, user=self.adduser)
+        self.assertEquals(page.status_int, 200)
+        
+    # Ensure proper Viewuser Permissions
+    def test_cannot_get_create_borderstation_page_as_viewuser(self):
+        url = reverse("borderstations_create")
+        page = self.app.get(url, user=self.viewuser, expect_errors=True)
+        self.assertEquals(page.status_int, 403)
+        
+    def test_can_get_update_borderstation_page_as_viewuser(self):
+        url = reverse("borderstations_update", args=[1])
+        page = self.app.get(url, user=self.viewuser, expect_errors=True)
+        self.assertEquals(page.status_int, 403)
+        
+    def test_can_get_view_borderstation_page_as_viewuser(self):
+        url = reverse("borderstations_view", args=[1])
+        page = self.app.get(url, user=self.viewuser)
+        self.assertEquals(page.status_int, 200)
