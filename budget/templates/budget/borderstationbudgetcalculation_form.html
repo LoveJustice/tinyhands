@@ -71,11 +71,6 @@
 
                     {% for staff_form in staff_formset %}
 
-                        {{ staff_form.id }}
-                        {{ staff_form.border_station|attr:"hidden: true"}}
-                        {{ staff_form.email|attr:"hidden: true" }}
-                        {{ staff_form.first_name|attr:"hidden: true" }}
-                        {{ staff_form.last_name|attr:"hidden: true" }}
                         <div class="row">
                             <div class="col-lg-4">
                                 <h3>
@@ -84,7 +79,7 @@
                                 </h3>
                             </div>
                             <div class="col-lg-8">
-                                {{ staff_form.salary|bootstrap }}
+                                    {{ staff_form|bootstrap }}
                             </div>
                         </div>
 
@@ -672,13 +667,16 @@
 
                         {{ misc_items_formset.management_form }}
 
-                        {% for item in misc_items_formset %}
-
+                        {% for form in misc_items_formset %}
                                 <div class="row">
-                                    {{ item|bootstrap }}
+                                    <div class="col-lg-6">
+                                        {{ form.id }}
+                                        {{ form.name|bootstrap }}
+                                    </div>
+                                    <div class="col-lg-6">
+                                        {{ form.cost|bootstrap }}
+                                    </div>
                                 </div>
-
-                            </div>
                         {% endfor %}
                     </div>
 
