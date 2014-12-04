@@ -13,6 +13,17 @@ class TestModels(TestCase):
         print (resp.status_code)
         self.assertEqual(resp.status_code, 302 or 200)
 
+    def test_border_station_budget_calculation_form_functions(self):
+        item = models.BorderStationBudgetCalculation()
+        item.shelter_water = 10
+        item.shelter_rent = 20
+        item.shelter_electricity = 40
+        item.shelter_shelter_startup = True
+        item.shelter_shelter_startup_amount = 100
+        item.shelter_shelter_two_amount = 200
+        item.shelter_shelter_two = True
+        self.assertEqual(item.shelter_total(), 370)
+
     # def test_valid_data(self):
         # budget_form = self.app.get(reverse('budget_create'))
         # budget_form.form['email'] = 'dvcolgan@gmail.com'
@@ -27,20 +38,3 @@ class TestModels(TestCase):
         # self.client.get(reverse('login'))
         # print(resp.status_code)
         # self.assertEqual(resp.status_code, 302)
-
-
-
-
-
-
-    #     form = models.BorderStationBudgetCalculation({
-    #         'name': "Turanga Leela",
-    #         'email': "leela@example.com",
-    #         'body': "Hi there",
-    #     }, entry=self.entry)
-    #     self.assertTrue(form.is_valid())
-    #     comment = form.save()
-    #     self.assertEqual(comment.name, "Turanga Leela")
-    #     self.assertEqual(comment.email, "leela@example.com")
-    #     self.assertEqual(comment.body, "Hi there")
-    #     self.assertEqual(comment.entry, self.entry)
