@@ -7,7 +7,6 @@ from django.core.urlresolvers import reverse_lazy
 from django.forms.models import modelformset_factory
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect, render_to_response
-from django.template import Template, Context
 from django.template.loader import render_to_string
 from django.views.generic import ListView, DeleteView, View
 from budget.forms import BorderStationBudgetCalculationForm
@@ -73,13 +72,11 @@ class BudgetCalcListView(
         ListView):
     model = BorderStationBudgetCalculation
 
-def search_form(request):
-    return render_to_response('search_form.html')
 
 class PDFView(View):
 
-    filename = 'report.pdf'
     template_name = ''
+    filename = 'report.pdf'
 
     def get_filename(self):
         return self.filename
@@ -107,6 +104,7 @@ class PDFView(View):
 
         return response
 
+
 class MoneyDistributionFormPDFView(PDFView):
     template_name = 'budget/test.rml'
     filename = 'Monthly-Money-Distribution-Form.pdf'
@@ -117,22 +115,11 @@ class MoneyDistributionFormPDFView(PDFView):
 
         station = BorderStation.objects.get(pk=self.kwargs['pk'])
 
-        return {
-            'name': station.station_name,
-            #'interest_rate_100': application.interest_rate * 100,
-            #'loan_amount_in_words': to_card(application.loan.amount),
-        }
+        context = {
+                'name': station.station_name,
+                }
 
-def getRML(name):
-    """
-    We used django template to write the RML, but you could use any other
-    template language of your choice.
-    """
-    t = Template(open('budget/templates/budget/test.rml').read())
-    c = Context({"name": name})
-    rml = t.render(c)
-    #django templates are unicode, and so need to be encoded to utf-8
-    return rml.encode('utf8')
+        return context
 
 @login_required
 def budget_calc_view(request, pk):
