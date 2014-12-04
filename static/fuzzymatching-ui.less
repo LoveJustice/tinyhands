@@ -67,11 +67,19 @@
 
 
 
-@bg-color: #5cb85c;
-@hl-color: lighten(@bg-color, 35%);
-button.show-matches { position: relative; }
+//@bg-color: #5cb85c;
+//@hl-color: lighten(@bg-color, 35%);
+@bg-color: rgba(255, 255, 255, 0);
+@hl-color: rgba(255, 255, 255, .75);
+@percent: 200%;
+button.show-matches {
+    position: relative;
+    &:focus, &:active {
+        outline: none !important;
+    }
+}
 button.show-matches.pulse::before {
-    content: "Show";
+    content: "";
     position: absolute;
     top: 0;
     left: 0;
@@ -79,10 +87,10 @@ button.show-matches.pulse::before {
     bottom: 0;
     padding: 10px 16px;
     opacity: 0;
-    background: -webkit-gradient(radial, center center, 0px, center center, 200%, color-stop(0%, @hl-color), color-stop(200%, @bg-color));
-    background: -webkit-radial-gradient(center center, circle closest-side, @hl-color, @bg-color 200%);
-    background: -moz-radial-gradient(center center, circle closest-side, @hl-color, @bg-color 200%);
-    background: radial-gradient(center center, circle closest-side, @hl-color, @bg-color 200%);
+    background: -webkit-gradient(radial, center center, 0px, center center, @percent, color-stop(0%, @hl-color), color-stop(@percent, @bg-color));
+    background: -webkit-radial-gradient(center center, circle closest-side, @hl-color, @bg-color @percent);
+    background: -moz-radial-gradient(center center, circle closest-side, @hl-color, @bg-color @percent);
+    background: radial-gradient(center center, circle closest-side, @hl-color, @bg-color @percent);
 
     -webkit-animation: pulse 1s ease alternate infinite;
     animation: pulse 1s ease alternate infinite;

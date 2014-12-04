@@ -1,4 +1,5 @@
 $cur_input = ""
+window.cur_row = ""
 
 setupInputHandlers = ($ui) ->
   $fuzzy_ui_eles = $("[data-fuzzy-ui]")
@@ -21,10 +22,12 @@ setupInputHandlers = ($ui) ->
   # Searching
   $("table#interceptees input, table#interceptees select").on "keyup change", (e) ->
   #$fuzzy_ui_eles.keyup (e) ->
-    if e.which not in [16, 17, 18, 37, 38, 39, 40]
+    if e.which not in [9, 16, 17, 18, 37, 38, 39, 40]
       $this = $(this)
-      pulse $this.parents("tr").find("button.show-matches").addClass("pulse")
-      #search $this.val(), $ui, display_results, $this.parents("tr")
+      $row = $this.parents("tr")
+      # Reset person id so it will now make a new entry
+      $row.find("[id*=person_id]").val("")
+      pulse $row.find("button.show-matches").addClass("pulse")
 
 pulse = (ele) ->
   ele.addClass("pulse")
@@ -39,13 +42,13 @@ search = (input, $ui, callback, $row) ->
         names = group[1]
         scores = group[2]
         id = group[0]
-        photo = group[3]
+#        photo = group[3]
         $.each names, (idx) ->
           results.push {
             id: id,
             name: names[idx],
             score: scores[idx],
-            photo: photo
+#            photo: photo
           }
       callback(results, $ui)
 
@@ -57,7 +60,7 @@ display_results = (results, $ui) ->
     for item in results.sort((a, b) ->
         return b.score - a.score)
       $span = $("<span>").addClass("name").text(item.name)
-      $li = $("<li class='person'>").attr("id", item.id).text("(#{item.score}) ").data("photo", item.photo).append($span)
+      $li = $("<li class='person'>").attr("id", item.id).text("(#{item.score}) ").append($span)
       $ul.append($li)
   else
       $li = $("<li>").text("Type to search for matches")
@@ -74,9 +77,9 @@ $ ->
     url = dutils.urls.resolve('matching_modal', id: this.id)
     $row = $this.parents('tr')
     $row.find("button.show-matches").click()
-    name = encodeURIComponent $row.find('#fuzzy_name').val()
-    phone = encodeURIComponent $row.find('#fuzzy_phone_contact').val()
-    age = encodeURIComponent $row.find('#fuzzy_age').val()
+    name = encodeURIComponent $row.find('[id$=name]').val()
+    phone = encodeURIComponent $row.find('[id$=phone]').val()
+    age = encodeURIComponent $row.find('[id$=age]').val()
     built_url = "#{url}?name=#{name}&phone=#{phone}&age=#{age}"
     $modal.load built_url, ->
       $modal.modal()
@@ -87,8 +90,8 @@ $ ->
 #    $button.prop("disabled", true)
 #    $button.children().css("color", "grey")
   # Hover image
-  $ui.on "mouseover", "li.person", ->
-    $ui.find("img").attr("src", "#{$(this).data("photo")}").show()
+#  $ui.on "mouseover", "li.person", ->
+#    $ui.find("img").attr("src", "#{$(this).data("photo")}").show()
   $popover_button = $("button.show-matches")
   $popover_button.popover
     content: $("#fuzzymatching-ui2").html()
@@ -98,11 +101,12 @@ $ ->
     trigger: "click"
     template: '<div class="popover" role="tooltip" style="width: 300px"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
   $popover_button.on "show.bs.popover", ->
+    window.cur_row = $(this).parents("tr")
     $(this).removeClass("pulse")
   $popover_button.on "shown.bs.popover", ->
     $this = $(this)
     $popover = $this.siblings(".popover").children(".popover-content")
     $row = $this.parents("tr")
     # Right now this only works when names are inputted. Not searching with other attributes
-    search $row.find("[data-fuzzy-ui]").val(), $popover, display_results, $this.parents("tr") if $row.find("input").val().length > 0
+    search $row.find("[id$=name]").val(), $popover, display_results, $this.parents("tr") if $row.find("[id$=name]").val().length > 0
 #    $popover.html("<a href=\"#\">hi</a>")

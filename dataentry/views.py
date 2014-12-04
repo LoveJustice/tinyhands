@@ -219,6 +219,7 @@ class InterceptionRecordUpdateView(
     def post(self, request, pk):
         # print(request)
         # raw_input("slkdfjadsklj")
+        # import pdb;pdb.set_trace()
         return super(InterceptionRecordUpdateView, self).post(request)
 
     def forms_valid(self, form, inlines):
@@ -468,7 +469,7 @@ def interceptee_fuzzy_matching(request):
 
     modified_matches = []
     for interceptee_group in matches:
-        modified_matches.append((interceptee_group[2].id, interceptee_group[0], interceptee_group[1], interceptee_group[2].photo.url))
+        modified_matches.append((interceptee_group[2].id, interceptee_group[0], interceptee_group[1]))
 
     return JsonResponse({
         'success': True,

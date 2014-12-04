@@ -4,7 +4,12 @@
         id: "{{ person.id }}",
         name: "{{ person.canonical_name }}",
         phone: "{{ person.canonical_phone }}",
-        age: "{{ person.canonical_age }}"
+        age: "{{ person.canonical_age }}",
+        kind: "{{ person.kind }}",
+        gender: "{{ person.gender }}",
+        district: "",
+        vdc: "",
+        relation_to: "{{ person.relation_to }}"
     };
 </script>
 
@@ -100,7 +105,7 @@
         <div class="modal-footer">
             <button type="button" class="btn btn-danger" data-dismiss="modal" id="go_back">Go back</button>
             <div class="btn-group">
-                <button type="button" class="btn btn-success" id="save">Save</button>
+{#                <button type="button" class="btn btn-success" id="save">Save</button>#}
                 <button type="button" class="btn btn-success" id="save_and_use">Save and use</button>
             </div>
         </div>

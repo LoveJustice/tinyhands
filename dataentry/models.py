@@ -276,12 +276,14 @@ class Person(models.Model):
         ('female', 'Female'),
         ('male', 'Male'),
     ]
-    gender = models.CharField(max_length=4, choices=GENDER_CHOICES, blank=True)
+    gender = models.CharField(max_length=6, choices=GENDER_CHOICES, blank=True)
     districts = models.ManyToManyField(District, related_name="+")
     vdcs = models.ManyToManyField(VDC, related_name="+")
-    canonical_name = models.ForeignKey("Name", related_name="+")
-    canonical_phone = models.ForeignKey("Phone", related_name="+")
-    canonical_age = models.ForeignKey("Age", related_name="+")
+    canonical_name = models.ForeignKey("Name", related_name="+", blank=True, null=True)
+    canonical_phone = models.ForeignKey("Phone", related_name="+", blank=True, null=True)
+    canonical_age = models.ForeignKey("Age", related_name="+", blank=True, null=True)
+    canonical_district = models.ForeignKey("District", related_name="+", blank=True, null=True)
+    canonical_vdc = models.ForeignKey("VDC", related_name="+", blank=True, null=True)
 
     def __unicode__(self):
         return "Name: {}, Age: {}, Gender: {}, Phone: {}".format(self.canonical_name, self.canonical_age, self.gender, self.canonical_phone)

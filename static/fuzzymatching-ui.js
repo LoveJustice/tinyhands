@@ -4,6 +4,8 @@
 
   $cur_input = "";
 
+  window.cur_row = "";
+
   setupInputHandlers = function($ui) {
     var $fuzzy_ui_eles;
     $fuzzy_ui_eles = $("[data-fuzzy-ui]");
@@ -17,10 +19,12 @@
       });
     });
     return $("table#interceptees input, table#interceptees select").on("keyup change", function(e) {
-      var $this, _ref;
-      if ((_ref = e.which) !== 16 && _ref !== 17 && _ref !== 18 && _ref !== 37 && _ref !== 38 && _ref !== 39 && _ref !== 40) {
+      var $row, $this, _ref;
+      if ((_ref = e.which) !== 9 && _ref !== 16 && _ref !== 17 && _ref !== 18 && _ref !== 37 && _ref !== 38 && _ref !== 39 && _ref !== 40) {
         $this = $(this);
-        return pulse($this.parents("tr").find("button.show-matches").addClass("pulse"));
+        $row = $this.parents("tr");
+        $row.find("[id*=person_id]").val("");
+        return pulse($row.find("button.show-matches").addClass("pulse"));
       }
     });
   };
@@ -40,17 +44,15 @@
       if (data.success) {
         results = [];
         data.data.forEach(function(group) {
-          var id, names, photo, scores;
+          var id, names, scores;
           names = group[1];
           scores = group[2];
           id = group[0];
-          photo = group[3];
           return $.each(names, function(idx) {
             return results.push({
               id: id,
               name: names[idx],
-              score: scores[idx],
-              photo: photo
+              score: scores[idx]
             });
           });
         });
@@ -71,7 +73,7 @@
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         item = _ref[_i];
         $span = $("<span>").addClass("name").text(item.name);
-        $li = $("<li class='person'>").attr("id", item.id).text("(" + item.score + ") ").data("photo", item.photo).append($span);
+        $li = $("<li class='person'>").attr("id", item.id).text("(" + item.score + ") ").append($span);
         _results.push($ul.append($li));
       }
       return _results;
@@ -94,17 +96,14 @@
       });
       $row = $this.parents('tr');
       $row.find("button.show-matches").click();
-      name = encodeURIComponent($row.find('#fuzzy_name').val());
-      phone = encodeURIComponent($row.find('#fuzzy_phone_contact').val());
-      age = encodeURIComponent($row.find('#fuzzy_age').val());
+      name = encodeURIComponent($row.find('[id$=name]').val());
+      phone = encodeURIComponent($row.find('[id$=phone]').val());
+      age = encodeURIComponent($row.find('[id$=age]').val());
       built_url = "" + url + "?name=" + name + "&phone=" + phone + "&age=" + age;
       return $modal.load(built_url, function() {
         $modal.modal();
         return init();
       });
-    });
-    $ui.on("mouseover", "li.person", function() {
-      return $ui.find("img").attr("src", "" + ($(this).data("photo"))).show();
     });
     $popover_button = $("button.show-matches");
     $popover_button.popover({
@@ -116,6 +115,7 @@
       template: '<div class="popover" role="tooltip" style="width: 300px"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
     });
     $popover_button.on("show.bs.popover", function() {
+      window.cur_row = $(this).parents("tr");
       return $(this).removeClass("pulse");
     });
     return $popover_button.on("shown.bs.popover", function() {
@@ -123,8 +123,8 @@
       $this = $(this);
       $popover = $this.siblings(".popover").children(".popover-content");
       $row = $this.parents("tr");
-      if ($row.find("input").val().length > 0) {
-        return search($row.find("[data-fuzzy-ui]").val(), $popover, display_results, $this.parents("tr"));
+      if ($row.find("[id$=name]").val().length > 0) {
+        return search($row.find("[id$=name]").val(), $popover, display_results, $this.parents("tr"));
       }
     });
   });

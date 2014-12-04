@@ -35,6 +35,21 @@ get_info = (attribute) ->
   console.log obj
   obj
 
+use = (id) ->
+  $row = window.cur_row
+  # Set person id to link to
+  $person_id = $row.find("[id$=person_ptr]")
+  $person_id.val(id)
+
+  # Set values in form and disable
+  values = $('#matching_modal .input-group-btn .btn-success').parent().siblings()
+  name = values.eq(0).text()
+  phone = values.eq(1).text()
+  age = values.eq(2).text()
+  $row.find('[id$=name]').val(name)
+  $row.find('[id$=phone]').val(phone)
+  $row.find('[id$=age]').val(age)
+
 @init = ->
 
   checkForCanon()
@@ -56,8 +71,10 @@ get_info = (attribute) ->
       $(this).text() == $text
 
     toggleState $matching_spans.siblings().children('button')
-  $save = $('#save')
-  $save.click ->
-    save(get_info('name'), get_info('phone_number'), get_info('age'))
+#  $save = $('#save')
+#  $save.click ->
+#    save(get_info('name'), get_info('phone_number'), get_info('age'))
   $save_and_use = $('#save_and_use')
-  $go_back = $('#go_back')
+  $save_and_use.click ->
+#    save(get_info('name'), get_info('phone_number'), get_info('age'))
+    use(window.person.id)

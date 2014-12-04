@@ -1,5 +1,6 @@
 from django import forms
 from django.db import models
+from django.forms import CharField, IntegerField
 from dataentry.models import (
     VictimInterview,
     InterceptionRecord,
@@ -8,9 +9,9 @@ from dataentry.models import (
     VictimInterviewLocationBox,
     BorderStation,
     District,
-    VDC
-)
-from dataentry.fields import DistrictField, VDCField
+    VDC,
+    Name, Age, Phone, Person)
+from dataentry.fields import DistrictField, VDCField, PersonIdField
 from django.forms.models import inlineformset_factory
 from django.core.exceptions import ValidationError
 from django.utils.html import mark_safe
@@ -367,26 +368,56 @@ class InterceptionRecordForm(DreamSuitePaperForm):
 class IntercepteeForm(DreamSuitePaperForm):
     class Meta:
         model = Interceptee
-        exclude = ('district','vdc')
+        exclude = ('districts','vdcs','canonical_name','canonical_age','canonical_phone','person_ptr')
     
     def __init__(self,*args, **kwargs):
         super(IntercepteeForm, self).__init__(*args, **kwargs)
         self.fields['district'] = DistrictField()
         self.fields['vdc'] = VDCField()
+        self.fields['person_id'] = PersonIdField()
+        self.fields['name'] = CharField()
+        self.fields['age'] = IntegerField()
+        self.fields['phone'] = CharField()
+
+        # TODO invalid because of new relationships
+
         try:
-            self.fields['district'].initial = self.instance.district
+            self.fields['district'].initial = self.instance.canonical_district
         except:
             pass
         try:
-           self.fields['vdc'].initial = self.instance.vdc
+           self.fields['vdc'].initial = self.instance.canonical_vdc
         except:
             pass
 
+        self.fields['name'].initial = self.instance.canonical_name
+        self.fields['phone'].initial = self.instance.canonical_phone
+        self.fields['age'].initial = self.instance.canonical_age
+
     def save(self, commit=True):
+        person = self.cleaned_data['person_ptr']
+        if person:
+            return Interceptee.objects.get(pk=person.id)
+        self.instance.interception_record = self.cleaned_data['interception_record']
+        self.instance.save()
+
         district = District.objects.get(name=self.cleaned_data['district'])
         vdc = VDC.objects.get(name=self.cleaned_data['vdc'])
-        self.instance.vdc = vdc
-        self.instance.district = district
+        self.instance.districts.add(district)
+        self.instance.vdcs.add(vdc)
+        self.instance.canonical_district = district
+        self.instance.canonical_vdc = vdc
+
+        name = Name(value=self.cleaned_data['name'])
+        self.instance.names.add(name)
+        self.instance.canonical_name = name
+        age = Age.objects.get_or_create(value=self.cleaned_data['age'])[0]
+        self.instance.ages.add(age)
+        self.instance.canonical_age = age
+        phone = Phone(value=self.cleaned_data['phone'])
+        self.instance.phone_numbers.add(phone)
+        self.instance.canonical_phone = phone
+
         return super(IntercepteeForm, self).save(commit)
 
 IntercepteeFormSet = inlineformset_factory(InterceptionRecord, Interceptee, exclude=[], extra=12)
