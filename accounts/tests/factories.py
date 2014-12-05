@@ -42,6 +42,18 @@ class AddUserDesignation(DjangoModelFactory):
     permission_vif_add = True
     permission_border_stations_view = True
     permission_border_stations_add = True
+    
+class EditUserDesignation(DjangoModelFactory):
+    class Meta:
+        model = DefaultPermissionsSet
+
+    name = "Edit User"
+    permission_irf_view = True
+    permission_irf_edit = True
+    permission_vif_view = True
+    permission_vif_edit = True
+    permission_border_stations_view = True
+    permission_border_stations_edit = True
 
 class UserFactory(DjangoModelFactory):
     class Meta:
@@ -81,3 +93,12 @@ class AddUserFactory(UserFactory):
     permission_border_stations_view = True
     permission_border_stations_add = True
     user_designation = factory.SubFactory(AddUserDesignation)
+    
+class EditUserFactory(UserFactory):
+    permission_irf_view = True
+    permission_irf_edit = True
+    permission_vif_view = True
+    permission_vif_edit = True
+    permission_border_stations_view = True
+    permission_border_stations_edit = True
+    user_designation = factory.SubFactory(EditUserDesignation)
