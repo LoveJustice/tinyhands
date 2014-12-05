@@ -10,3 +10,4 @@ class BorderStationBudgetCalculationForm(forms.ModelForm):
 class OtherBudgetItemCostForm(forms.ModelForm):
     class Meta:
         model = OtherBudgetItemCost
+        fields = ['name', 'cost']

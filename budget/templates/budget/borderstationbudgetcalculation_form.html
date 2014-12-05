@@ -18,6 +18,7 @@
      <form id="budget-calc-form" method="post">
         {% csrf_token %}
         <!-- First Table Thing -->
+
         <div class="form-page">
             <div class="row">
                 <div class="col-md-4">
@@ -65,16 +66,11 @@
             <div class="row">
                 <div class="col-md-6">
                     <h2 class="background"><span>Staff Salaries</span></h2>
+
                     {{ staff_formset.management_form }}
+
                     {% for staff_form in staff_formset %}
-                        {% for hidden in staff_form.hidden_fields %}
-                            {{ hidden }}
-                        {% endfor %}
-                        {{ staff_form.id }}
-                        {{ staff_form.border_station|attr:"hidden: true"}}
-                        {{ staff_form.email|attr:"hidden: true" }}
-                        {{ staff_form.first_name|attr:"hidden: true" }}
-                        {{ staff_form.last_name|attr:"hidden: true" }}
+
                         <div class="row">
                             <div class="col-lg-4">
                                 <h3>
@@ -83,12 +79,12 @@
                                 </h3>
                             </div>
                             <div class="col-lg-8">
-                                {{ staff_form.salary|bootstrap }}
+                                    {{ staff_form|bootstrap }}
                             </div>
                         </div>
 
                     {% endfor %}
-                    We need to render this from the static station model
+
                 </div>
                 <div class="col-md-6">
                     <h2 class="background"><span>Shelter</span></h2>
@@ -665,6 +661,28 @@
                             <input class="form-control text-center" data-bind="value: miscMaximum" disabled="disabled"/>
                         </div>
                     </div>
+
+
+                    <div class="row">
+
+                        {{ misc_items_formset.management_form }}
+
+                        {% for form in misc_items_formset %}
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        {{ form.id }}
+                                        {{ form.name|bootstrap }}
+                                    </div>
+                                    <div class="col-lg-6">
+                                        {{ form.cost|bootstrap }}
+                                    </div>
+                                </div>
+                        {% endfor %}
+                    </div>
+
+
+
+
                     <div class="row center" style="margin-top: 20px; padding-right: 200px; padding-left: 200px; text-align: center">
                         <label>Total Miscellaneous</label>
                         <input class="form-control text-center" data-bind="value: miscTotal" disabled="disabled"/>
@@ -676,8 +694,6 @@
         </div>
 
 
-{#     <script type='text/javascript' src="{{ STATIC_URL }}budget.js"></script>#}
-
 
      {% if submit_type %}
         <div class="row">
@@ -685,6 +701,9 @@
         </div>
      {% endif %}
      </form>
+
+
+
 
 <script>
 function budgetViewModel() {
