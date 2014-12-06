@@ -44,6 +44,11 @@ class TestModels(TestCase):
         item.awareness_sign_boards_boolean = True
         item.awareness_sign_boards = 20
         self.assertEqual(item.awareness_total(), 4035)
+        item.awareness_contact_cards = False
+        item.awareness_awareness_party_boolean = False
+        item.awareness_sign_boards_boolean = False
+        self.assertEqual(item.awareness_total(), 0)
+
 
         #Supplies
         item.supplies_walkie_talkies_boolean = True
@@ -55,3 +60,44 @@ class TestModels(TestCase):
         item.supplies_flashlights_boolean = True
         item.supplies_flashlights_amount = 5
         self.assertEqual(item.supplies_total(), 125)
+        item.supplies_walkie_talkies_boolean = False
+        item.supplies_recorders_boolean = False
+        item.supplies_binoculars_boolean = False
+        item.supplies_flashlights_boolean = False
+        self.assertEqual(item.supplies_total(), 0)
+
+
+        #Communication
+        item.communication_chair = True
+        item.communication_chair_amount = 1000
+        item.communication_manager = True
+        item.communication_manager_amount = 1000
+        item.communication_number_of_staff_with_walkie_talkies = 5
+        item.communication_number_of_staff_with_walkie_talkies_multiplier = 100
+        item.communication_each_staff = 10
+        item.communication_each_staff_multiplier = 300
+        self.assertEqual(item.communication_total(), 5500)
+        item.communication_chair = False
+        item.communication_manager = False
+        self.assertEqual(item.communication_total(), 3500)
+
+
+        #Travel
+        item.travel_chair_with_bike = True
+        item.travel_chair_with_bike_amount = 2000
+        item.travel_manager_with_bike = True
+        item.travel_manager_with_bike_amount = 2000
+        item.travel_number_of_staff_using_bikes = 5
+        item.travel_number_of_staff_using_bikes_multiplier = 100
+        item.travel_last_months_expense_for_sending_girls_home = 20
+        item.travel_motorbike = True
+        item.travel_motorbike_amount = 30000
+        item.travel_plus_other = 500
+        #self.assertEqual(item.travel_total(), 35020)
+        item.travel_chair_with_bike = False
+        #self.assertEqual(item.travel_total(), 33020)
+        item.travel_manager_with_bike = False
+        #self.assertEqual(item.travel_total(), 31020)
+        item.travel_motorbike = False
+        self.assertEqual(item.travel_total(), 1020)
+
