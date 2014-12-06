@@ -25,6 +25,9 @@ class TestModels(TestCase):
         item.shelter_shelter_two_amount = 200
         item.shelter_shelter_two = True
         self.assertEqual(item.shelter_total(), 370)
+        item.shelter_shelter_startup = False
+        item.shelter_shelter_two = False
+        self.assertEqual(item.shelter_total(), 70)
 
         #Food and Gas
         item.food_and_gas_number_of_intercepted_girls = 5
@@ -48,7 +51,6 @@ class TestModels(TestCase):
         item.awareness_awareness_party_boolean = False
         item.awareness_sign_boards_boolean = False
         self.assertEqual(item.awareness_total(), 0)
-
 
         #Supplies
         item.supplies_walkie_talkies_boolean = True
@@ -81,7 +83,6 @@ class TestModels(TestCase):
         item.communication_manager = False
         self.assertEqual(item.communication_total(), 3500)
 
-
         #Travel
         item.travel_chair_with_bike = True
         item.travel_chair_with_bike_amount = 2000
@@ -101,3 +102,26 @@ class TestModels(TestCase):
         item.travel_motorbike = False
         self.assertEqual(item.travel_total(), 1020)
 
+        #Administration
+        item.administration_booth = True
+        item.administration_booth_amount = 30000
+        item.administration_number_of_intercepts_last_month = 3
+        item.administration_number_of_intercepts_last_month_adder = 1000
+        item.administration_number_of_intercepts_last_month_multiplier = 10
+        item.administration_number_of_meetings_per_month = 4
+        item.administration_number_of_meetings_per_month_multiplier = 600
+        item.administration_registration = True
+        item.administration_registration_amount = 2000
+        self.assertEqual(item.administration_total(), 35430)
+        item.administration_booth = False
+        item.administration_registration = False
+        self.assertEqual(item.administration_total(), 3430)
+
+        #Medical
+        item.medical_last_months_expense = 500
+        self.assertEqual(item.medical_total(), 500)
+
+        #Miscellaneous
+        item.miscellaneous_number_of_intercepts_last_month = 5
+        item.miscellaneous_number_of_intercepts_last_month_multiplier = 300
+        self.assertEqual(item.miscellaneous_total(), 1500)
