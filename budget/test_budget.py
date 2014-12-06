@@ -55,3 +55,27 @@ class TestModels(TestCase):
         item.supplies_flashlights_boolean = True
         item.supplies_flashlights_amount = 5
         self.assertEqual(item.supplies_total(), 125)
+
+        #Administration
+        item.administration_booth = True
+        item.administration_booth_amount = 30000
+        item.administration_number_of_intercepts_last_month = 3
+        item.administration_number_of_intercepts_last_month_adder = 1000
+        item.administration_number_of_intercepts_last_month_multiplier = 10
+        item.administration_number_of_meetings_per_month = 4
+        item.administration_number_of_meetings_per_month_multiplier = 600
+        item.administration_registration = True
+        item.administration_registration_amount = 2000
+        self.assertEqual(item.administration_total(), 35430)
+        item.administration_booth = False
+        item.administration_registration = False
+        self.assertEqual(item.administration_total(), 3430)
+
+        #Medical
+        item.medical_last_months_expense = 500
+        self.assertEqual(item.medical_total(), 500)
+
+        #Miscellaneous
+        item.miscellaneous_number_of_intercepts_last_month = 5
+        item.miscellaneous_number_of_intercepts_last_month_multiplier = 300
+        self.assertEqual(item.miscellaneous_total(), 1500)
