@@ -23,10 +23,10 @@ class Migration(migrations.Migration):
             },
             bases=(models.Model,),
         ),
-        migrations.AddField(
-            model_name='victiminterviewlocationbox',
-            name='geolocation',
-            field=models.ForeignKey(related_name=b'geolocation', default='', to='dataentry.GeoCodeLocation'),
-            preserve_default=False,
-        ),
+        # migrations.AddField(
+        #     model_name='victiminterviewlocationbox',
+        #     name='geolocation',
+        #     field=models.ForeignKey(related_name=b'geolocation', default='', to='dataentry.GeoCodeLocation'),
+        #     preserve_default=False,
+        # ),
     ]

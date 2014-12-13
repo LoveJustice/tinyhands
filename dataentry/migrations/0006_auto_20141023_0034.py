@@ -11,14 +11,14 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='victiminterviewlocationbox',
-            name='district_geocodelocation',
-        ),
-        migrations.RemoveField(
-            model_name='victiminterviewlocationbox',
-            name='vdc_geocodelocation',
-        ),
+        # migrations.RemoveField(
+        #     model_name='victiminterviewlocationbox',
+        #     name='district_geocodelocation',
+        # ),
+        # migrations.RemoveField(
+        #     model_name='victiminterviewlocationbox',
+        #     name='vdc_geocodelocation',
+        # ),
         migrations.AlterField(
             model_name='interceptee',
             name='district',
