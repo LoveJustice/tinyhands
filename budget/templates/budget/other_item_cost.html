@@ -1,0 +1,14 @@
+{% load bootstrap %}
+{% load widget_tweaks %}
+
+
+<div class="row">
+    <div class="col-lg-6">
+        {{ form.id }}
+        {{ form.DELETE }}
+        {{ form.name|bootstrap }}
+    </div>
+    <div class="col-lg-6">
+        {{ form.cost|bootstrap }}
+    </div>
+</div>

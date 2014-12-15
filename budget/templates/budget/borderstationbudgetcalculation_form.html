@@ -664,20 +664,14 @@
 
 
                     <div class="row">
-
                         {{ misc_items_formset.management_form }}
 
-                        {% for form in misc_items_formset %}
-                                <div class="row">
-                                    <div class="col-lg-6">
-                                        {{ form.id }}
-                                        {{ form.name|bootstrap }}
-                                    </div>
-                                    <div class="col-lg-6">
-                                        {{ form.cost|bootstrap }}
-                                    </div>
-                                </div>
-                        {% endfor %}
+                            {% for item_form in misc_items_formset %}
+                            <div id='{{item_form.prefix}}'>
+                                {% include "budget/other_item_cost.html" with form=item_form %}
+                            </div>
+                            {% endfor %}
+
                     </div>
 
 
@@ -692,6 +686,49 @@
             <!-- End Miscellaneous -->
 
         </div>
+
+
+
+
+
+
+<script type="text/javascript">
+    /* Allows for the creation of more or less staff/committee members */
+        $(function() {
+            {% for formset in misc_items_formset %}
+            $('div#{{ formset.prefix }}').formset({
+               prefix: '{{ formset.prefix }}',
+               formCssClass: 'misc-formset{{ forloop.counter }}',
+               addText: '+ Add Another Item',
+               deleteText: 'Remove Item',
+               addCssClass: 'add-misc btn btn-success pull-right',
+               deleteCssClass: 'delete-misc btn btn-danger',
+            });
+            {% endfor %}
+        })
+    {% url 'borderstations_view' as borderstations_view %}
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
      {% if submit_type %}
