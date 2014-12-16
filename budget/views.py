@@ -36,26 +36,30 @@ def budget_calc_create(request, pk):
         staff_formset = StaffFormSet(request.POST, queryset=border_station_staff, prefix='staff')
         form = BorderStationBudgetCalculationForm(request.POST)
 
-        travel_items_formset = OtherItemsFormset(request.POST, prefix='travel_items')
-        misc_items_formset = OtherItemsFormset(request.POST, prefix='misc_items')
-        awareness_items_formset = OtherItemsFormset(request.POST, prefix='awareness_items')
-        supplies_items_formset = OtherItemsFormset(request.POST, prefix='supplies_items')
+        travel_items_formset = OtherItemsFormset(request.POST, prefix='travel')
+        misc_items_formset = OtherItemsFormset(request.POST, prefix='misc')
+        awareness_items_formset = OtherItemsFormset(request.POST, prefix='awareness')
+        supplies_items_formset = OtherItemsFormset(request.POST, prefix='supplies')
 
-        if form.is_valid() and staff_formset.is_valid() and misc_items_formset.is_valid():
+        # if form.is_valid() and staff_formset.is_valid() and travel_items_formset.is_valid() and misc_items_formset.is_valid() and awareness_items_formset.is_valid() and supplies_items_formset.is_valid():
+        if form.is_valid() and staff_formset.is_valid() and misc_items_formset.is_valid() and awareness_items_formset.is_valid():
             form.instance.border_station = border_station
             form.save()
             staff_formset.save()
+            # save_all(travel_items_formset, 1, form)
             save_all(misc_items_formset, 2, form)
+            save_all(awareness_items_formset, 3, form)
+            # save_all(supplies_items_formset, 4, form)
 
             return redirect("budget_list")
 
     else:
         staff_formset = StaffFormSet(queryset=border_station_staff, prefix='staff')
 
-        travel_items_formset = OtherItemsFormset(prefix='travel_items')
-        misc_items_formset = OtherItemsFormset(prefix='misc_items')
-        awareness_items_formset = OtherItemsFormset(prefix='awareness_items')
-        supplies_items_formset = OtherItemsFormset(prefix='supplies_items')
+        travel_items_formset = OtherItemsFormset(prefix='travel')
+        misc_items_formset = OtherItemsFormset(prefix='misc')
+        awareness_items_formset = OtherItemsFormset(prefix='awareness')
+        supplies_items_formset = OtherItemsFormset(prefix='supplies')
 
     submit_type = "Create"
     return render(request, 'budget/borderstationbudgetcalculation_form.html', locals())
@@ -84,10 +88,10 @@ def budget_calc_update(request, pk):
         staff_formset = StaffFormSet(request.POST, queryset=border_station_staff, prefix='staff')
         form = BorderStationBudgetCalculationForm(request.POST, instance=budget_calc)
 
-        travel_items_formset = OtherItemsFormset(request.POST, instance=budget_calc, queryset=budget_calc.otherbudgetitemcost_set.filter(form_section=1), prefix='misc_items')
-        misc_items_formset = OtherItemsFormset(request.POST, instance=budget_calc, queryset=budget_calc.otherbudgetitemcost_set.filter(form_section=2), prefix='misc_items')
-        awareness_items_formset = OtherItemsFormset(request.POST, instance=budget_calc, queryset=budget_calc.otherbudgetitemcost_set.filter(form_section=3), prefix='misc_items')
-        supplies_items_formset = OtherItemsFormset(request.POST, instance=budget_calc, queryset=budget_calc.otherbudgetitemcost_set.filter(form_section=4), prefix='misc_items')
+        travel_items_formset = OtherItemsFormset(request.POST, instance=budget_calc, queryset=budget_calc.otherbudgetitemcost_set.filter(form_section=1), prefix='travel')
+        misc_items_formset = OtherItemsFormset(request.POST, instance=budget_calc, queryset=budget_calc.otherbudgetitemcost_set.filter(form_section=2), prefix='misc')
+        awareness_items_formset = OtherItemsFormset(request.POST, instance=budget_calc, queryset=budget_calc.otherbudgetitemcost_set.filter(form_section=3), prefix='awareness')
+        supplies_items_formset = OtherItemsFormset(request.POST, instance=budget_calc, queryset=budget_calc.otherbudgetitemcost_set.filter(form_section=4), prefix='supplies')
 
         if form.is_valid() and staff_formset.is_valid() and misc_items_formset.is_valid():
             form.instance.border_station = border_station
@@ -99,10 +103,10 @@ def budget_calc_update(request, pk):
     else:
         staff_formset = StaffFormSet(queryset=border_station_staff, prefix='staff')
 
-        travel_items_formset = OtherItemsFormset(instance=budget_calc, queryset=budget_calc.otherbudgetitemcost_set.filter(form_section=1), prefix='travel_items')
-        misc_items_formset = OtherItemsFormset(instance=budget_calc, queryset=budget_calc.otherbudgetitemcost_set.filter(form_section=2), prefix='misc_items')
-        awareness_items_formset = OtherItemsFormset(instance=budget_calc, queryset=budget_calc.otherbudgetitemcost_set.filter(form_section=3), prefix='awareness_items')
-        supplies_items_formset = OtherItemsFormset(instance=budget_calc, queryset=budget_calc.otherbudgetitemcost_set.filter(form_section=4), prefix='supplies_items')
+        travel_items_formset = OtherItemsFormset(instance=budget_calc, queryset=budget_calc.otherbudgetitemcost_set.filter(form_section=1), prefix='travel')
+        misc_items_formset = OtherItemsFormset(instance=budget_calc, queryset=budget_calc.otherbudgetitemcost_set.filter(form_section=2), prefix='misc')
+        awareness_items_formset = OtherItemsFormset(instance=budget_calc, queryset=budget_calc.otherbudgetitemcost_set.filter(form_section=3), prefix='awareness')
+        supplies_items_formset = OtherItemsFormset(instance=budget_calc, queryset=budget_calc.otherbudgetitemcost_set.filter(form_section=4), prefix='supplies')
 
     submit_type = "Update"
     return render(request, 'budget/borderstationbudgetcalculation_form.html', locals())

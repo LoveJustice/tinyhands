@@ -316,6 +316,30 @@
                             {{ form.awareness_sign_boards|attr:"data-bind:value: awarenessSignBoardsAmount"|attr:"class: form-control" }}
                         </div>
                     </div>
+                    <div class="row">
+                        {{ awareness_items_formset.management_form }}
+                        {% for item_form in awareness_items_formset %}
+                            <div id='{{item_form.prefix}}'>
+                                {% include "budget/other_item_cost.html" with form=item_form %}
+                            </div>
+                        {% endfor %}
+                        <script type="text/javascript">
+                            /* Allows for the creation of more or less staff/committee members */
+                                $(function() {
+                                    {% for formset in awareness_items_formset %}
+                                    $('div#{{ formset.prefix }}').formset({
+                                       prefix: '{{ formset.prefix }}',
+                                       formCssClass: 'awareness-formset{{ forloop.counter }}',
+                                       addText: '+ Add Another Item',
+                                       deleteText: 'Remove Item',
+                                       addCssClass: 'add-awareness btn btn-success pull-right',
+                                       deleteCssClass: 'delete-awareness btn btn-danger',
+                                    });
+                                    {% endfor %}
+                                })
+                            {% url 'borderstations_view' as borderstations_view %}
+                        </script>
+                    </div>
 
                     <div class="row center" style="margin-top: 20px; padding-right: 200px; padding-left: 200px; text-align: center">
                         <label>Total Awareness</label>
@@ -662,20 +686,30 @@
                         </div>
                     </div>
 
-
                     <div class="row">
                         {{ misc_items_formset.management_form }}
-
-                            {% for item_form in misc_items_formset %}
+                        {% for item_form in misc_items_formset %}
                             <div id='{{item_form.prefix}}'>
                                 {% include "budget/other_item_cost.html" with form=item_form %}
                             </div>
-                            {% endfor %}
-
+                        {% endfor %}
+                        <script type="text/javascript">
+                            /* Allows for the creation of more or less staff/committee members */
+                                $(function() {
+                                    {% for formset in misc_items_formset %}
+                                    $('div#{{ formset.prefix }}').formset({
+                                       prefix: '{{ formset.prefix }}',
+                                       formCssClass: 'misc-formset{{ forloop.counter }}',
+                                       addText: '+ Add Another Item',
+                                       deleteText: 'Remove Item',
+                                       addCssClass: 'add-misc btn btn-success pull-right',
+                                       deleteCssClass: 'delete-misc btn btn-danger',
+                                    });
+                                    {% endfor %}
+                                })
+                            {% url 'borderstations_view' as borderstations_view %}
+                        </script>
                     </div>
-
-
-
 
                     <div class="row center" style="margin-top: 20px; padding-right: 200px; padding-left: 200px; text-align: center">
                         <label>Total Miscellaneous</label>
@@ -686,50 +720,6 @@
             <!-- End Miscellaneous -->
 
         </div>
-
-
-
-
-
-
-<script type="text/javascript">
-    /* Allows for the creation of more or less staff/committee members */
-        $(function() {
-            {% for formset in misc_items_formset %}
-            $('div#{{ formset.prefix }}').formset({
-               prefix: '{{ formset.prefix }}',
-               formCssClass: 'misc-formset{{ forloop.counter }}',
-               addText: '+ Add Another Item',
-               deleteText: 'Remove Item',
-               addCssClass: 'add-misc btn btn-success pull-right',
-               deleteCssClass: 'delete-misc btn btn-danger',
-            });
-            {% endfor %}
-        })
-    {% url 'borderstations_view' as borderstations_view %}
-</script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
      {% if submit_type %}
         <div class="row">
