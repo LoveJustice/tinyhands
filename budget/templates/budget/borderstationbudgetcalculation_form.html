@@ -78,7 +78,7 @@
                                     {{ staff_form.instance.last_name }}
                                 </h3>
                             </div>
-                            <div class="col-lg-8">
+                            <div class="col-lg-7">
                                     {{ staff_form|bootstrap }}
                             </div>
                         </div>
@@ -318,22 +318,11 @@
                     </div>
 
                     <hr>
-                    {{ awareness_items_formset.management_form }}
-
                     <div class="row">
-
+                        {{ awareness_items_formset.management_form }}
                         {% for item_form in awareness_items_formset %}
                             <div id='{{item_form.prefix}}'>
-                                {{ item_form.DELETE }}
-                                <div class="row">
-                                    {{ item_form.id }}
-                                    <div class="col-lg-4 col-lg-offset-2">
-                                        {{ item_form.name|bootstrap }}
-                                    </div>
-                                    <div class="col-lg-4">
-                                        {{ item_form.cost|bootstrap }}
-                                    </div>
-                                </div>
+                                {% include "budget/other_item_cost.html" with form=item_form %}
                             </div>
                         {% endfor %}
                         <script type="text/javascript">
@@ -345,8 +334,8 @@
                                        formCssClass: 'awareness-formset{{ forloop.counter }}',
                                        addText: '+ Add Another Item',
                                        deleteText: 'Remove Item',
-                                       addCssClass: 'add-awareness btn btn-success pull-right',
-                                       deleteCssClass: 'delete-awareness col-lg-offset-2 btn btn-danger',
+                                       addCssClass: 'add-awareness btn btn-success changeaddbtn col-lg-offset-4',
+                                       deleteCssClass: 'delete-awareness repositionremovebtn btn btn-danger',
                                     });
                                     {% endfor %}
                                 })
@@ -451,8 +440,8 @@
                                        formCssClass: 'travel-formset{{ forloop.counter }}',
                                        addText: '+ Add Another Item',
                                        deleteText: 'Remove Item',
-                                       addCssClass: 'add-travel btn btn-success pull-right',
-                                       deleteCssClass: 'delete-travel col-lg-offset-2 btn btn-danger',
+                                       addCssClass: 'add-travel btn btn-success changeaddbtn col-lg-offset-4',
+                                       deleteCssClass: 'delete-travel repositionremovebtn btn btn-danger',
                                     });
                                     {% endfor %}
                                 })
@@ -521,8 +510,8 @@
                                        formCssClass: 'supplies-formset{{ forloop.counter }}',
                                        addText: '+ Add Another Item',
                                        deleteText: 'Remove Item',
-                                       addCssClass: 'add-supplies btn btn-success pull-right',
-                                       deleteCssClass: 'delete-supplies col-lg-offset-2 btn btn-danger',
+                                       addCssClass: 'add-supplies btn btn-success changeaddbtn col-lg-offset-4',
+                                       deleteCssClass: 'delete-supplies repositionremovebtn btn btn-danger',
                                     });
                                     {% endfor %}
                                 })
@@ -766,8 +755,8 @@
                                        formCssClass: 'misc-formset{{ forloop.counter }}',
                                        addText: '+ Add Another Item',
                                        deleteText: 'Remove Item',
-                                       addCssClass: 'add-misc btn btn-success pull-right',
-                                       deleteCssClass: 'delete-misc col-lg-offset-2 btn btn-danger',
+                                       addCssClass: 'add-misc btn btn-success changeaddbtn col-lg-offset-4',
+                                       deleteCssClass: 'delete-misc repositionremovebtn btn btn-danger',
                                     });
                                     {% endfor %}
                                 })
