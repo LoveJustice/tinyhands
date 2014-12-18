@@ -24,6 +24,10 @@ from reportlab import *
 
 @login_required
 def budget_calc_create(request, pk):
+    #is there a better way to do permissions in function based views?
+    if not request.user.permission_budget_manage:
+        return redirect("home")
+
     border_station = get_object_or_404(BorderStation, pk=pk)
     border_station_staff = border_station.staff_set.all()
     form = BorderStationBudgetCalculationForm()
@@ -79,6 +83,10 @@ def save_all(other_formset, form_section, budget_calc_form):
 
 @login_required
 def budget_calc_update(request, pk):
+    #is there a better way to do permissions in function based views?
+    if not request.user.permission_budget_manage:
+        return redirect("home")
+
     budget_calc = get_object_or_404(BorderStationBudgetCalculation, pk=pk)
     form = BorderStationBudgetCalculationForm(instance=budget_calc)
 
@@ -123,6 +131,9 @@ class BudgetCalcListView(
         LoginRequiredMixin,
         ListView):
     model = BorderStationBudgetCalculation
+    border_stations = BorderStation.objects.all()
+    permissions_required = ['permission_budget_manage']
+
 
 
 def search_form(request):
@@ -178,6 +189,7 @@ class MoneyDistributionFormPDFView(PDFView):
 
 class BudgetCalcDeleteView(DeleteView, LoginRequiredMixin):
     model = BorderStationBudgetCalculation
+    permissions_required = ['permission_budget_manage']
     success_url = reverse_lazy('budget_list')
 
     def delete(self, request, *args, **kwargs):

@@ -4,7 +4,9 @@
         <h1>Details</h1>
     </div>
     <div class="col-lg-6">
-        <h1><a class="btn btn-success pull-right" href="{% url 'budget_create' form.instance.id %}" style="height: 100%">New Budget Calculation Form</a></h1>
+        {% if request.user.permission_budget_manage %}
+            <h1><a class="btn btn-success pull-right" href="{% url 'budget_create' form.instance.id %}" style="height: 100%">New Budget Calculation Form</a></h1>
+        {% endif %}
     </div>
 </div>
 
