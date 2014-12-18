@@ -66,11 +66,15 @@ def budget_calc_create(request, pk):
 
 
 def save_all(other_formset, form_section, budget_calc_form):
+
     for form in other_formset:
         form.instance.budget_item_parent = budget_calc_form.instance
         form.instance.form_section = form_section
         if form.instance.cost > 0:
             form.save()
+        if form.cleaned_data:
+            if form.cleaned_data["DELETE"]:
+                form.instance.delete()
     return True
 
 
