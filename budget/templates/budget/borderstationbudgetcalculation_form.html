@@ -316,11 +316,24 @@
                             {{ form.awareness_sign_boards|attr:"data-bind:value: awarenessSignBoardsAmount"|attr:"class: form-control" }}
                         </div>
                     </div>
+
+                    <hr>
+                    {{ awareness_items_formset.management_form }}
+
                     <div class="row">
-                        {{ awareness_items_formset.management_form }}
+
                         {% for item_form in awareness_items_formset %}
                             <div id='{{item_form.prefix}}'>
-                                {% include "budget/other_item_cost.html" with form=item_form %}
+                                {{ item_form.DELETE }}
+                                <div class="row">
+                                    {{ item_form.id }}
+                                    <div class="col-lg-4 col-lg-offset-2">
+                                        {{ item_form.name|bootstrap }}
+                                    </div>
+                                    <div class="col-lg-4">
+                                        {{ item_form.cost|bootstrap }}
+                                    </div>
+                                </div>
                             </div>
                         {% endfor %}
                         <script type="text/javascript">
@@ -333,11 +346,10 @@
                                        addText: '+ Add Another Item',
                                        deleteText: 'Remove Item',
                                        addCssClass: 'add-awareness btn btn-success pull-right',
-                                       deleteCssClass: 'delete-awareness btn btn-danger',
+                                       deleteCssClass: 'delete-awareness col-lg-offset-2 btn btn-danger',
                                     });
                                     {% endfor %}
                                 })
-                            {% url 'borderstations_view' as borderstations_view %}
                         </script>
                     </div>
 
@@ -422,6 +434,32 @@
                         </div>
                     </div>
 
+                    <hr>
+                    <div class="row">
+                        {{ travel_items_formset.management_form }}
+                        {% for item_form in travel_items_formset %}
+                            <div id='{{item_form.prefix}}'>
+                                {% include "budget/other_item_cost.html" with form=item_form %}
+                            </div>
+                        {% endfor %}
+                        <script type="text/javascript">
+                            /* Allows for the creation of more or less staff/committee members */
+                                $(function() {
+                                    {% for formset in travel_items_formset %}
+                                    $('div#{{ formset.prefix }}').formset({
+                                       prefix: '{{ formset.prefix }}',
+                                       formCssClass: 'travel-formset{{ forloop.counter }}',
+                                       addText: '+ Add Another Item',
+                                       deleteText: 'Remove Item',
+                                       addCssClass: 'add-travel btn btn-success pull-right',
+                                       deleteCssClass: 'delete-travel col-lg-offset-2 btn btn-danger',
+                                    });
+                                    {% endfor %}
+                                })
+                        </script>
+                    </div>
+
+
                     <div class="row center" style="margin-top: 20px; padding-right: 200px; padding-left: 200px; text-align: center">
                         <label>Total Travel</label>
                         <input class="form-control text-center" data-bind="value: travelTotal" disabled="disabled"/>
@@ -464,6 +502,31 @@
                         <div class="col-lg-4">
                             {{ form.supplies_flashlights_amount|attr:"data-bind:value: suppliesFlashlightsAmount"|attr:"class: form-control" }}
                         </div>
+                    </div>
+
+                    <hr>
+                    <div class="row">
+                        {{ supplies_items_formset.management_form }}
+                        {% for item_form in supplies_items_formset %}
+                            <div id='{{item_form.prefix}}'>
+                                {% include "budget/other_item_cost.html" with form=item_form %}
+                            </div>
+                        {% endfor %}
+                        <script type="text/javascript">
+                            /* Allows for the creation of more or less staff/committee members */
+                                $(function() {
+                                    {% for formset in supplies_items_formset %}
+                                    $('div#{{ formset.prefix }}').formset({
+                                       prefix: '{{ formset.prefix }}',
+                                       formCssClass: 'supplies-formset{{ forloop.counter }}',
+                                       addText: '+ Add Another Item',
+                                       deleteText: 'Remove Item',
+                                       addCssClass: 'add-supplies btn btn-success pull-right',
+                                       deleteCssClass: 'delete-supplies col-lg-offset-2 btn btn-danger',
+                                    });
+                                    {% endfor %}
+                                })
+                        </script>
                     </div>
 
                     <div class="row center" style="margin-top: 20px; padding-right: 200px; padding-left: 200px; text-align: center">
@@ -686,6 +749,7 @@
                         </div>
                     </div>
 
+                    <hr>
                     <div class="row">
                         {{ misc_items_formset.management_form }}
                         {% for item_form in misc_items_formset %}
@@ -703,7 +767,7 @@
                                        addText: '+ Add Another Item',
                                        deleteText: 'Remove Item',
                                        addCssClass: 'add-misc btn btn-success pull-right',
-                                       deleteCssClass: 'delete-misc btn btn-danger',
+                                       deleteCssClass: 'delete-misc col-lg-offset-2 btn btn-danger',
                                     });
                                     {% endfor %}
                                 })
