@@ -372,23 +372,15 @@ class IntercepteeForm(DreamSuitePaperForm):
     
     def __init__(self,*args, **kwargs):
         super(IntercepteeForm, self).__init__(*args, **kwargs)
-        self.fields['district'] = DistrictField()
-        self.fields['vdc'] = VDCField()
+        self.fields['district'] = DistrictField(required=False)
+        self.fields['vdc'] = VDCField(required=False)
         self.fields['person_id'] = PersonIdField()
         self.fields['name'] = CharField()
-        self.fields['age'] = IntegerField()
-        self.fields['phone'] = CharField()
+        self.fields['age'] = IntegerField(required=False)
+        self.fields['phone'] = CharField(required=False)
 
-        # TODO invalid because of new relationships
-
-        try:
-            self.fields['district'].initial = self.instance.canonical_district
-        except:
-            pass
-        try:
-           self.fields['vdc'].initial = self.instance.canonical_vdc
-        except:
-            pass
+        self.fields['district'].initial = self.instance.canonical_district
+        self.fields['vdc'].initial = self.instance.canonical_vdc
 
         self.fields['name'].initial = self.instance.canonical_name
         self.fields['phone'].initial = self.instance.canonical_phone
@@ -396,27 +388,34 @@ class IntercepteeForm(DreamSuitePaperForm):
 
     def save(self, commit=True):
         person = self.cleaned_data['person_ptr']
-        if person:
-            return Interceptee.objects.get(pk=person.id)
+        id = self.cleaned_data['person_id']
+        if person or id: # We are creating and linking to existing person or updating
+            return Interceptee.objects.get(pk=id)
         self.instance.interception_record = self.cleaned_data['interception_record']
         self.instance.save()
 
-        district = District.objects.get(name=self.cleaned_data['district'])
-        vdc = VDC.objects.get(name=self.cleaned_data['vdc'])
-        self.instance.districts.add(district)
-        self.instance.vdcs.add(vdc)
-        self.instance.canonical_district = district
-        self.instance.canonical_vdc = vdc
+        if self.cleaned_data['district']:
+            district = District.objects.get(name=self.cleaned_data['district'])
+            self.instance.districts.add(district)
+            self.instance.canonical_district = district
+        if self.cleaned_data['vdc']:
+            vdc = VDC.objects.get(name=self.cleaned_data['vdc'])
+            self.instance.vdcs.add(vdc)
+            self.instance.canonical_vdc = vdc
 
         name = Name(value=self.cleaned_data['name'])
         self.instance.names.add(name)
         self.instance.canonical_name = name
-        age = Age.objects.get_or_create(value=self.cleaned_data['age'])[0]
-        self.instance.ages.add(age)
-        self.instance.canonical_age = age
-        phone = Phone(value=self.cleaned_data['phone'])
-        self.instance.phone_numbers.add(phone)
-        self.instance.canonical_phone = phone
+
+        if self.cleaned_data['age']:
+            age = Age.objects.get_or_create(value=self.cleaned_data['age'])[0]
+            self.instance.ages.add(age)
+            self.instance.canonical_age = age
+
+        if self.cleaned_data['phone']:
+            phone = Phone(value=self.cleaned_data['phone'])
+            self.instance.phone_numbers.add(phone)
+            self.instance.canonical_phone = phone
 
         return super(IntercepteeForm, self).save(commit)
 

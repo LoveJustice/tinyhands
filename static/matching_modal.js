@@ -31,7 +31,10 @@
       canonical_phone: phone,
       canonical_age: age
     }, function(data) {
-      return console.log(data);
+      console.log(data);
+      window.person.name = name;
+      window.person.phone = phone;
+      return window.person.age = age;
     });
   };
 
@@ -55,17 +58,18 @@
   };
 
   use = function(id) {
-    var $person_id, $row, age, name, phone, values;
+    var $person_id, $row;
     $row = window.cur_row;
-    $person_id = $row.find("[id$=person_ptr]");
+    $person_id = $row.find("[id$=person_id]");
     $person_id.val(id);
-    values = $('#matching_modal .input-group-btn .btn-success').parent().siblings();
-    name = values.eq(0).text();
-    phone = values.eq(1).text();
-    age = values.eq(2).text();
-    $row.find('[id$=name]').val(name);
-    $row.find('[id$=phone]').val(phone);
-    return $row.find('[id$=age]').val(age);
+    $row.find('[id$=kind]').val(window.person.name);
+    $row.find('[id$=name]').val(window.person.name);
+    $row.find('[id$=gender]').val(window.person.name);
+    $row.find('[id$=age]').val(window.person.age);
+    $row.find('[id$=district]').val(window.person.age);
+    $row.find('[id$=vdc]').val(window.person.age);
+    $row.find('[id$=phone]').val(window.person.phone);
+    return $row.find('[id$=relation_to]').val(window.person.phone);
   };
 
   this.init = function() {

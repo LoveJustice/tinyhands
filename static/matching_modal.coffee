@@ -21,6 +21,9 @@ save = (name, phone, age) ->
     canonical_age: age
   , (data) ->
     console.log data
+    window.person.name = name
+    window.person.phone = phone
+    window.person.age = age
 
 get_info = (attribute) ->
   $matched = $("##{attribute}s.attribute .matched")
@@ -38,17 +41,18 @@ get_info = (attribute) ->
 use = (id) ->
   $row = window.cur_row
   # Set person id to link to
-  $person_id = $row.find("[id$=person_ptr]")
+  $person_id = $row.find("[id$=person_id]")
   $person_id.val(id)
 
   # Set values in form and disable
-  values = $('#matching_modal .input-group-btn .btn-success').parent().siblings()
-  name = values.eq(0).text()
-  phone = values.eq(1).text()
-  age = values.eq(2).text()
-  $row.find('[id$=name]').val(name)
-  $row.find('[id$=phone]').val(phone)
-  $row.find('[id$=age]').val(age)
+  $row.find('[id$=kind]').val(window.person.name)
+  $row.find('[id$=name]').val(window.person.name)
+  $row.find('[id$=gender]').val(window.person.name)
+  $row.find('[id$=age]').val(window.person.age)
+  $row.find('[id$=district]').val(window.person.age)
+  $row.find('[id$=vdc]').val(window.person.age)
+  $row.find('[id$=phone]').val(window.person.phone)
+  $row.find('[id$=relation_to]').val(window.person.phone)
 
 @init = ->
 

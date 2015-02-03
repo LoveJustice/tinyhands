@@ -760,6 +760,7 @@
                                 <td style="width: 7%">
                                     <span class="interceptee-number">{{ forloop.counter }}</span>
                                     {{ interceptee_form.id }} {{ interceptee_form.kind }}
+                                    {{ interceptee_form.person_id|attr:"style:display:none" }}
                                     {{ interceptee_form.person_ptr|attr:"style:display:none" }}
                                 </td>
                                 <td>
