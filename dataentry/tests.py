@@ -4,7 +4,6 @@ from fuzzywuzzy import process
 import csv
 import math
 
-
 class TestModels(WebTest):
 
     def test_interception_record_model(self):
