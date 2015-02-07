@@ -1,5 +1,4 @@
 from django import forms
-from dataentry.models import BorderStation
 
 from static_border_stations.models import Staff, CommitteeMember, Location
 

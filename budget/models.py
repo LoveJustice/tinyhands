@@ -169,8 +169,8 @@ class BorderStationBudgetCalculation(models.Model):
         return total
 
 class OtherBudgetItemCost(models.Model):
-    name = models.CharField(max_length=255)
-    cost = models.PositiveIntegerField()
+    name = models.CharField(max_length=255, blank=False)
+    cost = models.PositiveIntegerField(default=0, blank=False)
 
     BUDGET_FORM_SECTION_CHOICES = [
         (1, 'Travel'),
