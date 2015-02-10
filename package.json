@@ -1,0 +1,22 @@
+{
+  "name": "tinyhandsdreamsuite",
+  "version": "0.0.0",
+  "description": "Tiny Hands Dream Suite",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {
+      "protractor": "~1.6.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/tu-software-studio/tinyhands.git"
+  },
+  "author": "",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/tu-software-studio/tinyhands/issues"
+  }
+}
