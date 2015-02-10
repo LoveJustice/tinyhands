@@ -1,7 +1,6 @@
 from django.test import TestCase
 from budget import models
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
 
 class TestSelenium(TestCase):
 
@@ -16,14 +15,8 @@ class TestSelenium(TestCase):
         id_password.clear()
         id_password.send_keys("password")
         id_password.submit()
-        #submit = driver.find_elements_by_class_name('btn')
-        #submit.click()
-
-
+        
 class TestModels(TestCase):
-
-
-
     def test_budget_1(self):
         var = 1
         var2 = 3
