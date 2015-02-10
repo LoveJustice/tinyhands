@@ -7,6 +7,7 @@ from django.http import HttpResponseRedirect
 from django.views.generic import ListView, View, DeleteView, CreateView, UpdateView
 from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSet
 from django.contrib.auth.decorators import login_required
+import re
 from dataentry.models import (
     VictimInterview,
     InterceptionRecord,

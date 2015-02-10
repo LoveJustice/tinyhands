@@ -18,6 +18,9 @@ class CreateUnactivatedAccountForm(forms.ModelForm):
             'permission_vif_edit',
             'permission_accounts_manage',
             'permission_receive_email',
+            'permission_border_stations_view',
+            'permission_border_stations_add',
+            'permission_border_stations_edit',
             'permission_vdc_manage',
         ]
 
