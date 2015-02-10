@@ -1,21 +1,6 @@
 from django.test import TestCase
 from budget import models
-from selenium import webdriver
 
-class TestSelenium(TestCase):
-
-    def test_login(self):
-        driver = webdriver.Firefox()
-        driver.maximize_window()
-        driver.get("http://127.0.0.1:8000/login/?next=/")
-        id_username = driver.find_element_by_id('id_username')
-        id_username.clear()
-        id_username.send_keys("dvcolgan@gmail.com")
-        id_password = driver.find_element_by_id('id_password')
-        id_password.clear()
-        id_password.send_keys("password")
-        id_password.submit()
-        
 class TestModels(TestCase):
     def test_budget_1(self):
         var = 1
