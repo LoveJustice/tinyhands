@@ -1,13 +1,14 @@
 from django_webtest import WebTest
-from django.utils import unittest
+from django.utils.unittest import TestCase 
 from accounts.models import Account, Alert
 
 
-class TestModels(WebTest):
-    pass
+class TestModels(TestCase):
+    def setUp(self):
+        self.account = Account()
+        
 
-
-class AlertTestCase(unittest.TestCase):
+class AlertTestCase(TestCase):
     def setUp(self):
         self.alert = Alert(1, 'code', 'template')
         self.alert.save()
