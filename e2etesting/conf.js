@@ -1,8 +1,10 @@
-// conf.js
+var constants = require('./testConstants.json');
+
 exports.config = {
   seleniumAddress: 'http://localhost:4444/wd/hub',
-  specs: ['spec.js',
-	  'otherspec.js', 
-	  'portal/*'
-	 ]
-}
+  allScriptsTimeout: 10000,
+
+  SITE_DOMAIN: '0.0.0.0:8000',
+
+  specs:  ['accounts/loginPage.spec.js']
+};

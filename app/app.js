@@ -1,0 +1,1 @@
+var dreamSuite = angular.module('dreamSuite', []);
