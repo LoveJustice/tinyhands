@@ -1,5 +1,5 @@
 #start your django server
-./manage.py runserver 0.0.0.0:6000 &
+./manage.py runserver 0.0.0.0:8000 &
 
 #start webdriver server
 nodejs node_modules/protractor/bin/webdriver-manager start &
