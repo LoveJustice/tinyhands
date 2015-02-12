@@ -16,14 +16,14 @@ class TestModels(WebTest):
         self.assertEqual(record.calculate_total_red_flags(), 70)
 
     def fuzzySetUp(self,cutOffNum,matchName):
-        cutoffNumber = cutOffNum 
+        cutoffNumber = cutOffNum
         cutoffNumber = float(cutoffNumber)
         names = []
         with open('dataentry/non_victims.csv', 'rb') as csvfile:
             reader = csv.reader(csvfile)
             for row in reader:
                 names.append(row[2])
-            enteredName = matchName 
+            enteredName = matchName
             matches = process.extractBests(enteredName, names, score_cutoff=cutoffNumber, limit=None)
             modMatches = []
             for match in matches:
@@ -59,7 +59,7 @@ class TestModels(WebTest):
             "Ramita Limbu",
             "Ramita Roka Magar"]
         self.assertEqual(self.fuzzySetUp(86,"amit"), testMatches)
-        
+
     def testFuzzy_2(self):
         testMatches = [
             "Abita",
@@ -85,9 +85,9 @@ class TestModels(WebTest):
             "Sabitri Shrestha",
             "Sabitri Thapa" ]
         self.assertEqual(self.fuzzySetUp(86,"bit"), testMatches)
-        
+
     def testFuzzy_3(self):
         testMatches = [
             "Gobin Hemram",
-            "Gobinda Oli" ] 
+            "Gobinda Oli" ]
         self.assertEqual(self.fuzzySetUp(86,"gob"), testMatches)

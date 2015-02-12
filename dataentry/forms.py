@@ -6,6 +6,7 @@ from dataentry.models import (
     Interceptee,
     VictimInterviewPersonBox,
     VictimInterviewLocationBox,
+    BorderStation,
     District,
     VDC
 )
@@ -773,6 +774,14 @@ class VictimInterviewLocationBoxForm(DreamSuitePaperForm):
         self.instance.vdc = vdc
         self.instance.district = district
         return super(VictimInterviewLocationBoxForm, self).save(commit)
+
+class BorderStationForm(forms.ModelForm):
+    class Meta:
+        model = BorderStation
+        exclude = []
+        widgets = {
+            'date_established': forms.TextInput(attrs={'placeholder': '12/31/12'}),
+        }
 
 class VDCForm(forms.ModelForm):
     class Meta:
