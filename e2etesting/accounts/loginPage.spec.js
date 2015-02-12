@@ -9,7 +9,7 @@ describe('TinyHands Login', function() {
 
     it('should have a title', function() {
         browser.get('http://0.0.0.0:8000/logout/');
-	    expect(browser.getTitle()).toContain('Log In');
+	expect(browser.getTitle()).toContain('Log In');
     });
 
 
