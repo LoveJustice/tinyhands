@@ -66,16 +66,86 @@ class BorderStationsCreationTest(WebTest):
 		
 		self.assertEquals(200, form_response.status_code)
 		self.assertEquals('Border station with this Station code already exists.',field_errors['station_code'][0])
+
+	def test_border_station_create_view_form_submission_fails_with_invalid_date(self): 
+		form = self.form
+
+		form.set('station_name', 'Station A')
+		form.set('station_code', 'STA')
+		form.set('date_established', '1/1/1')
+		form.set('longitude', '3')
+		form.set('latitude', '4')
+		form_response = form.submit()
+
+		field_errors = form_response.context['form'].errors
+		
+		self.assertEquals(200, form_response.status_code)
+		self.assertEquals('Enter a valid date.',field_errors['date_established'][0])
+
+	def test_border_station_create_view_form_submission_fails_with_invalid_email(self): 
+		form = self.form
+
+		form.set('station_name', 'Station B')
+		form.set('station_code', 'STB')
+		form.set('date_established', '1/1/11')
+		form.set('longitude', '3')
+		form.set('latitude', '4')
+
+		form.set('staff_set-0-first_name', 'Bob')
+		form.set('staff_set-0-last_name', 'Smith')
+		form.set('staff_set-0-email', 'bobsmith')
+		form.set('staff_set-0-receives_money_distribution_form', True)
+
+		form.set('committeemember_set-0-first_name', 'Jack')
+		form.set('committeemember_set-0-last_name', 'Smith')
+		form.set('committeemember_set-0-email', 'jacksmith')
+		form.set('committeemember_set-0-receives_money_distribution_form', True)
+		
+		form_response = form.submit()
+		staff_errors = form_response.context['staff_form'].errors
+		cm_errors = form_response.context['cm_form'].errors
+		
+		self.assertEquals(200, form_response.status_code)
+		self.assertEquals('Enter a valid email address.',staff_errors['email'][0])
+		self.assertEquals('Enter a valid email address.',cm_errors['email'][0])
 		
 
 	def test_border_station_create_view_form_submits_with_correct_fields(self): 
 		form = self.form
 
-		form.set('station_name', 'Station 1')
-		form.set('station_code', 'STS')
+		form.set('station_name', 'Station C')
+		form.set('station_code', 'STC')
 		form.set('date_established', '1/1/11')
 		form.set('longitude', '3')
 		form.set('latitude', '4')
+		form_response = form.submit()
+
+		self.assertEquals(302, form_response.status_code)
+		self.assertEquals('', form_response.errors)
+
+	def test_border_station_create_view_form_submits_with_all_fields(self): 
+		form = self.form
+
+		form.set('station_name', 'Station D')
+		form.set('station_code', 'STD')
+		form.set('date_established', '1/1/11')
+		form.set('longitude', '3')
+		form.set('latitude', '4')
+
+		form.set('staff_set-0-first_name', 'Bob')
+		form.set('staff_set-0-last_name', 'Smith')
+		form.set('staff_set-0-email', 'bobsmith@test.org')
+		form.set('staff_set-0-receives_money_distribution_form', True)
+
+		form.set('committeemember_set-0-first_name', 'Jack')
+		form.set('committeemember_set-0-last_name', 'Smith')
+		form.set('committeemember_set-0-email', 'jacksmith@test.org')
+		form.set('committeemember_set-0-receives_money_distribution_form', True)
+
+		form.set('location_set-0-name', 'Nepal')
+		form.set('location_set-0-latitude', '1')
+		form.set('location_set-0-longitude', '2')
+
 		form_response = form.submit()
 
 		self.assertEquals(302, form_response.status_code)
