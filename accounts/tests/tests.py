@@ -216,7 +216,13 @@ class PermissionsTesting(WebTest):
         # print(resp.status_code)
         # self.assertEqual(resp.status_code, 302)
 
+class UpdatingInformationTests(WebTest):
 
+    def setUp(self):
+        self.superuser = SuperUserFactory.create()
+
+    def test_updating_account_information(self):
+        pass
 
 
 
