@@ -5,6 +5,9 @@ exports.config = {
   allScriptsTimeout: 10000,
 
   SITE_DOMAIN: '0.0.0.0:8000',
+capabilities: {
+  'browserName': 'firefox'
+},
 
   specs:  ['accounts/loginPage.spec.js']
 };

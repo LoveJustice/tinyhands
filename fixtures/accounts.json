@@ -387,5 +387,36 @@
         "permission_border_stations_add": true,
         "permission_border_stations_edit": true
     }
-}
+},
+{
+  "fields": {
+     "last_name": "user",
+     "permission_border_stations_view": true,
+     "permission_border_stations_edit": true,
+     "is_staff": false,
+     "user_permissions": [],
+     "date_joined": "2015-02-11T18:34:15.230Z",
+     "first_name": "test",
+     "permission_irf_add": true,
+     "permission_vif_add": true,
+     "is_superuser": false,
+     "last_login": "2015-02-12T20:21:53.435Z",
+     "email": "testuser@test.com",
+     "permission_border_stations_add": true,
+     "user_designation": 1,
+     "is_active": true,
+     "activation_key": "LE3GniXcD8jEAEcGh8awMbPCgwWz465w4aGrU7md",
+     "groups": [],
+     "permission_accounts_manage": true,
+     "password": "pbkdf2_sha256$12000$nhaHlxuQwUhi$iqzcMK5WCodBx/xHDxq+5eaWq1Mrf7EyKJBMchhRW4I=",
+     "permission_vdc_manage": true,
+     "permission_irf_view": true,
+     "permission_vif_edit": true,
+     "permission_vif_view": true,
+     "permission_receive_email": true,
+     "permission_irf_edit": true
+  },
+  "model": "accounts.account",
+  "pk": 22
+} 
 ]
