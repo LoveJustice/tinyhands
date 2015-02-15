@@ -5,6 +5,8 @@ from django.core.urlresolvers import reverse_lazy, reverse
 from accounts.tests.factories import *
 from accounts.models import Account, Alert
 #from dataentry.models import BorderStation
+import ipdb
+
 
 
 class TestModels(WebTest):
@@ -219,10 +221,59 @@ class PermissionsTesting(WebTest):
 class UpdatingInformationTests(WebTest):
 
     def setUp(self):
-        self.superuser = SuperUserFactory.create()
+        self.superuser = SuperUserFactory.create(email="joe@test.org", first_name="Joe", last_name="Test")
 
-    def test_updating_account_information(self):
-        pass
+        #second user to test duplicate email failure
+        self.superuser2 = SuperUserFactory.create(email="joe2@test.org", first_name="Joe", last_name="Test")
 
 
+    def test_account_update_view_exists(self):
+        response = self.app.get(reverse('account_update', kwargs={'pk': self.superuser.id}), user=self.superuser)
+        self.assertEquals(200, response.status_code)
 
+    def test_account_update_view_has_correct_information(self):
+        response = self.app.get(reverse('account_update', kwargs={'pk': self.superuser.id}), user=self.superuser)
+        form = response.form
+        self.assertEquals("joe@test.org", form.get('email').value)
+        self.assertEquals("Joe", form.get('first_name').value)
+        self.assertEquals("Test", form.get('last_name').value)
+        self.assertEquals(True, form.get('user_designation').options[1][1])
+        self.assertEquals(True, form.get('permission_irf_view').checked)
+        self.assertEquals(True, form.get('permission_irf_add').checked)
+        self.assertEquals(True, form.get('permission_irf_edit').checked)
+        self.assertEquals(True, form.get('permission_vif_view').checked)
+        self.assertEquals(True, form.get('permission_vif_add').checked)
+        self.assertEquals(True, form.get('permission_vif_edit').checked)
+        self.assertEquals(True, form.get('permission_border_stations_view').checked)
+        self.assertEquals(True, form.get('permission_border_stations_add').checked)
+        self.assertEquals(True, form.get('permission_border_stations_edit').checked)
+        self.assertEquals(True, form.get('permission_accounts_manage').checked)
+        self.assertEquals(True, form.get('permission_receive_email').checked)
+        self.assertEquals(True, form.get('permission_vdc_manage').checked)
+        self.assertEquals(True, form.get('permission_budget_manage').checked)
+        
+    def test_account_update_view_submission_fails_with_missing_required_fields(self):
+        response = self.app.get(reverse('account_update', kwargs={'pk': self.superuser.id}), user=self.superuser)
+        form = response.form
+
+        form.set('email', '')
+        form.set('user_designation', '')
+        form_response = form.submit()
+
+        self.assertEquals(200, form_response.status_code)
+
+        field_errors = form_response.context['form'].errors
+        self.assertEquals('This field is required.',field_errors['email'][0])
+        self.assertEquals('This field is required.',field_errors['user_designation'][0])
+
+    def test_account_update_view_submission_fails_with_duplicate_email(self):
+        response = self.app.get(reverse('account_update', kwargs={'pk': self.superuser.id}), user=self.superuser)
+        form = response.form
+
+        form.set('email', 'joe2@test.org')
+        form_response = form.submit()
+
+        self.assertEquals(200, form_response.status_code)
+
+        field_errors = form_response.context['form'].errors
+        self.assertEquals('Account with this Email already exists.',field_errors['email'][0])
