@@ -9,5 +9,5 @@ capabilities: {
   'browserName': 'firefox'
 },
 
-  specs:  ['accounts/loginPage.spec.js']
+  specs:  ['accounts/loginPage.spec.js', 'accounts/permissionsPage.spec.js']
 };
