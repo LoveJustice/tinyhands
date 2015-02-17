@@ -5,6 +5,7 @@ exports.config = {
   allScriptsTimeout: 10000,
 
   specs:  ['accounts/loginPage.spec.js',
-          'vdcs/vdcAdminPage.spec.js'
+            'accounts/permissionsPage.spec.js',
+            'vdcs/vdcAdminPage.spec.js'
           ]
 };
