@@ -1,6 +1,11 @@
 from django_webtest import WebTest
 from dataentry.models import InterceptionRecord
+from django.test.client import Client
+from django.core.urlresolvers import reverse
 from fuzzywuzzy import process
+from accounts.tests.factories import *
+from datetime import date
+from accounts.models import Account
 import csv
 import math
 
@@ -91,3 +96,30 @@ class TestModels(WebTest):
             "Gobin Hemram",
             "Gobinda Oli" ]
         self.assertEqual(self.fuzzySetUp(86,"gob"), testMatches)
+
+class ExportTesting(WebTest):
+
+    def setUp(self):
+        self.user = SuperUserFactory.create()
+
+    def test_to_see_if_user_can_export_irf(self):
+        response = self.app.get(reverse('interceptionrecord_csv_export'), user=self.user)
+        self.assertEqual(response.status_code, 200)
+
+    def test_to_see_if_user_received_irf_export(self):
+        response = self.app.get(reverse('interceptionrecord_csv_export'), user=self.user)
+        today = date.today()
+        result = response['Content-Disposition']
+        expected_result = 'attachment; filename=irf-all-data-%d-%d-%d.csv' % (today.year, today.month, today.day)
+        self.assertEquals(result, expected_result)
+
+    def test_to_see_if_user_can_export_vif(self):
+        response = self.app.get(reverse('victiminterview_csv_export'), user=self.user)
+        self.assertEqual(response.status_code, 200)
+
+    def test_to_see_if_user_received_vif_export(self):
+        response = self.app.get(reverse('victiminterview_csv_export'), user=self.user)
+        today = date.today()
+        result = response['Content-Disposition']
+        expected_result = 'attachment; filename=vif-all-data-%d-%d-%d.csv' % (today.year, today.month, today.day)
+        self.assertEquals(result, expected_result)
