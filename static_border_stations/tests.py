@@ -4,6 +4,8 @@ from django.core.urlresolvers import reverse
 
 from accounts.tests.factories import SuperUserFactory
 from dataentry.models import BorderStation
+from datetime import date
+import ipdb
 
 class BorderStationsCreationTest(WebTest):
 
@@ -129,8 +131,8 @@ class BorderStationsCreationTest(WebTest):
 		form.set('station_name', 'Station D')
 		form.set('station_code', 'STD')
 		form.set('date_established', '1/1/11')
-		form.set('longitude', '3')
 		form.set('latitude', '4')
+		form.set('longitude', '3')
 
 		form.set('staff_set-0-first_name', 'Bob')
 		form.set('staff_set-0-last_name', 'Smith')
@@ -150,3 +152,27 @@ class BorderStationsCreationTest(WebTest):
 
 		self.assertEquals(302, form_response.status_code)
 		self.assertEquals('', form_response.errors)
+
+		updatedStation = BorderStation.objects.get(station_name="Station D")
+		self.assertEquals('Station D', updatedStation.station_name)
+		self.assertEquals('STD', updatedStation.station_code)
+		self.assertEquals(date(2011,1,1), updatedStation.date_established)
+		self.assertEquals(4, updatedStation.latitude)
+		self.assertEquals(3, updatedStation.longitude)
+
+		staffMember = updatedStation.staff_set.get()
+		self.assertEquals('Bob', staffMember.first_name)
+		self.assertEquals('Smith', staffMember.last_name)
+		self.assertEquals('bobsmith@test.org', staffMember.email)
+		self.assertEquals(True, staffMember.receives_money_distribution_form)
+
+		committeeMember = updatedStation.committeemember_set.get()
+		self.assertEquals('Jack', committeeMember.first_name)
+		self.assertEquals('Smith', committeeMember.last_name)
+		self.assertEquals('jacksmith@test.org', committeeMember.email)
+		self.assertEquals(True, committeeMember.receives_money_distribution_form)
+
+		location = updatedStation.location_set.get()
+		self.assertEquals('Nepal', location.name)
+		self.assertEquals(1, location.latitude)
+		self.assertEquals(2, location.longitude)
