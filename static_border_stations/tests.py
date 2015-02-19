@@ -47,10 +47,6 @@ class BorderStationsCreationTest(WebTest):
 
 		field_errors = form_response.context['form'].errors
 
-<<<<<<< HEAD
-		#should be 5 help blocks for the 5 required fields
-		self.assertEquals(5, len(help_blocks))
-=======
 		self.assertEquals(200, form_response.status_code)
 		self.assertEquals('This field is required.',field_errors['station_name'][0])
 		self.assertEquals('This field is required.',field_errors['station_code'][0])
@@ -180,4 +176,3 @@ class BorderStationsCreationTest(WebTest):
 		self.assertEquals('Nepal', location.name)
 		self.assertEquals(1, location.latitude)
 		self.assertEquals(2, location.longitude)
->>>>>>> ff929d69d321ce8fe80221e616659f0232838af8
