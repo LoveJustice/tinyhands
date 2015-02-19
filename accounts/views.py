@@ -147,7 +147,6 @@ class AccessControlView(
         'permission_receive_email',
         'permission_vdc_manage',
         'permission_budget_manage',
-        'permission_budget_manage',
     ]
 
     def get_context_data(self, **kwargs):
