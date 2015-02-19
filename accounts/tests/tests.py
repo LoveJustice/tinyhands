@@ -218,6 +218,93 @@ class PermissionsTesting(WebTest):
         # print(resp.status_code)
         # self.assertEqual(resp.status_code, 302)
 
+class CreateAccountTests(WebTest):
+    
+    def setUp(self):
+        self.viewuser = ViewUserFactory.create(email="lame@sauce.com", first_name="lame", last_name="sauce")
+        self.superuser = SuperUserFactory.create(email="super@user.com", first_name="Super", last_name="User")
+    
+    def test_admin_can_access_create_account_page(self):
+        response = self.app.get(reverse('account_create'), user=self.superuser)
+        self.assertEquals(200, response.status_code)
+    
+    def test_view_user_can_not_access_create_account_page(self):
+        response = self.app.get(reverse('account_create'), user=self.viewuser, expect_errors=True)
+        self.assertEqual(403, response.status_code)
+    
+    def test_admin_can_create_account(self):
+        response = self.app.get(reverse('account_create'), user=self.superuser)
+        form = response.form
+        form.set('email', 'bob@joe.com')
+        form.set('first_name', 'bob')
+        form.set('last_name', 'joe')
+        form.set('user_designation', 2) #summer intern
+        form.set('permission_irf_view', True)
+        form.set('permission_irf_add', False)
+        form.set('permission_irf_edit', False)
+        form.set('permission_vif_view', True)
+        form.set('permission_vif_edit', False)
+        form.set('permission_vif_add', False)
+        form.set('permission_vif_view', False)
+        form.set('permission_border_stations_view', True)
+        form.set('permission_border_stations_add', False)
+        form.set('permission_border_stations_edit', False)
+        form.set('permission_receive_email', False)
+        form.set('permission_vdc_manage', False)
+        
+        form_response = form.submit()
+        self.assertEquals(302, form_response.status_code)
+        
+    def test_if_user_was_actually_added_to_db(self):
+        response = self.app.get(reverse('account_create'), user=self.superuser)
+        form = response.form
+        form.set('email', 'bob@joe.com')
+        form.set('first_name', 'bob')
+        form.set('last_name', 'joe')
+        form.set('user_designation', 2) #summer intern
+        form.set('permission_irf_view', True)
+        form.set('permission_irf_add', False)
+        form.set('permission_irf_edit', False)
+        form.set('permission_vif_view', True)
+        form.set('permission_vif_edit', False)
+        form.set('permission_vif_add', False)
+        form.set('permission_vif_view', False)
+        form.set('permission_border_stations_view', True)
+        form.set('permission_border_stations_add', False)
+        form.set('permission_border_stations_edit', False)
+        form.set('permission_receive_email', False)
+        form.set('permission_vdc_manage', False)
+        
+        form_response = form.submit()
+        
+        newuser = Account.objects.get(email='bob@joe.com')
+        self.assertIsNotNone(newuser)
+        
+    def test_if_required_fields_are_filled_in(self):
+        response = self.app.get(reverse('account_create'), user=self.superuser)
+        form = response.form
+        form.set('email', 'bob@joe.com')
+        form.set('first_name', 'bob')
+        form.set('last_name', 'joe')asda
+        form.set('user_designation', 2) #summer intern
+        form.set('permission_irf_view', True)
+        form.set('permission_irf_add', False)
+        form.set('permission_irf_edit', False)
+        form.set('permission_vif_view', True)
+        form.set('permission_vif_edit', False)
+        form.set('permission_vif_add', False)
+        form.set('permission_vif_view', False)
+        form.set('permission_border_stations_view', True)
+        form.set('permission_border_stations_add', False)
+        form.set('permission_border_stations_edit', False)
+        form.set('permission_receive_email', False)
+        form.set('permission_vdc_manage', False)
+        
+        form_response = form.submit()
+        
+        newuser = Account.objects.get(email='bob@joe.com')
+        self.assertIsNotNone(newuser)
+        
 class UpdatingInformationTests(WebTest):
 
     def setUp(self):
@@ -252,7 +339,6 @@ class UpdatingInformationTests(WebTest):
         self.assertEquals(True, form.get('permission_accounts_manage').checked)
         self.assertEquals(True, form.get('permission_receive_email').checked)
         self.assertEquals(True, form.get('permission_vdc_manage').checked)
-        self.assertEquals(True, form.get('permission_budget_manage').checked)
         
     def test_account_update_view_submission_fails_with_missing_required_fields(self):
         response = self.app.get(reverse('account_update', kwargs={'pk': self.superuser.id}), user=self.superuser)
@@ -299,7 +385,6 @@ class UpdatingInformationTests(WebTest):
         form.set('permission_border_stations_edit', False)
         form.set('permission_receive_email', False)
         form.set('permission_vdc_manage', False)
-        form.set('permission_budget_manage', False)
 
         form_response = form.submit()
         self.assertEquals(302, form_response.status_code)
@@ -324,4 +409,3 @@ class UpdatingInformationTests(WebTest):
         self.assertEquals(True, updatedAccount.permission_accounts_manage)
         self.assertEquals(False, updatedAccount.permission_receive_email)
         self.assertEquals(False, updatedAccount.permission_vdc_manage)
-        self.assertEquals(False, updatedAccount.permission_budget_manage)
