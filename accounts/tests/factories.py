@@ -7,6 +7,7 @@ from accounts.models import DefaultPermissionsSet
 class SuperUserDesignation(DjangoModelFactory):
     class Meta:
         model = DefaultPermissionsSet
+        django_get_or_create = ('name',)
 
     name = "Super User"
     permission_irf_view = True
@@ -25,6 +26,7 @@ class SuperUserDesignation(DjangoModelFactory):
 class ViewUserDesignation(DjangoModelFactory):
     class Meta:
         model = DefaultPermissionsSet
+        django_get_or_create = ('name',)
 
     name = "View User"
     permission_irf_view = True
@@ -34,6 +36,7 @@ class ViewUserDesignation(DjangoModelFactory):
 class AddUserDesignation(DjangoModelFactory):
     class Meta:
         model = DefaultPermissionsSet
+        django_get_or_create = ('name',)
 
     name = "Add User"
     permission_irf_view = True
@@ -46,6 +49,7 @@ class AddUserDesignation(DjangoModelFactory):
 class EditUserDesignation(DjangoModelFactory):
     class Meta:
         model = DefaultPermissionsSet
+        django_get_or_create = ('name',)
 
     name = "Edit User"
     permission_irf_view = True

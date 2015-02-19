@@ -2,7 +2,9 @@ from django.test import TestCase
 from django_webtest import WebTest
 from django.core.urlresolvers import reverse
 
-from accounts.tests.factories import *
+from accounts.tests.factories import SuperUserFactory
+from dataentry.models import BorderStation
+from datetime import date
 import ipdb
 
 class BorderStationsCreationTest(WebTest):
@@ -11,6 +13,7 @@ class BorderStationsCreationTest(WebTest):
 		self.superuser = SuperUserFactory.create()
 		self.response = self.app.get(reverse('borderstations_create'), user=self.superuser)
 		self.form = self.response.form
+		BorderStation.objects.get_or_create(station_name="Test Station", station_code="TTT")
 
 	def test_border_station_create_view_should_exist(self):
 		self.assertEquals(self.response.status_code, 200)
@@ -42,8 +45,139 @@ class BorderStationsCreationTest(WebTest):
 	def test_border_station_create_view_form_submission_fails_with_empty_fields(self):
 		form_response = self.form.submit()
 
-		#help blocks tell when a field is required
-		help_blocks = form_response.html.findAll('span', { "class" : "help-block" })
+		field_errors = form_response.context['form'].errors
 
+<<<<<<< HEAD
 		#should be 5 help blocks for the 5 required fields
 		self.assertEquals(5, len(help_blocks))
+=======
+		self.assertEquals(200, form_response.status_code)
+		self.assertEquals('This field is required.',field_errors['station_name'][0])
+		self.assertEquals('This field is required.',field_errors['station_code'][0])
+		self.assertEquals('This field is required.',field_errors['date_established'][0])
+		self.assertEquals('This field is required.',field_errors['latitude'][0])
+		self.assertEquals('This field is required.',field_errors['longitude'][0])
+
+	def test_border_station_create_view_form_submission_fails_with_dupilicate_station_code(self): 
+		form = self.form
+
+		form.set('station_name', 'Station 1')
+		form.set('station_code', 'TTT')
+		form.set('date_established', '1/1/11')
+		form.set('longitude', '3')
+		form.set('latitude', '4')
+		form_response = form.submit()
+
+		field_errors = form_response.context['form'].errors
+		
+		self.assertEquals(200, form_response.status_code)
+		self.assertEquals('Border station with this Station code already exists.',field_errors['station_code'][0])
+
+	def test_border_station_create_view_form_submission_fails_with_invalid_date(self): 
+		form = self.form
+
+		form.set('station_name', 'Station A')
+		form.set('station_code', 'STA')
+		form.set('date_established', '1/1/1')
+		form.set('longitude', '3')
+		form.set('latitude', '4')
+		form_response = form.submit()
+
+		field_errors = form_response.context['form'].errors
+		
+		self.assertEquals(200, form_response.status_code)
+		self.assertEquals('Enter a valid date.',field_errors['date_established'][0])
+
+	def test_border_station_create_view_form_submission_fails_with_invalid_email(self): 
+		form = self.form
+
+		form.set('station_name', 'Station B')
+		form.set('station_code', 'STB')
+		form.set('date_established', '1/1/11')
+		form.set('longitude', '3')
+		form.set('latitude', '4')
+
+		form.set('staff_set-0-first_name', 'Bob')
+		form.set('staff_set-0-last_name', 'Smith')
+		form.set('staff_set-0-email', 'bobsmith')
+		form.set('staff_set-0-receives_money_distribution_form', True)
+
+		form.set('committeemember_set-0-first_name', 'Jack')
+		form.set('committeemember_set-0-last_name', 'Smith')
+		form.set('committeemember_set-0-email', 'jacksmith')
+		form.set('committeemember_set-0-receives_money_distribution_form', True)
+		
+		form_response = form.submit()
+		staff_errors = form_response.context['staff_form'].errors
+		cm_errors = form_response.context['cm_form'].errors
+		
+		self.assertEquals(200, form_response.status_code)
+		self.assertEquals('Enter a valid email address.',staff_errors['email'][0])
+		self.assertEquals('Enter a valid email address.',cm_errors['email'][0])
+		
+
+	def test_border_station_create_view_form_submits_with_correct_fields(self): 
+		form = self.form
+
+		form.set('station_name', 'Station C')
+		form.set('station_code', 'STC')
+		form.set('date_established', '1/1/11')
+		form.set('longitude', '3')
+		form.set('latitude', '4')
+		form_response = form.submit()
+
+		self.assertEquals(302, form_response.status_code)
+		self.assertEquals('', form_response.errors)
+
+	def test_border_station_create_view_form_submits_with_all_fields(self): 
+		form = self.form
+
+		form.set('station_name', 'Station D')
+		form.set('station_code', 'STD')
+		form.set('date_established', '1/1/11')
+		form.set('latitude', '4')
+		form.set('longitude', '3')
+
+		form.set('staff_set-0-first_name', 'Bob')
+		form.set('staff_set-0-last_name', 'Smith')
+		form.set('staff_set-0-email', 'bobsmith@test.org')
+		form.set('staff_set-0-receives_money_distribution_form', True)
+
+		form.set('committeemember_set-0-first_name', 'Jack')
+		form.set('committeemember_set-0-last_name', 'Smith')
+		form.set('committeemember_set-0-email', 'jacksmith@test.org')
+		form.set('committeemember_set-0-receives_money_distribution_form', True)
+
+		form.set('location_set-0-name', 'Nepal')
+		form.set('location_set-0-latitude', '1')
+		form.set('location_set-0-longitude', '2')
+
+		form_response = form.submit()
+
+		self.assertEquals(302, form_response.status_code)
+		self.assertEquals('', form_response.errors)
+
+		updatedStation = BorderStation.objects.get(station_name="Station D")
+		self.assertEquals('Station D', updatedStation.station_name)
+		self.assertEquals('STD', updatedStation.station_code)
+		self.assertEquals(date(2011,1,1), updatedStation.date_established)
+		self.assertEquals(4, updatedStation.latitude)
+		self.assertEquals(3, updatedStation.longitude)
+
+		staffMember = updatedStation.staff_set.get()
+		self.assertEquals('Bob', staffMember.first_name)
+		self.assertEquals('Smith', staffMember.last_name)
+		self.assertEquals('bobsmith@test.org', staffMember.email)
+		self.assertEquals(True, staffMember.receives_money_distribution_form)
+
+		committeeMember = updatedStation.committeemember_set.get()
+		self.assertEquals('Jack', committeeMember.first_name)
+		self.assertEquals('Smith', committeeMember.last_name)
+		self.assertEquals('jacksmith@test.org', committeeMember.email)
+		self.assertEquals(True, committeeMember.receives_money_distribution_form)
+
+		location = updatedStation.location_set.get()
+		self.assertEquals('Nepal', location.name)
+		self.assertEquals(1, location.latitude)
+		self.assertEquals(2, location.longitude)
+>>>>>>> ff929d69d321ce8fe80221e616659f0232838af8
