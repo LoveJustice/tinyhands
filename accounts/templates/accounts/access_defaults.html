@@ -49,6 +49,7 @@ th, td {
                     <th colspan="3">Border Stations</th>
                     <th>Accounts</th>
                     <th>VDC</th>
+                    <th>Budget</th>
                 </tr>
                 <tr>
                     <th>&nbsp;</th>
@@ -62,6 +63,7 @@ th, td {
                     <th>View</th>
                     <th>Add</th>
                     <th>Edit</th>
+                    <th>Manage</th>
                     <th>Manage</th>
                     <th>Manage</th>
                 </tr>
@@ -93,6 +95,7 @@ th, td {
                         <td><label class="btn"><span class="yesno"></span>{{ form.permission_border_stations_edit }}</label></td>
                         <td><label class="btn"><span class="yesno"></span>{{ form.permission_accounts_manage }}</label></td>
                         <td><label class="btn"><span class="yesno"></span>{{ form.permission_vdc_manage }}</label></td>
+                        <td><label class="btn"><span class="yesno"></span>{{ form.permission_budget_manage }}</label></td>
                     </tr>
                 {% endfor %}
             </tbody>
@@ -115,6 +118,7 @@ th, td {
                     <td><label class="btn"><span class="yesno"></span>{{ form.permission_border_stations_add }}</label></td>
                     <td><label class="btn"><span class="yesno"></span>{{ form.permission_border_stations_edit }}</label></td>
                     <td><label class="btn"><span class="yesno"></span>{{ form.permission_accounts_manage }}</label></td>
+                    <td><label class="btn"><span class="yesno"></span>{{ form.permission_budget_manage }}</label></td>
                 </tr>
                 {% endwith %}
             </tbody>

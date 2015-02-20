@@ -7,6 +7,7 @@ from accounts.models import DefaultPermissionsSet
 class SuperUserDesignation(DjangoModelFactory):
     class Meta:
         model = DefaultPermissionsSet
+        django_get_or_create = ('name',)
 
     name = "Super User"
     permission_irf_view = True
@@ -25,15 +26,17 @@ class SuperUserDesignation(DjangoModelFactory):
 class ViewUserDesignation(DjangoModelFactory):
     class Meta:
         model = DefaultPermissionsSet
+        django_get_or_create = ('name',)
 
     name = "View User"
     permission_irf_view = True
     permission_vif_view = True
     permission_border_stations_view = True
-    
+
 class AddUserDesignation(DjangoModelFactory):
     class Meta:
         model = DefaultPermissionsSet
+        django_get_or_create = ('name',)
 
     name = "Add User"
     permission_irf_view = True
@@ -42,10 +45,11 @@ class AddUserDesignation(DjangoModelFactory):
     permission_vif_add = True
     permission_border_stations_view = True
     permission_border_stations_add = True
-    
+
 class EditUserDesignation(DjangoModelFactory):
     class Meta:
         model = DefaultPermissionsSet
+        django_get_or_create = ('name',)
 
     name = "Edit User"
     permission_irf_view = True
@@ -59,7 +63,7 @@ class UserFactory(DjangoModelFactory):
     class Meta:
         model = Account
         abstract = True
-        
+
     email = factory.Sequence(lambda n: 'test{0}@test.com'.format(n))
     first_name = factory.Sequence(lambda n: 'test{0}'.format(n))
     last_name = factory.Sequence(lambda n: 'test{0}'.format(n))
@@ -84,7 +88,7 @@ class ViewUserFactory(UserFactory):
     permission_vif_view = True
     permission_border_stations_view = True
     user_designation = factory.SubFactory(ViewUserDesignation)
-    
+
 class AddUserFactory(UserFactory):
     permission_irf_view = True
     permission_irf_add = True
@@ -93,7 +97,7 @@ class AddUserFactory(UserFactory):
     permission_border_stations_view = True
     permission_border_stations_add = True
     user_designation = factory.SubFactory(AddUserDesignation)
-    
+
 class EditUserFactory(UserFactory):
     permission_irf_view = True
     permission_irf_edit = True
