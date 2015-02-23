@@ -5,6 +5,10 @@ exports.config = {
   allScriptsTimeout: 10000,
 
   SITE_DOMAIN: '0.0.0.0:8000',
-
-  specs:  ['accounts/loginPage.spec.js']
+  capabilities: {
+    'browserName': 'firefox' // or 'safari'
+  },
+  specs:  ['accounts/loginPage.spec.js',
+	  'irf/irfCRUD.spec.js'
+	  ]
 };
