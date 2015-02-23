@@ -1,89 +1,112 @@
 $cur_input = ""
-list_of_names = [
-  "Justin Northworth"
-  "Justin North"
-  "Justice Northwood"
-  "Justyn Northwerth"
-  "Dustin Waldo"
-  "Dustin Waldron"
-  "Dusty Waldy"
-  "Dustin Waldro"
-]
-list_of_pics = [
-  "/media/interceptee_photos/doge.png"
-  "/media/interceptee_photos/doge.png"
-  "/media/interceptee_photos/doge.png"
-  "/media/interceptee_photos/doge.png"
-  "/media/interceptee_photos/38503_1144682394791_1729508_n.jpg"
-  "/media/interceptee_photos/38503_1144682394791_1729508_n.jpg"
-  "/media/interceptee_photos/38503_1144682394791_1729508_n.jpg"
-  "/media/interceptee_photos/38503_1144682394791_1729508_n.jpg"
-]
-$ ->
-  $ui = $("#fuzzymatching-ui")
-  setupInputHandlers($ui)
-  $items = $ui.find('li')
-  # When you click on a name, insert it
-  $ui.on "click", "li", ->
-    $this = $(this)
-    name = $this.children(".name").text()
-    console.log name
-    $cur_input.val(name)
-    $button = $cur_input.parent().parent().find(".photo-upload-button")
-    $button.prop("disabled", true)
-    $button.children().css("color", "grey")
-  # Hover image
-  $ui.on "mouseover", "li", ->
-    $ui.find("img").attr("src", list_of_pics[this.id])
-
-
+window.cur_row = ""
 
 setupInputHandlers = ($ui) ->
   $fuzzy_ui_eles = $("[data-fuzzy-ui]")
-  # When focusing on input, show it
-  $fuzzy_ui_eles.focus ->
-    $this = $(this)
-    $cur_input = $this
-    $ui.css({top: $this.offset().top+$this.outerHeight()+15, left: $this.offset().left})
-    search $this.val(), $ui
-    $ui.find("img").attr("src", "")
-    $ui.show()
+  # # When focusing on input, show it
+  # $fuzzy_ui_eles.focus ->
+  #   $this = $(this)
+  #   $cur_input = $this
+  #   $ui.css({top: $this.offset().top+$this.outerHeight()+15, left: $this.offset().left})
+  #   search $this.val(), $ui, display_results if $this.val().length > 0
+  #   $ui.find("img").attr("src", "").hide()
+  #   $ui.show()
+
   # When clicking away, hide
   $(document).click (e) ->
-    if !$(e.target).attr("data-fuzzy-ui")
-      $ui.hide()
+    $btn = $(".popover").siblings("button.show-matches")
+    $btn.each (idx, ele) ->
+      if e.target != ele
+        $(ele).popover("hide")
 
   # Searching
-  $fuzzy_ui_eles.keyup (e) ->
-    if e.which not in [16, 17, 37, 38, 39, 40]
-      search $(this).val(), $ui
+  $("table#interceptees input, table#interceptees select").on "keyup change", (e) ->
+  #$fuzzy_ui_eles.keyup (e) ->
+    if e.which not in [9, 16, 17, 18, 37, 38, 39, 40]
+      $this = $(this)
+      $row = $this.parents("tr")
+      # Reset person id so it will now make a new entry
+      $row.find("[id*=person_id]").val("")
+      pulse $row.find("button.show-matches").addClass("pulse")
 
-search = (input, $ui) ->
-  $.get $ui.data("ajax"), {name: input}, (data) ->
-    results = []
-    data.forEach (item) ->
-      results.push({id: 1, name: item[0], score: item[1]})
-    display_results(results, $ui)
+pulse = (ele) ->
+  ele.addClass("pulse")
 
-search_old = (input, $ui) ->
-  $button = $cur_input.parent().parent().find(".photo-upload-button")
-  $button.prop("disabled", false)
-  $button.children().css("color", "")
-  f = new Fuse(list_of_names, {includeScore: true})
-  result = f.search(input)
-  results = ({id: item.item, name: list_of_names[item.item], score: item.score} for item in result)
-  console.log(results)
-  display_results(results, $ui)
+search = (input, $ui, callback, $row) ->
+  if input.length == 0
+    return
+  $.get window.fuzzy_ajax_url, {name: input}, (data) ->
+    if data.success
+      results = []
+      data.data.forEach (group) ->
+        names = group[1]
+        scores = group[2]
+        id = group[0]
+#        photo = group[3]
+        $.each names, (idx) ->
+          results.push {
+            id: id,
+            name: names[idx],
+            score: scores[idx],
+#            photo: photo
+          }
+      callback(results, $ui)
 
 display_results = (results, $ui) ->
+  #pulse $row.find("button.show-matches")
   $ul = $ui.find("ul")
   $ul.children().remove()
   if results.length > 0
-    for item in results.slice(0, 6)
+    for item in results.sort((a, b) ->
+        return b.score - a.score)
       $span = $("<span>").addClass("name").text(item.name)
-#      $li = $("<li>").attr("id", item.id).text("(#{Math.round((1-item.score)*100)}) ").append($span)
-      $li = $("<li>").attr("id", item.id).text("(#{item.score})").append($span)
+      $li = $("<li class='person'>").attr("id", item.id).text("(#{item.score}) ").append($span)
       $ul.append($li)
   else
       $li = $("<li>").text("Type to search for matches")
       $ul.append($li)
+
+
+$ ->
+  $modal = $('#matching_modal')
+  $ui = $("#fuzzymatching-ui")
+  setupInputHandlers($ui)
+  # When you click on a name, show the modal
+  $(document.body).on "click", ".popover li.person", ->
+    $this = $(this)
+    url = dutils.urls.resolve('matching_modal', id: this.id)
+    $row = $this.parents('tr')
+    $row.find("button.show-matches").click()
+    name = encodeURIComponent $row.find('[id$=name]').val()
+    phone = encodeURIComponent $row.find('[id$=phone]').val()
+    age = encodeURIComponent $row.find('[id$=age]').val()
+    built_url = "#{url}?name=#{name}&phone=#{phone}&age=#{age}"
+    $modal.load built_url, ->
+      $modal.modal()
+      init()
+#    name = $this.children(".name").text()
+#    $cur_input.val(name)
+#    $button = $cur_input.parent().parent().find(".photo-upload-button")
+#    $button.prop("disabled", true)
+#    $button.children().css("color", "grey")
+  # Hover image
+#  $ui.on "mouseover", "li.person", ->
+#    $ui.find("img").attr("src", "#{$(this).data("photo")}").show()
+  $popover_button = $("button.show-matches")
+  $popover_button.popover
+    content: $("#fuzzymatching-ui2").html()
+    html: true
+    animation: false
+    placement: "bottom"
+    trigger: "click"
+    template: '<div class="popover" role="tooltip" style="width: 300px"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
+  $popover_button.on "show.bs.popover", ->
+    window.cur_row = $(this).parents("tr")
+    $(this).removeClass("pulse")
+  $popover_button.on "shown.bs.popover", ->
+    $this = $(this)
+    $popover = $this.siblings(".popover").children(".popover-content")
+    $row = $this.parents("tr")
+    # Right now this only works when names are inputted. Not searching with other attributes
+    search $row.find("[id$=name]").val(), $popover, display_results, $this.parents("tr") if $row.find("[id$=name]").val().length > 0
+#    $popover.html("<a href=\"#\">hi</a>")

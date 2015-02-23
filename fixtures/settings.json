@@ -1,0 +1,38 @@
+[
+{
+    "fields": {
+        "value": 3,
+        "keyword": "Fuzzy-Limit",
+        "description": "The max number of names that will show up in the identity matching drop down."
+    },
+    "model": "accounts.setting",
+    "pk": 1
+},
+{
+    "fields": {
+        "value": 70,
+        "keyword": "Fuzzy-Score-Cutoff",
+        "description": "The minimum score that will be shown in the dropdown matching menu."
+    },
+    "model": "accounts.setting",
+    "pk": 3
+},
+{
+    "fields": {
+        "value": 20,
+        "keyword": "Fuzzy-Age-Weight",
+        "description": "The amount of extra points that you want to give to a fuzzy match on name score if the person has a matching age associated with them."
+    },
+    "model": "accounts.setting",
+    "pk": 4
+},
+{
+    "fields": {
+        "value": 20,
+        "keyword": "Fuzzy-Phone-Number-Weight",
+        "description": "The amount of points that you want to give to a fuzzy match on name score if the person has a matching phone number associated with them."
+    },
+    "model": "accounts.setting",
+    "pk": 10
+}
+]

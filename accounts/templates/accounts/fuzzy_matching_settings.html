@@ -1,0 +1,63 @@
+{% extends "accounts/account_base.html" %}
+{% load bootstrap %}
+{% load widget_tweaks %}
+
+{% block title %}Fuzzy Matching Settings{% endblock %}
+
+{% block body_class %}fuzzy_matching_settings{% endblock %}
+
+{% block head %}
+<style>
+input[type="checkbox"] {
+    display: none;
+}
+.form-group {
+    margin-bottom: 0 !important;
+}
+label {
+    width: 100% !important;
+}
+td {
+}
+td:first-child {
+}
+table {
+}
+table, th, td {
+    border: 2px solid #ddd;
+}
+th, td {
+    text-align: center;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Fuzzy Matching Settings</h1>
+    <p>Use this form to designate the settings for the fuzzy identity matching.</p>
+
+    <form id="fuzzy-matching-settings-form" method="POST" class="row">{% csrf_token %}
+        {{ formset.management_form }}
+        <table class="table table-condensed table-striped">
+            <thead>
+                <tr>
+                    <th>Setting Name</th>
+                    <th>Setting Value</th>
+                    <th>Setting Description</th>
+                </tr>
+            </thead>
+            <tbody id="fuzzy-matching-settings-rows-container">
+                {% for form in formset %}
+                    <tr>
+                        <td>{{ form.id }}{{ form.instance.keyword }}</td>
+                        <td>{{ form.value|bootstrap_inline }}</td>
+                        <td>{{ form.instance.description }}</td>
+                   </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <input type="submit" class="clear btn btn-success btn-lg pull-right" value="Save All" />
+    </form>
+</div>
+{% endblock %}

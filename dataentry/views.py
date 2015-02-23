@@ -1,12 +1,30 @@
 from django.core.exceptions import ImproperlyConfigured, PermissionDenied
 from django.shortcuts import render, redirect
+from datetime import date
+import csv
+import re
+import os
+import shutil
+
+from django.core.exceptions import PermissionDenied
+from django.shortcuts import render
 from django.core.urlresolvers import reverse_lazy
-from django.core import serializers
 from django.contrib import messages
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, View, DeleteView, CreateView, UpdateView
 from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSet
 from django.contrib.auth.decorators import login_required
+from braces.views import LoginRequiredMixin
+from rest_framework import status
+from rest_framework.decorators import api_view
+from rest_framework.renderers import JSONRenderer
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
+from django.conf import settings
+
 import re
 from dataentry.models import (
     VictimInterview,
@@ -16,7 +34,8 @@ from dataentry.models import (
     VictimInterviewLocationBox,
     District,
     VDC,
-    BorderStation
+    BorderStation,
+    Name, Phone, Age
 )
 from accounts.mixins import PermissionsRequiredMixin
 from braces.views import LoginRequiredMixin
@@ -30,6 +49,7 @@ from dataentry.forms import (
 )
 from datetime import date
 from dataentry import export
+from dataentry.serializers import DistrictSerializer, IntercepteeSerializer
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 
@@ -52,6 +72,7 @@ from alert_checkers import IRFAlertChecker, VIFAlertChecker
 from fuzzywuzzy import process, fuzz
 from fuzzy_matching import match_location
 
+
 @login_required
 def home(request):
     return redirect("main_dashboard")
@@ -65,9 +86,9 @@ class SearchFormsMixin(object):
 
     def __init__(self, *args, **kw):
         for key, value in kw.iteritems():
-            if(value == "name"):
+            if (value == "name"):
                 self.Name = key
-            elif(value == "number"):
+            elif (value == "number"):
                 self.Number = key
 
     def get_queryset(self):
@@ -105,7 +126,7 @@ class InterceptionRecordListView(
     paginate_by = 20
 
     def __init__(self, *args, **kw):
-        #passes what to search by to SearchFormsMixin
+        # passes what to search by to SearchFormsMixin
         super(InterceptionRecordListView, self).__init__(irf_number__icontains="number", staff_name__icontains="name")
 
 
@@ -120,7 +141,6 @@ class IntercepteeInline(InlineFormSet):
         return kwargs
 
 class IRFImageAssociationMixin(object):
-
     def forms_invalid(self, form, inlines):
 
         for name, file in self.request.FILES.iteritems():
@@ -196,8 +216,14 @@ class InterceptionRecordUpdateView(
     inlines = [IntercepteeInline]
     permissions_required = ['permission_irf_edit']
 
+    def post(self, request, pk):
+        # print(request)
+        # raw_input("slkdfjadsklj")
+        # import pdb;pdb.set_trace()
+        return super(InterceptionRecordUpdateView, self).post(request)
+
     def forms_valid(self, form, inlines):
-        IRFAlertChecker(form,inlines).check_them()
+        IRFAlertChecker(form, inlines).check_them()
         return super(InterceptionRecordUpdateView, self).forms_valid(form, inlines)
 
 
@@ -209,7 +235,6 @@ class InterceptionRecordDetailView(InterceptionRecordUpdateView):
 
 
 class InterceptionRecordDeleteView(DeleteView):
-
     model = InterceptionRecord
     success_url = reverse_lazy('interceptionrecord_list')
 
@@ -250,7 +275,7 @@ class VictimInterviewListView(
     paginate_by = 20
 
     def __init__(self, *args, **kwargs):
-        #passes what to search by to SearchFormsMixin
+        # passes what to search by to SearchFormsMixin
         super(VictimInterviewListView, self).__init__(vif_number__icontains="number", interviewer__icontains="name")
 
 
@@ -265,7 +290,7 @@ class VictimInterviewCreateView(
     permissions_required = ['permission_vif_add']
 
     def forms_valid(self, form, inlines):
-        VIFAlertChecker(form,inlines).check_them()
+        VIFAlertChecker(form, inlines).check_them()
         form.instance.form_entered_by = self.request.user
         form.instance.date_form_received = date.today()
         return super(VictimInterviewCreateView, self).forms_valid(form, inlines)
@@ -357,7 +382,6 @@ class GeoCodeDistrictAPIView(
         else:
             return Response({"id": "-1","name":"None"})
 
-
 class GeoCodeVdcAPIView(APIView):
     
     def get(self, request):
@@ -431,8 +455,94 @@ class StationCodeAPIView(APIView):
 
 @login_required
 def interceptee_fuzzy_matching(request):
-    inputName= request.GET['name']
-    all_people = Interceptee.objects.all()
-    people_dict = {serializers.serialize("json", [obj]):obj.full_name for obj in all_people }
-    matches = process.extractBests(inputName, people_dict, limit = 10)
-    return HttpResponse(json.dumps(matches), content_type="application/json")
+    if 'name' not in request.GET\
+        and 'phone' not in request.GET\
+        and 'age' not in request.GET:
+        return JsonResponse({
+            'success': False,
+            'data': "You must pass at least one parameter"
+        })
+    name = request.GET['name'] if 'name' in request.GET else None
+    phone = request.GET['phone'] if 'phone' in request.GET else None
+    age = request.GET['age'] if 'age' in request.GET else None
+    matches = Interceptee.objects.fuzzy_match_on(name, age, phone)
+
+    modified_matches = []
+    for interceptee_group in matches:
+        modified_matches.append((interceptee_group[2].id, interceptee_group[0], interceptee_group[1]))
+
+    return JsonResponse({
+        'success': True,
+        'data': modified_matches
+    })
+
+from easydict import EasyDict as edict
+def getDict(post, name):
+    dic = {}
+    for k in post.keys():
+        # In case you call it on something that isn't a dict
+        if k == name:
+            return post.get(name)
+        if k.startswith(name):
+            rest = k[len(name):]
+            # Get attribute name
+            attribute = [p[:-1] for p in rest.split('[')][1]
+            # Add info to attribute
+            dic[attribute] = post.get(k)
+    return edict(dic)
+
+@login_required
+@csrf_exempt
+def matching_modal(request, id):
+    if not id:
+        return HttpResponse("You must pass parameter 'id'<br/>Example: /matching_modal/1")
+    person = Interceptee.objects.get(pk=id)
+    GET = request.GET
+    if GET:
+        name = GET['name'] if 'name' in GET and GET['name'] else None
+        phone = GET['phone'] if 'phone' in GET and GET['phone'] else None
+        age = GET['age'] if 'age' in GET and GET['age'] else None
+        return render(request, "dataentry/matching_modal.html", {
+            "person": person,
+            "form_name": name,
+            "form_phone": phone,
+            "form_age": age
+        })
+    POST = request.POST
+    print POST
+
+    if POST:
+        try:
+            name = getDict(POST, 'canonical_name')
+            phone = getDict(POST, 'canonical_phone')
+            age = getDict(POST, 'canonical_age')
+            print "Changing values to:", name.value, phone.value, age.value
+            if name.create == 'false':
+                person.canonical_name_id = int(name.value)
+            else:
+                person.canonical_name = Name.objects.create(value=name.value, person=person)
+            if phone.create == 'false':
+                person.canonical_phone_id = int(phone.value)
+            else:
+                person.canonical_phone = Phone.objects.create(value=phone.value, person=person)
+            if age.create == 'false':
+                person.canonical_age_id = int(age.value)
+            else:
+                existing_age = Age.objects.filter(value=age.value)
+                if not existing_age:
+                    new_age = Age.objects.create(value=age.value)
+                else:
+                    new_age = existing_age[0]
+                person.ages.add(new_age)
+                person.canonical_age = new_age
+            person.save()
+        except Exception as e:
+            print e
+    return HttpResponse("Person saved successfully.")
+    # if POST:
+    #     print POST
+    #     return HttpResponse('sdfsd')
+
+
+def matching_modal_test(request):
+    return render(request, "dataentry/matching_modal_test.html")

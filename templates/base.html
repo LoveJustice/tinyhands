@@ -7,7 +7,7 @@
     <link href="{{ STATIC_URL }}bootstrap.css" rel="stylesheet" media="screen">
     <link href="{{ STATIC_URL }}jquery-ui/jquery-ui.css" rel="stylesheet" media="screen">
     <link href="{{ STATIC_URL }}datetimepicker/jquery.datetimepicker.css" rel="stylesheet" media="screen">
-    <!--<link href='http://fonts.googleapis.com/css?family=PT+Serif:400,700' rel='stylesheet' type='text/css'>-->
+    <link href='http://fonts.googleapis.com/css?family=PT+Serif:400,700' rel='stylesheet' type='text/css'>
 
     <link rel="stylesheet/less" type="text/css" href="{{ STATIC_URL }}style.less" />
     {% comment %}
@@ -22,14 +22,16 @@
             relativeUrls: false
         };
     </script>
-
     {% endcomment %}
 
     {% block head %}{% endblock %}
 
-    <script src="{{ STATIC_URL }}less.js"></script>
     <script src="{{ STATIC_URL }}jquery.js"></script>
+    <script src="{{ STATIC_URL }}bootstrap.js"></script>
+    <script src="{{ STATIC_URL }}dutils.js"></script>
     <script src="{{ STATIC_URL }}/jquery-ui/jquery-ui.js"></script>
+
+    {% block afterjquery %}{% endblock %}
 </head>
 {% comment %}
 Add a class to the body tag that is the same as the url's name.  We can then check this
@@ -113,20 +115,18 @@ in the Javascript and run code unique to the current page.
 {% block tab_block %}{% endblock %}
 </div>
 
-
-
 {% block sticky_footer %}
 {% endblock %}
 
 
 <script src="{{ STATIC_URL }}datetimepicker/jquery.datetimepicker.js"></script>
-<script src="{{ STATIC_URL }}bootstrap.js"></script>
 <script src="{{ STATIC_URL }}jquery.deserialize.js"></script>
 <script src="{{ STATIC_URL }}jquery.formset.js"></script>
 {% block foot %}
 {% endblock %}
 <script src="{{ STATIC_URL }}all-pages.js"></script>
 <script src="{{ STATIC_URL }}geocodelocations.js"></script>
+<script src="{{ STATIC_URL }}less.js"></script>
 <script src="{{ STATIC_URL }}station-suggestions.js"></script>
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}datatables/css/jquery.dataTables.css">
 <script src="{{ STATIC_URL }}datatables/js/jquery.dataTables.min.js"></script>

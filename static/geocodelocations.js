@@ -14,8 +14,7 @@ function setPopovers(id)
 	        content: $(nameOfForm).html(),
 	        html:true,
 	        placement:'bottom',
-	        container: 'body',
-            trigger: 'focus',
+            trigger: 'focus'
 	    });
         $(element).on('shown.bs.popover', function(){
             $("#vdc_create_page").click(
@@ -39,11 +38,8 @@ function setPopovers(id)
             }
 
             input = $(element).val();
-            if(element.id.indexOf("district") > 0){
-                callFuzzyApi(input, "district", element);
-            } else{
-                callFuzzyApi(input, "vdc", element);
-            }
+            // This is better :)
+            callFuzzyApi(input, element.id.indexOf("district") > 0 ? "district" : "vdc", element);
 	    });
 	});
 }
@@ -73,11 +69,13 @@ function callFuzzyApi(input, locationType, element){
                             });
                         });
                     }
+                    // This was bad. Still is. You were just getting all popovers on page. NOT good. You aren't the ONLY popover.
                     var inputOffset = $(element).offset().left + (parseFloat($(element).css('width'))/2);
-                    var popoverOffset = $('.popover').offset().left + (parseFloat($('.popover').css('width'))/2);
+                    var $popover = unorderedList.parents('.popover');
+                    var popoverOffset = $popover.offset().left + (parseFloat($popover.css('width'))/2);
                     var offsetDiff = inputOffset - popoverOffset;
-                    var popoverLeft = $('.popover').offset().left + offsetDiff;
-                    $('.popover').css('left',popoverLeft+'px');
+                    var popoverLeft = $popover.offset().left + offsetDiff;
+                    $popover.css('left',popoverLeft-(parseFloat($(element).css('width'))/2)+'px');
                 }
         });
     }
