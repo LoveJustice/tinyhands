@@ -1,6 +1,6 @@
 'use strict';
 
-var constants = require('../testConstants.json');
+var c = require('../testConstants.json');
 
 var vdcAdminPage = function () {
     var page = this;
@@ -11,7 +11,7 @@ var vdcAdminPage = function () {
     };
 
    this.findItemsOnPage = function () {
-        this.firstVdcName = element(by.css(".vdc_admin_name"));
+        this.firstVdcName = element(by.css(".vdc_admin_name")).getText();
         this.firstVdcLatitude = element.all(by.css(".vdc_admin_latitude")).first().getText();
         this.firstVdclongitude = element.all(by.css(".vdc_admin_longitude")).first().getText();
         this.firstVdcDistrict = element.all(by.css(".vdc_admin_district")).first().getText();
@@ -20,15 +20,16 @@ var vdcAdminPage = function () {
         this.firstVdcEditButton = element.all(by.id("vdc_update_link")).first();
     };
 
-    this.checkIfValuesAreEqual = function () {
-        this.editVdcName = element(by.id("id_name"));
-        this.editVdcLatitude = element(by.id("id_latitude")).first().getText();
-        this.editVdclongitude = element(by.id("id_longitude")).first().getText();
-        this.editVdcDistrict = element(by.id("id_district")).first().getText();
-        this.editVdccannonical = element(by.id("id_cannonical_name")).first().getText();
-        this.editVdcVerified = element(by.id("id_verified")).first().getText();
-        this.editVdcSubmit = element(by.css("btn btn-primary")).first();
+
+    this.changeValues = function () {
+        this.editVdcName = element(by.id("id_name")).clear().sendKeys(c.vdcNewName);
+        this.editVdcLatitude = element(by.id("id_latitude")).clear().sendKeys(c.vdcNewLat);
+        this.editVdclongitude = element(by.id("id_longitude")).clear().sendKeys(c.vdcNewLon);
+        this.editVdcDistrict = element(by.cssContainingText('option', 'Achham')).click();
+        this.editVdccannonical = element(by.cssContainingText('option', 'Chalsa')).click();
+        this.editVdcSubmit = element(by.id("vdc_update_button")).click();
     };
+
     //
     //changeValues
     //this.checkIfVdcUpdated = function(){

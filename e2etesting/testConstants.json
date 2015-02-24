@@ -2,5 +2,16 @@
   "adminEmail"      : "testuser@test.com",
   "adminPassword"   : "password",
   "adminFirstName"  : "test",
-  "adminLastName"   : "user"
+  "adminLastName"   : "user",
+
+
+
+  "vdcNewName"      : "aaaaa",
+  "vdcNewLat"       : "18.2081988722",
+  "vdcNewLon"       : "18.2081988722",
+  "vdcNewDis"       : "Achham",
+  "vdcNewCan"       : "Chalsa"
+
+
 }
+
