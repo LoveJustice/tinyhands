@@ -1,6 +1,16 @@
 {
-  "adminEmail"      : "testuser@test.com",
-  "adminPassword"   : "password",
-  "adminFirstName"  : "test",
-  "adminLastName"   : "user"
+  "adminEmail"                : "testuser@test.com",
+  "adminPassword"             : "password",
+  "adminFirstName"            : "test",
+  "adminLastName"             : "user",
+
+  "irfNumber"                 : "0",
+  "irfEditNumber"             : "1",
+  "irfLocation"               : "none",
+  "irfInterceptTime"          : "01/01/01",
+  "irfStaffName"              : "TEST",
+  "irfInterceptFname"         : "name",
+  "irfInterceptDistrict"      : "Baglung",
+  "irfInterceptVdc"           : "Chalsa",
+  "irfNameCameUpBeforeValue"  : "1"
 }

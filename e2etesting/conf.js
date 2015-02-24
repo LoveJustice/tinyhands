@@ -8,10 +8,10 @@ exports.config = {
   capabilities: {
     'browserName': 'firefox' // or 'safari'
   },
-  specs:  ['accounts/loginPage.spec.js',
-	        'irf/irfCRUD.spec.js',
-            'accounts/loginPage.spec.js',
-            'accounts/permissionsPage.spec.js',
-            'vdcs/vdcAdminPage.spec.js'
+  specs:  [//'accounts/loginPage.spec.js',
+	        'irf/irfCRUD.spec.js'//,
+            //'accounts/loginPage.spec.js',
+            //'accounts/permissionsPage.spec.js',
+            //'vdcs/vdcAdminPage.spec.js'
           ]
 };
