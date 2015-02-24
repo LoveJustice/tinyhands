@@ -29,12 +29,14 @@ describe('Accounts Page', function() {
             this.permissions = element(by.id("id_permission_vif_view"));
             expect(this.permissions.element(by.xpath('..')).getAttribute('class')).toBe('btn btn-danger');
             permissionsPage.savePermissions();
-            permissionsPage.navigateToAccountPage();
-            permissionsPage.checkPermission("id_permission_vif_view");
-            permissionsPage.savePermissions();
+            //permissionsPage.navigateToAccountPage();
+            //permissionsPage.checkPermission("id_permission_vif_view");
+            //permissionsPage.savePermissions();
 
             //I need to view the vif list page, I'll wait for code from Jordan and Matt to do these kinds of tests.
             //TODO test for inability to view VIFS
+            permissionsPage.navigateToVifPage();
+            expect(element(by.className("table table-striped table-condensed")).isPresent()).toBe(false);
         });
 
         it('unchecks vif edit permission', function(){
