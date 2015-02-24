@@ -280,12 +280,11 @@ class CreateAccountTests(WebTest):
         newuser = Account.objects.get(email='bob@joe.com')
         self.assertIsNotNone(newuser)
         
-    def test_if_required_fields_are_filled_in(self):
+    def test_create_account_fails_without_email_entered(self):
         response = self.app.get(reverse('account_create'), user=self.superuser)
         form = response.form
-        form.set('email', 'bob@joe.com')
         form.set('first_name', 'bob')
-        form.set('last_name', 'joe')asda
+        form.set('last_name', 'joe')
         form.set('user_designation', 2) #summer intern
         form.set('permission_irf_view', True)
         form.set('permission_irf_add', False)
@@ -301,9 +300,9 @@ class CreateAccountTests(WebTest):
         form.set('permission_vdc_manage', False)
         
         form_response = form.submit()
-        
-        newuser = Account.objects.get(email='bob@joe.com')
-        self.assertIsNotNone(newuser)
+        field_errors = form_response.context['form'].errors
+        self.assertEquals('This field is required.',field_errors['email'][0])
+    
         
 class UpdatingInformationTests(WebTest):
 
