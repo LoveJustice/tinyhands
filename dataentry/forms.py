@@ -804,7 +804,7 @@ class VictimInterviewLocationBoxForm(DreamSuitePaperForm):
         self.instance.vdc = vdc
         self.instance.district = district
         return super(VictimInterviewLocationBoxForm, self).save(commit)
-        
+
 class BorderStationForm(forms.ModelForm):
     class Meta:
         model = BorderStation

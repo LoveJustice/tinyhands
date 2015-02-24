@@ -32,7 +32,7 @@ class ViewUserDesignation(DjangoModelFactory):
     permission_irf_view = True
     permission_vif_view = True
     permission_border_stations_view = True
-    
+
 class AddUserDesignation(DjangoModelFactory):
     class Meta:
         model = DefaultPermissionsSet
@@ -45,7 +45,7 @@ class AddUserDesignation(DjangoModelFactory):
     permission_vif_add = True
     permission_border_stations_view = True
     permission_border_stations_add = True
-    
+
 class EditUserDesignation(DjangoModelFactory):
     class Meta:
         model = DefaultPermissionsSet
@@ -63,7 +63,7 @@ class UserFactory(DjangoModelFactory):
     class Meta:
         model = Account
         abstract = True
-        
+
     email = factory.Sequence(lambda n: 'test{0}@test.com'.format(n))
     first_name = factory.Sequence(lambda n: 'test{0}'.format(n))
     last_name = factory.Sequence(lambda n: 'test{0}'.format(n))
@@ -88,7 +88,7 @@ class ViewUserFactory(UserFactory):
     permission_vif_view = True
     permission_border_stations_view = True
     user_designation = factory.SubFactory(ViewUserDesignation)
-    
+
 class AddUserFactory(UserFactory):
     permission_irf_view = True
     permission_irf_add = True
@@ -97,7 +97,7 @@ class AddUserFactory(UserFactory):
     permission_border_stations_view = True
     permission_border_stations_add = True
     user_designation = factory.SubFactory(AddUserDesignation)
-    
+
 class EditUserFactory(UserFactory):
     permission_irf_view = True
     permission_irf_edit = True
@@ -132,4 +132,3 @@ class SettingFactory(DjangoModelFactory):
     keyword = factory.Sequence(lambda n: 'test{0}'.format(n))
     value = random.randint(0, 10000)
     description = factory.Sequence(lambda n: 'description {0}'.format(n))
-	

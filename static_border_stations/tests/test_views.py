@@ -1,11 +1,97 @@
-from django.test import TestCase
 from django_webtest import WebTest
+from django.test import TestCase
 from django.core.urlresolvers import reverse
-
-from accounts.tests.factories import SuperUserFactory
-from dataentry.models import BorderStation
+import json
 from datetime import date
 import ipdb
+
+from static_border_stations.tests.factories import BorderStationFactory
+from accounts.tests.factories import SuperUserFactory
+
+from static_border_stations.models import *
+from dataentry.models import BorderStation
+
+
+class TestBorderStations(WebTest):
+    
+    def setUp(self):
+        self.BS = BorderStationFactory.create()
+        self.superuser = SuperUserFactory.create()
+        url = reverse("borderstations_update", kwargs={'pk':self.BS.id})
+        self.response = self.app.get(url, user=self.superuser)
+        self.form = self.response.form
+
+	def test_border_station_create_view_should_exist(self):
+		self.assertEquals(self.response.status_code, 200)
+        
+    def testUpdateStaff(self):
+        form = self.form
+        
+        form.set("staff_set-0-first_name", "Joe")
+        form.set("staff_set-0-last_name", "Shmo")
+        form.set("staff_set-0-email", "joe@gmail.com")
+        
+        formResp = form.submit()
+        
+        self.assertEquals(302, formResp.status_code)
+        
+        bs = BorderStation.objects.get(id=self.BS.id).staff_set.get()
+        self.assertEquals("Joe", bs.first_name)
+        self.assertEquals("Shmo", bs.last_name)
+        self.assertEquals("joe@gmail.com", bs.email)
+        
+    def testUpdateCommitteeMember(self):
+        form = self.form
+        
+        form.set("committeemember_set-0-first_name", "bob")
+        form.set("committeemember_set-0-last_name", "smith")
+        form.set("committeemember_set-0-email", "bob@gmail.com")
+        
+        formResp = form.submit()
+        
+        self.assertEquals(302, formResp.status_code)
+        
+        bs = BorderStation.objects.get(id=self.BS.id).committeemember_set.get()
+        self.assertEquals("bob", bs.first_name)
+        self.assertEquals("smith", bs.last_name)
+        self.assertEquals("bob@gmail.com", bs.email)
+        
+    def testUpdateLocation(self):
+        form = self.form
+        
+        form.set("location_set-0-name", "SomeLocation")
+        form.set("location_set-0-latitude", 1.23)
+        form.set("location_set-0-longitude", 4.56)
+        
+        formResp = form.submit()
+        
+        self.assertEquals(302, formResp.status_code)
+        
+        bs = BorderStation.objects.get(id=self.BS.id).location_set.get()
+        self.assertEquals("SomeLocation", bs.name)
+        self.assertEquals(1.23, bs.latitude)
+        self.assertEquals(4.56, bs.longitude)
+        
+    def testUpdateBorderStationDetails(self):
+        form = self.form
+        
+        form.set("location_set-0-name", "SomeLocation")
+        form.set("location_set-0-latitude", 1.23)
+        form.set("location_set-0-longitude", 4.56)
+        
+        formResp = form.submit()
+        
+        self.assertEquals(302, formResp.status_code)
+        
+        bs = BorderStation.objects.get(id=self.BS.id).location_set.get()
+        self.assertEquals("SomeLocation", bs.name)
+        self.assertEquals(1.23, bs.latitude)
+        self.assertEquals(4.56, bs.longitude)
+        
+    # TODO: Test editing borderstation info
+    # TODO: Test adding/updating more Staff to borderstation
+    # TODO: Test adding/updating more CommitteMembers to borderstation
+    # TODO: Test adding/updating more Locations to borderstation
 
 class BorderStationsCreationTest(WebTest):
 
@@ -15,10 +101,10 @@ class BorderStationsCreationTest(WebTest):
 		self.form = self.response.form
 		BorderStation.objects.get_or_create(station_name="Test Station", station_code="TTT")
 
-	def test_border_station_create_view_should_exist(self): 
+	def test_border_station_create_view_should_exist(self):
 		self.assertEquals(self.response.status_code, 200)
 
-	def test_border_station_create_view_form_fields_are_empty(self): 
+	def test_border_station_create_view_form_fields_are_empty(self):
 		fields = self.form.fields
 
 		self.assertEquals('', fields['station_name'][0].value)
@@ -42,7 +128,7 @@ class BorderStationsCreationTest(WebTest):
 		self.assertEquals('', fields['location_set-0-latitude'][0].value)
 		self.assertEquals('', fields['location_set-0-longitude'][0].value)
 
-	def test_border_station_create_view_form_submission_fails_with_empty_fields(self): 
+	def test_border_station_create_view_form_submission_fails_with_empty_fields(self):
 		form_response = self.form.submit()
 
 		field_errors = form_response.context['form'].errors
