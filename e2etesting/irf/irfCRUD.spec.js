@@ -57,11 +57,12 @@ describe('IRF CRUD', function() {
             browser.sleep(1000);
             expect(element(by.id('id_irf_number')).getAttribute('value')).toEqual(c.irfEditNumber);
         });
-
+        /*
         it('Delete IRF', function () {
             irfPage.deleteIRF();
             !expect(element(by.linkText('Delete')).isPresent());
         });
+        */
     });
 });
 
