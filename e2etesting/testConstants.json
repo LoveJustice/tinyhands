@@ -7,10 +7,12 @@
 
 
   "vdcNewName"      : "aaaaa",
-  "vdcNewLat"       : "18.2081988722",
-  "vdcNewLon"       : "18.2081988722",
+  "vdcNewLat"       : "0.0",
+  "vdcNewLon"       : "0.0",
   "vdcNewDis"       : "Achham",
-  "vdcNewCan"       : "Chalsa"
+  "vdcNewCan"       : "Chalsa",
+
+  "webAddress" : "http://0.0.0.0:8001"
 
 
 }

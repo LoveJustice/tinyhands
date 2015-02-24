@@ -3,7 +3,8 @@ from .base import *
 DEBUG = True
 TEMPLATE_DEBUG = True
 
-SITE_DOMAIN = '0.0.0.0:8000'
+SITE_DOMAIN = '0.0.0.0:8001'
+
 
 DATABASES = {
     'default': {

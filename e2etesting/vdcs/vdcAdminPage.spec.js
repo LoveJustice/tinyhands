@@ -20,13 +20,11 @@ describe('TinyHands Login', function () {
         vdcAdminPage.changeValues();
         browser.sleep(500);
 
-        browser.get('http://0.0.0.0:8000/');
+        browser.get(constants.webAddress);
         vdcAdminPage.navigate();
-        browser.sleep(5000);
+        browser.sleep(500);
 
         expect(element(by.css(".vdc_admin_name")).getText()).toBe(constants.vdcNewName);
-        expect(element.all(by.css(".vdc_admin_latitude")).first().getText()).toEqual(constants.vdcNewLat);
-        expect(element.all(by.css(".vdc_admin_longitude")).first().getText()).toEqual(constants.vdcNewLon);
         expect(element.all(by.css(".vdc_admin_district")).first().getText()).toEqual(constants.vdcNewDis);
         expect(element.all(by.css(".vdc_admin_cannonical")).first().getText()).toEqual(constants.vdcNewCan);
     });
