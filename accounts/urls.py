@@ -14,4 +14,5 @@ urlpatterns = patterns('accounts.views',
     url(r'^access-control/$', AccessControlView.as_view(), name='access_control'),
     url(r'^access-defaults/$', AccessDefaultsView.as_view(), name='access_defaults'),
     url(r'^access-defaults-delete/(?P<pk>\d+)/$', AccessDefaultsDeleteView.as_view(), name='access_defaults_delete'),
+    url(r'^fuzzy-matching-settings/$', FuzzyMatchingSettingsView.as_view(), name='fuzzy_matching_settings'),
 )

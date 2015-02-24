@@ -38,7 +38,8 @@ class DefaultPermissionsSet(models.Model):
             if account.permission_receive_email:
                 account.email_user("alerts/" + alert.email_template, alert, context)
 
-
+#seems this class is not needed
+#the methods defined don't work and are never used
 class AccountManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         now = timezone.now()
@@ -161,3 +162,21 @@ class Alert(models.Model):
     def email_permissions_set(self,context={}):
         for x in self.permissions_group.all():
             x.email_accounts(self,context)
+
+
+class SettingManager(models.Manager):
+
+    def get_by_keyword(self, setting_keyword):
+        setting = Setting.objects.filter(keyword=setting_keyword)
+        return setting[0].value
+
+
+class Setting(models.Model):
+    keyword = models.CharField(max_length=255)
+    value = models.IntegerField()
+    description = models.CharField(max_length=255)
+
+    objects = SettingManager()
+
+    def __unicode__(self):
+        return u'(Keyword: %s, Value: %i)' % (self.keyword, self.value)

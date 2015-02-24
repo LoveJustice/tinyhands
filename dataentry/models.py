@@ -1,8 +1,12 @@
 from django.db import models
+from fuzzywuzzy.fuzz import partial_ratio, partial_token_sort_ratio, partial_token_set_ratio
+from fuzzywuzzy.utils import asciidammit
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
+from fuzzywuzzy import process, utils, fuzz, string_processing
 
-from accounts.models import Account
+from accounts.models import Account, Setting
+
 
 NULL_BOOLEAN_CHOICES = [
     (None, ''),
@@ -14,6 +18,8 @@ NULL_BOOLEAN_CHOICES = [
 def set_weight(self, weight):
     self.weight = weight
     return self
+
+
 models.BooleanField.set_weight = set_weight
 
 class BorderStation(models.Model):
@@ -265,14 +271,131 @@ class InterceptionRecord(models.Model):
         ordering = ['-date_time_last_updated']
 
 
-class Interceptee(models.Model):
+class Person(models.Model):
+    GENDER_CHOICES = [
+        ('female', 'Female'),
+        ('male', 'Male'),
+    ]
+    gender = models.CharField(max_length=6, choices=GENDER_CHOICES, blank=True)
+    districts = models.ManyToManyField(District, related_name="+")
+    vdcs = models.ManyToManyField(VDC, related_name="+")
+    canonical_name = models.ForeignKey("Name", related_name="+", blank=True, null=True)
+    canonical_phone = models.ForeignKey("Phone", related_name="+", blank=True, null=True)
+    canonical_age = models.ForeignKey("Age", related_name="+", blank=True, null=True)
+    canonical_district = models.ForeignKey("District", related_name="+", blank=True, null=True)
+    canonical_vdc = models.ForeignKey("VDC", related_name="+", blank=True, null=True)
+
+    def __unicode__(self):
+        return "Name: {}, Age: {}, Gender: {}, Phone: {}".format(self.canonical_name, self.canonical_age, self.gender, self.canonical_phone)
+
+
+class Name(models.Model):
+    value = models.CharField(max_length=255)
+    person = models.ForeignKey(Person, related_name="names")
+
+    def __unicode__(self):
+        return self.value
+
+
+class Phone(models.Model):
+    value = models.CharField(max_length=255, blank=True)
+    person = models.ForeignKey(Person, related_name="phone_numbers")
+
+    def __unicode__(self):
+        return self.value
+
+
+class Age(models.Model):
+    value = models.PositiveIntegerField("age", unique=True, null=True, blank=True)
+    person = models.ManyToManyField(Person, related_name="ages")
+
+    def __unicode__(self):
+        return str(self.value)
+
+
+class IntercepteeManager(models.Manager):
+    def _custom_processor(self, items, force_ascii=False):
+        # full_process from fuzzywuzzy modified to accept lists as values in a dict
+        item_list = []
+        for item in items:
+            if item is None:
+                item_list.append("")
+            if force_ascii:
+                item = asciidammit(item)
+            string_out = string_processing.StringProcessor.replace_non_letters_non_numbers_with_whitespace(item)
+            string_out = string_processing.StringProcessor.to_lower_case(string_out)
+            string_out = string_processing.StringProcessor.strip(string_out)
+            item_list.append(string_out)
+        return item_list
+
+    def _custom_scorer(self, query, processed, force_ascii=True):
+        # WRatio from fuzzywuzzy modified to accept lists as values in a dict
+        item_list = []
+        for item in processed:
+            p1 = utils.full_process(query, force_ascii=force_ascii)
+            p2 = utils.full_process(item, force_ascii=force_ascii)
+            if not utils.validate_string(p1):
+                continue
+            if not utils.validate_string(p2):
+                continue
+            # should we look at partials?
+            try_partial = True
+            unbase_scale = .95
+            partial_scale = .90
+            base = fuzz.ratio(p1, p2)
+            len_ratio = float(max(len(p1), len(p2))) / min(len(p1), len(p2))
+            # if strings are similar length, don't use partials
+            if len_ratio < 1.5:
+                try_partial = False
+            # if one string is much much shorter than the other
+            if len_ratio > 8:
+                partial_scale = .6
+            if try_partial:
+                partial = partial_ratio(p1, p2) * partial_scale
+                ptsor = partial_token_sort_ratio(p1, p2, force_ascii=force_ascii) \
+                        * unbase_scale * partial_scale
+                ptser = partial_token_set_ratio(p1, p2, force_ascii=force_ascii) \
+                        * unbase_scale * partial_scale
+                item_list.append(int(max(base, partial, ptsor, ptser)))
+            else:
+                tsor = fuzz.token_sort_ratio(p1, p2, force_ascii=force_ascii) * unbase_scale
+                tser = fuzz.token_set_ratio(p1, p2, force_ascii=force_ascii) * unbase_scale
+                item_list.append(int(max(base, tsor, tser)))
+        return item_list
+
+    def fuzzy_match_on(self, input_name=None, input_age=None, input_phone=None):
+        interceptees = Interceptee.objects.all()
+        interceptee_dict = {
+           interceptee: list(interceptee.names.values_list('value', flat=True)) for interceptee in interceptees
+        }
+        fuzzy_limit = Setting.objects.get_by_keyword("Fuzzy-Limit")
+        fuzzy_cutoff = Setting.objects.get_by_keyword("Fuzzy-Score-Cutoff")
+        matches = process.extractBests(input_name, interceptee_dict, processor=self._custom_processor, scorer=self._custom_scorer, limit=fuzzy_limit, score_cutoff=fuzzy_cutoff)
+        if input_age != None:
+            for score_idx in range(len(matches)):
+                match = Interceptee.objects.get(pk=matches[score_idx][2].id)
+                age_list=list(match.ages.values_list('value', flat=True))
+                for idx in range(len(age_list)):
+                    if int(input_age) == age_list[idx]:
+                        scores = matches[score_idx][1]
+                        for score in range(len(scores)):
+                            matches[score_idx][1][score]+=Setting.objects.get_by_keyword("Fuzzy-Age-Weight")
+        if input_age != None:
+            for score_idx in range(len(matches)):
+                match = Interceptee.objects.get(pk=matches[score_idx][2].id)
+                phone_list=list(match.phone_numbers.values_list('value', flat=True))
+                for idx in range(len(phone_list)):
+                    if input_phone == phone_list[idx]:
+                        scores = matches[score_idx][1]
+                        for score in range(len(scores)):
+                            matches[score_idx][1][score]+=Setting.objects.get_by_keyword("Fuzzy-Phone-Number-Weight")
+        return matches
+
+
+class Interceptee(Person):
     KIND_CHOICES = [
         ('v', 'Victim'),
         ('t', 'Trafficker'),
-    ]
-    GENDER_CHOICES = [
-        ('f', 'F'),
-        ('m', 'M'),
     ]
     photo = models.ImageField(upload_to='interceptee_photos', default='', blank=True)
     photo_thumbnail = ImageSpecField(source='photo',
@@ -281,28 +404,19 @@ class Interceptee(models.Model):
                                      options={'quality': 80})
     interception_record = models.ForeignKey(InterceptionRecord, related_name='interceptees')
     kind = models.CharField(max_length=4, choices=KIND_CHOICES)
-    full_name = models.CharField(max_length=255)
-    gender = models.CharField(max_length=4, choices=GENDER_CHOICES, blank=True)
-    age = models.PositiveIntegerField(null=True, blank=True)
-    district = models.ForeignKey(District)
-    vdc = models.ForeignKey(VDC)
-    phone_contact = models.CharField(max_length=255, blank=True)
     relation_to = models.CharField(max_length=255, blank=True)
+    objects = IntercepteeManager()
 
     class Meta:
         ordering = ['id']
 
+    def __unicode__(self):
+        return super(Interceptee, self).__unicode__() + ", Kind: {}, Relation To: {}".format(self.kind, self.relation_to)
 
-class VictimInterview(models.Model):
 
+class VictimInterview(Person):
     class Meta:
         ordering = ['-date_time_last_updated']
-
-
-    GENDER_CHOICES = [
-        ('male', 'Male'),
-        ('female', 'Female'),
-    ]
 
     vif_number = models.CharField('VIF #', max_length=20)
     date = models.DateField('Date')
@@ -320,15 +434,9 @@ class VictimInterview(models.Model):
     permission_to_use_photograph = models.BooleanField('Check the box if form is signed', default=False)
 
     # 1. Victim & Family Information
-    victim_name = models.CharField('Name', max_length=255)
-
-    victim_gender = models.CharField('Gender', choices=GENDER_CHOICES, max_length=12)
-
-    victim_address_district = models.ForeignKey(District, related_name="victim_address_district");
-    victim_address_vdc = models.ForeignKey(VDC, related_name="victim_address_vdc");
+    victim_address_district = models.ForeignKey(District, related_name="victim_address_district")
+    victim_address_vdc = models.ForeignKey(VDC, related_name="victim_address_vdc")
     victim_address_ward = models.CharField('Ward #', max_length=255, blank=True)
-    victim_phone = models.CharField('Phone #', max_length=255, blank=True)
-    victim_age = models.CharField('Age', max_length=255, blank=True)
     victim_height = models.PositiveIntegerField('Height(ft)', null=True, blank=True)
     victim_weight = models.PositiveIntegerField('Weight(kg)', null=True, blank=True)
 
@@ -517,7 +625,6 @@ class VictimInterview(models.Model):
     victim_how_expense_was_paid_gave_money_to_broker = models.BooleanField('I gave a sum of money to the broker', default=False)
     victim_how_expense_was_paid_broker_gave_loan = models.BooleanField('The broker paid the expenses and I have to pay him back', default=False)
     victim_how_expense_was_paid_amount = models.DecimalField('Amount', max_digits=10, decimal_places=2, null=True, blank=True)
-    victim_how_expense_was_paid_broker_gave_loan = models.BooleanField('The broker paid the expenses and I have to pay him back', default=False)
 
     broker_works_in_job_location_no = models.BooleanField('No', default=False)
     broker_works_in_job_location_yes = models.BooleanField('Yes', default=False)
@@ -591,7 +698,6 @@ class VictimInterview(models.Model):
     meeting_at_border_no = models.BooleanField('No', default=False)
     meeting_at_border_meeting_broker = models.BooleanField('Meeting Broker', default=False)
     meeting_at_border_meeting_companion = models.BooleanField('Meeting Companion', default=False)
-
 
     victim_knew_details_about_destination = models.BooleanField(default=False)
 
@@ -787,12 +893,7 @@ class VictimInterview(models.Model):
     scanned_form = models.FileField('Attach scanned copy of form (pdf or image)', upload_to='scanned_vif_forms', default='', blank=True)
 
 
-class VictimInterviewPersonBox(models.Model):
-    GENDER_CHOICES = [
-        ('male', 'Male'),
-        ('female', 'Female'),
-    ]
-
+class VictimInterviewPersonBox(Person):
     victim_interview = models.ForeignKey(VictimInterview, related_name='person_boxes')
 
     who_is_this_relationship_boss_of = models.BooleanField('Boss of...', default=False)
@@ -806,17 +907,11 @@ class VictimInterviewPersonBox(models.Model):
     who_is_this_role_known_trafficker = models.BooleanField('Known Trafficker', default=False)
     who_is_this_role_manpower = models.BooleanField('Manpower', default=False)
     who_is_this_role_passport = models.BooleanField('Passport', default=False)
-    who_is_this_role_sex_industry = models.BooleanField('Sex Industry', default=False)
-
-    name = models.CharField('Name', max_length=255, blank=True)
-
-    gender = models.CharField('Gender', choices=GENDER_CHOICES, max_length=12, blank=True)
+    who_is_this_role_sex_industry = models.BooleanField('Sex Industry', default=False)  
 
     address_district = models.ForeignKey(District)
     address_vdc = models.ForeignKey(VDC)
     address_ward = models.CharField('Ward #', max_length=255, blank=True)
-    phone = models.CharField('Phone #', max_length=255, blank=True)
-    age = models.PositiveIntegerField('Age', null=True, blank=True)
     height = models.PositiveIntegerField('Height(ft)', null=True, blank=True)
     weight = models.PositiveIntegerField('Weight(kg)', null=True, blank=True)
 

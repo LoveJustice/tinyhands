@@ -1,4 +1,17 @@
 {% extends "base.html" %}
+{% block head %}
+    <script type="text/javascript">
+        window.fuzzy_ajax_url = "{% url 'interceptee_fuzzy_matching' %}";
+    </script>
+
+    <link rel="stylesheet/less" type="text/css" href="{{ STATIC_URL }}fuzzymatching-ui.less"/>
+    <link rel="stylesheet/less" type="text/css" href="{{ STATIC_URL }}matching_modal.less"/>
+{% endblock %}
+
+{% block afterjquery %}
+    <script src="{{ STATIC_URL }}matching_modal.js"></script>
+    <script src="{{ STATIC_URL }}fuzzymatching-ui.js"></script>
+{% endblock %}
 
 {% block tab_block %}
     <ul class="nav nav-tabs">
@@ -25,5 +38,19 @@
         
     {% block content %}
     {% endblock %}
+    <div id="matching_modal" class="modal fade">
+        <div class="modal-dialog modal-lg">
+            <!-- .modal-content -->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">Please select the correct attributes&hellip;</h4>
+                </div>
+                <div class="modal-body">
+                    body
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 

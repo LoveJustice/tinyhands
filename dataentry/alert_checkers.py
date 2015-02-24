@@ -69,10 +69,10 @@ class IRFAlertChecker(object):
         was submitted, form number that the match came from, and the name and all personal identifiers from both forms.
         """
         all_people = Interceptee.objects.all()
-        people_list = [person.full_name for person in all_people]
+        people_list = [person.canonical_name for person in all_people]
         matches = []
         trafficker_list = []
-        people_dict = {obj: obj.full_name for obj in all_people}
+        people_dict = {obj: obj.canonical_name for obj in all_people}
         trafficker_list = []
         trafficker_in_custody = self.trafficker_in_custody()
         traffickers_and_their_matches = {}
@@ -82,7 +82,7 @@ class IRFAlertChecker(object):
                 trafficker_list.append(person.instance)
         if len(trafficker_list) > 0:
             for trafficker in trafficker_list:
-                matches.append(process.extractBests(trafficker.full_name, people_list, score_cutoff=90, limit=10))
+                matches.append(process.extractBests(trafficker.canonical_name, people_list, score_cutoff=90, limit=10))
 
         trafficker_in_custody = self.IRF_data.get("trafficker_taken_into_custody")
         trafficker_name = ''
@@ -90,11 +90,11 @@ class IRFAlertChecker(object):
         if self.IRF_data.get("trafficker_taken_into_custody")=='':
             taken_into_custody = self.IRF_data.get("trafficker_taken_into_custody")
         if trafficker_in_custody is not None and taken_into_custody < len([there for there in self.interceptees.cleaned_data if there]):
-            trafficker_name = self.interceptees.cleaned_data[int(self.IRF_data.get("trafficker_taken_into_custody")) - 1].get("full_name")
+            trafficker_name = self.interceptees.cleaned_data[int(self.IRF_data.get("trafficker_taken_into_custody")) - 1].get("canonical_name")
 
         if len(matches) > 0:
             Alert.objects.send_alert("Name Match", context={"irf": self.irf.instance, "matches": matches, "trafficker_in_custody": trafficker_name})
-            traffickers_and_their_matches[trafficker.full_name] = process.extractBests(trafficker.full_name, people_dict, score_cutoff=89, limit=10)
+            traffickers_and_their_matches[trafficker.canonical_name] = process.extractBests(trafficker.canonical_name, people_dict, score_cutoff=89, limit=10)
         if len({person for person in traffickers_and_their_matches if len(traffickers_and_their_matches[person]) > 0}) > 0:
             Alert.objects.send_alert("Name Match", context={"irf": self.irf.instance, "traffickers_matches": traffickers_and_their_matches, "trafficker_in_custody": trafficker_in_custody})
             return True
@@ -137,5 +137,5 @@ class IRFAlertChecker(object):
         if self.IRF_data.get("trafficker_taken_into_custody") == '':
             taken_into_custody = self.IRF_data.get("trafficker_taken_into_custody")
         if trafficker_in_custody is not None and taken_into_custody < len([there for there in self.interceptees.cleaned_data if there]):
-            return self.interceptees.cleaned_data[int(self.IRF_data.get("trafficker_taken_into_custody")) - 1].get("full_name")
+            return self.interceptees.cleaned_data[int(self.IRF_data.get("trafficker_taken_into_custody")) - 1].get("canonical_name")
         return False

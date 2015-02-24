@@ -277,6 +277,8 @@ var DREAMSUITE = {
         setUpPermissionsCheckboxes();
         $('#add-another').click(function() {
             var formIdx = $('#id_form-TOTAL_FORMS').val();
+            console.log($('#id_form-TOTAL_FORMS').val());
+            console.log($('#permissions-rows-container').append($('#empty-form').html()));
             $('#permissions-rows-container').append($('#empty-form').html().replace(/__prefix__/g, formIdx));
             $('#id_form-TOTAL_FORMS').val(parseInt(formIdx) + 1);
             setUpPermissionsCheckboxes();
@@ -295,6 +297,15 @@ var DREAMSUITE = {
         });
 
         $('.in-use-button').tooltip();
+    },
+
+    fuzzy_matching_settings: function() {
+        $('#fuzzy-matching-settings-form').submit(function(event) {
+            var choice = confirm('Are you sure you want to save changes?');
+            if (!choice) {
+                event.preventDefault();
+            }
+        });
     },
 
     interceptionrecord_list: function() {

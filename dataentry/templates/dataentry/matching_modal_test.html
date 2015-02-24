@@ -1,0 +1,30 @@
+{% extends "dataentry/dataentry_base.html" %}
+
+{% block content %}
+    <div id="matching_modal" class="modal fade">
+        <div class="modal-dialog modal-lg">
+            <!-- .modal-content -->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">Please select the correct attributes&hellip;</h4>
+                </div>
+                <div class="modal-body">
+                    body
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button id="modal_btn" class="btn btn-primary">show modal</button>
+    <button class="btn btn-success btn-lg show-matches">Show</button>
+
+    <script>
+        $('#modal_btn').click(function() {
+            $('#matching_modal').load('/data-entry/matching_modal/3', function() {
+                $(this).modal()
+            })
+        });
+    </script>
+
+{% endblock %}

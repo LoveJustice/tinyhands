@@ -1,0 +1,115 @@
+{# Setting up view vars for js#}
+<script type="text/javascript">
+    window.person = {
+        id: "{{ person.id }}",
+        name: "{{ person.canonical_name }}",
+        phone: "{{ person.canonical_phone }}",
+        age: "{{ person.canonical_age }}",
+        kind: "{{ person.kind }}",
+        gender: "{{ person.gender }}",
+        district: "",
+        vdc: "",
+        relation_to: "{{ person.relation_to }}"
+    };
+</script>
+
+<!-- .modal-dialog -->
+<div class="modal-dialog modal-lg">
+    <!-- .modal-content -->
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <h4 class="modal-title">Please select the correct attributes&hellip;</h4>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-lg-3">
+                    <div id="canonical_info" class="well well-sm">
+                        <img id="photo" class="img-responsive img-rounded" src="{{ person.photo.url }}"/><br/>
+                        <strong><u>Current canonical information:</u></strong>
+
+                        <div id="name"><span>Name:</span> {{ person.canonical_name }}</div>
+                        <div id="age"><span>Age:</span> {{ person.canonical_age }}</div>
+                        <div id="phone"><span>Phone:</span> {{ person.canonical_phone }}</div>
+                    </div>
+                </div>
+                <div class="col-lg-9">
+                    <div class="row">
+                        <div id="names" class="attribute col-lg-6">
+                            <h3>Name</h3>
+                            <label>Form:</label>
+
+                            <div id="form_name" class="entered input-group">
+                                <span class="form-control">{% if form_name != None %}{{ form_name }}{% else %}Name not entered{% endif %}</span>
+                                <span class="input-group-btn"><button class="btn btn-default{% if form_name == None %} disabled{% endif %}">&#10003;</button></span>
+                            </div>
+                            <label>Matches:</label>
+                            <ul class="matched list-unstyled list-input-group">
+                                {% for name in person.names.all %}
+                                    <li class="input-group">
+                                        <span class="form-control" data-id="{{ name.pk }}">{{ name }}</span>
+                                        <span class="input-group-btn">
+                                            <button class="btn {% if name == person.canonical_name %}btn-success disabled{% else %}btn-default{% endif %}">&#10003;</button>
+                                        </span>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <div id="phone_numbers" class="attribute col-lg-6">
+                            <h3>Phone Number</h3>
+                            <label>Form:</label>
+
+                            <div id="form_phone" class="entered input-group">
+                                <span class="form-control">{% if form_phone != None %}{{ form_phone }}{% else %}Phone number not entered{% endif %}</span>
+                                <span class="input-group-btn"><button class="btn btn-default{% if form_phone == None %} disabled{% endif %}">&#10003;</button></span>
+                            </div>
+                            <label>Matches:</label>
+                            <ul class="matched list-unstyled list-input-group">
+                                {# NOTE: Nepal numbers are odd. Check here for ref http://www.howtocallabroad.com/nepal/ #}
+                                {% for phone in person.phone_numbers.all %}
+                                    <li class="input-group">
+                                        <span class="form-control" data-id="{{ phone.pk }}">{{ phone }}</span>
+                                        <span class="input-group-btn">
+                                            <button class="btn {% if phone == person.canonical_phone %} btn-success disabled{% else %}btn-default{% endif %}">&#10003;</button>
+                                        </span>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div id="ages" class="attribute col-lg-6">
+                            <h3>Age</h3>
+                            <label>Form:</label>
+
+                            <div id="form_age" class="entered input-group">
+                                <span class="form-control">{% if form_age != None %}{{ form_age }}{% else %}Age not entered{% endif %}</span>
+                                <span class="input-group-btn"><button class="btn btn-default{% if form_age == None %} disabled{% endif %}">&#10003;</button></span>
+                            </div>
+                            <label>Matches:</label>
+                            <ul class="matched list-unstyled list-input-group">
+                                {% for age in person.ages.all %}
+                                    <li class="input-group">
+                                        <span class="form-control" data-id="{{ age.pk }}">{{ age }}</span>
+                                        <span class="input-group-btn">
+                                            <button class="btn {% if age == person.canonical_age %}btn-success disabled{% else %}btn-default{% endif %}">&#10003;</button>
+                                        </span>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal" id="go_back">Go back</button>
+            <div class="btn-group">
+{#                <button type="button" class="btn btn-success" id="save">Save</button>#}
+                <button type="button" class="btn btn-success" id="save_and_use">Save and use</button>
+            </div>
+        </div>
+    </div>
+    <!-- /.modal-content -->
+</div>
+<!-- /.modal-dialog -->
