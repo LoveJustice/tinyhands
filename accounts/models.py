@@ -38,7 +38,8 @@ class DefaultPermissionsSet(models.Model):
             if account.permission_receive_email:
                 account.email_user("alerts/" + alert.email_template, alert, context)
 
-
+#seems this class is not needed
+#the methods defined don't work and are never used
 class AccountManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         now = timezone.now()

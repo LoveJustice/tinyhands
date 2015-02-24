@@ -1,0 +1,3 @@
+{% block subject %}Test Subject{% endblock %}
+
+{% block html %}<p>Hello </p>{% endblock %}
