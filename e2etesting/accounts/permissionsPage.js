@@ -28,7 +28,6 @@ var permissionsPage = function() {
 
     this.checkPermission = function(permission) {
         this.permissions = element(by.id(permission));
-        console.log(this.permissions);
         this.button = this.permissions.element(by.xpath('..'));
         this.button.click();
     };
