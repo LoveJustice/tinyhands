@@ -7,12 +7,12 @@ var vifPage = function() {
     var page = this;
 
     this.createVif = function(){
-        browser.get('http://0.0.0.0:8000/data-entry/vifs/create/');
+        browser.get(constants.webAddress + '/data-entry/vifs/create/');
     };
 
     this.filloutVif = function(){
           if(true) {
-              browser.driver.manage().window().maximize();
+              browser.executeScript("arguments[0].style.visibility = 'hidden';", element(by.id("footer")).getWebElement()); // Hides the footer so the webdriver can click on stuff
               this.vif_number = element(by.id("id_vif_number")).sendKeys("BHD123");
               this.date = element(by.id("id_date")).sendKeys("02/16/2015");
               this.interviewer = element(by.id("id_interviewer")).sendKeys("Test Interviewer");
@@ -28,7 +28,6 @@ var vifPage = function() {
               browser.executeScript('window.scrollTo(13,1050);');/*.then(function () {*/
               this.victim_recruited_in_village = element(by.id("id_victim_recruited_in_village_0")).click();
               //});
-              this.victim_recruited_in_village.click();
               this.victim_primary_means_of_travel = element(by.id("id_victim_primary_means_of_travel_tourist_bus")).click();
               this.victim_stayed_somewhere_between = element(by.id("id_victim_stayed_somewhere_between_0")).click();
               this.meeting_at_border = element(by.id("id_meeting_at_border_yes")).click();
@@ -40,7 +39,7 @@ var vifPage = function() {
               this.victim_heard_gospel = element(by.id("id_victim_heard_gospel_no")).click();
               this.legal_action_against_traffickers = element(by.id("id_legal_action_against_traffickers_no")).click();
               this.has_signature = element(by.id("id_has_signature")).click();
-              //browser.sleep(5000);
+              browser.executeScript("arguments[0].style.visibility = '';", element(by.id("footer")).getWebElement()); // Hides the footer so the webdriver can click on stuff
               this.submitButton = element(by.id("id_interviewer")).submit();
               this.ignore_warnings = element(by.id("id_ignore_warnings")).click();
               //browser.sleep(5000);

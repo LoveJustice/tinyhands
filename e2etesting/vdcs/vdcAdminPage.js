@@ -1,34 +1,33 @@
 'use strict';
 
-var constants = require('../testConstants.json');
+var c = require('../testConstants.json');
 
 var vdcAdminPage = function () {
     var page = this;
 
     this.navigate = function () {
-        browser.get('http://0.0.0.0:8000/data-entry/geocodelocations/vdc-admin/');
+        browser.get(c.webAddress + '/data-entry/geocodelocations/vdc-admin/');
         this.findItemsOnPage();
     };
 
    this.findItemsOnPage = function () {
-        this.firstVdcName = element(by.css(".vdc_admin_name"));
-        this.firstVdcLatitude = element.all(by.css(".vdc_admin_latitude")).first().getText();
-        this.firstVdclongitude = element.all(by.css(".vdc_admin_longitude")).first().getText();
-        this.firstVdcDistrict = element.all(by.css(".vdc_admin_district")).first().getText();
-        this.firstVdccannonical = element.all(by.css(".vdc_admin_cannonical")).first().getText();
-        this.firstVdcVerified = element.all(by.css(".vdc_admin_verified")).first().getText();
-        this.firstVdcEditButton = element.all(by.id("vdc_update_link")).first();
+        this.firstVdcName = element(by.css(".vdc_admin_name")).getText();
+        this.firstVdcDistrict = element.all(by.css(".vdc_admin_district")).get(3).getText();
+        this.firstVdccannonical = element.all(by.css(".vdc_admin_cannonical")).get(3).getText();
+        this.firstVdcVerified = element.all(by.css(".vdc_admin_verified")).get(3).getText();
+        this.firstVdcEditButton = element.all(by.id("vdc_update_link")).get(3);
     };
 
-    this.checkIfValuesAreEqual = function () {
-        this.editVdcName = element(by.id("id_name"));
-        this.editVdcLatitude = element(by.id("id_latitude")).first().getText();
-        this.editVdclongitude = element(by.id("id_longitude")).first().getText();
-        this.editVdcDistrict = element(by.id("id_district")).first().getText();
-        this.editVdccannonical = element(by.id("id_cannonical_name")).first().getText();
-        this.editVdcVerified = element(by.id("id_verified")).first().getText();
-        this.editVdcSubmit = element(by.css("btn btn-primary")).first();
+
+    this.changeValues = function () {
+        this.editVdcName = element(by.id("id_name")).clear().sendKeys(c.vdcNewName);
+        this.editVdcDistrict = element(by.cssContainingText('option', 'Achham')).click();
+        this.editVdccannonical = element(by.cssContainingText('option', 'Chalsa')).click();
+        browser.sleep(500);
+        this.editVdcSubmit = element(by.id("vdc_update_button")).click();
+        browser.sleep(500);
     };
+
     //
     //changeValues
     //this.checkIfVdcUpdated = function(){

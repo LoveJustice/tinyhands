@@ -14,7 +14,7 @@ rm test.sqlite3
 ./manage.py loaddata e2etesting/fixtures/*
 
 #start your django server
-./manage.py runserver 0.0.0.0:8000 &
+./manage.py runserver 0.0.0.0:8001 &
 
 #make sure the webdriver and django server have time to spin up
 sleep 10

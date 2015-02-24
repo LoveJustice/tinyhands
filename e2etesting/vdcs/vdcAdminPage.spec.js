@@ -16,9 +16,17 @@ describe('TinyHands Login', function () {
 
     it('should first VDCs information', function () {
         vdcAdminPage.firstVdcEditButton.click();
-        //browser.sleep(6000);
-        //vdcAdminPage.changeValues();
-        //vdcAdminPage.checkIfVdcUpdated();
+        browser.sleep(500);
+        vdcAdminPage.changeValues();
+        browser.sleep(500);
+
+        browser.get(constants.webAddress);
+        vdcAdminPage.navigate();
+        browser.sleep(500);
+
+        expect(element(by.css(".vdc_admin_name")).getText()).toBe(constants.vdcNewName);
+        expect(element.all(by.css(".vdc_admin_district")).first().getText()).toEqual(constants.vdcNewDis);
+        expect(element.all(by.css(".vdc_admin_cannonical")).first().getText()).toEqual(constants.vdcNewCan);
     });
 
 });
