@@ -4,11 +4,17 @@
   "adminFirstName"  : "test",
   "adminLastName"   : "user",
 
+  "vdcEditName"      : "aaaab",
+  "vdcEditLat"       : "0.1",
+  "vdcEditLon"       : "0.1",
+  "vdcEditDis"       : "Dang",
+  "vdcEditCan"       : "ShreeJung",
+
   "vdcNewName"      : "aaaaa",
   "vdcNewLat"       : "0.0",
   "vdcNewLon"       : "0.0",
-  "vdcNewDis"       : "Achham",
-  "vdcNewCan"       : "Chalsa",
+  "vdcNewDis"       : "Dang",
+  "vdcNewCan"       : "ShreeJung",
 
   "webAddress" : "http://0.0.0.0:8001",
 
@@ -18,7 +24,7 @@
   "irfInterceptTime"          : "01/01/01",
   "irfStaffName"              : "TEST",
   "irfInterceptFname"         : "name",
-  "irfInterceptDistrict"      : "Baglung",
-  "irfInterceptVdc"           : "Chalsa",
+  "irfInterceptDistrict"      : "Dang",
+  "irfInterceptVdc"           : "ShreeJung",
   "irfNameCameUpBeforeValue"  : "1"
 }
