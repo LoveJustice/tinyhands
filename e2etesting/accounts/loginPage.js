@@ -6,11 +6,11 @@ var loginPage = function () {
     var page = this;
 
     this.logout = function () {
-        browser.get('http://0.0.0.0:8000/logout/');
+        browser.get('http://0.0.0.0:8001/logout/');
     };
 
     this.login = function (username, password) {
-        browser.get('http://0.0.0.0:8000/login/');
+        browser.get('http://0.0.0.0:8001/login/');
         this.usernamefield = element(by.id("id_username")).sendKeys(username);
 
         this.passwordfield = element(by.id("id_password")).sendKeys(password);

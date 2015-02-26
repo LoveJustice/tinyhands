@@ -46,7 +46,7 @@ describe('IRF CRUD', function() {
             expect(element(by.id('id_name_came_up_before_value')).getAttribute('value')).toEqual(c.irfNameCameUpBeforeValue);
             expect(element(by.id('id_scan_and_submit_same_day')).isSelected()).toBeTruthy();
             expect(element(by.id('id_has_signature')).isSelected()).toBeTruthy();
-            browser.get('http://0.0.0.0:8000/data-entry/irfs/search/');
+            browser.get(c.webAddress + '/data-entry/irfs/search/');
             browser.sleep(1000);
         });
 

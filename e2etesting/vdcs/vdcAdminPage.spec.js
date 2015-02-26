@@ -2,7 +2,7 @@ var constants = require('../testConstants.json');
 var loginPage = require('../accounts/loginPage.js');
 var vdcAdminPage = require('./vdcAdminPage.js');
 
-describe('TinyHands Login', function () {
+describe('TinyHands VDCs', function () {
     beforeEach(function () {
         return browser.ignoreSynchronization = true;
     });
@@ -16,9 +16,27 @@ describe('TinyHands Login', function () {
 
     it('should first VDCs information', function () {
         vdcAdminPage.firstVdcEditButton.click();
-        //browser.sleep(6000);
-        //vdcAdminPage.changeValues();
-        //vdcAdminPage.checkIfVdcUpdated();
+        browser.sleep(500);
+        vdcAdminPage.changeValues();
+        browser.get(constants.webAddress);
+        vdcAdminPage.navigate();
+        expect(element(by.css(".vdc_admin_name")).getText()).toBe(constants.vdcEditName);
+        expect(element.all(by.css(".vdc_admin_district")).first().getText()).toEqual(constants.vdcEditDis);
+        expect(element.all(by.css(".vdc_admin_cannonical")).first().getText()).toEqual(constants.vdcEditCan);
+    });
+
+    it('should be able to create a new VDC through the vif:', function(){
+        browser.get(constants.webAddress + '/data-entry/vifs/create/');
+        this.victim_address_vdc = element(by.id("id_victim_address_vdc")).sendKeys("Bab");
+        browser.sleep(500);
+        vdcAdminPage.createNewVDC();
+        vdcAdminPage.navigate();
+        expect(element(by.css(".vdc_admin_name")).getText()).toBe(constants.vdcNewName);
+        expect(element.all(by.css(".vdc_admin_district")).first().getText()).toEqual(constants.vdcNewDis);
+        expect(element.all(by.css(".vdc_admin_cannonical")).first().getText()).toEqual(constants.vdcNewCan);
+
+
+
     });
 
 });

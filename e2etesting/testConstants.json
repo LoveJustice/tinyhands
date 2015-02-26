@@ -1,8 +1,22 @@
 {
-  "adminEmail"                : "testuser@test.com",
-  "adminPassword"             : "password",
-  "adminFirstName"            : "test",
-  "adminLastName"             : "user",
+  "adminEmail"      : "testuser@test.com",
+  "adminPassword"   : "password",
+  "adminFirstName"  : "test",
+  "adminLastName"   : "user",
+
+  "vdcEditName"      : "aaaab",
+  "vdcEditLat"       : "0.1",
+  "vdcEditLon"       : "0.1",
+  "vdcEditDis"       : "Dang",
+  "vdcEditCan"       : "ShreeJung",
+
+  "vdcNewName"      : "aaaaa",
+  "vdcNewLat"       : "0.0",
+  "vdcNewLon"       : "0.0",
+  "vdcNewDis"       : "Dang",
+  "vdcNewCan"       : "ShreeJung",
+
+  "webAddress" : "http://0.0.0.0:8001",
 
   "irfNumber"                 : "0",
   "irfEditNumber"             : "1",
@@ -10,6 +24,7 @@
   "irfInterceptTime"          : "01/01/01",
   "irfStaffName"              : "TEST",
   "irfInterceptFname"         : "name",
+
   "irfInterceptDistrict"      : "Baglung",
   "irfInterceptVdc"           : "Chalsa",
   "irfNameCameUpBeforeValue"  : "1",
@@ -32,4 +47,8 @@
   "committee1SetFirstName"    : "CFname1",
   "committee1SetLastName"     : "CLname1",
   "committee1Email"           : "example1@example.com"
+
+  "irfInterceptDistrict"      : "Dang",
+  "irfInterceptVdc"           : "ShreeJung",
+  "irfNameCameUpBeforeValue"  : "1"
 }

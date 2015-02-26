@@ -6,7 +6,7 @@ var irfPage = function() {
     var page = this;
     
     this.getToIRF = function(){
-	    browser.get('http://0.0.0.0:8000/data-entry/irfs/search/');
+	    browser.get(c.webAddress + '/data-entry/irfs/search/');
         browser.sleep(1000);
         this.link = element(by.id("id_input_new_irf"));
         this.link.click();
@@ -15,6 +15,7 @@ var irfPage = function() {
     };
 
     this.fillOutIRF = function() {
+        browser.executeScript("arguments[0].style.visibility = 'hidden';", element(by.id("footer")).getWebElement()); // Hides the footer so the webdriver can click on stuff
         this.irf_number = element(by.id("id_irf_number")).sendKeys(c.irfNumber);
         this.location = element(by.id("id_location")).sendKeys(c.irfLocation);
         this.date_time_of_interception = element(by.id("id_date_time_of_interception")).sendKeys(c.irfInterceptTime);
@@ -36,6 +37,7 @@ var irfPage = function() {
         this.name_came_up_before_value = element(by.id("id_name_came_up_before_value")).sendKeys(c.irfNameCameUpBeforeValue);
         this.scan_and_submit_same_day = element(by.id("id_scan_and_submit_same_day")).click();
         this.has_signature = element(by.id("id_has_signature")).click();
+                browser.executeScript("arguments[0].style.visibility = '';", element(by.id("footer")).getWebElement()); // Hides the footer so the webdriver can click on stuff
         this.submit = element(by.id("submtButton")).click();
 
     };
@@ -45,6 +47,7 @@ var irfPage = function() {
     };
 
     this.editIRF = function() {
+        browser.executeScript("arguments[0].style.visibility = 'hidden';", element(by.id("footer")).getWebElement()); // Hides the footer so the webdriver can click on stuff
         this.eIRF = element(by.linkText('Edit')).click();
         this.irf_number = element(by.id("id_irf_number")).clear();
         this.irf_number = element(by.id("id_irf_number")).sendKeys(c.irfEditNumber);
