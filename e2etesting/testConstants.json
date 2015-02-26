@@ -12,5 +12,24 @@
   "irfInterceptFname"         : "name",
   "irfInterceptDistrict"      : "Baglung",
   "irfInterceptVdc"           : "Chalsa",
-  "irfNameCameUpBeforeValue"  : "1"
+  "irfNameCameUpBeforeValue"  : "1",
+
+  "stationName"               : "Test Station",
+  "stationCode"               : "code",
+  "dateEstablished"           : "01/01/01",
+  "latitude"                  : "00.000000",
+  "longitude"                 : "00.000000",
+  "staff0SetFirstName"        : "SFname0",
+  "staff0SetLastName"         : "SLname0",
+  "staff0Email"               : "example0@example.com",
+  "staff1SetFirstName"        : "SFname1",
+  "staff1SetLastName"         : "SLname1",
+  "staff1Email"               : "example1@example.com",
+
+  "committee0SetFirstName"    : "CFname0",
+  "committee0SetLastName"     : "CLname0",
+  "committee0Email"           : "example0@example.com",
+  "committee1SetFirstName"    : "CFname1",
+  "committee1SetLastName"     : "CLname1",
+  "committee1Email"           : "example1@example.com"
 }

@@ -5,13 +5,17 @@ exports.config = {
   allScriptsTimeout: 10000,
 
   SITE_DOMAIN: '0.0.0.0:8000',
+  /*
   capabilities: {
-    'browserName': 'firefox' // or 'safari'
+    'browserName': 'chromium'//'firefox' // or 'safari'
   },
-  specs:  ['accounts/loginPage.spec.js',
-	        'irf/irfCRUD.spec.js',
-            'accounts/loginPage.spec.js',
-            'accounts/permissionsPage.spec.js',
-            'vdcs/vdcAdminPage.spec.js'
+  */
+
+  specs:  [//'accounts/loginPage.spec.js',
+	        //'irf/irfCRUD.spec.js',
+            //'accounts/loginPage.spec.js',
+            //'accounts/permissionsPage.spec.js',
+            //'vdcs/vdcAdminPage.spec.js',
+            'borderStations/borderStationCRUD.spec.js'
           ]
 };
