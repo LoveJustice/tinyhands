@@ -6,5 +6,5 @@ exports.config = {
 
   SITE_DOMAIN: '0.0.0.0:8000',
 
-  specs:  ['accounts/loginPage.spec.js']
+  specs:  ['accounts/loginPage.spec.js', 'dataentry/search.spec.js']
 };

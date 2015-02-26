@@ -17,7 +17,7 @@ var loginPage = function() {
     };
 
     this.loginAsAdmin = function() {
-	this.login(constants.adminEmail, constants.adminPassword);
+		this.login(constants.adminEmail, constants.adminPassword);
     };
 };
 
