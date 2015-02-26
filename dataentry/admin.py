@@ -1,5 +1,5 @@
 from django.contrib import admin
-from dataentry.models import InterceptionRecord, VictimInterview,District, VDC, BorderStation
+from dataentry.models import *
 
 
 class InterceptionRecordAdmin(admin.ModelAdmin):
@@ -19,6 +19,16 @@ class DistrictAdmin(admin.ModelAdmin):
 	search_fields = ['name']
 	list_display = ['name']
 
+class IntercepteeAdmin(admin.ModelAdmin):
+    model = Interceptee
+    search_fields = ['canonical_name']
+    list_display = ['canonical_name', 'id']
+
+class PersonAdmin(admin.ModelAdmin):
+    model = Interceptee
+    search_fields = ['canonical_name']
+    list_display = ['canonical_name', 'id']
+
 class BorderStationAdmin(admin.ModelAdmin):
     model = BorderStation
     search_fields = ['station_name']
@@ -33,5 +43,7 @@ admin.site.register(InterceptionRecord, InterceptionRecordAdmin)
 admin.site.register(VictimInterview, VictimInterviewAdmin)
 admin.site.register(District, DistrictAdmin)
 admin.site.register(BorderStation, BorderStationAdmin)
+admin.site.register(Interceptee, IntercepteeAdmin)
+admin.site.register(Person, PersonAdmin)
 admin.site.register(VDC, VDCAdmin)
 

@@ -305,7 +305,7 @@ def get_irf_export_rows(irfs):
             else:
                 row.append('Form is not signed')
 
-            row.append(interceptee.full_name or '')
+            row.append(interceptee.canonical_name or '')
 
             if interceptee.gender == 'm':
                 row.append('Male')
@@ -313,10 +313,10 @@ def get_irf_export_rows(irfs):
                 row.append('Female')
 
             row.extend([
-                interceptee.age,
-                interceptee.district,
-                interceptee.vdc,
-                interceptee.phone_contact,
+                interceptee.canonical_age,
+                interceptee.canonical_district,
+                interceptee.canonical_vdc,
+                interceptee.canonical_phone,
                 interceptee.relation_to,
             ])
 
@@ -325,17 +325,18 @@ def get_irf_export_rows(irfs):
                 if interceptee.kind == 'v':
                     continue
 
-                row.append(interceptee.full_name or '')
+                row.append(interceptee.canonical_name or '')
 
                 if interceptee.gender == 'm':
                     row.append('Male')
                 else:
                     row.append('Female')
+
                 row.extend([
-                    interceptee.age,
-                    interceptee.district,
-                    interceptee.vdc,
-                    interceptee.phone_contact,
+                    interceptee.canonical_age,
+                    interceptee.canonical_district,
+                    interceptee.canonical_vdc,
+                    interceptee.canonical_phone,
                     interceptee.relation_to,
                 ])
 
