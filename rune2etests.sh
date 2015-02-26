@@ -20,7 +20,7 @@ rm test.sqlite3
 sleep 10
 
 #run the tests
-nodejs node_modules/protractor/bin/protractor e2etesting/conf.js
+node node_modules/protractor/bin/protractor e2etesting/conf.js
 
 #shutdown all of the processes I spun up
 kill 0
