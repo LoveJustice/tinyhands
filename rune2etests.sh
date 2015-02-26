@@ -1,5 +1,5 @@
 #start webdriver server
-nodejs node_modules/protractor/bin/webdriver-manager start &
+webdriver-manager start &
 
 #Change settings to test
 export DJANGO_SETTINGS_MODULE=dreamsuite.settings.testing
@@ -20,7 +20,7 @@ rm test.sqlite3
 sleep 10
 
 #run the tests
-node node_modules/protractor/bin/protractor e2etesting/conf.js
+protractor e2etesting/conf.js
 
 #shutdown all of the processes I spun up
 kill 0
