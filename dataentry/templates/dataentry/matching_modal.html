@@ -7,8 +7,8 @@
         age: "{{ person.canonical_age }}",
         kind: "{{ person.kind }}",
         gender: "{{ person.gender }}",
-        district: "",
-        vdc: "",
+        district: "{{ person.canonical_district }}",
+        vdc: "{{ person.canonical_vdc }}",
         relation_to: "{{ person.relation_to }}"
     };
 </script>
@@ -25,12 +25,18 @@
             <div class="row">
                 <div class="col-lg-3">
                     <div id="canonical_info" class="well well-sm">
-                        <img id="photo" class="img-responsive img-rounded" src="{{ person.photo.url }}"/><br/>
+                        {% if person.photo %}
+                            <img id="photo" class="img-responsive img-rounded" src="{{ person.photo.url }}"/><br/>
+                        {% else %}
+                            <div class="well">No Photo</div>
+                        {% endif %}
                         <strong><u>Current canonical information:</u></strong>
 
                         <div id="name"><span>Name:</span> {{ person.canonical_name }}</div>
                         <div id="age"><span>Age:</span> {{ person.canonical_age }}</div>
                         <div id="phone"><span>Phone:</span> {{ person.canonical_phone }}</div>
+                        <div id="district"><span>District:</span> {{ person.canonical_district }}</div>
+                        <div id="vdc"><span>VDC:</span> {{ person.canonical_vdc }}</div>
                     </div>
                 </div>
                 <div class="col-lg-9">
@@ -105,7 +111,7 @@
         <div class="modal-footer">
             <button type="button" class="btn btn-danger" data-dismiss="modal" id="go_back">Go back</button>
             <div class="btn-group">
-{#                <button type="button" class="btn btn-success" id="save">Save</button>#}
+                <button type="button" class="btn btn-success" id="save">Save</button>
                 <button type="button" class="btn btn-success" id="save_and_use">Save and use</button>
             </div>
         </div>
