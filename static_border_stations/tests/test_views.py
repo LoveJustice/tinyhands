@@ -21,8 +21,13 @@ class TestBorderStations(WebTest):
         self.response = self.app.get(url, user=self.superuser)
         self.form = self.response.form
 
-	def test_border_station_create_view_should_exist(self):
+	def test_border_station_update_view_should_exist(self):
 		self.assertEquals(self.response.status_code, 200)
+        
+    def test_border_station_has_data(self):
+        form = self.form
+        
+        self.assertNotEqual('',form.get("station_name"))
         
     def testUpdateStaff(self):
         form = self.form
@@ -35,10 +40,10 @@ class TestBorderStations(WebTest):
         
         self.assertEquals(302, formResp.status_code)
         
-        bs = BorderStation.objects.get(id=self.BS.id).staff_set.get()
-        self.assertEquals("Joe", bs.first_name)
-        self.assertEquals("Shmo", bs.last_name)
-        self.assertEquals("joe@gmail.com", bs.email)
+        staff = BorderStation.objects.get(id=self.BS.id).staff_set.get()
+        self.assertEquals("Joe", staff.first_name)
+        self.assertEquals("Shmo", staff.last_name)
+        self.assertEquals("joe@gmail.com", staff.email)
         
     def testUpdateCommitteeMember(self):
         form = self.form
@@ -51,10 +56,10 @@ class TestBorderStations(WebTest):
         
         self.assertEquals(302, formResp.status_code)
         
-        bs = BorderStation.objects.get(id=self.BS.id).committeemember_set.get()
-        self.assertEquals("bob", bs.first_name)
-        self.assertEquals("smith", bs.last_name)
-        self.assertEquals("bob@gmail.com", bs.email)
+        cm = BorderStation.objects.get(id=self.BS.id).committeemember_set.get()
+        self.assertEquals("bob", cm.first_name)
+        self.assertEquals("smith", cm.last_name)
+        self.assertEquals("bob@gmail.com", cm.email)
         
     def testUpdateLocation(self):
         form = self.form
@@ -67,28 +72,32 @@ class TestBorderStations(WebTest):
         
         self.assertEquals(302, formResp.status_code)
         
-        bs = BorderStation.objects.get(id=self.BS.id).location_set.get()
-        self.assertEquals("SomeLocation", bs.name)
-        self.assertEquals(1.23, bs.latitude)
-        self.assertEquals(4.56, bs.longitude)
+        location = BorderStation.objects.get(id=self.BS.id).location_set.get()
+        self.assertEquals("SomeLocation", location.name)
+        self.assertEquals(1.23, location.latitude)
+        self.assertEquals(4.56, location.longitude)
         
     def testUpdateBorderStationDetails(self):
         form = self.form
         
-        form.set("location_set-0-name", "SomeLocation")
-        form.set("location_set-0-latitude", 1.23)
-        form.set("location_set-0-longitude", 4.56)
+        form.set("station_name", "SomeLocation")
+        form.set("station_code", "TTT")
+        form.set("date_established", "01/01/11")
+        form.set("longitude", "1.23")
+        form.set("latitude", "4.56")
         
         formResp = form.submit()
         
         self.assertEquals(302, formResp.status_code)
         
-        bs = BorderStation.objects.get(id=self.BS.id).location_set.get()
-        self.assertEquals("SomeLocation", bs.name)
-        self.assertEquals(1.23, bs.latitude)
-        self.assertEquals(4.56, bs.longitude)
+        bs = BorderStation.objects.get(id=self.BS.id)
         
-    # TODO: Test editing borderstation info
+        self.assertEquals("SomeLocation", bs.station_name)
+        self.assertEquals("TTT", bs.station_code)
+        self.assertEquals("01/01/11", bs.date_established.strftime("%D"))
+        self.assertEquals("1.23", str(bs.longitude))
+        self.assertEquals("4.56", str(bs.latitude))
+        
     # TODO: Test adding/updating more Staff to borderstation
     # TODO: Test adding/updating more CommitteMembers to borderstation
     # TODO: Test adding/updating more Locations to borderstation
