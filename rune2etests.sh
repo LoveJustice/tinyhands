@@ -21,6 +21,3 @@ sleep 10
 
 #run the tests
 protractor e2etesting/conf.js
-
-#shutdown all of the processes I spun up
-kill 0
