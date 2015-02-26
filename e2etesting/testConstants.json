@@ -46,7 +46,7 @@
   "committee0Email"           : "example0@example.com",
   "committee1SetFirstName"    : "CFname1",
   "committee1SetLastName"     : "CLname1",
-  "committee1Email"           : "example1@example.com"
+  "committee1Email"           : "example1@example.com",
 
   "irfInterceptDistrict"      : "Dang",
   "irfInterceptVdc"           : "ShreeJung",

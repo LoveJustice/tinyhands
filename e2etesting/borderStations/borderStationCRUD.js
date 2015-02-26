@@ -6,7 +6,7 @@ var borderStationPage = function() {
     var page = this;
 
     this.getToBoarderStationCreate = function(){
-        browser.get('http://0.0.0.0:8000/static_border_stations/border-stations/create/');
+        browser.get(c.webAddress + '/static_border_stations/border-stations/create/');
         };
 
     this.fillOutBoarderStation = function() {
