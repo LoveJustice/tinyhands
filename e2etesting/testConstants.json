@@ -2,7 +2,30 @@
   "adminEmail"      : "testuser@test.com",
   "adminPassword"   : "password",
   "adminFirstName"  : "test",
-  "adminLastName"   : "user"
+  "adminLastName"   : "user",
 
+  "vdcEditName"      : "aaaab",
+  "vdcEditLat"       : "0.1",
+  "vdcEditLon"       : "0.1",
+  "vdcEditDis"       : "Dang",
+  "vdcEditCan"       : "ShreeJung",
+
+  "vdcNewName"      : "aaaaa",
+  "vdcNewLat"       : "0.0",
+  "vdcNewLon"       : "0.0",
+  "vdcNewDis"       : "Dang",
+  "vdcNewCan"       : "ShreeJung",
+
+  "webAddress" : "http://0.0.0.0:8001",
+
+  "irfNumber"                 : "0",
+  "irfEditNumber"             : "1",
+  "irfLocation"               : "none",
+  "irfInterceptTime"          : "01/01/01",
+  "irfStaffName"              : "TEST",
+  "irfInterceptFname"         : "name",
+  "irfInterceptDistrict"      : "Dang",
+  "irfInterceptVdc"           : "ShreeJung",
+  "irfNameCameUpBeforeValue"  : "1"
 
 }
