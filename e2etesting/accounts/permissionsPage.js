@@ -5,6 +5,14 @@ var constants = require('../testConstants.json');
 var permissionsPage = function() {
     var page = this;
 
+    this.navigateToVdcPage = function() {
+        browser.get(constants.webAddress + "/data-entry/geocodelocations/vdc-admin/");
+    };
+
+    this.navigateToBorderstationPage = function() {
+        browser.get(constants.webAddress + "http://127.0.0.1:8000/static_border_stations/border-stations/0/")
+    };
+
     this.navigateToAccounts = function(){
         browser.get(constants.webAddress + '/accounts');
     };
@@ -34,8 +42,11 @@ var permissionsPage = function() {
 
     this.savePermissions = function() {
         this.submit = element(by.className("btn-primary")).click();
-
     };
+
+    this.viewVifForm = function() {
+        this.view = element(by.linkText("View")).click();
+    }
 
     this.resetPermissions = function() {
         element.all(by.className("btn-danger")).click();
