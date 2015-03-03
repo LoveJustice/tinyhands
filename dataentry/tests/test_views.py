@@ -9,6 +9,8 @@ from accounts.tests.factories import *
 from dataentry.models import BorderStation
 from accounts.models import Account
 
+import ipdb
+
 class SearchFormsMixinTests(TestCase):
 
 	def test_constructor(self):
@@ -24,7 +26,7 @@ class InterceptionRecordListViewTests(WebTest):
 	def setUp(self):
 		self.superuser = SuperUserFactory.create()
 		self.response = self.app.get(reverse('interceptionrecord_list'), user=self.superuser)
-        self.form = self.response.form
+        #self.form = self.response.form
 
 	def test_InterceptionRecordListView_exists(self):
 		self.assertEquals(self.response.status_code, 200)
@@ -48,20 +50,25 @@ class VictimInterviewFormListViewTests(WebTest):
 		self.assertEquals(response.status_code, 200)
 
 class InterceptionRecordCreateViewTests(WebTest):
-
+	
+	fixtures = ['irfs.json']
+	
 	def setUp(self):
+		self.IRF = InterceptionRecord.objects.all()[0]
 		self.superuser = SuperUserFactory.create()
-		self.response = self.app.get(reverse('interceptionrecord_create'), user=self.superuser)
-        self.form = self.response.form
-        
-    def test_irf_number_matches_existing_border_station(self):
-        form = self.form
-        
-        irfNumber = "BHD123"
-        
-        form.set("irf_number", irfNumber)
-        
-        self.assertTrue(False) # TODO: Validate IRF# contains code for existing borderstation
+		url = reverse("interceptionrecord_update", kwargs={'pk':self.IRF.id})
+		self.response = self.app.get(url, user=self.superuser)
+		self.form = self.response.form
+		
+	def test_irf_number_matches_existing_border_station(self):
+		form = self.form
+		
+		BSCode = form.get("irf_number")[:2]
+		
+		borderstation = BorderStation.objects.all().filter(station_code=BSCode)
+		ipdb.set_trace()
+		
+		# TODO: Validate IRF# contains code for existing borderstation
         
     # TODO: Validate IRF# is valid
     # TODO: If IRF# isnt valid do something
