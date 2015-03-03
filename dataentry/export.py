@@ -138,7 +138,7 @@ def text_if_true(condition, text):
 
 
 def get_station_name_from_number(form_number):
-    return BorderStation.objects.get(station_code=form_number[:3].upper()).station_name   
+    return BorderStation.objects.get(station_code=form_number[:3].upper())  
     
 def get_checkbox_group_value(instance, field_name_start):
     for field in instance._meta.fields:

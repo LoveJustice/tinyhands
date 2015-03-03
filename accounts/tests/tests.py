@@ -5,6 +5,8 @@ from django.core.urlresolvers import reverse_lazy, reverse
 from accounts.tests.factories import *
 from accounts.models import Account, Alert
 #from dataentry.models import BorderStation
+import ipdb
+
 
 
 class TestModels(WebTest):
@@ -216,7 +218,110 @@ class PermissionsTesting(WebTest):
         # print(resp.status_code)
         # self.assertEqual(resp.status_code, 302)
 
+class UpdatingInformationTests(WebTest):
 
+    def setUp(self):
+        self.superuser = SuperUserFactory.create(email="joe@test.org", first_name="Joe", last_name="Test")
 
+        #second user to test duplicate email failure
+        self.superuser2 = SuperUserFactory.create(email="joe2@test.org", first_name="Joe", last_name="Test")
 
+        #create user designation so that there are 2 options in user designation select box
+        self.viewuserdesignation = ViewUserDesignation.create()
 
+    def test_account_update_view_exists(self):
+        response = self.app.get(reverse('account_update', kwargs={'pk': self.superuser.id}), user=self.superuser)
+        self.assertEquals(200, response.status_code)
+
+    def test_account_update_view_has_correct_information(self):
+        response = self.app.get(reverse('account_update', kwargs={'pk': self.superuser.id}), user=self.superuser)
+        form = response.form
+        self.assertEquals("joe@test.org", form.get('email').value)
+        self.assertEquals("Joe", form.get('first_name').value)
+        self.assertEquals("Test", form.get('last_name').value)
+        self.assertEquals(True, form.get('user_designation').options[1][1])
+        self.assertEquals(True, form.get('permission_irf_view').checked)
+        self.assertEquals(True, form.get('permission_irf_add').checked)
+        self.assertEquals(True, form.get('permission_irf_edit').checked)
+        self.assertEquals(True, form.get('permission_vif_view').checked)
+        self.assertEquals(True, form.get('permission_vif_add').checked)
+        self.assertEquals(True, form.get('permission_vif_edit').checked)
+        self.assertEquals(True, form.get('permission_border_stations_view').checked)
+        self.assertEquals(True, form.get('permission_border_stations_add').checked)
+        self.assertEquals(True, form.get('permission_border_stations_edit').checked)
+        self.assertEquals(True, form.get('permission_accounts_manage').checked)
+        self.assertEquals(True, form.get('permission_receive_email').checked)
+        self.assertEquals(True, form.get('permission_vdc_manage').checked)
+        self.assertEquals(True, form.get('permission_budget_manage').checked)
+        
+    def test_account_update_view_submission_fails_with_missing_required_fields(self):
+        response = self.app.get(reverse('account_update', kwargs={'pk': self.superuser.id}), user=self.superuser)
+        form = response.form
+
+        form.set('email', '')
+        form.set('user_designation', '')
+        form_response = form.submit()
+
+        self.assertEquals(200, form_response.status_code)
+
+        field_errors = form_response.context['form'].errors
+        self.assertEquals('This field is required.',field_errors['email'][0])
+        self.assertEquals('This field is required.',field_errors['user_designation'][0])
+
+    def test_account_update_view_submission_fails_with_duplicate_email(self):
+        response = self.app.get(reverse('account_update', kwargs={'pk': self.superuser.id}), user=self.superuser)
+        form = response.form
+
+        form.set('email', 'joe2@test.org')
+        form_response = form.submit()
+
+        self.assertEquals(200, form_response.status_code)
+
+        field_errors = form_response.context['form'].errors
+        self.assertEquals('Account with this Email already exists.', field_errors['email'][0])
+
+    def test_account_update_view_submission_succeeds_with_valid_fields(self):
+        response = self.app.get(reverse('account_update', kwargs={'pk': self.superuser.id}), user=self.superuser)
+        form = response.form
+
+        form.set('first_name', 'NewJoe')
+        form.set('last_name', 'Test2')
+        form.set('email', 'newjoe@test.org')
+        form.set('user_designation', self.viewuserdesignation.id) #switch to view user designation
+        form.set('permission_irf_view', False)
+        form.set('permission_irf_add', False)
+        form.set('permission_irf_edit', False)
+        form.set('permission_vif_view', False)
+        form.set('permission_vif_add', False)
+        form.set('permission_vif_edit', False)
+        form.set('permission_border_stations_view', False)
+        form.set('permission_border_stations_add', False)
+        form.set('permission_border_stations_edit', False)
+        form.set('permission_receive_email', False)
+        form.set('permission_vdc_manage', False)
+        form.set('permission_budget_manage', False)
+
+        form_response = form.submit()
+        self.assertEquals(302, form_response.status_code)
+
+        response2 = form_response.follow()
+        self.assertEquals(200, response2.status_code)
+
+        updatedAccount = Account.objects.get(first_name='NewJoe')
+        self.assertEquals('newjoe@test.org', updatedAccount.email)
+        self.assertEquals('NewJoe', updatedAccount.first_name)
+        self.assertEquals('Test2', updatedAccount.last_name)
+        self.assertEquals(self.viewuserdesignation.id, updatedAccount.user_designation_id)
+        self.assertEquals(False, updatedAccount.permission_irf_view)
+        self.assertEquals(False, updatedAccount.permission_irf_add)
+        self.assertEquals(False, updatedAccount.permission_irf_edit)
+        self.assertEquals(False, updatedAccount.permission_vif_view)
+        self.assertEquals(False, updatedAccount.permission_vif_add)
+        self.assertEquals(False, updatedAccount.permission_vif_edit)
+        self.assertEquals(False, updatedAccount.permission_border_stations_view)
+        self.assertEquals(False, updatedAccount.permission_border_stations_add)
+        self.assertEquals(False, updatedAccount.permission_border_stations_edit)
+        self.assertEquals(True, updatedAccount.permission_accounts_manage)
+        self.assertEquals(False, updatedAccount.permission_receive_email)
+        self.assertEquals(False, updatedAccount.permission_vdc_manage)
+        self.assertEquals(False, updatedAccount.permission_budget_manage)

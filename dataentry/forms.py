@@ -774,7 +774,7 @@ class VictimInterviewLocationBoxForm(DreamSuitePaperForm):
         self.instance.vdc = vdc
         self.instance.district = district
         return super(VictimInterviewLocationBoxForm, self).save(commit)
-        
+
 class BorderStationForm(forms.ModelForm):
     class Meta:
         model = BorderStation
@@ -782,6 +782,10 @@ class BorderStationForm(forms.ModelForm):
         widgets = {
             'date_established': forms.TextInput(attrs={'placeholder': '12/31/12'}),
         }
+
+    def clean_station_code(self):
+        return self.cleaned_data['station_code'].upper()
+
 
 class VDCForm(forms.ModelForm):
     class Meta:
