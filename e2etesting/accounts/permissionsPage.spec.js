@@ -197,14 +197,6 @@ describe('Accounts Page', function() {
 
     describe('handles permissions of vif', function() {
 
-        it('allows creation of vif', function() {
-            //creates the vif
-            permissionsPage.navigateToVifPage();
-            expect(element(by.className("vif-number")).isPresent()).toBe(false);
-            vifPage.createVif();
-            vifPage.filloutVif();
-            expect(element(by.className("vif-number")).isPresent()).toBe(true);
-        });
 
         it('allows viewing of vif', function() {
             permissionsPage.navigateToVifPage();
