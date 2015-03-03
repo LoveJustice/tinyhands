@@ -389,6 +389,8 @@ class IntercepteeForm(DreamSuitePaperForm):
     def save(self, commit=True):
         person = self.cleaned_data['person_ptr']
         id = self.cleaned_data['person_id']
+        import ipdb
+        ipdb.set_trace();
         if person or id: # We are creating and linking to existing person or updating
             return Interceptee.objects.get(pk=id)
         self.instance.interception_record = self.cleaned_data['interception_record']

@@ -26,7 +26,7 @@ class InterceptionRecordListViewTests(WebTest):
 	def setUp(self):
 		self.superuser = SuperUserFactory.create()
 		self.response = self.app.get(reverse('interceptionrecord_list'), user=self.superuser)
-        #self.form = self.response.form
+		#self.form = self.response.form
 
 	def test_InterceptionRecordListView_exists(self):
 		self.assertEquals(self.response.status_code, 200)
