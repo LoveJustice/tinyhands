@@ -10,7 +10,7 @@ var permissionsPage = function() {
     };
 
     this.navigateToBorderstationPage = function() {
-        browser.get(constants.webAddress + "http://127.0.0.1:8000/static_border_stations/border-stations/0/")
+        browser.get(constants.webAddress + "/static_border_stations/border-stations/0/")
     };
 
     this.navigateToAccounts = function(){
@@ -46,31 +46,10 @@ var permissionsPage = function() {
 
     this.viewVifForm = function() {
         this.view = element(by.linkText("View")).click();
-    }
+    };
 
     this.resetPermissions = function() {
         element.all(by.className("btn-danger")).click();
-    };
-
-    this.uncheckAllPermissions = function() {
-        this.checkPermission("id_permission_irf_view");
-        this.checkPermission("id_permission_irf_add");
-        this.checkPermission("id_permission_irf_edit");
-        this.checkPermission("id_permission_vif_view");
-        this.checkPermission("id_permission_vif_add");
-        this.checkPermission("id_permission_vif_edit");
-        this.checkPermission("id_permission_border_stations_view");
-        this.checkPermission("id_permission_border_stations_add");
-        this.checkPermission("id_permission_border_stations_edit");
-    };
-
-    this.uncheckPermission = function(permission) {
-        browser.get(constants.webAddress + '/accounts/update/22/');
-        this.permissions = element(by.id(permission)).checked = false;
-    };
-
-    this.checkAllPermissions = function() {
-        browser.get(constants.webAddress + '/accounts/update/22/');
     };
 
 };

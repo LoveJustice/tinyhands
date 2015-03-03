@@ -20,5 +20,14 @@
   "irfInterceptFname"         : "name",
   "irfInterceptDistrict"      : "Baglung",
   "irfInterceptVdc"           : "Chalsa",
-  "irfNameCameUpBeforeValue"  : "1"
+  "irfNameCameUpBeforeValue"  : "1",
+
+  "vifNumber"                         : "BHD123",
+  "vifDate"                           : "02/16/2015",
+  "vifInterviewer"                    : "Test Interviewer",
+  "vifVictimName"                     : "Test Victim",
+  "vifAddressDistrict"                : "Baglung",
+  "vifAddressVDC"                     : "Babala",
+  "vifVictimGuardianAddressDistrict"  : "Baglung",
+  "vifVictimGuardianAddressVDC"       : "Babala"
 }

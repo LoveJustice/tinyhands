@@ -53,25 +53,6 @@ describe('Accounts Page', function() {
 
     });
 
-    /*describe('handles accounts permission', function(){
-        it('unchecks the account management permission', function(){
-            //uncheck the permission
-            permissionsPage.navigateToAccountPage();
-            permissionsPage.uncheckPermission("id_permission_accounts_manage");
-            this.permissions = element(by.id("id_permission_accounts_manage"));
-            expect(this.permissions.element(by.xpath("..")).getAttribute('class')).toBe('btn btn-danger');
-            permissionsPage.savePermissions();
-
-            //test for inability to edit accounts
-            browser.get(constants.webAddress + "/accounts/");
-            expect(element(by.linkText("Edit")).isPresent()).toBe(false);
-
-
-        });
-
-
-    });*/
-
     describe('handles permissions of IRF', function() {
 
         //DONE
@@ -293,4 +274,21 @@ describe('Accounts Page', function() {
         });
 
     });
+
+    describe('handles accounts permission', function(){
+        it('unchecks the account management permission', function(){
+
+            //uncheck the permission
+            permissionsPage.navigateToAccountPage();
+            permissionsPage.checkPermission("id_permission_accounts_manage");
+            this.permissions = element(by.id("id_permission_accounts_manage"));
+            expect(this.permissions.element(by.xpath("..")).getAttribute('class')).toBe('btn btn-danger');
+            permissionsPage.savePermissions();
+
+            //test for inability to edit accounts
+            expect(element(by.xpath('//h1')).getText()).toContain("403");
+
+        });
+    });
+
 });
