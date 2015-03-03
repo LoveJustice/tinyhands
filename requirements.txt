@@ -9,6 +9,7 @@ beautifulsoup4==4.3.2
 coverage==3.7.1
 django-appconf==0.6
 django-bootstrap-form==3.1
+django-bootstrap-pagination==1.5.1
 django-braces==1.4.0
 django-extra-views==0.6.4
 django-imagekit==3.2.1

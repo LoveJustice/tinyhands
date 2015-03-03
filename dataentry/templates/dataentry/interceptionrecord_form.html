@@ -6,6 +6,8 @@
 {% block head %}
 {% endblock %}
 
+{% block title %}{% if interceptionrecord %}Edit{% else %}Create{% endif %} IRF{% endblock %}
+
 {% block content %}
 
 {% include "dataentry/popover.html" %}
