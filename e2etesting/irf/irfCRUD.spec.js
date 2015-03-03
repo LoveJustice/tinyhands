@@ -52,7 +52,8 @@ describe('IRF CRUD', function() {
 
         it('Edit IRF', function () {
             irfPage.editIRF();
-            expect(browser.driver.getCurrentUrl()).toContain('/portal/dashboard/');
+            browser.sleep(1000);
+            expect(browser.driver.getCurrentUrl()).toContain('data-entry/irfs/search/');
             irfPage.viewIRF();
             expect(element(by.id('id_irf_number')).getAttribute('value')).toEqual(c.irfEditNumber);
             expect(element(by.id('id_location')).getAttribute('value')).toEqual(c.irfLocation);
