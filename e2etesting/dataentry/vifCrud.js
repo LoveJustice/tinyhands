@@ -1,5 +1,6 @@
 var loginPage = require('../accounts/loginPage.js');
 var filloutform = require('../accounts/vifPage.js');
+var c = require('../testConstants.json');
 
 var vifCrud = function() {
     var page = this;
