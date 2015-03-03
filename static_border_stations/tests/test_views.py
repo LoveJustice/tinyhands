@@ -29,7 +29,7 @@ class TestBorderStations(WebTest):
         
         self.assertNotEqual('',form.get("station_name"))
         
-    def testUpdateStaff(self):
+    def test_update_staff(self):
         form = self.form
         
         form.set("staff_set-0-first_name", "Joe")
@@ -45,7 +45,7 @@ class TestBorderStations(WebTest):
         self.assertEquals("Shmo", staff.last_name)
         self.assertEquals("joe@gmail.com", staff.email)
         
-    def testUpdateCommitteeMember(self):
+    def test_update_committee_member(self):
         form = self.form
         
         form.set("committeemember_set-0-first_name", "bob")
@@ -61,7 +61,7 @@ class TestBorderStations(WebTest):
         self.assertEquals("smith", cm.last_name)
         self.assertEquals("bob@gmail.com", cm.email)
         
-    def testUpdateLocation(self):
+    def test_update_location(self):
         form = self.form
         
         form.set("location_set-0-name", "SomeLocation")
@@ -77,7 +77,7 @@ class TestBorderStations(WebTest):
         self.assertEquals(1.23, location.latitude)
         self.assertEquals(4.56, location.longitude)
         
-    def testUpdateBorderStationDetails(self):
+    def test_update_border_station_details(self):
         form = self.form
         
         form.set("station_name", "SomeLocation")
@@ -97,10 +97,6 @@ class TestBorderStations(WebTest):
         self.assertEquals("01/01/11", bs.date_established.strftime("%D"))
         self.assertEquals("1.23", str(bs.longitude))
         self.assertEquals("4.56", str(bs.latitude))
-        
-    # TODO: Test adding/updating more Staff to borderstation
-    # TODO: Test adding/updating more CommitteMembers to borderstation
-    # TODO: Test adding/updating more Locations to borderstation
 
 class BorderStationsCreationTest(WebTest):
 
