@@ -13,8 +13,8 @@ exports.config = {
   specs:  ['accounts/loginPage.spec.js',
 	        'irf/irfCRUD.spec.js',
             'accounts/loginPage.spec.js',
-            'accounts/permissionsPage.spec.js',
             'vdcs/vdcAdminPage.spec.js',
-            'borderStations/borderStationCRUD.spec.js'
+            'borderStations/borderStationCRUD.spec.js',
+            'accounts/permissionsPage.spec.js'
           ]
 };

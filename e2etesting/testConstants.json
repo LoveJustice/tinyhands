@@ -30,10 +30,10 @@
   "irfNameCameUpBeforeValue"  : "1",
 
   "stationName"               : "Test Station",
-  "stationCode"               : "code",
+  "stationCode"               : "COD",
   "dateEstablished"           : "01/01/01",
-  "latitude"                  : "00.000000",
-  "longitude"                 : "00.000000",
+  "latitude"                  : "0.0",
+  "longitude"                 : "0.0",
   "staff0SetFirstName"        : "SFname0",
   "staff0SetLastName"         : "SLname0",
   "staff0Email"               : "example0@example.com",
@@ -50,5 +50,12 @@
 
   "irfInterceptDistrict"      : "Dang",
   "irfInterceptVdc"           : "ShreeJung",
-  "irfNameCameUpBeforeValue"  : "1"
+  "irfNameCameUpBeforeValue"  : "1",
+
+  "location0SetName"          : "location0",
+  "location0SetLatitude"      : "0.0",
+  "location0SetLongitude"     : "0.0",
+  "location1SetName"          : "location1",
+  "location1SetLatitude"      : "0.1",
+  "location1SetLongitude"     : "0.1"
 }
