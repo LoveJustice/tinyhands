@@ -63,13 +63,13 @@
                 </td>
             </tr>
             {% endfor %}
-        </tbody> 
+        </tbody>
     </table>
     {% else %}
         {% if database_empty %}
             <p>There are not yet any IRFs in the database.</p>
         {% else %}
-            <p>There are no matching IRFs you are looking for.</p>
+            <p>No IRFs match what you are looking for.</p>
         {% endif %}
     {% endif %}
 {% else %}

@@ -1,6 +1,8 @@
 {% extends "dataentry/dataentry_base.html" %}
 {% load bootstrap %}
+{% load bootstrap_pagination %}
 {% load times %}
+
 
 {% block title %}All VIFs{% endblock %}
 
@@ -60,13 +62,13 @@
                 </td>
             </tr>
             {% endfor %}
-        </tbody> 
+        </tbody>
     </table>
     {% else %}
         {% if database_empty %}
             <p>There are not yet any VIFs in the database. </p>
         {% else %}
-            <p>There are no matching VIFs you are looking for</p>
+            <p>No VIFs match what you are looking for.</p>
         {% endif %}
     {% endif %}
 {% else %}
@@ -83,26 +85,8 @@
                 </div>
             {% endif %}
 
-            <ul class="pagination pull-left" style="margin: 10px !important">
-                {% if page_obj.has_previous %}
-                    <li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
-                {% else %}
-                    <li class="disabled"><a href="">&laquo;</a></li>
-                {% endif %}
+            {% bootstrap_paginate page_obj range=15 show_first_last='True' %}
 
-                {% for i in page_obj.paginator.num_pages|times %}
-                <li{% if page_obj.number == i|add:"1" %} class="active"{% endif %}>
-                    <a href="?page={{ i|add:"1" }}">{{ i|add:"1" }}</a>
-                </li>
-                {% endfor %}
-
-                {% if page_obj.has_next %} 
-                    <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
-                {% else %}
-                    <li class="disabled"><a href="">&raquo;</a></li>
-                {% endif %}
-                
-            </ul>
         </div>
     </nav>
 </div>
