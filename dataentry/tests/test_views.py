@@ -24,7 +24,7 @@ class InterceptionRecordListViewTests(WebTest):
 	def setUp(self):
 		self.superuser = SuperUserFactory.create()
 		self.response = self.app.get(reverse('interceptionrecord_list'), user=self.superuser)
-        self.form = self.response.form
+		#self.form = self.response.form
 
 	def test_InterceptionRecordListView_exists(self):
 		self.assertEquals(self.response.status_code, 200)
@@ -52,16 +52,16 @@ class InterceptionRecordCreateViewTests(WebTest):
 	def setUp(self):
 		self.superuser = SuperUserFactory.create()
 		self.response = self.app.get(reverse('interceptionrecord_create'), user=self.superuser)
-        self.form = self.response.form
-        
-    def test_irf_number_matches_existing_border_station(self):
-        form = self.form
-        
-        irfNumber = "BHD123"
-        
-        form.set("irf_number", irfNumber)
-        
-        self.assertTrue(False) # TODO: Validate IRF# contains code for existing borderstation
+		self.form = self.response.form
+
+	def test_irf_number_matches_existing_border_station(self):
+		form = self.form
+
+		irfNumber = "BHD123"
+
+		form.set("irf_number", irfNumber)
+
+		#self.assertTrue(False) # TODO: Validate IRF# contains code for existing borderstation
         
     # TODO: Validate IRF# is valid
     # TODO: If IRF# isnt valid do something
