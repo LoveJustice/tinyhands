@@ -6,8 +6,12 @@ var borderStationPage = function() {
     var page = this;
 
     this.getToBorderStationCreate = function(){
-        browser.get(c.webAddress + '/static_border_stations/border-stations/create/');
-        };
+        browser.sleep(500);
+        element(by.id("border_station_dropdown")).click();
+        browser.sleep(200);
+        element(by.id("border_station_create_link")).click();
+        browser.sleep(500);
+    };
 
     this.fillOutBorderStation = function() {
         this.station_name = element(by.id("id_station_name")).sendKeys(c.stationName);
@@ -29,9 +33,8 @@ var borderStationPage = function() {
 
         this.location0_set_name = element(by.id("id_location_set-0-name")).sendKeys(c.location0SetName);
         this.location0_set_latitude = element(by.id("id_location_set-0-latitude")).sendKeys(c.location0SetLatitude);
-        this.location0_set_longitude = element(by.id("id_location_set-0-longitude")).sendKeys(c.location0SetLongitude);
+        this.location0_set_longitude = element(by.id("id_location_set-0-longitude")).sendKeys(c.location0SetLongitude).submit();
 
-        this.createBorder = element(by.id("borderCreate")).click()
     };
 
     this.viewBorderStation = function() {
