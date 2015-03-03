@@ -538,7 +538,11 @@ def matching_modal(request, id):
             person.save()
         except Exception as e:
             print e
-    return HttpResponse("Person saved successfully.")
+    return JsonResponse({
+            "name": person.canonical_name.value,
+            "phone": person.canonical_phone.value,
+            "age": person.canonical_age.value
+        });
     # if POST:
     #     print POST
     #     return HttpResponse('sdfsd')

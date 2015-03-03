@@ -13,17 +13,19 @@ checkForCanon = ->
   if form_phone.firstElementChild.innerHTML == window.person.phone
     toggleState $(form_phone.lastElementChild).children()
 
-save = (name, phone, age) ->
-  console.log name, phone, age
+save = (name, phone, age, use_it) ->
+#  console.log name, phone, age
   $.post dutils.urls.resolve('matching_modal', id: window.person.id),
     canonical_name: name
     canonical_phone: phone
     canonical_age: age
   , (data) ->
-    console.log data
-    window.person.name = name
-    window.person.phone = phone
-    window.person.age = age
+#    console.log data
+    window.person.name = data.name
+    window.person.phone = data.phone
+    window.person.age = data.age
+    if use_it
+      use window.person.id
 
 get_info = (attribute) ->
   $matched = $("##{attribute}s.attribute .matched")
@@ -35,7 +37,7 @@ get_info = (attribute) ->
   obj =
     value: attrib_val || $("#form_#{attribute} > span:first-child").text()
     create: !attrib_val
-  console.log obj
+#  console.log obj
   obj
 
 use = (id) ->
@@ -45,16 +47,17 @@ use = (id) ->
   $person_id.val(id)
 
   # Set values in form and disable
-  $row.find('[id$=kind]').val(window.person.name)
+  $row.find('[id$=kind]').val(window.person.kind)
   $row.find('[id$=name]').val(window.person.name)
-  $row.find('[id$=gender]').val(window.person.name)
+  $row.find('[id$=gender]').val(window.person.gender)
   $row.find('[id$=age]').val(window.person.age)
-  $row.find('[id$=district]').val(window.person.age)
-  $row.find('[id$=vdc]').val(window.person.age)
+  $row.find('[id$=district]').val(window.person.district)
+  $row.find('[id$=vdc]').val(window.person.vdc)
   $row.find('[id$=phone]').val(window.person.phone)
-  $row.find('[id$=relation_to]').val(window.person.phone)
+  $row.find('[id$=relation_to]').val(window.person.relation_to)
 
 @init = ->
+  $modal = $('#matching_modal')
 
   checkForCanon()
 
@@ -75,10 +78,10 @@ use = (id) ->
       $(this).text() == $text
 
     toggleState $matching_spans.siblings().children('button')
-#  $save = $('#save')
-#  $save.click ->
-#    save(get_info('name'), get_info('phone_number'), get_info('age'))
+  $save = $('#save')
+  $save.click ->
+    save(get_info('name'), get_info('phone_number'), get_info('age'))
   $save_and_use = $('#save_and_use')
   $save_and_use.click ->
-#    save(get_info('name'), get_info('phone_number'), get_info('age'))
-    use(window.person.id)
+    save(get_info('name'), get_info('phone_number'), get_info('age'), true)
+    $modal.modal('hide')
