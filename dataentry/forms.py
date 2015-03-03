@@ -116,7 +116,8 @@ class InterceptionRecordForm(DreamSuitePaperForm):
     def clean(self):
         cleaned_data = super(InterceptionRecordForm, self).clean()
         self.has_warnings = False
-
+        
+        self.ensure_valid_irf_number(cleaned_data)
         self.ensure_at_least_one_interceptee(cleaned_data)
         self.at_least_one_box_checked_on_page_one(cleaned_data)
         self.box_six_or_seven_must_be_checked(cleaned_data)
@@ -144,6 +145,12 @@ class InterceptionRecordForm(DreamSuitePaperForm):
             pass
             #import ipdb
             #ipdb.set_trace()
+            
+    def ensure_valid_irf_number(self, cleaned_data):
+        irfNumber = cleaned_data['irf_number']
+        import ipdb
+        ipdb.set_trace()
+        # Create new branch and new user story
 
     def ensure_at_least_one_interceptee(self, cleaned_data):
         if len([
