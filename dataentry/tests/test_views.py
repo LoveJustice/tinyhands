@@ -44,3 +44,20 @@ class VictimInterviewFormListViewTests(WebTest):
 	def test_search_url_exists(self):
 		response = self.app.get('/data-entry/vifs/search/?search_value=BHD', user=self.superuser)
 		self.assertEquals(response.status_code, 200)
+
+
+class VictimInterviewFormViewTests(WebTest):
+    
+    def setUp(self):
+        self.superuser = SuperUserFactory.create()
+    
+    def test_VictimInterviewForm_create_can_be_viewed(self):
+        response = self.app.get(reverse('victiminterview_create'), user=self.superuser)
+        self.assertEquals(response.status_code, 200)
+    
+    def test_VictimInterviewForm_does_not_submit_without_valid_fields_filled_out(self):
+        response = self.app.get(reverse('victiminterview_create'), user=self.superuser)
+        form = response.form
+        form_response = form.submit()
+        field_errors = form_response.context['form'].errors
+        print(field_errors)
