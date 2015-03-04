@@ -44,12 +44,4 @@ class IdentityMatchingModelTests(TestCase):
         close_phone = "".join(p)
         matches2 = self.intercepteeManager.fuzzy_match_on(input_phone=close_phone)
         self.assertEquals(matches2[0][2], self.interceptee)
- 
-#
-#class IdentityMatchingViewTests(WebTest):
-#    
-#    def setUp(self):
-#        self.interceptee = IntercepteeFactory.create()
-#        
-#    def test(self):
-#        ipdb.set_trace()     
+        
