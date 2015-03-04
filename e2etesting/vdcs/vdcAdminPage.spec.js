@@ -16,7 +16,7 @@ describe('TinyHands VDCs', function () {
 
     it('should first VDCs information', function () {
         vdcAdminPage.firstVdcEditButton.click();
-        browser.sleep(500);
+        browser.sleep(300);
         vdcAdminPage.changeValues();
         browser.get(constants.webAddress);
         vdcAdminPage.navigate();
@@ -28,15 +28,11 @@ describe('TinyHands VDCs', function () {
     it('should be able to create a new VDC through the vif:', function(){
         browser.get(constants.webAddress + '/data-entry/vifs/create/');
         this.victim_address_vdc = element(by.id("id_victim_address_vdc")).sendKeys("Bab");
-        browser.sleep(500);
         vdcAdminPage.createNewVDC();
         vdcAdminPage.navigate();
         expect(element(by.css(".vdc_admin_name")).getText()).toBe(constants.vdcNewName);
         expect(element.all(by.css(".vdc_admin_district")).first().getText()).toEqual(constants.vdcNewDis);
         expect(element.all(by.css(".vdc_admin_cannonical")).first().getText()).toEqual(constants.vdcNewCan);
-
-
-
     });
 
 });
