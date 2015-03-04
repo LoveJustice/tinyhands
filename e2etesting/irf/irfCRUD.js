@@ -7,10 +7,9 @@ var irfPage = function() {
     
     this.getToIRF = function(){
 	    browser.get(c.webAddress + '/data-entry/irfs/search/');
-        browser.sleep(1000);
         this.link = element(by.id("id_input_new_irf"));
         this.link.click();
-        browser.sleep(1000);
+        browser.sleep(200);
 
     };
 

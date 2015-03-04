@@ -12,7 +12,6 @@ describe('IRF CRUD', function() {
         it('accepts credentials', function () {
             loginPage.logout();
             loginPage.loginAsAdmin();
-            browser.sleep(1000);
         });
 
         it('Create IRF', function () {
@@ -25,7 +24,6 @@ describe('IRF CRUD', function() {
         it('Read IRF', function () {
             irfPage.viewIRF();
             expect(browser.driver.getCurrentUrl()).toContain('/data-entry/irfs/');
-            browser.sleep(1000);
             expect(element(by.id('id_irf_number')).getAttribute('value')).toEqual(c.irfNumber);
             expect(element(by.id('id_location')).getAttribute('value')).toEqual(c.irfLocation);
             //expect(element(by.id('id_date_time_of_interception')).getAttribute('value')).toEqual(c.IrfInterceptTime);
@@ -47,7 +45,6 @@ describe('IRF CRUD', function() {
             expect(element(by.id('id_scan_and_submit_same_day')).isSelected()).toBeTruthy();
             expect(element(by.id('id_has_signature')).isSelected()).toBeTruthy();
             browser.get(c.webAddress + '/data-entry/irfs/search/');
-            browser.sleep(1000);
         });
 
         it('Edit IRF', function () {
@@ -75,7 +72,6 @@ describe('IRF CRUD', function() {
             expect(element(by.id('id_scan_and_submit_same_day')).isSelected()).toBeTruthy();
             expect(element(by.id('id_has_signature')).isSelected()).toBeTruthy();
             browser.get(c.webAddress + '/data-entry/irfs/search/');
-            browser.sleep(1000);
         });
         /*
         it('Delete IRF', function () {

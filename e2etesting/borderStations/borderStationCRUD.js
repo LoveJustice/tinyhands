@@ -6,11 +6,10 @@ var borderStationPage = function() {
     var page = this;
 
     this.getToBorderStationCreate = function(){
-        browser.sleep(500);
         element(by.id("border_station_dropdown")).click();
         browser.sleep(200);
         element(by.id("border_station_create_link")).click();
-        browser.sleep(500);
+        browser.sleep(200);
     };
 
     this.fillOutBorderStation = function() {
@@ -64,7 +63,6 @@ var borderStationPage = function() {
         this.location1_set_longitude = element(by.id("id_location_set-1-longitude")).sendKeys(c.location1SetLongitude);
 
         this.updateBorder = element(by.id("borderUpdate")).click();
-        browser.sleep(1000);
     };
 };
 

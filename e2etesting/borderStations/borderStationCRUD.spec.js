@@ -12,7 +12,6 @@ describe('Border Station CRUD', function() {
         it('accepts credentials', function () {
             loginPage.logout();
             loginPage.loginAsAdmin();
-            browser.sleep(1000);
         });
 
         it('Create Border Station', function () {
@@ -20,7 +19,6 @@ describe('Border Station CRUD', function() {
             expect(browser.driver.getCurrentUrl()).toContain('/static_border_stations/border-stations/create/');
             borderStationPage.fillOutBorderStation();
             expect(browser.driver.getCurrentUrl()).toContain('/portal/dashboard/');
-            browser.sleep(1000);
         });
 
 
@@ -53,7 +51,6 @@ describe('Border Station CRUD', function() {
         });
         it('Edit Border Station', function () {
             borderStationPage.editBorderStation();
-            browser.sleep(1000);
             expect(browser.driver.getCurrentUrl()).toContain('/portal/dashboard/');
             borderStationPage.viewBorderStation();
 

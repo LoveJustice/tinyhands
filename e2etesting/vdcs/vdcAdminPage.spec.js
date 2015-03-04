@@ -16,10 +16,11 @@ describe('TinyHands VDCs', function () {
 
     it('should first VDCs information', function () {
         vdcAdminPage.firstVdcEditButton.click();
-        browser.sleep(300);
+        browser.sleep(500);
         vdcAdminPage.changeValues();
         browser.get(constants.webAddress);
         vdcAdminPage.navigate();
+        browser.sleep(500);
         expect(element(by.css(".vdc_admin_name")).getText()).toBe(constants.vdcEditName);
         expect(element.all(by.css(".vdc_admin_district")).first().getText()).toEqual(constants.vdcEditDis);
         expect(element.all(by.css(".vdc_admin_cannonical")).first().getText()).toEqual(constants.vdcEditCan);
@@ -29,6 +30,7 @@ describe('TinyHands VDCs', function () {
         browser.get(constants.webAddress + '/data-entry/vifs/create/');
         this.victim_address_vdc = element(by.id("id_victim_address_vdc")).sendKeys("Bab");
         vdcAdminPage.createNewVDC();
+        browser.sleep(500);
         vdcAdminPage.navigate();
         expect(element(by.css(".vdc_admin_name")).getText()).toBe(constants.vdcNewName);
         expect(element.all(by.css(".vdc_admin_district")).first().getText()).toEqual(constants.vdcNewDis);
