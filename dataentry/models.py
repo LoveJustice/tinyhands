@@ -65,7 +65,7 @@ class VDC(models.Model):
         if self.cannonical_name:
             return self.cannonical_name.district
         return self.district
-    
+
     @property
     def is_verified(self):
         return self.verified
