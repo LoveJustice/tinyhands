@@ -621,7 +621,6 @@ class VictimInterviewForm(DreamSuitePaperForm):
             (self.num_pbs - 1) / 3 + 1,
             (self.num_lbs - 1) / 2 + 1
         )
-        print self.box_pages_needed
         try:
             self.fields['victim_address_district'].initial = self.instance.victim_address_district
         except:

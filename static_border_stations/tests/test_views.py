@@ -16,7 +16,6 @@ class TestBorderStations(WebTest):
         self.form = self.app.get(url, user=self.superuser).form
 
     def testUpdateStaff(self):
-        print(self.form["staff_set-0-first_name"].value)
         self.form["staff_set-0-first_name"] = "testStaff"
         # TODO: Fill form for Staff and submit then check to see if changed in database
 

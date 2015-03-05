@@ -285,7 +285,7 @@ class CreateAccountTests(WebTest):
         form = response.form
         form.set('email', 'bob@joe.com')
         form.set('first_name', 'bob')
-        form.set('last_name', 'joe')asda
+        form.set('last_name', 'joe')
         form.set('user_designation', 2) #summer intern
         form.set('permission_irf_view', True)
         form.set('permission_irf_add', False)

@@ -922,7 +922,6 @@ def get_vif_export_rows(vifs):
         lbs = list(vif.location_boxes.all())
 
         for idx in range(max(len(pbs), len(lbs))):
-            print idx
             try:
                 pb = pbs[idx]
                 row.extend([
