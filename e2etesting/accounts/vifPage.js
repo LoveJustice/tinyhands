@@ -20,9 +20,9 @@ var vifPage = function() {
               this.gender = element(by.id("id_victim_gender_0")).click();
               this.victim_name = element(by.id("id_victim_name")).sendKeys("Test Victim");
               this.victim_address_district = element(by.id("id_victim_address_district")).sendKeys("Baglung");
-              this.victim_address_vdc = element(by.id("id_victim_address_vdc")).sendKeys("Babala");
+              this.victim_address_vdc = element(by.id("id_victim_address_vdc")).sendKeys("ShreeJung");
               this.victim_guardian_address_district = element(by.id("id_victim_guardian_address_district")).sendKeys("Baglung");
-              this.victim_guardian_address_vdc = element(by.id("id_victim_guardian_address_vdc")).sendKeys("Babala");
+              this.victim_guardian_address_vdc = element(by.id("id_victim_guardian_address_vdc")).sendKeys("ShreeJung");
               this.migration_plans = element(by.id("id_migration_plans_education")).click();
               this.primary_motivation = element(by.id("id_primary_motivation_support_myself")).click();
               browser.executeScript('window.scrollTo(13,1050);');/*.then(function () {*/

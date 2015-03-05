@@ -1,14 +1,18 @@
 'use strict';
 
-//var constants = require('../testConstants.json);
+var constants = require('../testConstants.json');
 var loginPage = require('../accounts/loginPage.js');
 
 var searchIRF = function(){
 
     var page = this;
 
-	this.gotoSearch = function(){
-		browser.get('http://0.0.0.0:8000/data-entry/irfs/search/');
+    this.gotoIRFSearch = function(){
+		browser.get(constants.webAddress + '/data-entry/irfs/search/');
+	};
+
+	this.gotoVIFSearch = function(){
+		browser.get(constants.webAddress + '/data-entry/vifs/search/');
 	};
 
     this.searchKey = function(keys){

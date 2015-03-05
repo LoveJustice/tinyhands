@@ -1,6 +1,7 @@
 var loginPage = require('../accounts/loginPage.js');
 var searchPage = require('./search.js');
 var irfs = require('../irf/irfCRUD.js');
+var vifs = require('../accounts/vifPage.js');
 
 describe('TinyHands', function(){
 
@@ -16,31 +17,32 @@ describe('TinyHands', function(){
 	});
 
 	describe('navigation', function(){
-		it('goes to search page', function(){
-			searchPage.gotoSearch();
-			expect(browser.driver.getCurrentUrl()).toContain('search');
+		it('goes to IRF search page', function(){
+            searchPage.gotoIRFSearch();
+			expect(browser.driver.getCurrentUrl()).toContain('irfs');
 		});
-	});
 
-	it('creates irf', function(){
-		irfs.getToIRF();
-		irfs.fillOutIRF();
+        it('goes to VIF search page', function(){
+            searchPage.gotoVIFSearch();
+			expect(browser.driver.getCurrentUrl()).toContain('vifs');
+		});
 	});
 
 	describe('result', function(){
-		it('shows correct item', function(){
-			searchPage.searchKey('A');
+		it('shows correct irf', function(){
+            searchPage.gotoIRFSearch();
+			searchPage.searchKey('TEST');
 			staffName1 = element(By.xpath("//div[@class='container']/table[@class='table table-striped table-condensed']/tbody/tr[1]/td[2]"));
-			expect(staffName1.getText()).toEqual('A');
+			expect(staffName1.getText()).toEqual('TEST');
 		});
-  
-   		it('is ordered by date edited', function(){
-			searchPage.searchKey('C');
-			staffName2 = element(by.xpath("//div[@class='container']/table[@class='table table-striped table-condensed']/tbody/tr[1]/td[2]"));
-			staffName3 = element(by.xpath("//div[@class='container']/table[@class='table table-striped table-condensed']/tbody/tr[2]/td[2]"));
-			expect(staffName2.getText()).toEqual('CC');
-			expect(staffName3.getText()).toEqual('CB');
-		});
+
+        it('shows correct vif', function () {
+            searchPage.gotoVIFSearch();
+            searchPage.searchKey('Test');
+            staffName2 = element(By.xpath("//div[@class='container']/table[@class='table table-striped table-condensed']/tbody/tr[1]/td[2]"));
+            expect(staffName2.getText()).toEqual('Test Interviewer');
+        });
+
 	});
 
 });
