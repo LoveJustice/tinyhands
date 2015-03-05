@@ -153,7 +153,6 @@ class AccessControlView(
         'permission_border_stations_edit',
         'permission_vdc_manage',
         'permission_budget_manage',
-        'permission_budget_manage',
     ]
 
     def get_context_data(self, **kwargs):

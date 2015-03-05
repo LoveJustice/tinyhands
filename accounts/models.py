@@ -141,7 +141,8 @@ class Account(AbstractBaseUser, PermissionsMixin):
 
 class AlertManager(models.Manager):
     def send_alert(self, code, context={}):
-        Alert.objects.get(code=code).email_permissions_set(context)
+        pass
+        #Alert.objects.get(code=code).email_permissions_set(context)
 
 
 class Alert(models.Model):
