@@ -284,8 +284,8 @@ class Interceptee(models.Model):
     full_name = models.CharField(max_length=255)
     gender = models.CharField(max_length=4, choices=GENDER_CHOICES, blank=True)
     age = models.PositiveIntegerField(null=True, blank=True)
-    district = models.ForeignKey(District)
-    vdc = models.ForeignKey(VDC)
+    district = models.ForeignKey(District, null=True, blank=True)
+    vdc = models.ForeignKey(VDC, null=True, blank=True)
     phone_contact = models.CharField(max_length=255, blank=True)
     relation_to = models.CharField(max_length=255, blank=True)
 
@@ -324,8 +324,8 @@ class VictimInterview(models.Model):
 
     victim_gender = models.CharField('Gender', choices=GENDER_CHOICES, max_length=12)
 
-    victim_address_district = models.ForeignKey(District, related_name="victim_address_district");
-    victim_address_vdc = models.ForeignKey(VDC, related_name="victim_address_vdc");
+    victim_address_district = models.ForeignKey(District, null=True, related_name="victim_address_district");
+    victim_address_vdc = models.ForeignKey(VDC, null=True, related_name="victim_address_vdc");
     victim_address_ward = models.CharField('Ward #', max_length=255, blank=True)
     victim_phone = models.CharField('Phone #', max_length=255, blank=True)
     victim_age = models.CharField('Age', max_length=255, blank=True)
@@ -385,8 +385,8 @@ class VictimInterview(models.Model):
     victim_primary_guardian_non_relative = models.BooleanField('Non-relative', default=False)
     victim_primary_guardian_no_one = models.BooleanField('No one (I have no guardian)', default=False)
 
-    victim_guardian_address_district = models.ForeignKey(District)
-    victim_guardian_address_vdc = models.ForeignKey(VDC)
+    victim_guardian_address_district = models.ForeignKey(District, null=True)
+    victim_guardian_address_vdc = models.ForeignKey(VDC, null=True)
     victim_guardian_address_ward = models.CharField('Ward #', max_length=255, blank=True)
     victim_guardian_phone = models.CharField('Phone #', max_length=255, blank=True)
 
