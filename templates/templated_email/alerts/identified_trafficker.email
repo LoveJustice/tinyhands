@@ -6,14 +6,14 @@
     <p class="descriptionOfAlert">
         This auto alert has been generated because IRF#{{ irf.irf_number }} was submitted with
         {% if both %}
-            {{ red_flags }} Red Flag points and a certainty rating of {{ certainty_points }}
+            {{ red_flags }} Red Flag points and a certainty rating of {{ certainty_points }} certainty points.
         {% endif %}
         {% if flags %}
             {{ red_flags }} Red Flag points
         {% endif %}
 
         {% if how_sure %}
-            a certainty rating of {{ certainty_points }}
+            a certainty rating of {{ certainty_points }} certainty points.
         {% endif %}
         <br/>
 
@@ -42,6 +42,6 @@
     <p>According to the form, {{ trafficker_in_custody }} was taken into custody</p>
 {% endif %}
 
-<p>To view the IRF click here: <a href="{{ site }}/{% url 'interceptionrecord_detail' irf.irf_number %}">Link to Interception Record Form</a></p>
+<p>To view the IRF click here: <a href="{{ site }}/{% url 'interceptionrecord_detail' irf.id %}">Link to Interception Record Form</a></p>
 
 {% endblock %}

@@ -4,6 +4,8 @@ from fuzzywuzzy import process
 from dataentry import serializers
 from dataentry.models import Interceptee
 import json
+import ipdb
+from django.conf import settings
 
 
 class VIFAlertChecker(object):
@@ -27,13 +29,14 @@ class VIFAlertChecker(object):
         points = self.vif.instance.calculate_strength_of_case_points()
 
         if (fir and fir_value != '') and (dofe and dofe_value != ''):
-            Alert.objects.send_alert("fir and dofe against", context={"vif": self.vif.instance, "both": True, "points": points, "fir_value": fir_value, "dofe_value": dofe_value})
+            Alert.objects.send_alert("fir and dofe against", context={"site": settings.SITE_DOMAIN, "vif": self.vif.instance, "both": True, "points": points, "fir_value": fir_value, "dofe_value": dofe_value})
             return True
         if fir and fir_value != '':
-            Alert.objects.send_alert("fir and dofe against", context={"vif": self.vif.instance, "fir": True, "fir_value": fir_value, "points": points})
+            Alert.objects.send_alert("fir and dofe against", context={"site": settings.SITE_DOMAIN, "vif": self.vif.instance, "fir": True, "fir_value": fir_value, "points": points})
             return True
         if dofe and dofe_value != '':
-            Alert.objects.send_alert("fir and dofe against", context={"vif": self.vif.instance, "dofe": True, "points": points, "dofe_value": dofe_value})
+            ipdb.set_trace()
+            Alert.objects.send_alert("fir and dofe against", context={"site": settings.SITE_DOMAIN, "vif": self.vif.instance, "dofe": True, "points": points, "dofe_value": dofe_value})
             return True
         return False
 
@@ -46,9 +49,8 @@ class VIFAlertChecker(object):
         dofe = self.vif.cleaned_data.get("legal_action_against_traffickers_dofe_complaint")
         reason_for_no = self.vif.instance.get_reason_for_no()
         points = self.vif.instance.calculate_strength_of_case_points()
-
         if self.vif.instance.calculate_strength_of_case_points() > 10:
-            Alert.objects.send_alert("strength of case", context={"vif": self.vif.instance, "points": points, "fir": fir, "dofe": dofe, "reason_for_no": reason_for_no})
+            Alert.objects.send_alert("strength of case", context={"site": settings.SITE_DOMAIN, "vif": self.vif.instance, "points": points, "fir": fir, "dofe": dofe, "reason_for_no": reason_for_no})
             return True
         return False
 
@@ -60,8 +62,9 @@ class IRFAlertChecker(object):
         self.IRF_data = form.cleaned_data
 
     def check_them(self):
-        self.identified_trafficker()
         self.trafficker_name_match()
+        pass
+        self.identified_trafficker()
 
     def trafficker_name_match(self):
         """
@@ -93,10 +96,10 @@ class IRFAlertChecker(object):
             trafficker_name = self.interceptees.cleaned_data[int(self.IRF_data.get("trafficker_taken_into_custody")) - 1].get("full_name")
 
         if len(matches) > 0:
-            Alert.objects.send_alert("Name Match", context={"irf": self.irf.instance, "matches": matches, "trafficker_in_custody": trafficker_name})
+            Alert.objects.send_alert("Name Match", context={"site": settings.SITE_DOMAIN, "irf": self.irf.instance, "matches": matches, "trafficker_in_custody": trafficker_name})
             traffickers_and_their_matches[trafficker.full_name] = process.extractBests(trafficker.full_name, people_dict, score_cutoff=89, limit=10)
         if len({person for person in traffickers_and_their_matches if len(traffickers_and_their_matches[person]) > 0}) > 0:
-            Alert.objects.send_alert("Name Match", context={"irf": self.irf.instance, "traffickers_matches": traffickers_and_their_matches, "trafficker_in_custody": trafficker_in_custody})
+            Alert.objects.send_alert("Name Match", context={"site": settings.SITE_DOMAIN, "irf": self.irf.instance, "traffickers_matches": traffickers_and_their_matches, "trafficker_in_custody": trafficker_in_custody})
             return True
         return False
 
@@ -115,15 +118,16 @@ class IRFAlertChecker(object):
         trafficker_in_custody = self.trafficker_in_custody()
         red_flags = self.irf.instance.calculate_total_red_flags()
         certainty_points = self.IRF_data.get('how_sure_was_trafficking')
+
         if len(trafficker_list) > 0:
             if (certainty_points >= 4) and (red_flags >= 400):
-                Alert.objects.send_alert("Identified Trafficker", context={"irf": self.irf.instance, "trafficker_list": trafficker_list, "both": True, "trafficker_in_custody": trafficker_in_custody, "red_flags": red_flags, "certainty_points": certainty_points})
+                Alert.objects.send_alert("Identified Trafficker", context={"site": settings.SITE_DOMAIN, "irf": self.irf.instance, "trafficker_list": trafficker_list, "both": True, "trafficker_in_custody": trafficker_in_custody, "red_flags": red_flags, "certainty_points": certainty_points})
                 return True
             if certainty_points >= 4:
-                Alert.objects.send_alert("Identified Trafficker", context={"irf": self.irf.instance, "trafficker_list": trafficker_list, "how_sure": True, "trafficker_in_custody": trafficker_in_custody, "certainty_points": certainty_points})
+                Alert.objects.send_alert("Identified Trafficker", context={"site": settings.SITE_DOMAIN, "irf": self.irf.instance, "trafficker_list": trafficker_list, "how_sure": True, "trafficker_in_custody": trafficker_in_custody, "certainty_points": certainty_points})
                 return True
             if red_flags >= 400:
-                Alert.objects.send_alert("Identified Trafficker", context={"irf": self.irf.instance, "trafficker_list": trafficker_list, "flags": True, "trafficker_in_custody": trafficker_in_custody, "red_flags": red_flags})
+                Alert.objects.send_alert("Identified Trafficker", context={"site": settings.SITE_DOMAIN, "irf": self.irf.instance, "trafficker_list": trafficker_list, "flags": True, "trafficker_in_custody": trafficker_in_custody, "red_flags": red_flags})
                 return True
         return False
 
