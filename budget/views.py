@@ -23,6 +23,10 @@ from reportlab import *
 
 
 @login_required
+def budget_calc_create_rest(request, pk):
+
+
+@login_required
 def budget_calc_create(request, pk):
     #is there a better way to do permissions in function based views?
     if not request.user.permission_budget_manage:
