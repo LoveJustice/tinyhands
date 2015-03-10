@@ -24,8 +24,49 @@
   "irfInterceptTime"          : "01/01/01",
   "irfStaffName"              : "TEST",
   "irfInterceptFname"         : "name",
+
+  "TEMPirfInterceptDistrict"      : "Baglung",
+  "TEMPirfInterceptVdc"           : "Chalsa",
+  "TEMPirfNameCameUpBeforeValue"  : "1",
+
+  "stationName"               : "Test Station",
+  "stationCode"               : "COD",
+  "dateEstablished"           : "01/01/01",
+  "latitude"                  : "0.0",
+  "longitude"                 : "0.0",
+  "staff0SetFirstName"        : "SFname0",
+  "staff0SetLastName"         : "SLname0",
+  "staff0Email"               : "example0@example.com",
+  "staff1SetFirstName"        : "SFname1",
+  "staff1SetLastName"         : "SLname1",
+  "staff1Email"               : "example1@example.com",
+
+  "committee0SetFirstName"    : "CFname0",
+  "committee0SetLastName"     : "CLname0",
+  "committee0Email"           : "example0@example.com",
+  "committee1SetFirstName"    : "CFname1",
+  "committee1SetLastName"     : "CLname1",
+  "committee1Email"           : "example1@example.com",
+
   "irfInterceptDistrict"      : "Dang",
   "irfInterceptVdc"           : "ShreeJung",
-  "irfNameCameUpBeforeValue"  : "1"
+  "irfNameCameUpBeforeValue"  : "1",
+
+  "vifNumber"                         : "BHD123",
+  "vifDate"                           : "02/16/2015",
+  "vifInterviewer"                    : "Test Interviewer",
+  "vifVictimName"                     : "Test Victim",
+  "vifAddressDistrict"                : "Baglung",
+  "vifAddressVDC"                     : "ShreeJung",
+  "vifVictimGuardianAddressDistrict"  : "Baglung",
+  "vifVictimGuardianAddressVDC"       : "ShreeJung",
+
+  "location0SetName"          : "location0",
+  "location0SetLatitude"      : "0.0",
+  "location0SetLongitude"     : "0.0",
+  "location1SetName"          : "location1",
+  "location1SetLatitude"      : "0.1",
+  "location1SetLongitude"     : "0.1"
+
 
 }
