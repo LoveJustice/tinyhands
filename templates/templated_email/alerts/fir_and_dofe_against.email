@@ -18,5 +18,5 @@
     {% endif %}
     </p>
 
-    <p>To view the VIF click here: <a href="{{ site }}/{% url 'victiminterview_detail' vif.vif_number %}">Link to Victim Interview Form</a></p>
+    <p>To view the VIF click here: <a href="{{ site }}{% url 'victiminterview_detail' vif.id %}">Link to Victim Interview Form</a></p>
 {% endblock %}
