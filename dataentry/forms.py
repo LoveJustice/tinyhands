@@ -720,7 +720,6 @@ class VictimInterviewPersonBoxForm(DreamSuitePaperForm):
         try:
             self.fields['address_district'].initial = self.instance.address_district
         except:
-
             pass
         try:
            self.fields['address_vdc'].initial = self.instance.address_vdc

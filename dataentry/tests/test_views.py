@@ -55,8 +55,11 @@ class InterceptionRecordFormViewTests(WebTest):
         self.superuser = SuperUserFactory.create();
         
     def test_user_can_create_irf_form(self):
-        pass
-
+        response = self.app.get(reverse('victiminterview_create'), user=self.superuser)
+        self.assertEquals(response.status_code, 200)
+        
+    def test_form_submits_with_required_fields_and_redirects(self):
+        
     
 class VictimInterviewFormViewTests(WebTest):
 
