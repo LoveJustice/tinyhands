@@ -16,14 +16,20 @@ from django.views.generic import ListView, DeleteView, View
 from budget.forms import BorderStationBudgetCalculationForm
 from budget.models import BorderStationBudgetCalculation, OtherBudgetItemCost
 from static_border_stations.models import Staff, BorderStation
-
+from serializers import BorderStationBudgetCalculationSerializer
+from models import BorderStationBudgetCalculation
 from z3c.rml import rml2pdf, document
 from lxml import etree
+from rest_framework import generics, viewsets
 from reportlab import *
 
 
-@login_required
-def budget_calc_create_rest(request, pk):
+class BudgetViewSet(viewsets.ModelViewSet):
+    queryset = BorderStationBudgetCalculation.objects.all()
+    serializer_class = BorderStationBudgetCalculationSerializer
+
+    def perform_create(self, serializer):
+        serializer.save()
 
 
 @login_required
