@@ -46,10 +46,16 @@ class VIFAlertChecker(object):
         """
         fir = self.vif.legal_action_against_traffickers_fir_filed
         dofe = self.vif.legal_action_against_traffickers_dofe_complaint
+
+        if fir or dofe:
+            legal_case = True
+        else:
+            legal_case = False
+
         reason_for_no = self.vif.get_reason_for_no()
         points = self.vif.calculate_strength_of_case_points()
         if self.vif.calculate_strength_of_case_points() > 10:
-            Alert.objects.send_alert("strength of case", context={"site": settings.SITE_DOMAIN, "vif": self.vif, "points": points, "fir": fir, "dofe": dofe, "reason_for_no": reason_for_no})
+            Alert.objects.send_alert("strength of case", context={"site": settings.SITE_DOMAIN, "vif": self.vif, "points": points, "legal_case": legal_case, "fir": fir, "dofe": dofe, "reason_for_no": reason_for_no})
             return True
         return False
 
@@ -113,6 +119,7 @@ class IRFAlertChecker(object):
 
         if len(trafficker_list) > 0:
             if (certainty_points >= 4) and (red_flags >= 400):
+                ipdb.set_trace()
                 Alert.objects.send_alert("Identified Trafficker", context={"site": settings.SITE_DOMAIN, "irf": self.irf, "trafficker_list": trafficker_list, "both": True, "trafficker_in_custody": trafficker_in_custody, "red_flags": red_flags, "certainty_points": certainty_points})
                 return True
             if certainty_points >= 4:
