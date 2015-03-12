@@ -31,6 +31,6 @@
     <p>According to the form, {{ trafficker_in_custody }} was taken into custody</p>
 {% endif %}
 
-<p>To view the IRF click here: <a href="{{ site }}/{% url 'interceptionrecord_detail' irf.id %}">Link to Interception Record Form</a></p>
+<p>To view the IRF click here: <a href="http://{{ site }}{% url 'interceptionrecord_detail' irf.id %}">Link to Interception Record Form</a></p>
 
 {% endblock %}
