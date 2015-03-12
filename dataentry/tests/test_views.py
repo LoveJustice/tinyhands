@@ -49,17 +49,42 @@ class VictimInterviewFormListViewTests(WebTest):
 
 class InterceptionRecordFormViewTests(WebTest):
     
-    fixture = ['geo-code-locations.json']
+    fixtures = ['geo-code-locations.json']
     
     def setUp(self):
         self.superuser = SuperUserFactory.create();
         
     def test_user_can_create_irf_form(self):
-        response = self.app.get(reverse('victiminterview_create'), user=self.superuser)
+        response = self.app.get(reverse('interceptionrecord_create'), user=self.superuser)
         self.assertEquals(response.status_code, 200)
         
     def test_form_submits_with_required_fields_and_redirects(self):
-        
+        response = self.app.get(reverse('interceptionrecord_create'), user=self.superuser)
+        form = response.form
+        import ipdb
+        ipdb.set_trace()
+        form.set('irf_number', 'CND2')
+        form.set('date_time_of_interception', datetime.datetime.now().strftime("%m/%d/%Y"))
+        form.set('location', 'Asia')
+        form.set('staff_name', "johnny be good 7")
+        form.set('drugged_or_drowsy', True)
+        form.set('which_contact_church_member', True)
+        form.set('how_sure_was_trafficking', 5)
+        form.set('contact_noticed', True)
+        form.set('interceptees-0-kind', "t")
+        form.set('interceptees-0-full_name', "Some Bad Guy")
+        form.set('interceptees-0-gender', "m")
+        form.set('interceptees-0-age', '102')
+        form.set('interceptees-0-district', 'Dhanusa')
+        form.set('interceptees-0-vdc', 'Chalsa')
+        form.set('interceptees-0-phone_contact', '9999999999')
+        form.set('has_signature', True)
+        form_response = form.submit()
+        field_errors = form_response.context['form'].errors
+        form_2 = form_response.form
+        form_2.set('ignore_warnings', True)
+        form_response_2 = form_2.submit()
+        self.assertEquals(form_response_2.status_code, 302)
     
 class VictimInterviewFormViewTests(WebTest):
 
