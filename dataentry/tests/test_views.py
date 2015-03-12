@@ -61,8 +61,6 @@ class InterceptionRecordFormViewTests(WebTest):
     def test_form_submits_with_required_fields_and_redirects(self):
         response = self.app.get(reverse('interceptionrecord_create'), user=self.superuser)
         form = response.form
-        import ipdb
-        ipdb.set_trace()
         form.set('irf_number', 'CND2')
         form.set('date_time_of_interception', datetime.datetime.now().strftime("%m/%d/%Y"))
         form.set('location', 'Asia')
