@@ -147,7 +147,30 @@ class IRFAlertCheckerTests(WebTest):
         self.superuser = SuperUserFactory.create()
         
     def test_alert_sent_when_trafficker_name_match(self):
-        
+        response = self.app.get(reverse('interceptionrecord_create'), user=self.superuser)
+        form = response.form
+        form.set('irf_number', 'BHD114')
+        form.set('date_time_of_interception', datetime.datetime.now().strftime("%m/%d/%Y"))
+        form.set('location', 'Asia')
+        form.set('staff_name', "johnny be good 7")
+        form.set('drugged_or_drowsy', True)
+        form.set('which_contact_church_member', True)
+        form.set('how_sure_was_trafficking', 5)
+        form.set('contact_noticed', True)
+        form.set('interceptees-0-kind', "t")
+        form.set('interceptees-0-full_name', "Some Bad Guy")
+        form.set('interceptees-0-gender', "m")
+        form.set('interceptees-0-age', '102')
+        form.set('interceptees-0-district', 'Dhanusa')
+        form.set('interceptees-0-vdc', 'Chalsa')
+        form.set('interceptees-0-phone_contact', '9999999999')
+        form.set('has_signature', True)
+        form_response = form.submit()
+        field_errors = form_response.context['form'].errors
+        form_2 = form_response.form
+        form_2.set('ignore_warnings', True)
+        form_response_2 = form_2.submit()
+        self.assertEquals(form_response_2.status_code, 302)
         
         self.assertEquals(form_response_2.status_code, 302)
         #check for email
@@ -157,7 +180,30 @@ class IRFAlertCheckerTests(WebTest):
         self.assertEquals(settings.ADMIN_EMAIL_SENDER, email.from_email)
         
     def test_alert_sent_when_identified_trafficker(self):
-        
+        response = self.app.get(reverse('interceptionrecord_create'), user=self.superuser)
+        form = response.form
+        form.set('irf_number', 'BHD115')
+        form.set('date_time_of_interception', datetime.datetime.now().strftime("%m/%d/%Y"))
+        form.set('location', 'Asia')
+        form.set('staff_name', "johnny be good 7")
+        form.set('drugged_or_drowsy', True)
+        form.set('which_contact_church_member', True)
+        form.set('how_sure_was_trafficking', 5)
+        form.set('contact_noticed', True)
+        form.set('interceptees-0-kind', "t")
+        form.set('interceptees-0-full_name', "Some Bad Guy")
+        form.set('interceptees-0-gender', "m")
+        form.set('interceptees-0-age', '102')
+        form.set('interceptees-0-district', 'Dhanusa')
+        form.set('interceptees-0-vdc', 'Chalsa')
+        form.set('interceptees-0-phone_contact', '9999999999')
+        form.set('has_signature', True)
+        form_response = form.submit()
+        field_errors = form_response.context['form'].errors
+        form_2 = form_response.form
+        form_2.set('ignore_warnings', True)
+        form_response_2 = form_2.submit()
+        self.assertEquals(form_response_2.status_code, 302)
         
         self.assertEquals(form_response_2.status_code, 302)
         #check for email
@@ -167,7 +213,30 @@ class IRFAlertCheckerTests(WebTest):
         self.assertEquals(settings.ADMIN_EMAIL_SENDER, email.from_email)
         
     def test_alert_sent_when_trafficker_in_custody(self):
-        
+        response = self.app.get(reverse('interceptionrecord_create'), user=self.superuser)
+        form = response.form
+        form.set('irf_number', 'BHD116')
+        form.set('date_time_of_interception', datetime.datetime.now().strftime("%m/%d/%Y"))
+        form.set('location', 'Asia')
+        form.set('staff_name', "johnny be good 7")
+        form.set('drugged_or_drowsy', True)
+        form.set('which_contact_church_member', True)
+        form.set('how_sure_was_trafficking', 5)
+        form.set('contact_noticed', True)
+        form.set('interceptees-0-kind', "t")
+        form.set('interceptees-0-full_name', "Some Bad Guy")
+        form.set('interceptees-0-gender', "m")
+        form.set('interceptees-0-age', '102')
+        form.set('interceptees-0-district', 'Dhanusa')
+        form.set('interceptees-0-vdc', 'Chalsa')
+        form.set('interceptees-0-phone_contact', '9999999999')
+        form.set('has_signature', True)
+        form_response = form.submit()
+        field_errors = form_response.context['form'].errors
+        form_2 = form_response.form
+        form_2.set('ignore_warnings', True)
+        form_response_2 = form_2.submit()
+        self.assertEquals(form_response_2.status_code, 302)
         
         self.assertEquals(form_response_2.status_code, 302)
         #check for email
