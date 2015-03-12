@@ -55,26 +55,29 @@ class VictimInterviewFormListViewTests(WebTest):
 
 class InterceptionRecordCreateViewTests(WebTest):
 	
-	fixtures = ['accounts.json','irfs.json']
+	fixtures = ['accounts.json','portal/border_stations.json']
 	
 	def setUp(self):
-		self.IRF = InterceptionRecord.objects.all()[0]
 		self.superuser = SuperUserFactory.create()
-		url = reverse("interceptionrecord_update", kwargs={'pk':self.IRF.id})
+		url = reverse("interceptionrecord_create")
 		self.response = self.app.get(url, user=self.superuser)
 		self.form = self.response.form
 		
 	def test_irf_number_is_valid(self):
 		form = self.form
 		
-		BSCode = form.get("irf_number").value[:2]
+		form.set('irf_number', BorderStation.objects.all()[0].station_code + '123')
+		
+		BSCode = form.get("irf_number").value[:3]
 		
 		self.assertEqual(3, len(BSCode))
 		
 	def test_irf_number_matches_existing_border_station(self):
 		form = self.form
 		
-		BSCode = form.get("irf_number").value[:2]
+		form.set('irf_number', BorderStation.objects.all()[0].station_code + '123')
+		
+		BSCode = form.get("irf_number").value[:3]
 		
 		borderstation = BorderStation.objects.all().filter(station_code=BSCode)
 		
@@ -83,12 +86,13 @@ class InterceptionRecordCreateViewTests(WebTest):
 	def test_when_irf_number_is_invalid_fail_to_submit_with_errors(self):
 		form = self.form
 		
+		form.set('irf_number', '123')
+		
 		form_response = form.submit()
 		theErrors = form_response.context['form'].errors
-		#ipdb.set_trace()
 		
-    # TODO: If IRF# isnt valid do something
-    # TODO: Dont let submit if IRF# isnt valid
+		self.assertIn('irf_number', theErrors.keys())
+		self.assertIsNotNone(theErrors['irf_number'])
     
 class IdentityMatchingViewTests(WebTest):
     
