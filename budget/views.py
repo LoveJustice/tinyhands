@@ -24,12 +24,14 @@ from rest_framework import generics, viewsets
 from reportlab import *
 
 
+
 class BudgetViewSet(viewsets.ModelViewSet):
     queryset = BorderStationBudgetCalculation.objects.all()
     serializer_class = BorderStationBudgetCalculationSerializer
 
     def perform_create(self, serializer):
         serializer.save()
+
 
 
 @login_required
@@ -145,11 +147,6 @@ class BudgetCalcListView(
     permissions_required = ['permission_budget_manage']
 
 
-
-def search_form(request):
-    return render_to_response('search_form.html')
-
-
 class PDFView(View):
 
     filename = 'report.pdf'
@@ -195,6 +192,20 @@ class MoneyDistributionFormPDFView(PDFView):
         return {
             'name': station.station_name,
         }
+
+@login_required
+def budget_calc_view(request, pk):
+    budget_calc = get_object_or_404(BorderStationBudgetCalculation, pk=pk)
+    form = BorderStationBudgetCalculationForm(instance=budget_calc)
+
+
+    border_station = budget_calc.border_station
+    border_station_staff = border_station.staff_set.all()
+
+    StaffFormSet = modelformset_factory(model=Staff, extra=0)
+    staff_formset = StaffFormSet(queryset=border_station_staff)
+
+    return render(request, 'budget/borderstationbudgetcalculation_form.html', locals())
 
 
 class BudgetCalcDeleteView(DeleteView, LoginRequiredMixin):

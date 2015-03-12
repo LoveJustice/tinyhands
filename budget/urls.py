@@ -25,6 +25,7 @@ urlpatterns = patterns('budget.views',
     url(r'^api/budget_calculations/$', budget_detail_list, name="budget_retrieve_list"),
     url(r'^api/budget_calculations/(?P<pk>\d+)/$', budget_detail, name="budget_retrieve"),
     url(r'^api/budget_calculations/create/(?P<pk>\d+)/$', budget_create, name="budget_create_api"),
+
 )
 
 
