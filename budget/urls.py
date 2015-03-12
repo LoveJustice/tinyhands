@@ -9,6 +9,7 @@ urlpatterns = patterns('budget.views',
     url(r'^budget_calculations/(?P<pk>\d+)/$', views.budget_calc_update, name='budget_detail'),
     url(r'^budget_calculations/update/(?P<pk>\d+)/$', views.budget_calc_update, name='budget_update'),
     url(r'^budget_calculations/delete/(?P<pk>\d+)/$', views.BudgetCalcDeleteView.as_view(), name='budget_delete'),
+    url(r'^[Mm]{2}[Dd]_form/(?P<pk>\d+)/$', views.MoneyDistributionFormPDFView.as_view(), name='mmd_pdf'),
 )
 
 
