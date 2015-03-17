@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 from django import forms
 from django.db import models
 from django.core.exceptions import ValidationError
@@ -18,3 +19,5 @@ class LocationForm(forms.ModelForm):
     class Meta:
         model = Location
         exclude = []
+=======
+>>>>>>> develop

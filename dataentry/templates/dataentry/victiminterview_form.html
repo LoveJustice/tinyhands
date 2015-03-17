@@ -3,14 +3,14 @@
 {% load bootstrap %}
 {% load unslugify %}
 
-{% block title %}{% if victiminterview %}Edit{% else %}Create{% endif%} VIF{% endblock %}
+{% block title %}{% if victiminterview %}Edit{% else %}Create{% endif %} VIF{% endblock %}
 
 {% block content %}
 
 {% include "dataentry/popover.html" %}
 
-{% if not interceptionrecord %}
-<div class="well well-sm pull-right" style="margin-top: -40px">
+{% if not victiminterviewinterceptionrecord %}
+<div class="well well-sm pull-right" style="margin-top: 22px">
     Resume an incomplete VIF:
     <select id="saved-for-later-list">
         <option>--------</option>

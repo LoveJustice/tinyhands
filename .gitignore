@@ -15,3 +15,5 @@ backups
 \#*#
 *~
 .idea/
+foo.*
+db.sqlite3.prod

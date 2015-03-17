@@ -6,12 +6,14 @@
 {% block head %}
 {% endblock %}
 
+{% block title %}{% if interceptionrecord %}Edit{% else %}Create{% endif %} IRF{% endblock %}
+
 {% block content %}
 
 {% include "dataentry/popover.html" %}
 
 {% if not interceptionrecord %}
-<div class="well well-sm pull-right" style="margin-top: -40px">
+<div class="well well-sm pull-right" style="margin-top: 22px">
     Resume an incomplete IRF:
     <select id="saved-for-later-list">
         <option>--------</option>

@@ -21,7 +21,7 @@ BOOLEAN_CHOICES = [
     (False, 'No'),
     (True, 'Yes'),
 ]
-       
+
 class DreamSuitePaperForm(forms.ModelForm):
     class Meta:
         model = VictimInterview
@@ -368,7 +368,7 @@ class IntercepteeForm(DreamSuitePaperForm):
     class Meta:
         model = Interceptee
         exclude = ('district','vdc')
-    
+
     def __init__(self,*args, **kwargs):
         super(IntercepteeForm, self).__init__(*args, **kwargs)
         self.fields['district'] = DistrictField()
@@ -584,7 +584,7 @@ class VictimInterviewForm(DreamSuitePaperForm):
     victim_where_going_gulf_qatar = forms.BooleanField(label='Qatar', required=False)
     victim_where_going_gulf_didnt_know = forms.BooleanField(label='Did Not Know', required=False)
     victim_where_going_gulf_other = forms.BooleanField(label='Other', required=False)
-    
+
     victim_address_district = DistrictField(label='District')
     victim_address_vdc = VDCField(label='VDC')
     victim_guardian_address_district = DistrictField(label='District')
@@ -621,18 +621,17 @@ class VictimInterviewForm(DreamSuitePaperForm):
             (self.num_pbs - 1) / 3 + 1,
             (self.num_lbs - 1) / 2 + 1
         )
-        print self.box_pages_needed
         try:
             self.fields['victim_address_district'].initial = self.instance.victim_address_district
         except:
             pass
-        try: 
+        try:
             self.fields['victim_address_vdc'].initial = self.instance.victim_address_vdc
         except:
             pass
         try:
             self.fields['victim_guardian_address_district'].initial = self.instance.victim_guardian_address_district
-        except: 
+        except:
             pass
         try:
             self.fields['victim_guardian_address_vdc'].initial = self.instance.victim_guardian_address_vdc
@@ -649,7 +648,7 @@ class VictimInterviewForm(DreamSuitePaperForm):
         self.instance.victim_guardian_address_district = victim_guardian_address_district
         self.instance.victim_guardian_address_vdc = victim_guardian_address_vdc
         return super(VictimInterviewForm, self).save(commit)
-        
+
 
     def clean(self):
         cleaned_data = super(VictimInterviewForm, self).clean()
@@ -671,7 +670,7 @@ class VictimInterviewForm(DreamSuitePaperForm):
         if not cleaned_data.get('ignore_warnings'):
             self.ensure_victim_where_going(cleaned_data)
             self.ensure_tiny_hands_rating(cleaned_data)
-            
+
         return cleaned_data
 
     def ensure_victim_where_going(self, cleaned_data):
@@ -778,7 +777,7 @@ class VictimInterviewLocationBoxForm(DreamSuitePaperForm):
 class BorderStationForm(forms.ModelForm):
     class Meta:
         model = BorderStation
-        exclude = []
+        fields = '__all__'
         widgets = {
             'date_established': forms.TextInput(attrs={'placeholder': '12/31/12'}),
         }
