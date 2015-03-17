@@ -5,7 +5,7 @@ from budget.views import BudgetViewSet
 
 
 budget_detail = BudgetViewSet.as_view({
-    'get': 'retrieve'
+    'get': 'retrieve',
 })
 
 budget_detail_list = BudgetViewSet.as_view({
@@ -14,6 +14,10 @@ budget_detail_list = BudgetViewSet.as_view({
 
 budget_create = BudgetViewSet.as_view({
     'post': 'create'
+})
+
+budget_delete = BudgetViewSet.as_view({
+    'delete': 'destroy'
 })
 
 urlpatterns = patterns('budget.views',
@@ -25,6 +29,7 @@ urlpatterns = patterns('budget.views',
     url(r'^api/budget_calculations/$', budget_detail_list, name="budget_retrieve_list"),
     url(r'^api/budget_calculations/(?P<pk>\d+)/$', budget_detail, name="budget_retrieve"),
     url(r'^api/budget_calculations/create/(?P<pk>\d+)/$', budget_create, name="budget_create_api"),
+    url(r'^api/budget_calculations/delete/(?P<pk>\d+)/$', budget_delete, name="budget_delete_api"),
 
 )
 

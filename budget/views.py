@@ -29,6 +29,7 @@ class BudgetViewSet(viewsets.ModelViewSet):
     queryset = BorderStationBudgetCalculation.objects.all()
     serializer_class = BorderStationBudgetCalculationSerializer
 
+    default = True
     def perform_create(self, serializer):
         serializer.save()
 
