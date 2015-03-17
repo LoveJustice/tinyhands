@@ -141,8 +141,6 @@ class InterceptionRecordForm(DreamSuitePaperForm):
 
     def get_pictures(self, cleaned_data):
             pass
-            #import ipdb
-            #ipdb.set_trace()
 
     def ensure_at_least_one_interceptee(self, cleaned_data):
         if len([
