@@ -4,7 +4,6 @@ from fuzzywuzzy import process
 from dataentry import serializers
 from dataentry.models import Interceptee
 import json
-import ipdb
 from django.conf import settings
 
 
@@ -119,7 +118,6 @@ class IRFAlertChecker(object):
 
         if len(trafficker_list) > 0:
             if (certainty_points >= 4) and (red_flags >= 400):
-                ipdb.set_trace()
                 Alert.objects.send_alert("Identified Trafficker", context={"site": settings.SITE_DOMAIN, "irf": self.irf, "trafficker_list": trafficker_list, "both": True, "trafficker_in_custody": trafficker_in_custody, "red_flags": red_flags, "certainty_points": certainty_points})
                 return True
             if certainty_points >= 4:
