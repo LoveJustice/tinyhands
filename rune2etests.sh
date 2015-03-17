@@ -1,5 +1,5 @@
 #start webdriver server
-webdriver-manager start &
+webdriver-manager start >/dev/null 2>&1 &
 
 #Change settings to test
 export DJANGO_SETTINGS_MODULE=dreamsuite.settings.testing
