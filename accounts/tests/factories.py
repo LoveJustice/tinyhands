@@ -1,8 +1,8 @@
 import factory
 from factory.django import DjangoModelFactory
+import random
 
-from accounts.models import Account
-from accounts.models import DefaultPermissionsSet
+from accounts.models import Account,DefaultPermissionsSet,Alert
 
 class SuperUserDesignation(DjangoModelFactory):
     class Meta:
@@ -106,3 +106,21 @@ class EditUserFactory(UserFactory):
     permission_border_stations_view = True
     permission_border_stations_edit = True
     user_designation = factory.SubFactory(EditUserDesignation)
+	
+class AlertFactory(DjangoModelFactory):
+    class Meta:
+        model = Alert
+    
+    email_template = "test"
+    code = factory.Sequence(lambda n: 'code{0}'.format(n))
+    
+    @factory.post_generation
+    def permissions_group(self, create, extracted, **kwargs):
+        if not create:
+            # Simple build, do nothing.
+            return
+
+        if extracted:
+            # A list of groups were passed in, use them
+            for group in extracted:
+                self.permissions_group.add(group)
