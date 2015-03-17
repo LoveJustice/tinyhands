@@ -17,8 +17,8 @@ var loginPage = function () {
         this.submitButton = element(by.id("submit")).click();
     };
 
-    this.loginAsAdmin = function () {
-        this.login(constants.adminEmail, constants.adminPassword);
+    this.loginAsAdmin = function() {
+		this.login(constants.adminEmail, constants.adminPassword);
     };
 };
 
