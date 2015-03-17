@@ -66,7 +66,6 @@ class IRFAlertChecker(object):
 
     def check_them(self):
         self.trafficker_name_match()
-        pass
         self.identified_trafficker()
 
     def trafficker_name_match(self):
