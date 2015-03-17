@@ -1,3 +1,5 @@
+{% load bootstrap %}
+
 <div class="modal-dialog modal-sm">
     <div class="modal-content">
         <form id="vdc_update_form" method="post" class="form" role="form" action="{% url 'vdc_admin_update' vdc.id %}">
@@ -21,7 +23,7 @@
                         </ul> 
                         {% endif %} 
                         {{ field.label_tag }} 
-                        {{ field }} 
+                        {{ field }}
                         {% if field.help_text %}
                         <div class="form-helptext">{{ field.help_text }}</div>
                         {% endif %} 
