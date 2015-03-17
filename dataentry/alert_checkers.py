@@ -132,6 +132,6 @@ class IRFAlertChecker(object):
         taken_into_custody = 0
         if self.irf.trafficker_taken_into_custody == '':
             taken_into_custody = self.irf.trafficker_taken_into_custody
-        if trafficker_in_custody is not None and taken_into_custody < len([there for there in self.interceptees.cleaned_data if there]):
-            return self.interceptees.cleaned_data[int(self.irf.trafficker_taken_into_custody) - 1].get("full_name")
+        if trafficker_in_custody is not None and taken_into_custody < len([there.cleaned_data for there in self.interceptees if there]):
+            return self.interceptees[int(self.irf.trafficker_taken_into_custody) - 1].cleaned_data.get("full_name")
         return False
