@@ -6,6 +6,7 @@ from budget.views import BudgetViewSet
 
 budget_detail = BudgetViewSet.as_view({
     'get': 'retrieve',
+
 })
 
 budget_detail_list = BudgetViewSet.as_view({

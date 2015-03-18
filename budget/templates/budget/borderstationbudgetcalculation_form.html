@@ -13,7 +13,7 @@
     {% block content %}
         <!--<script type="text/javascript" src="http://knockoutjs.com/downloads/knockout-3.2.0.js"></script>-->
         <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
-
+        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-cookies.js"></script>
 
      <h1 style="font-size: 25px; text-align: center">Tiny Hands Nepal - Border Monitoring Station Budget Calculation Form</h1>
 
@@ -783,16 +783,33 @@
      </form>
 
 <script>
-angular.module('BudgetCalculation', [])
-        .controller('MainCtrl', ['$scope', function($scope) {
+angular.module('BudgetCalculation', ['ngCookies'])
+        .config(['$httpProvider', function($httpProvider) {
+            $httpProvider.defaults.xsrfCookieName = 'csrftoken';
+            $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
+        }])
+        .controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
             var vm = this;
 
+
+            vm.saveForm = function() {
+                var result =
+                {
+
+
+
+
+
+
+                }
+            };
+
             vm.retrieveForm = function(id) {
-                $.get('/budget/api/budget_calculations/' + id + '/').
+                $http.get('/budget/api/budget_calculations/' + id + '/').
                         success(function (data, status, headers, config) {
                             //We can reference the json object to fill our vm variables
                             console.log(data);
-
+                            vm.data = data;
                             //shelter
                             vm.shelterRent = data.shelter_rent;
                             vm.shelterWater = data.shelter_water;
@@ -1110,19 +1127,19 @@ angular.module('BudgetCalculation', [])
             };
 
             vm.deletePost = function(id) {
-                $.get('/budget/api/budget_calculations/delete/' + id + '/').
+                $http.delete('/budget/api/budget_calculations/delete/' + id + '/').
                         success(function (data, status, headers, config) {
-                            console.log("success");
+                            console.log("1");
                         }).
                         error(function (data, status, headers, config) {
+                            console.log("2");
                             // called asynchronously if an error occurs
                             // or server returns response with an error status.
                         })
             };
 
-            vm.deletePost(3);
-            vm.retrieveForm(3);
-
+            vm.retrieveForm(1);
+            //vm.deletePost(1);
 
 
         }]);

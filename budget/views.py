@@ -24,7 +24,6 @@ from rest_framework import generics, viewsets
 from reportlab import *
 
 
-
 class BudgetViewSet(viewsets.ModelViewSet):
     queryset = BorderStationBudgetCalculation.objects.all()
     serializer_class = BorderStationBudgetCalculationSerializer
