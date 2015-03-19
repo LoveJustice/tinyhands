@@ -116,6 +116,7 @@ class InterceptionRecordForm(DreamSuitePaperForm):
         cleaned_data = super(InterceptionRecordForm, self).clean()
         self.has_warnings = False
 
+        self.ensure_valid_irf_number(cleaned_data)
         self.ensure_at_least_one_interceptee(cleaned_data)
         self.at_least_one_box_checked_on_page_one(cleaned_data)
         self.box_six_or_seven_must_be_checked(cleaned_data)
@@ -139,8 +140,18 @@ class InterceptionRecordForm(DreamSuitePaperForm):
 
         return cleaned_data
 
+    def ensure_valid_irf_number(self, cleaned_data):
+        BSCode = cleaned_data['irf_number'][:3]
+        formNumberLength = len(cleaned_data['irf_number'][3:])
+        codeLength = len(BSCode)
+        borderstations = BorderStation.objects.all().filter(station_code=BSCode)
+        if( formNumberLength == 0 ):
+            self._errors['irf_number'] = self.error_class(['Invalid IRF Number. Please add a number after the Border Station code.'])
+        if( len(borderstations) == 0 or codeLength != 3):
+            self._errors['irf_number'] = self.error_class(['Invalid IRF Number. Create one that includes an existing Border Station code.'])
+
     def get_pictures(self, cleaned_data):
-            pass
+        pass
 
     def ensure_at_least_one_interceptee(self, cleaned_data):
         if len([
@@ -652,6 +663,8 @@ class VictimInterviewForm(DreamSuitePaperForm):
         cleaned_data = super(VictimInterviewForm, self).clean()
         self.has_warnings = False
 
+        self.ensure_valid_vif_number(cleaned_data)
+
         for field_name_start in [
             'primary_motivation',
             'migration_plans',
@@ -670,6 +683,16 @@ class VictimInterviewForm(DreamSuitePaperForm):
             self.ensure_tiny_hands_rating(cleaned_data)
 
         return cleaned_data
+
+    def ensure_valid_vif_number(self, cleaned_data):
+        BSCode = cleaned_data['vif_number'][:3]
+        formNumberLength = len(cleaned_data['vif_number'][3:])
+        codeLength = len(BSCode)
+        borderstations = BorderStation.objects.all().filter(station_code=BSCode)
+        if( formNumberLength == 0 ):
+            self._errors['vif_number'] = self.error_class(['Invalid VIF Number. Please add a number after the Border Station code.'])
+        if( len(borderstations) == 0 or codeLength != 3):
+            self._errors['vif_number'] = self.error_class(['Invalid VIF Number. Create one that includes an existing Border Station code.'])
 
     def ensure_victim_where_going(self, cleaned_data):
         if not self.at_least_one_checked(cleaned_data, 'victim_where_going'):
