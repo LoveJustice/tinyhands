@@ -145,7 +145,8 @@ class IRFImageAssociationMixin(object):
 
     def forms_valid(self, form, inlines):
         interceptees = inlines[0]
-
+        if not os.path.exists(settings.BASE_DIR + '/media/unassociated_photos/'):
+            os.makedirs(settings.BASE_DIR + '/media/unassociated_photos/')
         image_paths = os.listdir(settings.BASE_DIR + '/media/unassociated_photos/')
         for path in image_paths:
             match = re.match(r"irf-photo-(.*)-index-(\d+)\.(.*)", path)
@@ -389,7 +390,7 @@ class VDCAdminView(
     model = VDC
     template_name = "dataentry/vdc_admin_page.html"
     permissions_required = ['permission_vdc_manage']
-    paginate_by = 20
+    paginate_by = 500
 
     def __init__(self, *args, **kwargs):
         super(VDCAdminView, self).__init__(name__icontains = "name")

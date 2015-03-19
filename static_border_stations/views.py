@@ -11,7 +11,6 @@ from braces.views import LoginRequiredMixin
 from static_border_stations.models import Staff,CommitteeMember,Location
 from dataentry.models import BorderStation
 
-from static_border_stations.forms import *
 from dataentry.forms import BorderStationForm
 
 class FormSetForStations(InlineFormSet):
