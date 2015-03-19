@@ -178,11 +178,13 @@ class InterceptionRecordCreateView(
     permissions_required = ['permission_irf_add']
 
     def forms_valid(self, form, inlines):
-
-        IRFAlertChecker(form,inlines).check_them()
         form.instance.form_entered_by = self.request.user
         form.instance.date_form_received = date.today()
-        return super(InterceptionRecordCreateView, self).forms_valid(form, inlines)
+        form = form.save()
+        for formset in inlines:
+            formset.save()
+        IRFAlertChecker(form, inlines).check_them()
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class InterceptionRecordUpdateView(
@@ -197,8 +199,11 @@ class InterceptionRecordUpdateView(
     permissions_required = ['permission_irf_edit']
 
     def forms_valid(self, form, inlines):
-        IRFAlertChecker(form,inlines).check_them()
-        return super(InterceptionRecordUpdateView, self).forms_valid(form, inlines)
+        form = form.save()
+        for formset in inlines:
+            formset.save()
+        IRFAlertChecker(form, inlines).check_them()
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class InterceptionRecordDetailView(InterceptionRecordUpdateView):
@@ -265,10 +270,13 @@ class VictimInterviewCreateView(
     permissions_required = ['permission_vif_add']
 
     def forms_valid(self, form, inlines):
-        VIFAlertChecker(form,inlines).check_them()
         form.instance.form_entered_by = self.request.user
         form.instance.date_form_received = date.today()
-        return super(VictimInterviewCreateView, self).forms_valid(form, inlines)
+        form = form.save()
+        for formset in inlines:
+            formset.save()
+        VIFAlertChecker(form, inlines).check_them()
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class VictimInterviewUpdateView(
@@ -283,8 +291,11 @@ class VictimInterviewUpdateView(
     permissions_required = ['permission_vif_edit']
 
     def forms_valid(self, form, inlines):
+        form = form.save()
+        for formset in inlines:
+            formset.save()
         VIFAlertChecker(form, inlines).check_them()
-        return super(VictimInterviewUpdateView, self).forms_valid(form, inlines)
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class VictimInterviewDetailView(VictimInterviewUpdateView):

@@ -6,7 +6,10 @@ from django.core.urlresolvers import reverse
 
 from accounts.tests.factories import *
 
+from dataentry.models import BorderStation, Interceptee
 from accounts.models import Account
+
+import ipdb
 
 import datetime
 
@@ -46,6 +49,48 @@ class VictimInterviewFormListViewTests(WebTest):
 	def test_search_url_exists(self):
 		response = self.app.get('/data-entry/vifs/search/?search_value=BHD', user=self.superuser)
 		self.assertEquals(response.status_code, 200)
+		
+		
+class VictimInterviewFormCreateViewTests(WebTest):
+	
+	fixtures = ['accounts.json','portal/border_stations.json']
+	
+	def setUp(self):
+		self.superuser = SuperUserFactory.create()
+		url = reverse("victiminterview_create")
+		self.response = self.app.get(url, user=self.superuser)
+		self.form = self.response.form
+		
+	def test_vif_number_is_valid(self):
+		form = self.form
+		
+		form.set('vif_number', BorderStation.objects.all()[0].station_code + '123')
+		
+		BSCode = form.get("vif_number").value[:3]
+		
+		self.assertEqual(3, len(BSCode))
+		
+	def test_vif_number_matches_existing_border_station(self):
+		form = self.form
+		
+		form.set('vif_number', BorderStation.objects.all()[0].station_code + '123')
+		
+		BSCode = form.get("vif_number").value[:3]
+		
+		borderstation = BorderStation.objects.all().filter(station_code=BSCode)
+		
+		self.assertNotEqual(0, len(borderstation))
+		
+	def test_when_vif_number_is_invalid_fail_to_submit_with_errors(self):
+		form = self.form
+		
+		form.set('vif_number', '123')
+		
+		form_response = form.submit()
+		theErrors = form_response.context['form'].errors
+		
+		self.assertIn('vif_number', theErrors.keys())
+		self.assertIsNotNone(theErrors['vif_number'])
 
 class InterceptionRecordFormViewTests(WebTest):
     
@@ -133,15 +178,15 @@ class InterceptionRecordFormViewTests(WebTest):
         form.set('has_signature', True)
 
 class VictimInterviewFormViewTests(WebTest):
-
-    fixtures = ['geo-code-locations.json']
-    
-    def setUp(self):
-        self.superuser = SuperUserFactory.create();
-
-    def test_can_user_create_vif_form(self):
-        response = self.app.get(reverse('victiminterview_create'), user=self.superuser)
-        self.assertEquals(response.status_code, 200)
+	
+	fixtures = ['geo-code-locations.json','portal/border_stations.json']
+	
+	def setUp(self):
+		self.superuser = SuperUserFactory.create();
+		
+	def test_can_user_create_vif_form(self):
+		response = self.app.get(reverse('victiminterview_create'), user=self.superuser)
+		self.assertEquals(response.status_code, 200)
 
     def test_form_submits_with_required_fields_and_redirects(self):
         response = self.app.get(reverse('victiminterview_create'), user=self.superuser)
