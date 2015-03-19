@@ -24,7 +24,7 @@ describe('VIF CRUD', function() {
     describe('submitted vif can be reviewed', function () {
         it('reviews a created vif form and checks that the data is still the same', function () {
             crudPage.checkEditedVif();
-            expect(element(by.id("id_vif_number")).getAttribute('value')).toContain("BHD123");
+            expect(element(by.id("id_vif_number")).getAttribute('value')).toContain(c.vifNumber);
         });
     });
 
@@ -33,7 +33,7 @@ describe('VIF CRUD', function() {
             browser.get(c.webAddress + "/data-entry/vifs");
             crudPage.editVif();
             crudPage.checkEditedVif();
-            expect(element(by.id("id_vif_number")).getAttribute('value')).toContain("AAA111");
+            expect(element(by.id("id_vif_number")).getAttribute('value')).toContain(c.vifNumber);
         });
     });
 
