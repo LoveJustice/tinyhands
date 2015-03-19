@@ -17,7 +17,7 @@ var vifCrud = function() {
     this.editVif = function() {
         this.edit = element(by.id("id_edit_vif_button")).click();
         this.clear_vif_number = element(by.id("id_vif_number")).clear();
-        this.change_vif_number = element(by.id("id_vif_number")).sendKeys("AAA111");
+        this.change_vif_number = element(by.id("id_vif_number")).sendKeys(c.vifNumber);
         this.hit_submit = element(by.id("id_interviewer")).submit();
         this.ignore_warnings = element(by.id("id_ignore_warnings")).click();
         this.submitButton = element(by.id("id_interviewer")).submit();
@@ -39,7 +39,7 @@ var vifCrud = function() {
     this.incorrectly_filled_out = function() {
         //Uses John's function to correctly fill out a VIF with the part which fills in the gender commented out
         if(true) {
-              this.vif_number = element(by.id("id_vif_number")).sendKeys("AAA111");
+              this.vif_number = element(by.id("id_vif_number")).sendKeys(c.vifNumber);
               this.date = element(by.id("id_date")).sendKeys("02/16/2015");
               this.interviewer = element(by.id("id_interviewer")).sendKeys("Test Interviewer");
               this.statement_read_before_beginning = element(by.id("id_statement_read_before_beginning")).click();
