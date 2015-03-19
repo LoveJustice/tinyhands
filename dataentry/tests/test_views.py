@@ -107,6 +107,31 @@ class InterceptionRecordFormViewTests(WebTest):
         self.assertEquals(field_errors['location'][0], "This field is required.")
 
 
+    #TODO: Test IRF form submits without asking for warnings if all fields filled in
+    def test_form_submits_with_all_required_and_warning_fields_filled_in(self):
+        response = self.app.get(reverse('interceptionrecord_create'), user=self.superuser)
+        form = response.form
+        form.set('irf_number', 'CND2')
+        form.set('date_time_of_interception', datetime.datetime.now().strftime("%m/%d/%Y"))
+        form.set('location', 'Asia')
+        form.set('staff_name', "johnny be good 7")
+        form.set('drugged_or_drowsy', True)
+        form.set('which_contact_church_member', True)
+        form.set('how_sure_was_trafficking', 5)
+        form.set('contact_noticed', True)
+        form.set('interceptees-0-kind', "t")
+        form.set('interceptees-0-full_name', "Some Bad Guy")
+        form.set('interceptees-0-gender', "m")
+        form.set('interceptees-0-age', '102')
+        form.set('interceptees-0-district', 'Dhanusa')
+        form.set('interceptees-0-vdc', 'Chalsa')
+        form.set('interceptees-0-phone_contact', '9999999999')
+        form.set('interception_type_india_trafficking', True)
+        form.set('call_subcommittee_chair', True)
+        form.set('call_thn_to_cross_check', True)
+        form.set('scan_and_submit_same_day', True)
+        form.set('has_signature', True)
+
 class VictimInterviewFormViewTests(WebTest):
 
     fixtures = ['geo-code-locations.json']
@@ -177,3 +202,5 @@ class VictimInterviewFormViewTests(WebTest):
         form_response = form.submit()
         field_errors = form_response.context['form'].errors
         self.assertEquals(field_errors['has_signature'][0], "This field is required.")
+
+    #TODO: Test VIF form submits without asking for warnings if all fields filled in
