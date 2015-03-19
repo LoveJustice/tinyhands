@@ -7,9 +7,9 @@ from datetime import date
 import ipdb
 
 class IrfFactory(DjangoModelFactory):
-    class Meta: 
+    class Meta:
         model = InterceptionRecord
-        
+
     form_entered_by = factory.SubFactory(SuperUserFactory)
     date_form_received = date(2012,1,1)
 
@@ -20,12 +20,12 @@ class IrfFactory(DjangoModelFactory):
     staff_name = "Joe Test"
 
     how_sure_was_trafficking = 5
-    
+
 
 class IntercepteeFactory(DjangoModelFactory):
     class Meta:
         model = Interceptee
-    
+
     full_name = factory.Sequence(lambda n: 'John Doe {0}'.format(n))
     age = FuzzyInteger(20,40)
     phone_contact = str(FuzzyInteger(100000000000,999999999999).fuzz())

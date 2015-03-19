@@ -16,73 +16,73 @@ import datetime
 import ipdb
 
 class VIFAlertCheckerTests(TestCase):
-    
+
     fixtures = ['geo-code-locations.json', "alerts/alerts.json", "portal/border_stations.json"]
-    
+
     def test_when_no_fir_or_dofe_filed_fir_and_dofe_against_returns_false(self):
-        vif = VictimInterview()        
+        vif = VictimInterview()
         alertChecker = VIFAlertChecker(vif, None)
-        
+
         result = alertChecker.fir_and_dofe_against()
         self.assertFalse(result)
-        
+
     def test_when_fir_filed_fir_and_dofe_against_returns_true(self):
         vif = VictimInterview()
         vif.legal_action_against_traffickers_fir_filed = True
         vif.legal_action_fir_against_value = "Case 2"
-        
+
         alertChecker = VIFAlertChecker(vif, None)
-        
+
         result = alertChecker.fir_and_dofe_against()
         self.assertTrue(result)
-        
+
     def test_when_dofe_filed_fir_and_dofe_against_returns_true(self):
         vif = VictimInterview()
         vif.legal_action_against_traffickers_dofe_complaint = True
         vif.legal_action_dofe_against_value = "Case 2"
-        
+
         alertChecker = VIFAlertChecker(vif, None)
-        
+
         result = alertChecker.fir_and_dofe_against()
         self.assertTrue(result)
-        
+
     def test_when_both_dofe_and_fir_filed_fir_and_dofe_against_returns_true(self):
         vif = VictimInterview()
         vif.legal_action_against_traffickers_fir_filed = True
         vif.legal_action_fir_against_value = "Case 1"
         vif.legal_action_against_traffickers_dofe_complaint = True
         vif.legal_action_dofe_against_value = "Case 2"
-        
+
         alertChecker = VIFAlertChecker(vif, None)
-        
+
         result = alertChecker.fir_and_dofe_against()
         self.assertTrue(result)
-        
+
     def test_when_less_than_10_case_points_ten_or_more_case_points_returns_false(self):
         vif = VictimInterview()
         vif.calculate_strength_of_case_points = Mock(return_value=2)
-        
+
         alertChecker = VIFAlertChecker(vif, None)
-        
+
         result = alertChecker.ten_or_more_case_points()
         self.assertFalse(result)
-        
+
     def test_when_10_case_points_ten_or_more_case_points_returns_true(self):
         vif = VictimInterview()
         vif.calculate_strength_of_case_points = Mock(return_value=11)
-        
+
         alertChecker = VIFAlertChecker(vif, None)
-        
+
         result = alertChecker.ten_or_more_case_points()
         self.assertTrue(result)
-        
+
 class VIFAlertCheckerWebTests(WebTest):
-	
+
     fixtures = ['geo-code-locations.json', "alerts/alerts.json", "portal/border_stations.json"]
-    
+
     def setUp(self):
         self.superuser = SuperUserFactory.create()
-		
+
     def test_alert_sent_when_fir_filed_against(self):
         response = self.app.get(reverse('victiminterview_create'), user=self.superuser)
         form = response.form
@@ -111,20 +111,20 @@ class VIFAlertCheckerWebTests(WebTest):
         #Fir filed against
         form.set('legal_action_against_traffickers_fir_filed', True)
         form.set('legal_action_fir_against_value', "Case 1")
-        
+
         form_response = form.submit()
         form_2 = form_response.form
         form_2.set('ignore_warnings', True)
         form_response_2 = form_2.submit()
-        
+
         self.assertEquals(form_response_2.status_code, 302)
         #check for email
         self.assertEquals(1, len(mail.outbox))
         email = mail.outbox[0]
         self.assertEquals(self.superuser.email, email.to[0])
         self.assertEquals(settings.ADMIN_EMAIL_SENDER, email.from_email)
-        
-        
+
+
     def test_alert_sent_when_dofe_filed_against(self):
         response = self.app.get(reverse('victiminterview_create'), user=self.superuser)
         form = response.form
@@ -153,19 +153,19 @@ class VIFAlertCheckerWebTests(WebTest):
         #Dofe filed against
         form.set('legal_action_against_traffickers_dofe_complaint', True)
         form.set('legal_action_dofe_against_value', "Case 1")
-        
+
         form_response = form.submit()
         form_2 = form_response.form
         form_2.set('ignore_warnings', True)
         form_response_2 = form_2.submit()
-        
+
         self.assertEquals(form_response_2.status_code, 302)
         #check for email
         self.assertEquals(1, len(mail.outbox))
         email = mail.outbox[0]
         self.assertEquals(self.superuser.email, email.to[0])
         self.assertEquals(settings.ADMIN_EMAIL_SENDER, email.from_email)
-        
+
     def test_alert_sent_when_10_strength_points_filed_against(self):
         response = self.app.get(reverse('victiminterview_create'), user=self.superuser)
         form = response.form
@@ -193,12 +193,12 @@ class VIFAlertCheckerWebTests(WebTest):
         form.set('has_signature', True)
         #Set to increase points over 10
         form.fields['victim_place_worked_involved_sending_girls_overseas'][1].checked = True
-        
+
         form_response = form.submit()
         form_2 = form_response.form
         form_2.set('ignore_warnings', True)
         form_response_2 = form_2.submit()
-        
+
         self.assertEquals(form_response_2.status_code, 302)
         #check for email
         self.assertEquals(1, len(mail.outbox))
@@ -206,55 +206,55 @@ class VIFAlertCheckerWebTests(WebTest):
         self.assertEquals(self.superuser.email, email.to[0])
         self.assertEquals(settings.ADMIN_EMAIL_SENDER, email.from_email)
 
-        
+
 class IRFAlertCheckerTests(TestCase):
-    
+
     fixtures = ['geo-code-locations.json', "alerts/alerts.json", "portal/border_stations.json"]
-    
-    def setUp(self):        
+
+    def setUp(self):
         self.interceptee = IntercepteeFactory.create(full_name="Matt",age=20,phone_contact='1234567890')
         self.interceptee2 = IntercepteeFactory.create(full_name="Bob",age=35,phone_contact='1112223333')
-        
+
     def test_when_name_does_not_match_trafficker_name_match_returns_false(self):
         trafficker = IntercepteeFactory.create(full_name="Ernest",age=35,phone_contact='1112223333')
         irf = trafficker.interception_record
         form = IntercepteeForm({"full_name": "Ernest", "kind":"t", "interception_record" :irf.id,"vdc":"Belhi",'district':'Achham'})
         form.instance = trafficker
         self.assertTrue(form.is_valid())
-        
+
         alertChecker = IRFAlertChecker(irf,[[form]])
         result = alertChecker.trafficker_name_match()
-        
+
         self.assertFalse(result)
-        
-        
+
+
     def test_when_name_matches_trafficker_name_match_returns_true(self):
         trafficker = IntercepteeFactory.create(full_name="Bob",age=35,phone_contact='1112223333')
         irf = trafficker.interception_record
         form = IntercepteeForm({"full_name": "Bob", "kind":"t", "interception_record" :irf.id,"vdc":"Belhi",'district':'Achham'})
         form.instance = trafficker
-        
+
         self.assertTrue(form.is_valid())
-                
+
         alertChecker = IRFAlertChecker(irf,[[form]])
         result = alertChecker.trafficker_name_match()
-        
+
         self.assertTrue(result)
-        
-        
+
+
     def test_when_no_trafficker_photo_identified_trafficker_returns_false(self):
         trafficker = IntercepteeFactory.create(full_name="Bob",age=35,phone_contact='1112223333')
         irf = trafficker.interception_record
         form = IntercepteeForm({"full_name": "Bob", "kind":"t", "interception_record" :irf.id,"vdc":"Belhi",'district':'Achham'})
         form.instance = trafficker
-        
+
         self.assertTrue(form.is_valid())
-                
+
         alertChecker = IRFAlertChecker(irf,[[form]])
         result = alertChecker.identified_trafficker()
-        
+
         self.assertFalse(result)
-        
+
     def test_when_trafficker_photo_and_4_certainity_points_identified_trafficker_returns_true(self):
         trafficker = IntercepteeFactory.create(full_name="Bob",age=35,phone_contact='1112223333')
         irf = trafficker.interception_record
@@ -262,16 +262,16 @@ class IRFAlertCheckerTests(TestCase):
         irf.calculate_total_red_flags = Mock(return_value=0)
         form = IntercepteeForm({"full_name": "Bob", "kind":"t", "interception_record" :irf.id,"vdc":"Belhi",'district':'Achham'})
         form.instance = trafficker
-            
+
         self.assertTrue(form.is_valid())
-        
+
         #Hack to get photo validation to not appear as None
         form.cleaned_data['photo'] = "Hello"
         alertChecker = IRFAlertChecker(irf,[[form]])
         result = alertChecker.identified_trafficker()
-        
+
         self.assertTrue(result)
-        
+
     def test_when_trafficker_photo_and_400_red_flags_identified_trafficker_returns_true(self):
         trafficker = IntercepteeFactory.create(full_name="Bob",age=35,phone_contact='1112223333')
         irf = trafficker.interception_record
@@ -279,16 +279,16 @@ class IRFAlertCheckerTests(TestCase):
         irf.calculate_total_red_flags = Mock(return_value=400)
         form = IntercepteeForm({"full_name": "Bob", "kind":"t", "interception_record" :irf.id,"vdc":"Belhi",'district':'Achham'})
         form.instance = trafficker
-            
+
         self.assertTrue(form.is_valid())
-        
+
         #Hack to get photo validation to not appear as None
         form.cleaned_data['photo'] = "Hello"
         alertChecker = IRFAlertChecker(irf,[[form]])
         result = alertChecker.identified_trafficker()
-        
+
         self.assertTrue(result)
-        
+
     def test_when_trafficker_photo_400_red_flags_and_4_certainity_points_identified_trafficker_returns_true(self):
         trafficker = IntercepteeFactory.create(full_name="Bob",age=35,phone_contact='1112223333')
         irf = trafficker.interception_record
@@ -296,28 +296,28 @@ class IRFAlertCheckerTests(TestCase):
         irf.calculate_total_red_flags = Mock(return_value=400)
         form = IntercepteeForm({"full_name": "Bob", "kind":"t", "interception_record" :irf.id,"vdc":"Belhi",'district':'Achham'})
         form.instance = trafficker
-            
+
         self.assertTrue(form.is_valid())
-        
+
         #Hack to get photo validation to not appear as None
         form.cleaned_data['photo'] = "Hello"
         alertChecker = IRFAlertChecker(irf,[[form]])
         result = alertChecker.identified_trafficker()
-        
+
         self.assertTrue(result)
-        
+
     def test_when_no_trafficker_in_custody_trafficker_in_custody_returns_false(self):
         trafficker = IntercepteeFactory.create(full_name="Bob",age=35,phone_contact='1112223333')
         irf = trafficker.interception_record
         form = IntercepteeForm({"full_name": "Bob", "kind":"t", "interception_record" :irf.id,"vdc":"Belhi",'district':'Achham'})
         form.instance = trafficker
         self.assertTrue(form.is_valid())
-                
+
         alertChecker = IRFAlertChecker(irf,[[form]])
         result = alertChecker.trafficker_in_custody()
-        
+
         self.assertFalse(result)
-        
+
     def test_when_trafficker_in_custody_trafficker_in_custody_returns_name(self):
         trafficker = IntercepteeFactory.create(full_name="Bob",age=35,phone_contact='1112223333')
         irf = trafficker.interception_record
@@ -327,18 +327,18 @@ class IRFAlertCheckerTests(TestCase):
         self.assertTrue(form.is_valid())
         alertChecker = IRFAlertChecker(irf,[[form]])
         result = alertChecker.trafficker_in_custody()
-        
+
         self.assertEquals(result, 'Bob')
-        
-    
+
+
 
 class IRFAlertCheckerWebTests(WebTest):
-	
+
     fixtures = ['geo-code-locations.json', "alerts/alerts.json", "portal/border_stations.json"]
-    
+
     def setUp(self):
         self.superuser = SuperUserFactory.create()
-        
+
     def test_alert_sent_when_trafficker_name_match(self):
         return
         response = self.app.get(reverse('interceptionrecord_create'), user=self.superuser)
@@ -365,14 +365,14 @@ class IRFAlertCheckerWebTests(WebTest):
         form_2.set('ignore_warnings', True)
         form_response_2 = form_2.submit()
         self.assertEquals(form_response_2.status_code, 302)
-        
+
         self.assertEquals(form_response_2.status_code, 302)
         #check for email
         self.assertEquals(1, len(mail.outbox))
         email = mail.outbox[0]
         self.assertEquals(self.superuser.email, email.to[0])
         self.assertEquals(settings.ADMIN_EMAIL_SENDER, email.from_email)
-        
+
     def test_alert_sent_when_identified_trafficker(self):
         return
         response = self.app.get(reverse('interceptionrecord_create'), user=self.superuser)
@@ -399,14 +399,14 @@ class IRFAlertCheckerWebTests(WebTest):
         form_2.set('ignore_warnings', True)
         form_response_2 = form_2.submit()
         self.assertEquals(form_response_2.status_code, 302)
-        
+
         self.assertEquals(form_response_2.status_code, 302)
         #check for email
         self.assertEquals(1, len(mail.outbox))
         email = mail.outbox[0]
         self.assertEquals(self.superuser.email, email.to[0])
         self.assertEquals(settings.ADMIN_EMAIL_SENDER, email.from_email)
-        
+
     def test_alert_sent_when_trafficker_in_custody(self):
         return
         response = self.app.get(reverse('interceptionrecord_create'), user=self.superuser)
@@ -433,7 +433,7 @@ class IRFAlertCheckerWebTests(WebTest):
         form_2.set('ignore_warnings', True)
         form_response_2 = form_2.submit()
         self.assertEquals(form_response_2.status_code, 302)
-        
+
         self.assertEquals(form_response_2.status_code, 302)
         #check for email
         self.assertEquals(1, len(mail.outbox))

@@ -18,30 +18,30 @@ class TestDefaultPermissionSet(TestCase):
 		s1 = SuperUserFactory.create(email="bob@test.com")
 		s2 = SuperUserFactory.create(email="joe@test.com")
 		alert = AlertFactory.create()
-		
+
 		self.su_permission_set.email_accounts(alert)
 		self.assertEquals(2, len(mail.outbox))
-		
+
 		email = mail.outbox[0]
 		self.assertEquals(settings.ADMIN_EMAIL_SENDER, email.from_email)
 		self.assertEquals(1, len(email.to))
 		self.assertEquals('bob@test.com', email.to[0])
 		self.assertEquals('Test Subject', email.subject)
 		self.assertEquals('<p>Hello </p>', email.body)
-		
+
 		email2 = mail.outbox[1]
 		self.assertEquals(settings.ADMIN_EMAIL_SENDER, email2.from_email)
 		self.assertEquals(1, len(email2.to))
 		self.assertEquals('joe@test.com', email2.to[0])
 		self.assertEquals('Test Subject', email2.subject)
 		self.assertEquals('<p>Hello </p>', email2.body)
-		
+
 
 class TestAccountManager(TestCase):
 
 	def setUp(self):
 		self.account_manager = Account.objects
-        
+
 	def test_create_user(self):
 		#expect error when given bad email
 		with self.assertRaises(ValueError):
@@ -50,13 +50,13 @@ class TestAccountManager(TestCase):
 		#seems these functions don't work and are never used so we may want to delete them -AS
 		#self.account_manager.create_user("hello@email.org", "password")
 		#self.account_manager.create_superuser("hello@email.org", "password")
-		
+
 
 class TestAccount(TestCase):
 
 	def setUp(self):
 		self.user = SuperUserFactory.create(email="bob@test.org", first_name="Bob", last_name="Test")
-		
+
 	def test_get_username(self):
 		self.assertEquals("bob@test.org", self.user.get_username())
 
@@ -65,49 +65,49 @@ class TestAccount(TestCase):
 
 	def test_get_full_name(self):
 		self.assertEquals("Bob Test", self.user.get_full_name())
-    
+
 	def test_send_activation_email(self):
 		self.user.send_activation_email()
 		self.assertEquals(1, len(mail.outbox))
-		
+
 		email = mail.outbox[0]
 		self.assertEquals(settings.ADMIN_EMAIL_SENDER, email.from_email)
 		self.assertEquals(1, len(email.to))
 		self.assertEquals('bob@test.org', email.to[0])
 		self.assertEquals('Bob, your new Tiny Hands Dreamsuite account is ready!', email.subject)
-		
+
 	def test_email_user(self):
 		alert = AlertFactory.create()
 		self.user.email_user("alerts/test", alert );
 		self.assertEquals(1, len(mail.outbox))
-		
+
 		email = mail.outbox[0]
 		self.assertEquals(settings.ADMIN_EMAIL_SENDER, email.from_email)
 		self.assertEquals(1, len(email.to))
 		self.assertEquals('bob@test.org', email.to[0])
 		self.assertEquals('Test Subject', email.subject)
 		self.assertEquals('<p>Hello </p>', email.body)
-		
+
 class TestAlert(TestCase):
-	
+
 	def setUp(self):
 		self.su_permission_set = SuperUserDesignation.create()
 		self.s1 = SuperUserFactory.create(email="bill@test.com")
 		self.s2 = SuperUserFactory.create(email="mike@test.com")
 		self.alert = AlertFactory.create(permissions_group=[self.su_permission_set])
-		
+
 	def test_email_permissions_set(self):
 		self.alert.email_permissions_set()
-		
+
 		self.assertEquals(2, len(mail.outbox))
-		
+
 		email = mail.outbox[0]
 		self.assertEquals(settings.ADMIN_EMAIL_SENDER, email.from_email)
 		self.assertEquals(1, len(email.to))
 		self.assertEquals('bill@test.com', email.to[0])
 		self.assertEquals('Test Subject', email.subject)
 		self.assertEquals('<p>Hello </p>', email.body)
-		
+
 		email2 = mail.outbox[1]
 		self.assertEquals(settings.ADMIN_EMAIL_SENDER, email2.from_email)
 		self.assertEquals(1, len(email2.to))
