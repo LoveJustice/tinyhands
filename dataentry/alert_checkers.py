@@ -4,7 +4,6 @@ from fuzzywuzzy import process
 from dataentry import serializers
 from dataentry.models import Interceptee
 import json
-import ipdb
 from django.conf import settings
 
 
@@ -46,10 +45,16 @@ class VIFAlertChecker(object):
         """
         fir = self.vif.legal_action_against_traffickers_fir_filed
         dofe = self.vif.legal_action_against_traffickers_dofe_complaint
+
+        if fir or dofe:
+            legal_case = True
+        else:
+            legal_case = False
+
         reason_for_no = self.vif.get_reason_for_no()
         points = self.vif.calculate_strength_of_case_points()
         if self.vif.calculate_strength_of_case_points() > 10:
-            Alert.objects.send_alert("strength of case", context={"site": settings.SITE_DOMAIN, "vif": self.vif, "points": points, "fir": fir, "dofe": dofe, "reason_for_no": reason_for_no})
+            Alert.objects.send_alert("strength of case", context={"site": settings.SITE_DOMAIN, "vif": self.vif, "points": points, "legal_case": legal_case, "fir": fir, "dofe": dofe, "reason_for_no": reason_for_no})
             return True
         return False
 
@@ -61,7 +66,6 @@ class IRFAlertChecker(object):
 
     def check_them(self):
         self.trafficker_name_match()
-        pass
         self.identified_trafficker()
 
     def trafficker_name_match(self):

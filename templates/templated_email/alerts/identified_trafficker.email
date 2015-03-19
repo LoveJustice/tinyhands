@@ -31,7 +31,7 @@
         <tr>
             <td>{{ person.full_name }}</td>
             <td>{{ person.phone_contact }}</td>
-            <td><img src="{{ site }}/{{ person.photo }}"/></td>
+            <td><img src="http://{{ site }}{{ person.photo.url }}"/></td>
         </tr>
         {% endfor %}
     </table>
