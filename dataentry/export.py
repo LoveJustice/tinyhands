@@ -137,9 +137,14 @@ def text_if_true(condition, text):
         return ''
 
 
-def get_station_name_from_number(form_number):
-    return BorderStation.objects.get(station_code=form_number[:3].upper())  
-    
+def get_station_name_from_number(irf_number):
+    code = irf_number[:3].upper()
+    try:
+        return BorderStation.objects.get(station_code=code).station_name
+    except BorderStation.DoesNotExist:
+        return "UNKNOWN"
+
+
 def get_checkbox_group_value(instance, field_name_start):
     for field in instance._meta.fields:
         if field.name.startswith(field_name_start):
