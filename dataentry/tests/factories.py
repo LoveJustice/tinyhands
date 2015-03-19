@@ -29,7 +29,7 @@ class IntercepteeFactory(DjangoModelFactory):
     full_name = factory.Sequence(lambda n: 'John Doe {0}'.format(n))
     age = FuzzyInteger(20,40)
     phone_contact = str(FuzzyInteger(100000000000,999999999999).fuzz())
-    photo = ''
+    photo = 'foo.png'
     gender = 'm'
     interception_record = factory.SubFactory(IrfFactory)
     kind = 't'
