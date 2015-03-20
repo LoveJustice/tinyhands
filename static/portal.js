@@ -93,6 +93,7 @@ function getContentString(borderStation){
 function getBorderStations(map){
     $.get("/portal/get_border_stations",function(data,status){
         var infowindow = new google.maps.InfoWindow({maxWidth: 1000});
+        var dynamicWindow = new google.maps.InfoWindow({maxWidth: 1000});
         for(var station=0;station<data.length;station++){
             var myLatlng = new google.maps.LatLng(data[station].fields.latitude,data[station].fields.longitude);
             var marker = new google.maps.Marker({
@@ -117,6 +118,26 @@ function getBorderStations(map){
                     });
 
                     infowindow.open(map, this);
+                    $(".gm-style-iw").each(function() {
+                        if(data[station].fields.station_name.length > 10) {
+                            $(this).addClass('station-info-window-big');
+                            console.log(data[station].station_code);
+                        }
+                        $(this).addClass('station-info-window');
+                    });
+                }
+            })(marker, station));
+
+            google.maps.event.addListener(marker, 'click', (function(marker, station) {
+                return function() {
+                    infowindow.close();
+                    dynamicWindow.setContent(getContentString(data[station]));
+                    console.log(data[station].fields.station_name);
+                    $.get("/portal/get_interception_records", {station_code: data[station].fields.station_code}, function(data){
+                        $("#stationInterception").text("Interceptions: " + data);
+                    });
+
+                    dynamicWindow.open(map, this);
                     $(".gm-style-iw").each(function() {
                         if(data[station].fields.station_name.length > 10) {
                             $(this).addClass('station-info-window-big');
