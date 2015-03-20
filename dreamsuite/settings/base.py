@@ -5,9 +5,9 @@ from unipath import Path
 import os
 BASE_DIR = Path(__file__).ancestor(3)
 
-SERVER_EMAIL = 'DreamSuiteAdmin@tinyhands.org'
-EMAIL_HOST = 'smtpcorp.com'
+SERVER_EMAIL = 'tnurkkala@cse.taylor.edu'
 
+EMAIL_HOST = 'smtpcorp.com'
 EMAIL_PORT = 2525
 EMAIL_HOST_USER = 'tinyhands'
 EMAIL_HOST_PASSWORD = 'TINY@2014'
@@ -26,8 +26,6 @@ FIXTURE_DIRS = (
 )
 
 STATICFILES_DIRS = (os.path.join(SITE_ROOT, '../../static/'),)
-
-ALLOWED_HOSTS = []
 
 AUTH_USER_MODEL = 'accounts.Account'
 LOGIN_URL = '/login/'
