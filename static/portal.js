@@ -84,9 +84,11 @@ function resizeMap() {
 function getContentString(borderStation){
     return '<div id="StationWindow" class="dashboardInfoWindow">' +
 	    '<h3>'+borderStation.fields.station_name+'</h3>' +
+	    '<p>Est. '+borderStation.fields.date_established+'</p>' +
 	    '<p>'+borderStation.fields.station_code+'</p>' +
         '<p>Shelter: '+borderStation.fields.has_shelter+'</p>' +
         '<p id="stationInterception">Interceptions: ' + '</p>' +
+        '<p id="staffset"># of Staff ' + '</p>' +
 	    '</div>';
 }
 
@@ -112,11 +114,19 @@ function getBorderStations(map){
                 return function() {
                     infowindow.setContent(getContentString(data[station]));
                     console.log(data[station].fields.station_name);
+
+                    //gets the number of irfs
                     $.get("/portal/get_interception_records", {station_code: data[station].fields.station_code}, function(data){
                         $("#stationInterception").text("Interceptions: " + data);
                     });
 
+                    //gets the number of staff
+                    $.get("/portal/get_staff_count", {station_code: data[station].fields.station_code}, function(data){
+                        $("#staffset").text('# of Staff:' + data);
+                    });
+
                     infowindow.open(map, this);
+
                     $(".gm-style-iw").each(function() {
                         if(data[station].fields.station_name.length > 10) {
                             $(this).addClass('station-info-window-big');
