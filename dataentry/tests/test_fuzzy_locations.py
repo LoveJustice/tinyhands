@@ -1,6 +1,6 @@
 from django.test import TestCase
 from dataentry.models import District, VDC
-from fuzzy_matching import match_location
+from dataentry.fuzzy_matching import match_location
 
 class FuzzyLocationMatchingTest(TestCase):
     
