@@ -1,6 +1,30 @@
 {% extends 'portal/portal_base.html' %}
 
 {% block content %}
-        <div id="map-canvas"></div>
-        <div id="content-window" style="width:19%; height:100%; float:left"></div>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-cookies.js"></script>
+    <div ng-app="TallyMod" ng-controller="MainCtrl as main">
+        <div class="col-lg-1"></div>
+        <div class="text-center col-lg-1" style="background-color: rgba(255,255,255,0.85); border-radius: 10px">
+            <h2>{{words}}</h2>
+            <h4>Event1</h4>
+            <h4>Event2</h4>
+        </div>
+    </div>
+    <div id="map-canvas" style="position:absolute; z-index:-100"></div>
+    <div id="content-window" style="width:19%; height:100%; float:left"></div>
+
+<script>
+    angular.module('TallyMod', ['ngCookies'])
+           .config(['$httpProvider', function($httpProvider) {
+                $httpProvider.defaults.xsrfCookieName = 'csrftoken';
+                $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
+            }])
+           .controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
+               var vm = this;
+
+               vm.words = 'Hello World';
+           }]);
+
+</script>
 {% endblock %}
