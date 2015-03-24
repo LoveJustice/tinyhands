@@ -91,7 +91,8 @@ function getStaticContentString(borderStation) { //This is what the content of a
         '</div>';
 }
 
-function getDyanamicContentString(borderStation){ //This is what the content of a static border_station is
+
+function getDynamicContentString(borderStation){ //This is what the content of a static border_station is
     return '<div id="StationWindow" class="dashboardInfoWindow">' +
         '<h3>' + borderStation.fields.station_name + ' - ' + borderStation.fields.station_code + '</h3>' +
 
@@ -99,6 +100,8 @@ function getDyanamicContentString(borderStation){ //This is what the content of 
         '<p>Has shelter: ' + hasShelter(borderStation) + '</p>' +
         '<p id="stationInterception">Interceptions: ' + '</p>' +
         '<p id="staffset"># of Staff ' + '</p>' +
+        '<p id="irf"><a href="/data-entry/irfs/search/?search_value=' + borderStation.fields.station_code + '">IRFs</a>' + '</p>' +
+        '<p id="vif"><a href="/data-entry/vifs/search/?search_value=' + borderStation.fields.station_code + '">VIFs</a>' + '</p>' +
         '</div>';
 }
 
@@ -156,7 +159,7 @@ function getBorderStations(map){
                 return function() {
                     infowindow.close();
 
-                    dynamicWindow.setContent(getDyanamicContentString(data[station]));
+                    dynamicWindow.setContent(getDynamicContentString(data[station]));
 
                     //gets the number of IRFs to date
                     $.get("/portal/get_interception_records", {station_code: data[station].fields.station_code}, function(data){
