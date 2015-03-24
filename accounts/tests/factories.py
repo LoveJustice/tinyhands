@@ -1,7 +1,7 @@
 import factory
 from factory.django import DjangoModelFactory
-
-from accounts.models import Account
+import random
+from accounts.models import Account,DefaultPermissionsSet,Alert
 from accounts.models import DefaultPermissionsSet
 
 class SuperUserDesignation(DjangoModelFactory):
@@ -23,6 +23,7 @@ class SuperUserDesignation(DjangoModelFactory):
     permission_border_stations_edit = True
     permission_vdc_manage = True
 
+
 class ViewUserDesignation(DjangoModelFactory):
     class Meta:
         model = DefaultPermissionsSet
@@ -32,6 +33,7 @@ class ViewUserDesignation(DjangoModelFactory):
     permission_irf_view = True
     permission_vif_view = True
     permission_border_stations_view = True
+
 
 class AddUserDesignation(DjangoModelFactory):
     class Meta:
@@ -46,6 +48,7 @@ class AddUserDesignation(DjangoModelFactory):
     permission_border_stations_view = True
     permission_border_stations_add = True
 
+
 class EditUserDesignation(DjangoModelFactory):
     class Meta:
         model = DefaultPermissionsSet
@@ -59,6 +62,7 @@ class EditUserDesignation(DjangoModelFactory):
     permission_border_stations_view = True
     permission_border_stations_edit = True
 
+
 class UserFactory(DjangoModelFactory):
     class Meta:
         model = Account
@@ -67,6 +71,7 @@ class UserFactory(DjangoModelFactory):
     email = factory.Sequence(lambda n: 'test{0}@test.com'.format(n))
     first_name = factory.Sequence(lambda n: 'test{0}'.format(n))
     last_name = factory.Sequence(lambda n: 'test{0}'.format(n))
+
 
 class SuperUserFactory(UserFactory):
     permission_irf_view = True
@@ -83,11 +88,13 @@ class SuperUserFactory(UserFactory):
     permission_vdc_manage = True
     user_designation = factory.SubFactory(SuperUserDesignation)
 
+
 class ViewUserFactory(UserFactory):
     permission_irf_view = True
     permission_vif_view = True
     permission_border_stations_view = True
     user_designation = factory.SubFactory(ViewUserDesignation)
+
 
 class AddUserFactory(UserFactory):
     permission_irf_view = True
@@ -98,6 +105,7 @@ class AddUserFactory(UserFactory):
     permission_border_stations_add = True
     user_designation = factory.SubFactory(AddUserDesignation)
 
+
 class EditUserFactory(UserFactory):
     permission_irf_view = True
     permission_irf_edit = True
@@ -106,3 +114,23 @@ class EditUserFactory(UserFactory):
     permission_border_stations_view = True
     permission_border_stations_edit = True
     user_designation = factory.SubFactory(EditUserDesignation)
+
+
+class AlertFactory(DjangoModelFactory):
+    class Meta:
+        model = Alert
+
+    email_template = "test"
+    code = factory.Sequence(lambda n: 'code{0}'.format(n))
+
+    @factory.post_generation
+    def permissions_group(self, create, extracted, **kwargs):
+        if not create:
+            # Simple build, do nothing.
+            return
+
+        if extracted:
+            # A list of groups were passed in, use them
+            for group in extracted:
+                self.permissions_group.add(group)
+
