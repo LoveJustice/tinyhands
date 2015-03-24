@@ -3,7 +3,7 @@ from dataentry.models import District, VDC
 from dataentry.fuzzy_matching import match_location
 
 class FuzzyLocationMatchingTest(TestCase):
-    
+
     fixtures = ['geo-code-locations.json']
 
     def test_district_matching_works(self):
@@ -43,4 +43,4 @@ class FuzzyLocationMatchingTest(TestCase):
         match = match_location(district_name=vdc.district.name, vdc_name=vdc.name)
         self.assertEquals(vdc, match[0])
         self.assertEquals(vdc.district, match[1])
-        
+

@@ -803,6 +803,10 @@ class BorderStationForm(forms.ModelForm):
             'date_established': forms.TextInput(attrs={'placeholder': '12/31/12'}),
         }
 
+    def clean_station_code(self):
+        return self.cleaned_data['station_code'].upper()
+
+
 class VDCForm(forms.ModelForm):
     class Meta:
         model = VDC
