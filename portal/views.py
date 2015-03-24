@@ -2,6 +2,11 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.core import serializers
 from django.contrib.auth.decorators import login_required
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from datetime import timedelta
+from django.utils import timezone
 from dataentry.models import BorderStation
 from dataentry.models import InterceptionRecord
 
@@ -19,3 +24,33 @@ def get_interception_records(request):
         interception_records = InterceptionRecord.objects.filter(irf_number__startswith=request.REQUEST["station_code"])
         return HttpResponse(interception_records.count())
     return HttpResponse("No IRFs Not Found")
+
+
+class TallyDaysView(APIView):
+    
+    def get(self, request):
+        days = ['Monday', 'Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']
+        today = timezone.now()
+        dates = [today - timedelta(days=x) for x in range(5)]
+        results = {}
+        i = 0
+        for date in dates:
+            day_records = {}
+            day_records['dayOfWeek'] = days[date.weekday()]
+            day_records['interceptions'] = {}
+            interceptions = day_records['interceptions']
+            records = InterceptionRecord.objects.filter(date_time_of_interception__year=date.year, date_time_of_interception__month=date.month, date_time_of_interception__day=date.day)
+            for record in records:
+                station_code = record.irf_number[:3]
+                victims = record.interceptees.filter(kind='v')
+                count = len(victims)
+                if station_code not in interceptions.keys():
+                   interceptions[station_code] = 0 
+                interceptions[station_code]+=count
+            results[i] = day_records
+            i+=1
+        
+        return Response(results, status=status.HTTP_200_OK);
+    
+    
+        
