@@ -93,7 +93,7 @@ function getStaticContentString(borderStation) { //This is what the content of a
 
 
 function getDynamicContentString(borderStation){ //This is what the content of a static border_station is
-    return '<div id="StationWindow" class="dashboardInfoWindow">' +
+    return '<div id="StationWindow" class="dynamicInfoWindow">' +
         '<h3>' + borderStation.fields.station_name + ' - ' + borderStation.fields.station_code + '</h3>' +
 
         '<p>Est. ' + borderStation.fields.date_established + '</p>' +
@@ -113,12 +113,14 @@ function getBorderStations(map){
         var infowindow = new google.maps.InfoWindow(); //Initialize the Static Border Station view
         var dynamicWindow = new google.maps.InfoWindow(); //Initialize the Dynamic Border Station view
 
+
         for(var station=0;station<data.length;station++){ //Iterate over each Border Station
             var myLatlng = new google.maps.LatLng(data[station].fields.latitude,data[station].fields.longitude);
             var marker = new google.maps.Marker({ //Initialize a BorderStation's marker
                 position: myLatlng,
                 map: map,
-                title: data[station].fields.station_name + " " + data[station].fields.station_code
+                title: data[station].fields.station_name + " " + data[station].fields.station_code,
+                clicked: false
             });
 
             google.maps.event.addListener(marker, 'mouseout', (function(marker, station) {
@@ -144,7 +146,9 @@ function getBorderStations(map){
                         $("#staffset").text('# of Staff:' + data);
                     });
 
-                    infowindow.open(map, this);
+                    if(!marker.clicked) {
+                        infowindow.open(map, this);
+                    }
 
                     $(".gm-style-iw").each(function() { // TODO: We are resizing according to the length of the station name? we need a better solution for this!
                         if(data[station].fields.station_name.length > 10) {
@@ -158,6 +162,7 @@ function getBorderStations(map){
             google.maps.event.addListener(marker, 'click', (function(marker, station) { //For the Dynamic view
                 return function() {
                     infowindow.close();
+                    marker.clicked = true;
 
                     dynamicWindow.setContent(getDynamicContentString(data[station]));
 
@@ -171,13 +176,18 @@ function getBorderStations(map){
                         $("#staffset").text('# of Staff:' + data);
                     });
 
+
                     dynamicWindow.open(map, this);
+
+
 
                     $(".gm-style-iw").each(function() {
                         if(data[station].fields.station_name.length > 10) {
-                            $(this).addClass('station-info-window-big');
+                            $(this).addClass('station-info-window-big-dynamic');
+
                         }
-                        $(this).addClass('station-info-window');
+                        $(this).addClass('station-info-window-big-dynamic');
+
                     });
                 }
             })(marker, station));
