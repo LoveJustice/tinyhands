@@ -92,21 +92,21 @@
                     <h2 class="background"><span>Shelter</span></h2>
                     <div class="row" >
                         <div class="col-lg-2 input-with-text calc-form-input-no-width" style="width: 100px; padding: 0">
-                            <input class="form-control" type="number" id="shelter_rent" ng-model="main.shelterRent"/>
+                            <input class="form-control" type="number" id="shelter_rent" ng-model="main.form.shelter_rent"/>
                             <small>Rent</small>
                         </div>
                         <div class="col-lg-1 form-symbol" style="padding: 0">
                             <h4 style="text-align: center">+</h4>
                         </div>
                         <div class="col-lg-2 input-with-text calc-form-input-no-width" style="width: 100px; padding: 0">
-                            <input class="form-control" type="number" id="shelter_water" ng-model="main.shelterWater"/>
+                            <input class="form-control" type="number" id="shelter_water" ng-model="main.form.shelter_water"/>
                             <small>Water</small>
                         </div>
                         <div class="col-lg-1 form-symbol" style="padding: 0">
                             <h4 style="text-align: center">+</h4>
                         </div>
                         <div class="col-lg-2 input-with-text calc-form-input-no-width" style="width: 100px; padding: 0">
-                            <input class="form-control" type="number" id="shelter_electricity" ng-model="main.shelterElectricity"/>
+                            <input class="form-control" type="number" id="shelter_electricity" ng-model="main.form.shelter_electricity"/>
                             <small>Electricity</small>
                         </div>
                         <div class="col-lg-1 form-symbol" style="padding: 0">
@@ -119,17 +119,17 @@
                     </div>
                     <div class="row" style="margin-top: 30px; text-align: center">
                         <div class="col-lg-2" style="margin-top: 5px; width: 50px">
-                            <input class="form-control" type="checkbox" id="shelterStartupBool" ng-model="main.shelterStartupBool"/>
+                            <input class="form-control" type="checkbox" id="shelterStartupBool" ng-model="main.form.shelter_shelter_startup"/>
                         </div>
                         <div class="col-lg-2 input-with-text" style="width: 100px; padding: 0">
-                            <input class="form-control" type="number" id="shelter_startup_amount" ng-model="main.shelterStartupAmount"/>
+                            <input class="form-control" type="number" id="shelter_startup_amount" ng-model="main.form.shelter_shelter_startup_amount"/>
                             <small>Shelter Startup</small>
                         </div>
                         <div class="col-lg-2" style="margin-top: 5px; width: 50px">
-                            <input class="form-control" type="checkbox" id="sheltert_two_bool" ng-model="main.shelterTwoBool"/>
+                            <input class="form-control" type="checkbox" id="sheltert_two_bool" ng-model="main.form.shelter_shelter_two"/>
                         </div>
                         <div class="col-lg-2 input-with-text" style="width: 100px; padding: 0">
-                            <input class="form-control" type="number" id="shelter_two_amount" ng-model="main.shelterTwoAmount"/>
+                            <input class="form-control" type="number" id="shelter_two_amount" ng-model="main.form.shelter_shelter_two_amount"/>
                             <small>Shelter 2</small>
                         </div>
                         <div class="col-lg-1" style="padding: 0">
@@ -159,20 +159,20 @@
                             <h4 style="text-align: center">=</h4>
                         </div>
                         <div class="col-lg-2 calc-form-input">
-                            <input class="form-control" type="number" id="food_gas_multiplier_before" ng-model="main.foodGasMultiplierBefore"/>
+                            <input class="form-control" type="number" id="food_gas_multiplier_before" ng-model="main.form.food_and_gas_number_of_intercepted_girls_multiplier_before"/>
                         </div>
                         <div class="col-lg-1 form-symbol">
                             <h4 style="text-align: center">*</h4>
                         </div>
                         <div class="col-lg-2 calc-form-input input-with-text">
-                            <input class="form-control" type="number" id="food_gas_number_of_girls" ng-model="main.foodGasNumberOfGirls"/>
+                            <input class="form-control" type="number" id="food_gas_number_of_girls" ng-model="main.form.food_and_gas_number_of_intercepted_girls"/>
                             <small># of Girls</small>
                         </div>
                          <div class="col-lg-1 form-symbol">
                             <h4 style="text-align: center">*</h4>
                         </div>
                         <div class="col-lg-2 calc-form-input">
-                            <input class="form-control" type="number" id="food_gas_multiplier_after" ng-model="main.foodGasMultiplierAfter"/>
+                            <input class="form-control" type="number" id="food_gas_multiplier_after" ng-model="main.form.food_and_gas_number_of_intercepted_girls_multiplier_after"/>
                         </div>
                         <div class="col-lg-1 form-symbol">
                             <h4 style="text-align: center">=</h4>
@@ -191,20 +191,20 @@
                             <h4 style="text-align: center">=</h4>
                         </div>
                         <div class="col-lg-2 calc-form-input">
-                            <input class="form-control" type="number" id="limbo_multiplier" ng-model="main.limboMultiplier"/>
+                            <input class="form-control" type="number" id="limbo_multiplier" ng-model="main.form.food_and_gas_limbo_girls_multiplier"/>
                         </div>
                         <div class="col-lg-1 form-symbol">
                             <h4 style="text-align: center">*</h4>
                         </div>
                         <div class="col-lg-2 calc-form-input input-with-text">
-                            <input class="form-control" type="number" id="limbo_number_of_girls" ng-model="main.limboNumberOfGirls"/>
+                            <input class="form-control" type="number" id="limbo_number_of_girls" ng-model="main.form.food_and_gas_number_of_limbo_girls"/>
                             <small># of Girls</small>
                         </div>
                         <div class="col-lg-1 form-symbol">
                             <h4 style="text-align: center">*</h4>
                         </div>
                         <div class="col-lg-2 calc-form-input input-with-text">
-                            <input class="form-control" type="number" id="limbo_number_of_days" ng-model="main.limboNumberOfDays"/>
+                            <input class="form-control" type="number" id="limbo_number_of_days" ng-model="main.form.food_and_gas_number_of_days"/>
                             <small># of Days</small>
                         </div>
                         <div class="col-lg-1 form-symbol">
@@ -225,97 +225,96 @@
             <!-- End Food & Gas -->
 
             <!-- Communication -->
-            <div class="row">
-                <div class="col-md-6">
-                    <h2 class="background"><span>Communication</span></h2>
-                    <div class="row">
-                        <div class="col-md-6 form-inline">
-                            <span style="padding-right: 10px"></span>
-                            <input class="form-control" type="checkbox" id="comm_chair_bool" ng-model="main.commChairBool"/>
-                            <input class="form-control" type="number" id="comm_chair_amount" ng-model="main.commChairAmount"/>
-                            <span style="padding-left: 10px"><small>for chair</small></span>
-                        </div>
-                        <div class="col-md-6 form-inline">
-                            <span style="padding-right: 10px"></span>
-                            <input class="form-control" type="checkbox" id="comm_manager_bool" ng-model="main.commManagerBool"/>
-                            <input class="form-control" type="number" id="comm_manager_amount" ng-model="main.commManagerAmount"/>
-                            <span style="padding-left: 10px;"><small>for manager</small></span>
-                        </div>
-                    </div>
+           <div class="row">
+               <div class="col-md-6">
+                   <h2 class="background"><span>Communication</span></h2>
+                   <div class="row">
+                       <div class="col-md-6 form-inline">
+                           <span style="padding-right: 10px"></span>
+                           <input class="form-control" type="checkbox" id="comm_chair_bool" ng-model="main.form.communication_chair"/>
+                           <input class="form-control" type="number" id="comm_chair_amount" ng-model="main.form.communication_chair_amount"/>
+                           <span style="padding-left: 10px"><small>for chair</small></span>
+                       </div>
+                       <div class="col-md-6 form-inline">
+                           <span style="padding-right: 10px"></span>
+                           <input class="form-control" type="checkbox" id="comm_manager_bool" ng-model="main.form.communication_manager"/>
+                           <input class="form-control" type="number" id="comm_manager_amount" ng-model="main.form.communication_manager_amount"/>
+                           <span style="padding-left: 10px;"><small>for manager</small></span>
+                       </div>
+                   </div>
+                   <div class="row" style="margin-top: 20px">
+                       <div class="col-lg-5 calc-form-input-no-width input-with-text" style="width: 200px">
+                           <input class="form-control" type="number" id="comm_number_of_staff_wt" ng-model="main.form.communication_number_of_staff_with_walkie_talkies"/>
+                           <small># of staff with walkie-talkies</small>
+                       </div>
+                       <div class="col-lg-1 form-symbol" style="padding: 0; margin: 0">
+                           <h4 style="text-align: center">*</h4>
+                       </div>
+                       <div class="col-lg-3 calc-form-input-no-width">
+                           <input class="form-control" type="number" id="comm_number_of_staff_wt_multiplier" ng-model="main.form.communication_number_of_staff_with_walkie_talkies_multiplier"/>
+                       </div>
+                       <div class="col-lg-1 form-symbol" style="padding: 0; margin: 0">
+                           <h4 style="text-align: center">=</h4>
+                       </div>
+                       <div class="col-lg-2 calc-form-input-no-width pull-right input-group">
+                           <div class="input-group-addon">$</div>
+                           <input style="width: 100px" class="form-control text-center" ng-value="main.commNumberOfStaffTotal()" disabled="disabled"/>
+                       </div>
+                   </div>
 
-                    <div class="row" style="margin-top: 20px">
-                        <div class="col-lg-5 calc-form-input-no-width input-with-text" style="width: 200px">
-                            <input class="form-control" type="number" id="comm_number_of_staff_wt" ng-model="main.commNumberOfStaffWt"/>
-                            <small># of staff with walkie-talkies</small>
-                        </div>
-                        <div class="col-lg-1 form-symbol" style="padding: 0; margin: 0">
-                            <h4 style="text-align: center">*</h4>
-                        </div>
-                        <div class="col-lg-3 calc-form-input-no-width">
-                            <input class="form-control" type="number" id="comm_number_of_staff_wt_multiplier" ng-model="main.commNumberOfStaffWtMultiplier"/>
-                        </div>
-                        <div class="col-lg-1 form-symbol" style="padding: 0; margin: 0">
-                            <h4 style="text-align: center">=</h4>
-                        </div>
-                        <div class="col-lg-2 calc-form-input-no-width pull-right input-group">
-                            <div class="input-group-addon">$</div>
-                            <input style="width: 100px" class="form-control text-center" ng-value="main.commNumberOfStaffTotal()" disabled="disabled"/>
-                        </div>
-                    </div>
+                   <div class="row" style="margin-top: 20px;">
+                       <div class="col-lg-5 calc-form-input-no-width input-with-text" style="width: 200px">
+                           <input class="form-control" type="number" id="comm_each_staff_wt" ng-model="main.form.communication_each_staff"/>
+                           <small>Each Staff</small>
+                       </div>
+                       <div class="col-lg-1 form-symbol" style="padding: 0; margin: 0">
+                           <h4 style="text-align: center">*</h4>
+                       </div>
+                       <div class="col-lg-3 calc-form-input-no-width">
+                           <input class="form-control" type="number" id="comm_each_staff_wt_multiplier" ng-model="main.form.communication_each_staff_multiplier"/>
+                       </div>
+                       <div class="col-lg-1 form-symbol" style="padding: 0; margin: 0">
+                           <h4 style="text-align: center">=</h4>
+                       </div>
+                       <div class="col-lg-2 calc-form-input-no-width pull-right input-group">
+                           <div class="input-group-addon">$</div>
+                           <input style="width: 100px" class="form-control text-center" ng-value="main.commEachStaffTotal()" disabled="disabled"/>
+                       </div>
+                   </div>
+                   <div class="row center" style="margin-top: 20px; padding-right: 200px; padding-left: 200px; text-align: center">
+                       <label>Total Communcation</label>
+                       <input style="width: 100px" class="form-control text-center" ng-value="main.commTotal()" disabled="disabled"/>
+                   </div>
 
-                    <div class="row" style="margin-top: 20px;">
-                        <div class="col-lg-5 calc-form-input-no-width input-with-text" style="width: 200px">
-                            <input class="form-control" type="number" id="comm_each_staff_wt" ng-model="main.commEachStaffWt"/>
-                            <small>Each Staff</small>
-                        </div>
-                        <div class="col-lg-1 form-symbol" style="padding: 0; margin: 0">
-                            <h4 style="text-align: center">*</h4>
-                        </div>
-                        <div class="col-lg-3 calc-form-input-no-width">
-                            <input class="form-control" type="number" id="comm_each_staff_wt_multiplier" ng-model="main.commEachStaffWtMultiplier"/>
-                        </div>
-                        <div class="col-lg-1 form-symbol" style="padding: 0; margin: 0">
-                            <h4 style="text-align: center">=</h4>
-                        </div>
-                        <div class="col-lg-2 calc-form-input-no-width pull-right input-group">
-                            <div class="input-group-addon">$</div>
-                            <input style="width: 100px" class="form-control text-center" ng-value="main.commEachStaffTotal()" disabled="disabled"/>
-                        </div>
-                    </div>
-                    <div class="row center" style="margin-top: 20px; padding-right: 200px; padding-left: 200px; text-align: center">
-                        <label>Total Communcation</label>
-                        <input style="width: 100px" class="form-control text-center" ng-value="main.commTotal()" disabled="disabled"/>
-                    </div>
-
-                </div>
-                <!-- End Communication -->
+               </div>
+               <!-- End Communication -->
 
                 <!-- Awareness -->
                 <div class="col-lg-6">
                     <h2 class="background"><span>Awareness</span></h2>
                     <div class="row">
                         <div class="col-lg-4 col-lg-offset-2">
-                            <input class="form-control" type="checkbox" id="awareness_contact_cards_bool" ng-model="main.awarenessContactCardsBool"/>
+                            <input class="form-control" type="checkbox" id="awareness_contact_cards_bool" ng-model="main.form.awareness_contact_cards"/>
                         </div>
                         <div class="col-lg-4">
 
-                            <input class="form-control" type="number" id="awareness_contact_cards_amount" ng-model="main.awarenessContactCardsAmount"/>
+                            <input class="form-control" type="number" id="awareness_contact_cards_amount" ng-model="main.form.awareness_contact_cards_amount"/>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-lg-4 col-lg-offset-2">
-                            <input class="form-control" type="checkbox" id="awareness_awareness_party_bool" ng-model="main.awarenessAwarenessPartyBool"/>
+                            <input class="form-control" type="checkbox" id="awareness_awareness_party_bool" ng-model="main.form.awareness_awareness_party_boolean"/>
                         </div>
                         <div class="col-lg-4">
-                            <input class="form-control" type="number" id="awareness_awareness_party_amount" ng-model="main.awarenessAwarenessPartyAmount"/>
+                            <input class="form-control" type="number" id="awareness_awareness_party_amount" ng-model="main.form.awareness_awareness_party"/>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-lg-4 col-lg-offset-2">
-                            <input class="form-control" type="checkbox" id="awareness_sign_boards_bool" ng-model="main.awarenessSignBoardsBool"/>
+                            <input class="form-control" type="checkbox" id="awareness_sign_boards_bool" ng-model="main.form.awareness_sign_boards_boolean"/>
                         </div>
                         <div class="col-lg-4">
-                            <input class="form-control" type="number" id="awareness_sign_boards_amount" ng-model="main.awarenessSignBoardsAmount"/>
+                            <input class="form-control" type="number" id="awareness_sign_boards_amount" ng-model="main.form.awareness_sign_boards"/>
                         </div>
                     </div>
 
@@ -353,263 +352,259 @@
             <!-- End Awareness -->
 
             <!-- Travel -->
-            <div class="row">
-                <div class="col-md-6">
-                    <h2 class="background"><span>Travel</span></h2>
+           <div class="row">
+               <div class="col-md-6">
+                   <h2 class="background"><span>Travel</span></h2>
 
-                    <div class="row">
-                        <div class="col-md-6 form-inline">
-                            <span style="padding-right: 10px"><input class="form-control" type="checkbox" id="travel_chair_with_bike_bool" ng-model="main.travelChairWithBikeBool"/></span>
-                            <input class="form-control" type="number" id="travel_chair_with_bike_amount" ng-model="main.travelChairWithBikeAmount"/>
-                            <span style="padding-left: 10px"><small>for chair</small></span>
-                        </div>
-                        <div class="col-md-6 form-inline">
-                            <span style="padding-right: 10px"><input class="form-control" type="checkbox" id="travel_manager_with_bike_bool" ng-model="main.travelManagerWithBikeBool"/></span>
-                            <input class="form-control" type="number" id="travel_manager_with_bike_amount" ng-model="main.travelManagerWithBikeAmount"/>
-                            <span style="padding-left: 10px;"><small>for manager</small></span>
-                        </div>
-                    </div>
+                   <div class="row">
+                       <div class="col-md-6 form-inline">
+                           <span style="padding-right: 10px"><input class="form-control" type="checkbox" id="travel_chair_with_bike_bool" ng-model="main.form.travel_chair_with_bike"/></span>
+                           <input class="form-control" type="number" id="travel_chair_with_bike_amount" ng-model="main.form.travel_chair_with_bike_amount"/>
+                           <span style="padding-left: 10px"><small>for chair</small></span>
+                       </div>
+                       <div class="col-md-6 form-inline">
+                           <span style="padding-right: 10px"><input class="form-control" type="checkbox" id="travel_manager_with_bike_bool" ng-model="main.form.travel_manager_with_bike"/></span>
+                           <input class="form-control" type="number" id="travel_manager_with_bike_amount" ng-model="main.form.travel_manager_with_bike_amount"/>
+                           <span style="padding-left: 10px;"><small>for manager</small></span>
+                       </div>
+                   </div>
 
-                    <div class="row" style="margin-top: 20px; padding-left: 15px">
-                        <div class="col-lg-5 calc-form-input-no-width input-with-text" style="width: 150px">
-                            <input class="form-control" type="number" id="travel_number_of_staff_using_bikes" ng-model="main.travelNumberOfStaffUsingBikes"/>
-                            <small># of staff using bikes</small>
-                        </div>
-                        <div class="col-lg-1 form-symbol" style="padding: 0; margin: 0">
-                            <h4 style="text-align: center">*</h4>
-                        </div>
-                        <div class="col-lg-3 calc-form-input-no-width">
-                            <input class="form-control" type="number" id="travel_number_of_staff_using_bikes_multiplier" ng-model="main.travelNumberOfStaffUsingBikesMultiplier"/>
-                        </div>
-                        <div class="col-lg-1 form-symbol" style="padding: 0; margin: 0">
-                            <h4 style="text-align: center">=</h4>
-                        </div>
-                        <div class="col-lg-2 pull-right input-group" style="padding: 0">
-                            <div class="input-group-addon">$</div>
-                            <input style="width: 100px" class="form-control text-center" ng-value="main.travelNumberOfStaffUsingBikesTotal()" disabled="disabled"/>
-                        </div>
-                    </div>
-
-                    <div class="row form-inline" style="margin-top: 30px">
-                        <div class="col-lg-11">
-                            <span><strong>Last month's expense for sending girls home: </strong></span>
-                            <input class="form-control" type="number" id="travel_sending_girls_home_expense" ng-model="main.travelSendingGirlsHomeExpense"/>
-                        </div>
-                        <div class="col-lg-1 form-symbol">
-                            <h4 style="text-align: center">=</h4>
-                        </div>
-                    </div>
-
-
-                    <div class="row" style="margin-top: 30px; padding-left: 15px">
-                        <div class="col-lg-2">
-                            <input class="form-control" type="checkbox" id="travel_motorbike_bool" ng-model="main.travelMotorbikeBool"/>
-                        </div>
-                        <div class="col-lg-3 calc-form-input-no-width input-with-text">
-                            <input class="form-control" type="number" id="travel_motorbike_amount" ng-model="main.travelMotorbikeAmount"/>
-                            <small>Motorbike</small>
-                        </div>
-                        <div class="col-lg-1 form-symbol">
-                            <h4 style="text-align: center">+</h4>
-                        </div>
-                        <div class="col-lg-3 calc-form-input-no-width input-with-text">
-                            <input class="form-control" type="number" id="travel_other" ng-model="main.travelOther"/>
-                            <small>Other</small>
-                        </div>
-                        <div class="col-lg-1 form-symbol">
-                            <h4 style="text-align: center">=</h4>
-                        </div>
-                        <div class="col-lg-2 pull-right input-group" style="padding: 0">
-                            <div class="input-group-addon">$</div>
-                            <input style="width: 100px" class="form-control text-center" ng-value="main.travelNumberOfStaffUsingBikesTotal()" disabled="disabled"/>
-                        </div>
-                    </div>
-
-                    <hr>
-                    <div class="row">
-                        {{ travel_items_formset.management_form }}
-                        {% for item_form in travel_items_formset %}
-                            <div id='{{item_form.prefix}}'>
-                                {% include "budget/other_item_cost.html" with form=item_form %}
-                            </div>
-                        {% endfor %}
-                        <script type="text/javascript">
-                            /* Allows for the creation of more or less staff/committee members */
-                                $(function() {
-                                    {% for formset in travel_items_formset %}
-                                    $('div#{{ formset.prefix }}').formset({
-                                       prefix: '{{ formset.prefix }}',
-                                       formCssClass: 'travel-formset{{ forloop.counter }}',
-                                       addText: '+ Add Another Item',
-                                       deleteText: 'Remove Item',
-                                       addCssClass: 'add-travel btn btn-success changeaddbtn col-lg-offset-4',
-                                       deleteCssClass: 'delete-travel repositionremovebtn btn btn-danger',
-                                    });
-                                    {% endfor %}
-                                })
-                        </script>
-                    </div>
+                   <div class="row" style="margin-top: 20px; padding-left: 15px">
+                       <div class="col-lg-5 calc-form-input-no-width input-with-text" style="width: 150px">
+                           <input class="form-control" type="number" id="travel_number_of_staff_using_bikes" ng-model="main.form.travel_number_of_staff_using_bikes"/>
+                           <small># of staff using bikes</small>
+                       </div>
+                       <div class="col-lg-1 form-symbol" style="padding: 0; margin: 0">
+                           <h4 style="text-align: center">*</h4>
+                       </div>
+                       <div class="col-lg-3 calc-form-input-no-width">
+                           <input class="form-control" type="number" id="travel_number_of_staff_using_bikes_multiplier" ng-model="main.form.travel_number_of_staff_using_bikes_multiplier"/>
+                       </div>
+                       <div class="col-lg-1 form-symbol" style="padding: 0; margin: 0">
+                           <h4 style="text-align: center">=</h4>
+                       </div>
+                       <div class="col-lg-2 pull-right input-group" style="padding: 0">
+                           <div class="input-group-addon">$</div>
+                           <input style="width: 100px" class="form-control text-center" ng-value="main.travelNumberOfStaffUsingBikesTotal()" disabled="disabled"/>
+                       </div>
+                   </div>
+                   <div class="row form-inline" style="margin-top: 30px">
+                       <div class="col-lg-11">
+                           <span><strong>Last month's expense for sending girls home: </strong></span>
+                           <input class="form-control" type="number" id="travel_sending_girls_home_expense" ng-model="main.form.travel_last_months_expense_for_sending_girls_home"/>
+                       </div>
+                       <div class="col-lg-1 form-symbol">
+                           <h4 style="text-align: center">=</h4>
+                       </div>
+                   </div>
 
 
-                    <div class="row center" style="margin-top: 20px; padding-right: 200px; padding-left: 200px; text-align: center">
-                        <label>Total Travel</label>
-                        <input style="width: 100px" class="form-control text-center" ng-value="main.travelTotal()" disabled="disabled"/>
-                    </div>
+                   <div class="row" style="margin-top: 30px; padding-left: 15px">
+                       <div class="col-lg-2">
+                           <input class="form-control" type="checkbox" id="travel_motorbike_bool" ng-model="main.form.travel_motorbike"/>
+                       </div>
+                       <div class="col-lg-3 calc-form-input-no-width input-with-text">
+                           <input class="form-control" type="number" id="travel_motorbike_amount" ng-model="main.form.travel_motorbike_amount"/>
+                           <small>Motorbike</small>
+                       </div>
+                       <div class="col-lg-1 form-symbol">
+                           <h4 style="text-align: center">+</h4>
+                       </div>
+                       <div class="col-lg-3 calc-form-input-no-width input-with-text">
+                           <input class="form-control" type="number" id="travel_other" ng-model="main.form.travel_plus_other"/>
+                           <small>Other</small>
+                       </div>
+                       <div class="col-lg-1 form-symbol">
+                           <h4 style="text-align: center">=</h4>
+                       </div>
+                       <div class="col-lg-2 pull-right input-group" style="padding: 0">
+                           <div class="input-group-addon">$</div>
+                           <input style="width: 100px" class="form-control text-center" ng-value="main.travelNumberOfStaffUsingBikesTotal()" disabled="disabled"/>
+                       </div>
+                   </div>
+                   <hr>
+                   <div class="row">
+                       {{ travel_items_formset.management_form }}
+                       {% for item_form in travel_items_formset %}
+                           <div id='{{item_form.prefix}}'>
+                               {% include "budget/other_item_cost.html" with form=item_form %}
+                           </div>
+                       {% endfor %}
+                       <script type="text/javascript">
+                           /* Allows for the creation of more or less staff/committee members */
+                               $(function() {
+                                   {% for formset in travel_items_formset %}
+                                   $('div#{{ formset.prefix }}').formset({
+                                      prefix: '{{ formset.prefix }}',
+                                      formCssClass: 'travel-formset{{ forloop.counter }}',
+                                      addText: '+ Add Another Item',
+                                      deleteText: 'Remove Item',
+                                      addCssClass: 'add-travel btn btn-success changeaddbtn col-lg-offset-4',
+                                      deleteCssClass: 'delete-travel repositionremovebtn btn btn-danger',
+                                   });
+                                   {% endfor %}
+                               })
+                       </script>
+                   </div>
 
-                </div>
-                <!-- End Travel -->
+
+                   <div class="row center" style="margin-top: 20px; padding-right: 200px; padding-left: 200px; text-align: center">
+                       <label>Total Travel</label>
+                       <input style="width: 100px" class="form-control text-center" ng-value="main.travelTotal()" disabled="disabled"/>
+                   </div>
+
+               </div>
+               <!-- End Travel -->
 
                 <!-- Supplies -->
-                <div class="col-md-6">
-                    <h2 class="background"><span>Supplies</span></h2>
-                    <div class="row">
-                        <div class="col-lg-4 col-lg-offset-2">
-                            <input class="form-control" type="checkbox" id="supplies_walkie_talkies_bool" ng-model="main.suppliesWalkieTalkiesBool"/>
-                        </div>
-                        <div class="col-lg-4">
-                            <input class="form-control" type="number" id="supplies_walkie_talkies_amount" ng-model="main.suppliesWalkieTalkiesAmount"/>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-4 col-lg-offset-2">
-                            <input class="form-control" type="checkbox" id="supplies_recorders_bool" ng-model="main.suppliesRecordersBool"/>
-                        </div>
-                        <div class="col-lg-4">
-                            <input class="form-control" type="number" id="supplies_recorders_amount" ng-model="main.suppliesRecordersAmount"/>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-4 col-lg-offset-2">
-                            <input class="form-control" type="checkbox" id="supplies_binoculars_bool" ng-model="main.suppliesBinocularsBool"/>
-                        </div>
-                        <div class="col-lg-4">
-                            <input class="form-control" type="number" id="supplies_binoculars_amount" ng-model="main.suppliesBinocularsAmount"/>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-4 col-lg-offset-2">
-                            <input class="form-control" type="checkbox" id="supplies_flashlights_bool" ng-model="main.suppliesFlashlightsBool"/>
-                        </div>
-                        <div class="col-lg-4">
-                            <input class="form-control" type="number" id="supplies_flashlights_amount" ng-model="main.suppliesFlashlightsAmount"/>
-                        </div>
-                    </div>
+               <div class="col-md-6">
+                   <h2 class="background"><span>Supplies</span></h2>
+                   <div class="row">
+                       <div class="col-lg-4 col-lg-offset-2">
+                           <input class="form-control" type="checkbox" id="supplies_walkie_talkies_bool" ng-model="main.form.supplies_walkie_talkies_boolean"/>
+                       </div>
+                       <div class="col-lg-4">
+                           <input class="form-control" type="number" id="supplies_walkie_talkies_amount" ng-model="main.form.supplies_walkie_talkies_amount"/>
+                       </div>
+                   </div>
+                   <div class="row">
+                       <div class="col-lg-4 col-lg-offset-2">
+                           <input class="form-control" type="checkbox" id="supplies_recorders_bool" ng-model="main.form.supplies_recorders_boolean"/>
+                       </div>
+                       <div class="col-lg-4">
+                           <input class="form-control" type="number" id="supplies_recorders_amount" ng-model="main.form.supplies_recorders_amount"/>
+                       </div>
+                   </div>
+                   <div class="row">
+                       <div class="col-lg-4 col-lg-offset-2">
+                           <input class="form-control" type="checkbox" id="supplies_binoculars_bool" ng-model="main.form.supplies_binoculars_boolean"/>
+                       </div>
+                       <div class="col-lg-4">
+                           <input class="form-control" type="number" id="supplies_binoculars_amount" ng-model="main.form.supplies_binoculars_amount"/>
+                       </div>
+                   </div>
+                   <div class="row">
+                       <div class="col-lg-4 col-lg-offset-2">
+                           <input class="form-control" type="checkbox" id="supplies_flashlights_bool" ng-model="main.form.supplies_flashlights_boolean"/>
+                       </div>
+                       <div class="col-lg-4">
+                           <input class="form-control" type="number" id="supplies_flashlights_amount" ng-model="main.form.supplies_flashlights_amount"/>
+                       </div>
+                   </div>
+                   <hr>
+                   <div class="row">
+                       {{ supplies_items_formset.management_form }}
+                       {% for item_form in supplies_items_formset %}
+                           <div id='{{item_form.prefix}}'>
+                               {% include "budget/other_item_cost.html" with form=item_form %}
+                           </div>
+                       {% endfor %}
+                       <script type="text/javascript">
+                           /* Allows for the creation of more or less staff/committee members */
+                               $(function() {
+                                   {% for formset in supplies_items_formset %}
+                                   $('div#{{ formset.prefix }}').formset({
+                                      prefix: '{{ formset.prefix }}',
+                                      formCssClass: 'supplies-formset{{ forloop.counter }}',
+                                      addText: '+ Add Another Item',
+                                      deleteText: 'Remove Item',
+                                      addCssClass: 'add-supplies btn btn-success changeaddbtn col-lg-offset-4',
+                                      deleteCssClass: 'delete-supplies repositionremovebtn btn btn-danger',
+                                   });
+                                   {% endfor %}
+                               })
+                       </script>
+                   </div>
 
-                    <hr>
-                    <div class="row">
-                        {{ supplies_items_formset.management_form }}
-                        {% for item_form in supplies_items_formset %}
-                            <div id='{{item_form.prefix}}'>
-                                {% include "budget/other_item_cost.html" with form=item_form %}
-                            </div>
-                        {% endfor %}
-                        <script type="text/javascript">
-                            /* Allows for the creation of more or less staff/committee members */
-                                $(function() {
-                                    {% for formset in supplies_items_formset %}
-                                    $('div#{{ formset.prefix }}').formset({
-                                       prefix: '{{ formset.prefix }}',
-                                       formCssClass: 'supplies-formset{{ forloop.counter }}',
-                                       addText: '+ Add Another Item',
-                                       deleteText: 'Remove Item',
-                                       addCssClass: 'add-supplies btn btn-success changeaddbtn col-lg-offset-4',
-                                       deleteCssClass: 'delete-supplies repositionremovebtn btn btn-danger',
-                                    });
-                                    {% endfor %}
-                                })
-                        </script>
-                    </div>
-
-                    <div class="row center" style="margin-top: 20px; padding-right: 200px; padding-left: 200px; text-align: center">
-                        <label>Total Supplies</label>
-                        <input style="width: 100px" class="form-control text-center" ng-value="main.suppliesTotal()" disabled="disabled"/>
-                    </div>
-                </div>
-            </div>
-            <!-- End Supplies -->
+                   <div class="row center" style="margin-top: 20px; padding-right: 200px; padding-left: 200px; text-align: center">
+                       <label>Total Supplies</label>
+                       <input style="width: 100px" class="form-control text-center" ng-value="main.suppliesTotal()" disabled="disabled"/>
+                   </div>
+               </div>
+           </div>
+           <!-- End Supplies -->
 
             <!-- Administration -->
-            <div class="row">
-                <div class="col-md-6">
-                    <h2 class="background"><span>Administration</span></h2>
-                    <div class="row">
-                        <div class="col-md-2 input-with-text calc-form-input-no-width">
-                            <input class="form-control" type="number" id="admin_number_of_interceptions_last_month" ng-model="main.adminNumberOfInterceptionsLastMonth"/>
-                            <small># of intercepts last month</small>
-                        </div>
-                        <div class="col-md-1 form-symbol">
-                            <h4 style="text-align: center">*</h4>
-                        </div>
-                        <div class="col-md-2 calc-form-input-no-width">
-                            <input class="form-control" type="number" id="admin_number_of_interceptions_last_month_multiplier" ng-model="main.adminNumberOfInterceptionsLastMonthMultiplier"/>
-                        </div>
-                        <div class="col-md-1 form-symbol">
-                            <h4 style="text-align: center">+</h4>
-                        </div>
-                        <div class="col-md-2 calc-form-input-no-width">
-                            <input class="form-control" type="number" id="admin_number_of_interceptions_last_month_adder" ng-model="main.adminNumberOfInterceptionsLastMonthAdder"/>
-                        </div>
-                        <div class="col-md-1 form-symbol">
-                            <h4 style="text-align: center">=</h4>
-                        </div>
-                        <div class="col-lg-2 pull-right input-group" style="width: 150px; padding: 0">
-                            <div class="input-group-addon">$</div>
-                            <input style="width: 100px" class="form-control text-center" ng-value="main.adminStationaryTotal()" disabled="disabled"/>
-                        </div>
-                    </div>
-                    <div class="row row-padding" >
-                        <div class="col-md-2 input-with-text calc-form-input-no-width">
-                            <input class="form-control" type="number" id="admin_number_of_meetings_per_month" ng-model="main.adminNumberOfMeetingsPerMonth"/>
-                            <small># of meetings per month</small>
-                        </div>
-                        <div class="col-md-1 form-symbol">
-                            <h4 style="text-align: center">*</h4>
-                        </div>
-                        <div class="col-md-2 calc-form-input-no-width">
-                            <input class="form-control" type="number" id="admin_number_of_meetings_per_month_multiplier" ng-model="main.adminNumberOfMeetingsPerMonthMultiplier"/>
-                        </div>
-                        <div class="col-md-1 form-symbol">
-                            <h4 style="text-align: center">=</h4>
-                        </div>
-                        <div class="col-lg-2 pull-right input-group" style="width: 150px; padding: 0">
-                            <div class="input-group-addon">$</div>
-                            <input style="width: 100px" class="form-control text-center" ng-value="main.adminMeetingsTotal()" disabled="disabled"/>
-                        </div>
-                    </div>
-                    <div class="row row-padding">
-                        <div class="col-lg-2" style="margin-top: 7px; width: 50px">
-                            <small><input class="form-control" type="checkbox" id="admin_booth_bool" ng-model="main.adminBoothBool"/></small>
-                        </div>
-                        <div class="col-lg-2 input-with-text" style="width: 100px; padding: 0">
-                            <input class="form-control" type="number" id="admin_booth_amount" ng-model="main.adminBoothAmount"/>
-                            <small>Booth</small>
-                        </div>
-                        <div class="col-lg-2" style="margin-top: 7px; width: 50px">
-                            <input class="form-control" type="checkbox" id="admin_registration_bool" ng-model="main.adminRegistrationBool"/>
-                        </div>
-                        <div class="col-lg-2 input-with-text" style="width: 100px; padding: 0">
-                            <input class="form-control" type="number" id="admin_registration_amount" ng-model="main.adminRegistrationAmount"/>
-                            <small>Registration</small>
-                        </div>
-                        <div class="col-md-1 form-symbol">
-                            <h4 style="text-align: center">=</h4>
-                        </div>
-                        <div class="col-lg-2 pull-right input-group" style="width: 150px; padding: 0">
-                            <div class="input-group-addon">$</div>
-                            <input style="width: 100px" class="form-control text-center" ng-value="main.adminBoothRentalTotal()" disabled="disabled"/>
-                        </div>
-                    </div>
+           <div class="row">
+               <div class="col-md-6">
+                   <h2 class="background"><span>Administration</span></h2>
+                   <div class="row">
+                       <div class="col-md-2 input-with-text calc-form-input-no-width">
+                           <input class="form-control" type="number" id="admin_number_of_interceptions_last_month" ng-model="main.form.administration_number_of_intercepts_last_month"/>
+                           <small># of intercepts last month</small>
+                       </div>
+                       <div class="col-md-1 form-symbol">
+                           <h4 style="text-align: center">*</h4>
+                       </div>
+                       <div class="col-md-2 calc-form-input-no-width">
+                           <input class="form-control" type="number" id="admin_number_of_interceptions_last_month_multiplier" ng-model="main.form.administration_number_of_intercepts_last_month_multiplier"/>
+                       </div>
+                       <div class="col-md-1 form-symbol">
+                           <h4 style="text-align: center">+</h4>
+                       </div>
+                       <div class="col-md-2 calc-form-input-no-width">
+                           <input class="form-control" type="number" id="admin_number_of_interceptions_last_month_adder" ng-model="main.form.administration_number_of_intercepts_last_month_adder"/>
+                       </div>
+                       <div class="col-md-1 form-symbol">
+                           <h4 style="text-align: center">=</h4>
+                       </div>
+                       <div class="col-lg-2 pull-right input-group" style="width: 150px; padding: 0">
+                           <div class="input-group-addon">$</div>
+                           <input style="width: 100px" class="form-control text-center" ng-value="main.adminStationaryTotal()" disabled="disabled"/>
+                       </div>
+                   </div>
+                   <div class="row row-padding" >
+                       <div class="col-md-2 input-with-text calc-form-input-no-width">
+                           <input class="form-control" type="number" id="admin_number_of_meetings_per_month" ng-model="main.form.administration_number_of_meetings_per_month"/>
+                           <small># of meetings per month</small>
+                       </div>
+                       <div class="col-md-1 form-symbol">
+                           <h4 style="text-align: center">*</h4>
+                       </div>
+                       <div class="col-md-2 calc-form-input-no-width">
+                           <input class="form-control" type="number" id="admin_number_of_meetings_per_month_multiplier" ng-model="main.form.administration_number_of_meetings_per_month_multiplier"/>
+                       </div>
+                       <div class="col-md-1 form-symbol">
+                           <h4 style="text-align: center">=</h4>
+                       </div>
+                       <div class="col-lg-2 pull-right input-group" style="width: 150px; padding: 0">
+                           <div class="input-group-addon">$</div>
+                           <input style="width: 100px" class="form-control text-center" ng-value="main.adminMeetingsTotal()" disabled="disabled"/>
+                       </div>
+                   </div>
+                   <div class="row row-padding">
+                       <div class="col-lg-2" style="margin-top: 7px; width: 50px">
+                           <small><input class="form-control" type="checkbox" id="admin_booth_bool" ng-model="main.form.administration_booth"/></small>
+                       </div>
+                       <div class="col-lg-2 input-with-text" style="width: 100px; padding: 0">
+                           <input class="form-control" type="number" id="admin_booth_amount" ng-model="main.form.administration_booth_amount"/>
+                           <small>Booth</small>
+                       </div>
+                       <div class="col-lg-2" style="margin-top: 7px; width: 50px">
+                           <input class="form-control" type="checkbox" id="admin_registration_bool" ng-model="main.form.administration_registration"/>
+                       </div>
+                       <div class="col-lg-2 input-with-text" style="width: 100px; padding: 0">
+                           <input class="form-control" type="number" id="admin_registration_amount" ng-model="main.form.administration_registration_amount"/>
+                           <small>Registration</small>
+                       </div>
+                       <div class="col-md-1 form-symbol">
+                           <h4 style="text-align: center">=</h4>
+                       </div>
+                       <div class="col-lg-2 pull-right input-group" style="width: 150px; padding: 0">
+                           <div class="input-group-addon">$</div>
+                           <input style="width: 100px" class="form-control text-center" ng-value="main.adminBoothRentalTotal()" disabled="disabled"/>
+                       </div>
+                   </div>
+                   <div class="row center" style="margin-top: 20px; padding-right: 200px; padding-left: 200px; text-align: center">
+                       <label>Total Admininstration</label>
+                       <input style="width: 100px" class="form-control text-center" ng-value="main.adminTotal()" disabled="disabled"/>
+                   </div>
+               </div>
+               <!-- End Administration -->
 
-                    <div class="row center" style="margin-top: 20px; padding-right: 200px; padding-left: 200px; text-align: center">
-                        <label>Total Admininstration</label>
-                        <input style="width: 100px" class="form-control text-center" ng-value="main.adminTotal()" disabled="disabled"/>
-                    </div>
-                </div>
-                <!-- End Administration -->
-
-                <!-- Total Table -->
-                <div class="col-md-6">
-                    <table class="table table-bordered table-hover">
+               <!-- Total Table -->
+               <div class="col-md-6">
+                   <table class="table table-bordered table-hover">
                         <thead>
                             <tr>
                                 <th colspan="3" class="text-center">Border Monitoring Station</th>
@@ -702,7 +697,7 @@
                     <h2 class="background"><span>Medical</span></h2>
                     <div class="row form-inline">
                         <div class="col-md-5 pull-left input-with-text" style="width: 270px">
-                            <input class="form-control" type="number" id="medical_expense" ng-model="main.medicalExpense"/>
+                            <input class="form-control" type="number" id="medical_expense" ng-model="main.form.medical_last_months_expense"/>
                             <small>Last month's medical expense</small>
                         </div>
                         <div class="col-md-1 form-symbol">
@@ -717,62 +712,64 @@
             <!-- End Medical -->
 
             <!-- Miscellaneous -->
-            <div class="row">
-                <div class="col-md-6">
-                    <h2 class="background"><span>Miscellaneous</span></h2>
-                    <div class="row">
-                        <div class="col-lg-2 input-with-text calc-form-input-no-width">
-                            <input class="form-control" type="number" id="misc_number_of_intercepts" ng-model="main.miscNumberOfIntercepts"/>
-                            <small># of intercepts last month</small>
-                        </div>
-                        <div class="col-lg-1 form-symbol">
-                            <h4 style="text-align: center">*</h4>
-                        </div>
-                        <div class="col-lg-2 calc-form-input-no-width">
-                            <input class="form-control" type="number" id="misc_number_of_intercepts_mult" ng-model="main.miscNumberOfInterceptsMult"/>
-                        </div>
-                        <div class="col-lg-1 form-symbol">
-                            <h4 style="text-align: center">=</h4>
-                        </div>
-                        <div class="col-lg-2 pull-right input-group" style="padding: 0">
-                            <div class="input-group-addon">$</div>
-                            <input style="width: 100px" class="form-control text-center" ng-value="main.miscMaximum()" disabled="disabled"/>
-                        </div>
-                    </div>
+           <div class="row">
+               <div class="col-md-6">
+                   <h2 class="background"><span>Miscellaneous</span></h2>
+                   <div class="row">
+                       <div class="col-lg-2 input-with-text calc-form-input-no-width">
+                           <input class="form-control" type="number" id="misc_number_of_intercepts" ng-model="main.form.miscellaneous_number_of_intercepts_last_month"/>
+                           <small># of intercepts last month</small>
+                       </div>
+                       <div class="col-lg-1 form-symbol">
+                           <h4 style="text-align: center">*</h4>
+                       </div>
+                       <div class="col-lg-2 calc-form-input-no-width">
+                           <input class="form-control" type="number" id="misc_number_of_intercepts_mult" ng-model="main.form.miscellaneous_number_of_intercepts_last_month_multiplier"/>
+                       </div>
+                       <div class="col-lg-1 form-symbol">
+                           <h4 style="text-align: center">=</h4>
+                       </div>
+                       <div class="col-lg-2 pull-right input-group" style="padding: 0">
+                           <div class="input-group-addon">$</div>
+                           <input style="width: 100px" class="form-control text-center" ng-value="main.miscMaximum()" disabled="disabled"/>
+                       </div>
+                   </div>
 
-                    <hr>
-                    <div class="row">
-                        {{ misc_items_formset.management_form }}
-                        {% for item_form in misc_items_formset %}
-                            <div id='{{item_form.prefix}}'>
-                                {% include "budget/other_item_cost.html" with form=item_form %}
-                            </div>
-                        {% endfor %}
-                        <script type="text/javascript">
-                            /* Allows for the creation of more or less staff/committee members */
-                                $(function() {
-                                    {% for formset in misc_items_formset %}
-                                    $('div#{{ formset.prefix }}').formset({
-                                       prefix: '{{ formset.prefix }}',
-                                       formCssClass: 'misc-formset{{ forloop.counter }}',
-                                       addText: '+ Add Another Item',
-                                       deleteText: 'Remove Item',
-                                       addCssClass: 'add-misc btn btn-success changeaddbtn col-lg-offset-4',
-                                       deleteCssClass: 'delete-misc repositionremovebtn btn btn-danger',
-                                    });
-                                    {% endfor %}
-                                })
-                        </script>
-                    </div>
+                   <hr>
+                   <div class="row">
+                       {{ misc_items_formset.management_form }}
+                       {% for item_form in misc_items_formset %}
+                           <div id='{{item_form.prefix}}'>
+                               {% include "budget/other_item_cost.html" with form=item_form %}
+                           </div>
+                       {% endfor %}
+                       <script type="text/javascript">
+                           /* Allows for the creation of more or less staff/committee members */
+                               $(function() {
+                                   {% for formset in misc_items_formset %}
+                                   $('div#{{ formset.prefix }}').formset({
+                                      prefix: '{{ formset.prefix }}',
+                                      formCssClass: 'misc-formset{{ forloop.counter }}',
+                                      addText: '+ Add Another Item',
+                                      deleteText: 'Remove Item',
+                                      addCssClass: 'add-misc btn btn-success changeaddbtn col-lg-offset-4',
+                                      deleteCssClass: 'delete-misc repositionremovebtn btn btn-danger',
+                                   });
+                                   {% endfor %}
+                               })
+                       </script>
+                   </div>
 
-                    <div class="row center" style="margin-top: 20px; padding-right: 200px; padding-left: 200px; text-align: center">
-                        <label>Total Miscellaneous</label>
-                        <input style="width: 100px" class="formxt-center" ng-value="main.miscTotal()" disabledf="disabled"/>
-                    </div>
-                </div>
-            </div>
-            <!-- End Miscellaneous -->
+                   <div class="row center" style="margin-top: 20px; padding-right: 200px; padding-left: 200px; text-align: center">
+                       <label>Total Miscellaneous</label>
+                       <input style="width: 100px" class="formxt-center" ng-value="main.miscTotal()" disabled="disabled"/>
+                   </div>
+               </div>
+           </div>
+           <!-- End Miscellaneous -->
 
+            <input type="button" class="pull-right btn btn-success navbar-btn btn-lg" ng-click="main.saveForm()"/>
+            <input type="button" class="pull-right btn btn-primary navbar-btn btn-lg" ng-click="main.createForm()" />
         </div>
 
      {% if submit_type %}
@@ -788,189 +785,30 @@ angular.module('BudgetCalculation', ['ngCookies'])
             $httpProvider.defaults.xsrfCookieName = 'csrftoken';
             $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
         }])
-        .controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
+        .controller('MainCtrl', ['$scope','$http', function($scope, $http) {
+
             var vm = this;
 
 
-            vm.saveForm = function() {
-                var result =
-                {
 
-
-
-
-
-
-                }
-            };
+            vm.form = {};
 
             vm.retrieveForm = function(id) {
+                console.log({{ budget_calc.pk }});
                 $http.get('/budget/api/budget_calculations/' + id + '/').
-                        success(function (data, status, headers, config) {
+                        success(function (data) {
                             //We can reference the json object to fill our vm variables
-                            console.log(data);
-                            vm.data = data;
-                            //shelter
-                            vm.shelterRent = data.shelter_rent;
-                            vm.shelterWater = data.shelter_water;
-                            vm.shelterElectricity = data.shelter_electricity;
-                            vm.shelterStartupBool = data.shelter_shelter_startup_;
-                            vm.shelterStartupAmount = data.shelter_shelter_startup_amount;
-                            vm.shelterTwoBool = data.shelter_shelter_two;
-                            vm.shelterTwoAmount = data.shelter_shelter_two_amount;
-
-                            //Food and Gas Section
-                            vm.foodGasNumberOfGirls = data.food_and_gas_number_of_intercepted_girls;
-                            vm.foodGasMultiplierBefore = data.food_and_gas_number_of_intercepted_girls_multiplier_before;
-                            vm.foodGasMultiplierAfter = data.food_and_gas_number_of_intercepted_girls_multiplier_after;
-                            vm.limboNumberOfGirls = data.food_and_gas_number_of_limbo_girls;
-                            vm.limboMultiplier = data.food_and_gas_limbo_girls_multiplier;
-                            vm.limboNumberOfDays = data.food_and_gas_number_of_days;
-
-                            //Communication Section
-                            vm.commChairBool = data.communication_chair;
-                            vm.commChairAmount = data.communication_chair_amount;
-                            vm.commManagerBool = data.communication_manager;
-                            vm.commManagerAmount = data.communication_manager_amount;
-                            vm.commNumberOfStaffWt = data.communication_number_of_staff_with_walkie_talkies;
-                            vm.commNumberOfStaffWtMultiplier = data.communication_number_of_staff_with_walkie_talkies_multiplier;
-                            vm.commEachStaffWt = data.communication_each_staff;
-                            vm.commEachStaffWtMultiplier = data.communication_each_staff_multiplier;
-
-                            //Misc Section
-                            vm.miscNumberOfIntercepts = data.miscellaneous_number_of_intercepts_last_month;
-                            vm.miscNumberOfInterceptsMult = data.miscellaneous_number_of_intercepts_last_month_multiplier;
-
-                            //Medical Section
-                            vm.medicalExpense = data.medical_last_months_expense;
-
-                            //Administration Section
-                            vm.adminNumberOfInterceptionsLastMonth = data.administration_number_of_intercepts_last_month;
-                            vm.adminNumberOfInterceptionsLastMonthMultiplier = data.administration_number_of_intercepts_last_month_multiplier;
-                            vm.adminNumberOfInterceptionsLastMonthAdder = data.administration_number_of_intercepts_last_month_adder;
-                            vm.adminNumberOfMeetingsPerMonth = data.administration_number_of_meetings_per_month;
-                            vm.adminNumberOfMeetingsPerMonthMultiplier = data.administration_number_of_meetings_per_month_multiplier;
-                            vm.adminBoothBool = data.administration_booth;
-                            vm.adminBoothAmount = data.administration_booth_amount;
-                            vm.adminRegistrationBool = data.administration_registration;
-                            vm.adminRegistrationAmount = data.administration_registration_amount;
-
-                            //Travel Section
-                            vm.travelChairWithBikeBool = data.travel_chair_with_bike;
-                            vm.travelChairWithBikeAmount = data.travel_chair_with_bike_amount;
-                            vm.travelManagerWithBikeBool = data.travel_manager_with_bike;
-                            vm.travelManagerWithBikeAmount = data.travel_manager_with_bike_amount;
-                            vm.travelNumberOfStaffUsingBikes = data.travel_number_of_staff_using_bikes;
-                            vm.travelNumberOfStaffUsingBikesMultiplier = data.travel_number_of_staff_using_bikes_multiplier;
-                            vm.travelSendingGirlsHomeExpense = data.travel_last_months_expense_for_sending_girls_home;
-                            vm.travelMotorbikeBool = data.travel_motorbike;
-                            vm.travelMotorbikeAmount = data.travel_motorbike_amount;
-                            vm.travelOther = data.travel_plus_other;
-
-                            //Supplies Section
-                            vm.suppliesWalkieTalkiesBool = data.supplies_walkie_talkies_boolean;
-                            vm.suppliesWalkieTalkiesAmount = data.supplies_walkie_talkies_amount;
-                            vm.suppliesRecordersBool = data.supplies_recorders_boolean;
-                            vm.suppliesRecordersAmount = data.supplies_recorders_amount;
-                            vm.suppliesBinocularsBool = data.supplies_binoculars_boolean;
-                            vm.suppliesBinocularsAmount = data.supplies_binoculars_amount;
-                            vm.suppliesFlashlightsBool = data.supplies_flashlights_boolean;
-                            vm.suppliesFlashlightsAmount = data.supplies_flashlights_amount;
-
-                            //Awareness Section
-                            vm.awarenessContactCardsBool = data.awareness_contact_cards;
-                            vm.awarenessContactCardsAmount = data.awareness_contact_cards_amount;
-                            vm.awarenessAwarenessPartyBool = data.awareness_awareness_party_boolean;
-                            vm.awarenessAwarenessPartyAmount = data.awareness_awareness_party;
-                            vm.awarenessSignBoardsBool = data.awareness_sign_boards_boolean;
-                            vm.awarenessSignBoardsAmount =data.awareness_sign_boards;
-                            // this callback will be called asynchronously
-                            // when the response is available
-
-                            $scope.$apply();
+                            vm.form = data;
+                            console.log(vm.form);
                         }).
                         error(function (data, status, headers, config) {
                             // called asynchronously if an error occurs
                             // or server returns response with an error status.
                         });
-
             };
 
-/*
-            vm.shelterRent = 1;
-            vm.shelterWater = 2;
-            vm.shelterElectricity = 3;
-            vm.shelterStartupBool = true;
-            vm.shelterStartupAmount = 71800;
-            vm.shelterTwoBool = true;
-            vm.shelterTwoAmount = 36800;
 
-            //Food and Gas Section
-            vm.foodGasNumberOfGirls = 2;
-            vm.foodGasMultiplierBefore = 3;
-            vm.foodGasMultiplierAfter = 3;
-            vm.limboNumberOfGirls = 4;
-            vm.limboMultiplier = 3;
-            vm.limboNumberOfDays = 5;
 
-            //Communication Section
-            vm.commChairBool = true;
-            vm.commChairAmount = 100;
-            vm.commManagerBool = true;
-            vm.commManagerAmount = 200;
-            vm.commNumberOfStaffWt = 2;
-            vm.commNumberOfStaffWtMultiplier = 4;
-            vm.commEachStaffWt = 5;
-            vm.commEachStaffWtMultiplier = 2;
-
-            //Misc Section
-            vm.miscNumberOfIntercepts = 5;
-            vm.miscNumberOfInterceptsMult = 50;
-
-            //Medical Section
-            vm.medicalExpense = 100;
-
-            //Administration Section
-            vm.adminNumberOfInterceptionsLastMonth = 2;
-            vm.adminNumberOfInterceptionsLastMonthMultiplier = 3;
-            vm.adminNumberOfInterceptionsLastMonthAdder = 4;
-            vm.adminNumberOfMeetingsPerMonth = 5;
-            vm.adminNumberOfMeetingsPerMonthMultiplier = 6;
-            vm.adminBoothBool = true;
-            vm.adminBoothAmount = 100;
-            vm.adminRegistrationBool = true;
-            vm.adminRegistrationAmount = 500;
-
-            //Travel Section
-            vm.travelChairWithBikeBool = true;
-            vm.travelChairWithBikeAmount = 200;
-            vm.travelManagerWithBikeBool = true;
-            vm.travelManagerWithBikeAmount = 200;
-            vm.travelNumberOfStaffUsingBikes = 200;
-            vm.travelNumberOfStaffUsingBikesMultiplier = 200;
-            vm.travelSendingGirlsHomeExpense = 200;
-            vm.travelMotorbikeBool = true;
-            vm.travelMotorbikeAmount = 200;
-            vm.travelOther = 200;
-
-            //Supplies Section
-            vm.suppliesWalkieTalkiesBool = true;
-            vm.suppliesWalkieTalkiesAmount = 200;
-            vm.suppliesRecordersBool = true;
-            vm.suppliesRecordersAmount = 200;
-            vm.suppliesBinocularsBool = true;
-            vm.suppliesBinocularsAmount = 200;
-            vm.suppliesFlashlightsBool = true;
-            vm.suppliesFlashlightsAmount = 200;
-
-            //Awareness Section
-            vm.awarenessContactCardsBool = true;
-            vm.awarenessContactCardsAmount = 300;
-            vm.awarenessAwarenessPartyBool = true;
-            vm.awarenessAwarenessPartyAmount = 300;
-            vm.awarenessSignBoardsBool = true;
-            vm.awarenessSignBoardsAmount = 300;
-*/
 
             vm.foodAndShelterTotal = function() {
                 return vm.foodTotal() + vm.shelterTotal();
@@ -987,30 +825,30 @@ angular.module('BudgetCalculation', ['ngCookies'])
             //shelter
 
             vm.utilTotal = function() {
-                return (vm.shelterRent + vm.shelterWater + vm.shelterElectricity);
+                return (vm.form.shelter_rent + vm.form.shelter_water + vm.form.shelter_electricity);
             };
 
             vm.shelterCheckboxTotal = function() {
                 var totalAmount = 0;
-                if (vm.shelterStartupBool) {
-                    totalAmount += vm.shelterStartupAmount;
+                if (vm.form.shelter_shelter_startup) {
+                    totalAmount += vm.form.shelter_shelter_startup_amount;
                 }
-                if (vm.shelterTwoBool) {
-                    totalAmount += vm.shelterTwoAmount;
+                if (vm.form.shelter_shelter_two) {
+                    totalAmount += vm.form.shelter_shelter_two_amount;
                 }
                 return totalAmount;
             };
             vm.shelterTotal = function () {
-                return vm.shelterRent + vm.shelterWater + vm.shelterElectricity + vm.shelterCheckboxTotal();
+                return vm.form.shelter_rent + vm.form.shelter_water + vm.form.shelter_electricity + vm.shelterCheckboxTotal();
             };
 
             //Food and Gas Section
 
             vm.foodGasInterceptedGirls = function () {
-                return vm.foodGasMultiplierBefore * vm.foodGasNumberOfGirls * vm.foodGasMultiplierAfter;
+                return vm.form.food_and_gas_number_of_intercepted_girls_multiplier_before * vm.form.food_and_gas_number_of_intercepted_girls * vm.form.food_and_gas_number_of_intercepted_girls_multiplier_after;
             };
             vm.foodGasLimboGirls = function () {
-                return vm.limboMultiplier * vm.limboNumberOfGirls * vm.limboNumberOfDays;
+                return vm.form.food_and_gas_limbo_girls_multiplier * vm.form.food_and_gas_number_of_limbo_girls * vm.form.food_and_gas_number_of_days;
             };
             vm.foodTotal = function () {
                 return vm.foodGasInterceptedGirls() + vm.foodGasLimboGirls();
@@ -1020,21 +858,21 @@ angular.module('BudgetCalculation', ['ngCookies'])
             vm.commManagerTotal = function () {
                 var amount = 0;
 
-                if (vm.commChairBool) {
-                    amount += vm.commChairAmount;
+                if (vm.form.communication_chair) {
+                    amount += vm.form.communication_chair_amount;
                 }
-                if (vm.commManagerBool) {
-                    amount += vm.commManagerAmount;
+                if (vm.form.communication_manager) {
+                    amount += vm.form.communication_manager_amount;
                 }
                 return amount;
             };
 
             vm.commNumberOfStaffTotal = function () {
-                return vm.commNumberOfStaffWt * vm.commNumberOfStaffWtMultiplier;
+                return vm.form.communication_number_of_staff_with_walkie_talkies * vm.form.communication_number_of_staff_with_walkie_talkies_multiplier;
             };
 
             vm.commEachStaffTotal = function () {
-                return vm.commEachStaffWt * vm.commEachStaffWtMultiplier;
+                return vm.form.communication_each_staff * vm.form.communication_each_staff_multiplier;
             };
 
             vm.commTotal = function () {
@@ -1043,7 +881,7 @@ angular.module('BudgetCalculation', ['ngCookies'])
 
             //Misc Section
             vm.miscMaximum = function() {
-                return vm.miscNumberOfIntercepts * vm.miscNumberOfInterceptsMult;
+                return vm.form.miscellaneous_number_of_intercepts_last_month * vm.form.miscellaneous_number_of_intercepts_last_month_multiplier;
             };
             vm.miscTotal = function() {
                 return vm.miscMaximum();
@@ -1051,23 +889,23 @@ angular.module('BudgetCalculation', ['ngCookies'])
 
             //Medical Section
             vm.medicalTotal = function() {
-                return vm.medicalExpense;
+                return vm.form.medical_last_months_expense;
             };
 
             //Administration Section
             vm.adminStationaryTotal = function() {
-                return (vm.adminNumberOfInterceptionsLastMonth * vm.adminNumberOfInterceptionsLastMonthMultiplier) + vm.adminNumberOfInterceptionsLastMonthAdder;
+                return (vm.form.administration_number_of_intercepts_last_month * vm.form.administration_number_of_intercepts_last_month_multiplier) + vm.form.administration_number_of_intercepts_last_month_adder;
             };
             vm.adminMeetingsTotal = function() {
-                return vm.adminNumberOfMeetingsPerMonth * vm.adminNumberOfMeetingsPerMonthMultiplier;
+                return vm.form.administration_number_of_meetings_per_month * vm.form.administration_number_of_meetings_per_month_multiplier;
             };
             vm.adminBoothRentalTotal = function() {
                 var amount = 0;
-                if(vm.adminBoothBool) {
-                    amount += vm.adminBoothAmount;
+                if(vm.form.administration_booth) {
+                    amount += vm.form.administration_booth_amount;
                 }
-                if(vm.adminRegistrationBool) {
-                    amount += vm.adminRegistrationAmount;
+                if(vm.form.administration_registration) {
+                    amount += vm.form.administration_registration_amount;
                 }
                 return amount;
             };
@@ -1077,36 +915,36 @@ angular.module('BudgetCalculation', ['ngCookies'])
 
             //Travel Section
             vm.travelNumberOfStaffUsingBikesTotal = function() {
-                return vm.travelNumberOfStaffUsingBikes * vm.travelNumberOfStaffUsingBikesMultiplier;
+                return vm.form.travel_number_of_staff_using_bikes * vm.form.travel_number_of_staff_using_bikes_multiplier;
             };
             vm.travelTotal = function() {
                 var amount = 0;
-                if(vm.travelChairWithBikeBool) {
-                    amount += vm.travelChairWithBikeAmount;
+                if(vm.form.travel_chair_with_bike) {
+                    amount += vm.form.travel_chair_with_bike_amount;
                 }
-                if(vm.travelManagerWithBikeBool) {
-                    amount += vm.travelManagerWithBikeAmount;
+                if(vm.form.travel_manager_with_bike) {
+                    amount += vm.form.travel_manager_with_bike_amount;
                 }
-                if(vm.travelMotorbikeBool) {
-                    amount += vm.travelMotorbikeAmount;
+                if(vm.form.travel_motorbike) {
+                    amount += vm.form.travel_motorbike_amount;
                 }
-                return amount + vm.travelOther + vm.travelSendingGirlsHomeExpense + (vm.travelNumberOfStaffUsingBikes * vm.travelNumberOfStaffUsingBikesMultiplier);
+                return amount + vm.form.travel_plus_other + vm.form.travel_last_months_expense_for_sending_girls_home + (vm.form.travel_number_of_staff_using_bikes * vm.form.travel_number_of_staff_using_bikes_multiplier);
             };
 
             //Supplies Section
             vm.suppliesTotal = function() {
                 var amount = 0;
-                if(vm.suppliesWalkieTalkiesBool) {
-                    amount += vm.suppliesWalkieTalkiesAmount;
+                if(vm.form.supplies_walkie_talkies_boolean) {
+                    amount += vm.form.supplies_walkie_talkies_amount;
                 }
-                if(vm.suppliesRecordersBool) {
-                    amount += vm.suppliesRecordersAmount;
+                if(vm.form.supplies_recorders_boolean) {
+                    amount += vm.form.supplies_recorders_amount;
                 }
-                if(vm.suppliesBinocularsBool) {
-                    amount += vm.suppliesBinocularsAmount;
+                if(vm.form.supplies_binoculars_boolean) {
+                    amount += vm.form.supplies_binoculars_amount;
                 }
-                if(vm.suppliesFlashlightsBool) {
-                    amount += vm.suppliesFlashlightsAmount;
+                if(vm.form.supplies_flashlights_boolean) {
+                    amount += vm.form.supplies_flashlights_amount;
                 }
                 return amount;
             };
@@ -1114,20 +952,20 @@ angular.module('BudgetCalculation', ['ngCookies'])
             //Awareness Section
             vm.awarenessTotal = function() {
                 var amount = 0;
-                if(vm.awarenessContactCardsBool) {
-                    amount += vm.awarenessContactCardsAmount;
+                if(vm.form.awareness_contact_cards) {
+                    amount += vm.form.awareness_contact_cards_amount;
                 }
-                if(vm.awarenessAwarenessPartyBool) {
-                    amount += vm.awarenessAwarenessPartyAmount;
+                if(vm.form.awareness_awareness_party_boolean) {
+                    amount += vm.form.awareness_awareness_party;
                 }
-                if(vm.awarenessSignBoardsBool) {
-                    amount += vm.awarenessSignBoardsAmount;
+                if(vm.form.awareness_sign_boards_boolean) {
+                    amount += vm.form.awareness_sign_boards;
                 }
                 return amount;
             };
 
             vm.deletePost = function(id) {
-                $http.delete('/budget/api/budget_calculations/delete/' + id + '/').
+                $http.delete('/budget/api/budget_calculations/' + id + '/').
                         success(function (data, status, headers, config) {
                             console.log("1");
                         }).
@@ -1138,8 +976,36 @@ angular.module('BudgetCalculation', ['ngCookies'])
                         })
             };
 
-            vm.retrieveForm(1);
-            //vm.deletePost(1);
+            vm.updateForm = function() {
+                //console.log(browser.url);
+                console.log(vm.form);
+                $http.put('/budget/api/budget_calculations/' + vm.form.id + '/', vm.form)
+                    .success(function(data, status) {
+                        console.log(data);
+                    })
+                    .error(function(data, status) {
+                        console.log(data);
+                    });
+            //console.log(result);
+            };
+
+            vm.createForm = function() {
+                $http.post('/budget/api/budget_calculations/', vm.form)
+                    .success(function(data, status) {
+                        console.log(data);
+                    })
+                    .error(function(data, status) {
+                        console.log(data);
+                    });
+
+
+            };
+
+
+//budgetService.getForm();
+vm.retrieveForm({{ pk }});
+//vm.saveForm(2);
+//vm.deletePost(1);
 
 
         }]);

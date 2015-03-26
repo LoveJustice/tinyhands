@@ -24,9 +24,8 @@
                 <td>{{ form.border_station.station_name }}</td>
                 <td>{{ form.border_station.station_code }}</td>
                 <td style="text-align: right">
-                    <a href="{% url "mmd_pdf" form.border_station.id %}" class="btn btn-sm btn-success">Generate MMD Form</a>
-                    <a href="{% url "budget_detail" form.id %}" class="btn btn-sm btn-primary">View</a>
-                    <a href="{% url "budget_update" form.id %}" class="btn btn-sm btn-primary">Edit</a>
+                    <a href="{% url "budget_detail_api" form.id %}" class="btn btn-sm btn-primary">View</a>
+                    <a href="{% url "budget_update_api" form.id %}" class="btn btn-sm btn-primary">Edit</a>
                     {% if request.user.is_superuser %}
                         {% include "delete_modal_forms.html" with form=form url_string="budget_delete"%}
                         <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#modal-{{ form.pk }}">Delete</button>

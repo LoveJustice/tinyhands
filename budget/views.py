@@ -8,6 +8,7 @@ from django.forms import formset_factory, inlineformset_factory
 from django.forms.models import modelformset_factory
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views.generic import ListView, DeleteView
+from rest_framework.renderers import JSONRenderer
 from budget.forms import BorderStationBudgetCalculationForm, OtherBudgetItemCostForm
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect, render_to_response
@@ -28,10 +29,24 @@ class BudgetViewSet(viewsets.ModelViewSet):
     queryset = BorderStationBudgetCalculation.objects.all()
     serializer_class = BorderStationBudgetCalculationSerializer
 
-    default = True
-    def perform_create(self, serializer):
-        serializer.save()
 
+def ng_budget_calc_update(request, pk):
+    #is there a better way to do permissions in function based views? Yes
+    if not request.user.permission_budget_manage:
+        return redirect("home")
+
+    submit_type = "Update"
+    return render(request, 'budget/borderstationbudgetcalculation_form.html', locals())
+
+
+def ng_budget_calc_create(request, pk):
+    #is there a better way to do permissions in function based views?
+    if not request.user.permission_budget_manage:
+        return redirect("home")
+
+    border_station = get_object_or_404(BorderStation, pk=pk)
+    #submit_type = "Create"
+    return render(request, 'budget/borderstationbudgetcalculation_form.html', locals())
 
 
 @login_required
@@ -192,6 +207,7 @@ class MoneyDistributionFormPDFView(PDFView):
         return {
             'name': station.station_name,
         }
+
 
 @login_required
 def budget_calc_view(request, pk):
