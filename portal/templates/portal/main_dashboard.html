@@ -2,13 +2,18 @@
 
 {% block content %}
     <div id="tally" ng-controller="MainCtrl as main">
-        <div class="col-lg-1"></div>
-        <div class="text-center col-lg-1" style="background-color: rgba(255,255,255,0.85); border-radius: 10px">
-            <h2 ng-bind="main.words"></h2>
-            <h4>Event1</h4>
-            <h4>Event2</h4>
+    {% verbatim %}
+        <div ng-repeat="day in main.days">
+            <div class="col-lg-1"></div>
+            <div ng-mouseenter="showInt = true" ng-mouseleave="showInt = false" ng-style="main.changeColor(day)" class="text-center col-lg-1 tally-tab">
+                <h3 class="day-of-week" ng-bind="day.dayOfWeek"></h3>
+                <div ng-repeat="(station,numIntercepts) in day.interceptions">
+                    <h4 ng-show="showInt">{{numIntercepts}} INT in {{station}}</h4>
+                </div>
+            </div>
         </div>
     </div>
+    {% endverbatim %}
     <div id="map-canvas" style="position:absolute; z-index:-100"></div>
     <div id="content-window" style="width:19%; height:100%; float:left"></div>
 
@@ -18,10 +23,43 @@
                 $httpProvider.defaults.xsrfCookieName = 'csrftoken';
                 $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
             }])
-           .controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
-               var vm = this;
+           .controller('MainCtrl', ['$http', function($http) {
+                var vm = this;
 
-               vm.words = 'Hello World';
+                vm.days = {};
+
+                vm.hasIntercepts = false
+
+                vm.changeColor = changeColor
+
+                activate()
+
+                function activate() {
+                   getTallyData()
+                }
+
+                function changeColor(day){
+                    if (!$.isEmptyObject(day.interceptions)) {
+                        return {'background-color': 'rgba(255,0,0,0.5)',
+                                'color': 'rgba(255,255,255,1)'};
+                    }
+                }
+
+                function getTallyData() {
+                   $http.get('/portal/tally/days/')
+                        .success(function(data) {
+                             // Data should be:
+                             // {0:{dayOfWeek:'Monday',
+                             //     interceptions: {<String of StationCode>:<Num of Interceptions>}},
+                             //  1:{dayOfWeek:'Sunday',
+                             //     interceptions: {...}},
+                             // }
+                            vm.days = data;
+                        })
+                        .error(function(error) {
+                            console.log(error);
+                        });
+                }
            }]);
     angular.bootstrap($('#tally'), ['TallyMod']);
 </script>
