@@ -100,6 +100,7 @@ function getDynamicContentString(borderStation){ //This is what the content of a
         '<p>Has shelter: ' + hasShelter(borderStation) + '</p>' +
         '<p id="stationInterception">Interceptions: ' + '</p>' +
         '<p id="staffset"># of Staff ' + '</p>' +
+        '<p id="BS"><a href="/static_border_stations/border-stations/' + borderStation.pk + '">Subcommittee, Staff, and Locations</a>' + '</p>' +
         '<p id="irf"><a href="/data-entry/irfs/search/?search_value=' + borderStation.fields.station_code + '">IRFs</a>' + '</p>' +
         '<p id="vif"><a href="/data-entry/vifs/search/?search_value=' + borderStation.fields.station_code + '">VIFs</a>' + '</p>' +
         '</div>';
