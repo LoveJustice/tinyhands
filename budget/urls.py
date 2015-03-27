@@ -5,11 +5,11 @@ from budget.views import BudgetViewSet
 
 
 budget_detail_list = BudgetViewSet.as_view({
-    'get': 'list'
+    'get': 'list',
+    'post': 'create'
 })
 
 budget_detail = BudgetViewSet.as_view({
-    'post': 'create',
     'put': 'update',
     'get': 'retrieve',
     'delete': 'destroy'
@@ -24,8 +24,8 @@ urlpatterns = patterns('budget.views',
     url(r'^api/budget_calculations/$', budget_detail_list, name="budget_retrieve_list"),
     url(r'^api/budget_calculations/create/(?P<pk>\d+)/$', views.ng_budget_calc_create, name="budget_create_api"),
     url(r'^api/budget_calculations/update/(?P<pk>\d+)/$', views.ng_budget_calc_update, name="budget_update_api"),
+    url(r'^api/budget_calculations/view/(?P<pk>\d+)/$', views.ng_budget_calc_view, name="budget_view_api"),
     url(r'^api/budget_calculations/(?P<pk>\d+)/$', budget_detail, name="budget_detail_api"),
-
 )
 
 

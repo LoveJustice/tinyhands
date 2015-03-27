@@ -768,13 +768,13 @@
            </div>
            <!-- End Miscellaneous -->
 
-            <input type="button" class="pull-right btn btn-success navbar-btn btn-lg" ng-click="main.saveForm()"/>
-            <input type="button" class="pull-right btn btn-primary navbar-btn btn-lg" ng-click="main.createForm()" />
+            <input type="submit" ng-show="main.update" class="pull-right btn btn-success navbar-btn btn-lg" value = "Submit" ng-click="main.saveForm()"/>
+            <input type="submit" ng-show="main.create" id="budget_create" class="pull-right btn btn-primary navbar-btn btn-lg" value = "Submit" ng-click="main.createForm()" />
         </div>
 
      {% if submit_type %}
         <div class="row">
-            <input type="submit" class="pull-right btn btn-primary navbar-btn btn-lg" value="{{ submit_type }}" />
+            <!--<input type="submit" class="pull-right btn btn-primary navbar-btn btn-lg" value="{{ submit_type }}" />-->
         </div>
      {% endif %}
      </form>
@@ -785,11 +785,9 @@ angular.module('BudgetCalculation', ['ngCookies'])
             $httpProvider.defaults.xsrfCookieName = 'csrftoken';
             $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
         }])
-        .controller('MainCtrl', ['$scope','$http', function($scope, $http) {
+        .controller('MainCtrl', ['$scope','$http','$locationProvider', function($scope, $http) {
 
             var vm = this;
-
-
 
             vm.form = {};
 
@@ -806,8 +804,6 @@ angular.module('BudgetCalculation', ['ngCookies'])
                             // or server returns response with an error status.
                         });
             };
-
-
 
 
             vm.foodAndShelterTotal = function() {
@@ -1002,235 +998,21 @@ angular.module('BudgetCalculation', ['ngCookies'])
             };
 
 
-//budgetService.getForm();
-vm.retrieveForm({{ pk }});
-//vm.saveForm(2);
-//vm.deletePost(1);
+            if( ({{ submit_type }}) == 1 ) {
+                vm.create = true;
+                vm.form.border_station = ({{ pk }});
 
+            }
+            else if( ({{ submit_type }}) == 2)  {
+                vm.update = true;
+                vm.retrieveForm({{ pk }});
+            }
+            else {
+                vm.retrieveForm({{ pk }});
+            }
 
         }]);
 </script>
-        <script>
-
-/*function budgetViewModel() {
-    //Total Section
-    this.foodAndShelterTotal = ko.pureComputed(function() {
-        return parseFloat(this.foodTotal()) + parseFloat(this.shelterTotal());
-    }, this);
-    this.bunchTotal = ko.pureComputed(function() {
-        return parseFloat(this.commTotal()) + parseFloat(this.travelTotal()) + parseFloat(this.adminTotal()) +
-            parseFloat(this.medicalTotal());
-    }, this);
-    this.stationTotal = ko.pureComputed(function() {
-        return parseFloat(this.foodAndShelterTotal()) + parseFloat(this.bunchTotal()) +
-            parseFloat(this.awarenessTotal()) + parseFloat(this.suppliesTotal());
-    }, this);
-
-    //Misc Section
-    this.miscNumberOfIntercepts = ko.observable({{ form.instance.miscellaneous_number_of_intercepts_last_month }});
-    this.miscNumberOfInterceptsMult = ko.observable({{ form.instance.miscellaneous_number_of_intercepts_last_month_multiplier }});
-    this.miscMaximum = ko.computed(function() {
-        return parseFloat(this.miscNumberOfIntercepts()) * parseFloat(this.miscNumberOfInterceptsMult());
-    }, this);
-    this.miscTotal = ko.computed(function() {
-        return parseFloat(this.miscMaximum());
-    }, this);
-
-    //Medical Section
-    this.medicalExpense = ko.observable({{ form.instance.medical_last_months_expense }});
-    this.medicalTotal = ko.computed(function() {
-        return parseFloat(this.medicalExpense());
-    }, this);
-
-    //Administration Section
-    this.adminNumberOfInterceptionsLastMonth = ko.observable({{ form.instance.administration_number_of_intercepts_last_month }});
-    this.adminNumberOfInterceptionsLastMonthMultiplier = ko.observable({{ form.instance.administration_number_of_intercepts_last_month_multiplier }});
-    this.adminNumberOfInterceptionsLastMonthAdder = ko.observable({{ form.instance.administration_number_of_intercepts_last_month_adder }});
-    this.adminNumberOfMeetingsPerMonth = ko.observable({{ form.instance.administration_number_of_meetings_per_month }});
-    this.adminNumberOfMeetingsPerMonthMultiplier = ko.observable({{ form.instance.administration_number_of_meetings_per_month_multiplier }});
-    this.adminBoothBool = ko.observable({{ form.instance.administration_booth|lower }} );
-    this.adminBoothAmount = ko.observable({{ form.instance.administration_booth_amount }});
-    this.adminRegistrationBool = ko.observable({{ form.instance.administration_registration|lower }});
-    this.adminRegistrationAmount = ko.observable({{ form.instance.administration_registration_amount }});
-    this.adminStationaryTotal = ko.computed(function() {
-        return (parseFloat(this.adminNumberOfInterceptionsLastMonth()) * parseFloat(this.adminNumberOfInterceptionsLastMonthMultiplier())) + parseFloat(this.adminNumberOfInterceptionsLastMonthAdder());
-    }, this);
-    this.adminMeetingsTotal = ko.computed(function() {
-        return parseFloat(this.adminNumberOfMeetingsPerMonth()) * parseFloat(this.adminNumberOfMeetingsPerMonthMultiplier());
-    }, this);
-    this.adminBoothRentalTotal = ko.computed(function() {
-        var amount = 0;
-        if(this.adminBoothBool()) {
-            amount += parseFloat(this.adminBoothAmount());
-        }
-        if(this.adminRegistrationBool()) {
-            amount += parseFloat(this.adminRegistrationAmount());
-        }
-        return amount;
-    }, this);
-    this.adminTotal = ko.computed(function() {
-        return parseFloat(this.adminStationaryTotal()) + parseFloat(this.adminMeetingsTotal()) + parseFloat(this.adminBoothRentalTotal());
-    }, this);
-
-    //Travel Section
-    this.travelChairWithBikeBool = ko.observable({{ form.instance.travel_chair_with_bike|lower }});
-    this.travelChairWithBikeAmount = ko.observable({{ form.instance.travel_chair_with_bike_amount }});
-    this.travelManagerWithBikeBool = ko.observable({{ form.instance.travel_manager_with_bike|lower }});
-    this.travelManagerWithBikeAmount = ko.observable({{ form.instance.travel_manager_with_bike_amount }});
-    this.travelNumberOfStaffUsingBikes = ko.observable({{ form.instance.travel_number_of_staff_using_bikes }});
-    this.travelNumberOfStaffUsingBikesMultiplier = ko.observable({{ form.instance.travel_number_of_staff_using_bikes_multiplier }});
-    this.travelSendingGirlsHomeExpense = ko.observable({{ form.instance.travel_last_months_expense_for_sending_girls_home }});
-    this.travelMotorbikeBool = ko.observable({{ form.instance.travel_motorbike|lower }});
-    this.travelMotorbikeAmount = ko.observable({{ form.instance.travel_motorbike_amount }});
-    this.travelOther = ko.observable({{ form.instance.travel_plus_other }});
-    this.travelNumberOfStaffUsingBikesTotal = ko.computed(function() {
-        return parseFloat(this.travelNumberOfStaffUsingBikes()) * parseFloat(this.travelNumberOfStaffUsingBikesMultiplier());
-    }, this);
-    this.travelTotal = ko.computed(function() {
-        var amount = 0;
-        if(this.travelChairWithBikeBool()) {
-            amount += parseFloat(this.travelChairWithBikeAmount());
-        }
-        if(this.travelManagerWithBikeBool()) {
-            amount += parseFloat(this.travelManagerWithBikeAmount());
-        }
-        if(this.travelMotorbikeBool()) {
-            amount += parseFloat(this.travelMotorbikeAmount());
-        }
-        return amount + parseFloat(this.travelOther()) + parseFloat(this.travelSendingGirlsHomeExpense()) +
-            (parseFloat(this.travelNumberOfStaffUsingBikes()) * parseFloat(this.travelNumberOfStaffUsingBikesMultiplier()));
-
-    }, this);
-
-    //Supplies Section
-    this.suppliesWalkieTalkiesBool = ko.observable({{ form.instance.supplies_walkie_talkies_boolean|lower }});
-    this.suppliesWalkieTalkiesAmount = ko.observable({{ form.instance.supplies_walkie_talkies_amount }});
-    this.suppliesRecordersBool = ko.observable({{ form.instance.supplies_recorders_boolean|lower }});
-    this.suppliesRecordersAmount = ko.observable({{ form.instance.supplies_recorders_amount }});
-    this.suppliesBinocularsBool = ko.observable({{ form.instance.supplies_binoculars_boolean|lower }});
-    this.suppliesBinocularsAmount = ko.observable({{ form.instance.supplies_binoculars_amount }});
-    this.suppliesFlashlightsBool = ko.observable({{ form.instance.supplies_flashlights_boolean|lower }});
-    this.suppliesFlashlightsAmount = ko.observable({{ form.instance.supplies_flashlights_amount }});
-    this.suppliesTotal = ko.computed(function() {
-        var amount = 0;
-        if(this.suppliesWalkieTalkiesBool()) {
-            amount += parseFloat(this.suppliesWalkieTalkiesAmount());
-        }
-        if(this.suppliesRecordersBool()) {
-            amount += parseFloat(this.suppliesRecordersAmount());
-        }
-        if(this.suppliesBinocularsBool()) {
-            amount += parseFloat(this.suppliesBinocularsAmount());
-        }
-        if(this.suppliesFlashlightsBool()) {
-            amount += parseFloat(this.suppliesFlashlightsAmount());
-        }
-        return amount;
-    }, this);
-
-    //Awareness Section
-    this.awarenessContactCardsBool = ko.observable({{ form.instance.awareness_contact_cards|lower }});
-    this.awarenessContactCardsAmount = ko.observable({{ form.instance.awareness_contact_cards_amount }});
-    this.awarenessAwarenessPartyBool = ko.observable({{ form.instance.awareness_awareness_party_boolean|lower }});
-    this.awarenessAwarenessPartyAmount = ko.observable({{ form.instance.awareness_awareness_party }});
-    this.awarenessSignBoardsBool = ko.observable({{ form.instance.supplies_flashlights_boolean|lower }});
-    this.awarenessSignBoardsAmount = ko.observable({{ form.instance.awareness_sign_boards }});
-    this.awarenessTotal = ko.computed(function() {
-        var amount = 0;
-        if(this.awarenessContactCardsBool()) {
-            amount += parseFloat(this.awarenessContactCardsAmount());
-        }
-        if(this.awarenessAwarenessPartyBool()) {
-            amount += parseFloat(this.awarenessAwarenessPartyAmount());
-        }
-        if(this.awarenessSignBoardsBool()) {
-            amount += parseFloat(this.awarenessSignBoardsAmount());
-        }
-        return amount;
-    }, this);
-
-    //Shelter Section
-    this.firstName = "TOTAL";
-    this.shelterRent = ko.observable({{ form.instance.shelter_rent }});
-    this.shelterWater = ko.observable({{ form.instance.shelter_water }});
-    this.shelterElectricity = ko.observable({{ form.instance.shelter_electricity }});
-    this.utilTotal = ko.pureComputed(function() {
-        return parseFloat(this.shelterRent()) + parseFloat(this.shelterElectricity()) + parseFloat(this.shelterWater());
-    }, this);
-    this.shelterCheckboxTotal = ko.pureComputed(function () {
-        var totalAmount = 0;
-        if (this.shelterStartupBool()) {
-            totalAmount += parseFloat(this.shelterStartupAmount());
-        }
-        if (this.shelterTwoBool()) {
-            totalAmount += parseFloat(this.shelterTwoAmount());
-        }
-        return totalAmount;
-    }, this);
-    this.shelterTotal = ko.pureComputed(function () {
-        return parseFloat(this.shelterRent()) + parseFloat(this.shelterWater()) + parseFloat(this.shelterElectricity()) + parseFloat(this.shelterCheckboxTotal());
-    }, this);
-    this.shelterStartupBool = ko.observable({{ form.instance.shelter_shelter_startup|lower }});
-    this.shelterStartupAmount = ko.observable({{ form.instance.shelter_shelter_startup_amount }});
-    this.shelterTwoBool = ko.observable({{ form.instance.shelter_shelter_two|lower }});
-    this.shelterTwoAmount = ko.observable({{ form.instance.shelter_shelter_two_amount }});
-
-    //Food and Gas Section
-    this.foodGasNumberOfGirls = ko.observable({{ form.instance.food_and_gas_number_of_intercepted_girls }});
-    this.foodGasMultiplierBefore = ko.observable({{ form.instance.food_and_gas_number_of_intercepted_girls_multiplier_before }});
-    this.foodGasMultiplierAfter = ko.observable({{ form.instance.food_and_gas_number_of_intercepted_girls_multiplier_after }});
-    this.limboNumberOfGirls = ko.observable({{ form.instance.food_and_gas_number_of_limbo_girls }});
-    this.limboMultiplier = ko.observable({{ form.instance.food_and_gas_limbo_girls_multiplier }});
-    this.limboNumberOfDays = ko.observable({{ form.instance.food_and_gas_number_of_days }});
-    this.foodGasInterceptedGirls = ko.pureComputed(function () {
-        return parseFloat(this.foodGasMultiplierBefore()) * parseFloat(this.foodGasNumberOfGirls()) * parseFloat(this.foodGasMultiplierAfter());
-    }, this);
-    this.foodGasLimboGirls = ko.pureComputed(function () {
-        return parseFloat(this.limboMultiplier()) * parseFloat(this.limboNumberOfGirls()) * parseFloat(this.limboNumberOfDays());
-    }, this);
-    this.foodTotal = ko.computed(function () {
-        return parseFloat(this.foodGasInterceptedGirls()) + parseFloat(this.foodGasLimboGirls());
-    }, this);
-
-    //Communication section
-    this.commChairBool = ko.observable({{ form.instance.communication_chair|lower }});
-    this.commChairAmount = ko.observable({{ form.instance.communication_chair_amount }});
-    this.commManagerBool = ko.observable({{ form.instance.communication_manager|lower }});
-    this.commManagerAmount = ko.observable({{ form.instance.communication_manager_amount }});
-    this.commNumberOfStaffWt = ko.observable({{ form.instance.communication_number_of_staff_with_walkie_talkies }});
-    this.commNumberOfStaffWtMultiplier = ko.observable({{ form.instance.communication_number_of_staff_with_walkie_talkies_multiplier }});
-    this.commEachStaffWt = ko.observable({{ form.instance.communication_each_staff }});
-    this.commEachStaffWtMultiplier = ko.observable({{ form.instance.communication_each_staff_multiplier }});
-    this.commManagerTotal = ko.computed(function () {
-        var amount = 0;
-
-        if (this.commChairBool()) {
-            amount += parseFloat(this.commChairAmount());
-        }
-        if (this.commManagerBool()) {
-            amount += parseFloat(this.commManagerAmount());
-        }
-        return amount;
-    }, this);
-
-    this.commNumberOfStaffTotal = ko.computed(function () {
-        return parseFloat(this.commNumberOfStaffWt()) * parseFloat(this.commNumberOfStaffWtMultiplier());
-    }, this);
-
-    this.commEachStaffTotal = ko.computed(function () {
-        return parseFloat(this.commEachStaffWt()) * parseFloat(this.commEachStaffWtMultiplier());
-    }, this);
-
-    this.commTotal = ko.computed(function () {
-        return parseFloat(this.commManagerTotal()) + parseFloat(this.commNumberOfStaffTotal()) + parseFloat(this.commEachStaffTotal());
-    }, this);
-}
-
-ko.applyBindings(new budgetViewModel());*/
-</script>
-
-
-
 
     {% endblock %}
 {% endblock %}
