@@ -95,7 +95,12 @@ class IRFAlertChecker(object):
                     pass
 
         if len(matches) > 0:  # if there are name matches
-            Alert.objects.send_alert("Name Match", context={"site": settings.SITE_DOMAIN, "irf": self.irf, "matches": matches, "interceptees": self.interceptees, "trafficker_in_custody": trafficker_in_custody})
+            Alert.objects.send_alert("Name Match",
+                                     context={"site": settings.SITE_DOMAIN,
+                                              "irf": self.irf,
+                                              "matches": matches,
+                                              "interceptees": self.interceptees,
+                                              "trafficker_in_custody": trafficker_in_custody})
             return True
         return False
 
@@ -117,13 +122,32 @@ class IRFAlertChecker(object):
 
         if len(trafficker_list) > 0:
             if (certainty_points >= 4) and (red_flags >= 400):
-                Alert.objects.send_alert("Identified Trafficker", context={"site": settings.SITE_DOMAIN, "irf": self.irf, "trafficker_list": trafficker_list, "both": True, "trafficker_in_custody": trafficker_in_custody, "red_flags": red_flags, "certainty_points": certainty_points})
+                Alert.objects.send_alert("Identified Trafficker",
+                                         context={"site": settings.SITE_DOMAIN,
+                                                  "irf": self.irf,
+                                                  "trafficker_list": trafficker_list,
+                                                  "both": True,
+                                                  "trafficker_in_custody": trafficker_in_custody,
+                                                  "red_flags": red_flags,
+                                                  "certainty_points": certainty_points})
                 return True
             if certainty_points >= 4:
-                Alert.objects.send_alert("Identified Trafficker", context={"site": settings.SITE_DOMAIN, "irf": self.irf, "trafficker_list": trafficker_list, "how_sure": True, "trafficker_in_custody": trafficker_in_custody, "certainty_points": certainty_points})
+                Alert.objects.send_alert("Identified Trafficker",
+                                         context={"site": settings.SITE_DOMAIN,
+                                                  "irf": self.irf,
+                                                  "trafficker_list": trafficker_list,
+                                                  "how_sure": True,
+                                                  "trafficker_in_custody": trafficker_in_custody,
+                                                  "certainty_points": certainty_points})
                 return True
             if red_flags >= 400:
-                Alert.objects.send_alert("Identified Trafficker", context={"site": settings.SITE_DOMAIN, "irf": self.irf, "trafficker_list": trafficker_list, "flags": True, "trafficker_in_custody": trafficker_in_custody, "red_flags": red_flags})
+                Alert.objects.send_alert("Identified Trafficker",
+                                         context={"site": settings.SITE_DOMAIN,
+                                                  "irf": self.irf,
+                                                  "trafficker_list": trafficker_list,
+                                                  "flags": True,
+                                                  "trafficker_in_custody": trafficker_in_custody,
+                                                  "red_flags": red_flags})
                 return True
         return False
 
