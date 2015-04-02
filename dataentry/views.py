@@ -106,7 +106,8 @@ class InterceptionRecordListView(
 
     def __init__(self, *args, **kw):
         #passes what to search by to SearchFormsMixin
-        super(InterceptionRecordListView, self).__init__(irf_number__icontains="number", staff_name__icontains="name")
+        super(InterceptionRecordListView, self).__init__(irf_number__icontains="number",
+                                                         staff_name__icontains="name")
 
 
 class IntercepteeInline(InlineFormSet):
@@ -356,10 +357,10 @@ class VictimInterviewCSVExportView(
 
         return response
 
-    
+
 class GeoCodeDistrictAPIView(
         APIView):
-    
+
     def get(self,request):
         value = request.QUERY_PARAMS['district']
         matches = match_location(district_name=value)
@@ -371,7 +372,7 @@ class GeoCodeDistrictAPIView(
 
 
 class GeoCodeVdcAPIView(APIView):
-    
+
     def get(self, request):
         value = request.QUERY_PARAMS['vdc']
         matches = match_location(vdc_name=value)
@@ -410,11 +411,11 @@ class VDCAdminUpdate(
     form_class = VDCForm
     template_name = "dataentry/vdc_admin_update.html"
     permissions_required = ['permission_vdc_manage']
-    
+
     def dispatch(self, request, *args, **kwargs):
         self.vdc_id = kwargs['pk']
         return super(VDCAdminUpdate, self).dispatch(request, *args, **kwargs)
-    
+
     def form_valid(self, form):
         form.save()
         vdc = VDC.objects.get(id=self.vdc_id)
@@ -429,13 +430,13 @@ class VDCCreateView(
     form_class = VDCForm
     template_name = "dataentry/vdc_create_page.html"
     permissions_required = ['permission_vif_add','permission_irf_add']
-    
+
     def form_valid(self, form):
         form.save()
         return HttpResponse(render_to_string('dataentry/vdc_create_success.html'))
 
 class StationCodeAPIView(APIView):
-    
+
     def get(self, request):
         codes = BorderStation.objects.all().values_list("station_code", flat=True)
         return Response(codes, status=status.HTTP_200_OK);

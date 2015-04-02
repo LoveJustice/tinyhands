@@ -378,10 +378,10 @@ class IntercepteeForm(DreamSuitePaperForm):
         model = Interceptee
         exclude = ('district','vdc')
 
-    def __init__(self,*args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super(IntercepteeForm, self).__init__(*args, **kwargs)
-        self.fields['district'] = DistrictField()
-        self.fields['vdc'] = VDCField()
+        self.fields['district'] = DistrictField(required=False)
+        self.fields['vdc'] = VDCField(required=False)
         try:
             self.fields['district'].initial = self.instance.district
         except:
@@ -392,10 +392,18 @@ class IntercepteeForm(DreamSuitePaperForm):
             pass
 
     def save(self, commit=True):
-        district = District.objects.get(name=self.cleaned_data['district'])
-        vdc = VDC.objects.get(name=self.cleaned_data['vdc'])
-        self.instance.vdc = vdc
-        self.instance.district = district
+        try:
+            district = District.objects.get(name=self.cleaned_data['district'])
+            self.instance.district = district
+        except District.DoesNotExist:
+            pass
+
+        try:
+            vdc = VDC.objects.get(name=self.cleaned_data['vdc'])
+            self.instance.vdc = vdc
+        except VDC.DoesNotExist:
+            pass
+
         return super(IntercepteeForm, self).save(commit)
 
 IntercepteeFormSet = inlineformset_factory(InterceptionRecord, Interceptee, exclude=[], extra=12)
