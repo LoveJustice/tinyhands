@@ -18,7 +18,9 @@
     {% endcomment %}
 
     {% if 'search' in request.path or 'vdc-admin' in request.path %}
-      <form class="navbar-form navbar-right" method="get" role="search"
+      <form class="navbar-form navbar-right"
+	    method="get"
+	    role="search"
             {% if 'irfs' in request.path %}
 	      action="/data-entry/irfs/search/"
 	    {% endif %}
@@ -28,7 +30,7 @@
             {% if 'vdc-admin' in request.path %}
 	      action="/data-entry/geocodelocations/vdc-admin/search/"
 	    {% endif %}
-            >
+	    >
 	    {% csrf_token %}
       </form>
     {% endif %}

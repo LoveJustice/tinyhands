@@ -74,7 +74,9 @@
 <div class="modal fade" id="modal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" tabindex="-1"></div>
 <!-- /.modal -->
 
-<form enctype="multipart/form-data" method="POST" id="victim-interview-form" autocomplete="off">{% csrf_token %}
+<form enctype="multipart/form-data"
+      method="POST" id="victim-interview-form"
+      autocomplete="off">{% csrf_token %}
     <div class="form-page">
         <div class="row">
             <div class="col-xs-6 header-area">
@@ -255,8 +257,8 @@
                         <div class="checkbox-group">{{ form.victim_caste_brahmin }}  {{ form.victim_caste_brahmin.label_tag }}</div>
                         <div class="checkbox-group">{{ form.victim_caste_chhetri }}  {{ form.victim_caste_chhetri.label_tag }}</div>
                         <div class="checkbox-group">{{ form.victim_caste_newar }}    {{ form.victim_caste_newar.label_tag }}</div>
-                    </div>                                                                                             
-                    <div class="col-xs-4">                                                                             
+                    </div>
+                    <div class="col-xs-4">
                         <div class="checkbox-group">{{ form.victim_caste_tamang }}   {{ form.victim_caste_tamang.label_tag }}</div>
                         <div class="checkbox-group">{{ form.victim_caste_mongolian }}{{ form.victim_caste_mongolian.label_tag }}</div>
                         <div class="checkbox-group">{{ form.victim_caste_muslim }}   {{ form.victim_caste_muslim.label_tag }}</div>
@@ -593,7 +595,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="form-page">
         <div class="row">
             <div class="col-xs-4 major-column">
@@ -1002,7 +1004,7 @@
                 </div>
                 <div class="black-box padded-box padded-box checkbox-group-marker" id="meeting_at_border">
                     <h2>
-                        <span class="section-number">5.1</span> 
+                        <span class="section-number">5.1</span>
                         Did the broker / companion arrange someone to meet you after crossing the border?<span class="required">*</span>
                     </h2>
                     <div class="inline-checkbox-group">{{ form.meeting_at_border_yes }} {{ form.meeting_at_border_yes.label_tag }}</div>
@@ -1261,7 +1263,7 @@
                 </div>
 
                 <div class="black-box clearfix">
-                    <h2><span class="section-number">6.6</span> 
+                    <h2><span class="section-number">6.6</span>
                         How can we serve you and others like you better?
                     </h2>
                     {{ form.how_can_we_serve_you_better|add_class:"full-width"|attr:"rows:20" }}
@@ -1295,12 +1297,12 @@
                         <span class="section-number">7.2</span>
                         Did your family/guardian pressure you in any way to accept the broker's offer?
                     </h2>
-                    {{ form.family_pressured_victim.0 }} 
-                    {{ form.family_pressured_victim.0.label_tag }} 
-                        
+                    {{ form.family_pressured_victim.0 }}
+                    {{ form.family_pressured_victim.0.label_tag }}
+
                     <span class="alarm-box-container">
-                        {{ form.family_pressured_victim.1 }} 
-                        {{ form.family_pressured_victim.1.label_tag }} 
+                        {{ form.family_pressured_victim.1 }}
+                        {{ form.family_pressured_victim.1.label_tag }}
                         <div class="alarm-box">1</div>
                     </span>
                 </div>
@@ -1489,7 +1491,7 @@
                         Total Home Situational Alarms
                     </h2>
                     <div class="alarm-box">?</div>
-                        
+
                     <div>
                         <label>Calculated Alarms:
                             <span id="calculated-total"></span>

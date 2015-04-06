@@ -1,19 +1,14 @@
 from django import forms
-from django.db import models
-from dataentry.models import (
-    VictimInterview,
-    InterceptionRecord,
-    Interceptee,
-    VictimInterviewPersonBox,
-    VictimInterviewLocationBox,
-    BorderStation,
-    District,
-    VDC
-)
-from dataentry.fields import DistrictField, VDCField
-from django.forms.models import inlineformset_factory
 from django.core.exceptions import ValidationError
+from django.db import models
+from django.forms.models import inlineformset_factory
 from django.utils.html import mark_safe
+
+from .models import (BorderStation, District,
+                     Interceptee, InterceptionRecord,
+                     VDC,
+                     VictimInterviewLocationBox, VictimInterviewPersonBox, VictimInterview)
+from .fields import DistrictField, VDCField, FormNumberField
 
 from accounts.models import Alert
 
@@ -95,13 +90,14 @@ class InterceptionRecordForm(DreamSuitePaperForm):
         required=False
     )
 
+    irf_number = FormNumberField(max_length=20)
+
     class Meta:
         model = InterceptionRecord
-        exclude = ['form_entered_by', 'date_form_received']
+        exclude = [ 'form_entered_by', 'date_form_received' ]
 
 
     def __init__(self, *args, **kwargs):
-
         super(InterceptionRecordForm, self).__init__(*args, **kwargs)
         for field_name, field in self.fields.iteritems():
             if type(field) == forms.fields.BooleanField:
@@ -110,13 +106,12 @@ class InterceptionRecordForm(DreamSuitePaperForm):
                     if hasattr(model_field, 'weight'):
                         field.weight = model_field.weight
                 except:
-                    pass  # Don't worry about this for nonmodel fields like ignore_warnings
+                    pass  # Don't worry about this for non-model fields like ignore_warnings
 
     def clean(self):
         cleaned_data = super(InterceptionRecordForm, self).clean()
         self.has_warnings = False
 
-        self.ensure_valid_irf_number(cleaned_data)
         self.ensure_at_least_one_interceptee(cleaned_data)
         self.at_least_one_box_checked_on_page_one(cleaned_data)
         self.box_six_or_seven_must_be_checked(cleaned_data)
@@ -125,7 +120,6 @@ class InterceptionRecordForm(DreamSuitePaperForm):
         self.if_box_7_1_ensure_7_2(cleaned_data)
         self.if_contact_noticed_ensure_contact_paid(cleaned_data)
         self.if_8_2_ensure_number_specified(cleaned_data)
-
         if not cleaned_data.get('ignore_warnings'):
             self.ensure_some_red_flags_checked(cleaned_data)
             self.ensure_some_noticing_reason_checked(cleaned_data)
@@ -133,22 +127,7 @@ class InterceptionRecordForm(DreamSuitePaperForm):
             self.ensure_at_least_one_of_9_1_through_9_5_are_checked(cleaned_data)
             self.ensure_signature_on_form(cleaned_data)
         self.get_pictures(cleaned_data)
-
-        #for field_name_start in []:
-        #    if not self.at_least_one_checked(cleaned_data, field_name_start):
-        #        self._errors[field_name_start] = self.error_class(['This field is required.'])
-
         return cleaned_data
-
-    def ensure_valid_irf_number(self, cleaned_data):
-        BSCode = cleaned_data['irf_number'][:3]
-        formNumberLength = len(cleaned_data['irf_number'][3:])
-        codeLength = len(BSCode)
-        borderstations = BorderStation.objects.all().filter(station_code=BSCode)
-        if( formNumberLength == 0 ):
-            self._errors['irf_number'] = self.error_class(['Invalid IRF Number. Please add a number after the Border Station code.'])
-        if( len(borderstations) == 0 or codeLength != 3):
-            self._errors['irf_number'] = self.error_class(['Invalid IRF Number. Create one that includes an existing Border Station code.'])
 
     def get_pictures(self, cleaned_data):
         pass
@@ -610,7 +589,10 @@ class VictimInterviewForm(DreamSuitePaperForm):
 
     class Meta:
         model = VictimInterview
-        exclude = ('victim_address_district', 'victim_guardian_address_district', 'victim_address_vdc', 'victim_guardian_address_vdc')
+        exclude = ('victim_address_district',
+                   'victim_guardian_address_district',
+                   'victim_address_vdc',
+                   'victim_guardian_address_vdc')
 
     def __init__(self, *args, **kwargs):
         super(VictimInterviewForm, self).__init__(*args, **kwargs)
@@ -693,13 +675,13 @@ class VictimInterviewForm(DreamSuitePaperForm):
         return cleaned_data
 
     def ensure_valid_vif_number(self, cleaned_data):
-        BSCode = cleaned_data['vif_number'][:3]
-        formNumberLength = len(cleaned_data['vif_number'][3:])
-        codeLength = len(BSCode)
-        borderstations = BorderStation.objects.all().filter(station_code=BSCode)
-        if( formNumberLength == 0 ):
+        border_station_code = cleaned_data['vif_number'][:3]
+        form_number_length = len(cleaned_data['vif_number'][3:])
+        code_length = len(border_station_code)
+        border_stations = BorderStation.objects.all().filter(station_code=border_station_code)
+        if form_number_length == 0:
             self._errors['vif_number'] = self.error_class(['Invalid VIF Number. Please add a number after the Border Station code.'])
-        if( len(borderstations) == 0 or codeLength != 3):
+        if len(border_stations) == 0 or code_length != 3:
             self._errors['vif_number'] = self.error_class(['Invalid VIF Number. Create one that includes an existing Border Station code.'])
 
     def ensure_victim_where_going(self, cleaned_data):
