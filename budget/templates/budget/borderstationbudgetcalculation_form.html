@@ -768,7 +768,7 @@
            </div>
            <!-- End Miscellaneous -->
 
-            <input type="submit" ng-show="main.update" class="pull-right btn btn-success navbar-btn btn-lg" value = "Submit" ng-click="main.saveForm()"/>
+            <input type="submit" ng-show="main.update" class="pull-right btn btn-success navbar-btn btn-lg" value = "Submit" ng-click="main.updateForm()"/>
             <input type="submit" ng-show="main.create" id="budget_create" class="pull-right btn btn-primary navbar-btn btn-lg" value = "Submit" ng-click="main.createForm()" />
         </div>
 
@@ -785,7 +785,7 @@ angular.module('BudgetCalculation', ['ngCookies'])
             $httpProvider.defaults.xsrfCookieName = 'csrftoken';
             $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
         }])
-        .controller('MainCtrl', ['$scope','$http','$locationProvider', function($scope, $http) {
+        .controller('MainCtrl', ['$scope','$http', function($scope, $http) {
 
             var vm = this;
 
@@ -973,7 +973,6 @@ angular.module('BudgetCalculation', ['ngCookies'])
             };
 
             vm.updateForm = function() {
-                //console.log(browser.url);
                 console.log(vm.form);
                 $http.put('/budget/api/budget_calculations/' + vm.form.id + '/', vm.form)
                     .success(function(data, status) {
@@ -986,6 +985,7 @@ angular.module('BudgetCalculation', ['ngCookies'])
             };
 
             vm.createForm = function() {
+                console.log(vm.form);
                 $http.post('/budget/api/budget_calculations/', vm.form)
                     .success(function(data, status) {
                         console.log(data);
@@ -997,17 +997,17 @@ angular.module('BudgetCalculation', ['ngCookies'])
 
             };
 
-
             if( ({{ submit_type }}) == 1 ) {
                 vm.create = true;
                 vm.form.border_station = ({{ pk }});
-
+                console.log(vm.form);
             }
             else if( ({{ submit_type }}) == 2)  {
                 vm.update = true;
                 vm.retrieveForm({{ pk }});
             }
             else {
+                $('input').prop('disabled', true);
                 vm.retrieveForm({{ pk }});
             }
 
