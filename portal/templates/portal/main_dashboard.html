@@ -8,9 +8,9 @@
             <div ng-mouseenter="showInt = true" ng-mouseleave="showInt = false" ng-style="main.changeColor(day)" class="text-center col-lg-1 tally-tab">
                 <h3 class="day-of-week" ng-bind="day.dayOfWeek"></h3>
                 <div ng-repeat="(station,numIntercepts) in day.interceptions">
-                    <h4 ng-if="numIntercepts > 0" ng-show="showInt">{{numIntercepts}} INT in {{station}}</h4>
+                    <h4 ng-show="showInt" class="animated tallyFade">{{numIntercepts}} INT in {{station}}</h4>
                 </div>
-                <h4 ng-if="day.interceptions.length == null" ng-show="showInt">No Interceptions</h4>
+                <h4 ng-show="showInt && main.isEmptyObject(day.interceptions)" class="animated tallyFade">No Interceptions</h4>
             </div>
         </div>
     </div>
@@ -19,7 +19,7 @@
     <div id="content-window" style="width:19%; height:100%; float:left"></div>
 
 <script>
-    angular.module('TallyMod',['ngCookies'])
+    angular.module('TallyMod',['ngCookies','ngAnimate'])
            .config(['$httpProvider', function($httpProvider) {
                 $httpProvider.defaults.xsrfCookieName = 'csrftoken';
                 $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
@@ -31,12 +31,18 @@
 
                 vm.hasIntercepts = false;
 
+                vm.isEmptyObject = isEmptyObject;
+
                 vm.changeColor = changeColor;
 
                 activate();
 
                 function activate() {
                     getTallyData();
+                }
+
+                function isEmptyObject(obj) {
+                    return $.isEmptyObject(obj);
                 }
 
                 function changeColor(day) {
