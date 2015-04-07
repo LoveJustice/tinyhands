@@ -1,15 +1,16 @@
 {% extends 'portal/portal_base.html' %}
 
 {% block content %}
-    <div id="tally" ng-controller="MainCtrl as main">
     {% verbatim %}
+    <div id="tally" ng-controller="MainCtrl as main">
+        <div class="col-lg-2"></div>
         <div ng-repeat="day in main.days">
-            <div class="col-lg-1"></div>
             <div ng-mouseenter="showInt = true" ng-mouseleave="showInt = false" ng-style="main.changeColor(day)" class="text-center col-lg-1 tally-tab">
                 <h3 class="day-of-week" ng-bind="day.dayOfWeek"></h3>
                 <div ng-repeat="(station,numIntercepts) in day.interceptions">
-                    <h4 ng-show="showInt">{{numIntercepts}} INT in {{station}}</h4>
+                    <h4 ng-if="numIntercepts > 0" ng-show="showInt">{{numIntercepts}} INT in {{station}}</h4>
                 </div>
+                <h4 ng-if="day.interceptions.length == null" ng-show="showInt">No Interceptions</h4>
             </div>
         </div>
     </div>
@@ -28,17 +29,17 @@
 
                 vm.days = {};
 
-                vm.hasIntercepts = false
+                vm.hasIntercepts = false;
 
-                vm.changeColor = changeColor
+                vm.changeColor = changeColor;
 
-                activate()
+                activate();
 
                 function activate() {
-                   getTallyData()
+                    getTallyData();
                 }
 
-                function changeColor(day){
+                function changeColor(day) {
                     if (!$.isEmptyObject(day.interceptions)) {
                         return {'background-color': 'rgba(255,0,0,0.5)',
                                 'color': 'rgba(255,255,255,1)'};
