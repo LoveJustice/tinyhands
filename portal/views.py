@@ -31,12 +31,15 @@ class TallyDaysView(APIView):
     def get(self, request):
         days = ['Monday', 'Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']
         today = timezone.now()
-        dates = [today - timedelta(days=x) for x in range(5)]
+        dates = [today - timedelta(days=x) for x in range(7)]
         results = {}
         i = 0
         for date in dates:
             day_records = {}
-            day_records['dayOfWeek'] = days[date.weekday()]
+            if(i==0):
+                day_records['dayOfWeek'] = "Today"
+            else:
+                day_records['dayOfWeek'] = days[date.weekday()]
             day_records['interceptions'] = {}
             interceptions = day_records['interceptions']
             records = InterceptionRecord.objects.filter(date_time_of_interception__year=date.year, date_time_of_interception__month=date.month, date_time_of_interception__day=date.day)
