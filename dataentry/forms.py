@@ -352,6 +352,7 @@ class InterceptionRecordForm(DreamSuitePaperForm):
             self.has_warnings = True
             self._errors['has_signature'] = error
 
+
 class IntercepteeForm(DreamSuitePaperForm):
     class Meta:
         model = Interceptee
@@ -557,6 +558,8 @@ class VictimInterviewForm(DreamSuitePaperForm):
         error_messages={'invalid_choice': 'This box must be checked.'}
     )
 
+    vif_number = FormNumberField(max_length=20)
+
     victim_where_going_region_india = forms.BooleanField(label='India', required=False)
     victim_where_going_region_gulf = forms.BooleanField(label='Gulf / Other', required=False)
 
@@ -586,16 +589,16 @@ class VictimInterviewForm(DreamSuitePaperForm):
     victim_guardian_address_district = DistrictField(label='District')
     victim_guardian_address_vdc = VDCField(label='VDC')
 
-
     class Meta:
         model = VictimInterview
         exclude = ('victim_address_district',
-                   'victim_guardian_address_district',
                    'victim_address_vdc',
+                   'victim_guardian_address_district',
                    'victim_guardian_address_vdc')
 
     def __init__(self, *args, **kwargs):
         super(VictimInterviewForm, self).__init__(*args, **kwargs)
+
         # Determine the number of pbs and lbs. I can't come up with a better way than this
         self.num_pbs = 0
         self.num_lbs = 0
@@ -653,8 +656,6 @@ class VictimInterviewForm(DreamSuitePaperForm):
         cleaned_data = super(VictimInterviewForm, self).clean()
         self.has_warnings = False
 
-        self.ensure_valid_vif_number(cleaned_data)
-
         for field_name_start in [
             'primary_motivation',
             'migration_plans',
@@ -673,16 +674,6 @@ class VictimInterviewForm(DreamSuitePaperForm):
             self.ensure_tiny_hands_rating(cleaned_data)
 
         return cleaned_data
-
-    def ensure_valid_vif_number(self, cleaned_data):
-        border_station_code = cleaned_data['vif_number'][:3]
-        form_number_length = len(cleaned_data['vif_number'][3:])
-        code_length = len(border_station_code)
-        border_stations = BorderStation.objects.all().filter(station_code=border_station_code)
-        if form_number_length == 0:
-            self._errors['vif_number'] = self.error_class(['Invalid VIF Number. Please add a number after the Border Station code.'])
-        if len(border_stations) == 0 or code_length != 3:
-            self._errors['vif_number'] = self.error_class(['Invalid VIF Number. Create one that includes an existing Border Station code.'])
 
     def ensure_victim_where_going(self, cleaned_data):
         if not self.at_least_one_checked(cleaned_data, 'victim_where_going'):

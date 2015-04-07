@@ -7,1114 +7,1129 @@
 
 {% block content %}
 
-{% include "dataentry/popover.html" %}
+  {% include "dataentry/popover.html" %}
 
-{% if not victiminterviewinterceptionrecord %}
-<div class="well well-sm pull-right" style="margin-top: 22px">
-    Resume an incomplete VIF:
-    <select id="saved-for-later-list">
+  {% if not victiminterviewinterceptionrecord %}
+    <div class="well well-sm pull-right" style="margin-top: 22px">
+      Resume an incomplete VIF:
+      <select id="saved-for-later-list">
         <option>--------</option>
-    </select>
-</div>
-{% endif %}
-
-<div style="display: none">
-    {% for id, errors in form.errors.items %}
-        {% if not errors.is_warning %}
-            <div class="error-for-popup" data-id="{{ id }}" data-message="{{ errors.0 }}"></div>
-        {% endif %}
-    {% endfor %}
-
-    {% for id, errors in form.errors.items %}
-        {% if errors.is_warning %}
-            <div class="warning-for-popup" data-id="{{ id }}" data-message="{{ errors.0 }}"></div>
-        {% endif %}
-    {% endfor %}
-</div>
-
-{% if form.errors and form.has_warnings and not form.ignore_warnings.value %}
-    <div class="alert alert-warning no-remove" style="margin-top: 20px">
-        <h3>These warnings will not prevent the form from being saved, but may indicate a problem with the form</h3>
-        <p>If you are sure that you want to submit the form with warnings, fix any errors, check the "Ignore warnings" box next to the submit button, and submit the form again.</p>
-        {% for id, errors in form.errors.items %}
-            {% if errors.is_warning %}
-                {% for error in errors %}
-                <p><strong>{{ id|unslugify }}:</strong> {{ error }}</p>
-                {% endfor %}
-            {% endif %}
-        {% endfor %}
+      </select>
     </div>
-{% endif %}
+  {% endif %}
 
-{% if form.errors %}
-<div id="error-box" class="alert alert-danger no-remove" style="margin-top: 20px">
+  <div style="display: none">
+    {% for id, errors in form.errors.items %}
+      {% if not errors.is_warning %}
+	<div class="error-for-popup" data-id="{{ id }}" data-message="{{ errors.0 }}"></div>
+      {% endif %}
+    {% endfor %}
+
+    {% for id, errors in form.errors.items %}
+      {% if errors.is_warning %}
+	<div class="warning-for-popup" data-id="{{ id }}" data-message="{{ errors.0 }}"></div>
+      {% endif %}
+    {% endfor %}
+  </div>
+
+  {% if form.errors and form.has_warnings and not form.ignore_warnings.value %}
+    <div class="alert alert-warning no-remove" style="margin-top: 20px">
+      <h3>These warnings will not prevent the form from being saved,
+	but may indicate a problem with the form</h3>
+      <p>If you are sure that you want to submit the form with warnings,
+	fix any errors, check the "Ignore warnings" box next to the submit button,
+	and submit the form again.</p>
+      {% for id, errors in form.errors.items %}
+	{% if errors.is_warning %}
+          {% for error in errors %}
+            <p><strong>{{ id|unslugify }}:</strong> {{ error }}</p>
+          {% endfor %}
+	{% endif %}
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <div id="error-box" class="alert alert-danger no-remove" style="margin-top: 20px">
     <h3>These errors will prevent the form from being saved</h3>
     {% for id, errors in form.errors.items %}
-        {% if not errors.is_warning %}
-            {% for error in errors %}
-            <p><strong>{{ id|unslugify }}:</strong> {{ error }}</p>
-            {% endfor %}
-        {% endif %}
+      {% if not errors.is_warning %}
+        {% for error in errors %}
+          <p><strong>{{ id|unslugify }}:</strong> {{ error }}</p>
+        {% endfor %}
+      {% endif %}
     {% endfor %}
-</div>
-{% endif %}
 
-{% for form in inlines.0 %}
-{% if form.errors %}
-{{ forloop.counter }} {{ form.errors }}
-{% endif %}
-{% endfor %}
-{% for form in inlines.1 %}
-{% if form.errors %}
-{{ forloop.counter }} {{ form.errors }}
-{% endif %}
-{% endfor %}
+    {% for form in inlines.0 %}
+      {% if form.errors %}
+        <h4 style="margin-top: 10px">Person Box #{{ forloop.counter }}:</h4>
+	{% for id, errors in form.errors.items %}
+	  {% for error in errors %}
+	    <p><strong>{{ id|unslugify }}:</strong> {{ error }}</p>
+	  {% endfor %}
+	{% endfor %}
+      {% endif %}
+    {% endfor %}
 
-<!-- Modal -->
-<div class="modal fade" id="modal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" tabindex="-1"></div>
-<!-- /.modal -->
+    {% for form in inlines.1 %}
+      {% if form.errors %}
+        <h4 style="margin-top: 10px">Location Box #{{ forloop.counter }}:</h4>
+	{% for id, errors in form.errors.items %}
+	  {% for error in errors %}
+	    <p><strong>{{ id|unslugify }}:</strong> {{ error }}</p>
+	  {% endfor %}
+	{% endfor %}
+      {% endif %}
+    {% endfor %}
+  </div>
 
-<form enctype="multipart/form-data"
-      method="POST" id="victim-interview-form"
-      autocomplete="off">{% csrf_token %}
+  <!-- Modal -->
+  <div class="modal fade" id="modal" role="dialog"
+       aria-labelledby="myModalLabel" aria-hidden="true" tabindex="-1">
+  </div>
+  <!-- /.modal -->
+
+  <form enctype="multipart/form-data"
+	method="POST" id="victim-interview-form"
+	autocomplete="off">{% csrf_token %}
     <div class="form-page">
-        <div class="row">
-            <div class="col-xs-6 header-area">
-                <img class="pull-left" style="margin-right: 20px" width="100" src="{{ STATIC_URL }}images/logo.png" alt="Tiny Hands Logo" />
-                <h2>Victim Interview Form (VIF)<br/>
-                Version 2.0 <span class="text-danger">Tiny Hands Nepal</span></h2>
+      <div class="row">
+        <div class="col-xs-6 header-area">
+          <img class="pull-left" style="margin-right: 20px" width="100"
+	       src="{{ STATIC_URL }}images/logo.png" alt="Tiny Hands Logo" />
+          <h2>Victim Interview Form (VIF)<br/>
+            Version 2.0 <span class="text-danger">Tiny Hands Nepal</span></h2>
+        </div>
+        <div class="col-xs-6">
+          <table class="table table-bordered top-data-area">
+            <tbody>
+              <tr>
+                <td>
+                  {{ form.vif_number.label_tag }}<span class="required">*</span>
+                </td>
+                <td>
+                  <div style="width: 100px">
+                    {{ form.vif_number }}
+                  </div>
+                </td>
+                <td>
+                  <label># of<br/>Victims</label>
+                </td>
+                <td>
+                  <div style="width: 50px">
+                    {{ form.number_of_victims }}
+                  </div>
+                </td>
+                <td>
+                  {{ form.location.label_tag }}
+                </td>
+                <td>
+                  {{ form.location }}
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <label>Date<span class="required">*</span></label>
+                </td>
+                <td>
+                  <div style="width: 100px">
+                    {{ form.date|attr:"data-placement: bottom" }}
+                  </div>
+                </td>
+                <td>
+                  <label># of<br/>Traffickers</label>
+                </td>
+                <td>
+                  <div style="width: 50px">
+                    {{ form.number_of_traffickers|attr:"data-placement: bottom" }}
+                  </div>
+                </td>
+                <td>
+                  {{ form.interviewer.label_tag }}<span class="required">*</span>
+                </td>
+                <td>
+                  {{ form.interviewer|attr:"data-placement: bottom" }}
+                </td>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="row">
+        <div class="clearfix mbs pull-right">
+          <label>
+            (<span class="required">*</span>) denotes required field
+          </label>
+        </div>
+        <div class="clearfix mbs">
+          <label>
+            Was statement read to the participant before beginning the interview?<span class="required">*</span>
+            <br/>
+            {{ form.statement_read_before_beginning|attr:"data-placement: top" }}
+            Check the box if this question on form is signed
+          </label>
+        </div>
+
+        <div class="clearfix mbs">
+          <label>
+            Permission to use photograph?
+            <br/>
+            {{ form.permission_to_use_photograph }}
+            Check the box if this question on form is signed
+          </label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-4 major-column">
+          <div class="blue-box black-box black-box-top">
+            <h1>1. Victim &amp; Family Information</h1>
+          </div>
+          <div class="black-box clearfix">
+            <div class="pull-right">
+              <div class="inline-radio-group">
+                <span class="section-number label-like">1.2</span>
+                <label for="{{ form.victim_gender.auto_id }}">
+                  Gender<span class="required">*</span>
+                </label>
+                {% for choice in form.victim_gender %}
+                  {{ choice }}
+                {% endfor %}
+              </div>
+            </div>
+
+            <label class="blending-into-input-label"
+                   for="{{ form.victim_name.auto_id }}">
+              <span class="section-number">1.1</span>
+              {{ form.victim_name.label }}<span class="required">*</span>
+            </label>
+
+            {{ form.victim_name|attr:"style: padding: 4px"|attr:"data-placement: left" }}
+          </div>
+
+          <div class="black-box clearfix">
+            <h2><span class="section-number">1.3</span> Victim's Recent Address</h2>
+            <div class="col-xs-6">
+              <div class="label-inside-field">
+                {{ form.victim_address_district.label_tag }}{{ form.victim_address_district }}
+              </div>
             </div>
             <div class="col-xs-6">
-                <table class="table table-bordered top-data-area">
-                    <tbody>
-                        <tr>
-                            <td>
-                                {{ form.vif_number.label_tag }}<span class="required">*</span>
-                            </td>
-                            <td>
-                                <div style="width: 100px">
-                                    {{ form.vif_number }}
-                                </div>
-                            </td>
-                            <td>
-                                <label># of<br/>Victims</label>
-                            </td>
-                            <td>
-                                <div style="width: 50px">
-                                    {{ form.number_of_victims }}
-                                </div>
-                            </td>
-                            <td>
-                                {{ form.location.label_tag }}
-                            </td>
-                            <td>
-                                    {{ form.location }}
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>
-                                <label>Date<span class="required">*</span></label>
-                            </td>
-                            <td>
-                                <div style="width: 100px">
-                                    {{ form.date|attr:"data-placement: bottom" }}
-                                </div>
-                            </td>
-                            <td>
-                                <label># of<br/>Traffickers</label>
-                            </td>
-                            <td>
-                                <div style="width: 50px">
-                                    {{ form.number_of_traffickers|attr:"data-placement: bottom" }}
-                                </div>
-                            </td>
-                            <td>
-                                {{ form.interviewer.label_tag }}<span class="required">*</span>
-                            </td>
-                            <td>
-                                    {{ form.interviewer|attr:"data-placement: bottom" }}
-                            </td>
-                    </tbody>
-                </table>
+              <div class="label-inside-field">
+                {{ form.victim_address_vdc.label_tag }}{{ form.victim_address_vdc }}
+              </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="clearfix mbs pull-right">
-                <label>
-                    (<span class="required">*</span>) denotes required field
+            <div class="col-xs-4">
+              <div class="label-inside-field">
+                {{ form.victim_address_ward.label_tag }}{{ form.victim_address_ward }}
+              </div>
+            </div>
+            <div class="col-xs-8">
+              <div class="label-inside-field">
+                {{ form.victim_phone.label_tag }}{{ form.victim_phone }}
+              </div>
+            </div>
+          </div>
+
+          <div class="black-box clearfix">
+            <div class="col-xs-4">
+              <div class="label-inside-field">
+                <label for="{{ form.victim_age.auto_id }}">
+                  <span class="section-number">1.4</span>
+                  {{ form.victim_age.label }}
                 </label>
+                {{ form.victim_age|attr:"style: padding-top: 24px" }}
+              </div>
             </div>
-            <div class="clearfix mbs">
-                <label>
-                    Was statement read to the participant before beginning the interview?<span class="required">*</span>
-                    <br/>
-                    {{ form.statement_read_before_beginning|attr:"data-placement: top" }}
-                    Check the box if this question on form is signed
+            <div class="col-xs-4">
+              <div class="label-inside-field">
+                <label for="{{ form.victim_height.auto_id }}">
+                  <span class="section-number">1.5</span>
+                  {{ form.victim_height.label }}
                 </label>
+                {{ form.victim_height|attr:"style: padding-top: 24px" }}
+              </div>
             </div>
-
-            <div class="clearfix mbs">
-                <label>
-                    Permission to use photograph?
-                    <br/>
-                    {{ form.permission_to_use_photograph }}
-                    Check the box if this question on form is signed
+            <div class="col-xs-4">
+              <div class="label-inside-field">
+                <label for="{{ form.victim_weight.auto_id }}">
+                  <span class="section-number">1.6</span>
+                  {{ form.victim_weight.label }}
                 </label>
+                {{ form.victim_weight|attr:"style: padding-top: 24px" }}
+              </div>
             </div>
+          </div>
+
+          <div class="black-box clearfix">
+            <h2><span class="section-number">1.7</span> Caste <small>(filled by interviewer, not asked directly)</small></h2>
+          </div>
+          <div class="black-box clearfix checkbox-group-marker" id="victim_caste">
+            <div class="col-xs-4">
+              <div class="checkbox-group">{{ form.victim_caste_magar }}  {{ form.victim_caste_magar.label_tag }}</div>
+              <div class="checkbox-group">{{ form.victim_caste_jaisi }}  {{ form.victim_caste_jaisi.label_tag }}</div>
+              <div class="checkbox-group">{{ form.victim_caste_thakuri }} {{ form.victim_caste_thakuri.label_tag }}</div>
+            </div>
+            <div class="col-xs-4">
+              <div class="checkbox-group">{{ form.victim_caste_brahmin }}  {{ form.victim_caste_brahmin.label_tag }}</div>
+              <div class="checkbox-group">{{ form.victim_caste_chhetri }}  {{ form.victim_caste_chhetri.label_tag }}</div>
+              <div class="checkbox-group">{{ form.victim_caste_newar }}    {{ form.victim_caste_newar.label_tag }}</div>
+            </div>
+            <div class="col-xs-4">
+              <div class="checkbox-group">{{ form.victim_caste_tamang }}   {{ form.victim_caste_tamang.label_tag }}</div>
+              <div class="checkbox-group">{{ form.victim_caste_mongolian }}{{ form.victim_caste_mongolian.label_tag }}</div>
+              <div class="checkbox-group">{{ form.victim_caste_muslim }}   {{ form.victim_caste_muslim.label_tag }}</div>
+            </div>
+
+            <label class="blending-into-input-label pull-right">
+              <div class="checkbox-group">{{ form.victim_caste_other }}{{ form.victim_caste_other.label_tag }}</div>
+            </label>
+            {{ form.victim_caste_other_value|add_class:"pull-right"|attr:"style:width: 140px; clear:right" }}
+
+            <div class="checkbox-group">{{ form.victim_caste_madeshi_terai }}{{ form.victim_caste_madeshi_terai.label_tag }}</div>
+            <div class="checkbox-group">{{ form.victim_caste_dalit }}        {{ form.victim_caste_dalit.label_tag }}</div>
+          </div>
+
+          <div class="black-box clearfix">
+            <h2><span class="section-number">1.8</span> What is your occupation?</h2>
+          </div>
+          <div class="black-box clearfix checkbox-group-marker" id="victim_occupation">
+            <div class="col-xs-6">
+
+              <div class="checkbox-group">{{ form.victim_occupation_unemployed }} {{ form.victim_occupation_unemployed.label_tag }}</div>
+              <div class="checkbox-group">{{ form.victim_occupation_farmer }} {{ form.victim_occupation_farmer.label_tag }}</div>
+              <div class="checkbox-group">{{ form.victim_occupation_wage_laborer }} {{ form.victim_occupation_wage_laborer.label_tag }}</div>
+              <div class="checkbox-group">{{ form.victim_occupation_business_owner }} {{ form.victim_occupation_business_owner.label_tag }}</div>
+              <div class="checkbox-group">{{ form.victim_occupation_migrant_worker }} {{ form.victim_occupation_migrant_worker.label_tag }}</div>
+              <div class="checkbox-group">{{ form.victim_occupation_tailoring }} {{ form.victim_occupation_tailoring.label_tag }}</div>
+              <div class="checkbox-group">{{ form.victim_occupation_housewife }} {{ form.victim_occupation_housewife.label_tag }}</div>
+            </div>
+            <div class="col-xs-6">
+              <div class="checkbox-group">{{ form.victim_occupation_animal_husbandry }} {{ form.victim_occupation_animal_husbandry.label_tag }}</div>
+              <div class="checkbox-group">{{ form.victim_occupation_domestic_work }} {{ form.victim_occupation_domestic_work.label_tag }}</div>
+              <div class="checkbox-group">{{ form.victim_occupation_shopkeeper }} {{ form.victim_occupation_shopkeeper.label_tag }}</div>
+              <div class="checkbox-group">{{ form.victim_occupation_hotel }} {{ form.victim_occupation_hotel.label_tag }}</div>
+              <div class="checkbox-group">{{ form.victim_occupation_factory }} {{ form.victim_occupation_factory.label_tag }}</div>
+
+              <div class="label-inside-field inline-checkbox-group">
+                <label>
+                  {{ form.victim_occupation_other }}
+                  {{ form.victim_occupation_other.label }}
+                </label>
+                {{ form.victim_occupation_other_value }}
+              </div>
+            </div>
+          </div>
+          <div class="black-box clearfix">
+            <h2><span class="section-number">1.9</span> Marital Status</h2>
+          </div>
+          <div class="black-box clearfix checkbox-group-marker" id="victim_marital_status">
+            <div class="col-xs-6 right-col-border">
+              <div class="checkbox-group">{{ form.victim_marital_status_single }} {{ form.victim_marital_status_single.label_tag }}</div>
+              <div class="checkbox-group">{{ form.victim_marital_status_married }} {{ form.victim_marital_status_married.label_tag }}</div>
+              <div class="checkbox-group">{{ form.victim_marital_status_widow }} {{ form.victim_marital_status_widow.label_tag }}</div>
+              <div class="checkbox-group">{{ form.victim_marital_status_divorced }} {{ form.victim_marital_status_divorced.label_tag }}</div>
+            </div>
+            <div class="col-xs-6">
+              <div class="checkbox-group">{{ form.victim_marital_status_husband_has_other_wives }} {{ form.victim_marital_status_husband_has_other_wives.label_tag }}</div>
+              <div class="checkbox-group">{{ form.victim_marital_status_abandoned_by_husband }} {{ form.victim_marital_status_abandoned_by_husband.label_tag }}</div>
+            </div>
+          </div>
         </div>
-        <div class="row">
-            <div class="col-xs-4 major-column">
-                <div class="blue-box black-box black-box-top">
-                    <h1>1. Victim &amp; Family Information</h1>
-                </div>
-                <div class="black-box clearfix">
-                    <div class="pull-right">
-                        <div class="inline-radio-group">
-                            <span class="section-number label-like">1.2</span>
-                            <label for="{{ form.victim_gender.auto_id }}">
-                                Gender<span class="required">*</span>
-                            </label>
-                            {% for choice in form.victim_gender %}
-                                {{ choice }}
-                            {% endfor %}
-                        </div>
-                    </div>
-
-                    <label class="blending-into-input-label"
-                           for="{{ form.victim_name.auto_id }}">
-                        <span class="section-number">1.1</span>
-                        {{ form.victim_name.label }}<span class="required">*</span>
-                    </label>
-
-                    {{ form.victim_name|attr:"style: padding: 4px"|attr:"data-placement: left" }}
-                </div>
-
-                <div class="black-box clearfix">
-                    <h2><span class="section-number">1.3</span> Victim's Recent Address</h2>
-                    <div class="col-xs-6">
-                        <div class="label-inside-field">
-                            {{ form.victim_address_district.label_tag }}{{ form.victim_address_district }}
-                        </div>
-                    </div>
-                    <div class="col-xs-6">
-                        <div class="label-inside-field">
-                            {{ form.victim_address_vdc.label_tag }}{{ form.victim_address_vdc }}
-                        </div>
-                    </div>
-                    <div class="col-xs-4">
-                        <div class="label-inside-field">
-                            {{ form.victim_address_ward.label_tag }}{{ form.victim_address_ward }}
-                        </div>
-                    </div>
-                    <div class="col-xs-8">
-                        <div class="label-inside-field">
-                            {{ form.victim_phone.label_tag }}{{ form.victim_phone }}
-                        </div>
-                    </div>
-                </div>
-
-                <div class="black-box clearfix">
-                    <div class="col-xs-4">
-                        <div class="label-inside-field">
-                            <label for="{{ form.victim_age.auto_id }}">
-                                <span class="section-number">1.4</span>
-                                {{ form.victim_age.label }}
-                            </label>
-                            {{ form.victim_age|attr:"style: padding-top: 24px" }}
-                        </div>
-                    </div>
-                    <div class="col-xs-4">
-                        <div class="label-inside-field">
-                            <label for="{{ form.victim_height.auto_id }}">
-                                <span class="section-number">1.5</span>
-                                {{ form.victim_height.label }}
-                            </label>
-                            {{ form.victim_height|attr:"style: padding-top: 24px" }}
-                        </div>
-                    </div>
-                    <div class="col-xs-4">
-                        <div class="label-inside-field">
-                            <label for="{{ form.victim_weight.auto_id }}">
-                                <span class="section-number">1.6</span>
-                                {{ form.victim_weight.label }}
-                            </label>
-                            {{ form.victim_weight|attr:"style: padding-top: 24px" }}
-                        </div>
-                    </div>
-                </div>
-
-                <div class="black-box clearfix">
-                    <h2><span class="section-number">1.7</span> Caste <small>(filled by interviewer, not asked directly)</small></h2>
-                </div>
-                <div class="black-box clearfix checkbox-group-marker" id="victim_caste">
-                    <div class="col-xs-4">
-                        <div class="checkbox-group">{{ form.victim_caste_magar }}  {{ form.victim_caste_magar.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.victim_caste_jaisi }}  {{ form.victim_caste_jaisi.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.victim_caste_thakuri }} {{ form.victim_caste_thakuri.label_tag }}</div>
-                    </div>
-                    <div class="col-xs-4">
-                        <div class="checkbox-group">{{ form.victim_caste_brahmin }}  {{ form.victim_caste_brahmin.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.victim_caste_chhetri }}  {{ form.victim_caste_chhetri.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.victim_caste_newar }}    {{ form.victim_caste_newar.label_tag }}</div>
-                    </div>
-                    <div class="col-xs-4">
-                        <div class="checkbox-group">{{ form.victim_caste_tamang }}   {{ form.victim_caste_tamang.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.victim_caste_mongolian }}{{ form.victim_caste_mongolian.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.victim_caste_muslim }}   {{ form.victim_caste_muslim.label_tag }}</div>
-                    </div>
-
-                    <label class="blending-into-input-label pull-right">
-                        <div class="checkbox-group">{{ form.victim_caste_other }}{{ form.victim_caste_other.label_tag }}</div>
-                    </label>
-                    {{ form.victim_caste_other_value|add_class:"pull-right"|attr:"style:width: 140px; clear:right" }}
-
-                    <div class="checkbox-group">{{ form.victim_caste_madeshi_terai }}{{ form.victim_caste_madeshi_terai.label_tag }}</div>
-                    <div class="checkbox-group">{{ form.victim_caste_dalit }}        {{ form.victim_caste_dalit.label_tag }}</div>
-                </div>
-
-                <div class="black-box clearfix">
-                    <h2><span class="section-number">1.8</span> What is your occupation?</h2>
-                </div>
-                <div class="black-box clearfix checkbox-group-marker" id="victim_occupation">
-                    <div class="col-xs-6">
-
-                        <div class="checkbox-group">{{ form.victim_occupation_unemployed }} {{ form.victim_occupation_unemployed.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.victim_occupation_farmer }} {{ form.victim_occupation_farmer.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.victim_occupation_wage_laborer }} {{ form.victim_occupation_wage_laborer.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.victim_occupation_business_owner }} {{ form.victim_occupation_business_owner.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.victim_occupation_migrant_worker }} {{ form.victim_occupation_migrant_worker.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.victim_occupation_tailoring }} {{ form.victim_occupation_tailoring.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.victim_occupation_housewife }} {{ form.victim_occupation_housewife.label_tag }}</div>
-                    </div>
-                    <div class="col-xs-6">
-                        <div class="checkbox-group">{{ form.victim_occupation_animal_husbandry }} {{ form.victim_occupation_animal_husbandry.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.victim_occupation_domestic_work }} {{ form.victim_occupation_domestic_work.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.victim_occupation_shopkeeper }} {{ form.victim_occupation_shopkeeper.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.victim_occupation_hotel }} {{ form.victim_occupation_hotel.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.victim_occupation_factory }} {{ form.victim_occupation_factory.label_tag }}</div>
-
-                        <div class="label-inside-field inline-checkbox-group">
-                            <label>
-                            {{ form.victim_occupation_other }}
-                            {{ form.victim_occupation_other.label }}
-                            </label>
-                            {{ form.victim_occupation_other_value }}
-                        </div>
-                    </div>
-                </div>
-                <div class="black-box clearfix">
-                    <h2><span class="section-number">1.9</span> Marital Status</h2>
-                </div>
-                <div class="black-box clearfix checkbox-group-marker" id="victim_marital_status">
-                    <div class="col-xs-6 right-col-border">
-                        <div class="checkbox-group">{{ form.victim_marital_status_single }} {{ form.victim_marital_status_single.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.victim_marital_status_married }} {{ form.victim_marital_status_married.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.victim_marital_status_widow }} {{ form.victim_marital_status_widow.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.victim_marital_status_divorced }} {{ form.victim_marital_status_divorced.label_tag }}</div>
-                    </div>
-                    <div class="col-xs-6">
-                        <div class="checkbox-group">{{ form.victim_marital_status_husband_has_other_wives }} {{ form.victim_marital_status_husband_has_other_wives.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.victim_marital_status_abandoned_by_husband }} {{ form.victim_marital_status_abandoned_by_husband.label_tag }}</div>
-                    </div>
-                </div>
+        <div class="col-xs-4 major-column">
+          <div class="black-box black-box-top padded-box clearfix">
+            <h2>
+              <span class="section-number">1.10</span>
+              With whom do you live?
+            </h2>
+          </div>
+          <div class="black-box clearfix checkbox-group-marker" id="victim_lives_with">
+            <div class="col-xs-6 right-col-border">
+              <div class="checkbox-group">{{ form.victim_lives_with_own_parents }} {{ form.victim_lives_with_own_parents.label_tag }}</div>
+              <div class="checkbox-group">{{ form.victim_lives_with_husband }} {{ form.victim_lives_with_husband.label_tag }}</div>
+              <div class="checkbox-group">{{ form.victim_lives_with_husbands_family }} {{ form.victim_lives_with_husbands_family.label_tag }}</div>
+              <div class="checkbox-group">{{ form.victim_lives_with_friends }} {{ form.victim_lives_with_friends.label_tag }}</div>
             </div>
-            <div class="col-xs-4 major-column">
-                <div class="black-box black-box-top padded-box clearfix">
-                    <h2>
-                        <span class="section-number">1.10</span>
-                        With whom do you live?
-                    </h2>
-                </div>
-                <div class="black-box clearfix checkbox-group-marker" id="victim_lives_with">
-                    <div class="col-xs-6 right-col-border">
-                        <div class="checkbox-group">{{ form.victim_lives_with_own_parents }} {{ form.victim_lives_with_own_parents.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.victim_lives_with_husband }} {{ form.victim_lives_with_husband.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.victim_lives_with_husbands_family }} {{ form.victim_lives_with_husbands_family.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.victim_lives_with_friends }} {{ form.victim_lives_with_friends.label_tag }}</div>
-                    </div>
-                    <div class="col-xs-6">
-                        <div class="checkbox-group">{{ form.victim_lives_with_alone }} {{ form.victim_lives_with_alone.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.victim_lives_with_other_relative }} {{ form.victim_lives_with_other_relative.label_tag }}</div>
-                        <div class="label-inside-field inline-checkbox-group">
-                            <label>
-                                {{ form.victim_lives_with_other }} {{ form.victim_lives_with_other.label }}
-                            </label>
-                            {{ form.victim_lives_with_other_value }}
-                        </div>
-                    </div>
-                </div>
-                <div class="black-box clearfix">
-                    <div class="col-xs-8">
-                        <h2>
-                            <span class="section-number">1.11</span>
-                            How many people<br/>are in your (own) family?
-                        </h2>
-                    </div>
-                    <div class="col-xs-4">
-                        {{ form.victim_num_in_family|attr:"style: width: 100%; height: 50px; text-align: center" }}
-                    </div>
-                </div>
-
-                <div class="black-box padded-box clearfix">
-                    <h2>
-                        <span class="section-number">1.12</span>
-                        Who is your primary guardian?
-                    </h2>
-                </div>
-                <div class="black-box clearfix checkbox-group-marker" id="victim_primary_guardian">
-                    <div class="col-xs-6 right-col-border">
-                        <div class="checkbox-group">{{ form.victim_primary_guardian_own_parents }} {{ form.victim_primary_guardian_own_parents.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.victim_primary_guardian_husband }} {{ form.victim_primary_guardian_husband.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.victim_primary_guardian_other_relative }} {{ form.victim_primary_guardian_other_relative.label_tag }}</div>
-                    </div>
-                    <div class="col-xs-6">
-                        <div class="checkbox-group">{{ form.victim_primary_guardian_non_relative }} {{ form.victim_primary_guardian_non_relative.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.victim_primary_guardian_no_one }} {{ form.victim_primary_guardian_no_one.label_tag }}</div>
-                    </div>
-                </div>
-
-                <div class="black-box padded-box clearfix">
-                    <h2><span class="section-number">1.13</span> Guardian's Address</h2>
-                        <div class="col-xs-6">
-                            <div class="label-inside-field">
-                                {{ form.victim_guardian_address_district.label_tag }}{{ form.victim_guardian_address_district }}
-                            </div>
-                        </div>
-                        <div class="col-xs-6">
-                            <div class="label-inside-field">
-                                {{ form.victim_guardian_address_vdc.label_tag }}{{ form.victim_guardian_address_vdc }}
-                            </div>
-                        </div>
-
-                        <div class="col-xs-4">
-                            <div class="label-inside-field">
-                                {{ form.victim_guardian_address_ward.label_tag }}{{ form.victim_guardian_address_ward }}
-                            </div>
-                        </div>
-                        <div class="col-xs-8">
-                            <div class="label-inside-field">
-                                {{ form.victim_guardian_phone.label_tag }}{{ form.victim_guardian_phone }}
-                            </div>
-                        </div>
-                </div>
-
-                <div class="black-box padded-box clearfix">
-                    <h2 style="white-space: nowrap">
-                        <span class="section-number">1.14</span>
-                        What is parents' marital status?
-                    </h2>
-                </div>
-                <div class="black-box clearfix checkbox-group-marker" id="victim_parents_marital_status">
-                    <div class="col-xs-4">
-                        <div class="checkbox-group">{{ form.victim_parents_marital_status_single }} {{ form.victim_parents_marital_status_single.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.victim_parents_marital_status_married }} {{ form.victim_parents_marital_status_married.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.victim_parents_marital_status_widow }} {{ form.victim_parents_marital_status_widow.label_tag }}</div>
-                    </div>
-                    <div class="col-xs-8">
-                        <div class="checkbox-group">{{ form.victim_parents_marital_status_father_has_other_wives }} {{ form.victim_parents_marital_status_father_has_other_wives.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.victim_parents_marital_separated }} {{ form.victim_parents_marital_separated.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.victim_parents_marital_divorced }} {{ form.victim_parents_marital_divorced.label_tag }}</div>
-                    </div>
-                </div>
-
-                <div class="black-box padded-box clearfix">
-                    <h2>
-                        <span class="section-number">1.15</span>
-                        Education Level
-
-                    </h2>
-                </div>
-                <div class="black-box clearfix checkbox-group-marker" id="victim_education_level">
-                    <div class="col-xs-6 right-col-border">
-                        <div class="checkbox-group">{{ form.victim_education_level_none }} {{ form.victim_education_level_none.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.victim_education_level_informal }} {{ form.victim_education_level_informal.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.victim_education_level_primary }} {{ form.victim_education_level_primary.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.victim_education_level_grade_4_8 }} {{ form.victim_education_level_grade_4_8.label_tag }}</div>
-                    </div>
-                    <div class="col-xs-6">
-                        <div class="checkbox-group">{{ form.victim_education_level_grade_9_10 }} {{ form.victim_education_level_grade_9_10.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.victim_education_level_slc }} {{ form.victim_education_level_slc.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.victim_education_level_11_12 }} {{ form.victim_education_level_11_12.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.victim_education_level_bachelors }} {{ form.victim_education_level_bachelors.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.victim_education_level_masters }} {{ form.victim_education_level_masters.label_tag }}</div>
-                    </div>
-                </div>
-
-                <div class="black-box padded-box clearfix">
-                    <h2>
-                        <span class="section-number">1.16</span>
-                        Is the victim literate?
-                    </h2>
-                    <div class="inline-checkbox-group checkbox-group-marker" id="victim_is_literate">
-                        {% for choice in form.victim_is_literate %}
-                            {{ choice }} {{ choice.label_tag }}
-                        {% endfor %}
-                    </div>
-                </div>
-
+            <div class="col-xs-6">
+              <div class="checkbox-group">{{ form.victim_lives_with_alone }} {{ form.victim_lives_with_alone.label_tag }}</div>
+              <div class="checkbox-group">{{ form.victim_lives_with_other_relative }} {{ form.victim_lives_with_other_relative.label_tag }}</div>
+              <div class="label-inside-field inline-checkbox-group">
+                <label>
+                  {{ form.victim_lives_with_other }} {{ form.victim_lives_with_other.label }}
+                </label>
+                {{ form.victim_lives_with_other_value }}
+              </div>
             </div>
-            <div class="col-xs-4 major-column">
-                <div class="blue-box black-box black-box-top">
-                    <h1>2. Migration Plans</h1>
-                </div>
-                <div class="black-box clearfix">
-                    <h2>
-                        <span class="section-number">2.1</span>
-                        What was the main thing which you were going abroad to do?<span class="required">*</span>
-                    </h2>
-                </div>
-                <div class="black-box clearfix checkbox-group-marker" id="migration_plans">
-
-                    <div class="col-xs-7 right-col-border">
-                        <div class="checkbox-group">{{ form.migration_plans_education }} {{ form.migration_plans_education.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.migration_plans_travel_tour }} {{ form.migration_plans_travel_tour.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.migration_plans_shopping }} {{ form.migration_plans_shopping.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.migration_plans_eloping }} {{ form.migration_plans_eloping.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.migration_plans_arranged_marriage }} {{ form.migration_plans_arranged_marriage.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.migration_plans_meet_own_family }} {{ form.migration_plans_meet_own_family.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.migration_plans_visit_brokers_home }} {{ form.migration_plans_visit_brokers_home.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.migration_plans_medical_treatment }} {{ form.migration_plans_medical_treatment.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.migration_plans_job_broker_didnt_say }} {{ form.migration_plans_job_broker_didnt_say.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.migration_plans_job_baby_care }} {{ form.migration_plans_job_baby_care.label_tag }}</div>
-                    </div>
-                    <div class="col-xs-5">
-                        <div class="checkbox-group">{{ form.migration_plans_job_factory }} {{ form.migration_plans_job_factory.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.migration_plans_job_hotel }} {{ form.migration_plans_job_hotel.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.migration_plans_job_shop }} {{ form.migration_plans_job_shop.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.migration_plans_job_laborer }} {{ form.migration_plans_job_laborer.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.migration_plans_job_brothel }} {{ form.migration_plans_job_brothel.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.migration_plans_job_household }} {{ form.migration_plans_job_household.label_tag }}</div>
-
-                        <div class="label-inside-field inline-checkbox-group">
-                            <label>
-                                {{ form.migration_plans_job_other }} {{ form.migration_plans_job_other.label }}
-                            </label>
-                            {{ form.migration_plans_job_other_value }}
-                        </div>
-
-                        <div class="label-inside-field inline-checkbox-group">
-                            <label>
-                                {{ form.migration_plans_other }} {{ form.migration_plans_other.label }}
-                            </label>
-                            {{ form.migration_plans_other_value }}
-                        </div>
-                    </div>
-                </div>
-
-                <div class="black-box clearfix">
-                    <h2>
-                        <span class="section-number">2.2</span>
-                        Primary motive to go abroad?<span class="required">*</span>
-                    </h2>
-                </div>
-                <div class="black-box clearfix checkbox-group-marker" id="primary_motivation">
-                    <div class="col-xs-6 right-col-border">
-                        <div class="checkbox-group">{{ form.primary_motivation_support_myself }} {{ form.primary_motivation_support_myself.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.primary_motivation_support_family }} {{ form.primary_motivation_support_family.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.primary_motivation_personal_debt }} {{ form.primary_motivation_personal_debt.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.primary_motivation_family_debt }} {{ form.primary_motivation_family_debt.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.primary_motivation_love_marriage }} {{ form.primary_motivation_love_marriage.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.primary_motivation_bad_home_marriage }} {{ form.primary_motivation_bad_home_marriage.label_tag }}</div>
-                    </div>
-                    <div class="col-xs-6">
-                        <div class="checkbox-group">{{ form.primary_motivation_get_education }} {{ form.primary_motivation_get_education.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.primary_motivation_tour_travel }} {{ form.primary_motivation_tour_travel.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.primary_motivation_didnt_know }} {{ form.primary_motivation_didnt_know.label_tag }}</div>
-
-                        <div class="label-inside-field inline-checkbox-group">
-                            <label>
-                            {{ form.primary_motivation_other }} {{ form.primary_motivation_other.label }}
-                            </label>
-                            {{ form.primary_motivation_other_value }}
-                        </div>
-                    </div>
-                </div>
-
-                <div class="black-box clearfix">
-                    <h2><span class="section-number">2.3</span> Where were you going?<span class="required">*</span></h2>
-                </div>
-                <div>
-                    <div class="black-box clearfix">
-                        <div class="col-xs-6 right-col-border text-center">
-                            <div class="checkbox-group">{{ form.victim_where_going_region_india }} {{ form.victim_where_going_region_india.label_tag }}</div>
-                        </div>
-                        <div class="col-xs-6 text-center">
-                            <div class="checkbox-group">{{ form.victim_where_going_region_gulf }} {{ form.victim_where_going_region_gulf.label_tag }}</div>
-                        </div>
-                    </div>
-                    <div class="black-box clearfix checkbox-group-marker" id="victim_where_going" data-placement="bottom">
-                        <div class="col-xs-6 right-col-border" id="victim_where_going_india">
-                            <div class="col-xs-6" style="padding: 0">
-                                <div class="checkbox-group">{{ form.victim_where_going_india_delhi }} {{ form.victim_where_going_india_delhi.label_tag }}</div>
-                                <div class="checkbox-group">{{ form.victim_where_going_india_mumbai }} {{ form.victim_where_going_india_mumbai.label_tag }}</div>
-                                <div class="checkbox-group">{{ form.victim_where_going_india_surat }} {{ form.victim_where_going_india_surat.label_tag }}</div>
-                                <div class="checkbox-group">{{ form.victim_where_going_india_rajastan }} {{ form.victim_where_going_india_rajastan.label_tag }}</div>
-                            </div>
-                            <div class="col-xs-6" style="padding: 0">
-                                <div class="checkbox-group">{{ form.victim_where_going_india_kolkata }} {{ form.victim_where_going_india_kolkata.label_tag }}</div>
-                                <div class="checkbox-group">{{ form.victim_where_going_india_pune }} {{ form.victim_where_going_india_pune.label_tag }}</div>
-                                <div class="checkbox-group">{{ form.victim_where_going_india_jaipur }} {{ form.victim_where_going_india_jaipur.label_tag }}</div>
-                                <div class="checkbox-group">{{ form.victim_where_going_india_bihar }} {{ form.victim_where_going_india_bihar.label_tag }}</div>
-                            </div>
-                            <div class="checkbox-group">{{ form.victim_where_going_india_didnt_know }} {{ form.victim_where_going_india_didnt_know.label_tag }}</div>
-
-                            <div class="label-inside-field inline-checkbox-group">
-                                <label>
-                                    {{ form.victim_where_going_india_other }} {{ form.victim_where_going_india_other.label }}
-                                </label>
-                                {{ form.victim_where_going_india_other_value }}
-                            </div>
-                        </div>
-                        <div class="col-xs-6" id="victim_where_going_gulf">
-                            <div class="col-xs-6" style="padding: 0">
-                                <div class="checkbox-group">{{ form.victim_where_going_gulf_lebanon }} {{ form.victim_where_going_gulf_lebanon.label_tag }}</div>
-                                <div class="checkbox-group">{{ form.victim_where_going_gulf_dubai }} {{ form.victim_where_going_gulf_dubai.label_tag }}</div>
-                            </div>
-                            <div class="col-xs-6" style="padding: 0">
-                                <div class="checkbox-group">{{ form.victim_where_going_gulf_malaysia }} {{ form.victim_where_going_gulf_malaysia.label_tag }}</div>
-                                <div class="checkbox-group">{{ form.victim_where_going_gulf_oman }} {{ form.victim_where_going_gulf_oman.label_tag }}</div>
-                            </div>
-
-                            <div class="checkbox-group">{{ form.victim_where_going_gulf_saudi_arabia }} {{ form.victim_where_going_gulf_saudi_arabia.label_tag }}</div>
-                            <div class="col-xs-6" style="padding: 0">
-                                <div class="checkbox-group">{{ form.victim_where_going_gulf_kuwait }} {{ form.victim_where_going_gulf_kuwait.label_tag }}</div>
-                            </div>
-                            <div class="col-xs-6" style="padding: 0">
-                                <div class="checkbox-group">{{ form.victim_where_going_gulf_qatar }} {{ form.victim_where_going_gulf_qatar.label_tag }}</div>
-                            </div>
-                            <div class="checkbox-group">{{ form.victim_where_going_gulf_didnt_know }} {{ form.victim_where_going_gulf_didnt_know.label_tag }}</div>
-
-                            <div class="label-inside-field inline-checkbox-group">
-                                <label>{{ form.victim_where_going_gulf_other }} {{ form.victim_where_going_gulf_other.label }}</label>
-                                {{ form.victim_where_going_gulf_other_value }}
-                            </div>
-                        </div>
-                    </div>
-                </div>
+          </div>
+          <div class="black-box clearfix">
+            <div class="col-xs-8">
+              <h2>
+                <span class="section-number">1.11</span>
+                How many people<br/>are in your (own) family?
+              </h2>
             </div>
+            <div class="col-xs-4">
+              {{ form.victim_num_in_family|attr:"style: width: 100%; height: 50px; text-align: center" }}
+            </div>
+          </div>
+
+          <div class="black-box padded-box clearfix">
+            <h2>
+              <span class="section-number">1.12</span>
+              Who is your primary guardian?
+            </h2>
+          </div>
+          <div class="black-box clearfix checkbox-group-marker" id="victim_primary_guardian">
+            <div class="col-xs-6 right-col-border">
+              <div class="checkbox-group">{{ form.victim_primary_guardian_own_parents }} {{ form.victim_primary_guardian_own_parents.label_tag }}</div>
+              <div class="checkbox-group">{{ form.victim_primary_guardian_husband }} {{ form.victim_primary_guardian_husband.label_tag }}</div>
+              <div class="checkbox-group">{{ form.victim_primary_guardian_other_relative }} {{ form.victim_primary_guardian_other_relative.label_tag }}</div>
+            </div>
+            <div class="col-xs-6">
+              <div class="checkbox-group">{{ form.victim_primary_guardian_non_relative }} {{ form.victim_primary_guardian_non_relative.label_tag }}</div>
+              <div class="checkbox-group">{{ form.victim_primary_guardian_no_one }} {{ form.victim_primary_guardian_no_one.label_tag }}</div>
+            </div>
+          </div>
+
+          <div class="black-box padded-box clearfix">
+            <h2><span class="section-number">1.13</span> Guardian's Address</h2>
+            <div class="col-xs-6">
+              <div class="label-inside-field">
+                {{ form.victim_guardian_address_district.label_tag }}{{ form.victim_guardian_address_district }}
+              </div>
+            </div>
+            <div class="col-xs-6">
+              <div class="label-inside-field">
+                {{ form.victim_guardian_address_vdc.label_tag }}{{ form.victim_guardian_address_vdc }}
+              </div>
+            </div>
+
+            <div class="col-xs-4">
+              <div class="label-inside-field">
+                {{ form.victim_guardian_address_ward.label_tag }}{{ form.victim_guardian_address_ward }}
+              </div>
+            </div>
+            <div class="col-xs-8">
+              <div class="label-inside-field">
+                {{ form.victim_guardian_phone.label_tag }}{{ form.victim_guardian_phone }}
+              </div>
+            </div>
+          </div>
+
+          <div class="black-box padded-box clearfix">
+            <h2 style="white-space: nowrap">
+              <span class="section-number">1.14</span>
+              What is parents' marital status?
+            </h2>
+          </div>
+          <div class="black-box clearfix checkbox-group-marker" id="victim_parents_marital_status">
+            <div class="col-xs-4">
+              <div class="checkbox-group">{{ form.victim_parents_marital_status_single }} {{ form.victim_parents_marital_status_single.label_tag }}</div>
+              <div class="checkbox-group">{{ form.victim_parents_marital_status_married }} {{ form.victim_parents_marital_status_married.label_tag }}</div>
+              <div class="checkbox-group">{{ form.victim_parents_marital_status_widow }} {{ form.victim_parents_marital_status_widow.label_tag }}</div>
+            </div>
+            <div class="col-xs-8">
+              <div class="checkbox-group">{{ form.victim_parents_marital_status_father_has_other_wives }} {{ form.victim_parents_marital_status_father_has_other_wives.label_tag }}</div>
+              <div class="checkbox-group">{{ form.victim_parents_marital_separated }} {{ form.victim_parents_marital_separated.label_tag }}</div>
+              <div class="checkbox-group">{{ form.victim_parents_marital_divorced }} {{ form.victim_parents_marital_divorced.label_tag }}</div>
+            </div>
+          </div>
+
+          <div class="black-box padded-box clearfix">
+            <h2>
+              <span class="section-number">1.15</span>
+              Education Level
+
+            </h2>
+          </div>
+          <div class="black-box clearfix checkbox-group-marker" id="victim_education_level">
+            <div class="col-xs-6 right-col-border">
+              <div class="checkbox-group">{{ form.victim_education_level_none }} {{ form.victim_education_level_none.label_tag }}</div>
+              <div class="checkbox-group">{{ form.victim_education_level_informal }} {{ form.victim_education_level_informal.label_tag }}</div>
+              <div class="checkbox-group">{{ form.victim_education_level_primary }} {{ form.victim_education_level_primary.label_tag }}</div>
+              <div class="checkbox-group">{{ form.victim_education_level_grade_4_8 }} {{ form.victim_education_level_grade_4_8.label_tag }}</div>
+            </div>
+            <div class="col-xs-6">
+              <div class="checkbox-group">{{ form.victim_education_level_grade_9_10 }} {{ form.victim_education_level_grade_9_10.label_tag }}</div>
+              <div class="checkbox-group">{{ form.victim_education_level_slc }} {{ form.victim_education_level_slc.label_tag }}</div>
+              <div class="checkbox-group">{{ form.victim_education_level_11_12 }} {{ form.victim_education_level_11_12.label_tag }}</div>
+              <div class="checkbox-group">{{ form.victim_education_level_bachelors }} {{ form.victim_education_level_bachelors.label_tag }}</div>
+              <div class="checkbox-group">{{ form.victim_education_level_masters }} {{ form.victim_education_level_masters.label_tag }}</div>
+            </div>
+          </div>
+
+          <div class="black-box padded-box clearfix">
+            <h2>
+              <span class="section-number">1.16</span>
+              Is the victim literate?
+            </h2>
+            <div class="inline-checkbox-group checkbox-group-marker" id="victim_is_literate">
+              {% for choice in form.victim_is_literate %}
+                {{ choice }} {{ choice.label_tag }}
+              {% endfor %}
+            </div>
+          </div>
+
         </div>
+        <div class="col-xs-4 major-column">
+          <div class="blue-box black-box black-box-top">
+            <h1>2. Migration Plans</h1>
+          </div>
+          <div class="black-box clearfix">
+            <h2>
+              <span class="section-number">2.1</span>
+              What was the main thing which you were going abroad to do?<span class="required">*</span>
+            </h2>
+          </div>
+          <div class="black-box clearfix checkbox-group-marker" id="migration_plans">
+
+            <div class="col-xs-7 right-col-border">
+              <div class="checkbox-group">{{ form.migration_plans_education }} {{ form.migration_plans_education.label_tag }}</div>
+              <div class="checkbox-group">{{ form.migration_plans_travel_tour }} {{ form.migration_plans_travel_tour.label_tag }}</div>
+              <div class="checkbox-group">{{ form.migration_plans_shopping }} {{ form.migration_plans_shopping.label_tag }}</div>
+              <div class="checkbox-group">{{ form.migration_plans_eloping }} {{ form.migration_plans_eloping.label_tag }}</div>
+              <div class="checkbox-group">{{ form.migration_plans_arranged_marriage }} {{ form.migration_plans_arranged_marriage.label_tag }}</div>
+              <div class="checkbox-group">{{ form.migration_plans_meet_own_family }} {{ form.migration_plans_meet_own_family.label_tag }}</div>
+              <div class="checkbox-group">{{ form.migration_plans_visit_brokers_home }} {{ form.migration_plans_visit_brokers_home.label_tag }}</div>
+              <div class="checkbox-group">{{ form.migration_plans_medical_treatment }} {{ form.migration_plans_medical_treatment.label_tag }}</div>
+              <div class="checkbox-group">{{ form.migration_plans_job_broker_didnt_say }} {{ form.migration_plans_job_broker_didnt_say.label_tag }}</div>
+              <div class="checkbox-group">{{ form.migration_plans_job_baby_care }} {{ form.migration_plans_job_baby_care.label_tag }}</div>
+            </div>
+            <div class="col-xs-5">
+              <div class="checkbox-group">{{ form.migration_plans_job_factory }} {{ form.migration_plans_job_factory.label_tag }}</div>
+              <div class="checkbox-group">{{ form.migration_plans_job_hotel }} {{ form.migration_plans_job_hotel.label_tag }}</div>
+              <div class="checkbox-group">{{ form.migration_plans_job_shop }} {{ form.migration_plans_job_shop.label_tag }}</div>
+              <div class="checkbox-group">{{ form.migration_plans_job_laborer }} {{ form.migration_plans_job_laborer.label_tag }}</div>
+              <div class="checkbox-group">{{ form.migration_plans_job_brothel }} {{ form.migration_plans_job_brothel.label_tag }}</div>
+              <div class="checkbox-group">{{ form.migration_plans_job_household }} {{ form.migration_plans_job_household.label_tag }}</div>
+
+              <div class="label-inside-field inline-checkbox-group">
+                <label>
+                  {{ form.migration_plans_job_other }} {{ form.migration_plans_job_other.label }}
+                </label>
+                {{ form.migration_plans_job_other_value }}
+              </div>
+
+              <div class="label-inside-field inline-checkbox-group">
+                <label>
+                  {{ form.migration_plans_other }} {{ form.migration_plans_other.label }}
+                </label>
+                {{ form.migration_plans_other_value }}
+              </div>
+            </div>
+          </div>
+
+          <div class="black-box clearfix">
+            <h2>
+              <span class="section-number">2.2</span>
+              Primary motive to go abroad?<span class="required">*</span>
+            </h2>
+          </div>
+          <div class="black-box clearfix checkbox-group-marker" id="primary_motivation">
+            <div class="col-xs-6 right-col-border">
+              <div class="checkbox-group">{{ form.primary_motivation_support_myself }} {{ form.primary_motivation_support_myself.label_tag }}</div>
+              <div class="checkbox-group">{{ form.primary_motivation_support_family }} {{ form.primary_motivation_support_family.label_tag }}</div>
+              <div class="checkbox-group">{{ form.primary_motivation_personal_debt }} {{ form.primary_motivation_personal_debt.label_tag }}</div>
+              <div class="checkbox-group">{{ form.primary_motivation_family_debt }} {{ form.primary_motivation_family_debt.label_tag }}</div>
+              <div class="checkbox-group">{{ form.primary_motivation_love_marriage }} {{ form.primary_motivation_love_marriage.label_tag }}</div>
+              <div class="checkbox-group">{{ form.primary_motivation_bad_home_marriage }} {{ form.primary_motivation_bad_home_marriage.label_tag }}</div>
+            </div>
+            <div class="col-xs-6">
+              <div class="checkbox-group">{{ form.primary_motivation_get_education }} {{ form.primary_motivation_get_education.label_tag }}</div>
+              <div class="checkbox-group">{{ form.primary_motivation_tour_travel }} {{ form.primary_motivation_tour_travel.label_tag }}</div>
+              <div class="checkbox-group">{{ form.primary_motivation_didnt_know }} {{ form.primary_motivation_didnt_know.label_tag }}</div>
+
+              <div class="label-inside-field inline-checkbox-group">
+                <label>
+                  {{ form.primary_motivation_other }} {{ form.primary_motivation_other.label }}
+                </label>
+                {{ form.primary_motivation_other_value }}
+              </div>
+            </div>
+          </div>
+
+          <div class="black-box clearfix">
+            <h2><span class="section-number">2.3</span> Where were you going?<span class="required">*</span></h2>
+          </div>
+          <div>
+            <div class="black-box clearfix">
+              <div class="col-xs-6 right-col-border text-center">
+                <div class="checkbox-group">{{ form.victim_where_going_region_india }} {{ form.victim_where_going_region_india.label_tag }}</div>
+              </div>
+              <div class="col-xs-6 text-center">
+                <div class="checkbox-group">{{ form.victim_where_going_region_gulf }} {{ form.victim_where_going_region_gulf.label_tag }}</div>
+              </div>
+            </div>
+            <div class="black-box clearfix checkbox-group-marker" id="victim_where_going" data-placement="bottom">
+              <div class="col-xs-6 right-col-border" id="victim_where_going_india">
+                <div class="col-xs-6" style="padding: 0">
+                  <div class="checkbox-group">{{ form.victim_where_going_india_delhi }} {{ form.victim_where_going_india_delhi.label_tag }}</div>
+                  <div class="checkbox-group">{{ form.victim_where_going_india_mumbai }} {{ form.victim_where_going_india_mumbai.label_tag }}</div>
+                  <div class="checkbox-group">{{ form.victim_where_going_india_surat }} {{ form.victim_where_going_india_surat.label_tag }}</div>
+                  <div class="checkbox-group">{{ form.victim_where_going_india_rajastan }} {{ form.victim_where_going_india_rajastan.label_tag }}</div>
+                </div>
+                <div class="col-xs-6" style="padding: 0">
+                  <div class="checkbox-group">{{ form.victim_where_going_india_kolkata }} {{ form.victim_where_going_india_kolkata.label_tag }}</div>
+                  <div class="checkbox-group">{{ form.victim_where_going_india_pune }} {{ form.victim_where_going_india_pune.label_tag }}</div>
+                  <div class="checkbox-group">{{ form.victim_where_going_india_jaipur }} {{ form.victim_where_going_india_jaipur.label_tag }}</div>
+                  <div class="checkbox-group">{{ form.victim_where_going_india_bihar }} {{ form.victim_where_going_india_bihar.label_tag }}</div>
+                </div>
+                <div class="checkbox-group">{{ form.victim_where_going_india_didnt_know }} {{ form.victim_where_going_india_didnt_know.label_tag }}</div>
+
+                <div class="label-inside-field inline-checkbox-group">
+                  <label>
+                    {{ form.victim_where_going_india_other }} {{ form.victim_where_going_india_other.label }}
+                  </label>
+                  {{ form.victim_where_going_india_other_value }}
+                </div>
+              </div>
+              <div class="col-xs-6" id="victim_where_going_gulf">
+                <div class="col-xs-6" style="padding: 0">
+                  <div class="checkbox-group">{{ form.victim_where_going_gulf_lebanon }} {{ form.victim_where_going_gulf_lebanon.label_tag }}</div>
+                  <div class="checkbox-group">{{ form.victim_where_going_gulf_dubai }} {{ form.victim_where_going_gulf_dubai.label_tag }}</div>
+                </div>
+                <div class="col-xs-6" style="padding: 0">
+                  <div class="checkbox-group">{{ form.victim_where_going_gulf_malaysia }} {{ form.victim_where_going_gulf_malaysia.label_tag }}</div>
+                  <div class="checkbox-group">{{ form.victim_where_going_gulf_oman }} {{ form.victim_where_going_gulf_oman.label_tag }}</div>
+                </div>
+
+                <div class="checkbox-group">{{ form.victim_where_going_gulf_saudi_arabia }} {{ form.victim_where_going_gulf_saudi_arabia.label_tag }}</div>
+                <div class="col-xs-6" style="padding: 0">
+                  <div class="checkbox-group">{{ form.victim_where_going_gulf_kuwait }} {{ form.victim_where_going_gulf_kuwait.label_tag }}</div>
+                </div>
+                <div class="col-xs-6" style="padding: 0">
+                  <div class="checkbox-group">{{ form.victim_where_going_gulf_qatar }} {{ form.victim_where_going_gulf_qatar.label_tag }}</div>
+                </div>
+                <div class="checkbox-group">{{ form.victim_where_going_gulf_didnt_know }} {{ form.victim_where_going_gulf_didnt_know.label_tag }}</div>
+
+                <div class="label-inside-field inline-checkbox-group">
+                  <label>{{ form.victim_where_going_gulf_other }} {{ form.victim_where_going_gulf_other.label }}</label>
+                  {{ form.victim_where_going_gulf_other_value }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="form-page">
-        <div class="row">
-            <div class="col-xs-4 major-column">
+      <div class="row">
+        <div class="col-xs-4 major-column">
 
-                <div class="blue-box black-box black-box-top">
-                    <h1>3. Recruitment Process</h1>
-                </div>
-                <div class="black-box padded-box checkbox-group-marker" id="manpower_involved">
-                    <div class="checkbox-group pull-right" style="margin-right: 4px">{{ form.manpower_involved.0 }} {{ form.manpower_involved.0.label_tag }}</div>
-                    <h2><span class="section-number">3.1</span> Was a manpower involved?</h2>
-                    <div class="checkbox-group" style="margin-top: 10px">
-                        {{ form.manpower_involved.1 }}
-                        {{ form.manpower_involved.1.label_tag }}
-                        <span class="blue-arrow">LB - Manpower</span>
-                        <span class="red-arrow">PB - Manpower</span>
-                    </div>
-                </div>
+          <div class="blue-box black-box black-box-top">
+            <h1>3. Recruitment Process</h1>
+          </div>
+          <div class="black-box padded-box checkbox-group-marker" id="manpower_involved">
+            <div class="checkbox-group pull-right" style="margin-right: 4px">{{ form.manpower_involved.0 }} {{ form.manpower_involved.0.label_tag }}</div>
+            <h2><span class="section-number">3.1</span> Was a manpower involved?</h2>
+            <div class="checkbox-group" style="margin-top: 10px">
+              {{ form.manpower_involved.1 }}
+              {{ form.manpower_involved.1.label_tag }}
+              <span class="blue-arrow">LB - Manpower</span>
+              <span class="red-arrow">PB - Manpower</span>
+            </div>
+          </div>
 
-                <div class="black-box padded-box checkbox-group-marker" id="victim_recruited_in_village">
-                    <h2>
-                        <span class="section-number">3.2</span>
-                        Did someone recruit you in your village and persuade you go abroad?<span class="required">*</span>
-                    </h2>
-                    <div class="checkbox-group" style="margin-top: 10px">
-                        {{ form.victim_recruited_in_village.0 }}
-                        <small>(Skip the rest of this section)</small>
-                    </div>
-                    <div class="checkbox-group" style="margin-top: 10px">
-                        {{ form.victim_recruited_in_village.1 }}
-                        <span class="red-arrow">PB - for each Broker</span>
-                    </div>
-                </div>
+          <div class="black-box padded-box checkbox-group-marker" id="victim_recruited_in_village">
+            <h2>
+              <span class="section-number">3.2</span>
+              Did someone recruit you in your village and persuade you go abroad?<span class="required">*</span>
+            </h2>
+            <div class="checkbox-group" style="margin-top: 10px">
+              {{ form.victim_recruited_in_village.0 }}
+              <small>(Skip the rest of this section)</small>
+            </div>
+            <div class="checkbox-group" style="margin-top: 10px">
+              {{ form.victim_recruited_in_village.1 }}
+              <span class="red-arrow">PB - for each Broker</span>
+            </div>
+          </div>
 
-                <div class="black-box clearfix">
-                    <h2>
-                        <span class="section-number">3.3</span>
-                        Broker's Relation to victim
-                    </h2>
-                </div>
-                <div class="black-box clearfix checkbox-group-marker" id="brokers_relation_to_victim">
-                    <div class="col-xs-4">
-                        <div class="checkbox-group">{{ form.brokers_relation_to_victim_own_dad }} {{ form.brokers_relation_to_victim_own_dad.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.brokers_relation_to_victim_own_mom }} {{ form.brokers_relation_to_victim_own_mom.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.brokers_relation_to_victim_own_uncle }} {{ form.brokers_relation_to_victim_own_uncle.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.brokers_relation_to_victim_own_aunt }} {{ form.brokers_relation_to_victim_own_aunt.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.brokers_relation_to_victim_own_bro }} {{ form.brokers_relation_to_victim_own_bro.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.brokers_relation_to_victim_own_sister }} {{ form.brokers_relation_to_victim_own_sister.label_tag }}</div>
-                    </div>
-                    <div class="col-xs-4">
-                        <div class="checkbox-group">{{ form.brokers_relation_to_victim_own_other_relative }} {{ form.brokers_relation_to_victim_own_other_relative.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.brokers_relation_to_victim_friend }} {{ form.brokers_relation_to_victim_friend.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.brokers_relation_to_victim_agent }} {{ form.brokers_relation_to_victim_agent.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.brokers_relation_to_victim_husband }} {{ form.brokers_relation_to_victim_husband.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.brokers_relation_to_victim_boyfriend }} {{ form.brokers_relation_to_victim_boyfriend.label_tag }}</div>
-                    </div>
-                    <div class="col-xs-4">
-                        <div class="checkbox-group">{{ form.brokers_relation_to_victim_neighbor }} {{ form.brokers_relation_to_victim_neighbor.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.brokers_relation_to_victim_recently_met }} {{ form.brokers_relation_to_victim_recently_met.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.brokers_relation_to_victim_contractor }} {{ form.brokers_relation_to_victim_contractor.label_tag }}</div>
-                        <div class="label-inside-field inline-checkbox-group">
-                        <label>{{ form.brokers_relation_to_victim_other }} {{ form.brokers_relation_to_victim_other.label }}</label>
-                            {{ form.brokers_relation_to_victim_other_value }}
-                        </div>
-                    </div>
-                </div>
+          <div class="black-box clearfix">
+            <h2>
+              <span class="section-number">3.3</span>
+              Broker's Relation to victim
+            </h2>
+          </div>
+          <div class="black-box clearfix checkbox-group-marker" id="brokers_relation_to_victim">
+            <div class="col-xs-4">
+              <div class="checkbox-group">{{ form.brokers_relation_to_victim_own_dad }} {{ form.brokers_relation_to_victim_own_dad.label_tag }}</div>
+              <div class="checkbox-group">{{ form.brokers_relation_to_victim_own_mom }} {{ form.brokers_relation_to_victim_own_mom.label_tag }}</div>
+              <div class="checkbox-group">{{ form.brokers_relation_to_victim_own_uncle }} {{ form.brokers_relation_to_victim_own_uncle.label_tag }}</div>
+              <div class="checkbox-group">{{ form.brokers_relation_to_victim_own_aunt }} {{ form.brokers_relation_to_victim_own_aunt.label_tag }}</div>
+              <div class="checkbox-group">{{ form.brokers_relation_to_victim_own_bro }} {{ form.brokers_relation_to_victim_own_bro.label_tag }}</div>
+              <div class="checkbox-group">{{ form.brokers_relation_to_victim_own_sister }} {{ form.brokers_relation_to_victim_own_sister.label_tag }}</div>
+            </div>
+            <div class="col-xs-4">
+              <div class="checkbox-group">{{ form.brokers_relation_to_victim_own_other_relative }} {{ form.brokers_relation_to_victim_own_other_relative.label_tag }}</div>
+              <div class="checkbox-group">{{ form.brokers_relation_to_victim_friend }} {{ form.brokers_relation_to_victim_friend.label_tag }}</div>
+              <div class="checkbox-group">{{ form.brokers_relation_to_victim_agent }} {{ form.brokers_relation_to_victim_agent.label_tag }}</div>
+              <div class="checkbox-group">{{ form.brokers_relation_to_victim_husband }} {{ form.brokers_relation_to_victim_husband.label_tag }}</div>
+              <div class="checkbox-group">{{ form.brokers_relation_to_victim_boyfriend }} {{ form.brokers_relation_to_victim_boyfriend.label_tag }}</div>
+            </div>
+            <div class="col-xs-4">
+              <div class="checkbox-group">{{ form.brokers_relation_to_victim_neighbor }} {{ form.brokers_relation_to_victim_neighbor.label_tag }}</div>
+              <div class="checkbox-group">{{ form.brokers_relation_to_victim_recently_met }} {{ form.brokers_relation_to_victim_recently_met.label_tag }}</div>
+              <div class="checkbox-group">{{ form.brokers_relation_to_victim_contractor }} {{ form.brokers_relation_to_victim_contractor.label_tag }}</div>
+              <div class="label-inside-field inline-checkbox-group">
+                <label>{{ form.brokers_relation_to_victim_other }} {{ form.brokers_relation_to_victim_other.label }}</label>
+                {{ form.brokers_relation_to_victim_other_value }}
+              </div>
+            </div>
+          </div>
 
-                <div class="black-box padded-box clearfix">
-                    <div style="width: 220px" class="pull-left">
-                        <h2>
-                            <span class="section-number">3.4</span>
-                            If married to broker, how long have you been married?
-                        </h2>
-                    </div>
-                    <div class="label-inside-field pull-right">
-                        {{ form.victim_married_to_broker_years.label_tag }}{{ form.victim_married_to_broker_years|attr:"style: width: 130px" }}
-                    </div>
-                    <div class="label-inside-field pull-right">
-                        {{ form.victim_married_to_broker_months.label_tag }}{{ form.victim_married_to_broker_months|attr:"style: width: 130px" }}
-                    </div>
-                </div>
+          <div class="black-box padded-box clearfix">
+            <div style="width: 220px" class="pull-left">
+              <h2>
+                <span class="section-number">3.4</span>
+                If married to broker, how long have you been married?
+              </h2>
+            </div>
+            <div class="label-inside-field pull-right">
+              {{ form.victim_married_to_broker_years.label_tag }}{{ form.victim_married_to_broker_years|attr:"style: width: 130px" }}
+            </div>
+            <div class="label-inside-field pull-right">
+              {{ form.victim_married_to_broker_months.label_tag }}{{ form.victim_married_to_broker_months|attr:"style: width: 130px" }}
+            </div>
+          </div>
 
-                <div class="black-box clearfix">
-                    <h2>
-                        <span class="section-number">3.5</span>
-                        How did you meet the broker?
-                    </h2>
-                </div>
-                <div class="black-box clearfix checkbox-group-marker" id="victim_how_met_broker">
-                    <div class="col-xs-6">
-                        <div class="checkbox-group">{{ form.victim_how_met_broker_from_community }} {{ form.victim_how_met_broker_from_community.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.victim_how_met_broker_at_work }} {{ form.victim_how_met_broker_at_work.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.victim_how_met_broker_at_school }} {{ form.victim_how_met_broker_at_school.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.victim_how_met_broker_job_advertisement }} {{ form.victim_how_met_broker_job_advertisement.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.victim_how_met_broker_he_approached_me }} {{ form.victim_how_met_broker_he_approached_me.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.victim_how_met_broker_through_friends }} {{ form.victim_how_met_broker_through_friends.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.victim_how_met_broker_through_family }} {{ form.victim_how_met_broker_through_family.label_tag }}</div>
-                    </div>
-                    <div class="col-xs-6">
-                        <div class="checkbox-group">{{ form.victim_how_met_broker_at_wedding }} {{ form.victim_how_met_broker_at_wedding.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.victim_how_met_broker_in_a_vehicle }} {{ form.victim_how_met_broker_in_a_vehicle.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.victim_how_met_broker_in_a_hospital }} {{ form.victim_how_met_broker_in_a_hospital.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.victim_how_met_broker_went_myself }} {{ form.victim_how_met_broker_went_myself.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.victim_how_met_broker_called_my_mobile }} {{ form.victim_how_met_broker_called_my_mobile.label_tag }}</div>
-                        <div class="label-inside-field inline-checkbox-group">
-                            <label>{{ form.victim_how_met_broker_other }} {{ form.victim_how_met_broker_other.label }}</label>
-                            {{ form.victim_how_met_broker_other_value|attr:"style: padding-top: 20px; height: 80px" }}
-                        </div>
-                    </div>
-                </div>
+          <div class="black-box clearfix">
+            <h2>
+              <span class="section-number">3.5</span>
+              How did you meet the broker?
+            </h2>
+          </div>
+          <div class="black-box clearfix checkbox-group-marker" id="victim_how_met_broker">
+            <div class="col-xs-6">
+              <div class="checkbox-group">{{ form.victim_how_met_broker_from_community }} {{ form.victim_how_met_broker_from_community.label_tag }}</div>
+              <div class="checkbox-group">{{ form.victim_how_met_broker_at_work }} {{ form.victim_how_met_broker_at_work.label_tag }}</div>
+              <div class="checkbox-group">{{ form.victim_how_met_broker_at_school }} {{ form.victim_how_met_broker_at_school.label_tag }}</div>
+              <div class="checkbox-group">{{ form.victim_how_met_broker_job_advertisement }} {{ form.victim_how_met_broker_job_advertisement.label_tag }}</div>
+              <div class="checkbox-group">{{ form.victim_how_met_broker_he_approached_me }} {{ form.victim_how_met_broker_he_approached_me.label_tag }}</div>
+              <div class="checkbox-group">{{ form.victim_how_met_broker_through_friends }} {{ form.victim_how_met_broker_through_friends.label_tag }}</div>
+              <div class="checkbox-group">{{ form.victim_how_met_broker_through_family }} {{ form.victim_how_met_broker_through_family.label_tag }}</div>
+            </div>
+            <div class="col-xs-6">
+              <div class="checkbox-group">{{ form.victim_how_met_broker_at_wedding }} {{ form.victim_how_met_broker_at_wedding.label_tag }}</div>
+              <div class="checkbox-group">{{ form.victim_how_met_broker_in_a_vehicle }} {{ form.victim_how_met_broker_in_a_vehicle.label_tag }}</div>
+              <div class="checkbox-group">{{ form.victim_how_met_broker_in_a_hospital }} {{ form.victim_how_met_broker_in_a_hospital.label_tag }}</div>
+              <div class="checkbox-group">{{ form.victim_how_met_broker_went_myself }} {{ form.victim_how_met_broker_went_myself.label_tag }}</div>
+              <div class="checkbox-group">{{ form.victim_how_met_broker_called_my_mobile }} {{ form.victim_how_met_broker_called_my_mobile.label_tag }}</div>
+              <div class="label-inside-field inline-checkbox-group">
+                <label>{{ form.victim_how_met_broker_other }} {{ form.victim_how_met_broker_other.label }}</label>
+                {{ form.victim_how_met_broker_other_value|attr:"style: padding-top: 20px; height: 80px" }}
+              </div>
+            </div>
+          </div>
 
-                <div class="black-box clearfix">
-                    <div class="label-inside-field">
-                        <label style="font-size: 26px; line-height: 18px; padding: 4px;">
-                            <span class="section-number">3.6</span>
-                            If by mobile, explain.
-                            <small style="font-size: 18px">(how he got your number, what he said, etc.)</small>
-                        </label>
-                        {{ form.victim_how_met_broker_mobile_explanation|attr:"style: padding-top: 60px; height: 120px" }}
-                    </div>
-                </div>
+          <div class="black-box clearfix">
+            <div class="label-inside-field">
+              <label style="font-size: 26px; line-height: 18px; padding: 4px;">
+                <span class="section-number">3.6</span>
+                If by mobile, explain.
+                <small style="font-size: 18px">(how he got your number, what he said, etc.)</small>
+              </label>
+              {{ form.victim_how_met_broker_mobile_explanation|attr:"style: padding-top: 60px; height: 120px" }}
+            </div>
+          </div>
 
-                <div class="black-box clearfix">
-                    <h2><span class="section-number">3.7</span> How long had you known broker before you left?</h2>
-                    <div class="clearfix">
-                        <div class="col-xs-6">
-                            <div class="label-inside-field">
-                                {{ form.victim_how_long_known_broker_years.label_tag }}{{ form.victim_how_long_known_broker_years }}
-                            </div>
-                        </div>
-                        <div class="col-xs-6">
-                            <div class="label-inside-field">
-                                {{ form.victim_how_long_known_broker_months.label_tag }}{{ form.victim_how_long_known_broker_months }}
-                            </div>
-                        </div>
-                    </div>
+          <div class="black-box clearfix">
+            <h2><span class="section-number">3.7</span> How long had you known broker before you left?</h2>
+            <div class="clearfix">
+              <div class="col-xs-6">
+                <div class="label-inside-field">
+                  {{ form.victim_how_long_known_broker_years.label_tag }}{{ form.victim_how_long_known_broker_years }}
                 </div>
-
-                <div class="black-box padded-box clearfix checkbox-group-marker" id="victim_how_expense_was_paid">
-                    <h2>
-                        <span class="section-number">3.8</span>
-                        How was the expense for taking you abroad paid for?
-                    </h2>
-                    <div style="padding: 6px">
-                        <div class="checkbox-group">{{ form.victim_how_expense_was_paid_paid_myself }} {{ form.victim_how_expense_was_paid_paid_myself.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.victim_how_expense_was_paid_broker_paid_all }} {{ form.victim_how_expense_was_paid_broker_paid_all.label_tag }}</div>
-                    </div>
-
-                    <div style="border: 1px solid black; padding: 4px" class="clearfix">
-                        <div style="width: 160px" class="pull-right">
-                            <div class="label-inside-field">
-                                {{ form.victim_how_expense_was_paid_amount.label_tag }}{{ form.victim_how_expense_was_paid_amount }}
-                            </div>
-                        </div>
-                        <div style="width: 260px">
-                        <div class="checkbox-group">{{ form.victim_how_expense_was_paid_gave_money_to_broker }} {{ form.victim_how_expense_was_paid_gave_money_to_broker.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.victim_how_expense_was_paid_broker_gave_loan }} {{ form.victim_how_expense_was_paid_broker_gave_loan.label_tag }}</div>
-                        </div>
-                    </div>
+              </div>
+              <div class="col-xs-6">
+                <div class="label-inside-field">
+                  {{ form.victim_how_long_known_broker_months.label_tag }}{{ form.victim_how_long_known_broker_months }}
                 </div>
+              </div>
+            </div>
+          </div>
 
-                <div class="black-box padded-box clearfix checkbox-group-marker" id="broker_works_in_job_location">
-                    <h2>
-                        <span class="section-number">3.9</span>
-                        If you were going for a job, does the broker work in the same job in the same place?
-                    </h2>
-                    <div class="inline-checkbox-group">
-                        {{ form.broker_works_in_job_location_no }} {{ form.broker_works_in_job_location_no.label_tag }}
-                        {{ form.broker_works_in_job_location_yes }} {{ form.broker_works_in_job_location_yes.label_tag }}
-                        {{ form.broker_works_in_job_location_dont_know }} {{ form.broker_works_in_job_location_dont_know.label_tag }}
-                    </div>
-                </div>
-
-                <div class="black-box padded-box clearfix">
-                    <div class="pull-right label-inside-field">
-                        {{ form.amount_victim_would_earn.label_tag }}{{ form.amount_victim_would_earn|attr:"style: width: 100px" }}
-                    </div>
-                    <h2><span class="section-number">3.10</span> If going for a job, how much did the broker say you'd be earning per month(NRS)?</h2>
-                </div>
-
-                <div class="black-box padded-box clearfix">
-                    <h2><span class="section-number">3.11</span> Besides those with you now, how many do you know of to whom the broker made similar promises?</h2>
-                    {{ form.number_broker_made_similar_promises_to|attr:"style: width: 60px" }}
-                </div>
+          <div class="black-box padded-box clearfix checkbox-group-marker" id="victim_how_expense_was_paid">
+            <h2>
+              <span class="section-number">3.8</span>
+              How was the expense for taking you abroad paid for?
+            </h2>
+            <div style="padding: 6px">
+              <div class="checkbox-group">{{ form.victim_how_expense_was_paid_paid_myself }} {{ form.victim_how_expense_was_paid_paid_myself.label_tag }}</div>
+              <div class="checkbox-group">{{ form.victim_how_expense_was_paid_broker_paid_all }} {{ form.victim_how_expense_was_paid_broker_paid_all.label_tag }}</div>
             </div>
 
-            <div class="col-xs-4 major-column">
-                <div class="blue-box black-box black-box-top">
-                    <h1>4. Travel and Transit</h1>
+            <div style="border: 1px solid black; padding: 4px" class="clearfix">
+              <div style="width: 160px" class="pull-right">
+                <div class="label-inside-field">
+                  {{ form.victim_how_expense_was_paid_amount.label_tag }}{{ form.victim_how_expense_was_paid_amount }}
                 </div>
-                <div class="black-box padded-box clearfix checkbox-group-marker" id="victim_first_time_crossing_border">
-                    <h2><span class="section-number">4.1</span> 1st time crossing border?</h2>
-                    <div class="pull-right" style="width: 80px">
-                        {% for choice in form.victim_first_time_crossing_border reversed %}
-                            <div class="checkbox-group">{{ choice }} {{ choice.label_tag }}</div>
-                        {% endfor %}
-                    </div>
-                </div>
-
-                <div class="black-box clearfix checkbox-group-marker" id="victim_primary_means_of_travel">
-                    <h2>
-                        <span class="section-number">4.2</span>
-                        Primary means of travel?<span class="required">*</span>
-                    </h2>
-                    <div class="col-xs-4">
-                        <div class="checkbox-group">{{ form.victim_primary_means_of_travel_tourist_bus }} {{ form.victim_primary_means_of_travel_tourist_bus.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.victim_primary_means_of_travel_motorbike }} {{ form.victim_primary_means_of_travel_motorbike.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.victim_primary_means_of_travel_private_car }} {{ form.victim_primary_means_of_travel_private_car.label_tag }}</div>
-                    </div>
-                    <div class="col-xs-4">
-                        <div class="checkbox-group">{{ form.victim_primary_means_of_travel_local_bus }} {{ form.victim_primary_means_of_travel_local_bus.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.victim_primary_means_of_travel_microbus }} {{ form.victim_primary_means_of_travel_microbus.label_tag }}</div>
-                        <div class="checkbox-group">{{ form.victim_primary_means_of_travel_plane }} {{ form.victim_primary_means_of_travel_plane.label_tag }}</div>
-                    </div>
-                    <div class="col-xs-4">
-                        <div class="label-inside-field inline-checkbox-group">
-                            <label>{{ form.victim_primary_means_of_travel_other }} {{ form.victim_primary_means_of_travel_other.label }}</label>
-                            {{ form.victim_primary_means_of_travel_other_value|attr:"style: padding-top: 20px; height: 80px" }}
-                        </div>
-                    </div>
-                </div>
-
-                <div class="black-box padded-box checkbox-group-marker" id="victim_stayed_somewhere_between">
-                    <h2><span class="section-number">4.3</span> Did you stay somewhere between your village and the border?<span class="required">*</span></h2>
-                    <div class="inline-checkbox-group">
-                        {% for choice in form.victim_stayed_somewhere_between %}
-                            {{ choice }} {{ choice.label_tag }}
-                        {% endfor %}
-                    </div>
-
-                    <span class="blue-arrow">LB - Transit Hideout</span>
-                </div>
-
-                <div class="black-box">
-                    <h2><span class="section-number">4.4</span> For how long did you stay?</h2>
-                </div>
-                <div class="black-box">
-                    <table>
-                        <tbody>
-                            <tr>
-                                <td>{{ form.victim_how_long_stayed_between_days.label_tag }}</td>
-                                <td>{{ form.victim_how_long_stayed_between_days|add_class:"full-width" }}</td>
-                                <td>{{ form.victim_how_long_stayed_between_start_date.label_tag }}</td>
-                                <td>{{ form.victim_how_long_stayed_between_start_date|add_class:"full-width" }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="black-box padded-box checkbox-group-marker" id="victim_was_hidden">
-                    <h2><span class="section-number">4.5</span> Was any attempt made to hide your presence there?</h2>
-                    <div class="inline-checkbox-group">{{ form.victim_was_hidden.0 }} {{ form.victim_was_hidden.0.label_tag }}</div>
-                    <div class="label-inside-field inline-checkbox-group">
-                        {{ form.victim_was_hidden.1 }}
-                        {{ form.victim_was_hidden_explanation|attr:"style: padding-left: 60px; height: 80px" }}
-                    </div>
-                </div>
-
-                <div class="black-box padded-box checkbox-group-marker" id="victim_was_free_to_go_out">
-                    <h2><span class="section-number">4.6</span> Were you free to go out?</h2>
-                    <div class="inline-checkbox-group">{{ form.victim_was_free_to_go_out.1 }} {{ form.victim_was_free_to_go_out.1.label_tag }}</div>
-                    <div class="label-inside-field inline-checkbox-group">
-                        {{ form.victim_was_free_to_go_out.0 }}
-                        {{ form.victim_was_free_to_go_out_explanation|attr:"style: padding-left: 60px; height: 80px" }}
-                    </div>
-                </div>
-
-                <div class="black-box padded-box clearfix">
-                    <h2><span class="section-number">4.7</span> Besides those you were intercepted with, how many others were with you who were in a similar situation?</h2>
-                    {{ form.how_many_others_in_situation|add_class:"pull-right"|attr:"style: width: 100px" }}
-                </div>
-
-                <div class="black-box padded-box clearfix">
-                    {{ form.others_in_situation_age_of_youngest|add_class:"pull-right"|attr:"style: width: 100px" }}
-                    <h2><span class="section-number">4.8</span> What was the age of the youngest?</h2>
-                </div>
-
-                <div class="black-box padded-box padded-box checkbox-group-marker" id="passport_made">
-                    <h2>
-                        <span class="section-number">4.9</span>
-                        Was a passport made for you?
-                    </h2>
-
-                    <div class="col-xs-6">
-                        <div class="checkbox-group">{{ form.passport_made_no_passport_made }} {{ form.passport_made_no_passport_made.label_tag }}</div>
-                    </div>
-                    <div class="col-xs-6">
-                        <div class="checkbox-group">{{ form.passport_made_real_passport_made }} {{ form.passport_made_real_passport_made.label_tag }}</div>
-                    </div>
-                    <div class="checkbox-group">{{ form.passport_made_passport_included_false_name }} {{ form.passport_made_passport_included_false_name.label_tag }}</div>
-                    <div class="checkbox-group">{{ form.passport_made_passport_included_other_false_info }} {{ form.passport_made_passport_included_other_false_info.label_tag }}</div>
-                    <div class="checkbox-group">{{ form.passport_made_passport_was_fake }} {{ form.passport_made_passport_was_fake.label_tag }}</div>
-
-                    <div class="text-center">
-                        <span class="blue-arrow">LB - Passport</span>
-                        <span class="red-arrow">PB - Passport</span>
-                    </div>
-                </div>
-
-                <div class="black-box clearfix padded-box checkbox-group-marker" id="victim_passport_with_broker">
-                    <h2><span class="section-number">4.10</span> Is your passport or a work permit with a broker?</h2>
-                    <div class="inline-checkbox-group">
-                        {% for choice in form.victim_passport_with_broker %}
-                            {{ choice }} {{ choice.label_tag }}
-                        {% endfor %}
-                    </div>
-                </div>
-
-                <div class="black-box padded-box padded-box checkbox-group-marker" id="abuse_happened">
-                    <div class="clearfix">
-                        <div class="col-xs-7">
-                            <h2>
-                                <span class="section-number">4.11</span>
-                                Did these take place on the way?
-                                <abbr class="max-allowed">(6)</abbr>
-                            </h2>
-                            <div class="checkbox-group">{{ form.abuse_happened_sexual_harassment }} {{ form.abuse_happened_sexual_harassment.label_tag }}</div>
-                            <div class="checkbox-group">{{ form.abuse_happened_sexual_abuse }} {{ form.abuse_happened_sexual_abuse.label_tag }}</div>
-                            <div class="checkbox-group">{{ form.abuse_happened_physical_abuse }} {{ form.abuse_happened_physical_abuse.label_tag }}</div>
-                            <div class="checkbox-group">{{ form.abuse_happened_threats }} {{ form.abuse_happened_threats.label_tag }}</div>
-                            <div class="checkbox-group">{{ form.abuse_happened_denied_proper_food }} {{ form.abuse_happened_denied_proper_food.label_tag }}</div>
-                            <div class="checkbox-group">{{ form.abuse_happened_forced_to_take_drugs }} {{ form.abuse_happened_forced_to_take_drugs.label_tag }}</div>
-                        </div>
-                        <div class="col-xs-5">
-                            <div class="label-inside-field">{{ form.abuse_happened_by_whom|attr:"rows:8" }}            {{ form.abuse_happened_by_whom.label_tag }}</div>
-                        </div>
-                    </div>
-
-                    <div class="label-inside-field">{{ form.abuse_happened_explanation|attr:"rows:3" }}        {{ form.abuse_happened_explanation.label_tag }}</div>
-                </div>
-
-                <div class="black-box padded-box padded-box checkbox-group-marker" id="victim_traveled_with_broker_companion">
-                    <h2>
-                        <span class="section-number">4.12</span>
-                        Did you travel to the border with a companion who was appointed by the broker to take you across?
-                    </h2>
-                    <div class="checkbox-group" style="margin-top: 10px">
-                        <div class="inline-checkbox-group">{{ form.victim_traveled_with_broker_companion_yes }} {{ form.victim_traveled_with_broker_companion_yes.label_tag }}</div>
-                        <span class="red-arrow">PB - Companion</span>
-                    </div>
-                    <div class="checkbox-group" style="margin-top: 10px">
-                        <div class="inline-checkbox-group">{{ form.victim_traveled_with_broker_companion_no }} {{ form.victim_traveled_with_broker_companion_no.label_tag }}</div>
-                        <small>(Skip the rest of this section)</small>
-                    </div>
-                    <div class="checkbox-group" style="margin-top: 10px">
-                        <div class="inline-checkbox-group">{{ form.victim_traveled_with_broker_companion_broker_took_me_to_border }} {{ form.victim_traveled_with_broker_companion_broker_took_me_to_border.label_tag }}</div>
-                        <small>(Skip the rest of this section)</small>
-                    </div>
-                </div>
-
-                <div class="black-box padded-box">
-                    <h2>
-                        <span class="section-number">4.13</span>
-                        Where did the broker meet up with the companion?
-                    </h2>
-                    <div class="text-center">
-                        <span class="blue-arrow">LB - Nepal Meet Point</span>
-                    </div>
-                </div>
+              </div>
+              <div style="width: 260px">
+                <div class="checkbox-group">{{ form.victim_how_expense_was_paid_gave_money_to_broker }} {{ form.victim_how_expense_was_paid_gave_money_to_broker.label_tag }}</div>
+                <div class="checkbox-group">{{ form.victim_how_expense_was_paid_broker_gave_loan }} {{ form.victim_how_expense_was_paid_broker_gave_loan.label_tag }}</div>
+              </div>
             </div>
+          </div>
 
-            <div class="col-xs-4 major-column">
-
-                <div class="black-box black-box-top padded-box clearfix padded-box checkbox-group-marker" id="companion_with_when_intercepted">
-                    <div class="pull-right" style="width: 80px">
-                        {% for choice in form.companion_with_when_intercepted reversed %}
-                            <div class="checkbox-group">{{ choice }} {{ choice.label_tag }}</div>
-                        {% endfor %}
-                    </div>
-                    <div style="width: 260px">
-                        <h2>
-                            <span class="section-number">4.14</span>
-                            Was the companion with you when intercepted?
-                        </h2>
-                    </div>
-                </div>
-
-                <div class="black-box padded-box padded-box checkbox-group-marker" id="planning_to_meet_companion_later">
-                    <h2>
-                        <span class="section-number">4.15</span>
-                        If No, were you planning to<br/>meet him/her again in India?
-                    </h2>
-                    <div class="inline-checkbox-group">
-                        {{ form.planning_to_meet_companion_later.0 }}
-                        {{ form.planning_to_meet_companion_later.0.label_tag }}
-                    </div>
-                    <div class="checkbox-group" style="margin-top: 10px">
-                        {{ form.planning_to_meet_companion_later.1 }}
-                        {{ form.planning_to_meet_companion_later.1.label_tag }} - Where?
-                        <span class="blue-arrow">LB - India Meet Point</span>
-                    </div>
-                </div>
-
-                <div class="black-box padded-box padded-box checkbox-group-marker" id="money_changed_hands_broker_companion">
-                    <h2><span class="section-number">4.16</span>
-                        Did money change hands between broker and the companion?
-                    </h2>
-
-                    <div class="inline-checkbox-group">{{ form.money_changed_hands_broker_companion_no }} {{ form.money_changed_hands_broker_companion_no.label_tag }}</div>
-                    <div class="inline-checkbox-group">{{ form.money_changed_hands_broker_companion_dont_know }} {{ form.money_changed_hands_broker_companion_dont_know.label_tag }}</div>
-                    <div class="inline-checkbox-group">{{ form.money_changed_hands_broker_companion_broker_gave_money }} {{ form.money_changed_hands_broker_companion_broker_gave_money.label_tag }}</div>
-                    <div class="inline-checkbox-group">{{ form.money_changed_hands_broker_companion_companion_gave_money }} {{ form.money_changed_hands_broker_companion_companion_gave_money.label_tag }}</div>
-                </div>
-
-                <div class="blue-box black-box" style="padding-top: 1px">
-                    <h1>5. Destination &amp; India Contact</h1>
-                </div>
-                <div class="black-box padded-box padded-box checkbox-group-marker" id="meeting_at_border">
-                    <h2>
-                        <span class="section-number">5.1</span>
-                        Did the broker / companion arrange someone to meet you after crossing the border?<span class="required">*</span>
-                    </h2>
-                    <div class="inline-checkbox-group">{{ form.meeting_at_border_yes }} {{ form.meeting_at_border_yes.label_tag }}</div>
-                    <div class="inline-checkbox-group">{{ form.meeting_at_border_no }} {{ form.meeting_at_border_no.label_tag }}</div>
-                    <div class="inline-checkbox-group">{{ form.meeting_at_border_meeting_broker }} {{ form.meeting_at_border_meeting_broker.label_tag }}</div>
-                    <div class="inline-checkbox-group">{{ form.meeting_at_border_meeting_companion }} {{ form.meeting_at_border_meeting_companion.label_tag }}</div>
-                </div>
-
-                <div class="black-box padded-box padded-box checkbox-group-marker" id="victim_knew_details_about_destination">
-                    <h2>
-                        <span class="section-number">5.2</span>
-                        Do you know any details about the place you were headed to in India?<span class="required">*</span>
-                    </h2>
-                    <div class="inline-checkbox-group">
-                    {% for choice in form.victim_knew_details_about_destination %}
-                        {{ choice }} {{ choice.label_tag }}
-                    {% endfor %}
-                    </div>
-
-                    <span class="blue-arrow">LB - Destination</span>
-                </div>
-
-                <div class="black-box padded-box">
-                    <h2><span class="section-number">5.3</span>
-                        Besides the broker and the companion, is there any other person or place you know of involved in the business of sending girls overseas?
-                    </h2>
-                </div>
-
-                <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="other_involved_person_in_india">
-                    <div class="col-xs-7">
-                        <p>Someone you were supposed to be meeting in India who may be involved in bringing girls to India</p>
-                    </div>
-                    <div class="col-xs-5">
-                        <br/>
-                        {% for choice in form.other_involved_person_in_india reversed %}
-                            <div class="checkbox-group">{{ choice }} {{ choice.label_tag }}</div>
-                        {% endfor %}
-                        <span style="top: 16px; right: -10px" class="red-arrow fat-arrow">PB - Indian<br/>Trafficker</span>
-                    </div>
-                </div>
-
-                <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="other_involved_husband_trafficker">
-                    <div class="col-xs-7">
-                        <p>A contact of a &quot;Husband Trafficker&quot;</p>
-                    </div>
-                    <div class="col-xs-5" style="padding-top: 10px">
-                        {% for choice in form.other_involved_husband_trafficker %}
-                            <div class="checkbox-group">{{ choice }} {{ choice.label_tag }}</div>
-                        {% endfor %}
-                        <span style="top: 0px; right: -10px" class="red-arrow fat-arrow">PB - Contact<br/>of Husband</span>
-                    </div>
-                </div>
-
-                <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="other_involved_someone_met_along_the_way">
-                    <div class="col-xs-7">
-                        <p>Someone the recruiter or companion met along the way who works with them</p>
-                    </div>
-                    <div class="col-xs-5" style="padding-top: 24px">
-                        {% for choice in form.other_involved_someone_met_along_the_way %}
-                            <div class="checkbox-group">{{ choice }} {{ choice.label_tag }}</div>
-                        {% endfor %}
-                        <span style="top: 0; right: -10px; height: 110px" class="red-arrow fat-arrow">PB - ______ <br/>of Recruiter<br/>or Companion</span>
-                    </div>
-                </div>
-
-                <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="other_involved_someone_involved_in_trafficking">
-                    <div class="col-xs-7">
-                        <p>Someone involved in trafficking that you heard about along the way or before you came to the border</p>
-                    </div>
-                    <div class="col-xs-5" style="padding-top: 42px">
-                        {% for choice in form.other_involved_someone_involved_in_trafficking %}
-                            <div class="checkbox-group">{{ choice }} {{ choice.label_tag }}</div>
-                        {% endfor %}
-                        <span style="top: 30px; right: -10px" class="red-arrow fat-arrow">PB - Known<br/>Trafficker</span>
-                    </div>
-                </div>
-
-                <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="other_involved_place_involved_in_trafficking">
-                    <div class="col-xs-7">
-                        <p>Some place involved in trafficking that you heard about along the way or before you came to the border</p>
-                    </div>
-                    <div class="col-xs-5" style="padding-top: 42px">
-                        {% for choice in form.other_involved_place_involved_in_trafficking %}
-                            <div class="checkbox-group">{{ choice }} {{ choice.label_tag }}</div>
-                        {% endfor %}
-                        <span style="top: 30px; right: -10px" class="blue-arrow fat-arrow">LB - Known<br/>Location</span>
-                    </div>
-                </div>
-
-                <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="victim_has_worked_in_sex_industry">
-                    <h2><span class="section-number">5.4</span> Have you ever worked in the sex industry?</h2>
-                    <div class="inline-checkbox-group">
-                    {% for choice in form.victim_has_worked_in_sex_industry %}
-                        {{ choice }} {{ choice.label_tag }}
-                    {% endfor %}
-                    </div>
-                </div>
-
-                <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="victim_place_worked_involved_sending_girls_overseas">
-                    <h2><span class="section-number">5.5</span> Was the place you worked involved in sending girls overseas?</h2>
-                    <div class="inline-checkbox-group">
-                    {% for choice in form.victim_place_worked_involved_sending_girls_overseas %}
-                        {{ choice }} {{ choice.label_tag }}
-                    {% endfor %}
-                    </div>
-                    <span class="blue-arrow">LB - Sex Industry</span>
-                </div>
-
+          <div class="black-box padded-box clearfix checkbox-group-marker" id="broker_works_in_job_location">
+            <h2>
+              <span class="section-number">3.9</span>
+              If you were going for a job, does the broker work in the same job in the same place?
+            </h2>
+            <div class="inline-checkbox-group">
+              {{ form.broker_works_in_job_location_no }} {{ form.broker_works_in_job_location_no.label_tag }}
+              {{ form.broker_works_in_job_location_yes }} {{ form.broker_works_in_job_location_yes.label_tag }}
+              {{ form.broker_works_in_job_location_dont_know }} {{ form.broker_works_in_job_location_dont_know.label_tag }}
             </div>
+          </div>
+
+          <div class="black-box padded-box clearfix">
+            <div class="pull-right label-inside-field">
+              {{ form.amount_victim_would_earn.label_tag }}{{ form.amount_victim_would_earn|attr:"style: width: 100px" }}
+            </div>
+            <h2><span class="section-number">3.10</span> If going for a job, how much did the broker say you'd be earning per month(NRS)?</h2>
+          </div>
+
+          <div class="black-box padded-box clearfix">
+            <h2><span class="section-number">3.11</span> Besides those with you now, how many do you know of to whom the broker made similar promises?</h2>
+            {{ form.number_broker_made_similar_promises_to|attr:"style: width: 60px" }}
+          </div>
         </div>
+
+        <div class="col-xs-4 major-column">
+          <div class="blue-box black-box black-box-top">
+            <h1>4. Travel and Transit</h1>
+          </div>
+          <div class="black-box padded-box clearfix checkbox-group-marker" id="victim_first_time_crossing_border">
+            <h2><span class="section-number">4.1</span> 1st time crossing border?</h2>
+            <div class="pull-right" style="width: 80px">
+              {% for choice in form.victim_first_time_crossing_border reversed %}
+                <div class="checkbox-group">{{ choice }} {{ choice.label_tag }}</div>
+              {% endfor %}
+            </div>
+          </div>
+
+          <div class="black-box clearfix checkbox-group-marker" id="victim_primary_means_of_travel">
+            <h2>
+              <span class="section-number">4.2</span>
+              Primary means of travel?<span class="required">*</span>
+            </h2>
+            <div class="col-xs-4">
+              <div class="checkbox-group">{{ form.victim_primary_means_of_travel_tourist_bus }} {{ form.victim_primary_means_of_travel_tourist_bus.label_tag }}</div>
+              <div class="checkbox-group">{{ form.victim_primary_means_of_travel_motorbike }} {{ form.victim_primary_means_of_travel_motorbike.label_tag }}</div>
+              <div class="checkbox-group">{{ form.victim_primary_means_of_travel_private_car }} {{ form.victim_primary_means_of_travel_private_car.label_tag }}</div>
+            </div>
+            <div class="col-xs-4">
+              <div class="checkbox-group">{{ form.victim_primary_means_of_travel_local_bus }} {{ form.victim_primary_means_of_travel_local_bus.label_tag }}</div>
+              <div class="checkbox-group">{{ form.victim_primary_means_of_travel_microbus }} {{ form.victim_primary_means_of_travel_microbus.label_tag }}</div>
+              <div class="checkbox-group">{{ form.victim_primary_means_of_travel_plane }} {{ form.victim_primary_means_of_travel_plane.label_tag }}</div>
+            </div>
+            <div class="col-xs-4">
+              <div class="label-inside-field inline-checkbox-group">
+                <label>{{ form.victim_primary_means_of_travel_other }} {{ form.victim_primary_means_of_travel_other.label }}</label>
+                {{ form.victim_primary_means_of_travel_other_value|attr:"style: padding-top: 20px; height: 80px" }}
+              </div>
+            </div>
+          </div>
+
+          <div class="black-box padded-box checkbox-group-marker" id="victim_stayed_somewhere_between">
+            <h2><span class="section-number">4.3</span> Did you stay somewhere between your village and the border?<span class="required">*</span></h2>
+            <div class="inline-checkbox-group">
+              {% for choice in form.victim_stayed_somewhere_between %}
+                {{ choice }} {{ choice.label_tag }}
+              {% endfor %}
+            </div>
+
+            <span class="blue-arrow">LB - Transit Hideout</span>
+          </div>
+
+          <div class="black-box">
+            <h2><span class="section-number">4.4</span> For how long did you stay?</h2>
+          </div>
+          <div class="black-box">
+            <table>
+              <tbody>
+                <tr>
+                  <td>{{ form.victim_how_long_stayed_between_days.label_tag }}</td>
+                  <td>{{ form.victim_how_long_stayed_between_days|add_class:"full-width" }}</td>
+                  <td>{{ form.victim_how_long_stayed_between_start_date.label_tag }}</td>
+                  <td>{{ form.victim_how_long_stayed_between_start_date|add_class:"full-width" }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="black-box padded-box checkbox-group-marker" id="victim_was_hidden">
+            <h2><span class="section-number">4.5</span> Was any attempt made to hide your presence there?</h2>
+            <div class="inline-checkbox-group">{{ form.victim_was_hidden.0 }} {{ form.victim_was_hidden.0.label_tag }}</div>
+            <div class="label-inside-field inline-checkbox-group">
+              {{ form.victim_was_hidden.1 }}
+              {{ form.victim_was_hidden_explanation|attr:"style: padding-left: 60px; height: 80px" }}
+            </div>
+          </div>
+
+          <div class="black-box padded-box checkbox-group-marker" id="victim_was_free_to_go_out">
+            <h2><span class="section-number">4.6</span> Were you free to go out?</h2>
+            <div class="inline-checkbox-group">{{ form.victim_was_free_to_go_out.1 }} {{ form.victim_was_free_to_go_out.1.label_tag }}</div>
+            <div class="label-inside-field inline-checkbox-group">
+              {{ form.victim_was_free_to_go_out.0 }}
+              {{ form.victim_was_free_to_go_out_explanation|attr:"style: padding-left: 60px; height: 80px" }}
+            </div>
+          </div>
+
+          <div class="black-box padded-box clearfix">
+            <h2><span class="section-number">4.7</span> Besides those you were intercepted with, how many others were with you who were in a similar situation?</h2>
+            {{ form.how_many_others_in_situation|add_class:"pull-right"|attr:"style: width: 100px" }}
+          </div>
+
+          <div class="black-box padded-box clearfix">
+            {{ form.others_in_situation_age_of_youngest|add_class:"pull-right"|attr:"style: width: 100px" }}
+            <h2><span class="section-number">4.8</span> What was the age of the youngest?</h2>
+          </div>
+
+          <div class="black-box padded-box padded-box checkbox-group-marker" id="passport_made">
+            <h2>
+              <span class="section-number">4.9</span>
+              Was a passport made for you?
+            </h2>
+
+            <div class="col-xs-6">
+              <div class="checkbox-group">{{ form.passport_made_no_passport_made }} {{ form.passport_made_no_passport_made.label_tag }}</div>
+            </div>
+            <div class="col-xs-6">
+              <div class="checkbox-group">{{ form.passport_made_real_passport_made }} {{ form.passport_made_real_passport_made.label_tag }}</div>
+            </div>
+            <div class="checkbox-group">{{ form.passport_made_passport_included_false_name }} {{ form.passport_made_passport_included_false_name.label_tag }}</div>
+            <div class="checkbox-group">{{ form.passport_made_passport_included_other_false_info }} {{ form.passport_made_passport_included_other_false_info.label_tag }}</div>
+            <div class="checkbox-group">{{ form.passport_made_passport_was_fake }} {{ form.passport_made_passport_was_fake.label_tag }}</div>
+
+            <div class="text-center">
+              <span class="blue-arrow">LB - Passport</span>
+              <span class="red-arrow">PB - Passport</span>
+            </div>
+          </div>
+
+          <div class="black-box clearfix padded-box checkbox-group-marker" id="victim_passport_with_broker">
+            <h2><span class="section-number">4.10</span> Is your passport or a work permit with a broker?</h2>
+            <div class="inline-checkbox-group">
+              {% for choice in form.victim_passport_with_broker %}
+                {{ choice }} {{ choice.label_tag }}
+              {% endfor %}
+            </div>
+          </div>
+
+          <div class="black-box padded-box padded-box checkbox-group-marker" id="abuse_happened">
+            <div class="clearfix">
+              <div class="col-xs-7">
+                <h2>
+                  <span class="section-number">4.11</span>
+                  Did these take place on the way?
+                  <abbr class="max-allowed">(6)</abbr>
+                </h2>
+                <div class="checkbox-group">{{ form.abuse_happened_sexual_harassment }} {{ form.abuse_happened_sexual_harassment.label_tag }}</div>
+                <div class="checkbox-group">{{ form.abuse_happened_sexual_abuse }} {{ form.abuse_happened_sexual_abuse.label_tag }}</div>
+                <div class="checkbox-group">{{ form.abuse_happened_physical_abuse }} {{ form.abuse_happened_physical_abuse.label_tag }}</div>
+                <div class="checkbox-group">{{ form.abuse_happened_threats }} {{ form.abuse_happened_threats.label_tag }}</div>
+                <div class="checkbox-group">{{ form.abuse_happened_denied_proper_food }} {{ form.abuse_happened_denied_proper_food.label_tag }}</div>
+                <div class="checkbox-group">{{ form.abuse_happened_forced_to_take_drugs }} {{ form.abuse_happened_forced_to_take_drugs.label_tag }}</div>
+              </div>
+              <div class="col-xs-5">
+                <div class="label-inside-field">{{ form.abuse_happened_by_whom|attr:"rows:8" }}            {{ form.abuse_happened_by_whom.label_tag }}</div>
+              </div>
+            </div>
+
+            <div class="label-inside-field">{{ form.abuse_happened_explanation|attr:"rows:3" }}        {{ form.abuse_happened_explanation.label_tag }}</div>
+          </div>
+
+          <div class="black-box padded-box padded-box checkbox-group-marker" id="victim_traveled_with_broker_companion">
+            <h2>
+              <span class="section-number">4.12</span>
+              Did you travel to the border with a companion who was appointed by the broker to take you across?
+            </h2>
+            <div class="checkbox-group" style="margin-top: 10px">
+              <div class="inline-checkbox-group">{{ form.victim_traveled_with_broker_companion_yes }} {{ form.victim_traveled_with_broker_companion_yes.label_tag }}</div>
+              <span class="red-arrow">PB - Companion</span>
+            </div>
+            <div class="checkbox-group" style="margin-top: 10px">
+              <div class="inline-checkbox-group">{{ form.victim_traveled_with_broker_companion_no }} {{ form.victim_traveled_with_broker_companion_no.label_tag }}</div>
+              <small>(Skip the rest of this section)</small>
+            </div>
+            <div class="checkbox-group" style="margin-top: 10px">
+              <div class="inline-checkbox-group">{{ form.victim_traveled_with_broker_companion_broker_took_me_to_border }} {{ form.victim_traveled_with_broker_companion_broker_took_me_to_border.label_tag }}</div>
+              <small>(Skip the rest of this section)</small>
+            </div>
+          </div>
+
+          <div class="black-box padded-box">
+            <h2>
+              <span class="section-number">4.13</span>
+              Where did the broker meet up with the companion?
+            </h2>
+            <div class="text-center">
+              <span class="blue-arrow">LB - Nepal Meet Point</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xs-4 major-column">
+
+          <div class="black-box black-box-top padded-box clearfix padded-box checkbox-group-marker" id="companion_with_when_intercepted">
+            <div class="pull-right" style="width: 80px">
+              {% for choice in form.companion_with_when_intercepted reversed %}
+                <div class="checkbox-group">{{ choice }} {{ choice.label_tag }}</div>
+              {% endfor %}
+            </div>
+            <div style="width: 260px">
+              <h2>
+                <span class="section-number">4.14</span>
+                Was the companion with you when intercepted?
+              </h2>
+            </div>
+          </div>
+
+          <div class="black-box padded-box padded-box checkbox-group-marker" id="planning_to_meet_companion_later">
+            <h2>
+              <span class="section-number">4.15</span>
+              If No, were you planning to<br/>meet him/her again in India?
+            </h2>
+            <div class="inline-checkbox-group">
+              {{ form.planning_to_meet_companion_later.0 }}
+              {{ form.planning_to_meet_companion_later.0.label_tag }}
+            </div>
+            <div class="checkbox-group" style="margin-top: 10px">
+              {{ form.planning_to_meet_companion_later.1 }}
+              {{ form.planning_to_meet_companion_later.1.label_tag }} - Where?
+              <span class="blue-arrow">LB - India Meet Point</span>
+            </div>
+          </div>
+
+          <div class="black-box padded-box padded-box checkbox-group-marker" id="money_changed_hands_broker_companion">
+            <h2><span class="section-number">4.16</span>
+              Did money change hands between broker and the companion?
+            </h2>
+
+            <div class="inline-checkbox-group">{{ form.money_changed_hands_broker_companion_no }} {{ form.money_changed_hands_broker_companion_no.label_tag }}</div>
+            <div class="inline-checkbox-group">{{ form.money_changed_hands_broker_companion_dont_know }} {{ form.money_changed_hands_broker_companion_dont_know.label_tag }}</div>
+            <div class="inline-checkbox-group">{{ form.money_changed_hands_broker_companion_broker_gave_money }} {{ form.money_changed_hands_broker_companion_broker_gave_money.label_tag }}</div>
+            <div class="inline-checkbox-group">{{ form.money_changed_hands_broker_companion_companion_gave_money }} {{ form.money_changed_hands_broker_companion_companion_gave_money.label_tag }}</div>
+          </div>
+
+          <div class="blue-box black-box" style="padding-top: 1px">
+            <h1>5. Destination &amp; India Contact</h1>
+          </div>
+          <div class="black-box padded-box padded-box checkbox-group-marker" id="meeting_at_border">
+            <h2>
+              <span class="section-number">5.1</span>
+              Did the broker / companion arrange someone to meet you after crossing the border?<span class="required">*</span>
+            </h2>
+            <div class="inline-checkbox-group">{{ form.meeting_at_border_yes }} {{ form.meeting_at_border_yes.label_tag }}</div>
+            <div class="inline-checkbox-group">{{ form.meeting_at_border_no }} {{ form.meeting_at_border_no.label_tag }}</div>
+            <div class="inline-checkbox-group">{{ form.meeting_at_border_meeting_broker }} {{ form.meeting_at_border_meeting_broker.label_tag }}</div>
+            <div class="inline-checkbox-group">{{ form.meeting_at_border_meeting_companion }} {{ form.meeting_at_border_meeting_companion.label_tag }}</div>
+          </div>
+
+          <div class="black-box padded-box padded-box checkbox-group-marker" id="victim_knew_details_about_destination">
+            <h2>
+              <span class="section-number">5.2</span>
+              Do you know any details about the place you were headed to in India?<span class="required">*</span>
+            </h2>
+            <div class="inline-checkbox-group">
+              {% for choice in form.victim_knew_details_about_destination %}
+                {{ choice }} {{ choice.label_tag }}
+              {% endfor %}
+            </div>
+
+            <span class="blue-arrow">LB - Destination</span>
+          </div>
+
+          <div class="black-box padded-box">
+            <h2><span class="section-number">5.3</span>
+              Besides the broker and the companion, is there any other person or place you know of involved in the business of sending girls overseas?
+            </h2>
+          </div>
+
+          <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="other_involved_person_in_india">
+            <div class="col-xs-7">
+              <p>Someone you were supposed to be meeting in India who may be involved in bringing girls to India</p>
+            </div>
+            <div class="col-xs-5">
+              <br/>
+              {% for choice in form.other_involved_person_in_india reversed %}
+                <div class="checkbox-group">{{ choice }} {{ choice.label_tag }}</div>
+              {% endfor %}
+              <span style="top: 16px; right: -10px" class="red-arrow fat-arrow">PB - Indian<br/>Trafficker</span>
+            </div>
+          </div>
+
+          <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="other_involved_husband_trafficker">
+            <div class="col-xs-7">
+              <p>A contact of a &quot;Husband Trafficker&quot;</p>
+            </div>
+            <div class="col-xs-5" style="padding-top: 10px">
+              {% for choice in form.other_involved_husband_trafficker %}
+                <div class="checkbox-group">{{ choice }} {{ choice.label_tag }}</div>
+              {% endfor %}
+              <span style="top: 0px; right: -10px" class="red-arrow fat-arrow">PB - Contact<br/>of Husband</span>
+            </div>
+          </div>
+
+          <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="other_involved_someone_met_along_the_way">
+            <div class="col-xs-7">
+              <p>Someone the recruiter or companion met along the way who works with them</p>
+            </div>
+            <div class="col-xs-5" style="padding-top: 24px">
+              {% for choice in form.other_involved_someone_met_along_the_way %}
+                <div class="checkbox-group">{{ choice }} {{ choice.label_tag }}</div>
+              {% endfor %}
+              <span style="top: 0; right: -10px; height: 110px" class="red-arrow fat-arrow">PB - ______ <br/>of Recruiter<br/>or Companion</span>
+            </div>
+          </div>
+
+          <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="other_involved_someone_involved_in_trafficking">
+            <div class="col-xs-7">
+              <p>Someone involved in trafficking that you heard about along the way or before you came to the border</p>
+            </div>
+            <div class="col-xs-5" style="padding-top: 42px">
+              {% for choice in form.other_involved_someone_involved_in_trafficking %}
+                <div class="checkbox-group">{{ choice }} {{ choice.label_tag }}</div>
+              {% endfor %}
+              <span style="top: 30px; right: -10px" class="red-arrow fat-arrow">PB - Known<br/>Trafficker</span>
+            </div>
+          </div>
+
+          <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="other_involved_place_involved_in_trafficking">
+            <div class="col-xs-7">
+              <p>Some place involved in trafficking that you heard about along the way or before you came to the border</p>
+            </div>
+            <div class="col-xs-5" style="padding-top: 42px">
+              {% for choice in form.other_involved_place_involved_in_trafficking %}
+                <div class="checkbox-group">{{ choice }} {{ choice.label_tag }}</div>
+              {% endfor %}
+              <span style="top: 30px; right: -10px" class="blue-arrow fat-arrow">LB - Known<br/>Location</span>
+            </div>
+          </div>
+
+          <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="victim_has_worked_in_sex_industry">
+            <h2><span class="section-number">5.4</span> Have you ever worked in the sex industry?</h2>
+            <div class="inline-checkbox-group">
+              {% for choice in form.victim_has_worked_in_sex_industry %}
+                {{ choice }} {{ choice.label_tag }}
+              {% endfor %}
+            </div>
+          </div>
+
+          <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="victim_place_worked_involved_sending_girls_overseas">
+            <h2><span class="section-number">5.5</span> Was the place you worked involved in sending girls overseas?</h2>
+            <div class="inline-checkbox-group">
+              {% for choice in form.victim_place_worked_involved_sending_girls_overseas %}
+                {{ choice }} {{ choice.label_tag }}
+              {% endfor %}
+            </div>
+            <span class="blue-arrow">LB - Sex Industry</span>
+          </div>
+
+        </div>
+      </div>
     </div>
 
     {{ inlines.0.management_form }}
@@ -1123,516 +1138,516 @@
     <div class="pages-needed" data-pages-needed="{{ form.box_pages_needed }}"></div>
 
     <div class="form-page box-page page-1">
-        <div class="row">
-            {% for pb_form in inlines.0|slice:"0:3" %}
-                {% include "dataentry/victiminterview_personbox.html" with pb_form=pb_form counter=forloop.counter %}
-            {% endfor %}
-        </div>
-        <div class="row">
-            {% for lb_form in inlines.1|slice:"0:2" %}
-                {% include "dataentry/victiminterview_locationbox.html" with lb_form=lb_form counter=forloop.counter %}
-            {% endfor %}
-        </div>
-        <div class="clearfix">
-            <button type="button" class="btn btn-primary pull-right add-another-sheet btn-lg" style="margin-top: 12px">Yes</button>
-            <h3 class="pull-left">Did you need to use an Additional Information sheet for extra PBs or LBs?</h3>
-        </div>
+      <div class="row">
+        {% for pb_form in inlines.0|slice:"0:3" %}
+          {% include "dataentry/victiminterview_personbox.html" with pb_form=pb_form counter=forloop.counter %}
+        {% endfor %}
+      </div>
+      <div class="row">
+        {% for lb_form in inlines.1|slice:"0:2" %}
+          {% include "dataentry/victiminterview_locationbox.html" with lb_form=lb_form counter=forloop.counter %}
+        {% endfor %}
+      </div>
+      <div class="clearfix">
+        <button type="button" class="btn btn-primary pull-right add-another-sheet btn-lg" style="margin-top: 12px">Yes</button>
+        <h3 class="pull-left">Did you need to use an Additional Information sheet for extra PBs or LBs?</h3>
+      </div>
     </div>
 
     <div class="form-page box-page page-2">
-        <div class="row">
-            {% for pb_form in inlines.0|slice:"3:6" %}
-                {% include "dataentry/victiminterview_personbox.html" with pb_form=pb_form counter=forloop.counter|add:"3" %}
-            {% endfor %}
-        </div>
-        <div class="row">
-            {% for lb_form in inlines.1|slice:"2:4" %}
-                {% include "dataentry/victiminterview_locationbox.html" with lb_form=lb_form counter=forloop.counter|add:"2" %}
-            {% endfor %}
-        </div>
-        <div class="clearfix">
-            <button type="button" class="btn btn-primary pull-right add-another-sheet btn-lg" style="margin-top: 12px">Yes</button>
-            <h3 class="pull-left">Did you need to use an Additional Information sheet for extra PBs or LBs?</h3>
-        </div>
+      <div class="row">
+        {% for pb_form in inlines.0|slice:"3:6" %}
+          {% include "dataentry/victiminterview_personbox.html" with pb_form=pb_form counter=forloop.counter|add:"3" %}
+        {% endfor %}
+      </div>
+      <div class="row">
+        {% for lb_form in inlines.1|slice:"2:4" %}
+          {% include "dataentry/victiminterview_locationbox.html" with lb_form=lb_form counter=forloop.counter|add:"2" %}
+        {% endfor %}
+      </div>
+      <div class="clearfix">
+        <button type="button" class="btn btn-primary pull-right add-another-sheet btn-lg" style="margin-top: 12px">Yes</button>
+        <h3 class="pull-left">Did you need to use an Additional Information sheet for extra PBs or LBs?</h3>
+      </div>
     </div>
 
     <div class="form-page box-page page-3">
-        <div class="row">
-            {% for pb_form in inlines.0|slice:"6:9" %}
-                {% include "dataentry/victiminterview_personbox.html" with pb_form=pb_form counter=forloop.counter|add:"6" %}
-            {% endfor %}
-        </div>
-        <div class="row">
-            {% for lb_form in inlines.1|slice:"4:6" %}
-                {% include "dataentry/victiminterview_locationbox.html" with lb_form=lb_form counter=forloop.counter|add:"4" %}
-            {% endfor %}
-        </div>
-        <div class="clearfix">
-            <button type="button" class="btn btn-primary pull-right add-another-sheet btn-lg" style="margin-top: 12px">Yes</button>
-            <h3 class="pull-left">Did you need to use an Additional Information sheet for extra PBs or LBs?</h3>
-        </div>
+      <div class="row">
+        {% for pb_form in inlines.0|slice:"6:9" %}
+          {% include "dataentry/victiminterview_personbox.html" with pb_form=pb_form counter=forloop.counter|add:"6" %}
+        {% endfor %}
+      </div>
+      <div class="row">
+        {% for lb_form in inlines.1|slice:"4:6" %}
+          {% include "dataentry/victiminterview_locationbox.html" with lb_form=lb_form counter=forloop.counter|add:"4" %}
+        {% endfor %}
+      </div>
+      <div class="clearfix">
+        <button type="button" class="btn btn-primary pull-right add-another-sheet btn-lg" style="margin-top: 12px">Yes</button>
+        <h3 class="pull-left">Did you need to use an Additional Information sheet for extra PBs or LBs?</h3>
+      </div>
     </div>
 
     <div class="form-page box-page page-4">
-        <div class="row">
-            {% for pb_form in inlines.0|slice:"9:12" %}
-                {% include "dataentry/victiminterview_personbox.html" with pb_form=pb_form counter=forloop.counter|add:"9" %}
-            {% endfor %}
-        </div>
-        <div class="row">
-            {% for lb_form in inlines.1|slice:"6:8" %}
-                {% include "dataentry/victiminterview_locationbox.html" with lb_form=lb_form counter=forloop.counter|add:"6" %}
-            {% endfor %}
-        </div>
+      <div class="row">
+        {% for pb_form in inlines.0|slice:"9:12" %}
+          {% include "dataentry/victiminterview_personbox.html" with pb_form=pb_form counter=forloop.counter|add:"9" %}
+        {% endfor %}
+      </div>
+      <div class="row">
+        {% for lb_form in inlines.1|slice:"6:8" %}
+          {% include "dataentry/victiminterview_locationbox.html" with lb_form=lb_form counter=forloop.counter|add:"6" %}
+        {% endfor %}
+      </div>
     </div>
 
     <div class="form-page">
-        <div class="row">
-            <div class="col-xs-4 major-column">
+      <div class="row">
+        <div class="col-xs-4 major-column">
 
-                <div class="blue-box black-box black-box-top">
-                    <h1>6. Awareness &amp; Assessment</h1>
-                </div>
+          <div class="blue-box black-box black-box-top">
+            <h1>6. Awareness &amp; Assessment</h1>
+          </div>
 
-                <div class="black-box padded-box padded-box checkbox-group-marker" id="awareness_before_interception">
-                    <h2>
-                        <span class="section-number">6.1</span>
-                        Before you were intercepted, were you aware that girls going abroad are often deceived and end up in very exploitative situations?<span class="required">*</span>
-                    </h2>
-                    <div class="checkbox-group">{{ form.awareness_before_interception_had_heard_not_how_bad }} {{ form.awareness_before_interception_had_heard_not_how_bad.label_tag }}</div>
-                    <div class="checkbox-group">{{ form.awareness_before_interception_knew_how_bad_not_happening_to_her }} {{ form.awareness_before_interception_knew_how_bad_not_happening_to_her.label_tag }}</div>
-                    <div class="checkbox-group">{{ form.awareness_before_interception_never_heard }} {{ form.awareness_before_interception_never_heard.label_tag }}</div>
-                </div>
+          <div class="black-box padded-box padded-box checkbox-group-marker" id="awareness_before_interception">
+            <h2>
+              <span class="section-number">6.1</span>
+              Before you were intercepted, were you aware that girls going abroad are often deceived and end up in very exploitative situations?<span class="required">*</span>
+            </h2>
+            <div class="checkbox-group">{{ form.awareness_before_interception_had_heard_not_how_bad }} {{ form.awareness_before_interception_had_heard_not_how_bad.label_tag }}</div>
+            <div class="checkbox-group">{{ form.awareness_before_interception_knew_how_bad_not_happening_to_her }} {{ form.awareness_before_interception_knew_how_bad_not_happening_to_her.label_tag }}</div>
+            <div class="checkbox-group">{{ form.awareness_before_interception_never_heard }} {{ form.awareness_before_interception_never_heard.label_tag }}</div>
+          </div>
 
-                <div class="black-box padded-box padded-box checkbox-group-marker" id="attitude_towards_tiny_hands">
-                    <h2>
-                        <span class="section-number">6.2</span>
-                        Do you think you would've been trafficked if you hadn't been intercepted by Tiny Hands?<span class="required">*</span>
-                    </h2>
-                    <div class="checkbox-group">{{ form.attitude_towards_tiny_hands_thankful }} {{ form.attitude_towards_tiny_hands_thankful.label_tag }}</div>
-                    <div class="checkbox-group">{{ form.attitude_towards_tiny_hands_blames }} {{ form.attitude_towards_tiny_hands_blames.label_tag }}</div>
-                    <div class="checkbox-group">{{ form.attitude_towards_tiny_hands_doesnt_know }} {{ form.attitude_towards_tiny_hands_doesnt_know.label_tag }}</div>
-                </div>
+          <div class="black-box padded-box padded-box checkbox-group-marker" id="attitude_towards_tiny_hands">
+            <h2>
+              <span class="section-number">6.2</span>
+              Do you think you would've been trafficked if you hadn't been intercepted by Tiny Hands?<span class="required">*</span>
+            </h2>
+            <div class="checkbox-group">{{ form.attitude_towards_tiny_hands_thankful }} {{ form.attitude_towards_tiny_hands_thankful.label_tag }}</div>
+            <div class="checkbox-group">{{ form.attitude_towards_tiny_hands_blames }} {{ form.attitude_towards_tiny_hands_blames.label_tag }}</div>
+            <div class="checkbox-group">{{ form.attitude_towards_tiny_hands_doesnt_know }} {{ form.attitude_towards_tiny_hands_doesnt_know.label_tag }}</div>
+          </div>
 
-                <div class="black-box padded-box padded-box checkbox-group-marker" id="victim_heard_gospel">
-                    <h2>
-                        <span class="section-number">6.3</span>
-                        Had you heard about the gospel of Jesus before coming to TH?<span class="required">*</span>
-                    </h2>
-                    <div class="checkbox-group">{{ form.victim_heard_gospel_no }} {{ form.victim_heard_gospel_no.label_tag }}</div>
-                    <div class="checkbox-group">{{ form.victim_heard_gospel_heard_name_only }} {{ form.victim_heard_gospel_heard_name_only.label_tag }}</div>
-                    <div class="checkbox-group">{{ form.victim_heard_gospel_heard_but_never_believed }} {{ form.victim_heard_gospel_heard_but_never_believed.label_tag }}</div>
-                    <div class="checkbox-group">{{ form.victim_heard_gospel_already_believer }} {{ form.victim_heard_gospel_already_believer.label_tag }}</div>
-                </div>
+          <div class="black-box padded-box padded-box checkbox-group-marker" id="victim_heard_gospel">
+            <h2>
+              <span class="section-number">6.3</span>
+              Had you heard about the gospel of Jesus before coming to TH?<span class="required">*</span>
+            </h2>
+            <div class="checkbox-group">{{ form.victim_heard_gospel_no }} {{ form.victim_heard_gospel_no.label_tag }}</div>
+            <div class="checkbox-group">{{ form.victim_heard_gospel_heard_name_only }} {{ form.victim_heard_gospel_heard_name_only.label_tag }}</div>
+            <div class="checkbox-group">{{ form.victim_heard_gospel_heard_but_never_believed }} {{ form.victim_heard_gospel_heard_but_never_believed.label_tag }}</div>
+            <div class="checkbox-group">{{ form.victim_heard_gospel_already_believer }} {{ form.victim_heard_gospel_already_believer.label_tag }}</div>
+          </div>
 
-                <div class="black-box padded-box padded-box checkbox-group-marker" id="victim_beliefs_now">
-                    <h2>
-                        <span class="section-number">6.4</span>
-                        If she wasn't already a believer, what does she believe now?
-                    </h2>
-                    <div class="checkbox-group">{{ form.victim_beliefs_now_doesnt_believe }} {{ form.victim_beliefs_now_doesnt_believe.label_tag }}</div>
-                    <div class="checkbox-group">{{ form.victim_beliefs_now_believes_no_church }} {{ form.victim_beliefs_now_believes_no_church.label_tag }}</div>
-                    <div class="checkbox-group">{{ form.victim_beliefs_now_believes_and_church }} {{ form.victim_beliefs_now_believes_and_church.label_tag }}</div>
-                </div>
+          <div class="black-box padded-box padded-box checkbox-group-marker" id="victim_beliefs_now">
+            <h2>
+              <span class="section-number">6.4</span>
+              If she wasn't already a believer, what does she believe now?
+            </h2>
+            <div class="checkbox-group">{{ form.victim_beliefs_now_doesnt_believe }} {{ form.victim_beliefs_now_doesnt_believe.label_tag }}</div>
+            <div class="checkbox-group">{{ form.victim_beliefs_now_believes_no_church }} {{ form.victim_beliefs_now_believes_no_church.label_tag }}</div>
+            <div class="checkbox-group">{{ form.victim_beliefs_now_believes_and_church }} {{ form.victim_beliefs_now_believes_and_church.label_tag }}</div>
+          </div>
 
-                <div class="black-box padded-box">
-                    <h2>
-                        <span class="section-number">6.5</span>
-                        How would you rate the work that Tiny Hands is doing on a scale of 1-10 (1 being the worst and 10 being the best), in each area:
-                    </h2>
+          <div class="black-box padded-box">
+            <h2>
+              <span class="section-number">6.5</span>
+              How would you rate the work that Tiny Hands is doing on a scale of 1-10 (1 being the worst and 10 being the best), in each area:
+            </h2>
 
-                    <div class="clearfix mbs">
-                    {{ form.tiny_hands_rating_border_staff|attr:"style: width: 70px"|add_class:"pull-right"|attr:"data-placement: left" }}
-                    {{ form.tiny_hands_rating_border_staff.label_tag }}
-                    </div>
-
-                    <div class="clearfix mbs">
-                    {{ form.tiny_hands_rating_shelter_staff|attr:"style: width: 70px"|add_class:"pull-right"|attr:"data-placement: left" }}
-                    {{ form.tiny_hands_rating_shelter_staff.label_tag }}
-                    </div>
-
-                    <div class="clearfix mbs">
-                    {{ form.tiny_hands_rating_trafficking_awareness|attr:"style: width: 70px"|add_class:"pull-right"|attr:"data-placement: left" }}
-                    {{ form.tiny_hands_rating_trafficking_awareness.label_tag }}
-                    </div>
-
-                    <div class="clearfix mbs">
-                    {{ form.tiny_hands_rating_shelter_accommodations|attr:"style: width: 70px"|add_class:"pull-right"|attr:"data-placement: left" }}
-                    {{ form.tiny_hands_rating_shelter_accommodations.label_tag }}
-                    </div>
-                </div>
-
-                <div class="black-box clearfix">
-                    <h2><span class="section-number">6.6</span>
-                        How can we serve you and others like you better?
-                    </h2>
-                    {{ form.how_can_we_serve_you_better|add_class:"full-width"|attr:"rows:20" }}
-                </div>
-
+            <div class="clearfix mbs">
+              {{ form.tiny_hands_rating_border_staff|attr:"style: width: 70px"|add_class:"pull-right"|attr:"data-placement: left" }}
+              {{ form.tiny_hands_rating_border_staff.label_tag }}
             </div>
-            <div class="col-xs-4 major-column">
-                <div class="blue-box black-box black-box-top">
-                    <h1>7. Home Situation Assessment</h1>
-                </div>
 
-                <div class="black-box padded-box">
-                    Ask questions like &quot;tell me about your home
-                    life,&quot; but don't ask directly about abuse unless the
-                    victim brings it up.
-                </div>
-
-                <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="guardian_knew_was_travelling_to_india">
-                    <h2><span class="section-number">7.1</span>
-                        Did your guardian know you were travelling to India?
-                    </h2>
-                    <div class="inline-checkbox-group">
-                    {% for choice in form.guardian_knew_was_travelling_to_india %}
-                        {{ choice }} {{ choice.label_tag }}
-                    {% endfor %}
-                    </div>
-                </div>
-
-                <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="family_pressured_victim">
-                    <h2>
-                        <span class="section-number">7.2</span>
-                        Did your family/guardian pressure you in any way to accept the broker's offer?
-                    </h2>
-                    {{ form.family_pressured_victim.0 }}
-                    {{ form.family_pressured_victim.0.label_tag }}
-
-                    <span class="alarm-box-container">
-                        {{ form.family_pressured_victim.1 }}
-                        {{ form.family_pressured_victim.1.label_tag }}
-                        <div class="alarm-box">1</div>
-                    </span>
-                </div>
-
-                <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="family_will_try_sending_again">
-                    <h2><span class="section-number">7.3</span>
-                        If they attempted to send you abroad, do you think they will try to send you overseas again?
-                    </h2>
-
-                    <br/>
-
-                    {{ form.family_will_try_sending_again.0 }}
-                    {{ form.family_will_try_sending_again.0.label_tag }}
-
-                    <span class="alarm-box-container">
-                        {{ form.family_will_try_sending_again.1 }}
-                        {{ form.family_will_try_sending_again.1.label_tag }}
-                        <div class="alarm-box">3</div>
-                    </span>
-                </div>
-
-                <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="victim_feels_safe_at_home">
-                    <h2><span class="section-number">7.4</span>
-                        Do you feel safe at home with your guardian?
-                    </h2>
-
-                    {{ form.victim_feels_safe_at_home.1 }}
-                    {{ form.victim_feels_safe_at_home.1.label_tag }}
-
-                    <span class="alarm-box-container">
-                        {{ form.victim_feels_safe_at_home.0 }}
-                        {{ form.victim_feels_safe_at_home.0.label_tag }}
-                        <div class="alarm-box">4</div>
-                    </span>
-                </div>
-
-                <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="victim_wants_to_go_home">
-                    <h2><span class="section-number">7.5</span>
-                        Do you want to go home?
-                    </h2>
-
-                    <br/>
-
-                    {{ form.victim_wants_to_go_home.1 }}
-                    {{ form.victim_wants_to_go_home.1.label_tag }}
-
-                    <span class="alarm-box-container">
-                        {{ form.victim_wants_to_go_home.0 }}
-                        {{ form.victim_wants_to_go_home.0.label_tag }}
-                        <div class="alarm-box">4</div>
-                    </span>
-                </div>
-
-                <div class="black-box padded-box clearfix">
-                    <h2><span class="section-number">7.6</span>
-                        Is victim subject to any of the following by someone in her home?
-                    </h2>
-                </div>
-
-                <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="victim_home_had_sexual_abuse">
-                    <div class="col-xs-2">
-                        <label>Sexual Abuse</label>
-                    </div>
-                    <div class="col-xs-9 col-xs-offset-1">
-                        {{ form.victim_home_had_sexual_abuse_never }}
-                        {{ form.victim_home_had_sexual_abuse_never.label_tag }}
-
-                        <span class="alarm-box-container">
-                            {{ form.victim_home_had_sexual_abuse_rarely }}
-                            {{ form.victim_home_had_sexual_abuse_rarely.label_tag }}
-                            <div class="alarm-box">4</div>
-                        </span>
-                        <br/>
-                        <span class="alarm-box-container">
-                            {{ form.victim_home_had_sexual_abuse_frequently }}
-                            {{ form.victim_home_had_sexual_abuse_frequently.label_tag }}
-                            <div class="alarm-box">10</div>
-                        </span>
-                    </div>
-                </div>
-
-                <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="victim_home_had_physical_abuse">
-                    <div class="col-xs-2">
-                        <label>Physical Abuse</label>
-                    </div>
-                    <div class="col-xs-9 col-xs-offset-1">
-                        {{ form.victim_home_had_physical_abuse_never }}
-                        {{ form.victim_home_had_physical_abuse_never.label_tag }}
-                        {{ form.victim_home_had_physical_abuse_rarely }}
-                        {{ form.victim_home_had_physical_abuse_rarely.label_tag }}
-                        <br/>
-                        <span class="alarm-box-container">
-                            {{ form.victim_home_had_physical_abuse_frequently }}
-                            {{ form.victim_home_had_physical_abuse_frequently.label_tag }}
-                            <div class="alarm-box">6</div>
-                        </span>
-                    </div>
-                </div>
-
-                <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="victim_home_had_emotional_abuse">
-                    <div class="col-xs-2">
-                        <label>Emotional Abuse</label>
-                    </div>
-                    <div class="col-xs-9 col-xs-offset-1">
-                        {{ form.victim_home_had_emotional_abuse_never }}
-                        {{ form.victim_home_had_emotional_abuse_never.label_tag }}
-                        {{ form.victim_home_had_emotional_abuse_rarely }}
-                        {{ form.victim_home_had_emotional_abuse_rarely.label_tag }}
-                        <br/>
-                        <span class="alarm-box-container">
-                            {{ form.victim_home_had_emotional_abuse_frequently }}
-                            {{ form.victim_home_had_emotional_abuse_frequently.label_tag }}
-                            <div class="alarm-box">2</div>
-                        </span>
-                    </div>
-                </div>
-
-                <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="victim_guardian_drinks_alcohol">
-                    <h2><span class="section-number">7.7</span>
-                        Does guardian drink alcohol?
-                    </h2>
-
-                    <br/>
-                    {{ form.victim_guardian_drinks_alcohol_never }}
-                    {{ form.victim_guardian_drinks_alcohol_never.label_tag }}
-                    {{ form.victim_guardian_drinks_alcohol_occasionally }}
-                    {{ form.victim_guardian_drinks_alcohol_occasionally.label_tag }}
-                    <span class="alarm-box-container">
-                        {{ form.victim_guardian_drinks_alcohol_all_the_time }}
-                        {{ form.victim_guardian_drinks_alcohol_all_the_time.label_tag }}
-                        <div class="alarm-box">1</div>
-                    </span>
-                </div>
-
-                <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="victim_guardian_uses_drugs">
-                    <h2><span class="section-number">7.8</span>
-                        Does guardian use drugs
-                    </h2>
-                    {{ form.victim_guardian_uses_drugs_never }}
-                    {{ form.victim_guardian_uses_drugs_never.label_tag }}
-
-                    <br/>
-                    <span class="alarm-box-container">
-                        {{ form.victim_guardian_uses_drugs_occasionally }}
-                        {{ form.victim_guardian_uses_drugs_occasionally.label_tag }}
-                        <div class="alarm-box">2</div>
-                    </span>
-
-                    <span class="alarm-box-container">
-                        {{ form.victim_guardian_uses_drugs_all_the_time }}
-                        {{ form.victim_guardian_uses_drugs_all_the_time.label_tag }}
-                        <div class="alarm-box">6</div>
-                    </span>
-                </div>
-
-                <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="victim_family_economic_situation">
-                    <h2><span class="section-number">7.9</span>
-                        Economic Situation of Family
-                    </h2>
-                    <br/>
-                    <span class="alarm-box-container">
-                        {{ form.victim_family_economic_situation_no_basic_needs }} {{ form.victim_family_economic_situation_no_basic_needs.label_tag }}
-                        <div class="alarm-box">7</div>
-                    </span>
-                    <div class="checkbox-group">{{ form.victim_family_economic_situation_difficult_basic_needs }} {{ form.victim_family_economic_situation_difficult_basic_needs.label_tag }}</div>
-                    <div class="checkbox-group">{{ form.victim_family_economic_situation_comfortable_basic_needs }} {{ form.victim_family_economic_situation_comfortable_basic_needs.label_tag }}</div>
-                    <div class="checkbox-group">{{ form.victim_family_economic_situation_wealthy }} {{ form.victim_family_economic_situation_wealthy.label_tag }}</div>
-                </div>
-
-                <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="victim_had_suicidal_thoughts">
-                    <h2><span class="section-number">7.10</span>
-                        Did she express any suicidal thoughts at any point?
-                    </h2>
-                    {{ form.victim_had_suicidal_thoughts.0 }}
-                    {{ form.victim_had_suicidal_thoughts.0.label_tag }}
-
-                    <span class="alarm-box-container">
-                        {{ form.victim_had_suicidal_thoughts.1 }}
-                        {{ form.victim_had_suicidal_thoughts.1.label_tag }}
-                        <div class="alarm-box">7</div>
-                    </span>
-                </div>
-
-                <div class="black-box padded-box clearfix">
-                    <h2>
-                        Total Home Situational Alarms
-                    </h2>
-                    <div class="alarm-box">?</div>
-
-                    <div>
-                        <label>Calculated Alarms:
-                            <span id="calculated-total"></span>
-                        </label>
-                    </div>
-                    <div>
-                        <label>Reported Alarms:</label>
-                        {{ form.reported_total_situational_alarms|attr:"style: width: 60px" }}
-                    </div>
-                    <p>If a victim had 10 or more total Home Situational Alarms, it would be better not to send her home. However, if the girl is a minor, you will need to discuss her options with her parents.</p>
-                </div>
-
+            <div class="clearfix mbs">
+              {{ form.tiny_hands_rating_shelter_staff|attr:"style: width: 70px"|add_class:"pull-right"|attr:"data-placement: left" }}
+              {{ form.tiny_hands_rating_shelter_staff.label_tag }}
             </div>
-            <div class="col-xs-4 major-column">
 
-                <div class="blue-box black-box black-box-top">
-                    <h1>8. Interviewer Evaluation</h1>
-                </div>
-
-                <div class="black-box padded-box padded-box checkbox-group-marker" id="legal_action_against_traffickers">
-                    <h2><span class="section-number">8.1</span>
-                        Has any legal action been taken against any of the traffickers?<span class="required">*</span>
-                    </h2>
-                    <div class="inline-checkbox-group">
-		        <span class="single-checkbox-allowed">
-                        {{ form.legal_action_against_traffickers_no }} {{ form.legal_action_against_traffickers_no.label_tag }}
-		        </span>
-                        <span class="alarm-box-container multiple-checkboxes-allowed">
-                        {{ form.legal_action_against_traffickers_fir_filed }} {{ form.legal_action_against_traffickers_fir_filed.label_tag }}
-                        {{ form.legal_action_fir_against_value|attr:"style: width: 140px" }}
-                        </span>
-                        <span class="alarm-box-container multiple-checkboxes-allowed">
-                        {{ form.legal_action_against_traffickers_dofe_complaint }} {{ form.legal_action_against_traffickers_dofe_complaint.label_tag }}
-                        {{ form.legal_action_dofe_against_value|attr:"style: width: 140px" }}
-                        </span>
-                    </div>
-                </div>
-
-                <div class="black-box clearfix padded-box">
-                    <h2><span class="section-number">8.2</span>
-                        If no, what's the main reason?
-                    </h2>
-                </div>
-                <div class="black-box padded-box checkbox-group-marker" id="reason_no_legal">
-                    <div class="checkbox-group">{{ form.reason_no_legal_no_trafficking_suspected }} {{ form.reason_no_legal_no_trafficking_suspected.label_tag }}</div>
-                    <div class="checkbox-group">{{ form.reason_no_legal_police_not_enough_info }} {{ form.reason_no_legal_police_not_enough_info.label_tag }}</div>
-                    <div class="checkbox-group">{{ form.reason_no_legal_trafficker_is_own_people }} {{ form.reason_no_legal_trafficker_is_own_people.label_tag }}</div>
-                    <div class="checkbox-group">{{ form.reason_no_legal_she_was_going_herself }} {{ form.reason_no_legal_she_was_going_herself.label_tag }}</div>
-                    <div class="checkbox-group">{{ form.reason_no_legal_trafficker_ran_away }} {{ form.reason_no_legal_trafficker_ran_away.label_tag }}</div>
-                    <div class="checkbox-group">{{ form.reason_no_legal_victim_afraid_of_reputation }} {{ form.reason_no_legal_victim_afraid_of_reputation.label_tag }}</div>
-                    <div class="checkbox-group">{{ form.reason_no_legal_victim_afraid_for_safety }} {{ form.reason_no_legal_victim_afraid_for_safety.label_tag }}</div>
-                    <div class="checkbox-group">{{ form.reason_no_legal_family_afraid_of_reputation }} {{ form.reason_no_legal_family_afraid_of_reputation.label_tag }}</div>
-                    <div class="checkbox-group">{{ form.reason_no_legal_family_afraid_for_safety }} {{ form.reason_no_legal_family_afraid_for_safety.label_tag }}</div>
-                    <div class="checkbox-group">{{ form.reason_no_legal_police_bribed }} {{ form.reason_no_legal_police_bribed.label_tag }}</div>
-                    <div class="checkbox-group">{{ form.reason_no_legal_victim_family_bribed }} {{ form.reason_no_legal_victim_family_bribed.label_tag }}</div>
-                    <div class="alarm-box-container">
-                        <div class="checkbox-group">
-                            {{ form.reason_no_legal_interference_by_powerful_people }} {{ form.reason_no_legal_interference_by_powerful_people.label_tag }}
-                            <br/>
-                            Who? {{ form.reason_no_legal_interference_value|attr:"style: width: 300px" }}
-                        </div>
-                    </div>
-                    <div class="label-inside-field inline-checkbox-group full-width">
-                        <label>
-                        {{ form.reason_no_legal_other }} {{ form.reason_no_legal_other.label }}
-                        </label>
-                        {{ form.reason_no_legal_other_value }}
-                    </div>
-                </div>
-
-                <div class="black-box padded-box padded-box checkbox-group-marker" id="interviewer_recommendation">
-                    <h2><span class="section-number">8.3</span>
-                        What is your recommendation about where she should go?
-                    </h2>
-                    <div class="checkbox-group">{{ form.interviewer_recommendation_send_home }} {{ form.interviewer_recommendation_send_home.label_tag }}</div>
-                    <div class="checkbox-group">{{ form.interviewer_recommendation_send_to_other_relatives }} {{ form.interviewer_recommendation_send_to_other_relatives.label_tag }}</div>
-                    <div class="checkbox-group">{{ form.interviewer_recommendation_find_other_place }} {{ form.interviewer_recommendation_find_other_place.label_tag }}</div>
-                    <label style="margin-left: 20px">Contact THN's Aftercare Coordinator</label>
-                </div>
-
-                <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="other_people_and_places_involved">
-                    <h2>
-                        <span class="section-number">8.4</span>
-                        Were there more people and places that you believe were
-                        involved in trafficking in addition to those recorded
-                        in the Information Boxes on the previous page?
-                    </h2>
-
-                    <br/>
-
-                    <div class="inline-checkbox-group">
-                        {% for choice in form.other_people_and_places_involved %}
-                            {{ choice }} {{ choice.label_tag }}
-                        {% endfor %}
-                        - If so, make sure you use an Additional Information Boxes Form and attach it to this form!
-                    </div>
-                </div>
-
-                <div class="black-box padded-box clearfix">
-                    <label>
-                    {{ form.has_signature }}
-                    Signature is on the original form<span class="required">*</span>
-                </div>
-                <div class="black-box padded-box clearfix">
-                    {{ form.scanned_form.label_tag }}
-                    {{ form.scanned_form }}
-                </div>
-
-                <div class="black-box clearfix">
-                    <div class="label-inside-field">
-                        {{ form.case_notes|attr:"rows:14" }}
-                        {{ form.case_notes.label_tag }}
-                    </div>
-                </div>
-
+            <div class="clearfix mbs">
+              {{ form.tiny_hands_rating_trafficking_awareness|attr:"style: width: 70px"|add_class:"pull-right"|attr:"data-placement: left" }}
+              {{ form.tiny_hands_rating_trafficking_awareness.label_tag }}
             </div>
+
+            <div class="clearfix mbs">
+              {{ form.tiny_hands_rating_shelter_accommodations|attr:"style: width: 70px"|add_class:"pull-right"|attr:"data-placement: left" }}
+              {{ form.tiny_hands_rating_shelter_accommodations.label_tag }}
+            </div>
+          </div>
+
+          <div class="black-box clearfix">
+            <h2><span class="section-number">6.6</span>
+              How can we serve you and others like you better?
+            </h2>
+            {{ form.how_can_we_serve_you_better|add_class:"full-width"|attr:"rows:20" }}
+          </div>
+
         </div>
+        <div class="col-xs-4 major-column">
+          <div class="blue-box black-box black-box-top">
+            <h1>7. Home Situation Assessment</h1>
+          </div>
+
+          <div class="black-box padded-box">
+            Ask questions like &quot;tell me about your home
+            life,&quot; but don't ask directly about abuse unless the
+            victim brings it up.
+          </div>
+
+          <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="guardian_knew_was_travelling_to_india">
+            <h2><span class="section-number">7.1</span>
+              Did your guardian know you were travelling to India?
+            </h2>
+            <div class="inline-checkbox-group">
+              {% for choice in form.guardian_knew_was_travelling_to_india %}
+                {{ choice }} {{ choice.label_tag }}
+              {% endfor %}
+            </div>
+          </div>
+
+          <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="family_pressured_victim">
+            <h2>
+              <span class="section-number">7.2</span>
+              Did your family/guardian pressure you in any way to accept the broker's offer?
+            </h2>
+            {{ form.family_pressured_victim.0 }}
+            {{ form.family_pressured_victim.0.label_tag }}
+
+            <span class="alarm-box-container">
+              {{ form.family_pressured_victim.1 }}
+              {{ form.family_pressured_victim.1.label_tag }}
+              <div class="alarm-box">1</div>
+            </span>
+          </div>
+
+          <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="family_will_try_sending_again">
+            <h2><span class="section-number">7.3</span>
+              If they attempted to send you abroad, do you think they will try to send you overseas again?
+            </h2>
+
+            <br/>
+
+            {{ form.family_will_try_sending_again.0 }}
+            {{ form.family_will_try_sending_again.0.label_tag }}
+
+            <span class="alarm-box-container">
+              {{ form.family_will_try_sending_again.1 }}
+              {{ form.family_will_try_sending_again.1.label_tag }}
+              <div class="alarm-box">3</div>
+            </span>
+          </div>
+
+          <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="victim_feels_safe_at_home">
+            <h2><span class="section-number">7.4</span>
+              Do you feel safe at home with your guardian?
+            </h2>
+
+            {{ form.victim_feels_safe_at_home.1 }}
+            {{ form.victim_feels_safe_at_home.1.label_tag }}
+
+            <span class="alarm-box-container">
+              {{ form.victim_feels_safe_at_home.0 }}
+              {{ form.victim_feels_safe_at_home.0.label_tag }}
+              <div class="alarm-box">4</div>
+            </span>
+          </div>
+
+          <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="victim_wants_to_go_home">
+            <h2><span class="section-number">7.5</span>
+              Do you want to go home?
+            </h2>
+
+            <br/>
+
+            {{ form.victim_wants_to_go_home.1 }}
+            {{ form.victim_wants_to_go_home.1.label_tag }}
+
+            <span class="alarm-box-container">
+              {{ form.victim_wants_to_go_home.0 }}
+              {{ form.victim_wants_to_go_home.0.label_tag }}
+              <div class="alarm-box">4</div>
+            </span>
+          </div>
+
+          <div class="black-box padded-box clearfix">
+            <h2><span class="section-number">7.6</span>
+              Is victim subject to any of the following by someone in her home?
+            </h2>
+          </div>
+
+          <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="victim_home_had_sexual_abuse">
+            <div class="col-xs-2">
+              <label>Sexual Abuse</label>
+            </div>
+            <div class="col-xs-9 col-xs-offset-1">
+              {{ form.victim_home_had_sexual_abuse_never }}
+              {{ form.victim_home_had_sexual_abuse_never.label_tag }}
+
+              <span class="alarm-box-container">
+                {{ form.victim_home_had_sexual_abuse_rarely }}
+                {{ form.victim_home_had_sexual_abuse_rarely.label_tag }}
+                <div class="alarm-box">4</div>
+              </span>
+              <br/>
+              <span class="alarm-box-container">
+                {{ form.victim_home_had_sexual_abuse_frequently }}
+                {{ form.victim_home_had_sexual_abuse_frequently.label_tag }}
+                <div class="alarm-box">10</div>
+              </span>
+            </div>
+          </div>
+
+          <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="victim_home_had_physical_abuse">
+            <div class="col-xs-2">
+              <label>Physical Abuse</label>
+            </div>
+            <div class="col-xs-9 col-xs-offset-1">
+              {{ form.victim_home_had_physical_abuse_never }}
+              {{ form.victim_home_had_physical_abuse_never.label_tag }}
+              {{ form.victim_home_had_physical_abuse_rarely }}
+              {{ form.victim_home_had_physical_abuse_rarely.label_tag }}
+              <br/>
+              <span class="alarm-box-container">
+                {{ form.victim_home_had_physical_abuse_frequently }}
+                {{ form.victim_home_had_physical_abuse_frequently.label_tag }}
+                <div class="alarm-box">6</div>
+              </span>
+            </div>
+          </div>
+
+          <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="victim_home_had_emotional_abuse">
+            <div class="col-xs-2">
+              <label>Emotional Abuse</label>
+            </div>
+            <div class="col-xs-9 col-xs-offset-1">
+              {{ form.victim_home_had_emotional_abuse_never }}
+              {{ form.victim_home_had_emotional_abuse_never.label_tag }}
+              {{ form.victim_home_had_emotional_abuse_rarely }}
+              {{ form.victim_home_had_emotional_abuse_rarely.label_tag }}
+              <br/>
+              <span class="alarm-box-container">
+                {{ form.victim_home_had_emotional_abuse_frequently }}
+                {{ form.victim_home_had_emotional_abuse_frequently.label_tag }}
+                <div class="alarm-box">2</div>
+              </span>
+            </div>
+          </div>
+
+          <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="victim_guardian_drinks_alcohol">
+            <h2><span class="section-number">7.7</span>
+              Does guardian drink alcohol?
+            </h2>
+
+            <br/>
+            {{ form.victim_guardian_drinks_alcohol_never }}
+            {{ form.victim_guardian_drinks_alcohol_never.label_tag }}
+            {{ form.victim_guardian_drinks_alcohol_occasionally }}
+            {{ form.victim_guardian_drinks_alcohol_occasionally.label_tag }}
+            <span class="alarm-box-container">
+              {{ form.victim_guardian_drinks_alcohol_all_the_time }}
+              {{ form.victim_guardian_drinks_alcohol_all_the_time.label_tag }}
+              <div class="alarm-box">1</div>
+            </span>
+          </div>
+
+          <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="victim_guardian_uses_drugs">
+            <h2><span class="section-number">7.8</span>
+              Does guardian use drugs
+            </h2>
+            {{ form.victim_guardian_uses_drugs_never }}
+            {{ form.victim_guardian_uses_drugs_never.label_tag }}
+
+            <br/>
+            <span class="alarm-box-container">
+              {{ form.victim_guardian_uses_drugs_occasionally }}
+              {{ form.victim_guardian_uses_drugs_occasionally.label_tag }}
+              <div class="alarm-box">2</div>
+            </span>
+
+            <span class="alarm-box-container">
+              {{ form.victim_guardian_uses_drugs_all_the_time }}
+              {{ form.victim_guardian_uses_drugs_all_the_time.label_tag }}
+              <div class="alarm-box">6</div>
+            </span>
+          </div>
+
+          <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="victim_family_economic_situation">
+            <h2><span class="section-number">7.9</span>
+              Economic Situation of Family
+            </h2>
+            <br/>
+            <span class="alarm-box-container">
+              {{ form.victim_family_economic_situation_no_basic_needs }} {{ form.victim_family_economic_situation_no_basic_needs.label_tag }}
+              <div class="alarm-box">7</div>
+            </span>
+            <div class="checkbox-group">{{ form.victim_family_economic_situation_difficult_basic_needs }} {{ form.victim_family_economic_situation_difficult_basic_needs.label_tag }}</div>
+            <div class="checkbox-group">{{ form.victim_family_economic_situation_comfortable_basic_needs }} {{ form.victim_family_economic_situation_comfortable_basic_needs.label_tag }}</div>
+            <div class="checkbox-group">{{ form.victim_family_economic_situation_wealthy }} {{ form.victim_family_economic_situation_wealthy.label_tag }}</div>
+          </div>
+
+          <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="victim_had_suicidal_thoughts">
+            <h2><span class="section-number">7.10</span>
+              Did she express any suicidal thoughts at any point?
+            </h2>
+            {{ form.victim_had_suicidal_thoughts.0 }}
+            {{ form.victim_had_suicidal_thoughts.0.label_tag }}
+
+            <span class="alarm-box-container">
+              {{ form.victim_had_suicidal_thoughts.1 }}
+              {{ form.victim_had_suicidal_thoughts.1.label_tag }}
+              <div class="alarm-box">7</div>
+            </span>
+          </div>
+
+          <div class="black-box padded-box clearfix">
+            <h2>
+              Total Home Situational Alarms
+            </h2>
+            <div class="alarm-box">?</div>
+
+            <div>
+              <label>Calculated Alarms:
+                <span id="calculated-total"></span>
+              </label>
+            </div>
+            <div>
+              <label>Reported Alarms:</label>
+              {{ form.reported_total_situational_alarms|attr:"style: width: 60px" }}
+            </div>
+            <p>If a victim had 10 or more total Home Situational Alarms, it would be better not to send her home. However, if the girl is a minor, you will need to discuss her options with her parents.</p>
+          </div>
+
+        </div>
+        <div class="col-xs-4 major-column">
+
+          <div class="blue-box black-box black-box-top">
+            <h1>8. Interviewer Evaluation</h1>
+          </div>
+
+          <div class="black-box padded-box padded-box checkbox-group-marker" id="legal_action_against_traffickers">
+            <h2><span class="section-number">8.1</span>
+              Has any legal action been taken against any of the traffickers?<span class="required">*</span>
+            </h2>
+            <div class="inline-checkbox-group">
+	      <span class="single-checkbox-allowed">
+                {{ form.legal_action_against_traffickers_no }} {{ form.legal_action_against_traffickers_no.label_tag }}
+	      </span>
+              <span class="alarm-box-container multiple-checkboxes-allowed">
+                {{ form.legal_action_against_traffickers_fir_filed }} {{ form.legal_action_against_traffickers_fir_filed.label_tag }}
+                {{ form.legal_action_fir_against_value|attr:"style: width: 140px" }}
+              </span>
+              <span class="alarm-box-container multiple-checkboxes-allowed">
+                {{ form.legal_action_against_traffickers_dofe_complaint }} {{ form.legal_action_against_traffickers_dofe_complaint.label_tag }}
+                {{ form.legal_action_dofe_against_value|attr:"style: width: 140px" }}
+              </span>
+            </div>
+          </div>
+
+          <div class="black-box clearfix padded-box">
+            <h2><span class="section-number">8.2</span>
+              If no, what's the main reason?
+            </h2>
+          </div>
+          <div class="black-box padded-box checkbox-group-marker" id="reason_no_legal">
+            <div class="checkbox-group">{{ form.reason_no_legal_no_trafficking_suspected }} {{ form.reason_no_legal_no_trafficking_suspected.label_tag }}</div>
+            <div class="checkbox-group">{{ form.reason_no_legal_police_not_enough_info }} {{ form.reason_no_legal_police_not_enough_info.label_tag }}</div>
+            <div class="checkbox-group">{{ form.reason_no_legal_trafficker_is_own_people }} {{ form.reason_no_legal_trafficker_is_own_people.label_tag }}</div>
+            <div class="checkbox-group">{{ form.reason_no_legal_she_was_going_herself }} {{ form.reason_no_legal_she_was_going_herself.label_tag }}</div>
+            <div class="checkbox-group">{{ form.reason_no_legal_trafficker_ran_away }} {{ form.reason_no_legal_trafficker_ran_away.label_tag }}</div>
+            <div class="checkbox-group">{{ form.reason_no_legal_victim_afraid_of_reputation }} {{ form.reason_no_legal_victim_afraid_of_reputation.label_tag }}</div>
+            <div class="checkbox-group">{{ form.reason_no_legal_victim_afraid_for_safety }} {{ form.reason_no_legal_victim_afraid_for_safety.label_tag }}</div>
+            <div class="checkbox-group">{{ form.reason_no_legal_family_afraid_of_reputation }} {{ form.reason_no_legal_family_afraid_of_reputation.label_tag }}</div>
+            <div class="checkbox-group">{{ form.reason_no_legal_family_afraid_for_safety }} {{ form.reason_no_legal_family_afraid_for_safety.label_tag }}</div>
+            <div class="checkbox-group">{{ form.reason_no_legal_police_bribed }} {{ form.reason_no_legal_police_bribed.label_tag }}</div>
+            <div class="checkbox-group">{{ form.reason_no_legal_victim_family_bribed }} {{ form.reason_no_legal_victim_family_bribed.label_tag }}</div>
+            <div class="alarm-box-container">
+              <div class="checkbox-group">
+                {{ form.reason_no_legal_interference_by_powerful_people }} {{ form.reason_no_legal_interference_by_powerful_people.label_tag }}
+                <br/>
+                Who? {{ form.reason_no_legal_interference_value|attr:"style: width: 300px" }}
+              </div>
+            </div>
+            <div class="label-inside-field inline-checkbox-group full-width">
+              <label>
+                {{ form.reason_no_legal_other }} {{ form.reason_no_legal_other.label }}
+              </label>
+              {{ form.reason_no_legal_other_value }}
+            </div>
+          </div>
+
+          <div class="black-box padded-box padded-box checkbox-group-marker" id="interviewer_recommendation">
+            <h2><span class="section-number">8.3</span>
+              What is your recommendation about where she should go?
+            </h2>
+            <div class="checkbox-group">{{ form.interviewer_recommendation_send_home }} {{ form.interviewer_recommendation_send_home.label_tag }}</div>
+            <div class="checkbox-group">{{ form.interviewer_recommendation_send_to_other_relatives }} {{ form.interviewer_recommendation_send_to_other_relatives.label_tag }}</div>
+            <div class="checkbox-group">{{ form.interviewer_recommendation_find_other_place }} {{ form.interviewer_recommendation_find_other_place.label_tag }}</div>
+            <label style="margin-left: 20px">Contact THN's Aftercare Coordinator</label>
+          </div>
+
+          <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="other_people_and_places_involved">
+            <h2>
+              <span class="section-number">8.4</span>
+              Were there more people and places that you believe were
+              involved in trafficking in addition to those recorded
+              in the Information Boxes on the previous page?
+            </h2>
+
+            <br/>
+
+            <div class="inline-checkbox-group">
+              {% for choice in form.other_people_and_places_involved %}
+                {{ choice }} {{ choice.label_tag }}
+              {% endfor %}
+              - If so, make sure you use an Additional Information Boxes Form and attach it to this form!
+            </div>
+          </div>
+
+          <div class="black-box padded-box clearfix">
+            <label>
+              {{ form.has_signature }}
+              Signature is on the original form<span class="required">*</span>
+          </div>
+          <div class="black-box padded-box clearfix">
+            {{ form.scanned_form.label_tag }}
+            {{ form.scanned_form }}
+          </div>
+
+          <div class="black-box clearfix">
+            <div class="label-inside-field">
+              {{ form.case_notes|attr:"rows:14" }}
+              {{ form.case_notes.label_tag }}
+            </div>
+          </div>
+
+        </div>
+      </div>
     </div>
 
     <div id="footer">
-        <nav class="navbar navbar-default navbar-fixed-bottom">
-            <div class="container">
-                <div class="navbar-inner navbar-content-center">
-                    {% if not victiminterview %}
-                        <button type="button" id="save-for-later" class="pull-left btn btn-warning navbar-btn btn-lg">Save for later</button>
-                    {% endif %}
-                    <input type="submit" class="pull-right btn btn-primary navbar-btn btn-lg" value="Submit" />
-                    {% if form.errors %}
-                        <div class="checkbox navbar-btn pull-right" style="margin-top: 16px; margin-right: 20px">
-                            {{ form.ignore_warnings }}
-                            {{ form.ignore_warnings.label_tag }}
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-        </nav>
+      <nav class="navbar navbar-default navbar-fixed-bottom">
+        <div class="container">
+          <div class="navbar-inner navbar-content-center">
+            {% if not victiminterview %}
+              <button type="button" id="save-for-later" class="pull-left btn btn-warning navbar-btn btn-lg">Save for later</button>
+            {% endif %}
+            <input type="submit" class="pull-right btn btn-primary navbar-btn btn-lg" value="Submit" />
+            {% if form.errors %}
+              <div class="checkbox navbar-btn pull-right" style="margin-top: 16px; margin-right: 20px">
+                {{ form.ignore_warnings }}
+                {{ form.ignore_warnings.label_tag }}
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </nav>
     </div>
+  </form>
 
-</form>
-<br/>
-<br/>
-<br/>
+  <br/>
+  <br/>
+  <br/>
 
 {% endblock %}
