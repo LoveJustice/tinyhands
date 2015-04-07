@@ -5,7 +5,7 @@ from datetime import timedelta
 from django.utils import timezone
 
 class TallyApiTests(WebTest):
-    
+
     def setUp(self):
         self.day1 = timezone.now()
         self.day2 = timezone.now() - timedelta(days=1)
