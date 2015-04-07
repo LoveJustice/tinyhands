@@ -95,16 +95,24 @@ function getStaticContentString(borderStation) { //This is what the content of a
 function getDynamicContentString(borderStation){ //This is what the content of a static border_station is
     return '<div id="StationWindow" class="dynamicInfoWindow">' +
         '<h3>' + borderStation.fields.station_name + ' - ' + borderStation.fields.station_code + '</h3>' +
+        '<div id="leftColumn" class="col-md-6">'+
 
-        '<p>Est. ' + borderStation.fields.date_established + '</p>' +
-        '<p>Has shelter: ' + hasShelter(borderStation) + '</p>' +
-        '<p id="stationInterception">Interceptions: ' + '</p>' +
-        '<p id="staffset"># of Staff ' + '</p>' +
-        '<p id="BS"><a href="/static_border_stations/border-stations/' + borderStation.pk + '">Subcommittee, Staff, and Locations</a>' + '</p>' +
-        '<p id="irf"><a href="/data-entry/irfs/search/?search_value=' + borderStation.fields.station_code + '">IRFs</a>' + '</p>' +
-        '<p id="vif"><a href="/data-entry/vifs/search/?search_value=' + borderStation.fields.station_code + '">VIFs</a>' + '</p>' +
-        '</div>';
+
+            '<p>Est. ' + borderStation.fields.date_established + '</p>' +
+            '<p>Has shelter: ' + hasShelter(borderStation) + '</p>' +
+            '<p id="stationInterception">Interceptions: ' + '</p>' +
+            '<p id="staffset"># of Staff ' + '</p>' +
+        '</div>'+
+
+        '<div id="rightColumn" class="col-md-6">'+
+            '<p id="BS"><a href="/static_border_stations/border-stations/' + borderStation.pk + '">Subcommittee, Staff, and Locations</a>' + '</p>' +
+            '<p id="irf"><a href="/data-entry/irfs/search/?search_value=' + borderStation.fields.station_code + '">IRFs</a>' + '</p>' +
+            '<p id="vif"><a href="/data-entry/vifs/search/?search_value=' + borderStation.fields.station_code + '">VIFs</a>' + '</p>' +
+        '</div>'+
+    '</div>';
 }
+
+
 
 function getBorderStations(map){
     /*  Runs on page load to show all the border stations on the
@@ -112,6 +120,7 @@ function getBorderStations(map){
      */
     $.get("/portal/get_border_stations",function(data, status){
         var infowindow = new google.maps.InfoWindow(); //Initialize the Static Border Station view
+
         var dynamicWindow = new google.maps.InfoWindow(); //Initialize the Dynamic Border Station view
 
 
@@ -123,6 +132,13 @@ function getBorderStations(map){
                 title: data[station].fields.station_name + " " + data[station].fields.station_code,
                 clicked: false
             });
+
+            google.maps.event.addListener(dynamicWindow, 'closeclick', (function(marker) {
+                return function() {
+                    toggleMarkerClick(marker);
+                }
+            })(marker));
+
 
             google.maps.event.addListener(marker, 'mouseout', (function(marker, station) {
                 return function() {
@@ -180,18 +196,19 @@ function getBorderStations(map){
 
                     dynamicWindow.open(map, this);
 
-
-
                     $(".gm-style-iw").each(function() {
                         if(data[station].fields.station_name.length > 10) {
                             $(this).addClass('station-info-window-big-dynamic');
-
                         }
                         $(this).addClass('station-info-window-big-dynamic');
 
                     });
                 }
             })(marker, station));
+
+            function toggleMarkerClick(marker){
+                marker.clicked = false;
+            }
         }
     });
 }
