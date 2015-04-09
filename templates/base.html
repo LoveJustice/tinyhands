@@ -110,18 +110,19 @@ in the Javascript and run code unique to the current page.
         </div><!-- /.navbar-collapse -->
     </div>
 
-<div class="container">
-{% if messages %}
-<div class="alert-container">
-    {% for message in messages %}
-    <div{% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>{{ message }}</div>
-    {% endfor %}
-</div>
+<!-- STARTS: MAIN CONTENT -->
+<div id="content-container" class="container">
+    {% if messages %}
+    <div class="alert-container">
+        {% for message in messages %}
+        <div{% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>{{ message }}</div>
+        {% endfor %}
+    </div>
 
-{% endif %}
-{% block tab_block %}{% endblock %}
+    {% endif %}
+    {% block tab_block %}{% endblock %}
 </div>
-
+<!-- ENDS: MAIN CONTENT-->
 
 
 {% block sticky_footer %}
