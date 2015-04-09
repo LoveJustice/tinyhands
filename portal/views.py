@@ -1,11 +1,9 @@
+from django.contrib.auth.decorators import login_required
+from django.core import serializers
 from django.http import HttpResponse
 from django.shortcuts import render
-from django.core import serializers
-from django.contrib.auth.decorators import login_required
-from dataentry.models import BorderStation
-from dataentry.models import InterceptionRecord
-from django.core.urlresolvers import reverse
-import ipdb
+
+from dataentry.models import BorderStation, InterceptionRecord
 
 
 @login_required
