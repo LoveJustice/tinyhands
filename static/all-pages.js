@@ -306,6 +306,11 @@ var DREAMSUITE = {
         setUpResumeIncompleteFormSystem('irf');
     },
 
+    borderstations_view: function() {
+        $('input[type="checkbox"]').attr("disabled","disabled");
+        $(".delete_checkbox").css("visibility","hidden");
+    },
+
     interceptionrecord_update: function() {
         function calculateTotal() {
             var total = 0;

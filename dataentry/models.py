@@ -24,6 +24,7 @@ class BorderStation(models.Model):
     latitude = models.FloatField(null=True)
     longitude = models.FloatField(null=True)
 
+
 class District(models.Model):
     name = models.CharField(max_length=255)
 
