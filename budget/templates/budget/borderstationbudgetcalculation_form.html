@@ -14,6 +14,7 @@
         <!--<script type="text/javascript" src="http://knockoutjs.com/downloads/knockout-3.2.0.js"></script>-->
         <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
         <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-cookies.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-route.js"></script>
 
      <h1 style="font-size: 25px; text-align: center">Tiny Hands Nepal - Border Monitoring Station Budget Calculation Form</h1>
 
@@ -294,16 +295,17 @@
                     <h2 class="background"><span>Awareness</span></h2>
                     <div class="row">
                         <div class="col-lg-4 col-lg-offset-2">
-                            <input class="form-control" type="checkbox" id="awareness_contact_cards_bool" ng-model="main.form.awareness_contact_cards"/>
+                            <input type="checkbox" style="margin-right: 10px" id="awareness_contact_cards_bool" ng-model="main.form.awareness_contact_cards"/>
+                            <label>Contact Cards</label>
                         </div>
                         <div class="col-lg-4">
-
                             <input class="form-control" type="number" id="awareness_contact_cards_amount" ng-model="main.form.awareness_contact_cards_amount"/>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-lg-4 col-lg-offset-2">
-                            <input class="form-control" type="checkbox" id="awareness_awareness_party_bool" ng-model="main.form.awareness_awareness_party_boolean"/>
+                            <input  type="checkbox" style="margin-right: 10px" id="awareness_awareness_party_bool" ng-model="main.form.awareness_awareness_party_boolean"/>
+                            <label>Awareness Party</label>
                         </div>
                         <div class="col-lg-4">
                             <input class="form-control" type="number" id="awareness_awareness_party_amount" ng-model="main.form.awareness_awareness_party"/>
@@ -311,7 +313,8 @@
                     </div>
                     <div class="row">
                         <div class="col-lg-4 col-lg-offset-2">
-                            <input class="form-control" type="checkbox" id="awareness_sign_boards_bool" ng-model="main.form.awareness_sign_boards_boolean"/>
+                            <input  type="checkbox" style="margin-right: 10px" id="awareness_sign_boards_bool" ng-model="main.form.awareness_sign_boards_boolean"/>
+                            <label>Sign Boards</label>
                         </div>
                         <div class="col-lg-4">
                             <input class="form-control" type="number" id="awareness_sign_boards_amount" ng-model="main.form.awareness_sign_boards"/>
@@ -762,14 +765,14 @@
 
                    <div class="row center" style="margin-top: 20px; padding-right: 200px; padding-left: 200px; text-align: center">
                        <label>Total Miscellaneous</label>
-                       <input style="width: 100px" class="formxt-center" ng-value="main.miscTotal()" disabled="disabled"/>
+                       <input style="width: 100px" class="format-center" ng-value="main.miscTotal()" disabled="disabled"/>
                    </div>
                </div>
            </div>
            <!-- End Miscellaneous -->
 
-            <input type="submit" ng-show="main.update" class="pull-right btn btn-success navbar-btn btn-lg" value = "Submit" ng-click="main.updateForm()"/>
-            <input type="submit" ng-show="main.create" id="budget_create" class="pull-right btn btn-primary navbar-btn btn-lg" value = "Submit" ng-click="main.createForm()" />
+            <input ng-show="main.update" class="pull-right btn btn-success navbar-btn btn-lg" value = "Submit" ng-click="main.updateForm()">
+            <input ng-show="main.create" id="budget_create" class="pull-right btn btn-primary navbar-btn btn-lg" value = "Submit" ng-click="main.createForm()">
         </div>
 
      {% if submit_type %}
@@ -780,12 +783,14 @@
      </form>
 
 <script>
-angular.module('BudgetCalculation', ['ngCookies'])
-        .config(['$httpProvider', function($httpProvider) {
+angular.module('BudgetCalculation', ['ngCookies', 'ngRoute'])
+        .config(['$httpProvider', '$routeProvider', function($httpProvider, $routeProvider) {
             $httpProvider.defaults.xsrfCookieName = 'csrftoken';
             $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
         }])
-        .controller('MainCtrl', ['$scope','$http', function($scope, $http) {
+        .controller('MainCtrl', ['$scope','$http', '$location', '$window', function($scope, $http, $location, $window) {
+
+
 
             var vm = this;
 
@@ -975,25 +980,26 @@ angular.module('BudgetCalculation', ['ngCookies'])
             vm.updateForm = function() {
                 console.log(vm.form);
                 $http.put('/budget/api/budget_calculations/' + vm.form.id + '/', vm.form)
-                    .success(function(data, status) {
-                        console.log(data);
-                    })
-                    .error(function(data, status) {
-                        console.log(data);
-                    });
-            //console.log(result);
+                        .success(function(data, status) {
+                            console.log("success");
+                            $window.location.assign('/budget/budget_calculations');
+
+                        })
+                        .error(function(data, status) {
+                            console.log("fail");
+                        });
             };
 
             vm.createForm = function() {
                 console.log(vm.form);
                 $http.post('/budget/api/budget_calculations/', vm.form)
-                    .success(function(data, status) {
-                        console.log(data);
-                    })
-                    .error(function(data, status) {
-                        console.log(data);
-                    });
-
+                        .success(function(data, status) {
+                            console.log("success Create");
+                            $window.location.assign('/budget/budget_calculations');
+                        })
+                        .error(function(data, status) {
+                            console.log("fail create");
+                        });
 
             };
 
