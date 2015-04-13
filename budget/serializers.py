@@ -1,6 +1,6 @@
 from django.forms import widgets
 from rest_framework import serializers
-from budget.models import BorderStationBudgetCalculation
+from budget.models import BorderStationBudgetCalculation, OtherBudgetItemCost
 
 
 class BorderStationBudgetCalculationSerializer(serializers.ModelSerializer):
@@ -21,3 +21,7 @@ class BorderStationBudgetCalculationSerializer(serializers.ModelSerializer):
     default = True
     class Meta:
         model = BorderStationBudgetCalculation
+
+class OtherBudgetItemCostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OtherBudgetItemCost

@@ -1,23 +1,24 @@
 import StringIO
-from braces.views import LoginRequiredMixin
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ImproperlyConfigured
 from django.core.urlresolvers import reverse_lazy
 from django.forms import formset_factory, inlineformset_factory
 from django.forms.models import modelformset_factory
-from django.shortcuts import get_object_or_404, render, redirect
-from django.views.generic import ListView, DeleteView
-from rest_framework.renderers import JSONRenderer
-from budget.forms import BorderStationBudgetCalculationForm, OtherBudgetItemCostForm
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect, render_to_response
 from django.template.loader import render_to_string
 from django.views.generic import ListView, DeleteView, View
+
+
+from braces.views import LoginRequiredMixin
+from rest_framework.response import Response
+
 from budget.forms import BorderStationBudgetCalculationForm
 from budget.models import BorderStationBudgetCalculation, OtherBudgetItemCost
 from static_border_stations.models import Staff, BorderStation
-from serializers import BorderStationBudgetCalculationSerializer
+from serializers import BorderStationBudgetCalculationSerializer, OtherBudgetItemCostSerializer
 from models import BorderStationBudgetCalculation
 from z3c.rml import rml2pdf, document
 from lxml import etree
@@ -49,12 +50,29 @@ def ng_budget_calc_create(request, pk):
 
 
 def ng_budget_calc_view(request, pk):
-    #is there a better way to do permissions in function based views?
+    """
+        is there a better way to do permissions in function based views?
+    """
     if not request.user.permission_budget_manage:
         return redirect("home")
 
     submit_type = 3
     return render(request, 'budget/borderstationbudgetcalculation_form.html', locals())
+
+
+class OtherItemsViewSet(viewsets.ModelViewSet):
+    queryset = OtherBudgetItemCost.objects.all()
+    serializer_class = OtherBudgetItemCostSerializer
+
+    def retrieve(self, request, *args, **kwargs):
+        """
+            I'm overriding this method to retrieve all
+            of the budget items for a particular budget calculation sheet
+        """
+        self.object_list = self.filter_queryset(self.get_queryset().filter(budget_item_parent=self.kwargs['pk']))
+        serializer = self.get_serializer(self.object_list, many=True)
+        return Response(serializer.data)
+
 
 
 @login_required
