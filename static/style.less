@@ -37,19 +37,28 @@ abbr {
     border: 1px solid black;
 }
 
-#tally .tally-tab {
-    background-color: rgba(255,255,255,0.85);
-    border-radius: 10px;
-    cursor: default;
-    margin-right: 15px;
-    * {
-        overflow: hidden;
-        text-overflow: '.';
+#tally {
+    .tally-tab {
+        background-color: rgba(255,255,255,0.85);
+        border-radius: 10px;
+        cursor: default;
+        margin-right: 15px;
+        /* Begin: Drop-down animation */
+        max-height: 26px;
+        -webkit-transition: max-height 1s;
+        transition: max-height 1s;
+        &:hover {
+            max-height: 500px;
+        }
+        /* End: Drop-down animation */
+        * {
+            overflow: hidden;
+            text-overflow: '.';
+        }
     }
-}
-
-#tally .day-of-week {
-    margin: 0;
+    .day-of-week {
+        margin: 0;
+    }
 }
 
 .station-info-window + div {display: none;}
@@ -581,8 +590,8 @@ abbr {
     margin: 2px;
 }
 
-.dropdown-menu {
+/*.dropdown-menu {
     max-height: 400px;
     overflow-y: auto;
     overflow-x: hidden;
-}
+}*/
