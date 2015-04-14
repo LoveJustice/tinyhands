@@ -30,7 +30,8 @@ class TallyDaysView(APIView):
     
     def get(self, request):
         days = ['Monday', 'Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']
-        today = timezone.now()
+        #timezone.now() gets utc time but timezone.now().now() gets local Nepal time
+        today = timezone.now().now()
         dates = [today - timedelta(days=x) for x in range(7)]
         results = {}
         i = 0
