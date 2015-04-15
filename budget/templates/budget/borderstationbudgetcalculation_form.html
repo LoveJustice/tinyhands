@@ -14,6 +14,11 @@
         <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
         <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-cookies.js"></script>
         <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-route.js"></script>
+        <script type="text/javascript">
+            window.budget_calc_id = {{ pk }};
+            window.submit_type = {{ submit_type }};
+        </script>
+
 
      <h1 style="font-size: 25px; text-align: center">Tiny Hands Nepal - Border Monitoring Station Budget Calculation Form</h1>
 
@@ -321,29 +326,30 @@
                     </div>
 
                     <hr>
-                    <div class="row">
-                        {{ awareness_items_formset.management_form }}
-                        {% for item_form in awareness_items_formset %}
-                            <div id='{{item_form.prefix}}'>
-                                {% include "budget/other_item_cost.html" with form=item_form %}
-                            </div>
-                        {% endfor %}
-                        <script type="text/javascript">
-                            /* Allows for the creation of more or less staff/committee members */
-                                $(function() {
-                                    {% for formset in awareness_items_formset %}
-                                    $('div#{{ formset.prefix }}').formset({
-                                       prefix: '{{ formset.prefix }}',
-                                       formCssClass: 'awareness-formset{{ forloop.counter }}',
-                                       addText: '+ Add Another Item',
-                                       deleteText: 'Remove Item',
-                                       addCssClass: 'add-awareness btn btn-success changeaddbtn col-lg-offset-4',
-                                       deleteCssClass: 'delete-awareness repositionremovebtn btn btn-danger',
-                                    });
-                                    {% endfor %}
-                                })
-                        </script>
-                    </div>
+                   {% verbatim %}
+                   <hr/>
+                       <div class="row" ng-controller="otherBudgetItemsCtrl as awarenessItemsCtrl">
+                                <div class="row" ng-repeat="form in awarenessItemsCtrl.awarenessForms" >
+
+                                    <div class="col-lg-4 col-lg-offset-1">
+                                        <input class="form-control" type="text" ng-model="form.name"/>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <input class="form-control" type="number" ng-model="form.cost"/>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <a class="btn btn-danger" ng-click="awarenessItemsCtrl.removeItem(form.id, form.form_section)" >Remove</a>
+                                    </div>
+                                    <br/><br/>
+                                </div>
+                                <div class="row">
+                                    <br/>
+                                    <div class="col-lg-4 col-lg-offset-5">
+                                        <a class="btn btn-success" ng-click="awarenessItemsCtrl.addNewItem(3)">Add item</a>
+                                    </div>
+                                </div>
+                       </div>
+                   {% endverbatim %}
 
                     <div class="row center" style="margin-top: 20px; padding-right: 200px; padding-left: 200px; text-align: center">
                         <label>Total Awareness</label>
@@ -425,29 +431,30 @@
                        </div>
                    </div>
                    <hr>
-                   <div class="row">
-                       {{ travel_items_formset.management_form }}
-                       {% for item_form in travel_items_formset %}
-                           <div id='{{item_form.prefix}}'>
-                               {% include "budget/other_item_cost.html" with form=item_form %}
-                           </div>
-                       {% endfor %}
-                       <script type="text/javascript">
-                           /* Allows for the creation of more or less staff/committee members */
-                               $(function() {
-                                   {% for formset in travel_items_formset %}
-                                   $('div#{{ formset.prefix }}').formset({
-                                      prefix: '{{ formset.prefix }}',
-                                      formCssClass: 'travel-formset{{ forloop.counter }}',
-                                      addText: '+ Add Another Item',
-                                      deleteText: 'Remove Item',
-                                      addCssClass: 'add-travel btn btn-success changeaddbtn col-lg-offset-4',
-                                      deleteCssClass: 'delete-travel repositionremovebtn btn btn-danger',
-                                   });
-                                   {% endfor %}
-                               })
-                       </script>
-                   </div>
+                   {% verbatim %}
+                   <hr/>
+                       <div class="row" ng-controller="otherBudgetItemsCtrl as travelItemsCtrl">
+                                <div class="row" ng-repeat="form in travelItemsCtrl.travelForms" >
+
+                                    <div class="col-lg-4 col-lg-offset-1">
+                                        <input class="form-control" type="text" ng-model="form.name"/>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <input class="form-control" type="number" ng-model="form.cost"/>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <a class="btn btn-danger" ng-click="travelItemsCtrl.removeItem(form.id, form.form_section)" >Remove</a>
+                                    </div>
+                                    <br/><br/>
+                                </div>
+                                <div class="row">
+                                    <br/>
+                                    <div class="col-lg-4 col-lg-offset-5">
+                                        <a class="btn btn-success" ng-click="travelItemsCtrl.addNewItem(1)">Add item</a>
+                                    </div>
+                                </div>
+                       </div>
+                   {% endverbatim %}
 
 
                    <div class="row center" style="margin-top: 20px; padding-right: 200px; padding-left: 200px; text-align: center">
@@ -494,29 +501,30 @@
                        </div>
                    </div>
                    <hr>
-                   <div class="row">
-                       {{ supplies_items_formset.management_form }}
-                       {% for item_form in supplies_items_formset %}
-                           <div id='{{item_form.prefix}}'>
-                               {% include "budget/other_item_cost.html" with form=item_form %}
-                           </div>
-                       {% endfor %}
-                       <script type="text/javascript">
-                           /* Allows for the creation of more or less staff/committee members */
-                               $(function() {
-                                   {% for formset in supplies_items_formset %}
-                                   $('div#{{ formset.prefix }}').formset({
-                                      prefix: '{{ formset.prefix }}',
-                                      formCssClass: 'supplies-formset{{ forloop.counter }}',
-                                      addText: '+ Add Another Item',
-                                      deleteText: 'Remove Item',
-                                      addCssClass: 'add-supplies btn btn-success changeaddbtn col-lg-offset-4',
-                                      deleteCssClass: 'delete-supplies repositionremovebtn btn btn-danger',
-                                   });
-                                   {% endfor %}
-                               })
-                       </script>
-                   </div>
+                   {% verbatim %}
+                   <hr/>
+                       <div class="row" ng-controller="otherBudgetItemsCtrl as suppliesItemsCtrl">
+                                <div class="row" ng-repeat="form in suppliesItemsCtrl.suppliesForms" >
+
+                                    <div class="col-lg-4 col-lg-offset-1">
+                                        <input class="form-control" type="text" ng-model="form.name"/>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <input class="form-control" type="number" ng-model="form.cost"/>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <a class="btn btn-danger" ng-click="suppliesItemsCtrl.removeItem(form.id, form.form_section)" >Remove</a>
+                                    </div>
+                                    <br/><br/>
+                                </div>
+                                <div class="row">
+                                    <br/>
+                                    <div class="col-lg-4 col-lg-offset-5">
+                                        <a class="btn btn-success" ng-click="suppliesItemsCtrl.addNewItem(4)">Add item</a>
+                                    </div>
+                                </div>
+                       </div>
+                   {% endverbatim %}
 
                    <div class="row center" style="margin-top: 20px; padding-right: 200px; padding-left: 200px; text-align: center">
                        <label>Total Supplies</label>
@@ -736,35 +744,34 @@
                            <input style="width: 100px" class="form-control text-center" ng-value="main.miscMaximum()" disabled="disabled"/>
                        </div>
                    </div>
+                   {% verbatim %}
+                   <hr/>
+                       <div class="row" ng-controller="otherBudgetItemsCtrl as miscItemsCtrl">
+                                <div class="row" ng-repeat="form in miscItemsCtrl.miscForms" >
 
-                   <hr>
-                   <div class="row">
-                       {{ misc_items_formset.management_form }}
-                       {% for item_form in misc_items_formset %}
-                           <div id='{{item_form.prefix}}'>
-                               {% include "budget/other_item_cost.html" with form=item_form %}
-                           </div>
-                       {% endfor %}
-                       <script type="text/javascript">
-                           /* Allows for the creation of more or less staff/committee members */
-                               $(function() {
-                                   {% for formset in misc_items_formset %}
-                                   $('div#{{ formset.prefix }}').formset({
-                                      prefix: '{{ formset.prefix }}',
-                                      formCssClass: 'misc-formset{{ forloop.counter }}',
-                                      addText: '+ Add Another Item',
-                                      deleteText: 'Remove Item',
-                                      addCssClass: 'add-misc btn btn-success changeaddbtn col-lg-offset-4',
-                                      deleteCssClass: 'delete-misc repositionremovebtn btn btn-danger',
-                                   });
-                                   {% endfor %}
-                               })
-                       </script>
-                   </div>
+                                    <div class="col-lg-4 col-lg-offset-1">
+                                        <input class="form-control" type="text" ng-model="form.name"/>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <input class="form-control" type="number" ng-model="form.cost"/>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <a class="btn btn-danger" ng-click="miscItemsCtrl.removeItem(form.id, form.form_section)" >Remove</a>
+                                    </div>
+                                    <br/><br/>
+                                </div>
+                                <div class="row">
+                                    <br/>
+                                    <div class="col-lg-4 col-lg-offset-5">
+                                        <a class="btn btn-success" ng-click="miscItemsCtrl.addNewItem(2)">Add item</a>
+                                    </div>
+                                </div>
+                       </div>
+                   {% endverbatim %}
 
                    <div class="row center" style="margin-top: 20px; padding-right: 200px; padding-left: 200px; text-align: center">
                        <label>Total Miscellaneous</label>
-                       <input style="width: 100px" class="format-center" ng-value="main.miscTotal()" disabled="disabled"/>
+                       <input style="width: 100px" class="format-center form-control" ng-value="main.miscTotal()" disabled="disabled"/>
                    </div>
                </div>
            </div>
@@ -782,7 +789,7 @@
      </form>
 
 <script>
-angular.module('BudgetCalculation', ['ngCookies', 'ngRoute'])
+var myModule = angular.module('BudgetCalculation', ['ngCookies', 'ngRoute'])
         .config(['$httpProvider', '$routeProvider', function($httpProvider, $routeProvider) {
             $httpProvider.defaults.xsrfCookieName = 'csrftoken';
             $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
@@ -796,12 +803,10 @@ angular.module('BudgetCalculation', ['ngCookies', 'ngRoute'])
             vm.form = {};
 
             vm.retrieveForm = function(id) {
-                console.log({{ budget_calc.pk }});
                 $http.get('/budget/api/budget_calculations/' + id + '/').
                         success(function (data) {
                             //We can reference the json object to fill our vm variables
                             vm.form = data;
-                            console.log(vm.form);
                         }).
                         error(function (data, status, headers, config) {
                             // called asynchronously if an error occurs
@@ -981,6 +986,10 @@ angular.module('BudgetCalculation', ['ngCookies', 'ngRoute'])
                 $http.put('/budget/api/budget_calculations/' + vm.form.id + '/', vm.form)
                         .success(function(data, status) {
                             console.log("success");
+
+                            //Broadcast event to call the saveAllItems function in the otherItems controller
+                            $scope.$emit('handleBudgetCalcSavedEmit', {message: 'It is done.'});
+
                             $window.location.assign('/budget/budget_calculations');
 
                         })
@@ -994,6 +1003,10 @@ angular.module('BudgetCalculation', ['ngCookies', 'ngRoute'])
                 $http.post('/budget/api/budget_calculations/', vm.form)
                         .success(function(data, status) {
                             console.log("success Create");
+                            window.budget_calc_id = data.id;
+                            //Broadcast event to call the saveAllItems function in the otherItems controller
+                            $scope.$emit('handleBudgetCalcSavedEmit', {message: 'It is done.'});
+
                             $window.location.assign('/budget/budget_calculations');
                         })
                         .error(function(data, status) {
@@ -1016,7 +1029,153 @@ angular.module('BudgetCalculation', ['ngCookies', 'ngRoute'])
                 vm.retrieveForm({{ pk }});
             }
 
+        }])
+
+        .controller('otherBudgetItemsCtrl', ['$scope','$http', '$location', '$window', function($scope, $http, $location, $window) {
+            var idCounter = 0;
+            var vm = this;
+            vm.formsList = [];
+            vm.miscForms = [];
+            vm.travelForms = [];
+            vm.awarenessForms = [];
+            vm.suppliesForms = [];
+            vm.budget_item_parent = 0;
+
+            vm.formsList.push(vm.travelForms, vm.miscForms, vm.awarenessForms, vm.suppliesForms);
+
+            // functions for the controller
+            vm.addNewItem = addNewItem;
+            vm.retrieveForm = retrieveForm;
+            vm.removeItem = removeItem;
+            vm.saveAllItems = saveAllItems;
+
+            main();
+
+            $scope.$on('handleBudgetCalcSavedBroadcast', function(event, args) {
+                console.log("Hello, I handled that broadcast yo");
+                saveAllItems();
+            });
+
+            function main(){
+                if( window.submit_type == 1 ) {
+                    //creation strategy
+                }
+                else if( window.submit_type == 2)  {
+                    // edit strategy
+                    vm.retrieveForm(window.budget_calc_id);
+                    vm.budget_item_parent = window.budget_calc_id;
+                }
+                else {
+                    //viewing or something else
+                    vm.retrieveForm(window.budget_calc_id);
+                }
+            }
+
+            function retrieveForm(id) {
+                // grab all of the otherBudgetItems for this budgetCalcSheet
+                $http.get('/budget/api/budget_calculations/items_detail/' + id + '/').
+                        success(function (data) {
+                            for( var x = 0; x < data.length; x++ ){
+                                switch(data[x].form_section){ //to divide the forms into their appropriate areas of the page
+                                    case 1:
+                                        vm.travelForms.push(data[x]);
+                                        console.log(1);
+                                        break;
+                                    case 2:
+                                        vm.miscForms.push(data[x]);
+                                        console.log(2);
+                                        break;
+                                    case 3:
+                                        vm.awarenessForms.push(data[x]);
+                                        console.log(3);
+                                        break;
+                                    case 4:
+                                        vm.suppliesForms.push(data[x]);
+                                        console.log(4);
+                                        break;
+                                }
+                            }
+                        }).
+                        error(function (data, status, headers, config) {
+                            console.log(data, status, headers, config);
+                        });
+            }
+
+            function addNewItem(form_section){
+                idCounter--;
+                vm.formsList[form_section-1].push(
+                        {
+                            id: idCounter,
+                            name: '',
+                            cost: 0,
+                            form_section: form_section,
+                            budget_item_parent: vm.budget_item_parent
+                        });
+            }
+
+            function removeItem(itemId, form_section){
+                if(itemId>-1){
+                    $http.delete('/budget/api/budget_calculations/items_detail/' + itemId + '/').
+                        success(function (data) {
+                            console.log(data);
+                            console.log("successfully deleted");
+                        }).
+                        error(function (data, status, headers, config) {
+                            console.log(data, status, headers, config);
+                        });
+                }
+                vm.formsList[form_section-1].pop(itemId); // Remove item from the list
+            }
+
+            function saveAllItems(){
+                //iterate through formsList
+                for(var list = 0; list < vm.formsList.length; list++){
+                    //iterate through innerLists to get each item
+                    for(var itemIndex = 0; itemIndex < vm.formsList[list].length; itemIndex++){
+                        item = vm.formsList[list][itemIndex];
+                        if(item.id < 0){
+                            saveItem(item);
+                        }else{
+                            updateItem(item);
+                        }
+                    }
+                }
+            }
+
+            function saveItem(item){
+                item.budget_item_parent = window.budget_calc_id;
+                $http.post('/budget/api/budget_calculations/items_list/', item)
+                        .success(function(data, status) {
+                            item.id = data.id;
+                        })
+                        .error(function(data, status){
+                            console.log("failure to create budget item!");
+                        });
+            }
+
+            function updateItem(item){
+                console.log(item);
+                $http.put('/budget/api/budget_calculations/items_detail/' + item.id + '/', item)
+                        .success(function(data, status) {
+                            console.log(data, status);
+                            console.log("success");
+                        })
+                        .error(function(data, status) {
+                            console.log(data, status);
+                            console.log("failure to update budget item!");
+                        });
+            }
         }]);
+
+myModule.run(function($rootScope) {
+    /*
+        Receive emitted message and broadcast it.
+        Event names must be distinct or browser will blow up!
+    */
+    $rootScope.$on('handleBudgetCalcSavedEmit', function(event, args) {
+        $rootScope.$broadcast('handleBudgetCalcSavedBroadcast', args);
+    });
+});
 </script>
 
     {% endblock %}

@@ -38,8 +38,8 @@ urlpatterns = patterns('budget.views',
     url(r'^api/budget_calculations/view/(?P<pk>\d+)/$', views.ng_budget_calc_view, name="budget_view_api"),
     url(r'^api/budget_calculations/(?P<pk>\d+)/$', budget_detail, name="budget_detail_api"),
 
-    url(r'^api/budget_calculations/d/$', other_items_list, name="budget_detail_api"),
-    url(r'^api/budget_calculations/d/(?P<pk>\d+)/$', other_items_detail, name="budget_detail_api"),
+    url(r'^api/budget_calculations/items_list/$', other_items_list, name="budget_detail_api"),
+    url(r'^api/budget_calculations/items_detail/(?P<pk>\d+)/$', other_items_detail, name="budget_detail_api"),
 )
 
 
