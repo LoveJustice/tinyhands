@@ -664,6 +664,15 @@ def get_dependant_nullable_choice_text(value_depend, value, text_true, text_fals
         return get_nullable_choice_text(value, text_true, text_false)
     return ''
 
+def get_fir_and_dofe_values(vif):
+    value = ""
+    if vif.legal_action_fir_against_value != "":
+        value += vif.legal_action_fir_against_value
+        value += ", "
+    if vif.legal_action_dofe_against_value != "":
+        value += vif.legal_action_dofe_against_value
+    return value
+
 def get_vif_export_rows(vifs):
     rows = []
     rows.append(vif_headers)
@@ -905,7 +914,7 @@ def get_vif_export_rows(vifs):
             vif.get_calculated_situational_alarms(),
 
             get_legal_action_against_traffickers(vif),
-            vif.legal_action_fir_against_value + ", " + vif.legal_action_dofe_against_value or '',
+            get_fir_and_dofe_values(vif),
 
             get_checkbox_group_value(vif, 'reason_no_legal'),
             vif.reason_no_legal_interference_value,
