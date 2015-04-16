@@ -138,7 +138,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
                 'account': self,
             }
         )
-
+0101
 class AlertManager(models.Manager):
     def send_alert(self, code, context={}):
         Alert.objects.get(code=code).email_permissions_set(context)
