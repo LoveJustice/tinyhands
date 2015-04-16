@@ -338,7 +338,7 @@
                                         <input class="form-control" type="number" ng-model="form.cost"/>
                                     </div>
                                     <div class="col-lg-2">
-                                        <a class="btn btn-danger" ng-click="awarenessItemsCtrl.removeItem(form.id)" >Remove</a>
+                                        <a class="btn btn-danger" ng-click="awarenessItemsCtrl.removeItem(form.id, $index)" >Remove</a>
                                     </div>
                                     <br/><br/>
                                 </div>
@@ -443,7 +443,7 @@
                                         <input class="form-control" type="number" ng-model="form.cost"/>
                                     </div>
                                     <div class="col-lg-2">
-                                        <a class="btn btn-danger" ng-click="travelItemsCtrl.removeItem(form.id)" >Remove</a>
+                                        <a class="btn btn-danger" ng-click="travelItemsCtrl.removeItem(form.id, $index)" >Remove</a>
                                     </div>
                                     <br/><br/>
                                 </div>
@@ -513,7 +513,7 @@
                                         <input class="form-control" type="number" ng-model="form.cost"/>
                                     </div>
                                     <div class="col-lg-2">
-                                        <a class="btn btn-danger" ng-click="suppliesItemsCtrl.removeItem(form.id)" >Remove</a>
+                                        <a class="btn btn-danger" ng-click="suppliesItemsCtrl.removeItem(form.id, $index)" >Remove</a>
                                     </div>
                                     <br/><br/>
                                 </div>
@@ -756,7 +756,7 @@
                                         <input class="form-control" type="number" ng-model="form.cost"/>
                                     </div>
                                     <div class="col-lg-2">
-                                        <a class="btn btn-danger" ng-click="miscItemsCtrl.removeItem(form.id)" >Remove</a>
+                                        <a class="btn btn-danger" ng-click="miscItemsCtrl.removeItem(form.id, $index)" >Remove</a>
                                     </div>
                                     <br/><br/>
                                 </div>
@@ -1056,7 +1056,6 @@ var myModule = angular.module('BudgetCalculation', ['ngCookies', 'ngRoute'])
             main();
 
             $scope.$on('handleBudgetCalcSavedBroadcast', function(event, args) {
-                console.log("Hello, I handled that broadcast yo");
                 saveAllItems();
             });
 
@@ -1084,7 +1083,6 @@ var myModule = angular.module('BudgetCalculation', ['ngCookies', 'ngRoute'])
                                     vm.formsList[$scope.form_section-1].push(data[x]);
                                 }
                             }
-                            console.log($scope.form_section, vm.formsList);
                         }).
                         error(function (data, status, headers, config) {
                             console.log(data, status, headers, config);
@@ -1101,27 +1099,23 @@ var myModule = angular.module('BudgetCalculation', ['ngCookies', 'ngRoute'])
                             form_section: $scope.form_section,
                             budget_item_parent: vm.budget_item_parent
                         });
-                console.log(vm.formsList);
             }
 
-            function removeItem(itemId){
+            function removeItem(itemId, index){
                 if(itemId>-1){
                     $http.delete('/budget/api/budget_calculations/items_detail/' + itemId + '/').
                         success(function (data) {
-                            console.log(data);
                             console.log("successfully deleted");
                         }).
                         error(function (data, status, headers, config) {
                             console.log(data, status, headers, config);
                         });
                 }
-                vm.formsList[$scope.form_section-1].pop(itemId); // Remove item from the list
+                vm.formsList[$scope.form_section-1].splice(index, 1); // Remove item from the list
             }
 
             function saveAllItems(){
-                //iterate through formsList
                 for(var list = 0; list < vm.formsList.length; list++){
-                    //iterate through innerLists to get each item
                     for(var itemIndex = 0; itemIndex < vm.formsList[list].length; itemIndex++){
                         item = vm.formsList[list][itemIndex];
                         if(item.id < 0){
@@ -1145,14 +1139,11 @@ var myModule = angular.module('BudgetCalculation', ['ngCookies', 'ngRoute'])
             }
 
             function updateItem(item){
-                console.log(item);
                 $http.put('/budget/api/budget_calculations/items_detail/' + item.id + '/', item)
                         .success(function(data, status) {
-                            console.log(data, status);
                             console.log("success");
                         })
                         .error(function(data, status) {
-                            console.log(data, status);
                             console.log("failure to update budget item!");
                         });
             }
