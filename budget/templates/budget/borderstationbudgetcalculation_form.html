@@ -328,7 +328,7 @@
                     <hr>
                    {% verbatim %}
                    <hr/>
-                       <div class="row" ng-controller="otherBudgetItemsCtrl as awarenessItemsCtrl">
+                       <div class="row" ng-controller="otherBudgetItemsCtrl as awarenessItemsCtrl" ng-init="form_section = 3;">
                                 <div class="row" ng-repeat="form in awarenessItemsCtrl.awarenessForms" >
 
                                     <div class="col-lg-4 col-lg-offset-1">
@@ -338,14 +338,14 @@
                                         <input class="form-control" type="number" ng-model="form.cost"/>
                                     </div>
                                     <div class="col-lg-2">
-                                        <a class="btn btn-danger" ng-click="awarenessItemsCtrl.removeItem(form.id, form.form_section)" >Remove</a>
+                                        <a class="btn btn-danger" ng-click="awarenessItemsCtrl.removeItem(form.id)" >Remove</a>
                                     </div>
                                     <br/><br/>
                                 </div>
                                 <div class="row">
                                     <br/>
                                     <div class="col-lg-4 col-lg-offset-5">
-                                        <a class="btn btn-success" ng-click="awarenessItemsCtrl.addNewItem(3)">Add item</a>
+                                        <a class="btn btn-success" ng-click="awarenessItemsCtrl.addNewItem()">Add item</a>
                                     </div>
                                 </div>
                        </div>
@@ -433,7 +433,7 @@
                    <hr>
                    {% verbatim %}
                    <hr/>
-                       <div class="row" ng-controller="otherBudgetItemsCtrl as travelItemsCtrl">
+                       <div class="row" ng-controller="otherBudgetItemsCtrl as travelItemsCtrl" ng-init="form_section = 1;">
                                 <div class="row" ng-repeat="form in travelItemsCtrl.travelForms" >
 
                                     <div class="col-lg-4 col-lg-offset-1">
@@ -443,14 +443,14 @@
                                         <input class="form-control" type="number" ng-model="form.cost"/>
                                     </div>
                                     <div class="col-lg-2">
-                                        <a class="btn btn-danger" ng-click="travelItemsCtrl.removeItem(form.id, form.form_section)" >Remove</a>
+                                        <a class="btn btn-danger" ng-click="travelItemsCtrl.removeItem(form.id)" >Remove</a>
                                     </div>
                                     <br/><br/>
                                 </div>
                                 <div class="row">
                                     <br/>
                                     <div class="col-lg-4 col-lg-offset-5">
-                                        <a class="btn btn-success" ng-click="travelItemsCtrl.addNewItem(1)">Add item</a>
+                                        <a class="btn btn-success" ng-click="travelItemsCtrl.addNewItem()">Add item</a>
                                     </div>
                                 </div>
                        </div>
@@ -503,7 +503,7 @@
                    <hr>
                    {% verbatim %}
                    <hr/>
-                       <div class="row" ng-controller="otherBudgetItemsCtrl as suppliesItemsCtrl">
+                       <div class="row" ng-controller="otherBudgetItemsCtrl as suppliesItemsCtrl" ng-init="form_section = 4;">
                                 <div class="row" ng-repeat="form in suppliesItemsCtrl.suppliesForms" >
 
                                     <div class="col-lg-4 col-lg-offset-1">
@@ -513,14 +513,14 @@
                                         <input class="form-control" type="number" ng-model="form.cost"/>
                                     </div>
                                     <div class="col-lg-2">
-                                        <a class="btn btn-danger" ng-click="suppliesItemsCtrl.removeItem(form.id, form.form_section)" >Remove</a>
+                                        <a class="btn btn-danger" ng-click="suppliesItemsCtrl.removeItem(form.id)" >Remove</a>
                                     </div>
                                     <br/><br/>
                                 </div>
                                 <div class="row">
                                     <br/>
                                     <div class="col-lg-4 col-lg-offset-5">
-                                        <a class="btn btn-success" ng-click="suppliesItemsCtrl.addNewItem(4)">Add item</a>
+                                        <a class="btn btn-success" ng-click="suppliesItemsCtrl.addNewItem()">Add item</a>
                                     </div>
                                 </div>
                        </div>
@@ -746,7 +746,7 @@
                    </div>
                    {% verbatim %}
                    <hr/>
-                       <div class="row" ng-controller="otherBudgetItemsCtrl as miscItemsCtrl">
+                       <div class="row" ng-controller="otherBudgetItemsCtrl as miscItemsCtrl" ng-init="form_section = 2;">
                                 <div class="row" ng-repeat="form in miscItemsCtrl.miscForms" >
 
                                     <div class="col-lg-4 col-lg-offset-1">
@@ -756,14 +756,14 @@
                                         <input class="form-control" type="number" ng-model="form.cost"/>
                                     </div>
                                     <div class="col-lg-2">
-                                        <a class="btn btn-danger" ng-click="miscItemsCtrl.removeItem(form.id, form.form_section)" >Remove</a>
+                                        <a class="btn btn-danger" ng-click="miscItemsCtrl.removeItem(form.id)" >Remove</a>
                                     </div>
                                     <br/><br/>
                                 </div>
                                 <div class="row">
                                     <br/>
                                     <div class="col-lg-4 col-lg-offset-5">
-                                        <a class="btn btn-success" ng-click="miscItemsCtrl.addNewItem(2)">Add item</a>
+                                        <a class="btn btn-success" ng-click="miscItemsCtrl.addNewItem()">Add item</a>
                                     </div>
                                 </div>
                        </div>
@@ -1034,11 +1034,15 @@ var myModule = angular.module('BudgetCalculation', ['ngCookies', 'ngRoute'])
         .controller('otherBudgetItemsCtrl', ['$scope','$http', '$location', '$window', function($scope, $http, $location, $window) {
             var idCounter = 0;
             var vm = this;
+
+            $scope.form_section = 0;
+
             vm.formsList = [];
             vm.miscForms = [];
             vm.travelForms = [];
             vm.awarenessForms = [];
             vm.suppliesForms = [];
+
             vm.budget_item_parent = 0;
 
             vm.formsList.push(vm.travelForms, vm.miscForms, vm.awarenessForms, vm.suppliesForms);
@@ -1076,44 +1080,31 @@ var myModule = angular.module('BudgetCalculation', ['ngCookies', 'ngRoute'])
                 $http.get('/budget/api/budget_calculations/items_detail/' + id + '/').
                         success(function (data) {
                             for( var x = 0; x < data.length; x++ ){
-                                switch(data[x].form_section){ //to divide the forms into their appropriate areas of the page
-                                    case 1:
-                                        vm.travelForms.push(data[x]);
-                                        console.log(1);
-                                        break;
-                                    case 2:
-                                        vm.miscForms.push(data[x]);
-                                        console.log(2);
-                                        break;
-                                    case 3:
-                                        vm.awarenessForms.push(data[x]);
-                                        console.log(3);
-                                        break;
-                                    case 4:
-                                        vm.suppliesForms.push(data[x]);
-                                        console.log(4);
-                                        break;
+                                if (data[x].form_section === $scope.form_section){
+                                    vm.formsList[$scope.form_section-1].push(data[x]);
                                 }
                             }
+                            console.log($scope.form_section, vm.formsList);
                         }).
                         error(function (data, status, headers, config) {
                             console.log(data, status, headers, config);
                         });
             }
 
-            function addNewItem(form_section){
+            function addNewItem(){
                 idCounter--;
-                vm.formsList[form_section-1].push(
+                vm.formsList[$scope.form_section-1].push(
                         {
                             id: idCounter,
                             name: '',
                             cost: 0,
-                            form_section: form_section,
+                            form_section: $scope.form_section,
                             budget_item_parent: vm.budget_item_parent
                         });
+                console.log(vm.formsList);
             }
 
-            function removeItem(itemId, form_section){
+            function removeItem(itemId){
                 if(itemId>-1){
                     $http.delete('/budget/api/budget_calculations/items_detail/' + itemId + '/').
                         success(function (data) {
@@ -1124,7 +1115,7 @@ var myModule = angular.module('BudgetCalculation', ['ngCookies', 'ngRoute'])
                             console.log(data, status, headers, config);
                         });
                 }
-                vm.formsList[form_section-1].pop(itemId); // Remove item from the list
+                vm.formsList[$scope.form_section-1].pop(itemId); // Remove item from the list
             }
 
             function saveAllItems(){
