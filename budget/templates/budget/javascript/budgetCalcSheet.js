@@ -268,11 +268,6 @@ var myModule = angular.module('BudgetCalculation', ['ngCookies', 'ngRoute'])
                 saveAllItems();
             });
 
-
-            $scope.$on('handleBudgetCalcSavedBroadcast', function(event, args) {
-                saveAllItems();
-            });
-
             function main(){
                 if( window.submit_type == 1 ) {
                     //creation strategy
