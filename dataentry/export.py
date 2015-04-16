@@ -153,7 +153,7 @@ def get_checkbox_group_value(instance, field_name_start):
                     return field.verbose_name
     return ''
 
-from django.utils.timezone import localtime
+from django.utils.timezone import make_naive, localtime
 
 
 def get_irf_export_rows(irfs):
@@ -170,12 +170,15 @@ def get_irf_export_rows(irfs):
 
             row = []
 
+            date_interception = localtime(irf.date_time_of_interception)
+            date_entered = localtime(irf.date_time_entered_into_system)
+
             row.extend([
                 irf.irf_number,
 
                 get_station_name_from_number(irf.irf_number),
-                localtime(irf.date_time_of_interception),
-                localtime(irf.date_time_entered_into_system),
+                make_naive(date_interception, date_interception.tzinfo),
+                make_naive(date_entered, date_entered.tzinfo),
                 irf.number_of_victims,
                 irf.number_of_traffickers,
 
