@@ -91,137 +91,142 @@
                 </div>
                 <div class="col-md-6">
                     <h2 class="background"><span>Shelter</span></h2>
-                    <div class="row" >
-                        <div class="col-lg-2 input-with-text calc-form-input-no-width" style="width: 100px; padding: 0">
+                    <div class="row" style="margin-top: 30px; text-align: center" >
+                        <div class="col-lg-2 input-with-text calc-form-input-no-width">
                             <input class="form-control" type="number" id="shelter_rent" ng-model="main.form.shelter_rent"/>
                             <small>Rent</small>
                         </div>
-                        <div class="col-lg-1 form-symbol" style="padding: 0">
+                        <div class="col-lg-1">
                             <h4 style="text-align: center">+</h4>
                         </div>
-                        <div class="col-lg-2 input-with-text calc-form-input-no-width" style="width: 100px; padding: 0">
+                        <div class="col-lg-2 input-with-text calc-form-input-no-width" >
                             <input class="form-control" type="number" id="shelter_water" ng-model="main.form.shelter_water"/>
                             <small>Water</small>
                         </div>
-                        <div class="col-lg-1 form-symbol" style="padding: 0">
+                        <div class="col-lg-1">
                             <h4 style="text-align: center">+</h4>
                         </div>
-                        <div class="col-lg-2 input-with-text calc-form-input-no-width" style="width: 100px; padding: 0">
+                        <div class="col-lg-2 input-with-text calc-form-input-no-width">
                             <input class="form-control" type="number" id="shelter_electricity" ng-model="main.form.shelter_electricity"/>
                             <small>Electricity</small>
                         </div>
-                        <div class="col-lg-1 form-symbol" style="padding: 0">
+                        <div class="col-lg-1">
                             <h4 style="text-align: center">=</h4>
                         </div>
-                        <div class="col-lg-1 pull-right input-group" style="width: 100px; text-align: center; padding: 0">
+                        <div class="col-lg-2 input-group" style="width: 100px; padding: 0">
                             <div class="input-group-addon">$</div>
-                            <input style="width: 100px" class="form-control text-center" ng-value="main.utilTotal()" disabled="disabled"/>
+                            <input class="form-control text-center" ng-value="main.utilTotal()" disabled="disabled"/>
                         </div>
                     </div>
                     <div class="row" style="margin-top: 30px; text-align: center">
-                        <div class="col-lg-2" style="margin-top: 5px; width: 50px">
-                            <input class="form-control" type="checkbox" id="shelterStartupBool" ng-model="main.form.shelter_shelter_startup"/>
+                        <div class="col-lg-1 col-lg-offset-2">
+                            <input type="checkbox" id="shelterStartupBool" ng-model="main.form.shelter_shelter_startup"/>
                         </div>
-                        <div class="col-lg-2 input-with-text" style="width: 100px; padding: 0">
+                        <div class="col-lg-2 input-with-text calc-form-input-no-width">
                             <input class="form-control" type="number" id="shelter_startup_amount" ng-model="main.form.shelter_shelter_startup_amount"/>
                             <small>Shelter Startup</small>
                         </div>
-                        <div class="col-lg-2" style="margin-top: 5px; width: 50px">
-                            <input class="form-control" type="checkbox" id="sheltert_two_bool" ng-model="main.form.shelter_shelter_two"/>
+                        <div class="col-lg-1">
+                            <input type="checkbox" id="shelter_two_bool" ng-model="main.form.shelter_shelter_two"/>
                         </div>
-                        <div class="col-lg-2 input-with-text" style="width: 100px; padding: 0">
+                        <div class="col-lg-2 input-with-text calc-form-input-no-width">
                             <input class="form-control" type="number" id="shelter_two_amount" ng-model="main.form.shelter_shelter_two_amount"/>
                             <small>Shelter 2</small>
                         </div>
-                        <div class="col-lg-1" style="padding: 0">
+                        <div class="col-lg-1">
                             <h4 style="text-align: center">=</h4>
                         </div>
-                        <div class="col-lg-1 pull-right input-group" style="width: 100px; text-align: center; padding: 0">
+                        <div class="col-lg-2 input-group" style="width: 100px; text-align: center; padding: 0">
                             <div class="input-group-addon">$</div>
-                            <input style="width: 100px" class="form-control text-center" ng-value="main.shelterCheckboxTotal()" disabled="disabled"/>
+                            <input class="form-control text-center" ng-value="main.shelterCheckboxTotal()" disabled="disabled"/>
                         </div>
                     </div>
 
-                    <div class="row center" style="margin-top: 20px; padding-right: 200px; padding-left: 200px; text-align: center">
-                        <label>Shelter Total</label>
-                        <input style="width: 100px" class="form-control text-center" ng-value="main.shelterTotal()" disabled="disabled"/>
+                    <div class="row" style="margin-top: 30px; text-align: center">
+                        <div class="col-lg-9" style="padding: 0"></div>
+                        <div class="col-lg-1 text-center" style="width: 100px; padding: 0">
+                            <label>Shelter Total</label>
+                            <input class="form-control text-center" ng-value="main.shelterTotal()" disabled="disabled"/>
+                        </div>
                     </div>
-                </div>
                 <!-- End Shelter -->
 
                 <!-- Food & Gas -->
-                <div class="col-lg-6 col-lg-offset-6">
+                <div class="row">
                     <h2 class="background"><span>Food & Gas</span></h2>
-                    <div class="row">
-                        <div class="col-lg-2 text-center">
-                            <strong>Intercepted Girls</strong>
+                    <div class="row" style="margin-top: 20px">
+                        <!--<div class="col-lg-1 text-center">
+                            <small>Intercepted Girls</small>
                         </div>
-                        <div class="col-lg-1 form-symbol">
+                        <div class="col-lg-1 ">
                             <h4 style="text-align: center">=</h4>
-                        </div>
-                        <div class="col-lg-2 calc-form-input">
+                        </div>-->
+                        <div class="col-lg-2 input-with-text calc-form-input-no-width">
                             <input class="form-control" type="number" id="food_gas_multiplier_before" ng-model="main.form.food_and_gas_number_of_intercepted_girls_multiplier_before"/>
                         </div>
-                        <div class="col-lg-1 form-symbol">
+                        <div class="col-lg-1">
                             <h4 style="text-align: center">*</h4>
                         </div>
-                        <div class="col-lg-2 calc-form-input input-with-text">
+                        <div class="col-lg-2 input-with-text calc-form-input-no-width">
                             <input class="form-control" type="number" id="food_gas_number_of_girls" ng-model="main.form.food_and_gas_number_of_intercepted_girls"/>
                             <small># of Girls</small>
                         </div>
-                         <div class="col-lg-1 form-symbol">
+                         <div class="col-lg-1 ">
                             <h4 style="text-align: center">*</h4>
                         </div>
-                        <div class="col-lg-2 calc-form-input">
+                        <div class="col-lg-2 input-with-text calc-form-input-no-width">
                             <input class="form-control" type="number" id="food_gas_multiplier_after" ng-model="main.form.food_and_gas_number_of_intercepted_girls_multiplier_after"/>
                         </div>
-                        <div class="col-lg-1 form-symbol">
+                        <div class="col-lg-1 ">
                             <h4 style="text-align: center">=</h4>
                         </div>
-                        <div class="col-lg-2 pull-right input-group" style="padding: 0">
+                        <div class="col-lg-2 input-group" style="width: 100px; text-align: center; padding: 0">
                             <div class="input-group-addon">$</div>
-                            <input style="width: 100px" class="form-control text-center" ng-value="main.foodGasInterceptedGirls()" disabled="disabled"/>
+                            <input class="form-control text-center" ng-value="main.foodGasInterceptedGirls()" disabled="disabled"/>
                         </div>
+                        <small>Intercepted Girls</small>
                     </div>
-
                     <div class="row" style="margin-top: 20px">
-                        <div class="col-lg-2 text-center">
-                            <strong>Limbo Girls</strong>
+                        <!--<div class="col-lg-1 text-center">
+                            <small>Limbo Girls</small>
                         </div>
-                        <div class="col-lg-1 form-symbol">
+                        <div class="col-lg-1">
                             <h4 style="text-align: center">=</h4>
-                        </div>
-                        <div class="col-lg-2 calc-form-input">
+                        </div>-->
+                        <div class="col-lg-2 input-with-text calc-form-input-no-width">
                             <input class="form-control" type="number" id="limbo_multiplier" ng-model="main.form.food_and_gas_limbo_girls_multiplier"/>
                         </div>
-                        <div class="col-lg-1 form-symbol">
+                        <div class="col-lg-1">
                             <h4 style="text-align: center">*</h4>
                         </div>
-                        <div class="col-lg-2 calc-form-input input-with-text">
+                        <div class="col-lg-2 input-with-text calc-form-input-no-width">
                             <input class="form-control" type="number" id="limbo_number_of_girls" ng-model="main.form.food_and_gas_number_of_limbo_girls"/>
                             <small># of Girls</small>
                         </div>
-                        <div class="col-lg-1 form-symbol">
+                        <div class="col-lg-1">
                             <h4 style="text-align: center">*</h4>
                         </div>
-                        <div class="col-lg-2 calc-form-input input-with-text">
+                        <div class="col-lg-2 input-with-text calc-form-input-no-width">
                             <input class="form-control" type="number" id="limbo_number_of_days" ng-model="main.form.food_and_gas_number_of_days"/>
                             <small># of Days</small>
                         </div>
-                        <div class="col-lg-1 form-symbol">
+                        <div class="col-lg-1">
                             <h4 style="text-align: center">=</h4>
                         </div>
-                        <div class="col-lg-2 pull-right input-group" style="padding: 0">
+                        <div class="col-lg-2 input-group" style="width: 100px; text-align: center; padding: 0">
                             <div class="input-group-addon">$</div>
-                            <input style="width: 100px" class="form-control text-center" ng-value="main.foodGasLimboGirls()" disabled="disabled"/>
+                            <input class="form-control text-center" ng-value="main.foodGasLimboGirls()" disabled="disabled"/>
+                        </div>
+                        <small>Limbo Girls</small>
+                    </div>
+                    <div class="row" style="margin-top: 30px; text-align: center">
+                        <div class="col-lg-9" style="padding: 0"></div>
+                        <div class="col-lg-1 text-center" style="width: 100px; padding: 0">
+                            <label>Total Food</label>
+                            <input style="width: 100px" class="form-control text-center" ng-value="main.foodTotal()" disabled="disabled"/>
                         </div>
                     </div>
-
-                    <div class="row center" style="margin-top: 20px; padding-right: 200px; padding-left: 200px; text-align: center">
-                        <label>Total Food</label>
-                        <input style="width: 100px" class="form-control text-center" ng-value="main.foodTotal()" disabled="disabled"/>
-                    </div>
-                 </div>
+                </div>
             </div>
             <!-- End Food & Gas -->
 
@@ -230,41 +235,45 @@
                <div class="col-md-6">
                    <h2 class="background"><span>Communication</span></h2>
                    <div class="row">
-                       <div class="col-md-6 form-inline">
-                           <span style="padding-right: 10px"></span>
-                           <input class="form-control" type="checkbox" id="comm_chair_bool" ng-model="main.form.communication_chair"/>
-                           <input class="form-control" type="number" id="comm_chair_amount" ng-model="main.form.communication_chair_amount"/>
-                           <span style="padding-left: 10px"><small>for chair</small></span>
+                       <div class="col-md-6 form-inline row">
+                           <span class="col-md-1" style="padding-right: 10px"></span>
+                           <input class="form-control col-md-5" type="checkbox" id="comm_chair_bool" ng-model="main.form.communication_chair"/>
+                           <div class="col-md-6">
+                               <input class="form-control" type="number" id="comm_chair_amount" ng-model="main.form.communication_chair_amount"/>
+                               <span style="padding-left: 10px"><small>for chair</small></span>
+                           </div>
                        </div>
-                       <div class="col-md-6 form-inline">
-                           <span style="padding-right: 10px"></span>
-                           <input class="form-control" type="checkbox" id="comm_manager_bool" ng-model="main.form.communication_manager"/>
-                           <input class="form-control" type="number" id="comm_manager_amount" ng-model="main.form.communication_manager_amount"/>
-                           <span style="padding-left: 10px;"><small>for manager</small></span>
+                       <div class="col-md-6 form-inline row">
+                           <span class="col-md-1" style="padding-right: 10px"></span>
+                           <input class="form-control col-md-5" type="checkbox" id="comm_manager_bool" ng-model="main.form.communication_manager"/>
+                           <div class="col-md-6">
+                               <input class="form-control" type="number" id="comm_manager_amount" ng-model="main.form.communication_manager_amount"/>
+                               <span style="padding-left: 10px;"><small>for manager</small></span>
+                           </div>
                        </div>
                    </div>
                    <div class="row" style="margin-top: 20px">
-                       <div class="col-lg-5 calc-form-input-no-width input-with-text" style="width: 200px">
+                       <div class="col-md-4" style="padding-right: 0">
                            <input class="form-control" type="number" id="comm_number_of_staff_wt" ng-model="main.form.communication_number_of_staff_with_walkie_talkies"/>
                            <small># of staff with walkie-talkies</small>
                        </div>
-                       <div class="col-lg-1 form-symbol" style="padding: 0; margin: 0">
+                       <div class="col-md-1 form-symbol" style="padding: 0; margin: 0">
                            <h4 style="text-align: center">*</h4>
                        </div>
-                       <div class="col-lg-3 calc-form-input-no-width">
+                       <div class="col-md-3 calc-form-input-no-width">
                            <input class="form-control" type="number" id="comm_number_of_staff_wt_multiplier" ng-model="main.form.communication_number_of_staff_with_walkie_talkies_multiplier"/>
                        </div>
-                       <div class="col-lg-1 form-symbol" style="padding: 0; margin: 0">
+                       <div class="col-md-1 form-symbol" style="padding: 0; margin: 0">
                            <h4 style="text-align: center">=</h4>
                        </div>
-                       <div class="col-lg-2 calc-form-input-no-width pull-right input-group">
+                       <div class="col-md-3 input-group">
                            <div class="input-group-addon">$</div>
-                           <input style="width: 100px" class="form-control text-center" ng-value="main.commNumberOfStaffTotal()" disabled="disabled"/>
+                           <input class="form-control text-center" ng-value="main.commNumberOfStaffTotal()" disabled="disabled"/>
                        </div>
                    </div>
 
                    <div class="row" style="margin-top: 20px;">
-                       <div class="col-lg-5 calc-form-input-no-width input-with-text" style="width: 200px">
+                       <div class="col-lg-4" style="padding-right: 0">
                            <input class="form-control" type="number" id="comm_each_staff_wt" ng-model="main.form.communication_each_staff"/>
                            <small>Each Staff</small>
                        </div>
@@ -277,9 +286,9 @@
                        <div class="col-lg-1 form-symbol" style="padding: 0; margin: 0">
                            <h4 style="text-align: center">=</h4>
                        </div>
-                       <div class="col-lg-2 calc-form-input-no-width pull-right input-group">
+                       <div class="col-lg-3 input-group">
                            <div class="input-group-addon">$</div>
-                           <input style="width: 100px" class="form-control text-center" ng-value="main.commEachStaffTotal()" disabled="disabled"/>
+                           <input class="form-control text-center" ng-value="main.commEachStaffTotal()" disabled="disabled"/>
                        </div>
                    </div>
                    <div class="row center" style="margin-top: 20px; padding-right: 200px; padding-left: 200px; text-align: center">
@@ -771,8 +780,8 @@
            </div>
            <!-- End Miscellaneous -->
 
-            <input ng-show="main.update" class="pull-right btn btn-success navbar-btn btn-lg" value = "Submit" ng-click="main.updateForm()">
-            <input ng-show="main.create" id="budget_create" class="pull-right btn btn-primary navbar-btn btn-lg" value = "Submit" ng-click="main.createForm()">
+            <input ng-show="main.update" class="pull-right btn btn-success navbar-btn btn-lg" value="Submit" ng-click="main.updateForm()">
+            <input ng-show="main.create" id="budget_create" class="pull-right btn btn-primary navbar-btn btn-lg" value="Submit" ng-click="main.createForm()">
         </div>
 
      {% if submit_type %}
