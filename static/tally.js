@@ -14,7 +14,7 @@ angular.module('TallyMod',['ngCookies','ngAnimate'])
         activate();
 
         function activate() {
-            getTallyData();
+            getTallyData(true);
         }
 
         function isEmptyObject(obj) {
@@ -28,7 +28,7 @@ angular.module('TallyMod',['ngCookies','ngAnimate'])
             }
         }
 
-        function getTallyData() {
+        function getTallyData(firstCall) {
             $http.get('/portal/tally/days/')
                 .success(function(data) {
                 // Data should be:
@@ -37,11 +37,31 @@ angular.module('TallyMod',['ngCookies','ngAnimate'])
                 //  1:{dayOfWeek:'Sunday',
                 //     interceptions: {...}},
                 // }
-                vm.days = data;
+                console.log(data);
+                if(firstCall){
+                    vm.days = data;   
+                    setInterval(getTallyData, 60000);
+                }else{ //updates
+                    checkDifferences(data);
+                }
             })
                 .error(function(error) {
                 console.log(error);
             });
+        }
+        
+        function checkDifferences(data){
+            for(var i = 0; i < 7; i++){
+                interceptions = data[i].interceptions;
+                for(var key in interceptions){
+                    if(interceptions.hasOwnProperty(key)){
+                        if(vm.days[i].interceptions[key] != interceptions[key]){
+                            //difference found
+                        }
+                    }
+                }
+            }
+            vm.days = data;
         }
     }]);
 angular.bootstrap($('#tally'), ['TallyMod']);
