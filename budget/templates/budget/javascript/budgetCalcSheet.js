@@ -8,8 +8,24 @@ var myModule = angular.module('BudgetCalculation', ['ngCookies', 'ngRoute'])
 
 
             var vm = this;
-
             vm.form = {};
+
+            vm.miscTotalVal = 0;
+
+            vm.travelTotalValue = [0];
+            vm.miscTotalValue = [0];
+            vm.awarenessTotalValue = [0];
+            vm.suppliesTotalValue = [0];
+
+            vm.otherItemsTotals = [vm.travelTotalValue,
+                                    vm.miscTotalValue,
+                                    vm.awarenessTotalValue,
+                                    vm.suppliesTotalValue];
+
+            $scope.$on('handleOtherItemsTotalChangeBroadcast', function(event, args) {
+                vm.otherItemsTotals[args['form_section']-1][0] = args['total'];
+                vm.miscTotal();
+            });
 
             vm.retrieveForm = function(id) {
                 $http.get('/budget/api/budget_calculations/' + id + '/').
@@ -98,7 +114,7 @@ var myModule = angular.module('BudgetCalculation', ['ngCookies', 'ngRoute'])
                 return vm.form.miscellaneous_number_of_intercepts_last_month * vm.form.miscellaneous_number_of_intercepts_last_month_multiplier;
             };
             vm.miscTotal = function() {
-                return vm.miscMaximum();
+                vm.miscTotalVal = vm.miscMaximum() + vm.miscTotalValue[0];
             };
 
             //Medical Section
@@ -252,15 +268,17 @@ var myModule = angular.module('BudgetCalculation', ['ngCookies', 'ngRoute'])
             vm.awarenessForms = [];
             vm.suppliesForms = [];
 
+            vm.formsList.push(vm.travelForms, vm.miscForms, vm.awarenessForms, vm.suppliesForms);
+
             vm.budget_item_parent = 0;
 
-            vm.formsList.push(vm.travelForms, vm.miscForms, vm.awarenessForms, vm.suppliesForms);
 
             // functions for the controller
             vm.addNewItem = addNewItem;
             vm.retrieveForm = retrieveForm;
             vm.removeItem = removeItem;
             vm.saveAllItems = saveAllItems;
+            vm.otherItemsTotal = otherItemsTotal;
 
             main();
 
@@ -292,6 +310,7 @@ var myModule = angular.module('BudgetCalculation', ['ngCookies', 'ngRoute'])
                                     vm.formsList[$scope.form_section-1].push(data[x]);
                                 }
                             }
+                            vm.otherItemsTotal();
                         }).
                         error(function (data, status, headers, config) {
                             console.log(data, status, headers, config);
@@ -321,6 +340,7 @@ var myModule = angular.module('BudgetCalculation', ['ngCookies', 'ngRoute'])
                         });
                 }
                 vm.formsList[$scope.form_section-1].splice(index, 1); // Remove item from the list
+                otherItemsTotal();
             }
 
             function saveAllItems(){
@@ -356,6 +376,17 @@ var myModule = angular.module('BudgetCalculation', ['ngCookies', 'ngRoute'])
                             console.log("failure to update budget item!");
                         });
             }
+
+            function otherItemsTotal(){
+                var acc =0;
+                for(var x = 0; x < vm.formsList[$scope.form_section-1].length; x++){
+                    acc += vm.formsList[$scope.form_section-1][x].cost;
+                }
+                $scope.miscItemsTotalVal = acc;
+                $scope.$emit('handleOtherItemsTotalChangeEmit', {form_section: $scope.form_section, total: acc});
+            }
+
+
         }]);
 
 myModule.run(function($rootScope) {
@@ -363,7 +394,12 @@ myModule.run(function($rootScope) {
         Receive emitted message and broadcast it.
         Event names must be distinct or browser will blow up!
     */
+
     $rootScope.$on('handleBudgetCalcSavedEmit', function(event, args) {
         $rootScope.$broadcast('handleBudgetCalcSavedBroadcast', args);
+    });
+
+    $rootScope.$on('handleOtherItemsTotalChangeEmit', function(event, args) {
+        $rootScope.$broadcast('handleOtherItemsTotalChangeBroadcast', args);
     });
 });

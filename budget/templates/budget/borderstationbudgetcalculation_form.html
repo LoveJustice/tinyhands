@@ -646,7 +646,7 @@
                                 </tr>
                                 <tr>
                                     <td>Misc.</td>
-                                    <td><p ng-bind="main.miscTotal()"></p></td>
+                                    <td><p ng-bind="main.miscTotalVal"></p></td>
                                     <td class="active"></td>
                                 </tr>
                                 <tr>
@@ -727,14 +727,14 @@
 
                             <div class="row">
                                 <div class="col-lg-2 input-with-text calc-form-input-no-width">
-                                    <input class="form-control" type="number" id="misc_number_of_intercepts" ng-model="main.form.miscellaneous_number_of_intercepts_last_month"/>
+                                    <input class="form-control" type="number" id="misc_number_of_intercepts" ng-model="main.form.miscellaneous_number_of_intercepts_last_month" ng-change="main.miscTotal()"/>
                                     <small># of intercepts last month</small>
                                 </div>
                                 <div class="col-lg-1 form-symbol">
                                     <h4 style="text-align: center">*</h4>
                                 </div>
                                 <div class="col-lg-2 calc-form-input-no-width">
-                                    <input class="form-control" type="number" id="misc_number_of_intercepts_mult" ng-model="main.form.miscellaneous_number_of_intercepts_last_month_multiplier"/>
+                                    <input class="form-control" type="number" id="misc_number_of_intercepts_mult" ng-model="main.form.miscellaneous_number_of_intercepts_last_month_multiplier" ng-change="main.miscTotal()"/>
                                 </div>
                                 <div class="col-lg-1 form-symbol">
                                     <h4 style="text-align: center">=</h4>
@@ -753,7 +753,7 @@
                                         <input class="form-control" type="text" ng-model="form.name"/>
                                     </div>
                                     <div class="col-lg-2">
-                                        <input class="form-control" type="number" ng-model="form.cost"/>
+                                        <input class="form-control" type="number" ng-model="form.cost" ng-change="miscItemsCtrl.otherItemsTotal()"/>
                                     </div>
                                     <div class="col-lg-2">
                                         <a class="btn btn-danger" ng-click="miscItemsCtrl.removeItem(form.id, $index)">Remove</a>
@@ -772,7 +772,7 @@
 
                             <div class="row center" style="margin-top: 20px; padding-right: 200px; padding-left: 200px; text-align: center">
                                 <label>Total Miscellaneous</label>
-                                <input style="width: 100px" class="format-center form-control" ng-value="main.miscTotal()" disabled="disabled"/>
+                                <input style="width: 100px" class="format-center form-control" ng-value="main.miscTotalVal" disabled="disabled"/>
                             </div>
                         </div>
                     </div>
