@@ -10,21 +10,27 @@ var myModule = angular.module('BudgetCalculation', ['ngCookies', 'ngRoute'])
             var vm = this;
             vm.form = {};
 
-            vm.miscTotalVal = 0;
+            vm.miscTotalValue = 0;
+            vm.travelTotalValue = 0;
+            vm.awarenessTotalValue = 0;
+            vm.suppliesTotalValue = 0;
 
-            vm.travelTotalValue = [0];
-            vm.miscTotalValue = [0];
-            vm.awarenessTotalValue = [0];
-            vm.suppliesTotalValue = [0];
+            vm.otherTravelTotalValue = [0];
+            vm.otherMiscTotalValue = [0];
+            vm.otherAwarenessTotalValue = [0];
+            vm.otherSuppliesTotalValue = [0];
 
-            vm.otherItemsTotals = [vm.travelTotalValue,
-                                    vm.miscTotalValue,
-                                    vm.awarenessTotalValue,
-                                    vm.suppliesTotalValue];
+            vm.otherItemsTotals = [vm.otherTravelTotalValue,
+                                    vm.otherMiscTotalValue,
+                                    vm.otherAwarenessTotalValue,
+                                    vm.otherSuppliesTotalValue];
 
             $scope.$on('handleOtherItemsTotalChangeBroadcast', function(event, args) {
                 vm.otherItemsTotals[args['form_section']-1][0] = args['total'];
                 vm.miscTotal();
+                vm.travelTotal();
+                vm.awarenessTotal();
+                vm.suppliesTotal();
             });
 
             vm.retrieveForm = function(id) {
@@ -44,12 +50,12 @@ var myModule = angular.module('BudgetCalculation', ['ngCookies', 'ngRoute'])
                 return vm.foodTotal() + vm.shelterTotal();
             };
             vm.bunchTotal = function() {
-                return vm.commTotal() + vm.travelTotal() + vm.adminTotal() +
-                        vm.medicalTotal();
+                return vm.commTotal() + vm.travelTotalValue + vm.adminTotal() +
+                        vm.medicalTotal() + vm.miscTotalValue;
             };
             vm.stationTotal = function() {
                 return vm.foodAndShelterTotal() + vm.bunchTotal() +
-                        vm.awarenessTotal() + vm.suppliesTotal();
+                        vm.awarenessTotalValue + vm.suppliesTotalValue;
             };
 
             //shelter
@@ -114,7 +120,7 @@ var myModule = angular.module('BudgetCalculation', ['ngCookies', 'ngRoute'])
                 return vm.form.miscellaneous_number_of_intercepts_last_month * vm.form.miscellaneous_number_of_intercepts_last_month_multiplier;
             };
             vm.miscTotal = function() {
-                vm.miscTotalVal = vm.miscMaximum() + vm.miscTotalValue[0];
+                vm.miscTotalValue = vm.miscMaximum() + vm.otherMiscTotalValue[0];
             };
 
             //Medical Section
@@ -158,7 +164,7 @@ var myModule = angular.module('BudgetCalculation', ['ngCookies', 'ngRoute'])
                 if(vm.form.travel_motorbike) {
                     amount += vm.form.travel_motorbike_amount;
                 }
-                return amount + vm.form.travel_plus_other + vm.form.travel_last_months_expense_for_sending_girls_home + (vm.form.travel_number_of_staff_using_bikes * vm.form.travel_number_of_staff_using_bikes_multiplier);
+                vm.travelTotalValue = amount + vm.form.travel_plus_other + vm.form.travel_last_months_expense_for_sending_girls_home + (vm.form.travel_number_of_staff_using_bikes * vm.form.travel_number_of_staff_using_bikes_multiplier) + vm.otherTravelTotalValue[0];
             };
 
             //Supplies Section
@@ -176,7 +182,7 @@ var myModule = angular.module('BudgetCalculation', ['ngCookies', 'ngRoute'])
                 if(vm.form.supplies_flashlights_boolean) {
                     amount += vm.form.supplies_flashlights_amount;
                 }
-                return amount;
+                vm.suppliesTotalValue = amount + vm.otherSuppliesTotalValue[0];
             };
 
             //Awareness Section
@@ -191,7 +197,7 @@ var myModule = angular.module('BudgetCalculation', ['ngCookies', 'ngRoute'])
                 if(vm.form.awareness_sign_boards_boolean) {
                     amount += vm.form.awareness_sign_boards;
                 }
-                return amount;
+                vm.awarenessTotalValue = amount + vm.otherAwarenessTotalValue[0];
             };
 
             vm.deletePost = function(id) {
