@@ -10,6 +10,7 @@ angular.module('TallyMod',['ngCookies','ngAnimate'])
         vm.hasIntercepts = false;
         vm.isEmptyObject = isEmptyObject;
         vm.changeColor = changeColor;
+        vm.onMouseLeave = onMouseLeave;
 
         activate();
 
@@ -22,10 +23,14 @@ angular.module('TallyMod',['ngCookies','ngAnimate'])
         }
 
         function changeColor(day) {
-            if (!$.isEmptyObject(day.interceptions)) {
+            if (day.change && !day.seen) {
                 return {'background-color': 'rgba(255,0,0,0.5)',
                         'color': 'rgba(255,255,255,1)'};
             }
+        }
+
+        function onMouseLeave(day){
+            day.seen = true;
         }
 
         function getTallyData(firstCall) {
@@ -37,8 +42,11 @@ angular.module('TallyMod',['ngCookies','ngAnimate'])
                 //  1:{dayOfWeek:'Sunday',
                 //     interceptions: {...}},
                 // }
-                console.log(data);
                 if(firstCall){
+                    for(var i = 0; i < 7; i++){
+                        data[i].change = false;
+                        data[i].seen = false;
+                    }
                     vm.days = data;   
                     setInterval(getTallyData, 60000);
                 }else{ //updates
@@ -53,10 +61,16 @@ angular.module('TallyMod',['ngCookies','ngAnimate'])
         function checkDifferences(data){
             for(var i = 0; i < 7; i++){
                 interceptions = data[i].interceptions;
+                data[i].change = false;
+                data[i].seen = false;
                 for(var key in interceptions){
                     if(interceptions.hasOwnProperty(key)){
                         if(vm.days[i].interceptions[key] != interceptions[key]){
-                            //difference found
+                            //data has changed
+                            data[i].change = true;
+                        }else if(vm.days[i].change && !vm.days[i].seen){ 
+                            //data was previously changed but has not been seen
+                            data[i].change = true;   
                         }
                     }
                 }

@@ -5,7 +5,7 @@
     <div id="tally" ng-controller="MainCtrl as main">
         <div class="col-md-2 hidden-sm"></div>
         <div ng-repeat="day in main.days" class="hidden-xs hidden-sm">
-            <div ng-mouseenter="showInt = true" ng-mouseleave="showInt = false" ng-style="main.changeColor(day)" class="text-center col-md-1 tally-tab">
+            <div ng-mouseenter="showInt = true" ng-mouseleave="showInt = false; main.onMouseLeave(day)" ng-style="main.changeColor(day)" class="text-center col-md-1 tally-tab">
                 <h3 class="day-of-week" ng-bind="day.dayOfWeek"></h3>
                 <div ng-repeat="(station,numIntercepts) in day.interceptions">
                     <h4 ng-show="showInt" class="animated tallyFade">{{numIntercepts}} INT in {{station}}</h4>
