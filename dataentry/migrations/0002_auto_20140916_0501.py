@@ -23,10 +23,11 @@ class Migration(migrations.Migration):
             },
             bases=(models.Model,),
         ),
+        # This is going to be removed in 0004, so don't bother creating it.
         # migrations.AddField(
         #     model_name='victiminterviewlocationbox',
         #     name='geolocation',
         #     field=models.ForeignKey(related_name=b'geolocation', default='', to='dataentry.GeoCodeLocation'),
         #     preserve_default=False,
-        # ),
+        #  ),
     ]

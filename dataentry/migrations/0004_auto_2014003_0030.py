@@ -10,6 +10,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        # Removed AddField in 0002, so no need to remove.
         # migrations.RemoveField(
         #     model_name='victiminterviewlocationbox',
         #     name='geolocation',
@@ -23,6 +24,7 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(blank=True, to='dataentry.VDC', null=True),
             preserve_default=True,
         ),
+        # To be removed in 0006, so don't add.
         # migrations.AddField(
         #     model_name='victiminterviewlocationbox',
         #     name='district_geocodelocation',

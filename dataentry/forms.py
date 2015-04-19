@@ -1,19 +1,14 @@
 from django import forms
-from django.db import models
-from dataentry.models import (
-    VictimInterview,
-    InterceptionRecord,
-    Interceptee,
-    VictimInterviewPersonBox,
-    VictimInterviewLocationBox,
-    BorderStation,
-    District,
-    VDC
-)
-from dataentry.fields import DistrictField, VDCField
-from django.forms.models import inlineformset_factory
 from django.core.exceptions import ValidationError
+from django.db import models
+from django.forms.models import inlineformset_factory
 from django.utils.html import mark_safe
+
+from .models import (BorderStation, District,
+                     Interceptee, InterceptionRecord,
+                     VDC,
+                     VictimInterviewLocationBox, VictimInterviewPersonBox, VictimInterview)
+from .fields import DistrictField, VDCField, FormNumberField
 
 from accounts.models import Alert
 
@@ -21,7 +16,7 @@ BOOLEAN_CHOICES = [
     (False, 'No'),
     (True, 'Yes'),
 ]
-       
+
 class DreamSuitePaperForm(forms.ModelForm):
     class Meta:
         model = VictimInterview
@@ -95,13 +90,14 @@ class InterceptionRecordForm(DreamSuitePaperForm):
         required=False
     )
 
+    irf_number = FormNumberField(max_length=20)
+
     class Meta:
         model = InterceptionRecord
-        exclude = ['form_entered_by', 'date_form_received']
+        exclude = [ 'form_entered_by', 'date_form_received' ]
 
 
     def __init__(self, *args, **kwargs):
-
         super(InterceptionRecordForm, self).__init__(*args, **kwargs)
         for field_name, field in self.fields.iteritems():
             if type(field) == forms.fields.BooleanField:
@@ -110,7 +106,7 @@ class InterceptionRecordForm(DreamSuitePaperForm):
                     if hasattr(model_field, 'weight'):
                         field.weight = model_field.weight
                 except:
-                    pass  # Don't worry about this for nonmodel fields like ignore_warnings
+                    pass  # Don't worry about this for non-model fields like ignore_warnings
 
     def clean(self):
         cleaned_data = super(InterceptionRecordForm, self).clean()
@@ -124,7 +120,6 @@ class InterceptionRecordForm(DreamSuitePaperForm):
         self.if_box_7_1_ensure_7_2(cleaned_data)
         self.if_contact_noticed_ensure_contact_paid(cleaned_data)
         self.if_8_2_ensure_number_specified(cleaned_data)
-
         if not cleaned_data.get('ignore_warnings'):
             self.ensure_some_red_flags_checked(cleaned_data)
             self.ensure_some_noticing_reason_checked(cleaned_data)
@@ -132,17 +127,10 @@ class InterceptionRecordForm(DreamSuitePaperForm):
             self.ensure_at_least_one_of_9_1_through_9_5_are_checked(cleaned_data)
             self.ensure_signature_on_form(cleaned_data)
         self.get_pictures(cleaned_data)
-
-        #for field_name_start in []:
-        #    if not self.at_least_one_checked(cleaned_data, field_name_start):
-        #        self._errors[field_name_start] = self.error_class(['This field is required.'])
-
         return cleaned_data
 
     def get_pictures(self, cleaned_data):
-            pass
-            #import ipdb
-            #ipdb.set_trace()
+        pass
 
     def ensure_at_least_one_interceptee(self, cleaned_data):
         if len([
@@ -364,15 +352,16 @@ class InterceptionRecordForm(DreamSuitePaperForm):
             self.has_warnings = True
             self._errors['has_signature'] = error
 
+
 class IntercepteeForm(DreamSuitePaperForm):
     class Meta:
         model = Interceptee
         exclude = ('district','vdc')
-    
-    def __init__(self,*args, **kwargs):
+
+    def __init__(self, *args, **kwargs):
         super(IntercepteeForm, self).__init__(*args, **kwargs)
-        self.fields['district'] = DistrictField()
-        self.fields['vdc'] = VDCField()
+        self.fields['district'] = DistrictField(required=False)
+        self.fields['vdc'] = VDCField(required=False)
         try:
             self.fields['district'].initial = self.instance.district
         except:
@@ -383,10 +372,18 @@ class IntercepteeForm(DreamSuitePaperForm):
             pass
 
     def save(self, commit=True):
-        district = District.objects.get(name=self.cleaned_data['district'])
-        vdc = VDC.objects.get(name=self.cleaned_data['vdc'])
-        self.instance.vdc = vdc
-        self.instance.district = district
+        try:
+            district = District.objects.get(name=self.cleaned_data['district'])
+            self.instance.district = district
+        except District.DoesNotExist:
+            pass
+
+        try:
+            vdc = VDC.objects.get(name=self.cleaned_data['vdc'])
+            self.instance.vdc = vdc
+        except VDC.DoesNotExist:
+            pass
+
         return super(IntercepteeForm, self).save(commit)
 
 IntercepteeFormSet = inlineformset_factory(InterceptionRecord, Interceptee, exclude=[], extra=12)
@@ -561,6 +558,8 @@ class VictimInterviewForm(DreamSuitePaperForm):
         error_messages={'invalid_choice': 'This box must be checked.'}
     )
 
+    vif_number = FormNumberField(max_length=20)
+
     victim_where_going_region_india = forms.BooleanField(label='India', required=False)
     victim_where_going_region_gulf = forms.BooleanField(label='Gulf / Other', required=False)
 
@@ -584,19 +583,22 @@ class VictimInterviewForm(DreamSuitePaperForm):
     victim_where_going_gulf_qatar = forms.BooleanField(label='Qatar', required=False)
     victim_where_going_gulf_didnt_know = forms.BooleanField(label='Did Not Know', required=False)
     victim_where_going_gulf_other = forms.BooleanField(label='Other', required=False)
-    
+
     victim_address_district = DistrictField(label='District')
     victim_address_vdc = VDCField(label='VDC')
     victim_guardian_address_district = DistrictField(label='District')
     victim_guardian_address_vdc = VDCField(label='VDC')
 
-
     class Meta:
         model = VictimInterview
-        exclude = ('victim_address_district', 'victim_guardian_address_district', 'victim_address_vdc', 'victim_guardian_address_vdc')
+        exclude = ('victim_address_district',
+                   'victim_address_vdc',
+                   'victim_guardian_address_district',
+                   'victim_guardian_address_vdc')
 
     def __init__(self, *args, **kwargs):
         super(VictimInterviewForm, self).__init__(*args, **kwargs)
+
         # Determine the number of pbs and lbs. I can't come up with a better way than this
         self.num_pbs = 0
         self.num_lbs = 0
@@ -621,18 +623,17 @@ class VictimInterviewForm(DreamSuitePaperForm):
             (self.num_pbs - 1) / 3 + 1,
             (self.num_lbs - 1) / 2 + 1
         )
-        print self.box_pages_needed
         try:
             self.fields['victim_address_district'].initial = self.instance.victim_address_district
         except:
             pass
-        try: 
+        try:
             self.fields['victim_address_vdc'].initial = self.instance.victim_address_vdc
         except:
             pass
         try:
             self.fields['victim_guardian_address_district'].initial = self.instance.victim_guardian_address_district
-        except: 
+        except:
             pass
         try:
             self.fields['victim_guardian_address_vdc'].initial = self.instance.victim_guardian_address_vdc
@@ -649,7 +650,7 @@ class VictimInterviewForm(DreamSuitePaperForm):
         self.instance.victim_guardian_address_district = victim_guardian_address_district
         self.instance.victim_guardian_address_vdc = victim_guardian_address_vdc
         return super(VictimInterviewForm, self).save(commit)
-        
+
 
     def clean(self):
         cleaned_data = super(VictimInterviewForm, self).clean()
@@ -671,7 +672,7 @@ class VictimInterviewForm(DreamSuitePaperForm):
         if not cleaned_data.get('ignore_warnings'):
             self.ensure_victim_where_going(cleaned_data)
             self.ensure_tiny_hands_rating(cleaned_data)
-            
+
         return cleaned_data
 
     def ensure_victim_where_going(self, cleaned_data):
@@ -774,13 +775,18 @@ class VictimInterviewLocationBoxForm(DreamSuitePaperForm):
         self.instance.vdc = vdc
         self.instance.district = district
         return super(VictimInterviewLocationBoxForm, self).save(commit)
-        
+
 class BorderStationForm(forms.ModelForm):
     class Meta:
         model = BorderStation
+        fields = '__all__'
         widgets = {
             'date_established': forms.TextInput(attrs={'placeholder': '12/31/12'}),
         }
+
+    def clean_station_code(self):
+        return self.cleaned_data['station_code'].upper()
+
 
 class VDCForm(forms.ModelForm):
     class Meta:

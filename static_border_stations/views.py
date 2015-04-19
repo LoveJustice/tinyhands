@@ -8,7 +8,6 @@ from accounts.mixins import PermissionsRequiredMixin
 from braces.views import LoginRequiredMixin
 from dataentry.models import BorderStation
 
-from static_border_stations.forms import *
 from dataentry.forms import BorderStationForm
 
 
@@ -20,7 +19,7 @@ class FormSetForStations(InlineFormSet):
             self.extra = 0
         else:
             self.extra = 1
-        return 
+        return
 
 
 class StaffInline(FormSetForStations):
@@ -61,6 +60,6 @@ class StaticBorderStationsUpdateView (
 
 class StaticBorderStationsDetailView(StaticBorderStationsUpdateView):
     permissions_required = ['permission_border_stations_view']
-    
+
     def post(self, request, *args, **kwargs):
         raise PermissionDenied

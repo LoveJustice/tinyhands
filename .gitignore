@@ -5,6 +5,7 @@
 *.sqlite3
 *.sqlitebak
 *.stackdump
+node_modules/
 media/
 env
 backups
@@ -15,3 +16,4 @@ backups
 *~
 .idea/
 foo.*
+db.sqlite3.prod
