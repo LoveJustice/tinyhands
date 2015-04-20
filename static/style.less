@@ -47,6 +47,7 @@ abbr {
         max-height: 26px;
         -webkit-transition: max-height 1s;
         transition: max-height 1s;
+        top: 5px;
         &:hover {
             max-height: 500px;
         }
@@ -56,8 +57,35 @@ abbr {
             text-overflow: '.';
         }
     }
+    .tally-tab-small {
+        background-color: rgba(255,255,255,0.85);
+        border-radius: 10px;
+        position: absolute;
+        display: table;
+        width: 50%;
+        left: 25%;
+        div {
+            display: table-cell;
+        }
+    }
     .day-of-week {
         margin: 0;
+    }
+    #layer-dropdown {
+        top:55px;
+        display:block;
+        position:fixed;
+        right:95px;
+        .btn.dropdown-toggle {
+            height:20px;
+        }
+        ul.dropdown-menu {
+            left:-76px;
+            min-width: 100px;
+            li.checkbox {
+                padding-left: 5px;
+            }
+        }
     }
 }
 
@@ -589,9 +617,3 @@ abbr {
     border: 1px solid black;
     margin: 2px;
 }
-
-/*.dropdown-menu {
-    max-height: 400px;
-    overflow-y: auto;
-    overflow-x: hidden;
-}*/

@@ -1,9 +1,12 @@
-angular.module('MapMod',['ngCookies'])
-    .config(['$httpProvider', function($httpProvider) {
-        $httpProvider.defaults.xsrfCookieName = 'csrftoken';
-        $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
-    }])
-    .controller('MapCtrl', ['$scope','$http', function($scope,$http) {
+(function() {
+    'use strict';
+
+    angular.module('PortalMod')
+       .controller('MapCtrl', MapCtrl);
+
+    MapCtrl.$inject = ['$rootScope','$http'];
+
+    function MapCtrl($rootScope,$http) {
         var vm = this;
 
         vm.VDCLayer = null;
@@ -14,7 +17,6 @@ angular.module('MapMod',['ngCookies'])
         activate();
 
         function activate() {
-            console.log('activate');
             var mapOptions = {
               center: { lat: 28.394857, lng: 84.124008},
               zoom: 8,
@@ -44,11 +46,13 @@ angular.module('MapMod',['ngCookies'])
                 resizeMap();
             });
 
-            $scope.$on('toggleVDCLayer',toggleVDCLayer);
+            console.log('Active Map');
+
+            $rootScope.$on('toggleVDCLayer', toggleVDCLayer);
         }
 
-        function toggleVDCLayer() {
-            if(!vm.hidden) {
+        function toggleVDCLayer(event,hide) {
+            if(!hide) {
                 vm.VDCLayer.setMap(null);
             }
             else {
@@ -110,6 +114,5 @@ angular.module('MapMod',['ngCookies'])
                 }
             });
         }
-    }]);
-
-angular.bootstrap($('#map-container'), ['MapMod']);
+    };
+})();

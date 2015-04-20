@@ -1,20 +1,31 @@
-angular.module('TallyMod',['ngCookies','ngAnimate'])
-    .config(['$httpProvider', function($httpProvider) {
-        $httpProvider.defaults.xsrfCookieName = 'csrftoken';
-        $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
-    }])
-    .controller('MainCtrl', ['$rootScope','$http', function($scope,$http) {
+(function() {
+    'use strict';
+
+    angular.module('PortalMod')
+           .controller('TallyCtrl', TallyCtrl);
+
+    TallyCtrl.$inject = ['$rootScope','$http'];
+
+    function TallyCtrl($rootScope,$http) {
         var vm = this;
 
         vm.days = {};
         vm.hasIntercepts = false;
+        vm.showVDCLayer = true;
+        vm.showTally = true;
         vm.isEmptyObject = isEmptyObject;
         vm.changeColor = changeColor;
+        vm.toggleVDCLayer = toggleVDCLayer;
 
         activate();
 
         function activate() {
             getTallyData();
+
+            // Prevent dropdown from closing after click
+            $('#tally .dropdown-menu').click(function(e) {
+                e.stopPropagation();
+            });
         }
 
         function isEmptyObject(obj) {
@@ -26,6 +37,10 @@ angular.module('TallyMod',['ngCookies','ngAnimate'])
                 return {'background-color': 'rgba(255,0,0,0.5)',
                         'color': 'rgba(255,255,255,1)'};
             }
+        }
+
+        function toggleVDCLayer() {
+            $rootScope.$emit('toggleVDCLayer', vm.showVDCLayer);
         }
 
         function getTallyData() {
@@ -43,5 +58,7 @@ angular.module('TallyMod',['ngCookies','ngAnimate'])
                 console.log(error);
             });
         }
-    }]);
-angular.bootstrap($('#tally'), ['TallyMod']);
+    };
+})();
+
+angular.bootstrap($('#portal'), ['PortalMod']);

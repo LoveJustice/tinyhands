@@ -25,7 +25,7 @@ FIXTURE_DIRS = (
    (os.path.join(SITE_ROOT, '../../fixtures/'),)
 )
 
-STATICFILES_DIRS = (os.path.join(SITE_ROOT, '../../static/'),)
+STATICFILES_DIRS = (os.path.join(SITE_ROOT, '../../static/'),os.path.join(SITE_ROOT, '../../portal/templates/portal/javascript/'),)
 
 ALLOWED_HOSTS = []
 
