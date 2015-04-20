@@ -55,12 +55,19 @@ var myModule = angular.module('BudgetCalculation', ['ngCookies', 'ngRoute'])
                 return vm.foodTotal() + vm.shelterTotal();
             };
             vm.bunchTotal = function() {
-                return vm.commTotal() + vm.travelTotalValue + vm.adminTotal() +
-                        vm.medicalTotal() + vm.miscTotalValue;
+                return  vm.commTotal() + 
+                        vm.travelTotalValue + 
+                        vm.adminTotal() +
+                        vm.medicalTotal() + 
+                        vm.miscTotalValue + 
+                        vm.salariesTotal;
             };
             vm.stationTotal = function() {
-                return vm.foodAndShelterTotal() + vm.bunchTotal() +
-                        vm.awarenessTotalValue + vm.suppliesTotalValue;
+                return  vm.foodAndShelterTotal() + 
+                        vm.bunchTotal() +
+                        vm.awarenessTotalValue + 
+                        vm.suppliesTotalValue + 
+                        vm.salariesTotal;
             };
 
             //shelter
@@ -80,16 +87,23 @@ var myModule = angular.module('BudgetCalculation', ['ngCookies', 'ngRoute'])
                 return totalAmount;
             };
             vm.shelterTotal = function () {
-                return vm.form.shelter_rent + vm.form.shelter_water + vm.form.shelter_electricity + vm.shelterCheckboxTotal();
+                return  vm.form.shelter_rent + 
+                        vm.form.shelter_water + 
+                        vm.form.shelter_electricity + 
+                        vm.shelterCheckboxTotal();
             };
 
             //Food and Gas Section
 
             vm.foodGasInterceptedGirls = function () {
-                return vm.form.food_and_gas_number_of_intercepted_girls_multiplier_before * vm.form.food_and_gas_number_of_intercepted_girls * vm.form.food_and_gas_number_of_intercepted_girls_multiplier_after;
+                return  vm.form.food_and_gas_number_of_intercepted_girls_multiplier_before * 
+                        vm.form.food_and_gas_number_of_intercepted_girls * 
+                        vm.form.food_and_gas_number_of_intercepted_girls_multiplier_after;
             };
             vm.foodGasLimboGirls = function () {
-                return vm.form.food_and_gas_limbo_girls_multiplier * vm.form.food_and_gas_number_of_limbo_girls * vm.form.food_and_gas_number_of_days;
+                return  vm.form.food_and_gas_limbo_girls_multiplier * 
+                        vm.form.food_and_gas_number_of_limbo_girls * 
+                        vm.form.food_and_gas_number_of_days;
             };
             vm.foodTotal = function () {
                 return vm.foodGasInterceptedGirls() + vm.foodGasLimboGirls();
@@ -109,11 +123,13 @@ var myModule = angular.module('BudgetCalculation', ['ngCookies', 'ngRoute'])
             };
 
             vm.commNumberOfStaffTotal = function () {
-                return vm.form.communication_number_of_staff_with_walkie_talkies * vm.form.communication_number_of_staff_with_walkie_talkies_multiplier;
+                return  vm.form.communication_number_of_staff_with_walkie_talkies * 
+                        vm.form.communication_number_of_staff_with_walkie_talkies_multiplier;
             };
 
             vm.commEachStaffTotal = function () {
-                return vm.form.communication_each_staff * vm.form.communication_each_staff_multiplier;
+                return  vm.form.communication_each_staff * 
+                        vm.form.communication_each_staff_multiplier;
             };
 
             vm.commTotal = function () {
@@ -418,6 +434,7 @@ var myModule = angular.module('BudgetCalculation', ['ngCookies', 'ngRoute'])
             }
             else if( window.submit_type == 2)  {
                 retrieveStaffSalaries(window.budget_calc_id);
+                
             }
             else {
                 retrieveStaffSalaries(window.budget_calc_id);
@@ -457,12 +474,27 @@ var myModule = angular.module('BudgetCalculation', ['ngCookies', 'ngRoute'])
 
         function retrieveStaffSalaries(budgetCalcId) {
             // grab all of the staff for this budgetCalcSheet
+            var staffData = [];
+            $http.get('/static_border_stations/api/border-stations/' + window.border_station + '/').
+                success(function (data) {
+                        staffData = data;
+                }).
+                error(function (data, status, headers, config) {
+                    console.log(data, status, headers, config);
+                });
+        
+        
             $http.get('/budget/api/budget_calculations/staff_salary/' + budgetCalcId + '/').
                     success(function (data) {
                         $(data).each(function(person){
+                            console.log(staffData);
+                            for(var x = 0; x < staffData.length; x++){
+                                if(staffData[x].id == data[person].staff_person){
+                                    data[person].name = staffData[x].first_name + staffData[x].last_name;
+                                }
+                            }
                             vm.staffSalaryForms.push(data[person])
                         });
-                        console.log(vm.staffSalaryForms);
                     }).
                     error(function (data, status, headers, config) {
                         console.log(data, status, headers, config);

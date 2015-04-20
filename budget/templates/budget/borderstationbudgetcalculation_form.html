@@ -10,6 +10,7 @@
         <script type="text/javascript">
             window.budget_calc_id = {{ pk }};
             window.submit_type = {{ submit_type }};
+            window.border_station = {{ border_station.id }};
         </script>
 
 
@@ -71,7 +72,7 @@
 
                         <!--  TODO: put staff forms here! -->
                         <div class="row" ng-controller="staffCtrl as staff"">
-                            <div class="row" ng-repeat="form in staff.staffSalaryForms">
+                            <div class="row" ng-repeat="form in staff.staffSalaryForms" ng-init="staff.totalSalaries();">
 
                                 <div class="col-lg-6">
                                     <h2>{{ form.name }}</h2>
@@ -655,7 +656,6 @@
                                     <td><p ng-bind="main.commTotal()"></p></td>
                                     <td class="active"></td>
                                 </tr>
-                                bind
                                 <tr>
                                     <td>Travel</td>
                                     <td><p ng-bind="main.travelTotalValue"></p></td>
