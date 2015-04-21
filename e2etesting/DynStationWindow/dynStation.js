@@ -1,16 +1,29 @@
 'use strict';
-
 var c = require('../testConstants.json');
+var arr = new Array();
 
-var irfPage = function() {
+
+var dynStation = function() {
     var page = this;
-    
-    this.getToIRF = function(){
-        browser.get(c.webAddress + '/data-entry/irfs/search/');
-        browser.sleep(1000);
-        this.link = element(by.id("id_input_new_irf"));
-        this.link.click();
-        browser.sleep(1000);
 
+    this.countStations = function() {
+        $('area[title="Dang DNG"]').click();
     };
+
+/*
+    this.findPropertyMarker = function(mTitle) {
+        var markers = this.session.elements('css selector', '.gmnoprint map area');
+        var title = 'property-' .mTitle;
+        for(markers as marker) {
+            if(title === marker.attribute('title')) {
+                return marker;
+            }
+        }
+
+        return false;
+    };
+*/
+
 };
+
+module.exports = new dynStation();
