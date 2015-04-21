@@ -16,6 +16,7 @@ var myModule = angular.module('BudgetCalculation', ['ngCookies', 'ngRoute'])
                         success(function (data) {
                             //We can reference the json object to fill our vm variables
                             vm.form = data;
+                        console.log(data);
                         }).
                         error(function (data, status, headers, config) {
                             // called asynchronously if an error occurs
@@ -130,6 +131,13 @@ var myModule = angular.module('BudgetCalculation', ['ngCookies', 'ngRoute'])
             //Travel Section
             vm.travelNumberOfStaffUsingBikesTotal = function() {
                 return vm.form.travel_number_of_staff_using_bikes * vm.form.travel_number_of_staff_using_bikes_multiplier;
+            };
+            vm.travelMotorbikeOtherTotal = function() {
+                var returnVal = 0;
+                if(vm.form.travel_motorbike) {
+                    returnVal = vm.form.travel_motorbike_amount;
+                }
+                return returnVal + vm.form.travel_plus_other;
             };
             vm.travelTotal = function() {
                 var amount = 0;
