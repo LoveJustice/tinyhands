@@ -42,9 +42,9 @@
     <div class="row">
         {% url 'borderstations_create' as borderstations_create_url %}
         {% if request.path == borderstations_create_url %}
-        <input type="submit" class="pull-right btn btn-primary navbar-btn btn-lg" value="Create" />
+        <input id="borderCreate" type="submit" class="pull-right btn btn-primary navbar-btn btn-lg" value="Create" />
         {% else %}
-        <input type="submit" class="pull-right btn btn-primary navbar-btn btn-lg" value="Update" />
+        <input id="borderUpdate" type="submit" class="pull-right btn btn-primary navbar-btn btn-lg" value="Update" />
         {% endif %}
     </div>
     {% endif %}
