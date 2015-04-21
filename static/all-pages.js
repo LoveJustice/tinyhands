@@ -536,6 +536,125 @@ var DREAMSUITE = {
             $('#error-box').remove();
         }
 
+    account_create: function() {
+        this.account_update();
+    },
+    account_update: function() {
+        setUpPermissionsCheckboxes();
+        $('select').change(function() {
+            for (var i=0; i<window.defaultPermissionSets.length; i++) {
+                var set = window.defaultPermissionSets[i];
+                if (set.id === parseInt($(this).val())) {
+                    for (var key in set) {
+                        var toBe = set[key];
+                        var $checkbox = $('#id_' + key);
+                        var current = !!$checkbox.prop('checked');
+                        if (toBe !== current) {
+                            $checkbox.trigger('click');
+                        }
+                    }
+                }
+            }
+        });
+    },
+
+    access_control: function() {
+        setUpPermissionsCheckboxes();
+        $('option:contains("---------")').remove();
+        $('select').change(function() {
+            var rowIdx = parseInt($(this).parents('td').find('input').val()) - 1;
+            for (var i=0; i<window.defaultPermissionSets.length; i++) {
+                var set = window.defaultPermissionSets[i];
+                if (set.id === parseInt($(this).val())) {
+                    for (var key in set) {
+                        var toBe = set[key];
+                        var $checkbox = $('#id_form-' + rowIdx + '-' + key);
+                        var current = !!$checkbox.prop('checked');
+                        if (toBe !== current) {
+                            $checkbox.trigger('click');
+                        }
+                    }
+                }
+            }
+        });
+    },
+
+    access_defaults: function() {
+        setUpPermissionsCheckboxes();
+        $('#add-another').click(function() {
+            var formIdx = $('#id_form-TOTAL_FORMS').val();
+            $('#permissions-rows-container').append($('#empty-form').html().replace(/__prefix__/g, formIdx));
+            $('#id_form-TOTAL_FORMS').val(parseInt(formIdx) + 1);
+            setUpPermissionsCheckboxes();
+        });
+        $('#permissions-form').submit(function(event) {
+            var choice = confirm('Are you sure you want to save changes?');
+            if (!choice) {
+                event.preventDefault();
+            }
+        });
+        $('.permissions-delete-form').submit(function(event) {
+            var choice = confirm('Are you sure you want to delete this permission set?');
+            if (!choice) {
+                event.preventDefault();
+            }
+        });
+
+        $('.in-use-button').tooltip();
+    },
+
+    interceptionrecord_list: function() {
+        clearCompletedForms('irf');
+    },
+    interceptionrecord_create: function() {
+        this.interceptionrecord_update();
+
+        setUpResumeIncompleteFormSystem('irf');
+    },
+
+    interceptionrecord_update: function() {
+        function calculateTotal() {
+            var total = 0;
+            $('input[type="checkbox"]').each(function(id, elem) {
+                var value = $.trim($(elem).next('.red-flag').text());
+                if (value !== '') {
+                    if ($(elem).prop('checked')) {
+                        total += parseInt(value);
+                    }
+                }
+            });
+            $('#calculated-total').text(total);
+        }
+        $('input[type="checkbox"]').click(calculateTotal);
+        calculateTotal();
+        var resize = function() {
+            $('.photo').each(function() {
+                var width = $(this).width();
+                $(this).height(width);
+                $(this).css('line-height', width + 'px');
+            });
+        };
+        $(window).resize(resize);
+        resize();
+
+        setUpValidationPopups();
+
+        setUpLimitedChoicesCheckboxGroups();
+        //$('#id_contact_noticed').click(function() {
+        //    $('#id_staff_noticed').attr('checked', null);
+        //    $('input[id*="id_noticed_"]').attr('checked', null);
+        //});
+        //$('#id_staff_noticed').click(function() {
+        //    $('#id_contact_noticed').attr('checked', null);
+        //    $('input[id*="id_which_contact_"]').attr('checked', null);
+        //    $('#contact_paid').find('input[type="checkbox"]').attr('checked', null);
+        //});
+
+        // A hack but it works
+        if ($('#error-box p').length === 0) {
+            $('#error-box').remove();
+        }
+
     var pagesNeeded = parseInt($('.pages-needed').data('pages-needed'));
     for (var i=1; i<=4; i++) {
       if (i > pagesNeeded) {
