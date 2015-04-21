@@ -321,29 +321,29 @@
 
                             <div class="row">
                                 <div class="col-lg-4 col-lg-offset-2">
-                                    <input type="checkbox" id="awareness_contact_cards_bool" ng-model="main.form.awareness_contact_cards"/>
-                                    <label>Contact Cards</label>
+                                    <input type="checkbox" id="awareness_contact_cards_bool" ng-model="main.form.awareness_contact_cards" ng-change="main.awarenessTotal()"/>
+                                    <label for="awareness_contact_cards_bool">Contact Cards</label>
                                 </div>
                                 <div class="col-lg-4">
-                                    <input style="text-align: right" class="form-control" type="number" id="awareness_contact_cards_amount" ng-model="main.form.awareness_contact_cards_amount"/>
+                                    <input style="text-align: right" class="form-control" type="number" id="awareness_contact_cards_amount" ng-model="main.form.awareness_contact_cards_amount" ng-change="main.awarenessTotal()"/>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-lg-4 col-lg-offset-2">
-                                    <input type="checkbox" id="awareness_awareness_party_bool" ng-model="main.form.awareness_awareness_party_boolean"/>
+                                    <input type="checkbox" id="awareness_awareness_party_bool" ng-model="main.form.awareness_awareness_party_boolean" ng-change="main.awarenessTotal()"/>
                                     <label>Awareness Party</label>
                                 </div>
                                 <div class="col-lg-4">
-                                    <input style="text-align: right" class="form-control" type="number" id="awareness_awareness_party_amount" ng-model="main.form.awareness_awareness_party"/>
+                                    <input style="text-align: right" class="form-control" type="number" id="awareness_awareness_party_amount" ng-model="main.form.awareness_awareness_party" ng-change="main.awarenessTotal()"/>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-lg-4 col-lg-offset-2">
-                                    <input type="checkbox" id="awareness_sign_boards_bool" ng-model="main.form.awareness_sign_boards_boolean"/>
+                                    <input type="checkbox" id="awareness_sign_boards_bool" ng-model="main.form.awareness_sign_boards_boolean" ng-change="main.awarenessTotal()"/>
                                     <label>Sign Boards</label>
                                 </div>
                                 <div class="col-lg-4">
-                                    <input style="text-align: right" class="form-control" type="number" id="awareness_sign_boards_amount" ng-model="main.form.awareness_sign_boards"/>
+                                    <input style="text-align: right" class="form-control" type="number" id="awareness_sign_boards_amount" ng-model="main.form.awareness_sign_boards" ng-change="main.awarenessTotal()"/>
                                 </div>
                             </div>
 
@@ -394,17 +394,17 @@
                             <div class="row">
                                 <div class="col-lg-6 form-inline row">
                                     <span class="col-lg-3" style="padding-right: 10px"></span>
-                                    <input class="form-control col-lg-3" type="checkbox" id="travel_chair_with_bike_bool" ng-model="main.form.travel_chair_with_bike"/>
+                                    <input class="form-control col-lg-3" type="checkbox" id="travel_chair_with_bike_bool" ng-model="main.form.travel_chair_with_bike" ng-change="main.travelTotal()"/>
                                     <div class="col-lg-6">
-                                        <input class="form-control" style="text-align: right" type="number" id="travel_chair_with_bike_amount" ng-model="main.form.travel_chair_with_bike_amount"/>
+                                        <input class="form-control" style="text-align: right" type="number" id="travel_chair_with_bike_amount" ng-model="main.form.travel_chair_with_bike_amount" ng-change="main.travelTotal()"/>
                                         <span style="padding-left: 10px"><small>for chair</small></span>
                                     </div>
                                 </div>
                                 <div class="col-lg-6 form-inline">
                                     <span class="col-lg-3" style="padding-right: 10px"></span>
-                                    <input class="form-control col-lg-3" type="checkbox" id="travel_manager_with_bike_bool" ng-model="main.form.travel_manager_with_bike"/>
+                                    <input class="form-control col-lg-3" type="checkbox" id="travel_manager_with_bike_bool" ng-model="main.form.travel_manager_with_bike" ng-change="main.travelTotal()"/>
                                     <div class="col-lg-6">
-                                        <input class="form-control" style="text-align: right" type="number" id="travel_manager_with_bike_amount" ng-model="main.form.travel_manager_with_bike_amount"/>
+                                        <input class="form-control" style="text-align: right" type="number" id="travel_manager_with_bike_amount" ng-model="main.form.travel_manager_with_bike_amount" ng-change="main.travelTotal()"/>
                                         <span style="padding-left: 10px;"><small>for manager</small></span>
                                     </div>
                                     </div>
@@ -412,14 +412,14 @@
 
                             <div class="row" style="margin-top: 20px">
                                 <div class="col-lg-4 calc-form-input-no-width">
-                                    <input style="text-align: right; padding: 0; margin: 0" class="form-control" type="number" id="travel_number_of_staff_using_bikes" ng-model="main.form.travel_number_of_staff_using_bikes"/>
+                                    <input style="text-align: right; padding: 0; margin: 0" class="form-control" type="number" id="travel_number_of_staff_using_bikes" ng-model="main.form.travel_number_of_staff_using_bikes" ng-change="main.travelTotal()"/>
                                     <small># of staff using bikes</small>
                                 </div>
                                 <div class="col-lg-1">
                                     <h4 style="text-align: center">*</h4>
                                 </div>
                                 <div class="col-lg-3 calc-form-input-no-width">
-                                    <input style="text-align: right; padding: 0; margin: 0" class="form-control" type="number" id="travel_number_of_staff_using_bikes_multiplier" ng-model="main.form.travel_number_of_staff_using_bikes_multiplier"/>
+                                    <input style="text-align: right; padding: 0; margin: 0" class="form-control" type="number" id="travel_number_of_staff_using_bikes_multiplier" ng-model="main.form.travel_number_of_staff_using_bikes_multiplier" ng-change="main.travelTotal()"/>
                                 </div>
                                 <div class="col-lg-1">
                                     <h4 style="text-align: center">=</h4>
@@ -435,23 +435,23 @@
                                     <strong>Last month's expense for sending girls home</strong>
                                 </div>
                                 <div class="col-lg-3 calc-form-input-no-width">
-                                    <input style="text-align: right" class="form-control" type="number" id="travel_sending_girls_home_expense" ng-model="main.form.travel_last_months_expense_for_sending_girls_home"/>
+                                    <input style="text-align: right" class="form-control" type="number" id="travel_sending_girls_home_expense" ng-model="main.form.travel_last_months_expense_for_sending_girls_home" ng-change="main.travelTotal()"/>
                                 </div>
                             </div>
 
                             <div class="row" style="margin-top: 30px">
                                 <div class="col-lg-1 text-center" style="padding: 0; margin: 0">
-                                    <input type="checkbox" id="travel_motorbike_bool" ng-model="main.form.travel_motorbike"/>
+                                    <input type="checkbox" id="travel_motorbike_bool" ng-model="main.form.travel_motorbike" ng-change="main.travelTotal()"/>
                                 </div>
                                 <div class="col-lg-3 calc-form-input-no-width" style="padding: 0; margin: 0">
-                                    <input style="text-align: right" class="form-control" type="number" id="travel_motorbike_amount" ng-model="main.form.travel_motorbike_amount"/>
+                                    <input style="text-align: right" class="form-control" type="number" id="travel_motorbike_amount" ng-model="main.form.travel_motorbike_amount" ng-change="main.travelTotal()"/>
                                     <small>Motorbike</small>
                                 </div>
                                 <div class="col-lg-1 " style="padding: 0; margin: 0">
                                     <h4 style="text-align: center">+</h4>
                                 </div>
                                 <div class="col-lg-3 calc-form-input-no-width" style="padding: 0; margin: 0">
-                                    <input style="text-align: right" class="form-control" type="number" id="travel_other" ng-model="main.form.travel_plus_other"/>
+                                    <input style="text-align: right" class="form-control" type="number" id="travel_other" ng-model="main.form.travel_plus_other" ng-change="main.travelTotal()"/>
                                     <small>Other</small>
                                 </div>
                                 <div class="col-lg-1 " style="padding: 0; margin: 0">
@@ -507,38 +507,38 @@
 
                             <div class="row">
                                 <div class="col-lg-4 col-lg-offset-2">
-                                    <input type="checkbox" id="supplies_walkie_talkies_bool" ng-model="main.form.supplies_walkie_talkies_boolean"/>
+                                    <input type="checkbox" id="supplies_walkie_talkies_bool" ng-model="main.form.supplies_walkie_talkies_boolean" ng-change="main.suppliesTotal()"/>
                                     <label>Walkie Talkies</label>
                                 </div>
                                 <div class="col-lg-4">
-                                    <input style="text-align: right" class="form-control" type="number" id="supplies_walkie_talkies_amount" ng-model="main.form.supplies_walkie_talkies_amount"/>
+                                    <input style="text-align: right" class="form-control" type="number" id="supplies_walkie_talkies_amount" ng-model="main.form.supplies_walkie_talkies_amount" ng-change="main.suppliesTotal()"/>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-lg-4 col-lg-offset-2">
-                                    <input type="checkbox" id="supplies_recorders_bool" ng-model="main.form.supplies_recorders_boolean"/>
+                                    <input type="checkbox" id="supplies_recorders_bool" ng-model="main.form.supplies_recorders_boolean" ng-change="main.suppliesTotal()"/>
                                     <label>Recorders</label>
                                 </div>
                                 <div class="col-lg-4">
-                                    <input style="text-align: right" class="form-control" type="number" id="supplies_recorders_amount" ng-model="main.form.supplies_recorders_amount"/>
+                                    <input style="text-align: right" class="form-control" type="number" id="supplies_recorders_amount" ng-model="main.form.supplies_recorders_amount" ng-change="main.suppliesTotal()"/>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-lg-4 col-lg-offset-2">
-                                    <input type="checkbox" id="supplies_binoculars_bool" ng-model="main.form.supplies_binoculars_boolean"/>
+                                    <input type="checkbox" id="supplies_binoculars_bool" ng-model="main.form.supplies_binoculars_boolean" ng-change="main.suppliesTotal()"/>
                                     <label>Binoculars</label>
                                 </div>
                                 <div class="col-lg-4">
-                                    <input style="text-align: right" class="form-control" type="number" id="supplies_binoculars_amount" ng-model="main.form.supplies_binoculars_amount"/>
+                                    <input style="text-align: right" class="form-control" type="number" id="supplies_binoculars_amount" ng-model="main.form.supplies_binoculars_amount" ng-change="main.suppliesTotal()"/>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-lg-4 col-lg-offset-2">
-                                    <input type="checkbox" id="supplies_flashlights_bool" ng-model="main.form.supplies_flashlights_boolean"/>
+                                    <input type="checkbox" id="supplies_flashlights_bool" ng-model="main.form.supplies_flashlights_boolean" ng-change="main.suppliesTotal()"/>
                                     <label>Flashlights</label>
                                 </div>
                                 <div class="col-lg-4">
-                                    <input style="text-align: right" class="form-control" type="number" id="supplies_flashlights_amount" ng-model="main.form.supplies_flashlights_amount"/>
+                                    <input style="text-align: right" class="form-control" type="number" id="supplies_flashlights_amount" ng-model="main.form.supplies_flashlights_amount" ng-change="main.suppliesTotal()"/>
                                 </div>
                             </div>
                             <hr>
@@ -684,14 +684,14 @@
 
                             <div class="row">
                                 <div class="col-lg-3 calc-form-input-no-width">
-                                    <input style="text-align: right" class="form-control" type="number" id="misc_number_of_intercepts" ng-model="main.form.miscellaneous_number_of_intercepts_last_month"/>
+                                    <input style="text-align: right" class="form-control" type="number" id="misc_number_of_intercepts" ng-model="main.form.miscellaneous_number_of_intercepts_last_month" ng-change="main.miscTotal()" />
                                     <small># of intercepts last month</small>
                                 </div>
                                 <div class="col-lg-1" >
                                     <h4 style="text-align: center">*</h4>
                                 </div>
                                 <div class="col-lg-3 calc-form-input-no-width">
-                                    <input style="text-align: right" class="form-control" type="number" id="misc_number_of_intercepts_mult" ng-model="main.form.miscellaneous_number_of_intercepts_last_month_multiplier"/>
+                                    <input style="text-align: right" class="form-control" type="number" id="misc_number_of_intercepts_mult" ng-model="main.form.miscellaneous_number_of_intercepts_last_month_multiplier" ng-change="main.miscTotal()" />
                                 </div>
                                 <div class="col-lg-1">
                                     <h4 style="text-align: center">=</h4>
