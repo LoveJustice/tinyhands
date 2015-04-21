@@ -329,7 +329,7 @@
                                         <input class="form-control" type="text" ng-model="form.name"/>
                                     </div>
                                     <div class="col-lg-4">
-                                        <input style="text-align: right" class="form-control" type="number" ng-model="form.cost"/>
+                                        <input style="text-align: right" class="form-control" type="number" ng-model="form.cost" ng-change="awarenessItemsCtrl.otherItemsTotal()"/>
                                     </div>
                                     <div class="col-lg-2">
                                         <a class="btn btn-danger" ng-click="awarenessItemsCtrl.removeItem(form.id, $index)">Remove</a>
@@ -350,7 +350,7 @@
                                 <div class="col-lg-4"></div>
                                 <div class="col-lg-4">
                                     <label>Total Awareness</label>
-                                    <input class="form-control text-center" ng-value="main.awarenessTotal()" disabled="disabled"/>
+                                    <input class="form-control text-center" ng-value="main.awarenessTotalValue" disabled="disabled"/>
                                 </div>
                                 <div class="col-lg-4"></div>
                             </div>
@@ -444,7 +444,7 @@
                                         <input class="form-control" type="text" ng-model="form.name"/>
                                     </div>
                                     <div class="col-lg-4">
-                                        <input style="text-align: right" class="form-control" type="number" ng-model="form.cost"/>
+                                        <input style="text-align: right" class="form-control" type="number" ng-model="form.cost" ng-change="travelItemsCtrl.otherItemsTotal()"/>
                                     </div>
                                     <div class="col-lg-2">
                                         <a class="btn btn-danger" ng-click="travelItemsCtrl.removeItem(form.id, $index)">Remove</a>
@@ -461,12 +461,11 @@
                             </div>
                             {% endverbatim %}
 
-
                             <div class="row center" style="margin-top: 20px; text-align: center">
                                 <div class="col-lg-4"></div>
                                 <div class="col-lg-4">
                                     <label>Total Travel</label>
-                                    <input class="form-control text-center" ng-value="main.travelTotal()" disabled="disabled"/>
+                                    <input class="form-control text-center" ng-value="main.travelTotalValue" disabled="disabled"/>
                                 </div>
                                 <div class="col-lg-4"></div>
                             </div>
@@ -524,7 +523,7 @@
                                         <input class="form-control" type="text" ng-model="form.name"/>
                                     </div>
                                     <div class="col-lg-4">
-                                        <input style="text-align: right" class="form-control" type="number" ng-model="form.cost"/>
+                                        <input style="text-align: right" class="form-control" type="number" ng-model="form.cost" ng-change="suppliesItemsCtrl.otherItemsTotal()"/>
                                     </div>
                                     <div class="col-lg-2">
                                         <a class="btn btn-danger" ng-click="suppliesItemsCtrl.removeItem(form.id, $index)">Remove</a>
@@ -543,7 +542,7 @@
 
                             <div class="row center" style="margin-top: 20px; padding-right: 200px; padding-left: 200px; text-align: center">
                                 <label>Total Supplies</label>
-                                <input class="form-control text-center" ng-value="main.suppliesTotal()" disabled="disabled"/>
+                                <input class="form-control text-center" ng-value="main.suppliesTotalValue" disabled="disabled"/>
                             </div>
                         </div>
                     </div>
@@ -683,7 +682,7 @@
                                             <input class="form-control" type="text" ng-model="form.name"/>
                                         </div>
                                         <div class="col-lg-2">
-                                            <input style="text-align: right" class="form-control" type="number" ng-model="form.cost"/>
+                                            <input class="form-control" type="number" ng-model="form.cost" ng-change="miscItemsCtrl.otherItemsTotal()"/>
                                         </div>
                                         <div class="col-lg-2">
                                             <a class="btn btn-danger" ng-click="miscItemsCtrl.removeItem(form.id, $index)">Remove</a>
@@ -704,7 +703,7 @@
                                     <div class="col-lg-4"></div>
                                     <div class="col-lg-4">
                                         <label>Total Miscellaneous</label>
-                                        <input class="text-center form-control" ng-value="main.miscTotal()" disabled="disabled"/>
+                                        <input class="text-center form-control" ng-value="main.miscTotalValue" disabled="disabled"/>
                                     </div>
                                     <div class="col-lg-4"></div>
                                 </div>
@@ -734,7 +733,7 @@
                                 </tr>
                                 <tr>
                                     <td>Travel</td>
-                                    <td><p style="text-align: right" ng-bind="main.travelTotal()"></p></td>
+                                    <td><p style="text-align: right" ng-bind="main.travelTotalValue"></p></td>
                                     <td class="active"></td>
                                 </tr>
                                 <tr>
@@ -749,7 +748,7 @@
                                 </tr>
                                 <tr>
                                     <td>Misc.</td>
-                                    <td><p style="text-align: right" ng-bind="main.miscTotal()"></p></td>
+                                    <td><p style="text-align: right" ng-bind="main.miscTotalValue"></p></td>
                                     <td class="active"></td>
                                 </tr>
                                 <tr>
@@ -781,11 +780,11 @@
                                 <tbody>
                                 <tr>
                                     <td class="text-center"><b>Awareness</b></td>
-                                    <td colspan="2"><p style="text-align: right" ng-bind="main.awarenessTotal()"></p></td>
+                                    <td colspan="2"><p style="text-align: right" ng-bind="main.awarenessTotalValue"></p></td>
                                 </tr>
                                 <tr>
                                     <td class="text-center"><b>Supplies</b></td>
-                                    <td colspan="2"><p style="text-align: right" ng-bind="main.suppliesTotal()"></p></td>
+                                    <td colspan="2"><p style="text-align: right" ng-bind="main.suppliesTotalValue"></p></td>
                                 </tr>
                                 <tr>
                                     <td class="text-center"><b>STATION TOTAL</b></td>
