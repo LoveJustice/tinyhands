@@ -1,3 +1,5 @@
+{% load bootstrap %}
+
 <div class="modal-dialog modal-sm">
     <div class="modal-content">
         <form id="vdc_update_form" method="post" class="form" role="form" action="{% url 'vdc_admin_update' vdc.id %}">
@@ -5,8 +7,8 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 <h4 class="modal-title" id="myModalLabel">Edit VDC</h4>
             </div>
-            <div class="modal-body"> 
-                {% csrf_token %} 
+            <div class="modal-body">
+                {% csrf_token %}
                 {{ form.non_field_errors }}
                 <div class="form-group">
                     {% for field in form %}
@@ -16,20 +18,20 @@
                             {% for error in field.errors %}
                             <li class="text-danger">
                                 <span class="fa fa-exclamation-triangle"></span><strong>{{ error|escape }}</strong>
-                            </li> 
-                            {% endfor %} 
-                        </ul> 
-                        {% endif %} 
-                        {{ field.label_tag }} 
-                        {{ field }} 
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                        {{ field.label_tag }}
+                        {{ field }}
                         {% if field.help_text %}
                         <div class="form-helptext">{{ field.help_text }}</div>
-                        {% endif %} 
+                        {% endif %}
                     </div>
-                    {% endfor %} 
-                </div> 
-                <div class="modal-footer"> 
-                    <input id="vdc_update_button" type="submit" class="btn btn-primary" value="Save" style="margin-bottom: 5px;"/> 
+                    {% endfor %}
+                </div>
+                <div class="modal-footer">
+                    <input id="vdc_update_button" type="submit" class="btn btn-primary" value="Save" style="margin-bottom: 5px;"/>
                 </div>
             </div>
         </form>
