@@ -8,4 +8,4 @@ Tiny Hands International
 ---
  * First install packages using `npm install`, or follow directions [here](http://karma-runner.github.io/0.12/intro/installation.html)
  * Then run `./node_modules/karma/bin/karma start` to start the karma server.
- ###### NOTE: Also check out [this](https://www.airpair.com/angularjs/posts/testing-angular-with-karma)
+ **NOTE**: Also check out [this](https://www.airpair.com/angularjs/posts/testing-angular-with-karma)
