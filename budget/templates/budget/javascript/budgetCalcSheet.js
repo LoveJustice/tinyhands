@@ -439,16 +439,13 @@ var myModule = angular.module('BudgetCalculation', ['ngCookies', 'ngRoute'])
 
         function main(){
             if( window.submit_type == 1 ) {
-                console.log("submit type is 1 or create");
                 vm.retrieveStaff(window.border_station);
             }
             else if( window.submit_type == 2)  {
-                console.log("submit type is 2 or update");
                 retrieveStaffSalaries(window.budget_calc_id);
                 
             }
             else {
-                console.log("submit type is 3 or view");
                 retrieveStaffSalaries(window.budget_calc_id);
             }
         }
@@ -506,7 +503,6 @@ var myModule = angular.module('BudgetCalculation', ['ngCookies', 'ngRoute'])
         function doTheRestOfTheStuff(budgetCalcId, staffData){
             $http.get('/budget/api/budget_calculations/staff_salary/' + budgetCalcId + '/').
                     success(function (data) {
-                        console.log(budgetCalcId);
                         $(data).each(function(person){
                             for(var x = 0; x < staffData.length; x++){
                                 if(staffData[x].id == data[person].staff_person){
@@ -524,7 +520,6 @@ var myModule = angular.module('BudgetCalculation', ['ngCookies', 'ngRoute'])
         function saveAllSalaries(){
             for(var person = 0; person < vm.staffSalaryForms.length; person++){
                 item = vm.staffSalaryForms[person];
-                console.log(item, "hello");
                 if(!item.id){
                     saveItem(item);
                 }else{
@@ -537,7 +532,6 @@ var myModule = angular.module('BudgetCalculation', ['ngCookies', 'ngRoute'])
             item.budget_calc_sheet = window.budget_calc_id;
             $http.post('/budget/api/budget_calculations/staff_salary/', item)
                 .success(function(data, status) {
-                    console.log(data, status);
                 })
                 .error(function(data, status){
                     console.log("failure to create staff salary!");
@@ -548,7 +542,6 @@ var myModule = angular.module('BudgetCalculation', ['ngCookies', 'ngRoute'])
         function updateItem(item){
             $http.put('/budget/api/budget_calculations/staff_salary/' + item.id + '/', item)
                     .success(function(data, status) {
-                        console.log("success", status);
                     })
                     .error(function(data, status) {
                         console.log("failure to update budget item!");
