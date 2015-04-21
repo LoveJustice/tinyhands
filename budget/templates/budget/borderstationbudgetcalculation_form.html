@@ -63,9 +63,8 @@
                 </div>
                 <!-- End First Table Thingy -->
 
-                <!-- Shelter -->
                 <div class="row">
-
+                    <!-- Salaries -->
                     {% verbatim %}
                     <div class="col-lg-6">
                         <h2 class="background"><span>Staff Salaries</span></h2>
@@ -74,8 +73,8 @@
                         <div class="row" ng-controller="staffCtrl as staff"">
                             <div class="row" ng-repeat="form in staff.staffSalaryForms" ng-init="staff.totalSalaries();">
 
-                                <div class="col-lg-6">
-                                    <h2>{{ form.name }}</h2>
+                                <div class="col-lg-3 col-lg-offset-3">
+                                    <label style="margin-bottom: 0; margin-top: 5px">{{ form.name }}</label>
                                 </div>
 
                                 <div class="col-lg-4">
@@ -87,17 +86,19 @@
                             </div>
 
                             <div class="row" style="margin-top: 30px; text-align: center">
-                                <div class="col-lg-9" style="padding: 0"></div>
-                                <div class="col-lg-1 text-center" style="width: 100px; padding: 0">
+                                <div class="col-lg-4"></div>
+                                <div class="col-lg-4 text-center">
                                     <label>Staff Total</label>
                                     <input class="form-control text-center" ng-model="staff.staffTotal" disabled="disabled"/>
                                 </div>
+                                <div class="col-lg-4"></div>
                             </div>
                         </div>
 
                     </div>
                     {% endverbatim %}
-
+                <!-- End Salaries -->
+                <!-- Shelter -->
                     <div class="col-lg-6">
                         <h2 class="background"><span>Shelter</span></h2>
 
@@ -130,14 +131,14 @@
                         </div>
                         <div class="row" style="margin-top: 30px; text-align: center">
                             <div class="col-lg-1 col-lg-offset-2">
-                                <input type="checkbox" id="shelterStartupBool" ng-model="main.form.shelter_shelter_startup"/>
+                                <input style="margin-bottom: 0; margin-top: 10px" type="checkbox" id="shelterStartupBool" ng-model="main.form.shelter_shelter_startup"/>
                             </div>
                             <div class="col-lg-2 input-with-text calc-form-input-no-width">
                                 <input style="text-align: right" class="form-control" type="number" id="shelter_startup_amount" ng-model="main.form.shelter_shelter_startup_amount"/>
                                 <small>Shelter Startup</small>
                             </div>
                             <div class="col-lg-1">
-                                <input type="checkbox" id="shelter_two_bool" ng-model="main.form.shelter_shelter_two"/>
+                                <input style="margin-bottom: 0; margin-top: 10px" type="checkbox" id="shelter_two_bool" ng-model="main.form.shelter_shelter_two"/>
                             </div>
                             <div class="col-lg-2 input-with-text calc-form-input-no-width">
                                 <input style="text-align: right" class="form-control" type="number" id="shelter_two_amount" ng-model="main.form.shelter_shelter_two_amount"/>
@@ -245,20 +246,20 @@
                             <h2 class="background"><span>Communication</span></h2>
 
                             <div class="row">
-                                <div class="col-lg-6 form-inline row">
-                                    <span class="col-lg-3"></span>
-                                    <input class="form-control col-lg-3" type="checkbox" id="comm_chair_bool" ng-model="main.form.communication_chair"/>
+                                <div class="col-lg-6">
+                                    <div class="col-lg-1"></div>
+                                    <input style="margin-bottom: 0; margin-top: 10px" class="col-lg-3" type="checkbox" id="comm_chair_bool" ng-model="main.form.communication_chair"/>
 
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-6 calc-form-input-no-width">
                                         <input style="text-align: right" class="form-control" type="number" id="comm_chair_amount" ng-model="main.form.communication_chair_amount"/>
                                         <span><small>for chair</small></span>
                                     </div>
                                 </div>
-                                <div class="col-lg-6 form-inline row">
-                                    <span class="col-lg-3"></span>
-                                    <input class="form-control col-lg-3" type="checkbox" id="comm_manager_bool" ng-model="main.form.communication_manager"/>
+                                <div class="col-lg-6 row">
+                                    <div></div>
+                                    <input style="margin-bottom: 0; margin-top: 10px" class="col-lg-3" type="checkbox" id="comm_manager_bool" ng-model="main.form.communication_manager"/>
 
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-6 calc-form-input-no-width">
                                         <input style="text-align: right" class="form-control" type="number" id="comm_manager_amount" ng-model="main.form.communication_manager_amount"/>
                                         <span><small>for manager</small></span>
                                     </div>
@@ -319,7 +320,7 @@
                         <div class="col-lg-6">
                             <h2 class="background"><span>Awareness</span></h2>
 
-                            <div class="row">
+                            <div class="row" style="margin-bottom: 7px">
                                 <div class="col-lg-4 col-lg-offset-2">
                                     <input type="checkbox" id="awareness_contact_cards_bool" ng-model="main.form.awareness_contact_cards"/>
                                     <label>Contact Cards</label>
@@ -328,7 +329,7 @@
                                     <input style="text-align: right" class="form-control" type="number" id="awareness_contact_cards_amount" ng-model="main.form.awareness_contact_cards_amount"/>
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row" style="margin-bottom: 7px">
                                 <div class="col-lg-4 col-lg-offset-2">
                                     <input type="checkbox" id="awareness_awareness_party_bool" ng-model="main.form.awareness_awareness_party_boolean"/>
                                     <label>Awareness Party</label>
@@ -337,7 +338,7 @@
                                     <input style="text-align: right" class="form-control" type="number" id="awareness_awareness_party_amount" ng-model="main.form.awareness_awareness_party"/>
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row" style="margin-bottom: 7px">
                                 <div class="col-lg-4 col-lg-offset-2">
                                     <input type="checkbox" id="awareness_sign_boards_bool" ng-model="main.form.awareness_sign_boards_boolean"/>
                                     <label>Sign Boards</label>
@@ -347,11 +348,9 @@
                                 </div>
                             </div>
 
-                            <hr>
-
                             {% verbatim %}
                             <div class="row" ng-controller="otherBudgetItemsCtrl as awarenessItemsCtrl" ng-init="form_section = 3;">
-                                <div class="row" ng-repeat="form in awarenessItemsCtrl.awarenessForms">
+                                <div class="" ng-repeat="form in awarenessItemsCtrl.awarenessForms">
 
                                     <div class="col-lg-4 col-lg-offset-2">
                                         <input class="form-control" type="text" ng-model="form.name"/>
@@ -392,22 +391,20 @@
                             <h2 class="background"><span>Travel</span></h2>
 
                             <div class="row">
-                                <div class="col-lg-6 form-inline row">
-                                    <span class="col-lg-3" style="padding-right: 10px"></span>
-                                    <input class="form-control col-lg-3" type="checkbox" id="travel_chair_with_bike_bool" ng-model="main.form.travel_chair_with_bike"/>
-                                    <div class="col-lg-6">
+                                <div class="col-lg-6">
+                                    <div class="col-lg-1"></div>
+                                    <input style="margin-bottom: 0; margin-top: 10px" class="col-lg-3" type="checkbox" id="travel_chair_with_bike_bool" ng-model="main.form.travel_chair_with_bike"/>
+                                    <div class="col-lg-6 calc-form-input-no-width">
                                         <input class="form-control" style="text-align: right" type="number" id="travel_chair_with_bike_amount" ng-model="main.form.travel_chair_with_bike_amount"/>
-                                        <span style="padding-left: 10px"><small>for chair</small></span>
                                     </div>
                                 </div>
-                                <div class="col-lg-6 form-inline">
-                                    <span class="col-lg-3" style="padding-right: 10px"></span>
-                                    <input class="form-control col-lg-3" type="checkbox" id="travel_manager_with_bike_bool" ng-model="main.form.travel_manager_with_bike"/>
-                                    <div class="col-lg-6">
+                                <div class="col-lg-6 row">
+                                    <div></div>
+                                    <input style="margin-bottom: 0; margin-top: 10px" class="col-lg-3" type="checkbox" id="travel_manager_with_bike_bool" ng-model="main.form.travel_manager_with_bike"/>
+                                    <div class="col-lg-6 calc-form-input-no-width">
                                         <input class="form-control" style="text-align: right" type="number" id="travel_manager_with_bike_amount" ng-model="main.form.travel_manager_with_bike_amount"/>
-                                        <span style="padding-left: 10px;"><small>for manager</small></span>
                                     </div>
-                                    </div>
+                                </div>
                             </div>
 
                             <div class="row" style="margin-top: 20px">
@@ -424,7 +421,7 @@
                                 <div class="col-lg-1">
                                     <h4 style="text-align: center">=</h4>
                                 </div>
-                                <div class="col-lg-3 input-group" style="padding: 0">
+                                <div class="col-lg-3 input-group">
                                     <div class="input-group-addon">$</div>
                                     <input class="form-control text-center" ng-value="main.travelNumberOfStaffUsingBikesTotal()" disabled="disabled"/>
                                 </div>
@@ -441,7 +438,7 @@
 
                             <div class="row" style="margin-top: 30px">
                                 <div class="col-lg-1 text-center" style="padding: 0; margin: 0">
-                                    <input type="checkbox" id="travel_motorbike_bool" ng-model="main.form.travel_motorbike"/>
+                                    <input style="margin-bottom: 0; margin-top: 10px" type="checkbox" id="travel_motorbike_bool" ng-model="main.form.travel_motorbike"/>
                                 </div>
                                 <div class="col-lg-3 calc-form-input-no-width" style="padding: 0; margin: 0">
                                     <input style="text-align: right" class="form-control" type="number" id="travel_motorbike_amount" ng-model="main.form.travel_motorbike_amount"/>
@@ -462,9 +459,9 @@
                                     <input class="form-control text-center" ng-value="main.travelMotorbikeOtherTotal()" disabled="disabled"/>
                                 </div>
                             </div>
-                            <hr>
                             {% verbatim %}
                             <hr/>
+                            <!--<h2 class="background"><span><small>Extra Travel Items</small></span></h2>-->
                             <div class="row" ng-controller="otherBudgetItemsCtrl as travelItemsCtrl" ng-init="form_section = 1;">
                                 <div class="row" ng-repeat="form in travelItemsCtrl.travelForms">
 
@@ -505,7 +502,7 @@
                         <div class="col-lg-6">
                             <h2 class="background"><span>Supplies</span></h2>
 
-                            <div class="row">
+                            <div class="row" style="margin-bottom: 7px">
                                 <div class="col-lg-4 col-lg-offset-2">
                                     <input type="checkbox" id="supplies_walkie_talkies_bool" ng-model="main.form.supplies_walkie_talkies_boolean"/>
                                     <label>Walkie Talkies</label>
@@ -514,7 +511,7 @@
                                     <input style="text-align: right" class="form-control" type="number" id="supplies_walkie_talkies_amount" ng-model="main.form.supplies_walkie_talkies_amount"/>
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row" style="margin-bottom: 7px">
                                 <div class="col-lg-4 col-lg-offset-2">
                                     <input type="checkbox" id="supplies_recorders_bool" ng-model="main.form.supplies_recorders_boolean"/>
                                     <label>Recorders</label>
@@ -523,7 +520,7 @@
                                     <input style="text-align: right" class="form-control" type="number" id="supplies_recorders_amount" ng-model="main.form.supplies_recorders_amount"/>
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row" style="margin-bottom: 7px">
                                 <div class="col-lg-4 col-lg-offset-2">
                                     <input type="checkbox" id="supplies_binoculars_bool" ng-model="main.form.supplies_binoculars_boolean"/>
                                     <label>Binoculars</label>
@@ -532,7 +529,7 @@
                                     <input style="text-align: right" class="form-control" type="number" id="supplies_binoculars_amount" ng-model="main.form.supplies_binoculars_amount"/>
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row" style="margin-bottom: 7px">
                                 <div class="col-lg-4 col-lg-offset-2">
                                     <input type="checkbox" id="supplies_flashlights_bool" ng-model="main.form.supplies_flashlights_boolean"/>
                                     <label>Flashlights</label>
@@ -541,11 +538,9 @@
                                     <input style="text-align: right" class="form-control" type="number" id="supplies_flashlights_amount" ng-model="main.form.supplies_flashlights_amount"/>
                                 </div>
                             </div>
-                            <hr>
                             {% verbatim %}
-                            <hr/>
                             <div class="row" ng-controller="otherBudgetItemsCtrl as suppliesItemsCtrl" ng-init="form_section = 4;">
-                                <div class="row" ng-repeat="form in suppliesItemsCtrl.suppliesForms">
+                                <div ng-repeat="form in suppliesItemsCtrl.suppliesForms">
 
                                     <div class="col-lg-4 col-lg-offset-2">
                                         <input class="form-control" type="text" ng-model="form.name"/>
@@ -568,9 +563,13 @@
                             </div>
                             {% endverbatim %}
 
-                            <div class="row center" style="margin-top: 20px; padding-right: 200px; padding-left: 200px; text-align: center">
-                                <label>Total Supplies</label>
-                                <input class="form-control text-center" ng-value="main.suppliesTotalValue" disabled="disabled"/>
+                            <div class="row center" style="margin-top: 20px; text-align: center">
+                                <div class="col-lg-4"></div>
+                                <div class="col-lg-4">
+                                    <label>Total Supplies</label>
+                                    <input class="form-control text-center" ng-value="main.suppliesTotalValue" disabled="disabled"/>
+                                </div>
+                                <div class="col-lg-4"></div>
                             </div>
                         </div>
                     </div>
@@ -630,14 +629,14 @@
                             </div>
                             <div class="row row-padding">
                                 <div class="col-lg-1 col-lg-offset-2">
-                                    <small><input type="checkbox" id="admin_booth_bool" ng-model="main.form.administration_booth"/></small>
+                                    <input style="margin-bottom: 0; margin-top: 10px" type="checkbox" id="admin_booth_bool" ng-model="main.form.administration_booth"/>
                                 </div>
                                 <div class="col-lg-2 calc-form-input-no-width">
                                     <input style="text-align: right" class="form-control" type="number" id="admin_booth_amount" ng-model="main.form.administration_booth_amount"/>
                                     <small>Booth</small>
                                 </div>
                                 <div class="col-lg-1">
-                                    <input type="checkbox" id="admin_registration_bool" ng-model="main.form.administration_registration"/>
+                                    <input style="margin-bottom: 0; margin-top: 10px" type="checkbox" id="admin_registration_bool" ng-model="main.form.administration_registration"/>
                                 </div>
                                 <div class="col-lg-2 calc-form-input-no-width">
                                     <input style="text-align: right" class="form-control" type="number" id="admin_registration_amount" ng-model="main.form.administration_registration_amount"/>
@@ -666,14 +665,15 @@
                             <h2 class="background"><span>Medical</span></h2>
 
                             <div class="row">
-                                <div class="col-lg-5 calc-form-input-no-width">
+                                <div class="col-lg-1"></div>
+                                <div class="col-lg-4 calc-form-input-no-width">
                                     <input style="text-align: right" class="form-control" type="number" id="medical_expense" ng-model="main.form.medical_last_months_expense"/>
                                     <small>Last month's medical expense</small>
                                 </div>
                                 <div class="col-lg-1">
                                     <h4 style="text-align: center">=</h4>
                                 </div>
-                                <div class="col-lg-6 calc-form-input-no-width">
+                                <div class="col-lg-5 calc-form-input-no-width">
                                     <input class="form-control text-center" ng-value="main.medicalTotal()" disabled="disabled"/>
                                 </div>
                             </div>
@@ -701,6 +701,7 @@
                                     <input class="form-control text-center" ng-value="main.miscMaximum()" disabled="disabled"/>
                                 </div>
                                 </div>
+
                                 {% verbatim %}
                                 <hr/>
                                 <div class="row" ng-controller="otherBudgetItemsCtrl as miscItemsCtrl" ng-init="form_section = 2;">
@@ -710,7 +711,7 @@
                                             <input class="form-control" type="text" ng-model="form.name"/>
                                         </div>
                                         <div class="col-lg-2">
-                                            <input class="form-control" type="number" ng-model="form.cost" ng-change="miscItemsCtrl.otherItemsTotal()"/>
+                                            <input style="text-align: right" class="form-control" type="number" ng-model="form.cost" ng-change="miscItemsCtrl.otherItemsTotal()"/>
                                         </div>
                                         <div class="col-lg-2">
                                             <a class="btn btn-danger" ng-click="miscItemsCtrl.removeItem(form.id, $index)">Remove</a>
@@ -751,7 +752,7 @@
                                 <tbody>
                                 <tr>
                                     <td>Salaries</td>
-                                    <td width="25%"><p ng-bind="main.salariesTotal"></p></td>
+                                    <td width="25%"><p style="text-align: right" ng-bind="main.salariesTotal"></p></td>
                                     <td class="active" width="25%"></td>
                                 </tr>
                                 <tr>
@@ -828,8 +829,8 @@
                         </div>
                     </div>
 
-                    <input ng-show="main.update" class="pull-right btn btn-success navbar-btn btn-lg" value="Submit" ng-click="main.updateForm()">
-                    <input ng-show="main.create" id="budget_create" class="pull-right btn btn-primary navbar-btn btn-lg" value="Submit" ng-click="main.createForm()">
+                    <input type="button" ng-show="main.update" class="pull-right btn btn-primary navbar-btn btn-lg" value="Submit" ng-click="main.updateForm()">
+                    <input type="button" ng-show="main.create" id="budget_create" class="pull-right btn btn-primary navbar-btn btn-lg" value="Submit" ng-click="main.createForm()">
                 </div>
             </div>
         </form>
