@@ -413,7 +413,7 @@ var myModule = angular.module('BudgetCalculation', ['ngCookies', 'ngRoute'])
 
     }])
 
-    .controller("staffCtrl", ['$scope','$http', '$location', '$window', function($scope, $http, $location, $window) {
+    .controller("staffCtrl", ['$scope','$http', '$location', '$window', '$q', function($scope, $http, $location, $window, $q) {
         // get staff for a border_station http://localhost:8000/static_border_stations/api/border-stations/0/
         var vm = this;
         vm.staffSalaryForms = [];
@@ -421,6 +421,7 @@ var myModule = angular.module('BudgetCalculation', ['ngCookies', 'ngRoute'])
 
         vm.totalSalaries = totalSalaries;
         vm.saveAllSalaries = saveAllSalaries;
+        vm.retrieveStaff = retrieveStaff;
 
         main();
 
@@ -430,13 +431,16 @@ var myModule = angular.module('BudgetCalculation', ['ngCookies', 'ngRoute'])
 
         function main(){
             if( window.submit_type == 1 ) {
-                retrieveStaff(window.budget_calc_id);
+                console.log("submit type is 1 or create");
+                vm.retrieveStaff(window.border_station);
             }
             else if( window.submit_type == 2)  {
+                console.log("submit type is 2 or update");
                 retrieveStaffSalaries(window.budget_calc_id);
                 
             }
             else {
+                console.log("submit type is 3 or view");
                 retrieveStaffSalaries(window.budget_calc_id);
             }
         }
@@ -471,23 +475,31 @@ var myModule = angular.module('BudgetCalculation', ['ngCookies', 'ngRoute'])
                 });
         }
 
+        function getStaffData() {
+            var temp = {};
+            var defer = $q.defer();
+            $http.get('/static_border_stations/api/border-stations/' + window.border_station + '/').
+                success(function (data) {
+                    temp = data;
+                    defer.resolve(data);
+            });
+            return defer.promise;
+        }
+
 
         function retrieveStaffSalaries(budgetCalcId) {
             // grab all of the staff for this budgetCalcSheet
-            var staffData = [];
-            $http.get('/static_border_stations/api/border-stations/' + window.border_station + '/').
-                success(function (data) {
-                        staffData = data;
-                }).
-                error(function (data, status, headers, config) {
-                    console.log(data, status, headers, config);
+            $scope.staffDataPromise = getStaffData()
+                .then(function (data){
+                    doTheRestOfTheStuff(budgetCalcId, data);
                 });
-        
-        
+        }
+
+        function doTheRestOfTheStuff(budgetCalcId, staffData){
             $http.get('/budget/api/budget_calculations/staff_salary/' + budgetCalcId + '/').
                     success(function (data) {
+                        console.log(budgetCalcId);
                         $(data).each(function(person){
-                            console.log(staffData);
                             for(var x = 0; x < staffData.length; x++){
                                 if(staffData[x].id == data[person].staff_person){
                                     data[person].name = staffData[x].first_name + staffData[x].last_name;

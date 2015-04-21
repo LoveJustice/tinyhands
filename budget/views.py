@@ -45,7 +45,8 @@ def ng_budget_calc_create(request, pk):
     #is there a better way to do permissions in function based views?
     if not request.user.permission_budget_manage:
         return redirect("home")
-    
+
+    border_station = BorderStation.objects.get(pk=pk)
     submit_type = 1
     return render(request, 'budget/borderstationbudgetcalculation_form.html', locals())
 
