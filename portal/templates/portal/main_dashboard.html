@@ -32,11 +32,11 @@
             </div>
 
             <!--    REGION: Layer Dropdown    -->
-            <div id="layer-dropdown" class="btn-group">
+            <div id="layer-dropdown" class="btn-group" ng-mouseenter="showDropDown = true" ng-class="{'open':showDropDown}">
                 <button class="btn btn-default btn-xs dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
                     <i class="glyphicon glyphicon-menu-hamburger"></i>
                 </button>
-                <ul class="dropdown-menu" role="menu">
+                <ul class="dropdown-menu" role="menu" ng-mouseleave="showDropDown = false">
                     <li class="checkbox">
                         <label>
                             <input type="checkbox"

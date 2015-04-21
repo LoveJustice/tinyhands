@@ -46,8 +46,6 @@
                 resizeMap();
             });
 
-            console.log('Active Map');
-
             $rootScope.$on('toggleVDCLayer', toggleVDCLayer);
         }
 
