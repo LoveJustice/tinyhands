@@ -27,7 +27,7 @@
 {% if request.user.permission_vif_view %}
     <h1>All VIFs</h1>
     {% if victiminterview_list %}
-    <table class="table table-striped table-condensed">
+    <table id="id_vif_list_table" class="table table-striped table-condensed">
         <thead>
             <tr>
                 <th>VIF #</th>
@@ -40,7 +40,7 @@
                 <th>&nbsp;</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="id_vif_list_table_body">
             {% for vif in victiminterview_list %}
             <tr>
                 <td class="vif-number">{{ vif.vif_number }}</td>
@@ -51,9 +51,9 @@
                 <td>{{ vif.date_time_entered_into_system }}</td>
                 <td>{{ vif.date_time_last_updated }}</td>
                 <td>
-                    <a class="btn btn-sm btn-primary" href="{% url 'victiminterview_detail' vif.pk %}">View</a>
+                    <a id="id_view_vif_button" class="btn btn-sm btn-primary" href="{% url 'victiminterview_detail' vif.pk %}">View</a>
                     {% if request.user.permission_vif_edit %}
-                        <a class="btn btn-sm btn-primary" href="{% url 'victiminterview_update' vif.pk %}">Edit</a>
+                        <a id="id_edit_vif_button" class="btn btn-sm btn-primary" href="{% url 'victiminterview_update' vif.pk %}">Edit</a>
                     {% endif %}
                     {% if request.user.is_superuser %}
                         {% include "delete_modal_forms.html" with form=vif url_string="victiminterview_delete"%}
@@ -81,7 +81,7 @@
         <div class="container">
             {% if request.user.permission_vif_add %}
                 <div class="navbar-inner navbar-content-center">
-                    <a class="pull-right btn btn-success navbar-btn" href="{% url 'victiminterview_create' %}">Input A New VIF</a>
+                    <a id="input_new_vif" class="pull-right btn btn-success navbar-btn" href="{% url 'victiminterview_create' %}">Input A New VIF</a>
                 </div>
             {% endif %}
 
