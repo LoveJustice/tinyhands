@@ -7,6 +7,7 @@
         <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
         <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-cookies.js"></script>
         <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-route.js"></script>
+        <link rel="stylesheet" href="{{ STATIC_URL }}animate.css"/>
         <script type="text/javascript">
             window.budget_calc_id = {{ pk }};
             window.submit_type = {{ submit_type }};
@@ -704,8 +705,7 @@
                                 {% verbatim %}
                                 <hr/>
                                 <div class="row" ng-controller="otherBudgetItemsCtrl as miscItemsCtrl" ng-init="form_section = 2;">
-                                    <div class="row" ng-repeat="form in miscItemsCtrl.miscForms">
-
+                                    <div class="animated slideInDown" ng-repeat="form in miscItemsCtrl.miscForms">
                                         <div class="col-lg-4 col-lg-offset-1">
                                             <input class="form-control" type="text" ng-model="form.name"/>
                                         </div>
@@ -836,6 +836,7 @@
 
 
         <script type="text/javascript" src="{{ STATIC_URL }}budgetCalcSheet.js"></script>
+
 
 
     {% endblock %}
