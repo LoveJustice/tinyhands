@@ -16,9 +16,9 @@ from braces.views import LoginRequiredMixin
 from rest_framework.response import Response
 
 from budget.forms import BorderStationBudgetCalculationForm
-from budget.models import BorderStationBudgetCalculation, OtherBudgetItemCost
+from budget.models import BorderStationBudgetCalculation, OtherBudgetItemCost, StaffSalary
 from static_border_stations.models import Staff, BorderStation
-from serializers import BorderStationBudgetCalculationSerializer, OtherBudgetItemCostSerializer
+from serializers import BorderStationBudgetCalculationSerializer, OtherBudgetItemCostSerializer, StaffSalarySerializer
 from models import BorderStationBudgetCalculation
 from z3c.rml import rml2pdf, document
 from lxml import etree
@@ -36,6 +36,7 @@ def ng_budget_calc_update(request, pk):
     if not request.user.permission_budget_manage:
         return redirect("home")
 
+    border_station = BorderStationBudgetCalculation.objects.get(pk=pk).border_station
     submit_type = 2
     return render(request, 'budget/borderstationbudgetcalculation_form.html', locals())
 
@@ -45,6 +46,7 @@ def ng_budget_calc_create(request, pk):
     if not request.user.permission_budget_manage:
         return redirect("home")
 
+    border_station = BorderStation.objects.get(pk=pk)
     submit_type = 1
     return render(request, 'budget/borderstationbudgetcalculation_form.html', locals())
 
@@ -56,6 +58,7 @@ def ng_budget_calc_view(request, pk):
     if not request.user.permission_budget_manage:
         return redirect("home")
 
+    border_station = BorderStationBudgetCalculation.objects.get(pk=pk).border_station
     submit_type = 3
     return render(request, 'budget/borderstationbudgetcalculation_form.html', locals())
 
@@ -73,6 +76,19 @@ class OtherItemsViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(self.object_list, many=True)
         return Response(serializer.data)
 
+
+class StaffSalaryViewSet(viewsets.ModelViewSet):
+    queryset = StaffSalary.objects.all()
+    serializer_class = StaffSalarySerializer
+
+
+    def budget_calc_retrieve(self, request, *args, **kwargs):
+        """
+            Retrieve all of the staffSalaries for a particular budget calculation sheet
+        """
+        self.object_list = self.filter_queryset(self.get_queryset().filter(budget_calc_sheet=self.kwargs['pk']))
+        serializer = self.get_serializer(self.object_list, many=True)
+        return Response(serializer.data)
 
 
 @login_required

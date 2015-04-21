@@ -10,6 +10,7 @@
         <script type="text/javascript">
             window.budget_calc_id = {{ pk }};
             window.submit_type = {{ submit_type }};
+            window.border_station = {{ border_station.id }};
         </script>
 
 
@@ -64,12 +65,39 @@
 
                 <!-- Shelter -->
                 <div class="row">
+
+                    {% verbatim %}
                     <div class="col-lg-6">
                         <h2 class="background"><span>Staff Salaries</span></h2>
 
                         <!--  TODO: put staff forms here! -->
+                        <div class="row" ng-controller="staffCtrl as staff"">
+                            <div class="row" ng-repeat="form in staff.staffSalaryForms" ng-init="staff.totalSalaries();">
+
+                                <div class="col-lg-6">
+                                    <h2>{{ form.name }}</h2>
+                                </div>
+
+                                <div class="col-lg-4">
+                                    <input class="form-control" type="number" ng-model="form.salary" ng-change="staff.totalSalaries()"/>
+                                </div>
+
+                                <br/><br/>
+
+                            </div>
+
+                            <div class="row" style="margin-top: 30px; text-align: center">
+                                <div class="col-lg-9" style="padding: 0"></div>
+                                <div class="col-lg-1 text-center" style="width: 100px; padding: 0">
+                                    <label>Staff Total</label>
+                                    <input class="form-control text-center" ng-model="staff.staffTotal" disabled="disabled"/>
+                                </div>
+                            </div>
+                        </div>
 
                     </div>
+                    {% endverbatim %}
+
                     <div class="col-lg-6">
                         <h2 class="background"><span>Shelter</span></h2>
 
@@ -723,7 +751,7 @@
                                 <tbody>
                                 <tr>
                                     <td>Salaries</td>
-                                    <td width="25%"></td>
+                                    <td width="25%"><p ng-bind="main.salariesTotal"></p></td>
                                     <td class="active" width="25%"></td>
                                 </tr>
                                 <tr>

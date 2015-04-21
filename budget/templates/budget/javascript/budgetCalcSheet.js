@@ -33,6 +33,11 @@ var myModule = angular.module('BudgetCalculation', ['ngCookies', 'ngRoute'])
                 vm.suppliesTotal();
             });
 
+            vm.salariesTotal = 0;
+            $scope.$on('handleSalariesTotalChangeBroadcast', function(event, args) {
+                vm.salariesTotal = args['total'];
+            });
+
             vm.retrieveForm = function(id) {
                 $http.get('/budget/api/budget_calculations/' + id + '/').
                         success(function (data) {
@@ -51,12 +56,19 @@ var myModule = angular.module('BudgetCalculation', ['ngCookies', 'ngRoute'])
                 return vm.foodTotal() + vm.shelterTotal();
             };
             vm.bunchTotal = function() {
-                return vm.commTotal() + vm.travelTotalValue + vm.adminTotal() +
-                        vm.medicalTotal() + vm.miscTotalValue;
+                return  vm.commTotal() + 
+                        vm.travelTotalValue + 
+                        vm.adminTotal() +
+                        vm.medicalTotal() + 
+                        vm.miscTotalValue + 
+                        vm.salariesTotal;
             };
             vm.stationTotal = function() {
-                return vm.foodAndShelterTotal() + vm.bunchTotal() +
-                        vm.awarenessTotalValue + vm.suppliesTotalValue;
+                return  vm.foodAndShelterTotal() + 
+                        vm.bunchTotal() +
+                        vm.awarenessTotalValue + 
+                        vm.suppliesTotalValue + 
+                        vm.salariesTotal;
             };
 
             //shelter
@@ -76,16 +88,23 @@ var myModule = angular.module('BudgetCalculation', ['ngCookies', 'ngRoute'])
                 return totalAmount;
             };
             vm.shelterTotal = function () {
-                return vm.form.shelter_rent + vm.form.shelter_water + vm.form.shelter_electricity + vm.shelterCheckboxTotal();
+                return  vm.form.shelter_rent + 
+                        vm.form.shelter_water + 
+                        vm.form.shelter_electricity + 
+                        vm.shelterCheckboxTotal();
             };
 
             //Food and Gas Section
 
             vm.foodGasInterceptedGirls = function () {
-                return vm.form.food_and_gas_number_of_intercepted_girls_multiplier_before * vm.form.food_and_gas_number_of_intercepted_girls * vm.form.food_and_gas_number_of_intercepted_girls_multiplier_after;
+                return  vm.form.food_and_gas_number_of_intercepted_girls_multiplier_before * 
+                        vm.form.food_and_gas_number_of_intercepted_girls * 
+                        vm.form.food_and_gas_number_of_intercepted_girls_multiplier_after;
             };
             vm.foodGasLimboGirls = function () {
-                return vm.form.food_and_gas_limbo_girls_multiplier * vm.form.food_and_gas_number_of_limbo_girls * vm.form.food_and_gas_number_of_days;
+                return  vm.form.food_and_gas_limbo_girls_multiplier * 
+                        vm.form.food_and_gas_number_of_limbo_girls * 
+                        vm.form.food_and_gas_number_of_days;
             };
             vm.foodTotal = function () {
                 return vm.foodGasInterceptedGirls() + vm.foodGasLimboGirls();
@@ -105,11 +124,13 @@ var myModule = angular.module('BudgetCalculation', ['ngCookies', 'ngRoute'])
             };
 
             vm.commNumberOfStaffTotal = function () {
-                return vm.form.communication_number_of_staff_with_walkie_talkies * vm.form.communication_number_of_staff_with_walkie_talkies_multiplier;
+                return  vm.form.communication_number_of_staff_with_walkie_talkies * 
+                        vm.form.communication_number_of_staff_with_walkie_talkies_multiplier;
             };
 
             vm.commEachStaffTotal = function () {
-                return vm.form.communication_each_staff * vm.form.communication_each_staff_multiplier;
+                return  vm.form.communication_each_staff * 
+                        vm.form.communication_each_staff_multiplier;
             };
 
             vm.commTotal = function () {
@@ -221,7 +242,6 @@ var myModule = angular.module('BudgetCalculation', ['ngCookies', 'ngRoute'])
             };
 
             vm.updateForm = function() {
-                console.log(vm.form);
                 $http.put('/budget/api/budget_calculations/' + vm.form.id + '/', vm.form)
                         .success(function(data, status) {
                             console.log("success");
@@ -238,7 +258,6 @@ var myModule = angular.module('BudgetCalculation', ['ngCookies', 'ngRoute'])
             };
 
             vm.createForm = function() {
-                console.log(vm.form);
                 $http.post('/budget/api/budget_calculations/', vm.form)
                         .success(function(data, status) {
                             console.log("success Create");
@@ -257,7 +276,6 @@ var myModule = angular.module('BudgetCalculation', ['ngCookies', 'ngRoute'])
             if( (window.submit_type) == 1 ) {
                 vm.create = true;
                 vm.form.border_station = (window.budget_calc_id);
-                console.log(vm.form);
             }
             else if( (window.submit_type) == 2)  {
                 vm.update = true;
@@ -270,138 +288,277 @@ var myModule = angular.module('BudgetCalculation', ['ngCookies', 'ngRoute'])
 
         }])
 
-        .controller('otherBudgetItemsCtrl', ['$scope','$http', '$location', '$window', function($scope, $http, $location, $window) {
-            var idCounter = 0;
-            var vm = this;
+    .controller('otherBudgetItemsCtrl', ['$scope','$http', '$location', '$window', function($scope, $http, $location, $window) {
+        var idCounter = 0;
+        var vm = this;
 
-            $scope.form_section = 0;
+        $scope.form_section = 0;
 
-            vm.formsList = [];
-            vm.miscForms = [];
-            vm.travelForms = [];
-            vm.awarenessForms = [];
-            vm.suppliesForms = [];
+        vm.formsList = [];
+        vm.miscForms = [];
+        vm.travelForms = [];
+        vm.awarenessForms = [];
+        vm.suppliesForms = [];
 
-            vm.formsList.push(vm.travelForms, vm.miscForms, vm.awarenessForms, vm.suppliesForms);
+        vm.formsList.push(vm.travelForms, vm.miscForms, vm.awarenessForms, vm.suppliesForms);
 
-            vm.budget_item_parent = 0;
+        vm.budget_item_parent = 0;
 
 
-            // functions for the controller
-            vm.addNewItem = addNewItem;
-            vm.retrieveForm = retrieveForm;
-            vm.removeItem = removeItem;
-            vm.saveAllItems = saveAllItems;
-            vm.otherItemsTotal = otherItemsTotal;
+        // functions for the controller
+        vm.addNewItem = addNewItem;
+        vm.retrieveForm = retrieveForm;
+        vm.removeItem = removeItem;
+        vm.saveAllItems = saveAllItems;
+        vm.otherItemsTotal = otherItemsTotal;
 
-            main();
+        main();
 
-            $scope.$on('handleBudgetCalcSavedBroadcast', function(event, args) {
-                saveAllItems();
-            });
+        $scope.$on('handleBudgetCalcSavedBroadcast', function(event, args) {
+            saveAllItems();
+        });
 
-            function main(){
-                if( window.submit_type == 1 ) {
-                    //creation strategy
-                }
-                else if( window.submit_type == 2)  {
-                    // edit strategy
-                    vm.retrieveForm(window.budget_calc_id);
-                    vm.budget_item_parent = window.budget_calc_id;
-                }
-                else {
-                    //viewing or something else
-                    vm.retrieveForm(window.budget_calc_id);
-                }
+        function main(){
+            if( window.submit_type == 1 ) {
+                //creation strategy
             }
+            else if( window.submit_type == 2)  {
+                // edit strategy
+                vm.retrieveForm(window.budget_calc_id);
+                vm.budget_item_parent = window.budget_calc_id;
+            }
+            else {
+                //viewing or something else
+                vm.retrieveForm(window.budget_calc_id);
+            }
+        }
 
-            function retrieveForm(id) {
-                // grab all of the otherBudgetItems for this budgetCalcSheet
-                $http.get('/budget/api/budget_calculations/items_detail/' + id + '/').
-                        success(function (data) {
-                            for( var x = 0; x < data.length; x++ ){
-                                if (data[x].form_section === $scope.form_section){
-                                    vm.formsList[$scope.form_section-1].push(data[x]);
-                                }
+        function retrieveForm(id) {
+            // grab all of the otherBudgetItems for this budgetCalcSheet
+            $http.get('/budget/api/budget_calculations/items_detail/' + id + '/').
+                    success(function (data) {
+                        for( var x = 0; x < data.length; x++ ){
+                            if (data[x].form_section === $scope.form_section){
+                                vm.formsList[$scope.form_section-1].push(data[x]);
                             }
-                            vm.otherItemsTotal();
-                        }).
-                        error(function (data, status, headers, config) {
-                            console.log(data, status, headers, config);
-                        });
-            }
-
-            function addNewItem(){
-                idCounter--;
-                vm.formsList[$scope.form_section-1].push(
-                        {
-                            id: idCounter,
-                            name: '',
-                            cost: 0,
-                            form_section: $scope.form_section,
-                            budget_item_parent: vm.budget_item_parent
-                        });
-            }
-
-            function removeItem(itemId, index){
-                if(itemId>-1){
-                    $http.delete('/budget/api/budget_calculations/items_detail/' + itemId + '/').
-                        success(function (data) {
-                            console.log("successfully deleted");
-                        }).
-                        error(function (data, status, headers, config) {
-                            console.log(data, status, headers, config);
-                        });
-                }
-                vm.formsList[$scope.form_section-1].splice(index, 1); // Remove item from the list
-                otherItemsTotal();
-            }
-
-            function saveAllItems(){
-                for(var list = 0; list < vm.formsList.length; list++){
-                    for(var itemIndex = 0; itemIndex < vm.formsList[list].length; itemIndex++){
-                        item = vm.formsList[list][itemIndex];
-                        if(item.id < 0){
-                            saveItem(item);
-                        }else{
-                            updateItem(item);
                         }
+                        vm.otherItemsTotal();
+                    }).
+                    error(function (data, status, headers, config) {
+                        console.log(data, status, headers, config);
+                    });
+        }
+
+        function addNewItem(){
+            idCounter--;
+            vm.formsList[$scope.form_section-1].push(
+                    {
+                        id: idCounter,
+                        name: '',
+                        cost: 0,
+                        form_section: $scope.form_section,
+                        budget_item_parent: vm.budget_item_parent
+                    });
+        }
+
+        function removeItem(itemId, index){
+            if(itemId>-1){
+                $http.delete('/budget/api/budget_calculations/items_detail/' + itemId + '/').
+                    success(function (data) {
+                        console.log("successfully deleted");
+                    }).
+                    error(function (data, status, headers, config) {
+                        console.log(data, status, headers, config);
+                    });
+            }
+            vm.formsList[$scope.form_section-1].splice(index, 1); // Remove item from the list
+            otherItemsTotal();
+        }
+
+        function saveAllItems(){
+            for(var list = 0; list < vm.formsList.length; list++){
+                for(var itemIndex = 0; itemIndex < vm.formsList[list].length; itemIndex++){
+                    item = vm.formsList[list][itemIndex];
+                    if(item.id < 0){
+                        saveItem(item);
+                    }else{
+                        updateItem(item);
                     }
                 }
             }
+        }
 
-            function saveItem(item){
-                item.budget_item_parent = window.budget_calc_id;
-                $http.post('/budget/api/budget_calculations/items_list/', item)
-                        .success(function(data, status) {
-                            item.id = data.id;
-                        })
-                        .error(function(data, status){
-                            console.log("failure to create budget item!");
-                        });
+        function saveItem(item){
+            item.budget_item_parent = window.budget_calc_id;
+            $http.post('/budget/api/budget_calculations/items_list/', item)
+                    .success(function(data, status) {
+                        item.id = data.id;
+                    })
+                    .error(function(data, status){
+                        console.log("failure to create budget item!");
+                    });
+        }
+
+        function updateItem(item){
+            $http.put('/budget/api/budget_calculations/items_detail/' + item.id + '/', item)
+                    .success(function(data, status) {
+                        console.log("success");
+                    })
+                    .error(function(data, status) {
+                        console.log("failure to update budget item!");
+                    });
+        }
+
+        function otherItemsTotal(){
+            var acc =0;
+            for(var x = 0; x < vm.formsList[$scope.form_section-1].length; x++){
+                acc += vm.formsList[$scope.form_section-1][x].cost;
             }
+            $scope.miscItemsTotalVal = acc;
+            $scope.$emit('handleOtherItemsTotalChangeEmit', {form_section: $scope.form_section, total: acc});
+        }
 
-            function updateItem(item){
-                $http.put('/budget/api/budget_calculations/items_detail/' + item.id + '/', item)
-                        .success(function(data, status) {
-                            console.log("success");
-                        })
-                        .error(function(data, status) {
-                            console.log("failure to update budget item!");
-                        });
+
+    }])
+
+    .controller("staffCtrl", ['$scope','$http', '$location', '$window', '$q', function($scope, $http, $location, $window, $q) {
+        // get staff for a border_station http://localhost:8000/static_border_stations/api/border-stations/0/
+        var vm = this;
+        vm.staffSalaryForms = [];
+        vm.staffTotal = 0;
+
+        vm.totalSalaries = totalSalaries;
+        vm.saveAllSalaries = saveAllSalaries;
+        vm.retrieveStaff = retrieveStaff;
+
+        main();
+
+        $scope.$on('handleBudgetCalcSavedBroadcast', function(event, args) {
+            vm.saveAllSalaries();
+        });
+
+        function main(){
+            if( window.submit_type == 1 ) {
+                console.log("submit type is 1 or create");
+                vm.retrieveStaff(window.border_station);
             }
+            else if( window.submit_type == 2)  {
+                console.log("submit type is 2 or update");
+                retrieveStaffSalaries(window.budget_calc_id);
+                
+            }
+            else {
+                console.log("submit type is 3 or view");
+                retrieveStaffSalaries(window.budget_calc_id);
+            }
+        }
 
-            function otherItemsTotal(){
-                var acc =0;
-                for(var x = 0; x < vm.formsList[$scope.form_section-1].length; x++){
-                    acc += vm.formsList[$scope.form_section-1][x].cost;
+        function totalSalaries(){
+            var acc = 0;
+            for(var x = 0; x < vm.staffSalaryForms.length; x++){
+                acc += vm.staffSalaryForms[x].salary;
+            }
+            vm.staffTotal = acc;
+
+            $scope.$emit('handleSalariesTotalChangeEmit', {total: acc});
+        }
+
+        function retrieveStaff(borderStationId) {
+            // grab all of the staff for this budgetCalcSheet
+            $http.get('/static_border_stations/api/border-stations/' + borderStationId + '/').
+                success(function (data) {
+                    $(data).each(function(person){
+                        vm.staffSalaryForms.push(
+                            {
+                                staff_person: data[person].id,
+                                name: data[person]['first_name'] + ' ' + data[person]['last_name'],
+                                budget_calc_sheet: 0,
+                                salary: 0
+                            }
+                        );
+                    });
+                }).
+                error(function (data, status, headers, config) {
+                    console.log(data, status, headers, config);
+                });
+        }
+
+        function getStaffData() {
+            var temp = {};
+            var defer = $q.defer();
+            $http.get('/static_border_stations/api/border-stations/' + window.border_station + '/').
+                success(function (data) {
+                    temp = data;
+                    defer.resolve(data);
+            });
+            return defer.promise;
+        }
+
+
+        function retrieveStaffSalaries(budgetCalcId) {
+            // grab all of the staff for this budgetCalcSheet
+            $scope.staffDataPromise = getStaffData()
+                .then(function (data){
+                    doTheRestOfTheStuff(budgetCalcId, data);
+                });
+        }
+
+        function doTheRestOfTheStuff(budgetCalcId, staffData){
+            $http.get('/budget/api/budget_calculations/staff_salary/' + budgetCalcId + '/').
+                    success(function (data) {
+                        console.log(budgetCalcId);
+                        $(data).each(function(person){
+                            for(var x = 0; x < staffData.length; x++){
+                                if(staffData[x].id == data[person].staff_person){
+                                    data[person].name = staffData[x].first_name + staffData[x].last_name;
+                                }
+                            }
+                            vm.staffSalaryForms.push(data[person])
+                        });
+                    }).
+                    error(function (data, status, headers, config) {
+                        console.log(data, status, headers, config);
+                    });
+        }
+
+        function saveAllSalaries(){
+            for(var person = 0; person < vm.staffSalaryForms.length; person++){
+                item = vm.staffSalaryForms[person];
+                console.log(item, "hello");
+                if(!item.id){
+                    saveItem(item);
+                }else{
+                    updateItem(item);
                 }
-                $scope.miscItemsTotalVal = acc;
-                $scope.$emit('handleOtherItemsTotalChangeEmit', {form_section: $scope.form_section, total: acc});
             }
+        }
+
+        function saveItem(item){
+            item.budget_calc_sheet = window.budget_calc_id;
+            $http.post('/budget/api/budget_calculations/staff_salary/', item)
+                .success(function(data, status) {
+                    console.log(data, status);
+                })
+                .error(function(data, status){
+                    console.log("failure to create staff salary!");
+                    console.log(data, status);
+                });
+        }
+
+        function updateItem(item){
+            $http.put('/budget/api/budget_calculations/staff_salary/' + item.id + '/', item)
+                    .success(function(data, status) {
+                        console.log("success", status);
+                    })
+                    .error(function(data, status) {
+                        console.log("failure to update budget item!");
+                    });
+        }
 
 
-        }]);
+
+    }]);
+
 
 myModule.run(function($rootScope) {
     /*
@@ -415,5 +572,9 @@ myModule.run(function($rootScope) {
 
     $rootScope.$on('handleOtherItemsTotalChangeEmit', function(event, args) {
         $rootScope.$broadcast('handleOtherItemsTotalChangeBroadcast', args);
+    });
+
+    $rootScope.$on('handleSalariesTotalChangeEmit', function(event, args) {
+        $rootScope.$broadcast('handleSalariesTotalChangeBroadcast', args);
     });
 });

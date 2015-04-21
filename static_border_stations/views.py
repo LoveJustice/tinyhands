@@ -3,6 +3,8 @@ from django.core.urlresolvers import reverse_lazy
 
 
 from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSet
+from rest_framework import viewsets
+from rest_framework.response import Response
 
 from accounts.mixins import PermissionsRequiredMixin
 from braces.views import LoginRequiredMixin
@@ -10,6 +12,7 @@ from dataentry.models import BorderStation
 
 from static_border_stations.forms import *
 from dataentry.forms import BorderStationForm
+from static_border_stations.serializers import StaffSerializer
 
 
 class FormSetForStations(InlineFormSet):
@@ -21,6 +24,19 @@ class FormSetForStations(InlineFormSet):
         else:
             self.extra = 1
         return 
+
+
+class StaffViewSet(viewsets.ModelViewSet):
+    queryset = Staff.objects.all()
+    serializer_class = StaffSerializer
+
+    def staff_retrieve(self, request, *args, **kwargs):
+        """
+            retrieve all the staff for a particular border_station
+        """
+        self.object_list = self.filter_queryset(self.get_queryset().filter(border_station=self.kwargs['pk']))
+        serializer = self.get_serializer(self.object_list, many=True)
+        return Response(serializer.data)
 
 
 class StaffInline(FormSetForStations):
