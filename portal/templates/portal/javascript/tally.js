@@ -10,13 +10,13 @@
         var vm = this;
 
         vm.days = {};
-        vm.hasIntercepts = false;
-        vm.showVDCLayer = true;
-        vm.showTally = true;
-        vm.isEmptyObject = isEmptyObject;
         vm.changeColor = changeColor;
-        vm.toggleVDCLayer = toggleVDCLayer;
+        vm.hasIntercepts = false;
+        vm.isEmptyObject = isEmptyObject;
         vm.onMouseLeave = onMouseLeave;
+        vm.showTally = true;
+        vm.showVDCLayer = true;
+        vm.toggleVDCLayer = toggleVDCLayer;
 
         activate();
 
@@ -29,10 +29,6 @@
             });
         }
 
-        function isEmptyObject(obj) {
-            return $.isEmptyObject(obj);
-        }
-
         function changeColor(day) {
             if (day.change && !day.seen) {
                 return {'background-color': 'rgba(255,0,0,0.5)',
@@ -40,12 +36,16 @@
             }
         }
 
-        function toggleVDCLayer() {
-            $rootScope.$emit('toggleVDCLayer', vm.showVDCLayer);
+        function isEmptyObject(obj) {
+            return $.isEmptyObject(obj);
         }
 
         function onMouseLeave(day){
             day.seen = true;
+        }
+
+        function toggleVDCLayer() {
+            $rootScope.$emit('toggleVDCLayer', vm.showVDCLayer);
         }
 
         function getTallyData(firstCall) {

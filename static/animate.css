@@ -6,20 +6,6 @@ Licensed under the MIT license - http://opensource.org/licenses/MIT
 Copyright (c) 2015 Daniel Eden
 */
 
-.tallyFade.ng-hide-add {
-    -webkit-animation-duration: 0.4s;
-    animation-duration: 0.4s;
-    -webkit-animation-name: fadeOutUp;
-    animation-name: fadeOutUp;
-}
-
-.tallyFade.ng-hide-remove {
-    -webkit-animation-duration: 0.4s;
-    animation-duration: 0.4s;
-    -webkit-animation-name: fadeInDown;
-    animation-name: fadeInDown;
-}
-
 .animated {
     -webkit-animation-duration: 1s;
     animation-duration: 1s;

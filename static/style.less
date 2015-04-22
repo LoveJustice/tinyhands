@@ -43,7 +43,7 @@ abbr {
         border-radius: 10px;
         cursor: default;
         margin-right: 15px;
-        /* Begin: Drop-down animation */
+        /* REGION: Drop-down animation */
         max-height: 26px;
         -webkit-transition: max-height 1s;
         transition: max-height 1s;
@@ -51,10 +51,23 @@ abbr {
         &:hover {
             max-height: 500px;
         }
-        /* End: Drop-down animation */
+        /* ENDREGION: Drop-down animation */
         * {
             overflow: hidden;
             text-overflow: '.';
+        }
+        .tallyFade.ng-hide-add {
+            -webkit-animation-duration: 0.4s;
+            animation-duration: 0.4s;
+            -webkit-animation-name: fadeOutUp;
+            animation-name: fadeOutUp;
+        }
+
+        .tallyFade.ng-hide-remove {
+            -webkit-animation-duration: 0.4s;
+            animation-duration: 0.4s;
+            -webkit-animation-name: fadeInDown;
+            animation-name: fadeInDown;
         }
     }
     .tally-tab-small {
