@@ -8,16 +8,15 @@ var irfPage = function() {
     this.getToIRF = function(){
 	    browser.get(c.webAddress + '/data-entry/irfs/search/');
         this.link = element(by.id("id_input_new_irf"));
-        this.link.click();
-        browser.sleep(200);
-
+        return this.link.click();
     };
 
-    this.fillOutIRF = function() {
+    this.fillOutIRF = function(date) {
+        var today = date || c.irfInterceptTime;
         browser.executeScript("arguments[0].style.visibility = 'hidden';", element(by.id("footer")).getWebElement()); // Hides the footer so the webdriver can click on stuff
         this.irf_number = element(by.id("id_irf_number")).sendKeys(c.irfNumber);
         this.location = element(by.id("id_location")).sendKeys(c.irfLocation);
-        this.date_time_of_interception = element(by.id("id_date_time_of_interception")).sendKeys(c.irfInterceptTime);
+        this.date_time_of_interception = element(by.id("id_date_time_of_interception")).sendKeys(today);
         this.staff_name = element(by.id("id_staff_name")).sendKeys(c.irfStaffName);
         this.drugged_or_drowsy = element(by.id("id_drugged_or_drowsy")).click();
         this.contact_noticed = element(by.id("id_contact_noticed")).click();
