@@ -39,7 +39,7 @@
 
         function checkDifferences(data){
             for(var i = 0; i < 7; i++){
-                interceptions = data[i].interceptions;
+                var interceptions = data[i].interceptions;
                 data[i].change = false;
                 data[i].seen = false;
                 for(var key in interceptions){
@@ -76,8 +76,7 @@
                 }else{ //updates
                     checkDifferences(data);
                 }
-            })
-                .error(function(error) {
+            }).error(function(error) {
                 console.log(error);
             });
         }
