@@ -16,6 +16,7 @@
         vm.onMouseLeave = onMouseLeave;
         vm.showTally = true;
         vm.showVDCLayer = true;
+        vm.sumNumIntercepts = sumNumIntercepts;
         vm.toggleVDCLayer = toggleVDCLayer;
 
         activate();
@@ -36,16 +37,24 @@
             }
         }
 
-        function isEmptyObject(obj) {
-            return $.isEmptyObject(obj);
-        }
-
-        function onMouseLeave(day){
-            day.seen = true;
-        }
-
-        function toggleVDCLayer() {
-            $rootScope.$emit('toggleVDCLayer', vm.showVDCLayer);
+        function checkDifferences(data){
+            for(var i = 0; i < 7; i++){
+                interceptions = data[i].interceptions;
+                data[i].change = false;
+                data[i].seen = false;
+                for(var key in interceptions){
+                    if(interceptions.hasOwnProperty(key)){
+                        if(vm.days[i].interceptions[key] != interceptions[key]){
+                            //data has changed
+                            data[i].change = true;
+                        }else if(vm.days[i].change && !vm.days[i].seen){
+                            //data was previously changed but has not been seen
+                            data[i].change = true;
+                        }
+                    }
+                }
+            }
+            vm.days = data;
         }
 
         function getTallyData(firstCall) {
@@ -73,24 +82,24 @@
             });
         }
 
-        function checkDifferences(data){
-            for(var i = 0; i < 7; i++){
-                interceptions = data[i].interceptions;
-                data[i].change = false;
-                data[i].seen = false;
-                for(var key in interceptions){
-                    if(interceptions.hasOwnProperty(key)){
-                        if(vm.days[i].interceptions[key] != interceptions[key]){
-                            //data has changed
-                            data[i].change = true;
-                        }else if(vm.days[i].change && !vm.days[i].seen){
-                            //data was previously changed but has not been seen
-                            data[i].change = true;
-                        }
-                    }
-                }
+        function isEmptyObject(obj) {
+            return $.isEmptyObject(obj);
+        }
+
+        function onMouseLeave(day){
+            day.seen = true;
+        }
+
+        function sumNumIntercepts(day) {
+            var sumInt = 0;
+            for (var key in day.interceptions) {
+                sumInt += day.interceptions[key];
             }
-            vm.days = data;
+            return sumInt;
+        }
+
+        function toggleVDCLayer() {
+            $rootScope.$emit('toggleVDCLayer', vm.showVDCLayer);
         }
     };
 

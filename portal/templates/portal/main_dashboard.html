@@ -26,6 +26,7 @@
                 <div class="hidden-md hidden-lg tally-tab-small">
                     <div class="text-center" ng-repeat="day in tally.days">
                         <h3 class="day-of-week">{{day.dayOfWeek[0]}}</h3>
+                        <h4>{{tally.sumNumIntercepts(day)}}</h4>
                     </div>
                 </div>
                 <!--   ENDREGION: Tally w/Smaller screens     -->
