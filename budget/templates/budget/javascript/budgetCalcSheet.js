@@ -5,7 +5,7 @@ var myModule = angular.module('BudgetCalculation', ['ngCookies', 'ngRoute'])
         }])
         .controller('MainCtrl', ['$scope','$http', '$location', '$window', function($scope, $http, $location, $window) {
 
-
+            $scope.thingy = 'hello';
 
             var vm = this;
             vm.form = {};

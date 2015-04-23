@@ -1,5 +1,5 @@
 // Karma configuration
-// Generated on Tue Apr 21 2015 16:02:02 GMT-0400 (EDT)
+// Generated on Tue Apr 21 2015 16:02:02 GMT-0400 (EDT)angular-mocks
 
 module.exports = function(config) {
   config.set({
@@ -17,10 +17,13 @@ module.exports = function(config) {
     files: [
         'test-main.js',
         'node_modules/angular/angular.js',
+        'static/jquery.js',
+        'node_modules/angular-cookies/angular-cookies.js',
+        'node_modules/angular-route/angular-route.js',
         'node_modules/angular-mocks/angular-mocks.js',
-        './karma/*.spec.js',
+        'budget/templates/budget/javascript/budgetCalcSheet.js',
+        './karma/*.spec.js'
     ],
-
 
     // list of files to exclude
     exclude: [
@@ -58,7 +61,7 @@ module.exports = function(config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['Chrome', 'Firefox', 'Safari'],
+    browsers: ['Chrome'],
 
 
     // Continuous Integration mode
