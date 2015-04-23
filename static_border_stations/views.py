@@ -7,6 +7,7 @@ from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineForm
 from accounts.mixins import PermissionsRequiredMixin
 from braces.views import LoginRequiredMixin
 from dataentry.models import BorderStation
+from static_border_stations.models import Staff, CommitteeMember, Location
 
 from dataentry.forms import BorderStationForm
 
