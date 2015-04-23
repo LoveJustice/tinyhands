@@ -506,7 +506,7 @@ var myModule = angular.module('BudgetCalculation', ['ngCookies', 'ngRoute'])
                         $(data).each(function(person){
                             for(var x = 0; x < staffData.length; x++){
                                 if(staffData[x].id == data[person].staff_person){
-                                    data[person].name = staffData[x].first_name + staffData[x].last_name;
+                                    data[person].name = staffData[x].first_name + ' ' + staffData[x].last_name;
                                 }
                             }
                             vm.staffSalaryForms.push(data[person])
