@@ -1,29 +1,37 @@
 'use strict';
+
 var c = require('../testConstants.json');
-var arr = new Array();
 
 
 var dynStation = function() {
-    var page = this;
 
-    this.countStations = function() {
-        $('area[title="Dang DNG"]').click();
-    };
+  this.checkStations = function(stationsCount) {
 
-/*
-    this.findPropertyMarker = function(mTitle) {
-        var markers = this.session.elements('css selector', '.gmnoprint map area');
-        var title = 'property-' .mTitle;
-        for(markers as marker) {
-            if(title === marker.attribute('title')) {
-                return marker;
-            }
-        }
+    console.log("FOO-10");
+    var promises=[];
 
-        return false;
-    };
-*/
+    element.all(by.tagName('area')).each(function(element) {
+      console.log("FOO-20");
+      promises.push(element.getAttribute("title"));
+    }).then(function(){
+      protractor.promise.all(promises).then(function(titles) {
+	// Check for all 1s
+	console.log("All promises are done?");
+	titles.forEach(function(title) {
+    	  console.log("FOO-30");
+    	  // Must be a legitimate title.
+    	  expect(title in stationsCount).toBe(true);
 
+    	  // Haven't seen this one before.
+    	  expect(stationsCount[title]).toBe(0);
+    	  stationsCount[title] += 1;
+    	  //console.log(stationsCount);
+	});
+	console.log(stationsCount);
+      });
+    });
+    console.log("FOO-90");
+  };
 };
 
 module.exports = new dynStation();
