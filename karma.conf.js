@@ -17,7 +17,7 @@ module.exports = function(config) {
     files: [
         'test-main.js',
         'node_modules/angular/angular.js',
-        'node_modules/angular-mocks/angular-mocks.js'.
+        'node_modules/angular-mocks/angular-mocks.js',
         './karma/*.spec.js',
     ],
 
