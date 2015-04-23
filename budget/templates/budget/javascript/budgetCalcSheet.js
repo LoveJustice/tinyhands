@@ -43,7 +43,6 @@ var myModule = angular.module('BudgetCalculation', ['ngCookies', 'ngRoute'])
                         success(function (data) {
                             //We can reference the json object to fill our vm variables
                             vm.form = data;
-                        console.log(data);
                         }).
                         error(function (data, status, headers, config) {
                             // called asynchronously if an error occurs
@@ -442,11 +441,10 @@ var myModule = angular.module('BudgetCalculation', ['ngCookies', 'ngRoute'])
                 vm.retrieveStaff(window.border_station);
             }
             else if( window.submit_type == 2)  {
-                retrieveStaffSalaries(window.budget_calc_id);
-                
+                retrieveStaffSalaries();
             }
             else {
-                retrieveStaffSalaries(window.budget_calc_id);
+                retrieveStaffSalaries();
             }
         }
 
@@ -491,30 +489,24 @@ var myModule = angular.module('BudgetCalculation', ['ngCookies', 'ngRoute'])
             return defer.promise;
         }
 
+        function retrieveStaffSalaries() {
+            var staffPromise = $http({method: 'GET', url: '/static_border_stations/api/border-stations/' + window.border_station + '/', cache: 'true'});
+            var staffSalaryPromise = $http({method: 'GET', url: '/budget/api/budget_calculations/staff_salary/' + window.budget_calc_id + '/', cache: 'true'});
+            $q.all([staffPromise, staffSalaryPromise]).then(function (data) {
+                var staffData = data[0].data;
+                var staffSalariesData = data[1].data;
 
-        function retrieveStaffSalaries(budgetCalcId) {
-            // grab all of the staff for this budgetCalcSheet
-            $scope.staffDataPromise = getStaffData()
-                .then(function (data){
-                    doTheRestOfTheStuff(budgetCalcId, data);
-                });
-        }
-
-        function doTheRestOfTheStuff(budgetCalcId, staffData){
-            $http.get('/budget/api/budget_calculations/staff_salary/' + budgetCalcId + '/').
-                    success(function (data) {
-                        $(data).each(function(person){
-                            for(var x = 0; x < staffData.length; x++){
-                                if(staffData[x].id == data[person].staff_person){
-                                    data[person].name = staffData[x].first_name + ' ' + staffData[x].last_name;
-                                }
-                            }
-                            vm.staffSalaryForms.push(data[person])
-                        });
-                    }).
-                    error(function (data, status, headers, config) {
-                        console.log(data, status, headers, config);
-                    });
+                // Match staff to staffSalaries
+                for(var person = 0; person < staffSalariesData.length; person++) {
+                    for (var x = 0; x < staffData.length; x++) {
+                        if (staffData[x].id === staffSalariesData[person].staff_person) {
+                            staffSalariesData[person].name = staffData[x].first_name + ' ' + staffData[x].last_name;
+                            console.log(staffSalariesData[person].name);
+                        }
+                    }
+                    vm.staffSalaryForms.push(staffSalariesData[person])
+                }
+            });
         }
 
         function saveAllSalaries(){
