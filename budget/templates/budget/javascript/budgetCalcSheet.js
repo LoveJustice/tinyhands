@@ -478,20 +478,9 @@ var myModule = angular.module('BudgetCalculation', ['ngCookies', 'ngRoute'])
                 });
         }
 
-        function getStaffData() {
-            var temp = {};
-            var defer = $q.defer();
-            $http.get('/static_border_stations/api/border-stations/' + window.border_station + '/').
-                success(function (data) {
-                    temp = data;
-                    defer.resolve(data);
-            });
-            return defer.promise;
-        }
-
         function retrieveStaffSalaries() {
-            var staffPromise = $http({method: 'GET', url: '/static_border_stations/api/border-stations/' + window.border_station + '/', cache: 'true'});
-            var staffSalaryPromise = $http({method: 'GET', url: '/budget/api/budget_calculations/staff_salary/' + window.budget_calc_id + '/', cache: 'true'});
+            var staffPromise = $http({method: 'GET', url: '/static_border_stations/api/border-stations/' + window.border_station + '/'});
+            var staffSalaryPromise = $http({method: 'GET', url: '/budget/api/budget_calculations/staff_salary/' + window.budget_calc_id + '/'});
             $q.all([staffPromise, staffSalaryPromise]).then(function (data) {
                 var staffData = data[0].data;
                 var staffSalariesData = data[1].data;
