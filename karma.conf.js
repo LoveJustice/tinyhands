@@ -20,8 +20,10 @@ module.exports = function(config) {
         'static/jquery.js',
         'node_modules/angular-cookies/angular-cookies.js',
         'node_modules/angular-route/angular-route.js',
-        'node_modules/angular-mocks/angular-mocks.js',
-        'budget/templates/budget/javascript/budgetCalcSheet.js',
+        'node_modules/angular-mocks/angular-mocks.js',  
+        'budget/templates/budget/javascript/*.js',
+        'budget/templates/budget/javascript/controllers/*.js',
+        'budget/templates/budget/javascript/controllers/staffCtrl.js',
         './karma/*.spec.js'
     ],
 
