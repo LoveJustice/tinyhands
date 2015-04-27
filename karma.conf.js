@@ -17,6 +17,8 @@ module.exports = function(config) {
     files: [
         'test-main.js',
         'node_modules/angular/angular.js',
+        'static/jquery.js',
+        'node_modules/angular-cookies/angular-cookies.js',
         'node_modules/angular-route/angular-route.js',
         'node_modules/angular-mocks/angular-mocks.js',  
         'budget/templates/budget/javascript/*.js',
