@@ -79,7 +79,7 @@
                                 </div>
 
                                 <div class="col-lg-4">
-                                    <input class="form-control" type="number" ng-model="form.salary" ng-change="staff.totalSalaries()"/>
+                                    <input class="form-control" type="number" ng-model="form.salary" ng-change="staff.totalSalaries()" ng-disabled="main.view"/>
                                 </div>
 
                                 <br/><br/>
@@ -354,10 +354,10 @@
                                 <div class="" ng-repeat="form in awarenessItemsCtrl.awarenessForms">
 
                                     <div class="col-lg-4 col-lg-offset-2">
-                                        <input class="form-control" type="text" ng-model="form.name"/>
+                                        <input class="form-control" type="text" ng-model="form.name" ng-disabled="main.view"/>
                                     </div>
                                     <div class="col-lg-4">
-                                        <input style="text-align: right" class="form-control" type="number" ng-model="form.cost" ng-change="awarenessItemsCtrl.otherItemsTotal()"/>
+                                        <input style="text-align: right" class="form-control" type="number" ng-model="form.cost" ng-change="awarenessItemsCtrl.otherItemsTotal()" ng-disabled="main.view"/>
                                     </div>
                                     <div class="col-lg-2">
                                         <a class="btn btn-danger" ng-click="awarenessItemsCtrl.removeItem(form.id, $index)">Remove</a>
@@ -368,7 +368,7 @@
                                     <br/>
 
                                     <div class="col-lg-4 col-lg-offset-5">
-                                        <a class="btn btn-success" ng-click="awarenessItemsCtrl.addNewItem()">Add item</a>
+                                        <a class="btn btn-success" ng-click="awarenessItemsCtrl.addNewItem()" ng-hide="main.view">Add item</a>
                                     </div>
                                 </div>
                             </div>
@@ -468,10 +468,10 @@
                                 <div class="row" ng-repeat="form in travelItemsCtrl.travelForms">
 
                                     <div class="col-lg-4 col-lg-offset-1">
-                                        <input class="form-control" type="text" ng-model="form.name"/>
+                                        <input class="form-control" type="text" ng-model="form.name" ng-disabled="main.view"/>
                                     </div>
                                     <div class="col-lg-4">
-                                        <input style="text-align: right" class="form-control" type="number" ng-model="form.cost" ng-change="travelItemsCtrl.otherItemsTotal()"/>
+                                        <input style="text-align: right" class="form-control" type="number" ng-model="form.cost" ng-change="travelItemsCtrl.otherItemsTotal()" ng-disabled="main.view"/>
                                     </div>
                                     <div class="col-lg-2">
                                         <a class="btn btn-danger" ng-click="travelItemsCtrl.removeItem(form.id, $index)">Remove</a>
@@ -482,7 +482,7 @@
                                     <br/>
 
                                     <div class="col-lg-4 col-lg-offset-5">
-                                        <a class="btn btn-success" ng-click="travelItemsCtrl.addNewItem()">Add item</a>
+                                        <a class="btn btn-success" ng-click="travelItemsCtrl.addNewItem()" ng-hide="main.view">Add item</a>
                                     </div>
                                 </div>
                             </div>
@@ -545,10 +545,10 @@
                                 <div ng-repeat="form in suppliesItemsCtrl.suppliesForms">
 
                                     <div class="col-lg-4 col-lg-offset-2">
-                                        <input class="form-control" type="text" ng-model="form.name"/>
+                                        <input class="form-control" type="text" ng-model="form.name" ng-disabled="main.view"/>
                                     </div>
                                     <div class="col-lg-4">
-                                        <input style="text-align: right" class="form-control" type="number" ng-model="form.cost" ng-change="suppliesItemsCtrl.otherItemsTotal()"/>
+                                        <input style="text-align: right" class="form-control" type="number" ng-model="form.cost" ng-change="suppliesItemsCtrl.otherItemsTotal()" ng-disabled="main.view"/>
                                     </div>
                                     <div class="col-lg-2">
                                         <a class="btn btn-danger" ng-click="suppliesItemsCtrl.removeItem(form.id, $index)">Remove</a>
@@ -559,7 +559,7 @@
                                     <br/>
 
                                     <div class="col-lg-4 col-lg-offset-5">
-                                        <a class="btn btn-success" ng-click="suppliesItemsCtrl.addNewItem()">Add item</a>
+                                        <a class="btn btn-success" ng-click="suppliesItemsCtrl.addNewItem()" ng-hide="main.view">Add item</a>
                                     </div>
                                 </div>
                             </div>
@@ -709,10 +709,10 @@
                                 <div class="row" ng-controller="otherBudgetItemsCtrl as miscItemsCtrl" ng-init="form_section = 2;">
                                     <div class="animated slideInDown" ng-repeat="form in miscItemsCtrl.miscForms">
                                         <div class="col-lg-4 col-lg-offset-1">
-                                            <input class="form-control" type="text" ng-model="form.name"/>
+                                            <input class="form-control" type="text" ng-model="form.name" ng-disabled="main.view"/>
                                         </div>
                                         <div class="col-lg-2">
-                                            <input style="text-align: right" class="form-control" type="number" ng-model="form.cost" ng-change="miscItemsCtrl.otherItemsTotal()"/>
+                                            <input style="text-align: right" class="form-control" type="number" ng-model="form.cost" ng-change="miscItemsCtrl.otherItemsTotal()" ng-disabled="main.view"/>
                                         </div>
                                         <div class="col-lg-2">
                                             <a class="btn btn-danger" ng-click="miscItemsCtrl.removeItem(form.id, $index)">Remove</a>
@@ -723,7 +723,7 @@
                                         <br/>
 
                                         <div class="col-lg-4 col-lg-offset-5">
-                                            <a class="btn btn-success" ng-click="miscItemsCtrl.addNewItem()">Add item</a>
+                                            <a class="btn btn-success" ng-click="miscItemsCtrl.addNewItem()" ng-hide="main.view">Add item</a>
                                         </div>
                                     </div>
                                 </div>
