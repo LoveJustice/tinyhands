@@ -18,6 +18,12 @@ describe('MainCtrl', function(){
         expect(controller).toBeDefined();
         //console.log(controller); //Good way to make sure stuff is actually there, or what is happening in reality
     });
+
+    it('should have a form variable', function(){
+       expect(controller.form).toBeDefined();
+    });
+
+    it('should ')
 });
 
 describe('otherBudgetItemsCtrl', function(){

@@ -276,6 +276,7 @@ angular
                 vm.retrieveForm(window.budget_calc_id);
             }
             else {
+                vm.view = true;
                 $('input').prop('disabled', true);
                 vm.retrieveForm(window.budget_calc_id);
             }
