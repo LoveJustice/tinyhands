@@ -360,7 +360,7 @@
                                         <input style="text-align: right" class="form-control" type="number" ng-model="form.cost" ng-change="awarenessItemsCtrl.otherItemsTotal()" ng-disabled="main.view"/>
                                     </div>
                                     <div class="col-lg-2">
-                                        <a class="btn btn-danger" ng-click="awarenessItemsCtrl.removeItem(form.id, $index)">Remove</a>
+                                        <a class="btn btn-danger" ng-click="awarenessItemsCtrl.removeItem(form.id, $index)" ng-hide="main.view">Remove</a>
                                     </div>
                                     <br/><br/>
                                 </div>
@@ -474,7 +474,7 @@
                                         <input style="text-align: right" class="form-control" type="number" ng-model="form.cost" ng-change="travelItemsCtrl.otherItemsTotal()" ng-disabled="main.view"/>
                                     </div>
                                     <div class="col-lg-2">
-                                        <a class="btn btn-danger" ng-click="travelItemsCtrl.removeItem(form.id, $index)">Remove</a>
+                                        <a class="btn btn-danger" ng-click="travelItemsCtrl.removeItem(form.id, $index)" ng-hide="main.view">Remove</a>
                                     </div>
                                     <br/><br/>
                                 </div>
@@ -551,7 +551,7 @@
                                         <input style="text-align: right" class="form-control" type="number" ng-model="form.cost" ng-change="suppliesItemsCtrl.otherItemsTotal()" ng-disabled="main.view"/>
                                     </div>
                                     <div class="col-lg-2">
-                                        <a class="btn btn-danger" ng-click="suppliesItemsCtrl.removeItem(form.id, $index)">Remove</a>
+                                        <a class="btn btn-danger" ng-click="suppliesItemsCtrl.removeItem(form.id, $index)" ng-hide="main.view">Remove</a>
                                     </div>
                                     <br/><br/>
                                 </div>
@@ -715,7 +715,7 @@
                                             <input style="text-align: right" class="form-control" type="number" ng-model="form.cost" ng-change="miscItemsCtrl.otherItemsTotal()" ng-disabled="main.view"/>
                                         </div>
                                         <div class="col-lg-2">
-                                            <a class="btn btn-danger" ng-click="miscItemsCtrl.removeItem(form.id, $index)">Remove</a>
+                                            <a class="btn btn-danger" ng-click="miscItemsCtrl.removeItem(form.id, $index)" ng-hide="main.view">Remove</a>
                                         </div>
                                         <br/><br/>
                                     </div>
