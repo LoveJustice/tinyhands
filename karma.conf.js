@@ -18,10 +18,10 @@ module.exports = function(config) {
         'test-main.js',
         'node_modules/angular/angular.js',
         'node_modules/angular-route/angular-route.js',
-        'node_modules/angular-mocks/angular-mocks.js',
-        'static/jquery.js',
-        'node_modules/angular-cookies/angular-cookies.js',
-        'budget/templates/budget/javascript/budgetCalcSheet.js',
+        'node_modules/angular-mocks/angular-mocks.js',  
+        'budget/templates/budget/javascript/*.js',
+        'budget/templates/budget/javascript/controllers/*.js',
+        'budget/templates/budget/javascript/controllers/staffCtrl.js',
         './karma/*.spec.js'
     ],
 
@@ -61,8 +61,7 @@ module.exports = function(config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['Chrome'],
-
+    browsers: ['PhantomJS'],
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
