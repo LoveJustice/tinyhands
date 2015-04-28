@@ -4,7 +4,6 @@ from rest_framework.test import APIClient
 
 from static_border_stations.tests.factories import BorderStationFactory
 
-import ipdb
 
 
 class BudgetCalcApiTests(WebTest):
@@ -18,8 +17,6 @@ class BudgetCalcApiTests(WebTest):
         self.assertEqual(response.status_code, 201)
 
     def testRemoveBudgetSheet(self):
-        ipdb.set_trace()
-
 
         response = self.client.post('/budget/api/budget_calculations/', {"border_station": self.border_station.pk})
         budget_id = response.data.get('id')
