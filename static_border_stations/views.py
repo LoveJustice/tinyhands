@@ -9,6 +9,7 @@ from rest_framework.response import Response
 from accounts.mixins import PermissionsRequiredMixin
 from braces.views import LoginRequiredMixin
 from dataentry.models import BorderStation
+from static_border_stations.models import Staff, CommitteeMember, Location
 
 from dataentry.forms import BorderStationForm
 from static_border_stations.models import Staff, CommitteeMember, Location
@@ -62,6 +63,11 @@ class StaticBorderStationsCreateView (
     inlines = [StaffInline, CommitteeMemberInline, LocationInline]
     permissions_required = ['permission_border_stations_add']
 
+    def get_context_data(self, **kwargs):
+        context = super(StaticBorderStationsCreateView, self).get_context_data(**kwargs)
+        context["saved"] = False
+        return context
+
 
 class StaticBorderStationsUpdateView (
         LoginRequiredMixin,
@@ -74,9 +80,19 @@ class StaticBorderStationsUpdateView (
     inlines = [StaffInline, CommitteeMemberInline, LocationInline]
     permissions_required = ['permission_border_stations_edit']
 
+    def get_context_data(self, **kwargs):
+        context = super(StaticBorderStationsUpdateView, self).get_context_data(**kwargs)
+        context["saved"] = True
+        return context
+
 
 class StaticBorderStationsDetailView(StaticBorderStationsUpdateView):
     permissions_required = ['permission_border_stations_view']
 
     def post(self, request, *args, **kwargs):
         raise PermissionDenied
+
+    def get_context_data(self, **kwargs):
+        context = super(StaticBorderStationsDetailView, self).get_context_data(**kwargs)
+        context["saved"] = True
+        return context

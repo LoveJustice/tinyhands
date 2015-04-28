@@ -112,7 +112,9 @@
      "permission_vif_edit": true,
      "permission_vif_view": true,
      "permission_receive_email": true,
-     "permission_irf_edit": true
+     "permission_irf_edit": true,
+     "permission_budget_manage": true
+
   },
   "model": "accounts.account",
   "pk": 22
