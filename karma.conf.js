@@ -23,7 +23,7 @@ module.exports = function(config) {
         'node_modules/angular-mocks/angular-mocks.js',  
         'budget/templates/budget/javascript/*.js',
         'budget/templates/budget/javascript/controllers/*.js',
-        'budget/templates/budget/javascript/controllers/staffCtrl.js',
+        'budget/templates/budget/javascript/services/*.js',
         './karma/*.spec.js'
     ],
 

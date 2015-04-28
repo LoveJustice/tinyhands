@@ -1,6 +1,6 @@
 angular
     .module('BudgetCalculation')
-    .controller("staffCtrl", ['$scope','$http', '$location', '$window', '$q', function($scope, $http, $location, $window, $q) {
+    .controller("staffCtrl", ['$scope','$http', '$location', '$window', '$q', 'staffService', function($scope, $http, $location, $window, $q, staffService) {
         // get staff for a border_station http://localhost:8000/static_border_stations/api/border-stations/0/
         var vm = this;
         vm.staffSalaryForms = [];
@@ -18,7 +18,7 @@ angular
 
         function main(){
             if( window.submit_type == 1 ) {
-                vm.retrieveStaff(window.border_station);
+                vm.retrieveStaff();
             }
             else if( window.submit_type == 2)  {
                 retrieveStaffSalaries();
@@ -38,11 +38,11 @@ angular
             $scope.$emit('handleSalariesTotalChangeEmit', {total: acc});
         }
 
-        function retrieveStaff(borderStationId) {
+        function retrieveStaff() {
             // grab all of the staff for this budgetCalcSheet
-            $http.get('/static_border_stations/api/border-stations/' + borderStationId + '/').
-                success(function (data) {
-                    $(data).each(function(person){
+            staffService.retrieveStaff(window.border_station).then(function(promise){
+                var data = promise.data;
+                $(data).each(function(person){
                         vm.staffSalaryForms.push(
                             {
                                 staff_person: data[person].id,
@@ -51,32 +51,29 @@ angular
                                 salary: 0
                             }
                         );
-                    });
-                }).
-                error(function (data, status, headers, config) {
-                    console.log(data, status, headers, config);
                 });
+            });
         }
 
         function retrieveStaffSalaries() {
-            var staffPromise = $http({method: 'GET', url: '/static_border_stations/api/border-stations/' + window.border_station + '/'});
-            var staffSalaryPromise = $http({method: 'GET', url: '/budget/api/budget_calculations/staff_salary/' + window.budget_calc_id + '/'});
-            $q.all([staffPromise, staffSalaryPromise]).then(function (data) {
-                var staffData = data[0].data;
-                var staffSalariesData = data[1].data;
+            staffService.retrieveStaffSalaries()
+                .then(function(promise){
+                    console.log(promise);
+                    var staffData = promise[0].data;
+                    var staffSalariesData = promise[1].data;
 
-                // Match staff to staffSalaries
-                for(var person = 0; person < staffSalariesData.length; person++) {
-                    for (var x = 0; x < staffData.length; x++) {
-                        if (staffData[x].id === staffSalariesData[person].staff_person) {
-                            staffSalariesData[person].name = staffData[x].first_name + ' ' + staffData[x].last_name;
-                            console.log(staffSalariesData[person].name);
+                    for(var person = 0; person < staffSalariesData.length; person++) {
+                        for (var x = 0; x < staffData.length; x++) {
+                            if (staffData[x].id === staffSalariesData[person].staff_person) {
+                                staffSalariesData[person].name = staffData[x].first_name + ' ' + staffData[x].last_name;
+                                console.log(staffSalariesData[person].name);
+                            }
                         }
+                        vm.staffSalaryForms.push(staffSalariesData[person])
                     }
-                    vm.staffSalaryForms.push(staffSalariesData[person])
-                }
-            });
+                });
         }
+
 
         function saveAllSalaries(){
             for(var person = 0; person < vm.staffSalaryForms.length; person++){
@@ -90,25 +87,10 @@ angular
         }
 
         function saveItem(item){
-            item.budget_calc_sheet = window.budget_calc_id;
-            $http.post('/budget/api/budget_calculations/staff_salary/', item)
-                .success(function(data, status) {
-                })
-                .error(function(data, status){
-                    console.log("failure to create staff salary!");
-                    console.log(data, status);
-                });
+            staffService.saveItem(item);
         }
 
         function updateItem(item){
-            $http.put('/budget/api/budget_calculations/staff_salary/' + item.id + '/', item)
-                    .success(function(data, status) {
-                    })
-                    .error(function(data, status) {
-                        console.log("failure to update budget item!");
-                    });
+            staffService.updateItem(item);
         }
-
-
-
     }]);
