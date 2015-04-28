@@ -22,8 +22,12 @@ describe('Budget Calculation', function() {
 
         it('calculates values correctly ', function () {
             // fill out form
+            browser.ignoreSynchronization = false
+            ;
             budgetForm.fillOutForm();
 
+
+            browser.sleep(3000);
             // expect totals to be certain values
             expect(element(by.binding("main.commTotal()")).getText()).toBe('60');
             expect(element(by.binding("main.travelTotalValue")).getText()).toBe('50');
@@ -49,7 +53,7 @@ describe('Budget Calculation', function() {
 
         it('should show form in budget calculations list', function () {
             browser.sleep(1000);
-            expect(element(by.xpath("/html/body/div[2]/table/tbody/tr/td[1]")).getText()).toBe('Bhadrapur');
+            expect(element(by.xpath("/html/body/div[3]/table/tbody/tr/td[1]")).getText()).toBe('Bhadrapur');
         });
     });
 
