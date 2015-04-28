@@ -3,6 +3,7 @@ from django.conf import settings
 from fuzzywuzzy import process
 
 from accounts.models import Alert
+
 from dataentry.models import Interceptee
 
 

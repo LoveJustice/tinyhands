@@ -19,6 +19,7 @@ from django.template.loader import render_to_string
 from django.views.generic import ListView, View, DeleteView, CreateView, UpdateView
 
 from rest_framework import status
+from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
