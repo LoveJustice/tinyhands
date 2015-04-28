@@ -137,9 +137,13 @@ def text_if_true(condition, text):
         return ''
 
 
-def get_station_name_from_number(form_number):
-    return BorderStation.objects.get(station_code=form_number[:3].upper()).station_name   
-    
+def get_station_name_from_number(irf_number):
+    code = irf_number[:3].upper()
+    try:
+        return BorderStation.objects.get(station_code=code).station_name
+    except BorderStation.DoesNotExist:
+        return "UNKNOWN"
+
 def get_checkbox_group_value(instance, field_name_start):
     for field in instance._meta.fields:
         if field.name.startswith(field_name_start):
@@ -922,7 +926,6 @@ def get_vif_export_rows(vifs):
         lbs = list(vif.location_boxes.all())
 
         for idx in range(max(len(pbs), len(lbs))):
-            print idx
             try:
                 pb = pbs[idx]
                 row.extend([
@@ -949,7 +952,7 @@ def get_vif_export_rows(vifs):
                 ])
             except:
                 row.extend(['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''])
-                
+
             try:
                 lb = lbs[idx]
                 row.extend([

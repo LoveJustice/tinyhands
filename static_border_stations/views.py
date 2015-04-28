@@ -10,8 +10,8 @@ from accounts.mixins import PermissionsRequiredMixin
 from braces.views import LoginRequiredMixin
 from dataentry.models import BorderStation
 
-from static_border_stations.forms import *
 from dataentry.forms import BorderStationForm
+from static_border_stations.models import Staff, CommitteeMember, Location
 from static_border_stations.serializers import StaffSerializer
 
 
@@ -19,11 +19,11 @@ class FormSetForStations(InlineFormSet):
 
     def __init__(self, *args, **kwargs):
         super(FormSetForStations, self).__init__(*args, **kwargs)
-        if(self.request.path.find('create') == -1 and self.request.path.find('update') == -1):
+        if self.request.path.find('create') == -1 and self.request.path.find('update') == -1:
             self.extra = 0
         else:
             self.extra = 1
-        return 
+        return
 
 
 class StaffViewSet(viewsets.ModelViewSet):
@@ -77,6 +77,6 @@ class StaticBorderStationsUpdateView (
 
 class StaticBorderStationsDetailView(StaticBorderStationsUpdateView):
     permissions_required = ['permission_border_stations_view']
-    
+
     def post(self, request, *args, **kwargs):
         raise PermissionDenied
