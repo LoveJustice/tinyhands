@@ -49,7 +49,7 @@
             $rootScope.$on('toggleVDCLayer', toggleVDCLayer);
         }
 
-        function toggleVDCLayer(event,hide) {
+        function toggleVDCLayer(event, hide) {
             if(!hide) {
                 vm.VDCLayer.setMap(null);
             }

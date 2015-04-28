@@ -18,11 +18,14 @@ module.exports = function(config) {
         'test-main.js',
         'node_modules/angular/angular.js',
         'node_modules/angular-cookies/angular-cookies.js',
+        'node_modules/angular-route/angular-route.js',
         'node_modules/angular-animate/angular-animate.js',
         'node_modules/angular-mocks/angular-mocks.js',
         'static/jquery.js',
-        'karma/*.spec.js',
+        'portal/templates/portal/javascript/portal.module.js',
         'portal/templates/portal/javascript/*.js',
+        './karma/portal/controllers/*.spec.js',
+
     ],
 
 
@@ -40,7 +43,7 @@ module.exports = function(config) {
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['dots'],
+    reporters: ['progress'],
 
 
     // web server port
@@ -62,7 +65,7 @@ module.exports = function(config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['Chrome'],
+    browsers: ['PhantomJS'],
 
 
     // Continuous Integration mode

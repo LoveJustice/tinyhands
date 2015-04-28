@@ -33,7 +33,7 @@
         function changeColor(day) {
             if (day.change && !day.seen) {
                 return {'background-color': 'rgba(255,0,0,0.5)',
-                        'color': 'rgba(255,255,255,1)'};
+                        'color': 'white'};
             }
         }
 
