@@ -57,6 +57,13 @@ var dynStation = function() {
   };
 
   this.clickStations = function (stationsCount){
+    var mapOptions = {
+      center: { lat: 28.394857, lng: 84.124008},
+      zoom: 3,
+      streetViewControl: false
+    };
+      var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+
       var baz = "area[title='Bhadrapur BHD']";
       element(by.css(baz)).click().then(function () {
           console.log("Clicked the first one");
