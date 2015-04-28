@@ -131,4 +131,22 @@ describe('Tally UI', function(){
         });
     }, 90000); //gives it a minute and a half until it timeouts
     
+    it('should disappear when unchecked from hamburger map menu', function(){
+        var EC = protractor.ExpectedConditions;
+        tallyHelper.navigateHome()
+        .then(function () {
+            var tallyDiv = element(by.id('tally')).element(by.tagName('div')).isDisplayed();
+            return expect(tallyDiv).toBe(true);
+        }).then(function (){
+            return element(by.id('layer-dropdown')).click().then(function(){
+                return element(by.id('layer-dropdown')).click() //not sure why I need the second click but it makes the dropdown popup
+            });
+        }).then(function(){
+            var tallyToggle = element(by.id('tallyToggle'));
+            return tallyToggle.click();
+        }).then(function () {
+            var tallyDiv = element(by.id('tally')).element(by.tagName('div')).isDisplayed();
+            return expect(tallyDiv).toBe(false);
+        });
+    });
 });
