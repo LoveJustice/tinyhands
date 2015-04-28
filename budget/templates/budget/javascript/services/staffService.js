@@ -3,31 +3,57 @@ angular
     .module('BudgetCalculation')
     .factory('staffService', staffService);
 
-staffService.$inject = ['$http'];
+staffService.$inject = ['$http', '$q'];
 
-function staffService($http) {
+function staffService($http, $q) {
 	return {
-		retrieveStaff: retrieveStaff
+		retrieveStaff: retrieveStaff,
+        retrieveStaffSalaries: retrieveStaffSalaries,
+        saveItem: saveItem,
+        updateItem: updateItem
 	};
 
-	// TODO: This has not been refactored properly yet!
 	function retrieveStaff(borderStationId) {
         // grab all of the staff for this budgetCalcSheet
-        $http.get('/static_border_stations/api/border-stations/' + borderStationId + '/').
+        return $http.get('/static_border_stations/api/border-stations/' + borderStationId + '/').
             success(function (data) {
-                $(data).each(function(person){
-                    vm.staffSalaryForms.push(
-                        {
-                            staff_person: data[person].id,
-                            name: data[person]['first_name'] + ' ' + data[person]['last_name'],
-                            budget_calc_sheet: 0,
-                            salary: 0
-                        }
-                    );
-                });
+                return data;
             }).
             error(function (data, status, headers, config) {
                 console.log(data, status, headers, config);
+            });
+    }
+
+    function retrieveStaffSalaries() {
+        var staffPromise = $http({method: 'GET', url: '/static_border_stations/api/border-stations/' + window.border_station + '/'});
+        var staffSalaryPromise = $http({method: 'GET', url: '/budget/api/budget_calculations/staff_salary/' + window.budget_calc_id + '/'});
+        return $q.all([staffPromise, staffSalaryPromise])
+            .then(function (data) {
+                return data;
+            })
+            .catch(function(data, status, headers, config) {
+                console.log(data, status, headers, config);
+            });
+    }
+
+    function saveItem(item) {
+        item.budget_calc_sheet = window.budget_calc_id;
+        return $http.post('/budget/api/budget_calculations/staff_salary/', item)
+            .success(function (data, status) {
+            })
+            .error(function (data, status) {
+                console.log("failure to create staff salary!");
+                console.log(data, status);
+            });
+    }
+
+    function updateItem(item) {
+        return $http.put('/budget/api/budget_calculations/staff_salary/' + item.id + '/', item)
+            .success(function(data, status) {
+
+            })
+            .error(function(data, status) {
+                console.log("failure to update budget item!");
             });
     }
 }

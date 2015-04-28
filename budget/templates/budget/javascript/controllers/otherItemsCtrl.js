@@ -1,6 +1,6 @@
 angular
     .module('BudgetCalculation')
-    .controller('otherBudgetItemsCtrl', ['$scope','$http', '$location', '$window', function($scope, $http, $location, $window) {
+    .controller('otherBudgetItemsCtrl', ['$scope','$http', 'otherItemsService', function($scope, $http, otherItemsService) {
         var idCounter = 0;
         var vm = this;
 
@@ -47,18 +47,16 @@ angular
 
         function retrieveForm(id) {
             // grab all of the otherBudgetItems for this budgetCalcSheet
-            $http.get('/budget/api/budget_calculations/items_detail/' + id + '/').
-                    success(function (data) {
-                        for( var x = 0; x < data.length; x++ ){
-                            if (data[x].form_section === $scope.form_section){
-                                vm.formsList[$scope.form_section-1].push(data[x]);
-                            }
+            otherItemsService.retrieveForm(id)
+                .then(function (promise) {
+                    var data = promise.data;
+                    for( var x = 0; x < data.length; x++ ){
+                        if (data[x].form_section === $scope.form_section){
+                            vm.formsList[$scope.form_section-1].push(data[x]);
                         }
-                        vm.otherItemsTotal();
-                    }).
-                    error(function (data, status, headers, config) {
-                        console.log(data, status, headers, config);
-                    });
+                    }
+                    vm.otherItemsTotal();
+                });
         }
 
         function addNewItem(){
@@ -75,13 +73,7 @@ angular
 
         function removeItem(itemId, index){
             if(itemId>-1){
-                $http.delete('/budget/api/budget_calculations/items_detail/' + itemId + '/').
-                    success(function (data) {
-                        console.log("successfully deleted");
-                    }).
-                    error(function (data, status, headers, config) {
-                        console.log(data, status, headers, config);
-                    });
+                otherItemsService.removeItem(itemId);
             }
             vm.formsList[$scope.form_section-1].splice(index, 1); // Remove item from the list
             otherItemsTotal();
@@ -101,24 +93,11 @@ angular
         }
 
         function saveItem(item){
-            item.budget_item_parent = window.budget_calc_id;
-            $http.post('/budget/api/budget_calculations/items_list/', item)
-                    .success(function(data, status) {
-                        item.id = data.id;
-                    })
-                    .error(function(data, status){
-                        console.log("failure to create budget item!");
-                    });
+            otherItemsService.saveItem(item);
         }
 
         function updateItem(item){
-            $http.put('/budget/api/budget_calculations/items_detail/' + item.id + '/', item)
-                    .success(function(data, status) {
-                        console.log("success");
-                    })
-                    .error(function(data, status) {
-                        console.log("failure to update budget item!");
-                    });
+            otherItemsService.updateItem(item);
         }
 
         function otherItemsTotal(){

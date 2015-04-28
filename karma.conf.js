@@ -23,8 +23,8 @@ module.exports = function(config) {
         'node_modules/angular-mocks/angular-mocks.js',  
         'budget/templates/budget/javascript/*.js',
         'budget/templates/budget/javascript/controllers/*.js',
-        'budget/templates/budget/javascript/controllers/staffCtrl.js',
-        './karma/*.spec.js'
+        'budget/templates/budget/javascript/services/*.js',
+        './karma/BudgetCalculation/controllers/*.spec.js'
     ],
 
     // list of files to exclude
