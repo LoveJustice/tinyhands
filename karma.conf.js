@@ -23,8 +23,9 @@ module.exports = function(config) {
         'node_modules/angular-mocks/angular-mocks.js',
         'static/jquery.js',
         'portal/templates/portal/javascript/portal.module.js',
-        'portal/templates/portal/javascript/*.js',
-        './karma/portal/controllers/*.spec.js',
+        'portal/templates/portal/javascript/controllers/*.js',
+        'portal/templates/portal/javascript/services/*.js',
+        'karma/portal/controllers/*.spec.js',
 
     ],
 

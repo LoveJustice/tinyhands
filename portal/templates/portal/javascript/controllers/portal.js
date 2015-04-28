@@ -4,9 +4,9 @@
     angular.module('PortalMod')
        .controller('MapCtrl', MapCtrl);
 
-    MapCtrl.$inject = ['$rootScope','$http'];
+    MapCtrl.$inject = ['$rootScope'];
 
-    function MapCtrl($rootScope,$http) {
+    function MapCtrl($rootScope) {
         var vm = this;
 
         vm.VDCLayer = null;

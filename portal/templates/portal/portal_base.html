@@ -20,7 +20,12 @@
 {% block title %}Dreamsuite Dash{% endblock %}
 {% block tab_block %}
     {% block content %}
-    {% endblock %}
-    <script type="text/javascript" src="{{ STATIC_URL }}portal.js"></script>
-    <script type="text/javascript" src="{{ STATIC_URL }}tally.js"></script>
+{% endblock %}
+    <script src="{{ STATIC_URL }}portal.module.js"></script>
+    <script src="{{ STATIC_URL }}services/tallyService.js"></script>
+    <script src="{{ STATIC_URL }}controllers/portal.js"></script>
+    <script src="{{ STATIC_URL }}controllers/tally.js"></script>
+    <script>
+        angular.bootstrap($('#portal'), ['PortalMod']);
+    </script>
 {% endblock %}

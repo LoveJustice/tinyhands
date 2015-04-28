@@ -4,13 +4,15 @@
     angular.module('PortalMod')
            .controller('TallyCtrl', TallyCtrl);
 
-    TallyCtrl.$inject = ['$rootScope','$http'];
+    TallyCtrl.$inject = ['$rootScope','tallyService'];
 
-    function TallyCtrl($rootScope,$http) {
+    function TallyCtrl($rootScope,tallyService) {
         var vm = this;
 
         vm.days = {};
         vm.changeColor = changeColor;
+        vm.checkDifferences = checkDifferences;
+        vm.getTallyData = getTallyData;
         vm.hasIntercepts = false;
         vm.isEmptyObject = isEmptyObject;
         vm.onMouseLeave = onMouseLeave;
@@ -58,14 +60,8 @@
         }
 
         function getTallyData(firstCall) {
-            $http.get('/portal/tally/days/')
-                .success(function(data) {
-                // Data should be:
-                // {0:{dayOfWeek:'Monday',
-                //     interceptions: {<String of StationCode>:<Num of Interceptions>}},
-                //  1:{dayOfWeek:'Sunday',
-                //     interceptions: {...}},
-                // }
+            return tallyService.getTallyDays().then(function(promise) {
+                var data = promise.data;
                 if(firstCall){
                     for(var i = 0; i < 7; i++){
                         data[i].change = false;
@@ -76,8 +72,6 @@
                 }else{ //updates
                     checkDifferences(data);
                 }
-            }).error(function(error) {
-                console.log(error);
             });
         }
 
@@ -102,5 +96,4 @@
         }
     };
 
-    angular.bootstrap($('#portal'), ['PortalMod']);
 })();
