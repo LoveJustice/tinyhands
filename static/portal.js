@@ -81,7 +81,7 @@ function resizeMap() { // keeping the controls visibile on the page at all times
 }
 
 function getStaticContentString(borderStation) { //This is what the content of a static border_station is
-    return '<div id="StationWindow" class="dashboardInfoWindow">' +
+    return '<div id="Static'+borderStation.fields.station_code+'" class="dashboardInfoWindow">' +
         '<h3>' + borderStation.fields.station_name + ' - ' + borderStation.fields.station_code + '</h3>' +
 
         '<p>Est. ' + borderStation.fields.date_established + '</p>' +
@@ -93,7 +93,7 @@ function getStaticContentString(borderStation) { //This is what the content of a
 
 
 function getDynamicContentString(borderStation){ //This is what the content of a static border_station is
-    return '<div id="StationWindow" class="dynamicInfoWindow">' +
+    return '<div id="Dynamic'+borderStation.fields.station_code+'" class="dynamicInfoWindow">' +
         '<h3>' + borderStation.fields.station_name + ' - ' + borderStation.fields.station_code + '</h3>' +
         '<div id="leftColumn" class="col-md-6">'+
 
