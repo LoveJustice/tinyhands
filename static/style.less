@@ -3,6 +3,38 @@ body {
   padding-bottom: 70px;
 }
 
+#budget-calc-form{
+  .animated-budget-items {
+  }
+  .animated-budget-items.ng-move,
+  .animated-budget-items.ng-enter,
+  .animated-budget-items.ng-leave {
+  }
+
+  .animated-budget-items.ng-leave.ng-leave-active,
+  .animated-budget-items.ng-move,
+  .animated-budget-items.ng-enter {
+    max-height: 0;
+    transition: max-height 0.4s ease-in;
+    -webkit-animation-duration: 0.4s;
+    animation-duration: 0.4s;
+    -webkit-animation-name: fadeOutUp;
+    animation-name: fadeOutUp;
+  }
+
+  .animated-budget-items.ng-leave,
+  .animated-budget-items.ng-move.ng-move-active,
+  .animated-budget-items.ng-enter.ng-enter-active {
+      max-height: 450px;
+      transition: max-height 0.4s ease-out;
+      -webkit-animation-duration: 0.4s;
+      animation-duration: 0.4s;
+      -webkit-animation-name: fadeInDown;
+      animation-name: fadeInDown;
+  }
+}
+
+
 .repositionremovebtn{
   position: relative;
   left: 80%;

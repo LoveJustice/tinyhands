@@ -4,10 +4,6 @@
 
 {% block tab_block %}
     {% block content %}
-        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
-        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-cookies.js"></script>
-        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-route.js"></script>
-        <link rel="stylesheet" href="{{ STATIC_URL }}animate.css"/>
         <script type="text/javascript">
             window.budget_calc_id = {{ pk }};
             window.submit_type = {{ submit_type }};
@@ -351,7 +347,7 @@
 
                             {% verbatim %}
                             <div class="row" ng-controller="otherBudgetItemsCtrl as awarenessItemsCtrl" ng-init="form_section = 3;">
-                                <div class="" ng-repeat="form in awarenessItemsCtrl.awarenessForms">
+                                <div class="animated-budget-items" ng-repeat="form in awarenessItemsCtrl.awarenessForms">
 
                                     <div class="col-lg-4 col-lg-offset-2">
                                         <input class="form-control" type="text" ng-model="form.name" ng-disabled="main.view"/>
@@ -464,8 +460,8 @@
                             {% verbatim %}
                             <hr/>
                             <!--<h2 class="background"><span><small>Extra Travel Items</small></span></h2>-->
-                            <div class="row" ng-controller="otherBudgetItemsCtrl as travelItemsCtrl" ng-init="form_section = 1;">
-                                <div class="row" ng-repeat="form in travelItemsCtrl.travelForms">
+                            <div class="row " ng-controller="otherBudgetItemsCtrl as travelItemsCtrl" ng-init="form_section = 1;">
+                                <div class="row animated-budget-items" ng-repeat="form in travelItemsCtrl.travelForms">
 
                                     <div class="col-lg-4 col-lg-offset-1">
                                         <input class="form-control" type="text" ng-model="form.name" ng-disabled="main.view"/>
@@ -542,7 +538,7 @@
                             </div>
                             {% verbatim %}
                             <div class="row" ng-controller="otherBudgetItemsCtrl as suppliesItemsCtrl" ng-init="form_section = 4;">
-                                <div ng-repeat="form in suppliesItemsCtrl.suppliesForms">
+                                <div class="animated-budget-items" ng-repeat="form in suppliesItemsCtrl.suppliesForms">
 
                                     <div class="col-lg-4 col-lg-offset-2">
                                         <input class="form-control" type="text" ng-model="form.name" ng-disabled="main.view"/>
@@ -707,7 +703,7 @@
                                 {% verbatim %}
                                 <hr/>
                                 <div class="row" ng-controller="otherBudgetItemsCtrl as miscItemsCtrl" ng-init="form_section = 2;">
-                                    <div class="animated slideInDown" ng-repeat="form in miscItemsCtrl.miscForms">
+                                    <div class="animated-budget-items" ng-repeat="form in miscItemsCtrl.miscForms">
                                         <div class="col-lg-4 col-lg-offset-1">
                                             <input class="form-control" type="text" ng-model="form.name" ng-disabled="main.view"/>
                                         </div>
@@ -723,7 +719,7 @@
                                         <br/>
 
                                         <div class="col-lg-4 col-lg-offset-5">
-                                            <a class="btn btn-success" ng-click="miscItemsCtrl.addNewItem()" ng-hide="main.view">Add item</a>
+                                            <a class="btn btn-success" ng-click="miscItemsCtrl.addNewItem();" ng-hide="main.view">Add item</a>
                                         </div>
                                     </div>
                                 </div>

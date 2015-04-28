@@ -9,6 +9,7 @@
     <link href="{{ STATIC_URL }}datetimepicker/jquery.datetimepicker.css" rel="stylesheet" media="screen">
     <!--<link href='http://fonts.googleapis.com/css?family=PT+Serif:400,700' rel='stylesheet' type='text/css'>-->
 
+    <link rel="stylesheet" href="{{ STATIC_URL }}animate.css"/>
     <link rel="stylesheet/less" type="text/css" href="{{ STATIC_URL }}style.less" />
     {% comment %}
     <script>
@@ -30,6 +31,11 @@
     <script src="{{ STATIC_URL }}less.js"></script>
     <script src="{{ STATIC_URL }}jquery.js"></script>
     <script src="{{ STATIC_URL }}/jquery-ui/jquery-ui.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-cookies.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-route.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.26/angular-animate.min.js"></script>
+
 </head>
 {% comment %}
 Add a class to the body tag that is the same as the url's name.  We can then check this
