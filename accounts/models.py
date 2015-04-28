@@ -9,7 +9,6 @@ from templated_email import send_templated_mail
 from django.conf import settings
 
 
-
 class DefaultPermissionsSet(models.Model):
     name = models.CharField(max_length=255, unique=True)
     permission_irf_view = models.BooleanField(default=False)
@@ -139,13 +138,14 @@ class Account(AbstractBaseUser, PermissionsMixin):
             }
         )
 
+
 class AlertManager(models.Manager):
     def send_alert(self, code, context={}):
         Alert.objects.get(code=code).email_permissions_set(context)
 
 
 class Alert(models.Model):
-    code = models.CharField(max_length=255,unique=True)
+    code = models.CharField(max_length=255, unique=True)
     email_template = models.CharField(max_length=255)
 
     permissions_group = models.ManyToManyField(DefaultPermissionsSet)
@@ -158,6 +158,6 @@ class Alert(models.Model):
     def __unicode__(self):
         return self.code
 
-    def email_permissions_set(self,context={}):
+    def email_permissions_set(self, context={}):
         for x in self.permissions_group.all():
-            x.email_accounts(self,context)
+            x.email_accounts(self, context)
