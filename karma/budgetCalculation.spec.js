@@ -1,16 +1,17 @@
 describe('MainCtrl', function(){
-    var scope;//we'll use this scope in our tests
+    var scope, httpBackend, controller;//we'll use this scope in our tests
 
     //mock Application to allow us to inject our own dependencies
     beforeEach(module('BudgetCalculation'));
 
-    beforeEach(inject(function($rootScope, $controller, _$httpBackend_){
+    beforeEach(inject(function($rootScope, $controller, $httpBackend){
         //create an empty scope that we can use in our tests if we need it.
         scope = $rootScope.$new();
-        $httpBackend = _$httpBackend_;
+        httpBackend = $httpBackend;
         //declare the controller and inject our empty scope. 
         //Remember vm=this so you can access stuff on vm by saying controller.variable or controller.function
-        controller = $controller('MainCtrl', {$scope: scope}); 
+
+        controller = $controller('MainCtrl', {$scope: scope});
     }));
 
     // tests start here
@@ -23,7 +24,38 @@ describe('MainCtrl', function(){
        expect(controller.form).toBeDefined();
     });
 
-    it('should ')
+    it('retrieves the form correctly', function() {
+        httpBackend.expectGET('/budget/api/budget_calculations/1/').respond(200, {
+            shelter_water: 0,
+            shelter_electricity: 3
+        });
+        controller.retrieveForm(1);
+        httpBackend.flush();
+        expect(controller.form.shelter_water).toBe(0);
+        expect(controller.form.shelter_electricity).toBe(3);
+    });
+
+    it('creates the form correctly', function() {
+        controller.test = true;
+        httpBackend.expectPOST('/budget/api/budget_calculations/', controller.form).respond(200, {
+           id: 2
+        });
+        controller.createForm();
+        httpBackend.flush();
+        expect(controller.id).toBe(2)
+    });
+
+    it('updates the form correctly', function() {
+        controller.test = true;
+        controller.form.id = 2;
+        httpBackend.expectPUT('/budget/api/budget_calculations/2/', controller.form).respond(200, {
+           id: 3
+        });
+        controller.updateForm();
+        httpBackend.flush();
+        expect(controller.id).toBe(3)
+
+    });
 });
 
 
@@ -33,7 +65,7 @@ describe('otherBudgetItemsCtrl', function(){
     //mock Application to allow us to inject our own dependencies
     beforeEach(module('BudgetCalculation'));
 
-    beforeEach(inject(function($rootScope, $controller, _$httpBackend_){
+    beforeEach(inject(function($rootScope, $controller){
         //create an empty scope
         scope = $rootScope.$new();
 
