@@ -1,5 +1,5 @@
 var budgetForm = require('./budgetForm.js');
-var loginPage = require('./loginPage.js');
+var loginPage = require('../accounts/loginPage.js');
 
 describe('Budget Calculation', function() {
     beforeEach(function () {
@@ -24,18 +24,18 @@ describe('Budget Calculation', function() {
             budgetForm.fillOutForm();
 
             // expect totals to be certain values
-            expect(element(by.binding("main.commTotal()")).getText()).toBe('60');
-            expect(element(by.binding("main.travelTotalValue")).getText()).toBe('50');
-            expect(element(by.binding("main.adminTotal()")).getText()).toBe('65');
-            expect(element(by.binding("main.medicalTotal()")).getText()).toBe('5');
-            expect(element(by.binding("main.miscTotalValue")).getText()).toBe('25');
-            expect(element(by.binding("main.bunchTotal()")).getText()).toBe('205');
-            expect(element(by.binding("main.shelterTotal()")).getText()).toBe('25');
-            expect(element(by.binding("main.foodTotal()")).getText()).toBe('250');
-            expect(element(by.binding("main.foodAndShelterTotal()")).getText()).toBe('275');
-            expect(element(by.binding("main.awarenessTotalValue")).getText()).toBe('15');
-            expect(element(by.binding("main.suppliesTotalValue")).getText()).toBe('20');
-            expect(element(by.binding("main.stationTotal()")).getText()).toBe('515');
+            expect(element(by.binding("main.shelterTotal()")).getText()).toBe('900');
+            expect(element(by.binding("main.foodTotal()")).getText()).toBe('2000');
+            expect(element(by.binding("main.commTotal()")).getText()).toBe('900');
+            expect(element(by.binding("main.awarenessTotalValue")).getText()).toBe('600');
+            expect(element(by.binding("main.travelTotalValue")).getText()).toBe('950');
+            expect(element(by.binding("main.suppliesTotalValue")).getText()).toBe('1000');
+            expect(element(by.binding("main.adminTotal()")).getText()).toBe('750');
+            expect(element(by.binding("main.medicalTotal()")).getText()).toBe('100');
+            expect(element(by.binding("main.miscTotalValue")).getText()).toBe('500');
+            expect(element(by.binding("main.bunchTotal()")).getText()).toBe('3200');
+            expect(element(by.binding("main.foodAndShelterTotal()")).getText()).toBe('2900');
+            expect(element(by.binding("main.stationTotal()")).getText()).toBe('7700');
         });
 
         it('redirects on submit', function () {
