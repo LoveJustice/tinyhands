@@ -21,12 +21,12 @@ class BorderStationBudgetCalculation(models.Model):
 
     def communication_total(self):
         total = 0
-        if (self.communication_chair):
+        if self.communication_chair:
             total += self.communication_chair_amount
-        if (self.communication_manager):
+        if self.communication_manager:
             total += self.communication_manager_amount
-        total += (self.communication_number_of_staff_with_walkie_talkies)*(self.communication_number_of_staff_with_walkie_talkies_multiplier)
-        total += (self.communication_each_staff)*(self.communication_each_staff_multiplier)
+        total += self.communication_number_of_staff_with_walkie_talkies * self.communication_number_of_staff_with_walkie_talkies_multiplier
+        total += self.communication_each_staff * self.communication_each_staff_multiplier
         return total
 
     travel_chair_with_bike = models.BooleanField(default=False)
@@ -42,13 +42,13 @@ class BorderStationBudgetCalculation(models.Model):
 
     def travel_total(self):
         total = 0
-        if (self.travel_chair_with_bike):
+        if self.travel_chair_with_bike:
             total += self.travel_chair_with_bike_amount
-        if (self.travel_manager_with_bike):
+        if self.travel_manager_with_bike:
             total += self.travel_manager_with_bike_amount
-        total += (self.travel_number_of_staff_using_bikes)*(self.travel_number_of_staff_using_bikes_multiplier)
+        total += self.travel_number_of_staff_using_bikes * self.travel_number_of_staff_using_bikes_multiplier
         total += self.travel_last_months_expense_for_sending_girls_home
-        if (self.travel_motorbike):
+        if self.travel_motorbike:
             total += self.travel_motorbike_amount
         total += self.travel_plus_other
         return total
@@ -67,9 +67,9 @@ class BorderStationBudgetCalculation(models.Model):
         total = 0
         total += (self.administration_number_of_intercepts_last_month * self.administration_number_of_intercepts_last_month_multiplier) + self.administration_number_of_intercepts_last_month_adder
         total += self.administration_number_of_meetings_per_month * self.administration_number_of_meetings_per_month_multiplier
-        if (self.administration_booth):
+        if self.administration_booth:
             total += self.administration_booth_amount
-        if (self.administration_registration):
+        if self.administration_registration:
             total += self.administration_registration_amount
         return total
 
@@ -97,9 +97,9 @@ class BorderStationBudgetCalculation(models.Model):
     def shelter_total(self):
         total = 0
         total += self.shelter_rent + self.shelter_electricity + self.shelter_water
-        if(self.shelter_shelter_startup):
+        if self.shelter_shelter_startup:
             total += self.shelter_shelter_startup_amount
-        if(self.shelter_shelter_two):
+        if self.shelter_shelter_two:
             total += self.shelter_shelter_two_amount
         return total
 
@@ -126,13 +126,13 @@ class BorderStationBudgetCalculation(models.Model):
 
     def awareness_total(self):
         total = 0
-        #If test fails, check names of contact cards.
-        if (self.awareness_contact_cards):
+        # If test fails, check names of contact cards.
+        if self.awareness_contact_cards:
             total += (self.awareness_contact_cards_amount + self.awareness_contact_cards_boolean_amount)
-        if (self.awareness_awareness_party_boolean):
+        if self.awareness_awareness_party_boolean:
             total += self.awareness_awareness_party
-        if(self.awareness_sign_boards_boolean):
-            total +=self.awareness_sign_boards
+        if self.awareness_sign_boards_boolean:
+            total += self.awareness_sign_boards
         return total
 
     supplies_walkie_talkies_boolean = models.BooleanField('Walkie-talkies', default=False)
@@ -146,13 +146,13 @@ class BorderStationBudgetCalculation(models.Model):
 
     def supplies_total(self):
         total = 0
-        if(self.supplies_walkie_talkies_boolean):
+        if self.supplies_walkie_talkies_boolean:
             total += self.supplies_walkie_talkies_amount
-        if(self.supplies_recorders_boolean):
+        if self.supplies_recorders_boolean:
             total += self.supplies_recorders_amount
-        if(self.supplies_binoculars_boolean):
+        if self.supplies_binoculars_boolean:
             total += self.supplies_binoculars_amount
-        if(self.supplies_flashlights_boolean):
+        if self.supplies_flashlights_boolean:
             total += self.supplies_flashlights_amount
         return total
 
@@ -176,12 +176,7 @@ class OtherBudgetItemCost(models.Model):
     name = models.CharField(max_length=255, blank=False)
     cost = models.PositiveIntegerField(default=0, blank=False)
 
-    BUDGET_FORM_SECTION_CHOICES = [
-        (1, 'Travel'),
-        (2, 'Miscellaneous'),
-        (3, 'Awareness'),
-        (4, 'Supplies'),
-    ]
+    BUDGET_FORM_SECTION_CHOICES = [(1, 'Travel'), (2, 'Miscellaneous'), (3, 'Awareness'), (4, 'Supplies'), ]
     form_section = models.IntegerField(BUDGET_FORM_SECTION_CHOICES, blank=True, null=True)
     budget_item_parent = models.ForeignKey(BorderStationBudgetCalculation, blank=True, null=True)
 
