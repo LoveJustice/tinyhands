@@ -1,12 +1,9 @@
-import json
-
 from django.conf import settings
-from django.core import serializers
 
 from fuzzywuzzy import process
 
 from accounts.models import Alert
-from dataentry import serializers
+
 from dataentry.models import Interceptee
 
 
