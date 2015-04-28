@@ -1,11 +1,9 @@
+from django.contrib.auth.decorators import login_required
+from django.core import serializers
 from django.http import HttpResponse
 from django.shortcuts import render
-from django.core import serializers
-from django.contrib.auth.decorators import login_required
-from dataentry.models import BorderStation
-from dataentry.models import InterceptionRecord
-from django.core.urlresolvers import reverse
-import ipdb
+
+from dataentry.models import BorderStation, InterceptionRecord
 
 
 @login_required
@@ -24,6 +22,7 @@ def get_interception_records(request):
         interception_records = InterceptionRecord.objects.filter(irf_number__startswith=request.REQUEST["station_code"])
         return HttpResponse(interception_records.count())
     return HttpResponse("No IRFs Found")
+
 
 def get_staff_count(request):
     if "station_code" in request.REQUEST:
