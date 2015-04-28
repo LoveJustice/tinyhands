@@ -11,14 +11,11 @@ class BudgetCalcApiTests(WebTest):
         self.client = APIClient()
         self.border_station = BorderStationFactory()
 
-
     def testCreateBudgetSheet(self):
         response = self.client.post('/budget/api/budget_calculations/', {"border_station": self.border_station.pk})
         self.assertEqual(response.status_code, 201)
 
     def testRemoveBudgetSheet(self):
-        self.budget_calc = BorderStationBudgetCalculationFactory()
-
         response = self.client.get('/budget/api/budget_calculations/')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data), 0)
