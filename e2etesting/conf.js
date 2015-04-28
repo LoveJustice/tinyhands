@@ -10,7 +10,6 @@ exports.config = {
 
 
         //'accounts/loginPage.spec.js',
-        //'accounts/loginPage.spec.js',
 
         //'borderStations/borderStationCRUD.spec.js',
         //'dataentry/vifCrud.spec.js',

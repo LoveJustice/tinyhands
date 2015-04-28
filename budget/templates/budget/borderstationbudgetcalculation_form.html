@@ -1,5 +1,9 @@
 {% extends 'base.html' %}
 
+{% block html %}
+   <html ng-app="BudgetCalculation">
+{% endblock %}
+
 {% block title %}Budget Calculation{% endblock %}
 
 {% block tab_block %}
@@ -10,6 +14,7 @@
             window.border_station = {{ border_station.id }};
         </script>
 
+        {% block angular %}{% endblock %}
 
         <h1 style="font-size: 25px; text-align: center">Border Monitoring Station Budget Calculation Form</h1>
 
@@ -17,7 +22,7 @@
             {% csrf_token %}
             <!-- First Table Thing -->
 
-            <div class="form-page" ng-app="BudgetCalculation" ng-controller="MainCtrl as main">
+            <div class="form-page"  ng-controller="MainCtrl as main">
                 <div class="row">
                     <div class="col-lg-4">
                     </div>
@@ -839,9 +844,6 @@
         <script type="text/javascript" src="{{ STATIC_URL }}services/otherItemsService.js"></script>
         <script type="text/javascript" src="{{ STATIC_URL }}controllers/otherItemsCtrl.js"></script>
         <script type="text/javascript" src="{{ STATIC_URL }}controllers/staffCtrl.js"></script>
-        <script>
-            angular.bootstrap($('#budget-calc-form'), ['BudgetCalculation']);
-        </script>
 
 
 

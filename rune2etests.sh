@@ -21,4 +21,5 @@ sleep 10
 
 #run the tests
 protractor e2etesting/conf.js
+
 kill 0

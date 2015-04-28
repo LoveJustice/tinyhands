@@ -38,6 +38,7 @@ angular
                         success(function (data) {
                             //We can reference the json object to fill our vm variables
                             vm.form = data;
+                        console.log(data);
                         }).
                         error(function (data, status, headers, config) {
                             // called asynchronously if an error occurs
@@ -50,18 +51,18 @@ angular
                 return vm.foodTotal() + vm.shelterTotal();
             };
             vm.bunchTotal = function() {
-                return  vm.commTotal() + 
-                        vm.travelTotalValue + 
+                return  vm.commTotal() +
+                        vm.travelTotalValue +
                         vm.adminTotal() +
-                        vm.medicalTotal() + 
-                        vm.miscTotalValue + 
+                        vm.medicalTotal() +
+                        vm.miscTotalValue +
                         vm.salariesTotal;
             };
             vm.stationTotal = function() {
-                return  vm.foodAndShelterTotal() + 
+                return  vm.foodAndShelterTotal() +
                         vm.bunchTotal() +
-                        vm.awarenessTotalValue + 
-                        vm.suppliesTotalValue + 
+                        vm.awarenessTotalValue +
+                        vm.suppliesTotalValue +
                         vm.salariesTotal;
             };
 
@@ -82,22 +83,22 @@ angular
                 return totalAmount;
             };
             vm.shelterTotal = function () {
-                return  vm.form.shelter_rent + 
-                        vm.form.shelter_water + 
-                        vm.form.shelter_electricity + 
+                return  vm.form.shelter_rent +
+                        vm.form.shelter_water +
+                        vm.form.shelter_electricity +
                         vm.shelterCheckboxTotal();
             };
 
             //Food and Gas Section
 
             vm.foodGasInterceptedGirls = function () {
-                return  vm.form.food_and_gas_number_of_intercepted_girls_multiplier_before * 
-                        vm.form.food_and_gas_number_of_intercepted_girls * 
+                return  vm.form.food_and_gas_number_of_intercepted_girls_multiplier_before *
+                        vm.form.food_and_gas_number_of_intercepted_girls *
                         vm.form.food_and_gas_number_of_intercepted_girls_multiplier_after;
             };
             vm.foodGasLimboGirls = function () {
-                return  vm.form.food_and_gas_limbo_girls_multiplier * 
-                        vm.form.food_and_gas_number_of_limbo_girls * 
+                return  vm.form.food_and_gas_limbo_girls_multiplier *
+                        vm.form.food_and_gas_number_of_limbo_girls *
                         vm.form.food_and_gas_number_of_days;
             };
             vm.foodTotal = function () {
@@ -118,12 +119,12 @@ angular
             };
 
             vm.commNumberOfStaffTotal = function () {
-                return  vm.form.communication_number_of_staff_with_walkie_talkies * 
+                return  vm.form.communication_number_of_staff_with_walkie_talkies *
                         vm.form.communication_number_of_staff_with_walkie_talkies_multiplier;
             };
 
             vm.commEachStaffTotal = function () {
-                return  vm.form.communication_each_staff * 
+                return  vm.form.communication_each_staff *
                         vm.form.communication_each_staff_multiplier;
             };
 
@@ -237,33 +238,38 @@ angular
 
             vm.updateForm = function() {
                 $http.put('/budget/api/budget_calculations/' + vm.form.id + '/', vm.form)
-                        .success(function(data, status) {
-                            console.log("success");
+                    .success(function(data, status) {
+                        console.log("success");
+                        vm.id = data.id;
+                        //Broadcast event to call the saveAllItems function in the otherItems controller
+                        $scope.$emit('handleBudgetCalcSavedEmit', {message: 'It is done.'});
 
-                            //Broadcast event to call the saveAllItems function in the otherItems controller
-                            $scope.$emit('handleBudgetCalcSavedEmit', {message: 'It is done.'});
+                        $window.location.assign('/budget/budget_calculations');
 
-                            $window.location.assign('/budget/budget_calculations');
-
-                        })
-                        .error(function(data, status) {
-                            console.log("fail");
-                        });
+                    })
+                    .error(function(data, status) {
+                        console.log("fail");
+                    });
             };
+
+
 
             vm.createForm = function() {
                 $http.post('/budget/api/budget_calculations/', vm.form)
-                        .success(function(data, status) {
-                            console.log("success Create");
-                            window.budget_calc_id = data.id;
-                            //Broadcast event to call the saveAllItems function in the otherItems controller
-                            $scope.$emit('handleBudgetCalcSavedEmit', {message: 'It is done.'});
+                    .success(function(data, status) {
+                        console.log("success Create");
+                        vm.id = data.id;
+                        window.budget_calc_id = data.id;
+                        //Broadcast event to call the saveAllItems function in the otherItems controller
+                        $scope.$emit('handleBudgetCalcSavedEmit', {message: 'It is done.'});
 
-                            $window.location.assign('/budget/budget_calculations');
-                        })
-                        .error(function(data, status) {
-                            console.log("fail create");
-                        });
+
+                        $window.location.assign('/budget/budget_calculations');
+
+                    })
+                    .error(function(data, status) {
+                        console.log("fail create");
+                    });
 
             };
 
@@ -275,7 +281,7 @@ angular
                 vm.update = true;
                 vm.retrieveForm(window.budget_calc_id);
             }
-            else {
+            else if( (window.submit_type) == 3) {
                 vm.view = true;
                 $('input').prop('disabled', true);
                 vm.retrieveForm(window.budget_calc_id);
