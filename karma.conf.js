@@ -24,7 +24,7 @@ module.exports = function(config) {
         'budget/templates/budget/javascript/*.js',
         'budget/templates/budget/javascript/controllers/*.js',
         'budget/templates/budget/javascript/services/*.js',
-        './karma/*.spec.js'
+        './karma/BudgetCalculation/controllers/*.spec.js'
     ],
 
     // list of files to exclude

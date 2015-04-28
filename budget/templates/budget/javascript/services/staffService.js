@@ -38,7 +38,7 @@ function staffService($http, $q) {
 
     function saveItem(item) {
         item.budget_calc_sheet = window.budget_calc_id;
-        $http.post('/budget/api/budget_calculations/staff_salary/', item)
+        return $http.post('/budget/api/budget_calculations/staff_salary/', item)
             .success(function (data, status) {
             })
             .error(function (data, status) {
@@ -48,7 +48,7 @@ function staffService($http, $q) {
     }
 
     function updateItem(item) {
-        $http.put('/budget/api/budget_calculations/staff_salary/' + item.id + '/', item)
+        return $http.put('/budget/api/budget_calculations/staff_salary/' + item.id + '/', item)
             .success(function(data, status) {
 
             })
