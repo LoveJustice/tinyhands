@@ -1,6 +1,6 @@
 angular
     .module('BudgetCalculation')
-    .controller('MainCtrl', ['$scope','$http', '$location', '$window', function($scope, $http, $location, $window) {
+    .controller('MainCtrl', ['$scope','$http', '$location', '$window', 'mainCtrlService', function($scope, $http, $location, $window, mainCtrlService) {
 
             var vm = this;
             vm.form = {};
@@ -33,7 +33,15 @@ angular
                 vm.salariesTotal = args['total'];
             });
 
-            vm.retrieveForm = function(id) {
+        vm.retrieveForm = function(id) {
+            mainCtrlService.retrieveForm(id).then(function(promise){
+                var data = promise.data;
+                vm.form = data;
+                console.log(data);
+            });
+        };
+
+            /*vm.retrieveForm = function(id) {
                 $http.get('/budget/api/budget_calculations/' + id + '/').
                         success(function (data) {
                             //We can reference the json object to fill our vm variables
@@ -44,7 +52,7 @@ angular
                             // called asynchronously if an error occurs
                             // or server returns response with an error status.
                         });
-            };
+            };*/
 
 
             vm.foodAndShelterTotal = function() {
@@ -224,7 +232,14 @@ angular
                 vm.awarenessTotalValue = amount + vm.otherAwarenessTotalValue[0];
             };
 
-            vm.deletePost = function(id) {
+
+
+        /*vm.deletePost = function(id) {
+            mainCtrlService.deletePost(id);
+        };*/
+
+
+            /*vm.deletePost = function(id) {
                 $http.delete('/budget/api/budget_calculations/' + id + '/').
                         success(function (data, status, headers, config) {
                             console.log("1");
@@ -234,9 +249,20 @@ angular
                             // called asynchronously if an error occurs
                             // or server returns response with an error status.
                         })
-            };
+            };*/
 
-            vm.updateForm = function() {
+
+        vm.updateForm = function() {
+            mainCtrlService.updateForm(vm.form.id, vm.form).then(function(promise) {
+                vm.id = promise.data.id;
+
+                //Broadcast event to call the saveAllItems function in the otherItems controller
+                $scope.$emit('handleBudgetCalcSavedEmit', {message: 'It is done.'});
+                $window.location.assign('/budget/budget_calculations');
+            });
+        };
+
+            /*vm.updateForm = function() {
                 $http.put('/budget/api/budget_calculations/' + vm.form.id + '/', vm.form)
                     .success(function(data, status) {
                         console.log("success");
@@ -250,11 +276,23 @@ angular
                     .error(function(data, status) {
                         console.log("fail");
                     });
-            };
+            };*/
 
+        vm.createForm = function() {
+            mainCtrlService.createForm(vm.form).then(function(promise) {
+                var data = promise.data;
+                vm.id = data.id;
+                window.budget_calc_id = data.id;
 
+                //Broadcast event to call the saveAllItems function in the otherItems controller
+                $scope.$emit('handleBudgetCalcSavedEmit', {message: 'It is done.'});
 
-            vm.createForm = function() {
+                //TODO We should change this because this is bad
+                $window.location.assign('/budget/budget_calculations');
+            });
+        };
+
+            /*vm.createForm = function() {
                 $http.post('/budget/api/budget_calculations/', vm.form)
                     .success(function(data, status) {
                         console.log("success Create");
@@ -271,7 +309,7 @@ angular
                         console.log("fail create");
                     });
 
-            };
+            };*/
 
             if( (window.submit_type) == 1 ) {
                 vm.create = true;
@@ -284,6 +322,7 @@ angular
             else if( (window.submit_type) == 3) {
                 vm.view = true;
                 $('input').prop('disabled', true);
+                console.log(window.budget_calc_id);
                 vm.retrieveForm(window.budget_calc_id);
             }
 
