@@ -43,7 +43,7 @@ var budgetForm = function () {
         element(by.id("awareness_sign_boards_bool")).click();
         element(by.id("awareness_sign_boards_amount")).sendKeys('5');
         element(by.id("awareness_add_item")).click();
-        element(by.id("Z_chair_with_bike_bool")).click();
+        element(by.id("travel_chair_with_bike_bool")).click();
         element(by.id("travel_chair_with_bike_amount")).sendKeys('5');
         element(by.id("travel_manager_with_bike_bool")).click();
         element(by.id("travel_manager_with_bike_amount")).sendKeys('5');
@@ -77,30 +77,6 @@ var budgetForm = function () {
         element(by.id("misc_number_of_intercepts_mult")).sendKeys('5');
         element(by.id("misc_add_item")).click();
 
-        // check all checkboxes
-        /*element(by.id("shelterStartupBool")).click();
-        element(by.id("shelter_two_bool")).click();
-        element(by.id("comm_chair_bool")).click();
-        element(by.id("comm_manager_bool")).click();
-        element(by.id("awareness_contact_cards_bool")).click();
-        element(by.id("awareness_awareness_party_bool")).click();
-        element(by.id("awareness_sign_boards_bool")).click();
-        element(by.id("Z_chair_with_bike_bool")).click();
-        element(by.id("travel_manager_with_bike_bool")).click();
-        element(by.id("travel_motorbike_bool")).click();
-        element(by.id("supplies_walkie_talkies_bool")).click();
-        element(by.id("supplies_recorders_bool")).click();
-        element(by.id("supplies_binoculars_bool")).click();
-        element(by.id("supplies_flashlights_bool")).click();
-        element(by.id("admin_booth_bool")).click();
-        element(by.id("admin_registration_bool")).click();*/
-
-        // add items with buttons
-        /*element(by.id("awareness_add_item")).click();
-        element(by.id("travel_add_item")).click();
-        element(by.id("supplies_add_item")).click();
-        element(by.id("misc_add_item")).click();*/
-
     };
 
     this.submitForm = function () {
@@ -111,6 +87,11 @@ var budgetForm = function () {
         browser.get(constants.webAddress + '/budget/budget_calculations/');
         element(by.linkText("View")).click();
     };
+
+    this.editForm = function () {
+        browser.get(constants.webAddress + '/budget/budget_calculations/');
+        element(by.linkText("Edit")).click();
+    }
 
     this.navigateToForms = function () {
         browser.get(constants.webAddress + '/budget/budget_calculations/');

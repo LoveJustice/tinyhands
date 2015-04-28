@@ -1,6 +1,7 @@
 from django.db import models
-from accounts.models import Account
+
 from dataentry.models import BorderStation
+from static_border_stations.models import Staff
 
 
 class BorderStationBudgetCalculation(models.Model):
@@ -168,6 +169,9 @@ class BorderStationBudgetCalculation(models.Model):
         total += self.travel_total()
         return total
 
+    members = models.ManyToManyField(Staff, through='StaffSalary')
+
+
 class OtherBudgetItemCost(models.Model):
     name = models.CharField(max_length=255, blank=False)
     cost = models.PositiveIntegerField(default=0, blank=False)
@@ -180,3 +184,10 @@ class OtherBudgetItemCost(models.Model):
     ]
     form_section = models.IntegerField(BUDGET_FORM_SECTION_CHOICES, blank=True, null=True)
     budget_item_parent = models.ForeignKey(BorderStationBudgetCalculation, blank=True, null=True)
+
+
+class StaffSalary(models.Model):
+    salary = models.PositiveIntegerField(default=0, blank=True, null=True)
+
+    budget_calc_sheet = models.ForeignKey(BorderStationBudgetCalculation, blank=True, null=True)
+    staff_person = models.ForeignKey(Staff, blank=True, null=True)

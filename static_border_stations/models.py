@@ -14,7 +14,9 @@ class Person(models.Model):
 
 
 class Staff(Person):
-    salary = models.PositiveIntegerField(default=0, blank=True, null=True)
+    class Meta:
+        abstract = False
+
 
 
 class CommitteeMember(Person):
