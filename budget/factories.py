@@ -19,7 +19,7 @@ class OtherBudgetItemCostFactory(DjangoModelFactory):
 
     name = factory.Sequence(lambda n: 'John Doe {0}'.format(n))
     cost = FuzzyInteger(10, 4000)
-    form_section = FuzzyInteger(1,4)
+    form_section = FuzzyInteger(1, 4)
     budget_calc_sheet = factory.SubFactory(BorderStationBudgetCalculationFactory)
 
 
@@ -28,7 +28,7 @@ class StaffSalaryFactory(DjangoModelFactory):
         model = StaffSalary
 
     full_name = factory.Sequence(lambda n: 'John Doe {0}'.format(n))
-    age = FuzzyInteger(20,40)
+    age = FuzzyInteger(20, 40)
     phone_contact = str(FuzzyInteger(100000000000,999999999999).fuzz())
     photo = 'foo.png'
     gender = 'm'
