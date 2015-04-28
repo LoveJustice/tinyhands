@@ -8,15 +8,15 @@ class Person(models.Model):
     receives_money_distribution_form = models.BooleanField(default=False)
     border_station = models.ForeignKey(BorderStation, null=False, default=1)
 
-    class Meta: 
+    class Meta:
         abstract = True
 
 class Staff(Person):
-    class Meta: 
+    class Meta:
         abstract = False
 
 class CommitteeMember(Person):
-    class Meta: 
+    class Meta:
         abstract = False
 
 class Location(models.Model):
