@@ -17,8 +17,15 @@ module.exports = function(config) {
     files: [
         'test-main.js',
         'node_modules/angular/angular.js',
-        'node_modules/angular-mocks/angular-mocks.js'.
-        './karma/*.spec.js',
+        'node_modules/angular-cookies/angular-cookies.js',
+        'node_modules/angular-route/angular-route.js',
+        'node_modules/angular-animate/angular-animate.js',
+        'node_modules/angular-mocks/angular-mocks.js',
+        'static/jquery.js',
+        'portal/templates/portal/javascript/portal.module.js',
+        'portal/templates/portal/javascript/*.js',
+        './karma/portal/controllers/*.spec.js',
+
     ],
 
 
@@ -58,7 +65,7 @@ module.exports = function(config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['Chrome', 'Firefox', 'Safari'],
+    browsers: ['PhantomJS'],
 
 
     // Continuous Integration mode
