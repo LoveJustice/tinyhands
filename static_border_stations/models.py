@@ -9,7 +9,7 @@ class Person(models.Model):
     receives_money_distribution_form = models.BooleanField(default=False)
     border_station = models.ForeignKey(BorderStation, null=False, default=1)
 
-    class Meta: 
+    class Meta:
         abstract = True
 
 

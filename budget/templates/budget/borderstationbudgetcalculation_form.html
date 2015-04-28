@@ -4,10 +4,6 @@
 
 {% block tab_block %}
     {% block content %}
-        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
-        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-cookies.js"></script>
-        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-route.js"></script>
-        <link rel="stylesheet" href="{{ STATIC_URL }}animate.css"/>
         <script type="text/javascript">
             window.budget_calc_id = {{ pk }};
             window.submit_type = {{ submit_type }};
@@ -15,7 +11,7 @@
         </script>
 
 
-        <h1 style="font-size: 25px; text-align: center">Tiny Hands Nepal - Border Monitoring Station Budget Calculation Form</h1>
+        <h1 style="font-size: 25px; text-align: center">Border Monitoring Station Budget Calculation Form</h1>
 
         <form id="budget-calc-form" method="post">
             {% csrf_token %}
@@ -29,7 +25,7 @@
                     <div class="col-lg-2">
                     </div>
 
-                    <div class="col-lg-4 col-lg-offset-7">
+                    <div class="col-lg-4 col-lg-offset-4">
                         <table class="table table-striped table-bordered table-hover">
                             <thead>
                             <tr>
@@ -351,7 +347,7 @@
 
                             {% verbatim %}
                             <div class="row" ng-controller="otherBudgetItemsCtrl as awarenessItemsCtrl" ng-init="form_section = 3;">
-                                <div class="" ng-repeat="form in awarenessItemsCtrl.awarenessForms">
+                                <div class="animated-budget-items" ng-repeat="form in awarenessItemsCtrl.awarenessForms">
 
                                     <div class="col-lg-4 col-lg-offset-2">
                                         <input class="form-control" type="text" ng-model="form.name" ng-disabled="main.view"/>
@@ -464,8 +460,8 @@
                             {% verbatim %}
                             <hr/>
                             <!--<h2 class="background"><span><small>Extra Travel Items</small></span></h2>-->
-                            <div class="row" ng-controller="otherBudgetItemsCtrl as travelItemsCtrl" ng-init="form_section = 1;">
-                                <div class="row" ng-repeat="form in travelItemsCtrl.travelForms">
+                            <div class="row " ng-controller="otherBudgetItemsCtrl as travelItemsCtrl" ng-init="form_section = 1;">
+                                <div class="row animated-budget-items" ng-repeat="form in travelItemsCtrl.travelForms">
 
                                     <div class="col-lg-4 col-lg-offset-1">
                                         <input class="form-control" type="text" ng-model="form.name" ng-disabled="main.view"/>
@@ -542,7 +538,7 @@
                             </div>
                             {% verbatim %}
                             <div class="row" ng-controller="otherBudgetItemsCtrl as suppliesItemsCtrl" ng-init="form_section = 4;">
-                                <div ng-repeat="form in suppliesItemsCtrl.suppliesForms">
+                                <div class="animated-budget-items" ng-repeat="form in suppliesItemsCtrl.suppliesForms">
 
                                     <div class="col-lg-4 col-lg-offset-2">
                                         <input class="form-control" type="text" ng-model="form.name" ng-disabled="main.view"/>
@@ -707,7 +703,7 @@
                                 {% verbatim %}
                                 <hr/>
                                 <div class="row" ng-controller="otherBudgetItemsCtrl as miscItemsCtrl" ng-init="form_section = 2;">
-                                    <div class="animated slideInDown" ng-repeat="form in miscItemsCtrl.miscForms">
+                                    <div class="animated-budget-items" ng-repeat="form in miscItemsCtrl.miscForms">
                                         <div class="col-lg-4 col-lg-offset-1">
                                             <input class="form-control" type="text" ng-model="form.name" ng-disabled="main.view"/>
                                         </div>
@@ -723,7 +719,7 @@
                                         <br/>
 
                                         <div class="col-lg-4 col-lg-offset-5">
-                                            <a class="btn btn-success" ng-click="miscItemsCtrl.addNewItem()" ng-hide="main.view">Add item</a>
+                                            <a class="btn btn-success" ng-click="miscItemsCtrl.addNewItem();" ng-hide="main.view">Add item</a>
                                         </div>
                                     </div>
                                 </div>
@@ -830,8 +826,8 @@
                         </div>
                     </div>
 
-                    <input type="button" ng-show="main.update" class="pull-right btn btn-primary navbar-btn btn-lg" value="Submit" ng-click="main.updateForm()">
-                    <input type="button" ng-show="main.create" id="budget_create" class="pull-right btn btn-primary navbar-btn btn-lg" value="Submit" ng-click="main.createForm()">
+                    <input type="button" ng-show="main.update" class="pull-right btn btn-success navbar-btn btn-lg" value="Submit" ng-click="main.updateForm()">
+                    <input type="button" ng-show="main.create" id="budget_create" class="pull-right btn btn-success navbar-btn btn-lg" value="Submit" ng-click="main.createForm()">
                 </div>
             </div>
         </form>
@@ -839,9 +835,13 @@
 
         <script type="text/javascript" src="{{ STATIC_URL }}budgetModule.js"></script>
         <script type="text/javascript" src="{{ STATIC_URL }}controllers/mainCtrl.js"></script>
+        <script type="text/javascript" src="{{ STATIC_URL }}services/staffService.js"></script>
+        <script type="text/javascript" src="{{ STATIC_URL }}services/otherItemsService.js"></script>
         <script type="text/javascript" src="{{ STATIC_URL }}controllers/otherItemsCtrl.js"></script>
         <script type="text/javascript" src="{{ STATIC_URL }}controllers/staffCtrl.js"></script>
-        <script type="text/javascript" src="{{ STATIC_URL }}services/staffService.js"></script>
+        <script>
+            angular.bootstrap($('#budget-calc-form'), ['BudgetCalculation']);
+        </script>
 
 
 

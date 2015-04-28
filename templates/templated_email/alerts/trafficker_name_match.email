@@ -13,22 +13,6 @@
 <table>
         <thead>
             <th>Name</th>
-<<<<<<< HEAD
-<<<<<<< HEAD
-            <th>Phone contact</th>
-            <th>Photo</th>
-=======
-            <th>Name Matched to</th>
-            <th>Name Match Certainty</th>
->>>>>>> origin/alerts
-        </thead>
-        {% for person,match in traffickers_matches.items %}
-        <tr>
-<<<<<<< HEAD
-            <td>{{ person.full_name }}</td>
-            <td>{{ person.phone_contact }}</td>
-            <td><img src="{{ site }}/{{ person.photo }}"/></td>
-=======
             <th>Name Matched to</th>
             <th>Name Match Certainty</th>
         </thead>
@@ -37,12 +21,6 @@
             <td>{{ person }}</td>
             <td><a href="{{ site }}/{% url 'interceptionrecord_detail' match.0.2.interception_record_id %}">{{ match.0.2.full_name }}</a></td>
             <td>{{ match.0.1 }}%</td>
->>>>>>> e1fd2745599d607df6423e674a4b1aaaf8368389
-=======
-            <td>{{ person }}</td>
-            <td><a href="{{ site }}/{% url 'interceptionrecord_detail' match.0.2.interception_record_id %}">{{ match.0.2.full_name }}</a></td>
-            <td>{{ match.0.1 }}%</td>
->>>>>>> origin/alerts
         </tr>
         {% endfor %}
     </table>
@@ -53,22 +31,6 @@
     <p>According to the form, {{ trafficker_in_custody }} was taken into custody</p>
 {% endif %}
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<p>To view the IRF click here: <a href="{{ site }}/{% url 'interceptionrecord_detail' irf.id %}">Link to Interception Record Form</a></p>
+<p>To view the IRF click here: <a href="http://{{ site }}{% url 'interceptionrecord_detail' irf.id %}">Link to Interception Record Form</a></p>
 
 {% endblock %}
-
-
-Any time there is a trafficker name match from a separate interception.
-E-mail should include form number that was submitted, form number that the match came from, and the name and all personal identifiers from both forms.
-=======
-<p>To view the IRF click here: <a href="{{ site }}/{% url 'interceptionrecord_detail' irf.irf_number %}">Link to Interception Record Form</a></p>
-
-{% endblock %}
->>>>>>> e1fd2745599d607df6423e674a4b1aaaf8368389
-=======
-<p>To view the IRF click here: <a href="{{ site }}/{% url 'interceptionrecord_detail' irf.irf_number %}">Link to Interception Record Form</a></p>
-
-{% endblock %}
->>>>>>> origin/alerts

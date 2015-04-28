@@ -244,10 +244,7 @@ angular
                         //Broadcast event to call the saveAllItems function in the otherItems controller
                         $scope.$emit('handleBudgetCalcSavedEmit', {message: 'It is done.'});
 
-                        if(vm.test) {}
-                        else {
-                            $window.location.assign('/budget/budget_calculations');
-                        }
+                        $window.location.assign('/budget/budget_calculations');
 
                     })
                     .error(function(data, status) {
@@ -266,10 +263,8 @@ angular
                         //Broadcast event to call the saveAllItems function in the otherItems controller
                         $scope.$emit('handleBudgetCalcSavedEmit', {message: 'It is done.'});
 
-                        if(vm.test) {}
-                        else {
-                            $window.location.assign('/budget/budget_calculations');
-                        }
+
+                        $window.location.assign('/budget/budget_calculations');
 
                     })
                     .error(function(data, status) {

@@ -1,121 +1,97 @@
 function makeDateTimePickers(selector) {
-    $(selector).datetimepicker({
-        format:'m/d/Y H:i',
-        step: 30
-    });
+  $(selector).datetimepicker({
+    format:'m/d/Y H:i',
+    step: 30
+  });
 }
+
 function makeDatePickers(selector) {
-    $(selector).datetimepicker({
-        format:'m/d/Y',
-        timepicker: false
-    });
+  $(selector).datetimepicker({
+    format:'m/d/Y',
+    timepicker: false
+  });
 }
 
 function setUpValidationPopup(elem, kind) {
-    var id = $(elem).data('id');
-    if (id == 'ignore_warnings') {
-        return;
-    }
-    var message = $(elem).data('message');
+  var id = $(elem).data('id');
+  if (id == 'ignore_warnings') {
+    return;
+  }
+  var message = $(elem).data('message');
 
-    if (kind === 'error') {
-        message = 'Error: ' + message;
-    }
-    if (kind === 'warning') {
-        message = 'Warning: ' + message;
-    }
+  if (kind === 'error') {
+    message = 'Error: ' + message;
+  }
+  if (kind === 'warning') {
+    message = 'Warning: ' + message;
+  }
 
-    var $elem = $('#id_' + id);
+  var $elem = $('#id_' + id);
+  if ($elem.length === 0) {
+    $elem = $('[name="'+id+'"]').eq(0);
     if ($elem.length === 0) {
-        $elem = $('[name="'+id+'"]').eq(0);
-        if ($elem.length === 0) {
-            $elem = $('#' + id).eq(0);
-        }
+      $elem = $('#' + id).eq(0);
     }
+  }
 
-    $elem.attr('data-toggle', 'tooltip').attr('title', message);
+  $elem.attr('data-toggle', 'tooltip').attr('title', message);
 
 
-    var opts = { trigger: 'manual' };
-    if (!$elem.is('[data-placement]')) {
-        opts.placement = 'top';
-    }
-    else {
-        opts.placement = $.trim($elem.data('placement'));
-        $elem.attr('data-placement', '');
-    }
+  var opts = { trigger: 'manual' };
+  if (!$elem.is('[data-placement]')) {
+    opts.placement = 'top';
+  }
+  else {
+    opts.placement = $.trim($elem.data('placement'));
+    $elem.attr('data-placement', '');
+  }
 
-    $elem.tooltip(opts).tooltip('show');
+  $elem.tooltip(opts).tooltip('show');
 }
 
-
 function setUpValidationPopups() {
-    $('.error-for-popup').each(function() {
-        setUpValidationPopup(this, 'error');
-    });
-    $('.warning-for-popup').each(function() {
-        setUpValidationPopup(this, 'warning');
-    });
+  $('.error-for-popup').each(function() {
+    setUpValidationPopup(this, 'error');
+  });
+  $('.warning-for-popup').each(function() {
+    setUpValidationPopup(this, 'warning');
+  });
 
-    $('.tooltip-inner').each(function() {
-        var kind = $(this).text().split(':')[0].toLowerCase();
-        $(this).addClass('kind-' + kind);
-    });
+  $('.tooltip-inner').each(function() {
+    var kind = $(this).text().split(':')[0].toLowerCase();
+    $(this).addClass('kind-' + kind);
+  });
 }
 
 function photoSelect() {
-    $('.photo-manip-controls').click();
-    console.log("Test...1.2.3");
+  $('.photo-manip-controls').click();
+  console.log("Test...1.2.3");
 
 }
 
-/*
-function hide55when54unchecked() {
-    $('#id_victim_has_worked_in_sex_industry_0').click(function(){
-        $('#victim_place_worked_involved_sending_girls_overseas').css("visibility",'hidden');
-        //clear vif 5.5 selections
-        $("#id_victim_place_worked_involved_sending_girls_overseas_1").prop('checked', false);
-        $("#id_victim_place_worked_involved_sending_girls_overseas_0").prop('checked', false);
-    });
-
-    $('#id_victim_has_worked_in_sex_industry_1').click(function(){
-        var yesBox = $('#id_victim_has_worked_in_sex_industry_1');
-        var checked = yesBox.is(":checked");
-        if(checked){
-            $('#victim_place_worked_involved_sending_girls_overseas').css("visibility",'visible');
-        }
-        else{
-            $('#victim_place_worked_involved_sending_girls_overseas').css("visibility",'hidden');
-            //clear vif 5.5 selections
-            $("#id_victim_place_worked_involved_sending_girls_overseas_1").prop('checked', false);
-            $("#id_victim_place_worked_involved_sending_girls_overseas_0").prop('checked', false);
-        }
-    });
-} */
-
 function setUpPermissionsCheckboxes() {
-    $('input[type="checkbox"]').each(function() {
-        var $label = $(this).parents('label');
-        if ($(this).prop('checked')) {
-            $label.addClass('btn-success');
-            $label.find('.yesno').text('Yes');
-        }
-        else {
-            $label.addClass('btn-danger');
-            $label.find('.yesno').text('No');
-        }
-    });
-    $('input[type="checkbox"]').click(function() {
-        var $label = $(this).parents('label');
-        if ($(this).parents('label').hasClass('btn-danger')) {
-            $label.removeClass('btn-danger').addClass('btn-success');
-            $label.find('.yesno').text('Yes');
-        }
-        else if ($(this).parents('label').hasClass('btn-success')) {
-            $label.removeClass('btn-success').addClass('btn-danger');
-            $label.find('.yesno').text('No');
-        }
-    });
+  $('input[type="checkbox"]').each(function() {
+    var $label = $(this).parents('label');
+    if ($(this).prop('checked')) {
+      $label.addClass('btn-success');
+      $label.find('.yesno').text('Yes');
+    }
+    else {
+      $label.addClass('btn-danger');
+      $label.find('.yesno').text('No');
+    }
+  });
+  $('input[type="checkbox"]').click(function() {
+    var $label = $(this).parents('label');
+    if ($(this).parents('label').hasClass('btn-danger')) {
+      $label.removeClass('btn-danger').addClass('btn-success');
+      $label.find('.yesno').text('Yes');
+    }
+    else if ($(this).parents('label').hasClass('btn-success')) {
+      $label.removeClass('btn-success').addClass('btn-danger');
+      $label.find('.yesno').text('No');
+    }
+  });
 }
 function setUpLimitedChoicesCheckboxGroups() {
     // Well, this was supposed to be used to allow restricting
@@ -188,315 +164,310 @@ function setUpLimitedChoicesCheckboxGroups() {
 
 
 function setUpResumeIncompleteFormSystem(which) {
-    var storedForms = JSON.parse(localStorage.getItem('saved-'+which+'s') || '{}');
-    for (var formNumber in storedForms) {
-        var formData = storedForms[formNumber];
-        $('#saved-for-later-list').append(
-            $('<option value="'+formData+'">'+formNumber+'</option>')
-        );
+  var storedForms = JSON.parse(localStorage.getItem('saved-'+which+'s') || '{}');
+  for (var formNumber in storedForms) {
+    var formData = storedForms[formNumber];
+    $('#saved-for-later-list').append(
+      $('<option value="'+formData+'">'+formNumber+'</option>')
+    );
+  }
+
+  $('#saved-for-later-list').change(function() {
+    $('form').deserialize($(this).val());
+  });
+
+  $('#save-for-later').click(function() {
+    var formNumber = $('#id_'+which+'_number').val();
+    if (!formNumber) {
+      alert('Please enter a '+which.toUpperCase()+' # to save this form for later.');
+      return;
     }
+    var storedForms = JSON.parse(localStorage.getItem('saved-'+which+'s') || '{}');
+    storedForms[formNumber] = $('form').serialize();
+    localStorage.setItem('saved-'+which+'s', JSON.stringify(storedForms));
 
-    $('#saved-for-later-list').change(function() {
-        $('form').deserialize($(this).val());
-    });
-
-    $('#save-for-later').click(function() {
-        var formNumber = $('#id_'+which+'_number').val();
-        if (!formNumber) {
-            alert('Please enter a '+which.toUpperCase()+' # to save this form for later.');
-            return;
-        }
-        var storedForms = JSON.parse(localStorage.getItem('saved-'+which+'s') || '{}');
-        storedForms[formNumber] = $('form').serialize();
-        localStorage.setItem('saved-'+which+'s', JSON.stringify(storedForms));
-
-        alert('This form has been saved for later.  Come back to the '+which.toUpperCase()+' create page and select the '+which.toUpperCase()+' number from the top dropdown to resume entering data.');
-        window.location.href = '/data-entry/'+which+'s/';
-    });
+    alert('This form has been saved for later.  Come back to the ' + which.toUpperCase() +
+	  ' create page and select the ' + which.toUpperCase() +
+	  ' number from the top dropdown to resume entering data.');
+    window.location.href = '/data-entry/'+which+'s/';
+  });
 }
 
-
 function clearCompletedForms(which) {
-    var storedForms = JSON.parse(localStorage.getItem('saved-'+which+'s') || '{}');
-    $('.'+which+'-number').each(function() {
-        var num = $(this).text();
-        if (num in storedForms) {
-            delete storedForms[num];
-        }
-    });
-    localStorage.setItem('saved-'+which+'s', JSON.stringify(storedForms));
+  var storedForms = JSON.parse(localStorage.getItem('saved-'+which+'s') || '{}');
+  $('.'+which+'-number').each(function() {
+    var num = $(this).text();
+    if (num in storedForms) {
+      delete storedForms[num];
+    }
+  });
+  localStorage.setItem('saved-'+which+'s', JSON.stringify(storedForms));
 }
 
 
 var DREAMSUITE = {
+  account_create: function() {
+    this.account_update();
+  },
 
-    account_create: function() {
-        this.account_update();
-    },
-    account_update: function() {
-        setUpPermissionsCheckboxes();
-        $('select').change(function() {
-            for (var i=0; i<window.defaultPermissionSets.length; i++) {
-                var set = window.defaultPermissionSets[i];
-                if (set.id === parseInt($(this).val())) {
-                    for (var key in set) {
-                        var toBe = set[key];
-                        var $checkbox = $('#id_' + key);
-                        var current = !!$checkbox.prop('checked');
-                        if (toBe !== current) {
-                            $checkbox.trigger('click');
-                        }
-                    }
-                }
+  account_update: function() {
+    setUpPermissionsCheckboxes();
+    $('select').change(function() {
+      for (var i=0; i<window.defaultPermissionSets.length; i++) {
+        var set = window.defaultPermissionSets[i];
+        if (set.id === parseInt($(this).val())) {
+          for (var key in set) {
+            var toBe = set[key];
+            var $checkbox = $('#id_' + key);
+            var current = !!$checkbox.prop('checked');
+            if (toBe !== current) {
+              $checkbox.trigger('click');
             }
-        });
-    },
+          }
+        }
+      }
+    });
+  },
 
-    access_control: function() {
-        setUpPermissionsCheckboxes();
-        $('option:contains("---------")').remove();
-        $('select').change(function() {
-            var rowIdx = parseInt($(this).parents('td').find('input').val()) - 1;
-            for (var i=0; i<window.defaultPermissionSets.length; i++) {
-                var set = window.defaultPermissionSets[i];
-                if (set.id === parseInt($(this).val())) {
-                    for (var key in set) {
-                        var toBe = set[key];
-                        var $checkbox = $('#id_form-' + rowIdx + '-' + key);
-                        var current = !!$checkbox.prop('checked');
-                        if (toBe !== current) {
-                            $checkbox.trigger('click');
-                        }
-                    }
-                }
+  access_control: function() {
+    setUpPermissionsCheckboxes();
+    $('option:contains("---------")').remove();
+    $('select').change(function() {
+      var rowIdx = parseInt($(this).parents('td').find('input').val()) - 1;
+      for (var i=0; i<window.defaultPermissionSets.length; i++) {
+        var set = window.defaultPermissionSets[i];
+        if (set.id === parseInt($(this).val())) {
+          for (var key in set) {
+            var toBe = set[key];
+            var $checkbox = $('#id_form-' + rowIdx + '-' + key);
+            var current = !!$checkbox.prop('checked');
+            if (toBe !== current) {
+              $checkbox.trigger('click');
             }
-        });
-    },
-
-    access_defaults: function() {
-        setUpPermissionsCheckboxes();
-        $('#add-another').click(function() {
-            var formIdx = $('#id_form-TOTAL_FORMS').val();
-            $('#permissions-rows-container').append($('#empty-form').html().replace(/__prefix__/g, formIdx));
-            $('#id_form-TOTAL_FORMS').val(parseInt(formIdx) + 1);
-            setUpPermissionsCheckboxes();
-        });
-        $('#permissions-form').submit(function(event) {
-            var choice = confirm('Are you sure you want to save changes?');
-            if (!choice) {
-                event.preventDefault();
-            }
-        });
-        $('.permissions-delete-form').submit(function(event) {
-            var choice = confirm('Are you sure you want to delete this permission set?');
-            if (!choice) {
-                event.preventDefault();
-            }
-        });
-
-        $('.in-use-button').tooltip();
-    },
-
-    interceptionrecord_list: function() {
-        clearCompletedForms('irf');
-    },
-    interceptionrecord_create: function() {
-        this.interceptionrecord_update();
-
-        setUpResumeIncompleteFormSystem('irf');
-    },
-
-    interceptionrecord_update: function() {
-        function calculateTotal() {
-            var total = 0;
-            $('input[type="checkbox"]').each(function(id, elem) {
-                var value = $.trim($(elem).next('.red-flag').text());
-                if (value !== '') {
-                    if ($(elem).prop('checked')) {
-                        total += parseInt(value);
-                    }
-                }
-            });
-            $('#calculated-total').text(total);
+          }
         }
-        $('input[type="checkbox"]').click(calculateTotal);
-        calculateTotal();
-        var resize = function() {
-            $('.photo').each(function() {
-                var width = $(this).width();
-                $(this).height(width);
-                $(this).css('line-height', width + 'px');
-            });
-        };
-        $(window).resize(resize);
-        resize();
+      }
+    });
+  },
 
-        setUpValidationPopups();
+  access_defaults: function() {
+    setUpPermissionsCheckboxes();
+    $('#add-another').click(function() {
+      var formIdx = $('#id_form-TOTAL_FORMS').val();
+      $('#permissions-rows-container').append($('#empty-form').html().replace(/__prefix__/g, formIdx));
+      $('#id_form-TOTAL_FORMS').val(parseInt(formIdx) + 1);
+      setUpPermissionsCheckboxes();
+    });
+    $('#permissions-form').submit(function(event) {
+      var choice = confirm('Are you sure you want to save changes?');
+      if (!choice) {
+        event.preventDefault();
+      }
+    });
+    $('.permissions-delete-form').submit(function(event) {
+      var choice = confirm('Are you sure you want to delete this permission set?');
+      if (!choice) {
+        event.preventDefault();
+      }
+    });
 
-        setUpLimitedChoicesCheckboxGroups();
-        //$('#id_contact_noticed').click(function() {
-        //    $('#id_staff_noticed').attr('checked', null);
-        //    $('input[id*="id_noticed_"]').attr('checked', null);
-        //});
-        //$('#id_staff_noticed').click(function() {
-        //    $('#id_contact_noticed').attr('checked', null);
-        //    $('input[id*="id_which_contact_"]').attr('checked', null);
-        //    $('#contact_paid').find('input[type="checkbox"]').attr('checked', null);
-        //});
+    $('.in-use-button').tooltip();
+  },
 
-        // A hack but it works
-        if ($('#error-box p').length === 0) {
-            $('#error-box').remove();
+  interceptionrecord_list: function() {
+    clearCompletedForms('irf');
+  },
+
+  interceptionrecord_create: function() {
+    this.interceptionrecord_update();
+
+    setUpResumeIncompleteFormSystem('irf');
+  },
+
+  interceptionrecord_update: function() {
+    function calculateTotal() {
+      var total = 0;
+      $('input[type="checkbox"]').each(function(id, elem) {
+        var value = $.trim($(elem).next('.red-flag').text());
+        if (value !== '') {
+          if ($(elem).prop('checked')) {
+            total += parseInt(value);
+          }
         }
+      });
+      $('#calculated-total').text(total);
+    }
+    $('input[type="checkbox"]').click(calculateTotal);
+    calculateTotal();
+    var resize = function() {
+      $('.photo').each(function() {
+        var width = $(this).width();
+        $(this).height(width);
+        $(this).css('line-height', width + 'px');
+      });
+    };
+    $(window).resize(resize);
+    resize();
 
-        $('.photo-upload-button').click(function() {
-            $(this).parents('td').find('input').click();
-            
-        });
-        $('.photo-upload-button').parents('td').find('input[type="file"]').change(function(event) {
-            $(this).parents('td').find('button').addClass('btn-success', 'btn-inverse').attr('title', $(this).val());
-        });
-        //$('.photo-manip-controls').each(function() {
-        //    var href = $(this).find('a').attr('href');
-        //    var id = $(this).find('input').attr('name').split('-')[1];
-        //    $('#photo-' + id).append(
+    setUpValidationPopups();
 
-        //});
-        makeDateTimePickers('#id_date_time_of_interception');
+    setUpLimitedChoicesCheckboxGroups();
+    //$('#id_contact_noticed').click(function() {
+    //    $('#id_staff_noticed').attr('checked', null);
+    //    $('input[id*="id_noticed_"]').attr('checked', null);
+    //});
+    //$('#id_staff_noticed').click(function() {
+    //    $('#id_contact_noticed').attr('checked', null);
+    //    $('input[id*="id_which_contact_"]').attr('checked', null);
+    //    $('#contact_paid').find('input[type="checkbox"]').attr('checked', null);
+    //});
 
-        //$('#save-for-later').click(function() {
-        //    var formData = $('form').serialize();
+    // A hack but it works
+    if ($('#error-box p').length === 0) {
+      $('#error-box').remove();
+    }
 
-        //});
-    },
+    $('.photo-upload-button').click(function() {
+      $(this).parents('td').find('input').click();
 
-    victiminterview_list: function() {
-        clearCompletedForms('vif');
-    },
-    victiminterview_create: function() {
-        this.victiminterview_update();
+    });
+    $('.photo-upload-button').parents('td').find('input[type="file"]').change(function(event) {
+      $(this).parents('td').find('button').addClass('btn-success', 'btn-inverse').attr('title', $(this).val());
+    });
+    //$('.photo-manip-controls').each(function() {
+    //    var href = $(this).find('a').attr('href');
+    //    var id = $(this).find('input').attr('name').split('-')[1];
+    //    $('#photo-' + id).append(
 
-        setUpResumeIncompleteFormSystem('vif');
-    },
-    victiminterview_update: function() {
-        function calculateTotal() {
-            var total = 0;
-            $('.alarm-box').each(function(id, elem) {
-                var $radio = $(elem).parents('.alarm-box-container').find('input');
-                if ($radio.is(':checked')) {
-                    total += parseInt($(elem).text());
-                }
-            });
-            $('#calculated-total').text(total);
+    //});
+    makeDateTimePickers('#id_date_time_of_interception');
+
+    //$('#save-for-later').click(function() {
+    //    var formData = $('form').serialize();
+
+    //});
+  },
+
+  victiminterview_list: function() {
+    clearCompletedForms('vif');
+  },
+
+  victiminterview_create: function() {
+    this.victiminterview_update();
+
+    setUpResumeIncompleteFormSystem('vif');
+  },
+
+  victiminterview_update: function() {
+    function calculateTotal() {
+      var total = 0;
+      $('.alarm-box').each(function(id, elem) {
+        var $radio = $(elem).parents('.alarm-box-container').find('input');
+        if ($radio.is(':checked')) {
+          total += parseInt($(elem).text());
         }
-        $('input[type="checkbox"]').click(calculateTotal);
-        calculateTotal();
+      });
+      $('#calculated-total').text(total);
+    }
+    $('input[type="checkbox"]').click(calculateTotal);
+    calculateTotal();
 
-        if ($('#error-box p').length === 0) {
-            $('#error-box').remove();
-        }
+    if ($('#error-box p').length === 0) {
+      $('#error-box').remove();
+    }
 
-        setUpValidationPopups();
+    setUpValidationPopups();
 
-        //hide55when54unchecked();
+    setUpLimitedChoicesCheckboxGroups();
 
-        setUpLimitedChoicesCheckboxGroups();
+    $('#id_victim_where_going_region_india').click(function() {
+      $('#id_victim_where_going_region_gulf').attr('checked', null);
+      $('input[id*="id_victim_where_going_gulf_"]').attr('checked', null);
+    });
+    $('#id_victim_where_going_region_gulf').click(function() {
+      $('#id_victim_where_going_region_india').attr('checked', null);
+      $('input[id*="id_victim_where_going_india_"]').attr('checked', null);
+    });
+    $('#victim_where_going_gulf').find('input[type="checkbox"]').click(function() {
+      $('#id_victim_where_going_region_gulf').attr('checked', 'checked');
+      $('#id_victim_where_going_region_india').attr('checked', null);
+      $('input[id*="id_victim_where_going_india_"]').attr('checked', null);
+    });
+    $('#victim_where_going_india').find('input[type="checkbox"]').click(function() {
+      $('#id_victim_where_going_region_india').attr('checked', 'checked');
+      $('#id_victim_where_going_region_gulf').attr('checked', null);
+      $('input[id*="id_victim_where_going_gulf_"]').attr('checked', null);
+    });
 
-        $('#id_victim_where_going_region_india').click(function() {
-            $('#id_victim_where_going_region_gulf').attr('checked', null);
-            $('input[id*="id_victim_where_going_gulf_"]').attr('checked', null);
-        });
-        $('#id_victim_where_going_region_gulf').click(function() {
-            $('#id_victim_where_going_region_india').attr('checked', null);
-            $('input[id*="id_victim_where_going_india_"]').attr('checked', null);
-        });
-        $('#victim_where_going_gulf').find('input[type="checkbox"]').click(function() {
-            $('#id_victim_where_going_region_gulf').attr('checked', 'checked');
-            $('#id_victim_where_going_region_india').attr('checked', null);
-            $('input[id*="id_victim_where_going_india_"]').attr('checked', null);
-        });
-        $('#victim_where_going_india').find('input[type="checkbox"]').click(function() {
-            $('#id_victim_where_going_region_india').attr('checked', 'checked');
-            $('#id_victim_where_going_region_gulf').attr('checked', null);
-            $('input[id*="id_victim_where_going_gulf_"]').attr('checked', null);
-        });
+    // Allow user to hover over the numbers in parens next to some fields to learn that
+    // that is how many may be checked.
+    $('.max-allowed').each(function(i, elem) {
+      var text = $(elem).text();
+      var count = text.substring(1, text.length - 1);
+      $(elem).attr(
+        'title',
+        'At most ' + count + ' may be checked.'
+      );
+    });
 
+    makeDatePickers('#id_date, #id_victim_how_long_stayed_between_start_date');
 
-        // Allow user to hover over the numbers in parens next to some fields to 
-        // learn that that is how many may be checked.
-        $('.max-allowed').each(function(i, elem) {
-            var text = $(elem).text();
-            var count = text.substring(1, text.length - 1);
-            $(elem).attr(
-                'title',
-                'At most ' + count + ' may be checked.'
-            );
-        });
+    var pagesNeeded = parseInt($('.pages-needed').data('pages-needed'));
+    for (var i=1; i<=4; i++) {
+      if (i > pagesNeeded) {
+        $('.box-page.page-' + i).hide();
+        $('.box-page.page-' + i).addClass('hidden');
+      }
+    }
+    $('.add-another-sheet').click(function(event) {
+      event.preventDefault();
+      var $nextPage = $('.box-page.hidden').eq(0);
+      $nextPage.removeClass('hidden');
+      $nextPage.slideDown();
+    });
+  },
 
-        makeDatePickers('#id_date, #id_victim_how_long_stayed_between_start_date');
+  victiminterview_detail: function() {
+    this.victiminterview_update();
 
-        var pagesNeeded = parseInt($('.pages-needed').data('pages-needed'));
-        for (var i=1; i<=4; i++) {
-            if (i > pagesNeeded) {
-                $('.box-page.page-' + i).hide();
-                $('.box-page.page-' + i).addClass('hidden');
-            }
-        }
-        $('.add-another-sheet').click(function(event) {
-            event.preventDefault();
-            var $nextPage = $('.box-page.hidden').eq(0);
-            $nextPage.removeClass('hidden');
-            $nextPage.slideDown();
-        });
-    },
+    var $form = $('#victim-interview-form');
+    $form.find('input, button, select, textarea').attr('disabled', 'disabled');
+    $('#footer').hide();
+  },
 
-    victiminterview_detail: function() {
-        this.victiminterview_update();
+  interceptionrecord_detail: function() {
+    this.interceptionrecord_update();
 
-        var $form = $('#victim-interview-form');
-        $form.find('input, button, select, textarea').attr('disabled', 'disabled');
-        $('#footer').hide();
-    },
-    interceptionrecord_detail: function() {
-        this.interceptionrecord_update();
+    var $form = $('#interception-record-form');
+    $form.find('input, button, select, textarea').attr('disabled', 'disabled');
+    $('#footer').hide();
+  },
 
-        var $form = $('#interception-record-form');
-        $form.find('input, button, select, textarea').attr('disabled', 'disabled');
-        $('#footer').hide();
-    },
-    budget_detail: function() {
-        //this.interceptionrecord_update();
-
-        var $form = $('#budget-calc-form');
-        $form.find('input, button, select, textarea').attr('disabled', 'disabled');
-        $('#footer').hide();
-    },
-
-    default: function() {}
+  default: function() {}
 
 };
 
 function reloadPhotos() {
-    var photoString = "";
-    var pathString = "";
-    $('.btn-success.photo-upload-button').each(function(){
-        console.log(this.parentNode.parentNode.childNodes[1].childNodes[3].name);
-        photoString = photoString + "/" + this.parentNode.parentNode.childNodes[1].childNodes[3].name;
-        pathString = pathString + "/" + this.title;
-        //localStorage.setItem("item", "TestString");
-    });
-    localStorage.setItem("pathList", pathString);
-    localStorage.setItem("photoList", photoString);
+  var photoString = "";
+  var pathString = "";
+  $('.btn-success.photo-upload-button').each(function(){
+    console.log(this.parentNode.parentNode.childNodes[1].childNodes[3].name);
+    photoString = photoString + "/" + this.parentNode.parentNode.childNodes[1].childNodes[3].name;
+    pathString = pathString + "/" + this.title;
+    //localStorage.setItem("item", "TestString");
+  });
+  localStorage.setItem("pathList", pathString);
+  localStorage.setItem("photoList", photoString);
 }
 
 $(document).ready(function() {
-    $('.alert').slideDown();
-    setTimeout(function() {
-        $('.alert').not('.no-remove').slideUp();
-    }, 4000);
+  $('.alert').slideDown();
+  setTimeout(function() {
+    $('.alert').not('.no-remove').slideUp();
+  }, 4000);
 
-    var bodyClass = $('body').attr('id');
-    if (bodyClass in DREAMSUITE) {
-        DREAMSUITE[bodyClass]();
-    }
+  var bodyClass = $('body').attr('id');
+  if (bodyClass in DREAMSUITE) {
+    DREAMSUITE[bodyClass]();
+  }
 });
