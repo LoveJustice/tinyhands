@@ -4,9 +4,11 @@ describe('otherBudgetItemsCtrl', function(){
     //mock Application to allow us to inject our own dependencies
     beforeEach(module('BudgetCalculation'));
 
-    beforeEach(inject(function($rootScope, $controller, _$httpBackend_){
+    beforeEach(inject(function($rootScope, $controller, $httpBackend){
         //create an empty scope
         scope = $rootScope.$new();
+        httpBackend = $httpBackend;
+
 
         controller = $controller('otherBudgetItemsCtrl', {$scope: scope});
         scope.form_section = 1;
