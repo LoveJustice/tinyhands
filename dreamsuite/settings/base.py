@@ -26,7 +26,7 @@ FIXTURE_DIRS = (
 )
 
 STATICFILES_DIRS = (os.path.join(SITE_ROOT, '../../static/'),
-                    os.path.join(SITE_ROOT, '../../budget/templates/budget/javascript'),
+                    os.path.join(SITE_ROOT, '../../budget/templates/budget/javascript/'),
                     )
 
 ALLOWED_HOSTS = []

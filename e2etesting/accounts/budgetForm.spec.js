@@ -3,14 +3,14 @@ var loginPage = require('./loginPage.js');
 
 describe('Budget Calculation', function() {
     beforeEach(function () {
-       return browser.ignoreSynchronization = true;
+        return browser.ignoreSynchronization = true;
     });
 
     describe('admin can login', function () {
-       it('accepts credentials', function () {
-           loginPage.loginAsAdmin();
-           expect(browser.driver.getCurrentUrl()).toContain('portal/dashboard');
-       });
+        it('accepts credentials', function () {
+            loginPage.loginAsAdmin();
+            expect(browser.driver.getCurrentUrl()).toContain('portal/dashboard');
+        });
     });
 
     describe('form creation', function () {
@@ -118,7 +118,7 @@ describe('Budget Calculation', function() {
 
     describe('editing form', function () {
         it('all inputs are enabled', function () {
-            budgetForm.viewForm();
+            budgetForm.editForm();
             browser.sleep(1000);
 
             expect(element(by.id("shelter_rent")).getAttribute('enabled')).toBe(null);

@@ -8,7 +8,6 @@ var budgetForm = function () {
 
     this.navigateToNewForm = function () {
         browser.get(constants.webAddress + '/static_border_stations/border-stations/update/0/');
-        //browser.get(constants.webAddress + '/budget/api/budget_calculations/create/0/');
         //click button
         element.all(by.linkText("New Budget Calculation Form")).click();
     };
@@ -42,7 +41,6 @@ var budgetForm = function () {
         element(by.id("awareness_awareness_party_amount")).sendKeys('5');
         element(by.id("awareness_sign_boards_bool")).click();
         element(by.id("awareness_sign_boards_amount")).sendKeys('5');
-        element(by.id("awareness_add_item")).click();
         element(by.id("travel_chair_with_bike_bool")).click();
         element(by.id("travel_chair_with_bike_amount")).sendKeys('5');
         element(by.id("travel_manager_with_bike_bool")).click();
@@ -53,7 +51,6 @@ var budgetForm = function () {
         element(by.id("travel_motorbike_bool")).click();
         element(by.id("travel_motorbike_amount")).sendKeys('5');
         element(by.id("travel_other")).sendKeys('5');
-        element(by.id("travel_add_item")).click();
         element(by.id("supplies_walkie_talkies_bool")).click();
         element(by.id("supplies_walkie_talkies_amount")).sendKeys('5');
         element(by.id("supplies_recorders_bool")).click();
@@ -62,7 +59,6 @@ var budgetForm = function () {
         element(by.id("supplies_binoculars_amount")).sendKeys('5');
         element(by.id("supplies_flashlights_bool")).click();
         element(by.id("supplies_flashlights_amount")).sendKeys('5');
-        element(by.id("supplies_add_item")).click();
         element(by.id("admin_number_of_interceptions_last_month")).sendKeys('5');
         element(by.id("admin_number_of_interceptions_last_month_multiplier")).sendKeys('5');
         element(by.id("admin_number_of_interceptions_last_month_adder")).sendKeys('5');
@@ -75,7 +71,6 @@ var budgetForm = function () {
         element(by.id("medical_expense")).sendKeys('5');
         element(by.id("misc_number_of_intercepts")).sendKeys('5');
         element(by.id("misc_number_of_intercepts_mult")).sendKeys('5');
-        element(by.id("misc_add_item")).click();
 
     };
 
@@ -91,7 +86,7 @@ var budgetForm = function () {
     this.editForm = function () {
         browser.get(constants.webAddress + '/budget/budget_calculations/');
         element(by.linkText("Edit")).click();
-    }
+    };
 
     this.navigateToForms = function () {
         browser.get(constants.webAddress + '/budget/budget_calculations/');
