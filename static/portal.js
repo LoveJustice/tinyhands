@@ -130,7 +130,8 @@ function getBorderStations(map){
                 position: myLatlng,
                 map: map,
                 title: data[station].fields.station_name + " " + data[station].fields.station_code,
-                clicked: false
+                clicked: false,
+                optimized: false
             });
 
             google.maps.event.addListener(dynamicWindow, 'closeclick', (function(marker) {

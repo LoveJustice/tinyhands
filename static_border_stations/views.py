@@ -11,7 +11,6 @@ from braces.views import LoginRequiredMixin
 from static_border_stations.models import Staff,CommitteeMember,Location
 from dataentry.models import BorderStation
 
-from static_border_stations.forms import *
 from dataentry.forms import BorderStationForm
 
 class FormSetForStations(InlineFormSet):
@@ -22,7 +21,7 @@ class FormSetForStations(InlineFormSet):
             self.extra = 0
         else:
             self.extra = 1
-        return 
+        return
 
 class StaffInline(FormSetForStations):
     model=Staff
@@ -43,7 +42,7 @@ class StaticBorderStationsCreateView (
     success_url = reverse_lazy('home')
     inlines = [StaffInline, CommitteeMemberInline, LocationInline]
     permissions_required = ['permission_border_stations_add']
-    
+
 class StaticBorderStationsUpdateView (
         LoginRequiredMixin,
         PermissionsRequiredMixin,
@@ -54,9 +53,9 @@ class StaticBorderStationsUpdateView (
     success_url = reverse_lazy('home')
     inlines = [StaffInline, CommitteeMemberInline, LocationInline]
     permissions_required = ['permission_border_stations_edit']
-    
+
 class StaticBorderStationsDetailView(StaticBorderStationsUpdateView):
     permissions_required = ['permission_border_stations_view']
-    
+
     def post(self, request, *args, **kwargs):
         raise PermissionDenied

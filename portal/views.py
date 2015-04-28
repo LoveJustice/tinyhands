@@ -25,9 +25,9 @@ def get_interception_records(request):
         return HttpResponse(interception_records.count())
     return HttpResponse("No IRFs Found")
 
-
 def get_staff_count(request):
     if "station_code" in request.REQUEST:
         border_station = BorderStation.objects.filter(station_code=request.REQUEST["station_code"]).first()
         return HttpResponse(border_station.staff_set.count())
     return HttpResponse("No station found")
+

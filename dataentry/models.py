@@ -17,7 +17,7 @@ def set_weight(self, weight):
 models.BooleanField.set_weight = set_weight
 
 class BorderStation(models.Model):
-    station_code = models.CharField(max_length=3)
+    station_code = models.CharField(max_length=3, unique=True)
     station_name = models.CharField(max_length=100)
     date_established = models.DateField(null=True)
     has_shelter = models.BooleanField(default=False)
