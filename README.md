@@ -13,6 +13,7 @@ Tiny Hands International
  4.  npm install -g protractor
  5.  npm install -g angular
  6.  webdriver-manager update
+ 7.  Install Chrome since that is what we are targeting for our tests
 
 ##### Running the tests
 1. Execute the ./rune2etests.sh test script which will run all the e2e tests specified in the e2etesting/conf.js file.
