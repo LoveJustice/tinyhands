@@ -16,6 +16,7 @@ def set_weight(self, weight):
     return self
 models.BooleanField.set_weight = set_weight
 
+
 class BorderStation(models.Model):
     station_code = models.CharField(max_length=3, unique=True)
     station_name = models.CharField(max_length=100)
@@ -23,6 +24,7 @@ class BorderStation(models.Model):
     has_shelter = models.BooleanField(default=False)
     latitude = models.FloatField(null=True)
     longitude = models.FloatField(null=True)
+
 
 class District(models.Model):
     name = models.CharField(max_length=255)
@@ -35,8 +37,8 @@ class VDC(models.Model):
     name = models.CharField(max_length=255)
     latitude = models.FloatField()
     longitude = models.FloatField()
-    district = models.ForeignKey(District,null=False)
-    cannonical_name = models.ForeignKey('self',null=True,blank=True)
+    district = models.ForeignKey(District, null=False)
+    cannonical_name = models.ForeignKey('self', null=True, blank=True)
     verified = models.BooleanField(default=False)
 
     def __unicode__(self):
@@ -298,7 +300,6 @@ class VictimInterview(models.Model):
     class Meta:
         ordering = ['-date_time_last_updated']
 
-
     GENDER_CHOICES = [
         ('male', 'Male'),
         ('female', 'Female'),
@@ -324,8 +325,8 @@ class VictimInterview(models.Model):
 
     victim_gender = models.CharField('Gender', choices=GENDER_CHOICES, max_length=12)
 
-    victim_address_district = models.ForeignKey(District, null=True, related_name="victim_address_district");
-    victim_address_vdc = models.ForeignKey(VDC, null=True, related_name="victim_address_vdc");
+    victim_address_district = models.ForeignKey(District, null=True, related_name="victim_address_district")
+    victim_address_vdc = models.ForeignKey(VDC, null=True, related_name="victim_address_vdc")
     victim_address_ward = models.CharField('Ward #', max_length=255, blank=True)
     victim_phone = models.CharField('Phone #', max_length=255, blank=True)
     victim_age = models.CharField('Age', max_length=255, blank=True)
