@@ -7,22 +7,23 @@ BASE_DIR = Path(__file__).ancestor(3)
 
 SERVER_EMAIL = 'tnurkkala@cse.taylor.edu'
 
-EMAIL_HOST = 'smtpcorp.com'
-EMAIL_PORT = 2525
-EMAIL_HOST_USER = 'tinyhands'
-EMAIL_HOST_PASSWORD = 'TINY@2014'
-EMAIL_USE_TLS = True
-
 ADMIN_EMAIL_SENDER = SERVER_EMAIL
 DEFAULT_FROM_EMAIL = SERVER_EMAIL
-#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+EMAIL_HOST = 'smtpcorp.com'
+EMAIL_HOST_USER = 'tinyhands'
+EMAIL_HOST_PASSWORD = 'TINY@2014'
+EMAIL_PORT = 2525
+EMAIL_USE_TLS = True
+
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 DEBUG = False
 TEMPLATE_DEBUG = False
 
 SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
 FIXTURE_DIRS = (
-   (os.path.join(SITE_ROOT, '../../fixtures/'),)
+    (os.path.join(SITE_ROOT, '../../fixtures/'),)
 )
 
 STATICFILES_DIRS = (os.path.join(SITE_ROOT, '../../static/'),)
