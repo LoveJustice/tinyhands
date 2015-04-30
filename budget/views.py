@@ -49,7 +49,7 @@ def retrieve_latest_budget_sheet_for_border_station(request, pk):
                 "staff_salaries": staff_serializer.data
             }
         )
-    return Response({"msg": "No form found"},)
+    return Response({"budget_form": "", "other_items": "", "staff_salaries": ""})
 
 
 
@@ -108,9 +108,7 @@ class StaffSalaryViewSet(viewsets.ModelViewSet):
         """
             Retrieve all of the staffSalaries for a particular budget calculation sheet
         """
-        import ipdb
-        ipdb.set_trace()
-        budget_sheet = BorderStationBudgetCalculation.objects.filter(border_station=pk).order_by('-date_time_entered').first()
+        budget_sheet = BorderStationBudgetCalculation.objects.filter(border_station=self.kwargs['pk']).order_by('-date_time_entered').first()
         if budget_sheet:
             staff_set = budget_sheet.staffsalary_set.all()
             serializer = self.get_serializer(staff_set, many=True)
