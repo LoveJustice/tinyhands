@@ -8,6 +8,7 @@ staffService.$inject = ['$http', '$q'];
 function staffService($http, $q) {
 	return {
 		retrieveStaff: retrieveStaff,
+        retrieveOldStaffSalaries: retrieveOldStaffSalaries,
         retrieveStaffSalaries: retrieveStaffSalaries,
         saveItem: saveItem,
         updateItem: updateItem
@@ -17,6 +18,7 @@ function staffService($http, $q) {
         // grab all of the staff for this budgetCalcSheet
         return $http.get('/static_border_stations/api/border-stations/' + borderStationId + '/').
             success(function (data) {
+                console.log(data);
                 return data;
             }).
             error(function (data, status, headers, config) {
@@ -24,9 +26,24 @@ function staffService($http, $q) {
             });
     }
 
+
     function retrieveStaffSalaries() {
         var staffPromise = $http({method: 'GET', url: '/static_border_stations/api/border-stations/' + window.border_station + '/'});
         var staffSalaryPromise = $http({method: 'GET', url: '/budget/api/budget_calculations/staff_salary/' + window.budget_calc_id + '/'});
+        return $q.all([staffPromise, staffSalaryPromise])
+            .then(function (data) {
+                console.log("hello");
+                return data;
+            })
+            .catch(function(data, status, headers, config) {
+                console.log(data, status, headers, config);
+            });
+    }
+
+
+    function retrieveOldStaffSalaries() {
+        var staffPromise = $http({method: 'GET', url: '/static_border_stations/api/border-stations/' + window.border_station + '/'});
+        var staffSalaryPromise = $http({method: 'GET', url: '/budget/api/budget_calculations/most_recent_form/' + window.budget_calc_id + '/'});
         return $q.all([staffPromise, staffSalaryPromise])
             .then(function (data) {
                 return data;

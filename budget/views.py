@@ -13,6 +13,7 @@ from django.views.generic import ListView, DeleteView, View
 
 
 from braces.views import LoginRequiredMixin
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from budget.forms import BorderStationBudgetCalculationForm
@@ -29,6 +30,27 @@ from reportlab import *
 class BudgetViewSet(viewsets.ModelViewSet):
     queryset = BorderStationBudgetCalculation.objects.all()
     serializer_class = BorderStationBudgetCalculationSerializer
+
+
+@api_view(['GET'])
+def retrieve_latest_budget_sheet_for_border_station(request, pk):
+    budget_sheet = BorderStationBudgetCalculation.objects.filter(border_station=pk).order_by('-date_time_entered').first()
+
+    if budget_sheet:
+
+        other_items_serializer = OtherBudgetItemCostSerializer(budget_sheet.otherbudgetitemcost_set.all())
+        staff_serializer = StaffSalarySerializer(budget_sheet.staffsalary_set.all())
+        budget_serializer = BorderStationBudgetCalculationSerializer(budget_sheet)
+
+        return Response(
+            {
+                "budget_form": budget_serializer.data,
+                "other_items": other_items_serializer.data,
+                "staff_salaries": staff_serializer.data
+            }
+        )
+    return Response({"msg": "No form found"},)
+
 
 
 def ng_budget_calc_update(request, pk):
@@ -86,9 +108,17 @@ class StaffSalaryViewSet(viewsets.ModelViewSet):
         """
             Retrieve all of the staffSalaries for a particular budget calculation sheet
         """
-        self.object_list = self.filter_queryset(self.get_queryset().filter(budget_calc_sheet=self.kwargs['pk']))
-        serializer = self.get_serializer(self.object_list, many=True)
-        return Response(serializer.data)
+        import ipdb
+        ipdb.set_trace()
+        budget_sheet = BorderStationBudgetCalculation.objects.filter(border_station=pk).order_by('-date_time_entered').first()
+        if budget_sheet:
+            staff_set = budget_sheet.staffsalary_set.all()
+            serializer = self.get_serializer(staff_set, many=True)
+            return Response(serializer.data)
+        else:
+            self.object_list = self.filter_queryset(self.get_queryset().filter(budget_calc_sheet=self.kwargs['pk']))
+            serializer = self.get_serializer(self.object_list, many=True)
+            return Response(serializer.data)
 
 
 @login_required

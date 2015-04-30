@@ -10,6 +10,8 @@ angular
         vm.saveAllSalaries = saveAllSalaries;
         vm.retrieveStaff = retrieveStaff;
         vm.retrieveStaffSalaries = retrieveStaffSalaries;
+        vm.retrieveOldStaffSalaries = retrieveOldStaffSalaries;
+
 
         main();
 
@@ -20,6 +22,7 @@ angular
         function main(){
             if( window.submit_type == 1 ) {
                 vm.retrieveStaff();
+                vm.retrieveOldStaffSalaries();
             }
             else if( window.submit_type == 2)  {
                 vm.retrieveStaffSalaries();
@@ -60,7 +63,7 @@ angular
                 .then(function(promise){
                     var staffData = promise[0].data;
                     var staffSalariesData = promise[1].data;
-
+                    console.log("hello");
                     for(var person = 0; person < staffSalariesData.length; person++) {
                         for (var x = 0; x < staffData.length; x++) {
                             if (staffData[x].id === staffSalariesData[person].staff_person) {
@@ -72,11 +75,38 @@ angular
                 });
         }
 
+        function retrieveOldStaffSalaries() {
+            staffService.retrieveOldStaffSalaries()
+                .then(function(promise){
+                    var staffData = promise[0].data;
+                    var staffSalariesData = promise[1].data.staff_salaries;
+
+                    for(var person = 0; person < staffSalariesData.length; person++) {
+                        for (var x = 0; x < staffData.length; x++) {
+                            if (staffData[x].id === staffSalariesData[person].staff_person) {
+                                staffSalariesData[person].name = staffData[x].first_name + ' ' + staffData[x].last_name;
+                            }
+                        }
+
+                        var newperson = staffSalariesData[person];
+                        newperson.id = -1;
+                        for(var oldPerson = 0; oldPerson < vm.staffSalaryForms.length; oldPerson++){
+
+                            if( newperson.staff_person == vm.staffSalaryForms[oldPerson].staff_person){
+                                console.log(vm.staffSalaryForms);
+                                vm.staffSalaryForms.splice(oldPerson,1);
+                            }
+                        }
+                        vm.staffSalaryForms.push(newperson);
+                    }
+                });
+        }
+
 
         function saveAllSalaries(){
             for(var person = 0; person < vm.staffSalaryForms.length; person++){
                 item = vm.staffSalaryForms[person];
-                if(!item.id){
+                if(item.id < 0){
                     saveItem(item);
                 }else{
                     updateItem(item);
