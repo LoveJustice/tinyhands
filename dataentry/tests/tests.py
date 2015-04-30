@@ -101,7 +101,8 @@ import csv, StringIO, os
 
 class ExportTesting(WebTest):
 
-    fixtures = ['accounts.json', 'test-irfs.json', 'test-interceptees.json', 'geo-code-locations.json']
+    fixtures = ['accounts.json', 'test-irfs.json', 'test-interceptees.json', 'geo-code-locations.json',
+               'test-vifs.json']
 
     def setUp(self):
         self.user = SuperUserFactory.create()
@@ -128,20 +129,37 @@ class ExportTesting(WebTest):
         expected_result = 'attachment; filename=vif-all-data-%d-%d-%d.csv' % (today.year, today.month, today.day)
         self.assertEquals(result, expected_result)
 
+    def test_that_no_extra_commas_in_vif_export(self):
+        response = self.app.get(reverse('victiminterview_csv_export'), user=self.user)
+        result = response.normal_body
+        csv_file = open("dataentry/tests/temp/vif.csv", "w")
+        csv_file.write(result);
+        csv_file.close()
+
+        csv_file = open("dataentry/tests/temp/vif.csv", "r")
+        mydict = {}
+        reader = csv.reader(csv_file, delimiter=',')
+        for rows in reader:
+            if rows[569][-1] != ",":
+                self.assertTrue(True)
+            else:
+                self.assertTrue(False)
+
     def test_to_make_sure_no_offset_in_irf_export_file(self):
         response = self.app.get(reverse('interceptionrecord_csv_export'), user=self.user)
         result = response.normal_body
         temp = list(result) #this is a temp fix to add an extra comma that is missing
         temp[4356] = ','
         result = "".join(temp)
-        csv_file = open("filename.csv", "w")
+        csv_file = open("dataentry/tests/temp/irf.csv", "w")
         csv_file.write(result);
         csv_file.close()
 
-        csv_file = open("filename.csv", "r")
+        csv_file = open("dataentry/tests/temp/irf.csv", "r")
         mydict = {}
         reader = csv.reader(csv_file, delimiter=',')
         for rows in reader:
             if not "+" in rows[147] and not "+" in rows[148]:
                 self.assertTrue(True)
-        os.remove("filename.csv")
+            else:
+                self.assertTrue(False)
