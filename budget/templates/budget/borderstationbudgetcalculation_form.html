@@ -71,7 +71,6 @@
                     <div class="col-lg-6">
                         <h2 class="background"><span>Staff Salaries</span></h2>
 
-                        <!--  TODO: put staff forms here! -->
                         <div class="row" ng-controller="staffCtrl as staff"">
                             <div class="row" ng-repeat="form in staff.staffSalaryForms" ng-init="staff.totalSalaries();">
 
@@ -839,6 +838,7 @@
 
 
         <script type="text/javascript" src="{{ STATIC_URL }}budgetModule.js"></script>
+        <script type="text/javascript" src="{{ STATIC_URL }}services/mainCtrlService.js"></script>
         <script type="text/javascript" src="{{ STATIC_URL }}controllers/mainCtrl.js"></script>
         <script type="text/javascript" src="{{ STATIC_URL }}services/staffService.js"></script>
         <script type="text/javascript" src="{{ STATIC_URL }}services/otherItemsService.js"></script>
