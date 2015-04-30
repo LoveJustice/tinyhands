@@ -26,7 +26,9 @@ FIXTURE_DIRS = (
     (os.path.join(SITE_ROOT, '../../fixtures/'),)
 )
 
-STATICFILES_DIRS = (os.path.join(SITE_ROOT, '../../static/'),)
+STATICFILES_DIRS = (os.path.join(SITE_ROOT, '../../static/'),
+                    os.path.join(SITE_ROOT, '../../budget/templates/budget/javascript/'),
+                    )
 
 AUTH_USER_MODEL = 'accounts.Account'
 LOGIN_URL = '/login/'
@@ -40,12 +42,14 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     'widget_tweaks',
     'bootstrapform',
     'imagekit',
     'dataentry',
     'accounts',
     'portal',
+    'budget',
     'util',
     'rest_framework',
     'static_border_stations',
@@ -106,3 +110,9 @@ TEMPLATE_CONTEXT_PROCESSORS += ("dataentry.context_processors.border_stations_pr
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.AllowAny',
+    )
+}

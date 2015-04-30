@@ -1,4 +1,6 @@
 {% load bootstrap %}
+{% load widget_tweaks %}
+
 <hr/>
 {{person_form.id}}
 <span class="delete_checkbox">{{ person_form.DELETE }}</span>
@@ -13,6 +15,7 @@
 <div class="row">
     <div class="col-sm-6">
         {{person_form.email|bootstrap}}
+        <p hidden="true">{{person_form.salary}}</p>
     </div>
     <div class="col-sm-6">
         {{person_form.receives_money_distribution_form|bootstrap}}

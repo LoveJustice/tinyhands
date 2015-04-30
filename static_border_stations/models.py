@@ -1,6 +1,7 @@
 from django.db import models
 from dataentry.models import BorderStation
 
+
 class Person(models.Model):
     email = models.EmailField(max_length=255, unique=True)
     first_name = models.CharField(max_length=255, blank=True)
@@ -11,13 +12,17 @@ class Person(models.Model):
     class Meta:
         abstract = True
 
+
 class Staff(Person):
     class Meta:
         abstract = False
 
+
+
 class CommitteeMember(Person):
     class Meta:
         abstract = False
+
 
 class Location(models.Model):
     name = models.CharField(max_length=255, blank=True)

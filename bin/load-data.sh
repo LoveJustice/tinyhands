@@ -4,4 +4,4 @@
 
 ./manage.py loaddata fixtures/accounts.json
 ./manage.py loaddata fixtures/portal/border_stations.json
-./manage.py loaddata fixtures/alerts/alerts.json 
+./manage.py loaddata fixtures/alerts/alerts.json

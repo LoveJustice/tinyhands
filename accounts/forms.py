@@ -22,6 +22,7 @@ class CreateUnactivatedAccountForm(forms.ModelForm):
             'permission_border_stations_add',
             'permission_border_stations_edit',
             'permission_vdc_manage',
+            'permission_budget_manage',
         ]
 
     def clean_password2(self):

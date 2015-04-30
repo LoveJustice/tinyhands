@@ -1,0 +1,14 @@
+{% load bootstrap %}
+{% load widget_tweaks %}
+
+
+{{ item_form.DELETE }}
+<div class="row">
+    {{ item_form.id }}
+    <div class="col-lg-4 col-lg-offset-1">
+        {{ item_form.name|bootstrap }}
+    </div>
+    <div class="col-lg-4">
+        {{ item_form.cost|bootstrap }}
+    </div>
+</div>

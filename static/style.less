@@ -1,42 +1,93 @@
 body {
-    padding-top: 70px;
-    padding-bottom: 70px;
+  padding-top: 70px;
+  padding-bottom: 70px;
+}
+
+#budget-calc-form{
+  .animated-budget-items {
+  }
+  .animated-budget-items.ng-move,
+  .animated-budget-items.ng-enter,
+  .animated-budget-items.ng-leave {
+  }
+
+  .animated-budget-items.ng-leave.ng-leave-active,
+  .animated-budget-items.ng-move,
+  .animated-budget-items.ng-enter {
+    max-height: 0;
+    transition: max-height 0.4s ease-in;
+    -webkit-animation-duration: 0.4s;
+    animation-duration: 0.4s;
+    -webkit-animation-name: fadeOutUp;
+    animation-name: fadeOutUp;
+  }
+
+  .animated-budget-items.ng-leave,
+  .animated-budget-items.ng-move.ng-move-active,
+  .animated-budget-items.ng-enter.ng-enter-active {
+      max-height: 50px;
+      transition: max-height 0.4s ease-out;
+      -webkit-animation-duration: 0.4s;
+      animation-duration: 0.4s;
+      -webkit-animation-name: fadeInDown;
+      animation-name: fadeInDown;
+  }
+}
+
+
+.repositionremovebtn{
+  position: relative;
+  left: 80%;
+  bottom: 50px;
+}
+
+.changeaddbtn{
+  width:200px;
 }
 
 .navbar {
-    padding-right: 20px;
+  padding-right: 20px;
 }
 
-.mbs {  // margin bottom small
-    margin-bottom: 4px;
+.mbs {
+  // margin bottom small
+  margin-bottom: 4px;
 }
 
 abbr {
-    font-size: 70%;
+  font-size: 70%;
 }
 
 .required {
-    color: #a00000;
+  color: #a00000;
 }
 
 .tooltip-inner.kind-error {
-    background-color: #a00000 !important;
-    font-weight: normal;
-    font-size: 13px;
-    border: 1px solid black;
+  background-color: #a00000 !important;
+  font-weight: normal;
+  font-size: 13px;
+  border: 1px solid black;
 }
+
 .tooltip-inner.kind-warning {
-    background-color: #FED228 !important;
-    color: black !important;
-    font-weight: normal;
-    font-size: 13px;
-    border: 1px solid black;
+  background-color: #FED228 !important;
+  color: black !important;
+  font-weight: normal;
+  font-size: 13px;
+  border: 1px solid black;
 }
 
+.station-info-window + div {
+  display: none;
+}
 
-.station-info-window + div {display: none;}
-.station-info-window {width:125px;}
-.station-info-window-big {width:200px;}
+.station-info-window {
+  width: 125px;
+}
+
+.station-info-window-big {
+  width: 200px;
+}
 
 .dynamicInfoWindow {width:350px;}
 
@@ -245,9 +296,10 @@ abbr {
 @vif-blue: #003366;
 @vif-red: #800000;
 
+
 #victim-interview-form {
     width: 1140px;
-    
+
     .form-page {
         font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
         font-size: 18px;
@@ -512,58 +564,130 @@ abbr {
 
 @warning-yellow: #FED228;
 .alarm-box {
-    position: relative;
-    display: inline-block;
-    padding-left: 22px;
-    padding-right: 6px;
-    text-align: right;
-    background-color: black;
-    color: @warning-yellow;
-    &:before {
-        color: black;
-        position: absolute;
-        content:"!";
-        z-index: 1000;
-        left: 9px;
-        top: 4px;
-        font-weight: bold;
-        font-size: 10px;
-    }
-    &:after {
-        content:" ";
-        position: absolute;
-        z-index: 500;
-        top: 3px;
-        left: 4px;
-        border-top: 0px solid transparent;
-        border-left: 7px solid transparent;
-        border-right: 7px solid transparent;
-        border-bottom: 14px solid @warning-yellow;
+  position: relative;
+  display: inline-block;
+  padding-left: 22px;
+  padding-right: 6px;
+  text-align: right;
+  background-color: black;
+  color: @warning-yellow;
+  &:before {
+    color: black;
+    position: absolute;
+    content: "!";
+    z-index: 1000;
+    left: 9px;
+    top: 4px;
+    font-weight: bold;
+    font-size: 10px;
+  }
+  &:after {
+    content: " ";
+    position: absolute;
+    z-index: 500;
+    top: 3px;
+    left: 4px;
+    border-top: 0px solid transparent;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-bottom: 14px solid @warning-yellow;
 
-    }
+  }
 }
+
 .alarm-box-container {
-    border: 1px solid black;
-    padding: 1px;
-    padding-right: 0;
+  border: 1px solid black;
+  padding: 1px;
+  padding-right: 0;
 }
 
 .interviewer-believes-box {
-    background-image: url(/static/images/interviewer.png);
-    background-repeat: no-repeat;
-    background-position: 2px;
-    padding-left: 18px;
-    border: 1px solid black;
-    margin: 2px;
+  background-image: url(/static/images/interviewer.png);
+  background-repeat: no-repeat;
+  background-position: 2px;
+  padding-left: 18px;
+  border: 1px solid black;
+  margin: 2px;
 }
+
 .victim-believes-box {
-    background-image: url(/static/images/victim.png);
-    background-repeat: no-repeat;
-    background-position: 18px;
-    padding-right: 18px;
-    padding-left: 4px;
-    border: 1px solid black;
-    margin: 2px;
+  background-image: url(/static/images/victim.png);
+  background-repeat: no-repeat;
+  background-position: 18px;
+  padding-right: 18px;
+  padding-left: 4px;
+  border: 1px solid black;
+  margin: 2px;
+}
+
+/**
+* Horizontal Type Line Behind Text
+* Inspired by this discussion @ CSS-Tricks: http://css-tricks.com/forums/topic/css-trick-for-a-horizontal-type-line-behind-text/#post-151970
+* Available on jsFiddle: http://jsfiddle.net/ericrasch/jAXXA/
+* Available on Dabblet: http://dabblet.com/gist/2045198
+* Available on GitHub Gist: https://gist.github.com/2045198
+*/
+h2.background {
+  font: 20px sans-serif;
+  margin-top: 30px;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+
+  &:before {
+    border-top: 2px solid #dfdfdf;
+    content: "";
+    margin: 0 auto; /* this centers the line to the full width specified */
+    position: absolute; /* positioning must be absolute here, and relative positioning must be applied to the parent */
+    top: 50%;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 95%;
+    z-index: -1;
+  }
+
+  span {
+    /* to hide the lines from behind the text, you have to set the background color the same as the container */
+    background: #fff;
+    padding: 0 15px;
+  }
+}
+
+.form-symbol {
+  padding: 0;
+  margin: 0;
+  width: 35px;
+}
+
+.calc-form-input {
+  padding: 0;
+  margin: 0;
+  width: 75px;
+}
+
+.calc-form-input-no-width {
+  padding: 0;
+  margin: 0;
+}
+
+.input-with-text {
+  text-align: center;
+}
+
+.center-checkbox {
+  text-align: center;
+  vertical-align: middle;
+  margin: 0;
+  padding: 0;
+}
+
+.form-table-input-width {
+  width: 150px;
+}
+
+.row-padding {
+  margin-top: 20px;
 }
 
 .dropdown-menu {

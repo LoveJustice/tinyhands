@@ -9,7 +9,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core import serializers
-from django.core.exceptions import ImproperlyConfigured, PermissionDenied
+from django.core.exceptions import PermissionDenied
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
 from django.core.urlresolvers import reverse_lazy
@@ -25,11 +25,12 @@ from rest_framework.response import Response
 
 from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSet
 from braces.views import LoginRequiredMixin
-from fuzzywuzzy import process, fuzz
+from fuzzywuzzy import process
 
-from dataentry.models import (BorderStation, District, VDC,
+from dataentry.models import (BorderStation, VDC,
                               Interceptee, InterceptionRecord,
-                              VictimInterview, VictimInterviewLocationBox, VictimInterviewPersonBox)
+                              VictimInterview, VictimInterviewLocationBox,
+                              VictimInterviewPersonBox)
 from dataentry.forms import (IntercepteeForm, InterceptionRecordForm,
                              VDCForm,
                              VictimInterviewForm,
@@ -54,9 +55,9 @@ class SearchFormsMixin(object):
 
     def __init__(self, *args, **kw):
         for key, value in kw.iteritems():
-            if(value == "name"):
+            if value == "name":
                 self.Name = key
-            elif(value == "number"):
+            elif value == "number":
                 self.Number = key
 
     def get_queryset(self):
@@ -64,7 +65,7 @@ class SearchFormsMixin(object):
             value = self.request.GET['search_value']
         except:
             value = ''
-        if (value != ''):
+        if value != '':
             code = value[:3]
             stations = BorderStation.objects.filter(station_code__startswith=code)
             if(len(stations) != 0):
@@ -278,6 +279,7 @@ class VictimInterviewUpdateView(LoginRequiredMixin,
         return HttpResponseRedirect(self.get_success_url())
 
 
+
 class VictimInterviewDetailView(VictimInterviewUpdateView):
     permissions_required = ['permission_vif_view']
 
@@ -414,8 +416,8 @@ class StationCodeAPIView(APIView):
 
 @login_required
 def interceptee_fuzzy_matching(request):
-    inputName= request.GET['name']
+    input_name = request.GET['name']
     all_people = Interceptee.objects.all()
     people_dict = {serializers.serialize("json", [obj]):obj.full_name for obj in all_people }
-    matches = process.extractBests(inputName, people_dict, limit = 10)
+    matches = process.extractBests(input_name, people_dict, limit = 10)
     return HttpResponse(json.dumps(matches), content_type="application/json")

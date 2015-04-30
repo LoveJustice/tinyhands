@@ -1,36 +1,56 @@
-from django.shortcuts import render
+from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse_lazy
 
-from django.views.generic import CreateView
 
 from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSet
+from rest_framework import viewsets
+from rest_framework.response import Response
 
 from accounts.mixins import PermissionsRequiredMixin
 from braces.views import LoginRequiredMixin
-
-from static_border_stations.models import Staff,CommitteeMember,Location
 from dataentry.models import BorderStation
+from static_border_stations.models import Staff, CommitteeMember, Location
 
 from dataentry.forms import BorderStationForm
+from static_border_stations.models import Staff, CommitteeMember, Location
+from static_border_stations.serializers import StaffSerializer
+
 
 class FormSetForStations(InlineFormSet):
 
     def __init__(self, *args, **kwargs):
         super(FormSetForStations, self).__init__(*args, **kwargs)
-        if(self.request.path.find('create') == -1 and self.request.path.find('update') == -1):
+        if self.request.path.find('create') == -1 and self.request.path.find('update') == -1:
             self.extra = 0
         else:
             self.extra = 1
         return
 
+
+class StaffViewSet(viewsets.ModelViewSet):
+    queryset = Staff.objects.all()
+    serializer_class = StaffSerializer
+
+    def staff_retrieve(self, request, *args, **kwargs):
+        """
+            retrieve all the staff for a particular border_station
+        """
+        self.object_list = self.filter_queryset(self.get_queryset().filter(border_station=self.kwargs['pk']))
+        serializer = self.get_serializer(self.object_list, many=True)
+        return Response(serializer.data)
+
+
 class StaffInline(FormSetForStations):
-    model=Staff
+    model = Staff
+
 
 class CommitteeMemberInline(FormSetForStations):
-    model=CommitteeMember
+    model = CommitteeMember
+
 
 class LocationInline(FormSetForStations):
-    model=Location
+    model = Location
+
 
 class StaticBorderStationsCreateView (
         LoginRequiredMixin,
@@ -43,6 +63,12 @@ class StaticBorderStationsCreateView (
     inlines = [StaffInline, CommitteeMemberInline, LocationInline]
     permissions_required = ['permission_border_stations_add']
 
+    def get_context_data(self, **kwargs):
+        context = super(StaticBorderStationsCreateView, self).get_context_data(**kwargs)
+        context["saved"] = False
+        return context
+
+
 class StaticBorderStationsUpdateView (
         LoginRequiredMixin,
         PermissionsRequiredMixin,
@@ -54,8 +80,19 @@ class StaticBorderStationsUpdateView (
     inlines = [StaffInline, CommitteeMemberInline, LocationInline]
     permissions_required = ['permission_border_stations_edit']
 
+    def get_context_data(self, **kwargs):
+        context = super(StaticBorderStationsUpdateView, self).get_context_data(**kwargs)
+        context["saved"] = True
+        return context
+
+
 class StaticBorderStationsDetailView(StaticBorderStationsUpdateView):
     permissions_required = ['permission_border_stations_view']
 
     def post(self, request, *args, **kwargs):
         raise PermissionDenied
+
+    def get_context_data(self, **kwargs):
+        context = super(StaticBorderStationsDetailView, self).get_context_data(**kwargs)
+        context["saved"] = True
+        return context
