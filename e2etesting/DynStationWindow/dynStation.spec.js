@@ -4,12 +4,21 @@ var borderStations = require('../fixtures/border_stations.json');
 var dynStation = require('./dynStation.js');
 var stationsFound = new Array();
 
+
+
 var stationsCount = new Object();
+var stationsCoords = new Object();
 for (var i = 0;  i < borderStations.length; i++) {
   var station = JSON.parse(JSON.stringify(borderStations[i]));
   var name = station.fields.station_name + " " + station.fields.station_code;
+  var lat = stations.fields.latitude;
+  var lon = stations.fields.longitude;
   stationsCount[name] = 0;
+  stationsCoords[name]=[lat,lon];
+
 }
+
+dynStation.initialize();
 
 describe('Dynamic Station Window', function() {
 
@@ -25,12 +34,14 @@ describe('Dynamic Station Window', function() {
     });
   });
 
-  describe('Test Marker Exists', function () {
+  describe('Test Marker Functionality', function () {
     it('marker exists', function () {
-      console.log("BEFORE\n", stationsCount);
-      dynStation.checkStations(stationsCount);
-      console.log("AFTER\n", stationsCount);
+        dynStation.checkStations(stationsCount);
+    });
+    it('marker is clickable', function() {
+        for(var station in stationsCount) {
+            dynStation.clickStation(station);
+        };
     });
   });
-
 });

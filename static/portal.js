@@ -126,12 +126,16 @@ function getBorderStations(map){
 
         for(var station=0;station<data.length;station++){ //Iterate over each Border Station
             var myLatlng = new google.maps.LatLng(data[station].fields.latitude,data[station].fields.longitude);
+            //var pinIcon = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|93B0F5", new google.maps.Size(21,34));
             var marker = new google.maps.Marker({ //Initialize a BorderStation's marker
+                id:'marker'+data[station].fields.station_code,
                 position: myLatlng,
                 map: map,
+                //icon: pinIcon,
                 title: data[station].fields.station_name + " " + data[station].fields.station_code,
                 clicked: false,
-                optimized: false
+                optimized: false,
+                hide: false
             });
 
             google.maps.event.addListener(dynamicWindow, 'closeclick', (function(marker) {
