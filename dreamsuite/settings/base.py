@@ -28,6 +28,7 @@ FIXTURE_DIRS = (
 
 STATICFILES_DIRS = (os.path.join(SITE_ROOT, '../../static/'),
                     os.path.join(SITE_ROOT, '../../budget/templates/budget/javascript/'),
+                    os.path.join(SITE_ROOT, '../../portal/templates/portal/javascript/'),
                     )
 
 AUTH_USER_MODEL = 'accounts.Account'

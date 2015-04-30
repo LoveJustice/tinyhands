@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="{{ STATIC_URL }}images/favicon.ico">
 
+    <link href="{{ STATIC_URL }}animate.css" rel="stylesheet" media="screen">
     <link href="{{ STATIC_URL }}bootstrap.css" rel="stylesheet" media="screen">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
     <link href="{{ STATIC_URL }}jquery-ui/jquery-ui.css" rel="stylesheet" media="screen">
     <link href="{{ STATIC_URL }}datetimepicker/jquery.datetimepicker.css" rel="stylesheet" media="screen">
     <link rel="stylesheet" href="{{ STATIC_URL }}animate.css"/>
@@ -16,10 +18,10 @@
     <script src="{{ STATIC_URL }}jquery.js"></script>
     <script src="{{ STATIC_URL }}/jquery-ui/jquery-ui.js"></script>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.js"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-cookies.min.js"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-route.js"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-animate.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.13/angular.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.13/angular-animate.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.13/angular-cookies.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.13/angular-route.min.js"></script>
     <script src="{{ STATIC_URL }}app.js"></script>
 
     {% block head %}{% endblock %}
@@ -104,17 +106,19 @@ in the Javascript and run code unique to the current page.
         </div><!-- /.navbar-collapse -->
     </div>
 
-<div class="container">
-{% if messages %}
-<div class="alert-container">
-    {% for message in messages %}
-    <div{% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>{{ message }}</div>
-    {% endfor %}
-</div>
-{% endif %}
-{% block tab_block %}{% endblock %}
-</div>
+<!-- REGION: MAIN CONTENT -->
+<div id="content-container" class="container">
+    {% if messages %}
+    <div class="alert-container">
+        {% for message in messages %}
+        <div{% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>{{ message }}</div>
+        {% endfor %}
+    </div>
 
+    {% endif %}
+    {% block tab_block %}{% endblock %}
+</div>
+<!-- ENDREGION: MAIN CONTENT-->
 
 {% block sticky_footer %}
 {% endblock %}
@@ -132,6 +136,5 @@ in the Javascript and run code unique to the current page.
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}datatables/css/jquery.dataTables.css">
 <script src="{{ STATIC_URL }}datatables/js/jquery.dataTables.min.js"></script>
 <script src="{{ STATIC_URL }}vdc-datatable.js"></script>
-
 </body>
 </html>

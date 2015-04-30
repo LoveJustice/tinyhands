@@ -18,8 +18,8 @@
 
   "webAddress" : "http://0.0.0.0:8001",
 
-  "irfNumber"                 : "0",
-  "irfEditNumber"             : "1",
+  "irfNumber"                 : "BHD123",
+  "irfEditNumber"             : "BHD124",
   "irfLocation"               : "none",
   "irfInterceptTime"          : "01/01/01",
   "irfStaffName"              : "TEST",

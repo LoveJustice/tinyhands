@@ -27,3 +27,10 @@ All you have to do is run the command "./manage.py test"
 2. Start the Karma server with "./node_modules/karma/bin/karma start" if you are in the root project directory
 3. Watch the magic.
 
+### Running Karma Tests
+---
+ * First install packages using `npm install`, or follow directions [here](http://karma-runner.github.io/0.12/intro/installation.html)
+ * Then run `./node_modules/karma/bin/karma start` to start the karma server.
+
+**NOTE**: Also check out [this](https://www.airpair.com/angularjs/posts/testing-angular-with-karma)
+Resource to learn how to do [unit-tests](http://www.tuesdaydeveloper.com/2013/06/angularjs-testing-with-karma-and-jasmine/) in jasmine.
