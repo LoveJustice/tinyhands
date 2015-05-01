@@ -27,8 +27,6 @@
         activate();
 
         function activate() {
-            getTallyLocalStorage();
-
             getTallyData(true);
 
             // Prevent dropdown from closing after click
@@ -62,9 +60,16 @@
                         }
                     }
                 }
+            }else{ //localStorage days is null
+                for(var i in data){
+                    if(!isEmptyObject(data[i].interceptions)){
+                        data[i].change = true;
+                        data[i].seen = false;
+                    }
+                }
             }
             vm.days = data;
-            saveTallyLocalStorage();
+            
         }
 
         function getDayOfWeek(date) {
@@ -78,16 +83,22 @@
             return tallyService.getTallyDays().then(function(promise) {
                 var data = promise.data;
                 if(firstCall){
+                    getTallyLocalStorage(data.id);
                     checkDifferences(data.days);
                     setInterval(getTallyData, 60000);
                 }else{ //updates
                     checkDifferences(data.days);
                 }
+                saveTallyLocalStorage(data.id);
             });
         }
 
-        function getTallyLocalStorage() {
-            vm.days = JSON.parse(localStorage.tallyDays);
+        function getTallyLocalStorage(id) {
+            console.log(id);
+            var oldTally = localStorage.getItem('tally-'+id);
+            if(oldTally){
+                vm.days = JSON.parse(oldTally);
+            }
         }
 
         function isEmptyObject(obj) {
@@ -98,8 +109,8 @@
             day.seen = true;
         }
 
-        function saveTallyLocalStorage() {
-            localStorage.tallyDays = JSON.stringify(vm.days);
+        function saveTallyLocalStorage(id) {
+            localStorage.setItem('tally-'+id, JSON.stringify(vm.days));
         }
 
         function sumNumIntercepts(day) {
