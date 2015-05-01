@@ -24,6 +24,8 @@
         vm.sumNumIntercepts = sumNumIntercepts;
         vm.toggleVDCLayer = toggleVDCLayer;
 
+        var userId = null;
+
         activate();
 
         function activate() {
@@ -83,18 +85,18 @@
             return tallyService.getTallyDays().then(function(promise) {
                 var data = promise.data;
                 if(firstCall){
-                    getTallyLocalStorage(data.id);
+                    getTallyLocalStorage();
                     checkDifferences(data.days);
                     setInterval(getTallyData, 60000);
                 }else{ //updates
                     checkDifferences(data.days);
                 }
-                saveTallyLocalStorage(data.id);
+                saveTallyLocalStorage();
             });
         }
 
-        function getTallyLocalStorage(id) {
-            var oldTally = localStorage.getItem('tally-'+id);
+        function getTallyLocalStorage() {
+            var oldTally = localStorage.getItem('tally-'+userId);
             if(oldTally){
                 vm.days = JSON.parse(oldTally);
             }
@@ -106,10 +108,11 @@
 
         function onMouseLeave(day){
             day.seen = true;
+            saveTallyLocalStorage();
         }
 
-        function saveTallyLocalStorage(id) {
-            localStorage.setItem('tally-'+id, JSON.stringify(vm.days));
+        function saveTallyLocalStorage() {
+            localStorage.setItem('tally-'+userId, JSON.stringify(vm.days));
         }
 
         function sumNumIntercepts(day) {
