@@ -12,7 +12,7 @@
                          ng-mouseenter="showInt = true"
                          ng-mouseleave="showInt = false; tally.onMouseLeave(day)"
                          ng-style="tally.changeColor(day)">
-                        <h3 class="day-of-week">{{day.dayOfWeek}}</h3>
+                        <h3 class="day-of-week">{{tally.getDayOfWeek(day.date)}}</h3>
                         <div ng-repeat="(station,numIntercepts) in day.interceptions">
                             <h4 ng-show="showInt" class="animated tallyFade">{{numIntercepts}} INT in {{station}}</h4>
                         </div>
@@ -25,7 +25,7 @@
                 <!--   REGION: Tally w/Smaller screens    -->
                 <div class="hidden-md hidden-lg tally-tab-small">
                     <div class="text-center" ng-repeat="day in tally.days">
-                        <h3 class="day-of-week">{{day.dayOfWeek[0]}}</h3>
+                        <h3 class="day-of-week">{{tally.getDayOfWeek(day.date)[0]}}</h3>
                         <h4>{{tally.sumNumIntercepts(day)}}</h4>
                     </div>
                 </div>
