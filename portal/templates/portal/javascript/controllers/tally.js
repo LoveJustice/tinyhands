@@ -11,7 +11,7 @@
 
         var daysOfWeek = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 
-        vm.days = {};
+        vm.days = [];
         vm.changeColor = changeColor;
         vm.checkDifferences = checkDifferences;
         vm.getDayOfWeek = getDayOfWeek;
@@ -69,7 +69,7 @@
                 }
             }
             vm.days = data;
-            
+
         }
 
         function getDayOfWeek(date) {
@@ -94,7 +94,6 @@
         }
 
         function getTallyLocalStorage(id) {
-            console.log(id);
             var oldTally = localStorage.getItem('tally-'+id);
             if(oldTally){
                 vm.days = JSON.parse(oldTally);
