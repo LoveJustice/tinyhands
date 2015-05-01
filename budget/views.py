@@ -20,10 +20,10 @@ from budget.models import BorderStationBudgetCalculation, OtherBudgetItemCost, S
 from static_border_stations.models import Staff, BorderStation
 from serializers import BorderStationBudgetCalculationSerializer, OtherBudgetItemCostSerializer, StaffSalarySerializer
 from models import BorderStationBudgetCalculation
-from z3c.rml import rml2pdf, document
+# from z3c.rml import rml2pdf, document
 from lxml import etree
 from rest_framework import generics, viewsets
-from reportlab import *
+#from reportlab import *
 
 
 class BudgetViewSet(viewsets.ModelViewSet):

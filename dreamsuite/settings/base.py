@@ -26,7 +26,7 @@ FIXTURE_DIRS = (
     (os.path.join(SITE_ROOT, '../../fixtures/'),)
 )
 
-STATICFILES_DIRS = (os.path.join(SITE_ROOT, '../../static/'),
+STATICFILES_DIRS = (
                     os.path.join(SITE_ROOT, '../../budget/templates/budget/javascript/'),
                     os.path.join(SITE_ROOT, '../../portal/templates/portal/javascript/'),
                     )
@@ -94,6 +94,7 @@ DATETIME_FORMAT = "n.j.Y g:iA"
 DATE_FORMAT = "n.j.Y"
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 MESSAGE_TAGS = {
     messages.constants.ERROR: 'danger'    # Fix up for Bootstrap.
