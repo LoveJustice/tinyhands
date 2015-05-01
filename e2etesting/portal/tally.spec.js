@@ -36,7 +36,7 @@ describe('Tally UI', function(){
         });
     });
     
-    it('should list interceptions when there are some', function() {
+    it('should list interceptions when there are some and show what days have changed', function() {
         irfCrud.getToIRF().then(function(){
             expect(browser.driver.getCurrentUrl()).toContain('data-entry/irfs/create/');
             var date = new Date();
@@ -57,6 +57,14 @@ describe('Tally UI', function(){
             
             expect(interceptions.count()).toEqual(1);
             expect(interceptions.first().getInnerHtml()).toEqual('1 INT in BHD');
+            var tab = interceptions.first().element(by.xpath('..')).element(by.xpath('..'));
+            expect(tab.getCssValue('color')).toEqual('rgba(255, 255, 255, 1)');
+            /*
+            Make sure the background is red when updated.
+            We check for .498039 rather than .5 because of the reason stated here: 
+                http://stackoverflow.com/questions/13754483/how-to-get-the-exact-rgba-value-set-through-css-via-javascript
+            */
+            expect(tab.getCssValue('background-color')).toEqual('rgba(255, 0, 0, 0.498039)');
         });
     });
     
@@ -86,12 +94,8 @@ describe('Tally UI', function(){
             expect(interceptions.first().getInnerHtml()).toEqual('2 INT in BHD');
             var tab = interceptions.first().element(by.xpath('..')).element(by.xpath('..'));
             expect(tab.getCssValue('color')).toEqual('rgba(255, 255, 255, 1)');
-            /*
-            Make sure the background is red when updated.
-            We check for .498039 rather than .5 because of the reason stated here: 
-                http://stackoverflow.com/questions/13754483/how-to-get-the-exact-rgba-value-set-through-css-via-javascript
-            */
             expect(tab.getCssValue('background-color')).toEqual('rgba(255, 0, 0, 0.498039)');
+            
         });
     }, 90000); //gives it a minute and a half until it timeouts
     
