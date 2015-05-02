@@ -26,6 +26,15 @@ var tally = function(){
             return browser.switchTo().window(newWindowHandle);
         });
     }
+    
+    self.getInterceptions = function(){
+        var interceptions = element.all(by.css('h4.animated.tallyFade')).filter(function(elem, index) {
+            return elem.getInnerHtml().then(function(text){
+                return text != 'No Interceptions';
+            });
+        });
+        return interceptions;
+    }
 }
 
 module.exports = new tally();

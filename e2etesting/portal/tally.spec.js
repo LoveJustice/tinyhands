@@ -11,10 +11,6 @@ describe('Tally UI', function(){
     });
     
     it('should have 7 days on screen', function(){
-        browser.driver.manage().window().getSize().then(function(size) {
-            origHeight = size.height;
-            origWidth = size.width;
-        });
         browser.driver.manage().window().maximize();
         
         browser.sleep(1000);
@@ -49,14 +45,12 @@ describe('Tally UI', function(){
             });
             expect(days.count()).toEqual(7);
             
-            var interceptions = element.all(by.css('h4.animated.tallyFade')).filter(function(elem, index) {
-                return elem.getInnerHtml().then(function(text){
-                    return text != 'No Interceptions';
-                });
-            });
+            var interceptions = tallyHelper.getInterceptions();
             
             expect(interceptions.count()).toEqual(1);
             expect(interceptions.first().getInnerHtml()).toEqual('1 INT in BHD');
+            
+            //test that tab is red based on changes since locally stored version
             var tab = interceptions.first().element(by.xpath('..')).element(by.xpath('..'));
             expect(tab.getCssValue('color')).toEqual('rgba(255, 255, 255, 1)');
             /*
@@ -65,6 +59,15 @@ describe('Tally UI', function(){
                 http://stackoverflow.com/questions/13754483/how-to-get-the-exact-rgba-value-set-through-css-via-javascript
             */
             expect(tab.getCssValue('background-color')).toEqual('rgba(255, 0, 0, 0.498039)');
+        });
+    });
+    
+    it('should change back to white after viewing a day', function(){
+        var interceptions = tallyHelper.getInterceptions();
+        var tab = interceptions.first().element(by.xpath('..')).element(by.xpath('..'));
+        browser.actions().mouseMove(tab).mouseMove({x: 300, y: 300}).perform().then(function(){ 
+            //expect(tab.getCssValue('color')).toEqual('rgba(255, 255, 255, 1)');
+            expect(tab.getCssValue('background-color')).toEqual('rgba(255, 255, 255, 0.85098)');
         });
     });
     
@@ -84,23 +87,18 @@ describe('Tally UI', function(){
         }).then(function() { //wait one minute for update to occur
             return browser.sleep(60000);
         }).then(function () {
-            var interceptions = element.all(by.css('h4.animated.tallyFade')).filter(function(elem, index) {
-                return elem.getInnerHtml().then(function(text){
-                    return text != 'No Interceptions';
-                });
-            });
+            var interceptions = tallyHelper.getInterceptions();
             
             expect(interceptions.count()).toEqual(1);
             expect(interceptions.first().getInnerHtml()).toEqual('2 INT in BHD');
             var tab = interceptions.first().element(by.xpath('..')).element(by.xpath('..'));
             expect(tab.getCssValue('color')).toEqual('rgba(255, 255, 255, 1)');
             expect(tab.getCssValue('background-color')).toEqual('rgba(255, 0, 0, 0.498039)');
-            
         });
     }, 90000); //gives it a minute and a half until it timeouts
     
     it('should show number of interceptions for that day when screen is small', function () {
-        browser.driver.manage().window().setSize(origWidth, origHeight).then(function(){
+        browser.driver.manage().window().setSize(768, 768).then(function(){
             return tallyHelper.openNewTab(); 
         }).then(function () { // switch to the newly created tab
             return browser.getAllWindowHandles().then(function (handles) {
@@ -132,10 +130,11 @@ describe('Tally UI', function(){
             
             expect(interceptions.count()).toEqual(1);
             expect(interceptions.first().getInnerHtml()).toEqual('3');
+            browser.driver.manage().window().maximize(); // return browser back to full size
         });
     }, 90000); //gives it a minute and a half until it timeouts
     
-    it('should disappear when unchecked from hamburger map menu', function(){
+    it('should disappear when unchecked from hamburger map menu and reappear when checked', function(){
         var EC = protractor.ExpectedConditions;
         tallyHelper.navigateHome()
         .then(function () {
@@ -151,6 +150,14 @@ describe('Tally UI', function(){
         }).then(function () {
             var tallyDiv = element(by.id('tally')).element(by.tagName('div')).isDisplayed();
             return expect(tallyDiv).toBe(false);
-        });
+        }).then(function (){
+            return element(by.id('layer-dropdown')).click();
+        }).then(function(){
+            var tallyToggle = element(by.id('tallyToggle'));
+            return tallyToggle.click();
+        }).then(function () {
+            var tallyDiv = element(by.id('tally')).element(by.tagName('div')).isDisplayed();
+            return expect(tallyDiv).toBe(true);
+        })
     });
 });
