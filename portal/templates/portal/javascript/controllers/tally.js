@@ -19,12 +19,13 @@
         vm.hasIntercepts = false;
         vm.isEmptyObject = isEmptyObject;
         vm.onMouseLeave = onMouseLeave;
+        vm.getTallyLocalStorage = getTallyLocalStorage;
+        vm.saveTallyLocalStorage = saveTallyLocalStorage;
         vm.showTally = true;
         vm.showVDCLayer = true;
         vm.sumNumIntercepts = sumNumIntercepts;
         vm.toggleVDCLayer = toggleVDCLayer;
-
-        var userId = null;
+        vm.userId = null;
 
         activate();
 
@@ -96,7 +97,7 @@
         }
 
         function getTallyLocalStorage() {
-            var oldTally = localStorage.getItem('tally-'+userId);
+            var oldTally = localStorage.getItem('tally-'+vm.userId);
             if(oldTally){
                 vm.days = JSON.parse(oldTally);
             }
@@ -112,7 +113,7 @@
         }
 
         function saveTallyLocalStorage() {
-            localStorage.setItem('tally-'+userId, JSON.stringify(vm.days));
+            localStorage.setItem('tally-'+vm.userId, JSON.stringify(vm.days));
         }
 
         function sumNumIntercepts(day) {

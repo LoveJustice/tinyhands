@@ -1,6 +1,6 @@
 
 describe('TallyCtrl', function(){
-    var vm, scope, httpBackend;//we'll use this scope in our tests
+    var vm, scope, httpBackend, localStorageTallyId;//we'll use this scope in our tests
 
     //mock Application to allow us to inject our own dependencies
     beforeEach(module('PortalMod'));
@@ -12,6 +12,12 @@ describe('TallyCtrl', function(){
         scope = $rootScope.$new();
         //declare the controller and inject our empty scope
         vm = $controller('TallyCtrl', {$scope: scope});
+
+        // Set tally id
+        vm.userId = 0;
+
+        // Clear local storage
+        localStorage.removeItem('tally-'+vm.userId);
     }));
    // tests start here
 
@@ -64,7 +70,6 @@ describe('TallyCtrl', function(){
 
     it('should have days that have not changed', function() {
         // REGION: Data Setup
-        localStorage.removeItem('tally-0');
         httpBackend.whenGET('/portal/tally/days/').respond(200, {
             id: 0,
             days: [
@@ -150,12 +155,76 @@ describe('TallyCtrl', function(){
                 {date:'2015-04-26T02:11:49.556',interceptions: {'BSD':4}},
             ]
         };
-        localStorage.removeItem('tally'+data.id);
         // ENDREGION: Data Setup
-        expect(localStorage.getItem('tally'+data.id)).toBeNull();
+        expect(localStorage.getItem('tally-'+vm.userId)).toBeNull();
 
-        localStorage.setItem('tally'+data.id, JSON.stringify(data));
+        localStorage.setItem('tally-'+vm.userId, JSON.stringify(data));
 
-        expect(localStorage.getItem('tally'+data.id)).not.toBeNull();
+        expect(localStorage.getItem('tally-'+vm.userId)).not.toBeNull();
+    });
+
+    it('should save tally data in local storage', function() {
+        // REGION: Data Setup
+        vm.days = [
+            {date:'2015-05-02T02:11:49.556',interceptions: {'BSD':4}},
+            {date:'2015-05-01T02:11:49.556',interceptions: {'ABC':2}},
+            {date:'2015-04-30T02:11:49.556',interceptions: {'BSD':4}},
+            {date:'2015-04-29T02:11:49.556',interceptions: {'ABC':2}},
+            {date:'2015-04-28T02:11:49.556',interceptions: {'BSD':4}},
+            {date:'2015-04-27T02:11:49.556',interceptions: {'ABC':2}},
+            {date:'2015-04-26T02:11:49.556',interceptions: {'BSD':4}},
+        ];
+        // ENDREGION: Data Setup
+        expect(localStorage.getItem('tally-'+vm.userId)).toBeNull();
+
+        vm.saveTallyLocalStorage();
+
+        expect(localStorage.getItem('tally-'+vm.userId)).not.toBeNull();
+    });
+
+    it('should get tally data from local storage', function() {
+        // REGION: Data Setup
+        vm.days = [
+            {date:'2015-05-02T02:11:49.556',interceptions: {'BSD':4}},
+            {date:'2015-05-01T02:11:49.556',interceptions: {'ABC':2}},
+            {date:'2015-04-30T02:11:49.556',interceptions: {'BSD':4}},
+            {date:'2015-04-29T02:11:49.556',interceptions: {'ABC':2}},
+            {date:'2015-04-28T02:11:49.556',interceptions: {'BSD':4}},
+            {date:'2015-04-27T02:11:49.556',interceptions: {'ABC':2}},
+            {date:'2015-04-26T02:11:49.556',interceptions: {'BSD':4}},
+        ];
+        vm.saveTallyLocalStorage();
+        vm.days = [];
+        // ENDREGION: Data Setup
+        expect(vm.days).toEqual([]);
+
+        vm.getTallyLocalStorage();
+
+        expect(vm.days).not.toEqual([]);
+    });
+
+    it('should return "Today" given current date string', function() {
+        // REGION: Data Setup
+        var todayString = new Date().toDateString();
+        // ENDREGION: Data Setup
+        var result = vm.getDayOfWeek(todayString);
+        expect(result).toEqual('Today');
+    });
+
+    it('should return day of the week given date string', function() {
+        // REGION: Data Setup
+        var daysOfWeek = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+        var dateStrings = [];
+        for (var i = 1; i < 7; i++) {
+            var newDate = new Date();
+            newDate.setDate(newDate.getDate() - i);
+            dateStrings.push(newDate);
+        }
+        // ENDREGION: Data Setup
+        for (var i in dateStrings) {
+            var newDayOfWeek = vm.getDayOfWeek(dateStrings[i]);
+            var result = daysOfWeek.indexOf(newDayOfWeek) >= 0;
+            expect(result).toBeTruthy();
+        }
     });
 });
