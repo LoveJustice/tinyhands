@@ -63,7 +63,6 @@ angular
                 .then(function(promise){
                     var staffData = promise[0].data;
                     var staffSalariesData = promise[1].data;
-                    console.log("hello");
                     for(var person = 0; person < staffSalariesData.length; person++) {
                         for (var x = 0; x < staffData.length; x++) {
                             if (staffData[x].id === staffSalariesData[person].staff_person) {
@@ -89,11 +88,10 @@ angular
                         }
 
                         var newperson = staffSalariesData[person];
-                        newperson.id = -1;
+                        newperson.id = undefined;
                         for(var oldPerson = 0; oldPerson < vm.staffSalaryForms.length; oldPerson++){
 
                             if( newperson.staff_person == vm.staffSalaryForms[oldPerson].staff_person){
-                                console.log(vm.staffSalaryForms);
                                 vm.staffSalaryForms.splice(oldPerson,1);
                             }
                         }
@@ -105,13 +103,15 @@ angular
 
         function saveAllSalaries(){
             for(var person = 0; person < vm.staffSalaryForms.length; person++){
+
                 item = vm.staffSalaryForms[person];
-                if(item.id < 0){
+                if(item.id === undefined){
                     saveItem(item);
                 }else{
                     updateItem(item);
                 }
             }
+            console.log(vm.staffSalaryForms);
         }
 
         function saveItem(item){

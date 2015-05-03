@@ -18,7 +18,6 @@ function staffService($http, $q) {
         // grab all of the staff for this budgetCalcSheet
         return $http.get('/static_border_stations/api/border-stations/' + borderStationId + '/').
             success(function (data) {
-                console.log(data);
                 return data;
             }).
             error(function (data, status, headers, config) {

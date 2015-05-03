@@ -49,7 +49,7 @@ def retrieve_latest_budget_sheet_for_border_station(request, pk):
                 "staff_salaries": staff_serializer.data
             }
         )
-    return Response({"budget_form": "", "other_items": "", "staff_salaries": ""})
+    return Response({"budget_form": {"border_station": pk}, "other_items": "", "staff_salaries": ""})
 
 
 
