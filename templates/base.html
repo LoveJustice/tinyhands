@@ -80,6 +80,9 @@ in the Javascript and run code unique to the current page.
                     </ul>
                 </li>
 
+                {% if request.user.permission_budget_manage %}
+                    <li><a href="{% url 'budget_list' %}">Budget Sheets</a></li>
+                {% endif %}
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li>
@@ -93,9 +96,6 @@ in the Javascript and run code unique to the current page.
                         {% endif %}
                         {% if request.user.permission_vdc_manage %}
                             <li><a href="{% url 'vdc_admin_page' %}">Edit VDCs</a></li>
-                        {% endif %}
-                        {% if request.user.permission_budget_manage %}
-                            <li><a href="{% url 'budget_list' %}">Border Station Budget Calculations</a></li>
                         {% endif %}
                         <li><a href="{% url 'logout' %}">Logout</a></li>
                     </ul>
