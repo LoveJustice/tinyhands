@@ -25,7 +25,7 @@ describe('Budget Calculation', function() {
             browser.ignoreSynchronization = false;
             budgetForm.fillOutForm();
 
-            browser.sleep(3000);
+            browser.sleep(10000);
             // expect totals to be certain values
             expect(element(by.binding("main.shelterTotal()")).getText()).toBe('900');
             expect(element(by.binding("main.foodTotal()")).getText()).toBe('2000');
@@ -44,7 +44,6 @@ describe('Budget Calculation', function() {
         it('redirects on submit', function () {
             //budgetForm.navigateToForms();
             budgetForm.submitForm();
-            browser.sleep(1000);
             browser.sleep(1000);
             expect(browser.driver.getCurrentUrl()).toContain('budget/budget_calculation');
         });
