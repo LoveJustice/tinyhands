@@ -16,6 +16,10 @@ exports.config = {
      'accounts/permissionsPage.spec.js'
      */
     'DynStationWindow/dynStation.spec.js',
-  ]
+  ],
+
+  capabilities: {
+      "browserName":"chrome"
+  }
 
 };

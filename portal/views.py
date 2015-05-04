@@ -29,3 +29,4 @@ def get_staff_count(request):
         border_station = BorderStation.objects.filter(station_code=request.REQUEST["station_code"]).first()
         return HttpResponse(border_station.staff_set.count())
     return HttpResponse("No station found")
+

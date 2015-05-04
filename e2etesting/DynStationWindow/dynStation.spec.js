@@ -3,6 +3,7 @@ var loginPage = require('../accounts/loginPage.js');
 var borderStations = require('../fixtures/border_stations.json');
 var dynStation = require('./dynStation.js');
 var stationsFound = new Array();
+var fullDict = new Object();
 
 
 
@@ -24,6 +25,7 @@ describe('Dynamic Station Window', function() {
 
   beforeEach(function () {
     return browser.ignoreSynchronization = true;
+
   });
 
   describe('Dynamic Station Window Tests', function () {
@@ -44,4 +46,25 @@ describe('Dynamic Station Window', function() {
         };
     });
   });
+
+  describe('Click Box is Present', function () {
+      it('box exists', function () {
+          console.log("About to check for boxes");
+
+          dynStation.clickStations(stationsCount);
+
+          console.log("Done checking for boxes");
+
+      });
+  });
+
+/*  describe('Hover Box is Shown', function () {
+      it('hover box is shown', function (){
+          console.log("About to check hover boxes");
+          dynStation.checkHover();
+          expect(element(by.id("StaticDNG")).isPresent()).toBe(true);
+      })
+
+  })*/
+
 });
