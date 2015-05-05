@@ -2,19 +2,19 @@ var c = require('../testConstants.json');
 var loginPage = require('../accounts/loginPage.js');
 var borderStationPage = require('./borderStationCRUD.js');
 
-describe('Border Station CRUD', function() {
+describe('Border Station CRUD -', function() {
 
     beforeEach(function () {
         return browser.ignoreSynchronization = true;
     });
 
-    describe('Border Station CRUD TESTS', function () {
-        it('accepts credentials', function () {
+    describe('', function () {
+        it('A user can', function () {
             loginPage.logout();
             loginPage.loginAsAdmin();
         });
 
-        it('Create Border Station', function () {
+        it('Create a Border Station', function () {
             borderStationPage.getToBorderStationCreate();
             expect(browser.driver.getCurrentUrl()).toContain('/static_border_stations/border-stations/create/');
             borderStationPage.fillOutBorderStation();
@@ -22,7 +22,7 @@ describe('Border Station CRUD', function() {
         });
 
 
-        it('View Border Station', function () {
+        it('View a Border Station', function () {
             borderStationPage.viewBorderStation();
             expect(browser.driver.getCurrentUrl()).toContain('/static_border_stations/border-stations/update/24/');
             expect(element(by.id("id_station_name")).getAttribute('value')).toEqual(c.stationName);
@@ -49,7 +49,7 @@ describe('Border Station CRUD', function() {
             borderStationPage.closeBorderStation();
             expect(browser.driver.getCurrentUrl()).toContain('/portal/dashboard/');
         });
-        it('Edit Border Station', function () {
+        it('Edit a Border Station', function () {
             borderStationPage.editBorderStation();
             expect(browser.driver.getCurrentUrl()).toContain('/portal/dashboard/');
             borderStationPage.viewBorderStation();

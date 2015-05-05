@@ -33,13 +33,7 @@ angular
                 vm.salariesTotal = args['total'];
             });
 
-        vm.retrieveForm = function(id) {
-            mainCtrlService.retrieveForm(id).then(function(promise){
-                var data = promise.data;
-                vm.form = data;
-                console.log(data);
-            });
-        };
+
 
             /*vm.retrieveForm = function(id) {
                 $http.get('/budget/api/budget_calculations/' + id + '/').
@@ -311,9 +305,26 @@ angular
 
             };*/
 
+            vm.retrieveForm = function(id) {
+                mainCtrlService.retrieveForm(id).then(function(promise){
+                    vm.form = promise.data;
+                });
+            };
+
+            vm.retrieveNewForm = function() {
+                mainCtrlService.retrieveNewForm(window.budget_calc_id).then(function(promise){
+                    var data = promise.data.budget_form;
+                    data.members = [];
+                    data.id = undefined;
+                    vm.form = data;
+                })
+            };
+
+
             if( (window.submit_type) == 1 ) {
                 vm.create = true;
-                vm.form.border_station = (window.budget_calc_id);
+                vm.form.border_station = window.budget_calc_id;
+                vm.retrieveNewForm();
             }
             else if( (window.submit_type) == 2)  {
                 vm.update = true;

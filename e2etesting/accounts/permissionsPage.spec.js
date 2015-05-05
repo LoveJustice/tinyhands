@@ -2,7 +2,7 @@ var constants = require('../testConstants.json');
 var loginPage = require('./loginPage.js');
 var permissionsPage = require('./permissionsPage.js');
 var vifPage = require('./vifPage.js');
-var irfPage = require('../irf/irfCRUD.js');
+var irfPage = require('../dataentry/irfCRUD.js');
 
 describe('Accounts Page', function() {
     
