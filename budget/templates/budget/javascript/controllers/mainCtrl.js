@@ -249,11 +249,11 @@ angular
         vm.updateForm = function() {
             mainCtrlService.updateForm(vm.form.id, vm.form).then(function(promise) {
                 vm.id = promise.data.id;
-
+                console.log(vm.id);
                 //Broadcast event to call the saveAllItems function in the otherItems controller
                 $scope.$emit('handleBudgetCalcSavedEmit', {message: 'It is done.'});
                 console.log("Test...");
-                $window.location.assign('/budget/budget_calculations/money_distribution/view/0/');
+                $window.location.assign('/budget/budget_calculations/money_distribution/view/' + vm.id + '/');
             });
         };
 
@@ -283,7 +283,7 @@ angular
                 $scope.$emit('handleBudgetCalcSavedEmit', {message: 'It is done.'});
 
                 //TODO We should change this because this is bad
-                $window.location.assign('/budget/budget_calculations/money_distribution/view/0/');
+                $window.location.assign('/budget/budget_calculations/money_distribution/view/' + vm.id + '/');
             });
         };
 
