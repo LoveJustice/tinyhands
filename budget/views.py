@@ -187,12 +187,12 @@ class MoneyDistributionFormPDFView(PDFView):
             'travel_chair': station.travel_chair_with_bike_amount,
             'travel_manager_bool': station.travel_manager_with_bike,
             'travel_manager': station.travel_manager_with_bike_amount,
-            'travel_total': station.travel_manager_chair_total(),
+            'travel_total': station.travel_total(),
             'communication_chair_bool': station.communication_chair,
             'communication_chair': station.communication_chair_amount,
             'communication_manager_bool': station.communication_manager,
             'communication_manager': station.communication_manager_amount,
-            'communication_total': station.communication_manager_chair_total(),
+            'communication_total': station.communication_total(),
         }
 
 @login_required
