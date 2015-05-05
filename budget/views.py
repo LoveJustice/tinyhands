@@ -92,16 +92,13 @@ def retrieve_latest_budget_sheet_for_border_station(request, pk):
                 "budget_form": budget_serializer.data,
                 "other_items": other_items_serializer.data,
                 "staff_salaries": staff_serializer.data,
-                "last_months_total_cost": budget_sheet.station_total()
             }
         )
     return Response({"budget_form": {"border_station": pk}, "other_items": "", "staff_salaries": ""})
 
 @api_view(['GET'])
 def previous_data(request, pk):
-    budget_sheet = BorderStationBudgetCalculation.objects.filter(border_station=pk).order_by('-date_time_entered').first()
-
-
+    budget_sheet = BorderStationBudgetCalculation.objects.filter(border_station=pk).order_by('-date_time_entered') # todo: query from the most recent from the current sheet?
 
     if budget_sheet:
         border_station = BorderStation.objects.get(pk=pk)
@@ -112,21 +109,21 @@ def previous_data(request, pk):
         last_3_months = all_interception_records.filter(date_time_of_interception__gte=(datetime.datetime.now() - datetime.timedelta(3*365/12)))
 
 
-
-
     # all the interception records that start with the station code > a specific date (so we can develop a function for it)
         # iterate over each record, count their interceptees and add them to the sum
-    return Response(
-        {
-            "all": 5,
-            "all_cost": 6,
-            "last_month": 1,
-            "last_months_cost": 2,
-            "last_3_months": 3,
-            "last_3_months_cost": 4,
-            "staff_count": 10
-        }
-    )
+        return Response(
+            {
+                "all": 5,
+                "all_cost": 6,
+                "last_month": 1,
+                "last_months_cost": 2,
+                "last_3_months": 3,
+                "last_3_months_cost": 4,
+                "staff_count": 10,
+                "last_months_total_cost": budget_sheet.station_total()
+            }
+        )
+    return Response({"no previous data"})
 
 
 def ng_budget_calc_update(request, pk):
@@ -273,6 +270,7 @@ class MoneyDistributionFormPDFView(PDFView):
 @login_required
 def money_distribution_view(request, pk):
     id = pk
+    border_station = (BorderStationBudgetCalculation.objects.get(pk=pk)).border_station
     return render(request, 'budget/moneydistribution_view.html', locals())
 
 @login_required

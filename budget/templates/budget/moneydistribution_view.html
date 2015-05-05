@@ -8,13 +8,43 @@
 
 {% block tab_block %}
     {% block content %}
+
+        <script type="text/javascript">
+            window.border_station = {{ border_station.id }};
+        </script>
+
         <div class="row">
             <iframe class="col-lg-7" style="height: 900px; border: hidden" id="money_distribution_form_iframe" src="{% url "money_distribution_pdf" id %}"></iframe>
-            <div class="col-lg-4 col-lg-offset-1">
+
+
+        {% verbatim %}
+            <div class="col-lg-4 col-lg-offset-1" ng-controller="emailRecipientsCtrl as main">
                 <h2>E-mail Recipients</h2>
+                <h3>Staff</h3>
+                <div ng-repeat="staff in main.staff">
+                    <div class="row">
+                            <div class="col-lg-1 col-lg-offset-2">
+                            <input type="checkbox" ng-model="string" [name="string"] [ng-true-value="expression"] [ng-false-value="expression"] [ng-change="string"]></div>
+                            <div class="col-lg-5">{{ staff.first_name }} {{ staff.last_name }}</div>
+                            <div class="col-lg-4">{{ staff.email}}</div>
+                    </div>
+
+                </div>
+                <h3>Committee Members</h3>
+                    <div ng-repeat="member in main.committeeMembers">
+                        <div class="row">
+                            <div class="col-lg-4 col-lg-offset-2">{{ member.first_name }}</div>
+                            <div class="col-lg-4">{{ member.email}}</div>
+                        </div>
+
+                    </div>
             </div>
+        {% endverbatim %}
+
+
         </div>
 
         <script type="text/javascript" src="{{ STATIC_URL }}budgetModule.js"></script>
+        <script type="text/javascript" src="{{ STATIC_URL }}controllers/emailRecipientsCtrl.js"></script>
     {% endblock %}
 {% endblock %}

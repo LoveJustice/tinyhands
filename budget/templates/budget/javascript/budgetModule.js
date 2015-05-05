@@ -23,4 +23,8 @@ myModule.run(function($rootScope) {
     $rootScope.$on('handleSalariesTotalChangeEmit', function(event, args) {
         $rootScope.$broadcast('handleSalariesTotalChangeBroadcast', args);
     });
+
+    $rootScope.$on('lastBudgetTotalEmit', function(event, args) {
+        $rootScope.$broadcast('lastBudgetTotalBroadcast', args);
+    });
 });

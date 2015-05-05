@@ -35,7 +35,10 @@ angular
                 vm.salariesTotal = args['total'];
             });
 
-
+            $scope.$on('lastBudgetTotalBroadcast', function(event, args) {
+                console.log(args);
+                vm.last_months_total_cost = args['total'];
+            });
 
             /*vm.retrieveForm = function(id) {
                 $http.get('/budget/api/budget_calculations/' + id + '/').
@@ -269,7 +272,6 @@ angular
                 data.id = undefined;
                 vm.form = data;
                 vm.form.month_year = new Date();
-                vm.last_months_total_cost = promise.data.last_months_total_cost;
             })
         };
 
