@@ -1,6 +1,6 @@
 var loginPage = require('../accounts/loginPage.js');
 var searchPage = require('./search.js');
-var irfs = require('../irf/irfCRUD.js');
+var irfs = require('../dataentry/irfCRUD.js');
 var vifs = require('../accounts/vifPage.js');
 
 describe('TinyHands', function(){

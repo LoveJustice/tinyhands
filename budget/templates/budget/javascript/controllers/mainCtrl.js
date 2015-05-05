@@ -33,13 +33,7 @@ angular
                 vm.salariesTotal = args['total'];
             });
 
-        vm.retrieveForm = function(id) {
-            mainCtrlService.retrieveForm(id).then(function(promise){
-                var data = promise.data;
-                vm.form = data;
-                console.log(data);
-            });
-        };
+
 
             /*vm.retrieveForm = function(id) {
                 $http.get('/budget/api/budget_calculations/' + id + '/').
@@ -255,10 +249,11 @@ angular
         vm.updateForm = function() {
             mainCtrlService.updateForm(vm.form.id, vm.form).then(function(promise) {
                 vm.id = promise.data.id;
-
+                console.log(vm.id);
                 //Broadcast event to call the saveAllItems function in the otherItems controller
                 $scope.$emit('handleBudgetCalcSavedEmit', {message: 'It is done.'});
-                $window.location.assign('/budget/budget_calculations');
+                console.log("Test...");
+                $window.location.assign('/budget/budget_calculations/money_distribution/view/' + vm.id + '/');
             });
         };
 
@@ -288,7 +283,7 @@ angular
                 $scope.$emit('handleBudgetCalcSavedEmit', {message: 'It is done.'});
 
                 //TODO We should change this because this is bad
-                $window.location.assign('/budget/budget_calculations');
+                $window.location.assign('/budget/budget_calculations/money_distribution/view/' + vm.id + '/');
             });
         };
 
@@ -311,9 +306,26 @@ angular
 
             };*/
 
+            vm.retrieveForm = function(id) {
+                mainCtrlService.retrieveForm(id).then(function(promise){
+                    vm.form = promise.data;
+                });
+            };
+
+            vm.retrieveNewForm = function() {
+                mainCtrlService.retrieveNewForm(window.budget_calc_id).then(function(promise){
+                    var data = promise.data.budget_form;
+                    data.members = [];
+                    data.id = undefined;
+                    vm.form = data;
+                })
+            };
+
+
             if( (window.submit_type) == 1 ) {
                 vm.create = true;
-                vm.form.border_station = (window.budget_calc_id);
+                vm.form.border_station = window.budget_calc_id;
+                vm.retrieveNewForm();
             }
             else if( (window.submit_type) == 2)  {
                 vm.update = true;

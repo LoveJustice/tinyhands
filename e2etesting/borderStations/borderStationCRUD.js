@@ -6,7 +6,8 @@ var borderStationPage = function() {
     var page = this;
 
     this.getToBorderStationCreate = function(){
-        browser.get(constants.webAddress + 'portal/dashboard/');
+        browser.get(c.webAddress + '/portal/dashboard/');
+        browser.sleep(200);
         element(by.id("border_station_dropdown")).click();
         browser.sleep(200);
         element(by.id("border_station_create_link")).click();
