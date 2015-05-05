@@ -15,7 +15,9 @@
             <tr>
                 <th>Station</th>
                 <th>Station Code</th>
-                <th>&nbsp;</th>
+                <th>Budget For</th>
+                <th>Date Entered</th>
+                <th>Last Updated</th>
             </tr>
         </thead>
         <tbody>
@@ -23,6 +25,9 @@
             <tr>
                 <td>{{ form.border_station.station_name }}</td>
                 <td>{{ form.border_station.station_code }}</td>
+                <td>{{ form.month_year|date:"M Y" }}</td>
+                <td>{{ form.date_time_entered }}</td>
+                <td>{{ form.date_time_last_updated }}</td>
                 <td style="text-align: right">
                     <a href="{% url "budget_view_api" form.id %}" class="btn btn-sm btn-primary">View</a>
                     <a href="{% url "budget_update_api" form.id %}" class="btn btn-sm btn-primary">Edit</a>

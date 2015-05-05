@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.db import models
 
 from dataentry.models import BorderStation
@@ -7,6 +9,8 @@ from static_border_stations.models import Staff
 class BorderStationBudgetCalculation(models.Model):
     date_time_entered = models.DateTimeField(auto_now_add=True)
     date_time_last_updated = models.DateTimeField(auto_now=True)
+
+    month_year = models.DateTimeField(default=datetime.now())
 
     border_station = models.ForeignKey(BorderStation)
 
