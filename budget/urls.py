@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, url
 from budget import views
-from budget.views import BudgetViewSet, OtherItemsViewSet, StaffSalaryViewSet
+from budget.views import BudgetViewSet, OtherItemsViewSet, StaffSalaryViewSet, MoneyDistribution
 
 other_items_list = OtherItemsViewSet.as_view({
     'get': 'list',
@@ -35,6 +35,10 @@ budget_detail = BudgetViewSet.as_view({
     'delete': 'destroy'
 })
 
+distribution_detail = MoneyDistribution.as_view({
+    'get': 'get_people_needing_form',
+    'post': 'send_emails'
+})
 
 urlpatterns = patterns('budget.views',
     url(r'^budget_calculations/$', views.BudgetCalcListView.as_view(), name='budget_list'),
@@ -57,6 +61,8 @@ urlpatterns = patterns('budget.views',
 
     url(r'^api/budget_calculations/staff_salary/$', staff_salary_list, name="staff_salary_list_api"),
     url(r'^api/budget_calculations/staff_salary/(?P<pk>\d+)/$', staff_salary_detail, name="staff_salary_detail_api"),
+
+    url(r'^api/budget_calculations/money_distribution/(?P<pk>\d+)/$', distribution_detail, name="money_distribution_api"),
 )
 
 

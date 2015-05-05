@@ -23,7 +23,7 @@ angular
         vm.removeItem = removeItem;
         vm.saveAllItems = saveAllItems;
         vm.otherItemsTotal = otherItemsTotal;
-        vm.retrieveNewForm = retrieveNewForm
+        vm.retrieveNewForm = retrieveNewForm;
 
         main();
 
@@ -123,4 +123,4 @@ angular
         }
 
 
-    }])
+    }]);

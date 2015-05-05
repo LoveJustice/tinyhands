@@ -10,26 +10,71 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect, render_to_response
 from django.template.loader import render_to_string
 from django.views.generic import ListView, DeleteView, View
+from django.conf import settings
 
 
 from braces.views import LoginRequiredMixin
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework.views import APIView
+from templated_email import send_templated_mail
 
 from budget.forms import BorderStationBudgetCalculationForm
 from budget.models import BorderStationBudgetCalculation, OtherBudgetItemCost, StaffSalary
-from static_border_stations.models import Staff, BorderStation
+from static_border_stations.models import Staff, BorderStation, CommitteeMember
 from serializers import BorderStationBudgetCalculationSerializer, OtherBudgetItemCostSerializer, StaffSalarySerializer
 from models import BorderStationBudgetCalculation
 from z3c.rml import rml2pdf, document
 from lxml import etree
 from rest_framework import generics, viewsets
 from reportlab import *
+from static_border_stations.serializers import StaffSerializer, CommitteeMemberSerializer
 
 
 class BudgetViewSet(viewsets.ModelViewSet):
     queryset = BorderStationBudgetCalculation.objects.all()
     serializer_class = BorderStationBudgetCalculationSerializer
+
+
+class MoneyDistribution(viewsets.ViewSet):
+
+
+    def get_people_needing_form(self, request, pk):
+        border_station = BorderStation.objects.get(pk=pk)
+        staff = border_station.staff_set.all().filter(receives_money_distribution_form=True)
+        committee_members = border_station.committeemember_set.all().filter(receives_money_distribution_form=True).all()
+
+        staff_serializer = StaffSerializer(staff, many=True)
+        committee_members_serializer = CommitteeMemberSerializer(committee_members, many=True)
+        return Response({"staff_members": staff_serializer.data, "committee_members": committee_members_serializer.data})
+
+    def send_emails(self, request, *args, **kwargs):
+        import ipdb
+        ipdb.set_trace()
+        staff_ids = request.DATA['staff_ids']
+        committee_ids = request.DATA['committee_ids']
+
+        file = ""
+        # send the emails
+        for id in staff_ids:
+            person = Staff.objects.get(pk=id)
+            self.email_staff_and_committee_members(person, file, 'money_distribution_form')
+
+        for id in committee_ids:
+            person = CommitteeMember.objects.get(pk=id)
+            self.email_staff_and_committee_members(person, file, 'money_distribution_form')
+
+        return Response("Emails Sent!", status=200)
+
+    def email_staff_and_committee_members(self, person, pdf_file, template, context={}):
+        context['person'] = person
+        send_templated_mail(
+            template_name=template,
+            from_email=settings.ADMIN_EMAIL_SENDER,
+            recipient_list=[person.email],
+            context=context
+        )
+
 
 
 @api_view(['GET'])
