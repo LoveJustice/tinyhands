@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 
+{% block html %}<html ng-app="PortalMod">{% endblock %}
+
+{% block angular %}{% endblock %}
+
 {% block head %}
     <script type="text/javascript"
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyChNFPd_bOOnk59AkeKM862OqN80Lvp56g">
@@ -25,7 +29,4 @@
     <script src="{{ STATIC_URL }}services/tallyService.js"></script>
     <script src="{{ STATIC_URL }}controllers/portal.js"></script>
     <script src="{{ STATIC_URL }}controllers/tally.js"></script>
-    <script>
-        angular.bootstrap($('#portal'), ['PortalMod']);
-    </script>
 {% endblock %}

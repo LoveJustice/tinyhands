@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html>
+{% block html %}<!DOCTYPE html>{% endblock %}
 <head>
     <title>{% block title %}{% endblock %} | Tiny Hands Dream Suite</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -44,9 +43,11 @@ in the Javascript and run code unique to the current page.
 {% endcomment %}
 <body id="{{ request.resolver_match.url_name }}">
 
-<div ng-app="dreamsuite"></div>
+{% block angular %}
+    <div ng-app="dreamsuite"></div>
+{% endblock %}
 
-<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-header-collapse">
                 <span class="sr-only">Toggle navigation</span>
@@ -111,19 +112,19 @@ in the Javascript and run code unique to the current page.
         </div><!-- /.navbar-collapse -->
     </div>
 
-<!-- REGION: MAIN CONTENT -->
-<div id="content-container" class="container">
-    {% if messages %}
-    <div class="alert-container">
-        {% for message in messages %}
-        <div{% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>{{ message }}</div>
-        {% endfor %}
-    </div>
+    <!-- REGION: MAIN CONTENT -->
+    <div id="content-container" class="container">
+        {% if messages %}
+        <div class="alert-container">
+            {% for message in messages %}
+            <div{% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>{{ message }}</div>
+            {% endfor %}
+        </div>
 
-    {% endif %}
-    {% block tab_block %}{% endblock %}
-</div>
-<!-- ENDREGION: MAIN CONTENT-->
+        {% endif %}
+        {% block tab_block %}{% endblock %}
+    </div>
+    <!-- ENDREGION: MAIN CONTENT-->
 
 
 {% block sticky_footer %}
