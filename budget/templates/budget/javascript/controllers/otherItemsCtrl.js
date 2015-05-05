@@ -23,6 +23,7 @@ angular
         vm.removeItem = removeItem;
         vm.saveAllItems = saveAllItems;
         vm.otherItemsTotal = otherItemsTotal;
+        vm.retrieveNewForm = retrieveNewForm
 
         main();
 
@@ -32,7 +33,7 @@ angular
 
         function main(){
             if( window.submit_type == 1 ) {
-                //creation strategy
+                vm.retrieveNewForm();
             }
             else if( window.submit_type == 2)  {
                 // edit strategy
@@ -57,6 +58,18 @@ angular
                     }
                     vm.otherItemsTotal();
                 });
+        }
+
+        function retrieveNewForm() {
+            otherItemsService.retrieveNewForm(window.budget_calc_id).then(function(promise){
+                var itemsList = promise.data.other_items;
+                for(var x = 0; x < itemsList.length; x++){
+                    if (itemsList[x].form_section === $scope.form_section){
+                        itemsList[x].id = -1;
+                        vm.formsList[$scope.form_section-1].push(itemsList[x]);
+                    }
+                }
+            });
         }
 
         function addNewItem(){

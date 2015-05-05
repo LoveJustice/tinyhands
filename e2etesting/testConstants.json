@@ -10,7 +10,7 @@
   "vdcEditDis"       : "Dang",
   "vdcEditCan"       : "ShreeJung",
 
-  "vdcNewName"      : "aaaaa",
+  "vdcNewName"      : "aaaaaaaa",
   "vdcNewLat"       : "0.0",
   "vdcNewLon"       : "0.0",
   "vdcNewDis"       : "Dang",
@@ -18,8 +18,8 @@
 
   "webAddress" : "http://0.0.0.0:8001",
 
-  "irfNumber"                 : "0",
-  "irfEditNumber"             : "1",
+  "irfNumber"                 : "BHD123",
+  "irfEditNumber"             : "BHD121",
   "irfLocation"               : "none",
   "irfInterceptTime"          : "01/01/01",
   "irfStaffName"              : "TEST",
@@ -30,7 +30,7 @@
   "TEMPirfNameCameUpBeforeValue"  : "1",
 
   "stationName"               : "Test Station",
-  "stationCode"               : "COD",
+  "stationCode"               : "AAA",
   "dateEstablished"           : "01/01/01",
   "latitude"                  : "0.0",
   "longitude"                 : "0.0",

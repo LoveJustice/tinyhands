@@ -17,7 +17,7 @@ var vifCrud = function() {
     this.editVif = function() {
         this.edit = element(by.id("id_edit_vif_button")).click();
         this.clear_vif_number = element(by.id("id_vif_number")).clear();
-        this.change_vif_number = element(by.id("id_vif_number")).sendKeys("AAA111");
+        this.change_vif_number = element(by.id("id_vif_number")).sendKeys(c.vifNumber);
         this.hit_submit = element(by.id("id_interviewer")).submit();
         this.ignore_warnings = element(by.id("id_ignore_warnings")).click();
         this.submitButton = element(by.id("id_interviewer")).submit();
@@ -39,7 +39,7 @@ var vifCrud = function() {
     this.incorrectly_filled_out = function() {
         //Uses John's function to correctly fill out a VIF with the part which fills in the gender commented out
         if(true) {
-              this.vif_number = element(by.id("id_vif_number")).sendKeys("AAA111");
+              this.vif_number = element(by.id("id_vif_number")).sendKeys(c.vifNumber);
               this.date = element(by.id("id_date")).sendKeys("02/16/2015");
               this.interviewer = element(by.id("id_interviewer")).sendKeys("Test Interviewer");
               this.statement_read_before_beginning = element(by.id("id_statement_read_before_beginning")).click();
@@ -58,7 +58,7 @@ var vifCrud = function() {
               this.meeting_at_border = element(by.id("id_meeting_at_border_yes")).click();
               this.victim_knew_details_about_destination = element(by.id("id_victim_knew_details_about_destination_0")).click();
               this.awareness_before_interception = element(by.id("id_awareness_before_interception_had_heard_not_how_bad")).click();
-              this.attitude_towards_tiny_hands = element(by.id("id_attitude_towards_tiny_hands_thankful")).click()
+              this.attitude_towards_tiny_hands = element(by.id("id_attitude_towards_tiny_hands_thankful")).click();
               this.victim_heard_gospel = element(by.id("id_victim_heard_gospel_no")).click();
               this.legal_action_against_traffickers = element(by.id("id_legal_action_against_traffickers_no")).click();
               this.has_signature = element(by.id("id_has_signature")).click();
@@ -67,39 +67,6 @@ var vifCrud = function() {
               //this.submitButton = element(by.id("id_interviewer")).submit();
           }
     };
-    /* This code utilizes id names of specific elements within the form */
-
-    /*
-    this.fillOutRequiredFields = function(){
-        // Enters a VIF Number //
-        this.vifnumberfield = element(by.id("id_vif_number")).sendKeys('BHD123');
-
-        // Enters a Date
-        this.datefield = element(by.id("id_date")).sendKeys('02/06/2014');
-
-        // Enters a name for the Interviewer //
-        this.interviewerfield = elment(by.id("id_interviewer")).sendKeys('Stanley');
-
-        // Chooses a gender for the victim //
-        this.genderfield = element(by.id("id_victim_gender_0")).Click();
-
-        // Enters a name for the victim //
-        this.victimnamefield = element(by.id("id_victim_name")).sendKeys('Ryan');
-
-        // Chooses the 'Education' field for migration plan //
-        this.migrationplanfield = element(by.id("id_migration_plans_education")).Click();
-
-        // Chooses 'No' for section 3.2 //
-        this.victimrecruitedinvillagefield = element(by.id("id_victim_recruited_in_village_0")).Click();
-
-        // Chooses 'Bus' for section 4.3 //
-        this.meansoftravelfield = element(by.id("id_victim_primary_means_of_travel_tourist_bus")).Click();
-
-
-
-
-    }
-    */
 
 };
 
