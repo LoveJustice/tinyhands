@@ -3,7 +3,7 @@
 {% load bootstrap %}
 {% load unslugify %}
 {% load times %}
-
+{% block title %}Manage VDCs{% endblock %}
 {% block content %}
 
 <!-- Modal -->
@@ -25,12 +25,12 @@
 	{% for vdc in vdc_list %}
 		{% url 'interceptionrecord_list' as vdc_edit %}
 		<tr>
-		<td style="text-align:center">{{ vdc.name }} </td>
-		<td style="text-align:center">{{ vdc.get_latitude }} </td>
-	    <td style="text-align:center">{{ vdc.get_longitude }} </td>
-	    <td style="text-align:center">{{ vdc.get_district }} </td>
-	    <td style="text-align:center">{{ vdc.get_cannonical_name }} </td>
-	    <td style="text-align:center">
+		<td class="vdc_admin_name" style="text-align:center">{{ vdc.name }} </td>
+		<td class="vdc_admin_latitude" style="text-align:center">{{ vdc.get_latitude }} </td>
+	    <td class="vdc_admin_longitude" style="text-align:center">{{ vdc.get_longitude }} </td>
+	    <td class="vdc_admin_district" style="text-align:center">{{ vdc.get_district }} </td>
+	    <td class="vdc_admin_cannonical" style="text-align:center">{{ vdc.get_cannonical_name }} </td>
+	    <td class="vdc_admin_verified" style="text-align:center">
             {% if vdc.is_verified %}
                 Yes
             {% else %}
@@ -71,12 +71,12 @@
                 {% endif %}
                 {% endfor %}
 
-                {% if page_obj.has_next %} 
+                {% if page_obj.has_next %}
                     <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
                 {% else %}
                     <li class="disabled"><a href="">&raquo;</a></li>
                 {% endif %}
-                
+
             </ul>
         </div>
     </nav>

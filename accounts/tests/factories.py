@@ -2,6 +2,8 @@ import factory
 from factory.django import DjangoModelFactory
 import random
 from accounts.models import Account,DefaultPermissionsSet,Alert
+from accounts.models import DefaultPermissionsSet
+
 class SuperUserDesignation(DjangoModelFactory):
     class Meta:
         model = DefaultPermissionsSet
@@ -131,3 +133,4 @@ class AlertFactory(DjangoModelFactory):
             # A list of groups were passed in, use them
             for group in extracted:
                 self.permissions_group.add(group)
+
