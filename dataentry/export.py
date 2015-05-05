@@ -173,6 +173,8 @@ def get_irf_export_rows(irfs):
             date_interception = localtime(irf.date_time_of_interception)
             date_entered = localtime(irf.date_time_entered_into_system)
 
+            date_entered = date_entered.replace(microsecond=0)
+
             row.extend([
                 irf.irf_number,
 
