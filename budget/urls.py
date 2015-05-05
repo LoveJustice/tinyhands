@@ -2,6 +2,8 @@ from django.conf.urls import patterns, url
 from budget import views
 from budget.views import BudgetViewSet, OtherItemsViewSet, StaffSalaryViewSet, MoneyDistribution, previous_data
 
+
+
 other_items_list = OtherItemsViewSet.as_view({
     'get': 'list',
     'post': 'create'
@@ -62,11 +64,10 @@ urlpatterns = patterns('budget.views',
     url(r'^api/budget_calculations/staff_salary/$', staff_salary_list, name="staff_salary_list_api"),
     url(r'^api/budget_calculations/staff_salary/(?P<pk>\d+)/$', staff_salary_detail, name="staff_salary_detail_api"),
 
+    url(r'^api/budget_calculations/previous_data/(?P<pk>\d+)/$', previous_data, name="previous_data"),
+
     url(r'^api/budget_calculations/money_distribution/(?P<pk>\d+)/$', distribution_detail, name="money_distribution_api"),
 
-    url(r'^api/budget_calculations/previous_data/(?P<pk>\d+)/$', previous_data, name="previous_data"),
-)
-
-
-
-
+    url(r'^budget_calculations/money_distribution_pdf/(?P<pk>\d+)/$', views.MoneyDistributionFormPDFView.as_view(), name="money_distribution_pdf"),
+    url(r'^budget_calculations/money_distribution/view/(?P<pk>\d+)/$', views.money_distribution_view, name="money_distribution_view"),
+    )

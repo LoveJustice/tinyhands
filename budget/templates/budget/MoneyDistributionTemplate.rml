@@ -1,0 +1,110 @@
+<!-- This is very simple RML template for illustrative purposes.  -->
+<!--                                                              -->
+<!-- A basic RML template has three sections.  The 'template'     -->
+<!-- section is where you define fixed position elements, along   -->
+<!-- with 'frames' containing  flowing text.  The 'stylesheet'    -->
+<!-- section contains re-useable text style definitions.  The     -->
+<!-- 'story' section contains the text and graphics which fill    -->
+<!-- up the frames defined in the template section.               -->
+<!--                                                              -->
+<!-- For more information, please read the documentation at       -->
+<!-- http://www.reportlab.com/software/documentation/             -->
+
+<!DOCTYPE document SYSTEM "rml.dtd">
+<document filename="test.pdf">
+
+    <template showBoundary="0">
+        <!--define a 'frame' into which the content will flow.-->
+        <pageTemplate id="main">
+            <pageGraphics>
+                <setFont name="Helvetica-Bold" size="18"/>
+                <drawString x="35" y="783">Money Distribution Document</drawString>
+                <setFont name="Helvetica-Oblique" size="12"/>
+                <setFont name="Helvetica-BoldOblique" size="18"/>
+                <setFont name="Helvetica" size="10"/>
+            </pageGraphics>
+            <frame id="first" x1="35" y1="45" width="260" height="700"/>
+            <frame id="second" x1="300" y1="45" width="260" height="700"/>
+        </pageTemplate>
+    </template>
+
+    <stylesheet>
+        <!-- define a text style -->
+        <paraStyle name="normal" fontName="Helvetica" fontSize="10" leading="12" spaceAfter="12" />
+        <paraStyle name="header" fontName="Helvetica" fontSize="14" leading="12" spaceAfter="12" />
+
+    </stylesheet>
+
+
+
+    <story>
+        <!--The elements in this section will fill up the frames -->
+        <!--defined in the <template> section above.             -->
+        <!--The text inside double hashes is replaced dynamically-->
+        <!--inside Default.aspx-->
+        <para style="header">
+            <b>Station Name</b>: {{ name }}
+        </para>
+        <spacer length="10"/>
+        <para style="header">
+            <b>Staff Salaries</b>
+        </para>
+
+        {% for staffSalary in staffSalaries %}
+            <para style="normal">
+                {{ staffSalary.staff_person.first_name }} {{ staffSalary.staff_person.last_name}} = {{ staffSalary.salary }}
+            </para>
+        {% endfor %}
+
+
+        <!--Communication-->
+        <para style="header">
+            <b>Communication</b>
+        </para>
+
+        {% if communication_chair_bool  %}
+            <para style="normal">
+                Chair: {{ communication_chair }}
+            </para>
+        {% endif %}
+
+        {% if communication_manager_bool  %}
+            <para style="normal">
+                Manager: {{ communication_manager }}
+            </para>
+        {% endif %}
+
+        <para style="normal">
+            Total: {{ communication_total }}
+        </para>
+
+        <!--Travel-->
+        <para style="header">
+            <b>Travel</b>
+        </para>
+
+        {% if travel_chair_bool  %}
+            <para style="normal">
+                Chair: {{ travel_chair }}
+            </para>
+        {% endif %}
+
+        {% if travel_manager_bool %}
+            <para style="normal">
+                Manager: {{ travel_manager }}
+            </para>
+        {% endif %}
+
+        <para style="normal">
+            Total: {{ travel_total }}
+        </para>
+
+        <nextFrame/>
+
+        <para style="header">
+            <b>Date</b>: {{ date }}
+        </para>
+
+    </story>
+</document>
+

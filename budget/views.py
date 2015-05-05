@@ -29,6 +29,7 @@ from models import BorderStationBudgetCalculation
 from z3c.rml import rml2pdf, document
 from lxml import etree
 from rest_framework import generics, viewsets
+import ipdb
 from reportlab import *
 from static_border_stations.serializers import StaffSerializer, CommitteeMemberSerializer
 
@@ -241,25 +242,43 @@ class PDFView(View):
 
 
 class MoneyDistributionFormPDFView(PDFView):
-    template_name = 'budget/test.rml'
+    template_name = 'budget/MoneyDistributionTemplate.rml'
     filename = 'Monthly-Money-Distribution-Form.pdf'
 
     def get_context_data(self):
         # application = LoanApplication.objects.get(
             # pk=self.kwargs['application_id'])
 
-        station = BorderStation.objects.get(pk=self.kwargs['pk'])
+        station = BorderStationBudgetCalculation.objects.get(pk=self.kwargs['pk'])
+        staffSalaries = StaffSalary.objects.filter(budget_calc_sheet=self.kwargs['pk'])
 
         return {
-            'name': station.station_name,
+            'name': station.border_station.station_name,
+            'shelter_total': station.shelter_total,
+            'date': station.date_time_entered.date,
+            'number': len(staffSalaries),
+            'staffSalaries': staffSalaries,
+            'travel_chair_bool': station.travel_chair_with_bike,
+            'travel_chair': station.travel_chair_with_bike_amount,
+            'travel_manager_bool': station.travel_manager_with_bike,
+            'travel_manager': station.travel_manager_with_bike_amount,
+            'travel_total': station.travel_manager_chair_total(),
+            'communication_chair_bool': station.communication_chair,
+            'communication_chair': station.communication_chair_amount,
+            'communication_manager_bool': station.communication_manager,
+            'communication_manager': station.communication_manager_amount,
+            'communication_total': station.communication_manager_chair_total(),
         }
 
+@login_required
+def money_distribution_view(request, pk):
+    id = pk
+    return render(request, 'budget/moneydistribution_view.html', locals())
 
 @login_required
 def budget_calc_view(request, pk):
     budget_calc = get_object_or_404(BorderStationBudgetCalculation, pk=pk)
     form = BorderStationBudgetCalculationForm(instance=budget_calc)
-
 
     border_station = budget_calc.border_station
     border_station_staff = border_station.staff_set.all()
