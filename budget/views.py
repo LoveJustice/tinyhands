@@ -192,6 +192,23 @@ class MoneyDistributionFormPDFView(PDFView):
             'communication_manager': station.communication_manager_amount,
             'communication_total': station.communication_chair_amount + station.communication_manager_amount,
 
+            'awareness_contact_cards_bool': station.awareness_contact_cards,
+            'awareness_contact_cards': station.awareness_contact_cards_amount,
+            'awareness_awareness_party_bool': station.awareness_awareness_party_boolean,
+            'awareness_awareness_party': station.awareness_awareness_party,
+            'awareness_sign_boards_bool': station.awareness_sign_boards_boolean,
+            'awareness_sign_boards': station.awareness_sign_boards,
+            'awareness_total': station.awareness_total(),
+            'supplies_walkie_talkies_bool': station.supplies_walkie_talkies_boolean,
+            'supplies_walkie_talkies': station.supplies_walkie_talkies_amount,
+            'supplies_recorders_bool': station.supplies_recorders_boolean,
+            'supplies_recorders': station.supplies_recorders_amount,
+            'supplies_binoculars_bool': station.supplies_binoculars_boolean,
+            'supplies_binoculars': station.supplies_binoculars_amount,
+            'supplies_flashlights_bool': station.supplies_flashlights_boolean,
+            'supplies_flashlights': station.supplies_flashlights_amount,
+            'supplies_total': station.supplies_total
+
         }
 
 @login_required

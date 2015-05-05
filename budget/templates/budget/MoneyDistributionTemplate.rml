@@ -115,6 +115,70 @@
             <b>Date</b>: {{ date }}
         </para>
 
+        <spacer length="10"/>
+
+        <!--Awareness-->
+        <para style="header">
+            <b>Awareness</b>
+        </para>
+
+        {% if awareness_contact_cards_bool %}
+            <para style="normal">
+                Contact Cards: {{ awareness_contact_cards }}
+            </para>
+        {% endif %}
+
+        {% if awareness_awareness_party_bool %}
+            <para style="normal">
+                Awareness Party: {{ awareness_awareness_party }}
+            </para>
+        {% endif %}
+
+        {% if awareness_sign_boards_bool %}
+            <para style="normal">
+                Sign Boards: {{ awareness_sign_boards }}
+            </para>
+        {% endif %}
+
+        <para style="normal">
+            Awareness Total: {{ awareness_total }}
+        </para>
+
+        <spacer length="10"/>
+
+        <!--Supplies-->
+        <para style="header">
+            <b>Supplies</b>
+        </para>
+
+        {% if supplies_walkie_talkies_bool %}
+            <para style="normal">
+                Walkie Talkies: {{ supplies_walkie_talkies }}
+            </para>
+        {% endif %}
+
+        {% if supplies_recorders_bool %}
+            <para style="normal">
+                Recorders: {{ supplies_recorders }}
+            </para>
+        {% endif %}
+
+        {% if supplies_binoculars_bool %}
+            <para style="normal">
+                Binoculars: {{ supplies_binoculars }}
+            </para>
+        {% endif %}
+
+        {% if supplies_flashlights_bool %}
+            <para style="normal">
+                Flashlights: {{ supplies_flashlights }}
+            </para>
+        {% endif %}
+
+        <para style="normal">
+            Supplies Total: {{ supplies_total }}
+        </para>
+
     </story>
 </document>
 
