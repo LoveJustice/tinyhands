@@ -252,7 +252,8 @@ angular
 
                 //Broadcast event to call the saveAllItems function in the otherItems controller
                 $scope.$emit('handleBudgetCalcSavedEmit', {message: 'It is done.'});
-                $window.location.assign('/budget/budget_calculations');
+                console.log("Test...");
+                $window.location.assign('/budget/budget_calculations/money_distribution/view/0/');
             });
         };
 
@@ -282,7 +283,7 @@ angular
                 $scope.$emit('handleBudgetCalcSavedEmit', {message: 'It is done.'});
 
                 //TODO We should change this because this is bad
-                $window.location.assign('/budget/budget_calculations');
+                $window.location.assign('/budget/budget_calculations/money_distribution/view/0/');
             });
         };
 
