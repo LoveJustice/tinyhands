@@ -144,7 +144,8 @@ class BorderStationBudgetCalculation(models.Model):
         total = 0
         # If test fails, check names of contact cards.
         if self.awareness_contact_cards:
-            total += (self.awareness_contact_cards_amount + self.awareness_contact_cards_boolean_amount)
+            #total += (self.awareness_contact_cards_amount + self.awareness_contact_cards_boolean_amount)
+            total += self.awareness_contact_cards_amount
         if self.awareness_awareness_party_boolean:
             total += self.awareness_awareness_party
         if self.awareness_sign_boards_boolean:
