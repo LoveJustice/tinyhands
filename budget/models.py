@@ -29,6 +29,14 @@ class BorderStationBudgetCalculation(models.Model):
         total += self.communication_each_staff * self.communication_each_staff_multiplier
         return total
 
+    def communication_manager_chair_total(self):
+        total = 0
+        if self.communication_chair:
+            total += self.communication_chair_amount
+        if self.communication_manager:
+            total += self.communication_manager_amount
+        return total
+
     travel_chair_with_bike = models.BooleanField(default=False)
     travel_chair_with_bike_amount = models.PositiveIntegerField('for chair (if has bike)', default=2000)
     travel_manager_with_bike = models.BooleanField(default=False)
@@ -51,6 +59,14 @@ class BorderStationBudgetCalculation(models.Model):
         if self.travel_motorbike:
             total += self.travel_motorbike_amount
         total += self.travel_plus_other
+        return total
+
+    def travel_manager_chair_total(self):
+        total = 0
+        if self.travel_chair_with_bike:
+            total += self.travel_chair_with_bike_amount
+        if self.travel_manager_with_bike:
+            total += self.travel_manager_with_bike_amount
         return total
 
     administration_number_of_intercepts_last_month = models.PositiveIntegerField('# of intercepts last month', default=0)

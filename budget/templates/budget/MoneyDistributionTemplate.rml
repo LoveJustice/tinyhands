@@ -62,13 +62,17 @@
             <b>Communication</b>
         </para>
 
-        <para style="normal">
-            Chair: {{ communication_chair }}
-        </para>
+        {% if communication_chair_bool  %}
+            <para style="normal">
+                Chair: {{ communication_chair }}
+            </para>
+        {% endif %}
 
-        <para style="normal">
-            Manager: {{ communication_manager }}
-        </para>
+        {% if communication_manager_bool  %}
+            <para style="normal">
+                Manager: {{ communication_manager }}
+            </para>
+        {% endif %}
 
         <para style="normal">
             Total: {{ communication_total }}
@@ -91,23 +95,9 @@
             </para>
         {% endif %}
 
-        {% if travel_chair_bool and travel_manager_bool %}
-            <para style="normal">
-                Total: {{ travel_chair }}
-            </para>
-        {% endif %}
-
-        {% if travel_chair_bool and not travel_manager_bool %}
-            <para style="normal">
-                Total: {{ travel_chair }}
-            </para>
-        {% endif %}
-
-        {% if travel_manager_bool and not travel_chair_bool %}
-            <para style="normal">
-                Total: {{ travel_chair }}
-            </para>
-        {% endif %}
+        <para style="normal">
+            Total: {{ travel_total }}
+        </para>
 
         <nextFrame/>
 
