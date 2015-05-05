@@ -26,72 +26,43 @@ var dynStation = function() {
                 for (var station in stationsCount) {
                     expect(stationsCount[station]).toBe(1);
                 }
+                ;
             });
         });
     };
 
-    this.checkClick = function (stationsCount) {
-        for(var station in stationsCount) {
-            browser.get(c.webAddress);
-            browser.sleep(800);
-            //$("div[title='Zoom out']").click();
-            //browser.sleep(500);
-            $("area[title='" + station + "']").click();
-            //$("area[title='" + station + "']").click();
-            expect($("div[id='Dynamic "+ station + "']").isPresent()).toBe(true);
-            /*
-            element(by.linkText('Subcommittee, Staff, and Locations')).then(function (link) {
-                link.click().then(function () {
-                    browser.sleep(800);
-                    console.log("HERE");
-                    expect(browser.driver.getCurrentUrl()).toContain('/static_border_stations/border-stations/');
-                });
-                //browser.get(c.webAddress);
-                //console.log("DONE");
-            });
-            */
-        };
+    this.checkClick = function (station) {
+        var promises = [];
+
+        browser.get(c.webAddress);
+        browser.sleep(400);
+        //$("div[title='Zoom out']").click(); browser.sleep(500);
+        $("area[title='" + station + "']").click();
+        browser.sleep(200);
+        expect($("div[id='Dynamic " + station + "']").isPresent()).toBe(true);
+        expect(element(by.linkText('Subcommittee, Staff, and Locations')).isPresent()).toBe(true);
+        expect(element(by.linkText('IRFs')).isPresent()).toBe(true);
+        expect(element(by.linkText('VIFs')).isPresent()).toBe(true);
+
     };
 
-    this.checkHover = function(stationsCount) {
-    /*
-        for(var station in stationsCount) {
-            browser.get(c.webAddress);
-            browser.sleep(800);
-            //ptor.actions().
-            //    mouseMove(ptor.findElement(protractor.byid))
-            $("area[title='" + station + "']").mouseover();
-            expect($("div[id='Static "+ station + "']").isPresent()).toBe(true);
-        };
-    */
+    this.checkHover = function (station) {
+        browser.get(c.webAddress);
+        browser.sleep(400);
+        browser.actions().mouseMove($("area[title='" + station + "']")).perform();
+        browser.sleep(200);
+        expect($("div[id='Static " + station + "']").isPresent()).toBe(true);
     };
 
-    this.clickStations = function (stationsCount){
-        /*
-        var mapOptions = {
-            center: { lat: 28.394857, lng: 84.124008},
-            zoom: 3,
-            streetViewControl: false
-        };
-        var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
-        */
-        var baz = "area[title='Bhadrapur BHD']";
-        element(by.css(baz)).click().then(function () {
-            console.log("Clicked the first one");
-        });
-        //$("area[title='Dang DNG']").click();
-        console.log(stationsCount);
-        for(var myStation in stationsCount){
-            var foo = "area[title='" + myStation + "']";
-            console.log(foo);
-            var my_element = browser.driver.findElement(By.css(foo));
-            debugger;
-            my_element.scrollIntoView();
-            ptor.sleep(500);
-            my_element.click().then(function () {
-                console.log("Clicked");
-            });
-        };
+    this.checkLinks = function (station,pk) {
+        browser.get(c.webAddress);
+        browser.sleep(400);
+        $("area[title='" + station + "']").click();
+        browser.sleep(200);
+        //expect($("a[href='/static_border_stations/border-stations/blaa" + pk + "']").isPresent()).toBe(false);
+        //expect(element(by.linkText('Subcommittee, Staff, and Locations')).getAttribute('href')).toEqual('/static_border_stations/border-stations/invalidurl');
+        //expect(element(by.linkText('IRFs')).getAttribute('href')).toEqual('http://0.0.0.0:8001/static_border_stations/border-stations/' + pk);
+        //expect(element(by.linkText('VIFs')).getAttribute('href')).toEqual('http://0.0.0.0:8001/static_border_stations/border-stations/' + pk);
     };
 };
 module.exports = new dynStation();

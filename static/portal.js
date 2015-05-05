@@ -165,7 +165,7 @@ function getBorderStations(map){
 
                     //gets the number of staff
                     $.get("/portal/get_staff_count", {station_code: data[station].fields.station_code}, function(data){
-                        $("#staffset").text('# of Staff:' + data);
+                        $("#staffset").text('# of Staff: ' + data);
                     });
 
                     if(!marker.clicked) {
@@ -195,7 +195,7 @@ function getBorderStations(map){
 
                     //gets the number of staff
                     $.get("/portal/get_staff_count", {station_code: data[station].fields.station_code}, function(data){
-                        $("#staffset").text('# of Staff:' + data);
+                        $("#staffset").text('# of Staff: ' + data);
                     });
 
 
