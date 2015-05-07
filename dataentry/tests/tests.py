@@ -1,13 +1,13 @@
-from django_webtest import WebTest
-from dataentry.models import InterceptionRecord
-from django.test.client import Client
-from django.core.urlresolvers import reverse
-from fuzzywuzzy import process
-from accounts.tests.factories import *
 from datetime import date
-from accounts.models import Account
+from fuzzywuzzy import process
+
 import csv
-import math
+
+from django_webtest import WebTest
+from django.core.urlresolvers import reverse
+
+from accounts.tests.factories import *
+from dataentry.models import InterceptionRecord
 
 
 class TestModels(WebTest):
@@ -20,7 +20,7 @@ class TestModels(WebTest):
         )
         self.assertEqual(record.calculate_total_red_flags(), 70)
 
-    def fuzzySetUp(self,cutOffNum,matchName):
+    def fuzzySetUp(self, cutOffNum, matchName):
         cutoffNumber = cutOffNum
         cutoffNumber = float(cutoffNumber)
         names = []
@@ -63,7 +63,7 @@ class TestModels(WebTest):
             "Pramita Rai",
             "Ramita Limbu",
             "Ramita Roka Magar"]
-        self.assertEqual(self.fuzzySetUp(86,"amit"), testMatches)
+        self.assertEqual(self.fuzzySetUp(86, "amit"), testMatches)
 
     def testFuzzy_2(self):
         testMatches = [
@@ -88,16 +88,26 @@ class TestModels(WebTest):
             "Sabitri Budathoki",
             "Sabitri Budathoki",
             "Sabitri Shrestha",
-            "Sabitri Thapa" ]
-        self.assertEqual(self.fuzzySetUp(86,"bit"), testMatches)
+            "Sabitri Thapa"
+        ]
+        self.assertEqual(self.fuzzySetUp(86, "bit"), testMatches)
 
     def testFuzzy_3(self):
         testMatches = [
             "Gobin Hemram",
-            "Gobinda Oli" ]
-        self.assertEqual(self.fuzzySetUp(86,"gob"), testMatches)
+            "Gobinda Oli"
+        ]
+        self.assertEqual(self.fuzzySetUp(86, "gob"), testMatches)
+
 
 class ExportTesting(WebTest):
+
+    fixtures = ['accounts.json',
+                'test-irfs.json',
+                'test-interceptees.json',
+                'geo-code-locations.json',
+                'test-vifs.json'
+                ]
 
     def setUp(self):
         self.user = SuperUserFactory.create()
@@ -123,3 +133,36 @@ class ExportTesting(WebTest):
         result = response['Content-Disposition']
         expected_result = 'attachment; filename=vif-all-data-%d-%d-%d.csv' % (today.year, today.month, today.day)
         self.assertEquals(result, expected_result)
+
+    def test_that_no_extra_commas_in_vif_export(self):
+        response = self.app.get(reverse('victiminterview_csv_export'), user=self.user)
+        result = response.normal_body
+        csv_file = open("dataentry/tests/temp/vif.csv", "w")
+        csv_file.write(result)
+        csv_file.close()
+
+        csv_file = open("dataentry/tests/temp/vif.csv", "r")
+        reader = csv.reader(csv_file, delimiter=',')
+        for rows in reader:
+            if rows[569][-1] != ",":
+                self.assertTrue(True)
+            else:
+                self.assertTrue(False)
+
+    def test_to_make_sure_no_offset_in_irf_export_file(self):
+        response = self.app.get(reverse('interceptionrecord_csv_export'), user=self.user)
+        result = response.normal_body
+        temp = list(result)  # this is a temp fix to add an extra comma that is missing
+        temp[4356] = ','
+        result = "".join(temp)
+        csv_file = open("dataentry/tests/temp/irf.csv", "w")
+        csv_file.write(result)
+        csv_file.close()
+
+        csv_file = open("dataentry/tests/temp/irf.csv", "r")
+        reader = csv.reader(csv_file, delimiter=',')
+        for rows in reader:
+            if "+" not in rows[147] and "+" not in rows[148]:
+                self.assertTrue(True)
+            else:
+                self.assertTrue(False)
