@@ -21,6 +21,8 @@ for (var i = 0;  i < borderStations.length; i++) {
 
 describe('Dynamic Station Window', function() {
 
+
+
     beforeEach(function () {
         return browser.ignoreSynchronization = true;
 
@@ -33,6 +35,8 @@ describe('Dynamic Station Window', function() {
             browser.sleep(1000);
         });
     });
+
+
 
     describe('Test Marker Functionality', function () {
 
@@ -53,11 +57,7 @@ describe('Dynamic Station Window', function() {
             };
         }, 50000);
 
-/*        it('marker links are correct', function() {
-            for (var station in stationsCount) {
-                dynStation.checkLinks(station, stationsCode[station], stationsPk[station]);
-            };
-        });*/
+
 
     });
 

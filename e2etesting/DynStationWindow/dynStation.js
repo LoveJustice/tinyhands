@@ -1,12 +1,16 @@
 'use strict';
 
 var c = require('../testConstants.json');
+var filloutform = require('../accounts/vifPage.js');
 
-//We need to initialize a google map object in order to use the panTo() method on each lat/lon for each borderStation
 
 var dynStation = function() {
+
+
+
     this.checkStationsExist = function (stationsCount) {
         var promises = [];
+
 
         element.all(by.tagName('area')).each(function (area) {
             promises.push(area.getAttribute("title"));
@@ -36,13 +40,25 @@ var dynStation = function() {
 
         browser.get(c.webAddress);
         browser.sleep(400);
-        //$("div[title='Zoom out']").click(); browser.sleep(500);
         $("area[title='" + station + "']").click();
         browser.sleep(200);
         expect($("div[id='Dynamic " + station + "']").isPresent()).toBe(true);
         expect(element(by.linkText('Subcommittee, Staff, and Locations')).isPresent()).toBe(true);
         expect(element(by.linkText('IRFs')).isPresent()).toBe(true);
         expect(element(by.linkText('VIFs')).isPresent()).toBe(true);
+
+        if(station == "Dang DNG"){
+            expect(element(by.id("stationInterception")).getText()).toContain('1');
+            expect(element(by.id("staffSet")).getText()).toContain('0');
+            expect(element(by.id("shelter")).getText()).toContain('No');
+        }
+
+        else{
+            expect(element(by.id("stationInterception")).getText()).toContain('0');
+            expect(element(by.id("staffSet")).getText()).toContain('0');
+            expect(element(by.id("shelter")).getText()).toContain('No');
+        }
+
 
     };
 
@@ -52,16 +68,13 @@ var dynStation = function() {
         browser.actions().mouseMove($("area[title='" + station + "']")).perform();
         browser.sleep(200);
         expect($("div[id='Static " + station + "']").isPresent()).toBe(true);
+        expect(element(by.id("stationInterception")).getText()).toContain('0');
+        expect(element(by.id("staffSet")).getText()).toContain('0');
+        expect(element(by.id("shelter")).getText()).toContain('No');
     };
 
     this.checkLinks = function (station, code, pk) {
-        //browser.get(c.webAddress);
-        //browser.sleep(400);
-        //$("area[title='" + station + "']").click();
-        //browser.sleep(200);
-        //expect($("a[href='/static_border_stations/border-stations/blaa" + pk + "']").isPresent()).toBe(false);
         expect(element(by.linkText('Subcommittee, Staff, and Locations')).getAttribute('href')).toContain('/static_border_stations/border-stations/' + pk );
-        //console.log(element(by.linkText('Subcommittee, Staff, and Locations')).getAttribute('href'));
         expect(element(by.linkText('IRFs')).getAttribute('href')).toContain('data-entry/irfs/search/?search_value=' + code);
         expect(element(by.linkText('VIFs')).getAttribute('href')).toContain('data-entry/vifs/search/?search_value=' + code);
     };

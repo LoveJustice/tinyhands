@@ -84,10 +84,10 @@ function getStaticContentString(borderStation) { //This is what the content of a
     return '<div id="Static '+borderStation.fields.station_name + " " + borderStation.fields.station_code +'" class="dashboardInfoWindow">' +
         '<h3>' + borderStation.fields.station_name + ' - ' + borderStation.fields.station_code + '</h3>' +
 
-        '<p>Est. ' + borderStation.fields.date_established + '</p>' +
-        '<p>Has shelter: ' + hasShelter(borderStation) + '</p>' +
+        '<p>Est. ' + established(borderStation) + '</p>' +
+        '<p id="shelter">Has shelter: ' + hasShelter(borderStation) + '</p>' +
         '<p id="stationInterception">Interceptions: ' + '</p>' +
-        '<p id="staffset"># of Staff ' + '</p>' +
+        '<p id="staffSet"># of Staff ' + '</p>' +
         '</div>';
 }
 
@@ -98,10 +98,10 @@ function getDynamicContentString(borderStation){ //This is what the content of a
         '<div id="leftColumn" class="col-md-6">'+
 
 
-            '<p>Est. ' + borderStation.fields.date_established + '</p>' +
-            '<p>Has shelter: ' + hasShelter(borderStation) + '</p>' +
+            '<p>Est. ' + established(borderStation) + '</p>' +
+            '<p id="shelter">Has shelter: ' + hasShelter(borderStation) + '</p>' +
             '<p id="stationInterception">Interceptions: ' + '</p>' +
-            '<p id="staffset"># of Staff ' + '</p>' +
+            '<p id="staffSet"># of Staff ' + '</p>' +
         '</div>'+
 
         '<div id="rightColumn" class="col-md-6">'+
@@ -126,7 +126,6 @@ function getBorderStations(map){
 
         for(var station=0;station<data.length;station++){ //Iterate over each Border Station
             var myLatlng = new google.maps.LatLng(data[station].fields.latitude,data[station].fields.longitude);
-            //var pinIcon = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|93B0F5", new google.maps.Size(21,34));
             var marker = new google.maps.Marker({ //Initialize a BorderStation's marker
                 id:'marker'+data[station].fields.station_code,
                 position: myLatlng,
@@ -165,7 +164,7 @@ function getBorderStations(map){
 
                     //gets the number of staff
                     $.get("/portal/get_staff_count", {station_code: data[station].fields.station_code}, function(data){
-                        $("#staffset").text('# of Staff: ' + data);
+                        $("#staffSet").text('# of Staff: ' + data);
                     });
 
                     if(!marker.clicked) {
@@ -195,7 +194,7 @@ function getBorderStations(map){
 
                     //gets the number of staff
                     $.get("/portal/get_staff_count", {station_code: data[station].fields.station_code}, function(data){
-                        $("#staffset").text('# of Staff: ' + data);
+                        $("#staffSet").text('# of Staff: ' + data);
                     });
 
 
@@ -224,6 +223,14 @@ function hasShelter(borderStation){ // basically just converts a true/false to a
     }
     else {
         return "No";
+    }
+}
+
+function established(borderStation){
+    if (borderStation.fields.date_established === null){
+        return "Unknown";
+    } else {
+        return borderStation.fields.date_established;
     }
 }
 
