@@ -39,13 +39,13 @@ class TestModels(TestCase):
 
         #Awareness
         item.awareness_contact_cards = True
-        item.awareness_contact_cards_boolean_amount = 4000
+        #item.awareness_contact_cards_boolean_amount = 4000
         item.awareness_contact_cards_amount = 5
         item.awareness_awareness_party_boolean = True
         item.awareness_awareness_party = 10
         item.awareness_sign_boards_boolean = True
         item.awareness_sign_boards = 20
-        self.assertEqual(item.awareness_total(), 4035)
+        self.assertEqual(item.awareness_total(), 35)
         item.awareness_contact_cards = False
         item.awareness_awareness_party_boolean = False
         item.awareness_sign_boards_boolean = False
