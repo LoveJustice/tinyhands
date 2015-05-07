@@ -1,10 +1,13 @@
 import StringIO
 import datetime
 
+from dateutil.relativedelta import relativedelta
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ImproperlyConfigured
 from django.core.urlresolvers import reverse_lazy
+from django.db.models import Count, Sum
 from django.forms import formset_factory, inlineformset_factory
 from django.forms.models import modelformset_factory
 from django.http import HttpResponse
@@ -87,43 +90,76 @@ def retrieve_latest_budget_sheet_for_border_station(request, pk):
         other_items_serializer = OtherBudgetItemCostSerializer(budget_sheet.otherbudgetitemcost_set.all())
         staff_serializer = StaffSalarySerializer(budget_sheet.staffsalary_set.all())
         budget_serializer = BorderStationBudgetCalculationSerializer(budget_sheet)
+
         return Response(
             {
                 "budget_form": budget_serializer.data,
                 "other_items": other_items_serializer.data,
-                "staff_salaries": staff_serializer.data,
+                "staff_salaries": staff_serializer.data
             }
         )
     return Response({"budget_form": {"border_station": pk}, "other_items": "", "staff_salaries": ""})
 
-@api_view(['GET'])
-def previous_data(request, pk):
-    budget_sheet = BorderStationBudgetCalculation.objects.filter(border_station=pk).order_by('-date_time_entered') # todo: query from the most recent from the current sheet?
 
-    if budget_sheet:
+@api_view(['GET'])
+def previous_data(request, pk, month, year):
+    date = datetime.datetime(int(year), int(month), 15)
+    budget_sheets = BorderStationBudgetCalculation.objects.filter(border_station=pk, month_year__lte=date).order_by('-date_time_entered')
+
+    if budget_sheets:
         border_station = BorderStation.objects.get(pk=pk)
         staff_count = border_station.staff_set.count()
 
-        all_interception_records = InterceptionRecord.objects.filter(irf_number__startswith=border_station.station_code)
-        last_months = all_interception_records.filter(date_time_of_interception__gte=(datetime.datetime.now() - datetime.timedelta(1*365/12)))
-        last_3_months = all_interception_records.filter(date_time_of_interception__gte=(datetime.datetime.now() - datetime.timedelta(3*365/12)))
+        all_interception_records = InterceptionRecord.objects.annotate(interceptee_count=Count("interceptees")).filter(irf_number__startswith=border_station.station_code)
+        last_months = all_interception_records.filter(date_time_of_interception__gte=(date+relativedelta(months=-1)), date_time_of_interception__lte=date)
+        last_3_months = all_interception_records.filter(date_time_of_interception__gte=(date+relativedelta(months=-3)), date_time_of_interception__lte=date)
+
+        last_months_count = last_months.aggregate(total=Sum('interceptee_count'))
+        last_3_months_count = last_3_months.aggregate(total=Sum('interceptee_count'))
+        all_interception_records_count = all_interception_records.aggregate(total=Sum('interceptee_count'))
+
+        if last_3_months_count['total'] == None:
+            last_3_months_count['total'] = 1
+        if last_months_count['total'] == None:
+            last_months_count['total'] = 1
+        if all_interception_records_count['total'] == None:
+            all_interception_records_count['total'] = 1
 
 
-    # all the interception records that start with the station code > a specific date (so we can develop a function for it)
-        # iterate over each record, count their interceptees and add them to the sum
+        last_months_cost = budget_sheets.first().station_total()
+
+        last_3_months_cost = 0
+        last_3_months_sheets = budget_sheets.filter(month_year__gte=date+relativedelta(months=-3))
+        for sheet in last_3_months_sheets:
+            last_3_months_cost += sheet.station_total()
+
+        all_cost = 0
+        for sheet in budget_sheets:
+            all_cost += sheet.station_total()
+
         return Response(
             {
-                "all": 5,
-                "all_cost": 6,
-                "last_month": 1,
-                "last_months_cost": 2,
-                "last_3_months": 3,
-                "last_3_months_cost": 4,
-                "staff_count": 10,
-                "last_months_total_cost": budget_sheet.station_total()
+                "all": all_interception_records_count['total'],
+                "all_cost": all_cost/all_interception_records_count['total'],
+                "last_month": last_months_count['total'],
+                "last_months_cost": last_months_cost/last_months_count['total'],
+                "last_3_months": last_3_months_count['total'],
+                "last_3_months_cost": last_3_months_cost/last_3_months_count['total'],
+                "staff_count": staff_count,
+                "last_months_total_cost": last_months_cost
             }
         )
-    return Response({"no previous data"})
+    return Response(
+            {
+                "all": 0,
+                "all_cost": 0,
+                "last_month": 0,
+                "last_months_cost": 0,
+                "last_3_months": 0,
+                "last_3_months_cost": 0,
+                "staff_count": 0,
+                "last_months_total_cost": 0
+            })
 
 
 def ng_budget_calc_update(request, pk):
@@ -197,6 +233,7 @@ class BudgetCalcListView(
         ListView):
     model = BorderStationBudgetCalculation
     border_stations = BorderStation.objects.all()
+    queryset = BorderStationBudgetCalculation.objects.all().order_by('-month_year')
     permissions_required = ['permission_budget_manage']
 
     def get_context_data(self, **kwargs):

@@ -27,4 +27,9 @@ myModule.run(function($rootScope) {
     $rootScope.$on('lastBudgetTotalEmit', function(event, args) {
         $rootScope.$broadcast('lastBudgetTotalBroadcast', args);
     });
+
+    $rootScope.$on('dateSetEmit', function(event, args) {
+        $rootScope.$broadcast('dateSetBroadcast', args);
+    });
+
 });

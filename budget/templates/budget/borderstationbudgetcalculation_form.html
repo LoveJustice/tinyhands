@@ -27,7 +27,7 @@
 
                 <h1 style="font-size: 25px; text-align: center">
                     Border Monitoring Station Budget Calculation Form For
-                    <input type="date" class="form-control" id="month_year" name="input" ng-model="main.form.month_year" placeholder="yyyy-MM-dd" min="2005-01-01" required />
+                    <input type="month" class="form-control" id="month_year" name="input" ng-model="main.form.month_year" onchange='change()' min="2005-01-01" required />
                 </h1>
                 {% endverbatim %}
 

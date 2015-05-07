@@ -16,6 +16,9 @@ angular
             vm.otherSuppliesTotalValue = [0];
 
 
+            // Budget Calc sheets are for the 15th of every month
+            vm.date = new Date();
+            vm.date.setDate(15);
 
             vm.otherItemsTotals = [vm.otherTravelTotalValue,
                                     vm.otherMiscTotalValue,
@@ -24,11 +27,15 @@ angular
 
             $scope.$on('handleOtherItemsTotalChangeBroadcast', function(event, args) {
                 vm.otherItemsTotals[args['form_section']-1][0] = args['total'];
+                callTotals();
+            });
+
+            function callTotals (){
                 vm.miscTotal();
                 vm.travelTotal();
                 vm.awarenessTotal();
                 vm.suppliesTotal();
-            });
+            }
 
             vm.salariesTotal = 0;
             $scope.$on('handleSalariesTotalChangeBroadcast', function(event, args) {
@@ -262,19 +269,90 @@ angular
             mainCtrlService.retrieveForm(id).then(function(promise){
                 vm.form = promise.data;
                 vm.form.month_year = new Date(promise.data.month_year);
+                $scope.$emit('dateSetEmit', {date: vm.form.month_year});
             });
         };
+
 
         vm.retrieveNewForm = function() {
             mainCtrlService.retrieveNewForm(window.budget_calc_id).then(function(promise){
                 var data = promise.data.budget_form;
+                if (promise.data.None){
+                    resetValuesToZero();
+                }
+                else{
+                    vm.form = data;
+                }
+
+                vm.form.month_year = vm.date;
                 data.members = [];
                 data.id = undefined;
-                vm.form = data;
-                vm.form.month_year = new Date();
             })
         };
 
+
+        function resetValuesToZero() {
+            vm.form = {
+                shelter_shelter_startup_amount: 71800,
+                shelter_shelter_two_amount: 36800,
+                communication_chair: false,
+                communication_chair_amount: 0,
+                communication_manager: false,
+                communication_manager_amount: 0,
+                communication_number_of_staff_with_walkie_talkies: 0,
+                communication_number_of_staff_with_walkie_talkies_multiplier: 0,
+                communication_each_staff: 0,
+                communication_each_staff_multiplier: 0,
+                travel_chair_with_bike: false,
+                travel_chair_with_bike_amount: 0,
+                travel_manager_with_bike: false,
+                travel_manager_with_bike_amount: 0,
+                travel_number_of_staff_using_bikes: 0,
+                travel_number_of_staff_using_bikes_multiplier: 0,
+                travel_last_months_expense_for_sending_girls_home: 0,
+                travel_motorbike: false,
+                travel_motorbike_amount: 0,
+                travel_plus_other: 0,
+                administration_number_of_intercepts_last_month: 0,
+                administration_number_of_intercepts_last_month_multiplier: 0,
+                administration_number_of_intercepts_last_month_adder: 0,
+                administration_number_of_meetings_per_month: 0,
+                administration_number_of_meetings_per_month_multiplier: 0,
+                administration_booth: false,
+                administration_booth_amount: 0,
+                administration_registration: false,
+                administration_registration_amount: 0,
+                medical_last_months_expense: 0,
+                miscellaneous_number_of_intercepts_last_month: 0,
+                miscellaneous_number_of_intercepts_last_month_multiplier: 0,
+                shelter_rent: 0,
+                shelter_water: 0,
+                shelter_electricity: 0,
+                shelter_shelter_startup: false,
+                shelter_shelter_two: false,
+                food_and_gas_number_of_intercepted_girls: 0,
+                food_and_gas_number_of_intercepted_girls_multiplier_before: 0,
+                food_and_gas_number_of_intercepted_girls_multiplier_after: 0,
+                food_and_gas_limbo_girls_multiplier: 0,
+                food_and_gas_number_of_limbo_girls: 0,
+                food_and_gas_number_of_days: 0,
+                awareness_contact_cards: false,
+                awareness_contact_cards_boolean_amount: 0,
+                awareness_contact_cards_amount: 0,
+                awareness_awareness_party_boolean: false,
+                awareness_awareness_party: 0,
+                awareness_sign_boards_boolean: false,
+                awareness_sign_boards: 0,
+                supplies_walkie_talkies_boolean: false,
+                supplies_walkie_talkies_amount: 0,
+                supplies_recorders_boolean: false,
+                supplies_recorders_amount: 0,
+                supplies_binoculars_boolean: false,
+                supplies_binoculars_amount: 0,
+                supplies_flashlights_boolean: false,
+                supplies_flashlights_amount: 0
+            }
+        }
 
         if( (window.submit_type) == 1 ) {
             vm.create = true;

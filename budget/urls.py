@@ -64,7 +64,7 @@ urlpatterns = patterns('budget.views',
     url(r'^api/budget_calculations/staff_salary/$', staff_salary_list, name="staff_salary_list_api"),
     url(r'^api/budget_calculations/staff_salary/(?P<pk>\d+)/$', staff_salary_detail, name="staff_salary_detail_api"),
 
-    url(r'^api/budget_calculations/previous_data/(?P<pk>\d+)/$', previous_data, name="previous_data"),
+    url(r'^api/budget_calculations/previous_data/(?P<pk>\d+)/(?P<month>\d+)/(?P<year>\d+)/$', previous_data, name="previous_data"),
 
     url(r'^api/budget_calculations/money_distribution/(?P<pk>\d+)/$', distribution_detail, name="money_distribution_api"),
 
