@@ -154,6 +154,8 @@ class PDFView(View):
         buf = StringIO.StringIO()
         rml = render_to_string(self.template_name, self.get_context_data())
 
+        self.rml = render_to_string(self.template_name, self.get_context_data())
+
         buf.write(rml)
         buf.seek(0)
         root = etree.parse(buf).getroot()
@@ -176,10 +178,13 @@ class MoneyDistributionFormPDFView(PDFView):
 
         station = BorderStationBudgetCalculation.objects.get(pk=self.kwargs['pk'])
         staffSalaries = StaffSalary.objects.filter(budget_calc_sheet=self.kwargs['pk'])
+        otherItems = station.otherbudgetitemcost_set.all()
+
+        adminMeetings = station.administration_number_of_meetings_per_month * station.administration_number_of_meetings_per_month_multiplier
 
         return {
+            'otherItems': otherItems,
             'name': station.border_station.station_name,
-            'shelter_total': station.shelter_total,
             'date': station.date_time_entered.date,
             'number': len(staffSalaries),
             'staffSalaries': staffSalaries,
@@ -196,7 +201,16 @@ class MoneyDistributionFormPDFView(PDFView):
             'communication_manager': station.communication_manager_amount,
             'communication_total': station.communication_total(),
 
-            'admin_total': station.administation_total(),
+            'admin_meetings': adminMeetings,
+            'admin_total': station.administration_total(),
+
+            'medical_total': station.medical_total(),
+
+            'misc_total': station.miscellaneous_total(),
+
+            'shelter_total': station.shelter_total(),
+
+            'food_gas_total': station.food_and_gas_total(),
 
             'awareness_contact_cards_bool': station.awareness_contact_cards,
             'awareness_contact_cards': station.awareness_contact_cards_amount,
@@ -214,7 +228,9 @@ class MoneyDistributionFormPDFView(PDFView):
             'supplies_binoculars': station.supplies_binoculars_amount,
             'supplies_flashlights_bool': station.supplies_flashlights_boolean,
             'supplies_flashlights': station.supplies_flashlights_amount,
-            'supplies_total': station.supplies_total
+            'supplies_total': station.supplies_total,
+
+            'monthly_total': station.station_total()
         }
 
 @login_required

@@ -45,8 +45,10 @@
         <para style="header">
             <b>Station Name</b>: {{ name }}
         </para>
+
         <spacer length="10"/>
-        <para style="header">
+
+        <para style="header" align="center">
             <b>Staff Salaries</b>
         </para>
 
@@ -98,10 +100,20 @@
             </para>
         {% endif %}
 
+        {% for item in otherItems %}
+            {% if item.form_section == 1 %}
+                <para style="normal">
+                    {{ item.name }}: {{ item.cost }}
+
+                </para>
+            {% endif %}
+        {% endfor %}
+
         <para style="normal">
             Total: {{ travel_total }}
         </para>
 
+        <!--Administration-->
         <spacer length="10"/>
 
         <para style="header">
@@ -109,7 +121,43 @@
         </para>
 
         <para style="normal">
+            Meetings: {{ admin_meetings }}
+        </para>
+
+
+        <para style="normal">
             Total: {{ admin_total }}
+        </para>
+
+        <!--Medical-->
+        <spacer length="10"/>
+
+        <para style="header">
+            <b>Medical</b>
+        </para>
+
+        <para style="normal">
+            Total: {{ medical_total }}
+        </para>
+
+        <!--Miscellaneous-->
+        <spacer length="10"/>
+
+        <para style="header">
+            <b>Miscellaneous</b>
+        </para>
+
+    {% for item in otherItems %}
+        {% if item.form_section == 2 %}
+            <para style="normal">
+                {{ item.name }}: {{ item.cost }}
+
+            </para>
+        {% endif %}
+    {% endfor %}
+
+        <para style="normal">
+            Total: {{ misc_total }}
         </para>
 
 
@@ -118,6 +166,35 @@
         <para style="header">
             <b>Date</b>: {{ date }}
         </para>
+
+        <spacer length="10"/>
+
+        <para style="header">
+            <b>Shelter</b>
+        </para>
+
+        <para style="normal">
+            Total: {{ shelter_total }}
+        </para>
+
+        <spacer length="10"/>
+
+        <para style="header">
+            <b>Food &amp; Gas</b>
+        </para>
+
+        <para style="normal">
+            Intercepted Girls: {{ name }}
+        </para>
+
+        <para style="normal">
+            Limbo Girls: {{ name }}
+        </para>
+
+        <para style="normal">
+            Total: {{ food_gas_total }}
+        </para>
+
 
         <spacer length="10"/>
 
@@ -143,6 +220,15 @@
                 Sign Boards: {{ awareness_sign_boards }}
             </para>
         {% endif %}
+
+        {% for item in otherItems %}
+            {% if item.form_section == 3 %}
+                <para style="normal">
+                    {{ item.name }}: {{ item.cost }}
+
+                </para>
+            {% endif %}
+        {% endfor %}
 
         <para style="normal">
             Awareness Total: {{ awareness_total }}
@@ -179,8 +265,24 @@
             </para>
         {% endif %}
 
+        {% for item in otherItems %}
+            {% if item.form_section == 4 %}
+                <para style="normal">
+                    {{ item.name }}: {{ item.cost }}
+
+                </para>
+            {% endif %}
+        {% endfor %}
+
         <para style="normal">
             Supplies Total: {{ supplies_total }}
+        </para>
+
+        <spacer length="10"/>
+
+        <!--Supplies-->
+        <para style="header">
+            <b>Monthly Total = {{ monthly_total }}</b>
         </para>
 
     </story>
