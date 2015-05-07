@@ -62,11 +62,10 @@ describe('Tally UI', function(){
         });
     });
     
-    it('should change back to white after viewing a day', function(){
+    it('should change back to white after viewing a day when screen is large', function(){
         var interceptions = tallyHelper.getInterceptions();
         var tab = interceptions.first().element(by.xpath('..')).element(by.xpath('..'));
         browser.actions().mouseMove(tab).mouseMove({x: 300, y: 300}).perform().then(function(){ 
-            //expect(tab.getCssValue('color')).toEqual('rgba(255, 255, 255, 1)');
             expect(tab.getCssValue('background-color')).toEqual('rgba(255, 255, 255, 0.85098)');
         });
     });
@@ -122,19 +121,27 @@ describe('Tally UI', function(){
         }).then(function() { //wait one minute for update to occur
             return browser.sleep(60000);
         }).then(function () {
-            var interceptions = element.all(by.css('h4.ng-binding')).filter(function(elem, index) {
-                return elem.getInnerHtml().then(function(text){
-                    return text != '0' && text.length == 1;
-                });
-            });
+            var interceptions = tallyHelper.getInterceptionsSmall();
             
             expect(interceptions.count()).toEqual(1);
             expect(interceptions.first().getInnerHtml()).toEqual('3');
-            browser.driver.manage().window().maximize(); // return browser back to full size
+            
+            var tab = interceptions.first().element(by.xpath('..'));
+            expect(tab.getCssValue('color')).toEqual('rgba(255, 255, 255, 1)');
+            expect(tab.getCssValue('background-color')).toEqual('rgba(255, 0, 0, 0.498039)');
         });
     }, 90000); //gives it a minute and a half until it timeouts
     
+    it('should change back to white after viewing a day when screen is small', function(){
+        var interceptions = tallyHelper.getInterceptionsSmall();
+        var tab = interceptions.first().element(by.xpath('..'));
+        browser.actions().mouseMove(tab).mouseMove({x: 300, y: 300}).perform().then(function(){ 
+            expect(tab.getCssValue('background-color')).toEqual('rgba(0, 0, 0, 0)');
+        });
+    });
+    
     it('should disappear when unchecked from hamburger map menu and reappear when checked', function(){
+        browser.driver.manage().window().maximize(); // return browser back to full size
         var EC = protractor.ExpectedConditions;
         tallyHelper.navigateHome()
         .then(function () {
