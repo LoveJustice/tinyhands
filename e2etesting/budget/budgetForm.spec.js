@@ -26,7 +26,6 @@ describe('Budget Calculation', function() {
             browser.ignoreSynchronization = false;
             budgetForm.fillOutForm();
 
-            browser.sleep(10000);
             // expect totals to be certain values
             expect(element(by.binding("main.shelterTotal()")).getText()).toBe('900');
             expect(element(by.binding("main.foodTotal()")).getText()).toBe('2000');
@@ -37,10 +36,10 @@ describe('Budget Calculation', function() {
             expect(element(by.binding("main.adminTotal()")).getText()).toBe('750');
             expect(element(by.binding("main.medicalTotal()")).getText()).toBe('100');
             expect(element(by.binding("main.miscTotalValue")).getText()).toBe('600');
-            expect(element(by.binding("main.bunchTotal()")).getText()).toBe('3200');
+            expect(element(by.binding("main.bunchTotal()")).getText()).toBe('3400');
             expect(element(by.binding("main.foodAndShelterTotal()")).getText()).toBe('2900');
             expect(element(by.binding("main.stationTotal()")).getText()).toBe('8100');
-        });
+        }, 500000);
 
         it('redirects on submit', function () {
             //budgetForm.navigateToForms();
@@ -55,7 +54,7 @@ describe('Budget Calculation', function() {
             browser.sleep(500);
             expect(element(by.css("#budget_list > div.container > table > tbody > tr:nth-child(1) > td:nth-child(1)")).getText()).toBe('Bhadrapur');
         });
-    });
+    }, 500000);
 
     describe('viewing form', function () {
         it('all inputs are disabled', function () {
