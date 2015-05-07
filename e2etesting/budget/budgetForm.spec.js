@@ -23,31 +23,28 @@ describe('Budget Calculation', function() {
 
         it('calculates values correctly ', function () {
             // fill out form
-            browser.ignoreSynchronization = false
-            ;
+            browser.ignoreSynchronization = false;
             budgetForm.fillOutForm();
 
-
-            browser.sleep(3000);
+            browser.sleep(10000);
             // expect totals to be certain values
-            expect(element(by.binding("main.commTotal()")).getText()).toBe('60');
-            expect(element(by.binding("main.travelTotalValue")).getText()).toBe('50');
-            expect(element(by.binding("main.adminTotal()")).getText()).toBe('65');
-            expect(element(by.binding("main.medicalTotal()")).getText()).toBe('5');
-            expect(element(by.binding("main.miscTotalValue")).getText()).toBe('25');
-            expect(element(by.binding("main.bunchTotal()")).getText()).toBe('205');
-            expect(element(by.binding("main.shelterTotal()")).getText()).toBe('25');
-            expect(element(by.binding("main.foodTotal()")).getText()).toBe('250');
-            expect(element(by.binding("main.foodAndShelterTotal()")).getText()).toBe('275');
-            expect(element(by.binding("main.awarenessTotalValue")).getText()).toBe('15');
-            expect(element(by.binding("main.suppliesTotalValue")).getText()).toBe('20');
-            expect(element(by.binding("main.stationTotal()")).getText()).toBe('515');
+            expect(element(by.binding("main.shelterTotal()")).getText()).toBe('900');
+            expect(element(by.binding("main.foodTotal()")).getText()).toBe('2000');
+            expect(element(by.binding("main.commTotal()")).getText()).toBe('900');
+            expect(element(by.binding("main.awarenessTotalValue")).getText()).toBe('700');
+            expect(element(by.binding("main.travelTotalValue")).getText()).toBe('1050');
+            expect(element(by.binding("main.suppliesTotalValue")).getText()).toBe('1100');
+            expect(element(by.binding("main.adminTotal()")).getText()).toBe('750');
+            expect(element(by.binding("main.medicalTotal()")).getText()).toBe('100');
+            expect(element(by.binding("main.miscTotalValue")).getText()).toBe('600');
+            expect(element(by.binding("main.bunchTotal()")).getText()).toBe('3200');
+            expect(element(by.binding("main.foodAndShelterTotal()")).getText()).toBe('2900');
+            expect(element(by.binding("main.stationTotal()")).getText()).toBe('8100');
         });
 
         it('redirects on submit', function () {
             //budgetForm.navigateToForms();
             budgetForm.submitForm();
-            browser.sleep(1000);
             browser.sleep(1000);
             expect(browser.driver.getCurrentUrl()).toContain('budget/budget_calculation');
         });
