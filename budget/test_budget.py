@@ -39,7 +39,7 @@ class TestModels(TestCase):
 
         #Awareness
         item.awareness_contact_cards = True
-        item.awareness_contact_cards_boolean_amount = 4000
+        #item.awareness_contact_cards_boolean_amount = 4000
         item.awareness_contact_cards_amount = 5
         item.awareness_awareness_party_boolean = True
         item.awareness_awareness_party = 10

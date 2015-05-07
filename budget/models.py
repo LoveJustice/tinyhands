@@ -52,8 +52,16 @@ class BorderStationBudgetCalculation(models.Model):
     travel_motorbike_amount = models.PositiveIntegerField(default=60000)
     travel_plus_other = models.PositiveIntegerField(default=0)
 
+    def travel_extra_items_total(self):
+        items = self.otherbudgetitemcost_set.filter(form_section=1)
+        total = 0
+        for item in items:
+            total += item.cost
+        return total
+
     def travel_total(self):
         total = 0
+        total += self.travel_extra_items_total()
         if self.travel_chair_with_bike:
             total += self.travel_chair_with_bike_amount
         if self.travel_manager_with_bike:
@@ -101,8 +109,15 @@ class BorderStationBudgetCalculation(models.Model):
     miscellaneous_number_of_intercepts_last_month = models.PositiveIntegerField('# of intercepts last month', default=0)
     miscellaneous_number_of_intercepts_last_month_multiplier = models.PositiveIntegerField(default=300)
 
-    def miscellaneous_total(self):
+    def miscellaneous_extra_items_total(self):
+        items = self.otherbudgetitemcost_set.filter(form_section=2)
         total = 0
+        for item in items:
+            total += item.cost
+        return total
+
+    def miscellaneous_total(self):
+        total = self. miscellaneous_extra_items_total()
         total += self.miscellaneous_number_of_intercepts_last_month * self.miscellaneous_number_of_intercepts_last_month_multiplier
         return total
 
@@ -144,8 +159,15 @@ class BorderStationBudgetCalculation(models.Model):
     awareness_sign_boards_boolean = models.BooleanField("Sign Boards", default=False)
     awareness_sign_boards = models.PositiveIntegerField(default=0)
 
-    def awareness_total(self):
+    def awareness_extra_items_total(self):
+        items = self.otherbudgetitemcost_set.filter(form_section=3)
         total = 0
+        for item in items:
+            total += item.cost
+        return total
+
+    def awareness_total(self):
+        total = self.awareness_extra_items_total()
         # If test fails, check names of contact cards.
         if self.awareness_contact_cards:
             #total += (self.awareness_contact_cards_amount + self.awareness_contact_cards_boolean_amount)
@@ -165,8 +187,15 @@ class BorderStationBudgetCalculation(models.Model):
     supplies_flashlights_boolean = models.BooleanField('Flashlights', default=False)
     supplies_flashlights_amount = models.PositiveIntegerField(default=0)
 
-    def supplies_total(self):
+    def supplies_extra_items_total(self):
+        items = self.otherbudgetitemcost_set.filter(form_section=4)
         total = 0
+        for item in items:
+            total += item.cost
+        return total
+
+    def supplies_total(self):
+        total = self.supplies_extra_items_total()
         if self.supplies_walkie_talkies_boolean:
             total += self.supplies_walkie_talkies_amount
         if self.supplies_recorders_boolean:
