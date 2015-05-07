@@ -1,5 +1,6 @@
 var budgetForm = require('./budgetForm.js');
 var loginPage = require('../accounts/loginPage.js');
+var constants = require('../testConstants.json');
 
 describe('Budget Calculation', function() {
     beforeEach(function () {
@@ -53,7 +54,9 @@ describe('Budget Calculation', function() {
 
         it('should show form in budget calculations list', function () {
             browser.sleep(1000);
-            expect(element(by.xpath("/html/body/div[3]/table/tbody/tr/td[1]")).getText()).toBe('Bhadrapur');
+            browser.get(constants.webAddress + '/budget/budget_calculations/');
+            browser.sleep(500);
+            expect(element(by.css("#budget_list > div.container > table > tbody > tr:nth-child(1) > td:nth-child(1)")).getText()).toBe('Bhadrapur');
         });
     });
 
