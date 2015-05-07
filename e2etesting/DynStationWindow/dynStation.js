@@ -54,15 +54,16 @@ var dynStation = function() {
         expect($("div[id='Static " + station + "']").isPresent()).toBe(true);
     };
 
-    this.checkLinks = function (station,pk) {
-        browser.get(c.webAddress);
-        browser.sleep(400);
-        $("area[title='" + station + "']").click();
-        browser.sleep(200);
+    this.checkLinks = function (station, code, pk) {
+        //browser.get(c.webAddress);
+        //browser.sleep(400);
+        //$("area[title='" + station + "']").click();
+        //browser.sleep(200);
         //expect($("a[href='/static_border_stations/border-stations/blaa" + pk + "']").isPresent()).toBe(false);
-        //expect(element(by.linkText('Subcommittee, Staff, and Locations')).getAttribute('href')).toEqual('/static_border_stations/border-stations/invalidurl');
-        //expect(element(by.linkText('IRFs')).getAttribute('href')).toEqual('http://0.0.0.0:8001/static_border_stations/border-stations/' + pk);
-        //expect(element(by.linkText('VIFs')).getAttribute('href')).toEqual('http://0.0.0.0:8001/static_border_stations/border-stations/' + pk);
+        expect(element(by.linkText('Subcommittee, Staff, and Locations')).getAttribute('href')).toContain('/static_border_stations/border-stations/' + pk );
+        //console.log(element(by.linkText('Subcommittee, Staff, and Locations')).getAttribute('href'));
+        expect(element(by.linkText('IRFs')).getAttribute('href')).toContain('data-entry/irfs/search/?search_value=' + code);
+        expect(element(by.linkText('VIFs')).getAttribute('href')).toContain('data-entry/vifs/search/?search_value=' + code);
     };
 };
 module.exports = new dynStation();

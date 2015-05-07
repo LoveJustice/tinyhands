@@ -6,14 +6,16 @@ var fullDict = new Object();
 
 
 
-
+var stationsCode = new Object();
 var stationsCount = new Object();
 var stationsPk = new Object();
 for (var i = 0;  i < borderStations.length; i++) {
     var station = JSON.parse(JSON.stringify(borderStations[i]));
     var name = station.fields.station_name + " " + station.fields.station_code;
+    var code = station.fields.station_code;
     stationsCount[name] = 0;
     stationsPk[name] = station.pk;
+    stationsCode[name] = code;
 
 };
 
@@ -38,9 +40,10 @@ describe('Dynamic Station Window', function() {
             dynStation.checkStationsExist(stationsCount);
         });
 
-        it('marker is clickable', function() {
+        it('marker is clickable and links are correct', function() {
             for (var station in stationsCount) {
                 dynStation.checkClick(station);
+                dynStation.checkLinks(station, stationsCode[station], stationsPk[station]);
             };
         }, 50000);
 
@@ -50,11 +53,11 @@ describe('Dynamic Station Window', function() {
             };
         }, 50000);
 
-        it('marker links are correct', function() {
+/*        it('marker links are correct', function() {
             for (var station in stationsCount) {
-                dynStation.checkLinks(station, stationsPk[station]);
+                dynStation.checkLinks(station, stationsCode[station], stationsPk[station]);
             };
-        });
+        });*/
 
     });
 
