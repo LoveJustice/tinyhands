@@ -25,8 +25,8 @@
             </pageGraphics>
             <frame id="first" x1="35" y1="700" width="260" height="50"/>
             <frame id="second" x1="300" y1="700" width="260" height="50"/>
-            <frame id="third" x1="35" y1="45" width="150" height="675"/>
-            <frame id="fourth" x1="300" y1="45" width="150" height="675"/>
+            <frame id="third" x1="35" y1="45" width="185" height="675"/>
+            <frame id="fourth" x1="300" y1="45" width="185" height="675"/>
         </pageTemplate>
     </template>
 
@@ -55,6 +55,7 @@
         <para style="header">
             <b>Date</b>: {{ date }}
         </para>
+        <spacer length="10"/>
 
         <nextFrame/>
 
@@ -65,7 +66,6 @@
         </para>
 
         <blockTable>
-
             {% for staffSalary in staffSalaries %}
             <tr>
                 <td align="left">
@@ -74,126 +74,504 @@
                     </para>
                 </td>
                 <td align="right">
-                    <para style="normal">
+                    <para style="normal" alignment="right">
                         {{ staffSalary.salary }}
                     </para>
                 </td>
             </tr>
             {% endfor %}
+        </blockTable>
 
-            <spacer length="10"/>
+        <spacer length="10"/>
 
-            <!--Communication-->
-            <para style="header">
-                <b>Communication</b>
-            </para>
+        <!--Communication-->
+        <para style="header">
+            <b>Communication</b>
+        </para>
 
+        <blockTable>
             {% if communication_chair_bool  %}
-                <para style="normal">
-                    Chair: {{ communication_chair }}
-                </para>
+                <tr>
+                    <td align="left">
+                        <para style="normal">
+                            Chair:
+                        </para>
+                    </td>
+                    <td align="right">
+                        <para style="normal" alignment="right">
+                            {{ communication_chair }}
+                        </para>
+                    </td>
+                </tr>
             {% endif %}
 
             {% if communication_manager_bool  %}
-                <para style="normal">
-                    Manager: {{ communication_manager }}
-                </para>
+                <tr>
+                    <td align="left">
+                        <para style="normal">
+                            Manager:
+                        </para>
+                    </td>
+                    <td align="right">
+                        <para style="normal" alignment="right">
+                            {{ communication_manager }}
+                        </para>
+                    </td>
+                </tr>
             {% endif %}
 
-            <para style="normal">
-                Total: {{ communication_total }}
-            </para>
+            <tr>
+                <td align="left">
+                    <para style="normal">
+                        Total:
+                    </para>
+                </td>
+                <td align="right">
+                    <para style="normal" alignment="right">
+                        {{ communication_total }}
+                    </para>
+                </td>
+            </tr>
+        </blockTable>
 
-            <spacer length="10"/>
+        <spacer length="10"/>
 
-            <!--Travel-->
-            <para style="header">
-                <b>Travel</b>
-            </para>
+        <!--Travel-->
+        <para style="header">
+            <b>Travel</b>
+        </para>
 
+        <blockTable>
             {% if travel_chair_bool  %}
-                <para style="normal">
-                    Chair: {{ travel_chair }}
-                </para>
+                <tr>
+                    <td align="left">
+                        <para style="normal">
+                            Chair:
+                        </para>
+                    </td>
+                    <td align="right">
+                        <para style="normal" alignment="right">
+                            {{ travel_chair }}
+                        </para>
+                    </td>
+                </tr>
             {% endif %}
 
             {% if travel_manager_bool %}
-                <para style="normal">
-                    Manager: {{ travel_manager }}
-                </para>
+                <tr>
+                    <td align="left">
+                        <para style="normal">
+                            Manager:
+                        </para>
+                    </td>
+                    <td align="right">
+                        <para style="normal" alignment="right">
+                            {{ travel_manager }}
+                        </para>
+                    </td>
+                </tr>
             {% endif %}
 
-            <para style="normal">
-                Total: {{ travel_total }}
-            </para>
+            {% for item in otherItems %}
+                {% if item.form_section == 1 %}
+                    <tr>
+                        <td align="left">
+                            <para style="normal">
+                                {{ item.name }}:
+                            </para>
+                        </td>
+                        <td align="right">
+                            <para style="normal" alignment="right">
+                                {{ item.cost }}
+                            </para>
+                        </td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
 
+            <tr>
+                <td align="left">
+                    <para style="normal">
+                        Total:
+                    </para>
+                </td>
+                <td align="right">
+                    <para style="normal" alignment="right">
+                        {{ travel_total }}
+                    </para>
+                </td>
+            </tr>
         </blockTable>
+
+        <spacer length="10"/>
+
+        <!--Administration-->
+        <para style="header">
+            <b>Administration</b>
+        </para>
+
+        <blockTable>
+            <tr>
+                <td align="left">
+                    <para style="normal">
+                        Meetings:
+                    </para>
+                </td>
+                <td align="right">
+                    <para style="normal" alignment="right">
+                        {{ admin_meetings }}
+                    </para>
+                </td>
+            </tr>
+
+            <tr>
+                <td align="left">
+                    <para style="normal">
+                        Total:
+                    </para>
+                </td>
+                <td align="right">
+                    <para style="normal" alignment="right">
+                        {{ admin_total }}
+                    </para>
+                </td>
+            </tr>
+        </blockTable>
+
+        <spacer length="10"/>
+
+        <!--Medical-->
+        <para style="header">
+            <b>Medical</b>
+        </para>
+
+        <blockTable>
+            <tr>
+                <td align="left">
+                    <para style="normal">
+                        Total:
+                    </para>
+                </td>
+                <td align="right">
+                    <para style="normal" alignment="right">
+                        {{ medical_total }}
+                    </para>
+                </td>
+            </tr>
+        </blockTable>
+
+        <spacer length="10"/>
+
+        <!--Miscellaneous-->
+        <para style="header">
+            <b>Miscellaneous</b>
+        </para>
+
+        <blockTable>
+            {% for item in otherItems %}
+                {% if item.form_section == 2 %}
+
+                    <tr>
+                        <td align="left">
+                            <para style="normal">
+                                {{ item.name }}:
+                            </para>
+                        </td>
+                        <td align="right">
+                            <para style="normal" alignment="right">
+                                {{ item.cost }}
+                            </para>
+                        </td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+
+            <tr>
+                <td align="left">
+                    <para style="normal">
+                        Total:
+                    </para>
+                </td>
+                <td align="right">
+                    <para style="normal" alignment="right">
+                        {{ misc_total }}
+                    </para>
+                </td>
+            </tr>
+        </blockTable>
+
 
         <nextFrame/>
 
         <spacer length="10"/>
 
-            <!--Awareness-->
-            <para style="header">
-                <b>Awareness</b>
-            </para>
+        <!--Shelter-->
+        <para style="header">
+            <b>Shelter</b>
+        </para>
 
+        <blockTable>
+            <tr>
+                <td align="left">
+                    <para style="normal">
+                        Total:
+                    </para>
+                </td>
+                <td align="right">
+                    <para style="normal" alignment="right">
+                        {{ shelter_total }}
+                    </para>
+                </td>
+            </tr>
+        </blockTable>
+
+        <spacer length="10"/>
+
+        <!--Food and Gas-->
+        <para style="header">
+            <b>Food &amp; Gas</b>
+        </para>
+
+        <blockTable>
+            <tr>
+                <td align="left">
+                    <para style="normal">
+                        Intercepted Girls:
+                    </para>
+                </td>
+                <td align="right">
+                    <para style="normal" alignment="right">
+                        {{ food_and_gas_intercepted_girls }}
+                    </para>
+                </td>
+            </tr>
+
+            <tr>
+                <td align="left">
+                    <para style="normal">
+                        Limbo Girls:
+                    </para>
+                </td>
+                <td align="right">
+                    <para style="normal" alignment="right">
+                        {{ food_and_gas_limbo_girls }}
+                    </para>
+                </td>
+            </tr>
+
+            <tr>
+                <td align="left">
+                    <para style="normal">
+                        Total:
+                    </para>
+                </td>
+                <td align="right">
+                    <para style="normal" alignment="right">
+                        {{ food_gas_total }}
+                    </para>
+                </td>
+            </tr>
+        </blockTable>
+
+        <spacer length="10"/>
+
+        <!--Awareness-->
+        <para style="header">
+            <b>Awareness</b>
+        </para>
+
+        <blockTable>
             {% if awareness_contact_cards_bool %}
-                <para style="normal">
-                    Contact Cards: {{ awareness_contact_cards }}
-                </para>
+                <tr>
+                    <td align="left">
+                        <para style="normal">
+                            Contact Cards:
+                        </para>
+                    </td>
+                    <td align="right">
+                        <para style="normal" alignment="right">
+                            {{ awareness_contact_cards }}
+                        </para>
+                    </td>
+                </tr>
             {% endif %}
 
             {% if awareness_awareness_party_bool %}
-                <para style="normal">
-                    Awareness Party: {{ awareness_awareness_party }}
-                </para>
+                <tr>
+                    <td align="left">
+                        <para style="normal">
+                            Awareness Party:
+                        </para>
+                    </td>
+                    <td align="right">
+                        <para style="normal" alignment="right">
+                            {{ awareness_awareness_party }}
+                        </para>
+                    </td>
+                </tr>
             {% endif %}
 
             {% if awareness_sign_boards_bool %}
-                <para style="normal">
-                    Sign Boards: {{ awareness_sign_boards }}
-                </para>
+                <tr>
+                    <td align="left">
+                        <para style="normal">
+                            Sign Boards:
+                        </para>
+                    </td>
+                    <td align="right">
+                        <para style="normal" alignment="right">
+                            {{ awareness_sign_boards }}
+                        </para>
+                    </td>
+                </tr>
             {% endif %}
 
-            <para style="normal">
-                Awareness Total: {{ awareness_total }}
-            </para>
+            {% for item in otherItems %}
+                {% if item.form_section == 3 %}
+                    <tr>
+                        <td align="left">
+                            <para style="normal">
+                                {{ item.name }}:
+                            </para>
+                        </td>
+                        <td align="right">
+                            <para style="normal" alignment="right">
+                                {{ item.cost }}
+                            </para>
+                        </td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
 
-            <spacer length="10"/>
+            <tr>
+                <td align="left">
+                    <para style="normal">
+                        Awareness Total:
+                    </para>
+                </td>
+                <td align="right">
+                    <para style="normal" alignment="right">
+                        {{ awareness_total }}
+                    </para>
+                </td>
+            </tr>
+        </blockTable>
 
-            <!--Supplies-->
-            <para style="header">
-                <b>Supplies</b>
-            </para>
+        <spacer length="10"/>
 
+        <!--Supplies-->
+        <para style="header">
+            <b>Supplies</b>
+        </para>
+
+        <blockTable>
             {% if supplies_walkie_talkies_bool %}
-                <para style="normal">
-                    Walkie Talkies: {{ supplies_walkie_talkies }}
-                </para>
+                <tr>
+                    <td align="left">
+                        <para style="normal">
+                            Walkie Talkies:
+                        </para>
+                    </td>
+                    <td align="right">
+                        <para style="normal" alignment="right">
+                            {{ supplies_walkie_talkies }}
+                        </para>
+                    </td>
+                </tr>
             {% endif %}
 
             {% if supplies_recorders_bool %}
-                <para style="normal">
-                    Recorders: {{ supplies_recorders }}
-                </para>
+                <tr>
+                    <td align="left">
+                        <para style="normal">
+                            Recorders:
+                        </para>
+                    </td>
+                    <td align="right">
+                        <para style="normal" alignment="right">
+                            {{ supplies_recorders }}
+                        </para>
+                    </td>
+                </tr>
             {% endif %}
 
             {% if supplies_binoculars_bool %}
-                <para style="normal">
-                    Binoculars: {{ supplies_binoculars }}
-                </para>
+                <tr>
+                    <td align="left">
+                        <para style="normal">
+                            Binoculars:
+                        </para>
+                    </td>
+                    <td align="right">
+                        <para style="normal" alignment="right">
+                            {{ supplies_binoculars }}
+                        </para>
+                    </td>
+                </tr>
             {% endif %}
 
             {% if supplies_flashlights_bool %}
-                <para style="normal">
-                    Flashlights: {{ supplies_flashlights }}
-                </para>
+                <tr>
+                    <td align="left">
+                        <para style="normal">
+                            Flashlights:
+                        </para>
+                    </td>
+                    <td align="right">
+                        <para style="normal" alignment="right">
+                            {{ supplies_flashlights }}
+                        </para>
+                    </td>
+                </tr>
             {% endif %}
 
-            <para style="normal">
-                Supplies Total: {{ supplies_total }}
-            </para>
+            {% for item in otherItems %}
+                {% if item.form_section == 4 %}
+                    <tr>
+                        <td align="left">
+                            <para style="normal">
+                                {{ item.name }}:
+                            </para>
+                        </td>
+                        <td align="right">
+                            <para style="normal" alignment="right">
+                                {{ item.cost }}
+                            </para>
+                        </td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+            <tr>
+                <td align="left">
+                    <para style="normal">
+                        Supplies Total:
+                    </para>
+                </td>
+                <td align="right">
+                    <para style="normal" alignment="right">
+                        {{ supplies_total }}
+                    </para>
+                </td>
+            </tr>
+        </blockTable>
+
+        <spacer length="10"/>
+
+        <blockTable>
+            <tr>
+                <td align="left">
+                    <para style="normal">
+                        Monthly Total:
+                    </para>
+                </td>
+                <td align="right">
+                    <para style="normal" alignment="right">
+                        {{ monthly_total }}
+                    </para>
+                </td>
+            </tr>
+        </blockTable>
+
     </story>
 </document>
 
