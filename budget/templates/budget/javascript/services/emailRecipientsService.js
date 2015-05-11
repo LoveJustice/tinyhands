@@ -22,7 +22,7 @@ function emailRecipientsService($http) {
 
     function sendEmails(people) {
         return $http.post('/budget/api/budget_calculations/money_distribution/0/', people)
-            .success(function (data, status) {
+            .success(function () {
                 console.log("success!");
                 return true;
             })

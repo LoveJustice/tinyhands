@@ -6,11 +6,10 @@ from dateutil.relativedelta import relativedelta
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ImproperlyConfigured
-from django.core.urlresolvers import reverse_lazy, reverse
+from django.core.urlresolvers import reverse_lazy
 from django.db.models import Count, Sum
-from django.forms.models import modelformset_factory
 from django.http import HttpResponse
-from django.shortcuts import get_object_or_404, render, redirect
+from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 from django.views.generic import ListView, DeleteView, View
 from django.conf import settings
@@ -21,62 +20,19 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from templated_email import send_templated_mail
 
-from budget.forms import BorderStationBudgetCalculationForm
 from budget.models import BorderStationBudgetCalculation, OtherBudgetItemCost, StaffSalary
 from dataentry.models import InterceptionRecord
 from static_border_stations.models import Staff, BorderStation, CommitteeMember
 from serializers import BorderStationBudgetCalculationSerializer, OtherBudgetItemCostSerializer, StaffSalarySerializer
-from models import BorderStationBudgetCalculation
-from z3c.rml import rml2pdf, document
+from z3c.rml import document
 from lxml import etree
-from rest_framework import generics, viewsets
-import ipdb
-from reportlab import *
+from rest_framework import viewsets
 from static_border_stations.serializers import StaffSerializer, CommitteeMemberSerializer
 
 
 class BudgetViewSet(viewsets.ModelViewSet):
     queryset = BorderStationBudgetCalculation.objects.all()
     serializer_class = BorderStationBudgetCalculationSerializer
-
-
-class MoneyDistribution(viewsets.ViewSet):
-    def get_people_needing_form(self, request, pk):
-        border_station = BorderStation.objects.get(pk=pk)
-        staff = border_station.staff_set.all().filter(receives_money_distribution_form=True)
-        committee_members = border_station.committeemember_set.all().filter(receives_money_distribution_form=True).all()
-
-        staff_serializer = StaffSerializer(staff, many=True)
-        committee_members_serializer = CommitteeMemberSerializer(committee_members, many=True)
-        return Response({"staff_members": staff_serializer.data, "committee_members": committee_members_serializer.data})
-
-    def send_emails(self, request, pk):
-        staff_ids = request.DATA['staff_ids']
-        budget_calc_id = int(request.DATA["budget_calc_id"])
-        committee_ids = request.DATA['committee_ids']
-
-        # send the emails
-        for id in staff_ids:
-            person = Staff.objects.get(pk=id)
-            self.email_staff_and_committee_members(person, budget_calc_id, 'money_distribution_form')
-
-        for id in committee_ids:
-            person = CommitteeMember.objects.get(pk=id)
-            self.email_staff_and_committee_members(person, budget_calc_id, 'money_distribution_form')
-
-        return Response("Emails Sent!", status=200)
-
-    def email_staff_and_committee_members(self, person, budget_calc_id, template, context={}):
-        context['person'] = person
-        context['budget_calc_id'] = budget_calc_id
-        context['site'] = settings.SITE_DOMAIN
-        send_templated_mail(
-            template_name=template,
-            from_email=settings.ADMIN_EMAIL_SENDER,
-            recipient_list=[person.email],
-            context=context
-        )
-
 
 
 @api_view(['GET'])
@@ -96,7 +52,7 @@ def retrieve_latest_budget_sheet_for_border_station(request, pk):
                 "staff_salaries": staff_serializer.data
             }
         )
-    return Response({"budget_form": {"border_station": pk}, "other_items": "", "staff_salaries": ""})
+    return Response({"budget_form": {"border_station": pk}, "other_items": "", "staff_salaries": "", "None": 1})
 
 
 @api_view(['GET'])
@@ -147,16 +103,15 @@ def previous_data(request, pk, month, year):
             }
         )
     return Response(
-            {
-                "all": 0,
-                "all_cost": 0,
-                "last_month": 0,
-                "last_months_cost": 0,
-                "last_3_months": 0,
-                "last_3_months_cost": 0,
-                "staff_count": 0,
-                "last_months_total_cost": 0
-            })
+        {"all": 0,
+         "all_cost": 0,
+         "last_month": 0,
+         "last_months_cost": 0,
+         "last_3_months": 0,
+         "last_3_months_cost": 0,
+         "staff_count": 0,
+         "last_months_total_cost": 0
+         })
 
 
 def ng_budget_calc_update(request, pk):
@@ -229,9 +184,60 @@ class BudgetCalcListView(
 
     def get_context_data(self, **kwargs):
         context = super(BudgetCalcListView, self).get_context_data(**kwargs)
-        if BorderStationBudgetCalculation.objects.all().count()==0:
+        if BorderStationBudgetCalculation.objects.all().count() == 0:
             context["none_in_system"] = True
         return context
+
+
+class BudgetCalcDeleteView(DeleteView, LoginRequiredMixin):
+    model = BorderStationBudgetCalculation
+    permissions_required = ['permission_budget_manage']
+    success_url = reverse_lazy('budget_list')
+
+    def delete(self, request, *args, **kwargs):
+        if self.request.user.is_superuser:
+            return super(BudgetCalcDeleteView, self).delete(request)
+        else:
+            messages.error(request, "You have no power here!!!")
+
+
+class MoneyDistribution(viewsets.ViewSet):
+
+    def get_people_needing_form(self, request, pk):
+        border_station = BorderStation.objects.get(pk=pk)
+        staff = border_station.staff_set.all().filter(receives_money_distribution_form=True)
+        committee_members = border_station.committeemember_set.all().filter(receives_money_distribution_form=True).all()
+
+        staff_serializer = StaffSerializer(staff, many=True)
+        committee_members_serializer = CommitteeMemberSerializer(committee_members, many=True)
+        return Response({"staff_members": staff_serializer.data, "committee_members": committee_members_serializer.data})
+
+    def send_emails(self, request, pk):
+        staff_ids = request.DATA['staff_ids']
+        budget_calc_id = int(request.DATA["budget_calc_id"])
+        committee_ids = request.DATA['committee_ids']
+
+        # send the emails
+        for id in staff_ids:
+            person = Staff.objects.get(pk=id)
+            self.email_staff_and_committee_members(person, budget_calc_id, 'money_distribution_form')
+
+        for id in committee_ids:
+            person = CommitteeMember.objects.get(pk=id)
+            self.email_staff_and_committee_members(person, budget_calc_id, 'money_distribution_form')
+
+        return Response("Emails Sent!", status=200)
+
+    def email_staff_and_committee_members(self, person, budget_calc_id, template, context={}):
+        context['person'] = person
+        context['budget_calc_id'] = budget_calc_id
+        context['site'] = settings.SITE_DOMAIN
+        send_templated_mail(
+            template_name=template,
+            from_email=settings.ADMIN_EMAIL_SENDER,
+            recipient_list=[person.email],
+            context=context
+        )
 
 
 class PDFView(View):
@@ -333,33 +339,9 @@ class MoneyDistributionFormPDFView(PDFView):
             'monthly_total': station.station_total()
         }
 
+
 @login_required
 def money_distribution_view(request, pk):
     id = pk
     border_station = (BorderStationBudgetCalculation.objects.get(pk=pk)).border_station
     return render(request, 'budget/moneydistribution_view.html', locals())
-
-@login_required
-def budget_calc_view(request, pk):
-    budget_calc = get_object_or_404(BorderStationBudgetCalculation, pk=pk)
-    form = BorderStationBudgetCalculationForm(instance=budget_calc)
-
-    border_station = budget_calc.border_station
-    border_station_staff = border_station.staff_set.all()
-
-    StaffFormSet = modelformset_factory(model=Staff, extra=0)
-    staff_formset = StaffFormSet(queryset=border_station_staff)
-
-    return render(request, 'budget/borderstationbudgetcalculation_form.html', locals())
-
-
-class BudgetCalcDeleteView(DeleteView, LoginRequiredMixin):
-    model = BorderStationBudgetCalculation
-    permissions_required = ['permission_budget_manage']
-    success_url = reverse_lazy('budget_list')
-
-    def delete(self, request, *args, **kwargs):
-        if self.request.user.is_superuser:
-            return super(BudgetCalcDeleteView, self).delete(request)
-        else:
-            messages.error(request, "You have no power here!!!")

@@ -8,7 +8,6 @@ angular
         if( window.submit_type === 1) {
             var date = new Date();
             date.setDate(15);
-            console.log("hello");
             retrieveForm(date.getMonth(), date.getFullYear());
         }
 

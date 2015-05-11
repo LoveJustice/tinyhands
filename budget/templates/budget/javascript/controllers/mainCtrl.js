@@ -43,23 +43,8 @@ angular
             });
 
             $scope.$on('lastBudgetTotalBroadcast', function(event, args) {
-                console.log(args);
                 vm.last_months_total_cost = args['total'];
             });
-
-            /*vm.retrieveForm = function(id) {
-                $http.get('/budget/api/budget_calculations/' + id + '/').
-                        success(function (data) {
-                            //We can reference the json object to fill our vm variables
-                            vm.form = data;
-                        console.log(data);
-                        }).
-                        error(function (data, status, headers, config) {
-                            // called asynchronously if an error occurs
-                            // or server returns response with an error status.
-                        });
-            };*/
-
 
             vm.foodAndShelterTotal = function() {
                 return vm.foodTotal() + vm.shelterTotal();
@@ -242,10 +227,8 @@ angular
         vm.updateForm = function() {
             mainCtrlService.updateForm(vm.form.id, vm.form).then(function(promise) {
                 vm.id = promise.data.id;
-                console.log(vm.id);
                 //Broadcast event to call the saveAllItems function in the otherItems controller
                 $scope.$emit('handleBudgetCalcSavedEmit', {message: 'It is done.'});
-                console.log("Test...");
                 $window.location.assign('/budget/budget_calculations/money_distribution/view/' + vm.id + '/');
             });
         };
@@ -269,7 +252,7 @@ angular
             mainCtrlService.retrieveForm(id).then(function(promise){
                 vm.form = promise.data;
                 vm.form.month_year = new Date(promise.data.month_year);
-                $scope.$emit('dateSetEmit', {date: vm.form.month});
+                $scope.$emit('dateSetEmit', {date: promise.data.month_year});
             });
         };
 
@@ -367,7 +350,6 @@ angular
         else if( (window.submit_type) == 3) {
             vm.view = true;
             $('input').prop('disabled', true);
-            console.log(window.budget_calc_id);
             vm.retrieveForm(window.budget_calc_id);
         }
 

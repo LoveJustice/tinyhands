@@ -4,18 +4,14 @@ angular
         var vm = this;
         vm.staff = {};
         vm.committeeMembers = {};
-        vm.loading = false;
+        vm.loading = false; // used for the loading animation
 
         //function definitions
         vm.sendEmails = sendEmails;
         vm.retrieveForm = retrieveForm;
 
-        function main(){
-            vm.retrieveForm();
-        }
-        main();
 
-
+        vm.retrieveForm(); // We always need to get the people, so I just call it immediately
         function retrieveForm() {
             emailRecipientsService.retrieveForm().then(function(promise){
                 var data = promise.data;
@@ -25,7 +21,7 @@ angular
         }
 
         function sendEmails(){
-            vm.loading = true;
+            vm.loading = true; // Start the animation on the webpage
             var people = {};
             people.budget_calc_id = window.pk;
             people.staff_ids = [];
@@ -42,7 +38,6 @@ angular
                 }
             }
             emailRecipientsService.sendEmails(people).then(function(){
-                vm.loading = false;
                 $window.location.assign('/');
             });
         }
