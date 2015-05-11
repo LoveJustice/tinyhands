@@ -13,5 +13,4 @@ urlpatterns = patterns('static_border_stations.views',
     url(r'^border-stations/update/(?P<pk>\d+)/$', StaticBorderStationsUpdateView.as_view(), name='borderstations_update'),
     url(r'^border-stations/(?P<pk>\d+)/$', StaticBorderStationsDetailView.as_view(), name='borderstations_view'),
     url(r'^api/border-stations/(?P<pk>\d+)/$', staff_detail, name="staff_detail_api")
-
 )

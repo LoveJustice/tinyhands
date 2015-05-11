@@ -31,7 +31,6 @@ function staffService($http, $q) {
         var staffSalaryPromise = $http({method: 'GET', url: '/budget/api/budget_calculations/staff_salary/' + window.budget_calc_id + '/'});
         return $q.all([staffPromise, staffSalaryPromise])
             .then(function (data) {
-                console.log("hello");
                 return data;
             })
             .catch(function(data, status, headers, config) {
