@@ -276,6 +276,7 @@ angular
 
         function resetValuesToZero() {
             vm.form = {
+                border_station: window.budget_calc_id,
                 shelter_shelter_startup_amount: 71800,
                 shelter_shelter_two_amount: 36800,
                 communication_chair: false,
@@ -339,7 +340,7 @@ angular
 
         if( (window.submit_type) == 1 ) {
             vm.create = true;
-            vm.form.border_station = window.budget_calc_id;
+            vm.form.border_station = window.border_station;
             vm.retrieveNewForm();
         }
         else if( (window.submit_type) == 2)  {

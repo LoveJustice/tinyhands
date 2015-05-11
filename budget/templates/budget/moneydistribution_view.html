@@ -17,7 +17,13 @@
 
 
             <div class="col-lg-6">
-                <h2 class="text-center">Money Distribution Form</h2>
+                <div class="row">
+                    <h2 class="text-center col-lg-8">Money Distribution Form</h2>
+                    <a style="margin-top: 20px;" href="{% url "budget_update_api" id %}" class="btn btn-primary col-lg-3">Update Budget</a>
+                    <div class="1"></div>
+                </div>
+
+
                 <iframe style="height: 70%; width: 100%; border: hidden; padding-top: 15px;" id="money_distribution_form_iframe" src="{% url "money_distribution_pdf" id %}"></iframe>
             </div>
 
@@ -59,11 +65,11 @@
 
                 <div class="row text-center">
                     <input type="button" style="margin-top: 50px" class="btn btn-primary" value="Send to Selected Staff and Members" ng-click="main.sendEmails()">
+
                 </div>
 
             </div>
         {% endverbatim %}
-
 
         </div>
 
