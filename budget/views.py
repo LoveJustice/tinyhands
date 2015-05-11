@@ -6,12 +6,11 @@ from dateutil.relativedelta import relativedelta
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ImproperlyConfigured
-from django.core.urlresolvers import reverse_lazy
+from django.core.urlresolvers import reverse_lazy, reverse
 from django.db.models import Count, Sum
-from django.forms import formset_factory, inlineformset_factory
 from django.forms.models import modelformset_factory
 from django.http import HttpResponse
-from django.shortcuts import get_object_or_404, render, redirect, render_to_response
+from django.shortcuts import get_object_or_404, render, redirect
 from django.template.loader import render_to_string
 from django.views.generic import ListView, DeleteView, View
 from django.conf import settings
@@ -20,7 +19,6 @@ from django.conf import settings
 from braces.views import LoginRequiredMixin
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework.views import APIView
 from templated_email import send_templated_mail
 
 from budget.forms import BorderStationBudgetCalculationForm
@@ -52,26 +50,26 @@ class MoneyDistribution(viewsets.ViewSet):
         committee_members_serializer = CommitteeMemberSerializer(committee_members, many=True)
         return Response({"staff_members": staff_serializer.data, "committee_members": committee_members_serializer.data})
 
-    def send_emails(self, request, *args, **kwargs):
-        import ipdb
-        ipdb.set_trace()
+    def send_emails(self, request, pk):
         staff_ids = request.DATA['staff_ids']
+        budget_calc_id = int(request.DATA["budget_calc_id"])
         committee_ids = request.DATA['committee_ids']
 
-        file = ""
         # send the emails
         for id in staff_ids:
             person = Staff.objects.get(pk=id)
-            self.email_staff_and_committee_members(person, file, 'money_distribution_form')
+            self.email_staff_and_committee_members(person, budget_calc_id, 'money_distribution_form')
 
         for id in committee_ids:
             person = CommitteeMember.objects.get(pk=id)
-            self.email_staff_and_committee_members(person, file, 'money_distribution_form')
+            self.email_staff_and_committee_members(person, budget_calc_id, 'money_distribution_form')
 
         return Response("Emails Sent!", status=200)
 
-    def email_staff_and_committee_members(self, person, pdf_file, template, context={}):
+    def email_staff_and_committee_members(self, person, budget_calc_id, template, context={}):
         context['person'] = person
+        context['budget_calc_id'] = budget_calc_id
+        context['site'] = settings.SITE_DOMAIN
         send_templated_mail(
             template_name=template,
             from_email=settings.ADMIN_EMAIL_SENDER,
@@ -118,13 +116,12 @@ def previous_data(request, pk, month, year):
         last_3_months_count = last_3_months.aggregate(total=Sum('interceptee_count'))
         all_interception_records_count = all_interception_records.aggregate(total=Sum('interceptee_count'))
 
-        if last_3_months_count['total'] == None:
+        if last_3_months_count['total'] is None:
             last_3_months_count['total'] = 1
-        if last_months_count['total'] == None:
+        if last_months_count['total'] is None:
             last_months_count['total'] = 1
-        if all_interception_records_count['total'] == None:
+        if all_interception_records_count['total'] is None:
             all_interception_records_count['total'] = 1
-
 
         last_months_cost = budget_sheets.first().station_total()
 
@@ -163,7 +160,6 @@ def previous_data(request, pk, month, year):
 
 
 def ng_budget_calc_update(request, pk):
-    #is there a better way to do permissions in function based views? Yes
     if not request.user.permission_budget_manage:
         return redirect("home")
 
@@ -173,7 +169,6 @@ def ng_budget_calc_update(request, pk):
 
 
 def ng_budget_calc_create(request, pk):
-    #is there a better way to do permissions in function based views?
     if not request.user.permission_budget_manage:
         return redirect("home")
 
@@ -183,9 +178,6 @@ def ng_budget_calc_create(request, pk):
 
 
 def ng_budget_calc_view(request, pk):
-    """
-        is there a better way to do permissions in function based views?
-    """
     if not request.user.permission_budget_manage:
         return redirect("home")
 
@@ -211,7 +203,6 @@ class OtherItemsViewSet(viewsets.ModelViewSet):
 class StaffSalaryViewSet(viewsets.ModelViewSet):
     queryset = StaffSalary.objects.all()
     serializer_class = StaffSalarySerializer
-
 
     def budget_calc_retrieve(self, request, *args, **kwargs):
         """

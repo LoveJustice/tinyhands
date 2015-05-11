@@ -1,42 +1,65 @@
 {% extends 'base.html' %}
 
 {% block html %}
-   <html ng-app="BudgetCalculation">
+   <html ng-app="BudgetCalculation" ng-controller="emailRecipientsCtrl as main">
 {% endblock %}
 
 {% block title %}Money Distribution PDF{% endblock %}
-
 {% block tab_block %}
     {% block content %}
-
         <script type="text/javascript">
             window.border_station = {{ border_station.id }};
+            window.pk = {{ id }};
         </script>
 
-        <div class="row">
-            <iframe class="col-lg-7" style="height: 900px; border: hidden" id="money_distribution_form_iframe" src="{% url "money_distribution_pdf" id %}"></iframe>
+        <div class="row" >
+
+
+            <div class="col-lg-6">
+                <h2 class="text-center">Money Distribution Form</h2>
+                <iframe style="height: 70%; width: 100%; border: hidden; padding-top: 15px;" id="money_distribution_form_iframe" src="{% url "money_distribution_pdf" id %}"></iframe>
+            </div>
 
         {% verbatim %}
-            <div class="col-lg-4 col-lg-offset-1" ng-controller="emailRecipientsCtrl as main">
-                <h2>E-mail Recipients</h2>
-                <h3>Staff</h3>
-                <div ng-repeat="staff in main.staff">
-                    <div class="row">
-                            <div class="col-lg-1 col-lg-offset-2">
-                            <input type="checkbox" ng-model="string" [name="string"] [ng-true-value="expression"] [ng-false-value="expression"] [ng-change="string"]></div>
-                            <div class="col-lg-5">{{ staff.first_name }} {{ staff.last_name }}</div>
-                            <div class="col-lg-4">{{ staff.email}}</div>
-                    </div>
+            <div class="col-lg-6">
+                <h2 class="text-center">Staff Email Recipients</h2>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="text-center" width="150px">Send Email</th>
+                            <th>Staff Name</th>
+                            <th>Staff Email</th>
+                        </tr>
+                    </thead>
+                    <tr ng-repeat="staff in main.staff" ng-class="{'notReceiving': !staff.receives_money_distribution_form, 'receiving': staff.receives_money_distribution_form}">
+                        <td style="text-align: center"><input type="checkbox" ng-model="staff.receives_money_distribution_form"></td>
+                        <td>{{ staff.first_name }} {{ staff.last_name }}</td>
+                        <td>{{ staff.email}}</td>
+                    </tr>
+                </table>
 
+                <br/>
+
+                <h2 class="text-center">Committee Email Recipients</h2>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="text-center" width="150px">Send Email</th>
+                            <th>Member Name</th>
+                            <th>Member Email</th>
+                        </tr>
+                    </thead>
+                    <tr ng-repeat="member in main.committeeMembers" ng-class="{'notReceiving': !member.receives_money_distribution_form, 'receiving': member.receives_money_distribution_form}">
+                        <td style="text-align: center"><input type="checkbox" ng-model="member.receives_money_distribution_form"></td>
+                        <td>{{ member.first_name }} {{ member.last_name }}</td>
+                        <td>{{ member.email}}</td>
+                    </tr>
+                </table>
+
+                <div class="row text-center">
+                    <input type="button" style="margin-top: 50px" class="btn btn-primary" value="Send to Selected Staff and Members" ng-click="main.sendEmails()">
                 </div>
-                <h3>Committee Members</h3>
-                    <div ng-repeat="member in main.committeeMembers">
-                        <div class="row">
-                            <div class="col-lg-4 col-lg-offset-2">{{ member.first_name }}</div>
-                            <div class="col-lg-4">{{ member.email}}</div>
-                        </div>
 
-                    </div>
             </div>
         {% endverbatim %}
 
@@ -45,5 +68,10 @@
 
         <script type="text/javascript" src="{{ STATIC_URL }}budgetModule.js"></script>
         <script type="text/javascript" src="{{ STATIC_URL }}controllers/emailRecipientsCtrl.js"></script>
+        <script type="text/javascript" src="{{ STATIC_URL }}services/emailRecipientsService.js"></script>
+
+        <div ng-show="main.loading" class="loader-container">
+            <div class="loader">Loading...</div>
+        </div>
     {% endblock %}
 {% endblock %}

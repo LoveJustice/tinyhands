@@ -269,7 +269,7 @@ angular
             mainCtrlService.retrieveForm(id).then(function(promise){
                 vm.form = promise.data;
                 vm.form.month_year = new Date(promise.data.month_year);
-                $scope.$emit('dateSetEmit', {date: vm.form.month_year});
+                $scope.$emit('dateSetEmit', {date: vm.form.month});
             });
         };
 
