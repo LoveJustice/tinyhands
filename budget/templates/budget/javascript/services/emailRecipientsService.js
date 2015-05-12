@@ -1,4 +1,3 @@
-// service
 angular
     .module('BudgetCalculation')
     .factory('emailRecipientsService', emailRecipientsService);
@@ -16,14 +15,14 @@ function emailRecipientsService($http) {
             .success(function (data) {
                 return data;
             })
-            .error(function (data, status, headers, config) {
+            .error(function (data, status) {
+                console.log(data, status);
             });
     }
 
     function sendEmails(people) {
         return $http.post('/budget/api/budget_calculations/money_distribution/0/', people)
             .success(function () {
-                console.log("success!");
                 return true;
             })
             .error(function (data, status) {
@@ -31,5 +30,4 @@ function emailRecipientsService($http) {
                 console.log(data, status);
             });
     }
-
 }
