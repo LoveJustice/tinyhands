@@ -1,23 +1,21 @@
 angular
     .module('BudgetCalculation')
     .controller("staffCtrl", ['$scope','$http', 'staffService', function($scope, $http, staffService) {
-        // get staff for a border_station http://localhost:8000/static_border_stations/api/border-stations/0/
         var vm = this;
+
+        // Variable Declarations
         vm.staffSalaryForms = [];
         vm.staffTotal = 0;
 
-        vm.totalSalaries = totalSalaries;
-        vm.saveAllSalaries = saveAllSalaries;
+        // Function Definitions
         vm.retrieveStaff = retrieveStaff;
         vm.retrieveStaffSalaries = retrieveStaffSalaries;
         vm.retrieveOldStaffSalaries = retrieveOldStaffSalaries;
+        vm.totalSalaries = totalSalaries;
+        vm.saveAllSalaries = saveAllSalaries;
 
-
+        // Calling the main function
         main();
-
-        $scope.$on('handleBudgetCalcSavedBroadcast', function(event, args) {
-            vm.saveAllSalaries();
-        });
 
         function main(){
             if( window.submit_type == 1 ) {
@@ -32,6 +30,12 @@ angular
             }
         }
 
+        // Event Listeners
+        $scope.$on('handleBudgetCalcSavedBroadcast', function() {
+            vm.saveAllSalaries();
+        });
+
+        // Function implementations
         function totalSalaries(){
             var acc = 0;
             for(var x = 0; x < vm.staffSalaryForms.length; x++){
@@ -102,8 +106,8 @@ angular
 
 
         function saveAllSalaries(){
+            var item = {};
             for(var person = 0; person < vm.staffSalaryForms.length; person++){
-
                 item = vm.staffSalaryForms[person];
                 if(item.id === undefined){
                     saveItem(item);
@@ -114,6 +118,7 @@ angular
             console.log(vm.staffSalaryForms);
         }
 
+        // Helper functions for saveAllSalaries
         function saveItem(item){
             staffService.saveItem(item);
         }

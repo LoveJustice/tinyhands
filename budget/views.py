@@ -37,9 +37,9 @@ class BudgetViewSet(viewsets.ModelViewSet):
 
 @api_view(['GET'])
 def retrieve_latest_budget_sheet_for_border_station(request, pk):
-    budget_sheet = BorderStationBudgetCalculation.objects.filter(border_station=pk).order_by('-date_time_entered').first()
+    budget_sheet = BorderStationBudgetCalculation.objects.filter(border_station=pk).order_by('-date_time_entered').first()  # Get's you the latest budget sheet for a border stations
 
-    if budget_sheet:
+    if budget_sheet:  # if there has been a preview budget sheet
 
         other_items_serializer = OtherBudgetItemCostSerializer(budget_sheet.otherbudgetitemcost_set.all())
         staff_serializer = StaffSalarySerializer(budget_sheet.staffsalary_set.all())
@@ -52,15 +52,17 @@ def retrieve_latest_budget_sheet_for_border_station(request, pk):
                 "staff_salaries": staff_serializer.data
             }
         )
+    # If there hasn't been a previous budget sheet
     return Response({"budget_form": {"border_station": pk}, "other_items": "", "staff_salaries": "", "None": 1})
 
 
 @api_view(['GET'])
 def previous_data(request, pk, month, year):
-    date = datetime.datetime(int(year), int(month), 15)
-    budget_sheets = BorderStationBudgetCalculation.objects.filter(border_station=pk, month_year__lte=date).order_by('-date_time_entered')
+    date = datetime.datetime(int(year), int(month), 15)  # We pass the Month_year as two key-word arguments because the day is always 15
 
-    if budget_sheets:
+    budget_sheets = BorderStationBudgetCalculation.objects.filter(border_station=pk, month_year__lte=date).order_by('-date_time_entered')  # filter them so the first element is the most recent
+
+    if budget_sheets:  # If this border station has had a previous budget calculation worksheet
         border_station = BorderStation.objects.get(pk=pk)
         staff_count = border_station.staff_set.count()
 
@@ -79,7 +81,7 @@ def previous_data(request, pk, month, year):
         if all_interception_records_count['total'] is None:
             all_interception_records_count['total'] = 1
 
-        last_months_cost = budget_sheets.first().station_total()
+        last_months_cost = budget_sheets.first().station_total()  # Since they are ordered by most recent, the first one will be last month's
 
         last_3_months_cost = 0
         last_3_months_sheets = budget_sheets.filter(month_year__gte=date+relativedelta(months=-3))
@@ -102,6 +104,8 @@ def previous_data(request, pk, month, year):
                 "last_months_total_cost": last_months_cost
             }
         )
+
+    # If this border station has not had a previous budget calculation worksheet
     return Response(
         {"all": 0,
          "all_cost": 0,
