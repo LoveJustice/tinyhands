@@ -86,6 +86,7 @@ class SuperUserFactory(UserFactory):
     permission_border_stations_add = True
     permission_border_stations_edit = True
     permission_vdc_manage = True
+    permission_budget_manage = True
     user_designation = factory.SubFactory(SuperUserDesignation)
 
 

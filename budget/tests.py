@@ -4,6 +4,7 @@ from rest_framework.test import APIRequestFactory
 from rest_framework.test import APIClient
 from accounts.tests.factories import SuperUserFactory
 from budget.factories import BorderStationBudgetCalculationFactory
+from budget.views import MoneyDistributionFormPDFView
 
 from static_border_stations.tests.factories import BorderStationFactory
 
@@ -61,10 +62,11 @@ class BudgetCalcApiTests(WebTest):
         self.assertEqual(shelter_water, 2)
 
 
-class MoneyDistributionTests(WebTest):
+class MoneyDistributionWebTests(WebTest):
     def setUp(self):
         self.budget_calc_sheet = BorderStationBudgetCalculationFactory()
         self.superuser = SuperUserFactory.create()
+        self.MDFView = MoneyDistributionFormPDFView(kwargs={"pk": str(self.budget_calc_sheet.id)})
 
     def testViewMoneyDistributionForm(self):
         response = self.app.get(reverse('money_distribution_view', kwargs={"pk": self.budget_calc_sheet.pk}), user=self.superuser)
@@ -80,3 +82,11 @@ class MoneyDistributionTests(WebTest):
         self.assertGreater(response.content.find("emailRecipientsCtrl"), -1)  # If it finds the string, it will be >0
         self.assertGreater(response.content.find("main.sendEmails"), -1)
 
+    def testMoneyDistributionForm(self):
+        request = self.app.get(reverse('money_distribution_pdf', kwargs={"pk": self.budget_calc_sheet.pk}), user=self.superuser)
+        context_data = self.MDFView.get_context_data()
+        dispatch = self.MDFView.dispatch(request)
+
+        self.assertEquals("application/pdf", request.content_type)
+        self.assertEquals(context_data['admin_total'], 1000)
+        self.assertGreater(dispatch.items()[1][1].find('filename=Monthly-Money-Distribution-Form.pdf'), -1)

@@ -124,3 +124,4 @@ class TestModels(TestCase):
         item.miscellaneous_number_of_intercepts_last_month = 5
         item.miscellaneous_number_of_intercepts_last_month_multiplier = 300
         self.assertEqual(item.miscellaneous_total(), 1500)
+

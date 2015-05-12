@@ -19,6 +19,7 @@ from braces.views import LoginRequiredMixin
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from templated_email import send_templated_mail
+from accounts.mixins import PermissionsRequiredMixin
 
 from budget.models import BorderStationBudgetCalculation, OtherBudgetItemCost, StaffSalary
 from dataentry.models import InterceptionRecord
@@ -206,7 +207,6 @@ class BudgetCalcDeleteView(DeleteView, LoginRequiredMixin):
 
 
 class MoneyDistribution(viewsets.ViewSet):
-
     def get_people_needing_form(self, request, pk):
         border_station = BorderStation.objects.get(pk=pk)
         staff = border_station.staff_set.all().filter(receives_money_distribution_form=True)
@@ -244,8 +244,8 @@ class MoneyDistribution(viewsets.ViewSet):
         )
 
 
-class PDFView(View):
-
+class PDFView(View, LoginRequiredMixin, PermissionsRequiredMixin):
+    permissions_required = ['permission_budget_manage']
     filename = 'report.pdf'
     template_name = ''
 
@@ -278,7 +278,9 @@ class PDFView(View):
         return response
 
 
-class MoneyDistributionFormPDFView(PDFView):
+class MoneyDistributionFormPDFView(PDFView, LoginRequiredMixin, PermissionsRequiredMixin):
+    permissions_required = ['permission_budget_manage']
+
     template_name = 'budget/MoneyDistributionTemplate.rml'
     filename = 'Monthly-Money-Distribution-Form.pdf'
 
@@ -346,6 +348,8 @@ class MoneyDistributionFormPDFView(PDFView):
 
 @login_required
 def money_distribution_view(request, pk):
+    if not request.user.permission_budget_manage:
+        return redirect("home")
     id = pk
     border_station = (BorderStationBudgetCalculation.objects.get(pk=pk)).border_station
     return render(request, 'budget/moneydistribution_view.html', locals())
