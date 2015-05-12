@@ -45,6 +45,7 @@ var permissionsPage = function() {
     };
 
     this.viewVifForm = function() {
+        browser.sleep(10000);
         this.view = element(by.linkText("View")).click();
     };
 
