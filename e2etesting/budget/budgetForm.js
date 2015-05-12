@@ -7,7 +7,7 @@ var budgetForm = function () {
     var page = this;
 
     this.navigateToNewForm = function () {
-        browser.get(constants.webAddress + '/static_border_stations/border-stations/update/0/');
+        browser.get(constants.webAddress + '/static_border_stations/border-stations/update/24/');
         //click button
         element.all(by.linkText("New Budget Calculation Form")).click();
     };
@@ -90,6 +90,10 @@ var budgetForm = function () {
 
     this.submitForm = function () {
         element(by.id("budget_create")).click();
+    };
+
+    this.updateForm = function () {
+        element(by.id("budget_update")).click();
     };
 
     this.viewForm = function () {

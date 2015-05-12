@@ -52,7 +52,7 @@ describe('Budget Calculation', function() {
             browser.sleep(1000);
             browser.get(constants.webAddress + '/budget/budget_calculations/');
             browser.sleep(500);
-            expect(element(by.css("#budget_list > div.container > table > tbody > tr:nth-child(1) > td:nth-child(1)")).getText()).toBe('Bhadrapur');
+            expect(element(by.css("#budget_list > div.container > table > tbody > tr:nth-child(1) > td:nth-child(1)")).getText()).toBe('Test Station');
         });
     }, 500000);
 
