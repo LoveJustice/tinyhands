@@ -42,8 +42,6 @@ angular
                 vm.last_months_total_cost = args['total'];
             });
 
-            // Calling the main function
-            main();
 
             // Functions
             function main(){
@@ -354,5 +352,6 @@ angular
                 }
             }
 
-
+            // Calling the main function
+            main();
     }]);
