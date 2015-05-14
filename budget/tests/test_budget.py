@@ -1,6 +1,7 @@
 from django.test import TestCase
 from budget import models
 
+
 class TestModels(TestCase):
     def test_budget_1(self):
         var = 1
