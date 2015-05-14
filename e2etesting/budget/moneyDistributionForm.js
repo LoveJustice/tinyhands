@@ -30,6 +30,7 @@ var moneyDistributionForm = function () {
 
     this.sendEmails = function () {
         //browser.ignoreSynchronization = false;
+
         element(by.buttonText("Send to Selected Staff and Members")).click();
         //browser.sleep(3000);
     };
