@@ -115,7 +115,6 @@ angular
                     updateItem(item);
                 }
             }
-            console.log(vm.staffSalaryForms);
         }
 
         // Helper functions for saveAllSalaries

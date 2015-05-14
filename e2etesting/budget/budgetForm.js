@@ -14,6 +14,11 @@ var budgetForm = function () {
 
     this.fillOutForm = function () {
         // select all input fields and insert '5'
+
+        browser.sleep(5000);
+        browser.executeScript('document.getElementById("month_year").value = "2015-07"');
+        browser.executeScript('$("#month_year").trigger("change");');
+        browser.sleep(5000);
         element(by.id("shelter_rent")).clear().sendKeys('100');
         element(by.id("shelter_water")).clear().sendKeys('200');
         element(by.id("shelter_electricity")).clear().sendKeys('300');
