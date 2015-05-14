@@ -46,11 +46,6 @@ describe('Accounts Page', function() {
 
     describe('handles budget permissions', function(){
         //TODO write budget tests
-
-
-
-
-
     });
 
     describe('handles permissions of IRF', function() {

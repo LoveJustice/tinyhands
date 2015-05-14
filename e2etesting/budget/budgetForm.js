@@ -97,6 +97,10 @@ var budgetForm = function () {
         element(by.id("budget_create")).click();
     };
 
+    this.updateForm = function () {
+        element(by.id("budget_update")).click();
+    };
+
     this.viewForm = function () {
         browser.get(constants.webAddress + '/budget/budget_calculations/');
         element(by.linkText("View")).click();
