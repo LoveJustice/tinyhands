@@ -27,7 +27,7 @@ describe('Budget Calculation', function() {
             budgetForm.fillOutForm();
 
             // expect totals to be certain values
-            expect(element(by.model("staff.staffTotal")).getText()).toBe('100');
+            expect(element(by.id('staffTotal')).getAttribute("value")).toBe('100');
             expect(element(by.binding("main.shelterTotal()")).getText()).toBe('900');
             expect(element(by.binding("main.foodTotal()")).getText()).toBe('2000');
             expect(element(by.binding("main.commTotal()")).getText()).toBe('900');
