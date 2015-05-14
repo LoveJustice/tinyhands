@@ -246,6 +246,7 @@ angular
 
             //CRUD Functions
             vm.updateForm = function() {
+                vm.form.month_year = new Date(document.getElementById('month_year').value + '-15');
                 mainCtrlService.updateForm(vm.form.id, vm.form).then(function(promise) {
                     vm.id = promise.data.id;
                     //Broadcast event to call the saveAllItems function in the otherItems controller
@@ -255,6 +256,7 @@ angular
             };
 
             vm.createForm = function() {
+                vm.form.month_year = new Date(document.getElementById('month_year').value + '-15');
                 mainCtrlService.createForm(vm.form).then(function(promise) {
                     var data = promise.data;
                     vm.id = data.id;
