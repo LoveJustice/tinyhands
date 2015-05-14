@@ -27,6 +27,7 @@ describe('Budget Calculation', function() {
             budgetForm.fillOutForm();
 
             // expect totals to be certain values
+            expect(element(by.model("staff.staffTotal")).getText()).toBe('100');
             expect(element(by.binding("main.shelterTotal()")).getText()).toBe('900');
             expect(element(by.binding("main.foodTotal()")).getText()).toBe('2000');
             expect(element(by.binding("main.commTotal()")).getText()).toBe('900');
@@ -36,9 +37,9 @@ describe('Budget Calculation', function() {
             expect(element(by.binding("main.adminTotal()")).getText()).toBe('750');
             expect(element(by.binding("main.medicalTotal()")).getText()).toBe('100');
             expect(element(by.binding("main.miscTotalValue")).getText()).toBe('600');
-            expect(element(by.binding("main.bunchTotal()")).getText()).toBe('3400');
+            expect(element(by.binding("main.bunchTotal()")).getText()).toBe('3500');
             expect(element(by.binding("main.foodAndShelterTotal()")).getText()).toBe('2900');
-            expect(element(by.binding("main.stationTotal()")).getText()).toBe('8100');
+            expect(element(by.binding("main.stationTotal()")).getText()).toBe('8300');
         }, 500000);
 
         it('redirects on submit to Money Distribution Form', function () {

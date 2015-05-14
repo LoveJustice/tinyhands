@@ -14,6 +14,7 @@ var budgetForm = function () {
 
     this.fillOutForm = function () {
         // select all input fields and insert '5'
+        element(by.model("form.salary")).clear().sendKeys('100');
         element(by.id("shelter_rent")).clear().sendKeys('100');
         element(by.id("shelter_water")).clear().sendKeys('200');
         element(by.id("shelter_electricity")).clear().sendKeys('300');
