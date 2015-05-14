@@ -90,3 +90,5 @@ class MoneyDistributionWebTests(WebTest):
         self.assertEquals("application/pdf", request.content_type)
         self.assertEquals(context_data['admin_total'], 1000)
         self.assertGreater(dispatch.items()[1][1].find('filename=Monthly-Money-Distribution-Form.pdf'), -1)
+
+    # TODO test the email functionality
