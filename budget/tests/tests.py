@@ -1,11 +1,15 @@
+from django.core import mail
 from django.core.urlresolvers import reverse
 from django_webtest import WebTest
+from django.test.testcases import TestCase
+
 from rest_framework.test import APIRequestFactory
 from rest_framework.test import APIClient
-from accounts.tests.factories import SuperUserFactory
-from budget.factories import BorderStationBudgetCalculationFactory
-from budget.views import MoneyDistributionFormPDFView
 
+from accounts.tests.factories import SuperUserFactory
+from budget.tests.factories import BorderStationBudgetCalculationFactory
+from static_border_stations.tests.factories import StaffFactory, CommitteeMemberFactory
+from budget.views import MoneyDistributionFormPDFView
 from static_border_stations.tests.factories import BorderStationFactory
 
 
@@ -62,11 +66,12 @@ class BudgetCalcApiTests(WebTest):
         self.assertEqual(shelter_water, 2)
 
 
-class MoneyDistributionWebTests(WebTest):
+class MoneyDistributionWebTests(WebTest, TestCase):
     def setUp(self):
         self.budget_calc_sheet = BorderStationBudgetCalculationFactory()
         self.superuser = SuperUserFactory.create()
         self.MDFView = MoneyDistributionFormPDFView(kwargs={"pk": str(self.budget_calc_sheet.id)})
+        self.client = APIClient()
 
     def testViewMoneyDistributionForm(self):
         response = self.app.get(reverse('money_distribution_view', kwargs={"pk": self.budget_calc_sheet.pk}), user=self.superuser)
@@ -90,3 +95,42 @@ class MoneyDistributionWebTests(WebTest):
         self.assertEquals("application/pdf", request.content_type)
         self.assertEquals(context_data['admin_total'], 1000)
         self.assertGreater(dispatch.items()[1][1].find('filename=Monthly-Money-Distribution-Form.pdf'), -1)
+
+    def testSendingTwoEmails(self):
+        self.staff = StaffFactory(border_station=self.budget_calc_sheet.border_station)
+        self.committee_member = CommitteeMemberFactory(border_station=self.budget_calc_sheet.border_station)
+
+        request = self.app.get(reverse('money_distribution_api', kwargs={"pk": self.budget_calc_sheet.pk}), user=self.superuser)
+        staff_data = request.json['staff_members']
+        committee_data = request.json['committee_members']
+
+        staff_ids = [int(staff['id']) for staff in staff_data]
+        committee_ids = [int(committee['id']) for committee in committee_data]
+
+        response = self.client.post('/budget/api/budget_calculations/money_distribution/' + str(self.budget_calc_sheet.pk) + '/', {"budget_calc_id": self.budget_calc_sheet.pk, "staff_ids": staff_ids, "committee_ids": committee_ids})
+
+        self.assertEquals('"Emails Sent!"', response.content)
+        self.assertEquals(len(mail.outbox), 2)
+        self.assertEquals(mail.outbox[0].to[0], self.staff.email)
+        self.assertEquals(mail.outbox[1].to[0], self.committee_member.email)
+
+    def testSendingFourEmails(self):
+        self.staff = StaffFactory(border_station=self.budget_calc_sheet.border_station)
+        self.committee_member = CommitteeMemberFactory(border_station=self.budget_calc_sheet.border_station)
+        self.staff2 = StaffFactory(border_station=self.budget_calc_sheet.border_station)
+        self.committee_member2 = CommitteeMemberFactory(border_station=self.budget_calc_sheet.border_station)
+
+        request = self.app.get(reverse('money_distribution_api', kwargs={"pk": self.budget_calc_sheet.pk}), user=self.superuser)
+        staff_data = request.json['staff_members']
+        committee_data = request.json['committee_members']
+
+        staff_ids = [staff['id'] for staff in staff_data]
+        committee_ids = [committee['id'] for committee in committee_data]
+
+        response = self.client.post('/budget/api/budget_calculations/money_distribution/' + str(self.budget_calc_sheet.pk) + '/', {"budget_calc_id": self.budget_calc_sheet.pk, "staff_ids": staff_ids, "committee_ids": committee_ids})
+
+
+        self.assertEquals('"Emails Sent!"', response.content)
+        self.assertEquals(len(mail.outbox), 2)
+        self.assertEquals(mail.outbox[0].to[0], self.staff2.email)
+        self.assertEquals(mail.outbox[1].to[0], self.committee_member2.email)
