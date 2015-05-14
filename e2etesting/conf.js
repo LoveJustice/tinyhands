@@ -6,13 +6,19 @@ exports.config = {
 
   specs:  [
         'accounts/loginPage.spec.js',
-        'accounts/permissionsPage.spec.js',
-        'dataentry/irfCRUD.spec.js',
-        'dataentry/search.spec.js',
-        'dataentry/vifCrud.spec.js',
         'borderStations/borderStationCRUD.spec.js',
+
+        'dataentry/irfCRUD.spec.js',
+        'dataentry/vifCrud.spec.js',
+        'dataentry/search.spec.js',
+
         'budget/budgetForm.spec.js',
-        'vdcs/vdcAdminPage.spec.js'
+        'budget/moneyDistributionForm.spec.js',
+
+        'vdcs/vdcAdminPage.spec.js',
+
+        //Has to run last
+        'accounts/permissionsPage.spec.js'
       ]
 
 };

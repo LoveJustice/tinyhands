@@ -7,7 +7,7 @@ var budgetForm = function () {
     var page = this;
 
     this.navigateToNewForm = function () {
-        browser.get(constants.webAddress + '/static_border_stations/border-stations/update/0/');
+        browser.get(constants.webAddress + '/static_border_stations/border-stations/update/24/');
         //click button
         element.all(by.linkText("New Budget Calculation Form")).click();
     };

@@ -1,6 +1,7 @@
 from django.test import TestCase
 from budget import models
 
+
 class TestModels(TestCase):
     def test_budget_1(self):
         var = 1
@@ -124,3 +125,4 @@ class TestModels(TestCase):
         item.miscellaneous_number_of_intercepts_last_month = 5
         item.miscellaneous_number_of_intercepts_last_month_multiplier = 300
         self.assertEqual(item.miscellaneous_total(), 1500)
+
