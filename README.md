@@ -5,7 +5,7 @@ Tiny Hands International
 
 # Installation
 
-## Clean Ubuntu Server 14.04
+As of 15-May-2015, these instructions were verified on a clean, fully-updated, Ubuntu 14.04 installation. Both Server and Desktop editions of Ubuntu work.
 
 Install these modules (`sudo apt-get install <module name>`)
   
