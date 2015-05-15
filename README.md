@@ -11,6 +11,7 @@ Install these modules (`sudo apt-get install <module name>`)
   * `git`
   * `virtualenvwrapper`
   * `python-dev`
+  * `libncurses5-dev`
 
 Clone the repository
 
