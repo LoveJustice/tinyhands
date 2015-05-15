@@ -8,12 +8,14 @@ Tiny Hands International
 ## Clean Ubuntu Server 14.04 (14-May-2015)
 
 Install these modules (`sudo apt-get install <module name>`)
-  * `git`
-  * `virtualenvwrapper`
-  * `python-dev`
-  * `libncurses5-dev`
-  * `libxml2-dev`
-  * `libxslt-dev`
+  
+      git
+      virtualenvwrapper
+      python-dev
+      libncurses5-dev
+      libxml2-dev
+      libxslt-dev
+      zlib1g-dev
 
 Clone the repository
 
