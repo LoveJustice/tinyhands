@@ -21,7 +21,7 @@ Clone the repository
 
     % git clone ...
 
-Make a virtual environment
+Make a virtual environment. You may need to close and re-open your shell after installing `virtualenvwrapper` in order to pick up the new commands defined by that package.
     
     % mkvirtualenv tinyhands
     % cd tinyhands
