@@ -5,7 +5,7 @@ Tiny Hands International
 
 # Installation
 
-## Clean Ubuntu Server 14.04 (14-May-2015)
+## Clean Ubuntu Server 14.04
 
 Install these modules (`sudo apt-get install <module name>`)
   
@@ -31,8 +31,21 @@ Install Python modules
 
     % pip install -r requirements.txt
 
-## Clean Ubuntu Desktop 14.04 (14-May-2015)
+Set Django environment variable (put this in your `.bashrc` or in the virtual environment's `postactivate` file). 
 
+    % export DJANGO_SETTINGS_MODULE=dreamsuite.settings.local
+
+Initialize the database
+
+    % ./manage.py migrate
+
+Load the fixtures into the database
+
+    % ./bin/load-data.sh
+
+Run the server
+
+    % ./manage.py runserver
 
 # Testing
 ## E2E Testing:
