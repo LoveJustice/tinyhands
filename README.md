@@ -12,6 +12,8 @@ Install these modules (`sudo apt-get install <module name>`)
   * `virtualenvwrapper`
   * `python-dev`
   * `libncurses5-dev`
+  * `libxml2-dev`
+  * `libxslt-dev`
 
 Clone the repository
 
