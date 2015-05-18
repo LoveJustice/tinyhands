@@ -261,9 +261,6 @@ class PDFView(View, LoginRequiredMixin, PermissionsRequiredMixin):
                 "A template_name must be specified for the rml template.")
 
         # Use StringIO and not cStringIO because cStringIO can't accept unicode characters
-        import ipdb
-        ipdb.set_trace()
-
 
         buf = StringIO.StringIO()
         rml = render_to_string(self.template_name, self.get_context_data())
