@@ -25,7 +25,6 @@ var moneyDistributionForm = function () {
                 titleElement.click();
             }
         });
-
     };
 
     this.sendEmails = function () {

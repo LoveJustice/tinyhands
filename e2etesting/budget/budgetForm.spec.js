@@ -15,6 +15,7 @@ describe('Budget Calculation', function() {
     });
 
     describe('form creation', function () {
+
         it('goes to new form', function () {
             budgetForm.navigateToNewForm();
             expect(browser.driver.getCurrentUrl()).toContain('/budget/api/budget_calculations/create/');
@@ -49,7 +50,7 @@ describe('Budget Calculation', function() {
         });
 
         it('should show form in budget calculations list', function () {
-            browser.sleep(1000);
+            browser.sleep(10000);
             browser.get(constants.webAddress + '/budget/budget_calculations/');
             browser.sleep(500);
             var x = new Date();
@@ -58,7 +59,33 @@ describe('Budget Calculation', function() {
             expect(element(by.css("#budget_list > div.container > table > tbody > tr:nth-child(1) > td:nth-child(2)")).getText()).toBe('AAA');
             expect(element(by.css("#budget_list > div.container > table > tbody > tr:nth-child(1) > td:nth-child(3)")).getText()).toBe(monthNames[x.getMonth()] + " " + x.getFullYear());
         });
-    }, 500000);
+
+        it('is populated with data from last form', function() {
+            budgetForm.viewForm();
+            //budgetForm.readForm();
+            budgetForm.navigateToNewForm();
+            //browser.sleep(10000);
+            expect(element(by.binding("main.shelterTotal()")).getText()).toBe('900');
+            expect(element(by.binding("main.foodTotal()")).getText()).toBe('2000');
+            expect(element(by.binding("main.commTotal()")).getText()).toBe('900');
+            expect(element(by.binding("main.awarenessTotalValue")).getText()).toBe('700'); //TODO
+            expect(element(by.binding("main.travelTotalValue")).getText()).toBe('1050'); //TODO
+            expect(element(by.binding("main.suppliesTotalValue")).getText()).toBe('1100'); //TODO
+            expect(element(by.binding("main.adminTotal()")).getText()).toBe('750');
+            expect(element(by.binding("main.medicalTotal()")).getText()).toBe('100');
+            expect(element(by.binding("main.miscTotalValue")).getText()).toBe('600'); //TODO
+            expect(element(by.binding("main.bunchTotal()")).getText()).toBe('3400'); //TODO
+            expect(element(by.binding("main.foodAndShelterTotal()")).getText()).toBe('2900');
+            expect(element(by.binding("main.stationTotal()")).getText()).toBe('8100'); //TODO
+            //budgetForm.readNewForm();
+            //budgetForm.submitForm();
+            //browser.sleep(10000);
+            //console.log("!!!!" + budgetForm.testForm.shelter_rent.toString());
+            //expect(budgetForm.testForm.shelter_rent).toEqual(budgetForm.testNewForm.shelter_rent);
+
+        });
+
+    }, 600000);
 
     describe('viewing form', function () {
         it('all inputs are disabled', function () {

@@ -208,7 +208,9 @@ angular
                 if(vm.form.travel_motorbike) {
                     amount += vm.form.travel_motorbike_amount;
                 }
+                console.log(vm.form);
                 vm.travelTotalValue = amount + vm.form.travel_plus_other + vm.form.travel_last_months_expense_for_sending_girls_home + (vm.form.travel_number_of_staff_using_bikes * vm.form.travel_number_of_staff_using_bikes_multiplier) + vm.otherTravelTotalValue[0];
+                console.log(vm.travelTotalValue);
             };
 
             //Supplies Section
@@ -280,6 +282,7 @@ angular
                     }
                     else{
                         vm.form = data;
+                        callTotals();
                     }
 
                     vm.form.month_year = vm.date;

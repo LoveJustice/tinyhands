@@ -71,6 +71,7 @@ angular
                         vm.formsList[$scope.form_section-1].push(itemsList[x]);
                     }
                 }
+                vm.otherItemsTotal();
             });
         }
 
