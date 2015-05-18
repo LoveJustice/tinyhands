@@ -261,6 +261,10 @@ class PDFView(View, LoginRequiredMixin, PermissionsRequiredMixin):
                 "A template_name must be specified for the rml template.")
 
         # Use StringIO and not cStringIO because cStringIO can't accept unicode characters
+        import ipdb
+        ipdb.set_trace()
+
+
         buf = StringIO.StringIO()
         rml = render_to_string(self.template_name, self.get_context_data())
 
@@ -271,8 +275,11 @@ class PDFView(View, LoginRequiredMixin, PermissionsRequiredMixin):
         root = etree.parse(buf).getroot()
         doc = document.Document(root)
 
+
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = "filename=%s" % self.get_filename()
+
+
         doc.process(response)
 
         return response
@@ -285,9 +292,6 @@ class MoneyDistributionFormPDFView(PDFView, LoginRequiredMixin, PermissionsRequi
     filename = 'Monthly-Money-Distribution-Form.pdf'
 
     def get_context_data(self):
-        # application = LoanApplication.objects.get(
-            # pk=self.kwargs['application_id'])
-
         station = BorderStationBudgetCalculation.objects.get(pk=self.kwargs['pk'])
         staffSalaries = StaffSalary.objects.filter(budget_calc_sheet=self.kwargs['pk'])
         otherItems = station.otherbudgetitemcost_set.all()
