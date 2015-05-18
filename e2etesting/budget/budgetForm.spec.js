@@ -1,6 +1,6 @@
 var budgetForm = require('./budgetForm.js');
 var loginPage = require('../accounts/loginPage.js');
-var constants = require('../testConstants.json');
+var c = require('../testConstants.json');
 
 describe('Budget Calculation', function() {
     beforeEach(function () {
@@ -29,22 +29,21 @@ describe('Budget Calculation', function() {
 
             // expect totals to be certain values
             expect(element(by.id('staffTotal')).getAttribute("value")).toBe('100');
-            expect(element(by.binding("main.shelterTotal()")).getText()).toBe('900');
-            expect(element(by.binding("main.foodTotal()")).getText()).toBe('2000');
-            expect(element(by.binding("main.commTotal()")).getText()).toBe('900');
-            expect(element(by.binding("main.awarenessTotalValue")).getText()).toBe('700');
-            expect(element(by.binding("main.travelTotalValue")).getText()).toBe('1050');
-            expect(element(by.binding("main.suppliesTotalValue")).getText()).toBe('1100');
-            expect(element(by.binding("main.adminTotal()")).getText()).toBe('750');
-            expect(element(by.binding("main.medicalTotal()")).getText()).toBe('100');
-            expect(element(by.binding("main.miscTotalValue")).getText()).toBe('600');
-            expect(element(by.binding("main.bunchTotal()")).getText()).toBe('3500');
-            expect(element(by.binding("main.foodAndShelterTotal()")).getText()).toBe('2900');
-            expect(element(by.binding("main.stationTotal()")).getText()).toBe('8300');
+            expect(element(by.binding("main.shelterTotal()")).getText()).toBe(c.shelterTotal);
+            expect(element(by.binding("main.foodTotal()")).getText()).toBe(c.foodTotal);
+            expect(element(by.binding("main.commTotal()")).getText()).toBe(c.commTotal);
+            expect(element(by.binding("main.awarenessTotalValue")).getText()).toBe(c.awarenessTotalValue);
+            expect(element(by.binding("main.travelTotalValue")).getText()).toBe(c.travelTotalValue);
+            expect(element(by.binding("main.suppliesTotalValue")).getText()).toBe(c.suppliesTotalValue);
+            expect(element(by.binding("main.adminTotal()")).getText()).toBe(c.adminTotal);
+            expect(element(by.binding("main.medicalTotal()")).getText()).toBe(c.medicalTotal);
+            expect(element(by.binding("main.miscTotalValue")).getText()).toBe(c.miscTotalValue);
+            expect(element(by.binding("main.bunchTotal()")).getText()).toBe(c.bunchTotal);
+            expect(element(by.binding("main.foodAndShelterTotal()")).getText()).toBe(c.foodAndShelterTotal);
+            expect(element(by.binding("main.stationTotal()")).getText()).toBe(c.stationTotal);
         }, 500000);
 
         it('redirects on submit to Money Distribution Form', function () {
-            //budgetForm.navigateToForms();
             budgetForm.submitForm();
             browser.sleep(1000);
             expect(browser.driver.getCurrentUrl()).toContain('budget_calculations/money_distribution');
@@ -52,7 +51,7 @@ describe('Budget Calculation', function() {
 
         it('should show form in budget calculations list', function () {
             browser.sleep(10000);
-            browser.get(constants.webAddress + '/budget/budget_calculations/');
+            browser.get(c.webAddress + '/budget/budget_calculations/');
             browser.sleep(500);
             var x = new Date();
             var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -62,28 +61,22 @@ describe('Budget Calculation', function() {
         });
 
         it('is populated with data from last form', function() {
-            budgetForm.viewForm();
-            //budgetForm.readForm();
+            //budgetForm.viewForm();
             budgetForm.navigateToNewForm();
-            //browser.sleep(10000);
-            expect(element(by.binding("main.shelterTotal()")).getText()).toBe('900');
-            expect(element(by.binding("main.foodTotal()")).getText()).toBe('2000');
-            expect(element(by.binding("main.commTotal()")).getText()).toBe('900');
-            expect(element(by.binding("main.awarenessTotalValue")).getText()).toBe('700');
-            expect(element(by.binding("main.travelTotalValue")).getText()).toBe('1050');
-            expect(element(by.binding("main.suppliesTotalValue")).getText()).toBe('1100');
-            expect(element(by.binding("main.adminTotal()")).getText()).toBe('750');
-            expect(element(by.binding("main.medicalTotal()")).getText()).toBe('100');
-            expect(element(by.binding("main.miscTotalValue")).getText()).toBe('600');
-            expect(element(by.binding("main.bunchTotal()")).getText()).toBe('3500');
-            expect(element(by.binding("main.foodAndShelterTotal()")).getText()).toBe('2900');
-            expect(element(by.binding("main.stationTotal()")).getText()).toBe('8300');
-            //budgetForm.readNewForm();
-            //budgetForm.submitForm();
-            //browser.sleep(10000);
-            //console.log("!!!!" + budgetForm.testForm.shelter_rent.toString());
-            //expect(budgetForm.testForm.shelter_rent).toEqual(budgetForm.testNewForm.shelter_rent);
 
+            //checks for values based on a recent test that filled out the form
+            expect(element(by.binding("main.shelterTotal()")).getText()).toBe(c.shelterTotal);
+            expect(element(by.binding("main.foodTotal()")).getText()).toBe(c.foodTotal);
+            expect(element(by.binding("main.commTotal()")).getText()).toBe(c.commTotal);
+            expect(element(by.binding("main.awarenessTotalValue")).getText()).toBe(c.awarenessTotalValue);
+            expect(element(by.binding("main.travelTotalValue")).getText()).toBe(c.travelTotalValue);
+            expect(element(by.binding("main.suppliesTotalValue")).getText()).toBe(c.suppliesTotalValue);
+            expect(element(by.binding("main.adminTotal()")).getText()).toBe(c.adminTotal);
+            expect(element(by.binding("main.medicalTotal()")).getText()).toBe(c.medicalTotal);
+            expect(element(by.binding("main.miscTotalValue")).getText()).toBe(c.miscTotalValue);
+            expect(element(by.binding("main.bunchTotal()")).getText()).toBe(c.bunchTotal);
+            expect(element(by.binding("main.foodAndShelterTotal()")).getText()).toBe(c.foodAndShelterTotal);
+            expect(element(by.binding("main.stationTotal()")).getText()).toBe(c.stationTotal);
         });
 
     }, 600000);

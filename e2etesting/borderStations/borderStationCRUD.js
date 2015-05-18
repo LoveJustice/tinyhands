@@ -39,7 +39,7 @@ var borderStationPage = function() {
     };
 
     this.viewBorderStation = function() {
-        browser.get(c.webAddress + '/static_border_stations/border-stations/update/24/');
+        browser.get(c.webAddress + '/static_border_stations/border-stations/update/' + c.stationId + '/');
     };
 
     this.closeBorderStation = function() {
@@ -47,7 +47,7 @@ var borderStationPage = function() {
     };
 
     this.editBorderStation = function() {
-        browser.get(c.webAddress + '/static_border_stations/border-stations/update/24/');
+        browser.get(c.webAddress + '/static_border_stations/border-stations/update/' + c.stationId + '/');
 
         //this.dIRF = element(by.linkText('+ Add Another Staff')).click();
         this.staff1_first_name = element(by.id("id_staff_set-1-first_name")).sendKeys(c.staff1SetFirstName);

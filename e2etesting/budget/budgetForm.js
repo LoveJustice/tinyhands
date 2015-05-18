@@ -1,13 +1,13 @@
 'use strict';
 
-var constants = require('../testConstants.json');
+var c = require('../testConstants.json');
 
 var budgetForm = function () {
 
     var page = this;
 
     this.navigateToNewForm = function () {
-        browser.get(constants.webAddress + '/static_border_stations/border-stations/update/24/');
+        browser.get(c.webAddress + '/static_border_stations/border-stations/update/24/');
         //click button
         element.all(by.linkText("New Budget Calculation Form")).click();
     };
@@ -253,17 +253,17 @@ var budgetForm = function () {
     };
 
     this.viewForm = function () {
-        browser.get(constants.webAddress + '/budget/budget_calculations/');
+        browser.get(c.webAddress + '/budget/budget_calculations/');
         element(by.linkText("View")).click();
     };
 
     this.editForm = function () {
-        browser.get(constants.webAddress + '/budget/budget_calculations/');
+        browser.get(c.webAddress + '/budget/budget_calculations/');
         element(by.linkText("Edit")).click();
     };
 
     this.navigateToForms = function () {
-        browser.get(constants.webAddress + '/budget/budget_calculations/');
+        browser.get(c.webAddress + '/budget/budget_calculations/');
     };
 
 };

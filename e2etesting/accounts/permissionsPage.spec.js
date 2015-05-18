@@ -50,7 +50,6 @@ describe('Accounts Page', function() {
 
     describe('handles permissions of IRF', function() {
 
-        //DONE
         it('unchecks irf add permissions', function(){
             //Unchecks the add permission
             permissionsPage.navigateToAccountPage();
@@ -70,7 +69,6 @@ describe('Accounts Page', function() {
             permissionsPage.savePermissions();
         });
 
-        //DONE
         it('unchecks irf view permission', function(){
             //unchecks the view permission
             permissionsPage.navigateToAccountPage();
@@ -91,7 +89,6 @@ describe('Accounts Page', function() {
             permissionsPage.savePermissions();
         });
 
-        //DONE
         it('unchecks irf edit permission', function(){
             //unchecks the edit permission
             permissionsPage.navigateToAccountPage();
@@ -199,7 +196,6 @@ describe('Accounts Page', function() {
             expect(browser.getTitle()).toContain("Edit VIF");
         });
 
-        //DONE
         it('unchecks vif add permissions', function(){
             //Unchecks the add permission
             permissionsPage.navigateToAccountPage();
@@ -220,7 +216,6 @@ describe('Accounts Page', function() {
             permissionsPage.savePermissions();
         });
 
-        //DONE
         it('unchecks vif view permission', function(){
             //unchecks the view permission
             permissionsPage.navigateToAccountPage();
@@ -240,7 +235,6 @@ describe('Accounts Page', function() {
             permissionsPage.savePermissions();
         });
 
-        //DONE
         it('unchecks vif edit permission', function(){
             //unchecks the edit permission
             permissionsPage.navigateToAccountPage();

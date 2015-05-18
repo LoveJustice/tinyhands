@@ -29,6 +29,7 @@
   "TEMPirfInterceptVdc"           : "Chalsa",
   "TEMPirfNameCameUpBeforeValue"  : "1",
 
+  "stationId"                 : "24",
   "stationName"               : "Test Station",
   "stationCode"               : "AAA",
   "dateEstablished"           : "01/01/01",
@@ -66,7 +67,19 @@
   "location0SetLongitude"     : "0.0",
   "location1SetName"          : "location1",
   "location1SetLatitude"      : "0.1",
-  "location1SetLongitude"     : "0.1"
+  "location1SetLongitude"     : "0.1",
 
+  "stationTotal"   : "8300",
+  "foodAndShelterTotal" : "2900",
+  "bunchTotal" : "3500",
+  "miscTotalValue" : "600",
+  "medicalTotal" : "100",
+  "adminTotal" : "750",
+  "suppliesTotalValue" : "1100",
+  "travelTotalValue" : "1050",
+  "awarenessTotalValue" : "700",
+  "commTotal" : "900",
+  "foodTotal" : "2000",
+  "shelterTotal" : "900"
 
 }

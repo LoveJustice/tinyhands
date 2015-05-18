@@ -44,6 +44,8 @@ angular
 
 
             // Functions
+
+            //Determine the kind of functionality...view/create/edit
             function main(){
                 if( (window.submit_type) == 1 ) {
                     vm.create = true;
