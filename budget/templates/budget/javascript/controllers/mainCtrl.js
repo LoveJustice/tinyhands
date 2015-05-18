@@ -286,7 +286,7 @@ angular
                     }
                     else{
                         vm.form = data;
-                        callTotals();
+                        //callTotals();
                     }
 
                     vm.form.month_year = vm.date;

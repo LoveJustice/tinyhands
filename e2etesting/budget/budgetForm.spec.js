@@ -69,15 +69,15 @@ describe('Budget Calculation', function() {
             expect(element(by.binding("main.shelterTotal()")).getText()).toBe('900');
             expect(element(by.binding("main.foodTotal()")).getText()).toBe('2000');
             expect(element(by.binding("main.commTotal()")).getText()).toBe('900');
-            expect(element(by.binding("main.awarenessTotalValue")).getText()).toBe('700'); //TODO
-            expect(element(by.binding("main.travelTotalValue")).getText()).toBe('1050'); //TODO
-            expect(element(by.binding("main.suppliesTotalValue")).getText()).toBe('1100'); //TODO
+            expect(element(by.binding("main.awarenessTotalValue")).getText()).toBe('700');
+            expect(element(by.binding("main.travelTotalValue")).getText()).toBe('1050');
+            expect(element(by.binding("main.suppliesTotalValue")).getText()).toBe('1100');
             expect(element(by.binding("main.adminTotal()")).getText()).toBe('750');
             expect(element(by.binding("main.medicalTotal()")).getText()).toBe('100');
-            expect(element(by.binding("main.miscTotalValue")).getText()).toBe('600'); //TODO
-            expect(element(by.binding("main.bunchTotal()")).getText()).toBe('3400'); //TODO
+            expect(element(by.binding("main.miscTotalValue")).getText()).toBe('600');
+            expect(element(by.binding("main.bunchTotal()")).getText()).toBe('3500');
             expect(element(by.binding("main.foodAndShelterTotal()")).getText()).toBe('2900');
-            expect(element(by.binding("main.stationTotal()")).getText()).toBe('8100'); //TODO
+            expect(element(by.binding("main.stationTotal()")).getText()).toBe('8300');
             //budgetForm.readNewForm();
             //budgetForm.submitForm();
             //browser.sleep(10000);
