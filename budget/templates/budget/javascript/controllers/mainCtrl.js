@@ -60,6 +60,7 @@ angular
                     $('input').prop('disabled', true);
                     vm.retrieveForm(window.budget_calc_id);
                 }
+
             }
 
             function callTotals (){
@@ -248,6 +249,7 @@ angular
 
             //CRUD Functions
             vm.updateForm = function() {
+                vm.form.month_year = new Date(document.getElementById('month_year').value + '-15');
                 mainCtrlService.updateForm(vm.form.id, vm.form).then(function(promise) {
                     vm.id = promise.data.id;
                     //Broadcast event to call the saveAllItems function in the otherItems controller
@@ -257,6 +259,7 @@ angular
             };
 
             vm.createForm = function() {
+                vm.form.month_year = new Date(document.getElementById('month_year').value + '-15');
                 mainCtrlService.createForm(vm.form).then(function(promise) {
                     var data = promise.data;
                     vm.id = data.id;
@@ -271,6 +274,7 @@ angular
                     vm.form = promise.data;
                     vm.form.month_year = new Date(promise.data.month_year);
                     $scope.$emit('dateSetEmit', {date: promise.data.month_year});
+                    callTotals();
                 });
             };
 
@@ -288,6 +292,7 @@ angular
                     vm.form.month_year = vm.date;
                     data.members = [];
                     data.id = undefined;
+                    callTotals();
                 })
             };
 

@@ -28,6 +28,7 @@ describe('Budget Calculation', function() {
             budgetForm.fillOutForm();
 
             // expect totals to be certain values
+            expect(element(by.id('staffTotal')).getAttribute("value")).toBe('100');
             expect(element(by.binding("main.shelterTotal()")).getText()).toBe('900');
             expect(element(by.binding("main.foodTotal()")).getText()).toBe('2000');
             expect(element(by.binding("main.commTotal()")).getText()).toBe('900');
@@ -37,9 +38,9 @@ describe('Budget Calculation', function() {
             expect(element(by.binding("main.adminTotal()")).getText()).toBe('750');
             expect(element(by.binding("main.medicalTotal()")).getText()).toBe('100');
             expect(element(by.binding("main.miscTotalValue")).getText()).toBe('600');
-            expect(element(by.binding("main.bunchTotal()")).getText()).toBe('3400');
+            expect(element(by.binding("main.bunchTotal()")).getText()).toBe('3500');
             expect(element(by.binding("main.foodAndShelterTotal()")).getText()).toBe('2900');
-            expect(element(by.binding("main.stationTotal()")).getText()).toBe('8100');
+            expect(element(by.binding("main.stationTotal()")).getText()).toBe('8300');
         }, 500000);
 
         it('redirects on submit to Money Distribution Form', function () {
@@ -57,7 +58,7 @@ describe('Budget Calculation', function() {
             var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
             expect(element(by.css("#budget_list > div.container > table > tbody > tr:nth-child(1) > td:nth-child(1)")).getText()).toBe('Test Station');
             expect(element(by.css("#budget_list > div.container > table > tbody > tr:nth-child(1) > td:nth-child(2)")).getText()).toBe('AAA');
-            expect(element(by.css("#budget_list > div.container > table > tbody > tr:nth-child(1) > td:nth-child(3)")).getText()).toBe(monthNames[x.getMonth()] + " " + x.getFullYear());
+            expect(element(by.css("#budget_list > div.container > table > tbody > tr:nth-child(1) > td:nth-child(3)")).getText()).toBe('July 2015');
         });
 
         it('is populated with data from last form', function() {
@@ -92,7 +93,7 @@ describe('Budget Calculation', function() {
             budgetForm.viewForm();
             browser.sleep(1000);
 
-            expect(element(by.id("month_year"))).toBeDefined();
+            expect(element(by.id("month_year")).getAttribute("value")).toBe('2015-07');
             expect(element(by.id("shelter_rent")).getAttribute('disabled')).toBe('true');
             expect(element(by.id("shelter_water")).getAttribute('disabled')).toBe('true');
             expect(element(by.id("shelter_electricity")).getAttribute('disabled')).toBe('true');
@@ -158,7 +159,7 @@ describe('Budget Calculation', function() {
             budgetForm.editForm();
             browser.sleep(1000);
 
-            expect(element(by.id("month_year"))).toBeDefined();
+            expect(element(by.id("month_year")).getAttribute("value")).toBe('2015-07');
             expect(element(by.id("shelter_rent")).getAttribute('enabled')).toBe(null);
             expect(element(by.id("shelter_water")).getAttribute('enabled')).toBe(null);
             expect(element(by.id("shelter_electricity")).getAttribute('enabled')).toBe(null);

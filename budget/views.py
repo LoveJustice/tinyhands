@@ -261,6 +261,7 @@ class PDFView(View, LoginRequiredMixin, PermissionsRequiredMixin):
                 "A template_name must be specified for the rml template.")
 
         # Use StringIO and not cStringIO because cStringIO can't accept unicode characters
+
         buf = StringIO.StringIO()
         rml = render_to_string(self.template_name, self.get_context_data())
 
@@ -271,8 +272,11 @@ class PDFView(View, LoginRequiredMixin, PermissionsRequiredMixin):
         root = etree.parse(buf).getroot()
         doc = document.Document(root)
 
+
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = "filename=%s" % self.get_filename()
+
+
         doc.process(response)
 
         return response
@@ -285,9 +289,6 @@ class MoneyDistributionFormPDFView(PDFView, LoginRequiredMixin, PermissionsRequi
     filename = 'Monthly-Money-Distribution-Form.pdf'
 
     def get_context_data(self):
-        # application = LoanApplication.objects.get(
-            # pk=self.kwargs['application_id'])
-
         station = BorderStationBudgetCalculation.objects.get(pk=self.kwargs['pk'])
         staffSalaries = StaffSalary.objects.filter(budget_calc_sheet=self.kwargs['pk'])
         otherItems = station.otherbudgetitemcost_set.all()
@@ -322,6 +323,8 @@ class MoneyDistributionFormPDFView(PDFView, LoginRequiredMixin, PermissionsRequi
 
             'shelter_total': station.shelter_total(),
 
+            'food_and_gas_intercepted_girls': station.food_and_gas_number_of_intercepted_girls,
+            'food_and_gas_limbo_girls': station.food_and_gas_number_of_limbo_girls,
             'food_gas_total': station.food_and_gas_total(),
 
             'awareness_contact_cards_bool': station.awareness_contact_cards,
