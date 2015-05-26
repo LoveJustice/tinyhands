@@ -1,6 +1,7 @@
 {% extends "dataentry/dataentry_base.html" %}
 {% load widget_tweaks %}
 {% load bootstrap %}
+{% load bootstrap_pagination %}
 {% load unslugify %}
 {% load times %}
 {% block title %}Manage VDCs{% endblock %}
@@ -55,29 +56,7 @@
 <div id="footer">
     <nav class="navbar navbar-default navbar-fixed-bottom">
         <div class="container">
-
-            <ul class="pagination pull-left" style="margin: 10px !important">
-                {% if page_obj.has_previous %}
-                    <li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
-                {% else %}
-                    <li class="disabled"><a href="">&laquo;</a></li>
-                {% endif %}
-
-                {% for i in page_obj.paginator.num_pages|times %}
-                {% if i >= lower_limit and i <= upper_limit %}
-                <li {% if page_obj.number == i|add:"1" %} class="active"{% endif %}>
-                    <a href="?page={{ i|add:"1" }}">{{ i|add:"1" }}</a>
-                </li>
-                {% endif %}
-                {% endfor %}
-
-                {% if page_obj.has_next %}
-                    <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
-                {% else %}
-                    <li class="disabled"><a href="">&raquo;</a></li>
-                {% endif %}
-
-            </ul>
+            {% bootstrap_paginate page_obj range=15 show_first_last='True' %}
         </div>
     </nav>
 </div>

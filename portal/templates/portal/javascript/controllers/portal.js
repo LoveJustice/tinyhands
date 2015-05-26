@@ -68,7 +68,7 @@
           return '<div id="Static'+borderStation.fields.station_code+'" class="dashboardInfoWindow">' +
             '<h3>' + borderStation.fields.station_name + ' - ' + borderStation.fields.station_code + '</h3>' +
 
-            '<p>Est. ' + borderStation.fields.date_established + '</p>' +
+            '<p>Est. ' + established(borderStation) + '</p>' +
             '<p>Has shelter: ' + hasShelter(borderStation) + '</p>' +
             '<p id="stationInterception">Interceptions: ' + '</p>' +
             '<p id="staffset"># of Staff ' + '</p>' +
@@ -82,7 +82,7 @@
                 '<div id="leftColumn" class="col-md-6">'+
 
 
-                    '<p>Est. ' + borderStation.fields.date_established + '</p>' +
+                    '<p>Est. ' + established(borderStation) + '</p>' +
                     '<p>Has shelter: ' + hasShelter(borderStation) + '</p>' +
                     '<p id="stationInterception">Interceptions: ' + '</p>' +
                     '<p id="staffset"># of Staff ' + '</p>' +
@@ -188,12 +188,12 @@
                             });
                         }
                     })(marker, station));
-
-                    function toggleMarkerClick(marker){
-                        marker.clicked = false;
-                    }
                 }
             });
+        }
+
+        function toggleMarkerClick(marker){
+            marker.clicked = false;
         }
 
         function hasShelter(borderStation){ // basically just converts a true/false to a yes/no
@@ -202,6 +202,14 @@
             }
             else {
                 return "No";
+            }
+        }
+
+        function established(borderStation){
+            if (borderStation.fields.date_established === null){
+                return "Unknown";
+            } else {
+                return borderStation.fields.date_established;
             }
         }
     };

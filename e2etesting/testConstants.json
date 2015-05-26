@@ -52,11 +52,11 @@
   "irfInterceptVdc"           : "ShreeJung",
   "irfNameCameUpBeforeValue"  : "1",
 
-  "vifNumber"                         : "BHD123",
+  "vifNumber"                         : "DNG123",
   "vifDate"                           : "02/16/2015",
   "vifInterviewer"                    : "Test Interviewer",
   "vifVictimName"                     : "Test Victim",
-  "vifAddressDistrict"                : "Baglung",
+  "vifAddressDistrict"                : "Dang",
   "vifAddressVDC"                     : "ShreeJung",
   "vifVictimGuardianAddressDistrict"  : "Baglung",
   "vifVictimGuardianAddressVDC"       : "ShreeJung",
