@@ -1,6 +1,6 @@
 
 describe('TallyCtrl', function(){
-    var vm, scope, httpBackend;//we'll use this scope in our tests
+    var vm, scope, httpBackend, localStorageTallyId;//we'll use this scope in our tests
 
     //mock Application to allow us to inject our own dependencies
     beforeEach(module('PortalMod'));
@@ -12,6 +12,12 @@ describe('TallyCtrl', function(){
         scope = $rootScope.$new();
         //declare the controller and inject our empty scope
         vm = $controller('TallyCtrl', {$scope: scope});
+
+        // Set tally id
+        vm.userId = 0;
+
+        // Clear local storage
+        localStorage.removeItem('tally-'+vm.userId);
     }));
    // tests start here
 
@@ -35,58 +41,85 @@ describe('TallyCtrl', function(){
         expect(style).toBeUndefined();
     });
 
-    it('should days that have not been seen or changed', function() {
+    it('should have days that have changed', function() {
         // REGION: Data Setup
         httpBackend.whenGET('/portal/tally/days/').respond(200, {
-            0:{dayOfWeek:'Sunday',interceptions: {'BSD':4}},
-            1:{dayOfWeek:'Monday',interceptions: {'ABC':2}},
-            2:{dayOfWeek:'Tuesday',interceptions: {'BSD':4}},
-            3:{dayOfWeek:'Wednesday',interceptions: {'ABC':2}},
-            4:{dayOfWeek:'Thursday',interceptions: {'BSD':4}},
-            5:{dayOfWeek:'Friday',interceptions: {'ABC':2}},
-            6:{dayOfWeek:'Saturday',interceptions: {'BSD':4}},
-        });
+        id: 0,
+        days: [
+            {date:'2015-05-02T02:11:49.556',interceptions: {'BSD':4}},
+            {date:'2015-05-01T02:11:49.556',interceptions: {'ABC':2}},
+            {date:'2015-04-30T02:11:49.556',interceptions: {'BSD':4}},
+            {date:'2015-04-29T02:11:49.556',interceptions: {'ABC':2}},
+            {date:'2015-04-28T02:11:49.556',interceptions: {'BSD':4}},
+            {date:'2015-04-27T02:11:49.556',interceptions: {'ABC':2}},
+            {date:'2015-04-26T02:11:49.556',interceptions: {'BSD':4}},
+        ]});
         httpBackend.expectGET('/portal/tally/days/');
         // ENDREGION: Data Setup
-        expect(vm.days).toEqual({});
+        expect(vm.days).toEqual([]);
 
         vm.getTallyData(true);
         httpBackend.flush();
 
-        expect(vm.days).not.toEqual({});
+        expect(vm.days).not.toEqual([]);
+        for (var i in vm.days) {
+            expect(vm.days[i].change).toBeTruthy();
+            expect(vm.days[i].seen).toBeFalsy();
+        }
+    });
+
+    it('should have days that have not changed', function() {
+        // REGION: Data Setup
+        httpBackend.whenGET('/portal/tally/days/').respond(200, {
+            id: 0,
+            days: [
+                {date:'2015-05-02T02:11:49.556',interceptions: {}},
+                {date:'2015-05-01T02:11:49.556',interceptions: {}},
+                {date:'2015-04-30T02:11:49.556',interceptions: {}},
+                {date:'2015-04-29T02:11:49.556',interceptions: {}},
+                {date:'2015-04-28T02:11:49.556',interceptions: {}},
+                {date:'2015-04-27T02:11:49.556',interceptions: {}},
+                {date:'2015-04-26T02:11:49.556',interceptions: {}},
+            ]});
+        httpBackend.expectGET('/portal/tally/days/');
+        // ENDREGION: Data Setup
+        expect(vm.days).toEqual([]);
+
+        vm.getTallyData(true);
+        httpBackend.flush();
+
+        expect(vm.days).not.toEqual([]);
         for (var i in vm.days) {
             expect(vm.days[i].change).toBeFalsy();
             expect(vm.days[i].seen).toBeFalsy();
         }
     });
 
-    it('should days that have been seen and changed', function() {
+    it('should have days that have or have not changed', function() {
         // REGION: Data Setup
-        vm.days = {
-            0:{dayOfWeek:'Sunday',interceptions: {'BSD':0}},
-            1:{dayOfWeek:'Monday',interceptions: {'ABC':0}},
-            2:{dayOfWeek:'Tuesday',interceptions: {'BSD':0}},
-            3:{dayOfWeek:'Wednesday',interceptions: {'ABC':0}},
-            4:{dayOfWeek:'Thursday',interceptions: {'BSD':0}},
-            5:{dayOfWeek:'Friday',interceptions: {'ABC':0}},
-            6:{dayOfWeek:'Saturday',interceptions: {'BSD':0}},
-        };
-        newData = {
-            0:{dayOfWeek:'Sunday',interceptions: {'BSD':4}},
-            1:{dayOfWeek:'Monday',interceptions: {'ABC':2}},
-            2:{dayOfWeek:'Tuesday',interceptions: {'BSD':4}},
-            3:{dayOfWeek:'Wednesday',interceptions: {'ABC':2}},
-            4:{dayOfWeek:'Thursday',interceptions: {'BSD':4}},
-            5:{dayOfWeek:'Friday',interceptions: {'ABC':2}},
-            6:{dayOfWeek:'Saturday',interceptions: {'BSD':4}},
-        };
+        vm.days = [];
+        newData = [
+            {date:'2015-05-02T02:11:49.556',interceptions: {'BSD':4}},
+            {date:'2015-05-01T02:11:49.556',interceptions: {}},
+            {date:'2015-04-30T02:11:49.556',interceptions: {}},
+            {date:'2015-04-29T02:11:49.556',interceptions: {'ABC':2}},
+            {date:'2015-04-28T02:11:49.556',interceptions: {}},
+            {date:'2015-04-27T02:11:49.556',interceptions: {'ABC':2}},
+            {date:'2015-04-26T02:11:49.556',interceptions: {'BSD':4}}
+        ];
         // ENDREGION: Data Setup
-        expect(vm.days).not.toEqual({});
+        expect(vm.days).toEqual([]);
 
         vm.checkDifferences(newData);
 
+        expect(vm.days).not.toEqual([]);
         for (var i in vm.days) {
-            expect(vm.days[i].change).toBeTruthy();
+            if ($.isEmptyObject(vm.days[i].interceptions)) {
+                expect(vm.days[i].change).toBeFalsy();
+            } else {
+                expect(vm.days[i].change).toBeTruthy();
+            }
+            expect(vm.days[i].seen).toBeFalsy();
         }
     });
 
@@ -106,5 +139,92 @@ describe('TallyCtrl', function(){
         // ENDREGION: Data Setup
         var sum = vm.sumNumIntercepts(day);
         expect(sum).toBe(6);
+    });
+
+    it('should set days when local storage exists', function() {
+        // REGION: Data Setup
+        data = {
+            id: 0,
+            days: [
+                {date:'2015-05-02T02:11:49.556',interceptions: {'BSD':4}},
+                {date:'2015-05-01T02:11:49.556',interceptions: {'ABC':2}},
+                {date:'2015-04-30T02:11:49.556',interceptions: {'BSD':4}},
+                {date:'2015-04-29T02:11:49.556',interceptions: {'ABC':2}},
+                {date:'2015-04-28T02:11:49.556',interceptions: {'BSD':4}},
+                {date:'2015-04-27T02:11:49.556',interceptions: {'ABC':2}},
+                {date:'2015-04-26T02:11:49.556',interceptions: {'BSD':4}},
+            ]
+        };
+        // ENDREGION: Data Setup
+        expect(localStorage.getItem('tally-'+vm.userId)).toBeNull();
+
+        localStorage.setItem('tally-'+vm.userId, JSON.stringify(data));
+
+        expect(localStorage.getItem('tally-'+vm.userId)).not.toBeNull();
+    });
+
+    it('should save tally data in local storage', function() {
+        // REGION: Data Setup
+        vm.days = [
+            {date:'2015-05-02T02:11:49.556',interceptions: {'BSD':4}},
+            {date:'2015-05-01T02:11:49.556',interceptions: {'ABC':2}},
+            {date:'2015-04-30T02:11:49.556',interceptions: {'BSD':4}},
+            {date:'2015-04-29T02:11:49.556',interceptions: {'ABC':2}},
+            {date:'2015-04-28T02:11:49.556',interceptions: {'BSD':4}},
+            {date:'2015-04-27T02:11:49.556',interceptions: {'ABC':2}},
+            {date:'2015-04-26T02:11:49.556',interceptions: {'BSD':4}},
+        ];
+        // ENDREGION: Data Setup
+        expect(localStorage.getItem('tally-'+vm.userId)).toBeNull();
+
+        vm.saveTallyLocalStorage();
+
+        expect(localStorage.getItem('tally-'+vm.userId)).not.toBeNull();
+    });
+
+    it('should get tally data from local storage', function() {
+        // REGION: Data Setup
+        vm.days = [
+            {date:'2015-05-02T02:11:49.556',interceptions: {'BSD':4}},
+            {date:'2015-05-01T02:11:49.556',interceptions: {'ABC':2}},
+            {date:'2015-04-30T02:11:49.556',interceptions: {'BSD':4}},
+            {date:'2015-04-29T02:11:49.556',interceptions: {'ABC':2}},
+            {date:'2015-04-28T02:11:49.556',interceptions: {'BSD':4}},
+            {date:'2015-04-27T02:11:49.556',interceptions: {'ABC':2}},
+            {date:'2015-04-26T02:11:49.556',interceptions: {'BSD':4}},
+        ];
+        vm.saveTallyLocalStorage();
+        vm.days = [];
+        // ENDREGION: Data Setup
+        expect(vm.days).toEqual([]);
+
+        vm.getTallyLocalStorage();
+
+        expect(vm.days).not.toEqual([]);
+    });
+
+    it('should return "Today" given current date string', function() {
+        // REGION: Data Setup
+        var todayString = new Date().toDateString();
+        // ENDREGION: Data Setup
+        var result = vm.getDayOfWeek(todayString);
+        expect(result).toEqual('Today');
+    });
+
+    it('should return day of the week given date string', function() {
+        // REGION: Data Setup
+        var daysOfWeek = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+        var dateStrings = [];
+        for (var i = 1; i < 7; i++) {
+            var newDate = new Date();
+            newDate.setDate(newDate.getDate() - i);
+            dateStrings.push(newDate);
+        }
+        // ENDREGION: Data Setup
+        for (var i in dateStrings) {
+            var newDayOfWeek = vm.getDayOfWeek(dateStrings[i]);
+            var result = daysOfWeek.indexOf(newDayOfWeek) >= 0;
+            expect(result).toBeTruthy();
+        }
     });
 });

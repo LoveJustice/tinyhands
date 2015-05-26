@@ -10,6 +10,7 @@ from datetime import timedelta
 from django.utils import timezone
 from dataentry.models import BorderStation, InterceptionRecord
 
+
 @login_required
 def main_dashboard(request):
     return render(request, "portal/main_dashboard.html")
@@ -38,18 +39,16 @@ def get_staff_count(request):
 class TallyDaysView(APIView):
 
     def get(self, request):
-        days = ['Monday', 'Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']
-        #timezone.now() gets utc time but timezone.now().now() gets local Nepal time
+        # timezone.now() gets utc time but timezone.now().now() gets local Nepal time
         today = timezone.now().now()
         dates = [today - timedelta(days=x) for x in range(7)]
         results = {}
+        results['id'] = request.user.id
+        foo = []
         i = 0
         for date in dates:
             day_records = {}
-            if(i==0):
-                day_records['dayOfWeek'] = "Today"
-            else:
-                day_records['dayOfWeek'] = days[date.weekday()]
+            day_records['date'] = date
             day_records['interceptions'] = {}
             interceptions = day_records['interceptions']
             records = InterceptionRecord.objects.filter(date_time_of_interception__year=date.year, date_time_of_interception__month=date.month, date_time_of_interception__day=date.day)
@@ -58,10 +57,9 @@ class TallyDaysView(APIView):
                 victims = record.interceptees.filter(kind='v')
                 count = len(victims)
                 if station_code not in interceptions.keys():
-                   interceptions[station_code] = 0
-                interceptions[station_code]+=count
-            results[i] = day_records
-            i+=1
-
-        return Response(results, status=status.HTTP_200_OK);
-
+                    interceptions[station_code] = 0
+                interceptions[station_code] += count
+            foo.append(day_records)
+            i += 1
+        results['days'] = foo
+        return Response(results, status=status.HTTP_200_OK)

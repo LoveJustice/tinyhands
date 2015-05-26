@@ -26,6 +26,24 @@ var tally = function(){
             return browser.switchTo().window(newWindowHandle);
         });
     }
+    
+    self.getInterceptions = function(){//grabs interceptions on large tally display
+        var interceptions = element.all(by.css('h4.animated.tallyFade')).filter(function(elem, index) {
+            return elem.getInnerHtml().then(function(text){
+                return text != 'No Interceptions';
+            });
+        });
+        return interceptions;
+    }
+    
+    self.getInterceptionsSmall = function(){//grabs interceptions on small tally display
+        var interceptions = element.all(by.css('h4.ng-binding')).filter(function(elem, index) {
+            return elem.getInnerHtml().then(function(text){
+                return text != '0' && text.length == 1;
+            });
+        });
+        return interceptions;
+    }
 }
 
 module.exports = new tally();
