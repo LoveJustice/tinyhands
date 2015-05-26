@@ -188,12 +188,12 @@
                             });
                         }
                     })(marker, station));
-
-                    function toggleMarkerClick(marker){
-                        marker.clicked = false;
-                    }
                 }
             });
+        }
+
+        function toggleMarkerClick(marker){
+            marker.clicked = false;
         }
 
         function hasShelter(borderStation){ // basically just converts a true/false to a yes/no
