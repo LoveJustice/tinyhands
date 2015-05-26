@@ -16,8 +16,8 @@ exports.config = {
         'dataentry/vifCrud.spec.js',
         'dataentry/search.spec.js',
         'budget/budgetForm.spec.js',
-        'accounts/permissionsPage.spec.js'
         'DynStationWindow/dynStation.spec.js',
+        'accounts/permissionsPage.spec.js'
       ],
 
     capabilities: {
