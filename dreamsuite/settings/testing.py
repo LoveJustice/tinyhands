@@ -5,6 +5,7 @@ TEMPLATE_DEBUG = True
 
 SITE_DOMAIN = '0.0.0.0:8001'
 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 DATABASES = {
     'default': {

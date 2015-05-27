@@ -200,11 +200,104 @@ function setUpResumeIncompleteFormSystem(which) {
         $('form').deserialize($(this).val());
     });
 
+/* TODO: Merge? - JS
+ <<<<<<< HEAD
     $('#save-for-later').click(function() {
         var formNumber = $('#id_'+which+'_number').val();
         if (!formNumber) {
             alert('Please enter a '+which.toUpperCase()+' # to save this form for later.');
             return;
+||||||| merged common ancestors
+    $('.in-use-button').tooltip();
+  },
+
+  interceptionrecord_list: function() {
+    clearCompletedForms('irf');
+  },
+
+  interceptionrecord_create: function() {
+    this.interceptionrecord_update();
+
+    setUpResumeIncompleteFormSystem('irf');
+  },
+
+  interceptionrecord_update: function() {
+    function calculateTotal() {
+      var total = 0;
+      $('input[type="checkbox"]').each(function(id, elem) {
+        var value = $.trim($(elem).next('.red-flag').text());
+        if (value !== '') {
+          if ($(elem).prop('checked')) {
+            total += parseInt(value);
+          }
+=======
+*/
+    $('.in-use-button').tooltip();
+  },
+
+  interceptionrecord_list: function() {
+    clearCompletedForms('irf');
+  },
+
+  interceptionrecord_create: function() {
+    this.interceptionrecord_update();
+
+    setUpResumeIncompleteFormSystem('irf');
+  },
+
+  budget_create_api: function(){
+    $(function() {
+        var queryDate = '2009-11-01',
+        dateParts = queryDate.match(/(\d+)/g)
+        realDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+                                        // months are 0-based!
+
+        $('#startDate').datepicker({
+            dateFormat: "MM yy"
+        }) // format to show
+        .datepicker('setDate', realDate)
+        .datepicker("option", "changeMonth", true)
+        .datepicker("option", "changeYear", true)
+        .datepicker("option", "showButtonPanel", true)
+        .datepicker("option", "onClose", function(e){
+             var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
+             var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+             $(this).datepicker("setDate",new Date(year,month,1));
+        })
+    });
+  },
+  budget_update_api: function(){
+    $(function() {
+        var queryDate = '2009-11-01',
+        dateParts = queryDate.match(/(\d+)/g)
+        realDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+                                        // months are 0-based!
+
+        $('#startDate').datepicker({
+            dateFormat: "MM yy"
+        }) // format to show
+        .datepicker('setDate', realDate)
+        .datepicker("option", "changeMonth", true)
+        .datepicker("option", "changeYear", true)
+        .datepicker("option", "showButtonPanel", true)
+        .datepicker("option", "onClose", function(e){
+             var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
+             var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+             $(this).datepicker("setDate",new Date(year,month,1));
+        })
+    });
+  },
+
+  interceptionrecord_update: function() {
+    function calculateTotal() {
+      var total = 0;
+      $('input[type="checkbox"]').each(function(id, elem) {
+        var value = $.trim($(elem).next('.red-flag').text());
+        if (value !== '') {
+          if ($(elem).prop('checked')) {
+            total += parseInt(value);
+          }
+>>>>>>> feature/angular_budget_calculation
         }
         var storedForms = JSON.parse(localStorage.getItem('saved-'+which+'s') || '{}');
         storedForms[formNumber] = $('form').serialize();

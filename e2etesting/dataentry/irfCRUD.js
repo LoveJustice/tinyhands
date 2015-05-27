@@ -35,7 +35,7 @@ var irfPage = function() {
         this.name_came_up_before_value = element(by.id("id_name_came_up_before_value")).sendKeys(c.irfNameCameUpBeforeValue);
         this.scan_and_submit_same_day = element(by.id("id_scan_and_submit_same_day")).click();
         this.has_signature = element(by.id("id_has_signature")).click();
-                browser.executeScript("arguments[0].style.visibility = '';", element(by.id("footer")).getWebElement()); // Hides the footer so the webdriver can click on stuff
+        browser.executeScript("arguments[0].style.visibility = '';", element(by.id("footer")).getWebElement()); // Hides the footer so the webdriver can click on stuff
         this.submit = element(by.id("submtButton")).click();
 
     };

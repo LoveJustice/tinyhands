@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% block html %}
+   <html ng-app="BudgetCalculation" ng-controller="emailRecipientsCtrl as main">
+{% endblock %}
+{% block angular %}{% endblock %}
+
+{% block title %}Money Distribution PDF{% endblock %}
+{% block tab_block %}
+    {% block content %}
+        <script type="text/javascript">
+            window.border_station = {{ border_station.id }};
+            window.pk = {{ id }};
+        </script>
+
+        <div class="row" >
+
+
+            <div class="col-lg-6">
+                <div class="row">
+                    <h2 class="text-center col-lg-8">Money Distribution Form</h2>
+                    <a style="margin-top: 20px;" href="{% url "budget_update_api" id %}" class="btn btn-primary col-lg-3">Update Budget</a>
+                    <div class="1"></div>
+                </div>
+
+                <!-- The Money Distribution Form PDF -->
+                <iframe style="height: 70%; width: 100%; border: hidden; padding-top: 15px;" id="money_distribution_form_iframe" src="{% url "money_distribution_pdf" id %}"></iframe>
+            </div>
+
+            {% verbatim %}  <!-- So the Django Templating Engine doesn't overwrite our fields and Angular gets to do it -->
+                <div class="col-lg-6">
+                    <h2 class="text-center">Staff Email Recipients</h2>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th class="text-center" width="150px">Send Email</th>
+                                <th>Staff Name</th>
+                                <th>Staff Email</th>
+                            </tr>
+                        </thead>
+                        <tr ng-repeat="staff in main.staff" ng-class="{'notReceiving': !staff.receives_money_distribution_form, 'receiving': staff.receives_money_distribution_form}">
+                            <td style="text-align: center"><input type="checkbox" ng-model="staff.receives_money_distribution_form"></td>
+                            <td>{{ staff.first_name }} {{ staff.last_name }}</td>
+                            <td>{{ staff.email}}</td>
+                        </tr>
+                    </table>
+
+                    <br/>
+
+                    <h2 class="text-center">Committee Email Recipients</h2>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th class="text-center" width="150px">Send Email</th>
+                                <th>Member Name</th>
+                                <th>Member Email</th>
+                            </tr>
+                        </thead>
+                        <tr ng-repeat="member in main.committeeMembers" ng-class="{'notReceiving': !member.receives_money_distribution_form, 'receiving': member.receives_money_distribution_form}">
+                            <td style="text-align: center"><input type="checkbox" ng-model="member.receives_money_distribution_form"></td>
+                            <td>{{ member.first_name }} {{ member.last_name }}</td>
+                            <td>{{ member.email}}</td>
+                        </tr>
+                    </table>
+
+                    <div class="row text-center">
+                        <a type="button" id="sendEmails" style="margin-top: 50px" class="btn btn-primary" value="Send to Selected Staff and Members" ng-click="main.sendEmails()">Send to Selected Staff and Members</a>
+
+                    </div>
+
+                </div>
+            {% endverbatim %}
+
+        </div>
+
+        <!-- All of our Angular code imported down here -->
+        <script type="text/javascript" src="{{ STATIC_URL }}budgetModule.js"></script>
+        <script type="text/javascript" src="{{ STATIC_URL }}controllers/emailRecipientsCtrl.js"></script>
+        <script type="text/javascript" src="{{ STATIC_URL }}services/emailRecipientsService.js"></script>
+
+        <!-- Loading animation container -->
+        <div ng-show="main.loading" class="loader-container">
+            <div class="loader">Loading...</div>
+        </div>
+    {% endblock %}
+{% endblock %}
