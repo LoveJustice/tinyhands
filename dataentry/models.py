@@ -898,7 +898,7 @@ class VictimInterviewLocationBox(models.Model):
 
     signboard = models.CharField(max_length=255, blank=True)
     location_in_town = models.CharField(max_length=255, blank=True)
-    district = models.ForeignKey(District)
+    district = models.ForeignKey(District, null=True)
     vdc = models.ForeignKey(VDC)
 
     phone = models.CharField('Phone #', max_length=255, blank=True)
