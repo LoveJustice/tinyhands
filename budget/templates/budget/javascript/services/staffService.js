@@ -1,4 +1,3 @@
-// service
 angular
     .module('BudgetCalculation')
     .factory('staffService', staffService);
@@ -7,6 +6,7 @@ staffService.$inject = ['$http', '$q'];
 
 function staffService($http, $q) {
 	return {
+        retrieveOldStaffSalaries: retrieveOldStaffSalaries,
 		retrieveStaff: retrieveStaff,
         retrieveStaffSalaries: retrieveStaffSalaries,
         saveItem: saveItem,
@@ -20,6 +20,18 @@ function staffService($http, $q) {
                 return data;
             }).
             error(function (data, status, headers, config) {
+                console.log(data, status, headers, config);
+            });
+    }
+
+    function retrieveOldStaffSalaries() {
+        var staffPromise = $http({method: 'GET', url: '/static_border_stations/api/border-stations/' + window.border_station + '/'});
+        var staffSalaryPromise = $http({method: 'GET', url: '/budget/api/budget_calculations/most_recent_form/' + window.budget_calc_id + '/'});
+        return $q.all([staffPromise, staffSalaryPromise])
+            .then(function (data) {
+                return data;
+            })
+            .catch(function(data, status, headers, config) {
                 console.log(data, status, headers, config);
             });
     }
@@ -53,6 +65,7 @@ function staffService($http, $q) {
 
             })
             .error(function(data, status) {
+                console.log(data, status);
                 console.log("failure to update budget item!");
             });
     }

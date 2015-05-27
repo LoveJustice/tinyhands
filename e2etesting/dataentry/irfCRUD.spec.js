@@ -2,26 +2,27 @@ var c = require('../testConstants.json');
 var loginPage = require('../accounts/loginPage.js');
 var irfPage = require('./irfCRUD.js');
 
-describe('IRF CRUD', function() {
+describe('Interception Record Form -', function() {
 
     beforeEach(function () {
         return browser.ignoreSynchronization = true;
     });
 
-    describe('IRF CRUD TESTS', function () {
-        it('accepts credentials', function () {
+    describe('A user', function () {
+        it('Logs In', function () {
             loginPage.logout();
             loginPage.loginAsAdmin();
         });
 
-        it('Create IRF', function () {
+        it('Can Create an IRF', function () {
             irfPage.getToIRF();
             expect(browser.driver.getCurrentUrl()).toContain('data-entry/irfs/create/');
             irfPage.fillOutIRF();
+
             expect(browser.driver.getCurrentUrl()).toContain('data-entry/irfs/search/');
         });
 
-        it('Read IRF', function () {
+        it('Can Read an IRF', function () {
             irfPage.viewIRF();
             expect(browser.driver.getCurrentUrl()).toContain('/data-entry/irfs/');
             expect(element(by.id('id_irf_number')).getAttribute('value')).toEqual(c.irfNumber);
@@ -47,7 +48,7 @@ describe('IRF CRUD', function() {
             browser.get(c.webAddress + '/data-entry/irfs/search/');
         });
 
-        it('Edit IRF', function () {
+        it('Can Edit an IRF', function () {
             irfPage.editIRF();
             expect(browser.driver.getCurrentUrl()).toContain('data-entry/irfs/search/');
             irfPage.viewIRF();
@@ -73,12 +74,6 @@ describe('IRF CRUD', function() {
             expect(element(by.id('id_has_signature')).isSelected()).toBeTruthy();
             browser.get(c.webAddress + '/data-entry/irfs/search/');
         });
-        /*
-        it('Delete IRF', function () {
-            irfPage.deleteIRF();
-            !expect(element(by.linkText('Delete')).isPresent());
-        });
-        */
     });
 });
 

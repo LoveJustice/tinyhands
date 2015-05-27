@@ -1,25 +1,26 @@
 angular
     .module('BudgetCalculation')
     .controller("staffCtrl", ['$scope','$http', 'staffService', function($scope, $http, staffService) {
-        // get staff for a border_station http://localhost:8000/static_border_stations/api/border-stations/0/
         var vm = this;
+
+        // Variable Declarations
         vm.staffSalaryForms = [];
         vm.staffTotal = 0;
 
-        vm.totalSalaries = totalSalaries;
-        vm.saveAllSalaries = saveAllSalaries;
+        // Function Definitions
         vm.retrieveStaff = retrieveStaff;
         vm.retrieveStaffSalaries = retrieveStaffSalaries;
+        vm.retrieveOldStaffSalaries = retrieveOldStaffSalaries;
+        vm.totalSalaries = totalSalaries;
+        vm.saveAllSalaries = saveAllSalaries;
 
+        // Calling the main function
         main();
-
-        $scope.$on('handleBudgetCalcSavedBroadcast', function(event, args) {
-            vm.saveAllSalaries();
-        });
 
         function main(){
             if( window.submit_type == 1 ) {
                 vm.retrieveStaff();
+                vm.retrieveOldStaffSalaries();
             }
             else if( window.submit_type == 2)  {
                 vm.retrieveStaffSalaries();
@@ -29,6 +30,12 @@ angular
             }
         }
 
+        // Event Listeners
+        $scope.$on('handleBudgetCalcSavedBroadcast', function() {
+            vm.saveAllSalaries();
+        });
+
+        // Function implementations
         function totalSalaries(){
             var acc = 0;
             for(var x = 0; x < vm.staffSalaryForms.length; x++){
@@ -60,7 +67,6 @@ angular
                 .then(function(promise){
                     var staffData = promise[0].data;
                     var staffSalariesData = promise[1].data;
-
                     for(var person = 0; person < staffSalariesData.length; person++) {
                         for (var x = 0; x < staffData.length; x++) {
                             if (staffData[x].id === staffSalariesData[person].staff_person) {
@@ -72,11 +78,38 @@ angular
                 });
         }
 
+        function retrieveOldStaffSalaries() {
+            staffService.retrieveOldStaffSalaries()
+                .then(function(promise){
+                    var staffData = promise[0].data;
+                    var staffSalariesData = promise[1].data.staff_salaries;
+
+                    for(var person = 0; person < staffSalariesData.length; person++) {
+                        for (var x = 0; x < staffData.length; x++) {
+                            if (staffData[x].id === staffSalariesData[person].staff_person) {
+                                staffSalariesData[person].name = staffData[x].first_name + ' ' + staffData[x].last_name;
+                            }
+                        }
+
+                        var newperson = staffSalariesData[person];
+                        newperson.id = undefined;
+                        for(var oldPerson = 0; oldPerson < vm.staffSalaryForms.length; oldPerson++){
+
+                            if( newperson.staff_person == vm.staffSalaryForms[oldPerson].staff_person){
+                                vm.staffSalaryForms.splice(oldPerson,1);
+                            }
+                        }
+                        vm.staffSalaryForms.push(newperson);
+                    }
+                });
+        }
+
 
         function saveAllSalaries(){
+            var item = {};
             for(var person = 0; person < vm.staffSalaryForms.length; person++){
                 item = vm.staffSalaryForms[person];
-                if(!item.id){
+                if(item.id === undefined){
                     saveItem(item);
                 }else{
                     updateItem(item);
@@ -84,6 +117,7 @@ angular
             }
         }
 
+        // Helper functions for saveAllSalaries
         function saveItem(item){
             staffService.saveItem(item);
         }

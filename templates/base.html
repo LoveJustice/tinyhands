@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 {% block html %}<html>{% endblock %}
 
 <head>
@@ -28,6 +29,7 @@
     {% block head %}{% endblock %}
 
 </head>
+
 {% comment %}
 Add a class to the body tag that is the same as the url's name.  We can then check this
 in the Javascript and run code unique to the current page.
@@ -55,10 +57,10 @@ in the Javascript and run code unique to the current page.
                 <li><a href="{% url 'main_dashboard' %}">Dashboard</a></li>
                 {% if request.user.permission_border_stations_view %}
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Stations<b class="caret"></b></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="border_station_dropdown">Stations<b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         {% if request.user.permission_border_stations_add %}
-                        <li><a href="{% url 'borderstations_create' %}">Create Station</a></li>
+                        <li><a href="{% url 'borderstations_create' %}" id="border_station_create_link">Create Station</a></li>
                         <hr style="margin: 4px"/>
                         {% endif %}
                         {% for station in border_stations %}
@@ -81,6 +83,9 @@ in the Javascript and run code unique to the current page.
                     </ul>
                 </li>
 
+                {% if request.user.permission_budget_manage %}
+                    <li><a href="{% url 'budget_list' %}">Budget Sheets</a></li>
+                {% endif %}
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li>
@@ -94,9 +99,6 @@ in the Javascript and run code unique to the current page.
                         {% endif %}
                         {% if request.user.permission_vdc_manage %}
                             <li><a href="{% url 'vdc_admin_page' %}">Edit VDCs</a></li>
-                        {% endif %}
-                        {% if request.user.permission_budget_manage %}
-                            <li><a href="{% url 'budget_list' %}">Border Station Budget Calculations</a></li>
                         {% endif %}
                         <li><a href="{% url 'logout' %}">Logout</a></li>
                     </ul>

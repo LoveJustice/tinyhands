@@ -1,38 +1,41 @@
 angular
     .module('BudgetCalculation')
     .controller('otherBudgetItemsCtrl', ['$scope','$http', 'otherItemsService', function($scope, $http, otherItemsService) {
-        var idCounter = 0;
         var vm = this;
 
+        // Variable Declarations
+        var idCounter = 0;
         $scope.form_section = 0;
+        vm.budget_item_parent = 0;
 
         vm.formsList = [];
         vm.miscForms = [];
         vm.travelForms = [];
         vm.awarenessForms = [];
         vm.suppliesForms = [];
-
         vm.formsList.push(vm.travelForms, vm.miscForms, vm.awarenessForms, vm.suppliesForms);
 
-        vm.budget_item_parent = 0;
 
-
-        // functions for the controller
+        // Functions Definitions
         vm.addNewItem = addNewItem;
-        vm.retrieveForm = retrieveForm;
-        vm.removeItem = removeItem;
-        vm.saveAllItems = saveAllItems;
         vm.otherItemsTotal = otherItemsTotal;
+        vm.removeItem = removeItem;
+        vm.retrieveForm = retrieveForm;
+        vm.retrieveNewForm = retrieveNewForm;
+        vm.saveAllItems = saveAllItems;
 
-        main();
-
-        $scope.$on('handleBudgetCalcSavedBroadcast', function(event, args) {
+        // Event Listeners
+        $scope.$on('handleBudgetCalcSavedBroadcast', function() {
             saveAllItems();
         });
 
+        // Calling the main function
+        main();
+
+        // Function Implementations
         function main(){
             if( window.submit_type == 1 ) {
-                //creation strategy
+                vm.retrieveNewForm();
             }
             else if( window.submit_type == 2)  {
                 // edit strategy
@@ -59,6 +62,19 @@ angular
                 });
         }
 
+        function retrieveNewForm() {
+            otherItemsService.retrieveNewForm(window.budget_calc_id).then(function(promise){
+                var itemsList = promise.data.other_items;
+                for(var x = 0; x < itemsList.length; x++){
+                    if (itemsList[x].form_section === $scope.form_section){
+                        itemsList[x].id = -1;
+                        vm.formsList[$scope.form_section-1].push(itemsList[x]);
+                    }
+                }
+                vm.otherItemsTotal();
+            });
+        }
+
         function addNewItem(){
             idCounter--;
             vm.formsList[$scope.form_section-1].push(
@@ -80,6 +96,7 @@ angular
         }
 
         function saveAllItems(){
+            var item = {};
             for(var list = 0; list < vm.formsList.length; list++){
                 for(var itemIndex = 0; itemIndex < vm.formsList[list].length; itemIndex++){
                     item = vm.formsList[list][itemIndex];
@@ -110,4 +127,4 @@ angular
         }
 
 
-    }])
+    }]);
