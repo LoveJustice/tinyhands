@@ -1,17 +1,11 @@
 angular
     .module('BudgetCalculation')
     .controller('MainCtrl', ['$scope','$http', '$location', '$window', 'mainCtrlService', function($scope, $http, $location, $window, mainCtrlService) {
-<<<<<<< HEAD
-
-            var vm = this;
-            vm.form = {};
-=======
             var vm = this;
 
             // Variable Declarations
             vm.form = {};
             vm.salariesTotal = 0;
->>>>>>> demo/v0.3-local
 
             vm.miscTotalValue = 0;
             vm.travelTotalValue = 0;
@@ -23,30 +17,16 @@ angular
             vm.otherAwarenessTotalValue = [0];
             vm.otherSuppliesTotalValue = [0];
 
-<<<<<<< HEAD
-=======
 
             // Budget Calc sheets are for the 15th of every month
             vm.date = new Date();
             vm.date.setDate(15);
 
->>>>>>> demo/v0.3-local
             vm.otherItemsTotals = [vm.otherTravelTotalValue,
                                     vm.otherMiscTotalValue,
                                     vm.otherAwarenessTotalValue,
                                     vm.otherSuppliesTotalValue];
 
-<<<<<<< HEAD
-            $scope.$on('handleOtherItemsTotalChangeBroadcast', function(event, args) {
-                vm.otherItemsTotals[args['form_section']-1][0] = args['total'];
-                vm.miscTotal();
-                vm.travelTotal();
-                vm.awarenessTotal();
-                vm.suppliesTotal();
-            });
-
-            vm.salariesTotal = 0;
-=======
 
             // Event Listeners
             $scope.$on('handleOtherItemsTotalChangeBroadcast', function(event, args) {
@@ -54,35 +34,10 @@ angular
                 callTotals();
             });
 
->>>>>>> demo/v0.3-local
             $scope.$on('handleSalariesTotalChangeBroadcast', function(event, args) {
                 vm.salariesTotal = args['total'];
             });
 
-<<<<<<< HEAD
-        vm.retrieveForm = function(id) {
-            mainCtrlService.retrieveForm(id).then(function(promise){
-                var data = promise.data;
-                vm.form = data;
-                console.log(data);
-            });
-        };
-
-            /*vm.retrieveForm = function(id) {
-                $http.get('/budget/api/budget_calculations/' + id + '/').
-                        success(function (data) {
-                            //We can reference the json object to fill our vm variables
-                            vm.form = data;
-                        console.log(data);
-                        }).
-                        error(function (data, status, headers, config) {
-                            // called asynchronously if an error occurs
-                            // or server returns response with an error status.
-                        });
-            };*/
-
-
-=======
             $scope.$on('lastBudgetTotalBroadcast', function(event, args) {
                 vm.last_months_total_cost = args['total'];
             });
@@ -117,7 +72,6 @@ angular
                 vm.suppliesTotal();
             }
 
->>>>>>> demo/v0.3-local
             vm.foodAndShelterTotal = function() {
                 return vm.foodTotal() + vm.shelterTotal();
             };
@@ -138,10 +92,6 @@ angular
             };
 
             //shelter
-<<<<<<< HEAD
-
-=======
->>>>>>> demo/v0.3-local
             vm.utilTotal = function() {
                 return (vm.form.shelter_rent + vm.form.shelter_water + vm.form.shelter_electricity);
             };
@@ -164,10 +114,6 @@ angular
             };
 
             //Food and Gas Section
-<<<<<<< HEAD
-
-=======
->>>>>>> demo/v0.3-local
             vm.foodGasInterceptedGirls = function () {
                 return  vm.form.food_and_gas_number_of_intercepted_girls_multiplier_before *
                         vm.form.food_and_gas_number_of_intercepted_girls *
@@ -265,13 +211,7 @@ angular
                 if(vm.form.travel_motorbike) {
                     amount += vm.form.travel_motorbike_amount;
                 }
-<<<<<<< HEAD
                 vm.travelTotalValue = amount + vm.form.travel_plus_other + vm.form.travel_last_months_expense_for_sending_girls_home + (vm.form.travel_number_of_staff_using_bikes * vm.form.travel_number_of_staff_using_bikes_multiplier) + vm.otherTravelTotalValue[0];
-=======
-                console.log(vm.form);
-                vm.travelTotalValue = amount + vm.form.travel_plus_other + vm.form.travel_last_months_expense_for_sending_girls_home + (vm.form.travel_number_of_staff_using_bikes * vm.form.travel_number_of_staff_using_bikes_multiplier) + vm.otherTravelTotalValue[0];
-                console.log(vm.travelTotalValue);
->>>>>>> demo/v0.3-local
             };
 
             //Supplies Section
@@ -307,103 +247,6 @@ angular
                 vm.awarenessTotalValue = amount + vm.otherAwarenessTotalValue[0];
             };
 
-<<<<<<< HEAD
-
-
-        /*vm.deletePost = function(id) {
-            mainCtrlService.deletePost(id);
-        };*/
-
-
-            /*vm.deletePost = function(id) {
-                $http.delete('/budget/api/budget_calculations/' + id + '/').
-                        success(function (data, status, headers, config) {
-                            console.log("1");
-                        }).
-                        error(function (data, status, headers, config) {
-                            console.log("2");
-                            // called asynchronously if an error occurs
-                            // or server returns response with an error status.
-                        })
-            };*/
-
-
-        vm.updateForm = function() {
-            mainCtrlService.updateForm(vm.form.id, vm.form).then(function(promise) {
-                vm.id = promise.data.id;
-
-                //Broadcast event to call the saveAllItems function in the otherItems controller
-                $scope.$emit('handleBudgetCalcSavedEmit', {message: 'It is done.'});
-                $window.location.assign('/budget/budget_calculations');
-            });
-        };
-
-            /*vm.updateForm = function() {
-                $http.put('/budget/api/budget_calculations/' + vm.form.id + '/', vm.form)
-                    .success(function(data, status) {
-                        console.log("success");
-                        vm.id = data.id;
-                        //Broadcast event to call the saveAllItems function in the otherItems controller
-                        $scope.$emit('handleBudgetCalcSavedEmit', {message: 'It is done.'});
-
-                        $window.location.assign('/budget/budget_calculations');
-
-                    })
-                    .error(function(data, status) {
-                        console.log("fail");
-                    });
-            };*/
-
-        vm.createForm = function() {
-            mainCtrlService.createForm(vm.form).then(function(promise) {
-                var data = promise.data;
-                vm.id = data.id;
-                window.budget_calc_id = data.id;
-
-                //Broadcast event to call the saveAllItems function in the otherItems controller
-                $scope.$emit('handleBudgetCalcSavedEmit', {message: 'It is done.'});
-
-                //TODO We should change this because this is bad
-                $window.location.assign('/budget/budget_calculations');
-            });
-        };
-
-            /*vm.createForm = function() {
-                $http.post('/budget/api/budget_calculations/', vm.form)
-                    .success(function(data, status) {
-                        console.log("success Create");
-                        vm.id = data.id;
-                        window.budget_calc_id = data.id;
-                        //Broadcast event to call the saveAllItems function in the otherItems controller
-                        $scope.$emit('handleBudgetCalcSavedEmit', {message: 'It is done.'});
-
-
-                        $window.location.assign('/budget/budget_calculations');
-
-                    })
-                    .error(function(data, status) {
-                        console.log("fail create");
-                    });
-
-            };*/
-
-            if( (window.submit_type) == 1 ) {
-                vm.create = true;
-                vm.form.border_station = (window.budget_calc_id);
-            }
-            else if( (window.submit_type) == 2)  {
-                vm.update = true;
-                vm.retrieveForm(window.budget_calc_id);
-            }
-            else if( (window.submit_type) == 3) {
-                vm.view = true;
-                $('input').prop('disabled', true);
-                console.log(window.budget_calc_id);
-                vm.retrieveForm(window.budget_calc_id);
-            }
-
-        }]);
-=======
             //CRUD Functions
             vm.updateForm = function() {
                 vm.form.month_year = new Date(document.getElementById('month_year').value + '-15');
@@ -520,4 +363,3 @@ angular
             // Calling the main function
             main();
     }]);
->>>>>>> demo/v0.3-local

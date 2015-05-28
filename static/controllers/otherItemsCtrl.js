@@ -1,49 +1,18 @@
 angular
     .module('BudgetCalculation')
     .controller('otherBudgetItemsCtrl', ['$scope','$http', 'otherItemsService', function($scope, $http, otherItemsService) {
-<<<<<<< HEAD
-        var idCounter = 0;
-        var vm = this;
-
-        $scope.form_section = 0;
-=======
         var vm = this;
 
         // Variable Declarations
         var idCounter = 0;
         $scope.form_section = 0;
         vm.budget_item_parent = 0;
->>>>>>> demo/v0.3-local
 
         vm.formsList = [];
         vm.miscForms = [];
         vm.travelForms = [];
         vm.awarenessForms = [];
         vm.suppliesForms = [];
-<<<<<<< HEAD
-
-        vm.formsList.push(vm.travelForms, vm.miscForms, vm.awarenessForms, vm.suppliesForms);
-
-        vm.budget_item_parent = 0;
-
-
-        // functions for the controller
-        vm.addNewItem = addNewItem;
-        vm.retrieveForm = retrieveForm;
-        vm.removeItem = removeItem;
-        vm.saveAllItems = saveAllItems;
-        vm.otherItemsTotal = otherItemsTotal;
-
-        main();
-
-        $scope.$on('handleBudgetCalcSavedBroadcast', function(event, args) {
-            saveAllItems();
-        });
-
-        function main(){
-            if( window.submit_type == 1 ) {
-                //creation strategy
-=======
         vm.formsList.push(vm.travelForms, vm.miscForms, vm.awarenessForms, vm.suppliesForms);
 
 
@@ -67,7 +36,6 @@ angular
         function main(){
             if( window.submit_type == 1 ) {
                 vm.retrieveNewForm();
->>>>>>> demo/v0.3-local
             }
             else if( window.submit_type == 2)  {
                 // edit strategy
@@ -94,8 +62,6 @@ angular
                 });
         }
 
-<<<<<<< HEAD
-=======
         function retrieveNewForm() {
             otherItemsService.retrieveNewForm(window.budget_calc_id).then(function(promise){
                 var itemsList = promise.data.other_items;
@@ -109,7 +75,6 @@ angular
             });
         }
 
->>>>>>> demo/v0.3-local
         function addNewItem(){
             idCounter--;
             vm.formsList[$scope.form_section-1].push(
@@ -131,10 +96,7 @@ angular
         }
 
         function saveAllItems(){
-<<<<<<< HEAD
-=======
             var item = {};
->>>>>>> demo/v0.3-local
             for(var list = 0; list < vm.formsList.length; list++){
                 for(var itemIndex = 0; itemIndex < vm.formsList[list].length; itemIndex++){
                     item = vm.formsList[list][itemIndex];
@@ -165,8 +127,4 @@ angular
         }
 
 
-<<<<<<< HEAD
-    }])
-=======
     }]);
->>>>>>> demo/v0.3-local

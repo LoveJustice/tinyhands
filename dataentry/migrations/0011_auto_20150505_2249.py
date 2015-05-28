@@ -38,25 +38,25 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='victiminterviewlocationbox',
             name='district',
-            field=models.ForeignKey(to='dataentry.District'),
+            field=models.ForeignKey(to='dataentry.District', null=True),
             preserve_default=True,
         ),
         migrations.AlterField(
             model_name='victiminterviewlocationbox',
             name='vdc',
-            field=models.ForeignKey(to='dataentry.VDC'),
+            field=models.ForeignKey(to='dataentry.VDC', null=True),
             preserve_default=True,
         ),
         migrations.AlterField(
             model_name='victiminterviewpersonbox',
             name='address_district',
-            field=models.ForeignKey(to='dataentry.District'),
+            field=models.ForeignKey(to='dataentry.District', null=True),
             preserve_default=True,
         ),
         migrations.AlterField(
             model_name='victiminterviewpersonbox',
             name='address_vdc',
-            field=models.ForeignKey(to='dataentry.VDC'),
+            field=models.ForeignKey(to='dataentry.VDC', null=True),
             preserve_default=True,
         ),
     ]

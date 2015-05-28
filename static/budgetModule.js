@@ -4,18 +4,7 @@ var myModule = angular.module('BudgetCalculation', ['ngCookies', 'ngRoute', 'ngA
             $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
         }]);
 
-<<<<<<< HEAD
-
-
 myModule.run(function($rootScope) {
-    /*
-        Receive emitted message and broadcast it.
-        Event names must be distinct or browser will blow up!
-    */
-
-=======
-myModule.run(function($rootScope) {
->>>>>>> demo/v0.3-local
     $rootScope.$on('handleBudgetCalcSavedEmit', function(event, args) {
         $rootScope.$broadcast('handleBudgetCalcSavedBroadcast', args);
     });
@@ -27,8 +16,6 @@ myModule.run(function($rootScope) {
     $rootScope.$on('handleSalariesTotalChangeEmit', function(event, args) {
         $rootScope.$broadcast('handleSalariesTotalChangeBroadcast', args);
     });
-<<<<<<< HEAD
-=======
 
     $rootScope.$on('lastBudgetTotalEmit', function(event, args) {
         $rootScope.$broadcast('lastBudgetTotalBroadcast', args);
@@ -37,5 +24,4 @@ myModule.run(function($rootScope) {
     $rootScope.$on('dateSetEmit', function(event, args) {
         $rootScope.$broadcast('dateSetBroadcast', args);
     });
->>>>>>> demo/v0.3-local
 });

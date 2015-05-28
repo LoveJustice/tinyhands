@@ -506,7 +506,7 @@ class Migration(migrations.Migration):
                 ('what_kind_place_brothel', models.BooleanField(default=False, verbose_name=b'Brothel')),
                 ('what_kind_place_hotel', models.BooleanField(default=False, verbose_name=b'Hotel')),
                 ('vdc', models.CharField(max_length=255, verbose_name=b'VDC', blank=True)),
-                ('district', models.CharField(max_length=255, blank=True)),
+                ('district', models.CharField(max_length=255, null=True, blank=True)),
                 ('signboard', models.CharField(max_length=255, blank=True)),
                 ('location_in_town', models.CharField(max_length=255, blank=True)),
                 ('phone', models.CharField(max_length=255, verbose_name=b'Phone #', blank=True)),
