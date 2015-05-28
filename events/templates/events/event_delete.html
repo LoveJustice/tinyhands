@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block tab_block %}
+<form method="post">
+    {% csrf_token %}
+    Are you sure you want to delete " {{object.title}} " event ?
+    <br/><br/>
+    <input type="submit" value="Confirm" class="btn btn-primary"/>
+
+    <a href="{% url 'list_event' %}" class="btn btn-default">Cancel</a>
+</form>
+{% endblock tab_block %}

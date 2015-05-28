@@ -2,65 +2,262 @@
 
 {% block content %}
     {% verbatim %}
-    <div id="portal">
-        <div id="tally" ng-controller="TallyCtrl as tally">
-            <div ng-show="tally.showTally">
-                <!--   REGION: Tally w/Larger screens    -->
-                <div class="col-lg-2 hidden-md hidden-sm hidden-xs"></div>
-                <div class="hidden-md hidden-sm hidden-xs" ng-repeat="day in tally.days">
-                    <div class="text-center col-lg-1 tally-tab"
-                         ng-mouseenter="showInt = true"
-                         ng-mouseleave="showInt = false; tally.onMouseLeave(day)"
-                         ng-style="tally.changeColor(day)">
-                        <h3 class="day-of-week">{{tally.getDayOfWeek(day.date)}}</h3>
-                        <div ng-repeat="(station,numIntercepts) in day.interceptions">
-                            <h4 ng-show="showInt" class="animated tallyFade">{{numIntercepts}} INT in {{station}}</h4>
+        <!--    REGION: Wrapper    -->
+        <div id="wrapper">
+            <div id="portal">
+                <div id="tally" ng-controller="TallyCtrl as tally">
+                    <div ng-show="tally.showTally">
+                        <!--   REGION: Tally w/Larger screens    -->
+                        <div class="col-lg-2 hidden-md hidden-sm hidden-xs"></div>
+                        <div class="hidden-md hidden-sm hidden-xs" ng-repeat="day in tally.days">
+                            <div class="text-center col-lg-1 tally-tab"
+                                 ng-mouseenter="showInt = true"
+                                 ng-mouseleave="showInt = false; tally.onMouseLeave(day)"
+                                 ng-style="tally.changeColor(day)">
+                                <h3 class="day-of-week">{{tally.getDayOfWeek(day.date)}}</h3>
+                                <div ng-repeat="(station,numIntercepts) in day.interceptions">
+                                    <h4 ng-show="showInt" class="animated tallyFade">{{numIntercepts}} INT in {{station}}</h4>
+                                </div>
+                                <h4 ng-show="showInt && tally.isEmptyObject(day.interceptions)" class="animated tallyFade">No Interceptions</h4>
+                            </div>
                         </div>
-                        <h4 ng-show="showInt && tally.isEmptyObject(day.interceptions)" class="animated tallyFade">No Interceptions</h4>
-                    </div>
-                </div>
-                <div class="col-lg-1 hidden-md hidden-sm hidden-xs"></div>
-                <!--   ENDREGION: Tally w/Larger screens     -->
+                        <div class="col-lg-1 hidden-md hidden-sm hidden-xs"></div>
+                        <!--   ENDREGION: Tally w/Larger screens     -->
 
-                <!--   REGION: Tally w/Smaller screens    -->
-                <div class="hidden-lg tally-tab-small">
-                    <div class="text-center"
-                         ng-repeat="day in tally.days"
-                         ng-style="tally.changeColor(day)"
-                         ng-mouseleave="tally.onMouseLeave(day)">
-                        <h3 class="day-of-week">{{tally.getDayOfWeek(day.date).substring(0,2)}}</h3>
-                        <h4>{{tally.sumNumIntercepts(day)}}</h4>
+                        <!--   REGION: Tally w/Smaller screens    -->
+                        <div class="hidden-lg tally-tab-small">
+                            <div class="text-center"
+                                 ng-repeat="day in tally.days"
+                                 ng-style="tally.changeColor(day)"
+                                 ng-mouseleave="tally.onMouseLeave(day)">
+                                <h3 class="day-of-week">{{tally.getDayOfWeek(day.date).substring(0,2)}}</h3>
+                                <h4>{{tally.sumNumIntercepts(day)}}</h4>
+                            </div>
+                        </div>
+                        <!--   ENDREGION: Tally w/Smaller screens     -->
                     </div>
+
+                    <div ng-show="tally.showEvents">
+                        <!--   REGION: Events     -->
+                        <div id="content-window">
+                            <div class="col-md-offset-9 col-md-3 events-div-1 events">
+                                <div><span class="day"></span> </div>
+                                <div><span class="event"></span> </div>
+                            </div>
+                            <div class="col-md-offset-9 col-md-3 events-div-2 events">
+                                <div><span class="day"></span> </div>
+                                <div><span class="event"></span> </div>
+                            </div>
+                            <div class="col-md-offset-9 col-md-3 events-div-3 events">
+                                <div><span class="day"></span> </div>
+                                <div><span class="event"></span> </div>
+                            </div>
+                            <div class="col-md-offset-9 col-md-3 events-div-4 events">
+                                 <div><span class="day"></span> </div>
+                                 <div><span class="event"></span> </div>
+                            </div>
+                            <div class="col-md-offset-9 col-md-3 events-div-5 events">
+                                <div><span class="day"></span> </div>
+                                <div><span class="event"></span> </div>
+                            </div>
+                            <div class="col-md-offset-9 col-md-3 events-div-6 events">
+                                <div><span class="day"></span> </div>
+                                <div><span class="event"></span> </div>
+                            </div>
+                            <div class="col-md-offset-9 col-md-3 events-div-7 events">
+                                <div><span class="day"></span> </div>
+                                <div><span class="event"></span> </div>
+                            </div>
+
+                        </div>
+                        <!--   ENDREGION: Events     -->
+                    </div>
+
+                    <!--    REGION: Layer Dropdown    -->
+                    <div id="layer-dropdown" class="btn-group" ng-mouseenter="showDropDown = true" ng-class="{'open':showDropDown}">
+                        <button class="btn btn-default btn-xs dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
+                            <i class="glyphicon glyphicon-menu-hamburger"></i>
+                        </button>
+                        <ul class="dropdown-menu" role="menu" ng-mouseleave="showDropDown = false">
+
+                            <li class="checkbox">
+                                <label><input type="checkbox"
+                                              ng-model="tally.showEvents">Events
+                                </label>
+                            </li>
+
+                            <li class="checkbox">
+                                <label><input id="tallyToggle" type="checkbox"
+                                              ng-model="tally.showTally">Tally
+                                </label>
+                            </li>
+
+                            <li class="checkbox">
+                                <label>
+                                    <input type="checkbox"
+                                           ng-model="tally.showVDCLayer"
+                                           ng-click="tally.toggleVDCLayer()">VDCs
+                                </label>
+                            </li>
+
+                        </ul>
+                    </div>
+                    <!--   ENDREGION: Layer Dropdown     -->
                 </div>
-                <!--   ENDREGION: Tally w/Smaller screens     -->
             </div>
 
-            <!--    REGION: Layer Dropdown    -->
-            <div id="layer-dropdown" class="btn-group" ng-mouseenter="showDropDown = true" ng-class="{'open':showDropDown}">
-                <button class="btn btn-default btn-xs dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
-                    <i class="glyphicon glyphicon-menu-hamburger"></i>
-                </button>
-                <ul class="dropdown-menu" role="menu" ng-mouseleave="showDropDown = false">
-                    <li class="checkbox">
-                        <label>
-                            <input type="checkbox"
-                                   ng-model="tally.showVDCLayer"
-                                   ng-click="tally.toggleVDCLayer()">VDC Layer
-                        </label>
-                    </li>
-                    <li class="checkbox">
-                        <label><input id="tallyToggle" type="checkbox"
-                                      ng-model="tally.showTally">Tally
-                        </label>
-                    </li>
-                </ul>
+            <div id="map-container" ng-controller="MapCtrl">
+                <div id="map-canvas" style="position:absolute; z-index:-100; width:100%; height:100%;"></div>
             </div>
-            <!--   ENDREGION: Layer Dropdown     -->
         </div>
-        <div id="map-container" ng-controller="MapCtrl">
-            <div id="map-canvas" style="position:absolute; z-index:-100; width:100%; height:100%;"></div>
-        </div>
-        <div id="content-window" style="width:19%; height:100%; float:left"></div>
-    </div>
+        <!--    ENDREGION: Wrapper    -->
     {% endverbatim %}
+
+    <!--    REGION: Events Modal    -->
+    <div class="modal fade" id="EventDetailModal" tabindex="-1" role="dialog" aria-labelledby="EventDetailLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="UploadFileLabel">Event Detail</h4>
+                </div>
+
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-3">Title</div>
+                        <div class="col-md-1">:</div>
+                        <div class="col-md-8 title-value">Meeting</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">Location</div>
+                        <div class="col-md-1">:</div>
+                        <div class="col-md-8 location-value">Kathmandu</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">Start</div>
+                        <div class="col-md-1">:</div>
+                        <div class="col-md-8 start-value">1 day</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">End</div>
+                        <div class="col-md-1">:</div>
+                        <div class="col-md-8 end-value">Yes</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">Description</div>
+                        <div class="col-md-1">:</div>
+                        <div class="col-md-8 description-value">Yes</div>
+                    </div>
+                    <div class="row optional">
+                        <div class="col-md-3">Repetition</div>
+                        <div class="col-md-1">:</div>
+                        <div class="col-md-8 repetition-value">Yes</div>
+                    </div>
+                    <div class="row optional">
+                        <div class="col-md-3">Ends At</div>
+                        <div class="col-md-1">:</div>
+                        <div class="col-md-8 ends-at-value">Yes</div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" data-dismiss="modal" class="btn btn-primary ">Close</button>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+    <!--    ENDREGION: Events Modal    -->
+
 {% endblock %}
+
+{% block displayCSS %}
+    #wrapper { position: relative; }
+    #content-window {
+           position: absolute;
+           top: 150px;
+           right: 0px;
+           width:19%;
+           height:100%;
+           z-index: 99;
+           float:right;
+    }
+
+{% endblock displayCSS %}
+
+{% block displayJS %}
+
+    function get_event_link(event){
+        var element = '<' + 'a href="#EventDetailModal"  data-toggle="modal" '+
+        'data-title="'+ event.title +'", ' +
+        'data-location="'+ event.location +'", ' +
+        'data-start="'+ event.start_date + "  " + event.start_time +'", ' +
+        'data-end="'+ event.end_date + "  " + event.end_time +'", ' +
+        'data-description="'+ event.description +'", ' +
+        'data-repeat="'+ event.is_repeat +'", ' +
+        'data-repetition="'+ event.repetition +'", ' +
+        'data-ends="'+ event.ends +'" >' +
+        event.title + '</' + 'a>';
+        return element;
+    }
+
+    $(function(){
+         $.ajax({
+            url: '/events/list.json/dashboard/',
+            success: function(resp){
+
+                resp.forEach(function(el, ind){
+                    var ir = ind + 1;
+                    var events = '';
+                    for(var i in el){
+                        if (i==0){
+                            $('.events-div-'+ir + ' .day').html(el[0].weekday);
+                        }else{
+                            //events +=  el[i].title + ',  ';
+                            events += get_event_link(el[i]) + ',  ';
+                        }
+                    }
+                    if (events){
+                        $('.events-div-'+ir + ' .event').html(events.trim().slice(0, -1));
+                    }
+
+                });
+            },
+            error: function(resp){
+                console.log('Ajax Error !!!  '+ resp);
+            }
+        });
+
+        $('.modal').on('show.bs.modal', function(e){
+            var el = e.relatedTarget;
+            var title = $(el).data('title');
+            var location = $(el).data('location');
+            var start_date = $(el).data('start');
+            var end_date = $(el).data('end');
+            var description = $(el).data('description');
+            var repeat = $(el).data('repeat');
+            var repetition = $(el).data('repetition');
+            var ends = $(el).data('ends');
+
+            $('.title-value').html(title);
+            $('.location-value').html(location);
+            $('.start-value').html(start_date);
+            $('.end-value').html(end_date);
+            $('.description-value').html(description);
+            if (repeat){
+                $('.optional').show();
+                $('.repetition-value').html(repetition);
+                $('.ends-at-value').html(window.event.ends? ends : 'Never');
+            }else{
+                $('.optional').hide();
+            }
+        });
+
+    });
+
+
+
+{% endblock displayJS %}

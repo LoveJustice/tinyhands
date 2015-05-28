@@ -21,6 +21,7 @@
         vm.onMouseLeave = onMouseLeave;
         vm.getTallyLocalStorage = getTallyLocalStorage;
         vm.saveTallyLocalStorage = saveTallyLocalStorage;
+        vm.showEvents = true;
         vm.showTally = true;
         vm.showVDCLayer = true;
         vm.sumNumIntercepts = sumNumIntercepts;

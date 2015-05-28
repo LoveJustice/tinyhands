@@ -5,9 +5,11 @@
 {% block angular %}{% endblock %}
 
 {% block head %}
+
     <script type="text/javascript"
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyChNFPd_bOOnk59AkeKM862OqN80Lvp56g">
     </script>
+
     <style>
       html, body, #map-canvas {
           margin: 0px;
@@ -18,7 +20,32 @@
         padding: 0;
         margin-top: 50px;
     }
+
+    .events {
+        background: none repeat scroll 0 0 #fdfdfd;
+        border-radius: 5px;
+        float: right;
+        margin-right: 15px;
+        margin-top: 10px;
+        padding: 3px 3px 3px 10px;
+        width: 226px;
+	}
+
+    .events .event {
+        font-size: 12px;
+    }
+
+    .events .day {
+        font-weight: bold;
+    }
+
+    .event-button {
+        float: right;
+        font-weight: bold;
+    }
+
     </style>
+
 {% endblock %}
 
 {% block title %}Dreamsuite Dash{% endblock %}
