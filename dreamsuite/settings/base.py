@@ -49,6 +49,7 @@ INSTALLED_APPS = (
     'imagekit',
     'dataentry',
     'accounts',
+    'events',
     'portal',
     'budget',
     'util',
