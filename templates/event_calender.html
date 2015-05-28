@@ -2,13 +2,13 @@
 {% extends 'base.html' %}
 
     {% block includeJS %}
-        <script src="{{ STATIC_URL }}vendor/moment.min.js"></script>
-        <script src="{{ STATIC_URL }}vendor/full-calendar/fullcalendar.min.js"></script>
+        <script src="{{ STATIC_URL }}moment.min.js"></script>
+        <script src="{{ STATIC_URL }}full-calendar/fullcalendar.min.js"></script>
     {% endblock includeJS %}
 
     {% block includeCSS %}
-        <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}vendor/full-calendar/fullcalendar.css">
-        <link type="text/css" href="{{ STATIC_URL }}vendor/full-calendar/fullcalendar.print.css" media='print' >
+        <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}full-calendar/fullcalendar.css">
+        <link type="text/css" href="{{ STATIC_URL }}full-calendar/fullcalendar.print.css" media='print' >
     {% endblock includeCSS %}
 
 {% block displayJS %}
