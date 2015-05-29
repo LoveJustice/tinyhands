@@ -14,8 +14,6 @@
 
         vm.toggleVDCLayer = toggleVDCLayer;
 
-        activate();
-
         function activate() {
             var mapOptions = {
               center: { lat: 28.394857, lng: 84.124008},
@@ -212,5 +210,13 @@
                 return borderStation.fields.date_established;
             }
         }
+
+        /*
+         * The map must know the size of the div before rendering.
+         * Having this here ensures everything is ready before activation.
+         * Sauce (http://stackoverflow.com/questions/4700594/google-maps-displaynone-problem)
+         * -- Justin Southworth
+         */
+        google.maps.event.addDomListener(window, 'load', activate);
     };
 })();
