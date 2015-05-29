@@ -47,7 +47,7 @@
 
         function checkDifferences(data){
             if (vm.days.length > 0) {
-                for(var i in data){
+                for(var i in data.reverse()){
                     var interceptions = data[i].interceptions;
                     data[i].change = false;
                     data[i].seen = false;
@@ -63,7 +63,7 @@
                         }
                     }
                 }
-            }else{ //localStorage days is null
+            } else{ //localStorage days is null
                 for(var i in data){
                     if(!isEmptyObject(data[i].interceptions)){
                         data[i].change = true;
