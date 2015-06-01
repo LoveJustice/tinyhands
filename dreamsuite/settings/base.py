@@ -22,14 +22,9 @@ DEBUG = False
 TEMPLATE_DEBUG = False
 
 SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
-FIXTURE_DIRS = (
-    (os.path.join(SITE_ROOT, '../../fixtures/'),)
-)
+FIXTURE_DIRS = (os.path.join(BASE_DIR, 'fixtures'),)
 
-STATICFILES_DIRS = (
-                    os.path.join(SITE_ROOT, '../../budget/templates/budget/javascript/'),
-                    os.path.join(SITE_ROOT, '../../portal/templates/portal/javascript/'),
-                    )
+STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
 
 AUTH_USER_MODEL = 'accounts.Account'
 LOGIN_URL = '/login/'
@@ -95,7 +90,7 @@ DATETIME_FORMAT = "n.j.Y g:iA"
 DATE_FORMAT = "n.j.Y"
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, "static")
+STATIC_ROOT = os.path.join(SITE_ROOT, "../static")
 
 MESSAGE_TAGS = {
     messages.constants.ERROR: 'danger'    # Fix up for Bootstrap.
