@@ -584,11 +584,11 @@ class VictimInterviewForm(DreamSuitePaperForm):
     victim_where_going_gulf_didnt_know = forms.BooleanField(label='Did Not Know', required=False)
     victim_where_going_gulf_other = forms.BooleanField(label='Other', required=False)
 
-    victim_address_district = DistrictField(label='District')
-    victim_address_vdc = VDCField(label='VDC')
-    victim_guardian_address_district = DistrictField(label='District')
-    victim_guardian_address_vdc = VDCField(label='VDC')
-
+    victim_address_district = DistrictField(label='District', required=False)
+    victim_address_vdc = VDCField(label='VDC', required=False)
+    victim_guardian_address_district = DistrictField(label='District', required=False)
+    victim_guardian_address_vdc = VDCField(label='VDC', required=False)
+    
     class Meta:
         model = VictimInterview
         exclude = ('victim_address_district',
