@@ -94,10 +94,8 @@ class EventJson(ListView):
 
         temp_events = get_repeated(qs_repeat, start_date, end_date)
         result_list = list(chain(temp_events, qs_non_repeat))
-        print result_list
         ls = listing_event(result_list)
 
-        print ls
         return ls
 
     def get(self, request, *args, **kwargs):

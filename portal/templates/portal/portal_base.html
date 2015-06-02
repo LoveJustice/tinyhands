@@ -29,18 +29,13 @@
         margin-top: 10px;
         padding: 3px 3px 3px 10px;
         width: 226px;
-	}
+    }
 
     .events .event {
         font-size: 12px;
     }
 
     .events .day {
-        font-weight: bold;
-    }
-
-    .event-button {
-        float: right;
         font-weight: bold;
     }
 
@@ -52,10 +47,11 @@
 {% block tab_block %}
     {% block content %}
 {% endblock %}
-    <script src="{{ STATIC_URL }}portal.module.js"></script>
-    <script src="{{ STATIC_URL }}services/tallyService.js"></script>
-    <script src="{{ STATIC_URL }}controllers/portal.js"></script>
-    <script src="{{ STATIC_URL }}controllers/tally.js"></script>
+    {% load static from staticfiles %}
+    <script src="{% static "js/portal.module.js" %}"></script>
+    <script src="{% static "js/services/tallyService.js" %}"></script>
+    <script src="{% static "js/controllers/portal.js" %}"></script>
+    <script src="{% static "js/controllers/tally.js" %}"></script>
     <script>
         angular.bootstrap($('#portal'), ['PortalMod']);
     </script>
