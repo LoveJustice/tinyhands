@@ -1,9 +1,9 @@
-*.pyc
 *.sqlite
 *.sqlite3
 *.sqlitebak
 *.stackdump
-*.sw[op]
+*.swop
+*.swo
 *~
 
 .#*
@@ -15,8 +15,15 @@
 
 backups
 db.sqlite3.prod
-dreamsuite/static/*         # Ignore files in STATIC_ROOT
+
+# Ignore files in STATIC_ROOT
+dreamsuite/static/*
+
 env
 foo.*
-media/                      # for now in dev we check in /media
+
+# for now in dev we check in /media
+media/
+
 node_modules/
+*.pyc
