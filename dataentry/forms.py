@@ -588,7 +588,7 @@ class VictimInterviewForm(DreamSuitePaperForm):
     victim_address_vdc = VDCField(label='VDC', required=False)
     victim_guardian_address_district = DistrictField(label='District', required=False)
     victim_guardian_address_vdc = VDCField(label='VDC', required=False)
-    
+
     class Meta:
         model = VictimInterview
         exclude = ('victim_address_district',
