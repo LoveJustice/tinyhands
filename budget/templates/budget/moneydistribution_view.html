@@ -74,9 +74,10 @@
         </div>
 
         <!-- All of our Angular code imported down here -->
-        <script type="text/javascript" src="{{ STATIC_URL }}budgetModule.js"></script>
-        <script type="text/javascript" src="{{ STATIC_URL }}controllers/emailRecipientsCtrl.js"></script>
-        <script type="text/javascript" src="{{ STATIC_URL }}services/emailRecipientsService.js"></script>
+        {% load static from staticfiles %}
+        <script type="text/javascript" src="{% static "budget/js/budgetModule.js" %}"></script>
+        <script type="text/javascript" src="{% static "budget/js/controllers/emailRecipientsCtrl.js" %}"></script>
+        <script type="text/javascript" src="{% static "budget/js/services/emailRecipientsService.js" %}"></script>
 
         <!-- Loading animation container -->
         <div ng-show="main.loading" class="loader-container">
