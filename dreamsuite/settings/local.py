@@ -7,13 +7,12 @@ SITE_DOMAIN = '0.0.0.0:8000'
 
 INSTALLED_APPS += ('debug_toolbar',)
 
-def prevent_tests_migrate(db):
+class DisableMigrations(object):
 
-    import django
-    from django.db import connections
-    from django.db.migrations.executor import MigrationExecutor
-    django.setup()
-    ma = MigrationExecutor(connections[db]).loader.migrated_apps
-    return dict(zip(ma, ['{a}.notmigrations'.format(a=a) for a in ma]))
+    def __contains__(self, item):
+        return True
 
-MIGRATION_MODULES = prevent_tests_migrate('default')
+    def __getitem__(self, item):
+        return "notmigrations"
+
+MIGRATION_MODULES = DisableMigrations()
