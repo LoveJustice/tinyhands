@@ -301,8 +301,8 @@ angular
             function resetValuesToZero() {
                 vm.form = {
                     border_station: window.border_station,
-                    shelter_shelter_startup_amount: 71800,
-                    shelter_shelter_two_amount: 36800,
+                    shelter_shelter_startup_amount: 0,
+                    shelter_shelter_two_amount: 0,
                     communication_chair: false,
                     communication_chair_amount: 0,
                     communication_manager: false,
