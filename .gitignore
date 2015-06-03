@@ -2,8 +2,7 @@
 *.sqlite3
 *.sqlitebak
 *.stackdump
-*.swop
-*.swo
+*.sw[op]
 *~
 
 .#*
