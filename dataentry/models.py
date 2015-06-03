@@ -813,8 +813,8 @@ class VictimInterviewPersonBox(models.Model):
 
     gender = models.CharField('Gender', choices=GENDER_CHOICES, max_length=12, blank=True)
 
-    address_district = models.ForeignKey(District)
-    address_vdc = models.ForeignKey(VDC)
+    address_district = models.ForeignKey(District, null=True)
+    address_vdc = models.ForeignKey(VDC, null=True)
     address_ward = models.CharField('Ward #', max_length=255, blank=True)
     phone = models.CharField('Phone #', max_length=255, blank=True)
     age = models.PositiveIntegerField('Age', null=True, blank=True)
@@ -899,7 +899,7 @@ class VictimInterviewLocationBox(models.Model):
     signboard = models.CharField(max_length=255, blank=True)
     location_in_town = models.CharField(max_length=255, blank=True)
     district = models.ForeignKey(District, null=True)
-    vdc = models.ForeignKey(VDC)
+    vdc = models.ForeignKey(VDC, null=True)
 
     phone = models.CharField('Phone #', max_length=255, blank=True)
     color = models.CharField(max_length=255, blank=True)
