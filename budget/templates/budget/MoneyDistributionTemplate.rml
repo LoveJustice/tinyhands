@@ -79,6 +79,14 @@
                     </para>
                 </td>
             </tr>
+            {% empty %}
+            <tr>
+                <td align="left">
+                    <para style="normal">
+                        No staff.
+                    </para>
+                </td>
+            </tr>
             {% endfor %}
         </blockTable>
 
