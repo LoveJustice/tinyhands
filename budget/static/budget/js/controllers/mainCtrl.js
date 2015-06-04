@@ -19,8 +19,9 @@ angular
 
 
             // Budget Calc sheets are for the 15th of every month
-            vm.date = new Date();
-            vm.date.setDate(15);
+            vm.date =  new Date();
+            var thisMonth = vm.date.getMonth();
+            vm.date.setMonth(thisMonth + 1)
 
             vm.otherItemsTotals = [vm.otherTravelTotalValue,
                                     vm.otherMiscTotalValue,
@@ -55,12 +56,12 @@ angular
                 else if( (window.submit_type) == 2)  {
                     vm.update = true;
                     vm.retrieveForm(window.budget_calc_id);
-
                 }
                 else if( (window.submit_type) == 3) {
                     vm.view = true;
                     $('input').prop('disabled', true);
                     vm.retrieveForm(window.budget_calc_id);
+
                 }
 
             }
@@ -290,6 +291,7 @@ angular
                     }
 
                     vm.form.month_year = vm.date;
+                    vm.form.next_month = vm.next_month;
                     data.members = [];
                     data.id = undefined;
                     callTotals();
@@ -299,8 +301,8 @@ angular
             function resetValuesToZero() {
                 vm.form = {
                     border_station: window.border_station,
-                    shelter_shelter_startup_amount: 71800,
-                    shelter_shelter_two_amount: 36800,
+                    shelter_shelter_startup_amount: 0,
+                    shelter_shelter_two_amount: 0,
                     communication_chair: false,
                     communication_chair_amount: 0,
                     communication_manager: false,

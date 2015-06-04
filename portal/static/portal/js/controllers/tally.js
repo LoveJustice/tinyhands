@@ -48,7 +48,7 @@
 
         function checkDifferences(data){
             if (vm.days.length > 0) {
-                for(var i in data){
+                for(var i in data.reverse()){
                     var interceptions = data[i].interceptions;
                     data[i].change = false;
                     data[i].seen = false;
