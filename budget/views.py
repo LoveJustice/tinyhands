@@ -83,7 +83,8 @@ def previous_data(request, pk, month, year):
         if all_interception_records_count['total'] is None:
             all_interception_records_count['total'] = 1
 
-        last_months_cost = budget_sheets.first().station_total()  # Since they are ordered by most recent, the first one will be last month's
+        last_months_sheet = budget_sheets.first() # Since they are ordered by most recent, the first one will be last month's
+        last_months_cost = last_months_sheet.station_total()
 
         last_3_months_cost = 0
         last_3_months_sheets = budget_sheets.filter(month_year__gte=date+relativedelta(months=-3))
