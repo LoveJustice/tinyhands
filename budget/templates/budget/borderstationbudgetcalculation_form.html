@@ -849,15 +849,15 @@
             </div>
         </form>
 
-
         <!-- All of our Angular code imported down here -->
-        <script type="text/javascript" src="{{ STATIC_URL }}budgetModule.js"></script>
-        <script type="text/javascript" src="{{ STATIC_URL }}services/mainCtrlService.js"></script>
-        <script type="text/javascript" src="{{ STATIC_URL }}controllers/mainCtrl.js"></script>
-        <script type="text/javascript" src="{{ STATIC_URL }}services/staffService.js"></script>
-        <script type="text/javascript" src="{{ STATIC_URL }}services/otherItemsService.js"></script>
-        <script type="text/javascript" src="{{ STATIC_URL }}controllers/otherItemsCtrl.js"></script>
-        <script type="text/javascript" src="{{ STATIC_URL }}controllers/staffCtrl.js"></script>
-        <script type="text/javascript" src="{{ STATIC_URL }}controllers/topTableCtrl.js"></script>
+        {% load static from staticfiles %}
+        <script type="text/javascript" src="{% static "budget/js/budgetModule.js" %}"></script>
+        <script type="text/javascript" src="{% static "budget/js/services/mainCtrlService.js" %}"></script>
+        <script type="text/javascript" src="{% static "budget/js/controllers/otherItemsCtrl.js" %}"></script>
+        <script type="text/javascript" src="{% static "budget/js/controllers/mainCtrl.js" %}"></script>
+        <script type="text/javascript" src="{% static "budget/js/controllers/staffCtrl.js" %}"></script>
+        <script type="text/javascript" src="{% static "budget/js/controllers/topTableCtrl.js" %}"></script>
+        <script type="text/javascript" src="{% static "budget/js/services/otherItemsService.js" %}"></script>
+        <script type="text/javascript" src="{% static "budget/js/services/staffService.js" %}"></script>
     {% endblock %}
 {% endblock %}

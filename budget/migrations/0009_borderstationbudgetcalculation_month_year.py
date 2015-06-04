@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='borderstationbudgetcalculation',
             name='month_year',
-            field=models.DateTimeField(default=datetime.datetime(2015, 5, 5, 22, 47, 53, 199365)),
+            field=models.DateTimeField(default=datetime.datetime.now),
             preserve_default=True,
         ),
     ]

@@ -48,10 +48,10 @@
     {% block content %}
 {% endblock %}
     {% load static from staticfiles %}
-    <script src="{% static "js/portal.module.js" %}"></script>
-    <script src="{% static "js/services/tallyService.js" %}"></script>
-    <script src="{% static "js/controllers/portal.js" %}"></script>
-    <script src="{% static "js/controllers/tally.js" %}"></script>
+    <script src="{% static "portal/js/portal.module.js" %}"></script>
+    <script src="{% static "portal/js/services/tallyService.js" %}"></script>
+    <script src="{% static "portal/js/controllers/portal.js" %}"></script>
+    <script src="{% static "portal/js/controllers/tally.js" %}"></script>
     <script>
         angular.bootstrap($('#portal'), ['PortalMod']);
     </script>
