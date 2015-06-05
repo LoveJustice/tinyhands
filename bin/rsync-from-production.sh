@@ -17,7 +17,8 @@ set -x
 ##  --specials  (-D => preserve special files)
 
 RSYNC='rsync --verbose --archive --progress --rsh=ssh'
-THI_PROD='thi-production:/home/dreamsuite/dreamsuite'
+#THI_PROD='thi-production:/home/dreamsuite/dreamsuite'
+THI_PROD='thi-production:/home/dreamsuite/tinyhands'
 
-$RSYNC $THI_PROD/db.sqlite3 db.sqlite3.prod
+$RSYNC $THI_PROD/db.sqlite3 .
 $RSYNC $THI_PROD/media .
