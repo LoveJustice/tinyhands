@@ -10,7 +10,7 @@
   "vdcEditDis"       : "Dang",
   "vdcEditCan"       : "ShreeJung",
 
-  "vdcNewName"      : "aaaaa",
+  "vdcNewName"      : "aaaab",
   "vdcNewLat"       : "0.0",
   "vdcNewLon"       : "0.0",
   "vdcNewDis"       : "Dang",
@@ -18,8 +18,8 @@
 
   "webAddress" : "http://0.0.0.0:8001",
 
-  "irfNumber"                 : "0",
-  "irfEditNumber"             : "1",
+  "irfNumber"                 : "BHD123",
+  "irfEditNumber"             : "BHD121",
   "irfLocation"               : "none",
   "irfInterceptTime"          : "01/01/01",
   "irfStaffName"              : "TEST",
@@ -29,8 +29,9 @@
   "TEMPirfInterceptVdc"           : "Chalsa",
   "TEMPirfNameCameUpBeforeValue"  : "1",
 
+  "stationId"                 : "24",
   "stationName"               : "Test Station",
-  "stationCode"               : "COD",
+  "stationCode"               : "AAA",
   "dateEstablished"           : "01/01/01",
   "latitude"                  : "0.0",
   "longitude"                 : "0.0",
@@ -52,11 +53,11 @@
   "irfInterceptVdc"           : "ShreeJung",
   "irfNameCameUpBeforeValue"  : "1",
 
-  "vifNumber"                         : "BHD123",
+  "vifNumber"                         : "DNG123",
   "vifDate"                           : "02/16/2015",
   "vifInterviewer"                    : "Test Interviewer",
   "vifVictimName"                     : "Test Victim",
-  "vifAddressDistrict"                : "Baglung",
+  "vifAddressDistrict"                : "Dang",
   "vifAddressVDC"                     : "ShreeJung",
   "vifVictimGuardianAddressDistrict"  : "Baglung",
   "vifVictimGuardianAddressVDC"       : "ShreeJung",
@@ -66,7 +67,19 @@
   "location0SetLongitude"     : "0.0",
   "location1SetName"          : "location1",
   "location1SetLatitude"      : "0.1",
-  "location1SetLongitude"     : "0.1"
+  "location1SetLongitude"     : "0.1",
 
+  "stationTotal"   : "8300",
+  "foodAndShelterTotal" : "2900",
+  "bunchTotal" : "3500",
+  "miscTotalValue" : "600",
+  "medicalTotal" : "100",
+  "adminTotal" : "750",
+  "suppliesTotalValue" : "1100",
+  "travelTotalValue" : "1050",
+  "awarenessTotalValue" : "700",
+  "commTotal" : "900",
+  "foodTotal" : "2000",
+  "shelterTotal" : "900"
 
 }

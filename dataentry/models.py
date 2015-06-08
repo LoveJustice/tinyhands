@@ -25,6 +25,7 @@ class BorderStation(models.Model):
     latitude = models.FloatField(null=True)
     longitude = models.FloatField(null=True)
 
+
 class District(models.Model):
     name = models.CharField(max_length=255)
 
@@ -36,8 +37,8 @@ class VDC(models.Model):
     name = models.CharField(max_length=255)
     latitude = models.FloatField()
     longitude = models.FloatField()
-    district = models.ForeignKey(District,null=False)
-    cannonical_name = models.ForeignKey('self',null=True,blank=True)
+    district = models.ForeignKey(District, null=False)
+    cannonical_name = models.ForeignKey('self', null=True, blank=True)
     verified = models.BooleanField(default=False)
 
     def __unicode__(self):
@@ -299,7 +300,6 @@ class VictimInterview(models.Model):
     class Meta:
         ordering = ['-date_time_last_updated']
 
-
     GENDER_CHOICES = [
         ('male', 'Male'),
         ('female', 'Female'),
@@ -325,8 +325,8 @@ class VictimInterview(models.Model):
 
     victim_gender = models.CharField('Gender', choices=GENDER_CHOICES, max_length=12)
 
-    victim_address_district = models.ForeignKey(District, null=True, related_name="victim_address_district");
-    victim_address_vdc = models.ForeignKey(VDC, null=True, related_name="victim_address_vdc");
+    victim_address_district = models.ForeignKey(District, null=True, related_name="victim_address_district")
+    victim_address_vdc = models.ForeignKey(VDC, null=True, related_name="victim_address_vdc")
     victim_address_ward = models.CharField('Ward #', max_length=255, blank=True)
     victim_phone = models.CharField('Phone #', max_length=255, blank=True)
     victim_age = models.CharField('Age', max_length=255, blank=True)
@@ -813,8 +813,8 @@ class VictimInterviewPersonBox(models.Model):
 
     gender = models.CharField('Gender', choices=GENDER_CHOICES, max_length=12, blank=True)
 
-    address_district = models.ForeignKey(District)
-    address_vdc = models.ForeignKey(VDC)
+    address_district = models.ForeignKey(District, null=True)
+    address_vdc = models.ForeignKey(VDC, null=True)
     address_ward = models.CharField('Ward #', max_length=255, blank=True)
     phone = models.CharField('Phone #', max_length=255, blank=True)
     age = models.PositiveIntegerField('Age', null=True, blank=True)
@@ -898,8 +898,8 @@ class VictimInterviewLocationBox(models.Model):
 
     signboard = models.CharField(max_length=255, blank=True)
     location_in_town = models.CharField(max_length=255, blank=True)
-    district = models.ForeignKey(District)
-    vdc = models.ForeignKey(VDC)
+    district = models.ForeignKey(District, null=True)
+    vdc = models.ForeignKey(VDC, null=True)
 
     phone = models.CharField('Phone #', max_length=255, blank=True)
     color = models.CharField(max_length=255, blank=True)

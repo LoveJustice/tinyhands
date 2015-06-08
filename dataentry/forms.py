@@ -584,10 +584,10 @@ class VictimInterviewForm(DreamSuitePaperForm):
     victim_where_going_gulf_didnt_know = forms.BooleanField(label='Did Not Know', required=False)
     victim_where_going_gulf_other = forms.BooleanField(label='Other', required=False)
 
-    victim_address_district = DistrictField(label='District')
-    victim_address_vdc = VDCField(label='VDC')
-    victim_guardian_address_district = DistrictField(label='District')
-    victim_guardian_address_vdc = VDCField(label='VDC')
+    victim_address_district = DistrictField(label='District', required=False)
+    victim_address_vdc = VDCField(label='VDC', required=False)
+    victim_guardian_address_district = DistrictField(label='District', required=False)
+    victim_guardian_address_vdc = VDCField(label='VDC', required=False)
 
     class Meta:
         model = VictimInterview
@@ -641,14 +641,18 @@ class VictimInterviewForm(DreamSuitePaperForm):
             pass
 
     def save(self, commit=True):
-        victim_address_district = District.objects.get(name=self.cleaned_data['victim_address_district'])
-        victim_address_vdc = VDC.objects.get(name=self.cleaned_data['victim_address_vdc'])
-        victim_guardian_address_district = District.objects.get(name=self.cleaned_data['victim_guardian_address_district'])
-        victim_guardian_address_vdc = VDC.objects.get(name=self.cleaned_data['victim_guardian_address_vdc'])
-        self.instance.victim_address_district = victim_address_district
-        self.instance.victim_address_vdc = victim_address_vdc
-        self.instance.victim_guardian_address_district = victim_guardian_address_district
-        self.instance.victim_guardian_address_vdc = victim_guardian_address_vdc
+        if self.cleaned_data['victim_address_district']:
+            victim_address_district = District.objects.get(name=self.cleaned_data['victim_address_district'])
+            self.instance.victim_address_district = victim_address_district
+        if self.cleaned_data['victim_address_vdc']:
+            victim_address_vdc = VDC.objects.get(name=self.cleaned_data['victim_address_vdc'])
+            self.instance.victim_address_vdc = victim_address_vdc
+        if self.cleaned_data['victim_guardian_address_district']:
+            victim_guardian_address_district = District.objects.get(name=self.cleaned_data['victim_guardian_address_district'])
+            self.instance.victim_guardian_address_district = victim_guardian_address_district
+        if self.cleaned_data['victim_guardian_address_vdc']:
+            victim_guardian_address_vdc = VDC.objects.get(name=self.cleaned_data['victim_guardian_address_vdc'])
+            self.instance.victim_guardian_address_vdc = victim_guardian_address_vdc
         return super(VictimInterviewForm, self).save(commit)
 
 

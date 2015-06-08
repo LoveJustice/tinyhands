@@ -1,19 +1,28 @@
-*.swp
-*.swo
-*.pyc
 *.sqlite
 *.sqlite3
 *.sqlitebak
 *.stackdump
-node_modules/
-media/
-env
-backups
-.coverage
-# for now in dev we check in /media
-.#*
-\#*#
+*.sw[op]
 *~
+
+.#*
+.coverage
 .idea/
-foo.*
+.nfs*
+
+\#*#
+
+backups
 db.sqlite3.prod
+
+# Ignore files in STATIC_ROOT
+dreamsuite/static/*
+
+env
+foo.*
+
+# for now in dev we check in /media
+media/
+
+node_modules/
+*.pyc
