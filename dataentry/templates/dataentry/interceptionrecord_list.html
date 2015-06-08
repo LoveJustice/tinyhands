@@ -54,7 +54,7 @@
 		{% if request.user.permission_irf_edit %}
                   <a class="btn btn-sm btn-primary" href="{% url 'interceptionrecord_update' irf.pk %}">Edit</a>
 		{% endif %}
-		{% if request.user.is_superuser %}
+		{% if request.user.permission_irf_edit %}
                   {% include "delete_modal_forms.html" with form=irf url_string="interceptionrecord_delete"%}
                   <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#modal-{{ irf.pk }}">Delete</button>
 		{% endif %}
