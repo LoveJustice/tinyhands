@@ -321,10 +321,18 @@ def get_irf_export_rows(irfs):
             else:
                 row.append('Female')
 
+            row.append(interceptee.age)
+
+            if interceptee.district:
+                row.append(interceptee.district)
+            else:
+                row.append('')
+            if interceptee.vdc:
+                row.append(interceptee.vdc)
+            else:
+                row.append('')
+
             row.extend([
-                interceptee.age,
-                interceptee.district,
-                interceptee.vdc,
                 interceptee.phone_contact,
                 interceptee.relation_to,
             ])
@@ -340,10 +348,20 @@ def get_irf_export_rows(irfs):
                     row.append('Male')
                 else:
                     row.append('Female')
+
+                # Old cold was here
+                row.append(interceptee.age)
+
+                if interceptee.district:
+                    row.append(interceptee.district)
+                else:
+                    row.append('')
+                if interceptee.vdc:
+                    row.append(interceptee.vdc)
+                else:
+                    row.append('')
+
                 row.extend([
-                    interceptee.age,
-                    interceptee.district,
-                    interceptee.vdc,
                     interceptee.phone_contact,
                     interceptee.relation_to,
                 ])
@@ -698,10 +716,25 @@ def get_vif_export_rows(vifs):
             text_if_true(vif.permission_to_use_photograph, "Permission was given to use photo"),
 
             vif.victim_name,
-            vif.victim_gender,
-            vif.victim_address_district,
-            vif.victim_address_vdc,
-            vif.victim_address_ward,
+            vif.victim_gender
+        ])
+
+        if vif.victim_address_district:
+            row.append(vif.victim_address_district)
+        else:
+            row.append("")
+
+        if vif.victim_address_vdc:
+            row.append(vif.victim_address_vdc)
+        else:
+            row.append("")
+
+        if vif.victim_address_ward:
+            row.append(vif.victim_address_ward)
+        else:
+            row.append("")
+
+        row.extend([
             vif.victim_phone,
             vif.victim_age,
             vif.victim_height,
@@ -720,11 +753,25 @@ def get_vif_export_rows(vifs):
 
             vif.victim_num_in_family,
 
-            get_checkbox_group_value(vif, 'victim_primary_guardian'),
+            get_checkbox_group_value(vif, 'victim_primary_guardian')
+        ])
 
-            vif.victim_guardian_address_district,
-            vif.victim_guardian_address_vdc,
-            vif.victim_guardian_address_ward,
+        if vif.victim_guardian_address_district:
+            row.append(vif.victim_guardian_address_district)
+        else:
+            row.append("")
+
+        if vif.victim_guardian_address_vdc:
+            row.append(vif.victim_guardian_address_vdc)
+        else:
+            row.append("")
+
+        if vif.victim_guardian_address_ward:
+            row.append(vif.victim_guardian_address_ward)
+        else:
+            row.append("")
+            
+        row.extend([
             vif.victim_guardian_phone,
 
             get_checkbox_group_value(vif, 'victim_parents_marital_status'),
