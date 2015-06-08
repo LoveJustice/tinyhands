@@ -36,7 +36,6 @@ function setUpValidationPopup(elem, kind) {
 
   $elem.attr('data-toggle', 'tooltip').attr('title', message);
 
-
   var opts = { trigger: 'manual' };
   if (!$elem.is('[data-placement]')) {
     opts.placement = 'top';
@@ -66,7 +65,6 @@ function setUpValidationPopups() {
 function photoSelect() {
   $('.photo-manip-controls').click();
   console.log("Test...1.2.3");
-
 }
 
 function setUpPermissionsCheckboxes() {
@@ -93,75 +91,75 @@ function setUpPermissionsCheckboxes() {
     }
   });
 }
+
 function setUpLimitedChoicesCheckboxGroups() {
-    // Well, this was supposed to be used to allow restricting
-    // a group of checkboxes to a certain number of checks, but
-    // now every group only requires one. heh heh heh
+  // Well, this was supposed to be used to allow restricting
+  // a group of checkboxes to a certain number of checks, but
+  // now every group only requires one. heh heh heh
 
-    // To add a new checkbox group, add the class checkbox-group-marker and an id that contains the common starting string of each checkbox field.  For example, if you had talked_to_brother,  talked_to_sister, and talked_to_aunt in a group, putting in an id of "talked_to" would make that a group
-    //
-    // This commented out block almost works but breaks if something clears checkboxes other than this manager
-    //var checkboxManagers = {};
-    //$('.checkbox-group-marker').each(function(i, elem) {
-    //    var name = $(elem).attr('id');
-    //    var maxAllowedChecked = $(elem).data('max') || 1;
-    //    checkboxManagers[name] = {
-    //        name: name,
-    //        maxAllowedChecked: maxAllowedChecked,
-    //        checkedOrder: $.makeArray($('#'+name+' input[type="checkbox"]:checked'))
-    //    };
-    //});
+  // To add a new checkbox group, add the class checkbox-group-marker and an id that contains the common starting string of each checkbox field.  For example, if you had talked_to_brother,  talked_to_sister, and talked_to_aunt in a group, putting in an id of "talked_to" would make that a group
+  //
+  // This commented out block almost works but breaks if something clears checkboxes other than this manager
+  //var checkboxManagers = {};
+  //$('.checkbox-group-marker').each(function(i, elem) {
+  //  var name = $(elem).attr('id');
+  //  var maxAllowedChecked = $(elem).data('max') || 1;
+  //  checkboxManagers[name] = {
+  //    name: name,
+  //    maxAllowedChecked: maxAllowedChecked,
+  //    checkedOrder: $.makeArray($('#'+name+' input[type="checkbox"]:checked'))
+  //  };
+  //});
 
-    //$('input[type="checkbox"]').click(function() {
-    //    var name = $(this).attr('name');
-    //    if (!(name in checkboxManagers)) {
-    //        name = $(this).parents('.checkbox-group-marker').attr('id');
-    //    }
-    //    var manager = checkboxManagers[name];
+  //$('input[type="checkbox"]').click(function() {
+  //  var name = $(this).attr('name');
+  //  if (!(name in checkboxManagers)) {
+  //    name = $(this).parents('.checkbox-group-marker').attr('id');
+  //  }
+  //  var manager = checkboxManagers[name];
 
-    //    if (manager) {
-    //        if ($(this).is(':checked')) {
-    //            var numberChecked = $('#'+name+' input[type="checkbox"]:checked').length;
-    //            if (numberChecked === 0) {
-    //                manager.checkedOrder = [];
-    //            }
-    //            else if (numberChecked > manager.maxAllowedChecked) {
-    //                var last = manager.checkedOrder.shift();
-    //                $(last).attr('checked', null);
-    //            }
-    //            manager.checkedOrder.push(this);
-    //        }
-    //        else {
-    //            manager.checkedOrder.splice(
-    //                manager.checkedOrder.indexOf(this), 1);
-    //        }
-    //    }
-    //});
+  //  if (manager) {
+  //    if ($(this).is(':checked')) {
+  //      var numberChecked = $('#'+name+' input[type="checkbox"]:checked').length;
+  //      if (numberChecked === 0) {
+  //        manager.checkedOrder = [];
+  //      }
+  //      else if (numberChecked > manager.maxAllowedChecked) {
+  //        var last = manager.checkedOrder.shift();
+  //        $(last).attr('checked', null);
+  //      }
+  //      manager.checkedOrder.push(this);
+  //    }
+  //    else {
+  //      manager.checkedOrder.splice(
+  //        manager.checkedOrder.indexOf(this), 1);
+  //    }
+  //  }
+  //});
 
-    // This simpler version just limits it to one checkbox since thats all we have right now
-    $('input[type="checkbox"]').click(function() {
-        var $selectedBox = $(this);
-	var $container = $selectedBox.parents('.checkbox-group-marker').eq(0);
-	if ($selectedBox.parent().hasClass('multiple-checkboxes-allowed')){
-	    $container.find('input[type="checkbox"]').each(function () {
-		var $currentBox = $(this);
-		if($currentBox.parent().hasClass('single-checkbox-allowed')) {
-		    $currentBox.attr('checked', null);
-		}
-	    });
-	    return;
-	}
-	else if ($selectedBox.parent().hasClass('single-checkbox-allowed')) {
-	    $container.find('input[type="checkbox"]').not(this).attr('checked', null);
-	    return;
-	}
-	else if ($container.length === 0) {
-            return;
+  // This simpler version just limits it to one checkbox since thats all we have right now
+  $('input[type="checkbox"]').click(function() {
+    var $selectedBox = $(this);
+    var $container = $selectedBox.parents('.checkbox-group-marker').eq(0);
+    if ($selectedBox.parent().hasClass('multiple-checkboxes-allowed')){
+      $container.find('input[type="checkbox"]').each(function () {
+        var $currentBox = $(this);
+        if($currentBox.parent().hasClass('single-checkbox-allowed')) {
+          $currentBox.attr('checked', null);
         }
-	$container.find('input[type="checkbox"]').not(this).attr('checked', null);
-    });
+      });
+      return;
+    }
+    else if ($selectedBox.parent().hasClass('single-checkbox-allowed')) {
+      $container.find('input[type="checkbox"]').not(this).attr('checked', null);
+      return;
+    }
+    else if ($container.length === 0) {
+      return;
+    }
+  $container.find('input[type="checkbox"]').not(this).attr('checked', null);
+  });
 }
-
 
 function setUpResumeIncompleteFormSystem(which) {
   var storedForms = JSON.parse(localStorage.getItem('saved-'+which+'s') || '{}');
@@ -187,8 +185,8 @@ function setUpResumeIncompleteFormSystem(which) {
     localStorage.setItem('saved-'+which+'s', JSON.stringify(storedForms));
 
     alert('This form has been saved for later.  Come back to the ' + which.toUpperCase() +
-	  ' create page and select the ' + which.toUpperCase() +
-	  ' number from the top dropdown to resume entering data.');
+          ' create page and select the ' + which.toUpperCase() +
+          ' number from the top dropdown to resume entering data.');
     window.location.href = '/data-entry/'+which+'s/';
   });
 }
@@ -203,7 +201,6 @@ function clearCompletedForms(which) {
   });
   localStorage.setItem('saved-'+which+'s', JSON.stringify(storedForms));
 }
-
 
 var DREAMSUITE = {
   account_create: function() {
@@ -274,6 +271,51 @@ var DREAMSUITE = {
     $('.in-use-button').tooltip();
   },
 
+  budget_create_api: function(){
+    $(function() {
+      var queryDate = '2009-11-01',
+      dateParts = queryDate.match(/(\d+)/g)
+      realDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+                                      // months are 0-based!
+
+      $('#startDate').datepicker({
+        dateFormat: "MM yy"
+      }) // format to show
+      .datepicker('setDate', realDate)
+      .datepicker("option", "changeMonth", true)
+      .datepicker("option", "changeYear", true)
+      .datepicker("option", "showButtonPanel", true)
+      .datepicker("option", "onClose", function(e){
+        var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
+        var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+        $(this).datepicker("setDate",new Date(year,month,1));
+      })
+    });
+  },
+
+  budget_update_api: function(){
+    $(function() {
+      var queryDate = '2009-11-01',
+      dateParts = queryDate.match(/(\d+)/g)
+      realDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+                                      // months are 0-based!
+
+      $('#startDate').datepicker({
+        dateFormat: "MM yy"
+      }) // format to show
+      .datepicker('setDate', realDate)
+      .datepicker("option", "changeMonth", true)
+      .datepicker("option", "changeYear", true)
+      .datepicker("option", "showButtonPanel", true)
+      .datepicker("option", "onClose", function(e){
+        var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
+        var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+        $(this).datepicker("setDate",new Date(year,month,1));
+      })
+    });
+  },
+
+  /********************** IRF **********************/
   interceptionrecord_list: function() {
     clearCompletedForms('irf');
   },
@@ -313,13 +355,13 @@ var DREAMSUITE = {
 
     setUpLimitedChoicesCheckboxGroups();
     //$('#id_contact_noticed').click(function() {
-    //    $('#id_staff_noticed').attr('checked', null);
-    //    $('input[id*="id_noticed_"]').attr('checked', null);
+    //  $('#id_staff_noticed').attr('checked', null);
+    //  $('input[id*="id_noticed_"]').attr('checked', null);
     //});
     //$('#id_staff_noticed').click(function() {
-    //    $('#id_contact_noticed').attr('checked', null);
-    //    $('input[id*="id_which_contact_"]').attr('checked', null);
-    //    $('#contact_paid').find('input[type="checkbox"]').attr('checked', null);
+    //  $('#id_contact_noticed').attr('checked', null);
+    //  $('input[id*="id_which_contact_"]').attr('checked', null);
+    //  $('#contact_paid').find('input[type="checkbox"]').attr('checked', null);
     //});
 
     // A hack but it works
@@ -335,19 +377,24 @@ var DREAMSUITE = {
       $(this).parents('td').find('button').addClass('btn-success', 'btn-inverse').attr('title', $(this).val());
     });
     //$('.photo-manip-controls').each(function() {
-    //    var href = $(this).find('a').attr('href');
-    //    var id = $(this).find('input').attr('name').split('-')[1];
-    //    $('#photo-' + id).append(
+    //  var href = $(this).find('a').attr('href');
+    //  var id = $(this).find('input').attr('name').split('-')[1];
+    //  $('#photo-' + id).append(
 
     //});
     makeDateTimePickers('#id_date_time_of_interception');
 
     //$('#save-for-later').click(function() {
-    //    var formData = $('form').serialize();
+    //  var formData = $('form').serialize();
 
     //});
   },
 
+  interceptionrecord_detail: function() {
+    this.interceptionrecord_update();
+  },
+
+  /********************** VIF **********************/
   victiminterview_list: function() {
     clearCompletedForms('vif');
   },
@@ -399,8 +446,8 @@ var DREAMSUITE = {
       $('input[id*="id_victim_where_going_gulf_"]').attr('checked', null);
     });
 
-    // Allow user to hover over the numbers in parens next to some fields to learn that
-    // that is how many may be checked.
+    // Allow user to hover over the numbers in parens next to some fields to
+    // learn that that is how many may be checked.
     $('.max-allowed').each(function(i, elem) {
       var text = $(elem).text();
       var count = text.substring(1, text.length - 1);
@@ -431,14 +478,6 @@ var DREAMSUITE = {
     this.victiminterview_update();
 
     var $form = $('#victim-interview-form');
-    $form.find('input, button, select, textarea').attr('disabled', 'disabled');
-    $('#footer').hide();
-  },
-
-  interceptionrecord_detail: function() {
-    this.interceptionrecord_update();
-
-    var $form = $('#interception-record-form');
     $form.find('input, button, select, textarea').attr('disabled', 'disabled');
     $('#footer').hide();
   },

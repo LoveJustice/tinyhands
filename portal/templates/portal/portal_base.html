@@ -1,9 +1,15 @@
 {% extends "base.html" %}
 
+{% block html %}<html ng-app="PortalMod">{% endblock %}
+
+{% block angular %}{% endblock %}
+
 {% block head %}
+
     <script type="text/javascript"
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyChNFPd_bOOnk59AkeKM862OqN80Lvp56g">
     </script>
+
     <style>
       html, body, #map-canvas {
           margin: 0px;
@@ -14,12 +20,39 @@
         padding: 0;
         margin-top: 50px;
     }
+
+    .events {
+        background: none repeat scroll 0 0 #fdfdfd;
+        border-radius: 5px;
+        float: right;
+        margin-right: 15px;
+        margin-top: 10px;
+        padding: 3px 3px 3px 10px;
+        width: 226px;
+    }
+
+    .events .event {
+        font-size: 12px;
+    }
+
+    .events .day {
+        font-weight: bold;
+    }
+
     </style>
+
 {% endblock %}
 
 {% block title %}Dreamsuite Dash{% endblock %}
 {% block tab_block %}
     {% block content %}
-    {% endblock %}
-    <script type="text/javascript" src="{{ STATIC_URL }}portal.js"></script>
+{% endblock %}
+    {% load static from staticfiles %}
+    <script src="{% static "portal/js/portal.module.js" %}"></script>
+    <script src="{% static "portal/js/services/tallyService.js" %}"></script>
+    <script src="{% static "portal/js/controllers/portal.js" %}"></script>
+    <script src="{% static "portal/js/controllers/tally.js" %}"></script>
+    <script>
+        angular.bootstrap($('#portal'), ['PortalMod']);
+    </script>
 {% endblock %}

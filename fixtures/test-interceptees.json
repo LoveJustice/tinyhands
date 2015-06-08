@@ -1,0 +1,18 @@
+[
+{
+  "fields": {
+    "kind": "v",
+    "district": 32,
+    "phone_contact": "",
+    "photo": "",
+    "age": 4,
+    "interception_record": 1003,
+    "vdc": 1,
+    "full_name": "sdad",
+    "gender": "f",
+    "relation_to": ""
+  },
+  "model": "dataentry.interceptee",
+  "pk": 4
+}
+]

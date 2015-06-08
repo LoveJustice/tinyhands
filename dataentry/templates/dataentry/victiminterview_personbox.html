@@ -29,7 +29,6 @@
 
     <div class="person-box row">
         <label class="blending-into-input-label">Name</label>
-
         <div class="inline-checkbox-group checkbox-group-marker" id="gender-{{ counter }}">
             {{ pb_form.gender.label_tag }}
             {% for choice in pb_form.gender %}
@@ -37,7 +36,7 @@
             {% endfor %}
         </div>
 
-        {{ pb_form.name }}
+        {{ pb_form.name|attr:"data-fuzzy-ui:name" }}
         <div class="col-xs-6">
             <div class="label-inside-field">
                 {{ pb_form.address_district.label_tag }}{{ pb_form.address_district }}
