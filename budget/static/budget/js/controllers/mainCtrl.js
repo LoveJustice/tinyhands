@@ -24,6 +24,8 @@ angular
             var thisMonth = vm.date.getMonth();
             vm.date.setMonth(thisMonth + 1)
 
+            vm.form.station_name = window.station_name;
+
             vm.otherItemsTotals = [vm.otherTravelTotalValue,
                                     vm.otherMiscTotalValue,
                                     vm.otherAwarenessTotalValue,
@@ -51,8 +53,6 @@ angular
             function main(){
                 if( (window.submit_type) == 1 ) {
                     vm.create = true;
-                    vm.form.border_station = window.border_station;
-                    vm.form.station_name = window.station_name;
                     vm.retrieveNewForm();
                 }
                 else if( (window.submit_type) == 2)  {
@@ -277,6 +277,7 @@ angular
                 mainCtrlService.retrieveForm(id).then(function(promise){
                     vm.form = promise.data;
                     vm.form.month_year = new Date(promise.data.month_year);
+                    vm.form.station_name = window.station_name;
                     $scope.$emit('dateSetEmit', {date: promise.data.month_year});
                     callTotals();
                 });
@@ -292,7 +293,7 @@ angular
                         vm.form = data;
                         //callTotals();
                     }
-
+                    vm.form.station_name = window.station_name;
                     vm.form.month_year = vm.date;
                     vm.form.next_month = vm.next_month;
                     data.members = [];
@@ -306,7 +307,6 @@ angular
             function resetValuesToZero() {
                 vm.form = {
                     border_station: window.border_station,
-                    station_name: window.station_name,
                     shelter_shelter_startup_amount: 0,
                     shelter_shelter_two_amount: 0,
                     communication_chair: false,
