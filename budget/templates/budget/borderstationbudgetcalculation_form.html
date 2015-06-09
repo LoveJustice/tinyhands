@@ -12,6 +12,7 @@
             window.budget_calc_id = {{ pk }};
             window.submit_type = {{ submit_type }};
             window.border_station = {{ border_station.id }};
+            window.station_name = "{{ border_station.station_name }}";
         </script>
 
         {% block angular %}{% endblock %}
@@ -26,7 +27,7 @@
                 {% verbatim %}
 
                 <h1 style="font-size: 25px; text-align: center">
-                    Border Monitoring Station Budget Calculation Form For
+                    {{ main.form.station_name }} Budget Calculation Form For
                     <input type="month" class="form-control" id="month_year" name="input" ng-model="main.form.month_year" onchange='change()' min="2005-01-01" required />
                 </h1>
                 {% endverbatim %}

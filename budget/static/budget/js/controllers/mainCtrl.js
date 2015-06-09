@@ -1,3 +1,4 @@
+
 angular
     .module('BudgetCalculation')
     .controller('MainCtrl', ['$scope','$http', '$location', '$window', 'mainCtrlService', function($scope, $http, $location, $window, mainCtrlService) {
@@ -51,6 +52,7 @@ angular
                 if( (window.submit_type) == 1 ) {
                     vm.create = true;
                     vm.form.border_station = window.border_station;
+                    vm.form.station_name = window.station_name;
                     vm.retrieveNewForm();
                 }
                 else if( (window.submit_type) == 2)  {
@@ -72,6 +74,7 @@ angular
                 vm.awarenessTotal();
                 vm.suppliesTotal();
             }
+
 
             vm.foodAndShelterTotal = function() {
                 return vm.foodTotal() + vm.shelterTotal();
@@ -298,9 +301,12 @@ angular
                 })
             };
 
+
+
             function resetValuesToZero() {
                 vm.form = {
                     border_station: window.border_station,
+                    station_name: window.station_name,
                     shelter_shelter_startup_amount: 0,
                     shelter_shelter_two_amount: 0,
                     communication_chair: false,
