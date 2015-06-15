@@ -294,6 +294,21 @@ class Interceptee(models.Model):
     class Meta:
         ordering = ['id']
 
+    ## TODO: These should not be required, but this was a simple way to allow exports to
+    ## work. The data really needs to be cleaned instead.
+    def district_as_string(self):
+        rtn = ''
+        try:
+            rtn = self.district
+        finally:
+            return rtn
+
+    def vdc_as_string(self):
+        rtn = ''
+        try:
+            rtn = self.vdc
+        finally:
+            return rtn
 
 class VictimInterview(models.Model):
 
@@ -667,6 +682,34 @@ class VictimInterview(models.Model):
     victim_had_suicidal_thoughts = models.NullBooleanField(null=True)
 
     reported_total_situational_alarms = models.PositiveIntegerField(blank=True, null=True)
+
+    def victim_address_district_as_string(self):
+        rtn = ''
+        try:
+            rtn = self.victim_address_district
+        finally:
+            return rtn
+
+    def victim_address_vdc_as_string(self):
+        rtn = ''
+        try:
+            rtn = self.victim_address_vdc
+        finally:
+            return rtn
+
+    def victim_guardian_address_district_as_string(self):
+        rtn = ''
+        try:
+            rtn = self.victim_guardian_address_district
+        finally:
+            return rtn
+
+    def victim_guardian_address_vdc_as_string(self):
+        rtn = ''
+        try:
+            rtn = self.victim_guardian_address_vdc
+        finally:
+            return rtn
 
     def calculate_strength_of_case_points(self):
             total = 0
