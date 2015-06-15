@@ -323,14 +323,8 @@ def get_irf_export_rows(irfs):
 
             row.append(interceptee.age)
 
-            if interceptee.district:
-                row.append(interceptee.district)
-            else:
-                row.append('')
-            if interceptee.vdc:
-                row.append(interceptee.vdc)
-            else:
-                row.append('')
+            row.append(interceptee.district_as_string())
+            row.append(interceptee.vdc_as_string())
 
             row.extend([
                 interceptee.phone_contact,
@@ -352,14 +346,8 @@ def get_irf_export_rows(irfs):
                 # Old cold was here
                 row.append(interceptee.age)
 
-                if interceptee.district:
-                    row.append(interceptee.district)
-                else:
-                    row.append('')
-                if interceptee.vdc:
-                    row.append(interceptee.vdc)
-                else:
-                    row.append('')
+                row.append(interceptee.district_as_string())
+                row.append(interceptee.vdc_as_string())
 
                 row.extend([
                     interceptee.phone_contact,
@@ -719,15 +707,8 @@ def get_vif_export_rows(vifs):
             vif.victim_gender
         ])
 
-        if vif.victim_address_district:
-            row.append(vif.victim_address_district)
-        else:
-            row.append("")
-
-        if vif.victim_address_vdc:
-            row.append(vif.victim_address_vdc)
-        else:
-            row.append("")
+        row.append(vif.victim_address_district_as_string())
+        row.append(vif.victim_address_vdc_as_string())
 
         if vif.victim_address_ward:
             row.append(vif.victim_address_ward)
@@ -756,21 +737,14 @@ def get_vif_export_rows(vifs):
             get_checkbox_group_value(vif, 'victim_primary_guardian')
         ])
 
-        if vif.victim_guardian_address_district:
-            row.append(vif.victim_guardian_address_district)
-        else:
-            row.append("")
-
-        if vif.victim_guardian_address_vdc:
-            row.append(vif.victim_guardian_address_vdc)
-        else:
-            row.append("")
+        row.append(vif.victim_guardian_address_district_as_string())
+        row.append(vif.victim_guardian_address_vdc_as_string())
 
         if vif.victim_guardian_address_ward:
             row.append(vif.victim_guardian_address_ward)
         else:
             row.append("")
-            
+
         row.extend([
             vif.victim_guardian_phone,
 
