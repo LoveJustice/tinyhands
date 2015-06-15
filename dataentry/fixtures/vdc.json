@@ -1,4170 +1,3645 @@
 [
-{
-  "fields": {
-    "name": "Achham"
-  },
-  "model": "dataentry.district",
-  "pk": 1
-},
-{
-  "fields": {
-    "name": "Arghakhanchi"
-  },
-  "model": "dataentry.district",
-  "pk": 2
-},
-{
-  "fields": {
-    "name": "Baglung"
-  },
-  "model": "dataentry.district",
-  "pk": 3
-},
-{
-  "fields": {
-    "name": "Baitadi"
-  },
-  "model": "dataentry.district",
-  "pk": 4
-},
-{
-  "fields": {
-    "name": "Bajhang"
-  },
-  "model": "dataentry.district",
-  "pk": 5
-},
-{
-  "fields": {
-    "name": "Bajura"
-  },
-  "model": "dataentry.district",
-  "pk": 6
-},
-{
-  "fields": {
-    "name": "Banke"
-  },
-  "model": "dataentry.district",
-  "pk": 7
-},
-{
-  "fields": {
-    "name": "Bara"
-  },
-  "model": "dataentry.district",
-  "pk": 8
-},
-{
-  "fields": {
-    "name": "Bardiya"
-  },
-  "model": "dataentry.district",
-  "pk": 9
-},
-{
-  "fields": {
-    "name": "Bhaktapur"
-  },
-  "model": "dataentry.district",
-  "pk": 10
-},
-{
-  "fields": {
-    "name": "Bhojpur"
-  },
-  "model": "dataentry.district",
-  "pk": 11
-},
-{
-  "fields": {
-    "name": "Chitawan"
-  },
-  "model": "dataentry.district",
-  "pk": 12
-},
-{
-  "fields": {
-    "name": "Dadeldhura"
-  },
-  "model": "dataentry.district",
-  "pk": 13
-},
-{
-  "fields": {
-    "name": "Dailekh"
-  },
-  "model": "dataentry.district",
-  "pk": 14
-},
-{
-  "fields": {
-    "name": "Dang"
-  },
-  "model": "dataentry.district",
-  "pk": 15
-},
-{
-  "fields": {
-    "name": "Darchula"
-  },
-  "model": "dataentry.district",
-  "pk": 16
-},
-{
-  "fields": {
-    "name": "Dhading"
-  },
-  "model": "dataentry.district",
-  "pk": 17
-},
-{
-  "fields": {
-    "name": "Dhankuta"
-  },
-  "model": "dataentry.district",
-  "pk": 18
-},
-{
-  "fields": {
-    "name": "Dhanusa"
-  },
-  "model": "dataentry.district",
-  "pk": 19
-},
-{
-  "fields": {
-    "name": "Dolakha"
-  },
-  "model": "dataentry.district",
-  "pk": 20
-},
-{
-  "fields": {
-    "name": "Dolpa"
-  },
-  "model": "dataentry.district",
-  "pk": 21
-},
-{
-  "fields": {
-    "name": "Doti"
-  },
-  "model": "dataentry.district",
-  "pk": 22
-},
-{
-  "fields": {
-    "name": "Gorkha"
-  },
-  "model": "dataentry.district",
-  "pk": 23
-},
-{
-  "fields": {
-    "name": "Gulmi"
-  },
-  "model": "dataentry.district",
-  "pk": 24
-},
-{
-  "fields": {
-    "name": "Humla"
-  },
-  "model": "dataentry.district",
-  "pk": 25
-},
-{
-  "fields": {
-    "name": "Ilam"
-  },
-  "model": "dataentry.district",
-  "pk": 26
-},
-{
-  "fields": {
-    "name": "Jajarkot"
-  },
-  "model": "dataentry.district",
-  "pk": 27
-},
-{
-  "fields": {
-    "name": "Jhapa"
-  },
-  "model": "dataentry.district",
-  "pk": 28
-},
-{
-  "fields": {
-    "name": "Jumla"
-  },
-  "model": "dataentry.district",
-  "pk": 29
-},
-{
-  "fields": {
-    "name": "Kailali"
-  },
-  "model": "dataentry.district",
-  "pk": 30
-},
-{
-  "fields": {
-    "name": "Kalikot"
-  },
-  "model": "dataentry.district",
-  "pk": 31
-},
-{
-  "fields": {
-    "name": "Kanchanpur"
-  },
-  "model": "dataentry.district",
-  "pk": 32
-},
-{
-  "fields": {
-    "name": "Kapilbastu"
-  },
-  "model": "dataentry.district",
-  "pk": 33
-},
-{
-  "fields": {
-    "name": "Kaski"
-  },
-  "model": "dataentry.district",
-  "pk": 34
-},
-{
-  "fields": {
-    "name": "Kathmandu"
-  },
-  "model": "dataentry.district",
-  "pk": 35
-},
-{
-  "fields": {
-    "name": "Kavrepalanchok"
-  },
-  "model": "dataentry.district",
-  "pk": 36
-},
-{
-  "fields": {
-    "name": "Khotang"
-  },
-  "model": "dataentry.district",
-  "pk": 37
-},
-{
-  "fields": {
-    "name": "Lalitpur"
-  },
-  "model": "dataentry.district",
-  "pk": 38
-},
-{
-  "fields": {
-    "name": "Lamjung"
-  },
-  "model": "dataentry.district",
-  "pk": 39
-},
-{
-  "fields": {
-    "name": "Mahottari"
-  },
-  "model": "dataentry.district",
-  "pk": 40
-},
-{
-  "fields": {
-    "name": "Makwanpur"
-  },
-  "model": "dataentry.district",
-  "pk": 41
-},
-{
-  "fields": {
-    "name": "Manang"
-  },
-  "model": "dataentry.district",
-  "pk": 42
-},
-{
-  "fields": {
-    "name": "Morang"
-  },
-  "model": "dataentry.district",
-  "pk": 43
-},
-{
-  "fields": {
-    "name": "Mugu"
-  },
-  "model": "dataentry.district",
-  "pk": 44
-},
-{
-  "fields": {
-    "name": "Mustang"
-  },
-  "model": "dataentry.district",
-  "pk": 45
-},
-{
-  "fields": {
-    "name": "Myagdi"
-  },
-  "model": "dataentry.district",
-  "pk": 46
-},
-{
-  "fields": {
-    "name": "Nawalparasi"
-  },
-  "model": "dataentry.district",
-  "pk": 47
-},
-{
-  "fields": {
-    "name": "Nuwakot"
-  },
-  "model": "dataentry.district",
-  "pk": 48
-},
-{
-  "fields": {
-    "name": "Okhaldhunga"
-  },
-  "model": "dataentry.district",
-  "pk": 49
-},
-{
-  "fields": {
-    "name": "Palpa"
-  },
-  "model": "dataentry.district",
-  "pk": 50
-},
-{
-  "fields": {
-    "name": "Panchthar"
-  },
-  "model": "dataentry.district",
-  "pk": 51
-},
-{
-  "fields": {
-    "name": "Parbat"
-  },
-  "model": "dataentry.district",
-  "pk": 52
-},
-{
-  "fields": {
-    "name": "Parsa"
-  },
-  "model": "dataentry.district",
-  "pk": 53
-},
-{
-  "fields": {
-    "name": "Pyuthan"
-  },
-  "model": "dataentry.district",
-  "pk": 54
-},
-{
-  "fields": {
-    "name": "Ramechhap"
-  },
-  "model": "dataentry.district",
-  "pk": 55
-},
-{
-  "fields": {
-    "name": "Rasuwa"
-  },
-  "model": "dataentry.district",
-  "pk": 56
-},
-{
-  "fields": {
-    "name": "Rautahat"
-  },
-  "model": "dataentry.district",
-  "pk": 57
-},
-{
-  "fields": {
-    "name": "Rolpa"
-  },
-  "model": "dataentry.district",
-  "pk": 58
-},
-{
-  "fields": {
-    "name": "Rukum"
-  },
-  "model": "dataentry.district",
-  "pk": 59
-},
-{
-  "fields": {
-    "name": "Rupandehi"
-  },
-  "model": "dataentry.district",
-  "pk": 60
-},
-{
-  "fields": {
-    "name": "Salyan"
-  },
-  "model": "dataentry.district",
-  "pk": 61
-},
-{
-  "fields": {
-    "name": "Sankhuwasabha"
-  },
-  "model": "dataentry.district",
-  "pk": 62
-},
-{
-  "fields": {
-    "name": "Saptari"
-  },
-  "model": "dataentry.district",
-  "pk": 63
-},
-{
-  "fields": {
-    "name": "Sarlahi"
-  },
-  "model": "dataentry.district",
-  "pk": 64
-},
-{
-  "fields": {
-    "name": "Sindhuli"
-  },
-  "model": "dataentry.district",
-  "pk": 65
-},
-{
-  "fields": {
-    "name": "Sindhupalchok"
-  },
-  "model": "dataentry.district",
-  "pk": 66
-},
-{
-  "fields": {
-    "name": "Siraha"
-  },
-  "model": "dataentry.district",
-  "pk": 67
-},
-{
-  "fields": {
-    "name": "Solukhumbu"
-  },
-  "model": "dataentry.district",
-  "pk": 68
-},
-{
-  "fields": {
-    "name": "Sunsari"
-  },
-  "model": "dataentry.district",
-  "pk": 69
-},
-{
-  "fields": {
-    "name": "Surkhet"
-  },
-  "model": "dataentry.district",
-  "pk": 70
-},
-{
-  "fields": {
-    "name": "Syangja"
-  },
-  "model": "dataentry.district",
-  "pk": 71
-},
-{
-  "fields": {
-    "name": "Tanahu"
-  },
-  "model": "dataentry.district",
-  "pk": 72
-},
-{
-  "fields": {
-    "name": "Taplejung"
-  },
-  "model": "dataentry.district",
-  "pk": 73
-},
-{
-  "fields": {
-    "name": "Terhathum"
-  },
-  "model": "dataentry.district",
-  "pk": 74
-},
-{
-  "fields": {
-    "name": "Udayapur"
-  },
-  "model": "dataentry.district",
-  "pk": 75
-},
-{
-  "fields": {
-    "latitude": 29.0589462112,
-    "district": 1,
-    "name": "Chalsa",
-    "longitude": 81.3814276584,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 1
-},
-{
-  "fields": {
-    "latitude": 29.1837169619,
-    "district": 1,
-    "name": "Chandika",
-    "longitude": 81.2336041444,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 16
-},
-{
-  "fields": {
-    "latitude": 29.1837169619,
-    "district": 1,
-    "name": "Chandika(Bayalpata)",
-    "longitude": 81.2336041444,
-    "cannonical_name": 16
-  },
-  "model": "dataentry.vdc",
-  "pk": 17
-},
-{
-  "fields": {
-    "latitude": 29.1487339277,
-    "district": 1,
-    "name": "Chaphamandau",
-    "longitude": 81.3821111635,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 18
-},
-{
-  "fields": {
-    "latitude": 29.1881908135,
-    "district": 1,
-    "name": "Darna",
-    "longitude": 81.3370619631,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 19
-},
-{
-  "fields": {
-    "latitude": 29.304386682,
-    "district": 1,
-    "name": "Devisthan",
-    "longitude": 81.2010444465,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 20
-},
-{
-  "fields": {
-    "latitude": 29.2326807824,
-    "district": 1,
-    "name": "Marku",
-    "longitude": 81.1460533537,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 21
-},
-{
-  "fields": {
-    "latitude": 29.0447168775,
-    "district": 1,
-    "name": "Mashtabamdali",
-    "longitude": 81.314692705,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 22
-},
-{
-  "fields": {
-    "latitude": 29.0447168775,
-    "district": 1,
-    "name": "Mashtanamdali",
-    "longitude": 81.314692705,
-    "cannonical_name": 22
-  },
-  "model": "dataentry.vdc",
-  "pk": 23
-},
-{
-  "fields": {
-    "latitude": 29.3203558468,
-    "district": 1,
-    "name": "Babala",
-    "longitude": 81.2466528783,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 24
-},
-{
-  "fields": {
-    "latitude": 29.2081988722,
-    "district": 1,
-    "name": "Baijinath",
-    "longitude": 81.1971298263,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 25
-},
-{
-  "fields": {
-    "latitude": 29.1398483613,
-    "district": 1,
-    "name": "Bannatoli",
-    "longitude": 81.3227704927,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 26
-},
-{
-  "fields": {
-    "latitude": 29.2058376727,
-    "district": 1,
-    "name": "Baradadivi",
-    "longitude": 81.2962380671,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 27
-},
-{
-  "fields": {
-    "latitude": 29.060437495,
-    "district": 1,
-    "name": "Basti",
-    "longitude": 81.1739527895,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 28
-},
-{
-  "fields": {
-    "latitude": 29.1667536079,
-    "district": 1,
-    "name": "Batulasen",
-    "longitude": 81.4526364633,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 29
-},
-{
-  "fields": {
-    "latitude": 29.0459596141,
-    "district": 1,
-    "name": "Bayala",
-    "longitude": 81.3850937312,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 30
-},
-{
-  "fields": {
-    "latitude": 29.2113678504,
-    "district": 1,
-    "name": "Bhagyaswori",
-    "longitude": 81.2393207326,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 31
-},
-{
-  "fields": {
-    "latitude": 28.9242335679,
-    "district": 1,
-    "name": "Bhairabsthan",
-    "longitude": 81.4397741399,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 32
-},
-{
-  "fields": {
-    "latitude": 29.231375909,
-    "district": 1,
-    "name": "Bhatakatiya",
-    "longitude": 81.4241156592,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 33
-},
-{
-  "fields": {
-    "latitude": 29.0343400273,
-    "district": 1,
-    "name": "Bhuli",
-    "longitude": 81.3580020742,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 34
-},
-{
-  "fields": {
-    "latitude": 29.1030633591,
-    "district": 1,
-    "name": "Binayak",
-    "longitude": 81.3988881071,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 35
-},
-{
-  "fields": {
-    "latitude": 29.2703978371,
-    "district": 1,
-    "name": "Bindhyawasini",
-    "longitude": 81.2925098574,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 36
-},
-{
-  "fields": {
-    "latitude": 29.0974710446,
-    "district": 1,
-    "name": "Birpath",
-    "longitude": 81.3243239134,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 37
-},
-{
-  "fields": {
-    "latitude": 29.2715784368,
-    "district": 1,
-    "name": "Budhakot",
-    "longitude": 81.1742634736,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 38
-},
-{
-  "fields": {
-    "latitude": 29.1837169619,
-    "district": 1,
-    "name": "Chandika(Bayalpata)",
-    "longitude": 81.2336041444,
-    "cannonical_name": 16
-  },
-  "model": "dataentry.vdc",
-  "pk": 39
-},
-{
-  "fields": {
-    "latitude": 28.9865568065,
-    "district": 1,
-    "name": "Dhakari",
-    "longitude": 81.257961781,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 40
-},
-{
-  "fields": {
-    "latitude": 29.0657812623,
-    "district": 1,
-    "name": "Dhaku",
-    "longitude": 81.3278035758,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 41
-},
-{
-  "fields": {
-    "latitude": 29.0073726439,
-    "district": 1,
-    "name": "Dhamali",
-    "longitude": 81.3734741444,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 42
-},
-{
-  "fields": {
-    "latitude": 29.0153882947,
-    "district": 1,
-    "name": "Dhodasain",
-    "longitude": 81.3057450018,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 43
-},
-{
-  "fields": {
-    "latitude": 29.2779785301,
-    "district": 1,
-    "name": "Dhudharukot",
-    "longitude": 81.2284467877,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 44
-},
-{
-  "fields": {
-    "latitude": 28.9504553094,
-    "district": 1,
-    "name": "Dhungachalna",
-    "longitude": 81.2761057348,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 45
-},
-{
-  "fields": {
-    "latitude": 29.272945447,
-    "district": 1,
-    "name": "Duni",
-    "longitude": 81.1207015278,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 46
-},
-{
-  "fields": {
-    "latitude": 29.2097522929,
-    "district": 1,
-    "name": "Gajara",
-    "longitude": 81.2555384447,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 47
-},
-{
-  "fields": {
-    "latitude": 29.2664210801,
-    "district": 1,
-    "name": "Hatikot",
-    "longitude": 81.2513131404,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 48
-},
-{
-  "fields": {
-    "latitude": 29.0104173485,
-    "district": 1,
-    "name": "Hichma",
-    "longitude": 81.2204311369,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 49
-},
-{
-  "fields": {
-    "latitude": 29.2303817198,
-    "district": 1,
-    "name": "Jalapadevi",
-    "longitude": 81.1881199863,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 50
-},
-{
-  "fields": {
-    "latitude": 29.09187873,
-    "district": 1,
-    "name": "Janalibandali",
-    "longitude": 81.2765406926,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 51
-},
-{
-  "fields": {
-    "latitude": 29.1777518264,
-    "district": 1,
-    "name": "Janalikot",
-    "longitude": 81.2569675918,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 52
-},
-{
-  "fields": {
-    "latitude": 29.1430173395,
-    "district": 1,
-    "name": "Jupu",
-    "longitude": 81.3042537179,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 53
-},
-{
-  "fields": {
-    "latitude": 29.1427066554,
-    "district": 1,
-    "name": "Kalagau",
-    "longitude": 81.3419086357,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 54
-},
-{
-  "fields": {
-    "latitude": 29.1188461134,
-    "district": 1,
-    "name": "Kalekanda",
-    "longitude": 81.5200549218,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 55
-},
-{
-  "fields": {
-    "latitude": 29.1794916576,
-    "district": 1,
-    "name": "Kalika",
-    "longitude": 81.2969215722,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 56
-},
-{
-  "fields": {
-    "latitude": 29.0519247496,
-    "district": 1,
-    "name": "Kalikasthan",
-    "longitude": 81.4331254993,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 57
-},
-{
-  "fields": {
-    "latitude": 29.3380648428,
-    "district": 1,
-    "name": "Khaptad",
-    "longitude": 81.2070717188,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 58
-},
-{
-  "fields": {
-    "latitude": 29.2447974639,
-    "district": 1,
-    "name": "Khodasadevi",
-    "longitude": 81.3397959836,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 59
-},
-{
-  "fields": {
-    "latitude": 29.09442634,
-    "district": 1,
-    "name": "Kuika",
-    "longitude": 81.375400386,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 60
-},
-{
-  "fields": {
-    "latitude": 29.0932457403,
-    "district": 1,
-    "name": "Kuntibandali",
-    "longitude": 81.1848267344,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 61
-},
-{
-  "fields": {
-    "latitude": 29.2897223906,
-    "district": 1,
-    "name": "Kushkot",
-    "longitude": 81.2882845531,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 62
-},
-{
-  "fields": {
-    "latitude": 29.0769658913,
-    "district": 1,
-    "name": "Layati",
-    "longitude": 81.4450557703,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 63
-},
-{
-  "fields": {
-    "latitude": 29.2060240832,
-    "district": 1,
-    "name": "Lungra",
-    "longitude": 81.162208929,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 64
-},
-{
-  "fields": {
-    "latitude": 29.1428309291,
-    "district": 1,
-    "name": "Malatikot",
-    "longitude": 81.3614817366,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 65
-},
-{
-  "fields": {
-    "latitude": 29.1366172462,
-    "district": 1,
-    "name": "Mangalsen",
-    "longitude": 81.2421790267,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 66
-},
-{
-  "fields": {
-    "latitude": 29.0447168775,
-    "district": 1,
-    "name": "Mashtanamdali",
-    "longitude": 81.314692705,
-    "cannonical_name": 22
-  },
-  "model": "dataentry.vdc",
-  "pk": 67
-},
-{
-  "fields": {
-    "latitude": 29.24585379,
-    "district": 1,
-    "name": "Mastamandau",
-    "longitude": 81.2419304794,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 68
-},
-{
-  "fields": {
-    "latitude": 28.9428124795,
-    "district": 1,
-    "name": "Nada",
-    "longitude": 81.3335201639,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 69
-},
-{
-  "fields": {
-    "latitude": 29.2295118042,
-    "district": 1,
-    "name": "Nandegada",
-    "longitude": 81.2949953305,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 70
-},
-{
-  "fields": {
-    "latitude": 29.2301331725,
-    "district": 1,
-    "name": "Nawathana",
-    "longitude": 81.2421168899,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 71
-},
-{
-  "fields": {
-    "latitude": 29.1397240876,
-    "district": 1,
-    "name": "Oligau",
-    "longitude": 81.283624291,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 72
-},
-{
-  "fields": {
-    "latitude": 29.2720133946,
-    "district": 1,
-    "name": "Patalkot",
-    "longitude": 81.1417659125,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 73
-},
-{
-  "fields": {
-    "latitude": 29.1663186501,
-    "district": 1,
-    "name": "Payal",
-    "longitude": 81.1832111769,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 74
-},
-{
-  "fields": {
-    "latitude": 29.1292229637,
-    "district": 1,
-    "name": "Pulletala",
-    "longitude": 81.4651259658,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 75
-},
-{
-  "fields": {
-    "latitude": 28.8200922441,
-    "district": 1,
-    "name": "Rahaph",
-    "longitude": 81.5239695419,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 76
-},
-{
-  "fields": {
-    "latitude": 29.2287040254,
-    "district": 1,
-    "name": "Ramarosan",
-    "longitude": 81.4559297152,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 77
-},
-{
-  "fields": {
-    "latitude": 28.984568428,
-    "district": 1,
-    "name": "Raniban",
-    "longitude": 81.401435717,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 78
-},
-{
-  "fields": {
-    "latitude": 29.2682851849,
-    "district": 1,
-    "name": "Risidaha",
-    "longitude": 81.3776373119,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 79
-},
-{
-  "fields": {
-    "latitude": 29.2138533235,
-    "district": 1,
-    "name": "Rodikot",
-    "longitude": 81.2187534425,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 80
-},
-{
-  "fields": {
-    "latitude": 29.2138533235,
-    "district": 1,
-    "name": "Ridikot",
-    "longitude": 81.2187534425,
-    "cannonical_name": 80
-  },
-  "model": "dataentry.vdc",
-  "pk": 81
-},
-{
-  "fields": {
-    "latitude": 29.1571223995,
-    "district": 1,
-    "name": "Santada",
-    "longitude": 81.397831781,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 82
-},
-{
-  "fields": {
-    "latitude": 29.0606860424,
-    "district": 1,
-    "name": "Sera",
-    "longitude": 81.2874146375,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 83
-},
-{
-  "fields": {
-    "latitude": 29.2517567886,
-    "district": 1,
-    "name": "Siddheswor",
-    "longitude": 81.2089358237,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 84
-},
-{
-  "fields": {
-    "latitude": 29.1563767576,
-    "district": 1,
-    "name": "Siudi",
-    "longitude": 81.1156063079,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 85
-},
-{
-  "fields": {
-    "latitude": 29.19452877,
-    "district": 1,
-    "name": "Soukat",
-    "longitude": 81.0746581382,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 86
-},
-{
-  "fields": {
-    "latitude": 29.1998104004,
-    "district": 1,
-    "name": "Sutar",
-    "longitude": 81.3640293465,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 87
-},
-{
-  "fields": {
-    "latitude": 29.294258379,
-    "district": 1,
-    "name": "Thanti",
-    "longitude": 81.3270579338,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 88
-},
-{
-  "fields": {
-    "latitude": 29.1806722573,
-    "district": 1,
-    "name": "Timilsain",
-    "longitude": 81.2753600929,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 89
-},
-{
-  "fields": {
-    "latitude": 29.1206480814,
-    "district": 1,
-    "name": "Toli",
-    "longitude": 81.4223136912,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 90
-},
-{
-  "fields": {
-    "latitude": 28.9855626172,
-    "district": 1,
-    "name": "Tosi",
-    "longitude": 81.3635943887,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 91
-},
-{
-  "fields": {
-    "latitude": 28.9396435013,
-    "district": 1,
-    "name": "Turmakhad",
-    "longitude": 81.3657070409,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 92
-},
-{
-  "fields": {
-    "latitude": 28.9681643054,
-    "district": 1,
-    "name": "Walanta",
-    "longitude": 81.1659371387,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 93
-},
-{
-  "fields": {
-    "latitude": 28.9681643054,
-    "district": 1,
-    "name": "Walant",
-    "longitude": 81.1659371387,
-    "cannonical_name": 93
-  },
-  "model": "dataentry.vdc",
-  "pk": 94
-},
-{
-  "fields": {
-    "latitude": 29.1217044075,
-    "district": 1,
-    "name": "Warla",
-    "longitude": 81.4719610169,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 95
-},
-{
-  "fields": {
-    "latitude": 27.9268753407,
-    "district": 2,
-    "name": "Adguri",
-    "longitude": 83.1943938907,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 96
-},
-{
-  "fields": {
-    "latitude": 28.0128105739,
-    "district": 2,
-    "name": "Argha",
-    "longitude": 83.0964662497,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 97
-},
-{
-  "fields": {
-    "latitude": 28.0306438436,
-    "district": 2,
-    "name": "Arghatos",
-    "longitude": 83.1786111364,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 98
-},
-{
-  "fields": {
-    "latitude": 27.9954743989,
-    "district": 2,
-    "name": "Asurkot",
-    "longitude": 82.9889074003,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 99
-},
-{
-  "fields": {
-    "latitude": 27.9604292279,
-    "district": 2,
-    "name": "Balkot",
-    "longitude": 83.2494471204,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 100
-},
-{
-  "fields": {
-    "latitude": 28.0438168511,
-    "district": 2,
-    "name": "Bangi",
-    "longitude": 83.096714797,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 101
-},
-{
-  "fields": {
-    "latitude": 27.9699361626,
-    "district": 2,
-    "name": "Bangla",
-    "longitude": 83.1851355033,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 102
-},
-{
-  "fields": {
-    "latitude": 27.9699361626,
-    "district": 2,
-    "name": "Wangla",
-    "longitude": 83.1851355033,
-    "cannonical_name": 102
-  },
-  "model": "dataentry.vdc",
-  "pk": 103
-},
-{
-  "fields": {
-    "latitude": 28.0401507783,
-    "district": 2,
-    "name": "Bhagawati",
-    "longitude": 83.2165146015,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 104
-},
-{
-  "fields": {
-    "latitude": 28.0072182594,
-    "district": 2,
-    "name": "Chhatraganj",
-    "longitude": 83.2260215362,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 105
-},
-{
-  "fields": {
-    "latitude": 27.9486232306,
-    "district": 2,
-    "name": "Chidika",
-    "longitude": 83.2798941661,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 106
-},
-{
-  "fields": {
-    "latitude": 28.0486013869,
-    "district": 2,
-    "name": "Dhakawang",
-    "longitude": 83.0064921226,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 107
-},
-{
-  "fields": {
-    "latitude": 27.9286773087,
-    "district": 2,
-    "name": "Dhanchaur",
-    "longitude": 83.0508578179,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 108
-},
-{
-  "fields": {
-    "latitude": 28.0184650253,
-    "district": 2,
-    "name": "Dharapani",
-    "longitude": 83.0407916517,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 109
-},
-{
-  "fields": {
-    "latitude": 27.8869213603,
-    "district": 2,
-    "name": "Dhatiwang",
-    "longitude": 83.2088096348,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 110
-},
-{
-  "fields": {
-    "latitude": 27.9350152652,
-    "district": 2,
-    "name": "Dhikura",
-    "longitude": 83.1031770271,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 111
-},
-{
-  "fields": {
-    "latitude": 28.0104493745,
-    "district": 2,
-    "name": "Dibharna",
-    "longitude": 83.1561176046,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 112
-},
-{
-  "fields": {
-    "latitude": 28.0820931372,
-    "district": 2,
-    "name": "Gorkhunga",
-    "longitude": 83.0205350458,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 113
-},
-{
-  "fields": {
-    "latitude": 28.0820931372,
-    "district": 2,
-    "name": "Gokhunga",
-    "longitude": 83.0205350458,
-    "cannonical_name": 113
-  },
-  "model": "dataentry.vdc",
-  "pk": 114
-},
-{
-  "fields": {
-    "latitude": 28.0778678329,
-    "district": 2,
-    "name": "Hansapur",
-    "longitude": 83.0664541617,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 115
-},
-{
-  "fields": {
-    "latitude": 27.8890340124,
-    "district": 2,
-    "name": "Jukena",
-    "longitude": 83.0368148947,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 116
-},
-{
-  "fields": {
-    "latitude": 27.8629986815,
-    "district": 2,
-    "name": "Juluke",
-    "longitude": 82.8792358988,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 117
-},
-{
-  "fields": {
-    "latitude": 27.8629986815,
-    "district": 2,
-    "name": "Jaluke",
-    "longitude": 82.8792358988,
-    "cannonical_name": 117
-  },
-  "model": "dataentry.vdc",
-  "pk": 118
-},
-{
-  "fields": {
-    "latitude": 27.9932996099,
-    "district": 2,
-    "name": "Keemadada",
-    "longitude": 83.0835417894,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 119
-},
-{
-  "fields": {
-    "latitude": 27.9932996099,
-    "district": 2,
-    "name": "Keemdada",
-    "longitude": 83.0835417894,
-    "cannonical_name": 119
-  },
-  "model": "dataentry.vdc",
-  "pk": 120
-},
-{
-  "fields": {
-    "latitude": 27.9749692456,
-    "district": 2,
-    "name": "Kerunga",
-    "longitude": 83.2324216295,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 121
-},
-{
-  "fields": {
-    "latitude": 28.0374788947,
-    "district": 2,
-    "name": "Khan",
-    "longitude": 83.1414533132,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 122
-},
-{
-  "fields": {
-    "latitude": 28.0374788947,
-    "district": 2,
-    "name": "Khana",
-    "longitude": 83.1414533132,
-    "cannonical_name": 122
-  },
-  "model": "dataentry.vdc",
-  "pk": 123
-},
-{
-  "fields": {
-    "latitude": 27.9257568778,
-    "district": 2,
-    "name": "Khanchikot",
-    "longitude": 83.1354260409,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 124
-},
-{
-  "fields": {
-    "latitude": 28.063389952,
-    "district": 2,
-    "name": "Khandaha",
-    "longitude": 83.1266026113,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 125
-},
-{
-  "fields": {
-    "latitude": 27.9087935238,
-    "district": 2,
-    "name": "Khidim",
-    "longitude": 83.2832495548,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 126
-},
-{
-  "fields": {
-    "latitude": 27.9841654962,
-    "district": 2,
-    "name": "Khilji",
-    "longitude": 83.0282400125,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 127
-},
-{
-  "fields": {
-    "latitude": 27.8684045855,
-    "district": 2,
-    "name": "Maidan",
-    "longitude": 83.2288798303,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 128
-},
-{
-  "fields": {
-    "latitude": 28.0625200364,
-    "district": 2,
-    "name": "Mareng",
-    "longitude": 83.1876831133,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 129
-},
-{
-  "fields": {
-    "latitude": 27.9243277308,
-    "district": 2,
-    "name": "Narapani",
-    "longitude": 83.1640711186,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 130
-},
-{
-  "fields": {
-    "latitude": 27.9243277308,
-    "district": 2,
-    "name": "Narpani",
-    "longitude": 83.1640711186,
-    "cannonical_name": 130
-  },
-  "model": "dataentry.vdc",
-  "pk": 131
-},
-{
-  "fields": {
-    "latitude": 27.9658351319,
-    "district": 2,
-    "name": "Nuwakot",
-    "longitude": 83.0571336375,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 132
-},
-{
-  "fields": {
-    "latitude": 27.9430930529,
-    "district": 2,
-    "name": "Pali",
-    "longitude": 83.2348449658,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 133
-},
-{
-  "fields": {
-    "latitude": 27.8610724398,
-    "district": 2,
-    "name": "Pathauti",
-    "longitude": 83.2588919182,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 134
-},
-{
-  "fields": {
-    "latitude": 27.8610724398,
-    "district": 2,
-    "name": "Patauti",
-    "longitude": 83.2588919182,
-    "cannonical_name": 134
-  },
-  "model": "dataentry.vdc",
-  "pk": 135
-},
-{
-  "fields": {
-    "latitude": 27.874369721,
-    "district": 2,
-    "name": "Pathona",
-    "longitude": 83.3079178756,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 136
-},
-{
-  "fields": {
-    "latitude": 27.874369721,
-    "district": 2,
-    "name": "Panena",
-    "longitude": 83.3079178756,
-    "cannonical_name": 136
-  },
-  "model": "dataentry.vdc",
-  "pk": 137
-},
-{
-  "fields": {
-    "latitude": 27.861010303,
-    "district": 2,
-    "name": "Pokharathok",
-    "longitude": 83.2811369027,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 138
-},
-{
-  "fields": {
-    "latitude": 27.9756527508,
-    "district": 2,
-    "name": "Sandhikharka",
-    "longitude": 83.130330821,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 139
-},
-{
-  "fields": {
-    "latitude": 27.8413129285,
-    "district": 2,
-    "name": "Siddhara",
-    "longitude": 82.9140325225,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 140
-},
-{
-  "fields": {
-    "latitude": 27.7935297077,
-    "district": 2,
-    "name": "Simalapani",
-    "longitude": 83.1843277246,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 141
-},
-{
-  "fields": {
-    "latitude": 27.7935297077,
-    "district": 2,
-    "name": "Simalpani",
-    "longitude": 83.1843277246,
-    "cannonical_name": 141
-  },
-  "model": "dataentry.vdc",
-  "pk": 142
-},
-{
-  "fields": {
-    "latitude": 27.8730648476,
-    "district": 2,
-    "name": "Sitapur",
-    "longitude": 83.1363580933,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 143
-},
-{
-  "fields": {
-    "latitude": 27.8606996188,
-    "district": 2,
-    "name": "Subarnakhal",
-    "longitude": 83.1761256632,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 144
-},
-{
-  "fields": {
-    "latitude": 27.8355342035,
-    "district": 2,
-    "name": "Thada",
-    "longitude": 83.0796893061,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 145
-},
-{
-  "fields": {
-    "latitude": 28.0036764602,
-    "district": 2,
-    "name": "Thulapokhara",
-    "longitude": 83.1961958587,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 146
-},
-{
-  "fields": {
-    "latitude": 28.3982453184,
-    "district": 3,
-    "name": "Akhikarichaur",
-    "longitude": 83.2599482443,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 147
-},
-{
-  "fields": {
-    "latitude": 28.2030735415,
-    "district": 3,
-    "name": "Amalachaur",
-    "longitude": 83.635192549,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 148
-},
-{
-  "fields": {
-    "latitude": 28.2811795343,
-    "district": 3,
-    "name": "Amarbhumi",
-    "longitude": 83.3956550768,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 149
-},
-{
-  "fields": {
-    "latitude": 28.2148795388,
-    "district": 3,
-    "name": "Andheri (Narayanstha",
-    "longitude": 83.6673172891,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 150
-},
-{
-  "fields": {
-    "latitude": 28.2148795388,
-    "district": 3,
-    "name": "Narayansthan",
-    "longitude": 83.6673172891,
-    "cannonical_name": 150
-  },
-  "model": "dataentry.vdc",
-  "pk": 151
-},
-{
-  "fields": {
-    "latitude": 28.2911214268,
-    "district": 3,
-    "name": "Argal",
-    "longitude": 83.2126621181,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 152
-},
-{
-  "fields": {
-    "latitude": 28.5004604006,
-    "district": 3,
-    "name": "Arjewa",
-    "longitude": 83.0437120827,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 153
-},
-{
-  "fields": {
-    "latitude": 28.1500086903,
-    "district": 3,
-    "name": "Batakachaur",
-    "longitude": 83.4643162718,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 154
-},
-{
-  "fields": {
-    "latitude": 28.2266233993,
-    "district": 3,
-    "name": "Bhakunde",
-    "longitude": 83.5107324824,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 155
-},
-{
-  "fields": {
-    "latitude": 28.2795639768,
-    "district": 3,
-    "name": "Bhimpokhara",
-    "longitude": 83.4575433575,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 156
-},
-{
-  "fields": {
-    "latitude": 28.2985778462,
-    "district": 3,
-    "name": "Bhinggithe",
-    "longitude": 83.1310764629,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 157
-},
-{
-  "fields": {
-    "latitude": 28.2429653851,
-    "district": 3,
-    "name": "Bihunkot",
-    "longitude": 83.5829976134,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 158
-},
-{
-  "fields": {
-    "latitude": 28.1646108449,
-    "district": 3,
-    "name": "Binamare",
-    "longitude": 83.6248156987,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 159
-},
-{
-  "fields": {
-    "latitude": 28.3549359492,
-    "district": 3,
-    "name": "Boharagaun",
-    "longitude": 83.2427984798,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 160
-},
-{
-  "fields": {
-    "latitude": 28.4184397875,
-    "district": 3,
-    "name": "Bongadovan",
-    "longitude": 83.1225015806,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 161
-},
-{
-  "fields": {
-    "latitude": 28.4592636836,
-    "district": 3,
-    "name": "Bowang",
-    "longitude": 82.9675944683,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 162
-},
-{
-  "fields": {
-    "latitude": 28.3320074597,
-    "district": 3,
-    "name": "Burtiwang",
-    "longitude": 83.3743421448,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 163
-},
-{
-  "fields": {
-    "latitude": 28.1311812314,
-    "district": 3,
-    "name": "Chhisti",
-    "longitude": 83.6026328511,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 164
-},
-{
-  "fields": {
-    "latitude": 28.2383672598,
-    "district": 3,
-    "name": "Dagatundada",
-    "longitude": 83.6121397858,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 165
-},
-{
-  "fields": {
-    "latitude": 28.1930695121,
-    "district": 3,
-    "name": "Damek",
-    "longitude": 83.5624924601,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 166
-},
-{
-  "fields": {
-    "latitude": 28.2768299564,
-    "district": 3,
-    "name": "Darling",
-    "longitude": 83.587098644,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 167
-},
-{
-  "fields": {
-    "latitude": 28.3047293922,
-    "district": 3,
-    "name": "Dhamja",
-    "longitude": 83.5659721225,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 168
-},
-{
-  "fields": {
-    "latitude": 28.2063046565,
-    "district": 3,
-    "name": "Dhudhilabhati",
-    "longitude": 83.4843864673,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 169
-},
-{
-  "fields": {
-    "latitude": 28.1455348387,
-    "district": 3,
-    "name": "Dhullubaskot",
-    "longitude": 83.535090119,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 170
-},
-{
-  "fields": {
-    "latitude": 28.1456591123,
-    "district": 3,
-    "name": "DhulluGaidi",
-    "longitude": 83.6210253522,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 171
-},
-{
-  "fields": {
-    "latitude": 28.1456591123,
-    "district": 3,
-    "name": "Dhullu Gaidi",
-    "longitude": 83.6210253522,
-    "cannonical_name": 171
-  },
-  "model": "dataentry.vdc",
-  "pk": 172
-},
-{
-  "fields": {
-    "latitude": 28.2500489835,
-    "district": 3,
-    "name": "Gwalichaur",
-    "longitude": 83.283560239,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 173
-},
-{
-  "fields": {
-    "latitude": 28.2459479528,
-    "district": 3,
-    "name": "Harichaur",
-    "longitude": 83.5066935885,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 174
-},
-{
-  "fields": {
-    "latitude": 28.1966113113,
-    "district": 3,
-    "name": "Hatiya",
-    "longitude": 83.4359818782,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 175
-},
-{
-  "fields": {
-    "latitude": 28.2752765357,
-    "district": 3,
-    "name": "Heel",
-    "longitude": 83.1409562186,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 176
-},
-{
-  "fields": {
-    "latitude": 28.145783386,
-    "district": 3,
-    "name": "Hugdisheer",
-    "longitude": 83.4946390439,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 177
-},
-{
-  "fields": {
-    "latitude": 28.2423440168,
-    "district": 3,
-    "name": "Jaljala",
-    "longitude": 83.4144825357,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 178
-},
-{
-  "fields": {
-    "latitude": 28.2813659448,
-    "district": 3,
-    "name": "KalikaN.P.",
-    "longitude": 83.5504379155,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 179
-},
-{
-  "fields": {
-    "latitude": 28.2813659448,
-    "district": 3,
-    "name": "Baglung Municipality",
-    "longitude": 83.5504379155,
-    "cannonical_name": 179
-  },
-  "model": "dataentry.vdc",
-  "pk": 180
-},
-{
-  "fields": {
-    "latitude": 28.1862965979,
-    "district": 3,
-    "name": "Kandebas",
-    "longitude": 83.385091816,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 181
-},
-{
-  "fields": {
-    "latitude": 28.3313860914,
-    "district": 3,
-    "name": "Khunga",
-    "longitude": 83.1044819005,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 182
-},
-{
-  "fields": {
-    "latitude": 28.1980404584,
-    "district": 3,
-    "name": "Kusmishera",
-    "longitude": 83.6184156054,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 183
-},
-{
-  "fields": {
-    "latitude": 28.2276797254,
-    "district": 3,
-    "name": "Lekhani",
-    "longitude": 83.6404120425,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 184
-},
-{
-  "fields": {
-    "latitude": 28.2912457005,
-    "district": 3,
-    "name": "Malikathota",
-    "longitude": 83.5257695947,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 185
-},
-{
-  "fields": {
-    "latitude": 28.2912457005,
-    "district": 3,
-    "name": "Malika",
-    "longitude": 83.5257695947,
-    "cannonical_name": 185
-  },
-  "model": "dataentry.vdc",
-  "pk": 186
-},
-{
-  "fields": {
-    "latitude": 28.2149416756,
-    "district": 3,
-    "name": "Malma",
-    "longitude": 83.2744261252,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 187
-},
-{
-  "fields": {
-    "latitude": 28.2219010004,
-    "district": 3,
-    "name": "Narethanti",
-    "longitude": 83.3813636063,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 188
-},
-{
-  "fields": {
-    "latitude": 28.4669686502,
-    "district": 3,
-    "name": "Nisi",
-    "longitude": 83.2477072892,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 189
-},
-{
-  "fields": {
-    "latitude": 28.2312836614,
-    "district": 3,
-    "name": "Paiyunpata",
-    "longitude": 83.4594074624,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 190
-},
-{
-  "fields": {
-    "latitude": 28.1715080328,
-    "district": 3,
-    "name": "Paiyunthanthap",
-    "longitude": 83.5591370714,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 191
-},
-{
-  "fields": {
-    "latitude": 28.2805581661,
-    "district": 3,
-    "name": "Palakot",
-    "longitude": 83.4923399813,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 192
-},
-{
-  "fields": {
-    "latitude": 28.2987021198,
-    "district": 3,
-    "name": "Pandavkhani",
-    "longitude": 83.4506461696,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 193
-},
-{
-  "fields": {
-    "latitude": 28.3033002451,
-    "district": 3,
-    "name": "Rajkut",
-    "longitude": 83.4966895592,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 194
-},
-{
-  "fields": {
-    "latitude": 28.2817387658,
-    "district": 3,
-    "name": "Ranasinkiteni",
-    "longitude": 83.3331454278,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 195
-},
-{
-  "fields": {
-    "latitude": 28.1437950075,
-    "district": 3,
-    "name": "Rangkhani",
-    "longitude": 83.5603176711,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 196
-},
-{
-  "fields": {
-    "latitude": 28.2147552651,
-    "district": 3,
-    "name": "Rayadanda",
-    "longitude": 83.5769082042,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 197
-},
-{
-  "fields": {
-    "latitude": 28.235757513,
-    "district": 3,
-    "name": "Resh",
-    "longitude": 83.3067372758,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 198
-},
-{
-  "fields": {
-    "latitude": 28.2109649186,
-    "district": 3,
-    "name": "Righa",
-    "longitude": 83.3211530199,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 199
-},
-{
-  "fields": {
-    "latitude": 28.1489523642,
-    "district": 3,
-    "name": "Salyan",
-    "longitude": 83.4320051212,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 200
-},
-{
-  "fields": {
-    "latitude": 28.1621253718,
-    "district": 3,
-    "name": "Sarkuwa",
-    "longitude": 83.6046833664,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 201
-},
-{
-  "fields": {
-    "latitude": 28.2316564824,
-    "district": 3,
-    "name": "Singana",
-    "longitude": 83.5400610652,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 202
-},
-{
-  "fields": {
-    "latitude": 28.106015816,
-    "district": 3,
-    "name": "Sisakhani",
-    "longitude": 83.58424035,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 203
-},
-{
-  "fields": {
-    "latitude": 28.1628088769,
-    "district": 3,
-    "name": "Sukhaura",
-    "longitude": 83.4211933131,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 204
-},
-{
-  "fields": {
-    "latitude": 28.4368944255,
-    "district": 3,
-    "name": "Sunkhani",
-    "longitude": 83.2089960453,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 205
-},
-{
-  "fields": {
-    "latitude": 28.4368944255,
-    "district": 3,
-    "name": "Khungkhani",
-    "longitude": 83.2089960453,
-    "cannonical_name": 205
-  },
-  "model": "dataentry.vdc",
-  "pk": 206
-},
-{
-  "fields": {
-    "latitude": 28.3627651896,
-    "district": 3,
-    "name": "Taman",
-    "longitude": 83.0466325136,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 207
-},
-{
-  "fields": {
-    "latitude": 28.2541500141,
-    "district": 3,
-    "name": "Tangram",
-    "longitude": 83.2395052279,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 208
-},
-{
-  "fields": {
-    "latitude": 28.3093275174,
-    "district": 3,
-    "name": "Tara",
-    "longitude": 83.2780300613,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 209
-},
-{
-  "fields": {
-    "latitude": 28.2423440168,
-    "district": 3,
-    "name": "Tityang",
-    "longitude": 83.5543525357,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 210
-},
-{
-  "fields": {
-    "latitude": 29.4512160067,
-    "district": 4,
-    "name": "Amchaur",
-    "longitude": 80.3264064547,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 211
-},
-{
-  "fields": {
-    "latitude": 29.4658802981,
-    "district": 4,
-    "name": "Basantapur",
-    "longitude": 80.4972205951,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 212
-},
-{
-  "fields": {
-    "latitude": 29.5255937899,
-    "district": 4,
-    "name": "Basuling",
-    "longitude": 80.5428911637,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 213
-},
-{
-  "fields": {
-    "latitude": 29.6247020307,
-    "district": 4,
-    "name": "Bhatana",
-    "longitude": 80.7549641579,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 214
-},
-{
-  "fields": {
-    "latitude": 29.4955195651,
-    "district": 4,
-    "name": "Bhumeswor",
-    "longitude": 80.5399085959,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 215
-},
-{
-  "fields": {
-    "latitude": 29.5662934123,
-    "district": 4,
-    "name": "Bijayapur",
-    "longitude": 80.6192573254,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 216
-},
-{
-  "fields": {
-    "latitude": 29.3744148872,
-    "district": 4,
-    "name": "Bilashpur",
-    "longitude": 80.3964967968,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 217
-},
-{
-  "fields": {
-    "latitude": 29.3744148872,
-    "district": 4,
-    "name": "Bisalpur",
-    "longitude": 80.3964967968,
-    "cannonical_name": 217
-  },
-  "model": "dataentry.vdc",
-  "pk": 218
-},
-{
-  "fields": {
-    "latitude": 29.5582777615,
-    "district": 4,
-    "name": "Bumiraj",
-    "longitude": 80.7450222654,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 219
-},
-{
-  "fields": {
-    "latitude": 29.5053993208,
-    "district": 4,
-    "name": "Chaukham",
-    "longitude": 80.7523544111,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 220
-},
-{
-  "fields": {
-    "latitude": 29.5739362421,
-    "district": 4,
-    "name": "DasharathchandaN.P.",
-    "longitude": 80.403642532,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 221
-},
-{
-  "fields": {
-    "latitude": 29.5739362421,
-    "district": 4,
-    "name": "Dasharathchanda Municipality",
-    "longitude": 80.403642532,
-    "cannonical_name": 221
-  },
-  "model": "dataentry.vdc",
-  "pk": 222
-},
-{
-  "fields": {
-    "latitude": 29.5195665176,
-    "district": 4,
-    "name": "Dehimandau",
-    "longitude": 80.4654065391,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 223
-},
-{
-  "fields": {
-    "latitude": 29.5923287432,
-    "district": 4,
-    "name": "Deulek",
-    "longitude": 80.5161101908,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 224
-},
-{
-  "fields": {
-    "latitude": 29.6180533901,
-    "district": 4,
-    "name": "Dhikarim/Rim",
-    "longitude": 80.5700449576,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 225
-},
-{
-  "fields": {
-    "latitude": 29.613020307,
-    "district": 4,
-    "name": "Dhikasintad/Sitad",
-    "longitude": 80.5137489913,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 226
-},
-{
-  "fields": {
-    "latitude": 29.387525758,
-    "district": 4,
-    "name": "Dhungad",
-    "longitude": 80.8129378184,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 227
-},
-{
-  "fields": {
-    "latitude": 29.6526636033,
-    "district": 4,
-    "name": "Dilasaini",
-    "longitude": 80.5992492667,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 228
-},
-{
-  "fields": {
-    "latitude": 29.5608875082,
-    "district": 4,
-    "name": "DurgaBhabani",
-    "longitude": 80.4622996977,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 229
-},
-{
-  "fields": {
-    "latitude": 29.5608875082,
-    "district": 4,
-    "name": "Durga Bhabani",
-    "longitude": 80.4622996977,
-    "cannonical_name": 229
-  },
-  "model": "dataentry.vdc",
-  "pk": 230
-},
-{
-  "fields": {
-    "latitude": 29.4709133812,
-    "district": 4,
-    "name": "Durgasthan",
-    "longitude": 80.4519849842,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 231
-},
-{
-  "fields": {
-    "latitude": 29.4610336256,
-    "district": 4,
-    "name": "Gajari",
-    "longitude": 80.7240821543,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 232
-},
-{
-  "fields": {
-    "latitude": 29.4965137544,
-    "district": 4,
-    "name": "Giregada",
-    "longitude": 80.3668575298,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 233
-},
-{
-  "fields": {
-    "latitude": 29.6519800982,
-    "district": 4,
-    "name": "Gokuleswor",
-    "longitude": 80.5432018478,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 234
-},
-{
-  "fields": {
-    "latitude": 29.4831543363,
-    "district": 4,
-    "name": "Gujar",
-    "longitude": 80.5852684804,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 235
-},
-{
-  "fields": {
-    "latitude": 29.5150305291,
-    "district": 4,
-    "name": "Gurukhola",
-    "longitude": 80.4916282805,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 236
-},
-{
-  "fields": {
-    "latitude": 29.5116130036,
-    "district": 4,
-    "name": "Gwallek",
-    "longitude": 80.4278758949,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 237
-},
-{
-  "fields": {
-    "latitude": 29.6129581702,
-    "district": 4,
-    "name": "Hat",
-    "longitude": 80.6961205817,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 238
-},
-{
-  "fields": {
-    "latitude": 29.550137837,
-    "district": 4,
-    "name": "Hatraj",
-    "longitude": 80.5025022254,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 239
-},
-{
-  "fields": {
-    "latitude": 29.550137837,
-    "district": 4,
-    "name": "Hatairaj",
-    "longitude": 80.5025022254,
-    "cannonical_name": 239
-  },
-  "model": "dataentry.vdc",
-  "pk": 240
-},
-{
-  "fields": {
-    "latitude": 29.4042405647,
-    "district": 4,
-    "name": "Kaipal",
-    "longitude": 80.5050498354,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 241
-},
-{
-  "fields": {
-    "latitude": 29.4042405647,
-    "district": 4,
-    "name": "Kailpal",
-    "longitude": 80.5050498354,
-    "cannonical_name": 241
-  },
-  "model": "dataentry.vdc",
-  "pk": 242
-},
-{
-  "fields": {
-    "latitude": 29.5844995029,
-    "district": 4,
-    "name": "Kataujpani",
-    "longitude": 80.5820995022,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 243
-},
-{
-  "fields": {
-    "latitude": 29.5715750427,
-    "district": 4,
-    "name": "Kotila",
-    "longitude": 80.7073052107,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 244
-},
-{
-  "fields": {
-    "latitude": 29.6849747539,
-    "district": 4,
-    "name": "Kotpetara",
-    "longitude": 80.7327813102,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 245
-},
-{
-  "fields": {
-    "latitude": 29.4118212577,
-    "district": 4,
-    "name": "Kulau",
-    "longitude": 80.3213112348,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 246
-},
-{
-  "fields": {
-    "latitude": 29.5904025016,
-    "district": 4,
-    "name": "Kuwakot",
-    "longitude": 80.7534107372,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 247
-},
-{
-  "fields": {
-    "latitude": 29.6463256468,
-    "district": 4,
-    "name": "Mahadevsthan",
-    "longitude": 80.6856194577,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 248
-},
-{
-  "fields": {
-    "latitude": 29.3894519996,
-    "district": 4,
-    "name": "Mahakali",
-    "longitude": 80.301365313,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 249
-},
-{
-  "fields": {
-    "latitude": 29.4365517153,
-    "district": 4,
-    "name": "Maharudra",
-    "longitude": 80.4158834871,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 250
-},
-{
-  "fields": {
-    "latitude": 29.5822625771,
-    "district": 4,
-    "name": "Malladehi",
-    "longitude": 80.6691531983,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 251
-},
-{
-  "fields": {
-    "latitude": 29.636880849,
-    "district": 4,
-    "name": "Mathairaj",
-    "longitude": 80.6440499198,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 252
-},
-{
-  "fields": {
-    "latitude": 29.5345414931,
-    "district": 4,
-    "name": "Maunali",
-    "longitude": 80.5588603285,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 253
-},
-{
-  "fields": {
-    "latitude": 29.4129397206,
-    "district": 4,
-    "name": "Melauli",
-    "longitude": 80.434710946,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 254
-},
-{
-  "fields": {
-    "latitude": 29.5173295918,
-    "district": 4,
-    "name": "Nagarjun",
-    "longitude": 80.3782907062,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 255
-},
-{
-  "fields": {
-    "latitude": 29.6429702581,
-    "district": 4,
-    "name": "Nwadeu",
-    "longitude": 80.7384978984,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 256
-},
-{
-  "fields": {
-    "latitude": 29.6048803825,
-    "district": 4,
-    "name": "Nwali",
-    "longitude": 80.4718687692,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 257
-},
-{
-  "fields": {
-    "latitude": 29.4269205069,
-    "district": 4,
-    "name": "Pancheswor",
-    "longitude": 80.2723474143,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 258
-},
-{
-  "fields": {
-    "latitude": 29.4640783301,
-    "district": 4,
-    "name": "Patan",
-    "longitude": 80.5566234027,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 259
-},
-{
-  "fields": {
-    "latitude": 29.4714726127,
-    "district": 4,
-    "name": "Raudidewal",
-    "longitude": 80.3664847088,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 260
-},
-{
-  "fields": {
-    "latitude": 29.5180130969,
-    "district": 4,
-    "name": "Rauleswor",
-    "longitude": 80.602045424,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 261
-},
-{
-  "fields": {
-    "latitude": 29.67192602,
-    "district": 4,
-    "name": "Rudreswor",
-    "longitude": 80.6267137447,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 262
-},
-{
-  "fields": {
-    "latitude": 29.4342526527,
-    "district": 4,
-    "name": "Sakar",
-    "longitude": 80.5174150642,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 263
-},
-{
-  "fields": {
-    "latitude": 29.4505946384,
-    "district": 4,
-    "name": "Salena",
-    "longitude": 80.4445907017,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 264
-},
-{
-  "fields": {
-    "latitude": 29.3476339143,
-    "district": 4,
-    "name": "Sarmali",
-    "longitude": 80.3144761837,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 265
-},
-{
-  "fields": {
-    "latitude": 29.5186344652,
-    "district": 4,
-    "name": "Shankarpur",
-    "longitude": 80.6411294889,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 266
-},
-{
-  "fields": {
-    "latitude": 29.4233165709,
-    "district": 4,
-    "name": "Shibanath",
-    "longitude": 80.3713313814,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 267
-},
-{
-  "fields": {
-    "latitude": 29.510743088,
-    "district": 4,
-    "name": "Shikharpur",
-    "longitude": 80.6781630384,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 268
-},
-{
-  "fields": {
-    "latitude": 29.4637055092,
-    "district": 4,
-    "name": "Shivaling",
-    "longitude": 80.8385381916,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 269
-},
-{
-  "fields": {
-    "latitude": 29.4172892986,
-    "district": 4,
-    "name": "Siddhapur",
-    "longitude": 80.6715143978,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 270
-},
-{
-  "fields": {
-    "latitude": 29.4285360645,
-    "district": 4,
-    "name": "Sikash",
-    "longitude": 80.7504281694,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 271
-},
-{
-  "fields": {
-    "latitude": 29.4285360645,
-    "district": 4,
-    "name": "Sigash",
-    "longitude": 80.7504281694,
-    "cannonical_name": 271
-  },
-  "model": "dataentry.vdc",
-  "pk": 272
-},
-{
-  "fields": {
-    "latitude": 29.4262991387,
-    "district": 4,
-    "name": "Silanga",
-    "longitude": 80.5822237759,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 273
-},
-{
-  "fields": {
-    "latitude": 29.5838781346,
-    "district": 4,
-    "name": "SreeKedar",
-    "longitude": 80.4657172232,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 274
-},
-{
-  "fields": {
-    "latitude": 29.5838781346,
-    "district": 4,
-    "name": "Sree Kedar",
-    "longitude": 80.4657172232,
-    "cannonical_name": 274
-  },
-  "model": "dataentry.vdc",
-  "pk": 275
-},
-{
-  "fields": {
-    "latitude": 29.5641186233,
-    "district": 4,
-    "name": "Sreekot",
-    "longitude": 80.5246229362,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 276
-},
-{
-  "fields": {
-    "latitude": 29.6028298672,
-    "district": 4,
-    "name": "Talladehi",
-    "longitude": 80.6324303329,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 277
-},
-{
-  "fields": {
-    "latitude": 29.4164815198,
-    "district": 4,
-    "name": "Thalakanda",
-    "longitude": 80.833318698,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 278
-},
-{
-  "fields": {
-    "latitude": 29.3646594052,
-    "district": 4,
-    "name": "Udayadeb",
-    "longitude": 80.3572263214,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 279
-},
-{
-  "fields": {
-    "latitude": 29.5283278103,
-    "district": 5,
-    "name": "Banjh",
-    "longitude": 80.8952691156,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 280
-},
-{
-  "fields": {
-    "latitude": 29.5026031635,
-    "district": 5,
-    "name": "Bhairabanath",
-    "longitude": 80.9788431494,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 281
-},
-{
-  "fields": {
-    "latitude": 29.5466581746,
-    "district": 5,
-    "name": "Bhamchaur",
-    "longitude": 80.9348502751,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 282
-},
-{
-  "fields": {
-    "latitude": 29.5715750427,
-    "district": 5,
-    "name": "Bhatekhola",
-    "longitude": 81.2524316033,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 283
-},
-{
-  "fields": {
-    "latitude": 29.5525611733,
-    "district": 5,
-    "name": "Byasi",
-    "longitude": 81.0660211191,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 284
-},
-{
-  "fields": {
-    "latitude": 29.5898432701,
-    "district": 5,
-    "name": "Chainpur",
-    "longitude": 81.1972541,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 285
-},
-{
-  "fields": {
-    "latitude": 29.5041565842,
-    "district": 5,
-    "name": "Chaudhari",
-    "longitude": 81.0344556105,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 286
-},
-{
-  "fields": {
-    "latitude": 29.704796402,
-    "district": 5,
-    "name": "Dahabagar",
-    "longitude": 80.9943152196,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 287
-},
-{
-  "fields": {
-    "latitude": 29.4308972639,
-    "district": 5,
-    "name": "Dangaji",
-    "longitude": 80.9519379028,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 288
-},
-{
-  "fields": {
-    "latitude": 29.6119018441,
-    "district": 5,
-    "name": "Dantola",
-    "longitude": 81.3929229716,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 289
-},
-{
-  "fields": {
-    "latitude": 29.6119018441,
-    "district": 5,
-    "name": "Datola",
-    "longitude": 81.3929229716,
-    "cannonical_name": 289
-  },
-  "model": "dataentry.vdc",
-  "pk": 290
-},
-{
-  "fields": {
-    "latitude": 29.695786562,
-    "district": 5,
-    "name": "Daulichaur",
-    "longitude": 81.1559952462,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 291
-},
-{
-  "fields": {
-    "latitude": 29.5372755136,
-    "district": 5,
-    "name": "Deulekh",
-    "longitude": 80.790692834,
-    "cannonical_name": 224
-  },
-  "model": "dataentry.vdc",
-  "pk": 292
-},
-{
-  "fields": {
-    "latitude": 29.5937578903,
-    "district": 5,
-    "name": "Deulikot",
-    "longitude": 80.8149261969,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 293
-},
-{
-  "fields": {
-    "latitude": 29.7126877792,
-    "district": 5,
-    "name": "Dhamena",
-    "longitude": 81.2303730294,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 294
-},
-{
-  "fields": {
-    "latitude": 29.4453751449,
-    "district": 5,
-    "name": "Gadaraya",
-    "longitude": 81.2550413501,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 295
-},
-{
-  "fields": {
-    "latitude": 29.5292598628,
-    "district": 5,
-    "name": "Hemantabada",
-    "longitude": 81.2114212968,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 296
-},
-{
-  "fields": {
-    "latitude": 29.54616108,
-    "district": 5,
-    "name": "Kadel",
-    "longitude": 81.0959089334,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 297
-},
-{
-  "fields": {
-    "latitude": 29.5087547095,
-    "district": 5,
-    "name": "Kailash",
-    "longitude": 81.264113327,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 298
-},
-{
-  "fields": {
-    "latitude": 29.4410255669,
-    "district": 5,
-    "name": "Kalukheti",
-    "longitude": 81.1763139889,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 299
-},
-{
-  "fields": {
-    "latitude": 29.8565345362,
-    "district": 5,
-    "name": "Kanda",
-    "longitude": 81.2846184803,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 300
-},
-{
-  "fields": {
-    "latitude": 29.6803144918,
-    "district": 5,
-    "name": "Kaphalaseri",
-    "longitude": 80.851027694,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 301
-},
-{
-  "fields": {
-    "latitude": 29.5886626704,
-    "district": 5,
-    "name": "Khiratadi",
-    "longitude": 80.88538936,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 302
-},
-{
-  "fields": {
-    "latitude": 29.4537636167,
-    "district": 5,
-    "name": "Koiralakot",
-    "longitude": 81.0589996576,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 303
-},
-{
-  "fields": {
-    "latitude": 29.4494140387,
-    "district": 5,
-    "name": "Kotbhairab",
-    "longitude": 81.0300438957,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 304
-},
-{
-  "fields": {
-    "latitude": 29.4494140387,
-    "district": 5,
-    "name": "Kot Bhairab",
-    "longitude": 81.0300438957,
-    "cannonical_name": 304
-  },
-  "model": "dataentry.vdc",
-  "pk": 305
-},
-{
-  "fields": {
-    "latitude": 29.5233568641,
-    "district": 5,
-    "name": "Kotdewal",
-    "longitude": 81.2634298219,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 306
-},
-{
-  "fields": {
-    "latitude": 29.4718454336,
-    "district": 5,
-    "name": "Lamatola",
-    "longitude": 81.1508378894,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 307
-},
-{
-  "fields": {
-    "latitude": 29.5791557357,
-    "district": 5,
-    "name": "Lekhgau",
-    "longitude": 81.0198534559,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 308
-},
-{
-  "fields": {
-    "latitude": 29.5791557357,
-    "district": 5,
-    "name": "Lekgau",
-    "longitude": 81.0198534559,
-    "cannonical_name": 308
-  },
-  "model": "dataentry.vdc",
-  "pk": 309
-},
-{
-  "fields": {
-    "latitude": 29.5096867619,
-    "district": 5,
-    "name": "Luyanta",
-    "longitude": 81.1872500707,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 310
-},
-{
-  "fields": {
-    "latitude": 29.4537014798,
-    "district": 5,
-    "name": "Majhigau",
-    "longitude": 81.1612768766,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 311
-},
-{
-  "fields": {
-    "latitude": 29.4844592097,
-    "district": 5,
-    "name": "Malumela",
-    "longitude": 81.0913108082,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 312
-},
-{
-  "fields": {
-    "latitude": 29.526277295,
-    "district": 5,
-    "name": "Mashdev",
-    "longitude": 81.3029488445,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 313
-},
-{
-  "fields": {
-    "latitude": 29.526277295,
-    "district": 5,
-    "name": "Masta",
-    "longitude": 81.3029488445,
-    "cannonical_name": 313
-  },
-  "model": "dataentry.vdc",
-  "pk": 314
-},
-{
-  "fields": {
-    "latitude": 29.5050264998,
-    "district": 5,
-    "name": "Matela",
-    "longitude": 81.0925535447,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 315
-},
-{
-  "fields": {
-    "latitude": 29.5026031635,
-    "district": 5,
-    "name": "Maulali",
-    "longitude": 81.0069911325,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 316
-},
-{
-  "fields": {
-    "latitude": 29.6332769129,
-    "district": 5,
-    "name": "Melbisauni",
-    "longitude": 81.3366891422,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 317
-},
-{
-  "fields": {
-    "latitude": 29.4454994185,
-    "district": 5,
-    "name": "Parakatne",
-    "longitude": 80.9877287158,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 318
-},
-{
-  "fields": {
-    "latitude": 29.4474256602,
-    "district": 5,
-    "name": "Patadewal",
-    "longitude": 81.2059532559,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 319
-},
-{
-  "fields": {
-    "latitude": 29.4433867664,
-    "district": 5,
-    "name": "Pauwagadhi",
-    "longitude": 81.0995750063,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 320
-},
-{
-  "fields": {
-    "latitude": 29.6688191786,
-    "district": 5,
-    "name": "Pipalkot",
-    "longitude": 80.9004264724,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 321
-},
-{
-  "fields": {
-    "latitude": 29.4839621151,
-    "district": 5,
-    "name": "Rayal",
-    "longitude": 80.9432387469,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 322
-},
-{
-  "fields": {
-    "latitude": 29.5666662333,
-    "district": 5,
-    "name": "Rilu",
-    "longitude": 81.3103431271,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 323
-},
-{
-  "fields": {
-    "latitude": 29.5659827281,
-    "district": 5,
-    "name": "Rithapata",
-    "longitude": 81.1575486669,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 324
-},
-{
-  "fields": {
-    "latitude": 29.5536174994,
-    "district": 5,
-    "name": "Sainpasela",
-    "longitude": 80.9980434292,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 325
-},
-{
-  "fields": {
-    "latitude": 29.5312482413,
-    "district": 5,
-    "name": "Subeda",
-    "longitude": 81.1420765967,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 326
-},
-{
-  "fields": {
-    "latitude": 29.6097891919,
-    "district": 5,
-    "name": "Sunikot",
-    "longitude": 81.224345757,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 327
-},
-{
-  "fields": {
-    "latitude": 29.4937175971,
-    "district": 5,
-    "name": "Sunkuda",
-    "longitude": 80.8661269433,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 328
-},
-{
-  "fields": {
-    "latitude": 29.6465741941,
-    "district": 5,
-    "name": "Surma",
-    "longitude": 81.0684444554,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 329
-},
-{
-  "fields": {
-    "latitude": 29.5305025993,
-    "district": 5,
-    "name": "Syandi",
-    "longitude": 80.8246816789,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 330
-},
-{
-  "fields": {
-    "latitude": 29.4244971707,
-    "district": 6,
-    "name": "Atichaur",
-    "longitude": 81.365644904,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 331
-},
-{
-  "fields": {
-    "latitude": 29.527022937,
-    "district": 6,
-    "name": "Baddhu",
-    "longitude": 81.7344891154,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 332
-},
-{
-  "fields": {
-    "latitude": 29.4799853581,
-    "district": 6,
-    "name": "Bai",
-    "longitude": 81.758846752,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 333
-},
-{
-  "fields": {
-    "latitude": 29.3377541587,
-    "district": 6,
-    "name": "Barhabise",
-    "longitude": 81.2899622475,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 334
-},
-{
-  "fields": {
-    "latitude": 29.3377541587,
-    "district": 6,
-    "name": "Barhabis",
-    "longitude": 81.2899622475,
-    "cannonical_name": 334
-  },
-  "model": "dataentry.vdc",
-  "pk": 335
-},
-{
-  "fields": {
-    "latitude": 29.7692322927,
-    "district": 6,
-    "name": "Bichhaiyan",
-    "longitude": 81.6543326072,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 336
-},
-{
-  "fields": {
-    "latitude": 29.7692322927,
-    "district": 6,
-    "name": "Bichhaiya",
-    "longitude": 81.6543326072,
-    "cannonical_name": 336
-  },
-  "model": "dataentry.vdc",
-  "pk": 337
-},
-{
-  "fields": {
-    "latitude": 29.3962870507,
-    "district": 6,
-    "name": "Bramhatola",
-    "longitude": 81.3682546508,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 338
-},
-{
-  "fields": {
-    "latitude": 29.3897626838,
-    "district": 6,
-    "name": "Budhiganga",
-    "longitude": 81.4763105948,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 339
-},
-{
-  "fields": {
-    "latitude": 29.3057536922,
-    "district": 6,
-    "name": "Chhatara",
-    "longitude": 81.358064211,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 340
-},
-{
-  "fields": {
-    "latitude": 29.5927015642,
-    "district": 6,
-    "name": "Dahakot",
-    "longitude": 81.4630133136,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 341
-},
-{
-  "fields": {
-    "latitude": 29.4231301604,
-    "district": 6,
-    "name": "Dogadi",
-    "longitude": 81.2913913945,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 342
-},
-{
-  "fields": {
-    "latitude": 29.3762789921,
-    "district": 6,
-    "name": "Gotree",
-    "longitude": 81.655140386,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 343
-},
-{
-  "fields": {
-    "latitude": 29.3927452515,
-    "district": 6,
-    "name": "Gudukhati",
-    "longitude": 81.3048129494,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 344
-},
-{
-  "fields": {
-    "latitude": 29.4515888277,
-    "district": 6,
-    "name": "Jagannath",
-    "longitude": 81.6658900572,
-    "cannonical_name": null
-  },
-  "model": "dataentry.vdc",
-  "pk": 345
-},
+    {
+	"fields": {
+	    "latitude": 29.0589462112,
+	    "district": 1,
+	    "name": "Chalsa",
+	    "longitude": 81.3814276584,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 1
+    },
+    {
+	"fields": {
+	    "latitude": 29.1837169619,
+	    "district": 1,
+	    "name": "Chandika",
+	    "longitude": 81.2336041444,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 16
+    },
+    {
+	"fields": {
+	    "latitude": 29.1837169619,
+	    "district": 1,
+	    "name": "Chandika(Bayalpata)",
+	    "longitude": 81.2336041444,
+	    "cannonical_name": 16
+	},
+	"model": "dataentry.vdc",
+	"pk": 17
+    },
+    {
+	"fields": {
+	    "latitude": 29.1487339277,
+	    "district": 1,
+	    "name": "Chaphamandau",
+	    "longitude": 81.3821111635,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 18
+    },
+    {
+	"fields": {
+	    "latitude": 29.1881908135,
+	    "district": 1,
+	    "name": "Darna",
+	    "longitude": 81.3370619631,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 19
+    },
+    {
+	"fields": {
+	    "latitude": 29.304386682,
+	    "district": 1,
+	    "name": "Devisthan",
+	    "longitude": 81.2010444465,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 20
+    },
+    {
+	"fields": {
+	    "latitude": 29.2326807824,
+	    "district": 1,
+	    "name": "Marku",
+	    "longitude": 81.1460533537,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 21
+    },
+    {
+	"fields": {
+	    "latitude": 29.0447168775,
+	    "district": 1,
+	    "name": "Mashtabamdali",
+	    "longitude": 81.314692705,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 22
+    },
+    {
+	"fields": {
+	    "latitude": 29.0447168775,
+	    "district": 1,
+	    "name": "Mashtanamdali",
+	    "longitude": 81.314692705,
+	    "cannonical_name": 22
+	},
+	"model": "dataentry.vdc",
+	"pk": 23
+    },
+    {
+	"fields": {
+	    "latitude": 29.3203558468,
+	    "district": 1,
+	    "name": "Babala",
+	    "longitude": 81.2466528783,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 24
+    },
+    {
+	"fields": {
+	    "latitude": 29.2081988722,
+	    "district": 1,
+	    "name": "Baijinath",
+	    "longitude": 81.1971298263,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 25
+    },
+    {
+	"fields": {
+	    "latitude": 29.1398483613,
+	    "district": 1,
+	    "name": "Bannatoli",
+	    "longitude": 81.3227704927,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 26
+    },
+    {
+	"fields": {
+	    "latitude": 29.2058376727,
+	    "district": 1,
+	    "name": "Baradadivi",
+	    "longitude": 81.2962380671,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 27
+    },
+    {
+	"fields": {
+	    "latitude": 29.060437495,
+	    "district": 1,
+	    "name": "Basti",
+	    "longitude": 81.1739527895,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 28
+    },
+    {
+	"fields": {
+	    "latitude": 29.1667536079,
+	    "district": 1,
+	    "name": "Batulasen",
+	    "longitude": 81.4526364633,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 29
+    },
+    {
+	"fields": {
+	    "latitude": 29.0459596141,
+	    "district": 1,
+	    "name": "Bayala",
+	    "longitude": 81.3850937312,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 30
+    },
+    {
+	"fields": {
+	    "latitude": 29.2113678504,
+	    "district": 1,
+	    "name": "Bhagyaswori",
+	    "longitude": 81.2393207326,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 31
+    },
+    {
+	"fields": {
+	    "latitude": 28.9242335679,
+	    "district": 1,
+	    "name": "Bhairabsthan",
+	    "longitude": 81.4397741399,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 32
+    },
+    {
+	"fields": {
+	    "latitude": 29.231375909,
+	    "district": 1,
+	    "name": "Bhatakatiya",
+	    "longitude": 81.4241156592,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 33
+    },
+    {
+	"fields": {
+	    "latitude": 29.0343400273,
+	    "district": 1,
+	    "name": "Bhuli",
+	    "longitude": 81.3580020742,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 34
+    },
+    {
+	"fields": {
+	    "latitude": 29.1030633591,
+	    "district": 1,
+	    "name": "Binayak",
+	    "longitude": 81.3988881071,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 35
+    },
+    {
+	"fields": {
+	    "latitude": 29.2703978371,
+	    "district": 1,
+	    "name": "Bindhyawasini",
+	    "longitude": 81.2925098574,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 36
+    },
+    {
+	"fields": {
+	    "latitude": 29.0974710446,
+	    "district": 1,
+	    "name": "Birpath",
+	    "longitude": 81.3243239134,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 37
+    },
+    {
+	"fields": {
+	    "latitude": 29.2715784368,
+	    "district": 1,
+	    "name": "Budhakot",
+	    "longitude": 81.1742634736,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 38
+    },
+    {
+	"fields": {
+	    "latitude": 29.1837169619,
+	    "district": 1,
+	    "name": "Chandika(Bayalpata)",
+	    "longitude": 81.2336041444,
+	    "cannonical_name": 16
+	},
+	"model": "dataentry.vdc",
+	"pk": 39
+    },
+    {
+	"fields": {
+	    "latitude": 28.9865568065,
+	    "district": 1,
+	    "name": "Dhakari",
+	    "longitude": 81.257961781,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 40
+    },
+    {
+	"fields": {
+	    "latitude": 29.0657812623,
+	    "district": 1,
+	    "name": "Dhaku",
+	    "longitude": 81.3278035758,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 41
+    },
+    {
+	"fields": {
+	    "latitude": 29.0073726439,
+	    "district": 1,
+	    "name": "Dhamali",
+	    "longitude": 81.3734741444,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 42
+    },
+    {
+	"fields": {
+	    "latitude": 29.0153882947,
+	    "district": 1,
+	    "name": "Dhodasain",
+	    "longitude": 81.3057450018,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 43
+    },
+    {
+	"fields": {
+	    "latitude": 29.2779785301,
+	    "district": 1,
+	    "name": "Dhudharukot",
+	    "longitude": 81.2284467877,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 44
+    },
+    {
+	"fields": {
+	    "latitude": 28.9504553094,
+	    "district": 1,
+	    "name": "Dhungachalna",
+	    "longitude": 81.2761057348,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 45
+    },
+    {
+	"fields": {
+	    "latitude": 29.272945447,
+	    "district": 1,
+	    "name": "Duni",
+	    "longitude": 81.1207015278,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 46
+    },
+    {
+	"fields": {
+	    "latitude": 29.2097522929,
+	    "district": 1,
+	    "name": "Gajara",
+	    "longitude": 81.2555384447,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 47
+    },
+    {
+	"fields": {
+	    "latitude": 29.2664210801,
+	    "district": 1,
+	    "name": "Hatikot",
+	    "longitude": 81.2513131404,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 48
+    },
+    {
+	"fields": {
+	    "latitude": 29.0104173485,
+	    "district": 1,
+	    "name": "Hichma",
+	    "longitude": 81.2204311369,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 49
+    },
+    {
+	"fields": {
+	    "latitude": 29.2303817198,
+	    "district": 1,
+	    "name": "Jalapadevi",
+	    "longitude": 81.1881199863,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 50
+    },
+    {
+	"fields": {
+	    "latitude": 29.09187873,
+	    "district": 1,
+	    "name": "Janalibandali",
+	    "longitude": 81.2765406926,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 51
+    },
+    {
+	"fields": {
+	    "latitude": 29.1777518264,
+	    "district": 1,
+	    "name": "Janalikot",
+	    "longitude": 81.2569675918,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 52
+    },
+    {
+	"fields": {
+	    "latitude": 29.1430173395,
+	    "district": 1,
+	    "name": "Jupu",
+	    "longitude": 81.3042537179,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 53
+    },
+    {
+	"fields": {
+	    "latitude": 29.1427066554,
+	    "district": 1,
+	    "name": "Kalagau",
+	    "longitude": 81.3419086357,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 54
+    },
+    {
+	"fields": {
+	    "latitude": 29.1188461134,
+	    "district": 1,
+	    "name": "Kalekanda",
+	    "longitude": 81.5200549218,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 55
+    },
+    {
+	"fields": {
+	    "latitude": 29.1794916576,
+	    "district": 1,
+	    "name": "Kalika",
+	    "longitude": 81.2969215722,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 56
+    },
+    {
+	"fields": {
+	    "latitude": 29.0519247496,
+	    "district": 1,
+	    "name": "Kalikasthan",
+	    "longitude": 81.4331254993,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 57
+    },
+    {
+	"fields": {
+	    "latitude": 29.3380648428,
+	    "district": 1,
+	    "name": "Khaptad",
+	    "longitude": 81.2070717188,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 58
+    },
+    {
+	"fields": {
+	    "latitude": 29.2447974639,
+	    "district": 1,
+	    "name": "Khodasadevi",
+	    "longitude": 81.3397959836,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 59
+    },
+    {
+	"fields": {
+	    "latitude": 29.09442634,
+	    "district": 1,
+	    "name": "Kuika",
+	    "longitude": 81.375400386,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 60
+    },
+    {
+	"fields": {
+	    "latitude": 29.0932457403,
+	    "district": 1,
+	    "name": "Kuntibandali",
+	    "longitude": 81.1848267344,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 61
+    },
+    {
+	"fields": {
+	    "latitude": 29.2897223906,
+	    "district": 1,
+	    "name": "Kushkot",
+	    "longitude": 81.2882845531,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 62
+    },
+    {
+	"fields": {
+	    "latitude": 29.0769658913,
+	    "district": 1,
+	    "name": "Layati",
+	    "longitude": 81.4450557703,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 63
+    },
+    {
+	"fields": {
+	    "latitude": 29.2060240832,
+	    "district": 1,
+	    "name": "Lungra",
+	    "longitude": 81.162208929,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 64
+    },
+    {
+	"fields": {
+	    "latitude": 29.1428309291,
+	    "district": 1,
+	    "name": "Malatikot",
+	    "longitude": 81.3614817366,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 65
+    },
+    {
+	"fields": {
+	    "latitude": 29.1366172462,
+	    "district": 1,
+	    "name": "Mangalsen",
+	    "longitude": 81.2421790267,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 66
+    },
+    {
+	"fields": {
+	    "latitude": 29.0447168775,
+	    "district": 1,
+	    "name": "Mashtanamdali",
+	    "longitude": 81.314692705,
+	    "cannonical_name": 22
+	},
+	"model": "dataentry.vdc",
+	"pk": 67
+    },
+    {
+	"fields": {
+	    "latitude": 29.24585379,
+	    "district": 1,
+	    "name": "Mastamandau",
+	    "longitude": 81.2419304794,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 68
+    },
+    {
+	"fields": {
+	    "latitude": 28.9428124795,
+	    "district": 1,
+	    "name": "Nada",
+	    "longitude": 81.3335201639,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 69
+    },
+    {
+	"fields": {
+	    "latitude": 29.2295118042,
+	    "district": 1,
+	    "name": "Nandegada",
+	    "longitude": 81.2949953305,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 70
+    },
+    {
+	"fields": {
+	    "latitude": 29.2301331725,
+	    "district": 1,
+	    "name": "Nawathana",
+	    "longitude": 81.2421168899,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 71
+    },
+    {
+	"fields": {
+	    "latitude": 29.1397240876,
+	    "district": 1,
+	    "name": "Oligau",
+	    "longitude": 81.283624291,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 72
+    },
+    {
+	"fields": {
+	    "latitude": 29.2720133946,
+	    "district": 1,
+	    "name": "Patalkot",
+	    "longitude": 81.1417659125,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 73
+    },
+    {
+	"fields": {
+	    "latitude": 29.1663186501,
+	    "district": 1,
+	    "name": "Payal",
+	    "longitude": 81.1832111769,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 74
+    },
+    {
+	"fields": {
+	    "latitude": 29.1292229637,
+	    "district": 1,
+	    "name": "Pulletala",
+	    "longitude": 81.4651259658,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 75
+    },
+    {
+	"fields": {
+	    "latitude": 28.8200922441,
+	    "district": 1,
+	    "name": "Rahaph",
+	    "longitude": 81.5239695419,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 76
+    },
+    {
+	"fields": {
+	    "latitude": 29.2287040254,
+	    "district": 1,
+	    "name": "Ramarosan",
+	    "longitude": 81.4559297152,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 77
+    },
+    {
+	"fields": {
+	    "latitude": 28.984568428,
+	    "district": 1,
+	    "name": "Raniban",
+	    "longitude": 81.401435717,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 78
+    },
+    {
+	"fields": {
+	    "latitude": 29.2682851849,
+	    "district": 1,
+	    "name": "Risidaha",
+	    "longitude": 81.3776373119,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 79
+    },
+    {
+	"fields": {
+	    "latitude": 29.2138533235,
+	    "district": 1,
+	    "name": "Rodikot",
+	    "longitude": 81.2187534425,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 80
+    },
+    {
+	"fields": {
+	    "latitude": 29.2138533235,
+	    "district": 1,
+	    "name": "Ridikot",
+	    "longitude": 81.2187534425,
+	    "cannonical_name": 80
+	},
+	"model": "dataentry.vdc",
+	"pk": 81
+    },
+    {
+	"fields": {
+	    "latitude": 29.1571223995,
+	    "district": 1,
+	    "name": "Santada",
+	    "longitude": 81.397831781,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 82
+    },
+    {
+	"fields": {
+	    "latitude": 29.0606860424,
+	    "district": 1,
+	    "name": "Sera",
+	    "longitude": 81.2874146375,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 83
+    },
+    {
+	"fields": {
+	    "latitude": 29.2517567886,
+	    "district": 1,
+	    "name": "Siddheswor",
+	    "longitude": 81.2089358237,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 84
+    },
+    {
+	"fields": {
+	    "latitude": 29.1563767576,
+	    "district": 1,
+	    "name": "Siudi",
+	    "longitude": 81.1156063079,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 85
+    },
+    {
+	"fields": {
+	    "latitude": 29.19452877,
+	    "district": 1,
+	    "name": "Soukat",
+	    "longitude": 81.0746581382,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 86
+    },
+    {
+	"fields": {
+	    "latitude": 29.1998104004,
+	    "district": 1,
+	    "name": "Sutar",
+	    "longitude": 81.3640293465,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 87
+    },
+    {
+	"fields": {
+	    "latitude": 29.294258379,
+	    "district": 1,
+	    "name": "Thanti",
+	    "longitude": 81.3270579338,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 88
+    },
+    {
+	"fields": {
+	    "latitude": 29.1806722573,
+	    "district": 1,
+	    "name": "Timilsain",
+	    "longitude": 81.2753600929,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 89
+    },
+    {
+	"fields": {
+	    "latitude": 29.1206480814,
+	    "district": 1,
+	    "name": "Toli",
+	    "longitude": 81.4223136912,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 90
+    },
+    {
+	"fields": {
+	    "latitude": 28.9855626172,
+	    "district": 1,
+	    "name": "Tosi",
+	    "longitude": 81.3635943887,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 91
+    },
+    {
+	"fields": {
+	    "latitude": 28.9396435013,
+	    "district": 1,
+	    "name": "Turmakhad",
+	    "longitude": 81.3657070409,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 92
+    },
+    {
+	"fields": {
+	    "latitude": 28.9681643054,
+	    "district": 1,
+	    "name": "Walanta",
+	    "longitude": 81.1659371387,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 93
+    },
+    {
+	"fields": {
+	    "latitude": 28.9681643054,
+	    "district": 1,
+	    "name": "Walant",
+	    "longitude": 81.1659371387,
+	    "cannonical_name": 93
+	},
+	"model": "dataentry.vdc",
+	"pk": 94
+    },
+    {
+	"fields": {
+	    "latitude": 29.1217044075,
+	    "district": 1,
+	    "name": "Warla",
+	    "longitude": 81.4719610169,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 95
+    },
+    {
+	"fields": {
+	    "latitude": 27.9268753407,
+	    "district": 2,
+	    "name": "Adguri",
+	    "longitude": 83.1943938907,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 96
+    },
+    {
+	"fields": {
+	    "latitude": 28.0128105739,
+	    "district": 2,
+	    "name": "Argha",
+	    "longitude": 83.0964662497,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 97
+    },
+    {
+	"fields": {
+	    "latitude": 28.0306438436,
+	    "district": 2,
+	    "name": "Arghatos",
+	    "longitude": 83.1786111364,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 98
+    },
+    {
+	"fields": {
+	    "latitude": 27.9954743989,
+	    "district": 2,
+	    "name": "Asurkot",
+	    "longitude": 82.9889074003,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 99
+    },
+    {
+	"fields": {
+	    "latitude": 27.9604292279,
+	    "district": 2,
+	    "name": "Balkot",
+	    "longitude": 83.2494471204,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 100
+    },
+    {
+	"fields": {
+	    "latitude": 28.0438168511,
+	    "district": 2,
+	    "name": "Bangi",
+	    "longitude": 83.096714797,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 101
+    },
+    {
+	"fields": {
+	    "latitude": 27.9699361626,
+	    "district": 2,
+	    "name": "Bangla",
+	    "longitude": 83.1851355033,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 102
+    },
+    {
+	"fields": {
+	    "latitude": 27.9699361626,
+	    "district": 2,
+	    "name": "Wangla",
+	    "longitude": 83.1851355033,
+	    "cannonical_name": 102
+	},
+	"model": "dataentry.vdc",
+	"pk": 103
+    },
+    {
+	"fields": {
+	    "latitude": 28.0401507783,
+	    "district": 2,
+	    "name": "Bhagawati",
+	    "longitude": 83.2165146015,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 104
+    },
+    {
+	"fields": {
+	    "latitude": 28.0072182594,
+	    "district": 2,
+	    "name": "Chhatraganj",
+	    "longitude": 83.2260215362,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 105
+    },
+    {
+	"fields": {
+	    "latitude": 27.9486232306,
+	    "district": 2,
+	    "name": "Chidika",
+	    "longitude": 83.2798941661,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 106
+    },
+    {
+	"fields": {
+	    "latitude": 28.0486013869,
+	    "district": 2,
+	    "name": "Dhakawang",
+	    "longitude": 83.0064921226,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 107
+    },
+    {
+	"fields": {
+	    "latitude": 27.9286773087,
+	    "district": 2,
+	    "name": "Dhanchaur",
+	    "longitude": 83.0508578179,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 108
+    },
+    {
+	"fields": {
+	    "latitude": 28.0184650253,
+	    "district": 2,
+	    "name": "Dharapani",
+	    "longitude": 83.0407916517,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 109
+    },
+    {
+	"fields": {
+	    "latitude": 27.8869213603,
+	    "district": 2,
+	    "name": "Dhatiwang",
+	    "longitude": 83.2088096348,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 110
+    },
+    {
+	"fields": {
+	    "latitude": 27.9350152652,
+	    "district": 2,
+	    "name": "Dhikura",
+	    "longitude": 83.1031770271,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 111
+    },
+    {
+	"fields": {
+	    "latitude": 28.0104493745,
+	    "district": 2,
+	    "name": "Dibharna",
+	    "longitude": 83.1561176046,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 112
+    },
+    {
+	"fields": {
+	    "latitude": 28.0820931372,
+	    "district": 2,
+	    "name": "Gorkhunga",
+	    "longitude": 83.0205350458,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 113
+    },
+    {
+	"fields": {
+	    "latitude": 28.0820931372,
+	    "district": 2,
+	    "name": "Gokhunga",
+	    "longitude": 83.0205350458,
+	    "cannonical_name": 113
+	},
+	"model": "dataentry.vdc",
+	"pk": 114
+    },
+    {
+	"fields": {
+	    "latitude": 28.0778678329,
+	    "district": 2,
+	    "name": "Hansapur",
+	    "longitude": 83.0664541617,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 115
+    },
+    {
+	"fields": {
+	    "latitude": 27.8890340124,
+	    "district": 2,
+	    "name": "Jukena",
+	    "longitude": 83.0368148947,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 116
+    },
+    {
+	"fields": {
+	    "latitude": 27.8629986815,
+	    "district": 2,
+	    "name": "Juluke",
+	    "longitude": 82.8792358988,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 117
+    },
+    {
+	"fields": {
+	    "latitude": 27.8629986815,
+	    "district": 2,
+	    "name": "Jaluke",
+	    "longitude": 82.8792358988,
+	    "cannonical_name": 117
+	},
+	"model": "dataentry.vdc",
+	"pk": 118
+    },
+    {
+	"fields": {
+	    "latitude": 27.9932996099,
+	    "district": 2,
+	    "name": "Keemadada",
+	    "longitude": 83.0835417894,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 119
+    },
+    {
+	"fields": {
+	    "latitude": 27.9932996099,
+	    "district": 2,
+	    "name": "Keemdada",
+	    "longitude": 83.0835417894,
+	    "cannonical_name": 119
+	},
+	"model": "dataentry.vdc",
+	"pk": 120
+    },
+    {
+	"fields": {
+	    "latitude": 27.9749692456,
+	    "district": 2,
+	    "name": "Kerunga",
+	    "longitude": 83.2324216295,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 121
+    },
+    {
+	"fields": {
+	    "latitude": 28.0374788947,
+	    "district": 2,
+	    "name": "Khan",
+	    "longitude": 83.1414533132,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 122
+    },
+    {
+	"fields": {
+	    "latitude": 28.0374788947,
+	    "district": 2,
+	    "name": "Khana",
+	    "longitude": 83.1414533132,
+	    "cannonical_name": 122
+	},
+	"model": "dataentry.vdc",
+	"pk": 123
+    },
+    {
+	"fields": {
+	    "latitude": 27.9257568778,
+	    "district": 2,
+	    "name": "Khanchikot",
+	    "longitude": 83.1354260409,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 124
+    },
+    {
+	"fields": {
+	    "latitude": 28.063389952,
+	    "district": 2,
+	    "name": "Khandaha",
+	    "longitude": 83.1266026113,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 125
+    },
+    {
+	"fields": {
+	    "latitude": 27.9087935238,
+	    "district": 2,
+	    "name": "Khidim",
+	    "longitude": 83.2832495548,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 126
+    },
+    {
+	"fields": {
+	    "latitude": 27.9841654962,
+	    "district": 2,
+	    "name": "Khilji",
+	    "longitude": 83.0282400125,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 127
+    },
+    {
+	"fields": {
+	    "latitude": 27.8684045855,
+	    "district": 2,
+	    "name": "Maidan",
+	    "longitude": 83.2288798303,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 128
+    },
+    {
+	"fields": {
+	    "latitude": 28.0625200364,
+	    "district": 2,
+	    "name": "Mareng",
+	    "longitude": 83.1876831133,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 129
+    },
+    {
+	"fields": {
+	    "latitude": 27.9243277308,
+	    "district": 2,
+	    "name": "Narapani",
+	    "longitude": 83.1640711186,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 130
+    },
+    {
+	"fields": {
+	    "latitude": 27.9243277308,
+	    "district": 2,
+	    "name": "Narpani",
+	    "longitude": 83.1640711186,
+	    "cannonical_name": 130
+	},
+	"model": "dataentry.vdc",
+	"pk": 131
+    },
+    {
+	"fields": {
+	    "latitude": 27.9658351319,
+	    "district": 2,
+	    "name": "Nuwakot",
+	    "longitude": 83.0571336375,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 132
+    },
+    {
+	"fields": {
+	    "latitude": 27.9430930529,
+	    "district": 2,
+	    "name": "Pali",
+	    "longitude": 83.2348449658,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 133
+    },
+    {
+	"fields": {
+	    "latitude": 27.8610724398,
+	    "district": 2,
+	    "name": "Pathauti",
+	    "longitude": 83.2588919182,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 134
+    },
+    {
+	"fields": {
+	    "latitude": 27.8610724398,
+	    "district": 2,
+	    "name": "Patauti",
+	    "longitude": 83.2588919182,
+	    "cannonical_name": 134
+	},
+	"model": "dataentry.vdc",
+	"pk": 135
+    },
+    {
+	"fields": {
+	    "latitude": 27.874369721,
+	    "district": 2,
+	    "name": "Pathona",
+	    "longitude": 83.3079178756,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 136
+    },
+    {
+	"fields": {
+	    "latitude": 27.874369721,
+	    "district": 2,
+	    "name": "Panena",
+	    "longitude": 83.3079178756,
+	    "cannonical_name": 136
+	},
+	"model": "dataentry.vdc",
+	"pk": 137
+    },
+    {
+	"fields": {
+	    "latitude": 27.861010303,
+	    "district": 2,
+	    "name": "Pokharathok",
+	    "longitude": 83.2811369027,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 138
+    },
+    {
+	"fields": {
+	    "latitude": 27.9756527508,
+	    "district": 2,
+	    "name": "Sandhikharka",
+	    "longitude": 83.130330821,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 139
+    },
+    {
+	"fields": {
+	    "latitude": 27.8413129285,
+	    "district": 2,
+	    "name": "Siddhara",
+	    "longitude": 82.9140325225,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 140
+    },
+    {
+	"fields": {
+	    "latitude": 27.7935297077,
+	    "district": 2,
+	    "name": "Simalapani",
+	    "longitude": 83.1843277246,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 141
+    },
+    {
+	"fields": {
+	    "latitude": 27.7935297077,
+	    "district": 2,
+	    "name": "Simalpani",
+	    "longitude": 83.1843277246,
+	    "cannonical_name": 141
+	},
+	"model": "dataentry.vdc",
+	"pk": 142
+    },
+    {
+	"fields": {
+	    "latitude": 27.8730648476,
+	    "district": 2,
+	    "name": "Sitapur",
+	    "longitude": 83.1363580933,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 143
+    },
+    {
+	"fields": {
+	    "latitude": 27.8606996188,
+	    "district": 2,
+	    "name": "Subarnakhal",
+	    "longitude": 83.1761256632,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 144
+    },
+    {
+	"fields": {
+	    "latitude": 27.8355342035,
+	    "district": 2,
+	    "name": "Thada",
+	    "longitude": 83.0796893061,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 145
+    },
+    {
+	"fields": {
+	    "latitude": 28.0036764602,
+	    "district": 2,
+	    "name": "Thulapokhara",
+	    "longitude": 83.1961958587,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 146
+    },
+    {
+	"fields": {
+	    "latitude": 28.3982453184,
+	    "district": 3,
+	    "name": "Akhikarichaur",
+	    "longitude": 83.2599482443,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 147
+    },
+    {
+	"fields": {
+	    "latitude": 28.2030735415,
+	    "district": 3,
+	    "name": "Amalachaur",
+	    "longitude": 83.635192549,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 148
+    },
+    {
+	"fields": {
+	    "latitude": 28.2811795343,
+	    "district": 3,
+	    "name": "Amarbhumi",
+	    "longitude": 83.3956550768,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 149
+    },
+    {
+	"fields": {
+	    "latitude": 28.2148795388,
+	    "district": 3,
+	    "name": "Andheri (Narayanstha",
+	    "longitude": 83.6673172891,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 150
+    },
+    {
+	"fields": {
+	    "latitude": 28.2148795388,
+	    "district": 3,
+	    "name": "Narayansthan",
+	    "longitude": 83.6673172891,
+	    "cannonical_name": 150
+	},
+	"model": "dataentry.vdc",
+	"pk": 151
+    },
+    {
+	"fields": {
+	    "latitude": 28.2911214268,
+	    "district": 3,
+	    "name": "Argal",
+	    "longitude": 83.2126621181,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 152
+    },
+    {
+	"fields": {
+	    "latitude": 28.5004604006,
+	    "district": 3,
+	    "name": "Arjewa",
+	    "longitude": 83.0437120827,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 153
+    },
+    {
+	"fields": {
+	    "latitude": 28.1500086903,
+	    "district": 3,
+	    "name": "Batakachaur",
+	    "longitude": 83.4643162718,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 154
+    },
+    {
+	"fields": {
+	    "latitude": 28.2266233993,
+	    "district": 3,
+	    "name": "Bhakunde",
+	    "longitude": 83.5107324824,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 155
+    },
+    {
+	"fields": {
+	    "latitude": 28.2795639768,
+	    "district": 3,
+	    "name": "Bhimpokhara",
+	    "longitude": 83.4575433575,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 156
+    },
+    {
+	"fields": {
+	    "latitude": 28.2985778462,
+	    "district": 3,
+	    "name": "Bhinggithe",
+	    "longitude": 83.1310764629,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 157
+    },
+    {
+	"fields": {
+	    "latitude": 28.2429653851,
+	    "district": 3,
+	    "name": "Bihunkot",
+	    "longitude": 83.5829976134,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 158
+    },
+    {
+	"fields": {
+	    "latitude": 28.1646108449,
+	    "district": 3,
+	    "name": "Binamare",
+	    "longitude": 83.6248156987,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 159
+    },
+    {
+	"fields": {
+	    "latitude": 28.3549359492,
+	    "district": 3,
+	    "name": "Boharagaun",
+	    "longitude": 83.2427984798,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 160
+    },
+    {
+	"fields": {
+	    "latitude": 28.4184397875,
+	    "district": 3,
+	    "name": "Bongadovan",
+	    "longitude": 83.1225015806,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 161
+    },
+    {
+	"fields": {
+	    "latitude": 28.4592636836,
+	    "district": 3,
+	    "name": "Bowang",
+	    "longitude": 82.9675944683,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 162
+    },
+    {
+	"fields": {
+	    "latitude": 28.3320074597,
+	    "district": 3,
+	    "name": "Burtiwang",
+	    "longitude": 83.3743421448,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 163
+    },
+    {
+	"fields": {
+	    "latitude": 28.1311812314,
+	    "district": 3,
+	    "name": "Chhisti",
+	    "longitude": 83.6026328511,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 164
+    },
+    {
+	"fields": {
+	    "latitude": 28.2383672598,
+	    "district": 3,
+	    "name": "Dagatundada",
+	    "longitude": 83.6121397858,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 165
+    },
+    {
+	"fields": {
+	    "latitude": 28.1930695121,
+	    "district": 3,
+	    "name": "Damek",
+	    "longitude": 83.5624924601,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 166
+    },
+    {
+	"fields": {
+	    "latitude": 28.2768299564,
+	    "district": 3,
+	    "name": "Darling",
+	    "longitude": 83.587098644,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 167
+    },
+    {
+	"fields": {
+	    "latitude": 28.3047293922,
+	    "district": 3,
+	    "name": "Dhamja",
+	    "longitude": 83.5659721225,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 168
+    },
+    {
+	"fields": {
+	    "latitude": 28.2063046565,
+	    "district": 3,
+	    "name": "Dhudhilabhati",
+	    "longitude": 83.4843864673,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 169
+    },
+    {
+	"fields": {
+	    "latitude": 28.1455348387,
+	    "district": 3,
+	    "name": "Dhullubaskot",
+	    "longitude": 83.535090119,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 170
+    },
+    {
+	"fields": {
+	    "latitude": 28.1456591123,
+	    "district": 3,
+	    "name": "DhulluGaidi",
+	    "longitude": 83.6210253522,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 171
+    },
+    {
+	"fields": {
+	    "latitude": 28.1456591123,
+	    "district": 3,
+	    "name": "Dhullu Gaidi",
+	    "longitude": 83.6210253522,
+	    "cannonical_name": 171
+	},
+	"model": "dataentry.vdc",
+	"pk": 172
+    },
+    {
+	"fields": {
+	    "latitude": 28.2500489835,
+	    "district": 3,
+	    "name": "Gwalichaur",
+	    "longitude": 83.283560239,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 173
+    },
+    {
+	"fields": {
+	    "latitude": 28.2459479528,
+	    "district": 3,
+	    "name": "Harichaur",
+	    "longitude": 83.5066935885,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 174
+    },
+    {
+	"fields": {
+	    "latitude": 28.1966113113,
+	    "district": 3,
+	    "name": "Hatiya",
+	    "longitude": 83.4359818782,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 175
+    },
+    {
+	"fields": {
+	    "latitude": 28.2752765357,
+	    "district": 3,
+	    "name": "Heel",
+	    "longitude": 83.1409562186,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 176
+    },
+    {
+	"fields": {
+	    "latitude": 28.145783386,
+	    "district": 3,
+	    "name": "Hugdisheer",
+	    "longitude": 83.4946390439,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 177
+    },
+    {
+	"fields": {
+	    "latitude": 28.2423440168,
+	    "district": 3,
+	    "name": "Jaljala",
+	    "longitude": 83.4144825357,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 178
+    },
+    {
+	"fields": {
+	    "latitude": 28.2813659448,
+	    "district": 3,
+	    "name": "KalikaN.P.",
+	    "longitude": 83.5504379155,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 179
+    },
+    {
+	"fields": {
+	    "latitude": 28.2813659448,
+	    "district": 3,
+	    "name": "Baglung Municipality",
+	    "longitude": 83.5504379155,
+	    "cannonical_name": 179
+	},
+	"model": "dataentry.vdc",
+	"pk": 180
+    },
+    {
+	"fields": {
+	    "latitude": 28.1862965979,
+	    "district": 3,
+	    "name": "Kandebas",
+	    "longitude": 83.385091816,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 181
+    },
+    {
+	"fields": {
+	    "latitude": 28.3313860914,
+	    "district": 3,
+	    "name": "Khunga",
+	    "longitude": 83.1044819005,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 182
+    },
+    {
+	"fields": {
+	    "latitude": 28.1980404584,
+	    "district": 3,
+	    "name": "Kusmishera",
+	    "longitude": 83.6184156054,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 183
+    },
+    {
+	"fields": {
+	    "latitude": 28.2276797254,
+	    "district": 3,
+	    "name": "Lekhani",
+	    "longitude": 83.6404120425,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 184
+    },
+    {
+	"fields": {
+	    "latitude": 28.2912457005,
+	    "district": 3,
+	    "name": "Malikathota",
+	    "longitude": 83.5257695947,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 185
+    },
+    {
+	"fields": {
+	    "latitude": 28.2912457005,
+	    "district": 3,
+	    "name": "Malika",
+	    "longitude": 83.5257695947,
+	    "cannonical_name": 185
+	},
+	"model": "dataentry.vdc",
+	"pk": 186
+    },
+    {
+	"fields": {
+	    "latitude": 28.2149416756,
+	    "district": 3,
+	    "name": "Malma",
+	    "longitude": 83.2744261252,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 187
+    },
+    {
+	"fields": {
+	    "latitude": 28.2219010004,
+	    "district": 3,
+	    "name": "Narethanti",
+	    "longitude": 83.3813636063,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 188
+    },
+    {
+	"fields": {
+	    "latitude": 28.4669686502,
+	    "district": 3,
+	    "name": "Nisi",
+	    "longitude": 83.2477072892,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 189
+    },
+    {
+	"fields": {
+	    "latitude": 28.2312836614,
+	    "district": 3,
+	    "name": "Paiyunpata",
+	    "longitude": 83.4594074624,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 190
+    },
+    {
+	"fields": {
+	    "latitude": 28.1715080328,
+	    "district": 3,
+	    "name": "Paiyunthanthap",
+	    "longitude": 83.5591370714,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 191
+    },
+    {
+	"fields": {
+	    "latitude": 28.2805581661,
+	    "district": 3,
+	    "name": "Palakot",
+	    "longitude": 83.4923399813,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 192
+    },
+    {
+	"fields": {
+	    "latitude": 28.2987021198,
+	    "district": 3,
+	    "name": "Pandavkhani",
+	    "longitude": 83.4506461696,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 193
+    },
+    {
+	"fields": {
+	    "latitude": 28.3033002451,
+	    "district": 3,
+	    "name": "Rajkut",
+	    "longitude": 83.4966895592,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 194
+    },
+    {
+	"fields": {
+	    "latitude": 28.2817387658,
+	    "district": 3,
+	    "name": "Ranasinkiteni",
+	    "longitude": 83.3331454278,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 195
+    },
+    {
+	"fields": {
+	    "latitude": 28.1437950075,
+	    "district": 3,
+	    "name": "Rangkhani",
+	    "longitude": 83.5603176711,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 196
+    },
+    {
+	"fields": {
+	    "latitude": 28.2147552651,
+	    "district": 3,
+	    "name": "Rayadanda",
+	    "longitude": 83.5769082042,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 197
+    },
+    {
+	"fields": {
+	    "latitude": 28.235757513,
+	    "district": 3,
+	    "name": "Resh",
+	    "longitude": 83.3067372758,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 198
+    },
+    {
+	"fields": {
+	    "latitude": 28.2109649186,
+	    "district": 3,
+	    "name": "Righa",
+	    "longitude": 83.3211530199,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 199
+    },
+    {
+	"fields": {
+	    "latitude": 28.1489523642,
+	    "district": 3,
+	    "name": "Salyan",
+	    "longitude": 83.4320051212,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 200
+    },
+    {
+	"fields": {
+	    "latitude": 28.1621253718,
+	    "district": 3,
+	    "name": "Sarkuwa",
+	    "longitude": 83.6046833664,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 201
+    },
+    {
+	"fields": {
+	    "latitude": 28.2316564824,
+	    "district": 3,
+	    "name": "Singana",
+	    "longitude": 83.5400610652,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 202
+    },
+    {
+	"fields": {
+	    "latitude": 28.106015816,
+	    "district": 3,
+	    "name": "Sisakhani",
+	    "longitude": 83.58424035,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 203
+    },
+    {
+	"fields": {
+	    "latitude": 28.1628088769,
+	    "district": 3,
+	    "name": "Sukhaura",
+	    "longitude": 83.4211933131,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 204
+    },
+    {
+	"fields": {
+	    "latitude": 28.4368944255,
+	    "district": 3,
+	    "name": "Sunkhani",
+	    "longitude": 83.2089960453,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 205
+    },
+    {
+	"fields": {
+	    "latitude": 28.4368944255,
+	    "district": 3,
+	    "name": "Khungkhani",
+	    "longitude": 83.2089960453,
+	    "cannonical_name": 205
+	},
+	"model": "dataentry.vdc",
+	"pk": 206
+    },
+    {
+	"fields": {
+	    "latitude": 28.3627651896,
+	    "district": 3,
+	    "name": "Taman",
+	    "longitude": 83.0466325136,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 207
+    },
+    {
+	"fields": {
+	    "latitude": 28.2541500141,
+	    "district": 3,
+	    "name": "Tangram",
+	    "longitude": 83.2395052279,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 208
+    },
+    {
+	"fields": {
+	    "latitude": 28.3093275174,
+	    "district": 3,
+	    "name": "Tara",
+	    "longitude": 83.2780300613,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 209
+    },
+    {
+	"fields": {
+	    "latitude": 28.2423440168,
+	    "district": 3,
+	    "name": "Tityang",
+	    "longitude": 83.5543525357,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 210
+    },
+    {
+	"fields": {
+	    "latitude": 29.4512160067,
+	    "district": 4,
+	    "name": "Amchaur",
+	    "longitude": 80.3264064547,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 211
+    },
+    {
+	"fields": {
+	    "latitude": 29.4658802981,
+	    "district": 4,
+	    "name": "Basantapur",
+	    "longitude": 80.4972205951,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 212
+    },
+    {
+	"fields": {
+	    "latitude": 29.5255937899,
+	    "district": 4,
+	    "name": "Basuling",
+	    "longitude": 80.5428911637,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 213
+    },
+    {
+	"fields": {
+	    "latitude": 29.6247020307,
+	    "district": 4,
+	    "name": "Bhatana",
+	    "longitude": 80.7549641579,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 214
+    },
+    {
+	"fields": {
+	    "latitude": 29.4955195651,
+	    "district": 4,
+	    "name": "Bhumeswor",
+	    "longitude": 80.5399085959,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 215
+    },
+    {
+	"fields": {
+	    "latitude": 29.5662934123,
+	    "district": 4,
+	    "name": "Bijayapur",
+	    "longitude": 80.6192573254,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 216
+    },
+    {
+	"fields": {
+	    "latitude": 29.3744148872,
+	    "district": 4,
+	    "name": "Bilashpur",
+	    "longitude": 80.3964967968,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 217
+    },
+    {
+	"fields": {
+	    "latitude": 29.3744148872,
+	    "district": 4,
+	    "name": "Bisalpur",
+	    "longitude": 80.3964967968,
+	    "cannonical_name": 217
+	},
+	"model": "dataentry.vdc",
+	"pk": 218
+    },
+    {
+	"fields": {
+	    "latitude": 29.5582777615,
+	    "district": 4,
+	    "name": "Bumiraj",
+	    "longitude": 80.7450222654,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 219
+    },
+    {
+	"fields": {
+	    "latitude": 29.5053993208,
+	    "district": 4,
+	    "name": "Chaukham",
+	    "longitude": 80.7523544111,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 220
+    },
+    {
+	"fields": {
+	    "latitude": 29.5739362421,
+	    "district": 4,
+	    "name": "DasharathchandaN.P.",
+	    "longitude": 80.403642532,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 221
+    },
+    {
+	"fields": {
+	    "latitude": 29.5739362421,
+	    "district": 4,
+	    "name": "Dasharathchanda Municipality",
+	    "longitude": 80.403642532,
+	    "cannonical_name": 221
+	},
+	"model": "dataentry.vdc",
+	"pk": 222
+    },
+    {
+	"fields": {
+	    "latitude": 29.5195665176,
+	    "district": 4,
+	    "name": "Dehimandau",
+	    "longitude": 80.4654065391,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 223
+    },
+    {
+	"fields": {
+	    "latitude": 29.5923287432,
+	    "district": 4,
+	    "name": "Deulek",
+	    "longitude": 80.5161101908,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 224
+    },
+    {
+	"fields": {
+	    "latitude": 29.6180533901,
+	    "district": 4,
+	    "name": "Dhikarim/Rim",
+	    "longitude": 80.5700449576,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 225
+    },
+    {
+	"fields": {
+	    "latitude": 29.613020307,
+	    "district": 4,
+	    "name": "Dhikasintad/Sitad",
+	    "longitude": 80.5137489913,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 226
+    },
+    {
+	"fields": {
+	    "latitude": 29.387525758,
+	    "district": 4,
+	    "name": "Dhungad",
+	    "longitude": 80.8129378184,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 227
+    },
+    {
+	"fields": {
+	    "latitude": 29.6526636033,
+	    "district": 4,
+	    "name": "Dilasaini",
+	    "longitude": 80.5992492667,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 228
+    },
+    {
+	"fields": {
+	    "latitude": 29.5608875082,
+	    "district": 4,
+	    "name": "DurgaBhabani",
+	    "longitude": 80.4622996977,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 229
+    },
+    {
+	"fields": {
+	    "latitude": 29.5608875082,
+	    "district": 4,
+	    "name": "Durga Bhabani",
+	    "longitude": 80.4622996977,
+	    "cannonical_name": 229
+	},
+	"model": "dataentry.vdc",
+	"pk": 230
+    },
+    {
+	"fields": {
+	    "latitude": 29.4709133812,
+	    "district": 4,
+	    "name": "Durgasthan",
+	    "longitude": 80.4519849842,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 231
+    },
+    {
+	"fields": {
+	    "latitude": 29.4610336256,
+	    "district": 4,
+	    "name": "Gajari",
+	    "longitude": 80.7240821543,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 232
+    },
+    {
+	"fields": {
+	    "latitude": 29.4965137544,
+	    "district": 4,
+	    "name": "Giregada",
+	    "longitude": 80.3668575298,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 233
+    },
+    {
+	"fields": {
+	    "latitude": 29.6519800982,
+	    "district": 4,
+	    "name": "Gokuleswor",
+	    "longitude": 80.5432018478,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 234
+    },
+    {
+	"fields": {
+	    "latitude": 29.4831543363,
+	    "district": 4,
+	    "name": "Gujar",
+	    "longitude": 80.5852684804,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 235
+    },
+    {
+	"fields": {
+	    "latitude": 29.5150305291,
+	    "district": 4,
+	    "name": "Gurukhola",
+	    "longitude": 80.4916282805,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 236
+    },
+    {
+	"fields": {
+	    "latitude": 29.5116130036,
+	    "district": 4,
+	    "name": "Gwallek",
+	    "longitude": 80.4278758949,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 237
+    },
+    {
+	"fields": {
+	    "latitude": 29.6129581702,
+	    "district": 4,
+	    "name": "Hat",
+	    "longitude": 80.6961205817,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 238
+    },
+    {
+	"fields": {
+	    "latitude": 29.550137837,
+	    "district": 4,
+	    "name": "Hatraj",
+	    "longitude": 80.5025022254,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 239
+    },
+    {
+	"fields": {
+	    "latitude": 29.550137837,
+	    "district": 4,
+	    "name": "Hatairaj",
+	    "longitude": 80.5025022254,
+	    "cannonical_name": 239
+	},
+	"model": "dataentry.vdc",
+	"pk": 240
+    },
+    {
+	"fields": {
+	    "latitude": 29.4042405647,
+	    "district": 4,
+	    "name": "Kaipal",
+	    "longitude": 80.5050498354,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 241
+    },
+    {
+	"fields": {
+	    "latitude": 29.4042405647,
+	    "district": 4,
+	    "name": "Kailpal",
+	    "longitude": 80.5050498354,
+	    "cannonical_name": 241
+	},
+	"model": "dataentry.vdc",
+	"pk": 242
+    },
+    {
+	"fields": {
+	    "latitude": 29.5844995029,
+	    "district": 4,
+	    "name": "Kataujpani",
+	    "longitude": 80.5820995022,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 243
+    },
+    {
+	"fields": {
+	    "latitude": 29.5715750427,
+	    "district": 4,
+	    "name": "Kotila",
+	    "longitude": 80.7073052107,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 244
+    },
+    {
+	"fields": {
+	    "latitude": 29.6849747539,
+	    "district": 4,
+	    "name": "Kotpetara",
+	    "longitude": 80.7327813102,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 245
+    },
+    {
+	"fields": {
+	    "latitude": 29.4118212577,
+	    "district": 4,
+	    "name": "Kulau",
+	    "longitude": 80.3213112348,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 246
+    },
+    {
+	"fields": {
+	    "latitude": 29.5904025016,
+	    "district": 4,
+	    "name": "Kuwakot",
+	    "longitude": 80.7534107372,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 247
+    },
+    {
+	"fields": {
+	    "latitude": 29.6463256468,
+	    "district": 4,
+	    "name": "Mahadevsthan",
+	    "longitude": 80.6856194577,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 248
+    },
+    {
+	"fields": {
+	    "latitude": 29.3894519996,
+	    "district": 4,
+	    "name": "Mahakali",
+	    "longitude": 80.301365313,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 249
+    },
+    {
+	"fields": {
+	    "latitude": 29.4365517153,
+	    "district": 4,
+	    "name": "Maharudra",
+	    "longitude": 80.4158834871,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 250
+    },
+    {
+	"fields": {
+	    "latitude": 29.5822625771,
+	    "district": 4,
+	    "name": "Malladehi",
+	    "longitude": 80.6691531983,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 251
+    },
+    {
+	"fields": {
+	    "latitude": 29.636880849,
+	    "district": 4,
+	    "name": "Mathairaj",
+	    "longitude": 80.6440499198,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 252
+    },
+    {
+	"fields": {
+	    "latitude": 29.5345414931,
+	    "district": 4,
+	    "name": "Maunali",
+	    "longitude": 80.5588603285,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 253
+    },
+    {
+	"fields": {
+	    "latitude": 29.4129397206,
+	    "district": 4,
+	    "name": "Melauli",
+	    "longitude": 80.434710946,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 254
+    },
+    {
+	"fields": {
+	    "latitude": 29.5173295918,
+	    "district": 4,
+	    "name": "Nagarjun",
+	    "longitude": 80.3782907062,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 255
+    },
+    {
+	"fields": {
+	    "latitude": 29.6429702581,
+	    "district": 4,
+	    "name": "Nwadeu",
+	    "longitude": 80.7384978984,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 256
+    },
+    {
+	"fields": {
+	    "latitude": 29.6048803825,
+	    "district": 4,
+	    "name": "Nwali",
+	    "longitude": 80.4718687692,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 257
+    },
+    {
+	"fields": {
+	    "latitude": 29.4269205069,
+	    "district": 4,
+	    "name": "Pancheswor",
+	    "longitude": 80.2723474143,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 258
+    },
+    {
+	"fields": {
+	    "latitude": 29.4640783301,
+	    "district": 4,
+	    "name": "Patan",
+	    "longitude": 80.5566234027,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 259
+    },
+    {
+	"fields": {
+	    "latitude": 29.4714726127,
+	    "district": 4,
+	    "name": "Raudidewal",
+	    "longitude": 80.3664847088,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 260
+    },
+    {
+	"fields": {
+	    "latitude": 29.5180130969,
+	    "district": 4,
+	    "name": "Rauleswor",
+	    "longitude": 80.602045424,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 261
+    },
+    {
+	"fields": {
+	    "latitude": 29.67192602,
+	    "district": 4,
+	    "name": "Rudreswor",
+	    "longitude": 80.6267137447,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 262
+    },
+    {
+	"fields": {
+	    "latitude": 29.4342526527,
+	    "district": 4,
+	    "name": "Sakar",
+	    "longitude": 80.5174150642,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 263
+    },
+    {
+	"fields": {
+	    "latitude": 29.4505946384,
+	    "district": 4,
+	    "name": "Salena",
+	    "longitude": 80.4445907017,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 264
+    },
+    {
+	"fields": {
+	    "latitude": 29.3476339143,
+	    "district": 4,
+	    "name": "Sarmali",
+	    "longitude": 80.3144761837,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 265
+    },
+    {
+	"fields": {
+	    "latitude": 29.5186344652,
+	    "district": 4,
+	    "name": "Shankarpur",
+	    "longitude": 80.6411294889,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 266
+    },
+    {
+	"fields": {
+	    "latitude": 29.4233165709,
+	    "district": 4,
+	    "name": "Shibanath",
+	    "longitude": 80.3713313814,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 267
+    },
+    {
+	"fields": {
+	    "latitude": 29.510743088,
+	    "district": 4,
+	    "name": "Shikharpur",
+	    "longitude": 80.6781630384,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 268
+    },
+    {
+	"fields": {
+	    "latitude": 29.4637055092,
+	    "district": 4,
+	    "name": "Shivaling",
+	    "longitude": 80.8385381916,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 269
+    },
+    {
+	"fields": {
+	    "latitude": 29.4172892986,
+	    "district": 4,
+	    "name": "Siddhapur",
+	    "longitude": 80.6715143978,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 270
+    },
+    {
+	"fields": {
+	    "latitude": 29.4285360645,
+	    "district": 4,
+	    "name": "Sikash",
+	    "longitude": 80.7504281694,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 271
+    },
+    {
+	"fields": {
+	    "latitude": 29.4285360645,
+	    "district": 4,
+	    "name": "Sigash",
+	    "longitude": 80.7504281694,
+	    "cannonical_name": 271
+	},
+	"model": "dataentry.vdc",
+	"pk": 272
+    },
+    {
+	"fields": {
+	    "latitude": 29.4262991387,
+	    "district": 4,
+	    "name": "Silanga",
+	    "longitude": 80.5822237759,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 273
+    },
+    {
+	"fields": {
+	    "latitude": 29.5838781346,
+	    "district": 4,
+	    "name": "SreeKedar",
+	    "longitude": 80.4657172232,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 274
+    },
+    {
+	"fields": {
+	    "latitude": 29.5838781346,
+	    "district": 4,
+	    "name": "Sree Kedar",
+	    "longitude": 80.4657172232,
+	    "cannonical_name": 274
+	},
+	"model": "dataentry.vdc",
+	"pk": 275
+    },
+    {
+	"fields": {
+	    "latitude": 29.5641186233,
+	    "district": 4,
+	    "name": "Sreekot",
+	    "longitude": 80.5246229362,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 276
+    },
+    {
+	"fields": {
+	    "latitude": 29.6028298672,
+	    "district": 4,
+	    "name": "Talladehi",
+	    "longitude": 80.6324303329,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 277
+    },
+    {
+	"fields": {
+	    "latitude": 29.4164815198,
+	    "district": 4,
+	    "name": "Thalakanda",
+	    "longitude": 80.833318698,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 278
+    },
+    {
+	"fields": {
+	    "latitude": 29.3646594052,
+	    "district": 4,
+	    "name": "Udayadeb",
+	    "longitude": 80.3572263214,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 279
+    },
+    {
+	"fields": {
+	    "latitude": 29.5283278103,
+	    "district": 5,
+	    "name": "Banjh",
+	    "longitude": 80.8952691156,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 280
+    },
+    {
+	"fields": {
+	    "latitude": 29.5026031635,
+	    "district": 5,
+	    "name": "Bhairabanath",
+	    "longitude": 80.9788431494,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 281
+    },
+    {
+	"fields": {
+	    "latitude": 29.5466581746,
+	    "district": 5,
+	    "name": "Bhamchaur",
+	    "longitude": 80.9348502751,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 282
+    },
+    {
+	"fields": {
+	    "latitude": 29.5715750427,
+	    "district": 5,
+	    "name": "Bhatekhola",
+	    "longitude": 81.2524316033,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 283
+    },
+    {
+	"fields": {
+	    "latitude": 29.5525611733,
+	    "district": 5,
+	    "name": "Byasi",
+	    "longitude": 81.0660211191,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 284
+    },
+    {
+	"fields": {
+	    "latitude": 29.5898432701,
+	    "district": 5,
+	    "name": "Chainpur",
+	    "longitude": 81.1972541,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 285
+    },
+    {
+	"fields": {
+	    "latitude": 29.5041565842,
+	    "district": 5,
+	    "name": "Chaudhari",
+	    "longitude": 81.0344556105,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 286
+    },
+    {
+	"fields": {
+	    "latitude": 29.704796402,
+	    "district": 5,
+	    "name": "Dahabagar",
+	    "longitude": 80.9943152196,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 287
+    },
+    {
+	"fields": {
+	    "latitude": 29.4308972639,
+	    "district": 5,
+	    "name": "Dangaji",
+	    "longitude": 80.9519379028,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 288
+    },
+    {
+	"fields": {
+	    "latitude": 29.6119018441,
+	    "district": 5,
+	    "name": "Dantola",
+	    "longitude": 81.3929229716,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 289
+    },
+    {
+	"fields": {
+	    "latitude": 29.6119018441,
+	    "district": 5,
+	    "name": "Datola",
+	    "longitude": 81.3929229716,
+	    "cannonical_name": 289
+	},
+	"model": "dataentry.vdc",
+	"pk": 290
+    },
+    {
+	"fields": {
+	    "latitude": 29.695786562,
+	    "district": 5,
+	    "name": "Daulichaur",
+	    "longitude": 81.1559952462,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 291
+    },
+    {
+	"fields": {
+	    "latitude": 29.5372755136,
+	    "district": 5,
+	    "name": "Deulekh",
+	    "longitude": 80.790692834,
+	    "cannonical_name": 224
+	},
+	"model": "dataentry.vdc",
+	"pk": 292
+    },
+    {
+	"fields": {
+	    "latitude": 29.5937578903,
+	    "district": 5,
+	    "name": "Deulikot",
+	    "longitude": 80.8149261969,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 293
+    },
+    {
+	"fields": {
+	    "latitude": 29.7126877792,
+	    "district": 5,
+	    "name": "Dhamena",
+	    "longitude": 81.2303730294,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 294
+    },
+    {
+	"fields": {
+	    "latitude": 29.4453751449,
+	    "district": 5,
+	    "name": "Gadaraya",
+	    "longitude": 81.2550413501,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 295
+    },
+    {
+	"fields": {
+	    "latitude": 29.5292598628,
+	    "district": 5,
+	    "name": "Hemantabada",
+	    "longitude": 81.2114212968,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 296
+    },
+    {
+	"fields": {
+	    "latitude": 29.54616108,
+	    "district": 5,
+	    "name": "Kadel",
+	    "longitude": 81.0959089334,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 297
+    },
+    {
+	"fields": {
+	    "latitude": 29.5087547095,
+	    "district": 5,
+	    "name": "Kailash",
+	    "longitude": 81.264113327,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 298
+    },
+    {
+	"fields": {
+	    "latitude": 29.4410255669,
+	    "district": 5,
+	    "name": "Kalukheti",
+	    "longitude": 81.1763139889,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 299
+    },
+    {
+	"fields": {
+	    "latitude": 29.8565345362,
+	    "district": 5,
+	    "name": "Kanda",
+	    "longitude": 81.2846184803,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 300
+    },
+    {
+	"fields": {
+	    "latitude": 29.6803144918,
+	    "district": 5,
+	    "name": "Kaphalaseri",
+	    "longitude": 80.851027694,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 301
+    },
+    {
+	"fields": {
+	    "latitude": 29.5886626704,
+	    "district": 5,
+	    "name": "Khiratadi",
+	    "longitude": 80.88538936,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 302
+    },
+    {
+	"fields": {
+	    "latitude": 29.4537636167,
+	    "district": 5,
+	    "name": "Koiralakot",
+	    "longitude": 81.0589996576,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 303
+    },
+    {
+	"fields": {
+	    "latitude": 29.4494140387,
+	    "district": 5,
+	    "name": "Kotbhairab",
+	    "longitude": 81.0300438957,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 304
+    },
+    {
+	"fields": {
+	    "latitude": 29.4494140387,
+	    "district": 5,
+	    "name": "Kot Bhairab",
+	    "longitude": 81.0300438957,
+	    "cannonical_name": 304
+	},
+	"model": "dataentry.vdc",
+	"pk": 305
+    },
+    {
+	"fields": {
+	    "latitude": 29.5233568641,
+	    "district": 5,
+	    "name": "Kotdewal",
+	    "longitude": 81.2634298219,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 306
+    },
+    {
+	"fields": {
+	    "latitude": 29.4718454336,
+	    "district": 5,
+	    "name": "Lamatola",
+	    "longitude": 81.1508378894,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 307
+    },
+    {
+	"fields": {
+	    "latitude": 29.5791557357,
+	    "district": 5,
+	    "name": "Lekhgau",
+	    "longitude": 81.0198534559,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 308
+    },
+    {
+	"fields": {
+	    "latitude": 29.5791557357,
+	    "district": 5,
+	    "name": "Lekgau",
+	    "longitude": 81.0198534559,
+	    "cannonical_name": 308
+	},
+	"model": "dataentry.vdc",
+	"pk": 309
+    },
+    {
+	"fields": {
+	    "latitude": 29.5096867619,
+	    "district": 5,
+	    "name": "Luyanta",
+	    "longitude": 81.1872500707,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 310
+    },
+    {
+	"fields": {
+	    "latitude": 29.4537014798,
+	    "district": 5,
+	    "name": "Majhigau",
+	    "longitude": 81.1612768766,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 311
+    },
+    {
+	"fields": {
+	    "latitude": 29.4844592097,
+	    "district": 5,
+	    "name": "Malumela",
+	    "longitude": 81.0913108082,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 312
+    },
+    {
+	"fields": {
+	    "latitude": 29.526277295,
+	    "district": 5,
+	    "name": "Mashdev",
+	    "longitude": 81.3029488445,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 313
+    },
+    {
+	"fields": {
+	    "latitude": 29.526277295,
+	    "district": 5,
+	    "name": "Masta",
+	    "longitude": 81.3029488445,
+	    "cannonical_name": 313
+	},
+	"model": "dataentry.vdc",
+	"pk": 314
+    },
+    {
+	"fields": {
+	    "latitude": 29.5050264998,
+	    "district": 5,
+	    "name": "Matela",
+	    "longitude": 81.0925535447,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 315
+    },
+    {
+	"fields": {
+	    "latitude": 29.5026031635,
+	    "district": 5,
+	    "name": "Maulali",
+	    "longitude": 81.0069911325,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 316
+    },
+    {
+	"fields": {
+	    "latitude": 29.6332769129,
+	    "district": 5,
+	    "name": "Melbisauni",
+	    "longitude": 81.3366891422,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 317
+    },
+    {
+	"fields": {
+	    "latitude": 29.4454994185,
+	    "district": 5,
+	    "name": "Parakatne",
+	    "longitude": 80.9877287158,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 318
+    },
+    {
+	"fields": {
+	    "latitude": 29.4474256602,
+	    "district": 5,
+	    "name": "Patadewal",
+	    "longitude": 81.2059532559,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 319
+    },
+    {
+	"fields": {
+	    "latitude": 29.4433867664,
+	    "district": 5,
+	    "name": "Pauwagadhi",
+	    "longitude": 81.0995750063,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 320
+    },
+    {
+	"fields": {
+	    "latitude": 29.6688191786,
+	    "district": 5,
+	    "name": "Pipalkot",
+	    "longitude": 80.9004264724,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 321
+    },
+    {
+	"fields": {
+	    "latitude": 29.4839621151,
+	    "district": 5,
+	    "name": "Rayal",
+	    "longitude": 80.9432387469,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 322
+    },
+    {
+	"fields": {
+	    "latitude": 29.5666662333,
+	    "district": 5,
+	    "name": "Rilu",
+	    "longitude": 81.3103431271,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 323
+    },
+    {
+	"fields": {
+	    "latitude": 29.5659827281,
+	    "district": 5,
+	    "name": "Rithapata",
+	    "longitude": 81.1575486669,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 324
+    },
+    {
+	"fields": {
+	    "latitude": 29.5536174994,
+	    "district": 5,
+	    "name": "Sainpasela",
+	    "longitude": 80.9980434292,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 325
+    },
+    {
+	"fields": {
+	    "latitude": 29.5312482413,
+	    "district": 5,
+	    "name": "Subeda",
+	    "longitude": 81.1420765967,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 326
+    },
+    {
+	"fields": {
+	    "latitude": 29.6097891919,
+	    "district": 5,
+	    "name": "Sunikot",
+	    "longitude": 81.224345757,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 327
+    },
+    {
+	"fields": {
+	    "latitude": 29.4937175971,
+	    "district": 5,
+	    "name": "Sunkuda",
+	    "longitude": 80.8661269433,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 328
+    },
+    {
+	"fields": {
+	    "latitude": 29.6465741941,
+	    "district": 5,
+	    "name": "Surma",
+	    "longitude": 81.0684444554,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 329
+    },
+    {
+	"fields": {
+	    "latitude": 29.5305025993,
+	    "district": 5,
+	    "name": "Syandi",
+	    "longitude": 80.8246816789,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 330
+    },
+    {
+	"fields": {
+	    "latitude": 29.4244971707,
+	    "district": 6,
+	    "name": "Atichaur",
+	    "longitude": 81.365644904,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 331
+    },
+    {
+	"fields": {
+	    "latitude": 29.527022937,
+	    "district": 6,
+	    "name": "Baddhu",
+	    "longitude": 81.7344891154,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 332
+    },
+    {
+	"fields": {
+	    "latitude": 29.4799853581,
+	    "district": 6,
+	    "name": "Bai",
+	    "longitude": 81.758846752,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 333
+    },
+    {
+	"fields": {
+	    "latitude": 29.3377541587,
+	    "district": 6,
+	    "name": "Barhabise",
+	    "longitude": 81.2899622475,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 334
+    },
+    {
+	"fields": {
+	    "latitude": 29.3377541587,
+	    "district": 6,
+	    "name": "Barhabis",
+	    "longitude": 81.2899622475,
+	    "cannonical_name": 334
+	},
+	"model": "dataentry.vdc",
+	"pk": 335
+    },
+    {
+	"fields": {
+	    "latitude": 29.7692322927,
+	    "district": 6,
+	    "name": "Bichhaiyan",
+	    "longitude": 81.6543326072,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 336
+    },
+    {
+	"fields": {
+	    "latitude": 29.7692322927,
+	    "district": 6,
+	    "name": "Bichhaiya",
+	    "longitude": 81.6543326072,
+	    "cannonical_name": 336
+	},
+	"model": "dataentry.vdc",
+	"pk": 337
+    },
+    {
+	"fields": {
+	    "latitude": 29.3962870507,
+	    "district": 6,
+	    "name": "Bramhatola",
+	    "longitude": 81.3682546508,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 338
+    },
+    {
+	"fields": {
+	    "latitude": 29.3897626838,
+	    "district": 6,
+	    "name": "Budhiganga",
+	    "longitude": 81.4763105948,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 339
+    },
+    {
+	"fields": {
+	    "latitude": 29.3057536922,
+	    "district": 6,
+	    "name": "Chhatara",
+	    "longitude": 81.358064211,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 340
+    },
+    {
+	"fields": {
+	    "latitude": 29.5927015642,
+	    "district": 6,
+	    "name": "Dahakot",
+	    "longitude": 81.4630133136,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 341
+    },
+    {
+	"fields": {
+	    "latitude": 29.4231301604,
+	    "district": 6,
+	    "name": "Dogadi",
+	    "longitude": 81.2913913945,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 342
+    },
+    {
+	"fields": {
+	    "latitude": 29.3762789921,
+	    "district": 6,
+	    "name": "Gotree",
+	    "longitude": 81.655140386,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 343
+    },
+    {
+	"fields": {
+	    "latitude": 29.3927452515,
+	    "district": 6,
+	    "name": "Gudukhati",
+	    "longitude": 81.3048129494,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 344
+    },
+    {
+	"fields": {
+	    "latitude": 29.4515888277,
+	    "district": 6,
+	    "name": "Jagannath",
+	    "longitude": 81.6658900572,
+	    "cannonical_name": null
+	},
+	"model": "dataentry.vdc",
+	"pk": 345
+    },
 {
   "fields": {
     "latitude": 29.3754090765,

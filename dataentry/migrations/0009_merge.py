@@ -8,7 +8,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('dataentry', '0008_auto_20141031_0111'),
-        ('dataentry', '0007_vdc_verified'),
+        ('dataentry', '0006_migrate_district_and_vdc'),
     ]
 
     operations = [
