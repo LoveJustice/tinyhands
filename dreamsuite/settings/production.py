@@ -2,7 +2,7 @@ from .base import *
 
 DEBUG = False
 
-ADMINS = (('Tom Nurkkala', 'tnurkkala@cse.taylor.edu'),('Austin Munn', 'austin_munn@taylor.edu'))
+ADMINS = (('Tom Nurkkala', 'tnurkkala@cse.taylor.edu'),)
 
 SITE_DOMAIN = 'tinyhandsdreamsuite.org'
 
