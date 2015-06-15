@@ -14,7 +14,7 @@
 gitinspector \
 	--file-types=coffee,py,sh,js,html,conf \
 	--grading \
-	--since='02/01/2015' \
+	--since='08/01/2014' \
 	--exclude='media/' \
 	--exclude='migrations/' \
 	--exclude='static/KML' \
@@ -27,3 +27,4 @@ gitinspector \
 	--exclude='static/less' \
 	--exclude='static/.*?less' \
 #	--format=html > foo.html
+

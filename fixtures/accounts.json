@@ -451,36 +451,4 @@
         "permission_vdc_manage":true
     }
 }
-,
-{
-    "pk": 34,
-    "model": "accounts.account",
-    "fields": {
-        "groups": [],
-        "first_name": "Micah",
-        "last_name": "Hahn",
-        "permission_accounts_manage": true,
-        "permission_irf_add": true,
-        "permission_irf_view": true,
-        "user_designation": 1,
-        "is_active": true,
-        "permission_vif_add": true,
-        "permission_vif_view": true,
-        "permission_vif_edit": true,
-        "is_superuser": true,
-        "is_staff": true,
-        "last_login": "2014-05-05T13:25:25.906Z",
-        "date_joined": "2014-04-16T17:23:25.607Z",
-        "user_permissions": [],
-        "password": "pbkdf2_sha256$12000$Ei2Lq9GYzqGB$T37ao7VIlbJP6vGoAludQXYpmQXDZ7tQ/Glm0lMr97c=",
-        "email": "micah_hahn@taylor.edu",
-        "permission_irf_edit": true,
-        "permission_receive_email": false,
-        "permission_border_stations_view": true,
-        "permission_border_stations_add": true,
-        "permission_border_stations_edit": true,
-        "permission_vdc_manage":true
-    }
-}
-
 ]
