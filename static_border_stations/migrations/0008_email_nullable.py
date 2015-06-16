@@ -12,7 +12,12 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AlterField(
-            model_name='person',
+            model_name='staff',
+            name='email',
+            field=NullableEmailField(blank=True, null=True, default=None, unique=True),
+        ),
+        migrations.AlterField(
+            model_name='committeemember',
             name='email',
             field=NullableEmailField(blank=True, null=True, default=None, unique=True),
         ),
