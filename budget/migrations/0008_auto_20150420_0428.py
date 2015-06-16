@@ -7,7 +7,7 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('static_border_stations', '0007_remove_staff_salary'),
+        ('static_border_stations', '0008_email_nullable'),
         ('budget', '0007_auto_20141218_0752'),
     ]
 
