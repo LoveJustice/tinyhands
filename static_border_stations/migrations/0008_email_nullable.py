@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 
 from django.db import models, migrations
 
-from models.py import NullableEmailField
+from static_border_stations.models import NullableEmailField
 
 class Migration(migrations.Migration):
 
