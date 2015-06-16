@@ -7,7 +7,7 @@ from static_border_stations.models import NullableEmailField
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('static_border_stations', '0003_auto_20141112_0117'),
+        ('static_border_stations', '0007_remove_staff_salary.py'),
     ]
 
     operations = [
