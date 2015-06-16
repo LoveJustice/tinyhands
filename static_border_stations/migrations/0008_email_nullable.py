@@ -16,14 +16,4 @@ class Migration(migrations.Migration):
             name='email',
             field=NullableEmailField(blank=True, null=True, default=None, unique=True),
         ),
-        migrations.AlterField(
-            model_name='Staff',
-            name='email',
-            field=NullableEmailField(blank=True, null=True, default=None, unique=True),
-        ),
-        migrations.AlterField(
-            model_name='CommitteeMember',
-            name='email',
-            field=NullableEmailField(blank=True, null=True, default=None, unique=True),
-        ),
     ]
