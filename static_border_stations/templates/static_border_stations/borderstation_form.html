@@ -1,4 +1,5 @@
 {% load bootstrap %}
+{% load unslugify %}
 <div class="row">
     <div class="col-lg-6">
         <h1>Details</h1>
@@ -11,6 +12,21 @@
         {% endif %}
     </div>
 </div>
+
+{% block content %}
+{% if form.errors %}
+    <div id="error-box" class="alert alert-danger no-remove" style="margin-top: 20px">
+        <h3>These errors will prevent the form from being saved</h3>
+        {% for id, errors in form.errors.items %}
+          {% if not errors.is_warning %}
+            {% for error in errors %}
+              <p><strong>{{ id|unslugify }}:</strong> {{ error }}</p>
+            {% endfor %}
+          {% endif %}
+        {% endfor %}
+    </div>
+{% endif %}
+{% endblock %}
 
 <hr/>
 <div class="row">

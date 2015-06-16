@@ -3,7 +3,7 @@ from dataentry.models import BorderStation
 
 
 class Person(models.Model):
-    email = models.EmailField(max_length=255, unique=True)
+    email = models.EmailField(max_length=255, unique=True, blank=True, default=None)
     first_name = models.CharField(max_length=255, blank=True)
     last_name = models.CharField(max_length=255, blank=True)
     receives_money_distribution_form = models.BooleanField(default=False)
