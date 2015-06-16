@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AlterField(
-            model_name='Person',
+            model_name='person',
             name='email',
             field=NullableEmailField(blank=True, null=True, default=None, unique=True),
         ),
