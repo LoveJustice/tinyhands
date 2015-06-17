@@ -30,6 +30,9 @@
             {% if 'vdc-admin' in request.path %}
 	      action="/data-entry/geocodelocations/vdc-admin/search/"
 	    {% endif %}
+            {% if 'district-admin' in request.path %}
+	      action="/data-entry/geocodelocations/district-admin/search/"
+	    {% endif %}
 	    >
 	    {% csrf_token %}
       </form>

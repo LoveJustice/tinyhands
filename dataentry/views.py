@@ -414,7 +414,7 @@ class DistrictAdminView(LoginRequiredMixin,
     model = District
     template_name = "dataentry/district_admin_page.html"
     permissions_required = ['permission_vdc_manage']
-    paginate_by = 100
+    paginate_by = 20
 
     def __init__(self, *args, **kwargs):
         super(DistrictAdminView, self).__init__(name__icontains = "name")
