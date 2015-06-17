@@ -796,3 +796,8 @@ class VDCForm(forms.ModelForm):
     class Meta:
         model = VDC
         fields = ['name','latitude','longitude','cannonical_name','district','verified']
+
+class DistrictForm(forms.ModelForm):
+    class Meta:
+        model = District
+        fields = ['name']

@@ -27,7 +27,7 @@ from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineForm
 from braces.views import LoginRequiredMixin
 from fuzzywuzzy import process
 
-from dataentry.models import (BorderStation, VDC,
+from dataentry.models import (BorderStation, VDC, District,
                               Interceptee, InterceptionRecord,
                               VictimInterview, VictimInterviewLocationBox,
                               VictimInterviewPersonBox)
@@ -406,6 +406,18 @@ class VDCCreateView(LoginRequiredMixin,
     def form_valid(self, form):
         form.save()
         return HttpResponse(render_to_string('dataentry/vdc_create_success.html'))
+
+class DistrictCreateView(LoginRequiredMixin,
+                    PermissionsRequiredMixin,
+                    CreateView):
+    model = District
+    form_class = VDCForm
+    template_name = "dataentry/district_create_page.html"
+    permissions_required = ['permission_vif_add','permission_irf_add']
+
+    def form_valid(self, form):
+        form.save()
+        return HttpResponse(render_to_string('dataentry/district_create_success.html'))
 
 
 class StationCodeAPIView(APIView):
