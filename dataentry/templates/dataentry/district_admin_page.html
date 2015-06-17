@@ -4,13 +4,12 @@
 {% load bootstrap_pagination %}
 {% load unslugify %}
 {% load times %}
-{% block title %}Manage Address 2{% endblock %}
+{% block title %}Manage Address 1{% endblock %}
 {% block content %}
 
 <!-- Modal -->
 <div class="modal fade" id="modal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" tabindex="-1"></div>
 <!-- /.modal -->
-
 <table id="district_table" class="table table-striped">
 	<thead>
         <tr>
@@ -23,7 +22,7 @@
 		<tr>
 		<td class="district_admin_name" style="text-align:center">{{ district.name }} </td>
 
-	    <td><a id="district_update_link" class="btn btn-warning pull-left" style="margin-right:-35px" href="{% url 'district_admin_update' district.id %}" data-target="#modal"  >Edit</a></td>
+	    <td><a id="district_update_link" class="btn btn-warning pull-left" style="margin-right:-35px" href="{% url 'district_admin_update' district.id %}"  data-target="#modal" >Edit</a></td>
 		</tr>
 	{% empty %}
 		{% if database_empty %}
