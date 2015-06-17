@@ -32,7 +32,7 @@ from dataentry.models import (BorderStation, VDC, District,
                               VictimInterview, VictimInterviewLocationBox,
                               VictimInterviewPersonBox)
 from dataentry.forms import (IntercepteeForm, InterceptionRecordForm,
-                             VDCForm,
+                             VDCForm, DistrictForm,
                              VictimInterviewForm,
                              VictimInterviewLocationBoxForm, VictimInterviewPersonBoxForm)
 from dataentry import export
@@ -411,7 +411,7 @@ class DistrictCreateView(LoginRequiredMixin,
                     PermissionsRequiredMixin,
                     CreateView):
     model = District
-    form_class = VDCForm
+    form_class = DistrictForm
     template_name = "dataentry/district_create_page.html"
     permissions_required = ['permission_vif_add','permission_irf_add']
 

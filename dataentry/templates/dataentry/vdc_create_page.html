@@ -20,10 +20,17 @@
                             {% endfor %}
                         </ul>
                         {% endif %}
-                        {{ field.label_tag }}
+
+                        <!-- Override District label and put Address 1 -->
+                        {% if field.label != "District" %}
+                            {{ field.label_tag }}
+                        {% else %}
+                            <label>Address 1:</label>
+                        {% endif %}
+
                         {{ field }}
                         {% if field.help_text %}
-                        <div class="form-helptext">{{ field.help_text }}</div>
+                            <div class="form-helptext">{{ field.help_text }}</div>
                         {% endif %}
                     </div>
                     {% endfor %}
