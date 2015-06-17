@@ -407,6 +407,42 @@ class VDCCreateView(LoginRequiredMixin,
         form.save()
         return HttpResponse(render_to_string('dataentry/vdc_create_success.html'))
 
+class DistrictAdminView(LoginRequiredMixin,
+                   PermissionsRequiredMixin,
+                   SearchFormsMixin,
+                   ListView):
+    model = District
+    template_name = "dataentry/district_admin_page.html"
+    permissions_required = ['permission_vdc_manage']
+    paginate_by = 100
+
+    def __init__(self, *args, **kwargs):
+        super(DistrictAdminView, self).__init__(name__icontains = "name")
+
+    def get_context_data(self, **kwargs):
+        context = super(DistrictAdminView, self).get_context_data(**kwargs)
+        context['lower_limit'] = context['page_obj'].number - 5
+        context['upper_limit'] = context['page_obj'].number + 5
+        context['database_empty'] = self.model.objects.count()==0
+        return context
+
+class DistrictAdminUpdate(LoginRequiredMixin,
+                     PermissionsRequiredMixin,
+                     UpdateView):
+    model = District
+    form_class = DistrictForm
+    template_name = "dataentry/district_admin_update.html"
+    permissions_required = ['permission_vdc_manage']
+
+    def dispatch(self, request, *args, **kwargs):
+        self.district_id = kwargs['pk']
+        return super(DistrictAdminUpdate, self).dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        form.save()
+        district = District.objects.get(id=self.district_id)
+        return HttpResponse(render_to_string('dataentry/district_admin_update_success.html'))
+
 class DistrictCreateView(LoginRequiredMixin,
                     PermissionsRequiredMixin,
                     CreateView):

@@ -2,10 +2,10 @@
 
 <div class="modal-dialog modal-sm">
     <div class="modal-content">
-        <form id="vdc_update_form" method="post" class="form" role="form" action="{% url 'vdc_admin_update' vdc.id %}">
+        <form id="district_update_form" method="post" class="form" role="form" action="{% url 'district_admin_update' district.id %}">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h4 class="modal-title" id="myModalLabel">Edit Address 2</h4>
+                <h4 class="modal-title" id="myModalLabel">Edit Address 1</h4>
             </div>
             <div class="modal-body">
                 {% csrf_token %}
@@ -22,14 +22,7 @@
                             {% endfor %}
                         </ul>
                         {% endif %}
-
-                        <!-- Override District label and put Address 1 -->
-                        {% if field.label != "District" %}
-                            {{ field.label_tag }}
-                        {% else %}
-                            <label>Address 1:</label>
-                        {% endif %}
-
+                        {{ field.label_tag }}
                         {{ field }}
                         {% if field.help_text %}
                         <div class="form-helptext">{{ field.help_text }}</div>
@@ -38,7 +31,7 @@
                     {% endfor %}
                 </div>
                 <div class="modal-footer">
-                    <input id="vdc_update_button" type="submit" class="btn btn-primary" value="Save" style="margin-bottom: 5px;"/>
+                    <input id="district_update_button" type="submit" class="btn btn-primary" value="Save" style="margin-bottom: 5px;"/>
                 </div>
             </div>
         </form>
@@ -46,9 +39,9 @@
 </div><!-- /.modal-dialog -->
 <script>
     $(function(){
-        $("#vdc_update_button").click(function(e){
+        $("#district_update_button").click(function(e){
             e.preventDefault();
-            var form = $("#vdc_update_form");
+            var form = $("#district_update_form");
             $.post(form.attr("action"),form.serialize(),function(data,status){
                 $("#modal").html(data);
             });
