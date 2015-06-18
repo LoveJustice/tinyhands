@@ -13,6 +13,7 @@
                 <div class="form-group">
                     {% for field in form %}
                     <div class="form-group">
+
                         {% if field.errors %}
                         <ul class="list-unstyled">
                             {% for error in field.errors %}
@@ -23,13 +24,13 @@
                         </ul>
                         {% endif %}
 
-                        <!-- Override District label and put Address 1 -->
                         {{ field.label_tag }}
-
                         {{ field }}
+
                         {% if field.help_text %}
                         <div class="form-helptext">{{ field.help_text }}</div>
                         {% endif %}
+
                     </div>
                     {% endfor %}
                 </div>
