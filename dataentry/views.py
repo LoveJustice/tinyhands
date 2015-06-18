@@ -408,9 +408,9 @@ class VDCCreateView(LoginRequiredMixin,
         return HttpResponse(render_to_string('dataentry/vdc_create_success.html'))
 
 class DistrictAdminView(LoginRequiredMixin,
-                   PermissionsRequiredMixin,
-                   SearchFormsMixin,
-                   ListView):
+                        PermissionsRequiredMixin,
+                        SearchFormsMixin,
+                        ListView):
     model = District
     template_name = "dataentry/district_admin_page.html"
     permissions_required = ['permission_vdc_manage']
@@ -427,8 +427,8 @@ class DistrictAdminView(LoginRequiredMixin,
         return context
 
 class DistrictAdminUpdate(LoginRequiredMixin,
-                     PermissionsRequiredMixin,
-                     UpdateView):
+                          PermissionsRequiredMixin,
+                          UpdateView):
     model = District
     form_class = DistrictForm
     template_name = "dataentry/district_admin_update.html"
@@ -444,8 +444,8 @@ class DistrictAdminUpdate(LoginRequiredMixin,
         return HttpResponse(render_to_string('dataentry/district_admin_update_success.html'))
 
 class DistrictCreateView(LoginRequiredMixin,
-                    PermissionsRequiredMixin,
-                    CreateView):
+                         PermissionsRequiredMixin,
+                         CreateView):
     model = District
     form_class = DistrictForm
     template_name = "dataentry/district_create_page.html"
