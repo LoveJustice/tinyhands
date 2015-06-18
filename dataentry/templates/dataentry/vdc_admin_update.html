@@ -5,7 +5,7 @@
         <form id="vdc_update_form" method="post" class="form" role="form" action="{% url 'vdc_admin_update' vdc.id %}">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h4 class="modal-title" id="myModalLabel">Edit VDC</h4>
+                <h4 class="modal-title" id="myModalLabel">Edit Address 2</h4>
             </div>
             <div class="modal-body">
                 {% csrf_token %}
@@ -13,6 +13,7 @@
                 <div class="form-group">
                     {% for field in form %}
                     <div class="form-group">
+
                         {% if field.errors %}
                         <ul class="list-unstyled">
                             {% for error in field.errors %}
@@ -22,11 +23,14 @@
                             {% endfor %}
                         </ul>
                         {% endif %}
+
                         {{ field.label_tag }}
                         {{ field }}
+
                         {% if field.help_text %}
                         <div class="form-helptext">{{ field.help_text }}</div>
                         {% endif %}
+
                     </div>
                     {% endfor %}
                 </div>
