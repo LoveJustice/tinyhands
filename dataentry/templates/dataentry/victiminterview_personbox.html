@@ -39,12 +39,12 @@
         {{ pb_form.name|attr:"data-fuzzy-ui:name" }}
         <div class="col-xs-6">
             <div class="label-inside-field">
-                <label>Address 1</label> {{ pb_form.address_district }}
+                {{ pb_form.address_district.label_tag }} {{ pb_form.address_district }}
             </div>
         </div>
         <div class="col-xs-6">
             <div class="label-inside-field">
-                <label>Address 2</label>{{ pb_form.address_vdc }}
+                {{ pb_form.address_vdc.label_tag }}{{ pb_form.address_vdc }}
             </div>
         </div>
         <div class="col-xs-4">
