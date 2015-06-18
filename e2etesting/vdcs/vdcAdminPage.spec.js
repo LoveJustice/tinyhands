@@ -42,4 +42,15 @@ describe('TinyHands VDCs', function () {
         expect(element.all(by.css(".vdc_admin_cannonical")).first().getText()).toEqual(constants.vdcNewCan);
     });
 
+    it('should not have any error tooltips above the create modal on a vif', function(){
+        browser.get(constants.webAddress + '/data-entry/vifs/create/');
+        this.victim_address_vdc = element(by.id("id_victim_address_vdc")).click();
+        vdcAdminPage.createNewVDC();
+        browser.sleep(500);
+        vdcAdminPage.navigate();
+        expect(element(by.css(".vdc_admin_name")).getText()).toBe(constants.vdcNewName);
+        expect(element.all(by.css(".vdc_admin_district")).first().getText()).toEqual(constants.vdcNewDis);
+        expect(element.all(by.css(".vdc_admin_cannonical")).first().getText()).toEqual(constants.vdcNewCan);
+    });
+
 });
