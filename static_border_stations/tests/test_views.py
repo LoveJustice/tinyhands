@@ -37,6 +37,22 @@ class TestBorderStations(WebTest):
         self.assertEquals("Shmo", bs.last_name)
         self.assertEquals("joe@gmail.com", bs.email)
 
+    def testUpdateStaffWithoutEmail(self):
+        form = self.form
+
+        form.set("staff_set-0-first_name", "Joe")
+        form.set("staff_set-0-last_name", "Shmo")
+
+        formResp = form.submit()
+
+        self.assertEquals(302, formResp.status_code)
+
+        bs = BorderStation.objects.get(id=self.BS.id).staff_set.get()
+        self.assertEquals("Joe", bs.first_name)
+        self.assertEquals("Shmo", bs.last_name)
+
+
+
     def testUpdateCommitteeMember(self):
         form = self.form
 
@@ -52,6 +68,20 @@ class TestBorderStations(WebTest):
         self.assertEquals("bob", bs.first_name)
         self.assertEquals("smith", bs.last_name)
         self.assertEquals("bob@gmail.com", bs.email)
+
+    def testUpdateCommitteeMemberWithoutEmail(self):
+        form = self.form
+
+        form.set("committeemember_set-0-first_name", "bob")
+        form.set("committeemember_set-0-last_name", "smith")
+
+        formResp = form.submit()
+
+        self.assertEquals(302, formResp.status_code)
+
+        bs = BorderStation.objects.get(id=self.BS.id).committeemember_set.get()
+        self.assertEquals("bob", bs.first_name)
+        self.assertEquals("smith", bs.last_name)
 
     def testUpdateLocation(self):
         form = self.form
@@ -253,6 +283,54 @@ class BorderStationsCreationTest(WebTest):
         self.assertEquals('Jack', committeeMember.first_name)
         self.assertEquals('Smith', committeeMember.last_name)
         self.assertEquals('jacksmith@test.org', committeeMember.email)
+        self.assertEquals(True, committeeMember.receives_money_distribution_form)
+
+        location = updatedStation.location_set.get()
+        self.assertEquals('Nepal', location.name)
+        self.assertEquals(1, location.latitude)
+        self.assertEquals(2, location.longitude)
+
+    def test_border_station_create_view_form_submits_with_no_email(self):
+        form = self.form
+
+        form.set('station_name', 'Station D')
+        form.set('station_code', 'STD')
+        form.set('date_established', '1/1/11')
+        form.set('latitude', '4')
+        form.set('longitude', '3')
+
+        form.set('staff_set-0-first_name', 'Bob')
+        form.set('staff_set-0-last_name', 'Smith')
+        form.set('staff_set-0-receives_money_distribution_form', True)
+
+        form.set('committeemember_set-0-first_name', 'Jack')
+        form.set('committeemember_set-0-last_name', 'Smith')
+        form.set('committeemember_set-0-receives_money_distribution_form', True)
+
+        form.set('location_set-0-name', 'Nepal')
+        form.set('location_set-0-latitude', '1')
+        form.set('location_set-0-longitude', '2')
+
+        form_response = form.submit()
+
+        self.assertEquals(302, form_response.status_code)
+        self.assertEquals('', form_response.errors)
+
+        updatedStation = BorderStation.objects.get(station_name="Station D")
+        self.assertEquals('Station D', updatedStation.station_name)
+        self.assertEquals('STD', updatedStation.station_code)
+        self.assertEquals(date(2011, 1, 1), updatedStation.date_established)
+        self.assertEquals(4, updatedStation.latitude)
+        self.assertEquals(3, updatedStation.longitude)
+
+        staffMember = updatedStation.staff_set.get()
+        self.assertEquals('Bob', staffMember.first_name)
+        self.assertEquals('Smith', staffMember.last_name)
+        self.assertEquals(True, staffMember.receives_money_distribution_form)
+
+        committeeMember = updatedStation.committeemember_set.get()
+        self.assertEquals('Jack', committeeMember.first_name)
+        self.assertEquals('Smith', committeeMember.last_name)
         self.assertEquals(True, committeeMember.receives_money_distribution_form)
 
         location = updatedStation.location_set.get()
