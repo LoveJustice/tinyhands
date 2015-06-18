@@ -24,11 +24,7 @@
                         {% endif %}
 
                         <!-- Override District label and put Address 1 -->
-                        {% if field.label != "District" %}
-                            {{ field.label_tag }}
-                        {% else %}
-                            <label>Address 1:</label>
-                        {% endif %}
+                        {{ field.label_tag }}
 
                         {{ field }}
                         {% if field.help_text %}
