@@ -5,23 +5,5 @@ var myModule = angular.module('BudgetCalculation', ['ngCookies', 'ngRoute', 'ngA
         }]);
 
 myModule.run(function($rootScope) {
-    $rootScope.$on('handleBudgetCalcSavedEmit', function(event, args) {
-        $rootScope.$broadcast('handleBudgetCalcSavedBroadcast', args);
-    });
 
-    $rootScope.$on('handleOtherItemsTotalChangeEmit', function(event, args) {
-        $rootScope.$broadcast('handleOtherItemsTotalChangeBroadcast', args);
-    });
-
-    $rootScope.$on('handleSalariesTotalChangeEmit', function(event, args) {
-        $rootScope.$broadcast('handleSalariesTotalChangeBroadcast', args);
-    });
-
-    $rootScope.$on('lastBudgetTotalEmit', function(event, args) {
-        $rootScope.$broadcast('lastBudgetTotalBroadcast', args);
-    });
-
-    $rootScope.$on('dateSetEmit', function(event, args) {
-        $rootScope.$broadcast('dateSetBroadcast', args);
-    });
 });

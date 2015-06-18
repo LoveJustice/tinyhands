@@ -45,9 +45,10 @@ def match_vdc_district(vdc_name, district_name):
     else:
         return None
 
-def match_staff(station, enteredName):
-    staffNames = [staff.name for staff in District.objects.all()]
-    matches = process.extractBests(enteredName, staffNames, score_cutoff=70, limit=5)
+def match_staff(station, name):
+    # Use station to get station staff names
+    staff_names = [staff.name for staff in ["Austin","Jon","Kirk"]]
+    matches = process.extractBests(name, staff_names, score_cutoff=70, limit=5)
     if(len(matches) > 0):
         names = []
         for match in matches:

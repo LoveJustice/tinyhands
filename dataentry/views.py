@@ -41,7 +41,7 @@ from dataentry.serializers import DistrictSerializer, VDCSerializer
 from accounts.mixins import PermissionsRequiredMixin
 
 from alert_checkers import IRFAlertChecker, VIFAlertChecker
-from fuzzy_matching import match_location
+from fuzzy_matching import match_location, match_staff
 
 @login_required
 def home(request):
@@ -356,6 +356,19 @@ class GeoCodeVdcAPIView(APIView):
             return Response(serializer.data)
         else:
             return Response({"id": "-1","name":"None"})
+
+class StationStaffAPIView(APIView):
+    def get(self,request):
+        station_code = request.QUERY_PARAMS['station']
+        station_id = BorderStation.objects.get(station_code=station_code).id
+        entered_name = request.QUERY_PARAMS['name']
+        matches = match_staff(station=station_id, name=entered_name)
+        if(matches):
+            serializer = DistrictSerializer(matches)
+            return Response(serializer.data)
+        else:
+            return Response({"id": "-1","name":"None"})
+
 
 
 class VDCAdminView(LoginRequiredMixin,
