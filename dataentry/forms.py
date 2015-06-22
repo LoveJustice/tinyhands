@@ -584,10 +584,10 @@ class VictimInterviewForm(DreamSuitePaperForm):
     victim_where_going_gulf_didnt_know = forms.BooleanField(label='Did Not Know', required=False)
     victim_where_going_gulf_other = forms.BooleanField(label='Other', required=False)
 
-    victim_address_district = DistrictField(label='District', required=False)
-    victim_address_vdc = VDCField(label='VDC', required=False)
-    victim_guardian_address_district = DistrictField(label='District', required=False)
-    victim_guardian_address_vdc = VDCField(label='VDC', required=False)
+    victim_address_district = DistrictField(label='Address 1', required=False)
+    victim_address_vdc = VDCField(label='Address 2', required=False)
+    victim_guardian_address_district = DistrictField(label='Address 1', required=False)
+    victim_guardian_address_vdc = VDCField(label='Address 2', required=False)
 
     class Meta:
         model = VictimInterview
@@ -721,8 +721,8 @@ class VictimInterviewPersonBoxForm(DreamSuitePaperForm):
         initial = self.initial.get('gender')
         if initial is not None:
             self.initial['gender'] = [unicode(initial)]
-        self.fields['address_district'] = DistrictField(label="District")
-        self.fields['address_vdc'] = VDCField(label="VDC")
+        self.fields['address_district'] = DistrictField(label="Address 1")
+        self.fields['address_vdc'] = VDCField(label="Address 2")
         try:
             self.fields['address_district'].initial = self.instance.address_district
         except:
@@ -762,8 +762,8 @@ class VictimInterviewLocationBoxForm(DreamSuitePaperForm):
 
     def __init__(self, *args, **kwargs):
         super(VictimInterviewLocationBoxForm, self).__init__(*args, **kwargs)
-        self.fields['district'] = DistrictField(label="District")
-        self.fields['vdc'] = VDCField(label="VDC")
+        self.fields['district'] = DistrictField(label="Address 1")
+        self.fields['vdc'] = VDCField(label="Address 2")
         try:
             self.fields['district'].initial = self.instance.district
         except:
@@ -796,3 +796,11 @@ class VDCForm(forms.ModelForm):
     class Meta:
         model = VDC
         fields = ['name','latitude','longitude','cannonical_name','district','verified']
+    def __init__(self, *args, **kwargs):
+        super(VDCForm, self).__init__(*args, **kwargs)
+        self.fields['district'].label = "Address 1"
+
+class DistrictForm(forms.ModelForm):
+    class Meta:
+        model = District
+        fields = ['name']

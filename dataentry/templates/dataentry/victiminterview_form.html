@@ -21,13 +21,13 @@
   <div style="display: none">
     {% for id, errors in form.errors.items %}
       {% if not errors.is_warning %}
-	<div class="error-for-popup" data-id="{{ id }}" data-message="{{ errors.0 }}"></div>
+        <div class="error-for-popup" data-id="{{ id }}" data-message="{{ errors.0 }}"></div>
       {% endif %}
     {% endfor %}
 
     {% for id, errors in form.errors.items %}
       {% if errors.is_warning %}
-	<div class="warning-for-popup" data-id="{{ id }}" data-message="{{ errors.0 }}"></div>
+        <div class="warning-for-popup" data-id="{{ id }}" data-message="{{ errors.0 }}"></div>
       {% endif %}
     {% endfor %}
   </div>
@@ -35,16 +35,16 @@
   {% if form.errors and form.has_warnings and not form.ignore_warnings.value %}
     <div class="alert alert-warning no-remove" style="margin-top: 20px">
       <h3>These warnings will not prevent the form from being saved,
-	but may indicate a problem with the form</h3>
+          but may indicate a problem with the form</h3>
       <p>If you are sure that you want to submit the form with warnings,
-	fix any errors, check the "Ignore warnings" box next to the submit button,
-	and submit the form again.</p>
+         fix any errors, check the "Ignore warnings" box next to the submit button,
+         and submit the form again.</p>
       {% for id, errors in form.errors.items %}
-	{% if errors.is_warning %}
+        {% if errors.is_warning %}
           {% for error in errors %}
             <p><strong>{{ id|unslugify }}:</strong> {{ error }}</p>
           {% endfor %}
-	{% endif %}
+        {% endif %}
       {% endfor %}
     </div>
   {% endif %}
@@ -62,22 +62,22 @@
     {% for form in inlines.0 %}
       {% if form.errors %}
         <h4 style="margin-top: 10px">Person Box #{{ forloop.counter }}:</h4>
-	{% for id, errors in form.errors.items %}
-	  {% for error in errors %}
-	    <p><strong>{{ id|unslugify }}:</strong> {{ error }}</p>
-	  {% endfor %}
-	{% endfor %}
+        {% for id, errors in form.errors.items %}
+          {% for error in errors %}
+            <p><strong>{{ id|unslugify }}:</strong> {{ error }}</p>
+          {% endfor %}
+        {% endfor %}
       {% endif %}
     {% endfor %}
 
     {% for form in inlines.1 %}
       {% if form.errors %}
         <h4 style="margin-top: 10px">Location Box #{{ forloop.counter }}:</h4>
-	{% for id, errors in form.errors.items %}
-	  {% for error in errors %}
-	    <p><strong>{{ id|unslugify }}:</strong> {{ error }}</p>
-	  {% endfor %}
-	{% endfor %}
+        {% for id, errors in form.errors.items %}
+          {% for error in errors %}
+            <p><strong>{{ id|unslugify }}:</strong> {{ error }}</p>
+          {% endfor %}
+        {% endfor %}
       {% endif %}
     {% endfor %}
   </div>
@@ -89,15 +89,17 @@
   <!-- /.modal -->
 
   <form enctype="multipart/form-data"
-	method="POST" id="victim-interview-form"
-	autocomplete="off">{% csrf_token %}
+        method="POST"
+        id="victim-interview-form"
+        autocomplete="off">
+    {% csrf_token %}
     <div class="form-page">
       <div class="row">
         <div class="col-xs-6 header-area">
           <img class="pull-left" style="margin-right: 20px" width="100"
-	       src="{{ STATIC_URL }}images/logo.png" alt="Tiny Hands Logo" />
+               src="{{ STATIC_URL }}images/logo.png" alt="Tiny Hands Logo" />
           <h2>Victim Interview Form (VIF)<br/>
-            Version 2.0 <span class="text-danger">Tiny Hands Nepal</span></h2>
+              Version 2.0 <span class="text-danger">Tiny Hands Nepal</span></h2>
         </div>
         <div class="col-xs-6">
           <table class="table table-bordered top-data-area">
@@ -208,7 +210,7 @@
             <h2><span class="section-number">1.3</span> Victim's Recent Address</h2>
             <div class="col-xs-6">
               <div class="label-inside-field">
-                {{ form.victim_address_district.label_tag }}{{ form.victim_address_district }}
+                {{ form.victim_address_district.label_tag }} {{ form.victim_address_district }}
               </div>
             </div>
             <div class="col-xs-6">
@@ -392,12 +394,12 @@
             <h2><span class="section-number">1.13</span> Guardian's Address</h2>
             <div class="col-xs-6">
               <div class="label-inside-field">
-                {{ form.victim_guardian_address_district.label_tag }}{{ form.victim_guardian_address_district }}
+                {{ form.victim_guardian_address_district.label_tag }} {{ form.victim_guardian_address_district }}
               </div>
             </div>
             <div class="col-xs-6">
               <div class="label-inside-field">
-                {{ form.victim_guardian_address_vdc.label_tag }}{{ form.victim_guardian_address_vdc }}
+                {{ form.victim_guardian_address_vdc.label_tag }} {{ form.victim_guardian_address_vdc }}
               </div>
             </div>
 
@@ -1530,9 +1532,9 @@
               Has any legal action been taken against any of the traffickers?<span class="required">*</span>
             </h2>
             <div class="inline-checkbox-group">
-	      <span class="single-checkbox-allowed">
+              <span class="single-checkbox-allowed">
                 {{ form.legal_action_against_traffickers_no }} {{ form.legal_action_against_traffickers_no.label_tag }}
-	      </span>
+              </span>
               <span class="alarm-box-container multiple-checkboxes-allowed">
                 {{ form.legal_action_against_traffickers_fir_filed }} {{ form.legal_action_against_traffickers_fir_filed.label_tag }}
                 {{ form.legal_action_fir_against_value|attr:"style: width: 140px" }}
