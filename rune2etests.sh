@@ -1,25 +1,27 @@
-#start webdriver server
+echo "######   Starting webdriver server.   ######"
 webdriver-manager start >/dev/null 2>&1 &
 
-#Change settings to test
+echo "######   Setting DJANGO_SETTINGS_MODULE to testing.   ######"
 export DJANGO_SETTINGS_MODULE=dreamsuite.settings.testing
 
-#delete old test database
+echo "######   Removing old test database.   ######"
 rm test.sqlite3
 
-#recreate test database
+echo "######   Create new test database.   ######"
 ./manage.py syncdb --noinput
 
 #import data to test database
+echo "######   Load 'e2etesting/fixtures/*' into database.   ######"
 ./manage.py loaddata e2etesting/fixtures/*
 
-#start your django server
+echo "######   Start the server.   ######"
 ./manage.py runserver 0.0.0.0:8001 &
 
-#make sure the webdriver and django server have time to spin up
+echo "######   Wait a while so the webdriver and django server are ready.   ######"
 sleep 10
 
-#run the tests
+echo "######   Run the tests as specified in 'e2etesting/conf.js'.   ######"
 protractor e2etesting/conf.js
 
+echo "######   Kill all remaining processes.   ######"
 kill 0
