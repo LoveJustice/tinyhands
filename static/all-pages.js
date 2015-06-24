@@ -509,7 +509,19 @@ $(document).ready(function() {
   if (bodyClass in DREAMSUITE) {
     DREAMSUITE[bodyClass]();
   }
+  $("ul.dropdown-menu input[type=checkbox]").each(function() {
+        $(this).change(function() {
+            var line = "";
+            $("ul.dropdown-menu input[type=checkbox]").each(function() {
+                if($(this).is(":checked")) {
+                    line += $("+ span", this).text() + ";";
+                }
+            });
+            $("input.inputResults").val(line);
+        });
+    });
 });
+
 $(document).on('click', '.dropdown-menu.dropdown-menu-form', function(e) {
   e.stopPropagation();
 });

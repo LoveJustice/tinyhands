@@ -103,7 +103,7 @@
           <h2 style="white-space: nowrap">Interception Record Form (IRF)<br/>
             Version 2.3 <span class="text-danger">Tiny Hands Nepal</span></h2>
         </div>
-        <div class="col-xs-7" ng-controller="staffListCtrl as staff">
+        <div class="col-xs-7">
           <p class="bg-danger" style="margin-bottom: 0; margin-left: 80px">
 	    You will find instructions for each section in the pink boxes like this</p>
           <table class="table table-bordered top-data-area" style="margin-left: 30px">
@@ -163,15 +163,21 @@
                             <button tabindex="-1" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button">
                                 <span class="caret"></span>
                             </button>
-                            <ul role="menu" id="dropdown-staff" class="dropdown-menu dropdown-menu-form" ng-click="staff.retrieveStaff">
+                            <ul role="menu" id="dropdown-staff" class="dropdown-menu dropdown-menu-form" >
                                 <li><a href="#"/>
-                                    <input type="checkbox"/><span class="lbl"> Bishnu Zimba day</span>
+                                    <input type="checkbox"/><span class="lbl">Pramila Dural</span>
                                 </li>
                                 <li><a href="#"/>
-                                    <input type="checkbox"/><span class="lbl"> Monday</span>
+                                    <input type="checkbox"/><span class="lbl">Shital Pun</span>
                                 </li>
                                 <li><a href="#"/>
-                                    <input type="checkbox"/><span class="lbl"> Monday</span>
+                                    <input type="checkbox"/><span class="lbl">Bin Roka</span>
+                                </li>
+                                <li><a href="#"/>
+                                    <input type="checkbox"/><span class="lbl">Alisha Zimba</span>
+                                </li>
+                                <li><a href="#"/>
+                                    <input type="checkbox"/><span class="lbl">Renuka Tamang</span>
                                 </li>
                             </ul>
                             </div>
@@ -942,9 +948,6 @@
   <br/>
   <br/>
   <br/>
-        {% load static from staticfiles %}
-            <script type="text/javascript" src="{% static "dataentry/js/services/staffListlService.js" %}"></script>
-            <script type="text/javascript" src="{% static "dataentry/js/controllers/staffListlCtrl.js" %}"></script>
 
 
   {% include "dataentry/fuzzymatching-ui.html" %}
