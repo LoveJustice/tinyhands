@@ -357,18 +357,6 @@ class GeoCodeVdcAPIView(APIView):
         else:
             return Response({"id": "-1","name":"None"})
 
-class StationStaffAPIView(APIView):
-    def get(self,request):
-        station_code = request.QUERY_PARAMS['station']
-        station_id = BorderStation.objects.get(station_code=station_code).id
-        entered_name = request.QUERY_PARAMS['name']
-        matches = match_staff(station=station_id, name=entered_name)
-        if(matches):
-            serializer = DistrictSerializer(matches)
-            return Response(serializer.data)
-        else:
-            return Response({"id": "-1","name":"None"})
-
 
 
 class VDCAdminView(LoginRequiredMixin,
@@ -432,5 +420,12 @@ def interceptee_fuzzy_matching(request):
     input_name = request.GET['name']
     all_people = Interceptee.objects.all()
     people_dict = {serializers.serialize("json", [obj]):obj.full_name for obj in all_people }
+    matches = process.extractBests(input_name, people_dict, limit = 10)
+    return HttpResponse(json.dumps(matches), content_type="application/json")
+
+def staff_fuzzy_matching(request):
+    input_name = request.GET['name']
+    all_staff = Interceptee.objects.all()
+    people_dict = {serializers.serialize("json", [obj]):obj.full_name for obj in all_staff }
     matches = process.extractBests(input_name, people_dict, limit = 10)
     return HttpResponse(json.dumps(matches), content_type="application/json")
