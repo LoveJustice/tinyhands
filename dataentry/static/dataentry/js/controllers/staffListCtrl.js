@@ -10,8 +10,9 @@ angular
         vm.retrieveStaff = retrieveStaff;
 
         function retrieveStaff() {
-            // grab all of the staff for this budgetCalcSheet
-            staffService.retrieveStaff(window.border_station).then(function(promise){
+            // grab all of the staff for this border station
+            // TODO: should get border station based on form number on page
+            staffService.retrieveStaff(1).then(function(promise){
                 var data = promise.data;
                 $(data).each(function(person){
                         vm.staffNames.push(
@@ -22,5 +23,6 @@ angular
                         );
                 });
             });
+            $("input.inputResults").val("Changed it");
         }
     }]);
