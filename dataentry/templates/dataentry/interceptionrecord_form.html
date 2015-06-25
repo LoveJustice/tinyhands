@@ -1,4 +1,7 @@
 {% extends "dataentry/dataentry_base.html" %}
+{% block html %}
+    <html ng-app="DataEntry">
+{% endblock %}
 {% load widget_tweaks %}
 {% load bootstrap %}
 {% load unslugify %}
@@ -158,37 +161,25 @@
                   {{ form.staff_name.label_tag }}
                 </td>
                 <td>
-                    <div class="input-group">
+                    <div class="input-group" ng-controller="staffListCtrl as staff">
+                        {% verbatim %}
 						<div class="input-group-btn">
-                            <button tabindex="-1" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button">
+                            <button tabindex="-1" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button" ng-click="addStaffNames">
                                 <span class="caret"></span>
                             </button>
                             <ul role="menu" id="dropdown-staff" class="dropdown-menu dropdown-menu-form" >
-                                <li><a href="#"/>
-                                    <input type="checkbox"/><span class="lbl">Pramila Dural</span>
-                                </li>
-                                <li><a href="#"/>
-                                    <input type="checkbox"/><span class="lbl">Shital Pun</span>
-                                </li>
-                                <li><a href="#"/>
-                                    <input type="checkbox"/><span class="lbl">Bin Roka</span>
-                                </li>
-                                <li><a href="#"/>
-                                    <input type="checkbox"/><span class="lbl">Alisha Zimba</span>
-                                </li>
-                                <li><a href="#"/>
-                                    <input type="checkbox"/><span class="lbl">Renuka Tamang</span>
-                                </li>
+                                <li ng-repeat="staffPerson in staff.staffNames">
+                                    <a href="#"/> <input type="checkbox"/><span class="lbl">{{ staffPerson }}</span> </li>
                             </ul>
+
                             </div>
+                        {% endverbatim %}
                         <input type="text" class="form-control inputResults"/>
                     </div>
                 </td>
               </tr>
               <tr>
-                <td>
-                  {{ form.staff_name|attr:"data-placement: bottom"|attr:"data-fuzzy-ui:name"  }}
-                </td>
+
               </tr>
             </tbody>
           </table>
@@ -949,6 +940,9 @@
   <br/>
   <br/>
 
-
+    {% load static from staticfiles %}
+     <script type="text/javascript" src="{% static "dataentry/js/dataEntryModule.js" %}"></script>
+     <script type="text/javascript" src="{% static "dataentry/js/services/staffListService.js" %}"></script>
+     <script type="text/javascript" src="{% static "dataentry/js/controllers/staffListCtrl.js" %}"></script>
   {% include "dataentry/fuzzymatching-ui.html" %}
 {% endblock %}

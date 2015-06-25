@@ -5,5 +5,8 @@ var myModule = angular.module('DataEntry', ['ngCookies', 'ngRoute', 'ngAnimate']
         }]);
 
 myModule.run(function($rootScope) {
+    $rootScope.$on('handleStaffNamesChangeEmit', function(event, args) {
+        $rootScope.$broadcast('handleStaffNamesChangeBroadcast', args);
+    });
 
 });
