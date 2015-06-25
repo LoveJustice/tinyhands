@@ -414,6 +414,19 @@ class StationCodeAPIView(APIView):
         codes = BorderStation.objects.all().values_list("station_code", flat=True)
         return Response(codes, status=status.HTTP_200_OK);
 
+def getStationID(request, code):
+    if code == '':
+        return Response({"id": "-1"})
+    else:
+        station = 5#BorderStation.objects.filter(station_code=code)
+        if station == 0:
+            return Response({"id": "-1"})
+        else:
+            return Response({"id": str(station)})
+
+
+
+
 
 @login_required
 def interceptee_fuzzy_matching(request):

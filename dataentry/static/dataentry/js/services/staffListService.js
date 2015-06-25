@@ -10,13 +10,30 @@ function staffListService($http, $q) {
 	};
 
 	function retrieveStaff(borderStationCod) {
+	    var stationID = 0;
+        $.getJSON('/stations/ids/'+borderStationCod+'/', function(data, jqXHR){
+            console.log("calling my function");
+            var test = data[0].id;
+            console.log(test);
+            stationID = test;
+        });
         // grab all of the staff for this budgetCalcSheet
-        borderStationId = BorderStation.objects.get(station_code=borderStationCod).id
-        return $http.get('/static_border_stations/api/border-stations/' + borderStationId + '/').
+        return $http.get('/static_border_stations/api/border-stations/' + stationID + '/').
             success(function (data) {
                 return data;
             }).
             error(function (data, status, headers, config) {
+                console.log(data, status, headers, config);
+            });
+    }
+
+    function getStationID(borderStationCod) {
+        var borderID = $http({method: 'GET', url: '/dataentry/api/border_stations/' + borderStationCod + '/'});
+        return $q.all([borderID])
+            .then(function (data) {
+                return data;
+            })
+            .catch(function(data, status, headers, config) {
                 console.log(data, status, headers, config);
             });
     }

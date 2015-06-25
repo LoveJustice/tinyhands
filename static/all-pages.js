@@ -509,7 +509,9 @@ $(document).ready(function() {
   if (bodyClass in DREAMSUITE) {
     DREAMSUITE[bodyClass]();
   }
-  $("ul.dropdown-menu input[type=checkbox]").each(function() {
+
+// Semi-colon delimiting the staff name data
+ $("ul#dropdown-staff").each(function() {
         $(this).change(function() {
             var line = "";
             $("ul.dropdown-menu input[type=checkbox]").each(function() {
@@ -522,6 +524,7 @@ $(document).ready(function() {
     });
 });
 
+// Allows multiple clicks on dropdown instead of automatically closing
 $(document).on('click', '.dropdown-menu.dropdown-menu-form', function(e) {
   e.stopPropagation();
 });

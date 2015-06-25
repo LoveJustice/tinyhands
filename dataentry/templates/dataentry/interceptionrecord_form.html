@@ -109,7 +109,7 @@
         <div class="col-xs-7">
           <p class="bg-danger" style="margin-bottom: 0; margin-left: 80px">
 	    You will find instructions for each section in the pink boxes like this</p>
-          <table class="table table-bordered top-data-area" style="margin-left: 30px">
+          <table class="table table-bordered top-data-area" style="margin-left: 30px"  ng-controller="staffListCtrl as staff">
             <tbody>
               <tr>
                 <td>
@@ -117,7 +117,7 @@
                 </td>
                 <td>
                   <div style="width: 75px">
-                    {{ form.irf_number }}
+                    {{ form.irf_number|add_ng_click="irfNumChange()" }}
                   </div>
                 </td>
                 <td>
@@ -161,15 +161,15 @@
                   {{ form.staff_name.label_tag }}
                 </td>
                 <td>
-                    <div class="input-group" ng-controller="staffListCtrl as staff">
+                    <div class="input-group">
                         {% verbatim %}
 						<div class="input-group-btn">
-                            <button tabindex="-1" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button" ng-click="addStaffNames">
+                            <button tabindex="-1" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button" ng-click="staff.retrieveStaff('DNG')">
                                 <span class="caret"></span>
                             </button>
                             <ul role="menu" id="dropdown-staff" class="dropdown-menu dropdown-menu-form" >
                                 <li ng-repeat="staffPerson in staff.staffNames">
-                                    <a href="#"/> <input type="checkbox"/><span class="lbl">{{ staffPerson }}</span> </li>
+                                    <a href="#"/> <input type="checkbox"/><span class="lbl">{{ staffPerson.name }}</span> </li>
                             </ul>
 
                             </div>
