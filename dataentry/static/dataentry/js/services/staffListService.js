@@ -10,15 +10,16 @@ function staffListService($http, $q) {
 	};
 
 	function retrieveStaff(borderStationCod) {
-	    var stationID = 0;
+	    /*
         $.getJSON('/stations/ids/'+borderStationCod+'/', function(data, jqXHR){
             console.log("calling my function");
             var test = data[0].id;
             console.log(test);
             stationID = test;
         });
+        */
         // grab all of the staff for this budgetCalcSheet
-        return $http.get('/static_border_stations/api/border-stations/' + stationID + '/').
+        return $http.get('/static_border_stations/api/border-stations/' + borderStationCod + '/').
             success(function (data) {
                 return data;
             }).

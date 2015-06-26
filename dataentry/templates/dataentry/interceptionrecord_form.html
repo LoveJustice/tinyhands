@@ -110,6 +110,7 @@
           <p class="bg-danger" style="margin-bottom: 0; margin-left: 80px">
 	    You will find instructions for each section in the pink boxes like this</p>
           <table class="table table-bordered top-data-area" style="margin-left: 30px"  ng-controller="staffListCtrl as staff">
+
             <tbody>
               <tr>
                 <td>
@@ -117,7 +118,7 @@
                 </td>
                 <td>
                   <div style="width: 75px">
-                    {{ form.irf_number|add_ng_click="irfNumChange()" }}
+                    {{ form.irf_number }}
                   </div>
                 </td>
                 <td>
@@ -161,10 +162,12 @@
                   {{ form.staff_name.label_tag }}
                 </td>
                 <td>
+
+                  {% verbatim %}
+
                     <div class="input-group">
-                        {% verbatim %}
 						<div class="input-group-btn">
-                            <button tabindex="-1" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button" ng-click="staff.retrieveStaff('DNG')">
+                            <button tabindex="-1" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button" ng-click="staff.retrieveStaff()">
                                 <span class="caret"></span>
                             </button>
                             <ul role="menu" id="dropdown-staff" class="dropdown-menu dropdown-menu-form" >
@@ -173,9 +176,10 @@
                             </ul>
 
                             </div>
-                        {% endverbatim %}
-                        <input type="text" class="form-control inputResults"/>
+                        <input id="id_staff_name" class="form-control inputResults" maxlength="255" name="staff_name" type=text" value="1"/>
                     </div>
+                  {% endverbatim %}
+
                 </td>
               </tr>
               <tr>
