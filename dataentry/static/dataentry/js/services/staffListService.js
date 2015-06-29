@@ -25,7 +25,6 @@ function staffListService($http, $q) {
         return $.get( '/get_station_id/', {"code": borderStationCod}).
             success(function(data) {
                 station_id = data;
-                console.log("Station id: " + station_id);
                 return station_id;
             }).
             error(function (data, status, headers, config) {
