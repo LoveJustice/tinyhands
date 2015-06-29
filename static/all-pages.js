@@ -520,6 +520,8 @@ $(document).ready(function() {
                 }
             });
             $("input#id_staff_name").val(line);
+            $("input#id_interviewer").val(line);
+
         });
     });
 });

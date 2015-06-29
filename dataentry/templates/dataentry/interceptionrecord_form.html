@@ -161,33 +161,22 @@
                 <td>
                   {{ form.staff_name.label_tag }}
                 </td>
-
-
-
                 <td>
                     {{ form.staff_name }}
-
                     <div class="input-group">
                       {% verbatim %}
 						<div class="input-group-btn">
-                            <button tabindex="-1" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button" ng-click="staff.retrieveStation()">
+                            <button tabindex="-1" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button" ng-click="staff.retrieveStation(1)">
                                 <span class="caret"></span>
                             </button>
                             <ul role="menu" id="dropdown-staff" class="dropdown-menu dropdown-menu-form" >
                                 <li ng-repeat="staffPerson in staff.staffNames">
                                     <a href="#"/> <input type="checkbox"/><span class="lbl">{{ staffPerson.name }}</span> </li>
                             </ul>
-                          {% endverbatim %}
-
-
-                            </div>
-
+                        </div>
+                      {% endverbatim %}
                     </div>
                 </td>
-
-              </tr>
-              <tr>
-
               </tr>
             </tbody>
           </table>

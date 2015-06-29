@@ -6,16 +6,18 @@ angular
         // Variable Declarations
         vm.staffNames = [];
         vm.testNames = [];
-        vm.stationID;
-        vm.station_code = "";
 
         // Function Definitions
         vm.retrieveStation = retrieveStation;
         vm.retrieveStaff = retrieveStaff;
 
-        function retrieveStation() {
-            irf_num = document.getElementById("id_irf_number").value.slice(0,3);
-            staffListService.getStationID(irf_num).then(function(response){
+        function retrieveStation(calledBy) {
+            console.log("Called by: " + toString(calledBy));
+            if (calledBy == 1) station_code = document.getElementById("id_irf_number").value.slice(0,3);
+            else station_code = document.getElementById("id_vif_number").value.slice(0,3);
+
+            staffListService.getStationID(station_code).then(function(response){
+                console.log("Response: " + toString(response));
                 retrieveStaff(response);
             });
         }
