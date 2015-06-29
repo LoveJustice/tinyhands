@@ -4,7 +4,7 @@
 {% load bootstrap_pagination %}
 {% load unslugify %}
 {% load times %}
-{% block title %}Manage VDCs{% endblock %}
+{% block title %}Manage Address 2{% endblock %}
 {% block content %}
 
 <!-- Modal -->
@@ -17,7 +17,7 @@
             <th style="text-align:center">Name</th>
             <th style="text-align:center">Latitude</th>
             <th style="text-align:center">Longitude</th>
-            <th style="text-align:center">District</th>
+            <th style="text-align:center">Address 1</th>
             <th style="text-align:center">Cannonical Name</th>
             <th style="text-align:center">Verified</th>
             <th></th>
@@ -43,11 +43,11 @@
 	{% empty %}
 		{% if database_empty %}
 			<tr>
-			<td colspan="12">There are currently no VDCs entered in the database</td>
+			<td colspan="12">There are currently no Address 2 records in the database</td>
 			<tr>
 		{% else %}
 			<tr>
-			<td colspan="12">There are no VDCs that match that query</td>
+			<td colspan="12">There are no Address 2 records that match that query</td>
 			<tr>
 		{% endif %}
 	{% endfor %}

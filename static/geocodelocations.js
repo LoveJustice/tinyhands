@@ -25,6 +25,14 @@ function setPopovers(id)
                     });
             });
         });
+        $(element).on('shown.bs.popover', function(){
+            $("#district_create_page").click(
+                    function(e){
+                        e.preventDefault();
+                        $("#modal").load(this.href, function(){$("#modal").modal("show");
+                    });
+            });
+        });
 	    $(element).blur(function() {
 	    	if($('.popover').hasClass('in'))
 	    	{
