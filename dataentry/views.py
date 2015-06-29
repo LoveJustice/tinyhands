@@ -414,15 +414,7 @@ class StationCodeAPIView(APIView):
         codes = BorderStation.objects.all().values_list("station_code", flat=True)
         return Response(codes, status=status.HTTP_200_OK);
 
-def getStationID(request, code):
-    if code == '':
-        return Response({"id": "-1"})
-    else:
-        station = 5#BorderStation.objects.filter(station_code=code)
-        if station == 0:
-            return Response({"id": "-1"})
-        else:
-            return Response({"id": str(station)})
+
 
 
 
@@ -435,3 +427,18 @@ def interceptee_fuzzy_matching(request):
     people_dict = {serializers.serialize("json", [obj]):obj.full_name for obj in all_people }
     matches = process.extractBests(input_name, people_dict, limit = 10)
     return HttpResponse(json.dumps(matches), content_type="application/json")
+
+def get_station_id(request):
+    code = request.GET['code']
+    #code = "DNG"
+    if code == '':
+        return HttpResponse([-1])
+    else:
+        station = BorderStation.objects.filter(station_code=code)
+        if len(station) > 0:
+            print("Station id is: " + str(station))
+            return HttpResponse([station[0].id])
+        else:
+            print("No station id")
+            return HttpResponse([-1])
+

@@ -6,7 +6,7 @@ angular
         // Variable Declarations
         vm.staffNames = [];
         vm.testNames = [];
-        vm.stationID = 5;
+        vm.stationID;
         vm.station_code = "";
 
         // Function Definitions
@@ -38,8 +38,13 @@ angular
         });
 
         function irfNumChange(irf_num) {
+            console.log("Got: " + irf_num);
             vm.station_code = irf_num.slice(0,3);
             console.log(vm.station_code);
+            staffListService.getStationID(vm.station_code).then(function(response){
+                vm.stationID = response;
+            })
+
         }
 
     }]);

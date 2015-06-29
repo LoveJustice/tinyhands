@@ -519,7 +519,7 @@ $(document).ready(function() {
                     line += $("+ span", this).text() + ";";
                 }
             });
-            $("input.inputResults").val(line);
+            $("input#id_staff_name").val(line);
         });
     });
 });

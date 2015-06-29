@@ -99,7 +99,7 @@ class InterceptionRecordForm(DreamSuitePaperForm):
 
     def __init__(self, *args, **kwargs):
         super(InterceptionRecordForm, self).__init__(*args, **kwargs)
-        #self.fields['irf_number'].widget.attrs.update({'ng-model': 'form.irf_number', 'ng-change': 'staff.irfNumChange(form.irf_number)'})
+        self.fields['irf_number'].widget.attrs.update({'ng-model': 'form.irf_number', 'ng-change': "staff.irfNumChange(form.irf_number)"})
         for field_name, field in self.fields.iteritems():
             if type(field) == forms.fields.BooleanField:
                 try:
