@@ -711,7 +711,7 @@
           </tr>
         </tbody>
       </table>
-      <table class="table table-bordered staff-intercepted">
+      <table class="table table-bordered staff-intercepted" ng-controller="staffListCtrl as staff">
         <tbody>
           <tr>
             <td colspan="5">
@@ -721,9 +721,23 @@
           <tr>
             <td colspan="5">
               <strong>7.1</strong>&nbsp;{{ form.staff_who_noticed.label_tag }}
-	      {{ form.staff_who_noticed }}
-              What was the sign that made you stop the girl for questioning? 
-	      (check all that apply below)
+              {{ form.staff_who_noticed }}
+                  What was the sign that made you stop the girl for questioning?
+              (check all that apply below)
+                <div class="input-group">
+                      {% verbatim %}
+                        <div class="input-group-btn">
+                            <button tabindex="-1" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button" ng-click="staff.retrieveStation(1)">
+                                <span class="caret"></span>
+                            </button>
+                            <ul role="menu" id="dropdown-staff-who-noticed" class="dropdown-menu dropdown-menu-form" >
+                                <li ng-repeat="staffPerson in staff.staffNames">
+                                    <a href="#"/> <input type="checkbox"/><span class="lbl">{{ staffPerson.name }}</span> </li>
+                            </ul>
+                        </div>
+                      {% endverbatim %}
+                </div>
+
             </td>
           </tr>
         </tbody>
