@@ -68,6 +68,25 @@ var vifCrud = function() {
           }
     };
 
+    this.good_vif_staff_dropdown = function() {
+        this.edit = element(by.id("id_edit_vif_button")).click();
+        this.clear_vif_number = element(by.id("id_vif_number")).clear();
+        this.change_vif_number = element(by.id("id_vif_number")).sendKeys(c.goodStaffVifNumber);
+        this.interviewer_dropdown = this.permissions.element(by.className("dropdown-toggle")).click();
+        browser.sleep(1000);
+    };
+
+    this.bad_vif_staff_dropdown = function() {
+        this.edit = element(by.id("id_edit_vif_button")).click();
+        this.clear_vif_number = element(by.id("id_vif_number")).clear();
+        this.change_vif_number = element(by.id("id_vif_number")).sendKeys(c.badStaffVifNumber);
+        this.interviewer_dropdown = this.permissions.element(by.className("dropdown-toggle"));
+        this.interviewer_dropdown.click();
+        browser.sleep(1000);
+        this.interviewer_dropdown.click();
+        browser.sleep(1000);
+    };
+
 };
 
 module.exports = new vifCrud();

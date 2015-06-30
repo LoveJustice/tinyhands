@@ -55,5 +55,19 @@ describe('VIF CRUD -', function() {
                 expect(element(by.id("error-box")).isPresent()).toBe(true);
             });
         });
+        describe('if you enter vif number with correct station code, the interviewer dropdown should include staff from that station', function () {
+            it ('enters vif number and checks dropdown for staff associated to station', function () {
+                browser.get(c.webAddress + "/data-entry/vifs");
+                crudPage.good_vif_staff_dropdown();
+                expect(element(by.xpath('//span[text()="SFname0 SLname0"]')))
+            });
+        });
+        describe('if you enter vif number with a non-existent station code, the interviewer dropdown will say Invalid Station Code', function () {
+            it ('enters non-existent code and checks dropdown for Invalid Station Code message', function () {
+                browser.get(c.webAddress + "/data-entry/vifs");
+                crudPage.bad_vif_staff_dropdown();
+                expect(element(by.xpath('//span[text()="Invalid Station Code"]')))
+            });
+        });
     });
 });
