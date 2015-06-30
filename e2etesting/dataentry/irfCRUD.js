@@ -52,6 +52,27 @@ var irfPage = function() {
         this.submit = element(by.id("submtButton")).click();
     };
 
+    this.good_irf_staff_dropdown = function() {
+        browser.executeScript("arguments[0].style.visibility = 'hidden';", element(by.id("footer")).getWebElement()); // Hides the footer so the webdriver can click on stuff
+        this.eIRF = element(by.linkText('Edit')).click();
+        this.irf_number = element(by.id("id_irf_number")).clear();
+        this.irf_number = element(by.id("id_irf_number")).sendKeys(c.goodStaffVifNumber);
+        this.staff_dropdown = this.permissions.element(by.className("dropdown-toggle")).click();
+        browser.sleep(1000);
+    };
+
+    this.bad_irf_staff_dropdown = function() {
+        browser.executeScript("arguments[0].style.visibility = 'hidden';", element(by.id("footer")).getWebElement()); // Hides the footer so the webdriver can click on stuff
+        this.eIRF = element(by.linkText('Edit')).click();
+        this.irf_number = element(by.id("id_irf_number")).clear();
+        this.irf_number = element(by.id("id_irf_number")).sendKeys(c.badStaffVifNumber);
+        this.staff_dropdown = this.permissions.element(by.className("dropdown-toggle"))
+        this.staff_dropdown.click();
+        browser.sleep(1000);
+        this.staff_dropdown.click();
+        browser.sleep(1000);
+    };
+
     this.deleteIRF = function() {
         this.dIRF = element(by.linkText('Delete')).click();
         this.dIRFpopUp = element(by.linkText('Delete')).click();

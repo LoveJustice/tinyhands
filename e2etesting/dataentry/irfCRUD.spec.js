@@ -74,6 +74,17 @@ describe('Interception Record Form -', function() {
             expect(element(by.id('id_has_signature')).isSelected()).toBeTruthy();
             browser.get(c.webAddress + '/data-entry/irfs/search/');
         });
+
+        // Both tests require border-station spec to be run in order for staff to be listed
+        it ('Can enter IRF number and click dropdown for staff members associated to station', function () {
+            crudPage.good_irf_staff_dropdown();
+            expect(element(by.xpath('//span[text()="SFname0 SLname0"]')))
+        });
+
+        it ('Can enter non-existent code and the dropdown will include Invalid Station Code message', function () {
+            crudPage.bad_irf_staff_dropdown();
+            expect(element(by.xpath('//span[text()="Invalid Station Code"]')))
+        });
     });
 });
 

@@ -68,6 +68,7 @@ var vifCrud = function() {
           }
     };
 
+    // Both tests require border-station spec to be run in order for staff to be listed
     this.good_vif_staff_dropdown = function() {
         this.edit = element(by.id("id_edit_vif_button")).click();
         this.clear_vif_number = element(by.id("id_vif_number")).clear();
