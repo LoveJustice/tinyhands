@@ -365,15 +365,12 @@ class VDCAdminView(LoginRequiredMixin,
     model = VDC
     template_name = "dataentry/vdc_admin_page.html"
     permissions_required = ['permission_vdc_manage']
-    paginate_by = 100
 
     def __init__(self, *args, **kwargs):
         super(VDCAdminView, self).__init__(name__icontains = "name")
 
     def get_context_data(self, **kwargs):
         context = super(VDCAdminView, self).get_context_data(**kwargs)
-        context['lower_limit'] = context['page_obj'].number - 5
-        context['upper_limit'] = context['page_obj'].number + 5
         context['database_empty'] = self.model.objects.count()==0
         return context
 
@@ -414,15 +411,12 @@ class DistrictAdminView(LoginRequiredMixin,
     model = District
     template_name = "dataentry/district_admin_page.html"
     permissions_required = ['permission_vdc_manage']
-    paginate_by = 20
 
     def __init__(self, *args, **kwargs):
         super(DistrictAdminView, self).__init__(name__icontains = "name")
 
     def get_context_data(self, **kwargs):
         context = super(DistrictAdminView, self).get_context_data(**kwargs)
-        context['lower_limit'] = context['page_obj'].number - 5
-        context['upper_limit'] = context['page_obj'].number + 5
         context['database_empty'] = self.model.objects.count()==0
         return context
 

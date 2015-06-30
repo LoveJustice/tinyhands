@@ -1,6 +1,6 @@
 $(document).ready( function() {
-  $('#vdc_table').dataTable( {
-    "aoColumnDefs": [ { "bSortable": false, "aTargets": [ 6 ], } ],
+  $('#district_table').dataTable( {
+    "aoColumnDefs": [ { "bSortable": false, "aTargets": [ 1 ], } ],
     "bFilter": true,
     "bInfo": false,
     "bPaginate": true,
@@ -8,7 +8,7 @@ $(document).ready( function() {
 } );
 
 //For VDC Admin Page, create modal functionality
-$("*[id*=vdc_update_link]:visible").each(
+$("*[id*=district_update_link]:visible").each(
     function() { 
         $(this).click(
             function(e){
