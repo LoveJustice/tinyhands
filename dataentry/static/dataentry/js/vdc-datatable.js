@@ -4,12 +4,12 @@ $(document).ready( function() {
     "bFilter": true,
     "bInfo": false,
     "bPaginate": true,
-	} );
+  } );
 } );
 
 //For VDC Admin Page, create modal functionality
 $("*[id*=vdc_update_link]:visible").each(
-    function() { 
+    function() {
         $(this).click(
             function(e){
                 e.preventDefault();

@@ -39,3 +39,8 @@
 
 
 {% endblock %}
+
+{% block includeJS %}
+    {% load static from staticfiles %}
+    <script src="{% static "dataentry/js/district-datatable.js" %}"></script>
+{% endblock %}

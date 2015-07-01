@@ -54,3 +54,8 @@
 </table>
 
 {% endblock %}
+
+{% block includeJS %}
+    {% load static from staticfiles %}
+    <script src="{% static "dataentry/js/vdc-datatable.js" %}"></script>
+{% endblock %}

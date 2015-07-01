@@ -56,3 +56,8 @@
 
     {% endblock %}
 {% endblock %}
+
+{% block includeJS %}
+    {% load static from staticfiles %}
+    <script src="{% static "budget/js/budget-datatable.js" %}"></script>
+{% endblock %}
