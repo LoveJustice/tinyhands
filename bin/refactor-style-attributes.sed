@@ -1,4 +1,4 @@
-#!/usr/bin/env gsed --file
+#!/bin/sed -if
 
 # Sed script to replace 'text-align' styles with a corresponding 'class' value in HTML
 # elements. For example, 'style="text-align: center"' will be replaced with
@@ -28,9 +28,12 @@
 /style[^>]*class/ s/style="\(.*\)text-align:\s*\(center\|left\|right\)\(.*\)"\(.*\)class="\(.*\)"/style="\1\3"\4class="text-\2 \5"/
 
 # When a style attribute contains multiple styles and the text-align attribute appears
-last, the previous replacements leave behind a superfluous semicolon (and, sometimes, a
-space). Remove these.
+# last, the previous replacements leave behind a superfluous semicolon (and, sometimes, a
+# space). Remove these.
 s/style="\([^"]*\);\s*"/style="\1"/
 
 # If a style attribute has been emptied, remove it entirely.
-s/style=""//
+s/\s*style=""//
+
+# Sometimes this leaves an extra space.
+/<.*class.*text-\(center\|left\|right\)/ s/\(<.*\)  /\1 /

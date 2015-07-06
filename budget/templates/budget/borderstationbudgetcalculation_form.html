@@ -22,11 +22,11 @@
             {% csrf_token %}
             <!-- First Table Thing -->
 
-            <div class="form-page"  ng-controller="MainCtrl as main">
+            <div class="form-page" ng-controller="MainCtrl as main">
 
                 {% verbatim %}
 
-                <h1 style="font-size: 25px; text-align: center">
+                <h1 class="text-center" style="font-size: 25px">
                     {{ main.form.station_name }} Budget Calculation Form For
                     <input type="month" class="form-control" id="month_year" name="input" ng-model="main.form.month_year" onchange='change()' min="2005-01-01" required />
                 </h1>
@@ -41,7 +41,7 @@
                     </div>
 
                     <div class="col-lg-4 col-lg-offset-4">
-                        <table class="table table-striped table-bordered table-hover" style="text-align: center">
+                        <table class="table table-striped table-bordered table-hover text-center">
                             <thead>
                             <tr>
                                 <th></th>
@@ -97,7 +97,7 @@
 
                             </div>
 
-                            <div class="row" style="margin-top: 30px; text-align: center">
+                            <div class="row text-center" style="margin-top: 30px">
                                 <div class="col-lg-4"></div>
                                 <div class="col-lg-4 text-center">
                                     <label>Staff Total</label>
@@ -114,50 +114,50 @@
                     <div class="col-lg-6">
                         <h2 class="background"><span>Shelter</span></h2>
 
-                        <div class="row" style="margin-top: 30px; text-align: center">
+                        <div class="row text-center" style="margin-top: 30px">
                             <div class="col-lg-2 calc-form-input-no-width">
-                                <input style="text-align: right" class="form-control" type="number" id="shelter_rent" ng-model="main.form.shelter_rent"/>
+                                <input class="text-right form-control" type="number" id="shelter_rent" ng-model="main.form.shelter_rent"/>
                                 <small>Rent</small>
                             </div>
                             <div class="col-lg-1">
-                                <h4 style="text-align: center">+</h4>
+                                <h4 class="text-center">+</h4>
                             </div>
                             <div class="col-lg-2 calc-form-input-no-width">
-                                <input style="text-align: right" class="form-control" type="number" id="shelter_water" ng-model="main.form.shelter_water"/>
+                                <input class="text-right form-control" type="number" id="shelter_water" ng-model="main.form.shelter_water"/>
                                 <small>Water</small>
                             </div>
                             <div class="col-lg-1">
-                                <h4 style="text-align: center">+</h4>
+                                <h4 class="text-center">+</h4>
                             </div>
                             <div class="col-lg-2 calc-form-input-no-width">
-                                <input style="text-align: right" class="form-control" type="number" id="shelter_electricity" ng-model="main.form.shelter_electricity"/>
+                                <input class="text-right form-control" type="number" id="shelter_electricity" ng-model="main.form.shelter_electricity"/>
                                 <small>Electricity</small>
                             </div>
                             <div class="col-lg-1">
-                                <h4 style="text-align: center">=</h4>
+                                <h4 class="text-center">=</h4>
                             </div>
                             <div class="col-lg-3 input-group">
                                 <div class="input-group-addon">$</div>
                                 <input class="form-control text-center" ng-value="main.utilTotal()" disabled="disabled"/>
                             </div>
                         </div>
-                        <div class="row" style="margin-top: 30px; text-align: center">
+                        <div class="row text-center" style="margin-top: 30px">
                             <div class="col-lg-1 col-lg-offset-2">
                                 <input style="margin-bottom: 0; margin-top: 10px" type="checkbox" id="shelterStartupBool" ng-model="main.form.shelter_shelter_startup"/>
                             </div>
                             <div class="col-lg-2 input-with-text calc-form-input-no-width">
-                                <input style="text-align: right" class="form-control" type="number" id="shelter_startup_amount" ng-model="main.form.shelter_shelter_startup_amount"/>
+                                <input class="text-right form-control" type="number" id="shelter_startup_amount" ng-model="main.form.shelter_shelter_startup_amount"/>
                                 <small>Shelter Startup</small>
                             </div>
                             <div class="col-lg-1">
                                 <input style="margin-bottom: 0; margin-top: 10px" type="checkbox" id="shelter_two_bool" ng-model="main.form.shelter_shelter_two"/>
                             </div>
                             <div class="col-lg-2 input-with-text calc-form-input-no-width">
-                                <input style="text-align: right" class="form-control" type="number" id="shelter_two_amount" ng-model="main.form.shelter_shelter_two_amount"/>
+                                <input class="text-right form-control" type="number" id="shelter_two_amount" ng-model="main.form.shelter_shelter_two_amount"/>
                                 <small>Shelter 2</small>
                             </div>
                             <div class="col-lg-1">
-                                <h4 style="text-align: center">=</h4>
+                                <h4 class="text-center">=</h4>
                             </div>
                             <div class="col-lg-3 input-group">
                                 <div class="input-group-addon">$</div>
@@ -165,7 +165,7 @@
                             </div>
                         </div>
 
-                        <div class="row center" style="margin-top: 20px; text-align: center">
+                        <div class="row center text-center" style="margin-top: 20px">
                             <div class="col-lg-4"></div>
                             <div class="col-lg-4">
                                 <label>Shelter Total</label>
@@ -182,31 +182,31 @@
                         <!-- End Shelter -->
 
                         <!-- Food & Gas -->
-                        <div class="row" style="margin-top: 30px; text-align: center">
+                        <div class="row text-center" style="margin-top: 30px">
                             <h2 class="background"><span>Food & Gas</span></h2>
 
 
                                 <div class="col-lg-2 calc-form-input-no-width">
-                                    <input style="text-align: right" class="form-control" type="number" id="food_gas_multiplier_before" ng-model="main.form.food_and_gas_number_of_intercepted_girls_multiplier_before"/>
+                                    <input class="text-right form-control" type="number" id="food_gas_multiplier_before" ng-model="main.form.food_and_gas_number_of_intercepted_girls_multiplier_before"/>
 
                                 </div>
                                 <div class="col-lg-1">
-                                    <h4 style="text-align: center">*</h4>
+                                    <h4 class="text-center">*</h4>
                                 </div>
                                 <div class="col-lg-2 calc-form-input-no-width">
-                                    <input style="text-align: right" class="form-control" type="number" id="food_gas_number_of_girls" ng-model="main.form.food_and_gas_number_of_intercepted_girls"/>
+                                    <input class="text-right form-control" type="number" id="food_gas_number_of_girls" ng-model="main.form.food_and_gas_number_of_intercepted_girls"/>
                                     <small># of Girls</small>
                                 </div>
                                 <div class="col-lg-1 ">
-                                    <h4 style="text-align: center">*</h4>
+                                    <h4 class="text-center">*</h4>
                                 </div>
                                 <div class="col-lg-2 calc-form-input-no-width">
-                                    <input style="text-align: right" class="form-control" type="number" id="food_gas_multiplier_after" ng-model="main.form.food_and_gas_number_of_intercepted_girls_multiplier_after"/>
+                                    <input class="text-right form-control" type="number" id="food_gas_multiplier_after" ng-model="main.form.food_and_gas_number_of_intercepted_girls_multiplier_after"/>
                                 </div>
                                 <div class="col-lg-1 ">
-                                    <h4 style="text-align: center">=</h4>
+                                    <h4 class="text-center">=</h4>
                                 </div>
-                                <div class="col-lg-3 input-group" style="text-align: center">
+                                <div class="col-lg-3 input-group text-center">
                                     <div class="input-group-addon">$</div>
                                     <input class="form-control text-center" ng-value="main.foodGasInterceptedGirls()" disabled="disabled"/>
                                 </div>
@@ -215,24 +215,24 @@
                             </div>
                             <div class="row" style="margin-top: 20px">
                                 <div class="col-lg-2 calc-form-input-no-width">
-                                    <input style="text-align: right" class="form-control" type="number" id="limbo_multiplier" ng-model="main.form.food_and_gas_limbo_girls_multiplier"/>
+                                    <input class="text-right form-control" type="number" id="limbo_multiplier" ng-model="main.form.food_and_gas_limbo_girls_multiplier"/>
                                 </div>
                                 <div class="col-lg-1">
-                                    <h4 style="text-align: center">*</h4>
+                                    <h4 class="text-center">*</h4>
                                 </div>
                                 <div class="col-lg-2 calc-form-input-no-width">
-                                    <input style="text-align: right" class="form-control" type="number" id="limbo_number_of_girls" ng-model="main.form.food_and_gas_number_of_limbo_girls"/>
+                                    <input class="text-right form-control" type="number" id="limbo_number_of_girls" ng-model="main.form.food_and_gas_number_of_limbo_girls"/>
                                     <small># of Girls</small>
                                 </div>
                                 <div class="col-lg-1">
-                                    <h4 style="text-align: center">*</h4>
+                                    <h4 class="text-center">*</h4>
                                 </div>
                                 <div class="col-lg-2 calc-form-input-no-width">
-                                    <input style="text-align: right" class="form-control" type="number" id="limbo_number_of_days" ng-model="main.form.food_and_gas_number_of_days"/>
+                                    <input class="text-right form-control" type="number" id="limbo_number_of_days" ng-model="main.form.food_and_gas_number_of_days"/>
                                     <small># of Days</small>
                                 </div>
                                 <div class="col-lg-1">
-                                    <h4 style="text-align: center">=</h4>
+                                    <h4 class="text-center">=</h4>
                                 </div>
                                 <div class="col-lg-3 input-group">
                                     <div class="input-group-addon">$</div>
@@ -240,7 +240,7 @@
                                 </div>
                                 <small>Limbo Girls</small>
                             </div>
-                            <div class="row" style="margin-top: 30px; text-align: center">
+                            <div class="row text-center" style="margin-top: 30px">
                                 <div class="col-lg-4"></div>
                                 <div class="col-lg-4">
                                     <label>Total Food</label>
@@ -263,7 +263,7 @@
                                     <input style="margin-bottom: 0; margin-top: 10px" class="col-lg-3" type="checkbox" id="comm_chair_bool" ng-model="main.form.communication_chair"/>
 
                                     <div class="col-lg-6 calc-form-input-no-width">
-                                        <input style="text-align: right" class="form-control" type="number" id="comm_chair_amount" ng-model="main.form.communication_chair_amount"/>
+                                        <input class="text-right form-control" type="number" id="comm_chair_amount" ng-model="main.form.communication_chair_amount"/>
                                         <span><small>for chair</small></span>
                                     </div>
                                 </div>
@@ -272,24 +272,24 @@
                                     <input style="margin-bottom: 0; margin-top: 10px" class="col-lg-3" type="checkbox" id="comm_manager_bool" ng-model="main.form.communication_manager"/>
 
                                     <div class="col-lg-6 calc-form-input-no-width">
-                                        <input style="text-align: right" class="form-control" type="number" id="comm_manager_amount" ng-model="main.form.communication_manager_amount"/>
+                                        <input class="text-right form-control" type="number" id="comm_manager_amount" ng-model="main.form.communication_manager_amount"/>
                                         <span><small>for manager</small></span>
                                     </div>
                                 </div>
                             </div>
                             <div class="row" style="margin-top: 20px">
                                 <div class="col-lg-4 calc-form-input-no-width">
-                                    <input style="text-align: right" class="form-control" type="number" id="comm_number_of_staff_wt" ng-model="main.form.communication_number_of_staff_with_walkie_talkies"/>
+                                    <input class="text-right form-control" type="number" id="comm_number_of_staff_wt" ng-model="main.form.communication_number_of_staff_with_walkie_talkies"/>
                                     <small># of staff with walkie-talkies</small>
                                 </div>
                                 <div class="col-lg-1">
-                                    <h4 style="text-align: center">*</h4>
+                                    <h4 class="text-center">*</h4>
                                 </div>
                                 <div class="col-lg-3 calc-form-input-no-width">
-                                    <input style="text-align: right" class="form-control" type="number" id="comm_number_of_staff_wt_multiplier" ng-model="main.form.communication_number_of_staff_with_walkie_talkies_multiplier"/>
+                                    <input class="text-right form-control" type="number" id="comm_number_of_staff_wt_multiplier" ng-model="main.form.communication_number_of_staff_with_walkie_talkies_multiplier"/>
                                 </div>
                                 <div class="col-lg-1">
-                                    <h4 style="text-align: center">=</h4>
+                                    <h4 class="text-center">=</h4>
                                 </div>
                                 <div class="col-lg-3 input-group">
                                     <div class="input-group-addon">$</div>
@@ -297,26 +297,26 @@
                                 </div>
                             </div>
 
-                            <div class="row" style="margin-top: 20px;">
+                            <div class="row" style="margin-top: 20px">
                                 <div class="col-lg-4 calc-form-input-no-width">
-                                    <input style="text-align: right" class="form-control" type="number" id="comm_each_staff_wt" ng-model="main.form.communication_each_staff"/>
+                                    <input class="text-right form-control" type="number" id="comm_each_staff_wt" ng-model="main.form.communication_each_staff"/>
                                     <small>Each Staff</small>
                                 </div>
                                 <div class="col-lg-1">
-                                    <h4 style="text-align: center">*</h4>
+                                    <h4 class="text-center">*</h4>
                                 </div>
                                 <div class="col-lg-3 calc-form-input-no-width">
-                                    <input style="text-align: right" class="form-control" type="number" id="comm_each_staff_wt_multiplier" ng-model="main.form.communication_each_staff_multiplier"/>
+                                    <input class="text-right form-control" type="number" id="comm_each_staff_wt_multiplier" ng-model="main.form.communication_each_staff_multiplier"/>
                                 </div>
                                 <div class="col-lg-1">
-                                    <h4 style="text-align: center">=</h4>
+                                    <h4 class="text-center">=</h4>
                                 </div>
                                 <div class="col-lg-3 input-group">
                                     <div class="input-group-addon">$</div>
                                     <input class="form-control text-center" ng-value="main.commEachStaffTotal()" disabled="disabled"/>
                                 </div>
                             </div>
-                            <div class="row center" style="margin-top: 20px; text-align: center">
+                            <div class="row center text-center" style="margin-top: 20px">
                                 <div class="col-lg-4"></div>
                                 <div class="col-lg-4">
                                     <label>Total Communication</label>
@@ -338,7 +338,7 @@
                                     <label for="awareness_contact_cards_bool">Contact Cards</label>
                                 </div>
                                 <div class="col-lg-4">
-                                    <input style="text-align: right" class="form-control" type="number" id="awareness_contact_cards_amount" ng-model="main.form.awareness_contact_cards_amount" ng-change="main.awarenessTotal()"/>
+                                    <input class="text-right form-control" type="number" id="awareness_contact_cards_amount" ng-model="main.form.awareness_contact_cards_amount" ng-change="main.awarenessTotal()"/>
                                 </div>
                             </div>
                             <div class="row" style="margin-bottom: 7px">
@@ -347,7 +347,7 @@
                                     <label>Awareness Party</label>
                                 </div>
                                 <div class="col-lg-4">
-                                    <input style="text-align: right" class="form-control" type="number" id="awareness_awareness_party_amount" ng-model="main.form.awareness_awareness_party" ng-change="main.awarenessTotal()"/>
+                                    <input class="text-right form-control" type="number" id="awareness_awareness_party_amount" ng-model="main.form.awareness_awareness_party" ng-change="main.awarenessTotal()"/>
                                 </div>
                             </div>
                             <div class="row" style="margin-bottom: 7px">
@@ -356,7 +356,7 @@
                                     <label>Sign Boards</label>
                                 </div>
                                 <div class="col-lg-4">
-                                    <input style="text-align: right" class="form-control" type="number" id="awareness_sign_boards_amount" ng-model="main.form.awareness_sign_boards" ng-change="main.awarenessTotal()"/>
+                                    <input class="text-right form-control" type="number" id="awareness_sign_boards_amount" ng-model="main.form.awareness_sign_boards" ng-change="main.awarenessTotal()"/>
                                 </div>
                             </div>
 
@@ -368,7 +368,7 @@
                                         <input class="form-control" type="text" ng-model="form.name" ng-disabled="main.view"/>
                                     </div>
                                     <div class="col-lg-4">
-                                        <input style="text-align: right" class="form-control" type="number" ng-model="form.cost" ng-change="awarenessItemsCtrl.otherItemsTotal()" ng-disabled="main.view"/>
+                                        <input class="text-right form-control" type="number" ng-model="form.cost" ng-change="awarenessItemsCtrl.otherItemsTotal()" ng-disabled="main.view"/>
                                     </div>
                                     <div class="col-lg-2">
                                         <a class="btn btn-danger" ng-click="awarenessItemsCtrl.removeItem(form.id, $index)" ng-hide="main.view">Remove</a>
@@ -385,7 +385,7 @@
                             </div>
                             {% endverbatim %}
 
-                            <div class="row center" style="margin-top: 20px; text-align: center">
+                            <div class="row center text-center" style="margin-top: 20px">
                                 <div class="col-lg-4"></div>
                                 <div class="col-lg-4">
                                     <label>Total Awareness</label>
@@ -407,14 +407,14 @@
                                     <div class="col-lg-1"></div>
                                     <input style="margin-bottom: 0; margin-top: 10px" class="col-lg-3" type="checkbox" id="travel_chair_with_bike_bool" ng-model="main.form.travel_chair_with_bike" ng-change="main.travelTotal()"/>
                                     <div class="col-lg-6 calc-form-input-no-width">
-                                        <input class="form-control" style="text-align: right" type="number" id="travel_chair_with_bike_amount" ng-model="main.form.travel_chair_with_bike_amount" ng-change="main.travelTotal()"/>
+                                        <input class="form-control text-right" type="number" id="travel_chair_with_bike_amount" ng-model="main.form.travel_chair_with_bike_amount" ng-change="main.travelTotal()"/>
                                     </div>
                                 </div>
                                 <div class="col-lg-6 row">
                                     <div></div>
                                     <input style="margin-bottom: 0; margin-top: 10px" class="col-lg-3" type="checkbox" id="travel_manager_with_bike_bool" ng-model="main.form.travel_manager_with_bike" ng-change="main.travelTotal()"/>
                                     <div class="col-lg-6 calc-form-input-no-width">
-                                        <input class="form-control" style="text-align: right" type="number" id="travel_manager_with_bike_amount" ng-model="main.form.travel_manager_with_bike_amount" ng-change="main.travelTotal()"/>
+                                        <input class="form-control text-right" type="number" id="travel_manager_with_bike_amount" ng-model="main.form.travel_manager_with_bike_amount" ng-change="main.travelTotal()"/>
 
                                     </div>
                                 </div>
@@ -422,17 +422,17 @@
 
                             <div class="row" style="margin-top: 20px">
                                 <div class="col-lg-4 calc-form-input-no-width">
-                                    <input style="text-align: right; padding: 0; margin: 0" class="form-control" type="number" id="travel_number_of_staff_using_bikes" ng-model="main.form.travel_number_of_staff_using_bikes" ng-change="main.travelTotal()"/>
+                                    <input style="; padding: 0; margin: 0" class="text-right form-control" type="number" id="travel_number_of_staff_using_bikes" ng-model="main.form.travel_number_of_staff_using_bikes" ng-change="main.travelTotal()"/>
                                     <small># of staff using bikes</small>
                                 </div>
                                 <div class="col-lg-1">
-                                    <h4 style="text-align: center">*</h4>
+                                    <h4 class="text-center">*</h4>
                                 </div>
                                 <div class="col-lg-3 calc-form-input-no-width">
-                                    <input style="text-align: right; padding: 0; margin: 0" class="form-control" type="number" id="travel_number_of_staff_using_bikes_multiplier" ng-model="main.form.travel_number_of_staff_using_bikes_multiplier" ng-change="main.travelTotal()"/>
+                                    <input style="; padding: 0; margin: 0" class="text-right form-control" type="number" id="travel_number_of_staff_using_bikes_multiplier" ng-model="main.form.travel_number_of_staff_using_bikes_multiplier" ng-change="main.travelTotal()"/>
                                 </div>
                                 <div class="col-lg-1">
-                                    <h4 style="text-align: center">=</h4>
+                                    <h4 class="text-center">=</h4>
                                 </div>
                                 <div class="col-lg-3 input-group">
                                     <div class="input-group-addon">$</div>
@@ -445,7 +445,7 @@
                                     <strong>Last month's expense for sending girls home</strong>
                                 </div>
                                 <div class="col-lg-3 calc-form-input-no-width">
-                                    <input style="text-align: right" class="form-control" type="number" id="travel_sending_girls_home_expense" ng-model="main.form.travel_last_months_expense_for_sending_girls_home" ng-change="main.travelTotal()"/>
+                                    <input class="text-right form-control" type="number" id="travel_sending_girls_home_expense" ng-model="main.form.travel_last_months_expense_for_sending_girls_home" ng-change="main.travelTotal()"/>
                                 </div>
                             </div>
 
@@ -454,18 +454,18 @@
                                     <input style="margin-bottom: 0; margin-top: 10px" type="checkbox" id="travel_motorbike_bool" ng-model="main.form.travel_motorbike" ng-change="main.travelTotal()"/>
                                 </div>
                                 <div class="col-lg-3 calc-form-input-no-width" style="padding: 0; margin: 0">
-                                    <input style="text-align: right" class="form-control" type="number" id="travel_motorbike_amount" ng-model="main.form.travel_motorbike_amount" ng-change="main.travelTotal()"/>
+                                    <input class="text-right form-control" type="number" id="travel_motorbike_amount" ng-model="main.form.travel_motorbike_amount" ng-change="main.travelTotal()"/>
                                     <small>Motorbike</small>
                                 </div>
                                 <div class="col-lg-1 " style="padding: 0; margin: 0">
-                                    <h4 style="text-align: center">+</h4>
+                                    <h4 class="text-center">+</h4>
                                 </div>
                                 <div class="col-lg-3 calc-form-input-no-width" style="padding: 0; margin: 0">
-                                    <input style="text-align: right" class="form-control" type="number" id="travel_other" ng-model="main.form.travel_plus_other" ng-change="main.travelTotal()"/>
+                                    <input class="text-right form-control" type="number" id="travel_other" ng-model="main.form.travel_plus_other" ng-change="main.travelTotal()"/>
                                     <small>Other</small>
                                 </div>
                                 <div class="col-lg-1 " style="padding: 0; margin: 0">
-                                    <h4 style="text-align: center">=</h4>
+                                    <h4 class="text-center">=</h4>
                                 </div>
                                 <div class="col-lg-3 input-group" style="padding: 0; margin: 0">
                                     <div class="input-group-addon">$</div>
@@ -482,7 +482,7 @@
                                         <input class="form-control" type="text" ng-model="form.name" ng-disabled="main.view"/>
                                     </div>
                                     <div class="col-lg-4">
-                                        <input style="text-align: right" class="form-control" type="number" ng-model="form.cost" ng-change="travelItemsCtrl.otherItemsTotal()" ng-disabled="main.view"/>
+                                        <input class="text-right form-control" type="number" ng-model="form.cost" ng-change="travelItemsCtrl.otherItemsTotal()" ng-disabled="main.view"/>
                                     </div>
                                     <div class="col-lg-2">
                                         <a class="btn btn-danger" ng-click="travelItemsCtrl.removeItem(form.id, $index)" ng-hide="main.view">Remove</a>
@@ -499,7 +499,7 @@
                             </div>
                             {% endverbatim %}
 
-                            <div class="row center" style="margin-top: 20px; text-align: center">
+                            <div class="row center text-center" style="margin-top: 20px">
                                 <div class="col-lg-4"></div>
                                 <div class="col-lg-4">
                                     <label>Total Travel</label>
@@ -521,7 +521,7 @@
                                     <label>Walkie Talkies</label>
                                 </div>
                                 <div class="col-lg-4">
-                                    <input style="text-align: right" class="form-control" type="number" id="supplies_walkie_talkies_amount" ng-model="main.form.supplies_walkie_talkies_amount" ng-change="main.suppliesTotal()"/>
+                                    <input class="text-right form-control" type="number" id="supplies_walkie_talkies_amount" ng-model="main.form.supplies_walkie_talkies_amount" ng-change="main.suppliesTotal()"/>
                                 </div>
                             </div>
                             <div class="row" style="margin-bottom: 7px">
@@ -530,7 +530,7 @@
                                     <label>Recorders</label>
                                 </div>
                                 <div class="col-lg-4">
-                                    <input style="text-align: right" class="form-control" type="number" id="supplies_recorders_amount" ng-model="main.form.supplies_recorders_amount" ng-change="main.suppliesTotal()"/>
+                                    <input class="text-right form-control" type="number" id="supplies_recorders_amount" ng-model="main.form.supplies_recorders_amount" ng-change="main.suppliesTotal()"/>
                                 </div>
                             </div>
                             <div class="row" style="margin-bottom: 7px">
@@ -539,7 +539,7 @@
                                     <label>Binoculars</label>
                                 </div>
                                 <div class="col-lg-4">
-                                    <input style="text-align: right" class="form-control" type="number" id="supplies_binoculars_amount" ng-model="main.form.supplies_binoculars_amount" ng-change="main.suppliesTotal()"/>
+                                    <input class="text-right form-control" type="number" id="supplies_binoculars_amount" ng-model="main.form.supplies_binoculars_amount" ng-change="main.suppliesTotal()"/>
                                 </div>
                             </div>
                             <div class="row" style="margin-bottom: 7px">
@@ -548,7 +548,7 @@
                                     <label>Flashlights</label>
                                 </div>
                                 <div class="col-lg-4">
-                                    <input style="text-align: right" class="form-control" type="number" id="supplies_flashlights_amount" ng-model="main.form.supplies_flashlights_amount" ng-change="main.suppliesTotal()"/>
+                                    <input class="text-right form-control" type="number" id="supplies_flashlights_amount" ng-model="main.form.supplies_flashlights_amount" ng-change="main.suppliesTotal()"/>
                                 </div>
                             </div>
                             {% verbatim %}
@@ -559,7 +559,7 @@
                                         <input class="form-control" type="text" ng-model="form.name" ng-disabled="main.view"/>
                                     </div>
                                     <div class="col-lg-4">
-                                        <input style="text-align: right" class="form-control" type="number" ng-model="form.cost" ng-change="suppliesItemsCtrl.otherItemsTotal()" ng-disabled="main.view"/>
+                                        <input class="text-right form-control" type="number" ng-model="form.cost" ng-change="suppliesItemsCtrl.otherItemsTotal()" ng-disabled="main.view"/>
                                     </div>
                                     <div class="col-lg-2">
                                         <a class="btn btn-danger" ng-click="suppliesItemsCtrl.removeItem(form.id, $index)" ng-hide="main.view">Remove</a>
@@ -576,7 +576,7 @@
                             </div>
                             {% endverbatim %}
 
-                            <div class="row center" style="margin-top: 20px; text-align: center">
+                            <div class="row center text-center" style="margin-top: 20px">
                                 <div class="col-lg-4"></div>
                                 <div class="col-lg-4">
                                     <label>Total Supplies</label>
@@ -595,23 +595,23 @@
 
                             <div class="row">
                                 <div class="col-lg-2 calc-form-input-no-width">
-                                    <input style="text-align: right" class="form-control" type="number" id="admin_number_of_interceptions_last_month" ng-model="main.form.administration_number_of_intercepts_last_month"/>
+                                    <input class="text-right form-control" type="number" id="admin_number_of_interceptions_last_month" ng-model="main.form.administration_number_of_intercepts_last_month"/>
                                     <small># of intercepts last month</small>
                                 </div>
                                 <div class="col-lg-1">
-                                    <h4 style="text-align: center">*</h4>
+                                    <h4 class="text-center">*</h4>
                                 </div>
                                 <div class="col-lg-2 calc-form-input-no-width">
-                                    <input style="text-align: right" class="form-control" type="number" id="admin_number_of_interceptions_last_month_multiplier" ng-model="main.form.administration_number_of_intercepts_last_month_multiplier"/>
+                                    <input class="text-right form-control" type="number" id="admin_number_of_interceptions_last_month_multiplier" ng-model="main.form.administration_number_of_intercepts_last_month_multiplier"/>
                                 </div>
                                 <div class="col-lg-1">
-                                    <h4 style="text-align: center">+</h4>
+                                    <h4 class="text-center">+</h4>
                                 </div>
                                 <div class="col-lg-2 calc-form-input-no-width">
-                                    <input style="text-align: right" class="form-control" type="number" id="admin_number_of_interceptions_last_month_adder" ng-model="main.form.administration_number_of_intercepts_last_month_adder"/>
+                                    <input class="text-right form-control" type="number" id="admin_number_of_interceptions_last_month_adder" ng-model="main.form.administration_number_of_intercepts_last_month_adder"/>
                                 </div>
                                 <div class="col-lg-1">
-                                    <h4 style="text-align: center">=</h4>
+                                    <h4 class="text-center">=</h4>
                                 </div>
                                 <div class="col-lg-3 input-group">
                                     <div class="input-group-addon">$</div>
@@ -623,17 +623,17 @@
                                     <span></span>
                                 </div>
                                 <div class="col-lg-2 calc-form-input-no-width">
-                                    <input style="text-align: right" class="form-control" type="number" id="admin_number_of_meetings_per_month" ng-model="main.form.administration_number_of_meetings_per_month"/>
+                                    <input class="text-right form-control" type="number" id="admin_number_of_meetings_per_month" ng-model="main.form.administration_number_of_meetings_per_month"/>
                                     <small># of meetings per month</small>
                                 </div>
                                 <div class="col-lg-1">
-                                    <h4 style="text-align: center">*</h4>
+                                    <h4 class="text-center">*</h4>
                                 </div>
                                 <div class="col-lg-2 calc-form-input-no-width">
-                                    <input style="text-align: right" class="form-control" type="number" id="admin_number_of_meetings_per_month_multiplier" ng-model="main.form.administration_number_of_meetings_per_month_multiplier"/>
+                                    <input class="text-right form-control" type="number" id="admin_number_of_meetings_per_month_multiplier" ng-model="main.form.administration_number_of_meetings_per_month_multiplier"/>
                                 </div>
                                 <div class="col-lg-1">
-                                    <h4 style="text-align: center">=</h4>
+                                    <h4 class="text-center">=</h4>
                                 </div>
                                 <div class="col-lg-2 col-lg-offset-2 input-group" style="width: 150px; padding: 0">
                                     <div class="input-group-addon">$</div>
@@ -645,25 +645,25 @@
                                     <input style="margin-bottom: 0; margin-top: 10px" type="checkbox" id="admin_booth_bool" ng-model="main.form.administration_booth"/>
                                 </div>
                                 <div class="col-lg-2 calc-form-input-no-width">
-                                    <input style="text-align: right" class="form-control" type="number" id="admin_booth_amount" ng-model="main.form.administration_booth_amount"/>
+                                    <input class="text-right form-control" type="number" id="admin_booth_amount" ng-model="main.form.administration_booth_amount"/>
                                     <small>Booth</small>
                                 </div>
                                 <div class="col-lg-1">
                                     <input style="margin-bottom: 0; margin-top: 10px" type="checkbox" id="admin_registration_bool" ng-model="main.form.administration_registration"/>
                                 </div>
                                 <div class="col-lg-2 calc-form-input-no-width">
-                                    <input style="text-align: right" class="form-control" type="number" id="admin_registration_amount" ng-model="main.form.administration_registration_amount"/>
+                                    <input class="text-right form-control" type="number" id="admin_registration_amount" ng-model="main.form.administration_registration_amount"/>
                                     <small>Registration</small>
                                 </div>
                                 <div class="col-lg-1">
-                                    <h4 style="text-align: center">=</h4>
+                                    <h4 class="text-center">=</h4>
                                 </div>
                                 <div class="col-lg-3 input-group">
                                     <div class="input-group-addon">$</div>
                                     <input class="form-control text-center" ng-value="main.adminBoothRentalTotal()" disabled="disabled"/>
                                 </div>
                             </div>
-                            <div class="row center" style="margin-top: 20px; text-align: center">
+                            <div class="row center text-center" style="margin-top: 20px">
                                 <div class="col-lg-4"></div>
                                 <div class="col-lg-4">
                                     <label>Total Admininstration</label>
@@ -680,11 +680,11 @@
                             <div class="row">
                                 <div class="col-lg-1"></div>
                                 <div class="col-lg-4 calc-form-input-no-width">
-                                    <input style="text-align: right" class="form-control" type="number" id="medical_expense" ng-model="main.form.medical_last_months_expense"/>
+                                    <input class="text-right form-control" type="number" id="medical_expense" ng-model="main.form.medical_last_months_expense"/>
                                     <small>Last month's medical expense</small>
                                 </div>
                                 <div class="col-lg-1">
-                                    <h4 style="text-align: center">=</h4>
+                                    <h4 class="text-center">=</h4>
                                 </div>
                                 <div class="col-lg-5 calc-form-input-no-width">
                                     <input class="form-control text-center" ng-value="main.medicalTotal()" disabled="disabled"/>
@@ -697,17 +697,17 @@
 
                             <div class="row">
                                 <div class="col-lg-3 calc-form-input-no-width">
-                                    <input style="text-align: right" class="form-control" type="number" id="misc_number_of_intercepts" ng-model="main.form.miscellaneous_number_of_intercepts_last_month" ng-change="main.miscTotal()" />
+                                    <input class="text-right form-control" type="number" id="misc_number_of_intercepts" ng-model="main.form.miscellaneous_number_of_intercepts_last_month" ng-change="main.miscTotal()" />
                                     <small># of intercepts last month</small>
                                 </div>
                                 <div class="col-lg-1" >
-                                    <h4 style="text-align: center">*</h4>
+                                    <h4 class="text-center">*</h4>
                                 </div>
                                 <div class="col-lg-3 calc-form-input-no-width">
-                                    <input style="text-align: right" class="form-control" type="number" id="misc_number_of_intercepts_mult" ng-model="main.form.miscellaneous_number_of_intercepts_last_month_multiplier" ng-change="main.miscTotal()" />
+                                    <input class="text-right form-control" type="number" id="misc_number_of_intercepts_mult" ng-model="main.form.miscellaneous_number_of_intercepts_last_month_multiplier" ng-change="main.miscTotal()" />
                                 </div>
                                 <div class="col-lg-1">
-                                    <h4 style="text-align: center">=</h4>
+                                    <h4 class="text-center">=</h4>
                                 </div>
                                 <div class="col-lg-4 input-group">
                                     <div class="input-group-addon">$</div>
@@ -723,7 +723,7 @@
                                             <input class="form-control" type="text" ng-model="form.name" ng-disabled="main.view"/>
                                         </div>
                                         <div class="col-lg-2">
-                                            <input style="text-align: right" class="form-control" type="number" ng-model="form.cost" ng-change="miscItemsCtrl.otherItemsTotal()" ng-disabled="main.view"/>
+                                            <input class="text-right form-control" type="number" ng-model="form.cost" ng-change="miscItemsCtrl.otherItemsTotal()" ng-disabled="main.view"/>
                                         </div>
                                         <div class="col-lg-2">
                                             <a class="btn btn-danger" ng-click="miscItemsCtrl.removeItem(form.id, $index)" ng-hide="main.view">Remove</a>
@@ -740,7 +740,7 @@
                                 </div>
                                 {% endverbatim %}
 
-                                <div class="row center" style="margin-top: 20px; text-align: center">
+                                <div class="row center text-center" style="margin-top: 20px">
                                     <div class="col-lg-4"></div>
                                     <div class="col-lg-4">
                                         <label>Total Miscellaneous</label>
@@ -764,37 +764,37 @@
                                 <tbody>
                                 <tr>
                                     <td>Salaries</td>
-                                    <td width="25%"><p style="text-align: right" ng-bind="main.salariesTotal"></p></td>
+                                    <td width="25%"><p class="text-right" ng-bind="main.salariesTotal"></p></td>
                                     <td class="active" width="25%"></td>
                                 </tr>
                                 <tr>
                                     <td>Comm.</td>
-                                    <td><p style="text-align: right" ng-bind="main.commTotal()"></p></td>
+                                    <td><p class="text-right" ng-bind="main.commTotal()"></p></td>
                                     <td class="active"></td>
                                 </tr>
                                 <tr>
                                     <td>Travel</td>
-                                    <td><p style="text-align: right" ng-bind="main.travelTotalValue"></p></td>
+                                    <td><p class="text-right" ng-bind="main.travelTotalValue"></p></td>
                                     <td class="active"></td>
                                 </tr>
                                 <tr>
                                     <td>Admin.</td>
-                                    <td><p style="text-align: right" ng-bind="main.adminTotal()"></p></td>
+                                    <td><p class="text-right" ng-bind="main.adminTotal()"></p></td>
                                     <td class="active"></td>
                                 </tr>
                                 <tr>
                                     <td>Medical</td>
-                                    <td><p style="text-align: right" ng-bind="main.medicalTotal()"></p></td>
+                                    <td><p class="text-right" ng-bind="main.medicalTotal()"></p></td>
                                     <td class="active"></td>
                                 </tr>
                                 <tr>
                                     <td>Misc.</td>
-                                    <td><p style="text-align: right" ng-bind="main.miscTotalValue"></p></td>
+                                    <td><p class="text-right" ng-bind="main.miscTotalValue"></p></td>
                                     <td class="active"></td>
                                 </tr>
                                 <tr>
                                     <td class="text-right"><b>TOTAL</b></td>
-                                    <td colspan="2"><p style="text-align: right" ng-bind="main.bunchTotal()"></p></td>
+                                    <td colspan="2"><p class="text-right" ng-bind="main.bunchTotal()"></p></td>
                                 </tr>
                                 </tbody>
                                 <thead>
@@ -805,31 +805,31 @@
                                 <tbody>
                                 <tr>
                                     <td class="warning">Shelter</td>
-                                    <td class="warning"><p style="text-align: right" ng-bind="main.shelterTotal()"></p></td>
+                                    <td class="warning"><p class="text-right" ng-bind="main.shelterTotal()"></p></td>
                                     <td class="active"></td>
                                 </tr>
                                 <tr>
                                     <td class="warning">Food</td>
-                                    <td class="warning"><p style="text-align: right" ng-bind="main.foodTotal()"></p></td>
+                                    <td class="warning"><p class="text-right" ng-bind="main.foodTotal()"></p></td>
                                     <td class="active"></td>
                                 </tr>
                                 <tr class="warning">
                                     <td class="text-right"><b>TOTAL</b></td>
-                                    <td colspan="2"><p style="text-align: right" ng-bind="main.foodAndShelterTotal()"></p></td>
+                                    <td colspan="2"><p class="text-right" ng-bind="main.foodAndShelterTotal()"></p></td>
                                 </tr>
                                 </tbody>
                                 <tbody>
                                 <tr>
                                     <td class="text-center"><b>Awareness</b></td>
-                                    <td colspan="2"><p style="text-align: right" ng-bind="main.awarenessTotalValue"></p></td>
+                                    <td colspan="2"><p class="text-right" ng-bind="main.awarenessTotalValue"></p></td>
                                 </tr>
                                 <tr>
                                     <td class="text-center"><b>Supplies</b></td>
-                                    <td colspan="2"><p style="text-align: right" ng-bind="main.suppliesTotalValue"></p></td>
+                                    <td colspan="2"><p class="text-right" ng-bind="main.suppliesTotalValue"></p></td>
                                 </tr>
                                 <tr>
                                     <td class="text-center"><b>STATION TOTAL</b></td>
-                                    <td colspan="2"><p style="text-align: right" ng-bind="main.stationTotal()"></p></td>
+                                    <td colspan="2"><p class="text-right" ng-bind="main.stationTotal()"></p></td>
                                 </tr>
                                 <tr>
                                     <td class="text-center">Last month's TOTAL</td>
