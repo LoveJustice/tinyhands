@@ -7,27 +7,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="{{ STATIC_URL }}images/favicon.ico">
 
-    <link href="{{ STATIC_URL }}animate.css" rel="stylesheet" media="screen">
-    <link href="{{ STATIC_URL }}bootstrap/css/bootstrap.css" rel="stylesheet" media="screen">
-    <link rel="stylesheet" href="{{ STATIC_URL }}bootstrap/css/bootstrap.min.css">
-    <link href="{{ STATIC_URL }}jquery-ui/jquery-ui.css" rel="stylesheet" media="screen">
-    <link href="{{ STATIC_URL }}datetimepicker/jquery.datetimepicker.css" rel="stylesheet" media="screen">
-    <link rel="stylesheet" href="{{ STATIC_URL }}animate.css"/>
-    <link rel="stylesheet/less" type="text/css" href="{{ STATIC_URL }}style.less" />
-    {% comment %}
-    <script>
-        less = {
-            env: "development",
-            async: false,
-            fileAsync: false,
-            poll: 200,
-            functions: {},
-            dumpLineNumbers: "comments",
-            relativeUrls: false
-        };
-    </script>
-
-    {% endcomment %}
+    <link rel="stylesheet"      href="{{ STATIC_URL }}animate.css"                              media="screen">
+    <link rel="stylesheet"      href="{{ STATIC_URL }}bootstrap/css/bootstrap.css"              media="screen">
+    <link rel="stylesheet"      href="{{ STATIC_URL }}bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet"      href="{{ STATIC_URL }}jquery-ui/jquery-ui.css"                  media="screen">
+    <link rel="stylesheet"      href="{{ STATIC_URL }}datetimepicker/jquery.datetimepicker.css" media="screen">
+    <link rel="stylesheet"      href="https://cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.css">
+    <link rel="stylesheet"      href="{{ STATIC_URL }}animate.css"/>
+    <link rel="stylesheet/less" href="{{ STATIC_URL }}style.less" />
 
     {% block head %}{% endblock %}
 
@@ -160,8 +147,9 @@ in the Javascript and run code unique to the current page.
 <script src="{{ STATIC_URL }}all-pages.js"></script>
 <script src="{{ STATIC_URL }}geocodelocations.js"></script>
 <script src="{{ STATIC_URL }}station-suggestions.js"></script>
-<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}datatables/css/jquery.dataTables.css">
 <script src="{{ STATIC_URL }}datatables/js/jquery.dataTables.min.js"></script>
+<script src="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+<script src="{{ STATIC_URL }}datatables/js/custom.js"></script>
 
 {% block includeJS %}{% endblock %}
 

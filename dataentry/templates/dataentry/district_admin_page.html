@@ -1,46 +1,51 @@
 {% extends "dataentry/dataentry_base.html" %}
 {% load widget_tweaks %}
 {% load bootstrap %}
-{% load bootstrap_pagination %}
 {% load unslugify %}
 {% load times %}
 {% block title %}Manage Address 1{% endblock %}
 {% block content %}
 
 <!-- Modal -->
-<div class="modal fade" id="modal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" tabindex="-1"></div>
+<div class="modal fade modal-over-tooltips" id="modal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" tabindex="-1"></div>
 <!-- /.modal -->
-<table id="district_table" class="table table-striped">
-	<thead>
+
+<h1 class="text-center">All Address 1 Entries</h1>
+<br/>
+
+<table class="table table-striped crud-datatable">
+    <thead>
         <tr>
-            <th style="text-align:center">Name</th>
-            <th></th>
+            <th class="text-center">Name</th>
+            <th class="text-center">Edit</th>
         </tr>
     </thead>
-	{% for district in district_list %}
-		{% url 'interceptionrecord_list' as district_edit %}
-		<tr>
-		<td class="district_admin_name" style="text-align:center">{{ district.name }} </td>
-
-	    <td><a id="district_update_link" class="btn btn-warning pull-left" style="margin-right:-35px" href="{% url 'district_admin_update' district.id %}"  data-target="#modal" >Edit</a></td>
-		</tr>
-	{% empty %}
-		{% if database_empty %}
-			<tr>
-			<td colspan="12">There are currently no Address 1 records in the database</td>
-			<tr>
-		{% else %}
-			<tr>
-			<td colspan="12">There are no Address 1 records that match that query</td>
-			<tr>
-		{% endif %}
-	{% endfor %}
+    {% for district in district_list %}
+        {% url 'interceptionrecord_list' as district_edit %}
+        <tr>
+            <td class="district_admin_name text-center">{{ district.name }}</td>
+            <td class="text-center">
+                <a id="update_link" class="btn btn-warning"
+                    href="{% url 'district_admin_update' district.id %}"
+                    data-target="#modal">
+                    Edit
+                </a>
+            </td>
+        </tr>
+    {% empty %}
+        {% if database_empty %}
+            <tr>
+                <td colspan="12">There are currently no Address 1 records in the database</td>
+            <tr/>
+        {% else %}
+            <tr>
+                <td colspan="12">There are no Address 1 records that match that query</td>
+            <tr/>
+        {% endif %}
+    {% endfor %}
 </table>
-
 
 {% endblock %}
 
 {% block includeJS %}
-    {% load static from staticfiles %}
-    <script src="{% static "dataentry/js/district-datatable.js" %}"></script>
 {% endblock %}
