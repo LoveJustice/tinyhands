@@ -4,7 +4,10 @@
 # elements. For example, 'style="text-align: center"' will be replaced with
 # 'class="text-center"'. It also works with 'right' and 'left' alignments.
 #
-# This script requires Gnu Sed (gsed on my machine).
+# This script requires Gnu Sed (sed on CMC machines).
+#
+### Example usage on the entire repo:
+### find . -not -path './node_modules/*' -not -path './htmlcov/*' -name "*.html" -exec sed -if bin/refactor-style-attributes.sed {} \;
 #
 # If a 'class' attribute already exists, the new alignment class is added to the current
 # list of classes in the attribute. If additional styles are present in the 'style'
