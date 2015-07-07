@@ -15,7 +15,7 @@ var vdcAdminPage = function () {
         this.firstVdcDistrict = element.all(by.css(".vdc_admin_district")).get(3).getText();
         this.firstVdccannonical = element.all(by.css(".vdc_admin_cannonical")).get(3).getText();
         this.firstVdcVerified = element.all(by.css(".vdc_admin_verified")).get(3).getText();
-        this.firstVdcEditButton = element.all(by.id("vdc_update_link")).get(3);
+        this.firstVdcEditButton = element.all(by.id("update_link")).get(3);
     };
 
 
