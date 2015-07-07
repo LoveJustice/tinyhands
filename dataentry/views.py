@@ -88,7 +88,6 @@ class SearchFormsMixin(object):
 
 class InterceptionRecordListView(LoginRequiredMixin, SearchFormsMixin, ListView):
     model = InterceptionRecord
-    paginate_by = 20
 
     def __init__(self, *args, **kw):
         #passes what to search by to SearchFormsMixin
@@ -235,7 +234,6 @@ class VictimInterviewListView(LoginRequiredMixin,
                               SearchFormsMixin,
                               ListView):
     model = VictimInterview
-    paginate_by = 20
 
     def __init__(self, *args, **kwargs):
         # Passes what to search by to SearchFormsMixin
