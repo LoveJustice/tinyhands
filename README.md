@@ -48,6 +48,9 @@ Run the server.
     % ./manage.py runserver
 
 # Testing
+## Django Testing:
+All you have to do is run the command `./manage.py test`.
+
 ## E2E Testing:
 ### setting up npm on our machines
  1.  `% mkdir "$HOME/npm"`
@@ -62,10 +65,7 @@ Run the server.
 1. Execute the `./rune2etests.sh` test script which will run all the e2e tests specified in the `e2etesting/conf.js` file.
 2. Watch the magic.
 
-#### Django Testing:
-All you have to do is run the command `./manage.py test`.
-
-#### Angular Testing with Karma
+## Angular Testing with Karma
 1. Make sure you have all of the dependencies downloaded by running `npm install`.
 2. Start the Karma server with `./node_modules/karma/bin/karma start` if you are in the root project directory.
 3. Watch the magic.
