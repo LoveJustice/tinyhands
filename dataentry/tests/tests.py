@@ -22,16 +22,12 @@ class TestModels(WebTest):
     def fuzzySetUp(self, cutOffNum, matchName):
         cutoffNumber = cutOffNum
         cutoffNumber = float(cutoffNumber)
-        names = []
         with open('dataentry/non_victims.csv', 'rb') as csvfile:
             reader = csv.reader(csvfile)
-            for row in reader:
-                names.append(row[2])
+            names = [row[2] for row in reader]
             enteredName = matchName
             matches = process.extractBests(enteredName, names, score_cutoff=cutoffNumber, limit=None)
-            modMatches = []
-            for match in matches:
-                modMatches.append(match[0])
+            modMatches = [match[0] for match in matches]
             return modMatches
 
     def testFuzzy_1(self):

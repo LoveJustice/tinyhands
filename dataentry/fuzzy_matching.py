@@ -1,46 +1,28 @@
 from fuzzywuzzy import process, fuzz
 from dataentry.models import District, VDC
 
-def match_location(district_name=None,vdc_name=None):
-    if district_name==None and vdc_name==None:
-       return None
-    elif vdc_name==None:
-       return match_district(district_name)
-    elif district_name==None:
-       return match_vdc(vdc_name)
-    else:
-       return match_vdc_district(vdc_name, district_name)
+def match_location(district_name=None, vdc_name=None):
+    '''
+    Currently we only send one or the other, so that's all this function
+    handles. For more flexible (and unDRY) code (which should DRYed before use),
+    look at commit 656d770fbaf28c82fca7fed11e7c1679982de3a5.
+    '''
 
-def match_district(locationName):
-    districtNames = [district.name for district in District.objects.all()]
-    matches = process.extractBests(locationName, districtNames, score_cutoff=70, limit=5)
+    # Determine the appropriate model
+    model = District
+    locationName = district_name
+    if vdc_name != None:
+        model = VDC
+        locationName = vdc_name
+
+    # Get all relevant data.
+    regionNames = {region.id: region.name for region in model.objects.all()}
+
+    # matches is in the form of [(u'match', score, id), ...]
+    matches = process.extractBests(locationName, regionNames, limit=7)
+
+    # Return the correct objects.
+    objects = None
     if(len(matches) > 0):
-        districts = []
-        for match in matches:
-            districts.append(District.objects.get(name=match[0]))
-        return districts
-    else:
-        return None
-
-def match_vdc(vdc_name):
-    vdcNames = [vdc.name for vdc in VDC.objects.all()]
-    matches = process.extractBests(vdc_name, vdcNames, score_cutoff=70, limit=5)
-    if(len(matches) > 0):
-        vdcs = []
-        for match in matches:
-            vdcs.append(VDC.objects.get(name=match[0]))
-        return vdcs
-    else:
-        return None
-
-def match_vdc_district(vdc_name, district_name):
-    locations = [vdc.name+", "+vdc.district.name for vdc in VDC.objects.all()]
-    name = vdc_name + ", " + district_name
-    matches = process.extractBests(name, locations, score_cutoff=70, limit=5)
-    if(len(matches) > 0 ):
-        names = matches[0][0].split(", ")
-        vdc = VDC.objects.get(name=names[0])
-        district = vdc.district
-        return (vdc, district)
-    else:
-        return None
+        objects = [model.objects.get(id=id) for name, score, id in matches]
+    return objects

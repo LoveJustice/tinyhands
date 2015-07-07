@@ -18,11 +18,6 @@ class FuzzyLocationMatchingTest(TestCase):
         matches = match_location(district_name=close_name)
         self.assertEquals(original,matches[0])
 
-    def test_no_district_match_on_bad_name(self):
-        name = "xyzxyz"
-        matches = match_location(district_name=name)
-        self.assertEquals(matches, None)
-
     def test_vdc_matching_works(self):
         original = VDC.objects.all()[0]
         matches = match_location(vdc_name=original.name)
@@ -33,14 +28,3 @@ class FuzzyLocationMatchingTest(TestCase):
         close_name = original.name + "s"
         matches = match_location(vdc_name=close_name)
         self.assertEquals(original, matches[0])
-
-    def test_no_vdc_match_on_bad_name(self):
-        name = "xyzxyz"
-        matches = match_location(vdc_name=name)
-        self.assertEquals(matches, None)
-
-    def test_vdc_and_district_matching_works(self):
-        vdc = VDC.objects.all()[0]
-        match = match_location(district_name=vdc.district.name, vdc_name=vdc.name)
-        self.assertEquals(vdc, match[0])
-        self.assertEquals(vdc.district, match[1])
