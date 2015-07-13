@@ -74,6 +74,12 @@ describe('Interception Record Form -', function() {
             expect(element(by.id('id_has_signature')).isSelected()).toBeTruthy();
             browser.get(c.webAddress + '/data-entry/irfs/search/');
         });
+
+        it('Cannot Edit while Viewing IRF', function() {
+            irfPage.viewIRF();
+            browser.sleep(500);
+            expect(element(by.id('id_irf_number')).getAttribute('disabled')).toEqual('true');
+        });
     });
 });
 
