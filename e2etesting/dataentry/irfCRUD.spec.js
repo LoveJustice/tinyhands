@@ -76,9 +76,8 @@ describe('Interception Record Form -', function() {
         });
 
         it ('Can Delete an IRF', function () {
-
-            irfPage.deleteIRF()
-            
+            irfPage.deleteIRF();
+            expect(element(by.xpath("//p[last()]")).innerHTML == 'There are not yet any IRFs in the database. ');
         });
     });
 });

@@ -53,9 +53,8 @@ var irfPage = function() {
     };
 
     this.deleteIRF = function() {
-        this.dIRF = element(by.linkText('Delete')).click();
-        browser.sleep(500);
-        this.dIRFpopUp = element(by.linkText('Delete')).click();
+        this.dIRF = element(by.xpath("//button[text()='Delete']")).click();
+        this.dIRFpopUp = element(by.xpath("//input[@value='Delete']")).click();
     };
 };
 
