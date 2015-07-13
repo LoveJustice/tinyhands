@@ -78,7 +78,7 @@ describe('Interception Record Form -', function() {
         it ('Can Delete an IRF', function () {
 
             irfPage.deleteIRF()
-
+            
         });
     });
 });
