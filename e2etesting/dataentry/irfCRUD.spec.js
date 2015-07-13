@@ -76,6 +76,13 @@ describe('Interception Record Form -', function() {
         });
 
         it ('Can Delete an IRF', function () {
+            loginPage.logout();
+            browser.sleep(200);
+            loginPage.login("HanSolo@MFalcon.com", "password");
+            browser.sleep(500);
+    	    browser.get(c.webAddress + '/data-entry/irfs/search/');
+    	    browser.sleep(500);
+            expect(browser.driver.getCurrentUrl()).toContain('/data-entry/irfs/');
             irfPage.deleteIRF();
             expect(element(by.xpath("//p[last()]")).innerHTML == 'There are not yet any IRFs in the database. ');
         });

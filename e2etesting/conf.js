@@ -11,9 +11,9 @@ exports.config = {
     //The order is very important. Ex. budgetForm.spec.js is dependant on borderStationCRUD.spec.js
     specs:  [
         // First logically
-        'accounts/loginPage.spec.js',
+        //'accounts/loginPage.spec.js',
 
-        'borderStations/borderStationCRUD.spec.js',
+        //'borderStations/borderStationCRUD.spec.js',
 
         'dataentry/irfCRUD.spec.js',
         /*'dataentry/vifCrud.spec.js',

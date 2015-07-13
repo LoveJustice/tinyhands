@@ -3,6 +3,8 @@
   "adminPassword"   : "password",
   "adminFirstName"  : "test",
   "adminLastName"   : "user",
+  "nonAdminEmail"   : "HanSolo@MFalcon.com",
+  "nonAdminPassword": "password",
 
   "vdcEditName"      : "aaaab",
   "vdcEditLat"       : "0.1",
