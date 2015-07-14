@@ -76,12 +76,14 @@ describe('Interception Record Form -', function() {
         });
 
         it ('Can Delete an IRF', function () {
-            loginPage.logout();
-            loginPage.loginAsAdmin();
+            irfPage.getToIRF();
+            irfPage.fillOutIRF();
             browser.get(c.webAddress + '/data-entry/irfs/search/');
+            var firstLink = element(by.xpath("//a[@class='btn btn-sm btn-primary']")).getAttribute('href');
             irfPage.deleteIRF();
-            var paraText = element(by.xpath("//p[last()]")).innerHTML;
-            expect(paraText == 'There are not yet any IRFs in the database. ');
+            var secondLink = element(by.xpath("//a[@class='btn btn-sm btn-primary']")).getAttribute('href');
+            browser.sleep(500);
+            expect(firstLink != secondLink).toBeTruthy();
         });
     });
 });
