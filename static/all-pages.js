@@ -514,7 +514,7 @@ $(document).ready(function() {
     $("ul#dropdown-staff").each(function() {
         $(this).change(function() {
             var line = "";
-            $("ul.dropdown-menu input[type=checkbox]").each(function() {
+            $("ul.dropdown-menu:not(#dropdown-staff-who-noticed) input[type=checkbox]").each(function() {
                 if($(this).is(":checked")) {
                     line += $("+ span", this).text() + ";";
                 }
@@ -528,7 +528,7 @@ $(document).ready(function() {
     $("ul#dropdown-staff-who-noticed").each(function() {
         $(this).change(function() {
             var line = "";
-            $("ul.dropdown-menu input[type=checkbox]").each(function() {
+            $("ul#dropdown-staff-who-noticed input[type=checkbox]").each(function() {
                 if($(this).is(":checked")) {
                     line += $("+ span", this).text() + ";";
                 }
