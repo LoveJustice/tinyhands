@@ -326,8 +326,8 @@ class MoneyDistributionFormPDFView(PDFView, LoginRequiredMixin, PermissionsRequi
 
             'shelter_total': station.shelter_total(),
 
-            'food_and_gas_intercepted_girls': station.food_and_gas_number_of_intercepted_girls,
-            'food_and_gas_limbo_girls': station.food_and_gas_number_of_limbo_girls,
+            'food_and_gas_intercepted_girls': station.food_and_gas_number_of_intercepted_girls_multiplier_before * station.food_and_gas_number_of_intercepted_girls * station.food_and_gas_number_of_intercepted_girls_multiplier_after,
+            'food_and_gas_limbo_girls': station.food_and_gas_limbo_girls_multiplier * station.food_and_gas_number_of_limbo_girls * station.food_and_gas_number_of_days,
             'food_gas_total': station.food_and_gas_total(),
 
             'awareness_contact_cards_bool': station.awareness_contact_cards,
