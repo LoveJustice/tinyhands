@@ -74,8 +74,6 @@ describe('Interception Record Form -', function() {
             expect(element(by.id('id_has_signature')).isSelected()).toBeTruthy();
             browser.get(c.webAddress + '/data-entry/irfs/search/');
         });
-
-
     });
 });
 
