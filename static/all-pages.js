@@ -516,7 +516,7 @@ $(document).ready(function() {
             var line = "";
             $("ul.dropdown-menu:not(#dropdown-staff-who-noticed) input[type=checkbox]").each(function() {
                 if($(this).is(":checked")) {
-                    line += $("+ span", this).text() + ";";
+                    line += $("+ span", this).text() + ",";
                 }
             });
             $("input#id_staff_name").val(line);
@@ -530,7 +530,7 @@ $(document).ready(function() {
             var line = "";
             $("ul#dropdown-staff-who-noticed input[type=checkbox]").each(function() {
                 if($(this).is(":checked")) {
-                    line += $("+ span", this).text() + ";";
+                    line += $("+ span", this).text() + ",";
                 }
             });
             $("input#id_staff_who_noticed").val(line);
