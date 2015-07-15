@@ -88,6 +88,8 @@
                 </td>
             </tr>
             {% endfor %}
+
+            {% if staffSalaries %}
             <tr>
                 <td align="left">
                     <para style="normal">
@@ -100,6 +102,8 @@
                     </para>
                 </td>
             </tr>
+            {% endif %}
+            
         </blockTable>
 
         <spacer length="10"/>
