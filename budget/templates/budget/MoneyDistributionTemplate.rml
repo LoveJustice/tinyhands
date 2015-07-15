@@ -140,6 +140,21 @@
                 </tr>
             {% endif %}
 
+            {% if communication_staff %}
+                <tr>
+                    <td align="left">
+                        <para style="normal">
+                            Staff:
+                        </para>
+                    </td>
+                    <td align="right">
+                        <para style="normal" alignment="right">
+                            {{ communication_staff }}
+                        </para>
+                    </td>
+                </tr>
+            {% endif %}
+
             <tr>
                 <td align="left">
                     <para style="normal">

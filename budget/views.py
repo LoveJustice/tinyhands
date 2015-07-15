@@ -315,6 +315,7 @@ class MoneyDistributionFormPDFView(PDFView, LoginRequiredMixin, PermissionsRequi
             'communication_chair': station.communication_chair_amount,
             'communication_manager_bool': station.communication_manager,
             'communication_manager': station.communication_manager_amount,
+            'communication_staff': station.communication_staff_total(),
             'communication_total': station.communication_total(),
 
             'admin_meetings': adminMeetings,
