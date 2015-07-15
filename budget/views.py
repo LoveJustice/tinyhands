@@ -303,6 +303,7 @@ class MoneyDistributionFormPDFView(PDFView, LoginRequiredMixin, PermissionsRequi
             'date': station.date_time_entered.date,
             'number': len(staffSalaries),
             'staffSalaries': staffSalaries,
+            'salary_total': sum([staff.salary for staff in staffSalaries]),
 
             'travel_chair_bool': station.travel_chair_with_bike,
             'travel_chair': station.travel_chair_with_bike_amount,

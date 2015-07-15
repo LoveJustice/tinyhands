@@ -88,6 +88,18 @@
                 </td>
             </tr>
             {% endfor %}
+            <tr>
+                <td align="left">
+                    <para style="normal">
+                        Total:
+                    </para>
+                </td>
+                <td align="right">
+                    <para style="normal" alignment="right">
+                        {{ salary_total }}
+                    </para>
+                </td>
+            </tr>
         </blockTable>
 
         <spacer length="10"/>
