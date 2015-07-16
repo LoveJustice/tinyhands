@@ -1,5 +1,5 @@
 {
-  "adminEmail"      : "testuser@test.com",
+  "adminEmail"      : "test@test.com",
   "adminPassword"   : "password",
   "adminFirstName"  : "test",
   "adminLastName"   : "user",
