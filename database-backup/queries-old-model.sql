@@ -1,45 +1,61 @@
 ----------------------------------------------------------------
 --- Model: Interceptee
 
+-- START-QUERY
 SELECT id, kind, interception_record_id, full_name, trim(district), trim(vdc)
 FROM dataentry_interceptee
-ORDER BY id
-limit 10;
+ORDER BY id;
+-- END-QUERY old interceptee
 
 ----------------------------------------------------------------
 -- Model: VictimInterview
 -- District only
 
-SELECT vif_number, victim_address_district
+SELECT vif_number,
+	   victim_address_district,
+	   victim_guardian_address_district
 FROM dataentry_victiminterview
-order by vif_number
-limit 10;
+order by vif_number;
 
 -- VDC only
-SELECT vif_number, victim_address_vdc
+SELECT vif_number,
+	   victim_address_vdc
+	   victim_guardian_address_vdc
 FROM dataentry_victiminterview
-order by vif_number
-limit 10;
+order by vif_number;
 
 -- District and VDC
-SELECT vif_number, victim_address_district, victim_address_vdc
+-- START-QUERY
+SELECT vif_number,
+	   victim_address_district,
+	   victim_address_vdc,
+	   victim_guardian_address_district,
+	   victim_guardian_address_vdc
 FROM dataentry_victiminterview
-order by vif_number
-limit 10;
+order by vif_number;
+-- END-QUERY old district-vdc
 
 ----------------------------------------------------------------
 -- Model: VictimInterviewPersonBox
 
-select id, victim_interview_id, address_district, address_vdc
+-- START-QUERY
+select id,
+	   victim_interview_id,
+	   address_district,
+	   address_vdc
 from dataentry_victiminterviewpersonbox
-order by id
-limit 10;
+order by id;
+-- END-QUERY old person-box
 
 ----------------------------------------------------------------
 -- Model: VictimInterviewLocationBox
 
-select id, victim_interview_id, district, vdc
+-- START-QUERY
+select id,
+	   victim_interview_id,
+	   district,
+	   vdc
 from dataentry_victiminterviewlocationbox
-order by id
-limit 10;
+order by id;
+-- END-QUERY old location-box
 
