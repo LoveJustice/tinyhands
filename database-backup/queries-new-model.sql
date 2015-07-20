@@ -5,17 +5,17 @@
 select interceptee.id, interceptee.kind,
 	   interceptee.interception_record_id,
 	   interceptee.full_name,
-	   -- district.id,
-	   district.name,
-	   -- vdc.id,
-	   vdc.name
+	   district.id,
+	   district.name as district_name,
+	   vdc.id,
+	   vdc.name as vdc_name
 from dataentry_interceptee as interceptee
 left outer join dataentry_district as district
 	 on interceptee.district_id = district.id
 left outer join dataentry_vdc as vdc
 	 on interceptee.vdc_id = vdc.id
 order by interceptee.id;
--- END-QUERY new interceptee
+-- END-QUERY interceptee
 
 ----------------------------------------------------------------
 -- Model: VictimInterview
@@ -67,7 +67,7 @@ left outer join dataentry_district as vg_dist
 left outer join dataentry_vdc as vg_vdc
 	 on vg_vdc.id = VIF.victim_guardian_address_vdc_id
 order by vif_number;
--- END-QUERY new district-vdc
+-- END-QUERY district-vdc
 
 ----------------------------------------------------------------
 -- Model: VictimInterviewPersonBox
@@ -85,7 +85,7 @@ left outer join dataentry_district as dist
 left outer join dataentry_vdc as vdc
 	 on vdc.id = pbox.address_vdc_id
 order by pbox.id;
--- END-QUERY new person-box
+-- END-QUERY person-box
 
 ----------------------------------------------------------------
 -- Model: VictimInterviewLocationBox
@@ -103,4 +103,4 @@ left outer join dataentry_district as dist
 left outer join dataentry_vdc as vdc
 	 on vdc.id = lbox.vdc_id
 order by lbox.id;
--- END-QUERY new location-box
+-- END-QUERY location-box

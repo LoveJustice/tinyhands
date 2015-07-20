@@ -5,7 +5,7 @@
 SELECT id, kind, interception_record_id, full_name, trim(district), trim(vdc)
 FROM dataentry_interceptee
 ORDER BY id;
--- END-QUERY old interceptee
+-- END-QUERY interceptee
 
 ----------------------------------------------------------------
 -- Model: VictimInterview
@@ -33,7 +33,7 @@ SELECT vif_number,
 	   victim_guardian_address_vdc
 FROM dataentry_victiminterview
 order by vif_number;
--- END-QUERY old district-vdc
+-- END-QUERY district-vdc
 
 ----------------------------------------------------------------
 -- Model: VictimInterviewPersonBox
@@ -45,7 +45,7 @@ select id,
 	   address_vdc
 from dataentry_victiminterviewpersonbox
 order by id;
--- END-QUERY old person-box
+-- END-QUERY person-box
 
 ----------------------------------------------------------------
 -- Model: VictimInterviewLocationBox
@@ -57,5 +57,5 @@ select id,
 	   vdc
 from dataentry_victiminterviewlocationbox
 order by id;
--- END-QUERY old location-box
+-- END-QUERY location-box
 
