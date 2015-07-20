@@ -1,16 +1,22 @@
 #!/bin/bash -x
 
+# Take a database snapshot from the old and new production instances and the staging
+# instance.
+
+# Time and date stamp
 NOW=$(date '+%F-%H-%M')
-HOST=thi-production
-THI_USER_HOME=~dreamsuite
-OLD_PROD_PATH=$THI_USER_HOME/dreamsuite
-NEW_PROD_PATH=$THI_USER_HOME/tinyhands
-RSYNC='rsync --times'
 
-# Production databases
-$RSYNC $HOST:$OLD_PROD_PATH/db.sqlite3 $NOW-old-prod-db.sqlite3
-$RSYNC $HOST:$NEW_PROD_PATH/db.sqlite3 $NOW-new-prod-db.sqlite3
+PROD_HOST=thi-production
+PROD_HOME=~dreamsuite
+PROD_NEW_PATH=$PROD_HOST:$PROD_HOME/tinyhands
+PROD_OLD_PATH=$PROD_HOST:$PROD_HOME/dreamsuite
 
-# One offs
-$RSYNC $HOST:$OLD_PROD_PATH/backup.db backup.db.sqlite3
-$RSYNC $HOST:$OLD_PROD_PATH/backup-08-04-14 backup-08-04-14.sqlite3
+STAGING_HOST=thi.cse.taylor.edu%proxy
+STAGING_HOME=~thi
+STAGING_PATH=$STAGING_HOST:$STAGING_HOME/tinyhands
+
+RSYNC='rsync --progress --times'
+
+$RSYNC $PROD_OLD_PATH/db.sqlite3 prod-old/db-$NOW.sqlite3
+$RSYNC $PROD_NEW_PATH/db.sqlite3 prod-new/db-$NOW.sqlite3
+$RSYNC $STAGING_PATH/db.sqlite3 staging/db-$NOW.sqlite3
