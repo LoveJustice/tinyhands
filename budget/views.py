@@ -65,7 +65,7 @@ def previous_data(request, pk, month, year):
     border_station = BorderStation.objects.get(pk=pk)
     staff_count = border_station.staff_set.count()
 
-    all_interception_records = InterceptionRecord.objects.annotate(interceptee_count=Count("interceptees")).filter(irf_number__startswith=border_station.station_code)
+    all_interception_records = InterceptionRecord.objects.annotate(interceptee_count="number_of_victims").filter(irf_number__startswith=border_station.station_code)
     last_months = all_interception_records.filter(date_time_of_interception__gte=(date+relativedelta(months=-1)), date_time_of_interception__lte=date)
     last_3_months = all_interception_records.filter(date_time_of_interception__gte=(date+relativedelta(months=-3)), date_time_of_interception__lte=date)
 
