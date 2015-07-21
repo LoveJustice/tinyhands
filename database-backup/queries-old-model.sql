@@ -8,33 +8,36 @@ FROM dataentry_interceptee
 ORDER BY id;
 -- END-QUERY interceptee
 
+-- START-QUERY
+select id
+from dataentry_interceptee
+order by id;
+-- END-QUERY interceptee-ids
+
 ----------------------------------------------------------------
 -- Model: VictimInterview
--- District only
 
-SELECT vif_number,
-	   victim_address_district,
-	   victim_guardian_address_district
-FROM dataentry_victiminterview
-order by vif_number;
-
--- VDC only
-SELECT vif_number,
-	   victim_address_vdc
-	   victim_guardian_address_vdc
-FROM dataentry_victiminterview
-order by vif_number;
-
--- District and VDC
 -- START-QUERY
 SELECT vif_number,
 	   victim_address_district,
-	   victim_address_vdc,
-	   victim_guardian_address_district,
+	   victim_address_vdc
+FROM dataentry_victiminterview
+order by vif_number;
+-- END-QUERY victim-address
+
+-- START-QUERY
+SELECT vif_number,
+	   victim_guardian_address_district
 	   victim_guardian_address_vdc
 FROM dataentry_victiminterview
 order by vif_number;
--- END-QUERY district-vdc
+-- END-QUERY victim-guardian-address
+
+-- START-QUERY
+select vif_number as id
+from dataentry_victiminterview
+order by vif_number;
+-- END-QUERY victim-interview-ids
 
 ----------------------------------------------------------------
 -- Model: VictimInterviewPersonBox
@@ -48,6 +51,12 @@ from dataentry_victiminterviewpersonbox
 order by id;
 -- END-QUERY person-box
 
+-- START-QUERY
+select id
+from dataentry_victiminterviewpersonbox
+order by id;
+-- END-QUERY person-box-ids
+
 ----------------------------------------------------------------
 -- Model: VictimInterviewLocationBox
 
@@ -59,4 +68,11 @@ select id,
 from dataentry_victiminterviewlocationbox
 order by id;
 -- END-QUERY location-box
+
+-- START-QUERY
+select id
+from dataentry_victiminterviewlocationbox
+order by id;
+-- END-QUERY location-box-ids
+
 

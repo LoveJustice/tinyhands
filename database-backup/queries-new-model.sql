@@ -5,10 +5,10 @@
 select interceptee.id, interceptee.kind,
 	   interceptee.interception_record_id,
 	   interceptee.full_name,
-	   district.id,
-	   district.name as district_name,
-	   vdc.id,
-	   vdc.name as vdc_name
+	   -- district.id,
+	   district.name as district,
+	   -- vdc.id,
+	   vdc.name as vdc
 from dataentry_interceptee as interceptee
 left outer join dataentry_district as district
 	 on interceptee.district_id = district.id
@@ -32,31 +32,29 @@ select * from dataentry_vdc order by id;
 ----------------------------------------------------------------
 -- Model: VictimInterview
 
--- District only
+-- START-QUERY
 select vif_number,
-	   -- va_dist.id,
-	   va_dist.name,
-	   -- vg_dist.id,
-	   vg_dist.name
+	   va_dist.name as victim_address_district,
+	   va_vdc.name as victim_address_vdc
 from dataentry_victiminterview as VIF
 left outer join dataentry_district as va_dist
 	 on va_dist.id = VIF.victim_address_district_id
-left outer join dataentry_district as vg_dist
-	 on vg_dist.id = VIF.victim_guardian_address_district_id
-order by vif_number;
-
--- VDC only
-select vif_number,
-	   -- va_vdc.id,
-	   va_vdc.name,
-	   -- vg_vdc.id,
-	   vg_vdc.name
-from dataentry_victiminterview as VIF
 left outer join dataentry_vdc as va_vdc
 	 on va_vdc.id = VIF.victim_address_vdc_id
+order by vif_number;
+-- END-QUERY victim-address
+
+-- START-QUERY
+select vif_number,
+	   vg_dist.name as victim_guardian_address_district,
+	   vg_vdc.name as victim_guardian_address_vdc
+from dataentry_victiminterview as VIF
+left outer join dataentry_district as vg_dist
+	 on vg_dist.id = VIF.victim_guardian_address_district_id
 left outer join dataentry_vdc as vg_vdc
 	 on vg_vdc.id = VIF.victim_guardian_address_vdc_id
 order by vif_number;
+-- END-QUERY victim-guardian-address
 
 -- District and VDC
 -- START-QUERY
@@ -87,12 +85,10 @@ order by vif_number;
 -- Model: VictimInterviewPersonBox
 
 -- START-QUERY
-select pbox.id,
-	   pbox.victim_interview_id,
-	   -- dist.id,
-	   dist.name,
-	   -- vdc.id,
-	   vdc.name
+select pbox.id as id,
+	   pbox.victim_interview_id as victim_interview_id,
+	   dist.name as address_district,
+	   vdc.name as address_vdc
 from dataentry_victiminterviewpersonbox as pbox
 left outer join dataentry_district as dist
 	 on dist.id = pbox.address_district_id
@@ -105,16 +101,14 @@ order by pbox.id;
 -- Model: VictimInterviewLocationBox
 
 -- START-QUERY
-select lbox.id,
-	   lbox.victim_interview_id,
-	   -- dist.id,
-	   dist.name,
-	   -- vdc.id,
-	   vdc.name
-from dataentry_victiminterviewlocationbox as lbox
+select locbox.id as id,
+	   locbox.victim_interview_id as victim_interview_id,
+	   dist.name as district,
+	   vdc.name as vdc
+from dataentry_victiminterviewlocationbox as locbox
 left outer join dataentry_district as dist
-	 on dist.id = lbox.district_id
+	 on dist.id = locbox.district_id
 left outer join dataentry_vdc as vdc
-	 on vdc.id = lbox.vdc_id
-order by lbox.id;
+	 on vdc.id = locbox.vdc_id
+order by locbox.id;
 -- END-QUERY location-box
