@@ -1,38 +1,11 @@
 #!/usr/bin/env python
 
 import argparse
-import re
-import sqlite3
 
-end_query = re.compile(r'-- END-QUERY (?P<name>[\w-]+)')
+from util import load_queries, run_query
 
-def load_queries(file_name):
-    """Load queries from text file."""
-    result = { }
-    in_query = False
-    query_lines = None
-    with open(file_name, 'r') as f:
-        for line in f:
-            line = line.strip()
-            if in_query:
-                match = re.match(end_query, line)
-                if match:
-                    name = match.group('name')
-                    result[name] = "\n".join(query_lines)
-                    in_query = False
-                else:
-                    query_lines.append(line)
-            else:
-                if line.startswith('-- START-QUERY'):
-                    query_lines = [ ]
-                    in_query = True
-    return result
-
-def run_query(db_file_name, query, max_rows=10):
-    connection = sqlite3.connect(db_file_name)
-    connection.row_factory = sqlite3.Row
-    cursor = connection.cursor()
-    cursor.execute(query)
+def process_query(db_file_name, query, max_rows=10):
+    cursor = run_query(db_file_name, query)
     for row in cursor.fetchmany(max_rows):
         print row
 
@@ -45,13 +18,14 @@ parser.add_argument('--new-db-file', help="New schema database file", action="ap
 parser.add_argument('--query-name', help="Name of query")
 args = parser.parse_args()
 
-old_queries = load_queries(args.old_query_file)
-new_queries = load_queries(args.new_query_file)
+if args.old_db_file:
+    old_queries = load_queries(args.old_query_file)
+    for file in args.old_db_file:
+        print "OLD", file
+        process_query(file, old_queries[args.query_name])
 
-for file in args.old_db_file:
-    print "OLD", file
-    run_query(file, old_queries[args.query_name])
-
-for file in args.new_db_file:
-    print "NEW", file
-    run_query(file, new_queries[args.query_name])
+if args.new_db_file:
+    new_queries = load_queries(args.new_query_file)
+    for file in args.new_db_file:
+        print "NEW", file
+        process_query(file, new_queries[args.query_name])

@@ -2,7 +2,8 @@
 --- Model: Interceptee
 
 -- START-QUERY
-SELECT id, kind, interception_record_id, full_name, trim(district), trim(vdc)
+SELECT id, kind, interception_record_id,
+	   full_name, trim(district) as district, trim(vdc) as vdc
 FROM dataentry_interceptee
 ORDER BY id;
 -- END-QUERY interceptee

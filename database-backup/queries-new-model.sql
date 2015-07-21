@@ -18,6 +18,18 @@ order by interceptee.id;
 -- END-QUERY interceptee
 
 ----------------------------------------------------------------
+-- Model: District
+-- START-QUERY
+select * from dataentry_district order by id;
+-- END-QUERY district
+
+----------------------------------------------------------------
+-- Model: VDC
+-- START-QUERY
+select * from dataentry_vdc order by id;
+-- END-QUERY vdc
+
+----------------------------------------------------------------
 -- Model: VictimInterview
 
 -- District only
@@ -49,13 +61,15 @@ order by vif_number;
 -- District and VDC
 -- START-QUERY
 select vif_number,
-	   -- va_dist.id,
+	   "VA",
+	   va_dist.id,
 	   va_dist.name,
-	   -- va_vdc.id,
+	   va_vdc.id,
 	   va_vdc.name,
-	   -- vg_dist.id,
+	   "VG",
+	   vg_dist.id,
 	   vg_dist.name,
-	   -- vg_vdc.id,
+	   vg_vdc.id,
 	   vg_vdc.name
 from dataentry_victiminterview as VIF
 left outer join dataentry_district as va_dist
