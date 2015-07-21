@@ -1,45 +1,78 @@
 ----------------------------------------------------------------
 --- Model: Interceptee
 
-SELECT id, kind, interception_record_id, full_name, trim(district), trim(vdc)
+-- START-QUERY
+SELECT id, kind, interception_record_id,
+	   full_name, trim(district) as district, trim(vdc) as vdc
 FROM dataentry_interceptee
-ORDER BY id
-limit 10;
+ORDER BY id;
+-- END-QUERY interceptee
+
+-- START-QUERY
+select id
+from dataentry_interceptee
+order by id;
+-- END-QUERY interceptee-ids
 
 ----------------------------------------------------------------
 -- Model: VictimInterview
--- District only
 
-SELECT vif_number, victim_address_district
+-- START-QUERY
+SELECT vif_number,
+	   victim_address_district,
+	   victim_address_vdc
 FROM dataentry_victiminterview
-order by vif_number
-limit 10;
+order by vif_number;
+-- END-QUERY victim-address
 
--- VDC only
-SELECT vif_number, victim_address_vdc
+-- START-QUERY
+SELECT vif_number,
+	   victim_guardian_address_district
+	   victim_guardian_address_vdc
 FROM dataentry_victiminterview
-order by vif_number
-limit 10;
+order by vif_number;
+-- END-QUERY victim-guardian-address
 
--- District and VDC
-SELECT vif_number, victim_address_district, victim_address_vdc
-FROM dataentry_victiminterview
-order by vif_number
-limit 10;
+-- START-QUERY
+select vif_number as id
+from dataentry_victiminterview
+order by vif_number;
+-- END-QUERY victim-interview-ids
 
 ----------------------------------------------------------------
 -- Model: VictimInterviewPersonBox
 
-select id, victim_interview_id, address_district, address_vdc
+-- START-QUERY
+select id,
+	   victim_interview_id,
+	   address_district,
+	   address_vdc
 from dataentry_victiminterviewpersonbox
-order by id
-limit 10;
+order by id;
+-- END-QUERY person-box
+
+-- START-QUERY
+select id
+from dataentry_victiminterviewpersonbox
+order by id;
+-- END-QUERY person-box-ids
 
 ----------------------------------------------------------------
 -- Model: VictimInterviewLocationBox
 
-select id, victim_interview_id, district, vdc
+-- START-QUERY
+select id,
+	   victim_interview_id,
+	   district,
+	   vdc
 from dataentry_victiminterviewlocationbox
-order by id
-limit 10;
+order by id;
+-- END-QUERY location-box
+
+-- START-QUERY
+select id
+from dataentry_victiminterviewlocationbox
+order by id;
+-- END-QUERY location-box-ids
+
 
