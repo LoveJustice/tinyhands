@@ -200,13 +200,11 @@ class InterceptionRecordDetailView(InterceptionRecordUpdateView):
 class InterceptionRecordDeleteView(DeleteView):
     model = InterceptionRecord
     success_url = reverse_lazy('interceptionrecord_list')
+    permissions_required = ['permission_irf_edit']
 
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()
-        if self.request.user.is_superuser:
-            self.object.delete()
-        else:
-            messages.error(request, "You have no power here!!!")
+        self.object.delete()
         return HttpResponseRedirect(self.success_url)
 
 
@@ -286,15 +284,13 @@ class VictimInterviewDetailView(VictimInterviewUpdateView):
 
 
 class VictimInterviewDeleteView(DeleteView):
+    permissions_required = ['permission_vif_edit']
     model = VictimInterview
     success_url = reverse_lazy('victiminterview_list')
 
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()
-        if self.request.user.is_superuser:
-            self.object.delete()
-        else:
-            messages.error(request, "You have no power here!!!")
+        self.object.delete()
         return HttpResponseRedirect(self.success_url)
 
 
