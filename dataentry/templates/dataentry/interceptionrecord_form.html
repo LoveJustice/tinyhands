@@ -1,4 +1,7 @@
 {% extends "dataentry/dataentry_base.html" %}
+{% block html %}
+    <html ng-app="DataEntry">
+{% endblock %}
 {% load widget_tweaks %}
 {% load bootstrap %}
 {% load unslugify %}
@@ -91,7 +94,7 @@
        aria-labelledby="myModalLabel" aria-hidden="true" tabindex="-1"></div>
   <!-- /.modal -->
 
-  <form enctype="multipart/form-data" method="POST" 
+  <form enctype="multipart/form-data" method="POST" action=""
 	id="interception-record-form" autocomplete="off">{% csrf_token %}
     <div class="form-page">
 
@@ -106,7 +109,8 @@
         <div class="col-xs-7">
           <p class="bg-danger" style="margin-bottom: 0; margin-left: 80px">
 	    You will find instructions for each section in the pink boxes like this</p>
-          <table class="table table-bordered top-data-area" style="margin-left: 30px">
+          <table class="table table-bordered top-data-area" style="margin-left: 30px"  ng-controller="staffListCtrl as staff">
+
             <tbody>
               <tr>
                 <td>
@@ -114,7 +118,7 @@
                 </td>
                 <td>
                   <div style="width: 75px">
-                    {{ form.irf_number }}
+                      {{ form.irf_number }}
                   </div>
                 </td>
                 <td>
@@ -158,8 +162,22 @@
                   {{ form.staff_name.label_tag }}
                 </td>
                 <td>
-                  {{ form.staff_name|attr:"data-placement: bottom" }}
+                    {{ form.staff_name }}
+                    <div class="input-group">
+                      {% verbatim %}
+						<div class="input-group-btn">
+                            <button tabindex="-1" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button" ng-click="staff.retrieveStation(1)">
+                                <span class="caret"></span>
+                            </button>
+                            <ul role="menu" id="dropdown-staff" class="dropdown-menu dropdown-menu-form" >
+                                <li ng-repeat="staffPerson in staff.staffNames">
+                                    <a href="#"/> <input type="checkbox"/><span class="lbl">{{ staffPerson.name }}</span> </li>
+                            </ul>
+                        </div>
+                      {% endverbatim %}
+                    </div>
                 </td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -693,7 +711,7 @@
           </tr>
         </tbody>
       </table>
-      <table class="table table-bordered staff-intercepted">
+      <table class="table table-bordered staff-intercepted" ng-controller="staffListCtrl as staff">
         <tbody>
           <tr>
             <td colspan="5">
@@ -703,9 +721,23 @@
           <tr>
             <td colspan="5">
               <strong>7.1</strong>&nbsp;{{ form.staff_who_noticed.label_tag }}
-	      {{ form.staff_who_noticed }}
-              What was the sign that made you stop the girl for questioning? 
-	      (check all that apply below)
+              {{ form.staff_who_noticed }}
+                  What was the sign that made you stop the girl for questioning?
+              (check all that apply below)
+                <div class="input-group">
+                      {% verbatim %}
+                        <div class="input-group-btn">
+                            <button tabindex="-1" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button" ng-click="staff.retrieveStation(1)">
+                                <span class="caret"></span>
+                            </button>
+                            <ul role="menu" id="dropdown-staff-who-noticed" class="dropdown-menu dropdown-menu-form" >
+                                <li ng-repeat="staffPerson in staff.staffNames">
+                                    <a href="#"/> <input type="checkbox"/><span class="lbl">{{ staffPerson.name }}</span> </li>
+                            </ul>
+                        </div>
+                      {% endverbatim %}
+                </div>
+
             </td>
           </tr>
         </tbody>
@@ -918,5 +950,10 @@
   <br/>
   <br/>
   <br/>
+
+    {% load static from staticfiles %}
+     <script type="text/javascript" src="{% static "dataentry/js/dataEntryModule.js" %}"></script>
+     <script type="text/javascript" src="{% static "dataentry/js/services/staffListService.js" %}"></script>
+     <script type="text/javascript" src="{% static "dataentry/js/controllers/staffListCtrl.js" %}"></script>
   {% include "dataentry/fuzzymatching-ui.html" %}
 {% endblock %}

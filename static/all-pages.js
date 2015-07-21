@@ -513,4 +513,38 @@ $(document).ready(function() {
   if (bodyClass in DREAMSUITE) {
     DREAMSUITE[bodyClass]();
   }
+
+// Semi-colon delimiting the staff name data
+    $("ul#dropdown-staff").each(function() {
+        $(this).change(function() {
+            var line = "";
+            $("ul.dropdown-menu:not(#dropdown-staff-who-noticed) input[type=checkbox]").each(function() {
+                if($(this).is(":checked")) {
+                    line += $("+ span", this).text() + ",";
+                }
+            });
+            $("input#id_staff_name").val(line);
+            $("input#id_interviewer").val(line);
+
+        });
+    });
+
+    $("ul#dropdown-staff-who-noticed").each(function() {
+        $(this).change(function() {
+            var line = "";
+            $("ul#dropdown-staff-who-noticed input[type=checkbox]").each(function() {
+                if($(this).is(":checked")) {
+                    line += $("+ span", this).text() + ",";
+                }
+            });
+            $("input#id_staff_who_noticed").val(line);
+
+        });
+    });
+});
+
+
+// Allows multiple clicks on dropdown instead of automatically closing
+$(document).on('click', '.dropdown-menu.dropdown-menu-form', function(e) {
+  e.stopPropagation();
 });

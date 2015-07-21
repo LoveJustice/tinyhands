@@ -26,3 +26,27 @@ def match_location(district_name=None, vdc_name=None):
     if(len(matches) > 0):
         objects = [model.objects.get(id=id) for name, score, id in matches]
     return objects
+
+def match_vdc_district(vdc_name, district_name):
+    locations = [vdc.name+", "+vdc.district.name for vdc in VDC.objects.all()]
+    name = vdc_name + ", " + district_name
+    matches = process.extractBests(name, locations, score_cutoff=70, limit=5)
+    if(len(matches) > 0 ):
+        names = matches[0][0].split(", ")
+        vdc = VDC.objects.get(name=names[0])
+        district = vdc.district
+        return (vdc, district)
+    else:
+        return None
+
+def match_staff(station, name):
+    # Use station to get station staff names
+    staff_names = [staff.name for staff in ["Austin","Jon","Kirk"]]
+    matches = process.extractBests(name, staff_names, score_cutoff=70, limit=5)
+    if(len(matches) > 0):
+        names = []
+        for match in matches:
+            names.append(District.objects.get(name=match[0]))
+        return names
+    else:
+        return None
