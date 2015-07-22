@@ -27,7 +27,7 @@ exports.config = {
         'vdcs/vdcAdminPage.spec.js', //There are problems in this one
 
         // Has to run last
-        'accounts/permissionsPage.spec.js' 
+        'accounts/permissionsPage.spec.js'
       ],
 
     capabilities: {
