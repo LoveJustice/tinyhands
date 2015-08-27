@@ -84,7 +84,8 @@ class NameVariations(CSVtoJSON):
     def validate(self, canonical_names):
         for datum in self.all_data:
             if canonical_names.find(datum['can1'], datum['can2']) is None:
-                raise RuntimeError("{},{} not in canonical names".format(datum['can1'], datum['can2']))
+                raise RuntimeError("{},{} not in canonical names".format(datum['can1'],
+                                                                         datum['can2']))
         print "Name variations valid"
 
     def find(self, adr1, adr2):
@@ -112,7 +113,10 @@ class FormData(CSVtoJSON):
         for datum in self.all_data:
             if (canonical_names.find(datum['adr1'], datum['adr2']) is None and
                 name_variations.find(datum['adr1'], datum['adr2']) is None):
-                print "{} ({}): {},{} in neither canonical nor variations".format(datum['id'], datum['idx'], datum['adr1'], datum['adr2'])
+                print "{} ({}): {},{} in neither canonical nor variations".format(datum['id'],
+                                                                                  datum['idx'],
+                                                                                  datum['adr1'],
+                                                                                  datum['adr2'])
         print "Form data valid"
 
 

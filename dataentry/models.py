@@ -42,7 +42,7 @@ class VDC(models.Model):
     verified = models.BooleanField(default=False)
 
     def __unicode__(self):
-        return self.name
+        return "{},{}".format(self.name, self.district)
 
     @property
     def get_cannonical_name(self):
