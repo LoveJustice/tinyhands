@@ -42,7 +42,7 @@ class VDC(models.Model):
     verified = models.BooleanField(default=False)
 
     def __unicode__(self):
-        return "{},{}".format(self.name, self.district)
+        return self.name
 
     @property
     def get_cannonical_name(self):
@@ -71,6 +71,10 @@ class VDC(models.Model):
     @property
     def is_verified(self):
         return self.verified
+
+    @property
+    def is_canonical(self):
+        return self.cannonical_name is None
 
 
 class InterceptionRecord(models.Model):
@@ -294,8 +298,11 @@ class Interceptee(models.Model):
     class Meta:
         ordering = ['id']
 
-    ## TODO: These should not be required, but this was a simple way to allow exports to
-    ## work. The data really needs to be cleaned instead.
+    def __unicode__(self):
+        return "{} ({})".format(self.full_name, self.id)
+
+    # TODO: These should not be required, but this was a simple way to allow
+    # exports to work. The data really needs to be cleaned instead.
     def district_as_string(self):
         rtn = ''
         try:
@@ -683,6 +690,9 @@ class VictimInterview(models.Model):
 
     reported_total_situational_alarms = models.PositiveIntegerField(blank=True, null=True)
 
+    def __unicode__(self):
+        return self.vif_number
+
     def victim_address_district_as_string(self):
         rtn = ''
         try:
@@ -918,6 +928,9 @@ class VictimInterviewPersonBox(models.Model):
     associated_with_place = models.NullBooleanField(null=True)
     associated_with_place_value = models.IntegerField(blank=True, null=True)
 
+    def __unicode__(self):
+        return "VIF {}".format(self.victim_interview.vif_number)
+
 
 class VictimInterviewLocationBox(models.Model):
     victim_interview = models.ForeignKey(VictimInterview, related_name='location_boxes')
@@ -968,3 +981,6 @@ class VictimInterviewLocationBox(models.Model):
 
     associated_with_person = models.NullBooleanField(null=True)
     associated_with_person_value = models.IntegerField(blank=True, null=True)
+
+    def __unicode__(self):
+        return "VIF {}".format(self.victim_interview.vif_number)
