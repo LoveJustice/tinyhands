@@ -90,9 +90,9 @@ class AddressMapping(object):
         self.create_mapping()
 
     def create_mapping(self):
-        print "\n Mapping {} objects ({}, {})".format(self.model_name,
-                                             self.district_attr_name,
-                                             self.vdc_attr_name)
+        print "\nMapping {} objects ({}, {})".format(self.model_name,
+                                                     self.district_attr_name,
+                                                     self.vdc_attr_name)
         for object in self.model_class.objects.all():
             try:
                 vdc = getattr(object, self.vdc_attr_name)
@@ -130,7 +130,9 @@ class AddressMapping(object):
         print "{} {} mappings".format(len(self.mapping), self.model_name)
 
     def apply_mapping(self):
-        print "\nUpdating {} objects".format(self.model_name)
+        print "\nUpdating {} objects ({}, {})".format(self.model_name,
+                                                      self.district_attr_name,
+                                                      self.vdc_attr_name)
         object_count = 0
         for entry in self.mapping:
             object = self.model_class.objects.get(pk=entry['id'])
@@ -164,6 +166,7 @@ def map_addresses():
     # due to foreign key constratins (that we are intentionally ignoring).
     from subprocess import call
     for table in ('vdc', 'district'):
+        print "Deleteing database {} entries"
         call(['sqlite3', 'db.sqlite3', 'delete from dataentry_{}'.format(table)])
 
     process_canonical_names()
