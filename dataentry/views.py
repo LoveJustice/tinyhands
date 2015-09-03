@@ -343,7 +343,7 @@ class GeoCodeVdcAPIView(APIView):
     def get(self, request):
         value = request.QUERY_PARAMS['vdc']
         matches = match_location(vdc_name=value)
-        if(matches):
+        if matches:
             serializer = VDCSerializer(matches)
             return Response(serializer.data)
         else:
@@ -361,6 +361,10 @@ class VDCAdminView(LoginRequiredMixin,
 
     def __init__(self, *args, **kwargs):
         super(VDCAdminView, self).__init__(name__icontains="name")
+
+    def get_queryset(self):
+        return self.model.objects.all().select_related('district',
+                                                       'cannonical_name__district')
 
     def get_context_data(self, **kwargs):
         context = super(VDCAdminView, self).get_context_data(**kwargs)
