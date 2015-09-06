@@ -11,6 +11,8 @@ def match_location(district_name=None, vdc_name=None):
     filter_by_district = False
     # Determine the appropriate model
     if vdc_name is not None and district_name is not None:
+        import ipdb
+        ipdb.set_trace()
         model = VDC
         locationName = vdc_name
         filter_by_district = True
@@ -25,7 +27,8 @@ def match_location(district_name=None, vdc_name=None):
     # necessary. Might also want to have cannonical_name__district in here.
     if filter_by_district:
         regionNames = {region.id: region.name
-                       for region in model.objects.filter(district__name__contains=district_name).select_related('district')}
+                       for region in model.objects.filter(district__name__contains=district_name)
+                                                  .select_related('district', 'cannonical_name__district')}
     else:
         regionNames = {region.id: region.name
                        for region in model.objects.all().select_related('district')}

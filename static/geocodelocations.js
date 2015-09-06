@@ -72,9 +72,17 @@ function setPopovers(id)
 
 function callFuzzyApi(input, locationType, element){
     var unorderedList = $("#popover-location-info");
+
+    var requestData = locationType+"="+input;
+    if (locationType === "vdc"){
+        var district_value = $("#id_interceptees-" + element.id.split('-')[1] + '-district').val();
+        if (district_value.length > 0) {
+            requestData = requestData + '&district=' + district_value;
+        }
+    }
     $.ajax({
         url: "/data-entry/geocodelocation/"+locationType+"/",
-        data: locationType+"="+input
+        data: requestData
     }).done(function(data){
             unorderedList.empty();
             if (data.id != -1) {
