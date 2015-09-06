@@ -341,8 +341,12 @@ class GeoCodeDistrictAPIView(APIView):
 
 class GeoCodeVdcAPIView(APIView):
     def get(self, request):
-        value = request.QUERY_PARAMS['vdc']
-        matches = match_location(vdc_name=value)
+        try:
+            district_name = request.QUERY_PARAMS['district']
+        except:
+            district_name = None
+        vdc_name = request.QUERY_PARAMS['vdc']
+        matches = match_location(district_name, vdc_name)
         if matches:
             serializer = VDCSerializer(matches)
             return Response(serializer.data)
