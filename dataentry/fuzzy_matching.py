@@ -11,8 +11,6 @@ def match_location(district_name=None, vdc_name=None):
     filter_by_district = False
     # Determine the appropriate model
     if vdc_name is not None and district_name is not None:
-        import ipdb
-        ipdb.set_trace()
         model = VDC
         locationName = vdc_name
         filter_by_district = True
