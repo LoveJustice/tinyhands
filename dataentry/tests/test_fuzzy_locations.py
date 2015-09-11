@@ -31,13 +31,16 @@ class FuzzyLocationMatchingTest(TestCase):
         self.assertEquals(original, matches[0])
     
     def test_filter_by_district(self):
-        original = VDC.objects.all()[0]     
+        VDC.objects.all().delete()
+        self.VDCList = VDCFactory.create_batch(20)
         matches = match_location(vdc_name=original.name, district_name=original.district.name)
 
         # VDCFactory associates a new District with each VDC
         self.assertEquals(len(matches), 1)
 
     def test_filter_by_district_multiple_vdcs(self):    
+        VDC.objects.all().delete()
+        self.VDCList = VDCFactory.create_batch(20)
         # Associate a new VDC with the first VDCs District
         original = VDC.objects.all()[0]     
         second = VDC.objects.all()[1]
