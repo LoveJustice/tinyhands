@@ -32,6 +32,9 @@ class FuzzyLocationMatchingTest(TestCase):
     
     def test_filter_by_district(self):
         VDC.objects.all().delete()
+        VDCFactory.create_batch(20)
+        
+        original = VDC.objects.all()[0]     
         self.VDCList = VDCFactory.create_batch(20)
         matches = match_location(vdc_name=original.name, district_name=original.district.name)
 
@@ -40,7 +43,7 @@ class FuzzyLocationMatchingTest(TestCase):
 
     def test_filter_by_district_multiple_vdcs(self):    
         VDC.objects.all().delete()
-        self.VDCList = VDCFactory.create_batch(20)
+        VDCFactory.create_batch(20)
         # Associate a new VDC with the first VDCs District
         original = VDC.objects.all()[0]     
         second = VDC.objects.all()[1]
