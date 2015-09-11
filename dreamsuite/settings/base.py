@@ -51,7 +51,7 @@ INSTALLED_APPS = (
     'util',
     'rest_framework',
     'static_border_stations',
-#    'django_extensions',
+   'django_extensions',
 )
 
 import django.conf.global_settings as DEFAULT_SETTINGS
