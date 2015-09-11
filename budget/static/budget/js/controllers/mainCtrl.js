@@ -12,24 +12,34 @@ angular
             vm.travelTotalValue = 0;
             vm.awarenessTotalValue = 0;
             vm.suppliesTotalValue = 0;
+            vm.shelterTotalValue = 0;
+            vm.foodGasTotalValue = 0;
+            vm.communicationTotalValue = 0;
 
             vm.otherTravelTotalValue = [0];
             vm.otherMiscTotalValue = [0];
             vm.otherAwarenessTotalValue = [0];
             vm.otherSuppliesTotalValue = [0];
+            vm.otherShelterTotalValue = [0];
+            vm.otherFoodGasTotalValue = [0];
+            vm.otherCommunicationTotalValue = [0];
 
 
             // Budget Calc sheets are for the 15th of every month
             vm.date =  new Date();
             var thisMonth = vm.date.getMonth();
-            vm.date.setMonth(thisMonth + 1)
+            vm.date.setMonth(thisMonth + 1);
 
             vm.form.station_name = window.station_name;
 
             vm.otherItemsTotals = [vm.otherTravelTotalValue,
                                     vm.otherMiscTotalValue,
                                     vm.otherAwarenessTotalValue,
-                                    vm.otherSuppliesTotalValue];
+                                    vm.otherSuppliesTotalValue,
+                                    vm.otherShelterTotalValue,
+                                    vm.otherFoodGasTotalValue,
+                                    vm.otherCommunicationTotalValue
+            ];
 
 
             // Event Listeners
@@ -73,6 +83,9 @@ angular
                 vm.travelTotal();
                 vm.awarenessTotal();
                 vm.suppliesTotal();
+                vm.shelterTotal();
+                vm.foodGasTotal();
+                vm.communicationTotal();
             }
 
 
@@ -110,11 +123,16 @@ angular
                 }
                 return totalAmount;
             };
+
+
+
             vm.shelterTotal = function () {
-                return  vm.form.shelter_rent +
+                var amount = 0;
+                amount += vm.form.shelter_rent +
                         vm.form.shelter_water +
                         vm.form.shelter_electricity +
                         vm.shelterCheckboxTotal();
+                vm.shelterTotalValue = amount + vm.otherShelterTotalValue[0];
             };
 
             //Food and Gas Section
@@ -128,6 +146,13 @@ angular
                         vm.form.food_and_gas_number_of_limbo_girls *
                         vm.form.food_and_gas_number_of_days;
             };
+
+            vm.foodGasTotal = function() {
+                var amount = 0;
+                amount += vm.foodTotal();
+                vm.otherfoodGasTotalValue = amount + vm.otherFoodGasTotalValue[0];
+            };
+
             vm.foodTotal = function () {
                 return vm.foodGasInterceptedGirls() + vm.foodGasLimboGirls();
             };
@@ -155,7 +180,14 @@ angular
                         vm.form.communication_each_staff_multiplier;
             };
 
-            vm.commTotal = function () {
+            vm.communicationTotal = function () {
+                var amount = 0;
+                amount += vm.commTotal();
+                vm.communicationTotalValue = amount + vm.otherCommunicationTotalValue[0];
+
+            };
+
+            vm.commTotal = function() {
                 return vm.commManagerTotal() + vm.commNumberOfStaffTotal() + vm.commEachStaffTotal();
             };
 

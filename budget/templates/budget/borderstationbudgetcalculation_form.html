@@ -165,11 +165,36 @@
                             </div>
                         </div>
 
+                        {% verbatim %}
+                            <div class="row" ng-controller="otherBudgetItemsCtrl as shelterItemsCtrl" ng-init="form_section = 5;">
+                                <div class="animated-budget-items" ng-repeat="form in shelterItemsCtrl.shelterForms">
+
+                                    <div class="col-lg-4 col-lg-offset-2">
+                                        <input class="form-control" type="text" ng-model="form.name" ng-disabled="main.view"/>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <input class="text-right form-control" type="number" ng-model="form.cost" ng-change="shelterItemsCtrl.otherItemsTotal()" ng-disabled="main.view"/>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <a class="btn btn-danger" ng-click="shelterItemsCtrl.removeItem(form.id, $index)" ng-hide="main.view">Remove</a>
+                                    </div>
+                                    <br/><br/>
+                                </div>
+                                <div class="row">
+                                    <br/>
+
+                                    <div class="col-lg-4 col-lg-offset-5">
+                                        <a class="btn btn-success" id="awareness_add_item" ng-click="shelterItemsCtrl.addNewItem()" ng-hide="main.view">Add item</a>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endverbatim %}
+
                         <div class="row center text-center" style="margin-top: 20px">
                             <div class="col-lg-4"></div>
                             <div class="col-lg-4">
                                 <label>Shelter Total</label>
-                                <input class="form-control text-center" ng-value="main.shelterTotal()" disabled="disabled"/>
+                                <input class="form-control text-center" ng-value="main.shelterTotalValue" disabled="disabled"/>
                             </div>
                             <div class="col-lg-4"></div>
 
@@ -240,11 +265,38 @@
                                 </div>
                                 <small>Limbo Girls</small>
                             </div>
+
+                            {% verbatim %}
+                            <div class="row" ng-controller="otherBudgetItemsCtrl as foodGasItemsCtrl" ng-init="form_section = 6;">
+                                <div class="animated-budget-items" ng-repeat="form in foodGasItemsCtrl.foodGasForms">
+
+                                    <div class="col-lg-4 col-lg-offset-2">
+                                        <input class="form-control" type="text" ng-model="form.name" ng-disabled="main.view"/>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <input class="text-right form-control" type="number" ng-model="form.cost" ng-change="foodGasItemsCtrl.otherItemsTotal()" ng-disabled="main.view"/>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <a class="btn btn-danger" ng-click="foodGasItemsCtrl.removeItem(form.id, $index)" ng-hide="main.view">Remove</a>
+                                    </div>
+                                    <br/><br/>
+                                </div>
+                                <div class="row">
+                                    <br/>
+
+                                    <div class="col-lg-4 col-lg-offset-5">
+                                        <a class="btn btn-success" id="awareness_add_item" ng-click="foodGasItemsCtrl.addNewItem()" ng-hide="main.view">Add item</a>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endverbatim %}
+
+
                             <div class="row text-center" style="margin-top: 30px">
                                 <div class="col-lg-4"></div>
                                 <div class="col-lg-4">
                                     <label>Total Food</label>
-                                    <input class="form-control text-center" ng-value="main.foodTotal()" disabled="disabled"/>
+                                    <input class="form-control text-center" ng-value="main.otherfoodGasTotalValue" disabled="disabled"/>
                                 </div>
                                 <div class="col-lg-4"></div>
                             </div>
@@ -316,11 +368,38 @@
                                     <input class="form-control text-center" ng-value="main.commEachStaffTotal()" disabled="disabled"/>
                                 </div>
                             </div>
+
+                            {% verbatim %}
+                            <div class="row" ng-controller="otherBudgetItemsCtrl as communicationItemsCtrl" ng-init="form_section = 7;">
+                                <div class="animated-budget-items" ng-repeat="form in communicationItemsCtrl.communicationForms">
+
+                                    <div class="col-lg-4 col-lg-offset-2">
+                                        <input class="form-control" type="text" ng-model="form.name" ng-disabled="main.view"/>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <input class="text-right form-control" type="number" ng-model="form.cost" ng-change="communicationItemsCtrl.otherItemsTotal()" ng-disabled="main.view"/>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <a class="btn btn-danger" ng-click="communicationItemsCtrl.removeItem(form.id, $index)" ng-hide="main.view">Remove</a>
+                                    </div>
+                                    <br/><br/>
+                                </div>
+                                <div class="row">
+                                    <br/>
+
+                                    <div class="col-lg-4 col-lg-offset-5">
+                                        <a class="btn btn-success" id="communication_add_item" ng-click="communicationItemsCtrl.addNewItem()" ng-hide="main.view">Add item</a>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endverbatim %}
+
+
                             <div class="row center text-center" style="margin-top: 20px">
                                 <div class="col-lg-4"></div>
                                 <div class="col-lg-4">
                                     <label>Total Communication</label>
-                                    <input class="form-control text-center" ng-value="main.commTotal()" disabled="disabled"/>
+                                    <input class="form-control text-center" ng-value="main.communicationTotalValue" disabled="disabled"/>
                                 </div>
                                 <div class="col-lg-4"></div>
                                 </div>
