@@ -24,6 +24,7 @@ angular
         // Event Listeners
         $scope.$on('dateSetBroadcast', function(event, args){ // When the mainCtrl receives a date from a saved form, it sends the value over a broadcast
             var form_date = args['date'];
+            console.log(form_date);
             retrieveForm(form_date.getMonth(), form_date.getFullYear());
         });
 
@@ -38,6 +39,7 @@ angular
             return $http.get('/budget/api/budget_calculations/previous_data/' + window.border_station + '/' + (month+1) + '/' + year + '/') //month is zero indexed in javascript
                 .success(function (data) {
                     vm.form = data;
+                    console.log(data);
                     $scope.$emit('lastBudgetTotalEmit', {total: data.last_months_total_cost });
                 })
                 .error(function (data, status, headers, config) {
