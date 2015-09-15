@@ -105,87 +105,90 @@
 
 
                 for(var station=0;station<data.length;station++){ //Iterate over each Border Station
-                    var myLatlng = new google.maps.LatLng(data[station].fields.latitude,data[station].fields.longitude);
-                    var marker = new google.maps.Marker({ //Initialize a BorderStation's marker
-                        position: myLatlng,
-                        map: map,
-                        title: data[station].fields.station_name + " " + data[station].fields.station_code,
-                        clicked: false,
-                        optimized: false
-                    });
+                    console.log(data[station].fields.closed)
+                    if (data[station].fields.closed == false) {
+                        var myLatlng = new google.maps.LatLng(data[station].fields.latitude, data[station].fields.longitude);
+                        var marker = new google.maps.Marker({ //Initialize a BorderStation's marker
+                            position: myLatlng,
+                            map: map,
+                            title: data[station].fields.station_name + " " + data[station].fields.station_code,
+                            clicked: false,
+                            optimized: false
+                        });
 
-                    google.maps.event.addListener(dynamicWindow, 'closeclick', (function(marker) {
-                        return function() {
-                            toggleMarkerClick(marker);
-                        }
-                    })(marker));
-
-
-                    google.maps.event.addListener(marker, 'mouseout', (function(marker, station) {
-                        return function() {
-                            infowindow.close();
-                            $(".gm-style-iw").each(function() {
-                                $(this).removeClass('station-info-window');
-                            });
-                        }
-                    })(marker, station));
-
-                    google.maps.event.addListener(marker, 'mouseover', (function(marker, station) { //For the Static View
-                        return function() {
-                            infowindow.setContent(getStaticContentString(data[station]));
-
-                            //gets the number of irfs
-                            $.get("/portal/get_interception_records", {station_code: data[station].fields.station_code}, function(data){
-                                $("#stationInterception").text("Interceptions: " + data);
-                            });
-
-                            //gets the number of staff
-                            $.get("/portal/get_staff_count", {station_code: data[station].fields.station_code}, function(data){
-                                $("#staffset").text('# of Staff:' + data);
-                            });
-
-                            if(!marker.clicked) {
-                                infowindow.open(map, this);
+                        google.maps.event.addListener(dynamicWindow, 'closeclick', (function (marker) {
+                            return function () {
+                                toggleMarkerClick(marker);
                             }
+                        })(marker));
 
-                            $(".gm-style-iw").each(function() { // TODO: We are resizing according to the length of the station name? we need a better solution for this!
-                                if(data[station].fields.station_name.length > 10) {
-                                    $(this).addClass('station-info-window-big');
+
+                        google.maps.event.addListener(marker, 'mouseout', (function (marker, station) {
+                            return function () {
+                                infowindow.close();
+                                $(".gm-style-iw").each(function () {
+                                    $(this).removeClass('station-info-window');
+                                });
+                            }
+                        })(marker, station));
+
+                        google.maps.event.addListener(marker, 'mouseover', (function (marker, station) { //For the Static View
+                            return function () {
+                                infowindow.setContent(getStaticContentString(data[station]));
+
+                                //gets the number of irfs
+                                $.get("/portal/get_interception_records", {station_code: data[station].fields.station_code}, function (data) {
+                                    $("#stationInterception").text("Interceptions: " + data);
+                                });
+
+                                //gets the number of staff
+                                $.get("/portal/get_staff_count", {station_code: data[station].fields.station_code}, function (data) {
+                                    $("#staffset").text('# of Staff:' + data);
+                                });
+
+                                if (!marker.clicked) {
+                                    infowindow.open(map, this);
                                 }
-                                $(this).addClass('station-info-window');
-                            });
-                        }
-                    })(marker, station));
 
-                    google.maps.event.addListener(marker, 'click', (function(marker, station) { //For the Dynamic view
-                        return function() {
-                            infowindow.close();
-                            marker.clicked = true;
+                                $(".gm-style-iw").each(function () { // TODO: We are resizing according to the length of the station name? we need a better solution for this!
+                                    if (data[station].fields.station_name.length > 10) {
+                                        $(this).addClass('station-info-window-big');
+                                    }
+                                    $(this).addClass('station-info-window');
+                                });
+                            }
+                        })(marker, station));
 
-                            dynamicWindow.setContent(getDynamicContentString(data[station]));
+                        google.maps.event.addListener(marker, 'click', (function (marker, station) { //For the Dynamic view
+                            return function () {
+                                infowindow.close();
+                                marker.clicked = true;
 
-                            //gets the number of IRFs to date
-                            $.get("/portal/get_interception_records", {station_code: data[station].fields.station_code}, function(data){
-                                $("#stationInterception").text("Interceptions: " + data);
-                            });
+                                dynamicWindow.setContent(getDynamicContentString(data[station]));
 
-                            //gets the number of staff
-                            $.get("/portal/get_staff_count", {station_code: data[station].fields.station_code}, function(data){
-                                $("#staffset").text('# of Staff:' + data);
-                            });
+                                //gets the number of IRFs to date
+                                $.get("/portal/get_interception_records", {station_code: data[station].fields.station_code}, function (data) {
+                                    $("#stationInterception").text("Interceptions: " + data);
+                                });
+
+                                //gets the number of staff
+                                $.get("/portal/get_staff_count", {station_code: data[station].fields.station_code}, function (data) {
+                                    $("#staffset").text('# of Staff:' + data);
+                                });
 
 
-                            dynamicWindow.open(map, this);
+                                dynamicWindow.open(map, this);
 
-                            $(".gm-style-iw").each(function() {
-                                if(data[station].fields.station_name.length > 10) {
+                                $(".gm-style-iw").each(function () {
+                                    if (data[station].fields.station_name.length > 10) {
+                                        $(this).addClass('station-info-window-big-dynamic');
+                                    }
                                     $(this).addClass('station-info-window-big-dynamic');
-                                }
-                                $(this).addClass('station-info-window-big-dynamic');
 
-                            });
-                        }
-                    })(marker, station));
+                                });
+                            }
+                        })(marker, station));
+                    }
                 }
             });
         }

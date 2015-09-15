@@ -13,8 +13,6 @@ class CommitteeMemberForm(forms.ModelForm):
         model = CommitteeMember
         exclude = []
 
-
-
 class LocationForm(forms.ModelForm):
     class Meta:
         model = Location
