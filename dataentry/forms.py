@@ -375,11 +375,15 @@ class IntercepteeForm(DreamSuitePaperForm):
         try:
             district = District.objects.get(name=self.cleaned_data['district'])
             self.instance.district = district
+            have_district = True
         except District.DoesNotExist:
-            pass
+            have_district = False
 
         try:
-            vdc = VDC.objects.get(name=self.cleaned_data['vdc'])
+            if have_district:
+                vdc = VDC.objects.get(name=self.cleaned_data['vdc'], district=district)
+            else:
+                vdc = VDC.objects.filter(name=self.cleaned_data['vdc'])[0]
             self.instance.vdc = vdc
         except VDC.DoesNotExist:
             pass
