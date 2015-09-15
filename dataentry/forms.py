@@ -126,11 +126,10 @@ class InterceptionRecordForm(DreamSuitePaperForm):
             self.ensure_8_1_2_3_checked(cleaned_data)
             self.ensure_at_least_one_of_9_1_through_9_5_are_checked(cleaned_data)
             self.ensure_signature_on_form(cleaned_data)
-        self.get_pictures(cleaned_data)
         return cleaned_data
 
-    def get_pictures(self, cleaned_data):
-        pass
+
+
 
     def ensure_at_least_one_interceptee(self, cleaned_data):
         if len([
@@ -360,6 +359,7 @@ class IntercepteeForm(DreamSuitePaperForm):
 
     def __init__(self, *args, **kwargs):
         super(IntercepteeForm, self).__init__(*args, **kwargs)
+
         self.fields['district'] = DistrictField(required=False)
         self.fields['vdc'] = VDCField(required=False)
         try:
@@ -375,20 +375,30 @@ class IntercepteeForm(DreamSuitePaperForm):
         try:
             district = District.objects.get(name=self.cleaned_data['district'])
             self.instance.district = district
-            have_district = True
         except District.DoesNotExist:
-            have_district = False
+            pass
 
         try:
-            if have_district:
-                vdc = VDC.objects.get(name=self.cleaned_data['vdc'], district=district)
-            else:
-                vdc = VDC.objects.filter(name=self.cleaned_data['vdc'])[0]
+            vdc = VDC.objects.get(name=self.cleaned_data['vdc'], district=district)
             self.instance.vdc = vdc
         except VDC.DoesNotExist:
             pass
 
         return super(IntercepteeForm, self).save(commit)
+
+    def clean(self):
+        cleaned_data = super(IntercepteeForm, self).clean()
+        self.has_warnings = False
+        self.if_address_1_need_address_2(cleaned_data)
+        return cleaned_data
+
+    def if_address_1_need_address_2(self, cleaned_data):
+        if cleaned_data.get('vdc') and not cleaned_data.get('district'):
+            import ipdb
+            ipdb.set_trace()
+            self._errors['district'] = self.error_class(
+                    ['If you supply an address 2, and address 1 is required'])
+
 
 IntercepteeFormSet = inlineformset_factory(InterceptionRecord, Interceptee, exclude=[], extra=12)
 
