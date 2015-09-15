@@ -164,6 +164,15 @@ class Command(BaseCommand):
         new_file = prefix + random.choice(self.sample_files)
         return new_file
 
+    def sanitize_email (self):
+        cnt = 1
+
+        for instance in Account.objects.all():
+            instance.email = "thi_" + str(cnt) + "@example.com"
+            instance.save()
+            cnt += 1
+        
+
     def create_base_user(self):
         account = Account()
         account.last_name = 'Test'
@@ -235,6 +244,7 @@ class Command(BaseCommand):
         sanitized += self.sanitize(VictimInterviewPersonBox, [],['name'],['phone'],[],None)
         sanitized += self.sanitize(VictimInterviewLocationBox, [],['person_in_charge'],['phone'],[],None)
 
+        self.sanitize_email ()
         self.create_test_users()
 
         self.stdout.write("Total sanitized {} objects".format(sanitized))
