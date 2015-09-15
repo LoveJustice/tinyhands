@@ -67,7 +67,7 @@ class Command(BaseCommand):
     number_strings = ['0','1','2','3','4','5','6','7','8','9']
 
     irf_file_prefix = 'scanned_irf_forms/'
-    vif_file_prefix = 'scammed_vif_forms/'
+    vif_file_prefix = 'scanned_vif_forms/'
 
     sample_files = [
         'sample_200dpi.pdf', 'sample_300dpi.pdf', 'sample_400dpi.pdf', 'sample_720dpi.pdf',
@@ -217,7 +217,7 @@ class Command(BaseCommand):
     def create_test_users(self):
         account = self.create_super()
         account.first_name = 'super'
-        account.email = 'test_sup@isp.net'
+        account.email = 'test_sup@example.com'
         account.set_password('pass')
         try:
             account.save()
@@ -227,7 +227,7 @@ class Command(BaseCommand):
         account = self.create_base_user()
         account = self.add_all_permissions(account)
         account.first_name = 'test1'
-        account.email = 'test1@isp.net'
+        account.email = 'test1@example.com'
         account.set_password('pass')
         try:
             account.save()
@@ -239,7 +239,8 @@ class Command(BaseCommand):
 
         sanitized += self.sanitize(Interceptee, ['photo'],['full_name'],['phone_contact'],[],None)
         sanitized += self.sanitize(InterceptionRecord, [],[],[],['scanned_form'], self.irf_file_prefix)
-        sanitized += self.sanitize(VictimInterview, [],['interviewer','victim_name'],
+        sanitized += self.sanitize(VictimInterview, [],
+            ['interviewer','victim_name','legal_action_fir_against_value','legal_action_dofe_against_value'],
             ['victim_phone','victim_guardian_phone'],['scanned_form'], self.vif_file_prefix)
         sanitized += self.sanitize(VictimInterviewPersonBox, [],['name'],['phone'],[],None)
         sanitized += self.sanitize(VictimInterviewLocationBox, [],['person_in_charge'],['phone'],[],None)

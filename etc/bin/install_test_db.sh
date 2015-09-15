@@ -17,7 +17,7 @@ FORM_SRC="${TOP}/etc/scanned_forms"
 # destination directories
 PHOTO="${TOP}/media/interceptee_photos"
 IRF_FORM="${TOP}/media/scanned_irf_forms"
-VIF_FORM="${TOP}/media/scanned_irf_forms"
+VIF_FORM="${TOP}/media/scanned_vif_forms"
 
 if [ -e ${TOP}/db.sqlite3 ]
 then
