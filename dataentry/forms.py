@@ -394,8 +394,6 @@ class IntercepteeForm(DreamSuitePaperForm):
 
     def if_address_1_need_address_2(self, cleaned_data):
         if cleaned_data.get('vdc') and not cleaned_data.get('district'):
-            import ipdb
-            ipdb.set_trace()
             self._errors['district'] = self.error_class(
                     ['If you supply an address 2, and address 1 is required'])
 
