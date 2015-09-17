@@ -1,17 +1,19 @@
-{% load bootstrap %}
-<hr/>
-{{location_form.id}}
-{{ location_form.DELETE }}
 <div class="row">
-    <div class="col-sm-12">
-        {{location_form.name|bootstrap}}
-    </div>
-</div>
-<div class="row">
-    <div class="col-sm-6">
-        {{location_form.latitude|bootstrap}}
-    </div>
-    <div class="col-sm-6">
-        {{location_form.longitude|bootstrap}}
-    </div>
+  <h1>Locations</h1><hr/>
+  <div class="row">
+      <div class="col-sm-12 form-group">
+        <label for="locationName">Name</label>
+        <input type="text" class="form-control" id="locationName" placeholder="Location Name" ng-model="">
+      </div>
+  </div>
+  <div class="row">
+      <div class="col-sm-6 form-group">
+        <label for="latitude">Latitude</label>
+        <input type="text" class="form-control" id="latitude" placeholder="Latitude" ng-model="">
+      </div>
+      <div class="col-sm-6 form-group">
+        <label for="longitude">Longitude</label>
+        <input type="text" class="form-control" id="longitude" placeholder="Longitude" ng-model="">
+      </div>
+  </div>
 </div>
