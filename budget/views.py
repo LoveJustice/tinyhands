@@ -18,7 +18,6 @@ from django.conf import settings
 
 
 from braces.views import LoginRequiredMixin
-from models import BorderStationBudgetCalculation
 from rest_framework import generics, viewsets
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -219,9 +218,9 @@ class MoneyDistribution(viewsets.ViewSet):
         return Response({"staff_members": staff_serializer.data, "committee_members": committee_members_serializer.data})
 
     def send_emails(self, request, pk):
-        staff_ids = request.DATA['staff_ids']
-        budget_calc_id = int(request.DATA["budget_calc_id"])
-        committee_ids = request.DATA['committee_ids']
+        staff_ids = request.data['staff_ids']
+        budget_calc_id = int(request.data["budget_calc_id"])
+        committee_ids = request.data['committee_ids']
 
         # send the emails
         for id in staff_ids:
