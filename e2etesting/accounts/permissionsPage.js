@@ -6,18 +6,6 @@ var commonMethods = require('../commonMethods.js');
 var permissionsPage = function() {
     var page = this;
 
-    this.isElementStale = function(WebElement) {
-
-        try {
-            var temp = WebElement.tagName;
-        }
-        catch(StaleElementReferenceException) {
-            return True
-        }
-
-        return false
-    };
-
     this.navigateToVdcPage = function() {
         browser.get(constants.webAddress + "/data-entry/geocodelocations/vdc-admin/");
     };
