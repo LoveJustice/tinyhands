@@ -4,7 +4,7 @@ from dataentry.models import District, VDC
 
 def match_location(district_name=None, vdc_name=None):
     """
-    Currently we only send one or the other, so that's all this function
+    Currently we only send one, the other, or both, so that's all this function
     handles. For more flexible (and unDRY) code (which should DRYed before use),
     look at commit 656d770fbaf28c82fca7fed11e7c1679982de3a5.
     """

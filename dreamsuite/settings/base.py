@@ -22,7 +22,10 @@ DEBUG = False
 TEMPLATE_DEBUG = False
 
 SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
-FIXTURE_DIRS = (os.path.join(BASE_DIR, 'fixtures'),)
+FIXTURE_DIRS = (
+                    os.path.join(BASE_DIR, 'fixtures'),
+                    os.path.join(BASE_DIR, 'dataentry/fixtures'),
+                )
 
 AUTH_USER_MODEL = 'accounts.Account'
 LOGIN_URL = '/login/'
@@ -48,7 +51,7 @@ INSTALLED_APPS = (
     'util',
     'rest_framework',
     'static_border_stations',
-    'django_extensions',
+   'django_extensions',
 )
 
 import django.conf.global_settings as DEFAULT_SETTINGS

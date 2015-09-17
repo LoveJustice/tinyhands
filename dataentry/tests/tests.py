@@ -7,6 +7,8 @@ from django_webtest import WebTest
 from django.core.urlresolvers import reverse
 
 from accounts.tests.factories import *
+from dataentry.tests.factories import VDCFactory, DistrictFactory
+
 from dataentry.models import InterceptionRecord
 
 class TestModels(WebTest):
@@ -22,6 +24,7 @@ class TestModels(WebTest):
     def fuzzySetUp(self, cutOffNum, matchName):
         cutoffNumber = cutOffNum
         cutoffNumber = float(cutoffNumber)
+
         with open('dataentry/non_victims.csv', 'rb') as csvfile:
             reader = csv.reader(csvfile)
             names = [row[2] for row in reader]
@@ -98,9 +101,10 @@ class TestModels(WebTest):
 class ExportTesting(WebTest):
 
     fixtures = ['accounts.json',
+                'district.json',
+                'vdc.json',
                 'test-irfs.json',
                 'test-interceptees.json',
-                'geo-code-locations.json',
                 'test-vifs.json'
                 ]
 
