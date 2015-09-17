@@ -332,7 +332,7 @@ class VictimInterviewCSVExportView(LoginRequiredMixin,
 
 class GeoCodeDistrictAPIView(APIView):
     def get(self,request):
-        value = request.QUERY_PARAMS['district']
+        value = request.query_params['district']
         matches = match_location(district_name=value)
         if(matches):
             serializer = DistrictSerializer(matches)
@@ -343,7 +343,7 @@ class GeoCodeDistrictAPIView(APIView):
 
 class GeoCodeVdcAPIView(APIView):
     def get(self, request):
-        value = request.QUERY_PARAMS['vdc']
+        value = request.query_params['vdc']
         matches = match_location(vdc_name=value)
         if(matches):
             serializer = VDCSerializer(matches)
