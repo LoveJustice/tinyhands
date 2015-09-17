@@ -8,7 +8,7 @@ class PersonForm(forms.ModelForm):
     def clean(self):
         person_data = self.cleaned_data
         if person_data['receives_money_distribution_form'] and not person_data['email']:
-            raise forms.ValidationError("foo")
+            raise forms.ValidationError("Email cannot be blank when receives money distribution form is checked.")
 
 
 class StaffForm(PersonForm):
@@ -17,7 +17,7 @@ class StaffForm(PersonForm):
         exclude = []
 
 
-class CommitteeMemberForm(forms.ModelForm):
+class CommitteeMemberForm(PersonForm):
     class Meta:
         model = CommitteeMember
         exclude = []

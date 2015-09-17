@@ -12,8 +12,7 @@ from dataentry.models import BorderStation
 from dataentry.forms import BorderStationForm
 from static_border_stations.models import Staff, CommitteeMember, Location
 from static_border_stations.serializers import StaffSerializer
-from static_border_stations.forms import StaffForm
-
+from static_border_stations.forms import StaffForm, CommitteeMemberForm
 
 class FormSetForStations(InlineFormSet):
 
@@ -46,7 +45,7 @@ class StaffInline(FormSetForStations):
 
 class CommitteeMemberInline(FormSetForStations):
     model = CommitteeMember
-
+    form_class = CommitteeMemberForm
 
 class LocationInline(FormSetForStations):
     model = Location
