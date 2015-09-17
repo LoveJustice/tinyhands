@@ -28,3 +28,8 @@ media/
 
 node_modules/
 *.pyc
+
+# Vagrant Stuff
+.vagrant/
+.bashrc
+.bash_history
