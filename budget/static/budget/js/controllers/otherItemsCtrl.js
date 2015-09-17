@@ -13,10 +13,7 @@ angular
         vm.travelForms = [];
         vm.awarenessForms = [];
         vm.suppliesForms = [];
-        vm.shelterForms = [];
-        vm.foodGasForms = [];
-        vm.communicationForms = [];
-        vm.formsList.push(vm.travelForms, vm.miscForms, vm.awarenessForms, vm.suppliesForms, vm.shelterForms, vm.foodGasForms, vm.communicationForms);
+        vm.formsList.push(vm.travelForms, vm.miscForms, vm.awarenessForms, vm.suppliesForms);
 
 
         // Functions Definitions
