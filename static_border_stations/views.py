@@ -9,11 +9,10 @@ from rest_framework.response import Response
 from accounts.mixins import PermissionsRequiredMixin
 from braces.views import LoginRequiredMixin
 from dataentry.models import BorderStation
-from static_border_stations.models import Staff, CommitteeMember, Location
-
 from dataentry.forms import BorderStationForm
 from static_border_stations.models import Staff, CommitteeMember, Location
 from static_border_stations.serializers import StaffSerializer
+from static_border_stations.forms import StaffForm
 
 
 class FormSetForStations(InlineFormSet):
@@ -42,6 +41,7 @@ class StaffViewSet(viewsets.ModelViewSet):
 
 class StaffInline(FormSetForStations):
     model = Staff
+    form_class = StaffForm
 
 
 class CommitteeMemberInline(FormSetForStations):
