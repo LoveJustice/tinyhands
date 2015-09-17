@@ -82,8 +82,7 @@ def previous_data(request, pk, month, year):
         if all_interception_records_count['total'] is None:
             all_interception_records_count['total'] = 1
 
-        last_months_sheet = budget_sheets.first() # Since they are ordered by most recent, the first one will be last month's
-        last_months_cost = last_months_sheet.station_total()
+        last_months_cost = last_months.station_total()
 
         last_3_months_cost = 0
         last_3_months_sheets = budget_sheets.filter(month_year__gte=date+relativedelta(months=-3))
@@ -273,13 +272,10 @@ class PDFView(View, LoginRequiredMixin, PermissionsRequiredMixin):
         root = etree.parse(buf).getroot()
         doc = document.Document(root)
 
-
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = "filename=%s" % self.get_filename()
 
-
         doc.process(response)
-
         return response
 
 
@@ -356,6 +352,5 @@ class MoneyDistributionFormPDFView(PDFView, LoginRequiredMixin, PermissionsRequi
 def money_distribution_view(request, pk):
     if not request.user.permission_budget_manage:
         return redirect("home")
-    id = pk
     border_station = (BorderStationBudgetCalculation.objects.get(pk=pk)).border_station
     return render(request, 'budget/moneydistribution_view.html', locals())
