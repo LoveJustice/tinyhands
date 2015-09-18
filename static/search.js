@@ -1,7 +1,10 @@
+$('#vdc-search').keypress(function(e) {
 
+  if(e.which == 13)
+  {
+    var val = $('#vdc-search').val();
+    $("#vdc-search-button").attr("href", "/data-entry/geocodelocations/vdc-admin/search/" + val);
+    $("#vdc-search-button")[0].click();
+  }
 
-$('#vdc-search-button').change(function() {
-  var base_url = "{{ search_url }}";
-  var val = $('#vdc-search').val();
-  var href = $('#vdc-search-button').attr("href", base_url + val);
 });
