@@ -48,6 +48,7 @@ INSTALLED_APPS = (
     'util',
     'rest_framework',
     'static_border_stations',
+    'rest_api',
 )
 
 import django.conf.global_settings as DEFAULT_SETTINGS
