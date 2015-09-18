@@ -385,6 +385,7 @@ class VDCSearchView(LoginRequiredMixin,
     model = VDC
     template_name = "dataentry/vdc_admin_page.html"
     permissions_required = ['permission_vdc_manage']
+    paginate_by = 25
 
     def get(self, request, value, *args, **kwargs):
         self.object_list = self.get_queryset(value)

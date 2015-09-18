@@ -4,6 +4,7 @@
 {% load bootstrap %}
 {% load unslugify %}
 {% load times %}
+{% load bootstrap_pagination %}
 
 {% block title %}Manage Address 2{% endblock %}
 {% block content %}
@@ -23,7 +24,7 @@
           <label>
               <input type="search" id="vdc-search" class="form-control">
           </label>
-          <a class="btn btn-primary" href="" id="vdc-search-button" type='submit'>Search</a>
+          <a class="btn btn-primary" href="{{ search_url }}" id="vdc-search-button" type='submit'>Search</a>
         </form>
     </div>
 </div>
@@ -69,14 +70,28 @@
     {% endif %}
     {% endfor %}
 </table>
+
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}">  </a>
+        {% endif %}
+
+        <span class="current">
+          {% bootstrap_paginate page_obj %}
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}"></a>
+        {% endif %}
+    </span>
+</div>
 <script>
-
-
   $('#vdc-search').change(function() {
     var base_url = "{{ search_url }}";
     var val = $('#vdc-search').val();
     var href = $('#vdc-search-button').attr("href", base_url + val);
   });
-
 </script>
+<script src="{{ STATIC_URL }}search.js"></script>
 {% endblock %}
