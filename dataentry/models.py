@@ -24,7 +24,7 @@ class BorderStation(models.Model):
     has_shelter = models.BooleanField(default=False)
     latitude = models.FloatField(null=True)
     longitude = models.FloatField(null=True)
-    closed = models.BooleanField(default=False)
+    open = models.BooleanField(default=True)
 
 
 class District(models.Model):

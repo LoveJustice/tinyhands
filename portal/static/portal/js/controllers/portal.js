@@ -106,7 +106,7 @@
 
                 for(var station=0;station<data.length;station++){ //Iterate over each Border Station
                     console.log(data[station].fields.closed)
-                    if (data[station].fields.closed == false) {
+                    if (data[station].fields.open == true) {
                         var myLatlng = new google.maps.LatLng(data[station].fields.latitude, data[station].fields.longitude);
                         var marker = new google.maps.Marker({ //Initialize a BorderStation's marker
                             position: myLatlng,

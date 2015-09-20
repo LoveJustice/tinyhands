@@ -67,32 +67,43 @@ function photoSelect() {
   console.log("Test...1.2.3");
 }
 
-function setUpSpecialCheckboxes(className,text1,text2) {
-  $('input[type="checkbox"]').each(function() {
-    var $label = $(this).parents('label');
-    if ($(this).prop('checked')) {
+function makeCheckboxApearAsAButton(className,checkedText,uncheckedText) {
+  $(className).parents('label').each(function() {
+    var $label = $(this);
+    var $input = $label.find('input');
+    $input.hide();
+    if ($input.prop('checked')) {
       $label.addClass('btn-success');
-      $label.find(className).text(text1);
+      $label.find(className).text(checkedText);
     }
     else {
       $label.addClass('btn-danger');
-      $label.find(className).text(text2);
+      $label.find(className).text(uncheckedText);
     }
   });
-  $('input[type="checkbox"]').click(function() {
-    var $label = $(this).parents('label');
-    if ($(this).parents('label').hasClass('btn-danger')) {
+  $(className).parents('label').click(function() {
+    //alert("In function");
+    var $label = $(this);
+    var $input = $label.find('input');
+    if ($label.hasClass('btn-danger')) {
+      //alert("here1");
+      $input.attr('checked','checked');
       $label.removeClass('btn-danger').addClass('btn-success');
-      $label.find(className).text(text1);
+      $label.find(className).text(checkedText);
     }
-    else if ($(this).parents('label').hasClass('btn-success')) {
+    else if ($label.hasClass('btn-success')) {
+      //alert("here2");
+      $input.removeAttr('checked');
       $label.removeClass('btn-success').addClass('btn-danger');
-      $label.find(className).text(text2);
+      $label.find(className).text(uncheckedText);
     }
+    event.stopPropagation();
+    event.preventDefault();
   });
 }
 
-setUpSpecialCheckboxes('.openclosed','Yes','No');
+
+makeCheckboxApearAsAButton('.openclosed','Open','Closed');
 
 function setUpLimitedChoicesCheckboxGroups() {
   // Well, this was supposed to be used to allow restricting
@@ -210,7 +221,7 @@ var DREAMSUITE = {
   },
 
   account_update: function() {
-    setUpSpecialCheckboxes('.yesno','Yes','No');
+    makeCheckboxApearAsAButton('.yesno','Yes','No');
     $('select').change(function() {
       for (var i=0; i<window.defaultPermissionSets.length; i++) {
         var set = window.defaultPermissionSets[i];
@@ -229,7 +240,7 @@ var DREAMSUITE = {
   },
 
   access_control: function() {
-    setUpSpecialCheckboxes('.yesno','Yes','No');
+    makeCheckboxApearAsAButton('.yesno','Yes','No');
     $('option:contains("---------")').remove();
     $('select').change(function() {
       var rowIdx = parseInt($(this).parents('td').find('input').val()) - 1;
@@ -250,12 +261,12 @@ var DREAMSUITE = {
   },
 
   access_defaults: function() {
-    setUpSpecialCheckboxes('.yesno','Yes','No');
+    makeCheckboxApearAsAButton('.yesno','Yes','No');
     $('#add-another').click(function() {
       var formIdx = $('#id_form-TOTAL_FORMS').val();
       $('#permissions-rows-container').append($('#empty-form').html().replace(/__prefix__/g, formIdx));
       $('#id_form-TOTAL_FORMS').val(parseInt(formIdx) + 1);
-      setUpSpecialCheckboxes('.yesno','Yes','No');
+      makeCheckboxApearAsAButton('.yesno','Yes','No');
     });
     $('#permissions-form').submit(function(event) {
       var choice = confirm('Are you sure you want to save changes?');
