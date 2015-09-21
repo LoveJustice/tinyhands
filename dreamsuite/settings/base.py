@@ -43,6 +43,7 @@ INSTALLED_APPS = (
     'widget_tweaks',
     'bootstrapform',
     'imagekit',
+    'django_extensions',
     'dataentry',
     'accounts',
     'events',
@@ -51,7 +52,7 @@ INSTALLED_APPS = (
     'util',
     'rest_framework',
     'static_border_stations',
-    'django_extensions',
+    'rest_api',
 )
 
 import django.conf.global_settings as DEFAULT_SETTINGS

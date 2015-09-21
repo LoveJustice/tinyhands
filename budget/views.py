@@ -18,9 +18,8 @@ from django.conf import settings
 
 
 from braces.views import LoginRequiredMixin
-from models import BorderStationBudgetCalculation
 from rest_framework import generics, viewsets
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, list_route
 from rest_framework.response import Response
 from templated_email import send_templated_mail
 from accounts.mixins import PermissionsRequiredMixin
@@ -161,6 +160,11 @@ class OtherItemsViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(self.object_list, many=True)
         return Response(serializer.data)
 
+    @list_route()
+    def list_by_budget_sheet(self, request, parent_pk, *args, **kwargs):
+        other_items_list = OtherBudgetItemCost.objects.filter(budget_item_parent_id=parent_pk)
+        serializer = self.get_serializer(other_items_list, many=True)
+        return Response(serializer.data)
 
 class StaffSalaryViewSet(viewsets.ModelViewSet):
     queryset = StaffSalary.objects.all()
