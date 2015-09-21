@@ -1,69 +1,81 @@
 {% extends "dataentry/dataentry_base.html" %}
+
 {% load widget_tweaks %}
 {% load bootstrap %}
 {% load unslugify %}
 {% load times %}
+
 {% block title %}Manage Address 2{% endblock %}
 {% block content %}
-
-{% block html %}<html ng-app="dataEntryModule">{% endblock %}
+{% block html %}<html ng-app="DataEntry">{% endblock %}
 
 <!-- Modal -->
-<div class="modal fade modal-over-tooltips" id="modal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" tabindex="-1"></div>
+<div class="modal fade modal-over-tooltips" id="modal" role="dialog"
+     aria-hidden="true" tabindex="-1"></div>
 <!-- /.modal -->
 
 <h1 class="text-center">All Address 2 Entries</h1>
 <br/>
 
-<table class="table table-striped crud-datatable">
+<div class="row">
+    <div class="col-md-6">
+
+    </div>
+    <div class="col-md-6 search-bar">
+          <label>
+              <input type="search" id="vdc-search" class="form-control">
+          </label>
+          <a class="btn btn-primary" href="{{ search_url }}" id="vdc-search-button" type='submit'>Search</a>
+        </form>
+    </div>
+</div>
+
+<table class="table table-striped" ng-controller="address1Ctrl">
     <thead>
-        <tr>
-            <th class="text-center">Name</th>
-            <th class="text-center">Latitude</th>
-            <th class="text-center">Longitude</th>
-            <th class="text-center">Address 1</th>
-            <th class="text-center">Cannonical Name</th>
-            <th class="text-center">Verified</th>
-            <th class="text-center">&nbsp;</th>
-        </tr>
+    <tr>
+        <th class="text-center">Name</th>
+        <th class="text-center">Latitude</th>
+        <th class="text-center">Longitude</th>
+        <th class="text-center">Address 1</th>
+        <th class="text-center">Canonical Name</th>
+        <th class="text-center">Verified</th>
+        <th class="text-center">&nbsp;</th>
+    </tr>
     </thead>
     {% for vdc in vdc_list %}
-        {% url 'interceptionrecord_list' as vdc_edit %}
-        <tr>
-            <td class="vdc_admin_name text-center">{{ vdc.name }}</td>
-            <td class="vdc_admin_latitude text-center">{{ vdc.get_latitude }}</td>
-            <td class="vdc_admin_longitude text-center">{{ vdc.get_longitude }}</td>
-            <td class="vdc_admin_district text-center">{{ vdc.get_district }}</td>
-            <td class="vdc_admin_cannonical text-center">{{ vdc.get_cannonical_name }}</td>
-            <td class="vdc_admin_verified text-center">
-                {% if vdc.is_verified %}
-                    Yes
-                {% else %}
-                    No
-                {% endif %}
-            </td>
-            <td class="text-center">
-                <a id="update_link" class="btn btn-warning"
-                    href="{% url 'vdc_admin_update' vdc.id %}"
-                    data-target="#modal">
-                    Edit
-                </a>
-            </td>
-        </tr>
+    {% url 'interceptionrecord_list' as vdc_edit %}
+    <tr>
+        <td class="vdc_admin_name text-center">{{ vdc.name }}</td>
+        <td class="vdc_admin_latitude text-center">{{ vdc.get_latitude }}</td>
+        <td class="vdc_admin_longitude text-center">{{ vdc.get_longitude }}</td>
+        <td class="vdc_admin_district text-center">{{ vdc.get_district }}</td>
+        <td class="vdc_admin_cannonical text-center">{{ vdc.get_cannonical_name }}</td>
+        <td class="vdc_admin_verified text-center">
+            {% if vdc.is_verified %}Yes{% else %}No{% endif %}
+        </td>
+        <td class="text-center">
+            <a id="update_link" class="btn btn-warning"
+               href="{% url 'vdc_admin_update' vdc.id %}"
+               data-target="#modal">Edit</a>
+        </td>
+    </tr>
     {% empty %}
-        {% if database_empty %}
-            <tr>
-                <td colspan="12">There are currently no Address 2 records in the database</td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="12">There are no Address 2 records that match that query</td>
-            </tr>
-        {% endif %}
+    {% if database_empty %}
+    <tr>
+        <td colspan="12">There are currently no Address 2 records in the database</td>
+    </tr>
+    {% else %}
+    <tr>
+        <td colspan="12">There are no Address 2 records that match that query</td>
+    </tr>
+    {% endif %}
     {% endfor %}
 </table>
+
+
 {% load static from staticfiles %}
 <script src="{% static "dataentry/js/dataEntryModule.js" %}"></script>
 <script src="{% static "dataentry/js/controllers/address1Ctrl.js" %}"></script>
 <script src="{% static "dataentry/js/services/address1Service.js" %}"></script>
+
 {% endblock %}

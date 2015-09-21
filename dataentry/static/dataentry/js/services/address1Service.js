@@ -6,11 +6,11 @@ address1Service.$inject = ['$http'];
 
 function address1Service($http) {
 	return {
-		retrieveStaff: retrieveStaff,
-		getStationID: getStationID,
+		retrieveStaff: retrieveAddress2,
 	};
 
-	function retrieveStaff(borderStationCod) {
+
+	function retrieveAddress2() {
         // grab all of the staff for this budgetCalcSheet
         return $http.get('/static_border_stations/api/border-stations/' + borderStationCod + '/').
             success(function (data) {
@@ -19,18 +19,6 @@ function address1Service($http) {
             error(function (data, status, headers, config) {
                 console.log(data, status, headers, config);
             });
-    }
-
-    function getStationID(borderStationCod) {
-        return $.get( '/get_station_id/', {"code": borderStationCod}).
-            success(function(data) {
-                station_id = data;
-                return station_id;
-            }).
-            error(function (data, status, headers, config) {
-                console.log(data, status, headers, config);
-            });
-
     }
 
 }
