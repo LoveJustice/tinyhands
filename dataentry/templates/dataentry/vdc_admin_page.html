@@ -6,6 +6,8 @@
 {% block title %}Manage Address 2{% endblock %}
 {% block content %}
 
+{% block html %}<html ng-app="dataEntryModule">{% endblock %}
+
 <!-- Modal -->
 <div class="modal fade modal-over-tooltips" id="modal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" tabindex="-1"></div>
 <!-- /.modal -->
@@ -60,5 +62,8 @@
         {% endif %}
     {% endfor %}
 </table>
-
+{% load static from staticfiles %}
+<script src="{% static "dataentry/js/dataEntryModule.js" %}"></script>
+<script src="{% static "dataentry/js/controllers/address1Ctrl.js" %}"></script>
+<script src="{% static "dataentry/js/services/address1Service.js" %}"></script>
 {% endblock %}
