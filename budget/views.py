@@ -18,7 +18,7 @@ from django.conf import settings
 
 
 from braces.views import LoginRequiredMixin
-from rest_framework import generics, viewsets
+from rest_framework import viewsets
 from rest_framework.decorators import api_view, list_route
 from rest_framework.response import Response
 from templated_email import send_templated_mail
