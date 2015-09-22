@@ -1,9 +1,13 @@
 from django import forms
 
-from static_border_stations.models import Staff, CommitteeMember, Location
+from static_border_stations.models import Person, Staff, CommitteeMember, Location
 
 
 class PersonForm(forms.ModelForm):
+
+    class Meta:
+        model = Person
+        exclude = []
 
     def clean(self):
         person_data = self.cleaned_data
