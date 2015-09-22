@@ -103,7 +103,7 @@ function makeCheckboxApearAsAButton(className,checkedText,uncheckedText) {
 }
 
 
-makeCheckboxApearAsAButton('.openclosed','Open','Closed');
+makeCheckboxApearAsAButton('.openclosed','Station Status: Open','Station Status: Closed');
 
 function setUpLimitedChoicesCheckboxGroups() {
   // Well, this was supposed to be used to allow restricting
