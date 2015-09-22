@@ -67,7 +67,7 @@ function photoSelect() {
   console.log("Test...1.2.3");
 }
 
-function makeCheckboxApearAsAButton(className,checkedText,uncheckedText) {
+function makeCheckboxAppearAsAButton(className,checkedText,uncheckedText) {
   $(className).parents('label').each(function() {
     var $label = $(this);
     var $input = $label.find('input');
@@ -101,9 +101,6 @@ function makeCheckboxApearAsAButton(className,checkedText,uncheckedText) {
     event.preventDefault();
   });
 }
-
-
-makeCheckboxApearAsAButton('.openclosed','Station Status: Open','Station Status: Closed');
 
 function setUpLimitedChoicesCheckboxGroups() {
   // Well, this was supposed to be used to allow restricting
@@ -216,12 +213,17 @@ function clearCompletedForms(which) {
 }
 
 var DREAMSUITE = {
+
+  borderstations_update: function() {
+    makeCheckboxAppearAsAButton('.openclosed','Station Status: Open','Station Status: Closed');
+  },
+
   account_create: function() {
     this.account_update();
   },
 
   account_update: function() {
-    makeCheckboxApearAsAButton('.yesno','Yes','No');
+    makeCheckboxAppearAsAButton('.yesno','Yes','No');
     $('select').change(function() {
       for (var i=0; i<window.defaultPermissionSets.length; i++) {
         var set = window.defaultPermissionSets[i];
@@ -240,7 +242,7 @@ var DREAMSUITE = {
   },
 
   access_control: function() {
-    makeCheckboxApearAsAButton('.yesno','Yes','No');
+    makeCheckboxAppearAsAButton('.yesno','Yes','No');
     $('option:contains("---------")').remove();
     $('select').change(function() {
       var rowIdx = parseInt($(this).parents('td').find('input').val()) - 1;
@@ -261,12 +263,12 @@ var DREAMSUITE = {
   },
 
   access_defaults: function() {
-    makeCheckboxApearAsAButton('.yesno','Yes','No');
+    makeCheckboxAppearAsAButton('.yesno','Yes','No');
     $('#add-another').click(function() {
       var formIdx = $('#id_form-TOTAL_FORMS').val();
       $('#permissions-rows-container').append($('#empty-form').html().replace(/__prefix__/g, formIdx));
       $('#id_form-TOTAL_FORMS').val(parseInt(formIdx) + 1);
-      makeCheckboxApearAsAButton('.yesno','Yes','No');
+      makeCheckboxAppearAsAButton('.yesno','Yes','No');
     });
     $('#permissions-form').submit(function(event) {
       var choice = confirm('Are you sure you want to save changes?');
