@@ -52,6 +52,7 @@ INSTALLED_APPS = (
     'rest_framework',
     'static_border_stations',
     'django_extensions',
+    'bootstrap_pagination'
 )
 
 import django.conf.global_settings as DEFAULT_SETTINGS
