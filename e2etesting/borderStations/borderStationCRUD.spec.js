@@ -21,15 +21,6 @@ describe('Border Station CRUD -', function() {
             expect(browser.driver.getCurrentUrl()).toContain('/portal/dashboard/');
         });
 
-        //new test
-        it('Create a Border Station', function () {
-            borderStationPage.getToBorderStationCreate();
-            expect(browser.driver.getCurrentUrl()).toContain('/static_border_stations/border-stations/create/');
-            borderStationPage.fillOutBorderStationNoEmail();
-            expect(browser.driver.getCurrentUrl()).toContain('/protal/dashboard/');
-        })
-
-
         it('View a Border Station', function () {
             borderStationPage.viewBorderStation();
             expect(browser.driver.getCurrentUrl()).toContain('/static_border_stations/border-stations/update/24/');
@@ -86,11 +77,11 @@ describe('Border Station CRUD -', function() {
             expect(element(by.id("id_location_set-0-longitude")).getAttribute('value')).toEqual(c.location0SetLongitude);
 
 
-            /*expect(element(by.id("id_staff_set-1-first_name")).getAttribute('value')).toEqual(c.staff1SetFirstName);
+            expect(element(by.id("id_staff_set-1-first_name")).getAttribute('value')).toEqual(c.staff1SetFirstName);
             expect(element(by.id("id_staff_set-1-last_name")).getAttribute('value')).toEqual(c.staff1SetLastName);
             expect(element(by.id("id_staff_set-1-email")).getAttribute('value')).toEqual(c.staff1Email);
             expect(element(by.id("id_staff_set-1-receives_money_distribution_form")).isSelected()).toBeTruthy();
-            */
+
 
             expect(element(by.id("id_committeemember_set-1-first_name")).getAttribute('value')).toEqual(c.committee1SetFirstName);
             expect(element(by.id("id_committeemember_set-1-last_name")).getAttribute('value')).toEqual(c.committee1SetLastName);
@@ -103,6 +94,36 @@ describe('Border Station CRUD -', function() {
 
             borderStationPage.closeBorderStation();
             expect(browser.driver.getCurrentUrl()).toContain('/portal/dashboard/');
+        });
+    });
+
+    describe('Create Border Station', function() {
+
+        it('fails when receives money distribution form checked with no email', function() {
+            browser.get(c.webAddress + '/static_border_stations/border-stations/create/').then(function() {
+                return expect(browser.driver.getCurrentUrl()).toContain('/static_border_stations/border-stations/create/');
+            }).then(function() {
+                return borderStationPage.fillOutBorderStationWithNoEmail();
+            }).then(function() {
+                expect(browser.driver.getCurrentUrl()).toContain('/static_border_stations/border-stations/create/');
+            }).then(function() {
+                expect(element.all(by.cssContainingText('.alert-danger', 'Email cannot be blank when receives money distribution form is checked.'))
+                .count()).toEqual(2);
+            });
+
+
+        });
+    });
+
+    describe('Update Border Station', function() {
+
+        it('fails when receives money distribution form checked with no email', function() {
+            borderStationPage.editBorderStationWithNoEmail().then(function() {
+                return expect(browser.driver.getCurrentUrl()).toContain('/static_border_stations/border-stations/update/' + c.stationId + '/');
+            }).then(function() {
+                expect(element.all(by.cssContainingText('.alert-danger', 'Email cannot be blank when receives money distribution form is checked.'))
+                .count()).toEqual(2);
+            });
         });
     });
 });

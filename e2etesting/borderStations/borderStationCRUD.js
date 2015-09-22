@@ -38,8 +38,7 @@ var borderStationPage = function() {
 
     };
 
-    //new function
-    this.fillOutBorderStationNoEmail = function() {
+    this.fillOutBorderStationWithNoEmail = function() {
         this.station_name = element(by.id("id_station_name")).sendKeys(c.stationName);
         this.station_code = element(by.id("id_station_code")).sendKeys(c.stationCode);
         this.date_established = element(by.id("id_date_established")).sendKeys(c.dateEstablished);
@@ -88,6 +87,25 @@ var borderStationPage = function() {
         this.location1_set_longitude = element(by.id("id_location_set-1-longitude")).sendKeys(c.location1SetLongitude);
 
         this.updateBorder = element(by.id("borderUpdate")).click();
+    };
+
+    this.editBorderStationWithNoEmail = function() {
+        return browser.get(c.webAddress + '/static_border_stations/border-stations/update/' + c.stationId + '/')
+            .then(function() {
+                element(by.id("id_staff_set-2-first_name")).sendKeys(c.staff1SetFirstName);
+                element(by.id("id_staff_set-2-last_name")).sendKeys(c.staff1SetLastName);
+                element(by.id("id_staff_set-2-receives_money_distribution_form")).click();
+
+                element(by.id("id_committeemember_set-2-first_name")).sendKeys(c.committee1SetFirstName);
+                element(by.id("id_committeemember_set-2-last_name")).sendKeys(c.committee1SetLastName);
+                element(by.id("id_committeemember_set-2-receives_money_distribution_form")).click();
+
+                element(by.id("id_location_set-2-name")).sendKeys(c.location1SetName);
+                element(by.id("id_location_set-2-latitude")).sendKeys(c.location1SetLatitude);
+                element(by.id("id_location_set-2-longitude")).sendKeys(c.location1SetLongitude);
+
+                element(by.id("borderUpdate")).click();
+            });
     };
 };
 
