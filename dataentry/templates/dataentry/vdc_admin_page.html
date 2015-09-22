@@ -10,10 +10,18 @@
 {% verbatim %}
 <div ng-controller="address2Ctrl as vm">
     <div class="row">
-        <div class="col-md-6">
-
+        <div class="col-md-2">
+            <select data-ng-model="vm.paginateBy" data-ng-change="vm.getAddresses()" class="form-control">
+                <option>25</option>
+                <option>50</option>
+                <option>100</option>
+                <option>500</option>
+            </select>
         </div>
-        <div class="col-md-6 search-bar">
+        <div class="col-md-3">
+            <p style="margin-top: 5px;">Results per page</p>
+        </div>
+        <div class="col-md-7 search-bar">
               <label>
                   <input type="search" ng-model="vm.searchValue" class="form-control">
               </label>
@@ -24,12 +32,24 @@
     <table class="table table-striped">
         <thead>
         <tr>
-            <th ng-click="sortColumn = 'name'; reverse = ! reverse" class="text-center">Name</th>
-            <th ng-click="sortColumn = 'latitude'; reverse = ! reverse" class="text-center">Latitude</th>
-            <th ng-click="sortColumn = 'longitude'; reverse = ! reverse" class="text-center">Longitude</th>
-            <th ng-click="sortColumn = 'district'; reverse = ! reverse" class="text-center">Address 1</th>
-            <th ng-click="sortColumn = 'cannonical_name'; reverse = ! reverse" class="text-center">Canonical Name</th>
-            <th ng-click="sortColumn = 'verified'; reverse = ! reverse" class="text-center">Verified</th>
+            <th ng-click="sortColumn = 'name'; reverse = ! reverse" class="text-center">
+                Name <img ng-show="sortColumn == 'name'" src="{{vm.sortIcon}}" style="height: 13px;"/>
+            </th>
+            <th ng-click="sortColumn = 'latitude'; reverse = ! reverse" class="text-center">
+                Latitude <img ng-show="sortColumn == 'latitude'" src="{{vm.sortIcon}}" style="height: 13px;"/>
+            </th>
+            <th ng-click="sortColumn = 'longitude'; reverse = ! reverse" class="text-center">
+                Longitude <img ng-show="sortColumn == 'longitude'" src="{{vm.sortIcon}}" style="height: 13px;"/>
+            </th>
+            <th ng-click="sortColumn = 'district'; reverse = ! reverse" class="text-center">
+                Address 1 <img ng-show="sortColumn == 'district'" src="{{vm.sortIcon}}" style="height: 13px;"/>
+            </th>
+            <th ng-click="sortColumn = 'cannonical_name'; reverse = ! reverse" class="text-center">
+                Canonical Name <img ng-show="sortColumn == 'cannonical_name'" src="{{vm.sortIcon}}" style="height: 13px;"/>
+            </th>
+            <th ng-click="sortColumn = 'verified'; reverse = ! reverse" class="text-center">
+                Verified <img ng-show="sortColumn == 'verified'" src="{{vm.sortIcon}}" style="height: 13px;"/>
+            </th>
             <th class="text-center">&nbsp;</th>
         </tr>
         </thead>

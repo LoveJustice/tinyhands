@@ -13,9 +13,9 @@ function address2Service($http) {
 		loadMoreAddresses: loadMoreAddresses
 	};
 
-	function listAddresses() {
+	function listAddresses(pageSize) {
         // grab all of the staff for this budgetCalcSheet
-        return $http.get('/api/address2/').
+        return $http.get('/api/address2/' + '?page_size=' + pageSize).
             success(function (data) {
                 return data;
             }).
@@ -38,9 +38,9 @@ function address2Service($http) {
             });
     }
 
-	function loadMoreAddresses(url) {
+	function loadMoreAddresses(url, pageSize) {
         // grab all of the staff for this budgetCalcSheet
-        return $http.get(url).
+        return $http.get(url + '&page_size=' + pageSize).
             success(function (data) {
                 return data;
             }).
