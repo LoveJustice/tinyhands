@@ -41,7 +41,7 @@ from dataentry.serializers import DistrictSerializer, VDCSerializer
 from accounts.mixins import PermissionsRequiredMixin
 
 from alert_checkers import IRFAlertChecker, VIFAlertChecker
-from fuzzy_matching import match_location
+from fuzzy_matching import match_location, match_staff
 
 @login_required
 def home(request):
@@ -200,13 +200,11 @@ class InterceptionRecordDetailView(InterceptionRecordUpdateView):
 class InterceptionRecordDeleteView(DeleteView):
     model = InterceptionRecord
     success_url = reverse_lazy('interceptionrecord_list')
+    permissions_required = ['permission_irf_edit']
 
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()
-        if self.request.user.is_superuser:
-            self.object.delete()
-        else:
-            messages.error(request, "You have no power here!!!")
+        self.object.delete()
         return HttpResponseRedirect(self.success_url)
 
 
@@ -286,15 +284,13 @@ class VictimInterviewDetailView(VictimInterviewUpdateView):
 
 
 class VictimInterviewDeleteView(DeleteView):
+    permissions_required = ['permission_vif_edit']
     model = VictimInterview
     success_url = reverse_lazy('victiminterview_list')
 
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()
-        if self.request.user.is_superuser:
-            self.object.delete()
-        else:
-            messages.error(request, "You have no power here!!!")
+        self.object.delete()
         return HttpResponseRedirect(self.success_url)
 
 
@@ -354,6 +350,7 @@ class GeoCodeVdcAPIView(APIView):
             return Response(serializer.data)
         else:
             return Response({"id": "-1","name":"None"})
+
 
 
 class VDCAdminView(LoginRequiredMixin,
@@ -454,6 +451,11 @@ class StationCodeAPIView(APIView):
         return Response(codes, status=status.HTTP_200_OK);
 
 
+
+
+
+
+
 @login_required
 def interceptee_fuzzy_matching(request):
     input_name = request.GET['name']
@@ -461,3 +463,18 @@ def interceptee_fuzzy_matching(request):
     people_dict = {serializers.serialize("json", [obj]):obj.full_name for obj in all_people }
     matches = process.extractBests(input_name, people_dict, limit = 10)
     return HttpResponse(json.dumps(matches), content_type="application/json")
+
+def get_station_id(request):
+    code = request.GET['code']
+    #code = "DNG"
+    if code == '':
+        return HttpResponse([-1])
+    else:
+        station = BorderStation.objects.filter(station_code=code)
+        if len(station) > 0:
+            print("Station id is: " + str(station))
+            return HttpResponse([station[0].id])
+        else:
+            print("No station id")
+            return HttpResponse([-1])
+

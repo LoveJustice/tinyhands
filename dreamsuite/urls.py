@@ -27,5 +27,6 @@ urlpatterns = patterns('',
 
     url(r'^admin/', include(admin.site.urls)),
     url(r'^interceptee_fuzzy_matching/', 'dataentry.views.interceptee_fuzzy_matching', name='interceptee_fuzzy_matching'),
+    url(r'^get_station_id/', 'dataentry.views.get_station_id', name='get_station_id'),
 
 ) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

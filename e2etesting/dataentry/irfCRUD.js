@@ -53,9 +53,14 @@ var irfPage = function() {
     };
 
     this.deleteIRF = function() {
-        this.dIRF = element(by.linkText('Delete')).click();
-        this.dIRFpopUp = element(by.linkText('Delete')).click();
+        this.dIRF = element(by.xpath("//button[text()='Delete']"));
+        this.dIRF.click();
+        browser.sleep(500);
+        this.dIRFPopUp = element(by.xpath("//input[@value='Delete']")).click();
     };
+
+    //TODO: Test for staff dropdown - ensure that correct staff is loaded based on the IRF number #id_irf_number
+    //TODO: Test for staff dropdown - ensure that selected staff are filled into input #id_staff_name
 };
 
 module.exports = new irfPage();

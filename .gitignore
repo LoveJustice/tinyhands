@@ -20,6 +20,8 @@ dreamsuite/static/*
 
 env
 foo.*
+foo[1-9]
+foo[1-9].*
 
 # for now in dev we check in /media
 media/

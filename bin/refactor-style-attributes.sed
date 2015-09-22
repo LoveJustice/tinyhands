@@ -1,13 +1,10 @@
-#!/bin/sed -if
+#!/usr/bin/env gsed --file
 
 # Sed script to replace 'text-align' styles with a corresponding 'class' value in HTML
 # elements. For example, 'style="text-align: center"' will be replaced with
 # 'class="text-center"'. It also works with 'right' and 'left' alignments.
 #
-# This script requires Gnu Sed (sed on CMC machines).
-#
-### Example usage on the entire repo:
-### find . -not -path './node_modules/*' -not -path './htmlcov/*' -name "*.html" -exec sed -if bin/refactor-style-attributes.sed {} \;
+# This script requires Gnu Sed (gsed on my machine).
 #
 # If a 'class' attribute already exists, the new alignment class is added to the current
 # list of classes in the attribute. If additional styles are present in the 'style'
@@ -31,12 +28,9 @@
 /style[^>]*class/ s/style="\(.*\)text-align:\s*\(center\|left\|right\)\(.*\)"\(.*\)class="\(.*\)"/style="\1\3"\4class="text-\2 \5"/
 
 # When a style attribute contains multiple styles and the text-align attribute appears
-# last, the previous replacements leave behind a superfluous semicolon (and, sometimes, a
-# space). Remove these.
+last, the previous replacements leave behind a superfluous semicolon (and, sometimes, a
+space). Remove these.
 s/style="\([^"]*\);\s*"/style="\1"/
 
 # If a style attribute has been emptied, remove it entirely.
-s/\s*style=""//
-
-# Sometimes this leaves an extra space.
-/<.*class.*text-\(center\|left\|right\)/ s/\(<.*\)  /\1 /
+s/style=""//
