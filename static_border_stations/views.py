@@ -1,9 +1,12 @@
+from django.core import serializers
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse_lazy
 
 
 from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSet
+from rest_framework import status
 from rest_framework import viewsets
+from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from accounts.mixins import PermissionsRequiredMixin
@@ -12,8 +15,12 @@ from dataentry.models import BorderStation
 from static_border_stations.models import Staff, CommitteeMember, Location
 
 from dataentry.forms import BorderStationForm
-from static_border_stations.models import Staff, CommitteeMember, Location
 from static_border_stations.serializers import StaffSerializer
+
+class BorderStationsView(APIView):
+  def get (self, request, pk):
+    result = serializers.serialize("json", BorderStation.objects.get(pk=pk))
+    return Response(results, status=status.HTTP_200_OK)
 
 
 class FormSetForStations(InlineFormSet):

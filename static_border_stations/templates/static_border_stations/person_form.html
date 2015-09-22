@@ -1,51 +1,53 @@
-<div class="row">
-  <h1>Staff</h1><hr/>
+<div ng-controller="BorderStationsCtrl as bsCtrl">
   <div class="row">
-      <div class="col-sm-6 form-group">
-        <label for="firstName">First Name</label>
-        <input type="text" class="form-control" id="firstName" placeholder="First Name" ng-model="">
-      </div>
-      <div class="col-sm-6 form-group">
-        <label for="lastName">Last Name</label>
-        <input type="text" class="form-control" id="lastName" placeholder="Last Name" ng-model="">
-      </div>
+    <h1>Staff</h1><hr/>
+    <div class="row">
+        <div class="col-sm-6 form-group">
+          <label for="firstName">First Name</label>
+          <input type="text" class="form-control" id="firstName" placeholder="First Name" ng-model="">
+        </div>
+        <div class="col-sm-6 form-group">
+          <label for="lastName">Last Name</label>
+          <input type="text" class="form-control" id="lastName" placeholder="Last Name" ng-model="">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6 form-group">
+          <label for="longitude">Longitude</label>
+          <input type="text" class="form-control" id="longitude" placeholder="Longitude" ng-model="">
+          <p hidden="true">{{person_form.salary}}</p>
+        </div>
+        <div class="col-sm-6 checkbox">
+          <label>
+            <input type="checkbox" ng-model=""> Recieves Money Distribution Form
+          </label>
+        </div>
+    </div>
   </div>
   <div class="row">
-      <div class="col-sm-6 form-group">
-        <label for="longitude">Longitude</label>
-        <input type="text" class="form-control" id="longitude" placeholder="Longitude" ng-model="">
-        <p hidden="true">{{person_form.salary}}</p>
-      </div>
-      <div class="col-sm-6 checkbox">
-        <label>
-          <input type="checkbox" ng-model=""> Recieves Money Distribution Form
-        </label>
-      </div>
-  </div>
-</div>
-<div class="row">
-  <h1>Committee Member</h1>
-  <hr/>
-  <div class="row">
-      <div class="col-sm-6 form-group">
-        <label for="firstName">First Name</label>
-        <input type="text" class="form-control" id="firstName" placeholder="First Name" ng-model="">
-      </div>
-      <div class="col-sm-6 form-group">
-        <label for="lastName">Last Name</label>
-        <input type="text" class="form-control" id="lastName" placeholder="Last Name" ng-model="">
-      </div>
-  </div>
-  <div class="row">
-      <div class="col-sm-6 form-group">
-        <label for="longitude">Longitude</label>
-        <input type="text" class="form-control" id="longitude" placeholder="Longitude" ng-model="">
-        <p hidden="true">{{person_form.salary}}</p>
-      </div>
-      <div class="col-sm-6 checkbox">
-        <label>
-          <input type="checkbox" ng-model=""> Recieves Money Distribution Form
-        </label>
-      </div>
+    <h1>Committee Member</h1>
+    <hr/>
+    <div class="row">
+        <div class="col-sm-6 form-group">
+          <label for="firstName">First Name</label>
+          <input type="text" class="form-control" id="firstName" placeholder="First Name" ng-model="">
+        </div>
+        <div class="col-sm-6 form-group">
+          <label for="lastName">Last Name</label>
+          <input type="text" class="form-control" id="lastName" placeholder="Last Name" ng-model="">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6 form-group">
+          <label for="longitude">Longitude</label>
+          <input type="text" class="form-control" id="longitude" placeholder="Longitude" ng-model="">
+          <p hidden="true">{{person_form.salary}}</p>
+        </div>
+        <div class="col-sm-6 checkbox">
+          <label>
+            <input type="checkbox" ng-model=""> Recieves Money Distribution Form
+          </label>
+        </div>
+    </div>
   </div>
 </div>

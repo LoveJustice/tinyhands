@@ -1,15 +1,12 @@
-<div class="row">
-    <div class="col-lg-6">
-        <h1>Details</h1>
-    </div>
+<!--<div class="row">
     <div class="col-lg-6">
         <!--{% if request.user.permission_budget_manage and saved %}-->
-            <h1>{{ hello }}</h1>
-                <h1>{{ model }}</h1>
-                <h1><a class="btn btn-success pull-right" href="{% url 'budget_create_api' form.instance.id %}" style="height: 100%">New Budget Calculation Form</a></h1>
+            <!--<h1>{{ hello }}</h1>-->
+                <!--<h1>{{ model }}</h1>-->
+                <!--<h1><a class="btn btn-success pull-right" href="{% url 'budget_create_api' form.instance.id %}" style="height: 100%">New Budget Calculation Form</a></h1>-->
         <!--{% endif %}-->
-    </div>
-</div>
+    <!--</div>-->
+<!--</div>-->
 
 <!--{% block content %}
 {% if form.errors %}
@@ -26,35 +23,38 @@
 {% endif %}
 {% endblock %}-->
 
-<hr/>
-<div class="row">
-    <div class="col-sm-6 form-group">
-      <label for="stationName">Station Name</label>
-      <input type="text" class="form-control" id="stationName" placeholder="Station Name" ng-model="">
-    </div>
-    <div class="col-sm-6 form-group">
-      <label for="stationCode">Station Code</label>
-      <input type="text" class="form-control" id="stationCode" placeholder="Station Code" ng-model="">
-    </div>
-</div>
-<div class="row">
-    <div class="col-sm-6 form-group">
-      <label for="dateEstablished">Date Established</label>
-      <input type="text" class="form-control" id="dateEstablished" placeholder="Date Established" ng-model="">
-    </div>
-    <div class="col-sm-6 checkbox" style="margin: 20px 0px">
-      <label>
-        <input type="checkbox" ng-model=""> Has Shelter
-      </label>
-    </div>
-</div>
-<div class="row">
-    <div class="col-sm-6 form-group">
-      <label for="latitude">Latitude</label>
-      <input type="text" class="form-control" id="latitude" placeholder="Latitude" ng-model="">
-    </div>
-    <div class="col-sm-6 form-group">
-      <label for="longitude">Longitude</label>
-      <input type="text" class="form-control" id="longitude" placeholder="Longitude" ng-model="">
-    </div>
+<div class="row" ng-controller="BorderStationsCtrl as bsCtrl">
+  <h1>Details</h1>
+  <hr/>
+  <div class="row">
+      <div class="col-sm-6 form-group">
+        <label for="stationName">Station Name</label>
+        <input type="text" class="form-control" id="stationName" placeholder="Station Name" ng-model="">
+      </div>
+      <div class="col-sm-6 form-group">
+        <label for="stationCode">Station Code</label>
+        <input type="text" class="form-control" id="stationCode" placeholder="Station Code" ng-model="">
+      </div>
+  </div>
+  <div class="row">
+      <div class="col-sm-6 form-group">
+        <label for="dateEstablished">Date Established</label>
+        <input type="text" class="form-control" id="dateEstablished" placeholder="Date Established" ng-model="">
+      </div>
+      <div class="col-sm-6 checkbox" style="margin: 20px 0px">
+        <label>
+          <input type="checkbox" ng-model=""> Has Shelter
+        </label>
+      </div>
+  </div>
+  <div class="row">
+      <div class="col-sm-6 form-group">
+        <label for="latitude">Latitude</label>
+        <input type="text" class="form-control" id="latitude" placeholder="Latitude" ng-model="">
+      </div>
+      <div class="col-sm-6 form-group">
+        <label for="longitude">Longitude</label>
+        <input type="text" class="form-control" id="longitude" placeholder="Longitude" ng-model="">
+      </div>
+  </div>
 </div>
