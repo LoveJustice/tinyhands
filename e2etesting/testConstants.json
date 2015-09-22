@@ -1,5 +1,5 @@
 {
-  "adminEmail"      : "testuser@test.com",
+  "adminEmail"      : "test@test.com",
   "adminPassword"   : "password",
   "adminFirstName"  : "test",
   "adminLastName"   : "user",
@@ -55,6 +55,8 @@
   "irfInterceptVdc"           : "ShreeJung",
   "irfNameCameUpBeforeValue"  : "1",
 
+  "goodStaffVifNumber"                : "AAA123",
+  "badStaffVifNumber"                 : "ZZZ999",
   "vifNumber"                         : "DNG123",
   "vifDate"                           : "02/16/2015",
   "vifInterviewer"                    : "Test Interviewer",

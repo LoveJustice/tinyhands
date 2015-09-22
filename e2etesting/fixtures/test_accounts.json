@@ -99,7 +99,7 @@
      "permission_vif_add": true,
      "is_superuser": false,
      "last_login": "2015-02-12T20:21:53.435Z",
-     "email": "testuser@test.com",
+     "email": "test@test.com",
      "permission_border_stations_add": true,
      "user_designation": 1,
      "is_active": true,

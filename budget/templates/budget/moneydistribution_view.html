@@ -16,15 +16,15 @@
         <div class="row" >
 
 
-            <div class="col-lg-6" style="height: 675px;">
+            <div class="col-lg-6" style="height: 675px">
                 <div class="row">
                     <h2 class="text-center col-lg-8">Money Distribution Form</h2>
-                    <a style="margin-top: 20px;" href="{% url "budget_update_api" id %}" class="btn btn-primary col-lg-3">Update Budget</a>
+                    <a style="margin-top: 20px" href="{% url "budget_update_api" id %}" class="btn btn-primary col-lg-3">Update Budget</a>
                     <div class="1"></div>
                 </div>
 
                 <!-- The Money Distribution Form PDF -->
-                <iframe style="height: 70%; width: 100%; border: hidden; padding-top: 15px;" id="money_distribution_form_iframe" src="{% url "money_distribution_pdf" id %}"></iframe>
+                <iframe style="height: 70%; width: 100%; border: hidden; padding-top: 15px" id="money_distribution_form_iframe" src="{% url "money_distribution_pdf" id %}"></iframe>
             </div>
 
             {% verbatim %}  <!-- So the Django Templating Engine doesn't overwrite our fields and Angular gets to do it -->
@@ -39,7 +39,7 @@
                             </tr>
                         </thead>
                         <tr ng-repeat="staff in main.staff" ng-class="{'notReceiving': !staff.receives_money_distribution_form, 'receiving': staff.receives_money_distribution_form}">
-                            <td style="text-align: center"><input type="checkbox" ng-model="staff.receives_money_distribution_form"></td>
+                            <td class="text-center"><input type="checkbox" ng-model="staff.receives_money_distribution_form"></td>
                             <td>{{ staff.first_name }} {{ staff.last_name }}</td>
                             <td>{{ staff.email}}</td>
                         </tr>
@@ -57,7 +57,7 @@
                             </tr>
                         </thead>
                         <tr ng-repeat="member in main.committeeMembers" ng-class="{'notReceiving': !member.receives_money_distribution_form, 'receiving': member.receives_money_distribution_form}">
-                            <td style="text-align: center"><input type="checkbox" ng-model="member.receives_money_distribution_form"></td>
+                            <td class="text-center"><input type="checkbox" ng-model="member.receives_money_distribution_form"></td>
                             <td>{{ member.first_name }} {{ member.last_name }}</td>
                             <td>{{ member.email}}</td>
                         </tr>
