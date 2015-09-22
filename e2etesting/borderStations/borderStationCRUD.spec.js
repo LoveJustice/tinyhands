@@ -21,6 +21,14 @@ describe('Border Station CRUD -', function() {
             expect(browser.driver.getCurrentUrl()).toContain('/portal/dashboard/');
         });
 
+        //new test
+        it('Create a Border Station', function () {
+            borderStationPage.getToBorderStationCreate();
+            expect(browser.driver.getCurrentUrl()).toContain('/static_border_stations/border-stations/create/');
+            borderStationPage.fillOutBorderStationNoEmail();
+            expect(browser.driver.getCurrentUrl()).toContain('/protal/dashboard/');
+        })
+
 
         it('View a Border Station', function () {
             borderStationPage.viewBorderStation();
