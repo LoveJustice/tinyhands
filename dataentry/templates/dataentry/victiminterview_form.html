@@ -1,4 +1,7 @@
 {% extends "dataentry/dataentry_base.html" %}
+{% block html %}
+    <html ng-app="DataEntry">
+{% endblock %}
 {% load widget_tweaks %}
 {% load bootstrap %}
 {% load unslugify %}
@@ -89,10 +92,8 @@
   <!-- /.modal -->
 
   <form enctype="multipart/form-data"
-        method="POST"
-        id="victim-interview-form"
-        autocomplete="off">
-    {% csrf_token %}
+	method="POST" action="" id="victim-interview-form"
+	autocomplete="off">{% csrf_token %}
     <div class="form-page">
       <div class="row">
         <div class="col-xs-6 header-area">
@@ -102,7 +103,7 @@
               Version 2.0 <span class="text-danger">Tiny Hands Nepal</span></h2>
         </div>
         <div class="col-xs-6">
-          <table class="table table-bordered top-data-area">
+          <table class="table table-bordered top-data-area" ng-controller="staffListCtrl as staff">
             <tbody>
               <tr>
                 <td>
@@ -151,6 +152,19 @@
                 </td>
                 <td>
                   {{ form.interviewer|attr:"data-placement: bottom" }}
+                    <div class="input-group">
+                      {% verbatim %}
+                        <div class="input-group-btn">
+                            <button tabindex="-1" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button" ng-click="staff.retrieveStation('2')">
+                                <span class="caret"></span>
+                            </button>
+                            <ul role="menu" id="dropdown-staff" class="dropdown-menu dropdown-menu-form" >
+                                <li ng-repeat="staffPerson in staff.staffNames">
+                                    <a href="#"/> <input type="checkbox"/><span class="lbl">{{ staffPerson.name }}</span> </li>
+                            </ul>
+                        </div>
+                      {% endverbatim %}
+                    </div>
                 </td>
             </tbody>
           </table>
@@ -724,7 +738,7 @@
 
           <div class="black-box clearfix">
             <div class="label-inside-field">
-              <label style="font-size: 26px; line-height: 18px; padding: 4px;">
+              <label style="font-size: 26px; line-height: 18px; padding: 4px">
                 <span class="section-number">3.6</span>
                 If by mobile, explain.
                 <small style="font-size: 18px">(how he got your number, what he said, etc.)</small>
@@ -1650,6 +1664,10 @@
   <br/>
   <br/>
   <br/>
+{% load static from staticfiles %}
+     <script type="text/javascript" src="{% static "dataentry/js/dataEntryModule.js" %}"></script>
+     <script type="text/javascript" src="{% static "dataentry/js/services/staffListService.js" %}"></script>
+     <script type="text/javascript" src="{% static "dataentry/js/controllers/staffListCtrl.js" %}"></script>
 {% include "dataentry/fuzzymatching-ui.html" %}
 
 {% endblock %}

@@ -75,6 +75,11 @@ describe('Interception Record Form -', function() {
             browser.get(c.webAddress + '/data-entry/irfs/search/');
         });
 
+        it('Cannot Edit while Viewing IRF', function() {
+            irfPage.viewIRF();
+            expect(element(by.id('id_irf_number')).getAttribute('disabled')).toEqual('true');
+        });
+
         it ('Can Delete an IRF', function () {
             irfPage.getToIRF();
             irfPage.fillOutIRF();
@@ -84,6 +89,7 @@ describe('Interception Record Form -', function() {
             var secondLink = element(by.xpath("//a[@class='btn btn-sm btn-primary']")).getAttribute('href');
             browser.sleep(500);
             expect(firstLink != secondLink).toBeTruthy();
+
         });
     });
 });

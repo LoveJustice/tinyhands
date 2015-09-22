@@ -1,7 +1,6 @@
 {% extends "dataentry/dataentry_base.html" %}
 {% load widget_tweaks %}
 {% load bootstrap %}
-{% load bootstrap_pagination %}
 {% load unslugify %}
 {% load times %}
 {% block title %}Manage Address 2{% endblock %}
@@ -11,54 +10,55 @@
 <div class="modal fade modal-over-tooltips" id="modal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" tabindex="-1"></div>
 <!-- /.modal -->
 
-<table id="vdc_table" class="table table-striped">
-	<thead>
+<h1 class="text-center">All Address 2 Entries</h1>
+<br/>
+
+<table class="table table-striped crud-datatable">
+    <thead>
         <tr>
-            <th style="text-align:center">Name</th>
-            <th style="text-align:center">Latitude</th>
-            <th style="text-align:center">Longitude</th>
-            <th style="text-align:center">Address 1</th>
-            <th style="text-align:center">Cannonical Name</th>
-            <th style="text-align:center">Verified</th>
-            <th></th>
+            <th class="text-center">Name</th>
+            <th class="text-center">Latitude</th>
+            <th class="text-center">Longitude</th>
+            <th class="text-center">Address 1</th>
+            <th class="text-center">Cannonical Name</th>
+            <th class="text-center">Verified</th>
+            <th class="text-center">&nbsp;</th>
         </tr>
     </thead>
-	{% for vdc in vdc_list %}
-		{% url 'interceptionrecord_list' as vdc_edit %}
-		<tr>
-		<td class="vdc_admin_name" style="text-align:center">{{ vdc.name }} </td>
-		<td class="vdc_admin_latitude" style="text-align:center">{{ vdc.get_latitude }} </td>
-	    <td class="vdc_admin_longitude" style="text-align:center">{{ vdc.get_longitude }} </td>
-	    <td class="vdc_admin_district" style="text-align:center">{{ vdc.get_district }} </td>
-	    <td class="vdc_admin_cannonical" style="text-align:center">{{ vdc.get_cannonical_name }} </td>
-	    <td class="vdc_admin_verified" style="text-align:center">
-            {% if vdc.is_verified %}
-                Yes
-            {% else %}
-                No
-            {% endif %}
-        </td>
-	    <td><a id="vdc_update_link" class="btn btn-warning pull-left" style="margin-right:-35px" href="{% url 'vdc_admin_update' vdc.id %}" data-target="#modal"  >Edit</a></td>
-		</tr>
-	{% empty %}
-		{% if database_empty %}
-			<tr>
-			<td colspan="12">There are currently no Address 2 records in the database</td>
-			<tr>
-		{% else %}
-			<tr>
-			<td colspan="12">There are no Address 2 records that match that query</td>
-			<tr>
-		{% endif %}
-	{% endfor %}
+    {% for vdc in vdc_list %}
+        {% url 'interceptionrecord_list' as vdc_edit %}
+        <tr>
+            <td class="vdc_admin_name text-center">{{ vdc.name }}</td>
+            <td class="vdc_admin_latitude text-center">{{ vdc.get_latitude }}</td>
+            <td class="vdc_admin_longitude text-center">{{ vdc.get_longitude }}</td>
+            <td class="vdc_admin_district text-center">{{ vdc.get_district }}</td>
+            <td class="vdc_admin_cannonical text-center">{{ vdc.get_cannonical_name }}</td>
+            <td class="vdc_admin_verified text-center">
+                {% if vdc.is_verified %}
+                    Yes
+                {% else %}
+                    No
+                {% endif %}
+            </td>
+            <td class="text-center">
+                <a id="update_link" class="btn btn-warning"
+                    href="{% url 'vdc_admin_update' vdc.id %}"
+                    data-target="#modal">
+                    Edit
+                </a>
+            </td>
+        </tr>
+    {% empty %}
+        {% if database_empty %}
+            <tr>
+                <td colspan="12">There are currently no Address 2 records in the database</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="12">There are no Address 2 records that match that query</td>
+            </tr>
+        {% endif %}
+    {% endfor %}
 </table>
-
-<div id="footer">
-    <nav class="navbar navbar-default navbar-fixed-bottom">
-        <div class="container">
-            {% bootstrap_paginate page_obj range=15 show_first_last='True' %}
-        </div>
-    </nav>
-</div>
 
 {% endblock %}

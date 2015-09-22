@@ -41,7 +41,7 @@ from dataentry.serializers import DistrictSerializer, VDCSerializer
 from accounts.mixins import PermissionsRequiredMixin
 
 from alert_checkers import IRFAlertChecker, VIFAlertChecker
-from fuzzy_matching import match_location
+from fuzzy_matching import match_location, match_staff
 
 @login_required
 def home(request):
@@ -88,7 +88,6 @@ class SearchFormsMixin(object):
 
 class InterceptionRecordListView(LoginRequiredMixin, SearchFormsMixin, ListView):
     model = InterceptionRecord
-    paginate_by = 20
 
     def __init__(self, *args, **kw):
         #passes what to search by to SearchFormsMixin
@@ -233,7 +232,6 @@ class VictimInterviewListView(LoginRequiredMixin,
                               SearchFormsMixin,
                               ListView):
     model = VictimInterview
-    paginate_by = 20
 
     def __init__(self, *args, **kwargs):
         # Passes what to search by to SearchFormsMixin
@@ -354,6 +352,7 @@ class GeoCodeVdcAPIView(APIView):
             return Response({"id": "-1","name":"None"})
 
 
+
 class VDCAdminView(LoginRequiredMixin,
                    PermissionsRequiredMixin,
                    SearchFormsMixin,
@@ -361,15 +360,12 @@ class VDCAdminView(LoginRequiredMixin,
     model = VDC
     template_name = "dataentry/vdc_admin_page.html"
     permissions_required = ['permission_vdc_manage']
-    paginate_by = 100
 
     def __init__(self, *args, **kwargs):
         super(VDCAdminView, self).__init__(name__icontains = "name")
 
     def get_context_data(self, **kwargs):
         context = super(VDCAdminView, self).get_context_data(**kwargs)
-        context['lower_limit'] = context['page_obj'].number - 5
-        context['upper_limit'] = context['page_obj'].number + 5
         context['database_empty'] = self.model.objects.count()==0
         return context
 
@@ -410,15 +406,12 @@ class DistrictAdminView(LoginRequiredMixin,
     model = District
     template_name = "dataentry/district_admin_page.html"
     permissions_required = ['permission_vdc_manage']
-    paginate_by = 20
 
     def __init__(self, *args, **kwargs):
         super(DistrictAdminView, self).__init__(name__icontains = "name")
 
     def get_context_data(self, **kwargs):
         context = super(DistrictAdminView, self).get_context_data(**kwargs)
-        context['lower_limit'] = context['page_obj'].number - 5
-        context['upper_limit'] = context['page_obj'].number + 5
         context['database_empty'] = self.model.objects.count()==0
         return context
 
@@ -458,6 +451,11 @@ class StationCodeAPIView(APIView):
         return Response(codes, status=status.HTTP_200_OK);
 
 
+
+
+
+
+
 @login_required
 def interceptee_fuzzy_matching(request):
     input_name = request.GET['name']
@@ -465,3 +463,18 @@ def interceptee_fuzzy_matching(request):
     people_dict = {serializers.serialize("json", [obj]):obj.full_name for obj in all_people }
     matches = process.extractBests(input_name, people_dict, limit = 10)
     return HttpResponse(json.dumps(matches), content_type="application/json")
+
+def get_station_id(request):
+    code = request.GET['code']
+    #code = "DNG"
+    if code == '':
+        return HttpResponse([-1])
+    else:
+        station = BorderStation.objects.filter(station_code=code)
+        if len(station) > 0:
+            print("Station id is: " + str(station))
+            return HttpResponse([station[0].id])
+        else:
+            print("No station id")
+            return HttpResponse([-1])
+

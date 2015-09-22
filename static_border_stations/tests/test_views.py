@@ -51,7 +51,17 @@ class TestBorderStations(WebTest):
         self.assertEquals("Joe", bs.first_name)
         self.assertEquals("Shmo", bs.last_name)
 
+    def test_update_staff_fails_when_no_email_and_receive_money_distribution_form_checked(self):
+        form = self.form
 
+        form.set("staff_set-0-first_name", "Joe")
+        form.set("staff_set-0-last_name", "Shmo")
+        form.set("staff_set-0-receives_money_distribution_form", True)
+
+        formResp = form.submit()
+
+        self.assertEquals(200, formResp.status_code)
+        self.assertEquals("Email cannot be blank when receives money distribution form is checked.", formResp.context["staff_form"].errors['__all__'][0])
 
     def testUpdateCommitteeMember(self):
         form = self.form
@@ -301,11 +311,9 @@ class BorderStationsCreationTest(WebTest):
 
         form.set('staff_set-0-first_name', 'Bob')
         form.set('staff_set-0-last_name', 'Smith')
-        form.set('staff_set-0-receives_money_distribution_form', True)
 
         form.set('committeemember_set-0-first_name', 'Jack')
         form.set('committeemember_set-0-last_name', 'Smith')
-        form.set('committeemember_set-0-receives_money_distribution_form', True)
 
         form.set('location_set-0-name', 'Nepal')
         form.set('location_set-0-latitude', '1')
@@ -326,12 +334,10 @@ class BorderStationsCreationTest(WebTest):
         staffMember = updatedStation.staff_set.get()
         self.assertEquals('Bob', staffMember.first_name)
         self.assertEquals('Smith', staffMember.last_name)
-        self.assertEquals(True, staffMember.receives_money_distribution_form)
 
         committeeMember = updatedStation.committeemember_set.get()
         self.assertEquals('Jack', committeeMember.first_name)
         self.assertEquals('Smith', committeeMember.last_name)
-        self.assertEquals(True, committeeMember.receives_money_distribution_form)
 
         location = updatedStation.location_set.get()
         self.assertEquals('Nepal', location.name)

@@ -33,6 +33,12 @@ class BorderStationBudgetCalculation(models.Model):
         total += self.communication_each_staff * self.communication_each_staff_multiplier
         return total
 
+    def communication_staff_total(self):
+        total = 0
+        total += self.communication_number_of_staff_with_walkie_talkies * self.communication_number_of_staff_with_walkie_talkies_multiplier
+        total += self.communication_each_staff * self.communication_each_staff_multiplier
+        return total
+
     def communication_manager_chair_total(self):
         total = 0
         if self.communication_chair:

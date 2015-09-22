@@ -303,6 +303,7 @@ class MoneyDistributionFormPDFView(PDFView, LoginRequiredMixin, PermissionsRequi
             'date': station.date_time_entered.date,
             'number': len(staffSalaries),
             'staffSalaries': staffSalaries,
+            'salary_total': sum([staff.salary for staff in staffSalaries]),
 
             'travel_chair_bool': station.travel_chair_with_bike,
             'travel_chair': station.travel_chair_with_bike_amount,
@@ -314,6 +315,7 @@ class MoneyDistributionFormPDFView(PDFView, LoginRequiredMixin, PermissionsRequi
             'communication_chair': station.communication_chair_amount,
             'communication_manager_bool': station.communication_manager,
             'communication_manager': station.communication_manager_amount,
+            'communication_staff': station.communication_staff_total(),
             'communication_total': station.communication_total(),
 
             'admin_meetings': adminMeetings,
@@ -325,8 +327,8 @@ class MoneyDistributionFormPDFView(PDFView, LoginRequiredMixin, PermissionsRequi
 
             'shelter_total': station.shelter_total(),
 
-            'food_and_gas_intercepted_girls': station.food_and_gas_number_of_intercepted_girls,
-            'food_and_gas_limbo_girls': station.food_and_gas_number_of_limbo_girls,
+            'food_and_gas_intercepted_girls': station.food_and_gas_number_of_intercepted_girls_multiplier_before * station.food_and_gas_number_of_intercepted_girls * station.food_and_gas_number_of_intercepted_girls_multiplier_after,
+            'food_and_gas_limbo_girls': station.food_and_gas_limbo_girls_multiplier * station.food_and_gas_number_of_limbo_girls * station.food_and_gas_number_of_days,
             'food_gas_total': station.food_and_gas_total(),
 
             'awareness_contact_cards_bool': station.awareness_contact_cards,
