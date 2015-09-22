@@ -2,14 +2,14 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
-from django.conf import settings
+import datetime
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('dataentry', '0009_merge'),
+        ('dataentry', '0001_initial'),
+        ('static_border_stations', '0001_initial'),
     ]
 
     operations = [
@@ -19,10 +19,11 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('date_time_entered', models.DateTimeField(auto_now_add=True)),
                 ('date_time_last_updated', models.DateTimeField(auto_now=True)),
+                ('month_year', models.DateTimeField(default=datetime.datetime.now)),
                 ('communication_chair', models.BooleanField(default=False)),
                 ('communication_chair_amount', models.PositiveIntegerField(default=1000, verbose_name=b'for chair')),
                 ('communication_manager', models.BooleanField(default=False)),
-                ('communication_manager_amount', models.PositiveIntegerField(default=1000, verbose_name=b'for manager (if station has manager)')),
+                ('communication_manager_amount', models.PositiveIntegerField(default=1000, verbose_name=b'for manager')),
                 ('communication_number_of_staff_with_walkie_talkies', models.PositiveIntegerField(default=0, verbose_name=b'# of staff with walkie-talkies')),
                 ('communication_number_of_staff_with_walkie_talkies_multiplier', models.PositiveIntegerField(default=100)),
                 ('communication_each_staff', models.PositiveIntegerField(default=0, verbose_name=b'each staff')),
@@ -36,6 +37,7 @@ class Migration(migrations.Migration):
                 ('travel_last_months_expense_for_sending_girls_home', models.PositiveIntegerField(default=0)),
                 ('travel_motorbike', models.BooleanField(default=False, verbose_name=b'Motorbike')),
                 ('travel_motorbike_amount', models.PositiveIntegerField(default=60000)),
+                ('travel_plus_other', models.PositiveIntegerField(default=0)),
                 ('administration_number_of_intercepts_last_month', models.PositiveIntegerField(default=0, verbose_name=b'# of intercepts last month')),
                 ('administration_number_of_intercepts_last_month_multiplier', models.PositiveIntegerField(default=20)),
                 ('administration_number_of_intercepts_last_month_adder', models.PositiveIntegerField(default=1000)),
@@ -77,8 +79,6 @@ class Migration(migrations.Migration):
                 ('supplies_flashlights_boolean', models.BooleanField(default=False, verbose_name=b'Flashlights')),
                 ('supplies_flashlights_amount', models.PositiveIntegerField(default=0)),
                 ('border_station', models.ForeignKey(to='dataentry.BorderStation')),
-                ('form_entered_by', models.ForeignKey(related_name=b'form_entered_by_account', to=settings.AUTH_USER_MODEL)),
-                ('form_updated_by', models.ForeignKey(related_name=b'form_updated_by_account', to=settings.AUTH_USER_MODEL)),
             ],
             options={
             },
@@ -89,12 +89,30 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('name', models.CharField(max_length=255)),
-                ('cost', models.PositiveIntegerField()),
-                ('form_section', models.IntegerField(verbose_name=[(1, b'Travel'), (2, b'Miscellaneous'), (3, b'Awareness'), (4, b'Supplies')])),
-                ('budget_item_parent', models.ForeignKey(to='budget.BorderStationBudgetCalculation')),
+                ('cost', models.PositiveIntegerField(default=0)),
+                ('form_section', models.IntegerField(null=True, verbose_name=[(1, b'Travel'), (2, b'Miscellaneous'), (3, b'Awareness'), (4, b'Supplies')], blank=True)),
+                ('budget_item_parent', models.ForeignKey(blank=True, to='budget.BorderStationBudgetCalculation', null=True)),
             ],
             options={
             },
             bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='StaffSalary',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('salary', models.PositiveIntegerField(default=0, null=True, blank=True)),
+                ('budget_calc_sheet', models.ForeignKey(blank=True, to='budget.BorderStationBudgetCalculation', null=True)),
+                ('staff_person', models.ForeignKey(blank=True, to='static_border_stations.Staff', null=True)),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.AddField(
+            model_name='borderstationbudgetcalculation',
+            name='members',
+            field=models.ManyToManyField(to='static_border_stations.Staff', through='budget.StaffSalary'),
+            preserve_default=True,
         ),
     ]

@@ -9,7 +9,8 @@ echo "Loading border stations..."
 echo "Loading alerts..."
 ./manage.py loaddata fixtures/alerts/alerts.json
 echo "Loading locations..."
-./manage.py loaddata fixtures/geo-code-locations.json
+./manage.py loaddata dataentry/fixtures/district.json
+./manage.py loaddata dataentry/fixtures/vdc.json
 echo "Loading vifs..."
 ./manage.py loaddata fixtures/vifs.json
 echo "Loading irfs..."

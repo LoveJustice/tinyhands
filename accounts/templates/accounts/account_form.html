@@ -56,12 +56,13 @@ window.defaultPermissionSets = JSON.parse('{{ default_permissions_sets|safe }}')
                 <table class="table table-condensed">
                     <thead>
                         <tr>
-                            <th colspan="3">Interception Record Forms</th>
+                            <th colspan="4">Interception Record Forms</th>
                         </tr>
                         <tr>
                             <th>View</th>
                             <th>Add</th>
                             <th>Edit</th>
+                            <th>Delete</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -69,18 +70,20 @@ window.defaultPermissionSets = JSON.parse('{{ default_permissions_sets|safe }}')
                             <td><label class="btn"><span class="yesno"></span>{{ form.permission_irf_view }}</label></td>
                             <td><label class="btn"><span class="yesno"></span>{{ form.permission_irf_add }}</label></td>
                             <td><label class="btn"><span class="yesno"></span>{{ form.permission_irf_edit }}</label></td>
+                            <td><label class="btn"><span class="yesno"></span>{{ form.permission_irf_delete }}</label></td>
                         </tr>
                     </tbody>
                 </table>
                 <table class="table table-condensed">
                     <thead>
                         <tr>
-                            <th colspan="3">Victim Interview Forms</th>
+                            <th colspan="4">Victim Interview Forms</th>
                         </tr>
                         <tr>
                             <th>View</th>
                             <th>Add</th>
                             <th>Edit</th>
+                            <th>Delete</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -88,6 +91,7 @@ window.defaultPermissionSets = JSON.parse('{{ default_permissions_sets|safe }}')
                             <td><label class="btn"><span class="yesno"></span>{{ form.permission_vif_view }}</label></td>
                             <td><label class="btn"><span class="yesno"></span>{{ form.permission_vif_add }}</label></td>
                             <td><label class="btn"><span class="yesno"></span>{{ form.permission_vif_edit }}</label></td>
+                            <td><label class="btn"><span class="yesno"></span>{{ form.permission_vif_delete }}</label></td>
                         </tr>
                     </tbody>
                 </table>
