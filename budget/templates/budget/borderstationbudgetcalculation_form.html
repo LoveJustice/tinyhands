@@ -184,7 +184,7 @@
                                     <br/>
 
                                     <div class="col-lg-4 col-lg-offset-5">
-                                        <a class="btn btn-success" id="awareness_add_item" ng-click="shelterItemsCtrl.addNewItem()" ng-hide="main.view">Add item</a>
+                                        <a class="btn btn-success" id="shelter_add_item" ng-click="shelterItemsCtrl.addNewItem()" ng-hide="main.view">Add item</a>
                                     </div>
                                 </div>
                             </div>
@@ -285,7 +285,7 @@
                                     <br/>
 
                                     <div class="col-lg-4 col-lg-offset-5">
-                                        <a class="btn btn-success" id="awareness_add_item" ng-click="foodGasItemsCtrl.addNewItem()" ng-hide="main.view">Add item</a>
+                                        <a class="btn btn-success" id="foodGas_add_item" ng-click="foodGasItemsCtrl.addNewItem()" ng-hide="main.view">Add item</a>
                                     </div>
                                 </div>
                             </div>
@@ -444,10 +444,10 @@
                                 <div class="animated-budget-items" ng-repeat="form in awarenessItemsCtrl.awarenessForms">
 
                                     <div class="col-lg-4 col-lg-offset-2">
-                                        <input class="form-control" type="text" ng-model="form.name" ng-disabled="main.view"/>
+                                        <input class="form-control awareness-extra-item-name" type="text" ng-model="form.name" ng-disabled="main.view"/>
                                     </div>
                                     <div class="col-lg-4">
-                                        <input class="text-right form-control" type="number" ng-model="form.cost" ng-change="awarenessItemsCtrl.otherItemsTotal()" ng-disabled="main.view"/>
+                                        <input class="text-right awareness-extra-item-value form-control" type="number" ng-model="form.cost" ng-change="awarenessItemsCtrl.otherItemsTotal()" ng-disabled="main.view"/>
                                     </div>
                                     <div class="col-lg-2">
                                         <a class="btn btn-danger" ng-click="awarenessItemsCtrl.removeItem(form.id, $index)" ng-hide="main.view">Remove</a>
@@ -848,7 +848,7 @@
                                 </tr>
                                 <tr>
                                     <td>Comm.</td>
-                                    <td><p class="text-right" ng-bind="main.commTotal()"></p></td>
+                                    <td><p class="text-right" ng-bind="main.communicationTotalValue"></p></td>
                                     <td class="active"></td>
                                 </tr>
                                 <tr>
@@ -889,7 +889,7 @@
                                 </tr>
                                 <tr>
                                     <td class="warning">Food</td>
-                                    <td class="warning"><p class="text-right" ng-bind="main.foodTotal()"></p></td>
+                                    <td class="warning"><p class="text-right" ng-bind="main.foodGasTotal()"></p></td>
                                     <td class="active"></td>
                                 </tr>
                                 <tr class="warning">

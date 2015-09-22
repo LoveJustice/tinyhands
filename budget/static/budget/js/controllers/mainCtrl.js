@@ -90,10 +90,10 @@ angular
 
 
             vm.foodAndShelterTotal = function() {
-                return vm.foodTotal() + vm.shelterTotal();
+                return vm.foodGasTotal() + vm.shelterTotal();
             };
             vm.bunchTotal = function() {
-                return  vm.commTotal() +
+                return  vm.communicationTotalValue +
                         vm.travelTotalValue +
                         vm.adminTotal() +
                         vm.medicalTotal() +
@@ -133,6 +133,7 @@ angular
                         vm.form.shelter_electricity +
                         vm.shelterCheckboxTotal();
                 vm.shelterTotalValue = amount + vm.otherShelterTotalValue[0];
+                return vm.shelterTotalValue;
             };
 
             //Food and Gas Section
@@ -151,6 +152,7 @@ angular
                 var amount = 0;
                 amount += vm.foodTotal();
                 vm.otherfoodGasTotalValue = amount + vm.otherFoodGasTotalValue[0];
+                return vm.otherfoodGasTotalValue;
             };
 
             vm.foodTotal = function () {
