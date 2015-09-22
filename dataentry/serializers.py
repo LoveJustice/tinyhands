@@ -11,4 +11,3 @@ class DistrictSerializer(serializers.ModelSerializer):
 class VDCSerializer(serializers.ModelSerializer):
     class Meta:
         model = VDC
-        exclude = ['district']

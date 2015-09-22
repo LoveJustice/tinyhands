@@ -8,10 +8,12 @@ angular
         // Variable Declarations
         vm.addresses = [];
         vm.searchValue = "";
+        vm.nextPageUrl = "";
 
         // Function Definitions
         vm.getAddresses= getAddresses;
         vm.searchAddresses= searchAddresses;
+        vm.loadMoreAddresses = loadMoreAddresses;
         main();
         //////////////////////////////////////////////////////
 
@@ -22,16 +24,25 @@ angular
         function getAddresses(){
             address2Service.listAddresses()
                 .success(function (data) {
-                    vm.addresses = data.slice(1,6);
-                    console.log(vm.addresses);
+                    vm.addresses = data.results;
+                    vm.nextPageUrl = data.next;
+                    console.log(data.results);
+                });
+        }
+
+        function loadMoreAddresses(){
+            address2Service.loadMoreAddresses(vm.nextPageUrl)
+                .success(function (data) {
+                    vm.addresses = vm.addresses.concat(data.results);
+                    vm.nextPageUrl = data.next;
                 });
         }
 
         function searchAddresses(){
-            console.log("clicked!");
             address2Service.searchAddresses(vm.searchValue)
                 .success(function (data) {
-                    vm.addresses = data;
+                    vm.addresses = data.results;
+                    vm.nextPageUrl = data.next;
                     console.log(data);
                 });
         }

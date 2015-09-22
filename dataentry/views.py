@@ -19,6 +19,7 @@ from django.views.generic import ListView, View, DeleteView, CreateView, UpdateV
 
 from rest_framework import status
 from rest_framework.decorators import list_route
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import viewsets
@@ -484,7 +485,12 @@ class Address2ViewSet(viewsets.ModelViewSet):
 
     @list_route()
     def search(self, request, search_value):
-        self.object_list = VDC.objects.filter(name__contains=search_value)\
-            .select_related('district', 'cannonical_name__district')
-        serializer = self.get_serializer(self.object_list, many=True)
-        return Response(serializer.data)
+        self.object_list = VDC.objects.filter(name__contains=search_value).select_related('district', 'cannonical_name__district')
+
+        if search_value == 'empty':
+            self.object_list = self.queryset
+
+        paginator = PageNumberPagination()
+        data = paginator.paginate_queryset(self.object_list, request)
+        serializer = self.get_serializer(data, many=True)
+        return paginator.get_paginated_response(serializer.data)

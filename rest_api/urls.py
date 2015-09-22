@@ -15,6 +15,7 @@ urlpatterns = patterns('rest_api.views',
 
     # Address 2s
     url(r'^address2/$', Address2ViewSet.as_view({'get': 'list', 'post': 'create'}), name='Address2'),
+    url(r'^address2/(?P<pk>\d+)/$', Address2ViewSet.as_view({'put': 'update', 'get': 'retrieve', 'delete': 'destroy'}), name='Address2detail'),
     url(r'^address2/search/(?P<search_value>[\w]+)/$', Address2ViewSet.as_view({'get': 'search'}), name='Address2Search'),
 
 )
