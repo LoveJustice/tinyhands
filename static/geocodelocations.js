@@ -1,5 +1,6 @@
 var adjustPopoverPosition = true;
 var largestPopoverButtonWidth = null;
+var locationType = '';
 
 function setPopovers(id)
 {
@@ -15,7 +16,7 @@ function setPopovers(id)
 	        html:true,
 	        placement:'bottom',
 	        container: 'body',
-            trigger: 'focus',
+            trigger: 'focus'
 	    });
         $(element).on('shown.bs.popover', function(){
             $("#vdc_create_page").click(
@@ -40,17 +41,30 @@ function setPopovers(id)
                 adjustPopoverPosition = true;
 			}	
 	    });
+        var timer = null;
 	    $(element).keyup(function(){
+            if (timer) {
+                $("#loading").css("display", "none");
+                clearTimeout(timer);
+            }
+
             if(!$('.popover').hasClass('in'))
             {
                 $(this).popover('show');
             }
-
             input = $(element).val();
             if(element.id.indexOf("district") > 0){
-                callFuzzyApi(input, "district", element);
+                locationType = "district";
             } else{
-                callFuzzyApi(input, "vdc", element);
+                locationType = "vdc";
+            }
+
+            if ( input !== "" && input.length >= 2 ) {
+                $("#loading").css("display", "block");
+                $("#popover-location-info").empty();
+                timer = setTimeout(function () {
+                    callFuzzyApi(input, locationType, element)
+                }, 400);
             }
 	    });
 	});
@@ -58,37 +72,70 @@ function setPopovers(id)
 
 function callFuzzyApi(input, locationType, element){
     var unorderedList = $("#popover-location-info");
-    if(input !== ""){
-        $.ajax({
-            url: "/data-entry/geocodelocation/"+locationType+"/",
-            data: locationType+"="+input,
-        }).done(function(data){
-                unorderedList.empty();
-                if (data.id != -1) {
-                    for (i in data) {
-                        //Add event for these divs that will extract the text from the div
-                        unorderedList.append($('<div class="btn fuzzymatches"></div><br/>').append(data[i].name));
-                        unorderedList.find(".fuzzymatches").each(function(){
-                            $(this).click(function() {
-                                $(element).val($(this).text());
-                            }).css('cursor','pointer');
-                            $(this).hover(function(e) {
-                                if (e.type === "mouseenter") {
-                                    $(this).addClass('btn-default').css('cursor','pointer');
-                                } else {
-                                    $(this).removeClass('btn-default');
-                                }
-                            });
-                        });
-                    }
-                    var inputOffset = $(element).offset().left + (parseFloat($(element).css('width'))/2);
-                    var popoverOffset = $('.popover').offset().left + (parseFloat($('.popover').css('width'))/2);
-                    var offsetDiff = inputOffset - popoverOffset;
-                    var popoverLeft = $('.popover').offset().left + offsetDiff;
-                    $('.popover').css('left',popoverLeft+'px');
-                }
-        });
+
+    var requestData = locationType+"="+input;
+    if (locationType === "vdc"){
+        var district_value = find_district_value(element);
+
+        if (district_value.length > 0) {
+            requestData = requestData + '&district=' + district_value;
+        }
     }
+    $.ajax({
+        url: "/data-entry/geocodelocation/"+locationType+"/",
+        data: requestData
+    }).done(function(data){
+            unorderedList.empty();
+            if (data.id != -1) {
+                for (i in data) {
+                    //Add event for these divs that will extract the text from the div
+                    unorderedList.append($('<div class="btn fuzzymatches"></div><br/>').append(data[i].name));
+                    unorderedList.find(".fuzzymatches").each(function(){
+                        $(this).click(function() {
+                            $(element).val($(this).text());
+                        }).css('cursor','pointer');
+                        $(this).hover(function(e) {
+                            if (e.type === "mouseenter") {
+                                $(this).addClass('btn-default').css('cursor','pointer');
+                            } else {
+                                $(this).removeClass('btn-default');
+                            }
+                        });
+                    });
+                }
+                var inputOffset = $(element).offset().left + (parseFloat($(element).css('width'))/2);
+                var popoverOffset = $('.popover').offset().left + (parseFloat($('.popover').css('width'))/2);
+                var offsetDiff = inputOffset - popoverOffset;
+                var popoverLeft = $('.popover').offset().left + offsetDiff;
+                $('.popover').css('left',popoverLeft+'px');
+                $("#loading").css( "display", "none" );
+            }
+        });
+}
+
+function find_district_value(element) {
+    var district_value = "";
+    if (element.id === "id_victim_address_vdc")
+    {
+       district_value = $("#id_victim_address_district").val();
+    }
+    else if (element.id === "id_victim_guardian_address_vdc")
+    {
+       district_value = $("#id_victim_guardian_address_district").val();
+    }
+    else if (element.id.indexOf("id_person_boxes-") > -1 && element.id.indexOf("vdc") > -1)
+    {
+       district_value = $("#id_person_boxes-" + element.id.split('-')[1] + '-address_district').val();
+    }
+    else if (element.id.indexOf("id_location_boxes-") > -1 && element.id.indexOf("vdc") > -1)
+    {
+       district_value = $("#id_location_boxes-" + element.id.split('-')[1] + '-district').val();
+    }
+    else
+    {
+       district_value = $("#id_interceptees-" + element.id.split('-')[1] + '-district').val();
+    }
+    return district_value;
 }
 
 setPopovers("[id$=address_district]");
