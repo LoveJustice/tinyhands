@@ -188,13 +188,13 @@
                                     </div>
                                 </div>
                             </div>
-                            {% endverbatim %}
+                        {% endverbatim %}
 
                         <div class="row center text-center" style="margin-top: 20px">
                             <div class="col-lg-4"></div>
                             <div class="col-lg-4">
                                 <label>Shelter Total</label>
-                                <input class="form-control text-center" ng-value="main.shelterTotalValue" disabled="disabled"/>
+                                <input class="form-control text-center" ng-value="main.shelterTotal()" disabled="disabled"/>
                             </div>
                             <div class="col-lg-4"></div>
 
@@ -291,12 +291,11 @@
                             </div>
                             {% endverbatim %}
 
-
                             <div class="row text-center" style="margin-top: 30px">
                                 <div class="col-lg-4"></div>
                                 <div class="col-lg-4">
                                     <label>Total Food</label>
-                                    <input class="form-control text-center" ng-value="main.otherfoodGasTotalValue" disabled="disabled"/>
+                                    <input class="form-control text-center" ng-value="main.foodGasTotal()" disabled="disabled"/>
                                 </div>
                                 <div class="col-lg-4"></div>
                             </div>
@@ -394,7 +393,6 @@
                             </div>
                             {% endverbatim %}
 
-
                             <div class="row center text-center" style="margin-top: 20px">
                                 <div class="col-lg-4"></div>
                                 <div class="col-lg-4">
@@ -402,7 +400,7 @@
                                     <input class="form-control text-center" ng-value="main.communicationTotalValue" disabled="disabled"/>
                                 </div>
                                 <div class="col-lg-4"></div>
-                                </div>
+                            </div>
 
                         </div>
                         <!-- End Communication -->

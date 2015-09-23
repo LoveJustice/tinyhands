@@ -38,8 +38,7 @@ angular
                                     vm.otherSuppliesTotalValue,
                                     vm.otherShelterTotalValue,
                                     vm.otherFoodGasTotalValue,
-                                    vm.otherCommunicationTotalValue
-            ];
+                                    vm.otherCommunicationTotalValue];
 
 
             // Event Listeners
@@ -123,9 +122,6 @@ angular
                 }
                 return totalAmount;
             };
-
-
-
             vm.shelterTotal = function () {
                 var amount = 0;
                 amount += vm.form.shelter_rent +
@@ -154,7 +150,6 @@ angular
                 vm.otherfoodGasTotalValue = amount + vm.otherFoodGasTotalValue[0];
                 return vm.otherfoodGasTotalValue;
             };
-
             vm.foodTotal = function () {
                 return vm.foodGasInterceptedGirls() + vm.foodGasLimboGirls();
             };
@@ -189,7 +184,7 @@ angular
 
             };
 
-            vm.commTotal = function() {
+            vm.commTotal = function () {
                 return vm.commManagerTotal() + vm.commNumberOfStaffTotal() + vm.commEachStaffTotal();
             };
 
