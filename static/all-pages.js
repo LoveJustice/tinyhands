@@ -79,7 +79,7 @@ function setUpPermissionsCheckboxes() {
       $label.find('.yesno').text('No');
     }
   });
-  $('input[type="checkbox"]').click(function() {
+  $('input[type="checkbox"]').unbind('click').click(function() {
     var $label = $(this).parents('label');
     if ($(this).parents('label').hasClass('btn-danger')) {
       $label.removeClass('btn-danger').addClass('btn-success');
@@ -236,7 +236,7 @@ var DREAMSUITE = {
         if (set.id === parseInt($(this).val())) {
           for (var key in set) {
             var toBe = set[key];
-            var $checkbox = $('#id_form-' + rowIdx + '-' + key);
+            var $checkbox = $('#id_form-' + (rowIdx-1) + '-' + key);
             var current = !!$checkbox.prop('checked');
             if (toBe !== current) {
               $checkbox.trigger('click');

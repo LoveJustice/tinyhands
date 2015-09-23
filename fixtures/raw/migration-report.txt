@@ -1,0 +1,560 @@
+
+Mapping Interceptee objects (district, vdc)
+No vdc for Interceptee Shanti Rasaily (9)
+No vdc for Interceptee Dipesh Magar (10)
+No vdc for Interceptee Tej Bahadur Tamang (67)
+No vdc for Interceptee Deepak Kumar Tamang (99)
+No vdc for Interceptee Sundar Man Thakur (106)
+No vdc for Interceptee Kamala B.K (182)
+No vdc for Interceptee Sandip Pariyar (198)
+No vdc for Interceptee Binod Magranti (199)
+No vdc for Interceptee Subash Pariyar (200)
+No vdc for Interceptee Sita Tharu (257)
+No vdc for Interceptee Santoshi Tharu (258)
+No vdc for Interceptee Jagat Gurung (279)
+No vdc for Interceptee Anisha Gurubg (281)
+No vdc for Interceptee Santa Bahadur Gauchan (282)
+No vdc for Interceptee Narayan Thapa (299)
+No vdc for Interceptee Narayan Thapa (302)
+No vdc for Interceptee Sapana Kumari Sharma (326)
+No vdc for Interceptee Mohan Ghimere (345)
+No vdc for Interceptee Kusum Rai (426)
+No vdc for Interceptee Raju Pariyar (429)
+No vdc for Interceptee Raj Kumar Hamal (435)
+No vdc for Interceptee Sarala Rai (458)
+No vdc for Interceptee Khadka Shrestha (459)
+No vdc for Interceptee Nitin Tamang (470)
+No vdc for Interceptee Sunil Khan (497)
+No vdc for Interceptee Rajendra B.K (544)
+No vdc for Interceptee Radhika (576)
+No vdc for Interceptee Rayala Thapa (613)
+No vdc for Interceptee Devi Lama (628)
+No vdc for Interceptee Golu Yadav (638)
+No vdc for Interceptee Deepak Saru (659)
+No vdc for Interceptee Dal Bahadur (661)
+No vdc for Interceptee Ram Bahadur (663)
+No vdc for Interceptee Ganesh Bohara (665)
+No vdc for Interceptee Tulsi Ram G.C (670)
+No vdc for Interceptee Deva Tiwari (671)
+No vdc for Interceptee Ganga Sigdel (672)
+No vdc for Interceptee Anu Chaudhary (679)
+No vdc for Interceptee Sarita Chaudhary (680)
+No vdc for Interceptee Rekha Chaudhary (681)
+No vdc for Interceptee Nisa Khapangi (729)
+No vdc for Interceptee Abhinadan Thakur (730)
+No vdc for Interceptee Sani Kumar Thakur (731)
+No vdc for Interceptee Santosh Kumar Mahato (732)
+No vdc for Interceptee Raju Khan (733)
+No vdc for Interceptee Janu Sinjal (753)
+No vdc for Interceptee Gyari Singh (754)
+No vdc for Interceptee Hos Narayan Yadav (773)
+No vdc for Interceptee Anil Bahadur (887)
+No vdc for Interceptee Bharat Saud (889)
+No vdc for Interceptee Albadin (892)
+No vdc for Interceptee Bikesh Saha (895)
+No vdc for Interceptee Pabitra Kadyat (912)
+No vdc for Interceptee Sarsawoti Sunar (913)
+No vdc for Interceptee Sagar Uragri (914)
+No vdc for Interceptee Belmati Yer (915)
+No vdc for Interceptee Jeena Thakur (916)
+No vdc for Interceptee Shanti Chaudhary (917)
+No vdc for Interceptee Geeta Bohara (918)
+No vdc for Interceptee Santosh Bhatta (919)
+No vdc for Interceptee Sarsawoti Khadka (920)
+No vdc for Interceptee Setu Bhatta (921)
+No vdc for Interceptee Padam Thakula (922)
+No vdc for Interceptee Pabitra Bhatta (923)
+No vdc for Interceptee Manoj Singh Thakula (924)
+No vdc for Interceptee Janaki Dhami (925)
+No vdc for Interceptee Sagar Pahari (926)
+No vdc for Interceptee Himali Buda (939)
+No vdc for Interceptee Kamal Saud (940)
+No vdc for Interceptee Hari Chamling (949)
+No vdc for Interceptee Chandra Limbu (964)
+No vdc for Interceptee Prativa Gharti (1019)
+No vdc for Interceptee Kamal Saud (1020)
+No vdc for Interceptee Bishal Darnal (1028)
+No vdc for Interceptee Elina Ansari (1039)
+No vdc for Interceptee Babina Kumari Kapadiya (1059)
+No vdc for Interceptee Gorakh Dhanadi (1063)
+No vdc for Interceptee Bikki Singh (1155)
+No vdc for Interceptee Surendra Chaudhary (1225)
+No vdc for Interceptee Manju Thapa (1247)
+No vdc for Interceptee Namu Devi Oda (1269)
+No vdc for Interceptee Kamal Chaudhary (1302)
+! No location Interceptee Juna Pariyar (1343) -- district Syangja, vdc -
+No vdc for Interceptee Raju Parsad Gupta (1355)
+No vdc for Interceptee Afasri Dapali (1359)
+No vdc for Interceptee Nimpam Sherpa (1366)
+No vdc for Interceptee Ram Budhathoki (1367)
+No vdc for Interceptee Ganga Tiruwa (1383)
+No vdc for Interceptee Najir Ahamad (1403)
+No vdc for Interceptee Sunil Singh (1406)
+No vdc for Interceptee Arun Shreevastav (1432)
+No vdc for Interceptee Manila Rana (1441)
+No vdc for Interceptee Sahil Chaudhary (1446)
+No vdc for Interceptee Rajesh Kumar Upadhaya (1463)
+No vdc for Interceptee Mangal Besar (1488)
+No vdc for Interceptee Sapana Basnet (1497)
+No vdc for Interceptee Devendra Baitha (1505)
+No vdc for Interceptee Ranjita Chepang (1520)
+No vdc for Interceptee Srijana Gurung (1521)
+No vdc for Interceptee Sundar Singh Thakuri (1538)
+No vdc for Interceptee Roshan Saha (1548)
+No vdc for Interceptee Asaraf Ansari (1558)
+No vdc for Interceptee Janak Shahi (1561)
+No vdc for Interceptee Mahesh Bohara (1563)
+No vdc for Interceptee Rabina Chettri (1566)
+No vdc for Interceptee Maya Thapa (1595)
+No vdc for Interceptee Manisha Kumari Mandal (1676)
+No vdc for Interceptee Raguwar Sunar (1691)
+No vdc for Interceptee Madan Kumar Sharma (1693)
+No vdc for Interceptee Mahesh Prasad Yadav (1696)
+No vdc for Interceptee Krishna Odd (1743)
+No vdc for Interceptee Babita Sada (1763)
+No district for Interceptee Deepa Upreti (1802)
+No vdc for Interceptee Sultan Khan (1834)
+No vdc for Interceptee Srijhana Chaudhary (1844)
+No vdc for Interceptee Nemina Rai (1845)
+No vdc for Interceptee Asha Chaudhary (1846)
+! No location Interceptee Khim Kumari B.K (1863) -- district Lamjung, vdc Besisahar 7
+No vdc for Interceptee Bhim Bahadur Tamang (1866)
+No vdc for Interceptee Surya Rai (1918)
+No vdc for Interceptee Manju Shahi (1920)
+No vdc for Interceptee Logg Raj Nath (1929)
+No vdc for Interceptee Aitullaha Khan (1938)
+No vdc for Interceptee Test (2002)
+No vdc for Interceptee Lalit Tamang (2028)
+No vdc for Interceptee Sumitra Kumari Bhattarai (2033)
+No vdc for Interceptee Laxmi Saha (2060)
+No vdc for Interceptee Buddha Mahato (2063)
+No vdc for Interceptee Ruksana Khatun (2064)
+No vdc for Interceptee Fulchaniya Haluwaina (2066)
+No vdc for Interceptee Sabin Tamang (2068)
+No vdc for Interceptee Puja Lama (2080)
+No vdc for Interceptee Arjun Gupta (2081)
+No vdc for Interceptee Bhupal Buda Magar (2083)
+No vdc for Interceptee Hem Bahadur Gaha (2098)
+No vdc for Interceptee Manita Rai (2103)
+No vdc for Interceptee Kausila Mochi Chamar (2104)
+No vdc for Interceptee Nisha Thapa (2105)
+No vdc for Interceptee Nar Dev Shrestha (2106)
+No vdc for Interceptee Srijana B.K (2111)
+No vdc for Interceptee Tara Limbu (2119)
+No vdc for Interceptee Sunil Agrawal (2120)
+No vdc for Interceptee Rakesh Khetang (2121)
+No vdc for Interceptee Milan Poudel (2122)
+No vdc for Interceptee Jiwan Pokherel (2123)
+No vdc for Interceptee Stuti Shrestha (2126)
+No vdc for Interceptee Laxmi Rai (2127)
+No vdc for Interceptee Prabin Nepali (2128)
+No vdc for Interceptee Sabita Nepali (2129)
+No vdc for Interceptee Mahatab (2132)
+No vdc for Interceptee Ranjita Rai (2134)
+No vdc for Interceptee Purna Sunar (2135)
+No vdc for Interceptee Rupa Rai (2138)
+No vdc for Interceptee Sher Bahadur Basnet (2139)
+No vdc for Interceptee Jalu B,K (2140)
+No vdc for Interceptee Sunita B.K (2145)
+No vdc for Interceptee Anuradha Mandal (2146)
+No vdc for Interceptee Rabina Tamang (2148)
+No vdc for Interceptee Amrit K.C. (2150)
+1927 Interceptee mappings
+
+Mapping VictimInterview objects (victim_address_district, victim_address_vdc)
+No victim_address_vdc for VictimInterview BRT201B
+No victim_address_vdc for VictimInterview DNG070A
+! Invalid victim_address_district for VictimInterview BRT195B
+No victim_address_vdc for VictimInterview KVT237C
+! Invalid victim_address_district for VictimInterview KVT237B
+No victim_address_vdc for VictimInterview KVT237A
+No victim_address_district for VictimInterview LHN079A
+! Invalid victim_address_district for VictimInterview BGN243A
+No victim_address_vdc for VictimInterview BHD157A
+! Invalid victim_address_district for VictimInterview TTP008A
+! Invalid victim_address_district for VictimInterview KVT221A
+! Invalid victim_address_district for VictimInterview LHN072A
+! Invalid victim_address_district for VictimInterview LHN071A
+! Invalid victim_address_district for VictimInterview KVT215A
+! Invalid victim_address_district for VictimInterview BGN232A
+! Invalid victim_address_district for VictimInterview LHN069A
+! Invalid victim_address_district for VictimInterview BHW705B
+! Invalid victim_address_district for VictimInterview KVT207A
+! Invalid victim_address_district for VictimInterview KVT207B
+! Invalid victim_address_district for VictimInterview LHN065A
+! Invalid victim_address_district for VictimInterview BHW694B
+! Invalid victim_address_district for VictimInterview BHW694A
+No victim_address_vdc for VictimInterview KVT197A
+! Invalid victim_address_district for VictimInterview BRT164F
+! Invalid victim_address_district for VictimInterview BRT164A
+No victim_address_vdc for VictimInterview BHW623A
+! Invalid victim_address_district for VictimInterview BGN209B
+! Invalid victim_address_district for VictimInterview BHW582A
+! Invalid victim_address_district for VictimInterview BRT157A
+No victim_address_vdc for VictimInterview LHN058A
+No victim_address_vdc for VictimInterview LHN058B
+No victim_address_vdc for VictimInterview BHD119D
+! Invalid victim_address_district for VictimInterview KVT185C
+! Invalid victim_address_district for VictimInterview BHW563A
+No victim_address_vdc for VictimInterview BHW515A
+422 VictimInterview mappings
+
+Mapping VictimInterview objects (victim_guardian_address_district, victim_guardian_address_vdc)
+No victim_guardian_address_vdc for VictimInterview BRT201B
+No victim_guardian_address_vdc for VictimInterview DNG070A
+! Invalid victim_guardian_address_district for VictimInterview KVT237A
+No victim_guardian_address_vdc for VictimInterview LHN084A
+No victim_guardian_address_vdc for VictimInterview LHN083A
+No victim_guardian_address_vdc for VictimInterview LHN079A
+No victim_guardian_address_vdc for VictimInterview BHD161B
+No victim_guardian_address_vdc for VictimInterview TTP009A
+No victim_guardian_address_vdc for VictimInterview BHW784A
+No victim_guardian_address_vdc for VictimInterview BHD157A
+! Invalid victim_guardian_address_district for VictimInterview NRG024A
+! Invalid victim_guardian_address_district for VictimInterview TTP008A
+! Invalid victim_guardian_address_district for VictimInterview KVT225A
+! Invalid victim_guardian_address_district for VictimInterview BHW767A
+No victim_guardian_address_vdc for VictimInterview NRG022A
+No victim_guardian_address_vdc for VictimInterview BHW743A
+! Invalid victim_guardian_address_district for VictimInterview KVT215A
+! Invalid victim_guardian_address_district for VictimInterview BRT184B
+No victim_guardian_address_vdc for VictimInterview LHN069A
+No victim_guardian_address_vdc for VictimInterview GLC025A
+! Invalid victim_guardian_address_district for VictimInterview KVT207B
+! Invalid victim_guardian_address_district for VictimInterview LHN065A
+! Invalid victim_guardian_address_district for VictimInterview BHW694B
+! Invalid victim_guardian_address_district for VictimInterview GLC024A
+No victim_guardian_address_vdc for VictimInterview KVT194C
+No victim_guardian_address_vdc for VictimInterview BRT164H
+No victim_guardian_address_vdc for VictimInterview BRT164G
+No victim_guardian_address_vdc for VictimInterview BRT164E
+No victim_guardian_address_vdc for VictimInterview JNK024B
+No victim_guardian_address_vdc for VictimInterview JNK024A
+! Invalid victim_guardian_address_district for VictimInterview DNG050A
+! Invalid victim_guardian_address_district for VictimInterview DNG049A
+No victim_guardian_address_vdc for VictimInterview PRS116A
+No victim_guardian_address_vdc for VictimInterview DHU001A
+! Invalid victim_guardian_address_district for VictimInterview BHW584B
+No victim_guardian_address_vdc for VictimInterview LHN058A
+No victim_guardian_address_vdc for VictimInterview LHN058B
+! Invalid victim_guardian_address_district for VictimInterview BGN208A
+No victim_guardian_address_vdc for VictimInterview BHD119D
+! Invalid victim_guardian_address_district for VictimInterview BHD119C
+! Invalid victim_guardian_address_district for VictimInterview BHW563A
+! Invalid victim_guardian_address_district for VictimInterview BHW558A
+No victim_guardian_address_vdc for VictimInterview BHW549A
+! Invalid victim_guardian_address_district for VictimInterview BGN200A
+! Invalid victim_guardian_address_district for VictimInterview KVT180B
+No victim_guardian_address_vdc for VictimInterview BHW515A
+411 VictimInterview mappings
+
+Mapping VictimInterviewPersonBox objects (address_district, address_vdc)
+No address_vdc for VictimInterviewPersonBox VIF BHW515A
+No address_vdc for VictimInterviewPersonBox VIF DHD047A
+No address_vdc for VictimInterviewPersonBox VIF DHD047B
+No address_vdc for VictimInterviewPersonBox VIF LHN053A
+No address_vdc for VictimInterviewPersonBox VIF BHW536A
+No address_vdc for VictimInterviewPersonBox VIF BGN200C
+No address_vdc for VictimInterviewPersonBox VIF BGN204A
+No address_vdc for VictimInterviewPersonBox VIF BRT147A
+No address_district for VictimInterviewPersonBox VIF BGN205A
+No address_vdc for VictimInterviewPersonBox VIF BHW558A
+No address_vdc for VictimInterviewPersonBox VIF BHW577A
+No address_vdc for VictimInterviewPersonBox VIF BHD119D
+No address_vdc for VictimInterviewPersonBox VIF BHD119E
+No address_vdc for VictimInterviewPersonBox VIF BHD119F
+No address_district for VictimInterviewPersonBox VIF BGN208A
+No address_vdc for VictimInterviewPersonBox VIF BHD124A
+No address_vdc for VictimInterviewPersonBox VIF LHN058B
+No address_vdc for VictimInterviewPersonBox VIF LHN058A
+No address_vdc for VictimInterviewPersonBox VIF BRT155A
+No address_vdc for VictimInterviewPersonBox VIF SLG049A
+No address_vdc for VictimInterviewPersonBox VIF BHW584A
+No address_vdc for VictimInterviewPersonBox VIF BHW584B
+No address_vdc for VictimInterviewPersonBox VIF BRT158A
+No address_vdc for VictimInterviewPersonBox VIF GLC021A
+No address_vdc for VictimInterviewPersonBox VIF NPJ320A
+No address_vdc for VictimInterviewPersonBox VIF NPJ320A
+No address_vdc for VictimInterviewPersonBox VIF NPJ320A
+No address_vdc for VictimInterviewPersonBox VIF BHD130A
+No address_vdc for VictimInterviewPersonBox VIF BGN209A
+No address_vdc for VictimInterviewPersonBox VIF BGN209B
+No address_vdc for VictimInterviewPersonBox VIF PRS116A
+No address_vdc for VictimInterviewPersonBox VIF PRS116B
+No address_vdc for VictimInterviewPersonBox VIF BRT164B
+No address_vdc for VictimInterviewPersonBox VIF BHD134A
+No address_vdc for VictimInterviewPersonBox VIF LHN063A
+No address_district for VictimInterviewPersonBox VIF NPJ338A
+No address_district for VictimInterviewPersonBox VIF NPJ338B
+No address_vdc for VictimInterviewPersonBox VIF NPJ338B
+No address_vdc for VictimInterviewPersonBox VIF BGN211A
+No address_vdc for VictimInterviewPersonBox VIF BGN216C
+No address_vdc for VictimInterviewPersonBox VIF DNG059A
+No address_vdc for VictimInterviewPersonBox VIF BGN217A
+No address_vdc for VictimInterviewPersonBox VIF DNG059A
+No address_vdc for VictimInterviewPersonBox VIF BHW668A
+No address_vdc for VictimInterviewPersonBox VIF GLC021A
+No address_vdc for VictimInterviewPersonBox VIF GLC021A
+! No location VictimInterviewPersonBox VIF BHW674A -- address_district Baglung, address_vdc Adhikari chaur
+No address_vdc for VictimInterviewPersonBox VIF BHW689A
+No address_vdc for VictimInterviewPersonBox VIF HTD034A
+No address_vdc for VictimInterviewPersonBox VIF BHW710A
+No address_vdc for VictimInterviewPersonBox VIF LHN068A
+No address_vdc for VictimInterviewPersonBox VIF BHW719A
+No address_vdc for VictimInterviewPersonBox VIF LHN070A
+No address_district for VictimInterviewPersonBox VIF BGN232A
+No address_vdc for VictimInterviewPersonBox VIF GLR033A
+No address_vdc for VictimInterviewPersonBox VIF GLC028A
+No address_vdc for VictimInterviewPersonBox VIF LHN076A
+No address_vdc for VictimInterviewPersonBox VIF TTP009A
+No address_vdc for VictimInterviewPersonBox VIF TTP011A
+No address_vdc for VictimInterviewPersonBox VIF BHD161B
+No address_vdc for VictimInterviewPersonBox VIF BHD161C
+No address_vdc for VictimInterviewPersonBox VIF BHD161D
+No address_vdc for VictimInterviewPersonBox VIF BHD161D
+No address_vdc for VictimInterviewPersonBox VIF BHd16E
+No address_vdc for VictimInterviewPersonBox VIF BGN251A
+No address_vdc for VictimInterviewPersonBox VIF LHN081A
+500 VictimInterviewPersonBox mappings
+
+Mapping VictimInterviewLocationBox objects (district, vdc)
+No vdc for VictimInterviewLocationBox VIF BHW515A
+No vdc for VictimInterviewLocationBox VIF DHD047A
+No vdc for VictimInterviewLocationBox VIF DHD047A
+No vdc for VictimInterviewLocationBox VIF BRT143A
+No vdc for VictimInterviewLocationBox VIF BRT144A
+No vdc for VictimInterviewLocationBox VIF BRT146A
+No vdc for VictimInterviewLocationBox VIF KVT181A
+No vdc for VictimInterviewLocationBox VIF KVT181B
+No vdc for VictimInterviewLocationBox VIF LHN052A
+No vdc for VictimInterviewLocationBox VIF LHN053A
+No vdc for VictimInterviewLocationBox VIF BHW533A
+No vdc for VictimInterviewLocationBox VIF BHW536A
+No vdc for VictimInterviewLocationBox VIF BHW541A
+No vdc for VictimInterviewLocationBox VIF KVT180B
+No vdc for VictimInterviewLocationBox VIF KVT180B
+No vdc for VictimInterviewLocationBox VIF KVT180A
+No vdc for VictimInterviewLocationBox VIF KVT180A
+No vdc for VictimInterviewLocationBox VIF BGN198A
+No vdc for VictimInterviewLocationBox VIF BGN198B
+No vdc for VictimInterviewLocationBox VIF BGN198C
+No vdc for VictimInterviewLocationBox VIF BGN199A
+No vdc for VictimInterviewLocationBox VIF BGN200A
+No vdc for VictimInterviewLocationBox VIF BGN200B
+No vdc for VictimInterviewLocationBox VIF BGN200C
+No vdc for VictimInterviewLocationBox VIF BHW553A
+No vdc for VictimInterviewLocationBox VIF BHW549A
+No vdc for VictimInterviewLocationBox VIF KVT183A
+No vdc for VictimInterviewLocationBox VIF KVT183B
+No vdc for VictimInterviewLocationBox VIF KVT183C
+No vdc for VictimInterviewLocationBox VIF BHW558A
+No vdc for VictimInterviewLocationBox VIF BHW560A
+No vdc for VictimInterviewLocationBox VIF BHW561A
+No vdc for VictimInterviewLocationBox VIF BHW561B
+No vdc for VictimInterviewLocationBox VIF BHW563A
+No vdc for VictimInterviewLocationBox VIF LHN054A
+No vdc for VictimInterviewLocationBox VIF LHN054A
+No vdc for VictimInterviewLocationBox VIF LHN055A
+No vdc for VictimInterviewLocationBox VIF LHN055A
+No vdc for VictimInterviewLocationBox VIF BHW571A
+No vdc for VictimInterviewLocationBox VIF KVT185A
+No vdc for VictimInterviewLocationBox VIF KVT185B
+No vdc for VictimInterviewLocationBox VIF KVT185C
+No vdc for VictimInterviewLocationBox VIF KVT185D
+No vdc for VictimInterviewLocationBox VIF KVT185E
+No vdc for VictimInterviewLocationBox VIF BHW577A
+No vdc for VictimInterviewLocationBox VIF BHD118A
+No vdc for VictimInterviewLocationBox VIF BHD119A
+No vdc for VictimInterviewLocationBox VIF BHD124A
+No vdc for VictimInterviewLocationBox VIF LHN056A
+No vdc for VictimInterviewLocationBox VIF LHN056A
+No vdc for VictimInterviewLocationBox VIF BHD120A
+No vdc for VictimInterviewLocationBox VIF LHN057A
+No district for VictimInterviewLocationBox VIF LHN058B
+No district for VictimInterviewLocationBox VIF LHN058A
+No vdc for VictimInterviewLocationBox VIF SLG049A
+No vdc for VictimInterviewLocationBox VIF BHW582A
+No vdc for VictimInterviewLocationBox VIF BHW584A
+No vdc for VictimInterviewLocationBox VIF BHW584B
+No vdc for VictimInterviewLocationBox VIF GLC021A
+No vdc for VictimInterviewLocationBox VIF GAR015A
+No vdc for VictimInterviewLocationBox VIF GAR015A
+No vdc for VictimInterviewLocationBox VIF GAR015B
+No vdc for VictimInterviewLocationBox VIF GAR015B
+No vdc for VictimInterviewLocationBox VIF KVT187A
+No vdc for VictimInterviewLocationBox VIF KVT187B
+No vdc for VictimInterviewLocationBox VIF GAR015C
+No vdc for VictimInterviewLocationBox VIF GAR015C
+No vdc for VictimInterviewLocationBox VIF GAR015D
+No vdc for VictimInterviewLocationBox VIF GAR015D
+No vdc for VictimInterviewLocationBox VIF GAR015E
+No vdc for VictimInterviewLocationBox VIF GAR015E
+No vdc for VictimInterviewLocationBox VIF GAR015F
+No vdc for VictimInterviewLocationBox VIF GAR015F
+No vdc for VictimInterviewLocationBox VIF GAR015G
+No vdc for VictimInterviewLocationBox VIF GAR015G
+No vdc for VictimInterviewLocationBox VIF GAR015H
+No vdc for VictimInterviewLocationBox VIF GAR015H
+No vdc for VictimInterviewLocationBox VIF GAR015I
+No vdc for VictimInterviewLocationBox VIF GAR015I
+No vdc for VictimInterviewLocationBox VIF NPJ320A
+No district for VictimInterviewLocationBox VIF BHD129A
+No vdc for VictimInterviewLocationBox VIF GLC022A
+No vdc for VictimInterviewLocationBox VIF GLC022B
+No vdc for VictimInterviewLocationBox VIF BHW599A
+No vdc for VictimInterviewLocationBox VIF BHW599A
+No vdc for VictimInterviewLocationBox VIF BHW600A
+No district for VictimInterviewLocationBox VIF BHD130A
+No vdc for VictimInterviewLocationBox VIF BHW609A
+No vdc for VictimInterviewLocationBox VIF BGN209A
+No vdc for VictimInterviewLocationBox VIF BHW623A
+No vdc for VictimInterviewLocationBox VIF BHW623A
+No vdc for VictimInterviewLocationBox VIF GLC023A
+No vdc for VictimInterviewLocationBox VIF DNG049A
+No vdc for VictimInterviewLocationBox VIF DNG050A
+No vdc for VictimInterviewLocationBox VIF DNG051A
+No vdc for VictimInterviewLocationBox VIF JNK024A
+No vdc for VictimInterviewLocationBox VIF JNK024B
+No vdc for VictimInterviewLocationBox VIF BRT164A
+No vdc for VictimInterviewLocationBox VIF LHN062A
+No district for VictimInterviewLocationBox VIF BHD135A
+No vdc for VictimInterviewLocationBox VIF BGN210A
+No vdc for VictimInterviewLocationBox VIF BRT165A
+No vdc for VictimInterviewLocationBox VIF GLC024A
+No vdc for VictimInterviewLocationBox VIF LHN063A
+No vdc for VictimInterviewLocationBox VIF NPJ338A
+No vdc for VictimInterviewLocationBox VIF NPJ338B
+No vdc for VictimInterviewLocationBox VIF BGN212A
+No vdc for VictimInterviewLocationBox VIF BGN211A
+No vdc for VictimInterviewLocationBox VIF BGN211A
+No vdc for VictimInterviewLocationBox VIF DNG055A
+No vdc for VictimInterviewLocationBox VIF DNG055A
+No vdc for VictimInterviewLocationBox VIF DNG057A
+No vdc for VictimInterviewLocationBox VIF BRT169A
+No vdc for VictimInterviewLocationBox VIF BRT169B
+No vdc for VictimInterviewLocationBox VIF BRT169C
+No vdc for VictimInterviewLocationBox VIF KVT197A
+No vdc for VictimInterviewLocationBox VIF KVT197B
+No vdc for VictimInterviewLocationBox VIF BRT167A
+No vdc for VictimInterviewLocationBox VIF BGN213A
+No vdc for VictimInterviewLocationBox VIF BRT170B
+No vdc for VictimInterviewLocationBox VIF BRT170A
+No vdc for VictimInterviewLocationBox VIF BGN216D
+No vdc for VictimInterviewLocationBox VIF NPJ340A
+No district for VictimInterviewLocationBox VIF DNG059A
+No vdc for VictimInterviewLocationBox VIF BHW662A
+No vdc for VictimInterviewLocationBox VIF BGN220A
+No vdc for VictimInterviewLocationBox VIF BHW668A
+No vdc for VictimInterviewLocationBox VIF KVT201A
+No district for VictimInterviewLocationBox VIF BGN222A
+No district for VictimInterviewLocationBox VIF BGN222B
+No vdc for VictimInterviewLocationBox VIF KVT205A
+No vdc for VictimInterviewLocationBox VIF BHW687A
+No vdc for VictimInterviewLocationBox VIF BHW687A
+No vdc for VictimInterviewLocationBox VIF BHW689A
+No vdc for VictimInterviewLocationBox VIF BHW691A
+No vdc for VictimInterviewLocationBox VIF DNG061A
+No vdc for VictimInterviewLocationBox VIF DNG062A
+No vdc for VictimInterviewLocationBox VIF DNG064A
+No vdc for VictimInterviewLocationBox VIF DET- Pratik Pokharel
+No vdc for VictimInterviewLocationBox VIF BGN225A
+No vdc for VictimInterviewLocationBox VIF BHW694A
+No vdc for VictimInterviewLocationBox VIF BHW694B
+No vdc for VictimInterviewLocationBox VIF BHW701A
+No vdc for VictimInterviewLocationBox VIF BHW705A
+No vdc for VictimInterviewLocationBox VIF BHW705B
+No vdc for VictimInterviewLocationBox VIF BHW705B
+No vdc for VictimInterviewLocationBox VIF LHN065B
+No vdc for VictimInterviewLocationBox VIF BHW709A
+No vdc for VictimInterviewLocationBox VIF BHW710A
+No vdc for VictimInterviewLocationBox VIF DNG063B
+No vdc for VictimInterviewLocationBox VIF BHW714A
+No vdc for VictimInterviewLocationBox VIF LHN069A
+No vdc for VictimInterviewLocationBox VIF LHN068A
+No vdc for VictimInterviewLocationBox VIF BHW713A
+No vdc for VictimInterviewLocationBox VIF BHW719A
+No vdc for VictimInterviewLocationBox VIF BHW720A
+No vdc for VictimInterviewLocationBox VIF BGN226A
+No vdc for VictimInterviewLocationBox VIF BGN228B
+No vdc for VictimInterviewLocationBox VIF TTP003A
+No vdc for VictimInterviewLocationBox VIF BHW722A
+No vdc for VictimInterviewLocationBox VIF BHW723A
+No vdc for VictimInterviewLocationBox VIF LHN070A
+No vdc for VictimInterviewLocationBox VIF GLR029A
+No vdc for VictimInterviewLocationBox VIF PRS117A
+No vdc for VictimInterviewLocationBox VIF DNG066A
+No vdc for VictimInterviewLocationBox VIF GLR033A
+No vdc for VictimInterviewLocationBox VIF LHN072A
+No vdc for VictimInterviewLocationBox VIF BRT186A
+No vdc for VictimInterviewLocationBox VIF BRT186B
+No vdc for VictimInterviewLocationBox VIF BRT186C
+No vdc for VictimInterviewLocationBox VIF BRT186D
+No vdc for VictimInterviewLocationBox VIF BRT187A
+No vdc for VictimInterviewLocationBox VIF GLC027C
+No vdc for VictimInterviewLocationBox VIF LHN074A
+No vdc for VictimInterviewLocationBox VIF LHN0075A
+No vdc for VictimInterviewLocationBox VIF KVT221A
+! No location VictimInterviewLocationBox VIF BHW768A -- district Rupandehi, vdc -
+No vdc for VictimInterviewLocationBox VIF GLC028A
+No vdc for VictimInterviewLocationBox VIF KVT223A
+No vdc for VictimInterviewLocationBox VIF KVT223B
+No vdc for VictimInterviewLocationBox VIF BHD156A
+No vdc for VictimInterviewLocationBox VIF BHW773A
+No vdc for VictimInterviewLocationBox VIF LHN076A
+No vdc for VictimInterviewLocationBox VIF GLR038A
+No vdc for VictimInterviewLocationBox VIF BHW779A
+No vdc for VictimInterviewLocationBox VIF BGN779B
+No district for VictimInterviewLocationBox VIF BGN240A
+No vdc for VictimInterviewLocationBox VIF NRG024A
+No district for VictimInterviewLocationBox VIF LHN077A
+No district for VictimInterviewLocationBox VIF LHN077B
+No vdc for VictimInterviewLocationBox VIF LHN078A
+No vdc for VictimInterviewLocationBox VIF LHN078B
+No vdc for VictimInterviewLocationBox VIF TTP010A
+No vdc for VictimInterviewLocationBox VIF TTP011A
+No vdc for VictimInterviewLocationBox VIF BRT192A
+No vdc for VictimInterviewLocationBox VIF BRT192B
+No vdc for VictimInterviewLocationBox VIF BHW794A
+No vdc for VictimInterviewLocationBox VIF KVT230B
+No vdc for VictimInterviewLocationBox VIF KVT230C
+No vdc for VictimInterviewLocationBox VIF KVT230D
+No vdc for VictimInterviewLocationBox VIF KVT230E
+No vdc for VictimInterviewLocationBox VIF BHD161A
+No vdc for VictimInterviewLocationBox VIF BHD161C
+No vdc for VictimInterviewLocationBox VIF BHD161D
+No vdc for VictimInterviewLocationBox VIF LHN080A
+No vdc for VictimInterviewLocationBox VIF LHN081A
+No vdc for VictimInterviewLocationBox VIF BHW805A
+No vdc for VictimInterviewLocationBox VIF LHN082A
+No vdc for VictimInterviewLocationBox VIF LHN084A
+No vdc for VictimInterviewLocationBox VIF BHW811A
+No vdc for VictimInterviewLocationBox VIF KVT237A
+No vdc for VictimInterviewLocationBox VIF KVT237A
+No vdc for VictimInterviewLocationBox VIF KVT237B
+No vdc for VictimInterviewLocationBox VIF KVT237B
+No vdc for VictimInterviewLocationBox VIF KVT237C
+No vdc for VictimInterviewLocationBox VIF KVT237C
+73 VictimInterviewLocationBox mappings
+
+Processing canonical names
+4137 canonical names
+Created 120 districts, 4137 VDCs
+
+Processing name variations
+9163 name variations
+Created 361 districts, 5460 VDCs
+
+Updating Interceptee objects
+Updated 1927 Interceptee objects
+
+Updating VictimInterview objects
+Updated 422 VictimInterview objects
+
+Updating VictimInterview objects
+Updated 411 VictimInterview objects
+
+Updating VictimInterviewPersonBox objects
+Updated 500 VictimInterviewPersonBox objects
+
+Updating VictimInterviewLocationBox objects
+Updated 73 VictimInterviewLocationBox objects
