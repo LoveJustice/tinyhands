@@ -1,3 +1,5 @@
+// BACKEND Ignore
+
 *.sqlite
 *.sqlite3
 *.sqlitebak
@@ -26,5 +28,18 @@ foo[1-9].*
 # for now in dev we check in /media
 media/
 
-node_modules/
 *.pyc
+
+
+
+
+
+// FRONTEND Ignore
+
+node_modules/
+bower_components/
+.sass-cache/
+.idea/
+.tmp/
+dist/
+jsconfig.json
