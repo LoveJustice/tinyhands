@@ -81,7 +81,7 @@ function makeCheckboxAppearAsAButton(className,checkedText,uncheckedText) {
       $label.find(className).text(uncheckedText);
     }
   });
-  $(className).parents('label').click(function() {
+  $(className).parents('label').unbind('click').click(function(event) {
     var $label = $(this);
     var $input = $label.find('input');
     if ($label.hasClass('btn-danger')) {
