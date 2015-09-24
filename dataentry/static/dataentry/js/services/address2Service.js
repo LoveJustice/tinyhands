@@ -24,12 +24,12 @@ function address2Service($http) {
             });
     }
 
-	function searchAddresses(searchValue) {
+	function searchAddresses(pageSize, searchValue) {
         // grab all of the staff for this budgetCalcSheet
         if(!searchValue){
             searchValue = "empty";
         }
-        return $http.get('/api/address2/search/' + searchValue + '/').
+        return $http.get('/api/address2/search/' + searchValue + '/' + '?page_size=' + pageSize).
             success(function (data) {
                 return data;
             }).

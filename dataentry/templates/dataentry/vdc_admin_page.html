@@ -54,7 +54,7 @@
         </tr>
         </thead>
         <tbody ng-init="sortColumn = 'name'">
-            <tr ng-repeat="address in vm.addresses| orderBy:sortColumn:reverse">
+            <tr ng-repeat="address in vm.addresses | orderBy:sortColumn:reverse">
 
                 <td class="text-center">{{ address.name }}</td>
                 <td class="text-center">{{ address.latitude }}</td>
@@ -65,24 +65,42 @@
                     {{ address.verified ? "Yes" : "No" }}
                 </td>
                 <td>
-                    <a href="#" ng-click="" class="btn btn-warning">Edit</a>
+                    <a href="#" ng-click="vm.editAddress2(address)" class="btn btn-warning">Edit</a>
                 </td>
             </tr>
             <tr ng-show="vm.addresses.length == 0">
                 <td colspan="12">There are currently no Address 2 records in the database</td>
             </tr>
         </tbody>
-        {% endverbatim %}
     </table>
     <div class="row text-center">
         <button ng-disabled="!vm.nextPageUrl" ng-click="vm.loadMoreAddresses()" class="btn btn-primary" style="margin-bottom:25px; width:90%;">Load more results</button>
     </div>
 
+
+<script type="text/ng-template" id="myModalContent.html">
+    <div class="modal-header">
+        <h3 class="modal-title">Edit Address 2</h3>
+    </div>
+    <div class="modal-body">
+        <h1>{{ address }}</h1>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" type="button" ng-click="">Save</button>
+        <button class="btn btn-danger" type="button" ng-click="">Cancel</button>
+    </div>
+</script>
+
+    <!-- Loading animation container -->
+    <div ng-show="vm.loading" class="loader-container">
+        <div class="loader">Loading...</div>
+    </div>
 </div>
 
 
 
 
+{% endverbatim %}
 
 
 {% load static from staticfiles %}
