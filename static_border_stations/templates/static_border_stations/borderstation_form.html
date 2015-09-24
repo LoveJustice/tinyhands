@@ -1,5 +1,6 @@
 {% load bootstrap %}
 {% load unslugify %}
+
 <div class="row">
     <div class="col-lg-6">
         <h1>Details</h1>
@@ -41,7 +42,7 @@
     <div class="col-sm-6">
         {{form.date_established|bootstrap}}
     </div>
-    <div class="col-sm-6" style="margin: 20px 0px">
+    <div class="col-sm-6" style="margin: 23px 0px">
         {{form.has_shelter|bootstrap}}
     </div>
 </div>
@@ -53,3 +54,5 @@
         {{form.longitude|bootstrap}}
     </div>
 </div>
+<td class="col-sm-10"></p><label class="btn"><span class="openclosed"></span>{{ form.open }}</label></td>
+
