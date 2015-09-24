@@ -15,12 +15,8 @@ from dataentry.models import BorderStation
 from static_border_stations.models import Staff, CommitteeMember, Location
 
 from dataentry.forms import BorderStationForm
+from dataentry.serializers import BorderStationSerializer
 from static_border_stations.serializers import StaffSerializer
-
-class BorderStationsView(APIView):
-  def get (self, request, pk):
-    result = serializers.serialize("json", BorderStation.objects.get(pk=pk))
-    return Response(results, status=status.HTTP_200_OK)
 
 
 class FormSetForStations(InlineFormSet):
@@ -103,3 +99,8 @@ class StaticBorderStationsDetailView(StaticBorderStationsUpdateView):
         context = super(StaticBorderStationsDetailView, self).get_context_data(**kwargs)
         context["saved"] = True
         return context
+
+
+class BorderStationViewSet(viewsets.ModelViewSet):
+    queryset = BorderStation.objects.all()
+    serializer_class = BorderStationSerializer

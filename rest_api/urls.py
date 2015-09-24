@@ -1,5 +1,6 @@
 from django.conf.urls import patterns, url
 from budget.views import BudgetViewSet, OtherItemsViewSet
+from static_border_stations.views import BorderStationViewSet
 
 urlpatterns = patterns('rest_api.views',
     # Budget URLs
@@ -10,4 +11,8 @@ urlpatterns = patterns('rest_api.views',
     url(r'^budgetcalculationform/(?P<parent_pk>\d+)/otheritem/$', OtherItemsViewSet.as_view({'get': 'list_by_budget_sheet', 'post': 'create'}), name='BudgetCalculationWithId'),
     url(r'^budgetcalculationform/(?P<parent_pk>\d+)/otheritem/(?P<pk>\d+)/$', OtherItemsViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}), name='BudgetCalculationWithId'),
 
+
+    # BorderStation URLs
+    url(r'^border-stations/$', BorderStationViewSet.as_view({'get':'list', 'post':'create'}), name="BorderStations"), # Detail
+    url(r'^border-stations/(?P<pk>\d+)/$', BorderStationViewSet.as_view({'get':'retrieve', 'put':'update', 'delete':'destroy'}), name="BorderStation"),
 )

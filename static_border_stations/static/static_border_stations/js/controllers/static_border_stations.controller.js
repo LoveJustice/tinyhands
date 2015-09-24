@@ -4,9 +4,23 @@
 	angular.module('BorderStationsMod')
 		.controller('BorderStationsCtrl', BorderStationsCtrl);
 		
-	BorderStationsCtrl.$inject = [];
+	BorderStationsCtrl.$inject = ['BorderStationsService'];
 		
-	function BorderStationsCtrl() {
+	function BorderStationsCtrl(BorderStationsService) {
+		var vm = this;
 		
+		vm.details = {};
+		
+		activate();
+		
+		function activate() {
+			getBorderstation();
+		}
+		
+		function getBorderstation() {
+			BorderStationsService.getStation(0).then(function(data) {
+				vm.details = data.data;
+			});
+		}
 	}
 })();

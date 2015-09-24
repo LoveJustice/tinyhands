@@ -22,39 +22,46 @@
     </div>
 {% endif %}
 {% endblock %}-->
-
-<div class="row" ng-controller="BorderStationsCtrl as bsCtrl">
+{% verbatim %}
+<div class="row">
   <h1>Details</h1>
   <hr/>
   <div class="row">
       <div class="col-sm-6 form-group">
         <label for="stationName">Station Name</label>
-        <input type="text" class="form-control" id="stationName" placeholder="Station Name" ng-model="">
+        <input type="text" class="form-control" id="stationName" placeholder="Station Name"
+               ng-model="bsCtrl.details.station_name">
       </div>
       <div class="col-sm-6 form-group">
         <label for="stationCode">Station Code</label>
-        <input type="text" class="form-control" id="stationCode" placeholder="Station Code" ng-model="">
+        <input type="text" class="form-control" id="stationCode" placeholder="Station Code"
+               ng-model="bsCtrl.details.station_code">
       </div>
   </div>
   <div class="row">
       <div class="col-sm-6 form-group">
         <label for="dateEstablished">Date Established</label>
-        <input type="text" class="form-control" id="dateEstablished" placeholder="Date Established" ng-model="">
+        <input type="text" class="form-control" id="dateEstablished" placeholder="Date Established" 
+               ng-model="bsCtrl.details.date_established">
       </div>
       <div class="col-sm-6 checkbox" style="margin: 20px 0px">
         <label>
-          <input type="checkbox" ng-model=""> Has Shelter
+          <input type="checkbox"
+                 ng-model="bsCtrl.details.has_shelter"> Has Shelter
         </label>
       </div>
   </div>
   <div class="row">
       <div class="col-sm-6 form-group">
         <label for="latitude">Latitude</label>
-        <input type="text" class="form-control" id="latitude" placeholder="Latitude" ng-model="">
+        <input type="text" class="form-control" id="latitude" placeholder="Latitude"
+               ng-model="bsCtrl.details.latitude">
       </div>
       <div class="col-sm-6 form-group">
         <label for="longitude">Longitude</label>
-        <input type="text" class="form-control" id="longitude" placeholder="Longitude" ng-model="">
+        <input type="text" class="form-control" id="longitude" placeholder="Longitude"
+               ng-model="bsCtrl.details.longitude">
       </div>
   </div>
 </div>
+{% endverbatim %}

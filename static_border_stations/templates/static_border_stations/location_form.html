@@ -1,19 +1,21 @@
-<div class="row" ng-controller="BorderStationsCtrl as bsCtrl">
+{% verbatim %}
+<div class="row">
   <h1>Locations</h1><hr/>
   <div class="row">
       <div class="col-sm-12 form-group">
         <label for="locationName">Name</label>
-        <input type="text" class="form-control" id="locationName" placeholder="Location Name" ng-model="">
+        <input type="text" class="form-control" id="locationName" placeholder="Location Name">
       </div>
   </div>
   <div class="row">
       <div class="col-sm-6 form-group">
         <label for="latitude">Latitude</label>
-        <input type="text" class="form-control" id="latitude" placeholder="Latitude" ng-model="">
+        <input type="text" class="form-control" id="latitude" placeholder="Latitude">
       </div>
       <div class="col-sm-6 form-group">
         <label for="longitude">Longitude</label>
-        <input type="text" class="form-control" id="longitude" placeholder="Longitude" ng-model="">
+        <input type="text" class="form-control" id="longitude" placeholder="Longitude">
       </div>
   </div>
 </div>
+{% endverbatim %}
