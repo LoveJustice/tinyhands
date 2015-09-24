@@ -82,17 +82,14 @@ function makeCheckboxAppearAsAButton(className,checkedText,uncheckedText) {
     }
   });
   $(className).parents('label').click(function() {
-    //alert("In function");
     var $label = $(this);
     var $input = $label.find('input');
     if ($label.hasClass('btn-danger')) {
-      //alert("here1");
       $input.attr('checked','checked');
       $label.removeClass('btn-danger').addClass('btn-success');
       $label.find(className).text(checkedText);
     }
     else if ($label.hasClass('btn-success')) {
-      //alert("here2");
       $input.removeAttr('checked');
       $label.removeClass('btn-success').addClass('btn-danger');
       $label.find(className).text(uncheckedText);
