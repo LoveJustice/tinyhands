@@ -16,6 +16,7 @@ Install these modules (`sudo apt-get install <module name>`).
       libxml2-dev
       libxslt-dev
       zlib1g-dev
+      libjpeg-dev
 
 Clone the repository.
 

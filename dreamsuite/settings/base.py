@@ -22,7 +22,10 @@ DEBUG = False
 TEMPLATE_DEBUG = False
 
 SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
-FIXTURE_DIRS = (os.path.join(BASE_DIR, 'fixtures'),)
+FIXTURE_DIRS = (
+                    os.path.join(BASE_DIR, 'fixtures'),
+                    os.path.join(BASE_DIR, 'dataentry/fixtures'),
+                )
 
 AUTH_USER_MODEL = 'accounts.Account'
 LOGIN_URL = '/login/'
@@ -49,6 +52,8 @@ INSTALLED_APPS = (
     'rest_framework',
     'static_border_stations',
     'rest_api',
+    'django_extensions',
+    'bootstrap_pagination',
 )
 
 import django.conf.global_settings as DEFAULT_SETTINGS
@@ -103,7 +108,10 @@ TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, "templates"),
 )
 
-TEMPLATE_CONTEXT_PROCESSORS += ("dataentry.context_processors.border_stations_processor", )
+TEMPLATE_CONTEXT_PROCESSORS += (
+    "dataentry.context_processors.border_stations_processor",
+    "django.core.context_processors.request",
+)
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'

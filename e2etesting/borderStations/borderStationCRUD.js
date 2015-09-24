@@ -1,6 +1,7 @@
 'use strict';
 
 var c = require('../testConstants.json');
+var methods = require('../commonMethods.js');
 
 var borderStationPage = function() {
     var page = this;
@@ -34,8 +35,9 @@ var borderStationPage = function() {
 
         this.location0_set_name = element(by.id("id_location_set-0-name")).sendKeys(c.location0SetName);
         this.location0_set_latitude = element(by.id("id_location_set-0-latitude")).sendKeys(c.location0SetLatitude);
+        browser.sleep(500);
         this.location0_set_longitude = element(by.id("id_location_set-0-longitude")).sendKeys(c.location0SetLongitude).submit();
-
+        browser.sleep(500);
     };
 
     this.viewBorderStation = function() {
@@ -43,7 +45,8 @@ var borderStationPage = function() {
     };
 
     this.closeBorderStation = function() {
-        this.closeBorder = element(by.id("borderUpdate")).click()
+        methods.click(element(by.id("borderUpdate")));
+        //this.closeBorder =  element(by.id("borderUpdate")).click()
     };
 
     this.editBorderStation = function() {
@@ -64,7 +67,8 @@ var borderStationPage = function() {
         this.location1_set_latitude = element(by.id("id_location_set-1-latitude")).sendKeys(c.location1SetLatitude);
         this.location1_set_longitude = element(by.id("id_location_set-1-longitude")).sendKeys(c.location1SetLongitude);
 
-        this.updateBorder = element(by.id("borderUpdate")).click();
+        methods.click(element(by.id("borderUpdate")));
+        //this.updateBorder = element(by.id("borderUpdate")).click();
     };
 };
 

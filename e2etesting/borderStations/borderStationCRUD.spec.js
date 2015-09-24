@@ -1,6 +1,7 @@
 var c = require('../testConstants.json');
 var loginPage = require('../accounts/loginPage.js');
 var borderStationPage = require('./borderStationCRUD.js');
+var methods = require('../commonMethods.js');
 
 describe('Border Station CRUD -', function() {
 
