@@ -12,7 +12,11 @@ echo "######   Create new test database.   ######"
 
 #import data to test database
 echo "######   Load 'e2etesting/fixtures/*' into database.   ######"
-./manage.py loaddata e2etesting/fixtures/*
+./manage.py loaddata e2etesting/fixtures/border_stations.json
+./manage.py loaddata e2etesting/fixtures/test_accounts.json
+./manage.py loaddata e2etesting/fixtures/test_alerts.json
+./manage.py loaddata e2etesting/fixtures/test_geo_code_locations.json
+./manage.py loaddata e2etesting/fixtures/test_vif.json
 
 echo "######   Start the server.   ######"
 ./manage.py runserver 0.0.0.0:8001 &
