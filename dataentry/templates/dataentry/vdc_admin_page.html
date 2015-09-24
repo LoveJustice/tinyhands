@@ -61,8 +61,7 @@
                 <td class="text-center">{{ address.longitude }}</td>
                 <td class="text-center">{{ address.district }}</td>
                 <td class="text-center">{{ address.cannonical_name }}</td>
-                <td class="text-center">
-                    {{ address.verified ? "Yes" : "No" }}
+                <td class="text-center">{{ address.verified ? "Yes" : "No" }}
                 </td>
                 <td>
                     <a href="#" ng-click="vm.editAddress2(address)" class="btn btn-warning">Edit</a>
@@ -78,18 +77,34 @@
     </div>
 
 
-<script type="text/ng-template" id="myModalContent.html">
-    <div class="modal-header">
-        <h3 class="modal-title">Edit Address 2</h3>
-    </div>
-    <div class="modal-body">
-        <h1>{{ address }}</h1>
-    </div>
-    <div class="modal-footer">
-        <button class="btn btn-primary" type="button" ng-click="">Save</button>
-        <button class="btn btn-danger" type="button" ng-click="">Cancel</button>
-    </div>
-</script>
+    <script type="text/ng-template" id="myModalContent.html">
+        <div class="modal-header">
+            <h3 class="modal-title">Edit Address 2</h3>
+        </div>
+        <div class="modal-body">
+
+            <!-- BEGIN Stephen Experimental Code -->
+
+            <input type="text" ng-model="address.name"/> Name
+
+            <input type="text" ng-model="address.latitude"/> Latitude
+
+            <input type="text" ng-model="address.longitude"/> Longitude
+
+            <input type="text" ng-model="address.district"/> District
+
+            <input type="text" ng-model="address.cannonical_name"/> CN
+
+            <input type="text" ng-model="address.verified"/> Verified
+
+            <!--END Stephen Experimental Code -->
+
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" type="button" ng-click="save()">Save</button>
+            <button class="btn btn-danger" type="button" ng-click="cancel()">Cancel</button>
+        </div>
+    </script>
 
     <!-- Loading animation container -->
     <div ng-show="vm.loading" class="loader-container">

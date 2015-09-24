@@ -69,10 +69,18 @@ angular
               size: size,
               resolve: {
                 address: function () {
-                    return "hello";
+                    return address;
                 }
               }
             });
+            modalInstance.result.then(function (address) {
+                console.log(address);
+                address2Service.saveAddress(address)
+                    .success(function (data){
+                        console.log(data);
+                    });
+            });
+
         }
 
 
@@ -80,8 +88,14 @@ angular
 
 angular
     .module('DataEntry')
-        .controller('ModalInstanceCtrl', function ($scope, $modalInstance, address) {
+        .controller('ModalInstanceCtrl', function ($scope, $modalInstance, address, address2Service) {
+          $scope.address = address;
 
-        console.log(address);
-      $scope.address = address;
+          $scope.save = function () {
+            $modalInstance.close($scope.address);
+          };
+
+          $scope.cancel = function () {
+            $modalInstance.dismiss('cancel');
+          };
 });

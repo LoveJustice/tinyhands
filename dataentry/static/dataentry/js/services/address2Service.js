@@ -10,7 +10,8 @@ function address2Service($http) {
 	return {
 		listAddresses: listAddresses,
 		searchAddresses: searchAddresses,
-		loadMoreAddresses: loadMoreAddresses
+		loadMoreAddresses: loadMoreAddresses,
+		saveAddress: saveAddress
 	};
 
 	function listAddresses(pageSize) {
@@ -41,6 +42,17 @@ function address2Service($http) {
 	function loadMoreAddresses(url, pageSize) {
         // grab all of the staff for this budgetCalcSheet
         return $http.get(url + '&page_size=' + pageSize).
+            success(function (data) {
+                return data;
+            }).
+            error(function (data, status, headers, config) {
+                console.log(data, status, headers, config);
+            });
+    }
+
+	function saveAddress(address) {
+        // grab all of the staff for this budgetCalcSheet
+        return $http.put('/api/address2/' + address.id, address).
             success(function (data) {
                 return data;
             }).
