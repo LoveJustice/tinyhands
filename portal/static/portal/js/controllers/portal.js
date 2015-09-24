@@ -81,7 +81,7 @@
 
                     '<p>Est. ' + established(borderStation) + '</p>' +
                     '<p>Has shelter: ' + hasShelter(borderStation) + '</p>' +
-                    '<p id="stationInterception">Interceptions: ' + '</p>' +
+                    '<p id="stationInterception"></p>' +
                     '<p id="staffset"># of Staff ' + '</p>' +
                 '</div>'+
 
@@ -151,11 +151,11 @@
                 return function() {
                     infoWindow.setContent(getStaticContentString(data[station]));
 
-                    getMarkerDataOnHoverOrClick(data,station);
-
                     if(!marker.clicked) {
                         infoWindow.open(map, this);
                     }
+
+                    getMarkerDataOnHoverOrClick(data,station);
 
                     $(".gm-style-iw").each(function() { // TODO: We are resizing according to the length of the station name? we need a better solution for this!
                         if(data[station].fields.station_name.length > 10) {
