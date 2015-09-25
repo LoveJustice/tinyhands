@@ -1,6 +1,7 @@
 'use strict';
 
 var constants = require('../testConstants.json');
+var commonMethods = require('../commonMethods.js');
 
 var permissionsPage = function() {
     var page = this;
@@ -19,7 +20,9 @@ var permissionsPage = function() {
 
     this.navigateToAccessControl = function() {
         browser.get(constants.webAddress + '/accounts');
+        browser.sleep(1000);
         this.accountPermission = element(by.partialLinkText("Access Control")).click();
+        browser.sleep(1000);
     };
 
     this.navigateToVifPage = function() {
@@ -35,9 +38,19 @@ var permissionsPage = function() {
     };
 
     this.checkPermission = function(permission) {
-        this.permissions = element(by.id(permission));
-        this.button = this.permissions.element(by.xpath('..'));
-        this.button.click();
+        commonMethods.click(element(by.id(permission)).element(by.xpath('..')));
+    };
+
+    this.checkPermissionSetup = function(permission) {
+        this.navigateToAccountPage();
+        this.resetPermissions();
+        this.checkPermission(permission);
+    };
+
+    this.checkPermissionCleanup = function() {
+        this.navigateToAccountPage();
+        this.resetPermissions();
+        this.savePermissions();
     };
 
     this.savePermissions = function() {

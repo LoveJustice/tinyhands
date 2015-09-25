@@ -71,16 +71,22 @@ def previous_data(request, pk, month, year):
         last_months = all_interception_records.filter(date_time_of_interception__gte=(date+relativedelta(months=-1)), date_time_of_interception__lte=date)
         last_3_months = all_interception_records.filter(date_time_of_interception__gte=(date+relativedelta(months=-3)), date_time_of_interception__lte=date)
 
-        last_months_count = last_months.aggregate(total=Sum('interceptee_count'))
-        last_3_months_count = last_3_months.aggregate(total=Sum('interceptee_count'))
-        all_interception_records_count = all_interception_records.aggregate(total=Sum('interceptee_count'))
+        last_months_count = last_months.aggregate(total=Sum('number_of_victims'))
+        last_3_months_count = last_3_months.aggregate(total=Sum('number_of_victims'))
+        all_interception_records_count = all_interception_records.aggregate(total=Sum('number_of_victims'))
 
+        last_3_months_count_divide = last_3_months_count['total']
         if last_3_months_count['total'] is None:
-            last_3_months_count['total'] = 1
+            last_3_months_count['total'] = 0
+            last_3_months_count_divide = 1
+        last_months_count_divide = last_months_count['total']
         if last_months_count['total'] is None:
-            last_months_count['total'] = 1
+            last_months_count['total'] = 0
+            last_months_count_divide = 1
+        all_interception_records_count_divide = all_interception_records_count['total']
         if all_interception_records_count['total'] is None:
-            all_interception_records_count['total'] = 1
+            all_interception_records_count['total'] = 0
+            all_interception_records_count_divide = 1
 
         last_months_cost = last_months.station_total()
 
@@ -96,11 +102,11 @@ def previous_data(request, pk, month, year):
         return Response(
             {
                 "all": all_interception_records_count['total'],
-                "all_cost": all_cost/all_interception_records_count['total'],
+                "all_cost": all_cost/all_interception_records_count_divide,
                 "last_month": last_months_count['total'],
-                "last_months_cost": last_months_cost/last_months_count['total'],
+                "last_months_cost": last_months_cost/last_months_count_divide,
                 "last_3_months": last_3_months_count['total'],
-                "last_3_months_cost": last_3_months_cost/last_3_months_count['total'],
+                "last_3_months_cost": last_3_months_cost/last_3_months_count_divide,
                 "staff_count": staff_count,
                 "last_months_total_cost": last_months_cost
             }

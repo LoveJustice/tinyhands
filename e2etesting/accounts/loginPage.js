@@ -1,6 +1,7 @@
 'use strict';
 
 var constants = require('../testConstants.json');
+var methods = require('../commonMethods.js');
 
 var loginPage = function () {
     var page = this;
@@ -11,10 +12,9 @@ var loginPage = function () {
 
     this.login = function (username, password) {
         browser.get('http://0.0.0.0:8001/login/');
-        this.usernamefield = element(by.id("id_username")).sendKeys(username);
-
-        this.passwordfield = element(by.id("id_password")).sendKeys(password);
-        this.submitButton = element(by.id("submit")).click();
+        this.usernamefield = element(by.id("id_username")).clear().sendKeys(username);
+        this.passwordfield = element(by.id("id_password")).clear().sendKeys(password);
+        methods.click(element(by.id("submit")));
     };
 
     this.loginAsAdmin = function() {
