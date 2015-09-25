@@ -22,13 +22,24 @@ class CSVtoJSON(object):
             reader = csv.reader(csv_file)
             reader.next()               # Skip header row
             idx = 0
-            for row in reader:
-                entry = {'idx': idx}
-                idx += 1
-                for mapping in self.mappings:
-                    value = row[mapping['col']].strip()
-                    entry[mapping['name']] = mapping['type'](value)
-                self.all_data.append(entry)
+            try:
+                for row in reader:
+                    entry = {'idx': idx}
+                    idx += 1
+                    for mapping in self.mappings:
+                        value = row[mapping['col']].strip()
+                        if value == '-':
+                            if mapping['type'] == str:
+                                value = 'Unknown'
+                            elif mapping['type'] == float:
+                                value = 0.0
+                            else:
+                                raise RuntimeError("Mapping weird: {}".format(mapping['type']))
+                        entry[mapping['name']] = mapping['type'](value)
+                    self.all_data.append(entry)
+            except:
+                print "FILE {} IDX {}".format(self.input_name, idx)
+                raise
 
     def save(self):
         with open(self.output_name, 'w') as json_file:
@@ -73,7 +84,8 @@ class NameVariations(CSVtoJSON):
     def validate(self, canonical_names):
         for datum in self.all_data:
             if canonical_names.find(datum['can1'], datum['can2']) is None:
-                raise RuntimeError("{},{} not in canonical names".format(datum['can1'], datum['can2']))
+                raise RuntimeError("{},{} not in canonical names".format(datum['can1'],
+                                                                         datum['can2']))
         print "Name variations valid"
 
     def find(self, adr1, adr2):
@@ -101,7 +113,11 @@ class FormData(CSVtoJSON):
         for datum in self.all_data:
             if (canonical_names.find(datum['adr1'], datum['adr2']) is None and
                 name_variations.find(datum['adr1'], datum['adr2']) is None):
-                print "{} ({}): {},{} in neither canonical nor variations".format(datum['id'], datum['idx'], datum['adr1'], datum['adr2'])
+                print "{} ({}): {},{} in neither canonical nor variations".format(datum['id'],
+                                                                                  datum['idx'],
+                                                                                  datum['adr1'],
+                                                                                  datum['adr2'])
+        print "Form data valid"
 
 
 if __name__ == '__main__':

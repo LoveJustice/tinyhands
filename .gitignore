@@ -1,4 +1,4 @@
-// BACKEND Ignore
+# BACKEND Ignore
 
 *.sqlite
 *.sqlite3
@@ -11,6 +11,7 @@
 .coverage
 .idea/
 .nfs*
+.vagrant/
 
 \#*#
 
@@ -30,11 +31,7 @@ media/
 
 *.pyc
 
-
-
-
-
-// FRONTEND Ignore
+# FRONTEND Ignore
 
 node_modules/
 bower_components/

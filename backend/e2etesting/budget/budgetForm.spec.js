@@ -26,12 +26,13 @@ describe('Budget Calculation', function() {
             // fill out form
             browser.ignoreSynchronization = false;
             budgetForm.fillOutForm();
+            browser.sleep(5000);
 
             // expect totals to be certain values
             expect(element(by.id('staffTotal')).getAttribute("value")).toBe('100');
             expect(element(by.binding("main.shelterTotal()")).getText()).toBe(c.shelterTotal);
-            expect(element(by.binding("main.foodTotal()")).getText()).toBe(c.foodTotal);
-            expect(element(by.binding("main.commTotal()")).getText()).toBe(c.commTotal);
+            expect(element(by.binding("main.foodGasTotal()")).getText()).toBe(c.foodTotal);
+            expect(element(by.binding("main.communicationTotalValue")).getText()).toBe(c.commTotal);
             expect(element(by.binding("main.awarenessTotalValue")).getText()).toBe(c.awarenessTotalValue);
             expect(element(by.binding("main.travelTotalValue")).getText()).toBe(c.travelTotalValue);
             expect(element(by.binding("main.suppliesTotalValue")).getText()).toBe(c.suppliesTotalValue);
@@ -55,19 +56,25 @@ describe('Budget Calculation', function() {
             browser.sleep(500);
             var x = new Date();
             var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-            expect(element(by.css("#budget_list > div.container > table > tbody > tr:nth-child(1) > td:nth-child(1)")).getText()).toBe('Test Station');
-            expect(element(by.css("#budget_list > div.container > table > tbody > tr:nth-child(1) > td:nth-child(2)")).getText()).toBe('AAA');
-            expect(element(by.css("#budget_list > div.container > table > tbody > tr:nth-child(1) > td:nth-child(3)")).getText()).toBe('July 2015');
+
+            //By.cssSelector("#budget_list > div.container > table > tbody > tr:nth-child(1) > td:nth-child(1)")
+
+            this.table = element(by.id("DataTables_Table_0"));
+            expect(this.table.element(by.xpath("./tbody/tr/td[1]")).getText()).toBe('Test Station');
+            expect(this.table.element(by.xpath("./tbody/tr/td[2]")).getText()).toBe('AAA');
+            expect(this.table.element(by.xpath("./tbody/tr/td[3]")).getText()).toBe('July 2015');
         });
 
         it('is populated with data from last form', function() {
             //budgetForm.viewForm();
+            //browser.ignoreSynchronization = false;
             budgetForm.navigateToNewForm();
-
+            browser.sleep(1000);
+            //browser.refresh();
             //checks for values based on a recent test that filled out the form
             expect(element(by.binding("main.shelterTotal()")).getText()).toBe(c.shelterTotal);
-            expect(element(by.binding("main.foodTotal()")).getText()).toBe(c.foodTotal);
-            expect(element(by.binding("main.commTotal()")).getText()).toBe(c.commTotal);
+            expect(element(by.binding("main.foodGasTotal()")).getText()).toBe(c.foodTotal);
+            expect(element(by.binding("main.communicationTotalValue")).getText()).toBe(c.commTotal);
             expect(element(by.binding("main.awarenessTotalValue")).getText()).toBe(c.awarenessTotalValue);
             expect(element(by.binding("main.travelTotalValue")).getText()).toBe(c.travelTotalValue);
             expect(element(by.binding("main.suppliesTotalValue")).getText()).toBe(c.suppliesTotalValue);
@@ -77,6 +84,7 @@ describe('Budget Calculation', function() {
             expect(element(by.binding("main.bunchTotal()")).getText()).toBe(c.bunchTotal);
             expect(element(by.binding("main.foodAndShelterTotal()")).getText()).toBe(c.foodAndShelterTotal);
             expect(element(by.binding("main.stationTotal()")).getText()).toBe(c.stationTotal);
+            browser.ignoreSynchronization = true;
         });
 
     }, 600000);
@@ -86,12 +94,13 @@ describe('Budget Calculation', function() {
             budgetForm.viewForm();
             browser.sleep(1000);
 
-            expect(element(by.id("month_year")).getAttribute("value")).toBe('2015-07');
+            browser.sleep(2000);
+            expect(element(by.model("main.form.month_year")).getAttribute("value")).toBe('2015-07');
             expect(element(by.id("shelter_rent")).getAttribute('disabled')).toBe('true');
             expect(element(by.id("shelter_water")).getAttribute('disabled')).toBe('true');
             expect(element(by.id("shelter_electricity")).getAttribute('disabled')).toBe('true');
             expect(element(by.id("shelterStartupBool")).getAttribute('disabled')).toBe('true');
-            expect(element(by.id("shelter_startup_amount")).getAttribute('disabled')).toBe('true');
+            expect(element(by.id("shelter_startup_amount")).getAttribute('disabled')).toBe('true');//
             expect(element(by.id("shelter_two_bool")).getAttribute('disabled')).toBe('true');
             expect(element(by.id("shelter_two_amount")).getAttribute('disabled')).toBe('true');
             expect(element(by.id("food_gas_multiplier_before")).getAttribute('disabled')).toBe('true');
@@ -149,10 +158,13 @@ describe('Budget Calculation', function() {
 
     describe('editing form', function () {
         it('all inputs are enabled', function () {
+            //browser.ignoreSynchronization = false;
             budgetForm.editForm();
-            browser.sleep(1000);
+            browser.sleep(4000);
+            browser.refresh();
 
-            expect(element(by.id("month_year")).getAttribute("value")).toBe('2015-07');
+            expect(browser.driver.getCurrentUrl()).toContain('budget_calculations/update');
+            expect(element(by.model("main.form.month_year")).getAttribute("value")).toBe('2015-07');
             expect(element(by.id("shelter_rent")).getAttribute('enabled')).toBe(null);
             expect(element(by.id("shelter_water")).getAttribute('enabled')).toBe(null);
             expect(element(by.id("shelter_electricity")).getAttribute('enabled')).toBe(null);
