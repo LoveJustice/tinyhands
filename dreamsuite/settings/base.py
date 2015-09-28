@@ -43,16 +43,15 @@ INSTALLED_APPS = (
     'widget_tweaks',
     'bootstrapform',
     'imagekit',
-    'django_extensions',
     'dataentry',
     'accounts',
     'events',
     'portal',
     'budget',
     'util',
-    'rest_framework',
     'static_border_stations',
     'rest_api',
+    'rest_framework',
     'django_extensions',
     'bootstrap_pagination'
 )
