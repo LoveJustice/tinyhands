@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, url
 
-from dataentry.views import Address2ViewSet, Address1ViewSet
+from dataentry.views import Address2ViewSet, Address1ViewSet, GeoCodeDistrictAPIView, GeoCodeVdcAPIView
 from budget.views import BudgetViewSet, OtherItemsViewSet
 
 urlpatterns = patterns('rest_api.views',
@@ -18,7 +18,10 @@ urlpatterns = patterns('rest_api.views',
     url(r'^address1/all/$', Address1ViewSet.as_view({'get': 'list_all', 'post': 'create'}), name='Address1'),
     url(r'^address1/(?P<pk>\d+)/$', Address1ViewSet.as_view({'put': 'update', 'get': 'retrieve', 'delete': 'destroy'}), name='Address1detail'),
 
-
     url(r'^address2/$', Address2ViewSet.as_view({'get': 'list', 'post': 'create'}), name='Address2'),
     url(r'^address2/(?P<pk>\d+)/$', Address2ViewSet.as_view({'put': 'update', 'get': 'retrieve', 'delete': 'destroy'}), name='Address2detail'),
+
+    # Fuzzy searching for addresses
+    url(r'^address1/fuzzy/$', GeoCodeDistrictAPIView.as_view()),
+    url(r'^address2/fuzzy/$', GeoCodeVdcAPIView.as_view()),
 )
