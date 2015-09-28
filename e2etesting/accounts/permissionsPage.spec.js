@@ -26,21 +26,18 @@ describe('Accounts Page', function() {
 
         it('unchecks vdc edit permission', function(){
             //uncheck permission for VDC edit
-            permissionsPage.navigateToAccountPage();
-            permissionsPage.resetPermissions();
-            permissionsPage.checkPermission("id_permission_vdc_manage");
+            permissionsPage.checkPermissionSetup("id_permission_vdc_manage");
             this.permissions = element(by.id("id_permission_vdc_manage"));
             expect(this.permissions.element(by.xpath("..")).getAttribute('class')).toBe('btn btn-danger');
             permissionsPage.savePermissions();
 
             //tests for inability to edit vdcs
             permissionsPage.navigateToVdcPage();
+            browser.sleep(800);
             expect(element(by.xpath('//h1')).getText()).toContain("403");
 
             //rechecks VDC edit permission
-            permissionsPage.navigateToAccountPage();
-            permissionsPage.resetPermissions();
-            permissionsPage.savePermissions();
+            permissionsPage.checkPermissionCleanup();
         });
     });
 
@@ -52,9 +49,7 @@ describe('Accounts Page', function() {
 
         it('unchecks irf add permissions', function(){
             //Unchecks the add permission
-            permissionsPage.navigateToAccountPage();
-            permissionsPage.resetPermissions();
-            permissionsPage.checkPermission("id_permission_irf_add");
+            permissionsPage.checkPermissionSetup("id_permission_irf_add");
             this.permissions = element(by.id("id_permission_irf_add"));
             expect(this.permissions.element(by.xpath("..")).getAttribute('class')).toBe('btn btn-danger');
             permissionsPage.savePermissions();
@@ -64,16 +59,12 @@ describe('Accounts Page', function() {
             expect(element(by.linkText("Input A New IRF")).isPresent()).toBe(false);
 
             //reset permissions
-            permissionsPage.navigateToAccountPage();
-            permissionsPage.resetPermissions();
-            permissionsPage.savePermissions();
+            permissionsPage.checkPermissionCleanup();
         });
 
         it('unchecks irf view permission', function(){
             //unchecks the view permission
-            permissionsPage.navigateToAccountPage();
-            permissionsPage.resetPermissions();
-            permissionsPage.checkPermission("id_permission_irf_view");
+            permissionsPage.checkPermissionSetup("id_permission_irf_view");
             this.permissions = element(by.id("id_permission_irf_view"));
             expect(this.permissions.element(by.xpath("..")).getAttribute('class')).toBe('btn btn-danger');
             permissionsPage.savePermissions();
@@ -84,16 +75,12 @@ describe('Accounts Page', function() {
             expect(element(by.linkText("View")).isPresent()).toBe(false);
 
             //reset permissions
-            permissionsPage.navigateToAccountPage();
-            permissionsPage.resetPermissions();
-            permissionsPage.savePermissions();
+            permissionsPage.checkPermissionCleanup();
         });
 
         it('unchecks irf edit permission', function(){
             //unchecks the edit permission
-            permissionsPage.navigateToAccountPage();
-            permissionsPage.resetPermissions();
-            permissionsPage.checkPermission("id_permission_irf_edit");
+            permissionsPage.checkPermissionSetup("id_permission_irf_edit");
             this.permissions = element(by.id("id_permission_irf_edit"));
             expect(this.permissions.element(by.xpath("..")).getAttribute('class')).toBe('btn btn-danger');
             permissionsPage.savePermissions();
@@ -103,14 +90,12 @@ describe('Accounts Page', function() {
             expect(element(by.linkText("Edit")).isPresent()).toBe(false);
 
             //resets permissions
-            permissionsPage.navigateToAccountPage();
-            permissionsPage.resetPermissions();
-            permissionsPage.savePermissions();
+            permissionsPage.checkPermissionCleanup();
         });
 
     });
 
-    describe('handles VDC editing permission', function(){
+    /*describe('handles VDC editing permission', function(){
         it('unchecks vdc edit permission', function(){
             permissionsPage.navigateToAccountPage();
             permissionsPage.resetPermissions();
@@ -261,15 +246,17 @@ describe('Accounts Page', function() {
 
             //uncheck the permission
             permissionsPage.navigateToAccountPage();
-            permissionsPage.checkPermission("id_permission_accounts_manage");
+            //permissionsPage.checkPermission("id_permission_accounts_manage");
+            browser.sleep(500);
             this.permissions = element(by.id("id_permission_accounts_manage"));
             expect(this.permissions.element(by.xpath("..")).getAttribute('class')).toBe('btn btn-danger');
             permissionsPage.savePermissions();
+            browser.sleep(500);
 
             //test for inability to edit accounts
             expect(element(by.xpath('//h1')).getText()).toContain("403");
 
         });
-    });
+    });*/
 
 });

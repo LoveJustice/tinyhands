@@ -77,7 +77,7 @@ in the Javascript and run code unique to the current page.
                         <hr style="margin: 4px"/>
                         {% endif %}
                         {% for station in border_stations %}
-                        {% if request.user.permission_border_stations_edit %}
+                        {% if request.user.permission_border_stations_edit and station.open %}
                         <li><a href="{% url 'borderstations_update' station.pk %}">{{station.station_name }}</a></li>
                         {% endif %}
                         {% if request.user.permission_border_stations_view and not request.user.permission_border_stations_edit %}
@@ -151,7 +151,6 @@ in the Javascript and run code unique to the current page.
 <script src="{{ STATIC_URL }}jquery.formset.js"></script>
 {% block foot %}
 {% endblock %}
-<script src="{{ STATIC_URL }}all-pages.js"></script>
 <script src="{{ STATIC_URL }}all-pages.js"></script>
 <script src="{{ STATIC_URL }}geocodelocations.js"></script>
 <script src="{{ STATIC_URL }}station-suggestions.js"></script>
