@@ -13,6 +13,7 @@ angular
         vm.paginateBy = 25;
         vm.sortIcon = "/static/images/sortIcon.jpg";
         vm.selectedAddress = {};
+        vm.sortColumn = {};
 
         // Function Definitions
         vm.getAddresses = getAddresses;
@@ -51,7 +52,7 @@ angular
 
         function searchAddresses(){
             vm.loading = true;
-            address2Service.searchAddresses(vm.paginateBy, vm.searchValue)
+            address2Service.searchAddresses(vm.paginateBy, vm.searchValue, vm.sortColumn)
                 .success(function (data) {
                     vm.addresses = data.results;
                     vm.nextPageUrl = data.next;

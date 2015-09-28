@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, url
 
-from dataentry.views import Address2ViewSet
+from dataentry.views import Address2ViewSet, Address1ViewSet
 from budget.views import BudgetViewSet, OtherItemsViewSet
 
 urlpatterns = patterns('rest_api.views',
@@ -13,9 +13,12 @@ urlpatterns = patterns('rest_api.views',
     url(r'^budgetcalculationform/(?P<parent_pk>\d+)/otheritem/(?P<pk>\d+)/$', OtherItemsViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}), name='BudgetCalculationWithId'),
 
 
-    # Address 2s
+    # Addresses
+    url(r'^address1/$', Address1ViewSet.as_view({'get': 'list', 'post': 'create'}), name='Address1'),
+    url(r'^address1/all/$', Address1ViewSet.as_view({'get': 'list_all', 'post': 'create'}), name='Address1'),
+    url(r'^address1/(?P<pk>\d+)/$', Address1ViewSet.as_view({'put': 'update', 'get': 'retrieve', 'delete': 'destroy'}), name='Address1detail'),
+
+
     url(r'^address2/$', Address2ViewSet.as_view({'get': 'list', 'post': 'create'}), name='Address2'),
     url(r'^address2/(?P<pk>\d+)/$', Address2ViewSet.as_view({'put': 'update', 'get': 'retrieve', 'delete': 'destroy'}), name='Address2detail'),
-    url(r'^address2/search/(?P<search_value>[\w]+)/$', Address2ViewSet.as_view({'get': 'search'}), name='Address2Search'),
-
 )

@@ -20,6 +20,7 @@ from django.views.generic import ListView, View, DeleteView, CreateView, UpdateV
 from rest_framework import status
 from rest_framework.decorators import list_route
 from rest_framework.pagination import PageNumberPagination
+from rest_framework import filters
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import viewsets
@@ -479,18 +480,30 @@ def get_station_id(request):
             return HttpResponse([-1])
 
 
+
+
 class Address2ViewSet(viewsets.ModelViewSet):
     queryset = VDC.objects.all()
     serializer_class = VDCSerializer
 
+    # a couple default backends found on the djangoresetframework docs
+    filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
+
+    # Specify the fields that we can search by and how
+    search_fields = ('^name',)
+
+    # specify the fields that the data can be ordered by
+    ordering_fields = ('name', 'district', 'verified', 'cannonical_name')
+    # Specify the default order
+    ordering = ('name', 'district',)
+
+
+class Address1ViewSet(viewsets.ModelViewSet):
+    queryset = District.objects.all()
+    serializer_class = DistrictSerializer
+
     @list_route()
-    def search(self, request, search_value):
-        self.object_list = VDC.objects.filter(name__contains=search_value).select_related('district', 'cannonical_name__district')
-
-        if search_value == 'empty':
-            self.object_list = self.queryset
-
-        paginator = PageNumberPagination()
-        data = paginator.paginate_queryset(self.object_list, request)
-        serializer = self.get_serializer(data, many=True)
-        return paginator.get_paginated_response(serializer.data)
+    def list_all(self, request):
+        districts = District.objects.all()
+        serializer = self.get_serializer(districts, many=True)
+        return Response(serializer.data)
