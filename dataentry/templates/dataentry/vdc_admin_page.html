@@ -32,35 +32,35 @@
     <table class="table table-striped">
         <thead>
         <tr>
-            <th ng-click="vm.sortColumn = 'name'; reverse = ! reverse" class="text-center">
+            <th ng-click="vm.sortColumn = 'name'; vm.reverse = ! vm.reverse; vm.getAddresses()" class="text-center">
                 Name <img ng-show="vm.sortColumn == 'name'" src="{{vm.sortIcon}}" style="height: 13px;"/>
             </th>
-            <th ng-click="vm.sortColumn = 'latitude'; reverse = ! reverse" class="text-center">
+            <th ng-click="vm.sortColumn = 'latitude'; vm.reverse = ! vm.reverse; vm.getAddresses()" class="text-center">
                 Latitude <img ng-show="vm.sortColumn == 'latitude'" src="{{vm.sortIcon}}" style="height: 13px;"/>
             </th>
-            <th ng-click="vm.sortColumn = 'longitude'; reverse = ! reverse" class="text-center">
+            <th ng-click="vm.sortColumn = 'longitude'; vm.reverse = ! vm.reverse; vm.getAddresses()" class="text-center">
                 Longitude <img ng-show="vm.sortColumn == 'longitude'" src="{{vm.sortIcon}}" style="height: 13px;"/>
             </th>
-            <th ng-click="vm.sortColumn = 'district.name'; reverse = ! reverse" class="text-center">
+            <th ng-click="vm.sortColumn = 'district.name'; vm.reverse = ! vm.reverse; vm.getAddresses()" class="text-center">
                 Address 1 <img ng-show="vm.sortColumn == 'district.name'" src="{{vm.sortIcon}}" style="height: 13px;"/>
             </th>
-            <th ng-click="vm.sortColumn = 'cannonical_name'; reverse = ! reverse" class="text-center">
-                Canonical Name <img ng-show="vm.sortColumn == 'cannonical_name'" src="{{vm.sortIcon}}" style="height: 13px;"/>
+            <th ng-click="vm.sortColumn = 'cannonical_name.name'; vm.reverse = ! vm.reverse; vm.getAddresses()" class="text-center">
+                Canonical Name <img ng-show="vm.sortColumn == 'cannonical_name.name'" src="{{vm.sortIcon}}" style="height: 13px;"/>
             </th>
-            <th ng-click="vm.sortColumn = 'verified'; reverse = ! reverse" class="text-center">
+            <th ng-click="vm.sortColumn = 'verified'; vm.reverse = ! vm.reverse; vm.getAddresses()" class="text-center">
                 Verified <img ng-show="vm.sortColumn == 'verified'" src="{{vm.sortIcon}}" style="height: 13px;"/>
             </th>
             <th class="text-center">&nbsp;</th>
         </tr>
         </thead>
         <tbody ng-init="vm.sortColumn = 'name'">
-            <tr ng-repeat="address in vm.addresses | orderBy:vm.sortColumn:reverse">
+            <tr ng-repeat="address in vm.addresses | orderBy:vm.sortColumn:vm.reverse">
 
                 <td class="text-center">{{ address.name }}</td>
                 <td class="text-center">{{ address.latitude }}</td>
                 <td class="text-center">{{ address.longitude }}</td>
                 <td class="text-center">{{ address.district.name }}</td>
-                <td class="text-center">{{ address.cannonical_name }}</td>
+                <td class="text-center">{{ address.cannonical_name.name }}</td>
                 <td class="text-center">{{ address.verified ? "Yes" : "No" }}
                 </td>
                 <td>
@@ -77,25 +77,44 @@
     </div>
 
 
-    <script type="text/ng-template" id="myModalContent.html">
+    <script type="text/ng-template" id="address2EditModal.html">
         <div class="modal-header">
             <h3 class="modal-title">Edit Address 2</h3>
         </div>
         <div class="modal-body">
 
-            <input type="text" ng-model="address.name"/> Name
+            <div class="form-group">
+                <label for="addressName">Name</label>
+                <input type="text" id="addressName" class="form-control" ng-model="address.name"/>
+            </div>
 
-            <input type="text" ng-model="address.latitude"/> Latitude
+            <div class="form-group">
+                <label for="addressName">Latitude</label>
+                <input type="number" class="form-control" ng-model="address.latitude"/>
+            </div>
 
-            <input type="text" ng-model="address.longitude"/> Longitude
 
-            <input type="text" ng-model="address.district.name"/> District
-            <input type="text" ng-model="address.district.id"/> District Id
+            <div class="form-group">
+                <label for="addressName">Longitude</label>
+                <input type="number" class="form-control" ng-model="address.longitude"/>
+            </div>
 
-            <input type="text" ng-model="address.cannonical_name"/> CN
+            <div class="form-group">
+                <label for="addressName">District</label>
+                <select  ng-model="address.district" ng-options="address1.name for address1 in address1s" class="form-control">
+                </select>
+            </div>
 
-            <input type="text" ng-model="address.verified"/> Verified
+            <div class="form-group">
+                <label for="addressName">Canonical Name</label>
+                <select ng-model="address.cannonical_name" ng-options="address2.name for address2 in address2s" class="form-control">
+                </select>
+            </div>
 
+            <div class="form-group">
+                <label for="addressName">Verified</label>
+                <input type="checkbox" class="form-control" ng-model="address.verified"/>
+            </div>
         </div>
         <div class="modal-footer">
             <button class="btn btn-primary" type="button" ng-click="save()">Save</button>

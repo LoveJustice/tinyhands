@@ -481,7 +481,7 @@ def get_station_id(request):
 
 
 class Address2ViewSet(viewsets.ModelViewSet):
-    queryset = VDC.objects.all()
+    queryset = VDC.objects.all().select_related('district', 'cannonical_name__district')
     serializer_class = VDCSerializer
 
     # a couple default backends found on the djangoresetframework docs
@@ -494,6 +494,7 @@ class Address2ViewSet(viewsets.ModelViewSet):
     ordering_fields = ('name', 'district', 'verified', 'cannonical_name')
     # Specify the default order
     ordering = ('name', 'district',)
+
 
 
 class Address1ViewSet(viewsets.ModelViewSet):

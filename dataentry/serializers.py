@@ -11,7 +11,8 @@ class DistrictSerializer(serializers.ModelSerializer):
 class CannonicalNameSerializer(serializers.ModelSerializer):
     class Meta:
         model = VDC
-        fields = ['id','name']
+        fields = ['id', 'name']
+
 
 class VDCSerializer(serializers.ModelSerializer):
     class Meta:
@@ -28,7 +29,10 @@ class VDCSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         instance.district = District.objects.get(pk=self.context['request'].data['district']['id'])
         instance.name = validated_data.get('name', instance.name)
-        instance.cannonical_name = VDC.objects.get(pk=self.context['request'].data['cannonical_name']['id'])
+        if self.context['request'].data['cannonical_name']['id'] == -1:
+            instance.cannonical_name = None
+        else:
+            instance.cannonical_name = VDC.objects.get(pk=self.context['request'].data['cannonical_name']['id'])
         instance.latitude = validated_data.get('latitude', instance.latitude)
         instance.longitude = validated_data.get('longitude', instance.longitude)
         instance.verified = validated_data.get('verified', instance.verified)

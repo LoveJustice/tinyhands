@@ -9,13 +9,14 @@ address2Service.$inject = ['$http'];
 function address2Service($http) {
 	return {
 		listAddresses: listAddresses,
+		listAddress1s: listAddress1s,
 		searchAddresses: searchAddresses,
 		loadMoreAddresses: loadMoreAddresses,
 		saveAddress: saveAddress
 	};
 
-	function listAddresses(pageSize) {
-        return $http.get('/api/address2/' + '?page_size=' + pageSize).
+	function listAddresses(queryParams) {
+        return $http.get('/api/address2/' + queryParams).
             success(function (data) {
                 return data;
             }).
@@ -24,11 +25,8 @@ function address2Service($http) {
             });
     }
 
-	function searchAddresses(pageSize, searchValue, ordering) {
-        if(!searchValue){
-            searchValue = "empty";
-        }
-        return $http.get('/api/address2/?search=' + searchValue + '&page_size=' + pageSize + '&ordering=' + ordering).
+	function searchAddresses(queryParams) {
+        return $http.get('/api/address2/' + queryParams).
             success(function (data) {
                 return data;
             }).
@@ -37,8 +35,8 @@ function address2Service($http) {
             });
     }
 
-	function loadMoreAddresses(url, pageSize) {
-        return $http.get(url + '&page_size=' + pageSize).
+	function loadMoreAddresses(url, queryParams) {
+        return $http.get(url + queryParams).
             success(function (data) {
                 return data;
             }).
