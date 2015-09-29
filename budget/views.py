@@ -18,7 +18,6 @@ from django.conf import settings
 
 
 from braces.views import LoginRequiredMixin
-from models import BorderStationBudgetCalculation
 from rest_framework import generics, viewsets
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -62,30 +61,34 @@ def retrieve_latest_budget_sheet_for_border_station(request, pk):
 def previous_data(request, pk, month, year):
     date = datetime.datetime(int(year), int(month), 15)  # We pass the Month_year as two key-word arguments because the day is always 15
 
-    border_station = BorderStation.objects.get(pk=pk)
-    staff_count = border_station.staff_set.count()
-
-    all_interception_records = InterceptionRecord.objects.annotate(interceptee_count="number_of_victims").filter(irf_number__startswith=border_station.station_code)
-    last_months = all_interception_records.filter(date_time_of_interception__gte=(date+relativedelta(months=-1)), date_time_of_interception__lte=date)
-    last_3_months = all_interception_records.filter(date_time_of_interception__gte=(date+relativedelta(months=-3)), date_time_of_interception__lte=date)
-
-    last_months_count = last_months.aggregate(total=Sum('interceptee_count'))
-    last_3_months_count = last_3_months.aggregate(total=Sum('interceptee_count'))
-    all_interception_records_count = all_interception_records.aggregate(total=Sum('interceptee_count'))
-
-    if last_3_months_count['total'] is None:
-        last_3_months_count['total'] = 1
-    if last_months_count['total'] is None:
-        last_months_count['total'] = 1
-    if all_interception_records_count['total'] is None:
-        all_interception_records_count['total'] = 1
-
     budget_sheets = BorderStationBudgetCalculation.objects.filter(border_station=pk, month_year__lte=date).order_by('-date_time_entered')  # filter them so the first element is the most recent
 
     if budget_sheets:  # If this border station has had a previous budget calculation worksheet
+        border_station = BorderStation.objects.get(pk=pk)
+        staff_count = border_station.staff_set.count()
 
-        last_months_sheet = budget_sheets.first() # Since they are ordered by most recent, the first one will be last month's
-        last_months_cost = last_months_sheet.station_total()
+        all_interception_records = InterceptionRecord.objects.annotate(interceptee_count=Count("interceptees")).filter(irf_number__startswith=border_station.station_code)
+        last_months = all_interception_records.filter(date_time_of_interception__gte=(date+relativedelta(months=-1)), date_time_of_interception__lte=date)
+        last_3_months = all_interception_records.filter(date_time_of_interception__gte=(date+relativedelta(months=-3)), date_time_of_interception__lte=date)
+
+        last_months_count = last_months.aggregate(total=Sum('number_of_victims'))
+        last_3_months_count = last_3_months.aggregate(total=Sum('number_of_victims'))
+        all_interception_records_count = all_interception_records.aggregate(total=Sum('number_of_victims'))
+
+        last_3_months_count_divide = last_3_months_count['total']
+        if last_3_months_count['total'] is None:
+            last_3_months_count['total'] = 0
+            last_3_months_count_divide = 1
+        last_months_count_divide = last_months_count['total']
+        if last_months_count['total'] is None:
+            last_months_count['total'] = 0
+            last_months_count_divide = 1
+        all_interception_records_count_divide = all_interception_records_count['total']
+        if all_interception_records_count['total'] is None:
+            all_interception_records_count['total'] = 0
+            all_interception_records_count_divide = 1
+
+        last_months_cost = last_months.station_total()
 
         last_3_months_cost = 0
         last_3_months_sheets = budget_sheets.filter(month_year__gte=date+relativedelta(months=-3))
@@ -99,11 +102,11 @@ def previous_data(request, pk, month, year):
         return Response(
             {
                 "all": all_interception_records_count['total'],
-                "all_cost": all_cost/all_interception_records_count['total'],
+                "all_cost": all_cost/all_interception_records_count_divide,
                 "last_month": last_months_count['total'],
-                "last_months_cost": last_months_cost/last_months_count['total'],
+                "last_months_cost": last_months_cost/last_months_count_divide,
                 "last_3_months": last_3_months_count['total'],
-                "last_3_months_cost": last_3_months_cost/last_3_months_count['total'],
+                "last_3_months_cost": last_3_months_cost/last_3_months_count_divide,
                 "staff_count": staff_count,
                 "last_months_total_cost": last_months_cost
             }
@@ -111,13 +114,13 @@ def previous_data(request, pk, month, year):
 
     # If this border station has not had a previous budget calculation worksheet
     return Response(
-        {"all": all_interception_records_count['total'],
+        {"all": 0,
          "all_cost": 0,
-         "last_month": last_months_count['total'],
+         "last_month": 0,
          "last_months_cost": 0,
-         "last_3_months": last_3_months_count['total'],
+         "last_3_months": 0,
          "last_3_months_cost": 0,
-         "staff_count": staff_count,
+         "staff_count": 0,
          "last_months_total_cost": 0
          })
 
@@ -220,9 +223,9 @@ class MoneyDistribution(viewsets.ViewSet):
         return Response({"staff_members": staff_serializer.data, "committee_members": committee_members_serializer.data})
 
     def send_emails(self, request, pk):
-        staff_ids = request.DATA['staff_ids']
-        budget_calc_id = int(request.DATA["budget_calc_id"])
-        committee_ids = request.DATA['committee_ids']
+        staff_ids = request.data['staff_ids']
+        budget_calc_id = int(request.data["budget_calc_id"])
+        committee_ids = request.data['committee_ids']
 
         # send the emails
         for id in staff_ids:
@@ -275,13 +278,10 @@ class PDFView(View, LoginRequiredMixin, PermissionsRequiredMixin):
         root = etree.parse(buf).getroot()
         doc = document.Document(root)
 
-
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = "filename=%s" % self.get_filename()
 
-
         doc.process(response)
-
         return response
 
 
@@ -358,6 +358,5 @@ class MoneyDistributionFormPDFView(PDFView, LoginRequiredMixin, PermissionsRequi
 def money_distribution_view(request, pk):
     if not request.user.permission_budget_manage:
         return redirect("home")
-    id = pk
     border_station = (BorderStationBudgetCalculation.objects.get(pk=pk)).border_station
     return render(request, 'budget/moneydistribution_view.html', locals())

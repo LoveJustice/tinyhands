@@ -4,6 +4,7 @@
 <hr/>
 {{person_form.id}}
 <span class="delete_checkbox">{{ person_form.DELETE }}</span>
+
 <div class="row">
     <div class="col-sm-6">
         {{person_form.first_name|bootstrap}}
@@ -17,7 +18,16 @@
         {{person_form.email|bootstrap}}
         <p hidden="true">{{person_form.salary}}</p>
     </div>
-    <div class="col-sm-6">
+    <div class="col-sm-6" style="margin: 23px 0px">
         {{person_form.receives_money_distribution_form|bootstrap}}
     </div>
+</div>
+<div class="row">
+    {% for id, errors in person_form.errors.items %}
+        {% for error in errors %}
+            <div class="col-sm-6">
+                <p class="alert-danger" style="padding: 10px;">{{error}}</p>
+            </div>
+        {% endfor %}
+    {% endfor %}
 </div>

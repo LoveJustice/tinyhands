@@ -12,7 +12,7 @@ from django.core.exceptions import PermissionDenied
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
 from django.core.urlresolvers import reverse_lazy
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import redirect
 from django.template.loader import render_to_string
 from django.views.generic import ListView, View, DeleteView, CreateView, UpdateView
@@ -40,7 +40,6 @@ from accounts.mixins import PermissionsRequiredMixin
 
 from alert_checkers import IRFAlertChecker, VIFAlertChecker
 from fuzzy_matching import match_location
-
 
 @login_required
 def home(request):
@@ -329,30 +328,24 @@ class VictimInterviewCSVExportView(LoginRequiredMixin,
 
 class GeoCodeDistrictAPIView(APIView):
     def get(self, request):
-        value = request.QUERY_PARAMS['district']
+        value = request.query_params['district']
         matches = match_location(district_name=value)
-        if(matches):
-            serializer = DistrictSerializer(matches)
+        if matches:
+            serializer = DistrictSerializer(matches, many=True)
             return Response(serializer.data)
         else:
-            return Response({"id": "-1",
-                             "name": "None"})
+            return Response({"id": "-1", "name": "None"})
 
 
 class GeoCodeVdcAPIView(APIView):
     def get(self, request):
-        try:
-            district_name = request.QUERY_PARAMS['district']
-        except:
-            district_name = None
-        vdc_name = request.QUERY_PARAMS['vdc']
-        matches = match_location(district_name, vdc_name)
+        value = request.query_params['vdc']
+        matches = match_location(vdc_name=value)
         if matches:
-            serializer = VDCSerializer(matches)
+            serializer = VDCSerializer(matches, many=True)
             return Response(serializer.data)
         else:
-            return Response({"id": "-1",
-                             "name": "None"})
+            return Response({"id": "-1", "name": "None"})
 
 
 class VDCAdminView(LoginRequiredMixin,
@@ -400,7 +393,7 @@ class VDCSearchView(LoginRequiredMixin,
             else:
                 is_empty = len(self.object_list) == 0
             if is_empty:
-                raise Http404(_("Empty list and '%(class_name)s.allow_empty' is False.")
+                raise Http404(("Empty list and '%(class_name)s.allow_empty' is False.")
                         % {'class_name': self.__class__.__name__})
         context = self.get_context_data()
         return self.render_to_response(context)
@@ -417,6 +410,7 @@ class VDCSearchView(LoginRequiredMixin,
         context['search_url'] = '/data-entry/geocodelocations/vdc-admin/search/'
         context['database_empty'] = self.model.objects.count() == 0
         return context
+
 
 class VDCAdminUpdate(LoginRequiredMixin,
                      PermissionsRequiredMixin,
@@ -442,7 +436,7 @@ class VDCCreateView(LoginRequiredMixin,
     model = VDC
     form_class = VDCForm
     template_name = "dataentry/vdc_create_page.html"
-    permissions_required = ['permission_vif_add','permission_irf_add']
+    permissions_required = ['permission_vif_add', 'permission_irf_add']
 
     def form_valid(self, form):
         form.save()
@@ -507,8 +501,8 @@ class StationCodeAPIView(APIView):
 def interceptee_fuzzy_matching(request):
     input_name = request.GET['name']
     all_people = Interceptee.objects.all()
-    people_dict = {serializers.serialize("json", [obj]): obj.full_name for obj in all_people}
-    matches = process.extractBests(input_name, people_dict, limit=10)
+    people_dict = {serializers.serialize("json", [obj]): obj.full_name for obj in all_people }
+    matches = process.extractBests(input_name, people_dict, limit = 10)
     return HttpResponse(json.dumps(matches), content_type="application/json")
 
 
