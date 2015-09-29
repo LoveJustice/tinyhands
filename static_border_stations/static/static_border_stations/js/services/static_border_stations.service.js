@@ -13,10 +13,6 @@
 	
 		function getStation(borderStationId) {
 			return $http.get('/api/border-stations/' + borderStationId + '/')
-									.success(function(data) {
-										// return data;
-										console.log(data);
-									})
 									.error(function (data, status, headers, config) {
 											console.log(data, status, headers, config);
 									});

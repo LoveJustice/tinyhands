@@ -4,8 +4,7 @@ from django.core.urlresolvers import reverse_lazy
 
 
 from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSet
-from rest_framework import status
-from rest_framework import viewsets
+from rest_framework import filters, generics, status, viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
@@ -33,6 +32,9 @@ class FormSetForStations(InlineFormSet):
 class StaffViewSet(viewsets.ModelViewSet):
     queryset = Staff.objects.all()
     serializer_class = StaffSerializer
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_fields = ('border_station',)
+
 
     def staff_retrieve(self, request, *args, **kwargs):
         """
@@ -103,4 +105,4 @@ class StaticBorderStationsDetailView(StaticBorderStationsUpdateView):
 
 class BorderStationViewSet(viewsets.ModelViewSet):
     queryset = BorderStation.objects.all()
-    serializer_class = BorderStationSerializer
+    serializer_class = BorderStationSerializer     
