@@ -230,13 +230,14 @@ var DREAMSUITE = {
     setUpPermissionsCheckboxes();
     $('option:contains("---------")').remove();
     $('select').change(function() {
-      var rowIdx = parseInt($(this).parents('td').find('input').val()) - 1;
+      var userId = parseInt($(this).parents('td').find('input').val());
+      var rowId = $('input[value=' + userId + ']')[0].id.slice(0,-3);
       for (var i=0; i<window.defaultPermissionSets.length; i++) {
         var set = window.defaultPermissionSets[i];
         if (set.id === parseInt($(this).val())) {
           for (var key in set) {
             var toBe = set[key];
-            var $checkbox = $('#id_form-' + (rowIdx-1) + '-' + key);
+            var $checkbox = $('#' + rowId + '-' + key);
             var current = !!$checkbox.prop('checked');
             if (toBe !== current) {
               $checkbox.trigger('click');
