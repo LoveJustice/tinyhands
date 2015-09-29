@@ -7,13 +7,13 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('accounts', '0003_defaultpermissionsset_permission_vdc_manage'),
+        ('dataentry', '0001_initial'),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='account',
-            name='permission_vdc_manage',
+            model_name='borderstation',
+            name='closed',
             field=models.BooleanField(default=False),
             preserve_default=True,
         ),

@@ -7,32 +7,32 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dataentry', '0007_borderstation'),
+        ('accounts', '0001_initial'),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='borderstation',
-            name='date_established',
-            field=models.DateField(null=True),
-            preserve_default=True,
-        ),
-        migrations.AddField(
-            model_name='borderstation',
-            name='has_shelter',
+            model_name='account',
+            name='permission_irf_delete',
             field=models.BooleanField(default=False),
             preserve_default=True,
         ),
         migrations.AddField(
-            model_name='borderstation',
-            name='latitude',
-            field=models.FloatField(null=True),
+            model_name='account',
+            name='permission_vif_delete',
+            field=models.BooleanField(default=False),
             preserve_default=True,
         ),
         migrations.AddField(
-            model_name='borderstation',
-            name='longitude',
-            field=models.FloatField(null=True),
+            model_name='defaultpermissionsset',
+            name='permission_irf_delete',
+            field=models.BooleanField(default=False),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='defaultpermissionsset',
+            name='permission_vif_delete',
+            field=models.BooleanField(default=False),
             preserve_default=True,
         ),
     ]

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
 from django.db import models, migrations
@@ -12,6 +13,31 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
+            name='BorderStation',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('station_code', models.CharField(unique=True, max_length=3)),
+                ('station_name', models.CharField(max_length=100)),
+                ('date_established', models.DateField(null=True)),
+                ('has_shelter', models.BooleanField(default=False)),
+                ('latitude', models.FloatField(null=True)),
+                ('longitude', models.FloatField(null=True)),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='District',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('name', models.CharField(max_length=255)),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
             name='Interceptee',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
@@ -20,10 +46,9 @@ class Migration(migrations.Migration):
                 ('full_name', models.CharField(max_length=255)),
                 ('gender', models.CharField(blank=True, max_length=4, choices=[(b'f', b'F'), (b'm', b'M')])),
                 ('age', models.PositiveIntegerField(null=True, blank=True)),
-                ('district', models.CharField(max_length=255, blank=True)),
-                ('vdc', models.CharField(max_length=255, verbose_name=b'VDC', blank=True)),
                 ('phone_contact', models.CharField(max_length=255, blank=True)),
                 ('relation_to', models.CharField(max_length=255, blank=True)),
+                ('district', models.ForeignKey(blank=True, to='dataentry.District', null=True)),
             ],
             options={
                 'ordering': ['id'],
@@ -156,12 +181,27 @@ class Migration(migrations.Migration):
                 ('interception_type_runaway', models.BooleanField(default=False, verbose_name=b'Runaway')),
                 ('trafficker_taken_into_custody', models.CharField(max_length=20, null=True, blank=True)),
                 ('how_sure_was_trafficking', models.IntegerField(verbose_name=b'How sure are you that it was trafficking case?', choices=[(1, b'1 - Not at all sure'), (2, b'2 - Unsure but suspects it'), (3, b'3 - Somewhat sure'), (4, b'4 - Very sure'), (5, b'5 - Absolutely sure')])),
-                ('has_signature', models.BooleanField(verbose_name=b'Scanned form has signature?')),
+                ('has_signature', models.BooleanField(default=False, verbose_name=b'Scanned form has signature?')),
                 ('scanned_form', models.FileField(default=b'', upload_to=b'scanned_irf_forms', verbose_name=b'Attach scanned copy of form (pdf or image)', blank=True)),
-                ('form_entered_by', models.ForeignKey(related_name=b'irfs_entered', to=settings.AUTH_USER_MODEL)),
+                ('form_entered_by', models.ForeignKey(related_name='irfs_entered', to=settings.AUTH_USER_MODEL)),
             ],
             options={
                 'ordering': ['-date_time_last_updated'],
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='VDC',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('name', models.CharField(max_length=255)),
+                ('latitude', models.FloatField()),
+                ('longitude', models.FloatField()),
+                ('verified', models.BooleanField(default=False)),
+                ('cannonical_name', models.ForeignKey(blank=True, to='dataentry.VDC', null=True)),
+                ('district', models.ForeignKey(to='dataentry.District')),
+            ],
+            options={
             },
             bases=(models.Model,),
         ),
@@ -181,8 +221,6 @@ class Migration(migrations.Migration):
                 ('permission_to_use_photograph', models.BooleanField(default=False, verbose_name=b'Check the box if form is signed')),
                 ('victim_name', models.CharField(max_length=255, verbose_name=b'Name')),
                 ('victim_gender', models.CharField(max_length=12, verbose_name=b'Gender', choices=[(b'male', b'Male'), (b'female', b'Female')])),
-                ('victim_address_district', models.CharField(max_length=255, verbose_name=b'District', blank=True)),
-                ('victim_address_vdc', models.CharField(max_length=255, verbose_name=b'VDC', blank=True)),
                 ('victim_address_ward', models.CharField(max_length=255, verbose_name=b'Ward #', blank=True)),
                 ('victim_phone', models.CharField(max_length=255, verbose_name=b'Phone #', blank=True)),
                 ('victim_age', models.CharField(max_length=255, verbose_name=b'Age', blank=True)),
@@ -235,8 +273,6 @@ class Migration(migrations.Migration):
                 ('victim_primary_guardian_other_relative', models.BooleanField(default=False, verbose_name=b'Other Relative')),
                 ('victim_primary_guardian_non_relative', models.BooleanField(default=False, verbose_name=b'Non-relative')),
                 ('victim_primary_guardian_no_one', models.BooleanField(default=False, verbose_name=b'No one (I have no guardian)')),
-                ('victim_guardian_address_district', models.CharField(max_length=255, verbose_name=b'District', blank=True)),
-                ('victim_guardian_address_vdc', models.CharField(max_length=255, verbose_name=b'VDC', blank=True)),
                 ('victim_guardian_address_ward', models.CharField(max_length=255, verbose_name=b'Ward #', blank=True)),
                 ('victim_guardian_phone', models.CharField(max_length=255, verbose_name=b'Phone #', blank=True)),
                 ('victim_parents_marital_status_single', models.BooleanField(default=False, verbose_name=b'Single')),
@@ -310,7 +346,7 @@ class Migration(migrations.Migration):
                 ('victim_where_going_gulf_other', models.NullBooleanField(verbose_name=b'Other')),
                 ('victim_where_going_gulf_other_value', models.CharField(max_length=255, blank=True)),
                 ('manpower_involved', models.NullBooleanField(verbose_name=b'Was a manpower involved?')),
-                ('victim_recruited_in_village', models.BooleanField(verbose_name=b'Did someone recruit you in your village and persuade you to abroad?')),
+                ('victim_recruited_in_village', models.BooleanField(default=b'False', verbose_name=b'Did someone recruit you in your village and persuade you to abroad?')),
                 ('brokers_relation_to_victim_own_dad', models.BooleanField(default=False, verbose_name=b'Own dad')),
                 ('brokers_relation_to_victim_own_mom', models.BooleanField(default=False, verbose_name=b'Own mom')),
                 ('brokers_relation_to_victim_own_uncle', models.BooleanField(default=False, verbose_name=b'Own uncle')),
@@ -349,8 +385,8 @@ class Migration(migrations.Migration):
                 ('victim_how_expense_was_paid_paid_myself', models.BooleanField(default=False, verbose_name=b'I paid the expenses myself')),
                 ('victim_how_expense_was_paid_broker_paid_all', models.BooleanField(default=False, verbose_name=b'The broker paid all the expenses')),
                 ('victim_how_expense_was_paid_gave_money_to_broker', models.BooleanField(default=False, verbose_name=b'I gave a sum of money to the broker')),
-                ('victim_how_expense_was_paid_broker_gave_loan', models.BooleanField(default=False, verbose_name=b'The broker paid the expenses and I have to pay him back')),
                 ('victim_how_expense_was_paid_amount', models.DecimalField(null=True, verbose_name=b'Amount', max_digits=10, decimal_places=2, blank=True)),
+                ('victim_how_expense_was_paid_broker_gave_loan', models.BooleanField(default=False, verbose_name=b'The broker paid the expenses and I have to pay him back')),
                 ('broker_works_in_job_location_no', models.BooleanField(default=False, verbose_name=b'No')),
                 ('broker_works_in_job_location_yes', models.BooleanField(default=False, verbose_name=b'Yes')),
                 ('broker_works_in_job_location_dont_know', models.BooleanField(default=False, verbose_name=b"Don't Know")),
@@ -365,7 +401,7 @@ class Migration(migrations.Migration):
                 ('victim_primary_means_of_travel_plane', models.BooleanField(default=False, verbose_name=b'Plane')),
                 ('victim_primary_means_of_travel_other', models.BooleanField(default=False, verbose_name=b'Other')),
                 ('victim_primary_means_of_travel_other_value', models.CharField(max_length=255, blank=True)),
-                ('victim_stayed_somewhere_between', models.BooleanField()),
+                ('victim_stayed_somewhere_between', models.BooleanField(default=False)),
                 ('victim_how_long_stayed_between_days', models.PositiveIntegerField(null=True, verbose_name=b'Days', blank=True)),
                 ('victim_how_long_stayed_between_start_date', models.DateField(null=True, verbose_name=b'Start Date', blank=True)),
                 ('victim_was_hidden', models.NullBooleanField()),
@@ -401,7 +437,7 @@ class Migration(migrations.Migration):
                 ('meeting_at_border_no', models.BooleanField(default=False, verbose_name=b'No')),
                 ('meeting_at_border_meeting_broker', models.BooleanField(default=False, verbose_name=b'Meeting Broker')),
                 ('meeting_at_border_meeting_companion', models.BooleanField(default=False, verbose_name=b'Meeting Companion')),
-                ('victim_knew_details_about_destination', models.BooleanField()),
+                ('victim_knew_details_about_destination', models.BooleanField(default=False)),
                 ('other_involved_person_in_india', models.NullBooleanField()),
                 ('other_involved_husband_trafficker', models.NullBooleanField()),
                 ('other_involved_someone_met_along_the_way', models.NullBooleanField()),
@@ -477,9 +513,13 @@ class Migration(migrations.Migration):
                 ('interviewer_recommendation_send_to_other_relatives', models.BooleanField(default=False, verbose_name=b'Plan to send the girl to stay with other relatives')),
                 ('interviewer_recommendation_find_other_place', models.BooleanField(default=False, verbose_name=b'Tiny Hands needs to help her find another place to go')),
                 ('other_people_and_places_involved', models.NullBooleanField()),
-                ('has_signature', models.BooleanField(verbose_name=b'Scanned form has signature')),
+                ('has_signature', models.BooleanField(default=False, verbose_name=b'Scanned form has signature')),
                 ('case_notes', models.TextField(verbose_name=b'Case Notes', blank=True)),
                 ('scanned_form', models.FileField(default=b'', upload_to=b'scanned_vif_forms', verbose_name=b'Attach scanned copy of form (pdf or image)', blank=True)),
+                ('victim_address_district', models.ForeignKey(related_name='victim_address_district', to='dataentry.District', null=True)),
+                ('victim_address_vdc', models.ForeignKey(related_name='victim_address_vdc', to='dataentry.VDC', null=True)),
+                ('victim_guardian_address_district', models.ForeignKey(to='dataentry.District', null=True)),
+                ('victim_guardian_address_vdc', models.ForeignKey(to='dataentry.VDC', null=True)),
             ],
             options={
                 'ordering': ['-date_time_last_updated'],
@@ -505,8 +545,6 @@ class Migration(migrations.Migration):
                 ('what_kind_place_factory', models.BooleanField(default=False, verbose_name=b'Factory')),
                 ('what_kind_place_brothel', models.BooleanField(default=False, verbose_name=b'Brothel')),
                 ('what_kind_place_hotel', models.BooleanField(default=False, verbose_name=b'Hotel')),
-                ('vdc', models.CharField(max_length=255, verbose_name=b'VDC', blank=True)),
-                ('district', models.CharField(max_length=255, null=True, blank=True)),
                 ('signboard', models.CharField(max_length=255, blank=True)),
                 ('location_in_town', models.CharField(max_length=255, blank=True)),
                 ('phone', models.CharField(max_length=255, verbose_name=b'Phone #', blank=True)),
@@ -530,7 +568,9 @@ class Migration(migrations.Migration):
                 ('victim_believes_not_used_for_trafficking', models.BooleanField(default=False, verbose_name=b'Victim does not believe this location is used for trafficking')),
                 ('associated_with_person', models.NullBooleanField()),
                 ('associated_with_person_value', models.IntegerField(null=True, blank=True)),
-                ('victim_interview', models.ForeignKey(related_name=b'location_boxes', to='dataentry.VictimInterview')),
+                ('district', models.ForeignKey(to='dataentry.District', null=True)),
+                ('vdc', models.ForeignKey(to='dataentry.VDC', null=True)),
+                ('victim_interview', models.ForeignKey(related_name='location_boxes', to='dataentry.VictimInterview')),
             ],
             options={
             },
@@ -553,8 +593,6 @@ class Migration(migrations.Migration):
                 ('who_is_this_role_sex_industry', models.BooleanField(default=False, verbose_name=b'Sex Industry')),
                 ('name', models.CharField(max_length=255, verbose_name=b'Name', blank=True)),
                 ('gender', models.CharField(blank=True, max_length=12, verbose_name=b'Gender', choices=[(b'male', b'Male'), (b'female', b'Female')])),
-                ('address_district', models.CharField(max_length=255, verbose_name=b'District', blank=True)),
-                ('address_vdc', models.CharField(max_length=255, verbose_name=b'VDC', blank=True)),
                 ('address_ward', models.CharField(max_length=255, verbose_name=b'Ward #', blank=True)),
                 ('phone', models.CharField(max_length=255, verbose_name=b'Phone #', blank=True)),
                 ('age', models.PositiveIntegerField(null=True, verbose_name=b'Age', blank=True)),
@@ -583,7 +621,7 @@ class Migration(migrations.Migration):
                 ('occupation_other_value', models.CharField(max_length=255, blank=True)),
                 ('political_party_congress', models.BooleanField(default=False, verbose_name=b'Congress')),
                 ('political_party_maoist', models.BooleanField(default=False, verbose_name=b'Maoist')),
-                ('political_party_umn', models.BooleanField(default=False, verbose_name=b'UMN')),
+                ('political_party_uml', models.BooleanField(default=False, verbose_name=b'UML')),
                 ('political_party_forum', models.BooleanField(default=False, verbose_name=b'Forum')),
                 ('political_party_tarai_madesh', models.BooleanField(default=False, verbose_name=b'Tarai Madesh')),
                 ('political_party_shadbawona', models.BooleanField(default=False, verbose_name=b'Shadbawona')),
@@ -604,7 +642,9 @@ class Migration(migrations.Migration):
                 ('victim_believes_not_trafficker', models.BooleanField(default=False, verbose_name=b"Victim doesn't believe they are a trafficker")),
                 ('associated_with_place', models.NullBooleanField()),
                 ('associated_with_place_value', models.IntegerField(null=True, blank=True)),
-                ('victim_interview', models.ForeignKey(related_name=b'person_boxes', to='dataentry.VictimInterview')),
+                ('address_district', models.ForeignKey(to='dataentry.District', null=True)),
+                ('address_vdc', models.ForeignKey(to='dataentry.VDC', null=True)),
+                ('victim_interview', models.ForeignKey(related_name='person_boxes', to='dataentry.VictimInterview')),
             ],
             options={
             },
@@ -613,7 +653,13 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='interceptee',
             name='interception_record',
-            field=models.ForeignKey(related_name=b'interceptees', to='dataentry.InterceptionRecord'),
+            field=models.ForeignKey(related_name='interceptees', to='dataentry.InterceptionRecord'),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='interceptee',
+            name='vdc',
+            field=models.ForeignKey(blank=True, to='dataentry.VDC', null=True),
             preserve_default=True,
         ),
     ]

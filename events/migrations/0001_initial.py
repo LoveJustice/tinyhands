@@ -11,11 +11,11 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Events',
+            name='Event',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('title', models.CharField(max_length=250, verbose_name=b'Title')),
-                ('location', models.CharField(max_length=250, verbose_name=b'Location')),
+                ('location', models.CharField(max_length=250, verbose_name=b'Location', blank=True)),
                 ('start_date', models.DateField(verbose_name=b'Start Date')),
                 ('start_time', models.TimeField(null=True, verbose_name=b'Start Time')),
                 ('end_date', models.DateField(verbose_name=b'End Date')),
@@ -28,7 +28,7 @@ class Migration(migrations.Migration):
                 ('modified_on', models.DateTimeField(auto_now=True, verbose_name=b'Crated on', null=True)),
             ],
             options={
-                'verbose_name_plural': 'Events',
+                'verbose_name_plural': 'Event',
             },
             bases=(models.Model,),
         ),
