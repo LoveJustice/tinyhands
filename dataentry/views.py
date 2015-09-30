@@ -491,7 +491,7 @@ class Address2ViewSet(viewsets.ModelViewSet):
     search_fields = ('^name',)
 
     # specify the fields that the data can be ordered by
-    ordering_fields = ('name', 'district', 'verified', 'cannonical_name')
+    ordering_fields = ('name', 'district__name', 'verified', 'cannonical_name__name')
     # Specify the default order
     ordering = ('name', 'district',)
 

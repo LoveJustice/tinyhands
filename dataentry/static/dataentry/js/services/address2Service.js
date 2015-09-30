@@ -26,13 +26,7 @@ function address2Service($http) {
     }
 
 	function searchAddresses(queryParams) {
-        return $http.get('/api/address2/' + queryParams).
-            success(function (data) {
-                return data;
-            }).
-            error(function (data, status, headers, config) {
-                console.log(data, status, headers, config);
-            });
+        return listAddresses(queryParams);
     }
 
 	function loadMoreAddresses(url, queryParams) {

@@ -22,10 +22,11 @@ DEBUG = False
 TEMPLATE_DEBUG = False
 
 SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
+
 FIXTURE_DIRS = (
-                    os.path.join(BASE_DIR, 'fixtures'),
-                    os.path.join(BASE_DIR, 'dataentry/fixtures'),
-                )
+    os.path.join(BASE_DIR, 'fixtures'),
+    os.path.join(BASE_DIR, 'dataentry/fixtures'),
+)
 
 AUTH_USER_MODEL = 'accounts.Account'
 LOGIN_URL = '/login/'
@@ -124,5 +125,5 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 25,
     'PAGINATE_BY_PARAM': 'page_size',
     'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.DjangoFilterBackend',),
-
+    'TEST_REQUEST_DEFAULT_FORMAT': 'json',
 }

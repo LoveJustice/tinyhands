@@ -21,7 +21,10 @@ class VDCSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         found_district = District.objects.get(pk=self.context['request'].data['district']['id'])
-        found_vdc = VDC.objects.get(pk=self.context['request'].data['cannonical_name']['id'])
+        if self.context['request'].data['cannonical_name']['id'] == -1:
+            found_vdc = None
+        else:
+            found_vdc = VDC.objects.get(pk=self.context['request'].data['cannonical_name']['id'])
         validated_data['district'] = found_district
         validated_data['cannonical_name'] = found_vdc
         return VDC.objects.create(**validated_data)

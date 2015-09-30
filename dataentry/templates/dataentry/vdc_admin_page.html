@@ -22,10 +22,12 @@
             <p style="margin-top: 5px;">Results per page</p>
         </div>
         <div class="col-md-7 search-bar">
-              <label>
-                  <input type="search" ng-model="vm.searchValue" class="form-control">
-              </label>
-              <a class="btn btn-primary" ng-click="vm.searchAddresses()">Search</a>
+            <form ng-submit="vm.searchAddresses()">
+                  <label>
+                      <input type="search" placeholder="by Address 2 name..." ng-model="vm.searchValue" class="form-control">
+                  </label>
+                  <a class="btn btn-primary" ng-click="vm.searchAddresses()">Search</a>
+            </form>
         </div>
     </div>
 
@@ -33,22 +35,22 @@
         <thead>
         <tr>
             <th ng-click="vm.sortColumn = 'name'; vm.reverse = ! vm.reverse; vm.getAddresses()" class="text-center">
-                Name <img ng-show="vm.sortColumn == 'name'" src="{{vm.sortIcon}}" style="height: 13px;"/>
+                Name <i class="glyphicon" ng-class="vm.sortIcon('name')"></i>
             </th>
             <th ng-click="vm.sortColumn = 'latitude'; vm.reverse = ! vm.reverse; vm.getAddresses()" class="text-center">
-                Latitude <img ng-show="vm.sortColumn == 'latitude'" src="{{vm.sortIcon}}" style="height: 13px;"/>
+                Latitude <i class="glyphicon" ng-class="vm.sortIcon('latitude')"></i>
             </th>
             <th ng-click="vm.sortColumn = 'longitude'; vm.reverse = ! vm.reverse; vm.getAddresses()" class="text-center">
-                Longitude <img ng-show="vm.sortColumn == 'longitude'" src="{{vm.sortIcon}}" style="height: 13px;"/>
+                Longitude <i class="glyphicon" ng-class="vm.sortIcon('longitude')"></i>
             </th>
             <th ng-click="vm.sortColumn = 'district.name'; vm.reverse = ! vm.reverse; vm.getAddresses()" class="text-center">
-                Address 1 <img ng-show="vm.sortColumn == 'district.name'" src="{{vm.sortIcon}}" style="height: 13px;"/>
+                Address 1 <i class="glyphicon" ng-class="vm.sortIcon('district.name')"></i>
             </th>
             <th ng-click="vm.sortColumn = 'cannonical_name.name'; vm.reverse = ! vm.reverse; vm.getAddresses()" class="text-center">
-                Canonical Name <img ng-show="vm.sortColumn == 'cannonical_name.name'" src="{{vm.sortIcon}}" style="height: 13px;"/>
+                Canonical Name <i class="glyphicon" ng-class="vm.sortIcon('cannonical_name.name')"></i>
             </th>
             <th ng-click="vm.sortColumn = 'verified'; vm.reverse = ! vm.reverse; vm.getAddresses()" class="text-center">
-                Verified <img ng-show="vm.sortColumn == 'verified'" src="{{vm.sortIcon}}" style="height: 13px;"/>
+                Verified <i class="glyphicon" ng-class="vm.sortIcon('verified')"></i>
             </th>
             <th class="text-center">&nbsp;</th>
         </tr>
@@ -99,20 +101,28 @@
                 <input type="number" class="form-control" ng-model="address.longitude"/>
             </div>
 
+
             <div class="form-group">
-                <label for="addressName">District</label>
-                <select  ng-model="address.district" ng-options="address1.name for address1 in address1s" class="form-control">
-                </select>
+                <label for="addressName">Address 1</label>
+                <i ng-show="loadingAddress1" class="glyphicon glyphicon-refresh"></i>
+                <input type="text" ng-model="address.district" placeholder="Address 1" typeahead="address1 as address1.name for address1 in getFuzzyAddress1s($viewValue)" typeahead-loading="loadingAddress1" typeahead-no-results="noResults" class="form-control">
+                <div ng-show="noResults">
+                  <i class="glyphicon glyphicon-remove"></i> No Results Found
+                </div>
             </div>
+
 
             <div class="form-group">
                 <label for="addressName">Canonical Name</label>
-                <select ng-model="address.cannonical_name" ng-options="address2.name for address2 in address2s" class="form-control">
-                </select>
+                <i ng-show="loadingAddress2" class="glyphicon glyphicon-refresh" style="position: relative; bottom:25px;"></i>
+                <input type="text" ng-model="address.cannonical_name" placeholder="Canonical Name" typeahead="address2 as address2.name for address2 in getFuzzyAddress2s($viewValue)" typeahead-loading="loadingAddress2" typeahead-no-results="noResults" class="form-control">
+                <div ng-show="noResults">
+                  <i class="glyphicon glyphicon-remove"></i> No Results Found
+                </div>
             </div>
 
             <div class="form-group">
-                <label for="addressName">Verified</label>
+                <label>Verified</label>
                 <input type="checkbox" class="form-control" ng-model="address.verified"/>
             </div>
         </div>
@@ -127,9 +137,6 @@
         <div class="loader">Loading...</div>
     </div>
 </div>
-
-
-
 
 {% endverbatim %}
 
