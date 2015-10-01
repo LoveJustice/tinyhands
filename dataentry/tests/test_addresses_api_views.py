@@ -1,15 +1,18 @@
 from django.core.urlresolvers import reverse
 from rest_framework import status
 from rest_framework.test import APIRequestFactory, APITestCase
+from accounts.tests.factories import VdcUserFactory, BadVdcUserFactory
 from dataentry.tests.factories import VDCFactory, DistrictFactory, CannonicalNameFactory
 
 
 class Address1Test(APITestCase):
     def setUp(self):
         self.district_list = DistrictFactory.create_batch(20)
-        self.factory = APIRequestFactory()
+        self.user = VdcUserFactory.create()
+        self.client.force_authenticate(user=self.user)
 
     def test_create_address1(self):
+
         url = reverse('Address1')
         data = {'name': 'Address1'}
 
@@ -70,6 +73,9 @@ class Address1Test(APITestCase):
 class Address2Test(APITestCase):
 
     def setUp(self):
+        self.user = VdcUserFactory.create()
+        self.client.force_authenticate(user=self.user)
+
         self.VDCList = VDCFactory.create_batch(20)
         self.factory = APIRequestFactory()
         self.first_district = self.VDCList[0].district
@@ -174,3 +180,34 @@ class Address2Test(APITestCase):
         self.assertEqual(response.data['id'], address2.id)
         self.assertEqual(response.data['name'], address2.name)
         self.assertEqual(response.data['cannonical_name'], None)
+
+    def test_403_if_doesnt_have_permission(self):
+        self.bad_user = BadVdcUserFactory.create()
+        self.client.force_authenticate(user=self.bad_user)
+
+        address2 = CannonicalNameFactory.create()
+
+        # get detail
+        url = reverse('Address2detail', args=[address2.id])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        # put detail
+        url = reverse('Address2detail', args=[address2.id])
+        response = self.client.put(url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        # delete detail
+        url = reverse('Address2detail', args=[address2.id])
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        # get
+        url = reverse('Address2')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        # post
+        url = reverse('Address2')
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)

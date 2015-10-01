@@ -21,6 +21,7 @@ from rest_framework import status
 from rest_framework.decorators import list_route
 from rest_framework.pagination import PageNumberPagination
 from rest_framework import filters
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import viewsets
@@ -38,6 +39,8 @@ from accounts.mixins import PermissionsRequiredMixin
 
 from alert_checkers import IRFAlertChecker, VIFAlertChecker
 from fuzzy_matching import match_location
+from rest_api.authentication import HasPermission
+
 
 @login_required
 def home(request):
@@ -483,6 +486,8 @@ def get_station_id(request):
 class Address2ViewSet(viewsets.ModelViewSet):
     queryset = VDC.objects.all().select_related('district', 'cannonical_name__district')
     serializer_class = VDCSerializer
+    permission_classes = (IsAuthenticated, HasPermission)
+    permissions_required = ['permission_vdc_manage']
 
     # a couple default backends found on the djangoresetframework docs
     filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
@@ -497,9 +502,12 @@ class Address2ViewSet(viewsets.ModelViewSet):
 
 
 
+
 class Address1ViewSet(viewsets.ModelViewSet):
     queryset = District.objects.all()
     serializer_class = DistrictSerializer
+    permission_classes = (IsAuthenticated, HasPermission)
+    permissions_required = ['permission_vdc_manage']
 
     @list_route()
     def list_all(self, request):

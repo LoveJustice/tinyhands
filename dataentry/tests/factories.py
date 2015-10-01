@@ -6,7 +6,6 @@ from factory.fuzzy import FuzzyInteger, FuzzyFloat, FuzzyChoice
 from accounts.tests.factories import SuperUserFactory
 from dataentry.models import *
 
-
 class IrfFactory(DjangoModelFactory):
     class Meta:
         model = InterceptionRecord
