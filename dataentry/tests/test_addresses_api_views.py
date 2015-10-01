@@ -69,6 +69,38 @@ class Address1Test(APITestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
+    def test_address1_403_if_doesnt_have_permission(self):
+            self.bad_user = BadVdcUserFactory.create()
+            self.client.force_authenticate(user=self.bad_user)
+
+            address2 = CannonicalNameFactory.create()
+
+            # get detail
+            url = reverse('Address1detail', args=[address2.id])
+            response = self.client.get(url)
+            self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+            # put detail
+            url = reverse('Address1detail', args=[address2.id])
+            response = self.client.put(url)
+            self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+            # delete detail
+            url = reverse('Address1detail', args=[address2.id])
+            response = self.client.delete(url)
+            self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+            # get
+            url = reverse('Address1')
+            response = self.client.get(url)
+            self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+            # post
+            url = reverse('Address1')
+            response = self.client.post(url)
+            self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+
 
 class Address2Test(APITestCase):
 
