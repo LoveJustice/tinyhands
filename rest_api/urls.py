@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, url
 from budget.views import BudgetViewSet, OtherItemsViewSet
-from static_border_stations.views import BorderStationViewSet, StaffViewSet
+from static_border_stations.views import BorderStationViewSet, StaffViewSet, CommitteeMemberViewSet, LocationViewSet
 
 urlpatterns = patterns('rest_api.views',
     # Budget URLs
@@ -17,6 +17,14 @@ urlpatterns = patterns('rest_api.views',
     url(r'^border-stations/(?P<pk>\d+)/$', BorderStationViewSet.as_view({'get':'retrieve', 'put':'update', 'delete':'destroy'}), name="BorderStation"),
 
     # Staff
-    url(r'^staff/$', StaffViewSet.as_view({'get':'list', 'post':'create'}), name="BorderStations"), # Detail
-    url(r'^staff/(?P<pk>\d+)/$', StaffViewSet.as_view({'get':'retrieve', 'put':'update', 'delete':'destroy'}), name="BorderStation"),
+    url(r'^staff/$', StaffViewSet.as_view({'get':'list', 'post':'create'}), name="AllStaff"),
+    url(r'^staff/(?P<pk>\d+)/$', StaffViewSet.as_view({'get':'retrieve', 'put':'update', 'delete':'destroy'}), name="Staff"),
+
+    # Committee Members
+    url(r'^committee-members/$', CommitteeMemberViewSet.as_view({'get':'list', 'post':'create'}), name="CommitteeMembers"),
+    url(r'^committee-members/(?P<pk>\d+)/$', CommitteeMemberViewSet.as_view({'get':'retrieve', 'put':'update', 'delete':'destroy'}), name="CommitteeMember"),
+
+    # Locations
+    url(r'^locations/$', LocationViewSet.as_view({'get':'list', 'post':'create'}), name="Locations"),
+    url(r'^locations/(?P<pk>\d+)/$', LocationViewSet.as_view({'get':'retrieve', 'put':'update', 'delete':'destroy'}), name="Location"),
 )

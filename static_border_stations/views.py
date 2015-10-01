@@ -15,7 +15,7 @@ from static_border_stations.models import Staff, CommitteeMember, Location
 
 from dataentry.forms import BorderStationForm
 from dataentry.serializers import BorderStationSerializer
-from static_border_stations.serializers import StaffSerializer
+from static_border_stations.serializers import StaffSerializer, CommitteeMemberSerializer, LocationSerializer
 
 
 class FormSetForStations(InlineFormSet):
@@ -29,11 +29,28 @@ class FormSetForStations(InlineFormSet):
         return
 
 
-class StaffViewSet(viewsets.ModelViewSet):
-    queryset = Staff.objects.all()
-    serializer_class = StaffSerializer
+class BorderStationViewSet(viewsets.ModelViewSet):
+    queryset = BorderStation.objects.all()
+    serializer_class = BorderStationSerializer     
+        
+
+class BorderStationRestAPI(viewsets.ModelViewSet):
     filter_backends = (filters.DjangoFilterBackend,)
     filter_fields = ('border_station',)
+
+
+class LocationViewSet(BorderStationRestAPI):
+    queryset = Location.objects.all()
+    serializer_class = LocationSerializer
+
+class CommitteeMemberViewSet(BorderStationRestAPI):
+    queryset = CommitteeMember.objects.all()
+    serializer_class = CommitteeMemberSerializer
+
+
+class StaffViewSet(BorderStationRestAPI):
+    queryset = Staff.objects.all()
+    serializer_class = StaffSerializer
 
 
     def staff_retrieve(self, request, *args, **kwargs):
@@ -101,8 +118,3 @@ class StaticBorderStationsDetailView(StaticBorderStationsUpdateView):
         context = super(StaticBorderStationsDetailView, self).get_context_data(**kwargs)
         context["saved"] = True
         return context
-
-
-class BorderStationViewSet(viewsets.ModelViewSet):
-    queryset = BorderStation.objects.all()
-    serializer_class = BorderStationSerializer     

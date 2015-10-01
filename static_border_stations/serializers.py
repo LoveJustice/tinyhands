@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from static_border_stations.models import Staff, CommitteeMember
+from static_border_stations.models import Staff, CommitteeMember, Location
 
 
 class StaffSerializer(serializers.ModelSerializer):
@@ -10,3 +10,8 @@ class StaffSerializer(serializers.ModelSerializer):
 class CommitteeMemberSerializer(serializers.ModelSerializer):
     class Meta:
         model = CommitteeMember
+
+
+class LocationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Location
