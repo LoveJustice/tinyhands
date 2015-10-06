@@ -8,14 +8,26 @@
 		
 	function BorderStationsService($http) {
 		return {
+			getCommitteeMembers: getCommitteeMembers,
+			getLocations: getLocations,
+			getStaff: getStaff,
 			getStation: getStation
 		};
 	
 		function getStation(borderStationId) {
-			return $http.get('/api/border-stations/' + borderStationId + '/')
-									.error(function (data, status, headers, config) {
-											console.log(data, status, headers, config);
-									});
+			return $http.get('/api/border-stations/' + borderStationId + '/');
+		}
+	
+		function getStaff(borderStationId) {
+			return $http.get('/api/staff/' + borderStationId + '/');
+		}
+	
+		function getCommitteeMembers(borderStationId) {
+			return $http.get('/api/committee-members/' + borderStationId + '/');
+		}
+	
+		function getLocations(borderStationId) {
+			return $http.get('/api/locations/' + borderStationId + '/');
 		}
 	}
 })();
