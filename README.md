@@ -67,5 +67,6 @@ All you have to do is run the command `./manage.py test`.
 
 ## Angular Testing with Karma
 1. Make sure you have all of the dependencies downloaded by running `npm install`.
-2. Start the Karma server with `./node_modules/karma/bin/karma start` if you are in the root project directory.
-3. Watch the magic.
+2. Install karma cli `npm install -g karma-cli`.  
+3. Start the Karma server with `karma start` if you are in the root project directory.
+4. Watch the magic.
