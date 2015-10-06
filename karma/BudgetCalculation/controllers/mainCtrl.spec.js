@@ -37,7 +37,7 @@ describe('MainCtrl', function(){
         expect(controller.form.shelter_electricity).toBe(3);
     });
 
-    // FIX THIS
+    // TODO: FIX THIS - Jon Warren
     it('creates the form correctly', function() {
         // controller.test = true;
         // httpBackend.expectPOST('/budget/api/budget_calculations/', controller.form).respond(200, {
@@ -48,7 +48,7 @@ describe('MainCtrl', function(){
         // expect(controller.id).toBe(2)
     });
 
-    // FIX THIS
+    // TODO: FIX THIS - Jon Warren
     it('updates the form correctly', function() {
         // controller.test = true;
         // controller.form.id = 2;
