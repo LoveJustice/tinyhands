@@ -180,8 +180,17 @@ function setUpResumeIncompleteFormSystem(which) {
         else if (allInputs[i].type == 'number')
             allInputs[i].value = '';
     }
+    var allSelects = document.getElementsByTagName("select");
+    for (var i = 0, max = allSelects.length; i <max; i++){
+        if (allSelects[i].id != "saved-for-later-list"){
+        allSelects[i].selectedIndex = 0;
+        console.log(allSelects[i].id);
+        }
+    }
+
     $('form').deserialize($(this).val());
   });
+
 
   $('#save-for-later').click(function() {
     var formNumber = $('#id_'+which+'_number').val();
