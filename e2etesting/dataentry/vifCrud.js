@@ -1,6 +1,7 @@
 var loginPage = require('../accounts/loginPage.js');
 var filloutform = require('../accounts/vifPage.js');
 var c = require('../testConstants.json');
+var methods = require('../commonMethods.js');
 
 var vifCrud = function() {
     var page = this;
@@ -15,7 +16,7 @@ var vifCrud = function() {
     };
 
     this.editVif = function() {
-        this.edit = element(by.id("id_edit_vif_button")).click();
+        this.edit = element.all(by.id("id_edit_vif_button")).click();
         this.clear_vif_number = element(by.id("id_vif_number")).clear();
         this.change_vif_number = element(by.id("id_vif_number")).sendKeys(c.vifNumber);
         this.hit_submit = element(by.id("id_interviewer")).submit();
@@ -24,15 +25,23 @@ var vifCrud = function() {
     };
 
     this.checkEditedVif = function() {
-        this.view_edited_vif = element(by.id("id_view_vif_button")).click();
+        browser.sleep(4000);
+        browser.get(c.webAddress + '/data-entry/vifs/search/');
+        methods.click(element(by.id("id_edit_vif_button")));
+        //this.view = element.all(by.id("id_edit_vif_button")).click();
+        //this.view_edited_vif = element(by.id("id_view_vif_button")).click();
     };
 
     this.incorrectly_edit_vif = function() {
-        this.edit = element(by.id("id_edit_vif_button")).click();
+        //browser.get(c.webAddress + '/data-entry/vifs/update/1004/');
+        methods.click(element(by.id("id_edit_vif_button")));
+        //this.edit = element(by.id("id_edit_vif_button")).click();
         this.clear_gender_field = element(by.id("id_migration_plans_education")).click();
-        this.submitButton = element(by.id("id_interviewer")).submit();
-        //this.ignore_warnings = element(by.id("id_ignore_warnings")).click();
+        this.victim_name = element(by.id("id_victim_name")).sendKeys("");
         //this.submitButton = element(by.id("id_interviewer")).submit();
+        //this.ignore_warnings = element(by.id("id_ignore_warnings")).click();
+        this.submitButton = element(by.id("id_interviewer")).submit();
+        browser.sleep(800);
 
     };
 
@@ -70,18 +79,24 @@ var vifCrud = function() {
 
     // Both tests require border-station spec to be run in order for staff to be listed
     this.good_vif_staff_dropdown = function() {
-        this.edit = element(by.id("id_edit_vif_button")).click();
+        //browser.get(c.webAddress + '/data-entry/vifs/1004/');
+        methods.click(element(by.id("id_edit_vif_button")));
+        browser.sleep(4000);
+        //this.edit = element(by.id("id_edit_vif_button")).click();
         this.clear_vif_number = element(by.id("id_vif_number")).clear();
         this.change_vif_number = element(by.id("id_vif_number")).sendKeys(c.goodStaffVifNumber);
-        this.interviewer_dropdown = this.permissions.element(by.className("dropdown-toggle")).click();
+        this.interviewer_dropdown = element(by.className("dropdown-toggle")).click();
         browser.sleep(1000);
     };
 
     this.bad_vif_staff_dropdown = function() {
-        this.edit = element(by.id("id_edit_vif_button")).click();
+        //browser.get(c.webAddress + '/data-entry/vifs/1004/');
+        methods.click(element(by.id("id_edit_vif_button")));
+        //this.edit = element(by.id("id_edit_vif_button")).click();
         this.clear_vif_number = element(by.id("id_vif_number")).clear();
         this.change_vif_number = element(by.id("id_vif_number")).sendKeys(c.badStaffVifNumber);
-        this.interviewer_dropdown = this.permissions.element(by.className("dropdown-toggle"));
+        this.interviewer_dropdowns = element.all(by.className("dropdown-toggle"));
+        this.dropdown = this.interviewer_dropdowns[3];
         this.interviewer_dropdown.click();
         browser.sleep(1000);
         this.interviewer_dropdown.click();

@@ -67,7 +67,7 @@
             '<h3>' + borderStation.fields.station_name + ' - ' + borderStation.fields.station_code + '</h3>' +
 
             '<p>Est. ' + established(borderStation) + '</p>' +
-            '<p>Has shelter: ' + hasShelter(borderStation) + '</p>' +
+            '<p id="shelter">Has shelter: ' + hasShelter(borderStation) + '</p>' +
             '<p id="stationInterception">Interceptions: ' + '</p>' +
             '<p id="staffset"># of Staff ' + '</p>' +
             '</div>';
@@ -80,7 +80,7 @@
 
 
                     '<p>Est. ' + established(borderStation) + '</p>' +
-                    '<p>Has shelter: ' + hasShelter(borderStation) + '</p>' +
+                    '<p id="shelter">Has shelter: ' + hasShelter(borderStation) + '</p>' +
                     '<p id="stationInterception"></p>' +
                     '<p id="staffset"># of Staff ' + '</p>' +
                 '</div>'+

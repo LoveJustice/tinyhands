@@ -17,11 +17,9 @@ for (var i = 0;  i < borderStations.length; i++) {
     stationsPk[name] = station.pk;
     stationsCode[name] = code;
 
-};
+}
 
 describe('Dynamic Station Window', function() {
-
-
 
     beforeEach(function () {
         return browser.ignoreSynchronization = true;
@@ -36,8 +34,6 @@ describe('Dynamic Station Window', function() {
         });
     });
 
-
-
     describe('Test Marker Functionality', function () {
 
         it('marker exists', function () {
@@ -46,19 +42,16 @@ describe('Dynamic Station Window', function() {
 
         it('marker is clickable and links are correct', function() {
             for (var station in stationsCount) {
-                dynStation.checkClick(station);
+                dynStation.checkClick("Dang DNG");
                 dynStation.checkLinks(station, stationsCode[station], stationsPk[station]);
-            };
+            }
         }, 50000);
 
         it('marker is hoverable', function() {
-            for (var station in stationsCount) {
-                dynStation.checkHover(station);
-            };
+            //for (var station in stationsCount) {
+            dynStation.checkHover("Dang DNG");
+            //}
         }, 50000);
-
-
-
     });
 
 });

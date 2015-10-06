@@ -1,16 +1,11 @@
-'use strict';
-
 var c = require('../testConstants.json');
 var filloutform = require('../accounts/vifPage.js');
 
 
 var dynStation = function() {
 
-
-
     this.checkStationsExist = function (stationsCount) {
         var promises = [];
-
 
         element.all(by.tagName('area')).each(function (area) {
             promises.push(area.getAttribute("title"));
@@ -30,7 +25,6 @@ var dynStation = function() {
                 for (var station in stationsCount) {
                     expect(stationsCount[station]).toBe(1);
                 }
-                ;
             });
         });
     };
@@ -40,16 +34,18 @@ var dynStation = function() {
 
         browser.get(c.webAddress);
         browser.sleep(400);
-        $("area[title='" + station + "']").click();
+        //$("area[title='" + station + "']").click();
+        browser.actions().mouseMove($("area[title='" + station + "']")).perform();
+        browser.actions().mouseMove($("area[title='" + station + "']")).click().perform();
         browser.sleep(200);
-        expect($("div[id='Dynamic " + station + "']").isPresent()).toBe(true);
+        expect($("div[id='Dynamic" + station.slice(-3) + "']").isPresent()).toBe(true);
         expect(element(by.linkText('Subcommittee, Staff, and Locations')).isPresent()).toBe(true);
         expect(element(by.linkText('IRFs')).isPresent()).toBe(true);
         expect(element(by.linkText('VIFs')).isPresent()).toBe(true);
 
         if(station == "Dang DNG"){
             expect(element(by.id("stationInterception")).getText()).toContain('1');
-            expect(element(by.id("staffSet")).getText()).toContain('0');
+            expect(element(by.id("staffset")).getText()).toContain('0');
             expect(element(by.id("shelter")).getText()).toContain('No');
         }
 
@@ -66,10 +62,11 @@ var dynStation = function() {
         browser.get(c.webAddress);
         browser.sleep(400);
         browser.actions().mouseMove($("area[title='" + station + "']")).perform();
-        browser.sleep(200);
-        expect($("div[id='Static " + station + "']").isPresent()).toBe(true);
+        browser.sleep(3000);
+        expect(element(by.id("Static"+station.slice(-3))).isPresent()).toBe(true);
+        //expect($("div[id='Dynamic" + station.slice(-3) + "']").isPresent()).toBe(true);
         expect(element(by.id("stationInterception")).getText()).toContain('0');
-        expect(element(by.id("staffSet")).getText()).toContain('0');
+        expect(element(by.id("staffset")).getText()).toContain('0');
         expect(element(by.id("shelter")).getText()).toContain('No');
     };
 

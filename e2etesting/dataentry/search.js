@@ -1,5 +1,3 @@
-'use strict';
-
 var constants = require('../testConstants.json');
 var loginPage = require('../accounts/loginPage.js');
 
@@ -15,12 +13,10 @@ var searchIRF = function(){
 		browser.get(constants.webAddress + '/data-entry/vifs/search/');
 	};
 
-    this.searchKey = function(keys){
-		this.searchfield = element(by.className("form-control"));
+    this.searchKey = function(keys, xpath){
+		this.searchfield = element(by.xpath(xpath));
 		this.searchfield.sendKeys(keys);
-		this.searchfield.submit();
     };
-
 };
 
 module.exports = new searchIRF();

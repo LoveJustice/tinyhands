@@ -23,7 +23,8 @@
   "irfNumber"                 : "BHD123",
   "irfEditNumber"             : "BHD121",
   "irfLocation"               : "none",
-  "irfInterceptTime"          : "01/01/01",
+  "irfInterceptTime"          : "09/16/2015 06:20",
+  "irfInterceptTimeTest"      : "2015-09-16 06:20:00",
   "irfStaffName"              : "TEST",
   "irfInterceptFname"         : "name",
 
@@ -52,7 +53,7 @@
   "committee1Email"           : "example1@example.com",
 
   "irfInterceptDistrict"      : "Dang",
-  "irfInterceptVdc"           : "ShreeJung",
+  "irfInterceptVdc"           : "Shree Jung",
   "irfNameCameUpBeforeValue"  : "1",
 
   "goodStaffVifNumber"                : "AAA123",
