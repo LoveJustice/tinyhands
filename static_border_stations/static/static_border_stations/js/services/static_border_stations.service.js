@@ -15,19 +15,19 @@
 		};
 	
 		function getStation(borderStationId) {
-			return $http.get('/api/border-stations/' + borderStationId + '/');
+			return $http.get('/api/border-stations/' + borderStationId);
 		}
 	
 		function getStaff(borderStationId) {
-			return $http.get('/api/staff/' + borderStationId + '/');
+			return $http.get('/api/staff/?borderstation=' + borderStationId);
 		}
 	
 		function getCommitteeMembers(borderStationId) {
-			return $http.get('/api/committee-members/' + borderStationId + '/');
+			return $http.get('/api/committee-members/?borderstation=' + borderStationId);
 		}
 	
 		function getLocations(borderStationId) {
-			return $http.get('/api/locations/' + borderStationId + '/');
+			return $http.get('/api/locations/?borderstation=' + borderStationId);
 		}
 	}
 })();
