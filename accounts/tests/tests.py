@@ -1,6 +1,8 @@
 from django_webtest import WebTest
 from django.utils import unittest
 from accounts.models import Account, Alert
+from accounts.tests.factories import SuperUserFactory
+from django.core import mail
 
 
 class TestModels(WebTest):
@@ -21,3 +23,41 @@ class AlertTestCase(unittest.TestCase):
         x.delete()
         self.assertEqual(len(Alert.objects.all()),0)
 
+class AccountTest(unittest.TestCase):
+    def test_unicode(self):
+        account = SuperUserFactory.create()
+
+        result = str(account)
+
+        self.assertEqual(result, account.email)
+
+    def test_get_username(self):
+        account = SuperUserFactory.create()
+
+        result = account.get_username()
+
+        self.assertEqual(result, account.email)
+
+    def test_get_short_name(self):
+        account = SuperUserFactory.create()
+
+        result = account.get_short_name()
+
+        self.assertEqual(result, account.first_name)
+
+    def test_get_full_name(self):
+        account = SuperUserFactory.create()
+
+        result = account.get_full_name()
+
+        self.assertEqual(result, account.first_name+' '+account.last_name)
+
+    def test_send_email_to_correct_person(self):
+        account = SuperUserFactory.create()
+        subject = "foo"
+
+        account.email_user("test_templated_email", "alert", {"subject": subject })
+
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].subject, subject)
+        self.assertEqual(mail.outbox[0].to[0], account.email)

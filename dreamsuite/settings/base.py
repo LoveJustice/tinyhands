@@ -16,7 +16,7 @@ EMAIL_HOST_PASSWORD = 'TINY@2014'
 EMAIL_PORT = 2525
 EMAIL_USE_TLS = True
 
-# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 DEBUG = False
 TEMPLATE_DEBUG = False
