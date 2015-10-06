@@ -22,10 +22,11 @@ DEBUG = False
 TEMPLATE_DEBUG = False
 
 SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
+
 FIXTURE_DIRS = (
-                    os.path.join(BASE_DIR, 'fixtures'),
-                    os.path.join(BASE_DIR, 'dataentry/fixtures'),
-                )
+    os.path.join(BASE_DIR, 'fixtures'),
+    os.path.join(BASE_DIR, 'dataentry/fixtures'),
+)
 
 AUTH_USER_MODEL = 'accounts.Account'
 LOGIN_URL = '/login/'
@@ -49,10 +50,11 @@ INSTALLED_APPS = (
     'portal',
     'budget',
     'util',
-    'rest_framework',
     'static_border_stations',
+    'rest_api',
+    'rest_framework',
     'django_extensions',
-    'bootstrap_pagination',
+    'bootstrap_pagination'
 )
 
 import django.conf.global_settings as DEFAULT_SETTINGS
@@ -118,5 +120,10 @@ MEDIA_URL = '/media/'
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.AllowAny',
-    )
+    ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 25,
+    'PAGINATE_BY_PARAM': 'page_size',
+    'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.DjangoFilterBackend',),
+    'TEST_REQUEST_DEFAULT_FORMAT': 'json',
 }

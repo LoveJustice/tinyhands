@@ -15,6 +15,9 @@
     <link rel="stylesheet"      href="https://cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.css">
     <link rel="stylesheet"      href="{{ STATIC_URL }}animate.css"/>
     <link rel="stylesheet/less" href="{{ STATIC_URL }}style.less" />
+    <link rel="stylesheet/less" href="{{ STATIC_URL }}style.less" />
+    <link rel="stylesheet/less" href="{{ STATIC_URL }}angular-bootstrap/ui-bootstrap-custom-0.13.4-csp.css" />
+
 
     {% block head %}{% endblock %}
 
@@ -26,6 +29,12 @@
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-animate.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-cookies.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-route.js"></script>
+    <script src="http://momentjs.com/downloads/moment.min.js"></script>
+    <script src="http://momentjs.com/downloads/moment-timezone-with-data-2010-2020.min.js"></script>
+
+    <script src="{{ STATIC_URL }}angular-bootstrap/ui-bootstrap-custom-0.13.4.js"></script>
+    <script src="{{ STATIC_URL }}angular-bootstrap/ui-bootstrap-custom-tpls-0.13.4.js"></script>
+
 
     <script src="{{ STATIC_URL }}app.js"></script>
 
@@ -70,7 +79,7 @@ in the Javascript and run code unique to the current page.
                         <hr style="margin: 4px"/>
                         {% endif %}
                         {% for station in border_stations %}
-                        {% if request.user.permission_border_stations_edit %}
+                        {% if request.user.permission_border_stations_edit and station.open %}
                         <li><a href="{% url 'borderstations_update' station.pk %}">{{station.station_name }}</a></li>
                         {% endif %}
                         {% if request.user.permission_border_stations_view and not request.user.permission_border_stations_edit %}
@@ -144,7 +153,6 @@ in the Javascript and run code unique to the current page.
 <script src="{{ STATIC_URL }}jquery.formset.js"></script>
 {% block foot %}
 {% endblock %}
-<script src="{{ STATIC_URL }}all-pages.js"></script>
 <script src="{{ STATIC_URL }}all-pages.js"></script>
 <script src="{{ STATIC_URL }}geocodelocations.js"></script>
 <script src="{{ STATIC_URL }}station-suggestions.js"></script>
