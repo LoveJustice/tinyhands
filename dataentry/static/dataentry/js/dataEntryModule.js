@@ -1,4 +1,4 @@
-var myModule = angular.module('DataEntry', ['ngCookies', 'ngRoute', 'ngAnimate'])
+var myModule = angular.module('DataEntry', ['ngCookies', 'ngRoute', 'ngAnimate','ui.bootstrap'])
         .config(['$httpProvider', '$routeProvider', function($httpProvider, $routeProvider) {
             $httpProvider.defaults.xsrfCookieName = 'csrftoken';
             $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
