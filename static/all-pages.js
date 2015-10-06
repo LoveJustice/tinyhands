@@ -171,6 +171,13 @@ function setUpResumeIncompleteFormSystem(which) {
   }
 
   $('#saved-for-later-list').change(function() {
+    var allInputs = document.getElementsByTagName("input");
+    for (var i = 0, max = allInputs.length; i < max; i++){
+        if (allInputs[i].type === 'checkbox')
+            allInputs[i].checked = false;
+        else if (allInputs[i].type == 'text')
+            allInputs[i].value = '';
+    }
     $('form').deserialize($(this).val());
   });
 
