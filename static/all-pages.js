@@ -178,8 +178,26 @@ function setUpResumeIncompleteFormSystem(which) {
   }
 
   $('#saved-for-later-list').change(function() {
+    var allInputs = document.getElementsByTagName("input");
+    for (var i = 0, max = allInputs.length; i < max; i++){
+        if (allInputs[i].type === 'checkbox')
+            allInputs[i].checked = false;
+        else if (allInputs[i].type == 'text')
+            allInputs[i].value = '';
+        else if (allInputs[i].type == 'number')
+            allInputs[i].value = '';
+    }
+    var allSelects = document.getElementsByTagName("select");
+    for (var i = 0, max = allSelects.length; i <max; i++){
+        if (allSelects[i].id != "saved-for-later-list"){
+        allSelects[i].selectedIndex = 0;
+        console.log(allSelects[i].id);
+        }
+    }
+
     $('form').deserialize($(this).val());
   });
+
 
   $('#save-for-later').click(function() {
     var formNumber = $('#id_'+which+'_number').val();
