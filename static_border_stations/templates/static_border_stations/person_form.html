@@ -1,54 +1,59 @@
 {% verbatim %}
-<div>
-  <div class="row">
-    <h1>Staff</h1><hr/>
-    <div class="row">
-        <div class="col-sm-6 form-group">
-          <label for="firstName">First Name</label>
-          <input type="text" class="form-control" id="firstName" placeholder="First Name">
-        </div>
-        <div class="col-sm-6 form-group">
-          <label for="lastName">Last Name</label>
-          <input type="text" class="form-control" id="lastName" placeholder="Last Name">
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-6 form-group">
-          <label for="longitude">Longitude</label>
-          <input type="text" class="form-control" id="longitude" placeholder="Longitude">
-          <p hidden="true">{{person_form.salary}}</p>
-        </div>
-        <div class="col-sm-6 checkbox">
-          <label>
-            <input type="checkbox"> Recieves Money Distribution Form
-          </label>
-        </div>
-    </div>
-  </div>
-  <div class="row">
-    <h1>Committee Member</h1>
+<div ng-cloak>
+  <div class="row well"
+       ng-repeat="persons in bsCtrl.people">
+    <h1>{{persons.name}}</h1>
     <hr/>
-    <div class="row">
-        <div class="col-sm-6 form-group">
-          <label for="firstName">First Name</label>
-          <input type="text" class="form-control" id="firstName" placeholder="First Name">
-        </div>
-        <div class="col-sm-6 form-group">
-          <label for="lastName">Last Name</label>
-          <input type="text" class="form-control" id="lastName" placeholder="Last Name">
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-6 form-group">
-          <label for="longitude">Longitude</label>
-          <input type="text" class="form-control" id="longitude" placeholder="Longitude">
-          <p hidden="true">{{person_form.salary}}</p>
-        </div>
-        <div class="col-sm-6 checkbox">
-          <label>
-            <input type="checkbox"> Recieves Money Distribution Form
-          </label>
-        </div>
+    <div ng-repeat="person in persons.data"
+         ng-mouseenter="person.hover = true"
+         ng-mouseleave="person.hover = false">
+      <div class="row">
+          <div class="col-sm-6 form-group">
+            <label for="firstName">First Name</label>
+            <input type="text" class="form-control" id="firstName" placeholder="First Name"
+                  ng-model="person.first_name">
+          </div>
+          <div class="col-sm-6 form-group">
+            <label for="lastName">Last Name</label>
+            <input type="text" class="form-control" id="lastName" placeholder="Last Name"
+                  ng-model="person.last_name">
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-sm-6 form-group">
+            <label for="email">Email</label>
+            <input type="text" class="form-control" id="email" placeholder="Email Address"
+                  ng-model="person.email">
+          </div>
+          <div class="col-sm-6 form-group">
+            <label for="phone">Phone Number</label>
+            <input type="text" class="form-control" id="phone" placeholder="Phone Number"
+                  ng-model="person.phone">
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-sm-6 form-group">
+            <label for="position">Position</label>
+            <input type="text" class="form-control" id="position" placeholder="Position"
+                  ng-model="person.position">
+          </div>
+          <div class="col-sm-6 checkbox">
+            <label>
+              <input type="checkbox"
+                     ng-model="person.receives_money_distribution_form"> Recieves Money Distribution Form
+            </label>
+          </div>
+      </div>
+      <div class="row col-xs-12">
+        <button class="btn btn-danger pull-left animated"
+                ng-class="{fadeIn: person.hover, fadeOut: !person.hover}">Remove {{person.first_name}}</button>
+        <button class="btn btn-success pull-right"
+                ng-if="$last">Add {{persons.name}}</button>
+      </div>
+      <br/>
+      <hr ng-if="!$last && persons.data.length > 1"/>
+      <div class="row"
+           ng-if="persons.data.length == 0">No {{persons.name}}</div>
     </div>
   </div>
 </div>

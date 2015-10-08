@@ -9,6 +9,9 @@
 		{% include "static_border_stations/borderstation_form.html" %}
 		{% include "static_border_stations/person_form.html" %}
 		{% include "static_border_stations/location_form.html" %}
+		<button class="btn btn-primary pull-right col-xs-12"
+						ng-click="bsCtrl.updateStation()">Update Station</button>
+		<br/><br/><br/>
 	</form>
 	{% block content %}
 	{% endblock %}

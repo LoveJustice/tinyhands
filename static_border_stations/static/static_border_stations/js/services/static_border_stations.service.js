@@ -11,10 +11,14 @@
 			getCommitteeMembers: getCommitteeMembers,
 			getLocations: getLocations,
 			getStaff: getStaff,
-			getStation: getStation
+			getDetails: getDetails,
+			updateCommitteeMembers: updateCommitteeMembers,
+			updateLocations: updateLocations,
+			updateStaff: updateStaff,
+			updateDetails: updateDetails
 		};
 	
-		function getStation(borderStationId) {
+		function getDetails(borderStationId) {
 			return $http.get('/api/border-stations/' + borderStationId);
 		}
 	
@@ -28,6 +32,22 @@
 	
 		function getLocations(borderStationId) {
 			return $http.get('/api/locations/?borderstation=' + borderStationId);
+		}
+	
+		function updateDetails(borderStationId, data) {
+			return $http.put('/api/border-stations/' + borderStationId, data);
+		}
+	
+		function updateStaff(staffId, data) {
+			return $http.put('/api/staff/' + staffId, data);
+		}
+	
+		function updateCommitteeMembers(memberId, data) {
+			return $http.put('/api/committee-members/' + memberId, data);
+		}
+	
+		function updateLocations(locationId, data) {
+			return $http.put('/api/locations/' + locationId, data);
 		}
 	}
 })();

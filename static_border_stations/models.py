@@ -16,6 +16,8 @@ class Person(models.Model):
     email = NullableEmailField(blank=True, null=True, default=None, unique=True)
     first_name = models.CharField(max_length=255, blank=True)
     last_name = models.CharField(max_length=255, blank=True)
+    phone = models.CharField(max_length=255, blank=True, null=True)
+    position = models.CharField(max_length=255, blank=True, null=True)
     receives_money_distribution_form = models.BooleanField(default=False)
     border_station = models.ForeignKey(BorderStation, null=False, default=1)
 
