@@ -14,6 +14,8 @@ module.exports = function(config) {
 
 
     // list of files / patterns to load in the browser
+    // !!!!!!!!!!!!! WARNING !!!!!!!!!!!!!!!
+    // DO NOT CHANGE THIS VARIABLE :) -B. Sell 10/6/2015
     files: [
         'test-main.js',
         'node_modules/angular/angular.js',
@@ -22,10 +24,12 @@ module.exports = function(config) {
         'node_modules/angular-animate/angular-animate.js',
         'node_modules/angular-route/angular-route.js',
         'node_modules/angular-mocks/angular-mocks.js',  
-        'budget/templates/budget/javascript/*.js',
-        'budget/templates/budget/javascript/controllers/*.js',
-        'budget/templates/budget/javascript/services/*.js',
-        './karma/BudgetCalculation/controllers/*.spec.js'
+        
+        '**/static/**/*.module.js',
+        '**/static/**/controllers/*.js',
+        '**/static/**/services/*.js',
+        
+        {pattern: 'karma/**/*.spec.js', included: false}
     ],
 
     // list of files to exclude
