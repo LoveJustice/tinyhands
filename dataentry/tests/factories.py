@@ -1,11 +1,10 @@
 from datetime import date
 import factory
 from factory.django import DjangoModelFactory
-from factory.fuzzy import FuzzyInteger
+from factory.fuzzy import FuzzyInteger, FuzzyFloat, FuzzyChoice
 
 from accounts.tests.factories import SuperUserFactory
 from dataentry.models import *
-
 
 class IrfFactory(DjangoModelFactory):
     class Meta:
@@ -34,3 +33,35 @@ class IntercepteeFactory(DjangoModelFactory):
     gender = 'm'
     interception_record = factory.SubFactory(IrfFactory)
     kind = 'v'
+
+
+class DistrictFactory(DjangoModelFactory):
+    class Meta:
+        model = District
+
+    name = factory.Sequence(lambda n: 'District {0}'.format(n))
+
+
+class CannonicalNameFactory(DjangoModelFactory):
+    class Meta:
+        model = VDC
+
+    name = factory.Sequence(lambda n: 'VDC cannon {0}'.format(n))
+    latitude = FuzzyFloat(0, 20)
+    longitude = FuzzyFloat(0, 20)
+    district = factory.SubFactory(DistrictFactory)
+    cannonical_name = None
+    verified = FuzzyChoice([True, False])
+
+
+class VDCFactory(DjangoModelFactory):
+    class Meta:
+        model = VDC
+
+    name = factory.Sequence(lambda n: 'VDC {0}'.format(n))
+    latitude = FuzzyFloat(0, 20)
+    longitude = FuzzyFloat(0, 20)
+
+    district = factory.SubFactory(DistrictFactory)
+    cannonical_name = factory.SubFactory(CannonicalNameFactory)
+    verified = FuzzyChoice([True, False])

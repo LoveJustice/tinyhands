@@ -3,6 +3,16 @@ body {
   padding-bottom: 70px;
 }
 
+#vdc_admin_page{
+    th {
+        cursor: pointer;
+        &:hover{
+            color: gray;
+        }
+    }
+
+}
+
 #money_distribution_view{
   .notReceiving {
     transition: background-color .5s ease;
@@ -145,7 +155,7 @@ abbr {
         cursor: default;
         margin-right: 15px;
         /* REGION: Drop-down animation */
-       
+
         -webkit-transition: max-height 1s;
         transition: max-height 1s;
         top: 5px;
@@ -764,6 +774,16 @@ abbr {
     }
 }
 
+.search-bar {
+    text-align: right;
+
+    label {
+      font-weight: normal;
+      white-space: nowrap;
+      text-align: left;
+    }
+}
+
 /**
 * Horizontal Type Line Behind Text
 * Inspired by this discussion @ CSS-Tricks: http://css-tricks.com/forums/topic/css-trick-for-a-horizontal-type-line-behind-text/#post-151970
@@ -835,7 +855,7 @@ h2.background {
 }
 
 .loader-container{
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -861,8 +881,8 @@ h2.background {
   -webkit-transform: translateZ(0);
   -ms-transform: translateZ(0);
   transform: translateZ(0);
-  -webkit-animation: load6 1.7s infinite ease;
-  animation: load6 1.7s infinite ease;
+  -webkit-animation: load6 1.0s infinite ease;
+  animation: load6 1.0s infinite ease;
 }
 @-webkit-keyframes load6 {
   0% {
