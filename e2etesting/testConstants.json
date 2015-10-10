@@ -20,8 +20,8 @@
 
   "webAddress" : "http://0.0.0.0:8001",
 
-  "irfNumber"                 : "BHD123",
-  "irfEditNumber"             : "BHD121",
+  "irfNumber"                 : "DNG123",
+  "irfEditNumber"             : "DNG121",
   "irfLocation"               : "none",
   "irfInterceptTime"          : "09/16/2015 06:20",
   "irfInterceptTimeTest"      : "2015-09-16 06:20:00",
