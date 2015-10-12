@@ -2,9 +2,9 @@ var commonMethods = function () {
     var page = this;
 
     this.click = function(element) {
-        browser.sleep(800);
+        browser.sleep(500);
         element.click();
-        browser.sleep(800);
+        browser.sleep(500);
     }
 };
 

@@ -9,13 +9,13 @@
   "vdcEditName"      : "aaaab",
   "vdcEditLat"       : "0.1",
   "vdcEditLon"       : "0.1",
-  "vdcEditDis"       : "Dang",
+  "vdcEditDis"       : "Achham",
   "vdcEditCan"       : "ShreeJung",
 
   "vdcNewName"      : "aaaab",
   "vdcNewLat"       : "0.0",
   "vdcNewLon"       : "0.0",
-  "vdcNewDis"       : "Dang",
+  "vdcNewDis"       : "Achham",
   "vdcNewCan"       : "ShreeJung",
 
   "webAddress" : "http://0.0.0.0:8001",

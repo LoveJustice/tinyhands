@@ -32,12 +32,16 @@ var moneyDistributionForm = function () {
     };
 
     this.sendEmails = function () {
+        browser.sleep(800);
         methods.click(element(by.partialLinkText("Send to")));
+        browser.sleep(800);
     };
 
     this.updateBudgetForm = function () {
         //element(by.linkText("Update Budget")).click();
+        browser.sleep(800);
         methods.click(element(by.linkText("Update Budget")));
+        browser.sleep(800);
     };
 
 };

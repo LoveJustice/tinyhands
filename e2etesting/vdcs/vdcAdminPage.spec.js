@@ -11,7 +11,7 @@ describe('TinyHands VDCs', function () {
         loginPage.logout();
         loginPage.loginAsAdmin();
         vdcAdminPage.navigate();
-        expect(browser.getTitle()).toContain('Manage VDCs');
+        expect(browser.getTitle()).toContain('Manage');
     });
 
     it('should change the first VDCs information', function () {
@@ -25,9 +25,14 @@ describe('TinyHands VDCs', function () {
         browser.get(constants.webAddress);
         vdcAdminPage.navigate();
         browser.sleep(2000);
-        expect(element(by.css(".vdc_admin_name")).getText()).toBe(constants.vdcEditName);
-        expect(element.all(by.css(".vdc_admin_district")).first().getText()).toEqual(constants.vdcEditDis);
-        expect(element.all(by.css(".vdc_admin_cannonical")).first().getText()).toEqual(constants.vdcEditCan);
+
+        expect(element(by.xpath("//td[text() = '" + constants.vdcEditName + "']")).isPresent()).toBe(true);
+        var item = element(by.xpath("//td[text() = 'aaaab']"));
+        var district = item.element(by.xpath("../td[4]"));
+        var cannon = item.element(by.xpath("../td[5]"));
+
+        expect(district.getText()).toEqual(constants.vdcEditDis);
+        expect(cannon.getText()).toEqual(constants.vdcEditCan);
         browser.sleep(500);
     });
 
@@ -37,9 +42,14 @@ describe('TinyHands VDCs', function () {
         vdcAdminPage.createNewVDC();
         browser.sleep(500);
         vdcAdminPage.navigate();
-        expect(element(by.css(".vdc_admin_name")).getText()).toBe(constants.vdcNewName);
-        expect(element.all(by.css(".vdc_admin_district")).first().getText()).toEqual(constants.vdcNewDis);
-        expect(element.all(by.css(".vdc_admin_cannonical")).first().getText()).toEqual(constants.vdcNewCan);
+
+        expect(element(by.xpath("//td[text() = '" + constants.vdcNewName + "']")).isPresent()).toBe(true);
+        var item = element(by.xpath("//td[text() = 'aaaab']"));
+        var district = item.element(by.xpath("../td[4]"));
+        var cannon = item.element(by.xpath("../td[5]"));
+
+        expect(district.getText()).toEqual(constants.vdcNewDis);
+        expect(cannon.getText()).toEqual(constants.vdcNewCan);
     });
 
     it('should not have any error tooltips above the create modal on a vif', function(){
@@ -48,9 +58,14 @@ describe('TinyHands VDCs', function () {
         vdcAdminPage.createNewVDC();
         browser.sleep(500);
         vdcAdminPage.navigate();
-        expect(element(by.css(".vdc_admin_name")).getText()).toBe(constants.vdcNewName);
-        expect(element.all(by.css(".vdc_admin_district")).first().getText()).toEqual(constants.vdcNewDis);
-        expect(element.all(by.css(".vdc_admin_cannonical")).first().getText()).toEqual(constants.vdcNewCan);
+
+        expect(element(by.xpath("//td[text() = '" + constants.vdcNewName + "']")).isPresent()).toBe(true);
+        var item = element(by.xpath("//td[text() = 'aaaab']"));
+        var district = item.element(by.xpath("../td[4]"));
+        var cannon = item.element(by.xpath("../td[5]"));
+
+        expect(district.getText()).toEqual(constants.vdcNewDis);
+        expect(cannon.getText()).toEqual(constants.vdcNewCan);
     });
 
 });
