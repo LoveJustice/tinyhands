@@ -85,12 +85,12 @@ function makeCheckboxAppearAsAButton(className,checkedText,uncheckedText) {
     var $label = $(this);
     var $input = $label.find('input');
     if ($label.hasClass('btn-danger')) {
-      $input.attr('checked','checked');
+      $input.prop('checked', true);
       $label.removeClass('btn-danger').addClass('btn-success');
       $label.find(className).text(checkedText);
     }
     else if ($label.hasClass('btn-success')) {
-      $input.removeAttr('checked');
+      $input.prop('checked', false);
       $label.removeClass('btn-success').addClass('btn-danger');
       $label.find(className).text(uncheckedText);
     }
@@ -248,11 +248,14 @@ var DREAMSUITE = {
         var set = window.defaultPermissionSets[i];
         if (set.id === parseInt($(this).val())) {
           for (var key in set) {
+            if(key == 'name' || key == 'id') {
+              continue;
+            }
             var toBe = set[key];
             var $checkbox = $('#' + rowId + '-' + key);
             var current = !!$checkbox.prop('checked');
             if (toBe !== current) {
-              $checkbox.trigger('click');
+              $checkbox.parents('label')[0].click();
             }
           }
         }
