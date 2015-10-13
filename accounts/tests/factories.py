@@ -69,7 +69,6 @@ class UserFactory(DjangoModelFactory):
     class Meta:
         model = Account
         abstract = True
-
     email = factory.Sequence(lambda n: 'test{0}@test.com'.format(n))
     first_name = factory.Sequence(lambda n: 'test{0}'.format(n))
     last_name = factory.Sequence(lambda n: 'test{0}'.format(n))
@@ -118,6 +117,16 @@ class EditUserFactory(UserFactory):
     permission_vif_edit = True
     permission_border_stations_view = True
     permission_border_stations_edit = True
+    user_designation = factory.SubFactory(EditUserDesignation)
+
+
+class VdcUserFactory(UserFactory):
+    permission_vdc_manage = True
+    user_designation = factory.SubFactory(EditUserDesignation)
+
+
+class BadVdcUserFactory(UserFactory):
+    permission_vdc_manage = False
     user_designation = factory.SubFactory(EditUserDesignation)
 
 

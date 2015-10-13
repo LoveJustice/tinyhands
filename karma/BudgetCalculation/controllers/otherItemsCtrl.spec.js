@@ -1,5 +1,5 @@
 describe('otherBudgetItemsCtrl', function(){
-    var scope;//we'll use this scope in our tests
+    var scope, controller;//we'll use this scope in our tests
 
     //mock Application to allow us to inject our own dependencies
     beforeEach(module('BudgetCalculation'));
@@ -21,7 +21,7 @@ describe('otherBudgetItemsCtrl', function(){
     });
 
     it('should add a new item to travelForms (index 1 of formsList)', function(){
-    	expect(controller.formsList.length).toEqual(4);
+    	expect(controller.formsList.length).toEqual(7);
     	expect(controller.formsList[0].length).toEqual(0);
 
     	controller.addNewItem();
@@ -29,8 +29,8 @@ describe('otherBudgetItemsCtrl', function(){
     });
 
     it('should remomve the item in travelForms (index 1 of formsList)', function(){
-    	expect(controller.formsList.length).toEqual(4);
-    	controller.formsList[0].push({id: -1})
+    	expect(controller.formsList.length).toEqual(7);
+    	controller.formsList[0].push({id: -1});
     	expect(controller.formsList[0].length).toEqual(1);
 
     	controller.removeItem(-1,0);
@@ -38,7 +38,7 @@ describe('otherBudgetItemsCtrl', function(){
     });
 
     it('should total all the budgetItems correctly', function(){
-    	expect(controller.formsList.length).toEqual(4);
+    	expect(controller.formsList.length).toEqual(7);
     	controller.otherItemsTotal();
     	expect(scope.miscItemsTotalVal).toEqual(0);
 

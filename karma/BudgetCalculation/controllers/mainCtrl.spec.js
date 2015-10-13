@@ -14,6 +14,12 @@ describe('MainCtrl', function(){
         //Remember vm=this so you can access stuff on vm by saying controller.variable or controller.function
 
         controller = $controller('MainCtrl', {$scope: scope, $window: window});
+
+        var fixture = '<input type="month" class="form-control" id="month_year" name="input" ng-model="main.form.month_year" onchange="change()" min="2005-01-01" required />';
+
+        document.body.insertAdjacentHTML(
+            'afterbegin',
+        fixture);
     }));
 
     // tests start here
@@ -37,25 +43,26 @@ describe('MainCtrl', function(){
         expect(controller.form.shelter_electricity).toBe(3);
     });
 
+    // TODO: FIX THIS - Jon Warren
     it('creates the form correctly', function() {
-        controller.test = true;
-        httpBackend.expectPOST('/budget/api/budget_calculations/', controller.form).respond(200, {
-           id: 2
-        });
-        controller.createForm();
-        httpBackend.flush();
-        expect(controller.id).toBe(2)
+         controller.test = true;
+         httpBackend.expectPOST('/budget/api/budget_calculations/', controller.form).respond(200, {
+            id: 2
+         });
+         controller.createForm();
+         httpBackend.flush();
+         expect(controller.id).toBe(2)
     });
 
+    // TODO: FIX THIS - Jon Warren
     it('updates the form correctly', function() {
-        controller.test = true;
-        controller.form.id = 2;
-        httpBackend.expectPUT('/budget/api/budget_calculations/2/', controller.form).respond(200, {
-           id: 3
-        });
-        controller.updateForm();
-        httpBackend.flush();
-        expect(controller.id).toBe(3)
-
+         controller.test = true;
+         controller.form.id = 2;
+         httpBackend.expectPUT('/budget/api/budget_calculations/2/', controller.form).respond(200, {
+            id: 3
+         });
+         controller.updateForm();
+         httpBackend.flush();
+         expect(controller.id).toBe(3)
     });
 });

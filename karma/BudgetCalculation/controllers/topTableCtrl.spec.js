@@ -1,5 +1,5 @@
 describe('topTableCtrl', function(){
-    var scope;//we'll use this scope in our tests
+    var scope, controller;//we'll use this scope in our tests
 
     //mock Application to allow us to inject our own dependencies
     beforeEach(module('BudgetCalculation'));

@@ -376,7 +376,7 @@ class IntercepteeForm(DreamSuitePaperForm):
             district = District.objects.get(name=self.cleaned_data['district'])
             self.instance.district = district
         except District.DoesNotExist:
-            pass
+            district = None
 
         try:
             vdc = VDC.objects.get(name=self.cleaned_data['vdc'], district=district)
@@ -792,6 +792,7 @@ class VictimInterviewLocationBoxForm(DreamSuitePaperForm):
         self.instance.district = district
         return super(VictimInterviewLocationBoxForm, self).save(commit)
 
+
 class BorderStationForm(forms.ModelForm):
     class Meta:
         model = BorderStation
@@ -807,10 +808,12 @@ class BorderStationForm(forms.ModelForm):
 class VDCForm(forms.ModelForm):
     class Meta:
         model = VDC
-        fields = ['name','latitude','longitude','cannonical_name','district','verified']
+        fields = ['name', 'latitude', 'longitude', 'cannonical_name', 'district', 'verified']
+
     def __init__(self, *args, **kwargs):
         super(VDCForm, self).__init__(*args, **kwargs)
         self.fields['district'].label = "Address 1"
+
 
 class DistrictForm(forms.ModelForm):
     class Meta:

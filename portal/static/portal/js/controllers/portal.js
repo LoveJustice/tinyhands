@@ -189,7 +189,7 @@
                 }
             })(marker, station));
         }
-        
+
         function getMarkerDataOnHoverOrClick(data, station) {
             //gets the number of irfs
             $.get("/portal/get_interception_records", {station_code: data[station].fields.station_code}, function(data){

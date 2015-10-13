@@ -18,7 +18,8 @@ from django.conf import settings
 
 
 from braces.views import LoginRequiredMixin
-from rest_framework import generics, viewsets
+from rest_framework.decorators import list_route
+from rest_framework import viewsets
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from templated_email import send_templated_mail
@@ -165,6 +166,11 @@ class OtherItemsViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(self.object_list, many=True)
         return Response(serializer.data)
 
+    @list_route()
+    def list_by_budget_sheet(self, request, parent_pk, *args, **kwargs):
+        other_items_list = OtherBudgetItemCost.objects.filter(budget_item_parent_id=parent_pk)
+        serializer = self.get_serializer(other_items_list, many=True)
+        return Response(serializer.data)
 
 class StaffSalaryViewSet(viewsets.ModelViewSet):
     queryset = StaffSalary.objects.all()
@@ -291,10 +297,20 @@ class MoneyDistributionFormPDFView(PDFView, LoginRequiredMixin, PermissionsRequi
     template_name = 'budget/MoneyDistributionTemplate.rml'
     filename = 'Monthly-Money-Distribution-Form.pdf'
 
+
+
     def get_context_data(self):
+
+        #import ipdb
+        ## ipdb.set_trace()
+
         station = BorderStationBudgetCalculation.objects.get(pk=self.kwargs['pk'])
         staffSalaries = StaffSalary.objects.filter(budget_calc_sheet=self.kwargs['pk'])
+        staffOtherItems = OtherBudgetItemCost.objects.filter(form_section=8, budget_item_parent=self.kwargs['pk'])
+        staffTotal = sum([staff.salary for staff in staffSalaries]) + sum(form.cost for form in staffOtherItems)
         otherItems = station.otherbudgetitemcost_set.all()
+
+        #staffNum = (staffSalaries) + (staffOtherItems)
 
         adminMeetings = station.administration_number_of_meetings_per_month * station.administration_number_of_meetings_per_month_multiplier
 
@@ -303,9 +319,9 @@ class MoneyDistributionFormPDFView(PDFView, LoginRequiredMixin, PermissionsRequi
             'name': station.border_station.station_name,
             'date': station.date_time_entered.date,
             'number': len(staffSalaries),
+            #'staff_num': staffNum,
             'staffSalaries': staffSalaries,
-            'salary_total': sum([staff.salary for staff in staffSalaries]),
-
+            'salary_total': staffTotal,
             'travel_chair_bool': station.travel_chair_with_bike,
             'travel_chair': station.travel_chair_with_bike_amount,
             'travel_manager_bool': station.travel_manager_with_bike,
