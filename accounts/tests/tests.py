@@ -52,7 +52,7 @@ class AccountTest(unittest.TestCase):
 
         self.assertEqual(result, account.first_name+' '+account.last_name)
 
-    def test_send_email_to_correct_person(self):
+    def test_email_user(self):
         account = SuperUserFactory.create()
         subject = "foo"
 
@@ -61,3 +61,10 @@ class AccountTest(unittest.TestCase):
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(mail.outbox[0].subject, subject)
         self.assertEqual(mail.outbox[0].to[0], account.email)
+
+    def test_send_activation_email(self):
+        account = SuperUserFactory.create()
+
+        account.send_activation_email()
+
+        self.assertEqual(mail.outbox[1].to[0], account.email)
