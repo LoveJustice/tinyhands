@@ -14,6 +14,7 @@ urlpatterns = patterns('',
     url(r'^static_border_stations/', include('static_border_stations.urls')),
     url(r'^portal/', include('portal.urls')),
     url(r'^budget/', include('budget.urls')),
+    url(r'^api/', include('rest_api.urls')),
     url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'login.html'}, name='login'),
     url(r'^logout/$', 'django.contrib.auth.views.logout_then_login', name='logout'),
 
@@ -30,3 +31,4 @@ urlpatterns = patterns('',
     url(r'^get_station_id/', 'dataentry.views.get_station_id', name='get_station_id'),
 
 ) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+

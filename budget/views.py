@@ -18,8 +18,8 @@ from django.conf import settings
 
 
 from braces.views import LoginRequiredMixin
-from models import BorderStationBudgetCalculation
-from rest_framework import generics, viewsets
+from rest_framework.decorators import list_route
+from rest_framework import viewsets
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from templated_email import send_templated_mail
@@ -89,8 +89,7 @@ def previous_data(request, pk, month, year):
             all_interception_records_count['total'] = 0
             all_interception_records_count_divide = 1
 
-        last_months_sheet = budget_sheets.first() # Since they are ordered by most recent, the first one will be last month's
-        last_months_cost = last_months_sheet.station_total()
+        last_months_cost = last_months.station_total()
 
         last_3_months_cost = 0
         last_3_months_sheets = budget_sheets.filter(month_year__gte=date+relativedelta(months=-3))
@@ -167,6 +166,11 @@ class OtherItemsViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(self.object_list, many=True)
         return Response(serializer.data)
 
+    @list_route()
+    def list_by_budget_sheet(self, request, parent_pk, *args, **kwargs):
+        other_items_list = OtherBudgetItemCost.objects.filter(budget_item_parent_id=parent_pk)
+        serializer = self.get_serializer(other_items_list, many=True)
+        return Response(serializer.data)
 
 class StaffSalaryViewSet(viewsets.ModelViewSet):
     queryset = StaffSalary.objects.all()
@@ -225,9 +229,9 @@ class MoneyDistribution(viewsets.ViewSet):
         return Response({"staff_members": staff_serializer.data, "committee_members": committee_members_serializer.data})
 
     def send_emails(self, request, pk):
-        staff_ids = request.DATA['staff_ids']
-        budget_calc_id = int(request.DATA["budget_calc_id"])
-        committee_ids = request.DATA['committee_ids']
+        staff_ids = request.data['staff_ids']
+        budget_calc_id = int(request.data["budget_calc_id"])
+        committee_ids = request.data['committee_ids']
 
         # send the emails
         for id in staff_ids:
@@ -280,13 +284,10 @@ class PDFView(View, LoginRequiredMixin, PermissionsRequiredMixin):
         root = etree.parse(buf).getroot()
         doc = document.Document(root)
 
-
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = "filename=%s" % self.get_filename()
 
-
         doc.process(response)
-
         return response
 
 
@@ -373,6 +374,5 @@ class MoneyDistributionFormPDFView(PDFView, LoginRequiredMixin, PermissionsRequi
 def money_distribution_view(request, pk):
     if not request.user.permission_budget_manage:
         return redirect("home")
-    id = pk
     border_station = (BorderStationBudgetCalculation.objects.get(pk=pk)).border_station
     return render(request, 'budget/moneydistribution_view.html', locals())

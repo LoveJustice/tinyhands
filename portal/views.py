@@ -23,9 +23,13 @@ def get_border_stations(request):
 
 
 def get_interception_records(request):
+    interceptionSum = 0
     if "station_code" in request.REQUEST:
         interception_records = InterceptionRecord.objects.filter(irf_number__startswith=request.REQUEST["station_code"])
-        return HttpResponse(interception_records.count())
+        for interception in interception_records:
+            victims = interception.interceptees.filter(kind='v')
+            interceptionSum += len(victims)
+        return HttpResponse(interceptionSum)
     return HttpResponse("No IRFs Found")
 
 

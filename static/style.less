@@ -3,6 +3,16 @@ body {
   padding-bottom: 70px;
 }
 
+#vdc_admin_page{
+    th {
+        cursor: pointer;
+        &:hover{
+            color: gray;
+        }
+    }
+
+}
+
 #money_distribution_view{
   .notReceiving {
     transition: background-color .5s ease;
@@ -845,7 +855,7 @@ h2.background {
 }
 
 .loader-container{
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -871,8 +881,8 @@ h2.background {
   -webkit-transform: translateZ(0);
   -ms-transform: translateZ(0);
   transform: translateZ(0);
-  -webkit-animation: load6 1.7s infinite ease;
-  animation: load6 1.7s infinite ease;
+  -webkit-animation: load6 1.0s infinite ease;
+  animation: load6 1.0s infinite ease;
 }
 @-webkit-keyframes load6 {
   0% {
