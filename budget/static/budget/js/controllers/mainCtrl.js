@@ -183,9 +183,7 @@ angular
             };
 
             vm.staffTotal = function () {
-                var amount = 0;
-                amount = vm.salariesTotal;
-                vm.staffTotalValue = amount + vm.otherStaffTotalValue[0];
+                vm.staffTotalValue = vm.salariesTotal + vm.otherStaffTotalValue[0];
                 return vm.staffTotalValue;
             };
 
