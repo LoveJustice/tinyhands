@@ -1,3 +1,5 @@
+{% load bootstrap %}
+
 <div class="modal-dialog modal-sm">
     <div class="modal-content">
         <form id="district_create_form" method="post" class="form" role="form" action="{% url 'district_create_page' %}">
@@ -20,8 +22,7 @@
                             {% endfor %}
                         </ul>
                         {% endif %}
-                        {{ field.label_tag }}
-                        {{ field }}
+                        {{ field|bootstrap }}
                         {% if field.help_text %}
                         <div class="form-helptext">{{ field.help_text }}</div>
                         {% endif %}
