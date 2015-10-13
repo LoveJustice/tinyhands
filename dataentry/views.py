@@ -382,24 +382,6 @@ class VDCSearchView(LoginRequiredMixin, PermissionsRequiredMixin, SearchFormsMix
         return context
 
 
-class VDCAdminUpdate(LoginRequiredMixin,
-                     PermissionsRequiredMixin,
-                     UpdateView):
-    model = VDC
-    form_class = VDCForm
-    template_name = "dataentry/vdc_admin_update.html"
-    permissions_required = ['permission_vdc_manage']
-
-    def dispatch(self, request, *args, **kwargs):
-        self.vdc_id = kwargs['pk']
-        return super(VDCAdminUpdate, self).dispatch(request, *args, **kwargs)
-
-    def form_valid(self, form):
-        form.save()
-        vdc = VDC.objects.get(id=self.vdc_id)
-        return HttpResponse(render_to_string('dataentry/vdc_admin_update_success.html'))
-
-
 class VDCCreateView(LoginRequiredMixin, PermissionsRequiredMixin, CreateView):
     model = VDC
     form_class = VDCForm
@@ -423,22 +405,6 @@ class DistrictAdminView(LoginRequiredMixin, PermissionsRequiredMixin, SearchForm
         context = super(DistrictAdminView, self).get_context_data(**kwargs)
         context['database_empty'] = self.model.objects.count() == 0
         return context
-
-
-class DistrictAdminUpdate(LoginRequiredMixin, PermissionsRequiredMixin, UpdateView):
-    model = District
-    form_class = DistrictForm
-    template_name = "dataentry/district_admin_update.html"
-    permissions_required = ['permission_vdc_manage']
-
-    def dispatch(self, request, *args, **kwargs):
-        self.district_id = kwargs['pk']
-        return super(DistrictAdminUpdate, self).dispatch(request, *args, **kwargs)
-
-    def form_valid(self, form):
-        form.save()
-        district = District.objects.get(id=self.district_id)
-        return HttpResponse(render_to_string('dataentry/district_admin_update_success.html'))
 
 
 class DistrictCreateView(LoginRequiredMixin, PermissionsRequiredMixin, CreateView):
@@ -481,8 +447,6 @@ def get_station_id(request):
             return HttpResponse([-1])
 
 
-
-
 class Address2ViewSet(viewsets.ModelViewSet):
     queryset = VDC.objects.all().select_related('district', 'cannonical_name__district')
     serializer_class = VDCSerializer
@@ -493,14 +457,12 @@ class Address2ViewSet(viewsets.ModelViewSet):
     filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
 
     # Specify the fields that we can search by and how
-    search_fields = ('^name',)
+    search_fields = ('name',)
 
     # specify the fields that the data can be ordered by
-    ordering_fields = ('name', 'district__name', 'verified', 'cannonical_name__name')
+    ordering_fields = ('name', 'district__name', 'longitude', 'latitude', 'verified', 'cannonical_name__name')
     # Specify the default order
-    ordering = ('name', 'district',)
-
-
+    ordering = ('name',)
 
 
 class Address1ViewSet(viewsets.ModelViewSet):
@@ -508,6 +470,10 @@ class Address1ViewSet(viewsets.ModelViewSet):
     serializer_class = DistrictSerializer
     permission_classes = (IsAuthenticated, HasPermission)
     permissions_required = ['permission_vdc_manage']
+    filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
+    search_fields = ('name',)
+    ordering_fields = ('name',)
+    ordering = ('name',)
 
     @list_route()
     def list_all(self, request):
