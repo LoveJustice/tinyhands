@@ -10,16 +10,22 @@
 		var vm = this;
 		
 		var staffTitle = 'Staff';
+		var committeeMemTitle = 'Committee Members';
 		
-		vm.borderStationId = window.border_station_pk
+		vm.addLocation = addLocation;
+		vm.addPerson = addPerson;
+		vm.borderStationId = window.border_station_pk;
 		vm.details = {};
 		vm.locations = [];
+		vm.newCommitteeMembers = [];
+		vm.newLocations = [];
+		vm.newStaff = [];
 		vm.people = {
 			staff: {
 				name: staffTitle
 			},
 			committeeMembers: {
-				name: 'Committee Members'
+				name: committeeMemTitle
 			}
 		};
 		vm.removeLocation = removeLocation;
@@ -33,7 +39,48 @@
 			getStaff();
 			getCommitteeMembers();
 			getLocations();
-			console.log(vm.people);
+		}
+		
+		function addLocation() {
+			var newLocation = {
+				border_station: vm.borderStationId
+			};
+			vm.newLocations.push(newLocation);
+			vm.locations.push(newLocation);
+		}
+		
+		function addPerson(persons) {
+			var newPerson = {
+				border_station: vm.borderStationId
+			};
+			if (persons.name == staffTitle) {
+				vm.newStaff.push(newPerson);
+				vm.people.staff.data.push(newPerson);
+			} else if (persons.name == committeeMemTitle) {
+				vm.newCommitteeMembers.push(newPerson);
+				vm.people.committeeMembers.data.push(newPerson);
+			}
+		}
+		
+		function createCommitteeMembers(members) {
+			createRelationship(members, BorderStationsService.createCommitteeMember, getCommitteeMembers);
+		}
+		
+		function createLocations(locations) {
+			createRelationship(locations, BorderStationsService.createLocation, getLocations);
+		}
+		
+		function createStaff(staff) {
+			createRelationship(staff, BorderStationsService.createStaff, getStaff);
+		}
+		
+		function createRelationship(createArray, createApiFunction, getApiFunction) {
+			createArray.forEach(function (anObject) {
+				createApiFunction(anObject).then(function() {
+					getApiFunction();
+				});
+			});
+			createArray = []; // Empty the array after all of the create calls have been fired.
 		}
 		
 		function getDetails() {
@@ -45,14 +92,12 @@
 		function getCommitteeMembers() {
 			BorderStationsService.getCommitteeMembers(vm.borderStationId).then(function(response) {
 				vm.people.committeeMembers.data = response.data;
-				console.log('Got the peeps');
 			});
 		}
 		
 		function getLocations() {
 			BorderStationsService.getLocations(vm.borderStationId).then(function(response) {
 				vm.locations = response.data;
-				console.log(response.data);
 			});
 		}
 		
@@ -63,50 +108,69 @@
 		}
 		
 		function removeCommitteeMember(member) {
-			member.border_station = null;
-			BorderStationsService.updateCommitteeMembers(member.id, member);
-			getCommitteeMembers();
+			removeRelation(member, vm.newCommitteeMembers, vm.people.committeeMembers.data, BorderStationsService.updateCommitteeMembers, getCommitteeMembers);
 		}
 		
 		function removeLocation(location) {
-			location.border_station = null;
-			updateLocations([location]);
-			getLocations();
+			removeRelation(location, vm.newLocations, vm.locations, BorderStationsService.updateLocations, getLocations);
 		}
 		
 		function removePerson(persons, person) {
 			persons.name == staffTitle ? removeStaff(person) : removeCommitteeMember(person);
 		}
 		
+		function removeRelation(value, newArray, currentArray, updateApiFunction, getApiFunction) {
+			var idx = newArray.indexOf(value);
+			if (idx >= 0) { // If relation was just created and isnt (shouldnt be) in the db
+				newArray.splice(idx, 1);
+				
+				idx = currentArray.indexOf(value);
+				currentArray.splice(idx, 1);
+			} else { // If exists in db
+				value.border_station = null;
+				if (value.id) {
+					updateApiFunction(value.id, value).then(function() {
+						getApiFunction();
+					});
+				}
+			}
+		}
+		
 		function removeStaff(staff) {
-			staff.border_station = null;
-			updateStaff([staff]);
-			getStaff();
+			removeRelation(staff, vm.newStaff, vm.people.staff.data, BorderStationsService.updateStaff, getStaff);
 		}
 		
 		function updateCommitteeMembers(committeeMembers) {
-			committeeMembers.forEach(function(member) {
-				BorderStationsService.updateCommitteeMembers(member.id, member);
-			});
+			updateRelationship(committeeMembers, BorderStationsService.updateCommitteeMembers, getCommitteeMembers);
 		}
 		
 		function updateDetails(details) {
-			BorderStationsService.updateDetails(vm.details.id, details);
+			BorderStationsService.updateDetails(details.id, details);
 		}
 		
 		function updateLocations(locations) {
-			locations.forEach(function(location) {
-				BorderStationsService.updateLocations(location.id, location);
-			});
+			updateRelationship(locations, BorderStationsService.updateLocations, getLocations);
 		}
 		
 		function updateStaff(staff) {
-			staff.data.forEach(function(aStaff) {
-				BorderStationsService.updateStaff(aStaff.id, aStaff);
+			updateRelationship(staff, BorderStationsService.updateStaff, getStaff);
+		}
+		
+		function updateRelationship(updateArray, updateApiFunction, getApiFunction) {
+			updateArray.forEach(function(anObject) {
+				if (anObject.id) {
+					updateApiFunction(anObject.id, anObject).then(function() {
+						getApiFunction();
+					});
+				}
 			});
 		}
 		
 		function updateStation() {
+			createCommitteeMembers(vm.newCommitteeMembers);
+			createLocations(vm.newLocations);
+			createStaff(vm.newStaff);
+			
 			updateDetails(vm.details);
 			updateCommitteeMembers(vm.people.committeeMembers.data);
 			updateLocations(vm.locations);

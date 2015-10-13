@@ -24,15 +24,19 @@
                  ng-model="location.longitude">
         </div>
     </div>
-    <div class="row col-xs-12">
-      <button class="btn btn-danger pull-left animated"
-              ng-class="{fadeIn: location.hover, fadeOut: !location.hover}">Remove {{location.name}}</button>
-    </div>
+    <button class="btn btn-danger pull-left hidden-xs animated"
+            ng-click="bsCtrl.removeLocation(location)"
+            ng-class="{fadeIn: location.hover, fadeOut: !location.hover}">Remove {{location.name}}</button>
+    <button class="btn btn-danger pull-left col-xs-12 visible-xs animated"
+            ng-click="bsCtrl.removeLocation(location)"
+            ng-class="{fadeIn: location.hover, fadeOut: !location.hover}">Remove {{location.name}}</button>
     <br/>
+    <br ng-if="$last"/>
     <hr ng-if="!$last && bsCtrl.locations.length > 1"/>
   </div>
   <h4 class="col-xs-12 text-center"
       ng-if="bsCtrl.locations.length == 0">No Locations</h4>
-  <button class="btn btn-success pull-right">Add Location</button>
+  <button class="btn btn-success col-xs-12 col-sm-offset-3 col-sm-6"
+          ng-click="bsCtrl.addLocation()">Add Location</button>
 </div>
 {% endverbatim %}
