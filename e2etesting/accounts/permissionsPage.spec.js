@@ -42,7 +42,6 @@ describe('Accounts Page', function() {
 
     describe('handles budget permissions', function(){
         it('unchecks budget management permission', function() {
-            // TODO This one should be failing right now, because the budget page is not behaving correctly with permissions.
             permissionsPage.checkPermissionSetup("id_permission_budget_manage");
             this.permissions = element(by.id("id_permission_budget_manage"));
             expect(this.permissions.element(by.xpath("..")).getAttribute('class')).toBe('btn btn-danger');

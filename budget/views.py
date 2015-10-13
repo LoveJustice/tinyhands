@@ -63,9 +63,14 @@ def previous_data(request, pk, month, year):
 
     budget_sheets = BorderStationBudgetCalculation.objects.filter(border_station=pk, month_year__lte=date).order_by('-date_time_entered')  # filter them so the first element is the most recent
 
+    #import ipdb
+
+
     if budget_sheets:  # If this border station has had a previous budget calculation worksheet
         border_station = BorderStation.objects.get(pk=pk)
         staff_count = border_station.staff_set.count()
+
+        #ipdb.set_trace()
 
         all_interception_records = InterceptionRecord.objects.annotate(interceptee_count=Count("interceptees")).filter(irf_number__startswith=border_station.station_code)
         last_months = all_interception_records.filter(date_time_of_interception__gte=(date+relativedelta(months=-1)), date_time_of_interception__lte=date)
@@ -187,6 +192,7 @@ class StaffSalaryViewSet(viewsets.ModelViewSet):
 
 class BudgetCalcListView(
         LoginRequiredMixin,
+        PermissionsRequiredMixin,
         ListView):
     model = BorderStationBudgetCalculation
     border_stations = BorderStation.objects.all()
@@ -200,7 +206,7 @@ class BudgetCalcListView(
         return context
 
 
-class BudgetCalcDeleteView(DeleteView, LoginRequiredMixin):
+class BudgetCalcDeleteView(DeleteView, LoginRequiredMixin, PermissionsRequiredMixin):
     model = BorderStationBudgetCalculation
     permissions_required = ['permission_budget_manage']
     success_url = reverse_lazy('budget_list')

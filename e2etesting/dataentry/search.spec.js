@@ -19,7 +19,7 @@ describe('TinyHands', function(){
 	describe('navigation', function(){
 		it('goes to IRF search page', function(){
 			irfs.getToIRF();
-			irfs.fillOutIRF();
+			irfs.fillOutIRF(c.irfNumber);
             searchPage.gotoIRFSearch();
 			expect(browser.driver.getCurrentUrl()).toContain('irfs');
 		});

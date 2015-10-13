@@ -20,7 +20,7 @@ exports.config = {
         //'dataentry/search.spec.js',
 
         'budget/budgetForm.spec.js',
-        'budget/moneyDistributionForm.spec.js',
+        'budget/moneyDistributionForm.spec.js'
 
         //'DynStationWindow/dynStation.spec.js',
 
@@ -30,8 +30,6 @@ exports.config = {
         //'accounts/permissionsPage.spec.js'
       ],
 
-   
-	// Specify you want to use jasmine 2.x as you would with mocha and cucumber.
     framework: 'jasmine2',
 
     capabilities: {

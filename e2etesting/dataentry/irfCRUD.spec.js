@@ -17,7 +17,7 @@ describe('Interception Record Form -', function() {
         it('Can Create an IRF', function () {
             irfPage.getToIRF();
             expect(browser.driver.getCurrentUrl()).toContain('data-entry/irfs/create/');
-            irfPage.fillOutIRF();
+            irfPage.fillOutIRF(c.irfNumber);
             expect(browser.driver.getCurrentUrl()).toContain('data-entry/irfs/search/');
         });
 
