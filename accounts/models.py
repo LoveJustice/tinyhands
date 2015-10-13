@@ -25,7 +25,7 @@ class DefaultPermissionsSet(models.Model):
     permission_border_stations_add = models.BooleanField(default=False)
     permission_border_stations_edit = models.BooleanField(default=False)
     permission_vdc_manage = models.BooleanField(default=False)
-    permission_budget_manage = models.BooleanField(default=True)
+    permission_budget_manage = models.BooleanField(default=False)
 
     def __unicode__(self):
         return self.name
