@@ -68,5 +68,13 @@ All you have to do is run the command `./manage.py test`.
 
 ## Angular Testing with Karma
 1. Make sure you have all of the dependencies downloaded by running `npm install`.
-2. Start the Karma server with `./node_modules/karma/bin/karma start` if you are in the root project directory.
-3. Watch the magic.
+2. Install karma cli `npm install -g karma-cli`.  
+3. Start the Karma server with `karma start` if you are in the root project directory.
+4. Watch the magic.
+
+#Installing sanitized prodution database
+1. Make sure there is not already a db.sqlite3 in the top level tinyhands directory
+2. Execute etc/bin/install_test_db.sh
+    The sanitized database has two accounts preconfigured for testing both of which have the password 'pass'
+    1) test_sup@example.com - is a super user account
+    2) test1 - is a user account
