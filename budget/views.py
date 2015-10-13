@@ -43,8 +43,8 @@ def retrieve_latest_budget_sheet_for_border_station(request, pk):
 
     if budget_sheet:  # if there has been a preview budget sheet
 
-        other_items_serializer = OtherBudgetItemCostSerializer(budget_sheet.otherbudgetitemcost_set.all())
-        staff_serializer = StaffSalarySerializer(budget_sheet.staffsalary_set.all())
+        other_items_serializer = OtherBudgetItemCostSerializer(budget_sheet.otherbudgetitemcost_set.all(), many=True)
+        staff_serializer = StaffSalarySerializer(budget_sheet.staffsalary_set.all(), many=True)
         budget_serializer = BorderStationBudgetCalculationSerializer(budget_sheet)
 
         return Response(
@@ -64,14 +64,9 @@ def previous_data(request, pk, month, year):
 
     budget_sheets = BorderStationBudgetCalculation.objects.filter(border_station=pk, month_year__lte=date).order_by('-date_time_entered')  # filter them so the first element is the most recent
 
-    #import ipdb
-
-
     if budget_sheets:  # If this border station has had a previous budget calculation worksheet
         border_station = BorderStation.objects.get(pk=pk)
         staff_count = border_station.staff_set.count()
-
-        #ipdb.set_trace()
 
         all_interception_records = InterceptionRecord.objects.annotate(interceptee_count=Count("interceptees")).filter(irf_number__startswith=border_station.station_code)
         last_months = all_interception_records.filter(date_time_of_interception__gte=(date+relativedelta(months=-1)), date_time_of_interception__lte=date)

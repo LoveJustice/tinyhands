@@ -2,6 +2,7 @@ var loginPage = require('../accounts/loginPage.js');
 var searchPage = require('./search.js');
 var irfs = require('../dataentry/irfCRUD.js');
 var vifs = require('../accounts/vifPage.js');
+var c = require('../testConstants.json');
 
 describe('TinyHands', function(){
 
