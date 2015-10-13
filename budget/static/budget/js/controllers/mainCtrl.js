@@ -12,24 +12,36 @@ angular
             vm.travelTotalValue = 0;
             vm.awarenessTotalValue = 0;
             vm.suppliesTotalValue = 0;
+            vm.shelterTotalValue = 0;
+            vm.foodGasTotalValue = 0;
+            vm.communicationTotalValue = 0;
+            vm.staffTotalValue = 0;
 
             vm.otherTravelTotalValue = [0];
             vm.otherMiscTotalValue = [0];
             vm.otherAwarenessTotalValue = [0];
             vm.otherSuppliesTotalValue = [0];
+            vm.otherShelterTotalValue = [0];
+            vm.otherFoodGasTotalValue = [0];
+            vm.otherCommunicationTotalValue = [0];
+            vm.otherStaffTotalValue = [0];
 
 
             // Budget Calc sheets are for the 15th of every month
             vm.date =  new Date();
             var thisMonth = vm.date.getMonth();
-            vm.date.setMonth(thisMonth + 1)
+            vm.date.setMonth(thisMonth + 1);
 
             vm.form.station_name = window.station_name;
 
             vm.otherItemsTotals = [vm.otherTravelTotalValue,
                                     vm.otherMiscTotalValue,
                                     vm.otherAwarenessTotalValue,
-                                    vm.otherSuppliesTotalValue];
+                                    vm.otherSuppliesTotalValue,
+                                    vm.otherShelterTotalValue,
+                                    vm.otherFoodGasTotalValue,
+                                    vm.otherCommunicationTotalValue,
+                                    vm.otherStaffTotalValue];
 
 
             // Event Listeners
@@ -73,14 +85,18 @@ angular
                 vm.travelTotal();
                 vm.awarenessTotal();
                 vm.suppliesTotal();
+                vm.shelterTotal();
+                vm.foodGasTotal();
+                vm.communicationTotal();
+                vm.staffTotal();
             }
 
 
             vm.foodAndShelterTotal = function() {
-                return vm.foodTotal() + vm.shelterTotal();
+                return vm.foodGasTotal() + vm.shelterTotal();
             };
             vm.bunchTotal = function() {
-                return  vm.commTotal() +
+                return  vm.communicationTotalValue +
                         vm.travelTotalValue +
                         vm.adminTotal() +
                         vm.medicalTotal() +
@@ -111,10 +127,13 @@ angular
                 return totalAmount;
             };
             vm.shelterTotal = function () {
-                return  vm.form.shelter_rent +
+                var amount = 0;
+                amount += vm.form.shelter_rent +
                         vm.form.shelter_water +
                         vm.form.shelter_electricity +
                         vm.shelterCheckboxTotal();
+                vm.shelterTotalValue = amount + vm.otherShelterTotalValue[0];
+                return vm.shelterTotalValue;
             };
 
             //Food and Gas Section
@@ -127,6 +146,13 @@ angular
                 return  vm.form.food_and_gas_limbo_girls_multiplier *
                         vm.form.food_and_gas_number_of_limbo_girls *
                         vm.form.food_and_gas_number_of_days;
+            };
+
+            vm.foodGasTotal = function() {
+                var amount = 0;
+                amount += vm.foodTotal();
+                vm.otherfoodGasTotalValue = amount + vm.otherFoodGasTotalValue[0];
+                return vm.otherfoodGasTotalValue;
             };
             vm.foodTotal = function () {
                 return vm.foodGasInterceptedGirls() + vm.foodGasLimboGirls();
@@ -141,6 +167,7 @@ angular
                 }
                 if (vm.form.communication_manager) {
                     amount += vm.form.communication_manager_amount;
+
                 }
                 return amount;
             };
@@ -153,6 +180,18 @@ angular
             vm.commEachStaffTotal = function () {
                 return  vm.form.communication_each_staff *
                         vm.form.communication_each_staff_multiplier;
+            };
+
+            vm.staffTotal = function () {
+                vm.staffTotalValue = vm.salariesTotal + vm.otherStaffTotalValue[0];
+                return vm.staffTotalValue;
+            };
+
+            vm.communicationTotal = function () {
+                var amount = 0;
+                amount += vm.commTotal();
+                vm.communicationTotalValue = amount + vm.otherCommunicationTotalValue[0];
+
             };
 
             vm.commTotal = function () {

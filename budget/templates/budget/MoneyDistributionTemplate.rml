@@ -79,7 +79,26 @@
                     </para>
                 </td>
             </tr>
-            {% empty %}
+            {% endfor %}
+
+            {% for item in otherItems %}
+                {% if item.form_section == 8 %}
+                    <tr>
+                        <td align="left">
+                            <para style="normal">
+                                {{ item.name }}:
+                            </para>
+                        </td>
+                        <td align="right">
+                            <para style="normal" alignment="right">
+                                {{ item.cost }}
+                            </para>
+                        </td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+
+            {% if salary_total == 0 %}
             <tr>
                 <td align="left">
                     <para style="normal">
@@ -87,9 +106,9 @@
                     </para>
                 </td>
             </tr>
-            {% endfor %}
+            {% endif %}
 
-            {% if staffSalaries %}
+            {% if salary_total > 0 %}
             <tr>
                 <td align="left">
                     <para style="normal">

@@ -67,28 +67,35 @@ function photoSelect() {
   console.log("Test...1.2.3");
 }
 
-function setUpPermissionsCheckboxes() {
-  $('input[type="checkbox"]').each(function() {
-    var $label = $(this).parents('label');
-    if ($(this).prop('checked')) {
+function makeCheckboxAppearAsAButton(className,checkedText,uncheckedText) {
+  $(className).parents('label').each(function() {
+    var $label = $(this);
+    var $input = $label.find('input');
+    $input.hide();
+    if ($input.prop('checked')) {
       $label.addClass('btn-success');
-      $label.find('.yesno').text('Yes');
+      $label.find(className).text(checkedText);
     }
     else {
       $label.addClass('btn-danger');
-      $label.find('.yesno').text('No');
+      $label.find(className).text(uncheckedText);
     }
   });
-  $('input[type="checkbox"]').unbind('click').click(function() {
-    var $label = $(this).parents('label');
-    if ($(this).parents('label').hasClass('btn-danger')) {
+  $(className).parents('label').unbind('click').click(function(event) {
+    var $label = $(this);
+    var $input = $label.find('input');
+    if ($label.hasClass('btn-danger')) {
+      $input.prop('checked', true);
       $label.removeClass('btn-danger').addClass('btn-success');
-      $label.find('.yesno').text('Yes');
+      $label.find(className).text(checkedText);
     }
-    else if ($(this).parents('label').hasClass('btn-success')) {
+    else if ($label.hasClass('btn-success')) {
+      $input.prop('checked', false);
       $label.removeClass('btn-success').addClass('btn-danger');
-      $label.find('.yesno').text('No');
+      $label.find(className).text(uncheckedText);
     }
+    event.stopPropagation();
+    event.preventDefault();
   });
 }
 
@@ -171,8 +178,26 @@ function setUpResumeIncompleteFormSystem(which) {
   }
 
   $('#saved-for-later-list').change(function() {
+    var allInputs = document.getElementsByTagName("input");
+    for (var i = 0, max = allInputs.length; i < max; i++){
+        if (allInputs[i].type === 'checkbox')
+            allInputs[i].checked = false;
+        else if (allInputs[i].type == 'text')
+            allInputs[i].value = '';
+        else if (allInputs[i].type == 'number')
+            allInputs[i].value = '';
+    }
+    var allSelects = document.getElementsByTagName("select");
+    for (var i = 0, max = allSelects.length; i <max; i++){
+        if (allSelects[i].id != "saved-for-later-list"){
+        allSelects[i].selectedIndex = 0;
+        console.log(allSelects[i].id);
+        }
+    }
+
     $('form').deserialize($(this).val());
   });
+
 
   $('#save-for-later').click(function() {
     var formNumber = $('#id_'+which+'_number').val();
@@ -203,12 +228,17 @@ function clearCompletedForms(which) {
 }
 
 var DREAMSUITE = {
+
+  borderstations_update: function() {
+    makeCheckboxAppearAsAButton('.openclosed','Station Status: Open','Station Status: Closed');
+  },
+
   account_create: function() {
     this.account_update();
   },
 
   account_update: function() {
-    setUpPermissionsCheckboxes();
+    makeCheckboxAppearAsAButton('.yesno','Yes','No');
     $('select').change(function() {
       for (var i=0; i<window.defaultPermissionSets.length; i++) {
         var set = window.defaultPermissionSets[i];
@@ -227,19 +257,23 @@ var DREAMSUITE = {
   },
 
   access_control: function() {
-    setUpPermissionsCheckboxes();
+    makeCheckboxAppearAsAButton('.yesno','Yes','No');
     $('option:contains("---------")').remove();
     $('select').change(function() {
-      var rowIdx = parseInt($(this).parents('td').find('input').val()) - 1;
+      var userId = parseInt($(this).parents('td').find('input').val());
+      var rowId = $('input[value=' + userId + ']')[0].id.slice(0,-3);
       for (var i=0; i<window.defaultPermissionSets.length; i++) {
         var set = window.defaultPermissionSets[i];
         if (set.id === parseInt($(this).val())) {
           for (var key in set) {
+            if(key == 'name' || key == 'id') {
+              continue;
+            }
             var toBe = set[key];
-            var $checkbox = $('#id_form-' + (rowIdx-1) + '-' + key);
+            var $checkbox = $('#' + rowId + '-' + key);
             var current = !!$checkbox.prop('checked');
             if (toBe !== current) {
-              $checkbox.trigger('click');
+              $checkbox.parents('label')[0].click();
             }
           }
         }
@@ -248,12 +282,12 @@ var DREAMSUITE = {
   },
 
   access_defaults: function() {
-    setUpPermissionsCheckboxes();
+    makeCheckboxAppearAsAButton('.yesno','Yes','No');
     $('#add-another').click(function() {
       var formIdx = $('#id_form-TOTAL_FORMS').val();
       $('#permissions-rows-container').append($('#empty-form').html().replace(/__prefix__/g, formIdx));
       $('#id_form-TOTAL_FORMS').val(parseInt(formIdx) + 1);
-      setUpPermissionsCheckboxes();
+      makeCheckboxAppearAsAButton('.yesno','Yes','No');
     });
     $('#permissions-form').submit(function(event) {
       var choice = confirm('Are you sure you want to save changes?');

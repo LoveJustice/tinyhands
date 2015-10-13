@@ -81,7 +81,7 @@
 
                     '<p>Est. ' + established(borderStation) + '</p>' +
                     '<p>Has shelter: ' + hasShelter(borderStation) + '</p>' +
-                    '<p id="stationInterception">Interceptions: ' + '</p>' +
+                    '<p id="stationInterception"></p>' +
                     '<p id="staffset"># of Staff ' + '</p>' +
                 '</div>'+
 
@@ -103,28 +103,30 @@
                 var dynamicWindow = new google.maps.InfoWindow(); //Initialize the Dynamic Border Station view
 
 
-                for(var station=0;station<data.length;station++){ //Iterate over each Border Station
-                    var myLatlng = new google.maps.LatLng(data[station].fields.latitude,data[station].fields.longitude);
+                for(var station=0;station<data.length;station++) { //Iterate over each Border Station
+                  if (data[station].fields.open == true) {
+                    var myLatlng = new google.maps.LatLng(data[station].fields.latitude, data[station].fields.longitude);
                     var marker = new google.maps.Marker({ //Initialize a BorderStation's marker
-                        position: myLatlng,
-                        map: map,
-                        title: data[station].fields.station_name + " " + data[station].fields.station_code,
-                        clicked: false,
-                        optimized: false
+                      position: myLatlng,
+                      map: map,
+                      title: data[station].fields.station_name + " " + data[station].fields.station_code,
+                      clicked: false,
+                      optimized: false
                     });
 
                     // Create Listeners
-                    createCloseWindowListener(dynamicWindow,marker);
-                    
-                    createMouseOutWindowListener(infoWindow,marker,station);
-                    
-                    createMouseOverWindowListener(infoWindow,marker,station,data,map);
+                    createCloseWindowListener(dynamicWindow, marker);
 
-                    createClickWindowListener(dynamicWindow,infoWindow,marker,station,data,map);
+                    createMouseOutWindowListener(infoWindow, marker, station);
+
+                    createMouseOverWindowListener(infoWindow, marker, station, data, map);
+
+                    createClickWindowListener(dynamicWindow, infoWindow, marker, station, data, map);
+                  }
                 }
             });
         }
-        
+
         function createCloseWindowListener(dynamicWindow, marker) {
             google.maps.event.addListener(dynamicWindow, 'closeclick', (function(marker) {
                 return function() {
@@ -132,7 +134,7 @@
                 }
             })(marker));
         }
-        
+
         function createMouseOutWindowListener(infoWindow, marker, station) {
             google.maps.event.addListener(marker, 'mouseout', (function(marker, station) {
                 return function() {
@@ -143,17 +145,17 @@
                 }
             })(marker, station));
         }
-        
+
         function createMouseOverWindowListener(infoWindow, marker, station, data, map) {
             google.maps.event.addListener(marker, 'mouseover', (function(marker, station) { //For the Static View
                 return function() {
                     infoWindow.setContent(getStaticContentString(data[station]));
 
-                    getMarkerDataOnHoverOrClick(data,station);
-
                     if(!marker.clicked) {
                         infoWindow.open(map, this);
                     }
+
+                    getMarkerDataOnHoverOrClick(data,station);
 
                     $(".gm-style-iw").each(function() { // TODO: We are resizing according to the length of the station name? we need a better solution for this!
                         if(data[station].fields.station_name.length > 10) {
@@ -164,7 +166,7 @@
                 }
             })(marker, station));
         }
-        
+
         function createClickWindowListener(dynamicWindow, infoWindow, marker, station, data, map) {
             google.maps.event.addListener(marker, 'click', (function(marker, station) { //For the Dynamic view
                 return function() {
@@ -187,7 +189,7 @@
                 }
             })(marker, station));
         }
-        
+
         function getMarkerDataOnHoverOrClick(data, station) {
             //gets the number of irfs
             $.get("/portal/get_interception_records", {station_code: data[station].fields.station_code}, function(data){

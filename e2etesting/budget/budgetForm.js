@@ -1,6 +1,7 @@
 'use strict';
 
 var c = require('../testConstants.json');
+var methods = require('../commonMethods.js');
 
 var budgetForm = function () {
 
@@ -9,7 +10,9 @@ var budgetForm = function () {
     this.navigateToNewForm = function () {
         browser.get(c.webAddress + '/static_border_stations/border-stations/update/24/');
         //click button
-        element.all(by.linkText("New Budget Calculation Form")).click();
+        browser.sleep(1000);
+        methods.click(element(by.linkText("New Budget Calculation Form")));
+        //element.all(by.linkText("New Budget Calculation Form")).click();
     };
 
     this.readForm = function () {
@@ -163,7 +166,7 @@ var budgetForm = function () {
 
     this.fillOutForm = function () {
         // select all input fields and insert '5'
-
+        //browser.refresh();
         browser.sleep(1000);
         browser.executeScript('document.getElementById("month_year").value = "2015-07"');
         browser.executeScript('$("#month_year").trigger("change");');
@@ -176,21 +179,33 @@ var budgetForm = function () {
         element(by.id("shelter_startup_amount")).clear().sendKeys('100');
         element(by.id("shelter_two_bool")).click();
         element(by.id("shelter_two_amount")).clear().sendKeys('200');
+        element(by.id("shelter_add_item")).click();
+        browser.sleep(1000);
+        element(by.xpath("//div[@ng-controller='otherBudgetItemsCtrl as shelterItemsCtrl']/div/div/input")).clear().sendKeys('Test1');
+        element(by.xpath("//div[@ng-controller='otherBudgetItemsCtrl as shelterItemsCtrl']/div/div[2]/input")).clear().sendKeys('100');
         element(by.id("food_gas_multiplier_before")).clear().sendKeys('100');
         element(by.id("food_gas_number_of_girls")).clear().sendKeys('4');
         element(by.id("food_gas_multiplier_after")).clear().sendKeys('2');
         element(by.id("limbo_multiplier")).clear().sendKeys('200');
         element(by.id("limbo_number_of_girls")).clear().sendKeys('2');
         element(by.id("limbo_number_of_days")).clear().sendKeys('3');
+        element(by.id("foodGas_add_item")).click();
+        browser.sleep(1000);
+        element(by.xpath("//div[@ng-controller='otherBudgetItemsCtrl as foodGasItemsCtrl']/div/div/input")).clear().sendKeys('Test1');
+        element(by.xpath("//div[@ng-controller='otherBudgetItemsCtrl as foodGasItemsCtrl']/div/div[2]/input")).clear().sendKeys('100');
         element(by.id("comm_chair_bool")).click();
         element(by.id("comm_chair_amount")).clear().sendKeys('100');
         element(by.id("comm_manager_bool")).click();
         element(by.id("comm_manager_amount")).clear().sendKeys('200');
         element(by.id("comm_number_of_staff_wt")).clear().sendKeys('5');
         element(by.id("comm_number_of_staff_wt_multiplier")).clear().sendKeys('20');
-        element(by.id("comm_each_staff_wt")).clear().sendKeys('100');
+        element(by.id("comm_each_staff_wt")).clear();
+        element(by.id("comm_each_staff_wt")).sendKeys('100');
         element(by.id("comm_each_staff_wt_multiplier")).clear().sendKeys('5');
-
+        element(by.id("communication_add_item")).click();
+        browser.sleep(1000);
+        element(by.xpath("//div[@ng-controller='otherBudgetItemsCtrl as communicationItemsCtrl']/div/div/input")).clear().sendKeys('Test1');
+        element(by.xpath("//div[@ng-controller='otherBudgetItemsCtrl as communicationItemsCtrl']/div/div[2]/input")).clear().sendKeys('100');
         element(by.id("awareness_contact_cards_bool")).click();
         element(by.id("awareness_contact_cards_amount")).clear().sendKeys('100');
         element(by.id("awareness_awareness_party_bool")).click();
@@ -198,8 +213,7 @@ var budgetForm = function () {
         element(by.id("awareness_sign_boards_bool")).click();
         element(by.id("awareness_sign_boards_amount")).clear().sendKeys('300');
         element(by.id("awareness_add_item")).click();
-        //element(by.xpath("//form[@id='budget-calc-form']/div[1]/div[2]/div[3]/div[2]/div[4]/div[1]/div[1]/input")).clear().sendKeys('Test1');
-        //element(by.xpath("//form[@id='budget-calc-form']/div[1]/div[2]/div[3]/div[2]/div[4]/div[1]/div[2]/input")).clear().sendKeys('100');
+        browser.sleep(1000);
         element(by.xpath("//div[@ng-controller='otherBudgetItemsCtrl as awarenessItemsCtrl']/div/div/input")).clear().sendKeys('Test1');
         element(by.xpath("//div[@ng-controller='otherBudgetItemsCtrl as awarenessItemsCtrl']/div/div[2]/input")).clear().sendKeys('100');
         element(by.id("travel_chair_with_bike_bool")).click();
@@ -241,25 +255,28 @@ var budgetForm = function () {
         element(by.id("misc_add_item")).click();
         element(by.xpath("//div[@ng-controller='otherBudgetItemsCtrl as miscItemsCtrl']/div/div/input")).clear().sendKeys('Test4');
         element(by.xpath("//div[@ng-controller='otherBudgetItemsCtrl as miscItemsCtrl']/div/div[2]/input")).clear().sendKeys('100');
-
     };
 
     this.submitForm = function () {
-        element(by.id("budget_create")).click();
+        methods.click(element(by.id("budget_create")));
     };
 
     this.updateForm = function () {
-        element(by.id("budget_update")).click();
+        methods.click(element(by.id("budget_update")));
     };
 
     this.viewForm = function () {
-        browser.get(c.webAddress + '/budget/budget_calculations/');
-        element(by.linkText("View")).click();
+        browser.get(c.webAddress + '/budget/api/budget_calculations/view/1/');
+        //methods.click(element(by.linkText("View")));
+        //element(by.linkText("View")).click();
     };
 
     this.editForm = function () {
-        browser.get(c.webAddress + '/budget/budget_calculations/');
-        element(by.linkText("Edit")).click();
+        browser.get(c.webAddress + '/budget/api/budget_calculations/update/1/');
+        //expect(element(by.linkText("Edit")).isPresent()).toBe(true);
+        //methods.click(element(by.linkText("Edit")));
+        browser.sleep(2000);
+        //element(by.linkText("Edit")).click();
     };
 
     this.navigateToForms = function () {

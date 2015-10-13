@@ -2,12 +2,12 @@ angular
     .module('DataEntry')
     .factory('staffListService', staffListService);
 
-staffListService.$inject = ['$http', '$q'];
+staffListService.$inject = ['$http'];
 
-function staffListService($http, $q) {
+function staffListService($http) {
 	return {
 		retrieveStaff: retrieveStaff,
-		getStationID: getStationID,
+		getStationID: getStationID
 	};
 
 	function retrieveStaff(borderStationCod) {
