@@ -9,16 +9,21 @@
 	function BorderStationsCtrl(BorderStationsService) {
 		var vm = this;
 		
+		var staffTitle = 'Staff';
+		
+		vm.borderStationId = window.border_station_pk
 		vm.details = {};
 		vm.locations = [];
 		vm.people = {
 			staff: {
-				name: 'Staff'
+				name: staffTitle
 			},
 			committeeMembers: {
 				name: 'Committee Members'
 			}
 		};
+		vm.removeLocation = removeLocation;
+		vm.removePerson = removePerson;
 		vm.updateStation = updateStation;
 		
 		activate();
@@ -32,49 +37,61 @@
 		}
 		
 		function getDetails() {
-			BorderStationsService.getDetails(0).then(function(response) {
+			BorderStationsService.getDetails(vm.borderStationId).then(function(response) {
 				vm.details = response.data;
 			});
 		}
 		
 		function getCommitteeMembers() {
-			BorderStationsService.getCommitteeMembers(0).then(function(response) {
+			BorderStationsService.getCommitteeMembers(vm.borderStationId).then(function(response) {
 				vm.people.committeeMembers.data = response.data;
+				console.log('Got the peeps');
 			});
 		}
 		
 		function getLocations() {
-			BorderStationsService.getLocations(0).then(function(response) {
+			BorderStationsService.getLocations(vm.borderStationId).then(function(response) {
 				vm.locations = response.data;
+				console.log(response.data);
 			});
 		}
 		
 		function getStaff() {
-			BorderStationsService.getStaff(0).then(function(response) {
+			BorderStationsService.getStaff(vm.borderStationId).then(function(response) {
 				vm.people.staff.data = response.data;
 			});
 		}
 		
-		function removePerson(person) {
-			person.border_station = null;
-			
+		function removeCommitteeMember(member) {
+			member.border_station = null;
+			BorderStationsService.updateCommitteeMembers(member.id, member);
+			getCommitteeMembers();
 		}
 		
-		function updateStation() {
-			updateDetails(vm.details);
-			updateCommitteeMembers(vm.people.committeeMembers.data);
-			updateLocations(vm.locations);
-			updateStaff(vm.people.staff.data);
+		function removeLocation(location) {
+			location.border_station = null;
+			updateLocations([location]);
+			getLocations();
 		}
 		
-		function updateDetails(details) {
-			BorderStationsService.updateDetails(vm.details.id, details);
+		function removePerson(persons, person) {
+			persons.name == staffTitle ? removeStaff(person) : removeCommitteeMember(person);
+		}
+		
+		function removeStaff(staff) {
+			staff.border_station = null;
+			updateStaff([staff]);
+			getStaff();
 		}
 		
 		function updateCommitteeMembers(committeeMembers) {
 			committeeMembers.forEach(function(member) {
 				BorderStationsService.updateCommitteeMembers(member.id, member);
 			});
+		}
+		
+		function updateDetails(details) {
+			BorderStationsService.updateDetails(vm.details.id, details);
 		}
 		
 		function updateLocations(locations) {
@@ -84,9 +101,16 @@
 		}
 		
 		function updateStaff(staff) {
-			vm.people.staff.data.forEach(function(staff) {
-				BorderStationsService.updateStaff(staff.id, staff);
+			staff.data.forEach(function(aStaff) {
+				BorderStationsService.updateStaff(aStaff.id, aStaff);
 			});
+		}
+		
+		function updateStation() {
+			updateDetails(vm.details);
+			updateCommitteeMembers(vm.people.committeeMembers.data);
+			updateLocations(vm.locations);
+			updateStaff(vm.people.staff.data);
 		}
 	}
 })();

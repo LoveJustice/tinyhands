@@ -11,31 +11,31 @@
           <div class="col-sm-6 form-group">
             <label for="firstName">First Name</label>
             <input type="text" class="form-control" id="firstName" placeholder="First Name"
-                  ng-model="person.first_name">
+                   ng-model="person.first_name">
           </div>
           <div class="col-sm-6 form-group">
             <label for="lastName">Last Name</label>
             <input type="text" class="form-control" id="lastName" placeholder="Last Name"
-                  ng-model="person.last_name">
+                   ng-model="person.last_name">
           </div>
       </div>
       <div class="row">
           <div class="col-sm-6 form-group">
             <label for="email">Email</label>
             <input type="text" class="form-control" id="email" placeholder="Email Address"
-                  ng-model="person.email">
+                   ng-model="person.email">
           </div>
           <div class="col-sm-6 form-group">
             <label for="phone">Phone Number</label>
             <input type="text" class="form-control" id="phone" placeholder="Phone Number"
-                  ng-model="person.phone">
+                   ng-model="person.phone">
           </div>
       </div>
       <div class="row">
           <div class="col-sm-6 form-group">
             <label for="position">Position</label>
             <input type="text" class="form-control" id="position" placeholder="Position"
-                  ng-model="person.position">
+                   ng-model="person.position">
           </div>
           <div class="col-sm-6 checkbox">
             <label>
@@ -46,15 +46,15 @@
       </div>
       <div class="row col-xs-12">
         <button class="btn btn-danger pull-left animated"
+                ng-click="bsCtrl.removePerson(persons, person)"
                 ng-class="{fadeIn: person.hover, fadeOut: !person.hover}">Remove {{person.first_name}}</button>
-        <button class="btn btn-success pull-right"
-                ng-if="$last">Add {{persons.name}}</button>
       </div>
       <br/>
       <hr ng-if="!$last && persons.data.length > 1"/>
-      <div class="row"
-           ng-if="persons.data.length == 0">No {{persons.name}}</div>
     </div>
+    <h4 class="col-xs-12 text-center"
+        ng-if="persons.data.length == 0">No {{persons.name}}</h4>
+    <button class="btn btn-success pull-right">Add {{persons.name}}</button>
   </div>
 </div>
 {% endverbatim %}

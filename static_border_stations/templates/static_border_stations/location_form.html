@@ -27,13 +27,12 @@
     <div class="row col-xs-12">
       <button class="btn btn-danger pull-left animated"
               ng-class="{fadeIn: location.hover, fadeOut: !location.hover}">Remove {{location.name}}</button>
-      <button class="btn btn-success pull-right"
-              ng-if="$last">Add Location</button>
     </div>
     <br/>
     <hr ng-if="!$last && bsCtrl.locations.length > 1"/>
-    <div class="row"
-          ng-if="bsCtrl.locations.length == 0">No Locations</div>
   </div>
+  <h4 class="col-xs-12 text-center"
+      ng-if="bsCtrl.locations.length == 0">No Locations</h4>
+  <button class="btn btn-success pull-right">Add Location</button>
 </div>
 {% endverbatim %}

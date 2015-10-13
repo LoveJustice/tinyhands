@@ -23,15 +23,15 @@
 		}
 	
 		function getStaff(borderStationId) {
-			return $http.get('/api/staff/?borderstation=' + borderStationId);
+			return $http.get('/api/staff/?border_station=' + borderStationId);
 		}
 	
 		function getCommitteeMembers(borderStationId) {
-			return $http.get('/api/committee-members/?borderstation=' + borderStationId);
+			return $http.get('/api/committee-members/?border_station=' + borderStationId);
 		}
 	
 		function getLocations(borderStationId) {
-			return $http.get('/api/locations/?borderstation=' + borderStationId);
+			return $http.get('/api/locations/?border_station=' + borderStationId);
 		}
 	
 		function updateDetails(borderStationId, data) {

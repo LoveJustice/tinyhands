@@ -105,6 +105,7 @@ class StaticBorderStationsUpdateView (
     def get_context_data(self, **kwargs):
         context = super(StaticBorderStationsUpdateView, self).get_context_data(**kwargs)
         context["saved"] = True
+        context["border_station_pk"] = kwargs['form'].instance.id
         return context
 
 
