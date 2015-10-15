@@ -1,31 +1,11 @@
-<!--<div class="row">
-    <div class="col-lg-6">
-        <!--{% if request.user.permission_budget_manage and saved %}-->
-            <!--<h1>{{ hello }}</h1>-->
-                <!--<h1>{{ model }}</h1>-->
-                <!--<h1><a class="btn btn-success pull-right" href="{% url 'budget_create_api' form.instance.id %}" style="height: 100%">New Budget Calculation Form</a></h1>-->
-        <!--{% endif %}-->
-    <!--</div>-->
-<!--</div>-->
-
-<!--{% block content %}
-{% if form.errors %}
-    <div id="error-box" class="alert alert-danger no-remove" style="margin-top: 20px">
-        <h3>These errors will prevent the form from being saved</h3>
-        {% for id, errors in form.errors.items %}
-          {% if not errors.is_warning %}
-            {% for error in errors %}
-              <p><strong>{{ id }}:</strong> {{ error }}</p>
-            {% endfor %}
-          {% endif %}
-        {% endfor %}
-    </div>
-{% endif %}
-{% endblock %}-->
-{% verbatim %}
-<div class="row well">
-  <h1>Details</h1>
+<div class="row well well-sm">
+  <h1>Details
+    {% if request.user.permission_budget_manage %}
+      <a class="btn btn-success pull-right" href="{% url 'budget_create_api' form.instance.id %}">New Budget Calculation Form</a>
+    {% endif %}
+  </h1>
   <hr/>
+  {% verbatim %}
   <div class="row">
       <div class="col-sm-6 form-group">
         <label for="stationName">Station Name</label>
@@ -63,5 +43,5 @@
                ng-model="bsCtrl.details.longitude">
       </div>
   </div>
+  {% endverbatim %}
 </div>
-{% endverbatim %}

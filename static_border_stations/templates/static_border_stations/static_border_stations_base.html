@@ -6,11 +6,26 @@
 
 {% block tab_block %}
 	<form id="borderstation-form" ng-controller="BorderStationsCtrl as bsCtrl">
+		
 		{% include "static_border_stations/borderstation_form.html" %}
 		{% include "static_border_stations/person_form.html" %}
 		{% include "static_border_stations/location_form.html" %}
+		
+		<!--Block for error messages-->
+		{% verbatim %}
+		<div class="text-danger well"
+			 	 ng-if="bsCtrl.errors.length > 0">
+			<h1>Errors</h1>
+			<div class="well well-sm"
+					ng-repeat="error in bsCtrl.errors">
+				<h4>Field: {{error.field}}</h4>
+				<h5 ng-repeat="message in error.messages">Message: {{message}}</h5>
+			</div>
+		</div>
+		
 		<button class="btn btn-primary pull-right col-xs-12"
-						ng-click="bsCtrl.updateStation()">Update Station</button>
+						ng-click="bsCtrl.updateStation()">{{bsCtrl.updateStatusText}}</button>
+		{% endverbatim %}
 		<br/><br/><br/>
 	</form>
 	{% block content %}

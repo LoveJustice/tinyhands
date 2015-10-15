@@ -1,5 +1,5 @@
 {% verbatim %}
-<div class="row well">
+<div class="row well well-sm">
   <h1>Locations</h1>
   <hr/>
   <div ng-repeat="location in bsCtrl.locations"
@@ -24,10 +24,10 @@
                  ng-model="location.longitude">
         </div>
     </div>
-    <button class="btn btn-danger pull-left hidden-xs animated"
+    <button class="btn btn-xs btn-danger pull-left hidden-xs animated"
             ng-click="bsCtrl.removeLocation(location)"
             ng-class="{fadeIn: location.hover, fadeOut: !location.hover}">Remove {{location.name}}</button>
-    <button class="btn btn-danger pull-left col-xs-12 visible-xs animated"
+    <button class="btn btn-xs btn-danger pull-left col-xs-12 visible-xs animated"
             ng-click="bsCtrl.removeLocation(location)"
             ng-class="{fadeIn: location.hover, fadeOut: !location.hover}">Remove {{location.name}}</button>
     <br/>
@@ -36,7 +36,7 @@
   </div>
   <h4 class="col-xs-12 text-center"
       ng-if="bsCtrl.locations.length == 0">No Locations</h4>
-  <button class="btn btn-success col-xs-12 col-sm-offset-3 col-sm-6"
+  <button class="btn btn-sm btn-success col-xs-12 col-sm-offset-4 col-sm-4"
           ng-click="bsCtrl.addLocation()">Add Location</button>
 </div>
 {% endverbatim %}

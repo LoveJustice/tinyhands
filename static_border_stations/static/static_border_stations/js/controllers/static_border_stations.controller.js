@@ -4,18 +4,21 @@
 	angular.module('BorderStationsMod')
 		.controller('BorderStationsCtrl', BorderStationsCtrl);
 		
-	BorderStationsCtrl.$inject = ['BorderStationsService'];
+	BorderStationsCtrl.$inject = ['$q','$timeout','BorderStationsService'];
 		
-	function BorderStationsCtrl(BorderStationsService) {
+	function BorderStationsCtrl($q, $timeout, BorderStationsService) {
 		var vm = this;
 		
-		var staffTitle = 'Staff';
+		var defer = $q.defer();
 		var committeeMemTitle = 'Committee Members';
+		var staffTitle = 'Staff';
+		var updateButtonText = 'Update Station';
 		
 		vm.addLocation = addLocation;
 		vm.addPerson = addPerson;
 		vm.borderStationId = window.border_station_pk;
 		vm.details = {};
+		vm.errors = [];
 		vm.locations = [];
 		vm.newCommitteeMembers = [];
 		vm.newLocations = [];
@@ -31,6 +34,7 @@
 		vm.removeLocation = removeLocation;
 		vm.removePerson = removePerson;
 		vm.updateStation = updateStation;
+		vm.updateStatusText = updateButtonText;
 		
 		activate();
 		
@@ -39,6 +43,16 @@
 			getStaff();
 			getCommitteeMembers();
 			getLocations();
+		}
+		
+		function handleErrors(error) {
+			var errorData = error.data;
+			for (var key in errorData) {
+				vm.errors.push({
+					field: key,
+					messages: errorData[key]
+				});
+			}
 		}
 		
 		function addLocation() {
@@ -62,57 +76,72 @@
 			}
 		}
 		
+		
+		// CREATE calls
 		function createCommitteeMembers(members) {
-			createRelationship(members, BorderStationsService.createCommitteeMember, getCommitteeMembers);
+			createRelationship(members, BorderStationsService.createCommitteeMember, BorderStationsService.getCommitteeMembers);
 		}
 		
 		function createLocations(locations) {
-			createRelationship(locations, BorderStationsService.createLocation, getLocations);
+			createRelationship(locations, BorderStationsService.createLocation, BorderStationsService.getLocations);
 		}
 		
 		function createStaff(staff) {
-			createRelationship(staff, BorderStationsService.createStaff, getStaff);
+			createRelationship(staff, BorderStationsService.createStaff, BorderStationsService.getStaff);
 		}
 		
 		function createRelationship(createArray, createApiFunction, getApiFunction) {
 			createArray.forEach(function (anObject) {
 				createApiFunction(anObject).then(function() {
-					getApiFunction();
-				});
+					getApiFunction(vm.borderStationId).then(function() {}, handleErrors);
+					defer.resolve();
+				}, handleErrors);
 			});
 			createArray = []; // Empty the array after all of the create calls have been fired.
 		}
 		
+		
+		// GET calls
 		function getDetails() {
-			BorderStationsService.getDetails(vm.borderStationId).then(function(response) {
-				vm.details = response.data;
-			});
+			if (vm.borderStationId) {
+				BorderStationsService.getDetails(vm.borderStationId).then(function(response) {
+					vm.details = response.data;
+				}, handleErrors);
+			}
 		}
 		
 		function getCommitteeMembers() {
-			BorderStationsService.getCommitteeMembers(vm.borderStationId).then(function(response) {
-				vm.people.committeeMembers.data = response.data;
-			});
+			if (vm.borderStationId) {
+				BorderStationsService.getCommitteeMembers(vm.borderStationId).then(function(response) {
+					vm.people.committeeMembers.data = response.data;
+				}, handleErrors);
+			}
 		}
 		
 		function getLocations() {
-			BorderStationsService.getLocations(vm.borderStationId).then(function(response) {
-				vm.locations = response.data;
-			});
+			if (vm.borderStationId) {
+				BorderStationsService.getLocations(vm.borderStationId).then(function(response) {
+					vm.locations = response.data;
+				}, handleErrors);
+			}
 		}
 		
 		function getStaff() {
-			BorderStationsService.getStaff(vm.borderStationId).then(function(response) {
-				vm.people.staff.data = response.data;
-			});
+			if (vm.borderStationId) {
+				BorderStationsService.getStaff(vm.borderStationId).then(function(response) {
+					vm.people.staff.data = response.data;
+				}, handleErrors);
+			}
 		}
 		
+		
+		// REMOVE calls
 		function removeCommitteeMember(member) {
-			removeRelation(member, vm.newCommitteeMembers, vm.people.committeeMembers.data, BorderStationsService.updateCommitteeMembers, getCommitteeMembers);
+			removeRelation(member, vm.newCommitteeMembers, vm.people.committeeMembers.data, BorderStationsService.updateCommitteeMembers, BorderStationsService.getCommitteeMembers);
 		}
 		
 		function removeLocation(location) {
-			removeRelation(location, vm.newLocations, vm.locations, BorderStationsService.updateLocations, getLocations);
+			removeRelation(location, vm.newLocations, vm.locations, BorderStationsService.updateLocations, BorderStationsService.getLocations);
 		}
 		
 		function removePerson(persons, person) {
@@ -130,51 +159,81 @@
 				value.border_station = null;
 				if (value.id) {
 					updateApiFunction(value.id, value).then(function() {
-						getApiFunction();
-					});
+						getApiFunction(vm.borderStationId).then(function() {}, handleErrors);
+						defer.resolve();
+					}, handleErrors);
 				}
 			}
 		}
 		
 		function removeStaff(staff) {
-			removeRelation(staff, vm.newStaff, vm.people.staff.data, BorderStationsService.updateStaff, getStaff);
+			removeRelation(staff, vm.newStaff, vm.people.staff.data, BorderStationsService.updateStaff, BorderStationsService.getStaff);
 		}
 		
+		
+		// UPDATE calls
 		function updateCommitteeMembers(committeeMembers) {
-			updateRelationship(committeeMembers, BorderStationsService.updateCommitteeMembers, getCommitteeMembers);
+			updateRelationship(committeeMembers, BorderStationsService.updateCommitteeMembers, BorderStationsService.getCommitteeMembers);
 		}
 		
 		function updateDetails(details) {
-			BorderStationsService.updateDetails(details.id, details);
+			// Format date properly
+			var dateEstablished = new Date(details.date_established);
+			var year = dateEstablished.getFullYear();
+			var month = dateEstablished.getMonth() + 1; // Plus 1 because it returns 0 - 11 inclusive to rep month
+			var day = dateEstablished.getDate();
+			var dateString = year.toString();
+			if (month) {
+				dateString += '-' + month;
+				if (day) {
+					dateString += '-' + day;
+				}
+			}
+			details.date_established = dateString;
+			
+			updateRelationship([details], BorderStationsService.updateDetails, BorderStationsService.getDetails);
 		}
 		
 		function updateLocations(locations) {
-			updateRelationship(locations, BorderStationsService.updateLocations, getLocations);
+			updateRelationship(locations, BorderStationsService.updateLocations, BorderStationsService.getLocations);
 		}
 		
 		function updateStaff(staff) {
-			updateRelationship(staff, BorderStationsService.updateStaff, getStaff);
+			updateRelationship(staff, BorderStationsService.updateStaff, BorderStationsService.getStaff);
 		}
 		
 		function updateRelationship(updateArray, updateApiFunction, getApiFunction) {
 			updateArray.forEach(function(anObject) {
 				if (anObject.id) {
 					updateApiFunction(anObject.id, anObject).then(function() {
-						getApiFunction();
-					});
+						getApiFunction(vm.borderStationId).then(function() {}, handleErrors);
+						defer.resolve();
+					}, handleErrors);
 				}
 			});
 		}
 		
 		function updateStation() {
-			createCommitteeMembers(vm.newCommitteeMembers);
-			createLocations(vm.newLocations);
-			createStaff(vm.newStaff);
+			vm.updateStatusText = 'Saving...';
 			
-			updateDetails(vm.details);
-			updateCommitteeMembers(vm.people.committeeMembers.data);
-			updateLocations(vm.locations);
-			updateStaff(vm.people.staff.data);
+			var promises = [];
+			
+			promises.push(createCommitteeMembers(vm.newCommitteeMembers));
+			promises.push(createLocations(vm.newLocations));
+			promises.push(createStaff(vm.newStaff));
+			
+			promises.push(updateDetails(vm.details));
+			promises.push(updateCommitteeMembers(vm.people.committeeMembers.data));
+			promises.push(updateLocations(vm.locations));
+			promises.push(updateStaff(vm.people.staff.data));
+			
+			
+			$q.all(promises).then(function() {
+				vm.updateStatusText = 'Saved';
+				$timeout(function() {
+					vm.updateStatusText = updateButtonText;
+				}, 2000);
+			});
 		}
 	}
 })();

@@ -1,6 +1,6 @@
 {% verbatim %}
 <div ng-cloak>
-  <div class="row well"
+  <div class="row well well-sm"
        ng-repeat="persons in bsCtrl.people">
     <h1>{{persons.name}}</h1>
     <hr/>
@@ -44,10 +44,10 @@
             </label>
           </div>
       </div>
-      <button class="btn btn-danger pull-left hidden-xs animated"
+      <button class="btn btn-xs btn-danger pull-left hidden-xs animated"
               ng-click="bsCtrl.removePerson(persons, person)"
               ng-class="{fadeIn: person.hover, fadeOut: !person.hover}">Remove {{person.first_name}}</button>
-      <button class="btn btn-danger col-xs-12 visible-xs animated"
+      <button class="btn btn-xs btn-danger col-xs-12 visible-xs animated"
               ng-click="bsCtrl.removePerson(persons, person)"
               ng-class="{fadeIn: person.hover, fadeOut: !person.hover}">Remove {{person.first_name}}</button>
       <br/>
@@ -56,7 +56,7 @@
     </div>
     <h4 class="col-xs-12 text-center"
         ng-if="persons.data.length == 0">No {{persons.name}}</h4>
-    <button class="btn btn-success col-xs-12 col-sm-offset-3 col-sm-6"
+    <button class="btn btn-sm btn-success col-xs-12 col-sm-offset-4 col-sm-4"
             ng-click="bsCtrl.addPerson(persons)">Add {{persons.name}}</button>
   </div>
 </div>
