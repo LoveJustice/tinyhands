@@ -9,12 +9,15 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView, R
 from django.contrib.auth.decorators import login_required
 from braces.views import LoginRequiredMixin
 from extra_views import ModelFormSetView
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
 
 from util.functions import get_object_or_None
 from accounts.models import Account, DefaultPermissionsSet
 from accounts.mixins import PermissionsRequiredMixin
 from accounts.forms import CreateUnactivatedAccountForm, AccountActivateForm
-
+from accounts.serializers import AccountsSerializer
 
 @login_required
 def home(request):
@@ -203,3 +206,12 @@ class AccessDefaultsDeleteView(
     model = DefaultPermissionsSet
     permissions_required = ['permission_accounts_manage']
     success_url = reverse_lazy('access_defaults')
+
+
+class AccountsView(APIView):
+
+    def get(self, request, format=None):
+        accounts = Account.objects.all()
+        serializer = AccountsSerializer(accounts, many=True)
+        return Response(serializer.data)
+
