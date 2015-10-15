@@ -12,6 +12,8 @@ from extra_views import ModelFormSetView
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
+from rest_api.authentication import HasPermission
 
 from util.functions import get_object_or_None
 from accounts.models import Account, DefaultPermissionsSet
@@ -209,6 +211,8 @@ class AccessDefaultsDeleteView(
 
 
 class AccountsView(APIView):
+    permission_classes = [IsAuthenticated, HasPermission]
+    permissions_required = ['permission_accounts_manage']
 
     def get(self, request, format=None):
         accounts = Account.objects.all()
