@@ -91,9 +91,9 @@ All you have to do is run the command `./manage.py test` in the project director
 5. finally open another gitbash terminal to the project directory and execute `protractor e2etesting/conf.js` to run the tests
 6. watch the magic happen
 
-## Angular Testing with Karma on unix ##
-1. Make sure you have all of the dependencies downloaded by running `npm install`.
-2. Install karma cli `npm install -g karma-cli`.  
+## Angular Testing with Karma ##
+1. Make sure you have all of the dependencies downloaded by running `npm install`. 
+2. Install karma cli `npm install -g karma-cli`. (if on windows remember to install on your host machine)
 3. Start the Karma server with `karma start` if you are in the root project directory.
 4. Watch the magic.
 
