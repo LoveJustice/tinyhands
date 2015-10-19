@@ -15,8 +15,6 @@ exports.config = {
 
         'borderStations/borderStationCRUD.spec.js',
 
-
-
         'dataentry/irfCRUD.spec.js',
         'dataentry/vifCrud.spec.js',
         'dataentry/search.spec.js',
@@ -28,6 +26,8 @@ exports.config = {
 
         'vdcs/vdcAdminPage.spec.js', //There are problems in this one
 
+
+        'accounts/accessDefaults.spec.js',
         // Has to run last
         'accounts/permissionsPage.spec.js'
       ],
