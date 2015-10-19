@@ -15,22 +15,27 @@ describe('TinyHands VDCs', function () {
     });
 
     it('should change the first VDCs information', function () {
-        vdcAdminPage.findItemsOnPage();
+        browser.ignoreSynchronization = false;
         browser.sleep(500);
 
-        vdcAdminPage.firstVdcEditButton.click();
-        browser.sleep(500);
+        //browser.pause();
 
+        element.all(by.className("edit")).first().click();
+        browser.sleep(500);
+        //browser.ignoreSynchronization = false;
         vdcAdminPage.changeValues();
+        browser.ignoreSynchronization = true;
+        browser.sleep(1000);
         browser.get(constants.webAddress);
         vdcAdminPage.navigate();
-        browser.sleep(2000);
 
-        expect(element(by.xpath("//td[text() = '" + constants.vdcEditName + "']")).isPresent()).toBe(true);
-        var item = element(by.xpath("//td[text() = 'aaaab']"));
+
+        browser.sleep(1000);
+        var item = element(by.xpath("//td[text() = '" + constants.vdcEditName + "']"));
         var district = item.element(by.xpath("../td[4]"));
         var cannon = item.element(by.xpath("../td[5]"));
 
+        expect(item.getText()).toEqual(constants.vdcEditName);
         expect(district.getText()).toEqual(constants.vdcEditDis);
         expect(cannon.getText()).toEqual(constants.vdcEditCan);
         browser.sleep(500);
@@ -38,29 +43,17 @@ describe('TinyHands VDCs', function () {
 
     it('should be able to create a new VDC through the vif:', function(){
         browser.get(constants.webAddress + '/data-entry/vifs/create/');
+        browser.sleep(500);
         this.victim_address_vdc = element(by.id("id_victim_address_vdc")).click();
+        browser.sleep(500);
         vdcAdminPage.createNewVDC();
         browser.sleep(500);
         vdcAdminPage.navigate();
 
-        expect(element(by.xpath("//td[text() = '" + constants.vdcNewName + "']")).isPresent()).toBe(true);
-        var item = element(by.xpath("//td[text() = 'aaaab']"));
-        var district = item.element(by.xpath("../td[4]"));
-        var cannon = item.element(by.xpath("../td[5]"));
-
-        expect(district.getText()).toEqual(constants.vdcNewDis);
-        expect(cannon.getText()).toEqual(constants.vdcNewCan);
-    });
-
-    it('should not have any error tooltips above the create modal on a vif', function(){
-        browser.get(constants.webAddress + '/data-entry/vifs/create/');
-        this.victim_address_vdc = element(by.id("id_victim_address_vdc")).click();
-        vdcAdminPage.createNewVDC();
-        browser.sleep(500);
-        vdcAdminPage.navigate();
+        browser.sleep(1000);
 
         expect(element(by.xpath("//td[text() = '" + constants.vdcNewName + "']")).isPresent()).toBe(true);
-        var item = element(by.xpath("//td[text() = 'aaaab']"));
+        var item = element(by.xpath("//td[text() = '" + constants.vdcNewName + "']"));
         var district = item.element(by.xpath("../td[4]"));
         var cannon = item.element(by.xpath("../td[5]"));
 

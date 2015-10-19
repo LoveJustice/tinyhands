@@ -43,9 +43,6 @@ function address2Service($http) {
         return $http.put('/api/address2/' + address.id, address).
             success(function (data) {
                 return data;
-            }).
-            error(function (data, status, headers, config) {
-                console.log(data, status, headers, config);
             });
     }
 

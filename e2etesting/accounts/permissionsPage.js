@@ -7,7 +7,7 @@ var permissionsPage = function() {
     var page = this;
 
     this.navigateToBudgetPage = function() {
-        browser.get(constants.webaddress + "/budget/budget_calculations/");
+        browser.get(constants.webAddress + "/budget/budget_calculations/");
     };
 
     this.navigateToVdcPage = function() {

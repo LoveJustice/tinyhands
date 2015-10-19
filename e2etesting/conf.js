@@ -15,6 +15,8 @@ exports.config = {
 
         'borderStations/borderStationCRUD.spec.js',
 
+
+
         'dataentry/irfCRUD.spec.js',
         'dataentry/vifCrud.spec.js',
         'dataentry/search.spec.js',
