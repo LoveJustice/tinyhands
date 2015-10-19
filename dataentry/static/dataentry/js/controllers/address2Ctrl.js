@@ -117,6 +117,10 @@ angular
                     address2Service.saveAddress(address)
                         .success(function (){
                             main();
+                        })
+                        .error(function (){
+                            alert(address);
+
                         });
             });
 

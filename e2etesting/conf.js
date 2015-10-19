@@ -15,22 +15,24 @@ exports.config = {
 
         'borderStations/borderStationCRUD.spec.js',
 
-        //'dataentry/irfCRUD.spec.js',
-        //'dataentry/vifCrud.spec.js',
-        //'dataentry/search.spec.js',
+        'dataentry/irfCRUD.spec.js',
+        'dataentry/vifCrud.spec.js',
+        'dataentry/search.spec.js',
 
         'budget/budgetForm.spec.js',
-        //'budget/moneyDistributionForm.spec.js',
+        'budget/moneyDistributionForm.spec.js',
 
-        //'DynStationWindow/dynStation.spec.js',
+        'DynStationWindow/dynStation.spec.js',
 
-        //'vdcs/vdcAdminPage.spec.js' //There are problems in this one
+        'vdcs/vdcAdminPage.spec.js', //There are problems in this one
 
 
-        'accounts/accessDefaults.spec.js'
+        'accounts/accessDefaults.spec.js',
         // Has to run last
-        //'accounts/permissionsPage.spec.js'
+        'accounts/permissionsPage.spec.js'
       ],
+
+    framework: 'jasmine2',
 
     capabilities: {
         "browserName":"chrome"

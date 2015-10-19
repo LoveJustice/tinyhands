@@ -122,8 +122,7 @@ describe('Border Station CRUD -', function() {
             borderStationPage.editBorderStationWithNoEmail().then(function() {
                 return expect(browser.driver.getCurrentUrl()).toContain('/static_border_stations/border-stations/update/' + c.stationId + '/');
             }).then(function() {
-                expect(element.all(by.cssContainingText('.alert-danger', 'Email cannot be blank when receives money distribution form is checked.'))
-                .count()).toEqual(2);
+                expect(element.all(by.cssContainingText('.alert-danger', 'Email cannot be blank when receives money distribution form is checked.')).count()).toEqual(2);
             });
         });
     });

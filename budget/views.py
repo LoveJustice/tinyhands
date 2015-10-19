@@ -43,8 +43,8 @@ def retrieve_latest_budget_sheet_for_border_station(request, pk):
 
     if budget_sheet:  # if there has been a preview budget sheet
 
-        other_items_serializer = OtherBudgetItemCostSerializer(budget_sheet.otherbudgetitemcost_set.all())
-        staff_serializer = StaffSalarySerializer(budget_sheet.staffsalary_set.all())
+        other_items_serializer = OtherBudgetItemCostSerializer(budget_sheet.otherbudgetitemcost_set.all(), many=True)
+        staff_serializer = StaffSalarySerializer(budget_sheet.staffsalary_set.all(), many=True)
         budget_serializer = BorderStationBudgetCalculationSerializer(budget_sheet)
 
         return Response(
@@ -193,6 +193,7 @@ class StaffSalaryViewSet(viewsets.ModelViewSet):
 
 class BudgetCalcListView(
         LoginRequiredMixin,
+        PermissionsRequiredMixin,
         ListView):
     model = BorderStationBudgetCalculation
     border_stations = BorderStation.objects.all()
@@ -206,7 +207,7 @@ class BudgetCalcListView(
         return context
 
 
-class BudgetCalcDeleteView(DeleteView, LoginRequiredMixin):
+class BudgetCalcDeleteView(DeleteView, LoginRequiredMixin, PermissionsRequiredMixin):
     model = BorderStationBudgetCalculation
     permissions_required = ['permission_budget_manage']
     success_url = reverse_lazy('budget_list')

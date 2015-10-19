@@ -6,24 +6,25 @@
   "nonAdminEmail"   : "HanSolo@MFalcon.com",
   "nonAdminPassword": "password",
 
-  "vdcEditName"      : "aaaab",
+  "vdcEditName"      : "Shree Jung",
   "vdcEditLat"       : "0.1",
   "vdcEditLon"       : "0.1",
-  "vdcEditDis"       : "Dang",
-  "vdcEditCan"       : "ShreeJung",
+  "vdcEditDis"       : "Achham",
+  "vdcEditCan"       : "Solma",
 
   "vdcNewName"      : "aaaab",
   "vdcNewLat"       : "0.0",
   "vdcNewLon"       : "0.0",
-  "vdcNewDis"       : "Dang",
+  "vdcNewDis"       : "Achham",
   "vdcNewCan"       : "ShreeJung",
 
   "webAddress" : "http://0.0.0.0:8001",
 
-  "irfNumber"                 : "BHD123",
-  "irfEditNumber"             : "BHD121",
+  "irfNumber"                 : "DNG123",
+  "irfEditNumber"             : "DNG121",
   "irfLocation"               : "none",
-  "irfInterceptTime"          : "01/01/01",
+  "irfInterceptTime"          : "06/16/2015 06:20",
+  "irfInterceptTimeTest"      : "2015-06-16 06:20:00",
   "irfStaffName"              : "TEST",
   "irfInterceptFname"         : "name",
 
@@ -52,7 +53,7 @@
   "committee1Email"           : "example1@example.com",
 
   "irfInterceptDistrict"      : "Dang",
-  "irfInterceptVdc"           : "ShreeJung",
+  "irfInterceptVdc"           : "Shree Jung",
   "irfNameCameUpBeforeValue"  : "1",
 
   "goodStaffVifNumber"                : "AAA123",
