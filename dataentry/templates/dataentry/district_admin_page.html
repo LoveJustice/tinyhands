@@ -35,7 +35,7 @@
     <table class="table table-striped">
         <thead>
             <tr>
-                <th ng-click="vm.sortColumn = 'name'; vm.reverse = ! vm.reverse; vm.getAddresses()" class="text-center">
+                <th id="addressNameHeader" ng-click="vm.sortColumn = 'name'; vm.reverse = ! vm.reverse; vm.getAddresses()" class="text-center">
                     Name <i class="glyphicon" ng-class="vm.sortIcon()"></i>
                 </th>
                 <th class="text-center">&nbsp;</th>
@@ -43,9 +43,9 @@
         </thead>
         <tbody>
             <tr ng-repeat="address in vm.addresses | orderBy:vm.sortColumn:vm.reverse">
-                <td class="text-center">{{ address.name }}</td>
+                <td class="text-center address-name">{{ address.name }}</td>
                 <td class="text-center">
-                    <a href="#" ng-click="vm.editAddress1(address)" class="btn btn-warning">Edit</a>
+                    <a href="#" ng-click="vm.editAddress1(address)" class="edit btn btn-warning">Edit</a>
                 </td>
             </tr>
             <tr ng-show="vm.addresses.length == 0"><td colspan="12">There are currently no Address 1 records in the database</td></tr>
