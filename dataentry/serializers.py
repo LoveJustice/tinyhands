@@ -1,7 +1,7 @@
 from django.core.urlresolvers import reverse
 from rest_framework import serializers
 
-from dataentry.models import District, VDC, InterceptionRecord
+from dataentry.models import District, VDC, InterceptionRecord, VictimInterview
 
 
 class DistrictSerializer(serializers.ModelSerializer):
@@ -79,7 +79,7 @@ class InterceptionRecordListSerializer(serializers.ModelSerializer):
 
 class VictimInterviewListSerializer(serializers.ModelSerializer):
     class Meta:
-        model = InterceptionRecord
+        model = VictimInterview
         fields = [
             'view_url',
             'edit_url',

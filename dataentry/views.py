@@ -33,7 +33,7 @@ from fuzzywuzzy import process
 from dataentry.models import (BorderStation, VDC, District, Interceptee, InterceptionRecord, VictimInterview, VictimInterviewLocationBox, VictimInterviewPersonBox)
 from dataentry.forms import (IntercepteeForm, InterceptionRecordForm, VDCForm, DistrictForm, VictimInterviewForm, VictimInterviewLocationBoxForm, VictimInterviewPersonBoxForm)
 from dataentry import export
-from dataentry.serializers import DistrictSerializer, VDCSerializer, InterceptionRecordListSerializer
+from dataentry.serializers import DistrictSerializer, VDCSerializer, InterceptionRecordListSerializer, VictimInterviewListSerializer
 
 from accounts.mixins import PermissionsRequiredMixin
 
@@ -491,4 +491,15 @@ class InterceptionRecordViewSet(viewsets.ModelViewSet):
     search_fields = ('irf_number',)
     ordering_fields = ('irf_number',)
     ordering = ('irf_number',)
+
+
+class VictimInterviewViewSet(viewsets.ModelViewSet):
+    queryset = VictimInterview.objects.all()
+    serializer_class = VictimInterviewListSerializer
+    permission_classes = (IsAuthenticated, HasPermission,)
+    permissions_required = ['permission_vif_view']
+    filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
+    search_fields = ('vif_number',)
+    ordering_fields = ('vif_number',)
+    ordering = ('vif_number',)
 
