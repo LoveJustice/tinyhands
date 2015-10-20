@@ -16,6 +16,7 @@
         "permission_border_stations_view": true,
         "permission_border_stations_add": true,
         "permission_border_stations_edit": true,
+        "permission_border_stations_delete": true,
         "permission_vdc_manage":true,
         "name": "Super Administrator"
     }
@@ -37,6 +38,7 @@
         "permission_border_stations_view": true,
         "permission_border_stations_add": true,
         "permission_border_stations_edit": true,
+        "permission_border_stations_delete": true,
         "permission_vdc_manage":true,
         "name": "Field Staff"
     }
@@ -58,6 +60,7 @@
         "permission_border_stations_view": true,
         "permission_border_stations_add": true,
         "permission_border_stations_edit": true,
+        "permission_border_stations_delete": true,
         "permission_vdc_manage":true,
         "name": "Summer Intern"
     }
@@ -91,6 +94,7 @@
         "permission_border_stations_view": true,
         "permission_border_stations_add": true,
         "permission_border_stations_edit": true,
+        "permission_border_stations_delete": true,
         "permission_vdc_manage":true
     }
 },
@@ -123,6 +127,7 @@
         "permission_border_stations_view": true,
         "permission_border_stations_add": true,
         "permission_border_stations_edit": true,
+        "permission_border_stations_delete": true,
         "permission_vdc_manage":true
     }
 },
@@ -154,6 +159,7 @@
         "permission_border_stations_view": true,
         "permission_border_stations_add": true,
         "permission_border_stations_edit": true,
+        "permission_border_stations_delete": true,
         "permission_vdc_manage":true
     }
 },
@@ -186,6 +192,7 @@
         "permission_border_stations_view": true,
         "permission_border_stations_add": true,
         "permission_border_stations_edit": true,
+        "permission_border_stations_delete": true,
         "permission_vdc_manage":true
     }
 },
@@ -218,6 +225,7 @@
         "permission_border_stations_view": true,
         "permission_border_stations_add": true,
         "permission_border_stations_edit": true,
+        "permission_border_stations_delete": true,
         "permission_vdc_manage":true
     }
 },
@@ -252,6 +260,7 @@
             "permission_border_stations_view": true,
             "permission_border_stations_add": true,
             "permission_border_stations_edit": true,
+            "permission_border_stations_delete": true,
             "permission_vdc_manage":true
         }
 },
@@ -284,6 +293,7 @@
         "permission_border_stations_view": true,
         "permission_border_stations_add": true,
         "permission_border_stations_edit": true,
+        "permission_border_stations_delete": true,
         "permission_vdc_manage":true
     }
 },
@@ -316,6 +326,7 @@
         "permission_border_stations_view": true,
         "permission_border_stations_add": true,
         "permission_border_stations_edit": true,
+        "permission_border_stations_delete": true,
         "permission_vdc_manage":true,
         "permission_budget_manage": true
     }
@@ -349,6 +360,7 @@
         "permission_border_stations_view": true,
         "permission_border_stations_add": true,
         "permission_border_stations_edit": true,
+        "permission_border_stations_delete": true,
         "permission_vdc_manage":true
     }
 },
@@ -381,6 +393,7 @@
         "permission_border_stations_view": true,
         "permission_border_stations_add": true,
         "permission_border_stations_edit": true,
+        "permission_border_stations_delete": true,
         "permission_vdc_manage":true
 	}
 },
@@ -413,7 +426,8 @@
         "permission_receive_email": false,
         "permission_border_stations_view": true,
         "permission_border_stations_add": true,
-        "permission_border_stations_edit": true
+        "permission_border_stations_edit": true,
+        "permission_border_stations_delete": true
     }
 },
 {
@@ -421,6 +435,7 @@
      "last_name": "user",
      "permission_border_stations_view": true,
      "permission_border_stations_edit": true,
+     "permission_border_stations_delete": true,
      "is_staff": true,
      "user_permissions": [],
      "date_joined": "2015-02-11T18:34:15.230Z",
@@ -477,6 +492,7 @@
         "permission_border_stations_view": true,
         "permission_border_stations_add": true,
         "permission_border_stations_edit": true,
+        "permission_border_stations_delete": true,
         "permission_vdc_manage":true
     }
 }
@@ -510,6 +526,7 @@
         "permission_border_stations_view": true,
         "permission_border_stations_add": true,
         "permission_border_stations_edit": true,
+        "permission_border_stations_delete": true,
         "permission_vdc_manage":true
     }
 }

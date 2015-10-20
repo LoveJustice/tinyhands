@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% block html %}<html ng-app="AccountsMod">{% endblock %}
+
 {% block tab_block %}
     <ul class="nav nav-tabs">
         {% url 'account_list' as account_list_url %}
@@ -13,4 +15,8 @@
     </ul>
     {% block content %}
     {% endblock %}
+
+    {% load static from staticfiles %}
+    <script src="{% static "accounts/js/accounts.module.js" %}"></script>
+	  <script src="{% static "accounts/js/controllers/accountsCtrl.js" %}"></script>
 {% endblock %}

@@ -106,6 +106,7 @@ class AccountUpdateView(
         'permission_border_stations_view',
         'permission_border_stations_add',
         'permission_border_stations_edit',
+        'permission_border_stations_delete',
         'permission_vdc_manage',
         'permission_budget_manage',
     ]
@@ -155,6 +156,7 @@ class AccessControlView(
         'permission_border_stations_view',
         'permission_border_stations_add',
         'permission_border_stations_edit',
+        'permission_border_stations_delete',
         'permission_vdc_manage',
         'permission_budget_manage',
     ]
@@ -188,6 +190,7 @@ class AccessDefaultsView(
         'permission_border_stations_view',
         'permission_border_stations_add',
         'permission_border_stations_edit',
+        'permission_border_stations_delete',
         'permission_vdc_manage',
         'permission_budget_manage',
     ]
