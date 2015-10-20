@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, url
 
-from dataentry.views import Address2ViewSet, Address1ViewSet, GeoCodeDistrictAPIView, GeoCodeVdcAPIView
+from dataentry.views import Address2ViewSet, Address1ViewSet, GeoCodeDistrictAPIView, GeoCodeVdcAPIView, InterceptionRecordViewSet
 from budget.views import BudgetViewSet, OtherItemsViewSet
 
 urlpatterns = patterns('rest_api.views',
@@ -24,4 +24,7 @@ urlpatterns = patterns('rest_api.views',
     # Fuzzy searching for addresses
     url(r'^address1/fuzzy/$', GeoCodeDistrictAPIView.as_view(), name="Address1FuzzySearch"),
     url(r'^address2/fuzzy/$', GeoCodeVdcAPIView.as_view(), name="Address2FuzzySearch"),
+
+    # IRFs
+    url(r'^irf/$', InterceptionRecordViewSet.as_view({'get': 'list'}), name="InterceptionRecord"),
 )
