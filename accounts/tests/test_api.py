@@ -2,16 +2,16 @@ from django.core.urlresolvers import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase, APIClient
 
-from accounts.tests.factories import SuperUserFactory, ViewUserFactory
+from accounts.tests.factories import SuperUserFactory, ViewUserFactory, SuperUserDesignation
 
-class AccountsTestCase(APITestCase):
+class RestApiTestCase(APITestCase):
     
     def login(self, user):
         self.client = APIClient()
         self.client.force_authenticate(user=user)
     
 
-class AccountsGetTests(AccountsTestCase):
+class AccountsGetTests(RestApiTestCase):
     
     def test_when_not_authenticated_should_deny_access(self):
         url = reverse('Accounts')
@@ -41,7 +41,7 @@ class AccountsGetTests(AccountsTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data['results']), 1)
 
-class AccountsPostTests(AccountsTestCase):
+class AccountsPostTests(RestApiTestCase):
     
     email = 'foo@bar.org'
     first_name = 'Test'
@@ -98,7 +98,7 @@ class AccountsPostTests(AccountsTestCase):
         self.assertEqual(response.data['last_name'], self.last_name)
 
 
-class AccountGetTests(AccountsTestCase):
+class AccountGetTests(RestApiTestCase):
     
     def test_when_not_authenticated_should_deny_access(self):
         user = SuperUserFactory.create()
@@ -131,7 +131,7 @@ class AccountGetTests(AccountsTestCase):
         self.assertEqual(response.data['email'], user.email)
 
 
-class AccountPutTests(AccountsTestCase):
+class AccountPutTests(RestApiTestCase):
     
     def get_update_user_data(self, user, new_email):
         update_user = { 
@@ -194,7 +194,7 @@ class AccountPutTests(AccountsTestCase):
         self.assertEqual(response.data['email'], new_email)
 
 
-class AccountDeleteTests(AccountsTestCase):
+class AccountDeleteTests(RestApiTestCase):
     
     def test_when_not_authenticated_should_deny_access(self):
         user = SuperUserFactory.create()
@@ -227,3 +227,221 @@ class AccountDeleteTests(AccountsTestCase):
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         
+
+class DefaultPermissionsSetsGetTests(RestApiTestCase):
+    
+    def test_when_not_authenticated_should_deny_access(self):
+        url = reverse('DefaultPermissionsSets')
+        
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.data['detail'], 'Authentication credentials were not provided.')
+
+    def test_when_authenticated_and_does_not_have_permission_should_deny_access(self):
+        url = reverse('DefaultPermissionsSets')
+        user = ViewUserFactory.create()
+        self.login(user)
+
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.data['detail'], 'You do not have the right permission to access this data') 
+
+    def test_when_authenticated_and_has_permission_should_return_all_default_permissions_sets(self):
+        url = reverse('DefaultPermissionsSets')
+        user = SuperUserFactory.create()
+        self.login(user)
+        
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data['results']), 1)
+
+
+class DefaultPermissionsSetsPostTests(RestApiTestCase):
+    
+    name = 'new_set'
+    new_permission_set = {
+        'name' : name,
+        'permission_irf_view' : True,
+        'permission_irf_add' : True,
+        'permission_irf_edit' : True,
+        'permission_irf_delete' : True,
+        'permission_vif_view' : True,
+        'permission_vif_add' : True,
+        'permission_vif_edit' : True,
+        'permission_vif_delete' : True,
+        'permission_accounts_manage' : True,
+        'permission_border_stations_view' : True,
+        'permission_border_stations_add' : True,
+        'permission_border_stations_edit' : True,
+        'permission_vdc_manage' : True,
+        'permission_budget_manage' : True,
+    }
+
+    def test_when_not_authenticated_should_deny_access(self):
+        url = reverse('DefaultPermissionsSets')
+        
+        response = self.client.post(url, self.new_permission_set)
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.data['detail'], 'Authentication credentials were not provided.')
+
+    def test_when_authenticated_and_does_not_have_permission_should_deny_access(self):
+        url = reverse('DefaultPermissionsSets')
+        user = ViewUserFactory.create()
+        self.login(user)
+
+        response = self.client.post(url, self.new_permission_set)
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.data['detail'], 'You do not have the right permission to access this data') 
+
+    def test_when_authenticated_and_has_permission_should_create_new_default_permissions_sets(self):
+        url = reverse('DefaultPermissionsSets')
+        user = SuperUserFactory.create()
+        self.login(user)
+        
+        response = self.client.post(url, self.new_permission_set)
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['name'], self.name)
+
+
+class DefaultPermissionsSetGetTests(RestApiTestCase):
+    
+    def test_when_not_authenticated_should_deny_access(self):
+        name = 'set_to_get'
+        permission_set = SuperUserDesignation.create(name=name)
+        url = reverse('DefaultPermissionsSet', args=[permission_set.id])
+        
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.data['detail'], 'Authentication credentials were not provided.')
+
+    def test_when_authenticated_and_does_not_have_permission_should_deny_access(self):
+        name = 'set_to_get'
+        permission_set = SuperUserDesignation.create(name=name)
+        url = reverse('DefaultPermissionsSet', args=[permission_set.id])
+        user = ViewUserFactory.create()
+        self.login(user)
+
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.data['detail'], 'You do not have the right permission to access this data') 
+
+    def test_when_authenticated_and_has_permission_should_return_default_permissions_set(self):
+        name = 'set_to_get'
+        permission_set = SuperUserDesignation.create(name=name)
+        url = reverse('DefaultPermissionsSet', args=[permission_set.id])
+        user = SuperUserFactory.create()
+        self.login(user)
+        
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['name'], name)
+
+
+class DefaultPermissionsSetPutTests(RestApiTestCase):
+    
+    def get_update_permission_set(self, permission_set, new_name):
+        update_permission_set = {
+            'id' : permission_set.id,
+            'name' : new_name,
+            'permission_irf_view' : True,
+            'permission_irf_add' : True,
+            'permission_irf_edit' : True,
+            'permission_irf_delete' : True,
+            'permission_vif_view' : True,
+            'permission_vif_add' : True,
+            'permission_vif_edit' : True,
+            'permission_vif_delete' : True,
+            'permission_accounts_manage' : True,
+            'permission_border_stations_view' : True,
+            'permission_border_stations_add' : True,
+            'permission_border_stations_edit' : True,
+            'permission_vdc_manage' : True,
+            'permission_budget_manage' : True,
+        }
+        return update_permission_set
+        
+    
+    def test_when_not_authenticated_should_deny_access(self):
+        name = 'set_to_get'
+        permission_set = SuperUserDesignation.create(name=name)
+        url = reverse('DefaultPermissionsSet', args=[permission_set.id])
+        new_name = 'new_name_for_set'
+        update_permission_set = self.get_update_permission_set(permission_set, new_name)
+
+        response = self.client.put(url, update_permission_set)
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.data['detail'], 'Authentication credentials were not provided.')
+
+    def test_when_authenticated_and_does_not_have_permission_should_deny_access(self):
+        name = 'set_to_get'
+        permission_set = SuperUserDesignation.create(name=name)
+        url = reverse('DefaultPermissionsSet', args=[permission_set.id])
+
+        user = ViewUserFactory.create()
+        self.login(user)
+        
+        new_name = 'new_name_for_set'
+        update_permission_set = self.get_update_permission_set(permission_set, new_name)
+
+        response = self.client.put(url, update_permission_set)
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.data['detail'], 'You do not have the right permission to access this data') 
+
+    def test_when_authenticated_and_has_permission_should_return_default_permissions_set(self):
+        name = 'set_to_get'
+        permission_set = SuperUserDesignation.create(name=name)
+        url = reverse('DefaultPermissionsSet', args=[permission_set.id])
+        user = SuperUserFactory.create()
+        self.login(user)
+
+        new_name = 'new_name_for_set'
+        update_permission_set = self.get_update_permission_set(permission_set, new_name)
+
+        response = self.client.put(url, update_permission_set)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['name'], new_name)
+
+
+class DefaultPermissionsSetDeleteTests(RestApiTestCase):
+    
+    def test_when_not_authenticated_should_deny_access(self):
+        permission_set = SuperUserDesignation.create()
+        url = reverse('DefaultPermissionsSet', args=[permission_set.id])
+        
+        response = self.client.delete(url)
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.data['detail'], 'Authentication credentials were not provided.')
+
+    def test_when_authenticated_and_does_not_have_permission_should_deny_access(self):
+        permission_set = SuperUserDesignation.create()
+        url = reverse('DefaultPermissionsSet', args=[permission_set.id])
+        user = ViewUserFactory.create()
+        self.login(user)
+        
+        response = self.client.delete(url)
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.data['detail'], 'You do not have the right permission to access this data') 
+
+    def test_when_authenticated_and_has_permission_should_return_default_permissions_set(self):
+        permission_set = SuperUserDesignation.create()
+        url = reverse('DefaultPermissionsSet', args=[permission_set.id])
+        user = SuperUserFactory.create()
+        self.login(user)
+
+        response = self.client.delete(url)
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
