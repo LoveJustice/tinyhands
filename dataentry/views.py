@@ -485,7 +485,8 @@ class Address1ViewSet(viewsets.ModelViewSet):
 class InterceptionRecordViewSet(viewsets.ModelViewSet):
     queryset = InterceptionRecord.objects.all()
     serializer_class = InterceptionRecordListSerializer
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (IsAuthenticated, HasPermission,)
+    permissions_required = ['permission_irf_view']
     filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
     search_fields = ('irf_number',)
     ordering_fields = ('irf_number',)

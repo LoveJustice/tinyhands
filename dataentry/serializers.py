@@ -63,17 +63,17 @@ class InterceptionRecordListSerializer(serializers.ModelSerializer):
             'date_time_entered_into_system',
             'date_time_last_updated'
         ]
-
     view_url = serializers.HyperlinkedIdentityField(
         view_name='interceptionrecord_detail',
+        read_only=True
     )
-
     edit_url = serializers.HyperlinkedIdentityField(
         view_name='interceptionrecord_update',
+        read_only=True
     )
-
     delete_url = serializers.HyperlinkedIdentityField(
         view_name='interceptionrecord_delete',
+        read_only=True
     )
 
 
@@ -93,17 +93,14 @@ class VictimInterviewListSerializer(serializers.ModelSerializer):
             'date_time_entered_into_system',
             'date_time_last_updated'
         ]
-
     view_url = serializers.HyperlinkedIdentityField(
         view_name='victiminterview_detail',
         read_only=True
     )
-
     edit_url = serializers.HyperlinkedIdentityField(
         view_name='victiminterview_update',
         read_only=True
     )
-
     delete_url = serializers.HyperlinkedIdentityField(
         view_name='victiminterview_delete',
         read_only=True
