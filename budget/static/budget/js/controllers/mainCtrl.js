@@ -108,7 +108,7 @@ angular
                         vm.bunchTotal() +
                         vm.awarenessTotalValue +
                         vm.suppliesTotalValue +
-                        vm.salariesTotal;
+                        vm.staffTotal();
             };
 
             //shelter

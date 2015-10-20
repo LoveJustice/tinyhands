@@ -35,7 +35,7 @@ describe('Budget Calculation', function() {
             browser.sleep(5000);
 
             // expect totals to be certain values
-            expect(element(by.id('staffTotal')).getAttribute("value")).toBe('100');
+            expect(element(by.id('staffTotal')).getAttribute("value")).toBe('200');
             expect(element(by.binding("main.shelterTotal()")).getText()).toBe(c.shelterTotal);
             expect(element(by.binding("main.foodGasTotal()")).getText()).toBe(c.foodTotal);
             expect(element(by.binding("main.communicationTotalValue")).getText()).toBe(c.commTotal);
