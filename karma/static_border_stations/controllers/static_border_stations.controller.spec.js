@@ -163,14 +163,23 @@ describe('BorderStationsCtrl', function(){
    });
    
    
+   describe('function changeStationStatus', function() {
+     it('should ')
+   });
+   
+   
    
    describe('function removeLocation', function() {
      
    });
    
+   
+   
    describe('function removePerson', function() {
      
    });
+   
+   
    
    describe('function updateStation', function() {
      

@@ -4,7 +4,7 @@
   <hr/>
   <div ng-repeat="location in bsCtrl.locations"
        ng-mouseenter="location.hover = true"
-       ng-mouseleave="location.hover = false">
+       ng-mouseleave="location.hover = false; location.removeConfirmed = false">
     <div class="row">
         <div class="col-sm-12 form-group">
           <label for="locationName">Name</label>
@@ -26,10 +26,14 @@
     </div>
     <button class="btn btn-xs btn-danger pull-left hidden-xs animated"
             ng-click="bsCtrl.removeLocation(location)"
-            ng-class="{fadeIn: location.hover, fadeOut: !location.hover}">Remove {{location.name}}</button>
+            ng-class="{fadeIn: location.hover && !location.removeConfirmed, fadeOut: !location.hover, pulse: location.removeConfirmed}">
+      {{ location.removeConfirmed ? "Are you sure?" : "Remove " + location.name }}
+    </button>
     <button class="btn btn-xs btn-danger pull-left col-xs-12 visible-xs animated"
             ng-click="bsCtrl.removeLocation(location)"
-            ng-class="{fadeIn: location.hover, fadeOut: !location.hover}">Remove {{location.name}}</button>
+            ng-class="{fadeIn: location.hover && !location.removeConfirmed, fadeOut: !location.hover, pulse: location.removeConfirmed}">
+      {{ location.removeConfirmed ? "Are you sure?" : "Remove " + location.name }}
+    </button>
     <br/>
     <br ng-if="$last"/>
     <hr ng-if="!$last && bsCtrl.locations.length > 1"/>

@@ -5,7 +5,7 @@
 {% block title %}Border Stations{% endblock %}
 
 {% block tab_block %}
-	<form id="borderstation-form" ng-controller="BorderStationsCtrl as bsCtrl">
+	<form id="borderstation-form" ng-controller="BorderStationsCtrl as bsCtrl" ng-cloak>
 		
 		{% include "static_border_stations/borderstation_form.html" %}
 		{% include "static_border_stations/person_form.html" %}
