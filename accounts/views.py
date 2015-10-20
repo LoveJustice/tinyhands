@@ -16,7 +16,7 @@ from util.functions import get_object_or_None
 from accounts.models import Account, DefaultPermissionsSet
 from accounts.mixins import PermissionsRequiredMixin
 from accounts.forms import CreateUnactivatedAccountForm, AccountActivateForm
-from accounts.serializers import AccountsSerializer
+from accounts.serializers import AccountsSerializer, DefaultPermissionsSetSerializer
 from rest_api.authentication import HasPermission
 
 @login_required
@@ -211,5 +211,12 @@ class AccessDefaultsDeleteView(
 class AccountViewSet(ModelViewSet):
     queryset = Account.objects.all()
     serializer_class = AccountsSerializer
+    permission_classes = [IsAuthenticated, HasPermission]
+    permissions_required = ['permission_accounts_manage']
+
+
+class DefaultPermissionsSetViewSet(ModelViewSet):
+    queryset = DefaultPermissionsSet.objects.all()
+    serializer_class = DefaultPermissionsSetSerializer
     permission_classes = [IsAuthenticated, HasPermission]
     permissions_required = ['permission_accounts_manage']
