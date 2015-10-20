@@ -9,12 +9,18 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView, R
 from django.contrib.auth.decorators import login_required
 from braces.views import LoginRequiredMixin
 from extra_views import ModelFormSetView
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.viewsets import ModelViewSet
+from rest_framework.permissions import IsAuthenticated
+
 
 from util.functions import get_object_or_None
 from accounts.models import Account, DefaultPermissionsSet
 from accounts.mixins import PermissionsRequiredMixin
 from accounts.forms import CreateUnactivatedAccountForm, AccountActivateForm
-
+from accounts.serializers import AccountsSerializer, DefaultPermissionsSetSerializer
+from rest_api.authentication import HasPermission
 
 @login_required
 def home(request):
@@ -206,3 +212,26 @@ class AccessDefaultsDeleteView(
     model = DefaultPermissionsSet
     permissions_required = ['permission_accounts_manage']
     success_url = reverse_lazy('access_defaults')
+
+
+class AccountViewSet(ModelViewSet):
+    queryset = Account.objects.all()
+    serializer_class = AccountsSerializer
+    permission_classes = [IsAuthenticated, HasPermission]
+    permissions_required = ['permission_accounts_manage']
+
+
+class DefaultPermissionsSetViewSet(ModelViewSet):
+    queryset = DefaultPermissionsSet.objects.all()
+    serializer_class = DefaultPermissionsSetSerializer
+    permission_classes = [IsAuthenticated, HasPermission]
+    permissions_required = ['permission_accounts_manage']
+
+    def destroy(self, request, pk=None):
+        instance = DefaultPermissionsSet.objects.get(pk=pk)
+        if(instance.is_used_by_accounts()):
+            error_message = {'detail': 'Permission set is currently used by accounts. It cannot be deleted.'}
+            return Response(error_message, status=status.HTTP_403_FORBIDDEN)
+        
+        instance.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
