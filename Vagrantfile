@@ -4,8 +4,8 @@ Vagrant.configure(2) do |config|
     config.vm.box = "ubuntu/trusty64" # Set the box to run a 64bit trusty distribution
   
     # Forward port 8000 on vm to port 8080 on our host machine
-    config.vm.network "forwarded_port", guest: 8000, host: 8080 # for the normal server
-    config.vm.network "forwarded_port", guest: 8001, host: 8081 # for the e2e test server
+    config.vm.network "forwarded_port", guest: 8000, host: 8000 # for the normal server
+    config.vm.network "forwarded_port", guest: 8001, host: 8001 # for the e2e test server
 
     # Sync the folder the Vagrant file is in and set it to /home/vagrant/tinyhands
     config.vm.synced_folder "./", "/home/vagrant/tinyhands"
