@@ -73,8 +73,9 @@ All you have to do is run the command `./manage.py test`.
 4. Watch the magic.
 
 #Installing sanitized prodution database
-1. Make sure there is not already a db.sqlite3 in the top level tinyhands directory
-2. Execute etc/bin/install_test_db.sh
+1. cd to the top level tinyhands directory
+2. Make sure there is not already a db.sqlite3 in the top level tinyhands directory
+3. Execute etc/bin/install_test_db.sh
     The sanitized database has two accounts preconfigured for testing both of which have the password 'pass'
     1) test_sup@example.com - is a super user account
     2) test1 - is a user account
