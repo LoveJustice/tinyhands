@@ -18,7 +18,7 @@
   "vdcNewDis"       : "Achham",
   "vdcNewCan"       : "ShreeJung",
 
-  "webAddress" : "http://0.0.0.0:8001",
+  "webAddress" : "http://localhost:8001",
 
   "irfNumber"                 : "DNG123",
   "irfEditNumber"             : "DNG121",
