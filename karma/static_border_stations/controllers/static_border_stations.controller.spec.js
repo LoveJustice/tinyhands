@@ -70,6 +70,13 @@ describe('BorderStationsCtrl', function(){
        // ENDREGION: Data Setup
        expect(vm.people.committeeMembers.name).toBe(committeeMemTitle);
      });
+     
+     it('updateStatusText should be "Update Station"', function() {
+       // REGION: Data Setup
+       var updateButtonText = 'Update Station';
+       // ENDREGION: Data Setup
+       expect(vm.updateStatusText).toBe(updateButtonText);
+     });
    });
    
 	 
@@ -153,6 +160,20 @@ describe('BorderStationsCtrl', function(){
        
        expect(vm.people.committeeMembers.data).toContain(emptyPerson);
      });
+   });
+   
+   
+   
+   describe('function removeLocation', function() {
+     
+   });
+   
+   describe('function removePerson', function() {
+     
+   });
+   
+   describe('function updateStation', function() {
+     
    });
 	 
 });
