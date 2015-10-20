@@ -17,6 +17,7 @@
 		vm.addLocation = addLocation;
 		vm.addPerson = addPerson;
 		vm.borderStationId = window.border_station_pk;
+		vm.changeStationStatus = changeStationStatus;
 		vm.details = {};
 		vm.errors = [];
 		vm.locations = [];
@@ -76,6 +77,10 @@
 			}
 		}
 		
+		function changeStationStatus() {
+			vm.details.open = !vm.details.open;
+		}
+		
 		
 		// CREATE calls
 		function createCommitteeMembers(members) {
@@ -113,7 +118,7 @@
 		function getCommitteeMembers() {
 			if (vm.borderStationId) {
 				BorderStationsService.getCommitteeMembers(vm.borderStationId).then(function(response) {
-					vm.people.committeeMembers.data = response.data;
+					vm.people.committeeMembers.data = response.data.results;
 				}, handleErrors);
 			}
 		}
@@ -121,7 +126,7 @@
 		function getLocations() {
 			if (vm.borderStationId) {
 				BorderStationsService.getLocations(vm.borderStationId).then(function(response) {
-					vm.locations = response.data;
+					vm.locations = response.data.results;
 				}, handleErrors);
 			}
 		}
@@ -129,7 +134,7 @@
 		function getStaff() {
 			if (vm.borderStationId) {
 				BorderStationsService.getStaff(vm.borderStationId).then(function(response) {
-					vm.people.staff.data = response.data;
+					vm.people.staff.data = response.data.results;
 				}, handleErrors);
 			}
 		}
