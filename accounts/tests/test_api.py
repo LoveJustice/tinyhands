@@ -2,7 +2,7 @@ from django.core.urlresolvers import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase, APIClient
 
-from accounts.tests.factories import SuperUserFactory, ViewUserFactory, SuperUserDesignation
+from accounts.tests.factories import SuperUserFactory, ViewUserFactory, SuperUserDesignation, ViewUserDesignation
 
 class RestApiTestCase(APITestCase):
     
@@ -398,7 +398,7 @@ class DefaultPermissionsSetPutTests(RestApiTestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(response.data['detail'], 'You do not have the right permission to access this data') 
 
-    def test_when_authenticated_and_has_permission_should_return_default_permissions_set(self):
+    def test_when_authenticated_and_has_permission_should_return_updated_permissions_set(self):
         name = 'set_to_get'
         permission_set = SuperUserDesignation.create(name=name)
         url = reverse('DefaultPermissionsSet', args=[permission_set.id])
@@ -436,8 +436,19 @@ class DefaultPermissionsSetDeleteTests(RestApiTestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(response.data['detail'], 'You do not have the right permission to access this data') 
 
-    def test_when_authenticated_and_has_permission_should_return_default_permissions_set(self):
+    def test_when_authenticated_and_has_permission_and_permissions_set_used_by_accounts_should_not_delete_default_permissions_set(self):
         permission_set = SuperUserDesignation.create()
+        url = reverse('DefaultPermissionsSet', args=[permission_set.id])
+        user = SuperUserFactory.create()
+        self.login(user)
+
+        response = self.client.delete(url)
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.data['detail'], 'Permission set is currently used by accounts. It cannot be deleted.')
+
+    def test_when_authenticated_and_has_permission_and_permissions_set_not_used_by_accounts_should_delete_default_permissions_set(self):
+        permission_set = ViewUserDesignation.create()
         url = reverse('DefaultPermissionsSet', args=[permission_set.id])
         user = SuperUserFactory.create()
         self.login(user)

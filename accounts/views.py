@@ -9,8 +9,11 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView, R
 from django.contrib.auth.decorators import login_required
 from braces.views import LoginRequiredMixin
 from extra_views import ModelFormSetView
+from rest_framework import status
+from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
+
 
 from util.functions import get_object_or_None
 from accounts.models import Account, DefaultPermissionsSet
@@ -220,3 +223,12 @@ class DefaultPermissionsSetViewSet(ModelViewSet):
     serializer_class = DefaultPermissionsSetSerializer
     permission_classes = [IsAuthenticated, HasPermission]
     permissions_required = ['permission_accounts_manage']
+
+    def destroy(self, request, pk=None):
+        instance = DefaultPermissionsSet.objects.get(pk=pk)
+        if(instance.is_used_by_accounts()):
+            error_message = {'detail': 'Permission set is currently used by accounts. It cannot be deleted.'}
+            return Response(error_message, status=status.HTTP_403_FORBIDDEN)
+        
+        instance.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
