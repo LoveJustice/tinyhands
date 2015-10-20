@@ -30,7 +30,7 @@ describe('Accounts Page', function() {
             expect(this.permissions.element(by.xpath("..")).getAttribute('class')).toBe('btn btn-danger');
             permissionsPage.savePermissions();
 
-            //tests for inability to edit vdcs
+            //tests for inability to edit addresses
             permissionsPage.navigateToVdcPage();
             browser.sleep(800);
             expect(element(by.xpath('//h1')).getText()).toContain("403");
@@ -47,7 +47,7 @@ describe('Accounts Page', function() {
             expect(this.permissions.element(by.xpath("..")).getAttribute('class')).toBe('btn btn-danger');
             permissionsPage.savePermissions();
 
-            //tests for inability to edit vdcs
+            //tests for inability to edit addresses
             permissionsPage.navigateToBudgetPage();
             browser.sleep(800);
             expect(element(by.xpath('//h1')).getText()).toContain("403");

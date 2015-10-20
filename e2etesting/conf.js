@@ -24,9 +24,9 @@ exports.config = {
 
         'DynStationWindow/dynStation.spec.js',
 
-        'vdcs/vdcAdminPage.spec.js', //There are problems in this one
+        'addresses/vdcAdminPage.spec.js', //There are problems in this one
 
-
+        'addresses/address1Page.spec.js',
         'accounts/accessDefaults.spec.js',
         // Has to run last
         'accounts/permissionsPage.spec.js'
