@@ -15,6 +15,7 @@ class BorderStationFactory(DjangoModelFactory):
     date_established = datetime.date(2015, 2, 19)
     latitude = 1
     longitude = 1
+    open = True
 
 
 class StaffFactory(DjangoModelFactory):

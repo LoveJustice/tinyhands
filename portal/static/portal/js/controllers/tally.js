@@ -77,10 +77,11 @@
         }
 
         function getDayOfWeek(date) {
-            date = new Date(date);
-            var today = new Date();
-            if (date.toDateString() == today.toDateString()) return 'Today';
-            return daysOfWeek[date.getDay()];
+            var newDate = moment(date);
+            var today = moment().tz("Asia/Kathmandu")
+            if (today.date() === newDate.date()) return 'Today';
+            var nameOfDay = newDate.format('dddd');
+            return nameOfDay;
         }
 
         function getTallyData(firstCall) {

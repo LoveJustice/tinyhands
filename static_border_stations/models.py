@@ -13,7 +13,7 @@ class NullableEmailField(models.EmailField):
         return value or None
 
 class Person(models.Model):
-    email = NullableEmailField(blank=True, null=True, default=None, unique=True)
+    email = NullableEmailField(blank=True, null=True, default=None, unique=False)
     first_name = models.CharField(max_length=255, blank=True)
     last_name = models.CharField(max_length=255, blank=True)
     phone = models.CharField(max_length=255, blank=True, null=True)
