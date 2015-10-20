@@ -37,6 +37,7 @@ angular
         function retrieveForm(month, year) {
             return $http.get('/budget/api/budget_calculations/previous_data/' + window.border_station + '/' + (month+1) + '/' + year + '/') //month is zero indexed in javascript
                 .success(function (data) {
+                    console.log(data);
                     vm.form = data;
                     $scope.$emit('lastBudgetTotalEmit', {total: data.last_months_total_cost });
                 })

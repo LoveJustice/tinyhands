@@ -1,5 +1,3 @@
-'use strict';
-
 var c = require('../testConstants.json');
 
 var vdcAdminPage = function () {
@@ -7,27 +5,24 @@ var vdcAdminPage = function () {
 
     this.navigate = function () {
         browser.get(c.webAddress + '/data-entry/geocodelocations/vdc-admin/');
-        this.findItemsOnPage();
     };
-
-   this.findItemsOnPage = function () {
-        this.firstVdcName = element.all(by.css(".vdc_admin_name")).get(3).getText();
-        this.firstVdcDistrict = element.all(by.css(".vdc_admin_district")).get(3).getText();
-        this.firstVdccannonical = element.all(by.css(".vdc_admin_cannonical")).get(3).getText();
-        this.firstVdcVerified = element.all(by.css(".vdc_admin_verified")).get(3).getText();
-        this.firstVdcEditButton = element.all(by.id("update_link")).get(3);
-    };
-
 
     this.changeValues = function () {
-        this.editVdcName = element(by.id("id_name")).clear().sendKeys(c.vdcEditName);
+        this.editVdcName = element(by.id('addressName')).clear().sendKeys(c.vdcEditName);
         browser.sleep(300);
-        this.editVdcDistrict = element(by.cssContainingText('option', c.vdcEditDis)).click();
-        browser.sleep(300);
-        this.editVdccannonical = element(by.cssContainingText('option', c.vdcEditCan)).click();
-        browser.sleep(200);
-        this.editVdcSubmit = element(by.id("vdc_update_button")).click();
+        this.editVdcDistrict = element(by.id('address1')).click().clear().sendKeys(c.vdcEditDis);
         browser.sleep(500);
+        this.exactItem = element(by.repeater("match in matches").row(0)).click();
+        browser.actions().sendKeys(protractor.Key.ENTER).perform();
+        browser.sleep(300);
+        this.editVdccannonical = element(by.id('canonical_name')).click().clear().sendKeys(c.vdcEditCan);
+        this.exactItem2 = element(by.repeater("match in matches").row(0)).click()
+        //browser.actions().sendKeys(protractor.Key.ENTER).perform();
+        browser.sleep(200);
+
+        this.editVdcSubmit = element(by.buttonText('Save')).click();
+
+        browser.sleep(1000);
     };
 
     this.createNewVDC = function() {
@@ -38,7 +33,9 @@ var vdcAdminPage = function () {
         this.newVdcLatitude = element(by.id("id_latitude")).clear().sendKeys(c.vdcNewLat);
         this.newVdcLongitude = element(by.id("id_longitude")).clear().sendKeys(c.vdcNewLon);
         this.editVdcDistrict = element(by.cssContainingText('option', c.vdcNewDis)).click();
-        this.editVdccannonical = element(by.cssContainingText('option', c.vdcNewCan)).click().submit();
+        this.editVdccannonical = element(by.cssContainingText('option', c.vdcNewCan)).click();
+        this.editVdccannonical = element(by.cssContainingText('option', c.vdcNewCan)).submit();
+        browser.sleep(500);
     };
 
 

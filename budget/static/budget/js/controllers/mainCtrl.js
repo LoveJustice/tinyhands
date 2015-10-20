@@ -15,6 +15,7 @@ angular
             vm.shelterTotalValue = 0;
             vm.foodGasTotalValue = 0;
             vm.communicationTotalValue = 0;
+            vm.staffTotalValue = 0;
 
             vm.otherTravelTotalValue = [0];
             vm.otherMiscTotalValue = [0];
@@ -23,6 +24,7 @@ angular
             vm.otherShelterTotalValue = [0];
             vm.otherFoodGasTotalValue = [0];
             vm.otherCommunicationTotalValue = [0];
+            vm.otherStaffTotalValue = [0];
 
 
             // Budget Calc sheets are for the 15th of every month
@@ -38,7 +40,8 @@ angular
                                     vm.otherSuppliesTotalValue,
                                     vm.otherShelterTotalValue,
                                     vm.otherFoodGasTotalValue,
-                                    vm.otherCommunicationTotalValue];
+                                    vm.otherCommunicationTotalValue,
+                                    vm.otherStaffTotalValue];
 
 
             // Event Listeners
@@ -85,6 +88,7 @@ angular
                 vm.shelterTotal();
                 vm.foodGasTotal();
                 vm.communicationTotal();
+                vm.staffTotal();
             }
 
 
@@ -163,6 +167,7 @@ angular
                 }
                 if (vm.form.communication_manager) {
                     amount += vm.form.communication_manager_amount;
+
                 }
                 return amount;
             };
@@ -175,6 +180,11 @@ angular
             vm.commEachStaffTotal = function () {
                 return  vm.form.communication_each_staff *
                         vm.form.communication_each_staff_multiplier;
+            };
+
+            vm.staffTotal = function () {
+                vm.staffTotalValue = vm.salariesTotal + vm.otherStaffTotalValue[0];
+                return vm.staffTotalValue;
             };
 
             vm.communicationTotal = function () {

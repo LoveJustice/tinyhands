@@ -2,7 +2,7 @@
 
 angular
     .module('DataEntry')
-    .controller("address2Ctrl", ['$scope','$http','$timeout', 'address2Service', "$modal", function($scope, $http, $timeout, address2Service, $modal) {
+    .controller("address1Ctrl", ['$scope','$http','$timeout', 'address1Service', "$modal", function($scope, $http, $timeout, address1Service, $modal) {
         var vm = this;
 
         // Variable Declarations
@@ -14,14 +14,14 @@ angular
         vm.paginateBy = 25;
         vm.sortIcon = "/static/images/sortIcon.jpg";
         vm.selectedAddress = {};
-        vm.sortColumn = "";
+        vm.sortColumn = "name";
 
 
         // Function Definitions
         vm.getAddresses = getAddresses;
         vm.searchAddresses = searchAddresses;
         vm.loadMoreAddresses = loadMoreAddresses;
-        vm.editAddress2 = editAddress2;
+        vm.editAddress1 = editAddress1;
         vm.getQueryParams = getQueryParams;
         vm.sortIcon = sortIcon;
         main();
@@ -34,28 +34,13 @@ angular
             vm.getAddresses();
         }
 
-        function sortIcon(column){
-            if(column === vm.sortColumn){
-                switch (column) {
-                    case "latitude":
-                    case "longitude":
-                        return vm.reverse ? "glyphicon-sort-by-order-alt" : "glyphicon-sort-by-order";
-                        return vm.reverse ? "glyphicon-sort-by-order-alt" : "glyphicon-sort-by-order";
-                    case "name":
-                    case "cannonical_name.name":
-                    case "district.name":
-                    case "verified":
-                        return vm.reverse ? "glyphicon-sort-by-alphabet-alt" : "glyphicon-sort-by-alphabet";
-                    default:
-                        return "glyphicon-sort";
-                }
-            }
-            return "glyphicon-sort";
+        function sortIcon(){
+            return vm.reverse ? "glyphicon-sort-by-alphabet-alt" : "glyphicon-sort-by-alphabet";
         }
 
         function getAddresses(){
             vm.loading = true;
-            address2Service.listAddresses(vm.getQueryParams())
+            address1Service.listAddresses(vm.getQueryParams())
                 .success(function (data) {
                     vm.addresses = data.results;
                     vm.nextPageUrl = data.next;
@@ -65,7 +50,7 @@ angular
 
         function loadMoreAddresses(){
             vm.loading = true;
-            address2Service.loadMoreAddresses(vm.nextPageUrl, "&" + vm.getQueryParams().slice(1))
+            address1Service.loadMoreAddresses(vm.nextPageUrl, "&" + vm.getQueryParams().slice(1))
                 .success(function (data) {
                     vm.addresses = vm.addresses.concat(data.results);
                     vm.nextPageUrl = data.next;
@@ -75,7 +60,7 @@ angular
 
         function searchAddresses(){
             vm.loading = true;
-            address2Service.searchAddresses(vm.getQueryParams())
+            address1Service.searchAddresses(vm.getQueryParams())
                 .success(function (data) {
                     vm.addresses = data.results;
                     vm.nextPageUrl = data.next;
@@ -89,22 +74,20 @@ angular
             if(vm.searchValue){
                 params += "&search=" + vm.searchValue;
             }
-            if(vm.sortColumn){
-                if(vm.reverse){
-                    params += "&ordering=-" + (vm.sortColumn.replace(".","__"));
-                } else{
-                    params += "&ordering=" + (vm.sortColumn.replace(".","__"));
-                }
+            if(vm.reverse){
+                params += "&ordering=-" + vm.sortColumn;
+            } else{
+                params += "&ordering=" + vm.sortColumn;
             }
             return params;
         }
 
-        function editAddress2(address){
+        function editAddress1(address){
             vm.selectedAddress = address;
             var size = 'md';
             var modalInstance = $modal.open({
               animation: true,
-              templateUrl: 'address2EditModal.html',
+              templateUrl: 'address1EditModal.html',
               controller: 'ModalInstanceCtrl',
               size: size,
               resolve: {
@@ -114,48 +97,23 @@ angular
               }
             });
             modalInstance.result.then(function (address) {
-                    address2Service.saveAddress(address)
+                    address1Service.saveAddress(address)
                         .success(function (){
                             main();
-                        })
-                        .error(function (){
-                            alert(address);
-
                         });
             });
 
         }
-
-
     }])
 
     .controller('ModalInstanceCtrl', function ($scope, $modalInstance, $http, address) {
         $scope.address = angular.copy(address);
 
-
         $scope.save = function () {
-            // this is so we can save null cannon names
-            if($scope.address.cannonical_name === "" || $scope.address.cannonical_name == undefined){
-                $scope.address.cannonical_name = {id: -1, name: "Empty"};
-            }
             $modalInstance.close($scope.address);
         };
 
         $scope.cancel = function () {
             $modalInstance.dismiss('close');
-        };
-
-        $scope.getFuzzyAddress1s = function(val) {
-            return $http.get('/api/address1/fuzzy/?district=' + val)
-                .then(function(response){
-                    return response.data;
-                });
-        };
-
-        $scope.getFuzzyAddress2s = function(val) {
-            return $http.get('/api/address2/fuzzy/?vdc=' + val)
-                .then(function(response){
-                    return response.data;
-                });
         };
     });

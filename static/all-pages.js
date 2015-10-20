@@ -85,12 +85,12 @@ function makeCheckboxAppearAsAButton(className,checkedText,uncheckedText) {
     var $label = $(this);
     var $input = $label.find('input');
     if ($label.hasClass('btn-danger')) {
-      $input.attr('checked','checked');
+      $input.prop('checked', true);
       $label.removeClass('btn-danger').addClass('btn-success');
       $label.find(className).text(checkedText);
     }
     else if ($label.hasClass('btn-success')) {
-      $input.removeAttr('checked');
+      $input.prop('checked', false);
       $label.removeClass('btn-success').addClass('btn-danger');
       $label.find(className).text(uncheckedText);
     }
@@ -178,8 +178,26 @@ function setUpResumeIncompleteFormSystem(which) {
   }
 
   $('#saved-for-later-list').change(function() {
+    var allInputs = document.getElementsByTagName("input");
+    for (var i = 0, max = allInputs.length; i < max; i++){
+        if (allInputs[i].type === 'checkbox')
+            allInputs[i].checked = false;
+        else if (allInputs[i].type == 'text')
+            allInputs[i].value = '';
+        else if (allInputs[i].type == 'number')
+            allInputs[i].value = '';
+    }
+    var allSelects = document.getElementsByTagName("select");
+    for (var i = 0, max = allSelects.length; i <max; i++){
+        if (allSelects[i].id != "saved-for-later-list"){
+        allSelects[i].selectedIndex = 0;
+        console.log(allSelects[i].id);
+        }
+    }
+
     $('form').deserialize($(this).val());
   });
+
 
   $('#save-for-later').click(function() {
     var formNumber = $('#id_'+which+'_number').val();
@@ -242,16 +260,20 @@ var DREAMSUITE = {
     makeCheckboxAppearAsAButton('.yesno','Yes','No');
     $('option:contains("---------")').remove();
     $('select').change(function() {
-      var rowIdx = parseInt($(this).parents('td').find('input').val()) - 1;
+      var userId = parseInt($(this).parents('td').find('input').val());
+      var rowId = $('input[value=' + userId + ']')[0].id.slice(0,-3);
       for (var i=0; i<window.defaultPermissionSets.length; i++) {
         var set = window.defaultPermissionSets[i];
         if (set.id === parseInt($(this).val())) {
           for (var key in set) {
+            if(key == 'name' || key == 'id') {
+              continue;
+            }
             var toBe = set[key];
-            var $checkbox = $('#id_form-' + (rowIdx-1) + '-' + key);
+            var $checkbox = $('#' + rowId + '-' + key);
             var current = !!$checkbox.prop('checked');
             if (toBe !== current) {
-              $checkbox.trigger('click');
+              $checkbox.parents('label')[0].click();
             }
           }
         }

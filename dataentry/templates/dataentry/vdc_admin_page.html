@@ -66,7 +66,7 @@
                 <td class="text-center">{{ address.verified ? "Yes" : "No" }}
                 </td>
                 <td>
-                    <a href="#" ng-click="vm.editAddress2(address)" class="btn btn-warning">Edit</a>
+                    <a href="#" ng-click="vm.editAddress2(address)" class="btn btn-warning edit">Edit</a>
                 </td>
             </tr>
             <tr ng-show="vm.addresses.length == 0">
@@ -105,7 +105,7 @@
             <div class="form-group">
                 <label for="addressName">Address 1</label>
                 <i ng-show="loadingAddress1" class="glyphicon glyphicon-refresh"></i>
-                <input type="text" ng-model="address.district" placeholder="Address 1" typeahead="address1 as address1.name for address1 in getFuzzyAddress1s($viewValue)" typeahead-loading="loadingAddress1" typeahead-no-results="noResults" class="form-control">
+                <input id="address1" type="text" ng-model="address.district" placeholder="Address 1" typeahead="address1 as address1.name for address1 in getFuzzyAddress1s($viewValue)" typeahead-loading="loadingAddress1" typeahead-no-results="noResults" class="form-control">
                 <div ng-show="noResults">
                   <i class="glyphicon glyphicon-remove"></i> No Results Found
                 </div>
@@ -115,7 +115,7 @@
             <div class="form-group">
                 <label for="addressName">Canonical Name</label>
                 <i ng-show="loadingAddress2" class="glyphicon glyphicon-refresh" style="position: relative; bottom:25px;"></i>
-                <input type="text" ng-model="address.cannonical_name" placeholder="Canonical Name" typeahead="address2 as address2.name for address2 in getFuzzyAddress2s($viewValue)" typeahead-loading="loadingAddress2" typeahead-no-results="noResults" class="form-control">
+                <input id="canonical_name" type="text" ng-model="address.cannonical_name" placeholder="Canonical Name" typeahead="address2 as address2.name for address2 in getFuzzyAddress2s($viewValue)" typeahead-loading="loadingAddress2" typeahead-no-results="noResults" class="form-control">
                 <div ng-show="noResults">
                   <i class="glyphicon glyphicon-remove"></i> No Results Found
                 </div>
@@ -123,11 +123,11 @@
 
             <div class="form-group">
                 <label>Verified</label>
-                <input type="checkbox" class="form-control" ng-model="address.verified"/>
+                <input id="verified_checkbox" type="checkbox" class="form-control" ng-model="address.verified"/>
             </div>
         </div>
         <div class="modal-footer">
-            <button class="btn btn-primary" type="button" ng-click="save()">Save</button>
+            <button id="updateSubmitButton" class="btn btn-primary" type="button" ng-click="save()">Save</button>
             <button class="btn btn-danger" type="button" ng-click="cancel()">Cancel</button>
         </div>
     </script>
@@ -142,7 +142,7 @@
 
 
 {% load static from staticfiles %}
-<script src="{% static "dataentry/js/dataEntryModule.js" %}"></script>
+<script src="{% static "dataentry/js/dataEntry.module.js" %}"></script>
 <script src="{% static "dataentry/js/services/address2Service.js" %}"></script>
 <script src="{% static "dataentry/js/controllers/address2Ctrl.js" %}"></script>
 
