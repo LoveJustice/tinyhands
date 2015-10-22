@@ -12,7 +12,7 @@
 
 {% verbatim %}
 
-  <div ng-controller="AccountsCtrl as accountsCtrl">
+  <div ng-controller="AccountsCtrl as accountsCtrl"><p>{{accountsCtrl.foo}}</p>
     <table class="table table-striped table-condensed">
       <thead>
         <tr>
@@ -37,6 +37,7 @@
           <!--need to fix the buttons-->
           <td><a class="btn btn-sm btn-primary" href="{% url 'account_update' account.pk %}">Edit</a>
           <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#modal-{{ account.pk }}">Delete</button>
+          </td>
         </tr>
     </tbody>
   </table>
