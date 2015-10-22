@@ -76,8 +76,8 @@ window.defaultPermissionSets = JSON.parse('{{ default_permissions_sets|safe }}')
             <tbody>
                     <tr ng-repeat="permission in accountsCtrl.accounts.results">
                         <td>
-                            {{ permission.id }}
-                            {{ permission.first_name+" "+permission.last_name }}<br/>
+<!--                            {{ permission.id }}
+-->                            {{ permission.first_name+" "+permission.last_name }}<br/>
                             {{ permission.user_designation }}
                         </td>
                         <td><label class="btn"><span class="yesno"></span>{{ permission.permission_irf_view }}</label></td>
