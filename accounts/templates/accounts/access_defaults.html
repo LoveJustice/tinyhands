@@ -33,12 +33,13 @@ th, td {
 {% endblock %}
 
 {% block content %}
-<div class="container">
     <h1>Access Defaults</h1>
+
+{% verbatim %}
+    <div class="container" ng-controller="AccountsCtrl as accountsCtrl">
     <p>Use this form to designate default access for each type of user.<br/>For instance: what default permissions ought to be given to a new user designated as &quot;Field Staff?&quot;</p>
 
-    <form id="permissions-form" method="POST" class="row">{% csrf_token %}
-        {{ formset.management_form }}
+    <form id="permissions-form" method="POST" class="row">
         <table class="table table-condensed">
             <thead>
                 <tr>
@@ -71,68 +72,64 @@ th, td {
                     <th>Manage</th>
                 </tr>
             </thead>
+
             <tbody id="permissions-rows-container">
-                {% for form in formset %}
-                    <tr>
+                    <tr ng-repeat="permission in accountsCtrl.permissions.results">
                         <td style="width: 25px">
-                            {% if form.instance.pk %}
-                                {% if not form.instance.is_used_by_accounts %}
                                     <form method="POST" class="permissions-delete-form" action="{% url 'access_defaults_delete' form.instance.pk %}">
-                                        {% csrf_token %}
                                         <input type="submit" class="btn btn-danger btn-xs" value="X" />
                                     </form>
-                                {% else %}
-                                    <button type="button" class="in-use-button btn btn-default btn-xs" data-toggle="tooltip" title="This designation is used by one or more accounts and cannot be deleted.">X</button>
-                                {% endif %}
-                            {% endif %}
-                        </td>
-                        <td>{{ form.id }}{{ form.name|bootstrap_inline }}</td>
-                        <td><label class="btn"><span class="yesno"></span>{{ form.permission_irf_view }}</label></td>
-                        <td><label class="btn"><span class="yesno"></span>{{ form.permission_irf_add }}</label></td>
-                        <td><label class="btn"><span class="yesno"></span>{{ form.permission_irf_edit }}</label></td>
-                        <td><label class="btn"><span class="yesno"></span>{{ form.permission_irf_delete }}</label></td>
-                        <td><label class="btn"><span class="yesno"></span>{{ form.permission_vif_view }}</label></td>
-                        <td><label class="btn"><span class="yesno"></span>{{ form.permission_vif_add }}</label></td>
-                        <td><label class="btn"><span class="yesno"></span>{{ form.permission_vif_edit }}</label></td>
-                        <td><label class="btn"><span class="yesno"></span>{{ form.permission_vif_delete }}</label></td>
-                        <td><label class="btn"><span class="yesno"></span>{{ form.permission_border_stations_view }}</label></td>
-                        <td><label class="btn"><span class="yesno"></span>{{ form.permission_border_stations_add }}</label></td>
-                        <td><label class="btn"><span class="yesno"></span>{{ form.permission_border_stations_edit }}</label></td>
-                        <td><label class="btn"><span class="yesno"></span>{{ form.permission_border_stations_delete }}</label></td>
-                        <td><label class="btn"><span class="yesno"></span>{{ form.permission_accounts_manage }}</label></td>
-                        <td><label class="btn"><span class="yesno"></span>{{ form.permission_vdc_manage }}</label></td>
-                        <td><label class="btn"><span class="yesno"></span>{{ form.permission_budget_manage }}</label></td>
+<!--                                    <button type="button" class="in-use-button btn btn-default btn-xs" data-toggle="tooltip" title="This designation is used by one or more accounts and cannot be deleted.">X</button>
+-->                        </td>
+                        <td>{{ permission.id }}{{ permission.name }}</td>
+                        <td><label class="btn"><span class="yesno"></span>{{ permission.permission_irf_view }}</label></td>
+                        <td><label class="btn"><span class="yesno"></span>{{ permission.permission_irf_add }}</label></td>
+                        <td><label class="btn"><span class="yesno"></span>{{ permission.permission_irf_edit }}</label></td>
+                        <td><label class="btn"><span class="yesno"></span>{{ permission.permission_irf_delete }}</label></td>
+                        <td><label class="btn"><span class="yesno"></span>{{ permission.permission_vif_view }}</label></td>
+                        <td><label class="btn"><span class="yesno"></span>{{ permission.permission_vif_add }}</label></td>
+                        <td><label class="btn"><span class="yesno"></span>{{ permission.permission_vif_edit }}</label></td>
+                        <td><label class="btn"><span class="yesno"></span>{{ permission.permission_vif_delete }}</label></td>
+                        <td><label class="btn"><span class="yesno"></span>{{ permission.permission_border_stations_view }}</label></td>
+                        <td><label class="btn"><span class="yesno"></span>{{ permission.permission_border_stations_add }}</label></td>
+                        <td><label class="btn"><span class="yesno"></span>{{ permission.permission_border_stations_edit }}</label></td>
+                        <td><label class="btn"><span class="yesno"></span>{{ permission.permission_border_stations_delete }}</label></td>
+                        <td><label class="btn"><span class="yesno"></span>{{ permission.permission_accounts_manage }}</label></td>
+                        <td><label class="btn"><span class="yesno"></span>{{ permission.permission_vdc_manage }}</label></td>
+                        <td><label class="btn"><span class="yesno"></span>{{ permission.permission_budget_manage }}</label></td>
                     </tr>
-                {% endfor %}
             </tbody>
         </table>
         <button type="button" id="add-another" class="clear btn btn-primary btn-lg pull-left">Add Another</button>
         <input type="submit" class="clear btn btn-success btn-lg pull-right" value="Save All" />
+
+<!--if form empty
         <table style="display:none">
             <tbody id="empty-form">
-                {% with form=formset.empty_form %}
                 <tr>
                     <td>&nbsp;</td>
-                    <td>{{ form.id }}{{ form.name|add_class:"form-control" }}</td>
-                    <td><label class="btn"><span class="yesno"></span>{{ form.permission_irf_view }}</label></td>
-                    <td><label class="btn"><span class="yesno"></span>{{ form.permission_irf_add }}</label></td>
-                    <td><label class="btn"><span class="yesno"></span>{{ form.permission_irf_edit }}</label></td>
-                    <td><label class="btn"><span class="yesno"></span>{{ form.permission_irf_delete }}</label></td>
-                    <td><label class="btn"><span class="yesno"></span>{{ form.permission_vif_view }}</label></td>
-                    <td><label class="btn"><span class="yesno"></span>{{ form.permission_vif_add }}</label></td>
-                    <td><label class="btn"><span class="yesno"></span>{{ form.permission_vif_edit }}</label></td>
-                    <td><label class="btn"><span class="yesno"></span>{{ form.permission_vif_delete }}</label></td>
-                    <td><label class="btn"><span class="yesno"></span>{{ form.permission_border_stations_view }}</label></td>
-                    <td><label class="btn"><span class="yesno"></span>{{ form.permission_border_stations_add }}</label></td>
-                    <td><label class="btn"><span class="yesno"></span>{{ form.permission_border_stations_edit }}</label></td>
-                    <td><label class="btn"><span class="yesno"></span>{{ form.permission_border_stations_delete }}</label></td>
-                    <td><label class="btn"><span class="yesno"></span>{{ form.permission_accounts_manage }}</label></td>
-                    <td><label class="btn"><span class="yesno"></span>{{ form.permission_vdc_manage }}</label></td>
-                    <td><label class="btn"><span class="yesno"></span>{{ form.permission_budget_manage }}</label></td>
+                    <td>{{ permission.id }}{{ permission.name|add_class:"form-control" }}</td>
+                    <td><label class="btn"><span class="yesno"></span>{{ permission.permission_irf_view }}</label></td>
+                    <td><label class="btn"><span class="yesno"></span>{{ permission.permission_irf_add }}</label></td>
+                    <td><label class="btn"><span class="yesno"></span>{{ permission.permission_irf_edit }}</label></td>
+                    <td><label class="btn"><span class="yesno"></span>{{ permission.permission_irf_delete }}</label></td>
+                    <td><label class="btn"><span class="yesno"></span>{{ permission.permission_vif_view }}</label></td>
+                    <td><label class="btn"><span class="yesno"></span>{{ permission.permission_vif_add }}</label></td>
+                    <td><label class="btn"><span class="yesno"></span>{{ permission.permission_vif_edit }}</label></td>
+                    <td><label class="btn"><span class="yesno"></span>{{ permission.permission_vif_delete }}</label></td>
+                    <td><label class="btn"><span class="yesno"></span>{{ permission.permission_border_stations_view }}</label></td>
+                    <td><label class="btn"><span class="yesno"></span>{{ permission.permission_border_stations_add }}</label></td>
+                    <td><label class="btn"><span class="yesno"></span>{{ permission.permission_border_stations_edit }}</label></td>
+                    <td><label class="btn"><span class="yesno"></span>{{ permission.permission_border_stations_delete }}</label></td>
+                    <td><label class="btn"><span class="yesno"></span>{{ permission.permission_accounts_manage }}</label></td>
+                    <td><label class="btn"><span class="yesno"></span>{{ permission.permission_vdc_manage }}</label></td>
+                    <td><label class="btn"><span class="yesno"></span>{{ permission.permission_budget_manage }}</label></td>
                 </tr>
-                {% endwith %}
             </tbody>
         </table>
-    </form>
+-->    </form>
 </div>
+
+{% endverbatim %}
+
 {% endblock %}
