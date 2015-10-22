@@ -2,7 +2,7 @@ from django.conf.urls import patterns, url
 
 from dataentry.views import Address2ViewSet, Address1ViewSet, GeoCodeDistrictAPIView, GeoCodeVdcAPIView
 from budget.views import BudgetViewSet, OtherItemsViewSet
-from accounts.views import AccountViewSet, DefaultPermissionsSetViewSet
+from accounts.views import AccountViewSet, DefaultPermissionsSetViewSet, CurrentUserView
 
 urlpatterns = patterns('rest_api.views',
     # Budget URLs
@@ -25,6 +25,9 @@ urlpatterns = patterns('rest_api.views',
     # Fuzzy searching for addresses
     url(r'^address1/fuzzy/$', GeoCodeDistrictAPIView.as_view(), name="Address1FuzzySearch"),
     url(r'^address2/fuzzy/$', GeoCodeVdcAPIView.as_view(), name="Address2FuzzySearch"),
+    
+    #Accounts and DefaultPermissionsSets
+    url(r'^me/$', CurrentUserView.as_view(), name="CurrentUser"),
     
     url(r'^accounts/$', AccountViewSet.as_view({'get': 'list', 'post':'create'}), name="Accounts"),
     url(r'^accounts/(?P<pk>\d+)/$', AccountViewSet.as_view({'get':'retrieve', 'put':'update', 'delete':'destroy'}), name='Account'),
