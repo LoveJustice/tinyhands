@@ -43,4 +43,18 @@ describe('TinyHands Address1s - ', function () {
         browser.sleep(1000);
         expect(lastAddress.getText()).not.toEqual(newAddressName); // We know our new address name will be on top
     });
+
+    it('should be able to be paginated by a different number', function () {
+        element(by.cssContainingText('option', '50')).click();
+        expect(element(by.model('vm.paginateBy')).isPresent()).toBe(true);
+    });
+
+    it('should be able to search', function () {
+        element(by.model('vm.searchValue')).clear().sendKeys("Baglung").then(function (){
+            element(by.linkText('Search')).click();
+        }).then(function () {
+            browser.sleep(500);
+            expect(element.all(by.className('address-name')).first().getText()).toBe("Baglung");
+        });
+    });
 });
