@@ -29,6 +29,6 @@ urlpatterns = patterns('rest_api.views',
     url(r'^accounts/$', AccountViewSet.as_view({'get': 'list', 'post':'create'}), name="Accounts"),
     url(r'^accounts/(?P<pk>\d+)/$', AccountViewSet.as_view({'get':'retrieve', 'put':'update', 'delete':'destroy'}), name='Account'),
 
-    url(r'^defaultPermissionsSet/$', DefaultPermissionsSetViewSet.as_view({'get': 'list', 'post':'create'}), name="DefaultPermissionsSets"),
-    url(r'^defaultPermissionsSet/(?P<pk>\d+)/$', DefaultPermissionsSetViewSet.as_view({'get': 'retrieve', 'put':'update', 'delete':'destroy'}), name="DefaultPermissionsSet"),
+    url(r'^defaultPermissionsSets/$', DefaultPermissionsSetViewSet.as_view({'get': 'list', 'post':'create'}), name="DefaultPermissionsSets"),
+    url(r'^defaultPermissionsSets/(?P<pk>\d+)/$', DefaultPermissionsSetViewSet.as_view({'get': 'retrieve', 'put':'update', 'delete':'destroy'}), name="DefaultPermissionsSet"),
 )

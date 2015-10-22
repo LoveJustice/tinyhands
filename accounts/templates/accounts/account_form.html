@@ -1,7 +1,7 @@
 {% extends "accounts/account_base.html" %}
 {% load bootstrap %}
 
-{% block title %}{% if account %}Edit {{ account.get_full_name }}'s Account{% else %}Create New Account{% endif %}{% endblock %}
+{% block title %}Edit Account {% endblock %}
 
 {% block head %}
 <style>
@@ -34,119 +34,36 @@ window.defaultPermissionSets = JSON.parse('{{ default_permissions_sets|safe }}')
 {% endblock %}
 
 {% block content %}
-<div class="container">
-    {% if account %}
-    <h1>Edit {{ account.get_full_name }}'s Account</h1>
-    {% else %}
-    <h1>Create New Account</h1>
-    {% endif %}
-    <div class="row">
-        {% comment %}
-        <form method="POST" class="permissions-delete-form float-right" action="{% url 'access_defaults_delete' form.instance.pk %}">
-            {% csrf_token %}
-            <input type="submit" class="btn btn-danger btn-xs" value="X" />
-        </form>
-        {% endcomment %}
-        <form method="POST" class="col-md-6">{% csrf_token %}
-            {{ form.email|bootstrap }}
-            {{ form.first_name|bootstrap }}
-            {{ form.last_name|bootstrap }}
-            {{ form.user_designation|bootstrap }}
-            <div class="clearfix">
-                <table class="table table-condensed">
-                    <thead>
-                        <tr>
-                            <th colspan="4">Interception Record Forms</th>
-                        </tr>
-                        <tr>
-                            <th>View</th>
-                            <th>Add</th>
-                            <th>Edit</th>
-                            <th>Delete</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><label class="btn"><span class="yesno"></span>{{ form.permission_irf_view }}</label></td>
-                            <td><label class="btn"><span class="yesno"></span>{{ form.permission_irf_add }}</label></td>
-                            <td><label class="btn"><span class="yesno"></span>{{ form.permission_irf_edit }}</label></td>
-                            <td><label class="btn"><span class="yesno"></span>{{ form.permission_irf_delete }}</label></td>
-                        </tr>
-                    </tbody>
-                </table>
-                <table class="table table-condensed">
-                    <thead>
-                        <tr>
-                            <th colspan="4">Victim Interview Forms</th>
-                        </tr>
-                        <tr>
-                            <th>View</th>
-                            <th>Add</th>
-                            <th>Edit</th>
-                            <th>Delete</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><label class="btn"><span class="yesno"></span>{{ form.permission_vif_view }}</label></td>
-                            <td><label class="btn"><span class="yesno"></span>{{ form.permission_vif_add }}</label></td>
-                            <td><label class="btn"><span class="yesno"></span>{{ form.permission_vif_edit }}</label></td>
-                            <td><label class="btn"><span class="yesno"></span>{{ form.permission_vif_delete }}</label></td>
-                        </tr>
-                    </tbody>
-                </table>
-                <table class="table table-condensed">
-                    <thead>
-                        <tr>
-                            <th colspan="4">Border Stations</th>
-                        </tr>
-                        <tr>
-                            <th>View</th>
-                            <th>Add</th>
-                            <th>Edit</th>
-                            <th>Delete</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><label class="btn"><span class="yesno"></span>{{ form.permission_border_stations_view }}</label></td>
-                            <td><label class="btn"><span class="yesno"></span>{{ form.permission_border_stations_add }}</label></td>
-                            <td><label class="btn"><span class="yesno"></span>{{ form.permission_border_stations_edit }}</label></td>
-                            <td><label class="btn"><span class="yesno"></span>{{ form.permission_border_stations_delete }}</label></td>
-                        </tr>
-                    </tbody>
-                </table>
-                <table class="table table-condensed">
-                    <thead>
-                        <tr>
-                            <th>Account Management</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><label class="btn"><span class="yesno"></span>{{ form.permission_accounts_manage }}</label></td>
-                        </tr>
-                    </tbody>
-                </table>
-                <table class="table table-condensed">
-                    <thead>
-                        <tr>
-                            <th>Alerts</th>
-                            <th>VDC Management</th>
-                            <th>Budget Management</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><label class="btn"><span class="yesno"></span>{{ form.permission_receive_email }}</label></td>
-                            <td><label class="btn"><span class="yesno"></span>{{ form.permission_vdc_manage }}</label></td>
-                            <td><label class="btn"><span class="yesno"></span>{{ form.permission_budget_manage }}</label></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <input type="submit" class="clear btn btn-primary btn-lg" value="{% if account %}Update{% else %}Create{% endif %}" />
-        </form>
+{% verbatim %}
+<div class="container" ng-controller="EditAccountCtrl as editCtrl">
+  <h1>Edit Account {{editCtrl.foo}}</h1>
+  <div class="row">
+    <div class="col-md-6 form-group">
+      <label >Email</label>
+      <input type="text" class="form-control" placeholder="Email" ng-model="editCtrl.account.email" />
+      
     </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6 form-group">
+      <label >First Name</label>
+      <input type="text" class="form-control" placeholder="First Name" ng-model="editCtrl.account.first_name" />
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6 form-group">
+      <label >Last Name</label>
+      <input type="text" class="form-control" placeholder="Last Name" ng-model="editCtrl.account.last_name" />
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6 form-group">
+      <label >User Designation</label>
+      <select ng-model="editCtrl.account.user_designation">
+        <option ng-repeat="set in editCtrl.permissionsSets.results" value="{{set.id}}"> {{set.name}}</option>
+      </select>
+    </div>
+  </div>
 </div>
+{% endverbatim %}
 {% endblock %}
