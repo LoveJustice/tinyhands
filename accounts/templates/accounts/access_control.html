@@ -39,7 +39,7 @@ window.defaultPermissionSets = JSON.parse('{{ default_permissions_sets|safe }}')
 
 
 {% verbatim %}
-<div class="container" ng-controller="AccountsCtrl as accountsCtrl"><p>{{accountsCtrl.foo}}</p>
+<div class="container" ng-controller="AccountsCtrl as accountsCtrl">
     <form method="POST" class="row">
         <table class="table table-condensed">
             <thead>
@@ -74,27 +74,28 @@ window.defaultPermissionSets = JSON.parse('{{ default_permissions_sets|safe }}')
                 </tr>
             </thead>
             <tbody>
-                    <tr ng-repeat="permission in accountsCtrl.permissions">
+                    <tr ng-repeat="permission in accountsCtrl.accounts.results">
                         <td>
-                            {{ permission.full_name }}<br/>
+                            {{ permission.id }}
+                            {{ permission.first_name+" "+permission.last_name }}<br/>
                             {{ permission.user_designation }}
                         </td>
-                        <td><label class="btn"><span class="yesno"></span>{{ permission.irf_vew }}</label></td>
-                        <td><label class="btn"><span class="yesno"></span>{{ permission.irf_add }}</label></td>
-                        <td><label class="btn"><span class="yesno"></span>{{ permission.irf_edit }}</label></td>
-                        <td><label class="btn"><span class="yesno"></span>{{ permission.irf_delete }}</label></td>
-                        <td><label class="btn"><span class="yesno"></span>{{ permission.vif_view }}</label></td>
-                        <td><label class="btn"><span class="yesno"></span>{{ permission.vif_add }}</label></td>
-                        <td><label class="btn"><span class="yesno"></span>{{ permission.vif_edit }}</label></td>
-                        <td><label class="btn"><span class="yesno"></span>{{ permission.vif_delete }}</label></td>
-                        <td><label class="btn"><span class="yesno"></span>{{ permission.border_stations_view }}</label></td>
-                        <td><label class="btn"><span class="yesno"></span>{{ permission.border_stations_add }}</label></td>
-                        <td><label class="btn"><span class="yesno"></span>{{ permission.border_stations_edit }}</label></td>
-                        <td><label class="btn"><span class="yesno"></span>{{ permission.border_stations_delete }}</label></td>
-                        <td><label class="btn"><span class="yesno"></span>{{ permission.accounts_manage }}</label></td>
-                        <td><label class="btn"><span class="yesno"></span>{{ permission.receive_email }}</label></td>
-                        <td><label class="btn"><span class="yesno"></span>{{ permission.vdc_manage }}</label></td>
-                        <td><label class="btn"><span class="yesno"></span>{{ permission.budget_manage }}</label></td>
+                        <td><label class="btn"><span class="yesno"></span>{{ permission.permission_irf_view }}</label></td>
+                        <td><label class="btn"><span class="yesno"></span>{{ permission.permission_irf_add }}</label></td>
+                        <td><label class="btn"><span class="yesno"></span>{{ permission.permission_irf_edit }}</label></td>
+                        <td><label class="btn"><span class="yesno"></span>{{ permission.permission_irf_delete }}</label></td>
+                        <td><label class="btn"><span class="yesno"></span>{{ permission.permission_vif_view }}</label></td>
+                        <td><label class="btn"><span class="yesno"></span>{{ permission.permission_vif_add }}</label></td>
+                        <td><label class="btn"><span class="yesno"></span>{{ permission.permission_vif_edit }}</label></td>
+                        <td><label class="btn"><span class="yesno"></span>{{ permission.permission_vif_delete }}</label></td>
+                        <td><label class="btn"><span class="yesno"></span>{{ permission.permission_border_stations_view }}</label></td>
+                        <td><label class="btn"><span class="yesno"></span>{{ permission.permission_border_stations_add }}</label></td>
+                        <td><label class="btn"><span class="yesno"></span>{{ permission.permission_border_stations_edit }}</label></td>
+                        <td><label class="btn"><span class="yesno"></span>{{ permission.permission_border_stations_delete }}</label></td>
+                        <td><label class="btn"><span class="yesno"></span>{{ permission.permission_accounts_manage }}</label></td>
+                        <td><label class="btn"><span class="yesno"></span>{{ permission.permission_receive_email }}</label></td>
+                        <td><label class="btn"><span class="yesno"></span>{{ permission.permission_vdc_manage }}</label></td>
+                        <td><label class="btn"><span class="yesno"></span>{{ permission.permission_budget_manage }}</label></td>
                     </tr>
             </tbody>
         </table>
