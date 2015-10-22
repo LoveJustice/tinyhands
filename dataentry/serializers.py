@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from dataentry.models import District, VDC
+from dataentry.models import District, VDC, BorderStation
 
 
 class DistrictSerializer(serializers.ModelSerializer):
@@ -44,3 +44,9 @@ class VDCSerializer(serializers.ModelSerializer):
 
     cannonical_name = CannonicalNameSerializer()
     district = DistrictSerializer()
+
+
+
+class BorderStationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BorderStation

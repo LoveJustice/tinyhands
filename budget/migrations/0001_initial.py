@@ -90,7 +90,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('name', models.CharField(max_length=255)),
                 ('cost', models.PositiveIntegerField(default=0)),
-                ('form_section', models.IntegerField(null=True, verbose_name=[(1, b'Travel'), (2, b'Miscellaneous'), (3, b'Awareness'), (4, b'Supplies')], blank=True)),
+                ('form_section', models.IntegerField(null=True, verbose_name=[(1, b'Travel'), (2, b'Miscellaneous'), (3, b'Awareness'), (4, b'Supplies'), (5, b'Shelter'), (6, b'FoodGas'), (7, b'Communication'), (8, b'Staff')], blank=True)),
                 ('budget_item_parent', models.ForeignKey(blank=True, to='budget.BorderStationBudgetCalculation', null=True)),
             ],
             options={
