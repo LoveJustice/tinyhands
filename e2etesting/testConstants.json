@@ -74,9 +74,9 @@
   "location1SetLatitude"      : "0.1",
   "location1SetLongitude"     : "0.1",
 
-  "stationTotal"   : "8700",
+  "stationTotal"   : "8600",
   "foodAndShelterTotal" : "3100",
-  "bunchTotal" : "3600",
+  "bunchTotal" : "3700",
   "miscTotalValue" : "600",
   "medicalTotal" : "100",
   "adminTotal" : "750",

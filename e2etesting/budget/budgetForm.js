@@ -259,6 +259,7 @@ var budgetForm = function () {
         element(by.id("misc_add_item")).click();
         element(by.xpath("//div[@ng-controller='otherBudgetItemsCtrl as miscItemsCtrl']/div/div/input")).clear().sendKeys('Test4');
         element(by.xpath("//div[@ng-controller='otherBudgetItemsCtrl as miscItemsCtrl']/div/div[2]/input")).clear().sendKeys('100');
+        browser.sleep(1000);
     };
 
     this.submitForm = function () {
