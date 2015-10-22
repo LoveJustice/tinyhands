@@ -17,6 +17,7 @@
 		vm.addPerson = addPerson;
 		vm.borderStationId = window.border_station_pk;
 		vm.changeStationStatus = changeStationStatus;
+		vm.createRelationship = createRelationship;
 		vm.details = {};
 		vm.errors = [];
 		vm.locations = [];
@@ -33,6 +34,8 @@
 		};
 		vm.removeLocation = removeLocation;
 		vm.removePerson = removePerson;
+		vm.removeRelationship = removeRelationship;
+		vm.updateRelationship = updateRelationship;
 		vm.updateStation = updateStation;
 		vm.updateStatusText = updateButtonText;
 		
@@ -167,12 +170,12 @@
 		
 		// REMOVE calls
 		function removeCommitteeMember(member) {
-			removeRelation(member, vm.newCommitteeMembers, vm.people.committeeMembers.data, BorderStationsService.updateCommitteeMembers, getCommitteeMembers);
+			vm.removeRelationship(member, vm.newCommitteeMembers, vm.people.committeeMembers.data, BorderStationsService.updateCommitteeMembers, getCommitteeMembers);
 		}
 		
 		function removeLocation(location) {
 			if (location.removeConfirmed) {
-				removeRelation(location, vm.newLocations, vm.locations, BorderStationsService.updateLocations, getLocations);
+				vm.removeRelationship(location, vm.newLocations, vm.locations, BorderStationsService.updateLocations, getLocations);
 			} else {
 				location.removeConfirmed = true;
 			}
@@ -186,7 +189,7 @@
 			}
 		}
 		
-		function removeRelation(value, newArray, currentArray, updateApiFunction, getApiFunction) {
+		function removeRelationship(value, newArray, currentArray, updateApiFunction, getApiFunction) {
 			var idx = newArray.indexOf(value);
 			if (idx >= 0) { // If relation was just created and isnt (shouldnt be) in the db
 				newArray.splice(idx, 1);
@@ -205,7 +208,7 @@
 		}
 		
 		function removeStaff(staff) {
-			removeRelation(staff, vm.newStaff, vm.people.staff.data, BorderStationsService.updateStaff, getStaff);
+			vm.removeRelationship(staff, vm.newStaff, vm.people.staff.data, BorderStationsService.updateStaff, getStaff);
 		}
 		
 		

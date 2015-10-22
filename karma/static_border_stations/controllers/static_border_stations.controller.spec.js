@@ -164,18 +164,114 @@ describe('BorderStationsCtrl', function(){
    
    
    describe('function changeStationStatus', function() {
-     it('should ')
+     it('should toggle open status from false to true for a station', function() {
+       // REGION: Data Setup
+       vm.details.open = false;
+       // ENDREGION: Data Setup
+       
+       vm.changeStationStatus();
+       
+       expect(vm.details.open).toBeTruthy();
+     });
+     
+     it('should toggle open status from true to false for a station', function() {
+       // REGION: Data Setup
+       vm.details.open = true;
+       // ENDREGION: Data Setup
+       
+       vm.changeStationStatus();
+       
+       expect(vm.details.open).toBeFalsy();
+     });
    });
    
    
    
    describe('function removeLocation', function() {
+     it('when location removedConfirmed is false should set location removedConfirmed to true', function() {
+       // REGION: Data Setup
+       var location = {
+         removeConfirmed: false
+       }
+       // ENDREGION: Data Setup
+       
+       vm.removeLocation(location);
+       
+       expect(location.removeConfirmed).toBeTruthy();
+     });
      
+     it('when location removedConfirmed is true should call removeRelationship', function() {
+       // REGION: Data Setup
+       var location = {
+         removeConfirmed: true
+       }
+       spyOn(vm,'removeRelationship');
+       // ENDREGION: Data Setup
+       
+       vm.removeLocation(location);
+       
+       expect(vm.removeRelationship).toHaveBeenCalled();
+     });
    });
    
    
    
    describe('function removePerson', function() {
+     var staffTitle = 'Staff';
+     
+     it('when person removeConfirmed is false should set person removeConfirmed to true', function() {
+       // REGION: Data Setup
+       var persons = {};
+       var person = {
+         removeConfirmed: false
+       }
+       // ENDREGION: Data Setup
+       
+       vm.removePerson(persons, person);
+       
+       expect(person.removeConfirmed).toBeTruthy();
+     });
+     
+     it('when person removedConfirmed is true should call removeRelationship', function() {
+       // REGION: Data Setup
+       var persons = {
+         name: staffTitle
+       };
+       var person = {
+         removeConfirmed: true
+       }
+       spyOn(vm,'removeRelationship');
+       // ENDREGION: Data Setup
+       
+       vm.removePerson(persons, person);
+       
+       expect(vm.removeRelationship).toHaveBeenCalled();
+     });
+   });
+   
+   
+   
+   describe('function removeRelationship', function() {
+     it('when value is in newArray remove it from newArray and currentArray', function() {
+       // REGION: Data Setup
+       var newValue = {
+         border_station: 1,
+         name: 'Test Object'
+       };
+       var newArray = [newValue];
+       var currentArray = [newValue];
+       // ENDREGION: Data Setup
+       
+       vm.removeRelationship(newValue, newArray, currentArray);
+       
+       expect(newArray).toEqual([]);       
+       expect(currentArray).toEqual([]);       
+     });
+   });
+   
+   
+   
+   describe('function updateRelationship', function() {
      
    });
    
