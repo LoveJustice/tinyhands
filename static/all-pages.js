@@ -233,29 +233,6 @@ var DREAMSUITE = {
     makeCheckboxAppearAsAButton('.openclosed','Station Status: Open','Station Status: Closed');
   },
 
-  account_create: function() {
-    this.account_update();
-  },
-
-  account_update: function() {
-    makeCheckboxAppearAsAButton('.yesno','Yes','No');
-    $('select').change(function() {
-      for (var i=0; i<window.defaultPermissionSets.length; i++) {
-        var set = window.defaultPermissionSets[i];
-        if (set.id === parseInt($(this).val())) {
-          for (var key in set) {
-            var toBe = set[key];
-            var $checkbox = $('#id_' + key);
-            var current = !!$checkbox.prop('checked');
-            if (toBe !== current) {
-              $checkbox.trigger('click');
-            }
-          }
-        }
-      }
-    });
-  },
-
   access_control: function() {
     makeCheckboxAppearAsAButton('.yesno','Yes','No');
     $('option:contains("---------")').remove();
