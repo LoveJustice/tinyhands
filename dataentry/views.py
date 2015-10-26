@@ -13,7 +13,7 @@ from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
 from django.core.urlresolvers import reverse_lazy
 from django.http import HttpResponse, HttpResponseRedirect, Http404
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render_to_response, render
 from django.template.loader import render_to_string
 from django.views.generic import ListView, View, DeleteView, CreateView, UpdateView
 
@@ -85,12 +85,8 @@ class SearchFormsMixin(object):
         return context
 
 
-class InterceptionRecordListView(LoginRequiredMixin, SearchFormsMixin, ListView):
-    model = InterceptionRecord
-
-    def __init__(self, *args, **kw):
-        # Passes what to search by to SearchFormsMixin
-        super(InterceptionRecordListView, self).__init__(irf_number__icontains="number", staff_name__icontains="name")
+def interception_record_list_template(request):
+    return render(request, 'dataentry/interceptionrecord_list.html')
 
 
 class IntercepteeInline(InlineFormSet):

@@ -8,7 +8,7 @@ angular
         // Variable Declarations
         vm.loading = false;
         vm.reverse = false;
-        vm.addresses = [];
+        vm.irfs = [];
         vm.searchValue = "";
         vm.nextPageUrl = "";
         vm.paginateBy = 25;
@@ -18,9 +18,9 @@ angular
 
 
         // Function Definitions
-        vm.getAddresses = getAddresses;
-        vm.searchAddresses = searchAddresses;
-        vm.loadMoreAddresses = loadMoreAddresses;
+        vm.getIrfs = getIrfs;
+        vm.searchIrfs = searchIrfs;
+        vm.loadMoreIrfs = loadMoreIrfs;
         vm.getQueryParams = getQueryParams;
         vm.sortIcon = sortIcon;
         main();
@@ -30,38 +30,38 @@ angular
 
 
         function main(){
-            vm.getAddresses();
+            vm.getIrfs();
         }
 
         function sortIcon(){
             return vm.reverse ? "glyphicon-sort-by-alphabet-alt" : "glyphicon-sort-by-alphabet";
         }
 
-        function getAddresses(){
+        function getIrfs(){
             vm.loading = true;
-            irfService.listAddresses(vm.getQueryParams())
+            irfService.listIrfs(vm.getQueryParams())
                 .success(function (data) {
-                    vm.addresses = data.results;
+                    vm.irfs = data.results;
                     vm.nextPageUrl = data.next;
                     vm.loading = false;
                 });
         }
 
-        function loadMoreAddresses(){
+        function loadMoreIrfs(){
             vm.loading = true;
-            irfService.loadMoreAddresses(vm.nextPageUrl, "&" + vm.getQueryParams().slice(1))
+            irfService.listIrfs(vm.nextPageUrl, "&" + vm.getQueryParams().slice(1))
                 .success(function (data) {
-                    vm.addresses = vm.addresses.concat(data.results);
+                    vm.irfs = vm.irfs.concat(data.results);
                     vm.nextPageUrl = data.next;
                     vm.loading = false;
                 });
         }
 
-        function searchAddresses(){
+        function searchIrfs(){
             vm.loading = true;
-            irfService.searchAddresses(vm.getQueryParams())
+            irfService.listIrfs(vm.getQueryParams())
                 .success(function (data) {
-                    vm.addresses = data.results;
+                    vm.irfs = data.results;
                     vm.nextPageUrl = data.next;
                     vm.loading = false;
                 });

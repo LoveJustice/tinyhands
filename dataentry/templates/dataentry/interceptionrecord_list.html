@@ -3,31 +3,26 @@
 {% block title %}All IRFs{% endblock %}
 {% block body_class %}interceptionrecord_list{% endblock %}
 
-{% block html %}<html ng-app="DataEntry">{% endblock %}
+{% block html %}<html ng-app="DataEntry" ng-cloak>{% endblock %}
 
 {% block content %}
+{% verbatim %}
 <div ng-controller="irfListCtrl as vm">
 
-      {% if request.user.permission_irf_view %}
         <form class="form-inline pull-right" style="margin: 20px">
-          {% if request.user.permission_irf_add %}
             <div class="form-group">
               <a id="id_input_new_irf" class="pull-right btn btn-success"
                  href="{% url 'interceptionrecord_create' %}">Input A New IRF
                </a>
             </div>
-          {% endif %}
 
           <div class="form-group">
             <a class="btn btn-primary"
                href="{% url 'interceptionrecord_csv_export' %}">Export as CSV</a>
           </div>
         </form>
-      {% endif %}
 
-      {% if request.user.permission_irf_view %}
         <h1>All IRFs</h1>
-        {% if interceptionrecord_list %}
           <table class="table table-striped table-condensed">
         <thead>
               <tr>
@@ -42,8 +37,7 @@
               </tr>
         </thead>
         <tbody>
-              {% for irf in interceptionrecord_list %}
-                <tr>
+                <tr ng-repeat="irf in vm.irfs">
                   <td class="irf-number">{{ irf.irf_number }}</td>
                   <td>{{ irf.staff_name }}</td>
                   <td>{{ irf.number_of_victims }}</td>
@@ -53,38 +47,25 @@
                   <td>{{ irf.date_time_last_updated }}</td>
                   <td>
             <a class="btn btn-sm btn-primary" href="{% url 'interceptionrecord_detail' irf.pk %}">View</a>
-            {% if request.user.permission_irf_edit %}
                       <a class="btn btn-sm btn-primary" href="{% url 'interceptionrecord_update' irf.pk %}">Edit</a>
-            {% endif %}
-            {% if request.user.permission_irf_delete %}
-                      {% include "delete_modal_forms.html" with form=irf url_string="interceptionrecord_delete"%}
                       <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#modal-{{ irf.pk }}">Delete</button>
-            {% endif %}
                   </td>
                 </tr>
-              {% endfor %}
         </tbody>
           </table>
-        {% else %}
-          {% if database_empty %}
         <p>There are not yet any IRFs in the database.</p>
-          {% else %}
         <p>No IRFs match what you are looking for.</p>
-          {% endif %}
-        {% endif %}
-      {% else %}
         <h1>IRFs</h1>
-      {% endif %}
 
-      {% if request.user.permission_irf_add %}
         <a id="id_input_new_irf" class="pull-right btn btn-success" style="margin-bottom: 10px"
            href="{% url 'interceptionrecord_create' %}">Input A New IRF
          </a>
-      {% endif %}
 
+{% endverbatim %}
     {% load static from staticfiles %}
     <script src="{% static "dataentry/js/dataEntry.module.js" %}"></script>
     <script src="{% static "dataentry/js/services/irfService.js" %}"></script>
     <script src="{% static "dataentry/js/controllers/irfListCtrl.js" %}"></script>
 </div>
+
 {% endblock %}
