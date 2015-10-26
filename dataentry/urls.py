@@ -2,7 +2,8 @@ from django.conf.urls import patterns, url
 from dataentry.views import *
 
 urlpatterns = patterns('dataentry.views',
-    url(r'^irfs/search/$', interception_record_list_template, name="interceptionrecord_list"),
+    url(r'^irfs/search/$', interception_record_list_template, name="interceptionrecord_list"),  # Simple render view
+
     url(r'^irfs/(?P<pk>\d+)/$', InterceptionRecordDetailView.as_view(), name='interceptionrecord_detail'),
     url(r'^irfs/create/$', InterceptionRecordCreateView.as_view(), name='interceptionrecord_create'),
     url(r'^irfs/delete/(?P<pk>\d+)/$', InterceptionRecordDeleteView.as_view(), name='interceptionrecord_delete'),

@@ -2,7 +2,7 @@
 
 angular
     .module('DataEntry')
-    .controller("irfListCtrl", ['$scope','$http','$timeout', 'irfService', "$modal", function($scope, $http, $timeout, irfService, $modal) {
+    .controller("irfListCtrl", ['$scope','$http','$timeout', 'irfService', function($scope, $http, $timeout, irfService) {
         var vm = this;
 
         // Variable Declarations
@@ -18,9 +18,9 @@ angular
 
 
         // Function Definitions
-        vm.getIrfs = getIrfs;
-        vm.searchIrfs = searchIrfs;
+        vm.listIrfs = listIrfs;
         vm.loadMoreIrfs = loadMoreIrfs;
+        vm.searchIrfs = searchIrfs;
         vm.getQueryParams = getQueryParams;
         vm.sortIcon = sortIcon;
         main();
@@ -30,14 +30,24 @@ angular
 
 
         function main(){
-            vm.getIrfs();
+            vm.listIrfs();
         }
 
-        function sortIcon(){
-            return vm.reverse ? "glyphicon-sort-by-alphabet-alt" : "glyphicon-sort-by-alphabet";
+        function sortIcon(column, name){
+            if(name === vm.sortColumn){
+                switch (column) {
+                    case "number":
+                        return vm.reverse ? "glyphicon-sort-by-order-alt" : "glyphicon-sort-by-order";
+                    case "letter":
+                        return vm.reverse ? "glyphicon-sort-by-alphabet-alt" : "glyphicon-sort-by-alphabet";
+                    default:
+                        return "glyphicon-sort";
+                }
+            }
+            return "glyphicon-sort";
         }
 
-        function getIrfs(){
+        function listIrfs(){
             vm.loading = true;
             irfService.listIrfs(vm.getQueryParams())
                 .success(function (data) {

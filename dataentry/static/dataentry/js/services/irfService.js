@@ -12,7 +12,6 @@ function irfService($http) {
 	function listIrfs() {
         return $http.get('/api/irf/').
             success(function (data) {
-                console.log(data);
                 return data;
             }).
             error(function (data, status, headers, config) {
