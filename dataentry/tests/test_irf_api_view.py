@@ -20,10 +20,15 @@ class IrfTest(APITestCase):
         self.assertEqual(response.data['count'], 20)  # 20 is coming from the 20 VDCs we made which each have their own District
 
     def test_irf_403_if_doesnt_have_permission(self):
-            self.bad_user = BadIrfUserFactory.create()
-            self.client.force_authenticate(user=self.bad_user)
+        self.bad_user = BadIrfUserFactory.create()
+        self.client.force_authenticate(user=self.bad_user)
 
-            # get
-            url = reverse('InterceptionRecord')
-            response = self.client.get(url)
-            self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        # get
+        url = reverse('InterceptionRecord')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        # delete
+        url = reverse('InterceptionRecordDetail', args=[self.irf_list[0].id])
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)\
