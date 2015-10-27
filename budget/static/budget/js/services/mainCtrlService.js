@@ -34,9 +34,11 @@ function mainCtrlService($http) {
     function retrieveNewForm() { // TODO: make this respond to the month_year selector at the top of the page
         return $http.get('/budget/api/budget_calculations/most_recent_form/' + window.budget_calc_id + '/').
             success(function (data) {
+                console.log(data);
                 return data;
             }).
             error(function (data, status) {
+                console.log(data);
                 console.log(data, status);
             });
     }
