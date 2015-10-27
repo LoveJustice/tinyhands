@@ -6,5 +6,4 @@ angular
         vm.accounts = Accounts.all();
         vm.permissions = PermissionsSets.all();
         vm.foo = "testing";
-
     }]);
