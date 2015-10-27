@@ -101,7 +101,6 @@ def previous_data(request, pk, month, year):
         all_cost = 0
         for sheet in budget_sheets:
             all_cost += sheet.station_total()
-        print("COST", all_cost)
         return Response(
             {
                 "all": all_interception_records_count['total'],
