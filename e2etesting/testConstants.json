@@ -18,13 +18,13 @@
   "vdcNewDis"       : "Achham",
   "vdcNewCan"       : "ShreeJung",
 
-  "webAddress" : "http://0.0.0.0:8001",
+  "webAddress" : "http://localhost:8001",
 
   "irfNumber"                 : "DNG123",
   "irfEditNumber"             : "DNG121",
   "irfLocation"               : "none",
-  "irfInterceptTime"          : "06/16/2015 06:20",
-  "irfInterceptTimeTest"      : "2015-06-16 06:20:00",
+  "irfInterceptTime"          : "05/16/2015 06:20",
+  "irfInterceptTimeTest"      : "2015-05-16 06:20:00",
   "irfStaffName"              : "TEST",
   "irfInterceptFname"         : "name",
 
@@ -76,7 +76,7 @@
 
   "stationTotal"   : "8600",
   "foodAndShelterTotal" : "3100",
-  "bunchTotal" : "3600",
+  "bunchTotal" : "3700",
   "miscTotalValue" : "600",
   "medicalTotal" : "100",
   "adminTotal" : "750",

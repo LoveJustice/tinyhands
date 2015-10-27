@@ -1,7 +1,7 @@
 var constants = require('../testConstants.json');
 var loginPage = require('./loginPage.js');
 var permissionsPage = require('./permissionsPage.js');
-var vifPage = require('./vifPage.js');
+var vifPage = require('../dataentry/vifPage.js');
 var irfPage = require('../dataentry/irfCRUD.js');
 
 describe('Accounts Page', function() {
@@ -30,7 +30,7 @@ describe('Accounts Page', function() {
             expect(this.permissions.element(by.xpath("..")).getAttribute('class')).toBe('btn btn-danger');
             permissionsPage.savePermissions();
 
-            //tests for inability to edit vdcs
+            //tests for inability to edit addresses
             permissionsPage.navigateToVdcPage();
             browser.sleep(800);
             expect(element(by.xpath('//h1')).getText()).toContain("403");
@@ -47,7 +47,7 @@ describe('Accounts Page', function() {
             expect(this.permissions.element(by.xpath("..")).getAttribute('class')).toBe('btn btn-danger');
             permissionsPage.savePermissions();
 
-            //tests for inability to edit vdcs
+            //tests for inability to edit addresses
             permissionsPage.navigateToBudgetPage();
             browser.sleep(800);
             expect(element(by.xpath('//h1')).getText()).toContain("403");

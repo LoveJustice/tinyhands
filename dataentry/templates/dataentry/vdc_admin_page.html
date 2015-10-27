@@ -34,7 +34,7 @@
     <table class="table table-striped">
         <thead>
         <tr>
-            <th ng-click="vm.sortColumn = 'name'; vm.reverse = ! vm.reverse; vm.getAddresses()" class="text-center">
+            <th ng-click="vm.sortColumn = 'name'; vm.reverse = ! vm.reverse; vm.getAddresses()" class="text-center" id="addressNameHeader">
                 Name <i class="glyphicon" ng-class="vm.sortIcon('name')"></i>
             </th>
             <th ng-click="vm.sortColumn = 'latitude'; vm.reverse = ! vm.reverse; vm.getAddresses()" class="text-center">
@@ -58,7 +58,7 @@
         <tbody ng-init="vm.sortColumn = 'name'">
             <tr ng-repeat="address in vm.addresses | orderBy:vm.sortColumn:vm.reverse">
 
-                <td class="text-center">{{ address.name }}</td>
+                <td class="text-center address-name">{{ address.name }}</td>
                 <td class="text-center">{{ address.latitude }}</td>
                 <td class="text-center">{{ address.longitude }}</td>
                 <td class="text-center">{{ address.district.name }}</td>

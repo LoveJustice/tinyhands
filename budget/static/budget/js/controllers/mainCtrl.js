@@ -101,14 +101,13 @@ angular
                         vm.adminTotal() +
                         vm.medicalTotal() +
                         vm.miscTotalValue +
-                        vm.salariesTotal;
+                        vm.staffTotal();
             };
             vm.stationTotal = function() {
                 return  vm.foodAndShelterTotal() +
                         vm.bunchTotal() +
                         vm.awarenessTotalValue +
-                        vm.suppliesTotalValue +
-                        vm.salariesTotal;
+                        vm.suppliesTotalValue;
             };
 
             //shelter

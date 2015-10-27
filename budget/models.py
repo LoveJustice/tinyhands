@@ -236,9 +236,6 @@ class OtherBudgetItemCost(models.Model):
     form_section = models.IntegerField(BUDGET_FORM_SECTION_CHOICES, blank=True, null=True)
     budget_item_parent = models.ForeignKey(BorderStationBudgetCalculation, blank=True, null=True)
 
-def staff_total(self):
-        total = 0
-
 class StaffSalary(models.Model):
     salary = models.PositiveIntegerField(default=0, blank=True, null=True)
 

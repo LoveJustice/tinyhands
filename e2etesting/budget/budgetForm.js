@@ -161,13 +161,20 @@ var budgetForm = function () {
 
 
     this.fillOutForm = function () {
-
         browser.sleep(500);
-        browser.executeScript('document.getElementById("month_year").value = "2015-07"');
+        browser.executeScript('document.getElementById("month_year").value = "2015-07"' );
         browser.executeScript('$("#month_year").trigger("change");');
         browser.sleep(500);
         browser.sleep(500);
         element(by.model("form.salary")).clear().sendKeys('100');
+        
+        element(by.id("staff_add_item")).click();
+        browser.sleep(500);
+        element(by.xpath("//div[@ng-controller='otherBudgetItemsCtrl as staffItemsCtrl']/div/div/input")).clear().sendKeys('Staff1');
+        element(by.xpath("//div[@ng-controller='otherBudgetItemsCtrl as staffItemsCtrl']/div/div[2]/input")).clear().sendKeys('100');
+
+
+
         element(by.id("shelter_rent")).clear().sendKeys('100');
         element(by.id("shelter_water")).clear().sendKeys('200');
         element(by.id("shelter_electricity")).clear().sendKeys('300');
@@ -249,8 +256,11 @@ var budgetForm = function () {
         element(by.id("misc_number_of_intercepts")).clear().sendKeys('10');
         element(by.id("misc_number_of_intercepts_mult")).clear().sendKeys('50');
         element(by.id("misc_add_item")).click();
+        browser.sleep(2000);
         element(by.xpath("//div[@ng-controller='otherBudgetItemsCtrl as miscItemsCtrl']/div/div/input")).clear().sendKeys('Test4');
         element(by.xpath("//div[@ng-controller='otherBudgetItemsCtrl as miscItemsCtrl']/div/div[2]/input")).clear().sendKeys('100');
+        browser.sleep(3000);
+        //browser.pause();
     };
 
     this.submitForm = function () {
