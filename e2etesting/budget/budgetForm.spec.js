@@ -83,7 +83,7 @@ describe('Budget Calculation', function() {
             //budgetForm.viewForm();
             //browser.ignoreSynchronization = false;
             budgetForm.navigateToNewForm();
-            browser.sleep(1000);
+            browser.sleep(4000);
 
             //browser.pause();
             //browser.refresh();
@@ -279,6 +279,8 @@ describe('Budget Calculation', function() {
             expect(table.element(by.xpath("./tr[1]/td[2]")).getText()).toBe("0");
             expect(table.element(by.xpath("./tr[2]/td[2]")).getText()).toBe("0");
             expect(table.element(by.xpath("./tr[3]/td[2]")).getText()).toBe("1");
+
+            expect(table.element(by.xpath("./tr[4]/td[2]")).getText()).toBe("2");
         });
     });
 });

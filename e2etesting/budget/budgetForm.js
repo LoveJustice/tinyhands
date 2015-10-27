@@ -256,10 +256,11 @@ var budgetForm = function () {
         element(by.id("misc_number_of_intercepts")).clear().sendKeys('10');
         element(by.id("misc_number_of_intercepts_mult")).clear().sendKeys('50');
         element(by.id("misc_add_item")).click();
-        browser.sleep(1000);
+        browser.sleep(2000);
         element(by.xpath("//div[@ng-controller='otherBudgetItemsCtrl as miscItemsCtrl']/div/div/input")).clear().sendKeys('Test4');
         element(by.xpath("//div[@ng-controller='otherBudgetItemsCtrl as miscItemsCtrl']/div/div[2]/input")).clear().sendKeys('100');
-        browser.sleep(1000);
+        browser.sleep(3000);
+        //browser.pause();
     };
 
     this.submitForm = function () {
