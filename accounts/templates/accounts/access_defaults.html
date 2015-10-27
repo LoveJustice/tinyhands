@@ -81,7 +81,13 @@ th, td {
                                     </form>
 <!--                                    <button type="button" class="in-use-button btn btn-default btn-xs" data-toggle="tooltip" title="This designation is used by one or more accounts and cannot be deleted.">X</button>
 -->                        </td>
-                        <td><!--{{ permission.id }}-->{{ permission.name }}</td>
+<!--                        <td>{{ permission.id }}{{ permission.name }}</td>-->
+<!--                        <td>{{ form.id }}{{ form.name|bootstrap_inline }}</td>-->
+                        <td>
+                          <form class="form-inline">
+                              <input type="text" class="form-control" value="{{ permission.name }}"/>
+                          </from>
+                        </td>
                         <td><label ng-click="permission.permission_irf_view = !permission.permission_irf_view" ng-class="permission.permission_irf_view ? 'btn btn-success' : 'btn btn-danger'"><span class="yesno"></span>{{ permission.permission_irf_view ? "Yes" : "No" }}</label></td>
                         <td><label ng-click="permission.permission_irf_add = !permission.permission_irf_add" ng-class="permission.permission_irf_add ? 'btn btn-success' : 'btn btn-danger'"><span class="yesno"></span>{{ permission.permission_irf_add ? "Yes" : "No" }}</label></td>
                         <td><label ng-click="permission.permission_irf_edit = !permission.permission_irf_edit" ng-class="permission.permission_irf_edit ? 'btn btn-success' : 'btn btn-danger'"><span class="yesno"></span>{{ permission.permission_irf_edit ? "Yes" : "No" }}</label></td>
