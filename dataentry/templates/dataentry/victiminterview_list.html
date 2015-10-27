@@ -1,84 +1,109 @@
 {% extends "dataentry/dataentry_base.html" %}
-{% load bootstrap %}
-{% load times %}
-
+{% block html %}<html ng-app="DataEntry" ng-cloak>{% endblock %}
 
 {% block title %}All VIFs{% endblock %}
 
-{% block body_class %}victiminterview_list{% endblock %}
-
-
 {% block content %}
-{% if request.user.permission_vif_view %}
-    <form class="form-inline pull-right" style="margin: 20px">
-        {% if request.user.permission_vif_add %}
-            <div class="form-group">
-                <a id="id_input_new_vif" class="pull-right btn btn-success"
-                    href="{% url 'victiminterview_create' %}">Input A New VIF
-                </a>
-            </div>
-        {% endif %}
-        <div class="form-group">
-            <a class="btn btn-primary" href="{% url 'victiminterview_csv_export' %}">Export as CSV</a>
-        </div>
-    </form>
-{% endif %}
+{% verbatim %}
+<div ng-controller="vifListCtrl as vm">
 
-{% if request.user.permission_vif_view %}
-    <h1>All VIFs</h1>
-    {% if victiminterview_list %}
-    <table id="id_vif_list_table" class="table table-striped table-condensed crud-datatable">
+        <div class="row">
+            <h1>All VIFs</h1>
+        </div>
+
+    <div class="row">
+        <div class="col-md-2">
+            <a id="id_input_new_vif" class="pull-right btn btn-success" href="/data-entry/vifs/create/">
+                Input A New VIF
+            </a>
+        </div>
+        <div class="col-md-2">
+            <a class="btn btn-primary" href="/data-entry/vifs/export/" download>
+                Export as CSV
+            </a>
+        </div>
+
+        <div class="col-md-2 col-md-offset-2">
+            <p style="margin-top: 5px;">Results per page</p>
+        </div>
+
+        <div class="col-md-1">
+            <select ng-model="vm.paginateBy" ng-change="vm.listVifs()" class="form-control">
+                <option>25</option>
+                <option>50</option>
+                <option>100</option>
+                <option>500</option>
+            </select>
+        </div>
+
+        <div class="col-md-3 search-bar">
+            <form ng-submit="vm.searchVifs()">
+                  <label>
+                      <input placeholder="by VIF number..." ng-model="vm.searchValue" class="form-control">
+                  </label>
+                  <button class="btn btn-primary">Search</button>
+            </form>
+        </div>
+    </div>
+
+    <table class="table table-striped table-condensed">
         <thead>
             <tr>
-                <th>VIF #</th>
-                <th>Interviewer</th>
-                <th># of victims</th>
-                <th># of traffickers</th>
-                <th>Date<br/>of Interview</th>
-                <th>Date/Time<br/>Entered Into System</th>
-                <th>Date/Time<br/>Last Edited</th>
+                <th ng-click="vm.sortColumn = 'vif_number'; vm.reverse = ! vm.reverse; vm.listVifs()">
+                    VIF # <i class="glyphicon" ng-class="vm.sortIcon('letter', 'vif_number')"></i>
+                </th>
+                <th ng-click="vm.sortColumn = 'interviewer'; vm.reverse = ! vm.reverse; vm.listVifs()">
+                    Interviewer <i class="glyphicon" ng-class="vm.sortIcon('letter', 'interviewer')"></i>
+                </th>
+                <th ng-click="vm.sortColumn = 'number_of_victims'; vm.reverse = ! vm.reverse; vm.listVifs()">
+                    # of victims <i class="glyphicon" ng-class="vm.sortIcon('number', 'number_of_victims')"></i>
+                </th>
+                <th ng-click="vm.sortColumn = 'number_of_traffickers'; vm.reverse = ! vm.reverse; vm.listVifs()">
+                    # of traffickers <i class="glyphicon" ng-class="vm.sortIcon('number', 'number_of_traffickers')"></i>
+                </th>
+                <th ng-click="vm.sortColumn = 'date'; vm.reverse = ! vm.reverse; vm.listVifs()">
+                    Date of Interview <i class="glyphicon" ng-class="vm.sortIcon('number', 'date')"></i>
+                </th>
+                <th ng-click="vm.sortColumn = 'date_time_entered_into_system'; vm.reverse = ! vm.reverse; vm.listVifs()">
+                    Time Entered Into System <i class="glyphicon" ng-class="vm.sortIcon('number', 'date_time_entered_into_system')"></i>
+                </th>
+                <th ng-click="vm.sortColumn = 'date_time_last_updated'; vm.reverse = ! vm.reverse; vm.listVifs()">
+                    Time Last Edited <i class="glyphicon" ng-class="vm.sortIcon('number', 'date_time_last_updated')"></i>
+                </th>
+                <th>&nbsp;</th>
+                <th>&nbsp;</th>
                 <th>&nbsp;</th>
             </tr>
         </thead>
-        <tbody id="id_vif_list_table_body">
-            {% for vif in victiminterview_list %}
-            <tr>
+        <tbody>
+            <tr ng-repeat="vif in vm.vifs">
                 <td class="vif-number">{{ vif.vif_number }}</td>
                 <td>{{ vif.interviewer }}</td>
                 <td>{{ vif.number_of_victims }}</td>
                 <td>{{ vif.number_of_traffickers }}</td>
-                <td>{{ vif.date }}</td>
-                <td>{{ vif.date_time_entered_into_system }}</td>
-                <td>{{ vif.date_time_last_updated }}</td>
-                <td>
-                    <a id="id_view_vif_button" class="btn btn-sm btn-primary" href="{% url 'victiminterview_detail' vif.pk %}">View</a>
-                    {% if request.user.permission_vif_edit %}
-                        <a id="id_edit_vif_button" class="btn btn-sm btn-primary" href="{% url 'victiminterview_update' vif.pk %}">Edit</a>
-                    {% endif %}
-                    {% if request.user.permission_vif_delete %}
-                        {% include "delete_modal_forms.html" with form=vif url_string="victiminterview_delete"%}
-                        <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#modal-{{ vif.pk }}">Delete</button>
-                    {% endif %}
-                </td>
+                <td>{{ vif.date_time_of_interception | date:"medium" }}</td>
+                <td>{{ vif.date_time_entered_into_system | date:"medium" }}</td>
+                <td>{{ vif.date_time_last_updated | date:"medium" }}</td>
+                <td><a class="btn btn-sm btn-primary" href="{{ vif.view_url }}">View</a></td>
+                <td><a class="btn btn-sm btn-primary" href="{{ vif.edit_url }}">Edit</a></td>
+                <td><a class="btn btn-sm btn-danger" ng-click="vm.deleteVif(vif)">{{ vif.confirmedDelete ? "Confirm?" : "Delete"}}</a></td>
             </tr>
-            {% endfor %}
         </tbody>
     </table>
-    {% else %}
-        {% if database_empty %}
-            <p>There are not yet any VIFs in the database. </p>
-        {% else %}
-            <p>No VIFs match what you are looking for.</p>
-        {% endif %}
-    {% endif %}
-{% else %}
-    <h1>VIFs</h1>
-{% endif %}
+    <div class="row text-center">
+        <button ng-disabled="!vm.nextPageUrl" ng-click="vm.loadMoreVifs()" class="btn btn-primary" style="margin-bottom:25px; width:90%;">Load more results</button>
+    </div>
 
-{% if request.user.permission_vif_add %}
-    <a id="id_input_new_vif" class="pull-right btn btn-success" style="margin-bottom: 10px"
-        href="{% url 'victiminterview_create' %}">Input A New VIF
-    </a>
-{% endif %}
+    <!-- Loading animation container -->
+    <div ng-show="vm.loading" class="loader-container">
+        <div class="loader">Loading...</div>
+    </div>
+
+{% endverbatim %}
+    {% load static from staticfiles %}
+    <script src="{% static "dataentry/js/dataEntry.module.js" %}"></script>
+    <script src="{% static "dataentry/js/services/vifService.js" %}"></script>
+    <script src="{% static "dataentry/js/controllers/vifListCtrl.js" %}"></script>
+</div>
 
 {% endblock %}
