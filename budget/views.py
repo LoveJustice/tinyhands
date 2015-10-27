@@ -61,7 +61,6 @@ def retrieve_latest_budget_sheet_for_border_station(request, pk):
 @api_view(['GET'])
 def previous_data(request, pk, month, year):
     date = datetime.datetime(int(year), int(month), 15)  # We pass the Month_year as two key-word arguments because the day is always 15
-
     budget_sheets = BorderStationBudgetCalculation.objects.filter(border_station=pk, month_year__lte=date).order_by('-date_time_entered')  # filter them so the first element is the most recent
 
     if budget_sheets:  # If this border station has had a previous budget calculation worksheet
@@ -89,17 +88,19 @@ def previous_data(request, pk, month, year):
             all_interception_records_count['total'] = 0
             all_interception_records_count_divide = 1
 
-        last_months_cost = last_months.station_total()
 
         last_3_months_cost = 0
         last_3_months_sheets = budget_sheets.filter(month_year__gte=date+relativedelta(months=-3))
+        last_months_sheets = budget_sheets.filter(month_year__gte=date+relativedelta(months=-1))
+        if(last_months_sheets.count() > 0):
+            last_months_cost = last_months_sheets[0].station_total()
+        else:
+            last_months_cost = 0
         for sheet in last_3_months_sheets:
             last_3_months_cost += sheet.station_total()
-
         all_cost = 0
         for sheet in budget_sheets:
             all_cost += sheet.station_total()
-
         return Response(
             {
                 "all": all_interception_records_count['total'],
@@ -112,7 +113,6 @@ def previous_data(request, pk, month, year):
                 "last_months_total_cost": last_months_cost
             }
         )
-
     # If this border station has not had a previous budget calculation worksheet
     return Response(
         {"all": 0,
