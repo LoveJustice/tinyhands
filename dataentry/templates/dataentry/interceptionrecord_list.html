@@ -86,7 +86,7 @@
                 <td>{{ irf.date_time_last_updated | date:"medium" }}</td>
                 <td><a class="btn btn-sm btn-primary" href="{{ irf.view_url }}">View</a></td>
                 <td><a class="btn btn-sm btn-primary" href="{{ irf.edit_url }}">Edit</a></td>
-                <td><a class="btn btn-sm btn-danger" ng-click="vm.deleteIrf(irf)">{{ irf.confirmedDelete ? "Are you sure?" : "Delete"}}</a></td>
+                <td><a class="btn btn-sm btn-danger" ng-click="vm.deleteIrf(irf)">{{ irf.confirmedDelete ? "Confirm?" : "Delete"}}</a></td>
             </tr>
         </tbody>
     </table>

@@ -85,6 +85,10 @@ angular
                     .success(function(){
                         vm.listIrfs();
                         vm.loading = false;
+                    })
+                    .error(function(){
+                        vm.loading = false;
+                        alert("you did not have authorization to delete that IRF");
                     });
             }
             else{

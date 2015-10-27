@@ -6,7 +6,6 @@ urlpatterns = patterns('dataentry.views',
 
     url(r'^irfs/(?P<pk>\d+)/$', InterceptionRecordDetailView.as_view(), name='interceptionrecord_detail'),
     url(r'^irfs/create/$', InterceptionRecordCreateView.as_view(), name='interceptionrecord_create'),
-    url(r'^irfs/delete/(?P<pk>\d+)/$', InterceptionRecordDeleteView.as_view(), name='interceptionrecord_delete'),
     url(r'^irfs/update/(?P<pk>\d+)/$', InterceptionRecordUpdateView.as_view(), name='interceptionrecord_update'),
     url(r'^irfs/export/$', InterceptionRecordCSVExportView.as_view(), name='interceptionrecord_csv_export'),
     url(r'^vifs/$', VictimInterviewListView.as_view(), name='victiminterview_list'),
