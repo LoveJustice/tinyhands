@@ -5,7 +5,7 @@
 
 {% block content %}
 {% verbatim %}
-<div ng-controller="irfListCtrl as vm">
+<div ng-controller="irfListCtrl as vm" ng-show="vm.user.permission_irf_view">
 
         <div class="row">
             <h1>All IRFs</h1>
@@ -13,13 +13,13 @@
 
     <div class="row">
         <div class="col-md-2">
-            <a id="id_input_new_irf" class="pull-right btn btn-success" href="/data-entry/irfs/create/">
-                Input A New IRF
+            <a class="btn btn-primary" href="/data-entry/irfs/export/" download>
+                Export as CSV
             </a>
         </div>
         <div class="col-md-2">
-            <a class="btn btn-primary" href="/data-entry/irfs/export/" download>
-                Export as CSV
+            <a ng-show="vm.user.permission_irf_add" id="id_input_new_irf" class="btn btn-success" href="/data-entry/irfs/create/">
+                Input A New IRF
             </a>
         </div>
 
@@ -71,8 +71,8 @@
                     Time Last Edited <i class="glyphicon" ng-class="vm.sortIcon('number', 'date_time_last_updated')"></i>
                 </th>
                 <th>&nbsp;</th>
-                <th>&nbsp;</th>
-                <th>&nbsp;</th>
+                <th ng-show="vm.user.permission_irf_edit">&nbsp;</th>
+                <th ng-show="vm.user.permission_irf_delete">&nbsp;</th>
             </tr>
         </thead>
         <tbody>
@@ -85,8 +85,8 @@
                 <td>{{ irf.date_time_entered_into_system | date:"medium" }}</td>
                 <td>{{ irf.date_time_last_updated | date:"medium" }}</td>
                 <td><a class="btn btn-sm btn-primary" href="{{ irf.view_url }}">View</a></td>
-                <td><a class="btn btn-sm btn-primary" href="{{ irf.edit_url }}">Edit</a></td>
-                <td><a class="btn btn-sm btn-danger" ng-click="vm.deleteIrf(irf)">{{ irf.confirmedDelete ? "Confirm?" : "Delete"}}</a></td>
+                <td ng-show="vm.user.permission_irf_edit"><a class="btn btn-sm btn-primary" href="{{ irf.edit_url }}">Edit</a></td>
+                <td ng-show="vm.user.permission_irf_delete"><a class="btn btn-sm btn-danger" ng-click="vm.deleteIrf(irf)">{{ irf.confirmedDelete ? "Confirm?" : "Delete"}}</a></td>
             </tr>
         </tbody>
     </table>

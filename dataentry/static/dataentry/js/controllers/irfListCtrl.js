@@ -8,6 +8,7 @@ angular
         // Variable Declarations
         vm.loading = false;
         vm.reverse = false;
+        vm.user = {};
         vm.irfs = [];
         vm.searchValue = "";
         vm.nextPageUrl = "";
@@ -18,6 +19,7 @@ angular
 
 
         // Function Definitions
+        vm.getUser = getUser;
         vm.listIrfs = listIrfs;
         vm.loadMoreIrfs = loadMoreIrfs;
         vm.searchIrfs = searchIrfs;
@@ -31,7 +33,22 @@ angular
 
 
         function main(){
+            vm.getUser();
             vm.listIrfs();
+        }
+
+        function getUser(){
+            vm.user = {
+                "email": "asdasd",
+                "permission_irf_view": true,
+                "permission_irf_add": true,
+                "permission_irf_edit": true,
+                "permission_irf_delete": true,
+                "permission_vif_view": true,
+                "permission_vif_add": true,
+                "permission_vif_edit": true,
+                "permission_vif_delete": true
+            };
         }
 
         function sortIcon(column, name){

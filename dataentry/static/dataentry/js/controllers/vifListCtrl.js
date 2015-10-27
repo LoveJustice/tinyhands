@@ -9,6 +9,7 @@ angular
         vm.loading = false;
         vm.reverse = false;
         vm.vifs = [];
+        vm.user = {};
         vm.searchValue = "";
         vm.nextPageUrl = "";
         vm.paginateBy = 25;
@@ -18,6 +19,7 @@ angular
 
 
         // Function Definitions
+        vm.getUser = getUser;
         vm.listVifs = listVifs;
         vm.loadMoreVifs = loadMoreVifs;
         vm.searchVifs = searchVifs;
@@ -32,6 +34,21 @@ angular
 
         function main(){
             vm.listVifs();
+            vm.getUser();
+        }
+
+        function getUser(){
+            vm.user = {
+                "email": "asdasd",
+                "permission_irf_view": true,
+                "permission_irf_add": true,
+                "permission_irf_edit": true,
+                "permission_irf_delete": true,
+                "permission_vif_view": true,
+                "permission_vif_add": true,
+                "permission_vif_edit": true,
+                "permission_vif_delete": true
+            };
         }
 
         function sortIcon(column, name){

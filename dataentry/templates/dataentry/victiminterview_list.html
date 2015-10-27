@@ -5,7 +5,7 @@
 
 {% block content %}
 {% verbatim %}
-<div ng-controller="vifListCtrl as vm">
+<div ng-controller="vifListCtrl as vm" ng-show="vm.user.permission_vif_view">
 
         <div class="row">
             <h1>All VIFs</h1>
@@ -13,13 +13,13 @@
 
     <div class="row">
         <div class="col-md-2">
-            <a id="id_input_new_vif" class="pull-right btn btn-success" href="/data-entry/vifs/create/">
-                Input A New VIF
+            <a class="btn btn-primary" href="/data-entry/vifs/export/" download>
+                Export as CSV
             </a>
         </div>
         <div class="col-md-2">
-            <a class="btn btn-primary" href="/data-entry/vifs/export/" download>
-                Export as CSV
+            <a ng-show="vm.user.permission_vif_add" id="id_input_new_vif" class="btn btn-success" href="/data-entry/vifs/create/">
+                Input A New VIF
             </a>
         </div>
 
@@ -71,8 +71,8 @@
                     Time Last Edited <i class="glyphicon" ng-class="vm.sortIcon('number', 'date_time_last_updated')"></i>
                 </th>
                 <th>&nbsp;</th>
-                <th>&nbsp;</th>
-                <th>&nbsp;</th>
+                <th ng-show="vm.user.permission_vif_edit">&nbsp;</th>
+                <th ng-show="vm.user.permission_vif_delete">&nbsp;</th>
             </tr>
         </thead>
         <tbody>
@@ -85,8 +85,8 @@
                 <td>{{ vif.date_time_entered_into_system | date:"medium" }}</td>
                 <td>{{ vif.date_time_last_updated | date:"medium" }}</td>
                 <td><a class="btn btn-sm btn-primary" href="{{ vif.view_url }}">View</a></td>
-                <td><a class="btn btn-sm btn-primary" href="{{ vif.edit_url }}">Edit</a></td>
-                <td><a class="btn btn-sm btn-danger" ng-click="vm.deleteVif(vif)">{{ vif.confirmedDelete ? "Confirm?" : "Delete"}}</a></td>
+                <td ng-show="vm.user.permission_vif_edit"><a class="btn btn-sm btn-primary" href="{{ vif.edit_url }}">Edit</a></td>
+                <td ng-show="vm.user.permission_vif_delete"><a class="btn btn-sm btn-danger" ng-click="vm.deleteVif(vif)">{{ vif.confirmedDelete ? "Confirm?" : "Delete"}}</a></td>
             </tr>
         </tbody>
     </table>
