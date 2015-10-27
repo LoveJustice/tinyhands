@@ -12,8 +12,9 @@ exports.config = {
     specs:  [
         // First logically
         'accounts/loginPage.spec.js',
-
-        'borderStations/borderStationCRUD.spec.js',
+        'borderStations/borderStation.spec.js' 
+        //Delete the CRUD and uncomment the rest after the new borderStation testing is working
+        // 'borderStations/borderStationCRUD.spec.js',
 
         'dataentry/irfCRUD.spec.js',
         'dataentry/vifCrud.spec.js',
@@ -28,7 +29,7 @@ exports.config = {
 
         'addresses/address1Page.spec.js',
         'accounts/accessDefaults.spec.js',
-        // Has to run last
+        //Has to run last
         'accounts/permissionsPage.spec.js'
       ],
 

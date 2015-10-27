@@ -8,8 +8,8 @@ import datetime
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dataentry', '0001_initial'),
         ('static_border_stations', '0001_initial'),
+        ('dataentry', '0001_initial'),
     ]
 
     operations = [
