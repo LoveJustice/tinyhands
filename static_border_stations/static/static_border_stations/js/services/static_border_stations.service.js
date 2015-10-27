@@ -38,18 +38,20 @@
 			return $http.post('/api/staff/', data);
 		}
 		
-		function createRelationship(createArray, createApiFunction, getApiFunction, errorHandler) {
+		function createRelationship(createArray, createApiFunction, errorHandler) {
 			var expectedNumCalls = createArray.length;
 			var numCalls = 0;
 			var defered = $q.defer();
 			createArray.forEach(function (anObject) {
 				createApiFunction(anObject).then(function() {
-					getApiFunction();
 					numCalls++;
 					if (numCalls >= expectedNumCalls) {
 						defered.resolve('Finished sending create calls');
 					}
-				}, errorHandler);
+				}, function(error) {
+					defered.reject(error);
+					errorHandler(error);
+				});
 			});
 			
 			if (expectedNumCalls == 0) {
@@ -111,7 +113,7 @@
 			return $http.put('/api/locations/' + locationId, data);
 		}
 		
-		function updateRelationship(updateArray, updateApiFunction, getApiFunction, numNew, errorHandler) {
+		function updateRelationship(updateArray, updateApiFunction, numNew, errorHandler) {
   		numNew = typeof numNew !== 'undefined' ? numNew : 0; // if null then set to 0
 			var expectedNumCalls = updateArray.length - numNew;
 			var numCalls = 0;
@@ -119,12 +121,14 @@
 			updateArray.forEach(function(anObject) {
 				if (anObject.id) {
 					updateApiFunction(anObject.id, anObject).then(function() {
-						getApiFunction();
 						numCalls++;
 						if (numCalls >= expectedNumCalls) {
 							defered.resolve('Finished sending update calls');
 						}
-					}, errorHandler);
+					}, function(error) {
+						defered.reject(error);
+						errorHandler(error);
+					});
 				}
 			});
 			

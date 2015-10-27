@@ -43,10 +43,7 @@
 		activate();
 		
 		function activate() {
-			getDetails();
-			getStaff();
-			getCommitteeMembers();
-			getLocations();
+			getData();
 		}
 		
 		function addLocation() {
@@ -78,37 +75,50 @@
 		// CREATE calls
 		function createCommitteeMembers(members) {
 			var defered = $q.defer();
-			vm.createRelationship(members, BorderStationsService.createCommitteeMember, getCommitteeMembers).then(function() {
+			vm.createRelationship(members, BorderStationsService.createCommitteeMember).then(function() {
 				vm.newCommitteeMembers = []; // Empty the array after all of the create calls have been fired.
 				defered.resolve('Finished creating Committee Members');
+			}, function(error) {
+				defered.reject(error);
 			});
 			return defered.promise;
 		}
 		
 		function createLocations(locations) {
 			var defered = $q.defer();
-			vm.createRelationship(locations, BorderStationsService.createLocation, getLocations).then(function() {
+			vm.createRelationship(locations, BorderStationsService.createLocation).then(function() {
 				vm.newLocations = []; // Empty the array after all of the create calls have been fired.
 				defered.resolve('Finished creating Locations');
+			}, function(error) {
+				defered.reject(error);
 			});
 			return defered.promise;
 		}
 		
-		function createRelationship(createArray, createApiFunction, getApiFunction) {
-			return BorderStationsService.createRelationship(createArray, createApiFunction, getApiFunction, vm.handleErrors);
+		function createRelationship(createArray, createApiFunction) {
+			return BorderStationsService.createRelationship(createArray, createApiFunction, vm.handleErrors);
 		}
 		
 		function createStaff(staff) {
 			var defered = $q.defer();
-			vm.createRelationship(staff, BorderStationsService.createStaff, getStaff).then(function() {
+			vm.createRelationship(staff, BorderStationsService.createStaff).then(function() {
 				vm.newStaff = []; // Empty the array after all of the create calls have been fired.
 				defered.resolve('Finished creating Staff');
+			}, function(error) {
+				defered.reject(error);
 			});
 			return defered.promise;
 		}
 		
 		
 		// GET calls
+		function getData() {
+			getDetails();
+			getStaff();
+			getCommitteeMembers();
+			getLocations();
+		}
+		
 		function getDetails() {
 			if (vm.borderStationId) {
 				BorderStationsService.getDetails(vm.borderStationId).then(function(response) {
@@ -187,8 +197,10 @@
 		// UPDATE calls
 		function updateCommitteeMembers(committeeMembers) {
 			var defered = $q.defer();
-			vm.updateRelationship(committeeMembers, BorderStationsService.updateCommitteeMembers, getCommitteeMembers, vm.newCommitteeMembers.length).then(function() {
+			vm.updateRelationship(committeeMembers, BorderStationsService.updateCommitteeMembers, vm.people.committeeMembers.data.length).then(function() {
 				defered.resolve('Finished updating Committee Members');
+			}, function(error) {
+				defered.reject(error);
 			});
 			return defered.promise;
 		}
@@ -210,34 +222,42 @@
 			
 			var defered = $q.defer();
 			
-			vm.updateRelationship([details], BorderStationsService.updateDetails, getDetails).then(function() {
+			vm.updateRelationship([details], BorderStationsService.updateDetails).then(function() {
 				defered.resolve('Finished updating Details');
+			}, function(error) {
+				defered.reject(error);
 			});
 			return defered.promise;
 		}
 		
 		function updateLocations(locations) {
 			var defered = $q.defer();
-			vm.updateRelationship(locations, BorderStationsService.updateLocations, getLocations, vm.newLocations.length).then(function() {
+			vm.updateRelationship(locations, BorderStationsService.updateLocations, vm.locations.length).then(function() {
 				defered.resolve('Finished updating Locations');
+			}, function(error) {
+				defered.reject(error);
 			});
 			return defered.promise;
 		}
 		
-		function updateRelationship(value, newArray, currentArray, updateApiFunction, getApiFunction) {
-			return BorderStationsService.updateRelationship(value, newArray, currentArray, updateApiFunction, getApiFunction, vm.handleErrors);
+		function updateRelationship(updateArray, updateApiFunction, numberOfNewValues) {
+			return BorderStationsService.updateRelationship(updateArray, updateApiFunction, numberOfNewValues, vm.handleErrors);
 		}
 		
 		function updateStaff(staff) {
 			var defered = $q.defer();
-			vm.updateRelationship(staff, BorderStationsService.updateStaff, getStaff, vm.newStaff.length).then(function() {
+			vm.updateRelationship(staff, BorderStationsService.updateStaff, vm.newStaff.length).then(function() {
 				defered.resolve('Finished updating Staff');
+			}, function(error) {
+				defered.reject(error);
 			});
 			return defered.promise;
 		}
 		
 		function updateStation() {
 			vm.updateStatusText = 'Saving...';
+			
+			vm.errors = [];
 			
 			var promises = [];
 			
@@ -252,10 +272,17 @@
 			
 			
 			$q.all(promises).then(function() {
+				getData();
 				vm.updateStatusText = 'Saved';
 				$timeout(function() {
 					vm.updateStatusText = updateButtonText;
 				}, 2000);
+			}, function(error) {
+				console.log(error);
+				vm.updateStatusText = 'Error';
+				$timeout(function() {
+					vm.updateStatusText = updateButtonText;
+				}, 4000);
 			});
 		}
 	}
