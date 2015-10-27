@@ -10,6 +10,7 @@ describe('BorderStationsCtrl', function(){
     }));
    
    
+   
    describe('initial value', function() {
      it('borderStationId should be equal to window border_station_pk', inject(function($controller) {
        // REGION: Data Setup
@@ -79,6 +80,7 @@ describe('BorderStationsCtrl', function(){
      });
    });
    
+   
 	 
 	 describe('function addLocation', function() {
      
@@ -106,6 +108,7 @@ describe('BorderStationsCtrl', function(){
    });
 	 
 	 
+   
 	 describe('function addPerson', function() {
      
      var committeeMemTitle = 'Committee Members';
@@ -163,6 +166,7 @@ describe('BorderStationsCtrl', function(){
    });
    
    
+   
    describe('function changeStationStatus', function() {
      it('should toggle open status from false to true for a station', function() {
        // REGION: Data Setup
@@ -183,6 +187,18 @@ describe('BorderStationsCtrl', function(){
        
        expect(vm.details.open).toBeFalsy();
      });
+   });
+   
+   
+   
+   describe('function createRelationship', function() {
+     
+   });
+   
+   
+   
+   describe('function handleErrors', function() {
+     
    });
    
    
@@ -252,21 +268,7 @@ describe('BorderStationsCtrl', function(){
    
    
    describe('function removeRelationship', function() {
-     it('when value is in newArray remove it from newArray and currentArray', function() {
-       // REGION: Data Setup
-       var newValue = {
-         border_station: 1,
-         name: 'Test Object'
-       };
-       var newArray = [newValue];
-       var currentArray = [newValue];
-       // ENDREGION: Data Setup
-       
-       vm.removeRelationship(newValue, newArray, currentArray);
-       
-       expect(newArray).toEqual([]);       
-       expect(currentArray).toEqual([]);       
-     });
+     
    });
    
    
