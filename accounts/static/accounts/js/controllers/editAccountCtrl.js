@@ -8,39 +8,40 @@ angular
 
     function EditAccountCtrl(Accounts, PermissionsSets, $window) {
         var vm = this;
-        window.vm = vm;
-            
-        if(window.account_id) {
-            vm.editing = true;
-            var accountId = window.account_id;
-            vm.account = Accounts.get({id: accountId});
-        } else {
-            vm.editing = false;
-            vm.account = {
-                email: '',
-                first_name: '',
-                last_name: '',
-                user_designation: '',
-                permission_irf_view: false,
-                permission_irf_add: false,
-                permission_irf_edit: false,
-                permission_irf_delete: false,
-                permission_vif_view: false,
-                permission_vif_add: false,
-                permission_vif_edit: false,
-                permission_vif_delete: false,
-                permission_border_stations_view: false,
-                permission_border_stations_add: false,                
-                permission_border_stations_edit: false,                
-                permission_border_stations_delete: false,                
-                permission_accounts_manage: false,
-                permission_receive_email: false,
-                permission_vdc_manage: false,
-                permission_budget_manage: false,
-            }
-        }
         
-        vm.permissionsSets = PermissionsSets.all();
+        vm.start = function() {
+            if($window.account_id !== undefined && $window.account_id > -1) {
+                vm.editing = true;
+                var accountId = $window.account_id;
+                vm.account = Accounts.get({id: accountId});
+            } else {
+                vm.editing = false;
+                vm.account = {
+                    email: '',
+                    first_name: '',
+                    last_name: '',
+                    user_designation: '',
+                    permission_irf_view: false,
+                    permission_irf_add: false,
+                    permission_irf_edit: false,
+                    permission_irf_delete: false,
+                    permission_vif_view: false,
+                    permission_vif_add: false,
+                    permission_vif_edit: false,
+                    permission_vif_delete: false,
+                    permission_border_stations_view: false,
+                    permission_border_stations_add: false,                
+                    permission_border_stations_edit: false,                
+                    permission_border_stations_delete: false,                
+                    permission_accounts_manage: false,
+                    permission_receive_email: false,
+                    permission_vdc_manage: false,
+                    permission_budget_manage: false,
+                }
+            }
+            
+            vm.permissionsSets = PermissionsSets.all();
+        }    
         
         vm.update = function() {
             var call;
@@ -96,5 +97,6 @@ angular
             }
             return "Create";
         }
-               
+        
+        vm.start();
     }
