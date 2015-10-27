@@ -38,17 +38,10 @@ angular
         }
 
         function getUser(){
-            vm.user = {
-                "email": "asdasd",
-                "permission_irf_view": true,
-                "permission_irf_add": true,
-                "permission_irf_edit": true,
-                "permission_irf_delete": true,
-                "permission_vif_view": true,
-                "permission_vif_add": true,
-                "permission_vif_edit": true,
-                "permission_vif_delete": true
-            };
+            $http.get('/api/me/')
+                .success(function(data){
+                    vm.user = data
+                });
         }
 
         function sortIcon(column, name){

@@ -1,4 +1,5 @@
 from django.conf.urls import patterns, url
+from accounts.views import CurrentUserView
 
 from dataentry.views import Address2ViewSet, Address1ViewSet, GeoCodeDistrictAPIView, GeoCodeVdcAPIView, InterceptionRecordViewSet, VictimInterviewViewSet
 from budget.views import BudgetViewSet, OtherItemsViewSet
@@ -32,4 +33,8 @@ urlpatterns = patterns('rest_api.views',
     # VIFs
     url(r'^vif/$', VictimInterviewViewSet.as_view({'get': 'list'}), name="VictimInterview"),
     url(r'^vif/(?P<pk>\d+)/$', VictimInterviewViewSet.as_view({'delete': 'destroy'}), name="VictimInterviewDetail"),
+
+    #Accounts and DefaultPermissionsSets
+    url(r'^me/$', CurrentUserView.as_view(), name="CurrentUser"),
+
 )
