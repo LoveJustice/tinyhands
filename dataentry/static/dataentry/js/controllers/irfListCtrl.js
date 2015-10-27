@@ -14,13 +14,14 @@ angular
         vm.paginateBy = 25;
         vm.sortIcon = "/static/images/sortIcon.jpg";
         vm.selectedAddress = {};
-        vm.sortColumn = "name";
+        vm.sortColumn = "irf_number";
 
 
         // Function Definitions
         vm.listIrfs = listIrfs;
         vm.loadMoreIrfs = loadMoreIrfs;
         vm.searchIrfs = searchIrfs;
+        vm.deleteIrf = deleteIrf;
         vm.getQueryParams = getQueryParams;
         vm.sortIcon = sortIcon;
         main();
@@ -59,7 +60,7 @@ angular
 
         function loadMoreIrfs(){
             vm.loading = true;
-            irfService.listIrfs(vm.nextPageUrl, "&" + vm.getQueryParams().slice(1))
+            irfService.loadMoreIrfs(vm.nextPageUrl, "&" + vm.getQueryParams().slice(1))
                 .success(function (data) {
                     vm.irfs = vm.irfs.concat(data.results);
                     vm.nextPageUrl = data.next;
@@ -77,10 +78,24 @@ angular
                 });
         }
 
+        function deleteIrf(irf) {
+            if(irf.confirmedDelete){
+                vm.loading = true;
+                irfService.deleteIrf(irf.delete_url)
+                    .success(function(){
+                        vm.listIrfs();
+                        vm.loading = false;
+                    });
+            }
+            else{
+                irf.confirmedDelete = true;
+            }
+        }
+
         function getQueryParams(){
             var params = "";
             params += "?page_size=" + vm.paginateBy;
-            if(vm.searchValue){
+                if(vm.searchValue){
                 params += "&search=" + vm.searchValue;
             }
             if(vm.reverse){
