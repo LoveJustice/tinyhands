@@ -77,12 +77,10 @@ th, td {
                     <tr ng-repeat="permission in accountsCtrl.permissions.results">
                         <td style="width: 25px">
                                     <form method="POST" class="permissions-delete-form" action="{% url 'access_defaults_delete' form.instance.pk %}">
-                                        <input type="submit" class="btn btn-danger btn-xs" value="X" />
+                                        <input type="submit" class="btn btn-danger btn-xs" ng-show="!permission.is_used_by_accounts" value="X" />
                                     </form>
-<!--                                    <button type="button" class="in-use-button btn btn-default btn-xs" data-toggle="tooltip" title="This designation is used by one or more accounts and cannot be deleted.">X</button>
--->                        </td>
-<!--                        <td>{{ permission.id }}{{ permission.name }}</td>-->
-<!--                        <td>{{ form.id }}{{ form.name|bootstrap_inline }}</td>-->
+                                    <button type="button" class="in-use-button btn btn-default btn-xs" ng-show="permission.is_used_by_accounts" data-toggle="tooltip" title="This designation is used by one or more accounts and cannot be deleted.">X</button>
+                        </td>
                         <td>
                           <form class="form-inline">
                               <input type="text" class="form-control" value="{{ permission.name }}"/>
