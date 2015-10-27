@@ -21,7 +21,6 @@ describe('Accounts Page', function() {
         expect(browser.driver.getCurrentUrl()).toContain('/accounts/access-control/');
     });
 
-
     describe('handles permissions of VDCs', function(){
 
         it('unchecks vdc edit permission', function(){
@@ -31,7 +30,7 @@ describe('Accounts Page', function() {
             expect(this.permissions.element(by.xpath("..")).getAttribute('class')).toBe('btn btn-danger');
             permissionsPage.savePermissions();
 
-            //tests for inability to edit vdcs
+            //tests for inability to edit addresses
             permissionsPage.navigateToVdcPage();
             browser.sleep(800);
             expect(element(by.xpath('//h1')).getText()).toContain("403");
@@ -42,7 +41,20 @@ describe('Accounts Page', function() {
     });
 
     describe('handles budget permissions', function(){
-        //TODO write budget tests
+        it('unchecks budget management permission', function() {
+            permissionsPage.checkPermissionSetup("id_permission_budget_manage");
+            this.permissions = element(by.id("id_permission_budget_manage"));
+            expect(this.permissions.element(by.xpath("..")).getAttribute('class')).toBe('btn btn-danger');
+            permissionsPage.savePermissions();
+
+            //tests for inability to edit addresses
+            permissionsPage.navigateToBudgetPage();
+            browser.sleep(800);
+            expect(element(by.xpath('//h1')).getText()).toContain("403");
+
+            //rechecks budget edit permission
+            permissionsPage.checkPermissionCleanup();
+        });
     });
 
     describe('handles permissions of IRF', function() {
@@ -95,7 +107,7 @@ describe('Accounts Page', function() {
 
     });
 
-    /*describe('handles VDC editing permission', function(){
+    describe('handles VDC editing permission', function(){
         it('unchecks vdc edit permission', function(){
             permissionsPage.navigateToAccountPage();
             permissionsPage.resetPermissions();
@@ -171,10 +183,7 @@ describe('Accounts Page', function() {
 
     });
 
-
     describe('handles permissions of vif', function() {
-
-
         it('allows viewing of vif', function() {
             permissionsPage.navigateToVifPage();
             permissionsPage.viewVifForm();
@@ -246,7 +255,7 @@ describe('Accounts Page', function() {
 
             //uncheck the permission
             permissionsPage.navigateToAccountPage();
-            //permissionsPage.checkPermission("id_permission_accounts_manage");
+            permissionsPage.checkPermission("id_permission_accounts_manage");
             browser.sleep(500);
             this.permissions = element(by.id("id_permission_accounts_manage"));
             expect(this.permissions.element(by.xpath("..")).getAttribute('class')).toBe('btn btn-danger');
@@ -257,6 +266,6 @@ describe('Accounts Page', function() {
             expect(element(by.xpath('//h1')).getText()).toContain("403");
 
         });
-    });*/
+    });
 
 });

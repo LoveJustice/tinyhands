@@ -6,6 +6,10 @@ var commonMethods = require('../commonMethods.js');
 var permissionsPage = function() {
     var page = this;
 
+    this.navigateToBudgetPage = function() {
+        browser.get(constants.webAddress + "/budget/budget_calculations/");
+    };
+
     this.navigateToVdcPage = function() {
         browser.get(constants.webAddress + "/data-entry/geocodelocations/vdc-admin/");
     };

@@ -11,6 +11,7 @@ from braces.views import LoginRequiredMixin
 from extra_views import ModelFormSetView
 from rest_framework import status
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 
@@ -214,6 +215,7 @@ class AccessDefaultsDeleteView(
     success_url = reverse_lazy('access_defaults')
 
 
+#Rest Api Views
 class AccountViewSet(ModelViewSet):
     queryset = Account.objects.all()
     serializer_class = AccountsSerializer
@@ -235,3 +237,11 @@ class DefaultPermissionsSetViewSet(ModelViewSet):
         
         instance.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class CurrentUserView(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request):
+        serializer = AccountsSerializer(request.user)
+        return Response(serializer.data)

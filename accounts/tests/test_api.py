@@ -456,3 +456,25 @@ class DefaultPermissionsSetDeleteTests(RestApiTestCase):
         response = self.client.delete(url)
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+
+class CurrentUserTests(RestApiTestCase):
+    
+    def test_when_not_logged_in_should_deny_access(self):
+        url = reverse('CurrentUser')
+        
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.data['detail'], 'Authentication credentials were not provided.')
+        
+    def test_when_logged_in_should_return_logged_in_users_account(self):
+        user = SuperUserFactory.create()
+        self.login(user)
+        url = reverse('CurrentUser')
+        
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['id'], user.id)
+        self.assertEqual(response.data['email'], user.email)

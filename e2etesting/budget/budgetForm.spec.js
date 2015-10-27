@@ -1,6 +1,7 @@
 var budgetForm = require('./budgetForm.js');
 var loginPage = require('../accounts/loginPage.js');
 var c = require('../testConstants.json');
+var irfCrud = require('../dataentry/irfCRUD.js');
 
 describe('Budget Calculation', function() {
     beforeEach(function () {
@@ -24,12 +25,17 @@ describe('Budget Calculation', function() {
 
         it('calculates values correctly ', function () {
             // fill out form
+            //Modify filloutIRF to pass in borderstation name to allow for different forms
+            irfCrud.getToIRF();
+            irfCrud.fillOutIRF("AAA123");
+
+            budgetForm.navigateToNewForm();
             browser.ignoreSynchronization = false;
             budgetForm.fillOutForm();
             browser.sleep(5000);
 
             // expect totals to be certain values
-            expect(element(by.id('staffTotal')).getAttribute("value")).toBe('100');
+            expect(element(by.id('staffTotal')).getAttribute("value")).toBe('200');
             expect(element(by.binding("main.shelterTotal()")).getText()).toBe(c.shelterTotal);
             expect(element(by.binding("main.foodGasTotal()")).getText()).toBe(c.foodTotal);
             expect(element(by.binding("main.communicationTotalValue")).getText()).toBe(c.commTotal);
@@ -51,7 +57,8 @@ describe('Budget Calculation', function() {
         });
 
         it('should show form in budget calculations list', function () {
-            browser.sleep(10000);
+
+            //browser.sleep(10000);
             browser.get(c.webAddress + '/budget/budget_calculations/');
             browser.sleep(500);
             var x = new Date();
@@ -224,4 +231,12 @@ describe('Budget Calculation', function() {
             expect(element(by.id("misc_number_of_intercepts_mult")).getAttribute('enabled')).toBe(null);
         });
     });
+
+    /*describe("Top Table", function() {
+        it("populates correctly", function() {
+            budgetForm.navigateToNewForm();
+            browser.ignoreSynchronization = false;
+            budgetForm.fillOutForm();
+        });
+    });*/
 });
