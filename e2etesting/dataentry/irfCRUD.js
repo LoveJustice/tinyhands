@@ -7,7 +7,7 @@ var irfPage = function() {
     var page = this;
     
     this.getToIRF = function(){
-	    browser.get(c.webAddress + '/data-entry/irfs/search/');
+	    browser.get(c.webAddress + '/data-entry/irfs/');
         //this.link = element(by.id("id_input_new_irf"));
         browser.get(c.webAddress + '/data-entry/irfs/create/');
         //return this.link.click();
@@ -69,12 +69,12 @@ var irfPage = function() {
     this.deleteIRF = function() {
 
         //this.dIRF = element(by.buttonText("Delete"));
-        this.dIRF = element(by.xpath("//button[text()='Delete']"));
+        this.dIRF = element(by.partialLinkText("Delete"));
         methods.click(this.dIRF);
         //this.dIRF.click();
         browser.sleep(500);
-        this.dIRFPopUp = element(by.xpath("//input[@value='Delete']"));
-        methods.click(this.dIRFPopUp);
+        this.confirmDelete = element(by.partialLinkText("Confirm"));
+        methods.click(this.confirmDelete);
     };
 
     //TODO: Test for staff dropdown - ensure that correct staff is loaded based on the IRF number #id_irf_number

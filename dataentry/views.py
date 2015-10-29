@@ -85,6 +85,7 @@ class SearchFormsMixin(object):
         return context
 
 
+@login_required
 def interception_record_list_template(request):
     return render(request, 'dataentry/interceptionrecord_list.html')
 

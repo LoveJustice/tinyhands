@@ -6,15 +6,15 @@ var searchIRF = function(){
     var page = this;
 
     this.gotoIRFSearch = function(){
-		browser.get(constants.webAddress + '/data-entry/irfs/search/');
+		browser.get(constants.webAddress + '/data-entry/irfs/');
 	};
 
 	this.gotoVIFSearch = function(){
-		browser.get(constants.webAddress + '/data-entry/vifs/search/');
+		browser.get(constants.webAddress + '/data-entry/vifs/');
 	};
 
-    this.searchKey = function(keys, xpath){
-		this.searchfield = element(by.xpath(xpath));
+    this.searchKey = function(keys, model){
+		this.searchfield = element(by.model(model));
 		this.searchfield.sendKeys(keys);
     };
 };

@@ -185,9 +185,10 @@ describe('Accounts Page', function() {
 
     describe('handles permissions of vif', function() {
         it('allows viewing of vif', function() {
-            permissionsPage.navigateToVifPage();
-            permissionsPage.viewVifForm();
-            expect(browser.getTitle()).toContain("Edit VIF");
+            permissionsPage.navigateToVifPage().then(function(){
+                var editButton = element(by.linkText("View"));
+                expect(editButton.isPresent()).toBeTruthy();
+            });
         });
 
         it('unchecks vif add permissions', function(){
