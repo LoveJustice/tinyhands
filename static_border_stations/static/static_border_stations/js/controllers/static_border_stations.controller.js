@@ -9,6 +9,9 @@
 	function BorderStationsCtrl($q, $timeout, BorderStationsService) {
 		var vm = this;
 		
+		var createCommitteeMembersDeferredMessage = 'Finished creating Committee Members';
+		var createLocationsDeferredMessage = 'Finished creating Locations';
+		var createStaffDeferredMessage = 'Finished creating Staff';
 		var committeeMemTitle = 'Committee Members';
 		var staffTitle = 'Staff';
 		var updateButtonText = 'Update Station';
@@ -17,6 +20,9 @@
 		vm.addPerson = addPerson;
 		vm.borderStationId = window.border_station_pk;
 		vm.changeStationStatus = changeStationStatus;
+		vm.createCommitteeMembers = createCommitteeMembers;
+		vm.createLocations = createLocations;
+		vm.createStaff = createStaff;
 		vm.createRelationship = createRelationship;
 		vm.details = {};
 		vm.errors = [];
@@ -33,10 +39,16 @@
 				name: committeeMemTitle
 			}
 		};
+		vm.removeCommitteeMember = removeCommitteeMember;
 		vm.removeLocation = removeLocation;
 		vm.removePerson = removePerson;
 		vm.removeRelationship = removeRelationship;
+		vm.removeStaff = removeStaff;
+		vm.updateCommitteeMembers = updateCommitteeMembers;
+		vm.updateDetails = updateDetails;
+		vm.updateLocations = updateLocations;
 		vm.updateRelationship = updateRelationship;
+		vm.updateStaff = updateStaff;
 		vm.updateStation = updateStation;
 		vm.updateStatusText = updateButtonText;
 		
@@ -74,40 +86,25 @@
 		
 		// CREATE calls
 		function createCommitteeMembers(members) {
-			var defered = $q.defer();
-			vm.createRelationship(members, BorderStationsService.createCommitteeMember).then(function() {
-				vm.newCommitteeMembers = []; // Empty the array after all of the create calls have been fired.
-				defered.resolve('Finished creating Committee Members');
-			}, function(error) {
-				defered.reject(error);
-			});
-			return defered.promise;
+			return vm.createRelationship(members, BorderStationsService.createCommitteeMember, createCommitteeMembersDeferredMessage);
 		}
 		
 		function createLocations(locations) {
-			var defered = $q.defer();
-			vm.createRelationship(locations, BorderStationsService.createLocation).then(function() {
-				vm.newLocations = []; // Empty the array after all of the create calls have been fired.
-				defered.resolve('Finished creating Locations');
-			}, function(error) {
-				defered.reject(error);
-			});
-			return defered.promise;
+			return vm.createRelationship(locations, BorderStationsService.createLocation, createLocationsDeferredMessage);
 		}
 		
-		function createRelationship(createArray, createApiFunction) {
-			return BorderStationsService.createRelationship(createArray, createApiFunction, vm.handleErrors);
+		function createRelationship(createArray, createApiFunction, resolveMessage) {
+			var deferred = $q.defer();
+			BorderStationsService.createRelationship(createArray, createApiFunction, vm.handleErrors).then(function() {
+				deferred.resolve(resolveMessage);
+			}, function(error) {
+				deferred.reject(error);
+			});
+			return deferred.promise;
 		}
 		
 		function createStaff(staff) {
-			var defered = $q.defer();
-			vm.createRelationship(staff, BorderStationsService.createStaff).then(function() {
-				vm.newStaff = []; // Empty the array after all of the create calls have been fired.
-				defered.resolve('Finished creating Staff');
-			}, function(error) {
-				defered.reject(error);
-			});
-			return defered.promise;
+			return vm.createRelationship(staff, BorderStationsService.createStaff, createStaffDeferredMessage);
 		}
 		
 		
@@ -179,7 +176,7 @@
 		
 		function removePerson(persons, person) {
 			if (person.removeConfirmed) {
-				persons.name == staffTitle ? removeStaff(person) : removeCommitteeMember(person);
+				persons.name == staffTitle ? vm.removeStaff(person) : vm.removeCommitteeMember(person);
 			} else {
 				person.removeConfirmed = true;
 			}
@@ -196,13 +193,7 @@
 		
 		// UPDATE calls
 		function updateCommitteeMembers(committeeMembers) {
-			var defered = $q.defer();
-			vm.updateRelationship(committeeMembers, BorderStationsService.updateCommitteeMembers, vm.people.committeeMembers.data.length).then(function() {
-				defered.resolve('Finished updating Committee Members');
-			}, function(error) {
-				defered.reject(error);
-			});
-			return defered.promise;
+			return vm.updateRelationship(committeeMembers, BorderStationsService.updateCommitteeMembers, vm.newCommitteeMembers.length, 'Finished updating Committee Members');
 		}
 		
 		function updateDetails(details) {
@@ -220,38 +211,25 @@
 			}
 			details.date_established = dateString;
 			
-			var defered = $q.defer();
-			
-			vm.updateRelationship([details], BorderStationsService.updateDetails).then(function() {
-				defered.resolve('Finished updating Details');
-			}, function(error) {
-				defered.reject(error);
-			});
-			return defered.promise;
+			return vm.updateRelationship([details], BorderStationsService.updateDetails, 0, 'Finished updating Details');
 		}
 		
 		function updateLocations(locations) {
-			var defered = $q.defer();
-			vm.updateRelationship(locations, BorderStationsService.updateLocations, vm.locations.length).then(function() {
-				defered.resolve('Finished updating Locations');
-			}, function(error) {
-				defered.reject(error);
-			});
-			return defered.promise;
+			return vm.updateRelationship(locations, BorderStationsService.updateLocations, vm.newLocations.length, 'Finished updating Locations');
 		}
 		
-		function updateRelationship(updateArray, updateApiFunction, numberOfNewValues) {
-			return BorderStationsService.updateRelationship(updateArray, updateApiFunction, numberOfNewValues, vm.handleErrors);
+		function updateRelationship(updateArray, updateApiFunction, numberOfNewValues, resolveMessage) {
+			var deferred = $q.defer();
+			BorderStationsService.updateRelationship(updateArray, updateApiFunction, numberOfNewValues, vm.handleErrors).then(function() {
+				deferred.resolve(resolveMessage);
+			}, function(error) {
+				deferred.reject(error);
+			});
+			return deferred.promise;
 		}
 		
 		function updateStaff(staff) {
-			var defered = $q.defer();
-			vm.updateRelationship(staff, BorderStationsService.updateStaff, vm.newStaff.length).then(function() {
-				defered.resolve('Finished updating Staff');
-			}, function(error) {
-				defered.reject(error);
-			});
-			return defered.promise;
+			return vm.updateRelationship(staff, BorderStationsService.updateStaff, vm.newStaff.length, 'Finished updating Staff');
 		}
 		
 		function updateStation() {
@@ -261,17 +239,20 @@
 			
 			var promises = [];
 			
-			promises.push(createCommitteeMembers(vm.newCommitteeMembers));
-			promises.push(createLocations(vm.newLocations));
-			promises.push(createStaff(vm.newStaff));
+			promises.push(vm.createCommitteeMembers(vm.newCommitteeMembers));
+			promises.push(vm.createLocations(vm.newLocations));
+			promises.push(vm.createStaff(vm.newStaff));
 			
-			promises.push(updateDetails(vm.details));
-			promises.push(updateCommitteeMembers(vm.people.committeeMembers.data));
-			promises.push(updateLocations(vm.locations));
-			promises.push(updateStaff(vm.people.staff.data));
+			promises.push(vm.updateCommitteeMembers(vm.people.committeeMembers.data));
+			promises.push(vm.updateDetails(vm.details));
+			promises.push(vm.updateLocations(vm.locations));
+			promises.push(vm.updateStaff(vm.people.staff.data));
 			
 			
 			$q.all(promises).then(function() {
+				vm.newCommitteeMembers = [];
+				vm.newLocations = [];
+				vm.newStaff = [];
 				getData();
 				vm.updateStatusText = 'Saved';
 				$timeout(function() {

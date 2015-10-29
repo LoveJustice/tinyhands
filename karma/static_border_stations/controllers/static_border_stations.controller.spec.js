@@ -1,12 +1,26 @@
 describe('BorderStationsCtrl', function(){
-    var vm;//we'll use this scope in our tests
-
+    var vm, bsService, fakeDeferredFunction, promiseQ;//we'll use this scope in our tests
+    var committeeMemTitle = 'Committee Members';
+    var staffTitle = 'Staff';
+    
+    
     //mock Application to allow us to inject our own dependencies
     beforeEach(module('BorderStationsMod'));
-    //mock the controller for the same reason and include $rootScope and $controller
-    beforeEach(inject(function($controller){
-        //declare the controller and inject our empty scope
-        vm = $controller('BorderStationsCtrl');
+    //mock the controller for the same reason and include and $controller
+    beforeEach(inject(function($controller, $q, BorderStationsService){
+      //declare the controller and inject our empty scope
+      vm = $controller('BorderStationsCtrl');
+      // declare $q
+      promiseQ = $q;
+      // Get service
+      bsService = BorderStationsService;
+    
+      // Create function to fake promise
+      fakeDeferredFunction = function () {
+        var deferred = promiseQ.defer();
+        deferred.resolve();
+        return deferred.promise;
+      }
     }));
    
    
@@ -55,9 +69,6 @@ describe('BorderStationsCtrl', function(){
      });
      
      it('people staff name should be "Staff"', function() {
-       // REGION: Data Setup
-       var staffTitle = 'Staff';
-       // ENDREGION: Data Setup
        expect(vm.people.staff.name).toBe(staffTitle);
      });
      
@@ -66,9 +77,6 @@ describe('BorderStationsCtrl', function(){
      });
      
      it('people committeeMembers name should be "Committee Members"', function() {
-       // REGION: Data Setup
-       var committeeMemTitle = 'Committee Members';
-       // ENDREGION: Data Setup
        expect(vm.people.committeeMembers.name).toBe(committeeMemTitle);
      });
      
@@ -110,10 +118,6 @@ describe('BorderStationsCtrl', function(){
 	 
    
 	 describe('function addPerson', function() {
-     
-     var committeeMemTitle = 'Committee Members';
-     var staffTitle = 'Staff';
-     
      var emptyPerson = {border_station: 1};
      
      beforeEach(function() {
@@ -191,14 +195,87 @@ describe('BorderStationsCtrl', function(){
    
    
    
+   describe('function createCommitteeMembers', function() {
+     
+     it('should call createRelationship', function() {
+       spyOn(vm,'createRelationship');
+       
+       vm.createCommitteeMembers();
+       
+       expect(vm.createRelationship).toHaveBeenCalled();
+     });
+   });
+   
+   
+   
+   describe('function createLocations', function() {
+     
+     it('should call createRelationship', function() {
+       spyOn(vm,'createRelationship');
+       
+       vm.createLocations();
+       
+       expect(vm.createRelationship).toHaveBeenCalled();
+     });
+   });
+   
+   
+   
    describe('function createRelationship', function() {
      
+     it('should call border station service createRelationship function', function() {
+       spyOn(bsService, 'createRelationship').and.callFake(fakeDeferredFunction);
+       
+       vm.createRelationship();
+       
+       expect(bsService.createRelationship).toHaveBeenCalled();
+     });
+   });
+   
+   
+   
+   describe('function createStaff', function() {
+     
+     it('should call createRelationship', function() {
+       spyOn(vm,'createRelationship');
+       
+       vm.createStaff();
+       
+       expect(vm.createRelationship).toHaveBeenCalled();
+     });
    });
    
    
    
    describe('function handleErrors', function() {
      
+     it('should add errors to errors array', function() {
+      // REGION: Data Setup
+      var errors = {
+        data: {
+          email: ['Invalid email']
+        }
+      };
+      // ENDREGION: Data Setup
+       expect(vm.errors).toEqual([]);
+       
+       vm.handleErrors(errors);
+       
+       expect(vm.errors).not.toEqual([]);
+     });
+   });
+   
+   
+   
+   describe('function removeCommitteeMember', function() {
+     
+     it('should call removeRelationship', function() {
+       spyOn(vm,'removeRelationship');
+       
+       vm.removeCommitteeMember();
+       
+       expect(vm.removeRelationship).toHaveBeenCalled();
+     });
    });
    
    
@@ -221,8 +298,8 @@ describe('BorderStationsCtrl', function(){
        var location = {
          removeConfirmed: true
        }
-       spyOn(vm,'removeRelationship');
        // ENDREGION: Data Setup
+       spyOn(vm,'removeRelationship');
        
        vm.removeLocation(location);
        
@@ -233,14 +310,20 @@ describe('BorderStationsCtrl', function(){
    
    
    describe('function removePerson', function() {
-     var staffTitle = 'Staff';
+     var person, persons;
+      
+     beforeEach(function() {
+       person = {
+         removeConfirmed: true
+       };
+       persons = {
+         name: staffTitle
+       };
+     });
      
      it('when person removeConfirmed is false should set person removeConfirmed to true', function() {
        // REGION: Data Setup
-       var persons = {};
-       var person = {
-         removeConfirmed: false
-       }
+       person.removeConfirmed = false;
        // ENDREGION: Data Setup
        
        vm.removePerson(persons, person);
@@ -249,19 +332,30 @@ describe('BorderStationsCtrl', function(){
      });
      
      it('when person removedConfirmed is true should call removeRelationship', function() {
-       // REGION: Data Setup
-       var persons = {
-         name: staffTitle
-       };
-       var person = {
-         removeConfirmed: true
-       }
        spyOn(vm,'removeRelationship');
-       // ENDREGION: Data Setup
        
        vm.removePerson(persons, person);
        
        expect(vm.removeRelationship).toHaveBeenCalled();
+     });
+     
+     it('when person removedConfirmed is true and persons name is staffTitle should call removeStaff', function() {
+       spyOn(vm,'removeStaff');
+       
+       vm.removePerson(persons, person);
+       
+       expect(vm.removeStaff).toHaveBeenCalled();
+     });
+     
+     it('when person removedConfirmed is true and persons name is committeeMemTitle should call removeCommitteeMember', function() {
+       // REGION: Data Setup
+       persons.name = committeeMemTitle;
+       // ENDREGION: Data Setup
+       spyOn(vm,'removeCommitteeMember');
+       
+       vm.removePerson(persons, person);
+       
+       expect(vm.removeCommitteeMember).toHaveBeenCalled();
      });
    });
    
@@ -269,18 +363,132 @@ describe('BorderStationsCtrl', function(){
    
    describe('function removeRelationship', function() {
      
+     it('should call border station service removeRelationship function', function() {
+       spyOn(bsService, 'removeRelationship');
+       
+       vm.removeRelationship();
+       
+       expect(bsService.removeRelationship).toHaveBeenCalled();
+     });
+   });
+   
+   
+   
+   describe('function removeStaff', function() {
+     
+     it('should call removeRelationship', function() {
+       spyOn(vm,'removeRelationship');
+       
+       vm.removeStaff();
+       
+       expect(vm.removeRelationship).toHaveBeenCalled();
+     });
+   });
+   
+   
+   
+   describe('function updateCommitteeMembers', function() {
+     
+     it('should call updateRelationship', function() {
+       spyOn(vm,'updateRelationship');
+       
+       vm.updateCommitteeMembers();
+       
+       expect(vm.updateRelationship).toHaveBeenCalled();
+     });
+   });
+   
+   
+   
+   describe('function updateDetails', function() {
+     
+     it('should call updateRelationship', function() {
+       // REGION: Data setup
+       var details = {};
+       // ENDREGION: Data setup       
+       spyOn(vm,'updateRelationship');
+       
+       vm.updateDetails(details);
+       
+       expect(vm.updateRelationship).toHaveBeenCalled();
+     });
+   });
+   
+   
+   
+   describe('function updateLocations', function() {
+     
+     it('should call updateRelationship', function() {
+       spyOn(vm,'updateRelationship');
+       
+       vm.updateLocations();
+       
+       expect(vm.updateRelationship).toHaveBeenCalled();
+     });
    });
    
    
    
    describe('function updateRelationship', function() {
      
+     it('should call border station service updateRelationship function', function() {
+       spyOn(bsService, 'updateRelationship').and.callFake(fakeDeferredFunction);
+       
+       vm.updateRelationship();
+       
+       expect(bsService.updateRelationship).toHaveBeenCalled();
+     });
+   });
+   
+   
+   
+   describe('function updateStaff', function() {
+     
+     it('should call updateRelationship', function() {
+       spyOn(vm,'updateRelationship');
+       
+       vm.updateStaff();
+       
+       expect(vm.updateRelationship).toHaveBeenCalled();
+     });
    });
    
    
    
    describe('function updateStation', function() {
+     var updateButtonText;
      
+     beforeEach(function() {
+       updateButtonText = 'Update Station';
+       
+       // Spy on all of the calls
+       spyOn(vm, 'createCommitteeMembers').and.callFake(fakeDeferredFunction);
+       spyOn(vm, 'createLocations').and.callFake(fakeDeferredFunction);
+       spyOn(vm, 'createStaff').and.callFake(fakeDeferredFunction);
+       spyOn(vm, 'updateCommitteeMembers').and.callFake(fakeDeferredFunction);
+       spyOn(vm, 'updateDetails').and.callFake(fakeDeferredFunction);
+       spyOn(vm, 'updateLocations').and.callFake(fakeDeferredFunction);
+       spyOn(vm, 'updateStaff').and.callFake(fakeDeferredFunction);
+     });
+     
+     it('should change updateStatusText to "Saving..."', function() {
+       expect(vm.updateStatusText).toEqual(updateButtonText);
+       
+       vm.updateStation();
+       
+       expect(vm.updateStatusText).toEqual("Saving...");
+     });
+     
+     it('should make errors array empty', function() {
+       // REGION: Data Setup
+       vm.errors = [{error: 'this is an aerror'}];
+       // ENDREGION: Data Setup
+       expect(vm.errors).not.toEqual([]);
+       
+       vm.updateStation();
+       
+       expect(vm.errors).toEqual([]);
+     });
    });
 	 
 });

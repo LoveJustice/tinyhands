@@ -41,24 +41,24 @@
 		function createRelationship(createArray, createApiFunction, errorHandler) {
 			var expectedNumCalls = createArray.length;
 			var numCalls = 0;
-			var defered = $q.defer();
+			var deferred = $q.defer();
 			createArray.forEach(function (anObject) {
 				createApiFunction(anObject).then(function() {
 					numCalls++;
 					if (numCalls >= expectedNumCalls) {
-						defered.resolve('Finished sending create calls');
+						deferred.resolve('Finished sending create calls');
 					}
 				}, function(error) {
-					defered.reject(error);
+					deferred.reject(error);
 					errorHandler(error);
 				});
 			});
 			
 			if (expectedNumCalls == 0) {
-				defered.resolve('No create calls needed');
+				deferred.resolve('No create calls needed');
 			}
 			
-			return defered.promise;
+			return deferred.promise;
 		}
 	
 		
@@ -117,26 +117,26 @@
   		numNew = typeof numNew !== 'undefined' ? numNew : 0; // if null then set to 0
 			var expectedNumCalls = updateArray.length - numNew;
 			var numCalls = 0;
-			var defered = $q.defer();
+			var deferred = $q.defer();
 			updateArray.forEach(function(anObject) {
 				if (anObject.id) {
 					updateApiFunction(anObject.id, anObject).then(function() {
 						numCalls++;
 						if (numCalls >= expectedNumCalls) {
-							defered.resolve('Finished sending update calls');
+							deferred.resolve('Finished sending update calls');
 						}
 					}, function(error) {
-						defered.reject(error);
+						deferred.reject(error);
 						errorHandler(error);
 					});
 				}
 			});
 			
 			if (expectedNumCalls == 0) {
-				defered.resolve('No update calls needed');
+				deferred.resolve('No update calls needed');
 			}
 			
-			return defered.promise
+			return deferred.promise
 		}
 	
 		function updateStaff(staffId, data) {
