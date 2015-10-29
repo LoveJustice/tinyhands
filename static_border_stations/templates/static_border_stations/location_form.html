@@ -8,19 +8,22 @@
     <div class="row">
         <div class="col-sm-12 form-group">
           <label for="locationName">Name</label>
-          <input type="text" class="form-control" id="locationName" placeholder="Location Name"
+          <input type="text" class="form-control" placeholder="Location Name"
+                 ng-attr-id="{{'locationName-' + $index}}"
                  ng-model="location.name">
         </div>
     </div>
     <div class="row">
         <div class="col-sm-6 form-group">
           <label for="latitude">Latitude</label>
-          <input type="text" class="form-control" id="latitude" placeholder="Latitude"
+          <input type="text" class="form-control" placeholder="Latitude"
+                 ng-attr-id="{{'latitude-' + $index}}"
                  ng-model="location.latitude">
         </div>
         <div class="col-sm-6 form-group">
           <label for="longitude">Longitude</label>
-          <input type="text" class="form-control" id="longitude" placeholder="Longitude"
+          <input type="text" class="form-control" placeholder="Longitude"
+                 ng-attr-id="{{'longitude-' + $index}}"
                  ng-model="location.longitude">
         </div>
     </div>
