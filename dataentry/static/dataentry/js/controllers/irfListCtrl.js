@@ -103,6 +103,11 @@ angular
             }
             else{
                 irf.confirmedDelete = true;
+                setTimeout((function() {
+                    console.log(irf);
+                    irf.confirmedDelete = false;
+                    $scope.$apply();
+                }), 3000);
             }
         }
 

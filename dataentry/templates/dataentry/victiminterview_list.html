@@ -7,27 +7,22 @@
 {% verbatim %}
 <div ng-controller="vifListCtrl as vm" ng-show="vm.user.permission_vif_view">
 
-        <div class="row">
-            <h1>All VIFs</h1>
+    <div class="row" style="margin: 20px 0 20px 0;">
+        <div class="col-xs-5">
+            <h1 style="margin:0;">All VIFs</h1>
         </div>
-
-    <div class="row">
-        <div class="col-md-2">
+        <div class="pull-right" style="margin-top:8px;">
             <a class="btn btn-primary" href="/data-entry/vifs/export/" download>
                 Export as CSV
             </a>
-        </div>
-        <div class="col-md-2">
-            <a ng-show="vm.user.permission_vif_add" id="id_input_new_vif" class="btn btn-success" href="/data-entry/vifs/create/">
+            <a style="margin-left:5px;" ng-show="vm.user.permission_vif_add" id="id_input_new_vif" class="btn btn-success pull-right" href="/data-entry/vifs/create/">
                 Input A New VIF
             </a>
         </div>
+    </div>
 
-        <div class="col-md-2 col-md-offset-2">
-            <p style="margin-top: 5px;">Results per page</p>
-        </div>
-
-        <div class="col-md-1">
+    <div class="row">
+        <div class="col-sm-2 col-xs-3">
             <select ng-model="vm.paginateBy" ng-change="vm.listVifs()" class="form-control">
                 <option>25</option>
                 <option>50</option>
@@ -35,8 +30,11 @@
                 <option>500</option>
             </select>
         </div>
+        <div class="col-sm-3 col-xs-1">
+            <p style="margin-top: 8px;">Results <span class="hidden-xs">per page</span></p>
+        </div>
 
-        <div class="col-md-3 search-bar">
+        <div class="col-md-3 search-bar pull-right">
             <form ng-submit="vm.searchVifs()">
                   <label>
                       <input placeholder="by VIF number..." ng-model="vm.searchValue" class="form-control">

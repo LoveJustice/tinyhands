@@ -15,7 +15,7 @@
             <a class="btn btn-primary" href="/data-entry/irfs/export/" download>
                 Export as CSV
             </a>
-            <a ng-show="vm.user.permission_irf_add" id="id_input_new_irf" class="btn btn-success pull-right" style="margin-left:10px;" href="/data-entry/irfs/create/">
+            <a ng-show="vm.user.permission_irf_add" id="id_input_new_irf" class="btn btn-success pull-right" style="margin-left:5px;" href="/data-entry/irfs/create/">
                 Input A New IRF
             </a>
         </div>
@@ -84,7 +84,7 @@
                 <td>{{ irf.date_time_last_updated | date:"medium" }}</td>
                 <td><a class="btn btn-sm btn-primary" href="{{ irf.view_url }}">View</a></td>
                 <td ng-show="vm.user.permission_irf_edit"><a class="btn btn-sm btn-primary" href="{{ irf.edit_url }}">Edit</a></td>
-                <td ng-show="vm.user.permission_irf_delete"><a class="btn btn-sm btn-danger" ng-click="vm.deleteIrf(irf)">{{ irf.confirmedDelete ? "Confirm?" : "Delete"}}</a></td>
+                <td ng-show="vm.user.permission_irf_delete"><a class="btn btn-sm btn-danger" ng-click="vm.deleteIrf(irf)" >{{ irf.confirmedDelete ? "Confirm" : "Delete"}}</a></td>
             </tr>
         </tbody>
     </table>
