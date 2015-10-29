@@ -58,8 +58,10 @@ table {
   <div class="row">
     <div class="col-md-6 form-group">
       <label >User Designation</label>
-      <select ng-model="editCtrl.account.user_designation" ng-change="editCtrl.onUserDesignationChanged(editCtrl.account.user_designation)" class="form-control">
-        <option ng-repeat="set in editCtrl.permissionsSets.results" value="{{set.id}}"> {{set.name}}</option>
+      <select ng-model="editCtrl.account.user_designation" 
+              ng-options="set.id as set.name for set in editCtrl.permissionsSets.results" 
+              ng-change="editCtrl.onUserDesignationChanged(editCtrl.account.user_designation)" 
+              class="form-control">
       </select>
     </div>
   </div>
