@@ -64,7 +64,6 @@ angular
         
         vm.onUserDesignationChanged = function(value) {
             PermissionsSets.get({id: value}).$promise.then(function (permissions) {
-                console.log(permissions);
                 vm.account.permission_irf_view = permissions.permission_irf_view;
                 vm.account.permission_irf_add = permissions.permission_irf_add;
                 vm.account.permission_irf_edit = permissions.permission_irf_edit;

@@ -4,6 +4,10 @@ angular.module('AccountsMod')
   .factory('Accounts', function ($resource) {
     return $resource('/api/accounts/:id/', {} ,
       {
+        me:{
+          url: '/api/accounts/me',
+          method: 'GET'
+        },
         all: {
           method: 'GET'
         },
