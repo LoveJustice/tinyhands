@@ -27,7 +27,7 @@ urlpatterns = patterns('rest_api.views',
     url(r'^address2/fuzzy/$', GeoCodeVdcAPIView.as_view(), name="Address2FuzzySearch"),
     
     #Accounts and DefaultPermissionsSets
-    url(r'^me/$', CurrentUserView.as_view(), name="CurrentUser"),
+    url(r'^accounts/me/$', CurrentUserView.as_view(), name="CurrentUser"),
     
     url(r'^accounts/$', AccountViewSet.as_view({'get': 'list', 'post':'create'}), name="Accounts"),
     url(r'^accounts/(?P<pk>\d+)/$', AccountViewSet.as_view({'get':'retrieve', 'put':'update', 'delete':'destroy'}), name='Account'),
