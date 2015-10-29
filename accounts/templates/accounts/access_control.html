@@ -76,12 +76,9 @@ window.defaultPermissionSets = JSON.parse('{{ default_permissions_sets|safe }}')
             <tbody>
                     <tr ng-repeat="permission in accountsCtrl.accounts.results">
                         <td>
-<!--                            {{ permission.id }}
--->                         {{ permission.first_name+" "+permission.last_name }}<br/>
-                          <select ng-repeat="p in accountsCtrl.permission.results" selected="permission.user_designation">
-                            <option value="p.id">{{ p.name }}</option>
+                          {{ permission.first_name+" "+permission.last_name }}<br/>
+                          <select  ng-model="permission.user_designation" ng-options="p.id as p.name for p in accountsCtrl.permissions.results">
                           </select>
-
                         </td>
                         <td><label ng-click="permission.permission_irf_view = !permission.permission_irf_view" ng-class="permission.permission_irf_view ? 'btn btn-success' : 'btn btn-danger'"><span class="yesno"></span>{{ permission.permission_irf_view ? "Yes" : "No" }}</label></td>
                         <td><label ng-click="permission.permission_irf_add = !permission.permission_irf_add" ng-class="permission.permission_irf_add ? 'btn btn-success' : 'btn btn-danger'"><span class="yesno"></span>{{ permission.permission_irf_add ? "Yes" : "No" }}</label></td>
