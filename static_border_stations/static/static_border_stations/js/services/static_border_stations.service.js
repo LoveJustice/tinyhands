@@ -12,6 +12,7 @@
 			createLocation: createLocation,
 			createRelationship: createRelationship,
 			createStaff: createStaff,
+			getBorderStationDataHelper: getBorderStationDataHelper,
 			getCommitteeMembers: getCommitteeMembers,
 			getDetails: getDetails,
 			getLocations: getLocations,
@@ -25,7 +26,7 @@
 		};
 	
 	
-		// POSTs
+		// POSTs		
 		function createCommitteeMember(data) {
 			return $http.post('/api/committee-members/', data);
 		}
@@ -63,6 +64,25 @@
 	
 		
 		// GETs
+		function getBorderStationDataHelper(getApiCall, borderStationId, errorHandler) {
+			var deferred = $q.defer();
+			var data;
+			if (borderStationId) {
+				getApiCall(borderStationId).then(function(response) {
+					if (response.data.results) {
+						data = response.data.results;
+					} else {
+						data = response.data;
+					}
+					deferred.resolve(data);
+				}, function(error){
+					deferred.reject(error);
+					errorHandler(error);
+				});
+			}			
+			return deferred.promise;
+		}
+		
 		function getCommitteeMembers(borderStationId) {
 			return $http.get('/api/committee-members/?border_station=' + borderStationId);
 		}

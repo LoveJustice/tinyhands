@@ -27,15 +27,18 @@
 		vm.details = {};
 		vm.errors = [];
 		vm.handleErrors = handleErrors;
+		vm.loading = false;
 		vm.locations = [];
 		vm.newCommitteeMembers = [];
 		vm.newLocations = [];
 		vm.newStaff = [];
 		vm.people = {
 			staff: {
+				data: [],
 				name: staffTitle
 			},
 			committeeMembers: {
+				data: [],
 				name: committeeMemTitle
 			}
 		};
@@ -55,7 +58,7 @@
 		activate();
 		
 		function activate() {
-			getData();
+			getBorderStationData();
 		}
 		
 		function addLocation() {
@@ -94,13 +97,7 @@
 		}
 		
 		function createRelationship(createArray, createApiFunction, resolveMessage) {
-			var deferred = $q.defer();
-			BorderStationsService.createRelationship(createArray, createApiFunction, vm.handleErrors).then(function() {
-				deferred.resolve(resolveMessage);
-			}, function(error) {
-				deferred.reject(error);
-			});
-			return deferred.promise;
+			return BorderStationsService.createRelationship(createArray, createApiFunction, vm.handleErrors);
 		}
 		
 		function createStaff(staff) {
@@ -109,43 +106,57 @@
 		
 		
 		// GET calls
-		function getData() {
-			getDetails();
-			getStaff();
-			getCommitteeMembers();
-			getLocations();
+		function getBorderStationData() {
+			vm.loading = true;
+			
+			var promises = [];
+			
+			promises.push(getCommitteeMembers());
+			promises.push(getDetails());
+			promises.push(getLocations());
+			promises.push(getStaff());
+			
+			$q.all(promises).then(function(data) {
+				for (var i = 0; i < data.length; i++) {
+					switch (i) { // Data returns in the order of which the promises were placed in the array
+						case 0:
+							vm.people.committeeMembers.data = data[i];
+							break;
+						case 1:
+							vm.details = data[i];
+							break;
+						case 2:
+							vm.locations = data[i];
+							break;
+						case 3:
+							vm.people.staff.data = data[i];
+							break;
+						default:
+							break;
+					}
+				}
+				vm.loading = false;
+			});
 		}
 		
-		function getDetails() {
-			if (vm.borderStationId) {
-				BorderStationsService.getDetails(vm.borderStationId).then(function(response) {
-					vm.details = response.data;
-				}, handleErrors);
-			}
+		function getBorderStationDataHelper(getApiCall) {
+			return BorderStationsService.getBorderStationDataHelper(getApiCall, vm.borderStationId, vm.handleErrors);
 		}
 		
 		function getCommitteeMembers() {
-			if (vm.borderStationId) {
-				BorderStationsService.getCommitteeMembers(vm.borderStationId).then(function(response) {
-					vm.people.committeeMembers.data = response.data.results;
-				}, handleErrors);
-			}
+			return getBorderStationDataHelper(BorderStationsService.getCommitteeMembers);
+		}
+		
+		function getDetails() {
+			return getBorderStationDataHelper(BorderStationsService.getDetails);
 		}
 		
 		function getLocations() {
-			if (vm.borderStationId) {
-				BorderStationsService.getLocations(vm.borderStationId).then(function(response) {
-					vm.locations = response.data.results;
-				}, handleErrors);
-			}
+			return getBorderStationDataHelper(BorderStationsService.getLocations);
 		}
 		
 		function getStaff() {
-			if (vm.borderStationId) {
-				BorderStationsService.getStaff(vm.borderStationId).then(function(response) {
-					vm.people.staff.data = response.data.results;
-				}, handleErrors);
-			}
+			return getBorderStationDataHelper(BorderStationsService.getStaff);
 		}
 		
 		
@@ -163,12 +174,12 @@
 		
 		// REMOVE calls
 		function removeCommitteeMember(member) {
-			vm.removeRelationship(member, vm.newCommitteeMembers, vm.people.committeeMembers.data, BorderStationsService.updateCommitteeMembers, getCommitteeMembers);
+			vm.removeRelationship(member, vm.newCommitteeMembers, vm.people.committeeMembers.data, BorderStationsService.updateCommitteeMembers);
 		}
 		
 		function removeLocation(location) {
 			if (location.removeConfirmed) {
-				vm.removeRelationship(location, vm.newLocations, vm.locations, BorderStationsService.updateLocations, getLocations);
+				vm.removeRelationship(location, vm.newLocations, vm.locations, BorderStationsService.updateLocations);
 			} else {
 				location.removeConfirmed = true;
 			}
@@ -182,12 +193,12 @@
 			}
 		}
 		
-		function removeRelationship(value, newArray, currentArray, updateApiFunction, getApiFunction) {
-			BorderStationsService.removeRelationship(value, newArray, currentArray, updateApiFunction, getApiFunction, vm.handleErrors);
+		function removeRelationship(value, newArray, currentArray, updateApiFunction) {
+			BorderStationsService.removeRelationship(value, newArray, currentArray, updateApiFunction, getBorderStationData, vm.handleErrors);
 		}
 		
 		function removeStaff(staff) {
-			vm.removeRelationship(staff, vm.newStaff, vm.people.staff.data, BorderStationsService.updateStaff, getStaff);
+			vm.removeRelationship(staff, vm.newStaff, vm.people.staff.data, BorderStationsService.updateStaff);
 		}
 		
 		
@@ -219,13 +230,7 @@
 		}
 		
 		function updateRelationship(updateArray, updateApiFunction, numberOfNewValues, resolveMessage) {
-			var deferred = $q.defer();
-			BorderStationsService.updateRelationship(updateArray, updateApiFunction, numberOfNewValues, vm.handleErrors).then(function() {
-				deferred.resolve(resolveMessage);
-			}, function(error) {
-				deferred.reject(error);
-			});
-			return deferred.promise;
+			return BorderStationsService.updateRelationship(updateArray, updateApiFunction, numberOfNewValues, vm.handleErrors);
 		}
 		
 		function updateStaff(staff) {
@@ -253,7 +258,7 @@
 				vm.newCommitteeMembers = [];
 				vm.newLocations = [];
 				vm.newStaff = [];
-				getData();
+				getBorderStationData();
 				vm.updateStatusText = 'Saved';
 				$timeout(function() {
 					vm.updateStatusText = updateButtonText;
