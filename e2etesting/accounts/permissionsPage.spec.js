@@ -186,7 +186,9 @@ describe('Accounts Page', function() {
     describe('handles permissions of vif', function() {
         it('allows viewing of vif', function() {
             permissionsPage.navigateToVifPage().then(function(){
-                var editButton = element(by.linkText("View"));
+                browser.sleep(500);
+                var editButton = element(by.partialLinkText("View"));
+                browser.sleep(500);
                 expect(editButton.isPresent()).toBeTruthy();
             });
         });
