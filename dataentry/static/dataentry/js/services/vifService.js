@@ -1,18 +1,18 @@
 angular
     .module('DataEntry')
-    .factory('irfService', irfService);
+    .factory('vifService', vifService);
 
-irfService.$inject = ['$http'];
+vifService.$inject = ['$http'];
 
-function irfService($http) {
+function vifService($http) {
 	return {
-		listIrfs: listIrfs,
-		loadMoreIrfs: loadMoreIrfs,
-		deleteIrf: deleteIrf
+		listVifs: listVifs,
+		loadMoreVifs: loadMoreVifs,
+		deleteVif: deleteVif
 	};
 
-	function listIrfs(queryparams) {
-        return $http.get('/api/irf/' + queryparams).
+	function listVifs(queryparams) {
+        return $http.get('/api/vif/' + queryparams).
             success(function (data) {
                 return data;
             }).
@@ -21,7 +21,7 @@ function irfService($http) {
             });
     }
 
-    function loadMoreIrfs(url, queryparams){
+    function loadMoreVifs(url, queryparams){
         return $http.get(url + queryparams).
             success(function (data) {
                 return data;
@@ -31,7 +31,7 @@ function irfService($http) {
             });
     }
 
-    function deleteIrf(url){
+    function deleteVif(url){
         return $http.delete(url)
             .success(function(status){
                 return status;

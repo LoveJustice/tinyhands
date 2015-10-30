@@ -2,26 +2,26 @@
 
 angular
     .module('DataEntry')
-    .controller("irfListCtrl", ['$scope','$http','$timeout', 'irfService', function($scope, $http, $timeout, irfService) {
+    .controller("vifListCtrl", ['$scope','$http','$timeout', 'vifService', function($scope, $http, $timeout, vifService) {
         var vm = this;
 
         // Variable Declarations
         vm.loading = false;
         vm.reverse = false;
-        vm.irfs = [];
+        vm.vifs = [];
         vm.searchValue = "";
         vm.nextPageUrl = "";
         vm.paginateBy = 25;
         vm.sortIcon = "/static/images/sortIcon.jpg";
         vm.selectedAddress = {};
-        vm.sortColumn = "irf_number";
+        vm.sortColumn = "vif_number";
 
 
         // Function Definitions
-        vm.listIrfs = listIrfs;
-        vm.loadMoreIrfs = loadMoreIrfs;
-        vm.searchIrfs = searchIrfs;
-        vm.deleteIrf = deleteIrf;
+        vm.listVifs = listVifs;
+        vm.loadMoreVifs = loadMoreVifs;
+        vm.searchVifs = searchVifs;
+        vm.deleteVif = deleteVif;
         vm.getQueryParams = getQueryParams;
         vm.sortIcon = sortIcon;
         main();
@@ -31,7 +31,7 @@ angular
 
 
         function main(){
-            vm.listIrfs();
+            vm.listVifs();
         }
 
         function sortIcon(column, name){
@@ -48,51 +48,51 @@ angular
             return "glyphicon-sort";
         }
 
-        function listIrfs(){
+        function listVifs(){
             vm.loading = true;
-            irfService.listIrfs(vm.getQueryParams())
+            vifService.listVifs(vm.getQueryParams())
                 .success(function (data) {
-                    vm.irfs = data.results;
+                    vm.vifs = data.results;
                     vm.nextPageUrl = data.next;
                     vm.loading = false;
                 });
         }
 
-        function loadMoreIrfs(){
+        function loadMoreVifs(){
             vm.loading = true;
-            irfService.loadMoreIrfs(vm.nextPageUrl, "&" + vm.getQueryParams().slice(1))
+            vifService.loadMoreVifs(vm.nextPageUrl, "&" + vm.getQueryParams().slice(1))
                 .success(function (data) {
-                    vm.irfs = vm.irfs.concat(data.results);
+                    vm.vifs = vm.vifs.concat(data.results);
                     vm.nextPageUrl = data.next;
                     vm.loading = false;
                 });
         }
 
-        function searchIrfs(){
+        function searchVifs(){
             vm.loading = true;
-            irfService.listIrfs(vm.getQueryParams())
+            vifService.listVifs(vm.getQueryParams())
                 .success(function (data) {
-                    vm.irfs = data.results;
+                    vm.vifs = data.results;
                     vm.nextPageUrl = data.next;
                     vm.loading = false;
                 });
         }
 
-        function deleteIrf(irf) {
-            if(irf.confirmedDelete){
+        function deleteVif(vif) {
+            if(vif.confirmedDelete){
                 vm.loading = true;
-                irfService.deleteIrf(irf.delete_url)
+                vifService.deleteVif(vif.delete_url)
                     .success(function(){
-                        vm.listIrfs();
+                        vm.listVifs();
                         vm.loading = false;
                     })
                     .error(function(){
                         vm.loading = false;
-                        alert("you did not have authorization to delete that IRF");
+                        alert("you did not have authorization to delete that VIF");
                     });
             }
             else{
-                irf.confirmedDelete = true;
+                vif.confirmedDelete = true;
             }
         }
 

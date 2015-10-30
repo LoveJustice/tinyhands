@@ -27,3 +27,8 @@ class VifTest(APITestCase):
             url = reverse('VictimInterview')
             response = self.client.get(url)
             self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+            # delete
+            url = reverse('VictimInterviewDetail',  args=[self.Vif_list[0].id])
+            response = self.client.delete(url)
+            self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)

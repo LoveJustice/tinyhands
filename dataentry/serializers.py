@@ -72,7 +72,7 @@ class InterceptionRecordListSerializer(serializers.ModelSerializer):
         read_only=True
     )
     delete_url = serializers.HyperlinkedIdentityField(
-        view_name='interceptionrecord_delete',
+        view_name='InterceptionRecordDetail',
         read_only=True
     )
 
@@ -102,7 +102,7 @@ class VictimInterviewListSerializer(serializers.ModelSerializer):
         read_only=True
     )
     delete_url = serializers.HyperlinkedIdentityField(
-        view_name='victiminterview_delete',
+        view_name='VictimInterviewDetail',
         read_only=True
     )
 
