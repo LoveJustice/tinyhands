@@ -101,22 +101,18 @@
 		
 		
 		// REMOVE
-		function removeRelationship(value, newArray, currentArray, updateApiFunction, getApiFunction, errorHandler) {
+		function removeRelationship(value, newArray, currentArray, removeArray) {
 			var idx = newArray.indexOf(value);
 			if (idx >= 0) { // If relation was just created and isnt (shouldnt be) in the db
 				newArray.splice(idx, 1);
-				
-				// Remove item from list
-				idx = currentArray.indexOf(value);
-				currentArray.splice(idx, 1);
 			} else { // If exists in db
 				value.border_station = null;
-				if (value.id) {
-					updateApiFunction(value.id, value).then(function() {
-						getApiFunction();
-					}, errorHandler);
-				}
+				removeArray.push(value); // Add item to remove array to finalize removal upon updating
 			}
+				
+			// Remove item from list
+			idx = currentArray.indexOf(value);
+			currentArray.splice(idx, 1);
 		}
 	
 	

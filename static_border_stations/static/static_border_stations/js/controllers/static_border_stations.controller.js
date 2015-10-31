@@ -47,6 +47,9 @@
 		vm.removePerson = removePerson;
 		vm.removeRelationship = removeRelationship;
 		vm.removeStaff = removeStaff;
+		vm.removeToCommitteeMembers = [];
+		vm.removeToLocations = [];
+		vm.removeToStaff = [];
 		vm.updateCommitteeMembers = updateCommitteeMembers;
 		vm.updateDetails = updateDetails;
 		vm.updateLocations = updateLocations;
@@ -102,6 +105,23 @@
 		
 		function createStaff(staff) {
 			return vm.createRelationship(staff, BorderStationsService.createStaff, createStaffDeferredMessage);
+		}
+		
+		
+		// Date Formatting
+		function formatDate (dateToFormat) { // Formats date to yyyy[-mm[-dd]]
+			var dateEstablished = new Date(dateToFormat);
+			var year = dateEstablished.getFullYear();
+			var month = dateEstablished.getMonth() + 1; // Plus 1 because it returns 0 - 11 inclusive to rep month
+			var day = dateEstablished.getDate();
+			var dateString = year.toString();
+			if (month) {
+				dateString += '-' + month;
+				if (day) {
+					dateString += '-' + day;
+				}
+			}
+			return dateString;
 		}
 		
 		
@@ -174,12 +194,12 @@
 		
 		// REMOVE calls
 		function removeCommitteeMember(member) {
-			vm.removeRelationship(member, vm.newCommitteeMembers, vm.people.committeeMembers.data, BorderStationsService.updateCommitteeMembers);
+			vm.removeRelationship(member, vm.newCommitteeMembers, vm.people.committeeMembers.data, vm.removeToCommitteeMembers);
 		}
 		
 		function removeLocation(location) {
 			if (location.removeConfirmed) {
-				vm.removeRelationship(location, vm.newLocations, vm.locations, BorderStationsService.updateLocations);
+				vm.removeRelationship(location, vm.newLocations, vm.locations, vm.removeToLocations);
 			} else {
 				location.removeConfirmed = true;
 			}
@@ -193,12 +213,12 @@
 			}
 		}
 		
-		function removeRelationship(value, newArray, currentArray, updateApiFunction) {
-			BorderStationsService.removeRelationship(value, newArray, currentArray, updateApiFunction, getBorderStationData, vm.handleErrors);
+		function removeRelationship(value, newArray, currentArray, removeArray) {
+			BorderStationsService.removeRelationship(value, newArray, currentArray, removeArray);
 		}
 		
 		function removeStaff(staff) {
-			vm.removeRelationship(staff, vm.newStaff, vm.people.staff.data, BorderStationsService.updateStaff);
+			vm.removeRelationship(staff, vm.newStaff, vm.people.staff.data, vm.removeToStaff);
 		}
 		
 		
@@ -208,19 +228,7 @@
 		}
 		
 		function updateDetails(details) {
-			// Format date properly
-			var dateEstablished = new Date(details.date_established);
-			var year = dateEstablished.getFullYear();
-			var month = dateEstablished.getMonth() + 1; // Plus 1 because it returns 0 - 11 inclusive to rep month
-			var day = dateEstablished.getDate();
-			var dateString = year.toString();
-			if (month) {
-				dateString += '-' + month;
-				if (day) {
-					dateString += '-' + day;
-				}
-			}
-			details.date_established = dateString;
+			details.date_established = formatDate(details.date_established);
 			
 			return vm.updateRelationship([details], BorderStationsService.updateDetails, 0, 'Finished updating Details');
 		}
@@ -244,14 +252,21 @@
 			
 			var promises = [];
 			
+			// Create Calls
 			promises.push(vm.createCommitteeMembers(vm.newCommitteeMembers));
 			promises.push(vm.createLocations(vm.newLocations));
 			promises.push(vm.createStaff(vm.newStaff));
 			
+			// Update Calls
 			promises.push(vm.updateCommitteeMembers(vm.people.committeeMembers.data));
 			promises.push(vm.updateDetails(vm.details));
 			promises.push(vm.updateLocations(vm.locations));
 			promises.push(vm.updateStaff(vm.people.staff.data));
+			
+			// Remove Calls
+			promises.push(vm.updateCommitteeMembers(vm.removeToCommitteeMembers));
+			promises.push(vm.updateLocations(vm.removeToLocations));
+			promises.push(vm.updateStaff(vm.removeToStaff));
 			
 			
 			$q.all(promises).then(function() {
