@@ -26,6 +26,7 @@
 		vm.createRelationship = createRelationship;
 		vm.details = {};
 		vm.errors = [];
+		vm.formatDate = formatDate;
 		vm.handleErrors = handleErrors;
 		vm.loading = false;
 		vm.locations = [];
@@ -109,19 +110,8 @@
 		
 		
 		// Date Formatting
-		function formatDate (dateToFormat) { // Formats date to yyyy[-mm[-dd]]
-			var dateEstablished = new Date(dateToFormat);
-			var year = dateEstablished.getFullYear();
-			var month = dateEstablished.getMonth() + 1; // Plus 1 because it returns 0 - 11 inclusive to rep month
-			var day = dateEstablished.getDate();
-			var dateString = year.toString();
-			if (month) {
-				dateString += '-' + month;
-				if (day) {
-					dateString += '-' + day;
-				}
-			}
-			return dateString;
+		function formatDate (dateToFormat) { // Formats date string to YYYY[-MM[-DD]]
+			return moment(dateToFormat).format('YYYY-MM-DD');
 		}
 		
 		
@@ -223,17 +213,23 @@
 		
 		
 		// UPDATE calls
-		function updateCommitteeMembers(committeeMembers) {
+		function updateCommitteeMembers(committeeMembers, removing) {
+			if (removing) {
+				return vm.updateRelationship(committeeMembers, BorderStationsService.updateCommitteeMembers, 0, 'Finished removing Committee Members');
+			}
 			return vm.updateRelationship(committeeMembers, BorderStationsService.updateCommitteeMembers, vm.newCommitteeMembers.length, 'Finished updating Committee Members');
 		}
 		
 		function updateDetails(details) {
-			details.date_established = formatDate(details.date_established);
+			details.date_established = vm.formatDate(details.date_established);
 			
 			return vm.updateRelationship([details], BorderStationsService.updateDetails, 0, 'Finished updating Details');
 		}
 		
-		function updateLocations(locations) {
+		function updateLocations(locations, removing) {
+			if (removing) {
+				return vm.updateRelationship(locations, BorderStationsService.updateLocations, 0, 'Finished removing Locations');
+			}
 			return vm.updateRelationship(locations, BorderStationsService.updateLocations, vm.newLocations.length, 'Finished updating Locations');
 		}
 		
@@ -241,7 +237,10 @@
 			return BorderStationsService.updateRelationship(updateArray, updateApiFunction, numberOfNewValues, vm.handleErrors);
 		}
 		
-		function updateStaff(staff) {
+		function updateStaff(staff, removing) {
+			if (removing) {
+				return vm.updateRelationship(staff, BorderStationsService.updateStaff, 0, 'Finished removing Staff');
+			}
 			return vm.updateRelationship(staff, BorderStationsService.updateStaff, vm.newStaff.length, 'Finished updating Staff');
 		}
 		
@@ -264,9 +263,9 @@
 			promises.push(vm.updateStaff(vm.people.staff.data));
 			
 			// Remove Calls
-			promises.push(vm.updateCommitteeMembers(vm.removeToCommitteeMembers));
-			promises.push(vm.updateLocations(vm.removeToLocations));
-			promises.push(vm.updateStaff(vm.removeToStaff));
+			promises.push(vm.updateCommitteeMembers(vm.removeToCommitteeMembers, true));
+			promises.push(vm.updateLocations(vm.removeToLocations, true));
+			promises.push(vm.updateStaff(vm.removeToStaff, true));
 			
 			
 			$q.all(promises).then(function() {

@@ -405,7 +405,8 @@ describe('BorderStationsCtrl', function(){
      it('should call updateRelationship', function() {
        // REGION: Data setup
        var details = {};
-       // ENDREGION: Data setup       
+       // ENDREGION: Data setup
+       spyOn(vm, 'formatDate');
        spyOn(vm,'updateRelationship');
        
        vm.updateDetails(details);

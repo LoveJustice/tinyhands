@@ -44,8 +44,9 @@
 			var numCalls = 0;
 			var deferred = $q.defer();
 			createArray.forEach(function (anObject) {
-				createApiFunction(anObject).then(function() {
+				createApiFunction(anObject).then(function(response) {
 					numCalls++;
+					anObject = response.data;
 					if (numCalls >= expectedNumCalls) {
 						deferred.resolve('Finished sending create calls');
 					}
@@ -79,7 +80,9 @@
 					deferred.reject(error);
 					errorHandler(error);
 				});
-			}			
+			} else {
+				deferred.reject('No border station id');
+			}
 			return deferred.promise;
 		}
 		
