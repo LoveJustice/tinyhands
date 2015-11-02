@@ -1,7 +1,7 @@
 'use strict';
 
 var c = require('../testConstants.json');
-var permissionsPage = require('./permissionsPage.js');
+//var permissionsPage = require('./permissionsPage.js');
 
 var vifPage = function() {
     var page = this;
@@ -10,10 +10,10 @@ var vifPage = function() {
         browser.get(c.webAddress + '/data-entry/vifs/create/');
     };
 
-    this.filloutVif = function() {
+    this.filloutVif = function(vifNumber) {
         browser.executeScript("arguments[0].style.visibility = 'hidden';", element(by.id("footer")).getWebElement()); // Hides the footer so the webdriver can click on stuff
         this.vif_number_of_victims = element(by.id("id_number_of_victims")).sendKeys("1");
-        this.vif_number = element(by.id("id_vif_number")).sendKeys(c.vifNumber);
+        this.vif_number = element(by.id("id_vif_number")).sendKeys(vifNumber);
         this.date = element(by.id("id_date")).sendKeys(c.vifDate);
         this.interviewer = element(by.id("id_interviewer")).sendKeys(c.vifInterviewer);
         this.statement_read_before_beginning = element(by.id("id_statement_read_before_beginning")).click();

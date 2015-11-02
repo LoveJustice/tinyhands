@@ -1,5 +1,5 @@
 var loginPage = require('../accounts/loginPage.js');
-var filloutform = require('../accounts/vifPage.js');
+var vifPage = require('./vifPage.js');
 var c = require('../testConstants.json');
 var methods = require('../commonMethods.js');
 
@@ -8,11 +8,11 @@ var vifCrud = function() {
 
     this.navigateToCreatePage = function(){
         loginPage.loginAsAdmin();
-        filloutform.createVif();
+        vifPage.createVif();
     };
 
     this.completeVif = function(){
-        filloutform.filloutVif();
+        vifPage.filloutVif(c.vifNumber);
     };
 
     this.editVif = function() {
