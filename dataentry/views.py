@@ -12,34 +12,33 @@ from django.core.exceptions import PermissionDenied
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
 from django.core.urlresolvers import reverse_lazy
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import redirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
+from django.shortcuts import redirect, render_to_response, render
 from django.template.loader import render_to_string
-from django.views.generic import ListView, View, DeleteView, CreateView, UpdateView
+from django.views.generic import ListView, View, DeleteView, CreateView
 
 from rest_framework import status
+from rest_framework.decorators import list_route
+from rest_framework import filters
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework import viewsets
 
 from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSet
 from braces.views import LoginRequiredMixin
 from fuzzywuzzy import process
 
-from dataentry.models import (BorderStation, VDC, District,
-                              Interceptee, InterceptionRecord,
-                              VictimInterview, VictimInterviewLocationBox,
-                              VictimInterviewPersonBox)
-from dataentry.forms import (IntercepteeForm, InterceptionRecordForm,
-                             VDCForm, DistrictForm,
-                             VictimInterviewForm,
-                             VictimInterviewLocationBoxForm, VictimInterviewPersonBoxForm)
+from dataentry.models import (BorderStation, VDC, District, Interceptee, InterceptionRecord, VictimInterview, VictimInterviewLocationBox, VictimInterviewPersonBox)
+from dataentry.forms import (IntercepteeForm, InterceptionRecordForm, VDCForm, DistrictForm, VictimInterviewForm, VictimInterviewLocationBoxForm, VictimInterviewPersonBoxForm)
 from dataentry import export
-from dataentry.serializers import DistrictSerializer, VDCSerializer
+from dataentry.serializers import DistrictSerializer, VDCSerializer, InterceptionRecordListSerializer, VictimInterviewListSerializer
 
 from accounts.mixins import PermissionsRequiredMixin
 
 from alert_checkers import IRFAlertChecker, VIFAlertChecker
 from fuzzy_matching import match_location
+from rest_api.authentication import HasPermission, HasDeletePermission
 
 
 @login_required
@@ -67,9 +66,9 @@ class SearchFormsMixin(object):
         if value != '':
             code = value[:3]
             stations = BorderStation.objects.filter(station_code__startswith=code)
-            if(len(stations) != 0):
+            if len(stations) != 0:
                 object_list = self.model.objects.filter(**{self.Number: value})
-                if(len(object_list) == 0):
+                if len(object_list) == 0:
                     object_list = self.model.objects.filter(**{self.Name: value})
             else:
                 object_list = self.model.objects.filter(**{self.Name: value})
@@ -85,13 +84,9 @@ class SearchFormsMixin(object):
         return context
 
 
-class InterceptionRecordListView(LoginRequiredMixin, SearchFormsMixin, ListView):
-    model = InterceptionRecord
-
-    def __init__(self, *args, **kw):
-        # Passes what to search by to SearchFormsMixin
-        super(InterceptionRecordListView, self).__init__(irf_number__icontains="number",
-                                                         staff_name__icontains="name")
+@login_required
+def interception_record_list_template(request):
+    return render(request, 'dataentry/interceptionrecord_list.html')
 
 
 class IntercepteeInline(InlineFormSet):
@@ -118,11 +113,7 @@ class IRFImageAssociationMixin(object):
 
             if match is not None and irf_num is not None and extension is not None:
                 interceptee_index = match.group(1)
-                filename = "unassociated_photos/irf-photo-%s-index-%s.%s" % (
-                    irf_num,
-                    interceptee_index,
-                    extension
-                )
+                filename = "unassociated_photos/irf-photo-%s-index-%s.%s" % (irf_num, interceptee_index, extension)
                 default_storage.save(filename, ContentFile(file.read()))
 
         return super(IRFImageAssociationMixin, self).forms_invalid(form, inlines)
@@ -150,10 +141,7 @@ class IRFImageAssociationMixin(object):
         return super(IRFImageAssociationMixin, self).forms_valid(form, inlines)
 
 
-class InterceptionRecordCreateView(LoginRequiredMixin,
-                                   PermissionsRequiredMixin,
-                                   IRFImageAssociationMixin,
-                                   CreateWithInlinesView):
+class InterceptionRecordCreateView(LoginRequiredMixin, PermissionsRequiredMixin, IRFImageAssociationMixin, CreateWithInlinesView):
     model = InterceptionRecord
     form_class = InterceptionRecordForm
     success_url = reverse_lazy('interceptionrecord_list')
@@ -170,10 +158,7 @@ class InterceptionRecordCreateView(LoginRequiredMixin,
         return HttpResponseRedirect(self.get_success_url())
 
 
-class InterceptionRecordUpdateView(LoginRequiredMixin,
-                                   PermissionsRequiredMixin,
-                                   IRFImageAssociationMixin,
-                                   UpdateWithInlinesView):
+class InterceptionRecordUpdateView(LoginRequiredMixin, PermissionsRequiredMixin, IRFImageAssociationMixin, UpdateWithInlinesView):
     model = InterceptionRecord
     form_class = InterceptionRecordForm
     success_url = reverse_lazy('interceptionrecord_list')
@@ -193,17 +178,6 @@ class InterceptionRecordDetailView(InterceptionRecordUpdateView):
 
     def post(self, request, *args, **kwargs):
         raise PermissionDenied
-
-
-class InterceptionRecordDeleteView(DeleteView):
-    model = InterceptionRecord
-    success_url = reverse_lazy('interceptionrecord_list')
-    permissions_required = ['permission_irf_edit']
-
-    def delete(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        self.object.delete()
-        return HttpResponseRedirect(self.success_url)
 
 
 class PersonBoxInline(InlineFormSet):
@@ -226,20 +200,15 @@ class LocationBoxInline(InlineFormSet):
         return kwargs
 
 
-class VictimInterviewListView(LoginRequiredMixin,
-                              SearchFormsMixin,
-                              ListView):
+class VictimInterviewListView(LoginRequiredMixin, SearchFormsMixin, ListView):
     model = VictimInterview
 
     def __init__(self, *args, **kwargs):
         # Passes what to search by to SearchFormsMixin
-        super(VictimInterviewListView, self).__init__(vif_number__icontains="number",
-                                                      interviewer__icontains="name")
+        super(VictimInterviewListView, self).__init__(vif_number__icontains="number", interviewer__icontains="name")
 
 
-class VictimInterviewCreateView(LoginRequiredMixin,
-                                PermissionsRequiredMixin,
-                                CreateWithInlinesView):
+class VictimInterviewCreateView(LoginRequiredMixin, PermissionsRequiredMixin, CreateWithInlinesView):
     model = VictimInterview
     form_class = VictimInterviewForm
     success_url = reverse_lazy('victiminterview_list')
@@ -256,9 +225,7 @@ class VictimInterviewCreateView(LoginRequiredMixin,
         return HttpResponseRedirect(self.get_success_url())
 
 
-class VictimInterviewUpdateView(LoginRequiredMixin,
-                                PermissionsRequiredMixin,
-                                UpdateWithInlinesView):
+class VictimInterviewUpdateView(LoginRequiredMixin, PermissionsRequiredMixin, UpdateWithInlinesView):
     model = VictimInterview
     form_class = VictimInterviewForm
     success_url = reverse_lazy('victiminterview_list')
@@ -280,20 +247,7 @@ class VictimInterviewDetailView(VictimInterviewUpdateView):
         raise PermissionDenied
 
 
-class VictimInterviewDeleteView(DeleteView):
-    permissions_required = ['permission_vif_edit']
-    model = VictimInterview
-    success_url = reverse_lazy('victiminterview_list')
-
-    def delete(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        self.object.delete()
-        return HttpResponseRedirect(self.success_url)
-
-
-class InterceptionRecordCSVExportView(LoginRequiredMixin,
-                                      PermissionsRequiredMixin,
-                                      View):
+class InterceptionRecordCSVExportView(LoginRequiredMixin, PermissionsRequiredMixin, View):
     permissions_required = ['permission_irf_view']
 
     def get(self, *args, **kwargs):
@@ -309,9 +263,7 @@ class InterceptionRecordCSVExportView(LoginRequiredMixin,
         return response
 
 
-class VictimInterviewCSVExportView(LoginRequiredMixin,
-                                   PermissionsRequiredMixin,
-                                   View):
+class VictimInterviewCSVExportView(LoginRequiredMixin, PermissionsRequiredMixin, View):
     permissions_required = ['permission_vif_view']
 
     def get(self, *args, **kwargs):
@@ -329,36 +281,32 @@ class VictimInterviewCSVExportView(LoginRequiredMixin,
 
 class GeoCodeDistrictAPIView(APIView):
     def get(self, request):
-        value = request.QUERY_PARAMS['district']
+        value = request.query_params['district']
         matches = match_location(district_name=value)
-        if(matches):
-            serializer = DistrictSerializer(matches)
+        if matches:
+            serializer = DistrictSerializer(matches, many=True)
             return Response(serializer.data)
         else:
-            return Response({"id": "-1",
-                             "name": "None"})
+            return Response({"id": "-1", "name": "None"})
 
 
 class GeoCodeVdcAPIView(APIView):
     def get(self, request):
         try:
-            district_name = request.QUERY_PARAMS['district']
+            district_name = request.query_params['district']
+
         except:
             district_name = None
-        vdc_name = request.QUERY_PARAMS['vdc']
+        vdc_name = request.query_params['vdc']
         matches = match_location(district_name, vdc_name)
         if matches:
-            serializer = VDCSerializer(matches)
+            serializer = VDCSerializer(matches, many=True)
             return Response(serializer.data)
         else:
-            return Response({"id": "-1",
-                             "name": "None"})
+            return Response({"id": "-1", "name": "None"})
 
 
-class VDCAdminView(LoginRequiredMixin,
-                   PermissionsRequiredMixin,
-                   SearchFormsMixin,
-                   ListView):
+class VDCAdminView(LoginRequiredMixin, PermissionsRequiredMixin, SearchFormsMixin, ListView):
     model = VDC
     template_name = "dataentry/vdc_admin_page.html"
     permissions_required = ['permission_vdc_manage']
@@ -368,8 +316,7 @@ class VDCAdminView(LoginRequiredMixin,
         super(VDCAdminView, self).__init__(name__icontains="name")
 
     def get_queryset(self):
-        return self.model.objects.all().select_related('district',
-                                                       'cannonical_name__district')
+        return self.model.objects.all().select_related('district', 'cannonical_name__district')
 
     def get_context_data(self, **kwargs):
         context = super(VDCAdminView, self).get_context_data(**kwargs)
@@ -378,10 +325,7 @@ class VDCAdminView(LoginRequiredMixin,
         return context
 
 
-class VDCSearchView(LoginRequiredMixin,
-                   PermissionsRequiredMixin,
-                   SearchFormsMixin,
-                   ListView):
+class VDCSearchView(LoginRequiredMixin, PermissionsRequiredMixin, SearchFormsMixin, ListView):
     model = VDC
     template_name = "dataentry/vdc_admin_page.html"
     permissions_required = ['permission_vdc_manage']
@@ -394,13 +338,12 @@ class VDCSearchView(LoginRequiredMixin,
             # When pagination is enabled and object_list is a queryset,
             # it's better to do a cheap query than to load the unpaginated
             # queryset in memory.
-            if (self.get_paginate_by(self.object_list) is not None
-                    and hasattr(self.object_list, 'exists')):
+            if self.get_paginate_by(self.object_list) is not None and hasattr(self.object_list, 'exists'):
                 is_empty = not self.object_list.exists()
             else:
                 is_empty = len(self.object_list) == 0
             if is_empty:
-                raise Http404(_("Empty list and '%(class_name)s.allow_empty' is False.")
+                raise Http404(("Empty list and '%(class_name)s.allow_empty' is False.")
                         % {'class_name': self.__class__.__name__})
         context = self.get_context_data()
         return self.render_to_response(context)
@@ -409,8 +352,7 @@ class VDCSearchView(LoginRequiredMixin,
         super(VDCSearchView, self).__init__(name__icontains="name")
 
     def get_queryset(self, searchValue):
-        return self.model.objects.filter(name__contains=searchValue).select_related('district',
-                                                       'cannonical_name__district')
+        return self.model.objects.filter(name__contains=searchValue).select_related('district', 'cannonical_name__district')
 
     def get_context_data(self, **kwargs):
         context = super(VDCSearchView, self).get_context_data(**kwargs)
@@ -418,41 +360,19 @@ class VDCSearchView(LoginRequiredMixin,
         context['database_empty'] = self.model.objects.count() == 0
         return context
 
-class VDCAdminUpdate(LoginRequiredMixin,
-                     PermissionsRequiredMixin,
-                     UpdateView):
-    model = VDC
-    form_class = VDCForm
-    template_name = "dataentry/vdc_admin_update.html"
-    permissions_required = ['permission_vdc_manage']
 
-    def dispatch(self, request, *args, **kwargs):
-        self.vdc_id = kwargs['pk']
-        return super(VDCAdminUpdate, self).dispatch(request, *args, **kwargs)
-
-    def form_valid(self, form):
-        form.save()
-        vdc = VDC.objects.get(id=self.vdc_id)
-        return HttpResponse(render_to_string('dataentry/vdc_admin_update_success.html'))
-
-
-class VDCCreateView(LoginRequiredMixin,
-                    PermissionsRequiredMixin,
-                    CreateView):
+class VDCCreateView(LoginRequiredMixin, PermissionsRequiredMixin, CreateView):
     model = VDC
     form_class = VDCForm
     template_name = "dataentry/vdc_create_page.html"
-    permissions_required = ['permission_vif_add','permission_irf_add']
+    permissions_required = ['permission_vif_add', 'permission_irf_add']
 
     def form_valid(self, form):
         form.save()
         return HttpResponse(render_to_string('dataentry/vdc_create_success.html'))
 
 
-class DistrictAdminView(LoginRequiredMixin,
-                        PermissionsRequiredMixin,
-                        SearchFormsMixin,
-                        ListView):
+class DistrictAdminView(LoginRequiredMixin, PermissionsRequiredMixin, SearchFormsMixin, ListView):
     model = District
     template_name = "dataentry/district_admin_page.html"
     permissions_required = ['permission_vdc_manage']
@@ -466,31 +386,11 @@ class DistrictAdminView(LoginRequiredMixin,
         return context
 
 
-class DistrictAdminUpdate(LoginRequiredMixin,
-                          PermissionsRequiredMixin,
-                          UpdateView):
-    model = District
-    form_class = DistrictForm
-    template_name = "dataentry/district_admin_update.html"
-    permissions_required = ['permission_vdc_manage']
-
-    def dispatch(self, request, *args, **kwargs):
-        self.district_id = kwargs['pk']
-        return super(DistrictAdminUpdate, self).dispatch(request, *args, **kwargs)
-
-    def form_valid(self, form):
-        form.save()
-        district = District.objects.get(id=self.district_id)
-        return HttpResponse(render_to_string('dataentry/district_admin_update_success.html'))
-
-
-class DistrictCreateView(LoginRequiredMixin,
-                         PermissionsRequiredMixin,
-                         CreateView):
+class DistrictCreateView(LoginRequiredMixin, PermissionsRequiredMixin, CreateView):
     model = District
     form_class = DistrictForm
     template_name = "dataentry/district_create_page.html"
-    permissions_required = ['permission_vif_add','permission_irf_add']
+    permissions_required = ['permission_vif_add', 'permission_irf_add']
 
     def form_valid(self, form):
         form.save()
@@ -507,7 +407,7 @@ class StationCodeAPIView(APIView):
 def interceptee_fuzzy_matching(request):
     input_name = request.GET['name']
     all_people = Interceptee.objects.all()
-    people_dict = {serializers.serialize("json", [obj]): obj.full_name for obj in all_people}
+    people_dict = {serializers.serialize("json", [obj]): obj.full_name for obj in all_people }
     matches = process.extractBests(input_name, people_dict, limit=10)
     return HttpResponse(json.dumps(matches), content_type="application/json")
 
@@ -524,3 +424,57 @@ def get_station_id(request):
         else:
             print("No station id")
             return HttpResponse([-1])
+
+
+class Address2ViewSet(viewsets.ModelViewSet):
+    queryset = VDC.objects.all().select_related('district', 'cannonical_name__district')
+    serializer_class = VDCSerializer
+    permission_classes = (IsAuthenticated, HasPermission)
+    permissions_required = ['permission_vdc_manage']
+    filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
+    search_fields = ('name',)
+    ordering_fields = ('name', 'district__name', 'longitude', 'latitude', 'verified', 'cannonical_name__name')
+    ordering = ('name',)
+
+
+class Address1ViewSet(viewsets.ModelViewSet):
+    queryset = District.objects.all()
+    serializer_class = DistrictSerializer
+    permission_classes = (IsAuthenticated, HasPermission)
+    permissions_required = ['permission_vdc_manage']
+    filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
+    search_fields = ('name',)
+    ordering_fields = ('name',)
+    ordering = ('name',)
+
+    @list_route()
+    def list_all(self, request):
+        districts = District.objects.all()
+        serializer = self.get_serializer(districts, many=True)
+        return Response(serializer.data)
+
+
+class InterceptionRecordViewSet(viewsets.ModelViewSet):
+    queryset = InterceptionRecord.objects.all()
+    serializer_class = InterceptionRecordListSerializer
+    permission_classes = (IsAuthenticated, HasPermission, HasDeletePermission,)
+    permissions_required = ['permission_irf_view']
+    delete_permissions_required = ['permission_irf_delete']
+
+    filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
+    search_fields = ('irf_number',)
+    ordering_fields = ('irf_number', 'staff_name', 'number_of_victims', 'number_of_traffickers', 'date_time_of_interception', 'date_time_entered_into_system', 'date_time_last_updated',)
+    ordering = ('irf_number',)
+
+
+class VictimInterviewViewSet(viewsets.ModelViewSet):
+    queryset = VictimInterview.objects.all()
+    serializer_class = VictimInterviewListSerializer
+    permission_classes = (IsAuthenticated, HasPermission, HasDeletePermission,)
+    permissions_required = ['permission_vif_view']
+    delete_permissions_required = ['permission_vif_delete']
+    filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
+    search_fields = ('vif_number',)
+    ordering_fields = ('vif_number', 'interviewer', 'number_of_victims', 'number_of_traffickers', 'date', 'date_time_entered_into_system', 'date_time_last_updated',)
+    ordering = ('vif_number',)
+

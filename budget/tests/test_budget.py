@@ -1,5 +1,5 @@
 from django.test import TestCase
-from budget import models
+from budget.tests.factories import BorderStationBudgetCalculationFactory
 
 
 class TestModels(TestCase):
@@ -8,13 +8,8 @@ class TestModels(TestCase):
         var2 = 3
         self.assertEqual(var + var2, 4)
 
-    #def test_status_codes(self):
-     #   resp = self.client.get('/budget/budget_calculations/')
-      #  print (resp.status_code)
-       # self.assertEqual(resp.status_code, 302 or 200)
-
     def test_border_station_budget_calculation_form_functions(self):
-        item = models.BorderStationBudgetCalculation()
+        item = BorderStationBudgetCalculationFactory.create()
 
         #Shelter
         item.shelter_water = 10

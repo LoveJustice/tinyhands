@@ -1,6 +1,4 @@
 from django import forms
-from django.core.exceptions import ValidationError
-from django.db import models
 from django.forms.models import inlineformset_factory
 from django.utils.html import mark_safe
 
@@ -10,12 +8,11 @@ from .models import (BorderStation, District,
                      VictimInterviewLocationBox, VictimInterviewPersonBox, VictimInterview)
 from .fields import DistrictField, VDCField, FormNumberField
 
-from accounts.models import Alert
-
 BOOLEAN_CHOICES = [
     (False, 'No'),
     (True, 'Yes'),
 ]
+
 
 class DreamSuitePaperForm(forms.ModelForm):
     class Meta:
@@ -96,7 +93,6 @@ class InterceptionRecordForm(DreamSuitePaperForm):
         model = InterceptionRecord
         exclude = [ 'form_entered_by', 'date_form_received' ]
 
-
     def __init__(self, *args, **kwargs):
         super(InterceptionRecordForm, self).__init__(*args, **kwargs)
         for field_name, field in self.fields.iteritems():
@@ -127,9 +123,6 @@ class InterceptionRecordForm(DreamSuitePaperForm):
             self.ensure_at_least_one_of_9_1_through_9_5_are_checked(cleaned_data)
             self.ensure_signature_on_form(cleaned_data)
         return cleaned_data
-
-
-
 
     def ensure_at_least_one_interceptee(self, cleaned_data):
         if len([
@@ -376,7 +369,7 @@ class IntercepteeForm(DreamSuitePaperForm):
             district = District.objects.get(name=self.cleaned_data['district'])
             self.instance.district = district
         except District.DoesNotExist:
-            pass
+            district = None
 
         try:
             vdc = VDC.objects.get(name=self.cleaned_data['vdc'], district=district)
@@ -399,6 +392,7 @@ class IntercepteeForm(DreamSuitePaperForm):
 
 
 IntercepteeFormSet = inlineformset_factory(InterceptionRecord, Interceptee, exclude=[], extra=12)
+
 
 class VictimInterviewForm(DreamSuitePaperForm):
     statement_read_before_beginning = forms.BooleanField(
@@ -667,7 +661,6 @@ class VictimInterviewForm(DreamSuitePaperForm):
             self.instance.victim_guardian_address_vdc = victim_guardian_address_vdc
         return super(VictimInterviewForm, self).save(commit)
 
-
     def clean(self):
         cleaned_data = super(VictimInterviewForm, self).clean()
         self.has_warnings = False
@@ -792,6 +785,7 @@ class VictimInterviewLocationBoxForm(DreamSuitePaperForm):
         self.instance.district = district
         return super(VictimInterviewLocationBoxForm, self).save(commit)
 
+
 class BorderStationForm(forms.ModelForm):
     class Meta:
         model = BorderStation
@@ -807,10 +801,12 @@ class BorderStationForm(forms.ModelForm):
 class VDCForm(forms.ModelForm):
     class Meta:
         model = VDC
-        fields = ['name','latitude','longitude','cannonical_name','district','verified']
+        fields = ['name', 'latitude', 'longitude', 'cannonical_name', 'district', 'verified']
+
     def __init__(self, *args, **kwargs):
         super(VDCForm, self).__init__(*args, **kwargs)
         self.fields['district'].label = "Address 1"
+
 
 class DistrictForm(forms.ModelForm):
     class Meta:

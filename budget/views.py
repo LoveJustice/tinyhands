@@ -18,8 +18,8 @@ from django.conf import settings
 
 
 from braces.views import LoginRequiredMixin
-from models import BorderStationBudgetCalculation
-from rest_framework import generics, viewsets
+from rest_framework.decorators import list_route
+from rest_framework import viewsets
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from templated_email import send_templated_mail
@@ -43,8 +43,8 @@ def retrieve_latest_budget_sheet_for_border_station(request, pk):
 
     if budget_sheet:  # if there has been a preview budget sheet
 
-        other_items_serializer = OtherBudgetItemCostSerializer(budget_sheet.otherbudgetitemcost_set.all())
-        staff_serializer = StaffSalarySerializer(budget_sheet.staffsalary_set.all())
+        other_items_serializer = OtherBudgetItemCostSerializer(budget_sheet.otherbudgetitemcost_set.all(), many=True)
+        staff_serializer = StaffSalarySerializer(budget_sheet.staffsalary_set.all(), many=True)
         budget_serializer = BorderStationBudgetCalculationSerializer(budget_sheet)
 
         return Response(
@@ -61,7 +61,6 @@ def retrieve_latest_budget_sheet_for_border_station(request, pk):
 @api_view(['GET'])
 def previous_data(request, pk, month, year):
     date = datetime.datetime(int(year), int(month), 15)  # We pass the Month_year as two key-word arguments because the day is always 15
-
     budget_sheets = BorderStationBudgetCalculation.objects.filter(border_station=pk, month_year__lte=date).order_by('-date_time_entered')  # filter them so the first element is the most recent
 
     if budget_sheets:  # If this border station has had a previous budget calculation worksheet
@@ -72,42 +71,48 @@ def previous_data(request, pk, month, year):
         last_months = all_interception_records.filter(date_time_of_interception__gte=(date+relativedelta(months=-1)), date_time_of_interception__lte=date)
         last_3_months = all_interception_records.filter(date_time_of_interception__gte=(date+relativedelta(months=-3)), date_time_of_interception__lte=date)
 
-        last_months_count = last_months.aggregate(total=Sum('interceptee_count'))
-        last_3_months_count = last_3_months.aggregate(total=Sum('interceptee_count'))
-        all_interception_records_count = all_interception_records.aggregate(total=Sum('interceptee_count'))
+        last_months_count = last_months.aggregate(total=Sum('number_of_victims'))
+        last_3_months_count = last_3_months.aggregate(total=Sum('number_of_victims'))
+        all_interception_records_count = all_interception_records.aggregate(total=Sum('number_of_victims'))
 
+        last_3_months_count_divide = last_3_months_count['total']
         if last_3_months_count['total'] is None:
-            last_3_months_count['total'] = 1
+            last_3_months_count['total'] = 0
+            last_3_months_count_divide = 1
+        last_months_count_divide = last_months_count['total']
         if last_months_count['total'] is None:
-            last_months_count['total'] = 1
+            last_months_count['total'] = 0
+            last_months_count_divide = 1
+        all_interception_records_count_divide = all_interception_records_count['total']
         if all_interception_records_count['total'] is None:
-            all_interception_records_count['total'] = 1
+            all_interception_records_count['total'] = 0
+            all_interception_records_count_divide = 1
 
-        last_months_sheet = budget_sheets.first() # Since they are ordered by most recent, the first one will be last month's
-        last_months_cost = last_months_sheet.station_total()
 
         last_3_months_cost = 0
         last_3_months_sheets = budget_sheets.filter(month_year__gte=date+relativedelta(months=-3))
+        last_months_sheets = budget_sheets.filter(month_year__gte=date+relativedelta(months=-1))
+        if(last_months_sheets.count() > 0):
+            last_months_cost = last_months_sheets[0].station_total()
+        else:
+            last_months_cost = 0
         for sheet in last_3_months_sheets:
             last_3_months_cost += sheet.station_total()
-
         all_cost = 0
         for sheet in budget_sheets:
             all_cost += sheet.station_total()
-
         return Response(
             {
                 "all": all_interception_records_count['total'],
-                "all_cost": all_cost/all_interception_records_count['total'],
+                "all_cost": all_cost/all_interception_records_count_divide,
                 "last_month": last_months_count['total'],
-                "last_months_cost": last_months_cost/last_months_count['total'],
+                "last_months_cost": last_months_cost/last_months_count_divide,
                 "last_3_months": last_3_months_count['total'],
-                "last_3_months_cost": last_3_months_cost/last_3_months_count['total'],
+                "last_3_months_cost": last_3_months_cost/last_3_months_count_divide,
                 "staff_count": staff_count,
                 "last_months_total_cost": last_months_cost
             }
         )
-
     # If this border station has not had a previous budget calculation worksheet
     return Response(
         {"all": 0,
@@ -161,6 +166,11 @@ class OtherItemsViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(self.object_list, many=True)
         return Response(serializer.data)
 
+    @list_route()
+    def list_by_budget_sheet(self, request, parent_pk, *args, **kwargs):
+        other_items_list = OtherBudgetItemCost.objects.filter(budget_item_parent_id=parent_pk)
+        serializer = self.get_serializer(other_items_list, many=True)
+        return Response(serializer.data)
 
 class StaffSalaryViewSet(viewsets.ModelViewSet):
     queryset = StaffSalary.objects.all()
@@ -183,6 +193,7 @@ class StaffSalaryViewSet(viewsets.ModelViewSet):
 
 class BudgetCalcListView(
         LoginRequiredMixin,
+        PermissionsRequiredMixin,
         ListView):
     model = BorderStationBudgetCalculation
     border_stations = BorderStation.objects.all()
@@ -196,7 +207,7 @@ class BudgetCalcListView(
         return context
 
 
-class BudgetCalcDeleteView(DeleteView, LoginRequiredMixin):
+class BudgetCalcDeleteView(DeleteView, LoginRequiredMixin, PermissionsRequiredMixin):
     model = BorderStationBudgetCalculation
     permissions_required = ['permission_budget_manage']
     success_url = reverse_lazy('budget_list')
@@ -219,9 +230,9 @@ class MoneyDistribution(viewsets.ViewSet):
         return Response({"staff_members": staff_serializer.data, "committee_members": committee_members_serializer.data})
 
     def send_emails(self, request, pk):
-        staff_ids = request.DATA['staff_ids']
-        budget_calc_id = int(request.DATA["budget_calc_id"])
-        committee_ids = request.DATA['committee_ids']
+        staff_ids = request.data['staff_ids']
+        budget_calc_id = int(request.data["budget_calc_id"])
+        committee_ids = request.data['committee_ids']
 
         # send the emails
         for id in staff_ids:
@@ -274,13 +285,10 @@ class PDFView(View, LoginRequiredMixin, PermissionsRequiredMixin):
         root = etree.parse(buf).getroot()
         doc = document.Document(root)
 
-
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = "filename=%s" % self.get_filename()
 
-
         doc.process(response)
-
         return response
 
 
@@ -290,10 +298,20 @@ class MoneyDistributionFormPDFView(PDFView, LoginRequiredMixin, PermissionsRequi
     template_name = 'budget/MoneyDistributionTemplate.rml'
     filename = 'Monthly-Money-Distribution-Form.pdf'
 
+
+
     def get_context_data(self):
+
+        #import ipdb
+        ## ipdb.set_trace()
+
         station = BorderStationBudgetCalculation.objects.get(pk=self.kwargs['pk'])
         staffSalaries = StaffSalary.objects.filter(budget_calc_sheet=self.kwargs['pk'])
+        staffOtherItems = OtherBudgetItemCost.objects.filter(form_section=8, budget_item_parent=self.kwargs['pk'])
+        staffTotal = sum([staff.salary for staff in staffSalaries]) + sum(form.cost for form in staffOtherItems)
         otherItems = station.otherbudgetitemcost_set.all()
+
+        #staffNum = (staffSalaries) + (staffOtherItems)
 
         adminMeetings = station.administration_number_of_meetings_per_month * station.administration_number_of_meetings_per_month_multiplier
 
@@ -302,9 +320,9 @@ class MoneyDistributionFormPDFView(PDFView, LoginRequiredMixin, PermissionsRequi
             'name': station.border_station.station_name,
             'date': station.date_time_entered.date,
             'number': len(staffSalaries),
+            #'staff_num': staffNum,
             'staffSalaries': staffSalaries,
-            'salary_total': sum([staff.salary for staff in staffSalaries]),
-
+            'salary_total': staffTotal,
             'travel_chair_bool': station.travel_chair_with_bike,
             'travel_chair': station.travel_chair_with_bike_amount,
             'travel_manager_bool': station.travel_manager_with_bike,
@@ -357,6 +375,5 @@ class MoneyDistributionFormPDFView(PDFView, LoginRequiredMixin, PermissionsRequi
 def money_distribution_view(request, pk):
     if not request.user.permission_budget_manage:
         return redirect("home")
-    id = pk
     border_station = (BorderStationBudgetCalculation.objects.get(pk=pk)).border_station
     return render(request, 'budget/moneydistribution_view.html', locals())

@@ -1,97 +1,149 @@
 {% extends "dataentry/dataentry_base.html" %}
 
-{% load widget_tweaks %}
-{% load bootstrap %}
-{% load unslugify %}
-{% load times %}
-{% load bootstrap_pagination %}
-
 {% block title %}Manage Address 2{% endblock %}
 {% block content %}
-<!-- Modal -->
-<div class="modal fade modal-over-tooltips" id="modal" role="dialog"
-     aria-hidden="true" tabindex="-1"></div>
-<!-- /.modal -->
+{% block html %}<html ng-app="DataEntry">{% endblock %}
 
 <h1 class="text-center">All Address 2 Entries</h1>
 <br/>
 
-<div class="row">
-    <div class="col-md-6">
-
+{% verbatim %}
+<div ng-controller="address2Ctrl as vm">
+    <div class="row">
+        <div class="col-md-2">
+            <select data-ng-model="vm.paginateBy" data-ng-change="vm.getAddresses()" class="form-control">
+                <option>25</option>
+                <option>50</option>
+                <option>100</option>
+                <option>500</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <p style="margin-top: 5px;">Results per page</p>
+        </div>
+        <div class="col-md-7 search-bar">
+            <form ng-submit="vm.searchAddresses()">
+                  <label>
+                      <input type="search" placeholder="by Address 2 name..." ng-model="vm.searchValue" class="form-control">
+                  </label>
+                  <a class="btn btn-primary" ng-click="vm.searchAddresses()">Search</a>
+            </form>
+        </div>
     </div>
-    <div class="col-md-6 search-bar">
-          <label>
-              <input type="search" id="vdc-search" class="form-control">
-          </label>
-          <a class="btn btn-primary" href="{{ search_url }}" id="vdc-search-button" type='submit'>Search</a>
-        </form>
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th ng-click="vm.sortColumn = 'name'; vm.reverse = ! vm.reverse; vm.getAddresses()" class="text-center" id="addressNameHeader">
+                Name <i class="glyphicon" ng-class="vm.sortIcon('name')"></i>
+            </th>
+            <th ng-click="vm.sortColumn = 'latitude'; vm.reverse = ! vm.reverse; vm.getAddresses()" class="text-center">
+                Latitude <i class="glyphicon" ng-class="vm.sortIcon('latitude')"></i>
+            </th>
+            <th ng-click="vm.sortColumn = 'longitude'; vm.reverse = ! vm.reverse; vm.getAddresses()" class="text-center">
+                Longitude <i class="glyphicon" ng-class="vm.sortIcon('longitude')"></i>
+            </th>
+            <th ng-click="vm.sortColumn = 'district.name'; vm.reverse = ! vm.reverse; vm.getAddresses()" class="text-center">
+                Address 1 <i class="glyphicon" ng-class="vm.sortIcon('district.name')"></i>
+            </th>
+            <th ng-click="vm.sortColumn = 'cannonical_name.name'; vm.reverse = ! vm.reverse; vm.getAddresses()" class="text-center">
+                Canonical Name <i class="glyphicon" ng-class="vm.sortIcon('cannonical_name.name')"></i>
+            </th>
+            <th ng-click="vm.sortColumn = 'verified'; vm.reverse = ! vm.reverse; vm.getAddresses()" class="text-center">
+                Verified <i class="glyphicon" ng-class="vm.sortIcon('verified')"></i>
+            </th>
+            <th class="text-center">&nbsp;</th>
+        </tr>
+        </thead>
+        <tbody ng-init="vm.sortColumn = 'name'">
+            <tr ng-repeat="address in vm.addresses | orderBy:vm.sortColumn:vm.reverse">
+
+                <td class="text-center address-name">{{ address.name }}</td>
+                <td class="text-center">{{ address.latitude }}</td>
+                <td class="text-center">{{ address.longitude }}</td>
+                <td class="text-center">{{ address.district.name }}</td>
+                <td class="text-center">{{ address.cannonical_name.name }}</td>
+                <td class="text-center">{{ address.verified ? "Yes" : "No" }}
+                </td>
+                <td>
+                    <a href="#" ng-click="vm.editAddress2(address)" class="btn btn-warning edit">Edit</a>
+                </td>
+            </tr>
+            <tr ng-show="vm.addresses.length == 0">
+                <td colspan="12">There are currently no Address 2 records in the database</td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="row text-center">
+        <button ng-disabled="!vm.nextPageUrl" ng-click="vm.loadMoreAddresses()" class="btn btn-primary" style="margin-bottom:25px; width:90%;">Load more results</button>
+    </div>
+
+
+    <script type="text/ng-template" id="address2EditModal.html">
+        <div class="modal-header">
+            <h3 class="modal-title">Edit Address 2</h3>
+        </div>
+        <div class="modal-body">
+
+            <div class="form-group">
+                <label for="addressName">Name</label>
+                <input type="text" id="addressName" class="form-control" ng-model="address.name"/>
+            </div>
+
+            <div class="form-group">
+                <label for="addressName">Latitude</label>
+                <input type="number" class="form-control" ng-model="address.latitude"/>
+            </div>
+
+
+            <div class="form-group">
+                <label for="addressName">Longitude</label>
+                <input type="number" class="form-control" ng-model="address.longitude"/>
+            </div>
+
+
+            <div class="form-group">
+                <label for="addressName">Address 1</label>
+                <i ng-show="loadingAddress1" class="glyphicon glyphicon-refresh"></i>
+                <input id="address1" type="text" ng-model="address.district" placeholder="Address 1" typeahead="address1 as address1.name for address1 in getFuzzyAddress1s($viewValue)" typeahead-loading="loadingAddress1" typeahead-no-results="noResults" class="form-control">
+                <div ng-show="noResults">
+                  <i class="glyphicon glyphicon-remove"></i> No Results Found
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label for="addressName">Canonical Name</label>
+                <i ng-show="loadingAddress2" class="glyphicon glyphicon-refresh" style="position: relative; bottom:25px;"></i>
+                <input id="canonical_name" type="text" ng-model="address.cannonical_name" placeholder="Canonical Name" typeahead="address2 as address2.name for address2 in getFuzzyAddress2s($viewValue)" typeahead-loading="loadingAddress2" typeahead-no-results="noResults" class="form-control">
+                <div ng-show="noResults">
+                  <i class="glyphicon glyphicon-remove"></i> No Results Found
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Verified</label>
+                <input id="verified_checkbox" type="checkbox" class="form-control" ng-model="address.verified"/>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button id="updateSubmitButton" class="btn btn-primary" type="button" ng-click="save()">Save</button>
+            <button class="btn btn-danger" type="button" ng-click="cancel()">Cancel</button>
+        </div>
+    </script>
+
+    <!-- Loading animation container -->
+    <div ng-show="vm.loading" class="loader-container">
+        <div class="loader">Loading...</div>
     </div>
 </div>
 
-<table class="table table-striped">
-    <thead>
-    <tr>
-        <th class="text-center">Name</th>
-        <th class="text-center">Latitude</th>
-        <th class="text-center">Longitude</th>
-        <th class="text-center">Address 1</th>
-        <th class="text-center">Canonical Name</th>
-        <th class="text-center">Verified</th>
-        <th class="text-center">&nbsp;</th>
-    </tr>
-    </thead>
-    {% for vdc in vdc_list %}
-    {% url 'interceptionrecord_list' as vdc_edit %}
-    <tr>
-        <td class="vdc_admin_name text-center">{{ vdc.name }}</td>
-        <td class="vdc_admin_latitude text-center">{{ vdc.get_latitude }}</td>
-        <td class="vdc_admin_longitude text-center">{{ vdc.get_longitude }}</td>
-        <td class="vdc_admin_district text-center">{{ vdc.get_district }}</td>
-        <td class="vdc_admin_cannonical text-center">{{ vdc.get_cannonical_name }}</td>
-        <td class="vdc_admin_verified text-center">
-            {% if vdc.is_verified %}Yes{% else %}No{% endif %}
-        </td>
-        <td class="text-center">
-            <a id="update_link" class="btn btn-warning"
-               href="{% url 'vdc_admin_update' vdc.id %}"
-               data-target="#modal">Edit</a>
-        </td>
-    </tr>
-    {% empty %}
-    {% if database_empty %}
-    <tr>
-        <td colspan="12">There are currently no Address 2 records in the database</td>
-    </tr>
-    {% else %}
-    <tr>
-        <td colspan="12">There are no Address 2 records that match that query</td>
-    </tr>
-    {% endif %}
-    {% endfor %}
-</table>
+{% endverbatim %}
 
-<div class="pagination">
-    <span class="step-links">
-        {% if page_obj.has_previous %}
-            <a href="?page={{ page_obj.previous_page_number }}">  </a>
-        {% endif %}
 
-        <span class="current">
-          {% bootstrap_paginate page_obj %}
-        </span>
+{% load static from staticfiles %}
+<script src="{% static "dataentry/js/dataEntry.module.js" %}"></script>
+<script src="{% static "dataentry/js/services/address2Service.js" %}"></script>
+<script src="{% static "dataentry/js/controllers/address2Ctrl.js" %}"></script>
 
-        {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}"></a>
-        {% endif %}
-    </span>
-</div>
-<script>
-  $('#vdc-search').change(function() {
-    var base_url = "{{ search_url }}";
-    var val = $('#vdc-search').val();
-    var href = $('#vdc-search-button').attr("href", base_url + val);
-  });
-</script>
-<script src="{{ STATIC_URL }}search.js"></script>
 {% endblock %}

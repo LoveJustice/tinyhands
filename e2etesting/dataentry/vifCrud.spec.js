@@ -11,17 +11,16 @@ describe('VIF CRUD -', function() {
 
     describe('A user', function () {
 
-
         it('Logs In', function () {
             loginPage.logout();
             loginPage.loginAsAdmin();
+            browser.get(c.webAddress + "/data-entry/vifs/");
+            browser.sleep(4000);
         });
-
 
         it('should have a title', function () {
             browser.get(c.webAddress + "/data-entry/vifs/create/");
             expect(browser.getTitle()).toContain('Create VIF');
-
         });
 
         describe('properly filled out form can be created and is created and shows up in the VIF page.', function () {
@@ -35,15 +34,16 @@ describe('VIF CRUD -', function() {
         describe('submitted vif can be reviewed', function () {
             it('reviews a created vif form and checks that the data is still the same', function () {
                 crudPage.checkEditedVif();
+                browser.sleep(4000);
                 expect(element(by.id("id_vif_number")).getAttribute('value')).toContain(c.vifNumber);
             });
         });
 
         describe('edited vif should be able to be submitted and remain edited when viewed', function () {
             it('edits a vif and checks to see that the changed value stays changed', function () {
-                browser.get(c.webAddress + "/data-entry/vifs");
                 crudPage.editVif();
                 crudPage.checkEditedVif();
+                browser.sleep(800);
                 expect(element(by.id("id_vif_number")).getAttribute('value')).toContain(c.vifNumber);
             });
         });
@@ -52,6 +52,7 @@ describe('VIF CRUD -', function() {
             it('edits a vif and leaves a required field unfilled', function () {
                 browser.get(c.webAddress + "/data-entry/vifs");
                 crudPage.incorrectly_edit_vif();
+                browser.sleep(5000);
                 expect(element(by.id("error-box")).isPresent()).toBe(true);
             });
         });

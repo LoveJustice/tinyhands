@@ -17,9 +17,8 @@ describe('Interception Record Form -', function() {
         it('Can Create an IRF', function () {
             irfPage.getToIRF();
             expect(browser.driver.getCurrentUrl()).toContain('data-entry/irfs/create/');
-            irfPage.fillOutIRF();
-
-            expect(browser.driver.getCurrentUrl()).toContain('data-entry/irfs/search/');
+            irfPage.fillOutIRF(c.irfNumber);
+            expect(browser.driver.getCurrentUrl()).toContain('data-entry/irfs/');
         });
 
         it('Can Read an IRF', function () {
@@ -27,7 +26,7 @@ describe('Interception Record Form -', function() {
             expect(browser.driver.getCurrentUrl()).toContain('/data-entry/irfs/');
             expect(element(by.id('id_irf_number')).getAttribute('value')).toEqual(c.irfNumber);
             expect(element(by.id('id_location')).getAttribute('value')).toEqual(c.irfLocation);
-            //expect(element(by.id('id_date_time_of_interception')).getAttribute('value')).toEqual(c.IrfInterceptTime);
+            expect(element(by.id('id_date_time_of_interception')).getAttribute('value')).toContain(c.irfInterceptTimeTest);
             expect(element(by.id('id_staff_name')).getAttribute('value')).toEqual(c.irfStaffName);
             expect(element(by.id('id_drugged_or_drowsy')).isSelected()).toBeTruthy();
             expect(element(by.id('id_contact_noticed')).isSelected()).toBeTruthy();
@@ -45,16 +44,16 @@ describe('Interception Record Form -', function() {
             expect(element(by.id('id_name_came_up_before_value')).getAttribute('value')).toEqual(c.irfNameCameUpBeforeValue);
             expect(element(by.id('id_scan_and_submit_same_day')).isSelected()).toBeTruthy();
             expect(element(by.id('id_has_signature')).isSelected()).toBeTruthy();
-            browser.get(c.webAddress + '/data-entry/irfs/search/');
+            browser.get(c.webAddress + '/data-entry/irfs/');
         });
 
         it('Can Edit an IRF', function () {
             irfPage.editIRF();
-            expect(browser.driver.getCurrentUrl()).toContain('data-entry/irfs/search/');
+            expect(browser.driver.getCurrentUrl()).toContain('data-entry/irfs/');
             irfPage.viewIRF();
             expect(element(by.id('id_irf_number')).getAttribute('value')).toEqual(c.irfEditNumber);
             expect(element(by.id('id_location')).getAttribute('value')).toEqual(c.irfLocation);
-            //expect(element(by.id('id_date_time_of_interception')).getAttribute('value')).toEqual(c.IrfInterceptTime);
+            expect(element(by.id('id_date_time_of_interception')).getAttribute('value')).toContain(c.irfInterceptTimeTest);
             expect(element(by.id('id_staff_name')).getAttribute('value')).toEqual(c.irfStaffName);
             expect(element(by.id('id_drugged_or_drowsy')).isSelected()).toBeTruthy();
             expect(element(by.id('id_contact_noticed')).isSelected()).toBeTruthy();
@@ -72,7 +71,7 @@ describe('Interception Record Form -', function() {
             expect(element(by.id('id_name_came_up_before_value')).getAttribute('value')).toEqual(c.irfNameCameUpBeforeValue);
             expect(element(by.id('id_scan_and_submit_same_day')).isSelected()).toBeTruthy();
             expect(element(by.id('id_has_signature')).isSelected()).toBeTruthy();
-            browser.get(c.webAddress + '/data-entry/irfs/search/');
+            browser.get(c.webAddress + '/data-entry/irfs/');
         });
 
         it('Cannot Edit while Viewing IRF', function() {
@@ -81,14 +80,16 @@ describe('Interception Record Form -', function() {
         });
 
         it ('Can Delete an IRF', function () {
-            irfPage.getToIRF();
-            irfPage.fillOutIRF();
-            browser.get(c.webAddress + '/data-entry/irfs/search/');
-            var firstLink = element(by.xpath("//a[@class='btn btn-sm btn-primary']")).getAttribute('href');
+            //irfPage.getToIRF();
+            //irfPage.fillOutIRF();
+            browser.get(c.webAddress + '/data-entry/irfs/');
+            //var firstLink = element(by.xpath("//a[@class='btn btn-sm btn-primary']")).getAttribute('href');
+            expect(browser.driver.getCurrentUrl()).toContain('data-entry/irfs/');
             irfPage.deleteIRF();
-            var secondLink = element(by.xpath("//a[@class='btn btn-sm btn-primary']")).getAttribute('href');
+            //var secondLink = element(by.xpath("//a[@class='btn btn-sm btn-primary']")).getAttribute('href');
             browser.sleep(500);
-            expect(firstLink != secondLink).toBeTruthy();
+            expect(element(by.xpath("//a[@class='btn btn-sm btn-primary']")).isPresent()).toBe(false);
+            //expect(firstLink != secondLink).toBeTruthy();
 
         });
     });

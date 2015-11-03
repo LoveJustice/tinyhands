@@ -10,7 +10,7 @@
     {% block content %}
         <script type="text/javascript">
             window.border_station = {{ border_station.id }};
-            window.pk = {{ id }};
+            window.pk = {{ pk }};
         </script>
 
         <div class="row" >
@@ -19,12 +19,12 @@
             <div class="col-lg-6" style="height: 675px">
                 <div class="row">
                     <h2 class="text-center col-lg-8">Money Distribution Form</h2>
-                    <a style="margin-top: 20px" href="{% url "budget_update_api" id %}" class="btn btn-primary col-lg-3">Update Budget</a>
+                    <a style="margin-top: 20px" href="{% url "budget_update_api" pk %}" class="btn btn-primary col-lg-3">Update Budget</a>
                     <div class="1"></div>
                 </div>
 
                 <!-- The Money Distribution Form PDF -->
-                <iframe style="height: 70%; width: 100%; border: hidden; padding-top: 15px" id="money_distribution_form_iframe" src="{% url "money_distribution_pdf" id %}"></iframe>
+                <iframe style="height: 70%; width: 100%; border: hidden; padding-top: 15px" id="money_distribution_form_iframe" src="{% url "money_distribution_pdf" pk %}"></iframe>
             </div>
 
             {% verbatim %}  <!-- So the Django Templating Engine doesn't overwrite our fields and Angular gets to do it -->
@@ -75,7 +75,7 @@
 
         <!-- All of our Angular code imported down here -->
         {% load static from staticfiles %}
-        <script type="text/javascript" src="{% static "budget/js/budgetModule.js" %}"></script>
+        <script type="text/javascript" src="{% static "budget/js/budget.module.js" %}"></script>
         <script type="text/javascript" src="{% static "budget/js/controllers/emailRecipientsCtrl.js" %}"></script>
         <script type="text/javascript" src="{% static "budget/js/services/emailRecipientsService.js" %}"></script>
 

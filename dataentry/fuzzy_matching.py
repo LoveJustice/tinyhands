@@ -12,32 +12,33 @@ def match_location(district_name=None, vdc_name=None):
     # Determine the appropriate model
     if vdc_name is not None and district_name is not None:
         model = VDC
-        locationName = vdc_name
+        location_name = vdc_name
         filter_by_district = True
     elif vdc_name is not None:
         model = VDC
-        locationName = vdc_name
+        location_name = vdc_name
     else:
         model = District
-        locationName = district_name
+        location_name = district_name
 
     # TODO - Make sure to optimize this search; the select_related might be
     # necessary. Might also want to have cannonical_name__district in here.
     if filter_by_district:
-        regionNames = {region.id: region.name
-                       for region in model.objects.filter(district__name__contains=district_name)
-                                                  .select_related('district', 'cannonical_name__district')}
+        region_names = {region.id: region.name
+                        for region in model.objects.filter(district__name__contains=district_name).select_related('district', 'cannonical_name__district')
+                        }
     else:
-        regionNames = {region.id: region.name
-                       for region in model.objects.all().select_related('district')}
+        region_names = {region.id: region.name
+                        for region in model.objects.all().select_related('district')
+                        }
 
     # matches is in the form of [(u'match', score, id), ...]
-    matches = process.extractBests(locationName, regionNames, limit=7)
+    matches = process.extractBests(location_name, region_names, limit=7)
 
     # Return the correct objects.
     objects = None
     if len(matches) > 0:
-        objects = [model.objects.get(id=id) for name, score, id in matches]
+        objects = [model.objects.get(pk=pk) for name, score, pk in matches]
     return objects
 
 
@@ -49,6 +50,6 @@ def match_vdc_district(vdc_name, district_name):
         names = matches[0][0].split(", ")
         vdc = VDC.objects.get(name=names[0])
         district = vdc.district
-        return (vdc, district)
+        return vdc, district
     else:
         return None

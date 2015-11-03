@@ -24,6 +24,7 @@ class BorderStation(models.Model):
     has_shelter = models.BooleanField(default=False)
     latitude = models.FloatField(null=True)
     longitude = models.FloatField(null=True)
+    open = models.BooleanField(default=True)
 
 
 class District(models.Model):
@@ -317,6 +318,7 @@ class Interceptee(models.Model):
         finally:
             return rtn
 
+
 class VictimInterview(models.Model):
 
     class Meta:
@@ -540,7 +542,6 @@ class VictimInterview(models.Model):
     victim_how_expense_was_paid_gave_money_to_broker = models.BooleanField('I gave a sum of money to the broker', default=False)
     victim_how_expense_was_paid_broker_gave_loan = models.BooleanField('The broker paid the expenses and I have to pay him back', default=False)
     victim_how_expense_was_paid_amount = models.DecimalField('Amount', max_digits=10, decimal_places=2, null=True, blank=True)
-    victim_how_expense_was_paid_broker_gave_loan = models.BooleanField('The broker paid the expenses and I have to pay him back', default=False)
 
     broker_works_in_job_location_no = models.BooleanField('No', default=False)
     broker_works_in_job_location_yes = models.BooleanField('Yes', default=False)
@@ -607,14 +608,12 @@ class VictimInterview(models.Model):
     money_changed_hands_broker_companion_broker_gave_money = models.BooleanField('Broker gave money to the companion', default=False).set_weight(3)
     money_changed_hands_broker_companion_companion_gave_money = models.BooleanField('Companion gave money to the broker', default=False).set_weight(3)
 
-
     # 5. Destination & India Contact
 
     meeting_at_border_yes = models.BooleanField('Yes', default=False)
     meeting_at_border_no = models.BooleanField('No', default=False)
     meeting_at_border_meeting_broker = models.BooleanField('Meeting Broker', default=False)
     meeting_at_border_meeting_companion = models.BooleanField('Meeting Companion', default=False)
-
 
     victim_knew_details_about_destination = models.BooleanField(default=False)
 

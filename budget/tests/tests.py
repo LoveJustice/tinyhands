@@ -26,7 +26,7 @@ class BudgetCalcApiTests(WebTest):
     def testRemoveBudgetSheet(self):
         response = self.client.get('/budget/api/budget_calculations/')
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.data), 0)
+        self.assertEqual(len(response.data['results']), 0)
 
         response = self.client.post('/budget/api/budget_calculations/', {"border_station": self.border_station.pk})
         budget_id = response.data.get('id')
@@ -34,7 +34,7 @@ class BudgetCalcApiTests(WebTest):
 
         response = self.client.get('/budget/api/budget_calculations/')
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.data), 1)
+        self.assertEqual(len(response.data['results']), 1)
 
         # delete the form
         response = self.client.delete('/budget/api/budget_calculations/' + str(budget_id) + '/')
@@ -43,7 +43,7 @@ class BudgetCalcApiTests(WebTest):
         # count the remaining forms
         response = self.client.get('/budget/api/budget_calculations/')
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.data), 0)
+        self.assertEqual(len(response.data['results']), 0)
 
     def testUpdateBudgetSheet(self):
         response = self.client.post('/budget/api/budget_calculations/', {"border_station": self.border_station.pk})
@@ -87,18 +87,6 @@ class MoneyDistributionWebTests(WebTest, TestCase):
         self.assertGreater(response.content.find("emailRecipientsCtrl"), -1)  # If it finds the string, it will be >0
         self.assertGreater(response.content.find("main.sendEmails"), -1)
 
-    # def testMoneyDistributionForm(self):
-    #     import ipdb
-    #     ipdb.set_trace()
-    #
-    #     request = self.app.get(reverse('money_distribution_pdf', kwargs={"pk": self.budget_calc_sheet.pk}), user=self.superuser)
-    #     context_data = self.MDFView.get_context_data()
-    #     dispatch = self.MDFView.dispatch(request)
-    #
-    #     self.assertEquals("application/pdf", request.content_type)
-    #     self.assertEquals(context_data['admin_total'], 1000)
-    #     self.assertGreater(dispatch.items()[1][1].find('filename=Monthly-Money-Distribution-Form.pdf'), -1)
-
     def testSendingTwoEmails(self):
         self.staff = StaffFactory(border_station=self.budget_calc_sheet.border_station)
         self.committee_member = CommitteeMemberFactory(border_station=self.budget_calc_sheet.border_station)
@@ -132,8 +120,5 @@ class MoneyDistributionWebTests(WebTest, TestCase):
 
         response = self.client.post('/budget/api/budget_calculations/money_distribution/' + str(self.budget_calc_sheet.pk) + '/', {"budget_calc_id": self.budget_calc_sheet.pk, "staff_ids": staff_ids, "committee_ids": committee_ids})
 
-
         self.assertEquals('"Emails Sent!"', response.content)
-        self.assertEquals(len(mail.outbox), 2)
-        self.assertEquals(mail.outbox[0].to[0], self.staff2.email)
-        self.assertEquals(mail.outbox[1].to[0], self.committee_member2.email)
+        self.assertEquals(len(mail.outbox), 4)
