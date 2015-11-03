@@ -19,7 +19,7 @@ exports.config = {
         'dataentry/vifCrud.spec.js',
         'dataentry/search.spec.js', //dependent on vifCrud.spec.js and irfCRUD.spec.js
 
-        // These three are dependent on each other
+         //These three are dependent on each other
         'borderStations/borderStationCRUD.spec.js',
         'budget/budgetForm.spec.js',
         'budget/moneyDistributionForm.spec.js',
@@ -29,7 +29,7 @@ exports.config = {
         'addresses/vdcAdminPage.spec.js',
         'addresses/address1Page.spec.js',
         'accounts/accessDefaults.spec.js',
-        //Has to run last
+        // Has to run last
         'accounts/permissionsPage.spec.js'
       ],
 

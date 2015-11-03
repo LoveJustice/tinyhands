@@ -7,9 +7,10 @@ var irfPage = function() {
     var page = this;
     
     this.getToIRF = function(){
-	    browser.get(c.webAddress + '/data-entry/irfs/');
+	    //browser.get(c.webAddress + '/data-entry/irfs/');
         //this.link = element(by.id("id_input_new_irf"));
         browser.get(c.webAddress + '/data-entry/irfs/create/');
+        browser.sleep(1000);
         //return this.link.click();
     };
 
@@ -51,11 +52,11 @@ var irfPage = function() {
 
     this.viewIRF = function() {
         //this.vIRF = element(by.linkText('View')).click();
-        browser.get(c.webAddress + '/data-entry/irfs/1/');
+        browser.get(c.webAddress + '/data-entry/irfs/3/');
     };
 
     this.editIRF = function() {
-        browser.get(c.webAddress + '/data-entry/irfs/update/1/');
+        browser.get(c.webAddress + '/data-entry/irfs/update/3/');
         browser.executeScript("arguments[0].style.visibility = 'hidden';", element(by.id("footer")).getWebElement()); // Hides the footer so the webdriver can click on stuff
         //this.eIRF = element(by.linkText('Edit')).click();
         //this.irf_number = element(by.id("id_irf_number")).clear();
