@@ -55,7 +55,9 @@ function setPopovers(id)
             input = $(element).val();
             if(element.id.indexOf("district") > 0){
                 locationType = "district";
-            } else{
+            }
+            else{
+                //var parentvalue = element.parent().parent().div().div().value()
                 locationType = "vdc";
             }
 
@@ -76,7 +78,6 @@ function callFuzzyApi(input, locationType, element){
     var requestData = locationType+"="+input;
     if (locationType === "vdc"){
         var district_value = find_district_value(element);
-
         if (district_value.length > 0) {
             requestData = requestData + '&district=' + district_value;
         }

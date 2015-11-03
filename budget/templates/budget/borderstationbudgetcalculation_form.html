@@ -334,8 +334,7 @@
 
                             <div class="row">
                                 <div class="col-lg-6">
-                                    <div class="col-lg-1"></div>
-                                    <input style="margin-bottom: 0; margin-top: 10px" class="col-lg-3" type="checkbox" id="comm_chair_bool" ng-model="main.form.communication_chair"/>
+                                    <input style="margin-bottom: 0; margin-top: 10px" class="col-lg-3 col-lg-offset-1" type="checkbox" id="comm_chair_bool" ng-model="main.form.communication_chair"/>
 
                                     <div class="col-lg-6 calc-form-input-no-width">
                                         <input class="text-right form-control" type="number" id="comm_chair_amount" ng-model="main.form.communication_chair_amount"/>
@@ -343,7 +342,6 @@
                                     </div>
                                 </div>
                                 <div class="col-lg-6 row">
-                                    <div></div>
                                     <input style="margin-bottom: 0; margin-top: 10px" class="col-lg-3" type="checkbox" id="comm_manager_bool" ng-model="main.form.communication_manager"/>
 
                                     <div class="col-lg-6 calc-form-input-no-width">
@@ -405,11 +403,11 @@
                                     <div class="col-lg-2">
                                         <a class="btn btn-danger" ng-click="communicationItemsCtrl.removeItem(form.id, $index)" ng-hide="main.view">Remove</a>
                                     </div>
-                                    <br/><br/>
+                                    <br/>
+                                    <br/>
                                 </div>
                                 <div class="row">
                                     <br/>
-
                                     <div class="col-lg-4 col-lg-offset-5">
                                         <a class="btn btn-success" id="communication_add_item" ng-click="communicationItemsCtrl.addNewItem()" ng-hide="main.view">Add item</a>
                                     </div>
@@ -423,7 +421,6 @@
                                     <label>Total Communication</label>
                                     <input class="form-control text-center" ng-value="main.communicationTotalValue" disabled="disabled"/>
                                 </div>
-                                <div class="col-lg-4"></div>
                             </div>
 
                         </div>
@@ -474,11 +471,11 @@
                                     <div class="col-lg-2">
                                         <a class="btn btn-danger" ng-click="awarenessItemsCtrl.removeItem(form.id, $index)" ng-hide="main.view">Remove</a>
                                     </div>
-                                    <br/><br/>
+                                    <br/>
+                                    <br/>
                                 </div>
                                 <div class="row">
                                     <br/>
-
                                     <div class="col-lg-4 col-lg-offset-5">
                                         <a class="btn btn-success" id="awareness_add_item" ng-click="awarenessItemsCtrl.addNewItem()" ng-hide="main.view">Add item</a>
                                     </div>
@@ -492,7 +489,6 @@
                                     <label>Total Awareness</label>
                                     <input class="form-control text-center" ng-value="main.awarenessTotalValue" disabled="disabled"/>
                                 </div>
-                                <div class="col-lg-4"></div>
                             </div>
                         </div>
                     </div>
@@ -505,14 +501,12 @@
 
                             <div class="row">
                                 <div class="col-lg-6">
-                                    <div class="col-lg-1"></div>
-                                    <input style="margin-bottom: 0; margin-top: 10px" class="col-lg-3" type="checkbox" id="travel_chair_with_bike_bool" ng-model="main.form.travel_chair_with_bike" ng-change="main.travelTotal()"/>
+                                    <input style="margin-bottom: 0; margin-top: 10px" class="col-lg-3 col-lg-offset-1" type="checkbox" id="travel_chair_with_bike_bool" ng-model="main.form.travel_chair_with_bike" ng-change="main.travelTotal()"/>
                                     <div class="col-lg-6 calc-form-input-no-width">
                                         <input class="form-control text-right" type="number" id="travel_chair_with_bike_amount" ng-model="main.form.travel_chair_with_bike_amount" ng-change="main.travelTotal()"/>
                                     </div>
                                 </div>
                                 <div class="col-lg-6 row">
-                                    <div></div>
                                     <input style="margin-bottom: 0; margin-top: 10px" class="col-lg-3" type="checkbox" id="travel_manager_with_bike_bool" ng-model="main.form.travel_manager_with_bike" ng-change="main.travelTotal()"/>
                                     <div class="col-lg-6 calc-form-input-no-width">
                                         <input class="form-control text-right" type="number" id="travel_manager_with_bike_amount" ng-model="main.form.travel_manager_with_bike_amount" ng-change="main.travelTotal()"/>
@@ -588,11 +582,11 @@
                                     <div class="col-lg-2">
                                         <a class="btn btn-danger" ng-click="travelItemsCtrl.removeItem(form.id, $index)" ng-hide="main.view">Remove</a>
                                     </div>
-                                    <br/><br/>
+                                    <br/>
+                                    <br/>
                                 </div>
                                 <div class="row">
                                     <br/>
-
                                     <div class="col-lg-4 col-lg-offset-5">
                                         <a class="btn btn-success" id="travel_add_item" ng-click="travelItemsCtrl.addNewItem()" ng-hide="main.view">Add item</a>
                                     </div>
@@ -606,7 +600,6 @@
                                     <label>Total Travel</label>
                                     <input class="form-control text-center" ng-value="main.travelTotalValue" disabled="disabled"/>
                                 </div>
-                                <div class="col-lg-4"></div>
                             </div>
 
                         </div>
@@ -669,7 +662,6 @@
                                 </div>
                                 <div class="row">
                                     <br/>
-
                                     <div class="col-lg-4 col-lg-offset-5">
                                         <a class="btn btn-success" id="supplies_add_item" ng-click="suppliesItemsCtrl.addNewItem()" ng-hide="main.view">Add item</a>
                                     </div>
@@ -683,7 +675,6 @@
                                     <label>Total Supplies</label>
                                     <input class="form-control text-center" ng-value="main.suppliesTotalValue" disabled="disabled"/>
                                 </div>
-                                <div class="col-lg-4"></div>
                             </div>
                         </div>
                     </div>
@@ -778,8 +769,7 @@
                             <h2 class="background"><span>Medical</span></h2>
 
                             <div class="row">
-                                <div class="col-lg-1"></div>
-                                <div class="col-lg-4 calc-form-input-no-width">
+                                <div class="col-lg-4 calc-form-input-no-width col-lg-offset-1">
                                     <input class="text-right form-control" type="number" id="medical_expense" ng-model="main.form.medical_last_months_expense"/>
                                     <small>Last month's medical expense</small>
                                 </div>
@@ -845,7 +835,6 @@
                                         <label>Total Miscellaneous</label>
                                         <input class="text-center form-control" ng-value="main.miscTotalValue" disabled="disabled"/>
                                     </div>
-                                    <div class="col-lg-4"></div>
                                 </div>
 
 
