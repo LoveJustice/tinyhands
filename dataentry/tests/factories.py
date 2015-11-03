@@ -2,6 +2,7 @@ import datetime
 import factory
 from factory.django import DjangoModelFactory
 from factory.fuzzy import FuzzyInteger, FuzzyFloat, FuzzyChoice, FuzzyDate
+import pytz
 
 from accounts.tests.factories import SuperUserFactory
 from dataentry.models import *
@@ -12,10 +13,10 @@ class IrfFactory(DjangoModelFactory):
         model = InterceptionRecord
 
     form_entered_by = factory.SubFactory(SuperUserFactory)
-    date_form_received = datetime.date(2012, 1, 1)
+    date_form_received = datetime.datetime(2012, 1, 1, tzinfo=pytz.UTC)
 
     irf_number = factory.Sequence(lambda n: 'BHD{0}'.format(n))
-    date_time_of_interception = datetime.date(2011, 12, 12)
+    date_time_of_interception = datetime.datetime(2011, 12, 12, tzinfo=pytz.UTC)
 
     location = "Nepal"
     staff_name = "Joe Test"
@@ -34,8 +35,8 @@ class VifFactory(DjangoModelFactory):
     number_of_traffickers = FuzzyInteger(1, 10).fuzz()
 
     date = datetime.date(2011, 12, 12)
-    date_time_entered_into_system = datetime.date(2011, 12, 12)
-    date_time_last_updated = datetime.date(2011, 12, 12)
+    date_time_entered_into_system = datetime.datetime(2011, 12, 12, tzinfo=pytz.UTC)
+    date_time_last_updated = datetime.datetime(2011, 12, 12, tzinfo=pytz.UTC)
 
 
 
