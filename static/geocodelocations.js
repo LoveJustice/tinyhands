@@ -57,7 +57,6 @@ function setPopovers(id)
                 locationType = "district";
             }
             else{
-                //var parentvalue = element.parent().parent().div().div().value()
                 locationType = "vdc";
             }
 
