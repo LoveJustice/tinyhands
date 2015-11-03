@@ -48,29 +48,29 @@
         <thead>
             <tr>
                 <th ng-click="vm.sortColumn = 'irf_number'; vm.reverse = ! vm.reverse; vm.listIrfs()" id='irf_number'>
-                    IRF # <i class="glyphicon" ng-class="vm.sortIcon('letter', 'irf_number')"></i>
+                    IRF # <i class="glyphicon" style="width:10px;" ng-class="vm.sortIcon('letter', 'irf_number')"></i>
                 </th>
                 <th ng-click="vm.sortColumn = 'staff_name'; vm.reverse = ! vm.reverse; vm.listIrfs()" id='staff_name'>
-                    Staff Name <i class="glyphicon" ng-class="vm.sortIcon('letter', 'staff_name')"></i>
+                    Staff Name <i class="glyphicon" style="width:10px;" ng-class="vm.sortIcon('letter', 'staff_name')"></i>
                 </th>
                 <th ng-click="vm.sortColumn = 'number_of_victims'; vm.reverse = ! vm.reverse; vm.listIrfs()" id='number_of_victims'>
-                    # of victims <i class="glyphicon" ng-class="vm.sortIcon('number', 'number_of_victims')"></i>
+                    # of victims <i class="glyphicon" style="width:10px;" ng-class="vm.sortIcon('number', 'number_of_victims')"></i>
                 </th>
                 <th ng-click="vm.sortColumn = 'number_of_traffickers'; vm.reverse = ! vm.reverse; vm.listIrfs()" id='number_of_traffickers'>
-                    # of traffickers <i class="glyphicon" ng-class="vm.sortIcon('number', 'number_of_traffickers')"></i>
+                    # of traffickers <i class="glyphicon" style="width:10px;" ng-class="vm.sortIcon('number', 'number_of_traffickers')"></i>
                 </th>
                 <th ng-click="vm.sortColumn = 'date_time_of_interception'; vm.reverse = ! vm.reverse; vm.listIrfs()" id='date_time_of_interception'>
-                    Time of Interception <i class="glyphicon" ng-class="vm.sortIcon('number', 'date_time_of_interception')"></i>
+                    Time of Interception <i class="glyphicon" style="width:10px;" ng-class="vm.sortIcon('number', 'date_time_of_interception')"></i>
                 </th>
                 <th ng-click="vm.sortColumn = 'date_time_entered_into_system'; vm.reverse = ! vm.reverse; vm.listIrfs()" class="hidden-xs" id='date_time_entered_into_system'>
-                    Time Entered Into System <i class="glyphicon" ng-class="vm.sortIcon('number', 'date_time_entered_into_system')"></i>
+                    Time Entered Into System <i class="glyphicon" style="width:10px;" ng-class="vm.sortIcon('number', 'date_time_entered_into_system')"></i>
                 </th>
                 <th ng-click="vm.sortColumn = 'date_time_last_updated'; vm.reverse = ! vm.reverse; vm.listIrfs()" class="hidden-xs" id='date_time_last_updated'>
-                    Time Last Edited <i class="glyphicon" ng-class="vm.sortIcon('number', 'date_time_last_updated')"></i>
+                    Time Last Edited <i class="glyphicon" style="width:10px;" ng-class="vm.sortIcon('number', 'date_time_last_updated')"></i>
                 </th>
                 <th ng-show="vm.user.permission_irf_view">&nbsp;</th>
                 <th ng-show="vm.user.permission_irf_edit">&nbsp;</th>
-                <th ng-show="vm.user.permission_irf_delete">&nbsp;</th>
+                <th ng-show="vm.user.permission_irf_delete">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
             </tr>
         </thead>
         <tbody>
