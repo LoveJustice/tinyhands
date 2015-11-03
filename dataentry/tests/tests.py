@@ -8,9 +8,9 @@ from django.core.urlresolvers import reverse
 import pytz
 
 from accounts.tests.factories import *
-from dataentry.tests.factories import VDCFactory, DistrictFactory
 
 from dataentry.models import InterceptionRecord
+
 
 class TestModels(WebTest):
 
@@ -22,20 +22,19 @@ class TestModels(WebTest):
         )
         self.assertEqual(record.calculate_total_red_flags(), 70)
 
-    def fuzzySetUp(self, cutOffNum, matchName):
-        cutoffNumber = cutOffNum
-        cutoffNumber = float(cutoffNumber)
+    def fuzzySetUp(self, cut_off_number, match_name):
+        cut_off_number = float(cut_off_number)
 
         with open('dataentry/non_victims.csv', 'rb') as csvfile:
             reader = csv.reader(csvfile)
             names = [row[2] for row in reader]
-            enteredName = matchName
-            matches = process.extractBests(enteredName, names, score_cutoff=cutoffNumber, limit=None)
-            modMatches = [match[0] for match in matches]
-            return modMatches
+            entered_name = match_name
+            matches = process.extractBests(entered_name, names, score_cutoff=cut_off_number, limit=None)
+            mod_matches = [match[0] for match in matches]
+            return mod_matches
 
     def testFuzzy_1(self):
-        testMatches = [
+        test_matches = [
             "Amit Agrawal",
             "Amit Basnet",
             "Amit Basnet",
@@ -62,10 +61,10 @@ class TestModels(WebTest):
             "Pramita Rai",
             "Ramita Limbu",
             "Ramita Roka Magar"]
-        self.assertEqual(self.fuzzySetUp(86, "amit"), testMatches)
+        self.assertEqual(self.fuzzySetUp(86, "amit"), test_matches)
 
     def testFuzzy_2(self):
-        testMatches = [
+        test_matches = [
             "Abita",
             "Babita Rai 1",
             "Babita Rai 1",
@@ -89,14 +88,14 @@ class TestModels(WebTest):
             "Sabitri Shrestha",
             "Sabitri Thapa"
         ]
-        self.assertEqual(self.fuzzySetUp(86, "bit"), testMatches)
+        self.assertEqual(self.fuzzySetUp(86, "bit"), test_matches)
 
     def testFuzzy_3(self):
-        testMatches = [
+        test_matches = [
             "Gobin Hemram",
             "Gobinda Oli"
         ]
-        self.assertEqual(self.fuzzySetUp(86, "gob"), testMatches)
+        self.assertEqual(self.fuzzySetUp(86, "gob"), test_matches)
 
 
 class ExportTesting(WebTest):
