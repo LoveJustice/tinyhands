@@ -5,6 +5,9 @@
   "adminLastName"   : "user",
   "nonAdminEmail"   : "HanSolo@MFalcon.com",
   "nonAdminPassword": "password",
+  "fooFirstName": "Foo",
+  "fooLastName": "Bar",
+  "fooEmail": "foo@bar.com",
 
   "vdcEditName"      : "Shree Jung",
   "vdcEditLat"       : "0.1",
