@@ -1,84 +1,107 @@
 {% extends "dataentry/dataentry_base.html" %}
-{% load bootstrap %}
-{% load times %}
+{% block html %}<html ng-app="DataEntry" ng-cloak>{% endblock %}
 
 {% block title %}All IRFs{% endblock %}
 
-{% block body_class %}interceptionrecord_list{% endblock %}
-
 {% block content %}
-  {% if request.user.permission_irf_view %}
-    <form class="form-inline pull-right" style="margin: 20px">
-      {% if request.user.permission_irf_add %}
-        <div class="form-group">
-          <a id="id_input_new_irf" class="pull-right btn btn-success"
-             href="{% url 'interceptionrecord_create' %}">Input A New IRF
-           </a>
+{% verbatim %}
+<div ng-controller="irfListCtrl as vm" ng-show="vm.user.permission_irf_view">
+
+    <div class="row" style="margin: 20px 0 20px 0;">
+        <div class="col-xs-5">
+            <h1 style="margin:0;">All IRFs</h1>
         </div>
-      {% endif %}
+        <div class="pull-right" style="margin-top:8px;">
+            <a class="btn btn-primary" id="export" href="/data-entry/irfs/export/" download>
+                Export as CSV
+            </a>
+            <a ng-show="vm.user.permission_irf_add" id="id_input_new_irf" class="btn btn-success pull-right" style="margin-left:5px;" href="/data-entry/irfs/create/">
+                Input A New IRF
+            </a>
+        </div>
+    </div>
 
-      <div class="form-group">
-        <a class="btn btn-primary"
-           href="{% url 'interceptionrecord_csv_export' %}">Export as CSV</a>
-      </div>
-    </form>
-  {% endif %}
+    <div class="row">
+        <div class="col-sm-2 col-xs-3">
+            <select ng-model="vm.paginateBy" ng-change="vm.listIrfs()" class="form-control">
+                <option>25</option>
+                <option>50</option>
+                <option>100</option>
+                <option>500</option>
+            </select>
+        </div>
+        <div class="col-sm-3 col-xs-1">
+            <p style="margin-top: 8px;">Results <span class="hidden-xs">per page</span></p>
+        </div>
 
-  {% if request.user.permission_irf_view %}
-    <h1>All IRFs</h1>
-    {% if interceptionrecord_list %}
-      <table class="table table-striped table-condensed crud-datatable">
-	<thead>
-          <tr>
-            <th>IRF #</th>
-            <th>Staff Name</th>
-            <th># of victims</th>
-            <th># of traffickers</th>
-            <th>Date/Time<br/>of Interception</th>
-            <th>Date/Time<br/>Entered Into System</th>
-            <th>Date/Time<br/>Last Edited</th>
-            <th>&nbsp;</th>
-          </tr>
-	</thead>
-	<tbody>
-          {% for irf in interceptionrecord_list %}
+        <div class="col-md-3 search-bar pull-right">
+            <form ng-submit="vm.searchIrfs()">
+                  <label>
+                      <input placeholder="by IRF number..." ng-model="vm.searchValue" class="form-control">
+                  </label>
+                  <button class="btn btn-primary">Search</button>
+            </form>
+        </div>
+    </div>
+
+    <table class="table table-striped table-condensed">
+        <thead>
             <tr>
-              <td class="irf-number">{{ irf.irf_number }}</td>
-              <td>{{ irf.staff_name }}</td>
-              <td>{{ irf.number_of_victims }}</td>
-              <td>{{ irf.number_of_traffickers }}</td>
-              <td>{{ irf.date_time_of_interception }}</td>
-              <td>{{ irf.date_time_entered_into_system }}</td>
-              <td>{{ irf.date_time_last_updated }}</td>
-              <td>
-		<a class="btn btn-sm btn-primary" href="{% url 'interceptionrecord_detail' irf.pk %}">View</a>
-		{% if request.user.permission_irf_edit %}
-                  <a class="btn btn-sm btn-primary" href="{% url 'interceptionrecord_update' irf.pk %}">Edit</a>
-		{% endif %}
-		{% if request.user.permission_irf_delete %}
-                  {% include "delete_modal_forms.html" with form=irf url_string="interceptionrecord_delete"%}
-                  <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#modal-{{ irf.pk }}">Delete</button>
-		{% endif %}
-              </td>
+                <th ng-click="vm.sortColumn = 'irf_number'; vm.reverse = ! vm.reverse; vm.listIrfs()" id='irf_number'>
+                    IRF # <i class="glyphicon" ng-class="vm.sortIcon('letter', 'irf_number')"></i>
+                </th>
+                <th ng-click="vm.sortColumn = 'staff_name'; vm.reverse = ! vm.reverse; vm.listIrfs()" id='staff_name'>
+                    Staff Name <i class="glyphicon" ng-class="vm.sortIcon('letter', 'staff_name')"></i>
+                </th>
+                <th ng-click="vm.sortColumn = 'number_of_victims'; vm.reverse = ! vm.reverse; vm.listIrfs()" id='number_of_victims'>
+                    # of victims <i class="glyphicon" ng-class="vm.sortIcon('number', 'number_of_victims')"></i>
+                </th>
+                <th ng-click="vm.sortColumn = 'number_of_traffickers'; vm.reverse = ! vm.reverse; vm.listIrfs()" id='number_of_traffickers'>
+                    # of traffickers <i class="glyphicon" ng-class="vm.sortIcon('number', 'number_of_traffickers')"></i>
+                </th>
+                <th ng-click="vm.sortColumn = 'date_time_of_interception'; vm.reverse = ! vm.reverse; vm.listIrfs()" id='date_time_of_interception'>
+                    Time of Interception <i class="glyphicon" ng-class="vm.sortIcon('number', 'date_time_of_interception')"></i>
+                </th>
+                <th ng-click="vm.sortColumn = 'date_time_entered_into_system'; vm.reverse = ! vm.reverse; vm.listIrfs()" class="hidden-xs" id='date_time_entered_into_system'>
+                    Time Entered Into System <i class="glyphicon" ng-class="vm.sortIcon('number', 'date_time_entered_into_system')"></i>
+                </th>
+                <th ng-click="vm.sortColumn = 'date_time_last_updated'; vm.reverse = ! vm.reverse; vm.listIrfs()" class="hidden-xs" id='date_time_last_updated'>
+                    Time Last Edited <i class="glyphicon" ng-class="vm.sortIcon('number', 'date_time_last_updated')"></i>
+                </th>
+                <th ng-show="vm.user.permission_irf_view">&nbsp;</th>
+                <th ng-show="vm.user.permission_irf_edit">&nbsp;</th>
+                <th ng-show="vm.user.permission_irf_delete">&nbsp;</th>
             </tr>
-          {% endfor %}
-	</tbody>
-      </table>
-    {% else %}
-      {% if database_empty %}
-	<p>There are not yet any IRFs in the database.</p>
-      {% else %}
-	<p>No IRFs match what you are looking for.</p>
-      {% endif %}
-    {% endif %}
-  {% else %}
-    <h1>IRFs</h1>
-  {% endif %}
+        </thead>
+        <tbody>
+            <tr ng-repeat="irf in vm.irfs">
+                <td class="irf-number">{{ irf.irf_number }}</td>
+                <td>{{ irf.staff_name }}</td>
+                <td>{{ irf.number_of_victims }}</td>
+                <td>{{ irf.number_of_traffickers }}</td>
+                <td>{{ irf.date_time_of_interception | date:"medium" }}</td>
+                <td class="hidden-xs">{{ irf.date_time_entered_into_system | date:"medium" }}</td>
+                <td class="hidden-xs">{{ irf.date_time_last_updated | date:"medium" }}</td>
+                <td ng-show="vm.user.permission_irf_view"><a class="btn btn-sm btn-primary viewButton" href="{{ irf.view_url }}">View</a></td>
+                <td ng-show="vm.user.permission_irf_edit"><a class="btn btn-sm btn-primary editButton" href="{{ irf.edit_url }}">Edit</a></td>
+                <td ng-show="vm.user.permission_irf_delete"><a class="btn btn-sm btn-danger deleteButton" ng-click="vm.deleteIrf(irf)" >{{ irf.confirmedDelete ? "Confirm" : "Delete"}}</a></td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="row text-center">
+        <button ng-disabled="!vm.nextPageUrl" ng-click="vm.loadMoreIrfs()" class="btn btn-primary" id="loadMoreButton" style="margin-bottom:25px; width:90%;">Load more results</button>
+    </div>
 
-  {% if request.user.permission_irf_add %}
-    <a id="id_input_new_irf" class="pull-right btn btn-success" style="margin-bottom: 10px"
-       href="{% url 'interceptionrecord_create' %}">Input A New IRF
-     </a>
-  {% endif %}
+    <!-- Loading animation container -->
+    <div ng-show="vm.loading" class="loader-container">
+        <div class="loader">Loading...</div>
+    </div>
+
+{% endverbatim %}
+    {% load static from staticfiles %}
+    <script src="{% static "dataentry/js/dataEntry.module.js" %}"></script>
+    <script src="{% static "dataentry/js/services/irfService.js" %}"></script>
+    <script src="{% static "dataentry/js/controllers/irfListCtrl.js" %}"></script>
+</div>
 
 {% endblock %}

@@ -1,6 +1,7 @@
 from django.conf.urls import patterns, url
+from accounts.views import CurrentUserView
 
-from dataentry.views import Address2ViewSet, Address1ViewSet, GeoCodeDistrictAPIView, GeoCodeVdcAPIView
+from dataentry.views import Address2ViewSet, Address1ViewSet, GeoCodeDistrictAPIView, GeoCodeVdcAPIView, InterceptionRecordViewSet, VictimInterviewViewSet
 from budget.views import BudgetViewSet, OtherItemsViewSet
 
 urlpatterns = patterns('rest_api.views',
@@ -24,4 +25,16 @@ urlpatterns = patterns('rest_api.views',
     # Fuzzy searching for addresses
     url(r'^address1/fuzzy/$', GeoCodeDistrictAPIView.as_view(), name="Address1FuzzySearch"),
     url(r'^address2/fuzzy/$', GeoCodeVdcAPIView.as_view(), name="Address2FuzzySearch"),
+
+    # IRFs
+    url(r'^irf/$', InterceptionRecordViewSet.as_view({'get': 'list'}), name="InterceptionRecord"),
+    url(r'^irf/(?P<pk>\d+)/$', InterceptionRecordViewSet.as_view({'delete': 'destroy'}), name="InterceptionRecordDetail"),
+
+    # VIFs
+    url(r'^vif/$', VictimInterviewViewSet.as_view({'get': 'list'}), name="VictimInterview"),
+    url(r'^vif/(?P<pk>\d+)/$', VictimInterviewViewSet.as_view({'delete': 'destroy'}), name="VictimInterviewDetail"),
+
+    #Accounts and DefaultPermissionsSets
+    url(r'^me/$', CurrentUserView.as_view(), name="CurrentUser"),
+
 )
