@@ -51,5 +51,5 @@ class FuzzyLocationMatchingTest(TestCase):
         second.save()
 
         # Now there should only be 2 valid VDCs for this district
-        matches = match_location(vdc_name=original.name, district_name=original.district.name)
+        matches = match_location(original.district.name, original.name)
         self.assertEquals(len(matches), 2)
