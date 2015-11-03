@@ -29,7 +29,7 @@
 			</div>
 			
 			<button class="btn btn-primary pull-right col-xs-12"
-							ng-click="bsCtrl.updateStation()">{{bsCtrl.updateStatusText}}</button>
+							ng-click="bsCtrl.modifyStation()">{{bsCtrl.modifyStatusText}}</button>
 			{% endverbatim %}
 			<br/><br/><br/>
 			
@@ -43,5 +43,10 @@
 	<script src="{% static "static_border_stations/js/controllers/static_border_stations.controller.js" %}"></script>
 	<script src="{% static "static_border_stations/js/services/static_border_stations.service.js" %}"></script>
 	
+	{% if border_station_pk %}
 	<script>window.border_station_pk = {{ border_station_pk }}</script>
+	{% endif %}
+	{% if is_create %}
+	<script>window.is_create = true</script>
+	{% endif %}
 {% endblock %}

@@ -4,9 +4,9 @@
 	angular.module('BorderStationsMod')
 		.controller('BorderStationsCtrl', BorderStationsCtrl);
 		
-	BorderStationsCtrl.$inject = ['$q','$timeout','BorderStationsService'];
+	BorderStationsCtrl.$inject = ['$q', '$window','$timeout','BorderStationsService'];
 		
-	function BorderStationsCtrl($q, $timeout, BorderStationsService) {
+	function BorderStationsCtrl($q, $window, $timeout, BorderStationsService) {
 		var vm = this;
 		
 		var createCommitteeMembersDeferredMessage = 'Finished creating Committee Members';
@@ -14,7 +14,7 @@
 		var createStaffDeferredMessage = 'Finished creating Staff';
 		var committeeMemTitle = 'Committee Members';
 		var staffTitle = 'Staff';
-		var updateButtonText = 'Update Station';
+		var modifyButtonText = window.is_create ? 'Create Station' : 'Update Station';
 		
 		vm.addLocation = addLocation;
 		vm.addPerson = addPerson;
@@ -28,8 +28,11 @@
 		vm.errors = [];
 		vm.formatDate = formatDate;
 		vm.handleErrors = handleErrors;
+		vm.isCreateBorderStation = window.is_create;
 		vm.loading = false;
 		vm.locations = [];
+		vm.modifyStation = modifyStation;
+		vm.modifyStatusText = modifyButtonText;
 		vm.newCommitteeMembers = [];
 		vm.newLocations = [];
 		vm.newStaff = [];
@@ -57,12 +60,13 @@
 		vm.updateRelationship = updateRelationship;
 		vm.updateStaff = updateStaff;
 		vm.updateStation = updateStation;
-		vm.updateStatusText = updateButtonText;
 		
 		activate();
 		
 		function activate() {
-			getBorderStationData();
+			if (!vm.isCreateBorderStation) {
+				getBorderStationData();
+			}
 		}
 		
 		function addLocation() {
@@ -92,6 +96,18 @@
 		
 		
 		// CREATE calls
+		function createBorderStation() {
+			vm.details.date_established = vm.formatDate(vm.details.date_established);
+			
+			BorderStationsService.createBorderStation(vm.details).then(function(response) {
+				vm.details = response.data;
+				setBorderStationIdForNew(vm.details.id, [vm.people.committeeMembers.data,
+																								 vm.locations,
+																								 vm.people.staff.data]);
+				vm.updateStation();
+			}, vm.handleErrors);
+		}
+		
 		function createCommitteeMembers(members) {
 			return vm.createRelationship(members, BorderStationsService.createCommitteeMember, createCommitteeMembersDeferredMessage);
 		}
@@ -182,6 +198,22 @@
 		}
 		
 		
+		
+		// MODIFY STATION Call
+		function modifyStation() {
+			vm.modifyStatusText = 'Saving...';
+			
+			vm.errors = [];
+			
+			if (vm.isCreateBorderStation) {
+				createBorderStation();
+			} else {
+				vm.updateStation();
+			}
+		}
+		
+		
+		
 		// REMOVE calls
 		function removeCommitteeMember(member) {
 			vm.removeRelationship(member, vm.newCommitteeMembers, vm.people.committeeMembers.data, vm.removeToCommitteeMembers);
@@ -210,6 +242,19 @@
 		function removeStaff(staff) {
 			vm.removeRelationship(staff, vm.newStaff, vm.people.staff.data, vm.removeToStaff);
 		}
+		
+		
+		
+		// Set Border Station Id for new CMs, Staff, & Locations
+		function setBorderStationIdForNew(bsId, dataToChange) {
+			dataToChange.forEach(function(dataContainer) {
+				dataContainer.forEach(function(data) {
+					data.border_station = bsId;
+				});
+			});
+		}
+		
+		
 		
 		
 		// UPDATE calls
@@ -244,11 +289,7 @@
 			return vm.updateRelationship(staff, BorderStationsService.updateStaff, vm.newStaff.length, 'Finished updating Staff');
 		}
 		
-		function updateStation() {
-			vm.updateStatusText = 'Saving...';
-			
-			vm.errors = [];
-			
+		function updateStation() {			
 			var promises = [];
 			
 			// Create Calls
@@ -269,19 +310,24 @@
 			
 			
 			$q.all(promises).then(function() {
+				// If creating re-route to dashboard
+				if (vm.isCreateBorderStation) {
+					$window.location.href = '/portal/dashboard'
+				}
+				
 				vm.newCommitteeMembers = [];
 				vm.newLocations = [];
 				vm.newStaff = [];
 				getBorderStationData();
-				vm.updateStatusText = 'Saved';
+				vm.modifyStatusText = 'Saved';
 				$timeout(function() {
-					vm.updateStatusText = updateButtonText;
+					vm.modifyStatusText = modifyButtonText;
 				}, 2000);
 			}, function(error) {
 				console.log(error);
-				vm.updateStatusText = 'Error';
+				vm.modifyStatusText = 'Error';
 				$timeout(function() {
-					vm.updateStatusText = updateButtonText;
+					vm.modifyStatusText = modifyButtonText;
 				}, 4000);
 			});
 		}

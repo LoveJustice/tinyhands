@@ -1,10 +1,10 @@
 <div class="row well well-sm">
   <h1>Details
-    {% if request.user.permission_budget_manage %}
+    {% if request.user.permission_budget_manage and not is_create %}
       <a class="btn btn-success pull-right" href="{% url 'budget_create_api' form.instance.id %}">New Budget Calculation Form</a>
     {% endif %}
   {% verbatim %}
-  <div class="row">
+  <div class="row" ng-if="!bsCtrl.isCreateBorderStation">
       <div class="col-xs-12">
           <button class="btn" 
                   ng-class="{'btn-success':bsCtrl.details.open, 'btn-danger':!bsCtrl.details.open}"

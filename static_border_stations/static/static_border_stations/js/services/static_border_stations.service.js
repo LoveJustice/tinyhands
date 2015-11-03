@@ -8,6 +8,7 @@
 		
 	function BorderStationsService($http, $q) {
 		return {
+			createBorderStation: createBorderStation,
 			createCommitteeMember: createCommitteeMember,
 			createLocation: createLocation,
 			createRelationship: createRelationship,
@@ -26,7 +27,11 @@
 		};
 	
 	
-		// POSTs		
+		// POSTs
+		function createBorderStation(data) {
+			return $http.post('/api/border-stations/', data);
+		}
+		
 		function createCommitteeMember(data) {
 			return $http.post('/api/committee-members/', data);
 		}
