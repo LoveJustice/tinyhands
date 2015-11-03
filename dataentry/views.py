@@ -15,11 +15,10 @@ from django.core.urlresolvers import reverse_lazy
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import redirect
 from django.template.loader import render_to_string
-from django.views.generic import ListView, View, DeleteView, CreateView, UpdateView
+from django.views.generic import ListView, View, DeleteView, CreateView
 
 from rest_framework import status
 from rest_framework.decorators import list_route
-from rest_framework.pagination import PageNumberPagination
 from rest_framework import filters
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
@@ -434,7 +433,7 @@ def interceptee_fuzzy_matching(request):
     input_name = request.GET['name']
     all_people = Interceptee.objects.all()
     people_dict = {serializers.serialize("json", [obj]): obj.full_name for obj in all_people }
-    matches = process.extractBests(input_name, people_dict, limit = 10)
+    matches = process.extractBests(input_name, people_dict, limit=10)
     return HttpResponse(json.dumps(matches), content_type="application/json")
 
 
@@ -457,16 +456,9 @@ class Address2ViewSet(viewsets.ModelViewSet):
     serializer_class = VDCSerializer
     permission_classes = (IsAuthenticated, HasPermission)
     permissions_required = ['permission_vdc_manage']
-
-    # a couple default backends found on the djangoresetframework docs
     filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
-
-    # Specify the fields that we can search by and how
     search_fields = ('name',)
-
-    # specify the fields that the data can be ordered by
     ordering_fields = ('name', 'district__name', 'longitude', 'latitude', 'verified', 'cannonical_name__name')
-    # Specify the default order
     ordering = ('name',)
 
 

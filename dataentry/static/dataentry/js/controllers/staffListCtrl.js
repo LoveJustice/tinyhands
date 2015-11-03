@@ -12,9 +12,11 @@ angular
         vm.retrieveStaff = retrieveStaff;
 
         function retrieveStation(calledBy) {
-            if (calledBy == 1) station_code = document.getElementById("id_irf_number").value.slice(0,3);
-            else station_code = document.getElementById("id_vif_number").value.slice(0,3);
-
+            var station_code = "";
+            if (calledBy == 1)
+                station_code = document.getElementById("id_irf_number").value.slice(0,3);
+            else
+                station_code = document.getElementById("id_vif_number").value.slice(0,3);
             staffListService.getStationID(station_code).then(function(response){
                 retrieveStaff(response);
             });
@@ -29,7 +31,7 @@ angular
                             vm.staffNames.push(
                                 {
                                     staff_person: data[person].id,
-                                    name: data[person]['first_name'] + ' ' + data[person]['last_name'],
+                                    name: data[person]['first_name'] + ' ' + data[person]['last_name']
                                 }
                             );
                     });
@@ -41,6 +43,4 @@ angular
         $scope.$on('handleStaffNamesChangeBroadcast', function(event, args) {
                 vm.staffNames = args['names'];
         });
-
-
     }]);
