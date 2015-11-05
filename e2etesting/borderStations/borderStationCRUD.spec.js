@@ -4,6 +4,7 @@ var borderStationPage = require('./borderStation.page.js');
 var methods = require('../commonMethods.js');
 
 describe('Border Station CRUD -', function() {
+    var BSPage = new borderStationPage();
 
     beforeEach(function () {
         return browser.ignoreSynchronization = true;
@@ -16,14 +17,14 @@ describe('Border Station CRUD -', function() {
         });
 
         it('Create a Border Station', function () {
-            borderStationPage.getToBorderStationCreate();
+            BSPage.getToBorderStationCreate();
             expect(browser.driver.getCurrentUrl()).toContain('/static_border_stations/border-stations/create/');
-            borderStationPage.fillOutBorderStation();
+            BSPage.fillOutBorderStation();
             expect(browser.driver.getCurrentUrl()).toContain('/portal/dashboard/');
         });
 
         it('View a Border Station', function () {
-            borderStationPage.viewBorderStation();
+            BSPage.viewBorderStation();
             expect(browser.driver.getCurrentUrl()).toContain('/static_border_stations/border-stations/update/24/');
             expect(element(by.id("id_station_name")).getAttribute('value')).toEqual(c.stationName);
 
@@ -46,13 +47,13 @@ describe('Border Station CRUD -', function() {
             expect(element(by.id("id_location_set-0-name")).getAttribute('value')).toEqual(c.location0SetName);
             expect(element(by.id("id_location_set-0-latitude")).getAttribute('value')).toEqual(c.location0SetLatitude);
             expect(element(by.id("id_location_set-0-longitude")).getAttribute('value')).toEqual(c.location0SetLongitude);
-            borderStationPage.closeBorderStation();
+            BSPage.closeBorderStation();
             expect(browser.driver.getCurrentUrl()).toContain('/portal/dashboard/');
         });
         it('Edit a Border Station', function () {
-            borderStationPage.editBorderStation();
+            BSPage.editBorderStation();
             expect(browser.driver.getCurrentUrl()).toContain('/portal/dashboard/');
-            borderStationPage.viewBorderStation();
+            BSPage.viewBorderStation();
 
             expect(browser.driver.getCurrentUrl()).toContain('/static_border_stations/border-stations/update/24/');
             expect(element(by.id("id_station_name")).getAttribute('value')).toEqual(c.stationName);
@@ -93,7 +94,7 @@ describe('Border Station CRUD -', function() {
             expect(element(by.id("id_location_set-1-latitude")).getAttribute('value')).toEqual(c.location1SetLatitude);
             expect(element(by.id("id_location_set-1-longitude")).getAttribute('value')).toEqual(c.location1SetLongitude);
 
-            borderStationPage.closeBorderStation();
+            BSPage.closeBorderStation();
             expect(browser.driver.getCurrentUrl()).toContain('/portal/dashboard/');
         });
     });
@@ -104,7 +105,7 @@ describe('Border Station CRUD -', function() {
             browser.get(c.webAddress + '/static_border_stations/border-stations/create/').then(function() {
                 return expect(browser.driver.getCurrentUrl()).toContain('/static_border_stations/border-stations/create/');
             }).then(function() {
-                return borderStationPage.fillOutBorderStationWithNoEmail();
+                return BSPage.fillOutBorderStationWithNoEmail();
             }).then(function() {
                 expect(browser.driver.getCurrentUrl()).toContain('/static_border_stations/border-stations/create/');
             }).then(function() {
@@ -119,7 +120,7 @@ describe('Border Station CRUD -', function() {
     describe('Update Border Station', function() {
 
         it('fails when receives money distribution form checked with no email', function() {
-            borderStationPage.editBorderStationWithNoEmail().then(function() {
+            BSPage.editBorderStationWithNoEmail().then(function() {
                 return expect(browser.driver.getCurrentUrl()).toContain('/static_border_stations/border-stations/update/' + c.stationId + '/');
             }).then(function() {
                 expect(element.all(by.cssContainingText('.alert-danger', 'Email cannot be blank when receives money distribution form is checked.')).count()).toEqual(2);

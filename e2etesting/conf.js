@@ -10,7 +10,8 @@ exports.config = {
 
     //The order is very important. Ex. budgetForm.spec.js is dependant on borderStationCRUD.spec.js
     specs:  [
-        'borderStations/closeABorderStation.spec.js',
+        //'borderStations/closeABorderStation.spec.js',
+        'borderStations/borderStationCRUD.spec.js',
       ],
     ////The order is very important. Ex. budgetForm.spec.js is dependant on borderStationCRUD.spec.js
     //specs:  [
