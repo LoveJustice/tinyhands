@@ -6,4 +6,5 @@ angular
         vm.accounts = Accounts.all();
         vm.permissions = PermissionsSets.all();
         vm.currentuser = Accounts.me();
+        vm.update = Accounts.update();
     }]);
