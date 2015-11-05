@@ -1,6 +1,6 @@
 var c = require('../testConstants.json');
 var loginPage = require('../accounts/loginPage.js');
-var borderStationPage = require('./borderStationCRUD.js');
+var borderStationPage = require('./borderStation.page.js');
 var methods = require('../commonMethods.js');
 
 describe('Border Station CRUD -', function() {
@@ -126,4 +126,5 @@ describe('Border Station CRUD -', function() {
             });
         });
     });
+
 });
