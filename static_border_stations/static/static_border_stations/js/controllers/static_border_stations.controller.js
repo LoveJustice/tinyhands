@@ -127,6 +127,9 @@
 		
 		// Date Formatting
 		function formatDate (dateToFormat) { // Formats date string to YYYY[-MM[-DD]]
+			if (dateToFormat == '' || dateToFormat == null || dateToFormat == undefined) {
+				return moment().format('YYYY-MM-DD');
+			}
 			return moment(dateToFormat).format('YYYY-MM-DD');
 		}
 		
