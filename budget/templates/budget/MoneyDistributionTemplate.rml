@@ -369,6 +369,24 @@
         </para>
 
         <blockTable>
+
+            {% for item in otherItems %}
+                {% if item.form_section == 5 %}
+                    <tr>
+                        <td align="left">
+                            <para style="normal">
+                                {{ item.name }}:
+                            </para>
+                        </td>
+                        <td align="right">
+                            <para style="normal" alignment="right">
+                                {{ item.cost }}
+                            </para>
+                        </td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+
             <tr>
                 <td align="left">
                     <para style="normal">
