@@ -5,6 +5,9 @@
   "adminLastName"   : "user",
   "nonAdminEmail"   : "HanSolo@MFalcon.com",
   "nonAdminPassword": "password",
+  "fooFirstName": "Foo",
+  "fooLastName": "Bar",
+  "fooEmail": "foo@bar.com",
 
   "vdcEditName"      : "Shree Jung",
   "vdcEditLat"       : "0.1",
@@ -23,8 +26,8 @@
   "irfNumber"                 : "DNG123",
   "irfEditNumber"             : "DNG121",
   "irfLocation"               : "none",
-  "irfInterceptTime"          : "06/16/2015 06:20",
-  "irfInterceptTimeTest"      : "2015-06-16 06:20:00",
+  "irfInterceptTime"          : "05/16/2015 06:20",
+  "irfInterceptTimeTest"      : "2015-05-16 06:20:00",
   "irfStaffName"              : "TEST",
   "irfInterceptFname"         : "name",
 

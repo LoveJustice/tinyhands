@@ -57,6 +57,29 @@
     }
 },
 {
+    "pk": 4, 
+    "model": "accounts.defaultpermissionsset", 
+    "fields": {
+        "permission_irf_add": false, 
+        "permission_accounts_manage": false, 
+        "permission_vif_add": false, 
+        "permission_irf_view": false, 
+        "permission_vif_edit": false, 
+        "permission_vif_view": false, 
+        "permission_vif_delete": false,         
+        "permission_irf_edit": false,
+        "permission_irf_delete": false,        
+        "permission_receive_email": false,
+        "permission_border_stations_view": false,
+        "permission_border_stations_add": false,
+        "permission_border_stations_edit": false,
+        "permission_border_stations_delete": false,        
+        "permission_vdc_manage":false,
+        "permission_budget_manage": false,        
+        "name": "No Access User"
+    }
+},
+{
     "pk": 1, 
     "model": "accounts.account", 
     "fields": {
@@ -65,12 +88,12 @@
         "last_name": "Colgan", 
         "permission_accounts_manage": true, 
         "permission_irf_add": true, 
-        "permission_irf_view": true, 
+        "permission_irf_view": true,
         "user_designation": 1, 
         "is_active": true, 
         "permission_vif_add": true, 
         "permission_vif_view": true, 
-        "permission_vif_edit": true, 
+        "permission_vif_edit": true,
         "is_superuser": true, 
         "is_staff": true, 
         "last_login": "2014-05-05T13:25:25.906Z", 
@@ -91,6 +114,7 @@
      "last_name": "user",
      "permission_border_stations_view": true,
      "permission_border_stations_edit": true,
+     "permission_border_stations_delete": true,
      "is_staff": false,
      "user_permissions": [],
      "date_joined": "2015-02-11T18:34:15.230Z",
@@ -111,6 +135,7 @@
      "permission_irf_view": true,
      "permission_vif_edit": true,
      "permission_vif_view": true,
+     "permission_vif_delete": true,     
      "permission_receive_email": true,
      "permission_irf_edit": true,
      "permission_irf_delete": true,
@@ -119,5 +144,41 @@
   },
   "model": "accounts.account",
   "pk": 22
+},
+{
+  "fields": {
+     "last_name": "Bar",
+     "permission_border_stations_view": true,
+     "permission_border_stations_edit": true,
+     "permission_border_stations_delete": true,
+     "is_staff": false,
+     "user_permissions": [],
+     "date_joined": "2015-02-11T18:34:15.230Z",
+     "first_name": "Foo",
+     "permission_irf_add": true,
+     "permission_vif_add": true,
+     "is_superuser": false,
+     "last_login": "2015-02-12T20:21:53.435Z",
+     "email": "foo@bar.com",
+     "permission_border_stations_add": true,
+     "user_designation": 1,
+     "is_active": true,
+     "activation_key": "LE3GniXcD8jEAEcGh8awMbPCgwWz465w4aGrU7md",
+     "groups": [],
+     "permission_accounts_manage": true,
+     "password": "pbkdf2_sha256$12000$nhaHlxuQwUhi$iqzcMK5WCodBx/xHDxq+5eaWq1Mrf7EyKJBMchhRW4I=",
+     "permission_vdc_manage": true,
+     "permission_irf_view": true,
+     "permission_vif_edit": true,
+     "permission_vif_view": true,
+     "permission_vif_delete": true,     
+     "permission_receive_email": true,
+     "permission_irf_edit": true,
+     "permission_irf_delete": true,
+     "permission_budget_manage": true
+
+  },
+  "model": "accounts.account",
+  "pk": 23
 }
 ]
