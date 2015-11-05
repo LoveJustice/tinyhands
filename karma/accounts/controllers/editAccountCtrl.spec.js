@@ -53,6 +53,29 @@ describe('EditAccountCtrl', function(){
 		permission_budget_manage: false,
 	};
 	
+	var newAccount = {
+		email: 'foo@test.org',
+		first_name: 'foo',
+		last_name: 'bar',
+		user_designation: 'Super User',
+		permission_irf_view: true,
+		permission_irf_add: true,
+		permission_irf_edit: true,
+		permission_irf_delete: true,
+		permission_vif_view: true,
+		permission_vif_add: true,
+		permission_vif_edit: true,
+		permission_vif_delete: true,
+		permission_border_stations_view: true,
+		permission_border_stations_add: true,                
+		permission_border_stations_edit: true,                
+		permission_border_stations_delete: true,                
+		permission_accounts_manage: true,
+		permission_receive_email: true,
+		permission_vdc_manage: true,
+		permission_budget_manage: true,
+	};
+	
 	beforeEach(module('AccountsMod'));
 	
 	beforeEach(inject(function($rootScope, $controller, $httpBackend, _$q_){
@@ -120,10 +143,79 @@ describe('EditAccountCtrl', function(){
 		})
 	});
 	
+	describe('checkFields', function() {
+		
+		it('when vm.account.email is null should set vm.emailError', function () {
+			controller.account = blankAccount;
+			
+			controller.checkFields();
+			
+			expect(controller.emailError).toEqual('An email is required.');
+		});
+		
+		it('when vm.account.email is null should return false', function () {
+			controller.account = blankAccount;
+			
+			var result = controller.checkFields();
+			
+			expect(result).toEqual(false);
+		});
+		
+		it('when vm.account.email is null vm.emailError should not be set', function () {
+			controller.account = newAccount;
+			
+			var result = controller.checkFields();
+			
+			expect(controller.emailError).toEqual('');			
+		});
+		
+		it('when vm.account.userDesignation is null should set vm.emailError', function () {
+			controller.account = blankAccount;
+			
+			controller.checkFields();
+			
+			expect(controller.userDesignationError).toEqual('A user designation is required.');
+		});
+		
+		it('when vm.account.userDesignation is null should return false', function () {
+			controller.account = blankAccount;
+			
+			var result = controller.checkFields();
+			
+			expect(result).toEqual(false);
+		});
+		
+		it('when vm.account.userDesignation is not null vm.userDesignationError should not be set', function () {
+			controller.account = newAccount;
+			
+			controller.checkFields();
+			
+			expect(controller.userDesignationError).toEqual('');
+		});
+		
+		it('when vm.account.email and vm.account.userDesignation are not null should return true', function () {
+			controller.account = newAccount;
+			
+			var result = controller.checkFields();
+			
+			expect(result).toEqual(true);
+		});
+	})
+	
 	describe('update', function() {
+		
+		it('when checkFields returns false should not create or update account', function() {
+			spyOn(controller, 'checkFields').and.returnValue(false);
+			mockAccountsService.update.and.returnValue({$promise: $q.when(blankAccount)});
+			
+			controller.update();			
+			
+			expect(mockAccountsService.update.calls.any()).toEqual(false);
+		})
 		
 		it('when vm.editing is true should call Accounts.update with vm.account', function () {
 			controller.editing = true;
+			controller.account = newAccount;
 			mockAccountsService.update.and.returnValue({$promise: $q.when(blankAccount)});
 			
 			controller.update();
@@ -133,6 +225,7 @@ describe('EditAccountCtrl', function(){
 		
 		it('when vm.editing is false should call Accounts.create with vm.account', function () {
 			controller.editing = false;
+			controller.account = newAccount;
 			mockAccountsService.create.and.returnValue({$promise: $q.when(blankAccount)});
 			
 			controller.update();
@@ -142,12 +235,29 @@ describe('EditAccountCtrl', function(){
 		
 		it('should redirect to accounts page', function () {
 			controller.editing = true;
+			controller.account = newAccount;
+			
 			mockAccountsService.update.and.returnValue({$promise: $q.when(blankAccount)});
 			
 			controller.update();
 			scope.$apply();
 			
 			expect(mockWindow.location.href).toBe('/accounts')
+		});
+		
+		it('when Accounts.update returns email error should set vm.emailError', function () {
+			controller.editing = true;
+			controller.account = newAccount;
+			var errorMessage = 'Enter a valid email';
+			var promise = $q.defer();
+			
+			mockAccountsService.update.and.returnValue({$promise: promise.promise});
+			
+			controller.update();
+			promise.reject({data: {email: [errorMessage] }});			
+			scope.$apply();
+			
+			expect(controller.emailError).toEqual(errorMessage);
 		});
 	})
 	

@@ -10,6 +10,9 @@ angular
         var vm = this;
         
         vm.start = function() {
+            vm.emailError = '';
+            vm.userDesignationError = '';            
+            
             if($window.account_id !== undefined && $window.account_id > -1) {
                 vm.editing = true;
                 var accountId = $window.account_id;
@@ -44,6 +47,9 @@ angular
         }    
         
         vm.update = function() {
+            if(!vm.checkFields()){
+                return;
+            }
             var call;
             if(vm.editing) {
                 call = Accounts.update(vm.account).$promise;
@@ -52,7 +58,26 @@ angular
             }
             call.then(function() {
                 $window.location.href = "/accounts";
+            }, function(err) {
+                if(err.data.email){
+                    vm.emailError = err.data.email[0];   
+                }                 
             });
+        }
+        
+        vm.checkFields = function() {
+            vm.emailError = '';
+            vm.userDesignationError = '';
+            if(!vm.account.email) {
+                vm.emailError = 'An email is required.';
+            }
+            if(!vm.account.user_designation){
+                vm.userDesignationError = 'A user designation is required.';
+            }
+            if(vm.emailError || vm.userDesignationError) {
+                return false;
+            }
+            return true;
         }
         
         vm.getTitle = function() {
