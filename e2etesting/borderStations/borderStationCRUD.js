@@ -8,14 +8,35 @@ var borderStationPage = function() {
 
     this.getToBorderStationCreate = function(){
         browser.get(c.webAddress + '/portal/dashboard/');
-        browser.sleep(200);
-        element(by.id("border_station_dropdown")).click();
-        browser.sleep(200);
-        element(by.id("border_station_create_link")).click();
-        browser.sleep(200);
+
+        browser.driver.wait(function() {
+            return browser.driver.findElement(by.id('border_station_dropdown')).then(function(elem) {
+                    elem.click();
+                    return true;
+                });
+        }, 20000);
+
+        browser.driver.wait(function() {
+            return browser.driver.findElement(by.id('border_station_create_link')).then(function(elem) {
+                    elem.click();
+                    return true;
+                });
+        }, 20000);
     };
 
     this.fillOutBorderStation = function() {
+
+
+        browser.driver.wait(function() {
+            return browser.driver.findElement(by.id('stationName')).then(function(elem) {
+                    return true;
+                });
+        }, 20000);
+
+        browser.sleep(3000);
+
+        //browser.pause();
+
         this.station_name = element(by.id("stationName")).sendKeys(c.stationName);
         this.station_code = element(by.id("stationCode")).sendKeys(c.stationCode);
         this.date_established = element(by.id("dateEstablished")).sendKeys(c.dateEstablished);

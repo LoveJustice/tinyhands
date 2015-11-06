@@ -41,6 +41,8 @@
   "staff0SetFirstName"        : "SFname0",
   "staff0SetLastName"         : "SLname0",
   "staff0Email"               : "example0@example.com",
+  "staff0Phone"               : "1234567890",
+  "staff0Position"            : "Journeyman",
   "staff1SetFirstName"        : "SFname1",
   "staff1SetLastName"         : "SLname1",
   "staff1Email"               : "example1@example.com",
