@@ -30,7 +30,7 @@ var permissionsPage = function() {
     };
 
     this.navigateToVifPage = function() {
-        browser.get(constants.webAddress + '/data-entry/vifs/search/');
+        return browser.get(constants.webAddress + '/data-entry/vifs/');
     };
 
     this.navigateToAccountPage = function(){
@@ -38,7 +38,7 @@ var permissionsPage = function() {
     };
 
     this.navigateToIrfPage = function() {
-        browser.get(constants.webAddress + '/data-entry/irfs/search/');
+        browser.get(constants.webAddress + '/data-entry/irfs/');
     };
 
     this.checkPermission = function(permission) {

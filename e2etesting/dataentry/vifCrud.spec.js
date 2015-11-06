@@ -14,7 +14,7 @@ describe('VIF CRUD -', function() {
         it('Logs In', function () {
             loginPage.logout();
             loginPage.loginAsAdmin();
-            browser.get(c.webAddress + "/data-entry/vifs/search/");
+            browser.get(c.webAddress + "/data-entry/vifs/");
             browser.sleep(4000);
         });
 

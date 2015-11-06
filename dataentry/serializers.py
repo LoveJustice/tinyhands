@@ -1,6 +1,7 @@
+from django.core.urlresolvers import reverse
 from rest_framework import serializers
 
-from dataentry.models import District, VDC
+from dataentry.models import District, VDC, InterceptionRecord, VictimInterview
 
 
 class DistrictSerializer(serializers.ModelSerializer):
@@ -44,3 +45,64 @@ class VDCSerializer(serializers.ModelSerializer):
 
     cannonical_name = CannonicalNameSerializer()
     district = DistrictSerializer()
+
+
+class InterceptionRecordListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = InterceptionRecord
+        fields = [
+            'view_url',
+            'edit_url',
+            'delete_url',
+            'id',
+            'irf_number',
+            'staff_name',
+            'number_of_victims',
+            'number_of_traffickers',
+            'date_time_of_interception',
+            'date_time_entered_into_system',
+            'date_time_last_updated'
+        ]
+    view_url = serializers.HyperlinkedIdentityField(
+        view_name='interceptionrecord_detail',
+        read_only=True
+    )
+    edit_url = serializers.HyperlinkedIdentityField(
+        view_name='interceptionrecord_update',
+        read_only=True
+    )
+    delete_url = serializers.HyperlinkedIdentityField(
+        view_name='InterceptionRecordDetail',
+        read_only=True
+    )
+
+
+class VictimInterviewListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = VictimInterview
+        fields = [
+            'view_url',
+            'edit_url',
+            'delete_url',
+            'id',
+            'vif_number',
+            'interviewer',
+            'number_of_victims',
+            'number_of_traffickers',
+            'date',
+            'date_time_entered_into_system',
+            'date_time_last_updated'
+        ]
+    view_url = serializers.HyperlinkedIdentityField(
+        view_name='victiminterview_detail',
+        read_only=True
+    )
+    edit_url = serializers.HyperlinkedIdentityField(
+        view_name='victiminterview_update',
+        read_only=True
+    )
+    delete_url = serializers.HyperlinkedIdentityField(
+        view_name='VictimInterviewDetail',
+        read_only=True
+    )
+

@@ -7,7 +7,7 @@ class PersonForm(forms.ModelForm):
 
     class Meta:
         model = Person
-        exclude = []
+        fields = ['email', 'first_name', 'last_name', 'receives_money_distribution_form', 'border_station']
 
     def clean(self):
         person_data = self.cleaned_data
@@ -20,15 +20,15 @@ class PersonForm(forms.ModelForm):
 class StaffForm(PersonForm):
     class Meta:
         model = Staff
-        exclude = []
+        fields = ['email', 'first_name', 'last_name', 'receives_money_distribution_form', 'border_station']
 
 
 class CommitteeMemberForm(PersonForm):
     class Meta:
         model = CommitteeMember
-        exclude = []
+        fields = ['email', 'first_name', 'last_name', 'receives_money_distribution_form', 'border_station']
 
 class LocationForm(forms.ModelForm):
     class Meta:
         model = Location
-        exclude = []
+        fields = ['name', 'latitude', 'longitude', 'border_station']
