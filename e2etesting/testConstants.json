@@ -33,6 +33,7 @@
   "TEMPirfNameCameUpBeforeValue"  : "1",
 
   "stationName"               : "Test Station",
+  "stationId"                 : "24", 
   "stationCode"               : "AAA",
   "dateEstablished"           : "01/01/01",
   "latitude"                  : "0",

@@ -19,6 +19,7 @@ describe('TinyHands Border Station', function() {
         borderPage.getToBorderStationCreate();
         expect(browser.getTitle()).toContain('Border Stations');
 		borderPage.fillOutBorderStation();
+		browser.sleep(500);
 		borderPage.viewBorderStation();
     });
 
@@ -26,7 +27,7 @@ describe('TinyHands Border Station', function() {
 
 		//browser.ignoreSynchronization = false;
 
-		it('station name should persist', function(){
+		it('station name should persist', function(){				
 			expect(element(by.id('stationName')).getAttribute('value')).toBe(c.stationName);
 		});
 
