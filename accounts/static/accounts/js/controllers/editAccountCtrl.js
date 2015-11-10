@@ -8,7 +8,7 @@ angular
 
     function EditAccountCtrl(Accounts, PermissionsSets, $window) {
         var vm = this;
-        
+
         vm.start = function() {
             if($window.account_id !== undefined && $window.account_id > -1) {
                 vm.editing = true;
@@ -30,38 +30,38 @@ angular
                     permission_vif_edit: false,
                     permission_vif_delete: false,
                     permission_border_stations_view: false,
-                    permission_border_stations_add: false,                
-                    permission_border_stations_edit: false,                
-                    permission_border_stations_delete: false,                
+                    permission_border_stations_add: false,
+                    permission_border_stations_edit: false,
+                    permission_border_stations_delete: false,
                     permission_accounts_manage: false,
                     permission_receive_email: false,
                     permission_vdc_manage: false,
                     permission_budget_manage: false,
                 }
             }
-            
+
             vm.permissionsSets = PermissionsSets.all();
-        }    
-        
+        }
+
         vm.update = function() {
             var call;
             if(vm.editing) {
                 call = Accounts.update(vm.account).$promise;
             }else {
-                call= Accounts.create(vm.account).$promise;                
+                call= Accounts.create(vm.account).$promise;
             }
             call.then(function() {
                 $window.location.href = "/accounts";
             });
         }
-        
+
         vm.getTitle = function() {
             if(vm.editing) {
                 return 'Edit ' +vm.account.first_name + ' ' + vm.account.last_name + "'s Account";
             }
             return 'Create Account';
         }
-        
+
         vm.onUserDesignationChanged = function(value) {
             PermissionsSets.get({id: value}).$promise.then(function (permissions) {
                 vm.account.permission_irf_view = permissions.permission_irf_view;
@@ -82,20 +82,20 @@ angular
                 vm.account.permission_budget_manage = permissions.permission_budget_manage;
             });
         }
-        
+
         vm.getButtonText = function(has_permission) {
             if(has_permission) {
                 return "Yes";
             }
             return "No";
         }
-        
+
         vm.getUpdateButtonText = function() {
             if(vm.editing) {
                 return "Update";
             }
             return "Create";
         }
-        
+
         vm.start();
     }
