@@ -7,9 +7,13 @@ var page = this;
 
 describe('TinyHands Border Station', function() {
 
+	/*beforeEach(function() {
+		return browser.ignoreSynchronization = true;
+	});*/
+
 	it('should have a title', function() {
 
-		browser.manage().timeouts().implicitlyWait(5000);
+		browser.manage().timeouts().implicitlyWait(10000);
 
         loginPage.loginAsAdmin();
         borderPage.getToBorderStationCreate();
@@ -19,6 +23,8 @@ describe('TinyHands Border Station', function() {
     });
 
 	describe('main details persist', function() {
+
+		//browser.ignoreSynchronization = false;
 
 		it('station name should persist', function(){
 			expect(element(by.id('stationName')).getAttribute('value')).toBe(c.stationName);
@@ -43,6 +49,7 @@ describe('TinyHands Border Station', function() {
 
 	describe('staff details persist', function() {
 
+		//browser.ignoreSynchronization = false;
 
 		it('staff name', function(){
 			borderPage.addBorderStationStaff();
@@ -50,11 +57,21 @@ describe('TinyHands Border Station', function() {
 		});
 
 		it('staff email', function(){
-			expect(element(by.id("S-lastName-0")).getAttribute('value')).toBe(c.staff0SetLastName);
+			browser.driver.wait(function() {
+				return browser.driver.findElement(by.id('S-lastName-0')).then(function(elem) {
+					expect(element(by.id("S-lastName-0")).getAttribute('value')).toBe(c.staff0SetLastName);
+					return true;
+				});
+			}, 20000);
 		});
 
 		it('staff position', function(){
-			expect(element(by.id("S-email-0")).getAttribute('value')).toBe(c.staff0Email);
+			browser.driver.wait(function() {
+				return browser.driver.findElement(by.id('S-email-0')).then(function(elem) {
+					expect(element(by.id("S-email-0")).getAttribute('value')).toBe(c.staff0Email);
+					return true;
+				});
+			}, 20000);
 		});
 
 		it('staff phone number', function(){
@@ -62,8 +79,74 @@ describe('TinyHands Border Station', function() {
 		});
 
 		it('requires name', function(){
-
 			expect(element(by.id("S-position-0")).getAttribute('value')).toBe(c.staff0Position);
+		});
+
+	});
+
+	describe('committee details persist', function() {
+
+		//browser.ignoreSynchronization = false;
+
+		it('committee name', function(){
+			borderPage.addBorderStationCommitteeMember();
+			expect(element(by.id('C-firstName-0')).getAttribute('value')).toBe(c.staff0SetFirstName);
+		});
+
+		it('committee email', function(){
+			browser.driver.wait(function() {
+				return browser.driver.findElement(by.id('C-lastName-0')).then(function(elem) {
+					expect(element(by.id("C-lastName-0")).getAttribute('value')).toBe(c.staff0SetLastName);
+					return true;
+				});
+			}, 20000);
+		});
+
+		it('committee position', function(){
+			browser.driver.wait(function() {
+				return browser.driver.findElement(by.id('C-email-0')).then(function(elem) {
+					expect(element(by.id("C-email-0")).getAttribute('value')).toBe(c.staff0Email);
+					return true;
+				});
+			}, 20000);
+		});
+
+		it('committee phone number', function(){
+			expect(element(by.id("C-phone-0")).getAttribute('value')).toBe(c.staff0Phone);
+		});
+
+		it('requires name', function(){
+
+			expect(element(by.id("C-position-0")).getAttribute('value')).toBe(c.staff0Position);
+		});
+
+	});
+
+	describe('location details persist', function() {
+
+		//browser.ignoreSynchronization = false;
+
+		it('location name', function(){
+			borderPage.addBorderStationLocation();
+			expect(element(by.id('locationName-0')).getAttribute('value')).toBe(c.location0SetName);
+		});
+
+		it('location latitude', function(){
+			browser.driver.wait(function() {
+				return browser.driver.findElement(by.id('C-lastName-0')).then(function(elem) {
+					expect(element(by.id("latitude-0")).getAttribute('value')).toBe(c.location0SetLatitude);
+					return true;
+				});
+			}, 20000);
+		});
+
+		it('location longitude', function(){
+			browser.driver.wait(function() {
+				return browser.driver.findElement(by.id('C-email-0')).then(function(elem) {
+					expect(element(by.id("longitude-0")).getAttribute('value')).toBe('0');
+					return true;
+				});
+			}, 20000);
 		});
 
 	});

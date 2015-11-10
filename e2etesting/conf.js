@@ -16,12 +16,12 @@ exports.config = {
         //Delete the CRUD and uncomment the rest after the new borderStation testing is working
         // 'borderStations/borderStationCRUD.spec.js',
 
-        //'dataentry/irfCRUD.spec.js',
-        //'dataentry/vifCrud.spec.js',
+        'dataentry/irfCRUD.spec.js',
+        'dataentry/vifCrud.spec.js',
         //'dataentry/search.spec.js',
 
-        //'budget/budgetForm.spec.js',
-        //'budget/moneyDistributionForm.spec.js',
+        'budget/budgetForm.spec.js',
+        'budget/moneyDistributionForm.spec.js',
 
         //'DynStationWindow/dynStation.spec.js',
 

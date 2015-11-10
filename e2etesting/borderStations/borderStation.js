@@ -25,16 +25,6 @@ var borderStationPage = function() {
     };
 
     this.fillOutBorderStation = function() {
-
-
-        browser.driver.wait(function() {
-            return browser.driver.findElement(by.id('stationName')).then(function(elem) {
-                    return true;
-                });
-        }, 20000);
-
-        browser.sleep(3000);
-
         //browser.pause();
 
         this.station_name = element(by.id("stationName")).sendKeys(c.stationName);
@@ -46,8 +36,6 @@ var borderStationPage = function() {
         this.submit = element(by.css('[ng-click="bsCtrl.modifyStation()"]')).click();
     };
 
-
-
     this.addBorderStationStaff = function() {
 
         this.editBorderStation();
@@ -58,8 +46,32 @@ var borderStationPage = function() {
         this.staff0_email = element(by.id("S-email-0")).sendKeys(c.staff0Email);
         this.staff0_phone = element(by.id("S-phone-0")).sendKeys(c.staff0Phone);
         this.staff0_position = element(by.id("S-position-0")).sendKeys(c.staff0Position);
+        this.MDF_checkbox = element(by.id("S-receivesMoneyDistributionForm-0")).click();
         this.saveForm();
     };
+
+    this.addBorderStationCommitteeMember = function() {
+
+        this.editBorderStation();
+
+        this.add = element(by.xpath("//button[text()='Add Committee Members']")).click();
+        this.committee0_first_name = element(by.id("C-firstName-0")).sendKeys(c.staff0SetFirstName);
+        this.committee0_last_name = element(by.id("C-lastName-0")).sendKeys(c.staff0SetLastName);
+        this.committee0_email = element(by.id("C-email-0")).sendKeys(c.staff0Email);
+        this.committee0_phone = element(by.id("C-phone-0")).sendKeys(c.staff0Phone);
+        this.committee0_position = element(by.id("C-position-0")).sendKeys(c.staff0Position);
+        this.saveForm();
+    };
+
+    this.addBorderStationLocation = function() {
+        this.editBorderStation();
+        this.add = element(by.xpath("//button[text()='Add Location']")).click();
+        this.location = element(by.id("locationName-0")).sendKeys(c.location0SetName);
+        this.latitude = element(by.id("latitude-0")).sendKeys(c.location0SetLatitude);
+        this.longitude = element(by.id("longitude-0")).sendKeys(c.location0SetLongitude);
+        this.saveForm();
+    };
+
 
     this.saveForm = function() {
         this.submit = element(by.css('[ng-click="bsCtrl.modifyStation()"]')).click();
