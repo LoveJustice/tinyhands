@@ -112,7 +112,7 @@ var borderStationPage = function() {
     };
 
     page.viewBorderStation = function() {
-        browser.get(c.webAddress + '/static_border_stations/border-stations/update/' + c.stationId + '/');
+        browser.get(c.webAddress + '/static_border_stations/border-stations/update/' + 25 + '/');
     };
 
     page.closeBorderStation = function() {
@@ -120,7 +120,7 @@ var borderStationPage = function() {
     };
 
     page.editBorderStation = function() {
-        browser.get(c.webAddress + '/static_border_stations/border-stations/update/' + c.stationId + '/');
+        browser.get(c.webAddress + '/static_border_stations/border-stations/update/' + 25 + '/');
 
         page.staff1_first_name.sendKeys(c.staff1SetFirstName);
         page.staff1_last_name.sendKeys(c.staff1SetLastName);
@@ -140,7 +140,7 @@ var borderStationPage = function() {
     };
 
     page.editBorderStationWithNoEmail = function() {
-        return browser.get(c.webAddress + '/static_border_stations/border-stations/update/' + c.stationId + '/')
+        return browser.get(c.webAddress + '/static_border_stations/border-stations/update/' + 25 + '/')
             .then(function() {
                 page.staff2_first_name.sendKeys(c.staff1SetFirstName);
                 page.staff2_last_name.sendKeys(c.staff1SetLastName);

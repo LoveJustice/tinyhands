@@ -25,28 +25,26 @@ describe('Border Station CRUD -', function() {
 
         it('View a Border Station', function () {
             BSPage.viewBorderStation();
-            expect(browser.driver.getCurrentUrl()).toContain('/static_border_stations/border-stations/update/24/');
-            expect(element(by.id("id_station_name")).getAttribute('value')).toEqual(c.stationName);
+            expect(browser.driver.getCurrentUrl()).toContain('/static_border_stations/border-stations/update/25/');
+            expect(BSPage.station_name.getAttribute('value')).toEqual(c.stationName);
+            expect(BSPage.station_code.getAttribute('value')).toEqual(c.stationCode);
+            expect(BSPage.has_shelter.isSelected()).toBeTruthy();
+            expect(BSPage.latitude.getAttribute('value')).toEqual(c.latitude);
+            expect(BSPage.longitude.getAttribute('value')).toEqual(c.longitude);
 
-            expect(element(by.id("id_station_code")).getAttribute('value')).toEqual(c.stationCode);
-            //expect(element(by.id("id_date_established")).getAttribute('value')).toEqual(c.dateEstablished);
-            expect(element(by.id("id_has_shelter")).isSelected()).toBeTruthy();
-            expect(element(by.id("id_latitude")).getAttribute('value')).toEqual(c.latitude);
-            expect(element(by.id("id_longitude")).getAttribute('value')).toEqual(c.longitude);
+            expect(BSPage.staff0_first_name.getAttribute('value')).toEqual(c.staff0SetFirstName);
+            expect(BSPage.staff0_last_name.getAttribute('value')).toEqual(c.staff0SetLastName);
+            expect(BSPage.staff0_email.getAttribute('value')).toEqual(c.staff0Email);
+            expect(BSPage.staff0_receives_money_distribution_form.isSelected()).toBeTruthy();
 
-            expect(element(by.id("id_staff_set-0-first_name")).getAttribute('value')).toEqual(c.staff0SetFirstName);
-            expect(element(by.id("id_staff_set-0-last_name")).getAttribute('value')).toEqual(c.staff0SetLastName);
-            expect(element(by.id("id_staff_set-0-email")).getAttribute('value')).toEqual(c.staff0Email);
-            expect(element(by.id("id_staff_set-0-receives_money_distribution_form")).isSelected()).toBeTruthy();
+            expect(BSPage.committee0_first_name.getAttribute('value')).toEqual(c.committee0SetFirstName);
+            expect(BSPage.committee0_last_name.getAttribute('value')).toEqual(c.committee0SetLastName);
+            expect(BSPage.committee0_email.getAttribute('value')).toEqual(c.committee0Email);
+            expect(BSPage.committee0_receives_money_distribution_form.isSelected()).toBeTruthy();
 
-            expect(element(by.id("id_committeemember_set-0-first_name")).getAttribute('value')).toEqual(c.committee0SetFirstName);
-            expect(element(by.id("id_committeemember_set-0-last_name")).getAttribute('value')).toEqual(c.committee0SetLastName);
-            expect(element(by.id("id_committeemember_set-0-email")).getAttribute('value')).toEqual(c.committee0Email);
-            expect(element(by.id("id_committeemember_set-0-receives_money_distribution_form")).isSelected()).toBeTruthy();
-
-            expect(element(by.id("id_location_set-0-name")).getAttribute('value')).toEqual(c.location0SetName);
-            expect(element(by.id("id_location_set-0-latitude")).getAttribute('value')).toEqual(c.location0SetLatitude);
-            expect(element(by.id("id_location_set-0-longitude")).getAttribute('value')).toEqual(c.location0SetLongitude);
+            expect(BSPage.location0_set_name.getAttribute('value')).toEqual(c.location0SetName);
+            expect(BSPage.location0_set_latitude.getAttribute('value')).toEqual(c.location0SetLatitude);
+            expect(BSPage.location0_set_longitude.getAttribute('value')).toEqual(c.location0SetLongitude);
             BSPage.closeBorderStation();
             expect(browser.driver.getCurrentUrl()).toContain('/portal/dashboard/');
         });
@@ -55,44 +53,41 @@ describe('Border Station CRUD -', function() {
             expect(browser.driver.getCurrentUrl()).toContain('/portal/dashboard/');
             BSPage.viewBorderStation();
 
-            expect(browser.driver.getCurrentUrl()).toContain('/static_border_stations/border-stations/update/24/');
-            expect(element(by.id("id_station_name")).getAttribute('value')).toEqual(c.stationName);
+            expect(browser.driver.getCurrentUrl()).toContain('/static_border_stations/border-stations/update/25/');
+            expect(BSPage.station_name.getAttribute('value')).toEqual(c.stationName);
+            expect(BSPage.station_code.getAttribute('value')).toEqual(c.stationCode);
+            expect(BSPage.has_shelter.isSelected()).toBeTruthy();
+            expect(BSPage.latitude.getAttribute('value')).toEqual(c.latitude);
+            expect(BSPage.longitude.getAttribute('value')).toEqual(c.longitude);
 
-            expect(element(by.id("id_station_code")).getAttribute('value')).toEqual(c.stationCode);
-            //expect(element(by.id("id_date_established")).getAttribute('value')).toEqual(c.dateEstablished);
-            expect(element(by.id("id_has_shelter")).isSelected()).toBeTruthy();
-            expect(element(by.id("id_latitude")).getAttribute('value')).toEqual(c.latitude);
-            expect(element(by.id("id_longitude")).getAttribute('value')).toEqual(c.longitude);
+            expect(BSPage.staff0_first_name.getAttribute('value')).toEqual(c.staff0SetFirstName);
+            expect(BSPage.staff0_last_name.getAttribute('value')).toEqual(c.staff0SetLastName);
+            expect(BSPage.staff0_email.getAttribute('value')).toEqual(c.staff0Email);
+            expect(BSPage.staff0_receives_money_distribution_form.isSelected()).toBeTruthy();
 
-            expect(element(by.id("id_staff_set-0-first_name")).getAttribute('value')).toEqual(c.staff0SetFirstName);
-            expect(element(by.id("id_staff_set-0-last_name")).getAttribute('value')).toEqual(c.staff0SetLastName);
-            expect(element(by.id("id_staff_set-0-email")).getAttribute('value')).toEqual(c.staff0Email);
-            expect(element(by.id("id_staff_set-0-receives_money_distribution_form")).isSelected()).toBeTruthy();
+            expect(BSPage.committee0_first_name.getAttribute('value')).toEqual(c.committee0SetFirstName);
+            expect(BSPage.committee0_last_name.getAttribute('value')).toEqual(c.committee0SetLastName);
+            expect(BSPage.committee0_email.getAttribute('value')).toEqual(c.committee0Email);
+            expect(BSPage.committee0_receives_money_distribution_form.isSelected()).toBeTruthy();
 
-            expect(element(by.id("id_committeemember_set-0-first_name")).getAttribute('value')).toEqual(c.committee0SetFirstName);
-            expect(element(by.id("id_committeemember_set-0-last_name")).getAttribute('value')).toEqual(c.committee0SetLastName);
-            expect(element(by.id("id_committeemember_set-0-email")).getAttribute('value')).toEqual(c.committee0Email);
-            expect(element(by.id("id_committeemember_set-0-receives_money_distribution_form")).isSelected()).toBeTruthy();
-
-            expect(element(by.id("id_location_set-0-name")).getAttribute('value')).toEqual(c.location0SetName);
-            expect(element(by.id("id_location_set-0-latitude")).getAttribute('value')).toEqual(c.location0SetLatitude);
-            expect(element(by.id("id_location_set-0-longitude")).getAttribute('value')).toEqual(c.location0SetLongitude);
+            expect(BSPage.location0_set_name.getAttribute('value')).toEqual(c.location0SetName);
+            expect(BSPage.location0_set_latitude.getAttribute('value')).toEqual(c.location0SetLatitude);
+            expect(BSPage.location0_set_longitude.getAttribute('value')).toEqual(c.location0SetLongitude);
 
 
-            expect(element(by.id("id_staff_set-1-first_name")).getAttribute('value')).toEqual(c.staff1SetFirstName);
-            expect(element(by.id("id_staff_set-1-last_name")).getAttribute('value')).toEqual(c.staff1SetLastName);
-            expect(element(by.id("id_staff_set-1-email")).getAttribute('value')).toEqual(c.staff1Email);
-            expect(element(by.id("id_staff_set-1-receives_money_distribution_form")).isSelected()).toBeTruthy();
+            expect(BSPage.staff1_first_name.getAttribute('value')).toEqual(c.staff1SetFirstName);
+            expect(BSPage.staff1_last_name.getAttribute('value')).toEqual(c.staff1SetLastName);
+            expect(BSPage.staff1_email.getAttribute('value')).toEqual(c.staff1Email);
+            expect(BSPage.staff1_receives_money_distribution_form.isSelected()).toBeTruthy();
 
+            expect(BSPage.committee1_first_name.getAttribute('value')).toEqual(c.committee1SetFirstName);
+            expect(BSPage.committee1_last_name.getAttribute('value')).toEqual(c.committee1SetLastName);
+            expect(BSPage.committee1_email.getAttribute('value')).toEqual(c.committee1Email);
+            expect(BSPage.committee1_receives_money_distribution_form.isSelected()).toBeTruthy();
 
-            expect(element(by.id("id_committeemember_set-1-first_name")).getAttribute('value')).toEqual(c.committee1SetFirstName);
-            expect(element(by.id("id_committeemember_set-1-last_name")).getAttribute('value')).toEqual(c.committee1SetLastName);
-            expect(element(by.id("id_committeemember_set-1-email")).getAttribute('value')).toEqual(c.committee1Email);
-            expect(element(by.id("id_committeemember_set-1-receives_money_distribution_form")).isSelected()).toBeTruthy();
-
-            expect(element(by.id("id_location_set-1-name")).getAttribute('value')).toEqual(c.location1SetName);
-            expect(element(by.id("id_location_set-1-latitude")).getAttribute('value')).toEqual(c.location1SetLatitude);
-            expect(element(by.id("id_location_set-1-longitude")).getAttribute('value')).toEqual(c.location1SetLongitude);
+            expect(BSPage.location1_set_name.getAttribute('value')).toEqual(c.location1SetName);
+            expect(BSPage.location1_set_latitude.getAttribute('value')).toEqual(c.location1SetLatitude);
+            expect(BSPage.location1_set_longitude.getAttribute('value')).toEqual(c.location1SetLongitude);
 
             BSPage.closeBorderStation();
             expect(browser.driver.getCurrentUrl()).toContain('/portal/dashboard/');
@@ -121,7 +116,7 @@ describe('Border Station CRUD -', function() {
 
         it('fails when receives money distribution form checked with no email', function() {
             BSPage.editBorderStationWithNoEmail().then(function() {
-                return expect(browser.driver.getCurrentUrl()).toContain('/static_border_stations/border-stations/update/' + c.stationId + '/');
+                return expect(browser.driver.getCurrentUrl()).toContain('/static_border_stations/border-stations/update/' + 25 + '/');
             }).then(function() {
                 expect(element.all(by.cssContainingText('.alert-danger', 'Email cannot be blank when receives money distribution form is checked.')).count()).toEqual(2);
             });
