@@ -1,5 +1,5 @@
 var c = require('../testConstants.json');
-var filloutform = require('../accounts/vifPage.js');
+var filloutform = require('../dataentry/vifPage.js');
 
 
 var dynStation = function() {

@@ -130,6 +130,18 @@ class BadVdcUserFactory(UserFactory):
     user_designation = factory.SubFactory(EditUserDesignation)
 
 
+class BadIrfUserFactory(UserFactory):
+    permission_irf_view = False
+    permission_irf_delete = False
+    user_designation = factory.SubFactory(EditUserDesignation)
+
+
+class BadVifUserFactory(UserFactory):
+    permission_vif_view = False
+    permission_vif_delete = False
+    user_designation = factory.SubFactory(EditUserDesignation)
+
+
 class AlertFactory(DjangoModelFactory):
     class Meta:
         model = Alert

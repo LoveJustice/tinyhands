@@ -101,7 +101,6 @@ class Address1Test(APITestCase):
             self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
 
-
 class Address2Test(APITestCase):
 
     def setUp(self):
