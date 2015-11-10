@@ -2,7 +2,7 @@ from django.conf.urls import patterns, url
 
 from dataentry.views import Address2ViewSet, Address1ViewSet, GeoCodeDistrictAPIView, GeoCodeVdcAPIView
 from budget.views import BudgetViewSet, OtherItemsViewSet
-from accounts.views import AccountViewSet, DefaultPermissionsSetViewSet, CurrentUserView
+from accounts.views import AccountViewSet, DefaultPermissionsSetViewSet, CurrentUserView, ResendActivationEmailView
 
 urlpatterns = patterns('rest_api.views',
     # Budget URLs
@@ -31,6 +31,7 @@ urlpatterns = patterns('rest_api.views',
     
     url(r'^accounts/$', AccountViewSet.as_view({'get': 'list', 'post':'create'}), name="Accounts"),
     url(r'^accounts/(?P<pk>\d+)/$', AccountViewSet.as_view({'get':'retrieve', 'put':'update', 'delete':'destroy'}), name='Account'),
+    url(r'^accounts/resend-activation-email/(?P<pk>\d+)/$', ResendActivationEmailView.as_view(), name='ResendActivationEmail'),
 
     url(r'^defaultPermissionsSets/$', DefaultPermissionsSetViewSet.as_view({'get': 'list', 'post':'create'}), name="DefaultPermissionsSets"),
     url(r'^defaultPermissionsSets/(?P<pk>\d+)/$', DefaultPermissionsSetViewSet.as_view({'get': 'retrieve', 'put':'update', 'delete':'destroy'}), name="DefaultPermissionsSet"),

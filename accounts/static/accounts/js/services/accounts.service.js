@@ -31,7 +31,14 @@ angular.module('AccountsMod')
           params:{
             id: '@id'
           }
-        }
+        },
+        resendActivationEmail: {
+          url: '/api/accounts/resend-activation-email/:id/',
+          method: 'POST',
+          params:{
+            id: '@id'
+          }
+        },
       }
     );
   });
