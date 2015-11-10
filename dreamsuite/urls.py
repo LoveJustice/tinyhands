@@ -17,7 +17,6 @@ urlpatterns = patterns('',
     url(r'^api/', include('rest_api.urls')),
     url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'login.html'}, name='login'),
     url(r'^logout/$', 'django.contrib.auth.views.logout_then_login', name='logout'),
-
     url(r'^password_reset/$', 'django.contrib.auth.views.password_reset', name='password_reset'),
     url(r'^password_reset/done/$', 'django.contrib.auth.views.password_reset_done', name='password_reset_done'),
     # Support old style base36 password reset links; remove in Django 1.7

@@ -5,7 +5,10 @@ TEMPLATE_DEBUG = True
 
 SITE_DOMAIN = 'localhost:8080'
 
-INSTALLED_APPS += ('corsheaders',)
+INSTALLED_APPS += (
+    'corsheaders',
+    'rest_framework.authtoken',
+)
 
 MIDDLEWARE_CLASSES += (
     'corsheaders.middleware.CorsMiddleware',

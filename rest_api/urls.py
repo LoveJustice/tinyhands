@@ -3,6 +3,8 @@ from accounts.views import CurrentUserView
 
 from dataentry.views import Address2ViewSet, Address1ViewSet, GeoCodeDistrictAPIView, GeoCodeVdcAPIView, InterceptionRecordViewSet, VictimInterviewViewSet
 from budget.views import BudgetViewSet, OtherItemsViewSet
+from rest_framework.authtoken import views
+
 
 urlpatterns = patterns('rest_api.views',
     # Budget URLs
@@ -35,6 +37,7 @@ urlpatterns = patterns('rest_api.views',
     url(r'^vif/(?P<pk>\d+)/$', VictimInterviewViewSet.as_view({'delete': 'destroy'}), name="VictimInterviewDetail"),
 
     #Accounts and DefaultPermissionsSets
+    url(r'^login/', views.obtain_auth_token),
     url(r'^me/$', CurrentUserView.as_view(), name="CurrentUser"),
 
 )
