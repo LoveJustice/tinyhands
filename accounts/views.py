@@ -247,7 +247,8 @@ class CurrentUserView(APIView):
         return Response(serializer.data)
         
 class ResendActivationEmailView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, HasPermission]
+    permissions_required = ['permission_accounts_manage']
     
     def post(self, request, pk=None):
         email_sent = False
