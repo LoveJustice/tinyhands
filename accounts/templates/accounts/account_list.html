@@ -34,17 +34,30 @@
           <td>{{account.user_designation}}</td>
           <td>{{account.date_joined}}</td>
           <td>{{account.last_login}}</td>
-          <!--need to fix the buttons-->
-          <td><a class="btn btn-sm btn-primary" href="/accounts/update/{{ account.id }}">Edit</a>
-          <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#modal-{{ account.pk }}">Delete</button>
+          <td>
+            <div>
+              <a class="btn btn-sm btn-primary" ng-href="/accounts/update/{{ account.id }}">Edit</a>
+              <button type="button" class="btn btn-primary btn-sm btn-danger" ng-click="accountsCtrl.openModal(account)" ng-show="accountsCtrl.currentuser.id != account.id">Delete</button>
+            </div>
           </td>
         </tr>
     </tbody>
   </table>
 </div>
 
+  <script type="text/ng-template" id="modal.html">
+          <div class="modal-header">
+          <h3>Are you sure to delete this user?</h3>
+          </div>
+          <div class="modal-footer">
+              <button class="btn btn-danger" type="button" ng-click="modalCtrl.delete()">Delete</button>
+              <button class="btn btn-warning" type="button" ng-click="modalCtrl.cancel()">Cancel</button>
+          </div>
+  </script>
+
+
 {% endverbatim %}
 
-<p class="pull-right"><a class="btn btn-success" href="{% url 'account_create' %}">Create A New Account</a></p>
+<p class="pull-right"><a class="btn btn-success" ng-href="/accounts/create">Create A New Account</a></p>
 
 {% endblock %}
