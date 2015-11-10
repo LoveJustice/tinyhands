@@ -12,6 +12,7 @@ var editAccountPage = function () {
 	this.firstName = element(by.model('editCtrl.account.first_name'));
 	this.lastName = element(by.model('editCtrl.account.last_name'));
 	this.email = element(by.model('editCtrl.account.email'));
+	this.emailError = element(by.binding('editCtrl.emailError'));
 	this.userDesignation = element(by.model('editCtrl.account.user_designation'));
 	this.userDesignationOptions = element.all(by.options("set.id as set.name for set in editCtrl.permissionsSets.results"));
 	this.permission_irf_view = element(by.binding('editCtrl.account.permission_irf_view'));
@@ -50,6 +51,10 @@ var editAccountPage = function () {
 		}).then(function() {
 			return self.userDesignationOptions.last().click();			
 		});
+	}.bind(this);
+	
+	this.clearEmailField = function() {
+		return this.email.clear();
 	}.bind(this);
 	
 	this.clickAllPermissions = function(state) {

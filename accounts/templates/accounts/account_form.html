@@ -38,9 +38,10 @@ table {
 <div class="container" ng-controller="EditAccountCtrl as editCtrl">
   <h1>{{editCtrl.getTitle()}}</h1>
   <div class="row">
-    <div class="col-md-6 form-group">
-      <label >Email</label>
+    <div ng-class="{'has-error': editCtrl.emailError}" class="col-md-6 form-group">
+      <label ng-class="{'text-danger': editCtrl.emailError}" >Email</label>
       <input type="text" class="form-control" placeholder="Email" ng-model="editCtrl.account.email" />
+      <span ng-class="{'text-danger': editCtrl.emailError}">{{editCtrl.emailError}}</span>
     </div>
   </div>
   <div class="row">
@@ -56,13 +57,14 @@ table {
     </div>
   </div>
   <div class="row">
-    <div class="col-md-6 form-group">
-      <label >User Designation</label>
+    <div class="col-md-6 form-group" ng-class="{'has-error': editCtrl.userDesignationError}">
+      <label ng-class="{'text-danger': editCtrl.userDesignationError}">User Designation</label>
       <select ng-model="editCtrl.account.user_designation" 
               ng-options="set.id as set.name for set in editCtrl.permissionsSets.results" 
               ng-change="editCtrl.onUserDesignationChanged(editCtrl.account.user_designation)" 
               class="form-control">
       </select>
+      <span ng-class="{'text-danger': editCtrl.userDesignationError}">{{editCtrl.userDesignationError}}</span>
     </div>
   </div>
   <div class="clearfix">

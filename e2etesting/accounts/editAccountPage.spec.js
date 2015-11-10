@@ -75,12 +75,21 @@ describe('Edit Account Page', function() {
 			browser.ignoreSynchronization=true;
 			editAccountPage.navigateToPage();
 			browser.waitForAngular();
-			editAccountPage.changeUserInfo();							
+		});
+		
+		it('should show error when email is not valid', function() {
+			editAccountPage.clearEmailField()
+			.then(editAccountPage.update)
+			.then(function() {
+				expect(editAccountPage.emailError.getText()).toEqual('An email is required.');
+			});					
 		});
 		
 		it('should redirect to accounts page', function() {
-			editAccountPage.update().then(function() {
-				return browser.waitForAngular();							
+			editAccountPage.changeUserInfo()
+			.then(editAccountPage.update)
+			.then(function() {
+				return browser.waitForAngular();
 			}).then(function() {
 				browser.sleep(1000);
 				expect(browser.getCurrentUrl()).toEqual(constants.webAddress + '/accounts/');				
@@ -91,6 +100,10 @@ describe('Edit Account Page', function() {
 			editAccountPage.navigateToPage().then(function() {
 				return browser.waitForAngular();					
 			}).then(function() {
+				expect(editAccountPage.firstName.getAttribute('value')).toEqual(editAccountPage.newFirstName);
+				expect(editAccountPage.lastName.getAttribute('value')).toEqual(editAccountPage.newLastName);
+				expect(editAccountPage.email.getAttribute('value')).toEqual(editAccountPage.newEmail);
+				expect(editAccountPage.userDesignation.getAttribute('value')).toEqual("3");
 				expect(editAccountPage.permission_irf_view.getText()).toEqual('No');
 				expect(editAccountPage.permission_irf_add.getText()).toEqual('No');
 				expect(editAccountPage.permission_irf_edit.getText()).toEqual('No');
