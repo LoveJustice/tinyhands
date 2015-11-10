@@ -94,12 +94,12 @@ describe('TinyHands Border Station', function() {
 		});
 
 		it('committee email', function(){
-			browser.driver.wait(function() {
-				return browser.driver.findElement(by.id('C-lastName-0')).then(function(elem) {
+			//browser.driver.wait(function() {
+			//	return browser.driver.findElement(by.id('C-lastName-0')).then(function(elem) {
 					expect(element(by.id("C-lastName-0")).getAttribute('value')).toBe(c.staff0SetLastName);
-					return true;
-				});
-			}, 20000);
+			//		return true;
+			//	});
+			//}, 20000);
 		});
 
 		it('committee position', function(){

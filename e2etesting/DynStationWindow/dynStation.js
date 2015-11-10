@@ -31,7 +31,7 @@ var dynStation = function() {
 
     this.removeEvents = function() {
         browser.actions().mouseMove($("i[class='glyphicon glyphicon-menu-hamburger']")).perform();
-        element(by.xpath("/html/body/div[2]/div/div/div/div[3]/ul/li/label/input")).click();
+        element(by.xpath("/html/body/div[3]/div/div/div/div[3]/ul/li/label/input")).click();
     };
 
     this.checkClick = function (station) {
