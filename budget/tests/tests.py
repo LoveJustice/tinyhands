@@ -78,11 +78,6 @@ class MoneyDistributionWebTests(WebTest, TestCase):
         self.assertGreater(response.request.url.find(str(self.budget_calc_sheet.pk)), -1)
         self.assertEquals(response.status_code, 200)
 
-    def testMoneyDistributionFormIsCorrect(self):
-        response = self.app.get(reverse('money_distribution_pdf', kwargs={"pk": self.budget_calc_sheet.pk}), user=self.superuser)
-        print(response.content)
-
-
     def testContainsMoneyDistributionForm(self):
         response = self.app.get(reverse('money_distribution_view', kwargs={"pk": self.budget_calc_sheet.pk}), user=self.superuser)
         self.assertGreater(response.content.find("budget_calculations/money_distribution_pdf/" + str(self.budget_calc_sheet.pk)), -1)
