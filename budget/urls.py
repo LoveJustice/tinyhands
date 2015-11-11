@@ -64,6 +64,6 @@ urlpatterns = patterns(
 
 
     url(r'^api/budget_calculations/money_distribution/(?P<pk>\d+)/$', distribution_detail, name="money_distribution_api"),
-    url(r'^budget_calculations/money_distribution_pdf/(?P<pk>\d+)/37911950010003282564610129364995291096940874808262/$', views.MoneyDistributionFormPDFView.as_view(), name="money_distribution_pdf"),
+    url(r'^budget_calculations/money_distribution_pdf/(?P<pk>\d+)/$', views.MoneyDistributionFormPDFView.as_view(), name="money_distribution_pdf"),
     url(r'^budget_calculations/money_distribution/view/(?P<pk>\d+)/$', views.money_distribution_view, name="money_distribution_view"),
 )
