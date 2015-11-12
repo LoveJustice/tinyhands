@@ -245,3 +245,15 @@ class CurrentUserView(APIView):
     def get(self, request):
         serializer = AccountsSerializer(request.user)
         return Response(serializer.data)
+        
+class ResendActivationEmailView(APIView):
+    permission_classes = [IsAuthenticated, HasPermission]
+    permissions_required = ['permission_accounts_manage']
+    
+    def post(self, request, pk=None):
+        email_sent = False
+        account = get_object_or_404(Account, pk=pk)
+        if not account.has_usable_password():
+            account.send_activation_email()
+            email_sent = True
+        return Response(email_sent)

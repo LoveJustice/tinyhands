@@ -8,6 +8,10 @@ angular
         vm.currentuser = Accounts.me();
         vm.update = Accounts.update();
 
+        vm.resendActivationEmail = function(account) {
+          Accounts.resendActivationEmail({id:account.id});
+        };
+
         vm.openModal = function(account) {
           var user_name = account.first_name+" "+account.last_name;
           var deleteModal = $modal.open({
