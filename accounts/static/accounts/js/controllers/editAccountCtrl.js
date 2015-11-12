@@ -87,8 +87,8 @@ angular
             return 'Create Account';
         }
 
-        vm.onUserDesignationChanged = function(value) {
-            PermissionsSets.get({id: value}).$promise.then(function (permissions) {
+        vm.onUserDesignationChanged = function(permissionSetId) {
+            PermissionsSets.get({id: permissionSetId}).$promise.then(function (permissions) {
                 vm.account.permission_irf_view = permissions.permission_irf_view;
                 vm.account.permission_irf_add = permissions.permission_irf_add;
                 vm.account.permission_irf_edit = permissions.permission_irf_edit;
