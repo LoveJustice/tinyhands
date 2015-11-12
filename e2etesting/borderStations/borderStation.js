@@ -25,8 +25,6 @@ var borderStationPage = function() {
     };
 
     this.fillOutBorderStation = function() {
-        //browser.pause();
-
         this.station_name = element(by.id("stationName")).sendKeys(c.stationName);
         this.station_code = element(by.id("stationCode")).sendKeys(c.stationCode);
         this.date_established = element(by.id("dateEstablished")).sendKeys(c.dateEstablished);
@@ -69,6 +67,7 @@ var borderStationPage = function() {
         this.location = element(by.id("locationName-0")).sendKeys(c.location0SetName);
         this.latitude = element(by.id("latitude-0")).sendKeys(c.location0SetLatitude);
         this.longitude = element(by.id("longitude-0")).sendKeys(c.location0SetLongitude);
+
         this.saveForm();
     };
 

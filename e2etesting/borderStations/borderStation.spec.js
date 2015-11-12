@@ -7,13 +7,14 @@ var page = this;
 
 describe('TinyHands Border Station', function() {
 
-	/*beforeEach(function() {
-		return browser.ignoreSynchronization = true;
-	});*/
+	beforeEach(function() {
+		browser.ignoreSynchronization = true;
+		browser.manage().timeouts().implicitlyWait(7000);
+	});
 
 	it('should have a title', function() {
 
-		browser.manage().timeouts().implicitlyWait(10000);
+		//browser.manage().timeouts().implicitlyWait(10000);
 
         loginPage.loginAsAdmin();
         borderPage.getToBorderStationCreate();
@@ -94,12 +95,12 @@ describe('TinyHands Border Station', function() {
 		});
 
 		it('committee email', function(){
-			//browser.driver.wait(function() {
-			//	return browser.driver.findElement(by.id('C-lastName-0')).then(function(elem) {
+			browser.driver.wait(function() {
+				return browser.driver.findElement(by.id('C-lastName-0')).then(function() {
 					expect(element(by.id("C-lastName-0")).getAttribute('value')).toBe(c.staff0SetLastName);
-			//		return true;
-			//	});
-			//}, 20000);
+					return true;
+				});
+			}, 20000);
 		});
 
 		it('committee position', function(){
@@ -132,21 +133,16 @@ describe('TinyHands Border Station', function() {
 		});
 
 		it('location latitude', function(){
-			browser.driver.wait(function() {
-				return browser.driver.findElement(by.id('C-lastName-0')).then(function(elem) {
-					expect(element(by.id("latitude-0")).getAttribute('value')).toBe(c.location0SetLatitude);
-					return true;
-				});
-			}, 20000);
+		//	browser.driver.wait(function() {
+		//		return browser.driver.findElement(by.id('latitude-0')).then(function(elem) {
+			expect(element(by.id("latitude-0")).getAttribute('value')).toBe(c.location0SetLatitude);
+		//			return true;
+		//		});
+		//	}, 20000);
 		});
 
 		it('location longitude', function(){
-			browser.driver.wait(function() {
-				return browser.driver.findElement(by.id('C-email-0')).then(function(elem) {
-					expect(element(by.id("longitude-0")).getAttribute('value')).toBe('0');
-					return true;
-				});
-			}, 20000);
+			expect(element(by.id("longitude-0")).getAttribute('value')).toBe('0');
 		});
 
 	});

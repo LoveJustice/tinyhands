@@ -5,7 +5,8 @@ var irfCrud = require('../dataentry/irfCRUD.js');
 
 describe('Budget Calculation', function() {
     beforeEach(function () {
-        return browser.ignoreSynchronization = true;
+        browser.ignoreSynchronization = true;
+        browser.manage().timeouts().implicitlyWait(7000);
     });
 
     describe('admin can login', function () {
