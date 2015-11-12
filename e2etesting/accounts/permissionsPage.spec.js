@@ -1,7 +1,7 @@
 var constants = require('../testConstants.json');
 var loginPage = require('./loginPage.js');
 var permissionsPage = require('./permissionsPage.js');
-var vifPage = require('./vifPage.js');
+var vifPage = require('../dataentry/vifPage.js');
 var irfPage = require('../dataentry/irfCRUD.js');
 
 describe('Accounts Page', function() {
@@ -185,9 +185,12 @@ describe('Accounts Page', function() {
 
     describe('handles permissions of vif', function() {
         it('allows viewing of vif', function() {
-            permissionsPage.navigateToVifPage();
-            permissionsPage.viewVifForm();
-            expect(browser.getTitle()).toContain("Edit VIF");
+            permissionsPage.navigateToVifPage().then(function(){
+                browser.sleep(500);
+                var editButton = element(by.partialLinkText("View"));
+                browser.sleep(500);
+                expect(editButton.isPresent()).toBeTruthy();
+            });
         });
 
         it('unchecks vif add permissions', function(){

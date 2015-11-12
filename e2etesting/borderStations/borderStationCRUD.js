@@ -35,8 +35,6 @@ var borderStationPage = function() {
 
         browser.sleep(3000);
 
-        //browser.pause();
-
         this.station_name = element(by.id("stationName")).sendKeys(c.stationName);
         this.station_code = element(by.id("stationCode")).sendKeys(c.stationCode);
         this.date_established = element(by.id("dateEstablished")).sendKeys(c.dateEstablished);

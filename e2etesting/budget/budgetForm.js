@@ -8,7 +8,7 @@ var budgetForm = function () {
     var page = this;
 
     this.navigateToNewForm = function () {
-        browser.get(c.webAddress + '/static_border_stations/border-stations/update/24/');
+        browser.get(c.webAddress + '/static_border_stations/border-stations/update/25/');
         browser.sleep(1000);
         methods.click(element(by.linkText("New Budget Calculation Form")));
     };
@@ -161,9 +161,8 @@ var budgetForm = function () {
 
 
     this.fillOutForm = function () {
-
         browser.sleep(500);
-        browser.executeScript('document.getElementById("month_year").value = "2015-07"');
+        browser.executeScript('document.getElementById("month_year").value = "2015-07"' );
         browser.executeScript('$("#month_year").trigger("change");');
         browser.sleep(500);
         browser.sleep(500);
@@ -257,9 +256,11 @@ var budgetForm = function () {
         element(by.id("misc_number_of_intercepts")).clear().sendKeys('10');
         element(by.id("misc_number_of_intercepts_mult")).clear().sendKeys('50');
         element(by.id("misc_add_item")).click();
+        browser.sleep(2000);
         element(by.xpath("//div[@ng-controller='otherBudgetItemsCtrl as miscItemsCtrl']/div/div/input")).clear().sendKeys('Test4');
         element(by.xpath("//div[@ng-controller='otherBudgetItemsCtrl as miscItemsCtrl']/div/div[2]/input")).clear().sendKeys('100');
-        browser.sleep(1000);
+        browser.sleep(3000);
+        //browser.pause();
     };
 
     this.submitForm = function () {

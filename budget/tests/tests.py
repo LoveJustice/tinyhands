@@ -87,18 +87,6 @@ class MoneyDistributionWebTests(WebTest, TestCase):
         self.assertGreater(response.content.find("emailRecipientsCtrl"), -1)  # If it finds the string, it will be >0
         self.assertGreater(response.content.find("main.sendEmails"), -1)
 
-    # def testMoneyDistributionForm(self):
-    #     import ipdb
-    #     ipdb.set_trace()
-    #
-    #     request = self.app.get(reverse('money_distribution_pdf', kwargs={"pk": self.budget_calc_sheet.pk}), user=self.superuser)
-    #     context_data = self.MDFView.get_context_data()
-    #     dispatch = self.MDFView.dispatch(request)
-    #
-    #     self.assertEquals("application/pdf", request.content_type)
-    #     self.assertEquals(context_data['admin_total'], 1000)
-    #     self.assertGreater(dispatch.items()[1][1].find('filename=Monthly-Money-Distribution-Form.pdf'), -1)
-
     def testSendingTwoEmails(self):
         self.staff = StaffFactory(border_station=self.budget_calc_sheet.border_station)
         self.committee_member = CommitteeMemberFactory(border_station=self.budget_calc_sheet.border_station)

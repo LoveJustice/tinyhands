@@ -1,7 +1,7 @@
 var loginPage = require('../accounts/loginPage.js');
 var searchPage = require('./search.js');
 var irfs = require('../dataentry/irfCRUD.js');
-var vifs = require('../accounts/vifPage.js');
+var vifs = require('../dataentry/vifPage.js');
 var c = require('../testConstants.json');
 
 describe('TinyHands', function(){
@@ -34,15 +34,17 @@ describe('TinyHands', function(){
 	describe('result', function(){
 		it('shows correct irf', function(){
             searchPage.gotoIRFSearch();
-			searchPage.searchKey('TEST', "/html/body/div[3]/div/div/div[2]/div/label/input");
-			staffName1 = element(By.xpath("/html/body/div[3]/div/div[2]/div/table/tbody/tr/td[2]"));
+			searchPage.searchKey('TEST', "vm.searchValue");
+			staffName1 = element(By.xpath('//*[@id="content-container"]/div/table/tbody/tr[1]/td[2]'));
+
 			expect(staffName1.getText()).toEqual('TEST');
 		});
 
         it('shows correct vif', function () {
             searchPage.gotoVIFSearch();
-            searchPage.searchKey('TEST', "/html/body/div[3]/div/div/div[2]/div/label/input");
-			staffName2 = element(By.xpath("/html/body/div[3]/div/div[2]/div/table/tbody/tr/td[2]"));
+
+            searchPage.searchKey('TEST', "vm.searchValue");
+			staffName2 = element(By.xpath('//*[@id="id_vif_list_table"]/tbody/tr[1]/td[2]'));
             expect(staffName2.getText()).toEqual('Test Interviewer');
         });
 

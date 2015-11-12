@@ -13,13 +13,12 @@ from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
 from django.core.urlresolvers import reverse_lazy
 from django.http import HttpResponse, HttpResponseRedirect, Http404
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render_to_response, render
 from django.template.loader import render_to_string
-from django.views.generic import ListView, View, DeleteView, CreateView, UpdateView
+from django.views.generic import ListView, View, DeleteView, CreateView
 
 from rest_framework import status
 from rest_framework.decorators import list_route
-from rest_framework.pagination import PageNumberPagination
 from rest_framework import filters
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
@@ -33,13 +32,13 @@ from fuzzywuzzy import process
 from dataentry.models import (BorderStation, VDC, District, Interceptee, InterceptionRecord, VictimInterview, VictimInterviewLocationBox, VictimInterviewPersonBox)
 from dataentry.forms import (IntercepteeForm, InterceptionRecordForm, VDCForm, DistrictForm, VictimInterviewForm, VictimInterviewLocationBoxForm, VictimInterviewPersonBoxForm)
 from dataentry import export
-from dataentry.serializers import DistrictSerializer, VDCSerializer
+from dataentry.serializers import DistrictSerializer, VDCSerializer, InterceptionRecordListSerializer, VictimInterviewListSerializer
 
 from accounts.mixins import PermissionsRequiredMixin
 
 from alert_checkers import IRFAlertChecker, VIFAlertChecker
 from fuzzy_matching import match_location
-from rest_api.authentication import HasPermission
+from rest_api.authentication import HasPermission, HasDeletePermission
 
 
 @login_required
@@ -85,12 +84,9 @@ class SearchFormsMixin(object):
         return context
 
 
-class InterceptionRecordListView(LoginRequiredMixin, SearchFormsMixin, ListView):
-    model = InterceptionRecord
-
-    def __init__(self, *args, **kw):
-        # Passes what to search by to SearchFormsMixin
-        super(InterceptionRecordListView, self).__init__(irf_number__icontains="number", staff_name__icontains="name")
+@login_required
+def interception_record_list_template(request):
+    return render(request, 'dataentry/interceptionrecord_list.html')
 
 
 class IntercepteeInline(InlineFormSet):
@@ -184,17 +180,6 @@ class InterceptionRecordDetailView(InterceptionRecordUpdateView):
         raise PermissionDenied
 
 
-class InterceptionRecordDeleteView(DeleteView):
-    model = InterceptionRecord
-    success_url = reverse_lazy('interceptionrecord_list')
-    permissions_required = ['permission_irf_edit']
-
-    def delete(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        self.object.delete()
-        return HttpResponseRedirect(self.success_url)
-
-
 class PersonBoxInline(InlineFormSet):
     model = VictimInterviewPersonBox
     extra = 12
@@ -262,17 +247,6 @@ class VictimInterviewDetailView(VictimInterviewUpdateView):
         raise PermissionDenied
 
 
-class VictimInterviewDeleteView(DeleteView):
-    permissions_required = ['permission_vif_edit']
-    model = VictimInterview
-    success_url = reverse_lazy('victiminterview_list')
-
-    def delete(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        self.object.delete()
-        return HttpResponseRedirect(self.success_url)
-
-
 class InterceptionRecordCSVExportView(LoginRequiredMixin, PermissionsRequiredMixin, View):
     permissions_required = ['permission_irf_view']
 
@@ -318,8 +292,13 @@ class GeoCodeDistrictAPIView(APIView):
 
 class GeoCodeVdcAPIView(APIView):
     def get(self, request):
-        value = request.query_params['vdc']
-        matches = match_location(vdc_name=value)
+        try:
+            district_name = request.query_params['district']
+
+        except:
+            district_name = None
+        vdc_name = request.query_params['vdc']
+        matches = match_location(district_name, vdc_name)
         if matches:
             serializer = VDCSerializer(matches, many=True)
             return Response(serializer.data)
@@ -429,7 +408,7 @@ def interceptee_fuzzy_matching(request):
     input_name = request.GET['name']
     all_people = Interceptee.objects.all()
     people_dict = {serializers.serialize("json", [obj]): obj.full_name for obj in all_people }
-    matches = process.extractBests(input_name, people_dict, limit = 10)
+    matches = process.extractBests(input_name, people_dict, limit=10)
     return HttpResponse(json.dumps(matches), content_type="application/json")
 
 
@@ -452,16 +431,9 @@ class Address2ViewSet(viewsets.ModelViewSet):
     serializer_class = VDCSerializer
     permission_classes = (IsAuthenticated, HasPermission)
     permissions_required = ['permission_vdc_manage']
-
-    # a couple default backends found on the djangoresetframework docs
     filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
-
-    # Specify the fields that we can search by and how
     search_fields = ('name',)
-
-    # specify the fields that the data can be ordered by
     ordering_fields = ('name', 'district__name', 'longitude', 'latitude', 'verified', 'cannonical_name__name')
-    # Specify the default order
     ordering = ('name',)
 
 
@@ -480,3 +452,29 @@ class Address1ViewSet(viewsets.ModelViewSet):
         districts = District.objects.all()
         serializer = self.get_serializer(districts, many=True)
         return Response(serializer.data)
+
+
+class InterceptionRecordViewSet(viewsets.ModelViewSet):
+    queryset = InterceptionRecord.objects.all()
+    serializer_class = InterceptionRecordListSerializer
+    permission_classes = (IsAuthenticated, HasPermission, HasDeletePermission,)
+    permissions_required = ['permission_irf_view']
+    delete_permissions_required = ['permission_irf_delete']
+
+    filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
+    search_fields = ('irf_number',)
+    ordering_fields = ('irf_number', 'staff_name', 'number_of_victims', 'number_of_traffickers', 'date_time_of_interception', 'date_time_entered_into_system', 'date_time_last_updated',)
+    ordering = ('irf_number',)
+
+
+class VictimInterviewViewSet(viewsets.ModelViewSet):
+    queryset = VictimInterview.objects.all()
+    serializer_class = VictimInterviewListSerializer
+    permission_classes = (IsAuthenticated, HasPermission, HasDeletePermission,)
+    permissions_required = ['permission_vif_view']
+    delete_permissions_required = ['permission_vif_delete']
+    filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
+    search_fields = ('vif_number',)
+    ordering_fields = ('vif_number', 'interviewer', 'number_of_victims', 'number_of_traffickers', 'date', 'date_time_entered_into_system', 'date_time_last_updated',)
+    ordering = ('vif_number',)
+

@@ -1,5 +1,7 @@
 from django.db import models
 from models import BorderStation
+from django.utils.timezone import make_naive, localtime
+
 
 irf_headers = [
     "IRF Number",
@@ -118,7 +120,7 @@ irf_headers = [
     "Victim Relationship to... "
 ]
 
-for i in range(1, 5+1):
+for i in range(1, 5 + 1):
     irf_headers.extend([
         "Trafficker %d Name" % i,
         "Trafficker %d Gender " % i,
@@ -144,6 +146,7 @@ def get_station_name_from_number(irf_number):
     except BorderStation.DoesNotExist:
         return "UNKNOWN"
 
+
 def get_checkbox_group_value(instance, field_name_start):
     for field in instance._meta.fields:
         if field.name.startswith(field_name_start):
@@ -153,12 +156,9 @@ def get_checkbox_group_value(instance, field_name_start):
                     return field.verbose_name
     return ''
 
-from django.utils.timezone import make_naive, localtime
-
 
 def get_irf_export_rows(irfs):
-    rows = []
-    rows.append(irf_headers)
+    rows = [irf_headers]
 
     for irf in irfs:
         for interceptee in irf.interceptees.all():
@@ -532,7 +532,7 @@ vif_lb_headers = [
     "LB%d - Association with People",
 ]
 
-for i in range(1, 9+1):
+for i in range(1, 9 + 1):
     vif_headers.extend([header % i for header in vif_pb_headers])
     if i != 9:
         vif_headers.extend([header % i for header in vif_lb_headers])
@@ -658,6 +658,7 @@ def get_legal_action_against_traffickers(vif):
     if vif.legal_action_against_traffickers_dofe_complaint:
         return 'A DoFE complaint has been filed'
 
+
 def get_nullable_choice_text(value, text_true, text_false):
     if value is None:
         return ''
@@ -665,12 +666,14 @@ def get_nullable_choice_text(value, text_true, text_false):
         return text_true
     return text_false
 
+
 def get_dependant_nullable_choice_text(value_depend, value, text_true, text_false):
     if value_depend is None:
         return ''
     if value_depend:
         return get_nullable_choice_text(value, text_true, text_false)
     return ''
+
 
 def get_fir_and_dofe_values(vif):
     value = ""
@@ -682,9 +685,9 @@ def get_fir_and_dofe_values(vif):
         value += vif.legal_action_dofe_against_value
     return value
 
+
 def get_vif_export_rows(vifs):
-    rows = []
-    rows.append(vif_headers)
+    rows = [vif_headers]
 
     for vif in vifs:
         row = []

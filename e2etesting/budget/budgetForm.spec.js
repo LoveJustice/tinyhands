@@ -2,6 +2,7 @@ var budgetForm = require('./budgetForm.js');
 var loginPage = require('../accounts/loginPage.js');
 var c = require('../testConstants.json');
 var irfCrud = require('../dataentry/irfCRUD.js');
+var vifCrud = require('../dataentry/vifCrud.js');
 
 describe('Budget Calculation', function() {
     beforeEach(function () {
@@ -30,9 +31,15 @@ describe('Budget Calculation', function() {
             irfCrud.getToIRF();
             irfCrud.fillOutIRF("AAA123");
 
+
+
+            //Create a vif form to test top table.
+
             budgetForm.navigateToNewForm();
             browser.ignoreSynchronization = false;
             budgetForm.fillOutForm();
+            browser.executeScript('document.getElementById("month_year").value = "2015-05"' );
+            browser.executeScript('$("#month_year").trigger("change");');
             browser.sleep(5000);
 
             // expect totals to be certain values
@@ -70,14 +77,16 @@ describe('Budget Calculation', function() {
             this.table = element(by.id("DataTables_Table_0"));
             expect(this.table.element(by.xpath("./tbody/tr/td[1]")).getText()).toBe('Test Station');
             expect(this.table.element(by.xpath("./tbody/tr/td[2]")).getText()).toBe('AAA');
-            expect(this.table.element(by.xpath("./tbody/tr/td[3]")).getText()).toBe('July 2015');
+            expect(this.table.element(by.xpath("./tbody/tr/td[3]")).getText()).toBe('May 2015');
         });
 
         it('is populated with data from last form', function() {
             //budgetForm.viewForm();
             //browser.ignoreSynchronization = false;
             budgetForm.navigateToNewForm();
-            browser.sleep(1000);
+            browser.sleep(4000);
+
+            //browser.pause();
             //browser.refresh();
             //checks for values based on a recent test that filled out the form
             expect(element(by.binding("main.shelterTotal()")).getText()).toBe(c.shelterTotal);
@@ -100,10 +109,10 @@ describe('Budget Calculation', function() {
     describe('viewing form', function () {
         it('all inputs are disabled', function () {
             budgetForm.viewForm();
-            browser.sleep(1000);
+            //browser.sleep(1000);
 
             browser.sleep(2000);
-            expect(element(by.model("main.form.month_year")).getAttribute("value")).toBe('2015-07');
+            expect(element(by.model("main.form.month_year")).getAttribute("value")).toBe('2015-05');
             expect(element(by.id("shelter_rent")).getAttribute('disabled')).toBe('true');
             expect(element(by.id("shelter_water")).getAttribute('disabled')).toBe('true');
             expect(element(by.id("shelter_electricity")).getAttribute('disabled')).toBe('true');
@@ -168,11 +177,11 @@ describe('Budget Calculation', function() {
         it('all inputs are enabled', function () {
             //browser.ignoreSynchronization = false;
             budgetForm.editForm();
-            browser.sleep(4000);
+            browser.sleep(2000);
             browser.refresh();
 
             expect(browser.driver.getCurrentUrl()).toContain('budget_calculations/update');
-            expect(element(by.model("main.form.month_year")).getAttribute("value")).toBe('2015-07');
+            expect(element(by.model("main.form.month_year")).getAttribute("value")).toBe('2015-05');
             expect(element(by.id("shelter_rent")).getAttribute('enabled')).toBe(null);
             expect(element(by.id("shelter_water")).getAttribute('enabled')).toBe(null);
             expect(element(by.id("shelter_electricity")).getAttribute('enabled')).toBe(null);
@@ -233,11 +242,46 @@ describe('Budget Calculation', function() {
         });
     });
 
-    /*describe("Top Table", function() {
-        it("populates correctly", function() {
+    describe("Top Table", function() {
+        it("populates this month correctly", function() {
             budgetForm.navigateToNewForm();
-            browser.ignoreSynchronization = false;
+            //browser.ignoreSynchronization = false;
             budgetForm.fillOutForm();
+
+            browser.executeScript('document.getElementById("month_year").value = "2015-06"');
+            browser.executeScript('$("#month_year").trigger("change");');
+            browser.sleep(500);
+
+            var table = element(by.xpath("/html/body/div[2]/form[1]/div[1]/div[1]/div[1]/table[1]/tbody[1]"));
+            expect(table.element(by.xpath("./tr[1]/td[2]")).getText()).toBe("1");
+            expect(table.element(by.xpath("./tr[2]/td[2]")).getText()).toBe("1");
+            expect(table.element(by.xpath("./tr[3]/td[2]")).getText()).toBe("1");
         });
-    });*/
+
+        it("populates laste 3 months correctly", function() {
+            browser.executeScript('document.getElementById("month_year").value = "2015-07"');
+            browser.executeScript('$("#month_year").trigger("change");');
+            browser.sleep(500);
+
+            var table = element(by.xpath("/html/body/div[2]/form[1]/div[1]/div[1]/div[1]/table[1]/tbody[1]"));
+            expect(table.element(by.xpath("./tr[1]/td[2]")).getText()).toBe("0");
+            expect(table.element(by.xpath("./tr[2]/td[2]")).getText()).toBe("1");
+            expect(table.element(by.xpath("./tr[3]/td[2]")).getText()).toBe("1");
+
+
+        });
+
+        it("populates all time correctly", function() {
+            browser.executeScript('document.getElementById("month_year").value = "2015-10"');
+            browser.executeScript('$("#month_year").trigger("change");');
+            browser.sleep(500);
+
+            var table = element(by.xpath("/html/body/div[2]/form[1]/div[1]/div[1]/div[1]/table[1]/tbody[1]"));
+            expect(table.element(by.xpath("./tr[1]/td[2]")).getText()).toBe("0");
+            expect(table.element(by.xpath("./tr[2]/td[2]")).getText()).toBe("0");
+            expect(table.element(by.xpath("./tr[3]/td[2]")).getText()).toBe("1");
+
+            expect(table.element(by.xpath("./tr[4]/td[2]")).getText()).toBe("2");
+        });
+    });
 });
