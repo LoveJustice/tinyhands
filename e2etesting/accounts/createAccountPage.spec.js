@@ -95,9 +95,7 @@ describe('Create Account Page', function() {
 				return browser.waitForAngular();
 			}).then(function() {
 				return browser.driver.wait(function() {
-					return browser.getCurrentUrl().then(function(url) {
-						console.log(url);
-						console.log(constants.webAddress + '/accounts/create/');						
+					return browser.getCurrentUrl().then(function(url) {						
 						return url != constants.webAddress + '/accounts/create/';
 					});
 				}, 2000);
