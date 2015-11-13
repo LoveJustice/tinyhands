@@ -36,77 +36,77 @@ th, td {
     <h1>Access Defaults</h1>
 
 {% verbatim %}
-    <div class="container" ng-controller="AccountsCtrl as accountsCtrl">
+    <div class="container" ng-controller="AccessDefaultsCtrl as defaultsCtrl">
     <p>Use this form to designate default access for each type of user.<br/>For instance: what default permissions ought to be given to a new user designated as &quot;Field Staff?&quot;</p>
 
-    <form id="permissions-form" method="POST" class="row">
-        <table class="table table-condensed">
-            <thead>
-                <tr>
-                    <th>&nbsp;</th>
-                    <th>&nbsp;</th>
-                    <th colspan="4">Interception Record Forms</th>
-                    <th colspan="4">Victim Interview Forms</th>
-                    <th colspan="4">Border Stations</th>
-                    <th>Accounts</th>
-                    <th>VDC</th>
-                    <th>Budget</th>
-                </tr>
-                <tr>
-                    <th>&nbsp;</th>
-                    <th>Designation</th>
-                    <th>View</th>
-                    <th>Add</th>
-                    <th>Edit</th>
-                    <th>Delete</th>
-                    <th>View</th>
-                    <th>Add</th>
-                    <th>Edit</th>
-                    <th>Delete</th>
-                    <th>View</th>
-                    <th>Add</th>
-                    <th>Edit</th>
-                    <th>Delete</th>
-                    <th>Manage</th>
-                    <th>Manage</th>
-                    <th>Manage</th>
-                </tr>
-            </thead>
+    <table class="table table-condensed">
+        <thead>
+            <tr>
+                <th>&nbsp;</th>
+                <th>&nbsp;</th>
+                <th colspan="4">Interception Record Forms</th>
+                <th colspan="4">Victim Interview Forms</th>
+                <th colspan="4">Border Stations</th>
+                <th>Accounts</th>
+                <th>VDC</th>
+                <th>Budget</th>
+            </tr>
+            <tr>
+                <th>&nbsp;</th>
+                <th>Designation</th>
+                <th>View</th>
+                <th>Add</th>
+                <th>Edit</th>
+                <th>Delete</th>
+                <th>View</th>
+                <th>Add</th>
+                <th>Edit</th>
+                <th>Delete</th>
+                <th>View</th>
+                <th>Add</th>
+                <th>Edit</th>
+                <th>Delete</th>
+                <th>Manage</th>
+                <th>Manage</th>
+                <th>Manage</th>
+            </tr>
+        </thead>
 
-            <tbody id="permissions-rows-container">
-                    <tr ng-repeat="permission in accountsCtrl.permissions.results">
-                        <td style="width: 25px">
-                                    <form method="POST" class="permissions-delete-form" action="{% url 'access_defaults_delete' form.instance.pk %}">
-                                        <input type="submit" class="btn btn-danger btn-xs" ng-show="!permission.is_used_by_accounts" value="X" />
-                                    </form>
-                                    <button type="button" class="in-use-button btn btn-default btn-xs" ng-show="permission.is_used_by_accounts" data-toggle="tooltip" title="This designation is used by one or more accounts and cannot be deleted.">X</button>
-                        </td>
-                        <td>
-                          <form class="form-inline">
-                              <input type="text" class="form-control" value="{{ permission.name }}"/>
-                          </from>
-                        </td>
-                        <td><label ng-click="permission.permission_irf_view = !permission.permission_irf_view" ng-class="permission.permission_irf_view ? 'btn btn-success' : 'btn btn-danger'"><span class="yesno"></span>{{ permission.permission_irf_view ? "Yes" : "No" }}</label></td>
-                        <td><label ng-click="permission.permission_irf_add = !permission.permission_irf_add" ng-class="permission.permission_irf_add ? 'btn btn-success' : 'btn btn-danger'"><span class="yesno"></span>{{ permission.permission_irf_add ? "Yes" : "No" }}</label></td>
-                        <td><label ng-click="permission.permission_irf_edit = !permission.permission_irf_edit" ng-class="permission.permission_irf_edit ? 'btn btn-success' : 'btn btn-danger'"><span class="yesno"></span>{{ permission.permission_irf_edit ? "Yes" : "No" }}</label></td>
-                        <td><label ng-click="permission.permission_irf_delete = !permission.permission_irf_delete" ng-class="permission.permission_irf_delete ? 'btn btn-success' : 'btn btn-danger'"><span class="yesno"></span>{{ permission.permission_irf_delete ? "Yes" : "No" }}</label></td>
-                        <td><label ng-click="permission.permission_vif_view = !permission.permission_vif_view" ng-class="permission.permission_vif_view ? 'btn btn-success' : 'btn btn-danger'"><span class="yesno"></span>{{ permission.permission_vif_view ? "Yes" : "No" }}</label></td>
-                        <td><label ng-click="permission.permission_vif_add = !permission.permission_vif_add" ng-class="permission.permission_vif_add ? 'btn btn-success' : 'btn btn-danger'"><span class="yesno"></span>{{ permission.permission_vif_add ? "Yes" : "No" }}</label></td>
-                        <td><label ng-click="permission.permission_vif_edit = !permission.permission_vif_edit" ng-class="permission.permission_vif_edit ? 'btn btn-success' : 'btn btn-danger'"><span class="yesno"></span>{{ permission.permission_vif_edit ? "Yes" : "No" }}</label></td>
-                        <td><label ng-click="permission.permission_vif_delete = !permission.permission_vif_delete" ng-class="permission.permission_vif_delete ? 'btn btn-success' : 'btn btn-danger'"><span class="yesno"></span>{{ permission.permission_vif_delete ? "Yes" : "No" }}</label></td>
-                        <td><label ng-click="permission.permission_border_stations_view = !permission.permission_border_stations_view" ng-class="permission.permission_border_stations_view ? 'btn btn-success' : 'btn btn-danger'"><span class="yesno"></span>{{ permission.permission_border_stations_view ? "Yes" : "No" }}</label></td>
-                        <td><label ng-click="permission.permission_border_stations_add = !permission.permission_border_stations_add" ng-class="permission.permission_border_stations_add ? 'btn btn-success' : 'btn btn-danger'"><span class="yesno"></span>{{ permission.permission_border_stations_add ? "Yes" : "No" }}</label></td>
-                        <td><label ng-click="permission.permission_border_stations_edit = !permission.permission_border_stations_edit" ng-class="permission.permission_border_stations_edit ? 'btn btn-success' : 'btn btn-danger'"><span class="yesno"></span>{{ permission.permission_border_stations_edit ? "Yes" : "No" }}</label></td>
-                        <td><label ng-click="permission.permission_border_stations_delete = !permission.permission_border_stations_delete" ng-class="permission.permission_border_stations_delete ? 'btn btn-success' : 'btn btn-danger'"><span class="yesno"></span>{{ permission.permission_border_stations_delete ? "Yes" : "No" }}</label></td>
-                        <td><label ng-click="permission.permission_accounts_manage = !permission.permission_accounts_manage" ng-class="permission.permission_accounts_manage ? 'btn btn-success' : 'btn btn-danger'"><span class="yesno"></span>{{ permission.permission_accounts_manage ? "Yes" : "No" }}</label></td>
-                        <td><label ng-click="permission.permission_vdc_manage = !permission.permission_vdc_manage" ng-class="permission.permission_vdc_manage ? 'btn btn-success' : 'btn btn-danger'"><span class="yesno"></span>{{ permission.permission_vdc_manage ? "Yes" : "No" }}</label></td>
-                        <td><label ng-click="permission.permission_budget_manage = !permission.permission_budget_manage" ng-class="permission.permission_budget_manage ? 'btn btn-success' : 'btn btn-danger'"><span class="yesno"></span>{{ permission.permission_budget_manage ? "Yes" : "No" }}</label></td>
-                    </tr>
-            </tbody>
-        </table>
-        <button type="button" id="add-another" class="clear btn btn-primary btn-lg pull-left">Add Another</button>
-        <input type="submit" class="clear btn btn-success btn-lg pull-right" value="Save All" />
-   </form>
+        <tbody id="permissions-rows-container">
+            <tr ng-repeat="permissionsSet in defaultsCtrl.permissionsSets">
+                <td style="width: 25px">
+                    <div tooltip="This designation is used by one or more accounts and cannot be deleted." 
+                         tooltip-enable="permissionsSet.is_used_by_accounts">
+                    <button type="button" 
+                        class="btn btn-xs"
+                        ng-class="permissionsSet.is_used_by_accounts ? 'btn-default' : 'btn-danger'"
+                        ng-click="defaultsCtrl.delete($index)" 
+                        ng-disabled="permissionsSet.is_used_by_accounts">X</button>
+                     </div>
+                </td>
+                <td>
+                    <input type="text" class="form-control" ng-model="permissionsSet.name"/>
+                </td>
+                <td><label ng-click="permissionsSet.permission_irf_view = !permissionsSet.permission_irf_view" ng-class="permissionsSet.permission_irf_view ? 'btn btn-success' : 'btn btn-danger'">{{ permissionsSet.permission_irf_view ? "Yes" : "No" }}</label></td>
+                <td><label ng-click="permissionsSet.permission_irf_add = !permissionsSet.permission_irf_add" ng-class="permissionsSet.permission_irf_add ? 'btn btn-success' : 'btn btn-danger'">{{ permissionsSet.permission_irf_add ? "Yes" : "No" }}</label></td>
+                <td><label ng-click="permissionsSet.permission_irf_edit = !permissionsSet.permission_irf_edit" ng-class="permissionsSet.permission_irf_edit ? 'btn btn-success' : 'btn btn-danger'">{{ permissionsSet.permission_irf_edit ? "Yes" : "No" }}</label></td>
+                <td><label ng-click="permissionsSet.permission_irf_delete = !permissionsSet.permission_irf_delete" ng-class="permissionsSet.permission_irf_delete ? 'btn btn-success' : 'btn btn-danger'">{{ permissionsSet.permission_irf_delete ? "Yes" : "No" }}</label></td>
+                <td><label ng-click="permissionsSet.permission_vif_view = !permissionsSet.permission_vif_view" ng-class="permissionsSet.permission_vif_view ? 'btn btn-success' : 'btn btn-danger'">{{ permissionsSet.permission_vif_view ? "Yes" : "No" }}</label></td>
+                <td><label ng-click="permissionsSet.permission_vif_add = !permissionsSet.permission_vif_add" ng-class="permissionsSet.permission_vif_add ? 'btn btn-success' : 'btn btn-danger'">{{ permissionsSet.permission_vif_add ? "Yes" : "No" }}</label></td>
+                <td><label ng-click="permissionsSet.permission_vif_edit = !permissionsSet.permission_vif_edit" ng-class="permissionsSet.permission_vif_edit ? 'btn btn-success' : 'btn btn-danger'">{{ permissionsSet.permission_vif_edit ? "Yes" : "No" }}</label></td>
+                <td><label ng-click="permissionsSet.permission_vif_delete = !permissionsSet.permission_vif_delete" ng-class="permissionsSet.permission_vif_delete ? 'btn btn-success' : 'btn btn-danger'">{{ permissionsSet.permission_vif_delete ? "Yes" : "No" }}</label></td>
+                <td><label ng-click="permissionsSet.permission_border_stations_view = !permissionsSet.permission_border_stations_view" ng-class="permissionsSet.permission_border_stations_view ? 'btn btn-success' : 'btn btn-danger'">{{ permissionsSet.permission_border_stations_view ? "Yes" : "No" }}</label></td>
+                <td><label ng-click="permissionsSet.permission_border_stations_add = !permissionsSet.permission_border_stations_add" ng-class="permissionsSet.permission_border_stations_add ? 'btn btn-success' : 'btn btn-danger'">{{ permissionsSet.permission_border_stations_add ? "Yes" : "No" }}</label></td>
+                <td><label ng-click="permissionsSet.permission_border_stations_edit = !permissionsSet.permission_border_stations_edit" ng-class="permissionsSet.permission_border_stations_edit ? 'btn btn-success' : 'btn btn-danger'">{{ permissionsSet.permission_border_stations_edit ? "Yes" : "No" }}</label></td>
+                <td><label ng-click="permissionsSet.permission_border_stations_delete = !permissionsSet.permission_border_stations_delete" ng-class="permissionsSet.permission_border_stations_delete ? 'btn btn-success' : 'btn btn-danger'">{{ permissionsSet.permission_border_stations_delete ? "Yes" : "No" }}</label></td>
+                <td><label ng-click="permissionsSet.permission_accounts_manage = !permissionsSet.permission_accounts_manage" ng-class="permissionsSet.permission_accounts_manage ? 'btn btn-success' : 'btn btn-danger'">{{ permissionsSet.permission_accounts_manage ? "Yes" : "No" }}</label></td>
+                <td><label ng-click="permissionsSet.permission_vdc_manage = !permissionsSet.permission_vdc_manage" ng-class="permissionsSet.permission_vdc_manage ? 'btn btn-success' : 'btn btn-danger'">{{ permissionsSet.permission_vdc_manage ? "Yes" : "No" }}</label></td>
+                <td><label ng-click="permissionsSet.permission_budget_manage = !permissionsSet.permission_budget_manage" ng-class="permissionsSet.permission_budget_manage ? 'btn btn-success' : 'btn btn-danger'">{{ permissionsSet.permission_budget_manage ? "Yes" : "No" }}</label></td>
+            </tr>
+        </tbody>
+    </table>
+    <button type="button" id="add-another" ng-click="defaultsCtrl.addAnother()" class="clear btn btn-primary btn-lg pull-left">Add Another</button>
+    <input type="button" class="clear btn btn-success btn-lg pull-right" ng-click="defaultsCtrl.saveAll()" value="Save All" />
 </div>
 
 {% endverbatim %}

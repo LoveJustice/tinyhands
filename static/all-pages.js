@@ -258,30 +258,6 @@ var DREAMSUITE = {
     });
   },
 
-  access_defaults: function() {
-    makeCheckboxAppearAsAButton('.yesno','Yes','No');
-    $('#add-another').click(function() {
-      var formIdx = $('#id_form-TOTAL_FORMS').val();
-      $('#permissions-rows-container').append($('#empty-form').html().replace(/__prefix__/g, formIdx));
-      $('#id_form-TOTAL_FORMS').val(parseInt(formIdx) + 1);
-      makeCheckboxAppearAsAButton('.yesno','Yes','No');
-    });
-    $('#permissions-form').submit(function(event) {
-      var choice = confirm('Are you sure you want to save changes?');
-      if (!choice) {
-        event.preventDefault();
-      }
-    });
-    $('.permissions-delete-form').submit(function(event) {
-      var choice = confirm('Are you sure you want to delete this permission set?');
-      if (!choice) {
-        event.preventDefault();
-      }
-    });
-
-    $('.in-use-button').tooltip();
-  },
-
   budget_create_api: function(){
     $(function() {
       var queryDate = '2009-11-01',
