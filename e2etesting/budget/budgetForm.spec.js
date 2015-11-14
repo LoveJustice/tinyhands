@@ -31,8 +31,6 @@ describe('Budget Calculation', function() {
             irfCrud.getToIRF();
             irfCrud.fillOutIRF("AAA123");
 
-
-
             //Create a vif form to test top table.
 
             budgetForm.navigateToNewForm();
@@ -86,8 +84,6 @@ describe('Budget Calculation', function() {
             budgetForm.navigateToNewForm();
             browser.sleep(4000);
 
-            //browser.pause();
-            //browser.refresh();
             //checks for values based on a recent test that filled out the form
             expect(element(by.binding("main.shelterTotal()")).getText()).toBe(c.shelterTotal);
             expect(element(by.binding("main.foodGasTotal()")).getText()).toBe(c.foodTotal);
@@ -245,7 +241,6 @@ describe('Budget Calculation', function() {
     describe("Top Table", function() {
         it("populates this month correctly", function() {
             budgetForm.navigateToNewForm();
-            //browser.ignoreSynchronization = false;
             budgetForm.fillOutForm();
 
             browser.executeScript('document.getElementById("month_year").value = "2015-06"');
@@ -281,7 +276,7 @@ describe('Budget Calculation', function() {
             expect(table.element(by.xpath("./tr[2]/td[2]")).getText()).toBe("0");
             expect(table.element(by.xpath("./tr[3]/td[2]")).getText()).toBe("1");
 
-            expect(table.element(by.xpath("./tr[4]/td[2]")).getText()).toBe("2");
+            expect(table.element(by.xpath("./tr[4]/td[2]")).getText()).toBe("1");
         });
     });
 });

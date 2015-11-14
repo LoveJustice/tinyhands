@@ -24,9 +24,9 @@ var borderStationPage = function() {
         }, 20000);
     };
 
-    this.fillOutBorderStation = function() {
-        this.station_name = element(by.id("stationName")).sendKeys(c.stationName);
-        this.station_code = element(by.id("stationCode")).sendKeys(c.stationCode);
+    this.fillOutBorderStation = function(stationName, stationCode) {
+        this.station_name = element(by.id("stationName")).sendKeys(stationName);
+        this.station_code = element(by.id("stationCode")).sendKeys(stationCode);
         this.date_established = element(by.id("dateEstablished")).sendKeys(c.dateEstablished);
         this.has_shelter = element(by.id("hasShelter")).click();
         this.latitude = element(by.id("latitude")).sendKeys(c.latitude);

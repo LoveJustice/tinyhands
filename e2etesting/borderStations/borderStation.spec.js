@@ -19,7 +19,7 @@ describe('TinyHands Border Station', function() {
         loginPage.loginAsAdmin();
         borderPage.getToBorderStationCreate();
         expect(browser.getTitle()).toContain('Border Stations');
-		borderPage.fillOutBorderStation();
+		borderPage.fillOutBorderStation(c.stationName, c.stationCode);
 		browser.sleep(500);
 		borderPage.viewBorderStation();
     });
@@ -143,7 +143,12 @@ describe('TinyHands Border Station', function() {
 		});
 
 		it('location longitude', function(){
-			expect(element(by.id("longitude-0")).getAttribute('value')).toBe('0');
+			browser.driver.wait(function() {
+				return browser.driver.findElement(by.id('longitude-0')).then(function(elem) {
+					expect(element(by.id("longitude-0")).getAttribute('value')).toBe('0');
+					return true;
+				});
+			}, 20000);
 		});
 
 	});
