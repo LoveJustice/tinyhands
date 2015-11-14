@@ -1,7 +1,7 @@
 from django.core.urlresolvers import reverse
 from rest_framework import serializers
 
-from dataentry.models import District, VDC, InterceptionRecord, VictimInterview
+from dataentry.models import District, VDC, InterceptionRecord, VictimInterview, BorderStation
 
 
 class DistrictSerializer(serializers.ModelSerializer):
@@ -47,6 +47,13 @@ class VDCSerializer(serializers.ModelSerializer):
     district = DistrictSerializer()
 
 
+
+class BorderStationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BorderStation
+        
+        
+        
 class InterceptionRecordListSerializer(serializers.ModelSerializer):
     class Meta:
         model = InterceptionRecord
@@ -105,4 +112,3 @@ class VictimInterviewListSerializer(serializers.ModelSerializer):
         view_name='VictimInterviewDetail',
         read_only=True
     )
-

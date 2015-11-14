@@ -16,8 +16,10 @@ class Person(models.Model):
     email = NullableEmailField(blank=True, null=True, default=None, unique=False)
     first_name = models.CharField(max_length=255, blank=True)
     last_name = models.CharField(max_length=255, blank=True)
+    phone = models.CharField(max_length=255, blank=True, null=True)
+    position = models.CharField(max_length=255, blank=True, null=True)
     receives_money_distribution_form = models.BooleanField(default=False)
-    border_station = models.ForeignKey(BorderStation, null=False, default=1)
+    border_station = models.ForeignKey(BorderStation, null=True)
 
     class Meta:
         abstract = True
@@ -38,4 +40,4 @@ class Location(models.Model):
     name = models.CharField(max_length=255, blank=True)
     latitude = models.FloatField(null=True)
     longitude = models.FloatField(null=True)
-    border_station = models.ForeignKey(BorderStation, null=False, default=1)
+    border_station = models.ForeignKey(BorderStation, null=True)

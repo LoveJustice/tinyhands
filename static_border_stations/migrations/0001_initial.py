@@ -16,11 +16,13 @@ class Migration(migrations.Migration):
             name='CommitteeMember',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('email', static_border_stations.models.NullableEmailField(default=None, max_length=75, unique=True, null=True, blank=True)),
+                ('email', static_border_stations.models.NullableEmailField(default=None, max_length=75, null=True, blank=True)),
                 ('first_name', models.CharField(max_length=255, blank=True)),
                 ('last_name', models.CharField(max_length=255, blank=True)),
+                ('phone', models.CharField(max_length=255, null=True, blank=True)),
+                ('position', models.CharField(max_length=255, null=True, blank=True)),
                 ('receives_money_distribution_form', models.BooleanField(default=False)),
-                ('border_station', models.ForeignKey(default=1, to='dataentry.BorderStation')),
+                ('border_station', models.ForeignKey(to='dataentry.BorderStation', null=True)),
             ],
             options={
                 'abstract': False,
@@ -34,7 +36,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=255, blank=True)),
                 ('latitude', models.FloatField(null=True)),
                 ('longitude', models.FloatField(null=True)),
-                ('border_station', models.ForeignKey(default=1, to='dataentry.BorderStation')),
+                ('border_station', models.ForeignKey(to='dataentry.BorderStation', null=True)),
             ],
             options={
             },
@@ -44,11 +46,13 @@ class Migration(migrations.Migration):
             name='Staff',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('email', static_border_stations.models.NullableEmailField(default=None, max_length=75, unique=True, null=True, blank=True)),
+                ('email', static_border_stations.models.NullableEmailField(default=None, max_length=75, null=True, blank=True)),
                 ('first_name', models.CharField(max_length=255, blank=True)),
                 ('last_name', models.CharField(max_length=255, blank=True)),
+                ('phone', models.CharField(max_length=255, null=True, blank=True)),
+                ('position', models.CharField(max_length=255, null=True, blank=True)),
                 ('receives_money_distribution_form', models.BooleanField(default=False)),
-                ('border_station', models.ForeignKey(default=1, to='dataentry.BorderStation')),
+                ('border_station', models.ForeignKey(to='dataentry.BorderStation', null=True)),
             ],
             options={
                 'abstract': False,

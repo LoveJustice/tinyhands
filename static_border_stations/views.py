@@ -1,17 +1,21 @@
+from django.core import serializers
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse_lazy
 
 
 from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSet
-from rest_framework import viewsets
+from rest_framework import filters, generics, status, viewsets
+from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from accounts.mixins import PermissionsRequiredMixin
 from braces.views import LoginRequiredMixin
 from dataentry.models import BorderStation
 from dataentry.forms import BorderStationForm
+from dataentry.serializers import BorderStationSerializer
+
 from static_border_stations.models import Staff, CommitteeMember, Location
-from static_border_stations.serializers import StaffSerializer
+from static_border_stations.serializers import StaffSerializer, CommitteeMemberSerializer, LocationSerializer
 from static_border_stations.forms import StaffForm, CommitteeMemberForm
 
 class FormSetForStations(InlineFormSet):
@@ -25,9 +29,29 @@ class FormSetForStations(InlineFormSet):
         return
 
 
-class StaffViewSet(viewsets.ModelViewSet):
+class BorderStationViewSet(viewsets.ModelViewSet):
+    queryset = BorderStation.objects.all()
+    serializer_class = BorderStationSerializer     
+        
+
+class BorderStationRestAPI(viewsets.ModelViewSet):
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_fields = ('border_station',)
+
+
+class LocationViewSet(BorderStationRestAPI):
+    queryset = Location.objects.all()
+    serializer_class = LocationSerializer
+
+class CommitteeMemberViewSet(BorderStationRestAPI):
+    queryset = CommitteeMember.objects.all()
+    serializer_class = CommitteeMemberSerializer
+
+
+class StaffViewSet(BorderStationRestAPI):
     queryset = Staff.objects.all()
     serializer_class = StaffSerializer
+
 
     def staff_retrieve(self, request, *args, **kwargs):
         """
@@ -65,6 +89,7 @@ class StaticBorderStationsCreateView (
     def get_context_data(self, **kwargs):
         context = super(StaticBorderStationsCreateView, self).get_context_data(**kwargs)
         context["saved"] = False
+        context["is_create"] = True
         return context
 
 
@@ -82,6 +107,7 @@ class StaticBorderStationsUpdateView (
     def get_context_data(self, **kwargs):
         context = super(StaticBorderStationsUpdateView, self).get_context_data(**kwargs)
         context["saved"] = True
+        context["border_station_pk"] = kwargs['form'].instance.id
         return context
 
 

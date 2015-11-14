@@ -1,96 +1,52 @@
 {% extends "base.html" %}
 
-{% load bootstrap %}
-
+{% block html %}<html ng-app="BorderStationsMod">{% endblock %}
+	
 {% block title %}Border Stations{% endblock %}
 
 {% block tab_block %}
-<form id="borderstation-form" method="POST">
-        {% csrf_token %}
-    <div class="row">
-        {% include "static_border_stations/borderstation_form.html" %}
-    </div>
-    {{ inlines.0.management_form }}
-    {{ inlines.1.management_form }}
-    {{ inlines.2.management_form }}
-    <div class="row">
-        <h1>Staff</h1>
-        {% for staff_form in inlines.0 %}
-        <div id='{{staff_form.prefix}}'>
-            {% include "static_border_stations/person_form.html" with person_form=staff_form %}
-        </div>
-        {% endfor %}
-    </div>
-    <div class="row">
-        <h1>Committee Member</h1>
-        {% for cm_form in inlines.1 %}
-        <div id='{{cm_form.prefix}}'>
-            {% include "static_border_stations/person_form.html" with person_form=cm_form %}
-        </div>
-        {% endfor %}
-    </div>
-    <div class="row">
-        <h1>Locations</h1>
-        {% for location_form in inlines.2 %}
-        <div id='{{location_form.prefix}}'>
-            {% include "static_border_stations/location_form.html" with location_form=location_form %}
-        </div>
-        {% endfor %}
-    </div>
-    <br/>
-    {% if request.get_full_path|slice:"40:46" == "create" or request.get_full_path|slice:"40:46" == "update" %}
-    <div class="row">
-        {% url 'borderstations_create' as borderstations_create_url %}
-        {% if request.path == borderstations_create_url %}
-        <input id="borderCreate" type="submit" class="pull-right btn btn-primary navbar-btn btn-lg" value="Create" />
-        {% else %}
-        <input id="borderUpdate" type="submit" class="pull-right btn btn-primary navbar-btn btn-lg" value="Update" />
-        {% endif %}
-    </div>
-    {% endif %}
-</form>
-<script type="text/javascript">
-    /* Allows for the creation of more or less staff/committee members */
-    {% if request.get_full_path|slice:"40:46" == "update" or request.get_full_path|slice:"40:46" == "create" %}
-    $(function() {
-        {% for formset in inlines.0 %}
-        $('div#{{ formset.prefix }}').formset({
-           prefix: '{{ formset.prefix }}',
-           formCssClass: 'staff-formset{{ forloop.counter }}',
-           addText: '+ Add Another Staff',
-           deleteText: 'Remove Staff',
-           addCssClass: 'add-staff btn btn-success pull-right',
-           deleteCssClass: 'delete-staff btn btn-danger',
-        });
-        {% endfor %}
-        {% for formset in inlines.1 %}
-        $('div#{{ formset.prefix }}').formset({
-           prefix: '{{ formset.prefix }}',
-           formCssClass: 'cm-formset{{ forloop.counter }}',
-           addText: '+ Add Another Committee Member',
-           deleteText: 'Remove Committee Member',
-           addCssClass: 'add-cm btn btn-success pull-right',
-           deleteCssClass: 'delete-cm btn btn-danger',
-        });
-        {% endfor %}
-        {% for formset in inlines.2 %}
-        $('div#{{ formset.prefix }}').formset({
-           prefix: '{{ formset.prefix }}',
-           formCssClass: 'location-formset{{ forloop.counter }}',
-           addText: '+ Add Another Location',
-           deleteText: 'Remove Location',
-           addCssClass: 'add-loc btn btn-success pull-right',
-           deleteCssClass: 'delete-loc btn btn-danger',
-        });
-        {% endfor %}
-    })
-    {% endif %}
-    {% url 'borderstations_view' as borderstations_view %}
-    {% if not request.user.permission_border_stations_edit and not request.get_full_path|slice:"40:46" == "create" %}
-    $(function () {
-        var $form = $('#borderstation-form');
-        $form.find('input').attr('disabled', 'disabled');
-    })
-    {% endif %}
-</script>
+	<form id="borderstation-form" ng-controller="BorderStationsCtrl as bsCtrl" ng-cloak>
+		
+		<h2 class="text-center"
+				ng-if="bsCtrl.loading"><img src="http://bonappetitcard.com/images/spinner.gif" width="25" height="25"> Loading Border Station Data...</h2>
+		
+		<div ng-if="!bsCtrl.loading">
+			
+			{% include "static_border_stations/borderstation_form.html" %}
+			{% include "static_border_stations/person_form.html" %}
+			{% include "static_border_stations/location_form.html" %}
+		
+			<!--Block for error messages-->
+			{% verbatim %}
+			<div class="text-danger well"
+					ng-if="bsCtrl.errors.length > 0">
+				<h1>Errors</h1>
+				<div class="well well-sm"
+						ng-repeat="error in bsCtrl.errors">
+					<h4>Field: {{error.field}}</h4>
+					<h5 ng-repeat="message in error.messages">Message: {{message}}</h5>
+				</div>
+			</div>
+			
+			<button class="btn btn-primary pull-right col-xs-12"
+							ng-click="bsCtrl.modifyStation()">{{bsCtrl.modifyStatusText}}</button>
+			{% endverbatim %}
+			<br/><br/><br/>
+			
+		</div>
+	</form>
+	{% block content %}
+	{% endblock %}
+	
+	{% load static from staticfiles %}
+	<script src="{% static "static_border_stations/js/static_border_stations.module.js" %}"></script>
+	<script src="{% static "static_border_stations/js/controllers/static_border_stations.controller.js" %}"></script>
+	<script src="{% static "static_border_stations/js/services/static_border_stations.service.js" %}"></script>
+	
+	{% if border_station_pk %}
+	<script>window.border_station_pk = {{ border_station_pk }}</script>
+	{% endif %}
+	{% if is_create %}
+	<script>window.is_create = true</script>
+	{% endif %}
 {% endblock %}
