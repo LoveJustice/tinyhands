@@ -18,7 +18,6 @@ exports.config = {
         'dataentry/irfCRUD.spec.js',
         'dataentry/vifCrud.spec.js',
         'dataentry/search.spec.js', //dependent on vifCrud.spec.js and irfCRUD.spec.js
-        //
 
         //These three are dependent on each other
         'borderStations/closeABorderStation.spec.js',
@@ -31,6 +30,8 @@ exports.config = {
         'addresses/vdcAdminPage.spec.js',
         'addresses/address1Page.spec.js',
         'accounts/accessDefaults.spec.js',
+
+        'portal/tally.spec.js',
 
         'accounts/permissionsPage.spec.js' // Has to run last
       ],
