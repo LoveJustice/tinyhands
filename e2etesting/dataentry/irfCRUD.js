@@ -15,12 +15,14 @@ var irfPage = function() {
     };
 
     this.fillOutIRF = function(irfNumber, irfInterceptTime) {
-        //var today = date || c.irfInterceptTime;
         browser.executeScript("arguments[0].style.visibility = 'hidden';", element(by.id("footer")).getWebElement()); // Hides the footer so the webdriver can click on stuff
         this.irf_number_of_victims = element(by.id("id_number_of_victims")).clear().sendKeys("1");
         this.irf_number = element(by.id("id_irf_number")).sendKeys(irfNumber);
         this.location = element(by.id("id_location")).sendKeys(c.irfLocation);
-        this.date_time_of_interception = element(by.id("id_date_time_of_interception")).sendKeys(irfInterceptTime);
+
+
+        var date = irfInterceptTime ? irfInterceptTime : c.irfInterceptTime;
+        this.date_time_of_interception = element(by.id("id_date_time_of_interception")).sendKeys(date);
         this.staff_name = element(by.id("id_staff_name")).sendKeys(c.irfStaffName);
         this.drugged_or_drowsy = element(by.id("id_drugged_or_drowsy")).click();
         this.contact_noticed = element(by.id("id_contact_noticed")).click();

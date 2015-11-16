@@ -152,5 +152,6 @@ describe('Tally UI', function(){
         browser.actions().mouseMove(tab).mouseMove({x: 300, y: 300}).perform().then(function(){
             expect(tab.getCssValue('background-color')).toEqual('rgba(0, 0, 0, 0)');
         });
+        browser.driver.manage().window().maximize();
     });
 });
