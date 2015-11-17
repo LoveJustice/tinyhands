@@ -26,3 +26,6 @@ var accessControlPage = function () {
 	
 	
 }
+
+
+//Remember this code:this.permission_irf_view.click()
