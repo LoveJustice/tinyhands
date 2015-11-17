@@ -16,9 +16,6 @@ describe('TallyCtrl', function(){
         // Set tally id
         vm.userId = 0;
 
-        document.body.insertAdjacentHTML(
-            'afterbegin',
-        fixture);
 
         // Clear local storage
         localStorage.removeItem('tally-'+vm.userId);
@@ -231,4 +228,5 @@ describe('TallyCtrl', function(){
     //         expect(result).toBeTruthy();
     //     }
     // });
+
 });
