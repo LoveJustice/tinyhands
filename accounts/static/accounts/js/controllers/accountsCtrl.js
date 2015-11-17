@@ -6,10 +6,9 @@ angular
         vm.accounts = Accounts.all();
         vm.permissions = PermissionsSets.all();
         vm.currentuser = Accounts.me();
-        vm.update = Accounts.update();
-
-        vm.resendActivationEmail = function(account) {
-          Accounts.resendActivationEmail({id:account.id});
+        
+        vm.resendActivationEmail = function(accountID) {
+          Accounts.resendActivationEmail({id:accountID});
         };
 
         vm.openModal = function(account) {
