@@ -5,8 +5,9 @@ from django.core.urlresolvers import reverse_lazy
 
 from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSet
 from rest_framework import filters, generics, status, viewsets
-from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from accounts.mixins import PermissionsRequiredMixin
 from braces.views import LoginRequiredMixin
@@ -17,6 +18,9 @@ from dataentry.serializers import BorderStationSerializer
 from static_border_stations.models import Staff, CommitteeMember, Location
 from static_border_stations.serializers import StaffSerializer, CommitteeMemberSerializer, LocationSerializer
 from static_border_stations.forms import StaffForm, CommitteeMemberForm
+
+from rest_api.authentication import HasPermission, HasDeletePermission, HasGetPermission, HasPostPermission, HasPutPermission
+
 
 class FormSetForStations(InlineFormSet):
 
@@ -31,12 +35,20 @@ class FormSetForStations(InlineFormSet):
 
 class BorderStationViewSet(viewsets.ModelViewSet):
     queryset = BorderStation.objects.all()
-    serializer_class = BorderStationSerializer     
+    serializer_class = BorderStationSerializer
+    permission_classes = (IsAuthenticated, HasPermission, HasPostPermission, HasPutPermission)
+    permissions_required = ['permission_border_stations_view']
+    post_permissions_required = ['permission_border_stations_add']
+    put_permissions_required = ['permission_border_stations_edit']
         
 
 class BorderStationRestAPI(viewsets.ModelViewSet):
     filter_backends = (filters.DjangoFilterBackend,)
     filter_fields = ('border_station',)
+    permission_classes = (IsAuthenticated, HasPermission, HasPostPermission, HasPutPermission)
+    permissions_required = ['permission_border_stations_view']
+    post_permissions_required = ['permission_border_stations_edit']
+    put_permissions_required = ['permission_border_stations_edit']
 
 
 class LocationViewSet(BorderStationRestAPI):

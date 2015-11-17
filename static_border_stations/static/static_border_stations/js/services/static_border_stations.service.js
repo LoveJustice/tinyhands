@@ -29,15 +29,15 @@
 	
 		// POSTs
 		function createBorderStation(data) {
-			return $http.post('/api/border-stations/', data);
+			return $http.post('/api/border-station/', data);
 		}
 		
 		function createCommitteeMember(data) {
-			return $http.post('/api/committee-members/', data);
+			return $http.post('/api/committee-member/', data);
 		}
 	
 		function createLocation(data) {
-			return $http.post('/api/locations/', data);
+			return $http.post('/api/location/', data);
 		}
 	
 		function createStaff(data) {
@@ -92,15 +92,15 @@
 		}
 		
 		function getCommitteeMembers(borderStationId) {
-			return $http.get('/api/committee-members/?border_station=' + borderStationId);
+			return $http.get('/api/committee-member/?border_station=' + borderStationId);
 		}
 	
 		function getDetails(borderStationId) {
-			return $http.get('/api/border-stations/' + borderStationId);
+			return $http.get('/api/border-station/' + borderStationId);
 		}
 	
 		function getLocations(borderStationId) {
-			return $http.get('/api/locations/?border_station=' + borderStationId);
+			return $http.get('/api/location/?border_station=' + borderStationId);
 		}
 	
 		function getStaff(borderStationId) {
@@ -126,15 +126,15 @@
 	
 		// PUTs
 		function updateCommitteeMembers(memberId, data) {
-			return $http.put('/api/committee-members/' + memberId, data);
+			return $http.put('/api/committee-member/' + memberId, data);
 		}
 	
 		function updateDetails(borderStationId, data) {
-			return $http.put('/api/border-stations/' + borderStationId, data);
+			return $http.put('/api/border-station/' + borderStationId, data);
 		}
 	
 		function updateLocations(locationId, data) {
-			return $http.put('/api/locations/' + locationId, data);
+			return $http.put('/api/location/' + locationId, data);
 		}
 		
 		function updateRelationship(updateArray, updateApiFunction, numNew, errorHandler) {
