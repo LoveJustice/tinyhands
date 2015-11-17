@@ -5,12 +5,11 @@ angular
 
         vm.accounts = Accounts.all(); 
         vm.permissions = PermissionsSets.all();
-        vm.foo = "testing";
         //Whenever permissionText is changed, then grab the appropriate permissionsSet and set each button value to that
 
 
          vm.changeUserRole = function(account){
-            PermissionsSets.get({id:account.user_designation}).$promise.then(function (permissions) {
+            PermissionsSets.get({id: account.user_designation}).$promise.then(function (permissions) {
                 account.permission_irf_view=  permissions.permission_irf_view;
                 account.permission_irf_add = permissions.permission_irf_add;
                 account.permission_irf_edit = permissions.permission_irf_edit;

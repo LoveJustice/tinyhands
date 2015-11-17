@@ -3,6 +3,7 @@ angular
     .controller('AccessDefaultsCtrl', ['$window','PermissionsSets',function($window, PermissionsSets) {
         var vm = this;
         vm.permissionsSets = [];
+        vm.nameError = false;
         
         $window.onbeforeunload = function(event) {
             var unsavedChanges = false;
@@ -58,14 +59,26 @@ angular
         }
         
         vm.saveAll = function() {
+            vm.nameError = false;
             for(var i = 0; i<vm.permissionsSets.length; i++) {
-                var permissionsSet = vm.permissionsSets[i];
-                if(permissionsSet.is_new) {
-                    PermissionsSets.create(permissionsSet);
-                }else {
-                    PermissionsSets.update(permissionsSet);
-                }
+                saveSet(i);
             }
+        }
+        
+        function saveSet(i) {
+            var permissionsSet = vm.permissionsSets[i];
+            var call = null;
+            if(permissionsSet.is_new) {
+                call = PermissionsSets.create(permissionsSet).$promise
+            }else {
+                call = PermissionsSets.update(permissionsSet).$promise;
+            }
+            call.then(function(data){
+                vm.permissionsSets[i] = data;
+            }, function(error) { // catch name error               
+                vm.nameError = true;
+                permissionsSet.nameError = true;
+            });
         }
 
     }]);
