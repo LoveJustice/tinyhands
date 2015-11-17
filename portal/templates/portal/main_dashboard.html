@@ -10,7 +10,7 @@
                         <!--   REGION: Tally w/Larger screens    -->
                         <div class="col-lg-2 hidden-md hidden-sm hidden-xs"></div>
 
-                        <div class="hidden-md hidden-sm hidden-xs" ng-repeat="day in tally.days">
+                        <div class="hidden-md hidden-sm hidden-xs" ng-repeat="day in tally.days" ng-cloak>
                             <div class="text-center col-lg-1 tally-tab"
                                  ng-init="showInt = !tally.isEmptyObject(day.interceptions)"
                                  ng-mousedown="showInt = !showInt"
@@ -23,7 +23,7 @@
                                 <h4 ng-show="showInt && tally.isEmptyObject(day.interceptions)" class="animated tallyFade">No Interceptions</h4>
                             </div>
                         </div>
-                        
+
                         <div class="col-lg-1 hidden-md hidden-sm hidden-xs"></div>
                         <!--   ENDREGION: Tally w/Larger screens     -->
 
