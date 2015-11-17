@@ -73,7 +73,8 @@
 		function getBorderStationDataHelper(getApiCall, borderStationId, errorHandler) {
 			var deferred = $q.defer();
 			var data;
-			if (borderStationId) {
+			console.log(borderStationId);
+			if (borderStationId !== undefined) {
 				getApiCall(borderStationId).then(function(response) {
 					if (response.data.results) {
 						data = response.data.results;

@@ -44,7 +44,7 @@
 	<script src="{% static "static_border_stations/js/controllers/static_border_stations.controller.js" %}"></script>
 	<script src="{% static "static_border_stations/js/services/static_border_stations.service.js" %}"></script>
 	
-	{% if border_station_pk %}
+	{% if border_station_pk != None %}
 	<script>window.border_station_pk = {{ border_station_pk }}</script>
 	{% endif %}
 	{% if is_create %}
