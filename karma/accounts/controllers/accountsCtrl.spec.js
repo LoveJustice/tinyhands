@@ -64,26 +64,28 @@ describe('accountsCtrl', function(){
       controller.openModal(account);
       scope.$apply();
 
-      console.log(mockModal.open.calls.argsFor(0));
-
-      expect(mockModal.open.mostRecentCall.args[0] instanceof String).templateUrl.toBeTruthy();
-      expect(mockModal.open.mostRecentCall.args[0] instanceof String).controller.toBeTruthy();
-      expect(mockModal.open.mostRecentCall.args[0] instanceof String).controllerAs.toBeTruthy();
-      expect(mockModal.open.mostRecentCall.args[0] instanceof String).resolve.toBeTruthy();
-
-//      expect(mockModal.open).toHaveBeenCalledWith({templateUrl:'modal.html',
-//                                                   controller:'ModalCtrl',
-//                                                   controllerAs:'modalCtrl',
-//                                                   resolve:{user_name: user_name}
-//                                                  });
+      expect(mockModal.open.calls.mostRecent().args[0].templateUrl).toEqual("modal.html");
+      expect(mockModal.open.calls.mostRecent().args[0].controller).toEqual("ModalCtrl");
+      expect(mockModal.open.calls.mostRecent().args[0].controllerAs).toEqual("modalCtrl");
+      expect(mockModal.open.calls.mostRecent().args[0].resolve.user_name()).toEqual(user_name);
     });
 
-    it('should return a promise', function(){
+    it('should delete the account after the result', function(){
+      mockModal.open.and.returnValue({result: $q.when(true)});
+      mockAccountsService.destroy.and.returnValue({$promise: $q.when(true)});
+      controller.openModal(account);
+      scope.$apply();
 
+      expect(mockAccountsService.destroy).toHaveBeenCalledWith({id:account.id});
     });
 
     it('should load all accounts after an account is deleted', function(){
+      mockModal.open.and.returnValue({result: $q.when(true)});
+      mockAccountsService.destroy.and.returnValue({$promise: $q.when(true)});
+      controller.openModal(account);
+      scope.$apply();
 
+      expect(mockAccountsService.all).toHaveBeenCalled();
     });
 
   });
