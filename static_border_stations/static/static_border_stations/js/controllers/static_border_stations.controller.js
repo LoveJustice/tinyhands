@@ -46,6 +46,7 @@
 				name: committeeMemTitle
 			}
 		};
+		vm.readonly = window.readonly;
 		vm.removeCommitteeMember = removeCommitteeMember;
 		vm.removeLocation = removeLocation;
 		vm.removePerson = removePerson;

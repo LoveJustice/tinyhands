@@ -10,7 +10,8 @@
           <label for="locationName">Name</label>
           <input type="text" class="form-control" placeholder="Location Name"
                  ng-attr-id="{{'locationName-' + $index}}"
-                 ng-model="location.name">
+                 ng-model="location.name"
+                 ng-readonly="bsCtrl.readonly">
         </div>
     </div>
     <div class="row">
@@ -18,25 +19,29 @@
           <label for="latitude">Latitude</label>
           <input type="text" class="form-control" placeholder="Latitude"
                  ng-attr-id="{{'latitude-' + $index}}"
-                 ng-model="location.latitude">
+                 ng-model="location.latitude"
+                 ng-readonly="bsCtrl.readonly">
         </div>
         <div class="col-sm-6 form-group">
           <label for="longitude">Longitude</label>
           <input type="text" class="form-control" placeholder="Longitude"
                  ng-attr-id="{{'longitude-' + $index}}"
-                 ng-model="location.longitude">
+                 ng-model="location.longitude"
+                 ng-readonly="bsCtrl.readonly">
         </div>
     </div>
-    <button class="btn btn-xs btn-danger pull-left hidden-xs animated"
-            ng-click="bsCtrl.removeLocation(location)"
-            ng-class="{fadeIn: location.hover && !location.removeConfirmed, fadeOut: !location.hover, pulse: location.removeConfirmed}">
-      {{ location.removeConfirmed ? "Are you sure?" : "Remove " + location.name }}
-    </button>
-    <button class="btn btn-xs btn-danger pull-left col-xs-12 visible-xs animated"
-            ng-click="bsCtrl.removeLocation(location)"
-            ng-class="{fadeIn: location.hover && !location.removeConfirmed, fadeOut: !location.hover, pulse: location.removeConfirmed}">
-      {{ location.removeConfirmed ? "Are you sure?" : "Remove " + location.name }}
-    </button>
+    <div ng-if="!bsCtrl.readonly">
+      <button class="btn btn-xs btn-danger pull-left hidden-xs animated"
+              ng-click="bsCtrl.removeLocation(location)"
+              ng-class="{fadeIn: location.hover && !location.removeConfirmed, fadeOut: !location.hover, pulse: location.removeConfirmed}">
+        {{ location.removeConfirmed ? "Are you sure?" : "Remove " + location.name }}
+      </button>
+      <button class="btn btn-xs btn-danger pull-left col-xs-12 visible-xs animated"
+              ng-click="bsCtrl.removeLocation(location)"
+              ng-class="{fadeIn: location.hover && !location.removeConfirmed, fadeOut: !location.hover, pulse: location.removeConfirmed}">
+        {{ location.removeConfirmed ? "Are you sure?" : "Remove " + location.name }}
+      </button>
+    </div>
     <br/>
     <br ng-if="$last"/>
     <hr ng-if="!$last && bsCtrl.locations.length > 1"/>
@@ -44,6 +49,7 @@
   <h4 class="col-xs-12 text-center"
       ng-if="bsCtrl.locations.length == 0">No Locations</h4>
   <button class="btn btn-sm btn-success col-xs-12 col-sm-offset-4 col-sm-4"
+          ng-if="!bsCtrl.readonly"
           ng-click="bsCtrl.addLocation()">Add Location</button>
 </div>
 {% endverbatim %}

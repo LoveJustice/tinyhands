@@ -132,4 +132,5 @@ class StaticBorderStationsDetailView(StaticBorderStationsUpdateView):
     def get_context_data(self, **kwargs):
         context = super(StaticBorderStationsDetailView, self).get_context_data(**kwargs)
         context["saved"] = True
+        context["readonly"] = True
         return context

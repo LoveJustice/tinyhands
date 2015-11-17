@@ -8,6 +8,7 @@
       <div class="col-xs-12">
           <button class="btn" 
                   ng-class="{'btn-success':bsCtrl.details.open, 'btn-danger':!bsCtrl.details.open}"
+                  ng-disabled="bsCtrl.readonly"
                   ng-click="bsCtrl.changeStationStatus()">Station Status: {{bsCtrl.details.open ? "Open" : "Closed"}}</button>
       </div>
   </div>
@@ -17,24 +18,28 @@
       <div class="col-sm-6 form-group">
         <label for="stationName">Station Name</label>
         <input type="text" class="form-control" id="stationName" placeholder="Station Name"
-               ng-model="bsCtrl.details.station_name">
+               ng-model="bsCtrl.details.station_name"
+               ng-readonly="bsCtrl.readonly">
       </div>
       <div class="col-sm-6 form-group">
         <label for="stationCode">Station Code</label>
         <input type="text" class="form-control" id="stationCode" placeholder="Station Code"
-               ng-model="bsCtrl.details.station_code">
+               ng-model="bsCtrl.details.station_code"
+               ng-readonly="bsCtrl.readonly">
       </div>
   </div>
   <div class="row">
       <div class="col-sm-6 form-group">
         <label for="dateEstablished">Date Established</label>
         <input type="text" class="form-control" id="dateEstablished" placeholder="Date Established" 
-               ng-model="bsCtrl.details.date_established">
+               ng-model="bsCtrl.details.date_established"
+               ng-readonly="bsCtrl.readonly">
       </div>
       <div class="col-sm-6 checkbox" style="margin: 20px 0px">
         <label>
           <input type="checkbox" id="hasShelter"
-                 ng-model="bsCtrl.details.has_shelter"> Has Shelter
+                 ng-model="bsCtrl.details.has_shelter"
+                 ng-disabled="bsCtrl.readonly"> Has Shelter
         </label>
       </div>
   </div>
@@ -42,12 +47,14 @@
       <div class="col-sm-6 form-group">
         <label for="latitude">Latitude</label>
         <input type="text" class="form-control" id="latitude" placeholder="Latitude"
-               ng-model="bsCtrl.details.latitude">
+               ng-model="bsCtrl.details.latitude"
+               ng-readonly="bsCtrl.readonly">
       </div>
       <div class="col-sm-6 form-group">
         <label for="longitude">Longitude</label>
         <input type="text" class="form-control" id="longitude" placeholder="Longitude"
-               ng-model="bsCtrl.details.longitude">
+               ng-model="bsCtrl.details.longitude"
+               ng-readonly="bsCtrl.readonly">
       </div>
   </div>
   {% endverbatim %}
