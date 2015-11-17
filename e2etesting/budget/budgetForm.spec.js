@@ -7,6 +7,7 @@ var vifCrud = require('../dataentry/vifCrud.js');
 describe('Budget Calculation', function() {
     beforeEach(function () {
         return browser.ignoreSynchronization = true;
+        
     });
 
     describe('admin can login', function () {
@@ -177,8 +178,6 @@ describe('Budget Calculation', function() {
             //browser.ignoreSynchronization = false;
             budgetForm.editForm();
             browser.sleep(2000);
-            browser.refresh();
-
             expect(browser.driver.getCurrentUrl()).toContain('budget_calculations/update');
             expect(element(by.model("main.form.month_year")).getAttribute("value")).toBe('2015-05');
             expect(element(by.id("shelter_rent")).getAttribute('enabled')).toBe(null);
