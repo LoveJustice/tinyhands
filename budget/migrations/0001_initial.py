@@ -8,6 +8,8 @@ import datetime
 class Migration(migrations.Migration):
 
     dependencies = [
+        ('dataentry', '0001_initial'),
+        ('static_border_stations', '0001_initial'),
     ]
 
     operations = [
@@ -76,6 +78,7 @@ class Migration(migrations.Migration):
                 ('supplies_binoculars_amount', models.PositiveIntegerField(default=0)),
                 ('supplies_flashlights_boolean', models.BooleanField(default=False, verbose_name=b'Flashlights')),
                 ('supplies_flashlights_amount', models.PositiveIntegerField(default=0)),
+                ('border_station', models.ForeignKey(to='dataentry.BorderStation')),
             ],
             options={
             },
@@ -87,7 +90,8 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('name', models.CharField(max_length=255)),
                 ('cost', models.PositiveIntegerField(default=0)),
-                ('form_section', models.IntegerField(null=True, verbose_name=[(1, b'Travel'), (2, b'Miscellaneous'), (3, b'Awareness'), (4, b'Supplies'), (5, b'Shelter'), (6, b'FoodGas'), (7, b'Communication'), (8, b'Staff')], blank=True)),
+                ('form_section', models.IntegerField(null=True, verbose_name=[(1, b'Travel'), (2, b'Miscellaneous'), (3, b'Awareness'), (4, b'Supplies')], blank=True)),
+                ('budget_item_parent', models.ForeignKey(blank=True, to='budget.BorderStationBudgetCalculation', null=True)),
             ],
             options={
             },
@@ -99,9 +103,16 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('salary', models.PositiveIntegerField(default=0, null=True, blank=True)),
                 ('budget_calc_sheet', models.ForeignKey(blank=True, to='budget.BorderStationBudgetCalculation', null=True)),
+                ('staff_person', models.ForeignKey(blank=True, to='static_border_stations.Staff', null=True)),
             ],
             options={
             },
             bases=(models.Model,),
+        ),
+        migrations.AddField(
+            model_name='borderstationbudgetcalculation',
+            name='members',
+            field=models.ManyToManyField(to='static_border_stations.Staff', through='budget.StaffSalary'),
+            preserve_default=True,
         ),
     ]

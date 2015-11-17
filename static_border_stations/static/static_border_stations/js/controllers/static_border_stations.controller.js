@@ -295,24 +295,23 @@
 		
 		function updateStation() {			
 			var promises = [];
-			
+
 			// Create Calls
 			promises.push(vm.createCommitteeMembers(vm.newCommitteeMembers));
 			promises.push(vm.createLocations(vm.newLocations));
 			promises.push(vm.createStaff(vm.newStaff));
-			
+
 			// Update Calls
 			promises.push(vm.updateCommitteeMembers(vm.people.committeeMembers.data));
 			promises.push(vm.updateDetails(vm.details));
 			promises.push(vm.updateLocations(vm.locations));
 			promises.push(vm.updateStaff(vm.people.staff.data));
-			
+
 			// Remove Calls
 			promises.push(vm.updateCommitteeMembers(vm.removeToCommitteeMembers, true));
 			promises.push(vm.updateLocations(vm.removeToLocations, true));
 			promises.push(vm.updateStaff(vm.removeToStaff, true));
-			
-			
+
 			$q.all(promises).then(function() {
 				// If creating re-route to dashboard
 				if (vm.isCreateBorderStation) {

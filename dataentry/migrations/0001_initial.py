@@ -22,7 +22,6 @@ class Migration(migrations.Migration):
                 ('has_shelter', models.BooleanField(default=False)),
                 ('latitude', models.FloatField(null=True)),
                 ('longitude', models.FloatField(null=True)),
-                ('open', models.BooleanField(default=True)),
             ],
             options={
             },

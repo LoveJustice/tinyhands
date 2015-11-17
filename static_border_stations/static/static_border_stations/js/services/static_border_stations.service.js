@@ -73,7 +73,6 @@
 		function getBorderStationDataHelper(getApiCall, borderStationId, errorHandler) {
 			var deferred = $q.defer();
 			var data;
-			console.log(borderStationId);
 			if (borderStationId !== undefined) {
 				getApiCall(borderStationId).then(function(response) {
 					if (response.data.results) {
@@ -144,7 +143,7 @@
 			var numCalls = 0;
 			var deferred = $q.defer();
 			updateArray.forEach(function(anObject) {
-				if (anObject.id) {
+				if (anObject.id !== undefined) {
 					updateApiFunction(anObject.id, anObject).then(function() {
 						numCalls++;
 						if (numCalls >= expectedNumCalls) {

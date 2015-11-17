@@ -482,7 +482,7 @@ describe('BorderStationsCtrl', function(){
      
      it('should make errors array empty', function() {
        // REGION: Data Setup
-       vm.errors = [{error: 'this is an aerror'}];
+       vm.errors = [{error: 'this is an error'}];
        // ENDREGION: Data Setup
        expect(vm.errors).not.toEqual([]);
        
