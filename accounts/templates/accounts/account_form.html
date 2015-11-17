@@ -35,7 +35,7 @@ table {
 
 {% block content %}
 {% verbatim %}
-<div class="container" ng-controller="EditAccountCtrl as editCtrl">
+<div class="container" ng-controller="EditAccountCtrl as editCtrl" ng-cloak>
   <h1>{{editCtrl.getTitle()}}</h1>
   <div class="row">
     <div ng-class="{'has-error': editCtrl.emailError}" class="col-md-6 form-group">

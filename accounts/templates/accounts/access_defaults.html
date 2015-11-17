@@ -36,9 +36,9 @@ th, td {
     <h1>Access Defaults</h1>
 
 {% verbatim %}
-    <div class="container" ng-controller="AccessDefaultsCtrl as defaultsCtrl">
+    <div class="container" ng-controller="AccessDefaultsCtrl as defaultsCtrl" ng-cloak>
     <p>Use this form to designate default access for each type of user.<br/>For instance: what default permissions ought to be given to a new user designated as &quot;Field Staff?&quot;</p>
-
+    <p ng-show="defaultsCtrl.nameError" class="text-danger">All access defaults must have a designation.</p>
     <table class="table table-condensed">
         <thead>
             <tr>
@@ -85,7 +85,9 @@ th, td {
                      </div>
                 </td>
                 <td>
-                    <input type="text" class="form-control" ng-model="permissionsSet.name"/>
+                    <div ng-class="{'has-error': permissionsSet.nameError}">
+                        <input type="text" class="form-control" ng-model="permissionsSet.name"/>
+                    </div>
                 </td>
                 <td><label ng-click="permissionsSet.permission_irf_view = !permissionsSet.permission_irf_view" ng-class="permissionsSet.permission_irf_view ? 'btn btn-success' : 'btn btn-danger'">{{ permissionsSet.permission_irf_view ? "Yes" : "No" }}</label></td>
                 <td><label ng-click="permissionsSet.permission_irf_add = !permissionsSet.permission_irf_add" ng-class="permissionsSet.permission_irf_add ? 'btn btn-success' : 'btn btn-danger'">{{ permissionsSet.permission_irf_add ? "Yes" : "No" }}</label></td>
