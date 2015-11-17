@@ -9,16 +9,11 @@ exports.config = {
     seleniumAddress: 'http://localhost:4444/wd/hub',
 
     //The order is very important. Ex. budgetForm.spec.js is dependant on borderStationCRUD.spec.js
-    //specs:  [
-    //    'borderStations/closeABorderStation.spec.js',
-    //    'borderStations/borderStationCRUD.spec.js',
-    //  ],
-    //The order is very important. Ex. budgetForm.spec.js is dependant on borderStationCRUD.spec.js
     specs:  [
         // First logically
         'accounts/loginPage.spec.js',
         'borderStations/borderStation.spec.js',
-        // 'borderStations/borderStationCRUD.spec.js',
+        /////////// 'borderStations/borderStationCRUD.spec.js',
         'dataentry/irfList.spec.js',
         'dataentry/vifList.spec.js',
         'dataentry/irfCRUD.spec.js',
@@ -26,7 +21,7 @@ exports.config = {
         'dataentry/search.spec.js', //dependent on vifCrud.spec.js and irfCRUD.spec.js
 
         //These three are dependent on each other
-        // 'borderStations/closeABorderStation.spec.js',
+        'borderStations/closeABorderStation.spec.js',
         'budget/budgetForm.spec.js',
         'budget/moneyDistributionForm.spec.js',
 
@@ -35,8 +30,10 @@ exports.config = {
         'addresses/vdcAdminPage.spec.js',
         'addresses/address1Page.spec.js',
         'accounts/accessDefaults.spec.js',
-        //Has to run last
-        'accounts/permissionsPage.spec.js'
+
+        'portal/tally.spec.js',
+
+        'accounts/permissionsPage.spec.js' // Has to run last
       ],
 
     framework: 'jasmine2',
