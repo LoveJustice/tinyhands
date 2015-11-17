@@ -38,7 +38,7 @@
             <div>
               <a class="btn btn-sm btn-primary" ng-href="/accounts/update/{{ account.id }}">Edit</a>
               <button type="button" class="btn btn-primary btn-sm btn-danger" ng-click="accountsCtrl.openModal(account)" ng-show="accountsCtrl.currentuser.id != account.id">Delete</button>
-              <button type="submit" class="btn btn-sm btn-primary" ng-click="accountsCtrl.resendActivationEmail(account)" ng-show="!account.has_been_activated">Resend Activation Email</button>
+              <button type="submit" class="btn btn-sm btn-primary" ng-click="accountsCtrl.resendActivationEmail(account.id)" ng-show="!account.has_been_activated">Resend Activation Email</button>
             </div>
           </td>
         </tr>
