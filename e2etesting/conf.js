@@ -12,7 +12,8 @@ exports.config = {
     specs:  [
         // First logically
         'accounts/loginPage.spec.js',
-
+        'borderStations/borderStation.spec.js',
+        /////////// 'borderStations/borderStationCRUD.spec.js',
         'dataentry/irfList.spec.js',
         'dataentry/vifList.spec.js',
         'dataentry/irfCRUD.spec.js',
@@ -21,7 +22,6 @@ exports.config = {
 
         //These three are dependent on each other
         'borderStations/closeABorderStation.spec.js',
-        'borderStations/borderStationCRUD.spec.js',
         'budget/budgetForm.spec.js',
         'budget/moneyDistributionForm.spec.js',
 

@@ -3,7 +3,7 @@
 {% block content %}
     {% verbatim %}
         <!--    REGION: Wrapper    -->
-        <div id="wrapper">
+        <div id="wrapper" ng-cloak>
             <div id="portal">
                 <div id="tally" ng-controller="TallyCtrl as tally">
                     <div ng-show="tally.showTally">
@@ -117,7 +117,7 @@
     {% endverbatim %}
 
     <!--    REGION: Events Modal    -->
-    <div class="modal fade" id="EventDetailModal" tabindex="-1" role="dialog" aria-labelledby="EventDetailLabel" aria-hidden="true">
+    <div class="modal fade" id="EventDetailModal" tabindex="-1" role="dialog" aria-labelledby="EventDetailLabel" aria-hidden="true" ng-cloak>
         <div class="modal-dialog">
             <div class="modal-content">
 

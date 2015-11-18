@@ -6,8 +6,8 @@ var vifCrud = require('../dataentry/vifCrud.js');
 
 describe('Budget Calculation', function() {
     beforeEach(function () {
-        return browser.ignoreSynchronization = true;
-        
+        browser.ignoreSynchronization = true;
+        browser.manage().timeouts().implicitlyWait(7000);
     });
 
     describe('admin can login', function () {
@@ -30,8 +30,6 @@ describe('Budget Calculation', function() {
             //Modify filloutIRF to pass in borderstation name to allow for different forms
             irfCrud.getToIRF();
             irfCrud.fillOutIRF("AAA123");
-
-
 
             //Create a vif form to test top table.
 
@@ -86,8 +84,6 @@ describe('Budget Calculation', function() {
             budgetForm.navigateToNewForm();
             browser.sleep(4000);
 
-            //browser.pause();
-            //browser.refresh();
             //checks for values based on a recent test that filled out the form
             expect(element(by.binding("main.shelterTotal()")).getText()).toBe(c.shelterTotal);
             expect(element(by.binding("main.foodGasTotal()")).getText()).toBe(c.foodTotal);
@@ -243,7 +239,6 @@ describe('Budget Calculation', function() {
     describe("Top Table", function() {
         it("populates this month correctly", function() {
             budgetForm.navigateToNewForm();
-            //browser.ignoreSynchronization = false;
             budgetForm.fillOutForm();
 
             browser.executeScript('document.getElementById("month_year").value = "2015-06"');
@@ -279,7 +274,7 @@ describe('Budget Calculation', function() {
             expect(table.element(by.xpath("./tr[2]/td[2]")).getText()).toBe("0");
             expect(table.element(by.xpath("./tr[3]/td[2]")).getText()).toBe("1");
 
-            expect(table.element(by.xpath("./tr[4]/td[2]")).getText()).toBe("2");
+            expect(table.element(by.xpath("./tr[4]/td[2]")).getText()).toBe("1");
         });
     });
 });
