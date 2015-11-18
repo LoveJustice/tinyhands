@@ -1,13 +1,12 @@
 var c = require('../testConstants.json');
 var loginPage = require('../accounts/loginPage.js');
-var borderStationPage = require('./borderStation.page.js');
-var methods = require('../commonMethods.js');
+var borderStation = require('./borderStation.js');
 
 describe('Border Stations - Close a Station - ', function() {
-    var BSPage = new borderStationPage();
 
     beforeEach(function () {
-        return browser.ignoreSynchronization = true;
+        browser.ignoreSynchronization = true;
+        browser.manage().timeouts().implicitlyWait(7000);
     });
 
     describe('', function () {
@@ -17,8 +16,8 @@ describe('Border Stations - Close a Station - ', function() {
         });
 
         it('create own test station', function () {
-            BSPage.getToBorderStationCreate();
-            BSPage.fillOutBorderStation("zzz closedTest", "CLT");
+            borderStation.getToBorderStationCreate();
+            borderStation.fillOutBorderStation("zzz closedTest", "CLT");
         });
 
         it('the close station button exists', function() {
@@ -26,17 +25,23 @@ describe('Border Stations - Close a Station - ', function() {
             element(by.id("border_station_dropdown")).click();
             element.all(by.css(".border_station_dropdown_item")).last().click();
 
-            expect(BSPage.stationClosedButton.isPresent()).toBe(true);
+            expect(element(by.css('[ng-click="bsCtrl.changeStationStatus()"]')).isPresent()).toBe(true);
         });
 
         it('the button toggles between open and closed', function() {
-            expect(BSPage.stationClosedButtonLabel.getAttribute('class')).toContain('btn-success');
-            BSPage.stationClosedButton.click();
-            expect(BSPage.stationClosedButtonLabel.getAttribute('class')).toContain('btn-danger');
+
+            //TODO finish changing this file to use borderStation.js
+            var button = element(by.css('[ng-click="bsCtrl.changeStationStatus()"]'))
+            expect(button.getAttribute('class')).toContain('btn-success');
+            button.click();
+            expect(button.getAttribute('class')).toContain('btn-danger');
         });
 
         it('the border station is taken out of dropdown', function() {
-            BSPage.border_station_update_button.click();
+            borderStation.saveForm();
+
+            //Seems that the dropdown only updates once you navigate away from the border station page after saving.
+            browser.get(c.webAddress);
 
             element(by.id("border_station_dropdown")).click();
             expect(element.all(by.css(".border_station_dropdown_item")).last().getText()).not.toBe("zzz closedTest");
