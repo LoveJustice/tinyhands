@@ -19,13 +19,19 @@ var accessControlPage = function () {
 	this.firstUserBorderStationEdit = this.accounts.first().element(by.binding('account.permission_border_stations_edit ? "Yes" : "No" '))
 	this.firstUserBorderStationView = this.accounts.first().element(by.binding('account.permission_border_stations_view ? "Yes" : "No" '))
 	
-	this.firstUserBorderStationView = this.accounts.first().element(by.binding('account.permission_accounts_manage ? "Yes" : "No" '))
-	this.firstUserBorderStationView = this.accounts.first().element(by.binding('account.permission_receive_email ? "Yes" : "No" '))
-	this.firstUserBorderStationView = this.accounts.first().element(by.binding('account.permission_vdc_manage ? "Yes" : "No" '))
-	this.firstUserBorderStationView = this.accounts.first().element(by.binding('account.permission_budget_manage ? "Yes" : "No" '))
+	this.firstUserAccountsManage = this.accounts.first().element(by.binding('account.permission_accounts_manage ? "Yes" : "No" '))
+	this.firstUserReceiveMail = this.accounts.first().element(by.binding('account.permission_receive_email ? "Yes" : "No" '))
+	this.firstUserVdcManage = this.accounts.first().element(by.binding('account.permission_vdc_manage ? "Yes" : "No" '))
+	this.firstUserBudgetManage = this.accounts.first().element(by.binding('account.permission_budget_manage ? "Yes" : "No" '))
 	
+	this.navigateToPage = function(){
+		//Call a get request to navigate to the specific page desired.
+		return browser.get(constants.webAddress + '/accounts/access-control');
+	}
 	
 }
+
+module.exports = new accessControlPage();
 
 
 //Remember this code:this.permission_irf_view.click()
