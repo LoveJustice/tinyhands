@@ -40,7 +40,7 @@ window.defaultPermissionSets = JSON.parse('{{ default_permissions_sets|safe }}')
 
 {% verbatim %}
 <div class="container" ng-controller="AccessCtrl as accessCtrl">
-    <form method="POST" class="row">
+    <div method="POST" class="row">
         <table class="table table-condensed">
             <thead>
                 <tr>
@@ -104,8 +104,8 @@ window.defaultPermissionSets = JSON.parse('{{ default_permissions_sets|safe }}')
             </tbody>
         </table>
         <!--update button doesn't work-->
-        <button class="clear btn btn-primary btn-lg" ng-click="accessCtrl.update()">Update<button/>
-    </form>
+        <button class="clear btn btn-primary btn-lg" ng-click="accessCtrl.update()">Update</button>
+    </div>
 </div>
 
 {% endverbatim %}

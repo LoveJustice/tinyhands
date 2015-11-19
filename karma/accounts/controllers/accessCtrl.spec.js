@@ -100,21 +100,24 @@ describe('accessCtrl', function(){
       expect(newAccount.permission_vif_edit).toEqual(fakePermissions.permission_vif_edit);
       expect(newAccount.permission_vif_view).toEqual(fakePermissions.permission_vif_view);
       
-	  expect(newAccount.permission_border_stations_add).toEqual(fakePermissions.permission_border_stations_add); 
-	  expect(newAccount.permission_border_stations_delete).toEqual(fakePermissions.permission_border_stations_delete);
-	  expect(newAccount.permission_border_stations_edit).toEqual(fakePermissions.permission_border_stations_edit);
-	  expect(newAccount.permission_border_stations_view).toEqual(fakePermissions.permission_border_stations_view);
+	    expect(newAccount.permission_border_stations_add).toEqual(fakePermissions.permission_border_stations_add); 
+	    expect(newAccount.permission_border_stations_delete).toEqual(fakePermissions.permission_border_stations_delete);
+	    expect(newAccount.permission_border_stations_edit).toEqual(fakePermissions.permission_border_stations_edit);
+	    expect(newAccount.permission_border_stations_view).toEqual(fakePermissions.permission_border_stations_view);
 	  
-	  expect(newAccount.permission_accounts_manage).toEqual(fakePermissions.permission_accounts_manage);
-	  expect(newAccount.permission_receive_email).toEqual(fakePermissions.permission_receive_email);
-	  expect(newAccount.permission_vdc_manage).toEqual(fakePermissions.permission_vdc_manage);
-	  expect(newAccount.permission_budget_manage).toEqual(fakePermissions.permission_budget_manage);
-    });
+	    expect(newAccount.permission_accounts_manage).toEqual(fakePermissions.permission_accounts_manage);
+	    expect(newAccount.permission_receive_email).toEqual(fakePermissions.permission_receive_email);
+	    expect(newAccount.permission_vdc_manage).toEqual(fakePermissions.permission_vdc_manage);
+	    expect(newAccount.permission_budget_manage).toEqual(fakePermissions.permission_budget_manage);
+     });
   });
   
-  // describe('update', function(){
-	//   mockPermissionSetsService.get.and.returnValue({$promise: $q.when(fakePermissions)});
-    //   controller.update();
-	  
-  // })
-});
+  describe('update', function(){
+    it('should call the update function with the account', function(){
+	    //mockPermissionSetsService.get.and.returnValue({$promise: $q.when(fakePermissions)});
+      controller.accounts={results: [newAccount]};
+      controller.update();
+	    expect(mockAccountsService.update).toHaveBeenCalledWith(newAccount);
+   });
+  });
+}); 
