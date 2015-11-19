@@ -1,7 +1,6 @@
 describe('EditAccountCtrl', function(){
 	var controller,
 		scope,
-		httpBackend,
 		mockAccountsService,
 		mockPermissionSetsService,
 		mockWindow,
@@ -78,9 +77,7 @@ describe('EditAccountCtrl', function(){
 
 	beforeEach(module('AccountsMod'));
 
-	beforeEach(inject(function($rootScope, $controller, $httpBackend, _$q_){
-        httpBackend = $httpBackend;
-
+	beforeEach(inject(function($rootScope, $controller, _$q_){
 		mockAccountsService = jasmine.createSpyObj('mockAccountsService', ['get','create','update']);
 		mockAccountsService.get.and.callFake(function() {
 			return blankAccount;

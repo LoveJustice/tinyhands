@@ -16,6 +16,7 @@ angular
             if(unsavedChanges) {
                 return "You have unsaved changes.";            
             }
+            return;
         };
 		
         PermissionsSets.all().$promise.then(function(response) {
@@ -65,8 +66,8 @@ angular
             }
         }
         
-        function saveSet(i) {
-            var permissionsSet = vm.permissionsSets[i];
+        function saveSet(index) {
+            var permissionsSet = vm.permissionsSets[index];
             var call = null;
             if(permissionsSet.is_new) {
                 call = PermissionsSets.create(permissionsSet).$promise
@@ -74,7 +75,7 @@ angular
                 call = PermissionsSets.update(permissionsSet).$promise;
             }
             call.then(function(data){
-                vm.permissionsSets[i] = data;
+                vm.permissionsSets[index] = data;
             }, function(error) { // catch name error               
                 vm.nameError = true;
                 permissionsSet.nameError = true;
