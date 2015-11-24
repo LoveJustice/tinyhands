@@ -3,7 +3,7 @@ var constants = require('../testConstants.json');
 var accessControlPage = function () {
 	
 	this.updateButton = element(by.buttonText('Update'));
-	this.accounts = element.all(by.repeater("account in accessCtrl.accounts.results"))
+	this.accounts = element.all(by.repeater("account in accessCtrl.accounts.results"));
 	this.firstUserIrfAdd = this.accounts.first().element(by.binding('account.permission_irf_add ? "Yes" : "No" '));
 	this.firstUserIrfDelete = this.accounts.first().element(by.binding('account.permission_irf_delete ? "Yes" : "No" '));
 	this.firstUserIrfEdit = this.accounts.first().element(by.binding('account.permission_irf_edit ? "Yes" : "No" '));
@@ -14,15 +14,18 @@ var accessControlPage = function () {
 	this.firstUserVifEdit = this.accounts.first().element(by.binding('account.permission_vif_edit ? "Yes" : "No" '));
 	this.firstUserVifView = this.accounts.first().element(by.binding('account.permission_vif_view ? "Yes" : "No" '));
 	
-	this.firstUserBorderStationAdd = this.accounts.first().element(by.binding('account.permission_border_stations_add ? "Yes" : "No" '))
-	this.firstUserBorderStationDelete = this.accounts.first().element(by.binding('account.permission_border_stations_delete ? "Yes" : "No" '))
-	this.firstUserBorderStationEdit = this.accounts.first().element(by.binding('account.permission_border_stations_edit ? "Yes" : "No" '))
-	this.firstUserBorderStationView = this.accounts.first().element(by.binding('account.permission_border_stations_view ? "Yes" : "No" '))
+	this.firstUserBorderStationAdd = this.accounts.first().element(by.binding('account.permission_border_stations_add ? "Yes" : "No" '));
+	this.firstUserBorderStationDelete = this.accounts.first().element(by.binding('account.permission_border_stations_delete ? "Yes" : "No" '));
+	this.firstUserBorderStationEdit = this.accounts.first().element(by.binding('account.permission_border_stations_edit ? "Yes" : "No" '));
+	this.firstUserBorderStationView = this.accounts.first().element(by.binding('account.permission_border_stations_view ? "Yes" : "No" '));
 	
-	this.firstUserAccountsManage = this.accounts.first().element(by.binding('account.permission_accounts_manage ? "Yes" : "No" '))
-	this.firstUserReceiveMail = this.accounts.first().element(by.binding('account.permission_receive_email ? "Yes" : "No" '))
-	this.firstUserVdcManage = this.accounts.first().element(by.binding('account.permission_vdc_manage ? "Yes" : "No" '))
-	this.firstUserBudgetManage = this.accounts.first().element(by.binding('account.permission_budget_manage ? "Yes" : "No" '))
+	this.firstUserAccountsManage = this.accounts.first().element(by.binding('account.permission_accounts_manage ? "Yes" : "No" '));
+	this.firstUserReceiveMail = this.accounts.first().element(by.binding('account.permission_receive_email ? "Yes" : "No" '));
+	this.firstUserVdcManage = this.accounts.first().element(by.binding('account.permission_vdc_manage ? "Yes" : "No" '));
+	this.firstUserBudgetManage = this.accounts.first().element(by.binding('account.permission_budget_manage ? "Yes" : "No" '));
+	
+	this.firstUserDesignation = this.accounts.first().element(by.model('accessCtrl.account.user_designation'));
+	this.firstUserDesignationOptions = this.accounts.first().all(by.options('p.id as p.name for p in accessCtrl.permissions.results'));
 	
 	this.navigateToPage = function(){
 		//Call a get request to navigate to the specific page desired.
