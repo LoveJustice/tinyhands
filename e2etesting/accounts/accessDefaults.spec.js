@@ -113,7 +113,7 @@ describe('Access Defaults', function () {
             permissionRow.designation.sendKeys(name);
             permissionRow.irfView.click();
             accessDefaultsPage.saveAll();
-            browser.sleep(2000);
+            browser.sleep(2000); //wait for all REST requests to be resolved.
             
             accessDefaultsPage.navigateToAccessDefaults();
             var lastRow = accessDefaultsPage.getLastPermissionsSetRow();
@@ -135,7 +135,7 @@ describe('Access Defaults', function () {
             expect(permissionRow.vdcManage.getText()).toEqual('No');
             expect(permissionRow.budgetManage.getText()).toEqual('No');
             
-            lastRow.deleteButton.click();
+            lastRow.deleteButton.click(); //remove newly created set
         }); 
     })    
 });
