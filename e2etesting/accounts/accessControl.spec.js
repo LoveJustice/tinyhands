@@ -53,9 +53,6 @@ describe('Access Control Page', function() {
 			expect(accessControlPage.firstUserIrfDelete.getText()).not.toEqual(initialIrfDelete);
 			expect(accessControlPage.firstUserIrfEdit.getText()).not.toEqual(initialIrfEdit);
 			expect(accessControlPage.firstUserIrfView.getText()).not.toEqual(initialIrfView);
-			
-			
-			
 		});
 	});
 	
@@ -72,14 +69,12 @@ describe('Access Control Page', function() {
 			accessControlPage.firstUserVifDelete.click();
 			accessControlPage.firstUserVifEdit.click();
 			accessControlPage.firstUserVifView.click();
-			
+	
 			//expect the button state to change.
 			expect(accessControlPage.firstUserVifAdd.getText()).not.toEqual(initialVifAdd);
 			expect(accessControlPage.firstUserVifDelete.getText()).not.toEqual(initialVifDelete);
 			expect(accessControlPage.firstUserVifEdit.getText()).not.toEqual(initialVifEdit);
 			expect(accessControlPage.firstUserVifView.getText()).not.toEqual(initialVifView);
-			
-
 		});
 	});
 	
@@ -92,19 +87,15 @@ describe('Access Control Page', function() {
 			var initialBorderStationEdit = accessControlPage.firstUserBorderStationEdit.getText();
 			var initialBorderStationView = accessControlPage.firstUserBorderStationView.getText();
 			
-	
 			accessControlPage.firstUserBorderStationAdd.click();
 			accessControlPage.firstUserBorderStationDelete.click();
 			accessControlPage.firstUserBorderStationEdit.click();
 			accessControlPage.firstUserBorderStationView.click();
-			
 		
 			expect(accessControlPage.firstUserBorderStationAdd.getText()).not.toEqual(initialBorderStationAdd);
 			expect(accessControlPage.firstUserBorderStationDelete.getText()).not.toEqual(initialBorderStationDelete);
 			expect(accessControlPage.firstUserBorderStationEdit.getText()).not.toEqual(initialBorderStationEdit);
 			expect(accessControlPage.firstUserBorderStationView.getText()).not.toEqual(initialBorderStationView);
-			
-
 		});
 	});
 	
@@ -128,11 +119,8 @@ describe('Access Control Page', function() {
 			expect(accessControlPage.firstUserReceiveMail.getText()).not.toEqual(initialReceiveMail);
 			expect(accessControlPage.firstUserVdcManage.getText()).not.toEqual(initialVdcManage);
 			expect(accessControlPage.firstUserBudgetManage.getText()).not.toEqual(initialBudgetManage);
-			
-
 		});
 	});
-	
 	
 	describe("When the user changes a profile's designation", function(){
 		it('should change the last few misc permissions to match', function(){
@@ -168,14 +156,18 @@ describe('Access Control Page', function() {
 			expect(accessControlPage.firstUserReceiveMail.getText()).toEqual("No");
 			expect(accessControlPage.firstUserVdcManage.getText()).toEqual("Yes");
 			expect(accessControlPage.firstUserBudgetManage.getText()).toEqual("No");
-			
-			
-			
-		
-			
 		});		
 	});
 	
+	describe('When the update button is clicked',function(){
+		it('should update the permissions', function(){
+			var initialValue = accessControlPage.firstUserVifAdd.getText();
+			accessControlPage.firstUserVifAdd.click();
+			accessControlPage.updateButton.click();
+			accessControlPage.navigateToPage();
+			expect(accessControlPage.firstUserVifAdd.getText()).not.toEqual(initialValue);	
+		});
+	});
 	
 	
 	
