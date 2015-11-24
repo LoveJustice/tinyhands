@@ -11,9 +11,25 @@ var vifCrud = function() {
         vifPage.createVif();
     };
 
+    this.navigateToCreatePageByItSelf = function(){
+        loginPage.loginAsAdmin();
+        vifPage.createVif();
+    };
+
     this.completeVif = function(){
         vifPage.filloutVif(c.vifNumber);
     };
+
+    this.startVif = function(){
+        vifPage.createVif();
+        browser.sleep(2000);
+        vifPage.partialfilloutVif1(c.vifNumber2);
+        browser.sleep(2000);
+        vifPage.createVif();
+        browser.sleep(2000);
+        vifPage.partialfilloutVif2(c.vifNumber3);
+    };
+
 
     this.editVif = function() {
         this.edit = element.all(by.id("id_edit_vif_button")).click();
@@ -36,7 +52,7 @@ var vifCrud = function() {
         //browser.get(c.webAddress + '/data-entry/vifs/update/1004/');
         browser.sleep(800);
         element(by.id("id_edit_vif_button")).click();
-        //browser.sleep(800);
+        browser.sleep(800);
         this.clear_gender_field = element(by.id("id_migration_plans_education")).click();
         this.victim_name = element(by.id("id_victim_name")).sendKeys("");
         this.submitButton = element(by.id("id_interviewer")).submit();

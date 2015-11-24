@@ -13,25 +13,25 @@ exports.config = {
         // First logically
         'accounts/loginPage.spec.js',
 
-        'dataentry/irfList.spec.js',
-        'dataentry/vifList.spec.js',
+        //'dataentry/irfList.spec.js',
+        //'dataentry/vifList.spec.js',
         'dataentry/irfCRUD.spec.js',
-        'dataentry/vifCrud.spec.js',
-        'dataentry/search.spec.js', //dependent on vifCrud.spec.js and irfCRUD.spec.js
+        //'dataentry/vifCrud.spec.js',
+        //'dataentry/search.spec.js', //dependent on vifCrud.spec.js and irfCRUD.spec.js
         //
 
         //These three are dependent on each other
-        'borderStations/borderStationCRUD.spec.js',
-        'budget/budgetForm.spec.js',
-        'budget/moneyDistributionForm.spec.js',
+        //'borderStations/borderStationCRUD.spec.js',
+        //'budget/budgetForm.spec.js',
+        //'budget/moneyDistributionForm.spec.js',
 
-        'DynStationWindow/dynStation.spec.js',
+        //'DynStationWindow/dynStation.spec.js',
 
-        'addresses/vdcAdminPage.spec.js',
-        'addresses/address1Page.spec.js',
-        'accounts/accessDefaults.spec.js',
+        //'addresses/vdcAdminPage.spec.js',
+        //'addresses/address1Page.spec.js',
+        //'accounts/accessDefaults.spec.js',
 
-        'accounts/permissionsPage.spec.js' // Has to run last
+        //'accounts/permissionsPage.spec.js' // Has to run last
       ],
 
     framework: 'jasmine2',
