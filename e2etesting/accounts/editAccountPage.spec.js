@@ -8,8 +8,8 @@ describe('Edit Account Page', function() {
 	beforeAll(function () {
 		browser.ignoreSynchronization=true;
 		loginPage.loginAsAdmin();
+		browser.ignoreSynchronization=false;		
 		editAccountPage.navigateToPage();
-		browser.waitForAngular();
 	});
 	
 	describe('when first loaded', function() {		

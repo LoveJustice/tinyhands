@@ -49,7 +49,7 @@ var editAccountPage = function () {
 		}).then(function() {
 			return self.email.clear().sendKeys(self.newEmail);			
 		}).then(function() {
-			return self.userDesignationOptions.last().click();			
+			return self.userDesignationOptions.get(3).click();			
 		});
 	}.bind(this);
 	

@@ -30,6 +30,8 @@ exports.config = {
         'accounts/editAccountPage.spec.js',
         'accounts/createAccountPage.spec.js',
         'accounts/accountList.spec.js',
+        'accounts/accessControl.spec.js',
+
         // Has to run last
         'accounts/permissionsPage.spec.js'
       ],

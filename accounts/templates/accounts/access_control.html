@@ -40,7 +40,7 @@ window.defaultPermissionSets = JSON.parse('{{ default_permissions_sets|safe }}')
 
 {% verbatim %}
 <div class="container" ng-controller="AccessCtrl as accessCtrl">
-    <form method="POST" class="row">
+    <div method="POST" class="row">
         <table class="table table-condensed">
             <thead>
                 <tr>
@@ -76,7 +76,8 @@ window.defaultPermissionSets = JSON.parse('{{ default_permissions_sets|safe }}')
             <tbody>
                     <tr ng-repeat="account in accessCtrl.accounts.results">
                         <td>
-                          {{ account.first_name+" "+account.last_name }}<br/>
+                          <span>{{account.first_name+" "+account.last_name}}</span>
+                          <br/>
                           <select  ng-change="accessCtrl.changeUserRole(account)" ng-model="account.user_designation" ng-options="p.id as p.name for p in accessCtrl.permissions.results">
                           <!--ng-change="editCtrl.onUserDesignationChanged(editCtrl.account.user_designation)" -->
                           </select>
@@ -104,8 +105,8 @@ window.defaultPermissionSets = JSON.parse('{{ default_permissions_sets|safe }}')
             </tbody>
         </table>
         <!--update button doesn't work-->
-        <button class="clear btn btn-primary btn-lg" ng-click="accessCtrl.update()">Update<button/>
-    </form>
+        <button class="clear btn btn-primary btn-lg" ng-click="accessCtrl.update()">Update</button>
+    </div>
 </div>
 
 {% endverbatim %}

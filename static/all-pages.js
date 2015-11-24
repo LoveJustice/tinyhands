@@ -233,31 +233,6 @@ var DREAMSUITE = {
     makeCheckboxAppearAsAButton('.openclosed','Station Status: Open','Station Status: Closed');
   },
 
-  access_control: function() {
-    makeCheckboxAppearAsAButton('.yesno','Yes','No');
-    $('option:contains("---------")').remove();
-    $('select').change(function() {
-      var userId = parseInt($(this).parents('td').find('input').val());
-      var rowId = $('input[value=' + userId + ']')[0].id.slice(0,-3);
-      for (var i=0; i<window.defaultPermissionSets.length; i++) {
-        var set = window.defaultPermissionSets[i];
-        if (set.id === parseInt($(this).val())) {
-          for (var key in set) {
-            if(key == 'name' || key == 'id') {
-              continue;
-            }
-            var toBe = set[key];
-            var $checkbox = $('#' + rowId + '-' + key);
-            var current = !!$checkbox.prop('checked');
-            if (toBe !== current) {
-              $checkbox.parents('label')[0].click();
-            }
-          }
-        }
-      }
-    });
-  },
-
   budget_create_api: function(){
     $(function() {
       var queryDate = '2009-11-01',
