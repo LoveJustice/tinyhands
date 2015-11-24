@@ -11,6 +11,29 @@ describe('Access Control Page', function() {
 		accessControlPage.navigateToPage();
 	});
 	
+	describe('On page load', function() {
+		it('should have user account', function() {
+			accessControlPage.getTestUserAccountRow().then(function(testUser) {
+				expect(testUser.irfView.getText()).toEqual("Yes");
+				expect(testUser.irfAdd.getText()).toEqual("Yes");
+				expect(testUser.irfEdit.getText()).toEqual("Yes");
+				expect(testUser.irfDelete.getText()).toEqual("Yes");
+				expect(testUser.vifView.getText()).toEqual("Yes");
+				expect(testUser.vifAdd.getText()).toEqual("Yes");
+				expect(testUser.vifEdit.getText()).toEqual("Yes");
+				expect(testUser.vifDelete.getText()).toEqual("Yes");
+				expect(testUser.borderStationView.getText()).toEqual("Yes");
+				expect(testUser.borderStationAdd.getText()).toEqual("Yes");
+				expect(testUser.borderStationEdit.getText()).toEqual("Yes");
+				expect(testUser.borderStationDelete.getText()).toEqual("Yes");
+				expect(testUser.accountsManage.getText()).toEqual("Yes");
+				expect(testUser.receiveEmail.getText()).toEqual("Yes");
+				expect(testUser.vdcManage.getText()).toEqual("Yes");
+				expect(testUser.BudgetManage.getText()).toEqual("Yes");		
+			});
+		});
+	});
+	
 	describe('When the irf permission buttons are clicked',function(){
 		it('should change the irf permissions', function(){
 			//figure out the state of the button
