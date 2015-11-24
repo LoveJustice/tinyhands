@@ -11,7 +11,7 @@ var accessDefaultsPage = function() {
     };
 
     this.addPermissionsSetRow = function() {
-        var addAnotherButton = element(by.id('add-another'));
+        var addAnotherButton = element(by.buttonText('Add Another'));
         return addAnotherButton.click();
     };
 
@@ -74,6 +74,11 @@ var accessDefaultsPage = function() {
         row.accountsManage.click();
         row.vdcManage.click();
         row.budgetManage.click();
+    }; 
+    
+    this.saveAll = function() {
+        var saveAllButton = element(by.buttonText('Save All'));
+        return saveAllButton.click();
     }
 }
 

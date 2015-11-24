@@ -101,6 +101,41 @@ describe('Access Defaults', function () {
                 });
             })
         });
-    })
+    });
     
+    describe('when save all clicked', function() {
+        it('should save changes', function() {
+            accessDefaultsPage.navigateToAccessDefaults();
+            accessDefaultsPage.addPermissionsSetRow();
+            
+            var name = "Foo Set";
+            var permissionRow = accessDefaultsPage.getLastPermissionsSetRow();
+            permissionRow.designation.sendKeys(name);
+            permissionRow.irfView.click();
+            accessDefaultsPage.saveAll();
+            browser.sleep(2000);
+            
+            accessDefaultsPage.navigateToAccessDefaults();
+            var lastRow = accessDefaultsPage.getLastPermissionsSetRow();
+            
+            expect(lastRow.designation.getAttribute('value')).toEqual(name);
+            expect(permissionRow.irfView.getText()).toEqual('Yes');
+            expect(permissionRow.irfAdd.getText()).toEqual('No');
+            expect(permissionRow.irfEdit.getText()).toEqual('No');
+            expect(permissionRow.irfDelete.getText()).toEqual('No');
+            expect(permissionRow.vifView.getText()).toEqual('No');
+            expect(permissionRow.vifAdd.getText()).toEqual('No');
+            expect(permissionRow.vifEdit.getText()).toEqual('No');
+            expect(permissionRow.vifDelete.getText()).toEqual('No');
+            expect(permissionRow.borderStationView.getText()).toEqual('No');
+            expect(permissionRow.borderStationAdd.getText()).toEqual('No');
+            expect(permissionRow.borderStationEdit.getText()).toEqual('No');
+            expect(permissionRow.accountsManage.getText()).toEqual('No');
+            expect(permissionRow.alertsCanReceive.getText()).toEqual('No');                
+            expect(permissionRow.vdcManage.getText()).toEqual('No');
+            expect(permissionRow.budgetManage.getText()).toEqual('No');
+            
+            lastRow.deleteButton.click();
+        }); 
+    })    
 });
