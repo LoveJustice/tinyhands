@@ -184,6 +184,8 @@ function setUpResumeIncompleteFormSystem(which) {
             allInputs[i].checked = false;
         else if (allInputs[i].type == 'text')
             allInputs[i].value = '';
+        else if (allInputs[i].type == 'radio')
+            allInputs[i].checked = false;
         else if (allInputs[i].type == 'number')
             allInputs[i].value = '';
     }
