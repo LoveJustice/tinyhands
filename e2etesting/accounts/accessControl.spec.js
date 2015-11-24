@@ -134,4 +134,49 @@ describe('Access Control Page', function() {
 	});
 	
 	
+	describe("When the user changes a profile's designation", function(){
+		it('should change the last few misc permissions to match', function(){
+			//First set the designation to a default value like summer intern
+			//Assumes that the testing account is designated as a super admin.
+			
+			
+		accessControlPage.firstUserDesignationOptions.filter(function(elem, idx){
+			return elem.getText().then(function(text){
+				return text=="Summer Intern";
+			});
+		 }).then(function(filteredOptions){
+
+			 return filteredOptions[0].click();
+		 }); 
+			expect(accessControlPage.firstUserVifAdd.getText()).toEqual("No");
+			expect(accessControlPage.firstUserVifDelete.getText()).toEqual("No");
+			expect(accessControlPage.firstUserVifEdit.getText()).toEqual("No");
+			expect(accessControlPage.firstUserVifView.getText()).toEqual("Yes");
+			
+			
+			expect(accessControlPage.firstUserIrfAdd.getText()).toEqual("No");
+			expect(accessControlPage.firstUserIrfDelete.getText()).toEqual("No");
+			expect(accessControlPage.firstUserIrfEdit.getText()).toEqual("No");
+			expect(accessControlPage.firstUserIrfView.getText()).toEqual("Yes");
+			
+			expect(accessControlPage.firstUserBorderStationAdd.getText()).toEqual("Yes");
+			expect(accessControlPage.firstUserBorderStationDelete.getText()).toEqual("No");
+			expect(accessControlPage.firstUserBorderStationEdit.getText()).toEqual("Yes");
+			expect(accessControlPage.firstUserBorderStationView.getText()).toEqual("Yes");
+			
+			expect(accessControlPage.firstUserAccountsManage.getText()).toEqual("No");
+			expect(accessControlPage.firstUserReceiveMail.getText()).toEqual("No");
+			expect(accessControlPage.firstUserVdcManage.getText()).toEqual("Yes");
+			expect(accessControlPage.firstUserBudgetManage.getText()).toEqual("No");
+			
+			
+			
+		
+			
+		});		
+	});
+	
+	
+	
+	
 });

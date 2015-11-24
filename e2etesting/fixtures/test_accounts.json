@@ -37,6 +37,10 @@
         "permission_border_stations_view": true,
         "permission_border_stations_add": true,
         "permission_border_stations_edit": true,
+        "permission_irf_delete": false,
+        "permission_vif_delete": false,
+        "permission_border_stations_delete": false,
+        "permission_budget_manage": false, 
         "permission_vdc_manage":true,
         "name": "Field Staff"
     }
@@ -56,6 +60,10 @@
         "permission_border_stations_view": true,
         "permission_border_stations_add": true,
         "permission_border_stations_edit": true,
+        "permission_irf_delete": false,
+        "permission_vif_delete": false,
+        "permission_border_stations_delete": false,
+        "permission_budget_manage": false,
         "permission_vdc_manage":true,
         "name": "Summer Intern"
     }
