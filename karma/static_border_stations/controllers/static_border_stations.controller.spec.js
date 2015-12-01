@@ -80,11 +80,11 @@ describe('BorderStationsCtrl', function(){
        expect(vm.people.committeeMembers.name).toBe(committeeMemTitle);
      });
      
-     it('updateStatusText should be "Update Station"', function() {
+     it('modifyStatusText should be "Update Station"', function() {
        // REGION: Data Setup
        var updateButtonText = 'Update Station';
        // ENDREGION: Data Setup
-       expect(vm.updateStatusText).toBe(updateButtonText);
+       expect(vm.modifyStatusText).toBe(updateButtonText);
      });
    });
    
@@ -265,6 +265,42 @@ describe('BorderStationsCtrl', function(){
      });
    });
    
+   
+   describe('function modifyStation', function() {
+     var updateButtonText;
+     
+     beforeEach(function() {
+       updateButtonText = 'Update Station';
+       
+       // Spy on all of the calls
+       spyOn(vm, 'createCommitteeMembers').and.callFake(fakeDeferredFunction);
+       spyOn(vm, 'createLocations').and.callFake(fakeDeferredFunction);
+       spyOn(vm, 'createStaff').and.callFake(fakeDeferredFunction);
+       spyOn(vm, 'updateCommitteeMembers').and.callFake(fakeDeferredFunction);
+       spyOn(vm, 'updateDetails').and.callFake(fakeDeferredFunction);
+       spyOn(vm, 'updateLocations').and.callFake(fakeDeferredFunction);
+       spyOn(vm, 'updateStaff').and.callFake(fakeDeferredFunction);
+     });
+     
+     it('should change updateStatusText to "Saving..."', function() {
+       expect(vm.modifyStatusText).toEqual(updateButtonText);
+       
+       vm.modifyStation();
+       
+       expect(vm.modifyStatusText).toEqual("Saving...");
+     });
+     
+     it('should make errors array empty', function() {
+       // REGION: Data Setup
+       vm.errors = [{error: 'this is an error'}];
+       // ENDREGION: Data Setup
+       expect(vm.errors).not.toEqual([]);
+       
+       vm.modifyStation();
+       
+       expect(vm.errors).toEqual([]);
+     });
+   });
    
    
    describe('function removeCommitteeMember', function() {
@@ -451,44 +487,6 @@ describe('BorderStationsCtrl', function(){
        vm.updateStaff();
        
        expect(vm.updateRelationship).toHaveBeenCalled();
-     });
-   });
-   
-   
-   
-   describe('function updateStation', function() {
-     var updateButtonText;
-     
-     beforeEach(function() {
-       updateButtonText = 'Update Station';
-       
-       // Spy on all of the calls
-       spyOn(vm, 'createCommitteeMembers').and.callFake(fakeDeferredFunction);
-       spyOn(vm, 'createLocations').and.callFake(fakeDeferredFunction);
-       spyOn(vm, 'createStaff').and.callFake(fakeDeferredFunction);
-       spyOn(vm, 'updateCommitteeMembers').and.callFake(fakeDeferredFunction);
-       spyOn(vm, 'updateDetails').and.callFake(fakeDeferredFunction);
-       spyOn(vm, 'updateLocations').and.callFake(fakeDeferredFunction);
-       spyOn(vm, 'updateStaff').and.callFake(fakeDeferredFunction);
-     });
-     
-     it('should change updateStatusText to "Saving..."', function() {
-       expect(vm.updateStatusText).toEqual(updateButtonText);
-       
-       vm.updateStation();
-       
-       expect(vm.updateStatusText).toEqual("Saving...");
-     });
-     
-     it('should make errors array empty', function() {
-       // REGION: Data Setup
-       vm.errors = [{error: 'this is an error'}];
-       // ENDREGION: Data Setup
-       expect(vm.errors).not.toEqual([]);
-       
-       vm.updateStation();
-       
-       expect(vm.errors).toEqual([]);
      });
    });
 	 
