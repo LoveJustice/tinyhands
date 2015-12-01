@@ -6,7 +6,8 @@ var vifCrud = require('../dataentry/vifCrud.js');
 
 describe('Budget Calculation', function() {
     beforeEach(function () {
-        return browser.ignoreSynchronization = true;
+        browser.ignoreSynchronization = true;
+        browser.manage().timeouts().implicitlyWait(5000);
     });
 
     describe('admin can login', function () {
@@ -17,11 +18,10 @@ describe('Budget Calculation', function() {
     });
 
     describe('form creation', function () {
-
         it('goes to new form', function () {
             budgetForm.navigateToNewForm();
+            browser.sleep(1000);
             expect(browser.driver.getCurrentUrl()).toContain('/budget/api/budget_calculations/create/');
-            browser.sleep(500);
         });
 
         it('calculates values correctly ', function () {
@@ -29,9 +29,6 @@ describe('Budget Calculation', function() {
             //Modify filloutIRF to pass in borderstation name to allow for different forms
             irfCrud.getToIRF();
             irfCrud.fillOutIRF("AAA123");
-
-
-
             //Create a vif form to test top table.
 
             budgetForm.navigateToNewForm();
@@ -39,7 +36,6 @@ describe('Budget Calculation', function() {
             budgetForm.fillOutForm();
             browser.executeScript('document.getElementById("month_year").value = "2015-05"' );
             browser.executeScript('$("#month_year").trigger("change");');
-            browser.sleep(5000);
 
             // expect totals to be certain values
             expect(element(by.id('staffTotal')).getAttribute("value")).toBe('200');
@@ -59,19 +55,14 @@ describe('Budget Calculation', function() {
 
         it('redirects on submit to Money Distribution Form', function () {
             budgetForm.submitForm();
-            browser.sleep(1000);
+
+            browser.wait(protractor.ExpectedConditions.titleIs('Money Distribution PDF | Tiny Hands Dream Suite'), 2000);
+
             expect(browser.driver.getCurrentUrl()).toContain('budget_calculations/money_distribution');
         });
 
         it('should show form in budget calculations list', function () {
-
-            //browser.sleep(10000);
             browser.get(c.webAddress + '/budget/budget_calculations/');
-            browser.sleep(500);
-            var x = new Date();
-            var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-
-            //By.cssSelector("#budget_list > div.container > table > tbody > tr:nth-child(1) > td:nth-child(1)")
 
             this.table = element(by.id("DataTables_Table_0"));
             expect(this.table.element(by.xpath("./tbody/tr/td[1]")).getText()).toBe('Test Station');
@@ -80,14 +71,14 @@ describe('Budget Calculation', function() {
         });
 
         it('is populated with data from last form', function() {
-            //budgetForm.viewForm();
-            //browser.ignoreSynchronization = false;
             budgetForm.navigateToNewForm();
-            browser.sleep(4000);
 
-            //browser.pause();
-            //browser.refresh();
-            //checks for values based on a recent test that filled out the form
+            browser.sleep(1);
+            browser.waitForAngular();
+
+            browser.wait(protractor.ExpectedConditions.presenceOf(element(by.xpath("//div[@ng-controller='otherBudgetItemsCtrl as miscItemsCtrl']/div/div[2]/input"))), 10000);
+            browser.wait(protractor.ExpectedConditions.presenceOf(element(by.xpath("//div[@ng-controller='otherBudgetItemsCtrl as shelterItemsCtrl']/div/div[2]/input"))), 10000);
+
             expect(element(by.binding("main.shelterTotal()")).getText()).toBe(c.shelterTotal);
             expect(element(by.binding("main.foodGasTotal()")).getText()).toBe(c.foodTotal);
             expect(element(by.binding("main.communicationTotalValue")).getText()).toBe(c.commTotal);
@@ -108,9 +99,7 @@ describe('Budget Calculation', function() {
     describe('viewing form', function () {
         it('all inputs are disabled', function () {
             budgetForm.viewForm();
-            //browser.sleep(1000);
 
-            browser.sleep(2000);
             expect(element(by.model("main.form.month_year")).getAttribute("value")).toBe('2015-05');
             expect(element(by.id("shelter_rent")).getAttribute('disabled')).toBe('true');
             expect(element(by.id("shelter_water")).getAttribute('disabled')).toBe('true');
@@ -174,10 +163,10 @@ describe('Budget Calculation', function() {
 
     describe('editing form', function () {
         it('all inputs are enabled', function () {
-            //browser.ignoreSynchronization = false;
             budgetForm.editForm();
-            browser.sleep(2000);
             browser.refresh();
+            browser.sleep(1);
+            browser.waitForAngular();
 
             expect(browser.driver.getCurrentUrl()).toContain('budget_calculations/update');
             expect(element(by.model("main.form.month_year")).getAttribute("value")).toBe('2015-05');
@@ -244,12 +233,12 @@ describe('Budget Calculation', function() {
     describe("Top Table", function() {
         it("populates this month correctly", function() {
             budgetForm.navigateToNewForm();
-            //browser.ignoreSynchronization = false;
             budgetForm.fillOutForm();
 
             browser.executeScript('document.getElementById("month_year").value = "2015-06"');
             browser.executeScript('$("#month_year").trigger("change");');
-            browser.sleep(500);
+
+            browser.wait(protractor.ExpectedConditions.textToBePresentInElement(element(by.xpath("/html/body/div[2]/form[1]/div[1]/div[1]/div[1]/table[1]/tbody[1]/tr[1]/td[2]")), "1"),2000);
 
             var table = element(by.xpath("/html/body/div[2]/form[1]/div[1]/div[1]/div[1]/table[1]/tbody[1]"));
             expect(table.element(by.xpath("./tr[1]/td[2]")).getText()).toBe("1");
@@ -260,20 +249,20 @@ describe('Budget Calculation', function() {
         it("populates laste 3 months correctly", function() {
             browser.executeScript('document.getElementById("month_year").value = "2015-07"');
             browser.executeScript('$("#month_year").trigger("change");');
-            browser.sleep(500);
+
+            browser.wait(protractor.ExpectedConditions.textToBePresentInElement(element(by.xpath("/html/body/div[2]/form[1]/div[1]/div[1]/div[1]/table[1]/tbody[1]/tr[1]/td[2]")), "0"),2000);
 
             var table = element(by.xpath("/html/body/div[2]/form[1]/div[1]/div[1]/div[1]/table[1]/tbody[1]"));
             expect(table.element(by.xpath("./tr[1]/td[2]")).getText()).toBe("0");
             expect(table.element(by.xpath("./tr[2]/td[2]")).getText()).toBe("1");
             expect(table.element(by.xpath("./tr[3]/td[2]")).getText()).toBe("1");
-
-
         });
 
         it("populates all time correctly", function() {
             browser.executeScript('document.getElementById("month_year").value = "2015-10"');
             browser.executeScript('$("#month_year").trigger("change");');
-            browser.sleep(500);
+
+            browser.wait(protractor.ExpectedConditions.textToBePresentInElement(element(by.xpath("/html/body/div[2]/form[1]/div[1]/div[1]/div[1]/table[1]/tbody[1]/tr[2]/td[2]")), "0"),2000);
 
             var table = element(by.xpath("/html/body/div[2]/form[1]/div[1]/div[1]/div[1]/table[1]/tbody[1]"));
             expect(table.element(by.xpath("./tr[1]/td[2]")).getText()).toBe("0");

@@ -9,8 +9,8 @@ var budgetForm = function () {
 
     this.navigateToNewForm = function () {
         browser.get(c.webAddress + '/static_border_stations/border-stations/update/24/');
-        browser.sleep(1000);
-        methods.click(element(by.linkText("New Budget Calculation Form")));
+        //browser.sleep(1000);
+        element(by.linkText("New Budget Calculation Form")).click();
     };
 
     this.readForm = function () {
@@ -169,11 +169,13 @@ var budgetForm = function () {
         element(by.model("form.salary")).clear().sendKeys('100');
         
         element(by.id("staff_add_item")).click();
-        browser.sleep(500);
-        element(by.xpath("//div[@ng-controller='otherBudgetItemsCtrl as staffItemsCtrl']/div/div/input")).clear().sendKeys('Staff1');
-        element(by.xpath("//div[@ng-controller='otherBudgetItemsCtrl as staffItemsCtrl']/div/div[2]/input")).clear().sendKeys('100');
 
-
+        browser.wait(function(){
+            return element(by.xpath("//div[@ng-controller='otherBudgetItemsCtrl as staffItemsCtrl']/div/div/input")).isPresent();
+        }, 10000).then(function(){
+            element(by.xpath("//div[@ng-controller='otherBudgetItemsCtrl as staffItemsCtrl']/div/div/input")).clear().sendKeys('Staff1');
+            element(by.xpath("//div[@ng-controller='otherBudgetItemsCtrl as staffItemsCtrl']/div/div[2]/input")).clear().sendKeys('100');
+        });
 
         element(by.id("shelter_rent")).clear().sendKeys('100');
         element(by.id("shelter_water")).clear().sendKeys('200');
@@ -184,8 +186,13 @@ var budgetForm = function () {
         element(by.id("shelter_two_amount")).clear().sendKeys('200');
         element(by.id("shelter_add_item")).click();
 
-        element(by.xpath("//div[@ng-controller='otherBudgetItemsCtrl as shelterItemsCtrl']/div/div/input")).clear().sendKeys('Test1');
-        element(by.xpath("//div[@ng-controller='otherBudgetItemsCtrl as shelterItemsCtrl']/div/div[2]/input")).clear().sendKeys('100');
+        browser.wait(function(){
+            return element(by.xpath("//div[@ng-controller='otherBudgetItemsCtrl as shelterItemsCtrl']/div/div/input")).isPresent();
+        }, 10000).then(function(){
+            element(by.xpath("//div[@ng-controller='otherBudgetItemsCtrl as shelterItemsCtrl']/div/div/input")).clear().sendKeys('Test1');
+            element(by.xpath("//div[@ng-controller='otherBudgetItemsCtrl as shelterItemsCtrl']/div/div[2]/input")).clear().sendKeys('100');
+        });
+
         element(by.id("food_gas_multiplier_before")).clear().sendKeys('100');
         element(by.id("food_gas_number_of_girls")).clear().sendKeys('4');
         element(by.id("food_gas_multiplier_after")).clear().sendKeys('2');
@@ -194,8 +201,13 @@ var budgetForm = function () {
         element(by.id("limbo_number_of_days")).clear().sendKeys('3');
         element(by.id("foodGas_add_item")).click();
 
-        element(by.xpath("//div[@ng-controller='otherBudgetItemsCtrl as foodGasItemsCtrl']/div/div/input")).clear().sendKeys('Test1');
-        element(by.xpath("//div[@ng-controller='otherBudgetItemsCtrl as foodGasItemsCtrl']/div/div[2]/input")).clear().sendKeys('100');
+        browser.wait(function(){
+            return element(by.xpath("//div[@ng-controller='otherBudgetItemsCtrl as foodGasItemsCtrl']/div/div/input")).isPresent();
+        }, 10000).then(function(){
+            element(by.xpath("//div[@ng-controller='otherBudgetItemsCtrl as foodGasItemsCtrl']/div/div/input")).clear().sendKeys('Test1');
+            element(by.xpath("//div[@ng-controller='otherBudgetItemsCtrl as foodGasItemsCtrl']/div/div[2]/input")).clear().sendKeys('100');
+        });
+
         element(by.id("comm_chair_bool")).click();
         element(by.id("comm_chair_amount")).clear().sendKeys('100');
         element(by.id("comm_manager_bool")).click();
@@ -207,8 +219,13 @@ var budgetForm = function () {
         element(by.id("comm_each_staff_wt_multiplier")).clear().sendKeys('5');
         element(by.id("communication_add_item")).click();
 
-        element(by.xpath("//div[@ng-controller='otherBudgetItemsCtrl as communicationItemsCtrl']/div/div/input")).clear().sendKeys('Test1');
-        element(by.xpath("//div[@ng-controller='otherBudgetItemsCtrl as communicationItemsCtrl']/div/div[2]/input")).clear().sendKeys('100');
+        browser.wait(function(){
+            return element(by.xpath("//div[@ng-controller='otherBudgetItemsCtrl as communicationItemsCtrl']/div/div/input")).isPresent();
+        }, 10000).then(function(){
+            element(by.xpath("//div[@ng-controller='otherBudgetItemsCtrl as communicationItemsCtrl']/div/div/input")).clear().sendKeys('Test1');
+            element(by.xpath("//div[@ng-controller='otherBudgetItemsCtrl as communicationItemsCtrl']/div/div[2]/input")).clear().sendKeys('100');
+        });
+
         element(by.id("awareness_contact_cards_bool")).click();
         element(by.id("awareness_contact_cards_amount")).clear().sendKeys('100');
         element(by.id("awareness_awareness_party_bool")).click();
@@ -217,8 +234,13 @@ var budgetForm = function () {
         element(by.id("awareness_sign_boards_amount")).clear().sendKeys('300');
         element(by.id("awareness_add_item")).click();
 
-        element(by.xpath("//div[@ng-controller='otherBudgetItemsCtrl as awarenessItemsCtrl']/div/div/input")).clear().sendKeys('Test1');
-        element(by.xpath("//div[@ng-controller='otherBudgetItemsCtrl as awarenessItemsCtrl']/div/div[2]/input")).clear().sendKeys('100');
+        browser.wait(function(){
+            return element(by.xpath("//div[@ng-controller='otherBudgetItemsCtrl as awarenessItemsCtrl']/div/div/input")).isPresent();
+        }, 10000).then(function(){
+            element(by.xpath("//div[@ng-controller='otherBudgetItemsCtrl as awarenessItemsCtrl']/div/div/input")).clear().sendKeys('Test1');
+            element(by.xpath("//div[@ng-controller='otherBudgetItemsCtrl as awarenessItemsCtrl']/div/div[2]/input")).clear().sendKeys('100');
+        });
+
         element(by.id("travel_chair_with_bike_bool")).click();
         element(by.id("travel_chair_with_bike_amount")).clear().sendKeys('100');
         element(by.id("travel_manager_with_bike_bool")).click();
@@ -241,8 +263,14 @@ var budgetForm = function () {
         element(by.id("supplies_flashlights_bool")).click();
         element(by.id("supplies_flashlights_amount")).clear().sendKeys('400');
         element(by.id("supplies_add_item")).click();
-        element(by.xpath("//div[@ng-controller='otherBudgetItemsCtrl as suppliesItemsCtrl']/div/div/input")).clear().sendKeys('Test3');
-        element(by.xpath("//div[@ng-controller='otherBudgetItemsCtrl as suppliesItemsCtrl']/div/div[2]/input")).clear().sendKeys('100');
+
+        browser.wait(function(){
+            return element(by.xpath("//div[@ng-controller='otherBudgetItemsCtrl as suppliesItemsCtrl']/div/div/input")).isPresent();
+        }, 10000).then(function(){
+            element(by.xpath("//div[@ng-controller='otherBudgetItemsCtrl as suppliesItemsCtrl']/div/div/input")).clear().sendKeys('Test3');
+            element(by.xpath("//div[@ng-controller='otherBudgetItemsCtrl as suppliesItemsCtrl']/div/div[2]/input")).clear().sendKeys('100');
+        });
+
         element(by.id("admin_number_of_interceptions_last_month")).clear().sendKeys('10');
         element(by.id("admin_number_of_interceptions_last_month_multiplier")).clear().sendKeys('20');
         element(by.id("admin_number_of_interceptions_last_month_adder")).clear().sendKeys('100');
@@ -256,19 +284,32 @@ var budgetForm = function () {
         element(by.id("misc_number_of_intercepts")).clear().sendKeys('10');
         element(by.id("misc_number_of_intercepts_mult")).clear().sendKeys('50');
         element(by.id("misc_add_item")).click();
-        browser.sleep(2000);
-        element(by.xpath("//div[@ng-controller='otherBudgetItemsCtrl as miscItemsCtrl']/div/div/input")).clear().sendKeys('Test4');
-        element(by.xpath("//div[@ng-controller='otherBudgetItemsCtrl as miscItemsCtrl']/div/div[2]/input")).clear().sendKeys('100');
-        browser.sleep(3000);
-        //browser.pause();
+
+        browser.wait(function(){
+            return element(by.xpath("//div[@ng-controller='otherBudgetItemsCtrl as miscItemsCtrl']/div/div/input")).isPresent();
+        }, 10000).then(function(){
+            element(by.xpath("//div[@ng-controller='otherBudgetItemsCtrl as miscItemsCtrl']/div/div/input")).clear().sendKeys('Test4');
+            element(by.xpath("//div[@ng-controller='otherBudgetItemsCtrl as miscItemsCtrl']/div/div[2]/input")).clear().sendKeys('100');
+        });
+
+        browser.sleep(1);
+        browser.waitForAngular();
+    };
+
+    this.urlChanged = function() {
+        return browser.getCurrentUrl().then(function(url) {
+            return url === c.webAdress + '';
+        });
     };
 
     this.submitForm = function () {
-        methods.click(element(by.id("budget_create")));
+        element(by.id("budget_create")).click();
     };
 
     this.updateForm = function () {
-        methods.click(element(by.id("budget_update")));
+        browser.sleep(800);
+        element(by.id("budget_update")).click();
+        browser.sleep(800);
     };
 
     this.viewForm = function () {
@@ -277,7 +318,6 @@ var budgetForm = function () {
 
     this.editForm = function () {
         browser.get(c.webAddress + '/budget/api/budget_calculations/update/1/');
-        browser.sleep(1000);
     };
 
     this.navigateToForms = function () {
