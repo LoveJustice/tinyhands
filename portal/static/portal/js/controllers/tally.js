@@ -78,7 +78,7 @@
 
         function getDayOfWeek(date) {
             var newDate = moment(date);
-            var today = moment().tz("Asia/Kathmandu")
+            var today = moment().tz("Asia/Kathmandu");
             if (today.date() === newDate.date()) return 'Today';
             var nameOfDay = newDate.format('dddd');
             return nameOfDay;

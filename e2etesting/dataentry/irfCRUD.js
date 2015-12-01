@@ -5,21 +5,24 @@ var methods = require('../commonMethods.js');
 
 var irfPage = function() {
     var page = this;
-    
+
     this.getToIRF = function(){
-	    browser.get(c.webAddress + '/data-entry/irfs/search/');
+	    //browser.get(c.webAddress + '/data-entry/irfs/');
         //this.link = element(by.id("id_input_new_irf"));
         browser.get(c.webAddress + '/data-entry/irfs/create/');
+        browser.sleep(1000);
         //return this.link.click();
     };
 
-    this.fillOutIRF = function(irfNumber) {
-        //var today = date || c.irfInterceptTime;
+    this.fillOutIRF = function(irfNumber, irfInterceptTime) {
         browser.executeScript("arguments[0].style.visibility = 'hidden';", element(by.id("footer")).getWebElement()); // Hides the footer so the webdriver can click on stuff
         this.irf_number_of_victims = element(by.id("id_number_of_victims")).clear().sendKeys("1");
         this.irf_number = element(by.id("id_irf_number")).sendKeys(irfNumber);
         this.location = element(by.id("id_location")).sendKeys(c.irfLocation);
-        this.date_time_of_interception = element(by.id("id_date_time_of_interception")).sendKeys(c.irfInterceptTime);
+
+
+        var date = irfInterceptTime ? irfInterceptTime : c.irfInterceptTime;
+        this.date_time_of_interception = element(by.id("id_date_time_of_interception")).sendKeys(date);
         this.staff_name = element(by.id("id_staff_name")).sendKeys(c.irfStaffName);
         this.drugged_or_drowsy = element(by.id("id_drugged_or_drowsy")).click();
         this.contact_noticed = element(by.id("id_contact_noticed")).click();
@@ -45,17 +48,15 @@ var irfPage = function() {
         //browser.sleep(2000);
         //this.ignoreWarning = element(by.id("id_ignore_warnings")).click();
         //this.submit = element(by.id("submtButton")).click();
-
-
     };
 
     this.viewIRF = function() {
         //this.vIRF = element(by.linkText('View')).click();
-        browser.get(c.webAddress + '/data-entry/irfs/1/');
+        browser.get(c.webAddress + '/data-entry/irfs/3/');
     };
 
     this.editIRF = function() {
-        browser.get(c.webAddress + '/data-entry/irfs/update/1/');
+        browser.get(c.webAddress + '/data-entry/irfs/update/3/');
         browser.executeScript("arguments[0].style.visibility = 'hidden';", element(by.id("footer")).getWebElement()); // Hides the footer so the webdriver can click on stuff
         //this.eIRF = element(by.linkText('Edit')).click();
         //this.irf_number = element(by.id("id_irf_number")).clear();
@@ -69,12 +70,12 @@ var irfPage = function() {
     this.deleteIRF = function() {
 
         //this.dIRF = element(by.buttonText("Delete"));
-        this.dIRF = element(by.xpath("//button[text()='Delete']"));
+        this.dIRF = element(by.partialLinkText("Delete"));
         methods.click(this.dIRF);
         //this.dIRF.click();
         browser.sleep(500);
-        this.dIRFPopUp = element(by.xpath("//input[@value='Delete']"));
-        methods.click(this.dIRFPopUp);
+        this.confirmDelete = element(by.partialLinkText("Confirm"));
+        methods.click(this.confirmDelete);
     };
 
     //TODO: Test for staff dropdown - ensure that correct staff is loaded based on the IRF number #id_irf_number

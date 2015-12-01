@@ -150,6 +150,7 @@
      "permission_vif_delete": true,
      "permission_receive_email": true,
      "permission_irf_edit": true,
+     "permission_vif_delete": true,
      "permission_irf_delete": true,
      "permission_budget_manage": true
 

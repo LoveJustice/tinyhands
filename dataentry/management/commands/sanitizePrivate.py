@@ -1,10 +1,10 @@
 from django.core.management.base import BaseCommand
 from django.db.utils import IntegrityError
 from dataentry.models import *
-from accounts.models import Account,DefaultPermissionsSet
-import dataentry
+from accounts.models import Account, DefaultPermissionsSet
 import random
 import time
+
 
 class Command(BaseCommand):
     help = 'update private names, phone numbers and scanned files'
@@ -12,7 +12,7 @@ class Command(BaseCommand):
     photo_prefix = 'interceptee_photos/'
 
     # Set of 20 sample animal photos
-    sample_photos =[
+    sample_photos = [
         'butterfly.jpg', 'flamingo.jpg', 'lamb.jpg', 'lion.jpg', 'monkey2.jpg',
         'owl.jpg', 'stuffedBear2.jpg', 'clownFish.jpg', 'giraffe.jpg', 'leopard.jpg',
         'llama.jpg', 'monkey.jpg', 'squirrel2.jpg', 'stuffedBear.jpg', 'fawn.jpg',
@@ -64,15 +64,14 @@ class Command(BaseCommand):
         'Julia', 'Cora', 'Lauren', 'Piper', 'Gianna',
         'Paisley', 'Bella', 'London', 'Clara', 'Cadenc']
 
-    number_strings = ['0','1','2','3','4','5','6','7','8','9']
+    number_strings = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 
     irf_file_prefix = 'scanned_irf_forms/'
     vif_file_prefix = 'scanned_vif_forms/'
 
     sample_files = [
         'sample_200dpi.pdf', 'sample_300dpi.pdf', 'sample_400dpi.pdf', 'sample_720dpi.pdf',
-        'sample_240dpi.pdf', 'sample_360dpi.pdf', 'sample_600dpi.pdf', 'sample_800dpi.pdf' ]
-
+        'sample_240dpi.pdf', 'sample_360dpi.pdf', 'sample_600dpi.pdf', 'sample_800dpi.pdf']
 
     def sanitize(self, model, photo_methods, name_methods, phone_methods, file_methods, file_prefix):
         class_name = model.__name__
@@ -107,7 +106,6 @@ class Command(BaseCommand):
                     self.stderr.write("WHAT?? {} - {}".format(type(e), e))
                     exit(1)
 
-
             # Sanitize phone numbers
             for method_name in phone_methods:
                 try:
@@ -134,7 +132,6 @@ class Command(BaseCommand):
                     self.stderr.write("WHAT?? {} - {}".format(type(e), e))
                     exit(1)
 
-
             if modified:
                 instance.save()
                 processed += 1
@@ -142,7 +139,6 @@ class Command(BaseCommand):
         self.stdout.write("Sanitize model {}: objects processed {}".format(class_name, processed))
 
         return processed
-
 
     def select_photo(self):
         new_photo = self.photo_prefix + random.choice(self.sample_photos)
@@ -153,7 +149,7 @@ class Command(BaseCommand):
             ' ' + random.choice(self.last_names)
         return new_name
 
-    def generate_phone(self,old_number):
+    def generate_phone(self, old_number):
         phone = ''
         for idx in range(len(old_number)):
             phone = phone + random.choice(self.number_strings)
@@ -164,7 +160,7 @@ class Command(BaseCommand):
         new_file = prefix + random.choice(self.sample_files)
         return new_file
 
-    def sanitize_email (self):
+    def sanitize_email(self):
         cnt = 1
 
         for instance in Account.objects.all():
@@ -172,7 +168,6 @@ class Command(BaseCommand):
             instance.save()
             cnt += 1
         
-
     def create_base_user(self):
         account = Account()
         account.last_name = 'Test'
@@ -180,7 +175,7 @@ class Command(BaseCommand):
         account.last_login = time.strftime("%Y-%m-%d %H:%M:%S", localtime)
         account.joined = time.strftime("%Y-%m-%d %H:%M:%S", localtime)
         account.user_designation = DefaultPermissionsSet()
-        account.user_designation_id = 1;
+        account.user_designation_id = 1
         account.is_active = True
         return account
 
@@ -221,7 +216,7 @@ class Command(BaseCommand):
         account.set_password('pass')
         try:
             account.save()
-        except IntegrityError as e:
+        except IntegrityError:
             self.stderr.write("There is an existing user with email {}".format(account.email))
 
         account = self.create_base_user()
@@ -231,21 +226,22 @@ class Command(BaseCommand):
         account.set_password('pass')
         try:
             account.save()
-        except IntegrityError as e:
+        except IntegrityError:
             self.stderr.write("There is an existing user with email {}".format(account.email))
 
     def handle(self, *args, **options):
         sanitized = 0
 
-        sanitized += self.sanitize(Interceptee, ['photo'],['full_name'],['phone_contact'],[],None)
-        sanitized += self.sanitize(InterceptionRecord, [],[],[],['scanned_form'], self.irf_file_prefix)
+        sanitized += self.sanitize(Interceptee, ['photo'], ['full_name'], ['phone_contact'], [], None)
+        sanitized += self.sanitize(InterceptionRecord, [], [], [], ['scanned_form'], self.irf_file_prefix)
         sanitized += self.sanitize(VictimInterview, [],
-            ['interviewer','victim_name','legal_action_fir_against_value','legal_action_dofe_against_value'],
-            ['victim_phone','victim_guardian_phone'],['scanned_form'], self.vif_file_prefix)
-        sanitized += self.sanitize(VictimInterviewPersonBox, [],['name'],['phone'],[],None)
-        sanitized += self.sanitize(VictimInterviewLocationBox, [],['person_in_charge'],['phone'],[],None)
+                                   ['interviewer', 'victim_name', 'legal_action_fir_against_value', 'legal_action_dofe_against_value'],
+                                   ['victim_phone', 'victim_guardian_phone'], ['scanned_form'], self.vif_file_prefix
+                                   )
+        sanitized += self.sanitize(VictimInterviewPersonBox, [], ['name'], ['phone'], [], None)
+        sanitized += self.sanitize(VictimInterviewLocationBox, [], ['person_in_charge'], ['phone'], [], None)
 
-        self.sanitize_email ()
+        self.sanitize_email()
         self.create_test_users()
 
         self.stdout.write("Total sanitized {} objects".format(sanitized))

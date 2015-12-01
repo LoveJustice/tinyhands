@@ -26,7 +26,7 @@ var vifCrud = function() {
 
     this.checkEditedVif = function() {
         browser.sleep(4000);
-        browser.get(c.webAddress + '/data-entry/vifs/search/');
+        browser.get(c.webAddress + '/data-entry/vifs/');
         methods.click(element(by.id("id_edit_vif_button")));
         //this.view = element.all(by.id("id_edit_vif_button")).click();
         //this.view_edited_vif = element(by.id("id_view_vif_button")).click();
@@ -34,7 +34,7 @@ var vifCrud = function() {
 
     this.incorrectly_edit_vif = function() {
         //browser.get(c.webAddress + '/data-entry/vifs/update/1004/');
-        //browser.sleep(800);
+        browser.sleep(800);
         element(by.id("id_edit_vif_button")).click();
         //browser.sleep(800);
         this.clear_gender_field = element(by.id("id_migration_plans_education")).click();

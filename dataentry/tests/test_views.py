@@ -1,11 +1,9 @@
 from django.test import TestCase
 from django_webtest import WebTest
 from dataentry.views import SearchFormsMixin
-from dataentry.models import InterceptionRecord
 from django.core.urlresolvers import reverse
 from accounts.tests.factories import *
-from dataentry.models import BorderStation, Interceptee
-from accounts.models import Account
+from dataentry.models import BorderStation
 
 
 class InterceptionRecordCreateViewTests(WebTest):
@@ -20,23 +18,23 @@ class InterceptionRecordCreateViewTests(WebTest):
     def test_irf_number_is_valid(self):
         form = self.form
         form.set('irf_number', BorderStation.objects.all()[0].station_code + '123')
-        BSCode = form.get("irf_number").value[:3]
-        self.assertEqual(3, len(BSCode))
+        borderstation_code = form.get("irf_number").value[:3]
+        self.assertEqual(3, len(borderstation_code))
 
     def test_irf_number_matches_existing_border_station(self):
         form = self.form
         form.set('irf_number', BorderStation.objects.all()[0].station_code + '123')
-        BSCode = form.get("irf_number").value[:3]
-        borderstation = BorderStation.objects.all().filter(station_code=BSCode)
+        borderstation_code = form.get("irf_number").value[:3]
+        borderstation = BorderStation.objects.all().filter(station_code=borderstation_code)
         self.assertNotEqual(0, len(borderstation))
 
     def test_when_irf_number_is_invalid_fail_to_submit_with_errors(self):
         form = self.form
         form.set('irf_number', '123')
         form_response = form.submit()
-        theErrors = form_response.context['form'].errors
-        self.assertIn('irf_number', theErrors.keys())
-        self.assertIsNotNone(theErrors['irf_number'])
+        errors = form_response.context['form'].errors
+        self.assertIn('irf_number', errors.keys())
+        self.assertIsNotNone(errors['irf_number'])
 
 
 class VictimInterviewFormCreateViewTests(WebTest):
@@ -51,23 +49,23 @@ class VictimInterviewFormCreateViewTests(WebTest):
     def test_vif_number_is_valid(self):
         form = self.form
         form.set('vif_number', BorderStation.objects.all()[0].station_code + '123')
-        BSCode = form.get("vif_number").value[:3]
-        self.assertEqual(3, len(BSCode))
+        borderstation_code = form.get("vif_number").value[:3]
+        self.assertEqual(3, len(borderstation_code))
 
     def test_vif_number_matches_existing_border_station(self):
         form = self.form
         form.set('vif_number', BorderStation.objects.all()[0].station_code + '123')
-        BSCode = form.get("vif_number").value[:3]
-        borderstation = BorderStation.objects.all().filter(station_code=BSCode)
+        borderstation_code = form.get("vif_number").value[:3]
+        borderstation = BorderStation.objects.all().filter(station_code=borderstation_code)
         self.assertNotEqual(0, len(borderstation))
 
     def test_when_vif_number_is_invalid_fail_to_submit_with_errors(self):
         form = self.form
         form.set('vif_number', '123')
         form_response = form.submit()
-        theErrors = form_response.context['form'].errors
-        self.assertIn('vif_number', theErrors.keys())
-        self.assertIsNotNone(theErrors['vif_number'])
+        errors = form_response.context['form'].errors
+        self.assertIn('vif_number', errors.keys())
+        self.assertIsNotNone(errors['vif_number'])
 
 
 class SearchFormsMixinTests(TestCase):
@@ -87,7 +85,7 @@ class InterceptionRecordListViewTests(WebTest):
         self.assertEquals(response.status_code, 200)
 
     def test_search_url_exists(self):
-        response = self.app.get('/data-entry/irfs/search/?search_value=BHD', user=self.superuser)
+        response = self.app.get('/api/irf/?search=BHD', user=self.superuser)
         self.assertEquals(response.status_code, 200)
 
 
@@ -100,5 +98,5 @@ class VictimInterviewFormListViewTests(WebTest):
         self.assertEquals(response.status_code, 200)
 
     def test_search_url_exists(self):
-        response = self.app.get('/data-entry/vifs/search/?search_value=BHD', user=self.superuser)
+        response = self.app.get('/api/vif/?search=BHD', user=self.superuser)
         self.assertEquals(response.status_code, 200)

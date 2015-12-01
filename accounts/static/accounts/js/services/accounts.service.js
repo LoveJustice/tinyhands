@@ -5,7 +5,7 @@ angular.module('AccountsMod')
     return $resource('/api/accounts/:id/', {} ,
       {
         me:{
-          url: '/api/accounts/me',
+          url: '/api/me',
           method: 'GET'
         },
         all: {

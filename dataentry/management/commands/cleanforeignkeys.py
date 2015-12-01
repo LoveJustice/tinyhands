@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 from dataentry.models import *
-import dataentry
+
 
 class Command(BaseCommand):
     help = 'Clean up bogus foreign key values'
@@ -25,10 +25,10 @@ class Command(BaseCommand):
             method = getattr(model, method_name)
             for instance in model.objects.all():
                 try:
-                    value = method.__get__(instance)
+                    method.__get__(instance)
                 except model.DoesNotExist:
                     missing_id = getattr(instance, method_name + "_id")
-                    self.stderr.write("Removed {} {} from {} {}" \
+                    self.stderr.write("Removed {} {} from {} {}"
                                       .format(method_name, missing_id,
                                               class_name, instance.pk))
                     foreign_keys_fixed += 1

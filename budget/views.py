@@ -302,16 +302,9 @@ class MoneyDistributionFormPDFView(PDFView, LoginRequiredMixin, PermissionsRequi
 
     def get_context_data(self):
 
-        #import ipdb
-        ## ipdb.set_trace()
-
         station = BorderStationBudgetCalculation.objects.get(pk=self.kwargs['pk'])
         staffSalaries = StaffSalary.objects.filter(budget_calc_sheet=self.kwargs['pk'])
-        staffOtherItems = OtherBudgetItemCost.objects.filter(form_section=8, budget_item_parent=self.kwargs['pk'])
-        staffTotal = sum([staff.salary for staff in staffSalaries]) + sum(form.cost for form in staffOtherItems)
         otherItems = station.otherbudgetitemcost_set.all()
-
-        #staffNum = (staffSalaries) + (staffOtherItems)
 
         adminMeetings = station.administration_number_of_meetings_per_month * station.administration_number_of_meetings_per_month_multiplier
 
@@ -320,9 +313,8 @@ class MoneyDistributionFormPDFView(PDFView, LoginRequiredMixin, PermissionsRequi
             'name': station.border_station.station_name,
             'date': station.date_time_entered.date,
             'number': len(staffSalaries),
-            #'staff_num': staffNum,
             'staffSalaries': staffSalaries,
-            'salary_total': staffTotal,
+            'salary_total': station.salary_total(),
             'travel_chair_bool': station.travel_chair_with_bike,
             'travel_chair': station.travel_chair_with_bike_amount,
             'travel_manager_bool': station.travel_manager_with_bike,
@@ -336,7 +328,7 @@ class MoneyDistributionFormPDFView(PDFView, LoginRequiredMixin, PermissionsRequi
             'communication_staff': station.communication_staff_total(),
             'communication_total': station.communication_total(),
 
-            'admin_meetings': adminMeetings,
+            'admin_meetings': station.administration_number_of_meetings_per_month * station.administration_number_of_meetings_per_month_multiplier,
             'admin_total': station.administration_total(),
 
             'medical_total': station.medical_total(),
