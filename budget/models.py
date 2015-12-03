@@ -23,6 +23,14 @@ class BorderStationBudgetCalculation(models.Model):
     communication_each_staff = models.PositiveIntegerField('each staff', default=0)
     communication_each_staff_multiplier = models.PositiveIntegerField(default=300)
 
+
+    def communication_extra_items_total(self):
+        items = self.otherbudgetitemcost_set.filter(form_section=7)
+        total = 0
+        for item in items:
+            total += item.cost
+        return total
+
     def communication_total(self):
         total = 0
         if self.communication_chair:
@@ -31,6 +39,7 @@ class BorderStationBudgetCalculation(models.Model):
             total += self.communication_manager_amount
         total += self.communication_number_of_staff_with_walkie_talkies * self.communication_number_of_staff_with_walkie_talkies_multiplier
         total += self.communication_each_staff * self.communication_each_staff_multiplier
+        total += self.communication_extra_items_total()
         return total
 
     def communication_staff_total(self):
@@ -135,9 +144,16 @@ class BorderStationBudgetCalculation(models.Model):
     shelter_shelter_two = models.BooleanField('Shelter 2', default=False)
     shelter_shelter_two_amount = models.PositiveIntegerField(default=36800)
 
+    def shelter_extra_items_total(self):
+        items = self.otherbudgetitemcost_set.filter(form_section=5)
+        total = 0
+        for item in items:
+            total += item.cost
+        return total
+
     def shelter_total(self):
         total = 0
-        total += self.shelter_rent + self.shelter_electricity + self.shelter_water
+        total += self.shelter_rent + self.shelter_electricity + self.shelter_water + self.shelter_extra_items_total()
         if self.shelter_shelter_startup:
             total += self.shelter_shelter_startup_amount
         if self.shelter_shelter_two:
@@ -151,8 +167,16 @@ class BorderStationBudgetCalculation(models.Model):
     food_and_gas_number_of_limbo_girls = models.PositiveIntegerField('# of limbo girls', default=0)
     food_and_gas_number_of_days = models.PositiveIntegerField('# of days', default=0)
 
+    def food_and_gas_extra_items_total(self):
+        items = self.otherbudgetitemcost_set.filter(form_section=6)
+        total = 0
+        for item in items:
+            total += item.cost
+        return total
+
     def food_and_gas_total(self):
         total = 0
+        total += self.food_and_gas_extra_items_total()
         total += (self.food_and_gas_number_of_intercepted_girls * self.food_and_gas_number_of_intercepted_girls_multiplier_before * self.food_and_gas_number_of_intercepted_girls_multiplier_after)
         total += (self.food_and_gas_limbo_girls_multiplier * self.food_and_gas_number_of_limbo_girls * self.food_and_gas_number_of_days)
         return total
@@ -212,8 +236,20 @@ class BorderStationBudgetCalculation(models.Model):
             total += self.supplies_flashlights_amount
         return total
 
+    def salary_total(self):
+        total = 0
+        extra = self.otherbudgetitemcost_set.filter(form_section=8)
+        items = self.staffsalary_set.all()
+        for item in items:
+            total += item.salary
+        for extraitem in extra:
+            total += extraitem.cost
+
+        return total
+
     def station_total(self):
         total = 0
+        total += self.salary_total()
         total += self.supplies_total()
         total += self.awareness_total()
         total += self.food_and_gas_total()

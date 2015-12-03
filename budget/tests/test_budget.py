@@ -1,5 +1,6 @@
 from django.test import TestCase
 from budget.tests.factories import BorderStationBudgetCalculationFactory
+from budget.models import OtherBudgetItemCost, StaffSalary
 
 
 class TestModels(TestCase):
@@ -23,6 +24,9 @@ class TestModels(TestCase):
         item.shelter_shelter_startup = False
         item.shelter_shelter_two = False
         self.assertEqual(item.shelter_total(), 70)
+        shelter_extra = OtherBudgetItemCost.objects.create(budget_item_parent=item, form_section=5, name="extra-Shelter", cost=100)
+        self.assertEqual(item.shelter_total(), 170)
+
 
         #Food and Gas
         item.food_and_gas_number_of_intercepted_girls = 5
@@ -32,6 +36,9 @@ class TestModels(TestCase):
         item.food_and_gas_number_of_limbo_girls = 10
         item.food_and_gas_number_of_days = 20
         self.assertEqual(item.food_and_gas_total(), 21500)
+        food_gas_extra = OtherBudgetItemCost.objects.create(budget_item_parent=item, form_section=6, name="extra-foodGas", cost=100)
+        self.assertEqual(item.food_and_gas_total(), 21600)
+
 
         #Awareness
         item.awareness_contact_cards = True
@@ -46,6 +53,9 @@ class TestModels(TestCase):
         item.awareness_awareness_party_boolean = False
         item.awareness_sign_boards_boolean = False
         self.assertEqual(item.awareness_total(), 0)
+        awareness_extra = OtherBudgetItemCost.objects.create(budget_item_parent=item, form_section=3, name="extra-Awareness", cost=100)
+        self.assertEqual(item.awareness_total(), 100)
+
 
         #Supplies
         item.supplies_walkie_talkies_boolean = True
@@ -62,6 +72,8 @@ class TestModels(TestCase):
         item.supplies_binoculars_boolean = False
         item.supplies_flashlights_boolean = False
         self.assertEqual(item.supplies_total(), 0)
+        supplies_extra = OtherBudgetItemCost.objects.create(budget_item_parent=item, form_section=4, name="extra-Supplies", cost=100)
+        self.assertEqual(item.supplies_total(), 100)
 
 
         #Communication
@@ -77,6 +89,9 @@ class TestModels(TestCase):
         item.communication_chair = False
         item.communication_manager = False
         self.assertEqual(item.communication_total(), 3500)
+        communication_extra = OtherBudgetItemCost.objects.create(budget_item_parent=item, form_section=7, name="extra-Communication", cost=100)
+        self.assertEqual(item.communication_total(), 3600)
+
 
         #Travel
         item.travel_chair_with_bike = True
@@ -96,6 +111,8 @@ class TestModels(TestCase):
         #self.assertEqual(item.travel_total(), 31020)
         item.travel_motorbike = False
         self.assertEqual(item.travel_total(), 1020)
+        travel_extra = OtherBudgetItemCost.objects.create(budget_item_parent=item, form_section=1, name="extra-Travel", cost=100)
+        self.assertEqual(item.travel_total(), 1120)
 
         #Administration
         item.administration_booth = True
@@ -112,6 +129,11 @@ class TestModels(TestCase):
         item.administration_registration = False
         self.assertEqual(item.administration_total(), 3430)
 
+        #Staff
+        staff = StaffSalary.objects.create(budget_calc_sheet=item, salary=1000)
+        extra_8 = OtherBudgetItemCost.objects.create(budget_item_parent=item, form_section=8, name="extra-Staff", cost=100)
+        self.assertEqual(item.salary_total(), 1100)
+
         #Medical
         item.medical_last_months_expense = 500
         self.assertEqual(item.medical_total(), 500)
@@ -120,4 +142,8 @@ class TestModels(TestCase):
         item.miscellaneous_number_of_intercepts_last_month = 5
         item.miscellaneous_number_of_intercepts_last_month_multiplier = 300
         self.assertEqual(item.miscellaneous_total(), 1500)
+        misc_extra = OtherBudgetItemCost.objects.create(budget_item_parent=item, form_section=2, name="extra-Miscellaneous", cost=100)
+        self.assertEqual(item.miscellaneous_total(), 1600)
 
+        #Station Total
+        self.assertEqual(item.station_total(), 33320)

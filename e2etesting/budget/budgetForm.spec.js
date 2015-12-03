@@ -78,7 +78,6 @@ describe('Budget Calculation', function() {
 
             browser.wait(protractor.ExpectedConditions.presenceOf(element(by.xpath("//div[@ng-controller='otherBudgetItemsCtrl as miscItemsCtrl']/div/div[2]/input"))), 10000);
             browser.wait(protractor.ExpectedConditions.presenceOf(element(by.xpath("//div[@ng-controller='otherBudgetItemsCtrl as shelterItemsCtrl']/div/div[2]/input"))), 10000);
-
             expect(element(by.binding("main.shelterTotal()")).getText()).toBe(c.shelterTotal);
             expect(element(by.binding("main.foodGasTotal()")).getText()).toBe(c.foodTotal);
             expect(element(by.binding("main.communicationTotalValue")).getText()).toBe(c.commTotal);
@@ -167,7 +166,6 @@ describe('Budget Calculation', function() {
             browser.refresh();
             browser.sleep(1);
             browser.waitForAngular();
-
             expect(browser.driver.getCurrentUrl()).toContain('budget_calculations/update');
             expect(element(by.model("main.form.month_year")).getAttribute("value")).toBe('2015-05');
             expect(element(by.id("shelter_rent")).getAttribute('enabled')).toBe(null);
@@ -269,7 +267,7 @@ describe('Budget Calculation', function() {
             expect(table.element(by.xpath("./tr[2]/td[2]")).getText()).toBe("0");
             expect(table.element(by.xpath("./tr[3]/td[2]")).getText()).toBe("1");
 
-            expect(table.element(by.xpath("./tr[4]/td[2]")).getText()).toBe("2");
+            expect(table.element(by.xpath("./tr[4]/td[2]")).getText()).toBe("1");
         });
     });
 });
