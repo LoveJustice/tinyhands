@@ -14,24 +14,24 @@ class RequestPermission(permissions.BasePermission):
 
 class HasPermission(RequestPermission):
     def has_permission(self, request, view):
-      return super(HasPermission, self).has_permission(request, view, "ANY", view.permissions_required)
+        return super(HasPermission, self).has_permission(request, view, "ANY", view.permissions_required)
 
 
 class HasDeletePermission(RequestPermission):
     def has_permission(self, request, view):
-      return super(HasDeletePermission, self).has_permission(request, view, "DELETE", view.delete_permissions_required)
+        return super(HasDeletePermission, self).has_permission(request, view, "DELETE", view.delete_permissions_required)
 
 
 class HasGetPermission(RequestPermission):
     def has_permission(self, request, view):
-      return super(HasGetPermission, self).has_permission(request, view, "GET", view.get_permissions_required)
+        return super(HasGetPermission, self).has_permission(request, view, "GET", view.get_permissions_required)
 
 
 class HasPostPermission(RequestPermission):
     def has_permission(self, request, view):
-      return super(HasPostPermission, self).has_permission(request, view, "POST", view.post_permissions_required)
+        return super(HasPostPermission, self).has_permission(request, view, "POST", view.post_permissions_required)
 
 
 class HasPutPermission(RequestPermission):
     def has_permission(self, request, view):
-      return super(HasPutPermission, self).has_permission(request, view, "PUT", view.put_permissions_required)
+        return super(HasPutPermission, self).has_permission(request, view, "PUT", view.put_permissions_required)
