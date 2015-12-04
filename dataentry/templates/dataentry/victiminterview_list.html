@@ -4,19 +4,12 @@
 {% block title %}All VIFs{% endblock %}
 
 {% block content %}
-
-    <script type="text/javascript">
-        window.station_code = "{{ station_code }}";
-        window.search = {{ search }};
-    </script>
-
-
 {% verbatim %}
 <div ng-controller="vifListCtrl as vm">
 
     <div class="row" style="margin: 20px 0 20px 0;">
         <div class="col-xs-5">
-            <h1 style="margin:0;" ng-bind="vm.header"></h1>
+            <h1 style="margin:0;">All VIFs</h1>
         </div>
         <div class="pull-right" style="margin-top:8px;">
             <a class="btn btn-primary" id="export" href="/data-entry/vifs/export/" download>

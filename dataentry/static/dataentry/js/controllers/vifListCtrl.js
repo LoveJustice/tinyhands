@@ -6,7 +6,6 @@ angular
         var vm = this;
 
         // Variable Declarations
-        vm.header = "All VIFs";
         vm.loading = false;
         vm.reverse = false;
         vm.vifs = [];
@@ -34,10 +33,6 @@ angular
 
 
         function main(){
-            if(window.search == 1){
-                vm.searchValue = window.station_code;
-                vm.header = "All VIFs for " + vm.searchValue;
-            }
             vm.listVifs();
             vm.getUser();
         }
@@ -88,12 +83,6 @@ angular
             vifService.listVifs(vm.getQueryParams())
                 .success(function (data) {
                     vm.vifs = data.results;
-                    if(vm.searchValue) {
-                        vm.header = "All VIFs for " + vm.searchValue;
-                    }
-                    else {
-                        vm.header = "All VIFs";
-                    }
                     vm.nextPageUrl = data.next;
                     vm.loading = false;
                 });
@@ -120,7 +109,7 @@ angular
         function getQueryParams(){
             var params = "";
             params += "?page_size=" + vm.paginateBy;
-            if(vm.searchValue){
+                if(vm.searchValue){
                 params += "&search=" + vm.searchValue;
             }
             if(vm.reverse){

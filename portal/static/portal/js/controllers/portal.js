@@ -87,8 +87,8 @@
 
                 '<div id="rightColumn" class="col-md-6">'+
                     '<p id="BS"><a href="/static_border_stations/border-stations/' + borderStation.pk + '">Subcommittee, Staff, and Locations</a>' + '</p>' +
-                    '<p id="irf"><a href="/data-entry/irfs/search/' + borderStation.fields.station_code + '">IRFs</a>' + '</p>' +
-                    '<p id="vif"><a href="/data-entry/vifs/search/' + borderStation.fields.station_code + '">VIFs</a>' + '</p>' +
+                    '<p id="irf"><a href="/data-entry/irfs/search/?search_value=' + borderStation.fields.station_code + '">IRFs</a>' + '</p>' +
+                    '<p id="vif"><a href="/data-entry/vifs/search/?search_value=' + borderStation.fields.station_code + '">VIFs</a>' + '</p>' +
                 '</div>'+
             '</div>';
         }
