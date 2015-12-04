@@ -88,6 +88,13 @@ class SearchFormsMixin(object):
 def interception_record_list_template(request):
     return render(request, 'dataentry/interceptionrecord_list.html')
 
+@login_required
+def interception_record_list_search_template(request, code):
+    print(code)
+    station_code = code
+    search = 1
+    return render(request, 'dataentry/interceptionrecord_list.html', locals())
+
 
 class IntercepteeInline(InlineFormSet):
     model = Interceptee
@@ -206,6 +213,14 @@ class VictimInterviewListView(LoginRequiredMixin, SearchFormsMixin, ListView):
     def __init__(self, *args, **kwargs):
         # Passes what to search by to SearchFormsMixin
         super(VictimInterviewListView, self).__init__(vif_number__icontains="number", interviewer__icontains="name")
+
+
+@login_required
+def victiminterview_record_list_search_template(request, code):
+    print(code)
+    station_code = code
+    search = 1
+    return render(request, 'dataentry/victiminterview_list.html', locals())
 
 
 class VictimInterviewCreateView(LoginRequiredMixin, PermissionsRequiredMixin, CreateWithInlinesView):

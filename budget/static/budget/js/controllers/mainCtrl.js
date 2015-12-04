@@ -1,7 +1,7 @@
 
 angular
     .module('BudgetCalculation')
-    .controller('MainCtrl', ['$scope','$http', '$location', '$window', 'mainCtrlService', function($scope, $http, $location, $window, mainCtrlService) {
+    .controller('MainCtrl', ['$scope','$http','$location','$window','mainCtrlService', function($scope, $http, $location, $window, mainCtrlService) {
             var vm = this;
 
             // Variable Declarations
