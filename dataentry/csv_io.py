@@ -580,13 +580,14 @@ irf_data = [
     BooleanCsvField("where_going_treatment", "2.5 Going for Treatment", "Going for Treatment", ""),
 
     BooleanCsvField("drugged_or_drowsy", "3.1 Appears drugged or drowsy", "Appears drugged or drowsy", ""),
-    BooleanCsvField("meeting_someone_across_border", "3.2 Is meeting someone just across border",
+    BooleanCsvField("wife_under_18", "3.2 Wife is under 18", "Wife is under 18", ""),
+    BooleanCsvField("meeting_someone_across_border", "3.3 Is meeting someone just across border",
             "Is meeting someone just across border", ""),
-    BooleanCsvField("seen_in_last_month_in_nepal", "3.3 Meeting someone he/she's seen in Nepal",
+    BooleanCsvField("seen_in_last_month_in_nepal", "3.4 Meeting someone he/she's seen in Nepal",
             "Meeting someone he/she's seen in Nepal", ""),
-    BooleanCsvField("traveling_with_someone_not_with_her", "3.4 Was traveling with someone not with him/her",
+    BooleanCsvField("traveling_with_someone_not_with_her", "3.5 Was traveling with someone not with him/her",
             "Was traveling with someone not with him/her", ""),
-    BooleanCsvField("wife_under_18", "3.5 Wife is under 18", "Wife is under 18", ""),
+
     BooleanCsvField("married_in_past_2_weeks", "3.6 Was married in the past two weeks",
             "Was married in the past two weeks", ""),
     BooleanCsvField("married_in_past_2_8_weeks", "3.7 Was married within the past 2-8 weeks",
