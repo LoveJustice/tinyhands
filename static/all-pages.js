@@ -465,24 +465,24 @@ var DREAMSUITE = {
 
         setUpLimitedChoicesCheckboxGroups();
 
-        $('#id_victim_where_going_region_india').click(function() {
-            $('#id_victim_where_going_region_gulf').prop('checked', false);
-            $('input[id*="id_victim_where_going_gulf_"]').prop('checked', false);
-        });
-        $('#id_victim_where_going_region_gulf').click(function() {
-            $('#id_victim_where_going_region_india').prop('checked', false);
-            $('input[id*="id_victim_where_going_india_"]').prop('checked', false);
-        });
-        $('#victim_where_going_gulf').find('input[type="checkbox"]').click(function() {
-            $('#id_victim_where_going_region_gulf').prop('checked', true);
-            $('#id_victim_where_going_region_india').prop('checked', false);
-            $('input[id*="id_victim_where_going_india_"]').prop('checked', false);
-        });
-        $('#victim_where_going_india').find('input[type="checkbox"]').click(function() {
-            $('#id_victim_where_going_region_india').prop('checked', true);
-            $('#id_victim_where_going_region_gulf').prop('checked', false);
-            $('input[id*="id_victim_where_going_gulf_"]').prop('checked', false);
-        });
+        //$('#id_victim_where_going_region_india').click(function() {
+        //    $('#id_victim_where_going_region_gulf').prop('checked', false);
+        //    $('input[id*="id_victim_where_going_gulf_"]').prop('checked', false);
+        //});
+        //$('#id_victim_where_going_region_gulf').click(function() {
+        //    $('#id_victim_where_going_region_india').prop('checked', false);
+        //    $('input[id*="id_victim_where_going_india_"]').prop('checked', false);
+        //});
+        //$('#victim_where_going_gulf').find('input[type="checkbox"]').click(function() {
+        //    $('#id_victim_where_going_region_gulf').prop('checked', true);
+        //    $('#id_victim_where_going_region_india').prop('checked', false);
+        //    $('input[id*="id_victim_where_going_india_"]').prop('checked', false);
+        //});
+        //$('#victim_where_going_india').find('input[type="checkbox"]').click(function() {
+        //    $('#id_victim_where_going_region_india').prop('checked', true);
+        //    $('#id_victim_where_going_region_gulf').prop('checked', false);
+        //    $('input[id*="id_victim_where_going_gulf_"]').prop('checked', false);
+        //});
 
         $('#id_victim_where_going_india_other_value').keyup(function(event) {
             $("#id_victim_where_going_india_other").prop('checked', $(this).val() != "");
@@ -504,7 +504,14 @@ var DREAMSUITE = {
             }
         });
 
-<<<<<<< HEAD
+        $("#id_victim_where_going_gulf_other").click(function() {
+            if(!$(this).prop('checked')){
+                $('#id_victim_where_going_gulf_other_value').val("");
+            } else {
+                $('#id_victim_where_going_india_other_value').val("");
+            }
+        });
+
     $('#id_victim_where_going_region_india').click(function() {
        if ($('#id_victim_where_going_region_india').prop('checked') == false) {
         $('input[id*="id_victim_where_going_india_"]').prop('checked', false);
@@ -554,26 +561,7 @@ var DREAMSUITE = {
         'At most ' + count + ' may be checked.'
       );
     });
-=======
-        $("#id_victim_where_going_gulf_other").click(function() {
-            if(!$(this).prop('checked')){
-                $('#id_victim_where_going_gulf_other_value').val("");
-            } else {
-                $('#id_victim_where_going_india_other_value').val("");
-            }
-        });
 
-        // Allow user to hover over the numbers in parens next to some fields to
-        // learn that that is how many may be checked.
-        $('.max-allowed').each(function(i, elem) {
-            var text = $(elem).text();
-            var count = text.substring(1, text.length - 1);
-            $(elem).attr(
-                'title',
-                'At most ' + count + ' may be checked.'
-            );
-        });
->>>>>>> 0155382fa50fb158581a32165cda6c970887f9c3
 
         makeDatePickers('#id_date, #id_victim_how_long_stayed_between_start_date');
 
@@ -591,16 +579,9 @@ var DREAMSUITE = {
             $nextPage.slideDown();
         });
     },
-
-<<<<<<< HEAD
-
-
+    
   victiminterview_detail: function() {
     this.victiminterview_update();
-=======
-    victiminterview_detail: function() {
-        this.victiminterview_update();
->>>>>>> 0155382fa50fb158581a32165cda6c970887f9c3
 
         var $form = $('#victim-interview-form');
         $form.find('input, button, select, textarea').attr('disabled', 'disabled');
