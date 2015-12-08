@@ -486,12 +486,16 @@ var DREAMSUITE = {
 
         $('#id_victim_where_going_india_other_value').keyup(function(event) {
             $("#id_victim_where_going_india_other").prop('checked', $(this).val() != "");
+            $("#id_victim_where_going_region_india").prop('checked', true);
+            $("#id_victim_where_going_region_gulf").prop('checked', false);
             $("#id_victim_where_going_gulf_other").prop('checked', false);
             $("#id_victim_where_going_gulf_other_value").val("");
         });
 
         $('#id_victim_where_going_gulf_other_value').keyup(function(event) {
             $("#id_victim_where_going_gulf_other").prop('checked', $(this).val() != "");
+            $("#id_victim_where_going_region_gulf").prop('checked', true);
+            $("#id_victim_where_going_region_india").prop('checked', false);
             $("#id_victim_where_going_india_other").prop('checked', false);
             $("#id_victim_where_going_india_other_value").val("");
         });
@@ -579,7 +583,7 @@ var DREAMSUITE = {
             $nextPage.slideDown();
         });
     },
-    
+
   victiminterview_detail: function() {
     this.victiminterview_update();
 
