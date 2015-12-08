@@ -2,10 +2,11 @@
 
 angular
     .module('DataEntry')
-    .controller("irfListCtrl", ['$scope','$http','$timeout', 'irfService', function($scope, $http, $timeout, irfService) {
+    .controller("irfListCtrl", ['$scope','$http','$timeout', '$location', 'irfService', function($scope, $http, $timeout, $location, irfService) {
         var vm = this;
 
         // Variable Declarations
+        vm.header = "All IRFs";
         vm.loading = false;
         vm.reverse = false;
         vm.user = {};
@@ -33,6 +34,10 @@ angular
 
 
         function main(){
+            if(window.search == 1){
+                vm.searchValue = window.station_code;
+                vm.header = "All IRFs for " + vm.searchValue;
+            }
             vm.getUser();
             vm.listIrfs();
         }
@@ -83,6 +88,12 @@ angular
             irfService.listIrfs(vm.getQueryParams())
                 .success(function (data) {
                     vm.irfs = data.results;
+                    if(vm.searchValue) {
+                        vm.header = "All IRFs for " + vm.searchValue;
+                    }
+                    else {
+                        vm.header = "All IRFs";
+                    }
                     vm.nextPageUrl = data.next;
                     vm.loading = false;
                 });
@@ -112,11 +123,13 @@ angular
         }
 
         function getQueryParams(){
+            console.log("getting params...");
             var params = "";
             params += "?page_size=" + vm.paginateBy;
-                if(vm.searchValue){
+            if(vm.searchValue) {
                 params += "&search=" + vm.searchValue;
             }
+
             if(vm.reverse){
                 params += "&ordering=-" + vm.sortColumn;
             } else{

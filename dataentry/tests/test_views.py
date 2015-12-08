@@ -88,6 +88,10 @@ class InterceptionRecordListViewTests(WebTest):
         response = self.app.get('/api/irf/?search=BHD', user=self.superuser)
         self.assertEquals(response.status_code, 200)
 
+    def test_search_portal_url_exists(self):
+        response = self.app.get(reverse('interceptionrecord_list_search', args=['BHD']), user=self.superuser)
+        self.assertEquals(response.status_code, 200)
+
 
 class VictimInterviewFormListViewTests(WebTest):
     def setUp(self):
@@ -99,4 +103,8 @@ class VictimInterviewFormListViewTests(WebTest):
 
     def test_search_url_exists(self):
         response = self.app.get('/api/vif/?search=BHD', user=self.superuser)
+        self.assertEquals(response.status_code, 200)
+
+    def test_search_portal_url_exists(self):
+        response = self.app.get(reverse('victiminterview_list_search', args=['BHD']), user=self.superuser)
         self.assertEquals(response.status_code, 200)
