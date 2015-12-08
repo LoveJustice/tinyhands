@@ -2,7 +2,7 @@
 
 angular.module('AccountsMod')
   .factory('Accounts', function ($resource) {
-    return $resource('/api/accounts/:id/', {} ,
+    return $resource('/api/account/:id/', {} ,
       {
         me:{
           url: '/api/me',
@@ -33,7 +33,7 @@ angular.module('AccountsMod')
           }
         },
         resendActivationEmail: {
-          url: '/api/accounts/resend-activation-email/:id/',
+          url: '/api/account/resend-activation-email/:id/',
           method: 'POST',
           params:{
             id: '@id'
