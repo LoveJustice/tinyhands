@@ -19,9 +19,10 @@ class AlertTestCase(unittest.TestCase):
         self.assertEqual(len(x),1)
 
     def testAlertRemoved(self):
-        x = Alert.objects.all()[0] #get the first alert in the database
+        x = Alert.objects.all()[0]  # get the first alert in the database
         x.delete()
         self.assertEqual(len(Alert.objects.all()),0)
+
 
 class AccountTest(unittest.TestCase):
     def test_unicode(self):

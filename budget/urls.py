@@ -3,7 +3,6 @@ from budget import views
 from budget.views import BudgetViewSet, OtherItemsViewSet, StaffSalaryViewSet, MoneyDistribution, previous_data
 
 
-
 other_items_list = OtherItemsViewSet.as_view({
     'get': 'list',
     'post': 'create'

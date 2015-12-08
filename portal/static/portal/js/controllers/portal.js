@@ -230,5 +230,5 @@
          * -- Justin Southworth
          */
         google.maps.event.addDomListener(window, 'load', activate);
-    };
+    }
 })();

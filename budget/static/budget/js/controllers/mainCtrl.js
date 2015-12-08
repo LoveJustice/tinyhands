@@ -340,8 +340,6 @@ angular
                 })
             };
 
-
-
             function resetValuesToZero() {
                 vm.form = {
                     border_station: window.border_station,
