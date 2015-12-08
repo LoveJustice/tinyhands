@@ -3,14 +3,14 @@ angular
     .controller('AccessCtrl', ['Accounts','PermissionsSets', function(Accounts, PermissionsSets) {
         var vm = this;
 
-        vm.accounts = Accounts.all(); 
+        vm.accounts = Accounts.all();
         vm.permissions = PermissionsSets.all();
         //Whenever permissionText is changed, then grab the appropriate permissionsSet and set each button value to that
 
 
          vm.changeUserRole = function(account){
             PermissionsSets.get({id: account.user_designation}).$promise.then(function (permissions) {
-                account.permission_irf_view=  permissions.permission_irf_view;
+                account.permission_irf_view =  permissions.permission_irf_view;
                 account.permission_irf_add = permissions.permission_irf_add;
                 account.permission_irf_edit = permissions.permission_irf_edit;
                 account.permission_irf_delete = permissions.permission_irf_delete;
@@ -26,14 +26,14 @@ angular
                 account.permission_receive_email = permissions.permission_receive_email;
                 account.permission_vdc_manage = permissions.permission_vdc_manage;
                 account.permission_budget_manage = permissions.permission_budget_manage;
-            });  
-            
-            
+            });
+
+
         }
-        
+
         vm.update = function(){
-            for (var idx=0; idx<vm.accounts.results.length; idx++){
-                Accounts.update(vm.accounts.results[idx]);
-            }
+          vm.accounts.results.forEach( function(elm, idx) {
+            Accounts.update(vm.accounts.results[idx]);
+          } )
         }
     }]);

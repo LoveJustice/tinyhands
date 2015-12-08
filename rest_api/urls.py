@@ -31,7 +31,7 @@ urlpatterns = patterns('rest_api.views',
     # Locations
     url(r'^location/$', LocationViewSet.as_view({'get':'list', 'post':'create'}), name="Locations"),
     url(r'^location/(?P<pk>\d+)/$', LocationViewSet.as_view({'get':'retrieve', 'put':'update', 'delete':'destroy'}), name="Location"),
-    
+
     # Addresses
     url(r'^address1/$', Address1ViewSet.as_view({'get': 'list', 'post': 'create'}), name='Address1'),
     url(r'^address1/all/$', Address1ViewSet.as_view({'get': 'list_all'}), name='Address1all'),
@@ -43,16 +43,16 @@ urlpatterns = patterns('rest_api.views',
     # Fuzzy searching for addresses
     url(r'^address1/fuzzy/$', GeoCodeDistrictAPIView.as_view(), name="Address1FuzzySearch"),
     url(r'^address2/fuzzy/$', GeoCodeVdcAPIView.as_view(), name="Address2FuzzySearch"),
-    
+
     #Accounts and DefaultPermissionsSets
     url(r'^me/$', CurrentUserView.as_view(), name="CurrentUser"),
-    
-    url(r'^accounts/$', AccountViewSet.as_view({'get': 'list', 'post':'create'}), name="Accounts"),
-    url(r'^accounts/(?P<pk>\d+)/$', AccountViewSet.as_view({'get':'retrieve', 'put':'update', 'delete':'destroy'}), name='Account'),
-    url(r'^accounts/resend-activation-email/(?P<pk>\d+)/$', ResendActivationEmailView.as_view(), name='ResendActivationEmail'),
 
-    url(r'^defaultPermissionsSets/$', DefaultPermissionsSetViewSet.as_view({'get': 'list', 'post':'create'}), name="DefaultPermissionsSets"),
-    url(r'^defaultPermissionsSets/(?P<pk>\d+)/$', DefaultPermissionsSetViewSet.as_view({'get': 'retrieve', 'put':'update', 'delete':'destroy'}), name="DefaultPermissionsSet"),
+    url(r'^account/$', AccountViewSet.as_view({'get': 'list', 'post':'create'}), name="AccountList"),
+    url(r'^account/(?P<pk>\d+)/$', AccountViewSet.as_view({'get':'retrieve', 'put':'update', 'delete':'destroy'}), name='Account'),
+    url(r'^account/resend-activation-email/(?P<pk>\d+)/$', ResendActivationEmailView.as_view(), name='ResendActivationEmail'),
+
+    url(r'^defaultPermissionsSet/$', DefaultPermissionsSetViewSet.as_view({'get': 'list', 'post':'create'}), name="DefaultPermissionsSets"),
+    url(r'^defaultPermissionsSet/(?P<pk>\d+)/$', DefaultPermissionsSetViewSet.as_view({'get': 'retrieve', 'put':'update', 'delete':'destroy'}), name="DefaultPermissionsSet"),
 
     # IRFs
     url(r'^irf/$', InterceptionRecordViewSet.as_view({'get': 'list'}), name="InterceptionRecord"),

@@ -79,7 +79,6 @@ window.defaultPermissionSets = JSON.parse('{{ default_permissions_sets|safe }}')
                           <span>{{account.first_name+" "+account.last_name}}</span>
                           <br/>
                           <select  ng-change="accessCtrl.changeUserRole(account)" ng-model="account.user_designation" ng-options="p.id as p.name for p in accessCtrl.permissions.results">
-                          <!--ng-change="editCtrl.onUserDesignationChanged(editCtrl.account.user_designation)" -->
                           </select>
                         </td>
                         <td><label ng-click="account.permission_irf_view = !account.permission_irf_view" ng-class="account.permission_irf_view ? 'btn btn-success' : 'btn btn-danger'"><span class="yesno"></span>{{ account.permission_irf_view ? "Yes" : "No" }}</label></td>
@@ -104,7 +103,6 @@ window.defaultPermissionSets = JSON.parse('{{ default_permissions_sets|safe }}')
                     </tr>
             </tbody>
         </table>
-        <!--update button doesn't work-->
         <button class="clear btn btn-primary btn-lg" ng-click="accessCtrl.update()">Update</button>
     </div>
 </div>
