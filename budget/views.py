@@ -29,12 +29,19 @@ from budget.models import BorderStationBudgetCalculation, OtherBudgetItemCost, S
 from dataentry.models import InterceptionRecord
 from static_border_stations.models import Staff, BorderStation, CommitteeMember
 from static_border_stations.serializers import StaffSerializer, CommitteeMemberSerializer
-from serializers import BorderStationBudgetCalculationSerializer, OtherBudgetItemCostSerializer, StaffSalarySerializer
+from serializers import BorderStationBudgetCalculationSerializer, OtherBudgetItemCostSerializer, StaffSalarySerializer, BorderStationBudgetCalculationListSerializer
 
 
 class BudgetViewSet(viewsets.ModelViewSet):
     queryset = BorderStationBudgetCalculation.objects.all()
     serializer_class = BorderStationBudgetCalculationSerializer
+
+    def list(self, request, *args, **kwargs):
+            temp = self.serializer_class
+            self.serializer_class = BorderStationBudgetCalculationListSerializer  # we want to use a custom serializer just for the list view
+            super_list_response = super(BudgetViewSet, self).list(request, *args, **kwargs)  # call the supers list view with custom serializer
+            self.serializer_class = temp  # put the original serializer back in place
+            return super_list_response
 
 
 @api_view(['GET'])
