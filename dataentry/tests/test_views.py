@@ -89,7 +89,7 @@ class InterceptionRecordListViewTests(WebTest):
         self.assertEquals(response.status_code, 200)
 
     def test_search_portal_url_exists(self):
-        response = self.app.get('/data-entry/irfs/search/BHD/', user=self.superuser)
+        response = self.app.get(reverse('interceptionrecord_list_search', args=['BHD']), user=self.superuser)
         self.assertEquals(response.status_code, 200)
 
 
@@ -106,5 +106,5 @@ class VictimInterviewFormListViewTests(WebTest):
         self.assertEquals(response.status_code, 200)
 
     def test_search_portal_url_exists(self):
-        response = self.app.get('/data-entry/vifs/search/BHD/', user=self.superuser)
+        response = self.app.get(reverse('victiminterview_list_search', args=['BHD']), user=self.superuser)
         self.assertEquals(response.status_code, 200)

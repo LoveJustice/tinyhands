@@ -90,7 +90,6 @@ def interception_record_list_template(request):
 
 @login_required
 def interception_record_list_search_template(request, code):
-    print(code)
     station_code = code
     search = 1
     return render(request, 'dataentry/interceptionrecord_list.html', locals())
@@ -217,7 +216,6 @@ class VictimInterviewListView(LoginRequiredMixin, SearchFormsMixin, ListView):
 
 @login_required
 def victiminterview_record_list_search_template(request, code):
-    print(code)
     station_code = code
     search = 1
     return render(request, 'dataentry/victiminterview_list.html', locals())
