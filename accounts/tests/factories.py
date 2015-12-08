@@ -1,8 +1,8 @@
 import factory
 from factory.django import DjangoModelFactory
-import random
-from accounts.models import Account,DefaultPermissionsSet,Alert
+from accounts.models import Account, Alert
 from accounts.models import DefaultPermissionsSet
+
 
 class SuperUserDesignation(DjangoModelFactory):
     class Meta:

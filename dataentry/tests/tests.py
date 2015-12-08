@@ -5,7 +5,6 @@ import csv
 
 from django_webtest import WebTest
 from django.core.urlresolvers import reverse
-import pytz
 
 from accounts.tests.factories import *
 
@@ -25,7 +24,7 @@ class TestModels(WebTest):
     def fuzzySetUp(self, cut_off_number, match_name):
         cut_off_number = float(cut_off_number)
 
-        with open('dataentry/non_victims.csv', 'rb') as csvfile:
+        with open('dataentry/tests/non_victims.csv', 'rb') as csvfile:
             reader = csv.reader(csvfile)
             names = [row[2] for row in reader]
             entered_name = match_name

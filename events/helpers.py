@@ -26,10 +26,11 @@ def get_repeated(qs, start, end):
                 continue
             while end > check_start and ends > check_start:
                 if start <= check_start:
-                    temp_event = Event(title=item.title, start_date=check_start, end_date=check_end,
-                                        start_time=item.start_time, end_time=item.end_time, location=item.location,
-                                        description=item.description, is_repeat=item.is_repeat, repetition=item.repetition,
-                                        ends=item.ends)
+                    temp_event = Event(
+                        title=item.title, start_date=check_start, end_date=check_end,
+                        start_time=item.start_time, end_time=item.end_time, location=item.location,
+                        description=item.description, is_repeat=item.is_repeat, repetition=item.repetition,
+                        ends=item.ends)
                     items.append(temp_event)
                 check_start = add_repeat(check_start, repetition)
                 check_end = add_repeat(check_end, repetition)
@@ -47,7 +48,7 @@ def add_repeat(date, repeat):
         month = date.month + 1
         if month > 12:
             month = 1
-            year = date.year +1
+            year = date.year + 1
         else:
             year = date.year
         try:
@@ -66,7 +67,7 @@ def dashboard_event_list(qs_list):
     days_list = [this_day + datetime.timedelta(i) for i in range(7)]
     today = datetime.date.today().weekday()
     week_list = [(today+i) % 7 for i in range(7)]
-    ls = [[{'weekday': '{} {} - {}'.format(week_day[item], days_list[i].month, days_list[i].day )}] for i, item in enumerate(week_list)]
+    ls = [[{'weekday': '{} {} - {}'.format(week_day[item], days_list[i].month, days_list[i].day)}] for i, item in enumerate(week_list)]
 
     for item in qs_list:
         ends = item.ends.strftime('%Y-%m-%d') if item.ends else ''
@@ -111,11 +112,3 @@ def event_list(qs_list):
         }
         ls.append(temp)
     return ls
-
-
-# from itertools import groupby
-# from operator import itemgetter
-# result = []
-# for key,valuesiter in groupby(ls, key=itemgetter('start_date')):
-#     result.append(dict(type=key, items=list(v for v in valuesiter)))
-# print result

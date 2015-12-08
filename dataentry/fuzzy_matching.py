@@ -9,6 +9,7 @@ def match_location(district_name=None, vdc_name=None):
     look at commit 656d770fbaf28c82fca7fed11e7c1679982de3a5.
     """
     filter_by_district = False
+
     # Determine the appropriate model
     if vdc_name is not None and district_name is not None:
         model = VDC
@@ -21,8 +22,6 @@ def match_location(district_name=None, vdc_name=None):
         model = District
         location_name = district_name
 
-    # TODO - Make sure to optimize this search; the select_related might be
-    # necessary. Might also want to have cannonical_name__district in here.
     if filter_by_district:
         region_names = {region.id: region.name
                         for region in model.objects.filter(district__name__contains=district_name).select_related('district', 'cannonical_name__district')
@@ -35,7 +34,6 @@ def match_location(district_name=None, vdc_name=None):
     # matches is in the form of [(u'match', score, id), ...]
     matches = process.extractBests(location_name, region_names, limit=7)
 
-    # Return the correct objects.
     objects = None
     if len(matches) > 0:
         objects = [model.objects.get(pk=pk) for name, score, pk in matches]
