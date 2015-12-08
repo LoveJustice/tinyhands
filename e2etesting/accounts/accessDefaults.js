@@ -38,42 +38,33 @@ var accessDefaultsPage = function() {
         var row = {};
         row.deleteButton = permissionsSet.element(by.buttonText('X'));
         row.designation = permissionsSet.element(by.model('permissionsSet.name'));
-        row.irfView = permissionsSet.element(by.binding('permissionsSet.permission_irf_view ? "Yes" : "No"'));
-        row.irfAdd = permissionsSet.element(by.binding('permissionsSet.permission_irf_add ? "Yes" : "No"'));
-        row.irfEdit = permissionsSet.element(by.binding('permissionsSet.permission_irf_edit ? "Yes" : "No"'));
-        row.irfDelete = permissionsSet.element(by.binding('permissionsSet.permission_irf_delete ? "Yes" : "No"'));
-        row.vifView = permissionsSet.element(by.binding('permissionsSet.permission_vif_view ? "Yes" : "No"'));
-        row.vifAdd = permissionsSet.element(by.binding('permissionsSet.permission_vif_add ? "Yes" : "No"'));
-        row.vifEdit = permissionsSet.element(by.binding('permissionsSet.permission_vif_edit ? "Yes" : "No"'));
-        row.vifDelete = permissionsSet.element(by.binding('permissionsSet.permission_vif_delete ? "Yes" : "No"'));
-        row.borderStationView = permissionsSet.element(by.binding('permissionsSet.permission_border_stations_view ? "Yes" : "No"'));
-        row.borderStationAdd = permissionsSet.element(by.binding('permissionsSet.permission_border_stations_add ? "Yes" : "No"'));
-        row.borderStationEdit = permissionsSet.element(by.binding('permissionsSet.permission_border_stations_edit ? "Yes" : "No"'));
-        row.borderStationDelete = permissionsSet.element(by.binding('permissionsSet.permission_border_stations_delete ? "Yes" : "No"'));
-        row.alertsCanReceive = permissionsSet.element(by.binding('permissionsSet.permission_receive_email ? "Yes" : "No"'));
-        row.accountsManage = permissionsSet.element(by.binding('permissionsSet.permission_accounts_manage ? "Yes" : "No"'));
-        row.vdcManage = permissionsSet.element(by.binding('permissionsSet.permission_vdc_manage ? "Yes" : "No"'));
-        row.budgetManage = permissionsSet.element(by.binding('permissionsSet.permission_budget_manage ? "Yes" : "No"'));
+        row.permissions = {};
+        row.permissions.irfView = permissionsSet.element(by.binding('permissionsSet.permission_irf_view ? "Yes" : "No"'));
+        row.permissions.irfAdd = permissionsSet.element(by.binding('permissionsSet.permission_irf_add ? "Yes" : "No"'));
+        row.permissions.irfEdit = permissionsSet.element(by.binding('permissionsSet.permission_irf_edit ? "Yes" : "No"'));
+        row.permissions.irfDelete = permissionsSet.element(by.binding('permissionsSet.permission_irf_delete ? "Yes" : "No"'));
+        row.permissions.vifView = permissionsSet.element(by.binding('permissionsSet.permission_vif_view ? "Yes" : "No"'));
+        row.permissions.vifAdd = permissionsSet.element(by.binding('permissionsSet.permission_vif_add ? "Yes" : "No"'));
+        row.permissions.vifEdit = permissionsSet.element(by.binding('permissionsSet.permission_vif_edit ? "Yes" : "No"'));
+        row.permissions.vifDelete = permissionsSet.element(by.binding('permissionsSet.permission_vif_delete ? "Yes" : "No"'));
+        row.permissions.borderStationView = permissionsSet.element(by.binding('permissionsSet.permission_border_stations_view ? "Yes" : "No"'));
+        row.permissions.borderStationAdd = permissionsSet.element(by.binding('permissionsSet.permission_border_stations_add ? "Yes" : "No"'));
+        row.permissions.borderStationEdit = permissionsSet.element(by.binding('permissionsSet.permission_border_stations_edit ? "Yes" : "No"'));
+        row.permissions.borderStationDelete = permissionsSet.element(by.binding('permissionsSet.permission_border_stations_delete ? "Yes" : "No"'));
+        row.permissions.alertsCanReceive = permissionsSet.element(by.binding('permissionsSet.permission_receive_email ? "Yes" : "No"'));
+        row.permissions.accountsManage = permissionsSet.element(by.binding('permissionsSet.permission_accounts_manage ? "Yes" : "No"'));
+        row.permissions.vdcManage = permissionsSet.element(by.binding('permissionsSet.permission_vdc_manage ? "Yes" : "No"'));
+        row.permissions.budgetManage = permissionsSet.element(by.binding('permissionsSet.permission_budget_manage ? "Yes" : "No"'));
         return row;
     }
     
     this.clickRowPermissionButtons = function(row) {
-        row.irfView.click();
-        row.irfAdd.click();
-        row.irfEdit.click();
-        row.irfDelete.click();
-        row.vifView.click();
-        row.vifAdd.click();
-        row.vifEdit.click();
-        row.vifDelete.click();
-        row.borderStationView.click();
-        row.borderStationAdd.click();
-        row.borderStationEdit.click();
-        row.borderStationDelete.click();
-        row.alertsCanReceive.click();
-        row.accountsManage.click();
-        row.vdcManage.click();
-        row.budgetManage.click();
+        var permissions = row.permissions;
+        for (var permissionButton in permissions) {
+            if (permissions.hasOwnProperty(permissionButton)) {
+                permissions[permissionButton].click();
+            }
+        }
     }; 
     
     this.saveAll = function() {

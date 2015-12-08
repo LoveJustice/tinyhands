@@ -9,7 +9,7 @@ angular
     function EditAccountCtrl(Accounts, PermissionsSets, $window) {
         var vm = this;
 
-        vm.start = function() {
+        vm.activate = function() {
             vm.emailError = '';
             vm.userDesignationError = '';
 
@@ -79,7 +79,7 @@ angular
             }
             return true;
         }
-        
+
         vm.getTitle = function() {
             if(vm.editing) {
                 return 'Edit ' +vm.account.first_name + ' ' + vm.account.last_name + "'s Account";
@@ -122,5 +122,5 @@ angular
             return "Create";
         }
 
-        vm.start();
+        vm.activate();
     }

@@ -2,7 +2,7 @@
 
 angular.module('AccountsMod')
   .factory('PermissionsSets', function ($resource) {
-    return $resource('/api/defaultPermissionsSets/:id/', {} ,
+    return $resource('/api/defaultPermissionsSet/:id/', {} ,
       {
         all: {
           method: 'GET'
@@ -31,4 +31,3 @@ angular.module('AccountsMod')
       }
     );
   });
-

@@ -27,11 +27,6 @@ th, td {
 }
 </style>
 {% endblock %}
-{% block foot %}
-<script>
-window.defaultPermissionSets = JSON.parse('{{ default_permissions_sets|safe }}');
-</script>
-{% endblock %}
 
 
 {% block content %}
@@ -39,7 +34,7 @@ window.defaultPermissionSets = JSON.parse('{{ default_permissions_sets|safe }}')
 
 
 {% verbatim %}
-<div class="container" ng-controller="AccessCtrl as accessCtrl">
+<div class="container" ng-controller="AccessCtrl as accessCtrl" ng-cloak>
     <div method="POST" class="row">
         <table class="table table-condensed">
             <thead>

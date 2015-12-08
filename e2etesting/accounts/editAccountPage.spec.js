@@ -21,22 +21,11 @@ describe('Edit Account Page', function() {
 		});
 		
 		it('should have permissions set', function() {
-			expect(editAccountPage.permission_irf_view.getText()).toEqual('Yes');
-			expect(editAccountPage.permission_irf_add.getText()).toEqual('Yes');
-			expect(editAccountPage.permission_irf_edit.getText()).toEqual('Yes');
-			expect(editAccountPage.permission_irf_delete.getText()).toEqual('Yes');
-			expect(editAccountPage.permission_vif_view.getText()).toEqual('Yes');
-			expect(editAccountPage.permission_vif_add.getText()).toEqual('Yes');
-			expect(editAccountPage.permission_vif_edit.getText()).toEqual('Yes');
-			expect(editAccountPage.permission_vif_delete.getText()).toEqual('Yes');
-			expect(editAccountPage.permission_border_stations_view.getText()).toEqual('Yes');			
-			expect(editAccountPage.permission_border_stations_add.getText()).toEqual('Yes');			
-			expect(editAccountPage.permission_border_stations_edit.getText()).toEqual('Yes');			
-			expect(editAccountPage.permission_border_stations_delete.getText()).toEqual('Yes');
-			expect(editAccountPage.permission_accounts_manage.getText()).toEqual('Yes');			
-			expect(editAccountPage.permission_receive_email.getText()).toEqual('Yes');			
-			expect(editAccountPage.permission_vdc_manage.getText()).toEqual('Yes');			
-			expect(editAccountPage.permission_budget_manage.getText()).toEqual('Yes');							
+			for(permission in editAccountPage.permissions) {
+                if (editAccountPage.permissions.hasOwnProperty(permission)) {
+                    expect(editAccountPage.permissions[permission].getText()).toEqual('Yes');
+                }
+            }								
 		});
 		
 		it("should have user's name in title", function() {
@@ -50,22 +39,11 @@ describe('Edit Account Page', function() {
 		it("should allow permissions to change individually", function() {
 			editAccountPage.clickAllPermissions();
 			
-			expect(editAccountPage.permission_irf_view.getText()).toEqual('No');
-			expect(editAccountPage.permission_irf_add.getText()).toEqual('No');
-			expect(editAccountPage.permission_irf_edit.getText()).toEqual('No');
-			expect(editAccountPage.permission_irf_delete.getText()).toEqual('No');
-			expect(editAccountPage.permission_vif_view.getText()).toEqual('No');
-			expect(editAccountPage.permission_vif_add.getText()).toEqual('No');
-			expect(editAccountPage.permission_vif_edit.getText()).toEqual('No');
-			expect(editAccountPage.permission_vif_delete.getText()).toEqual('No');
-			expect(editAccountPage.permission_border_stations_view.getText()).toEqual('No');			
-			expect(editAccountPage.permission_border_stations_add.getText()).toEqual('No');			
-			expect(editAccountPage.permission_border_stations_edit.getText()).toEqual('No');			
-			expect(editAccountPage.permission_border_stations_delete.getText()).toEqual('No');
-			expect(editAccountPage.permission_accounts_manage.getText()).toEqual('No');			
-			expect(editAccountPage.permission_receive_email.getText()).toEqual('No');			
-			expect(editAccountPage.permission_vdc_manage.getText()).toEqual('No');			
-			expect(editAccountPage.permission_budget_manage.getText()).toEqual('No');
+			for(permission in editAccountPage.permissions) {
+                if (editAccountPage.permissions.hasOwnProperty(permission)) {
+                    expect(editAccountPage.permissions[permission].getText()).toEqual('No');
+                }
+            }
 		})
 	});	
 	
@@ -104,22 +82,12 @@ describe('Edit Account Page', function() {
 				expect(editAccountPage.lastName.getAttribute('value')).toEqual(editAccountPage.newLastName);
 				expect(editAccountPage.email.getAttribute('value')).toEqual(editAccountPage.newEmail);
 				expect(editAccountPage.userDesignation.getAttribute('value')).toEqual("3");
-				expect(editAccountPage.permission_irf_view.getText()).toEqual('No');
-				expect(editAccountPage.permission_irf_add.getText()).toEqual('No');
-				expect(editAccountPage.permission_irf_edit.getText()).toEqual('No');
-				expect(editAccountPage.permission_irf_delete.getText()).toEqual('No');
-				expect(editAccountPage.permission_vif_view.getText()).toEqual('No');
-				expect(editAccountPage.permission_vif_add.getText()).toEqual('No');
-				expect(editAccountPage.permission_vif_edit.getText()).toEqual('No');
-				expect(editAccountPage.permission_vif_delete.getText()).toEqual('No');
-				expect(editAccountPage.permission_border_stations_view.getText()).toEqual('No');			
-				expect(editAccountPage.permission_border_stations_add.getText()).toEqual('No');			
-				expect(editAccountPage.permission_border_stations_edit.getText()).toEqual('No');			
-				expect(editAccountPage.permission_border_stations_delete.getText()).toEqual('No');
-				expect(editAccountPage.permission_accounts_manage.getText()).toEqual('No');			
-				expect(editAccountPage.permission_receive_email.getText()).toEqual('No');			
-				expect(editAccountPage.permission_vdc_manage.getText()).toEqual('No');			
-				expect(editAccountPage.permission_budget_manage.getText()).toEqual('No');
+				
+				for(permission in editAccountPage.permissions) {
+					if (editAccountPage.permissions.hasOwnProperty(permission)) {
+						expect(editAccountPage.permissions[permission].getText()).toEqual('No');
+					}
+				}
 			});
 		});
 	});

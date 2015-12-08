@@ -12,21 +12,15 @@ describe('Access Defaults', function () {
     it('should have permissions sets loaded', function() {
         accessDefaultsPage.navigateToAccessDefaults();
         accessDefaultsPage.getSuperAdministratorRow().then(function(adminRow) {
-            expect(adminRow.irfView.getText()).toEqual('Yes');
-            expect(adminRow.irfAdd.getText()).toEqual('Yes');
-            expect(adminRow.irfEdit.getText()).toEqual('Yes');
-            expect(adminRow.irfDelete.getText()).toEqual('Yes');
-            expect(adminRow.vifView.getText()).toEqual('Yes');
-            expect(adminRow.vifAdd.getText()).toEqual('Yes');
-            expect(adminRow.vifEdit.getText()).toEqual('Yes');
-            expect(adminRow.vifDelete.getText()).toEqual('Yes');
-            expect(adminRow.borderStationView.getText()).toEqual('Yes');
-            expect(adminRow.borderStationAdd.getText()).toEqual('Yes');
-            expect(adminRow.borderStationEdit.getText()).toEqual('Yes');
-            expect(adminRow.accountsManage.getText()).toEqual('Yes');
-            expect(adminRow.alertsCanReceive.getText()).toEqual('No');                
-            expect(adminRow.vdcManage.getText()).toEqual('Yes');
-            expect(adminRow.budgetManage.getText()).toEqual('Yes');
+            for(permission in adminRow.permissions) {
+                if (adminRow.permissions.hasOwnProperty(permission)) {
+                    if(permission == 'alertsCanReceive') {
+                        expect(adminRow.permissions[permission].getText()).toEqual('No');
+                    }else {
+                        expect(adminRow.permissions[permission].getText()).toEqual('Yes');
+                    }
+                }
+            }
         });
     });
     
@@ -37,21 +31,11 @@ describe('Access Defaults', function () {
         var permissionRow = accessDefaultsPage.getLastPermissionsSetRow();
         accessDefaultsPage.clickRowPermissionButtons(permissionRow);
         
-        expect(permissionRow.irfView.getText()).toEqual('Yes');
-        expect(permissionRow.irfAdd.getText()).toEqual('Yes');
-        expect(permissionRow.irfEdit.getText()).toEqual('Yes');
-        expect(permissionRow.irfDelete.getText()).toEqual('Yes');
-        expect(permissionRow.vifView.getText()).toEqual('Yes');
-        expect(permissionRow.vifAdd.getText()).toEqual('Yes');
-        expect(permissionRow.vifEdit.getText()).toEqual('Yes');
-        expect(permissionRow.vifDelete.getText()).toEqual('Yes');
-        expect(permissionRow.borderStationView.getText()).toEqual('Yes');
-        expect(permissionRow.borderStationAdd.getText()).toEqual('Yes');
-        expect(permissionRow.borderStationEdit.getText()).toEqual('Yes');
-        expect(permissionRow.accountsManage.getText()).toEqual('Yes');
-        expect(permissionRow.alertsCanReceive.getText()).toEqual('Yes');                
-        expect(permissionRow.vdcManage.getText()).toEqual('Yes');
-        expect(permissionRow.budgetManage.getText()).toEqual('Yes');
+        for(permission in permissionRow.permissions) {
+            if (permissionRow.permissions.hasOwnProperty(permission)) {
+                expect(permissionRow.permissions[permission].getText()).toEqual('Yes');
+            }
+        }
         
         permissionRow.deleteButton.click();
     });    
@@ -63,21 +47,11 @@ describe('Access Defaults', function () {
             
             var permissionRow = accessDefaultsPage.getLastPermissionsSetRow();
             expect(permissionRow.designation.getText()).toEqual('');
-            expect(permissionRow.irfView.getText()).toEqual('No');
-            expect(permissionRow.irfAdd.getText()).toEqual('No');
-            expect(permissionRow.irfEdit.getText()).toEqual('No');
-            expect(permissionRow.irfDelete.getText()).toEqual('No');
-            expect(permissionRow.vifView.getText()).toEqual('No');
-            expect(permissionRow.vifAdd.getText()).toEqual('No');
-            expect(permissionRow.vifEdit.getText()).toEqual('No');
-            expect(permissionRow.vifDelete.getText()).toEqual('No');
-            expect(permissionRow.borderStationView.getText()).toEqual('No');
-            expect(permissionRow.borderStationAdd.getText()).toEqual('No');
-            expect(permissionRow.borderStationEdit.getText()).toEqual('No');
-            expect(permissionRow.accountsManage.getText()).toEqual('No');
-            expect(permissionRow.alertsCanReceive.getText()).toEqual('No');                
-            expect(permissionRow.vdcManage.getText()).toEqual('No');
-            expect(permissionRow.budgetManage.getText()).toEqual('No');
+            for(permission in permissionRow.permissions) {
+                if (permissionRow.permissions.hasOwnProperty(permission)) {
+                    expect(permissionRow.permissions[permission].getText()).toEqual('No');
+                }
+            }
             
             permissionRow.deleteButton.click();        
         });
@@ -111,7 +85,7 @@ describe('Access Defaults', function () {
             var name = "Foo Set";
             var permissionRow = accessDefaultsPage.getLastPermissionsSetRow();
             permissionRow.designation.sendKeys(name);
-            permissionRow.irfView.click();
+            permissionRow.permissions.irfView.click();
             accessDefaultsPage.saveAll();
             browser.sleep(2000); //wait for all REST requests to be resolved.
             
@@ -119,22 +93,17 @@ describe('Access Defaults', function () {
             var lastRow = accessDefaultsPage.getLastPermissionsSetRow();
             
             expect(lastRow.designation.getAttribute('value')).toEqual(name);
-            expect(permissionRow.irfView.getText()).toEqual('Yes');
-            expect(permissionRow.irfAdd.getText()).toEqual('No');
-            expect(permissionRow.irfEdit.getText()).toEqual('No');
-            expect(permissionRow.irfDelete.getText()).toEqual('No');
-            expect(permissionRow.vifView.getText()).toEqual('No');
-            expect(permissionRow.vifAdd.getText()).toEqual('No');
-            expect(permissionRow.vifEdit.getText()).toEqual('No');
-            expect(permissionRow.vifDelete.getText()).toEqual('No');
-            expect(permissionRow.borderStationView.getText()).toEqual('No');
-            expect(permissionRow.borderStationAdd.getText()).toEqual('No');
-            expect(permissionRow.borderStationEdit.getText()).toEqual('No');
-            expect(permissionRow.accountsManage.getText()).toEqual('No');
-            expect(permissionRow.alertsCanReceive.getText()).toEqual('No');                
-            expect(permissionRow.vdcManage.getText()).toEqual('No');
-            expect(permissionRow.budgetManage.getText()).toEqual('No');
             
+            for(permission in lastRow.permissions) {
+                if (lastRow.permissions.hasOwnProperty(permission)) {
+                    if(permission == 'irfView') {
+                        expect(lastRow.permissions[permission].getText()).toEqual('Yes');
+                    }else {
+                        expect(lastRow.permissions[permission].getText()).toEqual('No');
+                    }
+                }
+            }
+                        
             lastRow.deleteButton.click(); //remove newly created set
         }); 
     })    
