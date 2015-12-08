@@ -17,7 +17,7 @@ class EventForm(forms.ModelForm):
             self.fields[field].widget.attrs['class'] = 'form-control'
 
         for field in self.fields.values():
-            field.error_messages = {'required':'"{fieldname}"  field is required'.format(
+            field.error_messages = {'required': '"{fieldname}"  field is required'.format(
                 fieldname=field.label)}
 
         self.fields['start_date'].widget.attrs['placeholder'] = 'Start date'
@@ -55,5 +55,4 @@ class EventForm(forms.ModelForm):
 
         if ends and ends <= start_date:
             raise forms.ValidationError('Events repetition ends must be greater than first event end date.')
-
         return data

@@ -20,7 +20,6 @@ class Event(models.Model):
     created_on = models.DateTimeField(verbose_name='Crated on', auto_now_add=True, null=True)
     modified_on = models.DateTimeField(verbose_name='Crated on', auto_now=True, null=True)
 
-
     def __str__(self):
         return self.title
 
