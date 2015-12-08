@@ -466,24 +466,44 @@ var DREAMSUITE = {
     setUpLimitedChoicesCheckboxGroups();
 
     $('#id_victim_where_going_region_india').click(function() {
-      $('#id_victim_where_going_region_gulf').attr('checked', null);
-      $('input[id*="id_victim_where_going_gulf_"]').attr('checked', null);
+       if ($('#id_victim_where_going_region_india').prop('checked') == false) {
+        $('input[id*="id_victim_where_going_india_"]').prop('checked', false);
+      }
+      $('#id_victim_where_going_region_gulf').prop('checked', false);
+      $('input[id*="id_victim_where_going_gulf_"]').prop('checked', false);
     });
     $('#id_victim_where_going_region_gulf').click(function() {
-      $('#id_victim_where_going_region_india').attr('checked', null);
-      $('input[id*="id_victim_where_going_india_"]').attr('checked', null);
-    });
-    $('#victim_where_going_gulf').find('input[type="checkbox"]').click(function() {
-      $('#id_victim_where_going_region_gulf').attr('checked', 'checked');
-      $('#id_victim_where_going_region_india').attr('checked', null);
-      $('input[id*="id_victim_where_going_india_"]').attr('checked', null);
-    });
-    $('#victim_where_going_india').find('input[type="checkbox"]').click(function() {
-      $('#id_victim_where_going_region_india').attr('checked', 'checked');
-      $('#id_victim_where_going_region_gulf').attr('checked', null);
-      $('input[id*="id_victim_where_going_gulf_"]').attr('checked', null);
+      if ($('#id_victim_where_going_region_gulf').prop('checked') == false) {
+        $('input[id*="id_victim_where_going_gulf_"]').prop('checked', false);
+      }
+      $('#id_victim_where_going_region_india').prop('checked', false);
+      $('input[id*="id_victim_where_going_india_"]').prop('checked', false);
     });
 
+    $('#victim_where_going_gulf').find('input[type="checkbox"]').click(function() {
+      if ( $(this).prop("checked") == true) {
+        $('#id_victim_where_going_region_gulf').prop('checked', true);
+        $('#id_victim_where_going_region_india').prop('checked', false);
+        $('input[id*="id_victim_where_going_india_"]').prop('checked', false);
+      }
+      else{
+        $('#id_victim_where_going_region_gulf').prop('checked', false);
+        $('#id_victim_where_going_region_india').prop('checked', false);
+        $('input[id*="id_victim_where_going_india_"]').prop('checked', false);
+      }
+    });
+    $('#victim_where_going_india').find('input[type="checkbox"]').click(function() {
+      if ( $(this).prop("checked") == true) {
+        $('#id_victim_where_going_region_india').prop('checked', true);
+        $('#id_victim_where_going_region_gulf').prop('checked', false);
+        $('input[id*="id_victim_where_going_gulf_"]').prop('checked', false);
+      }
+      else{
+        $('#id_victim_where_going_region_india').prop('checked', false);
+        $('#id_victim_where_going_region_gulf').prop('checked', false);
+        $('input[id*="id_victim_where_going_gulf_"]').prop('checked', false);
+      }
+    });
     // Allow user to hover over the numbers in parens next to some fields to
     // learn that that is how many may be checked.
     $('.max-allowed').each(function(i, elem) {
@@ -511,6 +531,8 @@ var DREAMSUITE = {
       $nextPage.slideDown();
     });
   },
+
+
 
   victiminterview_detail: function() {
     this.victiminterview_update();
