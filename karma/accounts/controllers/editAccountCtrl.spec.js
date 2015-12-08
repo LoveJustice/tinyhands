@@ -112,7 +112,7 @@ describe('EditAccountCtrl', function(){
 
 		beforeEach(function() {
 			mockWindow.account_id = 1;
-			controller.start();
+			controller.activate();
 		});
 
 		it('should set vm.editing to true', function() {
@@ -128,7 +128,7 @@ describe('EditAccountCtrl', function(){
 
 		beforeEach(function() {
 			mockWindow.account_id = 1;
-			controller.start();
+			controller.activate();
 		});
 
 		it('should set vm.editing to true', function() {

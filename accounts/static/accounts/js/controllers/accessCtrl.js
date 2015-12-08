@@ -3,10 +3,12 @@ angular
     .controller('AccessCtrl', ['Accounts','PermissionsSets', function(Accounts, PermissionsSets) {
         var vm = this;
 
-        vm.accounts = Accounts.all();
-        vm.permissions = PermissionsSets.all();
-        //Whenever permissionText is changed, then grab the appropriate permissionsSet and set each button value to that
 
+        vm.activate = function () {
+          vm.accounts = Accounts.all();
+          vm.permissions = PermissionsSets.all();
+          //Whenever permissionText is changed, then grab the appropriate permissionsSet and set each button value to that
+        }
 
          vm.changeUserRole = function(account){
             PermissionsSets.get({id: account.user_designation}).$promise.then(function (permissions) {
@@ -28,7 +30,6 @@ angular
                 account.permission_budget_manage = permissions.permission_budget_manage;
             });
 
-
         }
 
         vm.update = function(){
@@ -36,4 +37,6 @@ angular
             Accounts.update(vm.accounts.results[idx]);
           } )
         }
+
+        vm.activate();
     }]);

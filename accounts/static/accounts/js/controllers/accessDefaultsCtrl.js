@@ -2,27 +2,30 @@ angular
     .module('AccountsMod')
     .controller('AccessDefaultsCtrl', ['$window','PermissionsSets',function($window, PermissionsSets) {
         var vm = this;
-        vm.permissionsSets = [];
-        vm.nameError = false;
 
-        $window.onbeforeunload = function(event) {
-            var unsavedChanges = false;
+        vm.activate = function () {
+          vm.permissionsSets = [];
+          vm.nameError = false;
 
-            vm.permissionsSets.forEach( function (elm, idx) {
-              if (elm.is_new) {
-                unsavedChanges = true;
+          $window.onbeforeunload = function(event) {
+              var unsavedChanges = false;
+
+              vm.permissionsSets.forEach( function (elm, idx) {
+                if (elm.is_new) {
+                  unsavedChanges = true;
+                }
+              })
+
+              if(unsavedChanges) {
+                  return "You have unsaved changes.";
               }
-            })
+              return;
+          };
 
-            if(unsavedChanges) {
-                return "You have unsaved changes.";
-            }
-            return;
-        };
-
-        PermissionsSets.all().$promise.then(function(response) {
-			vm.permissionsSets = response.results;
-		});
+          PermissionsSets.all().$promise.then(function(response) {
+            vm.permissionsSets = response.results;
+          });
+        }
 
         vm.delete = function(permissionSetIndex) {
             var permissionsSet = vm.permissionsSets[permissionSetIndex];
@@ -82,5 +85,7 @@ angular
                 permissionsSet.nameError = true;
             });
         }
+
+        vm.activate();
 
     }]);
