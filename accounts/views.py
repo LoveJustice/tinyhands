@@ -5,7 +5,7 @@ from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse_lazy
 from django.contrib import messages
 from django.http import HttpResponseRedirect
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView, RedirectView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, RedirectView, TemplateView
 from django.contrib.auth.decorators import login_required
 from braces.views import LoginRequiredMixin
 from extra_views import ModelFormSetView
@@ -30,8 +30,8 @@ def home(request):
 class AccountListView(
         LoginRequiredMixin,
         PermissionsRequiredMixin,
-        ListView):
-    model = Account
+        TemplateView):
+    template_name="accounts/account_list.html"
     permissions_required = ['permission_accounts_manage']
 
 
@@ -94,28 +94,6 @@ class AccountUpdateView(
         UpdateView):
     model = Account
     success_url = reverse_lazy('account_list')
-    fields = [
-        'email',
-        'first_name',
-        'last_name',
-        'user_designation',
-        'permission_irf_view',
-        'permission_irf_add',
-        'permission_irf_edit',
-        'permission_irf_delete',
-        'permission_vif_view',
-        'permission_vif_add',
-        'permission_vif_edit',
-        'permission_vif_delete',
-        'permission_accounts_manage',
-        'permission_receive_email',
-        'permission_border_stations_view',
-        'permission_border_stations_add',
-        'permission_border_stations_edit',
-        'permission_border_stations_delete',
-        'permission_vdc_manage',
-        'permission_budget_manage',
-    ]
     permissions_required = ['permission_accounts_manage']
 
     def get_context_data(self, **kwargs):
@@ -125,7 +103,6 @@ class AccountUpdateView(
 
 
 class AccountDeleteView(DeleteView):
-
     model = Account
     success_url = reverse_lazy('account_list')
 
@@ -141,66 +118,20 @@ class AccountDeleteView(DeleteView):
 class AccessControlView(
         LoginRequiredMixin,
         PermissionsRequiredMixin,
-        ModelFormSetView):
-    model = Account
+        TemplateView):
     template_name = 'accounts/access_control.html'
-    success_url = reverse_lazy('account_list')
     permissions_required = ['permission_accounts_manage']
-    extra = 0
-    fields = [
-        'user_designation',
-        'permission_irf_view',
-        'permission_irf_add',
-        'permission_irf_edit',
-        'permission_irf_delete',
-        'permission_vif_view',
-        'permission_vif_add',
-        'permission_vif_edit',
-        'permission_vif_delete',
-        'permission_accounts_manage',
-        'permission_receive_email',
-        'permission_border_stations_view',
-        'permission_border_stations_add',
-        'permission_border_stations_edit',
-        'permission_border_stations_delete',
-        'permission_vdc_manage',
-        'permission_budget_manage',
-    ]
-
-    def get_context_data(self, **kwargs):
-        context = ModelFormSetView.get_context_data(self, **kwargs)
-        context['default_permissions_sets'] = json.dumps(list(DefaultPermissionsSet.objects.values()))
-        return context
+    
 
 
 class AccessDefaultsView(
         LoginRequiredMixin,
         PermissionsRequiredMixin,
-        ModelFormSetView):
-    model = DefaultPermissionsSet
+        TemplateView):
     template_name = 'accounts/access_defaults.html'
-    success_url = reverse_lazy('account_list')
     permissions_required = ['permission_accounts_manage']
-    extra = 0
-    fields = [
-        'name',
-        'permission_irf_view',
-        'permission_irf_add',
-        'permission_irf_edit',
-        'permission_irf_delete',
-        'permission_vif_view',
-        'permission_vif_add',
-        'permission_vif_edit',
-        'permission_vif_delete',
-        'permission_accounts_manage',
-        'permission_border_stations_view',
-        'permission_border_stations_add',
-        'permission_border_stations_edit',
-        'permission_border_stations_delete',
-        'permission_vdc_manage',
-        'permission_budget_manage',
-    ]
 
+    
 
 #TODO Currently this view doesn't check to make sure the permission set is
 # unused by accounts.  The button to go here is grayed out, but that wouldn't
