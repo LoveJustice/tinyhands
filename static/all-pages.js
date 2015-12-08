@@ -100,49 +100,6 @@ function makeCheckboxAppearAsAButton(className,checkedText,uncheckedText) {
 }
 
 function setUpLimitedChoicesCheckboxGroups() {
-    // Well, this was supposed to be used to allow restricting
-    // a group of checkboxes to a certain number of checks, but
-    // now every group only requires one. heh heh heh
-
-    // To add a new checkbox group, add the class checkbox-group-marker and an id that contains the common starting string of each checkbox field.  For example, if you had talked_to_brother,  talked_to_sister, and talked_to_aunt in a group, putting in an id of "talked_to" would make that a group
-    //
-    // This commented out block almost works but breaks if something clears checkboxes other than this manager
-    //var checkboxManagers = {};
-    //$('.checkbox-group-marker').each(function(i, elem) {
-    //  var name = $(elem).attr('id');
-    //  var maxAllowedChecked = $(elem).data('max') || 1;
-    //  checkboxManagers[name] = {
-    //    name: name,
-    //    maxAllowedChecked: maxAllowedChecked,
-    //    checkedOrder: $.makeArray($('#'+name+' input[type="checkbox"]:checked'))
-    //  };
-    //});
-
-    //$('input[type="checkbox"]').click(function() {
-    //  var name = $(this).attr('name');
-    //  if (!(name in checkboxManagers)) {
-    //    name = $(this).parents('.checkbox-group-marker').attr('id');
-    //  }
-    //  var manager = checkboxManagers[name];
-
-    //  if (manager) {
-    //    if ($(this).is(':checked')) {
-    //      var numberChecked = $('#'+name+' input[type="checkbox"]:checked').length;
-    //      if (numberChecked === 0) {
-    //        manager.checkedOrder = [];
-    //      }
-    //      else if (numberChecked > manager.maxAllowedChecked) {
-    //        var last = manager.checkedOrder.shift();
-    //        $(last).attr('checked', null);
-    //      }
-    //      manager.checkedOrder.push(this);
-    //    }
-    //    else {
-    //      manager.checkedOrder.splice(
-    //        manager.checkedOrder.indexOf(this), 1);
-    //    }
-    //  }
-    //});
 
     // This simpler version just limits it to one checkbox since thats all we have right now
     $('input[type="checkbox"]').click(function() {
@@ -388,17 +345,8 @@ var DREAMSUITE = {
         setUpValidationPopups();
 
         setUpLimitedChoicesCheckboxGroups();
-        //$('#id_contact_noticed').click(function() {
-        //  $('#id_staff_noticed').attr('checked', null);
-        //  $('input[id*="id_noticed_"]').attr('checked', null);
-        //});
-        //$('#id_staff_noticed').click(function() {
-        //  $('#id_contact_noticed').attr('checked', null);
-        //  $('input[id*="id_which_contact_"]').attr('checked', null);
-        //  $('#contact_paid').find('input[type="checkbox"]').attr('checked', null);
-        //});
 
-        // A hack but it works
+        // A hack but it work
         if ($('#error-box p').length === 0) {
             $('#error-box').remove();
         }
@@ -410,18 +358,9 @@ var DREAMSUITE = {
         $('.photo-upload-button').parents('td').find('input[type="file"]').change(function(event) {
             $(this).parents('td').find('button').addClass('btn-success', 'btn-inverse').attr('title', $(this).val());
         });
-        //$('.photo-manip-controls').each(function() {
-        //  var href = $(this).find('a').attr('href');
-        //  var id = $(this).find('input').attr('name').split('-')[1];
-        //  $('#photo-' + id).append(
 
-        //});
         makeDateTimePickers('#id_date_time_of_interception');
 
-        //$('#save-for-later').click(function() {
-        //  var formData = $('form').serialize();
-
-        //});
     },
 
     interceptionrecord_detail: function() {
@@ -465,25 +404,6 @@ var DREAMSUITE = {
 
         setUpLimitedChoicesCheckboxGroups();
 
-        //$('#id_victim_where_going_region_india').click(function() {
-        //    $('#id_victim_where_going_region_gulf').prop('checked', false);
-        //    $('input[id*="id_victim_where_going_gulf_"]').prop('checked', false);
-        //});
-        //$('#id_victim_where_going_region_gulf').click(function() {
-        //    $('#id_victim_where_going_region_india').prop('checked', false);
-        //    $('input[id*="id_victim_where_going_india_"]').prop('checked', false);
-        //});
-        //$('#victim_where_going_gulf').find('input[type="checkbox"]').click(function() {
-        //    $('#id_victim_where_going_region_gulf').prop('checked', true);
-        //    $('#id_victim_where_going_region_india').prop('checked', false);
-        //    $('input[id*="id_victim_where_going_india_"]').prop('checked', false);
-        //});
-        //$('#victim_where_going_india').find('input[type="checkbox"]').click(function() {
-        //    $('#id_victim_where_going_region_india').prop('checked', true);
-        //    $('#id_victim_where_going_region_gulf').prop('checked', false);
-        //    $('input[id*="id_victim_where_going_gulf_"]').prop('checked', false);
-        //});
-
         $('#id_victim_where_going_india_other_value').keyup(function(event) {
             $("#id_victim_where_going_india_other").prop('checked', $(this).val() != "");
             $("#id_victim_where_going_region_india").prop('checked', true);
@@ -516,55 +436,55 @@ var DREAMSUITE = {
             }
         });
 
-    $('#id_victim_where_going_region_india').click(function() {
-       if ($('#id_victim_where_going_region_india').prop('checked') == false) {
-        $('input[id*="id_victim_where_going_india_"]').prop('checked', false);
-      }
-      $('#id_victim_where_going_region_gulf').prop('checked', false);
-      $('input[id*="id_victim_where_going_gulf_"]').prop('checked', false);
-    });
-    $('#id_victim_where_going_region_gulf').click(function() {
-      if ($('#id_victim_where_going_region_gulf').prop('checked') == false) {
-        $('input[id*="id_victim_where_going_gulf_"]').prop('checked', false);
-      }
-      $('#id_victim_where_going_region_india').prop('checked', false);
-      $('input[id*="id_victim_where_going_india_"]').prop('checked', false);
-    });
+        $('#id_victim_where_going_region_india').click(function() {
+            if ($('#id_victim_where_going_region_india').prop('checked') == false) {
+                $('input[id*="id_victim_where_going_india_"]').prop('checked', false);
+            }
+            $('#id_victim_where_going_region_gulf').prop('checked', false);
+            $('input[id*="id_victim_where_going_gulf_"]').prop('checked', false);
+        });
+        $('#id_victim_where_going_region_gulf').click(function() {
+            if ($('#id_victim_where_going_region_gulf').prop('checked') == false) {
+                $('input[id*="id_victim_where_going_gulf_"]').prop('checked', false);
+            }
+            $('#id_victim_where_going_region_india').prop('checked', false);
+            $('input[id*="id_victim_where_going_india_"]').prop('checked', false);
+        });
 
-    $('#victim_where_going_gulf').find('input[type="checkbox"]').click(function() {
-      if ( $(this).prop("checked") == true) {
-        $('#id_victim_where_going_region_gulf').prop('checked', true);
-        $('#id_victim_where_going_region_india').prop('checked', false);
-        $('input[id*="id_victim_where_going_india_"]').prop('checked', false);
-      }
-      else{
-        $('#id_victim_where_going_region_gulf').prop('checked', false);
-        $('#id_victim_where_going_region_india').prop('checked', false);
-        $('input[id*="id_victim_where_going_india_"]').prop('checked', false);
-      }
-    });
-    $('#victim_where_going_india').find('input[type="checkbox"]').click(function() {
-      if ( $(this).prop("checked") == true) {
-        $('#id_victim_where_going_region_india').prop('checked', true);
-        $('#id_victim_where_going_region_gulf').prop('checked', false);
-        $('input[id*="id_victim_where_going_gulf_"]').prop('checked', false);
-      }
-      else{
-        $('#id_victim_where_going_region_india').prop('checked', false);
-        $('#id_victim_where_going_region_gulf').prop('checked', false);
-        $('input[id*="id_victim_where_going_gulf_"]').prop('checked', false);
-      }
-    });
-    // Allow user to hover over the numbers in parens next to some fields to
-    // learn that that is how many may be checked.
-    $('.max-allowed').each(function(i, elem) {
-      var text = $(elem).text();
-      var count = text.substring(1, text.length - 1);
-      $(elem).attr(
-        'title',
-        'At most ' + count + ' may be checked.'
-      );
-    });
+        $('#victim_where_going_gulf').find('input[type="checkbox"]').click(function() {
+            if ( $(this).prop("checked") == true) {
+                $('#id_victim_where_going_region_gulf').prop('checked', true);
+                $('#id_victim_where_going_region_india').prop('checked', false);
+                $('input[id*="id_victim_where_going_india_"]').prop('checked', false);
+            }
+            else{
+                $('#id_victim_where_going_region_gulf').prop('checked', false);
+                $('#id_victim_where_going_region_india').prop('checked', false);
+                $('input[id*="id_victim_where_going_india_"]').prop('checked', false);
+            }
+        });
+        $('#victim_where_going_india').find('input[type="checkbox"]').click(function() {
+            if ( $(this).prop("checked") == true) {
+                $('#id_victim_where_going_region_india').prop('checked', true);
+                $('#id_victim_where_going_region_gulf').prop('checked', false);
+                $('input[id*="id_victim_where_going_gulf_"]').prop('checked', false);
+            }
+            else{
+                $('#id_victim_where_going_region_india').prop('checked', false);
+                $('#id_victim_where_going_region_gulf').prop('checked', false);
+                $('input[id*="id_victim_where_going_gulf_"]').prop('checked', false);
+            }
+        });
+        // Allow user to hover over the numbers in parens next to some fields to
+        // learn that that is how many may be checked.
+        $('.max-allowed').each(function(i, elem) {
+            var text = $(elem).text();
+            var count = text.substring(1, text.length - 1);
+            $(elem).attr(
+                'title',
+                'At most ' + count + ' may be checked.'
+            );
+        });
 
 
         makeDatePickers('#id_date, #id_victim_how_long_stayed_between_start_date');
@@ -584,8 +504,8 @@ var DREAMSUITE = {
         });
     },
 
-  victiminterview_detail: function() {
-    this.victiminterview_update();
+    victiminterview_detail: function() {
+        this.victiminterview_update();
 
         var $form = $('#victim-interview-form');
         $form.find('input, button, select, textarea').attr('disabled', 'disabled');
