@@ -3,10 +3,12 @@ angular
     .controller('AccountsCtrl', ['Accounts','PermissionsSets', '$modal', function(Accounts, PermissionsSets, $modal) {
         var vm = this;
 
-        vm.accounts = Accounts.all();
-        vm.permissions = PermissionsSets.all();
-        vm.currentuser = Accounts.me();
-        
+        vm.activate = function () {
+          vm.accounts = Accounts.all();
+          vm.permissions = PermissionsSets.all();
+          vm.currentuser = Accounts.me();
+        }
+
         vm.resendActivationEmail = function(accountID) {
           Accounts.resendActivationEmail({id:accountID});
         };
@@ -30,5 +32,6 @@ angular
           })
         }
 
+        vm.activate();
 
     }]);
