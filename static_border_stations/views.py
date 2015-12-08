@@ -5,6 +5,7 @@ from django.core.urlresolvers import reverse_lazy
 
 from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSet
 from rest_framework import filters, generics, status, viewsets
+from rest_framework.decorators import list_route
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -40,6 +41,11 @@ class BorderStationViewSet(viewsets.ModelViewSet):
     permissions_required = ['permission_border_stations_view']
     post_permissions_required = ['permission_border_stations_add']
     put_permissions_required = ['permission_border_stations_edit']
+    
+    @list_route()
+    def list_all(self, request):
+      serializer = self.get_serializer(self.queryset, many=True)
+      return Response(serializer.data)
         
 
 class BorderStationRestAPI(viewsets.ModelViewSet):
