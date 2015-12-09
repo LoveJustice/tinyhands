@@ -5,7 +5,7 @@ var vifPage = require('../dataentry/vifPage.js');
 var irfPage = require('../dataentry/irfCRUD.js');
 
 describe('Accounts Page', function() {
-    
+
     beforeEach(function() {
         return browser.ignoreSynchronization = true;
     });

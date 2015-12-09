@@ -1,7 +1,7 @@
 {% extends "accounts/account_base.html" %}
 {% load bootstrap %}
 
-{% block title %}{% if account %}Edit {{ account.get_full_name }}'s Account{% else %}Create New Account{% endif %}{% endblock %}
+{% block title %}Edit Account {% endblock %}
 
 {% block head %}
 <style>
@@ -23,129 +23,182 @@ td {
     width: 75px !important;
 }
 table {
-    width: 250px !important;
+    width: 300px !important;
 }
 </style>
 {% endblock %}
 {% block foot %}
 <script>
-window.defaultPermissionSets = JSON.parse('{{ default_permissions_sets|safe }}');
+  window.account_id = {{account.id}}
 </script>
 {% endblock %}
 
 {% block content %}
-<div class="container">
-    {% if account %}
-    <h1>Edit {{ account.get_full_name }}'s Account</h1>
-    {% else %}
-    <h1>Create New Account</h1>
-    {% endif %}
-    <div class="row">
-        {% comment %}
-        <form method="POST" class="permissions-delete-form float-right" action="{% url 'access_defaults_delete' form.instance.pk %}">
-            {% csrf_token %}
-            <input type="submit" class="btn btn-danger btn-xs" value="X" />
-        </form>
-        {% endcomment %}
-        <form method="POST" class="col-md-6">{% csrf_token %}
-            {{ form.email|bootstrap }}
-            {{ form.first_name|bootstrap }}
-            {{ form.last_name|bootstrap }}
-            {{ form.user_designation|bootstrap }}
-            <div class="clearfix">
-                <table class="table table-condensed">
-                    <thead>
-                        <tr>
-                            <th colspan="4">Interception Record Forms</th>
-                        </tr>
-                        <tr>
-                            <th>View</th>
-                            <th>Add</th>
-                            <th>Edit</th>
-                            <th>Delete</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><label class="btn"><span class="yesno"></span>{{ form.permission_irf_view }}</label></td>
-                            <td><label class="btn"><span class="yesno"></span>{{ form.permission_irf_add }}</label></td>
-                            <td><label class="btn"><span class="yesno"></span>{{ form.permission_irf_edit }}</label></td>
-                            <td><label class="btn"><span class="yesno"></span>{{ form.permission_irf_delete }}</label></td>
-                        </tr>
-                    </tbody>
-                </table>
-                <table class="table table-condensed">
-                    <thead>
-                        <tr>
-                            <th colspan="4">Victim Interview Forms</th>
-                        </tr>
-                        <tr>
-                            <th>View</th>
-                            <th>Add</th>
-                            <th>Edit</th>
-                            <th>Delete</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><label class="btn"><span class="yesno"></span>{{ form.permission_vif_view }}</label></td>
-                            <td><label class="btn"><span class="yesno"></span>{{ form.permission_vif_add }}</label></td>
-                            <td><label class="btn"><span class="yesno"></span>{{ form.permission_vif_edit }}</label></td>
-                            <td><label class="btn"><span class="yesno"></span>{{ form.permission_vif_delete }}</label></td>
-                        </tr>
-                    </tbody>
-                </table>
-                <table class="table table-condensed">
-                    <thead>
-                        <tr>
-                            <th colspan="3">Border Stations</th>
-                        </tr>
-                        <tr>
-                            <th>View</th>
-                            <th>Add</th>
-                            <th>Edit</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><label class="btn"><span class="yesno"></span>{{ form.permission_border_stations_view }}</label></td>
-                            <td><label class="btn"><span class="yesno"></span>{{ form.permission_border_stations_add }}</label></td>
-                            <td><label class="btn"><span class="yesno"></span>{{ form.permission_border_stations_edit }}</label></td>
-                        </tr>
-                    </tbody>
-                </table>
-                <table class="table table-condensed">
-                    <thead>
-                        <tr>
-                            <th>Account Management</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><label class="btn"><span class="yesno"></span>{{ form.permission_accounts_manage }}</label></td>
-                        </tr>
-                    </tbody>
-                </table>
-                <table class="table table-condensed">
-                    <thead>
-                        <tr>
-                            <th>Alerts</th>
-                            <th>VDC Management</th>
-                            <th>Budget Management</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><label class="btn"><span class="yesno"></span>{{ form.permission_receive_email }}</label></td>
-                            <td><label class="btn"><span class="yesno"></span>{{ form.permission_vdc_manage }}</label></td>
-                            <td><label class="btn"><span class="yesno"></span>{{ form.permission_budget_manage }}</label></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <input type="submit" class="clear btn btn-primary btn-lg" value="{% if account %}Update{% else %}Create{% endif %}" />
-        </form>
+{% verbatim %}
+<div class="container" ng-controller="EditAccountCtrl as editCtrl" ng-cloak>
+  <h1>{{editCtrl.getTitle()}}</h1>
+  <div class="row">
+    <div ng-class="{'has-error': editCtrl.emailError}" class="col-md-6 form-group">
+      <label ng-class="{'text-danger': editCtrl.emailError}" >Email</label>
+      <input type="text" class="form-control" placeholder="Email" ng-model="editCtrl.account.email" />
+      <span ng-class="{'text-danger': editCtrl.emailError}">{{editCtrl.emailError}}</span>
     </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6 form-group">
+      <label >First Name</label>
+      <input type="text" class="form-control" placeholder="First Name" ng-model="editCtrl.account.first_name" />
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6 form-group">
+      <label >Last Name</label>
+      <input type="text" class="form-control" placeholder="Last Name" ng-model="editCtrl.account.last_name" />
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6 form-group" ng-class="{'has-error': editCtrl.userDesignationError}">
+      <label ng-class="{'text-danger': editCtrl.userDesignationError}">User Designation</label>
+      <select ng-model="editCtrl.account.user_designation" 
+              ng-options="set.id as set.name for set in editCtrl.permissionsSets.results" 
+              ng-change="editCtrl.onUserDesignationChanged(editCtrl.account.user_designation)" 
+              class="form-control">
+      </select>
+      <span ng-class="{'text-danger': editCtrl.userDesignationError}">{{editCtrl.userDesignationError}}</span>
+    </div>
+  </div>
+  <div class="clearfix">
+    <table class="table table-condensed">
+      <thead>
+        <tr>
+          <th colspan="4">Interception Record Forms</th>
+        </tr>
+        <tr>
+          <th>View</th>
+          <th>Add</th>
+          <th>Edit</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <label class="btn" ng-class="editCtrl.account.permission_irf_view ? 'btn btn-success' : 'btn btn-danger'" ng-click="editCtrl.account.permission_irf_view = !editCtrl.account.permission_irf_view">{{ editCtrl.getButtonText(editCtrl.account.permission_irf_view) }}</label>
+          </td>
+          <td>
+            <label class="btn" ng-class="editCtrl.account.permission_irf_add ? 'btn btn-success' : 'btn btn-danger'" ng-click="editCtrl.account.permission_irf_add= !editCtrl.account.permission_irf_add">{{ editCtrl.getButtonText(editCtrl.account.permission_irf_add) }}</label>
+          </td>
+          <td>
+            <label class="btn" ng-class="editCtrl.account.permission_irf_edit? 'btn btn-success' : 'btn btn-danger'" ng-click="editCtrl.account.permission_irf_edit= !editCtrl.account.permission_irf_edit">{{ editCtrl.getButtonText(editCtrl.account.permission_irf_edit) }}</label>            
+          </td>
+          <td>
+            <label class="btn" ng-class="editCtrl.account.permission_irf_delete ? 'btn btn-success' : 'btn btn-danger'" ng-click="editCtrl.account.permission_irf_delete= !editCtrl.account.permission_irf_delete">{{ editCtrl.getButtonText(editCtrl.account.permission_irf_delete) }}</label>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <table class="table table-condensed">
+      <thead>
+        <tr>
+          <th colspan="4">Victim Interview Forms</th>
+        </tr>
+        <tr>
+          <th>View</th>
+          <th>Add</th>
+          <th>Edit</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <label class="btn" ng-class="editCtrl.account.permission_vif_view ? 'btn btn-success' : 'btn btn-danger'" ng-click="editCtrl.account.permission_vif_view = !editCtrl.account.permission_vif_view">{{ editCtrl.getButtonText(editCtrl.account.permission_vif_view) }}</label>
+          </td>
+          <td>
+            <label class="btn" ng-class="editCtrl.account.permission_vif_add ? 'btn btn-success' : 'btn btn-danger'" ng-click="editCtrl.account.permission_vif_add= !editCtrl.account.permission_vif_add">{{ editCtrl.getButtonText(editCtrl.account.permission_vif_add) }}</label>
+          </td>
+          <td>
+            <label class="btn" ng-class="editCtrl.account.permission_vif_edit ? 'btn btn-success' : 'btn btn-danger'" ng-click="editCtrl.account.permission_vif_edit= !editCtrl.account.permission_vif_edit">{{ editCtrl.getButtonText(editCtrl.account.permission_vif_edit) }}</label>            
+          </td>
+          <td>
+            <label class="btn" ng-class="editCtrl.account.permission_vif_delete ? 'btn btn-success' : 'btn btn-danger'" ng-click="editCtrl.account.permission_vif_delete= !editCtrl.account.permission_vif_delete">{{ editCtrl.getButtonText(editCtrl.account.permission_vif_delete) }}</label>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <table class="table table-condensed">
+      <thead>
+        <tr>
+          <th colspan="4">Border Stations</th>
+        </tr>
+        <tr>
+          <th>View</th>
+          <th>Add</th>
+          <th>Edit</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <label class="btn" ng-class="editCtrl.account.permission_border_stations_view ? 'btn btn-success' : 'btn btn-danger'" ng-click="editCtrl.account.permission_border_stations_view = !editCtrl.account.permission_border_stations_view">{{ editCtrl.getButtonText(editCtrl.account.permission_border_stations_view) }}</label>
+          </td>
+          <td>
+            <label class="btn" ng-class="editCtrl.account.permission_border_stations_add ? 'btn btn-success' : 'btn btn-danger'" ng-click="editCtrl.account.permission_border_stations_add= !editCtrl.account.permission_border_stations_add">{{ editCtrl.getButtonText(editCtrl.account.permission_border_stations_add) }}</label>
+          </td>
+          <td>
+            <label class="btn" ng-class="editCtrl.account.permission_border_stations_edit ? 'btn btn-success' : 'btn btn-danger'" ng-click="editCtrl.account.permission_border_stations_edit= !editCtrl.account.permission_border_stations_edit">{{ editCtrl.getButtonText(editCtrl.account.permission_border_stations_edit) }}</label>            
+          </td>
+          <td>
+            <label class="btn" ng-class="editCtrl.account.permission_border_stations_delete ? 'btn btn-success' : 'btn btn-danger'" ng-click="editCtrl.account.permission_border_stations_delete= !editCtrl.account.permission_border_stations_delete">{{ editCtrl.getButtonText(editCtrl.account.permission_border_stations_delete) }}</label>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <table class="table table-condensed">
+      <thead>
+        <tr>
+          <th>Account Management</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <label class="btn" ng-class="editCtrl.account.permission_accounts_manage ? 'btn btn-success' : 'btn btn-danger'" ng-click="editCtrl.account.permission_accounts_manage= !editCtrl.account.permission_accounts_manage">{{ editCtrl.getButtonText(editCtrl.account.permission_accounts_manage) }}</label>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <table class="table table-condensed">
+      <thead>
+        <tr>
+          <th>Alerts</th>
+          <th>VDC Management</th>
+          <th>Budget Management</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <label class="btn" ng-class="editCtrl.account.permission_receive_email ? 'btn btn-success' : 'btn btn-danger'" ng-click="editCtrl.account.permission_receive_email = !editCtrl.account.permission_receive_email">{{ editCtrl.getButtonText(editCtrl.account.permission_receive_email) }}</label>
+          </td>
+          <td>
+            <label class="btn" ng-class="editCtrl.account.permission_vdc_manage ? 'btn btn-success' : 'btn btn-danger'" ng-click="editCtrl.account.permission_vdc_manage = !editCtrl.account.permission_vdc_manage">{{ editCtrl.getButtonText(editCtrl.account.permission_vdc_manage) }}</label>
+          </td>
+          <td>
+            <label class="btn" ng-class="editCtrl.account.permission_budget_manage ? 'btn btn-success' : 'btn btn-danger'" ng-click="editCtrl.account.permission_budget_manage = !editCtrl.account.permission_budget_manage">{{ editCtrl.getButtonText(editCtrl.account.permission_budget_manage) }}</label>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="row">
+    <div class="col-lg-6">
+      <button class="clear btn btn-primary btn-lg" ng-click="editCtrl.update()">{{editCtrl.getUpdateButtonText()}}</button>
+    </div>
+  </div>
+  <br/>
+  <br/>  
 </div>
+{% endverbatim %}
 {% endblock %}
-
