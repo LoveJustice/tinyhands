@@ -8,7 +8,7 @@
 	<form id="borderstation-form" ng-controller="BorderStationsCtrl as bsCtrl" ng-cloak>
 		
 		<h2 class="text-center"
-				ng-if="bsCtrl.loading"><img src="http://bonappetitcard.com/images/spinner.gif" width="25" height="25"> Loading Border Station Data...</h2>
+				ng-if="bsCtrl.loading"><img src="{{ STATIC_URL }}images/spinner.gif" width="25" height="25"> Loading Border Station Data...</h2>
 		
 		<div ng-if="!bsCtrl.loading">
 			
