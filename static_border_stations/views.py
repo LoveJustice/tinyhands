@@ -44,7 +44,8 @@ class BorderStationViewSet(viewsets.ModelViewSet):
     
     @list_route()
     def list_all(self, request):
-      serializer = self.get_serializer(self.queryset, many=True)
+      border_stations = BorderStation.objects.all()
+      serializer = self.get_serializer(border_stations, many=True)
       return Response(serializer.data)
         
 
