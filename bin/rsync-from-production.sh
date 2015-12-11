@@ -22,12 +22,10 @@ MONTH=$(date '+%B')
 NEW_DIR=backups/$YEAR/$MONTH
 
 RSYNC='rsync --verbose --archive --progress --rsh=ssh'
-#THI_PROD='thi-production:/home/dreamsuite/dreamsuite'
+
 THI_PROD='thi-production:/home/dreamsuite/tinyhands'
 
 NOW=$(date '+%F-%H-%M')
 
-$DIRS $NEW_DIR
-
-$RSYNC $THI_PROD/db.sqlite3 backups/$NEW_DIR/db-$NOW.sqlite3
+$RSYNC $THI_PROD/db.sqlite3 backups/db-$NOW.sqlite3
 $RSYNC $THI_PROD/media .
