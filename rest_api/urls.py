@@ -5,6 +5,7 @@ from rest_framework.authtoken import views
 
 from budget.views import BudgetViewSet, OtherItemsViewSet
 from dataentry.views import Address2ViewSet, Address1ViewSet, GeoCodeDistrictAPIView, GeoCodeVdcAPIView, InterceptionRecordViewSet, VictimInterviewViewSet
+from portal.views import *
 from static_border_stations.views import BorderStationViewSet, StaffViewSet, CommitteeMemberViewSet, LocationViewSet
 
 
@@ -45,6 +46,9 @@ urlpatterns = patterns('rest_api.views',
     # Staff
     url(r'^staff/$', StaffViewSet.as_view({'get':'list', 'post':'create'}), name="AllStaff"),
     url(r'^staff/(?P<pk>\d+)/$', StaffViewSet.as_view({'get':'retrieve', 'put':'update', 'delete':'destroy'}), name="Staff"),
+    
+    # Dashboard/Portal
+    url(r'^get_interception_records/$', get_interception_records, name='get_interception_records'),
 
     # IRFs
     url(r'^irf/$', InterceptionRecordViewSet.as_view({'get': 'list'}), name="InterceptionRecord"),
