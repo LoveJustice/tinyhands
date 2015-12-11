@@ -129,6 +129,4 @@ angular
             $scope.miscItemsTotalVal = acc;
             $scope.$emit('handleOtherItemsTotalChangeEmit', {form_section: $scope.form_section, total: acc});
         }
-
-
     }]);

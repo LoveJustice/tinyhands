@@ -31,6 +31,10 @@ exports.config = {
         'addresses/address1Page.spec.js',
 
         'accounts/accessDefaults.spec.js',
+        'accounts/editAccountPage.spec.js',
+        'accounts/createAccountPage.spec.js',
+        'accounts/accountList.spec.js',
+        'accounts/accessControl.spec.js',
 
         'portal/tally.spec.js',
 

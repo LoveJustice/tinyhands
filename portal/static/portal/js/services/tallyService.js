@@ -16,12 +16,6 @@
         function getTallyDays() {
             return $http.get('/portal/tally/days/')
                  .success(function(data) {
-                    // Data should be:
-                    // {0:{dayOfWeek:'Monday',
-                    //     interceptions: {<String of StationCode>:<Num of Interceptions>}},
-                    //  1:{dayOfWeek:'Sunday',
-                    //     interceptions: {...}},
-                    // }
                     return data;
                 }).error(function(error) {
                     console.log(error);

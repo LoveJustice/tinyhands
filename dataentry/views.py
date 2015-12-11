@@ -31,7 +31,7 @@ from fuzzywuzzy import process
 
 from dataentry.models import (BorderStation, VDC, District, Interceptee, InterceptionRecord, VictimInterview, VictimInterviewLocationBox, VictimInterviewPersonBox)
 from dataentry.forms import (IntercepteeForm, InterceptionRecordForm, VDCForm, DistrictForm, VictimInterviewForm, VictimInterviewLocationBoxForm, VictimInterviewPersonBoxForm)
-from dataentry import export
+from dataentry import csv_io
 from dataentry.serializers import DistrictSerializer, VDCSerializer, InterceptionRecordListSerializer, VictimInterviewListSerializer
 
 from accounts.mixins import PermissionsRequiredMixin
@@ -87,6 +87,12 @@ class SearchFormsMixin(object):
 @login_required
 def interception_record_list_template(request):
     return render(request, 'dataentry/interceptionrecord_list.html')
+
+@login_required
+def interception_record_list_search_template(request, code):
+    station_code = code
+    search = 1
+    return render(request, 'dataentry/interceptionrecord_list.html', locals())
 
 
 class IntercepteeInline(InlineFormSet):
@@ -208,6 +214,13 @@ class VictimInterviewListView(LoginRequiredMixin, SearchFormsMixin, ListView):
         super(VictimInterviewListView, self).__init__(vif_number__icontains="number", interviewer__icontains="name")
 
 
+@login_required
+def victiminterview_record_list_search_template(request, code):
+    station_code = code
+    search = 1
+    return render(request, 'dataentry/victiminterview_list.html', locals())
+
+
 class VictimInterviewCreateView(LoginRequiredMixin, PermissionsRequiredMixin, CreateWithInlinesView):
     model = VictimInterview
     form_class = VictimInterviewForm
@@ -257,7 +270,7 @@ class InterceptionRecordCSVExportView(LoginRequiredMixin, PermissionsRequiredMix
 
         writer = csv.writer(response)
         irfs = InterceptionRecord.objects.all()
-        csv_rows = export.get_irf_export_rows(irfs)
+        csv_rows = csv_io.get_irf_export_rows(irfs)
         writer.writerows(csv_rows)
 
         return response
@@ -273,7 +286,7 @@ class VictimInterviewCSVExportView(LoginRequiredMixin, PermissionsRequiredMixin,
 
         writer = csv.writer(response)
         vifs = VictimInterview.objects.select_related('person_boxes').select_related('location_boxes').all()
-        csv_rows = export.get_vif_export_rows(vifs)
+        csv_rows = csv_io.get_vif_export_rows(vifs)
         writer.writerows(csv_rows)
 
         return response

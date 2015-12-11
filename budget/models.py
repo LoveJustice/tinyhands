@@ -23,7 +23,6 @@ class BorderStationBudgetCalculation(models.Model):
     communication_each_staff = models.PositiveIntegerField('each staff', default=0)
     communication_each_staff_multiplier = models.PositiveIntegerField(default=300)
 
-
     def communication_extra_items_total(self):
         items = self.otherbudgetitemcost_set.filter(form_section=7)
         total = 0
@@ -198,9 +197,7 @@ class BorderStationBudgetCalculation(models.Model):
 
     def awareness_total(self):
         total = self.awareness_extra_items_total()
-        # If test fails, check names of contact cards.
         if self.awareness_contact_cards:
-            #total += (self.awareness_contact_cards_amount + self.awareness_contact_cards_boolean_amount)
             total += self.awareness_contact_cards_amount
         if self.awareness_awareness_party_boolean:
             total += self.awareness_awareness_party
@@ -271,6 +268,7 @@ class OtherBudgetItemCost(models.Model):
     BUDGET_FORM_SECTION_CHOICES = [(1, 'Travel'), (2, 'Miscellaneous'), (3, 'Awareness'), (4, 'Supplies'), (5, 'Shelter'), (6, 'FoodGas'), (7, 'Communication'), (8, 'Staff')]
     form_section = models.IntegerField(BUDGET_FORM_SECTION_CHOICES, blank=True, null=True)
     budget_item_parent = models.ForeignKey(BorderStationBudgetCalculation, blank=True, null=True)
+
 
 class StaffSalary(models.Model):
     salary = models.PositiveIntegerField(default=0, blank=True, null=True)

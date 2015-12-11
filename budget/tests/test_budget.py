@@ -42,7 +42,6 @@ class TestModels(TestCase):
 
         #Awareness
         item.awareness_contact_cards = True
-        #item.awareness_contact_cards_boolean_amount = 4000
         item.awareness_contact_cards_amount = 5
         item.awareness_awareness_party_boolean = True
         item.awareness_awareness_party = 10
@@ -104,11 +103,8 @@ class TestModels(TestCase):
         item.travel_motorbike = True
         item.travel_motorbike_amount = 30000
         item.travel_plus_other = 500
-        #self.assertEqual(item.travel_total(), 35020)
         item.travel_chair_with_bike = False
-        #self.assertEqual(item.travel_total(), 33020)
         item.travel_manager_with_bike = False
-        #self.assertEqual(item.travel_total(), 31020)
         item.travel_motorbike = False
         self.assertEqual(item.travel_total(), 1020)
         travel_extra = OtherBudgetItemCost.objects.create(budget_item_parent=item, form_section=1, name="extra-Travel", cost=100)
