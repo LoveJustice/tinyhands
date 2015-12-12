@@ -25,7 +25,9 @@ RSYNC='rsync --verbose --archive --progress --rsh=ssh'
 
 THI_PROD='thi-production:/home/dreamsuite/tinyhands'
 
+BACKUP_DIR='/home/thi/tinyhands/bin/backups'
+
 NOW=$(date '+%F-%H-%M')
 
-$RSYNC $THI_PROD/db.sqlite3 backups/db-$NOW.sqlite3
+$RSYNC $THI_PROD/db.sqlite3 $BACKUP_DIR/db-$NOW.sqlite3
 $RSYNC $THI_PROD/media .
