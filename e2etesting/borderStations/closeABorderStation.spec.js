@@ -25,6 +25,8 @@ describe('Border Stations - Close a Station - ', function() {
             element(by.id("border_station_dropdown")).click();
             element.all(by.css(".border_station_dropdown_item")).last().click();
 
+            browser.wait(protractor.ExpectedConditions.titleIs("Border Stations | Tiny Hands Dream Suite"), 7000);
+            browser.wait(protractor.ExpectedConditions.presenceOf(element(by.css('[ng-click="bsCtrl.changeStationStatus()"]'))), 7000);
             expect(element(by.css('[ng-click="bsCtrl.changeStationStatus()"]')).isPresent()).toBe(true);
         });
 

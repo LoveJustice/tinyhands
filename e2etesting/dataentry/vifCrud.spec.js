@@ -31,8 +31,6 @@ describe('VIF CRUD -', function() {
             });
         });
 
-
-
         describe('submitted vif can be reviewed', function () {
             it('reviews a created vif form and checks that the data is still the same', function () {
                 crudPage.checkEditedVif();
@@ -89,20 +87,20 @@ describe('VIF CRUD -', function() {
                 expect(element(by.id("id_vif_number")).getAttribute('value')).toEqual(c.vifNumber2);
                 expect(element(by.id("id_date")).getAttribute('value')).toEqual(c.vifDate);
                 expect(element(by.id("id_interviewer")).getAttribute('value')).toEqual(c.vifInterviewer);
-                expect(element(by.id("id_statement_read_before_beginning")).getAttribute('value')).toEqual('on');
-                expect(element(by.id("id_victim_gender_0")).getAttribute('value')).toEqual('male');
-                expect(element(by.id("id_migration_plans_education")).getAttribute('value')).toEqual('off');
-                expect(element(by.id("id_primary_motivation_support_myself")).getAttribute('value')).toEqual('off');
-                expect(element(by.id("id_victim_recruited_in_village_0")).getAttribute('value')).toEqual('False');
-                expect(element(by.id("id_victim_primary_means_of_travel_tourist_bus")).getAttribute('value')).toEqual('off');
-                expect(element(by.id("id_victim_stayed_somewhere_between_0")).getAttribute('value')).toEqual('False');
-                expect(element(by.id("id_meeting_at_border_yes")).getAttribute('value')).toEqual('off');
-                expect(element(by.id("id_victim_knew_details_about_destination_0")).getAttribute('value')).toEqual('False');
-                expect(element(by.id("id_awareness_before_interception_had_heard_not_how_bad")).getAttribute('value')).toEqual('off');
-                expect(element(by.id("id_attitude_towards_tiny_hands_thankful")).getAttribute('value')).toEqual('off');
-                expect(element(by.id("id_victim_heard_gospel_no")).getAttribute('value')).toEqual('off');
-                expect(element(by.id("id_legal_action_against_traffickers_no")).getAttribute('value')).toEqual('off');
-                expect(element(by.id("id_has_signature")).getAttribute('value')).toEqual('off');
+                expect(element(by.id("id_statement_read_before_beginning")).isSelected()).toBeTruthy();
+                expect(element(by.id("id_victim_gender_0")).isSelected()).toBeTruthy();
+                expect(element(by.id("id_migration_plans_education")).isSelected()).toBeFalsy();
+                expect(element(by.id("id_primary_motivation_support_myself")).isSelected()).toBeFalsy();
+                expect(element(by.id("id_victim_recruited_in_village_0")).isSelected()).toBeFalsy();
+                expect(element(by.id("id_victim_primary_means_of_travel_tourist_bus")).isSelected()).toBeFalsy();
+                expect(element(by.id("id_victim_stayed_somewhere_between_0")).isSelected()).toBeFalsy();
+                expect(element(by.id("id_meeting_at_border_yes")).isSelected()).toBeFalsy();
+                expect(element(by.id("id_victim_knew_details_about_destination_0")).isSelected()).toBeFalsy();
+                expect(element(by.id("id_awareness_before_interception_had_heard_not_how_bad")).isSelected()).toBeFalsy();
+                expect(element(by.id("id_attitude_towards_tiny_hands_thankful")).isSelected()).toBeFalsy();
+                expect(element(by.id("id_victim_heard_gospel_no")).isSelected()).toBeFalsy();
+                expect(element(by.id("id_legal_action_against_traffickers_no")).isSelected()).toBeFalsy();
+                expect(element(by.id("id_has_signature")).isSelected()).toBeFalsy();
             });
 
             it('Checks VIF partial 2', function () {
@@ -113,16 +111,16 @@ describe('VIF CRUD -', function() {
                 element(by.xpath('//*[@id="saved-for-later-list"]/option[3]')).click();
                 expect(element(by.id("id_vif_number")).getAttribute('value')).toEqual(c.vifNumber3);
                 expect(element(by.id("id_date")).getAttribute('value')).toEqual(c.vifDate);
-                expect(element(by.id("id_interviewer")).getAttribute('value')).toEqual('');
-                expect(element(by.id("id_statement_read_before_beginning")).getAttribute('value')).toEqual('off');
-                expect(element(by.id("id_victim_gender_0")).getAttribute('value')).toEqual('');
+                expect(element(by.id("id_interviewer")).isSelected()).toBeFalsy();
+                expect(element(by.id("id_statement_read_before_beginning")).isSelected()).toBeFalsy();
+                expect(element(by.id("id_victim_gender_0")).isSelected()).toBeFalsy();
                 expect(element(by.id("id_migration_plans_education")).getAttribute('value')).toEqual('on');
                 expect(element(by.id("id_primary_motivation_support_myself")).getAttribute('value')).toEqual('on');
-                expect(element(by.id("id_victim_recruited_in_village_0")).getAttribute('value')).toEqual('False');
+                expect(element(by.id("id_victim_recruited_in_village_0")).isSelected()).toBeTruthy();
                 expect(element(by.id("id_victim_primary_means_of_travel_tourist_bus")).getAttribute('value')).toEqual('on');
-                expect(element(by.id("id_victim_stayed_somewhere_between_0")).getAttribute('value')).toEqual('False');
+                expect(element(by.id("id_victim_stayed_somewhere_between_0")).isSelected()).toBeTruthy();
                 expect(element(by.id("id_meeting_at_border_yes")).getAttribute('value')).toEqual('on');
-                expect(element(by.id("id_victim_knew_details_about_destination_0")).getAttribute('value')).toEqual('False');
+                expect(element(by.id("id_victim_knew_details_about_destination_0")).isSelected()).toBeTruthy();
                 expect(element(by.id("id_awareness_before_interception_had_heard_not_how_bad")).getAttribute('value')).toEqual('on');
                 expect(element(by.id("id_attitude_towards_tiny_hands_thankful")).getAttribute('value')).toEqual('on');
                 expect(element(by.id("id_victim_heard_gospel_no")).getAttribute('value')).toEqual('on');

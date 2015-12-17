@@ -18,6 +18,7 @@ describe('TinyHands Border Station', function() {
 
         loginPage.loginAsAdmin();
         borderPage.getToBorderStationCreate();
+		browser.sleep(1000);
         expect(browser.getTitle()).toContain('Border Stations');
 		borderPage.fillOutBorderStation(c.stationName, c.stationCode);
 		browser.sleep(500);
@@ -59,21 +60,19 @@ describe('TinyHands Border Station', function() {
 		});
 
 		it('staff email', function(){
-			browser.driver.wait(function() {
-				return browser.driver.findElement(by.id('S-lastName-0')).then(function(elem) {
-					expect(element(by.id("S-lastName-0")).getAttribute('value')).toBe(c.staff0SetLastName);
-					return true;
-				});
-			}, 20000);
+			browser.wait(protractor.ExpectedConditions.presenceOf(element(by.id('S-lastName-0'))), 7000);
+			expect(element(by.id("S-lastName-0")).getAttribute('value')).toBe(c.staff0SetLastName);
+			//browser.driver.wait(function() {
+			//	return browser.driver.findElement(by.id('S-lastName-0')).then(function(elem) {
+			//		expect(element(by.id("S-lastName-0")).getAttribute('value')).toBe(c.staff0SetLastName);
+			//		return true;
+			//	});
+			//}, 20000);
 		});
 
 		it('staff position', function(){
-			browser.driver.wait(function() {
-				return browser.driver.findElement(by.id('S-email-0')).then(function(elem) {
-					expect(element(by.id("S-email-0")).getAttribute('value')).toBe(c.staff0Email);
-					return true;
-				});
-			}, 20000);
+			browser.wait(protractor.ExpectedConditions.presenceOf(element(by.id('S-email-0'))), 7000);
+			expect(element(by.id("S-email-0")).getAttribute('value')).toBe(c.staff0Email);
 		});
 
 		it('staff phone number', function(){
@@ -96,21 +95,13 @@ describe('TinyHands Border Station', function() {
 		});
 
 		it('committee email', function(){
-			browser.driver.wait(function() {
-				return browser.driver.findElement(by.id('C-lastName-0')).then(function() {
-					expect(element(by.id("C-lastName-0")).getAttribute('value')).toBe(c.staff0SetLastName);
-					return true;
-				});
-			}, 20000);
+			browser.wait(protractor.ExpectedConditions.presenceOf(element(by.id('C-email-0'))), 7000);
+			expect(element(by.id("C-email-0")).getAttribute('value')).toBe(c.staff0Email);
 		});
 
 		it('committee position', function(){
-			browser.driver.wait(function() {
-				return browser.driver.findElement(by.id('C-email-0')).then(function(elem) {
-					expect(element(by.id("C-email-0")).getAttribute('value')).toBe(c.staff0Email);
-					return true;
-				});
-			}, 20000);
+			browser.wait(protractor.ExpectedConditions.presenceOf(element(by.id('C-email-0'))), 7000);
+			expect(element(by.id("C-email-0")).getAttribute('value')).toBe(c.staff0Email);
 		});
 
 		it('committee phone number', function(){
@@ -134,6 +125,7 @@ describe('TinyHands Border Station', function() {
 		});
 
 		it('location latitude', function(){
+			browser.wait(protractor.ExpectedConditions.presenceOf(element(by.id('latitude-0'))), 7000);
 		//	browser.driver.wait(function() {
 		//		return browser.driver.findElement(by.id('latitude-0')).then(function(elem) {
 			expect(element(by.id("latitude-0")).getAttribute('value')).toBe(c.location0SetLatitude);
@@ -143,12 +135,8 @@ describe('TinyHands Border Station', function() {
 		});
 
 		it('location longitude', function(){
-			browser.driver.wait(function() {
-				return browser.driver.findElement(by.id('longitude-0')).then(function(elem) {
-					expect(element(by.id("longitude-0")).getAttribute('value')).toBe('0');
-					return true;
-				});
-			}, 20000);
+			browser.wait(protractor.ExpectedConditions.presenceOf(element(by.id('latitude-0'))), 7000);
+			expect(element(by.id("longitude-0")).getAttribute('value')).toBe('0');
 		});
 
 	});

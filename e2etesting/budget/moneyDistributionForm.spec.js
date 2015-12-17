@@ -23,14 +23,14 @@ describe('Money Distribution Form', function() {
 
         it('toggles e-mail addresses active/inactive', function() {
             MDF.navigateToMoneyDistributionPage();
-            browser.sleep(1);
+            browser.sleep(1000);
             browser.waitForAngular();
             MDF.toggleEmailAddress();
-            browser.sleep(1);
+            browser.sleep(1000);
             browser.waitForAngular();
             expect(element(by.className("notReceiving")).isPresent()).toBe(true);
             MDF.toggleEmailAddress();
-            browser.sleep(1);
+            browser.sleep(1000);
             browser.waitForAngular();
             expect(element(by.className("notReceiving")).isPresent()).toBe(false);
         });
@@ -47,7 +47,7 @@ describe('Money Distribution Form', function() {
         });
 
         it('Goes to the Budget Calc List upon submission', function() {
-            browser.sleep(1);
+            browser.sleep(1000);
             browser.waitForAngular();
 
             MDF.toggleAllEmailAddresses();

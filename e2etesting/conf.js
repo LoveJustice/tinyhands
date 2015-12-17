@@ -18,6 +18,10 @@ exports.config = {
 
         vif: 'dataentry/vifCrud.spec.js',
 
+        border: [
+            'borderStations/closeABorderStation.spec.js'
+        ],
+
         budget: [
              'borderStations/borderStationCRUD.spec.js',
             'dataentry/irfCRUD.spec.js',
@@ -71,7 +75,7 @@ exports.config = {
 
         'portal/tally.spec.js',
 
-        'accounts/permissionsPage.spec.js' // Has to run last
+        //'accounts/permissionsPage.spec.js' // Has to run last
       ],
 
     framework: 'jasmine2',
