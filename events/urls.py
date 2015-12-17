@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, url
-# from events.views import *
-from events.views import  EventJson, EventCalendarView, EventListView, EventCreateView, EventDeleteView, EventUpdateView
+
+from events.views import EventJson, EventCalendarView, EventListView, EventCreateView, EventDeleteView, EventUpdateView
 
 urlpatterns = patterns('dataentry.views',
     url(r'^create/$', EventCreateView.as_view(), name='create_event'),

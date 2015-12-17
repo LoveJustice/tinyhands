@@ -24,6 +24,7 @@ class DefaultPermissionsSet(models.Model):
     permission_border_stations_view = models.BooleanField(default=False)
     permission_border_stations_add = models.BooleanField(default=False)
     permission_border_stations_edit = models.BooleanField(default=False)
+    permission_border_stations_delete = models.BooleanField(default=False)
     permission_vdc_manage = models.BooleanField(default=False)
     permission_budget_manage = models.BooleanField(default=False)
 
@@ -89,6 +90,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
     permission_border_stations_view = models.BooleanField(default=False)
     permission_border_stations_add = models.BooleanField(default=False)
     permission_border_stations_edit = models.BooleanField(default=False)
+    permission_border_stations_delete = models.BooleanField(default=False)
     permission_vdc_manage = models.BooleanField(default=False)
     permission_budget_manage = models.BooleanField(default=False)
 

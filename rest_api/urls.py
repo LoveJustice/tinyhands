@@ -3,6 +3,7 @@ from accounts.views import CurrentUserView
 
 from dataentry.views import Address2ViewSet, Address1ViewSet, GeoCodeDistrictAPIView, GeoCodeVdcAPIView, InterceptionRecordViewSet, VictimInterviewViewSet
 from budget.views import BudgetViewSet, OtherItemsViewSet
+from accounts.views import AccountViewSet, DefaultPermissionsSetViewSet, CurrentUserView, ResendActivationEmailView
 from static_border_stations.views import BorderStationViewSet, StaffViewSet, CommitteeMemberViewSet, LocationViewSet
 
 urlpatterns = patterns('rest_api.views',
@@ -30,7 +31,7 @@ urlpatterns = patterns('rest_api.views',
     # Locations
     url(r'^location/$', LocationViewSet.as_view({'get':'list', 'post':'create'}), name="Locations"),
     url(r'^location/(?P<pk>\d+)/$', LocationViewSet.as_view({'get':'retrieve', 'put':'update', 'delete':'destroy'}), name="Location"),
-    
+
     # Addresses
     url(r'^address1/$', Address1ViewSet.as_view({'get': 'list', 'post': 'create'}), name='Address1'),
     url(r'^address1/all/$', Address1ViewSet.as_view({'get': 'list_all'}), name='Address1all'),
@@ -43,6 +44,16 @@ urlpatterns = patterns('rest_api.views',
     url(r'^address1/fuzzy/$', GeoCodeDistrictAPIView.as_view(), name="Address1FuzzySearch"),
     url(r'^address2/fuzzy/$', GeoCodeVdcAPIView.as_view(), name="Address2FuzzySearch"),
 
+    #Accounts and DefaultPermissionsSets
+    url(r'^me/$', CurrentUserView.as_view(), name="CurrentUser"),
+
+    url(r'^account/$', AccountViewSet.as_view({'get': 'list', 'post':'create'}), name="AccountList"),
+    url(r'^account/(?P<pk>\d+)/$', AccountViewSet.as_view({'get':'retrieve', 'put':'update', 'delete':'destroy'}), name='Account'),
+    url(r'^account/resend-activation-email/(?P<pk>\d+)/$', ResendActivationEmailView.as_view(), name='ResendActivationEmail'),
+
+    url(r'^defaultPermissionsSet/$', DefaultPermissionsSetViewSet.as_view({'get': 'list', 'post':'create'}), name="DefaultPermissionsSets"),
+    url(r'^defaultPermissionsSet/(?P<pk>\d+)/$', DefaultPermissionsSetViewSet.as_view({'get': 'retrieve', 'put':'update', 'delete':'destroy'}), name="DefaultPermissionsSet"),
+
     # IRFs
     url(r'^irf/$', InterceptionRecordViewSet.as_view({'get': 'list'}), name="InterceptionRecord"),
     url(r'^irf/(?P<pk>\d+)/$', InterceptionRecordViewSet.as_view({'delete': 'destroy'}), name="InterceptionRecordDetail"),
@@ -50,8 +61,4 @@ urlpatterns = patterns('rest_api.views',
     # VIFs
     url(r'^vif/$', VictimInterviewViewSet.as_view({'get': 'list'}), name="VictimInterview"),
     url(r'^vif/(?P<pk>\d+)/$', VictimInterviewViewSet.as_view({'delete': 'destroy'}), name="VictimInterviewDetail"),
-
-    #Accounts and DefaultPermissionsSets
-    url(r'^me/$', CurrentUserView.as_view(), name="CurrentUser"),
-
 )

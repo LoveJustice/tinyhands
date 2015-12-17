@@ -16,9 +16,18 @@ set -x
 ##  --devices   (-D => preserve device files - SU only)
 ##  --specials  (-D => preserve special files)
 
+RS='mkdir --parents'
+YEAR=$(date '+%Y')
+MONTH=$(date '+%B')
+NEW_DIR=backups/$YEAR/$MONTH
+
 RSYNC='rsync --verbose --archive --progress --rsh=ssh'
-#THI_PROD='thi-production:/home/dreamsuite/dreamsuite'
+
 THI_PROD='thi-production:/home/dreamsuite/tinyhands'
 
-$RSYNC $THI_PROD/db.sqlite3 .
+BACKUP_DIR='/home/thi/tinyhands/bin/backups'
+
+NOW=$(date '+%F-%H-%M')
+
+$RSYNC $THI_PROD/db.sqlite3 $BACKUP_DIR/db-$NOW.sqlite3
 $RSYNC $THI_PROD/media .

@@ -47,7 +47,9 @@ exports.config = {
         addresses: [
             'addresses/vdcAdminPage.spec.js',
             'addresses/address1Page.spec.js'
-        ]
+        ],
+
+        access: 'accounts/accessControl.spec.js'
     },
 
     //The order is very important. Ex. budgetForm.spec.js is dependant on borderStationCRUD.spec.js
@@ -72,6 +74,10 @@ exports.config = {
         'addresses/vdcAdminPage.spec.js',
         'addresses/address1Page.spec.js',
         'accounts/accessDefaults.spec.js',
+        'accounts/editAccountPage.spec.js',
+        'accounts/createAccountPage.spec.js',
+        'accounts/accountList.spec.js',
+        'accounts/accessControl.spec.js',
 
         'portal/tally.spec.js',
 

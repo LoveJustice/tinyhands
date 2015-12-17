@@ -2,12 +2,10 @@ import datetime
 import json
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
-from django.db.models import Q, F
 from django.http import HttpResponse
-from django.shortcuts import render
 from django.views.generic import CreateView, ListView, TemplateView, DeleteView, UpdateView
 from events.forms import EventForm
-from events.helpers import format_schedule, get_repeated, event_list, dashboard_event_list
+from events.helpers import get_repeated, event_list, dashboard_event_list
 from events.models import Event
 from itertools import chain
 
@@ -73,10 +71,11 @@ class EventJson(ListView):
         if dashboard:
             start_date = datetime.date.today()
             end_date = start_date + datetime.timedelta(days=7)
-            querydict = {}
-            querydict['start_date__gte'] = start_date
-            querydict['start_date__lte'] = end_date
-            querydict['is_repeat'] = False
+            querydict = {
+                'start_date__gte': start_date,
+                'start_date__lte': end_date,
+                'is_repeat': False
+            }
         else:
             start = self.request.GET.get('start', '')
             end = self.request.GET.get('end', '')

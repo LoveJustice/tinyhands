@@ -12,7 +12,6 @@ angular
         vm.sendEmails = sendEmails;
         vm.retrieveForm = retrieveForm;
 
-
         // Function implementations
         vm.retrieveForm(); // We always need to get the people, so I just call it immediately
         function retrieveForm() {

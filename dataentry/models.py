@@ -302,8 +302,6 @@ class Interceptee(models.Model):
     def __unicode__(self):
         return "{} ({})".format(self.full_name, self.id)
 
-    # TODO: These should not be required, but this was a simple way to allow
-    # exports to work. The data really needs to be cleaned instead.
     def district_as_string(self):
         rtn = ''
         try:

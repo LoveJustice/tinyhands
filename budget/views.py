@@ -88,11 +88,10 @@ def previous_data(request, pk, month, year):
             all_interception_records_count['total'] = 0
             all_interception_records_count_divide = 1
 
-
         last_3_months_cost = 0
         last_3_months_sheets = budget_sheets.filter(month_year__gte=date+relativedelta(months=-3))
         last_months_sheets = budget_sheets.filter(month_year__gte=date+relativedelta(months=-1))
-        if(last_months_sheets.count() > 0):
+        if last_months_sheets.count() > 0:
             last_months_cost = last_months_sheets[0].station_total()
         else:
             last_months_cost = 0
@@ -171,6 +170,7 @@ class OtherItemsViewSet(viewsets.ModelViewSet):
         other_items_list = OtherBudgetItemCost.objects.filter(budget_item_parent_id=parent_pk)
         serializer = self.get_serializer(other_items_list, many=True)
         return Response(serializer.data)
+
 
 class StaffSalaryViewSet(viewsets.ModelViewSet):
     queryset = StaffSalary.objects.all()
@@ -274,7 +274,6 @@ class PDFView(View, LoginRequiredMixin, PermissionsRequiredMixin):
                 "A template_name must be specified for the rml template.")
 
         # Use StringIO and not cStringIO because cStringIO can't accept unicode characters
-
         buf = StringIO.StringIO()
         rml = render_to_string(self.template_name, self.get_context_data())
 
@@ -294,11 +293,8 @@ class PDFView(View, LoginRequiredMixin, PermissionsRequiredMixin):
 
 class MoneyDistributionFormPDFView(PDFView, LoginRequiredMixin, PermissionsRequiredMixin):
     permissions_required = ['permission_budget_manage']
-
     template_name = 'budget/MoneyDistributionTemplate.rml'
     filename = 'Monthly-Money-Distribution-Form.pdf'
-
-
 
     def get_context_data(self):
 
