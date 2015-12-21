@@ -1,4 +1,5 @@
 {% extends "accounts/account_base.html" %}
+{% block html %}{% endblock %}
 {% load bootstrap %}
 
 {% block title %}Activate Account{% endblock %}
@@ -8,16 +9,16 @@
 {% block content %}
 <div class="container">
     {% if invalid_key %}
-    <h1>This account has already been activated or your activation key is invalid.  Please contact your administrator.</h1>
+        <h1>This account has already been activated or your activation key is invalid.  Please contact your administrator.</h1>
     {% else %}
-    <h1>Activate Your Account</h1>
-    <p>Your account is almost ready &mdash; just enter a password.</p>
-    <div class="row">
-        <form method="POST" class="col-sm-6">{% csrf_token %}
-            {{ form|bootstrap }}
-            <input type="submit" class="btn btn-primary btn-lg" value="Create" />
-        </form>
-    </div>
+        <h1>Activate Your Account</h1>
+        <p>Your account is almost ready &mdash; just enter a password.</p>
+        <div class="row">
+            <form method="POST" class="col-sm-6">{% csrf_token %}
+                {{ form|bootstrap }}
+                <input type="submit" class="btn btn-primary btn-lg" value="Create" />
+            </form>
+        </div>
     {% endif %}
 </div>
 {% endblock %}
