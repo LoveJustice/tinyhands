@@ -10,6 +10,7 @@ from django.contrib.auth.decorators import login_required
 from braces.views import LoginRequiredMixin
 from extra_views import ModelFormSetView
 from rest_framework import status
+from rest_framework.decorators import list_route
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -152,6 +153,10 @@ class AccountViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated, HasPermission]
     permissions_required = ['permission_accounts_manage']
 
+    @list_route()
+    def list_all(self, request):
+        serializer = self.get_serializer(self.queryset, many=True)
+        return Response(serializer.data)
 
 class DefaultPermissionsSetViewSet(ModelViewSet):
     queryset = DefaultPermissionsSet.objects.all()
