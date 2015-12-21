@@ -48,6 +48,7 @@ urlpatterns = patterns('rest_api.views',
     url(r'^me/$', CurrentUserView.as_view(), name="CurrentUser"),
 
     url(r'^account/$', AccountViewSet.as_view({'get': 'list', 'post':'create'}), name="AccountList"),
+    url(r'^account/all/$', AccountViewSet.as_view({'get': 'list_all'}), name="AccountListAll"),
     url(r'^account/(?P<pk>\d+)/$', AccountViewSet.as_view({'get':'retrieve', 'put':'update', 'delete':'destroy'}), name='Account'),
     url(r'^account/resend-activation-email/(?P<pk>\d+)/$', ResendActivationEmailView.as_view(), name='ResendActivationEmail'),
 
