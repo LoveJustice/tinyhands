@@ -26,7 +26,7 @@ def process_canonical_names():
                                latitude=canonical['lat'],
                                longitude=canonical['long'],
                                district=district,
-                               cannonical_name=None,
+                               canonical_name=None,
                                verified=True)
             vdc_count += 1
     print "Created {} districts, {} VDCs".format(district_count, vdc_count)
@@ -71,7 +71,7 @@ def process_name_variations():
                                latitude=variation['lat'],
                                longitude=variation['long'],
                                district=district,
-                               cannonical_name=can_vdc,
+                               canonical_name=can_vdc,
                                verified=True)
             vdc_count += 1
     print "Created {} districts, {} VDCs".format(district_count, vdc_count)

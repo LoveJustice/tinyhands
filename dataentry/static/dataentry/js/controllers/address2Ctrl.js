@@ -41,7 +41,7 @@ angular
                     case "longitude":
                         return vm.reverse ? "glyphicon-sort-by-order-alt" : "glyphicon-sort-by-order";
                     case "name":
-                    case "cannonical_name.name":
+                    case "canonical_name.name":
                     case "district.name":
                     case "verified":
                         return vm.reverse ? "glyphicon-sort-by-alphabet-alt" : "glyphicon-sort-by-alphabet";
@@ -134,8 +134,8 @@ angular
 
         $scope.save = function () {
             // this is so we can save null cannon names
-            if($scope.address.cannonical_name === "" || $scope.address.cannonical_name == undefined){
-                $scope.address.cannonical_name = {id: -1, name: "Empty"};
+            if($scope.address.canonical_name === "" || $scope.address.canonical_name == undefined){
+                $scope.address.canonical_name = {id: -1, name: "Empty"};
             }
             $modalInstance.close($scope.address);
         };

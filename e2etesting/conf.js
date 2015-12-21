@@ -29,6 +29,7 @@ exports.config = {
 
         'addresses/vdcAdminPage.spec.js',
         'addresses/address1Page.spec.js',
+
         'accounts/accessDefaults.spec.js',
         'accounts/editAccountPage.spec.js',
         'accounts/createAccountPage.spec.js',

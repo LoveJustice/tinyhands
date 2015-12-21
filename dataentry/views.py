@@ -329,7 +329,7 @@ class VDCAdminView(LoginRequiredMixin, PermissionsRequiredMixin, SearchFormsMixi
         super(VDCAdminView, self).__init__(name__icontains="name")
 
     def get_queryset(self):
-        return self.model.objects.all().select_related('district', 'cannonical_name__district')
+        return self.model.objects.all().select_related('district', 'canonical_name__district')
 
     def get_context_data(self, **kwargs):
         context = super(VDCAdminView, self).get_context_data(**kwargs)
@@ -365,7 +365,7 @@ class VDCSearchView(LoginRequiredMixin, PermissionsRequiredMixin, SearchFormsMix
         super(VDCSearchView, self).__init__(name__icontains="name")
 
     def get_queryset(self, searchValue):
-        return self.model.objects.filter(name__contains=searchValue).select_related('district', 'cannonical_name__district')
+        return self.model.objects.filter(name__contains=searchValue).select_related('district', 'canonical_name__district')
 
     def get_context_data(self, **kwargs):
         context = super(VDCSearchView, self).get_context_data(**kwargs)
@@ -440,13 +440,13 @@ def get_station_id(request):
 
 
 class Address2ViewSet(viewsets.ModelViewSet):
-    queryset = VDC.objects.all().select_related('district', 'cannonical_name__district')
+    queryset = VDC.objects.all().select_related('district', 'canonical_name__district')
     serializer_class = VDCSerializer
     permission_classes = (IsAuthenticated, HasPermission)
     permissions_required = ['permission_vdc_manage']
     filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
     search_fields = ('name',)
-    ordering_fields = ('name', 'district__name', 'longitude', 'latitude', 'verified', 'cannonical_name__name')
+    ordering_fields = ('name', 'district__name', 'longitude', 'latitude', 'verified', 'canonical_name__name')
     ordering = ('name',)
 
 
