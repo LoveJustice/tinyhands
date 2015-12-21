@@ -3,15 +3,20 @@
     {% if request.user.permission_budget_manage and not is_create %}
       <a class="btn btn-success pull-right" href="{% url 'budget_create_api' form.instance.id %}">New Budget Calculation Form</a>
     {% endif %}
+
+  {% if request.user.permission_border_stations_delete%}
+      {% verbatim %}
+          <div class="row" ng-if="!bsCtrl.isCreateBorderStation">
+              <div class="col-xs-12">
+                  <button class="btn"
+                          ng-class="{'btn-success':bsCtrl.details.open, 'btn-danger':!bsCtrl.details.open}"
+                          ng-disabled="bsCtrl.readonly"
+                          ng-click="bsCtrl.changeStationStatus()">Station Status: {{bsCtrl.details.open ? "Open" : "Closed"}}</button>
+              </div>
+          </div>
+      {% endverbatim %}
+  {% endif %}
   {% verbatim %}
-  <div class="row" ng-if="!bsCtrl.isCreateBorderStation">
-      <div class="col-xs-12">
-          <button class="btn" 
-                  ng-class="{'btn-success':bsCtrl.details.open, 'btn-danger':!bsCtrl.details.open}"
-                  ng-disabled="bsCtrl.readonly"
-                  ng-click="bsCtrl.changeStationStatus()">Station Status: {{bsCtrl.details.open ? "Open" : "Closed"}}</button>
-      </div>
-  </div>
   </h1>
   <hr/>
   <div class="row">
