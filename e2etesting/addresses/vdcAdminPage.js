@@ -15,7 +15,7 @@ var vdcAdminPage = function () {
         this.exactItem = element(by.repeater("match in matches").row(0)).click();
         browser.actions().sendKeys(protractor.Key.ENTER).perform();
         browser.sleep(300);
-        this.editVdccannonical = element(by.id('canonical_name')).click().clear().sendKeys(c.vdcEditCan);
+        this.editVdccanonical = element(by.id('canonical_name')).click().clear().sendKeys(c.vdcEditCan);
         this.exactItem2 = element(by.repeater("match in matches").row(0)).click()
         //browser.actions().sendKeys(protractor.Key.ENTER).perform();
         browser.sleep(200);
@@ -33,8 +33,8 @@ var vdcAdminPage = function () {
         this.newVdcLatitude = element(by.id("id_latitude")).clear().sendKeys(c.vdcNewLat);
         this.newVdcLongitude = element(by.id("id_longitude")).clear().sendKeys(c.vdcNewLon);
         this.editVdcDistrict = element(by.cssContainingText('option', c.vdcNewDis)).click();
-        this.editVdccannonical = element(by.cssContainingText('option', c.vdcNewCan)).click();
-        this.editVdccannonical = element(by.cssContainingText('option', c.vdcNewCan)).submit();
+        this.editVdccanonical = element(by.cssContainingText('option', c.vdcNewCan)).click();
+        this.editVdccanonical = element(by.cssContainingText('option', c.vdcNewCan)).submit();
         browser.sleep(500);
     };
 

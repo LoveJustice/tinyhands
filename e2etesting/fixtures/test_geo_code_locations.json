@@ -117,7 +117,7 @@
     "district": 1,
     "name": "ShreeJung",
     "longitude": 87.5134005355,
-    "cannonical_name": null
+    "canonical_name": null
   },
   "model": "dataentry.vdc",
   "pk": 4467
@@ -128,7 +128,7 @@
     "district": 15,
     "name": "Shree Jung",
     "longitude": 87.5134005355,
-    "cannonical_name": 4467
+    "canonical_name": 4467
   },
   "model": "dataentry.vdc",
   "pk": 4468
@@ -139,7 +139,7 @@
     "district": 15,
     "name": "Simle",
     "longitude": 87.6131922814,
-    "cannonical_name": null
+    "canonical_name": null
   },
   "model": "dataentry.vdc",
   "pk": 4469
@@ -150,7 +150,7 @@
     "district": 15,
     "name": "Solma",
     "longitude": 87.4851282788,
-    "cannonical_name": null
+    "canonical_name": null
   },
   "model": "dataentry.vdc",
   "pk": 4470
@@ -161,7 +161,7 @@
     "district": 15,
     "name": "Sudap",
     "longitude": 87.4654930411,
-    "cannonical_name": null
+    "canonical_name": null
   },
   "model": "dataentry.vdc",
   "pk": 4471
@@ -172,7 +172,7 @@
     "district": 15,
     "name": "Sungnam",
     "longitude": 87.4716445871,
-    "cannonical_name": null
+    "canonical_name": null
   },
   "model": "dataentry.vdc",
   "pk": 4472

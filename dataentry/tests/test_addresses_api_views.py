@@ -2,7 +2,7 @@ from django.core.urlresolvers import reverse
 from rest_framework import status
 from rest_framework.test import APIRequestFactory, APITestCase
 from accounts.tests.factories import VdcUserFactory, BadVdcUserFactory
-from dataentry.tests.factories import VDCFactory, DistrictFactory, CannonicalNameFactory
+from dataentry.tests.factories import VDCFactory, DistrictFactory, CanonicalNameFactory
 
 
 class Address1Test(APITestCase):
@@ -73,7 +73,7 @@ class Address1Test(APITestCase):
             self.bad_user = BadVdcUserFactory.create()
             self.client.force_authenticate(user=self.bad_user)
 
-            address2 = CannonicalNameFactory.create()
+            address2 = CanonicalNameFactory.create()
 
             # get detail
             url = reverse('Address1detail', args=[address2.id])
@@ -110,7 +110,7 @@ class Address2Test(APITestCase):
         self.VDCList = VDCFactory.create_batch(20)
         self.factory = APIRequestFactory()
         self.first_district = self.VDCList[0].district
-        self.first_cannonical_name = self.VDCList[0].cannonical_name
+        self.first_canonical_name = self.VDCList[0].canonical_name
         self.data = {
             'name': 'Address2',
             "latitude": 29.1837169619,
@@ -120,9 +120,9 @@ class Address2Test(APITestCase):
                 "id": self.first_district.id,
                 "name": self.first_district.name,
             },
-            "cannonical_name": {
-                "id": self.first_cannonical_name.id,
-                "name": self.first_cannonical_name.name,
+            "canonical_name": {
+                "id": self.first_canonical_name.id,
+                "name": self.first_canonical_name.name,
             },
         }
 
@@ -135,20 +135,20 @@ class Address2Test(APITestCase):
         self.assertIsNotNone(response.data['id'])
         self.assertEqual(response.data['name'], 'Address2')
         self.assertEqual(response.data['district']['id'], self.first_district.id)
-        self.assertEqual(response.data['cannonical_name']['id'], self.first_cannonical_name.id)
+        self.assertEqual(response.data['canonical_name']['id'], self.first_canonical_name.id)
 
-    def test_create_address2_cannonical_name_null(self):
-        # Should be able to save address2 with null cannonical name
+    def test_create_address2_canonical_name_null(self):
+        # Should be able to save address2 with null canonical name
         url = reverse('Address2')
 
-        self.data["cannonical_name"] = {"id": -1, "name": "Null"}
+        self.data["canonical_name"] = {"id": -1, "name": "Null"}
         response = self.client.post(url, self.data)
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertIsNotNone(response.data['id'])
         self.assertEqual(response.data['name'], 'Address2')
         self.assertEqual(response.data['district']['id'], self.first_district.id)
-        self.assertEqual(response.data['cannonical_name'], None)
+        self.assertEqual(response.data['canonical_name'], None)
 
     def test_update_address2(self):
         address2 = VDCFactory.create()
@@ -163,14 +163,14 @@ class Address2Test(APITestCase):
         self.assertEqual(response.data['name'], 'Address2Updated')
         self.assertEqual(response.data['id'], address2.id)
 
-    def test_update_address2_cannonical_name_null(self):
-        # Should be able to save address2 with null cannonical name
+    def test_update_address2_canonical_name_null(self):
+        # Should be able to save address2 with null canonical name
         address2 = VDCFactory.create()
         url = reverse('Address2detail', args=[address2.id])
 
         self.data['id'] = address2.id
         self.data['name'] = "Address2Updated"
-        self.data["cannonical_name"] = {"id": -1, "name": "Null"}
+        self.data["canonical_name"] = {"id": -1, "name": "Null"}
 
         response = self.client.put(url, self.data)
 
@@ -178,7 +178,7 @@ class Address2Test(APITestCase):
         self.assertIsNotNone(response.data['id'])
         self.assertEqual(response.data['name'], 'Address2Updated')
         self.assertEqual(response.data['district']['id'], self.first_district.id)
-        self.assertEqual(response.data['cannonical_name'], None)
+        self.assertEqual(response.data['canonical_name'], None)
 
     def test_remove_address2(self):
         address2 = VDCFactory.create()
@@ -201,8 +201,8 @@ class Address2Test(APITestCase):
         self.assertEqual(response.data['id'], address2.id)
         self.assertEqual(response.data['name'], address2.name)
 
-    def test_retrieve_address2_cannonical_name_null(self):
-        address2 = CannonicalNameFactory.create()
+    def test_retrieve_address2_canonical_name_null(self):
+        address2 = CanonicalNameFactory.create()
         url = reverse('Address2detail', args=[address2.id])
 
         response = self.client.get(url)
@@ -210,13 +210,13 @@ class Address2Test(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['id'], address2.id)
         self.assertEqual(response.data['name'], address2.name)
-        self.assertEqual(response.data['cannonical_name'], None)
+        self.assertEqual(response.data['canonical_name'], None)
 
     def test_403_if_doesnt_have_permission(self):
         self.bad_user = BadVdcUserFactory.create()
         self.client.force_authenticate(user=self.bad_user)
 
-        address2 = CannonicalNameFactory.create()
+        address2 = CanonicalNameFactory.create()
 
         # get detail
         url = reverse('Address2detail', args=[address2.id])

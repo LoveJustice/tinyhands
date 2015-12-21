@@ -39,34 +39,34 @@ class VDC(models.Model):
     latitude = models.FloatField()
     longitude = models.FloatField()
     district = models.ForeignKey(District, null=False)
-    cannonical_name = models.ForeignKey('self', null=True, blank=True)
+    canonical_name = models.ForeignKey('self', null=True, blank=True)
     verified = models.BooleanField(default=False)
 
     def __unicode__(self):
         return self.name
 
     @property
-    def get_cannonical_name(self):
-        if self.cannonical_name:
-            return self.cannonical_name.name
+    def get_canonical_name(self):
+        if self.canonical_name:
+            return self.canonical_name.name
         return self.name
 
     @property
     def get_latitude(self):
-        if self.cannonical_name:
-            return self.cannonical_name.latitude
+        if self.canonical_name:
+            return self.canonical_name.latitude
         return self.latitude
 
     @property
     def get_longitude(self):
-        if self.cannonical_name:
-            return self.cannonical_name.longitude
+        if self.canonical_name:
+            return self.canonical_name.longitude
         return self.longitude
 
     @property
     def get_district(self):
-        if self.cannonical_name:
-            return self.cannonical_name.district
+        if self.canonical_name:
+            return self.canonical_name.district
         return self.district
 
     @property
@@ -75,7 +75,7 @@ class VDC(models.Model):
 
     @property
     def is_canonical(self):
-        return self.cannonical_name is None
+        return self.canonical_name is None
 
 
 class InterceptionRecord(models.Model):

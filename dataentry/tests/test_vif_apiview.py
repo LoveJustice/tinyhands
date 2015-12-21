@@ -1,8 +1,8 @@
 from django.core.urlresolvers import reverse
 from rest_framework import status
-from rest_framework.test import APIRequestFactory, APITestCase
-from accounts.tests.factories import VdcUserFactory, BadVdcUserFactory, BadVifUserFactory, SuperUserFactory
-from dataentry.tests.factories import VDCFactory, DistrictFactory, CannonicalNameFactory, VifFactory
+from rest_framework.test import APITestCase
+from accounts.tests.factories import BadVifUserFactory, SuperUserFactory
+from dataentry.tests.factories import VifFactory
 
 
 class VifTest(APITestCase):

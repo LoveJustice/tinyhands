@@ -28,8 +28,8 @@ class BorderStationAdmin(admin.ModelAdmin):
 
 class VDCAdmin(admin.ModelAdmin):
     model = VDC
-    search_fields = ['name', 'latitude', 'longitude', 'district', 'cannonical_name']
-    list_display = ['name', 'latitude', 'longitude', 'district', 'cannonical_name']
+    search_fields = ['name', 'latitude', 'longitude', 'district', 'canonical_name']
+    list_display = ['name', 'latitude', 'longitude', 'district', 'canonical_name']
 
 admin.site.register(InterceptionRecord, InterceptionRecordAdmin)
 admin.site.register(VictimInterview, VictimInterviewAdmin)
