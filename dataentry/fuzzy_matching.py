@@ -24,7 +24,7 @@ def match_location(district_name=None, vdc_name=None):
 
     if filter_by_district:
         region_names = {region.id: region.name
-                        for region in model.objects.filter(district__name__contains=district_name).select_related('district', 'cannonical_name__district')
+                        for region in model.objects.filter(district__name__contains=district_name).select_related('district', 'canonical_name__district')
                         }
     else:
         region_names = {region.id: region.name

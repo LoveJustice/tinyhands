@@ -126,7 +126,7 @@ def store_district(map, pk, name):
     make_insert_statement('dataentry_district', value)
     return value
 
-def store_vdc(map, pk, name, cannonical_name,
+def store_vdc(map, pk, name, canonical_name,
               district, latitude, longitude, verified):
     if not name:
         raise RuntimeError("Empty VDC name")
@@ -134,7 +134,7 @@ def store_vdc(map, pk, name, cannonical_name,
         pk = next_pk(map)
     value = { 'id': pk,
               'name': name,
-              'cannonical_name_id': cannonical_name,
+              'canonical_name_id': canonical_name,
               'district_id': district,
               'latitude': latitude,
               'longitude': longitude,
@@ -169,16 +169,16 @@ def load_vdc_data(file_name, district):
 
             store_vdc(vdc_map,
                       pk, name, 
-                      fields['cannonical_name'],
+                      fields['canonical_name'],
                       district_fk,
                       fields['latitude'], fields['longitude'], 1)
 
     for pk, data in vdc_map.iteritems('pk'):
-        cannonical_name = data['cannonical_name_id']
-        if cannonical_name is not None:
-            if not vdc_map.contains(pk=cannonical_name):
+        canonical_name = data['canonical_name_id']
+        if canonical_name is not None:
+            if not vdc_map.contains(pk=canonical_name):
                 raise RuntimeError(
-                    "VDC {} has bogus cannonical_name {}".format(pk, cannonical_name))
+                    "VDC {} has bogus canonical_name {}".format(pk, canonical_name))
     return vdc_map
 
 def resolve_vdc_list(district, vdc_list, vdc_name):

@@ -60,7 +60,7 @@ class DistrictFactory(DjangoModelFactory):
     name = factory.Sequence(lambda n: 'District {0}'.format(n))
 
 
-class CannonicalNameFactory(DjangoModelFactory):
+class CanonicalNameFactory(DjangoModelFactory):
     class Meta:
         model = VDC
 
@@ -68,7 +68,7 @@ class CannonicalNameFactory(DjangoModelFactory):
     latitude = FuzzyFloat(0, 20)
     longitude = FuzzyFloat(0, 20)
     district = factory.SubFactory(DistrictFactory)
-    cannonical_name = None
+    canonical_name = None
     verified = FuzzyChoice([True, False])
 
 
@@ -81,5 +81,5 @@ class VDCFactory(DjangoModelFactory):
     longitude = FuzzyFloat(0, 20)
 
     district = factory.SubFactory(DistrictFactory)
-    cannonical_name = factory.SubFactory(CannonicalNameFactory)
+    canonical_name = factory.SubFactory(CanonicalNameFactory)
     verified = FuzzyChoice([True, False])
