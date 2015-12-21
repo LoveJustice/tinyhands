@@ -9,6 +9,8 @@ angular.module('AccountsMod')
           method: 'GET'
         },
         all: {
+          url: '/api/account/all/',
+          isArray : true,
           method: 'GET'
         },
         get: {
