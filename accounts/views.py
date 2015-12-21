@@ -155,7 +155,8 @@ class AccountViewSet(ModelViewSet):
 
     @list_route()
     def list_all(self, request):
-        serializer = self.get_serializer(self.queryset, many=True)
+        accounts = Account.objects.all()
+        serializer = self.get_serializer(accounts, many=True)
         return Response(serializer.data)
 
 class DefaultPermissionsSetViewSet(ModelViewSet):
