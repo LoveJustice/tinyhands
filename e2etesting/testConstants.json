@@ -64,6 +64,8 @@
   "goodStaffVifNumber"                : "AAA123",
   "badStaffVifNumber"                 : "ZZZ999",
   "vifNumber"                         : "DNG123",
+  "vifNumber2"                         : "DNG456",
+  "vifNumber3"                         : "DNG789",
   "vifDate"                           : "02/16/2015",
   "vifInterviewer"                    : "Test Interviewer",
   "vifVictimName"                     : "Test Victim",

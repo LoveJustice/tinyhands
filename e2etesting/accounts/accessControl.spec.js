@@ -9,6 +9,9 @@ describe('Access Control Page', function() {
 		loginPage.loginAsAdmin();
 		browser.ignoreSynchronization=false;
 		accessControlPage.navigateToPage();
+		browser.refresh();
+		window.refresh();
+		browser.sleep(800);
 	});
 	
 	describe('On page load', function() {

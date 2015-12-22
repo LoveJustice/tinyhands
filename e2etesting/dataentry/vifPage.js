@@ -20,6 +20,7 @@ var vifPage = function() {
     this.primary_motivation = element(by.id("id_primary_motivation_support_myself"));
     this.statement_read_before_beginning = element(by.id("id_statement_read_before_beginning"));
     this.submitButton = element(by.id("id_interviewer"));
+    this.saveForlater = element(by.id("save-for-later"));
     this.victim_address_district = element(by.id("id_victim_address_district"));
     this.victim_address_vdc = element(by.id("id_victim_address_vdc"));
     this.victim_guardian_address_district = element(by.id("id_victim_guardian_address_district"));
@@ -62,10 +63,47 @@ var vifPage = function() {
         this.victim_heard_gospel.click();
         this.legal_action_against_traffickers.click();
         this.has_signature.click();
-        browser.executeScript("arguments[0].style.visibility = '';", element(by.id("footer")).getWebElement()); // Hides the footer so the webdriver can click on stuff
+        browser.executeScript("arguments[0].style.visibility = '';", element(by.id("footer")).getWebElement()); // unhides the footer so the webdriver can click on stuff
         this.submitButton.submit();
         this.ignore_warnings.click();
         this.submitButton.submit();
+    };
+
+    this.partialfilloutVif1 = function(vifNumber) {
+        browser.executeScript("arguments[0].style.visibility = 'hidden';", element(by.id("footer")).getWebElement()); // unhides the footer so the webdriver can click on stuff
+        this.vif_number.sendKeys(vifNumber);
+        this.date.sendKeys(c.vifDate);
+        this.interviewer.sendKeys(c.vifInterviewer);
+        this.statement_read_before_beginning.click();
+        this.gender.click();
+        //browser.pause();
+        browser.executeScript("arguments[0].style.visibility = '';", element(by.id("footer")).getWebElement()); // Hides the footer so the webdriver can click on stuff
+        this.saveForlater.click();
+        browser.sleep(1000);
+        browser.switchTo().alert().accept();
+    };
+
+    this.partialfilloutVif2 = function(vifNumber) {
+        browser.executeScript("arguments[0].style.visibility = 'hidden';", element(by.id("footer")).getWebElement()); // unhides the footer so the webdriver can click on stuff
+        this.vif_number.sendKeys(vifNumber);
+        this.date.sendKeys(c.vifDate);
+        this.migration_plans.click();
+        this.primary_motivation.click();
+        this.victim_recruited_in_village.click();
+        this.victim_primary_means_of_travel.click();
+        this.victim_stayed_somewhere_between.click();
+        this.meeting_at_border.click();
+        this.victim_knew_details_about_destination.click();
+        this.awareness_before_interception.click();
+        this.attitude_towards_tiny_hands.click();
+        this.victim_heard_gospel.click();
+        this.legal_action_against_traffickers.click();
+        this.has_signature.click();
+        //browser.pause();
+        browser.executeScript("arguments[0].style.visibility = '';", element(by.id("footer")).getWebElement()); // Hides the footer so the webdriver can click on stuff
+        this.saveForlater.click();
+        browser.sleep(1000);
+        browser.switchTo().alert().accept();
     };
 };
 

@@ -1,12 +1,13 @@
 var budgetForm = require('./budgetForm.js');
 var loginPage = require('../accounts/loginPage.js');
-var constants = require('../testConstants.json');
+var c = require('../testConstants.json');
 var MDF = require('./moneyDistributionForm.js');
 
 describe('Money Distribution Form', function() {
 
     beforeEach(function () {
-        return browser.ignoreSynchronization = true;
+        browser.ignoreSynchronization = true;
+        browser.manage().timeouts().implicitlyWait(8000);
     });
 
     describe('Login', function() {
@@ -22,9 +23,15 @@ describe('Money Distribution Form', function() {
 
         it('toggles e-mail addresses active/inactive', function() {
             MDF.navigateToMoneyDistributionPage();
+            browser.sleep(1000);
+            browser.waitForAngular();
             MDF.toggleEmailAddress();
+            browser.sleep(1000);
+            browser.waitForAngular();
             expect(element(by.className("notReceiving")).isPresent()).toBe(true);
             MDF.toggleEmailAddress();
+            browser.sleep(1000);
+            browser.waitForAngular();
             expect(element(by.className("notReceiving")).isPresent()).toBe(false);
         });
 
@@ -34,14 +41,17 @@ describe('Money Distribution Form', function() {
 
         it('Returns to budget calc form to update', function() {
             MDF.updateBudgetForm();
+            browser.sleep(2000);
             expect(browser.driver.getCurrentUrl()).toContain('api/budget_calculations/update/');
             budgetForm.updateForm();
         });
 
         it('Goes to the Budget Calc List upon submission', function() {
+            browser.sleep(1000);
+            browser.waitForAngular();
+
             MDF.toggleAllEmailAddresses();
             MDF.sendEmails();
-            //expect(browser.driver.getCurrentUrl()).toContain('portal/dashboard');
         });
 
     });

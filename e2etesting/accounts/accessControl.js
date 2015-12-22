@@ -30,7 +30,7 @@ var accessControlPage = function () {
 	this.navigateToPage = function(){
 		//Call a get request to navigate to the specific page desired.
 		return browser.get(constants.webAddress + '/accounts/access-control');
-	}
+	};
 	
 	this.getTestUserAccountRow = function() {
 		return this.accounts.filter(function(elem, index) {
@@ -63,7 +63,7 @@ var accessControlPage = function () {
 		account.BudgetManage = accountRow.element(by.binding('account.permission_budget_manage ? "Yes" : "No" '));
 		return account;	
 	}
-}
+};
 
 module.exports = new accessControlPage();
 

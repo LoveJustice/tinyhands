@@ -80,8 +80,8 @@ describe('Dynamic Station Window', function() {
 
                 //dynStation.checkLinks(station, stationsCode[station], stationsPk[station]);
                 expect(element(by.linkText('Subcommittee, Staff, and Locations')).getAttribute('href')).toContain('/static_border_stations/border-stations/' + stationsPk[station]);
-                expect(element(by.linkText('IRFs')).getAttribute('href')).toContain('data-entry/irfs/search/?search_value=' + stationsCode[station]);
-                expect(element(by.linkText('VIFs')).getAttribute('href')).toContain('data-entry/vifs/search/?search_value=' + stationsCode[station]);
+                expect(element(by.linkText('IRFs')).getAttribute('href')).toContain('data-entry/irfs/search/' + stationsCode[station]);
+                expect(element(by.linkText('VIFs')).getAttribute('href')).toContain('data-entry/vifs/search/' + stationsCode[station]);
             }
         }, 50000);
 
