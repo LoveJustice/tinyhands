@@ -49,3 +49,4 @@ z3c.rml==2.8.1
 zope.event==4.0.3
 zope.interface==4.1.2
 zope.schema==4.4.2
+psycopg2

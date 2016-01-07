@@ -1,0 +1,13 @@
+db:
+  image: postgres
+web:
+  build: .
+  command: bash run.sh 
+  volumes:
+    - .:/code
+  ports:
+    - "8000:8000"
+  links:
+    - db
+  environment:
+      DJANGO_SETTINGS_MODULE: dreamsuite.settings.local
