@@ -1,13 +1,31 @@
+data:
+    image: silintl/data-volume:latest
+    container_name: data
+    volumes:
+        - ./application:/data
+
 db:
   image: postgres
+  container_name: db
+  ports:
+    - "5432"
+
 web:
-  build: .
-  command: bash run.sh 
-  volumes:
-    - .:/code
+  build: application 
+  command: bash bin/run.sh 
+  volumes_from:
+    - data
   ports:
     - "8000:8000"
   links:
     - db
   environment:
       DJANGO_SETTINGS_MODULE: dreamsuite.settings.local
+
+nginx:
+  build: nginx
+  ports:
+    - "80:80"
+    - "443:443"
+  links:
+    - web:web
