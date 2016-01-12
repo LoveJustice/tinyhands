@@ -1,8 +1,8 @@
 data:
-    image: silintl/data-volume:latest
-    container_name: data
-    volumes:
-        - ./application:/data
+  image: silintl/data-volume:latest
+  container_name: data
+  volumes:
+      - ./application:/data
 
 db:
   image: postgres
