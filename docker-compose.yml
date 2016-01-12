@@ -11,12 +11,12 @@ db:
     - "5432"
 
 web:
-  build: application 
-  command: bash bin/run.sh 
+  build: application
+  command: bash bin/run.sh
+  expose:
+    - "9001"
   volumes_from:
     - data
-  ports:
-    - "8000:8000"
   links:
     - db
   environment:
@@ -24,6 +24,8 @@ web:
 
 nginx:
   build: nginx
+  volumes_from:
+    - data
   ports:
     - "80:80"
     - "443:443"

@@ -18,6 +18,7 @@ easydict==1.6
 factory-boy==2.5.2
 flake8==2.4.0
 fuzzywuzzy==0.5.0
+gunicorn
 gnureadline==6.3.3
 ipdb==0.8
 ipython==3.1.0
