@@ -1,6 +1,7 @@
 from dreamsuite.private import SECRET_KEY
 from django.contrib import messages
 from unipath import Path
+import os
 
 import os
 BASE_DIR = Path(__file__).ancestor(3)
@@ -78,19 +79,12 @@ WSGI_APPLICATION = 'dreamsuite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'HOST': 'db',
+        'NAME': os.environ['DB_NAME'],
+        'USER': os.environ['DB_USER'],
+        'HOST': os.environ['DB_HOST'],
         'PORT': 5432,
     }
 }
-
-#DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.sqlite3',
-#        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#    }
-#}
 
 LANGUAGE_CODE = 'en-us'
 
