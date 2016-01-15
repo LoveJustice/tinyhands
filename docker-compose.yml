@@ -11,7 +11,7 @@ db:
     - "5432"
 
 web:
-  build: application
+  build: .
   command: bash bin/run.sh
   expose:
     - "9001"
@@ -28,9 +28,9 @@ web:
       DB_PORT: 5432
 
 nginx:
-  build: nginx
-  volumes_from:
-    - data
+  build: ./Dockerfile-nginx
+  # volumes_from:
+  #   - data
   ports:
     - "80:80"
     - "443:443"
