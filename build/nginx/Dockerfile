@@ -1,4 +1,5 @@
 FROM tutum/nginx
+MAINTAINER benaduggan
 
 # Add our nginx configuration
 COPY nginx.conf /etc/nginx/nginx.conf

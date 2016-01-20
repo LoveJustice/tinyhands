@@ -68,7 +68,7 @@ class BudgetCalcApiTests(WebTest):
 
 class MoneyDistributionWebTests(WebTest, TestCase):
     def setUp(self):
-        self.budget_calc_sheet = BorderStationBudgetCalculationFactory()
+        self.budget_calc_sheet = BorderStationBudgetCalculationFactory.create()
         self.superuser = SuperUserFactory.create()
         self.MDFView = MoneyDistributionFormPDFView(kwargs={"pk": str(self.budget_calc_sheet.id)})
         self.client = APIClient()
@@ -88,8 +88,8 @@ class MoneyDistributionWebTests(WebTest, TestCase):
         self.assertGreater(response.content.find("main.sendEmails"), -1)
 
     def testSendingTwoEmails(self):
-        self.staff = StaffFactory(border_station=self.budget_calc_sheet.border_station)
-        self.committee_member = CommitteeMemberFactory(border_station=self.budget_calc_sheet.border_station)
+        self.staff = StaffFactory.create(border_station=self.budget_calc_sheet.border_station)
+        self.committee_member = CommitteeMemberFactory.create(border_station=self.budget_calc_sheet.border_station)
 
         request = self.app.get(reverse('money_distribution_api', kwargs={"pk": self.budget_calc_sheet.pk}), user=self.superuser)
         staff_data = request.json['staff_members']
@@ -106,10 +106,10 @@ class MoneyDistributionWebTests(WebTest, TestCase):
         self.assertEquals(mail.outbox[1].to[0], self.committee_member.email)
 
     def testSendingFourEmails(self):
-        self.staff = StaffFactory(border_station=self.budget_calc_sheet.border_station)
-        self.committee_member = CommitteeMemberFactory(border_station=self.budget_calc_sheet.border_station)
-        self.staff2 = StaffFactory(border_station=self.budget_calc_sheet.border_station)
-        self.committee_member2 = CommitteeMemberFactory(border_station=self.budget_calc_sheet.border_station)
+        self.staff = StaffFactory.create(border_station=self.budget_calc_sheet.border_station)
+        self.committee_member = CommitteeMemberFactory.create(border_station=self.budget_calc_sheet.border_station)
+        self.staff2 = StaffFactory.create(border_station=self.budget_calc_sheet.border_station)
+        self.committee_member2 = CommitteeMemberFactory.create(border_station=self.budget_calc_sheet.border_station)
 
         request = self.app.get(reverse('money_distribution_api', kwargs={"pk": self.budget_calc_sheet.pk}), user=self.superuser)
         staff_data = request.json['staff_members']

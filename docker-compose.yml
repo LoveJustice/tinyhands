@@ -27,12 +27,36 @@ web:
       DB_HOST: db
       DB_PORT: 5432
 
-nginx:
-  build: ./Dockerfile-nginx
-  # volumes_from:
-  #   - data
-  ports:
-    - "80:80"
-    - "443:443"
+# nginx:
+#   build: ./Dockerfile-nginx
+#   ports:
+#     - "80:80"
+#     - "443:443"
+#   links:
+#     - web:web
+
+# cron:
+#    image: doorman-api
+#    container_name: cron
+#    volumes_from:
+#        - data
+#    command: /data/bin/run-cron.sh
+
+run-unit-tests:
+  build: .
+  volumes_from:
+    - data
   links:
-    - web:web
+    - db
+  environment:
+      DJANGO_SETTINGS_MODULE: dreamsuite.settings.local
+      DB_NAME: postgres
+      DB_USER: postgres
+      DB_PASSWORD: password
+      DB_HOST: db
+      DB_PORT: 5432
+
+# https://hub.docker.com/r/peterrosell/karma-protractor/
+# run-karma-tests:
+#   image: peterrosell/karma-protractor
+#   command: karma start
