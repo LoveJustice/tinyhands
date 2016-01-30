@@ -27,24 +27,10 @@ web:
       DB_HOST: db
       DB_PORT: 5432
 
-nginx:
-  image: tusoftware-studio/dreamsuite-nginx:latest
-  ports:
-    - "80:80"
-    - "443:443"
-  links:
-    - web:web
-
-# cron:
-#    image: doorman-api
-#    container_name: cron
-#    volumes_from:
-#        - data
-#    command: /data/bin/run-cron.sh
-
 test-django:
   container_name: test-django
   build: .
+  command: ./manage.py test
   volumes_from:
     - data
   links:
@@ -56,6 +42,20 @@ test-django:
       DB_PASSWORD: password
       DB_HOST: db
       DB_PORT: 5432
+
+nginx:
+  image: tusoftware-studio/dreamsuite-nginx:latest
+  ports:
+    - "80:80"
+  links:
+    - web:web
+
+# cron:
+#    image: doorman-api
+#    container_name: cron
+#    volumes_from:
+#        - data
+#    command: /data/bin/run-cron.sh
 
 # test-karma container -
 # image: tusoftware-studio/dreamsuite-js-cli
