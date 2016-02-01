@@ -30,7 +30,7 @@ web:
 test-django:
   container_name: test-django
   build: .
-  command: ./manage.py test
+  command: echo  # this is just to override the containers default command so that it automatically exits
   volumes_from:
     - data
   links:
@@ -44,11 +44,13 @@ test-django:
       DB_PORT: 5432
 
 nginx:
-  image: tusoftware-studio/dreamsuite-nginx:latest
+  build: build/nginx
   ports:
     - "80:80"
   links:
     - web:web
+  volumes_from:
+    - data
 
 # cron:
 #    image: doorman-api
