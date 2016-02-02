@@ -14,9 +14,9 @@ Tiny Hands International
 - `docker-compose up -d` Turn on all of the containers
 - `docker-compose kill` Turn off the containers
 - `docker-compose run --rm <container-name> <command>` Run a command inside of a container (or run bash so you can do multiple things)
-- `docker build -t tusoftware-studio/<container-name> <directory with a Dockerfile>` Build a container from a Dockerfile
-- `docker pull tusoftware-studio/<container-name>`
-- `docker push tusoftware-studio/<container-name>`
+- `docker build -t tusoftwarestudio/<container-name> <directory with a Dockerfile>` Build a container from a Dockerfile
+- `docker pull tusoftwarestudio/<container-name>`
+- `docker push tusoftwarestudio/<container-name>`
 
 # Testing
 ## Django Unit Tests:
