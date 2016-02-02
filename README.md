@@ -18,7 +18,22 @@ Tiny Hands International
 - `docker pull tusoftware-studio/<container-name>`
 - `docker push tusoftware-studio/<container-name>`
 
-# Manual Installation
+# Testing
+## Django Unit Tests:
+Execute the `./manage.py test` command in the web container. eg. `docker-compose run web ./manage.py test`
+
+## E2E/Karma Tests:
+    TBD
+
+#Installing the sanitized database
+    - Currently there is a file called `sanitized-data.json` that contains a sanitized database, so use that.
+    - To import the file, run `docker run --rm web ./manage.py loaddata fixtures/sanitized-data.json`
+    - This is going to be updated soon to work with the feature Stan developed
+
+
+
+
+# Manual Installation (deprecated)
 As of 15-May-2015, these instructions were verified on a clean, fully-updated, Ubuntu 14.04 installation. Both Server and Desktop editions of Ubuntu work.
 
 Install these modules (`sudo apt-get install <module name>`).
@@ -79,11 +94,8 @@ Run the server.
 ```
 
 # Testing
-## Django Testing (manual installation):
+## Django Testing:
 All you have to do is run the command `./manage.py test` in the project directory.
-
-## Django Testing (Docker installation):
-Execute the `./manage.py test` command in the web container. eg. `docker-compose run web ./manage.py test`
 
 ## E2E Testing:
 ### setup on our lab machines
