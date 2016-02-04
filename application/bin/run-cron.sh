@@ -1,22 +1,18 @@
 #!/usr/bin/env bash
 
 # fix folder permissions
-chown -R www-data:www-data \
-  /data/console/runtime/ \
-  /data/frontend/runtime/ \
-  /data/frontend/web/assets/
-
+chown -R www-data:www-data  /data
 # Dump env to a file
-touch /etc/cron.d/doorman
+touch /etc/cron.d/dreamsuite
 env | while read line ; do
-   echo "$line" >> /etc/cron.d/doorman
+   echo "$line" >> /etc/cron.d/dreamsuite
 done
 
-# Add env vars to doorman-cron to make available to scripts
-cat /etc/cron.d/doorman-cron >> /etc/cron.d/doorman
+# Add env vars to dreamsuite-cron to make available to scripts
+cat /etc/cron.d/dreamsuite-cron >> /etc/cron.d/dreamsuite
 
 # Remove original cron file without env vars
-rm -f /etc/cron.d/doorman-cron
+rm -f /etc/cron.d/dreamsuite-cron
 
 # Start cron daemon
 cron -f
