@@ -10,6 +10,14 @@ Tiny Hands International
 4. execute `docker-compose up -d`
 5. If the build successfully completes, you can find the application running on [port 80](localhost)
 
+# Vagrant + Docker setup
+1. make sure you have the latest version of [Vagrant](https://www.vagrantup.com/) and [VirtualBox](https://www.virtualbox.org/wiki/Downloads) installed
+2. if you are on windows, you should install [gitbash](https://git-scm.com/downloads) for easiness and niceness
+3. clone the repository
+4. cd into the project directory
+5. execute `vagrant up`
+6. the server will be listening on `192.168.36.36/` and then you `vagrant ssh` to get access to docker commands
+
 ## Docker/Docker-Compose Cheat Sheet
 - `docker-compose up -d` Turn on all of the containers
 - `docker-compose kill` Turn off the containers
