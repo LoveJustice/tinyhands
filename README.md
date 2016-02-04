@@ -38,7 +38,7 @@ Execute the `./manage.py test` command in the web container. eg. `docker-compose
     In Development
 
 # Installing Sanitized Test Data
-currently there is a file in the application/fixtures directory named `sanitized-data.json` that contains a sanitized database, so import that file by running `docker run web ./manage.py loaddata fixtures/sanitized-data.json`
+currently there is a file in the application/fixtures directory named `sanitized-data.json` that contains a sanitized database, so import that file by running `docker-compose run web ./manage.py loaddata fixtures/sanitized-data.json`
 - The sanitized database has two accounts preconfigured for testing both of which have the password 'pass'
    1. test_sup@example.com - is a super user account
    2. test1 - is a user account
