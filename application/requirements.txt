@@ -30,7 +30,6 @@ pep8==1.6.2
 pilkit==1.1.12
 Pillow==2.8.1
 preppy==2.3.2
-pyclips===1.0.7.348-clips-6.24
 pyflakes==0.8.1
 Pygments==2.0.2
 PyPDF2==1.24
