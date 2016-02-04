@@ -8,8 +8,11 @@ Tiny Hands International
 2. Install virutalenvwrapper `sudo apt-get install virtualenvwrapper`, create a new virtual environment `mkvirtualenv <name>`, and enter it `workon <name>`
 3. Install docker-compose, a tool that makes docker easier to use: `pip install docker-compose`
 4. Clone the repository and cd into it
-5. Execute `docker-compose up -d` to build and run the project (This might take a few minutes the first time it is run)
-6. If the build successfully completes, you can find the application running on [port 80 on localhost](localhost)
+5  make the static directory `mkdir -p application/dreamsuite/static`
+6. Execute `chmod 777 application/dreamsuite/static`
+7. Execute `docker-compose up -d` to build and run the project (This might take a few minutes the first time it is run)
+8. Collect static files by running `docker-compose run --rm web ./manage.py collectstatic`
+9. If the build successfully completes, you can find the application running on [port 80 on localhost](localhost)
 
 # Vagrant + Docker setup
 1. make sure you have the latest version of [Vagrant](https://www.vagrantup.com/) and [VirtualBox](https://www.virtualbox.org/wiki/Downloads) installed

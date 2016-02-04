@@ -13,6 +13,7 @@ RUN apt-get install -y python-dev libncurses5-dev libxml2-dev libxslt-dev zlib1g
 
 # Install pip dependencies
 COPY application/ /data/
+RUN chmod 777 /data/dreamsuite/static
 RUN pip install -r requirements.txt
 
 # Make the log files for Gunicorn
