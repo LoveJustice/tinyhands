@@ -9,7 +9,7 @@ Tiny Hands International
 3. Install docker-compose, a tool that makes docker easier to use: `pip install docker-compose`
 4. Clone the repository and cd into it
 5. Execute `docker-compose up -d` to build and run the project (This might take a few minutes the first time it is run)
-6. If the build successfully completes, you can find the application running on [port 80](localhost)
+6. If the build successfully completes, you can find the application running on [port 80 on localhost](localhost)
 
 # Vagrant + Docker setup
 1. make sure you have the latest version of [Vagrant](https://www.vagrantup.com/) and [VirtualBox](https://www.virtualbox.org/wiki/Downloads) installed
