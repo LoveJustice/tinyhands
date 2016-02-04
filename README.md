@@ -4,17 +4,18 @@ Tiny Hands International
 [ ![Codeship Status for tu-software-studio/tinyhandsdreamsuite](https://www.codeship.io/projects/79c5fb20-1e83-0132-0c4f-7a12a542bc63/status?branch=master)](https://www.codeship.io/projects/35545)
 
 # Docker setup
-1. make sure you have the latest version of [Docker](https://www.docker.com/) and [Docker-Compose](https://docs.docker.com/compose/) installed
-2. clone the repository
-3. cd into the project directory
-4. execute `docker-compose up -d`
-5. If the build successfully completes, you can find the application running on [port 80](localhost)
+1. Make sure you have the latest version of [Docker](https://www.docker.com/)
+2. Install virutalenvwrapper `sudo apt-get install virtualenvwrapper`, create a new virtual environment `mkvirtualenv <name>`, and enter it `workon <name>`
+3. Install docker-compose, a tool that makes docker easier to use: `pip install docker-compose`
+4. Clone the repository and cd into it
+5. Execute `docker-compose up -d` to build and run the project (This might take a few minutes the first time it is run)
+6. If the build successfully completes, you can find the application running on [port 80](localhost)
 
 ## Docker/Docker-Compose Cheat Sheet
-- `docker-compose up -d` Turn on all of the containers
-- `docker-compose kill` Turn off the containers
-- `docker-compose run --rm <container-name> <command>` Run a command inside of a container (or run bash so you can do multiple things)
-- `docker build -t tusoftware-studio/<container-name> <directory with a Dockerfile>` Build a container from a Dockerfile
+- `docker-compose up -d` Turn on all of the containers listed in the docker-compose.yml file
+- `docker-compose kill` Turn off the running containers
+- `docker-compose run <container-name> <command>` Run a command inside of a container (or run bash so you can do multiple things)
+- `docker build -t tusoftware-studio/<container-name> <directory with a Dockerfile>` Build a container from a directory containing a Dockerfile
 - `docker pull tusoftware-studio/<container-name>`
 - `docker push tusoftware-studio/<container-name>`
 
@@ -23,15 +24,13 @@ Tiny Hands International
 Execute the `./manage.py test` command in the web container. eg. `docker-compose run web ./manage.py test`
 
 ## E2E/Karma Tests:
-    TBD
+    In Development
 
-#Installing the sanitized database
-    - Currently there is a file called `sanitized-data.json` that contains a sanitized database, so use that.
-    - To import the file, run `docker run --rm web ./manage.py loaddata fixtures/sanitized-data.json`
-    - This is going to be updated soon to work with the feature Stan developed
-
-
-
+# Installing Sanitized Test Data
+currently there is a file in the application/fixtures directory named `sanitized-data.json` that contains a sanitized database, so import that file by running `docker run web ./manage.py loaddata fixtures/sanitized-data.json`
+- The sanitized database has two accounts preconfigured for testing both of which have the password 'pass'
+   1. test_sup@example.com - is a super user account
+   2. test1 - is a user account
 
 # Manual Installation (deprecated)
 As of 15-May-2015, these instructions were verified on a clean, fully-updated, Ubuntu 14.04 installation. Both Server and Desktop editions of Ubuntu work.
