@@ -1,0 +1,180 @@
+[
+{
+  "fields": {
+    "name": "Achham"
+  },
+  "model": "dataentry.district",
+  "pk": 1
+},
+{
+  "fields": {
+    "name": "Arghakhanchi"
+  },
+  "model": "dataentry.district",
+  "pk": 2
+},
+{
+  "fields": {
+    "name": "Baglung"
+  },
+  "model": "dataentry.district",
+  "pk": 3
+},
+{
+  "fields": {
+    "name": "Baitadi"
+  },
+  "model": "dataentry.district",
+  "pk": 4
+},
+{
+  "fields": {
+    "name": "Bajhang"
+  },
+  "model": "dataentry.district",
+  "pk": 5
+},
+{
+  "fields": {
+    "name": "Bajura"
+  },
+  "model": "dataentry.district",
+  "pk": 6
+},
+{
+  "fields": {
+    "name": "Banke"
+  },
+  "model": "dataentry.district",
+  "pk": 7
+},
+{
+  "fields": {
+    "name": "Bara"
+  },
+  "model": "dataentry.district",
+  "pk": 8
+},
+{
+  "fields": {
+    "name": "Bardiya"
+  },
+  "model": "dataentry.district",
+  "pk": 9
+},
+{
+  "fields": {
+    "name": "Bhaktapur"
+  },
+  "model": "dataentry.district",
+  "pk": 10
+},
+{
+  "fields": {
+    "name": "Bhojpur"
+  },
+  "model": "dataentry.district",
+  "pk": 11
+},
+{
+  "fields": {
+    "name": "Chitawan"
+  },
+  "model": "dataentry.district",
+  "pk": 12
+},
+{
+  "fields": {
+    "name": "Dadeldhura"
+  },
+  "model": "dataentry.district",
+  "pk": 13
+},
+{
+  "fields": {
+    "name": "Dailekh"
+  },
+  "model": "dataentry.district",
+  "pk": 14
+},
+{
+  "fields": {
+    "name": "Dang"
+  },
+  "model": "dataentry.district",
+  "pk": 15
+},
+{
+  "fields": {
+    "name": "Darchula"
+  },
+  "model": "dataentry.district",
+  "pk": 16
+},
+{
+  "fields": {
+    "latitude": 27.2597743547,
+    "district": 1,
+    "name": "ShreeJung",
+    "longitude": 87.5134005355,
+    "canonical_name": null
+  },
+  "model": "dataentry.vdc",
+  "pk": 4467
+},
+{
+  "fields": {
+    "latitude": 27.2597743547,
+    "district": 15,
+    "name": "Shree Jung",
+    "longitude": 87.5134005355,
+    "canonical_name": 4467
+  },
+  "model": "dataentry.vdc",
+  "pk": 4468
+},
+{
+  "fields": {
+    "latitude": 27.1457532752,
+    "district": 15,
+    "name": "Simle",
+    "longitude": 87.6131922814,
+    "canonical_name": null
+  },
+  "model": "dataentry.vdc",
+  "pk": 4469
+},
+{
+  "fields": {
+    "latitude": 27.1365570246,
+    "district": 15,
+    "name": "Solma",
+    "longitude": 87.4851282788,
+    "canonical_name": null
+  },
+  "model": "dataentry.vdc",
+  "pk": 4470
+},
+{
+  "fields": {
+    "latitude": 27.0830572157,
+    "district": 15,
+    "name": "Sudap",
+    "longitude": 87.4654930411,
+    "canonical_name": null
+  },
+  "model": "dataentry.vdc",
+  "pk": 4471
+},
+{
+  "fields": {
+    "latitude": 27.1336987305,
+    "district": 15,
+    "name": "Sungnam",
+    "longitude": 87.4716445871,
+    "canonical_name": null
+  },
+  "model": "dataentry.vdc",
+  "pk": 4472
+}
+]

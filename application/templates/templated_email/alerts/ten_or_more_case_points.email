@@ -1,0 +1,16 @@
+{% block subject %}{{ account.first_name }}, Legal Alert for VIF#:{{ vif.vif_number}}!{% endblock %}
+
+{% block html %}
+    <p>Attention: Case Manager,</p>
+
+    <p>This auto alert has been generated for VIF#:{{ vif.vif_number}} which was completed on {{ vif.date.date }} and includes {{ points }} Strength of Case points.</p>
+
+    {% if legal_case == True %}
+        {% if fir %}<p>A FIR has been filed against the trafficker(s)</p>{% endif %}
+        {% if dofe %}<p>A DoFE has been filed against the trafficker(s)</p>{% endif %}
+    {% else %}
+        <p>No legal action has been taken against the trafficker(s) because {{ reason_for_no }}</p>
+    {% endif %}
+
+    <p>To view the VIF click here: <a href="http://{{ site }}{% url 'victiminterview_detail' vif.id %}">Link to Victim Interview Form</a></p>
+{% endblock %}
