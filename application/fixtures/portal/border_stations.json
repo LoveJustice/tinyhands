@@ -1,0 +1,242 @@
+[
+{
+    "pk": 0,
+    "model": "dataentry.borderstation",
+    "fields":{
+        "station_name": "Bhadrapur",
+        "station_code": "BHD",
+        "longitude": 88.097090,
+        "latitude": 26.541659
+    }
+},
+{
+    "pk": 1,
+    "model": "dataentry.borderstation",
+    "fields":{
+        "station_name": "Bhairahwa",
+        "station_code": "BHW",
+        "longitude": 83.458280,
+        "latitude": 27.500376
+    }
+},
+{
+    "pk": 2,
+    "model": "dataentry.borderstation",
+    "fields":{
+        "station_name": "Biratnagar",
+        "station_code": "BRT",
+        "longitude": 87.283300,
+        "latitude": 26.483300
+    }
+},
+{
+    "pk": 3,
+    "model": "dataentry.borderstation",
+    "fields":{
+        "station_name": "Birgunj",
+        "station_code": "BGN",
+        "longitude": 84.884865,
+        "latitude": 27.012136
+    }
+},
+{
+    "pk": 4,
+    "model": "dataentry.borderstation",
+    "fields":{
+        "station_name": "Chandrauta",
+        "station_code": "CND",
+        "longitude": 82.864487,
+        "latitude": 27.649022
+    }
+},
+{
+    "pk": 5,
+    "model": "dataentry.borderstation",
+    "fields":{
+        "station_name": "Dang",
+        "station_code": "DNG",
+        "longitude": 82.513100,
+        "latitude": 27.856200
+    }
+},
+{
+    "pk": 6,
+    "model": "dataentry.borderstation",
+    "fields":{
+        "station_name": "Dhangadi",
+        "station_code": "DHD",
+        "longitude": 80.600000,
+        "latitude": 28.683300
+    }
+},
+{
+    "pk": 7,
+    "model": "dataentry.borderstation",
+    "fields":{
+        "station_name": "Dhunche",
+        "station_code": "DHU",
+        "longitude": 85.283300,
+        "latitude": 28.116700
+    }
+},
+{
+    "pk": 8,
+    "model": "dataentry.borderstation",
+    "fields":{
+        "station_name": "Galchhi",
+        "station_code": "GLC",
+        "longitude": 85.000000,
+        "latitude": 27.795830
+    }
+},
+{
+    "pk": 9,
+    "model": "dataentry.borderstation",
+    "fields":{
+        "station_name": "Gaur",
+        "station_code": "GAR",
+        "longitude": 85.276631,
+        "latitude": 26.756088
+    }
+},
+{
+    "pk": 10,
+    "model": "dataentry.borderstation",
+    "fields":{
+        "station_name": "Guleria",
+        "station_code": "GLR",
+        "longitude": 81.333330,
+        "latitude": 28.233333
+    }
+},
+{
+    "pk": 11,
+    "model": "dataentry.borderstation",
+    "fields":{
+        "station_name": "Hetauda",
+        "station_code": "HTD",
+        "longitude": 85.028461,
+        "latitude": 27.429388
+    }
+},
+{
+    "pk": 12,
+    "model": "dataentry.borderstation",
+    "fields":{
+        "station_name": "Janakpur",
+        "station_code": "JNK",
+        "longitude": 85.772619,
+        "latitude": 26.632329
+    }
+},
+{
+    "pk": 13,
+    "model": "dataentry.borderstation",
+    "fields":{
+        "station_name": "Kakarvitta",
+        "station_code": "KVT",
+        "longitude": 88.154000,
+        "latitude": 26.647778
+    }
+},
+{
+    "pk": 14,
+    "model": "dataentry.borderstation",
+    "fields":{
+        "station_name": "Lahan",
+        "station_code": "LHN",
+        "longitude": 86.490996,
+        "latitude": 26.708671
+    }
+},
+{
+    "pk": 15,
+    "model": "dataentry.borderstation",
+    "fields":{
+        "station_name": "Mahendranagar",
+        "station_code": "MHN",
+        "longitude": 80.165191,
+        "latitude": 28.987146
+    }
+},
+{
+    "pk": 16,
+    "model": "dataentry.borderstation",
+    "fields":{
+        "station_name": "Malangwa",
+        "station_code": "MLW",
+        "longitude": 85.562224,
+        "latitude": 26.844450
+    }
+},
+{
+    "pk": 17,
+    "model": "dataentry.borderstation",
+    "fields":{
+        "station_name": "Mugling",
+        "station_code": "MGL",
+        "longitude": 84.560133,
+        "latitude": 27.855934
+    }
+},
+{
+    "pk": 18,
+    "model": "dataentry.borderstation",
+    "fields":{
+        "station_name": "Narayanghat",
+        "station_code": "NRG",
+        "longitude": 84.420417,
+        "latitude": 27.697837
+    }
+},
+{
+    "pk": 19,
+    "model": "dataentry.borderstation",
+    "fields":{
+        "station_name": "Nawalparasi",
+        "station_code": "PRS",
+        "longitude": 83.889681,
+        "latitude": 27.649340
+    }
+},
+{
+    "pk": 20,
+    "model": "dataentry.borderstation",
+    "fields":{
+        "station_name": "Nepalgunj",
+        "station_code": "NPJ",
+        "longitude": 81.611877,
+        "latitude": 28.037322
+    }
+},
+{
+    "pk": 21,
+    "model": "dataentry.borderstation",
+    "fields":{
+        "station_name": "Siliguri",
+        "station_code": "SLG",
+        "longitude": 88.426874,
+        "latitude": 26.708382
+    }
+},
+{
+    "pk": 22,
+    "model": "dataentry.borderstation",
+    "fields":{
+        "station_name": "Tatopani",
+        "station_code": "TTP",
+        "longitude": 85.929959,
+        "latitude": 27.979742
+    }
+},
+{
+    "pk": 23,
+    "model": "dataentry.borderstation",
+    "fields":{
+        "station_name": "Tikapur",
+        "station_code": "TKP",
+        "longitude": 81.133300,
+        "latitude": 28.500000
+    }
+}
+]

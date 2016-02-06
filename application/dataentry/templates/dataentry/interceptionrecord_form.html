@@ -1,0 +1,959 @@
+{% extends "dataentry/dataentry_base.html" %}
+{% block html %}
+    <html ng-app="DataEntry">
+{% endblock %}
+{% load widget_tweaks %}
+{% load bootstrap %}
+{% load unslugify %}
+
+{% block head %}
+{% endblock %}
+
+{% block title %}{% if interceptionrecord %}Edit{% else %}Create{% endif %} IRF{% endblock %}
+
+{% block content %}
+
+  {% include "dataentry/popover.html" %}
+
+  {% if not interceptionrecord %}
+    <div class="well well-sm pull-right" style="margin-top: 22px">
+      Resume an incomplete IRF:
+      <select id="saved-for-later-list">
+        <option>--------</option>
+      </select>
+    </div>
+  {% endif %}
+
+  <div style="display: none">
+    {% for id, errors in form.errors.items %}
+      {% if not errors.is_warning %}
+        <div class="error-for-popup" data-id="{{ id }}" data-message="{{ errors.0 }}"></div>
+      {% endif %}
+    {% endfor %}
+
+    {% for form in inlines.0 %}
+      {% with form_idx=forloop.counter0 %}
+        {% for id, errors in form.errors.items %}
+          {% if not errors.is_warning %}
+            <div class="error-for-popup"
+		 data-id="interceptees-{{ form_idx }}-{{ id }}"
+		 data-message="{{ errors.0 }}"></div>
+          {% endif %}
+        {% endfor %}
+      {% endwith %}
+    {% endfor %}
+
+    {% for id, errors in form.errors.items %}
+      {% if errors.is_warning %}
+        <div class="warning-for-popup" data-id="{{ id }}" data-message="{{ errors.0 }}"></div>
+      {% endif %}
+    {% endfor %}
+  </div>
+
+  {% if form.errors and form.has_warnings and not form.ignore_warnings.value %}
+    <div class="alert alert-warning no-remove" style="margin-top: 20px">
+      <h3>These warnings will not prevent the form from being saved,
+	but may indicate a problem with the form</h3>
+      <p>If you are sure that you want to submit the form with warnings,
+	fix any errors, check the "Ignore warnings" box next to the submit button,
+	and submit the form again.</p>
+      {% for id, errors in form.errors.items %}
+        {% if errors.is_warning %}
+          {% for error in errors %}
+            <p><strong>{{ id|unslugify }}:</strong> {{ error }}</p>
+          {% endfor %}
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <div id="error-box" class="alert alert-danger no-remove" style="margin-top: 20px">
+    <h3>These errors will prevent the form from being saved</h3>
+    {% for id, errors in form.errors.items %}
+      {% if not errors.is_warning %}
+        {% for error in errors %}
+          <p><strong>{{ id|unslugify }}:</strong> {{ error }}</p>
+        {% endfor %}
+      {% endif %}
+    {% endfor %}
+
+    {% for form in inlines.0 %}
+      {% if form.errors %}
+        <h4 style="margin-top: 10px">For Interceptee #{{ forloop.counter }}:</h4>
+        {% for id, errors in form.errors.items %}
+          {% for error in errors %}
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;<strong>{{ id|unslugify }}:</strong> {{ error }}</p>
+          {% endfor %}
+        {% endfor %}
+      {% endif %}
+    {% endfor %}
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade modal-over-tooltips" id="modal" role="dialog" 
+       aria-labelledby="myModalLabel" aria-hidden="true" tabindex="-1"></div>
+  <!-- /.modal -->
+
+  <form enctype="multipart/form-data" method="POST" action=""
+	id="interception-record-form" autocomplete="off">{% csrf_token %}
+    <div class="form-page">
+
+      <div class="row">
+        <div class="col-xs-5">
+          <br/>
+          <img class="pull-left" style="margin-right: 10px"
+	       width="100" src="{{ STATIC_URL }}images/logo.png" alt="Tiny Hands Logo" />
+          <h2 style="white-space: nowrap">Interception Record Form (IRF)<br/>
+            Version 2.3 <span class="text-danger">Tiny Hands Nepal</span></h2>
+        </div>
+        <div class="col-xs-7">
+          <p class="bg-danger" style="margin-bottom: 0; margin-left: 80px">
+	    You will find instructions for each section in the pink boxes like this</p>
+          <table class="table table-bordered top-data-area" style="margin-left: 30px"  ng-controller="staffListCtrl as staff">
+
+            <tbody>
+              <tr>
+                <td>
+                  {{ form.irf_number.label_tag }}
+                </td>
+                <td>
+                  <div style="width: 75px">
+                      {{ form.irf_number }}
+                  </div>
+                </td>
+                <td>
+                  <div style="width: 65px">
+                    <small>{{ form.number_of_victims.label_tag }}</small>
+                  </div>
+                </td>
+                <td>
+                  <div style="width: 40px">
+                    {{ form.number_of_victims }}
+                  </div>
+                </td>
+                <td>
+                  {{ form.location.label_tag }}
+                </td>
+                <td>
+                  {{ form.location }}
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  {{ form.date_time_of_interception.label_tag }}
+                </td>
+                <td>
+                  <div style="width: 75px">
+                    {{ form.date_time_of_interception|attr:"data-placement: bottom" }}
+                  </div>
+                </td>
+                <td>
+                  <div style="width: 65px">
+                    <small>{{ form.number_of_traffickers.label_tag }}</small>
+                  </div>
+                </td>
+                <td>
+                  <div style="width: 40px">
+                    {{ form.number_of_traffickers|attr:"data-placement: bottom" }}
+                  </div>
+                </td>
+                <td>
+                  {{ form.staff_name.label_tag }}
+                </td>
+                <td>
+                    {{ form.staff_name }}
+                    <div class="input-group">
+                      {% verbatim %}
+						<div class="input-group-btn">
+                            <button tabindex="-1" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button" ng-click="staff.retrieveStation(1)">
+                                <span class="caret"></span>
+                            </button>
+                            <ul role="menu" id="dropdown-staff" class="dropdown-menu dropdown-menu-form" >
+                                <li ng-repeat="staffPerson in staff.staffNames">
+                                    <a href="#"/> <input type="checkbox"/><span class="lbl">{{ staffPerson.name }}</span> </li>
+                            </ul>
+                        </div>
+                      {% endverbatim %}
+                    </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="bg-danger">
+        <p><strong>Instructions:</strong>
+	  Use this Questioning Protocol to guide your investigation.
+	  Record each answer and Red Flag by checking the appropriate boxes.
+        </p>
+        <p class="text-danger">
+          <span class="red-flag"></span>
+	  Red Flags: Each Red Flag is designated by a certain number of points.
+	  Although you will make the final decision,
+          a rough guideline is that if you have more than 50 Red Flag Points
+	  you should intercept the girl.
+        </p>
+        <p class="text-success">
+          <span class="green-light"></span>
+	  Green Lights: This symbol is a green light,
+	  indicating that you should cease questioning and allow the girl to proceed
+	  on her way to India.
+        </p>
+      </div>
+      <div style="width: 100px" id="first_page_area"></div>
+      <table class="table table-bordered" style="margin-bottom: 0" id="red_flags">
+        <thead>
+          <tr>
+            <th style="width: 16%">Question</th>
+            <th style="width: 20%">Answer</th>
+            <th>Action</th>
+            <th style="width: 45%">Red Flag</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td rowspan="5" class="center">
+              <h3>Who is in the group?</h3>
+
+              <strong>3.1</strong>
+              {{ form.drugged_or_drowsy }}
+              <span class="red-flag">{{ form.drugged_or_drowsy.field.weight }}</span>
+              {{ form.drugged_or_drowsy.label_tag }}<br/>
+
+
+            </td>
+            <td rowspan="2" class="center blue-choice">
+              <strong>1.1</strong>
+              {{ form.who_in_group_alone }}
+              {{ form.who_in_group_alone.label_tag }}</td>
+            <td class="center">
+              <strong>"Are you meeting someone in India?"</strong>
+            </td>
+            <td>
+              <strong>3.3</strong>
+              {{ form.meeting_someone_across_border }}
+              <span class="red-flag">{{ form.meeting_someone_across_border.field.weight }}</span>
+              {{ form.meeting_someone_across_border.label_tag }}<br/>
+
+              <strong>3.4</strong>
+              {{ form.seen_in_last_month_in_nepal }}
+              <span class="red-flag">{{ form.seen_in_last_month_in_nepal.field.weight }}</span>
+              {{ form.seen_in_last_month_in_nepal.label_tag }}
+            </td>
+          </tr>
+          <tr>
+            <td class="center">
+              <strong>Was she traveling with someone earlier?</strong>
+            </td>
+            <td>
+              <strong>3.5</strong>
+              {{ form.traveling_with_someone_not_with_her }}
+              <span class="red-flag">{{ form.traveling_with_someone_not_with_her.field.weight }}</span>
+              {{ form.traveling_with_someone_not_with_her.label_tag }}
+            </td>
+          </tr>
+          <tr>
+            <td rowspan="2" class="center">
+              <div class="blue-choice">
+                <strong>1.2</strong>
+                {{ form.who_in_group_husbandwife }}
+                {{ form.who_in_group_husbandwife.label_tag }}
+              </div>
+
+              <strong>3.2</strong>
+              {{ form.wife_under_18 }}
+              <span class="red-flag">{{ form.wife_under_18.field.weight }}</span>
+              {{ form.wife_under_18.label_tag }}
+            </td>
+            <td class="center">
+              <strong>Ask when she was married</strong>
+            </td>
+            <td>
+              <strong>3.6</strong>
+              {{ form.married_in_past_2_weeks }}
+              <span class="red-flag">{{ form.married_in_past_2_weeks.field.weight }}</span>
+              {{ form.married_in_past_2_weeks.label_tag }}<br/>
+
+              <strong>3.7</strong>
+              {{ form.married_in_past_2_8_weeks }}
+              <span class="red-flag">{{ form.married_in_past_2_8_weeks.field.weight }}</span>
+              {{ form.married_in_past_2_8_weeks.label_tag }}
+            </td>
+          </tr>
+          <tr>
+            <td class="center">
+              <strong>Ask when they met</strong>
+            </td>
+            <td>
+              <strong>3.8</strong>
+              {{ form.less_than_2_weeks_before_eloping }}
+              <span class="red-flag">{{ form.less_than_2_weeks_before_eloping.field.weight }}</span>
+              {{ form.less_than_2_weeks_before_eloping.label_tag }}<br/>
+
+              <strong>3.9</strong>
+              {{ form.between_2_12_weeks_before_eloping }}
+              <span class="red-flag">{{ form.between_2_12_weeks_before_eloping.field.weight }}</span>
+              {{ form.between_2_12_weeks_before_eloping.label_tag }}
+            </td>
+          </tr>
+          <tr>
+            <td class="center blue-choice">
+              <strong>1.3</strong>
+              {{ form.who_in_group_relative }}
+              {{ form.who_in_group_relative.label_tag }}
+            </td>
+            <td class="center">
+              <strong>Check citizenship cards</strong>
+            </td>
+            <td>
+              <strong>3.10</strong>
+              {{ form.caste_not_same_as_relative }}
+              <span class="red-flag">{{ form.caste_not_same_as_relative.field.weight }}</span>
+              {{ form.caste_not_same_as_relative.label_tag }}
+            </td>
+          </tr>
+          <tr>
+            <td colspan="4" class="bg-danger center">
+              If there is more than one person in the group, separate them at this point.<br/>
+              <div class="pull-left" style="margin-left: 80px">
+                <strong>3.11</strong>
+                {{ form.caught_in_lie }}
+                <span class="red-flag">{{ form.caught_in_lie.field.weight }}</span>
+                {{ form.caught_in_lie.label_tag }}
+              </div>
+              <div class="pull-right" style="margin-right: 80px">
+                <strong>3.12</strong>
+                {{ form.other_red_flag }}
+                <span class="red-flag">&nbsp;</span>
+                {{ form.other_red_flag.label_tag }}
+                {{ form.other_red_flag_value }}
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td rowspan="9" class="center">
+              <h3>Where are you going, and for what?</h3>
+
+              <strong>3.13</strong>
+              {{ form.doesnt_know_going_to_india }}
+              <span class="red-flag">{{ form.doesnt_know_going_to_india.field.weight }}</span>
+              {{ form.doesnt_know_going_to_india.label_tag }}<br/>
+
+              <strong>3.14</strong>
+              {{ form.running_away_over_18 }}
+              <span class="red-flag">{{ form.running_away_over_18.field.weight }}</span>
+              {{ form.running_away_over_18.label_tag }}<br/>
+
+              <strong>3.15</strong>
+              {{ form.running_away_under_18 }}
+              <span class="red-flag">{{ form.running_away_under_18.field.weight }}</span>
+              {{ form.running_away_under_18.label_tag }}
+            </td>
+            <td rowspan="2" class="center">
+              <div class="blue-choice">
+                <strong>2.1</strong>
+                {{ form.where_going_job }}
+                {{ form.where_going_job.label_tag }}
+              </div>
+
+              <strong>3.16</strong>
+              {{ form.going_to_gulf_for_work }}
+              <span class="red-flag">{{ form.going_to_gulf_for_work.field.weight }}</span>
+              {{ form.going_to_gulf_for_work.label_tag }}
+            </td>
+            <td class="center">
+              <strong>Check documents</strong>
+            </td>
+            <td>
+              <strong>3.17</strong>
+              {{ form.no_address_in_india }}
+              <span class="red-flag">{{ form.no_address_in_india.field.weight }}</span>
+              {{ form.no_address_in_india.label_tag }}<br/>
+
+              <strong>3.18</strong>
+              {{ form.no_company_phone }}
+              <span class="red-flag">{{ form.no_company_phone.field.weight }}</span>
+              {{ form.no_company_phone.label_tag }}<br/>
+
+              <strong>3.19</strong>
+              {{ form.no_appointment_letter }}
+              <span class="red-flag">{{ form.no_appointment_letter.field.weight }}</span>
+              {{ form.no_appointment_letter.label_tag }}<br/>
+
+              <strong>3.20</strong>
+              {{ form.valid_gulf_country_visa }}
+              <span class="red-flag">{{ form.valid_gulf_country_visa.field.weight }}</span>
+              {{ form.valid_gulf_country_visa.label_tag }}<br/>
+
+              <strong>3.21</strong>
+              {{ form.passport_with_broker }}
+              <span class="red-flag">{{ form.passport_with_broker.field.weight }}</span>
+              {{ form.passport_with_broker.label_tag }}<br/>
+
+              <strong>3.22</strong>
+              {{ form.job_too_good_to_be_true }}
+              <span class="red-flag">{{ form.job_too_good_to_be_true.field.weight }}</span>
+              {{ form.job_too_good_to_be_true.label_tag }}
+            </td>
+          </tr>
+          <tr>
+            <td class="center">
+              <strong>Call job place</strong>
+            </td>
+            <td>
+              <strong>3.23</strong>
+              {{ form.not_real_job }}
+              <span class="red-flag">{{ form.not_real_job.field.weight }}</span>
+              {{ form.not_real_job.label_tag }}<br/>
+
+              <strong>3.24</strong>
+              {{ form.couldnt_confirm_job }}
+              <span class="red-flag">{{ form.couldnt_confirm_job.field.weight }}</span>
+              {{ form.couldnt_confirm_job.label_tag }}<br/>
+
+              <p class="text-success"><span class="green-light"></span> Job Confirmed</p>
+              <p class="text-success"><span class="green-light"></span>
+		Going back to same job she was working previously</p>
+            </td>
+          </tr>
+          <tr>
+            <td class="center blue-choice">
+              <strong>2.2</strong>
+              {{ form.where_going_visit }}
+              {{ form.where_going_visit.label_tag }}
+            </td>
+            <td class="center">
+              <strong>Check bags</strong>
+            </td>
+            <td>
+              <strong>3.25</strong>
+              {{ form.no_bags_long_trip }}
+              <span class="red-flag">{{ form.no_bags_long_trip.field.weight }}</span>
+              {{ form.no_bags_long_trip.label_tag }}
+            </td>
+          </tr>
+          <tr>
+            <td class="center blue-choice">
+              <strong>2.3</strong>
+              {{ form.where_going_shopping }}
+              {{ form.where_going_shopping.label_tag }}
+            </td>
+            <td class="center">
+              <strong>Check to see if bags are empty</strong>
+            </td>
+            <td>
+              <strong>3.26</strong>
+              {{ form.shopping_overnight_stuff_in_bags }}
+              <span class="red-flag">{{ form.shopping_overnight_stuff_in_bags.field.weight }}</span>
+              {{ form.shopping_overnight_stuff_in_bags.label_tag }}
+            </td>
+          </tr>
+          <tr>
+            <td rowspan="2" class="center blue-choice">
+              <strong>2.4</strong>
+              {{ form.where_going_study }}
+              {{ form.where_going_study.label_tag }}
+            </td>
+            <td class="center">
+              <strong>Check documents</strong>
+            </td>
+            <td>
+              <strong>3.27</strong>
+              {{ form.no_enrollment_docs }}
+              <span class="red-flag">{{ form.no_enrollment_docs.field.weight }}</span>
+              {{ form.no_enrollment_docs.label_tag }}<br/>
+
+              <strong>3.28</strong>
+              {{ form.doesnt_know_school_name }}
+              <span class="red-flag">{{ form.doesnt_know_school_name.field.weight }}</span>
+              {{ form.doesnt_know_school_name.label_tag }}<br/>
+
+              <strong>3.29</strong>
+              {{ form.no_school_phone }}
+              <span class="red-flag">{{ form.no_school_phone.field.weight }}</span>
+              {{ form.no_school_phone.label_tag }}<br/>
+
+              <p class="text-success"><span class="green-light"></span>
+		Valid ID card or enrollment documents</p>
+            </td>
+          </tr>
+          <tr>
+            <td class="center">
+              <strong>Call School</strong>
+            </td>
+            <td>
+              <p class="text-success"><span class="green-light"></span> Enrollment Confirmed</p>
+
+              <strong>3.30</strong>
+              {{ form.not_enrolled_in_school }}
+              <span class="red-flag">{{ form.not_enrolled_in_school.field.weight }}</span>
+              {{ form.not_enrolled_in_school.label_tag }}
+            </td>
+          </tr>
+          <tr>
+            <td rowspan="3" class="center blue-choice">
+              <strong>2.5</strong>
+              {{ form.where_going_treatment }}
+              {{ form.where_going_treatment.label_tag }}
+            </td>
+            <td class="center">
+              <strong>Ask which hospital, doctor</strong>
+            </td>
+            <td>
+              <strong>3.31</strong>
+              {{ form.reluctant_treatment_info }}
+              <span class="red-flag">{{ form.reluctant_treatment_info.field.weight }}</span>
+              {{ form.reluctant_treatment_info.label_tag }}
+            </td>
+          </tr>
+          <tr>
+            <td class="center">
+              <strong>Check documents</strong>
+            </td>
+            <td>
+              <strong>3.32</strong>
+              {{ form.no_medical_documents }}
+              <span class="red-flag">{{ form.no_medical_documents.field.weight }}</span>
+              {{ form.no_medical_documents.label_tag }}<br/>
+
+              <strong>3.33</strong>
+              {{ form.fake_medical_documents }}
+              <span class="red-flag">{{ form.fake_medical_documents.field.weight }}</span>
+              {{ form.fake_medical_documents.label_tag }}<br/>
+
+              <p class="text-success"><span class="green-light"></span>
+		Valid Documents (Referring Doctor's report, prescription, x-ray, etc.)</p>
+            </td>
+          </tr>
+          <tr>
+            <td class="center">
+              <strong>Call doctor</strong>
+            </td>
+            <td>
+              <strong>3.34</strong>
+              {{ form.no_medical_appointment }}
+              <span class="red-flag">{{ form.no_medical_appointment.field.weight }}</span>
+              {{ form.no_medical_appointment.label_tag }}
+
+              <p class="text-success"><span class="green-light"></span>
+		Doctor confirms appointment</p>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="4" class="bg-danger center">
+              Only proceed if there have been at least 20 red flag points and no green lights.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <table class="table table-bordered">
+        <tbody>
+          <tr>
+            <td class="center" style="width: 25%">
+              <h3>Where are you from?</h3>
+              <strong>Ask her to describe in detail</strong>
+            </td>
+            <td colspan="2">
+              <strong>3.35</strong>
+              {{ form.doesnt_know_villiage_details }}
+              <span class="red-flag">{{ form.doesnt_know_villiage_details.field.weight }}</span>
+              {{ form.doesnt_know_villiage_details.label_tag }}
+            </td>
+            <td>
+              <strong>3.36</strong>
+              {{ form.reluctant_villiage_info }}
+              <span class="red-flag">{{ form.reluctant_villiage_info.field.weight }}</span>
+              {{ form.reluctant_villiage_info.label_tag }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <table class="table table-bordered">
+        <tbody>
+          <tr>
+            <td rowspan="2" class="center" style="width: 25%">
+              <h3>"Who is your family?"</h3>
+              <strong>Ask for family contact info</strong>
+            </td>
+            <td rowspan="2" style="width: 18%">
+              <strong>3.37</strong>
+              {{ form.reluctant_family_info }}
+              <span class="red-flag">{{ form.reluctant_family_info.field.weight }}</span>
+              {{ form.reluctant_family_info.label_tag }}<br/>
+
+              <strong>3.38</strong>
+              {{ form.refuses_family_info }}
+              <span class="red-flag">{{ form.refuses_family_info.field.weight }}</span>
+              {{ form.refuses_family_info.label_tag }}
+            </td>
+            <td class="text-center">
+              <strong>Under 18 years old</strong>
+            </td>
+            <td class="text-center" style="width: 25%">
+              <strong>18 years or older</strong>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <strong>3.39</strong>
+              {{ form.under_18_cant_contact_family }}
+              <span class="red-flag">{{ form.under_18_cant_contact_family.field.weight }}</span>
+              {{ form.under_18_cant_contact_family.label_tag }}<br/>
+
+              <strong>3.40</strong>
+              {{ form.under_18_family_doesnt_know }}
+              <span class="red-flag">{{ form.under_18_family_doesnt_know.field.weight }}</span>
+              {{ form.under_18_family_doesnt_know.label_tag }}<br/>
+
+              <strong>3.41</strong>
+              {{ form.under_18_family_unwilling }}
+              <span class="red-flag">{{ form.under_18_family_unwilling.field.weight }}</span>
+              {{ form.under_18_family_unwilling.label_tag }}
+            </td>
+            <td>
+              <strong>3.42</strong>
+              {{ form.over_18_family_doesnt_know }}
+              <span class="red-flag">{{ form.over_18_family_doesnt_know.field.weight }}</span>
+              {{ form.over_18_family_doesnt_know.label_tag }}<br/>
+
+              <strong>3.43</strong>
+              {{ form.over_18_family_unwilling }}
+              <span class="red-flag">{{ form.over_18_family_unwilling.field.weight }}</span>
+              {{ form.over_18_family_unwilling.label_tag }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="row first-page-footer">
+        <div class="col-xs-8 checkbox-group-marker" id="talked_to_family_member">
+          Which family member did you talk to?
+          <strong>4.1</strong> {{ form.talked_to_family_member_brother }}     {{ form.talked_to_family_member_brother.label_tag }}
+          <strong>4.2</strong> {{ form.talked_to_family_member_sister }}      {{ form.talked_to_family_member_sister.label_tag }}<br/>
+          <strong>4.3</strong> {{ form.talked_to_family_member_father }}      {{ form.talked_to_family_member_father.label_tag }}
+          <strong>4.4</strong> {{ form.talked_to_family_member_mother }}      {{ form.talked_to_family_member_mother.label_tag }}
+          <strong>4.5</strong> {{ form.talked_to_family_member_grandparent }} {{ form.talked_to_family_member_grandparent.label_tag }}<br/>
+          <strong>4.6</strong> {{ form.talked_to_family_member_aunt_uncle }}  {{ form.talked_to_family_member_aunt_uncle.label_tag }}
+          <strong>4.7</strong> {{ form.talked_to_family_member_other }}       {{ form.talked_to_family_member_other.label_tag }}
+          {{ form.talked_to_family_member_other_value|attr:"style: margin-left: -20px" }}
+        </div>
+        <div class="col-xs-2">
+          <strong>5.0 {{ form.reported_total_red_flags.label }} {{ form.reported_total_red_flags|attr:"style: width: 50px" }}</strong>
+        </div>
+        <div class="col-xs-2">
+          <strong>Calculated Total Red Flag Points: <span id="calculated-total">0</span></strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="row form-page">
+
+      <table class="table table-bordered">
+        <tbody>
+          <tr>
+            <td colspan="4" class="bg-danger center">
+              Only fill out this side of the form if you intercept the girls.
+            </td>
+          </tr>
+          <tr>
+            <td colspan="4">
+              <strong>How did you make the interception?</strong>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <table class="table table-bordered contact-intercepted">
+        <tbody>
+          <tr>
+            <td colspan="4">
+              <strong>6.0</strong>&nbsp;{{ form.contact_noticed }}  {{ form.contact_noticed.label_tag }}
+            </td>
+          </tr>
+          <tr>
+            <td style="width: 67%" class="checkbox-group-marker" id="which_contact">
+              <div class="row">
+                <div class="col-xs-4">
+                  <strong>6.1</strong>&nbsp;{{ form.which_contact_hotel_owner }}          {{ form.which_contact_hotel_owner.label_tag }}<br/>
+                  <strong>6.2</strong>&nbsp;{{ form.which_contact_rickshaw_driver }}      {{ form.which_contact_rickshaw_driver.label_tag }}<br/>
+                  <strong>6.3</strong>&nbsp;{{ form.which_contact_taxi_driver }}          {{ form.which_contact_taxi_driver.label_tag }}
+                </div>
+                <div class="col-xs-4" style="margin-left: -16px">
+                  <strong>6.4</strong>&nbsp;{{ form.which_contact_bus_driver }}           {{ form.which_contact_bus_driver.label_tag }}<br/>
+                  <strong>6.5</strong>&nbsp;{{ form.which_contact_church_member }}        {{ form.which_contact_church_member.label_tag }}<br/>
+                  <strong>6.6</strong>&nbsp;{{ form.which_contact_other_ngo }}            {{ form.which_contact_other_ngo.label_tag }}
+                </div>
+                <div class="col-xs-4" style="white-space: nowrap; margin-left: -36px">
+                  <strong>6.7</strong>&nbsp;{{ form.which_contact_police }}               {{ form.which_contact_police.label_tag }}<br/>
+                  <strong>6.8</strong>&nbsp;{{ form.which_contact_subcommittee_member }}  {{ form.which_contact_subcommittee_member.label_tag }}<br/>
+                  <strong>6.9</strong>      {{ form.which_contact_other }}                {{ form.which_contact_other.label_tag }}
+                  {{ form.which_contact_other_value|attr:"style: width: 160px"|attr:"data-placement: bottom" }}
+                </div>
+              </div>
+            </td>
+            <td class="contact-paid checkbox-group-marker" id="contact_paid">
+              Did you pay this contact for the information?<br/>
+              <strong>6.10</strong> {{ form.contact_paid.1 }} {{ form.contact_paid.1.label_tag }}
+              <strong>6.11</strong> {{ form.contact_paid.2 }} {{ form.contact_paid.2.label_tag }}
+              {{ form.contact_paid.0 }} {{ form.contact_paid.0.label_tag }}
+              {{ form.contact_paid_how_much.label }}  
+	      {{ form.contact_paid_how_much|attr:"style: width: 70px" }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <table class="table table-bordered">
+        <tbody>
+          <tr>
+            <td class="bg-danger center">
+              Only proceed if there have been at least 20 red flag points and no green lights.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <table class="table table-bordered staff-intercepted" ng-controller="staffListCtrl as staff">
+        <tbody>
+          <tr>
+            <td colspan="5">
+              <strong>7.0</strong>&nbsp;{{ form.staff_noticed }}  {{ form.staff_noticed.label_tag }}
+            </td>
+          </tr>
+          <tr>
+            <td colspan="5">
+              <strong>7.1</strong>&nbsp;{{ form.staff_who_noticed.label_tag }}
+              {{ form.staff_who_noticed }}
+                  What was the sign that made you stop the girl for questioning?
+              (check all that apply below)
+                <div class="input-group">
+                      {% verbatim %}
+                        <div class="input-group-btn">
+                            <button tabindex="-1" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button" ng-click="staff.retrieveStation(1)">
+                                <span class="caret"></span>
+                            </button>
+                            <ul role="menu" id="dropdown-staff-who-noticed" class="dropdown-menu dropdown-menu-form" >
+                                <li ng-repeat="staffPerson in staff.staffNames">
+                                    <a href="#"/> <input type="checkbox"/><span class="lbl">{{ staffPerson.name }}</span> </li>
+                            </ul>
+                        </div>
+                      {% endverbatim %}
+                </div>
+
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table class="table table-bordered staff-intercepted">
+        <tbody>
+          <tr>
+            <th>Manner</th>
+            <th>Attire</th>
+            <th>Appearance</th>
+            <th colspan="2">Action</th>
+          </tr>
+          <tr>
+            <td>
+              <strong>7.2</strong>&nbsp;{{ form.noticed_hesitant }}              {{ form.noticed_hesitant.label_tag }}<br/>
+              <strong>7.3</strong>&nbsp;{{ form.noticed_nervous_or_afraid }}     {{ form.noticed_nervous_or_afraid.label_tag }}<br/>
+              <strong>7.4</strong>&nbsp;{{ form.noticed_hurrying }}              {{ form.noticed_hurrying.label_tag }}<br/>
+              <strong>7.5</strong>&nbsp;{{ form.noticed_drugged_or_drowsy }}     {{ form.noticed_drugged_or_drowsy.label_tag }}<br/>
+            </td>
+            <td>
+              <strong>7.6</strong>&nbsp;{{ form.noticed_new_clothes }}           {{ form.noticed_new_clothes.label_tag }}<br/>
+              <strong>7.7</strong>&nbsp;{{ form.noticed_dirty_clothes }}         {{ form.noticed_dirty_clothes.label_tag }}<br/>
+              <strong>7.8</strong>&nbsp;{{ form.noticed_carrying_full_bags }}    {{ form.noticed_carrying_full_bags.label_tag }}<br/>
+              <strong>7.9</strong>&nbsp;{{ form.noticed_village_dress }}         {{ form.noticed_village_dress.label_tag }}
+            </td>
+            <td rowspan="2">
+              <strong>7.10</strong>&nbsp;{{ form.noticed_indian_looking }}       {{ form.noticed_indian_looking.label_tag }}<br/>
+              <strong>7.11</strong>&nbsp;{{ form.noticed_typical_village_look }} {{ form.noticed_typical_village_look.label_tag }}<br/>
+              <strong>7.12</strong>&nbsp;{{ form.noticed_looked_like_agent }}    {{ form.noticed_looked_like_agent.label_tag }}<br/>
+              <strong>7.13</strong>&nbsp;{{ form.noticed_caste_difference }}     {{ form.noticed_caste_difference.label_tag }}<br/>
+              <strong>7.14</strong>&nbsp;{{ form.noticed_young_looking }}        {{ form.noticed_young_looking.label_tag }}
+            </td>
+            <td rowspan="2">
+              <strong>7.15</strong>&nbsp;{{ form.noticed_waiting_sitting }}      {{ form.noticed_waiting_sitting.label_tag }}<br/>
+              <strong>7.16</strong>&nbsp;{{ form.noticed_walking_to_border }}    {{ form.noticed_walking_to_border.label_tag }}<br/>
+              <strong>7.17</strong>&nbsp;{{ form.noticed_roaming_around }}       {{ form.noticed_roaming_around.label_tag }}<br/>
+              <strong>7.18</strong>&nbsp;{{ form.noticed_exiting_vehicle }}      {{ form.noticed_exiting_vehicle.label_tag }}<br/>
+              <strong>7.19</strong>&nbsp;{{ form.noticed_heading_to_vehicle }}   {{ form.noticed_heading_to_vehicle.label_tag }}<br/>
+            </td>
+            <td rowspan="2">
+              <strong>7.20</strong>&nbsp;{{ form.noticed_in_a_vehicle }}         {{ form.noticed_in_a_vehicle.label_tag }}<br/>
+              <strong>7.21</strong>&nbsp;{{ form.noticed_in_a_rickshaw }}        {{ form.noticed_in_a_rickshaw.label_tag }}<br/>
+              <strong>7.22</strong>&nbsp;{{ form.noticed_in_a_cart }}            {{ form.noticed_in_a_cart.label_tag }}<br/>
+              <strong>7.23</strong>&nbsp;{{ form.noticed_carrying_a_baby }}      {{ form.noticed_carrying_a_baby.label_tag }}<br/>
+              <strong>7.24</strong>&nbsp;{{ form.noticed_on_the_phone }}         {{ form.noticed_on_the_phone.label_tag }}
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2">
+              <strong>7.25</strong>&nbsp;{{ form.noticed_other_sign }}&nbsp;{{ form.noticed_other_sign.label_tag }}&nbsp;{{ form.noticed_other_sign_value|attr:"style: width: 60%" }}
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+      <br/>
+
+      {{ inlines.0.management_form }}
+      <div class="row">
+        <div class="col-xs-10">
+          <table class="table table-bordered interceptee-form" id="interceptees"
+		 data-placement="left">
+            <thead>
+              <tr>
+                <th>V<br><small>victim</small><br/>T<br/><small>trafficker</small></th>
+                <th>Full Name</th>
+                <th>F<br><small>Female</small><br/>M<br/><small>Male</small></th>
+                <th>Age</th>
+                <th>Address 1</th>
+                <th>Address 2</th>
+                <th>Phone Contact</th>
+                <th>Relation to...</th>
+                <th>Photo<br/>Upload</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for interceptee_form in inlines.0 %}
+                <tr>
+                  <td style="width: 7%">
+                    <span class="interceptee-number">{{ forloop.counter }}</span>
+                    {{ interceptee_form.id }} {{ interceptee_form.kind }}
+                  </td>
+                  <td>{{ interceptee_form.full_name|attr:"data-fuzzy-ui:name"}}</td>
+                  <td>{{ interceptee_form.gender }}</td>
+                  <td style="width: 7%">{{ interceptee_form.age }}</td>
+                  <td>{{ interceptee_form.district }}</td>
+                  <td>{{ interceptee_form.vdc }}</td>
+                  <td>{{ interceptee_form.phone_contact }}</td>
+                  <td>{{ interceptee_form.relation_to }}</td>
+                  <td>
+                    <button type="button" class="photo-upload-button"
+			    onclick="photoSelect()" style="width: 100%; font-size: 30px">
+		      <i class="glyphicon glyphicon-picture"></i>
+		    </button>
+                    <div class="photo-manip-controls" style="display: none">
+                      {{ interceptee_form.photo }}
+                    </div>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          <br/>
+          <div class="row last-form-area">
+            <div class="col-xs-6">
+              <p class="bg-danger">You must complete each of these procedures for this IRF to be
+                considered correctly filled out. Tick each box to indicate that
+                you have completed the procedure.</p>
+
+              <h3 class="text-center">Procedures</h3>
+              <strong>8.1</strong>&nbsp;{{ form.call_subcommittee_chair|attr:"data-placement: left" }} {{ form.call_subcommittee_chair.label_tag }}<br/>
+              <strong>8.2</strong>&nbsp;{{ form.call_thn_to_cross_check|attr:"data-placement: left" }} {{ form.call_thn_to_cross_check.label_tag }}<br/>
+              Had any name come up before?
+              {{ form.name_came_up_before.0 }} {{ form.name_came_up_before.0.label_tag }}
+              {{ form.name_came_up_before.1 }} {{ form.name_came_up_before.1.label_tag }}
+              <br/>
+              {{ form.name_came_up_before_value.label_tag }}  {{ form.name_came_up_before_value|attr:"style: width: 100px"|attr:"data-placement: bottom" }}<br/>
+              <strong>8.3</strong>&nbsp;{{ form.scan_and_submit_same_day|attr:"data-placement: bottom" }} {{ form.scan_and_submit_same_day.label_tag }}
+            </div>
+            <div class="col-xs-6">
+              <h3 style="margin-top: 0" class="text-center">Type of Intercept</h3>
+              <div class="checkbox-group-marker" id="interception_type">
+                <span class="checkbox-group">
+                  <strong>9.1</strong>
+                  {{ form.interception_type_gulf_countries }} {{ form.interception_type_gulf_countries.label_tag }}
+                </span>
+                <span class="checkbox-group">
+                  <strong>9.2</strong>
+                  {{ form.interception_type_india_trafficking }} {{ form.interception_type_india_trafficking.label_tag }}
+                </span>
+                <br/>
+                <span class="checkbox-group">
+                  <strong>9.3</strong>
+                  {{ form.interception_type_unsafe_migration }} {{ form.interception_type_unsafe_migration.label_tag }}
+                </span>
+                <span class="checkbox-group">
+                  <strong>9.4</strong>
+                  {{ form.interception_type_circus }} {{ form.interception_type_circus.label_tag }}
+                </span>
+                <span class="checkbox-group">
+                  <strong>9.5</strong>
+                  {{ form.interception_type_runaway }} {{ form.interception_type_runaway.label_tag }}
+                </span>
+              </div>
+
+              <strong>9.6</strong> <label>Was any trafficker taken into police custody?<br/>If yes, write the # from the table above:</label> {{ form.trafficker_taken_into_custody|attr:"style: width: 100px" }}<br/>
+              <strong>9.7</strong>&nbsp;{{ form.how_sure_was_trafficking.label_tag }}<br/>
+              <strong>Rate from 1-5</strong> <small>(1 = not at all sure, 5 = absolutely sure)</small> {{ form.how_sure_was_trafficking|attr:'style: width: 40px' }}
+
+              <div class="signature-box text-center">
+                <p><strong>I certify that I have followed procedures and filled<br/>out this form correctly, completely, and accurately.</strong></p>
+
+                {{ form.has_signature }} {{ form.has_signature.label_tag }}
+              </div>
+            </div>
+          </div>
+          <div class="bg-danger clearfix">
+            <div class="pull-left" style="margin-right: 20px">{{ form.scanned_form.label_tag }}</div> {{ form.scanned_form|add_class:"pull-left" }}
+          </div>
+        </div>
+        <div class="col-xs-2">
+          {% for interceptee_form in inlines.0|slice:":6" %}
+            <a target="_blank" class="photo" id="photo-{{ forloop.counter0 }}" {% if interceptee_form.instance.photo_thumbnail %} href="{{ interceptee_form.instance.photo.url }}">
+              <img class="img-thumbnail" src="{{ interceptee_form.instance.photo_thumbnail.url }}" />
+            {% else %}
+              >PHOTO {{ forloop.counter }}
+            {% endif %}
+            </a>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="row">
+        {% for interceptee_form in inlines.0|slice:"6:" %}
+          <div class="col-xs-2 pull-right">
+            <a target="_blank" class="photo" id="photo-{{ forloop.counter0|add:"6" }}" {% if interceptee_form.instance.photo_thumbnail %} href="{{ interceptee_form.instance.photo.url }}">
+              <img class="img-thumbnail" src="{{ interceptee_form.instance.photo_thumbnail.url }}" />
+            {% else %}
+              >PHOTO {{ forloop.counter|add:"6" }}
+            {% endif %}
+            </a>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div id="footer">
+      <nav class="navbar navbar-default navbar-fixed-bottom">
+        <div class="container">
+          <div class="navbar-inner navbar-content-center">
+            {% if not interceptionrecord %}
+              <button type="button" id="save-for-later"
+		      class="pull-left btn btn-warning navbar-btn btn-lg">Save for later</button>
+            {% endif %}
+            <input id="submtButton" type="submit"
+		   class="pull-right btn btn-primary navbar-btn btn-lg"
+		   onclick="reloadPhotos" value="Submit" />
+            {% if form.errors %}
+              <div class="checkbox navbar-btn pull-right"
+		   style="margin-top: 16px; margin-right: 20px">
+                {{ form.ignore_warnings }}
+                {{ form.ignore_warnings.label_tag }}
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </nav>
+    </div>
+  </form>
+  <br/>
+  <br/>
+  <br/>
+
+    {% load static from staticfiles %}
+     <script type="text/javascript" src="{% static "dataentry/js/dataEntry.module.js" %}"></script>
+     <script type="text/javascript" src="{% static "dataentry/js/services/staffListService.js" %}"></script>
+     <script type="text/javascript" src="{% static "dataentry/js/controllers/staffListCtrl.js" %}"></script>
+  {% include "dataentry/fuzzymatching-ui.html" %}
+{% endblock %}

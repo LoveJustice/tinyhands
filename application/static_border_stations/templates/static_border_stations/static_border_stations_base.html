@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block html %}<html ng-app="BorderStationsMod">{% endblock %}
+	
+{% block title %}Border Stations{% endblock %}
+
+{% block tab_block %}
+	<form id="borderstation-form" ng-controller="BorderStationsCtrl as bsCtrl" ng-cloak>
+		
+		<h2 class="text-center"
+				ng-if="bsCtrl.loading"><img src="{{ STATIC_URL }}images/spinner.gif" width="25" height="25"> Loading Border Station Data...</h2>
+		
+		<div ng-if="!bsCtrl.loading">
+			
+			{% include "static_border_stations/borderstation_form.html" %}
+			{% include "static_border_stations/person_form.html" %}
+			{% include "static_border_stations/location_form.html" %}
+		
+			<!--Block for error messages-->
+			{% verbatim %}
+			<div class="text-danger well"
+					ng-if="bsCtrl.errors.length > 0">
+				<h1>Errors</h1>
+				<div class="well well-sm"
+						ng-repeat="error in bsCtrl.errors">
+					<h4>Field: {{error.field}}</h4>
+					<h5 ng-repeat="message in error.messages">Message: {{message}}</h5>
+				</div>
+			</div>
+			
+			<button class="btn btn-primary pull-right col-xs-12"
+							ng-if="!bsCtrl.readonly"
+							ng-click="bsCtrl.modifyStation()">{{bsCtrl.modifyStatusText}}</button>
+			{% endverbatim %}
+			<br/><br/><br/>
+			
+		</div>
+	</form>
+	{% block content %}
+	{% endblock %}
+	
+	{% load static from staticfiles %}
+	<script src="{% static "static_border_stations/js/static_border_stations.module.js" %}"></script>
+	<script src="{% static "static_border_stations/js/controllers/static_border_stations.controller.js" %}"></script>
+	<script src="{% static "static_border_stations/js/services/static_border_stations.service.js" %}"></script>
+	
+	{% if border_station_pk != None %}
+	<script>window.border_station_pk = {{ border_station_pk }}</script>
+	{% endif %}
+	{% if is_create %}
+	<script>window.is_create = true</script>
+	{% endif %}
+	{% if readonly %}
+	<script>window.readonly = true</script>
+	{% endif %}
+{% endblock %}

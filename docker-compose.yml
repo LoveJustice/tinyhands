@@ -1,0 +1,66 @@
+data:
+  image: silintl/data-volume:latest
+  container_name: data
+  volumes:
+      - ./application:/data
+
+db:
+  image: postgres
+  container_name: db
+  ports:
+    - "5432"
+
+web:
+  build: .
+  command: bash bin/run.sh
+  expose:
+    - "9001"
+  volumes_from:
+    - data
+  links:
+    - db
+  environment:
+      DJANGO_SETTINGS_MODULE: dreamsuite.settings.local
+      DB_NAME: postgres
+      DB_USER: postgres
+      DB_PASSWORD: password
+      DB_HOST: db
+      DB_PORT: 5432
+
+test-django:
+  container_name: test-django
+  build: .
+  command: echo  # this is just to override the containers default command so that it automatically exits
+  volumes_from:
+    - data
+  links:
+    - db
+  environment:
+      DJANGO_SETTINGS_MODULE: dreamsuite.settings.local
+      DB_NAME: postgres
+      DB_USER: postgres
+      DB_PASSWORD: password
+      DB_HOST: db
+      DB_PORT: 5432
+
+nginx:
+  build: build/nginx
+  ports:
+    - "80:80"
+  links:
+    - web:web
+  volumes_from:
+    - data
+
+# cron:
+#    image: doorman-api
+#    container_name: cron
+#    volumes_from:
+#        - data
+#    command: /data/bin/run-cron.sh
+
+# test-karma container -
+# image: tusoftware-studio/dreamsuite-js-cli
+
+# test-protractor container
+# image: tusoftware-studio/dreamsuite-js-cli

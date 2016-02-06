@@ -1,0 +1,251 @@
+{% extends 'base.html' %}
+
+{% block displayCSS %}
+    .optional {
+        display:none;
+    }
+{% endblock displayCSS %}
+
+{% block tab_block %}
+
+<div class="row">
+    <div class="col-md-10">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                Create Event
+            </div>
+
+            <form method="post">
+                <div class="panel-body">
+
+                    {% csrf_token %}
+
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger alert-dismissible" role="alert">
+                          <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        {{ form.non_field_errors }}
+                        </div>
+                    {% endif %}
+
+                    <div class="row form-group">
+                        {% if form.title.errors %}
+                            <div class="alert alert-danger alert-dismissible" role="alert">
+                              <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                            {{ form.title.errors }}
+                           </div>
+                        {% endif %}
+
+                        <div class="col-md-3">
+                            {{ form.title.label_tag }}
+                        </div>
+                        <div class="col-md-9  ">
+                            {{ form.title }}
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        {% if form.location.errors %}
+                            <div class="alert alert-danger alert-dismissible" role="alert">
+                              <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                            {{ form.location.errors }}
+                           </div>
+                        {% endif %}
+
+                        <div class="col-md-3">
+                            {{ form.location.label_tag }}
+                        </div>
+                        <div class="col-md-9  ">
+                            {{ form.location }}
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        {% if form.start_date.errors %}
+                            <div class="alert alert-danger alert-dismissible" role="alert">
+                              <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                            {{ form.start_date.errors }}
+                           </div>
+                        {% elif form.start_time.errors %}
+                            <div class="alert alert-danger alert-dismissible" role="alert">
+                              <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                            {{ form.start_time.errors }}
+                           </div>
+                        {% elif form.end_date.errors %}
+                            <div class="alert alert-danger alert-dismissible" role="alert">
+                              <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                            {{ form.end_date.errors }}
+                           </div>
+                        {% elif form.end_time.errors %}
+                            <div class="alert alert-danger alert-dismissible" role="alert">
+                              <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                            {{ form.end_time.errors }}
+                           </div>
+                        {% else %}
+                        {% endif %}
+
+                        <div class="col-md-3">
+                           <strong> Date: </strong>
+                        </div>
+                        <div class="col-md-2  ">
+                            {{ form.start_date }}
+                        </div>
+                        <div class="col-md-2  ">
+                           {{ form.start_time }}
+                        </div>
+
+                        <div class="col-md-1">
+                           <strong> to </strong>
+                        </div>
+                        <div class="col-md-2  ">
+                            {{ form.end_date }}
+                        </div>
+                        <div class="col-md-2  ">
+                           {{ form.end_time }}
+                        </div>
+
+                    </div>
+
+                    <div class="row form-group">
+                        {% if form.description.errors %}
+                            <div class="alert alert-danger alert-dismissible" role="alert">
+                              <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                            {{ form.description.errors }}
+                           </div>
+                        {% endif %}
+
+                        <div class="col-md-3">
+                            {{ form.description.label_tag }}
+                        </div>
+                        <div class="col-md-9  ">
+                            {{ form.description }}
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        {% if form.is_repeat.errors %}
+                            <div class="alert alert-danger alert-dismissible" role="alert">
+                              <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                            {{ form.is_repeat.errors }}
+                           </div>
+                        {% endif %}
+
+                        <div class="col-md-3">
+                            {{ form.is_repeat.label_tag }}
+
+                        </div>
+                        <div class="col-md-9">
+                            {{ form.is_repeat }}
+                        </div>
+                    </div>
+
+                    <div class="row form-group optional">
+                        {% if form.repetition.errors %}
+                            <div class="alert alert-danger alert-dismissible" role="alert">
+                              <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                            {{ form.repetition.errors }}
+                           </div>
+                        {% endif %}
+
+                        <div class="col-md-3">
+                            {{ form.repetition.label_tag }}
+                        </div>
+                        <div class="col-md-9  ">
+                            {{ form.repetition }}
+                        </div>
+                    </div>
+
+                    <div class="row form-group optional">
+                        {% if form.ends.errors %}
+                            <div class="alert alert-danger alert-dismissible" role="alert">
+                              <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                            {{ form.ends.errors }}
+                           </div>
+                        {% endif %}
+
+                        <div class="col-md-3">
+                            {{ form.ends.label_tag }}
+                        </div>
+                        <div class="col-md-9  ">
+                            {{ form.ends }}
+                        </div>
+                    </div>
+
+                    <input class="btn btn-primary pull-right" type="submit" value="Save Event" />
+                    <a href="{% url 'list_event' %}" class="btn btn-default pull-right" style="margin-right: 5px">Cancel</a>
+                </div>
+            </form>
+</div>
+    </div>
+</div>
+
+
+{% block includeJS %}
+    <script src="{{ STATIC_URL }}bootstrap-timepicker/js/bootstrap-timepicker.js" type="text/javascript"> </script>
+{% endblock includeJS %}
+
+{% block includeCSS %}
+    <link rel="stylesheet" href="{{ STATIC_URL }}bootstrap-timepicker/css/bootstrap-timepicker.css" />
+{% endblock includeCSS %}
+
+{% endblock tab_block %}
+
+{% block displayJS %}
+
+function repeat_manage(){
+    var check = $('#id_is_repeat').prop('checked');
+    if (check){
+        $('.optional').show();
+        $('#id_ends').datepicker({autoclose: true, todayHighlight: true, format: 'yyyy-mm-dd'});
+    }else{
+        $('.optional').hide();
+    }
+}
+
+
+function hr_later(time){
+    var times = time.split(':');
+    if (times.length == 2){
+        hr = parseInt(times[0]);
+        min = times[1];
+
+        hr = (hr == 24) ? 1 : hr + 1;
+        return hr +  ':' + min;
+    }else
+        return '';
+
+
+}
+
+$(function(){
+    $('#id_start_date').datepicker({autoclose: true, todayHighlight: true, format: 'yyyy-mm-dd'});
+    $('#id_end_date').datepicker({autoclose: true, todayHighlight: true, format: 'yyyy-mm-dd'});
+
+    $('#id_start_time').addClass('timepicker').timepicker({showMeridian: false, defaultTime:'12:00'});
+    $('#id_end_time').addClass('timepicker').timepicker({showMeridian: false, defaultTime: '01:00'});
+
+    repeat_manage();
+
+});
+
+
+    $('#id_is_repeat').on('change', function(){
+        repeat_manage();
+    });
+
+    $('#id_start_date').on('change', function(){
+        var date = $(this).val();
+        $('#id_end_date').val(date);
+    });
+
+    $('#id_start_time').on('change', function(){
+        var tt = $(this).val();
+        var tt_1 = hr_later(tt);
+
+        if (tt_1){
+            $('#id_end_time').val(tt_1);
+        }
+    });
+
+
+
+{% endblock displayJS %}
