@@ -4,15 +4,15 @@ Tiny Hands International
 [ ![Codeship Status for tu-software-studio/tinyhandsdreamsuite](https://www.codeship.io/projects/79c5fb20-1e83-0132-0c4f-7a12a542bc63/status?branch=master)](https://www.codeship.io/projects/35545)
 
 # Docker setup
-1. Make sure you have the latest version of [Docker](https://www.docker.com/) (The lab machines should be up to date)
-2. Install virutalenvwrapper `sudo apt-get install virtualenvwrapper`, create a new virtual environment `mkvirtualenv <name>`, and enter it `workon <name>`
+1. Make sure you have the latest version of [Docker](https://www.docker.com/) (The lab machines should be up to date, if not, talk to the Nates)
+2. Install virutalenvwrapper `sudo apt-get install virtualenvwrapper`, create a new virtual environment `mkvirtualenv <name> -p /usr/bin/python2`, and enter it `workon <name>`
 3. Install docker-compose, a tool that makes docker easier to use: `pip install docker-compose`
 4. Clone the repository and cd into it
 5. set the repo as the virtualenvs root `setvirtualenvproject`
 6. Execute `docker-compose up -d` to build and run the project (This might take a few minutes the first time it is run)
-7. Install the test database by going into the application directory and executing `./etc/bin/install_test_db.sh`
+7. Install the test database by cd-ing into application and executing `./etc/bin/install_test_db.sh`
 8. Collect static files by running `docker-compose run --rm web ./manage.py collectstatic`
-9. If all of the steps were successful, you can find the application running on [port 80 on localhost](http://localhost)
+9. If all of the steps were successful, you can find the application running on [port 80 on localhost](http://localhost). If not, contact Ben Duggan through slack.
 
 # Vagrant + Docker setup (For Windows or Mac)
 1. make sure you have the latest version of [Vagrant](https://www.vagrantup.com/) and [VirtualBox](https://www.virtualbox.org/wiki/Downloads) installed
@@ -27,9 +27,12 @@ Tiny Hands International
 - `docker-compose kill <container name>*` Turn off the running containers
 - `docker-compose rm <container name>*` Delete the containers
 - `docker-compose run <container-name> <command>` Run a command inside of a container (or run bash so you can do multiple things)
+- `docker-compose build` - rebuild the containers specified in the docker-compose.yml file
 - `docker build -t tusoftware-studio/<container-name> <directory with a Dockerfile>` Build a container from a directory containing a Dockerfile
 - `docker pull tusoftware-studio/<container-name>`
 - `docker push tusoftware-studio/<container-name>`
+- `docker stop $(docker ps -a -q)` - stop all running containers on machine
+- `docker rm $(docker ps -a -q)` - remove all containers on machine
 
 # Testing
 ## Django Unit Tests:
@@ -41,7 +44,7 @@ Execute the `./manage.py test` command in the web container. eg. `docker-compose
 # Installing Sanitized Test Data
 1. cd into the application directory
 2. make sure the application is running or start it (`docker-compose up -d`)
-3. execute `./etc/bin/install_test_db.sh`
+3. execute `./etc/bin/install_test_db.sh` and wait awhile.
 4. The sanitized database has two accounts preconfigured for testing both of which have the password 'pass'
     - test_sup@example.com - is a super user account
     - test1 - is a user account
