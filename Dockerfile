@@ -12,7 +12,7 @@ WORKDIR /data
 
 # Install pip dependencies
 ADD application/requirements.txt /data/requirements.txt
-RUN pip install -r requirements.txt
+RUN pip install -r requirements.t
 
 # Make the log files for Gunicorn
 RUN mkdir -p /srv/logs
