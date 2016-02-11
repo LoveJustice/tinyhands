@@ -2,11 +2,12 @@ angular
     .module('AccountsMod')
     .controller('AccessDefaultsCtrl', ['$window','PermissionsSets',function($window, PermissionsSets) {
         var vm = this;
+        var saveButtonInitial = "Save All";
+        vm.saveButtonText = saveButtonInitial;
 
         vm.activate = function () {
           vm.permissionsSets = [];
           vm.nameError = false;
-
           $window.onbeforeunload = function(event) {
               var unsavedChanges = false;
 
@@ -64,10 +65,12 @@ angular
         }
 
         vm.saveAll = function() {
+            vm.saveButtonText = "Saving...";
             vm.nameError = false;
             for(var i = 0; i<vm.permissionsSets.length; i++) {
                 saveSet(i);
             }
+            vm.saveButtonText = "Saved!";
         }
 
         function saveSet(index) {
