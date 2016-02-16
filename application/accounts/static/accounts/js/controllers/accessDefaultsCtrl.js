@@ -1,10 +1,9 @@
 angular
     .module('AccountsMod')
-    .controller('AccessDefaultsCtrl', ['$window','PermissionsSets',function($window, PermissionsSets) {
+    .controller('AccessDefaultsCtrl', ['$window','PermissionsSets','$timeout',function($window, PermissionsSets, $timeout) {
         var vm = this;
-        var saveButtonInitial = "Save All";
-        vm.saveButtonText = saveButtonInitial;
-
+        vm.saveButtonText = "Save All";
+        vm.saveButtonColor = "btn-success";
         vm.activate = function () {
           vm.permissionsSets = [];
           vm.nameError = false;
@@ -63,14 +62,21 @@ angular
                 permission_vif_view: false
             });
         }
-
         vm.saveAll = function() {
-            vm.saveButtonText = "Saving...";
+            vm.swapSaveButton("Saving...", "btn-primary");
             vm.nameError = false;
             for(var i = 0; i<vm.permissionsSets.length; i++) {
                 saveSet(i);
             }
-            vm.saveButtonText = "Saved!";
+            timeout = $timeout(function() {
+                vm.swapSaveButton("Saved", "btn-primary");
+                timeout = $timeout(function() {vm.swapSaveButton("Save All", "btn-success")}, 750);
+            }, 750);
+        }
+
+        vm.swapSaveButton = function(text, color) {
+            vm.saveButtonText = text;
+            vm.saveButtonColor = color;
         }
 
         function saveSet(index) {
