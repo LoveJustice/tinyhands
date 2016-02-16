@@ -1,41 +1,41 @@
 from rest_framework import serializers
 
-from dataentry.models import District, VDC, InterceptionRecord, VictimInterview, BorderStation
+from dataentry.models import Address1, Address2, InterceptionRecord, VictimInterview, BorderStation
 
 
-class DistrictSerializer(serializers.ModelSerializer):
+class Address1Serializer(serializers.ModelSerializer):
     class Meta:
-        model = District
+        model = Address1
 
 
 class CanonicalNameSerializer(serializers.ModelSerializer):
     class Meta:
-        model = VDC
+        model = Address2
         fields = ['id', 'name']
 
 
-class VDCSerializer(serializers.ModelSerializer):
+class Address2Serializer(serializers.ModelSerializer):
     class Meta:
-        model = VDC
+        model = Address2
         depth = 1
 
     def create(self, validated_data):
-        found_district = District.objects.get(pk=self.context['request'].data['district']['id'])
+        found_district = Address1.objects.get(pk=self.context['request'].data['address1']['id'])
         if self.context['request'].data['canonical_name']['id'] == -1:
             found_vdc = None
         else:
-            found_vdc = VDC.objects.get(pk=self.context['request'].data['canonical_name']['id'])
-        validated_data['district'] = found_district
+            found_vdc = Address2.objects.get(pk=self.context['request'].data['canonical_name']['id'])
+        validated_data['address1'] = found_district
         validated_data['canonical_name'] = found_vdc
-        return VDC.objects.create(**validated_data)
+        return Address2.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
-        instance.district = District.objects.get(pk=self.context['request'].data['district']['id'])
+        instance.address1 = Address1.objects.get(pk=self.context['request'].data['address1']['id'])
         instance.name = validated_data.get('name', instance.name)
         if self.context['request'].data['canonical_name']['id'] == -1:
             instance.canonical_name = None
         else:
-            instance.canonical_name = VDC.objects.get(pk=self.context['request'].data['canonical_name']['id'])
+            instance.canonical_name = Address2.objects.get(pk=self.context['request'].data['canonical_name']['id'])
         instance.latitude = validated_data.get('latitude', instance.latitude)
         instance.longitude = validated_data.get('longitude', instance.longitude)
         instance.verified = validated_data.get('verified', instance.verified)
@@ -43,7 +43,7 @@ class VDCSerializer(serializers.ModelSerializer):
         return instance
 
     canonical_name = CanonicalNameSerializer()
-    district = DistrictSerializer()
+    district = Address1Serializer()
 
 
 class BorderStationSerializer(serializers.ModelSerializer):

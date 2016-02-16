@@ -1,5 +1,5 @@
 from fuzzywuzzy import process
-from dataentry.models import District, VDC
+from dataentry.models import Address1, Address2
 
 
 def match_location(district_name=None, vdc_name=None):
@@ -12,14 +12,14 @@ def match_location(district_name=None, vdc_name=None):
 
     # Determine the appropriate model
     if vdc_name is not None and district_name is not None:
-        model = VDC
+        model = Address2
         location_name = vdc_name
         filter_by_district = True
     elif vdc_name is not None:
-        model = VDC
+        model = Address2
         location_name = vdc_name
     else:
-        model = District
+        model = Address1
         location_name = district_name
 
     if filter_by_district:
@@ -41,12 +41,12 @@ def match_location(district_name=None, vdc_name=None):
 
 
 def match_vdc_district(vdc_name, district_name):
-    locations = [vdc.name+", "+vdc.district.name for vdc in VDC.objects.all()]
+    locations = [vdc.name+", "+vdc.district.name for vdc in Address2.objects.all()]
     name = vdc_name + ", " + district_name
     matches = process.extractBests(name, locations, score_cutoff=70, limit=5)
     if len(matches) > 0:
         names = matches[0][0].split(", ")
-        vdc = VDC.objects.get(name=names[0])
+        vdc = Address2.objects.get(name=names[0])
         district = vdc.district
         return vdc, district
     else:

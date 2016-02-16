@@ -1,26 +1,26 @@
 from django.core.exceptions import ValidationError
 from django.forms import CharField
 
-from .models import District, VDC, BorderStation
+from .models import Address1, Address2, BorderStation
 
 
-class DistrictField(CharField):
+class Address1Field(CharField):
     def validate(self, value):
-        super(DistrictField, self).validate(value)
+        super(Address1Field, self).validate(value)
         # Note that we don't have to deal with whether a field is required or not, as the
         # superclass takes care of it for us. If we do have a value, the associated
         # District must exist.
-        if value and not District.objects.filter(name=value).exists():
-            raise ValidationError("%(value)s is not a valid district.",
+        if value and not Address1.objects.filter(name=value).exists():
+            raise ValidationError("%(value)s is not a valid address1.",
                                   params={'value': value})
 
 
-class VDCField(CharField):
+class Address2Field(CharField):
     def validate(self, value):
-        super(VDCField, self).validate(value)
+        super(Address2Field, self).validate(value)
         # See comment above.
-        if value and not VDC.objects.filter(name=value).exists():
-            raise ValidationError("%(value)s is not a valid VDC.",
+        if value and not Address2.objects.filter(name=value).exists():
+            raise ValidationError("%(value)s is not a valid Address2.",
                                   params={'value': value})
 
 

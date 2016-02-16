@@ -1,8 +1,8 @@
 from parse import parse
 from django.db import models
 from models import BorderStation
-from models import District
-from models import VDC
+from models import Address1
+from models import Address2
 from django.utils.timezone import make_naive, localtime
 
 #####################################################
@@ -16,7 +16,7 @@ class CopyCsvField:
         self.title = title
         self.use_none_for_blank = use_none_for_blank
         self.export_null_or_blank_as = export_null_or_blank_as
-    
+
     def importField(self, instance, csv_map, title_prefix = None):
         if title_prefix is not None:
             column_title = self.title.format(title_prefix )
@@ -30,12 +30,12 @@ class CopyCsvField:
             setattr(instance, self.data_name, value)
         else:
             self.stderr.write("Cannot set {}", self.data_name)
-    
+
     def exportField(self, instance):
         rv = getattr(instance, self.data_name)
         if rv is None or rv == "":
             rv = self.export_null_or_blank_as
-        
+
         return rv
 
 # export/import date value
@@ -60,8 +60,8 @@ class DateCsvField:
         local_val = localtime(value)
         local_val = local_val.replace(microsecond=0)
         return make_naive(local_val, local_val.tzinfo)
-        
-# export text string for boolean field - one value for true alternate value for false        
+
+# export text string for boolean field - one value for true alternate value for false
 class BooleanCsvField:
     def __init__(self, data_name, title, true_string, false_string, depend_name = None):
         self.data_name = data_name
@@ -91,13 +91,13 @@ class BooleanCsvField:
             setattr(instance, self.data_name, value)
         else:
             self.stderr.write("No data value found for {}", self.data_name)
-            
+
     def exportField(self, instance):
         if self.depend_name is not None:
             dep_value = getattr(instance, self.depend_name)
             if dep_value is None or dep_value == False:
                 return ""
-           
+
         value = getattr(instance, self.data_name)
         rv = ""
         if value is not None:
@@ -105,9 +105,9 @@ class BooleanCsvField:
                 rv = self.true_string
             else:
                 rv = self.false_string
-                
+
         return rv
-    
+
 
 
 # export/import a single verbose name from a group of similarly named boolean fields
@@ -133,7 +133,7 @@ class GroupBooleanCsv:
             self.stderr.write("Unable to find boolean field with verbose name {}", value)
         else:
             self.stderr.write("No data value found for {}", self.data_name)
-            
+
     def exportField(self, instance):
         for field in instance._meta.fields:
             if field.name.startswith(self.data_name):
@@ -150,7 +150,7 @@ class BooleanValuePairCsv:
         self.data_name = boolean_field_name
         self.title = title
         self.value_name = value_field_name
-        
+
     def importField(self, instance, csv_map, title_prefix = None):
         if title_prefix is not None:
             column_title = self.title.format(title_prefix)
@@ -166,17 +166,17 @@ class BooleanValuePairCsv:
                 setattr(instance, self.value_name, value)
         else:
             self.stderr.write("No data value found for {}", self.data_name)
-    
+
     def exportField(self, instance):
         boolVal = getattr(instance, self.data_name)
         if boolVal:
             value = getattr(instance, self.value_name)
             if value is not None:
                 return value
-            
+
         return ""
-                    
-    
+
+
 # Export/import a single string from a set of boolean fields.  Map identifies the set of
 # fields and the value to be exported for each
 class MapFieldCsv:
@@ -199,23 +199,23 @@ class MapFieldCsv:
                 self.stderr.write("No mapping to field for value {} for item", value, self.data_name)
         else:
             self.stderr.write("No data value found for {}", self.data_name)
-        
+
     def exportField(self, instance):
         for key, val in self.value_to_field_map.items():
             value = getattr(instance, val)
             if value:
                 return key
-        
+
         return ""
-   
-# Export/import a set of fields in a single formatted string 
+
+# Export/import a set of fields in a single formatted string
 class FormatCsvFields:
     def __init__(self, data_name, title, formatString, *additional):
         self.data_name = data_name
         self.title = title
         self.formatString = formatString
         self.additional = additional
-        
+
     def importField(self, instance, csv_map, title_prefix = None):
         if title_prefix is not None:
             column_title = self.title.format(title_prefix)
@@ -224,33 +224,33 @@ class FormatCsvFields:
         tmp = csv_map[column_title]
         if tmp is None or tmp == "":
             return
-        
+
         parse_map = tmp.parse(self.formatString)
         if len(parse_map) != len(self.additional) +1:
             # Exception
             return
-        
+
         tmp_val = parse_map[self.data_name]
         if tmp_val is None:
             #Exception
             return
-        
+
         instance.setattr(self.data_name, tmp_val)
-        
+
         for add_name in self.additional:
             tmp_val = parse_map[add_name]
             if tmp_val is None:
                 #Exception
                 return
             instance.setattr(add_name, tmp_val)
-        
-        
+
+
     def exportField(self, instance):
         values = {}
         tmp = getattr(instance, self.data_name)
         if tmp is None:
             return ""
-        
+
         values[self.data_name] = tmp
         for param in self.additional:
             tmp = getattr(instance, param)
@@ -259,24 +259,24 @@ class FormatCsvFields:
             values[param] = tmp
 
         return self.formatString.format(**values)
-            
+
 # Export/import District field
 class DistrictCsvField:
     def __init__(self, data_name, title):
         self.data_name = data_name
         self.title = title
-    
+
     def importField(self, instance, csv_map, title_prefix = None):
         if title_prefix is not None:
             column_title = self.title.format(title_prefix)
         else:
             column_title = self.title
         value = csv_map[column_title]
-        district = District.objects.get(name=self.data_name)
+        district = Address1.objects.get(name=self.data_name)
         if district is not None:
             setattr(instance, self.data_name, value)
-        
-        
+
+
     def exportField(self, instance):
         value = ""
         try:
@@ -286,23 +286,23 @@ class DistrictCsvField:
         finally:
             return value
 
-# Export/import VDC field
+# Export/import Address2 field
 class VdcCsvField:
     def __init__(self, data_name, title):
         self.data_name = data_name
         self.title = title
-    
+
     def importField(self, instance, csv_map, title_prefix = None):
         if title_prefix is not None:
             column_title = self.title.format(title_prefix)
         else:
             column_title = self.title
         value = csv_map[column_title]
-        district = VDC.objects.get(name=self.data_name)
+        district = Address2.objects.get(name=self.data_name)
         if district is not None:
             setattr(instance, self.data_name, value)
-        
-        
+
+
     def exportField(self, instance):
         value = ""
         try:
@@ -310,7 +310,7 @@ class VdcCsvField:
             if tmp is not None:
                 value = tmp
         finally:
-            return value            
+            return value
 
 # Export/import value from a field.  Map identifies the mapping from the database value
 # to the export value
@@ -335,42 +335,42 @@ class MapValueCsvField:
                 self.stderr.write("No mapping for value {} for item", value, self.data_name)
         else:
             self.stderr.write("No data value found for {}", self.data_name)
-    
+
     def exportField(self, instance):
         value = getattr(instance, self.data_name)
-       
+
         for key, val in self.value_map.items():
             if val == value:
                 return key
-            
+
         return self.export_default
- 
-# Export the value returned by a function   
+
+# Export the value returned by a function
 class FunctionValueExportOnlyCsv:
     def __init__(self, data_name, title):
         self.data_name = data_name
         self.title = title
-        
+
     def importField(self, instance, csv_map, title_prefix = None):
         pass
-        
+
     def exportField(self, instance):
         function = getattr(instance, self.data_name)
         if function is not None:
             return function()
         self.stderr.write("No function named {} found", self.data_name)
         return ""
-        
+
 # Export the border station based on a base_field (e.g. irf_number)
 class BorderStationExportOnlyCsv:
     def __init__(self, data_name, title, base_field):
         self.data_name = data_name
         self.title = title
         self.base_field = base_field
-        
+
     def importField(self, instance, csv_map, title_prefix = None):
         pass
-        
+
     def exportField(self, instance):
         rv = "UNKNOWN"
         try:
@@ -394,7 +394,7 @@ class VictimHowExpensePaidCsv:
                 "victim_how_expense_was_paid_gave_money_to_broker":"They gave {} to the Broker",
                 "victim_how_expense_was_paid_broker_gave_loan":"Broker paid {} and they have to pay them back"
         }
-    
+
     def importField(self, instance, csv_map, title_prefix = None):
         if title_prefix is not None:
             column_title = self.title.format(title_prefix)
@@ -411,7 +411,7 @@ class VictimHowExpensePaidCsv:
                         instance.victim_how_expense_was_paid_amount = rv[0]
         else:
             self.stderr.write("No data value found for {}", self.data_name)
-            
+
     def exportField(self, instance):
         for msg in self.msgs.keys():
             bool_val = getattr(instance, msg)
@@ -420,28 +420,28 @@ class VictimHowExpensePaidCsv:
                     fmt = self.msgs[msg]
 
                     return fmt.format(instance.victim_how_expense_was_paid_amount)
-            
+
         return ""
 
 class BrokerPromisesCsv(FormatCsvFields):
     def __init__(self, data_name, title, formatString):
         FormatCsvFields.__init__(self, data_name, title, formatString)
-        
+
     def exportField(self, instance):
         tmp = getattr(instance, self.data_name)
         if tmp is None or tmp == 0:
             return ""
-        
+
         return FormatCsvFields.exportField(self, instance)
 
 class VictimWhereGoingCsv:
     def __init__(self, data_name, title):
         self.data_name = data_name
         self.title = title
-        
+
     def importField(self, instance, csv_map, title_prefix = None):
         pass
-    
+
     def exportField(self, instance):
         if instance.victim_where_going_region_india:
             if instance.victim_where_going_india_didnt_know:
@@ -474,7 +474,7 @@ class VictimWhereGoingCsv:
                     return "Gulf / Other"
                 else:
                     return val
-    
+
     def verbose_name(self, instance, prefix, default):
         for field in instance._meta.fields:
             if field.name.startswith(prefix):
@@ -488,7 +488,7 @@ class LegalActionCsv:
     def __init__(self, data_name, title):
         self.data_name = data_name
         self.title = title
-        
+
     def importField(self, instance, csv_map, title_prefix = None):
         if title_prefix is not None:
             column_title = self.title.format(title_prefix)
@@ -507,7 +507,7 @@ class LegalActionCsv:
             instance.legal_action_against_traffickers_fir_filed = True
         elif value == "A DoFE complaint has been filed":
             instance.legal_action_against_traffickers_dofe_complaint = True
-    
+
     def exportField(self, instance):
         if instance.legal_action_against_traffickers_no:
             return "No legal action has been taken"
@@ -517,12 +517,12 @@ class LegalActionCsv:
             return "An FIR has been filed"
         if instance.legal_action_against_traffickers_dofe_complaint:
             return "A DoFE complaint has been filed"
-             
+
 class FirDofeCsv:
     def __init__(self, data_name, title):
         self.data_name = data_name
         self.title = title
-    
+
     def importField(self, instance, csv_map, title_prefix = None):
         if title_prefix is not None:
             column_title = self.title.format(title_prefix)
@@ -532,7 +532,7 @@ class FirDofeCsv:
         if value is None:
             self.stderr.write("No data value found for {}", self.data_name)
             return
-        
+
         if value != "":
             parts = value.partition(",")
             if parts[2] != "":
@@ -544,8 +544,8 @@ class FirDofeCsv:
                 instance.legal_action_dofe_against_value = value
             else:
                 self.stderr.write("Value '{}' provided, but both legal action flags are false", value)
-        
-        
+
+
     def exportField(self, instance):
         value = ""
         if instance.legal_action_fir_against_value != "" and instance.legal_action_dofe_against_value != "":
@@ -668,11 +668,11 @@ irf_data = [
 
     GroupBooleanCsv("talked_to", "Family Member Talked to"),
     CopyCsvField("talked_to_family_member_other_value", "Other Family Member Talked to", True),
-    
+
     CopyCsvField("reported_total_red_flags", "Total Red Flag Points Listed", True, export_null_or_blank_as="0"),
     FunctionValueExportOnlyCsv("calculate_total_red_flags", "Total Red Flag Points Calculated by Computer"),
 
-    MapFieldCsv("Noticed", "How Was Interception Made", 
+    MapFieldCsv("Noticed", "How Was Interception Made",
             {
                 "Interception made as a result of a contact": "contact_noticed",
                 "Interception made as a result of staff": "staff_noticed"
@@ -767,47 +767,47 @@ def get_irf_export_rows(irfs):
     irf_headers = []
     for field in irf_data:
         irf_headers.append(field.title)
-    
+
     for field in interceptee_data:
         irf_headers.append(field.title.format(irf_victim_prefix))
-    
+
     for trafficker_num in range(1,5+1):
         for field in interceptee_data:
             prefix = irf_trafficker_prefix % trafficker_num
             irf_headers.append(field.title.format(prefix))
-            
+
     rows.append(irf_headers)
-    
+
     for irf in irfs:
         for interceptee in irf.interceptees.all():
             if interceptee.kind == "t":
                 continue
-            
+
             row = []
             # export base IRF
             for field in irf_data:
                 row.append(field.exportField(irf))
-            
+
             # export victim information
             for field in interceptee_data:
                 row.append(field.exportField(interceptee))
-            
+
             # export traffickers
             for trafficker in irf.interceptees.all():
                 if trafficker.kind == "v":
                     continue
-                
+
                 for field in interceptee_data:
                     row.append(field.exportField(trafficker))
-            
+
             rows.append(row)
-                   
-    
+
+
     return rows
 
 def get_irf_import_rows(csv_map):
     irf_number = csv_map[irf_data[0].title]
-    
+
     if irf_number is None:
         pass
 
@@ -858,9 +858,9 @@ vif_data = [
     CopyCsvField("victim_guardian_address_ward", "Guardian Ward", True),
     CopyCsvField("victim_guardian_phone", "Guardian Phone Number", True),
     GroupBooleanCsv("victim_parents_marital_status", "1.14 Parents' Marital Status"),
-    
+
     GroupBooleanCsv("victim_education_level", "1.15 Education Level"),
-    BooleanCsvField("victim_is_literate", "1.16 Literacy", "Literate", "Illiterate"), 
+    BooleanCsvField("victim_is_literate", "1.16 Literacy", "Literate", "Illiterate"),
 
     GroupBooleanCsv("migration_plans", "2.1 Purpose of Going Abroad"),
     CopyCsvField("migration_plans_job_other_value", "Other Job Abroad", True),
@@ -900,7 +900,7 @@ vif_data = [
                     "Broker said they would be earning {amount_victim_would_earn} per month"),
     BrokerPromisesCsv("number_broker_made_similar_promises_to", "3.11 Broker Promised Others",
               "Broker made similar promises to {number_broker_made_similar_promises_to} other(s)"),
-            
+
     BooleanCsvField("victim_first_time_crossing_border", "4.1 First Border Crossing",
             "First time crossing the border", "Not their first time crossing the border"),
     GroupBooleanCsv("victim_primary_means_of_travel", "4.2 Primary Means of Travel"),
@@ -954,7 +954,7 @@ vif_data = [
                 "Broker gave money to the Companion" : "money_changed_hands_broker_companion_broker_gave_money",
                 "Companion gave money to the Broker" : "money_changed_hands_broker_companion_companion_gave_money"
             }),
-    MapFieldCsv("meeting_at_border", "5.1 India Meeting Arranged", 
+    MapFieldCsv("meeting_at_border", "5.1 India Meeting Arranged",
             {
                 "Was planning to meet someone after crossing the border" : "meeting_at_border_yes",
                 "Was not planning on meeting anyone after crossing the border" : "meeting_at_border_no",
@@ -971,7 +971,7 @@ vif_data = [
     BooleanCsvField("other_involved_someone_met_along_the_way", "Contact of Recruiter/Companion",
             "Knows of a contact of the recruiter/companion who sends girls overseas",""),
     BooleanCsvField("other_involved_someone_involved_in_trafficking", "Known Trafficker",
-            "Knows of someone involved in trafficking",""), 
+            "Knows of someone involved in trafficking",""),
     BooleanCsvField("other_involved_place_involved_in_trafficking", "Known Location",
             "Knows of a place involved in trafficking",""),
 
@@ -1066,7 +1066,7 @@ vif_data = [
 ]
 
 person_box_prefix = "PB%d - "
-                         
+
 person_box_data = [
     GroupBooleanCsv("who_is_this_relationship", "{}Relationship"),
     GroupBooleanCsv("who_is_this_role", "{}Role"),
@@ -1119,7 +1119,7 @@ location_box_data = [
 
 def get_vif_export_rows(vifs):
     rows = []
-    
+
     vif_headers = []
     for field in vif_data:
         vif_headers.append(field.title)
@@ -1134,17 +1134,17 @@ def get_vif_export_rows(vifs):
                 vif_headers.append(field.title.format(prefix))
 
     rows.append(vif_headers)
-    
-    
+
+
     for vif in vifs:
         row = []
-        
+
         for field in vif_data:
             row.append(field.exportField(vif))
-            
+
         pbs = list(vif.person_boxes.all())
         lbs = list(vif.location_boxes.all())
-    
+
         for idx in range(max(len(pbs), len(lbs))):
             if idx < len(pbs):
                 pbs_instance = pbs[idx]
@@ -1153,7 +1153,7 @@ def get_vif_export_rows(vifs):
             else:
                 for field in person_box_data:
                     row.append("")
-            
+
             if idx < len(lbs):
                 lbs_instance = lbs[idx]
                 for field in location_box_data:
@@ -1161,8 +1161,8 @@ def get_vif_export_rows(vifs):
             else:
                 for field in location_box_data:
                     row.append("")
-                    
+
         rows.append(row)
-        
+
     print "returning from get_vif_export_rows %d" % len(rows)
     return rows
