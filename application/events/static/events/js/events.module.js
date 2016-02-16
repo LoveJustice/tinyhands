@@ -1,7 +1,7 @@
 (function() {
 	'use strict';
 
-	angular.module('EventsMod',['ngCookies','ngAnimate','ngResource','ui.bootstrap'])
+	angular.module('EventsMod',['ngCookies','ngAnimate','ngResource'])
         .config(['$httpProvider','$resourceProvider', function($httpProvider, $resourceProvider) {
             $httpProvider.defaults.xsrfCookieName = 'csrftoken';
             $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
