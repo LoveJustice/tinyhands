@@ -9,6 +9,12 @@ from events.helpers import get_repeated, event_list, dashboard_event_list
 from events.models import Event
 from itertools import chain
 
+from rest_framework.decorators import list_route
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.viewsets import ModelViewSet
+from events.models import Event
+from events.serializers import EventsSerializer
 
 class EventCreateView(SuccessMessageMixin, CreateView):
     template_name = 'events/event_form.html'
@@ -103,3 +109,15 @@ class EventJson(ListView):
         return HttpResponse(res, content_type="application/json")
 
 
+#Rest Api Views
+class EventViewSet(ModelViewSet):
+    queryset = Event.objects.all()
+    serializer_class = EventsSerializer
+    permission_classes = [IsAuthenticated]
+    permissions_required = [IsAuthenticated]
+
+    @list_route()
+    def list_all(self, request):
+        events = Event.objects.all()
+        serializer = self.get_serializer(events, many=True)
+        return Response(serializer.data)
