@@ -85,9 +85,9 @@
                 <td>{{ irf.staff_name }}</td>
                 <td>{{ irf.number_of_victims }}</td>
                 <td>{{ irf.number_of_traffickers }}</td>
-                <td>{{ irf.date_time_of_interception | date:"medium" }}</td>
-                <td class="hidden-xs">{{ irf.date_time_entered_into_system | date:"medium" }}</td>
-                <td class="hidden-xs">{{ irf.date_time_last_updated | date:"medium" }}</td>
+                <td>{{ irf.date_time_of_interception | date:"medium" : "+0545" }}</td>
+                <td class="hidden-xs">{{ irf.date_time_entered_into_system | date:"medium" : "+0545" }}</td>
+                <td class="hidden-xs">{{ irf.date_time_last_updated | date:"medium" : "+0545" }}</td>
                 <td ng-show="vm.user.permission_irf_view"><a class="btn btn-sm btn-primary viewButton" href="{{ irf.view_url }}">View</a></td>
                 <td ng-show="vm.user.permission_irf_edit"><a class="btn btn-sm btn-primary editButton" href="{{ irf.edit_url }}">Edit</a></td>
                 <td ng-show="vm.user.permission_irf_delete"><a class="btn btn-sm btn-danger deleteButton" ng-click="vm.deleteIrf(irf)" >{{ irf.confirmedDelete ? "Confirm" : "Delete"}}</a></td>

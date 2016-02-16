@@ -68,6 +68,7 @@ angular
             irfService.listIrfs(vm.getQueryParams())
                 .success(function (data) {
                     vm.irfs = data.results;
+                    console.log(vm.irfs.date_time_of_interception);
                     vm.nextPageUrl = data.next;
                     vm.loading = false;
                 });
@@ -98,6 +99,8 @@ angular
                     vm.loading = false;
                 });
         }
+
+
 
         function deleteIrf(irf) {
             if(irf.confirmedDelete){
