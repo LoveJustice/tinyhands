@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'events/event_base.html' %}
 
 {% block displayCSS %}
     .optional {
@@ -6,7 +6,7 @@
     }
 {% endblock displayCSS %}
 
-{% block tab_block %}
+{% block content %}
 
 <div class="row">
     <div class="col-md-10">
@@ -187,7 +187,7 @@
     <link rel="stylesheet" href="{{ STATIC_URL }}bootstrap-timepicker/css/bootstrap-timepicker.css" />
 {% endblock includeCSS %}
 
-{% endblock tab_block %}
+{% endblock %}
 
 {% block displayJS %}
 

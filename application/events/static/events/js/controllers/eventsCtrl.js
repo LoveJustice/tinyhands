@@ -22,7 +22,7 @@ angular
       deleteModal.result.then( function() {
         Events.destroy({id: event.id}).$promise.then( function() {
           vm.events = Events.all()
-        }
+        })
       })
     }
 

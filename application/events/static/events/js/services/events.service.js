@@ -5,10 +5,10 @@ angular.module('EventsMod')
     return $resource('/api/event/:id/', {} ,
       {
         all: {
-          url: '/api/event/all/'
+          url: '/api/event/all/',
           isArray: true,
           method: 'GET'
-        }
+        },
         get: {
           method: 'GET',
           params: {

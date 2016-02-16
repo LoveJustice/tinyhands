@@ -4,7 +4,7 @@ angular
   .module('EventsMod')
   .controller('EditEventCtrl', EditEventCtrl)
 
-  EditEventCtrl.$inject = ['Events',$window]
+  EditEventCtrl.$inject = ['Events', '$window']
 
   function EditEventCtrl(Events,$window) {
     var vm = this;
@@ -85,6 +85,6 @@ angular
       }
       return 'Create Event';
     }
-    
+
     vm.activate();
   }
