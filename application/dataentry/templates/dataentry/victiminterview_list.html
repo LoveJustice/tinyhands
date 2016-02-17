@@ -86,7 +86,7 @@
                 <td>{{ vif.interviewer }}</td>
                 <td>{{ vif.number_of_victims }}</td>
                 <td>{{ vif.number_of_traffickers }}</td>
-                <td>{{ vif.date_time_of_interception | date:"medium" }}</td>
+                <td>{{ vif.date | date:"medium" }}</td>
                 <td class="hidden-xs">{{ vif.date_time_entered_into_system | date:"medium" }}</td>
                 <td class="hidden-xs">{{ vif.date_time_last_updated | date:"medium" }}</td>
                 <td ng-show="vm.user.permission_vif_view"><a class="btn btn-sm btn-primary" href="{{ vif.view_url }}">View</a></td>
