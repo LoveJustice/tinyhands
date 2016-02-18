@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block tab_block %}
+    <h2> Edit Events </h2>
+    <table class="table table-bordered table-hover">
+        <thead>
+            <th>Title</th>
+            <th>Location</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Description</th>
+            <th>Repeat</th>
+            <th>Repetition</th>
+            <th>Ends On</th>
+            <th>Action</th>
+        </thead>
+        {% if object_list %}
+        {% for object in object_list %}
+            <tbody>
+                <tr>
+                    <td>{{object.title}}</td>
+                    <td>{{object.location}}</td>
+                    <td>{{object.start_date}}</td>
+                    <td>{{object.end_date}}</td>
+                    <td>{{object.description}}</td>
+                    <td>{{object.is_repeat}}</td>
+                    <td>{{object.get_repetition_display}}</td>
+                    <td>{{object.ends}}</td>
+                    <td><a href="{% url 'update_event' object.pk %}">Edit</a> <a href="{% url 'delete_event' object.pk %}" >Delete</a> </td>
+                </tr>
+            </tbody>
+        {% endfor %}
+        {% endif %}
+    </table>
+{% endblock tab_block %}
