@@ -817,7 +817,8 @@ def get_irf_import_rows(csv_map):
 vif_data = [
     CopyCsvField("vif_number", "VIF Number", False),
     BorderStationExportOnlyCsv("station_name","Station","vif_number"),
-    CopyCsvField("date", "Date", True),
+    CopyCsvField("date", "Date (on Form)", True),
+    DateCsvField("date_time_entered_into_system", "Date Entered"),
 
     CopyCsvField("number_of_victims", "Number of Victims", True),
     CopyCsvField("number_of_traffickers", "Number of Traffickers", True),
