@@ -98,7 +98,7 @@
                                 <div class="animated-budget-items" ng-repeat="form in staffItemsCtrl.staffForms">
 
                                     <div class="col-lg-4 col-lg-offset-1">
-                                        <input class="form-control" type="text" ng-model="form.name" ng-disabled="main.view"/>
+                                        <input class="form-control" type="text" placeholder="Staff Name" ng-model="form.name" ng-disabled="main.view"/>
                                     </div>
                                     <div class="col-lg-4">
                                         <input class="text-right form-control" type="number" ng-model="form.cost" ng-change="staffItemsCtrl.otherItemsTotal()" ng-disabled="main.view"/>
@@ -195,7 +195,7 @@
                                 <div class="animated-budget-items" ng-repeat="form in shelterItemsCtrl.shelterForms">
 
                                     <div class="col-lg-4 col-lg-offset-2">
-                                        <input class="form-control" type="text" ng-model="form.name" ng-disabled="main.view"/>
+                                        <input class="form-control" type="text" placeholder="Item Name" ng-model="form.name" ng-disabled="main.view"/>
                                     </div>
                                     <div class="col-lg-4">
                                         <input class="text-right form-control" type="number" ng-model="form.cost" ng-change="shelterItemsCtrl.otherItemsTotal()" ng-disabled="main.view"/>
@@ -231,7 +231,7 @@
                         <!-- End Shelter -->
 
                         <!-- Food & Gas -->
-                        <div class="row text-center" style="margin-top: 30px">
+                        <div class="row" style="margin-top: 30px">
                             <h2 class="background"><span>Food & Gas</span></h2>
 
 
@@ -295,7 +295,7 @@
                                 <div class="animated-budget-items" ng-repeat="form in foodGasItemsCtrl.foodGasForms">
 
                                     <div class="col-lg-4 col-lg-offset-2">
-                                        <input class="form-control" type="text" ng-model="form.name" ng-disabled="main.view"/>
+                                        <input class="form-control" type="text" placeholder="Item Name" ng-model="form.name" ng-disabled="main.view"/>
                                     </div>
                                     <div class="col-lg-4">
                                         <input class="text-right form-control" type="number" ng-model="form.cost" ng-change="foodGasItemsCtrl.otherItemsTotal()" ng-disabled="main.view"/>
@@ -395,7 +395,7 @@
                                 <div class="animated-budget-items" ng-repeat="form in communicationItemsCtrl.communicationForms">
 
                                     <div class="col-lg-4 col-lg-offset-2">
-                                        <input class="form-control" type="text" ng-model="form.name" ng-disabled="main.view"/>
+                                        <input class="form-control" type="text" placeholder="Item Name" ng-model="form.name" ng-disabled="main.view"/>
                                     </div>
                                     <div class="col-lg-4">
                                         <input class="text-right form-control" type="number" ng-model="form.cost" ng-change="communicationItemsCtrl.otherItemsTotal()" ng-disabled="main.view"/>
@@ -463,7 +463,7 @@
                                 <div class="animated-budget-items" ng-repeat="form in awarenessItemsCtrl.awarenessForms">
 
                                     <div class="col-lg-4 col-lg-offset-2">
-                                        <input class="form-control awareness-extra-item-name" type="text" ng-model="form.name" ng-disabled="main.view"/>
+                                        <input class="form-control awareness-extra-item-name" type="text" placeholder="Item Name" ng-model="form.name" ng-disabled="main.view"/>
                                     </div>
                                     <div class="col-lg-4">
                                         <input class="text-right awareness-extra-item-value form-control" type="number" ng-model="form.cost" ng-change="awarenessItemsCtrl.otherItemsTotal()" ng-disabled="main.view"/>
@@ -574,7 +574,7 @@
                                 <div class="row animated-budget-items" ng-repeat="form in travelItemsCtrl.travelForms">
 
                                     <div class="col-lg-4 col-lg-offset-1">
-                                        <input class="form-control" type="text" ng-model="form.name" ng-disabled="main.view"/>
+                                        <input class="form-control" type="text" placeholder="Item Name" ng-model="form.name" ng-disabled="main.view"/>
                                     </div>
                                     <div class="col-lg-4">
                                         <input class="text-right form-control" type="number" ng-model="form.cost" ng-change="travelItemsCtrl.otherItemsTotal()" ng-disabled="main.view"/>
@@ -650,7 +650,7 @@
                                 <div class="animated-budget-items" ng-repeat="form in suppliesItemsCtrl.suppliesForms">
 
                                     <div class="col-lg-4 col-lg-offset-2">
-                                        <input class="form-control" type="text" ng-model="form.name" ng-disabled="main.view"/>
+                                        <input class="form-control" type="text" placeholder="Item Name" ng-model="form.name" ng-disabled="main.view"/>
                                     </div>
                                     <div class="col-lg-4">
                                         <input class="text-right form-control" type="number" ng-model="form.cost" ng-change="suppliesItemsCtrl.otherItemsTotal()" ng-disabled="main.view"/>
@@ -810,7 +810,7 @@
                                 <div class="row" ng-controller="otherBudgetItemsCtrl as miscItemsCtrl" ng-init="form_section = 2;">
                                     <div class="animated-budget-items" ng-repeat="form in miscItemsCtrl.miscForms">
                                         <div class="col-lg-4 col-lg-offset-1">
-                                            <input class="form-control" type="text" ng-model="form.name" ng-disabled="main.view"/>
+                                            <input class="form-control" type="text" placeholder="Item Name" ng-model="form.name" ng-disabled="main.view"/>
                                         </div>
                                         <div class="col-lg-2">
                                             <input class="text-right form-control" type="number" ng-model="form.cost" ng-change="miscItemsCtrl.otherItemsTotal()" ng-disabled="main.view"/>
