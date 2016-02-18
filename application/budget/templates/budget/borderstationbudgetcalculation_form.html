@@ -81,12 +81,12 @@
                         <div class="row" ng-controller="staffCtrl as staff">
                             <div class="row" ng-repeat="form in staff.staffSalaryForms" ng-init="staff.totalSalaries();">
 
-                                <div class="col-lg-2 col-lg-offset-3">
+                                <div class="col-lg-5 col-lg-offset-1">
                                     <label style="margin-bottom: 0; margin-top: 5px">{{ form.name }}</label>
                                 </div>
 
-                                <div class="col-lg-4">
-                                    <input class="form-control" type="number" ng-model="form.salary" ng-change="staff.totalSalaries()" ng-disabled="main.view"/>
+                                <div class="col-lg-3">
+                                    <input class="text-right form-control" type="number" ng-model="form.salary" ng-change="staff.totalSalaries()" ng-disabled="main.view"/>
                                 </div>
 
                                 <br/><br/>
@@ -96,11 +96,10 @@
 
                             <div class="row" ng-controller="otherBudgetItemsCtrl as staffItemsCtrl" ng-init="form_section = 8;">
                                 <div class="animated-budget-items" ng-repeat="form in staffItemsCtrl.staffForms">
-
                                     <div class="col-lg-4 col-lg-offset-1">
                                         <input class="form-control" type="text" placeholder="Staff Name" ng-model="form.name" ng-disabled="main.view"/>
                                     </div>
-                                    <div class="col-lg-4">
+                                    <div class="col-lg-3">
                                         <input class="text-right form-control" type="number" ng-model="form.cost" ng-change="staffItemsCtrl.otherItemsTotal()" ng-disabled="main.view"/>
                                     </div>
                                     <div class="col-lg-2">
@@ -191,6 +190,7 @@
                         </div>
 
                         {% verbatim %}
+                            <br/>
                             <div class="row" ng-controller="otherBudgetItemsCtrl as shelterItemsCtrl" ng-init="form_section = 5;">
                                 <div class="animated-budget-items" ng-repeat="form in shelterItemsCtrl.shelterForms">
 
@@ -291,6 +291,7 @@
                             </div>
 
                             {% verbatim %}
+                                <br/>
                             <div class="row" ng-controller="otherBudgetItemsCtrl as foodGasItemsCtrl" ng-init="form_section = 6;">
                                 <div class="animated-budget-items" ng-repeat="form in foodGasItemsCtrl.foodGasForms">
 
@@ -391,6 +392,7 @@
                             </div>
 
                             {% verbatim %}
+                                <br/>
                             <div class="row" ng-controller="otherBudgetItemsCtrl as communicationItemsCtrl" ng-init="form_section = 7;">
                                 <div class="animated-budget-items" ng-repeat="form in communicationItemsCtrl.communicationForms">
 
@@ -568,7 +570,7 @@
                                 </div>
                             </div>
                             {% verbatim %}
-                            <hr/>
+                                <br/>
                             <!--<h2 class="background"><span><small>Extra Travel Items</small></span></h2>-->
                             <div class="row " ng-controller="otherBudgetItemsCtrl as travelItemsCtrl" ng-init="form_section = 1;">
                                 <div class="row animated-budget-items" ng-repeat="form in travelItemsCtrl.travelForms">
@@ -806,7 +808,7 @@
                                 </div>
 
                                 {% verbatim %}
-                                <hr/>
+                                    <br/>
                                 <div class="row" ng-controller="otherBudgetItemsCtrl as miscItemsCtrl" ng-init="form_section = 2;">
                                     <div class="animated-budget-items" ng-repeat="form in miscItemsCtrl.miscForms">
                                         <div class="col-lg-4 col-lg-offset-1">
