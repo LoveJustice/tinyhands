@@ -4,7 +4,7 @@ var constants = require('../testConstants.json');
 
 var accountListPage = function() {
   var page = this;
-  page.accounts = element.all(by.repeater('account in accountsCtrl.accounts.results'));
+  page.accounts = element.all(by.repeater('account in accountsCtrl.accounts'));
   page.createAccountButton = element(by.id('create'));
 
   this.navigateToAccountList = function() {
