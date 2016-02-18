@@ -491,3 +491,6 @@ class VictimInterviewViewSet(viewsets.ModelViewSet):
     ordering_fields = ('vif_number', 'interviewer', 'number_of_victims', 'number_of_traffickers', 'date', 'date_time_entered_into_system', 'date_time_last_updated',)
     ordering = ('vif_number',)
 
+@login_required
+def sys_admin_settings_template(request):
+    return render(request, 'dataentry/sys_admin_settings.html')

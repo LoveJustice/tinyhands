@@ -19,6 +19,10 @@ urlpatterns = patterns('dataentry.views',
     #Create a url that will have a border station argument and will list vifs for that specific BD station
 
 
+    #System Administrator Settings Page
+    url(r'^sysadminsettings/$', sys_admin_settings_template, name="sys_admin_settings"),
+
+
     url(r'^stations/codes/$', StationCodeAPIView.as_view()),
 
     url(r'^geocodelocation/district/(?P<id>\d+)/$', GeoCodeDistrictAPIView.as_view()),
