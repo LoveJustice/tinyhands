@@ -19,7 +19,7 @@ from django.conf import settings
 
 from braces.views import LoginRequiredMixin
 from rest_framework.decorators import list_route
-from rest_framework import viewsets
+from rest_framework import filters, viewsets
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from templated_email import send_templated_mail
@@ -160,6 +160,8 @@ def ng_budget_calc_view(request, pk):
 
 
 class OtherItemsViewSet(viewsets.ModelViewSet):
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_fields = ('form_section',)
     queryset = OtherBudgetItemCost.objects.all()
     serializer_class = OtherBudgetItemCostSerializer
 
