@@ -30,7 +30,7 @@ urlpatterns = patterns('rest_api.views',
 
     # Budget URLs
     url(r'^budget/$', BudgetViewSet.as_view(list), name='BudgetCalculation'),
-    url(r'^budget/(?P<pk>\d+)/$', BudgetViewSet.as_view(list), name='BudgetCalculationWithId'),
+    url(r'^budget/(?P<pk>\d+)/$', BudgetViewSet.as_view(detail), name='BudgetCalculationWithId'),
 
     url(r'^budget/(?P<parent_pk>\d+)/item/$', OtherItemsViewSet.as_view({'get': 'list_by_budget_sheet', 'post': 'create'}), name='BudgetCalculationWithId'),
     url(r'^budget/(?P<parent_pk>\d+)/item/(?P<pk>\d+)/$', OtherItemsViewSet.as_view(detail), name='BudgetCalculationWithId'),
