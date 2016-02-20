@@ -348,7 +348,7 @@ class VictimInterview(models.Model):
     victim_gender = models.CharField('Gender', choices=GENDER_CHOICES, max_length=12)
 
     victim_address1 = models.ForeignKey(Address1, null=True, related_name="victim_address1")
-    victim_address_vdc = models.ForeignKey(Address2, null=True, related_name="victim_address_vdc")
+    victim_address2 = models.ForeignKey(Address2, null=True, related_name="victim_address2")
     victim_address_ward = models.CharField('Ward #', max_length=255, blank=True)
     victim_phone = models.CharField('Phone #', max_length=255, blank=True)
     victim_age = models.CharField('Age', max_length=255, blank=True)
@@ -409,7 +409,7 @@ class VictimInterview(models.Model):
     victim_primary_guardian_no_one = models.BooleanField('No one (I have no guardian)', default=False)
 
     victim_guardian_address1 = models.ForeignKey(Address1, null=True)
-    victim_guardian_address_vdc = models.ForeignKey(Address2, null=True)
+    victim_guardian_address2 = models.ForeignKey(Address2, null=True)
     victim_guardian_address_ward = models.CharField('Ward #', max_length=255, blank=True)
     victim_guardian_phone = models.CharField('Phone #', max_length=255, blank=True)
 
@@ -697,10 +697,10 @@ class VictimInterview(models.Model):
         finally:
             return rtn
 
-    def victim_address_vdc_as_string(self):
+    def victim_address2_as_string(self):
         rtn = ''
         try:
-            rtn = self.victim_address_vdc
+            rtn = self.victim_address2
         finally:
             return rtn
 
@@ -711,10 +711,10 @@ class VictimInterview(models.Model):
         finally:
             return rtn
 
-    def victim_guardian_address_vdc_as_string(self):
+    def victim_guardian_address2_as_string(self):
         rtn = ''
         try:
-            rtn = self.victim_guardian_address_vdc
+            rtn = self.victim_guardian_address2
         finally:
             return rtn
 

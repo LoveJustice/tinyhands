@@ -599,16 +599,16 @@ class VictimInterviewForm(DreamSuitePaperForm):
     victim_where_going_gulf_other = forms.BooleanField(label='Other', required=False)
 
     victim_address1 = Address1Field(label='Address 1', required=False)
-    victim_address_vdc = Address2Field(label='Address 2', required=False)
+    victim_address2 = Address2Field(label='Address 2', required=False)
     victim_guardian_address1 = Address1Field(label='Address 1', required=False)
-    victim_guardian_address_vdc = Address2Field(label='Address 2', required=False)
+    victim_guardian_address2 = Address2Field(label='Address 2', required=False)
 
     class Meta:
         model = VictimInterview
         exclude = ('victim_address1',
-                   'victim_address_vdc',
+                   'victim_address2',
                    'victim_guardian_address1',
-                   'victim_guardian_address_vdc')
+                   'victim_guardian_address2')
 
     def __init__(self, *args, **kwargs):
         super(VictimInterviewForm, self).__init__(*args, **kwargs)
@@ -642,7 +642,7 @@ class VictimInterviewForm(DreamSuitePaperForm):
         except:
             pass
         try:
-            self.fields['victim_address_vdc'].initial = self.instance.victim_address_vdc
+            self.fields['victim_address2'].initial = self.instance.victim_address2
         except:
             pass
         try:
@@ -650,7 +650,7 @@ class VictimInterviewForm(DreamSuitePaperForm):
         except:
             pass
         try:
-            self.fields['victim_guardian_address_vdc'].initial = self.instance.victim_guardian_address_vdc
+            self.fields['victim_guardian_address2'].initial = self.instance.victim_guardian_address2
         except:
             pass
 
@@ -662,13 +662,13 @@ class VictimInterviewForm(DreamSuitePaperForm):
             victim_guardian_address1 = Address1.objects.get(name=self.cleaned_data['victim_guardian_address1'])
             self.instance.victim_guardian_address1 = victim_guardian_address1
             print victim_address1.id
-        if self.cleaned_data['victim_address_vdc']:
-            victim_address_vdc = Address2.objects.get(name=self.cleaned_data['victim_address_vdc'], address1_id = self.instance.victim_address1.id)
-            self.instance.victim_address_vdc = victim_address_vdc
-        if self.cleaned_data['victim_guardian_address_vdc']:
-            victim_guardian_address_vdc = Address2.objects.get(name=self.cleaned_data['victim_guardian_address_vdc'])
+        if self.cleaned_data['victim_address2']:
+            victim_address2 = Address2.objects.get(name=self.cleaned_data['victim_address2'], address1_id = self.instance.victim_address1.id)
+            self.instance.victim_address2 = victim_address2
+        if self.cleaned_data['victim_guardian_address2']:
+            victim_guardian_address2 = Address2.objects.get(name=self.cleaned_data['victim_guardian_address2'])
 
-            self.instance.victim_guardian_address_vdc = victim_guardian_address_vdc
+            self.instance.victim_guardian_address2 = victim_guardian_address2
         return_val = super(VictimInterviewForm, self).save(commit)
         if commit:
             google_sheet_client.update_vif(self.cleaned_data['vif_number'])
