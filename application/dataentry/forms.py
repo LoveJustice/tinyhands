@@ -356,32 +356,32 @@ class InterceptionRecordForm(DreamSuitePaperForm):
 class IntercepteeForm(DreamSuitePaperForm):
     class Meta:
         model = Interceptee
-        exclude = ('address1','vdc')
+        exclude = ('address1','address2')
 
     def __init__(self, *args, **kwargs):
         super(IntercepteeForm, self).__init__(*args, **kwargs)
 
-        self.fields['district'] = Address1Field(required=False)
-        self.fields['vdc'] = Address2Field(required=False)
+        self.fields['address1'] = Address1Field(required=False)
+        self.fields['address2'] = Address2Field(required=False)
         try:
-            self.fields['district'].initial = self.instance.district
+            self.fields['address1'].initial = self.instance.address1
         except:
             pass
         try:
-           self.fields['vdc'].initial = self.instance.vdc
+           self.fields['address2'].initial = self.instance.address2
         except:
             pass
 
     def save(self, commit=True):
         try:
-            district = Address1.objects.get(name=self.cleaned_data['district'])
-            self.instance.district = district
-        except District.DoesNotExist:
-            district = None
+            address1 = Address1.objects.get(name=self.cleaned_data['address1'])
+            self.instance.address1 = address1
+        except address1.DoesNotExist:
+            address1 = None
 
         try:
-            vdc = Address2.objects.get(name=self.cleaned_data['vdc'], district=district)
-            self.instance.vdc = vdc
+            address2 = Address2.objects.get(name=self.cleaned_data['address2'], address1=address1)
+            self.instance.address2 = address2
         except Address2.DoesNotExist:
             pass
 
@@ -394,8 +394,8 @@ class IntercepteeForm(DreamSuitePaperForm):
         return cleaned_data
 
     def if_address_1_need_address_2(self, cleaned_data):
-        if cleaned_data.get('vdc') and not cleaned_data.get('district'):
-            self._errors['district'] = self.error_class(
+        if cleaned_data.get('address2') and not cleaned_data.get('address1'):
+            self._errors['address1'] = self.error_class(
                     ['If you supply an address 2, and address 1 is required'])
 
 

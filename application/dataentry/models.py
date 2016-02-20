@@ -292,7 +292,7 @@ class Interceptee(models.Model):
     gender = models.CharField(max_length=4, choices=GENDER_CHOICES, blank=True)
     age = models.PositiveIntegerField(null=True, blank=True)
     address1 = models.ForeignKey(Address1, null=True, blank=True)
-    vdc = models.ForeignKey(Address2, null=True, blank=True)
+    address2 = models.ForeignKey(Address2, null=True, blank=True)
     phone_contact = models.CharField(max_length=255, blank=True)
     relation_to = models.CharField(max_length=255, blank=True)
 
@@ -309,10 +309,10 @@ class Interceptee(models.Model):
         finally:
             return rtn
 
-    def vdc_as_string(self):
+    def address2_as_string(self):
         rtn = ''
         try:
-            rtn = self.vdc
+            rtn = self.address2
         finally:
             return rtn
 
