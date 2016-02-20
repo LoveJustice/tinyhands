@@ -735,7 +735,7 @@ class VictimInterviewPersonBoxForm(DreamSuitePaperForm):
 
     class Meta:
         model = VictimInterviewPersonBox
-        exclude = ('address1', 'address_vdc')
+        exclude = ('address1', 'address2')
 
     def __init__(self, *args, **kwargs):
         super(VictimInterviewPersonBoxForm, self).__init__(*args, **kwargs)
@@ -743,20 +743,20 @@ class VictimInterviewPersonBoxForm(DreamSuitePaperForm):
         if initial is not None:
             self.initial['gender'] = [unicode(initial)]
         self.fields['address1'] = Address1Field(label="Address 1")
-        self.fields['address_vdc'] = Address2Field(label="Address 2")
+        self.fields['address2'] = Address2Field(label="Address 2")
         try:
             self.fields['address1'].initial = self.instance.address1
         except:
             pass
         try:
-           self.fields['address_vdc'].initial = self.instance.address_vdc
+           self.fields['address2'].initial = self.instance.address2
         except:
             pass
 
     def save(self, commit=True):
         address1 = Address1.objects.get(name=self.cleaned_data['address1'])
-        address_vdc = Address2.objects.get(name=self.cleaned_data['address_vdc'], address1_id = address1.id)
-        self.instance.address_vdc = address_vdc
+        address2 = Address2.objects.get(name=self.cleaned_data['address2'], address1_id = address1.id)
+        self.instance.address2 = address2
         self.instance.address1 = address1
         return super(VictimInterviewPersonBoxForm, self).save(commit)
 
@@ -779,25 +779,25 @@ class VictimInterviewLocationBoxForm(DreamSuitePaperForm):
 
     class Meta:
         model = VictimInterviewLocationBox
-        exclude = ('address1','vdc')
+        exclude = ('address1','address2')
 
     def __init__(self, *args, **kwargs):
         super(VictimInterviewLocationBoxForm, self).__init__(*args, **kwargs)
         self.fields['address1'] = Address1Field(label="Address 1")
-        self.fields['vdc'] = Address2Field(label="Address 2")
+        self.fields['address2'] = Address2Field(label="Address 2")
         try:
             self.fields['address1'].initial = self.instance.address1
         except:
             pass
         try:
-            self.fields['vdc'].initial = self.instance.vdc
+            self.fields['address2'].initial = self.instance.address2
         except:
             pass
 
     def save(self, commit=True):
         address1 = Address1.objects.get(name=self.cleaned_data['address1'])
-        vdc = Address2.objects.get(name=self.cleaned_data['vdc'], address1_id = address1.id)
-        self.instance.vdc = vdc
+        address2 = Address2.objects.get(name=self.cleaned_data['address2'], address1_id = address1.id)
+        self.instance.address2 = address2
         self.instance.address1 = address1
         return super(VictimInterviewLocationBoxForm, self).save(commit)
 
