@@ -598,16 +598,16 @@ class VictimInterviewForm(DreamSuitePaperForm):
     victim_where_going_gulf_didnt_know = forms.BooleanField(label='Did Not Know', required=False)
     victim_where_going_gulf_other = forms.BooleanField(label='Other', required=False)
 
-    victim_address_district = Address1Field(label='Address 1', required=False)
+    victim_address1 = Address1Field(label='Address 1', required=False)
     victim_address_vdc = Address2Field(label='Address 2', required=False)
-    victim_guardian_address_district = Address1Field(label='Address 1', required=False)
+    victim_guardian_address1 = Address1Field(label='Address 1', required=False)
     victim_guardian_address_vdc = Address2Field(label='Address 2', required=False)
 
     class Meta:
         model = VictimInterview
-        exclude = ('victim_address_district',
+        exclude = ('victim_address1',
                    'victim_address_vdc',
-                   'victim_guardian_address_district',
+                   'victim_guardian_address1',
                    'victim_guardian_address_vdc')
 
     def __init__(self, *args, **kwargs):
@@ -638,7 +638,7 @@ class VictimInterviewForm(DreamSuitePaperForm):
             (self.num_lbs - 1) / 2 + 1
         )
         try:
-            self.fields['victim_address_district'].initial = self.instance.victim_address_district
+            self.fields['victim_address1'].initial = self.instance.victim_address1
         except:
             pass
         try:
@@ -646,7 +646,7 @@ class VictimInterviewForm(DreamSuitePaperForm):
         except:
             pass
         try:
-            self.fields['victim_guardian_address_district'].initial = self.instance.victim_guardian_address_district
+            self.fields['victim_guardian_address1'].initial = self.instance.victim_guardian_address1
         except:
             pass
         try:
@@ -655,15 +655,15 @@ class VictimInterviewForm(DreamSuitePaperForm):
             pass
 
     def save(self, commit=True):
-        if self.cleaned_data['victim_address_district']:
-            victim_address_district = Address1.objects.get(name=self.cleaned_data['victim_address_district'])
-            self.instance.victim_address_district = victim_address_district
-        if self.cleaned_data['victim_guardian_address_district']:
-            victim_guardian_address_district = Address1.objects.get(name=self.cleaned_data['victim_guardian_address_district'])
-            self.instance.victim_guardian_address_district = victim_guardian_address_district
-            print victim_address_district.id
+        if self.cleaned_data['victim_address1']:
+            victim_address1 = Address1.objects.get(name=self.cleaned_data['victim_address1'])
+            self.instance.victim_address1 = victim_address1
+        if self.cleaned_data['victim_guardian_address1']:
+            victim_guardian_address1 = Address1.objects.get(name=self.cleaned_data['victim_guardian_address1'])
+            self.instance.victim_guardian_address1 = victim_guardian_address1
+            print victim_address1.id
         if self.cleaned_data['victim_address_vdc']:
-            victim_address_vdc = Address2.objects.get(name=self.cleaned_data['victim_address_vdc'], address1_id = self.instance.victim_address_district.id)
+            victim_address_vdc = Address2.objects.get(name=self.cleaned_data['victim_address_vdc'], address1_id = self.instance.victim_address1.id)
             self.instance.victim_address_vdc = victim_address_vdc
         if self.cleaned_data['victim_guardian_address_vdc']:
             victim_guardian_address_vdc = Address2.objects.get(name=self.cleaned_data['victim_guardian_address_vdc'])
@@ -735,17 +735,17 @@ class VictimInterviewPersonBoxForm(DreamSuitePaperForm):
 
     class Meta:
         model = VictimInterviewPersonBox
-        exclude = ('address_district', 'address_vdc')
+        exclude = ('address1', 'address_vdc')
 
     def __init__(self, *args, **kwargs):
         super(VictimInterviewPersonBoxForm, self).__init__(*args, **kwargs)
         initial = self.initial.get('gender')
         if initial is not None:
             self.initial['gender'] = [unicode(initial)]
-        self.fields['address_district'] = Address1Field(label="Address 1")
+        self.fields['address1'] = Address1Field(label="Address 1")
         self.fields['address_vdc'] = Address2Field(label="Address 2")
         try:
-            self.fields['address_district'].initial = self.instance.address_district
+            self.fields['address1'].initial = self.instance.address1
         except:
             pass
         try:
@@ -754,10 +754,10 @@ class VictimInterviewPersonBoxForm(DreamSuitePaperForm):
             pass
 
     def save(self, commit=True):
-        address_district = Address1.objects.get(name=self.cleaned_data['address_district'])
-        address_vdc = Address2.objects.get(name=self.cleaned_data['address_vdc'], address1_id = address_district.id)
+        address1 = Address1.objects.get(name=self.cleaned_data['address1'])
+        address_vdc = Address2.objects.get(name=self.cleaned_data['address_vdc'], address1_id = address1.id)
         self.instance.address_vdc = address_vdc
-        self.instance.address_district = address_district
+        self.instance.address1 = address1
         return super(VictimInterviewPersonBoxForm, self).save(commit)
 
     def clean(self):
@@ -779,14 +779,14 @@ class VictimInterviewLocationBoxForm(DreamSuitePaperForm):
 
     class Meta:
         model = VictimInterviewLocationBox
-        exclude = ('district','vdc')
+        exclude = ('address1','vdc')
 
     def __init__(self, *args, **kwargs):
         super(VictimInterviewLocationBoxForm, self).__init__(*args, **kwargs)
-        self.fields['district'] = Address1Field(label="Address 1")
+        self.fields['address1'] = Address1Field(label="Address 1")
         self.fields['vdc'] = Address2Field(label="Address 2")
         try:
-            self.fields['district'].initial = self.instance.district
+            self.fields['address1'].initial = self.instance.address1
         except:
             pass
         try:
@@ -795,10 +795,10 @@ class VictimInterviewLocationBoxForm(DreamSuitePaperForm):
             pass
 
     def save(self, commit=True):
-        district = Address1.objects.get(name=self.cleaned_data['district'])
-        vdc = Address2.objects.get(name=self.cleaned_data['vdc'], address1_id = district.id)
+        address1 = Address1.objects.get(name=self.cleaned_data['address1'])
+        vdc = Address2.objects.get(name=self.cleaned_data['vdc'], address1_id = address1.id)
         self.instance.vdc = vdc
-        self.instance.district = district
+        self.instance.address1 = address1
         return super(VictimInterviewLocationBoxForm, self).save(commit)
 
 
@@ -821,7 +821,7 @@ class Address2Form(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(Address2Form, self).__init__(*args, **kwargs)
-        self.fields['district'].label = "Address 1"
+        self.fields['address1'].label = "Address 1"
 
 
 class Address1Form(forms.ModelForm):

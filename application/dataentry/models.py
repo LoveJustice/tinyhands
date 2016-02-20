@@ -302,7 +302,7 @@ class Interceptee(models.Model):
     def __unicode__(self):
         return "{} ({})".format(self.full_name, self.id)
 
-    def district_as_string(self):
+    def address1_as_string(self):
         rtn = ''
         try:
             rtn = self.address1
@@ -347,7 +347,7 @@ class VictimInterview(models.Model):
 
     victim_gender = models.CharField('Gender', choices=GENDER_CHOICES, max_length=12)
 
-    victim_address_district = models.ForeignKey(Address1, null=True, related_name="victim_address_district")
+    victim_address1 = models.ForeignKey(Address1, null=True, related_name="victim_address1")
     victim_address_vdc = models.ForeignKey(Address2, null=True, related_name="victim_address_vdc")
     victim_address_ward = models.CharField('Ward #', max_length=255, blank=True)
     victim_phone = models.CharField('Phone #', max_length=255, blank=True)
@@ -408,7 +408,7 @@ class VictimInterview(models.Model):
     victim_primary_guardian_non_relative = models.BooleanField('Non-relative', default=False)
     victim_primary_guardian_no_one = models.BooleanField('No one (I have no guardian)', default=False)
 
-    victim_guardian_address_district = models.ForeignKey(Address1, null=True)
+    victim_guardian_address1 = models.ForeignKey(Address1, null=True)
     victim_guardian_address_vdc = models.ForeignKey(Address2, null=True)
     victim_guardian_address_ward = models.CharField('Ward #', max_length=255, blank=True)
     victim_guardian_phone = models.CharField('Phone #', max_length=255, blank=True)
@@ -690,10 +690,10 @@ class VictimInterview(models.Model):
     def __unicode__(self):
         return self.vif_number
 
-    def victim_address_district_as_string(self):
+    def victim_address1_as_string(self):
         rtn = ''
         try:
-            rtn = self.victim_address_district
+            rtn = self.victim_address1
         finally:
             return rtn
 
@@ -704,10 +704,10 @@ class VictimInterview(models.Model):
         finally:
             return rtn
 
-    def victim_guardian_address_district_as_string(self):
+    def victim_guardian_address1_as_string(self):
         rtn = ''
         try:
-            rtn = self.victim_guardian_address_district
+            rtn = self.victim_guardian_address1
         finally:
             return rtn
 
@@ -863,7 +863,7 @@ class VictimInterviewPersonBox(models.Model):
 
     gender = models.CharField('Gender', choices=GENDER_CHOICES, max_length=12, blank=True)
 
-    address_district = models.ForeignKey(Address1, null=True)
+    address1 = models.ForeignKey(Address1, null=True)
     address_vdc = models.ForeignKey(Address2, null=True)
     address_ward = models.CharField('Ward #', max_length=255, blank=True)
     phone = models.CharField('Phone #', max_length=255, blank=True)
@@ -951,7 +951,7 @@ class VictimInterviewLocationBox(models.Model):
 
     signboard = models.CharField(max_length=255, blank=True)
     location_in_town = models.CharField(max_length=255, blank=True)
-    district = models.ForeignKey(Address1, null=True)
+    address1 = models.ForeignKey(Address1, null=True)
     vdc = models.ForeignKey(Address2, null=True)
 
     phone = models.CharField('Phone #', max_length=255, blank=True)
