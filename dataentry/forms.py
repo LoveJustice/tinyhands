@@ -344,13 +344,7 @@ class InterceptionRecordForm(DreamSuitePaperForm):
             error.is_warning = True
             self.has_warnings = True
             self._errors['has_signature'] = error
-            
-    def save(self, commit=True):
-        return_val = super(InterceptionRecordForm, self).save(commit)
-        if commit:
-            google_sheet_client.update_irf(self.cleaned_data['irf_number'])
 
-        return return_val
 
 class IntercepteeForm(DreamSuitePaperForm):
     class Meta:
@@ -668,13 +662,7 @@ class VictimInterviewForm(DreamSuitePaperForm):
         if self.cleaned_data['victim_guardian_address_vdc']:
             victim_guardian_address_vdc = VDC.objects.get(name=self.cleaned_data['victim_guardian_address_vdc'], district_id = self.instance.victim_guardian_address_district.id)
             self.instance.victim_guardian_address_vdc = victim_guardian_address_vdc
-        return_val = super(VictimInterviewForm, self).save(commit)
-        if commit:
-            google_sheet_client.update_vif(self.cleaned_data['vif_number'])
- 
-        return return_val
-    
-
+        return super(VictimInterviewForm, self).save(commit)
 
     def clean(self):
         cleaned_data = super(VictimInterviewForm, self).clean()

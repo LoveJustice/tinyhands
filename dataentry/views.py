@@ -33,6 +33,7 @@ from dataentry.models import (BorderStation, VDC, District, Interceptee, Interce
 from dataentry.forms import (IntercepteeForm, InterceptionRecordForm, VDCForm, DistrictForm, VictimInterviewForm, VictimInterviewLocationBoxForm, VictimInterviewPersonBoxForm)
 from dataentry import csv_io
 from dataentry.serializers import DistrictSerializer, VDCSerializer, InterceptionRecordListSerializer, VictimInterviewListSerializer
+from dataentry.google_sheets import google_sheet_client
 
 from accounts.mixins import PermissionsRequiredMixin
 
@@ -161,6 +162,7 @@ class InterceptionRecordCreateView(LoginRequiredMixin, PermissionsRequiredMixin,
         for formset in inlines:
             formset.save()
         IRFAlertChecker(form, inlines).check_them()
+        google_sheet_client.update_irf(form.irf_number)
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -176,6 +178,7 @@ class InterceptionRecordUpdateView(LoginRequiredMixin, PermissionsRequiredMixin,
         for formset in inlines:
             formset.save()
         IRFAlertChecker(form, inlines).check_them()
+        google_sheet_client.update_irf(form.irf_number)
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -235,6 +238,7 @@ class VictimInterviewCreateView(LoginRequiredMixin, PermissionsRequiredMixin, Cr
         for formset in inlines:
             formset.save()
         VIFAlertChecker(form, inlines).check_them()
+        google_sheet_client.update_vif(form.vif_number)
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -250,6 +254,7 @@ class VictimInterviewUpdateView(LoginRequiredMixin, PermissionsRequiredMixin, Up
         for formset in inlines:
             formset.save()
         VIFAlertChecker(form, inlines).check_them()
+        google_sheet_client.update_vif(form.vif_number)
         return HttpResponseRedirect(self.get_success_url())
 
 
