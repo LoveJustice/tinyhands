@@ -19,24 +19,18 @@
                 <form method="post">
                     <div class="panel-body">
 
-
-                        {% if form.non_field_errors %}
-                            <div class="alert alert-danger alert-dismissible" role="alert">
+                            <div class="alert alert-danger alert-dismissible" role="alert" ng-show="editCtrl.checkFields() == false">
                               <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                            {{ form.non_field_errors }}
                             </div>
-                        {% endif %}
 
                         <div class="row form-group">
-                            {% if form.title.errors %}
-                                <div class="alert alert-danger alert-dismissible" role="alert">
+                                <div class="alert alert-danger alert-dismissible" role="alert" ng-show="editCtrl.event.titleError == ''">
                                   <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                                {{ form.title.errors }}
+                                {{ editCtrl.event.titleError }}
                                </div>
-                            {% endif %}
 
                             <div class="col-md-3">
-                                {{ form.title.label_tag }}
+                                <strong> Title: </strong>
                             </div>
                             <div class="col-md-9  ">
                                 <input class="form-control" id="id_title" maxlength="250" name="title" type="text" ng-model="editCtrl.event.title">
@@ -44,15 +38,12 @@
                         </div>
 
                         <div class="row form-group">
-                            {% if form.location.errors %}
-                                <div class="alert alert-danger alert-dismissible" role="alert">
+            <!--                    <div class="alert alert-danger alert-dismissible" role="alert" ng-show="editCtrl.event.titleError != ''">
                                   <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                                {{ form.location.errors }}
-                               </div>
-                            {% endif %}
+                              </div>-->
 
                             <div class="col-md-3">
-                                {{ form.location.label_tag }}
+                                <strong> Location: </strong>
                             </div>
                             <div class="col-md-9  ">
                                 <input class="form-control" id="id_location" maxlength="250" name="location" type="text" ng-model="editCtrl.event.location">
@@ -60,28 +51,23 @@
                         </div>
 
                         <div class="row form-group">
-                            {% if form.start_date.errors %}
-                                <div class="alert alert-danger alert-dismissible" role="alert">
+                                <div class="alert alert-danger alert-dismissible" role="alert" ng-show="editCtrl.event.startDateError != ''">
                                   <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                                {{ form.start_date.errors }}
+                                {{ editCtrl.event.startDateError }}
                                </div>
-                            {% elif form.start_time.errors %}
-                                <div class="alert alert-danger alert-dismissible" role="alert">
+                                <div class="alert alert-danger alert-dismissible" role="alert" ng-show="editCtrl.event.startTimeError != ''">
                                   <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                                {{ form.start_time.errors }}
+                                {{ editCtrl.event.startTimeError }}
                                </div>
-                            {% elif form.end_date.errors %}
-                                <div class="alert alert-danger alert-dismissible" role="alert">
+                                <div class="alert alert-danger alert-dismissible" role="alert" ng-show="editCtrl.event.endDateError != ''">
                                   <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                                {{ form.end_date.errors }}
+                                {{ editCtrl.event.endDateError }}
                                </div>
-                            {% elif form.end_time.errors %}
-                                <div class="alert alert-danger alert-dismissible" role="alert">
+                                <div class="alert alert-danger alert-dismissible" role="alert" ng-show="editCtrl.event.endTimeError != ''">
                                   <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                                {{ form.end_time.errors }}
+                                {{ editCtrl.event.endTimeError }}
                                </div>
-                            {% else %}
-                            {% endif %}
+
 
                             <div class="col-md-3">
                                <strong> Date: </strong>
@@ -106,15 +92,12 @@
                         </div>
 
                         <div class="row form-group">
-                            {% if form.description.errors %}
-                                <div class="alert alert-danger alert-dismissible" role="alert">
+                <!--                <div class="alert alert-danger alert-dismissible" role="alert">
                                   <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                                {{ form.description.errors }}
-                               </div>
-                            {% endif %}
+                              </div>-->
 
                             <div class="col-md-3">
-                                {{ form.description.label_tag }}
+                                <strong> Description: </strong>
                             </div>
                             <div class="col-md-9  ">
                                 <textarea class="form-control" cols="40" id="id_description" name="description" rows="10" ng-model="editCtrl.event.description"></textarea>
@@ -122,16 +105,12 @@
                         </div>
 
                         <div class="row form-group">
-                            {% if form.is_repeat.errors %}
-                                <div class="alert alert-danger alert-dismissible" role="alert">
+                        <!--        <div class="alert alert-danger alert-dismissible" role="alert">
                                   <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                                {{ form.is_repeat.errors }}
-                               </div>
-                            {% endif %}
+                              </div>-->
 
                             <div class="col-md-3">
-                                {{ form.is_repeat.label_tag }}
-
+                                <strong> Is Repeat: </strong>
                             </div>
                             <div class="col-md-9">
                                 <input id="id_is_repeat" name="is_repeat" type="checkbox" ng-model="editCtrl.event.is_repeat">
@@ -139,15 +118,12 @@
                         </div>
 
                         <div class="row form-group optional"  ng-show="editCtrl.event.is_repeat == true">
-                            {% if form.repetition.errors %}
-                                <div class="alert alert-danger alert-dismissible" role="alert">
+                        <!--        <div class="alert alert-danger alert-dismissible" role="alert">
                                   <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                                {{ form.repetition.errors }}
-                               </div>
-                            {% endif %}
+                              </div> -->
 
                             <div class="col-md-3">
-                                {{ form.repetition.label_tag }}
+                                <strong> Repetition: </strong>
                             </div>
                             <div class="col-md-9  ">
                                 <select class="form-control" id="id_repetition" name="repetition" ng-model="editCtrl.event.repetition">
@@ -159,15 +135,12 @@
                         </div>
 
                         <div class="row form-group optional"  ng-show="editCtrl.event.is_repeat == true">
-                            {% if form.ends.errors %}
-                                <div class="alert alert-danger alert-dismissible" role="alert">
+                <!--                <div class="alert alert-danger alert-dismissible" role="alert">
                                   <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                                {{ form.ends.errors }}
-                               </div>
-                            {% endif %}
+                              </div>-->
 
                             <div class="col-md-3">
-                                {{ form.ends.label_tag }}
+                                <strong> Ends: </strong>
                             </div>
                             <div class="col-md-9  ">
                                 <input class="form-control hasDatepicker" id="id_ends" name="ends" type="text" ng-model="editCtrl.event.ends">
