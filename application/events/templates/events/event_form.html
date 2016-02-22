@@ -9,7 +9,7 @@
 {% block content %}
 
 {% verbatim %}
-<div ng-controller="EditEventCtrl as editCtrl">
+<div ng-controller="EditEventCtrl as editCtrl" ng-cloak>
     <div class="row">
         <div class="col-md-10">
             <div class="panel panel-primary">
@@ -19,14 +19,14 @@
                 <form method="post">
                     <div class="panel-body">
 
-                            <div class="alert alert-danger alert-dismissible" role="alert" ng-show="editCtrl.checkFields() == false">
-                              <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                            </div>
+                            <div ng-show="editCtrl.checkFields() == false">
+                             <!-- <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>-->
+                          </div>
 
                         <div class="row form-group">
-                                <div class="alert alert-danger alert-dismissible" role="alert" ng-show="editCtrl.event.titleError == ''">
+                                <div class="alert alert-danger alert-dismissible" role="alert" ng-show="editCtrl.titleError != ''">
                                   <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                                {{ editCtrl.event.titleError }}
+                                {{ editCtrl.titleError }}
                                </div>
 
                             <div class="col-md-3">
@@ -51,21 +51,21 @@
                         </div>
 
                         <div class="row form-group">
-                                <div class="alert alert-danger alert-dismissible" role="alert" ng-show="editCtrl.event.startDateError != ''">
+                                <div class="alert alert-danger alert-dismissible" role="alert" ng-show="editCtrl.startDateError != ''">
                                   <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                                {{ editCtrl.event.startDateError }}
+                                {{ editCtrl.startDateError }}
                                </div>
-                                <div class="alert alert-danger alert-dismissible" role="alert" ng-show="editCtrl.event.startTimeError != ''">
+                                <div class="alert alert-danger alert-dismissible" role="alert" ng-show="editCtrl.startTimeError != ''">
                                   <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                                {{ editCtrl.event.startTimeError }}
+                                {{ editCtrl.startTimeError }}
                                </div>
-                                <div class="alert alert-danger alert-dismissible" role="alert" ng-show="editCtrl.event.endDateError != ''">
+                                <div class="alert alert-danger alert-dismissible" role="alert" ng-show="editCtrl.endDateError != ''">
                                   <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                                {{ editCtrl.event.endDateError }}
+                                {{ editCtrl.endDateError }}
                                </div>
-                                <div class="alert alert-danger alert-dismissible" role="alert" ng-show="editCtrl.event.endTimeError != ''">
+                                <div class="alert alert-danger alert-dismissible" role="alert" ng-show="editCtrl.endTimeError != ''">
                                   <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                                {{ editCtrl.event.endTimeError }}
+                                {{ editCtrl.endTimeError }}
                                </div>
 
 
