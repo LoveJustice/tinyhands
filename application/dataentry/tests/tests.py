@@ -100,8 +100,8 @@ class TestModels(WebTest):
 class ExportTesting(WebTest):
 
     fixtures = ['accounts.json',
-                'district.json',
-                'vdc.json',
+                'address1.json',
+                'address2.json',
                 'test-irfs.json',
                 'test-interceptees.json',
                 'test-vifs.json'

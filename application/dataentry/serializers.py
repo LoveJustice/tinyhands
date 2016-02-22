@@ -20,13 +20,13 @@ class Address2Serializer(serializers.ModelSerializer):
         depth = 1
 
     def create(self, validated_data):
-        found_district = Address1.objects.get(pk=self.context['request'].data['address1']['id'])
+        found_address1 = Address1.objects.get(pk=self.context['request'].data['address1']['id'])
         if self.context['request'].data['canonical_name']['id'] == -1:
-            found_vdc = None
+            found_found_address2 = None
         else:
-            found_vdc = Address2.objects.get(pk=self.context['request'].data['canonical_name']['id'])
-        validated_data['address1'] = found_district
-        validated_data['canonical_name'] = found_vdc
+            found_address2 = Address2.objects.get(pk=self.context['request'].data['canonical_name']['id'])
+        validated_data['address1'] = found_found_address1
+        validated_data['canonical_name'] = found_address2
         return Address2.objects.create(**validated_data)
 
     def update(self, instance, validated_data):

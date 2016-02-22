@@ -152,7 +152,7 @@ angular
         };
 
         $scope.getFuzzyAddress2s = function(val) {
-            return $http.get('/api/address2/fuzzy/?vdc=' + val)
+            return $http.get('/api/address2/fuzzy/?address2=' + val)
                 .then(function(response){
                     return response.data;
                 });
