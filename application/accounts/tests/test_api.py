@@ -63,7 +63,7 @@ class AccountsPostTests(RestApiTestCase):
         'permission_border_stations_view' : True,
         'permission_border_stations_add' : True,
         'permission_border_stations_edit' : True,
-        'permission_vdc_manage' : True,
+        'permission_address2_manage' : True,
         'permission_budget_manage' : True,
     }
 
@@ -152,7 +152,7 @@ class AccountPutTests(RestApiTestCase):
             'permission_border_stations_view' : True,
             'permission_border_stations_add' : True,
             'permission_border_stations_edit' : True,
-            'permission_vdc_manage' : True,
+            'permission_address2_manage' : True,
             'permission_budget_manage' : True,
         }
         return update_user
@@ -276,7 +276,7 @@ class DefaultPermissionsSetsPostTests(RestApiTestCase):
         'permission_border_stations_view' : True,
         'permission_border_stations_add' : True,
         'permission_border_stations_edit' : True,
-        'permission_vdc_manage' : True,
+        'permission_address2_manage' : True,
         'permission_budget_manage' : True,
     }
 
@@ -364,7 +364,7 @@ class DefaultPermissionsSetPutTests(RestApiTestCase):
             'permission_border_stations_view' : True,
             'permission_border_stations_add' : True,
             'permission_border_stations_edit' : True,
-            'permission_vdc_manage' : True,
+            'permission_address2_manage' : True,
             'permission_budget_manage' : True,
         }
         return update_permission_set
