@@ -55,7 +55,7 @@ angular
                 permission_irf_edit: false,
                 permission_irf_view: false,
                 permission_receive_email: false,
-                permission_vdc_manage: false,
+                permission_address2_manage: false,
                 permission_vif_add: false,
                 permission_vif_delete: false,
                 permission_vif_edit: false,

@@ -303,15 +303,15 @@ class GeoCodeAddress1APIView(APIView):
             return Response({"id": "-1", "name": "None"})
 
 
-class GeoCodeVdcAPIView(APIView):
+class GeoCodeAddress2APIView(APIView):
     def get(self, request):
         try:
             district_name = request.query_params['district']
 
         except:
             district_name = None
-        vdc_name = request.query_params['vdc']
-        matches = match_location(district_name, vdc_name)
+        address2_name = request.query_params['address2']
+        matches = match_location(district_name, address2_name)
         if matches:
             serializer = Address2Serializer(matches, many=True)
             return Response(serializer.data)
@@ -321,8 +321,8 @@ class GeoCodeVdcAPIView(APIView):
 
 class Address2AdminView(LoginRequiredMixin, PermissionsRequiredMixin, SearchFormsMixin, ListView):
     model = Address2
-    template_name = "dataentry/vdc_admin_page.html"
-    permissions_required = ['permission_vdc_manage']
+    template_name = "dataentry/address2_admin_page.html"
+    permissions_required = ['permission_address2_manage']
     paginate_by = 25
 
     def __init__(self, *args, **kwargs):
@@ -333,15 +333,15 @@ class Address2AdminView(LoginRequiredMixin, PermissionsRequiredMixin, SearchForm
 
     def get_context_data(self, **kwargs):
         context = super(Address2AdminView, self).get_context_data(**kwargs)
-        context['search_url'] = '/data-entry/geocodelocations/vdc-admin/search/'
+        context['search_url'] = '/data-entry/geocodelocations/address2-admin/search/'
         context['database_empty'] = self.model.objects.count() == 0
         return context
 
 
 class Address2SearchView(LoginRequiredMixin, PermissionsRequiredMixin, SearchFormsMixin, ListView):
     model = Address2
-    template_name = "dataentry/vdc_admin_page.html"
-    permissions_required = ['permission_vdc_manage']
+    template_name = "dataentry/address2_admin_page.html"
+    permissions_required = ['permission_address2_manage']
     paginate_by = 25
 
     def get(self, request, value, *args, **kwargs):
@@ -369,7 +369,7 @@ class Address2SearchView(LoginRequiredMixin, PermissionsRequiredMixin, SearchFor
 
     def get_context_data(self, **kwargs):
         context = super(Address2SearchView, self).get_context_data(**kwargs)
-        context['search_url'] = '/data-entry/geocodelocations/vdc-admin/search/'
+        context['search_url'] = '/data-entry/geocodelocations/address2-admin/search/'
         context['database_empty'] = self.model.objects.count() == 0
         return context
 
@@ -377,18 +377,18 @@ class Address2SearchView(LoginRequiredMixin, PermissionsRequiredMixin, SearchFor
 class Address2CreateView(LoginRequiredMixin, PermissionsRequiredMixin, CreateView):
     model = Address2
     form_class = Address2Form
-    template_name = "dataentry/vdc_create_page.html"
+    template_name = "dataentry/address2_create_page.html"
     permissions_required = ['permission_vif_add', 'permission_irf_add']
 
     def form_valid(self, form):
         form.save()
-        return HttpResponse(render_to_string('dataentry/vdc_create_success.html'))
+        return HttpResponse(render_to_string('dataentry/address2_create_success.html'))
 
 
 class Address1AdminView(LoginRequiredMixin, PermissionsRequiredMixin, SearchFormsMixin, ListView):
     model = Address1
     template_name = "dataentry/district_admin_page.html"
-    permissions_required = ['permission_vdc_manage']
+    permissions_required = ['permission_address2_manage']
 
     def __init__(self, *args, **kwargs):
         super(Address1AdminView, self).__init__(name__icontains="name")
@@ -443,7 +443,7 @@ class Address2ViewSet(viewsets.ModelViewSet):
     queryset = Address2.objects.all().select_related('district', 'canonical_name__district')
     serializer_class = Address2Serializer
     permission_classes = (IsAuthenticated, HasPermission)
-    permissions_required = ['permission_vdc_manage']
+    permissions_required = ['permission_address2_manage']
     filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
     search_fields = ('name',)
     ordering_fields = ('name', 'district__name', 'longitude', 'latitude', 'verified', 'canonical_name__name')
@@ -454,7 +454,7 @@ class Address1ViewSet(viewsets.ModelViewSet):
     queryset = Address1.objects.all()
     serializer_class = Address1Serializer
     permission_classes = (IsAuthenticated, HasPermission)
-    permissions_required = ['permission_vdc_manage']
+    permissions_required = ['permission_address2_manage']
     filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
     search_fields = ('name',)
     ordering_fields = ('name',)

@@ -27,8 +27,8 @@ urlpatterns = patterns('dataentry.views',
     url(r'^geocodelocations/district-admin/search/$', Address1AdminView.as_view()),
     url(r'^geocodelocations/district/create/$', Address1CreateView.as_view(), name='district_create_page'),
 
-    url(r'^geocodelocation/vdc/$', GeoCodeVdcAPIView.as_view()),
-    url(r'^geocodelocations/vdc-admin/$', Address2AdminView.as_view(), name='vdc_admin_page'),
-    url(r'^geocodelocations/vdc-admin/search/(?P<value>\w+)/$', Address2SearchView.as_view(), name='vdc_admin_search'),
-    url(r'^geocodelocations/vdc/create/$', Address2CreateView.as_view(), name='vdc_create_page'),
+    url(r'^geocodelocation/address2/$', GeoCodeAddress2APIView.as_view()),
+    url(r'^geocodelocations/address2-admin/$', Address2AdminView.as_view(), name='address2_admin_page'),
+    url(r'^geocodelocations/address2-admin/search/(?P<value>\w+)/$', Address2SearchView.as_view(), name='address2_admin_search'),
+    url(r'^geocodelocations/address2/create/$', Address2CreateView.as_view(), name='address2_create_page'),
 )

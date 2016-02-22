@@ -1,7 +1,7 @@
 from django.conf.urls import patterns, url
 from accounts.views import CurrentUserView
 
-from dataentry.views import Address2ViewSet, Address1ViewSet, GeoCodeAddress1APIView, GeoCodeVdcAPIView, InterceptionRecordViewSet, VictimInterviewViewSet
+from dataentry.views import Address2ViewSet, Address1ViewSet, GeoCodeAddress1APIView, GeoCodeAddress2APIView, InterceptionRecordViewSet, VictimInterviewViewSet
 from budget.views import BudgetViewSet, OtherItemsViewSet
 from accounts.views import AccountViewSet, DefaultPermissionsSetViewSet, CurrentUserView, ResendActivationEmailView
 from static_border_stations.views import BorderStationViewSet, StaffViewSet, CommitteeMemberViewSet, LocationViewSet
@@ -42,7 +42,7 @@ urlpatterns = patterns('rest_api.views',
 
     # Fuzzy searching for addresses
     url(r'^address1/fuzzy/$', GeoCodeAddress1APIView.as_view(), name="Address1FuzzySearch"),
-    url(r'^address2/fuzzy/$', GeoCodeVdcAPIView.as_view(), name="Address2FuzzySearch"),
+    url(r'^address2/fuzzy/$', GeoCodeAddress2APIView.as_view(), name="Address2FuzzySearch"),
 
     #Accounts and DefaultPermissionsSets
     url(r'^me/$', CurrentUserView.as_view(), name="CurrentUser"),

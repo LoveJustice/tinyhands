@@ -833,7 +833,7 @@ vif_data = [
     CopyCsvField("victim_gender", "1.2 Gender", True),
 
     DistrictCsvField("victim_address_district", "1.3 District"),
-    VdcCsvField("victim_address_vdc", "VDC"),
+    VdcCsvField("victim_address2", "VDC"),
 
     CopyCsvField("victim_address_ward", "Ward", True),
 
