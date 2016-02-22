@@ -31,8 +31,16 @@ class VDCAdmin(admin.ModelAdmin):
     search_fields = ['name', 'latitude', 'longitude', 'district', 'canonical_name']
     list_display = ['name', 'latitude', 'longitude', 'district', 'canonical_name']
 
+
+# class FuzzyMatchingAdmin(admin.ModelAdmin):
+#     model = FuzzyMatching
+#     search_fields = ['location_value', 'district_value', 'trafficker_value', 'interceptee_value']
+#     list_display = ['location_value', 'district_value', 'trafficker_value', 'interceptee_value']
+
+
 admin.site.register(InterceptionRecord, InterceptionRecordAdmin)
 admin.site.register(VictimInterview, VictimInterviewAdmin)
 admin.site.register(District, DistrictAdmin)
 admin.site.register(BorderStation, BorderStationAdmin)
 admin.site.register(VDC, VDCAdmin)
+# admin.site.register(FuzzyMatching, FuzzyMatchingAdmin)

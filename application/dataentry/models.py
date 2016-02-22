@@ -34,6 +34,29 @@ class District(models.Model):
         return self.name
 
 
+# class FuzzyMatching(models.Model):
+#     location_value = model.PositiveIntegerField(default=0)
+#     district_value = model.PositiveIntegerField(default=70)
+#     trafficker_value = model.PositiveIntegerField(default=90)
+#     interceptee_value = model.PositiveIntegerField(default=0)
+#
+#     @property
+#     def get_location_value(self):
+#         return self.location_value
+#
+#     @property
+#     def get_district_value(self):
+#         return self.district_value
+#
+#     @property
+#     def get_trafficker_value(self):
+#         return self.trafficker_value
+#
+#     @property
+#     def get_interceptee_value(self):
+#         return self.interceptee_value
+
+
 class VDC(models.Model):
     name = models.CharField(max_length=255)
     latitude = models.FloatField()

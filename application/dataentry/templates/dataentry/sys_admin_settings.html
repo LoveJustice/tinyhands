@@ -1,29 +1,40 @@
+{% extends "dataentry/dataentry_base.html" %}
+{% block html %}
+    <html ng-app="SysAdminSettings">
+{% endblock %}
 
-<!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+{% block title %}System Administrator Settings{% endblock %}
 
-<!-- jQuery library -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+{% block tab_block %}
+    {% block content %}
+        <!-- <h1 class="text-center">System Administrator Settings</h1>
+        <br/>
 
-<!-- Latest compiled JavaScript -->
-<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+        <div class="col-lg-16" style="height: 675px">
+            <div class="row">
+                <h2 class="text-left col-lg-8">Fuzzy Matching</h2>
+            </div>
+            <div class="row">
+                <div class="col-lg-4" >
+                    <h3 class="text-left col-lg-8">Phone Number</h3>
+                </div>
+                <div class="col-lg-4" >
+                    <h3 class="text-left col-lg-8">Name</h3>
+                </div>
+                <div class="col-lg-4" >
+                    <h3 class="text-left col-lg-8">Location (Address 1 and 2)</h3>
+                </div>
+            </div>
+        </div> -->
+        <div ng-controller="sysAdminCtrl as admin">
+            <div class="col-lg-2 calc-form-input-no-width">
+                <input class="text-right form-control" type="number" id="location_value" ng-model="admin.location_value"/>
+                <small>{{admin.location_value}}</small>
+            </div>
+            <!-- <div class="col-lg-3 input-group">
+                <input class="form-control text-center" ng-value="admin.location_value" disabled="disabled"/>
+            </div> -->
 
-<h1 class="text-center">System Admin Settings</h1>
-<br/>
-
-<div class="col-lg-16" style="height: 675px">
-    <div class="row">
-        <h2 class="text-left col-lg-8">Fuzz matching</h2>
-    </div>
-    <div class="row">
-        <div class="col-lg-4" >
-            <h3 class="text-left col-lg-8">Phone Number</h3>
         </div>
-        <div class="col-lg-4" >
-            <h3 class="text-left col-lg-8">Name</h3>
-        </div>
-        <div class="col-lg-4" >
-            <h3 class="text-left col-lg-8">Location (Address 1 and 2)</h3>
-        </div>
-    </div>
-</div>
+    {% endblock %}
+{% endblock %}
