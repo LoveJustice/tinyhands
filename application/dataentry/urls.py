@@ -21,11 +21,11 @@ urlpatterns = patterns('dataentry.views',
 
     url(r'^stations/codes/$', StationCodeAPIView.as_view()),
 
-    url(r'^geocodelocation/district/(?P<id>\d+)/$', GeoCodeAddress1APIView.as_view()),
-    url(r'^geocodelocation/district/$', GeoCodeAddress1APIView.as_view()),
-    url(r'^geocodelocations/district-admin/$', Address1AdminView.as_view(), name='district_admin_page'),
-    url(r'^geocodelocations/district-admin/search/$', Address1AdminView.as_view()),
-    url(r'^geocodelocations/district/create/$', Address1CreateView.as_view(), name='district_create_page'),
+    url(r'^geocodelocation/address1/(?P<id>\d+)/$', GeoCodeAddress1APIView.as_view()),
+    url(r'^geocodelocation/address1/$', GeoCodeAddress1APIView.as_view()),
+    url(r'^geocodelocations/address1-admin/$', Address1AdminView.as_view(), name='address1_admin_page'),
+    url(r'^geocodelocations/address1-admin/search/$', Address1AdminView.as_view()),
+    url(r'^geocodelocations/address1/create/$', Address1CreateView.as_view(), name='address1_create_page'),
 
     url(r'^geocodelocation/address2/$', GeoCodeAddress2APIView.as_view()),
     url(r'^geocodelocations/address2-admin/$', Address2AdminView.as_view(), name='address2_admin_page'),

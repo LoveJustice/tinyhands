@@ -42,7 +42,7 @@ angular
                         return vm.reverse ? "glyphicon-sort-by-order-alt" : "glyphicon-sort-by-order";
                     case "name":
                     case "canonical_name.name":
-                    case "district.name":
+                    case "address1.name":
                     case "verified":
                         return vm.reverse ? "glyphicon-sort-by-alphabet-alt" : "glyphicon-sort-by-alphabet";
                     default:
@@ -145,7 +145,7 @@ angular
         };
 
         $scope.getFuzzyAddress1s = function(val) {
-            return $http.get('/api/address1/fuzzy/?district=' + val)
+            return $http.get('/api/address1/fuzzy/?address1=' + val)
                 .then(function(response){
                     return response.data;
                 });

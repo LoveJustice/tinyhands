@@ -294,8 +294,8 @@ class VictimInterviewCSVExportView(LoginRequiredMixin, PermissionsRequiredMixin,
 
 class GeoCodeAddress1APIView(APIView):
     def get(self, request):
-        value = request.query_params['district']
-        matches = match_location(district_name=value)
+        value = request.query_params['address1']
+        matches = match_location(address1_name=value)
         if matches:
             serializer = Address1Serializer(matches, many=True)
             return Response(serializer.data)
@@ -306,12 +306,12 @@ class GeoCodeAddress1APIView(APIView):
 class GeoCodeAddress2APIView(APIView):
     def get(self, request):
         try:
-            district_name = request.query_params['district']
+            address1_name = request.query_params['address1']
 
         except:
-            district_name = None
+            address1_name = None
         address2_name = request.query_params['address2']
-        matches = match_location(district_name, address2_name)
+        matches = match_location(address1_name, address2_name)
         if matches:
             serializer = Address2Serializer(matches, many=True)
             return Response(serializer.data)
@@ -329,7 +329,7 @@ class Address2AdminView(LoginRequiredMixin, PermissionsRequiredMixin, SearchForm
         super(Address2AdminView, self).__init__(name__icontains="name")
 
     def get_queryset(self):
-        return self.model.objects.all().select_related('district', 'canonical_name__district')
+        return self.model.objects.all().select_related('address1', 'canonical_name__address1')
 
     def get_context_data(self, **kwargs):
         context = super(Address2AdminView, self).get_context_data(**kwargs)
@@ -365,7 +365,7 @@ class Address2SearchView(LoginRequiredMixin, PermissionsRequiredMixin, SearchFor
         super(Address2SearchView, self).__init__(name__icontains="name")
 
     def get_queryset(self, searchValue):
-        return self.model.objects.filter(name__contains=searchValue).select_related('district', 'canonical_name__district')
+        return self.model.objects.filter(name__contains=searchValue).select_related('address1', 'canonical_name__address1')
 
     def get_context_data(self, **kwargs):
         context = super(Address2SearchView, self).get_context_data(**kwargs)
@@ -387,7 +387,7 @@ class Address2CreateView(LoginRequiredMixin, PermissionsRequiredMixin, CreateVie
 
 class Address1AdminView(LoginRequiredMixin, PermissionsRequiredMixin, SearchFormsMixin, ListView):
     model = Address1
-    template_name = "dataentry/district_admin_page.html"
+    template_name = "dataentry/address1_admin_page.html"
     permissions_required = ['permission_address2_manage']
 
     def __init__(self, *args, **kwargs):
@@ -402,12 +402,12 @@ class Address1AdminView(LoginRequiredMixin, PermissionsRequiredMixin, SearchForm
 class Address1CreateView(LoginRequiredMixin, PermissionsRequiredMixin, CreateView):
     model = Address1
     form_class = Address1Form
-    template_name = "dataentry/district_create_page.html"
+    template_name = "dataentry/address1_create_page.html"
     permissions_required = ['permission_vif_add', 'permission_irf_add']
 
     def form_valid(self, form):
         form.save()
-        return HttpResponse(render_to_string('dataentry/district_create_success.html'))
+        return HttpResponse(render_to_string('dataentry/address1_create_success.html'))
 
 
 class StationCodeAPIView(APIView):
@@ -440,13 +440,13 @@ def get_station_id(request):
 
 
 class Address2ViewSet(viewsets.ModelViewSet):
-    queryset = Address2.objects.all().select_related('district', 'canonical_name__district')
+    queryset = Address2.objects.all().select_related('address1', 'canonical_name__address1')
     serializer_class = Address2Serializer
     permission_classes = (IsAuthenticated, HasPermission)
     permissions_required = ['permission_address2_manage']
     filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
     search_fields = ('name',)
-    ordering_fields = ('name', 'district__name', 'longitude', 'latitude', 'verified', 'canonical_name__name')
+    ordering_fields = ('name', 'address1__name', 'longitude', 'latitude', 'verified', 'canonical_name__name')
     ordering = ('name',)
 
 
@@ -462,8 +462,8 @@ class Address1ViewSet(viewsets.ModelViewSet):
 
     @list_route()
     def list_all(self, request):
-        districts = Address1.objects.all()
-        serializer = self.get_serializer(districts, many=True)
+        address1s = Address1.objects.all()
+        serializer = self.get_serializer(address1s, many=True)
         return Response(serializer.data)
 
 

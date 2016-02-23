@@ -3,525 +3,525 @@
   "fields": {
     "name": "Achham"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 1
 },
 {
   "fields": {
     "name": "Arghakhanchi"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 2
 },
 {
   "fields": {
     "name": "Baglung"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 3
 },
 {
   "fields": {
     "name": "Baitadi"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 4
 },
 {
   "fields": {
     "name": "Bajhang"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 5
 },
 {
   "fields": {
     "name": "Bajura"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 6
 },
 {
   "fields": {
     "name": "Banke"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 7
 },
 {
   "fields": {
     "name": "Bara"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 8
 },
 {
   "fields": {
     "name": "Bardiya"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 9
 },
 {
   "fields": {
     "name": "Bhaktapur"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 10
 },
 {
   "fields": {
     "name": "Bhojpur"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 11
 },
 {
   "fields": {
     "name": "Chitawan"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 12
 },
 {
   "fields": {
     "name": "Dadeldhura"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 13
 },
 {
   "fields": {
     "name": "Dailekh"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 14
 },
 {
   "fields": {
     "name": "Dang"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 15
 },
 {
   "fields": {
     "name": "Darchula"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 16
 },
 {
   "fields": {
     "name": "Dhading"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 17
 },
 {
   "fields": {
     "name": "Dhankuta"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 18
 },
 {
   "fields": {
     "name": "Dhanusa"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 19
 },
 {
   "fields": {
     "name": "Dolakha"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 20
 },
 {
   "fields": {
     "name": "Dolpa"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 21
 },
 {
   "fields": {
     "name": "Doti"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 22
 },
 {
   "fields": {
     "name": "Gorkha"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 23
 },
 {
   "fields": {
     "name": "Gulmi"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 24
 },
 {
   "fields": {
     "name": "Humla"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 25
 },
 {
   "fields": {
     "name": "Ilam"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 26
 },
 {
   "fields": {
     "name": "Jajarkot"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 27
 },
 {
   "fields": {
     "name": "Jhapa"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 28
 },
 {
   "fields": {
     "name": "Jumla"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 29
 },
 {
   "fields": {
     "name": "Kailali"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 30
 },
 {
   "fields": {
     "name": "Kalikot"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 31
 },
 {
   "fields": {
     "name": "Kanchanpur"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 32
 },
 {
   "fields": {
     "name": "Kapilbastu"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 33
 },
 {
   "fields": {
     "name": "Kaski"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 34
 },
 {
   "fields": {
     "name": "Kathmandu"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 35
 },
 {
   "fields": {
     "name": "Kavrepalanchok"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 36
 },
 {
   "fields": {
     "name": "Khotang"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 37
 },
 {
   "fields": {
     "name": "Lalitpur"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 38
 },
 {
   "fields": {
     "name": "Lamjung"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 39
 },
 {
   "fields": {
     "name": "Mahottari"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 40
 },
 {
   "fields": {
     "name": "Makwanpur"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 41
 },
 {
   "fields": {
     "name": "Manang"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 42
 },
 {
   "fields": {
     "name": "Morang"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 43
 },
 {
   "fields": {
     "name": "Mugu"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 44
 },
 {
   "fields": {
     "name": "Mustang"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 45
 },
 {
   "fields": {
     "name": "Myagdi"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 46
 },
 {
   "fields": {
     "name": "Nawalparasi"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 47
 },
 {
   "fields": {
     "name": "Nuwakot"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 48
 },
 {
   "fields": {
     "name": "Okhaldhunga"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 49
 },
 {
   "fields": {
     "name": "Palpa"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 50
 },
 {
   "fields": {
     "name": "Panchthar"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 51
 },
 {
   "fields": {
     "name": "Parbat"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 52
 },
 {
   "fields": {
     "name": "Parsa"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 53
 },
 {
   "fields": {
     "name": "Pyuthan"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 54
 },
 {
   "fields": {
     "name": "Ramechhap"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 55
 },
 {
   "fields": {
     "name": "Rasuwa"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 56
 },
 {
   "fields": {
     "name": "Rautahat"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 57
 },
 {
   "fields": {
     "name": "Rolpa"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 58
 },
 {
   "fields": {
     "name": "Rukum"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 59
 },
 {
   "fields": {
     "name": "Rupandehi"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 60
 },
 {
   "fields": {
     "name": "Salyan"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 61
 },
 {
   "fields": {
     "name": "Sankhuwasabha"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 62
 },
 {
   "fields": {
     "name": "Saptari"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 63
 },
 {
   "fields": {
     "name": "Sarlahi"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 64
 },
 {
   "fields": {
     "name": "Sindhuli"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 65
 },
 {
   "fields": {
     "name": "Sindhupalchok"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 66
 },
 {
   "fields": {
     "name": "Siraha"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 67
 },
 {
   "fields": {
     "name": "Solukhumbu"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 68
 },
 {
   "fields": {
     "name": "Sunsari"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 69
 },
 {
   "fields": {
     "name": "Surkhet"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 70
 },
 {
   "fields": {
     "name": "Syangja"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 71
 },
 {
   "fields": {
     "name": "Tanahu"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 72
 },
 {
   "fields": {
     "name": "Taplejung"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 73
 },
 {
   "fields": {
     "name": "Terhathum"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 74
 },
 {
   "fields": {
     "name": "Udayapur"
   },
-  "model": "dataentry.district",
+  "model": "dataentry.address1",
   "pk": 75
 }
 ]

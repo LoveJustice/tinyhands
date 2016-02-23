@@ -43,7 +43,7 @@ class Address2Serializer(serializers.ModelSerializer):
         return instance
 
     canonical_name = CanonicalNameSerializer()
-    district = Address1Serializer()
+    address1 = Address1Serializer()
 
 
 class BorderStationSerializer(serializers.ModelSerializer):
