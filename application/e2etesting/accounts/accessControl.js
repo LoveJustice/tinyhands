@@ -66,6 +66,3 @@ var accessControlPage = function () {
 }
 
 module.exports = new accessControlPage();
-
-
-//Remember this code:this.permission_irf_view.click()
