@@ -11,7 +11,7 @@ var permissionsPage = function() {
     };
 
     this.navigateToVdcPage = function() {
-        browser.get(constants.webAddress + "/data-entry/geocodelocations/vdc-admin/");
+        browser.get(constants.webAddress + "/data-entry/geocodelocations/address2-admin/");
     };
 
     this.navigateToBorderstationPage = function() {

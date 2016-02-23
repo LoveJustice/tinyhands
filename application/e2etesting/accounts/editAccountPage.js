@@ -7,7 +7,7 @@ var editAccountPage = function () {
 	this.newLastName = "Brown";
 	this.newEmail = "billbrown@gmail.com";
 	this.newUserDesignation = 3;
-	
+
 	this.title = element(by.binding('editCtrl.getTitle'))
 	this.firstName = element(by.model('editCtrl.account.first_name'));
 	this.lastName = element(by.model('editCtrl.account.last_name'));
@@ -25,39 +25,39 @@ var editAccountPage = function () {
 	this.permissions.vif_edit = element(by.binding('editCtrl.account.permission_vif_edit'));
 	this.permissions.vif_delete = element(by.binding('editCtrl.account.permission_vif_delete'));
 	this.permissions.border_stations_view = element(by.binding('editCtrl.account.permission_border_stations_view'));
-	this.permissions.border_stations_add = element(by.binding('editCtrl.account.permission_border_stations_add'));               
-	this.permissions.border_stations_edit = element(by.binding('editCtrl.account.permission_border_stations_edit'));                
-	this.permissions.border_stations_delete = element(by.binding('editCtrl.account.permission_border_stations_delete'));                
+	this.permissions.border_stations_add = element(by.binding('editCtrl.account.permission_border_stations_add'));
+	this.permissions.border_stations_edit = element(by.binding('editCtrl.account.permission_border_stations_edit'));
+	this.permissions.border_stations_delete = element(by.binding('editCtrl.account.permission_border_stations_delete'));
 	this.permissions.accounts_manage = element(by.binding('editCtrl.account.permission_accounts_manage'));
 	this.permissions.receive_email = element(by.binding('editCtrl.account.permission_receive_email'));
-	this.permissions.vdc_manage = element(by.binding('editCtrl.account.permission_vdc_manage'));
+	this.permissions.address2_manage = element(by.binding('editCtrl.account.permission_address2_manage'));
 	this.permissions.budget_manage = element(by.binding('editCtrl.account.permission_budget_manage'));
 	this.updateButton = element(by.binding('editCtrl.getUpdateButtonText'));
-	
-	
+
+
 	this.navigateToPage = function() {
 		return browser.get(constants.webAddress + '/accounts/update/23');
 	}
-	
+
 	this.update = function() {
 		return this.updateButton.click();
 	}.bind(this);
-	
+
 	this.changeUserInfo = function() {
 		var self = this;
 		return this.firstName.clear().sendKeys(self.newFirstName).then(function() {
 		 	return self.lastName.clear().sendKeys(self.newLastName);
 		}).then(function() {
-			return self.email.clear().sendKeys(self.newEmail);			
+			return self.email.clear().sendKeys(self.newEmail);
 		}).then(function() {
-			return self.userDesignationOptions.get(3).click();			
+			return self.userDesignationOptions.get(3).click();
 		});
 	}.bind(this);
-	
+
 	this.clearEmailField = function() {
 		return this.email.clear();
 	}.bind(this);
-	
+
 	this.clickAllPermissions = function(state) {
 		var self = this;
 		return this.permissions.irf_view.click().then(function () {
@@ -65,17 +65,17 @@ var editAccountPage = function () {
 		}).then(function(){
 			return self.permissions.irf_edit.click();
 		}).then(function(){
-			return self.permissions.irf_delete.click();			
+			return self.permissions.irf_delete.click();
 		}).then(function(){
-			return self.permissions.vif_view.click();			
+			return self.permissions.vif_view.click();
 		}).then(function(){
-			return self.permissions.vif_add.click();				
+			return self.permissions.vif_add.click();
 		}).then(function(){
-			return self.permissions.vif_edit.click();			
+			return self.permissions.vif_edit.click();
 		}).then(function(){
-			return self.permissions.vif_delete.click();			
+			return self.permissions.vif_delete.click();
 		}).then(function(){
-			return self.permissions.border_stations_view.click();			
+			return self.permissions.border_stations_view.click();
 		}).then(function(){
 			return self.permissions.border_stations_add.click();
 		}).then(function(){
@@ -87,10 +87,10 @@ var editAccountPage = function () {
 		}).then(function(){
 			return self.permissions.receive_email.click();
 		}).then(function(){
-			return self.permissions.vdc_manage.click();
+			return self.permissions.address2_manage.click();
 		}).then(function(){
 			return self.permissions.budget_manage.click();
-		});		
+		});
 	}.bind(this);
 
 }
