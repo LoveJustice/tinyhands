@@ -33,8 +33,8 @@ angular
         }
 
         vm.update = function(){
-          vm.accounts.results.forEach( function(elm, idx) {
-            Accounts.update(vm.accounts.results[idx]);
+          vm.accounts.forEach( function(elm, idx) {
+            Accounts.update(vm.accounts[idx]);
           } )
         }
 
