@@ -165,6 +165,7 @@ class Command(BaseCommand):
 
         for instance in Account.objects.all():
             instance.email = "thi_" + str(cnt) + "@example.com"
+            instance.permission_receive_email = False
             instance.save()
             cnt += 1
         
