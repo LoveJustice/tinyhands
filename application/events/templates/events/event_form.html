@@ -1,9 +1,11 @@
 {% extends 'events/event_base.html' %}
 
 {% block foot %}
+{% if event.id %}
 <script>
   window.event_id = {{event.id}}
 </script>
+{% endif %}
 {% endblock %}
 
 {% block content %}
@@ -18,10 +20,6 @@
                 </div>
                 <form method="post">
                     <div class="panel-body">
-
-                            <div ng-show="editCtrl.checkFields() == false">
-                             <!-- <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>-->
-                          </div>
 
                         <div class="row form-group">
                                 <div class="alert alert-danger alert-dismissible" role="alert" ng-show="editCtrl.titleError != ''">

@@ -8,6 +8,11 @@ angular
 
   function EditEventCtrl(Events,$window) {
     var vm = this;
+    vm.titleError = '';
+    vm.startDateError = '';
+    vm.startTimeError = '';
+    vm.endDateError = '';
+    vm.endTimeError = '';
 
     vm.activate = function() {
 
@@ -48,6 +53,10 @@ angular
       }, function(err) {
         if(err.data.title) {
           vm.titleError = err.data.title[0];
+          vm.startDateError = err.data.title[1];
+          vm.startTimeError = err.data.title[2];
+          vm.endDateError = err.data.title[3];
+          vm.endTimeError = err.data.title[4];
         }
       });
     }
