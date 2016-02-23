@@ -86,9 +86,9 @@
                 <td>{{ vif.interviewer }}</td>
                 <td>{{ vif.number_of_victims }}</td>
                 <td>{{ vif.number_of_traffickers }}</td>
-                <td>{{ vif.date | date:"medium" }}</td>
-                <td class="hidden-xs">{{ vif.date_time_entered_into_system | date:"medium" }}</td>
-                <td class="hidden-xs">{{ vif.date_time_last_updated | date:"medium" }}</td>
+                <td>{{ vif.date_time_of_interception | date:"medium" : vm.timeZoneDifference}}</td>
+                <td class="hidden-xs">{{ vif.date_time_entered_into_system | date:"medium" : vm.timeZoneDifference }}</td>
+                <td class="hidden-xs">{{ vif.date_time_last_updated | date:"medium" : vm.timeZoneDifference}}</td>
                 <td ng-show="vm.user.permission_vif_view"><a class="btn btn-sm btn-primary" href="{{ vif.view_url }}">View</a></td>
                 <td ng-show="vm.user.permission_vif_edit"><a class="btn btn-sm btn-primary" id="id_edit_vif_button" href="{{ vif.edit_url }}">Edit</a></td>
                 <td ng-show="vm.user.permission_vif_delete"><a class="btn btn-sm btn-danger" ng-click="vm.deleteVif(vif)">{{ vif.confirmedDelete ? "Confirm?" : "Delete"}}</a></td>
