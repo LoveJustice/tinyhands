@@ -1,40 +1,87 @@
-{% extends "dataentry/dataentry_base.html" %}
+{% extends 'base.html' %}
+
 {% block html %}
-    <html ng-app="DataEntry">
+    <html ng-app="System Admin Settings">
 {% endblock %}
 
-{% block title %}System Administrator Settings{% endblock %}
+{% block title %}System Admin Settings{% endblock %}
 
 {% block tab_block %}
     {% block content %}
-        <!-- <h1 class="text-center">System Administrator Settings</h1>
-        <br/>
-
-        <div class="col-lg-16" style="height: 675px">
+        {% block angular %}{% endblock %}
+        <h1 class="text-center">System Admin Settings</h1>
+        <div class="col-lg-6 form-group" style="height: 675px">
             <div class="row">
-                <h2 class="text-left col-lg-8">Fuzzy Matching</h2>
+                <h2 class="background"><span>Fuzzy Matching Settings</span></h2>
             </div>
-            <div class="row">
-                <div class="col-lg-4" >
-                    <h3 class="text-left col-lg-8">Phone Number</h3>
-                </div>
-                <div class="col-lg-4" >
-                    <h3 class="text-left col-lg-8">Name</h3>
-                </div>
-                <div class="col-lg-4" >
-                    <h3 class="text-left col-lg-8">Location (Address 1 and 2)</h3>
-                </div>
+            <div class="row center-block">
+                    <!-- Locations -->
+                    <div class="col-lg-3"></div>
+                    <div class="col-lg-1 input-with-text calc-form-input-no-width col-lg-offset-3" >
+                        <input type="checkbox" name="UseFuzzValue" value="U">
+                    </div>
+                    <div class="col-lg-3 input-with-text calc-form-input-no-width" >
+                        <p><big>Locations</big></p>
+                    </div>
+                    <div class="col-lg-2 input-with-text calc-form-input-no-width" >
+                        <input class="text-right form-control" type="number">
+                    </div>
+                    <br>
+                    <br>
+                    <!-- District -->
+                    <div class="col-lg-3"></div>
+                    <div class="col-lg-1 input-with-text calc-form-input-no-width col-lg-offset-3" >
+                        <input type="checkbox" name="UseFuzzValue" value="U">
+                    </div>
+                    <div class="col-lg-3 input-with-text calc-form-input-no-width" >
+                        <p><big>District</big></p>
+                    </div>
+                    <div class="col-lg-2 input-with-text calc-form-input-no-width" >
+                        <input class="text-right form-control" type="number">
+                    </div>
+                    <br>
+                    <br>
+                    <!-- Trafficker -->
+                    <div class="col-lg-3"></div>
+                    <div class="col-lg-1 input-with-text calc-form-input-no-width" >
+                        <input type="checkbox" name="UseFuzzValue" value="U">
+                    </div>
+                    <div class="col-lg-3 input-with-text calc-form-input-no-width" >
+                        <p><big>Trafficker</big></p>
+                    </div>
+                    <div class="col-lg-2 input-with-text calc-form-input-no-width" >
+                        <input class="text-right form-control" type="number">
+                    </div>
+                    <br>
+                    <br>
+                    <!-- Interceptee -->
+                    <div class="col-lg-3"></div>
+                    <div class="col-lg-1 input-with-text calc-form-input-no-width" >
+                        <input type="checkbox" name="UseFuzzValue" value="U">
+                    </div>
+                    <div class="col-lg-3 input-with-text calc-form-input-no-width" >
+                        <p><big>Interceptee</big></p>
+                    </div>
+                    <div class="col-lg-2 input-with-text calc-form-input-no-width" >
+                        <input class="text-right form-control" type="number">
+                    </div>
+                    <br>
+                    <br>
+                    <!-- Phone Number -->
+                    <div class="col-lg-3"></div>
+                    <div class="col-lg-1 input-with-text calc-form-input-no-width" >
+                        <input type="checkbox" name="UseFuzzValue" value="U">
+                    </div>
+                    <div class="col-lg-3 input-with-text calc-form-input-no-width" >
+                        <p><big>Phone Number</big></p>
+                    </div>
+                    <div class="col-lg-2 input-with-text calc-form-input-no-width" >
+                        <input class="text-right form-control" type="number">
+                    </div>
+                    <br>
+                    <br>
             </div>
-        </div> -->
-        <div ng-controller="sysAdminCtrl as admin">
-            <div class="col-lg-2 calc-form-input-no-width">
-                <input class="text-right form-control" type="number" id="location_value" ng-model="admin.form.location_value"/>
-                <small>Location</small>
-            </div>
-            <div class="col-lg-3 input-group">
-                <input class="form-control text-center" ng-value="admin.locationTotal()" disabled="disabled" value="0"/>
-            </div>
-
         </div>
+
     {% endblock %}
 {% endblock %}
