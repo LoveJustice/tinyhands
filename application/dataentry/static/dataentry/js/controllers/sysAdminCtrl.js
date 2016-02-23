@@ -1,12 +1,11 @@
 angular
-    .module('SysAdminSettings')
+    .module('DataEntry')
     .controller("sysAdminCtrl", ['$scope', function($scope){
         var vm = this;
 
-        // vm.form = {};
-        vm.location_value = location_value;
+        vm.form = {};
 
-        function getLocationValue() {
-            return vm.location_value;
+        vm.locationTotal = function() {
+            return vm.form.location_value;
         }
     }]);

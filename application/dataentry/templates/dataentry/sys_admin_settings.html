@@ -1,6 +1,6 @@
 {% extends "dataentry/dataentry_base.html" %}
 {% block html %}
-    <html ng-app="SysAdminSettings">
+    <html ng-app="DataEntry">
 {% endblock %}
 
 {% block title %}System Administrator Settings{% endblock %}
@@ -28,12 +28,12 @@
         </div> -->
         <div ng-controller="sysAdminCtrl as admin">
             <div class="col-lg-2 calc-form-input-no-width">
-                <input class="text-right form-control" type="number" id="location_value" ng-model="admin.location_value"/>
-                <small>{{admin.location_value}}</small>
+                <input class="text-right form-control" type="number" id="location_value" ng-model="admin.form.location_value"/>
+                <small>Location</small>
             </div>
-            <!-- <div class="col-lg-3 input-group">
-                <input class="form-control text-center" ng-value="admin.location_value" disabled="disabled"/>
-            </div> -->
+            <div class="col-lg-3 input-group">
+                <input class="form-control text-center" ng-value="admin.locationTotal()" disabled="disabled" value="0"/>
+            </div>
 
         </div>
     {% endblock %}
