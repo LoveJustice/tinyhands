@@ -294,7 +294,7 @@ class VictimInterviewCSVExportView(LoginRequiredMixin, PermissionsRequiredMixin,
 
 class GeoCodeAddress1APIView(APIView):
     def get(self, request):
-        value = request.query_params['address1']
+        value = request.query_params["address1"]
         matches = match_location(address1_name=value)
         if matches:
             serializer = Address1Serializer(matches, many=True)
@@ -306,11 +306,11 @@ class GeoCodeAddress1APIView(APIView):
 class GeoCodeAddress2APIView(APIView):
     def get(self, request):
         try:
-            address1_name = request.query_params['address1']
+            address1_name = request.query_params["address1"]
 
         except:
             address1_name = None
-        address2_name = request.query_params['address2']
+        address2_name = request.query_params["address2"]
         matches = match_location(address1_name, address2_name)
         if matches:
             serializer = Address2Serializer(matches, many=True)
