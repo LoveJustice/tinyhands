@@ -6,7 +6,12 @@ COPY nginx.conf /etc/nginx/nginx.conf
 COPY thi-nginx.conf /etc/nginx/sites-enabled/default
 
 # Make a directory for the nginx logs
-RUN mkdir -p /data/static /data/dreamsuite/static /data/media/
+RUN mkdir -p /data/dreamsuite/static/ /data/media/
+
+# Copy in static files
+COPY media/ /data/media/
+COPY static/ /data/dreamsuite/static/
+
 
 RUN mkdir /nginx
 WORKDIR /nginx

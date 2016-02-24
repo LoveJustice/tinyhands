@@ -79,10 +79,11 @@ WSGI_APPLICATION = 'dreamsuite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'HOST': os.environ['DB_HOST'],
         'NAME': os.environ['DB_NAME'],
         'USER': os.environ['DB_USER'],
-        'HOST': os.environ['DB_HOST'],
-        'PORT': 5432,
+        'PASSWORD': os.environ['DB_PASS'],
+        'PORT': os.environ['DB_PORT'],
     }
 }
 
