@@ -13,6 +13,14 @@ BOOLEAN_CHOICES = [
     (True, 'Yes'),
 ]
 
+LEVEL_CHOICES = [
+    ('state', 'State'),
+    ('country', 'Country'),
+    ('city', 'City'),
+    ('district', 'District'),
+    ('vdc', 'VDC'),
+]
+
 
 class DreamSuitePaperForm(forms.ModelForm):
     class Meta:
