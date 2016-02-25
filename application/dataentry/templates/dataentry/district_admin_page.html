@@ -65,11 +65,11 @@
                 <label for="addressName">Name</label>
                 <input type="text" id="addressName" class="form-control" ng-model="address.name"/>
                 <label for="addressName">Latitude</label>
-                <input type="text" id="addressLatitude" class="form-control" ng-model="address.latitude"/>
+                <input type="number" id="addressLatitude" class="form-control" ng-model="address.latitude"/>
                 <label for="addressLongitude">Longitude</label>
-                <input type="text" id="addressLongitude" class="form-control" ng-model="address.longitude"/>
+                <input type="number" id="addressLongitude" class="form-control" ng-model="address.longitude"/>
                 <label for="addressLevel">Level</label>
-                <input type="text" id="addressLevel" class="form-control" ng-model="address.level"/>
+                <select id="addressLevel" ng-model="address.level" ng-options="choice as choice for choice in levels"/>
             </div>
         </div>
         <div class="modal-footer">
