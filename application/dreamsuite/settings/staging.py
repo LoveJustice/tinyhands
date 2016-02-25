@@ -11,3 +11,7 @@ ALLOWED_HOSTS = [
     '10.120.170.20',
     'thi.cse.taylor.edu',
 ]
+
+SPREADSHEET_NAME = 'Dream Suite - THN Data (Staging)'
+IRF_WORKSHEET_NAME = 'IRF Entry'
+VIF_WORKSHEET_NAME = 'VIF Entry'
