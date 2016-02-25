@@ -29,10 +29,10 @@ class BorderStation(models.Model):
 
 class District(models.Model):
     name = models.CharField(max_length=255)
-    latitude = models.FloatField()
-    longitude = models.FloatField()
+    latitude = models.FloatField(default=0)
+    longitude = models.FloatField(default=0)
 
-    level = models.CharField(max_length=255)
+    level = models.CharField(max_length=255, default="District")
 
 
     def __unicode__(self):

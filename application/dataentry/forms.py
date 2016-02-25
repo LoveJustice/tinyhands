@@ -817,6 +817,11 @@ class VDCForm(forms.ModelForm):
 
 
 class DistrictForm(forms.ModelForm):
+    level = forms.MultipleChoiceField(
+        choices=LEVEL_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=True
+    )
     class Meta:
         model = District
-        fields = ['name']
+        fields = ['name', 'latitude', 'longitude', 'level']
