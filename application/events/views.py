@@ -121,3 +121,39 @@ class EventViewSet(ModelViewSet):
         events = Event.objects.all()
         serializer = self.get_serializer(events, many=True)
         return Response(serializer.data)
+
+    @list_route()
+    def calendar_feed(self, request):
+        start = request.query_params.get('start', '')
+        end = request.query_params.get('end', '')
+        start_date = datetime.datetime.strptime(start, "%Y-%m-%d")
+        end_date = datetime.datetime.strptime(end, "%Y-%m-%d")
+        querydict = {}
+        if start_date:
+            querydict['start_date__gte'] = start_date
+        if end_date:
+            querydict['start_date__lte'] = end_date
+        querydict['is_repeat'] = False
+
+        return Response(queryEventsForFeed(querydict, start_date, end_date))
+
+    @list_route()
+    def dashboard_feed(self, request):
+        start_date = datetime.date.today()
+        end_date = start_date + datetime.timedelta(days=7)
+        querydict = {
+            'start_date__gte': start_date,
+            'start_date__lte': end_date,
+            'is_repeat': False
+        }
+
+        return Response(queryEventsForFeed(querydict, start_date, end_date))
+
+def queryEventsForFeed(querydict, start_date, end_date):
+    repeated_events = Event.objects.filter(is_repeat=True)
+    non_repeated_events = Event.objects.filter(**querydict)
+
+    temp_events = get_repeated(repeated_events, start_date, end_date)
+    result_list = list(chain(temp_events, non_repeated_events))
+    events = event_list(result_list)
+    return events;
