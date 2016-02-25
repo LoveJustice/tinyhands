@@ -5,6 +5,8 @@
 *.sw[op]
 *~
 
+google_cred.json
+
 .#*
 .coverage
 .idea/
