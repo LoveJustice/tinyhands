@@ -661,7 +661,6 @@ class VictimInterviewForm(DreamSuitePaperForm):
         if self.cleaned_data['victim_guardian_address_district']:
             victim_guardian_address_district = District.objects.get(name=self.cleaned_data['victim_guardian_address_district'])
             self.instance.victim_guardian_address_district = victim_guardian_address_district
-            #print (victim_address_district.id)
         if self.cleaned_data['victim_address_vdc']:
             victim_address_vdc = VDC.objects.get(name=self.cleaned_data['victim_address_vdc'], district_id = self.instance.victim_address_district.id)
             self.instance.victim_address_vdc = victim_address_vdc
