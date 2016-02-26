@@ -36,7 +36,10 @@ Tiny Hands International
 
 # Testing
 ## Django Unit Tests:
-Execute the `./manage.py test` command in the web container. eg. `docker-compose run web ./manage.py test`
+There is a test container that I created called test-django detailed in the docker-compose file
+
+Simply execute the `./manage.py test` command in the test container. eg. `docker-compose run test-django ./manage.py test`
+
 
 ## E2E/Karma Tests:
     In Development
