@@ -1,4 +1,4 @@
-FROM tutum/nginx
+FROM nginx
 MAINTAINER benaduggan
 
 # Add our nginx configuration
@@ -12,12 +12,10 @@ RUN mkdir -p /data/dreamsuite/static/ /data/media/
 COPY media/ /data/media/
 COPY static/ /data/dreamsuite/static/
 
-
-RUN mkdir /nginx
-WORKDIR /nginx
-RUN touch access.log
-RUN touch error.log
-RUN chown -R www-data:www-data /nginx/
+RUN mkdir -p /log
+WORKDIR /log
+RUN touch /log/nginx_access.log /log/nginx_error.log
+RUN chown -R www-data:www-data /log/
 
 EXPOSE 80
 CMD service nginx start

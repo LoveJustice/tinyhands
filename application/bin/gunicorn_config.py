@@ -1,7 +1,7 @@
 bind = "0.0.0.0:9001"
 loglevel = "INFO"
-workers = "4"
+workers = "3"
 reload = True
 
-errorlog = "/srv/logs/error.log"
-accesslog = "/srv/logs/access.log"
+errorlog = "/log/gunicorn_error.log"
+accesslog = "/log/gunicorn_access.log"

@@ -5,6 +5,7 @@ ENV PYTHONUNBUFFERED 1
 
 # Install linux dependencies
 RUN apt-get update && apt-get install -y python-dev libncurses5-dev libxml2-dev libxslt-dev zlib1g-dev libjpeg-dev
+RUN pip install --upgrade pip
 
 # Make the directory for our code
 RUN mkdir /data
@@ -15,9 +16,9 @@ ADD application/requirements.txt /data/requirements.txt
 RUN pip install -r requirements.txt
 
 # Make the log files for Gunicorn
-RUN mkdir -p /srv/logs
-RUN touch /srv/logs/gunicorn.log /srv/logs/access.log
-RUN chown -R www-data:www-data /srv/logs/
+RUN mkdir -p /log
+RUN touch /log/gunicorn_access.log /log/gunicorn_error.log
+RUN chown -R www-data:www-data /log
 
 # Copy application files over to container
 COPY application/ /data/
