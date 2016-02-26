@@ -661,7 +661,6 @@ class VictimInterviewForm(DreamSuitePaperForm):
         if self.cleaned_data['victim_guardian_address_district']:
             victim_guardian_address_district = District.objects.get(name=self.cleaned_data['victim_guardian_address_district'])
             self.instance.victim_guardian_address_district = victim_guardian_address_district
-            print victim_address_district.id
         if self.cleaned_data['victim_address_vdc']:
             victim_address_vdc = VDC.objects.get(name=self.cleaned_data['victim_address_vdc'], district_id = self.instance.victim_address_district.id)
             self.instance.victim_address_vdc = victim_address_vdc
@@ -741,8 +740,8 @@ class VictimInterviewPersonBoxForm(DreamSuitePaperForm):
         initial = self.initial.get('gender')
         if initial is not None:
             self.initial['gender'] = [unicode(initial)]
-        self.fields['address_district'] = DistrictField(label="Address 1")
-        self.fields['address_vdc'] = VDCField(label="Address 2")
+        self.fields['address_district'] = DistrictField(label="Address 1", required=False)
+        self.fields['address_vdc'] = VDCField(label="Address 2", required=False)
         try:
             self.fields['address_district'].initial = self.instance.address_district
         except:
@@ -753,10 +752,12 @@ class VictimInterviewPersonBoxForm(DreamSuitePaperForm):
             pass
 
     def save(self, commit=True):
-        address_district = District.objects.get(name=self.cleaned_data['address_district'])
-        address_vdc = VDC.objects.get(name=self.cleaned_data['address_vdc'], district_id = address_district.id)
-        self.instance.address_vdc = address_vdc
-        self.instance.address_district = address_district
+        if self.cleaned_data['address_district']:
+            address_district = District.objects.get(name=self.cleaned_data['address_district'])
+            self.instance.address_district = address_district
+        if self.cleaned_data['address_vdc']:
+            address_vdc = VDC.objects.get(name=self.cleaned_data['address_vdc'], district_id = address_district.id)
+            self.instance.address_vdc = address_vdc
         return super(VictimInterviewPersonBoxForm, self).save(commit)
 
     def clean(self):
