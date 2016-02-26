@@ -42,20 +42,20 @@ class Address1Test(APITestCase):
         self.assertEqual(len(response.data), 20)  # 20 is coming from the 20 VDCs we made which each have their own District
 
     def test_retrieve_address1(self):
-        url = reverse('Address1detail', args=[1])
+        url = reverse('Address1detail', args=[self.district_list[0].id])
 
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['id'], 1)  # 1 is the arg we passed into the url
+        self.assertEqual(response.data['id'], self.district_list[0].id)  # 1 is the arg we passed into the url
 
     def test_update_address1(self):
-        url = reverse('Address1detail', args=[1])
+        url = reverse('Address1detail', args=[self.district_list[0].id])
         data = {'name': "updatedAddress1"}
         response = self.client.put(url, data)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['id'], 1)  # 1 is the arg we passed into the url
+        self.assertEqual(response.data['id'], self.district_list[0].id)  # 1 is the arg we passed into the url
         self.assertEqual(response.data['name'], "updatedAddress1")  # 1 is the arg we passed into the url
 
     def test_remove_address1(self):
