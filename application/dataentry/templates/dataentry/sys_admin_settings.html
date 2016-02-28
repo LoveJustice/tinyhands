@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block html %}
-    <html ng-app="System Admin Settings">
+    <html ng-app="DataEntry">
 {% endblock %}
 
 {% block title %}System Admin Settings{% endblock %}
@@ -9,78 +9,90 @@
 {% block tab_block %}
     {% block content %}
         {% block angular %}{% endblock %}
-        <h1 class="text-center">System Admin Settings</h1>
-        <div class="col-lg-6 form-group" style="height: 675px">
-            <div class="row">
-                <h2 class="background"><span>Fuzzy Matching Settings</span></h2>
+        <div ng-controller="sysAdminCtrl as admin">
+                <h1 class="text-center">System Admin Settings</h1>
+                <div class="col-lg-6 " style="height: 675px">
+                    <div class="row">
+                        <h2 class="background"><span>Fuzzy Matching Settings</span></h2>
+                    </div>
+
+                    <div class="row ">
+                        <br>
+                        <!-- Titles -->
+                        <div class="col-lg-5"></div>
+                        <div class="col-lg-3" >
+                            <label>Cutoff</label>
+                        </div>
+                        <div class="col-lg-3" >
+                            <label>Limit</label>
+                        </div>
+                        <!-- Address 1 -->
+                        <div class="col-lg-2"></div>
+                        <div class="col-lg-3" >
+                            <label>Address 1</label>
+                        </div>
+                        <div class="col-lg-3" >
+                            <input class="text-right form-control" type="number" id="address1_cutoff" ng-model="admin.form.address1_cutoff">
+                            <small>Default = 0</small>
+                        </div>
+                        <div class="col-lg-3" >
+                            <input class="text-right form-control" type="number" id="address1_limit" ng-model="admin.form.address1_limit">
+                            <small>Default = 0</small>
+                        </div>
+                        <br>
+                        <br>
+                        <br>
+                        <!-- Address 2 -->
+                        <div class="col-lg-2"></div>
+                        <div class="col-lg-3" >
+                            <label>Address 2</label>
+                        </div>
+                        <div class="col-lg-3" >
+                            <input class="text-right form-control" type="number" id="address2_cutoff" ng-model="admin.form.address2_cutoff">
+                            <small>Default = 0</small>
+                        </div>
+                        <div class="col-lg-3" >
+                            <input class="text-right form-control" type="number" id="address2_limit" ng-model="admin.form.address2_limit">
+                            <small>Default = 0</small>
+                        </div>
+                        <br>
+                        <br>
+                        <br>
+                        <!-- Person -->
+                        <div class="col-lg-2"></div>
+                        <div class="col-lg-3" >
+                            <label>Person</label>
+                        </div>
+                        <div class="col-lg-3" >
+                            <input class="text-right form-control" type="number" id="person_cutoff" ng-model="admin.form.person_cutoff">
+                            <small> Default = 0 </small>
+                        </div>
+                        <div class="col-lg-3" >
+                            <input class="text-right form-control" type="number" id="person_limit" ng-model="admin.form.person_limit">
+                            <small> Default = 0 </small>
+                        </div>
+                        <br>
+                        <br>
+                        <br>
+                        <!-- Phone Number -->
+                        <div class="col-lg-2"></div>
+                        <div class="col-lg-3" >
+                            <label>Phone Number</label>
+                        </div>
+                        <div class="col-lg-3" >
+                            <input class="text-right form-control" type="number" id="phone_number_cutoff" ng-model="admin.form.phone_number_cutoff">
+                            <small > Default = 0 </small>
+                        </div>
+                        <div class="col-lg-3" >
+                            <input class="text-right form-control" type="number" id="phone_number_limit" ng-model="admin.form.phone_number_limit">
+                            <small > Default = 0 </small>
+                        </div>
+                        <br>
+                        <br>
+                        <br>
+                    </div>
             </div>
-            <div class="row center-block">
-                    <!-- Locations -->
-                    <div class="col-lg-3"></div>
-                    <div class="col-lg-1 input-with-text calc-form-input-no-width col-lg-offset-3" >
-                        <input type="checkbox" name="UseFuzzValue" value="U">
-                    </div>
-                    <div class="col-lg-3 input-with-text calc-form-input-no-width" >
-                        <p><big>Locations</big></p>
-                    </div>
-                    <div class="col-lg-2 input-with-text calc-form-input-no-width" >
-                        <input class="text-right form-control" type="number">
-                    </div>
-                    <br>
-                    <br>
-                    <!-- District -->
-                    <div class="col-lg-3"></div>
-                    <div class="col-lg-1 input-with-text calc-form-input-no-width col-lg-offset-3" >
-                        <input type="checkbox" name="UseFuzzValue" value="U">
-                    </div>
-                    <div class="col-lg-3 input-with-text calc-form-input-no-width" >
-                        <p><big>District</big></p>
-                    </div>
-                    <div class="col-lg-2 input-with-text calc-form-input-no-width" >
-                        <input class="text-right form-control" type="number">
-                    </div>
-                    <br>
-                    <br>
-                    <!-- Trafficker -->
-                    <div class="col-lg-3"></div>
-                    <div class="col-lg-1 input-with-text calc-form-input-no-width" >
-                        <input type="checkbox" name="UseFuzzValue" value="U">
-                    </div>
-                    <div class="col-lg-3 input-with-text calc-form-input-no-width" >
-                        <p><big>Trafficker</big></p>
-                    </div>
-                    <div class="col-lg-2 input-with-text calc-form-input-no-width" >
-                        <input class="text-right form-control" type="number">
-                    </div>
-                    <br>
-                    <br>
-                    <!-- Interceptee -->
-                    <div class="col-lg-3"></div>
-                    <div class="col-lg-1 input-with-text calc-form-input-no-width" >
-                        <input type="checkbox" name="UseFuzzValue" value="U">
-                    </div>
-                    <div class="col-lg-3 input-with-text calc-form-input-no-width" >
-                        <p><big>Interceptee</big></p>
-                    </div>
-                    <div class="col-lg-2 input-with-text calc-form-input-no-width" >
-                        <input class="text-right form-control" type="number">
-                    </div>
-                    <br>
-                    <br>
-                    <!-- Phone Number -->
-                    <div class="col-lg-3"></div>
-                    <div class="col-lg-1 input-with-text calc-form-input-no-width" >
-                        <input type="checkbox" name="UseFuzzValue" value="U">
-                    </div>
-                    <div class="col-lg-3 input-with-text calc-form-input-no-width" >
-                        <p><big>Phone Number</big></p>
-                    </div>
-                    <div class="col-lg-2 input-with-text calc-form-input-no-width" >
-                        <input class="text-right form-control" type="number">
-                    </div>
-                    <br>
-                    <br>
-            </div>
+        <input type="button" ng-show="" id="" class="pull-right btn btn-success navbar-btn btn-lg" value="Update" ng-click="admin.updateForm()">
         </div>
 
     {% endblock %}
