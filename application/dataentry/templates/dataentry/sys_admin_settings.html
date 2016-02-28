@@ -11,10 +11,12 @@
         {% block angular %}{% endblock %}
         <h1 class="text-center">System Admin Settings</h1>
         <div class="col-lg-6 form-group" style="height: 675px">
+
+            <!-- Fuzzy Matching Settings -->
             <div class="row">
                 <h2 class="background"><span>Fuzzy Matching Settings</span></h2>
             </div>
-            <div class="row center-block">
+            <div class="row center-block" ng-controller="sysAdminCtrl as admin">
                     <!-- Locations -->
                     <div class="col-lg-3"></div>
                     <div class="col-lg-1 input-with-text calc-form-input-no-width col-lg-offset-3" >
@@ -24,7 +26,7 @@
                         <p><big>Locations</big></p>
                     </div>
                     <div class="col-lg-2 input-with-text calc-form-input-no-width" >
-                        <input class="text-right form-control" type="number">
+                        <input class="text-right form-control" type="number" id="location_value" ng-model="admin.location_value">
                     </div>
                     <br>
                     <br>
@@ -37,7 +39,7 @@
                         <p><big>District</big></p>
                     </div>
                     <div class="col-lg-2 input-with-text calc-form-input-no-width" >
-                        <input class="text-right form-control" type="number">
+                        <input class="text-right form-control" type="number" id="district_value" ng-model="admin.district_value">
                     </div>
                     <br>
                     <br>
@@ -50,7 +52,7 @@
                         <p><big>Trafficker</big></p>
                     </div>
                     <div class="col-lg-2 input-with-text calc-form-input-no-width" >
-                        <input class="text-right form-control" type="number">
+                        <input class="text-right form-control" type="number" id="trafficker_value" ng-model="admin.trafficker_value">
                     </div>
                     <br>
                     <br>
@@ -63,7 +65,7 @@
                         <p><big>Interceptee</big></p>
                     </div>
                     <div class="col-lg-2 input-with-text calc-form-input-no-width" >
-                        <input class="text-right form-control" type="number">
+                        <input class="text-right form-control" type="number" id="interceptee_value" ng-model="admin.interceptee_value">
                     </div>
                     <br>
                     <br>
@@ -76,7 +78,7 @@
                         <p><big>Phone Number</big></p>
                     </div>
                     <div class="col-lg-2 input-with-text calc-form-input-no-width" >
-                        <input class="text-right form-control" type="number">
+                        <input class="text-right form-control" type="number" id="phone_number_value" ng-model="admin.phone_number_value">
                     </div>
                     <br>
                     <br>
