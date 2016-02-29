@@ -4,7 +4,7 @@ MAINTAINER benaduggan
 ENV PYTHONUNBUFFERED 1
 
 # Install linux dependencies
-RUN apt-get update && apt-get install -y python-dev libncurses5-dev libxml2-dev libxslt-dev zlib1g-dev libjpeg-dev
+RUN apt-get update && apt-get install -y python-dev libncurses5-dev libxml2-dev libxslt-dev zlib1g-dev libjpeg-dev cron
 RUN pip install --upgrade pip
 
 # Make the directory for our code

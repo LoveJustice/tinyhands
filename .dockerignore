@@ -1,0 +1,7 @@
+.git
+.idea
+Vagrantfile
+local.env
+
+application/media/*
+application/static/*

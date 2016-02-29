@@ -22,6 +22,7 @@ application/dreamsuite/static/*
 
 application/.config/
 
+local.env
 
 env
 foo.*
