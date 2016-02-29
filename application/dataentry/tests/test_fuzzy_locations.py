@@ -21,7 +21,7 @@ class FuzzyLocationMatchingTest(TestCase):
 
     def test_address2_matching_works(self):
         original = Address2.objects.all()[0]
-        matches = match_location(address2_name_name=original.name)
+        matches = match_location(address2_name=original.name)
         self.assertEquals(original, matches[0])
 
     def test_address2_match_found_if_one_character_off(self):
