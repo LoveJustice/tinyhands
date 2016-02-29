@@ -9,7 +9,7 @@ class Address1Field(CharField):
         super(Address1Field, self).validate(value)
         # Note that we don't have to deal with whether a field is required or not, as the
         # superclass takes care of it for us. If we do have a value, the associated
-        # District must exist.
+        # Address1 must exist.
         if value and not Address1.objects.filter(name=value).exists():
             raise ValidationError("%(value)s is not a valid address1.",
                                   params={'value': value})

@@ -120,12 +120,12 @@ class EditUserFactory(UserFactory):
     user_designation = factory.SubFactory(EditUserDesignation)
 
 
-class VdcUserFactory(UserFactory):
+class Address2UserFactory(UserFactory):
     permission_address2_manage = True
     user_designation = factory.SubFactory(EditUserDesignation)
 
 
-class BadVdcUserFactory(UserFactory):
+class BadAddress2UserFactory(UserFactory):
     permission_address2_manage = False
     user_designation = factory.SubFactory(EditUserDesignation)
 
@@ -159,4 +159,3 @@ class AlertFactory(DjangoModelFactory):
             # A list of groups were passed in, use them
             for group in extracted:
                 self.permissions_group.add(group)
-

@@ -23,9 +23,9 @@
         vm.saveTallyLocalStorage = saveTallyLocalStorage;
         vm.showEvents = true;
         vm.showTally = true;
-        vm.showVDCLayer = true;
+        vm.showAddress2Layer = true;
         vm.sumNumIntercepts = sumNumIntercepts;
-        vm.toggleVDCLayer = toggleVDCLayer;
+        vm.toggleAddress2Layer = toggleAddress2Layer;
         vm.userId = null;
 
         activate();
@@ -104,7 +104,7 @@
                 vm.days = JSON.parse(oldTally);
             }
         }
-
+c
         function isEmptyObject(obj) {
             return $.isEmptyObject(obj);
         }
@@ -126,8 +126,8 @@
             return sumInt;
         }
 
-        function toggleVDCLayer() {
-            $rootScope.$emit('toggleVDCLayer', vm.showVDCLayer);
+        function toggleAddress2Layer() {
+            $rootScope.$emit('toggleAddress2Layer', vm.showAddress2Layer);
         }
     };
 

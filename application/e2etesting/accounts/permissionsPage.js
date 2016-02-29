@@ -10,7 +10,7 @@ var permissionsPage = function() {
         browser.get(constants.webAddress + "/budget/budget_calculations/");
     };
 
-    this.navigateToVdcPage = function() {
+    this.navigateToAddress2Page = function() {
         browser.get(constants.webAddress + "/data-entry/geocodelocations/address2-admin/");
     };
 

@@ -21,21 +21,21 @@ describe('Accounts Page', function() {
         expect(browser.driver.getCurrentUrl()).toContain('/accounts/access-control/');
     });
 
-    describe('handles permissions of VDCs', function(){
+    describe('handles permissions of Address2s', function(){
 
-        it('unchecks vdc edit permission', function(){
-            //uncheck permission for VDC edit
-            permissionsPage.checkPermissionSetup("id_permission_vdc_manage");
-            this.permissions = element(by.id("id_permission_vdc_manage"));
+        it('unchecks address2 edit permission', function(){
+            //uncheck permission for address2 edit
+            permissionsPage.checkPermissionSetup("id_permission_address2_manage");
+            this.permissions = element(by.id("id_permission_address2_manage"));
             expect(this.permissions.element(by.xpath("..")).getAttribute('class')).toBe('btn btn-danger');
             permissionsPage.savePermissions();
 
             //tests for inability to edit addresses
-            permissionsPage.navigateToVdcPage();
+            permissionsPage.navigateToAddress2Page();
             browser.sleep(800);
             expect(element(by.xpath('//h1')).getText()).toContain("403");
 
-            //rechecks VDC edit permission
+            //rechecks Address2 edit permission
             permissionsPage.checkPermissionCleanup();
         });
     });
@@ -107,17 +107,17 @@ describe('Accounts Page', function() {
 
     });
 
-    describe('handles VDC editing permission', function(){
-        it('unchecks vdc edit permission', function(){
+    describe('handles Address2 editing permission', function(){
+        it('unchecks address2 edit permission', function(){
             permissionsPage.navigateToAccountPage();
             permissionsPage.resetPermissions();
-            permissionsPage.checkPermission("id_permission_vdc_manage");
-            this.permissions = element(by.id("id_permission_vdc_manage"));
+            permissionsPage.checkPermission("id_permission_address2_manage");
+            this.permissions = element(by.id("id_permission_address2_manage"));
             expect(this.permissions.element(by.xpath("..")).getAttribute('class')).toBe('btn btn-danger');
             permissionsPage.savePermissions();
 
-            //tests for inability to edit vdc's
-            browser.get(constants.webAddress + "/data-entry/geocodelocations/vdc-admin/");
+            //tests for inability to edit address2's
+            browser.get(constants.webAddress + "/data-entry/geocodelocations/address2-admin/");
             expect(element(by.xpath('//h1')).getText()).toContain("403");
 
             permissionsPage.navigateToAccountPage();

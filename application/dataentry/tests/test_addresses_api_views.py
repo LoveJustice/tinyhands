@@ -1,14 +1,14 @@
 from django.core.urlresolvers import reverse
 from rest_framework import status
 from rest_framework.test import APIRequestFactory, APITestCase
-from accounts.tests.factories import VdcUserFactory, BadVdcUserFactory
+from accounts.tests.factories import Address2UserFactory, BadAddress2UserFactory
 from dataentry.tests.factories import Address2Factory, Address1Factory, CanonicalNameFactory
 
 
 class Address1Test(APITestCase):
     def setUp(self):
         self.address1_list = Address1Factory.create_batch(20)
-        self.user = VdcUserFactory.create()
+        self.user = Address2UserFactory.create()
         self.client.force_authenticate(user=self.user)
 
     def test_create_address1(self):
@@ -70,7 +70,7 @@ class Address1Test(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_address1_403_if_doesnt_have_permission(self):
-            self.bad_user = BadVdcUserFactory.create()
+            self.bad_user = BadAddress2UserFactory.create()
             self.client.force_authenticate(user=self.bad_user)
 
             address2 = CanonicalNameFactory.create()
@@ -104,7 +104,7 @@ class Address1Test(APITestCase):
 class Address2Test(APITestCase):
 
     def setUp(self):
-        self.user = VdcUserFactory.create()
+        self.user = Address2UserFactory.create()
         self.client.force_authenticate(user=self.user)
 
         self.Address2List = Address2Factory.create_batch(20)
@@ -213,7 +213,7 @@ class Address2Test(APITestCase):
         self.assertEqual(response.data['canonical_name'], None)
 
     def test_403_if_doesnt_have_permission(self):
-        self.bad_user = BadVdcUserFactory.create()
+        self.bad_user = BadAddress2UserFactory.create()
         self.client.force_authenticate(user=self.bad_user)
 
         address2 = CanonicalNameFactory.create()
