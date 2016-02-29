@@ -104,7 +104,6 @@
                 vm.days = JSON.parse(oldTally);
             }
         }
-c
         function isEmptyObject(obj) {
             return $.isEmptyObject(obj);
         }
