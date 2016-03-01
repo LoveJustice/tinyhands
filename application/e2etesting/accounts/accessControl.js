@@ -3,7 +3,7 @@ var constants = require('../testConstants.json');
 var accessControlPage = function () {
 
 	this.updateButton = element(by.buttonText('Update'));
-	this.accounts = element.all(by.repeater("account in accessCtrl.accounts.results"));
+	this.accounts = element.all(by.repeater("account in accessCtrl.accounts"));
 	this.firstUserIrfAdd = this.accounts.first().element(by.binding('account.permission_irf_add ? "Yes" : "No" '));
 	this.firstUserIrfDelete = this.accounts.first().element(by.binding('account.permission_irf_delete ? "Yes" : "No" '));
 	this.firstUserIrfEdit = this.accounts.first().element(by.binding('account.permission_irf_edit ? "Yes" : "No" '));
@@ -66,6 +66,3 @@ var accessControlPage = function () {
 }
 
 module.exports = new accessControlPage();
-
-
-//Remember this code:this.permission_irf_view.click()

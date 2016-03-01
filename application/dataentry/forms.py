@@ -667,7 +667,6 @@ class VictimInterviewForm(DreamSuitePaperForm):
             self.instance.victim_address2 = victim_address2
         if self.cleaned_data['victim_guardian_address2']:
             victim_guardian_address2 = Address2.objects.get(name=self.cleaned_data['victim_guardian_address2'])
-
             self.instance.victim_guardian_address2 = victim_guardian_address2
         return_val = super(VictimInterviewForm, self).save(commit)
         if commit:

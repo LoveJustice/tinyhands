@@ -12,6 +12,8 @@
 
   {% include "dataentry/popover.html" %}
 
+    <!-- In the upper-right corner of the form, allows the user
+    to choose from a list of incomplete VIFs to resume. -->
   {% if not victiminterviewinterceptionrecord %}
     <div class="well well-sm pull-right" style="margin-top: 22px">
       Resume an incomplete VIF:
@@ -20,7 +22,9 @@
       </select>
     </div>
   {% endif %}
+    <!-- End incomplete VIF toggle -->
 
+    <!-- Handles errors and warnings -->
   <div style="display: none">
     {% for id, errors in form.errors.items %}
       {% if not errors.is_warning %}
@@ -84,6 +88,7 @@
       {% endif %}
     {% endfor %}
   </div>
+    <!-- End errors and warnings -->
 
   <!-- Modal -->
   <div class="modal fade modal-over-tooltips" id="modal" role="dialog"
@@ -96,16 +101,21 @@
 	autocomplete="off">{% csrf_token %}
     <div class="form-page">
       <div class="row">
-        <div class="col-xs-6 header-area">
-          <img class="pull-left" style="margin-right: 20px" width="100"
+        <!-- Form title in the upper-left corner -->
+        <div class="col-xs-5 header-area">
+          <img class="pull-left" style="margin-right: 20px; margin-top: 20px" width="100"
                src="{{ STATIC_URL }}images/logo.png" alt="Tiny Hands Logo" />
-          <h2>Victim Interview Form (VIF)<br/>
-              Version 2.0 <span class="text-danger">Tiny Hands Nepal</span></h2>
+          <h2>Victim Interview Form (VIF) | Version 2.0 <br/>
+              <span class="text-danger">Tiny Hands Nepal</span></h2>
         </div>
-        <div class="col-xs-6">
+        <!-- End form title -->
+
+        <div class="col-xs-7">
+            <!-- Table in the upper-right corner of the form -->
           <table class="table table-bordered top-data-area" ng-controller="staffListCtrl as staff">
             <tbody>
               <tr>
+                  <!-- Victim VIF number -->
                 <td>
                   {{ form.vif_number.label_tag }}<span class="required">*</span>
                 </td>
@@ -114,6 +124,9 @@
                     {{ form.vif_number }}
                   </div>
                 </td>
+                  <!-- End VIF number -->
+
+                  <!-- # of victims -->
                 <td>
                   <label># of<br/>Victims</label>
                 </td>
@@ -122,15 +135,20 @@
                     {{ form.number_of_victims }}
                   </div>
                 </td>
+                  <!-- End # of victims -->
+
+                  <!-- Location -->
                 <td>
                   {{ form.location.label_tag }}
                 </td>
                 <td>
                   {{ form.location }}
                 </td>
+                  <!-- End location -->
               </tr>
 
               <tr>
+                <!-- Date -->
                 <td>
                   <label>Date<span class="required">*</span></label>
                 </td>
@@ -139,6 +157,9 @@
                     {{ form.date|attr:"data-placement: bottom" }}
                   </div>
                 </td>
+                <!-- End date -->
+
+                <!-- # of traffickers -->
                 <td>
                   <label># of<br/>Traffickers</label>
                 </td>
@@ -147,6 +168,9 @@
                     {{ form.number_of_traffickers|attr:"data-placement: bottom" }}
                   </div>
                 </td>
+                <!-- End # of traffickers -->
+
+                <!-- Interviewer -->
                 <td>
                   {{ form.interviewer.label_tag }}<span class="required">*</span>
                 </td>
@@ -166,10 +190,14 @@
                       {% endverbatim %}
                     </div>
                 </td>
+                <!-- End interviewer -->
             </tbody>
           </table>
+            <!-- End table -->
         </div>
       </div>
+
+        <!-- Text below the header and table but above where the form starts -->
       <div class="row">
         <div class="clearfix mbs pull-right">
           <label>
@@ -194,12 +222,15 @@
           </label>
         </div>
       </div>
+        <!-- End text -->
+
       <div class="row">
         <div class="col-xs-4 major-column">
           <div class="blue-box black-box black-box-top">
             <h1>1. Victim &amp; Family Information</h1>
           </div>
           <div class="black-box clearfix">
+              <!-- 1.2 - Gender -->
             <div class="pull-right">
               <div class="inline-radio-group">
                 <span class="section-number label-like">1.2</span>
@@ -211,15 +242,19 @@
                 {% endfor %}
               </div>
             </div>
+              <!-- End gender -->
 
+              <!-- 1.1 - Name -->
             <label class="blending-into-input-label"
                    for="{{ form.victim_name.auto_id }}">
               <span class="section-number">1.1</span>
               {{ form.victim_name.label }}<span class="required">*</span>
             </label>
             {{ form.victim_name|attr:"style: padding: 4px"|attr:"data-placement: left"|attr:"data-fuzzy-ui:name" }}
+              <!-- End name -->
           </div>
 
+            <!-- 1.3 - Victim's Recent Address -->
           <div class="black-box clearfix">
             <h2><span class="section-number">1.3</span> Victim's Recent Address</h2>
             <div class="col-xs-6">
@@ -243,9 +278,11 @@
               </div>
             </div>
           </div>
+            <!-- End address -->
 
           <div class="black-box clearfix">
             <div class="col-xs-4">
+                <!-- 1.4 - Age -->
               <div class="label-inside-field">
                 <label for="{{ form.victim_age.auto_id }}">
                   <span class="section-number">1.4</span>
@@ -253,8 +290,10 @@
                 </label>
                 {{ form.victim_age|attr:"style: padding-top: 24px" }}
               </div>
+                <!-- End age -->
             </div>
             <div class="col-xs-4">
+                <!-- 1.5 - Height -->
               <div class="label-inside-field">
                 <label for="{{ form.victim_height.auto_id }}">
                   <span class="section-number">1.5</span>
@@ -262,8 +301,10 @@
                 </label>
                 {{ form.victim_height|attr:"style: padding-top: 24px" }}
               </div>
+                <!-- End height -->
             </div>
             <div class="col-xs-4">
+                <!-- 1.6 - Weight -->
               <div class="label-inside-field">
                 <label for="{{ form.victim_weight.auto_id }}">
                   <span class="section-number">1.6</span>
@@ -271,9 +312,11 @@
                 </label>
                 {{ form.victim_weight|attr:"style: padding-top: 24px" }}
               </div>
+                <!-- End weight -->
             </div>
           </div>
 
+            <!-- 1.7 - Caste -->
           <div class="black-box clearfix">
             <h2><span class="section-number">1.7</span> Caste <small>(filled by interviewer, not asked directly)</small></h2>
           </div>
@@ -302,7 +345,9 @@
             <div class="checkbox-group">{{ form.victim_caste_madeshi_terai }}{{ form.victim_caste_madeshi_terai.label_tag }}</div>
             <div class="checkbox-group">{{ form.victim_caste_dalit }}        {{ form.victim_caste_dalit.label_tag }}</div>
           </div>
+            <!-- End caste -->
 
+            <!-- 1.8 - Occupation -->
           <div class="black-box clearfix">
             <h2><span class="section-number">1.8</span> What is your occupation?</h2>
           </div>
@@ -333,6 +378,9 @@
               </div>
             </div>
           </div>
+            <!-- End occupation -->
+
+            <!-- 1.9 - Marital Status -->
           <div class="black-box clearfix">
             <h2><span class="section-number">1.9</span> Marital Status</h2>
           </div>
@@ -348,8 +396,10 @@
               <div class="checkbox-group">{{ form.victim_marital_status_abandoned_by_husband }} {{ form.victim_marital_status_abandoned_by_husband.label_tag }}</div>
             </div>
           </div>
+            <!-- End marital status -->
         </div>
         <div class="col-xs-4 major-column">
+            <!-- 1.10 - With whom do you live? -->
           <div class="black-box black-box-top padded-box clearfix">
             <h2>
               <span class="section-number">1.10</span>
@@ -374,6 +424,9 @@
               </div>
             </div>
           </div>
+            <!-- End with whom did you live -->
+
+            <!-- 1.11 - How many people are in your (own) family? -->
           <div class="black-box clearfix">
             <div class="col-xs-8">
               <h2>
@@ -385,7 +438,9 @@
               {{ form.victim_num_in_family|attr:"style: width: 100%; height: 50px; text-align: center" }}
             </div>
           </div>
+            <!-- End how many people are in your (own) family -->
 
+            <!-- 1.12 - Primary Guardian -->
           <div class="black-box padded-box clearfix">
             <h2>
               <span class="section-number">1.12</span>
@@ -403,7 +458,9 @@
               <div class="checkbox-group">{{ form.victim_primary_guardian_no_one }} {{ form.victim_primary_guardian_no_one.label_tag }}</div>
             </div>
           </div>
+            <!-- End primary guardian -->
 
+            <!-- 1.13 - Guardian's Address -->
           <div class="black-box padded-box clearfix">
             <h2><span class="section-number">1.13</span> Guardian's Address</h2>
             <div class="col-xs-6">
@@ -428,7 +485,9 @@
               </div>
             </div>
           </div>
+            <!-- End guardian's address -->
 
+            <!-- 1.14 - Parents' Marital Status -->
           <div class="black-box padded-box clearfix">
             <h2 style="white-space: nowrap">
               <span class="section-number">1.14</span>
@@ -447,7 +506,9 @@
               <div class="checkbox-group">{{ form.victim_parents_marital_divorced }} {{ form.victim_parents_marital_divorced.label_tag }}</div>
             </div>
           </div>
+            <!-- End parents' marital status -->
 
+            <!-- 1.15 - Education Level -->
           <div class="black-box padded-box clearfix">
             <h2>
               <span class="section-number">1.15</span>
@@ -470,7 +531,9 @@
               <div class="checkbox-group">{{ form.victim_education_level_masters }} {{ form.victim_education_level_masters.label_tag }}</div>
             </div>
           </div>
+            <!-- End education level -->
 
+            <!-- 1.16 - Is the victim literate? -->
           <div class="black-box padded-box clearfix">
             <h2>
               <span class="section-number">1.16</span>
@@ -482,12 +545,15 @@
               {% endfor %}
             </div>
           </div>
+            <!-- End is the victim literate -->
 
         </div>
         <div class="col-xs-4 major-column">
           <div class="blue-box black-box black-box-top">
             <h1>2. Migration Plans</h1>
           </div>
+
+            <!-- 2.1 - What was the main thing which you were going abroad to do? -->
           <div class="black-box clearfix">
             <h2>
               <span class="section-number">2.1</span>
@@ -531,7 +597,9 @@
               </div>
             </div>
           </div>
+            <!-- End what was the main thing which you were going abroad to do -->
 
+            <!-- 2.2 - Primary motive to go abroad? -->
           <div class="black-box clearfix">
             <h2>
               <span class="section-number">2.2</span>
@@ -560,7 +628,9 @@
               </div>
             </div>
           </div>
+            <!-- End primary motive to go abroad -->
 
+            <!-- 2.3 - Where were you going? -->
           <div class="black-box clearfix">
             <h2><span class="section-number">2.3</span> Where were you going?<span class="required">*</span></h2>
           </div>
@@ -622,6 +692,7 @@
               </div>
             </div>
           </div>
+            <!-- End where were you going -->
         </div>
       </div>
     </div>
@@ -633,6 +704,7 @@
           <div class="blue-box black-box black-box-top">
             <h1>3. Recruitment Process</h1>
           </div>
+            <!-- 3.1 - Was a manpower involved? -->
           <div class="black-box padded-box checkbox-group-marker" id="manpower_involved">
             <div class="checkbox-group pull-right" style="margin-right: 4px">{{ form.manpower_involved.0 }} {{ form.manpower_involved.0.label_tag }}</div>
             <h2><span class="section-number">3.1</span> Was a manpower involved?</h2>
@@ -643,7 +715,9 @@
               <span class="red-arrow">PB - Manpower</span>
             </div>
           </div>
+            <!-- End was a manpower involved -->
 
+            <!-- 3.2 - Did someone recruit you in your village and persuade you go abroad -->
           <div class="black-box padded-box checkbox-group-marker" id="victim_recruited_in_village">
             <h2>
               <span class="section-number">3.2</span>
@@ -658,7 +732,9 @@
               <span class="red-arrow">PB - for each Broker</span>
             </div>
           </div>
+            <!-- End did someone recruit you in your village and persuade you go abroad -->
 
+            <!-- 3.3 - Broker's Relation to Victim -->
           <div class="black-box clearfix">
             <h2>
               <span class="section-number">3.3</span>
@@ -691,7 +767,9 @@
               </div>
             </div>
           </div>
+            <!-- End broker's relation to victim -->
 
+            <!-- 3.4 - If married to broker, how long have you been married? -->
           <div class="black-box padded-box clearfix">
             <div style="width: 220px" class="pull-left">
               <h2>
@@ -706,7 +784,9 @@
               {{ form.victim_married_to_broker_months.label_tag }}{{ form.victim_married_to_broker_months|attr:"style: width: 130px" }}
             </div>
           </div>
+            <!-- End if married to broker, how long have you been married -->
 
+            <!-- 3.5 - How did you meet the broker -->
           <div class="black-box clearfix">
             <h2>
               <span class="section-number">3.5</span>
@@ -735,7 +815,9 @@
               </div>
             </div>
           </div>
+            <!-- End how did you meet the broker -->
 
+            <!-- 3.6 - If by mobile, explain -->
           <div class="black-box clearfix">
             <div class="label-inside-field">
               <label style="font-size: 26px; line-height: 18px; padding: 4px">
@@ -746,7 +828,9 @@
               {{ form.victim_how_met_broker_mobile_explanation|attr:"style: padding-top: 60px; height: 120px" }}
             </div>
           </div>
+            <!-- End if by mobile, explain -->
 
+            <!-- 3.7 - How long had you known broker before you left? -->
           <div class="black-box clearfix">
             <h2><span class="section-number">3.7</span> How long had you known broker before you left?</h2>
             <div class="clearfix">
@@ -762,7 +846,9 @@
               </div>
             </div>
           </div>
+            <!-- End how long had you known broker before you left -->
 
+            <!-- 3.8 - How was the expense for taking you abroad paid for -->
           <div class="black-box padded-box clearfix checkbox-group-marker" id="victim_how_expense_was_paid">
             <h2>
               <span class="section-number">3.8</span>
@@ -785,7 +871,9 @@
               </div>
             </div>
           </div>
+            <!-- End how was the expense for taking you abroad paid for -->
 
+            <!-- 3.9 - If you were going for a job, does the broker work in the same job in the same place? -->
           <div class="black-box padded-box clearfix checkbox-group-marker" id="broker_works_in_job_location">
             <h2>
               <span class="section-number">3.9</span>
@@ -797,24 +885,30 @@
               {{ form.broker_works_in_job_location_dont_know }} {{ form.broker_works_in_job_location_dont_know.label_tag }}
             </div>
           </div>
+            <!-- End if you were going for a job, does the broker work in the same job in the same place -->
 
+            <!-- 3.10 - If going for a job, how much did the broker say you'd be earning per month(NRS)? -->
           <div class="black-box padded-box clearfix">
             <div class="pull-right label-inside-field">
               {{ form.amount_victim_would_earn.label_tag }}{{ form.amount_victim_would_earn|attr:"style: width: 100px" }}
             </div>
             <h2><span class="section-number">3.10</span> If going for a job, how much did the broker say you'd be earning per month(NRS)?</h2>
           </div>
+            <!-- End if going for a job, how much did the broker say you'd be earning per month(NRS) -->
 
+            <!-- 3.11 - Besides those with you now, how many do you know of to whom the broker made similar promises? -->
           <div class="black-box padded-box clearfix">
             <h2><span class="section-number">3.11</span> Besides those with you now, how many do you know of to whom the broker made similar promises?</h2>
             {{ form.number_broker_made_similar_promises_to|attr:"style: width: 60px" }}
           </div>
+            <!-- End besides those with you now, how many do you know of to whom the broker made similar promises -->
         </div>
 
         <div class="col-xs-4 major-column">
           <div class="blue-box black-box black-box-top">
             <h1>4. Travel and Transit</h1>
           </div>
+            <!-- 4.1 - 1st time crossing border? -->
           <div class="black-box padded-box clearfix checkbox-group-marker" id="victim_first_time_crossing_border">
             <h2><span class="section-number">4.1</span> 1st time crossing border?</h2>
             <div class="pull-right" style="width: 80px">
@@ -823,7 +917,9 @@
               {% endfor %}
             </div>
           </div>
+            <!-- End 1st time crossing border -->
 
+            <!-- 4.2 - Primary means of travel? -->
           <div class="black-box clearfix checkbox-group-marker" id="victim_primary_means_of_travel">
             <h2>
               <span class="section-number">4.2</span>
@@ -846,7 +942,9 @@
               </div>
             </div>
           </div>
+            <!-- End primary means of travel -->
 
+            <!-- 4.3 - Did you stay somewhere between your village and the border? -->
           <div class="black-box padded-box checkbox-group-marker" id="victim_stayed_somewhere_between">
             <h2><span class="section-number">4.3</span> Did you stay somewhere between your village and the border?<span class="required">*</span></h2>
             <div class="inline-checkbox-group">
@@ -857,7 +955,9 @@
 
             <span class="blue-arrow">LB - Transit Hideout</span>
           </div>
+            <!-- End did you stay somewhere between your village and the border -->
 
+            <!-- 4.4 - For how long did you stay? -->
           <div class="black-box">
             <h2><span class="section-number">4.4</span> For how long did you stay?</h2>
           </div>
@@ -873,7 +973,9 @@
               </tbody>
             </table>
           </div>
+            <!-- End for how long did you stay? -->
 
+            <!-- 4.5 - Was any attempt made to hide your presence there? -->
           <div class="black-box padded-box checkbox-group-marker" id="victim_was_hidden">
             <h2><span class="section-number">4.5</span> Was any attempt made to hide your presence there?</h2>
             <div class="inline-checkbox-group">{{ form.victim_was_hidden.0 }} {{ form.victim_was_hidden.0.label_tag }}</div>
@@ -882,7 +984,9 @@
               {{ form.victim_was_hidden_explanation|attr:"style: padding-left: 60px; height: 80px" }}
             </div>
           </div>
+            <!-- End was any attempt made to hide your presence there -->
 
+            <!-- 4.6 - Were you free to go out? -->
           <div class="black-box padded-box checkbox-group-marker" id="victim_was_free_to_go_out">
             <h2><span class="section-number">4.6</span> Were you free to go out?</h2>
             <div class="inline-checkbox-group">{{ form.victim_was_free_to_go_out.1 }} {{ form.victim_was_free_to_go_out.1.label_tag }}</div>
@@ -891,17 +995,23 @@
               {{ form.victim_was_free_to_go_out_explanation|attr:"style: padding-left: 60px; height: 80px" }}
             </div>
           </div>
+            <!-- End were you free to go out -->
 
+            <!-- 4.7 - Beside those you were intercepted with, how many others were with you who were in a similar situation? -->
           <div class="black-box padded-box clearfix">
             <h2><span class="section-number">4.7</span> Besides those you were intercepted with, how many others were with you who were in a similar situation?</h2>
             {{ form.how_many_others_in_situation|add_class:"pull-right"|attr:"style: width: 100px" }}
           </div>
+            <!-- End beside those you were intercepted with, how many others were with you who were in a similar situation -->
 
+            <!-- 4.8 - What was the age of the youngest -->
           <div class="black-box padded-box clearfix">
             {{ form.others_in_situation_age_of_youngest|add_class:"pull-right"|attr:"style: width: 100px" }}
             <h2><span class="section-number">4.8</span> What was the age of the youngest?</h2>
           </div>
+            <!-- End what was the age of the youngest -->
 
+            <!-- 4.9 - Was a passport made for you? -->
           <div class="black-box padded-box padded-box checkbox-group-marker" id="passport_made">
             <h2>
               <span class="section-number">4.9</span>
@@ -923,7 +1033,9 @@
               <span class="red-arrow">PB - Passport</span>
             </div>
           </div>
+            <!-- End was a passport made for you -->
 
+            <!-- 4.10 - Is your passport or a work permit with a broker? -->
           <div class="black-box clearfix padded-box checkbox-group-marker" id="victim_passport_with_broker">
             <h2><span class="section-number">4.10</span> Is your passport or a work permit with a broker?</h2>
             <div class="inline-checkbox-group">
@@ -932,7 +1044,9 @@
               {% endfor %}
             </div>
           </div>
+            <!-- End is your passport or a work permit with a broker -->
 
+            <!-- 4.11 - Did these take place on the way? -->
           <div class="black-box padded-box padded-box checkbox-group-marker" id="abuse_happened">
             <div class="clearfix">
               <div class="col-xs-7">
@@ -955,7 +1069,9 @@
 
             <div class="label-inside-field">{{ form.abuse_happened_explanation|attr:"rows:3" }}        {{ form.abuse_happened_explanation.label_tag }}</div>
           </div>
+            <!-- End did these take place on the way -->
 
+            <!-- 4.12 - Did you travel to the border with a companion who was appointed by the broker to take you across? -->
           <div class="black-box padded-box padded-box checkbox-group-marker" id="victim_traveled_with_broker_companion">
             <h2>
               <span class="section-number">4.12</span>
@@ -974,7 +1090,9 @@
               <small>(Skip the rest of this section)</small>
             </div>
           </div>
+            <!-- End did you travel to the border with a companion who was appointed by the broker to take you across -->
 
+            <!-- 4.13 - Where did the broker meet up with the companion? -->
           <div class="black-box padded-box">
             <h2>
               <span class="section-number">4.13</span>
@@ -984,10 +1102,12 @@
               <span class="blue-arrow">LB - Nepal Meet Point</span>
             </div>
           </div>
+            <!-- End where did the broker meet up with the companion -->
         </div>
 
         <div class="col-xs-4 major-column">
 
+            <!-- 4.14 - Was the companion with you when intercepted? -->
           <div class="black-box black-box-top padded-box clearfix padded-box checkbox-group-marker" id="companion_with_when_intercepted">
             <div class="pull-right" style="width: 80px">
               {% for choice in form.companion_with_when_intercepted reversed %}
@@ -1001,7 +1121,9 @@
               </h2>
             </div>
           </div>
+            <!-- End was the companion with you when intercepted -->
 
+            <!-- 4.15 - If No, were you planning to meet him/her again in India? -->
           <div class="black-box padded-box padded-box checkbox-group-marker" id="planning_to_meet_companion_later">
             <h2>
               <span class="section-number">4.15</span>
@@ -1017,7 +1139,9 @@
               <span class="blue-arrow">LB - India Meet Point</span>
             </div>
           </div>
+            <!-- End if No, were you planning to meet him/her again in India -->
 
+            <!-- 4.16 - Did money change hands between broker and the companion? -->
           <div class="black-box padded-box padded-box checkbox-group-marker" id="money_changed_hands_broker_companion">
             <h2><span class="section-number">4.16</span>
               Did money change hands between broker and the companion?
@@ -1028,10 +1152,12 @@
             <div class="inline-checkbox-group">{{ form.money_changed_hands_broker_companion_broker_gave_money }} {{ form.money_changed_hands_broker_companion_broker_gave_money.label_tag }}</div>
             <div class="inline-checkbox-group">{{ form.money_changed_hands_broker_companion_companion_gave_money }} {{ form.money_changed_hands_broker_companion_companion_gave_money.label_tag }}</div>
           </div>
+            <!-- End did money change hands between broker and the companion -->
 
           <div class="blue-box black-box" style="padding-top: 1px">
             <h1>5. Destination &amp; India Contact</h1>
           </div>
+            <!-- 5.1 - Did the broker / companion arrage someone to meet you after crossing the border? -->
           <div class="black-box padded-box padded-box checkbox-group-marker" id="meeting_at_border">
             <h2>
               <span class="section-number">5.1</span>
@@ -1042,7 +1168,9 @@
             <div class="inline-checkbox-group">{{ form.meeting_at_border_meeting_broker }} {{ form.meeting_at_border_meeting_broker.label_tag }}</div>
             <div class="inline-checkbox-group">{{ form.meeting_at_border_meeting_companion }} {{ form.meeting_at_border_meeting_companion.label_tag }}</div>
           </div>
+            <!-- End did the broker / companion arrage someone to meet you after crossing the border -->
 
+            <!-- 5.2 - Do you know any details about the place you were headed to in India? -->
           <div class="black-box padded-box padded-box checkbox-group-marker" id="victim_knew_details_about_destination">
             <h2>
               <span class="section-number">5.2</span>
@@ -1056,7 +1184,9 @@
 
             <span class="blue-arrow">LB - Destination</span>
           </div>
+            <!-- End do you know any details about the place you were headed to in India -->
 
+            <!-- 5.3 - Besides the broker and the companion, is there any other person or place you know of involved in the business of sending girls overseas? -->
           <div class="black-box padded-box">
             <h2><span class="section-number">5.3</span>
               Besides the broker and the companion, is there any other person or place you know of involved in the business of sending girls overseas?
@@ -1123,7 +1253,9 @@
               <span style="top: 30px; right: -10px" class="blue-arrow fat-arrow">LB - Known<br/>Location</span>
             </div>
           </div>
+            <!-- End besides the broker and the companion, is there any other person or place you know of involved in the business of sending girls overseas -->
 
+            <!-- 5.4 - Have you ever worked in the sex industry? -->
           <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="victim_has_worked_in_sex_industry">
             <h2><span class="section-number">5.4</span> Have you ever worked in the sex industry?</h2>
             <div class="inline-checkbox-group">
@@ -1132,7 +1264,9 @@
               {% endfor %}
             </div>
           </div>
+            <!-- End have you ever worked in the sex industry -->
 
+            <!-- 5.5 - Was the place you worked involved in sending girls overseas? -->
           <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="victim_place_worked_involved_sending_girls_overseas">
             <h2><span class="section-number">5.5</span> Was the place you worked involved in sending girls overseas?</h2>
             <div class="inline-checkbox-group">
@@ -1142,6 +1276,7 @@
             </div>
             <span class="blue-arrow">LB - Sex Industry</span>
           </div>
+            <!-- End was the place you worked involved in sending girls overseas -->
 
         </div>
       </div>
@@ -1152,6 +1287,7 @@
 
     <div class="pages-needed" data-pages-needed="{{ form.box_pages_needed }}"></div>
 
+    <!-- PB boxes and LB boxes -->
     <div class="form-page box-page page-1">
       <div class="row">
         {% for pb_form in inlines.0|slice:"0:3" %}
@@ -1215,6 +1351,7 @@
         {% endfor %}
       </div>
     </div>
+    <!-- End PB boxes and LB boxes -->
 
     <div class="form-page">
       <div class="row">
@@ -1224,6 +1361,7 @@
             <h1>6. Awareness &amp; Assessment</h1>
           </div>
 
+            <!-- 6.1 - Before you were intercepted, were you aware that girls going abroad are often deceived and end up in very exploitative situations? -->
           <div class="black-box padded-box padded-box checkbox-group-marker" id="awareness_before_interception">
             <h2>
               <span class="section-number">6.1</span>
@@ -1233,7 +1371,9 @@
             <div class="checkbox-group">{{ form.awareness_before_interception_knew_how_bad_not_happening_to_her }} {{ form.awareness_before_interception_knew_how_bad_not_happening_to_her.label_tag }}</div>
             <div class="checkbox-group">{{ form.awareness_before_interception_never_heard }} {{ form.awareness_before_interception_never_heard.label_tag }}</div>
           </div>
+            <!-- End before you were intercepted, were you aware that girls going abroad are often deceived and end up in very exploitative situations -->
 
+            <!-- 6.2 - Do you think you would've been trafficked if you hadn't been intercepted by Tiny Hands? -->
           <div class="black-box padded-box padded-box checkbox-group-marker" id="attitude_towards_tiny_hands">
             <h2>
               <span class="section-number">6.2</span>
@@ -1243,7 +1383,9 @@
             <div class="checkbox-group">{{ form.attitude_towards_tiny_hands_blames }} {{ form.attitude_towards_tiny_hands_blames.label_tag }}</div>
             <div class="checkbox-group">{{ form.attitude_towards_tiny_hands_doesnt_know }} {{ form.attitude_towards_tiny_hands_doesnt_know.label_tag }}</div>
           </div>
+            <!-- End do you think you would've been trafficked if you hadn't been intercepted by Tiny Hands -->
 
+            <!-- 6.3 - Had you heard about the gospel of Jesus before coming to TH? -->
           <div class="black-box padded-box padded-box checkbox-group-marker" id="victim_heard_gospel">
             <h2>
               <span class="section-number">6.3</span>
@@ -1254,7 +1396,9 @@
             <div class="checkbox-group">{{ form.victim_heard_gospel_heard_but_never_believed }} {{ form.victim_heard_gospel_heard_but_never_believed.label_tag }}</div>
             <div class="checkbox-group">{{ form.victim_heard_gospel_already_believer }} {{ form.victim_heard_gospel_already_believer.label_tag }}</div>
           </div>
+            <!-- End had you heard about the gospel of Jesus before coming to TH -->
 
+            <!-- 6.4 - If she wasn't already a believer, what does she believe now? -->
           <div class="black-box padded-box padded-box checkbox-group-marker" id="victim_beliefs_now">
             <h2>
               <span class="section-number">6.4</span>
@@ -1264,7 +1408,9 @@
             <div class="checkbox-group">{{ form.victim_beliefs_now_believes_no_church }} {{ form.victim_beliefs_now_believes_no_church.label_tag }}</div>
             <div class="checkbox-group">{{ form.victim_beliefs_now_believes_and_church }} {{ form.victim_beliefs_now_believes_and_church.label_tag }}</div>
           </div>
+            <!-- End if she wasn't already a believer, what does she believe now -->
 
+            <!-- 6.5 - How would you rate the work that Tiny Hands is doing on a scale of 1-10 (1 being the worst and 10 being the best), in each area -->
           <div class="black-box padded-box">
             <h2>
               <span class="section-number">6.5</span>
@@ -1291,13 +1437,16 @@
               {{ form.tiny_hands_rating_shelter_accommodations.label_tag }}
             </div>
           </div>
+            <!-- End how would you rate the work that Tiny Hands is doing on a scale of 1-10 (1 being the worst and 10 being the best), in each area -->
 
+            <!-- 6.6 - How can we serve you and others like you better? -->
           <div class="black-box clearfix">
             <h2><span class="section-number">6.6</span>
               How can we serve you and others like you better?
             </h2>
             {{ form.how_can_we_serve_you_better|add_class:"full-width"|attr:"rows:20" }}
           </div>
+            <!-- End how can we serve you and others like you better -->
 
         </div>
         <div class="col-xs-4 major-column">
@@ -1311,6 +1460,7 @@
             victim brings it up.
           </div>
 
+            <!-- 7.1 - Did your guardian know you were travelling to India? -->
           <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="guardian_knew_was_travelling_to_india">
             <h2><span class="section-number">7.1</span>
               Did your guardian know you were travelling to India?
@@ -1321,7 +1471,9 @@
               {% endfor %}
             </div>
           </div>
+            <!-- End did your guardian know you were travelling to India -->
 
+            <!-- 7.2 - Did your family/guardian pressure you in any way to accept the broker's offer? -->
           <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="family_pressured_victim">
             <h2>
               <span class="section-number">7.2</span>
@@ -1336,7 +1488,9 @@
               <div class="alarm-box">1</div>
             </span>
           </div>
+            <!-- End did your family/guardian pressure you in any way to accept the broker's offer -->
 
+            <!-- 7.3 - If they attempted to send you abroad, do you think they will try to send you overseas again? -->
           <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="family_will_try_sending_again">
             <h2><span class="section-number">7.3</span>
               If they attempted to send you abroad, do you think they will try to send you overseas again?
@@ -1353,7 +1507,9 @@
               <div class="alarm-box">3</div>
             </span>
           </div>
+            <!-- End if they attempted to send you abroad, do you think they will try to send you overseas again -->
 
+            <!-- 7.4 - Do you feel safe at home with your guardian? -->
           <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="victim_feels_safe_at_home">
             <h2><span class="section-number">7.4</span>
               Do you feel safe at home with your guardian?
@@ -1368,7 +1524,9 @@
               <div class="alarm-box">4</div>
             </span>
           </div>
+            <!-- End do you feel safe at home with your guardian -->
 
+            <!-- 7.5 - Do you want to go home? -->
           <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="victim_wants_to_go_home">
             <h2><span class="section-number">7.5</span>
               Do you want to go home?
@@ -1385,7 +1543,9 @@
               <div class="alarm-box">4</div>
             </span>
           </div>
+            <!-- End do you want to go home -->
 
+            <!-- 7.6 - Is the victim subject to any of the following by someone in her home? -->
           <div class="black-box padded-box clearfix">
             <h2><span class="section-number">7.6</span>
               Is victim subject to any of the following by someone in her home?
@@ -1449,7 +1609,9 @@
               </span>
             </div>
           </div>
+            <!-- End is the victim subject to any of the following by someone in her home -->
 
+            <!-- 7.7 - Does guardian drink alcohol? -->
           <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="victim_guardian_drinks_alcohol">
             <h2><span class="section-number">7.7</span>
               Does guardian drink alcohol?
@@ -1466,7 +1628,9 @@
               <div class="alarm-box">1</div>
             </span>
           </div>
+            <!-- End does guardian drink alcohol -->
 
+            <!-- 7.8 - Does guardian use drugs? -->
           <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="victim_guardian_uses_drugs">
             <h2><span class="section-number">7.8</span>
               Does guardian use drugs
@@ -1487,7 +1651,9 @@
               <div class="alarm-box">6</div>
             </span>
           </div>
+            <!-- End does guardian use drugs -->
 
+            <!-- 7.9 - Economic situation of family -->
           <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="victim_family_economic_situation">
             <h2><span class="section-number">7.9</span>
               Economic Situation of Family
@@ -1501,7 +1667,9 @@
             <div class="checkbox-group">{{ form.victim_family_economic_situation_comfortable_basic_needs }} {{ form.victim_family_economic_situation_comfortable_basic_needs.label_tag }}</div>
             <div class="checkbox-group">{{ form.victim_family_economic_situation_wealthy }} {{ form.victim_family_economic_situation_wealthy.label_tag }}</div>
           </div>
+            <!-- End economic situation of family -->
 
+            <!-- 7.10 - Did she express any suicidal thoughts at any point? -->
           <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="victim_had_suicidal_thoughts">
             <h2><span class="section-number">7.10</span>
               Did she express any suicidal thoughts at any point?
@@ -1533,6 +1701,7 @@
             </div>
             <p>If a victim had 10 or more total Home Situational Alarms, it would be better not to send her home. However, if the girl is a minor, you will need to discuss her options with her parents.</p>
           </div>
+            <!-- End did she express any suicidal thoughts at any point -->
 
         </div>
         <div class="col-xs-4 major-column">
@@ -1541,6 +1710,7 @@
             <h1>8. Interviewer Evaluation</h1>
           </div>
 
+            <!-- 8.1 - Has any legal action been taken against any of the traffickers? -->
           <div class="black-box padded-box padded-box checkbox-group-marker" id="legal_action_against_traffickers">
             <h2><span class="section-number">8.1</span>
               Has any legal action been taken against any of the traffickers?<span class="required">*</span>
@@ -1559,7 +1729,9 @@
               </span>
             </div>
           </div>
+            <!-- End has any legal action been taken against any of the traffickers -->
 
+            <!-- 8.2 - If no, what's the main reason? -->
           <div class="black-box clearfix padded-box">
             <h2><span class="section-number">8.2</span>
               If no, what's the main reason?
@@ -1591,7 +1763,9 @@
               {{ form.reason_no_legal_other_value }}
             </div>
           </div>
+            <!-- End if no, what's the main reason -->
 
+            <!-- 8.3 - What is your recommendation about where she should go? -->
           <div class="black-box padded-box padded-box checkbox-group-marker" id="interviewer_recommendation">
             <h2><span class="section-number">8.3</span>
               What is your recommendation about where she should go?
@@ -1601,7 +1775,10 @@
             <div class="checkbox-group">{{ form.interviewer_recommendation_find_other_place }} {{ form.interviewer_recommendation_find_other_place.label_tag }}</div>
             <label style="margin-left: 20px">Contact THN's Aftercare Coordinator</label>
           </div>
+            <!-- End what is your recommendation about where she should go -->
 
+            <!-- 8.4 - Were there more people and places that you believe were involved in trafficking in
+            addition to those recorded in the Information Boxes on the previous page? -->
           <div class="black-box padded-box clearfix padded-box checkbox-group-marker" id="other_people_and_places_involved">
             <h2>
               <span class="section-number">8.4</span>
@@ -1619,6 +1796,8 @@
               - If so, make sure you use an Additional Information Boxes Form and attach it to this form!
             </div>
           </div>
+            <!-- End were there more people and places that you believe were involved in trafficking in
+            addition to those recorded in the Information Boxes on the previous page -->
 
           <div class="black-box padded-box clearfix">
             <label>
