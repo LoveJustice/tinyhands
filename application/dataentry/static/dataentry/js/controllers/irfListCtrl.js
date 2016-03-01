@@ -17,6 +17,7 @@ angular
         vm.sortIcon = "/static/images/sortIcon.jpg";
         vm.selectedAddress = {};
         vm.sortColumn = "irf_number";
+        vm.timeZoneDifference ="+0545";
 
 
         // Function Definitions
@@ -98,6 +99,8 @@ angular
                     vm.loading = false;
                 });
         }
+
+
 
         function deleteIrf(irf) {
             if(irf.confirmedDelete){

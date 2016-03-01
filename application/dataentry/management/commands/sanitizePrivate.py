@@ -118,7 +118,7 @@ class Command(BaseCommand):
                 except Exception as e:
                     self.stderr.write("WHAT?? {} - {}".format(type(e), e))
                     exit(1)
- 
+
             # Sanitize scanned files
             for method_name in file_methods:
                 try:
@@ -168,7 +168,7 @@ class Command(BaseCommand):
             instance.permission_receive_email = False
             instance.save()
             cnt += 1
-        
+
     def create_base_user(self):
         account = Account()
         account.last_name = 'Test'
@@ -196,7 +196,7 @@ class Command(BaseCommand):
         account.permission_border_stations_view = True
         account.permission_border_stations_edit = True
 
-        account.permission_vdc_manage = True
+        account.permission_address2_manage = True
 
         account.permission_budget_manage = True
 

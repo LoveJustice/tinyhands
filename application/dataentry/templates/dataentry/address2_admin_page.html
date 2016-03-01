@@ -43,8 +43,8 @@
             <th ng-click="vm.sortColumn = 'longitude'; vm.reverse = ! vm.reverse; vm.getAddresses()" class="text-center">
                 Longitude <i class="glyphicon" ng-class="vm.sortIcon('longitude')"></i>
             </th>
-            <th ng-click="vm.sortColumn = 'district.name'; vm.reverse = ! vm.reverse; vm.getAddresses()" class="text-center">
-                Address 1 <i class="glyphicon" ng-class="vm.sortIcon('district.name')"></i>
+            <th ng-click="vm.sortColumn = 'address1.name'; vm.reverse = ! vm.reverse; vm.getAddresses()" class="text-center">
+                Address 1 <i class="glyphicon" ng-class="vm.sortIcon('address1.name')"></i>
             </th>
             <th ng-click="vm.sortColumn = 'canonical_name.name'; vm.reverse = ! vm.reverse; vm.getAddresses()" class="text-center">
                 Canonical Name <i class="glyphicon" ng-class="vm.sortIcon('canonical_name.name')"></i>
@@ -61,7 +61,7 @@
                 <td class="text-center address-name">{{ address.name }}</td>
                 <td class="text-center">{{ address.latitude }}</td>
                 <td class="text-center">{{ address.longitude }}</td>
-                <td class="text-center">{{ address.district.name }}</td>
+                <td class="text-center">{{ address.address1.name }}</td>
                 <td class="text-center">{{ address.canonical_name.name }}</td>
                 <td class="text-center">{{ address.verified ? "Yes" : "No" }}
                 </td>
@@ -105,7 +105,7 @@
             <div class="form-group">
                 <label for="addressName">Address 1</label>
                 <i ng-show="loadingAddress1" class="glyphicon glyphicon-refresh"></i>
-                <input id="address1" type="text" ng-model="address.district" placeholder="Address 1" typeahead="address1 as address1.name for address1 in getFuzzyAddress1s($viewValue)" typeahead-loading="loadingAddress1" typeahead-no-results="noResults" class="form-control">
+                <input id="address1" type="text" ng-model="address.address1" placeholder="Address 1" typeahead="address1 as address1.name for address1 in getFuzzyAddress1s($viewValue)" typeahead-loading="loadingAddress1" typeahead-no-results="noResults" class="form-control">
                 <div ng-show="noResults">
                   <i class="glyphicon glyphicon-remove"></i> No Results Found
                 </div>

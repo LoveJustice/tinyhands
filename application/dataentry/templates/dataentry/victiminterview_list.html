@@ -13,7 +13,7 @@
 
 {% verbatim %}
 <div ng-controller="vifListCtrl as vm">
-
+    <!-- Export as CSV and Input a New VIF buttons in the upper-right corner -->
     <div class="row" style="margin: 20px 0 20px 0;">
         <div class="col-xs-5">
             <h1 style="margin:0;" ng-bind="vm.header"></h1>
@@ -27,8 +27,10 @@
             </a>
         </div>
     </div>
+    <!-- End buttons -->
 
     <div class="row">
+        <!-- Results per page dropdown -->
         <div class="col-sm-2 col-xs-3">
             <select ng-model="vm.paginateBy" ng-change="vm.listVifs()" class="form-control">
                 <option>25</option>
@@ -40,7 +42,9 @@
         <div class="col-sm-3 col-xs-1">
             <p style="margin-top: 8px;">Results <span class="hidden-xs">per page</span></p>
         </div>
+        <!-- End dropdown -->
 
+        <!-- Search -->
         <div class="col-md-3 search-bar pull-right">
             <form ng-submit="vm.searchVifs()">
                   <label>
@@ -49,9 +53,11 @@
                   <button class="btn btn-primary">Search</button>
             </form>
         </div>
+        <!-- End search -->
     </div>
 
     <table class="table table-striped table-condensed" id="id_vif_list_table">
+        <!-- Column headers -->
         <thead>
             <tr>
                 <th ng-click="vm.sortColumn = 'vif_number'; vm.reverse = ! vm.reverse; vm.listVifs()" id='vif_number'>
@@ -80,20 +86,24 @@
                 <th ng-show="vm.user.permission_vif_delete">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
             </tr>
         </thead>
+        <!-- End column headers -->
+
+        <!-- Display every record in the table -->
         <tbody>
             <tr ng-repeat="vif in vm.vifs">
                 <td class="vif-number">{{ vif.vif_number }}</td>
                 <td>{{ vif.interviewer }}</td>
                 <td>{{ vif.number_of_victims }}</td>
                 <td>{{ vif.number_of_traffickers }}</td>
-                <td>{{ vif.date_time_of_interception | date:"medium" }}</td>
-                <td class="hidden-xs">{{ vif.date_time_entered_into_system | date:"medium" }}</td>
-                <td class="hidden-xs">{{ vif.date_time_last_updated | date:"medium" }}</td>
+                <td>{{ vif.date_time_of_interception | date:"medium" : vm.timeZoneDifference}}</td>
+                <td class="hidden-xs">{{ vif.date_time_entered_into_system | date:"medium" : vm.timeZoneDifference }}</td>
+                <td class="hidden-xs">{{ vif.date_time_last_updated | date:"medium" : vm.timeZoneDifference}}</td>
                 <td ng-show="vm.user.permission_vif_view"><a class="btn btn-sm btn-primary" href="{{ vif.view_url }}">View</a></td>
                 <td ng-show="vm.user.permission_vif_edit"><a class="btn btn-sm btn-primary" id="id_edit_vif_button" href="{{ vif.edit_url }}">Edit</a></td>
                 <td ng-show="vm.user.permission_vif_delete"><a class="btn btn-sm btn-danger" ng-click="vm.deleteVif(vif)">{{ vif.confirmedDelete ? "Confirm?" : "Delete"}}</a></td>
             </tr>
         </tbody>
+        <!-- End display every record in the table -->
     </table>
     <div class="row text-center">
         <button ng-disabled="!vm.nextPageUrl" ng-click="vm.loadMoreVifs()" class="btn btn-primary" style="margin-bottom:25px; width:90%;">Load more results</button>
