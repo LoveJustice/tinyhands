@@ -19,6 +19,8 @@ LEVEL_CHOICES = [
     ('city', 'City'),
     ('district', 'District'),
     ('vdc', 'VDC'),
+    ('building', 'Building'),
+    ('block', 'Block')
 ]
 
 

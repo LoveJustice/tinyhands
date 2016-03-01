@@ -85,9 +85,9 @@
                 <label for="addressLongitude">Longitude</label>
                 <input type="number" id="addressLongitude" class="form-control" ng-model="address.longitude"/>
                 <label for="addressLevel">Level</label>
-                <select id="addressLevel" ng-model="address.level" ng-options="choice as choice for choice in levels"/>
+                <select id="addressLevel" ng-model="address.level" ng-options="choice[0] as choice[1] for choice in levels"/>
                 <label for="addressCompleted">Completed</label>
-                <input type="checkbox" id="addressCompleted" class="form-control" ng-model="address.completed"/>
+                <input type="checkbox" id="addressCompleted" class="form-control" ng-model="address.completed" />
             </div>
         </div>
         <div class="modal-footer">

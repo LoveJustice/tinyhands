@@ -24,14 +24,19 @@ angular
         vm.editAddress1 = editAddress1;
         vm.getQueryParams = getQueryParams;
         vm.sortIcon = sortIcon;
-        main();
+        vm.console = console;
 
+        main();
 
         //////////////////////////////////////////////////////
 
 
         function main(){
             vm.getAddresses();
+        }
+
+        function console(){
+            console.log("What is going on?");
         }
 
         function sortIcon(column){
@@ -129,6 +134,16 @@ angular
         $scope.save = function () {
             $modalInstance.close($scope.address);
         };
+
+        $scope.levels = [
+            ['state', 'State'],
+            ['country', 'Country'],
+            ['city', 'City'],
+            ['district', 'District'],
+            ['vdc', 'VDC'],
+            ['building', 'Building'],
+            ['block', 'Block']
+        ];
 
         $scope.cancel = function () {
             $modalInstance.dismiss('close');
