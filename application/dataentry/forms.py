@@ -820,7 +820,7 @@ class DistrictForm(forms.ModelForm):
     level = forms.MultipleChoiceField(
         choices=LEVEL_CHOICES,
         widget=forms.CheckboxSelectMultiple,
-        required=True
+        required=True,
     )
     class Meta:
         model = District

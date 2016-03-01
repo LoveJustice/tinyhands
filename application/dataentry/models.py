@@ -40,7 +40,7 @@ class District(models.Model):
     latitude = models.FloatField(default=0)
     longitude = models.FloatField(default=0)
 
-    level = models.CharField(max_length=255, choices=LEVEL_CHOICES, default="District")
+    level = models.CharField(max_length=255, choices=LEVEL_CHOICES, default="district")
     completed = models.BooleanField(default=False)
 
 
