@@ -24,9 +24,18 @@ angular
             return today;
         }
 
-        vm.onCalendarEventClicked = function(event, jsEvent, view) {
-            window.event = event;
-            $('.modal').modal();
+        vm.onCalendarEventClicked = function(event) {
+            $modal.open({
+                templateUrl: 'modal.html',
+                controller: 'EventModalCtrl',
+                controllerAs: 'modalCtrl',
+                bindToController: true,
+                resolve: {
+                    event: function () {
+                        return event;
+                    }
+                }
+            })
         }
 
         vm.calendarConfig = {
