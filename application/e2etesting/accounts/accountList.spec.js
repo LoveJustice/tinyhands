@@ -15,12 +15,6 @@ describe('Account List', function() {
     expect(browser.driver.getCurrentUrl()).toContain('/accounts/');
   });
 
-  it("should show user's designation name and not just designation id *************************************************************", function() {
-    var id = 25;
-    designation = accountListPage.checkUserDesignation(id);
-    expect(designation == "fail");
-  });
-
   it('should not have delete button for current user', function() {
     accountListPage.navigateToAccountList();
     accountListPage.getAdminUserRow().then(function(adminUserRow) {
