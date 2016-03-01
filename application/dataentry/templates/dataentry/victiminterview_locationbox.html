@@ -3,6 +3,7 @@
 
 {{ lb_form.id }}
 <div class="col-xs-6" style="padding: 20px">
+    <!-- Which place? -->
     <div class="location-box location-box-top row checkbox-group-marker" id="which_place-{{ counter }}">
         <div class="col-xs-4">
             <div class="location-box-number">LB{{ counter }}</div>
@@ -21,7 +22,9 @@
             <div class="checkbox-group">{{ lb_form.which_place_sex_industry }} {{ lb_form.which_place_sex_industry.label_tag }}</div>
         </div>
     </div>
+    <!-- End which place -->
 
+    <!-- What kind of place is it? -->
     <div class="location-box row">
         <div class="inner checkbox-group-marker" id="what_kind_place-{{ counter }}">
             <h2>What kind of place is it?</h2>
@@ -34,8 +37,10 @@
             <div class="inline-checkbox-group">{{ lb_form.what_kind_place_hotel }} {{ lb_form.what_kind_place_hotel.label_tag }}</div>
         </div>
     </div>
+    <!-- End what kind of place is it -->
 
     <div class="location-box row">
+        <!-- Address 1, Address 2, Signboard, and Location in town -->
         <div class="col-xs-8 blue-border-right">
             <div class="col-xs-6">
                 <div class="label-inside-field">
@@ -59,6 +64,9 @@
                 </div>
             </div>
         </div>
+        <!-- End fields -->
+
+        <!-- Phone, color, # of levels -->
         <div class="col-xs-4">
             <div class="label-inside-field">
                 {{ lb_form.phone.label_tag }}{{ lb_form.phone }}
@@ -74,11 +82,12 @@
                 </div>
             </div>
         </div>
-
+        <!-- End fields -->
     </div>
 
     <div class="location-box row">
         <div class="inner">
+            <!-- Compound wall, gate color, roof type -->
             <div class="col-xs-6">
                 <div class="label-inside-field">
                     {{ lb_form.compound_wall.label_tag }}{{ lb_form.compound_wall }}
@@ -90,6 +99,9 @@
                     {{ lb_form.roof_type.label_tag }}{{ lb_form.roof_type }}
                 </div>
             </div>
+            <!-- End fields -->
+
+            <!-- Roof color, person in charge, nearby landmarks -->
             <div class="col-xs-6">
                 <div class="label-inside-field">
                     {{ lb_form.roof_color.label_tag }}{{ lb_form.roof_color }}
@@ -101,7 +113,9 @@
                     {{ lb_form.nearby_landmarks.label_tag }}{{ lb_form.nearby_landmarks }}
                 </div>
             </div>
+            <!-- End fields -->
 
+            <!-- Which do you agree with about this place? -->
             <div class="col-xs-8">
                 <h2>Which do you agree with about this place?</h2>
                 <div class="clearfix">
@@ -135,6 +149,9 @@
                     </div>
                 </div>
             </div>
+            <!-- End which do you agree with about this place -->
+
+            <!-- Nearby signboards, other -->
             <div class="col-xs-4">
                 <div class="label-inside-field">
                     {{ lb_form.nearby_signboards.label_tag }}{{ lb_form.nearby_signboards }}
@@ -143,8 +160,10 @@
                     {{ lb_form.other.label_tag }}{{ lb_form.other }}
                 </div>
             </div>
+            <!-- End fields -->
         </div>
     </div>
+    <!-- Do you know of anyone involved with trafficking who is associated with this place? -->
     <div class="location-box row checkbox-group-marker" id="associated_with_person-{{ counter }}">
         <h2>Do you know of anyone involved with trafficking who is associated with this place?</h2>
         {% for choice in lb_form.associated_with_person %}
@@ -154,4 +173,5 @@
         {% endfor %}
         <span class="red-arrow">PB# {{ lb_form.associated_with_person_value|attr:"style: width: 40px" }}</span>
     </div>
+    <!-- End do you know of anyone involved with trafficking who is associated with this place -->
 </div>
