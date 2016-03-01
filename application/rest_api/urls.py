@@ -25,8 +25,8 @@ urlpatterns = patterns('rest_api.views',
     url(r'^address2/(?P<pk>\d+)/$', Address2ViewSet.as_view(detail), name='Address2detail'),
 
     # Fuzzy searching for addresses
-    url(r'^address1/fuzzy/$', GeoCodeDistrictAPIView.as_view(), name="Address1FuzzySearch"),
-    url(r'^address2/fuzzy/$', GeoCodeVdcAPIView.as_view(), name="Address2FuzzySearch"),
+    url(r'^address1/fuzzy/$', GeoCodeAddress1APIView.as_view(), name="Address1FuzzySearch"),
+    url(r'^address2/fuzzy/$', GeoCodeAddress2APIView.as_view(), name="Address2FuzzySearch"),
 
     # Budget URLs
     url(r'^budget/$', BudgetViewSet.as_view(list), name='BudgetCalculation'),
@@ -68,7 +68,7 @@ urlpatterns = patterns('rest_api.views',
     # Fuzzy searching for addresses
     url(r'^address1/fuzzy/$', GeoCodeAddress1APIView.as_view(), name="Address1FuzzySearch"),
     url(r'^address2/fuzzy/$', GeoCodeAddress2APIView.as_view(), name="Address2FuzzySearch"),
-    
+
 
     # Fuzzy searching for addresses
     url(r'^address1/fuzzy/$', GeoCodeAddress1APIView.as_view(), name="Address1FuzzySearch"),
