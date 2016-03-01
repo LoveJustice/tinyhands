@@ -824,4 +824,4 @@ class DistrictForm(forms.ModelForm):
     )
     class Meta:
         model = District
-        fields = ['name', 'latitude', 'longitude', 'level']
+        fields = ['name', 'latitude', 'longitude', 'level', 'completed']

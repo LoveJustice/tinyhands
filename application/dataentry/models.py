@@ -41,6 +41,8 @@ class District(models.Model):
     longitude = models.FloatField(default=0)
 
     level = models.CharField(max_length=255, choices=LEVEL_CHOICES, default="District")
+    completed = models.BooleanField(default=False)
+
 
 
     def __unicode__(self):
