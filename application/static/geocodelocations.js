@@ -5,6 +5,7 @@ var locationType = '';
 function setPopovers(id)
 {
 	$(id).each(function(index, element) {
+				console.log(element);
         if($(element).attr('id').indexOf("-vdc") != -1 || $(element).attr('id').indexOf("address_vdc") != -1){
             nameOfForm = "#geocode-vdc-form";
         }
@@ -39,7 +40,7 @@ function setPopovers(id)
 	    	{
 		    	$(this).popover('hide');
                 adjustPopoverPosition = true;
-			}	
+			}
 	    });
         var timer = null;
 	    $(element).keyup(function(){
@@ -73,7 +74,6 @@ function setPopovers(id)
 
 function callFuzzyApi(input, locationType, element){
     var unorderedList = $("#popover-location-info");
-
     var requestData = locationType+"="+input;
     if (locationType === "vdc"){
         var district_value = find_district_value(element);
@@ -115,6 +115,8 @@ function callFuzzyApi(input, locationType, element){
 
 function find_district_value(element) {
     var district_value = "";
+		console.log("element ->");
+		console.log(element);
     if (element.id === "id_victim_address_vdc")
     {
        district_value = $("#id_victim_address_district").val();
@@ -131,10 +133,16 @@ function find_district_value(element) {
     {
        district_value = $("#id_location_boxes-" + element.id.split('-')[1] + '-district').val();
     }
+		else if (element.id == "sys_address1")
+		{
+				district_value = $("#sys_address1").val();;
+		}
     else
     {
        district_value = $("#id_interceptees-" + element.id.split('-')[1] + '-district').val();
     }
+		console.log("DV ->");
+		console.log(district_value);
     return district_value;
 }
 
@@ -142,4 +150,4 @@ setPopovers("[id$=address_district]");
 setPopovers("[id$=address_vdc]");
 setPopovers("[id$=-vdc]");
 setPopovers("[id$=-district]");
-//setPopovers("[id$=Sys_Address1]");
+setPopovers("[id$=sys_address1]");

@@ -8,6 +8,9 @@
 
 {% block tab_block %}
     {% block content %}
+
+    {% include "dataentry/popover.html" %}
+
         {% block angular %}{% endblock %}
         <div ng-controller="sysAdminCtrl as admin">
                 <h1 class="text-center">System Admin Settings</h1>
@@ -110,7 +113,7 @@
                             <label>Address 1</label>
                         </div>
                         <div class="col-lg-5" >
-                            <input class="text-right form-control" type="text" id="Sys_Address1" ng-model="">
+                            <input class="text-right form-control" type="text" id="sys_address1" ng-model="">
                         </div>
                         <br>
                         <br>
