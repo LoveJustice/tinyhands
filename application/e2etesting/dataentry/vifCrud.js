@@ -53,10 +53,10 @@ var vifCrud = function() {
         //this.gender = element(by.id("id_victim_gender_0")).click();
         //browser.sleep(6000);
         this.victim_name = element(by.id("id_victim_name")).sendKeys("Test Victim");
-        this.victim_address_district = element(by.id("id_victim_address_district")).sendKeys("Baglung");
-        this.victim_address_vdc = element(by.id("id_victim_address_vdc")).sendKeys("Babala");
-        this.victim_guardian_address_district = element(by.id("id_victim_guardian_address_district")).sendKeys("Baglung");
-        this.victim_guardian_address_vdc = element(by.id("id_victim_guardian_address_vdc")).sendKeys("Babala");
+        this.victim_address_address1= element(by.id("id_victim_address_address1")).sendKeys("Baglung");
+        this.victim_address_address2 = element(by.id("id_victim_address_address2")).sendKeys("Babala");
+        this.victim_guardian_address_address1= element(by.id("id_victim_guardian_address_address1")).sendKeys("Baglung");
+        this.victim_guardian_address_address2 = element(by.id("id_victim_guardian_address_address2")).sendKeys("Babala");
         this.migration_plans = element(by.id("id_migration_plans_education")).click();
         this.primary_motivation = element(by.id("id_primary_motivation_support_myself")).click();
         this.victim_recruited_in_village = element(by.id("id_victim_recruited_in_village_0")).click();

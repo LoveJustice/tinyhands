@@ -5,8 +5,8 @@ from rest_framework.authtoken import views
 
 from budget.views import BudgetViewSet, OtherItemsViewSet, MoneyDistribution, MoneyDistributionFormPDFView, money_distribution_view, retrieve_latest_budget_sheet_for_border_station, previous_data, StaffSalaryViewSet
 
-from dataentry.views import Address2ViewSet, Address1ViewSet, GeoCodeDistrictAPIView, GeoCodeVdcAPIView, InterceptionRecordViewSet, VictimInterviewViewSet
 from portal.views import *
+from dataentry.views import Address2ViewSet, Address1ViewSet, GeoCodeAddress1APIView, GeoCodeAddress2APIView, InterceptionRecordViewSet, VictimInterviewViewSet
 from accounts.views import AccountViewSet, DefaultPermissionsSetViewSet, CurrentUserView, ResendActivationEmailView
 from static_border_stations.views import BorderStationViewSet, StaffViewSet, CommitteeMemberViewSet, LocationViewSet
 
@@ -64,6 +64,10 @@ urlpatterns = patterns('rest_api.views',
 
     # Dashboard/Portal
     url(r'^get_interception_records/$', get_interception_records, name='get_interception_records'),
+
+    # Fuzzy searching for addresses
+    url(r'^address1/fuzzy/$', GeoCodeAddress1APIView.as_view(), name="Address1FuzzySearch"),
+    url(r'^address2/fuzzy/$', GeoCodeAddress2APIView.as_view(), name="Address2FuzzySearch"),
 
     #Accounts and DefaultPermissionsSets
     url(r'^me/$', CurrentUserView.as_view(), name="CurrentUser"),

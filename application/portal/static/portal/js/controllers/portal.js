@@ -9,10 +9,10 @@
     function MapCtrl($rootScope) {
         var vm = this;
 
-        vm.VDCLayer = null;
+        vm.Address2Layer = null;
         vm.map = null;
 
-        vm.toggleVDCLayer = toggleVDCLayer;
+        vm.toggleAddress2Layer = toggleAddress2Layer;
 
         function activate() {
             var mapOptions = {
@@ -21,7 +21,7 @@
               streetViewControl: false
             };
 
-            vm.VDCLayer = new google.maps.FusionTablesLayer({
+            vm.Address2Layer = new google.maps.FusionTablesLayer({
                 query: {
                     select: 'col13',
                     from: '1r-omWhMz1wzQG3-e55K7dmCetVe3fRWX4Ai4G_U1'
@@ -38,21 +38,21 @@
             vm.map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 
             getBorderStations(vm.map);
-            vm.VDCLayer.setMap(vm.map);
+            vm.Address2Layer.setMap(vm.map);
 
             $( window ).resize(function() {
                 resizeMap();
             });
 
-            $rootScope.$on('toggleVDCLayer', toggleVDCLayer);
+            $rootScope.$on('toggleAddress2Layer', toggleAddress2Layer);
         }
 
-        function toggleVDCLayer(event, hide) {
+        function toggleAddress2Layer(event, hide) {
             if(!hide) {
-                vm.VDCLayer.setMap(null);
+                vm.Address2Layer.setMap(null);
             }
             else {
-                vm.VDCLayer.setMap(vm.map);
+                vm.Address2Layer.setMap(vm.map);
             }
         }
 

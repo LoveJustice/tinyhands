@@ -26,15 +26,15 @@ angular
                 account.permission_border_stations_delete = permissions.permission_border_stations_delete;
                 account.permission_accounts_manage = permissions.permission_accounts_manage;
                 account.permission_receive_email = permissions.permission_receive_email;
-                account.permission_vdc_manage = permissions.permission_vdc_manage;
+                account.permission_address2_manage = permissions.permission_address2_manage;
                 account.permission_budget_manage = permissions.permission_budget_manage;
             });
 
         }
 
         vm.update = function(){
-          vm.accounts.results.forEach( function(elm, idx) {
-            Accounts.update(vm.accounts.results[idx]);
+          vm.accounts.forEach( function(elm, idx) {
+            Accounts.update(vm.accounts[idx]);
           } )
         }
 

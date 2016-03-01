@@ -53,33 +53,33 @@ class IntercepteeFactory(DjangoModelFactory):
     kind = 'v'
 
 
-class DistrictFactory(DjangoModelFactory):
+class Address1Factory(DjangoModelFactory):
     class Meta:
-        model = District
+        model = Address1
 
-    name = factory.Sequence(lambda n: 'District {0}'.format(n))
+    name = factory.Sequence(lambda n: 'Address1 {0}'.format(n))
 
 
 class CanonicalNameFactory(DjangoModelFactory):
     class Meta:
-        model = VDC
+        model = Address2
 
-    name = factory.Sequence(lambda n: 'VDC cannon {0}'.format(n))
+    name = factory.Sequence(lambda n: 'Address2 cannon {0}'.format(n))
     latitude = FuzzyFloat(0, 20)
     longitude = FuzzyFloat(0, 20)
-    district = factory.SubFactory(DistrictFactory)
+    address1 = factory.SubFactory(Address1Factory)
     canonical_name = None
     verified = FuzzyChoice([True, False])
 
 
-class VDCFactory(DjangoModelFactory):
+class Address2Factory(DjangoModelFactory):
     class Meta:
-        model = VDC
+        model = Address2
 
-    name = factory.Sequence(lambda n: 'VDC {0}'.format(n))
+    name = factory.Sequence(lambda n: 'Address2 {0}'.format(n))
     latitude = FuzzyFloat(0, 20)
     longitude = FuzzyFloat(0, 20)
 
-    district = factory.SubFactory(DistrictFactory)
+    address1 = factory.SubFactory(Address1Factory)
     canonical_name = factory.SubFactory(CanonicalNameFactory)
     verified = FuzzyChoice([True, False])

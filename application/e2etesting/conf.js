@@ -27,7 +27,7 @@ exports.config = {
 
         'DynStationWindow/dynStation.spec.js',
 
-        'addresses/vdcAdminPage.spec.js',
+        'addresses/address2AdminPage.spec.js',
         'addresses/address1Page.spec.js',
 
         'accounts/accessDefaults.spec.js',
