@@ -110,7 +110,7 @@
                             <label>Address 1</label>
                         </div>
                         <div class="col-lg-5" >
-                            <input class="text-right form-control" type="text" id="Sys_Address1" ng-model="">
+                            <input class="text-right form-control" type="text" id="address1_input" ng-model="address1_input">
                         </div>
                         <br>
                         <br>
@@ -119,7 +119,7 @@
                             <label>Address 2</label>
                         </div>
                         <div class="col-lg-5" >
-                            <input class="text-right form-control" type="text" id="adress_1_input" ng-model="">
+                            <input class="text-right form-control" type="text" id="address2_input" ng-model="address2_input">
                         </div>
                         <br>
                         <br>
@@ -128,7 +128,7 @@
                             <label>Person</label>
                         </div>
                         <div class="col-lg-5" >
-                            <input class="text-right form-control" type="text" id="adress_1_input" ng-model="">
+                            <input class="text-right form-control" type="text" id="person_input" ng-model="person_input">
                         </div>
                         <br>
                         <br>
@@ -137,7 +137,7 @@
                             <label>Phone Number</label>
                         </div>
                         <div class="col-lg-5" >
-                            <input class="text-right form-control" type="text" id="adress_1_input" ng-model="">
+                            <input class="text-right form-control" type="text" id="phone_number_input" ng-model="phone_number_input">
                         </div>
 
                  </div>
@@ -146,6 +146,10 @@
 
         <input type="button" ng-show="" id="" class="pull-right btn btn-success navbar-btn btn-lg" value="Update" ng-click="admin.updateForm()">
         </div>
+
+        {% load static from staticfiles %}
+             <script type="text/javascript" src="{% static "dataentry/js/dataEntry.module.js" %}"></script>
+             <script type="text/javascript" src="{% static "dataentry/js/controllers/sysAdminCtrl.js" %}"></script>
 
     {% endblock %}
 {% endblock %}
