@@ -15,10 +15,6 @@ var accountListPage = function() {
     element(by.id(id.toString())).element(by.id('edit')).click();
   };
 
-  this.checkUserDesignation = function(id) {
-    designation = element(by.id(id.toString())).element(by.tagName("td")).element(by.buttonText('Super Administrator'));
-    return designation;
-  };
 
   this.navigateToDeleteModal = function(id) {
     element(by.id(id.toString())).element(by.buttonText('Delete')).click();
