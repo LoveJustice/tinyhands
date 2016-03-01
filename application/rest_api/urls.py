@@ -62,8 +62,14 @@ urlpatterns = patterns('rest_api.views',
     url(r'^staff/$', StaffViewSet.as_view(list), name="AllStaff"),
     url(r'^staff/(?P<pk>\d+)/$', StaffViewSet.as_view(detail), name="Staff"),
 
+<<<<<<< HEAD
     # Dashboard/Portal
     url(r'^get_interception_records/$', get_interception_records, name='get_interception_records'),
+=======
+    # Fuzzy searching for addresses
+    url(r'^address1/fuzzy/$', GeoCodeAddress1APIView.as_view(), name="Address1FuzzySearch"),
+    url(r'^address2/fuzzy/$', GeoCodeAddress2APIView.as_view(), name="Address2FuzzySearch"),
+>>>>>>> develop
 
     # Fuzzy searching for addresses
     url(r'^address1/fuzzy/$', GeoCodeAddress1APIView.as_view(), name="Address1FuzzySearch"),
