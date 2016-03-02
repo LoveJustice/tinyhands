@@ -4,8 +4,7 @@ MAINTAINER benaduggan
 ENV PYTHONUNBUFFERED 1
 
 # Install linux dependencies
-RUN apt-get update && apt-get install -y python-dev libncurses5-dev libxml2-dev libxslt-dev zlib1g-dev libjpeg-dev cron
-RUN pip install --upgrade pip
+RUN apt-get update && apt-get install -y python-dev libncurses5-dev libxml2-dev libxslt-dev zlib1g-dev libjpeg-dev cron && pip install --upgrade pip
 
 # Make the directory for our code
 RUN mkdir /data
@@ -17,8 +16,7 @@ RUN pip install -r requirements.txt
 
 # Make the log files for Gunicorn
 RUN mkdir -p /log
-RUN touch /log/gunicorn_access.log /log/gunicorn_error.log
-RUN chown -R www-data:www-data /log
+RUN touch /log/gunicorn_access.log /log/gunicorn_error.log && chown -R www-data:www-data /log
 
 # Copy application files over to container
 COPY application/ /data/
