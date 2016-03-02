@@ -1,6 +1,6 @@
 #!/bin/bash
 ./manage.py migrate                  # Apply database migrations
-./manage.py collectstatic --noinput  # Collect static files
+# ./manage.py collectstatic --noinput  # Collect static files
 
 # Start Gunicorn processes
 echo Starting Gunicorn.

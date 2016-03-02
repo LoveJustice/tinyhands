@@ -1,4 +1,5 @@
-<script src="{{ STATIC_URL }}fuzzymatching-ui.js"></script>
+{% load static from staticfiles %}
+<script src="{% static 'fuzzymatching-ui.js' %}"></script>
 <script src="https://rawgit.com/krisk/fuse/master/src/fuse.min.js"></script>
 <style>
     #fuzzymatching-ui {

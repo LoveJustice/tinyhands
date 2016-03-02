@@ -10,7 +10,6 @@
         window.search = {{ search }};
     </script>
 
-
 {% verbatim %}
 <div ng-controller="irfListCtrl as vm" ng-show="vm.user.permission_irf_view">
     <div class="row" style="margin: 20px 0 20px 0;">
@@ -104,7 +103,8 @@
     </div>
 
 {% endverbatim %}
-    {% load static from staticfiles %}
+{% load static from staticfiles %}
+
     <script src="{% static "dataentry/js/dataEntry.module.js" %}"></script>
     <script src="{% static "dataentry/js/services/irfService.js" %}"></script>
     <script src="{% static "dataentry/js/controllers/irfListCtrl.js" %}"></script>
