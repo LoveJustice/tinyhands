@@ -49,7 +49,4 @@ angular
 			eventLimit: true, // allow "more" link when too many events
             eventClick: vm.onCalendarEventClicked,
         }
-
-        return vm;
-
     }]);
