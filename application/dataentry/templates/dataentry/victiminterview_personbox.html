@@ -3,6 +3,7 @@
 
 {{ pb_form.id }}
 <div class="col-xs-4" style="padding: 20px">
+    <!-- Top box including who is this box -->
     <div class="person-box person-box-top row" style="height: 158px">
         <div class="red-border-right red-border-bottom inner smaller pull-left checkbox-group-marker" id="who_is_this_relationship-{{ counter }}" style="width: 150px">
             <h2>Who is this?</h2>
@@ -26,7 +27,9 @@
             </div>
         </div>
     </div>
+    <!-- End top box -->
 
+    <!-- Name, gender, address 1, address 2, ward #, phone # -->
     <div class="person-box row">
         <label class="blending-into-input-label">Name</label>
         <div class="inline-checkbox-group checkbox-group-marker" id="gender-{{ counter }}">
@@ -58,7 +61,9 @@
             </div>
         </div>
     </div>
+    <!-- End fields -->
 
+    <!-- Age, height, weight -->
     <div class="person-box row">
         <div class="col-xs-4">
             <div class="label-inside-field">
@@ -76,6 +81,9 @@
             </div>
         </div>
     </div>
+    <!-- End fields -->
+
+    <!-- Physical description -->
     <div class="person-box row checkbox-group-marker" id="physical_description-{{ counter }}">
         <h2>Physical Description</h2>
         <div class="inline-checkbox-group">{{ pb_form.physical_description_kirat }} {{ pb_form.physical_description_kirat.label_tag }}</div>
@@ -84,12 +92,16 @@
         <div class="inline-checkbox-group">{{ pb_form.physical_description_pahadi }} {{ pb_form.physical_description_pahadi.label_tag }}</div>
         <div class="inline-checkbox-group">{{ pb_form.physical_description_newari }} {{ pb_form.physical_description_newari.label_tag }}</div>
     </div>
+    <!-- End physical description -->
 
+    <!-- Appearance other -->
     <div class="person-box row">
         <h2>Appearance Other <small>(hairstyle, facial hair, mouth, nose, eyes, glasses, tattoos, birth marks, etc.)</small></h2>
         {{ pb_form.appearance_other }}
     </div>
+    <!-- End appearance other -->
 
+    <!-- Occupation -->
     <div class="checkbox-group-marker" id="occupation-{{ counter }}">
         <div class="person-box row">
             <h2>What is this person's occupation?</h2>
@@ -120,7 +132,9 @@
             </div>
         </div>
     </div>
+    <!-- End occupation -->
 
+    <!-- Political party -->
     <div class="checkbox-group-marker" id="political_party-{{ counter }}">
         <div class="person-box row">
             <h2>Member of a political Party?</h2>
@@ -149,12 +163,16 @@
             </div>
         </div>
     </div>
+    <!-- End political party -->
 
+    <!-- Where does he spend most of his time? -->
     <div class="person-box row">
         <h2>Where does he spend most of his time? How can we get ahold of or find him?</h2>
         {{ pb_form.where_spends_time|attr:"rows:2"|add_class:"full-width" }}
     </div>
+    <!-- End where does he spend most of his time -->
 
+    <!-- Which do you believe about him? -->
     <div class="person-box row">
         <h2 style="margin-left: 40px">Which do you believe about him?</h2>
         <div class="clearfix">
@@ -181,7 +199,9 @@
             </div>
         </div>
     </div>
+    <!-- End which do you believe about him -->
 
+    <!-- Is this person associated with any of the places below? -->
     <div class="person-box row checkbox-group-marker" id="associated_with_place">
         <h2>Is this person associated with any of the places below?</h2>
         {% for choice in pb_form.associated_with_place %}
@@ -191,5 +211,6 @@
         {% endfor %}
         <span class="blue-arrow">LB# {{ pb_form.associated_with_place_value|attr:"style: width: 40px" }}</span>
     </div>
+    <!-- End is this person associated with any of the places below -->
 </div>
 

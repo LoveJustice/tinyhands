@@ -7,6 +7,7 @@ from .models import (BorderStation, District,
                      VDC,
                      VictimInterviewLocationBox, VictimInterviewPersonBox, VictimInterview)
 from .fields import DistrictField, VDCField, FormNumberField
+from .google_sheets import google_sheet_client
 
 BOOLEAN_CHOICES = [
     (False, 'No'),
@@ -353,7 +354,13 @@ class InterceptionRecordForm(DreamSuitePaperForm):
             error.is_warning = True
             self.has_warnings = True
             self._errors['has_signature'] = error
+            
+    def save(self, commit=True):
+        return_val = super(InterceptionRecordForm, self).save(commit)
+        if commit:
+            google_sheet_client.update_irf(self.cleaned_data['irf_number'])
 
+        return return_val
 
 class IntercepteeForm(DreamSuitePaperForm):
     class Meta:
@@ -660,16 +667,23 @@ class VictimInterviewForm(DreamSuitePaperForm):
         if self.cleaned_data['victim_address_district']:
             victim_address_district = District.objects.get(name=self.cleaned_data['victim_address_district'])
             self.instance.victim_address_district = victim_address_district
-        if self.cleaned_data['victim_address_vdc']:
-            victim_address_vdc = VDC.objects.get(name=self.cleaned_data['victim_address_vdc'])
-            self.instance.victim_address_vdc = victim_address_vdc
+ 
         if self.cleaned_data['victim_guardian_address_district']:
             victim_guardian_address_district = District.objects.get(name=self.cleaned_data['victim_guardian_address_district'])
             self.instance.victim_guardian_address_district = victim_guardian_address_district
+        if self.cleaned_data['victim_address_vdc']:
+            victim_address_vdc = VDC.objects.get(name=self.cleaned_data['victim_address_vdc'], district_id = self.instance.victim_address_district.id)
+            self.instance.victim_address_vdc = victim_address_vdc
         if self.cleaned_data['victim_guardian_address_vdc']:
-            victim_guardian_address_vdc = VDC.objects.get(name=self.cleaned_data['victim_guardian_address_vdc'])
+            victim_guardian_address_vdc = VDC.objects.get(name=self.cleaned_data['victim_guardian_address_vdc'], district_id = self.instance.victim_guardian_address_district.id)
             self.instance.victim_guardian_address_vdc = victim_guardian_address_vdc
-        return super(VictimInterviewForm, self).save(commit)
+        return_val = super(VictimInterviewForm, self).save(commit)
+        if commit:
+            google_sheet_client.update_vif(self.cleaned_data['vif_number'])
+ 
+        return return_val
+    
+
 
     def clean(self):
         cleaned_data = super(VictimInterviewForm, self).clean()
@@ -736,8 +750,8 @@ class VictimInterviewPersonBoxForm(DreamSuitePaperForm):
         initial = self.initial.get('gender')
         if initial is not None:
             self.initial['gender'] = [unicode(initial)]
-        self.fields['address_district'] = DistrictField(label="Address 1")
-        self.fields['address_vdc'] = VDCField(label="Address 2")
+        self.fields['address_district'] = DistrictField(label="Address 1", required=False)
+        self.fields['address_vdc'] = VDCField(label="Address 2", required=False)
         try:
             self.fields['address_district'].initial = self.instance.address_district
         except:
@@ -748,10 +762,12 @@ class VictimInterviewPersonBoxForm(DreamSuitePaperForm):
             pass
 
     def save(self, commit=True):
-        address_district = District.objects.get(name=self.cleaned_data['address_district'])
-        address_vdc = VDC.objects.get(name=self.cleaned_data['address_vdc'])
-        self.instance.address_vdc = address_vdc
-        self.instance.address_district = address_district
+        if self.cleaned_data['address_district']:
+            address_district = District.objects.get(name=self.cleaned_data['address_district'])
+            self.instance.address_district = address_district
+        if self.cleaned_data['address_vdc']:
+            address_vdc = VDC.objects.get(name=self.cleaned_data['address_vdc'], district_id = address_district.id)
+            self.instance.address_vdc = address_vdc
         return super(VictimInterviewPersonBoxForm, self).save(commit)
 
     def clean(self):
@@ -784,13 +800,13 @@ class VictimInterviewLocationBoxForm(DreamSuitePaperForm):
         except:
             pass
         try:
-           self.fields['vdc'].initial = self.instance.vdc
+            self.fields['vdc'].initial = self.instance.vdc
         except:
             pass
 
     def save(self, commit=True):
         district = District.objects.get(name=self.cleaned_data['district'])
-        vdc = VDC.objects.get(name=self.cleaned_data['vdc'])
+        vdc = VDC.objects.get(name=self.cleaned_data['vdc'], district_id = district.id)
         self.instance.vdc = vdc
         self.instance.district = district
         return super(VictimInterviewLocationBoxForm, self).save(commit)

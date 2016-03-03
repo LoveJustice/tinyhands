@@ -17,7 +17,7 @@ angular
         vm.sortIcon = "/static/images/sortIcon.jpg";
         vm.selectedAddress = {};
         vm.sortColumn = "vif_number";
-
+        vm.timeZoneDifference ="+0545";
 
         // Function Definitions
         vm.getUser = getUser;
