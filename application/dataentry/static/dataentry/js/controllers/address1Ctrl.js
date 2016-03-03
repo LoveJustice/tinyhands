@@ -135,15 +135,7 @@ angular
             $modalInstance.close($scope.address);
         };
 
-        $scope.levels = [
-            ['state', 'State'],
-            ['country', 'Country'],
-            ['city', 'City'],
-            ['district', 'District'],
-            ['vdc', 'VDC'],
-            ['building', 'Building'],
-            ['block', 'Block']
-        ];
+        $scope.levels = ['State','Country','City','District','VDC','Building','Block'];
 
         $scope.cancel = function () {
             $modalInstance.dismiss('close');

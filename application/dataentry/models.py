@@ -12,13 +12,13 @@ NULL_BOOLEAN_CHOICES = [
 
 
 LEVEL_CHOICES = [
-    ('state', 'State'),
-    ('country', 'Country'),
-    ('city', 'City'),
-    ('district', 'District'),
-    ('vdc', 'VDC'),
-    ('building', 'Building'),
-    ('block', 'Block')
+    ('State','State'),
+    ('Country','Country'),
+    ('City','City'),
+    ('District','District'),
+    ('VDC','VDC'),
+    ('Building','Building'),
+    ('Block','Block')
 ]
 
 def set_weight(self, weight):
@@ -42,7 +42,7 @@ class District(models.Model):
     latitude = models.FloatField(default=0)
     longitude = models.FloatField(default=0)
 
-    level = models.CharField(max_length=255, choices=LEVEL_CHOICES, default="district")
+    level = models.CharField(max_length=255, choices=LEVEL_CHOICES, default="District")
     completed = models.BooleanField(default=False)
 
 

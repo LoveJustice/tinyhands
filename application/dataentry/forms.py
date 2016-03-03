@@ -14,13 +14,13 @@ BOOLEAN_CHOICES = [
 ]
 
 LEVEL_CHOICES = [
-    ('state', 'State'),
-    ('country', 'Country'),
-    ('city', 'City'),
-    ('district', 'District'),
-    ('vdc', 'VDC'),
-    ('building', 'Building'),
-    ('block', 'Block')
+    ('State','State'),
+    ('Country','Country'),
+    ('City','City'),
+    ('District','District'),
+    ('VDC','VDC'),
+    ('Building','Building'),
+    ('Block','Block')
 ]
 
 
