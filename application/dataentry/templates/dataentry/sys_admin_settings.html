@@ -7,8 +7,9 @@
 {% block title %}System Admin Settings{% endblock %}
 
 {% block tab_block %}
-    {% block content %}
-        {% block angular %}{% endblock %}
+{% block content %}
+{% block angular %}{% endblock %}
+    <form id="sys_admin_update" method="post">
         <div ng-controller="sysAdminCtrl as admin">
                 <h1 class="text-center">System Admin Settings</h1>
                 <div class="col-lg-6 " style="height: 675px">
@@ -142,10 +143,10 @@
 
                  </div>
                  </div>
-             </div>
+                 <input type="button" id="update_form" class="pull-right btn btn-success navbar-btn btn-lg" value="Update" ng-click="admin.updateForm()">
 
-        <input type="button" id="update_form" class="pull-right btn btn-success navbar-btn btn-lg" value="Update" ng-click="admin.updateForm()">
-        </div>
+            </div>
+        </form>
 
         {% load static from staticfiles %}
              <script type="text/javascript" src="{% static "dataentry/js/dataEntry.module.js" %}"></script>
