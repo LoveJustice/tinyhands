@@ -38,7 +38,7 @@ angular
                     permission_border_stations_delete: false,
                     permission_accounts_manage: false,
                     permission_receive_email: false,
-                    permission_vdc_manage: false,
+                    permission_address2_manage: false,
                     permission_budget_manage: false,
                 }
             }
@@ -103,7 +103,7 @@ angular
                 vm.account.permission_border_stations_delete = permissions.permission_border_stations_delete;
                 vm.account.permission_accounts_manage = permissions.permission_accounts_manage;
                 vm.account.permission_receive_email = permissions.permission_receive_email;
-                vm.account.permission_vdc_manage = permissions.permission_vdc_manage;
+                vm.account.permission_address2_manage = permissions.permission_address2_manage;
                 vm.account.permission_budget_manage = permissions.permission_budget_manage;
             });
         }

@@ -10,7 +10,7 @@ $(document).ready(function() {
   });
 });
 
-//For VDC and District admin pages, create modal functionality
+//For Address2 and Address1 admin pages, create modal functionality
 $("*[id*=update_link]:visible").each(
     function() {
         $(this).click(
