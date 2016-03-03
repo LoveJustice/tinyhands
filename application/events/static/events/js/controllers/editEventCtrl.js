@@ -2,17 +2,40 @@
 
 angular
   .module('EventsMod')
-  .controller('EditEventCtrl', EditEventCtrl)
-
-  EditEventCtrl.$inject = ['Events', '$window']
-
-  function EditEventCtrl(Events,$window) {
+  .controller('EditEventCtrl',['Events', '$window', function EditEventCtrl(Events,$window) {
     var vm = this;
     vm.titleError = '';
     vm.startDateError = '';
     vm.startTimeError = '';
     vm.endDateError = '';
     vm.endTimeError = '';
+
+    vm.format = 'yyyy-MM-dd';
+
+    vm.popup1 = {
+        opened: false
+    };
+    vm.popup2 = {
+        opened: false
+    };
+    vm.popup3 = {
+        opened: false
+    };
+
+    vm.open1 = function() {
+        vm.popup1.opened = true;
+    };
+    vm.open2 = function() {
+        vm.popup2.opened = true;
+    };
+    vm.open3 = function() {
+        vm.popup3.opened = true;
+    };
+
+    
+
+    vm.minDate = new Date();
+    vm.maxDate = new Date(2020, 5, 22);
 
     vm.activate = function() {
 
@@ -96,4 +119,4 @@ angular
     }
 
     vm.activate();
-  }
+}]);

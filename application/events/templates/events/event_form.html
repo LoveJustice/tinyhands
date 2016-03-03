@@ -4,11 +4,13 @@
 {% if event.id %}
 <script>
   window.event_id = {{event.id}}
+
 </script>
 {% endif %}
 {% endblock %}
 
 {% block content %}
+
 
 {% verbatim %}
 <div ng-controller="EditEventCtrl as editCtrl" ng-cloak>
@@ -48,46 +50,63 @@
                             </div>
                         </div>
 
-                        <div class="row form-group">
-                                <div class="alert alert-danger alert-dismissible" role="alert" ng-show="editCtrl.startDateError != ''">
-                                  <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+
+
+
+                        <div class="row ">
+                            <div class="alert alert-danger alert-dismissible" role="alert" ng-show="editCtrl.startDateError != ''">
+                                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                                 {{ editCtrl.startDateError }}
-                               </div>
-                                <div class="alert alert-danger alert-dismissible" role="alert" ng-show="editCtrl.startTimeError != ''">
-                                  <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                            </div>
+                            <div class="alert alert-danger alert-dismissible" role="alert" ng-show="editCtrl.startTimeError != ''">
+                                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                                 {{ editCtrl.startTimeError }}
-                               </div>
-                                <div class="alert alert-danger alert-dismissible" role="alert" ng-show="editCtrl.endDateError != ''">
-                                  <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                            </div>
+                            <div class="alert alert-danger alert-dismissible" role="alert" ng-show="editCtrl.endDateError != ''">
+                                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                                 {{ editCtrl.endDateError }}
-                               </div>
-                                <div class="alert alert-danger alert-dismissible" role="alert" ng-show="editCtrl.endTimeError != ''">
-                                  <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                            </div>
+                            <div class="alert alert-danger alert-dismissible" role="alert" ng-show="editCtrl.endTimeError != ''">
+                                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                                 {{ editCtrl.endTimeError }}
-                               </div>
-
-
-                            <div class="col-md-3">
-                               <strong> Date: </strong>
-                            </div>
-                            <div class="col-md-2  ">
-                                <input class="form-control hasDatepicker" id="id_start_date" name="start_date" placeholder="Start date" type="text" ng-model="editCtrl.event.start_date">
-                            </div>
-                            <div class="col-md-2  ">
-                                <input class="form-control timepicker" id="id_start_time" name="start_time" placeholder="Start time" type="text" ng-model="editCtrl.event.start_time">
                             </div>
 
-                            <div class="col-md-1">
-                               <strong> to </strong>
-                            </div>
-                            <div class="col-md-2  ">
-                                <input class="form-control hasDatepicker" id="id_end_date" name="end_date" placeholder="End date" type="text" ng-model="editCtrl.event.end_date">
-                            </div>
-                            <div class="col-md-2  ">
-                                <input class="form-control timepicker" id="id_end_time" name="end_time" placeholder="End time" type="text" ng-model="editCtrl.event.end_time">
-                            </div>
+
+
+
+                                <div class="col-md-3">
+                                    <strong> Date: </strong>
+                                </div>
+                                <div class="col-md-2  ">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" datepicker-popup="{{editCtrl.format}}" ng-model="editCtrl.event.start_date" is-open="editCtrl.popup1.opened" ng-required="true" close-text="Close" min-date="editCtrl.minDate" max-date="editCtrl.maxDate"/>
+
+                                        <span class="input-group-btn">
+                                            <button type="button" class="btn btn-default" ng-click="editCtrl.open1()"><i class="glyphicon glyphicon-calendar"></i></button>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-md-2  ">
+                                    <input class="form-control timepicker" id="id_start_time" name="start_time" placeholder="Start time" type="text" ng-model="editCtrl.event.start_time">
+                                </div>
+
+                                <div class="col-md-1">
+                                    <strong> to </strong>
+                                </div>
+                                <div class="col-md-2  ">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" datepicker-popup="{{editCtrl.format}}" ng-model="editCtrl.event.end_date" is-open="editCtrl.popup2.opened" ng-required="true" close-text="Close"/>
+                                        <span class="input-group-btn">
+                                            <button type="button" class="btn btn-default" ng-click="editCtrl.open2()"><i class="glyphicon glyphicon-calendar"></i></button>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-md-2  ">
+                                    <input class="form-control timepicker" id="id_end_time" name="end_time" placeholder="End time" type="text" ng-model="editCtrl.event.end_time">
+                                </div>
 
                         </div>
+
 
                         <div class="row form-group">
                 <!--                <div class="alert alert-danger alert-dismissible" role="alert">
@@ -141,7 +160,12 @@
                                 <strong> Ends: </strong>
                             </div>
                             <div class="col-md-9  ">
-                                <input class="form-control hasDatepicker" id="id_ends" name="ends" type="text" ng-model="editCtrl.event.ends">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" datepicker-popup="{{editCtrl.format}}" ng-model="editCtrl.event.ends" is-open="editCtrl.popup3.opened" ng-required="true" close-text="Close"/>
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default" ng-click="editCtrl.open3()"><i class="glyphicon glyphicon-calendar"></i></button>
+                                    </span>
+                                </div>
                             </div>
                         </div>
 
