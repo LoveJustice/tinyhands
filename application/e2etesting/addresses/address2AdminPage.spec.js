@@ -1,20 +1,20 @@
 var constants = require('../testConstants.json');
 var loginPage = require('../accounts/loginPage.js');
-var vdcAdminPage = require('./vdcAdminPage.js');
+var address2AdminPage = require('./address2AdminPage.js');
 
-describe('TinyHands VDCs', function () {
+describe('TinyHands Address2s', function () {
     beforeEach(function () {
         return browser.ignoreSynchronization = true;
     });
 
-    it('should navigate to VDC manage page', function () {
+    it('should navigate to Address2 manage page', function () {
         loginPage.logout();
         loginPage.loginAsAdmin();
-        vdcAdminPage.navigate();
+        address2AdminPage.navigate();
         expect(browser.getTitle()).toContain('Manage');
     });
 
-    it('should change the first VDCs information', function () {
+    it('should change the first Address2s information', function () {
         browser.ignoreSynchronization = false;
         browser.sleep(500);
 
@@ -23,42 +23,42 @@ describe('TinyHands VDCs', function () {
         element.all(by.className("edit")).first().click();
         browser.sleep(500);
         //browser.ignoreSynchronization = false;
-        vdcAdminPage.changeValues();
+        address2AdminPage.changeValues();
         browser.ignoreSynchronization = true;
         browser.sleep(1000);
         browser.get(constants.webAddress);
-        vdcAdminPage.navigate();
+        address2AdminPage.navigate();
 
 
         browser.sleep(1000);
-        var item = element(by.xpath("//td[text() = '" + constants.vdcEditName + "']"));
-        var district = item.element(by.xpath("../td[4]"));
+        var item = element(by.xpath("//td[text() = '" + constants.address2EditName + "']"));
+        var address1 = item.element(by.xpath("../td[4]"));
         var cannon = item.element(by.xpath("../td[5]"));
 
-        expect(item.getText()).toEqual(constants.vdcEditName);
-        expect(district.getText()).toEqual(constants.vdcEditDis);
-        expect(cannon.getText()).toEqual(constants.vdcEditCan);
+        expect(item.getText()).toEqual(constants.address2EditName);
+        expect(address1.getText()).toEqual(constants.address2EditDis);
+        expect(cannon.getText()).toEqual(constants.address2EditCan);
         browser.sleep(500);
     });
 
-    it('should be able to create a new VDC through the vif:', function(){
+    it('should be able to create a new Address2 through the vif:', function(){
         browser.get(constants.webAddress + '/data-entry/vifs/create/');
         browser.sleep(500);
-        this.victim_address_vdc = element(by.id("id_victim_address_vdc")).click();
+        this.victim_address_address2 = element(by.id("id_victim_address_address2")).click();
         browser.sleep(500);
-        vdcAdminPage.createNewVDC();
+        address2AdminPage.createNewAddress2();
         browser.sleep(500);
-        vdcAdminPage.navigate();
+        address2AdminPage.navigate();
 
         browser.sleep(1000);
 
-        expect(element(by.xpath("//td[text() = '" + constants.vdcNewName + "']")).isPresent()).toBe(true);
-        var item = element(by.xpath("//td[text() = '" + constants.vdcNewName + "']"));
-        var district = item.element(by.xpath("../td[4]"));
+        expect(element(by.xpath("//td[text() = '" + constants.address2NewName + "']")).isPresent()).toBe(true);
+        var item = element(by.xpath("//td[text() = '" + constants.address2NewName + "']"));
+        var address1 = item.element(by.xpath("../td[4]"));
         var cannon = item.element(by.xpath("../td[5]"));
 
-        expect(district.getText()).toEqual(constants.vdcNewDis);
-        expect(cannon.getText()).toEqual(constants.vdcNewCan);
+        expect(address1.getText()).toEqual(constants.address2NewDis);
+        expect(cannon.getText()).toEqual(constants.address2NewCan);
     });
 
     it('should be able to be paginated by a different number', function () {

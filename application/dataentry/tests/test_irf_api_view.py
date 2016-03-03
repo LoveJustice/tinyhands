@@ -17,7 +17,7 @@ class IrfTest(APITestCase):
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['count'], 20)  # 20 is coming from the 20 VDCs we made which each have their own District
+        self.assertEqual(response.data['count'], 20)  # 20 is coming from the 20 Address2s we made which each have their own Address1
 
     def test_irf_403_if_doesnt_have_permission(self):
         self.bad_user = BadIrfUserFactory.create()

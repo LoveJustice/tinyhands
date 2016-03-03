@@ -45,7 +45,7 @@ th, td {
                     <th colspan="4">Border Stations</th>
                     <th>Accounts</th>
                     <th>Alerts</th>
-                    <th>VDC</th>
+                    <th>Address2</th>
                     <th>Budget</th>
                 </tr>
                 <tr>
@@ -64,7 +64,7 @@ th, td {
                     <th>Delete</th>
                     <th>Manage</th> <!--Accounts-->
                     <th>Can Receive</th> <!--Alerts-->
-                    <th>Manage</th> <!--VDC-->
+                    <th>Manage</th> <!--Address2-->
                     <th>Manage</th> <!--Budget-->
                 </tr>
             </thead>
@@ -90,7 +90,7 @@ th, td {
                         <td><label ng-click="account.permission_border_stations_delete = !account.permission_border_stations_delete" ng-class="account.permission_border_stations_delete ? 'btn btn-success' : 'btn btn-danger'"><span class="yesno"></span>{{ account.permission_border_stations_delete ? "Yes" : "No" }}</label></td>
                         <td><label ng-click="account.permission_accounts_manage = !account.permission_accounts_manage" ng-class="account.permission_accounts_manage ? 'btn btn-success' : 'btn btn-danger'"><span class="yesno"></span>{{ account.permission_accounts_manage ? "Yes" : "No" }}</label></td>
                         <td><label ng-click="account.permission_receive_email = !account.permission_receive_email" ng-class="account.permission_receive_email ? 'btn btn-success' : 'btn btn-danger'"><span class="yesno"></span>{{ account.permission_receive_email ? "Yes" : "No" }}</label></td>
-                        <td><label ng-click="account.permission_vdc_manage = !account.permission_vdc_manage" ng-class="account.permission_vdc_manage ? 'btn btn-success' : 'btn btn-danger'"><span class="yesno"></span>{{ account.permission_vdc_manage ? "Yes" : "No" }}</label></td>
+                        <td><label ng-click="account.permission_address2_manage = !account.permission_address2_manage" ng-class="account.permission_address2_manage ? 'btn btn-success' : 'btn btn-danger'"><span class="yesno"></span>{{ account.permission_address2_manage ? "Yes" : "No" }}</label></td>
                         <td><label ng-click="account.permission_budget_manage = !account.permission_budget_manage" ng-class="account.permission_budget_manage ? 'btn btn-success' : 'btn btn-danger'"><span class="yesno"></span>{{ account.permission_budget_manage ? "Yes" : "No" }}</label></td>
 
 
