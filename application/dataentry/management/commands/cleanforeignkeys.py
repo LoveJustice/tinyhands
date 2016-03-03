@@ -10,14 +10,12 @@ class Command(BaseCommand):
         foreign_keys_fixed = 0
 
         self.stderr.write("Checking {} models".format(class_name))
-        for method_name in ('address_district',
-                            'address_vdc',
-                            'district',
-                            'vdc',
-                            'victim_address_district',
-                            'victim_address_vdc',
-                            'victim_guardian_address_district',
-                            'victim_guardian_address_vdc'):
+        for method_name in ('address1',
+                            'address2,
+                            'victim_address1',
+                            'victim_address2',
+                            'victim_guardian_address1',
+                            'victim_guardian_address2'):
             if method_name not in dir(model):
                 self.stderr.write("{} does not have method {}".format(class_name, method_name))
                 continue
@@ -44,7 +42,7 @@ class Command(BaseCommand):
         foreign_keys_fixed = 0
 
         foreign_keys_fixed += self.clean(Interceptee)
-        foreign_keys_fixed += self.clean(VDC)
+        foreign_keys_fixed += self.clean(Address2)
         foreign_keys_fixed += self.clean(VictimInterview)
         foreign_keys_fixed += self.clean(VictimInterviewPersonBox)
 

@@ -27,61 +27,61 @@ class BorderStation(models.Model):
     open = models.BooleanField(default=True)
 
 
-class District(models.Model):
+class Address1(models.Model):
     name = models.CharField(max_length=255)
 
     def __unicode__(self):
         return self.name
 
 
-class FuzzyMatching(models.Model):
-    address1_cutoff = model.PositiveIntegerField(default=0)
-    address1_limit = model.PositiveIntegerField(default=0)
-    address2_cutoff = model.PositiveIntegerField(default=0)
-    address2_limit = model.PositiveIntegerField(default=0)
-    person_cutoff = model.PositiveIntegerField(default=0)
-    person_limit = model.PositiveIntegerField(default=0)
-    phone_number_cutoff = model.PositiveIntegerField(default=0)
-    phone_number_limit = model.PositiveIntegerField(default=0)
+# class FuzzyMatching(models.Model):
+#     address1_cutoff = model.PositiveIntegerField(default=0)
+#     address1_limit = model.PositiveIntegerField(default=0)
+#     address2_cutoff = model.PositiveIntegerField(default=0)
+#     address2_limit = model.PositiveIntegerField(default=0)
+#     person_cutoff = model.PositiveIntegerField(default=0)
+#     person_limit = model.PositiveIntegerField(default=0)
+#     phone_number_cutoff = model.PositiveIntegerField(default=0)
+#     phone_number_limit = model.PositiveIntegerField(default=0)
+#
+#     @property
+#     def get_address1_cutoff(self):
+#         return self.address1_cutoff
+#
+#     @property
+#     def get_address1_limit(self):
+#         return self.address1_limit
+#
+#     @property
+#     def get_address2_cutoff(self):
+#         return self.address2_cutoff
+#
+#     @property
+#     def get_address2_limit(self):
+#         return self.address2_limit
+#
+#     @property
+#     def get_person_cutoff(self):
+#         return self.person_cutoff
+#
+#     @property
+#     def get_person_limit(self):
+#         return self.person_limit
+#
+#     @property
+#     def get_phone_number_cutoff(self):
+#         return self.phone_number_cutoff
+#
+#     @property
+#     def get_phone_number_limit(self):
+#         return self.phone_number_limit
 
-    @property
-    def get_address1_cutoff(self):
-        return self.address1_cutoff
 
-    @property
-    def get_address1_limit(self):
-        return self.address1_limit
-
-    @property
-    def get_address2_cutoff(self):
-        return self.address2_cutoff
-
-    @property
-    def get_address2_limit(self):
-        return self.address2_limit
-
-    @property
-    def get_person_cutoff(self):
-        return self.person_cutoff
-
-    @property
-    def get_person_limit(self):
-        return self.person_limit
-
-    @property
-    def get_phone_number_cutoff(self):
-        return self.phone_number_cutoff
-
-    @property
-    def get_phone_number_limit(self):
-        return self.phone_number_limit
-
-
-class VDC(models.Model):
+class Address2(models.Model):
     name = models.CharField(max_length=255)
     latitude = models.FloatField()
     longitude = models.FloatField()
-    district = models.ForeignKey(District, null=False)
+    address1 = models.ForeignKey(Address1, null=False)
     canonical_name = models.ForeignKey('self', null=True, blank=True)
     verified = models.BooleanField(default=False)
 
@@ -107,10 +107,10 @@ class VDC(models.Model):
         return self.longitude
 
     @property
-    def get_district(self):
+    def get_address1(self):
         if self.canonical_name:
-            return self.canonical_name.district
-        return self.district
+            return self.canonical_name.address1
+        return self.address1
 
     @property
     def is_verified(self):
@@ -334,8 +334,8 @@ class Interceptee(models.Model):
     full_name = models.CharField(max_length=255)
     gender = models.CharField(max_length=4, choices=GENDER_CHOICES, blank=True)
     age = models.PositiveIntegerField(null=True, blank=True)
-    district = models.ForeignKey(District, null=True, blank=True)
-    vdc = models.ForeignKey(VDC, null=True, blank=True)
+    address1 = models.ForeignKey(Address1, null=True, blank=True)
+    address2 = models.ForeignKey(Address2, null=True, blank=True)
     phone_contact = models.CharField(max_length=255, blank=True)
     relation_to = models.CharField(max_length=255, blank=True)
 
@@ -345,17 +345,17 @@ class Interceptee(models.Model):
     def __unicode__(self):
         return "{} ({})".format(self.full_name, self.id)
 
-    def district_as_string(self):
+    def address1_as_string(self):
         rtn = ''
         try:
-            rtn = self.district
+            rtn = self.address1
         finally:
             return rtn
 
-    def vdc_as_string(self):
+    def address2_as_string(self):
         rtn = ''
         try:
-            rtn = self.vdc
+            rtn = self.address2
         finally:
             return rtn
 
@@ -390,8 +390,8 @@ class VictimInterview(models.Model):
 
     victim_gender = models.CharField('Gender', choices=GENDER_CHOICES, max_length=12)
 
-    victim_address_district = models.ForeignKey(District, null=True, related_name="victim_address_district")
-    victim_address_vdc = models.ForeignKey(VDC, null=True, related_name="victim_address_vdc")
+    victim_address1 = models.ForeignKey(Address1, null=True, related_name="victim_address1")
+    victim_address2 = models.ForeignKey(Address2, null=True, related_name="victim_address2")
     victim_address_ward = models.CharField('Ward #', max_length=255, blank=True)
     victim_phone = models.CharField('Phone #', max_length=255, blank=True)
     victim_age = models.CharField('Age', max_length=255, blank=True)
@@ -451,8 +451,8 @@ class VictimInterview(models.Model):
     victim_primary_guardian_non_relative = models.BooleanField('Non-relative', default=False)
     victim_primary_guardian_no_one = models.BooleanField('No one (I have no guardian)', default=False)
 
-    victim_guardian_address_district = models.ForeignKey(District, null=True)
-    victim_guardian_address_vdc = models.ForeignKey(VDC, null=True)
+    victim_guardian_address1 = models.ForeignKey(Address1, null=True)
+    victim_guardian_address2 = models.ForeignKey(Address2, null=True)
     victim_guardian_address_ward = models.CharField('Ward #', max_length=255, blank=True)
     victim_guardian_phone = models.CharField('Phone #', max_length=255, blank=True)
 
@@ -733,31 +733,31 @@ class VictimInterview(models.Model):
     def __unicode__(self):
         return self.vif_number
 
-    def victim_address_district_as_string(self):
+    def victim_address1_as_string(self):
         rtn = ''
         try:
-            rtn = self.victim_address_district
+            rtn = self.victim_address1
         finally:
             return rtn
 
-    def victim_address_vdc_as_string(self):
+    def victim_address2_as_string(self):
         rtn = ''
         try:
-            rtn = self.victim_address_vdc
+            rtn = self.victim_address2
         finally:
             return rtn
 
-    def victim_guardian_address_district_as_string(self):
+    def victim_guardian_address1_as_string(self):
         rtn = ''
         try:
-            rtn = self.victim_guardian_address_district
+            rtn = self.victim_guardian_address1
         finally:
             return rtn
 
-    def victim_guardian_address_vdc_as_string(self):
+    def victim_guardian_address2_as_string(self):
         rtn = ''
         try:
-            rtn = self.victim_guardian_address_vdc
+            rtn = self.victim_guardian_address2
         finally:
             return rtn
 
@@ -906,8 +906,8 @@ class VictimInterviewPersonBox(models.Model):
 
     gender = models.CharField('Gender', choices=GENDER_CHOICES, max_length=12, blank=True)
 
-    address_district = models.ForeignKey(District, null=True)
-    address_vdc = models.ForeignKey(VDC, null=True)
+    address1 = models.ForeignKey(Address1, null=True)
+    address2 = models.ForeignKey(Address2, null=True)
     address_ward = models.CharField('Ward #', max_length=255, blank=True)
     phone = models.CharField('Phone #', max_length=255, blank=True)
     age = models.PositiveIntegerField('Age', null=True, blank=True)
@@ -994,8 +994,8 @@ class VictimInterviewLocationBox(models.Model):
 
     signboard = models.CharField(max_length=255, blank=True)
     location_in_town = models.CharField(max_length=255, blank=True)
-    district = models.ForeignKey(District, null=True)
-    vdc = models.ForeignKey(VDC, null=True)
+    address1 = models.ForeignKey(Address1, null=True)
+    address2 = models.ForeignKey(Address2, null=True)
 
     phone = models.CharField('Phone #', max_length=255, blank=True)
     color = models.CharField(max_length=255, blank=True)

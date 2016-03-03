@@ -96,7 +96,7 @@
 
                             <div class="row" ng-controller="otherBudgetItemsCtrl as staffItemsCtrl" ng-init="form_section = 8;">
                                 <div class="animated-budget-items" ng-repeat="form in staffItemsCtrl.staffForms">
-                                    <div class="col-lg-4 col-lg-offset-1">
+                                    <div class="col-lg-5 col-lg-offset-1">
                                         <input class="form-control" type="text" placeholder="Staff Name" ng-model="form.name" ng-disabled="main.view"/>
                                     </div>
                                     <div class="col-lg-3">
@@ -194,7 +194,7 @@
                             <div class="row" ng-controller="otherBudgetItemsCtrl as shelterItemsCtrl" ng-init="form_section = 5;">
                                 <div class="animated-budget-items" ng-repeat="form in shelterItemsCtrl.shelterForms">
 
-                                    <div class="col-lg-4 col-lg-offset-2">
+                                    <div class="col-lg-4 col-lg-offset-1">
                                         <input class="form-control" type="text" placeholder="Item Name" ng-model="form.name" ng-disabled="main.view"/>
                                     </div>
                                     <div class="col-lg-4">
@@ -295,7 +295,7 @@
                             <div class="row" ng-controller="otherBudgetItemsCtrl as foodGasItemsCtrl" ng-init="form_section = 6;">
                                 <div class="animated-budget-items" ng-repeat="form in foodGasItemsCtrl.foodGasForms">
 
-                                    <div class="col-lg-4 col-lg-offset-2">
+                                    <div class="col-lg-4 col-lg-offset-1">
                                         <input class="form-control" type="text" placeholder="Item Name" ng-model="form.name" ng-disabled="main.view"/>
                                     </div>
                                     <div class="col-lg-4">
@@ -396,7 +396,7 @@
                             <div class="row" ng-controller="otherBudgetItemsCtrl as communicationItemsCtrl" ng-init="form_section = 7;">
                                 <div class="animated-budget-items" ng-repeat="form in communicationItemsCtrl.communicationForms">
 
-                                    <div class="col-lg-4 col-lg-offset-2">
+                                    <div class="col-lg-4 col-lg-offset-1">
                                         <input class="form-control" type="text" placeholder="Item Name" ng-model="form.name" ng-disabled="main.view"/>
                                     </div>
                                     <div class="col-lg-4">
@@ -814,7 +814,7 @@
                                         <div class="col-lg-4 col-lg-offset-1">
                                             <input class="form-control" type="text" placeholder="Item Name" ng-model="form.name" ng-disabled="main.view"/>
                                         </div>
-                                        <div class="col-lg-2">
+                                        <div class="col-lg-4">
                                             <input class="text-right form-control" type="number" ng-model="form.cost" ng-change="miscItemsCtrl.otherItemsTotal()" ng-disabled="main.view"/>
                                         </div>
                                         <div class="col-lg-2">

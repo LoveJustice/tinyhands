@@ -1,5 +1,5 @@
 from django.contrib import admin
-from dataentry.models import InterceptionRecord, VictimInterview, District, VDC, BorderStation
+from dataentry.models import InterceptionRecord, VictimInterview, Address1, Address2, BorderStation
 
 
 class InterceptionRecordAdmin(admin.ModelAdmin):
@@ -14,8 +14,8 @@ class VictimInterviewAdmin(admin.ModelAdmin):
     list_display = ['vif_number', 'interviewer', 'number_of_victims', 'number_of_traffickers', 'date', 'date_time_entered_into_system', 'date_time_last_updated']
 
 
-class DistrictAdmin(admin.ModelAdmin):
-    model = District
+class Address1Admin(admin.ModelAdmin):
+    model = Address1
     search_fields = ['name']
     list_display = ['name']
 
@@ -26,10 +26,10 @@ class BorderStationAdmin(admin.ModelAdmin):
     list_display = ['station_name']
 
 
-class VDCAdmin(admin.ModelAdmin):
-    model = VDC
-    search_fields = ['name', 'latitude', 'longitude', 'district', 'canonical_name']
-    list_display = ['name', 'latitude', 'longitude', 'district', 'canonical_name']
+class Address2Admin(admin.ModelAdmin):
+    model = Address2
+    search_fields = ['name', 'latitude', 'longitude', 'address1', 'canonical_name']
+    list_display = ['name', 'latitude', 'longitude', 'address1', 'canonical_name']
 
 
 # class FuzzyMatchingAdmin(admin.ModelAdmin):
@@ -40,7 +40,6 @@ class VDCAdmin(admin.ModelAdmin):
 
 admin.site.register(InterceptionRecord, InterceptionRecordAdmin)
 admin.site.register(VictimInterview, VictimInterviewAdmin)
-admin.site.register(District, DistrictAdmin)
+admin.site.register(Address1, Address1Admin)
 admin.site.register(BorderStation, BorderStationAdmin)
-admin.site.register(VDC, VDCAdmin)
-# admin.site.register(FuzzyMatching, FuzzyMatchingAdmin)
+admin.site.register(Address2, Address2Admin)

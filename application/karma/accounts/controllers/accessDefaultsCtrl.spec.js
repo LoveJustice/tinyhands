@@ -22,7 +22,7 @@ describe('AccessDefaultsCtrl', function(){
 		permission_border_stations_delete: true,
 		permission_accounts_manage: true,
 		permission_receive_email: true,
-		permission_vdc_manage: true,
+		permission_address2_manage: true,
 		permission_budget_manage: true,
 	}
 	
@@ -44,7 +44,7 @@ describe('AccessDefaultsCtrl', function(){
 		permission_border_stations_delete: true,
 		permission_accounts_manage: true,
 		permission_receive_email: true,
-		permission_vdc_manage: true,
+		permission_address2_manage: true,
 		permission_budget_manage: true,
 	}
 
@@ -175,7 +175,7 @@ describe('AccessDefaultsCtrl', function(){
 			expect(permissionSet.permission_irf_edit).toEqual(false);
 			expect(permissionSet.permission_irf_view).toEqual(false);
 			expect(permissionSet.permission_receive_email).toEqual(false);
-			expect(permissionSet.permission_vdc_manage).toEqual(false);		
+			expect(permissionSet.permission_address2_manage).toEqual(false);		
 			expect(permissionSet.permission_vif_add).toEqual(false);		
 			expect(permissionSet.permission_vif_delete).toEqual(false);		
 			expect(permissionSet.permission_vif_edit).toEqual(false);		

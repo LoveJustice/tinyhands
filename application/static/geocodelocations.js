@@ -5,11 +5,11 @@ var locationType = '';
 function setPopovers(id)
 {
 	$(id).each(function(index, element) {
-        if($(element).attr('id').indexOf("-vdc") != -1 || $(element).attr('id').indexOf("address_vdc") != -1){
-            nameOfForm = "#geocode-vdc-form";
+        if($(element).attr('id').indexOf("-address2") != -1 || $(element).attr('id').indexOf("address2") != -1){
+            nameOfForm = "#geocode-address2-form";
         }
         else{
-            nameOfForm = "#geocode-district-form";
+            nameOfForm = "#geocode-address1-form";
         }
 	    $(element).popover({
 	        content: $(nameOfForm).html(),
@@ -19,7 +19,7 @@ function setPopovers(id)
             trigger: 'focus'
 	    });
         $(element).on('shown.bs.popover', function(){
-            $("#vdc_create_page").click(
+            $("#address2_create_page").click(
                     function(e){
                         e.preventDefault();
                         $("#modal").load(this.href, function(){$("#modal").modal("show");
@@ -27,7 +27,7 @@ function setPopovers(id)
             });
         });
         $(element).on('shown.bs.popover', function(){
-            $("#district_create_page").click(
+            $("#address1_create_page").click(
                     function(e){
                         e.preventDefault();
                         $("#modal").load(this.href, function(){$("#modal").modal("show");
@@ -39,7 +39,7 @@ function setPopovers(id)
 	    	{
 		    	$(this).popover('hide');
                 adjustPopoverPosition = true;
-			}	
+			}
 	    });
         var timer = null;
 	    $(element).keyup(function(){
@@ -53,11 +53,11 @@ function setPopovers(id)
                 $(this).popover('show');
             }
             input = $(element).val();
-            if(element.id.indexOf("district") > 0){
-                locationType = "district";
+            if(element.id.indexOf("address1") > 0){
+                locationType = "address1";
             }
             else{
-                locationType = "vdc";
+                locationType = "address2";
             }
 
             if ( input !== "" && input.length >= 2 ) {
@@ -75,10 +75,10 @@ function callFuzzyApi(input, locationType, element){
     var unorderedList = $("#popover-location-info");
 
     var requestData = locationType+"="+input;
-    if (locationType === "vdc"){
-        var district_value = find_district_value(element);
-        if (district_value.length > 0) {
-            requestData = requestData + '&district=' + district_value;
+    if (locationType === "address2"){
+        var address1_value = find_address1_value(element);
+        if (address1_value.length > 0) {
+            requestData = requestData + '&address1=' + address1_value;
         }
     }
     $.ajax({
@@ -113,33 +113,32 @@ function callFuzzyApi(input, locationType, element){
         });
 }
 
-function find_district_value(element) {
-    var district_value = "";
-    if (element.id === "id_victim_address_vdc")
+function find_address1_value(element) {
+    var address1_value = "";
+    if (element.id === "id_victim_address2")
     {
-       district_value = $("#id_victim_address_district").val();
+       address1_value = $("#id_victim_address1").val();
     }
-    else if (element.id === "id_victim_guardian_address_vdc")
+    else if (element.id === "id_victim_guardian_address2")
     {
-       district_value = $("#id_victim_guardian_address_district").val();
+       address1_value = $("#id_victim_guardian_address1").val();
     }
-    else if (element.id.indexOf("id_person_boxes-") > -1 && element.id.indexOf("vdc") > -1)
+    else if (element.id.indexOf("id_person_boxes-") > -1 && element.id.indexOf("address2") > -1)
     {
-       district_value = $("#id_person_boxes-" + element.id.split('-')[1] + '-address_district').val();
+       address1_value = $("#id_person_boxes-" + element.id.split('-')[1] + '-address1').val();
     }
-    else if (element.id.indexOf("id_location_boxes-") > -1 && element.id.indexOf("vdc") > -1)
+    else if (element.id.indexOf("id_location_boxes-") > -1 && element.id.indexOf("address2") > -1)
     {
-       district_value = $("#id_location_boxes-" + element.id.split('-')[1] + '-district').val();
+       address1_value = $("#id_location_boxes-" + element.id.split('-')[1] + '-address1').val();
     }
     else
     {
-       district_value = $("#id_interceptees-" + element.id.split('-')[1] + '-district').val();
+       address1_value = $("#id_interceptees-" + element.id.split('-')[1] + '-address1').val();
     }
-    return district_value;
+    return address1_value;
 }
 
-setPopovers("[id$=address_district]");
-setPopovers("[id$=address_vdc]");
-setPopovers("[id$=-vdc]");
-setPopovers("[id$=-district]");
-//setPopovers("[id$=Sys_Address1]");
+setPopovers("[id$=address1]");
+setPopovers("[id$=address2]");
+setPopovers("[id$=-address2]");
+setPopovers("[id$=-address1]");
