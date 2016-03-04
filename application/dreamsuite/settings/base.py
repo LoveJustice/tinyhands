@@ -45,6 +45,7 @@ INSTALLED_APPS = (
     'widget_tweaks',
     'bootstrapform',
     'imagekit',
+    'storages',
     'dataentry',
     'accounts',
     'events',
@@ -102,6 +103,9 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
 STATIC_ROOT = os.path.normpath(os.path.join(SITE_ROOT, "../static"))
 STATIC_URL = '/static/'
 
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
 MESSAGE_TAGS = {
     messages.constants.ERROR: 'danger'    # Fix up for Bootstrap.
 }
@@ -119,8 +123,6 @@ TEMPLATE_CONTEXT_PROCESSORS += (
     "django.core.context_processors.request",
 )
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (

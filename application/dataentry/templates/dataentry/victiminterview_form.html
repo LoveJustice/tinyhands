@@ -11,7 +11,7 @@
 {% block content %}
 
   {% include "dataentry/popover.html" %}
-
+{% load static from staticfiles %}
     <!-- In the upper-right corner of the form, allows the user
     to choose from a list of incomplete VIFs to resume. -->
   {% if not victiminterviewinterceptionrecord %}
@@ -104,7 +104,7 @@
         <!-- Form title in the upper-left corner -->
         <div class="col-xs-5 header-area">
           <img class="pull-left" style="margin-right: 20px; margin-top: 20px" width="100"
-               src="{{ STATIC_URL }}images/logo.png" alt="Tiny Hands Logo" />
+               src="{% static 'images/logo.png' %}" alt="Tiny Hands Logo" />
           <h2>Victim Interview Form (VIF) | Version 2.0 <br/>
               <span class="text-danger">Tiny Hands Nepal</span></h2>
         </div>
