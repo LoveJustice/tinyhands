@@ -5,3 +5,4 @@ local.env
 
 application/media/*
 application/static/*
+application/google_cred.json

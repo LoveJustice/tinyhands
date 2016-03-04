@@ -4,7 +4,7 @@ MAINTAINER benaduggan
 ENV PYTHONUNBUFFERED 1
 
 # Install linux dependencies
-RUN apt-get update && apt-get install -y python-dev libncurses5-dev libxml2-dev libxslt-dev zlib1g-dev libjpeg-dev cron && pip install --upgrade pip
+RUN apt-get update && apt-get install -y python-dev libncurses5-dev libxml2-dev libxslt-dev zlib1g-dev libjpeg-dev s3cmd curl && pip install --upgrade pip
 
 # Make the directory for our code
 RUN mkdir /data
@@ -23,3 +23,9 @@ COPY application/ /data/
 
 # Run the application
 CMD /data/bin/run.sh
+
+RUN curl -o /usr/local/bin/s3-expand https://raw.githubusercontent.com/silinternational/s3-expand/master/s3-expand \
+    && chmod a+x /usr/local/bin/s3-expand
+
+ENTRYPOINT ["/usr/local/bin/s3-expand"]
+CMD ["/data/bin/run.sh"]
