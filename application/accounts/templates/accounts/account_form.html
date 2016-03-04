@@ -59,9 +59,9 @@ table {
   <div class="row">
     <div class="col-md-6 form-group" ng-class="{'has-error': editCtrl.userDesignationError}">
       <label ng-class="{'text-danger': editCtrl.userDesignationError}">User Designation</label>
-      <select ng-model="editCtrl.account.user_designation" 
-              ng-options="set.id as set.name for set in editCtrl.permissionsSets.results" 
-              ng-change="editCtrl.onUserDesignationChanged(editCtrl.account.user_designation)" 
+      <select ng-model="editCtrl.account.user_designation"
+              ng-options="set.id as set.name for set in editCtrl.permissionsSets.results"
+              ng-change="editCtrl.onUserDesignationChanged(editCtrl.account.user_designation)"
               class="form-control">
       </select>
       <span ng-class="{'text-danger': editCtrl.userDesignationError}">{{editCtrl.userDesignationError}}</span>
@@ -89,7 +89,7 @@ table {
             <label class="btn" ng-class="editCtrl.account.permission_irf_add ? 'btn btn-success' : 'btn btn-danger'" ng-click="editCtrl.account.permission_irf_add= !editCtrl.account.permission_irf_add">{{ editCtrl.getButtonText(editCtrl.account.permission_irf_add) }}</label>
           </td>
           <td>
-            <label class="btn" ng-class="editCtrl.account.permission_irf_edit? 'btn btn-success' : 'btn btn-danger'" ng-click="editCtrl.account.permission_irf_edit= !editCtrl.account.permission_irf_edit">{{ editCtrl.getButtonText(editCtrl.account.permission_irf_edit) }}</label>            
+            <label class="btn" ng-class="editCtrl.account.permission_irf_edit? 'btn btn-success' : 'btn btn-danger'" ng-click="editCtrl.account.permission_irf_edit= !editCtrl.account.permission_irf_edit">{{ editCtrl.getButtonText(editCtrl.account.permission_irf_edit) }}</label>
           </td>
           <td>
             <label class="btn" ng-class="editCtrl.account.permission_irf_delete ? 'btn btn-success' : 'btn btn-danger'" ng-click="editCtrl.account.permission_irf_delete= !editCtrl.account.permission_irf_delete">{{ editCtrl.getButtonText(editCtrl.account.permission_irf_delete) }}</label>
@@ -118,7 +118,7 @@ table {
             <label class="btn" ng-class="editCtrl.account.permission_vif_add ? 'btn btn-success' : 'btn btn-danger'" ng-click="editCtrl.account.permission_vif_add= !editCtrl.account.permission_vif_add">{{ editCtrl.getButtonText(editCtrl.account.permission_vif_add) }}</label>
           </td>
           <td>
-            <label class="btn" ng-class="editCtrl.account.permission_vif_edit ? 'btn btn-success' : 'btn btn-danger'" ng-click="editCtrl.account.permission_vif_edit= !editCtrl.account.permission_vif_edit">{{ editCtrl.getButtonText(editCtrl.account.permission_vif_edit) }}</label>            
+            <label class="btn" ng-class="editCtrl.account.permission_vif_edit ? 'btn btn-success' : 'btn btn-danger'" ng-click="editCtrl.account.permission_vif_edit= !editCtrl.account.permission_vif_edit">{{ editCtrl.getButtonText(editCtrl.account.permission_vif_edit) }}</label>
           </td>
           <td>
             <label class="btn" ng-class="editCtrl.account.permission_vif_delete ? 'btn btn-success' : 'btn btn-danger'" ng-click="editCtrl.account.permission_vif_delete= !editCtrl.account.permission_vif_delete">{{ editCtrl.getButtonText(editCtrl.account.permission_vif_delete) }}</label>
@@ -147,7 +147,7 @@ table {
             <label class="btn" ng-class="editCtrl.account.permission_border_stations_add ? 'btn btn-success' : 'btn btn-danger'" ng-click="editCtrl.account.permission_border_stations_add= !editCtrl.account.permission_border_stations_add">{{ editCtrl.getButtonText(editCtrl.account.permission_border_stations_add) }}</label>
           </td>
           <td>
-            <label class="btn" ng-class="editCtrl.account.permission_border_stations_edit ? 'btn btn-success' : 'btn btn-danger'" ng-click="editCtrl.account.permission_border_stations_edit= !editCtrl.account.permission_border_stations_edit">{{ editCtrl.getButtonText(editCtrl.account.permission_border_stations_edit) }}</label>            
+            <label class="btn" ng-class="editCtrl.account.permission_border_stations_edit ? 'btn btn-success' : 'btn btn-danger'" ng-click="editCtrl.account.permission_border_stations_edit= !editCtrl.account.permission_border_stations_edit">{{ editCtrl.getButtonText(editCtrl.account.permission_border_stations_edit) }}</label>
           </td>
           <td>
             <label class="btn" ng-class="editCtrl.account.permission_border_stations_delete ? 'btn btn-success' : 'btn btn-danger'" ng-click="editCtrl.account.permission_border_stations_delete= !editCtrl.account.permission_border_stations_delete">{{ editCtrl.getButtonText(editCtrl.account.permission_border_stations_delete) }}</label>
@@ -173,7 +173,7 @@ table {
       <thead>
         <tr>
           <th>Alerts</th>
-          <th>VDC Management</th>
+          <th>Address2 Management</th>
           <th>Budget Management</th>
         </tr>
       </thead>
@@ -183,7 +183,7 @@ table {
             <label class="btn" ng-class="editCtrl.account.permission_receive_email ? 'btn btn-success' : 'btn btn-danger'" ng-click="editCtrl.account.permission_receive_email = !editCtrl.account.permission_receive_email">{{ editCtrl.getButtonText(editCtrl.account.permission_receive_email) }}</label>
           </td>
           <td>
-            <label class="btn" ng-class="editCtrl.account.permission_vdc_manage ? 'btn btn-success' : 'btn btn-danger'" ng-click="editCtrl.account.permission_vdc_manage = !editCtrl.account.permission_vdc_manage">{{ editCtrl.getButtonText(editCtrl.account.permission_vdc_manage) }}</label>
+            <label class="btn" ng-class="editCtrl.account.permission_address2_manage ? 'btn btn-success' : 'btn btn-danger'" ng-click="editCtrl.account.permission_address2_manage = !editCtrl.account.permission_address2_manage">{{ editCtrl.getButtonText(editCtrl.account.permission_address2_manage) }}</label>
           </td>
           <td>
             <label class="btn" ng-class="editCtrl.account.permission_budget_manage ? 'btn btn-success' : 'btn btn-danger'" ng-click="editCtrl.account.permission_budget_manage = !editCtrl.account.permission_budget_manage">{{ editCtrl.getButtonText(editCtrl.account.permission_budget_manage) }}</label>
@@ -198,7 +198,7 @@ table {
     </div>
   </div>
   <br/>
-  <br/>  
+  <br/>
 </div>
 {% endverbatim %}
 {% endblock %}

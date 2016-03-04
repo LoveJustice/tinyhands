@@ -25,7 +25,7 @@ describe('accessCtrl', function(){
 		permission_border_stations_delete: false,                
 		permission_accounts_manage: false,
 		permission_receive_email: false,
-		permission_vdc_manage: false,
+		permission_address2_manage: false,
 		permission_budget_manage: false,
 	};
     
@@ -44,7 +44,7 @@ describe('accessCtrl', function(){
 		permission_border_stations_delete: true,                
 		permission_accounts_manage: true,
 		permission_receive_email: true,
-		permission_vdc_manage: true,
+		permission_address2_manage: true,
 		permission_budget_manage: true,
 	}
     
@@ -107,7 +107,7 @@ describe('accessCtrl', function(){
 	  
 	    expect(newAccount.permission_accounts_manage).toEqual(fakePermissions.permission_accounts_manage);
 	    expect(newAccount.permission_receive_email).toEqual(fakePermissions.permission_receive_email);
-	    expect(newAccount.permission_vdc_manage).toEqual(fakePermissions.permission_vdc_manage);
+	    expect(newAccount.permission_address2_manage).toEqual(fakePermissions.permission_address2_manage);
 	    expect(newAccount.permission_budget_manage).toEqual(fakePermissions.permission_budget_manage);
      });
   });

@@ -1,8 +1,8 @@
 from parse import parse
 from django.db import models
 from models import BorderStation
-from models import District
-from models import VDC
+from models import Address1
+from models import Address2
 from django.utils.timezone import make_naive, localtime
 
 #####################################################
@@ -260,8 +260,8 @@ class FormatCsvFields:
 
         return self.formatString.format(**values)
 
-# Export/import District field
-class DistrictCsvField:
+# Export/import Address1 field
+class Address1CsvField:
     def __init__(self, data_name, title):
         self.data_name = data_name
         self.title = title
@@ -272,8 +272,8 @@ class DistrictCsvField:
         else:
             column_title = self.title
         value = csv_map[column_title]
-        district = District.objects.get(name=self.data_name)
-        if district is not None:
+        address1 = Address1.objects.get(name=self.data_name)
+        if address1 is not None:
             setattr(instance, self.data_name, value)
 
 
@@ -286,8 +286,8 @@ class DistrictCsvField:
         finally:
             return value
 
-# Export/import VDC field
-class VdcCsvField:
+# Export/import Address2 field
+class Address2CsvField:
     def __init__(self, data_name, title):
         self.data_name = data_name
         self.title = title
@@ -298,8 +298,8 @@ class VdcCsvField:
         else:
             column_title = self.title
         value = csv_map[column_title]
-        district = VDC.objects.get(name=self.data_name)
-        if district is not None:
+        address1 = Address2.objects.get(name=self.data_name)
+        if address1 is not None:
             setattr(instance, self.data_name, value)
 
 
@@ -753,8 +753,8 @@ interceptee_data = [
     CopyCsvField("full_name", "{}Name", True),
     MapValueCsvField('gender', "{}Gender", { "Male":"m", "Female":"f"}, export_default="Female"),
     CopyCsvField("age", "{}Age", True),
-    DistrictCsvField("district", "{}District"),
-    VdcCsvField("vdc", "{}VDC"),
+    Address1CsvField("address1", "{}Address1"),
+    Address2CsvField("address2", "{}Address2"),
     CopyCsvField("phone_contact", "{}Phone", True),
     CopyCsvField("relation_to", "{}Relationship to...", True),
 ]
@@ -832,8 +832,8 @@ vif_data = [
     CopyCsvField("victim_name", "1.1 Name", True),
     CopyCsvField("victim_gender", "1.2 Gender", True),
 
-    DistrictCsvField("victim_address_district", "1.3 District"),
-    VdcCsvField("victim_address_vdc", "VDC"),
+    Address1CsvField("victim_address1_Address1", "1.3 Address1"),
+    Address2CsvField("victim_address2", "Address2"),
 
     CopyCsvField("victim_address_ward", "Ward", True),
 
@@ -854,8 +854,8 @@ vif_data = [
     CopyCsvField("victim_num_in_family", "1.11 Number of Family Members", True),
 
     GroupBooleanCsv("victim_primary_guardian", "1.12 Guardian"),
-    DistrictCsvField("victim_guardian_address_district", "1.13 Guardian District"),
-    VdcCsvField("victim_guardian_address_vdc", "Guardian VDC"),
+    Address1CsvField("victim_guardian_address1", "1.13 Guardian Address1"),
+    Address2CsvField("victim_guardian_address2", "Guardian Address2"),
     CopyCsvField("victim_guardian_address_ward", "Guardian Ward", True),
     CopyCsvField("victim_guardian_phone", "Guardian Phone Number", True),
     GroupBooleanCsv("victim_parents_marital_status", "1.14 Parents' Marital Status"),
@@ -1073,8 +1073,8 @@ person_box_data = [
     GroupBooleanCsv("who_is_this_role", "{}Role"),
     MapValueCsvField("gender", "{}Gender", { "Male":"male", "Female":"female"}),
     CopyCsvField("name", "{}Name", True),
-    DistrictCsvField("address_district", "{}District"),
-    VdcCsvField("address_vdc", "{}VDC"),
+    Address1CsvField("address1", "{}Address1"),
+    Address2CsvField("address2", "{}Address2"),
     CopyCsvField("address_ward", "{}Ward", True),
     CopyCsvField("phone", "{}Phone", True),
     CopyCsvField("age", "{}Age", True),
@@ -1097,8 +1097,8 @@ location_box_prefix = "LB%d - "
 location_box_data = [
     GroupBooleanCsv("which_place", "{}Place"),
     GroupBooleanCsv("what_kind_place", "{}Type of Place"),
-    VdcCsvField("vdc", "{}VDC",),
-    DistrictCsvField("district", "{}District",),
+    Address2CsvField("address2", "{}Address2",),
+    Address1CsvField("address1", "{}Address1",),
     CopyCsvField("phone", "{}Phone", True),
     CopyCsvField("signboard", "{}Signboard", True),
     CopyCsvField("location_in_town", "{}Location in Town", True),
@@ -1165,5 +1165,5 @@ def get_vif_export_rows(vifs):
 
         rows.append(row)
 
-    # print "returning from get_vif_export_rows %d" % len(rows)
+    print "returning from get_vif_export_rows %d" % len(rows)
     return rows

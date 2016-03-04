@@ -34,8 +34,8 @@ describe('Interception Record Form -', function() {
             expect(element(by.cssContainingText('option', 'Victim')).isSelected()).toBeTruthy();
             expect(element(by.id('id_interceptees-0-full_name')).getAttribute('value')).toEqual(c.irfInterceptFname);
             expect(element(by.cssContainingText('option', 'F')).isSelected()).toBeTruthy();
-            expect(element(by.id('id_interceptees-0-district')).getAttribute('value')).toEqual(c.irfInterceptDistrict);
-            expect(element(by.id('id_interceptees-0-vdc')).getAttribute('value')).toEqual(c.irfInterceptVdc);
+            expect(element(by.id('id_interceptees-0-address1')).getAttribute('value')).toEqual(c.irfInterceptAddress1);
+            expect(element(by.id('id_interceptees-0-address2')).getAttribute('value')).toEqual(c.irfInterceptAddress2);
             expect(element(by.cssContainingText('option', 'Absolutely sure'))).toBeTruthy();
             expect(element(by.id('id_interception_type_india_trafficking')).isSelected()).toBeTruthy();
             expect(element(by.id('id_call_subcommittee_chair')).isSelected()).toBeTruthy();
@@ -61,8 +61,8 @@ describe('Interception Record Form -', function() {
             expect(element(by.cssContainingText('option', 'Victim')).isSelected()).toBeTruthy();
             expect(element(by.id('id_interceptees-0-full_name')).getAttribute('value')).toEqual(c.irfInterceptFname);
             expect(element(by.cssContainingText('option', 'F')).isSelected()).toBeTruthy();
-            expect(element(by.id('id_interceptees-0-district')).getAttribute('value')).toEqual(c.irfInterceptDistrict);
-            expect(element(by.id('id_interceptees-0-vdc')).getAttribute('value')).toEqual(c.irfInterceptVdc);
+            expect(element(by.id('id_interceptees-0-address1')).getAttribute('value')).toEqual(c.irfInterceptAddress1);
+            expect(element(by.id('id_interceptees-0-address2')).getAttribute('value')).toEqual(c.irfInterceptAddress2);
             expect(element(by.cssContainingText('option', 'Absolutely sure'))).toBeTruthy();
             expect(element(by.id('id_interception_type_india_trafficking')).isSelected()).toBeTruthy();
             expect(element(by.id('id_call_subcommittee_chair')).isSelected()).toBeTruthy();
@@ -94,5 +94,3 @@ describe('Interception Record Form -', function() {
         });
     });
 });
-
-
