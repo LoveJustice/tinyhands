@@ -57,6 +57,9 @@ function setPopovers(id)
             if(element.id.indexOf("district") > 0){
                 locationType = "district";
             }
+						else if(element.id.indexOf("address1") > 0){
+								locationType = "district";
+						}
             else{
                 locationType = "vdc";
             }
@@ -137,6 +140,10 @@ function find_district_value(element) {
 		{
 				district_value = $("#sys_address1").val();;
 		}
+		else if (element.id == "sys_address2")
+		{
+				district_value = $("#sys_address1").val();;
+		}
     else
     {
        district_value = $("#id_interceptees-" + element.id.split('-')[1] + '-district').val();
@@ -151,3 +158,4 @@ setPopovers("[id$=address_vdc]");
 setPopovers("[id$=-vdc]");
 setPopovers("[id$=-district]");
 setPopovers("[id$=sys_address1]");
+setPopovers("[id$=sys_address2]");
