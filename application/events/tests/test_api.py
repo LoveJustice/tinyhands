@@ -28,7 +28,7 @@ class CalendarFeedAPITests(RestApiTestCase):
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.data, 'Date does not match format %Y-%m-%d')
+        self.assertEqual(response.data, 'Date does not match format YYYY-MM-DD')
 
     def test_when_start_date_is_later_than_end_date_should_return_400_error(self):
         url = reverse('EventCalendarFeed')
