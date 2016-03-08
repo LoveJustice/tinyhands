@@ -81,3 +81,49 @@ class CalendarFeedAPITests(RestApiTestCase):
         self.assertEquals(response.data[1]['location'], repeatedEvent.location)
 
 
+class DashboardFeedAPITests(RestApiTestCase):
+
+    def test_when_not_logged_in_should_return_403_error(self):
+        url = reverse('EventDashboardFeed')
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_should_return_events_that_occur_within_one_week(self):
+        url = reverse('EventDashboardFeed')
+        user = ViewUserFactory.create()
+        today = datetime.date.today()
+        event = EventFactory.create()
+        event2 = EventFactory.create(start_date=today+datetime.timedelta(days=1))
+        outsideEvent = EventFactory.create(start_date=today+datetime.timedelta(days=8))
+        self.login(user)
+
+        response = self.client.get(url)
+
+        self.assertEquals(len(response.data), 2)
+        self.assertEquals(response.data[0]['title'], event.title)
+        self.assertEquals(response.data[0]['location'], event.location)
+        self.assertEquals(response.data[1]['title'], event2.title)
+        self.assertEquals(response.data[1]['location'], event2.location)
+
+    def test_when_event_is_repeated_should_return_multiple_events_that_occur_in_week(self):
+        url = reverse('EventDashboardFeed')
+        user = ViewUserFactory.create()
+        today = datetime.date.today()
+        repeatedEventProperties = {
+            'start_date': today,
+            'end_date': today,
+            'is_repeat': True,
+            'repetition': 'D',
+            'ends': today + datetime.timedelta(days=2)
+        }
+        repeatedEvent = EventFactory.create(**repeatedEventProperties)
+        self.login(user)
+
+        response = self.client.get(url)
+
+        self.assertEquals(len(response.data), 2)
+        self.assertEquals(response.data[0]['title'], repeatedEvent.title)
+        self.assertEquals(response.data[0]['location'], repeatedEvent.location)
+        self.assertEquals(response.data[1]['title'], repeatedEvent.title)
+        self.assertEquals(response.data[1]['location'], repeatedEvent.location)
