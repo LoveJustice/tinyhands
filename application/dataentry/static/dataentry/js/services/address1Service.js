@@ -44,7 +44,7 @@ function address1Service($http) {
                 return data;
             }).
             error(function (data, status, headers, config) {
-                console.log("Failure ********", data, status, headers, config);
+                console.log("Unable to save address", data, status, headers, config);
             });
     }
 }
