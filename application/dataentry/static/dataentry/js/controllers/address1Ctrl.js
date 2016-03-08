@@ -14,7 +14,7 @@ angular
         vm.paginateBy = 25;
         vm.sortIcon = "/static/images/sortIcon.jpg";
         vm.selectedAddress = {};
-        vm.sortColumn = "";
+        vm.sortColumn = "name";
 
 
         // Function Definitions
