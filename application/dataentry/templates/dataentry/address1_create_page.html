@@ -22,7 +22,15 @@
                             {% endfor %}
                         </ul>
                         {% endif %}
-                        {{ field|bootstrap }}
+                        {% if field.label == "Level" %}
+                        <select id="address1_level" name="add1_level">
+                            {% for value, text in field.field.choices %}
+                                <option value="{{ value }}">{{ text }}</option>
+                            {% endfor %}
+                        </select>
+                        {% else %}
+                            {{ field|bootstrap }}
+                        {% endif %}
                         {% if field.help_text %}
                         <div class="form-helptext">{{ field.help_text }}</div>
                         {% endif %}
