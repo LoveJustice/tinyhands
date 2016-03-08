@@ -24,7 +24,7 @@ angular
           vm.events = Events.all()
         })
       })
-    }
+  }
 
     vm.activate();
   }]);
