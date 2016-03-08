@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from dataentry.models import Address1, Address2, InterceptionRecord, VictimInterview, BorderStation
+#from dataentry.models import Address1, Address2, InterceptionRecord, VictimInterview, BorderStation, FuzzyMatching
 
 
 class Address1Serializer(serializers.ModelSerializer):
@@ -110,3 +111,8 @@ class VictimInterviewListSerializer(serializers.ModelSerializer):
         view_name='VictimInterviewDetail',
         read_only=True
     )
+
+
+# class SysAdminSettingsSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = FuzzyMatching

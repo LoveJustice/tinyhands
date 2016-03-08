@@ -34,47 +34,47 @@ class Address1(models.Model):
         return self.name
 
 
-# class FuzzyMatching(models.Model):
-#     address1_cutoff = model.PositiveIntegerField(default=0)
-#     address1_limit = model.PositiveIntegerField(default=0)
-#     address2_cutoff = model.PositiveIntegerField(default=0)
-#     address2_limit = model.PositiveIntegerField(default=0)
-#     person_cutoff = model.PositiveIntegerField(default=0)
-#     person_limit = model.PositiveIntegerField(default=0)
-#     phone_number_cutoff = model.PositiveIntegerField(default=0)
-#     phone_number_limit = model.PositiveIntegerField(default=0)
-#
-#     @property
-#     def get_address1_cutoff(self):
-#         return self.address1_cutoff
-#
-#     @property
-#     def get_address1_limit(self):
-#         return self.address1_limit
-#
-#     @property
-#     def get_address2_cutoff(self):
-#         return self.address2_cutoff
-#
-#     @property
-#     def get_address2_limit(self):
-#         return self.address2_limit
-#
-#     @property
-#     def get_person_cutoff(self):
-#         return self.person_cutoff
-#
-#     @property
-#     def get_person_limit(self):
-#         return self.person_limit
-#
-#     @property
-#     def get_phone_number_cutoff(self):
-#         return self.phone_number_cutoff
-#
-#     @property
-#     def get_phone_number_limit(self):
-#         return self.phone_number_limit
+class FuzzyMatching(models.Model):
+    address1_cutoff = models.PositiveIntegerField(default=0)
+    address1_limit = models.PositiveIntegerField(default=0)
+    address2_cutoff = models.PositiveIntegerField(default=0)
+    address2_limit = models.PositiveIntegerField(default=0)
+    person_cutoff = models.PositiveIntegerField(default=0)
+    person_limit = models.PositiveIntegerField(default=0)
+    phone_number_cutoff = models.PositiveIntegerField(default=0)
+    phone_number_limit = models.PositiveIntegerField(default=0)
+
+    @property
+    def get_address1_cutoff(self):
+        return self.address1_cutoff
+
+    @property
+    def get_address1_limit(self):
+        return self.address1_limit
+
+    @property
+    def get_address2_cutoff(self):
+        return self.address2_cutoff
+
+    @property
+    def get_address2_limit(self):
+        return self.address2_limit
+
+    @property
+    def get_person_cutoff(self):
+        return self.person_cutoff
+
+    @property
+    def get_person_limit(self):
+        return self.person_limit
+
+    @property
+    def get_phone_number_cutoff(self):
+        return self.phone_number_cutoff
+
+    @property
+    def get_phone_number_limit(self):
+        return self.phone_number_limit
 
 
 class Address2(models.Model):
