@@ -7,9 +7,15 @@
 {% block title %}System Admin Settings{% endblock %}
 
 {% block tab_block %}
-{% block content %}
-{% block angular %}{% endblock %}
+
+    {% block content %}
+
+    {% include "dataentry/popover.html" %}
+
+        {% block angular %}{% endblock %}
+
     <form id="sys_admin_update" method="post">
+
         <div ng-controller="sysAdminCtrl as admin">
                 <h1 class="text-center">System Admin Settings</h1>
                 <div class="col-lg-6 " style="height: 675px">
@@ -111,7 +117,7 @@
                             <label>Address 1</label>
                         </div>
                         <div class="col-lg-5" >
-                            <input class="text-right form-control" type="text" id="address1_input" ng-model="address1_input">
+                            <input class="text-right form-control" type="text" id="sys_address1" ng-model="address1_input">
                         </div>
                         <br>
                         <br>
@@ -120,7 +126,7 @@
                             <label>Address 2</label>
                         </div>
                         <div class="col-lg-5" >
-                            <input class="text-right form-control" type="text" id="address2_input" ng-model="address2_input">
+                            <input class="text-right form-control" type="text" id="sys_address2" ng-model="address2_input">
                         </div>
                         <br>
                         <br>
@@ -129,7 +135,7 @@
                             <label>Person</label>
                         </div>
                         <div class="col-lg-5" >
-                            <input class="text-right form-control" type="text" id="person_input" ng-model="person_input">
+                            <input class="text-right form-control" type="text" id="sys_person" ng-model="person_input">
                         </div>
                         <br>
                         <br>
@@ -138,7 +144,7 @@
                             <label>Phone Number</label>
                         </div>
                         <div class="col-lg-5" >
-                            <input class="text-right form-control" type="text" id="phone_number_input" ng-model="phone_number_input">
+                            <input class="text-right form-control" type="text" id="sys_phone" ng-model="phone_number_input">
                         </div>
 
                  </div>
@@ -149,8 +155,10 @@
         </form>
 
         {% load static from staticfiles %}
-             <script type="text/javascript" src="{% static "dataentry/js/dataEntry.module.js" %}"></script>
-             <script type="text/javascript" src="{% static "dataentry/js/controllers/sysAdminCtrl.js" %}"></script>
+         <script type="text/javascript" src="{% static "dataentry/js/dataEntry.module.js" %}"></script>
+         <script type="text/javascript" src="{% static "dataentry/js/services/staffListService.js" %}"></script>
+         <script type="text/javascript" src="{% static "dataentry/js/controllers/staffListCtrl.js" %}"></script>
+      {% include "dataentry/fuzzymatching-ui.html" %}
 
     {% endblock %}
 {% endblock %}

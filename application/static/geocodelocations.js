@@ -56,6 +56,9 @@ function setPopovers(id)
             if(element.id.indexOf("address1") > 0){
                 locationType = "address1";
             }
+						else if(element.id.indexOf("address1") > 0){
+								locationType = "district";
+						}
             else{
                 locationType = "address2";
             }
@@ -73,7 +76,6 @@ function setPopovers(id)
 
 function callFuzzyApi(input, locationType, element){
     var unorderedList = $("#popover-location-info");
-
     var requestData = locationType+"="+input;
     if (locationType === "address2"){
         var address1_value = find_address1_value(element);
@@ -131,6 +133,14 @@ function find_address1_value(element) {
     {
        address1_value = $("#id_location_boxes-" + element.id.split('-')[1] + '-address1').val();
     }
+	else if (element.id == "sys_address1")
+	{
+		address1_value = $("#sys_address1").val();;
+	}
+	else if (element.id == "sys_address2")
+	{
+		address1_value = $("#sys_address1").val();;
+	}
     else
     {
        address1_value = $("#id_interceptees-" + element.id.split('-')[1] + '-address1').val();
@@ -142,3 +152,5 @@ setPopovers("[id$=address1]");
 setPopovers("[id$=address2]");
 setPopovers("[id$=-address2]");
 setPopovers("[id$=-address1]");
+setPopovers("[id$=sys_address1]");
+setPopovers("[id$=sys_address2]");
