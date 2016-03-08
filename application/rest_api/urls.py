@@ -39,7 +39,8 @@ urlpatterns = patterns('rest_api.views',
     url(r'^budget/previous_data/(?P<pk>\d+)/(?P<month>\d+)/(?P<year>\d+)/$', previous_data, name="rest_api_previous_data"),
 
     url(r'^budget/staff_salary/$', StaffSalaryViewSet.as_view(list), name="rest_api_staff_salary_list_api"),
-    url(r'^budget/staff_salary/(?P<pk>\d+)/$', StaffSalaryViewSet.as_view({'get': 'budget_calc_retrieve', 'put': 'update', 'delete': 'destroy'}), name="rest_api_staff_salary_detail_api"),
+    url(r'^budget/(?P<parent_pk>\d+)/staff_salary/$', StaffSalaryViewSet.as_view({'get': 'budget_calc_retrieve'}), name="rest_api_staff_salary_detail_api"),
+    url(r'^budget/(?P<parent_pk>\d+)/staff_salary/(?P<pk>\d+)/$', StaffSalaryViewSet.as_view({'put': 'update', 'delete': 'destroy'}), name="rest_api_staff_salary_detail_api"),
 
     url(r'^budget/money_distribution/(?P<pk>\d+)/$', MoneyDistribution.as_view({'get': 'get_people_needing_form', 'post': 'send_emails'}), name="rest_api_money_distribution_api"),
     url(r'^budget/money_distribution_pdf/(?P<pk>\d+)/$', MoneyDistributionFormPDFView.as_view(), name="rest_api_money_distribution_pdf"),
@@ -86,12 +87,12 @@ urlpatterns = patterns('rest_api.views',
     url(r'^defaultPermissionsSet/(?P<pk>\d+)/$', DefaultPermissionsSetViewSet.as_view(detail), name="DefaultPermissionsSet"),
 
     # IRFs
-    url(r'^irf/$', InterceptionRecordViewSet.as_view({'get': 'list'}), name="InterceptionRecord"),
-    url(r'^irf/(?P<pk>\d+)/$', InterceptionRecordViewSet.as_view({'delete': 'destroy'}), name="InterceptionRecordDetail"),
+    url(r'^irf/$', InterceptionRecordViewSet.as_view(list), name="InterceptionRecord"),
+    url(r'^irf/(?P<pk>\d+)/$', InterceptionRecordViewSet.as_view(detail), name="InterceptionRecordDetail"),
 
     # VIFs
-    url(r'^vif/$', VictimInterviewViewSet.as_view({'get': 'list'}), name="VictimInterview"),
-    url(r'^vif/(?P<pk>\d+)/$', VictimInterviewViewSet.as_view({'delete': 'destroy'}), name="VictimInterviewDetail"),
+    url(r'^vif/$', VictimInterviewViewSet.as_view(list), name="VictimInterview"),
+    url(r'^vif/(?P<pk>\d+)/$', VictimInterviewViewSet.as_view(detail), name="VictimInterviewDetail"),
 
     #Accounts and DefaultPermissionsSets
     url(r'^login/', views.obtain_auth_token),

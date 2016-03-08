@@ -189,15 +189,9 @@ class StaffSalaryViewSet(viewsets.ModelViewSet):
         """
             Retrieve all of the staffSalaries for a particular budget calculation sheet
         """
-        budget_sheet = BorderStationBudgetCalculation.objects.filter(border_station=self.kwargs['pk']).order_by('-date_time_entered').first()
-        if budget_sheet:
-            staff_set = budget_sheet.staffsalary_set.all()
-            serializer = self.get_serializer(staff_set, many=True)
-            return Response(serializer.data)
-        else:
-            self.object_list = self.filter_queryset(self.get_queryset().filter(budget_calc_sheet=self.kwargs['pk']))
-            serializer = self.get_serializer(self.object_list, many=True)
-            return Response(serializer.data)
+        self.object_list = self.filter_queryset(self.get_queryset().filter(budget_calc_sheet=self.kwargs['parent_pk']))
+        serializer = self.get_serializer(self.object_list, many=True)
+        return Response(serializer.data)
 
 
 class BudgetCalcListView(
