@@ -42,36 +42,19 @@
 
                     <div ng-show="tally.showEvents">
                         <!--   REGION: Events     -->
-                        <div id="content-window">
-                            <div class="col-md-offset-9 col-md-3 events-div-1 events">
-                                <div><span class="day"></span> </div>
-                                <div><span class="event"></span> </div>
+                        <div id="content-window" ng-controller="EventDashboardCtrl as eventCtrl">
+                            <div class="col-md-offset-9 col-md-3 events-div-1 events" ng-repeat="day in eventCtrl.days">
+                                <div ng-repeat="event in day">
+                                    <div ng-if="$index == 0"><span class="day">{{ event.weekday }}</span> </div>
+                                    <div ng-if="$index != 0">
+                                        <span class="event">
+                                            <a href="" ng-click="eventCtrl.showEvent(event)">
+                                                {{ event.title }}
+                                            </a>
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-md-offset-9 col-md-3 events-div-2 events">
-                                <div><span class="day"></span> </div>
-                                <div><span class="event"></span> </div>
-                            </div>
-                            <div class="col-md-offset-9 col-md-3 events-div-3 events">
-                                <div><span class="day"></span> </div>
-                                <div><span class="event"></span> </div>
-                            </div>
-                            <div class="col-md-offset-9 col-md-3 events-div-4 events">
-                                 <div><span class="day"></span> </div>
-                                 <div><span class="event"></span> </div>
-                            </div>
-                            <div class="col-md-offset-9 col-md-3 events-div-5 events">
-                                <div><span class="day"></span> </div>
-                                <div><span class="event"></span> </div>
-                            </div>
-                            <div class="col-md-offset-9 col-md-3 events-div-6 events">
-                                <div><span class="day"></span> </div>
-                                <div><span class="event"></span> </div>
-                            </div>
-                            <div class="col-md-offset-9 col-md-3 events-div-7 events">
-                                <div><span class="day"></span> </div>
-                                <div><span class="event"></span> </div>
-                            </div>
-
                         </div>
                         <!--   ENDREGION: Events     -->
                     </div>
@@ -114,67 +97,58 @@
             </div>
         </div>
         <!--    ENDREGION: Wrapper    -->
-    {% endverbatim %}
 
-    <!--    REGION: Events Modal    -->
-    <div class="modal fade" id="EventDetailModal" tabindex="-1" role="dialog" aria-labelledby="EventDetailLabel" aria-hidden="true" ng-cloak>
-        <div class="modal-dialog">
+        <!--    REGION: Events Modal    -->
+        <script type="text/ng-template" id="modal.html">
             <div class="modal-content">
-
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <button type="button" class="close" ng-click="modalCtrl.close()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                     <h4 class="modal-title" id="UploadFileLabel">Event Detail</h4>
                 </div>
-
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-3">Title</div>
                         <div class="col-md-1">:</div>
-                        <div class="col-md-8 title-value">Meeting</div>
+                        <div class="col-md-8 title-value">{{modalCtrl.event.title}}</div>
                     </div>
                     <div class="row">
                         <div class="col-md-3">Location</div>
                         <div class="col-md-1">:</div>
-                        <div class="col-md-8 location-value">Kathmandu</div>
+                        <div class="col-md-8 location-value">{{ modalCtrl.event.location }}</div>
                     </div>
                     <div class="row">
                         <div class="col-md-3">Start</div>
                         <div class="col-md-1">:</div>
-                        <div class="col-md-8 start-value">1 day</div>
+                        <div class="col-md-8 start-value">{{ modalCtrl.event.start_date + '  ' + modalCtrl.event.start_time }}</div>
                     </div>
                     <div class="row">
                         <div class="col-md-3">End</div>
                         <div class="col-md-1">:</div>
-                        <div class="col-md-8 end-value">Yes</div>
+                        <div class="col-md-8 end-value">{{ modalCtrl.event.end_date + '  ' + modalCtrl.event.end_time }}</div>
                     </div>
                     <div class="row">
                         <div class="col-md-3">Description</div>
                         <div class="col-md-1">:</div>
-                        <div class="col-md-8 description-value">Yes</div>
+                        <div class="col-md-8 description-value">{{ modalCtrl.event.description }}</div>
                     </div>
-                    <div class="row optional">
+                    <div class="row" ng-if="modalCtrl.event.is_repeat">
                         <div class="col-md-3">Repetition</div>
                         <div class="col-md-1">:</div>
-                        <div class="col-md-8 repetition-value">Yes</div>
+                        <div class="col-md-8 repetition-value">{{ modalCtrl.event.repetition }}</div>
                     </div>
-                    <div class="row optional">
+                    <div class="row" ng-if="modalCtrl.event.is_repeat">
                         <div class="col-md-3">Ends At</div>
                         <div class="col-md-1">:</div>
-                        <div class="col-md-8 ends-at-value">Yes</div>
+                        <div class="col-md-8 ends-at-value">{{ modalCtrl.event.ends ? modalCtrl.event.ends : 'Never' }}</div>
                     </div>
-
                 </div>
-
                 <div class="modal-footer">
-                    <button type="button" data-dismiss="modal" class="btn btn-primary ">Close</button>
+                    <button type="button" class="btn btn-primary" ng-click="modalCtrl.close()" >Close</button>
                 </div>
-
             </div>
-
-        </div>
-    </div>
-    <!--    ENDREGION: Events Modal    -->
-
+        </script>
+        <!--    ENDREGION: Events Modal    -->
+    {% endverbatim %}
 {% endblock %}
 
 {% block displayCSS %}
@@ -208,7 +182,7 @@
     }
 
     $(function(){
-         $.ajax({
+         /*$.ajax({
             url: '/events/list.json/dashboard/',
             success: function(resp){
 
@@ -232,7 +206,7 @@
             error: function(resp){
                 console.log('Ajax Error !!!  '+ resp);
             }
-        });
+        });*/
 
         $('.modal').on('show.bs.modal', function(e){
             var el = e.relatedTarget;

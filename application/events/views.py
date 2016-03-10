@@ -140,7 +140,8 @@ class EventViewSet(ModelViewSet):
             querydict['is_repeat'] = False
 
             event_data = queryEventsForFeed(querydict, start_date, end_date)
-            return Response(event_data)
+            events = event_list(event_data)
+            return Response(events)
         except ValueError:
             return Response("Date does not match format YYYY-MM-DD", status=status.HTTP_400_BAD_REQUEST)
 
@@ -156,7 +157,8 @@ class EventViewSet(ModelViewSet):
         }
 
         event_data = queryEventsForFeed(querydict, start_date, end_date)
-        return Response(event_data)
+        events = dashboard_event_list(event_data)
+        return Response(events)
 
 def queryEventsForFeed(querydict, start_date, end_date):
     repeated_events = Event.objects.filter(is_repeat=True)
@@ -164,5 +166,4 @@ def queryEventsForFeed(querydict, start_date, end_date):
 
     temp_events = get_repeated(repeated_events, start_date, end_date)
     result_list = list(chain(temp_events, non_repeated_events))
-    events = event_list(result_list)
-    return events;
+    return result_list;
