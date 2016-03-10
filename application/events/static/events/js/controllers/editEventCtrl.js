@@ -32,7 +32,7 @@ angular
         vm.popup3.opened = true;
     };
 
-    
+
 
     vm.minDate = new Date();
     vm.maxDate = new Date(2020, 5, 22);
