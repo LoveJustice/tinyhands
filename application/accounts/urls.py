@@ -1,7 +1,7 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 from accounts.views import *
 
-urlpatterns = patterns('accounts.views',
+urlpatterns = [
     url(r'^$', AccountListView.as_view(), name='account_list'),
 
     url(r'^create/$', AccountCreateView.as_view(), name='account_create'),
@@ -14,4 +14,4 @@ urlpatterns = patterns('accounts.views',
     url(r'^access-control/$', AccessControlView.as_view(), name='access_control'),
     url(r'^access-defaults/$', AccessDefaultsView.as_view(), name='access_defaults'),
     url(r'^access-defaults-delete/(?P<pk>\d+)/$', AccessDefaultsDeleteView.as_view(), name='access_defaults_delete'),
-)
+]
