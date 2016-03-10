@@ -1,0 +1,64 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
+from django.db import models, migrations
+
+
+class Migration(migrations.Migration):
+
+    dependencies = [
+        ('dataentry', '0028_auto_20160221_0004'),
+    ]
+
+    operations = [
+        migrations.CreateModel(
+            name='Person',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('photo', models.ImageField(default=b'', upload_to=b'interceptee_photos', blank=True)),
+                ('full_name', models.CharField(max_length=255)),
+                ('gender', models.CharField(blank=True, max_length=4, choices=[(b'f', b'F'), (b'm', b'M')])),
+                ('age', models.PositiveIntegerField(null=True, blank=True)),
+                ('phone_contact', models.CharField(max_length=255, blank=True)),
+                ('address1', models.ForeignKey(blank=True, to='dataentry.Address1', null=True)),
+                ('address2', models.ForeignKey(blank=True, to='dataentry.Address2', null=True)),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.RemoveField(
+            model_name='interceptee',
+            name='address1',
+        ),
+        migrations.RemoveField(
+            model_name='interceptee',
+            name='address2',
+        ),
+        migrations.RemoveField(
+            model_name='interceptee',
+            name='age',
+        ),
+        migrations.RemoveField(
+            model_name='interceptee',
+            name='full_name',
+        ),
+        migrations.RemoveField(
+            model_name='interceptee',
+            name='gender',
+        ),
+        migrations.RemoveField(
+            model_name='interceptee',
+            name='phone_contact',
+        ),
+        migrations.RemoveField(
+            model_name='interceptee',
+            name='photo',
+        ),
+        migrations.AddField(
+            model_name='interceptee',
+            name='person',
+            field=models.ForeignKey(related_name='interceptee', blank=True, to='dataentry.Person', null=True),
+            preserve_default=True,
+        ),
+    ]

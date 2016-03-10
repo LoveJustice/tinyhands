@@ -282,8 +282,8 @@ class Person(models.Model):
     full_name = models.CharField(max_length=255)
     gender = models.CharField(max_length=4, choices=GENDER_CHOICES, blank=True)
     age = models.PositiveIntegerField(null=True, blank=True)
-    district = models.ForeignKey(District, null=True, blank=True)
-    vdc = models.ForeignKey(VDC, null=True, blank=True)
+    address1 = models.ForeignKey(Address1, null=True, blank=True)
+    address2 = models.ForeignKey(Address2, null=True, blank=True)
     phone_contact = models.CharField(max_length=255, blank=True)
 
 
@@ -295,7 +295,7 @@ class Interceptee(models.Model):
     interception_record = models.ForeignKey(InterceptionRecord, related_name='interceptees')
     kind = models.CharField(max_length=4, choices=KIND_CHOICES)
     relation_to = models.CharField(max_length=255, blank=True)
-    person = models.ForeignKey(Person, related_name='interceptee')
+    person = models.ForeignKey(Person, related_name='interceptee', null=True, blank=True)
 
     class Meta:
         ordering = ['id']
