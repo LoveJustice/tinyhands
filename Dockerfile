@@ -16,7 +16,7 @@ RUN pip install -r requirements.txt
 
 # Make the log files for Gunicorn
 RUN mkdir -p /log
-RUN touch /log/gunicorn_access.log /log/gunicorn_error.log && chown -R www-data:www-data /log
+RUN chown -R www-data:www-data /log
 
 # Copy application files over to container
 COPY application/ /data/
