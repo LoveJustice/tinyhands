@@ -7,15 +7,9 @@
 {% block title %}System Admin Settings{% endblock %}
 
 {% block tab_block %}
-
-    {% block content %}
-
-    {% include "dataentry/popover.html" %}
-
-        {% block angular %}{% endblock %}
-
+{% block content %}
+{% block angular %}{% endblock %}
     <form id="sys_admin_update" method="post">
-
         <div ng-controller="sysAdminCtrl as admin">
                 <h1 class="text-center">System Admin Settings</h1>
                 <div class="col-lg-6 " style="height: 675px">
@@ -39,11 +33,13 @@
                             <label>Address 1</label>
                         </div>
                         <div class="col-lg-3" >
-                            <input class="text-right form-control" type="number" id="address1_cutoff" ng-model="admin.form.address1_cutoff">
+                            <!-- <input class="text-right form-control" type="number" id="address1_cutoff" ng-model="admin.form.address1_cutoff"> -->
+                            <input class="text-right form-control" type="number" id="address1_cutoff" ng-value="admin.address1_cutoff_value()">
                             <small>Default = 70</small>
                         </div>
                         <div class="col-lg-3" >
-                            <input class="text-right form-control" type="number" id="address1_limit" ng-model="admin.form.address1_limit">
+                            <!-- <input class="text-right form-control" type="number" id="address1_limit" ng-model="admin.form.address1_limit"> -->
+                            <input class="text-right form-control" type="number" id="address1_limit" ng-value="admin.address1_limit_value()">
                             <small>Default = 5</small>
                         </div>
                         <br>
@@ -55,11 +51,13 @@
                             <label>Address 2</label>
                         </div>
                         <div class="col-lg-3" >
-                            <input class="text-right form-control" type="number" id="address2_cutoff" ng-model="admin.form.address2_cutoff">
+                            <!-- <input class="text-right form-control" type="number" id="address2_cutoff" ng-model="admin.form.address2_cutoff"> -->
+                            <input class="text-right form-control" type="number" id="address2_cutoff" ng-value="admin.address2_cutoff_value()">
                             <small>Default = 70</small>
                         </div>
                         <div class="col-lg-3" >
-                            <input class="text-right form-control" type="number" id="address2_limit" ng-model="admin.form.address2_limit">
+                            <!-- <input class="text-right form-control" type="number" id="address2_limit" ng-model="admin.form.address2_limit"> -->
+                            <input class="text-right form-control" type="number" id="address2_limit" ng-value="admin.address2_limit_value()">
                             <small>Default = 5</small>
                         </div>
                         <br>
@@ -71,11 +69,13 @@
                             <label>Person</label>
                         </div>
                         <div class="col-lg-3" >
-                            <input class="text-right form-control" type="number" id="person_cutoff" ng-model="admin.form.person_cutoff">
+                            <!-- <input class="text-right form-control" type="number" id="person_cutoff" ng-model="admin.form.person_cutoff"> -->
+                            <input class="text-right form-control" type="number" id="person_cutoff" ng-value="admin.person_cutoff_value()">
                             <small> Default = 90 </small>
                         </div>
                         <div class="col-lg-3" >
-                            <input class="text-right form-control" type="number" id="person_limit" ng-model="admin.form.person_limit">
+                            <!-- <input class="text-right form-control" type="number" id="person_limit" ng-model="admin.form.person_limit"> -->
+                            <input class="text-right form-control" type="number" id="person_limit" ng-value="admin.person_limit_value()">
                             <small> Default = 10 </small>
                         </div>
                         <br>
@@ -87,11 +87,13 @@
                             <label>Phone Number</label>
                         </div>
                         <div class="col-lg-3" >
-                            <input class="text-right form-control" type="number" id="phone_number_cutoff" ng-model="admin.form.phone_number_cutoff">
+                            <!-- <input class="text-right form-control" type="number" id="phone_number_cutoff" ng-model="admin.form.phone_number_cutoff"> -->
+                            <input class="text-right form-control" type="number" id="phone_number_cutoff" ng-value="admin.phone_number_cutoff_value()">
                             <small > Default = 0 </small>
                         </div>
                         <div class="col-lg-3" >
-                            <input class="text-right form-control" type="number" id="phone_number_limit" ng-model="admin.form.phone_number_limit">
+                            <!-- <input class="text-right form-control" type="number" id="phone_number_limit" ng-model="admin.form.phone_number_limit"> -->
+                            <input class="text-right form-control" type="number" id="phone_number_limit" ng-value="admin.phone_number_limit_value()">
                             <small > Default = 0 </small>
                         </div>
                         <br>
@@ -117,7 +119,7 @@
                             <label>Address 1</label>
                         </div>
                         <div class="col-lg-5" >
-                            <input class="text-right form-control" type="text" id="sys_address1" ng-model="address1_input">
+                            <input class="text-right form-control" type="text" id="address1_input" ng-model="address1_input">
                         </div>
                         <br>
                         <br>
@@ -126,7 +128,7 @@
                             <label>Address 2</label>
                         </div>
                         <div class="col-lg-5" >
-                            <input class="text-right form-control" type="text" id="sys_address2" ng-model="address2_input">
+                            <input class="text-right form-control" type="text" id="address2_input" ng-model="address2_input">
                         </div>
                         <br>
                         <br>
@@ -135,7 +137,7 @@
                             <label>Person</label>
                         </div>
                         <div class="col-lg-5" >
-                            <input class="text-right form-control" type="text" id="sys_person" ng-model="person_input">
+                            <input class="text-right form-control" type="text" id="person_input" ng-model="person_input">
                         </div>
                         <br>
                         <br>
@@ -144,7 +146,7 @@
                             <label>Phone Number</label>
                         </div>
                         <div class="col-lg-5" >
-                            <input class="text-right form-control" type="text" id="sys_phone" ng-model="phone_number_input">
+                            <input class="text-right form-control" type="text" id="phone_number_input" ng-model="phone_number_input">
                         </div>
 
                  </div>
@@ -155,10 +157,8 @@
         </form>
 
         {% load static from staticfiles %}
-         <script type="text/javascript" src="{% static "dataentry/js/dataEntry.module.js" %}"></script>
-         <script type="text/javascript" src="{% static "dataentry/js/services/staffListService.js" %}"></script>
-         <script type="text/javascript" src="{% static "dataentry/js/controllers/staffListCtrl.js" %}"></script>
-      {% include "dataentry/fuzzymatching-ui.html" %}
+             <script type="text/javascript" src="{% static "dataentry/js/dataEntry.module.js" %}"></script>
+             <script type="text/javascript" src="{% static "dataentry/js/controllers/sysAdminCtrl.js" %}"></script>
 
     {% endblock %}
 {% endblock %}

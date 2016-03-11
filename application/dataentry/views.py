@@ -32,8 +32,8 @@ from fuzzywuzzy import process
 from dataentry.models import (BorderStation, Address2, Address1, Interceptee, InterceptionRecord, VictimInterview, VictimInterviewLocationBox, VictimInterviewPersonBox, FuzzyMatching)
 from dataentry.forms import (IntercepteeForm, InterceptionRecordForm, Address2Form, Address1Form, VictimInterviewForm, VictimInterviewLocationBoxForm, VictimInterviewPersonBoxForm)
 from dataentry import csv_io
-from dataentry.serializers import Address1Serializer, Address2Serializer, InterceptionRecordListSerializer, VictimInterviewListSerializer
-#from dataentry.serializers import Address1Serializer, Address2Serializer, InterceptionRecordListSerializer, VictimInterviewListSerializer, SysAdminSettingsSerializer
+#from dataentry.serializers import Address1Serializer, Address2Serializer, InterceptionRecordListSerializer, VictimInterviewListSerializer
+from dataentry.serializers import Address1Serializer, Address2Serializer, InterceptionRecordListSerializer, VictimInterviewListSerializer, SysAdminSettingsSerializer
 
 from accounts.mixins import PermissionsRequiredMixin
 
@@ -416,6 +416,11 @@ class StationCodeAPIView(APIView):
         codes = BorderStation.objects.all().values_list("station_code", flat=True)
         return Response(codes, status=status.HTTP_200_OK)
 
+@login_required
+def sys_admin_settings_update(request, pk):
+    return render(request, 'dataentry/sys_admin_settings.html', locals())
+    #return HttpResponse(render_to_string('dataentry/sys_admin_settings.html'))
+
 
 @login_required
 def interceptee_fuzzy_matching(request):
@@ -493,10 +498,6 @@ class VictimInterviewViewSet(viewsets.ModelViewSet):
     ordering = ('vif_number',)
 
 
-@login_required
-def sys_admin_settings_template(request):
-    return render(request, 'dataentry/sys_admin_settings.html')
-
-# class SysAdminSettingsViewSet(viewsets.ModelViewSet):
-#     queryset = FuzzyMatching.objects.all()
-#     serializer_class = SysAdminSettingsSerializer
+class SysAdminSettingsViewSet(viewsets.ModelViewSet):
+    queryset = FuzzyMatching.objects.all()
+    serializer_class = SysAdminSettingsSerializer
