@@ -8,7 +8,8 @@ from rest_framework.test import APIClient
 
 from accounts.tests.factories import SuperUserFactory
 from budget.tests.factories import BorderStationBudgetCalculationFactory
-from static_border_stations.tests.factories import StaffFactory, CommitteeMemberFactory
+
+from static_border_stations.tests.factories import StaffFactory, CommitteeMemberFactory, BorderStationFactory
 from budget.views import MoneyDistributionFormPDFView
 from static_border_stations.tests.factories import BorderStationFactory
 
@@ -68,7 +69,8 @@ class BudgetCalcApiTests(WebTest):
 
 class MoneyDistributionWebTests(WebTest, TestCase):
     def setUp(self):
-        self.budget_calc_sheet = BorderStationBudgetCalculationFactory.create()
+        self.border_station = BorderStationFactory.create()
+        self.budget_calc_sheet = BorderStationBudgetCalculationFactory.create(border_station=self.border_station)
         self.superuser = SuperUserFactory.create()
         self.MDFView = MoneyDistributionFormPDFView(kwargs={"pk": str(self.budget_calc_sheet.id)})
         self.client = APIClient()
@@ -91,7 +93,7 @@ class MoneyDistributionWebTests(WebTest, TestCase):
         self.staff = StaffFactory.create(border_station=self.budget_calc_sheet.border_station)
         self.committee_member = CommitteeMemberFactory.create(border_station=self.budget_calc_sheet.border_station)
 
-        request = self.app.get(reverse('money_distribution_api', kwargs={"pk": self.budget_calc_sheet.pk}), user=self.superuser)
+        request = self.app.get(reverse('money_distribution_api', kwargs={"pk": self.budget_calc_sheet.border_station.pk}), user=self.superuser)
         staff_data = request.json['staff_members']
         committee_data = request.json['committee_members']
 
@@ -111,7 +113,7 @@ class MoneyDistributionWebTests(WebTest, TestCase):
         self.staff2 = StaffFactory.create(border_station=self.budget_calc_sheet.border_station)
         self.committee_member2 = CommitteeMemberFactory.create(border_station=self.budget_calc_sheet.border_station)
 
-        request = self.app.get(reverse('money_distribution_api', kwargs={"pk": self.budget_calc_sheet.pk}), user=self.superuser)
+        request = self.app.get(reverse('money_distribution_api', kwargs={"pk": self.budget_calc_sheet.border_station.pk}), user=self.superuser)
         staff_data = request.json['staff_members']
         committee_data = request.json['committee_members']
 

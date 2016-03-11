@@ -1,5 +1,6 @@
+import unittest
+
 from django_webtest import WebTest
-from django.utils import unittest
 from accounts.models import Account, Alert
 from accounts.tests.factories import SuperUserFactory
 from django.core import mail

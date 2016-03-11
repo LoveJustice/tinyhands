@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 from accounts.views import CurrentUserView
 
 from rest_framework.authtoken import views
@@ -10,12 +10,10 @@ from dataentry.views import Address2ViewSet, Address1ViewSet, GeoCodeAddress1API
 from accounts.views import AccountViewSet, DefaultPermissionsSetViewSet, CurrentUserView, ResendActivationEmailView
 from static_border_stations.views import BorderStationViewSet, StaffViewSet, CommitteeMemberViewSet, LocationViewSet
 
-
 list = {'get': 'list', 'post': 'create'}
 detail = {'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}
 
-
-urlpatterns = patterns('rest_api.views',
+urlpatterns = [
     # Addresses
     url(r'^address1/$', Address1ViewSet.as_view(list), name='Address1'),
     url(r'^address1/all/$', Address1ViewSet.as_view({'get': 'list_all'}), name='Address1all'),
@@ -98,4 +96,6 @@ urlpatterns = patterns('rest_api.views',
     url(r'^login/', views.obtain_auth_token),
     url(r'^me/$', CurrentUserView.as_view(), name="CurrentUser"),
 
-)
+    url(r'^vif/$', VictimInterviewViewSet.as_view({'get': 'list'}), name="VictimInterview"),
+    url(r'^vif/(?P<pk>\d+)/$', VictimInterviewViewSet.as_view({'delete': 'destroy'}), name="VictimInterviewDetail"),
+]

@@ -1,17 +1,16 @@
 from .base import *
 
 DEBUG = True
-TEMPLATE_DEBUG = True
 
-INSTALLED_APPS += (
+INSTALLED_APPS += [
     'corsheaders',
     'rest_framework.authtoken',
-)
+]
 
-MIDDLEWARE_CLASSES += (
+MIDDLEWARE_CLASSES += [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
-)
+]
 
 CORS_ORIGIN_ALLOW_ALL = True
 

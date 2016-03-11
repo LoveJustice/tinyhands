@@ -1,7 +1,7 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 from dataentry.views import *
 
-urlpatterns = patterns('dataentry.views',
+urlpatterns = [
     url(r'^irfs/$', interception_record_list_template, name="interceptionrecord_list"),  # Simple render view
     url(r'^irfs/search/(?P<code>\w+)/$', interception_record_list_search_template, name="interceptionrecord_list_search"),
     url(r'^irfs/(?P<pk>\d+)/$', InterceptionRecordDetailView.as_view(), name='interceptionrecord_detail'),
@@ -30,5 +30,5 @@ urlpatterns = patterns('dataentry.views',
     url(r'^geocodelocation/address2/$', GeoCodeAddress2APIView.as_view()),
     url(r'^geocodelocations/address2-admin/$', Address2AdminView.as_view(), name='address2_admin_page'),
     url(r'^geocodelocations/address2-admin/search/(?P<value>\w+)/$', Address2SearchView.as_view(), name='address2_admin_search'),
-    url(r'^geocodelocations/address2/create/$', Address2CreateView.as_view(), name='address2_create_page'),
-)
+    url(r'^geocodelocations/address2/create/$', Address2CreateView.as_view(), name='address2_create_page')
+]
