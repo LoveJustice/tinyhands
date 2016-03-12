@@ -5,6 +5,8 @@
 *.sw[op]
 *~
 
+google_cred.json
+
 .#*
 .coverage
 .idea/
@@ -41,3 +43,7 @@ node_modules/
 
 access.log
 error.log
+
+# Eclipse Stuff
+.project
+.pydevproject

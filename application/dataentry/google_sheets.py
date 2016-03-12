@@ -4,7 +4,7 @@ from gdata.spreadsheets.client import SpreadsheetsClient
 from gdata.spreadsheets.client import ListQuery
 from gdata.spreadsheets.data import ListEntry
 from multiprocessing import Queue
-from threading import Thread
+from threading import Thread, enumerate
 
 import re
 import os
@@ -13,13 +13,11 @@ import smtplib
 import string
 
 
+
 from models import (InterceptionRecord, VictimInterview)
 from csv_io import get_irf_export_rows
 from django.conf import settings
 from csv_io import get_vif_export_rows
-
-
-    
 
 class GoogleSheetClientThread (Thread):
 
@@ -34,6 +32,7 @@ class GoogleSheetClientThread (Thread):
     token = None
     client = None
     spreadsheet_key = None
+    have_credentials = False
     
     def get_token(self):
         if os.path.isfile("google_cred.json"):
@@ -101,6 +100,10 @@ class GoogleSheetClientThread (Thread):
                     self.internal_update_irf(work[1])
                 elif work[0] == 'VIF':
                     self.internal_update_vif(work[1])
+                elif work[0] == "SHUTDOWN":
+                    self.work_queue.close()
+                    self.have_credentials = False
+                    return
                 else:
                     print "Unknown work type " + work[0]
             except:
@@ -123,13 +126,8 @@ class GoogleSheetClientThread (Thread):
         return list_entry
     
         
-    def update_sheet (self, worksheet_key, new_rows):
-        if (len(new_rows) < 2):
-            return
-        
+    def update_sheet (self, worksheet_key, key_value, new_rows):
         key_name = self.spreadsheet_header_from_export_header(new_rows[0][0])
-        key_value = str(new_rows[1][0])
-        #print key_name + "==" + key_value
         
         feed = self.client.get_list_feed(self.spreadsheet_key, worksheet_key, query=ListQuery(sq=key_name + "==" + key_value))
         for idx in range(len(feed.entry)-1, -1, -1):
@@ -146,6 +144,7 @@ class GoogleSheetClientThread (Thread):
             self.work_queue.put(work)
         
     def update_vif(self, the_vif_number):
+        
         #print "in update_vif " + the_vif_number
         if self.have_credentials:
             work = ['VIF', the_vif_number, 0]
@@ -153,23 +152,25 @@ class GoogleSheetClientThread (Thread):
         
     def internal_update_irf(self, the_irf_number):
         #print "in internal_update_irf " + the_irf_number
-        irf = InterceptionRecord.objects.get(irf_number = the_irf_number)
-        if irf is None:
+        try:
+            irf = InterceptionRecord.objects.get(irf_number = the_irf_number)
+            irfs = [irf]
+        except:
             print "Could not find IRF " + the_irf_number
-            return
-        irfs = [irf]
+            irfs = []
         new_rows = get_irf_export_rows(irfs)
-        self.update_sheet(self.irf_worksheet_key, new_rows)
+        self.update_sheet(self.irf_worksheet_key, the_irf_number, new_rows)
         
     def internal_update_vif(self, the_vif_number):
         #print "in internal_update_vif " + the_vif_number
-        vif = VictimInterview.objects.get(vif_number = the_vif_number)
-        if vif is None:
+        try:
+            vif = VictimInterview.objects.get(vif_number = the_vif_number)
+            vifs = [vif]
+        except:
             print "Could not find VIF " + the_vif_number
-            return
-        vifs = [vif]
+            vifs = []
         new_rows = get_vif_export_rows(vifs)
-        self.update_sheet(self.vif_worksheet_key, new_rows)
+        self.update_sheet(self.vif_worksheet_key, the_vif_number, new_rows)
         
     def send_exception_mail(self, exception_text):
         try:
@@ -196,5 +197,10 @@ class GoogleSheetClientThread (Thread):
             server.quit()
         except:
             traceback.print_exc()
-        
+    
+    def shutdown(self):
+        if self.have_credentials:
+            work = ['SHUTDOWN', '', 0]
+            self.work_queue.put(work)
+                
 google_sheet_client = GoogleSheetClientThread()
