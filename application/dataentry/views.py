@@ -15,7 +15,7 @@ from django.core.urlresolvers import reverse_lazy
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import redirect, render_to_response, render
 from django.template.loader import render_to_string
-from django.views.generic import ListView, View, DeleteView, CreateView
+from django.views.generic import ListView, View, DeleteView, CreateView, TemplateView
 
 from rest_framework import status
 from rest_framework.decorators import list_route
@@ -24,6 +24,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import viewsets
+
 
 from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSet
 from braces.views import LoginRequiredMixin
@@ -319,23 +320,10 @@ class GeoCodeAddress2APIView(APIView):
             return Response({"id": "-1", "name": "None"})
 
 
-class Address2AdminView(LoginRequiredMixin, PermissionsRequiredMixin, SearchFormsMixin, ListView):
+class Address2AdminView(LoginRequiredMixin, PermissionsRequiredMixin, TemplateView):
     model = Address2
     template_name = "dataentry/address2_admin_page.html"
     permissions_required = ['permission_address2_manage']
-    paginate_by = 25
-
-    def __init__(self, *args, **kwargs):
-        super(Address2AdminView, self).__init__(name__icontains="name")
-
-    def get_queryset(self):
-        return self.model.objects.all().select_related('address1', 'canonical_name__address1')
-
-    def get_context_data(self, **kwargs):
-        context = super(Address2AdminView, self).get_context_data(**kwargs)
-        context['search_url'] = '/data-entry/geocodelocations/address2-admin/search/'
-        context['database_empty'] = self.model.objects.count() == 0
-        return context
 
 
 class Address2SearchView(LoginRequiredMixin, PermissionsRequiredMixin, SearchFormsMixin, ListView):
@@ -385,18 +373,10 @@ class Address2CreateView(LoginRequiredMixin, PermissionsRequiredMixin, CreateVie
         return HttpResponse(render_to_string('dataentry/address2_create_success.html'))
 
 
-class Address1AdminView(LoginRequiredMixin, PermissionsRequiredMixin, SearchFormsMixin, ListView):
+class Address1AdminView(LoginRequiredMixin, PermissionsRequiredMixin, TemplateView):
     model = Address1
     template_name = "dataentry/address1_admin_page.html"
     permissions_required = ['permission_address2_manage']
-
-    def __init__(self, *args, **kwargs):
-        super(Address1AdminView, self).__init__(name__icontains="name")
-
-    def get_context_data(self, **kwargs):
-        context = super(Address1AdminView, self).get_context_data(**kwargs)
-        context['database_empty'] = self.model.objects.count() == 0
-        return context
 
 
 class Address1CreateView(LoginRequiredMixin, PermissionsRequiredMixin, CreateView):
@@ -459,6 +439,8 @@ class Address1ViewSet(viewsets.ModelViewSet):
     search_fields = ('name',)
     ordering_fields = ('name',)
     ordering = ('name',)
+    
+
 
     @list_route()
     def list_all(self, request):
