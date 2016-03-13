@@ -32,15 +32,15 @@ class GoogleSheetClientThread (Thread):
     token = None
     client = None
     spreadsheet_key = None
-    have_credentials = False
+    instance = None
     
     def get_token(self):
-        if os.path.isfile("google_cred.json"):
-            self.have_credentials = True
-            credentials = GoogleCredentials.from_stream("google_cred.json")
+        try:
+            credentials =  GoogleCredentials.get_application_default()
             credentials = credentials.create_scoped(self.scope)
             self.token = OAuth2TokenFromCredentials(credentials)
-        else:
+            self.have_credentials = True
+        except:
             self.have_credentials = False
             print "No credentials file for google spreadsheet.  No update to google spreadsheets will be attempted."
     
@@ -136,19 +136,24 @@ class GoogleSheetClientThread (Thread):
         for row_idx in range(1, len(new_rows)):
             list_entry = self.build_list_entry(new_rows[0], new_rows[row_idx])
             self.client.add_list_entry(list_entry, self.spreadsheet_key, worksheet_key)          
+     
+    @staticmethod       
+    def update_irf(the_irf_number):
+        if GoogleSheetClientThread.instance is None:
+            GoogleSheetClientThread.instance = GoogleSheetClientThread()
             
-    def update_irf(self, the_irf_number):
-        #print "in update_irf " + the_irf_number
-        if self.have_credentials:
+        if GoogleSheetClientThread.instance.have_credentials:
             work = ['IRF', the_irf_number, 0]
-            self.work_queue.put(work)
-        
-    def update_vif(self, the_vif_number):
-        
-        #print "in update_vif " + the_vif_number
-        if self.have_credentials:
+            GoogleSheetClientThread.instance.work_queue.put(work)
+    
+    @staticmethod    
+    def update_vif(the_vif_number):
+        if GoogleSheetClientThread.instance is None:
+            GoogleSheetClientThread.instance = GoogleSheetClientThread()
+
+        if GoogleSheetClientThread.instance.have_credentials:
             work = ['VIF', the_vif_number, 0]
-            self.work_queue.put(work)
+            GoogleSheetClientThread.instance.work_queue.put(work)
         
     def internal_update_irf(self, the_irf_number):
         #print "in internal_update_irf " + the_irf_number
@@ -198,9 +203,10 @@ class GoogleSheetClientThread (Thread):
         except:
             traceback.print_exc()
     
-    def shutdown(self):
-        if self.have_credentials:
-            work = ['SHUTDOWN', '', 0]
-            self.work_queue.put(work)
+    @staticmethod
+    def shutdown():
+        if GoogleSheetClientThread.instance is not None:
+            if GoogleSheetClientThread.instance.have_credentials:
+                work = ['SHUTDOWN', '', 0]
+                GoogleSheetClientThread.instance.work_queue.put(work)
                 
-google_sheet_client = GoogleSheetClientThread()

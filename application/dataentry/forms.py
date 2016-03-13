@@ -7,7 +7,6 @@ from .models import (BorderStation, Address1,
                      Address2,
                      VictimInterviewLocationBox, VictimInterviewPersonBox, VictimInterview)
 from .fields import Address1Field, Address2Field, FormNumberField
-from .google_sheets import google_sheet_client
 
 
 BOOLEAN_CHOICES = [
@@ -100,7 +99,7 @@ class InterceptionRecordForm(DreamSuitePaperForm):
         for field_name, field in self.fields.iteritems():
             if type(field) == forms.fields.BooleanField:
                 try:
-                    model_field = InterceptionRecord._meta.get_field_by_name(field_name)[0]
+                    model_field = InterceptionRecord._meta.get_field(field_name)[0]
                     if hasattr(model_field, 'weight'):
                         field.weight = model_field.weight
                 except:

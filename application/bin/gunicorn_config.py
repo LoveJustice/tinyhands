@@ -1,7 +1,12 @@
+import datetime
+
 bind = "0.0.0.0:9001"
 loglevel = "INFO"
-workers = "4"
+workers = "3"
 reload = True
 
-errorlog = "/srv/logs/error.log"
-accesslog = "/srv/logs/access.log"
+
+current_date = str(datetime.datetime.today())
+
+errorlog = "/log/%s-gunicorn_error.log" % current_date
+accesslog = "/log/%s-gunicorn_access.log" % current_date

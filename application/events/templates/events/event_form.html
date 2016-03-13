@@ -179,12 +179,13 @@
 </div>
 
 
+{% load static from staticfiles %}
 {% block includeJS %}
-    <script src="{{ STATIC_URL }}bootstrap-timepicker/js/bootstrap-timepicker.js" type="text/javascript"> </script>
+    <script src="{% static 'bootstrap-timepicker/js/bootstrap-timepicker.js' %}" type="text/javascript"> </script>
 {% endblock includeJS %}
 
 {% block includeCSS %}
-    <link rel="stylesheet" href="{{ STATIC_URL }}bootstrap-timepicker/css/bootstrap-timepicker.css" />
+    <link rel="stylesheet" href="{% static 'bootstrap-timepicker/css/bootstrap-timepicker.css' %}" />
 {% endblock includeCSS %}
 
 {% endblock tab_block %}
