@@ -771,15 +771,47 @@
                             <h2 class="background"><span>Medical</span></h2>
 
                             <div class="row">
-                                <div class="col-lg-4 calc-form-input-no-width col-lg-offset-1">
+                                <div class="col-lg-5 calc-form-input-no-width col-lg-offset-1">
                                     <input class="text-right form-control" type="number" id="medical_expense" ng-model="main.form.medical_last_months_expense"/>
                                     <small>Last month's medical expense</small>
                                 </div>
                                 <div class="col-lg-1">
                                     <h4 class="text-center">=</h4>
                                 </div>
-                                <div class="col-lg-5 calc-form-input-no-width">
-                                    <input class="form-control text-center" ng-value="main.medicalTotal()" disabled="disabled"/>
+                                <div class="col-lg-6 input-group calc-form-input-no-width">
+                                    <div class="input-group-addon">$</div>
+                                    <input class="form-control text-center" ng-value="main.form.medical_last_months_expense" disabled="disabled"/>
+                                </div>
+                            </div>
+
+                            {% verbatim %}
+                                <br/>
+                                <div class="row" ng-controller="otherBudgetItemsCtrl as medicalItemsCtrl" ng-init="form_section = 9;">
+                                    <div class="animated-budget-items" ng-repeat="form in medicalItemsCtrl.medicalForms">
+                                        <div class="col-lg-4 col-lg-offset-1">
+                                            <input class="form-control" type="text" placeholder="Item Name" ng-model="form.name" ng-disabled="main.view"/>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <input class="text-right form-control" type="number" ng-model="form.cost" ng-change="medicalItemsCtrl.otherItemsTotal()" ng-disabled="main.view"/>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <a class="btn btn-danger" ng-click="medicalItemsCtrl.removeItem(form.id, $index)" ng-hide="main.view">Remove</a>
+                                        </div>
+                                        <br/><br/>
+                                    </div>
+                                    <div class="row">
+                                        <br/>
+                                        <div class="col-lg-4 col-lg-offset-5">
+                                            <a class="btn btn-success" id="medical_add_item" ng-click="medicalItemsCtrl.addNewItem();" ng-hide="main.view">Add item</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endverbatim %}
+
+                            <div class="row center text-center" style="margin-top: 20px">
+                                <div class="col-lg-4 col-lg-offset-4">
+                                    <label>Total Medical</label>
+                                    <input class="text-center form-control" ng-value="main.medicalTotalValue" disabled="disabled"/>
                                 </div>
                             </div>
                         <!-- End Medical -->
