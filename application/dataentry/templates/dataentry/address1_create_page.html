@@ -1,6 +1,6 @@
 {% load bootstrap %}
 
-<div class="modal-dialog modal-sm">
+<div class="modal-dialog modal-sm" ng-controller="address1Ctrl as vm" id="address1EditModal.html">
     <div class="modal-content">
         <form id="address1_create_form" method="post" class="form" role="form" action="{% url 'address1_create_page' %}">
             <div class="modal-header">
@@ -23,11 +23,8 @@
                         </ul>
                         {% endif %}
                         {% if field.label == "Level" %}
-                        <select id="address1_level" name="add1_level">
-                            {% for value, text in field.field.choices %}
-                                <option value="{{ value }}">{{ text }}</option>
-                            {% endfor %}
-                        </select>
+                            <select id="addressLevel" ng-model="address.level" ng-options="choice as choice for choice in levels"/>
+                            
                         {% else %}
                             {{ field|bootstrap }}
                         {% endif %}
@@ -55,3 +52,8 @@
 
         });});
 </script>
+
+{% load static from staticfiles %}
+<script src="{% static "dataentry/js/dataEntry.module.js" %}"></script>
+<script src="{% static "dataentry/js/controllers/address1Ctrl.js" %}"></script>
+<script src="{% static "dataentry/js/services/address1Service.js" %}"></script>
