@@ -4,10 +4,9 @@ from gdata.spreadsheets.client import SpreadsheetsClient
 from gdata.spreadsheets.client import ListQuery
 from gdata.spreadsheets.data import ListEntry
 from multiprocessing import Queue
-from threading import Thread, enumerate
+from threading import Thread
 
 import re
-import os
 import traceback
 import smtplib
 import string
@@ -89,6 +88,7 @@ class GoogleSheetClientThread (Thread):
         self.reinitialize()
         if self.have_credentials:
             self.work_queue = Queue()
+            self.daemon = True
             self.start()
         
     def run(self):

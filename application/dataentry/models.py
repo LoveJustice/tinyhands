@@ -984,7 +984,3 @@ class VictimInterviewLocationBox(models.Model):
     def __unicode__(self):
         return "VIF {}".format(self.victim_interview.vif_number)
 
-# The signal_handler is imported here to make sure the signal handler is set in
-# the main thread.
-import signal_handler   
-
