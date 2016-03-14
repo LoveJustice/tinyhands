@@ -2,7 +2,7 @@
 
 angular
   .module('EventsMod')
-  .controller('EditEventCtrl',['Events', '$window', function EditEventCtrl(Events,$window) {
+  .controller('EditEventCtrl',['Events', '$window', '$scope', function EditEventCtrl(Events,$window,$scope) {
     var vm = this;
     vm.titleError = '';
     vm.startDateError = '';
@@ -11,31 +11,35 @@ angular
     vm.endTimeError = '';
 
     vm.format = 'yyyy-MM-dd';
-
-    vm.popup1 = {
+    vm.start_date_popup = {
         opened: false
     };
-    vm.popup2 = {
+    vm.end_date_popup = {
         opened: false
     };
-    vm.popup3 = {
+    vm.end_repeat_popup = {
         opened: false
     };
-
-    vm.open1 = function() {
-        vm.popup1.opened = true;
+    vm.start_date_open = function() {
+        vm.start_date_popup.opened = true;
     };
-    vm.open2 = function() {
-        vm.popup2.opened = true;
+    vm.end_date_open = function() {
+        vm.end_date_popup.opened = true;
     };
-    vm.open3 = function() {
-        vm.popup3.opened = true;
+    vm.end_repeat_open = function() {
+        vm.end_repeat_popup.opened = true;
     };
-
-
-
     vm.minDate = new Date();
     vm.maxDate = new Date(2020, 5, 22);
+
+    vm.my_start_time = new Date();
+    vm.my_end_time = new Date();
+    vm.display_start_time = 'n/a';
+    vm.hstep = 1;
+    vm.mstep = 1;
+    vm.ismeridian = false;
+
+
 
     vm.activate = function() {
 
@@ -43,7 +47,13 @@ angular
       if($window.event_id !== undefined && $window.event_id > -1) {
         vm.editing = true;
         var eventId = $window.event_id;
-        vm.event = Events.get({id: eventId});
+        Events.get({id: eventId}).$promise.then(function(event) {
+            vm.event = event;
+            vm.my_start_time = vm.event.start_date+'T'+vm.event.start_time;
+            $scope.$watch('my_start_time', function(newValue, oldValue) {
+                vm.display_start_time = moment(vm.my_start_time).format('HH:mm');
+            });
+        });
       } else {
         vm.editing = false;
         vm.event = {
