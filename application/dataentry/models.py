@@ -10,7 +10,15 @@ NULL_BOOLEAN_CHOICES = [
     (True, 'Yes'),
 ]
 
-
+LEVEL_CHOICES = [
+    ('State','State'),
+    ('Country','Country'),
+    ('City','City'),
+    ('District','District'),
+    ('VDC','VDC'),
+    ('Building','Building'),
+    ('Block','Block')
+]
 
 def set_weight(self, weight):
     self.weight = weight
@@ -29,15 +37,6 @@ class BorderStation(models.Model):
 
 
 class Address1(models.Model):
-    LEVEL_CHOICES = [
-        ('State','State'),
-        ('Country','Country'),
-        ('City','City'),
-        ('District','District'),
-        ('VDC','VDC'),
-        ('Building','Building'),
-        ('Block','Block')
-    ]
     name = models.CharField(max_length=255)
     latitude = models.FloatField(default=0)
     longitude = models.FloatField(default=0)
