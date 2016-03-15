@@ -52,11 +52,12 @@ class Address1(models.Model):
 
 
 class Address2(models.Model):
-    name = models.CharField(max_length=255)
-    latitude = models.FloatField()
-    longitude = models.FloatField()
+    name = models.CharField(max_length=255, default="Unknown")
+    latitude = models.FloatField(default=0)
+    longitude = models.FloatField(default=0)
     address1 = models.ForeignKey(Address1, null=False)
     canonical_name = models.ForeignKey('self', null=True, blank=True)
+    level = models.CharField(max_length=255, choices=LEVEL_CHOICES, default="VDC")
     verified = models.BooleanField(default=False)
 
     def __unicode__(self):
