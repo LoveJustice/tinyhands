@@ -4,7 +4,7 @@ botocore==1.4.2
 colorama==0.3.7
 coverage==4.0.3
 decorator==4.0.9
--e git+https://github.com/denaje/django-templated-email.git@93a9dae9e7ac9446cb848842441a7379dd20d23a#egg=denaje_django_templated_email
+# -e git+https://github.com/denaje/django-templated-email.git@93a9dae9e7ac9446cb848842441a7379dd20d23a#egg=denaje_django_templated_email
 Django==1.9.4
 django-appconf==1.0.1
 django-bootstrap-form==3.2
