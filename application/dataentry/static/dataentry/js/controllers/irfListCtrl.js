@@ -18,6 +18,9 @@ angular
         vm.selectedAddress = {};
         vm.sortColumn = "irf_number";
         vm.timeZoneDifference ="+0545";
+        vm.startDate = "";
+        vm.endDate = "";
+        vm.valid_date = false;
 
 
         // Function Definitions
@@ -28,6 +31,8 @@ angular
         vm.deleteIrf = deleteIrf;
         vm.getQueryParams = getQueryParams;
         vm.sortIcon = sortIcon;
+        vm.exportPhotos = exportPhotos;
+        vm.validDate = validDate;
         main();
 
 
@@ -139,5 +144,28 @@ angular
                 params += "&ordering=" + vm.sortColumn;
             }
             return params;
+        }
+
+        function exportPhotos() {
+            for (var irf of vm.irfs) {
+                var date = new Date(irf.date_time_of_interception);
+                var start = new Date(vm.startDate);
+                var end = new Date(vm.endDate);
+                if (date >= start && date <= end) {
+                    console.log(irf.irf_number);
+                }
+            }
+        }
+
+        function validDate() {
+            var start = new Date(vm.startDate);
+            var end = new Date(vm.endDate);
+            var oldest = new Date("01/01/2000");
+            var latest = Date.now();
+            if (vm.startDate == '' || vm.endDate == '' || start == "Invalid Date" || end == "Invalid Date" || end < start || start < oldest || start > latest || end < oldest || end > latest) {
+                vm.valid_date = false;
+            } else {
+                vm.valid_date = true;
+            }
         }
     }]);
