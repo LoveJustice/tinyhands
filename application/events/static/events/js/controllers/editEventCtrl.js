@@ -9,6 +9,11 @@ angular
     vm.startTimeError = '';
     vm.endDateError = '';
     vm.endTimeError = '';
+    vm.dateError = '';
+    vm.timeError = '';
+    vm.noRepetitionError = '';
+    vm.endsError = '';
+    vm.event = {};
 
     vm.format = 'yyyy-MM-dd';
     vm.start_date_popup = {
@@ -29,17 +34,23 @@ angular
     vm.end_repeat_open = function() {
         vm.end_repeat_popup.opened = true;
     };
-    vm.minDate = new Date();
-    vm.maxDate = new Date(2020, 5, 22);
 
-    vm.my_start_time = new Date();
-    vm.my_end_time = new Date();
+    $scope.my_start_time = new Date();
+    $scope.my_end_time = new Date();
     vm.display_start_time = 'n/a';
+    vm.display_end_time = 'n/a';
     vm.hstep = 1;
     vm.mstep = 1;
     vm.ismeridian = false;
 
-
+    $scope.$watch('my_start_time', function(newValue, oldValue) {
+        vm.display_start_time = moment($scope.my_start_time).format('HH:mm');
+        vm.event.start_time = vm.display_start_time;
+    });
+    $scope.$watch('my_end_time', function(newValue, oldValue) {
+        vm.display_end_time = moment($scope.my_end_time).format('HH:mm');
+        vm.event.end_time = vm.display_end_time;
+    });
 
     vm.activate = function() {
 
@@ -49,10 +60,8 @@ angular
         var eventId = $window.event_id;
         Events.get({id: eventId}).$promise.then(function(event) {
             vm.event = event;
-            vm.my_start_time = vm.event.start_date+'T'+vm.event.start_time;
-            $scope.$watch('my_start_time', function(newValue, oldValue) {
-                vm.display_start_time = moment(vm.my_start_time).format('HH:mm');
-            });
+            $scope.my_start_time = moment(vm.event.start_date +'T'+vm.event.start_time).toDate();
+            $scope.my_end_time = moment(vm.event.end_date +'T'+vm.event.end_time).toDate();
         });
       } else {
         vm.editing = false;
@@ -68,10 +77,25 @@ angular
           repetition: '',
           ends: '',
         }
+        $scope.my_start_time = moment('2016-01-01T12:00').toDate();
+        $scope.my_end_time = moment('2016-01-01T13:00').toDate();
       }
     }
 
     vm.update = function() {
+        vm.event.start_date = moment(vm.event.start_date).format('YYYY-MM-DD');
+        vm.event.end_date = moment(vm.event.end_date).format('YYYY-MM-DD');
+        if(vm.event.is_repeat) {
+            if(vm.event.ends != '') {
+                vm.event.ends = moment(vm.event.ends).format('YYYY-MM-DD');
+            } else {
+                vm.event.ends = null;
+            }
+        } else {
+            vm.event.repetition = '';
+            vm.event.ends = null;
+        }
+        console.log(vm.event.ends)
       if(!vm.checkFields()) {
         return;
       }
@@ -100,6 +124,10 @@ angular
       vm.startTimeError = '';
       vm.endDateError = '';
       vm.endTimeError = '';
+      vm.dateError = '';
+      vm.timeError = '';
+      vm.noRepetitionError = '';
+      vm.endsError = '';
       if(!vm.event.title) {
         vm.titleError = 'Title field is required';
       }
@@ -115,7 +143,27 @@ angular
       if(!vm.event.end_time) {
         vm.endTimeError = 'End time field is required';
       }
-      if(vm.titleError || vm.startDateError || vm.startTimeError || vm.endDateError || vm.endTimeError) {
+      if(vm.event.start_date && vm.event.end_date) {
+          if(vm.event.start_date > vm.event.end_date) {
+              vm.dateError = 'Start date is not allowed to be greater than end date';
+          }
+          if(vm.event.start_date == vm.event.end_date) {
+              if (vm.event.start_time > vm.event.end_time) {
+                  vm.timeError = 'Start time must less than end time for same day';
+              }
+          }
+      }
+      if(vm.event.end_date && vm.event.ends) {
+          if(vm.event.end_date > vm.event.ends) {
+              vm.endsError = 'Events repetition ends must be greater than first event end date';
+          }
+      }
+      if(vm.event.is_repeat) {
+          if(!vm.event.repetition) {
+              vm.noRepetitionError = 'Repetition is required if event is repeated';
+          }
+      }
+      if(vm.titleError || vm.startDateError || vm.startTimeError || vm.endDateError || vm.endTimeError || vm.dateError || vm.timeError || vm.noRepetitionError || vm.endsError) {
         return false;
       }
       return true
