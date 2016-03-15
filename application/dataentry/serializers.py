@@ -7,12 +7,6 @@ from dataentry.models import Address1, Address2, InterceptionRecord, VictimInter
 class Address1Serializer(serializers.ModelSerializer):
     class Meta:
         model = Address1
-        
-    def create(self, validated_data):
-        pdb.set_trace()
-        selectedLevel = self.context['request'].data['level']['value']
-        validated_data['level'] = selectedLevel
-        return Address1.objects.create(**validated_data)
 
 
 class CanonicalNameSerializer(serializers.ModelSerializer):
