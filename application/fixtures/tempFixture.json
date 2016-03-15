@@ -456,7 +456,8 @@
     "fields": {
         "kind": "v",
         "interception_record": 1,
-        "relation_to": "Sister"
+        "relation_to": "Sister",
+        "person": 1
     },
     "model": "dataentry.interceptee",
     "pk": 1

@@ -295,13 +295,13 @@ class Interceptee(models.Model):
     interception_record = models.ForeignKey(InterceptionRecord, related_name='interceptees')
     kind = models.CharField(max_length=4, choices=KIND_CHOICES)
     relation_to = models.CharField(max_length=255, blank=True)
-    person = models.ForeignKey(Person, related_name='interceptee', null=True, blank=True)
+    person = models.ForeignKey(Person, null=True, blank=True)
 
     class Meta:
         ordering = ['id']
 
     def __unicode__(self):
-        return "{} ({})".format(self.full_name, self.id)
+        return "{} ({})".format(self.person.full_name, self.id)
 
     def address1_as_string(self):
         rtn = ''

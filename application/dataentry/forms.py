@@ -3,11 +3,12 @@ from django.forms.models import inlineformset_factory
 from django.utils.html import mark_safe
 
 from .models import (BorderStation, Address1,
-                     Interceptee, InterceptionRecord,
+                     Interceptee, Person, InterceptionRecord,
                      Address2,
                      VictimInterviewLocationBox, VictimInterviewPersonBox, VictimInterview)
 from .fields import Address1Field, Address2Field, FormNumberField
 from .google_sheets import google_sheet_client
+from django.forms import CharField, ImageField
 
 
 BOOLEAN_CHOICES = [
@@ -353,37 +354,105 @@ class InterceptionRecordForm(DreamSuitePaperForm):
 
         return return_val
 
+# class PersonForm(IntercepteeForm):
+#    class Meta:
+#        model = Person
+#        exclude = ('address1','address2')
+#
+#        def __init__(self, *args, **kwargs):
+#            super(PersonForm, self).__init__(*args, **kwargs)
+#
+#            self.fields['address1'] = Address1Field(required=False)
+#            self.fields['address2'] = Address2Field(required=False)
+#
+#            try:
+#                self.fields['address1'].initial = self.instance.person.address1
+#            except:
+#                pass
+#            try:
+#               self.fields['address2'].initial = self.instance.person.address2
+#            except:
+#                pass
+#
+#
+#         def save(self, commit=True):
+#             #if self.cleaned_data['address1']:
+#             person = Person.objects.get(interceptee=self.instance)
+#             self.instance.person = person
+#             try:
+#                 address1 = Address1.objects.get(name=self.cleaned_data['address1'])
+#                 self.instance.person.address1 = address1
+#             except Address1.DoesNotExist:
+#                 address1 = None
+#             try:
+#                 address2 = Address2.objects.get(name=self.cleaned_data['address2'], address1=address1)
+#                 self.instance.person.address2 = address2
+#             except Address2.DoesNotExist:
+#                 pass
+#
+#             return super(IntercepteeForm, self).save(commit)
+#
+#
+#     def if_address_1_need_address_2(self, cleaned_data):
+#         if cleaned_data.get('address2') and not cleaned_data.get('address1'):
+#             self._errors['address1'] = self.error_class(
+#                     ['If you supply an address 2, and address 1 is required'])
+#
+
 class IntercepteeForm(DreamSuitePaperForm):
     class Meta:
         model = Interceptee
-        exclude = ('address1','address2')
+        exclude = ('address1','address2', 'full_name')
 
     def __init__(self, *args, **kwargs):
         super(IntercepteeForm, self).__init__(*args, **kwargs)
 
         self.fields['address1'] = Address1Field(required=False)
         self.fields['address2'] = Address2Field(required=False)
+        self.fields['full_name'] = CharField(required=False)
+        self.fields['photo'] = ImageField(required=False)
+
         try:
-            self.fields['address1'].initial = self.instance.address1
+            self.fields['full_name'].initial = self.instance.person.full_name
         except:
             pass
         try:
-           self.fields['address2'].initial = self.instance.address2
+            self.fields['address1'].initial = self.instance.person.address1
+        except:
+            pass
+        try:
+           self.fields['address2'].initial = self.instance.person.address2
+        except:
+            pass
+        try:
+           self.fields['photo'].initial = self.instance.person.photo
         except:
             pass
 
     def save(self, commit=True):
+        data = self.cleaned_data
+        #if self.cleaned_data['address1']:
+        person = Person.objects.get(interceptee=self.instance)
+        self.instance.person = person
         try:
             address1 = Address1.objects.get(name=self.cleaned_data['address1'])
-            self.instance.address1 = address1
-        except address1.DoesNotExist:
+            self.instance.person.address1 = address1
+        except Address1.DoesNotExist:
             address1 = None
-
         try:
             address2 = Address2.objects.get(name=self.cleaned_data['address2'], address1=address1)
-            self.instance.address2 = address2
+            self.instance.person.address2 = address2
         except Address2.DoesNotExist:
             pass
+
+
+        if data["full_name"]:
+            self.instance.person.full_name = data["full_name"]
+            self.instance.person.save()
+
+        if data["photo"]:
+            self.instance.person.photo = data["photo"]
+            self.instance.person.save()
 
         return super(IntercepteeForm, self).save(commit)
 
@@ -396,7 +465,7 @@ class IntercepteeForm(DreamSuitePaperForm):
     def if_address_1_need_address_2(self, cleaned_data):
         if cleaned_data.get('address2') and not cleaned_data.get('address1'):
             self._errors['address1'] = self.error_class(
-                    ['If you supply an address 2, and address 1 is required'])
+                ['If you supply an address 2, and address 1 is required'])
 
 
 IntercepteeFormSet = inlineformset_factory(InterceptionRecord, Interceptee, exclude=[], extra=12)
