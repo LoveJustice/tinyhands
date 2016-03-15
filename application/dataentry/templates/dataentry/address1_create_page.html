@@ -24,9 +24,10 @@
                         {% endif %}
                         {% if field.label == "Level" %}
                         <select id="address1_level" name="add1_level">
-                            {% for value, text in field.field.choices %}
-                                <option value="{{ value }}">{{ text }}</option>
+                            {% for val, text in field.field.choices %}
+                                <option value="{{ val }}">{{ text }}</option>
                             {% endfor %}
+			    <p>{{ val }}<br> {{ value }} </p>
                         </select>
                         {% else %}
                             {{ field|bootstrap }}
