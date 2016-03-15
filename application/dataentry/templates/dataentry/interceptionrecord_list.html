@@ -37,8 +37,18 @@
                       <h4 class="modal-title">Export Photos</h4>
                     </div>
                     <div class="modal-body">
-                        Start Date: <input type="text" ng-model="vm.startDate" ng-change="vm.validDate()"><br>
-                        End Date: <input type="text" ng-model="vm.endDate" ng-change="vm.validDate()"><br>
+                        <table>
+                            <col width="75">
+                            <col width="500">
+                            <tr>
+                                <td class="pull-right" style="padding-right: 5px; padding-top: 3px;">Start Date:</td>
+                                <td><input type="text" ng-model="vm.startDate" ng-change="vm.validDate()"></td>
+                            </tr>
+                            <tr>
+                                <td class="pull-right" style="padding-right: 5px; padding-top: 3px;">End Date:</td>
+                                <td><input type="text" ng-model="vm.endDate" ng-change="vm.validDate()"></td>
+                            </tr>
+                        </table>
                     </div>
                     <div class="modal-footer">
                       <button ng-click="vm.exportPhotos()" ng-disabled="vm.valid_date == false" type="button" class="btn btn-success" data-dismiss="modal">Submit</button>
