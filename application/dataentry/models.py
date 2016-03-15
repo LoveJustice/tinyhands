@@ -4,6 +4,8 @@ from imagekit.processors import ResizeToFill
 
 from accounts.models import Account
 
+
+
 NULL_BOOLEAN_CHOICES = [
     (None, ''),
     (False, 'No'),
@@ -981,3 +983,4 @@ class VictimInterviewLocationBox(models.Model):
 
     def __unicode__(self):
         return "VIF {}".format(self.victim_interview.vif_number)
+
