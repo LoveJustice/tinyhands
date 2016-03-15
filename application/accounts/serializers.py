@@ -11,8 +11,12 @@ class AccountsSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         account = Account.objects.create(**validated_data)
-        account.send_activation_email()
-        return account
+        try:
+		account.send_activation_email()
+	except:
+		account.delete()
+		
+	return account
 
 
 class DefaultPermissionsSetSerializer(serializers.ModelSerializer):
