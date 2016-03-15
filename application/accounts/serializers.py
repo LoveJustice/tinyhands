@@ -15,6 +15,7 @@ class AccountsSerializer(serializers.ModelSerializer):
 		account.send_activation_email()
 	except:
 		account.delete()
+		raise serializers.ValidationError({'email': ["Email address is invalid"]})
 		
 	return account
 
