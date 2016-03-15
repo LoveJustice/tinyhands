@@ -1,6 +1,9 @@
 {% load bootstrap %}
+<script>
+    var selectedLevel = "District";
+</script>
 
-<div class="modal-dialog modal-sm" ng-controller="address1Ctrl as vm" id="address1EditModal.html">
+<div class="modal-dialog modal-sm" ng-controller="address1Ctrl as vm">
     <div class="modal-content">
         <form id="address1_create_form" method="post" class="form" role="form" action="{% url 'address1_create_page' %}">
             <div class="modal-header">
@@ -22,12 +25,7 @@
                             {% endfor %}
                         </ul>
                         {% endif %}
-                        {% if field.label == "Level" %}
-                            <select id="addressLevel" ng-model="address.level" ng-options="choice as choice for choice in levels"/>
-                            
-                        {% else %}
-                            {{ field|bootstrap }}
-                        {% endif %}
+                        {{ field|bootstrap }}
                         {% if field.help_text %}
                         <div class="form-helptext">{{ field.help_text }}</div>
                         {% endif %}

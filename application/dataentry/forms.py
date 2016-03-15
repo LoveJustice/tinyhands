@@ -839,11 +839,6 @@ class Address2Form(forms.ModelForm):
 
   
 class Address1Form(forms.ModelForm):
-    level = forms.MultipleChoiceField(
-        choices=LEVEL_CHOICES,
-        widget=forms.CheckboxSelectMultiple,
-        required=True,
-    )
     class Meta:
         model = Address1
-        fields = ['name','latitude', 'longitude', 'completed']
+        exclude = []
