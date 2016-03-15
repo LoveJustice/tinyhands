@@ -30,6 +30,11 @@ angular.module('EventsMod')
             id: '@id'
           }
         },
+        dashboard: {
+          url: '/api/event/feed/dashboard',
+          method: 'GET',
+          isArray: true
+        }
       }
     );
   });

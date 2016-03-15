@@ -9,6 +9,7 @@ from events.helpers import get_repeated, event_list, dashboard_event_list
 from events.models import Event
 from itertools import chain
 
+from rest_framework import status
 from rest_framework.decorators import list_route
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -124,18 +125,26 @@ class EventViewSet(ModelViewSet):
 
     @list_route()
     def calendar_feed(self, request):
-        start = request.query_params.get('start', '')
-        end = request.query_params.get('end', '')
-        start_date = datetime.datetime.strptime(start, "%Y-%m-%d")
-        end_date = datetime.datetime.strptime(end, "%Y-%m-%d")
-        querydict = {}
-        if start_date:
-            querydict['start_date__gte'] = start_date
-        if end_date:
-            querydict['start_date__lte'] = end_date
-        querydict['is_repeat'] = False
+        try:
+            start = request.query_params.get('start', '')
+            end = request.query_params.get('end', '')
+            start_date = datetime.datetime.strptime(start, "%Y-%m-%d")
+            end_date = datetime.datetime.strptime(end, "%Y-%m-%d")
+            if(start_date > end_date):
+                return Response("Start date is later than end date", status=status.HTTP_400_BAD_REQUEST)
+            querydict = {}
+            if start_date:
+                querydict['start_date__gte'] = start_date
+            if end_date:
+                querydict['start_date__lte'] = end_date
+            querydict['is_repeat'] = False
 
-        return Response(queryEventsForFeed(querydict, start_date, end_date))
+            event_data = queryEventsForFeed(querydict, start_date, end_date)
+            events = event_list(event_data)
+            return Response(events)
+        except ValueError:
+            return Response("Date does not match format YYYY-MM-DD", status=status.HTTP_400_BAD_REQUEST)
+
 
     @list_route()
     def dashboard_feed(self, request):
@@ -147,7 +156,9 @@ class EventViewSet(ModelViewSet):
             'is_repeat': False
         }
 
-        return Response(queryEventsForFeed(querydict, start_date, end_date))
+        event_data = queryEventsForFeed(querydict, start_date, end_date)
+        events = dashboard_event_list(event_data)
+        return Response(events)
 
 def queryEventsForFeed(querydict, start_date, end_date):
     repeated_events = Event.objects.filter(is_repeat=True)
@@ -155,5 +166,4 @@ def queryEventsForFeed(querydict, start_date, end_date):
 
     temp_events = get_repeated(repeated_events, start_date, end_date)
     result_list = list(chain(temp_events, non_repeated_events))
-    events = event_list(result_list)
-    return events;
+    return result_list;
