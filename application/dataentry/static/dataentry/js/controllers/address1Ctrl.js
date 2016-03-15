@@ -14,7 +14,7 @@ angular
         vm.paginateBy = 25;
         vm.sortIcon = "/static/images/sortIcon.jpg";
         vm.selectedAddress = {};
-        vm.sortColumn = "";
+        vm.sortColumn = "name";
 
 
         // Function Definitions
@@ -24,7 +24,6 @@ angular
         vm.editAddress1 = editAddress1;
         vm.getQueryParams = getQueryParams;
         vm.sortIcon = sortIcon;
-        vm.console = console;
 
         main();
 
@@ -35,9 +34,6 @@ angular
             vm.getAddresses();
         }
 
-        function console(){
-            console.log("What is going on?");
-        }
 
         function sortIcon(column){
             if(column === vm.sortColumn){

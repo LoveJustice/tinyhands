@@ -44,7 +44,6 @@ function address1Service($http) {
                 return data;
             }).
             error(function (data, status, headers, config) {
-                console.log(data, status, headers, config);
             });
     }
 }
