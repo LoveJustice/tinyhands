@@ -42,4 +42,7 @@ function irfService($http) {
 
     }
 
+    function batchIrf(queryparams) {
+        return $http.get()
+    }
 }

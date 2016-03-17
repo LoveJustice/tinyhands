@@ -490,3 +490,10 @@ class VictimInterviewViewSet(viewsets.ModelViewSet):
     search_fields = ('vif_number',)
     ordering_fields = ('vif_number', 'interviewer', 'number_of_victims', 'number_of_traffickers', 'date', 'date_time_entered_into_system', 'date_time_last_updated',)
     ordering = ('vif_number',)
+
+
+class BatchView(View):
+    greeting = "Good Day"
+
+    def get(self, request):
+        return HttpResponse(self.greeting)

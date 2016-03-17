@@ -155,6 +155,8 @@ angular
                     console.log(irf.irf_number);
                 }
             }
+            var firstAddress = "http://localhost/media/interceptee_photos/lamb.jpg";
+            var secondAddress = "http://localhost/media/interceptee_photos/macaw.jpg";
         }
 
         function validDate() {
