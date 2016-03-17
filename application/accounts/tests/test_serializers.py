@@ -30,13 +30,13 @@ class TestAccountsSerializer(TestCase):
 		}
 	
 	def test_create_with_valid_email(self):
-		self.testUserInfo["email"] = "john_luscombe@taylor.edu"
+		self.testUserInfo["email"] = "eric_krauss@taylor.edu"
 		with self.assertRaises(serializers.ValidationError):
 			account = self.serializer.create(self.testUserInfo)
-			##account.delete()
+			account.delete()
 
 	def test_create_with_invalid_email(self):
-		self.testUserInfo["email"] = "JaegerManjensen@TheBananaBoatGuild.edu"
+		self.testUserInfo["email"] = "failure@FailBackend.fail"
 		with self.assertRaises(serializers.ValidationError):
 			account = self.serializer.create(self.testUserInfo)
-			##account.delete()
+			account.delete()
