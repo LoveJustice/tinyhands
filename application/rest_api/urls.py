@@ -63,7 +63,4 @@ urlpatterns = patterns('rest_api.views',
     url(r'^vif/$', VictimInterviewViewSet.as_view({'get': 'list'}), name="VictimInterview"),
     url(r'^vif/(?P<pk>\d+)/$', VictimInterviewViewSet.as_view({'delete': 'destroy'}), name="VictimInterviewDetail"),
 
-    #IRFBatch
-    url(r'^batch/', BatchView.as_view(), name="BatchView"),
-
 )

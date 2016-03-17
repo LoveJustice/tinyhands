@@ -8,7 +8,8 @@ function irfService($http) {
 	return {
 		listIrfs: listIrfs,
 		loadMoreIrfs: loadMoreIrfs,
-		deleteIrf: deleteIrf
+		deleteIrf: deleteIrf,
+        batchIrf: batchIrf
 	};
 
 	function listIrfs(queryparams) {
@@ -42,7 +43,13 @@ function irfService($http) {
 
     }
 
-    function batchIrf(queryparams) {
-        return $http.get()
+    function batchIrf(Json) {
+        return $http.get('/data-entry/batch/').
+            success(function (data) {
+                return data;
+            }).
+            error(function (data, status, headers, config) {
+                console.log(data, status, headers, config);
+            });
     }
 }

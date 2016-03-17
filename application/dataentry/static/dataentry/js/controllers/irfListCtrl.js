@@ -157,6 +157,14 @@ angular
             }
             var firstAddress = "http://localhost/media/interceptee_photos/lamb.jpg";
             var secondAddress = "http://localhost/media/interceptee_photos/macaw.jpg";
+
+            irfService.batchIrf(firstAddress + secondAddress)
+            .success(function(data){
+                console.log(data.results);
+            })
+            .error(function(){
+                alert("Could not Export Photos");
+            });
         }
 
         function validDate() {
