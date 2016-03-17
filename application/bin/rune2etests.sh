@@ -1,12 +1,6 @@
 echo "######   Starting webdriver server.   ######"
 webdriver-manager start >/dev/null 2>&1 &
 
-echo "######   Setting DJANGO_SETTINGS_MODULE to testing.   ######"
-export DJANGO_SETTINGS_MODULE=dreamsuite.settings.testing
-
-echo "######   Removing old test database.   ######"
-rm ./e2etest.sqlite3
-
 echo "######   Create new test database.   ######"
 ./manage.py syncdb --noinput
 

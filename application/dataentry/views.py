@@ -15,7 +15,7 @@ from django.core.urlresolvers import reverse_lazy
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import redirect, render_to_response, render
 from django.template.loader import render_to_string
-from django.views.generic import ListView, View, DeleteView, CreateView
+from django.views.generic import ListView, View, DeleteView, CreateView, TemplateView
 
 from rest_framework import status
 from rest_framework.decorators import list_route
@@ -25,6 +25,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import viewsets
 
+
 from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSet
 from braces.views import LoginRequiredMixin
 from fuzzywuzzy import process
@@ -33,7 +34,7 @@ from dataentry.models import (BorderStation, Address2, Address1, Interceptee, Pe
 from dataentry.forms import (IntercepteeForm, InterceptionRecordForm, Address2Form, Address1Form, VictimInterviewForm, VictimInterviewLocationBoxForm, VictimInterviewPersonBoxForm)
 from dataentry import csv_io
 from dataentry.serializers import Address1Serializer, Address2Serializer, InterceptionRecordListSerializer, VictimInterviewListSerializer
-
+from dataentry.google_sheets import GoogleSheetClientThread
 from accounts.mixins import PermissionsRequiredMixin
 
 from alert_checkers import IRFAlertChecker, VIFAlertChecker
@@ -161,6 +162,7 @@ class InterceptionRecordCreateView(LoginRequiredMixin, PermissionsRequiredMixin,
         for formset in inlines:
             formset.save()
         IRFAlertChecker(form, inlines).check_them()
+        GoogleSheetClientThread.update_irf(form.irf_number)
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -176,6 +178,7 @@ class InterceptionRecordUpdateView(LoginRequiredMixin, PermissionsRequiredMixin,
         for formset in inlines:
             formset.save()
         IRFAlertChecker(form, inlines).check_them()
+        GoogleSheetClientThread.update_irf(form.irf_number)
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -235,6 +238,7 @@ class VictimInterviewCreateView(LoginRequiredMixin, PermissionsRequiredMixin, Cr
         for formset in inlines:
             formset.save()
         VIFAlertChecker(form, inlines).check_them()
+        GoogleSheetClientThread.update_vif(form.vif_number)
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -250,6 +254,7 @@ class VictimInterviewUpdateView(LoginRequiredMixin, PermissionsRequiredMixin, Up
         for formset in inlines:
             formset.save()
         VIFAlertChecker(form, inlines).check_them()
+        GoogleSheetClientThread.update_vif(form.vif_number)
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -285,7 +290,7 @@ class VictimInterviewCSVExportView(LoginRequiredMixin, PermissionsRequiredMixin,
         response['Content-Disposition'] = 'attachment; filename=vif-all-data-%d-%d-%d.csv' % (today.year, today.month, today.day)
 
         writer = csv.writer(response)
-        vifs = VictimInterview.objects.select_related('person_boxes').select_related('location_boxes').all()
+        vifs = VictimInterview.objects.all()
         csv_rows = csv_io.get_vif_export_rows(vifs)
         writer.writerows(csv_rows)
 
@@ -319,23 +324,10 @@ class GeoCodeAddress2APIView(APIView):
             return Response({"id": "-1", "name": "None"})
 
 
-class Address2AdminView(LoginRequiredMixin, PermissionsRequiredMixin, SearchFormsMixin, ListView):
+class Address2AdminView(LoginRequiredMixin, PermissionsRequiredMixin, TemplateView):
     model = Address2
     template_name = "dataentry/address2_admin_page.html"
     permissions_required = ['permission_address2_manage']
-    paginate_by = 25
-
-    def __init__(self, *args, **kwargs):
-        super(Address2AdminView, self).__init__(name__icontains="name")
-
-    def get_queryset(self):
-        return self.model.objects.all().select_related('address1', 'canonical_name__address1')
-
-    def get_context_data(self, **kwargs):
-        context = super(Address2AdminView, self).get_context_data(**kwargs)
-        context['search_url'] = '/data-entry/geocodelocations/address2-admin/search/'
-        context['database_empty'] = self.model.objects.count() == 0
-        return context
 
 
 class Address2SearchView(LoginRequiredMixin, PermissionsRequiredMixin, SearchFormsMixin, ListView):
@@ -385,18 +377,10 @@ class Address2CreateView(LoginRequiredMixin, PermissionsRequiredMixin, CreateVie
         return HttpResponse(render_to_string('dataentry/address2_create_success.html'))
 
 
-class Address1AdminView(LoginRequiredMixin, PermissionsRequiredMixin, SearchFormsMixin, ListView):
+class Address1AdminView(LoginRequiredMixin, PermissionsRequiredMixin, TemplateView):
     model = Address1
     template_name = "dataentry/address1_admin_page.html"
     permissions_required = ['permission_address2_manage']
-
-    def __init__(self, *args, **kwargs):
-        super(Address1AdminView, self).__init__(name__icontains="name")
-
-    def get_context_data(self, **kwargs):
-        context = super(Address1AdminView, self).get_context_data(**kwargs)
-        context['database_empty'] = self.model.objects.count() == 0
-        return context
 
 
 class Address1CreateView(LoginRequiredMixin, PermissionsRequiredMixin, CreateView):
@@ -459,6 +443,8 @@ class Address1ViewSet(viewsets.ModelViewSet):
     search_fields = ('name',)
     ordering_fields = ('name',)
     ordering = ('name',)
+    
+
 
     @list_route()
     def list_all(self, request):
@@ -478,6 +464,13 @@ class InterceptionRecordViewSet(viewsets.ModelViewSet):
     search_fields = ('irf_number',)
     ordering_fields = ('irf_number', 'staff_name', 'number_of_victims', 'number_of_traffickers', 'date_time_of_interception', 'date_time_entered_into_system', 'date_time_last_updated',)
     ordering = ('irf_number',)
+    
+    def destroy(self, request, *args, **kwargs):
+        irf_id = kwargs['pk']
+        irf = InterceptionRecord.objects.get(id=irf_id)
+        rv = super(viewsets.ModelViewSet, self).destroy(request, args, kwargs)
+        GoogleSheetClientThread.update_irf(irf.irf_number)
+        return rv
 
 
 class VictimInterviewViewSet(viewsets.ModelViewSet):
@@ -490,3 +483,10 @@ class VictimInterviewViewSet(viewsets.ModelViewSet):
     search_fields = ('vif_number',)
     ordering_fields = ('vif_number', 'interviewer', 'number_of_victims', 'number_of_traffickers', 'date', 'date_time_entered_into_system', 'date_time_last_updated',)
     ordering = ('vif_number',)
+    
+    def destroy(self, request, *args, **kwargs):
+        vif_id = kwargs['pk']
+        vif = VictimInterview.objects.get(id=vif_id)
+        rv = super(viewsets.ModelViewSet, self).destroy(request, args, kwargs)
+        GoogleSheetClientThread.update_irf(vif.vif_number)
+        return rv

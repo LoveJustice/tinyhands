@@ -1,14 +1,16 @@
 
 {% extends 'base.html' %}
 
+{% load static from staticfiles %}
+
     {% block includeJS %}
-        <script src="{{ STATIC_URL }}moment.min.js"></script>
-        <script src="{{ STATIC_URL }}full-calendar/fullcalendar.min.js"></script>
+        <script src="{% static 'moment.min.js' %}"></script>
+        <script src="{% static 'full-calendar/fullcalendar.min.js' %}"></script>
     {% endblock includeJS %}
 
     {% block includeCSS %}
-        <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}full-calendar/fullcalendar.css">
-        <link type="text/css" href="{{ STATIC_URL }}full-calendar/fullcalendar.print.css" media='print' >
+        <link rel="stylesheet" type="text/css" href="{% static 'full-calendar/fullcalendar.css' %}">
+        <link type="text/css" href="{% static 'full-calendar/fullcalendar.print.css' %}" media='print' >
     {% endblock includeCSS %}
 
 {% block displayJS %}

@@ -101,7 +101,7 @@ class InterceptionRecordForm(DreamSuitePaperForm):
         for field_name, field in self.fields.iteritems():
             if type(field) == forms.fields.BooleanField:
                 try:
-                    model_field = InterceptionRecord._meta.get_field_by_name(field_name)[0]
+                    model_field = InterceptionRecord._meta.get_field(field_name)[0]
                     if hasattr(model_field, 'weight'):
                         field.weight = model_field.weight
                 except:
@@ -347,12 +347,6 @@ class InterceptionRecordForm(DreamSuitePaperForm):
             self.has_warnings = True
             self._errors['has_signature'] = error
 
-    def save(self, commit=True):
-        return_val = super(InterceptionRecordForm, self).save(commit)
-        if commit:
-            google_sheet_client.update_irf(self.cleaned_data['irf_number'])
-
-        return return_val
 
 # class PersonForm(IntercepteeForm):
 #    class Meta:
@@ -737,13 +731,7 @@ class VictimInterviewForm(DreamSuitePaperForm):
         if self.cleaned_data['victim_guardian_address2']:
             victim_guardian_address2 = Address2.objects.get(name=self.cleaned_data['victim_guardian_address2'])
             self.instance.victim_guardian_address2 = victim_guardian_address2
-        return_val = super(VictimInterviewForm, self).save(commit)
-        if commit:
-            google_sheet_client.update_vif(self.cleaned_data['vif_number'])
-
-        return return_val
-
-
+        return super(VictimInterviewForm, self).save(commit)
 
     def clean(self):
         cleaned_data = super(VictimInterviewForm, self).clean()
