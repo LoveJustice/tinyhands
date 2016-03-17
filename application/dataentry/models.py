@@ -84,7 +84,7 @@ class InterceptionRecord(models.Model):
     form_entered_by = models.ForeignKey(Account, related_name='irfs_entered')
     date_form_received = models.DateTimeField()
 
-    irf_number = models.CharField('IRF #:', max_length=20)
+    irf_number = models.CharField('IRF #:', max_length=20, unique=True)
     date_time_of_interception = models.DateTimeField('Date/Time:')
 
     date_time_entered_into_system = models.DateTimeField(auto_now_add=True)
@@ -329,7 +329,7 @@ class VictimInterview(models.Model):
         ('female', 'Female'),
     ]
 
-    vif_number = models.CharField('VIF #', max_length=20)
+    vif_number = models.CharField('VIF #', max_length=20, unique=True)
     date = models.DateField('Date')
 
     date_time_entered_into_system = models.DateTimeField(auto_now_add=True)
