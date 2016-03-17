@@ -38,10 +38,6 @@
                         </div>
 
                         <div class="row form-group">
-            <!--                    <div class="alert alert-danger alert-dismissible" role="alert" ng-show="editCtrl.event.titleError != ''">
-                                  <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                              </div>-->
-
                             <div class="col-md-3">
                                 <strong> Location: </strong>
                             </div>
@@ -70,6 +66,14 @@
                                 <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                                 {{ editCtrl.endTimeError }}
                             </div>
+                            <div class="alert alert-danger alert-dismissible" role="alert" ng-show="editCtrl.dateError != ''">
+                                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                {{ editCtrl.dateError }}
+                            </div>
+                            <div class="alert alert-danger alert-dismissible" role="alert" ng-show="editCtrl.timeError != ''">
+                                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                {{ editCtrl.timeError }}
+                            </div>
 
 
 
@@ -79,15 +83,19 @@
                                 </div>
                                 <div class="col-md-2  ">
                                     <div class="input-group">
-                                        <input type="text" class="form-control" datepicker-popup="{{editCtrl.format}}" ng-model="editCtrl.event.start_date" is-open="editCtrl.popup1.opened" ng-required="true" close-text="Close" min-date="editCtrl.minDate" max-date="editCtrl.maxDate"/>
-
-                                        <span class="input-group-btn">
-                                            <button type="button" class="btn btn-default" ng-click="editCtrl.open1()"><i class="glyphicon glyphicon-calendar"></i></button>
-                                        </span>
+                                        <input type="text" class="form-control" id="id_start_date" name="start_date" placeholder="Start date" datepicker-popup="{{editCtrl.date_format}}" ng-model="editCtrl.event.start_date" ng-click="editCtrl.start_date_open()" is-open="editCtrl.start_date_popup.opened" ng-required="true" close-text="Close"/>
                                     </div>
                                 </div>
                                 <div class="col-md-2  ">
-                                    <input class="form-control timepicker" id="id_start_time" name="start_time" placeholder="Start time" type="text" ng-model="editCtrl.event.start_time">
+                                        <span dropdown auto-close="outsideClick">
+                                          <input href dropdown-toggle value = "{{ editCtrl.display_start_time }}" class="form-control" id="id_start_time">
+
+                                          <ul class="dropdown-menu">
+                                             <li>
+                                                <timepicker ng-model="my_start_time" hour-step="editCtrl.hstep" minute-step="editCtrl.mstep" show-meridian="editCtrl.ismeridian"></timepicker>
+                                             </li>
+                                          </ul>
+                                        </span>
                                 </div>
 
                                 <div class="col-md-1">
@@ -95,24 +103,25 @@
                                 </div>
                                 <div class="col-md-2  ">
                                     <div class="input-group">
-                                        <input type="text" class="form-control" datepicker-popup="{{editCtrl.format}}" ng-model="editCtrl.event.end_date" is-open="editCtrl.popup2.opened" ng-required="true" close-text="Close"/>
-                                        <span class="input-group-btn">
-                                            <button type="button" class="btn btn-default" ng-click="editCtrl.open2()"><i class="glyphicon glyphicon-calendar"></i></button>
-                                        </span>
+                                        <input type="text" class="form-control" datepicker-popup="{{editCtrl.date_format}}" ng-model="editCtrl.event.end_date" ng-click="editCtrl.end_date_open()" is-open="editCtrl.end_date_popup.opened" ng-required="true" close-text="Close"/>
                                     </div>
                                 </div>
                                 <div class="col-md-2  ">
-                                    <input class="form-control timepicker" id="id_end_time" name="end_time" placeholder="End time" type="text" ng-model="editCtrl.event.end_time">
+                                    <span dropdown auto-close="outsideClick">
+                                      <input href dropdown-toggle value = "{{ editCtrl.display_end_time }}" class="form-control" id="id_end_time">
+
+                                      <ul class="dropdown-menu">
+                                         <li>
+                                            <timepicker ng-model="my_end_time" hour-step="editCtrl.hstep" minute-step="editCtrl.mstep" show-meridian="editCtrl.ismeridian"></timepicker>
+                                         </li>
+                                      </ul>
+                                    </span>
                                 </div>
 
                         </div>
 
 
                         <div class="row form-group">
-                <!--                <div class="alert alert-danger alert-dismissible" role="alert">
-                                  <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                              </div>-->
-
                             <div class="col-md-3">
                                 <strong> Description: </strong>
                             </div>
@@ -122,10 +131,6 @@
                         </div>
 
                         <div class="row form-group">
-                        <!--        <div class="alert alert-danger alert-dismissible" role="alert">
-                                  <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                              </div>-->
-
                             <div class="col-md-3">
                                 <strong> Is Repeat: </strong>
                             </div>
@@ -135,16 +140,17 @@
                         </div>
 
                         <div class="row form-group optional"  ng-show="editCtrl.event.is_repeat == true">
-                        <!--        <div class="alert alert-danger alert-dismissible" role="alert">
-                                  <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                              </div> -->
+                            <div class="alert alert-danger alert-dismissible" role="alert" ng-show="editCtrl.noRepetitionError != ''">
+                                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                {{ editCtrl.noRepetitionError }}
+                            </div>
 
                             <div class="col-md-3">
                                 <strong> Repetition: </strong>
                             </div>
                             <div class="col-md-9  ">
                                 <select class="form-control" id="id_repetition" name="repetition" ng-model="editCtrl.event.repetition">
-                                <option value="D" selected="selected">Daily</option>
+                                <option value="D">Daily</option>
                                 <option value="W">Weekly</option>
                                 <option value="M">Monthly</option>
                                 </select>
@@ -152,19 +158,16 @@
                         </div>
 
                         <div class="row form-group optional"  ng-show="editCtrl.event.is_repeat == true">
-                <!--                <div class="alert alert-danger alert-dismissible" role="alert">
-                                  <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                              </div>-->
-
+                            <div class="alert alert-danger alert-dismissible" role="alert" ng-show="editCtrl.endsError != ''">
+                                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                {{ editCtrl.endsError }}
+                            </div>
                             <div class="col-md-3">
                                 <strong> Ends: </strong>
                             </div>
                             <div class="col-md-9  ">
                                 <div class="input-group">
-                                    <input type="text" class="form-control" datepicker-popup="{{editCtrl.format}}" ng-model="editCtrl.event.ends" is-open="editCtrl.popup3.opened" ng-required="true" close-text="Close"/>
-                                    <span class="input-group-btn">
-                                        <button type="button" class="btn btn-default" ng-click="editCtrl.open3()"><i class="glyphicon glyphicon-calendar"></i></button>
-                                    </span>
+                                    <input type="text" class="form-control" datepicker-popup="{{editCtrl.date_format}}" ng-model="editCtrl.event.ends" ng-click="editCtrl.end_repeat_open()" is-open="editCtrl.end_repeat_popup.opened" ng-required="true" close-text="Close"/>
                                 </div>
                             </div>
                         </div>
