@@ -2,7 +2,7 @@
 
 angular
     .module('DataEntry')
-    .controller("sysAdminCtrl", ['$scope', function($scope) {
+    .controller("sysAdminCtrl", ['$scope', '$http', 'sysAdminService', function($scope, $http, sysAdminService) {
         var vm = this;
 
         vm.form = {};
@@ -59,15 +59,16 @@ angular
         };
 
         vm.retrieveForm = function(form) {
-            sysAdminCtrlService.retrieveForm(form).then(function(promise){
+            sysAdminService.retrieveForm(form).then(function(promise){
                 vm.form = promise.data;
                 callTotals();
             });
         };
 
-        vm.updateForm = function() {
-            sysAdminCtrlService.updateForm(form).then(function(promise){
+        vm.updateForm = function(form) {
+            sysAdminService.updateForm(form).then(function(promise){
                 vm.form = promise.data;
+                vm.callTotals();
             });
         };
 
