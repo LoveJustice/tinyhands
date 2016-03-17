@@ -16,8 +16,8 @@ class EventFactory(DjangoModelFactory):
     end_date = datetime.date.today()
     end_time = (datetime.datetime.now() + datetime.timedelta(hours=1)).time()
     description = factory.Sequence(lambda n: 'This is Event {0}'.format(n))
-    is_repeat = False
-    repetition = ''
-    ends = None
-    created_on = None
-    modified_on = None
+    is_repeat = True
+    repetition = 'D'
+    ends = datetime.date.today() + datetime.timedelta(days=3)
+    created_on = datetime.datetime.now() - datetime.timedelta(days=3)
+    modified_on = datetime.datetime.now() - datetime.timedelta(days=2)
