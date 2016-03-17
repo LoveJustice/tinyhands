@@ -36,9 +36,8 @@ class BudgetViewSet(viewsets.ModelViewSet):
     queryset = BorderStationBudgetCalculation.objects.all()
     serializer_class = BorderStationBudgetCalculationSerializer
     filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
-    #search_fields = ('border_station', 'border_station')
-    #ordering_fields = ('station_name', 'station_code', 'month_year', 'date_time_entered', 'date_time_last_updated')
-    #ordering = ('station_name', 'station_code', 'month_year', 'date_time_entered', 'date_time_last_updated')
+    search_fields = ['border_station__station_name', 'border_station__station_code']
+    ordering_fields = ['border_station__station_name', 'border_station__station_code', 'month_year', 'date_time_entered', 'date_time_last_updated']
 
     def list(self, request, *args, **kwargs):
             temp = self.serializer_class
