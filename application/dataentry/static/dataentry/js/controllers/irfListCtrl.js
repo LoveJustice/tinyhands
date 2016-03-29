@@ -155,12 +155,19 @@ angular
                     console.log(irf.irf_number);
                 }
             }
+
             var firstAddress = "http://localhost/media/interceptee_photos/lamb.jpg";
             var secondAddress = "http://localhost/media/interceptee_photos/macaw.jpg";
 
-            irfService.batchIrf(firstAddress + secondAddress)
+            var listofAddresses = [];
+            listofAddresses.push(firstAddress);
+            listofAddresses.push(secondAddress);
+            console.log(listofAddresses);
+            console.log(angular.toJson(listofAddresses));
+
+            irfService.batchIrf(angular.toJson(listofAddresses))
             .success(function(data){
-                console.log(data.results);
+                console.log(data);
             })
             .error(function(){
                 alert("Could not Export Photos");
