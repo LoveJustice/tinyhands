@@ -147,27 +147,20 @@ angular
         }
 
         function exportPhotos() {
+            var listOfIrfNumbers = [];
             for (var irf of vm.irfs) {
                 var date = new Date(irf.date_time_of_interception);
                 var start = new Date(vm.startDate);
                 var end = new Date(vm.endDate);
                 if (date >= start && date <= end) {
+                    listOfIrfNumbers.push((irf.irf_number));
                     console.log(irf.irf_number);
                 }
             }
 
-            var firstAddress = "http://localhost/media/interceptee_photos/lamb.jpg";
-            var secondAddress = "http://localhost/media/interceptee_photos/macaw.jpg";
-
-            var listofAddresses = [];
-            listofAddresses.push(firstAddress);
-            listofAddresses.push(secondAddress);
-            console.log(listofAddresses);
-            console.log(angular.toJson(listofAddresses));
-
-            irfService.batchIrf(angular.toJson(listofAddresses))
+            irfService.batchIrf(listOfIrfNumbers)
             .success(function(data){
-                console.log(data);
+                console.log(String(data));
             })
             .error(function(){
                 alert("Could not Export Photos");

@@ -496,6 +496,6 @@ class BatchView(View):
     greeting = "Good Day"
 
     def get(self, request):
-        return HttpResponse(self.greeting)
+        return HttpResponse(InterceptionRecord.objects.get(pk=1))
     def post(self, request):
         queryset = InterceptionRecord.objects.all()
