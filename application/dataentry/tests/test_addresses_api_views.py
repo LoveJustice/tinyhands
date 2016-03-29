@@ -151,9 +151,9 @@ class Address2Test(APITestCase):
         }
 
     def test_create_address2(self):
-	self.data["latitude"] = 29.1837169619
-        self.data["longitude"]= 81.2336041444
-	self.data["level"] = "City"	
+	   self.data["latitude"] = 29.1837169619
+       self.data["longitude"]= 81.2336041444
+	   self.data["level"] = "City"	
 
         url = reverse('Address2')
 
@@ -162,9 +162,9 @@ class Address2Test(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertIsNotNone(response.data['id'])
         self.assertEqual(response.data['name'], 'Address2')
-	self.assertEqual(response.data['level'], "City")
-	self.assertEqual(response.data["latitude"], 29.1837169619)
-	self.assertEqual(response.data["longitude"],  81.2336041444)
+        self.assertEqual(response.data['level'], "City")
+        self.assertEqual(response.data["latitude"], 29.1837169619)
+        self.assertEqual(response.data["longitude"],  81.2336041444)
         self.assertEqual(response.data['address1']['id'], self.first_address1.id)
         self.assertEqual(response.data['canonical_name']['id'], self.first_canonical_name.id)
 
@@ -178,9 +178,9 @@ class Address2Test(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertIsNotNone(response.data['id'])
-	self.assertEqual(response.data["level"], "VDC")
-	self.assertEqual(response.data["latitude"], 0)
-	self.assertEqual(response.data["longitude"],0)
+        self.assertEqual(response.data["level"], "VDC")
+        self.assertEqual(response.data["latitude"], 0)
+        self.assertEqual(response.data["longitude"],0)
         self.assertEqual(response.data['name'], 'Address2')
         self.assertEqual(response.data['address1']['id'], self.first_address1.id)
         self.assertEqual(response.data['canonical_name'], None)
@@ -191,18 +191,18 @@ class Address2Test(APITestCase):
 
         self.data['id'] = address2.id
         self.data['name'] = "Address2Updated"
-	self.data["level"] = "District"
-	self.data["latitude"] = 29.1337
-	self.data["longitude"]= 81.188118
+        self.data["level"] = "District"
+        self.data["latitude"] = 29.1337
+        self.data["longitude"]= 81.188118
 
         response = self.client.put(url, self.data)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['name'], 'Address2Updated')
         self.assertEqual(response.data['id'], address2.id)
-	self.assertEqual(response.data["level"], "District")
-	self.assertEqual(response.data["latitude"], 29.1337)
-	self.assertEqual(response.data["longitude"],81.188118)
+        self.assertEqual(response.data["level"], "District")
+        self.assertEqual(response.data["latitude"], 29.1337)
+        self.assertEqual(response.data["longitude"],81.188118)
 
     def test_update_address2_canonical_name_null(self):
         # Should be able to save address2 with null canonical name
