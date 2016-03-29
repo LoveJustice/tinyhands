@@ -10,16 +10,38 @@ class Address1Test(APITestCase):
         self.address1_list = Address1Factory.create_batch(20)
         self.user = Address2UserFactory.create()
         self.client.force_authenticate(user=self.user)
+        self.data = {'name': 'Address1'}
 
-    def test_create_address1(self):
-
+    def test_create_address1_complete_data(self):
+        self.data["level"] = "City"
+        self.data["latitude"] = 27.713855
+        self.data["longitude"] = 85.314800
+        self.data["completed"] = False
+        
         url = reverse('Address1')
-        data = {'name': 'Address1'}
 
-        response = self.client.post(url, data)
+        response = self.client.post(url, self.data)
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['name'], 'Address1')
+        self.assertEqual(response.data['level'], 'City')
+        self.assertEqual(response.data['latitude'], 27.713855)
+        self.assertEqual(response.data['longitude'], 85.314800)
+        self.assertEqual(response.data['completed'], False) 
+        self.assertIsNotNone(response.data['id'])
+        
+    def test_create_address1_incomplete_data(self):
+
+        url = reverse('Address1')
+
+        response = self.client.post(url, self.data)
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['name'], 'Address1')
+        self.assertEqual(response.data['level'], 'District')
+        self.assertEqual(response.data['latitude'], 0)
+        self.assertEqual(response.data['latitude'], 0)
+        self.assertEqual(response.data['completed'], False) 
         self.assertIsNotNone(response.data['id'])
 
     def test_list_address1s(self):
