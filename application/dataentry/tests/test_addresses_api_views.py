@@ -11,14 +11,18 @@ class Address1Test(APITestCase):
         self.user = Address2UserFactory.create()
         self.client.force_authenticate(user=self.user)
         self.data = {'name': 'Address1'}
+        self.data = {
+            'name': 'Address1',
+            "completed": False,
+        }
 
     def test_create_address1_complete_data(self):
+        url = reverse('Address1')
+        
         self.data["level"] = "City"
         self.data["latitude"] = 27.713855
         self.data["longitude"] = 85.314800
-        self.data["completed"] = False
         
-        url = reverse('Address1')
 
         response = self.client.post(url, self.data)
 
@@ -31,7 +35,7 @@ class Address1Test(APITestCase):
         self.assertIsNotNone(response.data['id'])
         
     def test_create_address1_incomplete_data(self):
-
+        # Should be able to save address1 with null level, latitude, and longitude
         url = reverse('Address1')
 
         response = self.client.post(url, self.data)
