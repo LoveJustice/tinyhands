@@ -1,4 +1,5 @@
-from datetime import date
+from datetime import date, datetime
+from time import strptime, mktime
 import csv
 import json
 import os
@@ -15,6 +16,7 @@ from django.core.urlresolvers import reverse_lazy
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import redirect, render_to_response, render
 from django.template.loader import render_to_string
+from django.utils import timezone
 from django.views.generic import ListView, View, DeleteView, CreateView
 
 from rest_framework import status
@@ -495,7 +497,20 @@ class VictimInterviewViewSet(viewsets.ModelViewSet):
 class BatchView(View):
     greeting = "Good Day"
 
-    def get(self, request):
-        return HttpResponse(InterceptionRecord.objects.get(pk=1))
+    def get(self, request, startDate, endDate):
+        listOfIrfNumbers = []
+        irfs = InterceptionRecord.objects.all()
+        start = timezone.make_aware(datetime.fromtimestamp(mktime(strptime(startDate, '%m-%d-%Y'))), timezone.get_default_timezone())
+        end = timezone.make_aware(datetime.fromtimestamp(mktime(strptime(endDate, '%m-%d-%Y'))), timezone.get_default_timezone())
+
+        for irf in irfs:
+            date = irf.date_time_of_interception
+            if date >= start and date <= end:
+                listOfIrfNumbers.append(irf.irf_number)
+
+        interceptees = Interceptee.objects.filter(interception_record__irf_number__in=listOfIrfNumbers)
+        photos = Interceptee.objects.filter(interception_record__irf_number__in=listOfIrfNumbers).values('photo')
+        return HttpResponse(photos)
+
     def post(self, request):
         queryset = InterceptionRecord.objects.all()

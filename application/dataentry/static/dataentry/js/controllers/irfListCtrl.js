@@ -154,11 +154,11 @@ angular
                 var end = new Date(vm.endDate);
                 if (date >= start && date <= end) {
                     listOfIrfNumbers.push((irf.irf_number));
-                    console.log(irf.irf_number);
+                    //console.log(irf.irf_number);
                 }
             }
 
-            irfService.batchIrf(listOfIrfNumbers)
+            irfService.batchIrf(vm.startDate, vm.endDate)
             .success(function(data){
                 console.log(String(data));
             })

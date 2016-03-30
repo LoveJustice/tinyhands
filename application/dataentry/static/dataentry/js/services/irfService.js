@@ -43,8 +43,8 @@ function irfService($http) {
 
     }
 
-    function batchIrf(Json) {
-        return $http.get('/data-entry/batch/').
+    function batchIrf(startDate, endDate) {
+        return $http.get('/data-entry/batch/' + startDate +'/' + endDate).
             success(function (data) {
                 return data;
             }).
