@@ -147,17 +147,6 @@ angular
         }
 
         function exportPhotos() {
-            var listOfIrfNumbers = [];
-            for (var irf of vm.irfs) {
-                var date = new Date(irf.date_time_of_interception);
-                var start = new Date(vm.startDate);
-                var end = new Date(vm.endDate);
-                if (date >= start && date <= end) {
-                    listOfIrfNumbers.push((irf.irf_number));
-                    //console.log(irf.irf_number);
-                }
-            }
-
             irfService.batchIrf(vm.startDate, vm.endDate)
             .success(function(data){
                 console.log(String(data));

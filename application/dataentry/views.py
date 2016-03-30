@@ -508,8 +508,7 @@ class BatchView(View):
             if date >= start and date <= end:
                 listOfIrfNumbers.append(irf.irf_number)
 
-        interceptees = Interceptee.objects.filter(interception_record__irf_number__in=listOfIrfNumbers)
-        photos = Interceptee.objects.filter(interception_record__irf_number__in=listOfIrfNumbers).values('photo')
+        photos = Interceptee.objects.filter(interception_record__irf_number__in=listOfIrfNumbers).values_list('photo', flat=True)
         return HttpResponse(photos)
 
     def post(self, request):
