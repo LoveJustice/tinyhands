@@ -32,7 +32,7 @@
         "permission_irf_edit": true
       },
     "model": "accounts.account",
-    "pk": 10014
+    "pk": 1
 },
 {
     "fields": {
@@ -539,7 +539,7 @@
         "where_going_treatment": false,
         "drugged_or_drowsy": false,
         "talked_to_family_member_other": false,
-        "form_entered_by": 10014,
+        "form_entered_by": 1,
         "which_contact_subcommittee_member": false,
         "staff_name": "Ashish",
         "noticed_village_dress": false,

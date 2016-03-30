@@ -7,8 +7,8 @@ from .models import (BorderStation, Address1,
                      Address2,
                      VictimInterviewLocationBox, VictimInterviewPersonBox, VictimInterview)
 from .fields import Address1Field, Address2Field, FormNumberField
-from .google_sheets import google_sheet_client
-from django.forms import CharField, ImageField
+from django.forms import CharField, ImageField, IntegerField
+from imagekit.models import ImageSpecField
 
 
 BOOLEAN_CHOICES = [
@@ -404,7 +404,12 @@ class IntercepteeForm(DreamSuitePaperForm):
         self.fields['address1'] = Address1Field(required=False)
         self.fields['address2'] = Address2Field(required=False)
         self.fields['full_name'] = CharField(required=False)
-        self.fields['photo'] = ImageField(required=False)
+        self.fields['age'] = IntegerField(required=False)
+        self.fields['photo'] = ImageField()
+        self.fields['gender'] = CharField(max_length=4, required=False)
+        self.fields['phone_contact'] = CharField(required=False)
+        #self.fields['photo_thumbnail'] = ImageSpecField()
+        #self.fields['age'] = PositiveIntegerField(required=False)
 
         try:
             self.fields['full_name'].initial = self.instance.person.full_name
@@ -422,6 +427,31 @@ class IntercepteeForm(DreamSuitePaperForm):
            self.fields['photo'].initial = self.instance.person.photo
         except:
             pass
+        try:
+           self.fields['gender'].initial = self.instance.person.gender
+        except:
+            pass
+        try:
+           self.fields['phone_contact'].initial = self.instance.person.phone_contact
+        except:
+            pass
+        try:
+           self.fields['age'].initial = self.instance.person.age
+        except:
+            pass
+        # try:
+        #    self.fields['gender'].initial = self.instance.person.gender
+        # except:
+        #     pass
+        # try:
+        #    self.fields['phone_contact'].initial = self.instance.person.phone_contact
+        # except:
+        #     pass
+        # try:
+        #    self.fields['age'].initial = self.instance.person.age
+        # except:
+        #     pass
+
 
     def save(self, commit=True):
         data = self.cleaned_data
@@ -439,7 +469,6 @@ class IntercepteeForm(DreamSuitePaperForm):
         except Address2.DoesNotExist:
             pass
 
-
         if data["full_name"]:
             self.instance.person.full_name = data["full_name"]
             self.instance.person.save()
@@ -447,6 +476,24 @@ class IntercepteeForm(DreamSuitePaperForm):
         if data["photo"]:
             self.instance.person.photo = data["photo"]
             self.instance.person.save()
+
+        if data["gender"]:
+            self.instance.person.gender = data["gender"]
+            self.instance.person.save()
+
+        if data["phone_contact"]:
+            self.instance.person.phone_contact = data["phone_contact"]
+            self.instance.person.save()
+
+        if data["age"]:
+            self.instance.person.age = data["age"]
+            self.instance.person.save()
+
+
+
+        # if data["photo"]:
+        #     self.instance.person.photo = data["photo"]
+        #     self.instance.person.save()
 
         return super(IntercepteeForm, self).save(commit)
 

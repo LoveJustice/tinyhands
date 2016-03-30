@@ -984,4 +984,3 @@ class VictimInterviewLocationBox(models.Model):
 
     def __unicode__(self):
         return "VIF {}".format(self.victim_interview.vif_number)
-
