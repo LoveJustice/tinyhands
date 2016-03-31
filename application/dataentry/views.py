@@ -518,18 +518,13 @@ class BatchView(View):
 
         #response = HttpResponse(content_type='image/jpeg')
 
-        file = urllib.urlopen('http://edwards.cse.taylor.edu/media/interceptee_photos/butterfly.jpg')
-        image_file = io.BytesIO(file.read())
-        im = Image.open(image_file)
-
-        #im.save(response, "JPEG")
-
+        fileUrl = urllib.urlopen('http://edwards.cse.taylor.edu/media/interceptee_photos/butterfly.jpg')
         f = StringIO()
         zip = zipfile.ZipFile(f, 'w')
-        zip.writestr('plant4.jpg',  file.read())
+        zip.writestr('irf.jpg',  fileUrl.read())
         zip.close() # Close
         response = HttpResponse(f.getvalue(), content_type="application/zip")
-        response['Content-Disposition'] = 'attachment; filename=plant4bar.zip'
+        response['Content-Disposition'] = 'attachment; filename=irfPhotos.zip'
         return response
 
     def post(self, request):
