@@ -1,10 +1,14 @@
 from datetime import date, datetime
 from time import strptime, mktime
 import csv
+import io
 import json
 import os
 import re
 import shutil
+import urllib
+
+from PIL import Image
 
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
@@ -509,7 +513,15 @@ class BatchView(View):
                 listOfIrfNumbers.append(irf.irf_number)
 
         photos = Interceptee.objects.filter(interception_record__irf_number__in=listOfIrfNumbers).values_list('photo', flat=True)
-        return HttpResponse(photos)
+
+        response = HttpResponse(content_type='image/jpeg')
+
+        file = urllib.urlopen('http://edwards.cse.taylor.edu/media/interceptee_photos/butterfly.jpg')
+        image_file = io.BytesIO(file.read())
+        im = Image.open(image_file)
+
+        im.save(response, "JPEG")
+        return response
 
     def post(self, request):
         queryset = InterceptionRecord.objects.all()
