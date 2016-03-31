@@ -147,13 +147,17 @@ angular
         }
 
         function exportPhotos() {
-            irfService.batchIrf(vm.startDate, vm.endDate)
-            .success(function(data){
-                console.log(String(data));
-            })
-            .error(function(){
-                alert("Could not Export Photos");
-            });
+            var a         = document.createElement('a');
+            a.href        = 'http://localhost/data-entry/batch/' + vm.startDate + '/' + vm.endDate;
+            a.click();
+
+            //irfService.batchIrf(vm.startDate, vm.endDate)
+            //.success(function(data){
+            //    console.log(String(data));
+            //})
+            //.error(function(){
+            //    alert("Could not Export Photos");
+            //});
         }
 
         function validDate() {

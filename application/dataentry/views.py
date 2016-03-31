@@ -516,15 +516,15 @@ class BatchView(View):
 
         photos = Interceptee.objects.filter(interception_record__irf_number__in=listOfIrfNumbers).values_list('photo', flat=True)
 
-        #response = HttpResponse(content_type='image/jpeg')
-
-        fileUrl = urllib.urlopen('http://edwards.cse.taylor.edu/media/interceptee_photos/butterfly.jpg')
         f = StringIO()
         zip = zipfile.ZipFile(f, 'w')
-        zip.writestr('irf.jpg',  fileUrl.read())
+        for photoUrl in photos:
+            fileUrl = urllib.urlopen('http://edwards.cse.taylor.edu/media/' + photoUrl)
+            zip.writestr(photoUrl,  fileUrl.read())
         zip.close() # Close
+
         response = HttpResponse(f.getvalue(), content_type="application/zip")
-        response['Content-Disposition'] = 'attachment; filename=irfPhotos.zip'
+        response['Content-Disposition'] = 'attachment; filename=irfPhotos ' + startDate + '-' + endDate + '.zip'
         return response
 
     def post(self, request):
