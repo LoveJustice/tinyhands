@@ -9,8 +9,6 @@ import re
 import shutil
 import urllib
 
-from PIL import Image
-
 from StringIO import StringIO
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
@@ -501,8 +499,6 @@ class VictimInterviewViewSet(viewsets.ModelViewSet):
 
 
 class BatchView(View):
-    greeting = "Good Day"
-
     def get(self, request, startDate, endDate):
         listOfIrfNumbers = []
         irfs = InterceptionRecord.objects.all()
@@ -511,21 +507,21 @@ class BatchView(View):
 
         for irf in irfs:
             date = irf.date_time_of_interception
-            if date >= start and date <= end:
+            if start <= date <= end:
                 listOfIrfNumbers.append(irf.irf_number)
 
-        photos = Interceptee.objects.filter(interception_record__irf_number__in=listOfIrfNumbers).values_list('photo', flat=True)
+        photos = list(Interceptee.objects.filter(interception_record__irf_number__in=listOfIrfNumbers).values_list('photo', 'full_name', 'interception_record__irf_number'))
+
+        for i in range(len(photos)):
+            photos[i] = [str(x) for x in photos[i]]
 
         f = StringIO()
-        zip = zipfile.ZipFile(f, 'w')
-        for photoUrl in photos:
-            fileUrl = urllib.urlopen('http://edwards.cse.taylor.edu/media/' + photoUrl)
-            zip.writestr(photoUrl,  fileUrl.read())
-        zip.close() # Close
+        imagezip = zipfile.ZipFile(f, 'w')
+        for photoTuple in photos:
+            fileurl = urllib.urlopen('http://edwards.cse.taylor.edu/media/' + photoTuple[0])
+            imagezip.writestr(photoTuple[2] + '-' + photoTuple[1] + '.jpg', fileurl.read())
+        imagezip.close()  # Close
 
         response = HttpResponse(f.getvalue(), content_type="application/zip")
-        response['Content-Disposition'] = 'attachment; filename=irfPhotos ' + startDate + '-' + endDate + '.zip'
+        response['Content-Disposition'] = 'attachment; filename=irfPhotos ' + startDate + ' to ' + endDate + '.zip'
         return response
-
-    def post(self, request):
-        queryset = InterceptionRecord.objects.all()
