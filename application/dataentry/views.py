@@ -1,3 +1,4 @@
+import zipfile
 from datetime import date, datetime
 from time import strptime, mktime
 import csv
@@ -10,6 +11,7 @@ import urllib
 
 from PIL import Image
 
+from StringIO import StringIO
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core import serializers
@@ -514,13 +516,20 @@ class BatchView(View):
 
         photos = Interceptee.objects.filter(interception_record__irf_number__in=listOfIrfNumbers).values_list('photo', flat=True)
 
-        response = HttpResponse(content_type='image/jpeg')
+        #response = HttpResponse(content_type='image/jpeg')
 
         file = urllib.urlopen('http://edwards.cse.taylor.edu/media/interceptee_photos/butterfly.jpg')
         image_file = io.BytesIO(file.read())
         im = Image.open(image_file)
 
-        im.save(response, "JPEG")
+        #im.save(response, "JPEG")
+
+        f = StringIO()
+        zip = zipfile.ZipFile(f, 'w')
+        zip.writestr('plant4.jpg',  file.read())
+        zip.close() # Close
+        response = HttpResponse(f.getvalue(), content_type="application/zip")
+        response['Content-Disposition'] = 'attachment; filename=plant4bar.zip'
         return response
 
     def post(self, request):
