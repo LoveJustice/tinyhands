@@ -5,7 +5,7 @@ import threading
 from django.core.mail.backends.base import BaseEmailBackend
 from django.utils import six
 
-SMTP_EMAIL = "fail@smtperror.com"
+SMTP_ERROR_EMAIL = "fail@smtperror.com"
 
 class EmailBackend(BaseEmailBackend):
     def __init__(self, *args, **kwargs):
