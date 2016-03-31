@@ -3,6 +3,7 @@ from django.db import models
 from accounts.serializers import AccountsSerializer
 from rest_framework import serializers
 from accounts.tests.factories import SuperUserDesignation
+from django.db import TestEmailBackend
 
 class TestAccountsSerializer(TestCase):
 	def setUp(self):
@@ -30,13 +31,17 @@ class TestAccountsSerializer(TestCase):
 		}
 	
 	def test_create_with_valid_email(self):
-		self.testUserInfo["email"] = "eric_krauss@taylor.edu"
-		with self.assertRaises(serializers.ValidationError):
+		self.testUserInfo["email"] = "valid@smtperror.com"
+		try:
 			account = self.serializer.create(self.testUserInfo)
 			account.delete()
+		except serializers.ValidationError:
+			self.fail()
+		self.assertTrue(True)
+
 
 	def test_create_with_invalid_email(self):
-		self.testUserInfo["email"] = "failure@FailBackend.fail"
+		self.testUserInfo["email"] = "fail@smtperror.com"
 		with self.assertRaises(serializers.ValidationError):
 			account = self.serializer.create(self.testUserInfo)
 			account.delete()
