@@ -1,7 +1,7 @@
 import sys
 import smtplib
 import threading
-
+import ipdb
 from django.core.mail.backends.base import BaseEmailBackend
 from django.utils import six
 
@@ -32,7 +32,9 @@ class EmailBackend(BaseEmailBackend):
             try:
                 stream_created = self.open()
                 for message in email_messages:
-                    if message.from_email == SMTP_EMAIL:
+                    ##if message.to_email == SMTP_ERROR_EMAIL:
+		    raise smtplib.SMTPException()
+		    if SMTP_ERROR_EMAIL in message.recipients():
                         raise smtplib.SMTPException()
                     self.write_message(message)
                     self.stream.flush()  # flush after each message

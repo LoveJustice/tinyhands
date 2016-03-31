@@ -3,7 +3,7 @@ from django.db import models
 from accounts.serializers import AccountsSerializer
 from rest_framework import serializers
 from accounts.tests.factories import SuperUserDesignation
-from django.db import TestEmailBackend
+from dreamsuite.test_email_backend import SMTP_ERROR_EMAIL
 
 class TestAccountsSerializer(TestCase):
 	def setUp(self):
@@ -41,7 +41,7 @@ class TestAccountsSerializer(TestCase):
 
 
 	def test_create_with_invalid_email(self):
-		self.testUserInfo["email"] = "fail@smtperror.com"
+		self.testUserInfo["email"] = SMTP_ERROR_EMAIL
 		with self.assertRaises(serializers.ValidationError):
 			account = self.serializer.create(self.testUserInfo)
 			account.delete()
