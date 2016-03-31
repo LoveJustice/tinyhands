@@ -1,5 +1,5 @@
 describe("eventsCtrl", function() {
-    var scope, controller, mockModal, $q;
+    var scope, controller, mockModal, mockEventsService, mockEvent, $q;
 
     beforeEach(module('EventsMod'));
 
@@ -7,20 +7,25 @@ describe("eventsCtrl", function() {
         $q = _$q_;
         scope = $rootScope.$new();
         mockModal = jasmine.createSpyObj('mockModal', ['open']);
-        mockEventsService = jasmine.createSpyObj('mockEventsService', ['all']);
-        controller = $controller('EventsCtrl', {$modal: mockModal});
+        mockEventsService = jasmine.createSpyObj('mockEventsService', ['all','destroy']);
+        mockEvent = {title:'foo', id:1};
+        mockEventsService.all.and.returnValue({$promise: $q.when([mockEvent])});
+        controller = $controller('EventsCtrl', {
+            Events: mockEventsService,
+            $modal: mockModal
+        });
     }));
 
     describe('on activate', function() {
         it('should display all the events', function() {
-            expect(mockEventsService.all.toHaveBeenCalled();
+            expect(mockEventsService.all).toHaveBeenCalled();
         });
     });
 
     describe('when delete button onclick', function() {
         it('should open Modal', function() {
-            var mockEvent = {title: 'foo'};
-
+            mockModal.open.and.returnValue({result: $q.when(true)});
+            mockEventsService.destroy.and.returnValue({$promise: $q.when(true)});
             controller.openModal(mockEvent);
             scope.$apply();
 
@@ -29,15 +34,13 @@ describe("eventsCtrl", function() {
             expect(modalArgs.templateUrl).toEqual('modal.html');
             expect(modalArgs.controller).toEqual('ModalCtrl');
             expect(modalArgs.controllerAs).toEqual('modalCtrl');
-            expect(modalArgs.bindToController).toEqual(true);
-            expect(modalArgs.resolve.event()).toEqual(mockevent);
+            expect(modalArgs.resolve.eventTitle()).toEqual(mockEvent.title);
         });
 
         it('should delete the event after the result', function() {
-            var mockEvent = {title: 'foo', id :1};
 
             mockModal.open.and.returnValue({result: $q.when(true)});
-            mockEventsService .destroy.and.returnValue({$promise: $q.when(true)});
+            mockEventsService.destroy.and.returnValue({$promise: $q.when(true)});
             controller.openModal(mockEvent);
             scope.$apply()
 
@@ -45,10 +48,9 @@ describe("eventsCtrl", function() {
         });
 
         it('should load all events after an event is deleted', function() {
-            var mockEvent = {title: 'foo', id :1};
 
             mockModal.open.and.returnValue({result: $q.when(true)});
-            mockEventsService .destroy.and.returnValue({$promise: $q.when(true)});
+            mockEventsService.destroy.and.returnValue({$promise: $q.when(true)});
             controller.openModal(mockEvent);
             scope.$apply()
 

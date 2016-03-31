@@ -1,5 +1,5 @@
-describe("modalCtrl", function() {
-    var controller, mockEvent, mockModalInstance = {};
+describe("ModalCtrl", function() {
+    var controller, scope, mockEvent, mockModalInstance;
 
     beforeEach(module('EventsMod'));
 
@@ -10,14 +10,14 @@ describe("modalCtrl", function() {
         controller = $controller('ModalCtrl', {
             $scope: scope,
             $modalInstance: mockModalInstance,
-            event: mockEvent
+            eventTitle: mockEvent.title
         });
     }));
 
 
     describe("on activate", function() {
         it('should set event to display', function() {
-            expect(controller.event).toEqual(mockEvent);
+            expect(scope.eventTitle).toEqual(mockEvent.title);
         });
     });
 
