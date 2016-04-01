@@ -750,13 +750,16 @@ irf_data = [
 ]
 
 interceptee_data = [
+    CopyCsvField("relation_to", "{}Relationship to...", True),
+]
+
+person_data = [
     CopyCsvField("full_name", "{}Name", True),
     MapValueCsvField('gender', "{}Gender", { "Male":"m", "Female":"f"}, export_default="Female"),
     CopyCsvField("age", "{}Age", True),
     Address1CsvField("address1", "{}Address1"),
     Address2CsvField("address2", "{}Address2"),
     CopyCsvField("phone_contact", "{}Phone", True),
-    CopyCsvField("relation_to", "{}Relationship to...", True),
 ]
 
 irf_victim_prefix = "Victim "
@@ -767,6 +770,9 @@ def get_irf_export_rows(irfs):
     irf_headers = []
     for field in irf_data:
         irf_headers.append(field.title)
+
+    for field in person_data:
+        irf_headers.append(field.title.format(irf_victim_prefix))
 
     for field in interceptee_data:
         irf_headers.append(field.title.format(irf_victim_prefix))
@@ -780,6 +786,7 @@ def get_irf_export_rows(irfs):
 
     for irf in irfs:
         for interceptee in irf.interceptees.all():
+            person = interceptee.person
             if interceptee.kind == "t":
                 continue
 
@@ -789,6 +796,9 @@ def get_irf_export_rows(irfs):
                 row.append(field.exportField(irf))
 
             # export victim information
+            for field in person_data:
+                row.append(field.exportField(person))
+
             for field in interceptee_data:
                 row.append(field.exportField(interceptee))
 
@@ -797,8 +807,13 @@ def get_irf_export_rows(irfs):
                 if trafficker.kind == "v":
                     continue
 
+                for field in person_data:
+                    row.append(field.exportField(person))
+
                 for field in interceptee_data:
                     row.append(field.exportField(trafficker))
+
+
 
             rows.append(row)
 
