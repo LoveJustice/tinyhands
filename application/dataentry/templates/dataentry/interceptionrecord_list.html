@@ -42,11 +42,11 @@
                             <col width="500">
                             <tr>
                                 <td class="pull-right" style="padding-right: 5px; padding-top: 3px;">Start Date:</td>
-                                <td><input type="text" ng-model="vm.startDate" ng-change="vm.validDate()"></td>
+                                <td><input type="text" ng-model="vm.startDate" ng-change="vm.validDate()" placeholder="MM-DD-YYYY" maxlength="10"></td>
                             </tr>
                             <tr>
                                 <td class="pull-right" style="padding-right: 5px; padding-top: 3px;">End Date:</td>
-                                <td><input type="text" ng-model="vm.endDate" ng-change="vm.validDate()"></td>
+                                <td><input type="text" ng-model="vm.endDate" ng-change="vm.validDate()" placeholder="MM-DD-YYYY" maxlength="10"></td>
                             </tr>
                         </table>
                     </div>
