@@ -10,7 +10,7 @@ urlpatterns = patterns('dataentry.views',
     url(r'^irfs/export/$', InterceptionRecordCSVExportView.as_view(), name='interceptionrecord_csv_export'),
 
     #IRFBatch
-    url(r'^batch/(?P<startDate>\d{2}-\d{2}-\d{4})/(?P<endDate>\d{2}-\d{2}-\d{4})', BatchView.as_view(), name="BatchView"),
+    url(r'^batch/(?P<startDate>(\d{2}|\d{1})-(\d{2}|\d{1})-\d{4})/(?P<endDate>\d{2}-\d{2}-\d{4})', BatchView.as_view(), name="BatchView"),
     #Create a url that will have a border station argument and will list irfs for that specific BD station
 
     url(r'^vifs/$', VictimInterviewListView.as_view(), name='victiminterview_list'),

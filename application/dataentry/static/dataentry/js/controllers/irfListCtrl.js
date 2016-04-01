@@ -147,55 +147,38 @@ angular
         }
 
         function exportPhotos() {
-            if (vm.startDate.length < 10) {
-                var dateParts = vm.startDate.split('-');
+            vm.startDate = formatDate(vm.startDate);
+            vm.endDate = formatDate(vm.endDate);
+            console.log('StartDate: ' + vm.startDate);
+            console.log('EndDate: ' + vm.endDate);
+
+            var a         = document.createElement('a');
+            a.href        = 'http://localhost/data-entry/batch/' + vm.startDate + '/' + vm.endDate;
+            a.click();
+        }
+
+        function lpad (str, padString, length) {
+            while (str.length < length)
+                str = padString + str;
+            return str;
+        }
+
+        function formatDate(date) {
+            if (date.length < 10) {
+                var dateParts = date.split('-');
                 if (dateParts[0].length == 1)
                     dateParts[0] = '0' + dateParts[0];
                 if (dateParts[1].length == 1)
                     dateParts[1] = '0' + dateParts[1];
                 if (dateParts[2] == '0' || dateParts[2] == '00' || dateParts[2] == '000')
                     dateParts[2] = '2000'
-                if (dateParts[2].length == 2)
+                if (dateParts[2].length < 4)
                 {
-                    dateParts[2] = '20' + dateParts[2];
+                    dateParts[2] = lpad(lpad(dateParts[2], '0', 3), '2', 4);
                 }
-                vm.startDate = dateParts.join('-')
+                date = dateParts.join('-')
             }
-            console.log('StartDate: ' + vm.startDate);
-            //console.log('EndDate: ' + vm.endDate);
-
-            //var a         = document.createElement('a');
-            //a.href        = 'http://localhost/data-entry/batch/' + vm.startDate + '/' + vm.endDate;
-            //a.click();
-        }
-
-        // left padding s with c to a total of n chars
-        function padding_left(s, c, n) {
-          if (! s || ! c || s.length >= n) {
-            return s;
-          }
-          var max = (n - s.length)/c.length;
-          for (var i = 0; i < max; i++) {
-            s = c + s;
-          }
-          return s;
-        }
-
-        // right padding s with c to a total of n chars
-        function padding_right(s, c, n) {
-          if (! s || ! c || s.length >= n) {
-            return s;
-          }
-          var max = (n - s.length)/c.length;
-          for (var i = 0; i < max; i++) {
-            s += c;
-          }
-          return s;
-        }
-        function lpad (str, padString, length) {
-            while (str.length < length)
-                str = str + padString;
-            return str;
+            return  date;
         }
 
         function validDate() {
