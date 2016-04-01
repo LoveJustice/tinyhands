@@ -20,12 +20,12 @@
             <a class="btn btn-primary" id="export" href="/data-entry/irfs/export/" download>
                 Export as CSV
             </a>
+            <button id="id_export_photos" class="btn btn-primary" data-toggle="modal" data-target="#exportPhotoModal" style="margin-left:10px;" href="#">
+                Export Photos
+            </button>
             <a ng-show="vm.user.permission_irf_add" id="id_input_new_irf" class="btn btn-success" style="margin-left:5px;" href="/data-entry/irfs/create/">
                 Input A New IRF
             </a>
-            <button id="id_export_photos" class="btn btn-success pull-right" data-toggle="modal" data-target="#exportPhotoModal" style="margin-left:10px;" href="#">
-                Export Photos...
-            </button>
               <!-- Modal -->
               <div class="modal fade" id="exportPhotoModal" role="dialog">
                 <div class="modal-dialog">
@@ -63,7 +63,7 @@
     <div class="row">
         <div class="col-sm-2 col-xs-3">
             <select ng-model="vm.paginateBy" ng-change="vm.listIrfs()" class="form-control">
-                <option>25</option>
+                <option selected>25</option>
                 <option>50</option>
                 <option>100</option>
                 <option>500</option>

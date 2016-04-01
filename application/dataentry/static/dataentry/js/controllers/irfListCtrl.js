@@ -131,7 +131,6 @@ angular
         }
 
         function getQueryParams(){
-            console.log("getting params...");
             var params = "";
             params += "?page_size=" + vm.paginateBy;
             if(vm.searchValue) {
@@ -149,11 +148,9 @@ angular
         function exportPhotos() {
             vm.startDate = formatDate(vm.startDate);
             vm.endDate = formatDate(vm.endDate);
-            console.log('StartDate: ' + vm.startDate);
-            console.log('EndDate: ' + vm.endDate);
 
-            var a         = document.createElement('a');
-            a.href        = 'http://localhost/data-entry/batch/' + vm.startDate + '/' + vm.endDate;
+            var a = document.createElement('a');
+            a.href = 'http://localhost/data-entry/batch/' + vm.startDate + '/' + vm.endDate;
             a.click();
         }
 
@@ -178,7 +175,7 @@ angular
                 }
                 date = dateParts.join('-')
             }
-            return  date;
+            return date;
         }
 
         function validDate() {

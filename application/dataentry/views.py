@@ -506,8 +506,8 @@ class BatchView(View):
         listOfIrfNumbers = []
         irfs = InterceptionRecord.objects.all()
         for irf in irfs:
-            date = irf.date_time_of_interception
-            if start <= date <= end:
+            irfDate = irf.date_time_of_interception
+            if start <= irfDate <= end:
                 listOfIrfNumbers.append(irf.irf_number)
 
         photos = list(Interceptee.objects.filter(interception_record__irf_number__in=listOfIrfNumbers).values_list('photo', 'full_name', 'interception_record__irf_number'))
