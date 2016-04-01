@@ -147,17 +147,55 @@ angular
         }
 
         function exportPhotos() {
-            var a         = document.createElement('a');
-            a.href        = 'http://localhost/data-entry/batch/' + vm.startDate + '/' + vm.endDate;
-            a.click();
+            if (vm.startDate.length < 10) {
+                var dateParts = vm.startDate.split('-');
+                if (dateParts[0].length == 1)
+                    dateParts[0] = '0' + dateParts[0];
+                if (dateParts[1].length == 1)
+                    dateParts[1] = '0' + dateParts[1];
+                if (dateParts[2] == '0' || dateParts[2] == '00' || dateParts[2] == '000')
+                    dateParts[2] = '2000'
+                if (dateParts[2].length == 2)
+                {
+                    dateParts[2] = '20' + dateParts[2];
+                }
+                vm.startDate = dateParts.join('-')
+            }
+            console.log('StartDate: ' + vm.startDate);
+            //console.log('EndDate: ' + vm.endDate);
 
-            //irfService.batchIrf(vm.startDate, vm.endDate)
-            //.success(function(data){
-            //    console.log(String(data));
-            //})
-            //.error(function(){
-            //    alert("Could not Export Photos");
-            //});
+            //var a         = document.createElement('a');
+            //a.href        = 'http://localhost/data-entry/batch/' + vm.startDate + '/' + vm.endDate;
+            //a.click();
+        }
+
+        // left padding s with c to a total of n chars
+        function padding_left(s, c, n) {
+          if (! s || ! c || s.length >= n) {
+            return s;
+          }
+          var max = (n - s.length)/c.length;
+          for (var i = 0; i < max; i++) {
+            s = c + s;
+          }
+          return s;
+        }
+
+        // right padding s with c to a total of n chars
+        function padding_right(s, c, n) {
+          if (! s || ! c || s.length >= n) {
+            return s;
+          }
+          var max = (n - s.length)/c.length;
+          for (var i = 0; i < max; i++) {
+            s += c;
+          }
+          return s;
+        }
+        function lpad (str, padString, length) {
+            while (str.length < length)
+                str = str + padString;
+            return str;
         }
 
         function validDate() {

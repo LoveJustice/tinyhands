@@ -500,11 +500,11 @@ class VictimInterviewViewSet(viewsets.ModelViewSet):
 
 class BatchView(View):
     def get(self, request, startDate, endDate):
-        listOfIrfNumbers = []
-        irfs = InterceptionRecord.objects.all()
         start = timezone.make_aware(datetime.fromtimestamp(mktime(strptime(startDate, '%m-%d-%Y'))), timezone.get_default_timezone())
         end = timezone.make_aware(datetime.fromtimestamp(mktime(strptime(endDate, '%m-%d-%Y'))), timezone.get_default_timezone())
 
+        listOfIrfNumbers = []
+        irfs = InterceptionRecord.objects.all()
         for irf in irfs:
             date = irf.date_time_of_interception
             if start <= date <= end:
