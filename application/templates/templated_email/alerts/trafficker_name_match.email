@@ -16,7 +16,7 @@
             <th>Name Matched to</th>
             <th>Name Match Certainty</th>
         </thead>
-        {% for person,match in traffickers_matches.items %}
+        {% for person,match in matches.items %}
         <tr>
             <td>{{ person }}</td>
             <td><a href="{{ site }}/{% url 'interceptionrecord_detail' match.0.2.interception_record_id %}">{{ match.0.2.full_name }}</a></td>
