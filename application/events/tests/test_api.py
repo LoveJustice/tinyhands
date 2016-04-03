@@ -119,7 +119,7 @@ class UpdateEventAPITests(RestApiTestCase):
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    def test_when_user_logged_in_and_valid_event_data_should_return_403_error(self):
+    def test_when_user_logged_in_and_valid_event_data_should_return_200(self):
         event = EventFactory.create()
         url = reverse('Event', args=[event.id])
         user = ViewUserFactory.create()
@@ -142,6 +142,92 @@ class UpdateEventAPITests(RestApiTestCase):
         response = self.client.put(url, updatedEvent)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+
+class DestroyEventAPITests(RestApiTestCase):
+
+    def test_when_not_logged_in_should_return_403_error(self):
+        event = EventFactory.create()
+        url = reverse('Event', args=[event.id])
+
+        response = self.client.delete(url)
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_when_user_logged_in_and_invalid_event_data_should_return_404_error(self):
+        url = reverse('Event', args=[101])
+        user = ViewUserFactory.create()
+        self.login(user)
+
+        response = self.client.delete(url)
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_when_user_logged_in_and_valid_event_data_should_return_204(self):
+        event = EventFactory.create()
+        url = reverse('Event', args=[event.id])
+        user = ViewUserFactory.create()
+        self.login(user)
+
+        response = self.client.delete(url)
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+
+class AllEventAPITests(RestApiTestCase):
+    newEvent = {
+        'title': 'Foo',
+        'location': '',
+        'start_date': datetime.date(2016, 2, 2),
+        'start_time': datetime.time(3, 0, 0),
+        'end_date': datetime.date(2016, 2, 2),
+        'end_time': datetime.time(4, 0, 0),
+        'description': 'foo',
+        'is_repeat': False,
+        'repetition': '',
+        'ends': None
+    }
+
+    def test_when_not_logged_in_should_return_403_error(self):
+        url = '/api/event/all/'
+
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_when_user_logged_in_should_return_all_event(self):
+        event = EventFactory.create()
+        url = '/api/event/all/'
+        user = ViewUserFactory.create()
+        self.login(user)
+
+        response = self.client.post(reverse('EventList'), self.newEvent)
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data),2)
+        self.assertEqual(response.data[0]['id'], event.id)
+        self.assertEqual(response.data[0]['title'], event.title)
+        self.assertEqual(response.data[0]['location'], event.location)
+        self.assertEqual(response.data[0]['start_date'], str(event.start_date))
+        self.assertEqual(response.data[0]['start_time'], str(event.start_time))
+        self.assertEqual(response.data[0]['end_date'], str(event.end_date))
+        self.assertEqual(response.data[0]['end_time'], str(event.end_time))
+        self.assertEqual(response.data[0]['description'], event.description)
+        self.assertEqual(response.data[0]['is_repeat'], event.is_repeat)
+        self.assertEqual(response.data[0]['repetition'], event.repetition)
+        self.assertEqual(response.data[0]['ends'], str(event.ends))
+        self.assertIsNotNone(response.data[1]['id'])
+        self.assertEqual(response.data[1]['title'], self.newEvent['title'],)
+        self.assertEqual(response.data[1]['location'], self.newEvent['location'])
+        self.assertEqual(response.data[1]['start_date'], str(self.newEvent['start_date']))
+        self.assertEqual(response.data[1]['start_time'], str(self.newEvent['start_time']))
+        self.assertEqual(response.data[1]['end_date'], str(self.newEvent['end_date']))
+        self.assertEqual(response.data[1]['end_time'], str(self.newEvent['end_time']))
+        self.assertEqual(response.data[1]['description'], self.newEvent['description'])
+        self.assertEqual(response.data[1]['is_repeat'], self.newEvent['is_repeat'])
+        self.assertEqual(response.data[1]['repetition'], self.newEvent['repetition'])
+        self.assertEqual(response.data[1]['ends'], self.newEvent['ends'])
 
 
 class CalendarFeedAPITests(RestApiTestCase):
