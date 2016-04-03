@@ -4,7 +4,7 @@ from fuzzywuzzy import process
 
 from accounts.models import Alert
 
-from dataentry.models import Interceptee
+from dataentry.models import Interceptee, Person
 
 
 class VIFAlertChecker(object):
@@ -106,7 +106,11 @@ class IRFAlertChecker(object):
         # Get all of the interceptees from other IRFs
         all_people = Interceptee.objects.all().exclude(interception_record=self.irf.id)
         # Get a list of all of their full_names for use of fuzzy_wuzzy
-        people_list = [person.full_name for person in all_people]
+        people_list = []
+        for intercept in all_people:
+            interceptPerson = Person.objects.get(interceptee=intercept)
+            people_list.append(interceptPerson.full_name)
+        #people_list = [person.full_name for person in all_people]
         trafficker_in_custody = self.trafficker_in_custody()
 
         matches = []
@@ -119,9 +123,10 @@ class IRFAlertChecker(object):
 
         # For each trafficker on the IRF
         for trafficker in trafficker_list:
+            traffickerPerson = Person.objects.get(interceptee=trafficker)
 
             # Get a list of the best matches that have a score of 90+
-            traffickers_with_name_match = process.extractBests(trafficker.full_name,
+            traffickers_with_name_match = process.extractBests(traffickerPerson.full_name,
                                                                people_list,
                                                                score_cutoff=90,
                                                                limit=10)
@@ -130,7 +135,8 @@ class IRFAlertChecker(object):
                 try:
                     name = person_match[0]
                     # Append the interceptee object that has the full name
-                    matches.append(Interceptee.objects.all().filter(full_name=name))
+                    matches.append(Person.objects.all().filter(full_name=name))
+                    #matches.append(Interceptee.objects.all().filter(full_name=name))
                 except:
                     pass
 

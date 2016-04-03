@@ -347,52 +347,6 @@ class InterceptionRecordForm(DreamSuitePaperForm):
             self.has_warnings = True
             self._errors['has_signature'] = error
 
-
-# class PersonForm(IntercepteeForm):
-#    class Meta:
-#        model = Person
-#        exclude = ('address1','address2')
-#
-#        def __init__(self, *args, **kwargs):
-#            super(PersonForm, self).__init__(*args, **kwargs)
-#
-#            self.fields['address1'] = Address1Field(required=False)
-#            self.fields['address2'] = Address2Field(required=False)
-#
-#            try:
-#                self.fields['address1'].initial = self.instance.person.address1
-#            except:
-#                pass
-#            try:
-#               self.fields['address2'].initial = self.instance.person.address2
-#            except:
-#                pass
-#
-#
-#         def save(self, commit=True):
-#             #if self.cleaned_data['address1']:
-#             person = Person.objects.get(interceptee=self.instance)
-#             self.instance.person = person
-#             try:
-#                 address1 = Address1.objects.get(name=self.cleaned_data['address1'])
-#                 self.instance.person.address1 = address1
-#             except Address1.DoesNotExist:
-#                 address1 = None
-#             try:
-#                 address2 = Address2.objects.get(name=self.cleaned_data['address2'], address1=address1)
-#                 self.instance.person.address2 = address2
-#             except Address2.DoesNotExist:
-#                 pass
-#
-#             return super(IntercepteeForm, self).save(commit)
-#
-#
-#     def if_address_1_need_address_2(self, cleaned_data):
-#         if cleaned_data.get('address2') and not cleaned_data.get('address1'):
-#             self._errors['address1'] = self.error_class(
-#                     ['If you supply an address 2, and address 1 is required'])
-#
-
 class IntercepteeForm(DreamSuitePaperForm):
     class Meta:
         model = Interceptee
@@ -456,8 +410,14 @@ class IntercepteeForm(DreamSuitePaperForm):
     def save(self, commit=True):
         data = self.cleaned_data
         #if self.cleaned_data['address1']:
-        person = Person.objects.get(interceptee=self.instance)
-        self.instance.person = person
+        try:
+            person = Person.objects.get(interceptee=self.instance)
+            self.instance.person = person
+        except Person.DoesNotExist:
+            person = Person()
+            person.interceptee = self.instance
+            person.save()
+            self.instance.person = person
         try:
             address1 = Address1.objects.get(name=self.cleaned_data['address1'])
             self.instance.person.address1 = address1
