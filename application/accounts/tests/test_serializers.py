@@ -36,7 +36,7 @@ class TestAccountsSerializer(TestCase):
 	def test_create_with_valid_email(self):
 		self.testUserInfo["email"] = "valid@smtperror.com"
 		account = self.serializer.create(self.testUserInfo)
-		self.assertTrue(True)
+		self.assertEquals(account.email, self.testUserInfo["email"])
 
 
 	def test_create_with_invalid_email(self):

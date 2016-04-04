@@ -32,8 +32,6 @@ class EmailBackend(BaseEmailBackend):
             try:
                 stream_created = self.open()
                 for message in email_messages:
-                    ##if message.to_email == SMTP_ERROR_EMAIL:
-		    raise smtplib.SMTPException()
 		    if SMTP_ERROR_EMAIL in message.recipients():
                         raise smtplib.SMTPException()
                     self.write_message(message)
