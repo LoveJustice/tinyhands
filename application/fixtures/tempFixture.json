@@ -456,6 +456,7 @@
     "fields": {
         "kind": "v",
         "interception_record": 1,
+        "photo": "interceptee_photos/giraffe.jpg",
         "relation_to": "Sister",
         "person": 1
     },
@@ -466,7 +467,6 @@
     "fields": {
         "address1": 1,
         "phone_contact": "9808862188",
-        "photo": "interceptee_photos/giraffe.jpg",
         "age": 24,
         "address2": 1,
         "full_name": "Layla Walker",

@@ -276,11 +276,6 @@ class InterceptionRecord(models.Model):
 
 class Person(models.Model):
     GENDER_CHOICES = [('f', 'F'), ('m', 'M')]
-    photo = models.ImageField(upload_to='interceptee_photos', default='', blank=True)
-    photo_thumbnail = ImageSpecField(source='photo',
-                                     processors=[ResizeToFill(200, 200)],
-                                     format='JPEG',
-                                     options={'quality': 80})
     full_name = models.CharField(max_length=255)
     gender = models.CharField(max_length=4, choices=GENDER_CHOICES, blank=True)
     age = models.PositiveIntegerField(null=True, blank=True)
@@ -294,6 +289,11 @@ class Interceptee(models.Model):
         ('v', 'Victim'),
         ('t', 'Trafficker'),
     ]
+    photo = models.ImageField(upload_to='interceptee_photos', default='', blank=True)
+    photo_thumbnail = ImageSpecField(source='photo',
+                                     processors=[ResizeToFill(200, 200)],
+                                     format='JPEG',
+                                     options={'quality': 80})
     interception_record = models.ForeignKey(InterceptionRecord, related_name='interceptees')
     kind = models.CharField(max_length=4, choices=KIND_CHOICES)
     relation_to = models.CharField(max_length=255, blank=True)

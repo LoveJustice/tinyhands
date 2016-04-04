@@ -378,7 +378,7 @@ class IntercepteeForm(DreamSuitePaperForm):
         except:
             pass
         try:
-           self.fields['photo'].initial = self.instance.person.photo
+           self.fields['photo'].initial = self.instance.photo
         except:
             pass
         try:
@@ -393,19 +393,6 @@ class IntercepteeForm(DreamSuitePaperForm):
            self.fields['age'].initial = self.instance.person.age
         except:
             pass
-        # try:
-        #    self.fields['gender'].initial = self.instance.person.gender
-        # except:
-        #     pass
-        # try:
-        #    self.fields['phone_contact'].initial = self.instance.person.phone_contact
-        # except:
-        #     pass
-        # try:
-        #    self.fields['age'].initial = self.instance.person.age
-        # except:
-        #     pass
-
 
     def save(self, commit=True):
         data = self.cleaned_data
@@ -434,8 +421,8 @@ class IntercepteeForm(DreamSuitePaperForm):
             self.instance.person.save()
 
         if data["photo"]:
-            self.instance.person.photo = data["photo"]
-            self.instance.person.save()
+            self.instance.photo = data["photo"]
+            self.instance.save()
 
         if data["gender"]:
             self.instance.person.gender = data["gender"]
