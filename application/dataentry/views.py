@@ -511,17 +511,19 @@ class BatchView(View):
                 listOfIrfNumbers.append(irf.irf_number)
 
         photos = list(Interceptee.objects.filter(interception_record__irf_number__in=listOfIrfNumbers).values_list('photo', 'full_name', 'interception_record__irf_number'))
+        if len(photos) == 0:
+            return HttpResponse('There are no photos within this date range.')
+        else:
+            for i in range(len(photos)):
+                photos[i] = [str(x) for x in photos[i]]
 
-        for i in range(len(photos)):
-            photos[i] = [str(x) for x in photos[i]]
+            f = StringIO()
+            imagezip = zipfile.ZipFile(f, 'w')
+            for photoTuple in photos:
+                fileurl = urllib.urlopen('http://edwards.cse.taylor.edu/media/' + photoTuple[0])
+                imagezip.writestr(photoTuple[2] + '-' + photoTuple[1] + '.jpg', fileurl.read())
+            imagezip.close()  # Close
 
-        f = StringIO()
-        imagezip = zipfile.ZipFile(f, 'w')
-        for photoTuple in photos:
-            fileurl = urllib.urlopen('http://edwards.cse.taylor.edu/media/' + photoTuple[0])
-            imagezip.writestr(photoTuple[2] + '-' + photoTuple[1] + '.jpg', fileurl.read())
-        imagezip.close()  # Close
-
-        response = HttpResponse(f.getvalue(), content_type="application/zip")
-        response['Content-Disposition'] = 'attachment; filename=irfPhotos ' + startDate + ' to ' + endDate + '.zip'
-        return response
+            response = HttpResponse(f.getvalue(), content_type="application/zip")
+            response['Content-Disposition'] = 'attachment; filename=irfPhotos ' + startDate + ' to ' + endDate + '.zip'
+            return response

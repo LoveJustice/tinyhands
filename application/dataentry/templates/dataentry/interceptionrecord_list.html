@@ -20,7 +20,7 @@
             <a class="btn btn-primary" id="export" href="/data-entry/irfs/export/" download>
                 Export as CSV
             </a>
-            <button id="id_export_photos" class="btn btn-primary" data-toggle="modal" data-target="#exportPhotoModal" style="margin-left:10px;" href="#">
+            <button id="id_export_photos" class="btn btn-primary" data-toggle="modal" data-target="#exportPhotoModal" style="margin-left:5px;" href="#">
                 Export Photos
             </button>
             <a ng-show="vm.user.permission_irf_add" id="id_input_new_irf" class="btn btn-success" style="margin-left:5px;" href="/data-entry/irfs/create/">
@@ -39,19 +39,49 @@
                     <div class="modal-body">
                         <table>
                             <col width="75">
-                            <col width="500">
+                            <col width="200">
+                            <col width="100">
+                            <col width="100">
                             <tr>
                                 <td class="pull-right" style="padding-right: 5px; padding-top: 3px;">Start Date:</td>
-                                <td><input type="text" ng-model="vm.startDate" ng-change="vm.validDate()" placeholder="MM-DD-YYYY" maxlength="10"></td>
+                                <td>
+                                    <select ng-model="vm.startMonth" class="form-control">
+                                        <option ng-repeat="month in vm.getMonths()" value="{{ month }}">{{ month }}</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select ng-model="vm.startDay" class="form-control">
+                                        <option ng-repeat="day in vm.getDays(vm.startMonth, vm.startYear)" value="{{ day }}">{{ day }}</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select ng-model="vm.startYear" class="form-control">
+                                        <option ng-repeat="year in vm.getYears()" value="{{ year }}">{{ year }}</option>
+                                    </select>
+                                </td>
                             </tr>
                             <tr>
                                 <td class="pull-right" style="padding-right: 5px; padding-top: 3px;">End Date:</td>
-                                <td><input type="text" ng-model="vm.endDate" ng-change="vm.validDate()" placeholder="MM-DD-YYYY" maxlength="10"></td>
+                                <td>
+                                    <select ng-model="vm.endMonth" class="form-control">
+                                        <option ng-repeat="month in vm.getMonths()" value="{{ month }}">{{ month }}</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select ng-model="vm.endDay" class="form-control">
+                                        <option ng-repeat="day in vm.getDays(vm.endMonth, vm.endYear)" value="{{ day }}">{{ day }}</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select ng-model="vm.endYear" class="form-control">
+                                        <option ng-repeat="year in vm.getYears()" value="{{ year }}">{{ year }}</option>
+                                    </select>
+                                </td>
                             </tr>
                         </table>
                     </div>
                     <div class="modal-footer">
-                      <button ng-click="vm.exportPhotos()" ng-disabled="vm.valid_date == false" type="button" class="btn btn-success" data-dismiss="modal">Submit</button>
+                      <button ng-click="vm.exportPhotos()" ng-disabled="!vm.validDate()" type="button" class="btn btn-success" data-dismiss="modal">Submit</button>
                     </div>
                   </div>
 

@@ -21,6 +21,12 @@ angular
         vm.startDate = "";
         vm.endDate = "";
         vm.valid_date = false;
+        vm.startMonth = "";
+        vm.startDay = "";
+        vm.startYear = "";
+        vm.endMonth = "";
+        vm.endDay = "";
+        vm.endYear = "";
 
 
         // Function Definitions
@@ -33,6 +39,9 @@ angular
         vm.sortIcon = sortIcon;
         vm.exportPhotos = exportPhotos;
         vm.validDate = validDate;
+        vm.getMonths = getMonths;
+        vm.getDays = getDays;
+        vm.getYears = getYears;
         main();
 
 
@@ -105,8 +114,6 @@ angular
                 });
         }
 
-
-
         function deleteIrf(irf) {
             if(irf.confirmedDelete){
                 vm.loading = true;
@@ -146,47 +153,76 @@ angular
         }
 
         function exportPhotos() {
-            vm.startDate = formatDate(vm.startDate);
-            vm.endDate = formatDate(vm.endDate);
+            var monthArray = ['January','February','March','April','May','June','July','August','September','October',
+            'November','December'];
+
+            var startMonth = vm.startMonth;
+            startMonth = monthArray.indexOf(startMonth) + 1;
+            if (startMonth.toString().length == 1) {
+                startMonth = '0' + startMonth;
+            }
+
+            var startDay = vm.startDay.toString();
+            if (vm.startDay.length == 1) {
+                startDay = '0' + startDay;
+            }
+
+            var endMonth = vm.endMonth;
+            endMonth = monthArray.indexOf(endMonth) + 1;
+            if (endMonth.toString().length == 1) {
+                endMonth = '0' + endMonth;
+            }
+
+            var endDay = vm.endDay.toString();
+            if (vm.endDay.length == 1) {
+                endDay = '0' + endDay;
+            }
+
+            vm.startDate = startMonth + '-' + startDay + '-' + vm.startYear;
+            vm.endDate = endMonth + '-' + endDay + '-' + vm.endYear;
 
             var a = document.createElement('a');
             a.href = 'http://localhost/data-entry/batch/' + vm.startDate + '/' + vm.endDate;
             a.click();
         }
 
-        function lpad (str, padString, length) {
-            while (str.length < length)
-                str = padString + str;
-            return str;
-        }
-
-        function formatDate(date) {
-            if (date.length < 10) {
-                var dateParts = date.split('-');
-                if (dateParts[0].length == 1)
-                    dateParts[0] = '0' + dateParts[0];
-                if (dateParts[1].length == 1)
-                    dateParts[1] = '0' + dateParts[1];
-                if (dateParts[2] == '0' || dateParts[2] == '00' || dateParts[2] == '000')
-                    dateParts[2] = '2000'
-                if (dateParts[2].length < 4)
-                {
-                    dateParts[2] = lpad(lpad(dateParts[2], '0', 3), '2', 4);
-                }
-                date = dateParts.join('-')
-            }
-            return date;
-        }
-
         function validDate() {
-            var start = new Date(vm.startDate);
-            var end = new Date(vm.endDate);
-            var oldest = new Date("01/01/2000");
-            var latest = Date.now();
-            if (vm.startDate == '' || vm.endDate == '' || start == "Invalid Date" || end == "Invalid Date" || end < start || start < oldest || start > latest || end < oldest || end > latest) {
-                vm.valid_date = false;
+            var monthArray = ['January','February','March','April','May','June','July','August','September','October',
+            'November','December'];
+
+            if (vm.startMonth == '' || vm.startDay == '' || vm.startYear == '' || vm.endMonth == '' || vm.endDay == '' || vm.endYear == '') {
+                return false;
+            } else if (vm.startYear > vm.endYear) {
+                return false;
+            } else if (vm.startYear == vm.endYear && monthArray.indexOf(vm.startMonth) > monthArray.indexOf(vm.endMonth)) {
+                return false;
+            } else if (vm.startYear == vm.endYear && vm.startMonth == vm.endMonth && vm.startDay > vm.endDay) {
+                return false;
             } else {
-                vm.valid_date = true;
+                return true;
             }
+        }
+
+        function getMonths() {
+            return ['','January','February','March','April','May','June','July','August','September','October','November','December'];
+        }
+
+        function getDays(month, year) {
+            var days = ['',1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30];
+            if (month == '') {
+                return '';
+            } else if (month == 'January' || month == 'March' || month=='May' || month == 'July' || month == 'August' || month == 'October' || month == 'December') {
+                days.push(31);
+            } else if (month == 'February') {
+                days.pop();
+                if (year != '' && year % 4 != 0) {
+                    days.pop();
+                }
+            }
+            return days;
+        }
+
+        function getYears() {
+            return ['', 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016];
         }
     }]);
