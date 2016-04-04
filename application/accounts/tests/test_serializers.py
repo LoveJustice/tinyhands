@@ -4,7 +4,10 @@ from accounts.serializers import AccountsSerializer
 from rest_framework import serializers
 from accounts.tests.factories import SuperUserDesignation
 from dreamsuite.test_email_backend import SMTP_ERROR_EMAIL
+from django.test.utils import override_settings
 
+
+@override_settings(EMAIL_BACKEND = "dreamsuite.test_email_backend.EmailBackend")
 class TestAccountsSerializer(TestCase):
 	def setUp(self):
 		self.serializer = AccountsSerializer()
@@ -32,11 +35,7 @@ class TestAccountsSerializer(TestCase):
 	
 	def test_create_with_valid_email(self):
 		self.testUserInfo["email"] = "valid@smtperror.com"
-		try:
-			account = self.serializer.create(self.testUserInfo)
-			account.delete()
-		except serializers.ValidationError:
-			self.fail()
+		account = self.serializer.create(self.testUserInfo)
 		self.assertTrue(True)
 
 
@@ -44,4 +43,3 @@ class TestAccountsSerializer(TestCase):
 		self.testUserInfo["email"] = SMTP_ERROR_EMAIL
 		with self.assertRaises(serializers.ValidationError):
 			account = self.serializer.create(self.testUserInfo)
-			account.delete()
