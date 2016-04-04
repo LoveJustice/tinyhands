@@ -34,7 +34,7 @@ from dataentry.models import (BorderStation, Address2, Address1, Interceptee, In
 from dataentry.forms import (IntercepteeForm, InterceptionRecordForm, Address2Form, Address1Form, VictimInterviewForm, VictimInterviewLocationBoxForm, VictimInterviewPersonBoxForm)
 from dataentry import csv_io
 from dataentry.serializers import Address1Serializer, Address2Serializer, InterceptionRecordListSerializer, VictimInterviewListSerializer
-
+from dataentry.google_sheets import GoogleSheetClientThread
 from accounts.mixins import PermissionsRequiredMixin
 
 from alert_checkers import IRFAlertChecker, VIFAlertChecker
@@ -162,6 +162,7 @@ class InterceptionRecordCreateView(LoginRequiredMixin, PermissionsRequiredMixin,
         for formset in inlines:
             formset.save()
         IRFAlertChecker(form, inlines).check_them()
+        GoogleSheetClientThread.update_irf(form.irf_number)
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -177,6 +178,7 @@ class InterceptionRecordUpdateView(LoginRequiredMixin, PermissionsRequiredMixin,
         for formset in inlines:
             formset.save()
         IRFAlertChecker(form, inlines).check_them()
+        GoogleSheetClientThread.update_irf(form.irf_number)
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -236,6 +238,7 @@ class VictimInterviewCreateView(LoginRequiredMixin, PermissionsRequiredMixin, Cr
         for formset in inlines:
             formset.save()
         VIFAlertChecker(form, inlines).check_them()
+        GoogleSheetClientThread.update_vif(form.vif_number)
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -251,6 +254,7 @@ class VictimInterviewUpdateView(LoginRequiredMixin, PermissionsRequiredMixin, Up
         for formset in inlines:
             formset.save()
         VIFAlertChecker(form, inlines).check_them()
+        GoogleSheetClientThread.update_vif(form.vif_number)
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -460,6 +464,13 @@ class InterceptionRecordViewSet(viewsets.ModelViewSet):
     search_fields = ('irf_number',)
     ordering_fields = ('irf_number', 'staff_name', 'number_of_victims', 'number_of_traffickers', 'date_time_of_interception', 'date_time_entered_into_system', 'date_time_last_updated',)
     ordering = ('irf_number',)
+    
+    def destroy(self, request, *args, **kwargs):
+        irf_id = kwargs['pk']
+        irf = InterceptionRecord.objects.get(id=irf_id)
+        rv = super(viewsets.ModelViewSet, self).destroy(request, args, kwargs)
+        GoogleSheetClientThread.update_irf(irf.irf_number)
+        return rv
 
 
 class VictimInterviewViewSet(viewsets.ModelViewSet):
@@ -472,3 +483,10 @@ class VictimInterviewViewSet(viewsets.ModelViewSet):
     search_fields = ('vif_number',)
     ordering_fields = ('vif_number', 'interviewer', 'number_of_victims', 'number_of_traffickers', 'date', 'date_time_entered_into_system', 'date_time_last_updated',)
     ordering = ('vif_number',)
+    
+    def destroy(self, request, *args, **kwargs):
+        vif_id = kwargs['pk']
+        vif = VictimInterview.objects.get(id=vif_id)
+        rv = super(viewsets.ModelViewSet, self).destroy(request, args, kwargs)
+        GoogleSheetClientThread.update_irf(vif.vif_number)
+        return rv

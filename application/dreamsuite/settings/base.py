@@ -103,7 +103,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 MESSAGE_TAGS = {
-    messages.constants.ERROR: 'danger'    # Fix up for Bootstrap.
+    messages.constants.ERROR: 'danger'  # Fix up for Bootstrap.
 }
 
 TEMPLATES = [
@@ -126,7 +126,8 @@ TEMPLATES = [
             ],
             'loaders': [
                 'django.template.loaders.filesystem.Loader',
-                'django.template.loaders.app_directories.Loader',            ]
+                'django.template.loaders.app_directories.Loader',
+            ]
         },
     },
 ]
