@@ -34,7 +34,7 @@ angular
         }
 
         /* Created associative array to make referencing designation names faster
-           loop through permission set and create associative array with designation id as key, designation name as value
+           loop through permission set and make entries with designation id as key, designation name as value
            ex: permissionsSet[1] = Super Administrator */
         vm.createPermissionsArray = function(permissionSet) {
 
