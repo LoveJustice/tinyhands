@@ -96,6 +96,7 @@ class AccountUpdateView(
     model = Account
     success_url = reverse_lazy('account_list')
     permissions_required = ['permission_accounts_manage']
+    fields = []
 
     def get_context_data(self, **kwargs):
         context = super(AccountUpdateView, self).get_context_data(**kwargs)
@@ -122,7 +123,7 @@ class AccessControlView(
         TemplateView):
     template_name = 'accounts/access_control.html'
     permissions_required = ['permission_accounts_manage']
-    
+
 
 
 class AccessDefaultsView(
@@ -132,7 +133,7 @@ class AccessDefaultsView(
     template_name = 'accounts/access_defaults.html'
     permissions_required = ['permission_accounts_manage']
 
-    
+
 
 #TODO Currently this view doesn't check to make sure the permission set is
 # unused by accounts.  The button to go here is grayed out, but that wouldn't
@@ -170,22 +171,22 @@ class DefaultPermissionsSetViewSet(ModelViewSet):
         if(instance.is_used_by_accounts()):
             error_message = {'detail': 'Permission set is currently used by accounts. It cannot be deleted.'}
             return Response(error_message, status=status.HTTP_403_FORBIDDEN)
-        
+
         instance.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class CurrentUserView(APIView):
     permission_classes = [IsAuthenticated]
-    
+
     def get(self, request):
         serializer = AccountsSerializer(request.user)
         return Response(serializer.data)
-        
+
 class ResendActivationEmailView(APIView):
     permission_classes = [IsAuthenticated, HasPermission]
     permissions_required = ['permission_accounts_manage']
-    
+
     def post(self, request, pk=None):
         email_sent = False
         account = get_object_or_404(Account, pk=pk)
