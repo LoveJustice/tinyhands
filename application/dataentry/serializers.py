@@ -82,6 +82,12 @@ class InterceptionRecordListSerializer(serializers.ModelSerializer):
     )
 
 
+class InterceptionRecordSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = InterceptionRecord
+
+
+
 class VictimInterviewListSerializer(serializers.ModelSerializer):
     class Meta:
         model = VictimInterview
