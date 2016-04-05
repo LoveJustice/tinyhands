@@ -1,5 +1,5 @@
 #!/bin/bash
-python /data/manage.py migrate --noinput                  # Apply database migrations
+python /data/manage.py migrate --noinput        # Apply database migrations
 
 # Start Gunicorn processes
 echo Starting Gunicorn.

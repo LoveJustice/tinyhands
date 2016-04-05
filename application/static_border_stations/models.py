@@ -4,11 +4,17 @@ from dataentry.models import BorderStation
 
 class NullableEmailField(models.EmailField):
     description = "EmailField that stores NULL but returns ''"
-    __metaclass__ = models.SubfieldBase
+
+    def from_db_value(self, value, expression, connection, context):
+        if value is None:
+            return ''
+        return value
+
     def to_python(self, value):
         if isinstance(value, models.EmailField):
             return value
         return value or ''
+
     def get_prep_value(self, value):
         return value or None
 
