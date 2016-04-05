@@ -13,7 +13,8 @@
 
 {% block content %}
 
-  {% include "dataentry/popover.html" %}
+{% include "dataentry/popover.html" %}
+{% load static from staticfiles %}
 
   {% if not interceptionrecord %}
     <div class="well well-sm pull-right" style="margin-top: 22px">
@@ -90,7 +91,7 @@
   </div>
 
   <!-- Modal -->
-  <div class="modal fade modal-over-tooltips" id="modal" role="dialog" 
+  <div class="modal fade modal-over-tooltips" id="modal" role="dialog"
        aria-labelledby="myModalLabel" aria-hidden="true" tabindex="-1"></div>
   <!-- /.modal -->
 
@@ -102,7 +103,7 @@
         <div class="col-xs-5">
           <br/>
           <img class="pull-left" style="margin-right: 10px"
-	       width="100" src="{{ STATIC_URL }}images/logo.png" alt="Tiny Hands Logo" />
+	       width="100" src="{% static 'images/logo.png' %}" alt="Tiny Hands Logo" />
           <h2 style="white-space: nowrap">Interception Record Form (IRF)<br/>
             Version 2.3 <span class="text-danger">Tiny Hands Nepal</span></h2>
         </div>
@@ -696,7 +697,7 @@
               <strong>6.10</strong> {{ form.contact_paid.1 }} {{ form.contact_paid.1.label_tag }}
               <strong>6.11</strong> {{ form.contact_paid.2 }} {{ form.contact_paid.2.label_tag }}
               {{ form.contact_paid.0 }} {{ form.contact_paid.0.label_tag }}
-              {{ form.contact_paid_how_much.label }}  
+              {{ form.contact_paid_how_much.label }}
 	      {{ form.contact_paid_how_much|attr:"style: width: 70px" }}
             </td>
           </tr>
@@ -824,8 +825,8 @@
                   <td>{{ interceptee_form.full_name|attr:"data-fuzzy-ui:name"}}</td>
                   <td>{{ interceptee_form.gender }}</td>
                   <td style="width: 7%">{{ interceptee_form.age }}</td>
-                  <td>{{ interceptee_form.district }}</td>
-                  <td>{{ interceptee_form.vdc }}</td>
+                  <td>{{ interceptee_form.address1 }}</td>
+                  <td>{{ interceptee_form.address2 }}</td>
                   <td>{{ interceptee_form.phone_contact }}</td>
                   <td>{{ interceptee_form.relation_to }}</td>
                   <td>
@@ -951,7 +952,6 @@
   <br/>
   <br/>
 
-    {% load static from staticfiles %}
      <script type="text/javascript" src="{% static "dataentry/js/dataEntry.module.js" %}"></script>
      <script type="text/javascript" src="{% static "dataentry/js/services/staffListService.js" %}"></script>
      <script type="text/javascript" src="{% static "dataentry/js/controllers/staffListCtrl.js" %}"></script>

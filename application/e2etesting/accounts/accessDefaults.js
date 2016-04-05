@@ -19,7 +19,7 @@ var accessDefaultsPage = function() {
         var permissionsSet = permissionsSet[index];
         return populateRow(permissionsSet);
     };
-    
+
     this.getSuperAdministratorRow = function() {
         return permissionsSets.filter(function(elem, index) {
             return elem.element(by.model('permissionsSet.name')).getAttribute('value').then(function(text) {
@@ -29,11 +29,11 @@ var accessDefaultsPage = function() {
             return populateRow(filteredElements[0]);
         });
     }
-    
+
     this.getLastPermissionsSetRow = function() {
         return populateRow(permissionsSets.last());
     }
-    
+
     function populateRow(permissionsSet) {
         var row = {};
         row.deleteButton = permissionsSet.element(by.buttonText('X'));
@@ -53,7 +53,7 @@ var accessDefaultsPage = function() {
         row.permissions.borderStationDelete = permissionsSet.element(by.binding('permissionsSet.permission_border_stations_delete ? "Yes" : "No"'));
         row.permissions.alertsCanReceive = permissionsSet.element(by.binding('permissionsSet.permission_receive_email ? "Yes" : "No"'));
         row.permissions.accountsManage = permissionsSet.element(by.binding('permissionsSet.permission_accounts_manage ? "Yes" : "No"'));
-        row.permissions.vdcManage = permissionsSet.element(by.binding('permissionsSet.permission_vdc_manage ? "Yes" : "No"'));
+        row.permissions.address2Manage = permissionsSet.element(by.binding('permissionsSet.permission_address2_manage ? "Yes" : "No"'));
         row.permissions.budgetManage = permissionsSet.element(by.binding('permissionsSet.permission_budget_manage ? "Yes" : "No"'));
         return row;
     }
@@ -65,8 +65,8 @@ var accessDefaultsPage = function() {
                 permissions[permissionButton].click();
             }
         }
-    }; 
-    
+    };
+
     this.saveAll = function() {
         var saveAllButton = element(by.buttonText('Save All'));
         return saveAllButton.click();

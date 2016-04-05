@@ -11,7 +11,7 @@ describe('TinyHands Address1s - ', function () {
     it('should navigate to address1 manage page', function () {
         loginPage.logout();
         loginPage.loginAsAdmin();
-        browser.get(c.webAddress + '/data-entry/geocodelocations/district-admin/');
+        browser.get(c.webAddress + '/data-entry/geocodelocations/address1-admin/');
         expect(browser.getTitle()).toContain('Manage Address 1');
     });
 

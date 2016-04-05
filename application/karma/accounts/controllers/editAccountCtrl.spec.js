@@ -25,7 +25,7 @@ describe('EditAccountCtrl', function(){
 		permission_border_stations_delete: true,
 		permission_accounts_manage: true,
 		permission_receive_email: true,
-		permission_vdc_manage: true,
+		permission_address2_manage: true,
 		permission_budget_manage: true,
 	}
 
@@ -48,7 +48,7 @@ describe('EditAccountCtrl', function(){
 		permission_border_stations_delete: false,
 		permission_accounts_manage: false,
 		permission_receive_email: false,
-		permission_vdc_manage: false,
+		permission_address2_manage: false,
 		permission_budget_manage: false,
 	};
 
@@ -71,7 +71,7 @@ describe('EditAccountCtrl', function(){
 		permission_border_stations_delete: true,
 		permission_accounts_manage: true,
 		permission_receive_email: true,
-		permission_vdc_manage: true,
+		permission_address2_manage: true,
 		permission_budget_manage: true,
 	};
 
@@ -316,7 +316,7 @@ describe('EditAccountCtrl', function(){
 			expect(controller.account.permission_border_stations_delete).toBe(fakePermissions.permission_border_stations_delete);
 			expect(controller.account.permission_accounts_manage).toBe(fakePermissions.permission_accounts_manage);
 			expect(controller.account.permission_receive_email).toBe(fakePermissions.permission_receive_email);
-			expect(controller.account.permission_vdc_manage).toBe(fakePermissions.permission_vdc_manage);
+			expect(controller.account.permission_address2_manage).toBe(fakePermissions.permission_address2_manage);
 			expect(controller.account.permission_budget_manage).toBe(fakePermissions.permission_budget_manage);
 		});
 	});

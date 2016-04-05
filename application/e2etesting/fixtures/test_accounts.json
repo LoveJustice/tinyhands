@@ -17,7 +17,7 @@
         "permission_border_stations_add": true,
         "permission_border_stations_edit": true,
         "permission_border_stations_delete": true,
-        "permission_vdc_manage":true,
+        "permission_address2_manage":true,
         "permission_budget_manage": true,
         "name": "Super Administrator"
     }
@@ -41,7 +41,7 @@
         "permission_vif_delete": false,
         "permission_border_stations_delete": false,
         "permission_budget_manage": false,
-        "permission_vdc_manage":true,
+        "permission_address2_manage":true,
         "name": "Field Staff"
     }
 },
@@ -64,7 +64,7 @@
         "permission_vif_delete": false,
         "permission_border_stations_delete": false,
         "permission_budget_manage": false,
-        "permission_vdc_manage":true,
+        "permission_address2_manage":true,
         "name": "Summer Intern"
     }
 },
@@ -86,7 +86,7 @@
         "permission_border_stations_add": false,
         "permission_border_stations_edit": false,
         "permission_border_stations_delete": false,
-        "permission_vdc_manage":false,
+        "permission_address2_manage":false,
         "permission_budget_manage": false,
         "name": "No Access User"
     }
@@ -118,7 +118,7 @@
         "permission_border_stations_view": true,
         "permission_border_stations_add": true,
         "permission_border_stations_edit": true,
-        "permission_vdc_manage":true
+        "permission_address2_manage":true
     }
 },
 {
@@ -143,7 +143,7 @@
      "groups": [],
      "permission_accounts_manage": true,
      "password": "pbkdf2_sha256$12000$nhaHlxuQwUhi$iqzcMK5WCodBx/xHDxq+5eaWq1Mrf7EyKJBMchhRW4I=",
-     "permission_vdc_manage": true,
+     "permission_address2_manage": true,
      "permission_irf_view": true,
      "permission_vif_edit": true,
      "permission_vif_view": true,
@@ -180,7 +180,7 @@
      "groups": [],
      "permission_accounts_manage": true,
      "password": "pbkdf2_sha256$12000$nhaHlxuQwUhi$iqzcMK5WCodBx/xHDxq+5eaWq1Mrf7EyKJBMchhRW4I=",
-     "permission_vdc_manage": true,
+     "permission_address2_manage": true,
      "permission_irf_view": true,
      "permission_vif_edit": true,
      "permission_vif_view": true,
@@ -216,7 +216,7 @@
      "groups": [],
      "permission_accounts_manage": true,
      "password": "pbkdf2_sha256$12000$nhaHlxuQwUhi$iqzcMK5WCodBx/xHDxq+5eaWq1Mrf7EyKJBMchhRW4I=",
-     "permission_vdc_manage": true,
+     "permission_address2_manage": true,
      "permission_irf_view": true,
      "permission_vif_edit": true,
      "permission_vif_view": true,

@@ -19,13 +19,9 @@ web:
     - data
   links:
     - db
-  environment:
-      DJANGO_SETTINGS_MODULE: dreamsuite.settings.local
-      DB_NAME: postgres
-      DB_USER: postgres
-      DB_PASSWORD: password
-      DB_HOST: db
-      DB_PORT: 5432
+  env_file:
+    - ./common.env
+    - ./local.env
 
 test-django:
   container_name: test-django
@@ -35,13 +31,9 @@ test-django:
     - data
   links:
     - db
-  environment:
-      DJANGO_SETTINGS_MODULE: dreamsuite.settings.local
-      DB_NAME: postgres
-      DB_USER: postgres
-      DB_PASSWORD: password
-      DB_HOST: db
-      DB_PORT: 5432
+  env_file:
+    - ./common.env
+    - ./local.env
 
 nginx:
   build: build/nginx
@@ -53,11 +45,14 @@ nginx:
     - data
 
 # cron:
-#    image: doorman-api
+#    build: build/cron
 #    container_name: cron
 #    volumes_from:
 #        - data
-#    command: /data/bin/run-cron.sh
+#    env_file:
+#      - ./common.env
+#      - ./local.env
+#    command: bash /data/bin/run-cron.sh
 
 # test-karma container -
 # image: tusoftware-studio/dreamsuite-js-cli
