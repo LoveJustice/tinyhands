@@ -490,6 +490,14 @@ class VictimInterviewViewSet(viewsets.ModelViewSet):
     ordering_fields = ('vif_number', 'interviewer', 'number_of_victims', 'number_of_traffickers', 'date', 'date_time_entered_into_system', 'date_time_last_updated',)
     ordering = ('vif_number',)
 
+    def destroy(self, request, *args, **kwargs):
+        vif_id = kwargs['pk']
+        vif = VictimInterview.objects.get(id=vif_id)
+        rv = super(viewsets.ModelViewSet, self).destroy(request, args, kwargs)
+        GoogleSheetClientThread.update_irf(vif.vif_number)
+        return rv
+
+
 class BatchView(View):
     def get(self, request, startDate, endDate):
         start = timezone.make_aware(datetime.fromtimestamp(mktime(strptime(startDate, '%m-%d-%Y'))), timezone.get_default_timezone())
@@ -519,10 +527,3 @@ class BatchView(View):
             response = HttpResponse(f.getvalue(), content_type="application/zip")
             response['Content-Disposition'] = 'attachment; filename=irfPhotos ' + startDate + ' to ' + endDate + '.zip'
             return response
-    
-    def destroy(self, request, *args, **kwargs):
-        vif_id = kwargs['pk']
-        vif = VictimInterview.objects.get(id=vif_id)
-        rv = super(viewsets.ModelViewSet, self).destroy(request, args, kwargs)
-        GoogleSheetClientThread.update_irf(vif.vif_number)
-        return rv
