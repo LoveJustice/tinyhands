@@ -151,9 +151,9 @@ class Address2Test(APITestCase):
         }
 
     def test_create_address2(self):
-	   self.data["latitude"] = 29.1837169619
-       self.data["longitude"]= 81.2336041444
-	   self.data["level"] = "City"	
+        self.data["latitude"] = 29.1837169619
+        self.data["longitude"] = 81.2336041444   
+        self.data["level"] = "City"	
 
         url = reverse('Address2')
 
@@ -169,10 +169,7 @@ class Address2Test(APITestCase):
         self.assertEqual(response.data['canonical_name']['id'], self.first_canonical_name.id)
 
     def test_create_address2_incomplete_data(self):
-
-	
         url = reverse('Address2')
-
         self.data["canonical_name"] = {"id": -1, "name": "Null"}
         response = self.client.post(url, self.data)
 
