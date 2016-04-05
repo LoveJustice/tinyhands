@@ -8,7 +8,6 @@ from .models import (BorderStation, Address1,
                      VictimInterviewLocationBox, VictimInterviewPersonBox, VictimInterview)
 
 from .fields import Address1Field, Address2Field, FormNumberField
-from .google_sheets import google_sheet_client
 
 BOOLEAN_CHOICES = [
     (False, 'No'),
@@ -110,7 +109,7 @@ class InterceptionRecordForm(DreamSuitePaperForm):
         for field_name, field in self.fields.iteritems():
             if type(field) == forms.fields.BooleanField:
                 try:
-                    model_field = InterceptionRecord._meta.get_field_by_name(field_name)[0]
+                    model_field = InterceptionRecord._meta.get_field(field_name)[0]
                     if hasattr(model_field, 'weight'):
                         field.weight = model_field.weight
                 except:
@@ -361,12 +360,6 @@ class InterceptionRecordForm(DreamSuitePaperForm):
         if commit:
             google_sheet_client.update_irf(self.cleaned_data['irf_number'])
 
-    def save(self, commit=True):
-        return_val = super(InterceptionRecordForm, self).save(commit)
-        if commit:
-            google_sheet_client.update_irf(self.cleaned_data['irf_number'])
-
-        return return_val
 
 class IntercepteeForm(DreamSuitePaperForm):
     class Meta:
@@ -391,7 +384,7 @@ class IntercepteeForm(DreamSuitePaperForm):
         try:
             address1 = Address1.objects.get(name=self.cleaned_data['address1'])
             self.instance.address1 = address1
-        except address1.DoesNotExist:
+        except Address1.DoesNotExist:
             address1 = None
 
         try:
@@ -683,13 +676,7 @@ class VictimInterviewForm(DreamSuitePaperForm):
         if self.cleaned_data['victim_guardian_address2']:
             victim_guardian_address2 = Address2.objects.get(name=self.cleaned_data['victim_guardian_address2'])
             self.instance.victim_guardian_address2 = victim_guardian_address2
-        return_val = super(VictimInterviewForm, self).save(commit)
-        if commit:
-            google_sheet_client.update_vif(self.cleaned_data['vif_number'])
-
-        return return_val
-
-
+        return super(VictimInterviewForm, self).save(commit)
 
     def clean(self):
         cleaned_data = super(VictimInterviewForm, self).clean()

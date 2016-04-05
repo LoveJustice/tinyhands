@@ -117,8 +117,15 @@ class BorderStationBudgetCalculation(models.Model):
 
     medical_last_months_expense = models.PositiveIntegerField("Last month's medical expense", default=0)
 
+    def medical_extra_items_total(self):
+        items = self.otherbudgetitemcost_set.filter(form_section=9)
+        total = 0
+        for item in items:
+            total += item.cost
+        return total
+
     def medical_total(self):
-        return self.medical_last_months_expense
+        return self.medical_last_months_expense + self.medical_extra_items_total()
 
     miscellaneous_number_of_intercepts_last_month = models.PositiveIntegerField('# of intercepts last month', default=0)
     miscellaneous_number_of_intercepts_last_month_multiplier = models.PositiveIntegerField(default=300)
