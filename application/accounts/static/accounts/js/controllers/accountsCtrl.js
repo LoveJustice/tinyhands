@@ -7,6 +7,7 @@ angular
           vm.accounts = Accounts.all();
           PermissionsSets.all().$promise.then(vm.createPermissionsArray);
           vm.currentuser = Accounts.me();
+          vm.permissions = PermissionsSets.all();
           vm.permissionsDesignations = {};
         }
 
