@@ -38,41 +38,37 @@
                     </div>
                     <div class="modal-body">
                         <table>
-                            <col width="75">
-                            <col width="200">
-                            <col width="100">
-                            <col width="100">
                             <tr>
-                                <td class="pull-right" style="padding-right: 5px; padding-top: 3px;">Start Date:</td>
-                                <td>
+                                <td width='75' style="padding-right: 5px; padding-top: 3px; text-align: right;">Start Date:</td>
+                                <td width='200'>
                                     <select ng-model="vm.startMonth" class="form-control">
                                         <option ng-repeat="month in vm.getMonths()" value="{{ month }}">{{ month }}</option>
                                     </select>
                                 </td>
-                                <td>
+                                <td width='100'>
                                     <select ng-model="vm.startDay" class="form-control">
                                         <option ng-repeat="day in vm.getDays(vm.startMonth, vm.startYear)" value="{{ day }}">{{ day }}</option>
                                     </select>
                                 </td>
-                                <td>
+                                <td width='100'>
                                     <select ng-model="vm.startYear" class="form-control">
                                         <option ng-repeat="year in vm.getYears()" value="{{ year }}">{{ year }}</option>
                                     </select>
                                 </td>
                             </tr>
                             <tr>
-                                <td class="pull-right" style="padding-right: 5px; padding-top: 3px;">End Date:</td>
-                                <td>
+                                <td width='75' style="padding-right: 5px; padding-top: 3px; text-align: right;">End Date:</td>
+                                <td width='200'>
                                     <select ng-model="vm.endMonth" class="form-control">
                                         <option ng-repeat="month in vm.getMonths()" value="{{ month }}">{{ month }}</option>
                                     </select>
                                 </td>
-                                <td>
+                                <td width='100'>
                                     <select ng-model="vm.endDay" class="form-control">
                                         <option ng-repeat="day in vm.getDays(vm.endMonth, vm.endYear)" value="{{ day }}">{{ day }}</option>
                                     </select>
                                 </td>
-                                <td>
+                                <td width='100'>
                                     <select ng-model="vm.endYear" class="form-control">
                                         <option ng-repeat="year in vm.getYears()" value="{{ year }}">{{ year }}</option>
                                     </select>
@@ -93,7 +89,7 @@
     <div class="row">
         <div class="col-sm-2 col-xs-3">
             <select ng-model="vm.paginateBy" ng-change="vm.listIrfs()" class="form-control">
-                <option selected>25</option>
+                <option>25</option>
                 <option>50</option>
                 <option>100</option>
                 <option>500</option>
