@@ -275,7 +275,9 @@ class InterceptionRecord(models.Model):
 
 
 class Person(models.Model):
-    GENDER_CHOICES = [('f', 'F'), ('m', 'M')]
+
+    GENDER_CHOICES = [ ('M', 'm'), ('F', 'f'),]
+
     full_name = models.CharField(max_length=255)
     gender = models.CharField(max_length=4, choices=GENDER_CHOICES, blank=True)
     age = models.PositiveIntegerField(null=True, blank=True)
@@ -325,10 +327,7 @@ class VictimInterview(models.Model):
     class Meta:
         ordering = ['-date_time_last_updated']
 
-    GENDER_CHOICES = [
-        ('male', 'Male'),
-        ('female', 'Female'),
-    ]
+    GENDER_CHOICES = [ ('M', 'm'), ('F', 'f'),]
 
     vif_number = models.CharField('VIF #', max_length=20, unique=True)
     date = models.DateField('Date')
@@ -346,15 +345,20 @@ class VictimInterview(models.Model):
     permission_to_use_photograph = models.BooleanField('Check the box if form is signed', default=False)
 
     # 1. Victim & Family Information
-    victim_name = models.CharField('Name', max_length=255)
 
-    victim_gender = models.CharField('Gender', choices=GENDER_CHOICES, max_length=12)
+    victim = models.ForeignKey(Person, null=True, blank=True)
 
-    victim_address1 = models.ForeignKey(Address1, null=True, related_name="victim_address1")
-    victim_address2 = models.ForeignKey(Address2, null=True, related_name="victim_address2")
+    #Person Refactor Information
+    #victim_name = models.CharField('Name', max_length=255)
+    #victim_gender = models.CharField('Gender', choices=GENDER_CHOICES, max_length=12)
+    #victim_address1 = models.ForeignKey(Address1, null=True, related_name="victim_address1")
+    #victim_address2 = models.ForeignKey(Address2, null=True, related_name="victim_address2")
+    #victim_phone = models.CharField('Phone #', max_length=255, blank=True)
+    #victim_age = models.CharField('Age', max_length=255, blank=True)
+    #END
+
     victim_address_ward = models.CharField('Ward #', max_length=255, blank=True)
-    victim_phone = models.CharField('Phone #', max_length=255, blank=True)
-    victim_age = models.CharField('Age', max_length=255, blank=True)
+
     victim_height = models.PositiveIntegerField('Height(ft)', null=True, blank=True)
     victim_weight = models.PositiveIntegerField('Weight(kg)', null=True, blank=True)
 
@@ -843,8 +847,8 @@ class VictimInterview(models.Model):
 
 class VictimInterviewPersonBox(models.Model):
     GENDER_CHOICES = [
-        ('male', 'Male'),
-        ('female', 'Female'),
+        ('Male', 'male'),
+        ('Female', 'female'),
     ]
 
     victim_interview = models.ForeignKey(VictimInterview, related_name='person_boxes')

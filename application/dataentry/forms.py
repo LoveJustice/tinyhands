@@ -466,7 +466,7 @@ class VictimInterviewForm(DreamSuitePaperForm):
     )
 
     victim_gender = forms.ChoiceField(
-        choices=VictimInterview.GENDER_CHOICES,
+        choices=Person.GENDER_CHOICES,
         widget=forms.RadioSelect,
         required=True
     )
@@ -694,12 +694,35 @@ class VictimInterviewForm(DreamSuitePaperForm):
             (self.num_pbs - 1) / 3 + 1,
             (self.num_lbs - 1) / 2 + 1
         )
+
+        #self.fields['victim_address1'] = Address1Field(required=False)
+        #self.fields['victim_address2'] = Address2Field(required=False)
+        self.fields['victim_name'] = CharField(required=False)
+        self.fields['victim_age'] = IntegerField(required=False)
+        self.fields['victim_phone'] = CharField(required=False)
+
         try:
-            self.fields['victim_address1'].initial = self.instance.victim_address1
+            self.fields['victim_name'].initial = self.instance.victim.full_name
         except:
             pass
         try:
-            self.fields['victim_address2'].initial = self.instance.victim_address2
+           self.fields['victim_gender'].initial = self.instance.victim.gender
+        except:
+            pass
+        try:
+           self.fields['victim_phone'].initial = self.instance.victim.phone_contact
+        except:
+            pass
+        try:
+           self.fields['victim_age'].initial = self.instance.victim.age
+        except:
+            pass
+        try:
+            self.fields['victim_address1'].initial = self.instance.victim.address1
+        except:
+            pass
+        try:
+            self.fields['victim_address2'].initial = self.instance.victim.address2
         except:
             pass
         try:
@@ -712,19 +735,46 @@ class VictimInterviewForm(DreamSuitePaperForm):
             pass
 
     def save(self, commit=True):
+        try:
+            person = Person.objects.get(victiminterview=self.instance)
+            self.instance.victim = person
+        except Person.DoesNotExist:
+            person = Person()
+            person.victiminterview = self.instance
+            person.save()
+            self.instance.victim = person
+
+
         if self.cleaned_data['victim_address1']:
             victim_address1 = Address1.objects.get(name=self.cleaned_data['victim_address1'])
-            self.instance.victim_address1 = victim_address1
+            self.instance.victim.address1 = victim_address1
         if self.cleaned_data['victim_guardian_address1']:
             victim_guardian_address1 = Address1.objects.get(name=self.cleaned_data['victim_guardian_address1'])
             self.instance.victim_guardian_address1 = victim_guardian_address1
             print victim_address1.id
         if self.cleaned_data['victim_address2']:
-            victim_address2 = Address2.objects.get(name=self.cleaned_data['victim_address2'], address1_id = self.instance.victim_address1.id)
-            self.instance.victim_address2 = victim_address2
+            victim_address2 = Address2.objects.get(name=self.cleaned_data['victim_address2'], address1_id = self.instance.victim.address1.id)
+            self.instance.victim.address2 = victim_address2
         if self.cleaned_data['victim_guardian_address2']:
             victim_guardian_address2 = Address2.objects.get(name=self.cleaned_data['victim_guardian_address2'])
             self.instance.victim_guardian_address2 = victim_guardian_address2
+
+        if self.cleaned_data["victim_name"]:
+            self.instance.victim.full_name = self.cleaned_data["victim_name"]
+            self.instance.victim.save()
+
+        if self.cleaned_data["victim_gender"]:
+            self.instance.victim.gender = self.cleaned_data["victim_gender"]
+            self.instance.victim.save()
+
+        if self.cleaned_data["victim_phone"]:
+            self.instance.victim.phone_contact = self.cleaned_data["victim_phone"]
+            self.instance.victim.save()
+
+        if self.cleaned_data["victim_age"]:
+            self.instance.victim.age = self.cleaned_data["victim_age"]
+            self.instance.victim.save()
+
         return super(VictimInterviewForm, self).save(commit)
 
     def clean(self):
@@ -773,7 +823,7 @@ class VictimInterviewForm(DreamSuitePaperForm):
 class VictimInterviewPersonBoxForm(DreamSuitePaperForm):
 
     gender = forms.MultipleChoiceField(
-        choices=VictimInterviewPersonBox.GENDER_CHOICES,
+        choices=Person.GENDER_CHOICES,
         widget=forms.CheckboxSelectMultiple,
         required=False
     )

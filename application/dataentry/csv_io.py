@@ -3,6 +3,8 @@ from django.db import models
 from models import BorderStation
 from models import Address1
 from models import Address2
+from models import Person
+from models import Interceptee
 from django.utils.timezone import make_naive, localtime
 
 #####################################################
@@ -753,6 +755,15 @@ interceptee_data = [
     CopyCsvField("relation_to", "{}Relationship to...", True),
 ]
 
+victim_data = [
+    CopyCsvField("full_name", "1.1 Name", True),
+    MapValueCsvField('gender', "1.2 Gender", { "Male":"m", "Female":"f"}, export_default="Female"),
+    Address1CsvField("address1", "1.3 Address1"),
+    Address2CsvField("address2", "Address2"),
+    CopyCsvField("phone_contact", "Phone Number", True),
+    CopyCsvField("age", "1.4 Age", True),
+]
+
 person_data = [
     CopyCsvField("full_name", "{}Name", True),
     MapValueCsvField('gender', "{}Gender", { "Male":"m", "Female":"f"}, export_default="Female"),
@@ -760,6 +771,7 @@ person_data = [
     Address1CsvField("address1", "{}Address1"),
     Address2CsvField("address2", "{}Address2"),
     CopyCsvField("phone_contact", "{}Phone", True),
+
 ]
 
 irf_victim_prefix = "Victim "
@@ -829,6 +841,8 @@ def get_irf_import_rows(csv_map):
 
 
 
+
+
 vif_data = [
     CopyCsvField("vif_number", "VIF Number", False),
     BorderStationExportOnlyCsv("station_name","Station","vif_number"),
@@ -844,16 +858,7 @@ vif_data = [
     BooleanCsvField("statement_read_before_beginning", "Statement Read", "Statement was read to the participant", ""),
     BooleanCsvField("permission_to_use_photograph", "Photo Permission", "Permission was given to use photo", ""),
 
-    CopyCsvField("victim_name", "1.1 Name", True),
-    CopyCsvField("victim_gender", "1.2 Gender", True),
-
-    Address1CsvField("victim_address1_Address1", "1.3 Address1"),
-    Address2CsvField("victim_address2", "Address2"),
-
     CopyCsvField("victim_address_ward", "Ward", True),
-
-    CopyCsvField("victim_phone", "Phone Number", True),
-    CopyCsvField("victim_age", "1.4 Age", True),
     CopyCsvField("victim_height", "1.5 Height", True),
     CopyCsvField("victim_weight", "1.6 Weight", True),
 
@@ -1137,6 +1142,10 @@ def get_vif_export_rows(vifs):
     rows = []
 
     vif_headers = []
+
+    for field in victim_data:
+        vif_headers.append(field.title)
+
     for field in vif_data:
         vif_headers.append(field.title)
 
@@ -1153,10 +1162,16 @@ def get_vif_export_rows(vifs):
 
 
     for vif in vifs:
+        person = vif.victim
         row = []
+
+        for field in victim_data:
+            row.append(field.exportField(person))
 
         for field in vif_data:
             row.append(field.exportField(vif))
+
+
 
         pbs = list(vif.person_boxes.all())
         lbs = list(vif.location_boxes.all())
