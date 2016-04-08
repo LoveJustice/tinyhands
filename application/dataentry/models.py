@@ -866,15 +866,11 @@ class VictimInterviewPersonBox(models.Model):
     who_is_this_role_passport = models.BooleanField('Passport', default=False)
     who_is_this_role_sex_industry = models.BooleanField('Sex Industry', default=False)
 
-    name = models.CharField('Name', max_length=255, blank=True)
+    person = models.ForeignKey(Person, null=True, blank=True)
 
-    gender = models.CharField('Gender', choices=GENDER_CHOICES, max_length=12, blank=True)
-
-    address1 = models.ForeignKey(Address1, null=True)
-    address2 = models.ForeignKey(Address2, null=True)
     address_ward = models.CharField('Ward #', max_length=255, blank=True)
-    phone = models.CharField('Phone #', max_length=255, blank=True)
-    age = models.PositiveIntegerField('Age', null=True, blank=True)
+
+    #Think about possibly adding height to the Person model
     height = models.PositiveIntegerField('Height(ft)', null=True, blank=True)
     weight = models.PositiveIntegerField('Weight(kg)', null=True, blank=True)
 

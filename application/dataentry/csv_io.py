@@ -764,6 +764,15 @@ victim_data = [
     CopyCsvField("age", "1.4 Age", True),
 ]
 
+person_box_person_data = [
+    MapValueCsvField("gender", "{}Gender", { "Male":"m", "Female":"f"}),
+    CopyCsvField("full_name", "{}Name", True),
+    Address1CsvField("address1", "{}Address1"),
+    Address2CsvField("address2", "{}Address2"),
+    CopyCsvField("phone_contact", "{}Phone", True),
+    CopyCsvField("age", "{}Age", True),
+]
+
 person_data = [
     CopyCsvField("full_name", "{}Name", True),
     MapValueCsvField('gender', "{}Gender", { "Male":"m", "Female":"f"}, export_default="Female"),
@@ -1091,13 +1100,7 @@ person_box_prefix = "PB%d - "
 person_box_data = [
     GroupBooleanCsv("who_is_this_relationship", "{}Relationship"),
     GroupBooleanCsv("who_is_this_role", "{}Role"),
-    MapValueCsvField("gender", "{}Gender", { "Male":"male", "Female":"female"}),
-    CopyCsvField("name", "{}Name", True),
-    Address1CsvField("address1", "{}Address1"),
-    Address2CsvField("address2", "{}Address2"),
     CopyCsvField("address_ward", "{}Ward", True),
-    CopyCsvField("phone", "{}Phone", True),
-    CopyCsvField("age", "{}Age", True),
     CopyCsvField("height", "{}Height", True),
     CopyCsvField("weight", "{}Weight", True),
     GroupBooleanCsv("physical_description", "{}Physical Description"),
@@ -1150,9 +1153,15 @@ def get_vif_export_rows(vifs):
         vif_headers.append(field.title)
 
     for i in range(1, 9+1):
+        for field in person_box_person_data:
+            prefix = person_box_prefix % i
+            vif_headers.append(field.title.format(prefix))
+
         for field in person_box_data:
             prefix = person_box_prefix % i
             vif_headers.append(field.title.format(prefix))
+
+
         if i < 9:
             for field in location_box_data:
                 prefix = location_box_prefix % i
@@ -1179,6 +1188,10 @@ def get_vif_export_rows(vifs):
         for idx in range(max(len(pbs), len(lbs))):
             if idx < len(pbs):
                 pbs_instance = pbs[idx]
+                person = pbs_instance.person
+                for field in person_box_person_data:
+                    row.append(field.exportField(person))
+
                 for field in person_box_data:
                     row.append(field.exportField(pbs_instance))
             else:

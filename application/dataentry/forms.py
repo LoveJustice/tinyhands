@@ -362,8 +362,6 @@ class IntercepteeForm(DreamSuitePaperForm):
         self.fields['photo'] = ImageField()
         self.fields['gender'] = CharField(max_length=4, required=False)
         self.fields['phone_contact'] = CharField(required=False)
-        #self.fields['photo_thumbnail'] = ImageSpecField()
-        #self.fields['age'] = PositiveIntegerField(required=False)
 
         try:
             self.fields['full_name'].initial = self.instance.person.full_name
@@ -396,7 +394,6 @@ class IntercepteeForm(DreamSuitePaperForm):
 
     def save(self, commit=True):
         data = self.cleaned_data
-        #if self.cleaned_data['address1']:
         try:
             person = Person.objects.get(interceptee=self.instance)
             self.instance.person = person
@@ -435,12 +432,6 @@ class IntercepteeForm(DreamSuitePaperForm):
         if data["age"]:
             self.instance.person.age = data["age"]
             self.instance.person.save()
-
-
-
-        # if data["photo"]:
-        #     self.instance.person.photo = data["photo"]
-        #     self.instance.person.save()
 
         return super(IntercepteeForm, self).save(commit)
 
@@ -694,9 +685,6 @@ class VictimInterviewForm(DreamSuitePaperForm):
             (self.num_pbs - 1) / 3 + 1,
             (self.num_lbs - 1) / 2 + 1
         )
-
-        #self.fields['victim_address1'] = Address1Field(required=False)
-        #self.fields['victim_address2'] = Address2Field(required=False)
         self.fields['victim_name'] = CharField(required=False)
         self.fields['victim_age'] = IntegerField(required=False)
         self.fields['victim_phone'] = CharField(required=False)
@@ -844,20 +832,69 @@ class VictimInterviewPersonBoxForm(DreamSuitePaperForm):
             self.initial['gender'] = [unicode(initial)]
         self.fields['address1'] = Address1Field(label="Address 1")
         self.fields['address2'] = Address2Field(label="Address 2")
+        self.fields['name'] = CharField(required=False)
+        self.fields['age'] = IntegerField(required=False)
+        self.fields['phone'] = CharField(required=False)
+
         try:
-            self.fields['address1'].initial = self.instance.address1
+            self.fields['name'].initial = self.instance.person.full_name
         except:
             pass
         try:
-           self.fields['address2'].initial = self.instance.address2
+            self.fields['address1'].initial = self.instance.person.address1
+        except:
+            pass
+        try:
+           self.fields['address2'].initial = self.instance.person.address2
+        except:
+            pass
+        try:
+           self.fields['phone'].initial = self.instance.person.phone_contact
+        except:
+            pass
+        try:
+           self.fields['age'].initial = self.instance.person.age
+        except:
+            pass
+        try:
+           self.fields['gender'].initial = self.instance.person.gender
         except:
             pass
 
     def save(self, commit=True):
+        data = self.cleaned_data
+        try:
+            person = Person.objects.get(victiminterviewpersonbox=self.instance)
+            self.instance.person = person
+        except Person.DoesNotExist:
+            person = Person()
+            person.victiminterviewpersonbox = self.instance
+            person.save()
+            self.instance.person = person
+
         address1 = Address1.objects.get(name=self.cleaned_data['address1'])
         address2 = Address2.objects.get(name=self.cleaned_data['address2'], address1_id = address1.id)
-        self.instance.address2 = address2
-        self.instance.address1 = address1
+        self.instance.person.address2 = address2
+        self.instance.person.address1 = address1
+
+
+        if data["name"]:
+            self.instance.person.full_name = data["name"]
+            self.instance.person.save()
+
+        if data["gender"]:
+            self.instance.person.gender = data["gender"]
+            self.instance.person.save()
+
+        if data["phone"]:
+            self.instance.person.phone_contact = data["phone"]
+            self.instance.person.save()
+
+        if data["age"]:
+            self.instance.person.age = data["age"]
+            self.instance.person.save()
+
+
         return super(VictimInterviewPersonBoxForm, self).save(commit)
 
     def clean(self):
