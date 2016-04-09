@@ -35,6 +35,7 @@ class Address1(models.Model):
 
 
 class FuzzyMatching(models.Model):
+    value = 7
     address1_cutoff = models.PositiveIntegerField(default=70)
     address1_limit = models.PositiveIntegerField(default=5)
     address2_cutoff = models.PositiveIntegerField(default=70)
@@ -43,6 +44,10 @@ class FuzzyMatching(models.Model):
     person_limit = models.PositiveIntegerField(default=10)
     phone_number_cutoff = models.PositiveIntegerField(default=0)
     phone_number_limit = models.PositiveIntegerField(default=0)
+
+    # @property
+    # def get_address1_limit(self):
+    #     return 5
 
 
 class Address2(models.Model):

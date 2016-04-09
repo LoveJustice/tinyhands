@@ -10,9 +10,9 @@ function sysAdminService($http) {
         updateForm: updateForm
 	};
 
-    function retrieveForm(form) {
+    function retrieveForm() {
         console.log("retrieveForm");
-        return $http.get('/data-entry/api/sysadminsettings/1/', form)
+        return $http.get('/data-entry/api/sysadminsettings/1/')
             .success(function(data) {
                 return data;
             })

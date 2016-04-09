@@ -4,7 +4,7 @@ from fuzzywuzzy import process
 
 from accounts.models import Alert
 
-from dataentry.models import Interceptee
+from dataentry.models import Interceptee, FuzzyMatching
 
 
 class VIFAlertChecker(object):
@@ -121,10 +121,14 @@ class IRFAlertChecker(object):
         for trafficker in trafficker_list:
 
             # Get a list of the best matches that have a score of 90+
+            # traffickers_with_name_match = process.extractBests(trafficker.full_name,
+            #                                                    people_list,
+            #                                                    score_cutoff=90,
+            #                                                    limit=10)
             traffickers_with_name_match = process.extractBests(trafficker.full_name,
                                                                people_list,
-                                                               score_cutoff=90,
-                                                               limit=10)
+                                                               score_cutoff=FuzzyMatching.person_cutoff,
+                                                               limit=FuzzyMatching.person_limit)
             # If there is more than one match, iterate over all of them.
             for person_match in traffickers_with_name_match:
                 try:
