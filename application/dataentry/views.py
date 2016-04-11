@@ -512,7 +512,7 @@ class BatchView(View):
 
         photos = list(Interceptee.objects.filter(interception_record__irf_number__in=listOfIrfNumbers).values_list('photo', 'full_name', 'interception_record__irf_number'))
         if len(photos) == 0:
-            return HttpResponse('There are no photos within this date range.')
+            return render(request, 'dataentry/batch_photo_error.html')
         else:
             for i in range(len(photos)):
                 photos[i] = [str(x) for x in photos[i]]
