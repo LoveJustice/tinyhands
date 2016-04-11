@@ -103,48 +103,26 @@ class IRFAlertChecker(object):
         came from, and the name and all personal identifiers from both forms.
 
         """
-        # Get all of the interceptees from other IRFs
-        all_people = Interceptee.objects.all().exclude(interception_record=self.irf.id)
-        # Get a list of all of their full_names for use of fuzzy_wuzzy
-        people_list = [person.full_name for person in all_people]
-        trafficker_in_custody = self.trafficker_in_custody()
-
-        matches = []
+        all_people = Interceptee.objects.all()
+        people_dict = {obj: obj.full_name for obj in all_people}
         trafficker_list = []
+        trafficker_in_custody = self.trafficker_in_custody()
+        traffickers_and_their_matches = {}
 
-        # Get all of the traffickers from the submitted IRF
         for person in self.interceptees:
             if person.cleaned_data.get("kind") == 't':
                 trafficker_list.append(person.instance)
 
-        # For each trafficker on the IRF
-        for trafficker in trafficker_list:
-
-            # Get a list of the best matches that have a score of 90+
-            traffickers_with_name_match = process.extractBests(trafficker.full_name,
-                                                               people_list,
-                                                               score_cutoff=90,
-                                                               limit=10)
-            # If there is more than one match, iterate over all of them.
-            for person_match in traffickers_with_name_match:
-                try:
-                    name = person_match[0]
-                    # Append the interceptee object that has the full name
-                    matches.append(Interceptee.objects.all().filter(full_name=name))
-                except:
-                    pass
-
-        if len(matches) > 0:
-            # There are name matches.
+        if len(trafficker_list) > 0:
+            for trafficker in trafficker_list:
+                    traffickers_and_their_matches[trafficker.full_name] = process.extractBests(trafficker.full_name, people_dict, score_cutoff=89, limit = 10)
+        if True:
             Alert.objects.send_alert("Name Match",
-                                     context={"site": settings.SITE_DOMAIN,
-                                              "irf": self.irf,
-                                              "matches": matches,
-                                              "interceptees": self.interceptees,
+                                     context={"irf": self.irf,
+                                              "traffickers_matches": traffickers_and_their_matches,
                                               "trafficker_in_custody": trafficker_in_custody})
             return True
         return False
-
     def identified_trafficker(self):
         """Email Alerts to Investigators
 
@@ -209,4 +187,4 @@ class IRFAlertChecker(object):
             taken_into_custody = self.irf.trafficker_taken_into_custody
         if trafficker_in_custody is not None and taken_into_custody < len([there for there in self.interceptees.cleaned_data if there]):
             return self.interceptees.cleaned_data[int(self.irf.trafficker_taken_into_custody) - 1].get("full_name")
-        return False
+        return ''
