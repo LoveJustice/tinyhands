@@ -2,7 +2,7 @@
 
 angular
     .module('DataEntry')
-    .controller("irfListCtrl", ['$scope','$http','$timeout', '$location', 'irfService', function($scope, $http, $timeout, $location, irfService) {
+    .controller("irfListCtrl", ['$scope','$http','$timeout', '$location', '$window', 'irfService', function($scope, $http, $timeout, $location, $window, irfService) {
         var vm = this;
 
         // Variable Declarations
@@ -109,9 +109,8 @@ angular
             vm.startDate = startMonth + '-' + startDay + '-' + vm.startYear;
             vm.endDate = endMonth + '-' + endDay + '-' + vm.endYear;
 
-            var a = document.createElement('a');
-            a.href = 'http://localhost/data-entry/batch/' + vm.startDate + '/' + vm.endDate;
-            a.click();
+            var url = '/api/batch/' + vm.startDate + '/' + vm.endDate;
+            $window.location.href = url;
         }
 
         function getDays(month, year) {

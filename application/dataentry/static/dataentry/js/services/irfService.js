@@ -8,7 +8,8 @@ function irfService($http) {
 	return {
 		listIrfs: listIrfs,
 		loadMoreIrfs: loadMoreIrfs,
-		deleteIrf: deleteIrf
+		deleteIrf: deleteIrf,
+        batchPhotos: batchPhotos
 	};
 
 	function listIrfs(queryparams) {
@@ -40,5 +41,15 @@ function irfService($http) {
                 console.log(data, status, headers, config);
             });
 
+    }
+
+    function batchPhotos(url) {
+        return $http.get(url).
+            success(function(data){
+                return data;
+            }).
+            error(function (data, status, headers, config) {
+                console.log(data, status, headers, config);
+            });
     }
 }
