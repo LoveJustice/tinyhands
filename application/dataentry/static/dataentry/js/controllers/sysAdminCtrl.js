@@ -7,14 +7,14 @@ angular
 
         vm.form = {};
 
-        vm.address1_cutoff = 70;
-        vm.address1_limit = 5;
-        vm.address2_cutoff = 70;
-        vm.address2_limit = 5;
-        vm.person_cutoff = 90;
-        vm.person_limit = 10;
-        vm.phone_number_cutoff = 0;
-        vm.phone_number_limit = 0;
+        // vm.address1_cutoff = 70;
+        // vm.address1_limit = 5;
+        // vm.address2_cutoff = 70;
+        // vm.address2_limit = 5;
+        // vm.person_cutoff = 90;
+        // vm.person_limit = 10;
+        // vm.phone_number_cutoff = 0;
+        // vm.phone_number_limit = 0;
 
         function callTotals() {
             vm.address1_cutoff_value();
