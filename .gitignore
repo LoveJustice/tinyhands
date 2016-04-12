@@ -21,7 +21,9 @@ application/dreamsuite/static/*
 
 
 application/.config/
+application/google_cred.json
 
+local.env
 
 env
 foo.*
@@ -30,6 +32,8 @@ foo[1-9].*
 
 # for now in dev we check in /media
 application/media/
+build/nginx/media/*
+build/nginx/static/*
 
 node_modules/
 *.pyc

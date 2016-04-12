@@ -28,7 +28,7 @@ def match_location(address1_name=None, address2_name=None):
                         }
     else:
         region_names = {region.id: region.name
-                        for region in model.objects.all().select_related('address1')
+                        for region in model.objects.all()
                         }
 
     # matches is in the form of [(u'match', score, id), ...]
