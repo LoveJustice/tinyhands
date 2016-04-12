@@ -110,7 +110,6 @@ class IRFAlertChecker(object):
         for intercept in all_people:
             interceptPerson = Person.objects.get(interceptee=intercept)
             people_list.append(interceptPerson.full_name)
-        #people_list = [person.full_name for person in all_people]
         trafficker_in_custody = self.trafficker_in_custody()
 
         matches = []
@@ -134,9 +133,8 @@ class IRFAlertChecker(object):
             for person_match in traffickers_with_name_match:
                 try:
                     name = person_match[0]
-                    # Append the interceptee object that has the full name
+                    # Append the person object that has the full name
                     matches.append(Person.objects.all().filter(full_name=name))
-                    #matches.append(Interceptee.objects.all().filter(full_name=name))
                 except:
                     pass
 

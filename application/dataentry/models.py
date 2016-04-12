@@ -348,15 +348,6 @@ class VictimInterview(models.Model):
 
     victim = models.ForeignKey(Person, null=True, blank=True)
 
-    #Person Refactor Information
-    #victim_name = models.CharField('Name', max_length=255)
-    #victim_gender = models.CharField('Gender', choices=GENDER_CHOICES, max_length=12)
-    #victim_address1 = models.ForeignKey(Address1, null=True, related_name="victim_address1")
-    #victim_address2 = models.ForeignKey(Address2, null=True, related_name="victim_address2")
-    #victim_phone = models.CharField('Phone #', max_length=255, blank=True)
-    #victim_age = models.CharField('Age', max_length=255, blank=True)
-    #END
-
     victim_address_ward = models.CharField('Ward #', max_length=255, blank=True)
 
     victim_height = models.PositiveIntegerField('Height(ft)', null=True, blank=True)
