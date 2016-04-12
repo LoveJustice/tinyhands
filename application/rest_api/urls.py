@@ -7,7 +7,7 @@ from budget.views import BudgetViewSet, OtherItemsViewSet, MoneyDistribution, Mo
 
 from portal.views import get_interception_records
 from dataentry.views import Address2ViewSet, Address1ViewSet, GeoCodeAddress1APIView, GeoCodeAddress2APIView, InterceptionRecordViewSet, VictimInterviewViewSet
-from accounts.views import AccountViewSet, DefaultPermissionsSetViewSet, CurrentUserView, ResendActivationEmailView
+from accounts.views import AccountViewSet, DefaultPermissionsSetViewSet, CurrentUserView, ResendActivationEmailView, AccountActivateView
 from static_border_stations.views import BorderStationViewSet, StaffViewSet, CommitteeMemberViewSet, LocationViewSet
 
 list = {'get': 'list', 'post': 'create'}
@@ -21,6 +21,7 @@ urlpatterns = [
         url(r'^account/$', AccountViewSet.as_view(list), name="AccountList"),
         url(r'^account/all/$', AccountViewSet.as_view({'get': 'list_all'}), name="AccountListAll"),
         url(r'^account/(?P<pk>\d+)/$', AccountViewSet.as_view(detail), name='Account'),
+        url(r'^accounts/activate-account/(?P<activation_key>[a-zA-Z0-9]+)/$', AccountActivateView.as_view(), name='account_activate'),
         url(r'^account/resend-activation-email/(?P<pk>\d+)/$', ResendActivationEmailView.as_view(), name='ResendActivationEmail'),
 
         url(r'^defaultPermissionsSet/$', DefaultPermissionsSetViewSet.as_view(list), name="DefaultPermissionsSets"),
