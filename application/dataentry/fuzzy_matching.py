@@ -32,7 +32,7 @@ def match_location(address1_name=None, address2_name=None):
                         }
 
     # matches is in the form of [(u'match', score, id), ...]
-    matches = process.extractBests(location_name, region_names, limit=FuzzyMatching.value)
+    matches = process.extractBests(location_name, region_names, limit=FuzzyMatching.objects.all()[0].address1_limit)
 
     objects = None
     if len(matches) > 0:
