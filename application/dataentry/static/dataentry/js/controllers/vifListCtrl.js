@@ -27,6 +27,7 @@ angular
         vm.deleteVif = deleteVif;
         vm.getQueryParams = getQueryParams;
         vm.sortIcon = sortIcon;
+        vm.vifExists = vifExists;
         main();
 
 
@@ -38,6 +39,7 @@ angular
                 vm.searchValue = window.station_code;
                 vm.header = "All VIFs for " + vm.searchValue;
             }
+            vm.vifExists();
             vm.listVifs();
             vm.getUser();
         }
@@ -117,7 +119,7 @@ angular
             }
         }
 
-        function getQueryParams(){
+        function getQueryParams() {
             var params = "";
             params += "?page_size=" + vm.paginateBy;
             if(vm.searchValue){
@@ -129,5 +131,19 @@ angular
                 params += "&ordering=" + vm.sortColumn;
             }
             return params;
+        }
+
+        function vifExists() {
+            var storedForms = JSON.parse(localStorage.getItem('saved-vifs') || '{}');
+            for (var key in storedForms) {
+                console.log(key);
+                vifService.vifExists(key)
+                    .success(function (data) {
+                        if (data == key) {
+                            delete storedForms[key];
+                            localStorage.setItem('saved-vifs', JSON.stringify(storedForms));
+                        }
+                    })
+            }
         }
     }]);

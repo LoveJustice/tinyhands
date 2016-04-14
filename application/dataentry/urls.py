@@ -15,6 +15,7 @@ urlpatterns = [
     url(r'^vifs/(?P<pk>\d+)/$', VictimInterviewDetailView.as_view(), name='victiminterview_detail'),
     url(r'^vifs/create/$', VictimInterviewCreateView.as_view(), name='victiminterview_create'),
     url(r'^vifs/update/(?P<pk>\d+)/$', VictimInterviewUpdateView.as_view(), name='victiminterview_update'),
+    url(r'^vifs/vifExists/([A-Z]{3}[0-9]{3})', vifExists, name='VifExists'),
     url(r'^vifs/export/$', VictimInterviewCSVExportView.as_view(), name='victiminterview_csv_export'),
     #Create a url that will have a border station argument and will list vifs for that specific BD station
 
