@@ -13,43 +13,43 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='victiminterview',
-            name='victim_address1',
-        ),
-        migrations.RemoveField(
-            model_name='victiminterview',
-            name='victim_address2',
-        ),
-        migrations.RemoveField(
-            model_name='victiminterview',
-            name='victim_age',
-        ),
-        migrations.RemoveField(
-            model_name='victiminterview',
-            name='victim_gender',
-        ),
-        migrations.RemoveField(
-            model_name='victiminterview',
-            name='victim_name',
-        ),
-        migrations.RemoveField(
-            model_name='victiminterview',
-            name='victim_phone',
-        ),
-        migrations.AddField(
-            model_name='victiminterview',
-            name='victim',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='dataentry.Person'),
-        ),
+        # migrations.RemoveField(
+        #     model_name='victiminterview',
+        #     name='victim_address1',
+        # ),
+        # migrations.RemoveField(
+        #     model_name='victiminterview',
+        #     name='victim_address2',
+        # ),
+        # migrations.RemoveField(
+        #     model_name='victiminterview',
+        #     name='victim_age',
+        # ),
+        # migrations.RemoveField(
+        #     model_name='victiminterview',
+        #     name='victim_gender',
+        # ),
+        # migrations.RemoveField(
+        #     model_name='victiminterview',
+        #     name='victim_name',
+        # ),
+        # migrations.RemoveField(
+        #     model_name='victiminterview',
+        #     name='victim_phone',
+        # ),
+        # migrations.AddField(
+        #     model_name='victiminterview',
+        #     name='victim',
+        #     field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='dataentry.Person'),
+        # ),
         migrations.AlterField(
             model_name='person',
             name='gender',
             field=models.CharField(blank=True, choices=[(b'M', b'm'), (b'F', b'f')], max_length=4),
         ),
-        migrations.AlterField(
-            model_name='victiminterviewpersonbox',
-            name='gender',
-            field=models.CharField(blank=True, choices=[(b'Male', b'male'), (b'Female', b'female')], max_length=12, verbose_name=b'Gender'),
-        ),
+        # migrations.AlterField(
+        #     model_name='victiminterviewpersonbox',
+        #     name='gender',
+        #     field=models.CharField(blank=True, choices=[(b'Male', b'male'), (b'Female', b'female')], max_length=12, verbose_name=b'Gender'),
+        # ),
     ]

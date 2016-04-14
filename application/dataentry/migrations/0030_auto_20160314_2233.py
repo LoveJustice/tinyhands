@@ -11,10 +11,10 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AlterField(
-            model_name='interceptee',
-            name='person',
-            field=models.ForeignKey(blank=True, to='dataentry.Person', null=True),
-            preserve_default=True,
-        ),
+        # migrations.AlterField(
+        #     model_name='interceptee',
+        #     name='person',
+        #     field=models.ForeignKey(blank=True, to='dataentry.Person', null=True),
+        #     preserve_default=True,
+        # ),
     ]

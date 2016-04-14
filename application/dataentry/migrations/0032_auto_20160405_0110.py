@@ -16,9 +16,9 @@ class Migration(migrations.Migration):
             model_name='person',
             name='photo',
         ),
-        migrations.AddField(
-            model_name='interceptee',
-            name='photo',
-            field=models.ImageField(blank=True, default=b'', upload_to=b'interceptee_photos'),
-        ),
+        # migrations.AddField(
+        #     model_name='interceptee',
+        #     name='photo',
+        #     field=models.ImageField(blank=True, default=b'', upload_to=b'interceptee_photos'),
+        # ),
     ]

@@ -27,38 +27,41 @@ class Migration(migrations.Migration):
             },
             bases=(models.Model,),
         ),
-        migrations.RemoveField(
-            model_name='interceptee',
-            name='address1',
-        ),
-        migrations.RemoveField(
-            model_name='interceptee',
-            name='address2',
-        ),
-        migrations.RemoveField(
-            model_name='interceptee',
-            name='age',
-        ),
-        migrations.RemoveField(
-            model_name='interceptee',
-            name='full_name',
-        ),
-        migrations.RemoveField(
-            model_name='interceptee',
-            name='gender',
-        ),
-        migrations.RemoveField(
-            model_name='interceptee',
-            name='phone_contact',
-        ),
-        migrations.RemoveField(
-            model_name='interceptee',
-            name='photo',
-        ),
-        migrations.AddField(
-            model_name='interceptee',
-            name='person',
-            field=models.ForeignKey(related_name='interceptee', blank=True, to='dataentry.Person', null=True),
-            preserve_default=True,
-        ),
+        # migrations.AddField(model_name="Interceptee", name='person_tmp_name', field=models.ForeignKey(to='dataentry.Person', null=True)),
+        # migrations.AddField(model_name="VictimInterview", name='person_tmp_name', field=models.ForeignKey(to='dataentry.Person', null=True)),
+        # migrations.AddField(model_name="VictimInterviewPersonBox", name='person_tmp_name', field=models.ForeignKey(to='dataentry.Person', null=True)),
+        # migrations.RemoveField(
+        #     model_name='interceptee',
+        #     name='address1',
+        # ),
+        # migrations.RemoveField(
+        #     model_name='interceptee',
+        #     name='address2',
+        # ),
+        # migrations.RemoveField(
+        #     model_name='interceptee',
+        #     name='age',
+        # ),
+        # migrations.RemoveField(
+        #     model_name='interceptee',
+        #     name='full_name',
+        # ),
+        # migrations.RemoveField(
+        #     model_name='interceptee',
+        #     name='gender',
+        # ),
+        # migrations.RemoveField(
+        #     model_name='interceptee',
+        #     name='phone_contact',
+        # ),
+        # migrations.RemoveField(
+        #     model_name='interceptee',
+        #     name='photo',
+        # ),
+        # migrations.AddField(
+        #     model_name='interceptee',
+        #     name='person',
+        #     field=models.ForeignKey(related_name='interceptee', blank=True, to='dataentry.Person', null=True),
+        #     preserve_default=True,
+        # ),
     ]

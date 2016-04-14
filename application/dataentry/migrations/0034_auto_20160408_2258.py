@@ -13,33 +13,33 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='victiminterviewpersonbox',
-            name='address1',
-        ),
-        migrations.RemoveField(
-            model_name='victiminterviewpersonbox',
-            name='address2',
-        ),
-        migrations.RemoveField(
-            model_name='victiminterviewpersonbox',
-            name='age',
-        ),
-        migrations.RemoveField(
-            model_name='victiminterviewpersonbox',
-            name='gender',
-        ),
-        migrations.RemoveField(
-            model_name='victiminterviewpersonbox',
-            name='name',
-        ),
-        migrations.RemoveField(
-            model_name='victiminterviewpersonbox',
-            name='phone',
-        ),
-        migrations.AddField(
-            model_name='victiminterviewpersonbox',
-            name='person',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='dataentry.Person'),
-        ),
+        # migrations.RemoveField(
+        #     model_name='victiminterviewpersonbox',
+        #     name='address1',
+        # ),
+        # migrations.RemoveField(
+        #     model_name='victiminterviewpersonbox',
+        #     name='address2',
+        # ),
+        # migrations.RemoveField(
+        #     model_name='victiminterviewpersonbox',
+        #     name='age',
+        # ),
+        # migrations.RemoveField(
+        #     model_name='victiminterviewpersonbox',
+        #     name='gender',
+        # ),
+        # migrations.RemoveField(
+        #     model_name='victiminterviewpersonbox',
+        #     name='name',
+        # ),
+        # migrations.RemoveField(
+        #     model_name='victiminterviewpersonbox',
+        #     name='phone',
+        # ),
+        # migrations.AddField(
+        #     model_name='victiminterviewpersonbox',
+        #     name='person',
+        #     field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='dataentry.Person'),
+        # ),
     ]
