@@ -13,9 +13,7 @@ COPY media/ /data/media/
 COPY static/ /data/dreamsuite/static/
 
 RUN mkdir -p /log
-WORKDIR /log
-RUN touch /log/nginx_access.log /log/nginx_error.log
-RUN chown -R www-data:www-data /log/
+RUN chown -R www-data:www-data /log
 
 EXPOSE 80
 CMD service nginx start

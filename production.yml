@@ -8,30 +8,24 @@ db:
   extends:
     file: common.yml
     service: db
+  volumes:
+    - /var/lib/mysql
 
 web:
   extends:
     file: common.yml
     service: web
-  volumes_from:
-    - data
+  image: "tusoftwarestudio/dreamsuite:${DREAMSUITE_TAG}"
+  environment:
+    - prod.env
   links:
     - db
 
-test:
-  extends:
-    file: common.yml
-    service: test
-  volumes_from:
-    - data
-  links:
-    - db
 
 nginx:
   extends:
     file: common.yml
     service: nginx
+  image: "tusoftwarestudio/dreamsuite-nginx:${DREAMSUITE_TAG}"
   links:
     - web:web
-  volumes_from:
-    - data

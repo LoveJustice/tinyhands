@@ -14,18 +14,10 @@ WORKDIR /data
 ADD application/requirements.txt /data/requirements.txt
 RUN pip install -r requirements.txt
 
-# Make the log files for Gunicorn
-RUN mkdir -p /log
-RUN chown -R www-data:www-data /log
-
 # Copy application files over to container
 COPY application/ /data/
 
-# Run the application
-CMD /data/bin/run.sh
+# Own the log dir
+RUN chown -R www-data:www-data /data/log
 
-RUN curl -o /usr/local/bin/s3-expand https://raw.githubusercontent.com/silinternational/s3-expand/master/s3-expand \
-    && chmod a+x /usr/local/bin/s3-expand
-
-ENTRYPOINT ["/usr/local/bin/s3-expand"]
 CMD ["/data/bin/run.sh"]
