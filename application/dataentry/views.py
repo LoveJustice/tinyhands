@@ -504,20 +504,16 @@ class VictimInterviewViewSet(viewsets.ModelViewSet):
 
 
 def vifExists(request, vif_number):
-    existingVif = VictimInterview.objects.filter(vif_number=vif_number)
-    if len(existingVif) <= 0:
-        return HttpResponse("Vif does not exist")
-    elif len(existingVif) == 1:
+    try:
+        existingVif = VictimInterview.objects.get(vif_number=vif_number)
         return HttpResponse(existingVif)
-    else:
-        return HttpResponse("Database Error",status=status.HTTP_500)
+    except:
+        return HttpResponse("Vif does not exist")
 
 
 def irfExists(request, irf_number):
-    existingIrf = InterceptionRecord.objects.filter(irf_number=irf_number)
-    if len(existingIrf) <= 0:
+    try:
+        existingIrf = InterceptionRecord.objects.get(irf_number=irf_number)
+        return HttpResponse(existingIrf.irf_number)
+    except:
         return HttpResponse("Irf does not exist")
-    elif len(existingIrf) == 1:
-        return HttpResponse(existingIrf[0].irf_number)
-    else:
-        return HttpResponse("Database Error",status=status.HTTP_500)
