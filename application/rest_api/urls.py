@@ -5,6 +5,7 @@ from dataentry.views import Address2ViewSet, Address1ViewSet, GeoCodeAddress1API
 from budget.views import BudgetViewSet, OtherItemsViewSet
 from accounts.views import AccountViewSet, DefaultPermissionsSetViewSet, CurrentUserView, ResendActivationEmailView
 from static_border_stations.views import BorderStationViewSet, StaffViewSet, CommitteeMemberViewSet, LocationViewSet
+from events.views import EventViewSet
 
 urlpatterns = [
     # Budget URLs
@@ -62,4 +63,11 @@ urlpatterns = [
     # VIFs
     url(r'^vif/$', VictimInterviewViewSet.as_view({'get': 'list'}), name="VictimInterview"),
     url(r'^vif/(?P<pk>\d+)/$', VictimInterviewViewSet.as_view({'delete': 'destroy'}), name="VictimInterviewDetail"),
+
+    #Events
+    url(r'^event/$', EventViewSet.as_view({'get': 'list', 'post':'create'}), name="EventList"),
+    url(r'^event/all/$', EventViewSet.as_view({'get': 'list_all'}), name="EventListAll"),
+    url(r'^event/(?P<pk>\d+)/$', EventViewSet.as_view({'get':'retrieve', 'put':'update', 'delete':'destroy'}), name='Event'),
+    url(r'^event/feed/calendar/$', EventViewSet.as_view({'get': 'calendar_feed'}), name='EventCalendarFeed'),
+    url(r'^event/feed/dashboard/$', EventViewSet.as_view({'get': 'dashboard_feed'}), name='EventDashboardFeed')
 ]
