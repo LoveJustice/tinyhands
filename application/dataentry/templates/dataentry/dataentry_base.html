@@ -4,8 +4,8 @@
   <ul class="nav nav-tabs">
     {% url 'interceptionrecord_list' as interceptionrecord_list_url %}
     {% url 'victiminterview_list' as victiminterview_list_url %}
-    {% url 'vdc_admin_page' as vdc_admin_page_url %}
-    {% url 'district_admin_page' as district_admin_page_url %}
+    {% url 'address2_admin_page' as address2_admin_page_url %}
+    {% url 'address1_admin_page' as address1_admin_page_url %}
 
     {% comment %}
       {% if 'irfs' in request.path or 'vifs' in request.path %}
@@ -18,7 +18,7 @@
       {% endif %}
     {% endcomment %}
 
-    {% if 'search' in request.path or 'vdc-admin' in request.path or 'district-admin' in request.path %}
+    {% if 'search' in request.path or 'address2-admin' in request.path or 'address1-admin' in request.path %}
       <form class="navbar-form navbar-right"
 	    method="get"
 	    role="search"
@@ -28,11 +28,11 @@
             {% if 'vifs' in request.path %}
 	      action="/data-entry/vifs/search/"
 	    {% endif %}
-            {% if 'vdc-admin' in request.path %}
-	      action="/data-entry/geocodelocations/vdc-admin/search/"
+            {% if 'address2-admin' in request.path %}
+	      action="/data-entry/geocodelocations/address2-admin/search/"
 	    {% endif %}
-            {% if 'district-admin' in request.path %}
-	      action="/data-entry/geocodelocations/district-admin/search/"
+            {% if 'address1-admin' in request.path %}
+	      action="/data-entry/geocodelocations/address1-admin/search/"
 	    {% endif %}
 	    >
 	    {% csrf_token %}

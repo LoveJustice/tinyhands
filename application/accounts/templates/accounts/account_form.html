@@ -31,7 +31,7 @@ table {
 {% block foot %}
 {% if account.id %}
 <script>
-  window.account_id = {{account.id}}
+  window.account_id = {{view.id}}
 </script>
 {% endif %}
 {% endblock %}
@@ -176,7 +176,7 @@ table {
       <thead>
         <tr>
           <th>Alerts</th>
-          <th>VDC Management</th>
+          <th>Address2 Management</th>
           <th>Budget Management</th>
         </tr>
       </thead>
@@ -186,7 +186,7 @@ table {
             <label class="btn" ng-class="editCtrl.account.permission_receive_email ? 'btn btn-success' : 'btn btn-danger'" ng-click="editCtrl.account.permission_receive_email = !editCtrl.account.permission_receive_email">{{ editCtrl.getButtonText(editCtrl.account.permission_receive_email) }}</label>
           </td>
           <td>
-            <label class="btn" ng-class="editCtrl.account.permission_vdc_manage ? 'btn btn-success' : 'btn btn-danger'" ng-click="editCtrl.account.permission_vdc_manage = !editCtrl.account.permission_vdc_manage">{{ editCtrl.getButtonText(editCtrl.account.permission_vdc_manage) }}</label>
+            <label class="btn" ng-class="editCtrl.account.permission_address2_manage ? 'btn btn-success' : 'btn btn-danger'" ng-click="editCtrl.account.permission_address2_manage = !editCtrl.account.permission_address2_manage">{{ editCtrl.getButtonText(editCtrl.account.permission_address2_manage) }}</label>
           </td>
           <td>
             <label class="btn" ng-class="editCtrl.account.permission_budget_manage ? 'btn btn-success' : 'btn btn-danger'" ng-click="editCtrl.account.permission_budget_manage = !editCtrl.account.permission_budget_manage">{{ editCtrl.getButtonText(editCtrl.account.permission_budget_manage) }}</label>

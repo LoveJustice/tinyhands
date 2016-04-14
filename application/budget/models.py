@@ -12,7 +12,7 @@ class BorderStationBudgetCalculation(models.Model):
 
     month_year = models.DateTimeField(default=datetime.now)
 
-    border_station = models.ForeignKey(BorderStation)
+    border_station = models.ForeignKey(BorderStation, on_delete=models.CASCADE)
 
     communication_chair = models.BooleanField(default=False)
     communication_chair_amount = models.PositiveIntegerField('for chair', default=1000)
@@ -117,8 +117,15 @@ class BorderStationBudgetCalculation(models.Model):
 
     medical_last_months_expense = models.PositiveIntegerField("Last month's medical expense", default=0)
 
+    def medical_extra_items_total(self):
+        items = self.otherbudgetitemcost_set.filter(form_section=9)
+        total = 0
+        for item in items:
+            total += item.cost
+        return total
+
     def medical_total(self):
-        return self.medical_last_months_expense
+        return self.medical_last_months_expense + self.medical_extra_items_total()
 
     miscellaneous_number_of_intercepts_last_month = models.PositiveIntegerField('# of intercepts last month', default=0)
     miscellaneous_number_of_intercepts_last_month_multiplier = models.PositiveIntegerField(default=300)
@@ -267,11 +274,11 @@ class OtherBudgetItemCost(models.Model):
 
     BUDGET_FORM_SECTION_CHOICES = [(1, 'Travel'), (2, 'Miscellaneous'), (3, 'Awareness'), (4, 'Supplies'), (5, 'Shelter'), (6, 'FoodGas'), (7, 'Communication'), (8, 'Staff')]
     form_section = models.IntegerField(BUDGET_FORM_SECTION_CHOICES, blank=True, null=True)
-    budget_item_parent = models.ForeignKey(BorderStationBudgetCalculation, blank=True, null=True)
+    budget_item_parent = models.ForeignKey(BorderStationBudgetCalculation, blank=True, null=True, on_delete=models.CASCADE)
 
 
 class StaffSalary(models.Model):
     salary = models.PositiveIntegerField(default=0, blank=True, null=True)
 
-    budget_calc_sheet = models.ForeignKey(BorderStationBudgetCalculation, blank=True, null=True)
-    staff_person = models.ForeignKey(Staff, blank=True, null=True)
+    budget_calc_sheet = models.ForeignKey(BorderStationBudgetCalculation, blank=True, null=True, on_delete=models.CASCADE)
+    staff_person = models.ForeignKey(Staff, blank=True, null=True, on_delete=models.CASCADE)

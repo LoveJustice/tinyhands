@@ -25,7 +25,7 @@ class DefaultPermissionsSet(models.Model):
     permission_border_stations_add = models.BooleanField(default=False)
     permission_border_stations_edit = models.BooleanField(default=False)
     permission_border_stations_delete = models.BooleanField(default=False)
-    permission_vdc_manage = models.BooleanField(default=False)
+    permission_address2_manage = models.BooleanField(default=False)
     permission_budget_manage = models.BooleanField(default=False)
 
     def __unicode__(self):
@@ -75,7 +75,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
 
-    user_designation = models.ForeignKey(DefaultPermissionsSet, related_name='accounts')
+    user_designation = models.ForeignKey(DefaultPermissionsSet, related_name='accounts', on_delete=models.CASCADE)
 
     permission_irf_view = models.BooleanField(default=False)
     permission_irf_add = models.BooleanField(default=False)
@@ -91,7 +91,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
     permission_border_stations_add = models.BooleanField(default=False)
     permission_border_stations_edit = models.BooleanField(default=False)
     permission_border_stations_delete = models.BooleanField(default=False)
-    permission_vdc_manage = models.BooleanField(default=False)
+    permission_address2_manage = models.BooleanField(default=False)
     permission_budget_manage = models.BooleanField(default=False)
 
     date_joined = models.DateTimeField(default=timezone.now)
@@ -143,7 +143,6 @@ class Account(AbstractBaseUser, PermissionsMixin):
                 'account': self,
             }
         )
-
 
 class AlertManager(models.Manager):
     def send_alert(self, code, context={}):

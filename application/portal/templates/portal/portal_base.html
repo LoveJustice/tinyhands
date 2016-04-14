@@ -22,8 +22,7 @@
     .events {
         background: none repeat scroll 0 0 #fdfdfd;
         border-radius: 5px;
-        float: right;
-        margin-right: 15px;
+        float: none;
         margin-top: 10px;
         padding: 3px 3px 3px 10px;
         width: 226px;
@@ -51,7 +50,7 @@
     <script src="{% static "portal/js/controllers/portal.js" %}"></script>
     <script src="{% static "portal/js/controllers/tally.js" %}"></script>
     <script src="{% static "portal/js/controllers/eventDashboardCtrl.js" %}"></script>
-    <script src="{{ STATIC_URL }}events/js/events.module.js"></script>
-    <script src="{{ STATIC_URL }}events/js/services/events.service.js"></script>
-    <script src="{{ STATIC_URL }}events/js/controllers/eventModalCtrl.js"></script>
+    <script src="{% static 'events/js/events.module.js' %}"></script>
+    <script src="{% static 'events/js/services/events.service.js'%}"></script>
+    <script src="{% static 'events/js/controllers/eventModalCtrl.js'%}"></script>
 {% endblock %}

@@ -46,31 +46,33 @@ class AccountsPostTests(RestApiTestCase):
     email = 'foo@bar.org'
     first_name = 'Test'
     last_name = 'Tester'
-    new_user = {
-        'email' : email,
-        'first_name' : first_name,
-        'last_name' : last_name,
-        'user_designation' : 1,
-        'permission_irf_view' : True,
-        'permission_irf_add' : True,
-        'permission_irf_edit' : True,
-        'permission_irf_delete' : True,
-        'permission_vif_view' : True,
-        'permission_vif_add' : True,
-        'permission_vif_edit' : True,
-        'permission_vif_delete' : True,
-        'permission_accounts_manage' : True,
-        'permission_border_stations_view' : True,
-        'permission_border_stations_add' : True,
-        'permission_border_stations_edit' : True,
-        'permission_vdc_manage' : True,
-        'permission_budget_manage' : True,
-    }
+
+    def get_user_data(self, user):
+        return {
+            'email' : self.email,
+            'first_name' : self.first_name,
+            'last_name' : self.last_name,
+            'user_designation' : user.user_designation.id,
+            'permission_irf_view' : True,
+            'permission_irf_add' : True,
+            'permission_irf_edit' : True,
+            'permission_irf_delete' : True,
+            'permission_vif_view' : True,
+            'permission_vif_add' : True,
+            'permission_vif_edit' : True,
+            'permission_vif_delete' : True,
+            'permission_accounts_manage' : True,
+            'permission_border_stations_view' : True,
+            'permission_border_stations_add' : True,
+            'permission_border_stations_edit' : True,
+            'permission_vdc_manage' : True,
+            'permission_budget_manage' : True,
+        }
 
     def test_when_not_authenticated_should_deny_access(self):
         url = reverse('AccountList')
 
-        response = self.client.post(url, self.new_user)
+        response = self.client.post(url, {})
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(response.data['detail'], 'Authentication credentials were not provided.')
@@ -80,7 +82,7 @@ class AccountsPostTests(RestApiTestCase):
         user = ViewUserFactory.create()
         self.login(user)
 
-        response = self.client.post(url, self.new_user)
+        response = self.client.post(url, self.get_user_data(user))
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(response.data['detail'], 'You do not have the right permission to access this data')
@@ -90,7 +92,7 @@ class AccountsPostTests(RestApiTestCase):
         user = SuperUserFactory.create()
         self.login(user)
 
-        response = self.client.post(url, self.new_user)
+        response = self.client.post(url, self.get_user_data(user))
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['email'], self.email)
@@ -139,7 +141,7 @@ class AccountPutTests(RestApiTestCase):
             'email' : new_email,
             'first_name' : user.first_name,
             'last_name' : user.last_name,
-            'user_designation' : 1,
+            'user_designation' : user.user_designation.id,
             'permission_irf_view' : True,
             'permission_irf_add' : True,
             'permission_irf_edit' : True,
@@ -152,7 +154,7 @@ class AccountPutTests(RestApiTestCase):
             'permission_border_stations_view' : True,
             'permission_border_stations_add' : True,
             'permission_border_stations_edit' : True,
-            'permission_vdc_manage' : True,
+            'permission_address2_manage' : True,
             'permission_budget_manage' : True,
         }
         return update_user
@@ -276,7 +278,7 @@ class DefaultPermissionsSetsPostTests(RestApiTestCase):
         'permission_border_stations_view' : True,
         'permission_border_stations_add' : True,
         'permission_border_stations_edit' : True,
-        'permission_vdc_manage' : True,
+        'permission_address2_manage' : True,
         'permission_budget_manage' : True,
     }
 
@@ -364,7 +366,7 @@ class DefaultPermissionsSetPutTests(RestApiTestCase):
             'permission_border_stations_view' : True,
             'permission_border_stations_add' : True,
             'permission_border_stations_edit' : True,
-            'permission_vdc_manage' : True,
+            'permission_address2_manage' : True,
             'permission_budget_manage' : True,
         }
         return update_permission_set

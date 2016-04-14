@@ -2,11 +2,12 @@ from django import forms
 from django.forms.models import inlineformset_factory
 from django.utils.html import mark_safe
 
-from .models import (BorderStation, District,
+from .models import (BorderStation, Address1,
                      Interceptee, InterceptionRecord,
-                     VDC,
+                     Address2,
                      VictimInterviewLocationBox, VictimInterviewPersonBox, VictimInterview)
-from .fields import DistrictField, VDCField, FormNumberField
+from .fields import Address1Field, Address2Field, FormNumberField
+
 
 BOOLEAN_CHOICES = [
     (False, 'No'),
@@ -98,7 +99,7 @@ class InterceptionRecordForm(DreamSuitePaperForm):
         for field_name, field in self.fields.iteritems():
             if type(field) == forms.fields.BooleanField:
                 try:
-                    model_field = InterceptionRecord._meta.get_field_by_name(field_name)[0]
+                    model_field = InterceptionRecord._meta.get_field(field_name)[0]
                     if hasattr(model_field, 'weight'):
                         field.weight = model_field.weight
                 except:
@@ -348,33 +349,33 @@ class InterceptionRecordForm(DreamSuitePaperForm):
 class IntercepteeForm(DreamSuitePaperForm):
     class Meta:
         model = Interceptee
-        exclude = ('district','vdc')
+        exclude = ('address1','address2')
 
     def __init__(self, *args, **kwargs):
         super(IntercepteeForm, self).__init__(*args, **kwargs)
 
-        self.fields['district'] = DistrictField(required=False)
-        self.fields['vdc'] = VDCField(required=False)
+        self.fields['address1'] = Address1Field(required=False)
+        self.fields['address2'] = Address2Field(required=False)
         try:
-            self.fields['district'].initial = self.instance.district
+            self.fields['address1'].initial = self.instance.address1
         except:
             pass
         try:
-           self.fields['vdc'].initial = self.instance.vdc
+           self.fields['address2'].initial = self.instance.address2
         except:
             pass
 
     def save(self, commit=True):
         try:
-            district = District.objects.get(name=self.cleaned_data['district'])
-            self.instance.district = district
-        except District.DoesNotExist:
-            district = None
+            address1 = Address1.objects.get(name=self.cleaned_data['address1'])
+            self.instance.address1 = address1
+        except Address1.DoesNotExist:
+            address1 = None
 
         try:
-            vdc = VDC.objects.get(name=self.cleaned_data['vdc'], district=district)
-            self.instance.vdc = vdc
-        except VDC.DoesNotExist:
+            address2 = Address2.objects.get(name=self.cleaned_data['address2'], address1=address1)
+            self.instance.address2 = address2
+        except Address2.DoesNotExist:
             pass
 
         return super(IntercepteeForm, self).save(commit)
@@ -386,8 +387,8 @@ class IntercepteeForm(DreamSuitePaperForm):
         return cleaned_data
 
     def if_address_1_need_address_2(self, cleaned_data):
-        if cleaned_data.get('vdc') and not cleaned_data.get('district'):
-            self._errors['district'] = self.error_class(
+        if cleaned_data.get('address2') and not cleaned_data.get('address1'):
+            self._errors['address1'] = self.error_class(
                     ['If you supply an address 2, and address 1 is required'])
 
 
@@ -590,17 +591,17 @@ class VictimInterviewForm(DreamSuitePaperForm):
     victim_where_going_gulf_didnt_know = forms.BooleanField(label='Did Not Know', required=False)
     victim_where_going_gulf_other = forms.BooleanField(label='Other', required=False)
 
-    victim_address_district = DistrictField(label='Address 1', required=False)
-    victim_address_vdc = VDCField(label='Address 2', required=False)
-    victim_guardian_address_district = DistrictField(label='Address 1', required=False)
-    victim_guardian_address_vdc = VDCField(label='Address 2', required=False)
+    victim_address1 = Address1Field(label='Address 1', required=False)
+    victim_address2 = Address2Field(label='Address 2', required=False)
+    victim_guardian_address1 = Address1Field(label='Address 1', required=False)
+    victim_guardian_address2 = Address2Field(label='Address 2', required=False)
 
     class Meta:
         model = VictimInterview
-        exclude = ('victim_address_district',
-                   'victim_address_vdc',
-                   'victim_guardian_address_district',
-                   'victim_guardian_address_vdc')
+        exclude = ('victim_address1',
+                   'victim_address2',
+                   'victim_guardian_address1',
+                   'victim_guardian_address2')
 
     def __init__(self, *args, **kwargs):
         super(VictimInterviewForm, self).__init__(*args, **kwargs)
@@ -630,35 +631,36 @@ class VictimInterviewForm(DreamSuitePaperForm):
             (self.num_lbs - 1) / 2 + 1
         )
         try:
-            self.fields['victim_address_district'].initial = self.instance.victim_address_district
+            self.fields['victim_address1'].initial = self.instance.victim_address1
         except:
             pass
         try:
-            self.fields['victim_address_vdc'].initial = self.instance.victim_address_vdc
+            self.fields['victim_address2'].initial = self.instance.victim_address2
         except:
             pass
         try:
-            self.fields['victim_guardian_address_district'].initial = self.instance.victim_guardian_address_district
+            self.fields['victim_guardian_address1'].initial = self.instance.victim_guardian_address1
         except:
             pass
         try:
-            self.fields['victim_guardian_address_vdc'].initial = self.instance.victim_guardian_address_vdc
+            self.fields['victim_guardian_address2'].initial = self.instance.victim_guardian_address2
         except:
             pass
 
     def save(self, commit=True):
-        if self.cleaned_data['victim_address_district']:
-            victim_address_district = District.objects.get(name=self.cleaned_data['victim_address_district'])
-            self.instance.victim_address_district = victim_address_district
-        if self.cleaned_data['victim_address_vdc']:
-            victim_address_vdc = VDC.objects.get(name=self.cleaned_data['victim_address_vdc'])
-            self.instance.victim_address_vdc = victim_address_vdc
-        if self.cleaned_data['victim_guardian_address_district']:
-            victim_guardian_address_district = District.objects.get(name=self.cleaned_data['victim_guardian_address_district'])
-            self.instance.victim_guardian_address_district = victim_guardian_address_district
-        if self.cleaned_data['victim_guardian_address_vdc']:
-            victim_guardian_address_vdc = VDC.objects.get(name=self.cleaned_data['victim_guardian_address_vdc'])
-            self.instance.victim_guardian_address_vdc = victim_guardian_address_vdc
+        if self.cleaned_data['victim_address1']:
+            victim_address1 = Address1.objects.get(name=self.cleaned_data['victim_address1'])
+            self.instance.victim_address1 = victim_address1
+        if self.cleaned_data['victim_guardian_address1']:
+            victim_guardian_address1 = Address1.objects.get(name=self.cleaned_data['victim_guardian_address1'])
+            self.instance.victim_guardian_address1 = victim_guardian_address1
+            print victim_address1.id
+        if self.cleaned_data['victim_address2']:
+            victim_address2 = Address2.objects.get(name=self.cleaned_data['victim_address2'], address1_id = self.instance.victim_address1.id)
+            self.instance.victim_address2 = victim_address2
+        if self.cleaned_data['victim_guardian_address2']:
+            victim_guardian_address2 = Address2.objects.get(name=self.cleaned_data['victim_guardian_address2'])
+            self.instance.victim_guardian_address2 = victim_guardian_address2
         return super(VictimInterviewForm, self).save(commit)
 
     def clean(self):
@@ -719,29 +721,29 @@ class VictimInterviewPersonBoxForm(DreamSuitePaperForm):
 
     class Meta:
         model = VictimInterviewPersonBox
-        exclude = ('address_district', 'address_vdc')
+        exclude = ('address1', 'address2')
 
     def __init__(self, *args, **kwargs):
         super(VictimInterviewPersonBoxForm, self).__init__(*args, **kwargs)
         initial = self.initial.get('gender')
         if initial is not None:
             self.initial['gender'] = [unicode(initial)]
-        self.fields['address_district'] = DistrictField(label="Address 1")
-        self.fields['address_vdc'] = VDCField(label="Address 2")
+        self.fields['address1'] = Address1Field(label="Address 1")
+        self.fields['address2'] = Address2Field(label="Address 2")
         try:
-            self.fields['address_district'].initial = self.instance.address_district
+            self.fields['address1'].initial = self.instance.address1
         except:
             pass
         try:
-           self.fields['address_vdc'].initial = self.instance.address_vdc
+           self.fields['address2'].initial = self.instance.address2
         except:
             pass
 
     def save(self, commit=True):
-        address_district = District.objects.get(name=self.cleaned_data['address_district'])
-        address_vdc = VDC.objects.get(name=self.cleaned_data['address_vdc'])
-        self.instance.address_vdc = address_vdc
-        self.instance.address_district = address_district
+        address1 = Address1.objects.get(name=self.cleaned_data['address1'])
+        address2 = Address2.objects.get(name=self.cleaned_data['address2'], address1_id = address1.id)
+        self.instance.address2 = address2
+        self.instance.address1 = address1
         return super(VictimInterviewPersonBoxForm, self).save(commit)
 
     def clean(self):
@@ -763,26 +765,26 @@ class VictimInterviewLocationBoxForm(DreamSuitePaperForm):
 
     class Meta:
         model = VictimInterviewLocationBox
-        exclude = ('district','vdc')
+        exclude = ('address1','address2')
 
     def __init__(self, *args, **kwargs):
         super(VictimInterviewLocationBoxForm, self).__init__(*args, **kwargs)
-        self.fields['district'] = DistrictField(label="Address 1")
-        self.fields['vdc'] = VDCField(label="Address 2")
+        self.fields['address1'] = Address1Field(label="Address 1")
+        self.fields['address2'] = Address2Field(label="Address 2")
         try:
-            self.fields['district'].initial = self.instance.district
+            self.fields['address1'].initial = self.instance.address1
         except:
             pass
         try:
-           self.fields['vdc'].initial = self.instance.vdc
+            self.fields['address2'].initial = self.instance.address2
         except:
             pass
 
     def save(self, commit=True):
-        district = District.objects.get(name=self.cleaned_data['district'])
-        vdc = VDC.objects.get(name=self.cleaned_data['vdc'])
-        self.instance.vdc = vdc
-        self.instance.district = district
+        address1 = Address1.objects.get(name=self.cleaned_data['address1'])
+        address2 = Address2.objects.get(name=self.cleaned_data['address2'], address1_id = address1.id)
+        self.instance.address2 = address2
+        self.instance.address1 = address1
         return super(VictimInterviewLocationBoxForm, self).save(commit)
 
 
@@ -798,17 +800,17 @@ class BorderStationForm(forms.ModelForm):
         return self.cleaned_data['station_code'].upper()
 
 
-class VDCForm(forms.ModelForm):
+class Address2Form(forms.ModelForm):
     class Meta:
-        model = VDC
-        fields = ['name', 'latitude', 'longitude', 'canonical_name', 'district', 'verified']
+        model = Address2
+        fields = ['name', 'latitude', 'longitude', 'canonical_name', 'address1', 'verified']
 
     def __init__(self, *args, **kwargs):
-        super(VDCForm, self).__init__(*args, **kwargs)
-        self.fields['district'].label = "Address 1"
+        super(Address2Form, self).__init__(*args, **kwargs)
+        self.fields['address1'].label = "Address 1"
 
 
-class DistrictForm(forms.ModelForm):
+class Address1Form(forms.ModelForm):
     class Meta:
-        model = District
+        model = Address1
         fields = ['name']

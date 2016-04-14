@@ -6,13 +6,13 @@ import json
 from accounts.tests.factories import *
 
 from accounts.models import Account
-from dataentry.models import BorderStation
+from static_border_stations.tests.factories import BorderStationFactory
 
 # Create your tests here.
 class BorderStationModelsTests(WebTest):
 
     def setUp(self):
-        BorderStation.objects.get_or_create(station_name="Test Station", station_code="TS1")
+        self.border_station = BorderStationFactory.create()
         self.superuser = SuperUserFactory.create()
         self.viewuser = ViewUserFactory.create()
         self.adduser = AddUserFactory.create()
@@ -25,12 +25,12 @@ class BorderStationModelsTests(WebTest):
         self.assertEquals(page.status_int, 200)
 
     def test_can_get_update_borderstation_page_as_superuser(self):
-        url = reverse("borderstations_update", args=[1])
+        url = reverse("borderstations_update", args=[self.border_station.id])
         page = self.app.get(url, user=self.superuser)
         self.assertEquals(page.status_int, 200)
 
     def test_can_get_view_borderstation_page_as_superuser(self):
-        url = reverse("borderstations_view", args=[1])
+        url = reverse("borderstations_view", args=[self.border_station.id])
         page = self.app.get(url, user=self.superuser)
         self.assertEquals(page.status_int, 200)
 
@@ -41,12 +41,12 @@ class BorderStationModelsTests(WebTest):
         self.assertEquals(page.status_int, 403)
 
     def test_cannot_get_update_borderstation_page_as_viewuser(self):
-        url = reverse("borderstations_update", args=[1])
+        url = reverse("borderstations_update", args=[self.border_station.id])
         page = self.app.get(url, user=self.viewuser, expect_errors=True)
         self.assertEquals(page.status_int, 403)
 
     def test_can_get_view_borderstation_page_as_viewuser(self):
-        url = reverse("borderstations_view", args=[1])
+        url = reverse("borderstations_view", args=[self.border_station.id])
         page = self.app.get(url, user=self.viewuser)
         self.assertEquals(page.status_int, 200)
 
@@ -57,12 +57,12 @@ class BorderStationModelsTests(WebTest):
         self.assertEquals(page.status_int, 200)
 
     def test_cannot_get_update_borderstation_page_as_adduser(self):
-        url = reverse("borderstations_update", args=[1])
+        url = reverse("borderstations_update", args=[self.border_station.id])
         page = self.app.get(url, user=self.adduser, expect_errors=True)
         self.assertEquals(page.status_int, 403)
 
     def test_can_get_view_borderstation_page_as_adduser(self):
-        url = reverse("borderstations_view", args=[1])
+        url = reverse("borderstations_view", args=[self.border_station.id])
         page = self.app.get(url, user=self.adduser)
         self.assertEquals(page.status_int, 200)
 
@@ -73,11 +73,11 @@ class BorderStationModelsTests(WebTest):
         self.assertEquals(page.status_int, 403)
 
     def test_can_get_update_borderstation_page_as_edituser(self):
-        url = reverse("borderstations_update", args=[1])
+        url = reverse("borderstations_update", args=[self.border_station.id])
         page = self.app.get(url, user=self.edituser)
         self.assertEquals(page.status_int, 200)
 
     def test_can_get_view_borderstation_page_as_edituser(self):
-        url = reverse("borderstations_view", args=[1])
+        url = reverse("borderstations_view", args=[self.border_station.id])
         page = self.app.get(url, user=self.edituser)
         self.assertEquals(page.status_int, 200)

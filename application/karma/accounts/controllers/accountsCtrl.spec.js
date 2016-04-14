@@ -22,6 +22,9 @@ describe('accountsCtrl', function(){
     mockAccountsService = jasmine.createSpyObj('mockAccountsService', ['all','me','update','resendActivationEmail','destroy']);
 
     mockPermissionSetsService = jasmine.createSpyObj('mockPermissionSetsService', ['all']);
+    
+    mockPermissionDesignation = {1: 'Super Administrator'};
+    mockPermissionSetsService.all.and.returnValue({$promise: $q.when([mockPermissionDesignation])})
 
     scope = $rootScope.$new();
     controller = $controller('AccountsCtrl', {

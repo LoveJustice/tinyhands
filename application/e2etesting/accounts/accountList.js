@@ -4,7 +4,7 @@ var constants = require('../testConstants.json');
 
 var accountListPage = function() {
   var page = this;
-  page.accounts = element.all(by.repeater('account in accountsCtrl.accounts.results'));
+  page.accounts = element.all(by.repeater('account in accountsCtrl.accounts'));
   page.createAccountButton = element(by.id('create'));
 
   this.navigateToAccountList = function() {
@@ -14,6 +14,7 @@ var accountListPage = function() {
   this.navigateToEditAccountPage = function(id) {
     element(by.id(id.toString())).element(by.id('edit')).click();
   };
+
 
   this.navigateToDeleteModal = function(id) {
     element(by.id(id.toString())).element(by.buttonText('Delete')).click();
