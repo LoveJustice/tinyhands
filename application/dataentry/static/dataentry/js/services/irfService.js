@@ -8,7 +8,8 @@ function irfService($http) {
 	return {
 		listIrfs: listIrfs,
 		loadMoreIrfs: loadMoreIrfs,
-		deleteIrf: deleteIrf
+		deleteIrf: deleteIrf,
+        irfExists: irfExists
 	};
 
 	function listIrfs(queryparams) {
@@ -39,7 +40,15 @@ function irfService($http) {
             .error(function (data, status, headers, config) {
                 console.log(data, status, headers, config);
             });
-
     }
 
+    function irfExists(irfNumber) {
+        return $http.post('irfExists/' + irfNumber).
+            success(function (data) {
+                return data;
+            }).
+            error(function (data, status, headers, config) {
+                return data;
+            });
+    }
 }

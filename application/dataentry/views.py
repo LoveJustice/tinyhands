@@ -511,3 +511,13 @@ def vifExists(request, vif_number):
         return HttpResponse(existingVif)
     else:
         return HttpResponse("Database Error",status=status.HTTP_500)
+
+
+def irfExists(request, irf_number):
+    existingIrf = InterceptionRecord.objects.filter(irf_number=irf_number)
+    if len(existingIrf) <= 0:
+        return HttpResponse("Irf does not exist")
+    elif len(existingIrf) == 1:
+        return HttpResponse(existingIrf[0].irf_number)
+    else:
+        return HttpResponse("Database Error",status=status.HTTP_500)

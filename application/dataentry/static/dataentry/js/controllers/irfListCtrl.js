@@ -28,6 +28,7 @@ angular
         vm.deleteIrf = deleteIrf;
         vm.getQueryParams = getQueryParams;
         vm.sortIcon = sortIcon;
+        vm.irfExists = irfExists;
         main();
 
 
@@ -41,6 +42,7 @@ angular
             }
             vm.getUser();
             vm.listIrfs();
+            vm.irfExists();
         }
 
         function getUser(){
@@ -126,7 +128,6 @@ angular
         }
 
         function getQueryParams(){
-            console.log("getting params...");
             var params = "";
             params += "?page_size=" + vm.paginateBy;
             if(vm.searchValue) {
@@ -139,5 +140,18 @@ angular
                 params += "&ordering=" + vm.sortColumn;
             }
             return params;
+        }
+
+        function irfExists() {
+            var storedForms = JSON.parse(localStorage.getItem('saved-irfs') || '{}');
+            for (var key in storedForms) {
+                irfService.irfExists(key)
+                    .success(function (data) {
+                        if (data == key) {
+                            delete storedForms[key];
+                            localStorage.setItem('saved-irfs', JSON.stringify(storedForms));
+                        }
+                    })
+            }
         }
     }]);

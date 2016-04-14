@@ -136,7 +136,6 @@ angular
         function vifExists() {
             var storedForms = JSON.parse(localStorage.getItem('saved-vifs') || '{}');
             for (var key in storedForms) {
-                console.log(key);
                 vifService.vifExists(key)
                     .success(function (data) {
                         if (data == key) {
