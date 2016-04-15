@@ -5,33 +5,46 @@ data:
       - ./application:/data
 
 db:
-  extends:
-    file: common.yml
-    service: db
+  image: postgres
+  container_name: db
+  ports:
+    - "5432"
 
 web:
-  extends:
-    file: common.yml
-    service: web
+  build: .
   volumes_from:
     - data
+  volumes:
+    - /tmp:/log
   links:
     - db
+  expose:
+    - "9001"
+  env_file:
+    - ./common.env
+    - ./local.env
 
 test:
-  extends:
-    file: common.yml
-    service: test
+  container_name: test-django
+  build: .
+  command: echo  # this is just to override the containers default command so that it automatically exits
+  env_file:
+    - ./common.env
+    - ./local.env
   volumes_from:
     - data
   links:
     - db
 
 nginx:
-  extends:
-    file: common.yml
-    service: nginx
+  build: build/nginx
   links:
     - web:web
+  volumes:
+    - /tmp:/log
   volumes_from:
     - data
+  ports:
+    - "80:80"
+  environment:
+    SITE_HOSTNAME: "thi.cse.taylor.edu"

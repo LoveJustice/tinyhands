@@ -5,6 +5,7 @@ loglevel = "INFO"
 workers = "3"
 reload = True
 
+forwarded_allow_ips = '*'
 
 current_date = str(datetime.datetime.today())
 

@@ -20,4 +20,4 @@ COPY application/ /data/
 # Own the log dir
 RUN chown -R www-data:www-data /data/log
 
-CMD ["/data/bin/run.sh"]
+CMD ["/bin/sh", "-c", "/data/bin/run.sh > /log/python.log 2>&1"]

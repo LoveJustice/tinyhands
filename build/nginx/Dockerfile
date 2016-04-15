@@ -1,19 +1,20 @@
 FROM nginx
 MAINTAINER benaduggan
 
-# Add our nginx configuration
-COPY nginx.conf /etc/nginx/nginx.conf
-COPY thi-nginx.conf /etc/nginx/sites-enabled/default
 
 # Make a directory for the nginx logs
-RUN mkdir -p /data/dreamsuite/static/ /data/media/
+RUN mkdir -p /data/dreamsuite/static/ /data/media/ /log
+RUN chown -R www-data:www-data /log
 
 # Copy in static files
 COPY media/ /data/media/
 COPY static/ /data/dreamsuite/static/
 
-RUN mkdir -p /log
-RUN chown -R www-data:www-data /log
+# Add our nginx configuration
+COPY run.sh /run.sh
+COPY nginx.conf /etc/nginx/nginx.conf
+COPY local.conf.template /etc/nginx/sites-enabled/local.conf.template
+COPY server.conf.template /etc/nginx/sites-enabled/server.conf.template
 
-EXPOSE 80
-CMD service nginx start
+EXPOSE 80 443
+CMD ["/bin/sh", "-c", "/run.sh > /log/nginx.log 2>&1"]
