@@ -110,3 +110,21 @@ class VictimInterviewListSerializer(serializers.ModelSerializer):
         view_name='VictimInterviewDetail',
         read_only=True
     )
+
+class VictimInterviewSerializer(serializers.ModelSerializer):
+        class Meta:
+        model = VictimInterview
+        fields = [
+            'view_url',
+            'edit_url',
+            'delete_url',
+            'id',
+            'vif_number',
+            'interviewer',
+            'number_of_victims',
+            'number_of_traffickers',
+            'date',
+            'date_time_entered_into_system',
+            'date_time_last_updated',
+            'number_of_victims'
+        ]

@@ -33,7 +33,7 @@ from fuzzywuzzy import process
 from dataentry.models import (BorderStation, Address2, Address1, Interceptee, InterceptionRecord, VictimInterview, VictimInterviewLocationBox, VictimInterviewPersonBox)
 from dataentry.forms import (IntercepteeForm, InterceptionRecordForm, Address2Form, Address1Form, VictimInterviewForm, VictimInterviewLocationBoxForm, VictimInterviewPersonBoxForm)
 from dataentry import csv_io
-from dataentry.serializers import Address1Serializer, Address2Serializer, InterceptionRecordListSerializer, VictimInterviewListSerializer
+from dataentry.serializers import Address1Serializer, Address2Serializer, InterceptionRecordListSerializer, VictimInterviewListSerializer, VictimInterviewSerializer
 from dataentry.google_sheets import GoogleSheetClientThread
 from accounts.mixins import PermissionsRequiredMixin
 
@@ -490,3 +490,13 @@ class VictimInterviewViewSet(viewsets.ModelViewSet):
         rv = super(viewsets.ModelViewSet, self).destroy(request, args, kwargs)
         GoogleSheetClientThread.update_irf(vif.vif_number)
         return rv
+
+class VictimInterviewView(viewsets.ModelViewSet):
+    def model(self, request, *args, **kwargs):
+        queryset = VictimInterview.objects.get(vif_number="BGN197A")
+        serializer_class = VictimInterviewSerializer
+        return queryset
+    
+    
+    
+    
