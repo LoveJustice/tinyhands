@@ -1,7 +1,7 @@
 from django.conf.urls import url
 from accounts.views import CurrentUserView
 
-from dataentry.views import Address2ViewSet, Address1ViewSet, GeoCodeAddress1APIView, GeoCodeAddress2APIView, InterceptionRecordViewSet, VictimInterviewViewSet
+from dataentry.views import Address2ViewSet, Address1ViewSet, GeoCodeAddress1APIView, GeoCodeAddress2APIView, InterceptionRecordViewSet, VictimInterviewViewSet, VictimInterviewView
 from budget.views import BudgetViewSet, OtherItemsViewSet
 from accounts.views import AccountViewSet, DefaultPermissionsSetViewSet, CurrentUserView, ResendActivationEmailView
 from static_border_stations.views import BorderStationViewSet, StaffViewSet, CommitteeMemberViewSet, LocationViewSet
@@ -63,7 +63,7 @@ urlpatterns = [
     # VIFs
     url(r'^vif/$', VictimInterviewViewSet.as_view({'get': 'list'}), name="VictimInterview"),
     url(r'^vif/(?P<pk>\d+)/$', VictimInterviewViewSet.as_view({'delete': 'destroy'}), name="VictimInterviewDetail"),
-    url(r'^vif/M/$', VictimInterviewView.as_view({get:'model'}),name="VictimInterviewView"),
+    url(r'^vif/M/$', VictimInterviewView.as_view({'get': 'Model'}), name="VictimInterviewViewSet"),
 
     #Events
     url(r'^event/$', EventViewSet.as_view({'get': 'list', 'post':'create'}), name="EventList"),

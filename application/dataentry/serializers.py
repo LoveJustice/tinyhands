@@ -113,18 +113,15 @@ class VictimInterviewListSerializer(serializers.ModelSerializer):
 
 class VictimInterviewSerializer(serializers.ModelSerializer):
         class Meta:
-        model = VictimInterview
-        fields = [
-            'view_url',
-            'edit_url',
-            'delete_url',
-            'id',
-            'vif_number',
-            'interviewer',
-            'number_of_victims',
-            'number_of_traffickers',
-            'date',
-            'date_time_entered_into_system',
-            'date_time_last_updated',
-            'number_of_victims'
-        ]
+            model = VictimInterview
+            fields = [
+                'id',
+                'vif_number',
+                'interviewer',
+                'number_of_victims',
+                'number_of_traffickers',
+                'date',
+                'date_time_entered_into_system',
+                'date_time_last_updated',
+                'victim_gender'
+            ]
