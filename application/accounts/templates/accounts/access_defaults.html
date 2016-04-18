@@ -112,7 +112,7 @@ th, td {
                 </tbody>
             </table>
             <button ng-click="defaultsCtrl.addAnother()" class="clear btn btn-primary btn-lg pull-left">Add Another</button>
-            <button ng-click="defaultsCtrl.saveAll()" class="clear btn btn-success btn-lg pull-right">Save All</button>
+            <button ng-click="defaultsCtrl.saveAll()" class="clear btn btn-lg pull-right" ng-class="defaultsCtrl.saveButtonColor == 'btn-success' ? 'btn-success' : 'btn-primary'">{{defaultsCtrl.saveButtonText}}</button>
         </div>
     </div>
 

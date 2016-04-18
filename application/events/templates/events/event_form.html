@@ -1,252 +1,185 @@
-{% extends 'base.html' %}
+{% extends 'events/event_base.html' %}
 
-{% block displayCSS %}
-    .optional {
-        display:none;
-    }
-{% endblock displayCSS %}
+{% block foot %}
+{% if event.id %}
+<script>
+  window.event_id = {{event.id}}
 
-{% block tab_block %}
+</script>
+{% endif %}
+{% endblock %}
 
-<div class="row">
-    <div class="col-md-10">
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                Create Event
-            </div>
+{% block content %}
 
-            <form method="post">
-                <div class="panel-body">
 
-                    {% csrf_token %}
-
-                    {% if form.non_field_errors %}
-                        <div class="alert alert-danger alert-dismissible" role="alert">
-                          <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                        {{ form.non_field_errors }}
-                        </div>
-                    {% endif %}
-
-                    <div class="row form-group">
-                        {% if form.title.errors %}
-                            <div class="alert alert-danger alert-dismissible" role="alert">
-                              <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                            {{ form.title.errors }}
-                           </div>
-                        {% endif %}
-
-                        <div class="col-md-3">
-                            {{ form.title.label_tag }}
-                        </div>
-                        <div class="col-md-9  ">
-                            {{ form.title }}
-                        </div>
-                    </div>
-
-                    <div class="row form-group">
-                        {% if form.location.errors %}
-                            <div class="alert alert-danger alert-dismissible" role="alert">
-                              <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                            {{ form.location.errors }}
-                           </div>
-                        {% endif %}
-
-                        <div class="col-md-3">
-                            {{ form.location.label_tag }}
-                        </div>
-                        <div class="col-md-9  ">
-                            {{ form.location }}
-                        </div>
-                    </div>
-
-                    <div class="row form-group">
-                        {% if form.start_date.errors %}
-                            <div class="alert alert-danger alert-dismissible" role="alert">
-                              <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                            {{ form.start_date.errors }}
-                           </div>
-                        {% elif form.start_time.errors %}
-                            <div class="alert alert-danger alert-dismissible" role="alert">
-                              <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                            {{ form.start_time.errors }}
-                           </div>
-                        {% elif form.end_date.errors %}
-                            <div class="alert alert-danger alert-dismissible" role="alert">
-                              <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                            {{ form.end_date.errors }}
-                           </div>
-                        {% elif form.end_time.errors %}
-                            <div class="alert alert-danger alert-dismissible" role="alert">
-                              <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                            {{ form.end_time.errors }}
-                           </div>
-                        {% else %}
-                        {% endif %}
-
-                        <div class="col-md-3">
-                           <strong> Date: </strong>
-                        </div>
-                        <div class="col-md-2  ">
-                            {{ form.start_date }}
-                        </div>
-                        <div class="col-md-2  ">
-                           {{ form.start_time }}
-                        </div>
-
-                        <div class="col-md-1">
-                           <strong> to </strong>
-                        </div>
-                        <div class="col-md-2  ">
-                            {{ form.end_date }}
-                        </div>
-                        <div class="col-md-2  ">
-                           {{ form.end_time }}
-                        </div>
-
-                    </div>
-
-                    <div class="row form-group">
-                        {% if form.description.errors %}
-                            <div class="alert alert-danger alert-dismissible" role="alert">
-                              <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                            {{ form.description.errors }}
-                           </div>
-                        {% endif %}
-
-                        <div class="col-md-3">
-                            {{ form.description.label_tag }}
-                        </div>
-                        <div class="col-md-9  ">
-                            {{ form.description }}
-                        </div>
-                    </div>
-
-                    <div class="row form-group">
-                        {% if form.is_repeat.errors %}
-                            <div class="alert alert-danger alert-dismissible" role="alert">
-                              <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                            {{ form.is_repeat.errors }}
-                           </div>
-                        {% endif %}
-
-                        <div class="col-md-3">
-                            {{ form.is_repeat.label_tag }}
-
-                        </div>
-                        <div class="col-md-9">
-                            {{ form.is_repeat }}
-                        </div>
-                    </div>
-
-                    <div class="row form-group optional">
-                        {% if form.repetition.errors %}
-                            <div class="alert alert-danger alert-dismissible" role="alert">
-                              <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                            {{ form.repetition.errors }}
-                           </div>
-                        {% endif %}
-
-                        <div class="col-md-3">
-                            {{ form.repetition.label_tag }}
-                        </div>
-                        <div class="col-md-9  ">
-                            {{ form.repetition }}
-                        </div>
-                    </div>
-
-                    <div class="row form-group optional">
-                        {% if form.ends.errors %}
-                            <div class="alert alert-danger alert-dismissible" role="alert">
-                              <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                            {{ form.ends.errors }}
-                           </div>
-                        {% endif %}
-
-                        <div class="col-md-3">
-                            {{ form.ends.label_tag }}
-                        </div>
-                        <div class="col-md-9  ">
-                            {{ form.ends }}
-                        </div>
-                    </div>
-
-                    <input class="btn btn-primary pull-right" type="submit" value="Save Event" />
-                    <a href="{% url 'list_event' %}" class="btn btn-default pull-right" style="margin-right: 5px">Cancel</a>
+{% verbatim %}
+<div ng-controller="EditEventCtrl as editCtrl" ng-cloak>
+    <div class="row">
+        <div class="col-md-10">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    {{editCtrl.getTitle()}}
                 </div>
-            </form>
-</div>
+                <form method="post">
+                    <div class="panel-body">
+
+                        <div class="row form-group">
+                                <div class="alert alert-danger alert-dismissible" role="alert" ng-show="editCtrl.titleError != ''">
+                                  <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                {{ editCtrl.titleError }}
+                               </div>
+
+                            <div class="col-md-3">
+                                <strong> Title: </strong>
+                            </div>
+                            <div class="col-md-9  ">
+                                <input class="form-control" id="id_title" maxlength="250" name="title" type="text" ng-model="editCtrl.event.title">
+                            </div>
+                        </div>
+
+                        <div class="row form-group">
+                            <div class="col-md-3">
+                                <strong> Location: </strong>
+                            </div>
+                            <div class="col-md-9  ">
+                                <input class="form-control" id="id_location" maxlength="250" name="location" type="text" ng-model="editCtrl.event.location">
+                            </div>
+                        </div>
+
+
+
+
+                        <div class="row ">
+                            <div class="alert alert-danger alert-dismissible" role="alert" ng-show="editCtrl.startDateError != ''">
+                                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                {{ editCtrl.startDateError }}
+                            </div>
+                            <div class="alert alert-danger alert-dismissible" role="alert" ng-show="editCtrl.startTimeError != ''">
+                                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                {{ editCtrl.startTimeError }}
+                            </div>
+                            <div class="alert alert-danger alert-dismissible" role="alert" ng-show="editCtrl.endDateError != ''">
+                                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                {{ editCtrl.endDateError }}
+                            </div>
+                            <div class="alert alert-danger alert-dismissible" role="alert" ng-show="editCtrl.endTimeError != ''">
+                                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                {{ editCtrl.endTimeError }}
+                            </div>
+                            <div class="alert alert-danger alert-dismissible" role="alert" ng-show="editCtrl.dateError != ''">
+                                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                {{ editCtrl.dateError }}
+                            </div>
+                            <div class="alert alert-danger alert-dismissible" role="alert" ng-show="editCtrl.timeError != ''">
+                                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                {{ editCtrl.timeError }}
+                            </div>
+
+
+
+
+                                <div class="col-md-3">
+                                    <strong> Date: </strong>
+                                </div>
+                                <div class="col-md-2  ">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="id_start_date" name="start_date" placeholder="Start date" datepicker-popup="{{editCtrl.date_format}}" ng-model="editCtrl.event.start_date" ng-click="editCtrl.start_date_open()" is-open="editCtrl.start_date_popup.opened" ng-required="true" close-text="Close"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-2  ">
+                                        <span dropdown auto-close="outsideClick">
+                                          <input href dropdown-toggle value = "{{ editCtrl.display_start_time }}" class="form-control" id="id_start_time">
+
+                                          <ul class="dropdown-menu">
+                                             <li>
+                                                <timepicker ng-model="my_start_time" hour-step="editCtrl.hstep" minute-step="editCtrl.mstep" show-meridian="editCtrl.ismeridian"></timepicker>
+                                             </li>
+                                          </ul>
+                                        </span>
+                                </div>
+
+                                <div class="col-md-1">
+                                    <strong> to </strong>
+                                </div>
+                                <div class="col-md-2  ">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" datepicker-popup="{{editCtrl.date_format}}" ng-model="editCtrl.event.end_date" ng-click="editCtrl.end_date_open()" is-open="editCtrl.end_date_popup.opened" ng-required="true" close-text="Close"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-2  ">
+                                    <span dropdown auto-close="outsideClick">
+                                      <input href dropdown-toggle value = "{{ editCtrl.display_end_time }}" class="form-control" id="id_end_time">
+
+                                      <ul class="dropdown-menu">
+                                         <li>
+                                            <timepicker ng-model="my_end_time" hour-step="editCtrl.hstep" minute-step="editCtrl.mstep" show-meridian="editCtrl.ismeridian"></timepicker>
+                                         </li>
+                                      </ul>
+                                    </span>
+                                </div>
+
+                        </div>
+
+
+                        <div class="row form-group">
+                            <div class="col-md-3">
+                                <strong> Description: </strong>
+                            </div>
+                            <div class="col-md-9  ">
+                                <textarea class="form-control" cols="40" id="id_description" name="description" rows="10" ng-model="editCtrl.event.description"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="row form-group">
+                            <div class="col-md-3">
+                                <strong> Is Repeat: </strong>
+                            </div>
+                            <div class="col-md-9">
+                                <input id="id_is_repeat" name="is_repeat" type="checkbox" ng-model="editCtrl.event.is_repeat">
+                            </div>
+                        </div>
+
+                        <div class="row form-group optional"  ng-show="editCtrl.event.is_repeat == true">
+                            <div class="alert alert-danger alert-dismissible" role="alert" ng-show="editCtrl.noRepetitionError != ''">
+                                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                {{ editCtrl.noRepetitionError }}
+                            </div>
+
+                            <div class="col-md-3">
+                                <strong> Repetition: </strong>
+                            </div>
+                            <div class="col-md-9  ">
+                                <select class="form-control" id="id_repetition" name="repetition" ng-model="editCtrl.event.repetition">
+                                <option value="D">Daily</option>
+                                <option value="W">Weekly</option>
+                                <option value="M">Monthly</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row form-group optional"  ng-show="editCtrl.event.is_repeat == true">
+                            <div class="alert alert-danger alert-dismissible" role="alert" ng-show="editCtrl.endsError != ''">
+                                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                {{ editCtrl.endsError }}
+                            </div>
+                            <div class="col-md-3">
+                                <strong> Ends: </strong>
+                            </div>
+                            <div class="col-md-9  ">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" datepicker-popup="{{editCtrl.date_format}}" ng-model="editCtrl.event.ends" ng-click="editCtrl.end_repeat_open()" is-open="editCtrl.end_repeat_popup.opened" ng-required="true" close-text="Close"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <input class="btn btn-primary pull-right" ng-click="editCtrl.update()" value="Save Event" />
+                        <a ng-href="/events/list/" class="btn btn-default pull-right" style="margin-right: 5px">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
+{% endverbatim %}
+{% endblock %}
 
-
-{% load static from staticfiles %}
-{% block includeJS %}
-    <script src="{% static 'bootstrap-timepicker/js/bootstrap-timepicker.js' %}" type="text/javascript"> </script>
-{% endblock includeJS %}
-
-{% block includeCSS %}
-    <link rel="stylesheet" href="{% static 'bootstrap-timepicker/css/bootstrap-timepicker.css' %}" />
-{% endblock includeCSS %}
-
-{% endblock tab_block %}
-
-{% block displayJS %}
-
-function repeat_manage(){
-    var check = $('#id_is_repeat').prop('checked');
-    if (check){
-        $('.optional').show();
-        $('#id_ends').datepicker({autoclose: true, todayHighlight: true, format: 'yyyy-mm-dd'});
-    }else{
-        $('.optional').hide();
-    }
-}
-
-
-function hr_later(time){
-    var times = time.split(':');
-    if (times.length == 2){
-        hr = parseInt(times[0]);
-        min = times[1];
-
-        hr = (hr == 24) ? 1 : hr + 1;
-        return hr +  ':' + min;
-    }else
-        return '';
-
-
-}
-
-$(function(){
-    $('#id_start_date').datepicker({autoclose: true, todayHighlight: true, format: 'yyyy-mm-dd'});
-    $('#id_end_date').datepicker({autoclose: true, todayHighlight: true, format: 'yyyy-mm-dd'});
-
-    $('#id_start_time').addClass('timepicker').timepicker({showMeridian: false, defaultTime:'12:00'});
-    $('#id_end_time').addClass('timepicker').timepicker({showMeridian: false, defaultTime: '01:00'});
-
-    repeat_manage();
-
-});
-
-
-    $('#id_is_repeat').on('change', function(){
-        repeat_manage();
-    });
-
-    $('#id_start_date').on('change', function(){
-        var date = $(this).val();
-        $('#id_end_date').val(date);
-    });
-
-    $('#id_start_time').on('change', function(){
-        var tt = $(this).val();
-        var tt_1 = hr_later(tt);
-
-        if (tt_1){
-            $('#id_end_time').val(tt_1);
-        }
-    });
-
-
-
-{% endblock displayJS %}
