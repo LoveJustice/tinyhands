@@ -13,19 +13,19 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AlterField(
-            model_name='interceptee',
-            name='person',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='dataentry.Person'),
-        ),
-        migrations.AlterField(
-            model_name='victiminterview',
-            name='victim',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='dataentry.Person'),
-        ),
-        migrations.AlterField(
-            model_name='victiminterviewpersonbox',
-            name='person',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='dataentry.Person'),
-        ),
+        # migrations.AlterField(
+        #     model_name='interceptee',
+        #     name='person',
+        #     field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='dataentry.Person'),
+        # ),
+        # migrations.AlterField(
+        #     model_name='victiminterview',
+        #     name='victim',
+        #     field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='dataentry.Person'),
+        # ),
+        # migrations.AlterField(
+        #     model_name='victiminterviewpersonbox',
+        #     name='person',
+        #     field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='dataentry.Person'),
+        # ),
     ]

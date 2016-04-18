@@ -7,57 +7,56 @@ from django.core.management import call_command
 import ipdb
 
 
-def migrate_foreign_keys(app_config, app_name, model_name, person_list):
-    model = app_config.get_model(app_name, model_name)
-    Person = app_config.get_model(app_name, 'Person')
-
-    for instance in model.objects.all():
-        #Looping/Getting all the attributes for the Person object
-
-        ipdb.set_trace()
-        person = Person.objects.new()
-
-        for person_attr in person_list:
-            person_attr_data = getattr(instance, person_attr).strip()
-
-            #Apply the correct attribute
-            if "name" in person_attr:
-                person.full_name = person_attr_data
-            elif "age" in person_attr:
-                person.age = person_attr_data
-            elif "gender" in person_attr:
-                person.gender = person_attr_data
-            elif "address1" in person_attr:
-                person.address1 = person_attr_data
-            elif "address2" in person_attr:
-                person.address2 = person_attr_data
-            elif "phone" in person_attr:
-                person.phone_contact = person_attr_data
-
-        instance.person_tmp_name = person
-
-        instance.save()
-
-def migration_ops(model_name, person_field_name, person_list):
-    return [
-
-        # Add temporary fields to store the new foreign keys.
-        migrations.AddField(model_name=model_name, name="person_tmp_name", field=models.ForeignKey(to='dataentry.Person', null=True)),
-
-        # Set values for the temporary fields.
-        migrations.RunPython(lambda app, schema_editor: migrate_foreign_keys(app, 'dataentry', model_name, person_list)),
-
-        #Remove the old fields that are now replaced with the Person FK
-        migrations.RemoveField(model_name=model_name, name=person_list[0]),
-        migrations.RemoveField(model_name=model_name, name=person_list[1]),
-        migrations.RemoveField(model_name=model_name, name=person_list[2]),
-        migrations.RemoveField(model_name=model_name, name=person_list[3]),
-        migrations.RemoveField(model_name=model_name, name=person_list[4]),
-        migrations.RemoveField(model_name=model_name, name=person_list[5]),
-
-        #Rename the person FK field because VictimInterview will have different names for this field
-        migrations.RenameField(model_name=model_name, old_name="person_tmp_name", new_name=person_field_name),
-    ]
+# def migrate_foreign_keys(app_config, app_name, model_name, person_field_name, person_list):
+#     model = app_config.get_model(app_name, model_name)
+#     Person = app_config.get_model(app_name, 'Person')
+#
+#     for instance in model.objects.all():
+#         #Looping/Getting all the attributes for the Person object
+#
+#         person = Person.objects.new()
+#
+#         for person_attr in person_list:
+#             person_attr_data = getattr(instance, person_attr).strip()
+#
+#             #Apply the correct attribute
+#             if "name" in person_attr:
+#                 person.full_name = person_attr_data
+#             elif "age" in person_attr:
+#                 person.age = person_attr_data
+#             elif "gender" in person_attr:
+#                 person.gender = person_attr_data
+#             elif "address1" in person_attr:
+#                 person.address1 = person_attr_data
+#             elif "address2" in person_attr:
+#                 person.address2 = person_attr_data
+#             elif "phone" in person_attr:
+#                 person.phone_contact = person_attr_data
+#
+#         instance.person_field_name = person
+#
+#         instance.save()
+#
+# def migration_ops(model_name, person_field_name, person_list):
+#     return [
+#
+#         # Add temporary fields to store the new foreign keys.
+#         migrations.AddField(model_name=model_name, name=person_field_name, field=models.ForeignKey(to='dataentry.Person', null=True, blank=True)),
+#
+#         # Set values for the temporary fields.
+#         migrations.RunPython(lambda app, schema_editor: migrate_foreign_keys(app, 'dataentry', model_name, person_field_name, person_list)),
+#
+#         #Remove the old fields that are now replaced with the Person FK
+#         migrations.RemoveField(model_name=model_name, name=person_list[0]),
+#         migrations.RemoveField(model_name=model_name, name=person_list[1]),
+#         migrations.RemoveField(model_name=model_name, name=person_list[2]),
+#         migrations.RemoveField(model_name=model_name, name=person_list[3]),
+#         migrations.RemoveField(model_name=model_name, name=person_list[4]),
+#         migrations.RemoveField(model_name=model_name, name=person_list[5]),
+#
+#         #Rename the person FK field because VictimInterview will have different names for this field
+#         #migrations.RenameField(model_name=model_name, old_name="person_tmp_name", new_name=person_field_name),
+#     ]
 
 
 class Migration(migrations.Migration):
@@ -67,10 +66,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = chain(
-        migration_ops('interceptee', 'person', ["full_name", "address1", "address2", "age", "gender", "phone_contact"]),
-        migration_ops('victiminterview', 'victim', ["victim_name", "victim_address1", "victim_address2", "victim_age", "victim_gender", "victim_phone"]),
-        migration_ops('victiminterviewpersonbox', 'person', ["name", "address1", "address2", "age", "gender", "phone"]),
-
-        #I have not added this functionality yet. Need to do some Model work
-        #migration_ops("VictimInterview", "guardian")
+        # migration_ops('interceptee', 'person', ["full_name", "address1", "address2", "age", "gender", "phone_contact"]),
+        # migration_ops('victiminterview', 'victim', ["victim_name", "victim_address1", "victim_address2", "victim_age", "victim_gender", "victim_phone"]),
+        # migration_ops('victiminterviewpersonbox', 'person', ["name", "address1", "address2", "age", "gender", "phone"]),
     )

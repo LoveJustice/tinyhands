@@ -42,11 +42,11 @@ class Migration(migrations.Migration):
         #     name='victim',
         #     field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='dataentry.Person'),
         # ),
-        migrations.AlterField(
-            model_name='person',
-            name='gender',
-            field=models.CharField(blank=True, choices=[(b'M', b'm'), (b'F', b'f')], max_length=4),
-        ),
+        # migrations.AlterField(
+        #     model_name='person',
+        #     name='gender',
+        #     field=models.CharField(blank=True, choices=[(b'M', b'm'), (b'F', b'f')], max_length=4),
+        # ),
         # migrations.AlterField(
         #     model_name='victiminterviewpersonbox',
         #     name='gender',
