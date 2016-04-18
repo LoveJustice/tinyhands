@@ -495,6 +495,18 @@ class VictimInterviewViewSet(viewsets.ModelViewSet):
         'date_time_last_updated',)
     ordering = ('vif_number',)
 
+
+class VictimInterviewView(viewsets.ModelViewSet):
+    queryset = VictimInterview.objects.get(vif_number="BGN197A")
+    serializer_class = VictimInterviewSerializer
+
+    def model(self, request, *args, **kwargs):
+        vif_id = kwargs['pk']
+        vif = VictimInterview.objects.get(id=vif_id)
+        serializer_class = VictimInterviewSerializer
+        data = self.get_serializer(vif)
+        return Response(data.data)
+
     def destroy(self, request, *args, **kwargs):
         vif_id = kwargs['pk']
         vif = VictimInterview.objects.get(id=vif_id)
@@ -502,13 +514,10 @@ class VictimInterviewViewSet(viewsets.ModelViewSet):
         GoogleSheetClientThread.update_irf(vif.vif_number)
         return rv
 
-
-class VictimInterviewView(viewsets.ModelViewSet):
-    queryset = VictimInterview.objects.get(vif_number="BGN197A")
-    serializer_class = VictimInterviewSerializer
-
-    def Model(self, request):
-        vif = VictimInterview.objects.get(vif_number="BGN197A")
-        serializer_class = VictimInterviewSerializer
-        data = self.get_serializer(vif)
-        return Response(data.data)
+    def update(self, request, *args, **kwargs):
+        try:
+            rowsModified = VictimInterview.objects.filter(id = kwargs['pk']).update(kwargs['number_of_victims'])
+            if rowsModified == 0:
+                raise KeyError('Does not Exist' + kwargs['pk'])
+        finally:
+            return Response()
