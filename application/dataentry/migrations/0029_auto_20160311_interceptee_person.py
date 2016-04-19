@@ -18,7 +18,7 @@ import ipdb
 #
 #         for person_attr in person_list:
 #             person_attr_data = getattr(instance, person_attr).strip()
-#
+# 
 #             #Apply the correct attribute
 #             if "name" in person_attr:
 #                 person.full_name = person_attr_data
