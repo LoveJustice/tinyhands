@@ -105,9 +105,11 @@ class IRFAlertChecker(object):
         """
         all_people = Interceptee.objects.all()
         people_dict = {obj: obj.full_name for obj in all_people}
+
         trafficker_list = []
-        trafficker_in_custody = self.trafficker_in_custody()
         traffickers_and_their_matches = {}
+
+        trafficker_in_custody = self.trafficker_in_custody()
 
         for person in self.interceptees:
             if person.cleaned_data.get("kind") == 't':
@@ -116,11 +118,12 @@ class IRFAlertChecker(object):
         if len(trafficker_list) > 0:
             for trafficker in trafficker_list:
                     traffickers_and_their_matches[trafficker.full_name] = process.extractBests(trafficker.full_name, people_dict, score_cutoff=89, limit = 10)
-        if True:
+
+        if len(trafficker_list) > 0:
             Alert.objects.send_alert("Name Match",
                                      context={"irf": self.irf,
-                                              "traffickers_matches": traffickers_and_their_matches,
-                                              "trafficker_in_custody": trafficker_in_custody})
+                                              "trafficker_list": trafficker_list,
+                                              "traffickers_and_their_matches_dictionary": traffickers_and_their_matches})
             return True
         return False
     def identified_trafficker(self):
@@ -136,14 +139,15 @@ class IRFAlertChecker(object):
         alert.
 
         """
+        trafficker_in_custody = self.trafficker_in_custody()
+        red_flags = self.irf.calculate_total_red_flags()
+        certainty_points = self.irf.how_sure_was_trafficking
         trafficker_list = []
         for person in self.interceptees:
             if person.cleaned_data.get("kind") == 't' and person.cleaned_data.get('photo') not in [None, '']:
                 trafficker_list.append(person.instance)
 
-        trafficker_in_custody = self.trafficker_in_custody()
-        red_flags = self.irf.calculate_total_red_flags()
-        certainty_points = self.irf.how_sure_was_trafficking
+
 
         if len(trafficker_list) > 0:
             if (certainty_points >= 4) and (red_flags >= 400):
@@ -156,7 +160,7 @@ class IRFAlertChecker(object):
                                                   "red_flags": red_flags,
                                                   "certainty_points": certainty_points})
                 return True
-            if certainty_points >= 4:
+            elif certainty_points >= 4:
                 Alert.objects.send_alert("Identified Trafficker",
                                          context={"site": settings.SITE_DOMAIN,
                                                   "irf": self.irf,
@@ -165,7 +169,7 @@ class IRFAlertChecker(object):
                                                   "trafficker_in_custody": trafficker_in_custody,
                                                   "certainty_points": certainty_points})
                 return True
-            if red_flags >= 400:
+            elif red_flags >= 400:
                 Alert.objects.send_alert("Identified Trafficker",
                                          context={"site": settings.SITE_DOMAIN,
                                                   "irf": self.irf,
