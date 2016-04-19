@@ -497,7 +497,7 @@ class VictimInterviewViewSet(viewsets.ModelViewSet):
 
 
 class VictimInterviewView(viewsets.ModelViewSet):
-    queryset = VictimInterview.objects.get(vif_number="BGN197A")
+    queryset = VictimInterview.objects.all()
     serializer_class = VictimInterviewSerializer
 
     def model(self, request, *args, **kwargs):
@@ -513,11 +513,3 @@ class VictimInterviewView(viewsets.ModelViewSet):
         rv = super(viewsets.ModelViewSet, self).destroy(request, args, kwargs)
         GoogleSheetClientThread.update_irf(vif.vif_number)
         return rv
-
-    def update(self, request, *args, **kwargs):
-        try:
-            rowsModified = VictimInterview.objects.filter(id=kwargs['pk']).update(kwargs)
-            if rowsModified == 0:
-                raise KeyError('Does not Exist' + kwargs['pk'])
-        finally:
-            return Response()
