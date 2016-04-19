@@ -516,7 +516,7 @@ class VictimInterviewView(viewsets.ModelViewSet):
 
     def update(self, request, *args, **kwargs):
         try:
-            rowsModified = VictimInterview.objects.filter(id = kwargs['pk']).update(kwargs['number_of_victims'])
+            rowsModified = VictimInterview.objects.filter(id=kwargs['pk']).update(kwargs)
             if rowsModified == 0:
                 raise KeyError('Does not Exist' + kwargs['pk'])
         finally:

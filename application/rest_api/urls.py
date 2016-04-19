@@ -62,7 +62,7 @@ urlpatterns = [
 
     # VIFs
     url(r'^vif/$', VictimInterviewViewSet.as_view({'get': 'list'}), name="VictimInterview"),
-    url(r'^vif/(?P<pk>\d+)/$', VictimInterviewView.as_view({'delete': 'destroy', 'get': 'model', 'post':'update'}), name="VictimInterviewDetail"),
+    url(r'^vif/(?P<pk>\d+)/$', VictimInterviewView.as_view({'delete': 'destroy', 'get': 'model', 'put':'update'}), name="VictimInterviewDetail"),
 
     #Events
     url(r'^event/$', EventViewSet.as_view({'get': 'list', 'post':'create'}), name="EventList"),
