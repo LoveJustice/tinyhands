@@ -39,11 +39,12 @@ function address1Service($http) {
     }
 
 	function saveAddress(address) {
-        return $http.put('/api/address1/' + address.id, address).
+        return $http.put('/api/address1/' + address.id + '/', address).
             success(function (data) {
                 return data;
             }).
             error(function (data, status, headers, config) {
+                console.log(data, status, headers, config);
             });
     }
 }

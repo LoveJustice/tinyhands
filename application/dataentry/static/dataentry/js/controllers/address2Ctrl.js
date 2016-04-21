@@ -40,7 +40,7 @@ angular
                     case "latitude":
                     case "longitude":
                         return vm.reverse ? "glyphicon-sort-by-order-alt" : "glyphicon-sort-by-order";
-		    case "level":
+                    case "level":
                     case "name":
                     case "canonical_name.name":
                     case "address1.name":
