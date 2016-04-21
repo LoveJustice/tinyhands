@@ -44,10 +44,6 @@ class FuzzyMatching(models.Model):
     phone_number_cutoff = models.PositiveIntegerField(default=0)
     phone_number_limit = models.PositiveIntegerField(default=0)
 
-    # @property
-    # def get_address1_limit(self):
-    #     return 5
-
 
 class Address2(models.Model):
     name = models.CharField(max_length=255)
