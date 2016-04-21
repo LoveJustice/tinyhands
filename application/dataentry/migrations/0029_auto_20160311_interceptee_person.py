@@ -25,7 +25,7 @@ def migrate_foreign_keys(app_config, app_name, model_name, person_field_name, pe
             elif "age" in person_attr:
                 person.age = person_attr_data
             elif "gender" in person_attr:
-                person.gender = person_attr_data.strip()
+                person.gender = person_attr_data.upper().strip()[0]
             elif "address1" in person_attr:
                 person.address1 = person_attr_data
             elif "address2" in person_attr:
