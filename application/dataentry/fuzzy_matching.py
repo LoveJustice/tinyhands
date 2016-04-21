@@ -22,17 +22,21 @@ def match_location(address1_name=None, address2_name=None):
         model = Address1
         location_name = address1_name
 
+    fuzzy_object = FuzzyMatching.objects.all()[0]
+
     if filter_by_address1:
+        fuzzy_limit = fuzzy_object.address2_limit
         region_names = {region.id: region.name
                         for region in model.objects.filter(address1__name__contains=address1_name).select_related('address1', 'canonical_name__address1')
                         }
     else:
+        fuzzy_limit = fuzzy_object.address1_limit
         region_names = {region.id: region.name
                         for region in model.objects.all()
                         }
 
     # matches is in the form of [(u'match', score, id), ...]
-    matches = process.extractBests(location_name, region_names, limit=FuzzyMatching.objects.all()[0].address1_limit)
+    matches = process.extractBests(location_name, region_names, limit=fuzzy_limit)
 
     objects = None
     if len(matches) > 0:
