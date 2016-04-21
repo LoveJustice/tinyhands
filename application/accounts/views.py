@@ -66,6 +66,22 @@ class AccountActivateView(UpdateView):
         login(self.request, account)
         return super(AccountActivateView, self).form_valid(form)
 
+class AccountActivateClient(APIView):
+    def get(self, request):
+        account = get_object_or_None(Account, activation_key=request.activationKey)
+        if account.has_usable_password():
+            account = None
+        serializer = AccountsSerializer(account)
+        return Response(serializer.data)
+
+    def post(self, request, pk=None):
+        account = get_object_or_None(Account, pk=pk)
+        account_activated = False
+        if account:
+            account.set_password(request.password)
+            account.save()
+            account_activated = True
+        return Response(account_activated)
 
 class AccountUpdateView(
         LoginRequiredMixin,
