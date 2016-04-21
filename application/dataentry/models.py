@@ -35,7 +35,6 @@ class Address1(models.Model):
 
 
 class FuzzyMatching(models.Model):
-    value = 7
     address1_cutoff = models.PositiveIntegerField(default=70)
     address1_limit = models.PositiveIntegerField(default=5)
     address2_cutoff = models.PositiveIntegerField(default=70)
