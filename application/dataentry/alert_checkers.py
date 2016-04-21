@@ -113,17 +113,20 @@ class IRFAlertChecker(object):
 
         for person in self.interceptees:
             if person.cleaned_data.get("kind") == 't':
+
                 trafficker_list.append(person.instance)
 
         if len(trafficker_list) > 0:
             for trafficker in trafficker_list:
                     traffickers_and_their_matches[trafficker.full_name] = process.extractBests(trafficker.full_name, people_dict, score_cutoff=89, limit = 10)
 
+
         if len(trafficker_list) > 0:
             Alert.objects.send_alert("Name Match",
                                      context={"irf": self.irf,
                                               "trafficker_list": trafficker_list,
-                                              "traffickers_and_their_matches_dictionary": traffickers_and_their_matches})
+                                              "traffickers_and_their_matches_dictionary": traffickers_and_their_matches,
+                                              "trafficker_in_custody" : trafficker_in_custody})
             return True
         return False
     def identified_trafficker(self):

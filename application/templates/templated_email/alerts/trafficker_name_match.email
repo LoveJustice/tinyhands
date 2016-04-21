@@ -15,12 +15,15 @@
             <th>Name</th>
             <th>Name Matched to</th>
             <th>Name Match Certainty</th>
+            <th>Address One </th>
+            <th>Address Two </th>
         </thead>
         {% for person,person_match in traffickers_and_their_matches_dictionary.items%}
         <tr>
             <td>{{ person }}</td>
             <td><a href="{{ site }}/{% url 'interceptionrecord_detail' person_match.0.2.interception_record_id %}">{{ person_match.0.2.full_name }}</a></td>
-            <td>{{ person_match.0.1 }}%</td>
+            <td>{{ person_match.0.1}}%</td>
+            <td>{{ person_match.0.1.address_one}}%</td>
         </tr>
         {% endfor %}
     </table>
