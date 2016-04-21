@@ -14,27 +14,33 @@ def migrate_foreign_keys(app_config, app_name, model_name, person_field_name, pe
     for instance in model.objects.all():
         #Looping/Getting all the attributes for the Person object
 
-        person = Person.objects.new()
+        person = Person.objects.create()
 
         for person_attr in person_list:
-            person_attr_data = getattr(instance, person_attr).strip()
+            person_attr_data = getattr(instance, person_attr)
 
             #Apply the correct attribute
             if "name" in person_attr:
-                person.full_name = person_attr_data
+                person.full_name = person_attr_data.strip()
             elif "age" in person_attr:
                 person.age = person_attr_data
             elif "gender" in person_attr:
-                person.gender = person_attr_data
+                person.gender = person_attr_data.strip()
             elif "address1" in person_attr:
                 person.address1 = person_attr_data
             elif "address2" in person_attr:
                 person.address2 = person_attr_data
             elif "phone" in person_attr:
-                person.phone_contact = person_attr_data
+                person.phone_contact = person_attr_data.strip()
 
-        instance[person_field_name] = person
+        setattr(instance, person_field_name, person)
+        #instance[person_field_name] = person
+        print(person.full_name)
+        print(person.age)
+        print(person.gender)
+        print(person.address2)
 
+        
         instance.save()
 
 def migration_ops(model_name, person_field_name, person_list):
