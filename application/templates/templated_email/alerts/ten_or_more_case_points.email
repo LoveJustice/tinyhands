@@ -12,5 +12,5 @@
         <p>No legal action has been taken against the trafficker(s) because {{ reason_for_no }}</p>
     {% endif %}
 
-    <p>To view the VIF click here: <a href="http://{{ site }}{% url 'victiminterview_detail' vif.id %}">Link to Victim Interview Form</a></p>
+    <p>To view the VIF click here: <a href="https://{{ site }}{% url 'victiminterview_detail' vif.id %}">Link to Victim Interview Form</a></p>
 {% endblock %}
