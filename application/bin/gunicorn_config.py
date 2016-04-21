@@ -1,7 +1,7 @@
 bind = "0.0.0.0:9001"
-loglevel = "DEBUG"
+loglevel = "INFO"
 worker_class = 'gevent'
-workers = "4"
+workers = "3"
 reload = True
 
 timeout = 90

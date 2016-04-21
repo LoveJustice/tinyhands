@@ -33,7 +33,7 @@ LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_URL = '/logout/'
 
-INSTALLED_APPS = (
+INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -56,7 +56,7 @@ INSTALLED_APPS = (
     'rest_framework',
     'django_extensions',
     'bootstrap_pagination',
-)
+]
 
 
 MIDDLEWARE_CLASSES = (
