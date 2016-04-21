@@ -40,10 +40,8 @@ function address2Service($http) {
     }
 
 	function saveAddress(address) {
-	console.log(address);
         return $http.put('/api/address2/' + address.id, address).
             success(function (data) {
-            	    console.log(data);
 		    return data;
             }).
  	    error(function (data, status, headers, config) {

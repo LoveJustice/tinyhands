@@ -1,5 +1,4 @@
 from rest_framework import serializers
-import pdb
 
 from dataentry.models import Address1, Address2, InterceptionRecord, VictimInterview, BorderStation
 

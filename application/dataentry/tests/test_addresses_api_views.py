@@ -10,7 +10,6 @@ class Address1Test(APITestCase):
         self.address1_list = Address1Factory.create_batch(20)
         self.user = Address2UserFactory.create()
         self.client.force_authenticate(user=self.user)
-        self.data = {'name': 'Address1'}
         self.data = {
             'name': 'Address1',
             "completed": False,
