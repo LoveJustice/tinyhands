@@ -5,8 +5,10 @@ angular
 
         vm.activate = function () {
           vm.accounts = Accounts.all();
-          vm.permissions = PermissionsSets.all();
+          PermissionsSets.all().$promise.then(vm.createPermissionsArray);
           vm.currentuser = Accounts.me();
+          vm.permissions = PermissionsSets.all();
+          vm.permissionsDesignations = {};
         }
 
         vm.resendActivationEmail = function(accountID) {
@@ -30,6 +32,20 @@ angular
               vm.accounts = Accounts.all();
             })
           })
+        }
+
+        /* Created associative array to make referencing designation names faster
+           loop through permission set and make entries with designation id as key, designation name as value
+           ex: permissionsSet[1] = Super Administrator */
+        vm.createPermissionsArray = function(permissionSet) {
+
+            for (i=0; i < permissionSet.count; i++){
+                vm.permissionsDesignations[permissionSet.results[i].id] = permissionSet.results[i].name;
+            }
+        }
+
+        vm.designationFinder = function(userDesignation) {
+            return vm.permissionsDesignations[userDesignation];
         }
 
         vm.activate();

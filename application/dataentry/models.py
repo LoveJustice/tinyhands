@@ -56,9 +56,9 @@ class Address2(models.Model):
     name = models.CharField(max_length=255, default="Unknown")
     latitude = models.FloatField(default=0)
     longitude = models.FloatField(default=0)
-    address1 = models.ForeignKey(Address1, null=False)
-    canonical_name = models.ForeignKey('self', null=True, blank=True)
     level = models.CharField(max_length=255, choices=LEVEL_CHOICES, default="VDC")
+    address1 = models.ForeignKey(Address1, null=False, on_delete=models.CASCADE)
+    canonical_name = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE)
     verified = models.BooleanField(default=False)
 
     def __unicode__(self):
@@ -98,7 +98,7 @@ class Address2(models.Model):
 
 
 class InterceptionRecord(models.Model):
-    form_entered_by = models.ForeignKey(Account, related_name='irfs_entered')
+    form_entered_by = models.ForeignKey(Account, related_name='irfs_entered', on_delete=models.CASCADE)
     date_form_received = models.DateTimeField()
 
     irf_number = models.CharField('IRF #:', max_length=20, unique=True)
@@ -305,13 +305,13 @@ class Interceptee(models.Model):
                                      processors=[ResizeToFill(200, 200)],
                                      format='JPEG',
                                      options={'quality': 80})
-    interception_record = models.ForeignKey(InterceptionRecord, related_name='interceptees')
+    interception_record = models.ForeignKey(InterceptionRecord, related_name='interceptees', on_delete=models.CASCADE)
     kind = models.CharField(max_length=4, choices=KIND_CHOICES)
     full_name = models.CharField(max_length=255)
     gender = models.CharField(max_length=4, choices=GENDER_CHOICES, blank=True)
     age = models.PositiveIntegerField(null=True, blank=True)
-    address1 = models.ForeignKey(Address1, null=True, blank=True)
-    address2 = models.ForeignKey(Address2, null=True, blank=True)
+    address1 = models.ForeignKey(Address1, null=True, blank=True, on_delete=models.CASCADE)
+    address2 = models.ForeignKey(Address2, null=True, blank=True, on_delete=models.CASCADE)
     phone_contact = models.CharField(max_length=255, blank=True)
     relation_to = models.CharField(max_length=255, blank=True)
 
@@ -366,8 +366,8 @@ class VictimInterview(models.Model):
 
     victim_gender = models.CharField('Gender', choices=GENDER_CHOICES, max_length=12)
 
-    victim_address1 = models.ForeignKey(Address1, null=True, related_name="victim_address1")
-    victim_address2 = models.ForeignKey(Address2, null=True, related_name="victim_address2")
+    victim_address1 = models.ForeignKey(Address1, null=True, related_name="victim_address1", on_delete=models.CASCADE)
+    victim_address2 = models.ForeignKey(Address2, null=True, related_name="victim_address2", on_delete=models.CASCADE)
     victim_address_ward = models.CharField('Ward #', max_length=255, blank=True)
     victim_phone = models.CharField('Phone #', max_length=255, blank=True)
     victim_age = models.CharField('Age', max_length=255, blank=True)
@@ -427,8 +427,8 @@ class VictimInterview(models.Model):
     victim_primary_guardian_non_relative = models.BooleanField('Non-relative', default=False)
     victim_primary_guardian_no_one = models.BooleanField('No one (I have no guardian)', default=False)
 
-    victim_guardian_address1 = models.ForeignKey(Address1, null=True)
-    victim_guardian_address2 = models.ForeignKey(Address2, null=True)
+    victim_guardian_address1 = models.ForeignKey(Address1, null=True, on_delete=models.CASCADE)
+    victim_guardian_address2 = models.ForeignKey(Address2, null=True, on_delete=models.CASCADE)
     victim_guardian_address_ward = models.CharField('Ward #', max_length=255, blank=True)
     victim_guardian_phone = models.CharField('Phone #', max_length=255, blank=True)
 
@@ -863,7 +863,7 @@ class VictimInterviewPersonBox(models.Model):
         ('female', 'Female'),
     ]
 
-    victim_interview = models.ForeignKey(VictimInterview, related_name='person_boxes')
+    victim_interview = models.ForeignKey(VictimInterview, related_name='person_boxes', on_delete=models.CASCADE)
 
     who_is_this_relationship_boss_of = models.BooleanField('Boss of...', default=False)
     who_is_this_relationship_coworker_of = models.BooleanField('Co-worker of...', default=False)
@@ -882,8 +882,8 @@ class VictimInterviewPersonBox(models.Model):
 
     gender = models.CharField('Gender', choices=GENDER_CHOICES, max_length=12, blank=True)
 
-    address1 = models.ForeignKey(Address1, null=True)
-    address2 = models.ForeignKey(Address2, null=True)
+    address1 = models.ForeignKey(Address1, null=True, on_delete=models.CASCADE)
+    address2 = models.ForeignKey(Address2, null=True, on_delete=models.CASCADE)
     address_ward = models.CharField('Ward #', max_length=255, blank=True)
     phone = models.CharField('Phone #', max_length=255, blank=True)
     age = models.PositiveIntegerField('Age', null=True, blank=True)
@@ -949,7 +949,7 @@ class VictimInterviewPersonBox(models.Model):
 
 
 class VictimInterviewLocationBox(models.Model):
-    victim_interview = models.ForeignKey(VictimInterview, related_name='location_boxes')
+    victim_interview = models.ForeignKey(VictimInterview, related_name='location_boxes', on_delete=models.CASCADE)
 
     which_place_india_meetpoint = models.BooleanField('India Meet Point', default=False)
     which_place_manpower = models.BooleanField('Manpower', default=False)
@@ -970,8 +970,8 @@ class VictimInterviewLocationBox(models.Model):
 
     signboard = models.CharField(max_length=255, blank=True)
     location_in_town = models.CharField(max_length=255, blank=True)
-    address1 = models.ForeignKey(Address1, null=True)
-    address2 = models.ForeignKey(Address2, null=True)
+    address1 = models.ForeignKey(Address1, null=True, on_delete=models.CASCADE)
+    address2 = models.ForeignKey(Address2, null=True, on_delete=models.CASCADE)
 
     phone = models.CharField('Phone #', max_length=255, blank=True)
     color = models.CharField(max_length=255, blank=True)
