@@ -35,12 +35,9 @@ def migrate_foreign_keys(app_config, app_name, model_name, person_field_name, pe
 
         setattr(instance, person_field_name, person)
         #instance[person_field_name] = person
-        print(person.full_name)
-        print(person.age)
-        print(person.gender)
-        print(person.address2)
 
-        
+        person.save()
+
         instance.save()
 
 def migration_ops(model_name, person_field_name, person_list):
