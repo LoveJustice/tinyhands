@@ -2,6 +2,8 @@ from .base import *
 
 DEBUG = True
 
+INSTALLED_APPS.append('debug_toolbar')
+
 SITE_DOMAIN = 'localhost'
 
 SPREADSHEET_NAME = 'Tinyhands'
