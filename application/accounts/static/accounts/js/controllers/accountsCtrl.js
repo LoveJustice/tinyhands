@@ -3,15 +3,18 @@ angular
     .controller('AccountsCtrl', ['Accounts','PermissionsSets', '$modal', function(Accounts, PermissionsSets, $modal) {
         var vm = this;
 
-        vm.sortColumn = 'email';
-        vm.accounts = Accounts.all();
-        PermissionsSets.all().$promise.then(vm.createPermissionsArray);
-        vm.currentuser = Accounts.me();
-        vm.permissions = PermissionsSets.all();
-        vm.permissionsDesignations = {};
-        vm.sortIcon = "/static/images/sortIcon.jpg";
-
-        vm.reverse = false;
+        vm.activate = function () {
+            vm.sortColumn = 'email';
+            vm.accounts = Accounts.all();
+            PermissionsSets.all().$promise.then(vm.createPermissionsArray);
+            vm.sortColumn = 'email';
+            vm.currentuser = Accounts.me();
+            vm.permissions = PermissionsSets.all();
+            vm.permissionsDesignations = {};
+            vm.sortIcon = "/static/images/sortIcon.jpg";
+            vm.reverse = false;
+            vm.sortColumn = 'email';
+        }
         vm.resendActivationEmail = function(accountID) {
           Accounts.resendActivationEmail({id:accountID});
         };
@@ -48,8 +51,6 @@ angular
         vm.designationFinder = function(userDesignation) {
             return vm.permissionsDesignations[userDesignation];
         }
-        vm.sortColumnfunc = function()
-        {
-            return vm.sortIcon;
-        }
+
+        vm.activate();
     }]);
