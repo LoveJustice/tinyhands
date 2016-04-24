@@ -756,12 +756,12 @@ interceptee_data = [
 ]
 
 victim_data = [
-    CopyCsvField("full_name", "1.1 Name", True),
-    MapValueCsvField('gender', "1.2 Gender", { "Male":"m", "Female":"f"}, export_default="Female"),
-    Address1CsvField("address1", "1.3 Address1"),
-    Address2CsvField("address2", "Address2"),
-    CopyCsvField("phone_contact", "Phone Number", True),
-    CopyCsvField("age", "1.4 Age", True),
+    "1.1 Name",
+    "1.2 Gender",
+    "1.3 Address1",
+    "Address2",
+    "Phone Number",
+    "1.4 Age",
 ]
 
 person_box_person_data = [
@@ -867,7 +867,16 @@ vif_data = [
     BooleanCsvField("statement_read_before_beginning", "Statement Read", "Statement was read to the participant", ""),
     BooleanCsvField("permission_to_use_photograph", "Photo Permission", "Permission was given to use photo", ""),
 
+    CopyCsvField("full_name", "1.1 Name", True),
+    CopyCsvField("gender", "1.2 Gender", True),
+
+    Address1CsvField("address1", "1.3 Address1"),
+    Address2CsvField("address2", "Address2"),
+
     CopyCsvField("victim_address_ward", "Ward", True),
+
+    CopyCsvField("phone_contact", "Phone Number", True),
+    CopyCsvField("age", "1.4 Age", True),
     CopyCsvField("victim_height", "1.5 Height", True),
     CopyCsvField("victim_weight", "1.6 Weight", True),
 
@@ -1146,9 +1155,6 @@ def get_vif_export_rows(vifs):
 
     vif_headers = []
 
-    for field in victim_data:
-        vif_headers.append(field.title)
-
     for field in vif_data:
         vif_headers.append(field.title)
 
@@ -1174,11 +1180,11 @@ def get_vif_export_rows(vifs):
         person = vif.victim
         row = []
 
-        for field in victim_data:
-            row.append(field.exportField(person))
-
         for field in vif_data:
-            row.append(field.exportField(vif))
+            if field.title in victim_data:
+                row.append(field.exportField(person))
+            else:
+                row.append(field.exportField(vif))
 
 
 
