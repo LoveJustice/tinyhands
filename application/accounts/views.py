@@ -1,4 +1,5 @@
 import json
+import pdb
 
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, get_object_or_404
@@ -67,21 +68,26 @@ class AccountActivateView(UpdateView):
         return super(AccountActivateView, self).form_valid(form)
 
 class AccountActivateClient(APIView):
-    def get(self, request):
-        account = get_object_or_None(Account, activation_key=request.activationKey)
-        if account.has_usable_password():
+    def get(self, request, activation_key=None):
+        account = Account.objects.get(activation_key=activation_key)
+        if account and account.has_usable_password():
             account = None
         serializer = AccountsSerializer(account)
         return Response(serializer.data)
 
-    def post(self, request, pk=None):
-        account = get_object_or_None(Account, pk=pk)
+    def post(self, request, activation_key=None):
+        account = Account.objects.get(activation_key=activation_key)
         account_activated = False
-        if account:
-            account.set_password(request.password)
-            account.save()
-            account_activated = True
-        return Response(account_activated)
+        print(request)
+        '''if account and not account.has_usable_password():
+            if request.data.account != request.data.id:
+                unmatchingPasswords = True;
+                return Response(unmatchingPasswords)
+            else:
+                account.set_password(request.data.password1)
+                account.save()
+                account_activated = True
+        return Response(account_activated)'''
 
 class AccountUpdateView(
         LoginRequiredMixin,
