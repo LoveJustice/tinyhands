@@ -6,7 +6,8 @@ from rest_framework.authtoken import views
 from budget.views import BudgetViewSet, OtherItemsViewSet, MoneyDistribution, MoneyDistributionFormPDFView, money_distribution_view, retrieve_latest_budget_sheet_for_border_station, previous_data, StaffSalaryViewSet
 
 from portal.views import get_interception_records
-from dataentry.views import Address2ViewSet, Address1ViewSet, GeoCodeAddress1APIView, GeoCodeAddress2APIView, InterceptionRecordViewSet, VictimInterviewViewSet
+from dataentry.views import Address2ViewSet, Address1ViewSet, GeoCodeAddress1APIView, GeoCodeAddress2APIView, InterceptionRecordViewSet, VictimInterviewViewSet, BatchView
+from budget.views import BudgetViewSet, OtherItemsViewSet
 from accounts.views import AccountViewSet, DefaultPermissionsSetViewSet, CurrentUserView, ResendActivationEmailView, AccountActivateView, AccountActivateClient
 from static_border_stations.views import BorderStationViewSet, StaffViewSet, CommitteeMemberViewSet, LocationViewSet
 from events.views import EventViewSet
@@ -90,7 +91,16 @@ urlpatterns = [
         url(r'^staff/$', StaffViewSet.as_view(list), name="AllStaff"),
         url(r'^staff/(?P<pk>\d+)/$', StaffViewSet.as_view(detail), name="Staff"),
 
-    # Events
+        # Events
+            url(r'^event/$', EventViewSet.as_view({'get': 'list', 'post':'create'}), name="EventList"),
+            url(r'^event/all/$', EventViewSet.as_view({'get': 'list_all'}), name="EventListAll"),
+            url(r'^event/(?P<pk>\d+)/$', EventViewSet.as_view({'get':'retrieve', 'put':'update', 'delete':'destroy'}), name='Event'),
+            url(r'^event/feed/calendar/$', EventViewSet.as_view({'get': 'calendar_feed'}), name='EventCalendarFeed'),
+            url(r'^event/feed/dashboard/$', EventViewSet.as_view({'get': 'dashboard_feed'}), name='EventDashboardFeed')
+        #IRFBatch
+        url(r'^batch/(?P<startDate>(\d{2}|\d{1})-(\d{2}|\d{1})-\d{4})/(?P<endDate>\d{2}-\d{2}-\d{4})', BatchView.as_view(), name="BatchView"),
+
+        #Events
         url(r'^event/$', EventViewSet.as_view({'get': 'list', 'post':'create'}), name="EventList"),
         url(r'^event/all/$', EventViewSet.as_view({'get': 'list_all'}), name="EventListAll"),
         url(r'^event/(?P<pk>\d+)/$', EventViewSet.as_view({'get':'retrieve', 'put':'update', 'delete':'destroy'}), name='Event'),
