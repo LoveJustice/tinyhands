@@ -1,10 +1,15 @@
-from datetime import date
+import zipfile
+from datetime import date, datetime
+from time import strptime, mktime
 import csv
+import io
 import json
 import os
 import re
 import shutil
+import urllib
 
+from StringIO import StringIO
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core import serializers
@@ -15,6 +20,7 @@ from django.core.urlresolvers import reverse_lazy
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import redirect, render_to_response, render
 from django.template.loader import render_to_string
+from django.utils import timezone
 from django.views.generic import ListView, View, DeleteView, CreateView, TemplateView
 
 from rest_framework import status
@@ -490,3 +496,34 @@ class VictimInterviewViewSet(viewsets.ModelViewSet):
         rv = super(viewsets.ModelViewSet, self).destroy(request, args, kwargs)
         GoogleSheetClientThread.update_irf(vif.vif_number)
         return rv
+
+
+class BatchView(View):
+    def get(self, request, startDate, endDate):
+        start = timezone.make_aware(datetime.fromtimestamp(mktime(strptime(startDate, '%m-%d-%Y'))), timezone.get_default_timezone())
+        end = timezone.make_aware(datetime.fromtimestamp(mktime(strptime(endDate, '%m-%d-%Y'))), timezone.get_default_timezone())
+
+        listOfIrfNumbers = []
+        irfs = InterceptionRecord.objects.all()
+        for irf in irfs:
+            irfDate = irf.date_time_of_interception
+            if start <= irfDate <= end:
+                listOfIrfNumbers.append(irf.irf_number)
+
+        photos = list(Interceptee.objects.filter(interception_record__irf_number__in=listOfIrfNumbers).values_list('photo', 'full_name', 'interception_record__irf_number'))
+        if len(photos) == 0:
+            return render(request, 'dataentry/batch_photo_error.html')
+        else:
+            for i in range(len(photos)):
+                photos[i] = [str(x) for x in photos[i]]
+
+            f = StringIO()
+            imagezip = zipfile.ZipFile(f, 'w')
+            for photoTuple in photos:
+                fileurl = urllib.urlopen('http://edwards.cse.taylor.edu/media/' + photoTuple[0])
+                imagezip.writestr(photoTuple[2] + '-' + photoTuple[1] + '.jpg', fileurl.read())
+            imagezip.close()  # Close
+
+            response = HttpResponse(f.getvalue(), content_type="application/zip")
+            response['Content-Disposition'] = 'attachment; filename=irfPhotos ' + startDate + ' to ' + endDate + '.zip'
+            return response
