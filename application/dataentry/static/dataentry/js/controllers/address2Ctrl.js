@@ -118,14 +118,10 @@ angular
                             main();
                         })
                         .error(function (){
-                            alert(address);
-
+                            console.log(address);
                         });
             });
-
         }
-
-
     }])
 
     .controller('ModalInstanceCtrl', function ($scope, $modalInstance, $http, address) {

@@ -1,5 +1,4 @@
-docker push tusoftwarestudio/dreamsuite-nginx
-docker push tusoftwarestudio/dreamsuite
+printf "\n\nPushing Dreamsuite Build Number: %s\n\n" "$1"
 
-# docker push tusoftwarestudio/dreamsuite-js-cli
-# docker build -t tusoftwarestudio/dreamsuite-js-cli -f Dockerfile-js-cli .
+docker push tusoftwarestudio/dreamsuite-nginx:$1
+docker push tusoftwarestudio/dreamsuite:$1

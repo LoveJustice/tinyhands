@@ -110,7 +110,7 @@ angular
             vm.endDate = endMonth + '-' + endDay + '-' + vm.endYear;
 
             var url = '/api/batch/' + vm.startDate + '/' + vm.endDate;
-            $window.location.href = url;
+            $window.open(url, '_blank');
         }
 
         function getDays(month, year) {
