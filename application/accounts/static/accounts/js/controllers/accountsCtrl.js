@@ -4,11 +4,14 @@ angular
         var vm = this;
 
         vm.activate = function () {
-          vm.accounts = Accounts.all();
-          PermissionsSets.all().$promise.then(vm.createPermissionsArray);
-          vm.currentuser = Accounts.me();
-          vm.permissions = PermissionsSets.all();
-          vm.permissionsDesignations = {};
+            vm.sortColumn = 'email';
+            vm.accounts = Accounts.all();
+            PermissionsSets.all().$promise.then(vm.createPermissionsArray);
+            vm.currentuser = Accounts.me();
+            vm.permissions = PermissionsSets.all();
+            vm.permissionsDesignations = {};
+            vm.sorticon = "/static/images/sortIcon.jpg";
+            vm.reverse = '-';
         }
 
         vm.resendActivationEmail = function(accountID) {
@@ -48,6 +51,26 @@ angular
             return vm.permissionsDesignations[userDesignation];
         }
 
-        vm.activate();
+        vm.reversefunc = function() {
+            if (vm.reverse === '+')
+                vm.reverse = '-';
+            else
+                vm.reverse = '+';
+        }
 
+        vm.sortIcon = function(column, name){
+            if(name === vm.sortColumn){
+                switch (column) {
+                    case "number":
+                        return vm.reverse == '-' ? "glyphicon-sort-by-order-alt" : "glyphicon-sort-by-order";
+                    case "letter":
+                        return vm.reverse == '-' ? "glyphicon-sort-by-alphabet-alt" : "glyphicon-sort-by-alphabet";
+                    default:
+                        return "glyphicon-sort";
+                }
+            }
+            return "glyphicon-sort";
+        }
+
+        vm.activate();
     }]);
