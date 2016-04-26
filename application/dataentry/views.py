@@ -498,6 +498,11 @@ class VictimInterviewViewSet(viewsets.ModelViewSet):
         return rv
 
 
+@login_required
+def id_management_template(request):
+    return render(request, 'dataentry/id_management.html')
+
+
 class BatchView(View):
     def get(self, request, startDate, endDate):
         start = timezone.make_aware(datetime.fromtimestamp(mktime(strptime(startDate, '%m-%d-%Y'))), timezone.get_default_timezone())

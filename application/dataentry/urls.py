@@ -21,6 +21,8 @@ urlpatterns = [
 
     url(r'^stations/codes/$', StationCodeAPIView.as_view()),
 
+    url(r'^id/management/$', id_management_template, name='id_management'),
+
     url(r'^geocodelocation/address1/(?P<id>\d+)/$', GeoCodeAddress1APIView.as_view()),
     url(r'^geocodelocation/address1/$', GeoCodeAddress1APIView.as_view()),
     url(r'^geocodelocations/address1-admin/$', Address1AdminView.as_view(), name='address1_admin_page'),
