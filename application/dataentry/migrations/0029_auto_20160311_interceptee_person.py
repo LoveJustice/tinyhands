@@ -23,11 +23,13 @@ def migrate_foreign_keys(app_config, app_name, model_name, person_field_name, pe
             if "name" in person_attr:
                 person.full_name = person_attr_data.strip()
             elif "age" in person_attr:
+                try:
+                    if type(person_attr_data) == unicode:
+                        person_attr_data = int(person_attr_data)
+                except:
+                    person_attr_data = None
                 if type(person_attr_data) == int:
                     person.age = person_attr_data
-                else:
-                    print(person_attr_data)
-                    print(type(person_attr_data))
             elif "gender" in person_attr:
                 if person_attr_data is not None and len(person_attr_data) > 0:
                     person.gender = person_attr_data.upper().strip()[0]

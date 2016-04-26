@@ -834,11 +834,7 @@ def get_irf_export_rows(irfs):
                 for field in interceptee_data:
                     row.append(field.exportField(trafficker))
 
-
-
             rows.append(row)
-
-
     return rows
 
 def get_irf_import_rows(csv_map):
