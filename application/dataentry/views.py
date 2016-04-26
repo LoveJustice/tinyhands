@@ -447,7 +447,7 @@ class Address1ViewSet(viewsets.ModelViewSet):
     permissions_required = ['permission_address2_manage']
     filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
     search_fields = ('name',)
-    ordering_fields = ('name',)
+    ordering_fields = ('name','longitude','latitude','level','completed')
     ordering = ('name',)
 
 
