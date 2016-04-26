@@ -522,7 +522,7 @@ class BatchView(View):
             for photoTuple in photos:
                 if photoTuple[0] == '':
                     continue
-                imageFile = open('/data/media/' + photoTuple[0])
+                imageFile = open(settings.MEDIA_ROOT + '/' + photoTuple[0])
                 imagezip.writestr(photoTuple[2] + '-' + photoTuple[1] + '.jpg', imageFile.read())
             imagezip.close()  # Close
 
