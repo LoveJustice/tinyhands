@@ -751,9 +751,6 @@ irf_data = [
     BooleanCsvField("has_signature", "Staff signature on form", "Form is signed", "Form is not signed"),
 ]
 
-interceptee_data = [
-    CopyCsvField("relation_to", "{}Relationship to...", True),
-]
 
 victim_data = [
     "1.1 Name",
@@ -773,14 +770,14 @@ person_box_person_data = [
     CopyCsvField("age", "{}Age", True),
 ]
 
-person_data = [
+interceptee_data = [
     CopyCsvField("full_name", "{}Name", True),
-    MapValueCsvField('gender', "{}Gender", { "Male":"m", "Female":"f"}, export_default="Female"),
+    MapValueCsvField('gender', "{}Gender", { "Male":"M", "Female":"F"}, export_default="Female"),
     CopyCsvField("age", "{}Age", True),
     Address1CsvField("address1", "{}Address1"),
     Address2CsvField("address2", "{}Address2"),
     CopyCsvField("phone_contact", "{}Phone", True),
-
+    CopyCsvField("relation_to", "{}Relationship to...", True)
 ]
 
 irf_victim_prefix = "Victim "
@@ -791,9 +788,6 @@ def get_irf_export_rows(irfs):
     irf_headers = []
     for field in irf_data:
         irf_headers.append(field.title)
-
-    for field in person_data:
-        irf_headers.append(field.title.format(irf_victim_prefix))
 
     for field in interceptee_data:
         irf_headers.append(field.title.format(irf_victim_prefix))
@@ -817,22 +811,23 @@ def get_irf_export_rows(irfs):
                 row.append(field.exportField(irf))
 
             # export victim information
-            for field in person_data:
-                row.append(field.exportField(person))
-
             for field in interceptee_data:
-                row.append(field.exportField(interceptee))
+                if(field.title != "{}Relationship to..."):
+                    row.append(field.exportField(person))
+                else:
+                    row.append(field.exportField(interceptee))
 
             # export traffickers
             for trafficker in irf.interceptees.all():
+                traffick_person = trafficker.person
                 if trafficker.kind == "v":
                     continue
 
-                for field in person_data:
-                    row.append(field.exportField(person))
-
                 for field in interceptee_data:
-                    row.append(field.exportField(trafficker))
+                    if(field.title != "{}Relationship to..."):
+                        row.append(field.exportField(traffick_person))
+                    else:
+                        row.append(field.exportField(trafficker))
 
             rows.append(row)
     return rows
@@ -864,7 +859,7 @@ vif_data = [
     BooleanCsvField("permission_to_use_photograph", "Photo Permission", "Permission was given to use photo", ""),
 
     CopyCsvField("full_name", "1.1 Name", True),
-    CopyCsvField("gender", "1.2 Gender", True),
+    MapValueCsvField("gender", "1.2 Gender", { "male":"M", "female":"F"}, export_default="female"),
 
     Address1CsvField("address1", "1.3 Address1"),
     Address2CsvField("address2", "Address2"),
