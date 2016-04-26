@@ -51,6 +51,11 @@ class BorderStationSerializer(serializers.ModelSerializer):
     class Meta:
         model = BorderStation
 
+    def validate(self, data):
+        if data['has_signature'] is not True:
+            raise serializers.ValidationError({'has_signature': 'Form should be signed, though not required.'})
+        return data
+
 
 class InterceptionRecordListSerializer(serializers.ModelSerializer):
     class Meta:
