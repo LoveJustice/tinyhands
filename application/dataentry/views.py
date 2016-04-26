@@ -449,7 +449,7 @@ class Address1ViewSet(viewsets.ModelViewSet):
     search_fields = ('name',)
     ordering_fields = ('name',)
     ordering = ('name',)
-    
+
 
 
     @list_route()
@@ -470,7 +470,7 @@ class InterceptionRecordViewSet(viewsets.ModelViewSet):
     search_fields = ('irf_number',)
     ordering_fields = ('irf_number', 'staff_name', 'number_of_victims', 'number_of_traffickers', 'date_time_of_interception', 'date_time_entered_into_system', 'date_time_last_updated',)
     ordering = ('irf_number',)
-    
+
     def destroy(self, request, *args, **kwargs):
         irf_id = kwargs['pk']
         irf = InterceptionRecord.objects.get(id=irf_id)
@@ -522,7 +522,7 @@ class BatchView(View):
             for photoTuple in photos:
                 if photoTuple[0] == '':
                     continue
-                imageFile = open(settings.MEDIA_ROOT + '/' + photoTuple[0])
+                imageFile = open(settings.MEDIA_URL + '/' + photoTuple[0])
                 imagezip.writestr(photoTuple[2] + '-' + photoTuple[1] + '.jpg', imageFile.read())
             imagezip.close()  # Close
 
