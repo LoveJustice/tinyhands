@@ -357,16 +357,12 @@ class InterceptionRecordForm(DreamSuitePaperForm):
             self.has_warnings = True
             self._errors['has_signature'] = error
 
-#<<<<<<< HEAD
-#=======
     def save(self, commit=True):
         return_val = super(InterceptionRecordForm, self).save(commit)
         if commit:
             google_sheet_client.update_irf(self.cleaned_data['irf_number'])
         return return_val
 
-
-#>>>>>>> develop
 class IntercepteeForm(DreamSuitePaperForm):
     class Meta:
         model = Interceptee

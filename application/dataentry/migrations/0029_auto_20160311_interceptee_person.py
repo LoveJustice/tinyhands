@@ -12,10 +12,10 @@ def migrate_foreign_keys(app_config, app_name, model_name, person_field_name, pe
     Person = app_config.get_model(app_name, 'Person')
 
     for instance in model.objects.all():
-        #Looping/Getting all the attributes for the Person object
 
         person = Person.objects.create()
 
+        #Looping/Getting all the attributes for the Person object
         for person_attr in person_list:
             person_attr_data = getattr(instance, person_attr)
 
