@@ -135,11 +135,11 @@ function find_address1_value(element) {
     }
 	else if (element.id == "sys_address1")
 	{
-		address1_value = $("#sys_address1").val();;
+		address1_value = $("#sys_address1").val();
 	}
 	else if (element.id == "sys_address2")
 	{
-		address1_value = $("#sys_address1").val();;
+		address1_value = $("#sys_address2").val();
 	}
     else
     {

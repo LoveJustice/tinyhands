@@ -104,7 +104,7 @@
     $ul = $ui.find("ul");
     $ul.children().remove();
     if (results.length > 0) {
-      _ref = results.slice(0, 10);
+      _ref = results.slice(0, 100);
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         item = _ref[_i];

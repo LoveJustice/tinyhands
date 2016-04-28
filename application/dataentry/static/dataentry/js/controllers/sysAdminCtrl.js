@@ -7,26 +7,15 @@ angular
 
         vm.form = {};
 
-        function callTotals() {
-            vm.address1_cutoff_value();
-            vm.address1_limit_value();
-            vm.address2_cutoff_value();
-            vm.address2_limit_value();
-            vm.person_cutoff_value();
-            vm.person_limit_value();
-            vm.phone_number_cutoff_value();
-            vm.phone_number_limit_value();
-        }
-
         function getForm() {
             return {"address1_cutoff": angular.element('#address1_cutoff').val(),
                     "address1_limit": angular.element('#address1_limit').val(),
                     "address2_cutoff": angular.element('#address2_cutoff').val(),
                     "address2_limit": angular.element('#address2_limit').val(),
                     "person_cutoff": angular.element('#person_cutoff').val(),
-                    "person_limit": angular.element('#person_limit').val(),
-                    "phone_number_cutoff": angular.element('#phone_number_cutoff').val(),
-                    "phone_number_limit": angular.element('#phone_number_limit').val()}
+                    "person_limit": angular.element('#person_limit').val()}
+                    // "phone_number_cutoff": angular.element('#phone_number_cutoff').val(),
+                    // "phone_number_limit": angular.element('#phone_number_limit').val()}
         }
 
         vm.retrieveForm = function() {
@@ -39,7 +28,6 @@ angular
             vm.form = getForm();
             sysAdminService.updateForm(vm.form).then(function(promise){
                 vm.form = promise.data;
-                //console.log("UpdateForm:", vm.form);
                 $window.location.assign('/data-entry/sysadminsettings/1/');
             });
         };
