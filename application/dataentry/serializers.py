@@ -103,11 +103,25 @@ class InterceptionRecordSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(validation_response)
         return data
 
-    def check_for_errors(self, data): # For validation
+    def check_for_errors(self, data): # For Error validation
         errors = []
+        errors += self.check_for_none_checked(data)
+        if data['contact_noticed'] == False and data['staff_noticed'] == False:
+            errors.append({'contact_noticed': 'Either Contact (6.0) or Staff (7.0) must be chosen for how interception was made.'})
         return errors
 
-    def check_for_red_flags(self, data): # For validation
+    def check_for_none_checked(self, data): # For Error validation
+        errors = []
+        has_none_checked = True
+        for field in data:
+            if isinstance(data[field], bool) and data[field] == True:
+                has_none_checked = False
+        if has_none_checked:
+            errors.append({'no_checkboxes_checked': 'At least one box must be checked on the first page.'})
+        return errors
+
+    def check_for_red_flags(self, data): # For Warning validation
+        warnings = []
         any_red_flags = False
         for field in InterceptionRecord._meta.fields:
             try:
@@ -117,10 +131,10 @@ class InterceptionRecordSerializer(serializers.ModelSerializer):
             except:
                 pass
         if any_red_flags == False:
-            return [{'red_flags': 'No red flags are checked.'}]
-        return []
+            warnings.append({'red_flags': 'No red flags are checked.'})
+        return warnings
 
-    def check_for_warnings(self, data): # For validation
+    def check_for_warnings(self, data): # For Warning validation
         warnings = []
         warnings += self.check_for_red_flags(data)
         warnings += self.check_procedure(data)
@@ -130,7 +144,7 @@ class InterceptionRecordSerializer(serializers.ModelSerializer):
         return warnings
 
 
-    def check_procedure(self, data): # For validation
+    def check_procedure(self, data): # For Warning validation
         warnings = []
         if data['call_thn_to_cross_check'] == False:
             warnings.append({'call_thn_to_cross_check': 'Procedure not followed.'})
@@ -140,7 +154,8 @@ class InterceptionRecordSerializer(serializers.ModelSerializer):
             warnings.append({'scan_and_submit_same_day': 'Procedure not followed.'})
         return warnings
 
-    def check_type(self, data): # For validation
+    def check_type(self, data): # For Warning validation
+        warnings = []
         type_is_set = False
         for field in InterceptionRecord._meta.fields:
             try:
@@ -150,8 +165,8 @@ class InterceptionRecordSerializer(serializers.ModelSerializer):
             except:
                 pass
         if type_is_set == False:
-            return [{'interception_type': 'Field should be included, though not required.'}]
-        return []
+            warnings.append({'interception_type': 'Field should be included, though not required.'})
+        return warnings
 
 
 
