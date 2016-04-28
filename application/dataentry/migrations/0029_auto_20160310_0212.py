@@ -15,7 +15,6 @@ class Migration(migrations.Migration):
             name='Person',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('photo', models.ImageField(default=b'', upload_to=b'interceptee_photos', blank=True)),
                 ('full_name', models.CharField(max_length=255)),
                 ('gender', models.CharField(blank=True, max_length=4, choices=[(b'f', b'F'), (b'm', b'M')])),
                 ('age', models.PositiveIntegerField(null=True, blank=True)),

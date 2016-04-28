@@ -41,7 +41,6 @@ def migrate_foreign_keys(app_config, app_name, model_name, person_field_name, pe
                 person.phone_contact = person_attr_data.strip()
 
         setattr(instance, person_field_name, person)
-        #instance[person_field_name] = person
 
         person.save()
 
@@ -63,9 +62,6 @@ def migration_ops(model_name, person_field_name, person_list):
         migrations.RemoveField(model_name=model_name, name=person_list[3]),
         migrations.RemoveField(model_name=model_name, name=person_list[4]),
         migrations.RemoveField(model_name=model_name, name=person_list[5]),
-
-        #Rename the person FK field because VictimInterview will have different names for this field
-        #migrations.RenameField(model_name=model_name, old_name="person_tmp_name", new_name=person_field_name),
     ]
 
 

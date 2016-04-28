@@ -447,7 +447,7 @@ class Address1ViewSet(viewsets.ModelViewSet):
     permissions_required = ['permission_address2_manage']
     filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
     search_fields = ('name',)
-    ordering_fields = ('name',)
+    ordering_fields = ('name','longitude','latitude','level','completed')
     ordering = ('name',)
 
 
@@ -525,8 +525,10 @@ class BatchView(View):
             f = StringIO()
             imagezip = zipfile.ZipFile(f, 'w')
             for photoTuple in photos:
-                fileurl = urllib.urlopen('http://edwards.cse.taylor.edu/media/' + photoTuple[0])
-                imagezip.writestr(photoTuple[2] + '-' + photoTuple[1] + '.jpg', fileurl.read())
+                if photoTuple[0] == '':
+                    continue
+                imageFile = open(settings.MEDIA_ROOT + '/' + photoTuple[0])
+                imagezip.writestr(photoTuple[2] + '-' + photoTuple[1] + '.jpg', imageFile.read())
             imagezip.close()  # Close
 
             response = HttpResponse(f.getvalue(), content_type="application/zip")

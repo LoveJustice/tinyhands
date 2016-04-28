@@ -42,9 +42,12 @@ function address2Service($http) {
 	function saveAddress(address) {
         return $http.put('/api/address2/' + address.id + '/', address).
             success(function (data) {
-                return data;
+		    return data;
+            }).
+ 	    error(function (data, status, headers, config) {
+                console.log(data, status, headers, config);
             });
-    }
+   }
 
     function listAddress1s(){
         return $http.get('/api/address1/')

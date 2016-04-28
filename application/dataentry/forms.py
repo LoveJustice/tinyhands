@@ -6,14 +6,24 @@ from .models import (BorderStation, Address1,
                      Interceptee, Person, InterceptionRecord,
                      Address2,
                      VictimInterviewLocationBox, VictimInterviewPersonBox, VictimInterview)
-from .fields import Address1Field, Address2Field, FormNumberField
 from django.forms import CharField, ImageField, IntegerField
-from imagekit.models import ImageSpecField
 
+from .fields import Address1Field, Address2Field, FormNumberField
+from .google_sheets import GoogleSheetClientThread as google_sheet_client
 
 BOOLEAN_CHOICES = [
     (False, 'No'),
     (True, 'Yes'),
+]
+
+LEVEL_CHOICES = [
+    ('State','State'),
+    ('Country','Country'),
+    ('City','City'),
+    ('District','District'),
+    ('VDC','VDC'),
+    ('Building','Building'),
+    ('Block','Block')
 ]
 
 
@@ -347,6 +357,16 @@ class InterceptionRecordForm(DreamSuitePaperForm):
             self.has_warnings = True
             self._errors['has_signature'] = error
 
+#<<<<<<< HEAD
+#=======
+    def save(self, commit=True):
+        return_val = super(InterceptionRecordForm, self).save(commit)
+        if commit:
+            google_sheet_client.update_irf(self.cleaned_data['irf_number'])
+        return return_val
+
+
+#>>>>>>> develop
 class IntercepteeForm(DreamSuitePaperForm):
     class Meta:
         model = Interceptee
@@ -952,9 +972,15 @@ class BorderStationForm(forms.ModelForm):
 
 
 class Address2Form(forms.ModelForm):
+    level = forms.MultipleChoiceField(
+	choices=LEVEL_CHOICES,
+	widget=forms.CheckboxSelectMultiple,
+	required=True,
+    )
     class Meta:
+
         model = Address2
-        fields = ['name', 'latitude', 'longitude', 'canonical_name', 'address1', 'verified']
+	exclude = []
 
     def __init__(self, *args, **kwargs):
         super(Address2Form, self).__init__(*args, **kwargs)
@@ -964,4 +990,4 @@ class Address2Form(forms.ModelForm):
 class Address1Form(forms.ModelForm):
     class Meta:
         model = Address1
-        fields = ['name']
+        exclude = []

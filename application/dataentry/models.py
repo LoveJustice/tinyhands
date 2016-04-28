@@ -12,6 +12,15 @@ NULL_BOOLEAN_CHOICES = [
     (True, 'Yes'),
 ]
 
+LEVEL_CHOICES = [
+    ('State','State'),
+    ('Country','Country'),
+    ('City','City'),
+    ('District','District'),
+    ('VDC','VDC'),
+    ('Building','Building'),
+    ('Block','Block')
+]
 
 def set_weight(self, weight):
     self.weight = weight
@@ -31,15 +40,23 @@ class BorderStation(models.Model):
 
 class Address1(models.Model):
     name = models.CharField(max_length=255)
+    latitude = models.FloatField(default=0)
+    longitude = models.FloatField(default=0)
+
+    level = models.CharField(max_length=255, choices=LEVEL_CHOICES, default="District")
+    completed = models.BooleanField(default=False)
+
+
 
     def __unicode__(self):
         return self.name
 
 
 class Address2(models.Model):
-    name = models.CharField(max_length=255)
-    latitude = models.FloatField()
-    longitude = models.FloatField()
+    name = models.CharField(max_length=255, default="Unknown")
+    latitude = models.FloatField(default=0)
+    longitude = models.FloatField(default=0)
+    level = models.CharField(max_length=255, choices=LEVEL_CHOICES, default="VDC")
     address1 = models.ForeignKey(Address1, null=False, on_delete=models.CASCADE)
     canonical_name = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE)
     verified = models.BooleanField(default=False)
