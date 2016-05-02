@@ -121,7 +121,7 @@ class UpdateEventAPITests(RestApiTestCase):
 
     def test_when_user_logged_in_and_valid_event_data_should_return_200(self):
         event = EventFactory.create()
-        url = reverse('Event', args=[event.id])
+        url = reverse('update_event', args=[event.id])
         user = ViewUserFactory.create()
         self.login(user)
 

@@ -74,7 +74,6 @@
     "victim_education_level_grade_4_8": false,
     "victim_how_expense_was_paid_broker_gave_loan": false,
     "victim_home_had_physical_abuse_frequently": false,
-    "victim_address2": 1,
     "victim_home_had_emotional_abuse_frequently": false,
     "victim_where_going_gulf_saudi_arabia": false,
     "migration_plans_education": false,
@@ -152,7 +151,6 @@
     "brokers_relation_to_victim_own_mom": false,
     "abuse_happened_forced_to_take_drugs": false,
     "attitude_towards_tiny_hands_doesnt_know": false,
-    "victim_phone": "",
     "victim_where_going_gulf_malaysia": false,
     "victim_occupation_shopkeeper": false,
     "victim_has_worked_in_sex_industry": null,
@@ -183,7 +181,6 @@
     "victim_heard_gospel_no": true,
     "migration_plans_eloping": false,
     "victim_how_expense_was_paid_broker_paid_all": false,
-    "victim_gender": "male",
     "how_many_others_in_situation": null,
     "abuse_happened_by_whom": "",
     "abuse_happened_sexual_harassment": false,
@@ -221,7 +218,6 @@
     "legal_action_dofe_against_value": "dasdas",
     "victim_occupation_business_owner": false,
     "brokers_relation_to_victim_recently_met": false,
-    "victim_name": "dsadsad",
     "reason_no_legal_trafficker_is_own_people": false,
     "victim_wants_to_go_home": null,
     "victim_education_level_none": false,
@@ -241,7 +237,6 @@
     "victim_traveled_with_broker_companion_broker_took_me_to_border": false,
     "companion_with_when_intercepted": null,
     "victim_education_level_bachelors": false,
-    "victim_address1": 4,
     "brokers_relation_to_victim_own_bro": false,
     "victim_parents_marital_status_widow": false,
     "victim_how_met_broker_other": false,
@@ -254,7 +249,6 @@
     "primary_motivation_bad_home_marriage": false,
     "victim_how_expense_was_paid_paid_myself": false,
     "vif_number": "BHD123",
-    "victim_age": "",
     "victim_where_going_gulf_oman": false,
     "planning_to_meet_companion_later": null,
     "brokers_relation_to_victim_neighbor": false,
@@ -311,9 +305,22 @@
     "victim_lives_with_other": false,
     "reported_total_situational_alarms": null,
     "victim_how_met_broker_went_myself": false,
-    "victim_occupation_tailoring": false
+    "victim_occupation_tailoring": false,
+    "victim": 2
   },
   "model": "dataentry.victiminterview",
   "pk": 1003
+},
+{
+    "fields": {
+        "phone_contact": "",
+        "age": null,
+        "address2": 1,
+        "address1": 4,
+        "full_name": "dsadsad",
+        "gender": "m"
+    },
+    "model": "dataentry.person",
+    "pk": 2
 }
 ]
