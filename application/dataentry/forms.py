@@ -816,11 +816,6 @@ class BorderStationForm(forms.ModelForm):
 
 
 class Address2Form(forms.ModelForm):
-    level = forms.MultipleChoiceField(
-	choices=LEVEL_CHOICES,
-	widget=forms.CheckboxSelectMultiple,
-	required=True,
-    )
     class Meta:
 
         model = Address2
