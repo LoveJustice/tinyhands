@@ -9,7 +9,6 @@ from .models import (BorderStation, Address1,
 from django.forms import CharField, ImageField, IntegerField
 
 from .fields import Address1Field, Address2Field, FormNumberField
-from .google_sheets import GoogleSheetClientThread as google_sheet_client
 
 BOOLEAN_CHOICES = [
     (False, 'No'),
@@ -357,11 +356,6 @@ class InterceptionRecordForm(DreamSuitePaperForm):
             self.has_warnings = True
             self._errors['has_signature'] = error
 
-    def save(self, commit=True):
-        return_val = super(InterceptionRecordForm, self).save(commit)
-        if commit:
-            google_sheet_client.update_irf(self.cleaned_data['irf_number'])
-        return return_val
 
 class IntercepteeForm(DreamSuitePaperForm):
     class Meta:
