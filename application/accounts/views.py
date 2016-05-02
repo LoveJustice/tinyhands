@@ -114,17 +114,6 @@ class AccessDefaultsView(
     permissions_required = ['permission_accounts_manage']
 
 
-#TODO Currently this view doesn't check to make sure the permission set is
-# unused by accounts.  The button to go here is grayed out, but that wouldn't
-# stop someone who was bent on deleting.  Come back to this someday.
-class AccessDefaultsDeleteView(
-        LoginRequiredMixin,
-        PermissionsRequiredMixin,
-        DeleteView):
-    model = DefaultPermissionsSet
-    permissions_required = ['permission_accounts_manage']
-    success_url = reverse_lazy('access_defaults')
-
 #Rest Api Views
 class AccountViewSet(ModelViewSet):
     queryset = Account.objects.all()
