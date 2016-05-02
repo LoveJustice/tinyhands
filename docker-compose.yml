@@ -24,18 +24,6 @@ web:
     - ./common.env
     - ./local.env
 
-test:
-  container_name: test-django
-  build: .
-  command: echo  # this is just to override the containers default command so that it automatically exits
-  env_file:
-    - ./common.env
-    - ./local.env
-  volumes_from:
-    - data
-  links:
-    - db
-
 nginx:
   build: build/nginx
   links:
