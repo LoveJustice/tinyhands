@@ -121,7 +121,7 @@ class InterceptionRecordSerializer(serializers.ModelSerializer):
         any_red_flags = False
         for field in InterceptionRecord._meta.fields:
             try:
-                if field.weight:
+                if field.weight != None:
                     if data[field.name] == True:
                         any_red_flags = True
             except:

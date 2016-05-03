@@ -484,6 +484,20 @@ class InterceptionRecordViewSet(viewsets.ModelViewSet):
         super_list_response = super(InterceptionRecordViewSet, self).list(request, *args, **kwargs)  # call the supers list view with custom serializer
         self.serializer_class = temp  # put the original serializer back in place
         return super_list_response
+        
+    def retrieve(self, request, *args, **kwargs):
+        response = {}
+        response = super(InterceptionRecordViewSet, self).retrieve(request, *args, **kwargs)
+        for field in InterceptionRecord._meta.fields:
+            try:
+                if field.weight != None:
+                    response.data[field.name] = {
+                        'value': response.data[field.name],
+                        'weight': field.weight
+                    }
+            except:
+                pass
+        return response
 
 
 class VictimInterviewViewSet(viewsets.ModelViewSet):
