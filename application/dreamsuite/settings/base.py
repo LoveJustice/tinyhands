@@ -155,7 +155,7 @@ LOGGING = {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': '/log/dreamsuite.log',
+            'filename':os.environ['DREAMSUITE_LOG'],
             'formatter':'verbose',
         },
     },
