@@ -8,6 +8,7 @@ import os
 import re
 import shutil
 import urllib
+import logging
 
 from StringIO import StringIO
 from django.conf import settings
@@ -47,6 +48,7 @@ from alert_checkers import IRFAlertChecker, VIFAlertChecker
 from fuzzy_matching import match_location
 from rest_api.authentication import HasPermission, HasDeletePermission
 
+logger = logging.getLogger(__name__)
 
 @login_required
 def home(request):
@@ -167,8 +169,11 @@ class InterceptionRecordCreateView(LoginRequiredMixin, PermissionsRequiredMixin,
         form = form.save()
         for formset in inlines:
             formset.save()
+        logger.debug("IRF Create: After save for " + form.irf_number)
         IRFAlertChecker(form, inlines).check_them()
+        logger.debug("IRF Create: After alert checker for " + form.irf_number)
         GoogleSheetClientThread.update_irf(form.irf_number)
+        logger.debug("IRF Create: After google update irf for " + form.irf_number)
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -183,8 +188,11 @@ class InterceptionRecordUpdateView(LoginRequiredMixin, PermissionsRequiredMixin,
         form = form.save()
         for formset in inlines:
             formset.save()
+        logger.debug("IRF Update: After save for " + form.irf_number)
         IRFAlertChecker(form, inlines).check_them()
+        logger.debug("IRF Update: After alert checker for " + form.irf_number)
         GoogleSheetClientThread.update_irf(form.irf_number)
+        logger.debug("IRF Update: After google update irf for " + form.irf_number)
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -243,8 +251,11 @@ class VictimInterviewCreateView(LoginRequiredMixin, PermissionsRequiredMixin, Cr
         form = form.save()
         for formset in inlines:
             formset.save()
+        logger.debug("VIF Create: After save for " + form.vif_number)
         VIFAlertChecker(form, inlines).check_them()
+        logger.debug("VIF Create: After alert checker for " + form.vif_number)
         GoogleSheetClientThread.update_vif(form.vif_number)
+        logger.debug("VIF Create: After google update vif for " + form.vif_number)
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -259,8 +270,11 @@ class VictimInterviewUpdateView(LoginRequiredMixin, PermissionsRequiredMixin, Up
         form = form.save()
         for formset in inlines:
             formset.save()
+        logger.debug("VIF Update: After save for " + form.vif_number)
         VIFAlertChecker(form, inlines).check_them()
+        logger.debug("VIF Update: After alert checker for " + form.vif_number)
         GoogleSheetClientThread.update_vif(form.vif_number)
+        logger.debug("VIF Update: After google update vif for " + form.vif_number)
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -475,6 +489,7 @@ class InterceptionRecordViewSet(viewsets.ModelViewSet):
         irf_id = kwargs['pk']
         irf = InterceptionRecord.objects.get(id=irf_id)
         rv = super(viewsets.ModelViewSet, self).destroy(request, args, kwargs)
+        logger.debug("After IRF destroy " + irf.irf_number)
         GoogleSheetClientThread.update_irf(irf.irf_number)
         return rv
 
@@ -494,6 +509,7 @@ class VictimInterviewViewSet(viewsets.ModelViewSet):
         vif_id = kwargs['pk']
         vif = VictimInterview.objects.get(id=vif_id)
         rv = super(viewsets.ModelViewSet, self).destroy(request, args, kwargs)
+        logger.debug("After VIF destroy " + vif.irf_number)
         GoogleSheetClientThread.update_irf(vif.vif_number)
         return rv
 
