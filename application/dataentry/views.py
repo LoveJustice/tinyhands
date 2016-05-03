@@ -41,14 +41,14 @@ from dataentry.forms import (IntercepteeForm, InterceptionRecordForm, Address2Fo
                              VictimInterviewLocationBoxForm, VictimInterviewPersonBoxForm)
 from dataentry import csv_io
 
-from dataentry.serializers import Address1Serializer, Address2Serializer, InterceptionRecordListSerializer, InterceptionRecordSerializer, VictimInterviewListSerializer, VictimInterviewSerializer
-from dataentry.google_sheets import GoogleSheetClientThread
+from dataentry.serializers import Address1Serializer, Address2Serializer, InterceptionRecordListSerializer, VictimInterviewListSerializer, VictimInterviewSerializer, InterceptionRecordSerializer
 
+from dataentry.google_sheets import GoogleSheetClientThread
 from accounts.mixins import PermissionsRequiredMixin
 
 from alert_checkers import IRFAlertChecker, VIFAlertChecker
 from fuzzy_matching import match_location
-from rest_api.authentication import HasPermission, HasDeletePermission
+from rest_api.authentication import HasPermission, HasDeletePermission, HasGetPermission
 
 
 @login_required
@@ -495,12 +495,11 @@ class InterceptionRecordViewSet(viewsets.ModelViewSet):
         return super_list_response
 
 
-class VictimInterviewViewSet(viewsets.ModelViewSet):
+class VictimInterviewListViewSet(viewsets.ModelViewSet):
     queryset = VictimInterview.objects.all()
     serializer_class = VictimInterviewListSerializer
-    permission_classes = (IsAuthenticated, HasPermission, HasDeletePermission,)
+    permission_classes = (IsAuthenticated, HasPermission,)
     permissions_required = ['permission_vif_view']
-    delete_permissions_required = ['permission_vif_delete']
     filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
     search_fields = ('vif_number',)
     ordering_fields = (
@@ -509,23 +508,21 @@ class VictimInterviewViewSet(viewsets.ModelViewSet):
         'date_time_last_updated',)
     ordering = ('vif_number',)
 
+        
+class VictimInterviewDetailViewSet(viewsets.ModelViewSet):
+    queryset = VictimInterview.objects.all()
+    serializer_class = VictimInterviewSerializer
+    permission_classes = (IsAuthenticated, HasGetPermission, HasDeletePermission, )
+    get_permissions_required = ['permission_vif_view']
+    delete_permissions_required = ['permission_vif_delete']
+
+    
     def destroy(self, request, *args, **kwargs):
         vif_id = kwargs['pk']
         vif = VictimInterview.objects.get(id=vif_id)
         rv = super(viewsets.ModelViewSet, self).destroy(request, args, kwargs)
         GoogleSheetClientThread.update_irf(vif.vif_number)
         return rv
-        
-class VictimInterviewView(viewsets.ModelViewSet):
-    queryset = VictimInterview.objects.all()
-    serializer_class = VictimInterviewSerializer
-
-    def model(self, request, *args, **kwargs):
-        vif_id = kwargs['pk']
-        vif = VictimInterview.objects.get(id=vif_id)
-        serializer_class = VictimInterviewSerializer
-        data = self.get_serializer(vif)
-        return Response(data.data)
 
 
 class BatchView(View):
