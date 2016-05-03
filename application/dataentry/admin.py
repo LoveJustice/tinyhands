@@ -32,12 +32,6 @@ class Address2Admin(admin.ModelAdmin):
     list_display = ['name', 'latitude', 'longitude', 'address1', 'canonical_name']
 
 
-# class FuzzyMatchingAdmin(admin.ModelAdmin):
-#     model = FuzzyMatching
-#     search_fields = ['location_value', 'district_value', 'trafficker_value', 'interceptee_value']
-#     list_display = ['location_value', 'district_value', 'trafficker_value', 'interceptee_value']
-
-
 admin.site.register(InterceptionRecord, InterceptionRecordAdmin)
 admin.site.register(VictimInterview, VictimInterviewAdmin)
 admin.site.register(Address1, Address1Admin)
