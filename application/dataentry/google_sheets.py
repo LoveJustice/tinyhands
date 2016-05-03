@@ -42,7 +42,7 @@ class GoogleSheetClientThread (Thread):
             self.have_credentials = True
         except:
             self.have_credentials = False
-            logging.warn("No credentials file for google spreadsheet.  No update to google spreadsheets will be attempted.")
+            logger.warn("No credentials file for google spreadsheet.  No update to google spreadsheets will be attempted.")
 
     def get_client(self):
         self.client = SpreadsheetsClient()
