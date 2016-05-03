@@ -32,7 +32,7 @@ from static_border_stations.serializers import StaffSerializer, CommitteeMemberS
 from serializers import BorderStationBudgetCalculationSerializer, OtherBudgetItemCostSerializer, StaffSalarySerializer
 
 
-class BudgetViewSet(viewsets.ModelViewSet):
+class OldBudgetViewSet(viewsets.ModelViewSet):
     queryset = BorderStationBudgetCalculation.objects.all()
     serializer_class = BorderStationBudgetCalculationSerializer
 
@@ -152,7 +152,7 @@ def ng_budget_calc_view(request, pk):
     return render(request, 'budget/borderstationbudgetcalculation_form.html', locals())
 
 
-class OtherItemsViewSet(viewsets.ModelViewSet):
+class OldOtherItemsViewSet(viewsets.ModelViewSet):
     queryset = OtherBudgetItemCost.objects.all()
     serializer_class = OtherBudgetItemCostSerializer
 
@@ -172,7 +172,7 @@ class OtherItemsViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
 
-class StaffSalaryViewSet(viewsets.ModelViewSet):
+class OldStaffSalaryViewSet(viewsets.ModelViewSet):
     queryset = StaffSalary.objects.all()
     serializer_class = StaffSalarySerializer
 
