@@ -37,7 +37,7 @@ from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineForm
 from braces.views import LoginRequiredMixin
 from fuzzywuzzy import process
 
-from dataentry.models import (BorderStation, Address2, Address1, Interceptee, InterceptionRecord, VictimInterview, VictimInterviewLocationBox, VictimInterviewPersonBox)
+from dataentry.models import (BorderStation, Address2, Address1, Interceptee, Person, InterceptionRecord, VictimInterview, VictimInterviewLocationBox, VictimInterviewPersonBox)
 from dataentry.forms import (IntercepteeForm, InterceptionRecordForm, Address2Form, Address1Form, VictimInterviewForm, VictimInterviewLocationBoxForm, VictimInterviewPersonBoxForm)
 from dataentry import csv_io
 from dataentry.serializers import Address1Serializer, Address2Serializer, InterceptionRecordListSerializer, VictimInterviewListSerializer

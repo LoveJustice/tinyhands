@@ -39,16 +39,22 @@ class VifFactory(DjangoModelFactory):
     date_time_last_updated = datetime.datetime(2011, 12, 12, tzinfo=pytz.UTC)
 
 
+class PersonFactory(DjangoModelFactory):
+    class Meta:
+        model = Person
+
+    full_name = factory.Sequence(lambda n: 'John Doe {0}'.format(n))
+    age = FuzzyInteger(20, 40)
+    phone_contact = str(FuzzyInteger(100000000000, 999999999999).fuzz())
+    gender = 'm'
+
 
 class IntercepteeFactory(DjangoModelFactory):
     class Meta:
         model = Interceptee
 
-    full_name = factory.Sequence(lambda n: 'John Doe {0}'.format(n))
-    age = FuzzyInteger(20, 40)
-    phone_contact = str(FuzzyInteger(100000000000, 999999999999).fuzz())
+    person = factory.SubFactory(PersonFactory)
     photo = 'foo.png'
-    gender = 'm'
     interception_record = factory.SubFactory(IrfFactory)
     kind = 'v'
 
@@ -58,6 +64,7 @@ class Address1Factory(DjangoModelFactory):
         model = Address1
 
     name = factory.Sequence(lambda n: 'Address1 {0}'.format(n))
+
 
 
 class CanonicalNameFactory(DjangoModelFactory):
