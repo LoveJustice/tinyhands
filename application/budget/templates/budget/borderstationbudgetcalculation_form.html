@@ -82,9 +82,8 @@
                             <div class="row" ng-repeat="form in staff.staffSalaryForms" ng-init="staff.totalSalaries();">
 
                                 <div class="col-lg-5 col-lg-offset-1">
-                                    <label style="margin-bottom: 0; margin-top: 5px">{{ form.name }}</label>
+                                    <label style="margin-bottom: 0; margin-top: 5px">{{ form.staff_person }}</label>
                                 </div>
-
                                 <div class="col-lg-3">
                                     <input class="text-right form-control" type="number" ng-model="form.salary" ng-change="staff.totalSalaries()" ng-disabled="main.view"/>
                                 </div>
