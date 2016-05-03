@@ -21,7 +21,9 @@ from braces.views import LoginRequiredMixin
 from rest_framework.decorators import list_route
 from rest_framework import filters, viewsets
 from rest_framework.decorators import api_view
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_api.authentication import HasPermission
 from templated_email import send_templated_mail
 from accounts.mixins import PermissionsRequiredMixin
 
@@ -35,6 +37,8 @@ from serializers import BorderStationBudgetCalculationSerializer, OtherBudgetIte
 class BudgetViewSet(viewsets.ModelViewSet):
     queryset = BorderStationBudgetCalculation.objects.all()
     serializer_class = BorderStationBudgetCalculationSerializer
+    permission_classes = [IsAuthenticated, HasPermission]
+    permissions_required = ['permission_budget_manage']
     filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
     search_fields = ['border_station__station_name', 'border_station__station_code']
     ordering_fields = ['border_station__station_name', 'border_station__station_code', 'month_year', 'date_time_entered', 'date_time_last_updated']
@@ -163,10 +167,12 @@ def ng_budget_calc_view(request, pk):
 
 
 class OtherItemsViewSet(viewsets.ModelViewSet):
-    filter_backends = (filters.DjangoFilterBackend,)
-    filter_fields = ('form_section',)
     queryset = OtherBudgetItemCost.objects.all()
     serializer_class = OtherBudgetItemCostSerializer
+    permission_classes = [IsAuthenticated, HasPermission]
+    permissions_required = ['permission_budget_manage']
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_fields = ('form_section',)
 
     def list(self, request, *args, **kwargs):
         """

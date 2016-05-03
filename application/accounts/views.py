@@ -127,6 +127,7 @@ class AccountViewSet(ModelViewSet):
         serializer = self.get_serializer(accounts, many=True)
         return Response(serializer.data)
 
+
 class DefaultPermissionsSetViewSet(ModelViewSet):
     queryset = DefaultPermissionsSet.objects.all()
     serializer_class = DefaultPermissionsSetSerializer
