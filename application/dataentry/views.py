@@ -1,10 +1,15 @@
-from datetime import date
+import zipfile
+from datetime import date, datetime
+from time import strptime, mktime
 import csv
+import io
 import json
 import os
 import re
 import shutil
+import urllib
 
+from StringIO import StringIO
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core import serializers
@@ -15,6 +20,7 @@ from django.core.urlresolvers import reverse_lazy
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import redirect, render_to_response, render
 from django.template.loader import render_to_string
+from django.utils import timezone
 from django.views.generic import ListView, View, DeleteView, CreateView, TemplateView
 
 from rest_framework import status
@@ -34,9 +40,10 @@ from dataentry.models import (BorderStation, Address2, Address1, Interceptee, In
 from dataentry.forms import (IntercepteeForm, InterceptionRecordForm, Address2Form, Address1Form, VictimInterviewForm,
                              VictimInterviewLocationBoxForm, VictimInterviewPersonBoxForm)
 from dataentry import csv_io
-from dataentry.serializers import Address1Serializer, Address2Serializer, InterceptionRecordListSerializer, \
-    VictimInterviewListSerializer, VictimInterviewSerializer
+
+from dataentry.serializers import Address1Serializer, Address2Serializer, InterceptionRecordListSerializer, InterceptionRecordSerializer, VictimInterviewListSerializer, VictimInterviewSerializer
 from dataentry.google_sheets import GoogleSheetClientThread
+
 from accounts.mixins import PermissionsRequiredMixin
 
 from alert_checkers import IRFAlertChecker, VIFAlertChecker
@@ -449,7 +456,7 @@ class Address1ViewSet(viewsets.ModelViewSet):
     permissions_required = ['permission_address2_manage']
     filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
     search_fields = ('name',)
-    ordering_fields = ('name',)
+    ordering_fields = ('name','longitude','latitude','level','completed')
     ordering = ('name',)
 
     @list_route()
@@ -461,7 +468,7 @@ class Address1ViewSet(viewsets.ModelViewSet):
 
 class InterceptionRecordViewSet(viewsets.ModelViewSet):
     queryset = InterceptionRecord.objects.all()
-    serializer_class = InterceptionRecordListSerializer
+    serializer_class = InterceptionRecordSerializer
     permission_classes = (IsAuthenticated, HasPermission, HasDeletePermission,)
     permissions_required = ['permission_irf_view']
     delete_permissions_required = ['permission_irf_delete']
@@ -480,6 +487,13 @@ class InterceptionRecordViewSet(viewsets.ModelViewSet):
         GoogleSheetClientThread.update_irf(irf.irf_number)
         return rv
 
+    def list(self, request, *args, **kwargs):
+        temp = self.serializer_class
+        self.serializer_class = InterceptionRecordListSerializer  # we want to use a custom serializer just for the list view
+        super_list_response = super(InterceptionRecordViewSet, self).list(request, *args, **kwargs)  # call the supers list view with custom serializer
+        self.serializer_class = temp  # put the original serializer back in place
+        return super_list_response
+
 
 class VictimInterviewViewSet(viewsets.ModelViewSet):
     queryset = VictimInterview.objects.all()
@@ -495,7 +509,13 @@ class VictimInterviewViewSet(viewsets.ModelViewSet):
         'date_time_last_updated',)
     ordering = ('vif_number',)
 
-
+    def destroy(self, request, *args, **kwargs):
+        vif_id = kwargs['pk']
+        vif = VictimInterview.objects.get(id=vif_id)
+        rv = super(viewsets.ModelViewSet, self).destroy(request, args, kwargs)
+        GoogleSheetClientThread.update_irf(vif.vif_number)
+        return rv
+        
 class VictimInterviewView(viewsets.ModelViewSet):
     queryset = VictimInterview.objects.all()
     serializer_class = VictimInterviewSerializer
@@ -507,9 +527,35 @@ class VictimInterviewView(viewsets.ModelViewSet):
         data = self.get_serializer(vif)
         return Response(data.data)
 
-    def destroy(self, request, *args, **kwargs):
-        vif_id = kwargs['pk']
-        vif = VictimInterview.objects.get(id=vif_id)
-        rv = super(viewsets.ModelViewSet, self).destroy(request, args, kwargs)
-        GoogleSheetClientThread.update_irf(vif.vif_number)
-        return rv
+
+class BatchView(View):
+    def get(self, request, startDate, endDate):
+        start = timezone.make_aware(datetime.fromtimestamp(mktime(strptime(startDate, '%m-%d-%Y'))), timezone.get_default_timezone())
+        end = timezone.make_aware(datetime.fromtimestamp(mktime(strptime(endDate, '%m-%d-%Y'))), timezone.get_default_timezone())
+
+        listOfIrfNumbers = []
+        irfs = InterceptionRecord.objects.all()
+        for irf in irfs:
+            irfDate = irf.date_time_of_interception
+            if start <= irfDate <= end:
+                listOfIrfNumbers.append(irf.irf_number)
+
+        photos = list(Interceptee.objects.filter(interception_record__irf_number__in=listOfIrfNumbers).values_list('photo', 'full_name', 'interception_record__irf_number'))
+        if len(photos) == 0:
+            return render(request, 'dataentry/batch_photo_error.html')
+        else:
+            for i in range(len(photos)):
+                photos[i] = [str(x) for x in photos[i]]
+
+            f = StringIO()
+            imagezip = zipfile.ZipFile(f, 'w')
+            for photoTuple in photos:
+                if photoTuple[0] == '':
+                    continue
+                imageFile = open(settings.MEDIA_ROOT + '/' + photoTuple[0])
+                imagezip.writestr(photoTuple[2] + '-' + photoTuple[1] + '.jpg', imageFile.read())
+            imagezip.close()  # Close
+
+            response = HttpResponse(f.getvalue(), content_type="application/zip")
+            response['Content-Disposition'] = 'attachment; filename=irfPhotos ' + startDate + ' to ' + endDate + '.zip'
+            return response

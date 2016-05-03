@@ -13,15 +13,6 @@
                 <div class="form-group">
                     {% for field in form %}
                     <div class="form-group">
-                        {% if field.errors %}
-                        <ul class="list-unstyled">
-                            {% for error in field.errors %}
-                            <li class="text-danger">
-                                <span class="fa fa-exclamation-triangle"></span><strong>{{ error|escape }}</strong>
-                            </li>
-                            {% endfor %}
-                        </ul>
-                        {% endif %}
                         {{ field|bootstrap }}
                         {% if field.help_text %}
                         <div class="form-helptext">{{ field.help_text }}</div>

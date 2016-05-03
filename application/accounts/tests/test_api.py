@@ -18,7 +18,7 @@ class AccountsGetTests(RestApiTestCase):
 
         response = self.client.get(url)
 
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertEqual(response.data['detail'], 'Authentication credentials were not provided.')
 
     def test_when_authenticated_and_does_not_have_permission_should_deny_access(self):
@@ -74,7 +74,7 @@ class AccountsPostTests(RestApiTestCase):
 
         response = self.client.post(url, {})
 
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertEqual(response.data['detail'], 'Authentication credentials were not provided.')
 
     def test_when_authenticated_and_does_not_have_permission_should_deny_access(self):
@@ -108,7 +108,7 @@ class AccountGetTests(RestApiTestCase):
 
         response = self.client.get(url)
 
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertEqual(response.data['detail'], 'Authentication credentials were not provided.')
 
     def test_when_authenticated_and_does_not_have_permission_should_deny_access(self):
@@ -167,7 +167,7 @@ class AccountPutTests(RestApiTestCase):
 
         response = self.client.put(url, update_user_data)
 
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertEqual(response.data['detail'], 'Authentication credentials were not provided.')
 
     def test_when_authenticated_and_does_not_have_permission_should_deny_access(self):
@@ -205,7 +205,7 @@ class AccountDeleteTests(RestApiTestCase):
 
         response = self.client.delete(url)
 
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertEqual(response.data['detail'], 'Authentication credentials were not provided.')
 
     def test_when_authenticated_and_does_not_have_permission_should_deny_access(self):
@@ -237,7 +237,7 @@ class DefaultPermissionsSetsGetTests(RestApiTestCase):
 
         response = self.client.get(url)
 
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertEqual(response.data['detail'], 'Authentication credentials were not provided.')
 
     def test_when_authenticated_and_does_not_have_permission_should_deny_access(self):
@@ -287,7 +287,7 @@ class DefaultPermissionsSetsPostTests(RestApiTestCase):
 
         response = self.client.post(url, self.new_permission_set)
 
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertEqual(response.data['detail'], 'Authentication credentials were not provided.')
 
     def test_when_authenticated_and_does_not_have_permission_should_deny_access(self):
@@ -320,7 +320,7 @@ class DefaultPermissionsSetGetTests(RestApiTestCase):
 
         response = self.client.get(url)
 
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertEqual(response.data['detail'], 'Authentication credentials were not provided.')
 
     def test_when_authenticated_and_does_not_have_permission_should_deny_access(self):
@@ -381,7 +381,7 @@ class DefaultPermissionsSetPutTests(RestApiTestCase):
 
         response = self.client.put(url, update_permission_set)
 
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertEqual(response.data['detail'], 'Authentication credentials were not provided.')
 
     def test_when_authenticated_and_does_not_have_permission_should_deny_access(self):
@@ -424,7 +424,7 @@ class DefaultPermissionsSetDeleteTests(RestApiTestCase):
 
         response = self.client.delete(url)
 
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertEqual(response.data['detail'], 'Authentication credentials were not provided.')
 
     def test_when_authenticated_and_does_not_have_permission_should_deny_access(self):
@@ -467,7 +467,7 @@ class CurrentUserTests(RestApiTestCase):
 
         response = self.client.get(url)
 
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertEqual(response.data['detail'], 'Authentication credentials were not provided.')
 
     def test_when_logged_in_should_return_logged_in_users_account(self):
@@ -488,7 +488,7 @@ class ResendActivationEmailTests(RestApiTestCase):
 
         response = self.client.post(url)
 
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertEqual(response.data['detail'], 'Authentication credentials were not provided.')
 
 
