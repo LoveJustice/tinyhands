@@ -1,7 +1,6 @@
 from django.conf.urls import url
 from accounts.views import CurrentUserView
-
-from dataentry.views import Address2ViewSet, Address1ViewSet, GeoCodeAddress1APIView, GeoCodeAddress2APIView, InterceptionRecordViewSet, VictimInterviewViewSet, BatchView
+from dataentry.views import Address2ViewSet, Address1ViewSet, GeoCodeAddress1APIView, GeoCodeAddress2APIView, InterceptionRecordViewSet, VictimInterviewViewSet, BatchView, VictimInterviewView
 from budget.views import BudgetViewSet, OtherItemsViewSet
 from accounts.views import AccountViewSet, DefaultPermissionsSetViewSet, CurrentUserView, ResendActivationEmailView
 from static_border_stations.views import BorderStationViewSet, StaffViewSet, CommitteeMemberViewSet, LocationViewSet
@@ -62,7 +61,7 @@ urlpatterns = [
 
     # VIFs
     url(r'^vif/$', VictimInterviewViewSet.as_view({'get': 'list'}), name="VictimInterview"),
-    url(r'^vif/(?P<pk>\d+)/$', VictimInterviewViewSet.as_view({'delete': 'destroy'}), name="VictimInterviewDetail"),
+    url(r'^vif/(?P<pk>\d+)/$', VictimInterviewView.as_view({'delete': 'destroy', 'get': 'model', 'put':'update'}), name="VictimInterviewDetail"),
 
     #IRFBatch
     url(r'^batch/(?P<startDate>(\d{2}|\d{1})-(\d{2}|\d{1})-\d{4})/(?P<endDate>\d{2}-\d{2}-\d{4})', BatchView.as_view(), name="BatchView"),
