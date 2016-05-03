@@ -105,27 +105,26 @@ class IRFAlertChecker(object):
         """
         all_people = Interceptee.objects.all()
         people_dict = {obj: obj.full_name for obj in all_people}
-
         trafficker_list = []
-        traffickers_and_their_matches = {}
 
         trafficker_in_custody = self.trafficker_in_custody()
 
         for person in self.interceptees:
             if person.cleaned_data.get("kind") == 't':
-
-                trafficker_list.append(person.instance)
-
-        if len(trafficker_list) > 0:
-            for trafficker in trafficker_list:
-                    traffickers_and_their_matches[trafficker.full_name] = process.extractBests(trafficker.full_name, people_dict, score_cutoff=89, limit = 10)
-
+                onePersonMatches = []
+                tmplist =[]
+                p=person.instance
+                onePersonMatches= process.extractBests(p.full_name, people_dict, score_cutoff=89, limit = 10)
+                for match in onePersonMatches:
+                    tuplematch=(match[1],match[2])
+                    tmplist.append(tuplematch)
+                tmplist.insert(0,(0,person.instance))
+                trafficker_list.append(tmplist)
 
         if len(trafficker_list) > 0:
             Alert.objects.send_alert("Name Match",
                                      context={"irf": self.irf,
                                               "trafficker_list": trafficker_list,
-                                              "traffickers_and_their_matches_dictionary": traffickers_and_their_matches,
                                               "trafficker_in_custody" : trafficker_in_custody})
             return True
         return False
