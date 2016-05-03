@@ -100,12 +100,17 @@
   };
 
   display_results = function(results, $ui) {
-    var $li, $span, $ul, item, _i, _len, _ref, _results;
+    var $li, $span, $ul, item, _i, _len, _ref, _results, _reslen;
     $ul = $ui.find("ul");
     $ul.children().remove();
-    if (results.length > 0) {
+    _reslen = results.length
+    if (_reslen > 0) {
       _ref = results.slice(0, 100);
       _results = [];
+      // calculate height of fuzzymatching div
+      document.getElementById("fuzzymatching-ui").style.height = (parseInt(_reslen*20 + 25) + 'px');
+
+      console.log("Length:", _ref.length);
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         item = _ref[_i];
         $span = $("<span>").addClass("name").text(item.name);
