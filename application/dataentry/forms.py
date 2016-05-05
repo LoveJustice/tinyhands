@@ -17,12 +17,12 @@ BOOLEAN_CHOICES = [
 
 LEVEL_CHOICES = [
     ('Country','Country'),
-    ('State','State'),    
+    ('State','State'),
     ('District','District'),
     ('City','City'),
     ('VDC','VDC'),
     ('Block','Block'),
-    ('Building','Building')    
+    ('Building','Building')
 ]
 
 
@@ -963,9 +963,8 @@ class BorderStationForm(forms.ModelForm):
 
 class Address2Form(forms.ModelForm):
     class Meta:
-
         model = Address2
-	exclude = []
+        exclude = []
 
     def __init__(self, *args, **kwargs):
         super(Address2Form, self).__init__(*args, **kwargs)
