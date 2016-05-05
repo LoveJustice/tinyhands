@@ -43,7 +43,7 @@
                     <div ng-show="tally.showEvents">
                         <!--   REGION: Events     -->
                         <div id="content-window" ng-controller="EventDashboardCtrl as eventCtrl">
-                            <div class="col-md-offset-9 col-md-3 events-div-1 events" ng-repeat="day in eventCtrl.days">
+                            <div class="col-md-3 events-div-1 events" ng-repeat="day in eventCtrl.days">
                                 <div ng-repeat="event in day">
                                     <div ng-if="$index == 0"><span class="day">{{ event.weekday }}</span> </div>
                                     <div ng-if="$index != 0">
