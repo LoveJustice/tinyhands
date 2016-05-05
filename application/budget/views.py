@@ -21,7 +21,9 @@ from braces.views import LoginRequiredMixin
 from rest_framework.decorators import list_route
 from rest_framework import filters, viewsets
 from rest_framework.decorators import api_view
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_api.authentication import HasPermission
 from templated_email import send_templated_mail
 from accounts.mixins import PermissionsRequiredMixin
 
@@ -32,9 +34,16 @@ from static_border_stations.serializers import StaffSerializer, CommitteeMemberS
 from serializers import BorderStationBudgetCalculationSerializer, OtherBudgetItemCostSerializer, StaffSalarySerializer, BorderStationBudgetCalculationListSerializer
 
 
+class OldBudgetViewSet(viewsets.ModelViewSet):
+    queryset = BorderStationBudgetCalculation.objects.all()
+    serializer_class = BorderStationBudgetCalculationSerializer
+
+
 class BudgetViewSet(viewsets.ModelViewSet):
     queryset = BorderStationBudgetCalculation.objects.all()
     serializer_class = BorderStationBudgetCalculationSerializer
+    permission_classes = [IsAuthenticated, HasPermission]
+    permissions_required = ['permission_budget_manage']
     filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
     search_fields = ['border_station__station_name', 'border_station__station_code']
     ordering_fields = ['border_station__station_name', 'border_station__station_code', 'month_year', 'date_time_entered', 'date_time_last_updated']
@@ -162,11 +171,32 @@ def ng_budget_calc_view(request, pk):
     return render(request, 'budget/borderstationbudgetcalculation_form.html', locals())
 
 
-class OtherItemsViewSet(viewsets.ModelViewSet):
-    filter_backends = (filters.DjangoFilterBackend,)
-    filter_fields = ('form_section',)
+class OldOtherItemsViewSet(viewsets.ModelViewSet):
     queryset = OtherBudgetItemCost.objects.all()
     serializer_class = OtherBudgetItemCostSerializer
+
+    def retrieve(self, request, *args, **kwargs):
+        """
+            I'm overriding this method to retrieve all
+            of the budget items for a particular budget calculation sheet
+        """
+        self.object_list = self.filter_queryset(self.get_queryset().filter(budget_item_parent=self.kwargs['pk']))
+        serializer = self.get_serializer(self.object_list, many=True)
+        return Response(serializer.data)
+
+    @list_route()
+    def list_by_budget_sheet(self, request, parent_pk, *args, **kwargs):
+        other_items_list = OtherBudgetItemCost.objects.filter(budget_item_parent_id=parent_pk)
+        serializer = self.get_serializer(other_items_list, many=True)
+        return Response(serializer.data)
+
+class OtherItemsViewSet(viewsets.ModelViewSet):
+    queryset = OtherBudgetItemCost.objects.all()
+    serializer_class = OtherBudgetItemCostSerializer
+    permission_classes = [IsAuthenticated, HasPermission]
+    permissions_required = ['permission_budget_manage']
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_fields = ('form_section',)
 
     def list(self, request, *args, **kwargs):
         """
@@ -183,6 +213,24 @@ class OtherItemsViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(other_items_list, many=True)
         return Response(serializer.data)
 
+
+class OldStaffSalaryViewSet(viewsets.ModelViewSet):
+    queryset = StaffSalary.objects.all()
+    serializer_class = StaffSalarySerializer
+
+    def budget_calc_retrieve(self, request, *args, **kwargs):
+        """
+            Retrieve all of the staffSalaries for a particular budget calculation sheet
+        """
+        budget_sheet = BorderStationBudgetCalculation.objects.filter(border_station=self.kwargs['pk']).order_by('-date_time_entered').first()
+        if budget_sheet:
+            staff_set = budget_sheet.staffsalary_set.all()
+            serializer = self.get_serializer(staff_set, many=True)
+            return Response(serializer.data)
+        else:
+            self.object_list = self.filter_queryset(self.get_queryset().filter(budget_calc_sheet=self.kwargs['pk']))
+            serializer = self.get_serializer(self.object_list, many=True)
+            return Response(serializer.data)
 
 class StaffSalaryViewSet(viewsets.ModelViewSet):
     queryset = StaffSalary.objects.all()

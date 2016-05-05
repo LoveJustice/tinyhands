@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login
 from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse_lazy
 from django.contrib import messages
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, RedirectView, TemplateView
 from django.contrib.auth.decorators import login_required
 from braces.views import LoginRequiredMixin
@@ -66,6 +66,25 @@ class AccountActivateView(UpdateView):
         login(self.request, account)
         return super(AccountActivateView, self).form_valid(form)
 
+class AccountActivateClient(APIView):
+    def get(self, request, activation_key=None):
+        account = Account.objects.get(activation_key=activation_key)
+        if account and account.has_usable_password():
+            return HttpResponse("account_already_active/invalid_key")
+        serializer = AccountsSerializer(account)
+        return Response(serializer.data)
+
+    def post(self, request, activation_key=None, password1=None, password2=None):
+        account = Account.objects.get(activation_key=activation_key)
+        if account and account.has_usable_password():
+            return HttpResponse("account_already_active/invalid_key")
+        elif request.data['password1'] != request.data['password2']:
+            return HttpResponse("unmatching_passwords")
+        else:
+            account.set_password(request.data['password1'])
+            account.save()
+            return HttpResponse("acount_saved")
+
 
 class AccountUpdateView(
         LoginRequiredMixin,
@@ -95,17 +114,6 @@ class AccessDefaultsView(
     permissions_required = ['permission_accounts_manage']
 
 
-#TODO Currently this view doesn't check to make sure the permission set is
-# unused by accounts.  The button to go here is grayed out, but that wouldn't
-# stop someone who was bent on deleting.  Come back to this someday.
-class AccessDefaultsDeleteView(
-        LoginRequiredMixin,
-        PermissionsRequiredMixin,
-        DeleteView):
-    model = DefaultPermissionsSet
-    permissions_required = ['permission_accounts_manage']
-    success_url = reverse_lazy('access_defaults')
-
 #Rest Api Views
 class AccountViewSet(ModelViewSet):
     queryset = Account.objects.all()
@@ -118,6 +126,7 @@ class AccountViewSet(ModelViewSet):
         accounts = Account.objects.all()
         serializer = self.get_serializer(accounts, many=True)
         return Response(serializer.data)
+
 
 class DefaultPermissionsSetViewSet(ModelViewSet):
     queryset = DefaultPermissionsSet.objects.all()

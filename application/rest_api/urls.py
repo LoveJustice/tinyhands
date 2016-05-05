@@ -3,13 +3,15 @@ from accounts.views import CurrentUserView
 
 from rest_framework.authtoken import views
 
-from budget.views import BudgetViewSet, OtherItemsViewSet, MoneyDistribution, MoneyDistributionFormPDFView, money_distribution_view, retrieve_latest_budget_sheet_for_border_station, previous_data, StaffSalaryViewSet
+from budget.views import BudgetViewSet, OtherItemsViewSet, OldBudgetViewSet, OldOtherItemsViewSet, MoneyDistribution, MoneyDistributionFormPDFView, money_distribution_view, retrieve_latest_budget_sheet_for_border_station, previous_data, StaffSalaryViewSet
 
 from portal.views import get_interception_records
-from dataentry.views import Address2ViewSet, Address1ViewSet, GeoCodeAddress1APIView, GeoCodeAddress2APIView, InterceptionRecordViewSet, VictimInterviewViewSet, IntercepteeViewSet
-from accounts.views import AccountViewSet, DefaultPermissionsSetViewSet, CurrentUserView, ResendActivationEmailView, AccountActivateView
+from dataentry.views import Address2ViewSet, Address1ViewSet, GeoCodeAddress1APIView, GeoCodeAddress2APIView, InterceptionRecordViewSet, VictimInterviewViewSet, BatchView, IntercepteeViewSet
+from budget.views import OldBudgetViewSet, OldOtherItemsViewSet, BudgetViewSet, OtherItemsViewSet
+from accounts.views import AccountViewSet, DefaultPermissionsSetViewSet, CurrentUserView, ResendActivationEmailView, AccountActivateView, AccountActivateClient
 from static_border_stations.views import BorderStationViewSet, StaffViewSet, CommitteeMemberViewSet, LocationViewSet
 from events.views import EventViewSet
+
 
 list = {'get': 'list', 'post': 'create'}
 detail = {'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}
@@ -22,7 +24,7 @@ urlpatterns = [
         url(r'^account/$', AccountViewSet.as_view(list), name="AccountList"),
         url(r'^account/all/$', AccountViewSet.as_view({'get': 'list_all'}), name="AccountListAll"),
         url(r'^account/(?P<pk>\d+)/$', AccountViewSet.as_view(detail), name='Account'),
-        url(r'^account/activate-account/(?P<activation_key>[a-zA-Z0-9]+)/$', AccountActivateView.as_view(), name='account_activate'),
+        url(r'^account/activate/(?P<activation_key>[a-zA-Z0-9]+)/$', AccountActivateClient.as_view(), name='account_activate'),
         url(r'^account/resend-activation-email/(?P<pk>\d+)/$', ResendActivationEmailView.as_view(), name='ResendActivationEmail'),
 
         url(r'^defaultPermissionsSet/$', DefaultPermissionsSetViewSet.as_view(list), name="DefaultPermissionsSets"),
@@ -72,6 +74,15 @@ urlpatterns = [
         url(r'^budget/money_distribution_pdf/(?P<pk>\d+)/$', MoneyDistributionFormPDFView.as_view(), name="rest_api_money_distribution_pdf"),
         url(r'^budget/money_distribution/view/(?P<pk>\d+)/$', money_distribution_view, name="rest_api_money_distribution_view"),
 
+        # Old Budget viewsets for the old django site. needs to change eventually - ask ben duggan about it
+            # Budget URLs
+            url(r'^Oldbudget/$', OldBudgetViewSet.as_view({'get': 'list', 'post': 'create'}), name='OldBudgetCalculation'),
+            url(r'^Oldbudget/(?P<pk>\d+)/$', OldBudgetViewSet.as_view({'put': 'update', 'get': 'retrieve', 'delete': 'destroy'}), name='OldBudgetCalculationWithId'),
+
+            # Other items
+            url(r'^Oldbudget/(?P<parent_pk>\d+)/item/$', OldOtherItemsViewSet.as_view({'get': 'list_by_budget_sheet', 'post': 'create'}), name='OldBudgetCalculationWithId'),
+            url(r'^Oldbudget/(?P<parent_pk>\d+)/item/(?P<pk>\d+)/$', OldOtherItemsViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}), name='OldBudgetCalculationWithId'),
+
 
     # Portal App
         url(r'^get_interception_records/$', get_interception_records, name='get_interception_records'),
@@ -94,10 +105,16 @@ urlpatterns = [
         url(r'^staff/$', StaffViewSet.as_view(list), name="AllStaff"),
         url(r'^staff/(?P<pk>\d+)/$', StaffViewSet.as_view(detail), name="Staff"),
 
-    # Events
-        url(r'^event/$', EventViewSet.as_view({'get': 'list', 'post':'create'}), name="EventList"),
-        url(r'^event/all/$', EventViewSet.as_view({'get': 'list_all'}), name="EventListAll"),
-        url(r'^event/(?P<pk>\d+)/$', EventViewSet.as_view({'get':'retrieve', 'put':'update', 'delete':'destroy'}), name='Event'),
-        url(r'^event/feed/calendar/$', EventViewSet.as_view({'get': 'calendar_feed'}), name='EventCalendarFeed'),
-        url(r'^event/feed/dashboard/$', EventViewSet.as_view({'get': 'dashboard_feed'}), name='EventDashboardFeed')
+        # Events
+            url(r'^event/$', EventViewSet.as_view({'get': 'list', 'post':'create'}), name="EventList"),
+            url(r'^event/all/$', EventViewSet.as_view({'get': 'list_all'}), name="EventListAll"),
+            url(r'^event/(?P<pk>\d+)/$', EventViewSet.as_view({'get':'retrieve', 'put':'update', 'delete':'destroy'}), name='Event'),
+            url(r'^event/feed/calendar/$', EventViewSet.as_view({'get': 'calendar_feed'}), name='EventCalendarFeed'),
+            url(r'^event/feed/dashboard/$', EventViewSet.as_view({'get': 'dashboard_feed'}), name='EventDashboardFeed'),
+        #IRFBatch
+        url(r'^batch/(?P<startDate>(\d{2}|\d{1})-(\d{2}|\d{1})-\d{4})/(?P<endDate>\d{2}-\d{2}-\d{4})', BatchView.as_view(), name="BatchView")
+
+
 ]
+
+
