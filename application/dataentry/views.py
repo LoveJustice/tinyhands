@@ -8,6 +8,7 @@ import os
 import re
 import shutil
 import urllib
+import logging
 
 from StringIO import StringIO
 from django.conf import settings
@@ -36,7 +37,7 @@ from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineForm
 from braces.views import LoginRequiredMixin
 from fuzzywuzzy import process
 
-from dataentry.models import (BorderStation, Address2, Address1, Interceptee, InterceptionRecord, VictimInterview, VictimInterviewLocationBox, VictimInterviewPersonBox)
+from dataentry.models import (BorderStation, Address2, Address1, Interceptee, Person, InterceptionRecord, VictimInterview, VictimInterviewLocationBox, VictimInterviewPersonBox)
 from dataentry.forms import (IntercepteeForm, InterceptionRecordForm, Address2Form, Address1Form, VictimInterviewForm, VictimInterviewLocationBoxForm, VictimInterviewPersonBoxForm)
 from dataentry import csv_io
 from dataentry.serializers import Address1Serializer, Address2Serializer, InterceptionRecordListSerializer, VictimInterviewListSerializer
@@ -47,6 +48,7 @@ from alert_checkers import IRFAlertChecker, VIFAlertChecker
 from fuzzy_matching import match_location
 from rest_api.authentication import HasPermission, HasDeletePermission
 
+logger = logging.getLogger(__name__)
 
 @login_required
 def home(request):
@@ -167,8 +169,11 @@ class InterceptionRecordCreateView(LoginRequiredMixin, PermissionsRequiredMixin,
         form = form.save()
         for formset in inlines:
             formset.save()
+        logger.debug("IRF Create: After save for " + form.irf_number)
         IRFAlertChecker(form, inlines).check_them()
+        logger.debug("IRF Create: After alert checker for " + form.irf_number)
         GoogleSheetClientThread.update_irf(form.irf_number)
+        logger.debug("IRF Create: After google update irf for " + form.irf_number)
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -183,8 +188,11 @@ class InterceptionRecordUpdateView(LoginRequiredMixin, PermissionsRequiredMixin,
         form = form.save()
         for formset in inlines:
             formset.save()
+        logger.debug("IRF Update: After save for " + form.irf_number)
         IRFAlertChecker(form, inlines).check_them()
+        logger.debug("IRF Update: After alert checker for " + form.irf_number)
         GoogleSheetClientThread.update_irf(form.irf_number)
+        logger.debug("IRF Update: After google update irf for " + form.irf_number)
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -243,8 +251,11 @@ class VictimInterviewCreateView(LoginRequiredMixin, PermissionsRequiredMixin, Cr
         form = form.save()
         for formset in inlines:
             formset.save()
+        logger.debug("VIF Create: After save for " + form.vif_number)
         VIFAlertChecker(form, inlines).check_them()
+        logger.debug("VIF Create: After alert checker for " + form.vif_number)
         GoogleSheetClientThread.update_vif(form.vif_number)
+        logger.debug("VIF Create: After google update vif for " + form.vif_number)
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -259,8 +270,11 @@ class VictimInterviewUpdateView(LoginRequiredMixin, PermissionsRequiredMixin, Up
         form = form.save()
         for formset in inlines:
             formset.save()
+        logger.debug("VIF Update: After save for " + form.vif_number)
         VIFAlertChecker(form, inlines).check_them()
+        logger.debug("VIF Update: After alert checker for " + form.vif_number)
         GoogleSheetClientThread.update_vif(form.vif_number)
+        logger.debug("VIF Update: After google update vif for " + form.vif_number)
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -449,7 +463,7 @@ class Address1ViewSet(viewsets.ModelViewSet):
     search_fields = ('name',)
     ordering_fields = ('name','longitude','latitude','level','completed')
     ordering = ('name',)
-    
+
 
 
     @list_route()
@@ -470,11 +484,12 @@ class InterceptionRecordViewSet(viewsets.ModelViewSet):
     search_fields = ('irf_number',)
     ordering_fields = ('irf_number', 'staff_name', 'number_of_victims', 'number_of_traffickers', 'date_time_of_interception', 'date_time_entered_into_system', 'date_time_last_updated',)
     ordering = ('irf_number',)
-    
+
     def destroy(self, request, *args, **kwargs):
         irf_id = kwargs['pk']
         irf = InterceptionRecord.objects.get(id=irf_id)
         rv = super(viewsets.ModelViewSet, self).destroy(request, args, kwargs)
+        logger.debug("After IRF destroy " + irf.irf_number)
         GoogleSheetClientThread.update_irf(irf.irf_number)
         return rv
 
@@ -494,6 +509,7 @@ class VictimInterviewViewSet(viewsets.ModelViewSet):
         vif_id = kwargs['pk']
         vif = VictimInterview.objects.get(id=vif_id)
         rv = super(viewsets.ModelViewSet, self).destroy(request, args, kwargs)
+        logger.debug("After VIF destroy " + vif.irf_number)
         GoogleSheetClientThread.update_irf(vif.vif_number)
         return rv
 
@@ -520,8 +536,10 @@ class BatchView(View):
             f = StringIO()
             imagezip = zipfile.ZipFile(f, 'w')
             for photoTuple in photos:
-                fileurl = urllib.urlopen('http://edwards.cse.taylor.edu/media/' + photoTuple[0])
-                imagezip.writestr(photoTuple[2] + '-' + photoTuple[1] + '.jpg', fileurl.read())
+                if photoTuple[0] == '':
+                    continue
+                imageFile = open(settings.MEDIA_ROOT + '/' + photoTuple[0])
+                imagezip.writestr(photoTuple[2] + '-' + photoTuple[1] + '.jpg', imageFile.read())
             imagezip.close()  # Close
 
             response = HttpResponse(f.getvalue(), content_type="application/zip")

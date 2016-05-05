@@ -1,0 +1,41 @@
+server {
+  listen         80;
+  server_name    ${SITE_HOSTNAME};
+  location / {
+  	rewrite ^ https://$server_name$request_uri permanent;
+  }
+}
+
+server {
+	server_name ${SITE_HOSTNAME};
+	listen 443 default_server ssl;
+
+	root /data;
+	access_log /log/nginx_access.log;
+	error_log /log/nginx_error.log debug;
+
+	ssl on;
+  ssl_certificate_key ${SSL_KEY_PATH};
+	ssl_certificate ${SSL_CERT_PATH};
+
+	client_max_body_size 20m;
+
+	location /favicon.ico {
+		alias /data/static/images/favicon.ico;
+	}
+
+	location /static/ {
+		alias /data/dreamsuite/static/;
+	}
+
+	location / {
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_connect_timeout 300s;
+    proxy_read_timeout 300s;
+
+		proxy_pass http://web:9001;
+	}
+}

@@ -35,6 +35,7 @@ foo[1-9].*
 # for now in dev we check in /media
 application/media/
 application/src/*
+application/log/*
 build/nginx/media/*
 build/nginx/static/*
 

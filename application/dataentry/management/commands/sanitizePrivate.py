@@ -233,14 +233,15 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         sanitized = 0
 
-        sanitized += self.sanitize(Interceptee, ['photo'], ['full_name'], ['phone_contact'], [], None)
+        sanitized += self.sanitize(Interceptee, ['photo'], [], [], [], None)
         sanitized += self.sanitize(InterceptionRecord, [], [], [], ['scanned_form'], self.irf_file_prefix)
         sanitized += self.sanitize(VictimInterview, [],
-                                   ['interviewer', 'victim_name', 'legal_action_fir_against_value', 'legal_action_dofe_against_value'],
-                                   ['victim_phone', 'victim_guardian_phone'], ['scanned_form'], self.vif_file_prefix
+                                   ['interviewer', 'legal_action_fir_against_value', 'legal_action_dofe_against_value'],
+                                   ['victim_guardian_phone'], ['scanned_form'], self.vif_file_prefix
                                    )
-        sanitized += self.sanitize(VictimInterviewPersonBox, [], ['name'], ['phone'], [], None)
+        sanitized += self.sanitize(VictimInterviewPersonBox, [], [], [], [], None)
         sanitized += self.sanitize(VictimInterviewLocationBox, [], ['person_in_charge'], ['phone'], [], None)
+        sanitized += self.sanitize(Person, [], ['full_name'], ['phone_contact'], [], [])
 
         self.sanitize_email()
         self.create_test_users()

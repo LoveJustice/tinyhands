@@ -1,36 +1,36 @@
 from django.conf.urls import url
 from budget import views
-from budget.views import BudgetViewSet, OtherItemsViewSet, StaffSalaryViewSet, MoneyDistribution, previous_data
+from budget.views import OldBudgetViewSet, OldOtherItemsViewSet, OldStaffSalaryViewSet, MoneyDistribution, previous_data
 
 
-other_items_list = OtherItemsViewSet.as_view({
+other_items_list = OldOtherItemsViewSet.as_view({
     'get': 'list',
     'post': 'create'
 })
 
-other_items_detail = OtherItemsViewSet.as_view({
+other_items_detail = OldOtherItemsViewSet.as_view({
     'get': 'retrieve',
     'put': 'update',
     'delete': 'destroy'
 })
 
-staff_salary_list = StaffSalaryViewSet.as_view({
+staff_salary_list = OldStaffSalaryViewSet.as_view({
     'get': 'list',
     'post': 'create'
 })
 
-staff_salary_detail = StaffSalaryViewSet.as_view({
+staff_salary_detail = OldStaffSalaryViewSet.as_view({
     'get': 'budget_calc_retrieve',
     'put': 'update',
     'delete': 'destroy'
 })
 
-budget_detail_list = BudgetViewSet.as_view({
+budget_detail_list = OldBudgetViewSet.as_view({
     'get': 'list',
     'post': 'create'
 })
 
-budget_detail = BudgetViewSet.as_view({
+budget_detail = OldBudgetViewSet.as_view({
     'put': 'update',
     'get': 'retrieve',
     'delete': 'destroy'

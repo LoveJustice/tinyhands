@@ -119,14 +119,10 @@ angular
                             main();
                         })
                         .error(function (){
-                            alert(address);
-
+                            console.log(address);
                         });
             });
-
         }
-
-
     }])
 
     .controller('ModalInstanceCtrl2', function ($scope, $modalInstance, $http, address) {
