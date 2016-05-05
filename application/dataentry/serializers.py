@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from dataentry.models import Address1, Address2, InterceptionRecord, VictimInterview, BorderStation
+from dataentry.models import Address1, Address2, InterceptionRecord, VictimInterview, BorderStation, Interceptee
 
 
 class Address1Serializer(serializers.ModelSerializer):
@@ -116,3 +116,20 @@ class VictimInterviewListSerializer(serializers.ModelSerializer):
         view_name='VictimInterviewDetail',
         read_only=True
     )
+
+class IntercepteeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Interceptee
+        fields = [
+            'photo',
+            'id',
+            'interception_record',
+            'kind',
+            'full_name',
+            'gender',
+            'age',
+            'address1',
+            'address2',
+            'phone_contact',
+            'relation_to',
+        ]
