@@ -526,7 +526,7 @@ class BatchView(View):
             if start <= irfDate <= end:
                 listOfIrfNumbers.append(irf.irf_number)
 
-        photos = list(Interceptee.objects.filter(interception_record__irf_number__in=listOfIrfNumbers).values_list('photo', 'full_name', 'interception_record__irf_number'))
+        photos = list(Interceptee.objects.filter(interception_record__irf_number__in=listOfIrfNumbers).values_list('photo', 'person__full_name', 'interception_record__irf_number'))
         if len(photos) == 0:
             return render(request, 'dataentry/batch_photo_error.html')
         else:
@@ -538,8 +538,11 @@ class BatchView(View):
             for photoTuple in photos:
                 if photoTuple[0] == '':
                     continue
-                imageFile = open(settings.MEDIA_ROOT + '/' + photoTuple[0])
-                imagezip.writestr(photoTuple[2] + '-' + photoTuple[1] + '.jpg', imageFile.read())
+                try:
+                    imageFile = open(settings.MEDIA_ROOT + '/' + photoTuple[0])
+                    imagezip.writestr(photoTuple[2] + '-' + photoTuple[1] + '.jpg', imageFile.read())
+                except:
+                    logger.error('Could not find photo: ' + photoTuple[1] + '.jpg')
             imagezip.close()  # Close
 
             response = HttpResponse(f.getvalue(), content_type="application/zip")
