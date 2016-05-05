@@ -110,7 +110,7 @@ class InterceptionRecordForm(DreamSuitePaperForm):
         for field_name, field in self.fields.iteritems():
             if type(field) == forms.fields.BooleanField:
                 try:
-                    model_field = InterceptionRecord._meta.get_field(field_name)[0]
+                    model_field = InterceptionRecord._meta.get_field(field_name)
                     if hasattr(model_field, 'weight'):
                         field.weight = model_field.weight
                 except:
