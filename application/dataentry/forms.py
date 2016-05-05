@@ -16,13 +16,13 @@ BOOLEAN_CHOICES = [
 ]
 
 LEVEL_CHOICES = [
-    ('State','State'),
     ('Country','Country'),
-    ('City','City'),
+    ('State','State'),
     ('District','District'),
+    ('City','City'),
     ('VDC','VDC'),
-    ('Building','Building'),
-    ('Block','Block')
+    ('Block','Block'),
+    ('Building','Building')
 ]
 
 
@@ -962,15 +962,9 @@ class BorderStationForm(forms.ModelForm):
 
 
 class Address2Form(forms.ModelForm):
-    level = forms.MultipleChoiceField(
-	choices=LEVEL_CHOICES,
-	widget=forms.CheckboxSelectMultiple,
-	required=True,
-    )
     class Meta:
-
         model = Address2
-	exclude = []
+        exclude = []
 
     def __init__(self, *args, **kwargs):
         super(Address2Form, self).__init__(*args, **kwargs)
