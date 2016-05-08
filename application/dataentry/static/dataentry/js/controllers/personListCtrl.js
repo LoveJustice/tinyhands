@@ -1,28 +1,26 @@
-'use strict';
-
 angular
     .module('DataEntry')
-    .controller("irfListCtrl", ['$scope','$http','$timeout', '$location', '$window', 'profileService', function($scope, $http, $timeout, $location, $window, profileService) {
+    .controller("personListCtrl", ['$scope','$http','$timeout', '$location', '$window', 'personService', function($scope, $http, $timeout, $location, $window, personService) {
         var vm = this;
 
 
         // Variable Declarations
         vm.loading = false;
         vm.reverse = false;
-        vm.addresses = [];
+        vm.persons = [];
         vm.searchValue = "";
         vm.nextPageUrl = "";
         vm.paginateBy = 25;
         vm.sortIcon = "/static/images/sortIcon.jpg";
-        vm.selectedAddress = {};
+        vm.selectedPerson = {};
         vm.sortColumn = "name";
 
 
         // Function Definitions
-        vm.getAddresses = getAddresses;
-        vm.searchAddresses = searchAddresses;
-        vm.loadMoreAddresses = loadMoreAddresses;
-        vm.editAddress1 = editAddress1;
+        vm.getPersons = getPersons;
+        vm.searchPersons = searchPersons;
+        vm.loadMorePersons = loadMorePersons;
+        vm.editPerson = editPerson;
         vm.getQueryParams = getQueryParams;
         vm.sortIcon = sortIcon;
         main();
@@ -32,38 +30,39 @@ angular
 
 
         function main(){
-            vm.getAddresses();
+            vm.getPersons();
         }
 
-        function sortIcon(){
-            return vm.reverse ? "glyphicon-sort-by-alphabet-alt" : "glyphicon-sort-by-alphabet";
-        }
+        // function sortIcon(){
+        //     return vm.reverse ? "glyphicon-sort-by-alphabet-alt" : "glyphicon-sort-by-alphabet";
+        // }
 
-        function getAddresses(){
+        function getPersons(){
             vm.loading = true;
-            address1Service.listAddresses(vm.getQueryParams())
+            personService.listPersons()
                 .success(function (data) {
-                    vm.addresses = data.results;
+                    vm.persons = data.results;
+                    vm.nextPageUrl = data.next;
+                    vm.loading = false;
+                    console.log(vm.persons);
+                });
+        }
+
+        function loadMorePersons(){
+            vm.loading = true;
+            personService.loadMore(vm.nextPageUrl, "&" + vm.getQueryParams().slice(1))
+                .success(function (data) {
+                    vm.persons = vm.persons.concat(data.results);
                     vm.nextPageUrl = data.next;
                     vm.loading = false;
                 });
         }
 
-        function loadMoreAddresses(){
+        function searchPersons(){
             vm.loading = true;
-            address1Service.loadMoreAddresses(vm.nextPageUrl, "&" + vm.getQueryParams().slice(1))
+            personService.searchPersons(vm.getQueryParams())
                 .success(function (data) {
-                    vm.addresses = vm.addresses.concat(data.results);
-                    vm.nextPageUrl = data.next;
-                    vm.loading = false;
-                });
-        }
-
-        function searchAddresses(){
-            vm.loading = true;
-            address1Service.searchAddresses(vm.getQueryParams())
-                .success(function (data) {
-                    vm.addresses = data.results;
+                    vm.persons = data.results;
                     vm.nextPageUrl = data.next;
                     vm.loading = false;
                 });
@@ -83,22 +82,22 @@ angular
             return params;
         }
 
-        function editAddress1(address){
-            vm.selectedAddress = address;
+        function editPerson(person){
+            vm.selectedPerson = person;
             var size = 'md';
             var modalInstance = $modal.open({
               animation: true,
-              templateUrl: 'address1EditModal.html',
+              templateUrl: 'PersonEditModal.html',
               controller: 'ModalInstanceCtrl',
               size: size,
               resolve: {
-                address: function () {
-                    return address;
+                person: function () {
+                    return person;
                 }
               }
             });
-            modalInstance.result.then(function (address) {
-                    address1Service.saveAddress(address)
+            modalInstance.result.then(function (person) {
+                    personService.savePerson(person)
                         .success(function (){
                             main();
                         });
@@ -108,11 +107,11 @@ angular
 
     }])
 
-    .controller('ModalInstanceCtrl', function ($scope, $modalInstance, $http, address) {
-        $scope.address = angular.copy(address);
+    .controller('ModalInstanceCtrl', function ($scope, $modalInstance, $http, person) {
+        $scope.person = angular.copy(person);
 
         $scope.save = function () {
-            $modalInstance.close($scope.address);
+            $modalInstance.close($scope.person);
         };
 
         $scope.cancel = function () {

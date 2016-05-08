@@ -1,11 +1,15 @@
 from rest_framework import serializers
 
-from dataentry.models import Address1, Address2, InterceptionRecord, VictimInterview, BorderStation
+from dataentry.models import Address1, Address2, InterceptionRecord, VictimInterview, BorderStation, Person
 
 
 class Address1Serializer(serializers.ModelSerializer):
     class Meta:
         model = Address1
+
+class PersonSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Person
 
 
 class CanonicalNameSerializer(serializers.ModelSerializer):

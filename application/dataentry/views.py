@@ -39,7 +39,7 @@ from fuzzywuzzy import process
 from dataentry.models import (BorderStation, Address2, Address1, Interceptee, Person, InterceptionRecord, VictimInterview, VictimInterviewLocationBox, VictimInterviewPersonBox)
 from dataentry.forms import (IntercepteeForm, InterceptionRecordForm, Address2Form, Address1Form, VictimInterviewForm, VictimInterviewLocationBoxForm, VictimInterviewPersonBoxForm)
 from dataentry import csv_io
-from dataentry.serializers import Address1Serializer, Address2Serializer, InterceptionRecordListSerializer, VictimInterviewListSerializer
+from dataentry.serializers import Address1Serializer, Address2Serializer, InterceptionRecordListSerializer, VictimInterviewListSerializer, PersonSerializer
 from dataentry.google_sheets import GoogleSheetClientThread
 from accounts.mixins import PermissionsRequiredMixin
 
@@ -428,6 +428,15 @@ def get_station_id(request):
             print("No station id")
             return HttpResponse([-1])
 
+class PersonViewSet(viewsets.ModelViewSet):
+    queryset = Person.objects.all()
+    serializer_class = PersonSerializer
+    permission_classes = (IsAuthenticated, HasPermission)
+    permissions_required = ['permission_address2_manage']
+    #filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
+    #search_fields = ('name',)
+    #ordering_fields = ('name', 'address1__name', 'longitude', 'latitude', 'verified', 'canonical_name__name')
+    #ordering = ('name',)
 
 class Address2ViewSet(viewsets.ModelViewSet):
     queryset = Address2.objects.all().select_related('address1', 'canonical_name__address1')

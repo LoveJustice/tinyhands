@@ -1,11 +1,80 @@
 {% extends "dataentry/dataentry_base.html" %}
-{% block title %}ID Profile Management{% endblock %}
 {% block html %}<html ng-app="DataEntry">{% endblock %}
+
+{% block title %}ID Profile Management{% endblock %}
+
 {% block content %}
 
 <h1 class="text-center">ID Profile Management</h1>
 <br/>
 
+{% verbatim %}
+<div ng-controller="personListCtrl as vm">
+
+    <div class="row">
+        <div class="col-md-2">
+            <select data-ng-model="vm.paginateBy" data-ng-change="vm.getPersons()" class="form-control">
+                <option>25</option>
+                <option>50</option>
+                <option>100</option>
+                <option>500</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <p style="margin-top: 5px;">Results per page</p>
+        </div>
+        <div class="col-md-7 search-bar">
+            <form ng-submit="vm.searchPersons()">
+                  <label>
+                      <input type="search" placeholder="by Person name..." ng-model="vm.searchValue" class="form-control">
+                  </label>
+                  <a class="btn btn-primary" ng-click="vm.searchPersons()">Search</a>
+            </form>
+        </div>
+    </div>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th id="personNameHeader" ng-click="vm.sortColumn = 'name'; vm.reverse = ! vm.reverse; vm.getPersons()" class="text-center">
+                    Name <i class="glyphicon" ng-class="vm.sortIcon('name')"></i>
+                </th>
+                <th id="personLatitudeHeader" ng-click="vm.sortColumn = 'latitude'; vm.reverse = ! vm.reverse; vm.getPersons()" class="text-center">
+                    Latitude <i class="glyphicon" ng-class="vm.sortIcon('latitude')"></i>
+                </th>
+                <th id="personLongitudeHeader" ng-click="vm.sortColumn = 'longitude'; vm.reverse = ! vm.reverse; vm.getPersons()" class="text-center">
+                    Longitude <i class="glyphicon" ng-class="vm.sortIcon('longitude')"></i>
+                </th>
+                <th id="personLevelHeader" ng-click="vm.sortColumn = 'level'; vm.reverse = ! vm.reverse; vm.getPersons()" class="text-center">
+                    Level <i class="glyphicon" ng-class="vm.sortIcon('level')"></i>
+                </th>
+                <th id="personCompletedHeader" ng-click="vm.sortColumn = 'completed'; vm.reverse = ! vm.reverse; vm.getPersons()" class="text-center">
+                    Completed <i class="glyphicon" ng-class="vm.sortIcon('completed')"></i>
+                </th>
+                <th class="text-center">&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="person in vm.persons | orderBy:vm.sortColumn:vm.reverse">
+                <td class="text-center person-full_name">{{ person.full_name }}</td>
+                <td class="text-center person-age">{{ person.age }}</td>
+                <td class="text-center person-gender">{{ person.gender }}</td>
+                <td class="text-center person-phone_contact">{{ person.phone_contact }}</td>
+                <td class="text-center">
+                    <!-- <a href="#" ng-click="vm.editPerson(person)" class="edit btn btn-warning">Edit</a> -->
+                </td>
+            </tr>
+            <tr ng-show="vm.persons.length == 0"><td colspan="12">There are currently no Person records in the database</td></tr>
+        </tbody>
+    </table>
 
 
+{% endverbatim %}
+{% load static from staticfiles %}
+
+    <script src="{% static "dataentry/js/dataEntry.module.js" %}"></script>
+    <script src="{% static "dataentry/js/controllers/personListCtrl.js" %}"></script>
+    <script src="{% static "dataentry/js/services/personService.js" %}"></script>
+
+</div>
 {% endblock %}
