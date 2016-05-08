@@ -7,7 +7,7 @@
 
     <script type="text/javascript">
         window.station_code = "{{ station_code }}";
-        window.search = {{ search }};
+        window.search = {% if search%}{{ search }}{% else %} -1 {% endif %};
     </script>
 
 {% verbatim %}
