@@ -22,7 +22,7 @@ angular
         vm.loadMorePersons = loadMorePersons;
         vm.editPerson = editPerson;
         vm.getQueryParams = getQueryParams;
-        vm.sortIcon = sortIcon;
+        //vm.sortIcon = sortIcon;
         main();
 
 

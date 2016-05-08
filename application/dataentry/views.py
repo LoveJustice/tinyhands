@@ -507,6 +507,18 @@ class VictimInterviewViewSet(viewsets.ModelViewSet):
         return rv
 
 
+def ng_budget_calc_create(request, pk):
+    if not request.user.permission_budget_manage:
+        return redirect("home")
+
+    border_station = BorderStation.objects.get(pk=pk)
+    submit_type = 1
+    return render(request, 'budget/borderstationbudgetcalculation_form.html', locals())
+
+
+
+
+
 @login_required
 def id_management_template(request):
     return render(request, 'dataentry/id_management.html')
