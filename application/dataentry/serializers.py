@@ -134,6 +134,7 @@ class VictimInterviewSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = VictimInterview
+        read_only_fields = ('person_boxes','location_boxes')
         fields = [
             'id',
             'vif_number',
@@ -423,5 +424,4 @@ class VictimInterviewSerializer(serializers.ModelSerializer):
             'victim_had_suicidal_thoughts',
             'reported_total_situational_alarms'
         ]
-        read_only_fields = ('person_boxes','location_boxes')
         depth = 1

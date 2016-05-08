@@ -509,9 +509,8 @@ class VictimInterviewView(viewsets.ModelViewSet):
     def model(self, request, *args, **kwargs):
         vif_id = kwargs['pk']
         vif = VictimInterview.objects.get(id=vif_id)
-        serializer_class = VictimInterviewSerializer
-        data = self.get_serializer(vif)
-        return Response(data.data)
+        serializer = VictimInterviewSerializer(vif)
+        return Response(serializer.data)
 
     def destroy(self, request, *args, **kwargs):
         vif_id = kwargs['pk']
