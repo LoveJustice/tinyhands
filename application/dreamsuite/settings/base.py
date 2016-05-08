@@ -2,8 +2,8 @@ from dreamsuite.private import SECRET_KEY
 from django.contrib import messages
 from unipath import Path
 import os
+import logging.config
 
-import os
 BASE_DIR = Path(__file__).ancestor(3)
 
 SERVER_EMAIL = 'tnurkkala@cse.taylor.edu'
@@ -33,7 +33,7 @@ LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_URL = '/logout/'
 
-INSTALLED_APPS = (
+INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -56,7 +56,7 @@ INSTALLED_APPS = (
     'rest_framework',
     'django_extensions',
     'bootstrap_pagination',
-)
+]
 
 
 MIDDLEWARE_CLASSES = (
@@ -141,3 +141,41 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.DjangoFilterBackend',),
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
 }
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format':
+              '%(levelname)s|%(asctime)s|%(name)s[%(lineno)s-%(funcName)s]>> %(message)s',
+        },
+    },
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename':os.environ['DREAMSUITE_LOG'],
+            'formatter':'verbose',
+        },
+    },
+    'loggers': {
+        '': {
+            'handlers': ['file'],
+            'level': 'INFO',
+            'propagate': True,
+       },
+        'dataentry.google_sheets': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'dataentry.views': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+    },
+}
+
+logging.config.dictConfig(LOGGING)

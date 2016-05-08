@@ -7,7 +7,8 @@ Vagrant.configure(2) do |config|
   config.vm.network "private_network", ip: "192.168.36.36"
 
   config.vm.provider "virtualbox" do |vb|
-     vb.memory = "1024"
+     vb.memory = "2048"
+     vb.cpus = 2
      vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
      vb.customize ["guestproperty", "set", :id, "/VirtualBox/GuestAdd/VBoxService/--timesync-set-threshold", 59000]
   end

@@ -9,6 +9,7 @@ urlpatterns = [
     url(r'^irfs/irfExists/([A-Z]{3}[0-9]{3})', irfExists, name='IrfExists'),
     url(r'^irfs/update/(?P<pk>\d+)/$', InterceptionRecordUpdateView.as_view(), name='interceptionrecord_update'),
     url(r'^irfs/export/$', InterceptionRecordCSVExportView.as_view(), name='interceptionrecord_csv_export'),
+
     #Create a url that will have a border station argument and will list irfs for that specific BD station
 
     url(r'^vifs/$', VictimInterviewListView.as_view(), name='victiminterview_list'),
@@ -19,7 +20,6 @@ urlpatterns = [
     url(r'^vifs/vifExists/([A-Z]{3}[0-9]{3})', vifExists, name='VifExists'),
     url(r'^vifs/export/$', VictimInterviewCSVExportView.as_view(), name='victiminterview_csv_export'),
     #Create a url that will have a border station argument and will list vifs for that specific BD station
-
 
     url(r'^stations/codes/$', StationCodeAPIView.as_view()),
 

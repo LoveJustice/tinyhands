@@ -33,11 +33,11 @@ function irfService($http) {
     }
 
     function deleteIrf(url){
-        return $http.delete(url)
-            .success(function(status){
+        return $http.delete(url).
+            success(function(status){
                 return status;
-            })
-            .error(function (data, status, headers, config) {
+            }).
+            error(function (data, status, headers, config) {
                 console.log(data, status, headers, config);
             });
     }

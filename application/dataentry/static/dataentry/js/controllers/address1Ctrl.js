@@ -24,8 +24,8 @@ angular
         vm.editAddress1 = editAddress1;
         vm.getQueryParams = getQueryParams;
         vm.sortIcon = sortIcon;
-        main();
 
+        main();
 
         //////////////////////////////////////////////////////
 
@@ -34,8 +34,22 @@ angular
             vm.getAddresses();
         }
 
-        function sortIcon(){
-            return vm.reverse ? "glyphicon-sort-by-alphabet-alt" : "glyphicon-sort-by-alphabet";
+
+        function sortIcon(column){
+            if(column === vm.sortColumn){
+                switch (column) {
+                    case "latitude":
+                    case "longitude":
+                        return vm.reverse ? "glyphicon-sort-by-order-alt" : "glyphicon-sort-by-order";
+                    case "name":
+                    case "level":
+                    case "completed":
+                        return vm.reverse ? "glyphicon-sort-by-alphabet-alt" : "glyphicon-sort-by-alphabet";
+                    default:
+                        return "glyphicon-sort";
+                }
+            }
+            return "glyphicon-sort";
         }
 
         function getAddresses(){
@@ -100,6 +114,10 @@ angular
                     address1Service.saveAddress(address)
                         .success(function (){
                             main();
+                        })
+                        .error(function (){
+                            alert(address.name);
+
                         });
             });
 
@@ -112,6 +130,8 @@ angular
         $scope.save = function () {
             $modalInstance.close($scope.address);
         };
+
+        $scope.levels = ['State','Country','City','District','VDC','Building','Block'];
 
         $scope.cancel = function () {
             $modalInstance.dismiss('close');

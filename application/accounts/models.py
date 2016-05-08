@@ -75,7 +75,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
 
-    user_designation = models.ForeignKey(DefaultPermissionsSet, related_name='accounts')
+    user_designation = models.ForeignKey(DefaultPermissionsSet, related_name='accounts', on_delete=models.CASCADE)
 
     permission_irf_view = models.BooleanField(default=False)
     permission_irf_add = models.BooleanField(default=False)
@@ -143,7 +143,6 @@ class Account(AbstractBaseUser, PermissionsMixin):
                 'account': self,
             }
         )
-
 
 class AlertManager(models.Manager):
     def send_alert(self, code, context={}):

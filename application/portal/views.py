@@ -24,8 +24,8 @@ def get_border_stations(request):
 
 def get_interception_records(request):
     interceptionSum = 0
-    if "station_code" in request.REQUEST:
-        interception_records = InterceptionRecord.objects.filter(irf_number__startswith=request.REQUEST["station_code"])
+    if "station_code" in request.GET:
+        interception_records = InterceptionRecord.objects.filter(irf_number__startswith=request.GET["station_code"])
         for interception in interception_records:
             victims = interception.interceptees.filter(kind='v')
             interceptionSum += len(victims)
@@ -34,8 +34,8 @@ def get_interception_records(request):
 
 
 def get_staff_count(request):
-    if "station_code" in request.REQUEST:
-        border_station = BorderStation.objects.filter(station_code=request.REQUEST["station_code"]).first()
+    if "station_code" in request.GET:
+        border_station = BorderStation.objects.filter(station_code=request.GET["station_code"]).first()
         return HttpResponse(border_station.staff_set.count())
     return HttpResponse("No station found")
 

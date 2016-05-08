@@ -27,10 +27,13 @@ table {
 }
 </style>
 {% endblock %}
+
 {% block foot %}
+{% if view.id %}
 <script>
   window.account_id = {{view.id}}
 </script>
+{% endif %}
 {% endblock %}
 
 {% block content %}

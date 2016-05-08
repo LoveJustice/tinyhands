@@ -31,7 +31,7 @@
         <tr>
             <td>{{ person.full_name }}</td>
             <td>{{ person.phone_contact }}</td>
-            <td><img src="http://{{ site }}{{ person.photo.url }}"/></td>
+            <td><img src="https://{{ site }}{{ person.photo.url }}"/></td>
         </tr>
         {% endfor %}
     </table>
@@ -42,6 +42,6 @@
     <p>According to the form, {{ trafficker_in_custody }} was taken into custody</p>
 {% endif %}
 
-<p>To view the IRF click here: <a href="http://{{ site }}{% url 'interceptionrecord_detail' irf.id %}">Link to Interception Record Form</a></p>
+<p>To view the IRF click here: <a href="https://{{ site }}{% url 'interceptionrecord_detail' irf.id %}">Link to Interception Record Form</a></p>
 
 {% endblock %}

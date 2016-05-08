@@ -12,6 +12,16 @@ NULL_BOOLEAN_CHOICES = [
     (True, 'Yes'),
 ]
 
+LEVEL_CHOICES = [
+    ('Country','Country'),
+    ('State','State'),
+    ('District','District'),
+    ('City','City'),
+    ('VDC','VDC'),
+    ('Block','Block'),
+    ('Building','Building')
+
+]
 
 def set_weight(self, weight):
     self.weight = weight
@@ -31,17 +41,25 @@ class BorderStation(models.Model):
 
 class Address1(models.Model):
     name = models.CharField(max_length=255)
+    latitude = models.FloatField(default=0)
+    longitude = models.FloatField(default=0)
+
+    level = models.CharField(max_length=255, choices=LEVEL_CHOICES, default="District")
+    completed = models.BooleanField(default=False)
+
+
 
     def __unicode__(self):
         return self.name
 
 
 class Address2(models.Model):
-    name = models.CharField(max_length=255)
-    latitude = models.FloatField()
-    longitude = models.FloatField()
-    address1 = models.ForeignKey(Address1, null=False)
-    canonical_name = models.ForeignKey('self', null=True, blank=True)
+    name = models.CharField(max_length=255, default="Unknown")
+    latitude = models.FloatField(default=0)
+    longitude = models.FloatField(default=0)
+    level = models.CharField(max_length=255, choices=LEVEL_CHOICES, default="VDC")
+    address1 = models.ForeignKey(Address1, null=False, on_delete=models.CASCADE)
+    canonical_name = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE)
     verified = models.BooleanField(default=False)
 
     def __unicode__(self):
@@ -81,7 +99,7 @@ class Address2(models.Model):
 
 
 class InterceptionRecord(models.Model):
-    form_entered_by = models.ForeignKey(Account, related_name='irfs_entered')
+    form_entered_by = models.ForeignKey(Account, related_name='irfs_entered', on_delete=models.CASCADE)
     date_form_received = models.DateTimeField()
 
     irf_number = models.CharField('IRF #:', max_length=20, unique=True)
@@ -274,47 +292,50 @@ class InterceptionRecord(models.Model):
         ordering = ['-date_time_last_updated']
 
 
-class Interceptee(models.Model):
-    KIND_CHOICES = [
-        ('v', 'Victim'),
-        ('t', 'Trafficker'),
-    ]
-    GENDER_CHOICES = [
-        ('f', 'F'),
-        ('m', 'M'),
-    ]
-    photo = models.ImageField(upload_to='interceptee_photos', default='', blank=True)
-    photo_thumbnail = ImageSpecField(source='photo',
-                                     processors=[ResizeToFill(200, 200)],
-                                     format='JPEG',
-                                     options={'quality': 80})
-    interception_record = models.ForeignKey(InterceptionRecord, related_name='interceptees')
-    kind = models.CharField(max_length=4, choices=KIND_CHOICES)
+class Person(models.Model):
+
+    GENDER_CHOICES = [ ('M', 'm'), ('F', 'f'),]
+
     full_name = models.CharField(max_length=255)
     gender = models.CharField(max_length=4, choices=GENDER_CHOICES, blank=True)
     age = models.PositiveIntegerField(null=True, blank=True)
     address1 = models.ForeignKey(Address1, null=True, blank=True)
     address2 = models.ForeignKey(Address2, null=True, blank=True)
     phone_contact = models.CharField(max_length=255, blank=True)
+
+
+class Interceptee(models.Model):
+    KIND_CHOICES = [
+        ('v', 'Victim'),
+        ('t', 'Trafficker'),
+    ]
+    photo = models.ImageField(upload_to='interceptee_photos', default='', blank=True)
+    photo_thumbnail = ImageSpecField(source='photo',
+                                     processors=[ResizeToFill(200, 200)],
+                                     format='JPEG',
+                                     options={'quality': 80})
+    interception_record = models.ForeignKey(InterceptionRecord, related_name='interceptees', on_delete=models.CASCADE)
+    kind = models.CharField(max_length=4, choices=KIND_CHOICES)
     relation_to = models.CharField(max_length=255, blank=True)
+    person = models.ForeignKey(Person, null=True, blank=True)
 
     class Meta:
         ordering = ['id']
 
     def __unicode__(self):
-        return "{} ({})".format(self.full_name, self.id)
+        return "{} ({})".format(self.person.full_name, self.id)
 
     def address1_as_string(self):
         rtn = ''
         try:
-            rtn = self.address1
+            rtn = self.person.address1
         finally:
             return rtn
 
     def address2_as_string(self):
         rtn = ''
         try:
-            rtn = self.address2
+            rtn = self.person.address2
         finally:
             return rtn
 
@@ -324,10 +345,7 @@ class VictimInterview(models.Model):
     class Meta:
         ordering = ['-date_time_last_updated']
 
-    GENDER_CHOICES = [
-        ('male', 'Male'),
-        ('female', 'Female'),
-    ]
+    GENDER_CHOICES = [ ('M', 'm'), ('F', 'f'),]
 
     vif_number = models.CharField('VIF #', max_length=20, unique=True)
     date = models.DateField('Date')
@@ -345,15 +363,11 @@ class VictimInterview(models.Model):
     permission_to_use_photograph = models.BooleanField('Check the box if form is signed', default=False)
 
     # 1. Victim & Family Information
-    victim_name = models.CharField('Name', max_length=255)
 
-    victim_gender = models.CharField('Gender', choices=GENDER_CHOICES, max_length=12)
+    victim = models.ForeignKey(Person, null=True, blank=True)
 
-    victim_address1 = models.ForeignKey(Address1, null=True, related_name="victim_address1")
-    victim_address2 = models.ForeignKey(Address2, null=True, related_name="victim_address2")
     victim_address_ward = models.CharField('Ward #', max_length=255, blank=True)
-    victim_phone = models.CharField('Phone #', max_length=255, blank=True)
-    victim_age = models.CharField('Age', max_length=255, blank=True)
+
     victim_height = models.PositiveIntegerField('Height(ft)', null=True, blank=True)
     victim_weight = models.PositiveIntegerField('Weight(kg)', null=True, blank=True)
 
@@ -410,8 +424,8 @@ class VictimInterview(models.Model):
     victim_primary_guardian_non_relative = models.BooleanField('Non-relative', default=False)
     victim_primary_guardian_no_one = models.BooleanField('No one (I have no guardian)', default=False)
 
-    victim_guardian_address1 = models.ForeignKey(Address1, null=True)
-    victim_guardian_address2 = models.ForeignKey(Address2, null=True)
+    victim_guardian_address1 = models.ForeignKey(Address1, null=True, on_delete=models.CASCADE)
+    victim_guardian_address2 = models.ForeignKey(Address2, null=True, on_delete=models.CASCADE)
     victim_guardian_address_ward = models.CharField('Ward #', max_length=255, blank=True)
     victim_guardian_phone = models.CharField('Phone #', max_length=255, blank=True)
 
@@ -842,11 +856,11 @@ class VictimInterview(models.Model):
 
 class VictimInterviewPersonBox(models.Model):
     GENDER_CHOICES = [
-        ('male', 'Male'),
-        ('female', 'Female'),
+        ('Male', 'male'),
+        ('Female', 'female'),
     ]
 
-    victim_interview = models.ForeignKey(VictimInterview, related_name='person_boxes')
+    victim_interview = models.ForeignKey(VictimInterview, related_name='person_boxes', on_delete=models.CASCADE)
 
     who_is_this_relationship_boss_of = models.BooleanField('Boss of...', default=False)
     who_is_this_relationship_coworker_of = models.BooleanField('Co-worker of...', default=False)
@@ -861,15 +875,11 @@ class VictimInterviewPersonBox(models.Model):
     who_is_this_role_passport = models.BooleanField('Passport', default=False)
     who_is_this_role_sex_industry = models.BooleanField('Sex Industry', default=False)
 
-    name = models.CharField('Name', max_length=255, blank=True)
+    person = models.ForeignKey(Person, null=True, blank=True)
 
-    gender = models.CharField('Gender', choices=GENDER_CHOICES, max_length=12, blank=True)
-
-    address1 = models.ForeignKey(Address1, null=True)
-    address2 = models.ForeignKey(Address2, null=True)
     address_ward = models.CharField('Ward #', max_length=255, blank=True)
-    phone = models.CharField('Phone #', max_length=255, blank=True)
-    age = models.PositiveIntegerField('Age', null=True, blank=True)
+
+    #Think about possibly adding height to the Person model
     height = models.PositiveIntegerField('Height(ft)', null=True, blank=True)
     weight = models.PositiveIntegerField('Weight(kg)', null=True, blank=True)
 
@@ -932,7 +942,7 @@ class VictimInterviewPersonBox(models.Model):
 
 
 class VictimInterviewLocationBox(models.Model):
-    victim_interview = models.ForeignKey(VictimInterview, related_name='location_boxes')
+    victim_interview = models.ForeignKey(VictimInterview, related_name='location_boxes', on_delete=models.CASCADE)
 
     which_place_india_meetpoint = models.BooleanField('India Meet Point', default=False)
     which_place_manpower = models.BooleanField('Manpower', default=False)
@@ -953,8 +963,8 @@ class VictimInterviewLocationBox(models.Model):
 
     signboard = models.CharField(max_length=255, blank=True)
     location_in_town = models.CharField(max_length=255, blank=True)
-    address1 = models.ForeignKey(Address1, null=True)
-    address2 = models.ForeignKey(Address2, null=True)
+    address1 = models.ForeignKey(Address1, null=True, on_delete=models.CASCADE)
+    address2 = models.ForeignKey(Address2, null=True, on_delete=models.CASCADE)
 
     phone = models.CharField('Phone #', max_length=255, blank=True)
     color = models.CharField(max_length=255, blank=True)
@@ -983,4 +993,3 @@ class VictimInterviewLocationBox(models.Model):
 
     def __unicode__(self):
         return "VIF {}".format(self.victim_interview.vif_number)
-

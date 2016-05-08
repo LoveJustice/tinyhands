@@ -7,7 +7,7 @@
 
     <script type="text/javascript">
         window.station_code = "{{ station_code }}";
-        window.search = {{ search }};
+        window.search = {% if search%}{{ search }}{% else %} -1 {% endif %};
     </script>
 
 {% verbatim %}
@@ -20,9 +20,69 @@
             <a class="btn btn-primary" id="export" href="/data-entry/irfs/export/" download>
                 Export as CSV
             </a>
-            <a ng-show="vm.user.permission_irf_add" id="id_input_new_irf" class="btn btn-success pull-right" style="margin-left:5px;" href="/data-entry/irfs/create/">
+            <button id="id_export_photos" class="btn btn-primary" data-toggle="modal" data-target="#exportPhotoModal" style="margin-left:5px;" href="#">
+                Export Photos
+            </button>
+            <a ng-show="vm.user.permission_irf_add" id="id_input_new_irf" class="btn btn-success" style="margin-left:5px;" href="/data-entry/irfs/create/">
                 Input A New IRF
             </a>
+              <!-- Modal -->
+              <div class="modal fade" id="exportPhotoModal" role="dialog">
+                <div class="modal-dialog">
+
+                  <!-- Modal content-->
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                      <h4 class="modal-title">Export Photos</h4>
+                    </div>
+                    <div class="modal-body">
+                        <table>
+                            <tr>
+                                <td width='75' style="padding-right: 5px; padding-top: 3px; text-align: right;">Start Date:</td>
+                                <td width='200'>
+                                    <select ng-model="vm.startMonth" class="form-control">
+                                        <option ng-repeat="month in vm.getMonths()" value="{{ month }}">{{ month }}</option>
+                                    </select>
+                                </td>
+                                <td width='100'>
+                                    <select ng-model="vm.startDay" class="form-control">
+                                        <option ng-repeat="day in vm.getDays(vm.startMonth, vm.startYear)" value="{{ day }}">{{ day }}</option>
+                                    </select>
+                                </td>
+                                <td width='100'>
+                                    <select ng-model="vm.startYear" class="form-control">
+                                        <option ng-repeat="year in vm.getYears()" value="{{ year }}">{{ year }}</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width='75' style="padding-right: 5px; padding-top: 3px; text-align: right;">End Date:</td>
+                                <td width='200'>
+                                    <select ng-model="vm.endMonth" class="form-control">
+                                        <option ng-repeat="month in vm.getMonths()" value="{{ month }}">{{ month }}</option>
+                                    </select>
+                                </td>
+                                <td width='100'>
+                                    <select ng-model="vm.endDay" class="form-control">
+                                        <option ng-repeat="day in vm.getDays(vm.endMonth, vm.endYear)" value="{{ day }}">{{ day }}</option>
+                                    </select>
+                                </td>
+                                <td width='100'>
+                                    <select ng-model="vm.endYear" class="form-control">
+                                        <option ng-repeat="year in vm.getYears()" value="{{ year }}">{{ year }}</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                      <button ng-click="vm.exportPhotos()" ng-disabled="!vm.validDate()" type="button" class="btn btn-success" data-dismiss="modal">Submit</button>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
         </div>
     </div>
 
@@ -48,7 +108,7 @@
             </form>
         </div>
     </div>
-
+    <!--{{ vm.irfs }}-->
     <table class="table table-striped table-condensed">
         <thead>
             <tr>

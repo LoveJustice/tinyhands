@@ -3,6 +3,8 @@ from django.db import models
 from models import BorderStation
 from models import Address1
 from models import Address2
+from models import Person
+from models import Interceptee
 from django.utils.timezone import make_naive, localtime
 
 #####################################################
@@ -749,14 +751,33 @@ irf_data = [
     BooleanCsvField("has_signature", "Staff signature on form", "Form is signed", "Form is not signed"),
 ]
 
+
+victim_data = [
+    "1.1 Name",
+    "1.2 Gender",
+    "1.3 Address1",
+    "Address2",
+    "Phone Number",
+    "1.4 Age",
+]
+
+person_box_person_data = [
+    MapValueCsvField("gender", "{}Gender", { "Male":"m", "Female":"f"}),
+    CopyCsvField("full_name", "{}Name", True),
+    Address1CsvField("address1", "{}Address1"),
+    Address2CsvField("address2", "{}Address2"),
+    CopyCsvField("phone_contact", "{}Phone", True),
+    CopyCsvField("age", "{}Age", True),
+]
+
 interceptee_data = [
     CopyCsvField("full_name", "{}Name", True),
-    MapValueCsvField('gender', "{}Gender", { "Male":"m", "Female":"f"}, export_default="Female"),
+    MapValueCsvField('gender', "{}Gender", { "Male":"M", "Female":"F"}, export_default="Female"),
     CopyCsvField("age", "{}Age", True),
     Address1CsvField("address1", "{}Address1"),
     Address2CsvField("address2", "{}Address2"),
     CopyCsvField("phone_contact", "{}Phone", True),
-    CopyCsvField("relation_to", "{}Relationship to...", True),
+    CopyCsvField("relation_to", "{}Relationship to...", True)
 ]
 
 irf_victim_prefix = "Victim "
@@ -780,6 +801,7 @@ def get_irf_export_rows(irfs):
 
     for irf in irfs:
         for interceptee in irf.interceptees.all():
+            person = interceptee.person
             if interceptee.kind == "t":
                 continue
 
@@ -790,19 +812,24 @@ def get_irf_export_rows(irfs):
 
             # export victim information
             for field in interceptee_data:
-                row.append(field.exportField(interceptee))
+                if(field.title != "{}Relationship to..."):
+                    row.append(field.exportField(person))
+                else:
+                    row.append(field.exportField(interceptee))
 
             # export traffickers
             for trafficker in irf.interceptees.all():
+                traffick_person = trafficker.person
                 if trafficker.kind == "v":
                     continue
 
                 for field in interceptee_data:
-                    row.append(field.exportField(trafficker))
+                    if(field.title != "{}Relationship to..."):
+                        row.append(field.exportField(traffick_person))
+                    else:
+                        row.append(field.exportField(trafficker))
 
             rows.append(row)
-
-
     return rows
 
 def get_irf_import_rows(csv_map):
@@ -810,6 +837,8 @@ def get_irf_import_rows(csv_map):
 
     if irf_number is None:
         pass
+
+
 
 
 
@@ -829,16 +858,16 @@ vif_data = [
     BooleanCsvField("statement_read_before_beginning", "Statement Read", "Statement was read to the participant", ""),
     BooleanCsvField("permission_to_use_photograph", "Photo Permission", "Permission was given to use photo", ""),
 
-    CopyCsvField("victim_name", "1.1 Name", True),
-    CopyCsvField("victim_gender", "1.2 Gender", True),
+    CopyCsvField("full_name", "1.1 Name", True),
+    MapValueCsvField("gender", "1.2 Gender", { "male":"M", "female":"F"}, export_default="female"),
 
-    Address1CsvField("victim_address1_Address1", "1.3 Address1"),
-    Address2CsvField("victim_address2", "Address2"),
+    Address1CsvField("address1", "1.3 Address1"),
+    Address2CsvField("address2", "Address2"),
 
     CopyCsvField("victim_address_ward", "Ward", True),
 
-    CopyCsvField("victim_phone", "Phone Number", True),
-    CopyCsvField("victim_age", "1.4 Age", True),
+    CopyCsvField("phone_contact", "Phone Number", True),
+    CopyCsvField("age", "1.4 Age", True),
     CopyCsvField("victim_height", "1.5 Height", True),
     CopyCsvField("victim_weight", "1.6 Weight", True),
 
@@ -1071,13 +1100,7 @@ person_box_prefix = "PB%d - "
 person_box_data = [
     GroupBooleanCsv("who_is_this_relationship", "{}Relationship"),
     GroupBooleanCsv("who_is_this_role", "{}Role"),
-    MapValueCsvField("gender", "{}Gender", { "Male":"male", "Female":"female"}),
-    CopyCsvField("name", "{}Name", True),
-    Address1CsvField("address1", "{}Address1"),
-    Address2CsvField("address2", "{}Address2"),
     CopyCsvField("address_ward", "{}Ward", True),
-    CopyCsvField("phone", "{}Phone", True),
-    CopyCsvField("age", "{}Age", True),
     CopyCsvField("height", "{}Height", True),
     CopyCsvField("weight", "{}Weight", True),
     GroupBooleanCsv("physical_description", "{}Physical Description"),
@@ -1122,13 +1145,20 @@ def get_vif_export_rows(vifs):
     rows = []
 
     vif_headers = []
+
     for field in vif_data:
         vif_headers.append(field.title)
 
     for i in range(1, 9+1):
+        for field in person_box_person_data:
+            prefix = person_box_prefix % i
+            vif_headers.append(field.title.format(prefix))
+
         for field in person_box_data:
             prefix = person_box_prefix % i
             vif_headers.append(field.title.format(prefix))
+
+
         if i < 9:
             for field in location_box_data:
                 prefix = location_box_prefix % i
@@ -1138,10 +1168,16 @@ def get_vif_export_rows(vifs):
 
 
     for vif in vifs:
+        person = vif.victim
         row = []
 
         for field in vif_data:
-            row.append(field.exportField(vif))
+            if field.title in victim_data:
+                row.append(field.exportField(person))
+            else:
+                row.append(field.exportField(vif))
+
+
 
         pbs = list(vif.person_boxes.all())
         lbs = list(vif.location_boxes.all())
@@ -1149,6 +1185,10 @@ def get_vif_export_rows(vifs):
         for idx in range(max(len(pbs), len(lbs))):
             if idx < len(pbs):
                 pbs_instance = pbs[idx]
+                person = pbs_instance.person
+                for field in person_box_person_data:
+                    row.append(field.exportField(person))
+
                 for field in person_box_data:
                     row.append(field.exportField(pbs_instance))
             else:

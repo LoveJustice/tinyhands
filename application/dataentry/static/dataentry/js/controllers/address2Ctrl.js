@@ -40,6 +40,7 @@ angular
                     case "latitude":
                     case "longitude":
                         return vm.reverse ? "glyphicon-sort-by-order-alt" : "glyphicon-sort-by-order";
+                    case "level":
                     case "name":
                     case "canonical_name.name":
                     case "address1.name":
@@ -104,7 +105,7 @@ angular
             var modalInstance = $modal.open({
               animation: true,
               templateUrl: 'address2EditModal.html',
-              controller: 'ModalInstanceCtrl',
+              controller: 'ModalInstanceCtrl2',
               size: size,
               resolve: {
                 address: function () {
@@ -118,17 +119,14 @@ angular
                             main();
                         })
                         .error(function (){
-                            alert(address);
-
+                            console.log(address);
                         });
             });
-
         }
-
-
     }])
 
-    .controller('ModalInstanceCtrl', function ($scope, $modalInstance, $http, address) {
+    .controller('ModalInstanceCtrl2', function ($scope, $modalInstance, $http, address) {
+
         $scope.address = angular.copy(address);
 
 
@@ -140,6 +138,7 @@ angular
             $modalInstance.close($scope.address);
         };
 
+	$scope.levels = ['State','Country','City','District','VDC','Building','Block'];
         $scope.cancel = function () {
             $modalInstance.dismiss('close');
         };

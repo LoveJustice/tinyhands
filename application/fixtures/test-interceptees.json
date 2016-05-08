@@ -2,17 +2,25 @@
 {
   "fields": {
     "kind": "v",
-    "address1": 32,
-    "phone_contact": "",
     "photo": "",
-    "age": 4,
     "interception_record": 1003,
-    "address2": 1,
-    "full_name": "sdad",
-    "gender": "f",
-    "relation_to": ""
+    "relation_to": "",
+    "person": 1
   },
   "model": "dataentry.interceptee",
   "pk": 4
+},
+{
+    "fields": {
+        "address1": 1,
+        "phone_contact": "",
+        "age": 4,
+        "address2": 1,
+        "address1": 32,
+        "full_name": "sdad",
+        "gender": "f"
+    },
+    "model": "dataentry.person",
+    "pk": 1
 }
 ]
