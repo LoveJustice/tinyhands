@@ -51,6 +51,13 @@
                 <th id="personFormHeader" ng-click="vm.sortColumn = 'form'; vm.reverse = ! vm.reverse; vm.getPersons()" class="text-center">
                     Found In... <i class="glyphicon" ng-class="vm.sortIcon('form')"></i>
                 </th>
+                <!-- <th id="personAddress1Header" ng-click="vm.sortColumn = 'address1'; vm.reverse = ! vm.reverse; vm.getPersons()" class="text-center">
+                    Address1 <i class="glyphicon" ng-class="vm.sortIcon('address1')"></i>
+                </th>
+                <th id="personAddress2Header" ng-click="vm.sortColumn = 'address2'; vm.reverse = ! vm.reverse; vm.getPersons()" class="text-center">
+                    Address2 <i class="glyphicon" ng-class="vm.sortIcon('address2')"></i>
+                </th> -->
+
                 <th class="text-center">&nbsp;</th>
             </tr>
         </thead>
@@ -61,7 +68,7 @@
                 <td class="text-center person-gender">{{ person.gender }}</td>
                 <td class="text-center person-phone_contact">{{ person.phone_contact }}</td>
                 <td class="text-center">
-                    <!-- <a href="#" ng-click="vm.editPerson(person)" class="edit btn btn-warning">Edit</a> -->
+                    <a href="#" ng-click="vm.getForm(person)" class="edit btn btn-success">Edit</a>
                 </td>
             </tr>
             <tr ng-show="vm.persons.length == 0"><td colspan="12">There are currently no Person records in the database</td></tr>

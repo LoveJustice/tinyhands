@@ -433,10 +433,10 @@ class PersonViewSet(viewsets.ModelViewSet):
     serializer_class = PersonSerializer
     permission_classes = (IsAuthenticated, HasPermission)
     permissions_required = ['permission_address2_manage']
-    #filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
-    #search_fields = ('name',)
-    #ordering_fields = ('name', 'address1__name', 'longitude', 'latitude', 'verified', 'canonical_name__name')
-    #ordering = ('name',)
+    filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
+    search_fields = ('full_name',)
+    ordering_fields = ('full_name', 'age', 'gender', 'phone_contact')
+    ordering = ('full_name',)
 
 class Address2ViewSet(viewsets.ModelViewSet):
     queryset = Address2.objects.all().select_related('address1', 'canonical_name__address1')
@@ -506,18 +506,9 @@ class VictimInterviewViewSet(viewsets.ModelViewSet):
         GoogleSheetClientThread.update_irf(vif.vif_number)
         return rv
 
-
-def ng_budget_calc_create(request, pk):
-    if not request.user.permission_budget_manage:
-        return redirect("home")
-
-    border_station = BorderStation.objects.get(pk=pk)
-    submit_type = 1
-    return render(request, 'budget/borderstationbudgetcalculation_form.html', locals())
-
-
-
-
+def IdFormMatch(request, pk):
+    intercepteeList = Interceptee.objects.filter(person=pk)
+    return Response(intercepteeList, status=status.HTTP_200_OK)
 
 @login_required
 def id_management_template(request):

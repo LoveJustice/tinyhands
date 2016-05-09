@@ -20,7 +20,7 @@ angular
         vm.getPersons = getPersons;
         vm.searchPersons = searchPersons;
         vm.loadMorePersons = loadMorePersons;
-        vm.editPerson = editPerson;
+        vm.getForm = getForm;
         vm.getQueryParams = getQueryParams;
         //vm.sortIcon = sortIcon;
         main();
@@ -33,9 +33,9 @@ angular
             vm.getPersons();
         }
 
-        // function sortIcon(){
-        //     return vm.reverse ? "glyphicon-sort-by-alphabet-alt" : "glyphicon-sort-by-alphabet";
-        // }
+        function sortIcon(){
+            return vm.reverse ? "glyphicon-sort-by-alphabet-alt" : "glyphicon-sort-by-alphabet";
+        }
 
         function getPersons(){
             vm.loading = true;
@@ -45,6 +45,15 @@ angular
                     vm.nextPageUrl = data.next;
                     vm.loading = false;
                     console.log(vm.persons);
+                });
+        }
+
+        function getForm(person){
+            vm.loading = true;
+            personService.getForm(person)
+                .success(function (data) {
+                    console.log(data)
+                    vm.loading = false;
                 });
         }
 
@@ -80,29 +89,6 @@ angular
                 params += "&ordering=" + vm.sortColumn;
             }
             return params;
-        }
-
-        function editPerson(person){
-            vm.selectedPerson = person;
-            var size = 'md';
-            var modalInstance = $modal.open({
-              animation: true,
-              templateUrl: 'PersonEditModal.html',
-              controller: 'ModalInstanceCtrl',
-              size: size,
-              resolve: {
-                person: function () {
-                    return person;
-                }
-              }
-            });
-            modalInstance.result.then(function (person) {
-                    personService.savePerson(person)
-                        .success(function (){
-                            main();
-                        });
-            });
-
         }
 
     }])

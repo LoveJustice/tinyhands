@@ -1,7 +1,7 @@
 from django.conf.urls import url
 from accounts.views import CurrentUserView
 
-from dataentry.views import Address2ViewSet, Address1ViewSet, GeoCodeAddress1APIView, GeoCodeAddress2APIView, InterceptionRecordViewSet, VictimInterviewViewSet, BatchView, PersonViewSet
+from dataentry.views import Address2ViewSet, Address1ViewSet, GeoCodeAddress1APIView, GeoCodeAddress2APIView, InterceptionRecordViewSet, VictimInterviewViewSet, BatchView, PersonViewSet, IdFormMatch
 from budget.views import BudgetViewSet, OtherItemsViewSet
 from accounts.views import AccountViewSet, DefaultPermissionsSetViewSet, CurrentUserView, ResendActivationEmailView
 from static_border_stations.views import BorderStationViewSet, StaffViewSet, CommitteeMemberViewSet, LocationViewSet
@@ -69,6 +69,8 @@ urlpatterns = [
 
     #Persons
     url(r'^person/$', PersonViewSet.as_view({'get': 'list'}), name="Person"),
+    #url(r'^person/(?P<pk>\d+)/$', IdFormMatch, name="PersonForm"),
+
 
     #Events
     url(r'^event/$', EventViewSet.as_view({'get': 'list', 'post':'create'}), name="EventList"),

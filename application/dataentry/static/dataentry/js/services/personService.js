@@ -14,7 +14,7 @@ function personService($http) {
 		saveAddress: saveAddress
 	};
 
-  function listPersons(){
+  function listPersons(queryParams){
         return $http.get('/api/person/')
             .success(function (data) {
                 return data;
@@ -26,6 +26,10 @@ function personService($http) {
 
 	function searchPersons(queryParams) {
         return listPersons(queryParams);
+  }
+
+  function getForm(person) {
+        return("Hello")
   }
 
 	function loadMorePersons(url, queryParams) {
