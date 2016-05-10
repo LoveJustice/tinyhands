@@ -518,8 +518,8 @@ class VictimInterviewViewSet(viewsets.ModelViewSet):
         vif_id = kwargs['pk']
         vif = VictimInterview.objects.get(id=vif_id)
         rv = super(viewsets.ModelViewSet, self).destroy(request, args, kwargs)
-        logger.debug("After VIF destroy " + vif.irf_number)
-        GoogleSheetClientThread.update_irf(vif.vif_number)
+        logger.debug("After VIF destroy " + vif.vif_number)
+        GoogleSheetClientThread.update_vif(vif.vif_number)
         return rv
 
 
