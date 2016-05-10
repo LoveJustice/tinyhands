@@ -172,17 +172,6 @@ function setUpResumeIncompleteFormSystem(which) {
     });
 }
 
-function clearCompletedForms(which) {
-    var storedForms = JSON.parse(localStorage.getItem('saved-'+which+'s') || '{}');
-    $('.'+which+'-number').each(function() {
-        var num = $(this).text();
-        if (num in storedForms) {
-            delete storedForms[num];
-        }
-    });
-    localStorage.setItem('saved-'+which+'s', JSON.stringify(storedForms));
-}
-
 var DREAMSUITE = {
 
     borderstations_update: function() {
@@ -306,10 +295,6 @@ var DREAMSUITE = {
     },
 
     /********************** IRF **********************/
-    interceptionrecord_list: function() {
-        clearCompletedForms('irf');
-    },
-
     interceptionrecord_create: function() {
         this.interceptionrecord_update();
 
@@ -371,10 +356,6 @@ var DREAMSUITE = {
     },
 
     /********************** VIF **********************/
-    victiminterview_list: function() {
-        clearCompletedForms('vif');
-    },
-
     victiminterview_create: function() {
         this.victiminterview_update();
 
