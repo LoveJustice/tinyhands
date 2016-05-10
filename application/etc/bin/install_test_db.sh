@@ -46,9 +46,9 @@ cp * "${IRF_FORM}"
 cp * "${VIF_FORM}"
 
 # Fix permissions for Docker
-chmod 777 "${PHOTO}" "${IRF_FORM}" "${VIF_FORM}" "${TOP}/media" "${TOP}/dreamsuite/static"
+chmod 777 "${PHOTO}" "${IRF_FORM}" "${VIF_FORM}" "${TOP}/media" "${TOP}/dreamsuite/static" "${TOP}/src"
 
 # migrate and load db
 docker-compose run --rm web ./manage.py migrate
 docker-compose run --rm web ./manage.py loaddata fixtures/sanitized-data.json
-
+docker-compose run --rm web ./manage.py loaddata fixtures/sys_admin.json

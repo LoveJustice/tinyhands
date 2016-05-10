@@ -12,50 +12,27 @@ db:
 
 web:
   build: .
-  command: bash bin/run.sh
+  volumes_from:
+    - data
+  volumes:
+    - /tmp:/log
+  links:
+    - db
   expose:
     - "9001"
-  volumes_from:
-    - data
-  links:
-    - db
-  env_file:
-    - ./common.env
-    - ./local.env
-
-test-django:
-  container_name: test-django
-  build: .
-  command: echo  # this is just to override the containers default command so that it automatically exits
-  volumes_from:
-    - data
-  links:
-    - db
   env_file:
     - ./common.env
     - ./local.env
 
 nginx:
   build: build/nginx
-  ports:
-    - "80:80"
   links:
     - web:web
+  volumes:
+    - /tmp:/log
   volumes_from:
     - data
-
-# cron:
-#    build: build/cron
-#    container_name: cron
-#    volumes_from:
-#        - data
-#    env_file:
-#      - ./common.env
-#      - ./local.env
-#    command: bash /data/bin/run-cron.sh
-
-# test-karma container -
-# image: tusoftware-studio/dreamsuite-js-cli
-
-# test-protractor container
-# image: tusoftware-studio/dreamsuite-js-cli
+  ports:
+    - "80:80"
+  environment:
+    SITE_HOSTNAME: "localhost"

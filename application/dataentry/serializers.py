@@ -39,7 +39,8 @@ class Address2Serializer(serializers.ModelSerializer):
             instance.canonical_name = Address2.objects.get(pk=self.context['request'].data['canonical_name']['id'])
         instance.latitude = validated_data.get('latitude', instance.latitude)
         instance.longitude = validated_data.get('longitude', instance.longitude)
-        instance.verified = validated_data.get('verified', instance.verified)
+        instance.level = validated_data.get('level', instance.level)
+	instance.verified = validated_data.get('verified', instance.verified)
         instance.save()
         return instance
 

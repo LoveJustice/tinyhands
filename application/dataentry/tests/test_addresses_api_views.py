@@ -10,16 +10,41 @@ class Address1Test(APITestCase):
         self.address1_list = Address1Factory.create_batch(20)
         self.user = Address2UserFactory.create()
         self.client.force_authenticate(user=self.user)
+        self.data = {
+            'name': 'Address1',
+            "completed": False,
+        }
 
-    def test_create_address1(self):
-
+    def test_create_address1_complete_data(self):
         url = reverse('Address1')
-        data = {'name': 'Address1'}
+        
+        self.data["level"] = "City"
+        self.data["latitude"] = 27.713855
+        self.data["longitude"] = 85.314800
+        
 
-        response = self.client.post(url, data)
+        response = self.client.post(url, self.data)
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['name'], 'Address1')
+        self.assertEqual(response.data['level'], 'City')
+        self.assertEqual(response.data['latitude'], 27.713855)
+        self.assertEqual(response.data['longitude'], 85.314800)
+        self.assertEqual(response.data['completed'], False) 
+        self.assertIsNotNone(response.data['id'])
+        
+    def test_create_address1_incomplete_data(self):
+        # Should be able to save address1 with null level, latitude, and longitude
+        url = reverse('Address1')
+
+        response = self.client.post(url, self.data)
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['name'], 'Address1')
+        self.assertEqual(response.data['level'], 'District')
+        self.assertEqual(response.data['latitude'], 0)
+        self.assertEqual(response.data['latitude'], 0)
+        self.assertEqual(response.data['completed'], False) 
         self.assertIsNotNone(response.data['id'])
 
     def test_list_address1s(self):
@@ -113,8 +138,6 @@ class Address2Test(APITestCase):
         self.first_canonical_name = self.Address2List[0].canonical_name
         self.data = {
             'name': 'Address2',
-            "latitude": 29.1837169619,
-            "longitude": 81.2336041444,
             "verified": False,
             "address1": {
                 "id": self.first_address1.id,
@@ -127,6 +150,10 @@ class Address2Test(APITestCase):
         }
 
     def test_create_address2(self):
+        self.data["latitude"] = 29.1837169619
+        self.data["longitude"] = 81.2336041444   
+        self.data["level"] = "City"	
+
         url = reverse('Address2')
 
         response = self.client.post(url, self.data)
@@ -134,18 +161,22 @@ class Address2Test(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertIsNotNone(response.data['id'])
         self.assertEqual(response.data['name'], 'Address2')
+        self.assertEqual(response.data['level'], "City")
+        self.assertEqual(response.data["latitude"], 29.1837169619)
+        self.assertEqual(response.data["longitude"],  81.2336041444)
         self.assertEqual(response.data['address1']['id'], self.first_address1.id)
         self.assertEqual(response.data['canonical_name']['id'], self.first_canonical_name.id)
 
-    def test_create_address2_canonical_name_null(self):
-        # Should be able to save address2 with null canonical name
+    def test_create_address2_incomplete_data(self):
         url = reverse('Address2')
-
         self.data["canonical_name"] = {"id": -1, "name": "Null"}
         response = self.client.post(url, self.data)
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertIsNotNone(response.data['id'])
+        self.assertEqual(response.data["level"], "VDC")
+        self.assertEqual(response.data["latitude"], 0)
+        self.assertEqual(response.data["longitude"],0)
         self.assertEqual(response.data['name'], 'Address2')
         self.assertEqual(response.data['address1']['id'], self.first_address1.id)
         self.assertEqual(response.data['canonical_name'], None)
@@ -156,12 +187,18 @@ class Address2Test(APITestCase):
 
         self.data['id'] = address2.id
         self.data['name'] = "Address2Updated"
+        self.data["level"] = "District"
+        self.data["latitude"] = 29.1337
+        self.data["longitude"]= 81.188118
 
         response = self.client.put(url, self.data)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['name'], 'Address2Updated')
         self.assertEqual(response.data['id'], address2.id)
+        self.assertEqual(response.data["level"], "District")
+        self.assertEqual(response.data["latitude"], 29.1337)
+        self.assertEqual(response.data["longitude"],81.188118)
 
     def test_update_address2_canonical_name_null(self):
         # Should be able to save address2 with null canonical name

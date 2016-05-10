@@ -1,81 +1,9 @@
+{% extends 'events/event_base.html' %}
 
-{% extends 'base.html' %}
-
-{% load static from staticfiles %}
-
-    {% block includeJS %}
-        <script src="{% static 'moment.min.js' %}"></script>
-        <script src="{% static 'full-calendar/fullcalendar.min.js' %}"></script>
-    {% endblock includeJS %}
-
-    {% block includeCSS %}
-        <link rel="stylesheet" type="text/css" href="{% static 'full-calendar/fullcalendar.css' %}">
-        <link type="text/css" href="{% static 'full-calendar/fullcalendar.print.css' %}" media='print' >
-    {% endblock includeCSS %}
-
-{% block displayJS %}
-    function get_today(){
-        var today = new Date();
-        var dd = today.getDate();
-        var mm = today.getMonth()+1; //January is 0!
-        var yyyy = today.getFullYear();
-
-        if(dd<10) {
-            dd='0'+dd
-        }
-
-        if(mm<10) {
-            mm='0'+mm
-        }
-
-        today = yyyy+'-'+mm+'-'+dd;
-        return today;
-    }
-
-	$(document).ready(function() {
-        $('.modal').on('show.bs.modal', function(e){
-            $('.title-value').html(window.event.title);
-            $('.location-value').html(window.event.location);
-            $('.start-value').html(window.event.start_date + '  ' +  window.event.start_time);
-            $('.end-value').html(window.event.end_date + '  ' + window.event.end_time);
-            $('.description-value').html(window.event.description);
-            if (window.event.is_repeat){
-                $('.optional').show();
-                $('.repetition-value').html(window.event.repetition);
-                $('.ends-at-value').html(window.event.ends? window.event.ends : 'Never');
-            }else{
-                $('.optional').hide();
-            }
-        });
-
-
-		$('#calendar').fullCalendar({
-			header: {
-				left: 'prev,next today',
-				center: 'title',
-				right: 'month,agendaWeek,agendaDay'
-			},
-
-			defaultDate: get_today(),
-			editable: false,
-			eventLimit: true, // allow "more" link when too many events
-            eventSources: [
-                {
-                    url: '/events/list.json/',
-                },
-            ],
-            eventClick: function(event, jsEvent, view){
-                window.event = event;
-                $('.modal').modal();
-            },
-
-		});
-
-	});
-
-
-{% endblock displayJS %}
-
+{% block includeCSS %}
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}full-calendar/fullcalendar.css">
+    <link type="text/css" href="{{ STATIC_URL }}full-calendar/fullcalendar.print.css" media='print' >
+{% endblock includeCSS %}
 
 {% block displayCSS %}
 
@@ -102,71 +30,65 @@
 {% endblock displayCSS %}
 
 
-{% block tab_block %}
+{% block content %}
+{% verbatim %}
+<div  ng-controller="CalendarCtrl as calendarCtrl" ng-cloak>
     <div class="row" style="margin-top:30px; margin-bottom:15px">
         <div class="pull-right" style="margin-right:135px">
-            <a href="{% url 'list_event' %}" class="btn btn-primary" >Edit Event</a>
-            <a href="{% url 'create_event' %}" class="btn btn-primary" >Create Event</a>
+            <a ng-href="/events/list/" class="btn btn-primary" >Edit Event</a>
+            <a ng-href="/events/create/" class="btn btn-primary" >Create Event</a>
         </div>
     </div>
-    <div id='calendar' ></div>
-
-
-<div class="modal fade" id="EventDetailModal" tabindex="-1" role="dialog" aria-labelledby="EventDetailLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-            <h4 class="modal-title" id="UploadFileLabel">Event Detail</h4>
-          </div>
-
-          <div class="modal-body">
-              <div class="row">
-                  <div class="col-md-3">Title</div>
-                  <div class="col-md-1">:</div>
-                  <div class="col-md-8 title-value">Meeting</div>
-              </div>
-              <div class="row">
-                  <div class="col-md-3">Location</div>
-                  <div class="col-md-1">:</div>
-                  <div class="col-md-8 location-value">Kathmandu</div>
-              </div>
-              <div class="row">
-                  <div class="col-md-3">Start</div>
-                  <div class="col-md-1">:</div>
-                  <div class="col-md-8 start-value">1 day</div>
-              </div>
-              <div class="row">
-                  <div class="col-md-3">End</div>
-                  <div class="col-md-1">:</div>
-                  <div class="col-md-8 end-value">Yes</div>
-              </div>
-              <div class="row">
-                  <div class="col-md-3">Description</div>
-                  <div class="col-md-1">:</div>
-                  <div class="col-md-8 description-value">Yes</div>
-              </div>
-              <div class="row optional">
-                  <div class="col-md-3">Repetition</div>
-                  <div class="col-md-1">:</div>
-                  <div class="col-md-8 repetition-value">Yes</div>
-              </div>
-              <div class="row optional">
-                  <div class="col-md-3">Ends At</div>
-                  <div class="col-md-1">:</div>
-                  <div class="col-md-8 ends-at-value">Yes</div>
-              </div>
-
-          </div>
-
-          <div class="modal-footer">
-               <button type="button" data-dismiss="modal" class="btn btn-primary ">Close</button>
-          </div>
-
-        </div>
-
-    </div>
+    <div id="calendar" ui-calendar="calendarCtrl.calendarConfig" ng-model="calendarCtrl.eventSources"></div>
 </div>
 
-{% endblock tab_block %}
+<script type="text/ng-template" id="modal.html">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" ng-click="modalCtrl.close()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <h4 class="modal-title" id="UploadFileLabel">Event Detail</h4>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-3">Title</div>
+                <div class="col-md-1">:</div>
+                <div class="col-md-8 title-value">{{modalCtrl.event.title}}</div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">Location</div>
+                <div class="col-md-1">:</div>
+                <div class="col-md-8 location-value">{{ modalCtrl.event.location }}</div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">Start</div>
+                <div class="col-md-1">:</div>
+                <div class="col-md-8 start-value">{{ modalCtrl.event.start_date + '  ' + modalCtrl.event.start_time }}</div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">End</div>
+                <div class="col-md-1">:</div>
+                <div class="col-md-8 end-value">{{ modalCtrl.event.end_date + '  ' + modalCtrl.event.end_time }}</div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">Description</div>
+                <div class="col-md-1">:</div>
+                <div class="col-md-8 description-value">{{ modalCtrl.event.description }}</div>
+            </div>
+            <div class="row" ng-if="modalCtrl.event.is_repeat">
+                <div class="col-md-3">Repetition</div>
+                <div class="col-md-1">:</div>
+                <div class="col-md-8 repetition-value">{{ modalCtrl.event.repetition }}</div>
+            </div>
+            <div class="row" ng-if="modalCtrl.event.is_repeat">
+                <div class="col-md-3">Ends At</div>
+                <div class="col-md-1">:</div>
+                <div class="col-md-8 ends-at-value">{{ modalCtrl.event.ends ? modalCtrl.event.ends : 'Never' }}</div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" ng-click="modalCtrl.close()" >Close</button>
+        </div>
+    </div>
+</script>
+{% endverbatim %}
+{% endblock content %}

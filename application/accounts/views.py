@@ -39,16 +39,9 @@ class AccountListView(
 class AccountCreateView(
         LoginRequiredMixin,
         PermissionsRequiredMixin,
-        CreateView):
-    model = Account
-    form_class = CreateUnactivatedAccountForm
-    success_url = reverse_lazy('account_list')
+        TemplateView):
+    template_name = 'accounts/account_form.html'
     permissions_required = ['permission_accounts_manage']
-
-    def get_context_data(self, **kwargs):
-        context = super(AccountCreateView, self).get_context_data(**kwargs)
-        context['default_permissions_sets'] = json.dumps(list(DefaultPermissionsSet.objects.values()))
-        return context
 
 
 class AccountActivateView(UpdateView):
@@ -74,46 +67,15 @@ class AccountActivateView(UpdateView):
         return super(AccountActivateView, self).form_valid(form)
 
 
-class AccountResendActivationEmailView(
-        LoginRequiredMixin,
-        PermissionsRequiredMixin,
-        RedirectView):
-    model = Account
-    permanent = False
-    permissions_required = ['permission_accounts_manage']
-    url = reverse_lazy('account_list')
-
-    def post(self, request, *args, **kwargs):
-        account = get_object_or_404(Account, pk=self.kwargs['pk'])
-        account.send_activation_email()
-        return super(AccountResendActivationEmailView, self).post(request, *args, **kwargs)
-
-
 class AccountUpdateView(
         LoginRequiredMixin,
         PermissionsRequiredMixin,
-        UpdateView):
-    model = Account
-    success_url = reverse_lazy('account_list')
+        TemplateView):
+    template_name = 'accounts/account_form.html'
     permissions_required = ['permission_accounts_manage']
 
-    def get_context_data(self, **kwargs):
-        context = super(AccountUpdateView, self).get_context_data(**kwargs)
-        context['default_permissions_sets'] = json.dumps(list(DefaultPermissionsSet.objects.values()))
-        return context
-
-
-class AccountDeleteView(DeleteView):
-    model = Account
-    success_url = reverse_lazy('account_list')
-
-    def delete(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        if self.request.user.is_superuser:
-            self.object.delete()
-        else:
-            messages.error(request, "You have no power here!!!")
-        return HttpResponseRedirect(self.success_url)
+    def id(self):
+        return self.kwargs['pk']
 
 
 class AccessControlView(
@@ -124,26 +86,12 @@ class AccessControlView(
     permissions_required = ['permission_accounts_manage']
     
 
-
 class AccessDefaultsView(
         LoginRequiredMixin,
         PermissionsRequiredMixin,
         TemplateView):
     template_name = 'accounts/access_defaults.html'
     permissions_required = ['permission_accounts_manage']
-
-    
-
-#TODO Currently this view doesn't check to make sure the permission set is
-# unused by accounts.  The button to go here is grayed out, but that wouldn't
-# stop someone who was bent on deleting.  Come back to this someday.
-class AccessDefaultsDeleteView(
-        LoginRequiredMixin,
-        PermissionsRequiredMixin,
-        DeleteView):
-    model = DefaultPermissionsSet
-    permissions_required = ['permission_accounts_manage']
-    success_url = reverse_lazy('access_defaults')
 
 
 #Rest Api Views

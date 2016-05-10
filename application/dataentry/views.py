@@ -1,10 +1,16 @@
-from datetime import date
+import zipfile
+from datetime import date, datetime
+from time import strptime, mktime
 import csv
+import io
 import json
 import os
 import re
 import shutil
+import urllib
+import logging
 
+from StringIO import StringIO
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core import serializers
@@ -15,7 +21,8 @@ from django.core.urlresolvers import reverse_lazy
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import redirect, render_to_response, render
 from django.template.loader import render_to_string
-from django.views.generic import ListView, View, DeleteView, CreateView
+from django.utils import timezone
+from django.views.generic import ListView, View, DeleteView, CreateView, TemplateView
 
 from rest_framework import status
 from rest_framework.decorators import list_route
@@ -25,15 +32,17 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import viewsets
 
+
 from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSet
 from braces.views import LoginRequiredMixin
 from fuzzywuzzy import process
 
-from dataentry.models import (BorderStation, Address2, Address1, Interceptee, InterceptionRecord, VictimInterview, VictimInterviewLocationBox, VictimInterviewPersonBox, FuzzyMatching)
+
+from dataentry.models import (BorderStation, Address2, Address1, Interceptee, Person, FuzzyMatching, InterceptionRecord, VictimInterview, VictimInterviewLocationBox, VictimInterviewPersonBox)
 from dataentry.forms import (IntercepteeForm, InterceptionRecordForm, Address2Form, Address1Form, VictimInterviewForm, VictimInterviewLocationBoxForm, VictimInterviewPersonBoxForm)
 from dataentry import csv_io
-#from dataentry.serializers import Address1Serializer, Address2Serializer, InterceptionRecordListSerializer, VictimInterviewListSerializer
 from dataentry.serializers import Address1Serializer, Address2Serializer, InterceptionRecordListSerializer, VictimInterviewListSerializer, SysAdminSettingsSerializer
+from dataentry.google_sheets import GoogleSheetClientThread
 
 from accounts.mixins import PermissionsRequiredMixin
 
@@ -41,6 +50,7 @@ from alert_checkers import IRFAlertChecker, VIFAlertChecker
 from fuzzy_matching import match_location
 from rest_api.authentication import HasPermission, HasDeletePermission
 
+logger = logging.getLogger(__name__)
 
 @login_required
 def home(request):
@@ -161,7 +171,11 @@ class InterceptionRecordCreateView(LoginRequiredMixin, PermissionsRequiredMixin,
         form = form.save()
         for formset in inlines:
             formset.save()
+        logger.debug("IRF Create: After save for " + form.irf_number)
         IRFAlertChecker(form, inlines).check_them()
+        logger.debug("IRF Create: After alert checker for " + form.irf_number)
+        GoogleSheetClientThread.update_irf(form.irf_number)
+        logger.debug("IRF Create: After google update irf for " + form.irf_number)
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -176,7 +190,11 @@ class InterceptionRecordUpdateView(LoginRequiredMixin, PermissionsRequiredMixin,
         form = form.save()
         for formset in inlines:
             formset.save()
+        logger.debug("IRF Update: After save for " + form.irf_number)
         IRFAlertChecker(form, inlines).check_them()
+        logger.debug("IRF Update: After alert checker for " + form.irf_number)
+        GoogleSheetClientThread.update_irf(form.irf_number)
+        logger.debug("IRF Update: After google update irf for " + form.irf_number)
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -240,7 +258,11 @@ class VictimInterviewCreateView(LoginRequiredMixin, PermissionsRequiredMixin, Cr
         form = form.save()
         for formset in inlines:
             formset.save()
+        logger.debug("VIF Create: After save for " + form.vif_number)
         VIFAlertChecker(form, inlines).check_them()
+        logger.debug("VIF Create: After alert checker for " + form.vif_number)
+        GoogleSheetClientThread.update_vif(form.vif_number)
+        logger.debug("VIF Create: After google update vif for " + form.vif_number)
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -255,7 +277,11 @@ class VictimInterviewUpdateView(LoginRequiredMixin, PermissionsRequiredMixin, Up
         form = form.save()
         for formset in inlines:
             formset.save()
+        logger.debug("VIF Update: After save for " + form.vif_number)
         VIFAlertChecker(form, inlines).check_them()
+        logger.debug("VIF Update: After alert checker for " + form.vif_number)
+        GoogleSheetClientThread.update_vif(form.vif_number)
+        logger.debug("VIF Update: After google update vif for " + form.vif_number)
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -325,23 +351,10 @@ class GeoCodeAddress2APIView(APIView):
             return Response({"id": "-1", "name": "None"})
 
 
-class Address2AdminView(LoginRequiredMixin, PermissionsRequiredMixin, SearchFormsMixin, ListView):
+class Address2AdminView(LoginRequiredMixin, PermissionsRequiredMixin, TemplateView):
     model = Address2
     template_name = "dataentry/address2_admin_page.html"
     permissions_required = ['permission_address2_manage']
-    paginate_by = 25
-
-    def __init__(self, *args, **kwargs):
-        super(Address2AdminView, self).__init__(name__icontains="name")
-
-    def get_queryset(self):
-        return self.model.objects.all().select_related('address1', 'canonical_name__address1')
-
-    def get_context_data(self, **kwargs):
-        context = super(Address2AdminView, self).get_context_data(**kwargs)
-        context['search_url'] = '/data-entry/geocodelocations/address2-admin/search/'
-        context['database_empty'] = self.model.objects.count() == 0
-        return context
 
 
 class Address2SearchView(LoginRequiredMixin, PermissionsRequiredMixin, SearchFormsMixin, ListView):
@@ -391,18 +404,10 @@ class Address2CreateView(LoginRequiredMixin, PermissionsRequiredMixin, CreateVie
         return HttpResponse(render_to_string('dataentry/address2_create_success.html'))
 
 
-class Address1AdminView(LoginRequiredMixin, PermissionsRequiredMixin, SearchFormsMixin, ListView):
+class Address1AdminView(LoginRequiredMixin, PermissionsRequiredMixin, TemplateView):
     model = Address1
     template_name = "dataentry/address1_admin_page.html"
     permissions_required = ['permission_address2_manage']
-
-    def __init__(self, *args, **kwargs):
-        super(Address1AdminView, self).__init__(name__icontains="name")
-
-    def get_context_data(self, **kwargs):
-        context = super(Address1AdminView, self).get_context_data(**kwargs)
-        context['database_empty'] = self.model.objects.count() == 0
-        return context
 
 
 class Address1CreateView(LoginRequiredMixin, PermissionsRequiredMixin, CreateView):
@@ -426,7 +431,7 @@ class StationCodeAPIView(APIView):
 def interceptee_fuzzy_matching(request):
     input_name = request.GET['name']
     all_people = Interceptee.objects.all()
-    people_dict = {serializers.serialize("json", [obj]): obj.full_name for obj in all_people }
+    people_dict = {serializers.serialize("json", [obj]): obj.person.full_name for obj in all_people }
     fuzzy_object = FuzzyMatching.objects.all()[0]
     matches = process.extractBests(input_name, people_dict, score_cutoff=fuzzy_object.person_cutoff, limit=fuzzy_object.person_limit)
     return HttpResponse(json.dumps(matches), content_type="application/json")
@@ -464,8 +469,10 @@ class Address1ViewSet(viewsets.ModelViewSet):
     permissions_required = ['permission_address2_manage']
     filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
     search_fields = ('name',)
-    ordering_fields = ('name',)
+    ordering_fields = ('name','longitude','latitude','level','completed')
     ordering = ('name',)
+
+
 
     @list_route()
     def list_all(self, request):
@@ -486,6 +493,14 @@ class InterceptionRecordViewSet(viewsets.ModelViewSet):
     ordering_fields = ('irf_number', 'staff_name', 'number_of_victims', 'number_of_traffickers', 'date_time_of_interception', 'date_time_entered_into_system', 'date_time_last_updated',)
     ordering = ('irf_number',)
 
+    def destroy(self, request, *args, **kwargs):
+        irf_id = kwargs['pk']
+        irf = InterceptionRecord.objects.get(id=irf_id)
+        rv = super(viewsets.ModelViewSet, self).destroy(request, args, kwargs)
+        logger.debug("After IRF destroy " + irf.irf_number)
+        GoogleSheetClientThread.update_irf(irf.irf_number)
+        return rv
+
 
 class VictimInterviewViewSet(viewsets.ModelViewSet):
     queryset = VictimInterview.objects.all()
@@ -497,6 +512,47 @@ class VictimInterviewViewSet(viewsets.ModelViewSet):
     search_fields = ('vif_number',)
     ordering_fields = ('vif_number', 'interviewer', 'number_of_victims', 'number_of_traffickers', 'date', 'date_time_entered_into_system', 'date_time_last_updated',)
     ordering = ('vif_number',)
+
+    def destroy(self, request, *args, **kwargs):
+        vif_id = kwargs['pk']
+        vif = VictimInterview.objects.get(id=vif_id)
+        rv = super(viewsets.ModelViewSet, self).destroy(request, args, kwargs)
+        logger.debug("After VIF destroy " + vif.irf_number)
+        GoogleSheetClientThread.update_irf(vif.vif_number)
+        return rv
+
+
+class BatchView(View):
+    def get(self, request, startDate, endDate):
+        start = timezone.make_aware(datetime.fromtimestamp(mktime(strptime(startDate, '%m-%d-%Y'))), timezone.get_default_timezone())
+        end = timezone.make_aware(datetime.fromtimestamp(mktime(strptime(endDate, '%m-%d-%Y'))), timezone.get_default_timezone())
+
+        listOfIrfNumbers = []
+        irfs = InterceptionRecord.objects.all()
+        for irf in irfs:
+            irfDate = irf.date_time_of_interception
+            if start <= irfDate <= end:
+                listOfIrfNumbers.append(irf.irf_number)
+
+        photos = list(Interceptee.objects.filter(interception_record__irf_number__in=listOfIrfNumbers).values_list('photo', 'full_name', 'interception_record__irf_number'))
+        if len(photos) == 0:
+            return render(request, 'dataentry/batch_photo_error.html')
+        else:
+            for i in range(len(photos)):
+                photos[i] = [str(x) for x in photos[i]]
+
+            f = StringIO()
+            imagezip = zipfile.ZipFile(f, 'w')
+            for photoTuple in photos:
+                if photoTuple[0] == '':
+                    continue
+                imageFile = open(settings.MEDIA_ROOT + '/' + photoTuple[0])
+                imagezip.writestr(photoTuple[2] + '-' + photoTuple[1] + '.jpg', imageFile.read())
+            imagezip.close()  # Close
+
+            response = HttpResponse(f.getvalue(), content_type="application/zip")
+            response['Content-Disposition'] = 'attachment; filename=irfPhotos ' + startDate + ' to ' + endDate + '.zip'
+            return response
 
 
 class SysAdminSettingsViewSet(viewsets.ModelViewSet):

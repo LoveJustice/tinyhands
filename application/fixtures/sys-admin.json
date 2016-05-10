@@ -6,9 +6,7 @@
         "address2_cutoff": 70,
         "address2_limit": 5,
         "person_cutoff": 90,
-        "person_limit": 10,
-        "phone_number_cutoff": 0,
-        "phone_number_limit": 0
+        "person_limit": 10
     },
     "model": "dataentry.fuzzymatching",
     "pk": 1

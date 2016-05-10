@@ -16,6 +16,8 @@ angular
             vm.foodGasTotalValue = 0;
             vm.communicationTotalValue = 0;
             vm.staffTotalValue = 0;
+            vm.medicalTotalValue = 0;
+            vm.otherTotalValue = 0;
 
             vm.otherTravelTotalValue = [0];
             vm.otherMiscTotalValue = [0];
@@ -25,6 +27,7 @@ angular
             vm.otherFoodGasTotalValue = [0];
             vm.otherCommunicationTotalValue = [0];
             vm.otherStaffTotalValue = [0];
+            vm.otherMedicalTotalValue = [0];
 
 
             // Budget Calc sheets are for the 15th of every month
@@ -41,7 +44,8 @@ angular
                                     vm.otherShelterTotalValue,
                                     vm.otherFoodGasTotalValue,
                                     vm.otherCommunicationTotalValue,
-                                    vm.otherStaffTotalValue];
+                                    vm.otherStaffTotalValue,
+                                    vm.otherMedicalTotalValue];
 
 
             // Event Listeners
@@ -89,6 +93,7 @@ angular
                 vm.foodGasTotal();
                 vm.communicationTotal();
                 vm.staffTotal();
+                vm.medicalTotal();
             }
 
 
@@ -206,8 +211,10 @@ angular
             };
 
             //Medical Section
+
             vm.medicalTotal = function() {
-                return vm.form.medical_last_months_expense;
+                vm.medicalTotalValue = vm.form.medical_last_months_expense + vm.otherMedicalTotalValue[0];
+                return vm.medicalTotalValue;
             };
 
             //Administration Section
