@@ -11,11 +11,12 @@ function personService($http) {
 		listPersons: listPersons,
 		searchPersons: searchPersons,
 		loadMorePersons: loadMorePersons,
-		saveAddress: saveAddress
+		saveAddress: saveAddress,
+    getForm: getForm
 	};
 
   function listPersons(queryParams){
-        return $http.get('/api/person/')
+        return $http.get('/api/person/' + queryParams)
             .success(function (data) {
                 return data;
             })

@@ -22,7 +22,7 @@ angular
         vm.loadMorePersons = loadMorePersons;
         vm.getForm = getForm;
         vm.getQueryParams = getQueryParams;
-        //vm.sortIcon = sortIcon;
+        vm.sortIcon = sortIcon;
         main();
 
 
@@ -37,24 +37,36 @@ angular
             return vm.reverse ? "glyphicon-sort-by-alphabet-alt" : "glyphicon-sort-by-alphabet";
         }
 
+        function getQueryParams(){
+            var params = "";
+            params += "?page_size=" + vm.paginateBy;
+            if(vm.searchValue){
+                params += "&search=" + vm.searchValue;
+            }
+            if(vm.reverse){
+                params += "&ordering=-" + vm.sortColumn;
+            } else{
+                params += "&ordering=" + vm.sortColumn;
+            }
+            console.log(params)
+            return params;
+        }
+
+
         function getPersons(){
             vm.loading = true;
-            personService.listPersons()
+            personService.listPersons(vm.getQueryParams())
                 .success(function (data) {
                     vm.persons = data.results;
                     vm.nextPageUrl = data.next;
                     vm.loading = false;
-                    console.log(vm.persons);
+                    //console.log(vm.persons);
                 });
         }
 
         function getForm(person){
             vm.loading = true;
-            personService.getForm(person)
-                .success(function (data) {
-                    console.log(data)
-                    vm.loading = false;
-                });
+            console.log(personService.getForm(person));
         }
 
         function loadMorePersons(){
@@ -76,21 +88,6 @@ angular
                     vm.loading = false;
                 });
         }
-
-        function getQueryParams(){
-            var params = "";
-            params += "?page_size=" + vm.paginateBy;
-            if(vm.searchValue){
-                params += "&search=" + vm.searchValue;
-            }
-            if(vm.reverse){
-                params += "&ordering=-" + vm.sortColumn;
-            } else{
-                params += "&ordering=" + vm.sortColumn;
-            }
-            return params;
-        }
-
     }])
 
     .controller('ModalInstanceCtrl', function ($scope, $modalInstance, $http, person) {
