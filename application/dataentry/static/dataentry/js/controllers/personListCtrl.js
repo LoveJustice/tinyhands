@@ -71,7 +71,7 @@ angular
 
         function loadMorePersons(){
             vm.loading = true;
-            personService.loadMore(vm.nextPageUrl, "&" + vm.getQueryParams().slice(1))
+            personService.loadMorePersons(vm.nextPageUrl, "&" + vm.getQueryParams().slice(1))
                 .success(function (data) {
                     vm.persons = vm.persons.concat(data.results);
                     vm.nextPageUrl = data.next;

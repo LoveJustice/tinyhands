@@ -14,10 +14,10 @@
     <div class="row">
         <div class="col-md-2">
             <select data-ng-model="vm.paginateBy" data-ng-change="vm.getPersons()" class="form-control">
-                <option>25</option>
-                <option>50</option>
-                <option>100</option>
-                <option>500</option>
+                <option value="25" selected>25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="500">500</option>
             </select>
         </div>
         <div class="col-md-3">
@@ -70,12 +70,21 @@
                 <td class="text-center person-gender">{{ person.address1 }}</td>
                 <td class="text-center person-phone_contact">{{ person.address2 }}</td>
                 <td class="text-center">
-                    <a href="#" ng-click="vm.getForm(person)" class="edit btn btn-success">Edit</a>
+                    <a href="#" ng-click="vm.getForm(person)" class="edit btn btn-success">Form</a>
                 </td>
             </tr>
             <tr ng-show="vm.persons.length == 0"><td colspan="12">There are currently no Person records in the database</td></tr>
         </tbody>
     </table>
+
+    <div class="row text-center">
+        <button ng-disabled="!vm.nextPageUrl" ng-click="vm.loadMorePersons()" class="btn btn-primary" id="loadMoreButton" style="margin-bottom:25px; width:90%;">Load more results</button>
+    </div>
+
+    <!-- Loading animation container -->
+    <!-- <div ng-show="vm.loading" class="loader-container">
+        <div class="loader">Loading...</div>
+    </div> -->
 
 
 {% endverbatim %}
