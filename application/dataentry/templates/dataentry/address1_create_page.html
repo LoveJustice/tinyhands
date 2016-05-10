@@ -1,6 +1,5 @@
 {% load bootstrap %}
-
-<div class="modal-dialog modal-sm">
+<div class="modal-dialog modal-sm" ng-controller="address1Ctrl as vm">
     <div class="modal-content">
         <form id="address1_create_form" method="post" class="form" role="form" action="{% url 'address1_create_page' %}">
             <div class="modal-header">
@@ -47,3 +46,8 @@
 
         });});
 </script>
+
+{% load static from staticfiles %}
+<script src="{% static "dataentry/js/dataEntry.module.js" %}"></script>
+<script src="{% static "dataentry/js/controllers/address1Ctrl.js" %}"></script>
+<script src="{% static "dataentry/js/services/address1Service.js" %}"></script>

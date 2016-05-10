@@ -64,7 +64,6 @@ function setUpValidationPopups() {
 
 function photoSelect() {
     $('.photo-manip-controls').click();
-    console.log("Test...1.2.3");
 }
 
 function makeCheckboxAppearAsAButton(className,checkedText,uncheckedText) {

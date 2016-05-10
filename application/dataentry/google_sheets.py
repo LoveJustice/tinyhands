@@ -10,13 +10,14 @@ import re
 import traceback
 import smtplib
 import string
-
-
+import logging
 
 from models import (InterceptionRecord, VictimInterview)
 from csv_io import get_irf_export_rows
 from django.conf import settings
 from csv_io import get_vif_export_rows
+
+logger = logging.getLogger(__name__);
 
 class GoogleSheetClientThread (Thread):
 
@@ -41,7 +42,7 @@ class GoogleSheetClientThread (Thread):
             self.have_credentials = True
         except:
             self.have_credentials = False
-            print "No credentials file for google spreadsheet.  No update to google spreadsheets will be attempted."
+            logger.warn("No credentials file for google spreadsheet.  No update to google spreadsheets will be attempted.")
 
     def get_client(self):
         self.client = SpreadsheetsClient()
@@ -53,7 +54,7 @@ class GoogleSheetClientThread (Thread):
             if (name == spreadsheet.title.text):
                 return spreadsheet.id.text.rsplit('/',1)[1]
 
-        print "Spreadsheet with the name " + name + " not found"
+        logger.error("Spreadsheet with the name " + name + " not found")
         return None
 
     def find_worksheet_by_name(self, name):
@@ -63,7 +64,7 @@ class GoogleSheetClientThread (Thread):
                 if (name == worksheet.title.text):
                     return worksheet.id.text.rsplit('/',1)[1]
 
-        print "Worksheet with the name " + name + " not found"
+        logger.error("Worksheet with the name " + name + " not found")
         return None
 
     def spreadsheet_header_from_export_header(self, hdr):
@@ -81,7 +82,7 @@ class GoogleSheetClientThread (Thread):
             self.irf_worksheet_key = self.find_worksheet_by_name(settings.IRF_WORKSHEET_NAME)
             self.vif_worksheet_key = self.find_worksheet_by_name(settings.VIF_WORKSHEET_NAME)
         else:
-            print "Unable to get token"
+            logger.error("Unable to get token")
 
     def __init__(self):
         Thread.__init__(self)
@@ -94,7 +95,7 @@ class GoogleSheetClientThread (Thread):
     def run(self):
         while True:
             work = self.work_queue.get()
-            print "in run " + work[0] + ", " + work[1]
+            logger.info("in run " + work[0] + ", " + work[1])
             try:
                 if work[0] == 'IRF':
                     self.internal_update_irf(work[1])
@@ -105,16 +106,16 @@ class GoogleSheetClientThread (Thread):
                     self.have_credentials = False
                     return
                 else:
-                    print "Unknown work type " + work[0]
+                    logger.error("Unknown work type " + work[0])
             except:
-                print "Failed to process " + work[0] + " " + work[1] + " on attempt " + str(work[2])
+                logger.error("Failed to process " + work[0] + " " + work[1] + " on attempt " + str(work[2]))
                 self.reinitialize();
                 work[2] = work[2] + 1
                 if work[2] < 2:
-                    print "GoogleSheetClientThread.run Failed to process " + work[0] + " " + work[1] + " on attempt " + str(work[2]) + " - retrying"
+                    logger.error("GoogleSheetClientThread.run Failed to process " + work[0] + " " + work[1] + " on attempt " + str(work[2]) + " - retrying")
                     self.work_queue.put(work);
                 else:
-                    print "GoogleSheetClientThread.run Failed to process " + work[0] + " " + work[1] + " on attempt " + str(work[2]) + " - giving up"
+                    logger.error("GoogleSheetClientThread.run Failed to process " + work[0] + " " + work[1] + " on attempt " + str(work[2]) + " - giving up")
                     self.send_exception_mail(traceback.format_exc())
 
     def build_list_entry(self, header_row, data_row):
@@ -139,21 +140,25 @@ class GoogleSheetClientThread (Thread):
 
     @staticmethod
     def update_irf(the_irf_number):
+        logger.debug("Entry IRF = " + the_irf_number)
         if GoogleSheetClientThread.instance is None:
             GoogleSheetClientThread.instance = GoogleSheetClientThread()
 
         if GoogleSheetClientThread.instance.have_credentials:
             work = ['IRF', the_irf_number, 0]
             GoogleSheetClientThread.instance.work_queue.put(work)
+            logger.debug("IRF added to work queue " + the_irf_number)
 
     @staticmethod
     def update_vif(the_vif_number):
+        logger.debug("Entry VIF = " + the_vif_number)
         if GoogleSheetClientThread.instance is None:
             GoogleSheetClientThread.instance = GoogleSheetClientThread()
 
         if GoogleSheetClientThread.instance.have_credentials:
             work = ['VIF', the_vif_number, 0]
             GoogleSheetClientThread.instance.work_queue.put(work)
+            logger.debug("VIF added to work queue " + the_vif_number)
 
     def internal_update_irf(self, the_irf_number):
         #print "in internal_update_irf " + the_irf_number
@@ -161,7 +166,7 @@ class GoogleSheetClientThread (Thread):
             irf = InterceptionRecord.objects.get(irf_number = the_irf_number)
             irfs = [irf]
         except:
-            print "Could not find IRF " + the_irf_number
+            logger.info("Could not find IRF " + the_irf_number)
             irfs = []
         new_rows = get_irf_export_rows(irfs)
         self.update_sheet(self.irf_worksheet_key, the_irf_number, new_rows)
@@ -172,7 +177,7 @@ class GoogleSheetClientThread (Thread):
             vif = VictimInterview.objects.get(vif_number = the_vif_number)
             vifs = [vif]
         except:
-            print "Could not find VIF " + the_vif_number
+            logger.info("Could not find VIF " + the_vif_number)
             vifs = []
         new_rows = get_vif_export_rows(vifs)
         self.update_sheet(self.vif_worksheet_key, the_vif_number, new_rows)
@@ -195,7 +200,6 @@ class GoogleSheetClientThread (Thread):
                     "",
                     exception_text
                     ), "\r\n")
-            print body
             server = smtplib.SMTP(settings.EMAIL_HOST, settings.EMAIL_PORT)
             server.login(settings.EMAIL_HOST_USER, settings.EMAIL_HOST_PASSWORD)
             server.sendmail(frm, to, body)

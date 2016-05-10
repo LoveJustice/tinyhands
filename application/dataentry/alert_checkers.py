@@ -4,7 +4,7 @@ from fuzzywuzzy import process
 
 from accounts.models import Alert
 
-from dataentry.models import Interceptee
+from dataentry.models import Interceptee, Person
 
 
 class VIFAlertChecker(object):
@@ -103,24 +103,29 @@ class IRFAlertChecker(object):
         came from, and the name and all personal identifiers from both forms.
 
         """
-        all_people = Interceptee.objects.all()
-        people_dict = {obj: obj.full_name for obj in all_people}
+        # Get all of the interceptees from other IRFs
+        all_people = Interceptee.objects.all().exclude(interception_record=self.irf.id) #this looks like we need it
+        # Get a list of all of their full_names for use of fuzzy_wuzzy
+        people_dict = {obj: obj.person.full_name for obj in all_people}
+
         trafficker_list = []
 
         trafficker_in_custody = self.trafficker_in_custody()
 
-        for person in self.interceptees:
-            if person.cleaned_data.get("kind") == 't':
+        for interceptee in self.interceptees:
+            if interceptee.cleaned_data.get("kind") == 't':
                 onePersonMatches = []
                 tmplist =[]
-                p=person.instance
+                p=interceptee.instance.person
                 onePersonMatches= process.extractBests(p.full_name, people_dict, score_cutoff=89, limit = 10)
+                print(onePersonMatches)
                 for match in onePersonMatches:
-                    tuplematch=(match[1],match[2])
+                    w= match[2].person
+                    #per = Person.objects.get()
+                    tuplematch=(match[1],w)
                     tmplist.append(tuplematch)
-                tmplist.insert(0,(0,person.instance))
+                tmplist.insert(0,(0,interceptee.instance.person))
                 trafficker_list.append(tmplist)
-
         if len(trafficker_list) > 0:
             Alert.objects.send_alert("Name Match",
                                      context={"irf": self.irf,

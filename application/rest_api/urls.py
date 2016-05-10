@@ -2,19 +2,19 @@ from django.conf.urls import url
 from accounts.views import CurrentUserView
 
 from dataentry.views import Address2ViewSet, Address1ViewSet, GeoCodeAddress1APIView, GeoCodeAddress2APIView, InterceptionRecordViewSet, VictimInterviewViewSet, BatchView
-from budget.views import BudgetViewSet, OtherItemsViewSet
+from budget.views import OldBudgetViewSet, OldOtherItemsViewSet
 from accounts.views import AccountViewSet, DefaultPermissionsSetViewSet, CurrentUserView, ResendActivationEmailView
 from static_border_stations.views import BorderStationViewSet, StaffViewSet, CommitteeMemberViewSet, LocationViewSet
 from events.views import EventViewSet
 
 urlpatterns = [
     # Budget URLs
-    url(r'^budget/$', BudgetViewSet.as_view({'get': 'list', 'post': 'create'}), name='BudgetCalculation'),
-    url(r'^budget/(?P<pk>\d+)/$', BudgetViewSet.as_view({'put': 'update', 'get': 'retrieve', 'delete': 'destroy'}), name='BudgetCalculationWithId'),
+    url(r'^budget/$', OldBudgetViewSet.as_view({'get': 'list', 'post': 'create'}), name='BudgetCalculation'),
+    url(r'^budget/(?P<pk>\d+)/$', OldBudgetViewSet.as_view({'put': 'update', 'get': 'retrieve', 'delete': 'destroy'}), name='BudgetCalculationWithId'),
 
     # Other items
-    url(r'^budget/(?P<parent_pk>\d+)/item/$', OtherItemsViewSet.as_view({'get': 'list_by_budget_sheet', 'post': 'create'}), name='BudgetCalculationWithId'),
-    url(r'^budget/(?P<parent_pk>\d+)/item/(?P<pk>\d+)/$', OtherItemsViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}), name='BudgetCalculationWithId'),
+    url(r'^budget/(?P<parent_pk>\d+)/item/$', OldOtherItemsViewSet.as_view({'get': 'list_by_budget_sheet', 'post': 'create'}), name='BudgetCalculationWithId'),
+    url(r'^budget/(?P<parent_pk>\d+)/item/(?P<pk>\d+)/$', OldOtherItemsViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}), name='BudgetCalculationWithId'),
 
 
     # BorderStation URLs

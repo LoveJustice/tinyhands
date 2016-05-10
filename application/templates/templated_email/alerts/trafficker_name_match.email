@@ -32,7 +32,7 @@
                     {% endif %}
                     {% if person.0 != 0 %}
                         <tr>
-                            <td><a href="{{ site }}/{% url 'interceptionrecord_detail' person.1.interception_record_id %}">{{ person.1.full_name }}</a></td>
+                            <td>{{ person.1.full_name }}</td>
                             <td>{{ person.0}}%</td>
                             <td>{{ person.1.phone_contact }}</td>
                             <td>{{ person.1.address1 }}</td>

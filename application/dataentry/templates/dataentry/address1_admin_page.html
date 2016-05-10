@@ -36,7 +36,19 @@
         <thead>
             <tr>
                 <th id="addressNameHeader" ng-click="vm.sortColumn = 'name'; vm.reverse = ! vm.reverse; vm.getAddresses()" class="text-center">
-                    Name <i class="glyphicon" ng-class="vm.sortIcon()"></i>
+                    Name <i class="glyphicon" ng-class="vm.sortIcon('name')"></i>
+                </th>
+                <th id="addressLatitudeHeader" ng-click="vm.sortColumn = 'latitude'; vm.reverse = ! vm.reverse; vm.getAddresses()" class="text-center">
+                    Latitude <i class="glyphicon" ng-class="vm.sortIcon('latitude')"></i>
+                </th>
+                <th id="addressLongitudeHeader" ng-click="vm.sortColumn = 'longitude'; vm.reverse = ! vm.reverse; vm.getAddresses()" class="text-center">
+                    Longitude <i class="glyphicon" ng-class="vm.sortIcon('longitude')"></i>
+                </th>
+                <th id="addressLevelHeader" ng-click="vm.sortColumn = 'level'; vm.reverse = ! vm.reverse; vm.getAddresses()" class="text-center">
+                    Level <i class="glyphicon" ng-class="vm.sortIcon('level')"></i>
+                </th>
+                <th id="addressCompletedHeader" ng-click="vm.sortColumn = 'completed'; vm.reverse = ! vm.reverse; vm.getAddresses()" class="text-center">
+                    Completed <i class="glyphicon" ng-class="vm.sortIcon('completed')"></i>
                 </th>
                 <th class="text-center">&nbsp;</th>
             </tr>
@@ -44,6 +56,10 @@
         <tbody>
             <tr ng-repeat="address in vm.addresses | orderBy:vm.sortColumn:vm.reverse">
                 <td class="text-center address-name">{{ address.name }}</td>
+                <td class="text-center address-latitude">{{ address.latitude }}</td>
+                <td class="text-center address-longitude">{{ address.longitude }}</td>
+                <td class="text-center address-level">{{ address.level }}</td>
+                <td class="text-center address-completed">{{ address.completed ? "Yes" : "No"}}</td>
                 <td class="text-center">
                     <a href="#" ng-click="vm.editAddress1(address)" class="edit btn btn-warning">Edit</a>
                 </td>
@@ -64,6 +80,15 @@
             <div class="form-group">
                 <label for="addressName">Name</label>
                 <input type="text" id="addressName" class="form-control" ng-model="address.name"/>
+                <label for="addressLatitude">Latitude</label>
+                <input type="number" id="addressLatitude" class="form-control" ng-model="address.latitude"/>
+                <label for="addressLongitude">Longitude</label>
+                <input type="number" id="addressLongitude" class="form-control" ng-model="address.longitude"/>
+                <label for="addressLevel">Level</label>
+                <select id="addressLevel" ng-model="address.level" ng-options="choice as choice for choice in levels" class='form-control'/>
+                <br />
+                <label for="addressCompleted">Completed</label>
+                <input type="checkbox" id="addressCompleted" class="form-control" ng-model="address.completed" />
             </div>
         </div>
         <div class="modal-footer">
