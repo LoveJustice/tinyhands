@@ -31,7 +31,7 @@ class VIFAlertChecker(object):
         points = self.vif.calculate_strength_of_case_points()
 
         if (fir and fir_value != '') and (dofe and dofe_value != ''):
-            Alert.objects.send_alcalculate_strength_of_case_pointsert("fir and dofe against",
+            Alert.objects.send_alert("fir and dofe against",
                                      context={"site": settings.SITE_DOMAIN,
                                               "vif": self.vif,
                                               "both": True,
