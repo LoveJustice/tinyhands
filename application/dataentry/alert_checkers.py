@@ -31,7 +31,7 @@ class VIFAlertChecker(object):
         points = self.vif.calculate_strength_of_case_points()
 
         if (fir and fir_value != '') and (dofe and dofe_value != ''):
-            Alert.objects.send_alert("fir and dofe against",
+            Alert.objects.send_alcalculate_strength_of_case_pointsert("fir and dofe against",
                                      context={"site": settings.SITE_DOMAIN,
                                               "vif": self.vif,
                                               "both": True,
@@ -104,53 +104,37 @@ class IRFAlertChecker(object):
 
         """
         # Get all of the interceptees from other IRFs
-        all_people = Interceptee.objects.all().exclude(interception_record=self.irf.id)
+        all_people = Interceptee.objects.all().exclude(interception_record=self.irf.id) #this looks like we need it
         # Get a list of all of their full_names for use of fuzzy_wuzzy
-        people_list = []
-        for intercept in all_people:
-            interceptPerson = Person.objects.get(interceptee=intercept)
-            people_list.append(interceptPerson.full_name)
-        trafficker_in_custody = self.trafficker_in_custody()
+        people_dict = {obj: obj.person.full_name for obj in all_people}
 
-        matches = []
         trafficker_list = []
-
-        # Get all of the traffickers from the submitted IRF
-        for person in self.interceptees:
-            if person.cleaned_data.get("kind") == 't':
-                trafficker_list.append(person.instance)
 
         fuzzy_object = FuzzyMatching.objects.all()[0]
 
-        # For each trafficker on the IRF
-        for trafficker in trafficker_list:
-            traffickerPerson = Person.objects.get(interceptee=trafficker)
+        trafficker_in_custody = self.trafficker_in_custody()
 
-            # Get a list of the best matches that have a score of 90+
-            traffickers_with_name_match = process.extractBests(traffickerPerson.full_name,
-                                                               people_list,
-                                                               score_cutoff=fuzzy_object.person_cutoff,
-                                                               limit=fuzzy_object.person_limit)
-            # If there is more than one match, iterate over all of them.
-            for person_match in traffickers_with_name_match:
-                try:
-                    name = person_match[0]
-                    # Append the person object that has the full name
-                    matches.append(Person.objects.all().filter(full_name=name))
-                except:
-                    pass
-
-        if len(matches) > 0:
-            # There are name matches.
+        for interceptee in self.interceptees:
+            if interceptee.cleaned_data.get("kind") == 't':
+                onePersonMatches = []
+                tmplist =[]
+                p=interceptee.instance.person
+                onePersonMatches= process.extractBests(p.full_name, people_dict, score_cutoff=fuzzy_object.person_cutoff, limit=fuzzy_object.person_limit)
+                print(onePersonMatches)
+                for match in onePersonMatches:
+                    w= match[2].person
+                    #per = Person.objects.get()
+                    tuplematch=(match[1],w)
+                    tmplist.append(tuplematch)
+                tmplist.insert(0,(0,interceptee.instance.person))
+                trafficker_list.append(tmplist)
+        if len(trafficker_list) > 0:
             Alert.objects.send_alert("Name Match",
-                                     context={"site": settings.SITE_DOMAIN,
-                                              "irf": self.irf,
-                                              "matches": matches,
-                                              "interceptees": self.interceptees,
-                                              "trafficker_in_custody": trafficker_in_custody})
+                                     context={"irf": self.irf,
+                                              "trafficker_list": trafficker_list,
+                                              "trafficker_in_custody" : trafficker_in_custody})
             return True
         return False
-
     def identified_trafficker(self):
         """Email Alerts to Investigators
 
@@ -164,14 +148,15 @@ class IRFAlertChecker(object):
         alert.
 
         """
-        trafficker_list = []
-        for person in self.interceptees:
-            if person.cleaned_data.get("kind") == 't' and person.cleaned_data.get('photo') not in [None, '']:
-                trafficker_list.append(person.instance)
-
         trafficker_in_custody = self.trafficker_in_custody()
         red_flags = self.irf.calculate_total_red_flags()
         certainty_points = self.irf.how_sure_was_trafficking
+        trafficker_list = []
+        for intercep in self.interceptees:
+            if intercep.cleaned_data.get("kind") == 't' and intercep.cleaned_data.get('photo') not in [None, '']:
+                trafficker_list.append(intercep.instance.person)
+
+
 
         if len(trafficker_list) > 0:
             if (certainty_points >= 4) and (red_flags >= 400):
@@ -184,7 +169,7 @@ class IRFAlertChecker(object):
                                                   "red_flags": red_flags,
                                                   "certainty_points": certainty_points})
                 return True
-            if certainty_points >= 4:
+            elif certainty_points >= 4:
                 Alert.objects.send_alert("Identified Trafficker",
                                          context={"site": settings.SITE_DOMAIN,
                                                   "irf": self.irf,
@@ -193,7 +178,7 @@ class IRFAlertChecker(object):
                                                   "trafficker_in_custody": trafficker_in_custody,
                                                   "certainty_points": certainty_points})
                 return True
-            if red_flags >= 400:
+            elif red_flags >= 400:
                 Alert.objects.send_alert("Identified Trafficker",
                                          context={"site": settings.SITE_DOMAIN,
                                                   "irf": self.irf,
@@ -215,4 +200,4 @@ class IRFAlertChecker(object):
             taken_into_custody = self.irf.trafficker_taken_into_custody
         if trafficker_in_custody is not None and taken_into_custody < len([there for there in self.interceptees.cleaned_data if there]):
             return self.interceptees.cleaned_data[int(self.irf.trafficker_taken_into_custody) - 1].get("full_name")
-        return False
+        return ''
