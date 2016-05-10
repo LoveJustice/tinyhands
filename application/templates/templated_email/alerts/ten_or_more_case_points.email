@@ -3,7 +3,7 @@
 {% block html %}
     <p>Attention: Case Manager,</p>
 
-    <p>This auto alert has been generated for VIF#:{{ vif.vif_number}} which was completed on {{ vif.date.date }} and includes {{ points }} Strength of Case points.</p>
+    <p>This auto alert has been generated for VIF#:{{ vif.vif_number}} which was completed on {{ vif.date }} and includes {{ points }} Strength of Case points.</p>
 
     {% if legal_case == True %}
         {% if fir %}<p>A FIR has been filed against the trafficker(s)</p>{% endif %}

@@ -31,7 +31,7 @@ class VIFAlertChecker(object):
         points = self.vif.calculate_strength_of_case_points()
 
         if (fir and fir_value != '') and (dofe and dofe_value != ''):
-            Alert.objects.send_alert("fir and dofe against",
+            Alert.objects.send_alcalculate_strength_of_case_pointsert("fir and dofe against",
                                      context={"site": settings.SITE_DOMAIN,
                                               "vif": self.vif,
                                               "both": True,
@@ -150,9 +150,9 @@ class IRFAlertChecker(object):
         red_flags = self.irf.calculate_total_red_flags()
         certainty_points = self.irf.how_sure_was_trafficking
         trafficker_list = []
-        for person in self.interceptees:
-            if person.cleaned_data.get("kind") == 't' and person.cleaned_data.get('photo') not in [None, '']:
-                trafficker_list.append(person.instance)
+        for intercep in self.interceptees:
+            if intercep.cleaned_data.get("kind") == 't' and intercep.cleaned_data.get('photo') not in [None, '']:
+                trafficker_list.append(intercep.instance.person)
 
 
 
