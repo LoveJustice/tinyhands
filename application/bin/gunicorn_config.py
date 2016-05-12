@@ -1,6 +1,5 @@
 bind = "0.0.0.0:9001"
 loglevel = "INFO"
-worker_class = 'gevent'
 workers = "3"
 reload = True
 

@@ -52,10 +52,10 @@ def add_repeat(date, repeat):
         else:
             year = date.year
         try:
-            date = datetime.datetime(year, month, date.day)
+            date = datetime.date(year, month, date.day)
         except ValueError:
-            temp_date = datetime.datetime(year, month, 1) - datetime.timedelta(1)
-            date = datetime.datetime(year, month, temp_date.day)
+            temp_date = datetime.date(year, month, 1) - datetime.timedelta(1)
+            date = datetime.date(year, month, temp_date.day)
         return date
     else:
         return date

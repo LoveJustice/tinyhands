@@ -8,6 +8,7 @@ import os
 import re
 import shutil
 import urllib
+import logging
 
 from StringIO import StringIO
 from django.conf import settings
@@ -35,13 +36,11 @@ from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineForm
 from braces.views import LoginRequiredMixin
 from fuzzywuzzy import process
 
-from dataentry.models import (BorderStation, Address2, Address1, Interceptee, InterceptionRecord, VictimInterview,
-                              VictimInterviewLocationBox, VictimInterviewPersonBox)
-from dataentry.forms import (IntercepteeForm, InterceptionRecordForm, Address2Form, Address1Form, VictimInterviewForm,
-                             VictimInterviewLocationBoxForm, VictimInterviewPersonBoxForm)
+from dataentry.forms import IntercepteeForm, InterceptionRecordForm, Address2Form, Address1Form, VictimInterviewForm, VictimInterviewLocationBoxForm, VictimInterviewPersonBoxForm
+from dataentry.models import BorderStation, Address2, Address1, Interceptee, InterceptionRecord, VictimInterview, VictimInterviewLocationBox, VictimInterviewPersonBox, Person
+
 from dataentry import csv_io
-from dataentry.serializers import Address1Serializer, Address2Serializer, InterceptionRecordListSerializer, \
-    VictimInterviewListSerializer, VictimInterviewSerializer
+from dataentry.serializers import Address1Serializer, Address2Serializer, InterceptionRecordListSerializer, InterceptionRecordSerializer, VictimInterviewListSerializer, IntercepteeSerializer, VictimInterviewSerializer
 from dataentry.google_sheets import GoogleSheetClientThread
 from accounts.mixins import PermissionsRequiredMixin
 
@@ -49,6 +48,7 @@ from alert_checkers import IRFAlertChecker, VIFAlertChecker
 from fuzzy_matching import match_location
 from rest_api.authentication import HasPermission, HasDeletePermission
 
+logger = logging.getLogger(__name__)
 
 @login_required
 def home(request):
@@ -171,8 +171,11 @@ class InterceptionRecordCreateView(LoginRequiredMixin, PermissionsRequiredMixin,
         form = form.save()
         for formset in inlines:
             formset.save()
+        logger.debug("IRF Create: After save for " + form.irf_number)
         IRFAlertChecker(form, inlines).check_them()
+        logger.debug("IRF Create: After alert checker for " + form.irf_number)
         GoogleSheetClientThread.update_irf(form.irf_number)
+        logger.debug("IRF Create: After google update irf for " + form.irf_number)
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -188,8 +191,11 @@ class InterceptionRecordUpdateView(LoginRequiredMixin, PermissionsRequiredMixin,
         form = form.save()
         for formset in inlines:
             formset.save()
+        logger.debug("IRF Update: After save for " + form.irf_number)
         IRFAlertChecker(form, inlines).check_them()
+        logger.debug("IRF Update: After alert checker for " + form.irf_number)
         GoogleSheetClientThread.update_irf(form.irf_number)
+        logger.debug("IRF Update: After google update irf for " + form.irf_number)
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -248,8 +254,11 @@ class VictimInterviewCreateView(LoginRequiredMixin, PermissionsRequiredMixin, Cr
         form = form.save()
         for formset in inlines:
             formset.save()
+        logger.debug("VIF Create: After save for " + form.vif_number)
         VIFAlertChecker(form, inlines).check_them()
+        logger.debug("VIF Create: After alert checker for " + form.vif_number)
         GoogleSheetClientThread.update_vif(form.vif_number)
+        logger.debug("VIF Create: After google update vif for " + form.vif_number)
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -264,8 +273,11 @@ class VictimInterviewUpdateView(LoginRequiredMixin, PermissionsRequiredMixin, Up
         form = form.save()
         for formset in inlines:
             formset.save()
+        logger.debug("VIF Update: After save for " + form.vif_number)
         VIFAlertChecker(form, inlines).check_them()
+        logger.debug("VIF Update: After alert checker for " + form.vif_number)
         GoogleSheetClientThread.update_vif(form.vif_number)
+        logger.debug("VIF Update: After google update vif for " + form.vif_number)
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -418,7 +430,7 @@ class StationCodeAPIView(APIView):
 def interceptee_fuzzy_matching(request):
     input_name = request.GET['name']
     all_people = Interceptee.objects.all()
-    people_dict = {serializers.serialize("json", [obj]): obj.full_name for obj in all_people}
+    people_dict = {serializers.serialize("json", [obj]): obj.person.full_name for obj in all_people}
     matches = process.extractBests(input_name, people_dict, limit=10)
     return HttpResponse(json.dumps(matches), content_type="application/json")
 
@@ -455,7 +467,7 @@ class Address1ViewSet(viewsets.ModelViewSet):
     permissions_required = ['permission_address2_manage']
     filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
     search_fields = ('name',)
-    ordering_fields = ('name',)
+    ordering_fields = ('name','longitude','latitude','level','completed')
     ordering = ('name',)
 
     @list_route()
@@ -467,7 +479,7 @@ class Address1ViewSet(viewsets.ModelViewSet):
 
 class InterceptionRecordViewSet(viewsets.ModelViewSet):
     queryset = InterceptionRecord.objects.all()
-    serializer_class = InterceptionRecordListSerializer
+    serializer_class = InterceptionRecordSerializer
     permission_classes = (IsAuthenticated, HasPermission, HasDeletePermission,)
     permissions_required = ['permission_irf_view']
     delete_permissions_required = ['permission_irf_delete']
@@ -483,9 +495,35 @@ class InterceptionRecordViewSet(viewsets.ModelViewSet):
         irf_id = kwargs['pk']
         irf = InterceptionRecord.objects.get(id=irf_id)
         rv = super(viewsets.ModelViewSet, self).destroy(request, args, kwargs)
+        logger.debug("After IRF destroy " + irf.irf_number)
         GoogleSheetClientThread.update_irf(irf.irf_number)
         return rv
 
+    def list(self, request, *args, **kwargs):
+        temp = self.serializer_class
+        self.serializer_class = InterceptionRecordListSerializer  # we want to use a custom serializer just for the list view
+        super_list_response = super(InterceptionRecordViewSet, self).list(request, *args, **kwargs)  # call the supers list view with custom serializer
+        self.serializer_class = temp  # put the original serializer back in place
+        return super_list_response
+        
+    def retrieve(self, request, *args, **kwargs):
+        response = {}
+        response = super(InterceptionRecordViewSet, self).retrieve(request, *args, **kwargs)
+        for field in InterceptionRecord._meta.fields:
+            try:
+                if field.weight != None:
+                    response.data[field.name] = {
+                        'value': response.data[field.name],
+                        'weight': field.weight
+                    }
+            except:
+                pass
+        return response
+
+class IntercepteeViewSet(viewsets.ModelViewSet):
+    queryset = Interceptee.objects.all()
+    serializer_class = IntercepteeSerializer
+    filter_fields = ('interception_record',)
 
 class VictimInterviewViewSet(viewsets.ModelViewSet):
     queryset = VictimInterview.objects.all()
@@ -508,18 +546,30 @@ class VictimInterviewDetailViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated, HasPermission, HasDeletePermission,)
     permissions_required = ['permission_vif_view']
     delete_permissions_required = ['permission_vif_delete']
-    def model(self, request, *args, **kwargs):
-        vif_id = kwargs['pk']
-        vif = VictimInterview.objects.get(id=vif_id)
-        serializer = VictimInterviewSerializer(vif)
-        return Response(serializer.data)
 
     def destroy(self, request, *args, **kwargs):
         vif_id = kwargs['pk']
         vif = VictimInterview.objects.get(id=vif_id)
         rv = super(viewsets.ModelViewSet, self).destroy(request, args, kwargs)
-        GoogleSheetClientThread.update_irf(vif.vif_number)
+        logger.debug("After VIF destroy " + vif.vif_number)
+        GoogleSheetClientThread.update_vif(vif.vif_number)
         return rv
+
+
+def vifExists(request, vif_number):
+    try:
+        existingVif = VictimInterview.objects.get(vif_number=vif_number)
+        return HttpResponse(existingVif)
+    except:
+        return HttpResponse("Vif does not exist")
+
+
+def irfExists(request, irf_number):
+    try:
+        existingIrf = InterceptionRecord.objects.get(irf_number=irf_number)
+        return HttpResponse(existingIrf.irf_number)
+    except:
+        return HttpResponse("Irf does not exist")
 
 
 class BatchView(View):
@@ -534,7 +584,7 @@ class BatchView(View):
             if start <= irfDate <= end:
                 listOfIrfNumbers.append(irf.irf_number)
 
-        photos = list(Interceptee.objects.filter(interception_record__irf_number__in=listOfIrfNumbers).values_list('photo', 'full_name', 'interception_record__irf_number'))
+        photos = list(Interceptee.objects.filter(interception_record__irf_number__in=listOfIrfNumbers).values_list('photo', 'person__full_name', 'interception_record__irf_number'))
         if len(photos) == 0:
             return render(request, 'dataentry/batch_photo_error.html')
         else:
@@ -544,8 +594,13 @@ class BatchView(View):
             f = StringIO()
             imagezip = zipfile.ZipFile(f, 'w')
             for photoTuple in photos:
-                fileurl = urllib.urlopen('http://edwards.cse.taylor.edu/media/' + photoTuple[0])
-                imagezip.writestr(photoTuple[2] + '-' + photoTuple[1] + '.jpg', fileurl.read())
+                if photoTuple[0] == '':
+                    continue
+                try:
+                    imageFile = open(settings.MEDIA_ROOT + '/' + photoTuple[0])
+                    imagezip.writestr(photoTuple[2] + '-' + photoTuple[1] + '.jpg', imageFile.read())
+                except:
+                    logger.error('Could not find photo: ' + photoTuple[1] + '.jpg')
             imagezip.close()  # Close
 
             response = HttpResponse(f.getvalue(), content_type="application/zip")

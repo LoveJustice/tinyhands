@@ -8,7 +8,8 @@ function vifService($http) {
 	return {
 		listVifs: listVifs,
 		loadMoreVifs: loadMoreVifs,
-		deleteVif: deleteVif
+		deleteVif: deleteVif,
+        vifExists: vifExists
 	};
 
 	function listVifs(queryparams) {
@@ -21,7 +22,7 @@ function vifService($http) {
             });
     }
 
-    function loadMoreVifs(url, queryparams){
+    function loadMoreVifs(url, queryparams) {
         return $http.get(url + queryparams).
             success(function (data) {
                 return data;
@@ -33,13 +34,21 @@ function vifService($http) {
 
     function deleteVif(url){
         return $http.delete(url)
-            .success(function(status){
+            .success(function(status) {
                 return status;
             })
             .error(function (data, status, headers, config) {
                 console.log(data, status, headers, config);
             });
-
     }
 
+    function vifExists(vifNumber) {
+        return $http.post('vifExists/' + vifNumber).
+            success(function (data) {
+                return data;
+            }).
+            error(function (data, status, headers, config) {
+                return data;
+            });
+    }
 }

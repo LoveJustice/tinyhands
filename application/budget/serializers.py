@@ -1,12 +1,27 @@
 from rest_framework import serializers
 from budget.models import BorderStationBudgetCalculation, OtherBudgetItemCost, StaffSalary
+from dataentry.serializers import BorderStationSerializer
+
+
+class BorderStationBudgetCalculationListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BorderStationBudgetCalculation
+        fields = [
+            'id',
+            'border_station',
+            'month_year',
+            'date_time_entered',
+            'date_time_last_updated',
+        ]
+
+    border_station = BorderStationSerializer(read_only=True)
 
 
 class BorderStationBudgetCalculationSerializer(serializers.ModelSerializer):
-    default = True
-
     class Meta:
         model = BorderStationBudgetCalculation
+
+    default = True
 
 
 class OtherBudgetItemCostSerializer(serializers.ModelSerializer):
