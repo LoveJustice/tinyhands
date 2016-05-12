@@ -13,16 +13,34 @@
 <table>
         <thead>
             <th>Name</th>
-            <th>Name Matched to</th>
             <th>Name Match Certainty</th>
+            <th>Phone Number </th>
+            <th>Address One </th>
+            <th>Address Two </th>
         </thead>
-        {% for person,match in traffickers_matches.items %}
-        <tr>
-            <td>{{ person }}</td>
-            <td><a href="{{ site }}/{% url 'interceptionrecord_detail' match.0.2.interception_record_id %}">{{ match.0.2.full_name }}</a></td>
-            <td>{{ match.0.1 }}%</td>
-        </tr>
-        {% endfor %}
+            {% for personMatches in trafficker_list%}
+                {% for person in personMatches%}
+                    {% if person.0 == 0 %}
+                        <br>
+                        <tr>
+                            <td>{{ person.1.full_name }}</td>
+                            <td></td>
+                            <td>{{ person.1.phone_contact }}</td>
+                            <td>{{ person.1.address1 }}</td>
+                            <td>{{ person.1.address2 }}</td>
+                        </tr>
+                    {% endif %}
+                    {% if person.0 != 0 %}
+                        <tr>
+                            <td>{{ person.1.full_name }}</td>
+                            <td>{{ person.0}}%</td>
+                            <td>{{ person.1.phone_contact }}</td>
+                            <td>{{ person.1.address1 }}</td>
+                            <td>{{ person.1.address2 }}</td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
     </table>
 
 <br/>
