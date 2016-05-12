@@ -369,7 +369,7 @@ class IntercepteeForm(DreamSuitePaperForm):
         self.fields['address2'] = Address2Field(required=False)
         self.fields['full_name'] = CharField(required=False)
         self.fields['age'] = IntegerField(required=False)
-        self.fields['photo'] = ImageField()
+        self.fields['photo'] = ImageField(required=False)
         self.fields['gender'] = CharField(max_length=4, required=False)
         self.fields['phone_contact'] = CharField(required=False)
 
