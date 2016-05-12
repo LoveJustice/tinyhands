@@ -40,7 +40,7 @@ from dataentry.forms import IntercepteeForm, InterceptionRecordForm, Address2For
 from dataentry.models import BorderStation, Address2, Address1, Interceptee, InterceptionRecord, VictimInterview, VictimInterviewLocationBox, VictimInterviewPersonBox, Person
 
 from dataentry import csv_io
-from dataentry.serializers import Address1Serializer, Address2Serializer, InterceptionRecordListSerializer, VictimInterviewListSerializer
+from dataentry.serializers import Address1Serializer, Address2Serializer, InterceptionRecordListSerializer, InterceptionRecordSerializer, VictimInterviewListSerializer, IntercepteeSerializer
 from dataentry.google_sheets import GoogleSheetClientThread
 from accounts.mixins import PermissionsRequiredMixin
 
@@ -479,7 +479,7 @@ class Address1ViewSet(viewsets.ModelViewSet):
 
 class InterceptionRecordViewSet(viewsets.ModelViewSet):
     queryset = InterceptionRecord.objects.all()
-    serializer_class = InterceptionRecordListSerializer
+    serializer_class = InterceptionRecordSerializer
     permission_classes = (IsAuthenticated, HasPermission, HasDeletePermission,)
     permissions_required = ['permission_irf_view']
     delete_permissions_required = ['permission_irf_delete']
@@ -499,6 +499,31 @@ class InterceptionRecordViewSet(viewsets.ModelViewSet):
         GoogleSheetClientThread.update_irf(irf.irf_number)
         return rv
 
+    def list(self, request, *args, **kwargs):
+        temp = self.serializer_class
+        self.serializer_class = InterceptionRecordListSerializer  # we want to use a custom serializer just for the list view
+        super_list_response = super(InterceptionRecordViewSet, self).list(request, *args, **kwargs)  # call the supers list view with custom serializer
+        self.serializer_class = temp  # put the original serializer back in place
+        return super_list_response
+        
+    def retrieve(self, request, *args, **kwargs):
+        response = {}
+        response = super(InterceptionRecordViewSet, self).retrieve(request, *args, **kwargs)
+        for field in InterceptionRecord._meta.fields:
+            try:
+                if field.weight != None:
+                    response.data[field.name] = {
+                        'value': response.data[field.name],
+                        'weight': field.weight
+                    }
+            except:
+                pass
+        return response
+
+class IntercepteeViewSet(viewsets.ModelViewSet):
+    queryset = Interceptee.objects.all()
+    serializer_class = IntercepteeSerializer
+    filter_fields = ('interception_record',)
 
 class VictimInterviewViewSet(viewsets.ModelViewSet):
     queryset = VictimInterview.objects.all()

@@ -20,7 +20,7 @@ class GetEventAPITests(RestApiTestCase):
 
         response = self.client.get(url)
 
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_when_user_logged_in_and_event_does_not_exist_should_return_404(self):
         url = reverse('Event', args=[101])
@@ -72,7 +72,7 @@ class CreateEventAPITests(RestApiTestCase):
 
         response = self.client.post(url, self.newEvent)
 
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
 
     def test_when_user_logged_in_and_valid_event_should_return_event(self):
@@ -117,7 +117,7 @@ class UpdateEventAPITests(RestApiTestCase):
 
         response = self.client.put(url, updatedEvent)
 
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_when_user_logged_in_and_valid_event_data_should_return_200(self):
         event = EventFactory.create()
@@ -152,7 +152,7 @@ class DestroyEventAPITests(RestApiTestCase):
 
         response = self.client.delete(url)
 
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_when_user_logged_in_and_invalid_event_data_should_return_404_error(self):
         url = reverse('Event', args=[101])
@@ -193,7 +193,7 @@ class AllEventAPITests(RestApiTestCase):
 
         response = self.client.get(url)
 
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_when_user_logged_in_should_return_all_event(self):
         event = EventFactory.create()
@@ -237,7 +237,7 @@ class CalendarFeedAPITests(RestApiTestCase):
 
         response = self.client.get(url)
 
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_when_no_start_and_end_date_in_query_should_return_400_error(self):
         url = reverse('EventCalendarFeed')
@@ -307,7 +307,7 @@ class DashboardFeedAPITests(RestApiTestCase):
 
         response = self.client.get(url)
 
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_should_return_events_that_occur_within_one_week(self):
         url = reverse('EventDashboardFeed')
