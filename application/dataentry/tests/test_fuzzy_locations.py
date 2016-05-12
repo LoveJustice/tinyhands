@@ -1,12 +1,13 @@
 from django.test import TestCase
 from dataentry.models import Address1, Address2
 from dataentry.fuzzy_matching import match_location
-from dataentry.tests.factories import Address2Factory
+from dataentry.tests.factories import Address2Factory, FuzzyMatchingFactory
 
 
 class FuzzyLocationMatchingTest(TestCase):
     def setUp(self):
         self.Address2List = Address2Factory.create_batch(20)
+        FuzzyMatchingFactory.create_batch(1)
 
     def test_address1_matching_works(self):
         original = Address1.objects.all()[0]
