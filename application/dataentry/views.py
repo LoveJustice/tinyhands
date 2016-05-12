@@ -502,7 +502,7 @@ class VictimInterviewViewSet(viewsets.ModelViewSet):
     ordering = ('vif_number',)
 
 
-class VictimInterviewView(viewsets.ModelViewSet):
+class VictimInterviewDetailViewSet(viewsets.ModelViewSet):
     queryset = VictimInterview.objects.all()
     serializer_class = VictimInterviewSerializer
 
