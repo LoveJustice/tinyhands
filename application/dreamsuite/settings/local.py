@@ -4,7 +4,6 @@ DEBUG = True
 
 INSTALLED_APPS += [
     'corsheaders',
-    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE_CLASSES += [
