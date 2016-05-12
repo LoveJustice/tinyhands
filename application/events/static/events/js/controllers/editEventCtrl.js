@@ -154,7 +154,7 @@ angular
           }
       }
       if(vm.event.end_date && vm.event.ends) {
-          if(vm.event.end_date > vm.event.ends) {
+          if(vm.event.end_date >= vm.event.ends) {
               vm.endsError = 'Events repetition ends must be greater than first event end date';
           }
       }

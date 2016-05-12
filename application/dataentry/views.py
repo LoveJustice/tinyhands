@@ -32,16 +32,14 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import viewsets
 
-
 from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSet
 from braces.views import LoginRequiredMixin
 from fuzzywuzzy import process
 
-
-from dataentry.models import (BorderStation, Address2, Address1, Interceptee, Person, FuzzyMatching, InterceptionRecord, VictimInterview, VictimInterviewLocationBox, VictimInterviewPersonBox)
-from dataentry.forms import (IntercepteeForm, InterceptionRecordForm, Address2Form, Address1Form, VictimInterviewForm, VictimInterviewLocationBoxForm, VictimInterviewPersonBoxForm)
+from dataentry.models import BorderStation, Address2, Address1, Interceptee, Person, FuzzyMatching, InterceptionRecord, VictimInterview, VictimInterviewLocationBox, VictimInterviewPersonBox
+from dataentry.forms import IntercepteeForm, InterceptionRecordForm, Address2Form, Address1Form, VictimInterviewForm, VictimInterviewLocationBoxForm, VictimInterviewPersonBoxForm
 from dataentry import csv_io
-from dataentry.serializers import Address1Serializer, Address2Serializer, InterceptionRecordListSerializer, VictimInterviewListSerializer, SysAdminSettingsSerializer
+from dataentry.serializers import Address1Serializer, Address2Serializer, InterceptionRecordListSerializer, VictimInterviewListSerializer, SysAdminSettingsSerializer, IntercepteeSerializer, InterceptionRecordSerializer
 from dataentry.google_sheets import GoogleSheetClientThread
 
 from accounts.mixins import PermissionsRequiredMixin
@@ -98,6 +96,7 @@ class SearchFormsMixin(object):
 @login_required
 def interception_record_list_template(request):
     return render(request, 'dataentry/interceptionrecord_list.html')
+
 
 @login_required
 def interception_record_list_search_template(request, code):
@@ -158,7 +157,8 @@ class IRFImageAssociationMixin(object):
         return super(IRFImageAssociationMixin, self).forms_valid(form, inlines)
 
 
-class InterceptionRecordCreateView(LoginRequiredMixin, PermissionsRequiredMixin, IRFImageAssociationMixin, CreateWithInlinesView):
+class InterceptionRecordCreateView(LoginRequiredMixin, PermissionsRequiredMixin, IRFImageAssociationMixin,
+                                   CreateWithInlinesView):
     model = InterceptionRecord
     form_class = InterceptionRecordForm
     success_url = reverse_lazy('interceptionrecord_list')
@@ -179,7 +179,8 @@ class InterceptionRecordCreateView(LoginRequiredMixin, PermissionsRequiredMixin,
         return HttpResponseRedirect(self.get_success_url())
 
 
-class InterceptionRecordUpdateView(LoginRequiredMixin, PermissionsRequiredMixin, IRFImageAssociationMixin, UpdateWithInlinesView):
+class InterceptionRecordUpdateView(LoginRequiredMixin, PermissionsRequiredMixin, IRFImageAssociationMixin,
+                                   UpdateWithInlinesView):
     model = InterceptionRecord
     form_class = InterceptionRecordForm
     success_url = reverse_lazy('interceptionrecord_list')
@@ -298,7 +299,8 @@ class InterceptionRecordCSVExportView(LoginRequiredMixin, PermissionsRequiredMix
     def get(self, *args, **kwargs):
         response = HttpResponse(content_type='text/csv')
         today = date.today()
-        response['Content-Disposition'] = 'attachment; filename=irf-all-data-%d-%d-%d.csv' % (today.year, today.month, today.day)
+        response['Content-Disposition'] = 'attachment; filename=irf-all-data-%d-%d-%d.csv' % (
+            today.year, today.month, today.day)
 
         writer = csv.writer(response)
         irfs = InterceptionRecord.objects.all()
@@ -314,7 +316,8 @@ class VictimInterviewCSVExportView(LoginRequiredMixin, PermissionsRequiredMixin,
     def get(self, *args, **kwargs):
         response = HttpResponse(content_type='text/csv')
         today = date.today()
-        response['Content-Disposition'] = 'attachment; filename=vif-all-data-%d-%d-%d.csv' % (today.year, today.month, today.day)
+        response['Content-Disposition'] = 'attachment; filename=vif-all-data-%d-%d-%d.csv' % (
+            today.year, today.month, today.day)
 
         writer = csv.writer(response)
         vifs = VictimInterview.objects.all()
@@ -376,7 +379,7 @@ class Address2SearchView(LoginRequiredMixin, PermissionsRequiredMixin, SearchFor
                 is_empty = len(self.object_list) == 0
             if is_empty:
                 raise Http404(("Empty list and '%(class_name)s.allow_empty' is False.")
-                        % {'class_name': self.__class__.__name__})
+                              % {'class_name': self.__class__.__name__})
         context = self.get_context_data()
         return self.render_to_response(context)
 
@@ -384,7 +387,8 @@ class Address2SearchView(LoginRequiredMixin, PermissionsRequiredMixin, SearchFor
         super(Address2SearchView, self).__init__(name__icontains="name")
 
     def get_queryset(self, searchValue):
-        return self.model.objects.filter(name__contains=searchValue).select_related('address1', 'canonical_name__address1')
+        return self.model.objects.filter(name__contains=searchValue).select_related('address1',
+                                                                                    'canonical_name__address1')
 
     def get_context_data(self, **kwargs):
         context = super(Address2SearchView, self).get_context_data(**kwargs)
@@ -434,6 +438,7 @@ def interceptee_fuzzy_matching(request):
     people_dict = {serializers.serialize("json", [obj]): obj.person.full_name for obj in all_people }
     fuzzy_object = FuzzyMatching.objects.all()[0]
     matches = process.extractBests(input_name, people_dict, score_cutoff=fuzzy_object.person_cutoff, limit=fuzzy_object.person_limit)
+
     return HttpResponse(json.dumps(matches), content_type="application/json")
 
 
@@ -472,8 +477,6 @@ class Address1ViewSet(viewsets.ModelViewSet):
     ordering_fields = ('name','longitude','latitude','level','completed')
     ordering = ('name',)
 
-
-
     @list_route()
     def list_all(self, request):
         address1s = Address1.objects.all()
@@ -483,14 +486,16 @@ class Address1ViewSet(viewsets.ModelViewSet):
 
 class InterceptionRecordViewSet(viewsets.ModelViewSet):
     queryset = InterceptionRecord.objects.all()
-    serializer_class = InterceptionRecordListSerializer
+    serializer_class = InterceptionRecordSerializer
     permission_classes = (IsAuthenticated, HasPermission, HasDeletePermission,)
     permissions_required = ['permission_irf_view']
     delete_permissions_required = ['permission_irf_delete']
 
     filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
     search_fields = ('irf_number',)
-    ordering_fields = ('irf_number', 'staff_name', 'number_of_victims', 'number_of_traffickers', 'date_time_of_interception', 'date_time_entered_into_system', 'date_time_last_updated',)
+    ordering_fields = (
+        'irf_number', 'staff_name', 'number_of_victims', 'number_of_traffickers', 'date_time_of_interception',
+        'date_time_entered_into_system', 'date_time_last_updated',)
     ordering = ('irf_number',)
 
     def destroy(self, request, *args, **kwargs):
@@ -501,6 +506,31 @@ class InterceptionRecordViewSet(viewsets.ModelViewSet):
         GoogleSheetClientThread.update_irf(irf.irf_number)
         return rv
 
+    def list(self, request, *args, **kwargs):
+        temp = self.serializer_class
+        self.serializer_class = InterceptionRecordListSerializer  # we want to use a custom serializer just for the list view
+        super_list_response = super(InterceptionRecordViewSet, self).list(request, *args, **kwargs)  # call the supers list view with custom serializer
+        self.serializer_class = temp  # put the original serializer back in place
+        return super_list_response
+
+    def retrieve(self, request, *args, **kwargs):
+        response = {}
+        response = super(InterceptionRecordViewSet, self).retrieve(request, *args, **kwargs)
+        for field in InterceptionRecord._meta.fields:
+            try:
+                if field.weight != None:
+                    response.data[field.name] = {
+                        'value': response.data[field.name],
+                        'weight': field.weight
+                    }
+            except:
+                pass
+        return response
+
+class IntercepteeViewSet(viewsets.ModelViewSet):
+    queryset = Interceptee.objects.all()
+    serializer_class = IntercepteeSerializer
+    filter_fields = ('interception_record',)
 
 class VictimInterviewViewSet(viewsets.ModelViewSet):
     queryset = VictimInterview.objects.all()
@@ -510,16 +540,35 @@ class VictimInterviewViewSet(viewsets.ModelViewSet):
     delete_permissions_required = ['permission_vif_delete']
     filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
     search_fields = ('vif_number',)
-    ordering_fields = ('vif_number', 'interviewer', 'number_of_victims', 'number_of_traffickers', 'date', 'date_time_entered_into_system', 'date_time_last_updated',)
+    ordering_fields = (
+        'vif_number', 'interviewer', 'number_of_victims', 'number_of_traffickers', 'date',
+        'date_time_entered_into_system',
+        'date_time_last_updated',)
     ordering = ('vif_number',)
 
     def destroy(self, request, *args, **kwargs):
         vif_id = kwargs['pk']
         vif = VictimInterview.objects.get(id=vif_id)
         rv = super(viewsets.ModelViewSet, self).destroy(request, args, kwargs)
-        logger.debug("After VIF destroy " + vif.irf_number)
-        GoogleSheetClientThread.update_irf(vif.vif_number)
+        logger.debug("After VIF destroy " + vif.vif_number)
+        GoogleSheetClientThread.update_vif(vif.vif_number)
         return rv
+
+
+def vifExists(request, vif_number):
+    try:
+        existingVif = VictimInterview.objects.get(vif_number=vif_number)
+        return HttpResponse(existingVif)
+    except:
+        return HttpResponse("Vif does not exist")
+
+
+def irfExists(request, irf_number):
+    try:
+        existingIrf = InterceptionRecord.objects.get(irf_number=irf_number)
+        return HttpResponse(existingIrf.irf_number)
+    except:
+        return HttpResponse("Irf does not exist")
 
 
 class BatchView(View):
@@ -534,7 +583,7 @@ class BatchView(View):
             if start <= irfDate <= end:
                 listOfIrfNumbers.append(irf.irf_number)
 
-        photos = list(Interceptee.objects.filter(interception_record__irf_number__in=listOfIrfNumbers).values_list('photo', 'full_name', 'interception_record__irf_number'))
+        photos = list(Interceptee.objects.filter(interception_record__irf_number__in=listOfIrfNumbers).values_list('photo', 'person__full_name', 'interception_record__irf_number'))
         if len(photos) == 0:
             return render(request, 'dataentry/batch_photo_error.html')
         else:
@@ -546,8 +595,11 @@ class BatchView(View):
             for photoTuple in photos:
                 if photoTuple[0] == '':
                     continue
-                imageFile = open(settings.MEDIA_ROOT + '/' + photoTuple[0])
-                imagezip.writestr(photoTuple[2] + '-' + photoTuple[1] + '.jpg', imageFile.read())
+                try:
+                    imageFile = open(settings.MEDIA_ROOT + '/' + photoTuple[0])
+                    imagezip.writestr(photoTuple[2] + '-' + photoTuple[1] + '.jpg', imageFile.read())
+                except:
+                    logger.error('Could not find photo: ' + photoTuple[1] + '.jpg')
             imagezip.close()  # Close
 
             response = HttpResponse(f.getvalue(), content_type="application/zip")

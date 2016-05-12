@@ -8,6 +8,7 @@ decorator==4.0.9
 Django==1.9.4
 django-appconf==1.0.1
 django-bootstrap-form==3.2
+django-cors-headers==1.1.0
 django-bootstrap-pagination==1.6.1
 django-braces==1.8.1
 django-debug-toolbar==1.4

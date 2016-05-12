@@ -17,49 +17,51 @@ from static_border_stations.tests.factories import BorderStationFactory
 class BudgetCalcApiTests(WebTest):
     def setUp(self):
         self.factory = APIRequestFactory()
+        self.superuser = SuperUserFactory.create()
         self.client = APIClient()
+        self.client.force_authenticate(user=self.superuser)
         self.border_station = BorderStationFactory()
 
     def testCreateBudgetSheet(self):
-        response = self.client.post('/budget/api/budget_calculations/', {"border_station": self.border_station.pk})
+        response = self.client.post('/api/budget/', {"border_station": self.border_station.pk})
         self.assertEqual(response.status_code, 201)
 
     def testRemoveBudgetSheet(self):
-        response = self.client.get('/budget/api/budget_calculations/')
+        response = self.client.get('/api/budget/')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data['results']), 0)
 
-        response = self.client.post('/budget/api/budget_calculations/', {"border_station": self.border_station.pk})
+        response = self.client.post('/api/budget/', {"border_station": self.border_station.pk})
         budget_id = response.data.get('id')
         self.assertEqual(response.status_code, 201)
 
-        response = self.client.get('/budget/api/budget_calculations/')
+        response = self.client.get('/api/budget/')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data['results']), 1)
 
         # delete the form
-        response = self.client.delete('/budget/api/budget_calculations/' + str(budget_id) + '/')
+        response = self.client.delete('/api/budget/' + str(budget_id) + '/')
         self.assertEqual(response.status_code, 204)
 
         # count the remaining forms
-        response = self.client.get('/budget/api/budget_calculations/')
+        response = self.client.get('/api/budget/')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data['results']), 0)
 
     def testUpdateBudgetSheet(self):
-        response = self.client.post('/budget/api/budget_calculations/', {"border_station": self.border_station.pk})
+        response = self.client.post('/api/budget/', {"border_station": self.border_station.pk})
         budget_id = response.data.get('id')
         self.assertEqual(response.status_code, 201)
 
-        response = self.client.get('/budget/api/budget_calculations/' + str(budget_id) + '/')
+        response = self.client.get('/api/budget/' + str(budget_id) + '/')
         budget_id = response.data.get('id')
         self.assertEqual(response.status_code, 200)
 
-        response = self.client.put('/budget/api/budget_calculations/' + str(budget_id) + '/', {"border_station": self.border_station.pk, "shelter_water": 2})
+        response = self.client.put('/api/budget/' + str(budget_id) + '/', {"border_station": self.border_station.pk, "shelter_water": 2})
         budget_id = response.data.get('id')
         self.assertEqual(response.status_code, 200)
 
-        response = self.client.get('/budget/api/budget_calculations/' + str(budget_id) + '/')
+        response = self.client.get('/api/budget/' + str(budget_id) + '/')
 
         shelter_water = response.data["shelter_water"]
         self.assertEqual(response.data.get('id'), budget_id)
@@ -100,7 +102,7 @@ class MoneyDistributionWebTests(WebTest, TestCase):
         staff_ids = [int(staff['id']) for staff in staff_data]
         committee_ids = [int(committee['id']) for committee in committee_data]
 
-        response = self.client.post('/budget/api/budget_calculations/money_distribution/' + str(self.budget_calc_sheet.pk) + '/', {"budget_calc_id": self.budget_calc_sheet.pk, "staff_ids": staff_ids, "committee_ids": committee_ids})
+        response = self.client.post('/api/budget/money_distribution/' + str(self.budget_calc_sheet.pk) + '/', {"budget_calc_id": self.budget_calc_sheet.pk, "staff_ids": staff_ids, "committee_ids": committee_ids})
 
         self.assertEquals('"Emails Sent!"', response.content)
         self.assertEquals(len(mail.outbox), 2)
@@ -120,7 +122,7 @@ class MoneyDistributionWebTests(WebTest, TestCase):
         staff_ids = [staff['id'] for staff in staff_data]
         committee_ids = [committee['id'] for committee in committee_data]
 
-        response = self.client.post('/budget/api/budget_calculations/money_distribution/' + str(self.budget_calc_sheet.pk) + '/', {"budget_calc_id": self.budget_calc_sheet.pk, "staff_ids": staff_ids, "committee_ids": committee_ids})
+        response = self.client.post('/api/budget/money_distribution/' + str(self.budget_calc_sheet.pk) + '/', {"budget_calc_id": self.budget_calc_sheet.pk, "staff_ids": staff_ids, "committee_ids": committee_ids})
 
         self.assertEquals('"Emails Sent!"', response.content)
         self.assertEquals(len(mail.outbox), 4)

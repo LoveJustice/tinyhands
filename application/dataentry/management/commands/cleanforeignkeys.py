@@ -1,49 +1,68 @@
 from django.core.management.base import BaseCommand
 from dataentry.models import *
-
+from dataentry.tests.factories import IrfFactory
 
 class Command(BaseCommand):
-    help = 'Clean up bogus foreign key values'
+    help = 'clean up the bad foreign keys'
 
-    def clean(self, model):
-        class_name = model.__name__
-        foreign_keys_fixed = 0
+    def get_or_create_default_address1(self):
+        try:
+            d = Address1.objects.get(name='Bad foreign Key Address1')
+        except:
+            d = Address1.objects.create(name='Bad foreign Key Address1')
+        return d
 
-        self.stderr.write("Checking {} models".format(class_name))
-        for method_name in ('address1',
-                            'address2,
-                            'victim_address1',
-                            'victim_address2',
-                            'victim_guardian_address1',
-                            'victim_guardian_address2'):
-            if method_name not in dir(model):
-                self.stderr.write("{} does not have method {}".format(class_name, method_name))
-                continue
+    def get_or_create_default_address2(self, address1):
+        try:
+            v = Address2.objects.get(name='Bad foreign Key Address2')
+        except:
+            v = Address2.objects.create(name='Bad foreign Key Address2', latitude=0, longitude=0, address1=address1)
+        return v
 
-            method = getattr(model, method_name)
-            for instance in model.objects.all():
-                try:
-                    method.__get__(instance)
-                except model.DoesNotExist:
-                    missing_id = getattr(instance, method_name + "_id")
-                    self.stderr.write("Removed {} {} from {} {}"
-                                      .format(method_name, missing_id,
-                                              class_name, instance.pk))
-                    foreign_keys_fixed += 1
-                    method.__set__(instance, None)
-                    instance.save()
-                except Exception as e:
-                    self.stderr.write("WHAT?? {} - {}".format(type(e), e))
-                    exit(1)
-
-        return foreign_keys_fixed
+    def get_or_create_default_irf(self):
+        try:
+            irf = InterceptionRecord.objects.get(location="Bad foreign Key IRF")
+        except:
+            irf = IrfFactory.create(location="Bad foreign Key IRF")
+        return irf
 
     def handle(self, *args, **options):
-        foreign_keys_fixed = 0
+        items = [
+            [Person,['address1'],['address2']],
+            [VictimInterview,['victim__address1','victim_guardian_address1'],['victim__address2', 'victim_guardian_address2']],
+            [VictimInterviewPersonBox,['person__address1'],['person__address2']],
+            [VictimInterviewLocationBox,['address1'],['address2']]
+        ]
 
-        foreign_keys_fixed += self.clean(Interceptee)
-        foreign_keys_fixed += self.clean(Address2)
-        foreign_keys_fixed += self.clean(VictimInterview)
-        foreign_keys_fixed += self.clean(VictimInterviewPersonBox)
+        valid_address2s = [address2.id for address2 in Address2.objects.all()]
+        valid_address1s = [address1.id for address1 in Address1.objects.all()]
 
-        self.stderr.write("Checking complete ({} fixed)".format(foreign_keys_fixed))
+        default_irf = self.get_or_create_default_irf()
+        default_address1 = self.get_or_create_default_address1()
+        default_address2 = self.get_or_create_default_address2(default_address1)
+
+        for item in items:
+            model = item[0]
+            for address1 in item[1]:
+                filter_field = address1 + "__in"
+                bad_ones = model.objects.exclude(**{filter_field: valid_address1s})
+                for x in bad_ones:
+                    setattr(x, address1 + '_id', default_address1.id)
+                    x.save()
+            model = item[0]
+            for address2 in item[2]:
+                filter_field = address2 + "__in"
+                bad_ones = model.objects.exclude(**{filter_field: valid_address2s})
+                for x in bad_ones:
+                    setattr(x, address2 + '_id', default_address2.id)
+                    x.save()
+
+
+        #  The IRF process is a little different so I had to do it separately down here.
+        valid_irfs = [irf.id for irf in InterceptionRecord.objects.all()]
+        # irfId_interceptee = [[interceptee.interception_record_id, interceptee] for interceptee in Interceptee.objects.all()]
+        for interceptee in Interceptee.objects.all():
+            if interceptee.interception_record_id not in valid_irfs:
+                interceptee.interception_record_id = default_irf.id
+                interceptee.save()
+                print("invalid Interceptee!", interceptee)
