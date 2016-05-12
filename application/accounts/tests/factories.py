@@ -99,6 +99,12 @@ class ViewUserFactory(UserFactory):
     permission_border_stations_view = True
     user_designation = factory.SubFactory(ViewUserDesignation)
 
+class NoPermissionUserFactory(UserFactory):
+    permission_irf_view = False
+    permission_vif_view = False
+    permission_border_stations_view = False
+    user_designation = factory.SubFactory(ViewUserDesignation)
+
 
 class AddUserFactory(UserFactory):
     permission_irf_view = True

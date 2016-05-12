@@ -505,7 +505,9 @@ class VictimInterviewViewSet(viewsets.ModelViewSet):
 class VictimInterviewDetailViewSet(viewsets.ModelViewSet):
     queryset = VictimInterview.objects.all()
     serializer_class = VictimInterviewSerializer
-
+    permission_classes = (IsAuthenticated, HasPermission, HasDeletePermission,)
+    permissions_required = ['permission_vif_view']
+    delete_permissions_required = ['permission_vif_delete']
     def model(self, request, *args, **kwargs):
         vif_id = kwargs['pk']
         vif = VictimInterview.objects.get(id=vif_id)
