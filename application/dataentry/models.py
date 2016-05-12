@@ -309,7 +309,7 @@ class Interceptee(models.Model):
         ('v', 'Victim'),
         ('t', 'Trafficker'),
     ]
-    photo = models.ImageField(upload_to='interceptee_photos', default='', blank=True, null=True)
+    photo = models.ImageField(upload_to='interceptee_photos', default='', blank=True)
     photo_thumbnail = ImageSpecField(source='photo',
                                      processors=[ResizeToFill(200, 200)],
                                      format='JPEG',
