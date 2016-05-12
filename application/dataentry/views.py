@@ -40,7 +40,7 @@ from dataentry.forms import IntercepteeForm, InterceptionRecordForm, Address2For
 from dataentry.models import BorderStation, Address2, Address1, Interceptee, InterceptionRecord, VictimInterview, VictimInterviewLocationBox, VictimInterviewPersonBox, Person
 
 from dataentry import csv_io
-from dataentry.serializers import Address1Serializer, Address2Serializer, InterceptionRecordListSerializer, InterceptionRecordSerializer, VictimInterviewListSerializer, IntercepteeSerializer
+from dataentry.serializers import Address1Serializer, Address2Serializer, InterceptionRecordListSerializer, InterceptionRecordSerializer, VictimInterviewListSerializer, IntercepteeSerializer, VictimInterviewSerializer
 from dataentry.google_sheets import GoogleSheetClientThread
 from accounts.mixins import PermissionsRequiredMixin
 
@@ -538,6 +538,14 @@ class VictimInterviewViewSet(viewsets.ModelViewSet):
         'date_time_entered_into_system',
         'date_time_last_updated',)
     ordering = ('vif_number',)
+
+
+class VictimInterviewDetailViewSet(viewsets.ModelViewSet):
+    queryset = VictimInterview.objects.all()
+    serializer_class = VictimInterviewSerializer
+    permission_classes = (IsAuthenticated, HasPermission, HasDeletePermission,)
+    permissions_required = ['permission_vif_view']
+    delete_permissions_required = ['permission_vif_delete']
 
     def destroy(self, request, *args, **kwargs):
         vif_id = kwargs['pk']
