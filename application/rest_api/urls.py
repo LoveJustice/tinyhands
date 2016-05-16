@@ -1,7 +1,7 @@
 from django.conf.urls import url
 from accounts.views import CurrentUserView
 
-from dataentry.views import Address2ViewSet, Address1ViewSet, GeoCodeAddress1APIView, GeoCodeAddress2APIView, InterceptionRecordViewSet, VictimInterviewViewSet, BatchView, PersonViewSet, IdFormMatch
+from dataentry.views import Address2ViewSet, Address1ViewSet, GeoCodeAddress1APIView, GeoCodeAddress2APIView, InterceptionRecordViewSet, VictimInterviewViewSet, BatchView, PersonViewSet
 from budget.views import BudgetViewSet, OtherItemsViewSet
 from accounts.views import AccountViewSet, DefaultPermissionsSetViewSet, CurrentUserView, ResendActivationEmailView
 from static_border_stations.views import BorderStationViewSet, StaffViewSet, CommitteeMemberViewSet, LocationViewSet

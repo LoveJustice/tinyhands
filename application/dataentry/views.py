@@ -506,10 +506,6 @@ class VictimInterviewViewSet(viewsets.ModelViewSet):
         GoogleSheetClientThread.update_irf(vif.vif_number)
         return rv
 
-def IdFormMatch(request, pk):
-    intercepteeList = Interceptee.objects.filter(person=pk)
-    return Response(intercepteeList, status=status.HTTP_200_OK)
-
 @login_required
 def id_management_template(request):
     return render(request, 'dataentry/id_management.html')
