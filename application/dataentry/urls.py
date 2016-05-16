@@ -1,14 +1,19 @@
 from django.conf.urls import url
 from dataentry.views import *
 
+sys_admin_list = SysAdminSettingsViewSet.as_view({
+    'get': 'retrieve',
+    'put': 'update'
+})
+
 urlpatterns = [
     url(r'^irfs/$', interception_record_list_template, name="interceptionrecord_list"),  # Simple render view
     url(r'^irfs/search/(?P<code>\w+)/$', interception_record_list_search_template, name="interceptionrecord_list_search"),
     url(r'^irfs/(?P<pk>\d+)/$', InterceptionRecordDetailView.as_view(), name='interceptionrecord_detail'),
     url(r'^irfs/create/$', InterceptionRecordCreateView.as_view(), name='interceptionrecord_create'),
+    url(r'^irfs/irfExists/([A-Z]{3}[0-9]+)', irfExists, name='IrfExists'),
     url(r'^irfs/update/(?P<pk>\d+)/$', InterceptionRecordUpdateView.as_view(), name='interceptionrecord_update'),
     url(r'^irfs/export/$', InterceptionRecordCSVExportView.as_view(), name='interceptionrecord_csv_export'),
-
     #Create a url that will have a border station argument and will list irfs for that specific BD station
 
     url(r'^vifs/$', VictimInterviewListView.as_view(), name='victiminterview_list'),
@@ -16,12 +21,16 @@ urlpatterns = [
     url(r'^vifs/(?P<pk>\d+)/$', VictimInterviewDetailView.as_view(), name='victiminterview_detail'),
     url(r'^vifs/create/$', VictimInterviewCreateView.as_view(), name='victiminterview_create'),
     url(r'^vifs/update/(?P<pk>\d+)/$', VictimInterviewUpdateView.as_view(), name='victiminterview_update'),
+    url(r'^vifs/vifExists/([A-Z]{3}[0-9]+)', vifExists, name='VifExists'),
     url(r'^vifs/export/$', VictimInterviewCSVExportView.as_view(), name='victiminterview_csv_export'),
     #Create a url that will have a border station argument and will list vifs for that specific BD station
 
-    url(r'^stations/codes/$', StationCodeAPIView.as_view()),
 
     url(r'^id-management/$', id_management_template, name='id_management'),
+    #System Administrator Settings Page
+    url(r'^api/sysadminsettings/(?P<pk>\d+)/$', sys_admin_list, name="sys_admin_settings_api"),
+    url(r'^sysadminsettings/(?P<pk>\d+)/$', sys_admin_settings_update, name="sys_admin_settings"),
+    url(r'^stations/codes/$', StationCodeAPIView.as_view()),
 
     url(r'^geocodelocation/address1/(?P<id>\d+)/$', GeoCodeAddress1APIView.as_view()),
     url(r'^geocodelocation/address1/$', GeoCodeAddress1APIView.as_view()),

@@ -16,13 +16,13 @@ BOOLEAN_CHOICES = [
 ]
 
 LEVEL_CHOICES = [
-    ('State','State'),
     ('Country','Country'),
-    ('City','City'),
+    ('State','State'),
     ('District','District'),
+    ('City','City'),
     ('VDC','VDC'),
-    ('Building','Building'),
-    ('Block','Block')
+    ('Block','Block'),
+    ('Building','Building')
 ]
 
 
@@ -110,7 +110,7 @@ class InterceptionRecordForm(DreamSuitePaperForm):
         for field_name, field in self.fields.iteritems():
             if type(field) == forms.fields.BooleanField:
                 try:
-                    model_field = InterceptionRecord._meta.get_field(field_name)[0]
+                    model_field = InterceptionRecord._meta.get_field(field_name)
                     if hasattr(model_field, 'weight'):
                         field.weight = model_field.weight
                 except:
@@ -369,7 +369,7 @@ class IntercepteeForm(DreamSuitePaperForm):
         self.fields['address2'] = Address2Field(required=False)
         self.fields['full_name'] = CharField(required=False)
         self.fields['age'] = IntegerField(required=False)
-        self.fields['photo'] = ImageField()
+        self.fields['photo'] = ImageField(required=False)
         self.fields['gender'] = CharField(max_length=4, required=False)
         self.fields['phone_contact'] = CharField(required=False)
 
@@ -746,15 +746,15 @@ class VictimInterviewForm(DreamSuitePaperForm):
         if self.cleaned_data['victim_address1']:
             victim_address1 = Address1.objects.get(name=self.cleaned_data['victim_address1'])
             self.instance.victim.address1 = victim_address1
-        if self.cleaned_data['victim_guardian_address1']:
-            victim_guardian_address1 = Address1.objects.get(name=self.cleaned_data['victim_guardian_address1'])
-            self.instance.victim_guardian_address1 = victim_guardian_address1
-            print victim_address1.id
         if self.cleaned_data['victim_address2']:
             victim_address2 = Address2.objects.get(name=self.cleaned_data['victim_address2'], address1_id = self.instance.victim.address1.id)
             self.instance.victim.address2 = victim_address2
+
+        if self.cleaned_data['victim_guardian_address1']:
+            victim_guardian_address1 = Address1.objects.get(name=self.cleaned_data['victim_guardian_address1'])
+            self.instance.victim_guardian_address1 = victim_guardian_address1
         if self.cleaned_data['victim_guardian_address2']:
-            victim_guardian_address2 = Address2.objects.get(name=self.cleaned_data['victim_guardian_address2'])
+            victim_guardian_address2 = Address2.objects.get(name=self.cleaned_data['victim_guardian_address2'], address1=victim_guardian_address1)
             self.instance.victim_guardian_address2 = victim_guardian_address2
 
         if self.cleaned_data["victim_name"]:
@@ -962,15 +962,9 @@ class BorderStationForm(forms.ModelForm):
 
 
 class Address2Form(forms.ModelForm):
-    level = forms.MultipleChoiceField(
-	choices=LEVEL_CHOICES,
-	widget=forms.CheckboxSelectMultiple,
-	required=True,
-    )
     class Meta:
-
         model = Address2
-	exclude = []
+        exclude = []
 
     def __init__(self, *args, **kwargs):
         super(Address2Form, self).__init__(*args, **kwargs)
