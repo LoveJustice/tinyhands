@@ -44,7 +44,7 @@ class Address2Serializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
-    canonical_name = CanonicalNameSerializer()
+    canonical_name = CanonicalNameSerializer(required=False)
     address1 = Address1Serializer()
 
 
