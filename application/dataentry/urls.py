@@ -26,11 +26,10 @@ urlpatterns = [
     #Create a url that will have a border station argument and will list vifs for that specific BD station
 
 
+    url(r'^id-management/$', id_management_template, name='id_management'),
     #System Administrator Settings Page
     url(r'^api/sysadminsettings/(?P<pk>\d+)/$', sys_admin_list, name="sys_admin_settings_api"),
     url(r'^sysadminsettings/(?P<pk>\d+)/$', sys_admin_settings_update, name="sys_admin_settings"),
-
-
     url(r'^stations/codes/$', StationCodeAPIView.as_view()),
 
     url(r'^geocodelocation/address1/(?P<id>\d+)/$', GeoCodeAddress1APIView.as_view()),

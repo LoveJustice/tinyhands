@@ -7,6 +7,10 @@ class Address1Serializer(serializers.ModelSerializer):
     class Meta:
         model = Address1
 
+class PersonSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Person
+
 
 class CanonicalNameSerializer(serializers.ModelSerializer):
     class Meta:

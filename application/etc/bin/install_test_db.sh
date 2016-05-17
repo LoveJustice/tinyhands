@@ -51,4 +51,3 @@ chmod 777 "${PHOTO}" "${IRF_FORM}" "${VIF_FORM}" "${TOP}/media" "${TOP}/dreamsui
 # migrate and load db
 docker-compose run --rm web ./manage.py migrate
 docker-compose run --rm web ./manage.py loaddata fixtures/sanitized-data.json
-docker-compose run --rm web ./manage.py loaddata fixtures/sys-admin.json

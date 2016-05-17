@@ -39,7 +39,7 @@ from fuzzywuzzy import process
 from dataentry.models import BorderStation, Address2, Address1, Interceptee, Person, FuzzyMatching, InterceptionRecord, VictimInterview, VictimInterviewLocationBox, VictimInterviewPersonBox
 from dataentry.forms import IntercepteeForm, InterceptionRecordForm, Address2Form, Address1Form, VictimInterviewForm, VictimInterviewLocationBoxForm, VictimInterviewPersonBoxForm
 from dataentry import csv_io
-from dataentry.serializers import Address1Serializer, Address2Serializer, InterceptionRecordListSerializer, VictimInterviewListSerializer, SysAdminSettingsSerializer, IntercepteeSerializer, InterceptionRecordSerializer
+from dataentry.serializers import Address1Serializer, Address2Serializer, InterceptionRecordListSerializer, VictimInterviewListSerializer, SysAdminSettingsSerializer, PersonSerializer, IntercepteeSerializer, InterceptionRecordSerializer
 from dataentry.google_sheets import GoogleSheetClientThread
 
 from accounts.mixins import PermissionsRequiredMixin
@@ -455,6 +455,15 @@ def get_station_id(request):
             print("No station id")
             return HttpResponse([-1])
 
+class PersonViewSet(viewsets.ModelViewSet):
+    queryset = Person.objects.all()
+    serializer_class = PersonSerializer
+    permission_classes = (IsAuthenticated, HasPermission)
+    permissions_required = ['permission_address2_manage']
+    filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
+    search_fields = ('full_name',)
+    ordering_fields = ('full_name', 'age', 'gender', 'phone_contact')
+    ordering = ('full_name',)
 
 class Address2ViewSet(viewsets.ModelViewSet):
     queryset = Address2.objects.all().select_related('address1', 'canonical_name__address1')
@@ -555,6 +564,11 @@ class VictimInterviewViewSet(viewsets.ModelViewSet):
         return rv
 
 
+@login_required
+def id_management_template(request):
+    return render(request, 'dataentry/id_management.html')
+
+
 def vifExists(request, vif_number):
     try:
         existingVif = VictimInterview.objects.get(vif_number=vif_number)
@@ -569,6 +583,7 @@ def irfExists(request, irf_number):
         return HttpResponse(existingIrf.irf_number)
     except:
         return HttpResponse("Irf does not exist")
+
 
 
 class BatchView(View):
