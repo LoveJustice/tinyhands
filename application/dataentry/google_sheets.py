@@ -11,11 +11,15 @@ import traceback
 import smtplib
 import string
 import logging
+import csv_io
+import time
 
 from models import (InterceptionRecord, VictimInterview)
-from csv_io import get_irf_export_rows
+
 from django.conf import settings
-from csv_io import get_vif_export_rows
+#from csv_io import get_vif_export_rows
+#from csv_io import get_irf_export_rows
+#from csv_io import import_irf_row
 
 logger = logging.getLogger(__name__);
 
@@ -32,7 +36,11 @@ class GoogleSheetClientThread (Thread):
     token = None
     client = None
     spreadsheet_key = None
+    import_spreadsheet_key = None
     instance = None
+    
+
+
 
     def get_token(self):
         try:
@@ -57,9 +65,9 @@ class GoogleSheetClientThread (Thread):
         logger.error("Spreadsheet with the name " + name + " not found")
         return None
 
-    def find_worksheet_by_name(self, name):
-        if self.spreadsheet_key is not None:
-            worksheets = self.client.get_worksheets(self.spreadsheet_key);
+    def find_worksheet_by_name(self, spreadsheet_key, name):
+        if spreadsheet_key is not None:
+            worksheets = self.client.get_worksheets(spreadsheet_key);
             for worksheet in worksheets.entry:
                 if (name == worksheet.title.text):
                     return worksheet.id.text.rsplit('/',1)[1]
@@ -67,7 +75,8 @@ class GoogleSheetClientThread (Thread):
         logger.error("Worksheet with the name " + name + " not found")
         return None
 
-    def spreadsheet_header_from_export_header(self, hdr):
+    @staticmethod
+    def spreadsheet_header_from_export_header(hdr):
         hdr = hdr.lower()
         hdr = re.sub("[^a-z0-9\.\-]*","", hdr)
         hdr = re.sub("^[0-9\.\-]*","", hdr)
@@ -79,12 +88,17 @@ class GoogleSheetClientThread (Thread):
         if self.token is not None:
             self.get_client()
             self.spreadsheet_key = self.find_spreadsheet_by_name(settings.SPREADSHEET_NAME)
-            self.irf_worksheet_key = self.find_worksheet_by_name(settings.IRF_WORKSHEET_NAME)
-            self.vif_worksheet_key = self.find_worksheet_by_name(settings.VIF_WORKSHEET_NAME)
+            self.irf_worksheet_key = self.find_worksheet_by_name(self.spreadsheet_key, settings.IRF_WORKSHEET_NAME)
+            self.vif_worksheet_key = self.find_worksheet_by_name(self.spreadsheet_key, settings.VIF_WORKSHEET_NAME)
+            
+            self.import_spreadsheet_key = self.find_spreadsheet_by_name(settings.IMPORT_SPREADSHEET_NAME)
+            self.irf_import_worksheet_key = self.find_worksheet_by_name(self.import_spreadsheet_key, settings.IRF_IMPORT_WORKSHEET_NAME)
         else:
             logger.error("Unable to get token")
 
     def __init__(self):
+        self.import_status_name = self.spreadsheet_header_from_export_header("Import Status")
+        self.import_issues_name = self.spreadsheet_header_from_export_header("Import Issues")
         Thread.__init__(self)
         self.reinitialize()
         if self.have_credentials:
@@ -138,6 +152,8 @@ class GoogleSheetClientThread (Thread):
             list_entry = self.build_list_entry(new_rows[0], new_rows[row_idx])
             self.client.add_list_entry(list_entry, self.spreadsheet_key, worksheet_key)
 
+
+
     @staticmethod
     def update_irf(the_irf_number):
         logger.debug("Entry IRF = " + the_irf_number)
@@ -168,7 +184,7 @@ class GoogleSheetClientThread (Thread):
         except:
             logger.info("Could not find IRF " + the_irf_number)
             irfs = []
-        new_rows = get_irf_export_rows(irfs)
+        new_rows = csv_io.get_irf_export_rows(irfs)
         self.update_sheet(self.irf_worksheet_key, the_irf_number, new_rows)
 
     def internal_update_vif(self, the_vif_number):
@@ -179,8 +195,51 @@ class GoogleSheetClientThread (Thread):
         except:
             logger.info("Could not find VIF " + the_vif_number)
             vifs = []
-        new_rows = get_vif_export_rows(vifs)
+        new_rows = csv_io.get_vif_export_rows(vifs)
         self.update_sheet(self.vif_worksheet_key, the_vif_number, new_rows)
+    
+    @staticmethod
+    def import_irfs():
+        logger.debug("Entry");
+        if GoogleSheetClientThread.instance is None:
+            GoogleSheetClientThread.instance = GoogleSheetClientThread()
+
+        if GoogleSheetClientThread.instance.have_credentials:
+            logger.info("Starting import from Google Sheet")
+            GoogleSheetClientThread.instance.internal_import_irf()
+            logger.info("Waiting for export to complete")
+            GoogleSheetClientThread.shutdown()
+            while not GoogleSheetClientThread.instance.work_queue.empty():
+                time.sleep (5)
+            logger.info("Finished import from Google Sheet")
+        
+    def internal_import_irf(self):
+        feed = self.client.get_list_feed(self.import_spreadsheet_key, self.irf_import_worksheet_key, query=ListQuery(sq=self.import_status_name + "== Ready"))
+        logger.debug("Number of entries to import =" + str(len(feed.entry)))
+        for idx in range(len(feed.entry)):
+            irfData = feed.entry[idx].to_dict()
+        
+            errList = csv_io.import_irf_row(irfData)
+            if len(errList) > 0:
+                if errList[0] == 'IRF already exists':
+                    feed.entry[idx].set_value(self.import_status_name, "Existing")
+                    feed.entry[idx].set_value(self.import_issues_name, errList[0])
+                else:
+                    logger.debug("Rejected " + irfData['irfnumber'])
+                    feed.entry[idx].set_value(self.import_status_name, "Rejected")
+                    sep = ""
+                    err_string = ""
+                    for err in errList:
+                        err_string = err_string + sep + err
+                        sep = '\n'
+                        
+                    feed.entry[idx].set_value(self.import_issues_name, err_string)
+                    
+            else:
+                feed.entry[idx].set_value(self.import_status_name, "Imported")
+                feed.entry[idx].set_value(self.import_issues_name, "")
+                
+            self.client.update(feed.entry[idx])
 
     def send_exception_mail(self, exception_text):
         try:

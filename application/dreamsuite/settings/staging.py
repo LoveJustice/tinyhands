@@ -14,3 +14,7 @@ SITE_DOMAIN = '139.162.52.72'
 SPREADSHEET_NAME = 'Dream Suite - THN Data (Staging)'
 IRF_WORKSHEET_NAME = 'IRF Entry'
 VIF_WORKSHEET_NAME = 'VIF Entry'
+
+IMPORT_ACCOUNT_EMAIL = 'ashishm@tinyhands.org'
+IMPORT_SPREADSHEET_NAME = 'Dream Suite - THN Data (Staging)'
+IRF_IMPORT_WORKSHEET_NAME = 'IRF Import'
