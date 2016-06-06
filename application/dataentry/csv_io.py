@@ -1471,5 +1471,4 @@ def get_vif_export_rows(vifs):
 
         rows.append(row)
 
-    print "returning from get_vif_export_rows %d" % len(rows)
     return rows

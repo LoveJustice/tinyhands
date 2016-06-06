@@ -60,6 +60,7 @@ class GoogleSheetClientThread (Thread):
         spreadsheets = self.client.get_spreadsheets()
         for spreadsheet in spreadsheets.entry:
             if (name == spreadsheet.title.text):
+                
                 return spreadsheet.id.text.rsplit('/',1)[1]
 
         logger.error("Spreadsheet with the name " + name + " not found")
@@ -144,7 +145,7 @@ class GoogleSheetClientThread (Thread):
     def update_sheet (self, worksheet_key, key_value, new_rows):
         key_name = self.spreadsheet_header_from_export_header(new_rows[0][0])
 
-        feed = self.client.get_list_feed(self.spreadsheet_key, worksheet_key, query=ListQuery(sq=key_name + "==" + key_value))
+        feed = self.client.get_list_feed(self.spreadsheet_key, worksheet_key, query=ListQuery(sq=key_name + "==\"" + key_value + "\""))
         for idx in range(len(feed.entry)-1, -1, -1):
             self.client.delete(feed.entry[idx])
 
@@ -240,6 +241,55 @@ class GoogleSheetClientThread (Thread):
                 feed.entry[idx].set_value(self.import_issues_name, "")
                 
             self.client.update(feed.entry[idx])
+            
+    @staticmethod
+    def audit_export_forms():
+        logger.debug("Entry");
+        if GoogleSheetClientThread.instance is None:
+            GoogleSheetClientThread.instance = GoogleSheetClientThread()
+
+        if GoogleSheetClientThread.instance.have_credentials:
+            logger.info("Starting audit of exported forms")
+            GoogleSheetClientThread.instance.internal_audit_export_sheets()
+            logger.info("Finished audit of exported forms")
+     
+    def get_exported_form_numbers(self, spreadsheet_key, worksheet_key, column_name):
+        form_numbers = set()
+        feed = self.client.get_list_feed(spreadsheet_key, worksheet_key)
+        for idx in range(len(feed.entry)):
+            form_data = feed.entry[idx].to_dict()
+            form_number = form_data[column_name]
+            form_numbers.add(form_number)
+        
+        return form_numbers
+            
+    def internal_audit_export_sheets(self):
+        form_numbers = self.get_exported_form_numbers(self.spreadsheet_key, self.irf_worksheet_key,
+                self.spreadsheet_header_from_export_header('IRF Number'))
+        
+        irfList = InterceptionRecord.objects.all()
+        for irf in irfList:
+            if irf.irf_number not in form_numbers:
+                logger.debug("IRF Number " + irf.irf_number + " exporting")
+                irfs = [irf]
+                new_rows = csv_io.get_irf_export_rows(irfs)
+                self.update_sheet(self.irf_worksheet_key, irf.irf_number, new_rows)
+            else:
+                logger.debug("IRF Number " + irf.irf_number + " already exported")
+                
+        form_numbers = self.get_exported_form_numbers(self.spreadsheet_key, self.vif_worksheet_key,
+                self.spreadsheet_header_from_export_header('VIF Number'))
+        
+        vifList = VictimInterview.objects.all()
+        for vif in vifList:
+            if vif.vif_number not in form_numbers:
+                logger.debug("VIF Number " + vif.vif_number + " exporting")
+                vifs = [vif]
+                new_rows = csv_io.get_vif_export_rows(vifs)
+                self.update_sheet(self.vif_worksheet_key, vif.vif_number, new_rows)
+            else:
+                logger.debug("VIF Number " + vif.vif_number + " already exported")
+                
 
     def send_exception_mail(self, exception_text):
         try:
