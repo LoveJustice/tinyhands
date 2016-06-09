@@ -4,6 +4,7 @@ import random
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
 from django.utils import timezone
+from django.core.urlresolvers import reverse
 
 from templated_email import send_templated_mail
 from django.conf import settings
@@ -134,12 +135,16 @@ class Account(AbstractBaseUser, PermissionsMixin):
         )
 
     def send_activation_email(self):
+        beta_activation_url = settings.CLIENT_DOMAIN + '/account/activate/' + self.activation_key
+        activation_url = settings.SITE_DOMAIN + reverse('account_activate', kwargs={'activation_key': self.activation_key})
+
         send_templated_mail(
             template_name='new_user_password_link',
             from_email=settings.ADMIN_EMAIL_SENDER,
             recipient_list=[self.email],
             context={
-                'site': settings.SITE_DOMAIN,
+                'activation_url': activation_url,
+                'beta_activation_url': beta_activation_url,
                 'account': self,
             }
         )
