@@ -59,6 +59,18 @@ class IntercepteeFactory(DjangoModelFactory):
     kind = 'v'
 
 
+class FuzzyMatchingFactory(DjangoModelFactory):
+    class Meta:
+        model = FuzzyMatching
+
+    address1_cutoff = 70
+    address1_limit = 5
+    address2_cutoff = 70
+    address2_limit = 5
+    person_cutoff = 90
+    person_limit = 10
+
+
 class Address1Factory(DjangoModelFactory):
     class Meta:
         model = Address1

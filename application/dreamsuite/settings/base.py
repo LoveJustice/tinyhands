@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_extensions',
     'bootstrap_pagination',
+    'rest_framework.authtoken',
 ]
 
 

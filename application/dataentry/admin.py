@@ -31,6 +31,7 @@ class Address2Admin(admin.ModelAdmin):
     search_fields = ['name', 'latitude', 'longitude', 'address1', 'canonical_name']
     list_display = ['name', 'latitude', 'longitude', 'address1', 'canonical_name']
 
+
 admin.site.register(InterceptionRecord, InterceptionRecordAdmin)
 admin.site.register(VictimInterview, VictimInterviewAdmin)
 admin.site.register(Address1, Address1Admin)

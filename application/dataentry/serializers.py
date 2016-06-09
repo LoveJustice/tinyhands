@@ -1,11 +1,15 @@
 from rest_framework import serializers
 
-from dataentry.models import Address1, Address2, InterceptionRecord, VictimInterview, BorderStation, Interceptee, Person
+from dataentry.models import Address1, Address2, InterceptionRecord, VictimInterview, BorderStation, FuzzyMatching, Person, Interceptee
 
 
 class Address1Serializer(serializers.ModelSerializer):
     class Meta:
         model = Address1
+
+class PersonSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Person
 
 
 class CanonicalNameSerializer(serializers.ModelSerializer):
@@ -40,11 +44,11 @@ class Address2Serializer(serializers.ModelSerializer):
         instance.latitude = validated_data.get('latitude', instance.latitude)
         instance.longitude = validated_data.get('longitude', instance.longitude)
         instance.level = validated_data.get('level', instance.level)
-	instance.verified = validated_data.get('verified', instance.verified)
+        instance.verified = validated_data.get('verified', instance.verified)
         instance.save()
         return instance
 
-    canonical_name = CanonicalNameSerializer()
+    canonical_name = CanonicalNameSerializer(required=False)
     address1 = Address1Serializer()
 
 
@@ -166,8 +170,6 @@ class InterceptionRecordSerializer(serializers.ModelSerializer):
         return warnings
 
 
-
-
 class VictimInterviewListSerializer(serializers.ModelSerializer):
     class Meta:
         model = VictimInterview
@@ -209,6 +211,11 @@ class VictimInterviewLocationBoxSerializer(serializers.ModelSerializer):
     class Meta:
         model = VictimInterview
         exclude = []
+
+
+class SysAdminSettingsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FuzzyMatching
 
 
 class PersonSerializer(serializers.ModelSerializer):

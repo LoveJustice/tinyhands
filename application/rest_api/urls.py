@@ -1,5 +1,6 @@
 from django.conf.urls import url
 
+from dataentry.views import Address2ViewSet, Address1ViewSet, GeoCodeAddress1APIView, GeoCodeAddress2APIView, InterceptionRecordViewSet, VictimInterviewViewSet, BatchView, PersonViewSet, IntercepteeViewSet
 from rest_framework.authtoken import views
 
 from portal.views import get_interception_records
@@ -71,13 +72,13 @@ urlpatterns = [
         url(r'^budget/money_distribution/view/(?P<pk>\d+)/$', money_distribution_view, name="rest_api_money_distribution_view"),
 
         # Old Budget viewsets for the old django site. needs to change eventually - ask ben duggan about it
-            # Budget URLs
-            url(r'^Oldbudget/$', OldBudgetViewSet.as_view({'get': 'list', 'post': 'create'}), name='OldBudgetCalculation'),
-            url(r'^Oldbudget/(?P<pk>\d+)/$', OldBudgetViewSet.as_view({'put': 'update', 'get': 'retrieve', 'delete': 'destroy'}), name='OldBudgetCalculationWithId'),
+        # Budget URLs
+        url(r'^Oldbudget/$', OldBudgetViewSet.as_view({'get': 'list', 'post': 'create'}), name='OldBudgetCalculation'),
+        url(r'^Oldbudget/(?P<pk>\d+)/$', OldBudgetViewSet.as_view({'put': 'update', 'get': 'retrieve', 'delete': 'destroy'}), name='OldBudgetCalculationWithId'),
 
-            # Other items
-            url(r'^Oldbudget/(?P<parent_pk>\d+)/item/$', OldOtherItemsViewSet.as_view({'get': 'list_by_budget_sheet', 'post': 'create'}), name='OldBudgetCalculationWithId'),
-            url(r'^Oldbudget/(?P<parent_pk>\d+)/item/(?P<pk>\d+)/$', OldOtherItemsViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}), name='OldBudgetCalculationWithId'),
+        # Other items
+        url(r'^Oldbudget/(?P<parent_pk>\d+)/item/$', OldOtherItemsViewSet.as_view({'get': 'list_by_budget_sheet', 'post': 'create'}), name='OldBudgetCalculationWithId'),
+        url(r'^Oldbudget/(?P<parent_pk>\d+)/item/(?P<pk>\d+)/$', OldOtherItemsViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}), name='OldBudgetCalculationWithId'),
 
 
     # Portal App
@@ -102,13 +103,25 @@ urlpatterns = [
         url(r'^staff/(?P<pk>\d+)/$', StaffViewSet.as_view(detail), name="Staff"),
 
         # Events
-            url(r'^event/$', EventViewSet.as_view({'get': 'list', 'post':'create'}), name="EventList"),
-            url(r'^event/all/$', EventViewSet.as_view({'get': 'list_all'}), name="EventListAll"),
-            url(r'^event/(?P<pk>\d+)/$', EventViewSet.as_view({'get':'retrieve', 'put':'update', 'delete':'destroy'}), name='Event'),
-            url(r'^event/feed/calendar/$', EventViewSet.as_view({'get': 'calendar_feed'}), name='EventCalendarFeed'),
-            url(r'^event/feed/dashboard/$', EventViewSet.as_view({'get': 'dashboard_feed'}), name='EventDashboardFeed'),
+        url(r'^event/$', EventViewSet.as_view({'get': 'list', 'post':'create'}), name="EventList"),
+        url(r'^event/all/$', EventViewSet.as_view({'get': 'list_all'}), name="EventListAll"),
+        url(r'^event/(?P<pk>\d+)/$', EventViewSet.as_view({'get':'retrieve', 'put':'update', 'delete':'destroy'}), name='Event'),
+        url(r'^event/feed/calendar/$', EventViewSet.as_view({'get': 'calendar_feed'}), name='EventCalendarFeed'),
+        url(r'^event/feed/dashboard/$', EventViewSet.as_view({'get': 'dashboard_feed'}), name='EventDashboardFeed'),
+
         #IRFBatch
-        url(r'^batch/(?P<startDate>(\d{2}|\d{1})-(\d{2}|\d{1})-\d{4})/(?P<endDate>\d{2}-\d{2}-\d{4})', BatchView.as_view(), name="BatchView")
+        url(r'^batch/(?P<startDate>(\d{2}|\d{1})-(\d{2}|\d{1})-\d{4})/(?P<endDate>\d{2}-\d{2}-\d{4})', BatchView.as_view(), name="BatchView"),
+
+        #Persons
+        url(r'^person/$', PersonViewSet.as_view({'get': 'list'}), name="Person"),
+        #url(r'^person/(?P<pk>\d+)/$', IdFormMatch, name="PersonForm"),
+
+
+        #Events
+        url(r'^event/$', EventViewSet.as_view({'get': 'list', 'post':'create'}), name="EventList"),
+        url(r'^event/all/$', EventViewSet.as_view({'get': 'list_all'}), name="EventListAll"),
+        url(r'^event/(?P<pk>\d+)/$', EventViewSet.as_view({'get':'retrieve', 'put':'update', 'delete':'destroy'}), name='Event'),
+        url(r'^event/feed/calendar/$', EventViewSet.as_view({'get': 'calendar_feed'}), name='EventCalendarFeed'),
+        url(r'^event/feed/dashboard/$', EventViewSet.as_view({'get': 'dashboard_feed'}), name='EventDashboardFeed')
+
 ]
-
-
