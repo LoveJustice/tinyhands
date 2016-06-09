@@ -16,7 +16,7 @@ class AccountsSerializer(serializers.ModelSerializer):
 	except:
 		account.delete()
 		raise serializers.ValidationError({'email': ["Email address is invalid"]})
-		
+
 	return account
 
 
