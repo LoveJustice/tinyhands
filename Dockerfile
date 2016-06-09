@@ -4,7 +4,7 @@ MAINTAINER benaduggan
 ENV PYTHONUNBUFFERED 1
 
 # Install linux dependencies
-RUN apt-get update && apt-get install -y python-dev libncurses5-dev libxml2-dev libxslt-dev zlib1g-dev libjpeg-dev s3cmd curl && pip install --upgrade pip
+RUN apt-get update && apt-get install -y python-dev libncurses5-dev libxml2-dev libxslt-dev zlib1g-dev libjpeg-dev s3cmd curl rsync && pip install --upgrade pip
 
 # Make the directory for our code
 RUN mkdir /data /log && chown -R www-data:www-data /log

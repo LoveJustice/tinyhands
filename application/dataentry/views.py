@@ -36,12 +36,12 @@ from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineForm
 from braces.views import LoginRequiredMixin
 from fuzzywuzzy import process
 
+from dataentry.models import BorderStation, Address2, Address1, Interceptee, Person, FuzzyMatching, InterceptionRecord, VictimInterview, VictimInterviewLocationBox, VictimInterviewPersonBox
 from dataentry.forms import IntercepteeForm, InterceptionRecordForm, Address2Form, Address1Form, VictimInterviewForm, VictimInterviewLocationBoxForm, VictimInterviewPersonBoxForm
-from dataentry.models import BorderStation, Address2, Address1, Interceptee, InterceptionRecord, VictimInterview, VictimInterviewLocationBox, VictimInterviewPersonBox, Person
-
 from dataentry import csv_io
-from dataentry.serializers import Address1Serializer, Address2Serializer, InterceptionRecordListSerializer, VictimInterviewListSerializer
+from dataentry.serializers import Address1Serializer, Address2Serializer, InterceptionRecordListSerializer, VictimInterviewListSerializer, SysAdminSettingsSerializer, PersonSerializer, IntercepteeSerializer, InterceptionRecordSerializer
 from dataentry.google_sheets import GoogleSheetClientThread
+
 from accounts.mixins import PermissionsRequiredMixin
 
 from alert_checkers import IRFAlertChecker, VIFAlertChecker
@@ -232,6 +232,11 @@ class VictimInterviewListView(LoginRequiredMixin, SearchFormsMixin, ListView):
     def __init__(self, *args, **kwargs):
         # Passes what to search by to SearchFormsMixin
         super(VictimInterviewListView, self).__init__(vif_number__icontains="number", interviewer__icontains="name")
+
+
+@login_required
+def sys_admin_settings_update(request, pk):
+    return render(request, 'dataentry/sys_admin_settings.html', locals())
 
 
 @login_required
@@ -430,8 +435,10 @@ class StationCodeAPIView(APIView):
 def interceptee_fuzzy_matching(request):
     input_name = request.GET['name']
     all_people = Interceptee.objects.all()
-    people_dict = {serializers.serialize("json", [obj]): obj.full_name for obj in all_people}
-    matches = process.extractBests(input_name, people_dict, limit=10)
+    people_dict = {serializers.serialize("json", [obj]): obj.person.full_name for obj in all_people }
+    fuzzy_object = FuzzyMatching.objects.all()[0]
+    matches = process.extractBests(input_name, people_dict, score_cutoff=fuzzy_object.person_cutoff, limit=fuzzy_object.person_limit)
+
     return HttpResponse(json.dumps(matches), content_type="application/json")
 
 
@@ -448,6 +455,15 @@ def get_station_id(request):
             print("No station id")
             return HttpResponse([-1])
 
+class PersonViewSet(viewsets.ModelViewSet):
+    queryset = Person.objects.all()
+    serializer_class = PersonSerializer
+    permission_classes = (IsAuthenticated, HasPermission)
+    permissions_required = ['permission_address2_manage']
+    filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
+    search_fields = ('full_name',)
+    ordering_fields = ('full_name', 'age', 'gender', 'phone_contact')
+    ordering = ('full_name',)
 
 class Address2ViewSet(viewsets.ModelViewSet):
     queryset = Address2.objects.all().select_related('address1', 'canonical_name__address1')
@@ -479,7 +495,7 @@ class Address1ViewSet(viewsets.ModelViewSet):
 
 class InterceptionRecordViewSet(viewsets.ModelViewSet):
     queryset = InterceptionRecord.objects.all()
-    serializer_class = InterceptionRecordListSerializer
+    serializer_class = InterceptionRecordSerializer
     permission_classes = (IsAuthenticated, HasPermission, HasDeletePermission,)
     permissions_required = ['permission_irf_view']
     delete_permissions_required = ['permission_irf_delete']
@@ -499,6 +515,31 @@ class InterceptionRecordViewSet(viewsets.ModelViewSet):
         GoogleSheetClientThread.update_irf(irf.irf_number)
         return rv
 
+    def list(self, request, *args, **kwargs):
+        temp = self.serializer_class
+        self.serializer_class = InterceptionRecordListSerializer  # we want to use a custom serializer just for the list view
+        super_list_response = super(InterceptionRecordViewSet, self).list(request, *args, **kwargs)  # call the supers list view with custom serializer
+        self.serializer_class = temp  # put the original serializer back in place
+        return super_list_response
+
+    def retrieve(self, request, *args, **kwargs):
+        response = {}
+        response = super(InterceptionRecordViewSet, self).retrieve(request, *args, **kwargs)
+        for field in InterceptionRecord._meta.fields:
+            try:
+                if field.weight != None:
+                    response.data[field.name] = {
+                        'value': response.data[field.name],
+                        'weight': field.weight
+                    }
+            except:
+                pass
+        return response
+
+class IntercepteeViewSet(viewsets.ModelViewSet):
+    queryset = Interceptee.objects.all()
+    serializer_class = IntercepteeSerializer
+    filter_fields = ('interception_record',)
 
 class VictimInterviewViewSet(viewsets.ModelViewSet):
     queryset = VictimInterview.objects.all()
@@ -518,9 +559,14 @@ class VictimInterviewViewSet(viewsets.ModelViewSet):
         vif_id = kwargs['pk']
         vif = VictimInterview.objects.get(id=vif_id)
         rv = super(viewsets.ModelViewSet, self).destroy(request, args, kwargs)
-        logger.debug("After VIF destroy " + vif.irf_number)
-        GoogleSheetClientThread.update_irf(vif.vif_number)
+        logger.debug("After VIF destroy " + vif.vif_number)
+        GoogleSheetClientThread.update_vif(vif.vif_number)
         return rv
+
+
+@login_required
+def id_management_template(request):
+    return render(request, 'dataentry/id_management.html')
 
 
 def vifExists(request, vif_number):
@@ -537,6 +583,7 @@ def irfExists(request, irf_number):
         return HttpResponse(existingIrf.irf_number)
     except:
         return HttpResponse("Irf does not exist")
+
 
 
 class BatchView(View):
@@ -573,3 +620,8 @@ class BatchView(View):
             response = HttpResponse(f.getvalue(), content_type="application/zip")
             response['Content-Disposition'] = 'attachment; filename=irfPhotos ' + startDate + ' to ' + endDate + '.zip'
             return response
+
+
+class SysAdminSettingsViewSet(viewsets.ModelViewSet):
+    queryset = FuzzyMatching.objects.all()
+    serializer_class = SysAdminSettingsSerializer
