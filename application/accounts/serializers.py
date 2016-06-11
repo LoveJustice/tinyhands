@@ -5,20 +5,18 @@ from accounts.models import Account, DefaultPermissionsSet
 class AccountsSerializer(serializers.ModelSerializer):
     has_been_activated = serializers.BooleanField(source='has_usable_password', read_only=True)
 
-    class Meta:
-        model = Account
-        exclude = ['password', 'activation_key', 'groups','user_permissions', 'is_staff', 'is_superuser']
-
     def create(self, validated_data):
         account = Account.objects.create(**validated_data)
         try:
-		account.send_activation_email()
-	except:
-		account.delete()
-		raise serializers.ValidationError({'email': ["Email address is invalid"]})
-		
-	return account
+            account.send_activation_email()
+        except:
+            account.delete()
+            raise serializers.ValidationError({'email': ["Email address is invalid"]})
+        return account
 
+    class Meta:
+        model = Account
+        exclude = ['password', 'activation_key', 'groups','user_permissions', 'is_staff', 'is_superuser']
 
 class DefaultPermissionsSetSerializer(serializers.ModelSerializer):
     is_used_by_accounts = serializers.BooleanField(read_only=True);

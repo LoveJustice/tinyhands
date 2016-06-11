@@ -9,6 +9,7 @@ ALLOWED_HOSTS = [
 
 ADMINS = (('Ben Duggan', 'benaduggan@gmail.com'))
 SITE_DOMAIN = 'tinyhandsdreamsuite.org'
+CLIENT_DOMAIN = 'tinyhandsdreamsuite.org/beta/#'
 
 SPREADSHEET_NAME = 'Dream Suite - THN Data'
 IRF_WORKSHEET_NAME = 'IRF Entry'
