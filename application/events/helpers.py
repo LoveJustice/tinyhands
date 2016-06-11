@@ -30,7 +30,7 @@ def get_repeated(qs, start, end):
                         title=item.title, start_date=check_start, end_date=check_end,
                         start_time=item.start_time, end_time=item.end_time, location=item.location,
                         description=item.description, is_repeat=item.is_repeat, repetition=item.repetition,
-                        ends=item.ends)
+                        ends=item.ends, id=item.id)
                     items.append(temp_event)
                 check_start = add_repeat(check_start, repetition)
                 check_end = add_repeat(check_end, repetition)
@@ -72,6 +72,7 @@ def dashboard_event_list(qs_list):
     for item in qs_list:
         ends = item.ends.strftime('%Y-%m-%d') if item.ends else ''
         temp = {
+            'id': item.id,
             'location': item.location,
             'description': item.description,
             'is_repeat': item.is_repeat,
@@ -96,7 +97,9 @@ def event_list(qs_list):
     ls = []
     for item in qs_list:
         ends = item.ends.strftime('%Y-%m-%d') if item.ends else ''
+        print item.id
         temp = {
+            'id': item.id,
             'location': item.location,
             'description': item.description,
             'is_repeat': item.is_repeat,
