@@ -370,8 +370,8 @@ class IntercepteeForm(DreamSuitePaperForm):
         self.fields['full_name'] = CharField(required=False)
         self.fields['age'] = IntegerField(required=False)
         self.fields['photo'] = ImageField(required=False)
-        self.fields['gender'] = ChoiceField(choices=[ (None, '----',), ('m', 'M'), ('f', 'F'),], required=False)
-        
+        self.fields['gender'] = ChoiceField(choices=[ (None, '----',), ('M', 'M'), ('F', 'F'),], required=False)
+
         self.fields['phone_contact'] = CharField(required=False)
 
         try:
