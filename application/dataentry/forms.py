@@ -6,7 +6,7 @@ from .models import (BorderStation, Address1,
                      Interceptee, Person, InterceptionRecord,
                      Address2,
                      VictimInterviewLocationBox, VictimInterviewPersonBox, VictimInterview)
-from django.forms import CharField, ImageField, IntegerField
+from django.forms import CharField, ImageField, IntegerField, ChoiceField
 
 from .fields import Address1Field, Address2Field, FormNumberField
 
@@ -370,7 +370,8 @@ class IntercepteeForm(DreamSuitePaperForm):
         self.fields['full_name'] = CharField(required=False)
         self.fields['age'] = IntegerField(required=False)
         self.fields['photo'] = ImageField(required=False)
-        self.fields['gender'] = CharField(max_length=4, required=False)
+        self.fields['gender'] = ChoiceField(choices=[ (None, '----',), ('m', 'M'), ('f', 'F'),], required=False)
+        
         self.fields['phone_contact'] = CharField(required=False)
 
         try:
