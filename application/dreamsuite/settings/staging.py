@@ -7,8 +7,10 @@ ALLOWED_HOSTS = [
     'staging.tinyhandsdreamsuite.org',
 ]
 
+DEBUG = True
+
 # ADMINS = [('Tom Nurkkala', 'tnurkkala@cse.taylor.edu')]
-ADMINS = [('Ben Duggan', 'benaduggan@gmail.com')]
+ADMINS = [('Ben Duggan', 'benaduggan@gmail.com'), ('Austin Munn', "austin@tinyhands.org")]
 SITE_DOMAIN = 'staging.tinyhandsdreamsuite.org'
 CLIENT_DOMAIN = 'staging.tinyhandsdreamsuite.org/beta/#'
 

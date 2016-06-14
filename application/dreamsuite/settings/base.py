@@ -6,7 +6,7 @@ import logging.config
 
 BASE_DIR = Path(__file__).ancestor(3)
 
-SERVER_EMAIL = 'tnurkkala@cse.taylor.edu'
+SERVER_EMAIL = 'austin@tinyhands.org'
 
 ADMIN_EMAIL_SENDER = SERVER_EMAIL
 DEFAULT_FROM_EMAIL = SERVER_EMAIL
