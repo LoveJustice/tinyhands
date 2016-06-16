@@ -2,12 +2,10 @@ import zipfile
 from datetime import date, datetime
 from time import strptime, mktime
 import csv
-import io
 import json
 import os
 import re
 import shutil
-import urllib
 import logging
 
 from StringIO import StringIO
@@ -39,7 +37,7 @@ from fuzzywuzzy import process
 from dataentry.models import BorderStation, Address2, Address1, Interceptee, Person, FuzzyMatching, InterceptionRecord, VictimInterview, VictimInterviewLocationBox, VictimInterviewPersonBox
 from dataentry.forms import IntercepteeForm, InterceptionRecordForm, Address2Form, Address1Form, VictimInterviewForm, VictimInterviewLocationBoxForm, VictimInterviewPersonBoxForm
 from dataentry import csv_io
-from dataentry.serializers import Address1Serializer, Address2Serializer, InterceptionRecordListSerializer, VictimInterviewListSerializer, SysAdminSettingsSerializer, PersonSerializer, IntercepteeSerializer, InterceptionRecordSerializer
+from dataentry.serializers import Address1Serializer, Address2Serializer, InterceptionRecordListSerializer, VictimInterviewListSerializer, VictimInterviewSerializer, SysAdminSettingsSerializer, PersonSerializer, IntercepteeSerializer, InterceptionRecordSerializer
 from dataentry.google_sheets import GoogleSheetClientThread
 
 from accounts.mixins import PermissionsRequiredMixin
@@ -472,7 +470,7 @@ class Address2ViewSet(viewsets.ModelViewSet):
     permissions_required = ['permission_address2_manage']
     filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
     search_fields = ('name',)
-    ordering_fields = ('name', 'address1__name', 'longitude', 'latitude', 'verified', 'canonical_name__name')
+    ordering_fields = ('name', 'address1__name', 'longitude', 'latitude', 'level', 'verified', 'canonical_name__name')
     ordering = ('name',)
 
 
@@ -554,6 +552,14 @@ class VictimInterviewViewSet(viewsets.ModelViewSet):
         'date_time_entered_into_system',
         'date_time_last_updated',)
     ordering = ('vif_number',)
+
+
+class VictimInterviewDetailViewSet(viewsets.ModelViewSet):
+    queryset = VictimInterview.objects.all()
+    serializer_class = VictimInterviewSerializer
+    permission_classes = (IsAuthenticated, HasPermission, HasDeletePermission,)
+    permissions_required = ['permission_vif_view']
+    delete_permissions_required = ['permission_vif_delete']
 
     def destroy(self, request, *args, **kwargs):
         vif_id = kwargs['pk']

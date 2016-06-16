@@ -44,7 +44,7 @@ class Address2Serializer(serializers.ModelSerializer):
         instance.latitude = validated_data.get('latitude', instance.latitude)
         instance.longitude = validated_data.get('longitude', instance.longitude)
         instance.level = validated_data.get('level', instance.level)
-	instance.verified = validated_data.get('verified', instance.verified)
+        instance.verified = validated_data.get('verified', instance.verified)
         instance.save()
         return instance
 
@@ -73,6 +73,7 @@ class InterceptionRecordListSerializer(serializers.ModelSerializer):
             'date_time_entered_into_system',
             'date_time_last_updated'
         ]
+
     view_url = serializers.HyperlinkedIdentityField(
         view_name='interceptionrecord_detail',
         read_only=True
@@ -169,8 +170,6 @@ class InterceptionRecordSerializer(serializers.ModelSerializer):
         return warnings
 
 
-
-
 class VictimInterviewListSerializer(serializers.ModelSerializer):
     class Meta:
         model = VictimInterview
@@ -187,6 +186,7 @@ class VictimInterviewListSerializer(serializers.ModelSerializer):
             'date_time_entered_into_system',
             'date_time_last_updated'
         ]
+
     view_url = serializers.HyperlinkedIdentityField(
         view_name='victiminterview_detail',
         read_only=True
@@ -201,9 +201,22 @@ class VictimInterviewListSerializer(serializers.ModelSerializer):
     )
 
 
+class VictimInterviewPersonBoxSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = VictimInterview
+        exclude = []
+
+
+class VictimInterviewLocationBoxSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = VictimInterview
+        exclude = []
+
+
 class SysAdminSettingsSerializer(serializers.ModelSerializer):
     class Meta:
         model = FuzzyMatching
+
 
 class PersonSerializer(serializers.ModelSerializer):
     class Meta:
@@ -216,6 +229,19 @@ class PersonSerializer(serializers.ModelSerializer):
             'address2',
             'phone_contact',
         ]
+
+
+class VictimInterviewSerializer(serializers.ModelSerializer):
+    victim_guardian_address1 = Address1Serializer(read_only=True)
+    victim_guardian_address2 = Address2Serializer(read_only=True)
+    victim = PersonSerializer(read_only=True)
+
+    class Meta:
+        model = VictimInterview
+        read_only_fields = ('person_boxes','location_boxes')
+        exclude = []
+        depth = 1
+
 
 class IntercepteeSerializer(serializers.ModelSerializer):
     class Meta:
