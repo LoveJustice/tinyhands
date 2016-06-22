@@ -67,9 +67,8 @@ urlpatterns = [
         url(r'^budget/(?P<parent_pk>\d+)/staff_salary/$', StaffSalaryViewSet.as_view({'get': 'budget_calc_retrieve'}), name="rest_api_staff_salary_detail_api"),
         url(r'^budget/(?P<parent_pk>\d+)/staff_salary/(?P<pk>\d+)/$', StaffSalaryViewSet.as_view({'put': 'update', 'delete': 'destroy'}), name="rest_api_staff_salary_detail_api"),
 
-        url(r'^budget/money_distribution/(?P<pk>\d+)/$', MoneyDistribution.as_view({'get': 'get_people_needing_form', 'post': 'send_emails'}), name="rest_api_money_distribution_api"),
-        url(r'^budget/money_distribution_pdf/(?P<pk>\d+)/$', MoneyDistributionFormPDFView.as_view(), name="rest_api_money_distribution_pdf"),
-        url(r'^budget/money_distribution/view/(?P<pk>\d+)/$', money_distribution_view, name="rest_api_money_distribution_view"),
+        url(r'^mdf/(?P<pk>\d+)/$', MoneyDistribution.as_view({'get': 'retrieve', 'post': 'send_emails'}), name="MDFViewSet"),
+        url(r'^mdf/(?P<pk>\d+)/pdf/$', MoneyDistributionFormPDFView.as_view(), name="MdfPdf"),
 
         # Old Budget viewsets for the old django site. needs to change eventually - ask ben duggan about it
         # Budget URLs

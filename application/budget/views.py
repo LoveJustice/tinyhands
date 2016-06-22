@@ -15,6 +15,7 @@ from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 from django.views.generic import ListView, DeleteView, View
 from django.conf import settings
+from django.core.urlresolvers import reverse
 
 
 from braces.views import LoginRequiredMixin
@@ -274,18 +275,21 @@ class BudgetCalcDeleteView(DeleteView, LoginRequiredMixin, PermissionsRequiredMi
 
 
 class MoneyDistribution(viewsets.ViewSet):
-    def get_people_needing_form(self, request, pk):
-        border_station = BorderStation.objects.get(pk=pk)
+    def retrieve(self, request, pk):
+        border_station = BorderStationBudgetCalculation.objects.get(pk=pk).border_station
         staff = border_station.staff_set.all().filter(receives_money_distribution_form=True)
         committee_members = border_station.committeemember_set.all().filter(receives_money_distribution_form=True).all()
 
         staff_serializer = StaffSerializer(staff, many=True)
         committee_members_serializer = CommitteeMemberSerializer(committee_members, many=True)
-        return Response({"staff_members": staff_serializer.data, "committee_members": committee_members_serializer.data})
+
+        pdf_url = settings.SITE_DOMAIN + reverse('MdfPdf', kwargs={"pk": pk})
+
+        return Response({"staff_members": staff_serializer.data, "committee_members": committee_members_serializer.data, "pdf_url": pdf_url})
 
     def send_emails(self, request, pk):
         staff_ids = request.data['staff_ids']
-        budget_calc_id = int(request.data["budget_calc_id"])
+        budget_calc_id = pk
         committee_ids = request.data['committee_ids']
 
         # send the emails
@@ -340,6 +344,7 @@ class PDFView(View, LoginRequiredMixin, PermissionsRequiredMixin):
 
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = "filename=%s" % self.get_filename()
+        response['X-Frame-Options'] = "*"
 
         doc.process(response)
         return response

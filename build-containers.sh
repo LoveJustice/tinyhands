@@ -4,8 +4,8 @@ cp -a application/media build/nginx/
 
 TAG=$(date +%s)
 
-docker build -t tusoftwarestudio/dreamsuite-nginx:$TAG ./build/nginx/
-docker build -t tusoftwarestudio/dreamsuite:$TAG .
+docker build --no-cache -t tusoftwarestudio/dreamsuite-nginx:$TAG ./build/nginx/
+docker build --no-cache -t tusoftwarestudio/dreamsuite:$TAG .
 
 docker-compose run --rm web python manage.py collectstatic -l --noinput
 
