@@ -17,9 +17,6 @@ import time
 from models import (InterceptionRecord, VictimInterview)
 
 from django.conf import settings
-#from csv_io import get_vif_export_rows
-#from csv_io import get_irf_export_rows
-#from csv_io import import_irf_row
 
 logger = logging.getLogger(__name__);
 
