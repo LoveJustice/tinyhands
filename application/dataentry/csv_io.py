@@ -14,7 +14,7 @@ from django.utils.timezone import make_naive, localtime, make_aware
 from django.conf import settings
 
 #####################################################
-# Note: import logic is not complete in this version
+# Note: VIF import logic is not complete in this version
 #####################################################
 
 def no_translation(title):
@@ -534,6 +534,18 @@ class VictimHowExpensePaidCsv:
 class BrokerPromisesCsv(FormatCsvFields):
     def __init__(self, data_name, title, formatString):
         FormatCsvFields.__init__(self, data_name, title, formatString)
+        
+    def importField(self, instance, csv_map, title_prefix = None, name_translation = no_translation):
+        errs = []
+        if title_prefix is not None:
+            column_title = self.title.format(title_prefix)
+        else:
+            column_title = self.title
+        
+        value = csv_map[name_translation(column_title)]
+        if value is not None and value != "":
+            FormatCsvFields.importField(self, instance, csv_map, title_prefix = title_prefix, name_translation = name_translation)
+        return errs
 
     def exportField(self, instance):
         tmp = getattr(instance, self.data_name)
@@ -1001,8 +1013,6 @@ def import_irf_row(irfDict):
         if errs is not None:
             errList.extend(errs)
      
-    # Need to verify the following       
-    irf.date_form_received = irf.date_time_entered_into_system
     irf.form_entered_by = entered_by
     
     interceptee_list = []
