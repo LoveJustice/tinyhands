@@ -95,14 +95,14 @@ class MoneyDistributionWebTests(WebTest, TestCase):
         self.staff = StaffFactory.create(border_station=self.budget_calc_sheet.border_station)
         self.committee_member = CommitteeMemberFactory.create(border_station=self.budget_calc_sheet.border_station)
 
-        request = self.app.get(reverse('money_distribution_api', kwargs={"pk": self.budget_calc_sheet.border_station.pk}), user=self.superuser)
+        request = self.app.get(reverse('money_distribution_api', kwargs={"pk": self.budget_calc_sheet.pk}), user=self.superuser)
         staff_data = request.json['staff_members']
         committee_data = request.json['committee_members']
 
         staff_ids = [int(staff['id']) for staff in staff_data]
         committee_ids = [int(committee['id']) for committee in committee_data]
 
-        response = self.client.post('/api/budget/money_distribution/' + str(self.budget_calc_sheet.pk) + '/', {"budget_calc_id": self.budget_calc_sheet.pk, "staff_ids": staff_ids, "committee_ids": committee_ids})
+        response = self.client.post('/api/mdf/' + str(self.budget_calc_sheet.pk) + '/', {"budget_calc_id": self.budget_calc_sheet.pk, "staff_ids": staff_ids, "committee_ids": committee_ids})
 
         self.assertEquals('"Emails Sent!"', response.content)
         self.assertEquals(len(mail.outbox), 2)
@@ -115,14 +115,14 @@ class MoneyDistributionWebTests(WebTest, TestCase):
         self.staff2 = StaffFactory.create(border_station=self.budget_calc_sheet.border_station)
         self.committee_member2 = CommitteeMemberFactory.create(border_station=self.budget_calc_sheet.border_station)
 
-        request = self.app.get(reverse('money_distribution_api', kwargs={"pk": self.budget_calc_sheet.border_station.pk}), user=self.superuser)
+        request = self.app.get(reverse('money_distribution_api', kwargs={"pk": self.budget_calc_sheet.pk}), user=self.superuser)
         staff_data = request.json['staff_members']
         committee_data = request.json['committee_members']
 
         staff_ids = [staff['id'] for staff in staff_data]
         committee_ids = [committee['id'] for committee in committee_data]
 
-        response = self.client.post('/api/budget/money_distribution/' + str(self.budget_calc_sheet.pk) + '/', {"budget_calc_id": self.budget_calc_sheet.pk, "staff_ids": staff_ids, "committee_ids": committee_ids})
+        response = self.client.post('/api/mdf/' + str(self.budget_calc_sheet.pk) + '/', {"budget_calc_id": self.budget_calc_sheet.pk, "staff_ids": staff_ids, "committee_ids": committee_ids})
 
         self.assertEquals('"Emails Sent!"', response.content)
         self.assertEquals(len(mail.outbox), 4)
