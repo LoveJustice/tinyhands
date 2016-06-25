@@ -628,6 +628,45 @@ class BatchView(View):
             return response
 
 
+class PhotoExporter(viewsets.GenericViewSet):
+    permission_classes = (IsAuthenticated, HasPermission)
+    permissions_required = ['permission_irf_view']
+
+    def getPhotos(self, startDate, endDate):
+        start = timezone.make_aware(datetime.fromtimestamp(mktime(strptime(startDate, '%m-%d-%Y'))), timezone.get_default_timezone())
+        end = timezone.make_aware(datetime.fromtimestamp(mktime(strptime(endDate, '%m-%d-%Y'))), timezone.get_default_timezone())
+
+        return Interceptee.objects.filter(interception_record__date_time_of_interception__gte=start,
+                                          interception_record__date_time_of_interception__lte=end).values_list('photo', 'person__full_name', 'interception_record__irf_number')
+
+    def countPhotosInDateRange(self, request, startDate, endDate):
+            return Response({"count": self.getPhotos(startDate, endDate).count()})
+
+    def exportPhotos(self, request, startDate, endDate):
+        photos = list(self.getPhotos(startDate, endDate))
+        if len(photos) == 0:
+            return Response({'detail' : "No photos found in specified date range"}, status = status.HTTP_400_BAD_REQUEST)
+
+        for i in range(len(photos)):
+            photos[i] = [str(x) for x in photos[i]]
+
+        f = StringIO()
+        imagezip = zipfile.ZipFile(f, 'w')
+        for photoTuple in photos:
+            if photoTuple[0] == '':
+                continue
+            try:
+                imageFile = open(settings.MEDIA_ROOT + '/' + photoTuple[0])
+                imagezip.writestr(photoTuple[2] + '-' + photoTuple[1] + '.jpg', imageFile.read())
+            except:
+                logger.error('Could not find photo: ' + photoTuple[1] + '.jpg')
+        imagezip.close()  # Close
+
+        response = HttpResponse(f.getvalue(), content_type="application/zip")
+        response['Content-Disposition'] = 'attachment; filename=irfPhotos ' + startDate + ' to ' + endDate + '.zip'
+        return response
+
+
 class SysAdminSettingsViewSet(viewsets.ModelViewSet):
     queryset = FuzzyMatching.objects.all()
     serializer_class = SysAdminSettingsSerializer
