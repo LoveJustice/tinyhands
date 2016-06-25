@@ -14,7 +14,7 @@ MIDDLEWARE_CLASSES += [
 CORS_ORIGIN_ALLOW_ALL = True
 INSTALLED_APPS.append('debug_toolbar')
 
-SITE_DOMAIN = 'localhost'
+SITE_DOMAIN = 'http://localhost'
 CLIENT_DOMAIN = 'localhost:3000/#'
 
 SPREADSHEET_NAME = 'Tinyhands'

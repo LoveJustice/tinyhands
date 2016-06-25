@@ -37,7 +37,7 @@ budget_detail = OldBudgetViewSet.as_view({
 })
 
 distribution_detail = MoneyDistribution.as_view({
-    'get': 'get_people_needing_form',
+    'get': 'retrieve',
     'post': 'send_emails'
 })
 
