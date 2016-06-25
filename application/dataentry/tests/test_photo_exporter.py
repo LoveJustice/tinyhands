@@ -4,11 +4,6 @@ from rest_framework.test import APITestCase
 from accounts.tests.factories import BadIrfUserFactory, SuperUserFactory
 from dataentry.tests.factories import IntercepteeFactory
 
-# urls =
-# ["PhotoExporter",
-# 'PhotoExporterCount'
-# ]
-# url(r'^photos/(?P<startDate>(\d+)-(\d+)-\d+)/(?P<endDate>\d+-\d+-\d+)/count/$', PhotoExporter.as_view({'get': 'countPhotosInDateRange'}), name="PhotoExporterCount"),
 
 class PhotoTest(APITestCase):
     def setUp(self):
