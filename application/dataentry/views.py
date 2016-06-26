@@ -637,7 +637,7 @@ class PhotoExporter(viewsets.GenericViewSet):
         end = timezone.make_aware(datetime.fromtimestamp(mktime(strptime(endDate, '%m-%d-%Y'))), timezone.get_default_timezone())
 
         return Interceptee.objects.filter(interception_record__date_time_of_interception__gte=start,
-                                          interception_record__date_time_of_interception__lte=end).values_list('photo', 'person__full_name', 'interception_record__irf_number')
+                                          interception_record__date_time_of_interception__lte=end).exclude(photo="").values_list('photo', 'person__full_name', 'interception_record__irf_number')
 
     def countPhotosInDateRange(self, request, startDate, endDate):
             return Response({"count": self.getPhotos(startDate, endDate).count()})
