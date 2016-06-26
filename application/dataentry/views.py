@@ -653,14 +653,12 @@ class PhotoExporter(viewsets.GenericViewSet):
         f = StringIO()
         imagezip = zipfile.ZipFile(f, 'w')
         for photoTuple in photos:
-            if photoTuple[0] == '':
-                continue
             try:
                 imageFile = open(settings.MEDIA_ROOT + '/' + photoTuple[0])
                 imagezip.writestr(photoTuple[2] + '-' + photoTuple[1] + '.jpg', imageFile.read())
             except:
                 logger.error('Could not find photo: ' + photoTuple[1] + '.jpg')
-        imagezip.close()  # Close
+        imagezip.close()
 
         response = HttpResponse(f.getvalue(), content_type="application/zip")
         response['Content-Disposition'] = 'attachment; filename=irfPhotos ' + startDate + ' to ' + endDate + '.zip'
