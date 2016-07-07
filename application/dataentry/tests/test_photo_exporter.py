@@ -37,4 +37,16 @@ class PhotoTest(APITestCase):
         # get
         url = reverse('PhotoExporterCount', kwargs={"startDate": "8-4-2007", "endDate": "8-4-2013"})
         response = self.client.delete(url)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)\
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        # With Unauthenticated User
+        self.bad_user = BadIrfUserFactory.create()
+        self.client.force_authenticate(user=None)
+
+        url = reverse('PhotoExporter', kwargs={"startDate": "8-4-2007", "endDate": "8-4-2013"})
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+        url = reverse('PhotoExporterCount', kwargs={"startDate": "8-4-2007", "endDate": "8-4-2013"})
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
