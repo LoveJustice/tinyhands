@@ -1,7 +1,7 @@
 import datetime
 import factory
 from factory.django import DjangoModelFactory
-from factory.fuzzy import FuzzyInteger, FuzzyFloat, FuzzyChoice, FuzzyDate
+from factory.fuzzy import FuzzyInteger, FuzzyFloat, FuzzyChoice, FuzzyDateTime
 import pytz
 
 from accounts.tests.factories import SuperUserFactory
@@ -16,7 +16,7 @@ class IrfFactory(DjangoModelFactory):
     date_form_received = datetime.datetime(2012, 1, 1, tzinfo=pytz.UTC)
 
     irf_number = factory.Sequence(lambda n: 'BHD{0}'.format(n))
-    date_time_of_interception = datetime.datetime(2011, 12, 12, tzinfo=pytz.UTC)
+    date_time_of_interception = FuzzyDateTime(datetime.datetime(2008, 1, 1, tzinfo=pytz.UTC), datetime.datetime(2012, 1, 1, tzinfo=pytz.UTC))
 
     location = "Nepal"
     staff_name = "Joe Test"
