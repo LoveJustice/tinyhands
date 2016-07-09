@@ -2,6 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.core import serializers
 from django.http import HttpResponse
 from django.shortcuts import render
+from django.conf import settings
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -13,7 +14,7 @@ from dataentry.models import BorderStation, InterceptionRecord
 
 @login_required
 def main_dashboard(request):
-    return render(request, "portal/main_dashboard.html")
+    return render(request, "portal/main_dashboard.html", {'settings': settings})
 
 
 @login_required
