@@ -91,6 +91,7 @@ class GoogleSheetClientThread (Thread):
             
             self.import_spreadsheet_key = self.find_spreadsheet_by_name(settings.IMPORT_SPREADSHEET_NAME)
             self.irf_import_worksheet_key = self.find_worksheet_by_name(self.import_spreadsheet_key, settings.IRF_IMPORT_WORKSHEET_NAME)
+            self.vif_import_worksheet_key = self.find_worksheet_by_name(self.import_spreadsheet_key, settings.VIF_IMPORT_WORKSHEET_NAME)
         else:
             logger.error("Unable to get token")
 
@@ -128,6 +129,7 @@ class GoogleSheetClientThread (Thread):
                     self.work_queue.put(work);
                 else:
                     logger.error("GoogleSheetClientThread.run Failed to process " + work[0] + " " + work[1] + " on attempt " + str(work[2]) + " - giving up")
+                    logger.error(traceback.format_exc())
                     self.send_exception_mail(traceback.format_exc())
 
     def build_list_entry(self, header_row, data_row):
@@ -183,6 +185,7 @@ class GoogleSheetClientThread (Thread):
             logger.info("Could not find IRF " + the_irf_number)
             irfs = []
         new_rows = csv_io.get_irf_export_rows(irfs)
+        logger.info(new_rows)
         self.update_sheet(self.irf_worksheet_key, the_irf_number, new_rows)
 
     def internal_update_vif(self, the_vif_number):
@@ -238,6 +241,50 @@ class GoogleSheetClientThread (Thread):
                 feed.entry[idx].set_value(self.import_issues_name, "")
                 
             self.client.update(feed.entry[idx])
+            
+    @staticmethod
+    def import_vifs():
+        logger.debug("Entry");
+        if GoogleSheetClientThread.instance is None:
+            GoogleSheetClientThread.instance = GoogleSheetClientThread()
+
+        if GoogleSheetClientThread.instance.have_credentials:
+            logger.info("Starting import from Google Sheet")
+            GoogleSheetClientThread.instance.internal_import_vif()
+            logger.info("Waiting for export to complete")
+            GoogleSheetClientThread.shutdown()
+            while not GoogleSheetClientThread.instance.work_queue.empty():
+                time.sleep (5)
+            logger.info("Finished import from Google Sheet")
+            
+    def internal_import_vif(self):
+        feed = self.client.get_list_feed(self.import_spreadsheet_key, self.vif_import_worksheet_key, query=ListQuery(sq=self.import_status_name + "== Ready"))
+        logger.debug("Number of entries to import =" + str(len(feed.entry)))
+        for idx in range(len(feed.entry)):
+            vifData = feed.entry[idx].to_dict()
+        
+            errList = csv_io.import_vif_row(vifData)
+            if len(errList) > 0:
+                if errList[0] == 'VIF already exists':
+                    feed.entry[idx].set_value(self.import_status_name, "Existing")
+                    feed.entry[idx].set_value(self.import_issues_name, errList[0])
+                else:
+                    logger.debug("Rejected " + vifData['vifnumber'])
+                    feed.entry[idx].set_value(self.import_status_name, "Rejected")
+                    sep = ""
+                    err_string = ""
+                    for err in errList:
+                        err_string = err_string + sep + err
+                        sep = '\n'
+                        
+                    feed.entry[idx].set_value(self.import_issues_name, err_string)
+                    
+            else:
+                feed.entry[idx].set_value(self.import_status_name, "Imported")
+                feed.entry[idx].set_value(self.import_issues_name, "")
+                
+            self.client.update(feed.entry[idx])
+            
             
     @staticmethod
     def audit_export_forms():

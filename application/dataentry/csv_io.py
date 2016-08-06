@@ -8,6 +8,9 @@ from models import Address2
 from models import Person
 from models import Interceptee
 from models import InterceptionRecord
+from models import VictimInterview
+from models import VictimInterviewLocationBox
+from models import VictimInterviewPersonBox
 from dataentry.google_sheets import GoogleSheetClientThread
 from accounts.models import Account
 from django.utils.timezone import make_naive, localtime, make_aware
@@ -65,8 +68,16 @@ class DateTimeCsvField:
 
         value = csv_map[name_translation(column_title)]
         if value is not None:
-            parsed_value = datetime.strptime(value, "%m/%d/%Y %H:%M:%S")
-            parsed_value = make_aware(parsed_value)
+            try:
+                parsed_value = datetime.strptime(value, "%m/%d/%Y %H:%M:%S")
+                parsed_value = make_aware(parsed_value)
+            except:
+                try:
+                    parsed_value = datetime.strptime(value, "%Y-%m-%d %H:%M:%S")
+                    parsed_value = make_aware(parsed_value)
+                except:
+                    errs.append(column_title)
+                
             setattr(instance, self.data_name, parsed_value)
         else:
             errs.append(column_title)
@@ -93,9 +104,12 @@ class DateCsvField:
 
         value = csv_map[name_translation(column_title)]
         if value is not None:
-            parsed_value = datetime.strptime(value, "%m/%d/%Y")
-            parsed_value = make_aware(parsed_value)
-            setattr(instance, self.data_name, parsed_value)
+            try:
+                parsed_value = datetime.strptime(value, "%m/%d/%Y")
+                parsed_value = make_aware(parsed_value)
+                setattr(instance, self.data_name, parsed_value)
+            except:
+                errs.append(column_title)
         else:
             errs.append(column_title)
         
@@ -256,8 +270,6 @@ class MapFieldCsv:
                 setattr(instance, field_name, True)
             else:
                 errs.append(column_title)
-        else:
-            errs.append(column_title)
             
         return errs
 
@@ -287,26 +299,26 @@ class FormatCsvFields:
         tmp = csv_map[name_translation(column_title)]
         if tmp is None or tmp == "":
             return errs
-
-        parse_map = tmp.parse(self.formatString)
-        if len(parse_map) != len(self.additional) +1:
+       
+        parse_map = parse(self.formatString, tmp)
+        if len(parse_map.named) != len(self.additional) +1:
             errs.append(column_title + ':Unexpected number of values parsed from "' +
                     tmp + '"');
             return errs
 
-        tmp_val = parse_map[self.data_name]
+        tmp_val = parse_map.named[self.data_name]
         if tmp_val is None:
             errs.append(column_title + ':Unable to parse data field value from "' + tmp + '"')
             return errs
 
-        instance.setattr(self.data_name, tmp_val)
+        setattr(instance, self.data_name, tmp_val)
 
         for add_name in self.additional:
             tmp_val = parse_map[add_name]
             if tmp_val is None:
                 errs.append(column_title + ':Unable to parse value for additional field ' +
                         add_name + ' from value="' + tmp +'"')
-            instance.setattr(add_name, tmp_val)
+            setattr(instance, add_name, tmp_val)
             
         return errs
 
@@ -412,11 +424,12 @@ class Address2CsvField:
 # Export/import value from a field.  Map identifies the mapping from the database value
 # to the export value
 class MapValueCsvField:
-    def __init__(self, data_name, title, value_map, export_default=""):
+    def __init__(self, data_name, title, value_map, export_default="", required_nonempty=False):
         self.data_name = data_name
         self.title = title
         self.value_map = value_map
         self.export_default = export_default
+        self.required_nonempty = required_nonempty
 
     def importField(self, instance, csv_map, title_prefix = None, name_translation = no_translation):
         errs = []
@@ -433,7 +446,10 @@ class MapValueCsvField:
             else:
                 errs.append(column_title)
         else:
-            setattr(instance, self.data_name, value)
+            if self.required_nonempty:
+                errs.append(column_title)
+            else:
+                setattr(instance, self.data_name, value)
             
         return errs
 
@@ -507,16 +523,29 @@ class VictimHowExpensePaidCsv:
         
         value = csv_map[name_translation(column_title)]
         if value is not None:
+            found = False
             for msg in self.msgs.keys():
                 fmt = self.msgs[msg]
                 rv = parse(fmt, value)
                 if rv is not None:
-                    instance.setattr(instance, msg, True)
-                    if len(rv) > 0:
-                        instance.victim_how_expense_was_paid_amount = rv[0]
+                    found = True
+                    setattr(instance, msg, True)
+                    if len(rv.fixed) > 0:
+                        if (rv.fixed[0] == 'None'):
+                            break
+                        else:
+                            instance.victim_how_expense_was_paid_amount = rv.fixed[0]
+                            break
+            if not found:
+                # if the amount was blank in the export, the parse will fail.
+                # check to see if the format matches with the empty string where the amount would be
+                for msg in self.msgs.keys():
+                    fmt = self.msgs[msg];
+                    fmt = fmt.replace("{}","");
+                    if value == fmt:
+                        setattr(instance, msg, True)
                         break
-        else:
-            errs.append(column_title)
+                        
             
         return errs
 
@@ -526,8 +555,11 @@ class VictimHowExpensePaidCsv:
             if bool_val is not None:
                 if bool_val:
                     fmt = self.msgs[msg]
+                    amt = instance.victim_how_expense_was_paid_amount
+                    if amt is None:
+                        amt = ""
 
-                    return fmt.format(instance.victim_how_expense_was_paid_amount)
+                    return fmt.format(amt)
 
         return ""
 
@@ -555,47 +587,101 @@ class BrokerPromisesCsv(FormatCsvFields):
         return FormatCsvFields.exportField(self, instance)
 
 class VictimWhereGoingCsv:
+    india_prefix = "victim_where_going_india"
+    gulf_prefix = "victim_where_going_gulf"  
+    just_india = "India"
+    just_gulf = "Gulf / Other"    
+    unknown_in_india = "Unknown location in India"
+    unknown_in_gulf = "Unknown location in Gulf / Other"
+    
+    india_other_suffix = ", India"
+    
     def __init__(self, data_name, title):
         self.data_name = data_name
         self.title = title
 
     def importField(self, instance, csv_map, title_prefix = None, name_translation = no_translation):
-        errs = []  
-        errs.append("VictimWhereGoingCsv import not yet implemented")         
+        errs = []
+        if title_prefix is not None:
+            column_title = self.title.format(title_prefix)
+        else:
+            column_title = self.title
+        
+        found = False
+        value = csv_map[name_translation(column_title)]
+        for field in instance._meta.fields:
+            if field.verbose_name == value:
+                if field.name.startswith(VictimWhereGoingCsv.india_prefix):
+                    instance.victim_where_going_region_india = True
+                    setattr(instance, field.name, True)
+                    found = True
+                    break
+                elif field.name.startswith(VictimWhereGoingCsv.gulf_prefix) : 
+                    instance.victim_where_going_region_gulf = True
+                    setattr(instance, field.name, True)
+                    found = True
+                    break
+        
+        if found == False:
+            if value is None:
+                pass
+            elif value == VictimWhereGoingCsv.unknown_in_india:
+                instance.victim_where_going_india_didnt_know = True
+                instance.victim_where_going_region_india = True
+            elif value == VictimWhereGoingCsv.just_india:
+                instance.victim_where_going_region_india = True
+            elif value.endswith(VictimWhereGoingCsv.india_other_suffix):
+                instance.victim_where_going_region_india = True
+                instance.victim_where_going_india_other = True
+                instance.victim_where_going_india_other_value = value[:-len(VictimWhereGoingCsv.india_other_suffix)]
+            elif value == VictimWhereGoingCsv.unknown_in_gulf:
+                instance.victim_where_going_region_gulf = True
+                instance.victim_where_going_gulf_didnt_know = True
+            elif value == VictimWhereGoingCsv.just_gulf:
+                instance.victim_where_going_region_gulf = True
+            elif value != "":
+                # Didn't match any other value - so we have to assume
+                # it is gulf other
+                instance.victim_where_going_region_gulf = True
+                instance.victim_where_going_gulf_other = True
+                instance.victim_where_going_gulf_other_value = value
+             
         return errs
 
     def exportField(self, instance):
         if instance.victim_where_going_region_india:
             if instance.victim_where_going_india_didnt_know:
-                return "Unknown location in India"
+                return VictimWhereGoingCsv.unknown_in_india
             elif instance.victim_where_going_india_other:
                 other_value = instance.victim_where_going_india_other_value
                 if other_value is None or other_value == "":
-                    return "India"
+                    return VictimWhereGoingCsv.just_india
                 else:
-                    return other_value + ", India"
+                    return other_value + VictimWhereGoingCsv.india_other_suffix
             else:
-                val = self.verbose_name(instance, "victim_where_going_india", None)
+                val = self.verbose_name(instance, VictimWhereGoingCsv.india_prefix, None)
                 if val is None:
-                    return "India"
+                    return VictimWhereGoingCsv.just_india
                 else:
                     return val
 
         elif instance.victim_where_going_region_gulf:
             if instance.victim_where_going_gulf_didnt_know:
-                return "Unknown location in Gulf / Other"
+                return VictimWhereGoingCsv.unknown_in_gulf
             elif instance.victim_where_going_gulf_other:
                 other_value = instance.victim_where_going_gulf_other_value
                 if other_value is None or other_value == "":
-                    return "Gulf / Other"
+                    return VictimWhereGoingCsv.just_gulf
                 else:
                     return other_value
             else:
-                val = self.verbose_name(instance, 'victim_where_going_gulf', None)
+                val = self.verbose_name(instance, VictimWhereGoingCsv.gulf_prefix, None)
                 if val is None:
-                    return "Gulf / Other"
+                    return VictimWhereGoingCsv.just_gulf
                 else:
                     return val
+        else:
+            return ""
 
     def verbose_name(self, instance, prefix, default):
         for field in instance._meta.fields:
@@ -605,8 +691,16 @@ class VictimWhereGoingCsv:
                     if isinstance(field, models.BooleanField) or isinstance(field, models.NullBooleanField):
                         return field.verbose_name
         return default
+    
+    
 
 class LegalActionCsv:
+    no_action = "No legal action has been taken"
+    fir_action = "An FIR has been filed"
+    doe_action = "A DoFE complaint has been filed"
+    both_action = "An FIR and a DoFE complaint have both been filed"
+    
+    
     def __init__(self, data_name, title):
         self.data_name = data_name
         self.title = title
@@ -622,32 +716,33 @@ class LegalActionCsv:
         if value is None:
             errs.append(column_title +":Value not found")
             return errs
-        if value == "No legal action has been taken":
+        if value == LegalActionCsv.no_action:
             instance.legal_action_against_traffickers_no = True
-        elif value == "An FIR and a DoFE complaint have both been filed":
+        elif value == LegalActionCsv.both_action:
             instance.legal_action_against_traffickers_fir_filed = True
             instance.legal_action_against_traffickers_dofe_complaint = True
-        elif value == "An FIR has been filed":
+        elif value == LegalActionCsv.fir_action:
             instance.legal_action_against_traffickers_fir_filed = True
-        elif value == "A DoFE complaint has been filed":
+        elif value == LegalActionCsv.doe_action:
             instance.legal_action_against_traffickers_dofe_complaint = True
             
         return errs
 
     def exportField(self, instance):
         if instance.legal_action_against_traffickers_no:
-            return "No legal action has been taken"
+            return LegalActionCsv.no_action
         if instance.legal_action_against_traffickers_fir_filed and instance.legal_action_against_traffickers_dofe_complaint:
-            return "An FIR and a DoFE complaint have both been filed"
+            return LegalActionCsv.both_action
         if instance.legal_action_against_traffickers_fir_filed:
-            return "An FIR has been filed"
+            return LegalActionCsv.fir_action
         if instance.legal_action_against_traffickers_dofe_complaint:
-            return "A DoFE complaint has been filed"
+            return LegalActionCsv.doe_action
 
 class FirDofeCsv:
     def __init__(self, data_name, title):
         self.data_name = data_name
         self.title = title
+        self.separator = ", "
 
     def importField(self, instance, csv_map, title_prefix = None, name_translation = no_translation):
         errs = []
@@ -662,7 +757,7 @@ class FirDofeCsv:
             return
 
         if value != "":
-            parts = value.partition(",")
+            parts = value.partition(self.separator)
             if parts[2] != "":
                 instance.legal_action_fir_against_value = parts[0]
                 instance.legal_action_dofe_against_value = parts[2]
@@ -679,7 +774,7 @@ class FirDofeCsv:
     def exportField(self, instance):
         value = ""
         if instance.legal_action_fir_against_value != "" and instance.legal_action_dofe_against_value != "":
-            value += instance.legal_action_fir_against_value + ", " + instance.legal_action_dofe_against_value
+            value += instance.legal_action_fir_against_value + self.separator + instance.legal_action_dofe_against_value
         elif instance.legal_action_fir_against_value != "":
             value += instance.legal_action_fir_against_value
         elif instance.legal_action_dofe_against_value != "":
@@ -899,7 +994,7 @@ victim_data = [
 ]
 
 person_box_person_data = [
-    MapValueCsvField("gender", "{}Gender", { "Male":"m", "Female":"f"}),
+    MapValueCsvField("gender", "{}Gender", { "Male":"M", "Female":"F"}, required_nonempty=True),
     CopyCsvField("full_name", "{}Name", True),
     Address1CsvField("address1", "{}Address1"),
     Address2CsvField("address2", "{}Address2", "address1"),
@@ -909,7 +1004,7 @@ person_box_person_data = [
 
 interceptee_person_data = [
     CopyCsvField("full_name", "{}Name", True),
-    MapValueCsvField('gender', "{}Gender", { "Male":"M", "Female":"F"}, export_default="Female"),
+    MapValueCsvField('gender', "{}Gender", { "Male":"M", "Female":"F"}, export_default="Female", required_nonempty=True),
     CopyCsvField("age", "{}Age", True),
     Address1CsvField("address1", "{}Address1"),
     Address2CsvField("address2", "{}Address2", "address1"),
@@ -1004,14 +1099,21 @@ def import_irf_row(irfDict):
     
     irf = InterceptionRecord()
     for field in irf_data:
-        errs = field.importField(irf, irfDict, name_translation = GoogleSheetClientThread.spreadsheet_header_from_export_header)
-        if errs is not None:
-            errList.extend(errs)
+        try:
+            errs = field.importField(irf, irfDict, name_translation = GoogleSheetClientThread.spreadsheet_header_from_export_header)
+            if errs is not None:
+                errList.extend(errs)
+        except:
+            errList.append(field.title + ":Unexpected error - contact developer")
+
             
     for field in additional_irf_import_data:
-        errs = field.importField(irf, irfDict, name_translation = GoogleSheetClientThread.spreadsheet_header_from_export_header)
-        if errs is not None:
-            errList.extend(errs)
+        try:
+            errs = field.importField(irf, irfDict, name_translation = GoogleSheetClientThread.spreadsheet_header_from_export_header)
+            if errs is not None:
+                errList.extend(errs)
+        except:
+            errList.append(field.title + ":Unexpected error - contact developer")       
      
     irf.form_entered_by = entered_by
     
@@ -1028,30 +1130,36 @@ def import_irf_row(irfDict):
         interceptee = Interceptee()
         person = Person()
         for field in interceptee_import_data:
-            if field.title in person_titles:
-                errs = field.importField(person, irfDict, prefix, 
-                        name_translation = GoogleSheetClientThread.spreadsheet_header_from_export_header)
-            else:
-                errs = field.importField(interceptee, irfDict, prefix, 
-                        name_translation = GoogleSheetClientThread.spreadsheet_header_from_export_header)
-            
-            errList.extend(errs)
+            try:
+                if field.title in person_titles:
+                    errs = field.importField(person, irfDict, prefix, 
+                            name_translation = GoogleSheetClientThread.spreadsheet_header_from_export_header)
+                else:
+                    errs = field.importField(interceptee, irfDict, prefix, 
+                            name_translation = GoogleSheetClientThread.spreadsheet_header_from_export_header)          
+                if errs is not None:
+                    errList.extend(errs)
+            except:
+                errList.append(field.title.format(prefix) + ":Unexpected error - contact developer")
         
         interceptee_list.append(interceptee)
         person_list.append(person)
         
     if len(errList) == 0:
-        with transaction.atomic():
-            irf.save()
-            irfdb = InterceptionRecord.objects.get(id=irf.id)
-            for idx in range(len(person_list)):
-                person = person_list[idx]
-                interceptee = interceptee_list[idx]
-                person.save()
-                persondb = Person.objects.get(id=person.id)
-                interceptee.interception_record = irfdb
-                interceptee.person = persondb
-                interceptee.save()
+        try:
+            with transaction.atomic():
+                irf.save()
+                irfdb = InterceptionRecord.objects.get(id=irf.id)
+                for idx in range(len(person_list)):
+                    person = person_list[idx]
+                    interceptee = interceptee_list[idx]
+                    person.save()
+                    persondb = Person.objects.get(id=person.id)
+                    interceptee.interception_record = irfdb
+                    interceptee.person = persondb
+                    interceptee.save()
+        except:
+            errList.append("Unexpected error saving IRF in database")
                 
         GoogleSheetClientThread.update_irf(irf_nbr)        
         
@@ -1135,45 +1243,45 @@ vif_data = [
     BooleanCsvField("permission_to_use_photograph", "Photo Permission", "Permission was given to use photo", ""),
 
     CopyCsvField("full_name", "1.1 Name", True),
-    MapValueCsvField("gender", "1.2 Gender", { "male":"M", "female":"F"}, export_default="female"),
+    MapValueCsvField("gender", "1.2 Gender", { "male":"M", "female":"F"}, export_default="female", required_nonempty=True),
 
     Address1CsvField("address1", "1.3 Address1"),
     Address2CsvField("address2", "Address2", "address1"),
 
-    CopyCsvField("victim_address_ward", "Ward", True),
+    CopyCsvField("victim_address_ward", "Ward", False),
 
-    CopyCsvField("phone_contact", "Phone Number", True),
+    CopyCsvField("phone_contact", "Phone Number", False),
     CopyCsvField("age", "1.4 Age", True),
     CopyCsvField("victim_height", "1.5 Height", True),
     CopyCsvField("victim_weight", "1.6 Weight", True),
 
     GroupBooleanCsv("victim_caste", "1.7 Caste"),
-    CopyCsvField("victim_caste_other_value", "Other Caste", True),
+    CopyCsvField("victim_caste_other_value", "Other Caste", False),
 
     GroupBooleanCsv("victim_occupation", "1.8 Occupation"),
-    CopyCsvField("victim_occupation_other_value", "Other Occupation", True),
+    CopyCsvField("victim_occupation_other_value", "Other Occupation", False),
 
     GroupBooleanCsv("victim_marital_status", "1.9 Marital Status"),
     GroupBooleanCsv("victim_lives_with", "1.10 Live With"),
-    CopyCsvField("victim_lives_with_other_value", "Live With Other", True),
+    CopyCsvField("victim_lives_with_other_value", "Live With Other", False),
     CopyCsvField("victim_num_in_family", "1.11 Number of Family Members", True),
 
     GroupBooleanCsv("victim_primary_guardian", "1.12 Guardian"),
     Address1CsvField("victim_guardian_address1", "1.13 Guardian Address1"),
     Address2CsvField("victim_guardian_address2", "Guardian Address2", "victim_guardian_address1"),
-    CopyCsvField("victim_guardian_address_ward", "Guardian Ward", True),
-    CopyCsvField("victim_guardian_phone", "Guardian Phone Number", True),
+    CopyCsvField("victim_guardian_address_ward", "Guardian Ward", False),
+    CopyCsvField("victim_guardian_phone", "Guardian Phone Number", False),
     GroupBooleanCsv("victim_parents_marital_status", "1.14 Parents' Marital Status"),
 
     GroupBooleanCsv("victim_education_level", "1.15 Education Level"),
     BooleanCsvField("victim_is_literate", "1.16 Literacy", "Literate", "Illiterate"),
 
     GroupBooleanCsv("migration_plans", "2.1 Purpose of Going Abroad"),
-    CopyCsvField("migration_plans_job_other_value", "Other Job Abroad", True),
-    CopyCsvField("migration_plans_other_value", "Other Reason for Going Abroad", True),
+    CopyCsvField("migration_plans_job_other_value", "Other Job Abroad", False),
+    CopyCsvField("migration_plans_other_value", "Other Reason for Going Abroad", False),
 
     GroupBooleanCsv("primary_motivation", "2.2 Motive for Going Abroad"),
-    CopyCsvField("primary_motivation_other_value", "Other Motive", True),
+    CopyCsvField("primary_motivation_other_value", "Other Motive", False),
     VictimWhereGoingCsv("victim_where_going", "Destination"),
 
     BooleanCsvField("manpower_involved","3.1 Involvement of Manpower",
@@ -1181,14 +1289,14 @@ vif_data = [
     BooleanCsvField("victim_recruited_in_village", "3.2 Recruited from Village",
             "Was recruited from village", "Was not recruited from village"),
     GroupBooleanCsv("brokers_relation_to_victim", "3.3 Broker's Relation to Victim"),
-    CopyCsvField("brokers_relation_to_victim_other_value", "Broker's Relation Other", True),
+    CopyCsvField("brokers_relation_to_victim_other_value", "Broker's Relation Other", False),
 
     FormatCsvFields("victim_married_to_broker_years", "3.4 Duration of Marriage to Broker",
             "Married to Broker for {victim_married_to_broker_years} years and {victim_married_to_broker_months} months",
             "victim_married_to_broker_months"),
     GroupBooleanCsv("victim_how_met_broker", "3.5 Met Broker"),
-    CopyCsvField("victim_how_met_broker_other_value", "Met Broker Other", True),
-    CopyCsvField("victim_how_met_broker_mobile_explanation", "3.6 Explanation if by mobile", True),
+    CopyCsvField("victim_how_met_broker_other_value", "Met Broker Other", False),
+    CopyCsvField("victim_how_met_broker_mobile_explanation", "3.6 Explanation if by mobile", False),
 
     FormatCsvFields("victim_how_long_known_broker_years", "3.7 Length of time known Broker",
             "Known Broker for {victim_how_long_known_broker_years} Years and {victim_how_long_known_broker_months} Months",
@@ -1210,7 +1318,7 @@ vif_data = [
     BooleanCsvField("victim_first_time_crossing_border", "4.1 First Border Crossing",
             "First time crossing the border", "Not their first time crossing the border"),
     GroupBooleanCsv("victim_primary_means_of_travel", "4.2 Primary Means of Travel"),
-    CopyCsvField("victim_primary_means_of_travel_other_value", "Other Means of Travel", True),
+    CopyCsvField("victim_primary_means_of_travel_other_value", "Other Means of Travel", False),
     BooleanCsvField("victim_stayed_somewhere_between", "4.3 Transit Stay",
             "Stayed somewhere in transit", "Did not stay anywhere in transit"),
     FormatCsvFields("victim_how_long_stayed_between_days", "4.4 Transit Stay Duration",
@@ -1218,10 +1326,10 @@ vif_data = [
               "victim_how_long_stayed_between_start_date"),
 
     BooleanCsvField("victim_was_hidden", "4.5 Transit Hide", "Was kept hidden",""),
-    CopyCsvField("victim_was_hidden_explanation", "Transit Hide Explanation", True),
+    CopyCsvField("victim_was_hidden_explanation", "Transit Hide Explanation", False),
     BooleanCsvField("victim_was_free_to_go_out", "4.6 Transit Free", "Was free to go outside",
             "Was not free to go outside"),
-    CopyCsvField("victim_was_free_to_go_out_explanation", "Transit Free Explanation", True),
+    CopyCsvField("victim_was_free_to_go_out_explanation", "Transit Free Explanation", False),
 
     CopyCsvField("how_many_others_in_situation", "4.7 Number of Others", True),
 
@@ -1238,8 +1346,8 @@ vif_data = [
     BooleanCsvField("abuse_happened_threats","Threats","Threats",""),
     BooleanCsvField("abuse_happened_denied_proper_food","Denied Proper Food","Denied Proper Food",""),
     BooleanCsvField("abuse_happened_forced_to_take_drugs","Forced to Take Drugs","Forced to Take Drugs",""),
-    CopyCsvField("abuse_happened_by_whom", "Person Responsible", True),
-    CopyCsvField("abuse_happened_explanation", "Explanation of Abuse", True),
+    CopyCsvField("abuse_happened_by_whom", "Person Responsible", False),
+    CopyCsvField("abuse_happened_explanation", "Explanation of Abuse", False),
 
     MapFieldCsv("victim_traveled_with_broker_companion", "4.12 Traveled with Companion",
                 {
@@ -1298,7 +1406,7 @@ vif_data = [
     CopyCsvField("tiny_hands_rating_shelter_staff", "Rating of Shelter Staff", True),
     CopyCsvField("tiny_hands_rating_trafficking_awareness", "Rating of Trafficking Awareness", True),
     CopyCsvField("tiny_hands_rating_shelter_accommodations", "Rating of Shelter Accommodations", True),
-    CopyCsvField("how_can_we_serve_you_better", "6.6 How Can We Better Serve You", True),
+    CopyCsvField("how_can_we_serve_you_better", "6.6 How Can We Better Serve You", False),
 
     BooleanCsvField("guardian_knew_was_travelling_to_india", "7.1 Guardian Know",
             "Guardian knew they were travelling to India",
@@ -1357,8 +1465,8 @@ vif_data = [
     FirDofeCsv("fir_and_dofe_values", "Legal Action Taken Against"),
 
     GroupBooleanCsv("reason_no_legal", "8.2 Reason for No Legal Action"),
-    CopyCsvField("reason_no_legal_interference_value", "Person Interfering with Legal Action", True),
-    CopyCsvField("reason_no_legal_other_value", "Other Reason for No Legal Action", True),
+    CopyCsvField("reason_no_legal_interference_value", "Person Interfering with Legal Action", False),
+    CopyCsvField("reason_no_legal_other_value", "Other Reason for No Legal Action", False),
 
     GroupBooleanCsv("interviewer_recommendation", "8.3 Recommendation"),
 
@@ -1368,7 +1476,7 @@ vif_data = [
 
     BooleanCsvField("has_signature", "Staff Signature on Form", "Form is signed by staff", "Form is not signed by staff"),
 
-    CopyCsvField("case_notes", "Case Notes", True)
+    CopyCsvField("case_notes", "Case Notes", False)
 ]
 
 person_box_prefix = "PB%d - "
@@ -1376,15 +1484,15 @@ person_box_prefix = "PB%d - "
 person_box_data = [
     GroupBooleanCsv("who_is_this_relationship", "{}Relationship"),
     GroupBooleanCsv("who_is_this_role", "{}Role"),
-    CopyCsvField("address_ward", "{}Ward", True),
+    CopyCsvField("address_ward", "{}Ward", False),
     CopyCsvField("height", "{}Height", True),
     CopyCsvField("weight", "{}Weight", True),
     GroupBooleanCsv("physical_description", "{}Physical Description"),
-    CopyCsvField("appearance_other", "{}Appearance", True),
+    CopyCsvField("appearance_other", "{}Appearance", False),
     GroupBooleanCsv("occupation", "{}Occupation"),
-    CopyCsvField("occupation_other_value", "{}Other Occupation", True),
+    CopyCsvField("occupation_other_value", "{}Other Occupation", False),
     GroupBooleanCsv("political_party", "{}Political Affiliation"),
-    CopyCsvField("where_spends_time", "{}How to Locate/Contact", True),
+    CopyCsvField("where_spends_time", "{}How to Locate/Contact", False),
     GroupBooleanCsv("interviewer_believes", "{}Interviewer Believes"),
     GroupBooleanCsv("victim_believes", "{}Victim Believes"),
     FormatCsvFields("associated_with_place_value", "{}Association with Locations",
@@ -1398,19 +1506,19 @@ location_box_data = [
     GroupBooleanCsv("what_kind_place", "{}Type of Place"),
     Address2CsvField("address2", "{}Address2","address1"),
     Address1CsvField("address1", "{}Address1",),
-    CopyCsvField("phone", "{}Phone", True),
-    CopyCsvField("signboard", "{}Signboard", True),
-    CopyCsvField("location_in_town", "{}Location in Town", True),
-    CopyCsvField("color", "{}Color", True),
-    CopyCsvField("compound_wall", "{}Compound Wall", True),
-    CopyCsvField("number_of_levels", "{}Levels", True),
-    CopyCsvField("roof_color", "{}Roof Color", True),
-    CopyCsvField("gate_color", "{}Gate Color", True),
-    CopyCsvField("person_in_charge", "{}Person in Charge", True),
-    CopyCsvField("roof_type", "{}Roof Type", True),
-    CopyCsvField("nearby_landmarks", "{}Nearby Landmarks", True),
-    CopyCsvField("nearby_signboards", "{}Nearby Signboards", True),
-    CopyCsvField("other", "{}Other", True),
+    CopyCsvField("phone", "{}Phone", False),
+    CopyCsvField("signboard", "{}Signboard", False),
+    CopyCsvField("location_in_town", "{}Location in Town", False),
+    CopyCsvField("color", "{}Color", False),
+    CopyCsvField("compound_wall", "{}Compound Wall", False),
+    CopyCsvField("number_of_levels", "{}Levels", False),
+    CopyCsvField("roof_color", "{}Roof Color", False),
+    CopyCsvField("gate_color", "{}Gate Color", False),
+    CopyCsvField("person_in_charge", "{}Person in Charge", False),
+    CopyCsvField("roof_type", "{}Roof Type", False),
+    CopyCsvField("nearby_landmarks", "{}Nearby Landmarks", False),
+    CopyCsvField("nearby_signboards", "{}Nearby Signboards", False),
+    CopyCsvField("other", "{}Other", False),
     GroupBooleanCsv("interviewer_believes", "{}Interviewer Believes"),
     GroupBooleanCsv("victim_believes", "{}Victim Believes"),
     FormatCsvFields("associated_with_person_value", "{}Association with People",
@@ -1455,8 +1563,8 @@ def get_vif_export_rows(vifs):
 
 
 
-        pbs = list(vif.person_boxes.all())
-        lbs = list(vif.location_boxes.all())
+        pbs = list(vif.person_boxes.all().order_by('id'))
+        lbs = list(vif.location_boxes.all().order_by('id'))
 
         for idx in range(max(len(pbs), len(lbs))):
             if idx < len(pbs):
@@ -1468,6 +1576,8 @@ def get_vif_export_rows(vifs):
                 for field in person_box_data:
                     row.append(field.exportField(pbs_instance))
             else:
+                for field in person_box_person_data:
+                    row.append("")
                 for field in person_box_data:
                     row.append("")
 
@@ -1482,3 +1592,131 @@ def get_vif_export_rows(vifs):
         rows.append(row)
 
     return rows
+
+def import_vif_row(vifDict):
+    errList = []
+    
+    vif_nbr = vifDict[GoogleSheetClientThread.spreadsheet_header_from_export_header(vif_data[0].title)]
+    if vif_nbr is None:
+        errList.append("Unable to find data for VIF Number")
+        return errList
+    else:
+        try:
+            VictimInterview.objects.get(vif_number=vif_nbr)
+            errList.append("VIF already exists")
+            return errList
+        except:
+            pass
+    
+    person = Person()
+    vif = VictimInterview()
+    for field in vif_data:
+        try:
+            if field.title in victim_data:
+                errs = field.importField(person, vifDict, "", 
+                        name_translation = GoogleSheetClientThread.spreadsheet_header_from_export_header)
+            else:
+                errs = field.importField(vif, vifDict, "", 
+                        name_translation = GoogleSheetClientThread.spreadsheet_header_from_export_header)
+            if errs is not None:
+                errList.extend(errs)
+        except:
+            errList.append(field.title + ":Unexpected error - contact developer");
+            
+     
+    location_boxes=[]
+    person_boxes=[]
+    person_box_persons=[] 
+    for idx in range(1,10):
+        
+        prefix = person_box_prefix % idx
+        found = False
+        for field in person_box_person_data:
+            tmp = vifDict.get(GoogleSheetClientThread.spreadsheet_header_from_export_header(field.title.format(prefix)))
+            if tmp is not None:
+                found = True
+                break
+        if found:
+            tmp_person = Person()
+            for field in person_box_person_data:
+                try:
+                    errs = field.importField(tmp_person, vifDict, prefix, 
+                            name_translation = GoogleSheetClientThread.spreadsheet_header_from_export_header)
+                    if errs is not None:
+                        errList.extend(errs)     
+                except:
+                    errList.append(field.title.format(prefix) + ":Unexpected error - contact developer")
+            
+            person_box_persons.append(tmp_person)
+               
+            tmp_person_box = VictimInterviewPersonBox()
+            for field in person_box_data:
+                try:
+                    errs = field.importField(tmp_person_box, vifDict, prefix, 
+                            name_translation = GoogleSheetClientThread.spreadsheet_header_from_export_header)
+                    if errs is not None:
+                        errList.extend(errs)
+                except:
+                    errList.append(field.title.format(prefix) + ":Unexpected error - contact developer")
+                
+            person_boxes.append(tmp_person_box)
+
+        prefix = location_box_prefix % idx
+        found = False
+        for field in location_box_data:
+            tmp = vifDict.get(GoogleSheetClientThread.spreadsheet_header_from_export_header(field.title.format(prefix)))
+            if tmp is not None:
+                found = True
+                break
+         
+        if found: 
+            tmp_location = VictimInterviewLocationBox()   
+            # The order that fields are imported is not important except that Address1 fields
+            # must be imported before Address2 fields
+            for field in location_box_data:
+                if isinstance(field, Address1CsvField):
+                    try:
+                        errs = field.importField(tmp_location, vifDict, prefix, 
+                                name_translation = GoogleSheetClientThread.spreadsheet_header_from_export_header)
+                        if errs is not None:
+                            errList.extend(errs)
+                    except:
+                        errList.append(field.title.format(prefix) + ":Unexpected error - contact developer")
+                    
+            for field in location_box_data:
+                if not isinstance(field, Address1CsvField):
+                    try:
+                        errs = field.importField(tmp_location, vifDict, prefix, 
+                                name_translation = GoogleSheetClientThread.spreadsheet_header_from_export_header)
+                        if errs is not None:
+                            errList.extend(errs)
+                    except:
+                        errList.append(field.title.format(prefix) + ":Unexpected error - contact developer")
+                    
+            location_boxes.append(tmp_location)           
+        
+    if len(errList) == 0:
+        try:
+            with transaction.atomic():
+                person.save()
+                persondb = Person.objects.get(id=person.id)
+                vif.victim = persondb
+                vif.save()
+                vifdb = VictimInterview.objects.get(id=vif.id)
+                for idx in range(len(person_boxes)):
+                    person_box_persons[idx].save()
+                    person_box_person_db = Person.objects.get(id=person_box_persons[idx].id)
+                    person_boxes[idx].victim_interview = vifdb
+                    person_boxes[idx].person= person_box_person_db
+                    person_boxes[idx].save()
+                    
+                    
+                for idx in range (len(location_boxes)):
+                    location_boxes[idx].victim_interview = vifdb
+                    location_boxes[idx].save()
+        except:
+            errList.append("Unexpected error saving VIF in database - contact developer")
+                          
+        GoogleSheetClientThread.update_vif(vif_nbr)        
+        
+    return errList
