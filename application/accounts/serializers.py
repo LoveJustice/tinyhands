@@ -4,6 +4,7 @@ from accounts.models import Account, DefaultPermissionsSet
 
 class AccountsSerializer(serializers.ModelSerializer):
     has_been_activated = serializers.BooleanField(source='has_usable_password', read_only=True)
+    user_designation_name = serializers.SerializerMethodField(read_only=True)
 
     def create(self, validated_data):
         account = Account.objects.create(**validated_data)
@@ -13,6 +14,9 @@ class AccountsSerializer(serializers.ModelSerializer):
             account.delete()
             raise serializers.ValidationError({'email': ["Email address is invalid"]})
         return account
+
+    def get_user_designation_name(self, obj):
+        return obj.user_designation.name;
 
     class Meta:
         model = Account

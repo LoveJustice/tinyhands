@@ -56,6 +56,15 @@ class BorderStationSerializer(serializers.ModelSerializer):
     class Meta:
         model = BorderStation
 
+    number_of_interceptions = serializers.SerializerMethodField(read_only=True)
+    number_of_staff = serializers.SerializerMethodField(read_only=True)
+
+    def get_number_of_interceptions(self, obj):
+        return Interceptee.objects.filter(interception_record__irf_number__startswith=obj.station_code, kind='v').count()
+
+    def get_number_of_staff(self, obj):
+        return obj.staff_set.all().count()
+
 
 class InterceptionRecordListSerializer(serializers.ModelSerializer):
     class Meta:
