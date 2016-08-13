@@ -10,6 +10,7 @@ from models import Interceptee
 from models import InterceptionRecord
 from dataentry.google_sheets import GoogleSheetClientThread
 from accounts.models import Account
+from dataentry_signals import irf_done
 from django.utils.timezone import make_naive, localtime, make_aware
 from django.conf import settings
 
@@ -237,6 +238,7 @@ class BooleanValuePairCsv:
 # Export/import a single string from a set of boolean fields.  Map identifies the set of
 # fields and the value to be exported for each
 class MapFieldCsv:
+    set_no_field = "SET_NO_FIELD"
     def __init__(self, data_name, title, value_to_field_map):
         self.data_name = data_name
         self.title = title
@@ -253,7 +255,8 @@ class MapFieldCsv:
         if value is not None:
             field_name = self.value_to_field_map[value]
             if field_name is not None:
-                setattr(instance, field_name, True)
+                if field_name != MapFieldCsv.set_no_field:
+                    setattr(instance, field_name, True)
             else:
                 errs.append(column_title)
         else:
@@ -263,9 +266,10 @@ class MapFieldCsv:
 
     def exportField(self, instance):
         for key, val in self.value_to_field_map.items():
-            value = getattr(instance, val)
-            if value:
-                return key
+            if val != MapFieldCsv.set_no_field:
+                value = getattr(instance, val)
+                if value:
+                    return key
 
         return ""
 
@@ -427,10 +431,13 @@ class MapValueCsvField:
         
         value = csv_map[name_translation(column_title)]
         if value is not None:
-            mapped_value = self.value_map[value]
-            if mapped_value is not None:
-                setattr(instance, self.data_name, mapped_value)
-            else:
+            try:
+                mapped_value = self.value_map[value]
+                if mapped_value is not None:
+                    setattr(instance, self.data_name, mapped_value)
+                else:
+                    errs.append(column_title)
+            except:
                 errs.append(column_title)
         else:
             setattr(instance, self.data_name, value)
@@ -808,7 +815,8 @@ irf_data = [
     MapFieldCsv("Noticed", "How Was Interception Made",
             {
                 "Interception made as a result of a contact": "contact_noticed",
-                "Interception made as a result of staff": "staff_noticed"
+                "Interception made as a result of staff": "staff_noticed",
+                "Unknown": MapFieldCsv.set_no_field
             }),
     GroupBooleanCsv("which_contact", "Who was the contact"),
     CopyCsvField("which_contact_other_value", "Other contact", False),
@@ -899,7 +907,7 @@ victim_data = [
 ]
 
 person_box_person_data = [
-    MapValueCsvField("gender", "{}Gender", { "Male":"m", "Female":"f"}),
+    MapValueCsvField("gender", "{}Gender", { "Male":"m", "Female":"f", "Unknown":"U"}),
     CopyCsvField("full_name", "{}Name", True),
     Address1CsvField("address1", "{}Address1"),
     Address2CsvField("address2", "{}Address2", "address1"),
@@ -909,7 +917,7 @@ person_box_person_data = [
 
 interceptee_person_data = [
     CopyCsvField("full_name", "{}Name", True),
-    MapValueCsvField('gender', "{}Gender", { "Male":"M", "Female":"F"}, export_default="Female"),
+    MapValueCsvField('gender', "{}Gender", { "Male":"M", "Female":"F", "Unknown":"U"}, export_default="Unknown"),
     CopyCsvField("age", "{}Age", True),
     Address1CsvField("address1", "{}Address1"),
     Address2CsvField("address2", "{}Address2", "address1"),
@@ -921,7 +929,7 @@ interceptee_data.extend(interceptee_person_data)
 interceptee_data.extend([CopyCsvField("relation_to", "{}Relationship to...", False)])
 
 interceptee_import_data = [
-    CopyCsvField("kind", "{}Kind", True),
+    MapValueCsvField("kind", "{}Kind", {"v":"v", "t":"t"}),
 ]
 interceptee_import_data.extend(interceptee_data)
 
@@ -983,7 +991,6 @@ def import_irf_row(irfDict):
     errList = []
     
     entered_by = Account.objects.get(email=settings.IMPORT_ACCOUNT_EMAIL)
-    
     
     person_titles = []
     for field in interceptee_person_data:
@@ -1052,8 +1059,8 @@ def import_irf_row(irfDict):
                 interceptee.interception_record = irfdb
                 interceptee.person = persondb
                 interceptee.save()
-                
-        GoogleSheetClientThread.update_irf(irf_nbr)        
+
+        irf_done.send(sender=__file__, irf_number=irf.irf_number, irf=irf, interceptees=interceptee_list)    
         
     return errList
 
@@ -1135,7 +1142,7 @@ vif_data = [
     BooleanCsvField("permission_to_use_photograph", "Photo Permission", "Permission was given to use photo", ""),
 
     CopyCsvField("full_name", "1.1 Name", True),
-    MapValueCsvField("gender", "1.2 Gender", { "male":"M", "female":"F"}, export_default="female"),
+    MapValueCsvField("gender", "1.2 Gender", { "male":"M", "female":"F", "unknown":"U"}, export_default="Unknown"),
 
     Address1CsvField("address1", "1.3 Address1"),
     Address2CsvField("address2", "Address2", "address1"),

@@ -39,7 +39,7 @@
 <br/>
 
 {% if trafficker_in_custody != '' %}
-    <p>According to the form, {{ trafficker_in_custody }} was taken into custody</p>
+    <p>According to the form, {{ trafficker_in_custody }} taken into custody</p>
 {% endif %}
 
 <p>To view the IRF click here: <a href="{{ site }}{% url 'interceptionrecord_detail' irf.id %}">Link to Interception Record Form</a></p>
