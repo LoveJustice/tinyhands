@@ -509,7 +509,7 @@ class InterceptionRecordViewSet(viewsets.ModelViewSet):
         irf = InterceptionRecord.objects.get(id=irf_id)
         rv = super(viewsets.ModelViewSet, self).destroy(request, args, kwargs)
         logger.debug("After IRF destroy " + irf.irf_number)
-        irf_done.send_robust(sender=self.__class__, irf_number=irf.irf_number, None, None)
+        irf_done.send_robust(sender=self.__class__, irf_number=irf.irf_number, irf=None, interceptees=None)  
         return rv
 
     def list(self, request, *args, **kwargs):
