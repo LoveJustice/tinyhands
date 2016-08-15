@@ -6,7 +6,12 @@ from dataentry.models import Address1, Address2, InterceptionRecord, VictimInter
 def related_items_helper(self, obj):
     related_items_list = []
 
-    relationships = obj._meta.get_all_related_objects()
+    relationships = [
+        f for f in obj._meta.get_fields()
+        if (f.one_to_many or f.one_to_one)
+        and f.auto_created and not f.concrete
+    ]
+
     for relationship in relationships:
         related_items_list.append({
             "type": relationship.related_model._meta.model_name,
