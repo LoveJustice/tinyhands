@@ -23,7 +23,7 @@ from django.utils import timezone
 from django.views.generic import ListView, View, DeleteView, CreateView, TemplateView
 
 from rest_framework import status
-from rest_framework.decorators import list_route
+from rest_framework.decorators import list_route, detail_route
 from rest_framework import filters
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
@@ -37,7 +37,7 @@ from fuzzywuzzy import process
 from dataentry.models import BorderStation, Address2, Address1, Interceptee, Person, FuzzyMatching, InterceptionRecord, VictimInterview, VictimInterviewLocationBox, VictimInterviewPersonBox
 from dataentry.forms import IntercepteeForm, InterceptionRecordForm, Address2Form, Address1Form, VictimInterviewForm, VictimInterviewLocationBoxForm, VictimInterviewPersonBoxForm
 from dataentry import csv_io
-from dataentry.serializers import Address1Serializer, Address2Serializer, InterceptionRecordListSerializer, VictimInterviewListSerializer, VictimInterviewSerializer, SysAdminSettingsSerializer, PersonSerializer, IntercepteeSerializer, InterceptionRecordSerializer
+from dataentry.serializers import Address1Serializer, Address1RelatedItemsSerializer, Address2Serializer, Address2RelatedItemsSerializer, InterceptionRecordListSerializer, VictimInterviewListSerializer, VictimInterviewSerializer, SysAdminSettingsSerializer, PersonSerializer, IntercepteeSerializer, InterceptionRecordSerializer
 from dataentry.google_sheets import GoogleSheetClientThread
 
 from accounts.mixins import PermissionsRequiredMixin
@@ -473,6 +473,17 @@ class Address2ViewSet(viewsets.ModelViewSet):
     ordering_fields = ('name', 'address1__name', 'longitude', 'latitude', 'level', 'verified', 'canonical_name__name')
     ordering = ('name',)
 
+    @detail_route()
+    def related_items(self, request, pk):
+        try:
+            address = Address2.objects.get(pk=pk)
+        except:
+            logger.error('Could not find Address2 with the following id: ' + pk)
+            return Response({'detail' : "Address2 not found"}, status = status.HTTP_404_NOT_FOUND)
+
+        serializer = Address2RelatedItemsSerializer(address)
+        return Response(serializer.data)
+
 
 class Address1ViewSet(viewsets.ModelViewSet):
     queryset = Address1.objects.all()
@@ -488,6 +499,17 @@ class Address1ViewSet(viewsets.ModelViewSet):
     def list_all(self, request):
         address1s = Address1.objects.all()
         serializer = self.get_serializer(address1s, many=True)
+        return Response(serializer.data)
+
+    @detail_route()
+    def related_items(self, request, pk):
+        try:
+            address = Address1.objects.get(pk=pk)
+        except:
+            logger.error('Could not find Address1 with the following id: ' + pk)
+            return Response({'detail' : "Address1 not found"}, status = status.HTTP_404_NOT_FOUND)
+
+        serializer = Address1RelatedItemsSerializer(address)
         return Response(serializer.data)
 
 
