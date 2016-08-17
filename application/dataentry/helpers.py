@@ -2,10 +2,10 @@
 """
     This Helper method returns a dictionary of the related items
     to a given object in the following format:
-    {
+    [{
         "type": "<model_name>",
         "ids": [1,2,3],
-    }
+    }]
 """
 def related_items_helper(self, obj):
     related_items_list = []
