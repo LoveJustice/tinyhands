@@ -130,38 +130,40 @@ class Address1Test(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_address1_403_if_doesnt_have_permission(self):
-            self.bad_user = BadAddress2UserFactory.create()
-            self.client.force_authenticate(user=self.bad_user)
+        self.bad_user = BadAddress2UserFactory.create()
+        self.client.force_authenticate(user=self.bad_user)
 
-            address2 = CanonicalNameFactory.create()
+        address2 = CanonicalNameFactory.create()
 
-            # get detail
-            url = reverse('Address1detail', args=[address2.id])
-            response = self.client.get(url)
-            self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        # get detail
+        url = reverse('Address1detail', args=[address2.id])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-            # put detail
-            url = reverse('Address1detail', args=[address2.id])
-            response = self.client.put(url)
-            self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        # put detail
+        url = reverse('Address1detail', args=[address2.id])
+        response = self.client.put(url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-            # delete detail
-            url = reverse('Address1detail', args=[address2.id])
-            response = self.client.delete(url)
-            self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        # delete detail
+        url = reverse('Address1detail', args=[address2.id])
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-            # get
-            url = reverse('Address1')
-            response = self.client.get(url)
-            self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-            # post
-            url = reverse('Address1')
-            response = self.client.post(url)
-            self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        url = reverse('Address1RelatedItems', args=[address2.id])
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
 
+        # get
+        url = reverse('Address1')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
+        # post
+        url = reverse('Address1')
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
 
 class Address2Test(APITestCase):
@@ -342,6 +344,10 @@ class Address2Test(APITestCase):
 
         # delete detail
         url = reverse('Address2detail', args=[address2.id])
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        url = reverse('Address2RelatedItems', args=[address2.id])
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
