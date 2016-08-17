@@ -2,10 +2,17 @@ from rest_framework import serializers
 
 from dataentry.models import Address1, Address2, InterceptionRecord, VictimInterview, BorderStation, FuzzyMatching, Person, Interceptee
 
+from helpers import related_items_helper
+
 
 class Address1Serializer(serializers.ModelSerializer):
     class Meta:
         model = Address1
+
+class Address1RelatedItemsSerializer(Address1Serializer):
+    related_items = serializers.SerializerMethodField()
+    get_related_items = related_items_helper
+
 
 class PersonSerializer(serializers.ModelSerializer):
     class Meta:
@@ -50,6 +57,11 @@ class Address2Serializer(serializers.ModelSerializer):
 
     canonical_name = CanonicalNameSerializer(required=False)
     address1 = Address1Serializer()
+
+
+class Address2RelatedItemsSerializer(Address2Serializer):
+    related_items = serializers.SerializerMethodField()
+    get_related_items = related_items_helper
 
 
 class BorderStationSerializer(serializers.ModelSerializer):
