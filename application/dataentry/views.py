@@ -1,3 +1,4 @@
+
 import zipfile
 from datetime import date, datetime
 from time import strptime, mktime
@@ -44,6 +45,7 @@ from accounts.mixins import PermissionsRequiredMixin
 
 from alert_checkers import IRFAlertChecker, VIFAlertChecker
 from fuzzy_matching import match_location
+from helpers import related_items_helper
 from rest_api.authentication import HasPermission, HasDeletePermission
 
 logger = logging.getLogger(__name__)
@@ -484,6 +486,27 @@ class Address2ViewSet(viewsets.ModelViewSet):
         serializer = Address2RelatedItemsSerializer(address)
         return Response(serializer.data)
 
+    def there_are_no_related_items(self, address):
+        count = 0
+        for related_items_and_ids in related_items_helper(self, address):
+            count += len(related_items_and_ids['ids'])
+        if count > 0:
+            return False
+        return True
+
+    def destroy(self, request, pk, *args, **kwargs):
+        try:
+            address = Address2.objects.get(pk=pk)
+        except:
+            logger.error('Could not find Address2 with the following id: ' + pk)
+            return Response({'detail' : "Address2 not found"}, status = status.HTTP_404_NOT_FOUND)
+
+        if (self.there_are_no_related_items(address)):
+            return super(viewsets.ModelViewSet, self).destroy(request, args, kwargs)
+        else:
+            logger.debug('Address2 could not be deleted due to related items on the following address1: ' + pk)
+            return Response({'detail' : "This Address 2 could not be deleted because it is being used by other resources"}, status = status.HTTP_409_CONFLICT)
+
 
 class Address1ViewSet(viewsets.ModelViewSet):
     queryset = Address1.objects.all()
@@ -511,6 +534,27 @@ class Address1ViewSet(viewsets.ModelViewSet):
 
         serializer = Address1RelatedItemsSerializer(address)
         return Response(serializer.data)
+
+    def there_are_no_related_items(self, address):
+        count = 0
+        for related_items_and_ids in related_items_helper(self, address):
+            count += len(related_items_and_ids['ids'])
+        if count > 0:
+            return False
+        return True
+
+    def destroy(self, request, pk, *args, **kwargs):
+        try:
+            address = Address1.objects.get(pk=pk)
+        except:
+            logger.error('Could not find Address1 with the following id: ' + pk)
+            return Response({'detail' : "Address1 not found"}, status = status.HTTP_404_NOT_FOUND)
+
+        if (self.there_are_no_related_items(address)):
+            return super(viewsets.ModelViewSet, self).destroy(request, args, kwargs)
+        else:
+            logger.debug('Address1 could not be deleted due to related items on the following address1: ' + pk)
+            return Response({'detail' : "This Address 1 could not be deleted because it is being used by other resources"}, status = status.HTTP_409_CONFLICT)
 
 
 class InterceptionRecordViewSet(viewsets.ModelViewSet):
