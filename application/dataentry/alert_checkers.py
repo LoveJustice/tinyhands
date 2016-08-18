@@ -112,8 +112,7 @@ class IRFAlertChecker(object):
           
 
     def check_them(self):
-        current_datetime = datetime.now()
-        current_datetime = make_aware(current_datetime)
+        current_datetime = make_aware(datetime.now())
         days = abs((current_datetime - self.irf.date_time_of_interception).days)
         if days > settings.ALERT_INTERVAL_IN_DAYS:
             logger.info("The number of days since the interception date for IRF#=" + self.irf.irf_number + 
