@@ -147,12 +147,9 @@ class IRFAlertChecker(object):
                 tmplist =[]
                 p=interceptee.person
                 onePersonMatches= process.extractBests(p.full_name, people_dict, score_cutoff=fuzzy_object.person_cutoff, limit=fuzzy_object.person_limit)
-                print(onePersonMatches)
+                logger.debug(onePersonMatches)
                 for match in onePersonMatches:
-                    w= match[2].person
-                    #per = Person.objects.get()
-                    tuplematch=(match[1],w)
-                    tmplist.append(tuplematch)
+                    tmplist.append((match[1], match[2].person))
                 tmplist.insert(0,(0,interceptee.person))
                 trafficker_list.append(tmplist)
         if len(trafficker_list) > 0:
