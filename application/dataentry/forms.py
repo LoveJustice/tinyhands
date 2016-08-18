@@ -128,6 +128,7 @@ class InterceptionRecordForm(DreamSuitePaperForm):
         self.if_box_7_1_ensure_7_2(cleaned_data)
         self.if_contact_noticed_ensure_contact_paid(cleaned_data)
         self.if_8_2_ensure_number_specified(cleaned_data)
+        self.verify_9_6_content(cleaned_data)
         if not cleaned_data.get('ignore_warnings'):
             self.ensure_some_red_flags_checked(cleaned_data)
             self.ensure_some_noticing_reason_checked(cleaned_data)
@@ -355,7 +356,20 @@ class InterceptionRecordForm(DreamSuitePaperForm):
             error.is_warning = True
             self.has_warnings = True
             self._errors['has_signature'] = error
-
+    
+    def verify_9_6_content (self, cleaned_data):
+        if (cleaned_data.get('trafficker_taken_into_custody')):
+            traffickers = cleaned_data.get('trafficker_taken_into_custody').split(',');
+            for trafficker in traffickers:
+                if not trafficker.isdigit():
+                    error = self.error_class(['Field contains non-numeric value'])
+                    self._errors['trafficker_taken_into_custody'] = error
+                    break
+                elif int(trafficker) < 1 or int(trafficker) > 12:
+                    error = self.error_class(['Row number out of range'])
+                    self._errors['trafficker_taken_into_custody'] = error
+                    break
+                    
 
 class IntercepteeForm(DreamSuitePaperForm):
     class Meta:

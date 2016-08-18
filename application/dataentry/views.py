@@ -40,6 +40,7 @@ from dataentry.forms import IntercepteeForm, InterceptionRecordForm, Address2For
 from dataentry import csv_io
 from dataentry.serializers import Address1Serializer, Address1RelatedItemsSerializer, Address2Serializer, Address2RelatedItemsSerializer, InterceptionRecordListSerializer, VictimInterviewListSerializer, VictimInterviewSerializer, SysAdminSettingsSerializer, PersonSerializer, IntercepteeSerializer, InterceptionRecordSerializer
 from dataentry.google_sheets import GoogleSheetClientThread
+from dataentry_signals import irf_done
 
 from accounts.mixins import PermissionsRequiredMixin
 
@@ -169,13 +170,12 @@ class InterceptionRecordCreateView(LoginRequiredMixin, PermissionsRequiredMixin,
         form.instance.form_entered_by = self.request.user
         form.instance.date_form_received = date.today()
         form = form.save()
+        interceptees = []
         for formset in inlines:
-            formset.save()
+            interceptee = formset.save()
+            interceptees.append(interceptee)
         logger.debug("IRF Create: After save for " + form.irf_number)
-        IRFAlertChecker(form, inlines).check_them()
-        logger.debug("IRF Create: After alert checker for " + form.irf_number)
-        GoogleSheetClientThread.update_irf(form.irf_number)
-        logger.debug("IRF Create: After google update irf for " + form.irf_number)
+        irf_done.send_robust(sender=self.__class__, irf_number=form.irf_number, irf=form, interceptees=interceptees)
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -189,13 +189,12 @@ class InterceptionRecordUpdateView(LoginRequiredMixin, PermissionsRequiredMixin,
 
     def forms_valid(self, form, inlines):
         form = form.save()
+        interceptees = []
         for formset in inlines:
-            formset.save()
+            interceptee = formset.save()
+            interceptees.append(interceptee)
         logger.debug("IRF Update: After save for " + form.irf_number)
-        IRFAlertChecker(form, inlines).check_them()
-        logger.debug("IRF Update: After alert checker for " + form.irf_number)
-        GoogleSheetClientThread.update_irf(form.irf_number)
-        logger.debug("IRF Update: After google update irf for " + form.irf_number)
+        irf_done.send_robust(sender=self.__class__, irf_number=form.irf_number, irf=form, interceptees=interceptees)
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -576,7 +575,7 @@ class InterceptionRecordViewSet(viewsets.ModelViewSet):
         irf = InterceptionRecord.objects.get(id=irf_id)
         rv = super(viewsets.ModelViewSet, self).destroy(request, args, kwargs)
         logger.debug("After IRF destroy " + irf.irf_number)
-        GoogleSheetClientThread.update_irf(irf.irf_number)
+        irf_done.send_robust(sender=self.__class__, irf_number=irf.irf_number, irf=None, interceptees=None)  
         return rv
 
     def list(self, request, *args, **kwargs):
