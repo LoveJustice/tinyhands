@@ -131,6 +131,7 @@ in the Javascript and run code unique to the current page.
                         {% if request.user.is_superuser %}
                             <li><a href="{% url 'id_management' %}">ID Management</a></li>
                         {% endif %}
+                        <li><a href="{{ settings.CLIENT_DOMAIN }}">Check out the new look!</a></li>
                         <li><a href="{% url 'logout' %}">Logout</a></li>
                     </ul>
                 </li>

@@ -15,6 +15,7 @@ import csv_io
 import time
 
 from models import (InterceptionRecord, VictimInterview)
+from dataentry_signals import irf_done
 
 from django.conf import settings
 
@@ -128,8 +129,7 @@ class GoogleSheetClientThread (Thread):
                     logger.error("GoogleSheetClientThread.run Failed to process " + work[0] + " " + work[1] + " on attempt " + str(work[2]) + " - retrying")
                     self.work_queue.put(work);
                 else:
-                    logger.error("GoogleSheetClientThread.run Failed to process " + work[0] + " " + work[1] + " on attempt " + str(work[2]) + " - giving up")
-                    logger.error(traceback.format_exc())
+                    logger.error("GoogleSheetClientThread.run Failed to process " + work[0] + " " + work[1] + " on attempt " + str(work[2]) + " - giving up\n" + traceback.format_exc())
                     self.send_exception_mail(traceback.format_exc())
 
     def build_list_entry(self, header_row, data_row):
@@ -153,7 +153,11 @@ class GoogleSheetClientThread (Thread):
             self.client.add_list_entry(list_entry, self.spreadsheet_key, worksheet_key)
 
 
-
+    @staticmethod
+    def handle_irf_done_signal(sender, **kwargs):
+        irf_number = kwargs.get("irf_number")
+        GoogleSheetClientThread.update_irf(irf_number)
+    
     @staticmethod
     def update_irf(the_irf_number):
         logger.debug("Entry IRF = " + the_irf_number)
@@ -366,3 +370,5 @@ class GoogleSheetClientThread (Thread):
             if GoogleSheetClientThread.instance.have_credentials:
                 work = ['SHUTDOWN', '', 0]
                 GoogleSheetClientThread.instance.work_queue.put(work)
+            
+irf_done.connect(GoogleSheetClientThread.handle_irf_done_signal, weak=False, dispatch_uid="GoogleSheetClientThread")

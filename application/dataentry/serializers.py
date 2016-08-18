@@ -2,10 +2,17 @@ from rest_framework import serializers
 
 from dataentry.models import Address1, Address2, InterceptionRecord, VictimInterview, BorderStation, FuzzyMatching, Person, Interceptee
 
+from helpers import related_items_helper
+
 
 class Address1Serializer(serializers.ModelSerializer):
     class Meta:
         model = Address1
+
+class Address1RelatedItemsSerializer(Address1Serializer):
+    related_items = serializers.SerializerMethodField()
+    get_related_items = related_items_helper
+
 
 class PersonSerializer(serializers.ModelSerializer):
     class Meta:
@@ -52,9 +59,23 @@ class Address2Serializer(serializers.ModelSerializer):
     address1 = Address1Serializer()
 
 
+class Address2RelatedItemsSerializer(Address2Serializer):
+    related_items = serializers.SerializerMethodField()
+    get_related_items = related_items_helper
+
+
 class BorderStationSerializer(serializers.ModelSerializer):
     class Meta:
         model = BorderStation
+
+    number_of_interceptions = serializers.SerializerMethodField(read_only=True)
+    number_of_staff = serializers.SerializerMethodField(read_only=True)
+
+    def get_number_of_interceptions(self, obj):
+        return Interceptee.objects.filter(interception_record__irf_number__startswith=obj.station_code, kind='v').count()
+
+    def get_number_of_staff(self, obj):
+        return obj.staff_set.all().count()
 
 
 class InterceptionRecordListSerializer(serializers.ModelSerializer):
