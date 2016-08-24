@@ -35,10 +35,10 @@ from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineForm
 from braces.views import LoginRequiredMixin
 from fuzzywuzzy import process
 
-from dataentry.models import BorderStation, Address2, Address1, Interceptee, Person, FuzzyMatching, InterceptionRecord, VictimInterview, VictimInterviewLocationBox, VictimInterviewPersonBox
+from dataentry.models import BorderStation, SiteSettings, Address2, Address1, Interceptee, Person, FuzzyMatching, InterceptionRecord, VictimInterview, VictimInterviewLocationBox, VictimInterviewPersonBox
 from dataentry.forms import IntercepteeForm, InterceptionRecordForm, Address2Form, Address1Form, VictimInterviewForm, VictimInterviewLocationBoxForm, VictimInterviewPersonBoxForm
 from dataentry import csv_io
-from dataentry.serializers import Address1Serializer, Address1RelatedItemsSerializer, Address2Serializer, Address2RelatedItemsSerializer, InterceptionRecordListSerializer, VictimInterviewListSerializer, VictimInterviewSerializer, SysAdminSettingsSerializer, PersonSerializer, IntercepteeSerializer, InterceptionRecordSerializer
+from dataentry.serializers import Address1Serializer, SiteSettingsSerializer, Address1RelatedItemsSerializer, Address2Serializer, Address2RelatedItemsSerializer, InterceptionRecordListSerializer, VictimInterviewListSerializer, VictimInterviewSerializer, SysAdminSettingsSerializer, PersonSerializer, IntercepteeSerializer, InterceptionRecordSerializer
 from dataentry.google_sheets import GoogleSheetClientThread
 from dataentry_signals import irf_done
 
@@ -47,7 +47,7 @@ from accounts.mixins import PermissionsRequiredMixin
 from alert_checkers import IRFAlertChecker, VIFAlertChecker
 from fuzzy_matching import match_location
 from helpers import related_items_helper
-from rest_api.authentication import HasPermission, HasDeletePermission
+from rest_api.authentication import HasPermission, HasDeletePermission, IsSuperAdministrator
 
 logger = logging.getLogger(__name__)
 
@@ -575,7 +575,7 @@ class InterceptionRecordViewSet(viewsets.ModelViewSet):
         irf = InterceptionRecord.objects.get(id=irf_id)
         rv = super(viewsets.ModelViewSet, self).destroy(request, args, kwargs)
         logger.debug("After IRF destroy " + irf.irf_number)
-        irf_done.send_robust(sender=self.__class__, irf_number=irf.irf_number, irf=None, interceptees=None)  
+        irf_done.send_robust(sender=self.__class__, irf_number=irf.irf_number, irf=None, interceptees=None)
         return rv
 
     def list(self, request, *args, **kwargs):
@@ -733,3 +733,13 @@ class PhotoExporter(viewsets.GenericViewSet):
 class SysAdminSettingsViewSet(viewsets.ModelViewSet):
     queryset = FuzzyMatching.objects.all()
     serializer_class = SysAdminSettingsSerializer
+
+
+class SiteSettingsViewSet(viewsets.ModelViewSet):
+    queryset = SiteSettings.objects.all()
+    serializer_class = SiteSettingsSerializer
+    permission_classes = (IsAuthenticated, IsSuperAdministrator)
+
+    def retrieve_custom(self, request, *args, **kwargs):
+        sitesettings = SiteSettings.objects.all()[0]
+        return Response(SiteSettingsSerializer(sitesettings).data)

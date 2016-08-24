@@ -4,7 +4,7 @@ from dataentry.views import Address2ViewSet, Address1ViewSet, GeoCodeAddress1API
 from rest_framework.authtoken import views
 
 from portal.views import get_interception_records
-from dataentry.views import Address2ViewSet, Address1ViewSet, GeoCodeAddress1APIView, GeoCodeAddress2APIView, InterceptionRecordViewSet, VictimInterviewViewSet, BatchView, IntercepteeViewSet, VictimInterviewDetailViewSet, PhotoExporter
+from dataentry.views import Address2ViewSet, Address1ViewSet, SiteSettingsViewSet, GeoCodeAddress1APIView, GeoCodeAddress2APIView, InterceptionRecordViewSet, VictimInterviewViewSet, BatchView, IntercepteeViewSet, VictimInterviewDetailViewSet, PhotoExporter
 from budget.views import BudgetViewSet, OtherItemsViewSet, OldBudgetViewSet, OldOtherItemsViewSet, MoneyDistribution, MoneyDistributionFormPDFView, money_distribution_view, retrieve_latest_budget_sheet_for_border_station, previous_data, StaffSalaryViewSet
 from accounts.views import AccountViewSet, DefaultPermissionsSetViewSet, CurrentUserView, ResendActivationEmailView, AccountActivateView, AccountActivateClient
 from static_border_stations.views import BorderStationViewSet, StaffViewSet, CommitteeMemberViewSet, LocationViewSet
@@ -50,6 +50,9 @@ urlpatterns = [
         # Interceptee
         url(r'^interceptee/$', IntercepteeViewSet.as_view(list), name="Interceptee"),
         url(r'^interceptee/(?P<pk>\d+)/$', IntercepteeViewSet.as_view(detail), name="IntercepteeDetail"),
+
+        #SiteSettings
+        url(r'^SiteSettings/$', SiteSettingsViewSet.as_view({'get': 'retrieve_custom', 'put': 'update'}), name="SiteSettings"),
 
         # VIFs
         url(r'^vif/$', VictimInterviewViewSet.as_view(list), name="VictimInterview"),
@@ -103,13 +106,6 @@ urlpatterns = [
         url(r'^staff/$', StaffViewSet.as_view(list), name="AllStaff"),
         url(r'^staff/(?P<pk>\d+)/$', StaffViewSet.as_view(detail), name="Staff"),
 
-        # Events
-        url(r'^event/$', EventViewSet.as_view({'get': 'list', 'post':'create'}), name="EventList"),
-        url(r'^event/all/$', EventViewSet.as_view({'get': 'list_all'}), name="EventListAll"),
-        url(r'^event/(?P<pk>\d+)/$', EventViewSet.as_view({'get':'retrieve', 'put':'update', 'delete':'destroy'}), name='Event'),
-        url(r'^event/feed/calendar/$', EventViewSet.as_view({'get': 'calendar_feed'}), name='EventCalendarFeed'),
-        url(r'^event/feed/dashboard/$', EventViewSet.as_view({'get': 'dashboard_feed'}), name='EventDashboardFeed'),
-
         #IRFBatch
         url(r'^batch/(?P<startDate>(\d+)-(\d+)-\d+)/(?P<endDate>\d+-\d+-\d+)$', BatchView.as_view(), name="BatchView"),
         url(r'^photos/(?P<startDate>(\d+)-(\d+)-\d+)/(?P<endDate>\d+-\d+-\d+)/$', PhotoExporter.as_view({'get': 'exportPhotos'}), name="PhotoExporter"),
@@ -119,12 +115,10 @@ urlpatterns = [
         url(r'^person/$', PersonViewSet.as_view({'get': 'list'}), name="Person"),
         #url(r'^person/(?P<pk>\d+)/$', IdFormMatch, name="PersonForm"),
 
-
-        #Events
+    # Events
         url(r'^event/$', EventViewSet.as_view({'get': 'list', 'post':'create'}), name="EventList"),
-        url(r'^event/all/$', EventViewSet.as_view({'get': 'list_all'}), name="EventListAll"),
         url(r'^event/(?P<pk>\d+)/$', EventViewSet.as_view({'get':'retrieve', 'put':'update', 'delete':'destroy'}), name='Event'),
+        url(r'^event/all/$', EventViewSet.as_view({'get': 'list_all'}), name="EventListAll"),
         url(r'^event/feed/calendar/$', EventViewSet.as_view({'get': 'calendar_feed'}), name='EventCalendarFeed'),
-        url(r'^event/feed/dashboard/$', EventViewSet.as_view({'get': 'dashboard_feed'}), name='EventDashboardFeed')
-
+        url(r'^event/feed/dashboard/$', EventViewSet.as_view({'get': 'dashboard_feed'}), name='EventDashboardFeed'),
 ]

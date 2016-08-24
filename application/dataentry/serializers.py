@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from dataentry.models import Address1, Address2, InterceptionRecord, VictimInterview, BorderStation, FuzzyMatching, Person, Interceptee
+from dataentry.models import Address1, Address2, SiteSettings, InterceptionRecord, VictimInterview, BorderStation, FuzzyMatching, Person, Interceptee
 
 from helpers import related_items_helper
 
@@ -13,6 +13,10 @@ class Address1RelatedItemsSerializer(Address1Serializer):
     related_items = serializers.SerializerMethodField()
     get_related_items = related_items_helper
 
+
+class SiteSettingsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SiteSettings
 
 class PersonSerializer(serializers.ModelSerializer):
     class Meta:

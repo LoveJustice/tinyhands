@@ -3,6 +3,7 @@ from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
 
 from accounts.models import Account
+from django.contrib.postgres.fields import JSONField
 
 
 
@@ -52,6 +53,10 @@ class Address1(models.Model):
     def __unicode__(self):
         return self.name
 
+
+class SiteSettings(models.Model):
+    data = JSONField()
+    date_time_last_updated = models.DateTimeField(auto_now=True)
 
 class FuzzyMatching(models.Model):
     address1_cutoff = models.PositiveIntegerField(default=70)

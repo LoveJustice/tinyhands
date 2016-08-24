@@ -1,6 +1,6 @@
 from rest_framework import permissions
 
-        
+# Permission Based Permissions
 class RequestPermission(permissions.BasePermission):
     message = 'You do not have the right permission to access this data'
 
@@ -35,3 +35,19 @@ class HasPostPermission(RequestPermission):
 class HasPutPermission(RequestPermission):
     def has_permission(self, request, view):
         return super(HasPutPermission, self).has_permission(request, view, "PUT", view.put_permissions_required)
+
+
+
+# Designation Based Permissions
+class HasUserDesignation(permissions.BasePermission):
+    message = 'You do not have the right user designation to access this data'
+
+    def has_permission(self, request, view, required_user_designation):
+        if request.user.user_designation.name != required_user_designation:
+            return False
+        return True
+
+
+class IsSuperAdministrator(HasUserDesignation):
+    def has_permission(self, request, view):
+        return super(IsSuperAdministrator, self).has_permission(request, view, 'Super Administrator')
