@@ -6,16 +6,19 @@ from gdata.spreadsheets.data import ListEntry
 from multiprocessing import Queue
 from threading import Thread
 
-import re
 import traceback
 import smtplib
 import string
 import logging
-import csv_io
 import time
 
-from models import (InterceptionRecord, VictimInterview)
-from dataentry_signals import irf_done
+import irf_io
+import vif_io
+
+from dataentry.models import (InterceptionRecord, VictimInterview)
+from dataentry.dataentry_signals import irf_done
+from dataentry.dataentry_signals import vif_done
+from google_sheet_names import spreadsheet_header_from_export_header
 
 from django.conf import settings
 
@@ -74,13 +77,6 @@ class GoogleSheetClientThread (Thread):
         logger.error("Worksheet with the name " + name + " not found")
         return None
 
-    @staticmethod
-    def spreadsheet_header_from_export_header(hdr):
-        hdr = hdr.lower()
-        hdr = re.sub("[^a-z0-9\.\-]*","", hdr)
-        hdr = re.sub("^[0-9\.\-]*","", hdr)
-        return hdr
-
     def reinitialize(self):
         self.token = None
         self.get_token()
@@ -92,12 +88,13 @@ class GoogleSheetClientThread (Thread):
             
             self.import_spreadsheet_key = self.find_spreadsheet_by_name(settings.IMPORT_SPREADSHEET_NAME)
             self.irf_import_worksheet_key = self.find_worksheet_by_name(self.import_spreadsheet_key, settings.IRF_IMPORT_WORKSHEET_NAME)
+            self.vif_import_worksheet_key = self.find_worksheet_by_name(self.import_spreadsheet_key, settings.VIF_IMPORT_WORKSHEET_NAME)
         else:
             logger.error("Unable to get token")
 
     def __init__(self):
-        self.import_status_name = self.spreadsheet_header_from_export_header("Import Status")
-        self.import_issues_name = self.spreadsheet_header_from_export_header("Import Issues")
+        self.import_status_name = spreadsheet_header_from_export_header("Import Status")
+        self.import_issues_name = spreadsheet_header_from_export_header("Import Issues")
         Thread.__init__(self)
         self.reinitialize()
         if self.have_credentials:
@@ -134,14 +131,14 @@ class GoogleSheetClientThread (Thread):
     def build_list_entry(self, header_row, data_row):
         list_entry = ListEntry()
         for col_idx in range(0, len(data_row)):
-            col_header = self.spreadsheet_header_from_export_header(header_row[col_idx])
+            col_header = spreadsheet_header_from_export_header(header_row[col_idx])
             list_entry.set_value(col_header, str(data_row[col_idx]))
 
         return list_entry
 
 
     def update_sheet (self, worksheet_key, key_value, new_rows):
-        key_name = self.spreadsheet_header_from_export_header(new_rows[0][0])
+        key_name = spreadsheet_header_from_export_header(new_rows[0][0])
 
         feed = self.client.get_list_feed(self.spreadsheet_key, worksheet_key, query=ListQuery(sq=key_name + "==\"" + key_value + "\""))
         for idx in range(len(feed.entry)-1, -1, -1):
@@ -167,6 +164,11 @@ class GoogleSheetClientThread (Thread):
             work = ['IRF', the_irf_number, 0]
             GoogleSheetClientThread.instance.work_queue.put(work)
             logger.debug("IRF added to work queue " + the_irf_number)
+            
+    @staticmethod
+    def handle_vif_done_signal(sender, **kwargs):
+        vif_number = kwargs.get("vif_number")
+        GoogleSheetClientThread.update_vif(vif_number)
 
     @staticmethod
     def update_vif(the_vif_number):
@@ -187,7 +189,8 @@ class GoogleSheetClientThread (Thread):
         except:
             logger.info("Could not find IRF " + the_irf_number)
             irfs = []
-        new_rows = csv_io.get_irf_export_rows(irfs)
+        new_rows = irf_io.get_irf_export_rows(irfs)
+        logger.info(new_rows)
         self.update_sheet(self.irf_worksheet_key, the_irf_number, new_rows)
 
     def internal_update_vif(self, the_vif_number):
@@ -198,7 +201,7 @@ class GoogleSheetClientThread (Thread):
         except:
             logger.info("Could not find VIF " + the_vif_number)
             vifs = []
-        new_rows = csv_io.get_vif_export_rows(vifs)
+        new_rows = vif_io.get_vif_export_rows(vifs)
         self.update_sheet(self.vif_worksheet_key, the_vif_number, new_rows)
     
     @staticmethod
@@ -222,7 +225,7 @@ class GoogleSheetClientThread (Thread):
         for idx in range(len(feed.entry)):
             irfData = feed.entry[idx].to_dict()
         
-            errList = csv_io.import_irf_row(irfData)
+            errList = irf_io.import_irf_row(irfData)
             if len(errList) > 0:
                 if errList[0] == 'IRF already exists':
                     feed.entry[idx].set_value(self.import_status_name, "Existing")
@@ -243,6 +246,50 @@ class GoogleSheetClientThread (Thread):
                 feed.entry[idx].set_value(self.import_issues_name, "")
                 
             self.client.update(feed.entry[idx])
+            
+    @staticmethod
+    def import_vifs():
+        logger.debug("Entry");
+        if GoogleSheetClientThread.instance is None:
+            GoogleSheetClientThread.instance = GoogleSheetClientThread()
+
+        if GoogleSheetClientThread.instance.have_credentials:
+            logger.info("Starting import from Google Sheet")
+            GoogleSheetClientThread.instance.internal_import_vif()
+            logger.info("Waiting for export to complete")
+            GoogleSheetClientThread.shutdown()
+            while not GoogleSheetClientThread.instance.work_queue.empty():
+                time.sleep (5)
+            logger.info("Finished import from Google Sheet")
+            
+    def internal_import_vif(self):
+        feed = self.client.get_list_feed(self.import_spreadsheet_key, self.vif_import_worksheet_key, query=ListQuery(sq=self.import_status_name + "== Ready"))
+        logger.debug("Number of entries to import =" + str(len(feed.entry)))
+        for idx in range(len(feed.entry)):
+            vifData = feed.entry[idx].to_dict()
+        
+            errList = vif_io.import_vif_row(vifData)
+            if len(errList) > 0:
+                if errList[0] == 'VIF already exists':
+                    feed.entry[idx].set_value(self.import_status_name, "Existing")
+                    feed.entry[idx].set_value(self.import_issues_name, errList[0])
+                else:
+                    logger.debug("Rejected " + vifData['vifnumber'])
+                    feed.entry[idx].set_value(self.import_status_name, "Rejected")
+                    sep = ""
+                    err_string = ""
+                    for err in errList:
+                        err_string = err_string + sep + err
+                        sep = '\n'
+                        
+                    feed.entry[idx].set_value(self.import_issues_name, err_string)
+                    
+            else:
+                feed.entry[idx].set_value(self.import_status_name, "Imported")
+                feed.entry[idx].set_value(self.import_issues_name, "")
+                
+            self.client.update(feed.entry[idx])
+            
             
     @staticmethod
     def audit_export_forms():
@@ -267,27 +314,27 @@ class GoogleSheetClientThread (Thread):
             
     def internal_audit_export_sheets(self):
         form_numbers = self.get_exported_form_numbers(self.spreadsheet_key, self.irf_worksheet_key,
-                self.spreadsheet_header_from_export_header('IRF Number'))
+                spreadsheet_header_from_export_header('IRF Number'))
         
         irfList = InterceptionRecord.objects.all()
         for irf in irfList:
             if irf.irf_number not in form_numbers:
                 logger.debug("IRF Number " + irf.irf_number + " exporting")
                 irfs = [irf]
-                new_rows = csv_io.get_irf_export_rows(irfs)
+                new_rows = irf_io.get_irf_export_rows(irfs)
                 self.update_sheet(self.irf_worksheet_key, irf.irf_number, new_rows)
             else:
                 logger.debug("IRF Number " + irf.irf_number + " already exported")
                 
         form_numbers = self.get_exported_form_numbers(self.spreadsheet_key, self.vif_worksheet_key,
-                self.spreadsheet_header_from_export_header('VIF Number'))
+                spreadsheet_header_from_export_header('VIF Number'))
         
         vifList = VictimInterview.objects.all()
         for vif in vifList:
             if vif.vif_number not in form_numbers:
                 logger.debug("VIF Number " + vif.vif_number + " exporting")
                 vifs = [vif]
-                new_rows = csv_io.get_vif_export_rows(vifs)
+                new_rows = vif_io.get_vif_export_rows(vifs)
                 self.update_sheet(self.vif_worksheet_key, vif.vif_number, new_rows)
             else:
                 logger.debug("VIF Number " + vif.vif_number + " already exported")
@@ -326,3 +373,4 @@ class GoogleSheetClientThread (Thread):
                 GoogleSheetClientThread.instance.work_queue.put(work)
             
 irf_done.connect(GoogleSheetClientThread.handle_irf_done_signal, weak=False, dispatch_uid="GoogleSheetClientThread")
+vif_done.connect(GoogleSheetClientThread.handle_vif_done_signal, weak=False, dispatch_uid="GoogleSheetClientThread")

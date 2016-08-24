@@ -37,14 +37,15 @@ from fuzzywuzzy import process
 
 from dataentry.models import BorderStation, Address2, Address1, Interceptee, Person, FuzzyMatching, InterceptionRecord, VictimInterview, VictimInterviewLocationBox, VictimInterviewPersonBox
 from dataentry.forms import IntercepteeForm, InterceptionRecordForm, Address2Form, Address1Form, VictimInterviewForm, VictimInterviewLocationBoxForm, VictimInterviewPersonBoxForm
-from dataentry import csv_io
 from dataentry.serializers import Address1Serializer, Address1RelatedItemsSerializer, Address2Serializer, Address2RelatedItemsSerializer, InterceptionRecordListSerializer, VictimInterviewListSerializer, VictimInterviewSerializer, SysAdminSettingsSerializer, PersonSerializer, IntercepteeSerializer, InterceptionRecordSerializer
-from dataentry.google_sheets import GoogleSheetClientThread
 from dataentry_signals import irf_done
+from dataentry_signals import vif_done
+
+from export_import import irf_io
+from export_import import vif_io
 
 from accounts.mixins import PermissionsRequiredMixin
 
-from alert_checkers import IRFAlertChecker, VIFAlertChecker
 from fuzzy_matching import match_location
 from helpers import related_items_helper
 from rest_api.authentication import HasPermission, HasDeletePermission
@@ -259,10 +260,7 @@ class VictimInterviewCreateView(LoginRequiredMixin, PermissionsRequiredMixin, Cr
         for formset in inlines:
             formset.save()
         logger.debug("VIF Create: After save for " + form.vif_number)
-        VIFAlertChecker(form, inlines).check_them()
-        logger.debug("VIF Create: After alert checker for " + form.vif_number)
-        GoogleSheetClientThread.update_vif(form.vif_number)
-        logger.debug("VIF Create: After google update vif for " + form.vif_number)
+        vif_done.send_robust(sender=self.__class__,vif_number=form.vif_number, vif=form)
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -278,10 +276,7 @@ class VictimInterviewUpdateView(LoginRequiredMixin, PermissionsRequiredMixin, Up
         for formset in inlines:
             formset.save()
         logger.debug("VIF Update: After save for " + form.vif_number)
-        VIFAlertChecker(form, inlines).check_them()
-        logger.debug("VIF Update: After alert checker for " + form.vif_number)
-        GoogleSheetClientThread.update_vif(form.vif_number)
-        logger.debug("VIF Update: After google update vif for " + form.vif_number)
+        vif_done.send_robust(sender=self.__class__,vif_number=form.vif_number, vif=form)
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -303,7 +298,7 @@ class InterceptionRecordCSVExportView(LoginRequiredMixin, PermissionsRequiredMix
 
         writer = csv.writer(response)
         irfs = InterceptionRecord.objects.all()
-        csv_rows = csv_io.get_irf_export_rows(irfs)
+        csv_rows = irf_io.get_irf_export_rows(irfs)
         writer.writerows(csv_rows)
 
         return response
@@ -320,7 +315,7 @@ class VictimInterviewCSVExportView(LoginRequiredMixin, PermissionsRequiredMixin,
 
         writer = csv.writer(response)
         vifs = VictimInterview.objects.all()
-        csv_rows = csv_io.get_vif_export_rows(vifs)
+        csv_rows = vif_io.get_vif_export_rows(vifs)
         writer.writerows(csv_rows)
 
         return response
@@ -631,7 +626,7 @@ class VictimInterviewDetailViewSet(viewsets.ModelViewSet):
         vif = VictimInterview.objects.get(id=vif_id)
         rv = super(viewsets.ModelViewSet, self).destroy(request, args, kwargs)
         logger.debug("After VIF destroy " + vif.vif_number)
-        GoogleSheetClientThread.update_vif(vif.vif_number)
+        vif_done.send_robust(sender=self.__class__,vif_number=vif.vif_number, vif=None)
         return rv
 
 

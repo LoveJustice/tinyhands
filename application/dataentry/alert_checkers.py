@@ -12,6 +12,7 @@ from accounts.models import Alert
 from dataentry.models import Interceptee, Person, FuzzyMatching
 
 from dataentry_signals import irf_done
+from dataentry_signals import vif_done
 
 
 
@@ -22,6 +23,13 @@ class VIFAlertChecker(object):
     def __init__(self, form, inlines):
         self.vif = form
         self.inlines = inlines
+
+     
+    @staticmethod
+    def handle_vif_done(sender, **kwargs):
+        vif = kwargs.get("vif")
+        if vif is not None:
+            VIFAlertChecker(vif).check_them()
 
     def check_them(self):
         self.fir_and_dofe_against()
@@ -253,6 +261,7 @@ class IRFAlertChecker(object):
                             
         return traff_format
     
-irf_done.connect(IRFAlertChecker.handle_irf_done, weak=False, dispatch_uid = "IRFAlertChecker")    
+irf_done.connect(IRFAlertChecker.handle_irf_done, weak=False, dispatch_uid = "IRFAlertChecker")  
+vif_done.connect(VIFAlertChecker.handle_vif_done, weak=False, dispatch_uid = "VIFAlertChecker")   
     
     
