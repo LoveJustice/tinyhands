@@ -1,3 +1,4 @@
+
 import zipfile
 from datetime import date, datetime
 from time import strptime, mktime
@@ -23,7 +24,7 @@ from django.utils import timezone
 from django.views.generic import ListView, View, DeleteView, CreateView, TemplateView
 
 from rest_framework import status
-from rest_framework.decorators import list_route
+from rest_framework.decorators import list_route, detail_route
 from rest_framework import filters
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
@@ -36,14 +37,17 @@ from fuzzywuzzy import process
 
 from dataentry.models import BorderStation, Address2, Address1, Interceptee, Person, FuzzyMatching, InterceptionRecord, VictimInterview, VictimInterviewLocationBox, VictimInterviewPersonBox
 from dataentry.forms import IntercepteeForm, InterceptionRecordForm, Address2Form, Address1Form, VictimInterviewForm, VictimInterviewLocationBoxForm, VictimInterviewPersonBoxForm
-from dataentry import csv_io
-from dataentry.serializers import Address1Serializer, Address2Serializer, InterceptionRecordListSerializer, VictimInterviewListSerializer, VictimInterviewSerializer, SysAdminSettingsSerializer, PersonSerializer, IntercepteeSerializer, InterceptionRecordSerializer
-from dataentry.google_sheets import GoogleSheetClientThread
+from dataentry.serializers import Address1Serializer, Address1RelatedItemsSerializer, Address2Serializer, Address2RelatedItemsSerializer, InterceptionRecordListSerializer, VictimInterviewListSerializer, VictimInterviewSerializer, SysAdminSettingsSerializer, PersonSerializer, IntercepteeSerializer, InterceptionRecordSerializer
+from dataentry_signals import irf_done
+from dataentry_signals import vif_done
+
+from export_import import irf_io
+from export_import import vif_io
 
 from accounts.mixins import PermissionsRequiredMixin
 
-from alert_checkers import IRFAlertChecker, VIFAlertChecker
 from fuzzy_matching import match_location
+from helpers import related_items_helper
 from rest_api.authentication import HasPermission, HasDeletePermission
 
 logger = logging.getLogger(__name__)
@@ -167,13 +171,12 @@ class InterceptionRecordCreateView(LoginRequiredMixin, PermissionsRequiredMixin,
         form.instance.form_entered_by = self.request.user
         form.instance.date_form_received = date.today()
         form = form.save()
+        interceptees = []
         for formset in inlines:
-            formset.save()
+            interceptee = formset.save()
+            interceptees.append(interceptee)
         logger.debug("IRF Create: After save for " + form.irf_number)
-        IRFAlertChecker(form, inlines).check_them()
-        logger.debug("IRF Create: After alert checker for " + form.irf_number)
-        GoogleSheetClientThread.update_irf(form.irf_number)
-        logger.debug("IRF Create: After google update irf for " + form.irf_number)
+        irf_done.send_robust(sender=self.__class__, irf_number=form.irf_number, irf=form, interceptees=interceptees)
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -187,13 +190,12 @@ class InterceptionRecordUpdateView(LoginRequiredMixin, PermissionsRequiredMixin,
 
     def forms_valid(self, form, inlines):
         form = form.save()
+        interceptees = []
         for formset in inlines:
-            formset.save()
+            interceptee = formset.save()
+            interceptees.append(interceptee)
         logger.debug("IRF Update: After save for " + form.irf_number)
-        IRFAlertChecker(form, inlines).check_them()
-        logger.debug("IRF Update: After alert checker for " + form.irf_number)
-        GoogleSheetClientThread.update_irf(form.irf_number)
-        logger.debug("IRF Update: After google update irf for " + form.irf_number)
+        irf_done.send_robust(sender=self.__class__, irf_number=form.irf_number, irf=form, interceptees=interceptees)
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -258,10 +260,7 @@ class VictimInterviewCreateView(LoginRequiredMixin, PermissionsRequiredMixin, Cr
         for formset in inlines:
             formset.save()
         logger.debug("VIF Create: After save for " + form.vif_number)
-        VIFAlertChecker(form, inlines).check_them()
-        logger.debug("VIF Create: After alert checker for " + form.vif_number)
-        GoogleSheetClientThread.update_vif(form.vif_number)
-        logger.debug("VIF Create: After google update vif for " + form.vif_number)
+        vif_done.send_robust(sender=self.__class__,vif_number=form.vif_number, vif=form)
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -277,10 +276,7 @@ class VictimInterviewUpdateView(LoginRequiredMixin, PermissionsRequiredMixin, Up
         for formset in inlines:
             formset.save()
         logger.debug("VIF Update: After save for " + form.vif_number)
-        VIFAlertChecker(form, inlines).check_them()
-        logger.debug("VIF Update: After alert checker for " + form.vif_number)
-        GoogleSheetClientThread.update_vif(form.vif_number)
-        logger.debug("VIF Update: After google update vif for " + form.vif_number)
+        vif_done.send_robust(sender=self.__class__,vif_number=form.vif_number, vif=form)
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -302,7 +298,7 @@ class InterceptionRecordCSVExportView(LoginRequiredMixin, PermissionsRequiredMix
 
         writer = csv.writer(response)
         irfs = InterceptionRecord.objects.all()
-        csv_rows = csv_io.get_irf_export_rows(irfs)
+        csv_rows = irf_io.get_irf_export_rows(irfs)
         writer.writerows(csv_rows)
 
         return response
@@ -319,7 +315,7 @@ class VictimInterviewCSVExportView(LoginRequiredMixin, PermissionsRequiredMixin,
 
         writer = csv.writer(response)
         vifs = VictimInterview.objects.all()
-        csv_rows = csv_io.get_vif_export_rows(vifs)
+        csv_rows = vif_io.get_vif_export_rows(vifs)
         writer.writerows(csv_rows)
 
         return response
@@ -473,6 +469,38 @@ class Address2ViewSet(viewsets.ModelViewSet):
     ordering_fields = ('name', 'address1__name', 'longitude', 'latitude', 'level', 'verified', 'canonical_name__name')
     ordering = ('name',)
 
+    @detail_route()
+    def related_items(self, request, pk):
+        try:
+            address = Address2.objects.get(pk=pk)
+        except:
+            logger.error('Could not find Address2 with the following id: ' + pk)
+            return Response({'detail' : "Address2 not found"}, status = status.HTTP_404_NOT_FOUND)
+
+        serializer = Address2RelatedItemsSerializer(address)
+        return Response(serializer.data)
+
+    def there_are_no_related_items(self, address):
+        count = 0
+        for related_items_and_ids in related_items_helper(self, address):
+            count += len(related_items_and_ids['ids'])
+        if count > 0:
+            return False
+        return True
+
+    def destroy(self, request, pk, *args, **kwargs):
+        try:
+            address = Address2.objects.get(pk=pk)
+        except:
+            logger.error('Could not find Address2 with the following id: ' + pk)
+            return Response({'detail' : "Address2 not found"}, status = status.HTTP_404_NOT_FOUND)
+
+        if (self.there_are_no_related_items(address)):
+            return super(viewsets.ModelViewSet, self).destroy(request, args, kwargs)
+        else:
+            logger.debug('Address2 could not be deleted due to related items on the following address1: ' + pk)
+            return Response({'detail' : "This Address 2 could not be deleted because it is being used by other resources"}, status = status.HTTP_409_CONFLICT)
+
 
 class Address1ViewSet(viewsets.ModelViewSet):
     queryset = Address1.objects.all()
@@ -489,6 +517,38 @@ class Address1ViewSet(viewsets.ModelViewSet):
         address1s = Address1.objects.all()
         serializer = self.get_serializer(address1s, many=True)
         return Response(serializer.data)
+
+    @detail_route()
+    def related_items(self, request, pk):
+        try:
+            address = Address1.objects.get(pk=pk)
+        except:
+            logger.error('Could not find Address1 with the following id: ' + pk)
+            return Response({'detail' : "Address1 not found"}, status = status.HTTP_404_NOT_FOUND)
+
+        serializer = Address1RelatedItemsSerializer(address)
+        return Response(serializer.data)
+
+    def there_are_no_related_items(self, address):
+        count = 0
+        for related_items_and_ids in related_items_helper(self, address):
+            count += len(related_items_and_ids['ids'])
+        if count > 0:
+            return False
+        return True
+
+    def destroy(self, request, pk, *args, **kwargs):
+        try:
+            address = Address1.objects.get(pk=pk)
+        except:
+            logger.error('Could not find Address1 with the following id: ' + pk)
+            return Response({'detail' : "Address1 not found"}, status = status.HTTP_404_NOT_FOUND)
+
+        if (self.there_are_no_related_items(address)):
+            return super(viewsets.ModelViewSet, self).destroy(request, args, kwargs)
+        else:
+            logger.debug('Address1 could not be deleted due to related items on the following address1: ' + pk)
+            return Response({'detail' : "This Address 1 could not be deleted because it is being used by other resources"}, status = status.HTTP_409_CONFLICT)
 
 
 class InterceptionRecordViewSet(viewsets.ModelViewSet):
@@ -510,7 +570,7 @@ class InterceptionRecordViewSet(viewsets.ModelViewSet):
         irf = InterceptionRecord.objects.get(id=irf_id)
         rv = super(viewsets.ModelViewSet, self).destroy(request, args, kwargs)
         logger.debug("After IRF destroy " + irf.irf_number)
-        GoogleSheetClientThread.update_irf(irf.irf_number)
+        irf_done.send_robust(sender=self.__class__, irf_number=irf.irf_number, irf=None, interceptees=None)  
         return rv
 
     def list(self, request, *args, **kwargs):
@@ -566,7 +626,7 @@ class VictimInterviewDetailViewSet(viewsets.ModelViewSet):
         vif = VictimInterview.objects.get(id=vif_id)
         rv = super(viewsets.ModelViewSet, self).destroy(request, args, kwargs)
         logger.debug("After VIF destroy " + vif.vif_number)
-        GoogleSheetClientThread.update_vif(vif.vif_number)
+        vif_done.send_robust(sender=self.__class__,vif_number=vif.vif_number, vif=None)
         return rv
 
 

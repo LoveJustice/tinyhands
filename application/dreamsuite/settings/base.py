@@ -19,6 +19,8 @@ EMAIL_USE_TLS = True
 
 #EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
+ALERT_INTERVAL_IN_DAYS = 30
+
 DEBUG = False
 
 SITE_ROOT = os.path.dirname(os.path.realpath(__file__))

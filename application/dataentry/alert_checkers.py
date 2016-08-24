@@ -1,16 +1,35 @@
 from django.conf import settings
 
+from datetime import datetime
+from django.utils.timezone import make_aware
+import logging
+from django.dispatch import receiver
+
 from fuzzywuzzy import process
 
 from accounts.models import Alert
 
 from dataentry.models import Interceptee, Person, FuzzyMatching
 
+from dataentry_signals import irf_done
+from dataentry_signals import vif_done
+
+
+
+logger = logging.getLogger(__name__)
+
 
 class VIFAlertChecker(object):
     def __init__(self, form, inlines):
         self.vif = form
         self.inlines = inlines
+
+     
+    @staticmethod
+    def handle_vif_done(sender, **kwargs):
+        vif = kwargs.get("vif")
+        if vif is not None:
+            VIFAlertChecker(vif).check_them()
 
     def check_them(self):
         self.fir_and_dofe_against()
@@ -91,8 +110,24 @@ class IRFAlertChecker(object):
     def __init__(self, form, inlines):
         self.irf = form
         self.interceptees = inlines[0]
+        
+    @staticmethod
+    def handle_irf_done(sender, **kwargs):
+        irf = kwargs.get("irf")
+        interceptees = kwargs.get("interceptees")
+        if irf is not None and interceptees is not None:
+            IRFAlertChecker(irf, interceptees).check_them()
+          
 
     def check_them(self):
+        current_datetime = make_aware(datetime.now())
+        days = abs((current_datetime - self.irf.date_time_of_interception).days)
+        if days > settings.ALERT_INTERVAL_IN_DAYS:
+            logger.info("The number of days since the interception date for IRF#=" + self.irf.irf_number + 
+                        ' is greater than the configured limit of ' + str(settings.ALERT_INTERVAL_IN_DAYS) + 
+                        '. Alert checking will not be done.')
+            return
+        
         self.trafficker_name_match()
         self.identified_trafficker()
 
@@ -115,18 +150,15 @@ class IRFAlertChecker(object):
         trafficker_in_custody = self.trafficker_in_custody()
 
         for interceptee in self.interceptees:
-            if interceptee.cleaned_data.get("kind") == 't':
+            if interceptee.kind == 't':
                 onePersonMatches = []
                 tmplist =[]
-                p=interceptee.instance.person
+                p=interceptee.person
                 onePersonMatches= process.extractBests(p.full_name, people_dict, score_cutoff=fuzzy_object.person_cutoff, limit=fuzzy_object.person_limit)
-                print(onePersonMatches)
+                logger.debug(onePersonMatches)
                 for match in onePersonMatches:
-                    w= match[2].person
-                    #per = Person.objects.get()
-                    tuplematch=(match[1],w)
-                    tmplist.append(tuplematch)
-                tmplist.insert(0,(0,interceptee.instance.person))
+                    tmplist.append((match[1], match[2].person))
+                tmplist.insert(0,(0,interceptee.person))
                 trafficker_list.append(tmplist)
         if len(trafficker_list) > 0:
             Alert.objects.send_alert("Name Match",
@@ -135,6 +167,7 @@ class IRFAlertChecker(object):
                                               "trafficker_in_custody" : trafficker_in_custody})
             return True
         return False
+    
     def identified_trafficker(self):
         """Email Alerts to Investigators
 
@@ -153,8 +186,8 @@ class IRFAlertChecker(object):
         certainty_points = self.irf.how_sure_was_trafficking
         trafficker_list = []
         for intercep in self.interceptees:
-            if intercep.cleaned_data.get("kind") == 't' and intercep.cleaned_data.get('photo') not in [None, '']:
-                trafficker_list.append(intercep.instance.person)
+            if intercep.kind == 't' and intercep.photo not in [None, '']:
+                trafficker_list.append(intercep.person)
 
 
 
@@ -188,16 +221,47 @@ class IRFAlertChecker(object):
                                                   "red_flags": red_flags})
                 return True
         return False
-
+    
     def trafficker_in_custody(self):
         """
         Returns the value of the trafficker in custody on the IRF
-        If there is not one, it returns False
+        If there is not one, it returns empty string
         """
+        traff_format = ''
         trafficker_in_custody = self.irf.trafficker_taken_into_custody
-        taken_into_custody = 0
-        if self.irf.trafficker_taken_into_custody == '':
-            taken_into_custody = self.irf.trafficker_taken_into_custody
-        if trafficker_in_custody is not None and taken_into_custody < len([there for there in self.interceptees.cleaned_data if there]):
-            return self.interceptees.cleaned_data[int(self.irf.trafficker_taken_into_custody) - 1].get("full_name")
-        return ''
+        logger.debug("trafficker_in_custody=" + trafficker_in_custody)
+        trafficker_in_custody_list = []
+        if trafficker_in_custody is not None:
+            traffickers = trafficker_in_custody.split(',')
+            for trafficker_index in traffickers:
+                if trafficker_index.isdigit() == True:
+                    idx = int(trafficker_index) - 1
+                    if idx >= 0 and idx < len(self.interceptees):
+                        trafficker_in_custody_list.append(self.interceptees[idx].person.full_name)
+                    else:
+                        logger.warn("trafficker index out of range:" + idx)
+                elif trafficker_index != '':
+                    logger.warn('Non numeric index=' + trafficker_index)
+             
+            if len(trafficker_in_custody_list) > 0:       
+                for trafficker_index in range(0, len(trafficker_in_custody_list)-1):
+                    if traff_format != '':
+                        traff_format = traff_format + ', ' + trafficker_in_custody_list[trafficker_index]
+                    else:
+                        traff_format = trafficker_in_custody_list[trafficker_index]
+                
+                if traff_format == '':
+                    # Only one trafficker in custody
+                    traff_format = trafficker_in_custody_list[0] + ' was'
+                else:
+                    traff_format = traff_format + ' and ' + trafficker_in_custody_list[len(trafficker_in_custody_list)-1] + ' were'
+                
+        logger.info("trafficker_in_custody returning " + traff_format)
+                
+                            
+        return traff_format
+    
+irf_done.connect(IRFAlertChecker.handle_irf_done, weak=False, dispatch_uid = "IRFAlertChecker")  
+vif_done.connect(VIFAlertChecker.handle_vif_done, weak=False, dispatch_uid = "VIFAlertChecker")   
+    
+    
