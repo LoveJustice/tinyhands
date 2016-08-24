@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class FuzzyMatching(models.Model):
     address1_cutoff = models.PositiveIntegerField(default=70)
     address1_limit = models.PositiveIntegerField(default=5)
