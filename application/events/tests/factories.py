@@ -14,7 +14,7 @@ class EventFactory(DjangoModelFactory):
     start_date = datetime.date.today()
     start_time = datetime.datetime.now().time()
     end_date = datetime.date.today()
-    end_time = (datetime.datetime.now() + datetime.timedelta(hours=1)).time()
+    end_time = (datetime.datetime.now() + datetime.timedelta(days=1)).time()
     description = factory.Sequence(lambda n: 'This is Event {0}'.format(n))
     is_repeat = True
     repetition = 'D'

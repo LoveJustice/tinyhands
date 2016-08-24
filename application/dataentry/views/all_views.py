@@ -1,7 +1,5 @@
 
-import zipfile
-from datetime import date, datetime
-from time import strptime, mktime
+from datetime import date
 import csv
 import json
 import os
@@ -9,7 +7,6 @@ import re
 import shutil
 import logging
 
-from StringIO import StringIO
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core import serializers
@@ -20,7 +17,6 @@ from django.core.urlresolvers import reverse_lazy
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import redirect, render_to_response, render
 from django.template.loader import render_to_string
-from django.utils import timezone
 from django.views.generic import ListView, View, DeleteView, CreateView, TemplateView
 
 from rest_framework import status
@@ -38,16 +34,14 @@ from fuzzywuzzy import process
 from dataentry.models import BorderStation, Address2, Address1, Interceptee, Person, FuzzyMatching, InterceptionRecord, VictimInterview, VictimInterviewLocationBox, VictimInterviewPersonBox
 from dataentry.forms import IntercepteeForm, InterceptionRecordForm, Address2Form, Address1Form, VictimInterviewForm, VictimInterviewLocationBoxForm, VictimInterviewPersonBoxForm
 from dataentry.serializers import Address1Serializer, Address1RelatedItemsSerializer, Address2Serializer, Address2RelatedItemsSerializer, InterceptionRecordListSerializer, VictimInterviewListSerializer, VictimInterviewSerializer, SysAdminSettingsSerializer, PersonSerializer, IntercepteeSerializer, InterceptionRecordSerializer
-from dataentry_signals import irf_done
-from dataentry_signals import vif_done
+from dataentry.dataentry_signals import irf_done, vif_done
+from dataentry.fuzzy_matching import match_location
+from dataentry.helpers import related_items_helper
 
-from export_import import irf_io
-from export_import import vif_io
+from export_import import irf_io, vif_io
 
 from accounts.mixins import PermissionsRequiredMixin
 
-from fuzzy_matching import match_location
-from helpers import related_items_helper
 from rest_api.authentication import HasPermission, HasDeletePermission
 
 logger = logging.getLogger(__name__)
@@ -436,6 +430,7 @@ def interceptee_fuzzy_matching(request):
     return HttpResponse(json.dumps(matches), content_type="application/json")
 
 
+@login_required
 def get_station_id(request):
     code = request.GET['code']
     if code == '':
@@ -459,97 +454,6 @@ class PersonViewSet(viewsets.ModelViewSet):
     ordering_fields = ('full_name', 'age', 'gender', 'phone_contact')
     ordering = ('full_name',)
 
-class Address2ViewSet(viewsets.ModelViewSet):
-    queryset = Address2.objects.all().select_related('address1', 'canonical_name__address1')
-    serializer_class = Address2Serializer
-    permission_classes = (IsAuthenticated, HasPermission)
-    permissions_required = ['permission_address2_manage']
-    filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
-    search_fields = ('name',)
-    ordering_fields = ('name', 'address1__name', 'longitude', 'latitude', 'level', 'verified', 'canonical_name__name')
-    ordering = ('name',)
-
-    @detail_route()
-    def related_items(self, request, pk):
-        try:
-            address = Address2.objects.get(pk=pk)
-        except:
-            logger.error('Could not find Address2 with the following id: ' + pk)
-            return Response({'detail' : "Address2 not found"}, status = status.HTTP_404_NOT_FOUND)
-
-        serializer = Address2RelatedItemsSerializer(address)
-        return Response(serializer.data)
-
-    def there_are_no_related_items(self, address):
-        count = 0
-        for related_items_and_ids in related_items_helper(self, address):
-            count += len(related_items_and_ids['ids'])
-        if count > 0:
-            return False
-        return True
-
-    def destroy(self, request, pk, *args, **kwargs):
-        try:
-            address = Address2.objects.get(pk=pk)
-        except:
-            logger.error('Could not find Address2 with the following id: ' + pk)
-            return Response({'detail' : "Address2 not found"}, status = status.HTTP_404_NOT_FOUND)
-
-        if (self.there_are_no_related_items(address)):
-            return super(viewsets.ModelViewSet, self).destroy(request, args, kwargs)
-        else:
-            logger.debug('Address2 could not be deleted due to related items on the following address1: ' + pk)
-            return Response({'detail' : "This Address 2 could not be deleted because it is being used by other resources"}, status = status.HTTP_409_CONFLICT)
-
-
-class Address1ViewSet(viewsets.ModelViewSet):
-    queryset = Address1.objects.all()
-    serializer_class = Address1Serializer
-    permission_classes = (IsAuthenticated, HasPermission)
-    permissions_required = ['permission_address2_manage']
-    filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
-    search_fields = ('name',)
-    ordering_fields = ('name','longitude','latitude','level','completed')
-    ordering = ('name',)
-
-    @list_route()
-    def list_all(self, request):
-        address1s = Address1.objects.all()
-        serializer = self.get_serializer(address1s, many=True)
-        return Response(serializer.data)
-
-    @detail_route()
-    def related_items(self, request, pk):
-        try:
-            address = Address1.objects.get(pk=pk)
-        except:
-            logger.error('Could not find Address1 with the following id: ' + pk)
-            return Response({'detail' : "Address1 not found"}, status = status.HTTP_404_NOT_FOUND)
-
-        serializer = Address1RelatedItemsSerializer(address)
-        return Response(serializer.data)
-
-    def there_are_no_related_items(self, address):
-        count = 0
-        for related_items_and_ids in related_items_helper(self, address):
-            count += len(related_items_and_ids['ids'])
-        if count > 0:
-            return False
-        return True
-
-    def destroy(self, request, pk, *args, **kwargs):
-        try:
-            address = Address1.objects.get(pk=pk)
-        except:
-            logger.error('Could not find Address1 with the following id: ' + pk)
-            return Response({'detail' : "Address1 not found"}, status = status.HTTP_404_NOT_FOUND)
-
-        if (self.there_are_no_related_items(address)):
-            return super(viewsets.ModelViewSet, self).destroy(request, args, kwargs)
-        else:
-            logger.debug('Address1 could not be deleted due to related items on the following address1: ' + pk)
-            return Response({'detail' : "This Address 1 could not be deleted because it is being used by other resources"}, status = status.HTTP_409_CONFLICT)
-
 
 class InterceptionRecordViewSet(viewsets.ModelViewSet):
     queryset = InterceptionRecord.objects.all()
@@ -570,7 +474,7 @@ class InterceptionRecordViewSet(viewsets.ModelViewSet):
         irf = InterceptionRecord.objects.get(id=irf_id)
         rv = super(viewsets.ModelViewSet, self).destroy(request, args, kwargs)
         logger.debug("After IRF destroy " + irf.irf_number)
-        irf_done.send_robust(sender=self.__class__, irf_number=irf.irf_number, irf=None, interceptees=None)  
+        irf_done.send_robust(sender=self.__class__, irf_number=irf.irf_number, irf=None, interceptees=None)
         return rv
 
     def list(self, request, *args, **kwargs):
@@ -626,7 +530,7 @@ class VictimInterviewDetailViewSet(viewsets.ModelViewSet):
         vif = VictimInterview.objects.get(id=vif_id)
         rv = super(viewsets.ModelViewSet, self).destroy(request, args, kwargs)
         logger.debug("After VIF destroy " + vif.vif_number)
-        vif_done.send_robust(sender=self.__class__,vif_number=vif.vif_number, vif=None)
+        vif_done.send_robust(sender=self.__class__, vif_number=vif.vif_number, vif=None)
         return rv
 
 
@@ -635,6 +539,7 @@ def id_management_template(request):
     return render(request, 'dataentry/id_management.html')
 
 
+@login_required
 def vifExists(request, vif_number):
     try:
         existingVif = VictimInterview.objects.get(vif_number=vif_number)
@@ -643,6 +548,7 @@ def vifExists(request, vif_number):
         return HttpResponse("Vif does not exist")
 
 
+@login_required
 def irfExists(request, irf_number):
     try:
         existingIrf = InterceptionRecord.objects.get(irf_number=irf_number)
@@ -650,81 +556,3 @@ def irfExists(request, irf_number):
     except:
         return HttpResponse("Irf does not exist")
 
-
-
-class BatchView(View):
-    def get(self, request, startDate, endDate):
-        start = timezone.make_aware(datetime.fromtimestamp(mktime(strptime(startDate, '%m-%d-%Y'))), timezone.get_default_timezone())
-        end = timezone.make_aware(datetime.fromtimestamp(mktime(strptime(endDate, '%m-%d-%Y'))), timezone.get_default_timezone())
-
-        listOfIrfNumbers = []
-        irfs = InterceptionRecord.objects.all()
-        for irf in irfs:
-            irfDate = irf.date_time_of_interception
-            if start <= irfDate <= end:
-                listOfIrfNumbers.append(irf.irf_number)
-
-        photos = list(Interceptee.objects.filter(interception_record__irf_number__in=listOfIrfNumbers).values_list('photo', 'person__full_name', 'interception_record__irf_number'))
-        if len(photos) == 0:
-            return render(request, 'dataentry/batch_photo_error.html')
-        else:
-            for i in range(len(photos)):
-                photos[i] = [str(x) for x in photos[i]]
-
-            f = StringIO()
-            imagezip = zipfile.ZipFile(f, 'w')
-            for photoTuple in photos:
-                if photoTuple[0] == '':
-                    continue
-                try:
-                    imageFile = open(settings.MEDIA_ROOT + '/' + photoTuple[0])
-                    imagezip.writestr(photoTuple[2] + '-' + photoTuple[1] + '.jpg', imageFile.read())
-                except:
-                    logger.error('Could not find photo: ' + photoTuple[1] + '.jpg')
-            imagezip.close()  # Close
-
-            response = HttpResponse(f.getvalue(), content_type="application/zip")
-            response['Content-Disposition'] = 'attachment; filename=irfPhotos ' + startDate + ' to ' + endDate + '.zip'
-            return response
-
-
-class PhotoExporter(viewsets.GenericViewSet):
-    permission_classes = (IsAuthenticated, HasPermission)
-    permissions_required = ['permission_irf_view']
-
-    def getPhotos(self, startDate, endDate):
-        start = timezone.make_aware(datetime.fromtimestamp(mktime(strptime(startDate, '%m-%d-%Y'))), timezone.get_default_timezone())
-        end = timezone.make_aware(datetime.fromtimestamp(mktime(strptime(endDate, '%m-%d-%Y'))), timezone.get_default_timezone())
-
-        return Interceptee.objects.filter(interception_record__date_time_of_interception__gte=start,
-                                          interception_record__date_time_of_interception__lte=end).exclude(photo="").values_list('photo', 'person__full_name', 'interception_record__irf_number')
-
-    def countPhotosInDateRange(self, request, startDate, endDate):
-            return Response({"count": self.getPhotos(startDate, endDate).count()})
-
-    def exportPhotos(self, request, startDate, endDate):
-        photos = list(self.getPhotos(startDate, endDate))
-        if len(photos) == 0:
-            return Response({'detail' : "No photos found in specified date range"}, status = status.HTTP_400_BAD_REQUEST)
-
-        for i in range(len(photos)):
-            photos[i] = [str(x) for x in photos[i]]
-
-        f = StringIO()
-        imagezip = zipfile.ZipFile(f, 'w')
-        for photoTuple in photos:
-            try:
-                imageFile = open(settings.MEDIA_ROOT + '/' + photoTuple[0])
-                imagezip.writestr(photoTuple[2] + '-' + photoTuple[1] + '.jpg', imageFile.read())
-            except:
-                logger.error('Could not find photo: ' + photoTuple[1] + '.jpg')
-        imagezip.close()
-
-        response = HttpResponse(f.getvalue(), content_type="application/zip")
-        response['Content-Disposition'] = 'attachment; filename=irfPhotos ' + startDate + ' to ' + endDate + '.zip'
-        return response
-
-
-class SysAdminSettingsViewSet(viewsets.ModelViewSet):
-    queryset = FuzzyMatching.objects.all()
-    serializer_class = SysAdminSettingsSerializer

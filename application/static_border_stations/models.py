@@ -36,7 +36,6 @@ class Staff(Person):
         abstract = False
 
 
-
 class CommitteeMember(Person):
     class Meta:
         abstract = False
