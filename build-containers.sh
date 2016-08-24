@@ -2,7 +2,7 @@ docker-compose run --rm web python manage.py collectstatic --noinput
 cp -a application/dreamsuite/static build/nginx/
 cp -a application/media build/nginx/
 
-TAG=$(date +%s)
+TAG=`git log --format="%H" -n 1`
 
 docker build --no-cache -t tusoftwarestudio/dreamsuite-nginx:$TAG ./build/nginx/
 docker build --no-cache -t tusoftwarestudio/dreamsuite:$TAG .
