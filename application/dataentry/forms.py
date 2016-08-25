@@ -16,13 +16,13 @@ BOOLEAN_CHOICES = [
 ]
 
 LEVEL_CHOICES = [
-    ('Country','Country'),
-    ('State','State'),
-    ('District','District'),
-    ('City','City'),
-    ('VDC','VDC'),
-    ('Block','Block'),
-    ('Building','Building')
+    ('Country', 'Country'),
+    ('State', 'State'),
+    ('District', 'District'),
+    ('City', 'City'),
+    ('VDC', 'VDC'),
+    ('Block', 'Block'),
+    ('Building', 'Building')
 ]
 
 
@@ -103,7 +103,7 @@ class InterceptionRecordForm(DreamSuitePaperForm):
 
     class Meta:
         model = InterceptionRecord
-        exclude = [ 'form_entered_by', 'date_form_received' ]
+        exclude = ['form_entered_by', 'date_form_received']
 
     def __init__(self, *args, **kwargs):
         super(InterceptionRecordForm, self).__init__(*args, **kwargs)
@@ -356,10 +356,10 @@ class InterceptionRecordForm(DreamSuitePaperForm):
             error.is_warning = True
             self.has_warnings = True
             self._errors['has_signature'] = error
-    
+
     def verify_9_6_content (self, cleaned_data):
-        if (cleaned_data.get('trafficker_taken_into_custody')):
-            traffickers = cleaned_data.get('trafficker_taken_into_custody').split(',');
+        if cleaned_data.get('trafficker_taken_into_custody'):
+            traffickers = cleaned_data.get('trafficker_taken_into_custody').split(',')
             for trafficker in traffickers:
                 if not trafficker.isdigit():
                     error = self.error_class(['Field contains non-numeric value'])
@@ -369,7 +369,7 @@ class InterceptionRecordForm(DreamSuitePaperForm):
                     error = self.error_class(['Row number out of range'])
                     self._errors['trafficker_taken_into_custody'] = error
                     break
-                    
+
 
 class IntercepteeForm(DreamSuitePaperForm):
     class Meta:
@@ -384,7 +384,7 @@ class IntercepteeForm(DreamSuitePaperForm):
         self.fields['full_name'] = CharField(required=False)
         self.fields['age'] = IntegerField(required=False)
         self.fields['photo'] = ImageField(required=False)
-        self.fields['gender'] = ChoiceField(choices=[ (None, '----',), ('M', 'M'), ('F', 'F'),], required=False)
+        self.fields['gender'] = ChoiceField(choices=[(None, '----',), ('M', 'M'), ('F', 'F')], required=False)
 
         self.fields['phone_contact'] = CharField(required=False)
 
@@ -397,23 +397,23 @@ class IntercepteeForm(DreamSuitePaperForm):
         except:
             pass
         try:
-           self.fields['address2'].initial = self.instance.person.address2
+            self.fields['address2'].initial = self.instance.person.address2
         except:
             pass
         try:
-           self.fields['photo'].initial = self.instance.photo
+            self.fields['photo'].initial = self.instance.photo
         except:
             pass
         try:
-           self.fields['gender'].initial = self.instance.person.gender
+            self.fields['gender'].initial = self.instance.person.gender
         except:
             pass
         try:
-           self.fields['phone_contact'].initial = self.instance.person.phone_contact
+            self.fields['phone_contact'].initial = self.instance.person.phone_contact
         except:
             pass
         try:
-           self.fields['age'].initial = self.instance.person.age
+            self.fields['age'].initial = self.instance.person.age
         except:
             pass
 

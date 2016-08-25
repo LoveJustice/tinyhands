@@ -99,6 +99,7 @@ class ViewUserFactory(UserFactory):
     permission_border_stations_view = True
     user_designation = factory.SubFactory(ViewUserDesignation)
 
+
 class NoPermissionUserFactory(UserFactory):
     permission_irf_view = False
     permission_vif_view = False
@@ -156,7 +157,7 @@ class AlertFactory(DjangoModelFactory):
     code = factory.Sequence(lambda n: 'code{0}'.format(n))
 
     @factory.post_generation
-    def permissions_group(self, create, extracted, **kwargs):
+    def permissions_group(self, create, extracted):
         if not create:
             # Simple build, do nothing.
             return

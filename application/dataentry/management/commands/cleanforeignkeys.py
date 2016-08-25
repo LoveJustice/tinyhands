@@ -2,6 +2,7 @@ from django.core.management.base import BaseCommand
 from dataentry.models import *
 from dataentry.tests.factories import IrfFactory
 
+
 class Command(BaseCommand):
     help = 'clean up the bad foreign keys'
 
@@ -28,10 +29,10 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         items = [
-            [Person,['address1'],['address2']],
-            [VictimInterview,['victim__address1','victim_guardian_address1'],['victim__address2', 'victim_guardian_address2']],
-            [VictimInterviewPersonBox,['person__address1'],['person__address2']],
-            [VictimInterviewLocationBox,['address1'],['address2']]
+            [Person, ['address1'], ['address2']],
+            [VictimInterview, ['victim__address1', 'victim_guardian_address1'], ['victim__address2', 'victim_guardian_address2']],
+            [VictimInterviewPersonBox, ['person__address1'], ['person__address2']],
+            [VictimInterviewLocationBox, ['address1'], ['address2']]
         ]
 
         valid_address2s = [address2.id for address2 in Address2.objects.all()]
@@ -57,10 +58,8 @@ class Command(BaseCommand):
                     setattr(x, address2 + '_id', default_address2.id)
                     x.save()
 
-
         #  The IRF process is a little different so I had to do it separately down here.
         valid_irfs = [irf.id for irf in InterceptionRecord.objects.all()]
-        # irfId_interceptee = [[interceptee.interception_record_id, interceptee] for interceptee in Interceptee.objects.all()]
         for interceptee in Interceptee.objects.all():
             if interceptee.interception_record_id not in valid_irfs:
                 interceptee.interception_record_id = default_irf.id

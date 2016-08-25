@@ -1,17 +1,15 @@
 from django.core import mail
 from django.core.urlresolvers import reverse
-from django_webtest import WebTest
 from django.test.testcases import TestCase
-
-from rest_framework.test import APIRequestFactory
+from django_webtest import WebTest
 from rest_framework.test import APIClient
+from rest_framework.test import APIRequestFactory
 
 from accounts.tests.factories import SuperUserFactory
 from budget.tests.factories import BorderStationBudgetCalculationFactory
-
-from static_border_stations.tests.factories import StaffFactory, CommitteeMemberFactory, BorderStationFactory
 from budget.views import MoneyDistributionFormPDFView
 from static_border_stations.tests.factories import BorderStationFactory
+from static_border_stations.tests.factories import StaffFactory, CommitteeMemberFactory
 
 
 class BudgetCalcApiTests(WebTest):

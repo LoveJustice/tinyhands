@@ -18,6 +18,7 @@ class NullableEmailField(models.EmailField):
     def get_prep_value(self, value):
         return value or None
 
+
 class Person(models.Model):
     email = NullableEmailField(blank=True, null=True, default=None, unique=False)
     first_name = models.CharField(max_length=255, blank=True)

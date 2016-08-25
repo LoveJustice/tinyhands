@@ -1,12 +1,9 @@
-from django.test import TestCase
+from django.core.urlresolvers import reverse
 from django_webtest import WebTest
-from django.core.urlresolvers import reverse, resolve
-import json
 
 from accounts.tests.factories import *
-
-from accounts.models import Account
 from static_border_stations.tests.factories import BorderStationFactory
+
 
 # Create your tests here.
 class BorderStationModelsTests(WebTest):

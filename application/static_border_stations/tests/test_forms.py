@@ -2,6 +2,7 @@ from django.test import TestCase
 from static_border_stations.forms import PersonForm
 from factories import BorderStationFactory
 
+
 class PersonFormTests(TestCase):
 
     def test_person_form_when_no_email_given_and_receives_money_distribution_form_is_true_should_have_error(self):
