@@ -1,4 +1,3 @@
-
 if [ "$SITE_HOSTNAME" = "localhost" ]
 then
   cat /etc/nginx/sites-enabled/local.conf.template > /etc/nginx/sites-enabled/default

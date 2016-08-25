@@ -58,3 +58,5 @@ error.log
 
 # VS Code Stuff
 .vscode/*
+
+local.env
