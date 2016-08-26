@@ -3,6 +3,7 @@
     "model": "dataentry.sitesettings",
     "pk": 1,
     "fields": {
+        "date_time_last_updated": "2016-04-27T16:31:54.335Z",
         "data": [
             {
                 "name": "address1_limit",
