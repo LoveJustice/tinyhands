@@ -4,4 +4,4 @@ from export_import.google_sheets import GoogleSheetClientThread
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        GoogleSheetClientThread.audit_export_forms()
+        GoogleSheetClientThread.import_vifs()
