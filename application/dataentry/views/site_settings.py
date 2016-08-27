@@ -19,5 +19,5 @@ class SiteSettingsViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated, IsSuperAdministrator)
 
     def retrieve_custom(self, request, *args, **kwargs):
-        sitesettings = SiteSettings.objects.all()[0]
-        return Response(SiteSettingsSerializer(sitesettings).data)
+        site_settings = SiteSettings.objects.all()[0]
+        return Response(SiteSettingsSerializer(site_settings).data)

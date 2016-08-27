@@ -18,6 +18,7 @@ class SiteSettingsSerializer(serializers.ModelSerializer):
     class Meta:
         model = SiteSettings
 
+
 class PersonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Person

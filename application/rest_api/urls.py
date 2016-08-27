@@ -52,7 +52,8 @@ urlpatterns = [
         url(r'^interceptee/(?P<pk>\d+)/$', IntercepteeViewSet.as_view(detail), name="IntercepteeDetail"),
 
         #SiteSettings
-        url(r'^site-settings/$', SiteSettingsViewSet.as_view({'get': 'retrieve_custom', 'put': 'update'}), name="SiteSettings"),
+        url(r'^site-settings/$', SiteSettingsViewSet.as_view({'get': 'retrieve_custom'}), name="SiteSettings"),
+        url(r'^site-settings/(?P<pk>\d+)/$', SiteSettingsViewSet.as_view({'put': 'update'}), name="SiteSettingsUpdate"),
 
         # VIFs
         url(r'^vif/$', VictimInterviewViewSet.as_view(list), name="VictimInterview"),
