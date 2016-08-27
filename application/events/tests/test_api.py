@@ -6,6 +6,7 @@ from rest_framework.test import APITestCase, APIClient
 from accounts.tests.factories import ViewUserFactory
 from events.tests.factories import EventFactory
 
+
 class RestApiTestCase(APITestCase):
 
     def login(self, user):
@@ -74,7 +75,6 @@ class CreateEventAPITests(RestApiTestCase):
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-
     def test_when_user_logged_in_and_valid_event_should_return_event(self):
         url = reverse('EventList')
         user = ViewUserFactory.create()
@@ -102,7 +102,7 @@ class UpdateEventAPITests(RestApiTestCase):
         event = EventFactory.create()
         url = reverse('Event', args=[event.id])
 
-        updatedEvent = {
+        updated_event = {
             'title': "My updated title",
             'location': event.location,
             'start_date': event.start_date,
@@ -115,7 +115,7 @@ class UpdateEventAPITests(RestApiTestCase):
             'ends': event.ends
         }
 
-        response = self.client.put(url, updatedEvent)
+        response = self.client.put(url, updated_event)
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
@@ -125,7 +125,7 @@ class UpdateEventAPITests(RestApiTestCase):
         user = ViewUserFactory.create()
         self.login(user)
 
-        updatedEvent = {
+        updated_event = {
             'id': event.id,
             'title': "My updated title",
             'location': event.location,
@@ -139,7 +139,7 @@ class UpdateEventAPITests(RestApiTestCase):
             'ends': event.ends
         }
 
-        response = self.client.put(url, updatedEvent)
+        response = self.client.put(url, updated_event)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
@@ -201,11 +201,11 @@ class AllEventAPITests(RestApiTestCase):
         user = ViewUserFactory.create()
         self.login(user)
 
-        response = self.client.post(reverse('EventList'), self.newEvent)
+        self.client.post(reverse('EventList'), self.newEvent)
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data),2)
+        self.assertEqual(len(response.data), 2)
         self.assertEqual(response.data[0]['id'], event.id)
         self.assertEqual(response.data[0]['title'], event.title)
         self.assertEqual(response.data[0]['location'], event.location)
@@ -267,7 +267,7 @@ class CalendarFeedAPITests(RestApiTestCase):
         event = EventFactory.create(is_repeat=False)
         start_date = datetime.date.today()
         end_date = start_date + datetime.timedelta(days=2)
-        outsideEvent = EventFactory.create(start_date=end_date+datetime.timedelta(days=1), end_date=end_date+datetime.timedelta(days=2))
+        EventFactory.create(start_date=end_date+datetime.timedelta(days=1), end_date=end_date+datetime.timedelta(days=2))
         self.login(user)
 
         response = self.client.get(url, {'start': start_date, 'end': end_date})
@@ -281,23 +281,23 @@ class CalendarFeedAPITests(RestApiTestCase):
         user = ViewUserFactory.create()
         start_date = datetime.date.today()
         end_date = start_date + datetime.timedelta(days=2)
-        repeatedEventProperties = {
+        repeated_event_properties = {
             'start_date': start_date,
             'end_date': end_date,
             'is_repeat': True,
             'repetition': 'D',
             'ends': end_date + datetime.timedelta(days=4)
         }
-        repeatedEvent = EventFactory.create(**repeatedEventProperties)
+        repeated_event = EventFactory.create(**repeated_event_properties)
         self.login(user)
 
         response = self.client.get(url, {'start': start_date, 'end': end_date})
 
         self.assertEquals(len(response.data), 2)
-        self.assertEquals(response.data[0]['title'], repeatedEvent.title)
-        self.assertEquals(response.data[0]['location'], repeatedEvent.location)
-        self.assertEquals(response.data[1]['title'], repeatedEvent.title)
-        self.assertEquals(response.data[1]['location'], repeatedEvent.location)
+        self.assertEquals(response.data[0]['title'], repeated_event.title)
+        self.assertEquals(response.data[0]['location'], repeated_event.location)
+        self.assertEquals(response.data[1]['title'], repeated_event.title)
+        self.assertEquals(response.data[1]['location'], repeated_event.location)
 
 
 class DashboardFeedAPITests(RestApiTestCase):
@@ -315,7 +315,7 @@ class DashboardFeedAPITests(RestApiTestCase):
         today = datetime.date.today()
         event = EventFactory.create(is_repeat=False)
         event2 = EventFactory.create(start_date=today+datetime.timedelta(days=1), is_repeat=False)
-        outsideEvent = EventFactory.create(start_date=today+datetime.timedelta(days=8))
+        EventFactory.create(start_date=today+datetime.timedelta(days=8))
         self.login(user)
 
         response = self.client.get(url)
@@ -330,29 +330,28 @@ class DashboardFeedAPITests(RestApiTestCase):
             else:
                 self.assertEquals(len(day), 1)
 
-
     def test_when_event_is_repeated_should_return_multiple_events_that_occur_in_week(self):
         url = reverse('EventDashboardFeed')
         user = ViewUserFactory.create()
         today = datetime.date.today()
-        repeatedEventProperties = {
+        repeated_event_properties = {
             'start_date': today,
             'end_date': today,
             'is_repeat': True,
             'repetition': 'D',
             'ends': today + datetime.timedelta(days=2)
         }
-        repeatedEvent = EventFactory.create(**repeatedEventProperties)
+        repeated_event = EventFactory.create(**repeated_event_properties)
         self.login(user)
 
         response = self.client.get(url)
 
         for idx, day in enumerate(response.data):
             if idx == 0:
-                self.assertEquals(day[1]['title'], repeatedEvent.title)
-                self.assertEquals(day[1]['location'], repeatedEvent.location)
+                self.assertEquals(day[1]['title'], repeated_event.title)
+                self.assertEquals(day[1]['location'], repeated_event.location)
             elif idx == 1:
-                self.assertEquals(day[1]['title'], repeatedEvent.title)
-                self.assertEquals(day[1]['location'], repeatedEvent.location)
+                self.assertEquals(day[1]['title'], repeated_event.title)
+                self.assertEquals(day[1]['location'], repeated_event.location)
             else:
                 self.assertEquals(len(day), 1)

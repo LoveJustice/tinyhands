@@ -2,6 +2,7 @@ from django.db import models
 from addresses import Address1, Address2
 from victim_interview import VictimInterview
 
+
 class VictimInterviewLocationBox(models.Model):
     victim_interview = models.ForeignKey(VictimInterview, related_name='location_boxes', on_delete=models.CASCADE)
 

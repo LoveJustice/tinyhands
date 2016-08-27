@@ -6,6 +6,7 @@ from imagekit.processors import ResizeToFill
 from person import Person
 from interception_record import InterceptionRecord
 
+
 class Interceptee(models.Model):
     KIND_CHOICES = [
         ('v', 'Victim'),

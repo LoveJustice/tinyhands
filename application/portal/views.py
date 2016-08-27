@@ -1,14 +1,15 @@
+from datetime import timedelta
+
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core import serializers
 from django.http import HttpResponse
 from django.shortcuts import render
-from django.conf import settings
-
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
-from datetime import timedelta
 from django.utils import timezone
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
 from dataentry.models import BorderStation, InterceptionRecord
 
 
@@ -24,13 +25,13 @@ def get_border_stations(request):
 
 
 def get_interception_records(request):
-    interceptionSum = 0
+    interception_sum = 0
     if "station_code" in request.GET:
         interception_records = InterceptionRecord.objects.filter(irf_number__startswith=request.GET["station_code"])
         for interception in interception_records:
             victims = interception.interceptees.filter(kind='v')
-            interceptionSum += len(victims)
-        return HttpResponse(interceptionSum)
+            interception_sum += len(victims)
+        return HttpResponse(interception_sum)
     return HttpResponse("No IRFs Found")
 
 
@@ -47,14 +48,11 @@ class TallyDaysView(APIView):
         # timezone.now() gets utc time but timezone.now().now() gets local Nepal time
         today = timezone.now().now()
         dates = [today - timedelta(days=x) for x in range(7)]
-        results = {}
-        results['id'] = request.user.id
+        results = {'id': request.user.id}
         foo = []
         i = 0
         for date in dates:
-            day_records = {}
-            day_records['date'] = date
-            day_records['interceptions'] = {}
+            day_records = {'date': date, 'interceptions': {}}
             interceptions = day_records['interceptions']
             records = InterceptionRecord.objects.filter(date_time_of_interception__year=date.year, date_time_of_interception__month=date.month, date_time_of_interception__day=date.day)
             for record in records:

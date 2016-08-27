@@ -1,38 +1,35 @@
 import StringIO
 import datetime
 
+from braces.views import LoginRequiredMixin
 from dateutil.relativedelta import relativedelta
-from lxml import etree
-from z3c.rml import document
-
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ImproperlyConfigured
+from django.core.urlresolvers import reverse
 from django.core.urlresolvers import reverse_lazy
 from django.db.models import Count, Sum
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 from django.views.generic import ListView, DeleteView, View
-from django.conf import settings
-from django.core.urlresolvers import reverse
-
-
-from braces.views import LoginRequiredMixin
-from rest_framework.decorators import list_route
+from lxml import etree
 from rest_framework import filters, viewsets
 from rest_framework.decorators import api_view
+from rest_framework.decorators import list_route
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_api.authentication import HasPermission
 from templated_email import send_templated_mail
-from accounts.mixins import PermissionsRequiredMixin
+from z3c.rml import document
 
+from accounts.mixins import PermissionsRequiredMixin
 from budget.models import BorderStationBudgetCalculation, OtherBudgetItemCost, StaffSalary
 from dataentry.models import InterceptionRecord
+from rest_api.authentication import HasPermission
+from serializers import BorderStationBudgetCalculationSerializer, OtherBudgetItemCostSerializer, StaffSalarySerializer, BorderStationBudgetCalculationListSerializer
 from static_border_stations.models import Staff, BorderStation, CommitteeMember
 from static_border_stations.serializers import StaffSerializer, CommitteeMemberSerializer
-from serializers import BorderStationBudgetCalculationSerializer, OtherBudgetItemCostSerializer, StaffSalarySerializer, BorderStationBudgetCalculationListSerializer
 
 
 class OldBudgetViewSet(viewsets.ModelViewSet):
@@ -232,6 +229,7 @@ class OldStaffSalaryViewSet(viewsets.ModelViewSet):
             self.object_list = self.filter_queryset(self.get_queryset().filter(budget_calc_sheet=self.kwargs['pk']))
             serializer = self.get_serializer(self.object_list, many=True)
             return Response(serializer.data)
+
 
 class StaffSalaryViewSet(viewsets.ModelViewSet):
     queryset = StaffSalary.objects.all()

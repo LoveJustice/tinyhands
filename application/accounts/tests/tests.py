@@ -1,13 +1,8 @@
 import unittest
 
-from django_webtest import WebTest
-from accounts.models import Account, Alert
+from accounts.models import Alert
 from accounts.tests.factories import SuperUserFactory
 from django.core import mail
-
-
-class TestModels(WebTest):
-    pass
 
 
 class AlertTestCase(unittest.TestCase):
@@ -17,12 +12,12 @@ class AlertTestCase(unittest.TestCase):
 
     def testAlertAdded(self):
         x = Alert.objects.all()
-        self.assertEqual(len(x),1)
+        self.assertEqual(len(x), 1)
 
     def testAlertRemoved(self):
         x = Alert.objects.all()[0]  # get the first alert in the database
         x.delete()
-        self.assertEqual(len(Alert.objects.all()),0)
+        self.assertEqual(len(Alert.objects.all()), 0)
 
 
 class AccountTest(unittest.TestCase):
@@ -58,7 +53,7 @@ class AccountTest(unittest.TestCase):
         account = SuperUserFactory.create()
         subject = "foo"
 
-        account.email_user("test_templated_email", "alert", {"subject": subject })
+        account.email_user("test_templated_email", "alert", {"subject": subject})
 
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(mail.outbox[0].subject, subject)

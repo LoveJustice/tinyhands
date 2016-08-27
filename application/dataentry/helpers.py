@@ -1,4 +1,3 @@
-
 """
     This Helper method returns a dictionary of the related items
     to a given object in the following format:

@@ -9,14 +9,10 @@ class Address1Serializer(serializers.ModelSerializer):
     class Meta:
         model = Address1
 
+
 class Address1RelatedItemsSerializer(Address1Serializer):
     related_items = serializers.SerializerMethodField()
     get_related_items = related_items_helper
-
-
-class PersonSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Person
 
 
 class CanonicalNameSerializer(serializers.ModelSerializer):
@@ -125,14 +121,14 @@ class InterceptionRecordSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(validation_response)
         return data
 
-    def check_for_errors(self, data): # For Error validation
+    def check_for_errors(self, data):  # For Error validation
         errors = []
         errors += self.check_for_none_checked(data)
         if data['contact_noticed'] == False and data['staff_noticed'] == False:
             errors.append({'contact_noticed': 'Either Contact (6.0) or Staff (7.0) must be chosen for how interception was made.'})
         return errors
 
-    def check_for_none_checked(self, data): # For Error validation
+    def check_for_none_checked(self, data):  # For Error validation
         errors = []
         has_none_checked = True
         for field in data:
@@ -142,51 +138,50 @@ class InterceptionRecordSerializer(serializers.ModelSerializer):
             errors.append({'no_checkboxes_checked': 'At least one box must be checked on the first page.'})
         return errors
 
-    def check_for_red_flags(self, data): # For Warning validation
+    def check_for_red_flags(self, data):  # For Warning validation
         warnings = []
         any_red_flags = False
         for field in InterceptionRecord._meta.fields:
             try:
-                if field.weight != None:
-                    if data[field.name] == True:
+                if field.weight is not None:
+                    if data[field.name]:
                         any_red_flags = True
             except:
                 pass
-        if any_red_flags == False:
+        if not any_red_flags:
             warnings.append({'red_flags': 'No red flags are checked.'})
         return warnings
 
-    def check_for_warnings(self, data): # For Warning validation
+    def check_for_warnings(self, data):  # For Warning validation
         warnings = []
         warnings += self.check_for_red_flags(data)
         warnings += self.check_procedure(data)
         warnings += self.check_type(data)
-        if data['has_signature'] == False:
+        if not data['has_signature']:
             warnings.append({'has_signature': 'Form should be signed, though not required.'})
         return warnings
 
-
-    def check_procedure(self, data): # For Warning validation
+    def check_procedure(self, data):  # For Warning validation
         warnings = []
-        if data['call_thn_to_cross_check'] == False:
+        if not data['call_thn_to_cross_check']:
             warnings.append({'call_thn_to_cross_check': 'Procedure not followed.'})
-        if data['call_subcommittee_chair'] == False:
+        if not data['call_subcommittee_chair']:
             warnings.append({'call_subcommittee_chair': 'Procedure not followed.'})
-        if data['scan_and_submit_same_day'] == False:
+        if not data['scan_and_submit_same_day']:
             warnings.append({'scan_and_submit_same_day': 'Procedure not followed.'})
         return warnings
 
-    def check_type(self, data): # For Warning validation
+    def check_type(self, data):  # For Warning validation
         warnings = []
         type_is_set = False
         for field in InterceptionRecord._meta.fields:
             try:
                 if field.name:
-                    if 'type' in field.name and data[field.name] == True:
+                    if 'type' in field.name and data[field.name]:
                         type_is_set = True
             except:
                 pass
-        if type_is_set == False:
+        if not type_is_set:
             warnings.append({'interception_type': 'Field should be included, though not required.'})
         return warnings
 
@@ -259,7 +254,7 @@ class VictimInterviewSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = VictimInterview
-        read_only_fields = ('person_boxes','location_boxes')
+        read_only_fields = ('person_boxes', 'location_boxes')
         exclude = []
         depth = 1
 

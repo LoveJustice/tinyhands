@@ -32,4 +32,3 @@ class OtherBudgetItemCostSerializer(serializers.ModelSerializer):
 class StaffSalarySerializer(serializers.ModelSerializer):
     class Meta:
         model = StaffSalary
-
