@@ -38,6 +38,7 @@ foo[1-9].*
 application/media/
 application/src/*
 application/log/*
+application/.idea
 build/nginx/media/*
 build/nginx/static/*
 
@@ -58,3 +59,5 @@ error.log
 
 # VS Code Stuff
 .vscode/*
+
+local.env

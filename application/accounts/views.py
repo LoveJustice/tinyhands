@@ -1,14 +1,10 @@
-import json
-
-from django.contrib.auth import authenticate, login
-from django.shortcuts import render, get_object_or_404
-from django.core.urlresolvers import reverse_lazy
-from django.contrib import messages
-from django.http import HttpResponseRedirect, HttpResponse
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView, RedirectView, TemplateView
-from django.contrib.auth.decorators import login_required
 from braces.views import LoginRequiredMixin
-from extra_views import ModelFormSetView
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse_lazy
+from django.http import HttpResponse
+from django.shortcuts import render, get_object_or_404
+from django.views.generic import UpdateView, TemplateView
 from rest_framework import status
 from rest_framework.decorators import list_route
 from rest_framework.permissions import IsAuthenticated
@@ -16,12 +12,13 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
-from util.functions import get_object_or_None
-from accounts.models import Account, DefaultPermissionsSet
+from accounts.forms import AccountActivateForm
 from accounts.mixins import PermissionsRequiredMixin
-from accounts.forms import CreateUnactivatedAccountForm, AccountActivateForm
+from accounts.models import Account, DefaultPermissionsSet
 from accounts.serializers import AccountsSerializer, DefaultPermissionsSetSerializer
 from rest_api.authentication import HasPermission
+from util.functions import get_object_or_None
+
 
 @login_required
 def home(request):
@@ -65,6 +62,7 @@ class AccountActivateView(UpdateView):
                                password=self.request.POST['password1'])
         login(self.request, account)
         return super(AccountActivateView, self).form_valid(form)
+
 
 class AccountActivateClient(APIView):
     def get(self, request, activation_key=None):
@@ -136,7 +134,7 @@ class DefaultPermissionsSetViewSet(ModelViewSet):
 
     def destroy(self, request, pk=None):
         instance = DefaultPermissionsSet.objects.get(pk=pk)
-        if(instance.is_used_by_accounts()):
+        if instance.is_used_by_accounts():
             error_message = {'detail': 'Permission set is currently used by accounts. It cannot be deleted.'}
             return Response(error_message, status=status.HTTP_403_FORBIDDEN)
 
@@ -150,6 +148,7 @@ class CurrentUserView(APIView):
     def get(self, request):
         serializer = AccountsSerializer(request.user)
         return Response(serializer.data)
+
 
 class ResendActivationEmailView(APIView):
     permission_classes = [IsAuthenticated, HasPermission]

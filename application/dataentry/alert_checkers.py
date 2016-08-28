@@ -1,19 +1,14 @@
-from django.conf import settings
-
-from datetime import datetime
-from django.utils.timezone import make_aware
 import logging
-from django.dispatch import receiver
+from datetime import datetime
 
+from django.conf import settings
+from django.utils.timezone import make_aware
 from fuzzywuzzy import process
 
 from accounts.models import Alert
-
-from dataentry.models import Interceptee, Person, FuzzyMatching
-
+from dataentry.models import Interceptee, FuzzyMatching
 from dataentry_signals import irf_done
 from dataentry_signals import vif_done
-
 
 
 logger = logging.getLogger(__name__)
@@ -24,7 +19,6 @@ class VIFAlertChecker(object):
         self.vif = form
         self.inlines = inlines
 
-     
     @staticmethod
     def handle_vif_done(sender, **kwargs):
         vif = kwargs.get("vif")
@@ -117,7 +111,6 @@ class IRFAlertChecker(object):
         interceptees = kwargs.get("interceptees")
         if irf is not None and interceptees is not None:
             IRFAlertChecker(irf, interceptees).check_them()
-          
 
     def check_them(self):
         current_datetime = make_aware(datetime.now())
@@ -139,7 +132,7 @@ class IRFAlertChecker(object):
 
         """
         # Get all of the interceptees from other IRFs
-        all_people = Interceptee.objects.all().exclude(interception_record=self.irf.id) #this looks like we need it
+        all_people = Interceptee.objects.all().exclude(interception_record=self.irf.id)  # this looks like we need it
         # Get a list of all of their full_names for use of fuzzy_wuzzy
         people_dict = {obj: obj.person.full_name for obj in all_people}
 
@@ -151,20 +144,19 @@ class IRFAlertChecker(object):
 
         for interceptee in self.interceptees:
             if interceptee.kind == 't':
-                onePersonMatches = []
-                tmplist =[]
-                p=interceptee.person
-                onePersonMatches= process.extractBests(p.full_name, people_dict, score_cutoff=fuzzy_object.person_cutoff, limit=fuzzy_object.person_limit)
+                tmplist = []
+                p = interceptee.person
+                onePersonMatches = process.extractBests(p.full_name, people_dict, score_cutoff=fuzzy_object.person_cutoff, limit=fuzzy_object.person_limit)
                 logger.debug(onePersonMatches)
                 for match in onePersonMatches:
                     tmplist.append((match[1], match[2].person))
-                tmplist.insert(0,(0,interceptee.person))
+                tmplist.insert(0, (0, interceptee.person))
                 trafficker_list.append(tmplist)
         if len(trafficker_list) > 0:
             Alert.objects.send_alert("Name Match",
                                      context={"irf": self.irf,
                                               "trafficker_list": trafficker_list,
-                                              "trafficker_in_custody" : trafficker_in_custody})
+                                              "trafficker_in_custody": trafficker_in_custody})
             return True
         return False
     
@@ -188,8 +180,6 @@ class IRFAlertChecker(object):
         for intercep in self.interceptees:
             if intercep.kind == 't' and intercep.photo not in [None, '']:
                 trafficker_list.append(intercep.person)
-
-
 
         if len(trafficker_list) > 0:
             if (certainty_points >= 4) and (red_flags >= 400):
@@ -234,9 +224,9 @@ class IRFAlertChecker(object):
         if trafficker_in_custody is not None:
             traffickers = trafficker_in_custody.split(',')
             for trafficker_index in traffickers:
-                if trafficker_index.isdigit() == True:
+                if trafficker_index.isdigit():
                     idx = int(trafficker_index) - 1
-                    if idx >= 0 and idx < len(self.interceptees):
+                    if 0 <= idx < len(self.interceptees):
                         trafficker_in_custody_list.append(self.interceptees[idx].person.full_name)
                     else:
                         logger.warn("trafficker index out of range:" + idx)
@@ -257,11 +247,7 @@ class IRFAlertChecker(object):
                     traff_format = traff_format + ' and ' + trafficker_in_custody_list[len(trafficker_in_custody_list)-1] + ' were'
                 
         logger.info("trafficker_in_custody returning " + traff_format)
-                
-                            
         return traff_format
     
-irf_done.connect(IRFAlertChecker.handle_irf_done, weak=False, dispatch_uid = "IRFAlertChecker")  
-vif_done.connect(VIFAlertChecker.handle_vif_done, weak=False, dispatch_uid = "VIFAlertChecker")   
-    
-    
+irf_done.connect(IRFAlertChecker.handle_irf_done, weak=False, dispatch_uid="IRFAlertChecker")
+vif_done.connect(VIFAlertChecker.handle_vif_done, weak=False, dispatch_uid="VIFAlertChecker")

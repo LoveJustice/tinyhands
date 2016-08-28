@@ -3,6 +3,7 @@ from django.test import TestCase
 from rest_framework import serializers
 from events.serializers import EventsSerializer
 
+
 class EventsSerializerTests(TestCase):
     serializer = EventsSerializer()
 

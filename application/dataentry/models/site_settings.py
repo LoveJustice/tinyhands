@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.postgres.fields import JSONField
 
 
+
 class FuzzyMatching(models.Model):
     address1_cutoff = models.PositiveIntegerField(default=70)
     address1_limit = models.PositiveIntegerField(default=5)

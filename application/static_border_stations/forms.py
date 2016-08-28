@@ -28,6 +28,7 @@ class CommitteeMemberForm(PersonForm):
         model = CommitteeMember
         fields = ['email', 'first_name', 'last_name', 'receives_money_distribution_form', 'border_station']
 
+
 class LocationForm(forms.ModelForm):
     class Meta:
         model = Location

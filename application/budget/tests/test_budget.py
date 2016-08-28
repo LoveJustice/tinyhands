@@ -12,7 +12,7 @@ class TestModels(TestCase):
     def test_border_station_budget_calculation_form_functions(self):
         item = BorderStationBudgetCalculationFactory.create()
 
-        #Shelter
+        # Shelter
         item.shelter_water = 10
         item.shelter_rent = 20
         item.shelter_electricity = 40
@@ -28,7 +28,7 @@ class TestModels(TestCase):
         self.assertEqual(item.shelter_total(), 170)
 
 
-        #Food and Gas
+        # Food and Gas
         item.food_and_gas_number_of_intercepted_girls = 5
         item.food_and_gas_number_of_intercepted_girls_multiplier_before = 100
         item.food_and_gas_number_of_intercepted_girls_multiplier_after = 3
@@ -40,7 +40,7 @@ class TestModels(TestCase):
         self.assertEqual(item.food_and_gas_total(), 21600)
 
 
-        #Awareness
+        # Awareness
         item.awareness_contact_cards = True
         item.awareness_contact_cards_amount = 5
         item.awareness_awareness_party_boolean = True
@@ -56,7 +56,7 @@ class TestModels(TestCase):
         self.assertEqual(item.awareness_total(), 100)
 
 
-        #Supplies
+        # Supplies
         item.supplies_walkie_talkies_boolean = True
         item.supplies_walkie_talkies_amount = 20
         item.supplies_recorders_boolean = True
@@ -75,7 +75,7 @@ class TestModels(TestCase):
         self.assertEqual(item.supplies_total(), 100)
 
 
-        #Communication
+        # Communication
         item.communication_chair = True
         item.communication_chair_amount = 1000
         item.communication_manager = True
@@ -92,7 +92,7 @@ class TestModels(TestCase):
         self.assertEqual(item.communication_total(), 3600)
 
 
-        #Travel
+        # Travel
         item.travel_chair_with_bike = True
         item.travel_chair_with_bike_amount = 2000
         item.travel_manager_with_bike = True
@@ -110,7 +110,7 @@ class TestModels(TestCase):
         travel_extra = OtherBudgetItemCost.objects.create(budget_item_parent=item, form_section=1, name="extra-Travel", cost=100)
         self.assertEqual(item.travel_total(), 1120)
 
-        #Administration
+        # Administration
         item.administration_booth = True
         item.administration_booth_amount = 30000
         item.administration_number_of_intercepts_last_month = 3
@@ -125,21 +125,21 @@ class TestModels(TestCase):
         item.administration_registration = False
         self.assertEqual(item.administration_total(), 3430)
 
-        #Staff
+        # Staff
         staff = StaffSalary.objects.create(budget_calc_sheet=item, salary=1000)
         extra_8 = OtherBudgetItemCost.objects.create(budget_item_parent=item, form_section=8, name="extra-Staff", cost=100)
         self.assertEqual(item.salary_total(), 1100)
 
-        #Medical
+        # Medical
         item.medical_last_months_expense = 500
         self.assertEqual(item.medical_total(), 500)
 
-        #Miscellaneous
+        # Miscellaneous
         item.miscellaneous_number_of_intercepts_last_month = 5
         item.miscellaneous_number_of_intercepts_last_month_multiplier = 300
         self.assertEqual(item.miscellaneous_total(), 1500)
         misc_extra = OtherBudgetItemCost.objects.create(budget_item_parent=item, form_section=2, name="extra-Miscellaneous", cost=100)
         self.assertEqual(item.miscellaneous_total(), 1600)
 
-        #Station Total
+        # Station Total
         self.assertEqual(item.station_total(), 33320)

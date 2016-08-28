@@ -4,15 +4,14 @@ from rest_framework.test import APITestCase, APIClient
 
 from accounts.tests.factories import SuperUserFactory, ViewUserFactory, SuperUserDesignation, ViewUserDesignation
 
-class RestApiTestCase(APITestCase):
 
+class RestApiTestCase(APITestCase):
     def login(self, user):
         self.client = APIClient()
         self.client.force_authenticate(user=user)
 
 
 class AccountsGetTests(RestApiTestCase):
-
     def test_when_not_authenticated_should_deny_access(self):
         url = reverse('AccountList')
 
@@ -41,32 +40,32 @@ class AccountsGetTests(RestApiTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data['results']), 1)
 
-class AccountsPostTests(RestApiTestCase):
 
+class AccountsPostTests(RestApiTestCase):
     email = 'foo@bar.org'
     first_name = 'Test'
     last_name = 'Tester'
 
     def get_user_data(self, user):
         return {
-            'email' : self.email,
-            'first_name' : self.first_name,
-            'last_name' : self.last_name,
-            'user_designation' : user.user_designation.id,
-            'permission_irf_view' : True,
-            'permission_irf_add' : True,
-            'permission_irf_edit' : True,
-            'permission_irf_delete' : True,
-            'permission_vif_view' : True,
-            'permission_vif_add' : True,
-            'permission_vif_edit' : True,
-            'permission_vif_delete' : True,
-            'permission_accounts_manage' : True,
-            'permission_border_stations_view' : True,
-            'permission_border_stations_add' : True,
-            'permission_border_stations_edit' : True,
-            'permission_vdc_manage' : True,
-            'permission_budget_manage' : True,
+            'email': self.email,
+            'first_name': self.first_name,
+            'last_name': self.last_name,
+            'user_designation': user.user_designation.id,
+            'permission_irf_view': True,
+            'permission_irf_add': True,
+            'permission_irf_edit': True,
+            'permission_irf_delete': True,
+            'permission_vif_view': True,
+            'permission_vif_add': True,
+            'permission_vif_edit': True,
+            'permission_vif_delete': True,
+            'permission_accounts_manage': True,
+            'permission_border_stations_view': True,
+            'permission_border_stations_add': True,
+            'permission_border_stations_edit': True,
+            'permission_vdc_manage': True,
+            'permission_budget_manage': True,
         }
 
     def test_when_not_authenticated_should_deny_access(self):
@@ -123,7 +122,7 @@ class AccountGetTests(RestApiTestCase):
 
     def test_when_authenticated_and_has_permission_should_return_account(self):
         user = SuperUserFactory.create()
-        url = reverse('Account',args=[user.id])
+        url = reverse('Account', args=[user.id])
         self.login(user)
 
         response = self.client.get(url)
@@ -134,28 +133,27 @@ class AccountGetTests(RestApiTestCase):
 
 
 class AccountPutTests(RestApiTestCase):
-
     def get_update_user_data(self, user, new_email):
         update_user = {
-            'id' : user.id,
-            'email' : new_email,
-            'first_name' : user.first_name,
-            'last_name' : user.last_name,
-            'user_designation' : user.user_designation.id,
-            'permission_irf_view' : True,
-            'permission_irf_add' : True,
-            'permission_irf_edit' : True,
-            'permission_irf_delete' : True,
-            'permission_vif_view' : True,
-            'permission_vif_add' : True,
-            'permission_vif_edit' : True,
-            'permission_vif_delete' : True,
-            'permission_accounts_manage' : True,
-            'permission_border_stations_view' : True,
-            'permission_border_stations_add' : True,
-            'permission_border_stations_edit' : True,
-            'permission_address2_manage' : True,
-            'permission_budget_manage' : True,
+            'id': user.id,
+            'email': new_email,
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'user_designation': user.user_designation.id,
+            'permission_irf_view': True,
+            'permission_irf_add': True,
+            'permission_irf_edit': True,
+            'permission_irf_delete': True,
+            'permission_vif_view': True,
+            'permission_vif_add': True,
+            'permission_vif_edit': True,
+            'permission_vif_delete': True,
+            'permission_accounts_manage': True,
+            'permission_border_stations_view': True,
+            'permission_border_stations_add': True,
+            'permission_border_stations_edit': True,
+            'permission_address2_manage': True,
+            'permission_budget_manage': True,
         }
         return update_user
 
@@ -184,7 +182,7 @@ class AccountPutTests(RestApiTestCase):
 
     def test_when_authenticated_and_has_permission_should_update_account(self):
         user = SuperUserFactory.create()
-        url = reverse('Account',args=[user.id])
+        url = reverse('Account', args=[user.id])
         self.login(user)
         new_email = 'foo@new.org'
         update_user_data = self.get_update_user_data(user, new_email)
@@ -199,9 +197,8 @@ class AccountPutTests(RestApiTestCase):
 class AccountDeleteTests(RestApiTestCase):
 
     def test_when_not_authenticated_should_deny_access(self):
-        user = SuperUserFactory.create()
         user_to_delete = ViewUserFactory.create()
-        url = reverse('Account',args=[user_to_delete.id])
+        url = reverse('Account', args=[user_to_delete.id])
 
         response = self.client.delete(url)
 
@@ -211,7 +208,7 @@ class AccountDeleteTests(RestApiTestCase):
     def test_when_authenticated_and_does_not_have_permission_should_deny_access(self):
         user = ViewUserFactory.create()
         user_to_delete = ViewUserFactory.create()
-        url = reverse('Account',args=[user_to_delete.id])
+        url = reverse('Account', args=[user_to_delete.id])
         self.login(user)
 
         response = self.client.delete(url)
@@ -222,7 +219,7 @@ class AccountDeleteTests(RestApiTestCase):
     def test_when_authenticated_and_has_permission_should_delete_account(self):
         user = SuperUserFactory.create()
         user_to_delete = ViewUserFactory.create()
-        url = reverse('Account',args=[user_to_delete.id])
+        url = reverse('Account', args=[user_to_delete.id])
         self.login(user)
 
         response = self.client.delete(url)
@@ -265,21 +262,21 @@ class DefaultPermissionsSetsPostTests(RestApiTestCase):
 
     name = 'new_set'
     new_permission_set = {
-        'name' : name,
-        'permission_irf_view' : True,
-        'permission_irf_add' : True,
-        'permission_irf_edit' : True,
-        'permission_irf_delete' : True,
-        'permission_vif_view' : True,
-        'permission_vif_add' : True,
-        'permission_vif_edit' : True,
-        'permission_vif_delete' : True,
-        'permission_accounts_manage' : True,
-        'permission_border_stations_view' : True,
-        'permission_border_stations_add' : True,
-        'permission_border_stations_edit' : True,
-        'permission_address2_manage' : True,
-        'permission_budget_manage' : True,
+        'name': name,
+        'permission_irf_view': True,
+        'permission_irf_add': True,
+        'permission_irf_edit': True,
+        'permission_irf_delete': True,
+        'permission_vif_view': True,
+        'permission_vif_add': True,
+        'permission_vif_edit': True,
+        'permission_vif_delete': True,
+        'permission_accounts_manage': True,
+        'permission_border_stations_view': True,
+        'permission_border_stations_add': True,
+        'permission_border_stations_edit': True,
+        'permission_address2_manage': True,
+        'permission_budget_manage': True,
     }
 
     def test_when_not_authenticated_should_deny_access(self):
@@ -352,25 +349,24 @@ class DefaultPermissionsSetPutTests(RestApiTestCase):
 
     def get_update_permission_set(self, permission_set, new_name):
         update_permission_set = {
-            'id' : permission_set.id,
-            'name' : new_name,
-            'permission_irf_view' : True,
-            'permission_irf_add' : True,
-            'permission_irf_edit' : True,
-            'permission_irf_delete' : True,
-            'permission_vif_view' : True,
-            'permission_vif_add' : True,
-            'permission_vif_edit' : True,
-            'permission_vif_delete' : True,
-            'permission_accounts_manage' : True,
-            'permission_border_stations_view' : True,
-            'permission_border_stations_add' : True,
-            'permission_border_stations_edit' : True,
-            'permission_address2_manage' : True,
-            'permission_budget_manage' : True,
+            'id': permission_set.id,
+            'name': new_name,
+            'permission_irf_view': True,
+            'permission_irf_add': True,
+            'permission_irf_edit': True,
+            'permission_irf_delete': True,
+            'permission_vif_view': True,
+            'permission_vif_add': True,
+            'permission_vif_edit': True,
+            'permission_vif_delete': True,
+            'permission_accounts_manage': True,
+            'permission_border_stations_view': True,
+            'permission_border_stations_add': True,
+            'permission_border_stations_edit': True,
+            'permission_address2_manage': True,
+            'permission_budget_manage': True,
         }
         return update_permission_set
-
 
     def test_when_not_authenticated_should_deny_access(self):
         name = 'set_to_get'
@@ -481,21 +477,20 @@ class CurrentUserTests(RestApiTestCase):
         self.assertEqual(response.data['id'], user.id)
         self.assertEqual(response.data['email'], user.email)
 
-class ResendActivationEmailTests(RestApiTestCase):
 
+class ResendActivationEmailTests(RestApiTestCase):
     def test_when_not_logged_in_should_deny_access(self):
-        url = reverse('ResendActivationEmail',args=[1])
+        url = reverse('ResendActivationEmail', args=[1])
 
         response = self.client.post(url)
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertEqual(response.data['detail'], 'Authentication credentials were not provided.')
 
-
     def test_when_logged_in_and_does_not_have_permission_should_deny_access(self):
         user = ViewUserFactory.create()
         self.login(user)
-        url = reverse('ResendActivationEmail',args=[1000])
+        url = reverse('ResendActivationEmail', args=[1000])
 
         response = self.client.post(url)
 
@@ -505,7 +500,7 @@ class ResendActivationEmailTests(RestApiTestCase):
     def test_when_logged_in_and_bad_id_should_return_404(self):
         user = SuperUserFactory.create()
         self.login(user)
-        url = reverse('ResendActivationEmail',args=[1000])
+        url = reverse('ResendActivationEmail', args=[1000])
 
         response = self.client.post(url)
 
@@ -517,7 +512,7 @@ class ResendActivationEmailTests(RestApiTestCase):
         activated_user.set_password('foo')
         activated_user.save()
         self.login(user)
-        url = reverse('ResendActivationEmail',args=[activated_user.id])
+        url = reverse('ResendActivationEmail', args=[activated_user.id])
 
         response = self.client.post(url)
 
@@ -528,7 +523,7 @@ class ResendActivationEmailTests(RestApiTestCase):
         user = SuperUserFactory.create()
         activated_user = ViewUserFactory.create()
         self.login(user)
-        url = reverse('ResendActivationEmail',args=[activated_user.id])
+        url = reverse('ResendActivationEmail', args=[activated_user.id])
 
         response = self.client.post(url)
 
