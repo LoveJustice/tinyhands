@@ -33,6 +33,8 @@ from static_border_stations.serializers import StaffSerializer, CommitteeMemberS
 
 
 class OldBudgetViewSet(viewsets.ModelViewSet):
+    authentication_classes = [IsAuthenticated, HasPermission]
+    permissions_required = ['permission_budget_manage']
     queryset = BorderStationBudgetCalculation.objects.all()
     serializer_class = BorderStationBudgetCalculationSerializer
 
@@ -174,6 +176,8 @@ def ng_budget_calc_view(request, pk):
 class OldOtherItemsViewSet(viewsets.ModelViewSet):
     queryset = OtherBudgetItemCost.objects.all()
     serializer_class = OtherBudgetItemCostSerializer
+    authentication_classes = [IsAuthenticated, HasPermission]
+    permissions_required = ['permission_budget_manage']
 
     def retrieve(self, request, *args, **kwargs):
         """
@@ -218,6 +222,9 @@ class OtherItemsViewSet(viewsets.ModelViewSet):
 class OldStaffSalaryViewSet(viewsets.ModelViewSet):
     queryset = StaffSalary.objects.all()
     serializer_class = StaffSalarySerializer
+    authentication_classes = [IsAuthenticated, HasPermission]
+    permissions_required = ['permission_budget_manage']
+
 
     def budget_calc_retrieve(self, request, *args, **kwargs):
         """
@@ -237,6 +244,8 @@ class OldStaffSalaryViewSet(viewsets.ModelViewSet):
 class StaffSalaryViewSet(viewsets.ModelViewSet):
     queryset = StaffSalary.objects.all()
     serializer_class = StaffSalarySerializer
+    authentication_classes = [IsAuthenticated, HasPermission]
+    permissions_required = ['permission_budget_manage']
 
     def budget_calc_retrieve(self, request, *args, **kwargs):
         """
@@ -276,6 +285,9 @@ class BudgetCalcDeleteView(DeleteView, LoginRequiredMixin, PermissionsRequiredMi
 
 
 class MoneyDistribution(viewsets.ViewSet):
+    authentication_classes = [IsAuthenticated, HasPermission]
+    permissions_required = ['permission_budget_manage']
+
     def retrieve(self, request, pk):
         border_station = BorderStationBudgetCalculation.objects.get(pk=pk).border_station
         staff = border_station.staff_set.all().filter(receives_money_distribution_form=True)

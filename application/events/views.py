@@ -117,7 +117,6 @@ class EventViewSet(ModelViewSet):
     queryset = Event.objects.all()
     serializer_class = EventsSerializer
     permission_classes = [IsAuthenticated]
-    permissions_required = [IsAuthenticated]
 
     @list_route()
     def list_all(self, request):
