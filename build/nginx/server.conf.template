@@ -1,9 +1,9 @@
 server {
-  listen         80;
-  server_name    ${SITE_HOSTNAME};
-  location / {
-  	rewrite ^ https://$server_name$request_uri permanent;
-  }
+    listen          80;
+    server_name     ${SITE_HOSTNAME};
+    location / {
+        rewrite     ^ https://$server_name$request_uri permanent;
+    }
 }
 
 server {
@@ -29,17 +29,16 @@ server {
 	}
 
 	location /robots.txt {
-		 alias /data/dreamsuite/static/robots.txt;
+		 alias /robots.txt;
 	}
 
 	location / {
-	proxy_set_header Host $host;
-	proxy_set_header X-Real-IP $remote_addr;
-	proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-	proxy_set_header X-Forwarded-Proto $scheme;
-	proxy_connect_timeout 300s;
-	proxy_read_timeout 300s;
-
-		proxy_pass http://web:9001;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_connect_timeout 300s;
+        proxy_read_timeout 300s;
+        proxy_pass http://web:9001;
 	}
 }
