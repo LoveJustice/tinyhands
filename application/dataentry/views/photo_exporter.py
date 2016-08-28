@@ -17,11 +17,15 @@ from rest_framework.response import Response
 from dataentry.models import Interceptee
 from dataentry.models import InterceptionRecord
 from rest_api.authentication import HasPermission
+from accounts.mixins import PermissionsRequiredMixin
+
 
 logger = logging.getLogger(__name__)
 
 
-class BatchView(View):
+class BatchView(View, PermissionsRequiredMixin):
+    permissions_required = ['permission_irf_view']
+
     def get(self, request, startDate, endDate):
         start = timezone.make_aware(datetime.fromtimestamp(mktime(strptime(startDate, '%m-%d-%Y'))), timezone.get_default_timezone())
         end = timezone.make_aware(datetime.fromtimestamp(mktime(strptime(endDate, '%m-%d-%Y'))), timezone.get_default_timezone())

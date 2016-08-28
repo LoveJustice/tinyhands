@@ -16,7 +16,7 @@ from django.template.loader import render_to_string
 from django.views.generic import ListView, DeleteView, View
 from lxml import etree
 from rest_framework import filters, viewsets
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.decorators import list_route
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -55,6 +55,7 @@ class BudgetViewSet(viewsets.ModelViewSet):
 
 
 @api_view(['GET'])
+@permission_classes((IsAuthenticated, ))
 def retrieve_latest_budget_sheet_for_border_station(request, pk):
     budget_sheet = BorderStationBudgetCalculation.objects.filter(border_station=pk).order_by('-date_time_entered').first()  # Get's you the latest budget sheet for a border stations
 
@@ -76,6 +77,7 @@ def retrieve_latest_budget_sheet_for_border_station(request, pk):
 
 
 @api_view(['GET'])
+@permission_classes((IsAuthenticated, ))
 def previous_data(request, pk, month, year):
     date = datetime.datetime(int(year), int(month), 15)  # We pass the Month_year as two key-word arguments because the day is always 15
     budget_sheets = BorderStationBudgetCalculation.objects.filter(border_station=pk, month_year__lte=date).order_by('-date_time_entered')  # filter them so the first element is the most recent
@@ -187,6 +189,7 @@ class OldOtherItemsViewSet(viewsets.ModelViewSet):
         other_items_list = OtherBudgetItemCost.objects.filter(budget_item_parent_id=parent_pk)
         serializer = self.get_serializer(other_items_list, many=True)
         return Response(serializer.data)
+
 
 class OtherItemsViewSet(viewsets.ModelViewSet):
     queryset = OtherBudgetItemCost.objects.all()

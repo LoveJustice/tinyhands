@@ -2,6 +2,7 @@ import datetime
 import json
 from itertools import chain
 
+from braces.views import LoginRequiredMixin
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.http import HttpResponse
@@ -18,7 +19,7 @@ from events.models import Event
 from events.serializers import EventsSerializer
 
 
-class EventCreateView(SuccessMessageMixin, CreateView):
+class EventCreateView(SuccessMessageMixin, CreateView, LoginRequiredMixin):
     template_name = 'events/event_form.html'
     form_class = EventForm
     success_url = '/events/calendar/'
@@ -36,16 +37,16 @@ class EventCreateView(SuccessMessageMixin, CreateView):
         return message
 
 
-class EventListView(ListView):
+class EventListView(ListView, LoginRequiredMixin):
     template_name = 'events/event_list.html'
     model = Event
 
 
-class EventCalendarView(TemplateView):
+class EventCalendarView(TemplateView, LoginRequiredMixin):
     template_name = 'events/event_calendar.html'
 
 
-class EventDeleteView(DeleteView):
+class EventDeleteView(DeleteView, LoginRequiredMixin):
     model = Event
     success_url = '/events/list/'
     template_name = 'events/event_delete.html'
@@ -58,7 +59,7 @@ class EventDeleteView(DeleteView):
         return super(EventDeleteView, self).delete(request, *args, **kwargs)
 
 
-class EventUpdateView(SuccessMessageMixin, UpdateView):
+class EventUpdateView(SuccessMessageMixin, UpdateView, LoginRequiredMixin):
     model = Event
     template_name = 'events/event_form.html'
     form_class = EventForm
@@ -70,7 +71,7 @@ class EventUpdateView(SuccessMessageMixin, UpdateView):
         return message
 
 
-class EventJson(ListView):
+class EventJson(ListView, LoginRequiredMixin):
     model = Event
 
     def get_queryset(self, queryset=None):
