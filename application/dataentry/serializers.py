@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from dataentry.models import Address1, Address2, SiteSettings, InterceptionRecord, VictimInterview, BorderStation, FuzzyMatching, Person, Interceptee
+from dataentry.models import Address1, Address2, SiteSettings, InterceptionRecord, VictimInterview, BorderStation, Person, Interceptee
 
 from helpers import related_items_helper
 
@@ -20,11 +20,6 @@ class SiteSettingsSerializer(serializers.ModelSerializer):
         model = SiteSettings
 
 
-class PersonSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Person
-
-
 class CanonicalNameSerializer(serializers.ModelSerializer):
     class Meta:
         model = Address2
@@ -38,7 +33,6 @@ class Address2Serializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         found_address1 = Address1.objects.get(pk=self.context['request'].data['address1']['id'])
-        found_address2 = None
         if self.context['request'].data['canonical_name']['id'] == -1:
             found_address2 = None
         else:
@@ -237,11 +231,6 @@ class VictimInterviewLocationBoxSerializer(serializers.ModelSerializer):
     class Meta:
         model = VictimInterview
         exclude = []
-
-
-class SysAdminSettingsSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = FuzzyMatching
 
 
 class PersonSerializer(serializers.ModelSerializer):

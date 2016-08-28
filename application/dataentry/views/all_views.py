@@ -30,11 +30,11 @@ from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineForm
 from braces.views import LoginRequiredMixin
 from fuzzywuzzy import process
 
-from dataentry.models import BorderStation, SiteSettings, Address2, Address1, Interceptee, Person, FuzzyMatching, InterceptionRecord, VictimInterview, VictimInterviewLocationBox, VictimInterviewPersonBox
+from dataentry.models import BorderStation, SiteSettings, Address2, Address1, Interceptee, Person, InterceptionRecord, VictimInterview, VictimInterviewLocationBox, VictimInterviewPersonBox
 from dataentry.forms import IntercepteeForm, InterceptionRecordForm, Address2Form, Address1Form, VictimInterviewForm, VictimInterviewLocationBoxForm, VictimInterviewPersonBoxForm
 from dataentry.dataentry_signals import irf_done
 
-from dataentry.serializers import Address1Serializer, Address2Serializer, InterceptionRecordListSerializer, VictimInterviewListSerializer, VictimInterviewSerializer, SysAdminSettingsSerializer, PersonSerializer, IntercepteeSerializer, InterceptionRecordSerializer
+from dataentry.serializers import Address1Serializer, Address2Serializer, InterceptionRecordListSerializer, VictimInterviewListSerializer, VictimInterviewSerializer, PersonSerializer, IntercepteeSerializer, InterceptionRecordSerializer
 from dataentry.dataentry_signals import irf_done, vif_done
 from dataentry.fuzzy_matching import match_location
 
@@ -424,8 +424,8 @@ def interceptee_fuzzy_matching(request):
     input_name = request.GET['name']
     all_people = Interceptee.objects.all()
     people_dict = {serializers.serialize("json", [obj]): obj.person.full_name for obj in all_people }
-    fuzzy_object = FuzzyMatching.objects.all()[0]
-    matches = process.extractBests(input_name, people_dict, score_cutoff=fuzzy_object.person_cutoff, limit=fuzzy_object.person_limit)
+    site_settings = SiteSettings.objects.all()[0]
+    matches = process.extractBests(input_name, people_dict, score_cutoff=site_settings.get_setting_value_by_name('person_cutoff'), limit=site_settings.get_setting_value_by_name('person_limit'))
 
     return HttpResponse(json.dumps(matches), content_type="application/json")
 

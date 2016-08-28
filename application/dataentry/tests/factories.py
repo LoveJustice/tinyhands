@@ -61,14 +61,16 @@ class IntercepteeFactory(DjangoModelFactory):
 
 class FuzzyMatchingFactory(DjangoModelFactory):
     class Meta:
-        model = FuzzyMatching
+        model = SiteSettings
 
-    address1_cutoff = 70
-    address1_limit = 5
-    address2_cutoff = 70
-    address2_limit = 5
-    person_cutoff = 90
-    person_limit = 10
+    data = [
+        {'name': 'address1_cutoff', 'value': 70, 'description': "asdfasdf"},
+        {'name': 'address1_limit', 'value': 5, 'description': "asdfasdf"},
+        {'name': 'address2_cutoff', 'value': 70, 'description': "asdfasdf"},
+        {'name': 'address2_limit', 'value': 5, 'description': "asdfasdf"},
+        {'name': 'person_cutoff', 'value': 90, 'description': "asdfasdf"},
+        {'name': 'person_limit', 'value': 10, 'description': "asdfasdf"},
+    ]
 
 
 class Address1Factory(DjangoModelFactory):

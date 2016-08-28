@@ -1,6 +1,6 @@
 from addresses import Address1, Address2
 
-from site_settings import FuzzyMatching, SiteSettings
+from site_settings import SiteSettings
 
 from border_station import BorderStation
 
