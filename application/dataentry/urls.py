@@ -14,7 +14,7 @@ urlpatterns = [
     url(r'^irfs/irfExists/([A-Z]{3}[0-9]+)', irfExists, name='IrfExists'),
     url(r'^irfs/update/(?P<pk>\d+)/$', InterceptionRecordUpdateView.as_view(), name='interceptionrecord_update'),
     url(r'^irfs/export/$', InterceptionRecordCSVExportView.as_view(), name='interceptionrecord_csv_export'),
-    #Create a url that will have a border station argument and will list irfs for that specific BD station
+    # Create a url that will have a border station argument and will list irfs for that specific BD station
 
     url(r'^vifs/$', VictimInterviewListView.as_view(), name='victiminterview_list'),
     url(r'^vifs/search/(?P<code>\w+)/$', victiminterview_record_list_search_template, name='victiminterview_list_search'),
@@ -23,11 +23,11 @@ urlpatterns = [
     url(r'^vifs/update/(?P<pk>\d+)/$', VictimInterviewUpdateView.as_view(), name='victiminterview_update'),
     url(r'^vifs/vifExists/([A-Z]{3}[0-9]+)', vifExists, name='VifExists'),
     url(r'^vifs/export/$', VictimInterviewCSVExportView.as_view(), name='victiminterview_csv_export'),
-    #Create a url that will have a border station argument and will list vifs for that specific BD station
+    # Create a url that will have a border station argument and will list vifs for that specific BD station
 
 
     url(r'^id-management/$', id_management_template, name='id_management'),
-    #System Administrator Settings Page
+    # System Administrator Settings Page
     url(r'^api/sysadminsettings/(?P<pk>\d+)/$', sys_admin_list, name="sys_admin_settings_api"),
     url(r'^sysadminsettings/(?P<pk>\d+)/$', sys_admin_settings_update, name="sys_admin_settings"),
     url(r'^stations/codes/$', StationCodeAPIView.as_view()),

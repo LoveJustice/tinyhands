@@ -34,5 +34,8 @@ nginx:
     - data
   ports:
     - "80:80"
-  environment:
-    SITE_HOSTNAME: "localhost"
+    - "443:443"
+  env_file:
+    - ./common.env
+    - ./local.env
+

@@ -1,26 +1,20 @@
-from django.core import serializers
+from braces.views import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse_lazy
-
-
 from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSet
-from rest_framework import filters, generics, status, viewsets
+from rest_framework import filters, viewsets
 from rest_framework.decorators import list_route
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.views import APIView
 
 from accounts.mixins import PermissionsRequiredMixin
-from braces.views import LoginRequiredMixin
-from dataentry.models import BorderStation
 from dataentry.forms import BorderStationForm
+from dataentry.models import BorderStation
 from dataentry.serializers import BorderStationSerializer
-
+from rest_api.authentication import HasPermission, HasPostPermission, HasPutPermission
+from static_border_stations.forms import StaffForm, CommitteeMemberForm
 from static_border_stations.models import Staff, CommitteeMember, Location
 from static_border_stations.serializers import StaffSerializer, CommitteeMemberSerializer, LocationSerializer
-from static_border_stations.forms import StaffForm, CommitteeMemberForm
-
-from rest_api.authentication import HasPermission, HasDeletePermission, HasGetPermission, HasPostPermission, HasPutPermission
 
 
 class FormSetForStations(InlineFormSet):
@@ -44,9 +38,9 @@ class BorderStationViewSet(viewsets.ModelViewSet):
     
     @list_route()
     def list_all(self, request):
-      border_stations = BorderStation.objects.all().order_by('station_name')
-      serializer = self.get_serializer(border_stations, many=True)
-      return Response(serializer.data)
+        border_stations = BorderStation.objects.all().order_by('station_name')
+        serializer = self.get_serializer(border_stations, many=True)
+        return Response(serializer.data)
         
 
 class BorderStationRestAPI(viewsets.ModelViewSet):
@@ -62,6 +56,7 @@ class LocationViewSet(BorderStationRestAPI):
     queryset = Location.objects.all()
     serializer_class = LocationSerializer
 
+
 class CommitteeMemberViewSet(BorderStationRestAPI):
     queryset = CommitteeMember.objects.all()
     serializer_class = CommitteeMemberSerializer
@@ -70,7 +65,6 @@ class CommitteeMemberViewSet(BorderStationRestAPI):
 class StaffViewSet(BorderStationRestAPI):
     queryset = Staff.objects.all()
     serializer_class = StaffSerializer
-
 
     def staff_retrieve(self, request, *args, **kwargs):
         """
@@ -89,6 +83,7 @@ class StaffInline(FormSetForStations):
 class CommitteeMemberInline(FormSetForStations):
     model = CommitteeMember
     form_class = CommitteeMemberForm
+
 
 class LocationInline(FormSetForStations):
     model = Location

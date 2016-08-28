@@ -1,13 +1,13 @@
 from django.db import models
 
 LEVEL_CHOICES = [
-    ('Country','Country'),
-    ('State','State'),
-    ('District','District'),
-    ('City','City'),
-    ('VDC','VDC'),
-    ('Block','Block'),
-    ('Building','Building')
+    ('Country', 'Country'),
+    ('State', 'State'),
+    ('District', 'District'),
+    ('City', 'City'),
+    ('VDC', 'VDC'),
+    ('Block', 'Block'),
+    ('Building', 'Building')
 ]
 
 

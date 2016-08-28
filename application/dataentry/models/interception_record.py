@@ -8,6 +8,7 @@ def set_weight(self, weight):
 
 models.BooleanField.set_weight = set_weight
 
+
 class InterceptionRecord(models.Model):
     form_entered_by = models.ForeignKey(Account, related_name='irfs_entered', on_delete=models.CASCADE)
     date_form_received = models.DateTimeField()

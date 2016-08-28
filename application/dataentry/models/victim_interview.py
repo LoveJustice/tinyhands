@@ -9,7 +9,7 @@ class VictimInterview(models.Model):
     class Meta:
         ordering = ['-date_time_last_updated']
 
-    GENDER_CHOICES = [ ('M', 'm'), ('F', 'f'),]
+    GENDER_CHOICES = [('M', 'm'), ('F', 'f')]
 
     vif_number = models.CharField('VIF #', max_length=20, unique=True)
     date = models.DateField('Date')

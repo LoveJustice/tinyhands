@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class BorderStation(models.Model):
     station_code = models.CharField(max_length=3, unique=True)
     station_name = models.CharField(max_length=100)

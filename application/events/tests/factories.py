@@ -4,6 +4,7 @@ from factory.django import DjangoModelFactory
 
 from events.models import Event
 
+
 class EventFactory(DjangoModelFactory):
     class Meta:
         model = Event

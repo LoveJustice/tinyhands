@@ -45,6 +45,7 @@ def match_location(address1_name=None, address2_name=None):
         objects = [model.objects.get(pk=pk) for name, score, pk in matches]
     return objects
 
+
 # This function is not used anywhere else in code
 def match_address2_address1(address2_name, address1_name):
     locations = [address2.name+", "+address2.address1.name for address2 in Address2.objects.all()]
