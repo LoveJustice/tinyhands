@@ -10,10 +10,10 @@ class SiteSettings(models.Model):
         for setting in self.data:
             if setting['name'] == setting_name:
                 return setting['value']
-        NameError() 
+        raise ValueError('Setting with name ' + setting_name + ' not found')
 
     def get_setting_by_name(self, setting_name):
         for setting in self.data:
             if setting['name'] == setting_name:
                 return setting
-        NameError()
+        raise ValueError('Setting with name "' + setting_name + '" not found')

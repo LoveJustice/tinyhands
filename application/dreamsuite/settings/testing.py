@@ -10,8 +10,11 @@ CLIENT_DOMAIN = '0.0.0.0:8000/beta/#'
 EMAIL_BACKEND = 'dreamsuite.test_email_backend.EmailBackend'
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'mydatabase',
-    }
+  'default': {
+    'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    'NAME': 'test',
+    'USER': os.environ.get('PGUSER'),
+    'PASSWORD': os.environ.get('PGPASSWORD'),
+    'HOST': '127.0.0.1',
+  }
 }
