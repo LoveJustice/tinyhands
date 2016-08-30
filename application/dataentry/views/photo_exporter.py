@@ -24,6 +24,7 @@ from accounts.mixins import PermissionsRequiredMixin
 logger = logging.getLogger(__name__)
 
 
+#  TODO: This view is used on the Django side, once we move to the Angular client this can be deleted
 class BatchView(View, PermissionsRequiredMixin, LoginRequiredMixin):
     permissions_required = ['permission_irf_view']
 
