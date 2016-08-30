@@ -4,6 +4,7 @@ from StringIO import StringIO
 from datetime import datetime
 from time import strptime, mktime
 
+from braces.views import LoginRequiredMixin
 from django.conf import settings
 from django.http import HttpResponse
 from django.shortcuts import render
@@ -23,7 +24,7 @@ from accounts.mixins import PermissionsRequiredMixin
 logger = logging.getLogger(__name__)
 
 
-class BatchView(View, PermissionsRequiredMixin):
+class BatchView(View, PermissionsRequiredMixin, LoginRequiredMixin):
     permissions_required = ['permission_irf_view']
 
     def get(self, request, startDate, endDate):
