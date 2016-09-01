@@ -8,6 +8,7 @@ from dataentry.dataentry_signals import irf_done
 from django.conf import settings
 
 import traceback
+import logging
 
 from field_types import Address1CsvField
 from field_types import Address2CsvField
@@ -25,7 +26,8 @@ from field_types import MapValueCsvField
 from field_types import no_translation
 
 from google_sheet_names import spreadsheet_header_from_export_header
-        
+
+logger = logging.getLogger(__name__);        
 
 inv_how_sure = {}
 for tup in InterceptionRecord.HOW_SURE_TRAFFICKING_CHOICES:
@@ -338,6 +340,7 @@ def import_irf_row(irfDict):
             default_op[1](irfDict, default_op, name_translation=spreadsheet_header_from_export_header)
         except:
             print traceback.format_exc()
+            logger.error ("Failed to set default for field " + default_op[0] + traceback.format_exc() )
             errList.append("Failed to set default for field " + default_op[0])
         
     
@@ -420,6 +423,7 @@ def import_irf_row(irfDict):
                     interceptee.person = persondb
                     interceptee.save()
         except:
+            logger.error ("Unexpected error saving IRF in database IRF Number=" + irf_nbr + traceback.format_exc() )
             errList.append("Unexpected error saving IRF in database")
 
         irf_done.send(sender=__file__, irf_number=irf.irf_number, irf=irf, interceptees=interceptee_list)    
