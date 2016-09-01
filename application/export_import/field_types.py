@@ -41,6 +41,10 @@ class CopyCsvField:
 
 # export/import date value
 class DateTimeCsvField:
+    parse_options = ["%m/%d/%Y %H:%M:%S","%Y-%m-%d %H:%M:%S","%m/%d/%Y %I:%M:%S %p","%Y-%m-%d %I:%M:%S %p",
+                     "%m/%d/%y %H:%M:%S","%m/%d/%y %I:%M:%S %p",
+                     "%m/%d/%Y %H:%M","%Y-%m-%d %H:%M","%m/%d/%Y %I:%M %p","%Y-%m-%d %I:%M %p",
+                     "%m/%d/%y %H:%M","%m/%d/%y %I:%M %p"];
     def __init__(self, data_name, title):
         self.data_name = data_name
         self.title = title
@@ -54,17 +58,19 @@ class DateTimeCsvField:
 
         value = csv_map[name_translation(column_title)]
         if value is not None:
-            try:
-                parsed_value = datetime.strptime(value, "%m/%d/%Y %H:%M:%S")
-                parsed_value = make_aware(parsed_value)
-            except:
+            parsed_value = None
+            for fmt in DateTimeCsvField.parse_options:
                 try:
-                    parsed_value = datetime.strptime(value, "%Y-%m-%d %H:%M:%S")
+                    parsed_value = datetime.strptime(value, fmt)
                     parsed_value = make_aware(parsed_value)
+                    setattr(instance, self.data_name, parsed_value)
+                    break
                 except:
-                    errs.append(column_title)
+                    #print "Failed to parse datetime value=" + value + " with format " + fmt
+                    pass
                 
-            setattr(instance, self.data_name, parsed_value)
+            if parsed_value is None:
+                errs.append(column_title)
         else:
             errs.append(column_title)
         
@@ -77,6 +83,7 @@ class DateTimeCsvField:
         return make_naive(local_val, local_val.tzinfo)
     
 class DateCsvField:
+    parse_options = ["%m/%d/%Y","%Y-%m-%d", "%m/%d/%y"];
     def __init__(self, data_name, title):
         self.data_name = data_name
         self.title = title
@@ -90,11 +97,16 @@ class DateCsvField:
 
         value = csv_map[name_translation(column_title)]
         if value is not None:
-            try:
-                parsed_value = datetime.strptime(value, "%m/%d/%Y")
-                parsed_value = make_aware(parsed_value)
-                setattr(instance, self.data_name, parsed_value)
-            except:
+            parsed_value = None
+            for fmt in DateCsvField.parse_options:
+                try:
+                    parsed_value = datetime.strptime(value, fmt)
+                    parsed_value = make_aware(parsed_value)
+                    setattr(instance, self.data_name, parsed_value)
+                except:
+                    pass
+                
+            if parsed_value is None:
                 errs.append(column_title)
         else:
             errs.append(column_title)

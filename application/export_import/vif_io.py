@@ -40,7 +40,7 @@ vif_data = [
     BooleanCsvField("permission_to_use_photograph", "Photo Permission", "Permission was given to use photo", ""),
 
     CopyCsvField("full_name", "1.1 Name", True),
-    MapValueCsvField("gender", "1.2 Gender", { "male":"M", "female":"F", "unknown":"U"}, export_default="Unknown"),
+    MapValueCsvField("gender", "1.2 Gender", { "male":"M", "female":"F", "Unknown":"U"}, export_default="Unknown"),
 
     Address1CsvField("address1", "1.3 Address1"),
     Address2CsvField("address2", "Address2", "address1"),

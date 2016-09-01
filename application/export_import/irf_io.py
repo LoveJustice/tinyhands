@@ -7,6 +7,8 @@ from accounts.models import Account
 from dataentry.dataentry_signals import irf_done
 from django.conf import settings
 
+import traceback
+
 from field_types import Address1CsvField
 from field_types import Address2CsvField
 from field_types import BooleanCsvField
@@ -19,6 +21,8 @@ from field_types import FunctionValueExportOnlyCsv
 from field_types import GroupBooleanCsv
 from field_types import MapFieldCsv
 from field_types import MapValueCsvField
+
+from field_types import no_translation
 
 from google_sheet_names import spreadsheet_header_from_export_header
         
@@ -248,6 +252,7 @@ irf_victim_prefix = "Victim "
 irf_trafficker_prefix = "Trafficker %d "
 irf_interceptee_prefix = "Interceptee %d "
 
+
 def get_irf_export_rows(irfs):
     rows = []
     irf_headers = []
@@ -297,11 +302,44 @@ def get_irf_export_rows(irfs):
             rows.append(row)
     return rows
 
+# default the value of a field on import to the date portion of a date time field
+# parameters
+#    irfDict - the dictionary of IRF import values 
+#    params  - the array from the default_import entry
+#           position 0 is the title of the field to default
+#           position 1 is this function
+#           position 2 is the title of the field that contains the date time
+#    name_translation - function to translate the title to the value in irfDict
+def default_date_part(irfDict, params, name_translation=no_translation):
+    if len(params) == 3:
+        if name_translation(params[0]) not in irfDict or irfDict[name_translation(params[0])] is None:
+            if name_translation(params[2]) in irfDict and irfDict[name_translation(params[2])] is not None:
+                parts=irfDict[name_translation(params[2])].partition(' ')
+                irfDict[name_translation(params[0])] = parts[0]
+       
+                
+# define default values on import as array of arrays
+#    inner array defines
+#      position 0 - title of field to default
+#      position 1 - function to invoke to determine and set default value
+#      position 2... - additional values required by the function to determine the default
+default_import = [
+        ["Date Received", default_date_part, "Date/Time Entered into System"]
+    ]
 
 def import_irf_row(irfDict):
     errList = []
     
     entered_by = Account.objects.get(email=settings.IMPORT_ACCOUNT_EMAIL)
+    
+    #default column values
+    for default_op in default_import:
+        try:
+            default_op[1](irfDict, default_op, name_translation=spreadsheet_header_from_export_header)
+        except:
+            print traceback.format_exc()
+            errList.append("Failed to set default for field " + default_op[0])
+        
     
     person_titles = []
     for field in interceptee_person_data:
