@@ -59,7 +59,7 @@ class IntercepteeFactory(DjangoModelFactory):
     kind = 'v'
 
 
-class FuzzyMatchingFactory(DjangoModelFactory):
+class SiteSettingsFactory(DjangoModelFactory):
     class Meta:
         model = SiteSettings
 
