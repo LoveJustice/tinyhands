@@ -11,11 +11,12 @@ def no_translation(title):
 
 # export/import field value - no translation
 class CopyCsvField:
-    def __init__(self, data_name, title, use_none_for_blank, export_null_or_blank_as=""):
+    def __init__(self, data_name, title, use_none_for_blank, export_null_or_blank_as="", allow_null_or_blank_import = True):
         self.data_name = data_name
         self.title = title
         self.use_none_for_blank = use_none_for_blank
         self.export_null_or_blank_as = export_null_or_blank_as
+        self.allow_null_or_blank_import = allow_null_or_blank_import
 
     def importField(self, instance, csv_map, title_prefix = None, name_translation = no_translation):
         errs = []
@@ -25,8 +26,11 @@ class CopyCsvField:
             column_title = self.title        
         
         value = csv_map[name_translation(column_title)]
-        if value is None and not self.use_none_for_blank:
-            value = ""
+        if value is None:
+            if not self.allow_null_or_blank_import:
+                errs.append(column_title)
+            elif not self.use_none_for_blank:
+                value = ""
           
         setattr(instance, self.data_name, value)
             
@@ -121,12 +125,13 @@ class DateCsvField:
 
 # export text string for boolean field - one value for true alternate value for false
 class BooleanCsvField:
-    def __init__(self, data_name, title, true_string, false_string, depend_name = None):
+    def __init__(self, data_name, title, true_string, false_string, depend_name = None, allow_null_or_blank_import = True):
         self.data_name = data_name
         self.title = title
         self.true_string = true_string
         self.false_string = false_string
         self.depend_name = depend_name
+        self.allow_null_or_blank_import = allow_null_or_blank_import
 
     def importField(self, instance, csv_map, title_prefix = None, name_translation = no_translation):
         errs = []
@@ -144,8 +149,9 @@ class BooleanCsvField:
             value = True
         elif value == self.false_string:
             value = False
-        elif value == "":
-            value = None
+        elif self.allow_null_or_blank_import:
+            if value == "":
+                value = None
         else:
             errs.append(column_title)
             return errs

@@ -225,7 +225,7 @@ irf_data = [
     #FunctionValueExportOnlyCsv("get_how_sure_was_trafficking_display", "How sure that it was a trafficking case"),
     MapValueCsvField("how_sure_was_trafficking", "How sure that it was a trafficking case", inv_how_sure),
 
-    BooleanCsvField("has_signature", "Staff signature on form", "Form is signed", "Form is not signed"),
+    BooleanCsvField("has_signature", "Staff signature on form", "Form is signed", "Form is not signed", allow_null_or_blank_import=False),
 ]
 
 additional_irf_import_data = [
@@ -233,7 +233,7 @@ additional_irf_import_data = [
 ]
 
 interceptee_person_data = [
-    CopyCsvField("full_name", "{}Name", True),
+    CopyCsvField("full_name", "{}Name", False, allow_null_or_blank_import=False),
     MapValueCsvField('gender', "{}Gender", { "Male":"M", "Female":"F", "Unknown":"U"}, export_default="Unknown"),
     CopyCsvField("age", "{}Age", True),
     Address1CsvField("address1", "{}Address1"),
