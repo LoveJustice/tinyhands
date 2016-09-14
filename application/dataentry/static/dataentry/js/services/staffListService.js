@@ -22,7 +22,7 @@ function staffListService($http) {
     }
 
     function getStationID(borderStationCod) {
-        return $.get( '/get_station_id/', {"code": borderStationCod}).
+        return $.get( '/api/get_station_id/', {"code": borderStationCod}).
             success(function(data) {
                 return data;
             }).

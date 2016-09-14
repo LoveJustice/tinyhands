@@ -3,6 +3,7 @@ from django.conf.urls import url
 from dataentry.views import Address2ViewSet, Address1ViewSet, GeoCodeAddress1APIView, GeoCodeAddress2APIView, InterceptionRecordViewSet, VictimInterviewViewSet, BatchView, PersonViewSet, IntercepteeViewSet
 from rest_framework.authtoken import views
 
+from dataentry.views import get_station_id
 from portal.views import get_interception_records, TallyDaysView
 from dataentry.views import Address2ViewSet, Address1ViewSet, GeoCodeAddress1APIView, GeoCodeAddress2APIView, InterceptionRecordViewSet, VictimInterviewViewSet, BatchView, IntercepteeViewSet, VictimInterviewDetailViewSet, PhotoExporter
 from budget.views import BudgetViewSet, OtherItemsViewSet, OldBudgetViewSet, OldOtherItemsViewSet, MoneyDistribution, MoneyDistributionFormPDFView, money_distribution_view, retrieve_latest_budget_sheet_for_border_station, previous_data, StaffSalaryViewSet
@@ -92,6 +93,9 @@ urlpatterns = [
         # Border Stations
         url(r'^border-station/$', BorderStationViewSet.as_view({'get':'list_all', 'post':'create'}), name="BorderStations"), # Detail
         url(r'^border-station/(?P<pk>\d+)/$', BorderStationViewSet.as_view(detail), name="BorderStation"),
+        url(r'^get_station_id/', get_station_id, name='get_station_id'),
+
+
 
         # Committee Members
         url(r'^committee-member/$', CommitteeMemberViewSet.as_view(list), name="CommitteeMembers"),
