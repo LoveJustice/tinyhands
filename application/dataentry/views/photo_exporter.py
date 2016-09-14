@@ -4,6 +4,7 @@ from StringIO import StringIO
 from datetime import datetime
 from time import strptime, mktime
 
+from braces.views import LoginRequiredMixin
 from django.conf import settings
 from django.http import HttpResponse
 from django.shortcuts import render
@@ -17,11 +18,16 @@ from rest_framework.response import Response
 from dataentry.models import Interceptee
 from dataentry.models import InterceptionRecord
 from rest_api.authentication import HasPermission
+from accounts.mixins import PermissionsRequiredMixin
+
 
 logger = logging.getLogger(__name__)
 
 
-class BatchView(View):
+#  TODO: This view is used on the Django side, once we move to the Angular client this can be deleted
+class BatchView(View, PermissionsRequiredMixin, LoginRequiredMixin):
+    permissions_required = ['permission_irf_view']
+
     def get(self, request, startDate, endDate):
         start = timezone.make_aware(datetime.fromtimestamp(mktime(strptime(startDate, '%m-%d-%Y'))), timezone.get_default_timezone())
         end = timezone.make_aware(datetime.fromtimestamp(mktime(strptime(endDate, '%m-%d-%Y'))), timezone.get_default_timezone())

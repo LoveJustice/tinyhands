@@ -74,6 +74,7 @@ class MoneyDistributionWebTests(WebTest, TestCase):
         self.superuser = SuperUserFactory.create()
         self.MDFView = MoneyDistributionFormPDFView(kwargs={"pk": str(self.budget_calc_sheet.id)})
         self.client = APIClient()
+        self.client.force_authenticate(user=self.superuser)
 
     def testViewMoneyDistributionForm(self):
         response = self.app.get(reverse('money_distribution_view', kwargs={"pk": self.budget_calc_sheet.pk}), user=self.superuser)
