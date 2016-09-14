@@ -157,9 +157,15 @@ class InterceptionRecordCreateView(LoginRequiredMixin, PermissionsRequiredMixin,
                                    CreateWithInlinesView):
     model = InterceptionRecord
     form_class = InterceptionRecordForm
-    success_url = reverse_lazy('interceptionrecord_list')
+    success_url = settings.CLIENT_DOMAIN + "/irf"
+
     inlines = [IntercepteeInline]
     permissions_required = ['permission_irf_add']
+
+    def get_context_data(self, **kwargs):
+        context = super(InterceptionRecordCreateView, self).get_context_data(**kwargs)
+        context.update({"CLIENT_DOMAIN": settings.CLIENT_DOMAIN})
+        return context
 
     def forms_valid(self, form, inlines):
         form.instance.form_entered_by = self.request.user
@@ -178,9 +184,15 @@ class InterceptionRecordUpdateView(LoginRequiredMixin, PermissionsRequiredMixin,
                                    UpdateWithInlinesView):
     model = InterceptionRecord
     form_class = InterceptionRecordForm
-    success_url = reverse_lazy('interceptionrecord_list')
+    success_url = settings.CLIENT_DOMAIN + "/irf"
     inlines = [IntercepteeInline]
     permissions_required = ['permission_irf_edit']
+
+    def get_context_data(self, **kwargs):
+        context = super(InterceptionRecordUpdateView, self).get_context_data(**kwargs)
+        context.update({"CLIENT_DOMAIN": settings.CLIENT_DOMAIN})
+        return context
+
 
     def forms_valid(self, form, inlines):
         form = form.save()
@@ -195,6 +207,12 @@ class InterceptionRecordUpdateView(LoginRequiredMixin, PermissionsRequiredMixin,
 
 class InterceptionRecordDetailView(InterceptionRecordUpdateView):
     permissions_required = ['permission_irf_view']
+
+    def get_context_data(self, **kwargs):
+        context = super(InterceptionRecordDetailView, self).get_context_data(**kwargs)
+        context.update({"CLIENT_DOMAIN": settings.CLIENT_DOMAIN})
+        return context
+
 
     def post(self, request, *args, **kwargs):
         raise PermissionDenied
@@ -243,9 +261,15 @@ def victiminterview_record_list_search_template(request, code):
 class VictimInterviewCreateView(LoginRequiredMixin, PermissionsRequiredMixin, CreateWithInlinesView):
     model = VictimInterview
     form_class = VictimInterviewForm
-    success_url = reverse_lazy('victiminterview_list')
+    success_url = settings.CLIENT_DOMAIN + '/vif'
     inlines = [PersonBoxInline, LocationBoxInline]
     permissions_required = ['permission_vif_add']
+
+    def get_context_data(self, **kwargs):
+        context = super(VictimInterviewCreateView, self).get_context_data(**kwargs)
+        context.update({"CLIENT_DOMAIN": settings.CLIENT_DOMAIN})
+        return context
+
 
     def forms_valid(self, form, inlines):
         form.instance.form_entered_by = self.request.user
@@ -261,9 +285,15 @@ class VictimInterviewCreateView(LoginRequiredMixin, PermissionsRequiredMixin, Cr
 class VictimInterviewUpdateView(LoginRequiredMixin, PermissionsRequiredMixin, UpdateWithInlinesView):
     model = VictimInterview
     form_class = VictimInterviewForm
-    success_url = reverse_lazy('victiminterview_list')
+    success_url = settings.CLIENT_DOMAIN + '/vif'
     inlines = [PersonBoxInline, LocationBoxInline]
     permissions_required = ['permission_vif_edit']
+
+    def get_context_data(self, **kwargs):
+        context = super(VictimInterviewUpdateView, self).get_context_data(**kwargs)
+        context.update({"CLIENT_DOMAIN": settings.CLIENT_DOMAIN})
+        return context
+
 
     def forms_valid(self, form, inlines):
         form = form.save()
@@ -276,6 +306,11 @@ class VictimInterviewUpdateView(LoginRequiredMixin, PermissionsRequiredMixin, Up
 
 class VictimInterviewDetailView(VictimInterviewUpdateView):
     permissions_required = ['permission_vif_view']
+
+    def get_context_data(self, **kwargs):
+        context = super(VictimInterviewDetailView, self).get_context_data(**kwargs)
+        context.update({"CLIENT_DOMAIN": settings.CLIENT_DOMAIN})
+        return context
 
     def post(self, request, *args, **kwargs):
         raise PermissionDenied

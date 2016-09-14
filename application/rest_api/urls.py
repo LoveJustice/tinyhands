@@ -3,7 +3,7 @@ from django.conf.urls import url
 from dataentry.views import Address2ViewSet, Address1ViewSet, GeoCodeAddress1APIView, GeoCodeAddress2APIView, InterceptionRecordViewSet, VictimInterviewViewSet, BatchView, PersonViewSet, IntercepteeViewSet
 from rest_framework.authtoken import views
 
-from portal.views import get_interception_records
+from portal.views import get_interception_records, TallyDaysView
 from dataentry.views import Address2ViewSet, Address1ViewSet, GeoCodeAddress1APIView, GeoCodeAddress2APIView, InterceptionRecordViewSet, VictimInterviewViewSet, BatchView, IntercepteeViewSet, VictimInterviewDetailViewSet, PhotoExporter
 from budget.views import BudgetViewSet, OtherItemsViewSet, OldBudgetViewSet, OldOtherItemsViewSet, MoneyDistribution, MoneyDistributionFormPDFView, money_distribution_view, retrieve_latest_budget_sheet_for_border_station, previous_data, StaffSalaryViewSet
 from accounts.views import AccountViewSet, DefaultPermissionsSetViewSet, CurrentUserView, ResendActivationEmailView, AccountActivateView, AccountActivateClient
@@ -84,6 +84,8 @@ urlpatterns = [
 
     # Portal App
         url(r'^get_interception_records/$', get_interception_records, name='get_interception_records'),
+        url(r'^portal/tally/days/$', TallyDaysView.as_view(), name='tally_day_api'),
+
 
 
     # Static Border Station App

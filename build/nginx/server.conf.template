@@ -32,16 +32,15 @@ server {
         alias /data/media/;
     }
 
-    location /beta/ {
+    location / {
         alias /data/dist/;
     }
-
 
     location /robots.txt {
         alias /robots.txt;
     }
 
-	location / {
+	location ~ ^/(data-entry|api|login|logout)/ {
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;

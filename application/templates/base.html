@@ -74,21 +74,21 @@ in the Javascript and run code unique to the current page.
         <div class="collapse navbar-collapse navbar-header-collapse">
             {% if request.user.is_authenticated %}
             <ul class="nav navbar-nav">
-                <li><a href="{% url 'main_dashboard' %}">Dashboard</a></li>
+                <li><a href="{{ settings.CLIENT_DOMAIN }}/">Dashboard</a></li>
                 {% if request.user.permission_border_stations_view %}
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="border_station_dropdown">Stations<b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         {% if request.user.permission_border_stations_add %}
-                        <li><a href="{% url 'borderstations_create' %}" id="border_station_create_link">Create Station</a></li>
+                        <li><a href="{{ settings.CLIENT_DOMAIN }}/border-station/" id="border_station_create_link">Create Station</a></li>
                         <hr style="margin: 4px"/>
                         {% endif %}
                         {% for station in border_stations %}
                         {% if request.user.permission_border_stations_edit and station.open %}
-                        <li><a class="border_station_dropdown_item" href="{% url 'borderstations_update' station.pk %}">{{station.station_name }}</a></li>
+                        <li><a class="border_station_dropdown_item" href="{{ settings.CLIENT_DOMAIN }}/border-station/{{ station.pk }}">{{station.station_name }}</a></li>
                         {% endif %}
                         {% if request.user.permission_border_stations_view and not request.user.permission_border_stations_edit %}
-                        <li><a href="{% url 'borderstations_view' station.pk %}">{{station.station_name }}</a></li>
+                        <li><a href="{{ settings.CLIENT_DOMAIN }}/border-station/{{ station.pk }}">{{station.station_name }}</a></li>
                         {% endif %}
                         {% endfor %}
                     </ul>
@@ -99,16 +99,16 @@ in the Javascript and run code unique to the current page.
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Forms<span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
-                    <li><a href="{% url 'interceptionrecord_list' %}">IRFs</a></li>
-                    <li><a href="{% url 'victiminterview_list' %}">VIFs</a></li>
+                    <li><a href="{{ CLIENT_DOMAIN }}/irf">IRFs</a></li>
+                    <li><a href="{{ CLIENT_DOMAIN }}/vif">VIFs</a></li>
                     </ul>
                 </li>
 
                 {% if request.user.permission_budget_manage %}
-                    <li><a href="{% url 'budget_list' %}">Budget Sheets</a></li>
+                    <li><a href="{{ CLIENT_DOMAIN }}/budget">Budget Sheets</a></li>
                 {% endif %}
 
-                <li><a href="{% url 'event_calendar' %}">Event Calendar</a></li>
+                <li><a href="{{ CLIENT_DOMAIN }}/events">Event Calendar</a></li>
 
             </ul>
             <ul class="nav navbar-nav navbar-right">
@@ -119,19 +119,12 @@ in the Javascript and run code unique to the current page.
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Hello {{ request.user.get_full_name }}<b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         {% if request.user.permission_accounts_manage %}
-                        <li><a href="{% url 'account_list' %}">Accounts and Permissions</a></li>
+                        <li><a href="{{ CLIENT_DOMAIN }}/accounts/list">Accounts and Permissions</a></li>
                         {% endif %}
                         {% if request.user.permission_address2_manage %}
-                            <li><a href="{% url 'address1_admin_page' %}">Edit Address 1</a></li>
-                            <li><a href="{% url 'address2_admin_page' %}">Edit Address 2</a></li>
+                            <li><a href="/address1">Edit Address 1</a></li>
+                            <li><a href="/address2">Edit Address 2</a></li>
                         {% endif %}
-                        {% if request.user.is_superuser %}
-                            <li><a href="{% url 'sys_admin_settings' 1 %}">System Admin Settings</a></li>
-                        {% endif %}
-                        {% if request.user.is_superuser %}
-                            <li><a href="{% url 'id_management' %}">ID Management</a></li>
-                        {% endif %}
-                        <li><a href="{{ settings.CLIENT_DOMAIN }}">Check out the new look!</a></li>
                         <li><a href="{% url 'logout' %}">Logout</a></li>
                     </ul>
                 </li>
