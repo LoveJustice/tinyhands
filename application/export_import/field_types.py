@@ -11,11 +11,12 @@ def no_translation(title):
 
 # export/import field value - no translation
 class CopyCsvField:
-    def __init__(self, data_name, title, use_none_for_blank, export_null_or_blank_as=""):
+    def __init__(self, data_name, title, use_none_for_blank, export_null_or_blank_as="", allow_null_or_blank_import = True):
         self.data_name = data_name
         self.title = title
         self.use_none_for_blank = use_none_for_blank
         self.export_null_or_blank_as = export_null_or_blank_as
+        self.allow_null_or_blank_import = allow_null_or_blank_import
 
     def importField(self, instance, csv_map, title_prefix = None, name_translation = no_translation):
         errs = []
@@ -25,8 +26,11 @@ class CopyCsvField:
             column_title = self.title        
         
         value = csv_map[name_translation(column_title)]
-        if value is None and not self.use_none_for_blank:
-            value = ""
+        if value is None:
+            if not self.allow_null_or_blank_import:
+                errs.append(column_title)
+            elif not self.use_none_for_blank:
+                value = ""
           
         setattr(instance, self.data_name, value)
             
@@ -41,6 +45,10 @@ class CopyCsvField:
 
 # export/import date value
 class DateTimeCsvField:
+    parse_options = ["%m/%d/%Y %H:%M:%S","%Y-%m-%d %H:%M:%S","%m/%d/%Y %I:%M:%S %p","%Y-%m-%d %I:%M:%S %p",
+                     "%m/%d/%y %H:%M:%S","%m/%d/%y %I:%M:%S %p",
+                     "%m/%d/%Y %H:%M","%Y-%m-%d %H:%M","%m/%d/%Y %I:%M %p","%Y-%m-%d %I:%M %p",
+                     "%m/%d/%y %H:%M","%m/%d/%y %I:%M %p"];
     def __init__(self, data_name, title):
         self.data_name = data_name
         self.title = title
@@ -54,17 +62,19 @@ class DateTimeCsvField:
 
         value = csv_map[name_translation(column_title)]
         if value is not None:
-            try:
-                parsed_value = datetime.strptime(value, "%m/%d/%Y %H:%M:%S")
-                parsed_value = make_aware(parsed_value)
-            except:
+            parsed_value = None
+            for fmt in DateTimeCsvField.parse_options:
                 try:
-                    parsed_value = datetime.strptime(value, "%Y-%m-%d %H:%M:%S")
+                    parsed_value = datetime.strptime(value, fmt)
                     parsed_value = make_aware(parsed_value)
+                    setattr(instance, self.data_name, parsed_value)
+                    break
                 except:
-                    errs.append(column_title)
+                    #print "Failed to parse datetime value=" + value + " with format " + fmt
+                    pass
                 
-            setattr(instance, self.data_name, parsed_value)
+            if parsed_value is None:
+                errs.append(column_title)
         else:
             errs.append(column_title)
         
@@ -77,6 +87,7 @@ class DateTimeCsvField:
         return make_naive(local_val, local_val.tzinfo)
     
 class DateCsvField:
+    parse_options = ["%m/%d/%Y","%Y-%m-%d", "%m/%d/%y"];
     def __init__(self, data_name, title):
         self.data_name = data_name
         self.title = title
@@ -90,11 +101,16 @@ class DateCsvField:
 
         value = csv_map[name_translation(column_title)]
         if value is not None:
-            try:
-                parsed_value = datetime.strptime(value, "%m/%d/%Y")
-                parsed_value = make_aware(parsed_value)
-                setattr(instance, self.data_name, parsed_value)
-            except:
+            parsed_value = None
+            for fmt in DateCsvField.parse_options:
+                try:
+                    parsed_value = datetime.strptime(value, fmt)
+                    parsed_value = make_aware(parsed_value)
+                    setattr(instance, self.data_name, parsed_value)
+                except:
+                    pass
+                
+            if parsed_value is None:
                 errs.append(column_title)
         else:
             errs.append(column_title)
@@ -103,18 +119,17 @@ class DateCsvField:
 
     def exportField(self, instance):
         value = getattr(instance, self.data_name)
-        local_val = localtime(value)
-        local_val = local_val.replace(microsecond=0)
-        return make_naive(local_val, local_val.tzinfo)
+        return value
 
 # export text string for boolean field - one value for true alternate value for false
 class BooleanCsvField:
-    def __init__(self, data_name, title, true_string, false_string, depend_name = None):
+    def __init__(self, data_name, title, true_string, false_string, depend_name = None, allow_null_or_blank_import = True):
         self.data_name = data_name
         self.title = title
         self.true_string = true_string
         self.false_string = false_string
         self.depend_name = depend_name
+        self.allow_null_or_blank_import = allow_null_or_blank_import
 
     def importField(self, instance, csv_map, title_prefix = None, name_translation = no_translation):
         errs = []
@@ -132,8 +147,9 @@ class BooleanCsvField:
             value = True
         elif value == self.false_string:
             value = False
-        elif value == "":
-            value = None
+        elif self.allow_null_or_blank_import:
+            if value == "":
+                value = None
         else:
             errs.append(column_title)
             return errs
