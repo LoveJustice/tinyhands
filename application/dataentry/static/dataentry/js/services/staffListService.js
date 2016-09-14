@@ -12,7 +12,7 @@ function staffListService($http) {
 
 	function retrieveStaff(borderStationCod) {
         // grab all of the staff for this budgetCalcSheet
-        return $http.get('/static_border_stations/api/border-stations/' + borderStationCod + '/').
+        return $http.get('/api/staff/' + borderStationCod + '/').
             success(function (data) {
                 return data;
             }).

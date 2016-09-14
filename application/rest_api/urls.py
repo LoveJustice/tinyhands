@@ -103,7 +103,7 @@ urlpatterns = [
 
         # Staff
         url(r'^staff/$', StaffViewSet.as_view(list), name="AllStaff"),
-        url(r'^staff/(?P<pk>\d+)/$', StaffViewSet.as_view(detail), name="Staff"),
+        url(r'^staff/(?P<pk>\d+)/$', StaffViewSet.as_view({'get': 'staff_retrieve', 'put': 'update', 'delete': 'destroy'}), name="Staff"),
 
         # Events
         url(r'^event/$', EventViewSet.as_view({'get': 'list', 'post':'create'}), name="EventList"),

@@ -15,7 +15,7 @@ CORS_ORIGIN_ALLOW_ALL = True
 INSTALLED_APPS.append('debug_toolbar')
 
 SITE_DOMAIN = 'http://localhost'
-CLIENT_DOMAIN = 'http://localhost:3000/#'
+CLIENT_DOMAIN = 'http://localhost/#'
 
 SPREADSHEET_NAME = 'Tinyhands'
 IRF_WORKSHEET_NAME = 'IRF Entry'
