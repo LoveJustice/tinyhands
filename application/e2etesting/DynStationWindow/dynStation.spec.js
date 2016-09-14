@@ -1,6 +1,6 @@
 var c = require('../testConstants.json');
+var borderStations = require('../border_stations.json');
 var loginPage = require('../accounts/loginPage.js');
-var borderStations = require('../fixtures/border_stations.json');
 var dynStation = require('./dynStation.js');
 var fullDict = new Object();
 
