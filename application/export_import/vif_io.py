@@ -12,6 +12,7 @@ from field_types import BooleanCsvField
 from field_types import BorderStationExportOnlyCsv
 from field_types import BrokerPromisesCsv
 from field_types import CopyCsvField
+from field_types import DateCsvField
 from field_types import DateTimeCsvField
 from field_types import FirDofeCsv
 from field_types import FormatCsvFields
@@ -27,7 +28,7 @@ from google_sheet_names import spreadsheet_header_from_export_header
 vif_data = [
     CopyCsvField("vif_number", "VIF Number", False),
     BorderStationExportOnlyCsv("station_name","Station","vif_number"),
-    CopyCsvField("date", "Date (on Form)", True),
+    DateCsvField("date", "Date (on Form)"),
     DateTimeCsvField("date_time_entered_into_system", "Date Entered"),
 
     CopyCsvField("number_of_victims", "Number of Victims", True),
@@ -40,7 +41,7 @@ vif_data = [
     BooleanCsvField("permission_to_use_photograph", "Photo Permission", "Permission was given to use photo", ""),
 
     CopyCsvField("full_name", "1.1 Name", True),
-    MapValueCsvField("gender", "1.2 Gender", { "male":"M", "female":"F", "unknown":"U"}, export_default="Unknown"),
+    MapValueCsvField("gender", "1.2 Gender", { "male":"M", "female":"F", "Unknown":"U"}, export_default="Unknown"),
 
     Address1CsvField("address1", "1.3 Address1"),
     Address2CsvField("address2", "Address2", "address1"),
