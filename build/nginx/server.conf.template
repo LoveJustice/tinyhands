@@ -24,6 +24,10 @@ server {
         alias /data/static/images/favicon.ico;
     }
 
+    location /bower_components/bootstrap/fonts/ {
+        alias /data/dist/fonts/;
+    }
+
     location /static/ {
         alias /data/dreamsuite/static/;
     }
