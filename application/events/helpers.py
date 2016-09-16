@@ -1,4 +1,5 @@
 import datetime
+import calendar
 from events.models import Event
 
 rep_dict = {'D': 'Daily', 'W': 'Weekly', 'M': 'Monthly'}
@@ -45,17 +46,10 @@ def add_repeat(date, repeat):
         date += datetime.timedelta(days=7)
         return date
     if repeat == 'M':
-        month = date.month + 1
-        if month > 12:
-            month = 1
-            year = date.year + 1
-        else:
-            year = date.year
-        try:
-            date = datetime.date(year, month, date.day)
-        except ValueError:
-            temp_date = datetime.date(year, month, 1) - datetime.timedelta(1)
-            date = datetime.date(year, month, temp_date.day)
+        year = int(date.year + date.month/12)
+        month = date.month % 12 + 1
+        day = min(date.day, calendar.monthrange(year, month)[1])
+        date = datetime.datetime(year, month, day)
         return date
     else:
         return date
