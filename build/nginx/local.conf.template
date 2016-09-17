@@ -8,7 +8,7 @@ server {
     client_max_body_size 100m;
 
     location /favicon.ico {
-        alias /data/static/images/favicon.ico;
+        alias /data/dreamsuite/static/images/favicon.ico;
     }
 
     location /static/ {
