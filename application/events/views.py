@@ -1,11 +1,9 @@
 import datetime
-import json
 from itertools import chain
 
 from braces.views import LoginRequiredMixin
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
-from django.http import HttpResponse
 from django.views.generic import CreateView, ListView, TemplateView, DeleteView, UpdateView
 from rest_framework import status
 from rest_framework.decorators import list_route
@@ -14,7 +12,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from events.forms import EventForm
-from events.helpers import get_repeated, event_list, dashboard_event_list
+from events.helpers import get_repeated_events, event_list, dashboard_event_list
 from events.models import Event
 from events.serializers import EventsSerializer
 
@@ -71,47 +69,6 @@ class EventUpdateView(SuccessMessageMixin, UpdateView, LoginRequiredMixin):
         return message
 
 
-class EventJson(ListView, LoginRequiredMixin):
-    model = Event
-
-    def get_queryset(self, queryset=None):
-        dashboard = self.kwargs.get('dashboard', '')
-        listing_event = dashboard_event_list if dashboard else event_list
-        if dashboard:
-            start_date = datetime.date.today()
-            end_date = start_date + datetime.timedelta(days=7)
-            querydict = {
-                'start_date__gte': start_date,
-                'start_date__lte': end_date,
-                'is_repeat': False
-            }
-        else:
-            start = self.request.GET.get('start', '')
-            end = self.request.GET.get('end', '')
-            start_date = datetime.datetime.strptime(start, "%Y-%m-%d")
-            end_date = datetime.datetime.strptime(end, "%Y-%m-%d")
-            querydict = {}
-            if start_date:
-                querydict['start_date__gte'] = start_date
-            if end_date:
-                querydict['start_date__lte'] = end_date
-            querydict['is_repeat'] = False
-
-        qs_repeat = self.model.objects.filter(is_repeat=True)
-        qs_non_repeat = self.model.objects.filter(**querydict)
-
-        temp_events = get_repeated(qs_repeat, start_date, end_date)
-        result_list = list(chain(temp_events, qs_non_repeat))
-        ls = listing_event(result_list)
-
-        return ls
-
-    def get(self, request, *args, **kwargs):
-        res = self.get_queryset()
-        res = json.dumps(res)
-        return HttpResponse(res, content_type="application/json")
-
-
 # Rest Api Views
 class EventViewSet(ModelViewSet):
     queryset = Event.objects.all()
@@ -129,8 +86,8 @@ class EventViewSet(ModelViewSet):
         try:
             start = request.query_params.get('start', '')
             end = request.query_params.get('end', '')
-            start_date = datetime.datetime.strptime(start, "%Y-%m-%d")
-            end_date = datetime.datetime.strptime(end, "%Y-%m-%d")
+            start_date = datetime.datetime.strptime(start, "%Y-%m-%d").date()
+            end_date = datetime.datetime.strptime(end, "%Y-%m-%d").date()
             if start_date > end_date:
                 return Response("Start date is later than end date", status=status.HTTP_400_BAD_REQUEST)
             querydict = {}
@@ -165,6 +122,6 @@ def query_events_for_feed(querydict, start_date, end_date):
     repeated_events = Event.objects.filter(is_repeat=True)
     non_repeated_events = Event.objects.filter(**querydict)
 
-    temp_events = get_repeated(repeated_events, start_date, end_date)
+    temp_events = get_repeated_events(repeated_events, start_date, end_date)
     result_list = list(chain(temp_events, non_repeated_events))
     return result_list

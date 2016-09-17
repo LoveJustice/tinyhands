@@ -1,6 +1,6 @@
 from django.conf.urls import url
 
-from events.views import EventJson, EventCalendarView, EventListView, EventCreateView, EventDeleteView, EventUpdateView
+from events.views import EventCalendarView, EventListView, EventCreateView, EventDeleteView, EventUpdateView
 
 urlpatterns = [
     url(r'^create/$', EventCreateView.as_view(), name='create_event'),
@@ -8,6 +8,4 @@ urlpatterns = [
     url(r'^delete/(?P<pk>[0-9]+)/$', EventDeleteView.as_view(), name='delete_event'),
     url(r'^list/$', EventListView.as_view(), name='list_event'),
     url(r'^calendar/$', EventCalendarView.as_view(), name='event_calendar'),
-    url(r'^list.json/$', EventJson.as_view(), name='event_list_json'),
-    url(r'^list.json/(?P<dashboard>dashboard)/$', EventJson.as_view(), name='event_list_dashboard'),
 ]
