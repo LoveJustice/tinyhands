@@ -283,7 +283,7 @@ class CalendarFeedAPITests(RestApiTestCase):
         end_date = start_date + datetime.timedelta(days=2)
         repeated_event_properties = {
             'start_date': start_date,
-            'end_date': end_date,
+            'end_date': start_date,
             'is_repeat': True,
             'repetition': 'D',
             'ends': end_date + datetime.timedelta(days=4)
