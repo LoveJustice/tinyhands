@@ -7,6 +7,7 @@ from django_webtest import WebTest
 from django.core.urlresolvers import reverse
 
 from accounts.tests.factories import *
+from dataentry.tests.factories import VifFactory, IntercepteeFactory
 
 from dataentry.models import InterceptionRecord
 
@@ -98,17 +99,10 @@ class TestModels(WebTest):
 
 
 class ExportTesting(WebTest):
-
-    fixtures = ['accounts.json',
-                'address1.json',
-                'address2.json',
-                'test-irfs.json',
-                'test-interceptees.json',
-                'test-vifs.json'
-                ]
-
     def setUp(self):
         self.user = SuperUserFactory.create()
+        self.intercept = IntercepteeFactory.create()  # This creates an IRF as a SubFactory used in the tests
+        self.vif = VifFactory.create()
 
     def test_to_see_if_user_can_export_irf(self):
         response = self.app.get(reverse('interceptionrecord_csv_export'), user=self.user)

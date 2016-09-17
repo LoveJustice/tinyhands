@@ -1,14 +1,15 @@
 from django.conf.urls import url
-
-from dataentry.views import Address2ViewSet, Address1ViewSet, GeoCodeAddress1APIView, GeoCodeAddress2APIView, InterceptionRecordViewSet, VictimInterviewViewSet, BatchView, PersonViewSet, IntercepteeViewSet
 from rest_framework.authtoken import views
 
-from portal.views import get_interception_records
-from dataentry.views import Address2ViewSet, Address1ViewSet, SiteSettingsViewSet, GeoCodeAddress1APIView, GeoCodeAddress2APIView, InterceptionRecordViewSet, VictimInterviewViewSet, BatchView, IntercepteeViewSet, VictimInterviewDetailViewSet, PhotoExporter
-from budget.views import BudgetViewSet, OtherItemsViewSet, OldBudgetViewSet, OldOtherItemsViewSet, MoneyDistribution, MoneyDistributionFormPDFView, money_distribution_view, retrieve_latest_budget_sheet_for_border_station, previous_data, StaffSalaryViewSet
-from accounts.views import AccountViewSet, DefaultPermissionsSetViewSet, CurrentUserView, ResendActivationEmailView, AccountActivateView, AccountActivateClient
-from static_border_stations.views import BorderStationViewSet, StaffViewSet, CommitteeMemberViewSet, LocationViewSet
+from accounts.views import AccountViewSet, DefaultPermissionsSetViewSet, CurrentUserView, ResendActivationEmailView, AccountActivateClient
+from budget.views import BudgetViewSet, OtherItemsViewSet, OldBudgetViewSet, OldOtherItemsViewSet, MoneyDistribution, MoneyDistributionFormPDFView, retrieve_latest_budget_sheet_for_border_station, previous_data, StaffSalaryViewSet
+from dataentry.views import Address2ViewSet, Address1ViewSet, GeoCodeAddress1APIView, GeoCodeAddress2APIView, InterceptionRecordViewSet, VictimInterviewViewSet, BatchView, IntercepteeViewSet, VictimInterviewDetailViewSet, PhotoExporter
+from dataentry.views import PersonViewSet
+from dataentry.views import SiteSettingsViewSet
+from dataentry.views import get_station_id
 from events.views import EventViewSet
+from portal.views import get_interception_records, TallyDaysView
+from static_border_stations.views import BorderStationViewSet, StaffViewSet, CommitteeMemberViewSet, LocationViewSet
 
 
 list = {'get': 'list', 'post': 'create'}
@@ -88,12 +89,17 @@ urlpatterns = [
 
     # Portal App
         url(r'^get_interception_records/$', get_interception_records, name='get_interception_records'),
+        url(r'^portal/tally/days/$', TallyDaysView.as_view(), name='tally_day_api'),
+
 
 
     # Static Border Station App
         # Border Stations
         url(r'^border-station/$', BorderStationViewSet.as_view({'get':'list_all', 'post':'create'}), name="BorderStations"), # Detail
         url(r'^border-station/(?P<pk>\d+)/$', BorderStationViewSet.as_view(detail), name="BorderStation"),
+        url(r'^get_station_id/', get_station_id, name='get_station_id'),
+
+
 
         # Committee Members
         url(r'^committee-member/$', CommitteeMemberViewSet.as_view(list), name="CommitteeMembers"),
@@ -105,7 +111,7 @@ urlpatterns = [
 
         # Staff
         url(r'^staff/$', StaffViewSet.as_view(list), name="AllStaff"),
-        url(r'^staff/(?P<pk>\d+)/$', StaffViewSet.as_view(detail), name="Staff"),
+        url(r'^staff/(?P<pk>\d+)/$', StaffViewSet.as_view({'get': 'staff_retrieve', 'put': 'update', 'delete': 'destroy'}), name="Staff"),
 
         #IRFBatch
         url(r'^batch/(?P<startDate>(\d+)-(\d+)-\d+)/(?P<endDate>\d+-\d+-\d+)/$', BatchView.as_view(), name="BatchView"),

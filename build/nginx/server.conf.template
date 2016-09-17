@@ -21,7 +21,11 @@ server {
     client_max_body_size 20m;
 
     location /favicon.ico {
-        alias /data/static/images/favicon.ico;
+        alias /data/dreamsuite/static/images/favicon.ico;
+    }
+
+    location /bower_components/bootstrap/fonts/ {
+        alias /data/dist/fonts/;
     }
 
     location /static/ {
@@ -32,16 +36,15 @@ server {
         alias /data/media/;
     }
 
-    location /beta/ {
+    location / {
         alias /data/dist/;
     }
-
 
     location /robots.txt {
         alias /robots.txt;
     }
 
-	location / {
+	location ~ ^/(data-entry|api|login|logout|interceptee_fuzzy_matching)/ {
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
