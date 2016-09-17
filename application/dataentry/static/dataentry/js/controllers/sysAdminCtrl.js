@@ -7,31 +7,46 @@ angular
 
         vm.form = {};
 
-        function getForm() {
-            return {"address1_cutoff": angular.element('#address1_cutoff').val(),
-                    "address1_limit": angular.element('#address1_limit').val(),
-                    "address2_cutoff": angular.element('#address2_cutoff').val(),
-                    "address2_limit": angular.element('#address2_limit').val(),
-                    "person_cutoff": angular.element('#person_cutoff').val(),
-                    "person_limit": angular.element('#person_limit').val()}
-                    // "phone_number_cutoff": angular.element('#phone_number_cutoff').val(),
-                    // "phone_number_limit": angular.element('#phone_number_limit').val()}
-        }
 
-        vm.retrieveForm = function() {
+        vm.activate = function() {
             sysAdminService.retrieveForm().then(function(promise){
-                vm.form = promise.data;
+                vm.form = vm.transformDataFromApi(promise.data);
             });
         };
 
+        vm.transformDataFromApi = function (data) {
+            var localData = angular.copy(data.data);
+            var serializedObject = angular.copy(data);
+            var settingNames = [];
+            for (var x = 0; x < localData.length; x++){
+                var setting = localData[x];
+                serializedObject[setting.name] = {value: setting.value, description: setting.description};
+                settingNames.push(setting.name);
+            }
+            delete serializedObject.data;
+            serializedObject.settingNames = settingNames;
+            console.log(serializedObject);
+            return serializedObject;
+        };
+
+        vm.transformToApiData = function (data) {
+            var settings = [];
+            data.settingNames.forEach(function (settingName) {
+                var setting = data[settingName];
+                settings.push({name: settingName, value: setting.value, description: setting.description});
+                delete data[settingName];
+            });
+            delete data.settingNames;
+            data.data = settings;
+            return data;
+        };
+
         vm.updateForm = function() {
-            vm.form = getForm();
-            sysAdminService.updateForm(vm.form).then(function(promise){
-                vm.form = promise.data;
+            sysAdminService.updateForm(vm.transformToApiData(vm.form)).then(function(promise){
+                vm.form = vm.transformDataFromApi(promise.data);
                 $window.location.assign('/data-entry/sysadminsettings/1/');
             });
         };
 
-        vm.retrieveForm();
-
+        vm.activate();
     }]);

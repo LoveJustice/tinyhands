@@ -31,4 +31,4 @@ class IrfTest(APITestCase):
         # delete
         url = reverse('InterceptionRecordDetail', args=[self.irf_list[0].id])
         response = self.client.delete(url)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)\
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)

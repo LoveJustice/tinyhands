@@ -1,6 +1,0 @@
-#!/bin/bash -x
-
-# Deploy configuration files to proper locations in file system.
-
-cp thi-nginx.conf /etc/nginx/sites-available
-cp thi-supervisor.conf /etc/supervisor/conf.d

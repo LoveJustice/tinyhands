@@ -9,7 +9,7 @@ class SuperUserDesignation(DjangoModelFactory):
         model = DefaultPermissionsSet
         django_get_or_create = ('name',)
 
-    name = "Super User"
+    name = "Super Administrator"
     permission_irf_view = True
     permission_irf_add = True
     permission_irf_edit = True

@@ -6,10 +6,9 @@ from django.utils.timezone import make_aware
 from fuzzywuzzy import process
 
 from accounts.models import Alert
-from dataentry.models import Interceptee, FuzzyMatching
+from dataentry.models import Interceptee, SiteSettings
 from dataentry_signals import irf_done
 from dataentry_signals import vif_done
-
 
 logger = logging.getLogger(__name__)
 
@@ -138,7 +137,7 @@ class IRFAlertChecker(object):
 
         trafficker_list = []
 
-        fuzzy_object = FuzzyMatching.objects.all()[0]
+        site_settings = SiteSettings.objects.all()[0]
 
         trafficker_in_custody = self.trafficker_in_custody()
 
@@ -146,7 +145,7 @@ class IRFAlertChecker(object):
             if interceptee.kind == 't':
                 tmplist = []
                 p = interceptee.person
-                onePersonMatches = process.extractBests(p.full_name, people_dict, score_cutoff=fuzzy_object.person_cutoff, limit=fuzzy_object.person_limit)
+                onePersonMatches = process.extractBests(p.full_name, people_dict, score_cutoff=site_settings.get_setting_value_by_name('person_cutoff'), limit=site_settings.get_setting_value_by_name('person_limit'))
                 logger.debug(onePersonMatches)
                 for match in onePersonMatches:
                     tmplist.append((match[1], match[2].person))

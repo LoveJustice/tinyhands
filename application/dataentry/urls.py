@@ -1,11 +1,6 @@
 from django.conf.urls import url
 from dataentry.views import *
 
-sys_admin_list = SysAdminSettingsViewSet.as_view({
-    'get': 'retrieve',
-    'put': 'update'
-})
-
 urlpatterns = [
     url(r'^irfs/$', interception_record_list_template, name="interceptionrecord_list"),  # Simple render view
     url(r'^irfs/search/(?P<code>\w+)/$', interception_record_list_search_template, name="interceptionrecord_list_search"),
@@ -28,7 +23,6 @@ urlpatterns = [
 
     url(r'^id-management/$', id_management_template, name='id_management'),
     # System Administrator Settings Page
-    url(r'^api/sysadminsettings/(?P<pk>\d+)/$', sys_admin_list, name="sys_admin_settings_api"),
     url(r'^sysadminsettings/(?P<pk>\d+)/$', sys_admin_settings_update, name="sys_admin_settings"),
     url(r'^stations/codes/$', StationCodeAPIView.as_view()),
 

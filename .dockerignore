@@ -2,7 +2,26 @@
 .idea
 Vagrantfile
 local.env
+common.env
 
+application/.idea
 application/media/*
 application/static/*
 application/google_cred.json
+application/etc/google_cred.json
+
+
+\#*#
+.vscode/*
+.project
+.pydevproject
+.vagrant/
+.#*
+.coverage
+.nfs*
+*.sqlite
+*.sqlite3
+*.sqlitebak
+*.stackdump
+*.sw[op]
+*~
