@@ -37,9 +37,7 @@ class HasPutPermission(RequestPermission):
         return super(HasPutPermission, self).has_permission(request, view, "PUT", view.put_permissions_required)
 
 
-
-# Designation Based Permissions
-class HasUserDesignation(permissions.BasePermission):
+class HasUserDesignation(permissions.BasePermission):  # Designation Based Permissions
     message = 'You do not have the right user designation to access this data'
 
     def has_permission(self, request, view, required_user_designation):
