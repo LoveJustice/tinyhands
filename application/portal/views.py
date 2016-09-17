@@ -7,6 +7,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.utils import timezone
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -24,6 +25,7 @@ def get_border_stations(request):
     return HttpResponse(border_stations, content_type="application/json")
 
 
+@login_required
 def get_interception_records(request):
     interception_sum = 0
     if "station_code" in request.GET:
@@ -35,6 +37,7 @@ def get_interception_records(request):
     return HttpResponse("No IRFs Found")
 
 
+@login_required
 def get_staff_count(request):
     if "station_code" in request.GET:
         border_station = BorderStation.objects.filter(station_code=request.GET["station_code"]).first()
@@ -43,6 +46,7 @@ def get_staff_count(request):
 
 
 class TallyDaysView(APIView):
+    permission_classes = (IsAuthenticated, )
 
     def get(self, request):
         # timezone.now() gets utc time but timezone.now().now() gets local Nepal time

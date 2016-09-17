@@ -108,7 +108,7 @@ urlpatterns = [
         url(r'^staff/(?P<pk>\d+)/$', StaffViewSet.as_view(detail), name="Staff"),
 
         #IRFBatch
-        url(r'^batch/(?P<startDate>(\d+)-(\d+)-\d+)/(?P<endDate>\d+-\d+-\d+)$', BatchView.as_view(), name="BatchView"),
+        url(r'^batch/(?P<startDate>(\d+)-(\d+)-\d+)/(?P<endDate>\d+-\d+-\d+)/$', BatchView.as_view(), name="BatchView"),
         url(r'^photos/(?P<startDate>(\d+)-(\d+)-\d+)/(?P<endDate>\d+-\d+-\d+)/$', PhotoExporter.as_view({'get': 'export_photos'}), name="PhotoExporter"),
         url(r'^photos/(?P<startDate>(\d+)-(\d+)-\d+)/(?P<endDate>\d+-\d+-\d+)/count/$', PhotoExporter.as_view({'get': 'count_photos_in_date_range'}), name="PhotoExporterCount"),
 

@@ -42,7 +42,7 @@ from export_import import irf_io, vif_io
 
 from accounts.mixins import PermissionsRequiredMixin
 
-from rest_api.authentication import HasPermission, HasDeletePermission
+from rest_api.authentication import HasPermission, HasDeletePermission, HasPostPermission, HasPutPermission
 
 logger = logging.getLogger(__name__)
 
@@ -316,6 +316,8 @@ class VictimInterviewCSVExportView(LoginRequiredMixin, PermissionsRequiredMixin,
 
 
 class GeoCodeAddress1APIView(APIView):
+    permission_classes = (IsAuthenticated,)
+
     def get(self, request):
         value = request.query_params["address1"]
         matches = match_location(address1_name=value)
@@ -327,6 +329,8 @@ class GeoCodeAddress1APIView(APIView):
 
 
 class GeoCodeAddress2APIView(APIView):
+    permission_classes = (IsAuthenticated,)
+
     def get(self, request):
         try:
             address1_name = request.query_params["address1"]
@@ -414,6 +418,8 @@ class Address1CreateView(LoginRequiredMixin, PermissionsRequiredMixin, CreateVie
 
 
 class StationCodeAPIView(APIView):
+    permission_classes = (IsAuthenticated, )
+
     def get(self, request):
         codes = BorderStation.objects.all().values_list("station_code", flat=True)
         return Response(codes, status=status.HTTP_200_OK)
@@ -498,10 +504,18 @@ class InterceptionRecordViewSet(viewsets.ModelViewSet):
                 pass
         return response
 
+
 class IntercepteeViewSet(viewsets.ModelViewSet):
+    permission_classes = (IsAuthenticated, HasPermission, HasDeletePermission, HasPostPermission, HasPutPermission)
+    permissions_required = ['permission_irf_view']
+    delete_permissions_required = ['permission_irf_delete']
+    post_permissions_required = ['permission_irf_add']
+    put_permissions_required = ['permission_irf_edit']
+
     queryset = Interceptee.objects.all()
     serializer_class = IntercepteeSerializer
     filter_fields = ('interception_record',)
+
 
 class VictimInterviewViewSet(viewsets.ModelViewSet):
     queryset = VictimInterview.objects.all()

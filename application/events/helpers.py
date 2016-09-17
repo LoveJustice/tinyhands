@@ -1,64 +1,52 @@
 import datetime
+import calendar
 from events.models import Event
 
 rep_dict = {'D': 'Daily', 'W': 'Weekly', 'M': 'Monthly'}
-
-
-def list_weekday(day):
-    return [(day+i) % 7 for i in range(7)]
 
 
 def format_schedule(date, time):
     return datetime.datetime.combine(date, time).strftime('%Y-%m-%dT%H:%M:%S')
 
 
-def get_repeated(qs, start, end):
+def get_repeated_events(events, start_date_range, end_date_range):
     items = []
-    for item in qs:
-        if item.start_date:
-            start = datetime.date(start.year, start.month, start.day)
-            end = datetime.date(end.year, end.month, end.day)
-            check_start = item.start_date
-            check_end = item.end_date
-            ends = item.ends if item.ends else end
-            repetition = item.repetition
-            if not repetition:
-                continue
-            while end > check_start and ends > check_start:
-                if start <= check_start:
-                    temp_event = Event(
-                        title=item.title, start_date=check_start, end_date=check_end,
-                        start_time=item.start_time, end_time=item.end_time, location=item.location,
-                        description=item.description, is_repeat=item.is_repeat, repetition=item.repetition,
-                        ends=item.ends, id=item.id)
-                    items.append(temp_event)
-                check_start = add_repeat(check_start, repetition)
-                check_end = add_repeat(check_end, repetition)
+    for event in events:
+        start_date_generator = repeating_date_generator(event.start_date, event.repetition)
+        end_date_generator = repeating_date_generator(event.end_date, event.repetition)
+        start_date = event.start_date
+        end_date = event.end_date
+        event_ends = end_date_range if event.ends is None else min(event.ends, end_date_range)
+        while event_ends > start_date:
+            if start_date_range <= start_date <= end_date_range:
+                rep_event = Event(
+                            title=event.title, start_date=start_date, end_date=end_date,
+                            start_time=event.start_time, end_time=event.end_time, location=event.location,
+                            description=event.description, is_repeat=event.is_repeat, repetition=event.repetition,
+                            ends=event.ends, id=event.id)
+                items.append(rep_event)
+            start_date = start_date_generator.next()
+            end_date = end_date_generator.next()
     return items
 
 
-def add_repeat(date, repeat):
-    if repeat == 'D':
-        date += datetime.timedelta(days=1)
-        return date
-    if repeat == 'W':
-        date += datetime.timedelta(days=7)
-        return date
-    if repeat == 'M':
-        month = date.month + 1
-        if month > 12:
-            month = 1
-            year = date.year + 1
+def repeating_date_generator(date, repeat):
+    temp_date = date
+    while True:
+        if repeat == 'D':
+            temp_date += datetime.timedelta(days=1)
+            yield temp_date
+        elif repeat == 'W':
+            temp_date += datetime.timedelta(days=7)
+            yield temp_date
+        elif repeat == 'M':
+            year = int(temp_date.year + temp_date.month / 12)
+            month = temp_date.month % 12 + 1
+            day = min(date.day, calendar.monthrange(year, month)[1])
+            temp_date = datetime.date(year, month, day)
+            yield temp_date
         else:
-            year = date.year
-        try:
-            date = datetime.date(year, month, date.day)
-        except ValueError:
-            temp_date = datetime.date(year, month, 1) - datetime.timedelta(1)
-            date = datetime.date(year, month, temp_date.day)
-        return date
-    else:
-        return date
+            raise StopIteration
 
 
 def dashboard_event_list(qs_list):
@@ -97,7 +85,6 @@ def event_list(qs_list):
     ls = []
     for item in qs_list:
         ends = item.ends.strftime('%Y-%m-%d') if item.ends else ''
-        print item.id
         temp = {
             'id': item.id,
             'location': item.location,
