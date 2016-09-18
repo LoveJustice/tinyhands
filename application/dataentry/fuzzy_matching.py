@@ -1,5 +1,6 @@
 from fuzzywuzzy import process
-from dataentry.models import Address1, Address2, FuzzyMatching
+
+from dataentry.models import Address1, Address2, SiteSettings
 
 
 def match_location(address1_name=None, address2_name=None):
@@ -22,17 +23,17 @@ def match_location(address1_name=None, address2_name=None):
         model = Address1
         location_name = address1_name
 
-    fuzzy_object = FuzzyMatching.objects.all()[0]
+    site_settings = SiteSettings.objects.all()[0]
 
     if filter_by_address1:
-        fuzzy_cutoff = fuzzy_object.address2_cutoff
-        fuzzy_limit = fuzzy_object.address2_limit
+        fuzzy_cutoff = site_settings.get_setting_value_by_name('address2_cutoff')
+        fuzzy_limit = site_settings.get_setting_value_by_name('address2_limit')
         region_names = {region.id: region.name
                         for region in model.objects.filter(address1__name__contains=address1_name).select_related('address1', 'canonical_name__address1')
                         }
     else:
-        fuzzy_limit = fuzzy_object.address1_limit
-        fuzzy_cutoff = fuzzy_object.address1_cutoff
+        fuzzy_limit = site_settings.get_setting_value_by_name('address1_limit')
+        fuzzy_cutoff = site_settings.get_setting_value_by_name('address1_cutoff')
         region_names = {region.id: region.name
                         for region in model.objects.all()
                         }

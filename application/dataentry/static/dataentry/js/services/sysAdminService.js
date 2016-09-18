@@ -11,7 +11,7 @@ function sysAdminService($http) {
 	};
 
     function retrieveForm() {
-        return $http.get('/data-entry/api/sysadminsettings/1/')
+        return $http.get('/api/site-settings/')
             .success(function(data) {
                 return data;
             })
@@ -21,7 +21,7 @@ function sysAdminService($http) {
     }
 
     function updateForm(form) {
-        return $http.put('/data-entry/api/sysadminsettings/1/', form)
+        return $http.put('/api/site-settings/' + form.id + '/', form)
             .success(function(data) {
                 return data;
             })
