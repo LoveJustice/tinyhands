@@ -25,7 +25,6 @@ angular
             }
             delete serializedObject.data;
             serializedObject.settingNames = settingNames;
-            console.log(serializedObject);
             return serializedObject;
         };
 
