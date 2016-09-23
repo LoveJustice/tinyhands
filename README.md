@@ -23,7 +23,10 @@ Tiny Hands International
 3. clone the repository
 4. cd into the project directory
 5. execute `vagrant up --provision`
-6. the server will be listening on `192.168.36.36/` and then you `vagrant ssh` and `cd /vagrant`to get access to docker/docker-compose commands inside the vagrant box to follow the above steps
+6. Execute `vagrant ssh` and `cd /vagrant`to get access to docker/docker-compose commands inside the vagrant box
+7. Execute the `setup.sh` script in the root of the repo (this might take a few minutes)
+8. Run `docker-compose up -d` to start running the project
+9. the server should be running on `192.168.36.36/`
 
 ## Installing Sanitized Test Data
 execute `docker-compose run --rm web sh /data/bin/install_test_db.sh`
