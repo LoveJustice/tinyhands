@@ -22,8 +22,9 @@ Tiny Hands International
 2. if you are on windows, you should install [gitbash](https://git-scm.com/downloads) for easiness and niceness
 3. clone the repository
 4. cd into the project directory
-5. execute `vagrant up --provision`
-6. the server will be listening on `192.168.36.36/` and then you `vagrant ssh` and `cd /vagrant`to get access to docker/docker-compose commands inside the vagrant box to follow the above steps
+5. Create the local.env file for docker-compose to use: `cp local.env.dist local.env`
+6. execute `vagrant up --provision`
+7. the server will be listening on `192.168.36.36/` and then you `vagrant ssh` and `cd /vagrant`to get access to docker/docker-compose commands inside the vagrant box
 
 ## Installing Sanitized Test Data
 execute `docker-compose run --rm web sh /data/bin/install_test_db.sh`
