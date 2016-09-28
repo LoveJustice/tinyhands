@@ -30,7 +30,6 @@ nginx:
     - web:web
   volumes:
     - /tmp:/log
-    - ../tinyhands-client/dist/:/data/dist/
   volumes_from:
     - data
   ports:
