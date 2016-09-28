@@ -2,7 +2,6 @@ from django.conf.urls import url
 from rest_framework.authtoken import views
 
 from accounts.views import AccountViewSet, DefaultPermissionsSetViewSet, CurrentUserView, ResendActivationEmailView, AccountActivateClient
-from budget.views import BudgetViewSet, OtherItemsViewSet, OldBudgetViewSet, OldOtherItemsViewSet, MoneyDistribution, MoneyDistributionFormPDFView, retrieve_latest_budget_sheet_for_border_station, previous_data, StaffSalaryViewSet
 from dataentry.views import Address2ViewSet, Address1ViewSet, GeoCodeAddress1APIView, GeoCodeAddress2APIView, InterceptionRecordViewSet, VictimInterviewViewSet, BatchView, IntercepteeViewSet, VictimInterviewDetailViewSet, PhotoExporter
 from dataentry.views import PersonViewSet
 from dataentry.views import SiteSettingsViewSet
@@ -59,32 +58,6 @@ urlpatterns = [
         # VIFs
         url(r'^vif/$', VictimInterviewViewSet.as_view(list), name="VictimInterview"),
         url(r'^vif/(?P<pk>\d+)/$', VictimInterviewDetailViewSet.as_view(detail), name="VictimInterviewDetail"),
-
-    # Budget URLs
-        url(r'^budget/$', BudgetViewSet.as_view(list), name='BudgetCalculation'),
-        url(r'^budget/(?P<pk>\d+)/$', BudgetViewSet.as_view(detail), name='BudgetCalculationWithId'),
-
-        url(r'^budget/(?P<parent_pk>\d+)/item/$', OtherItemsViewSet.as_view(list), name='BudgetCalculationWithId'),
-        url(r'^budget/(?P<parent_pk>\d+)/item/(?P<pk>\d+)/$', OtherItemsViewSet.as_view(detail), name='BudgetCalculationWithId'),
-
-        url(r'^budget/most_recent_form/(?P<pk>\d+)/$', retrieve_latest_budget_sheet_for_border_station, name="rest_api_budget_new_api"),
-        url(r'^budget/previous_data/(?P<pk>\d+)/(?P<month>\d+)/(?P<year>\d+)/$', previous_data, name="rest_api_previous_data"),
-
-        url(r'^budget/staff_salary/$', StaffSalaryViewSet.as_view(list), name="rest_api_staff_salary_list_api"),
-        url(r'^budget/(?P<parent_pk>\d+)/staff_salary/$', StaffSalaryViewSet.as_view({'get': 'budget_calc_retrieve'}), name="rest_api_staff_salary_detail_api"),
-        url(r'^budget/(?P<parent_pk>\d+)/staff_salary/(?P<pk>\d+)/$', StaffSalaryViewSet.as_view({'put': 'update', 'delete': 'destroy'}), name="rest_api_staff_salary_detail_api"),
-
-        url(r'^mdf/(?P<pk>\d+)/$', MoneyDistribution.as_view({'get': 'retrieve', 'post': 'send_emails'}), name="MDFViewSet"),
-        url(r'^mdf/(?P<pk>\d+)/pdf/$', MoneyDistributionFormPDFView.as_view(), name="MdfPdf"),
-
-        # Old Budget viewsets for the old django site. needs to change eventually - ask ben duggan about it
-        # Budget URLs
-        url(r'^Oldbudget/$', OldBudgetViewSet.as_view({'get': 'list', 'post': 'create'}), name='OldBudgetCalculation'),
-        url(r'^Oldbudget/(?P<pk>\d+)/$', OldBudgetViewSet.as_view({'put': 'update', 'get': 'retrieve', 'delete': 'destroy'}), name='OldBudgetCalculationWithId'),
-
-        # Other items
-        url(r'^Oldbudget/(?P<parent_pk>\d+)/item/$', OldOtherItemsViewSet.as_view({'get': 'list_by_budget_sheet', 'post': 'create'}), name='OldBudgetCalculationWithId'),
-        url(r'^Oldbudget/(?P<parent_pk>\d+)/item/(?P<pk>\d+)/$', OldOtherItemsViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}), name='OldBudgetCalculationWithId'),
 
 
     # Portal App

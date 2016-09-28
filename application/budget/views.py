@@ -32,13 +32,6 @@ from static_border_stations.models import Staff, BorderStation, CommitteeMember
 from static_border_stations.serializers import StaffSerializer, CommitteeMemberSerializer
 
 
-class OldBudgetViewSet(viewsets.ModelViewSet):
-    permission_classes = (IsAuthenticated, HasPermission,)
-    permissions_required = ['permission_budget_manage']
-    queryset = BorderStationBudgetCalculation.objects.all()
-    serializer_class = BorderStationBudgetCalculationSerializer
-
-
 class BudgetViewSet(viewsets.ModelViewSet):
     queryset = BorderStationBudgetCalculation.objects.all()
     serializer_class = BorderStationBudgetCalculationSerializer
@@ -146,54 +139,6 @@ def previous_data(request, pk, month, year):
          })
 
 
-def ng_budget_calc_update(request, pk):
-    if not request.user.permission_budget_manage:
-        return redirect("home")
-
-    border_station = BorderStationBudgetCalculation.objects.get(pk=pk).border_station
-    submit_type = 2
-    return render(request, 'budget/borderstationbudgetcalculation_form.html', locals())
-
-
-def ng_budget_calc_create(request, pk):
-    if not request.user.permission_budget_manage:
-        return redirect("home")
-
-    border_station = BorderStation.objects.get(pk=pk)
-    submit_type = 1
-    return render(request, 'budget/borderstationbudgetcalculation_form.html', locals())
-
-
-def ng_budget_calc_view(request, pk):
-    if not request.user.permission_budget_manage:
-        return redirect("home")
-
-    border_station = BorderStationBudgetCalculation.objects.get(pk=pk).border_station
-    submit_type = 3
-    return render(request, 'budget/borderstationbudgetcalculation_form.html', locals())
-
-
-class OldOtherItemsViewSet(viewsets.ModelViewSet):
-    queryset = OtherBudgetItemCost.objects.all()
-    serializer_class = OtherBudgetItemCostSerializer
-    permission_classes = [IsAuthenticated, HasPermission]
-    permissions_required = ['permission_budget_manage']
-
-    def retrieve(self, request, *args, **kwargs):
-        """
-            I'm overriding this method to retrieve all
-            of the budget items for a particular budget calculation sheet
-        """
-        self.object_list = self.filter_queryset(self.get_queryset().filter(budget_item_parent=self.kwargs['pk']))
-        serializer = self.get_serializer(self.object_list, many=True)
-        return Response(serializer.data)
-
-    @list_route()
-    def list_by_budget_sheet(self, request, parent_pk, *args, **kwargs):
-        other_items_list = OtherBudgetItemCost.objects.filter(budget_item_parent_id=parent_pk)
-        serializer = self.get_serializer(other_items_list, many=True)
-        return Response(serializer.data)
-
 
 class OtherItemsViewSet(viewsets.ModelViewSet):
     queryset = OtherBudgetItemCost.objects.all()
@@ -217,28 +162,6 @@ class OtherItemsViewSet(viewsets.ModelViewSet):
         other_items_list = OtherBudgetItemCost.objects.filter(budget_item_parent_id=parent_pk)
         serializer = self.get_serializer(other_items_list, many=True)
         return Response(serializer.data)
-
-
-class OldStaffSalaryViewSet(viewsets.ModelViewSet):
-    queryset = StaffSalary.objects.all()
-    serializer_class = StaffSalarySerializer
-    permission_classes = [IsAuthenticated, HasPermission]
-    permissions_required = ['permission_budget_manage']
-
-
-    def budget_calc_retrieve(self, request, *args, **kwargs):
-        """
-            Retrieve all of the staffSalaries for a particular budget calculation sheet
-        """
-        budget_sheet = BorderStationBudgetCalculation.objects.filter(border_station=self.kwargs['pk']).order_by('-date_time_entered').first()
-        if budget_sheet:
-            staff_set = budget_sheet.staffsalary_set.all()
-            serializer = self.get_serializer(staff_set, many=True)
-            return Response(serializer.data)
-        else:
-            self.object_list = self.filter_queryset(self.get_queryset().filter(budget_calc_sheet=self.kwargs['pk']))
-            serializer = self.get_serializer(self.object_list, many=True)
-            return Response(serializer.data)
 
 
 class StaffSalaryViewSet(viewsets.ModelViewSet):
@@ -429,11 +352,3 @@ class MoneyDistributionFormPDFView(PDFView, LoginRequiredMixin, PermissionsRequi
 
             'monthly_total': station.station_total()
         }
-
-
-@login_required
-def money_distribution_view(request, pk):
-    if not request.user.permission_budget_manage:
-        return redirect("home")
-    border_station = (BorderStationBudgetCalculation.objects.get(pk=pk)).border_station
-    return render(request, 'budget/moneydistribution_view.html', locals())
