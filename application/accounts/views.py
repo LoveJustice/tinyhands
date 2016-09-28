@@ -26,7 +26,7 @@ class AccountActivateClient(APIView):
         serializer = AccountsSerializer(account)
         return Response(serializer.data)
 
-    def post(self, request, activation_key=None, password1=None, password2=None):
+    def post(self, request, activation_key=None):
         account = Account.objects.get(activation_key=activation_key)
         if account and account.has_usable_password():
             return HttpResponse("account_already_active/invalid_key")
