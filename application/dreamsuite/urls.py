@@ -18,7 +18,10 @@ urlpatterns = [
     url(r'^static_border_stations/', include('static_border_stations.urls')),
     url(r'^portal/', include('portal.urls')),
     url(r'^budget/', include('budget.urls')),
+
     url(r'^api/', include('rest_api.urls')),
+
+    url(r'^api/', include('accounts.urls')),
 
     url(r'^login/$', auth_views.login, {'template_name': 'login.html'}, name='login'),
     url(r'^logout/$', auth_views.logout_then_login, name='logout'),
