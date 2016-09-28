@@ -1,14 +1,20 @@
 from django.conf.urls import url
 from accounts.views import *
+from rest_framework.authtoken import views
+
+list = {'get': 'list', 'post': 'create'}
+detail = {'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}
 
 urlpatterns = [
-    url(r'^$', AccountListView.as_view(), name='account_list'),
+        url(r'^login/', views.obtain_auth_token),
+        url(r'^me/$', CurrentUserView.as_view(), name="CurrentUser"),
 
-    url(r'^create/$', AccountCreateView.as_view(), name='account_create'),
-    url(r'^accounts/activate-account/(?P<activation_key>[a-zA-Z0-9]+)/$', AccountActivateView.as_view(), name='account_activate'),
+        url(r'^account/$', AccountViewSet.as_view(list), name="AccountList"),
+        url(r'^account/all/$', AccountViewSet.as_view({'get': 'list_all'}), name="AccountListAll"),
+        url(r'^account/(?P<pk>\d+)/$', AccountViewSet.as_view(detail), name='Account'),
+        url(r'^account/activate/(?P<activation_key>[a-zA-Z0-9]+)/$', AccountActivateClient.as_view(), name='accountActivation'),
+        url(r'^account/resend-activation-email/(?P<pk>\d+)/$', ResendActivationEmailView.as_view(), name='ResendActivationEmail'),
 
-    url(r'^update/(?P<pk>\d+)/$', AccountUpdateView.as_view(), name='account_update'),
-
-    url(r'^access-control/$', AccessControlView.as_view(), name='access_control'),
-    url(r'^access-defaults/$', AccessDefaultsView.as_view(), name='access_defaults'),
+        url(r'^defaultPermissionsSet/$', DefaultPermissionsSetViewSet.as_view(list), name="DefaultPermissionsSets"),
+        url(r'^defaultPermissionsSet/(?P<pk>\d+)/$', DefaultPermissionsSetViewSet.as_view(detail), name="DefaultPermissionsSet"),
 ]
