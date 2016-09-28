@@ -15,12 +15,11 @@ from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
 from django.core.urlresolvers import reverse_lazy
 from django.http import HttpResponse, HttpResponseRedirect, Http404
-from django.shortcuts import redirect, render_to_response, render
+from django.shortcuts import redirect, render
 from django.template.loader import render_to_string
-from django.views.generic import ListView, View, DeleteView, CreateView, TemplateView
+from django.views.generic import ListView, View, CreateView, TemplateView
 
 from rest_framework import status
-from rest_framework.decorators import list_route, detail_route
 from rest_framework import filters
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
@@ -31,12 +30,13 @@ from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineForm
 from braces.views import LoginRequiredMixin
 from fuzzywuzzy import process
 
-from dataentry.models import BorderStation, Address2, Address1, Interceptee, Person, FuzzyMatching, InterceptionRecord, VictimInterview, VictimInterviewLocationBox, VictimInterviewPersonBox
+from dataentry.models import BorderStation, SiteSettings, Address2, Address1, Interceptee, Person, InterceptionRecord, VictimInterview, VictimInterviewLocationBox, VictimInterviewPersonBox
 from dataentry.forms import IntercepteeForm, InterceptionRecordForm, Address2Form, Address1Form, VictimInterviewForm, VictimInterviewLocationBoxForm, VictimInterviewPersonBoxForm
-from dataentry.serializers import Address1Serializer, Address1RelatedItemsSerializer, Address2Serializer, Address2RelatedItemsSerializer, InterceptionRecordListSerializer, VictimInterviewListSerializer, VictimInterviewSerializer, SysAdminSettingsSerializer, PersonSerializer, IntercepteeSerializer, InterceptionRecordSerializer
+from dataentry.dataentry_signals import irf_done
+
+from dataentry.serializers import Address1Serializer, Address2Serializer, InterceptionRecordListSerializer, VictimInterviewListSerializer, VictimInterviewSerializer, PersonSerializer, IntercepteeSerializer, InterceptionRecordSerializer
 from dataentry.dataentry_signals import irf_done, vif_done
 from dataentry.fuzzy_matching import match_location
-from dataentry.helpers import related_items_helper
 
 from export_import import irf_io, vif_io
 
@@ -157,9 +157,15 @@ class InterceptionRecordCreateView(LoginRequiredMixin, PermissionsRequiredMixin,
                                    CreateWithInlinesView):
     model = InterceptionRecord
     form_class = InterceptionRecordForm
-    success_url = reverse_lazy('interceptionrecord_list')
+    success_url = settings.CLIENT_DOMAIN + "/irf"
+
     inlines = [IntercepteeInline]
     permissions_required = ['permission_irf_add']
+
+    def get_context_data(self, **kwargs):
+        context = super(InterceptionRecordCreateView, self).get_context_data(**kwargs)
+        context.update({"CLIENT_DOMAIN": settings.CLIENT_DOMAIN})
+        return context
 
     def forms_valid(self, form, inlines):
         form.instance.form_entered_by = self.request.user
@@ -178,9 +184,15 @@ class InterceptionRecordUpdateView(LoginRequiredMixin, PermissionsRequiredMixin,
                                    UpdateWithInlinesView):
     model = InterceptionRecord
     form_class = InterceptionRecordForm
-    success_url = reverse_lazy('interceptionrecord_list')
+    success_url = settings.CLIENT_DOMAIN + "/irf"
     inlines = [IntercepteeInline]
     permissions_required = ['permission_irf_edit']
+
+    def get_context_data(self, **kwargs):
+        context = super(InterceptionRecordUpdateView, self).get_context_data(**kwargs)
+        context.update({"CLIENT_DOMAIN": settings.CLIENT_DOMAIN})
+        return context
+
 
     def forms_valid(self, form, inlines):
         form = form.save()
@@ -195,6 +207,12 @@ class InterceptionRecordUpdateView(LoginRequiredMixin, PermissionsRequiredMixin,
 
 class InterceptionRecordDetailView(InterceptionRecordUpdateView):
     permissions_required = ['permission_irf_view']
+
+    def get_context_data(self, **kwargs):
+        context = super(InterceptionRecordDetailView, self).get_context_data(**kwargs)
+        context.update({"CLIENT_DOMAIN": settings.CLIENT_DOMAIN})
+        return context
+
 
     def post(self, request, *args, **kwargs):
         raise PermissionDenied
@@ -243,9 +261,15 @@ def victiminterview_record_list_search_template(request, code):
 class VictimInterviewCreateView(LoginRequiredMixin, PermissionsRequiredMixin, CreateWithInlinesView):
     model = VictimInterview
     form_class = VictimInterviewForm
-    success_url = reverse_lazy('victiminterview_list')
+    success_url = settings.CLIENT_DOMAIN + '/vif'
     inlines = [PersonBoxInline, LocationBoxInline]
     permissions_required = ['permission_vif_add']
+
+    def get_context_data(self, **kwargs):
+        context = super(VictimInterviewCreateView, self).get_context_data(**kwargs)
+        context.update({"CLIENT_DOMAIN": settings.CLIENT_DOMAIN})
+        return context
+
 
     def forms_valid(self, form, inlines):
         form.instance.form_entered_by = self.request.user
@@ -261,9 +285,15 @@ class VictimInterviewCreateView(LoginRequiredMixin, PermissionsRequiredMixin, Cr
 class VictimInterviewUpdateView(LoginRequiredMixin, PermissionsRequiredMixin, UpdateWithInlinesView):
     model = VictimInterview
     form_class = VictimInterviewForm
-    success_url = reverse_lazy('victiminterview_list')
+    success_url = settings.CLIENT_DOMAIN + '/vif'
     inlines = [PersonBoxInline, LocationBoxInline]
     permissions_required = ['permission_vif_edit']
+
+    def get_context_data(self, **kwargs):
+        context = super(VictimInterviewUpdateView, self).get_context_data(**kwargs)
+        context.update({"CLIENT_DOMAIN": settings.CLIENT_DOMAIN})
+        return context
+
 
     def forms_valid(self, form, inlines):
         form = form.save()
@@ -276,6 +306,11 @@ class VictimInterviewUpdateView(LoginRequiredMixin, PermissionsRequiredMixin, Up
 
 class VictimInterviewDetailView(VictimInterviewUpdateView):
     permissions_required = ['permission_vif_view']
+
+    def get_context_data(self, **kwargs):
+        context = super(VictimInterviewDetailView, self).get_context_data(**kwargs)
+        context.update({"CLIENT_DOMAIN": settings.CLIENT_DOMAIN})
+        return context
 
     def post(self, request, *args, **kwargs):
         raise PermissionDenied
@@ -430,8 +465,8 @@ def interceptee_fuzzy_matching(request):
     input_name = request.GET['name']
     all_people = Interceptee.objects.all()
     people_dict = {serializers.serialize("json", [obj]): obj.person.full_name for obj in all_people }
-    fuzzy_object = FuzzyMatching.objects.all()[0]
-    matches = process.extractBests(input_name, people_dict, score_cutoff=fuzzy_object.person_cutoff, limit=fuzzy_object.person_limit)
+    site_settings = SiteSettings.objects.all()[0]
+    matches = process.extractBests(input_name, people_dict, score_cutoff=site_settings.get_setting_value_by_name('person_cutoff'), limit=site_settings.get_setting_value_by_name('person_limit'))
 
     return HttpResponse(json.dumps(matches), content_type="application/json")
 
@@ -569,4 +604,3 @@ def irfExists(request, irf_number):
         return HttpResponse(existingIrf.irf_number)
     except:
         return HttpResponse("Irf does not exist")
-

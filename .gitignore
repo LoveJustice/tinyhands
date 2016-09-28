@@ -39,6 +39,7 @@ application/media/
 application/src/*
 application/log/*
 application/.idea
+application/fixtures/sanitized-data.json
 build/nginx/media/*
 build/nginx/static/*
 

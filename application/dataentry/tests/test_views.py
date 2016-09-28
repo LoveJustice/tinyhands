@@ -2,15 +2,15 @@ from django.test import TestCase
 from django_webtest import WebTest
 from dataentry.views import SearchFormsMixin
 from django.core.urlresolvers import reverse
-from accounts.tests.factories import *
+from accounts.tests.factories import SuperUserFactory
+from static_border_stations.tests.factories import BorderStationFactory
 from dataentry.models import BorderStation
 
 
 class InterceptionRecordCreateViewTests(WebTest):
-    fixtures = ['accounts.json', 'portal/border_stations.json']
-
     def setUp(self):
         self.superuser = SuperUserFactory.create()
+        BorderStationFactory.create()
         url = reverse("interceptionrecord_create")
         self.response = self.app.get(url, user=self.superuser)
         self.form = self.response.form
@@ -38,10 +38,9 @@ class InterceptionRecordCreateViewTests(WebTest):
 
 
 class VictimInterviewFormCreateViewTests(WebTest):
-    fixtures = ['accounts.json', 'portal/border_stations.json']
-
     def setUp(self):
         self.superuser = SuperUserFactory.create()
+        BorderStationFactory.create()
         url = reverse("victiminterview_create")
         self.response = self.app.get(url, user=self.superuser)
         self.form = self.response.form

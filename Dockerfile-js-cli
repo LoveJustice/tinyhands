@@ -1,8 +1,0 @@
-FROM silintl/js-cli:latest
-
-RUN mkdir /data
-WORKDIR /data
-COPY application/ /data/
-
-RUN npm install -g protractor karma-cli
-RUN npm install

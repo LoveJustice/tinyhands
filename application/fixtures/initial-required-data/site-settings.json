@@ -1,0 +1,41 @@
+[
+{
+    "model": "dataentry.sitesettings",
+    "pk": 1,
+    "fields": {
+        "date_time_last_updated": "2016-04-27T16:31:54.335Z",
+        "data": [
+            {
+                "name": "address1_limit",
+                "value": 5,
+                "description": "The number of suggested addresses that pop up in the auto-complete elements"
+            },
+            {
+                "name": "address2_limit",
+                "value": 5,
+                "description": "The number of suggested addresses that pop up in the auto-complete elements"
+            },
+            {
+                "name": "person_limit",
+                "value": 10,
+                "description": "The number of suggested persons that pop up in the auto-complete elements"
+            },
+            {
+                "name": "address1_cutoff",
+                "value": 70,
+                "description": "The percetage of how much an addresses matches the name that was searched"
+            },
+            {
+                "name": "address2_cutoff",
+                "value": 70,
+                "description": "The percetage of how much an addresses matches the name that was searched"
+            },
+            {
+                "name": "person_cutoff",
+                "value": 90,
+                "description": "The percetage of how much an persons name matches the name that was searched"
+            }
+        ]
+    }
+}
+]

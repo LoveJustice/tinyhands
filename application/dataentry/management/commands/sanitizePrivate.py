@@ -161,13 +161,19 @@ class Command(BaseCommand):
         return new_file
 
     def sanitize_email(self):
-        cnt = 1
-
         for instance in Account.objects.all():
-            instance.email = "thi_" + str(cnt) + "@example.com"
+            instance.email = self.get_next_email().next()
             instance.permission_receive_email = False
             instance.save()
+
+    def get_next_email(self):
+        cnt = 0
+        while True:
             cnt += 1
+            email = "thi_" + str(cnt) + "@example.com"
+            if len(Account.objects.filter(email=email)) > 0:
+                continue
+            yield email
 
     def create_base_user(self):
         account = Account()
@@ -175,7 +181,6 @@ class Command(BaseCommand):
         localtime = time.localtime()
         account.last_login = time.strftime("%Y-%m-%d %H:%M:%S", localtime)
         account.joined = time.strftime("%Y-%m-%d %H:%M:%S", localtime)
-        account.user_designation = DefaultPermissionsSet()
         account.user_designation_id = 1
         account.is_active = True
         return account

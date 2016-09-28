@@ -24,21 +24,6 @@ class IrfFactory(DjangoModelFactory):
     how_sure_was_trafficking = 5
 
 
-class VifFactory(DjangoModelFactory):
-    class Meta:
-        model = VictimInterview
-
-    vif_number = factory.Sequence(lambda n: 'BHD{0}'.format(n))
-    interviewer = "Joe Test"
-
-    number_of_victims = FuzzyInteger(1, 10).fuzz()
-    number_of_traffickers = FuzzyInteger(1, 10).fuzz()
-
-    date = datetime.date(2011, 12, 12)
-    date_time_entered_into_system = datetime.datetime(2011, 12, 12, tzinfo=pytz.UTC)
-    date_time_last_updated = datetime.datetime(2011, 12, 12, tzinfo=pytz.UTC)
-
-
 class PersonFactory(DjangoModelFactory):
     class Meta:
         model = Person
@@ -47,6 +32,23 @@ class PersonFactory(DjangoModelFactory):
     age = FuzzyInteger(20, 40)
     phone_contact = str(FuzzyInteger(100000000000, 999999999999).fuzz())
     gender = 'm'
+
+
+class VifFactory(DjangoModelFactory):
+    class Meta:
+        model = VictimInterview
+
+    vif_number = factory.Sequence(lambda n: 'BHD{0}'.format(n))
+    interviewer = "Joe Test"
+
+    victim = factory.SubFactory(PersonFactory)
+
+    number_of_victims = FuzzyInteger(1, 10).fuzz()
+    number_of_traffickers = FuzzyInteger(1, 10).fuzz()
+
+    date = datetime.date(2011, 12, 12)
+    date_time_entered_into_system = datetime.datetime(2011, 12, 12, tzinfo=pytz.UTC)
+    date_time_last_updated = datetime.datetime(2011, 12, 12, tzinfo=pytz.UTC)
 
 
 class IntercepteeFactory(DjangoModelFactory):
@@ -59,16 +61,18 @@ class IntercepteeFactory(DjangoModelFactory):
     kind = 'v'
 
 
-class FuzzyMatchingFactory(DjangoModelFactory):
+class SiteSettingsFactory(DjangoModelFactory):
     class Meta:
-        model = FuzzyMatching
+        model = SiteSettings
 
-    address1_cutoff = 70
-    address1_limit = 5
-    address2_cutoff = 70
-    address2_limit = 5
-    person_cutoff = 90
-    person_limit = 10
+    data = [
+        {'name': 'address1_cutoff', 'value': 70, 'description': "asdfasdf"},
+        {'name': 'address1_limit', 'value': 5, 'description': "asdfasdf"},
+        {'name': 'address2_cutoff', 'value': 70, 'description': "asdfasdf"},
+        {'name': 'address2_limit', 'value': 5, 'description': "asdfasdf"},
+        {'name': 'person_cutoff', 'value': 90, 'description': "asdfasdf"},
+        {'name': 'person_limit', 'value': 10, 'description': "asdfasdf"},
+    ]
 
 
 class Address1Factory(DjangoModelFactory):
