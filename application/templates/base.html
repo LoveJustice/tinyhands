@@ -14,7 +14,6 @@
     <link rel="stylesheet"      href="{% static 'bootstrap/css/bootstrap.min.css' %}">
     <link rel="stylesheet"      href="{% static 'jquery-ui/jquery-ui.css' %}"                  media="screen">
     <link rel="stylesheet"      href="{% static 'datetimepicker/jquery.datetimepicker.css' %}" media="screen">
-    <link rel="stylesheet"      href="https://cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.css">
     <link rel="stylesheet"      href="{% static 'animate.css' %}"/>
     <link rel="stylesheet/less" href="{% static 'style.less' %}" />
     <link rel="stylesheet/less" href="{% static 'style.less' %}" />
@@ -40,9 +39,6 @@
     <script src="{% static 'angular-ui-calendar/angular-ui-calendar.min.js' %}"></script>
     <script src="{% static 'full-calendar/fullcalendar.min.js'%}"></script>
 
-
-    <script src="{% static 'app.js' %}"></script>
-
     {% block includeCSS %}{% endblock %}
     <style type="text/css">
     {% block displayCSS %}{% endblock %}
@@ -57,7 +53,6 @@ in the Javascript and run code unique to the current page.
 <body id="{{ request.resolver_match.url_name }}">
 
 {% block angular %}
-    <div ng-app="dreamsuite"></div>
 {% endblock %}
 
     <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -160,9 +155,6 @@ in the Javascript and run code unique to the current page.
 {% endblock %}
 <script src="{% static 'all-pages.js' %}"></script>
 <script src="{% static 'geocodelocations.js' %}"></script>
-<script src="{% static 'datatables/js/jquery.dataTables.min.js' %}"></script>
-<script src="//cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.js"></script>
-<script src="{% static 'datatables/js/custom.js' %}"></script>
 
 {% block includeJS %}{% endblock %}
 

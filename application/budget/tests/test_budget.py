@@ -27,7 +27,6 @@ class TestModels(TestCase):
         shelter_extra = OtherBudgetItemCost.objects.create(budget_item_parent=item, form_section=5, name="extra-Shelter", cost=100)
         self.assertEqual(item.shelter_total(), 170)
 
-
         # Food and Gas
         item.food_and_gas_number_of_intercepted_girls = 5
         item.food_and_gas_number_of_intercepted_girls_multiplier_before = 100
@@ -38,7 +37,6 @@ class TestModels(TestCase):
         self.assertEqual(item.food_and_gas_total(), 21500)
         food_gas_extra = OtherBudgetItemCost.objects.create(budget_item_parent=item, form_section=6, name="extra-foodGas", cost=100)
         self.assertEqual(item.food_and_gas_total(), 21600)
-
 
         # Awareness
         item.awareness_contact_cards = True
@@ -54,7 +52,6 @@ class TestModels(TestCase):
         self.assertEqual(item.awareness_total(), 0)
         awareness_extra = OtherBudgetItemCost.objects.create(budget_item_parent=item, form_section=3, name="extra-Awareness", cost=100)
         self.assertEqual(item.awareness_total(), 100)
-
 
         # Supplies
         item.supplies_walkie_talkies_boolean = True
@@ -74,7 +71,6 @@ class TestModels(TestCase):
         supplies_extra = OtherBudgetItemCost.objects.create(budget_item_parent=item, form_section=4, name="extra-Supplies", cost=100)
         self.assertEqual(item.supplies_total(), 100)
 
-
         # Communication
         item.communication_chair = True
         item.communication_chair_amount = 1000
@@ -90,7 +86,6 @@ class TestModels(TestCase):
         self.assertEqual(item.communication_total(), 3500)
         communication_extra = OtherBudgetItemCost.objects.create(budget_item_parent=item, form_section=7, name="extra-Communication", cost=100)
         self.assertEqual(item.communication_total(), 3600)
-
 
         # Travel
         item.travel_chair_with_bike = True
