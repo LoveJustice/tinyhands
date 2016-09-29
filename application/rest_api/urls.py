@@ -77,25 +77,6 @@ urlpatterns = [
 
 
 
-    # Static Border Station App
-        # Border Stations
-        url(r'^border-station/$', BorderStationViewSet.as_view({'get':'list_all', 'post':'create'}), name="BorderStations"), # Detail
-        url(r'^border-station/(?P<pk>\d+)/$', BorderStationViewSet.as_view(detail), name="BorderStation"),
-        url(r'^get_station_id/', get_station_id, name='get_station_id'),
-
-
-
-        # Committee Members
-        url(r'^committee-member/$', CommitteeMemberViewSet.as_view(list), name="CommitteeMembers"),
-        url(r'^committee-member/(?P<pk>\d+)/$', CommitteeMemberViewSet.as_view(detail), name="CommitteeMember"),
-
-        # Locations
-        url(r'^location/$', LocationViewSet.as_view(list), name="Locations"),
-        url(r'^location/(?P<pk>\d+)/$', LocationViewSet.as_view(detail), name="Location"),
-
-        # Staff
-        url(r'^staff/$', StaffViewSet.as_view(list), name="AllStaff"),
-        url(r'^staff/(?P<pk>\d+)/$', StaffViewSet.as_view({'get': 'staff_retrieve', 'put': 'update', 'delete': 'destroy'}), name="Staff"),
 
         #IRFBatch
         url(r'^batch/(?P<startDate>(\d+)-(\d+)-\d+)/(?P<endDate>\d+-\d+-\d+)/$', BatchView.as_view(), name="BatchView"),
