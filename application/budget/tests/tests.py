@@ -77,51 +77,6 @@ class MoneyDistributionWebTests(WebTest, TestCase):
         self.client.force_authenticate(user=self.superuser)
 
     def testViewMoneyDistributionForm(self):
-        response = self.app.get(reverse('money_distribution_view', kwargs={"pk": self.budget_calc_sheet.pk}), user=self.superuser)
+        response = self.app.get(reverse('MdfPdf', kwargs={"pk": self.budget_calc_sheet.pk}), user=self.superuser)
         self.assertGreater(response.request.url.find(str(self.budget_calc_sheet.pk)), -1)
         self.assertEquals(response.status_code, 200)
-
-    def testContainsMoneyDistributionForm(self):
-        response = self.app.get(reverse('money_distribution_view', kwargs={"pk": self.budget_calc_sheet.pk}), user=self.superuser)
-        self.assertGreater(response.content.find("budget_calculations/money_distribution_pdf/" + str(self.budget_calc_sheet.pk)), -1)
-
-    def testContainsControllerAndEmailButton(self):
-        response = self.app.get(reverse('money_distribution_view', kwargs={"pk": self.budget_calc_sheet.pk}), user=self.superuser)
-        self.assertGreater(response.content.find("emailRecipientsCtrl"), -1)  # If it finds the string, it will be >0
-        self.assertGreater(response.content.find("main.sendEmails"), -1)
-
-    def testSendingTwoEmails(self):
-        self.staff = StaffFactory.create(border_station=self.budget_calc_sheet.border_station)
-        self.committee_member = CommitteeMemberFactory.create(border_station=self.budget_calc_sheet.border_station)
-
-        request = self.app.get(reverse('money_distribution_api', kwargs={"pk": self.budget_calc_sheet.pk}), user=self.superuser)
-        staff_data = request.json['staff_members']
-        committee_data = request.json['committee_members']
-
-        staff_ids = [int(staff['id']) for staff in staff_data]
-        committee_ids = [int(committee['id']) for committee in committee_data]
-
-        response = self.client.post('/api/mdf/' + str(self.budget_calc_sheet.pk) + '/', {"budget_calc_id": self.budget_calc_sheet.pk, "staff_ids": staff_ids, "committee_ids": committee_ids})
-
-        self.assertEquals('"Emails Sent!"', response.content)
-        self.assertEquals(len(mail.outbox), 2)
-        self.assertEquals(mail.outbox[0].to[0], self.staff.email)
-        self.assertEquals(mail.outbox[1].to[0], self.committee_member.email)
-
-    def testSendingFourEmails(self):
-        self.staff = StaffFactory.create(border_station=self.budget_calc_sheet.border_station)
-        self.committee_member = CommitteeMemberFactory.create(border_station=self.budget_calc_sheet.border_station)
-        self.staff2 = StaffFactory.create(border_station=self.budget_calc_sheet.border_station)
-        self.committee_member2 = CommitteeMemberFactory.create(border_station=self.budget_calc_sheet.border_station)
-
-        request = self.app.get(reverse('money_distribution_api', kwargs={"pk": self.budget_calc_sheet.pk}), user=self.superuser)
-        staff_data = request.json['staff_members']
-        committee_data = request.json['committee_members']
-
-        staff_ids = [staff['id'] for staff in staff_data]
-        committee_ids = [committee['id'] for committee in committee_data]
-
-        response = self.client.post('/api/mdf/' + str(self.budget_calc_sheet.pk) + '/', {"budget_calc_id": self.budget_calc_sheet.pk, "staff_ids": staff_ids, "committee_ids": committee_ids})
-
-        self.assertEquals('"Emails Sent!"', response.content)
-        self.assertEquals(len(mail.outbox), 4)

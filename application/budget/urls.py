@@ -8,12 +8,6 @@ from budget.views import \
     previous_data, \
     StaffSalaryViewSet
 
-
-distribution_detail = MoneyDistribution.as_view({
-    'get': 'retrieve',
-    'post': 'send_emails'
-})
-
 list_methods = {'get': 'list', 'post': 'create'}
 detail_methods = {'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}
 
