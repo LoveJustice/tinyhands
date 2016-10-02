@@ -9,13 +9,13 @@ detail_methods = {'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}
 
 urlpatterns = [
         # Border Station
-        url(r'^border-station/$', BorderStationViewSet.as_view({'get':'list_all', 'post':'create'}), name="BorderStations"), # Detail
-        url(r'^border-station/(?P<pk>\d+)/$', BorderStationViewSet.as_view(detail_methods), name="BorderStation"),
+        url(r'^border-station/$', BorderStationViewSet.as_view({'get': 'list_all', 'post': 'create'}), name="BorderStations"),  # Detail
+        url(r'^border-station/(?P<pk>\d+)/$', BorderStationViewSet.as_view(detail_methods), name="BorderStationsDetail"),
         url(r'^get_station_id/', get_station_id, name='get_station_id'),
 
         # Committee Members
         url(r'^committee-member/$', CommitteeMemberViewSet.as_view(list_methods), name="CommitteeMembers"),
-        url(r'^committee-member/(?P<pk>\d+)/$', CommitteeMemberViewSet.as_view(detail_methods), name="CommitteeMember"),
+        url(r'^committee-member/(?P<pk>\d+)/$', CommitteeMemberViewSet.as_view(detail_methods), name="CommitteeMembersDetail"),
 
         # Locations
         url(r'^location/$', LocationViewSet.as_view(list_methods), name="Locations"),

@@ -8,6 +8,7 @@ class RequestPermission(permissions.BasePermission):
         if request.method == method or method == "ANY":
             for permission_str in permissions_required:
                 if not getattr(request.user, permission_str):
+                    self.message = self.message.format(permission_str)
                     return False
         return True
 
