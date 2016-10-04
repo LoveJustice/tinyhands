@@ -16,11 +16,11 @@ urlpatterns = [
     url(r'^data-entry/', include('dataentry.urls')),
     url(r'^accounts/', include('accounts.urls')),
     url(r'^events/', include('events.urls')),
-    url(r'^portal/', include('portal.urls')),
 
     url(r'^api/', include('accounts.urls')),
     url(r'^api/', include('budget.urls')),
     url(r'^api/', include('rest_api.urls')),
+    url(r'^api/', include('portal.urls')),
     url(r'^api/', include('static_border_stations.urls')),
 
     url(r'^login/$', auth_views.login, {'template_name': 'login.html'}, name='login'),
