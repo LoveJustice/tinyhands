@@ -1,48 +1,12 @@
 from datetime import timedelta
 
-from django.conf import settings
-from django.contrib.auth.decorators import login_required
-from django.core import serializers
-from django.http import HttpResponse
-from django.shortcuts import render
 from django.utils import timezone
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from dataentry.models import BorderStation, InterceptionRecord
-
-
-@login_required
-def main_dashboard(request):
-    return render(request, "portal/main_dashboard.html", {'settings': settings})
-
-
-@login_required
-def get_border_stations(request):
-    border_stations = serializers.serialize("json", BorderStation.objects.all())
-    return HttpResponse(border_stations, content_type="application/json")
-
-
-@login_required
-def get_interception_records(request):
-    interception_sum = 0
-    if "station_code" in request.GET:
-        interception_records = InterceptionRecord.objects.filter(irf_number__startswith=request.GET["station_code"])
-        for interception in interception_records:
-            victims = interception.interceptees.filter(kind='v')
-            interception_sum += len(victims)
-        return HttpResponse(interception_sum)
-    return HttpResponse("No IRFs Found")
-
-
-@login_required
-def get_staff_count(request):
-    if "station_code" in request.GET:
-        border_station = BorderStation.objects.filter(station_code=request.GET["station_code"]).first()
-        return HttpResponse(border_station.staff_set.count())
-    return HttpResponse("No station found")
+from dataentry.models import InterceptionRecord
 
 
 class TallyDaysView(APIView):

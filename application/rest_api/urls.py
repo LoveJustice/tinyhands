@@ -4,7 +4,6 @@ from dataentry.views import Address2ViewSet, Address1ViewSet, GeoCodeAddress1API
 from dataentry.views import PersonViewSet
 from dataentry.views import SiteSettingsViewSet
 from events.views import EventViewSet
-from portal.views import get_interception_records, TallyDaysView
 
 
 list = {'get': 'list', 'post': 'create'}
@@ -40,11 +39,6 @@ urlpatterns = [
         # VIFs
         url(r'^vif/$', VictimInterviewViewSet.as_view(list), name="VictimInterview"),
         url(r'^vif/(?P<pk>\d+)/$', VictimInterviewDetailViewSet.as_view(detail), name="VictimInterviewDetail"),
-
-
-    # Portal App
-        url(r'^get_interception_records/$', get_interception_records, name='get_interception_records'),
-        url(r'^portal/tally/days/$', TallyDaysView.as_view(), name='tally_day_api'),
 
         #IRFBatch
         url(r'^batch/(?P<startDate>(\d+)-(\d+)-\d+)/(?P<endDate>\d+-\d+-\d+)/$', BatchView.as_view(), name="BatchView"),
