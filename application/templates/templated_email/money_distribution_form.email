@@ -3,7 +3,7 @@
 {% block html %}
 <p>Hello {{ person.first_name }},</p>
 
-<p>Click <a href="{{ site }}{% url 'money_distribution_pdf' budget_calc_id %}">this link</a> to view the new money distribution form for your Border Station!</p>
+<p>Click <a href="{{ site }}{% url 'MdfPdf' budget_calc_id %}">this link</a> to view the new money distribution form for your Border Station!</p>
 
 
 <p>Cheers,</p>
