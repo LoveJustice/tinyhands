@@ -1,7 +1,7 @@
-import factory
-from factory.django import DjangoModelFactory
 import datetime
 
+import factory
+from factory.django import DjangoModelFactory
 from factory.fuzzy import FuzzyText, FuzzyFloat
 
 from accounts.tests.factories import UserFactory, ViewUserDesignation

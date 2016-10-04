@@ -7,23 +7,16 @@ detail_methods = {'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}
 
 
 urlpatterns = [
-        # Border Station
-        url(r'^border-station/$', BorderStationViewSet.as_view({'get': 'list_all', 'post': 'create'}), name="BorderStations"),  # Detail
-        url(r'^border-station/(?P<pk>\d+)/$', BorderStationViewSet.as_view(detail_methods), name="BorderStationsDetail"),
+        url(r'^border-station/$', BorderStationViewSet.as_view({'get': 'list_all', 'post': 'create'}), name="BorderStation"),  # Detail
+        url(r'^border-station/(?P<pk>\d+)/$', BorderStationViewSet.as_view(detail_methods), name="BorderStationDetail"),
         url(r'^get_station_id/', get_station_id, name='get_station_id'),
 
-        # Committee Members
-        url(r'^committee-member/$', CommitteeMemberViewSet.as_view(list_methods), name="CommitteeMembers"),
-        url(r'^committee-member/(?P<pk>\d+)/$', CommitteeMemberViewSet.as_view(detail_methods), name="CommitteeMembersDetail"),
+        url(r'^committee-member/$', CommitteeMemberViewSet.as_view(list_methods), name="CommitteeMember"),
+        url(r'^committee-member/(?P<pk>\d+)/$', CommitteeMemberViewSet.as_view(detail_methods), name="CommitteeMemberDetail"),
 
-        # Locations
         url(r'^location/$', LocationViewSet.as_view(list_methods), name="Location"),
         url(r'^location/(?P<pk>\d+)/$', LocationViewSet.as_view(detail_methods), name="LocationDetail"),
 
-        # Staff
         url(r'^staff/$', StaffViewSet.as_view(list_methods), name="Staff"),
         url(r'^staff/(?P<pk>\d+)/$', StaffViewSet.as_view({'get': 'staff_retrieve', 'put': 'update', 'delete': 'destroy'}), name="StaffDetail"),
-
-        # TODO: I think this is used in the IRF and VIF to find staff
-        url(r'^api/border-stations/(?P<pk>\d+)/$', StaffViewSet.as_view({'get': 'staff_retrieve', 'post': 'create', 'put': 'update', 'delete': 'destroy'}), name="staff_detail_api")
 ]

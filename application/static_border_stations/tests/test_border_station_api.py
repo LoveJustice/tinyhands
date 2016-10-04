@@ -19,14 +19,14 @@ class BorderStationsTests(RestApiTestCase):
     # Authentication Methods
 
     def test_when_not_authenticated_should_deny_access(self):
-        url = reverse('BorderStations')
+        url = reverse('BorderStation')
         response = self.client.get(url)
         self.assertEqual(status.HTTP_401_UNAUTHORIZED, response.status_code)
         self.assertIn('Authentication credentials were not provided', response.data['detail'])
 
     def test_when_authenticated_and_does_not_have_permission_should_deny_access(self):
         self.login(UnauthorizedBorderStationUser.create())
-        url = reverse('BorderStations')
+        url = reverse('BorderStation')
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
@@ -35,7 +35,7 @@ class BorderStationsTests(RestApiTestCase):
 
     def test_return_all_BorderStations(self):
         self.login(ViewBorderStationUser.create())
-        url = reverse('BorderStations')
+        url = reverse('BorderStation')
 
         response = self.client.get(url)
 
@@ -44,7 +44,7 @@ class BorderStationsTests(RestApiTestCase):
 
     def test_create_BorderStation(self):
         self.login(AddBorderStationUser.create())
-        url = reverse('BorderStations')
+        url = reverse('BorderStation')
 
         data = {
             "station_code": "TXT",
@@ -61,7 +61,7 @@ class BorderStationsTests(RestApiTestCase):
 
     def test_get_BorderStation(self):
         self.login(EditBorderStationUser.create())
-        url = reverse('BorderStationsDetail', args=[self.border_station.id])
+        url = reverse('BorderStationDetail', args=[self.border_station.id])
 
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -70,7 +70,7 @@ class BorderStationsTests(RestApiTestCase):
 
     def test_update_BorderStation(self):
         self.login(EditBorderStationUser.create())
-        url = reverse('BorderStationsDetail', args=[self.border_station.id])
+        url = reverse('BorderStationDetail', args=[self.border_station.id])
 
         data = {
             "id": self.border_station.id,
@@ -88,7 +88,7 @@ class BorderStationsTests(RestApiTestCase):
 
     def test_delete_BorderStation(self):
         self.login(DeleteBorderStationUser.create())
-        url = reverse('BorderStationsDetail', args=[self.border_station.id])
+        url = reverse('BorderStationDetail', args=[self.border_station.id])
 
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
