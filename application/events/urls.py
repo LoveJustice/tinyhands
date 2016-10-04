@@ -1,11 +1,11 @@
 from django.conf.urls import url
 
-from events.views import EventCalendarView, EventListView, EventCreateView, EventDeleteView, EventUpdateView
+from events.views import EventViewSet
 
 urlpatterns = [
-    url(r'^create/$', EventCreateView.as_view(), name='create_event'),
-    url(r'^update/(?P<pk>[0-9]+)/$', EventUpdateView.as_view(), name='update_event'),
-    url(r'^delete/(?P<pk>[0-9]+)/$', EventDeleteView.as_view(), name='delete_event'),
-    url(r'^list/$', EventListView.as_view(), name='list_event'),
-    url(r'^calendar/$', EventCalendarView.as_view(), name='event_calendar'),
+        url(r'^event/$', EventViewSet.as_view({'get': 'list', 'post': 'create'}), name="EventList"),
+        url(r'^event/(?P<pk>\d+)/$', EventViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}), name='Event'),
+        url(r'^event/all/$', EventViewSet.as_view({'get': 'list_all'}), name="EventListAll"),
+        url(r'^event/feed/calendar/$', EventViewSet.as_view({'get': 'calendar_feed'}), name='EventCalendarFeed'),
+        url(r'^event/feed/dashboard/$', EventViewSet.as_view({'get': 'dashboard_feed'}), name='EventDashboardFeed'),
 ]
