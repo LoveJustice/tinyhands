@@ -96,3 +96,29 @@ class BorderStationsTests(RestApiTestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
+    def test_get_station_id_when_not_authenticated_should_deny_access(self):
+        url = reverse('get_station_id')
+        response = self.client.get(url)
+        self.assertEqual(status.HTTP_401_UNAUTHORIZED, response.status_code)
+        self.assertIn('Authentication credentials were not provided', response.data['detail'])
+
+    def test_get_station_id__no_code_should_return_neg1(self):
+        self.login(EditBorderStationUser.create())
+        url = reverse('get_station_id')
+        response = self.client.get(url + "?code=")
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
+        self.assertEqual(-1, response.data)
+
+    def test_get_station_id__invalid_code_should_return_neg1(self):
+        self.login(EditBorderStationUser.create())
+        url = reverse('get_station_id')
+        response = self.client.get(url + "?code=ZZZ")
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
+        self.assertEqual(-1, response.data)
+
+    def test_get_station_id__valid_code_should_return_border_station_id(self):
+        self.login(EditBorderStationUser.create())
+        url = reverse('get_station_id')
+        response = self.client.get(url + "?code=" + self.border_station.station_code)
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
+        self.assertEqual(self.border_station.id, response.data)

@@ -6,6 +6,7 @@ from django.contrib import admin
 
 from django.contrib.auth import views as auth_views
 from dataentry import views as dataentry_views
+from static_border_stations import views as static_border_stations_views
 
 
 admin.autodiscover()
@@ -35,5 +36,5 @@ urlpatterns = [
 
     url(r'^admin/', include(admin.site.urls)),
     url(r'^interceptee_fuzzy_matching/', dataentry_views.interceptee_fuzzy_matching, name='interceptee_fuzzy_matching'),
-    url(r'^get_station_id/', dataentry_views.get_station_id, name='get_station_id')
+    url(r'^get_station_id/', static_border_stations_views.get_station_id, name='get_station_id')
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

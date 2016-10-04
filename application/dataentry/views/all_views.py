@@ -471,20 +471,6 @@ def interceptee_fuzzy_matching(request):
     return HttpResponse(json.dumps(matches), content_type="application/json")
 
 
-@login_required
-def get_station_id(request):
-    code = request.GET['code']
-    if code == '':
-        return HttpResponse([-1])
-    else:
-        station = BorderStation.objects.filter(station_code=code)
-        if len(station) > 0:
-            print("Station id is: " + str(station))
-            return HttpResponse([station[0].id])
-        else:
-            print("No station id")
-            return HttpResponse([-1])
-
 class PersonViewSet(viewsets.ModelViewSet):
     queryset = Person.objects.all()
     serializer_class = PersonSerializer

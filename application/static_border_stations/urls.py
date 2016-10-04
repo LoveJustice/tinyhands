@@ -1,6 +1,5 @@
 from django.conf.urls import url
 
-from dataentry.views import get_station_id
 from static_border_stations.views import *
 
 list_methods = {'get': 'list', 'post': 'create'}
@@ -18,12 +17,12 @@ urlpatterns = [
         url(r'^committee-member/(?P<pk>\d+)/$', CommitteeMemberViewSet.as_view(detail_methods), name="CommitteeMembersDetail"),
 
         # Locations
-        url(r'^location/$', LocationViewSet.as_view(list_methods), name="Locations"),
-        url(r'^location/(?P<pk>\d+)/$', LocationViewSet.as_view(detail_methods), name="Location"),
+        url(r'^location/$', LocationViewSet.as_view(list_methods), name="Location"),
+        url(r'^location/(?P<pk>\d+)/$', LocationViewSet.as_view(detail_methods), name="LocationDetail"),
 
         # Staff
-        url(r'^staff/$', StaffViewSet.as_view(list_methods), name="AllStaff"),
-        url(r'^staff/(?P<pk>\d+)/$', StaffViewSet.as_view({'get': 'staff_retrieve', 'put': 'update', 'delete': 'destroy'}), name="Staff"),
+        url(r'^staff/$', StaffViewSet.as_view(list_methods), name="Staff"),
+        url(r'^staff/(?P<pk>\d+)/$', StaffViewSet.as_view({'get': 'staff_retrieve', 'put': 'update', 'delete': 'destroy'}), name="StaffDetail"),
 
         # TODO: I think this is used in the IRF and VIF to find staff
         url(r'^api/border-stations/(?P<pk>\d+)/$', StaffViewSet.as_view({'get': 'staff_retrieve', 'post': 'create', 'put': 'update', 'delete': 'destroy'}), name="staff_detail_api")

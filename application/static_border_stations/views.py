@@ -1,5 +1,5 @@
 from rest_framework import filters, viewsets
-from rest_framework.decorators import list_route
+from rest_framework.decorators import list_route, api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
@@ -23,14 +23,28 @@ class BorderStationViewSet(viewsets.ModelViewSet):
         border_stations = BorderStation.objects.all().order_by('station_name')
         serializer = self.get_serializer(border_stations, many=True)
         return Response(serializer.data)
-        
+
+
+@api_view(['GET'])
+@permission_classes((IsAuthenticated, ))
+def get_station_id(request):
+    code = request.GET['code']
+    if code == '':
+        return Response(-1)
+    else:
+        station = BorderStation.objects.filter(station_code=code)
+        if len(station) > 0:
+            return Response(station[0].id)
+        else:
+            return Response(-1)
+
 
 class BorderStationRestAPI(viewsets.ModelViewSet):
     filter_backends = (filters.DjangoFilterBackend,)
     filter_fields = ('border_station',)
     permission_classes = (IsAuthenticated, HasPermission, HasPostPermission, HasPutPermission)
     permissions_required = ['permission_border_stations_view']
-    post_permissions_required = ['permission_border_stations_edit']
+    post_permissions_required = ['permission_border_stations_add']
     put_permissions_required = ['permission_border_stations_edit']
 
 

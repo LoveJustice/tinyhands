@@ -2,11 +2,11 @@ import factory
 from factory.django import DjangoModelFactory
 import datetime
 
-from factory.fuzzy import FuzzyText
+from factory.fuzzy import FuzzyText, FuzzyFloat
 
 from accounts.tests.factories import UserFactory, ViewUserDesignation
 from dataentry.models import BorderStation
-from static_border_stations.models import Staff, CommitteeMember
+from static_border_stations.models import Staff, CommitteeMember, Location
 
 
 class BorderStationFactory(DjangoModelFactory):
@@ -29,6 +29,16 @@ class StaffFactory(DjangoModelFactory):
     first_name = factory.Sequence(lambda n: "staff_first_%d" % n)
     last_name = factory.Sequence(lambda n: "staff_last_%d" % n)
     receives_money_distribution_form = True
+    border_station = factory.SubFactory(BorderStationFactory)
+
+
+class LocationFactory(DjangoModelFactory):
+    class Meta:
+        model = Location
+
+    name = factory.Sequence(lambda n: 'Location {0}'.format(n))
+    latitude = FuzzyFloat(0, 20)
+    longitude = FuzzyFloat(0, 20)
     border_station = factory.SubFactory(BorderStationFactory)
 
 
