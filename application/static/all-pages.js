@@ -168,7 +168,7 @@ function setUpResumeIncompleteFormSystem(which) {
         alert('This form has been saved for later.  Come back to the ' + which.toUpperCase() +
         ' create page and select the ' + which.toUpperCase() +
         ' number from the top dropdown to resume entering data.');
-        window.location.href = '/data-entry/'+which+'s/';
+        window.location.href = '/#/'+which;
     });
 }
 
