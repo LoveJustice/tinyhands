@@ -89,18 +89,6 @@ class SearchFormsMixin(object):
         return context
 
 
-@login_required
-def interception_record_list_template(request):
-    return render(request, 'dataentry/interceptionrecord_list.html')
-
-
-@login_required
-def interception_record_list_search_template(request, code):
-    station_code = code
-    search = 1
-    return render(request, 'dataentry/interceptionrecord_list.html', locals())
-
-
 class IntercepteeInline(InlineFormSet):
     model = Interceptee
     extra = 12
@@ -246,18 +234,6 @@ class VictimInterviewListView(LoginRequiredMixin, SearchFormsMixin, ListView):
         super(VictimInterviewListView, self).__init__(vif_number__icontains="number", interviewer__icontains="name")
 
 
-@login_required
-def sys_admin_settings_update(request, pk):
-    return render(request, 'dataentry/sys_admin_settings.html', locals())
-
-
-@login_required
-def victiminterview_record_list_search_template(request, code):
-    station_code = code
-    search = 1
-    return render(request, 'dataentry/victiminterview_list.html', locals())
-
-
 class VictimInterviewCreateView(LoginRequiredMixin, PermissionsRequiredMixin, CreateWithInlinesView):
     model = VictimInterview
     form_class = VictimInterviewForm
@@ -381,49 +357,6 @@ class GeoCodeAddress2APIView(APIView):
             return Response({"id": "-1", "name": "None"})
 
 
-class Address2AdminView(LoginRequiredMixin, PermissionsRequiredMixin, TemplateView):
-    model = Address2
-    template_name = "dataentry/address2_admin_page.html"
-    permissions_required = ['permission_address2_manage']
-
-
-class Address2SearchView(LoginRequiredMixin, PermissionsRequiredMixin, SearchFormsMixin, ListView):
-    model = Address2
-    template_name = "dataentry/address2_admin_page.html"
-    permissions_required = ['permission_address2_manage']
-    paginate_by = 25
-
-    def get(self, request, value, *args, **kwargs):
-        self.object_list = self.get_queryset(value)
-        allow_empty = self.get_allow_empty()
-        if not allow_empty:
-            # When pagination is enabled and object_list is a queryset,
-            # it's better to do a cheap query than to load the unpaginated
-            # queryset in memory.
-            if self.get_paginate_by(self.object_list) is not None and hasattr(self.object_list, 'exists'):
-                is_empty = not self.object_list.exists()
-            else:
-                is_empty = len(self.object_list) == 0
-            if is_empty:
-                raise Http404(("Empty list and '%(class_name)s.allow_empty' is False.")
-                              % {'class_name': self.__class__.__name__})
-        context = self.get_context_data()
-        return self.render_to_response(context)
-
-    def __init__(self, *args, **kwargs):
-        super(Address2SearchView, self).__init__(name__icontains="name")
-
-    def get_queryset(self, searchValue):
-        return self.model.objects.filter(name__contains=searchValue).select_related('address1',
-                                                                                    'canonical_name__address1')
-
-    def get_context_data(self, **kwargs):
-        context = super(Address2SearchView, self).get_context_data(**kwargs)
-        context['search_url'] = '/data-entry/geocodelocations/address2-admin/search/'
-        context['database_empty'] = self.model.objects.count() == 0
-        return context
-
-
 class Address2CreateView(LoginRequiredMixin, PermissionsRequiredMixin, CreateView):
     model = Address2
     form_class = Address2Form
@@ -433,12 +366,6 @@ class Address2CreateView(LoginRequiredMixin, PermissionsRequiredMixin, CreateVie
     def form_valid(self, form):
         form.save()
         return HttpResponse(render_to_string('dataentry/address2_create_success.html'))
-
-
-class Address1AdminView(LoginRequiredMixin, PermissionsRequiredMixin, TemplateView):
-    model = Address1
-    template_name = "dataentry/address1_admin_page.html"
-    permissions_required = ['permission_address2_manage']
 
 
 class Address1CreateView(LoginRequiredMixin, PermissionsRequiredMixin, CreateView):
@@ -567,11 +494,6 @@ class VictimInterviewDetailViewSet(viewsets.ModelViewSet):
         logger.debug("After VIF destroy " + vif.vif_number)
         vif_done.send_robust(sender=self.__class__, vif_number=vif.vif_number, vif=None)
         return rv
-
-
-@login_required
-def id_management_template(request):
-    return render(request, 'dataentry/id_management.html')
 
 
 @login_required
