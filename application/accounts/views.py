@@ -67,7 +67,7 @@ def password_reset(request):
         # Set unusable password and Generate new activation key
         account.set_unusable_password()
         account.activation_key = make_activation_key()
-        account.save()  
+        account.save()
 
         # Send an activation email to the email
         account.send_activation_email()
