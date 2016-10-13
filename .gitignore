@@ -6,6 +6,8 @@
 *~
 
 google_cred.json
+dreamsuite_tag
+
 
 .#*
 .coverage
@@ -19,7 +21,13 @@ backups
 db.sqlite3.prod
 
 # Ignore files in STATIC_ROOT
-dreamsuite/static/*
+application/dreamsuite/static/*
+
+
+application/.config/
+application/google_cred.json
+
+local.env
 
 env
 foo.*
@@ -27,7 +35,13 @@ foo[1-9]
 foo[1-9].*
 
 # for now in dev we check in /media
-media/
+application/media/
+application/src/*
+application/log/*
+application/.idea
+application/fixtures/sanitized-data.json
+build/nginx/media/*
+build/nginx/static/*
 
 node_modules/
 *.pyc
@@ -36,3 +50,15 @@ node_modules/
 .vagrant/
 .bashrc
 .bash_history
+
+access.log
+error.log
+
+# Eclipse Stuff
+.project
+.pydevproject
+
+# VS Code Stuff
+.vscode/*
+
+local.env

@@ -1,0 +1,40 @@
+{% load bootstrap %}
+
+<div class="modal-dialog modal-sm">
+    <div class="modal-content">
+        <form id="address2_create_form" method="post" class="form" role="form" action="{% url 'address2_create_page' %}">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel">Create Address 2</h4>
+            </div>
+            <div class="modal-body">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+                <div class="form-group">
+                    {% for field in form %}
+                    <div class="form-group">
+                        {{ field|bootstrap }}
+                        {% if field.help_text %}
+                        <div class="form-helptext">{{ field.help_text }}</div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="modal-footer">
+                    <input id="address2_create_button" type="submit" class="btn btn-primary" value="Save" style="margin-bottom: 5px" />
+                </div>
+            </div>
+        </form>
+    </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->
+<script>
+    $(function(){
+        $("#address2_create_button").click(function(e){
+            e.preventDefault();
+            var form = $("#address2_create_form");
+            $.post(form.attr("action"),form.serialize(),function(data,status){
+                $("#modal").html(data);
+            });
+
+        });});
+</script>

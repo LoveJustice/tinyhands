@@ -1,0 +1,54 @@
+{% block subject %}{{ account.first_name }}, Investigations Alert for IRF#{{ irf.irf_number }}!{% endblock %}
+
+{% block html %}
+<h3>Attention: Investigations Team,</h3>
+
+    <p class="descriptionOfAlert">
+        This auto alert has been generated because IRF#{{ irf.irf_number }} had a name match!
+
+        The interception occurred at {{ irf.location }} at {{ irf.date_time_of_interception.time }} on {{ irf.date_time_of_interception.date }}.
+    </p>
+
+<h3>The following trafficker(s) on the form had a name match with 90% or higher certainty:</h3>
+<table>
+        <thead>
+            <th>Name</th>
+            <th>Name Match Certainty</th>
+            <th>Phone Number </th>
+            <th>Address One </th>
+            <th>Address Two </th>
+        </thead>
+            {% for personMatches in trafficker_list%}
+                {% for person in personMatches%}
+                    {% if person.0 == 0 %}
+                        <br>
+                        <tr>
+                            <td>{{ person.1.full_name }}</td>
+                            <td></td>
+                            <td>{{ person.1.phone_contact }}</td>
+                            <td>{{ person.1.address1 }}</td>
+                            <td>{{ person.1.address2 }}</td>
+                        </tr>
+                    {% endif %}
+                    {% if person.0 != 0 %}
+                        <tr>
+                            <td>{{ person.1.full_name }}</td>
+                            <td>{{ person.0}}%</td>
+                            <td>{{ person.1.phone_contact }}</td>
+                            <td>{{ person.1.address1 }}</td>
+                            <td>{{ person.1.address2 }}</td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
+    </table>
+
+<br/>
+
+{% if trafficker_in_custody != '' %}
+    <p>According to the form, {{ trafficker_in_custody }} taken into custody</p>
+{% endif %}
+
+<p>To view the IRF click here: <a href="{{ site }}{% url 'interceptionrecord_detail' irf.id %}">Link to Interception Record Form</a></p>
+
+{% endblock %}

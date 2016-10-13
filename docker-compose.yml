@@ -1,0 +1,41 @@
+data:
+  image: silintl/data-volume:latest
+  container_name: data
+  volumes:
+      - ./application:/data
+
+db:
+  image: postgres
+  container_name: db
+  ports:
+    - "5432"
+
+web:
+  build: .
+  volumes_from:
+    - data
+  volumes:
+    - /tmp:/log
+  links:
+    - db
+  expose:
+    - "9001"
+  env_file:
+    - ./common.env
+    - ./local.env
+
+nginx:
+  build: build/nginx
+  links:
+    - web:web
+  volumes:
+    - /tmp:/log
+  volumes_from:
+    - data
+  ports:
+    - "80:80"
+    - "443:443"
+  env_file:
+    - ./common.env
+    - ./local.env
+

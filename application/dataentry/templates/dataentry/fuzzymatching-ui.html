@@ -1,0 +1,87 @@
+{% load static from staticfiles %}
+<script src="https://rawgit.com/krisk/fuse/master/src/fuse.min.js"></script>
+<style>
+    #fuzzymatching-ui {
+{#        width: 500px;#}
+        height: 225px;
+        position: absolute;
+        top: 0;
+        left: 0;
+{#        box-shadow: inset 0 0 5px black;#}
+        border-radius: 5px;
+        padding: 10px;
+        display: none;
+    }
+
+    #fuzzymatching-staff-ui {
+{#        width: 500px;#}
+        height: 225px;
+        position: absolute;
+        top: 0;
+        left: 0;
+{#        box-shadow: inset 0 0 5px black;#}
+        border-radius: 5px;
+        padding: 10px;
+        display: none;
+    }
+
+    .fuzzymatching-list {
+        float: left;
+    }
+
+    .fuzzymatching-list > ul > li:hover {
+        background: #ccc;
+        cursor: pointer;
+    }
+
+    .fuzzymatching-pic {
+        height: 100%;
+        float: right;
+        margin-left: 20px;
+    }
+
+    .fuzzymatching-pic > img {
+        height: 100%;
+    }
+
+    .arrow_box {
+        position: relative;
+        background: #eee;
+        border: 3px solid #000;
+    }
+
+    .arrow_box:after, .arrow_box:before {
+        bottom: 100%;
+        left: 25px;
+        border: solid transparent;
+        content: " ";
+        height: 0;
+        width: 0;
+        position: absolute;
+        pointer-events: none;
+    }
+
+    .arrow_box:after {
+        border-color: rgba(238, 238, 238, 0);
+        border-bottom-color: #eee;
+        border-width: 10px;
+        margin-left: -10px;
+    }
+
+    .arrow_box:before {
+        border-color: rgba(0, 0, 0, 0);
+        border-bottom-color: #000;
+        border-width: 14px;
+        margin-left: -14px;
+    }
+</style>
+<div id="fuzzymatching-ui" class="arrow_box" data-ajax="{% url 'interceptee_fuzzy_matching' %}">
+    <div class="fuzzymatching-list">
+        <ul class="list-unstyled">
+            <li>Type to search for matches</li>
+        </ul>
+    </div>
+    <div class="fuzzymatching-pic">
+        <img src=""/>
+    </div>
+</div>

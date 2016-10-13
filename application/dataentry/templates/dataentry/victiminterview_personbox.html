@@ -1,0 +1,215 @@
+{% load widget_tweaks %}
+{% load bootstrap %}
+
+{{ pb_form.id }}
+<div class="col-xs-4" style="padding: 20px">
+    <!-- Top box including who is this box -->
+    <div class="person-box person-box-top row" style="height: 158px">
+        <div class="red-border-right red-border-bottom inner smaller pull-left checkbox-group-marker" id="who_is_this_relationship-{{ counter }}" style="width: 150px">
+            <h2>Who is this?</h2>
+            <div class="checkbox-group">{{ pb_form.who_is_this_relationship_boss_of }} {{ pb_form.who_is_this_relationship_boss_of.label_tag }}</div>
+            <div class="checkbox-group">{{ pb_form.who_is_this_relationship_coworker_of }} {{ pb_form.who_is_this_relationship_coworker_of.label_tag }}</div>
+            <div class="checkbox-group">{{ pb_form.who_is_this_relationship_own_relative_of }} {{ pb_form.who_is_this_relationship_own_relative_of.label_tag }}</div>
+        </div>
+        <div class="inner checkbox-group-marker" id="who_is_this_role-{{ counter }}">
+            <div class="person-box-number">PB{{ counter }}</div>
+            <div class="pull-right" style="margin-right: 20px">
+                <div class="checkbox-group">{{ pb_form.who_is_this_role_india_trafficker }} {{ pb_form.who_is_this_role_india_trafficker.label_tag }}</div>
+                <div class="checkbox-group">{{ pb_form.who_is_this_role_contact_of_husband }} {{ pb_form.who_is_this_role_contact_of_husband.label_tag }}</div>
+                <div class="checkbox-group">{{ pb_form.who_is_this_role_known_trafficker }} {{ pb_form.who_is_this_role_known_trafficker.label_tag }}</div>
+                <div class="checkbox-group">{{ pb_form.who_is_this_role_manpower }} {{ pb_form.who_is_this_role_manpower.label_tag }}</div>
+                <div class="checkbox-group">{{ pb_form.who_is_this_role_passport }} {{ pb_form.who_is_this_role_passport.label_tag }}</div>
+                <div class="checkbox-group">{{ pb_form.who_is_this_role_sex_industry }} {{ pb_form.who_is_this_role_sex_industry.label_tag }}</div>
+            </div>
+            <div class="pull-left red-border-right" style="width: 146px">
+                <div class="checkbox-group">{{ pb_form.who_is_this_role_broker }} {{ pb_form.who_is_this_role_broker.label_tag }}</div>
+                <div class="checkbox-group">{{ pb_form.who_is_this_role_companion }} {{ pb_form.who_is_this_role_companion.label_tag }}</div>
+            </div>
+        </div>
+    </div>
+    <!-- End top box -->
+
+    <!-- Name, gender, address 1, address 2, ward #, phone # -->
+    <div class="person-box row">
+        <label class="blending-into-input-label">Name</label>
+        <div class="inline-checkbox-group checkbox-group-marker" id="gender-{{ counter }}">
+            {{ pb_form.gender.label_tag }}
+            {% for choice in pb_form.gender %}
+                {{ choice }}
+            {% endfor %}
+        </div>
+
+        {{ pb_form.name}}
+        <div class="col-xs-6">
+            <div class="label-inside-field">
+                {{ pb_form.address1.label_tag }} {{ pb_form.address1 }}
+            </div>
+        </div>
+        <div class="col-xs-6">
+            <div class="label-inside-field">
+                {{ pb_form.address2.label_tag }}{{ pb_form.address2 }}
+            </div>
+        </div>
+        <div class="col-xs-4">
+            <div class="label-inside-field">
+                {{ pb_form.address_ward.label_tag }}{{ pb_form.address_ward }}
+            </div>
+        </div>
+        <div class="col-xs-8">
+            <div class="label-inside-field">
+                {{ pb_form.phone.label_tag }}{{ pb_form.phone }}
+            </div>
+        </div>
+    </div>
+    <!-- End fields -->
+
+    <!-- Age, height, weight -->
+    <div class="person-box row">
+        <div class="col-xs-4">
+            <div class="label-inside-field">
+                {{ pb_form.age.label_tag }}{{ pb_form.age }}
+            </div>
+        </div>
+        <div class="col-xs-4">
+            <div class="label-inside-field">
+                {{ pb_form.height.label_tag }}{{ pb_form.height }}
+            </div>
+        </div>
+        <div class="col-xs-4">
+            <div class="label-inside-field">
+                {{ pb_form.weight.label_tag }}{{ pb_form.weight }}
+            </div>
+        </div>
+    </div>
+    <!-- End fields -->
+
+    <!-- Physical description -->
+    <div class="person-box row checkbox-group-marker" id="physical_description-{{ counter }}">
+        <h2>Physical Description</h2>
+        <div class="inline-checkbox-group">{{ pb_form.physical_description_kirat }} {{ pb_form.physical_description_kirat.label_tag }}</div>
+        <div class="inline-checkbox-group">{{ pb_form.physical_description_sherpa }} {{ pb_form.physical_description_sherpa.label_tag }}</div>
+        <div class="inline-checkbox-group">{{ pb_form.physical_description_madeshi }} {{ pb_form.physical_description_madeshi.label_tag }}</div>
+        <div class="inline-checkbox-group">{{ pb_form.physical_description_pahadi }} {{ pb_form.physical_description_pahadi.label_tag }}</div>
+        <div class="inline-checkbox-group">{{ pb_form.physical_description_newari }} {{ pb_form.physical_description_newari.label_tag }}</div>
+    </div>
+    <!-- End physical description -->
+
+    <!-- Appearance other -->
+    <div class="person-box row">
+        <h2>Appearance Other <small>(hairstyle, facial hair, mouth, nose, eyes, glasses, tattoos, birth marks, etc.)</small></h2>
+        {{ pb_form.appearance_other }}
+    </div>
+    <!-- End appearance other -->
+
+    <!-- Occupation -->
+    <div class="checkbox-group-marker" id="occupation-{{ counter }}">
+        <div class="person-box row">
+            <h2>What is this person's occupation?</h2>
+            <div class="inline-checkbox-group">{{ pb_form.occupation_none }} {{ pb_form.occupation_none.label_tag }}</div>
+        </div>
+        <div class="person-box row">
+            <div class="col-xs-4" style="width: 40%">
+            <div class="checkbox-group">{{ pb_form.occupation_agent }} {{ pb_form.occupation_agent.label_tag }}</div>
+            <div class="checkbox-group">{{ pb_form.occupation_business_owner }} {{ pb_form.occupation_business_owner.label_tag }}</div>
+                <div class="label-inside-field">
+                    <label>{{ pb_form.occupation_other }} {{ pb_form.occupation_other.label }}</label>
+                    {{ pb_form.occupation_other_value }}
+                </div>
+            </div>
+            <div class="col-xs-4">
+                <div class="checkbox-group">{{ pb_form.occupation_wage_labor }} {{ pb_form.occupation_wage_labor.label_tag }}</div>
+                <div class="checkbox-group">{{ pb_form.occupation_job_in_india }} {{ pb_form.occupation_job_in_india.label_tag }}</div>
+                <div class="checkbox-group">{{ pb_form.occupation_job_in_gulf }} {{ pb_form.occupation_job_in_gulf.label_tag }}</div>
+                <div class="checkbox-group">{{ pb_form.occupation_farmer }} {{ pb_form.occupation_farmer.label_tag }}</div>
+                <div class="checkbox-group">{{ pb_form.occupation_teacher }} {{ pb_form.occupation_teacher.label_tag }}</div>
+            </div>
+            <div class="col-xs-4" style="width: 25%">
+                <div class="checkbox-group">{{ pb_form.occupation_police }} {{ pb_form.occupation_police.label_tag }}</div>
+                <div class="checkbox-group">{{ pb_form.occupation_army }} {{ pb_form.occupation_army.label_tag }}</div>
+                <div class="checkbox-group">{{ pb_form.occupation_guard }} {{ pb_form.occupation_guard.label_tag }}</div>
+                <div class="checkbox-group">{{ pb_form.occupation_cook }} {{ pb_form.occupation_cook.label_tag }}</div>
+                <div class="checkbox-group">{{ pb_form.occupation_driver }} {{ pb_form.occupation_driver.label_tag }}</div>
+            </div>
+        </div>
+    </div>
+    <!-- End occupation -->
+
+    <!-- Political party -->
+    <div class="checkbox-group-marker" id="political_party-{{ counter }}">
+        <div class="person-box row">
+            <h2>Member of a political Party?</h2>
+            <div class="inline-checkbox-group">{{ pb_form.political_party_congress }} {{ pb_form.political_party_congress.label_tag }}</div>
+        </div>
+        <div class="person-box row">
+            <div class="col-xs-4" style="width: 39%">
+            <div class="checkbox-group">{{ pb_form.political_party_maoist }} {{ pb_form.political_party_maoist.label_tag }}</div>
+            <div class="checkbox-group">{{ pb_form.political_party_uml }} {{ pb_form.political_party_uml.label_tag }}</div>
+            <div class="checkbox-group">{{ pb_form.political_party_forum }} {{ pb_form.political_party_forum.label_tag }}</div>
+            <div class="checkbox-group">{{ pb_form.political_party_tarai_madesh }} {{ pb_form.political_party_tarai_madesh.label_tag }}</div>
+            <div class="checkbox-group">{{ pb_form.political_party_shadbawona }} {{ pb_form.political_party_shadbawona.label_tag }}</div>
+            </div>
+            <div class="col-xs-8" style="width: 60%">
+            <div class="checkbox-group">{{ pb_form.political_party_rnt }} {{ pb_form.political_party_rnt.label_tag }}</div>
+            <div class="checkbox-group">{{ pb_form.political_party_njf }} {{ pb_form.political_party_njf.label_tag }}</div>
+            <div class="checkbox-group">{{ pb_form.political_party_loktantrak }} {{ pb_form.political_party_loktantrak.label_tag }}</div>
+
+            <label class="blending-into-input-label">{{ pb_form.political_party_other }} {{ pb_form.political_party_other.label_tag }}</label>
+
+                <div class="inline-checkbox-group">
+                    {{ pb_form.political_party_dont_know }} {{ pb_form.political_party_dont_know.label_tag }}
+                </div>
+
+                {{ pb_form.political_party_other_value }}
+            </div>
+        </div>
+    </div>
+    <!-- End political party -->
+
+    <!-- Where does he spend most of his time? -->
+    <div class="person-box row">
+        <h2>Where does he spend most of his time? How can we get ahold of or find him?</h2>
+        {{ pb_form.where_spends_time|attr:"rows:2"|add_class:"full-width" }}
+    </div>
+    <!-- End where does he spend most of his time -->
+
+    <!-- Which do you believe about him? -->
+    <div class="person-box row">
+        <h2 style="margin-left: 40px">Which do you believe about him?</h2>
+        <div class="clearfix">
+            <div class="pull-left interviewer-believes-box checkbox-group-marker" id="interviewer_believes-{{ counter }}">
+                {{ pb_form.interviewer_believes_definitely_trafficked }} <br/>
+                {{ pb_form.interviewer_believes_have_trafficked }} <br/>
+                {{ pb_form.interviewer_believes_suspects_trafficked }} <br/>
+                {{ pb_form.interviewer_believes_not_trafficker }}
+            </div>
+            <div class="pull-right victim-believes-box checkbox-group-marker" id="victim_believes-{{ counter }}">
+                {{ pb_form.victim_believes_definitely_trafficked }} <br/>
+                {{ pb_form.victim_believes_have_trafficked }} <br/>
+                {{ pb_form.victim_believes_suspects_trafficked }} <br/>
+                {{ pb_form.victim_believes_not_trafficker }}
+            </div>
+            <div class="text-center">
+                Definitely trafficked many girls
+                <br/>
+                Has trafficked some girls
+                <br/>
+                Suspect he's a trafficker
+                <br/>
+                Don't believe he's a trafficker
+            </div>
+        </div>
+    </div>
+    <!-- End which do you believe about him -->
+
+    <!-- Is this person associated with any of the places below? -->
+    <div class="person-box row checkbox-group-marker" id="associated_with_place">
+        <h2>Is this person associated with any of the places below?</h2>
+        {% for choice in pb_form.associated_with_place %}
+            <div class="inline-checkbox-group">
+                {{ choice }}
+            </div>
+        {% endfor %}
+        <span class="blue-arrow">LB# {{ pb_form.associated_with_place_value|attr:"style: width: 40px" }}</span>
+    </div>
+    <!-- End is this person associated with any of the places below -->
+</div>

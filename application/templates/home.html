@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+{% block body_class %}home{% endblock %}
+
+{% load static from staticfiles %}
+
+{% block head %}
+<style>
+body {
+    background-image: url({% static 'images/home-placeholder-image.jpg' %});
+    background-repeat: no-repeat;
+    background-position: top center;
+    background-size: 100%;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<h1>Welcome to the Tiny Hands Dream Suite!</h1>
+{% endblock %}

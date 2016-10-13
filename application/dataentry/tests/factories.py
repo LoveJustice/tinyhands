@@ -1,0 +1,108 @@
+import datetime
+import factory
+from factory.django import DjangoModelFactory
+from factory.fuzzy import FuzzyInteger, FuzzyFloat, FuzzyChoice, FuzzyDateTime
+import pytz
+
+from accounts.tests.factories import SuperUserFactory
+from dataentry.models import *
+
+
+class IrfFactory(DjangoModelFactory):
+    class Meta:
+        model = InterceptionRecord
+
+    form_entered_by = factory.SubFactory(SuperUserFactory)
+    date_form_received = datetime.datetime(2012, 1, 1, tzinfo=pytz.UTC)
+
+    irf_number = factory.Sequence(lambda n: 'BHD{0}'.format(n))
+    date_time_of_interception = FuzzyDateTime(datetime.datetime(2008, 1, 1, tzinfo=pytz.UTC), datetime.datetime(2012, 1, 1, tzinfo=pytz.UTC))
+
+    location = "Nepal"
+    staff_name = "Joe Test"
+
+    how_sure_was_trafficking = 5
+
+
+class PersonFactory(DjangoModelFactory):
+    class Meta:
+        model = Person
+
+    full_name = factory.Sequence(lambda n: 'John Doe {0}'.format(n))
+    age = FuzzyInteger(20, 40)
+    phone_contact = str(FuzzyInteger(100000000000, 999999999999).fuzz())
+    gender = 'm'
+
+
+class VifFactory(DjangoModelFactory):
+    class Meta:
+        model = VictimInterview
+
+    vif_number = factory.Sequence(lambda n: 'BHD{0}'.format(n))
+    interviewer = "Joe Test"
+
+    victim = factory.SubFactory(PersonFactory)
+
+    number_of_victims = FuzzyInteger(1, 10).fuzz()
+    number_of_traffickers = FuzzyInteger(1, 10).fuzz()
+
+    date = datetime.date(2011, 12, 12)
+    date_time_entered_into_system = datetime.datetime(2011, 12, 12, tzinfo=pytz.UTC)
+    date_time_last_updated = datetime.datetime(2011, 12, 12, tzinfo=pytz.UTC)
+
+
+class IntercepteeFactory(DjangoModelFactory):
+    class Meta:
+        model = Interceptee
+
+    person = factory.SubFactory(PersonFactory)
+    photo = 'foo.png'
+    interception_record = factory.SubFactory(IrfFactory)
+    kind = 'v'
+
+
+class SiteSettingsFactory(DjangoModelFactory):
+    class Meta:
+        model = SiteSettings
+
+    data = [
+        {'name': 'address1_cutoff', 'value': 70, 'description': "asdfasdf"},
+        {'name': 'address1_limit', 'value': 5, 'description': "asdfasdf"},
+        {'name': 'address2_cutoff', 'value': 70, 'description': "asdfasdf"},
+        {'name': 'address2_limit', 'value': 5, 'description': "asdfasdf"},
+        {'name': 'person_cutoff', 'value': 90, 'description': "asdfasdf"},
+        {'name': 'person_limit', 'value': 10, 'description': "asdfasdf"},
+    ]
+
+
+class Address1Factory(DjangoModelFactory):
+    class Meta:
+        model = Address1
+
+    name = factory.Sequence(lambda n: 'Address1 {0}'.format(n))
+
+
+
+class CanonicalNameFactory(DjangoModelFactory):
+    class Meta:
+        model = Address2
+
+    name = factory.Sequence(lambda n: 'Address2 cannon {0}'.format(n))
+    latitude = FuzzyFloat(0, 20)
+    longitude = FuzzyFloat(0, 20)
+    address1 = factory.SubFactory(Address1Factory)
+    canonical_name = None
+    verified = FuzzyChoice([True, False])
+
+
+class Address2Factory(DjangoModelFactory):
+    class Meta:
+        model = Address2
+
+    name = factory.Sequence(lambda n: 'Address2 {0}'.format(n))
+    latitude = FuzzyFloat(0, 20)
+    longitude = FuzzyFloat(0, 20)
+
+    address1 = factory.SubFactory(Address1Factory)
+    canonical_name = factory.SubFactory(CanonicalNameFactory)
+    verified = FuzzyChoice([True, False])
