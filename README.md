@@ -8,7 +8,7 @@ Tiny Hands International
 
 ## Docker
 
-1. Make sure you install Docker [here](https://www.docker.com/ and docker-compose by executing: `sudo pip install docker-compose`
+1. Make sure you install Docker [here](https://www.docker.com/) and docker-compose by executing: `sudo pip install docker-compose`
 2. Clone the repository and cd into it
 3. execute the `setup.sh` script in the root of the repo (this might take a few minutes)
 4. run `docker-compose up -d` to start running the project
