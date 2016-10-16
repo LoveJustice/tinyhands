@@ -1,9 +1,8 @@
 from django.conf.urls import url
 
-from dataentry.views import Address2ViewSet, Address1ViewSet, GeoCodeAddress1APIView, GeoCodeAddress2APIView, InterceptionRecordViewSet, VictimInterviewViewSet, IntercepteeViewSet, VictimInterviewDetailViewSet, PhotoExporter
+from dataentry.views import Address2ViewSet, Address1ViewSet, GeoCodeAddress1APIView, GeoCodeAddress2APIView, InterceptionRecordViewSet, VictimInterviewViewSet, IntercepteeViewSet, VictimInterviewDetailViewSet, PhotoExporter, IrfCsvExportView, VifCsvExportView
 from dataentry.views import PersonViewSet
 from dataentry.views import SiteSettingsViewSet
-from events.views import EventViewSet
 
 
 list = {'get': 'list', 'post': 'create'}
@@ -27,6 +26,7 @@ urlpatterns = [
         # IRFs
         url(r'^irf/$', InterceptionRecordViewSet.as_view(list), name="InterceptionRecord"),
         url(r'^irf/(?P<pk>\d+)/$', InterceptionRecordViewSet.as_view(detail), name="InterceptionRecordDetail"),
+        url(r'^irf/export/$', IrfCsvExportView.as_view(), name="InterceptionRecordCsvExport"),
 
         # Interceptee
         url(r'^interceptee/$', IntercepteeViewSet.as_view(list), name="Interceptee"),
@@ -39,6 +39,7 @@ urlpatterns = [
         # VIFs
         url(r'^vif/$', VictimInterviewViewSet.as_view(list), name="VictimInterview"),
         url(r'^vif/(?P<pk>\d+)/$', VictimInterviewDetailViewSet.as_view(detail), name="VictimInterviewDetail"),
+        url(r'^vif/export/$', VifCsvExportView.as_view(), name="VictimInterviewCsvExport"),
 
         #IRFBatch
         url(r'^photos/(?P<startDate>(\d+)-(\d+)-\d+)/(?P<endDate>\d+-\d+-\d+)/$', PhotoExporter.as_view({'get': 'export_photos'}), name="PhotoExporter"),
