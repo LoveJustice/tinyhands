@@ -7,7 +7,7 @@ from accounts.tests.factories import NoPermissionUserFactory, SuperUserFactory
 
 class IrfCsvExportView(APITestCase):
 
-    def test_when_user_not_authenticated_should_return_404(self):
+    def test_when_user_not_authenticated_should_return_401(self):
         url = reverse('InterceptionRecordCsvExport')
 
         response = self.client.get(url)
@@ -35,7 +35,7 @@ class IrfCsvExportView(APITestCase):
 
 class VifCsvExportView(APITestCase):
 
-    def test_when_user_not_authenticated_should_return_404(self):
+    def test_when_user_not_authenticated_should_return_401(self):
         url = reverse('VictimInterviewCsvExport')
         response = self.client.get(url)
 
