@@ -105,29 +105,29 @@ class ExportTesting(WebTest):
         self.vif = VifFactory.create()
 
     def test_to_see_if_user_can_export_irf(self):
-        response = self.app.get(reverse('interceptionrecord_csv_export'), user=self.user)
+        response = self.app.get(reverse('InterceptionRecordCsvExport'), user=self.user)
         self.assertEqual(response.status_code, 200)
 
     def test_to_see_if_user_received_irf_export(self):
-        response = self.app.get(reverse('interceptionrecord_csv_export'), user=self.user)
+        response = self.app.get(reverse('InterceptionRecordCsvExport'), user=self.user)
         today = date.today()
         result = response['Content-Disposition']
         expected_result = 'attachment; filename=irf-all-data-%d-%d-%d.csv' % (today.year, today.month, today.day)
         self.assertEquals(result, expected_result)
 
     def test_to_see_if_user_can_export_vif(self):
-        response = self.app.get(reverse('victiminterview_csv_export'), user=self.user)
+        response = self.app.get(reverse('VictimInterviewCsvExport'), user=self.user)
         self.assertEqual(response.status_code, 200)
 
     def test_to_see_if_user_received_vif_export(self):
-        response = self.app.get(reverse('victiminterview_csv_export'), user=self.user)
+        response = self.app.get(reverse('VictimInterviewCsvExport'), user=self.user)
         today = date.today()
         result = response['Content-Disposition']
         expected_result = 'attachment; filename=vif-all-data-%d-%d-%d.csv' % (today.year, today.month, today.day)
         self.assertEquals(result, expected_result)
 
     def test_that_no_extra_commas_in_vif_export(self):
-        response = self.app.get(reverse('victiminterview_csv_export'), user=self.user)
+        response = self.app.get(reverse('VictimInterviewCsvExport'), user=self.user)
         result = response.normal_body
         csv_file = open("dataentry/tests/temp/vif.csv", "w")
         csv_file.write(result)
@@ -142,7 +142,7 @@ class ExportTesting(WebTest):
                 self.assertTrue(False)
 
     def test_to_make_sure_no_offset_in_irf_export_file(self):
-        response = self.app.get(reverse('interceptionrecord_csv_export'), user=self.user)
+        response = self.app.get(reverse('InterceptionRecordCsvExport'), user=self.user)
         result = response.normal_body
         temp = list(result)  # this is a temp fix to add an extra comma that is missing
         temp[4356] = ','
