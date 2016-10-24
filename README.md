@@ -2,13 +2,12 @@
 
 Tiny Hands International
 
-[ ![Codeship Status for tu-software-studio/tinyhandsdreamsuite](https://www.codeship.io/projects/79c5fb20-1e83-0132-0c4f-7a12a542bc63/status?branch=master)](https://www.codeship.io/projects/35545)
-
+![Codeship Status](https://app.codeship.com/projects/79c5fb20-1e83-0132-0c4f-7a12a542bc63/status?branch=master)
 # Setup
 
 ## Docker
 
-1. Make sure you install Docker [here](https://www.docker.com/ and docker-compose by executing: `sudo pip install docker-compose`
+1. Make sure you install Docker [here](https://www.docker.com/) and docker-compose by executing: `sudo pip install docker-compose`
 2. Clone the repository and cd into it
 3. execute the `setup.sh` script in the root of the repo (this might take a few minutes)
 4. run `docker-compose up -d` to start running the project
