@@ -256,6 +256,7 @@ irf_interceptee_prefix = "Interceptee %d "
 
 
 def get_irf_export_rows(irfs):
+    logger.debug("Enter get_irf_export_row irf count=" + str(len(irfs)))
     rows = []
     irf_headers = []
     for field in irf_data:
@@ -356,7 +357,7 @@ def import_irf_row(irfDict):
     else:
         try:
             InterceptionRecord.objects.get(irf_number=irf_nbr)
-            errList.append("IRF already exists")
+            errList.append("Form already exists")
             return errList
         except:
             pass

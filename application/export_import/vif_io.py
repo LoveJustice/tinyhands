@@ -419,7 +419,7 @@ def import_vif_row(vifDict):
     else:
         try:
             VictimInterview.objects.get(vif_number=vif_nbr)
-            errList.append("VIF already exists")
+            errList.append("Form already exists")
             return errList
         except:
             pass
