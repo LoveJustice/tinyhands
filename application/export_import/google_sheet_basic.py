@@ -138,14 +138,14 @@ class GoogleSheetBasic:
             "values":[[val]]
             }
         rng = self.sheet_name + "!" + self.convert_notation(row, col) + ":" + self.convert_notation(row, col)
-        result = GoogleSheetBasic.sheet_service.spreadsheets().values().update(spreadsheetId=self.spreadsheet_id, range=rng, valueInputOption="USER_ENTERED", body=body).execute()
+        GoogleSheetBasic.sheet_service.spreadsheets().values().update(spreadsheetId=self.spreadsheet_id, range=rng, valueInputOption="USER_ENTERED", body=body).execute()
 
     def append_rows(self, vals):
         body = {
             "values": vals
             }
         rng = self.sheet_name + "!" + "A:ZZ"
-        result = GoogleSheetBasic.sheet_service.spreadsheets().values().append(spreadsheetId=self.spreadsheet_id, range=rng, valueInputOption="USER_ENTERED", body=body).execute()
+        GoogleSheetBasic.sheet_service.spreadsheets().values().append(spreadsheetId=self.spreadsheet_id, range=rng, valueInputOption="USER_ENTERED", body=body).execute()
          
             
         

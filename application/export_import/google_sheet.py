@@ -25,10 +25,15 @@ class GoogleSheet (GoogleSheetBasic):
         self.column_names = results[0]
         
     def find_key_column(self, name):
+        self.key_column_index = None
         for idx in range(len(self.column_names)):
             if self.column_names[idx] == name:
                 self.key_column_name = name
                 self.key_column_index = idx
+                break
+        
+        if self.key_column_index is None:
+            logger.error("Unable to find key column with name=" + name)
                 
     def refresh_keys(self):
         results = self.get_data(2,self.key_column_index, None, self.key_column_index, majorDimension="COLUMNS")
@@ -114,9 +119,11 @@ class GoogleSheet (GoogleSheetBasic):
         
         db_data_to_export = []
         for db_obj in db_data:
-            key_value = db_obj.getattr(db_obj, key_field)
+            key_value = getattr(db_obj, key_field)
             if not key_value in sheet_keys:
                 db_data_to_export.append(db_obj)
+                logger.debug("audit - export " + key_value + "for sheet " + self.sheet_name)
                 
         new_rows = self.export_method(db_data_to_export)
+        logger.debug("export_method returned row count " + str(len(new_rows)))
         self.append_rows(new_rows)                    

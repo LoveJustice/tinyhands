@@ -198,10 +198,12 @@ class GroupBooleanCsv:
                     if field.verbose_name == value:
                         setattr(instance, field.name, True)
                         return
-
+            
+            print self.title, '[' + value + ']'
             errs.append(column_title)
         else:
             if not self.allow_none:
+                print 'else', self.title, value
                 errs.append(column_title)
             
         return errs
@@ -377,7 +379,7 @@ class Address1CsvField:
         try:
             tmp = getattr(instance, self.data_name)
             if tmp is not None:
-                value = tmp
+                value = tmp.name
         finally:
             return value
 
