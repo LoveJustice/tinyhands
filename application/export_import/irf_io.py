@@ -4,7 +4,6 @@ from dataentry.models import Person
 from dataentry.models import Interceptee
 from dataentry.models import InterceptionRecord
 from accounts.models import Account
-from dataentry.dataentry_signals import irf_done
 from django.conf import settings
 
 import traceback
@@ -425,9 +424,7 @@ def import_irf_row(irfDict):
                     interceptee.save()
         except:
             logger.error ("Unexpected error saving IRF in database IRF Number=" + irf_nbr + traceback.format_exc() )
-            errList.append("Unexpected error saving IRF in database")
-
-        irf_done.send(sender=__file__, irf_number=irf.irf_number, irf=irf, interceptees=interceptee_list)    
+            errList.append("Unexpected error saving IRF in database")  
         
     return errList
 
