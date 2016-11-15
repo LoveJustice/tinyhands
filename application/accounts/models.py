@@ -37,12 +37,15 @@ class DefaultPermissionsSet(models.Model):
         return self.accounts.count() > 0
 
     def email_accounts(self, alert, context={}):
-        accounts = self.accounts.all()
-        for account in accounts:
-            if account.permission_receive_investigation_alert and alert.is_investigation():
-                account.email_user("alerts/" + alert.email_template, alert, context)
+        if alert.is_investigation():
+            accounts = self.accounts.filter(permission_receive_investigation_alert=True)
+        elif alert.is_legal():
+            accounts = self.accounts.filter(permission_receive_legal_alert=True)
 
-            if account.permission_receive_legal_alert and alert.is_legal():
+        for account in accounts:
+            recieve_investigation_alert = account.permission_receive_investigation_alert and alert.is_investigation()
+            recieve_legal_alert = account.permission_receive_legal_alert and alert.is_legal()
+            if recieve_investigation_alert or recieve_legal_alert:
                 account.email_user("alerts/" + alert.email_template, alert, context)
 
 
