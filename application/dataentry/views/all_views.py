@@ -21,6 +21,7 @@ from django.views.generic import ListView, View, CreateView, TemplateView
 
 from rest_framework import status
 from rest_framework import filters
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -462,19 +463,21 @@ class VictimInterviewDetailViewSet(viewsets.ModelViewSet):
         return rv
 
 
-@login_required
+@api_view(['POST'])
+@permission_classes((IsAuthenticated, ))
 def vifExists(request, vif_number):
     try:
         existingVif = VictimInterview.objects.get(vif_number=vif_number)
-        return HttpResponse(existingVif)
+        return Response(existingVif.vif_number)
     except:
-        return HttpResponse("Vif does not exist")
+        return Response("Vif does not exist")
 
 
-@login_required
+@api_view(['POST'])
+@permission_classes((IsAuthenticated, ))
 def irfExists(request, irf_number):
     try:
         existingIrf = InterceptionRecord.objects.get(irf_number=irf_number)
-        return HttpResponse(existingIrf.irf_number)
+        return Response(existingIrf.irf_number)
     except:
-        return HttpResponse("Irf does not exist")
+        return Response("Irf does not exist")
