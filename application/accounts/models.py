@@ -41,12 +41,11 @@ class DefaultPermissionsSet(models.Model):
             accounts = self.accounts.filter(permission_receive_investigation_alert=True)
         elif alert.is_legal():
             accounts = self.accounts.filter(permission_receive_legal_alert=True)
+        else:
+            raise Exception('Alert type must be either legal or investigation')
 
         for account in accounts:
-            recieve_investigation_alert = account.permission_receive_investigation_alert and alert.is_investigation()
-            recieve_legal_alert = account.permission_receive_legal_alert and alert.is_legal()
-            if recieve_investigation_alert or recieve_legal_alert:
-                account.email_user("alerts/" + alert.email_template, alert, context)
+            account.email_user("alerts/" + alert.email_template, alert, context)
 
 
 class AccountManager(BaseUserManager):
