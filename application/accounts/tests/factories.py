@@ -19,7 +19,8 @@ class SuperUserDesignation(DjangoModelFactory):
     permission_vif_edit = True
     permission_vif_delete = True
     permission_accounts_manage = True
-    permission_receive_email = True
+    permission_receive_investigation_alert = True
+    permission_receive_legal_alert = True
     permission_border_stations_view = True
     permission_border_stations_add = True
     permission_border_stations_edit = True
@@ -84,7 +85,8 @@ class SuperUserFactory(UserFactory):
     permission_vif_edit = True
     permission_vif_delete = True
     permission_accounts_manage = True
-    permission_receive_email = True
+    permission_receive_investigation_alert = True
+    permission_receive_legal_alert = True
     permission_border_stations_view = True
     permission_border_stations_add = True
     permission_border_stations_edit = True
