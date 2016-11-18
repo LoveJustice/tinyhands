@@ -172,8 +172,13 @@ LOGGING = {
             'handlers': ['file'],
             'level': 'INFO',
             'propagate': True,
-       },
-        'dataentry.google_sheets': {
+        },
+        'export_import': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'export_import.google_sheet_work_queue': {
             'handlers': ['file'],
             'level': 'DEBUG',
             'propagate': False,

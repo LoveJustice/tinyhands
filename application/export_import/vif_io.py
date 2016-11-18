@@ -4,7 +4,6 @@ from dataentry.models import Person
 from dataentry.models import VictimInterview
 from dataentry.models import VictimInterviewLocationBox
 from dataentry.models import VictimInterviewPersonBox
-from dataentry.dataentry_signals import vif_done
 
 from field_types import Address1CsvField
 from field_types import Address2CsvField
@@ -419,7 +418,7 @@ def import_vif_row(vifDict):
     else:
         try:
             VictimInterview.objects.get(vif_number=vif_nbr)
-            errList.append("VIF already exists")
+            errList.append("Form already exists")
             return errList
         except:
             pass
@@ -530,8 +529,7 @@ def import_vif_row(vifDict):
                 for idx in range (len(location_boxes)):
                     location_boxes[idx].victim_interview = vifdb
                     location_boxes[idx].save()
-                    
-            vif_done.send(sender=__file__, vif_number=vif.vif_number, irf=vif)    
+                   
         except:
             errList.append("Unexpected error saving VIF in database - contact developer")
              

@@ -17,6 +17,7 @@ CLIENT_DOMAIN = 'https://staging.tinyhandsdreamsuite.org/#'
 SPREADSHEET_NAME = 'Dream Suite - THN Data (Staging)'
 IRF_WORKSHEET_NAME = 'IRF Entry'
 VIF_WORKSHEET_NAME = 'VIF Entry'
+ADDRESS2_WORKSHEET_NAME = 'Address2 Export'
 
 IMPORT_ACCOUNT_EMAIL = 'ashishm@tinyhands.org'
 IMPORT_SPREADSHEET_NAME = 'Dream Suite - THN Data (Staging)'
