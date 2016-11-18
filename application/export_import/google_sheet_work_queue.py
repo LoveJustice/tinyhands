@@ -79,7 +79,6 @@ class GoogleSheetWorkQueue(Thread):
         
 
     def internal_update_vif(self, the_vif_number):
-        #print "in internal_update_vif " + the_vif_number
         vif = None
         try:
             vif = VictimInterview.objects.get(vif_number = the_vif_number)

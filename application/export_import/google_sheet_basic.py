@@ -27,7 +27,6 @@ class GoogleSheetBasic:
             GoogleSheetBasic.credentials = True        
         except:
             logger.warn("No credentials file for google spreadsheet.  No update to google spreadsheets will be attempted.")
-            #print "No credentials file for google spreadsheet.  No access to google spreadsheets will be attempted."
         
         if GoogleSheetBasic.credentials:    
             GoogleSheetBasic.drive_service = discovery.build('drive', 'v3', http=GoogleSheetBasic.http)
@@ -60,7 +59,7 @@ class GoogleSheetBasic:
                 break
             
         if not found:
-            print "Unable to locate sheet " + self.sheet_name
+            logger.error("Unable to locate sheet " + self.sheet_name)
     
     
     def __init__(self, spreadsheet_name, sheet_name):

@@ -339,7 +339,6 @@ def import_irf_row(irfDict):
         try:
             default_op[1](irfDict, default_op, name_translation=spreadsheet_header_from_export_header)
         except:
-            print traceback.format_exc()
             logger.error ("Failed to set default for field " + default_op[0] + traceback.format_exc() )
             errList.append("Failed to set default for field " + default_op[0])
         
