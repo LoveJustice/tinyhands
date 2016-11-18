@@ -1,13 +1,11 @@
 from .base import *
 
 ALLOWED_HOSTS = [
-    'localhost',
-    '127.0.0.1',
     '139.162.35.242',
     'tinyhandsdreamsuite.org',
 ]
 
-ADMINS = (('Ben Duggan', 'benaduggan@gmail.com'), ("Austin Munn", 'austin@tinyhands.org'))
+ADMINS = [('Ben Duggan', 'benaduggan@gmail.com'), ('Austin Munn', "austin@tinyhands.org"), ("Stan Rishel", "scrishel@sbcglobal.net")]
 SITE_DOMAIN = 'https://tinyhandsdreamsuite.org'
 CLIENT_DOMAIN = 'https://tinyhandsdreamsuite.org/#'
 
