@@ -4,7 +4,6 @@ from dataentry.models import Person
 from dataentry.models import Interceptee
 from dataentry.models import InterceptionRecord
 from accounts.models import Account
-from dataentry.dataentry_signals import irf_done
 from django.conf import settings
 
 import traceback
@@ -256,6 +255,7 @@ irf_interceptee_prefix = "Interceptee %d "
 
 
 def get_irf_export_rows(irfs):
+    logger.debug("Enter get_irf_export_row irf count=" + str(len(irfs)))
     rows = []
     irf_headers = []
     for field in irf_data:
@@ -339,7 +339,6 @@ def import_irf_row(irfDict):
         try:
             default_op[1](irfDict, default_op, name_translation=spreadsheet_header_from_export_header)
         except:
-            print traceback.format_exc()
             logger.error ("Failed to set default for field " + default_op[0] + traceback.format_exc() )
             errList.append("Failed to set default for field " + default_op[0])
         
@@ -356,7 +355,7 @@ def import_irf_row(irfDict):
     else:
         try:
             InterceptionRecord.objects.get(irf_number=irf_nbr)
-            errList.append("IRF already exists")
+            errList.append("Form already exists")
             return errList
         except:
             pass
@@ -424,9 +423,7 @@ def import_irf_row(irfDict):
                     interceptee.save()
         except:
             logger.error ("Unexpected error saving IRF in database IRF Number=" + irf_nbr + traceback.format_exc() )
-            errList.append("Unexpected error saving IRF in database")
-
-        irf_done.send(sender=__file__, irf_number=irf.irf_number, irf=irf, interceptees=interceptee_list)    
+            errList.append("Unexpected error saving IRF in database")  
         
     return errList
 

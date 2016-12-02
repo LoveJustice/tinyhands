@@ -14,9 +14,8 @@ logger = logging.getLogger(__name__)
 
 
 class VIFAlertChecker(object):
-    def __init__(self, form, inlines):
-        self.vif = form
-        self.inlines = inlines
+    def __init__(self, vif):
+        self.vif = vif
 
     @staticmethod
     def handle_vif_done(sender, **kwargs):
@@ -86,7 +85,8 @@ class VIFAlertChecker(object):
 
         reason_for_no = self.vif.get_reason_for_no()
         points = self.vif.calculate_strength_of_case_points()
-        if self.vif.calculate_strength_of_case_points() > 10:
+
+        if points > 10:
             Alert.objects.send_alert("strength of case",
                                      context={"site": settings.SITE_DOMAIN,
                                               "vif": self.vif,

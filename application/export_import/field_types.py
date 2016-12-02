@@ -70,7 +70,6 @@ class DateTimeCsvField:
                     setattr(instance, self.data_name, parsed_value)
                     break
                 except:
-                    #print "Failed to parse datetime value=" + value + " with format " + fmt
                     pass
                 
             if parsed_value is None:
@@ -198,7 +197,7 @@ class GroupBooleanCsv:
                     if field.verbose_name == value:
                         setattr(instance, field.name, True)
                         return
-
+            
             errs.append(column_title)
         else:
             if not self.allow_none:
@@ -377,7 +376,7 @@ class Address1CsvField:
         try:
             tmp = getattr(instance, self.data_name)
             if tmp is not None:
-                value = tmp
+                value = tmp.name
         finally:
             return value
 
