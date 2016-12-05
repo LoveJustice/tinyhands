@@ -10,7 +10,7 @@ class AccountsSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         account = Account.objects.create(**validated_data)
         try:
-            account.send_activation_email()
+            account.send_activation_email('activate')
         except:
             account.delete()
             raise serializers.ValidationError({'email': ["Email address is invalid"]})
