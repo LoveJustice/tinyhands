@@ -36,7 +36,7 @@ class AccountActivateClient(APIView):
         else:
             account.set_password(request.data['password1'])
             account.save()
-            return HttpResponse("acount_saved")
+            return HttpResponse("account_saved")
 
 
 class AccountViewSet(ModelViewSet):
