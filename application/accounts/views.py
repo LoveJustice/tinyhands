@@ -70,7 +70,7 @@ def password_reset(request):
         account.save()
 
         # Send an activation email to the email
-        account.send_activation_email()
+        account.send_activation_email('reset')
         return Response({"message": "Email sent!"}, HTTP_200_OK)
     except:
         return Response({"message": "There was a problem sending the email, please try again!"}, HTTP_500_INTERNAL_SERVER_ERROR)
@@ -108,6 +108,6 @@ class ResendActivationEmailView(APIView):
         email_sent = False
         account = get_object_or_404(Account, pk=pk)
         if not account.has_usable_password():
-            account.send_activation_email()
+            account.send_activation_email('activate')
             email_sent = True
         return Response(email_sent)
