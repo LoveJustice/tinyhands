@@ -134,9 +134,10 @@
                 </td>
                 <td>
                   {{ form.location.label_tag }}
-                </td>
+                </td>                
                 <td>
-                  {{ form.location }}
+                  <input id="id_location" maxlength=255 name="location" type="text"
+
                   <div class="input-group">
                       {% verbatim %}
 						<div class="input-group-btn">
@@ -145,7 +146,7 @@
                             </button>
                             <ul role="menu" id="dropdown-locations" class="dropdown-menu dropdown-menu-form" >
                                 <li ng-repeat="location in borderStation.locations">
-                                    <a href="#"/> <input type="radio"/><span class="lbl">{{ location.name }}</span> </li>
+                                    <a href="#"/><input type="radio" value="{{location.name}}" style="text-align:right"/><span class="lbl">{{ location.name }} </li>
                             </ul>
                         </div>
                       {% endverbatim %}
