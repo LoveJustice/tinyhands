@@ -112,7 +112,7 @@
 
         <div class="col-xs-7">
             <!-- Table in the upper-right corner of the form -->
-          <table class="table table-bordered top-data-area" ng-controller="staffListCtrl as staff">
+          <table class="table table-bordered top-data-area" ng-controller="borderStationCtrl as borderStation">
             <tbody>
               <tr>
                   <!-- Victim VIF number -->
@@ -179,11 +179,11 @@
                     <div class="input-group">
                       {% verbatim %}
                         <div class="input-group-btn">
-                            <button tabindex="-1" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button" ng-click="staff.retrieveStation('2')">
+                            <button tabindex="-1" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button" ng-click="borderStation.retrieveStation('2')">
                                 <span class="caret"></span>
                             </button>
                             <ul role="menu" id="dropdown-staff" class="dropdown-menu dropdown-menu-form" >
-                                <li ng-repeat="staffPerson in staff.staffNames">
+                                <li ng-repeat="staffPerson in borderStation.staffNames">
                                     <a href="#"/> <input type="checkbox"/><span class="lbl">{{ staffPerson.name }}</span> </li>
                             </ul>
                         </div>
@@ -1845,8 +1845,8 @@
   <br/>
 {% load static from staticfiles %}
      <script type="text/javascript" src="{% static "dataentry/js/dataEntry.module.js" %}"></script>
-     <script type="text/javascript" src="{% static "dataentry/js/services/staffListService.js" %}"></script>
-     <script type="text/javascript" src="{% static "dataentry/js/controllers/staffListCtrl.js" %}"></script>
+     <script type="text/javascript" src="{% static "dataentry/js/services/borderStationService.js" %}"></script>
+     <script type="text/javascript" src="{% static "dataentry/js/controllers/borderStationCtrl.js" %}"></script>
 {% include "dataentry/fuzzymatching-ui.html" %}
 
 {% endblock %}

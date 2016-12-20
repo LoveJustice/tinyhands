@@ -1,6 +1,6 @@
 angular
     .module('DataEntry')
-    .controller("staffListCtrl", ['$scope','$http', 'staffListService', function($scope, $http, staffListService) {
+    .controller("borderStationCtrl", ['$scope','$http', 'borderStationService', function($scope, $http, borderStationService) {
         var vm = this;
 
         // Variable Declarations
@@ -17,14 +17,14 @@ angular
                 station_code = document.getElementById("id_irf_number").value.slice(0,3);
             else
                 station_code = document.getElementById("id_vif_number").value.slice(0,3);
-            staffListService.getStationID(station_code).then(function(response){
+            borderStationService.getStationID(station_code).then(function(response){
                 retrieveStaff(response);
             });
         }
 
         function retrieveStaff(stationID) {
             if (stationID >= 0) {
-                staffListService.retrieveStaff(stationID).then(function(promise){
+                borderStationService.retrieveStaff(stationID).then(function(promise){
                     var data = promise.data;
                     vm.staffNames=[];
                     $(data).each(function(person){
