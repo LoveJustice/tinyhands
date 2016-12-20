@@ -15,7 +15,7 @@ urlpatterns = [
         url(r'^committee-member/(?P<pk>\d+)/$', CommitteeMemberViewSet.as_view(detail_methods), name="CommitteeMemberDetail"),
 
         url(r'^location/$', LocationViewSet.as_view(list_methods), name="Location"),
-        url(r'^location/(?P<pk>\d+)/$', LocationViewSet.as_view(detail_methods), name="LocationDetail"),
+        url(r'^location/(?P<pk>\d+)/$', LocationViewSet.as_view({'get': 'location_retrieve'}), name="LocationDetail"),
 
         url(r'^staff/$', StaffViewSet.as_view(list_methods), name="Staff"),
         url(r'^staff/(?P<pk>\d+)/$', StaffViewSet.as_view({'get': 'staff_retrieve', 'put': 'update', 'delete': 'destroy'}), name="StaffDetail"),

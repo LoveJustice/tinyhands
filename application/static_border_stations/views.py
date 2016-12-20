@@ -51,6 +51,14 @@ class BorderStationRestAPI(viewsets.ModelViewSet):
 class LocationViewSet(BorderStationRestAPI):
     queryset = Location.objects.all()
     serializer_class = LocationSerializer
+    
+    def location_retrieve(self, request, *args, **kwargs):
+        """
+            retrieve all locations for a particular border_station
+        """
+        self.object_list = self.filter_queryset(self.get_queryset().filter(border_station=self.kwargs['pk']))
+        serializer = self.get_serializer(self.object_list, many=True)
+        return Response(serializer.data)
 
 
 class CommitteeMemberViewSet(BorderStationRestAPI):
