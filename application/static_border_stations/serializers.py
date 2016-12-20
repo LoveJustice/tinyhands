@@ -8,6 +8,7 @@ class StaffSerializer(serializers.ModelSerializer):
         model = Staff
 
 
+
 class CommitteeMemberSerializer(serializers.ModelSerializer):
     class Meta:
         model = CommitteeMember
@@ -16,3 +17,4 @@ class CommitteeMemberSerializer(serializers.ModelSerializer):
 class LocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Location
+
