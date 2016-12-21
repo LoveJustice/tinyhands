@@ -523,9 +523,7 @@ $(document).ready(function() {
     $("ul#dropdown-locations").each(function() {
         $(this).change(function() {
             var answer = "";
-            console.log("Bout to");
             $("ul.dropdown-menu input[type=radio]").each(function() {
-                console.log("Logging",this.value);
                 if($(this).is(":checked")) {
                     answer = this.value;
                 }
@@ -563,7 +561,6 @@ $(document).ready(function() {
         });
     });
 });
-
 
 // Allows multiple clicks on dropdown instead of automatically closing
 $(document).on('click', '.dropdown-menu.dropdown-menu-form:not(#dropdown-locations)', function(e) {

@@ -134,19 +134,18 @@
                 </td>
                 <td>
                   {{ form.location.label_tag }}
-                </td>                
+                </td>
                 <td>
-                  <input id="id_location" maxlength=255 name="location" type="text"
-
-                  <div class="input-group">
+                    {{ form.location }}
+                    <div class="input-group">
                       {% verbatim %}
 						<div class="input-group-btn">
-                            <button tabindex="-1" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button" ng-click="borderStation.retrieveLocationByStation(1)">
+                            <button tabindex="-1" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button" ng-click="borderStation.retrieveLocationsByStation(1)">
                                 <span class="caret"></span>
                             </button>
                             <ul role="menu" id="dropdown-locations" class="dropdown-menu dropdown-menu-form" >
                                 <li ng-repeat="location in borderStation.locations">
-                                    <a href="#"/><input type="radio" value="{{location.name}}" style="text-align:right"/><span class="lbl">{{ location.name }} </li>
+                                    <a href="#"/> <input type="radio" value="{{ location.name }}"/><span class="lbl">{{ location.name }}</span> </li>
                             </ul>
                         </div>
                       {% endverbatim %}
@@ -161,6 +160,7 @@
                 <td>
                   <div style="width: 75px">
                     {{ form.date_time_of_interception|attr:"data-placement: bottom" }}
+                    
                   </div>
                 </td>
                 <td>
@@ -192,6 +192,7 @@
                       {% endverbatim %}
                     </div>
                 </td>
+              </tr>
               </tr>
             </tbody>
           </table>

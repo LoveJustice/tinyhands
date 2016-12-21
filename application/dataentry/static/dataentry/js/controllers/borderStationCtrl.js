@@ -6,12 +6,13 @@ angular
         // Variable Declarations
         vm.staffNames = [];
         vm.testNames = [];
+        vm.locations = [];
 
         // Function Definitions
         vm.retrieveStaffByStation = retrieveStaffByStation;
         vm.retrieveStaff = retrieveStaff;
         
-        vm.retrieveLocationByStation = retrieveLocationByStation;
+        vm.retrieveLocationsByStation = retrieveLocationsByStation;
         vm.retrieveLocations = retrieveLocations;
 
         function retrieveStaffByStation(calledBy) {
@@ -29,7 +30,6 @@ angular
             if (stationID >= 0) {
                 borderStationService.retrieveStaff(stationID).then(function(promise){
                     var data = promise.data;
-                    console.log(data);
                     vm.staffNames=[];
                     $(data).each(function(person){
                             vm.staffNames.push(
@@ -44,7 +44,7 @@ angular
             else vm.staffNames = [{name: "Invalid Station Code"}];
         }
         
-        function retrieveLocationByStation(calledBy) {
+        function retrieveLocationsByStation(calledBy) {
             var station_code = "";
             if (calledBy == 1)
                 station_code = document.getElementById("id_irf_number").value.slice(0,3);
@@ -68,7 +68,6 @@ angular
                                 }
                             );
                     });
-                    console.log(data);
                 });
             }
             else vm.locations = [{name: "Invalid Station Code"}];

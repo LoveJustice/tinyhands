@@ -15,7 +15,6 @@ function borderStationService($http) {
         // grab all of the staff for this station
         return $http.get('/api/staff/' + borderStationCod + '/').
             success(function (data) {
-                console.log("staff data",data);
                 return data;
             }).
             error(function (data, status, headers, config) {
@@ -27,7 +26,6 @@ function borderStationService($http) {
         // grab all of the locations for this station
         return $http.get('/api/location/' + borderStationCod + '/').
             success(function (data) {
-                console.log("location data",data);
                 return data;
             }).
             error(function (data, status, headers, config) {
