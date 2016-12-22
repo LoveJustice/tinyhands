@@ -21,6 +21,11 @@ class BorderStationViewSet(viewsets.ModelViewSet):
     @list_route()
     def list_all(self, request):
         border_stations = BorderStation.objects.all().order_by('station_name')
+        open_param = request.query_params.get('open', None)
+        if open_param in ['True', 'true']:
+            border_stations = border_stations.filter(open=True)
+        elif open_param in ['False', 'false']:
+            border_stations = border_stations.filter(open=False)
         serializer = self.get_serializer(border_stations, many=True)
         return Response(serializer.data)
 
