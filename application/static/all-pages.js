@@ -520,24 +520,29 @@ $(document).ready(function() {
         DREAMSUITE[bodyClass]();
     }
 
+    /*
+    The following three are listeners for dropdowns in the IRF and VIF that put data from dynamically from dropdowns
+    into their forms. Staff names are delimitted by semi-colons
+    */
+
+    // Location box in top right of VIF or IRF
     $("ul#dropdown-locations").each(function() {
         $(this).change(function() {
             var answer = "";
-            $("ul.dropdown-menu input[type=radio]").each(function() {
+            $("ul#dropdown-locations input[type=checkbox]").each(function() {
                 if($(this).is(":checked")) {
                     answer = this.value;
                 }
             });
-
             $("input#id_location").val(answer);
         });
     });
-    
-    // Semi-colon delimiting the staff name data
+
+    // Interviewer in top right of VIF and Staff name in top right of IRF
     $("ul#dropdown-staff").each(function() {
         $(this).change(function() {
             var line = "";
-            $("ul.dropdown-menu:not(#dropdown-staff-who-noticed) input[type=checkbox]").each(function() {
+            $("ul.dropdown-menu:not(#dropdown-staff-who-noticed):not(#dropdown-locations) input[type=checkbox]").each(function() {
                 if($(this).is(":checked")) {
                     line += $("+ span", this).text() + ",";
                 }
@@ -548,6 +553,7 @@ $(document).ready(function() {
         });
     });
 
+    // Staff who noticed victims in section 7 of IRF
     $("ul#dropdown-staff-who-noticed").each(function() {
         $(this).change(function() {
             var line = "";
