@@ -113,7 +113,12 @@ class BorderStationBudgetCalculation(models.Model):
             total += self.administration_booth_amount
         if self.administration_registration:
             total += self.administration_registration_amount
-        return total
+        return total + self.administration_extra_items_total()
+
+
+    def administration_extra_items_total(self):
+        items = self.otherbudgetitemcost_set.filter(form_section=10)
+        return sum(item.cost for item in items)
 
     medical_last_months_expense = models.PositiveIntegerField("Last month's medical expense", default=0)
 
@@ -272,7 +277,7 @@ class OtherBudgetItemCost(models.Model):
     name = models.CharField(max_length=255, blank=False)
     cost = models.PositiveIntegerField(default=0, blank=False)
 
-    BUDGET_FORM_SECTION_CHOICES = [(1, 'Travel'), (2, 'Miscellaneous'), (3, 'Awareness'), (4, 'Supplies'), (5, 'Shelter'), (6, 'FoodGas'), (7, 'Communication'), (8, 'Staff')]
+    BUDGET_FORM_SECTION_CHOICES = [(1, 'Travel'), (2, 'Miscellaneous'), (3, 'Awareness'), (4, 'Supplies'), (5, 'Shelter'), (6, 'FoodGas'), (7, 'Communication'), (8, 'Staff'), (9, 'Medical'), (10, 'Administration')]
     form_section = models.IntegerField(BUDGET_FORM_SECTION_CHOICES, blank=True, null=True)
     budget_item_parent = models.ForeignKey(BorderStationBudgetCalculation, blank=True, null=True, on_delete=models.CASCADE)
 
