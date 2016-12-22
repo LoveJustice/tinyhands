@@ -13,7 +13,7 @@ class RestApiTestCase(APITestCase):
 
 class BorderStationsTests(RestApiTestCase):
     def setUp(self):
-        self.border_station = BorderStationFactory.create()
+        self.border_station = BorderStationFactory.create(open=False)
         self.other_border_stations = BorderStationFactory.create_batch(4)
 
     # Authentication Methods
@@ -41,6 +41,24 @@ class BorderStationsTests(RestApiTestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 5)
+
+    def test_when_open_param_set_to_true_should_return_open_border_stations(self):
+        self.login(ViewBorderStationUser.create())
+        url = reverse('BorderStation')
+
+        response = self.client.get(url+'?open=true')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 4)
+
+    def test_when_open_param_set_to_false_should_return_closed_border_stations(self):
+        self.login(ViewBorderStationUser.create())
+        url = reverse('BorderStation')
+
+        response = self.client.get(url+'?open=false')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
 
     def test_create_BorderStation(self):
         self.login(AddBorderStationUser.create())
