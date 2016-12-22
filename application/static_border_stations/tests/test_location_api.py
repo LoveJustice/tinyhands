@@ -60,11 +60,11 @@ class LocationTests(RestApiTestCase):
 
     def test_get_Location(self):
         self.login(ViewBorderStationUser.create())
-        url = reverse('LocationDetail', args=[self.location.id])
+        url = reverse('LocationDetail', args=[self.location.border_station.id])
 
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(self.location.name, response.data['name'])
+        self.assertEqual(self.location.name, response.data[0]['name'])
 
     def test_update_Location(self):
         self.login(EditBorderStationUser.create())
@@ -80,11 +80,11 @@ class LocationTests(RestApiTestCase):
         response = self.client.put(url, data=data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(data['name'], response.data['name'])
-
+        
     def test_delete_Location(self):
         self.login(DeleteBorderStationUser.create())
         delete_url = reverse('LocationDetail', args=[self.location.id])
-        url = reverse('LocationDetail', args=[self.location.id])
+        url = reverse('LocationDetail', args=[self.location.border_station.id])
 
         location_count = len(self.client.get(url).data)
 
