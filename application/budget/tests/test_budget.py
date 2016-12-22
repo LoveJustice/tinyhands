@@ -115,10 +115,12 @@ class TestModels(TestCase):
         item.administration_number_of_meetings_per_month_multiplier = 600
         item.administration_registration = True
         item.administration_registration_amount = 2000
-        self.assertEqual(item.administration_total(), 35430)
+        extra_admin = OtherBudgetItemCost.objects.create(budget_item_parent=item, form_section=10, name="extra-Admin", cost=100)
+
+        self.assertEqual(item.administration_total(), 35530)
         item.administration_booth = False
         item.administration_registration = False
-        self.assertEqual(item.administration_total(), 3430)
+        self.assertEqual(item.administration_total(), 3530)
 
         # Staff
         staff = StaffSalary.objects.create(budget_calc_sheet=item, salary=1000)
@@ -127,7 +129,9 @@ class TestModels(TestCase):
 
         # Medical
         item.medical_last_months_expense = 500
-        self.assertEqual(item.medical_total(), 500)
+        extra_medical = OtherBudgetItemCost.objects.create(budget_item_parent=item, form_section=9, name="extra-Medical", cost=100)
+
+        self.assertEqual(item.medical_total(), 600)
 
         # Miscellaneous
         item.miscellaneous_number_of_intercepts_last_month = 5
@@ -137,4 +141,4 @@ class TestModels(TestCase):
         self.assertEqual(item.miscellaneous_total(), 1600)
 
         # Station Total
-        self.assertEqual(item.station_total(), 33320)
+        self.assertEqual(item.station_total(), 33520)
