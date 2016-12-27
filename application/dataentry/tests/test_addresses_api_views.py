@@ -165,6 +165,19 @@ class Address1Test(APITestCase):
         response = self.client.post(url)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
+    def test_address_related_items_swap(self):
+        address2 = Address2Factory.create()
+        address1 = address2.address1
+        new_address1 = Address1Factory.create()
+        person = PersonFactory.create(address1=address1)
+        vif = VifFactory.create(victim_guardian_address1=address1)
+
+        mapperD = {'person': person, 'victiminterview': vif, 'address2': address2 }
+
+        url = reverse('Address1RelatedItemsSwap', args=[address1.id, new_address1.id])
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
 class Address2Test(APITestCase):
 
