@@ -1,0 +1,84 @@
+<!--
+Created By Andrew Smith
+
+PDF is generated using reportlab and the RML implementation provided by z3c.rml
+
+z3c.rml docs can be found on their github page: https://github.com/zopefoundation/z3c.rml
+-->
+{% load humanize %}
+
+<!DOCTYPE document SYSTEM "rml.dtd">
+<document filename="outfile.pdf">
+    <template  showBoundary="0">
+        <pageTemplate id="main" pagesize="LETTER">
+            <pageGraphics>
+                <setFont name="Helvetica" size="10"/>
+            </pageGraphics>
+            <frame id="title" x1=".5in" y1="10in" width="7.5in" height=".6in"/>
+            <frame id="leftColumn" x1=".5in" y1=".5in" width="3.5in" height="9.5in"/>
+            <frame id="rightColumn" x1="4.5in" y1=".5in" width="3.5in" height="9.5in"/>
+
+        </pageTemplate>
+    </template>
+
+    <stylesheet>
+        <paraStyle name="title"
+            fontName="Helvetica-Bold"
+            fontSize="14"
+            alignment="center"
+            spaceAfter="7"/>
+        <paraStyle name="tableHeader"
+            fontName="Helvetica-Bold"
+            fontSize="12"
+            alignment="center"
+            borderWidth="1"
+            borderColor="black"
+            leading="16"
+            backColor="lightgrey"/>
+        <paraStyle name="monthlyTotal"
+            fontName="Helvetica-Bold"
+            fontSize="14"/>
+        <blockTableStyle id="infoGrid">
+            <lineStyle kind="grid"  colorName="black" thickness="1" start="0,0" stop="-1,-1" />
+        </blockTableStyle>
+        <blockTableStyle id="budgetGrid" keepWithNext="true">
+            <lineStyle kind="grid" colorName="black" thickness="1" start="0,0" stop="-1,-1" />
+            <blockTextColor start="-1,-1" stop="-1,-1" colorName="#c00000"/>
+        </blockTableStyle>
+    </stylesheet>
+
+    <story>
+        <para style="title"><u>Tiny Hands Nepal – Monthly Money Distribution Form</u></para>
+        <blockTable colWidths="50% 50%" style="infoGrid">
+            <tr>
+                <td>Station: {{ name }}</td>
+                <td>Date: {{ date }}</td>
+            </tr>
+        </blockTable>
+
+        <nextFrame/>
+
+        {% for section in sections %}
+        <condPageBreak height="{{ section.height_required }}in"/>
+        <para style="tableHeader">{{ section.title }}</para>
+        <blockTable colWidths="70% 30%" style="budgetGrid">
+            {% for item in section.items %}
+            <tr>
+                <td>{{ item.name }}</td>
+                <td>{{ item.value|intcomma }}</td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td><para><b><u>Total</u></b></para></td>
+                <td>{{ section.total|intcomma }}</td>
+            </tr>
+        </blockTable>
+        <spacer length="10"/>
+        {% endfor %}
+
+        <spacer length="5"/>
+        <para style="monthlyTotal">
+            <b><u>Monthly Total:</u></b> <font color="#c00000">{{ total|intcomma }}</font>
+        </para>
+    </story>
+</document>
