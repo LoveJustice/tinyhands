@@ -34,5 +34,5 @@ class TallyDaysView(APIView):
             foo.append(day_records)
             i += 1
         results['days'] = foo
-        results['ytd'] = Interceptee.objects.filter(interception_record__date_time_of_interception__year=today.year).count()
+        results['ytd'] = Interceptee.objects.filter(kind='v', interception_record__date_time_of_interception__year=today.year).count()
         return Response(results, status=status.HTTP_200_OK)
