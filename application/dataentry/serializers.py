@@ -81,7 +81,7 @@ class BorderStationSerializer(serializers.ModelSerializer):
         return obj.staff_set.all().count()
 
     def get_ytd_interceptions(self, obj):
-        return Interceptee.objects.filter(interception_record__irf_number__startswith=obj.station_code, interception_record__date_time_of_interception__year=datetime.date.today().year).count()
+        return Interceptee.objects.filter(interception_record__irf_number__startswith=obj.station_code, kind='v', interception_record__date_time_of_interception__year=datetime.date.today().year).count()
 
 
 class InterceptionRecordListSerializer(serializers.ModelSerializer):
