@@ -10,7 +10,7 @@ z3c.rml docs can be found on their github page: https://github.com/zopefoundatio
 <!DOCTYPE document SYSTEM "rml.dtd">
 <document filename="outfile.pdf">
     <template  showBoundary="0">
-        <pageTemplate id="main" pagesize="LETTER">
+        <pageTemplate id="first" pagesize="LETTER">
             <pageGraphics>
                 <setFont name="Helvetica" size="10"/>
             </pageGraphics>
@@ -18,6 +18,10 @@ z3c.rml docs can be found on their github page: https://github.com/zopefoundatio
             <frame id="leftColumn" x1=".5in" y1=".5in" width="3.5in" height="9.5in"/>
             <frame id="rightColumn" x1="4.5in" y1=".5in" width="3.5in" height="9.5in"/>
 
+        </pageTemplate>
+        <pageTemplate id="following" pagesize="LETTER">
+            <frame id="leftColumn" x1=".5in" y1=".5in" width="3.5in" height="10in"/>
+            <frame id="rightColumn" x1="4.5in" y1=".5in" width="3.5in" height="10in"/>
         </pageTemplate>
     </template>
 
@@ -57,9 +61,10 @@ z3c.rml docs can be found on their github page: https://github.com/zopefoundatio
         </blockTable>
 
         <nextFrame/>
+        <setNextTemplate name="following" />
 
         {% for section in sections %}
-        <condPageBreak height="{{ section.height_required }}in"/>
+        <condPageBreak height="{{ section.height_required }}"/>
         <para style="tableHeader">{{ section.title }}</para>
         <blockTable colWidths="70% 30%" style="budgetGrid">
             {% for item in section.items %}

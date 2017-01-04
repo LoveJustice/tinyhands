@@ -17,7 +17,7 @@ class BudgetTable:
 
     @property
     def height_required(self):
-        return len(self.items) * 0.25 + 0.5
+        return len(self.items) * 18 + 54
 
 
 class MoneyDistributionFormHelper:
@@ -104,14 +104,14 @@ class MoneyDistributionFormHelper:
             items.append(BudgetLineItem('Booth', self.budget.administration_booth_amount))
         if self.budget.administration_registration:
             items.append(BudgetLineItem('Registration', self.budget.administration_registration_amount))
-        return items
+        return items + self.get_other_items(BorderStationBudgetCalculation.ADMINISTRATION)
 
     @property
     def medical_items(self):
         items = []
         if self.budget.medical_last_months_expense > 0:
             items.append(BudgetLineItem('Expense', self.budget.medical_last_months_expense))
-        return items
+        return items + self.get_other_items(BorderStationBudgetCalculation.MEDICAL)
 
     @property
     def miscellaneous_items(self):
