@@ -16,6 +16,7 @@ class BorderStationBudgetCalculation(models.Model):
     COMMUNICATION = 7
     STAFF = 8
     MEDICAL = 9
+    ADMINISTRATION = 10
 
     date_time_entered = models.DateTimeField(auto_now_add=True)
     date_time_last_updated = models.DateTimeField(auto_now=True)
@@ -125,7 +126,12 @@ class BorderStationBudgetCalculation(models.Model):
             total += self.administration_booth_amount
         if self.administration_registration:
             total += self.administration_registration_amount
-        return total
+        return total + self.administration_extra_items_total()
+
+
+    def administration_extra_items_total(self):
+        items = self.otherbudgetitemcost_set.filter(form_section=self.ADMINISTRATION)
+        return sum(item.cost for item in items)
 
     medical_last_months_expense = models.PositiveIntegerField("Last month's medical expense", default=0)
 
@@ -296,7 +302,9 @@ class OtherBudgetItemCost(models.Model):
         (BorderStationBudgetCalculation.SHELTER, 'Shelter'),
         (BorderStationBudgetCalculation.FOOD_AND_GAS, 'FoodGas'),
         (BorderStationBudgetCalculation.COMMUNICATION, 'Communication'),
-        (BorderStationBudgetCalculation.STAFF, 'Staff')
+        (BorderStationBudgetCalculation.STAFF, 'Staff'),
+        (BorderStationBudgetCalculation.MEDICAL, 'Medical'),
+        (BorderStationBudgetCalculation.ADMINISTRATION, 'Administration')
     ]
     name = models.CharField(max_length=255, blank=False)
     cost = models.PositiveIntegerField(default=0, blank=False)

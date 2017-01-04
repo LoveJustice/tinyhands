@@ -6,6 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from dataentry.models import Interceptee
 from dataentry.models import InterceptionRecord
 
 
@@ -33,4 +34,5 @@ class TallyDaysView(APIView):
             foo.append(day_records)
             i += 1
         results['days'] = foo
+        results['ytd'] = Interceptee.objects.filter(kind='v', interception_record__date_time_of_interception__year=today.year).count()
         return Response(results, status=status.HTTP_200_OK)

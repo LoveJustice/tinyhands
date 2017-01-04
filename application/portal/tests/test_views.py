@@ -27,8 +27,11 @@ class TallyApiTests(WebTest):
         json = response.json
         self.assertEquals(response.status_code, 200)
 
+        # Check Year to date interceptions - we set up 3 interceptees, so it should be 3
+        self.assertEquals(json['ytd'], 3)
+
         # make sure we are getting the past 7 days
-        self.assertEquals(len(json), 2)
+        self.assertEquals(len(json), 3)
         self.assertEquals(json['id'], self.superuser.id)
 
         # Test that today entry is right
