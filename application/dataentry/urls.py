@@ -1,4 +1,6 @@
 from django.conf.urls import url
+from django.views.generic import RedirectView
+
 from dataentry.views import *
 
 urlpatterns = [
@@ -8,7 +10,6 @@ urlpatterns = [
     url(r'^irfs/update/(?P<pk>\d+)/$', InterceptionRecordUpdateView.as_view(), name='interceptionrecord_update'),
     # Create a url that will have a border station argument and will list irfs for that specific BD station
 
-    url(r'^vifs/$', VictimInterviewListView.as_view(), name='victiminterview_list'),
     url(r'^vifs/(?P<pk>\d+)/$', VictimInterviewDetailView.as_view(), name='victiminterview_detail'),
     url(r'^vifs/create/$', VictimInterviewCreateView.as_view(), name='victiminterview_create'),
     url(r'^vifs/update/(?P<pk>\d+)/$', VictimInterviewUpdateView.as_view(), name='victiminterview_update'),
@@ -21,5 +22,10 @@ urlpatterns = [
     url(r'^geocodelocations/address1/create/$', Address1CreateView.as_view(), name='address1_create_page'),
 
     url(r'^geocodelocation/address2/$', GeoCodeAddress2APIView.as_view()),
-    url(r'^geocodelocations/address2/create/$', Address2CreateView.as_view(), name='address2_create_page')
+    url(r'^geocodelocations/address2/create/$', Address2CreateView.as_view(), name='address2_create_page'),
+
+
+    # redirect views so that when they try to access old urls they are used to, it redirects them to the proper location in the client
+    url(r'^vifs/$', RedirectView.as_view(url=settings.CLIENT_DOMAIN + '/vif'), name='victiminterview_list'),
+    url(r'^irfs/$', RedirectView.as_view(url=settings.CLIENT_DOMAIN + '/irf'), name='interceptionrecord_list'),
 ]
