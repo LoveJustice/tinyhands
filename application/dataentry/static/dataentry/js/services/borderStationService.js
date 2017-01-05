@@ -13,7 +13,7 @@ function borderStationService($http) {
 
 	function retrieveStaff(borderStationCod) {
         // grab all of the staff for this station
-        return $http.get('/api/staff/' + borderStationCod + '/').
+        return $http.get('/api/border-station/' + borderStationCod + '/staff/').
             success(function (data) {
                 return data;
             }).
@@ -24,7 +24,7 @@ function borderStationService($http) {
     
     function retrieveLocations(borderStationCode) {
         // grab all of the locations for this station
-        return $http.get('/api/location/' + borderStationCode + '/').
+        return $http.get('/api/border-station/' + borderStationCode + '/location/').
             success(function (data) {
                 return data;
             }).

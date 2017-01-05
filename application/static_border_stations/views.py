@@ -57,7 +57,7 @@ class LocationViewSet(BorderStationRestAPI):
     queryset = Location.objects.all()
     serializer_class = LocationSerializer
     
-    def location_retrieve(self, request, *args, **kwargs):
+    def retrieve_border_station_locations(self, request, *args, **kwargs):
         """
             retrieve all locations for a particular border_station
         """
@@ -75,7 +75,7 @@ class StaffViewSet(BorderStationRestAPI):
     queryset = Staff.objects.all()
     serializer_class = StaffSerializer
 
-    def staff_retrieve(self, request, *args, **kwargs):
+    def retrieve_border_station_staff(self, request, *args, **kwargs):
         """
             retrieve all the staff for a particular border_station
         """
