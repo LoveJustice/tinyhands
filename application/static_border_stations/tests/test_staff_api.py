@@ -71,7 +71,7 @@ class StaffTests(RestApiTestCase):
 
     def test_update_Staff(self):
         self.login(EditBorderStationUser.create())
-        url = reverse('StaffForBorderStation', args=[self.staff.id])
+        url = reverse('StaffDetail', args=[self.staff.id])
 
         data = {
             "email": "TEST@TEST.COM",
@@ -89,7 +89,7 @@ class StaffTests(RestApiTestCase):
 
     def test_delete_Staff(self):
         self.login(DeleteBorderStationUser.create())
-        delete_url = reverse('StaffForBorderStation', args=[self.staff.id])
+        delete_url = reverse('StaffDetail', args=[self.staff.id])
         url = reverse('StaffForBorderStation', args=[self.staff.border_station.id])
 
         staff_count = len(self.client.get(url).data)
@@ -107,8 +107,8 @@ class StaffTests(RestApiTestCase):
             mem.save()
 
         self.login(DeleteBorderStationUser.create())
-        url = reverse('Staff') + "?border_station=" + str(self.staff.border_station_id)
+        url = reverse('StaffForBorderStation', args=[self.staff.border_station.id])
 
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["count"], 5)
+        self.assertEqual(len(response.data), 5)
