@@ -22,9 +22,9 @@ function borderStationService($http) {
             });
     }
     
-    function retrieveLocations(borderStationCod) {
+    function retrieveLocations(borderStationCode) {
         // grab all of the locations for this station
-        return $http.get('/api/location/' + borderStationCod + '/').
+        return $http.get('/api/location/' + borderStationCode + '/').
             success(function (data) {
                 return data;
             }).
@@ -33,8 +33,8 @@ function borderStationService($http) {
             });
     }
 
-    function getStationID(borderStationCod) {
-        return $.get( '/api/get_station_id/', {"code": borderStationCod}).
+    function getStationID(borderStationCode) {
+        return $.get( '/api/get_station_id/', {"code": borderStationCode}).
             success(function(data) {
                 return data;
             }).
