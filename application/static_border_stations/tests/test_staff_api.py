@@ -63,7 +63,7 @@ class StaffTests(RestApiTestCase):
 
     def test_get_Staff(self):
         self.login(ViewBorderStationUser.create())
-        url = reverse('StaffDetail', args=[self.staff.border_station.id])
+        url = reverse('StaffForBorderStation', args=[self.staff.border_station.id])
 
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -71,7 +71,7 @@ class StaffTests(RestApiTestCase):
 
     def test_update_Staff(self):
         self.login(EditBorderStationUser.create())
-        url = reverse('StaffDetail', args=[self.staff.id])
+        url = reverse('StaffForBorderStation', args=[self.staff.id])
 
         data = {
             "email": "TEST@TEST.COM",
@@ -89,8 +89,8 @@ class StaffTests(RestApiTestCase):
 
     def test_delete_Staff(self):
         self.login(DeleteBorderStationUser.create())
-        delete_url = reverse('StaffDetail', args=[self.staff.id])
-        url = reverse('StaffDetail', args=[self.staff.border_station.id])
+        delete_url = reverse('StaffForBorderStation', args=[self.staff.id])
+        url = reverse('StaffForBorderStation', args=[self.staff.border_station.id])
 
         staff_count = len(self.client.get(url).data)
 
@@ -98,7 +98,7 @@ class StaffTests(RestApiTestCase):
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
         new_staff_count = len(self.client.get(url).data)
-        url = reverse('StaffDetail', args=[self.staff.border_station.id])
+        url = reverse('StaffForBorderStation', args=[self.staff.border_station.id])
         self.assertNotEqual(staff_count, new_staff_count)
 
     def test_get_Staff_by_border_station(self):

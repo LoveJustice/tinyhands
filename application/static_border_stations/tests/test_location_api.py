@@ -60,7 +60,7 @@ class LocationTests(RestApiTestCase):
 
     def test_get_Location(self):
         self.login(ViewBorderStationUser.create())
-        url = reverse('LocationDetail', args=[self.location.border_station.id])
+        url = reverse('LocationsForBorderStation', args=[self.location.border_station.id])
 
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -68,7 +68,7 @@ class LocationTests(RestApiTestCase):
 
     def test_update_Location(self):
         self.login(EditBorderStationUser.create())
-        url = reverse('LocationDetail', args=[self.location.id])
+        url = reverse('LocationsForBorderStation', args=[self.location.id])
 
         data = {
             "name": "asdfasdf",
@@ -83,8 +83,8 @@ class LocationTests(RestApiTestCase):
         
     def test_delete_Location(self):
         self.login(DeleteBorderStationUser.create())
-        delete_url = reverse('LocationDetail', args=[self.location.id])
-        url = reverse('LocationDetail', args=[self.location.border_station.id])
+        delete_url = reverse('LocationsForBorderStation', args=[self.location.id])
+        url = reverse('LocationsForBorderStation', args=[self.location.border_station.id])
 
         location_count = len(self.client.get(url).data)
 
@@ -92,7 +92,7 @@ class LocationTests(RestApiTestCase):
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
         new_location_count = len(self.client.get(url).data)
-        url = reverse('LocationDetail', args=[self.location.border_station.id])
+        url = reverse('LocationsForBorderStation', args=[self.location.border_station.id])
         self.assertNotEqual(location_count, new_location_count)
 
     def test_get_Location_by_border_station(self):
