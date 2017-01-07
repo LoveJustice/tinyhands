@@ -29,7 +29,10 @@ class TestAccountsSerializer(TestCase):
             "permission_border_stations_add": True,
             "permission_border_stations_edit": True,
             "permission_address2_manage": True,
-            "permission_budget_manage": True,
+            "permission_budget_view": True,
+            "permission_budget_add": True,
+            "permission_budget_edit":  True,
+            "permission_budget_delete": True,
         }
 
     def test_create_with_valid_email(self):

@@ -23,7 +23,7 @@ from static_border_stations.serializers import StaffSerializer, CommitteeMemberS
 
 class MoneyDistribution(viewsets.ViewSet):
     permission_classes = [IsAuthenticated, HasPermission]
-    permissions_required = ['permission_budget_manage']
+    permissions_required = ['permission_budget_view']
 
     def retrieve(self, request, pk):
         border_station = BorderStationBudgetCalculation.objects.get(pk=pk).border_station
@@ -66,7 +66,7 @@ class MoneyDistribution(viewsets.ViewSet):
 
 
 class PDFView(View, LoginRequiredMixin, PermissionsRequiredMixin):
-    permissions_required = ['permission_budget_manage']
+    permissions_required = ['permission_budget_view']
     filename = 'report.pdf'
     template_name = ''
 
@@ -101,7 +101,7 @@ class PDFView(View, LoginRequiredMixin, PermissionsRequiredMixin):
 
 
 class MoneyDistributionFormPDFView(PDFView, LoginRequiredMixin, PermissionsRequiredMixin):
-    permissions_required = ['permission_budget_manage']
+    permissions_required = ['permission_budget_view']
     template_name = 'budget/MoneyDistributionTemplate.rml'
     filename = 'Monthly-Money-Distribution-Form.pdf'
 

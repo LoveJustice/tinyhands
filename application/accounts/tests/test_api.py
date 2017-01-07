@@ -65,7 +65,10 @@ class AccountsPostTests(RestApiTestCase):
             'permission_border_stations_add': True,
             'permission_border_stations_edit': True,
             'permission_vdc_manage': True,
-            'permission_budget_manage': True,
+            'permission_budget_view': True,
+            'permission_budget_add': True,
+            'permission_budget_edit':  True,
+            'permission_budget_delete': True,
         }
 
     def test_when_not_authenticated_should_deny_access(self):
@@ -153,7 +156,10 @@ class AccountPutTests(RestApiTestCase):
             'permission_border_stations_add': True,
             'permission_border_stations_edit': True,
             'permission_address2_manage': True,
-            'permission_budget_manage': True,
+            'permission_budget_view': True,
+            'permission_budget_add': True,
+            'permission_budget_edit':  True,
+            'permission_budget_delete': True,
         }
         return update_user
 
@@ -276,7 +282,10 @@ class DefaultPermissionsSetsPostTests(RestApiTestCase):
         'permission_border_stations_add': True,
         'permission_border_stations_edit': True,
         'permission_address2_manage': True,
-        'permission_budget_manage': True,
+        'permission_budget_view': True,
+        'permission_budget_add': True,
+        'permission_budget_edit':  True,
+        'permission_budget_delete': True,
     }
 
     def test_when_not_authenticated_should_deny_access(self):
@@ -364,7 +373,10 @@ class DefaultPermissionsSetPutTests(RestApiTestCase):
             'permission_border_stations_add': True,
             'permission_border_stations_edit': True,
             'permission_address2_manage': True,
-            'permission_budget_manage': True,
+            'permission_budget_view': True,
+            'permission_budget_add': True,
+            'permission_budget_edit':  True,
+            'permission_budget_delete': True,
         }
         return update_permission_set
 

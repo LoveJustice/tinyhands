@@ -19,7 +19,7 @@ class BudgetViewSet(viewsets.ModelViewSet):
     queryset = BorderStationBudgetCalculation.objects.all()
     serializer_class = BorderStationBudgetCalculationSerializer
     permission_classes = [IsAuthenticated, HasPermission]
-    permissions_required = ['permission_budget_manage']
+    permissions_required = ['permission_budget_view']
     filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
     search_fields = ['border_station__station_name', 'border_station__station_code']
     ordering_fields = ['border_station__station_name', 'border_station__station_code', 'month_year', 'date_time_entered', 'date_time_last_updated']
@@ -126,7 +126,7 @@ class OtherItemsViewSet(viewsets.ModelViewSet):
     queryset = OtherBudgetItemCost.objects.all()
     serializer_class = OtherBudgetItemCostSerializer
     permission_classes = [IsAuthenticated, HasPermission]
-    permissions_required = ['permission_budget_manage']
+    permissions_required = ['permission_budget_view']
     filter_backends = (filters.DjangoFilterBackend,)
     filter_fields = ('form_section',)
 
@@ -150,7 +150,7 @@ class StaffSalaryViewSet(viewsets.ModelViewSet):
     queryset = StaffSalary.objects.all()
     serializer_class = StaffSalarySerializer
     permission_classes = [IsAuthenticated, HasPermission]
-    permissions_required = ['permission_budget_manage']
+    permissions_required = ['permission_budget_view']
 
     def budget_calc_retrieve(self, request, *args, **kwargs):
         """
