@@ -21,7 +21,8 @@ class DefaultPermissionsSet(models.Model):
     permission_vif_edit = models.BooleanField(default=False)
     permission_vif_delete = models.BooleanField(default=False)
     permission_accounts_manage = models.BooleanField(default=False)
-    permission_receive_email = models.BooleanField(default=False)
+    permission_receive_investigation_alert = models.BooleanField(default=False)
+    permission_receive_legal_alert = models.BooleanField(default=False)
     permission_border_stations_view = models.BooleanField(default=False)
     permission_border_stations_add = models.BooleanField(default=False)
     permission_border_stations_edit = models.BooleanField(default=False)
@@ -36,10 +37,15 @@ class DefaultPermissionsSet(models.Model):
         return self.accounts.count() > 0
 
     def email_accounts(self, alert, context={}):
-        accounts = self.accounts.all()
+        if alert.is_investigation():
+            accounts = self.accounts.filter(permission_receive_investigation_alert=True)
+        elif alert.is_legal():
+            accounts = self.accounts.filter(permission_receive_legal_alert=True)
+        else:
+            raise Exception('Alert type must be either legal or investigation')
+
         for account in accounts:
-            if account.permission_receive_email:
-                account.email_user("alerts/" + alert.email_template, alert, context)
+            account.email_user("alerts/" + alert.email_template, alert, context)
 
 
 class AccountManager(BaseUserManager):
@@ -86,7 +92,8 @@ class Account(AbstractBaseUser, PermissionsMixin):
     permission_vif_edit = models.BooleanField(default=False)
     permission_vif_delete = models.BooleanField(default=False)
     permission_accounts_manage = models.BooleanField(default=False)
-    permission_receive_email = models.BooleanField(default=False)
+    permission_receive_investigation_alert = models.BooleanField(default=False)
+    permission_receive_legal_alert = models.BooleanField(default=False)
     permission_border_stations_view = models.BooleanField(default=False)
     permission_border_stations_add = models.BooleanField(default=False)
     permission_border_stations_edit = models.BooleanField(default=False)
@@ -133,10 +140,14 @@ class Account(AbstractBaseUser, PermissionsMixin):
             context=context
         )
 
-    def send_activation_email(self):
+    def send_activation_email(self, email_type):
+        if email_type == 'reset':
+            template = 'reset_password_link'
+        else:
+            template = 'new_user_password_link'
         activation_url = settings.CLIENT_DOMAIN + '/account/activate/' + self.activation_key
         send_templated_mail(
-            template_name='new_user_password_link',
+            template_name=template,
             from_email=settings.ADMIN_EMAIL_SENDER,
             recipient_list=[self.email],
             context={
@@ -152,6 +163,9 @@ class AlertManager(models.Manager):
 
 
 class Alert(models.Model):
+    LEGAL_CODES = ['fir and dofe against', 'strength of case']
+    INVESTIGATION_CODES = ['Name Match', 'Identified Trafficker']
+
     code = models.CharField(max_length=255, unique=True)
     email_template = models.CharField(max_length=255)
 
@@ -168,3 +182,9 @@ class Alert(models.Model):
     def email_permissions_set(self, context={}):
         for x in self.permissions_group.all():
             x.email_accounts(self, context)
+
+    def is_investigation(self):
+        return self.code in self.INVESTIGATION_CODES
+
+    def is_legal(self):
+        return self.code in self.LEGAL_CODES

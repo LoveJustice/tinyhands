@@ -62,6 +62,6 @@ class AccountTest(unittest.TestCase):
     def test_send_activation_email(self):
         account = SuperUserFactory.create()
 
-        account.send_activation_email()
+        account.send_activation_email('activate')
 
         self.assertEqual(mail.outbox[1].to[0], account.email)
