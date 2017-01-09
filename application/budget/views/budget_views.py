@@ -60,18 +60,19 @@ def previous_data(request, pk, month, year):
     date = datetime.datetime(int(year), int(month), 15)  # We pass the Month_year as two key-word arguments because the day is always 15
     budget_sheets = BorderStationBudgetCalculation.objects.filter(border_station=pk, month_year__lte=date).order_by('-date_time_entered')  # filter them so the first element is the most recent
 
+    border_station = BorderStation.objects.get(pk=pk)
+    staff_count = border_station.staff_set.count()
+
+    # Last month data will count records from the 15th of previous month to 14th of budget sheet month
+    all_interception_records = InterceptionRecord.objects.annotate(interceptee_count=Count("interceptees")).filter(irf_number__startswith=border_station.station_code)
+    last_months = all_interception_records.filter(date_time_of_interception__gte=(date+relativedelta(months=-1)), date_time_of_interception__lte=date)
+    last_3_months = all_interception_records.filter(date_time_of_interception__gte=(date+relativedelta(months=-3)), date_time_of_interception__lte=date)
+
+    last_months_count = last_months.aggregate(total=Sum('number_of_victims'))
+    last_3_months_count = last_3_months.aggregate(total=Sum('number_of_victims'))
+    all_interception_records_count = all_interception_records.aggregate(total=Sum('number_of_victims'))
+    
     if budget_sheets:  # If this border station has had a previous budget calculation worksheet
-        border_station = BorderStation.objects.get(pk=pk)
-        staff_count = border_station.staff_set.count()
-
-        all_interception_records = InterceptionRecord.objects.annotate(interceptee_count=Count("interceptees")).filter(irf_number__startswith=border_station.station_code)
-        last_months = all_interception_records.filter(date_time_of_interception__gte=(date+relativedelta(months=-1)), date_time_of_interception__lte=date)
-        last_3_months = all_interception_records.filter(date_time_of_interception__gte=(date+relativedelta(months=-3)), date_time_of_interception__lte=date)
-
-        last_months_count = last_months.aggregate(total=Sum('number_of_victims'))
-        last_3_months_count = last_3_months.aggregate(total=Sum('number_of_victims'))
-        all_interception_records_count = all_interception_records.aggregate(total=Sum('number_of_victims'))
-
         last_3_months_count_divide = last_3_months_count['total']
         if last_3_months_count['total'] is None:
             last_3_months_count['total'] = 0
@@ -111,13 +112,13 @@ def previous_data(request, pk, month, year):
         )
     # If this border station has not had a previous budget calculation worksheet
     return Response(
-        {"all": 0,
+        {"all": all_interception_records_count['total'],
          "all_cost": 0,
-         "last_month": 0,
+         "last_month": last_months_count['total'],
          "last_months_cost": 0,
-         "last_3_months": 0,
+         "last_3_months": last_3_months_count['total'],
          "last_3_months_cost": 0,
-         "staff_count": 0,
+         "staff_count": staff_count,
          "last_months_total_cost": 0
          })
 
