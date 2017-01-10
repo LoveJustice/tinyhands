@@ -391,7 +391,7 @@ class InterceptionRecordViewSet(viewsets.ModelViewSet):
     ordering_fields = (
         'irf_number', 'staff_name', 'number_of_victims', 'number_of_traffickers', 'date_time_of_interception',
         'date_time_entered_into_system', 'date_time_last_updated',)
-    ordering = ('irf_number',)
+    ordering = ('date_time_of_interception',)
 
     def destroy(self, request, *args, **kwargs):
         irf_id = kwargs['pk']
@@ -445,9 +445,9 @@ class VictimInterviewViewSet(viewsets.ModelViewSet):
     search_fields = ('vif_number',)
     ordering_fields = (
         'vif_number', 'interviewer', 'number_of_victims', 'number_of_traffickers', 'date',
-        'date_time_entered_into_system',
+        'date_time_entered_into_system', 'date',
         'date_time_last_updated',)
-    ordering = ('vif_number',)
+    ordering = ('date',)
 
 
 class VictimInterviewDetailViewSet(viewsets.ModelViewSet):
