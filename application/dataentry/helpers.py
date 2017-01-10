@@ -16,16 +16,22 @@ def related_items_helper(self, obj):
     ]
 
     for relationship in relationships:
-        if relationship.related_model._meta.model_name =='victiminterviewlocationbox':
-            related_items_list.append({
-                "type": relationship.related_model._meta.model_name,
-                "ids": [model.victim_interview_id for model in relationship.related_model.objects.filter(**{relationship.remote_field.name: obj})]
-            })
-            continue
-
+        type = relationship.related_model._meta.model_name
         related_items_list.append({
-            "type": relationship.related_model._meta.model_name,
-            "ids": [model.id for model in relationship.related_model.objects.filter(**{relationship.remote_field.name: obj})]
+            "type": type,
+            "objects": [get_response_object_from_type(type, model) for model in relationship.related_model.objects.filter(**{relationship.remote_field.name: obj})]
         })
-
+    print related_items_list
     return related_items_list
+
+
+def get_response_object_from_type(type, object):
+    if type == 'address2':
+        return {"name": object.name, "id": object.id}
+    elif type == 'person':
+        return {"name": object.full_name, "id": object.id}
+    elif type == 'victiminterviewlocationbox':
+        return {"name": object.victim_interview.vif_number, "id": object.victim_interview.id}
+    elif type == 'victiminterview':
+        return {"name": object.vif_number, "id": object.id}
+    return {}
