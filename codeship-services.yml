@@ -34,7 +34,6 @@ web:
 
 nginx:
   build:
-    context: build/nginx
     image: tusoftwarestudio/dreamsuite-nginx
     dockerfile_path: build/nginx/Dockerfile
   links:
