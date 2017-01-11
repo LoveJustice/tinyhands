@@ -30,6 +30,8 @@ nginx:
     - web:web
   volumes:
     - /tmp:/log
+    - build/nginx/media:/data/media
+    - build/nginx/static:/data/dreamsuite/static
   volumes_from:
     - data
   ports:
@@ -38,4 +40,3 @@ nginx:
   env_file:
     - ./common.env
     - ./local.env
-
