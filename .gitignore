@@ -4,6 +4,7 @@
 *.stackdump
 *.sw[op]
 *~
+codeship.aes
 
 google_cred.json
 dreamsuite_tag
