@@ -33,3 +33,19 @@
   service: nginx
   type: push
   registry: https://index.docker.io/v1/
+
+- name: push_ds_test
+  tag: feature/codeship-docker
+  image_name: tusoftwarestudio/dreamsuite
+  image_tag: "{{ .CommitID }}"
+  service: nginx
+  type: push
+  registry: https://index.docker.io/v1/
+
+- name: push_nginx_test
+  tag: feature/codeship-docker
+  image_name: tusoftwarestudio/dreamsuite-nginx
+  image_tag: "{{ .CommitID }}"
+  service: nginx
+  type: push
+  registry: https://index.docker.io/v1/
