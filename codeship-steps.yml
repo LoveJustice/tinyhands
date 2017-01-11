@@ -42,7 +42,7 @@
   tag: feature/codeship-docker
   image_name: tusoftwarestudio/dreamsuite
   image_tag: "{{ .CommitID }}"
-  service: nginx
+  service: web
   type: push
   registry: https://index.docker.io/v1/
   encrypted_dockercfg_path: dockercfg.encrypted
