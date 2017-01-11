@@ -34,8 +34,9 @@ web:
 
 nginx:
   build:
+    context: build/nginx
     image: tusoftwarestudio/dreamsuite-nginx
-    dockerfile_path: build/nginx/Dockerfile
+    dockerfile_path: Dockerfile
   links:
     - web
   volumes_from:
