@@ -1,5 +1,5 @@
 #!/bin/bash
 
-sleep 10s
+sleep 1m
 
 python /data/manage.py test
