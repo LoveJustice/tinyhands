@@ -18,6 +18,7 @@
   service: nginx
   type: push
   registry: https://index.docker.io/v1/
+  encrypted_dockercfg_path: dockercfg.encrypted
 
 - name: deploy
   # tag: ^(master|develop|feature/codeship-docker)
