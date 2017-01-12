@@ -2,24 +2,8 @@
   service: web
   command: sh /data/bin/run-codeship.sh
 
-- name: push_ds_develop
-  tag: develop
-  image_name: tusoftwarestudio/dreamsuite
-  image_tag: "{{ .CommitID }}"
-  service: web
-  type: push
-  registry: https://index.docker.io/v1/
-
-- name: push_nginx_develop
-  tag: develop
-  image_name: tusoftwarestudio/dreamsuite-nginx
-  image_tag: "{{ .CommitID }}"
-  service: nginx
-  type: push
-  registry: https://index.docker.io/v1/
-
-- name: push_ds_master
-  tag: master
+- name: push_dreamsuite
+  # tag: ^(master|develop)
   image_name: tusoftwarestudio/dreamsuite
   image_tag: "{{ .CommitID }}"
   service: web
@@ -27,31 +11,16 @@
   registry: https://index.docker.io/v1/
   encrypted_dockercfg_path: dockercfg.encrypted
 
-
-- name: push_nginx_master
-  tag: master
+- name: push_nginx
+  # tag: ^(master|develop)
   image_name: tusoftwarestudio/dreamsuite-nginx
   image_tag: "{{ .CommitID }}"
   service: nginx
   type: push
   registry: https://index.docker.io/v1/
-  encrypted_dockercfg_path: dockercfg.encrypted
 
-
-- name: push_ds_test
-  tag: feature/codeship-docker
-  image_name: tusoftwarestudio/dreamsuite
-  image_tag: "{{ .CommitID }}"
-  service: web
-  type: push
-  registry: https://index.docker.io/v1/
-  encrypted_dockercfg_path: dockercfg.encrypted
-
-- name: push_nginx_test
-  tag: feature/codeship-docker
-  image_name: tusoftwarestudio/dreamsuite-nginx
-  image_tag: "{{ .CommitID }}"
-  service: nginx
-  type: push
-  registry: https://index.docker.io/v1/
-  encrypted_dockercfg_path: dockercfg.encrypted
+- name: deploy
+  # tag: ^(master|develop|feature/codeship-docker)
+  service: deploy
+  command: sh /run.sh
+  encrypted_dockercfg_path: deploycfg.encrypted

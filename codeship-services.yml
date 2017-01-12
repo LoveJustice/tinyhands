@@ -44,3 +44,9 @@ nginx:
   ports:
     - "80:80"
     - "443:443"
+
+deploy:
+  build:
+    context: build/deploy
+    dockerfile_path: Dockerfile
+    
