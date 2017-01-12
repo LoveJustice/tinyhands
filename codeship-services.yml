@@ -30,7 +30,7 @@ web:
     SITE_HOSTNAME: localhost
     DJANGO_SECRET_KEY: thisissosecretfordevelopment
     CLIENT_BASE_URL: http://localhost:3000/#
-    EMAIL_HOST_PASSWORD: thiAdmin@977
+    EMAIL_HOST_PASSWORD: notarealpassword
 
 nginx:
   build:
@@ -50,4 +50,3 @@ deploy:
     context: build/deploy
     dockerfile_path: Dockerfile
   encrypted_env_file: deploycfg.env.encrypted
-    
