@@ -2,22 +2,22 @@
   service: web
   command: sh /data/bin/run-codeship.sh
 
-- name: push_dreamsuite
-  # tag: ^(master|develop)
-  image_name: tusoftwarestudio/dreamsuite
-  image_tag: "{{ .CommitID }}"
-  service: web
-  type: push
-  registry: https://index.docker.io/v1/
-  encrypted_dockercfg_path: dockercfg.encrypted
-
-- name: push_nginx
-  # tag: ^(master|develop)
-  image_name: tusoftwarestudio/dreamsuite-nginx
-  image_tag: "{{ .CommitID }}"
-  service: nginx
-  type: push
-  registry: https://index.docker.io/v1/
+# - name: push_dreamsuite
+#   # tag: ^(master|develop)
+#   image_name: tusoftwarestudio/dreamsuite
+#   image_tag: "{{ .CommitID }}"
+#   service: web
+#   type: push
+#   registry: https://index.docker.io/v1/
+#   encrypted_dockercfg_path: dockercfg.encrypted
+#
+# - name: push_nginx
+#   # tag: ^(master|develop)
+#   image_name: tusoftwarestudio/dreamsuite-nginx
+#   image_tag: "{{ .CommitID }}"
+#   service: nginx
+#   type: push
+#   registry: https://index.docker.io/v1/
 
 - name: deploy
   # tag: ^(master|develop|feature/codeship-docker)
