@@ -49,4 +49,5 @@ deploy:
   build:
     context: build/deploy
     dockerfile_path: Dockerfile
+  encrypted_env_file: deploycfg.env.encrypted
     

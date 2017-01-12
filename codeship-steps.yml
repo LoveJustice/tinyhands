@@ -23,5 +23,4 @@
 - name: deploy
   # tag: ^(master|develop|feature/codeship-docker)
   service: deploy
-  encrypted_env_file: deploycfg.env.encrypted
   command: sh /run.sh
