@@ -11,8 +11,9 @@ else
   HOST=staging.tinyhandsdreamsuite.org
 fi
 
+echo $CI_BRANCH
 echo copy over dreamsuite tag $CI_COMMIT_ID to $HOST
 scp -rp /dreamsuite_tag thi@$HOST:/home/thi/tinyhands/dreamsuite_tag
 
 echo execute run script
-# ssh thi@staging.tinyhandsdreamsuite.org 'tinyhands/run.sh'
+ssh thi@staging.tinyhandsdreamsuite.org 'tinyhands/run.sh'

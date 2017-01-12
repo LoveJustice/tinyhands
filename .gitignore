@@ -63,3 +63,4 @@ error.log
 .vscode/*
 
 local.env
+deploybot_args.env
