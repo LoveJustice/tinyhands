@@ -28,7 +28,10 @@ class DefaultPermissionsSet(models.Model):
     permission_border_stations_edit = models.BooleanField(default=False)
     permission_border_stations_delete = models.BooleanField(default=False)
     permission_address2_manage = models.BooleanField(default=False)
-    permission_budget_manage = models.BooleanField(default=False)
+    permission_budget_view = models.BooleanField(default=False)
+    permission_budget_add = models.BooleanField(default=False)
+    permission_budget_edit = models.BooleanField(default=False)
+    permission_budget_delete = models.BooleanField(default=False)
 
     def __unicode__(self):
         return self.name
@@ -99,7 +102,10 @@ class Account(AbstractBaseUser, PermissionsMixin):
     permission_border_stations_edit = models.BooleanField(default=False)
     permission_border_stations_delete = models.BooleanField(default=False)
     permission_address2_manage = models.BooleanField(default=False)
-    permission_budget_manage = models.BooleanField(default=False)
+    permission_budget_view = models.BooleanField(default=False)
+    permission_budget_add = models.BooleanField(default=False)
+    permission_budget_edit = models.BooleanField(default=False)
+    permission_budget_delete = models.BooleanField(default=False)
 
     date_joined = models.DateTimeField(default=timezone.now)
 
@@ -140,10 +146,14 @@ class Account(AbstractBaseUser, PermissionsMixin):
             context=context
         )
 
-    def send_activation_email(self):
+    def send_activation_email(self, email_type):
+        if email_type == 'reset':
+            template = 'reset_password_link'
+        else:
+            template = 'new_user_password_link'
         activation_url = settings.CLIENT_DOMAIN + '/account/activate/' + self.activation_key
         send_templated_mail(
-            template_name='new_user_password_link',
+            template_name=template,
             from_email=settings.ADMIN_EMAIL_SENDER,
             recipient_list=[self.email],
             context={

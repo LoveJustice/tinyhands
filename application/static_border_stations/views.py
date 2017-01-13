@@ -21,6 +21,11 @@ class BorderStationViewSet(viewsets.ModelViewSet):
     @list_route()
     def list_all(self, request):
         border_stations = BorderStation.objects.all().order_by('station_name')
+        open_param = request.query_params.get('open', None)
+        if open_param in ['True', 'true']:
+            border_stations = border_stations.filter(open=True)
+        elif open_param in ['False', 'false']:
+            border_stations = border_stations.filter(open=False)
         serializer = self.get_serializer(border_stations, many=True)
         return Response(serializer.data)
 
@@ -51,6 +56,14 @@ class BorderStationRestAPI(viewsets.ModelViewSet):
 class LocationViewSet(BorderStationRestAPI):
     queryset = Location.objects.all()
     serializer_class = LocationSerializer
+    
+    def retrieve_border_station_locations(self, request, *args, **kwargs):
+        """
+            retrieve all locations for a particular border_station
+        """
+        self.object_list = self.filter_queryset(self.get_queryset().filter(border_station=self.kwargs['pk']))
+        serializer = self.get_serializer(self.object_list, many=True)
+        return Response(serializer.data)
 
 
 class CommitteeMemberViewSet(BorderStationRestAPI):
@@ -62,7 +75,7 @@ class StaffViewSet(BorderStationRestAPI):
     queryset = Staff.objects.all()
     serializer_class = StaffSerializer
 
-    def staff_retrieve(self, request, *args, **kwargs):
+    def retrieve_border_station_staff(self, request, *args, **kwargs):
         """
             retrieve all the staff for a particular border_station
         """
