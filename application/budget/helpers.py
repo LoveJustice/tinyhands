@@ -17,6 +17,9 @@ class BudgetTable:
 
     @property
     def height_required(self):
+        # for helping calculate the height required to render the table
+        # using points where 1 point = 1/72 of an inch
+        # 18 * number of items + 18 for the total + 36 for the title
         return len(self.items) * 18 + 54
 
 
