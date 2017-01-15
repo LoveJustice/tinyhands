@@ -3,6 +3,8 @@
 Vagrantfile
 local.env
 common.env
+.codeship.aes
+deploybot_args.env
 
 application/.idea
 application/media/*
