@@ -1,0 +1,52 @@
+data:
+  image: silintl/data-volume:latest
+  volumes:
+      - ./application:/data
+
+db:
+  image: postgres
+  expose:
+    - "5432"
+
+web:
+  build:
+    image: tusoftwarestudio/dreamsuite
+    dockerfile_path: Dockerfile
+  volumes_from:
+    - data
+  links:
+    - db
+  expose:
+    - "9001"
+  environment:
+    DJANGO_SETTINGS_MODULE: dreamsuite.settings.local
+    DB_NAME: postgres
+    DB_USER: postgres
+    DB_PASS: password
+    DB_HOST: db
+    DB_PORT: 5432
+    GOOGLE_APPLICATION_CREDENTIALS: /data/google_cred.json
+    DREAMSUITE_LOG: /log/dreamsuite.log
+    SITE_HOSTNAME: localhost
+    DJANGO_SECRET_KEY: thisissosecretfordevelopment
+    CLIENT_BASE_URL: http://localhost:3000/#
+    EMAIL_HOST_PASSWORD: notarealpassword
+
+nginx:
+  build:
+    context: build/nginx
+    image: tusoftwarestudio/dreamsuite-nginx
+    dockerfile_path: Dockerfile
+  links:
+    - web
+  volumes_from:
+    - data
+  ports:
+    - "80:80"
+    - "443:443"
+
+deploy:
+  build:
+    context: build/deploy
+    dockerfile_path: Dockerfile
+  encrypted_env_file: deploycfg.env.encrypted
