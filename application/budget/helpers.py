@@ -6,6 +6,8 @@ BudgetLineItem = namedtuple('budgetItem', ['name', 'value'])
 
 
 class BudgetTable:
+    ROW_HEIGHT = 18
+    TITLE_HEIGHT = 36
 
     def __init__(self, title, items):
         self.title = title
@@ -19,8 +21,7 @@ class BudgetTable:
     def height_required(self):
         # for helping calculate the height required to render the table
         # using points where 1 point = 1/72 of an inch
-        # 18 * number of items + 18 for the total + 36 for the title
-        return len(self.items) * 18 + 54
+        return (len(self.items)+1) * self.ROW_HEIGHT + self.TITLE_HEIGHT
 
 
 class MoneyDistributionFormHelper:
@@ -48,7 +49,7 @@ class MoneyDistributionFormHelper:
 
     @property
     def date_entered(self):
-        return self.budget.date_time_entered.date
+        return self.budget.date_time_entered.date()
 
     @property
     def station_name(self):
@@ -171,9 +172,6 @@ class MoneyDistributionFormHelper:
             items.append(BudgetLineItem('Flashlights', self.budget.supplies_flashlights_amount))
         return items + self.get_other_items(BorderStationBudgetCalculation.SUPPLIES)
 
-    @property
-    def other_items(self):
-        return self.budget.otherbudgetitemcost_set.all()
-
     def get_other_items(self, section):
-        return [BudgetLineItem(item.name, item.cost) for item in self.other_items if item.form_section == section]
+        other_items = self.budget.otherbudgetitemcost_set.filter(form_section=section)
+        return [BudgetLineItem(item.name, item.cost) for item in other_items]
