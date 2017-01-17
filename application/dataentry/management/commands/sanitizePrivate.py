@@ -203,7 +203,10 @@ class Command(BaseCommand):
 
         account.permission_address2_manage = True
 
-        account.permission_budget_manage = True
+        account.permission_budget_view = True
+        account.permission_budget_add = True
+        account.permission_budget_edit = True
+        account.permission_budget_delete = True
 
         return account
 

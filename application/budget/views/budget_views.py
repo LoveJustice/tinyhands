@@ -11,15 +11,18 @@ from rest_framework.response import Response
 from budget.models import BorderStationBudgetCalculation, OtherBudgetItemCost, StaffSalary
 from budget.serializers import BorderStationBudgetCalculationSerializer, OtherBudgetItemCostSerializer, StaffSalarySerializer, BorderStationBudgetCalculationListSerializer
 from dataentry.models import InterceptionRecord
-from rest_api.authentication import HasPermission
+from rest_api.authentication import HasPermission, HasDeletePermission, HasPostPermission, HasPutPermission
 from static_border_stations.models import BorderStation
 
 
 class BudgetViewSet(viewsets.ModelViewSet):
     queryset = BorderStationBudgetCalculation.objects.all()
     serializer_class = BorderStationBudgetCalculationSerializer
-    permission_classes = [IsAuthenticated, HasPermission]
-    permissions_required = ['permission_budget_manage']
+    permission_classes = [IsAuthenticated, HasPermission, HasDeletePermission, HasPostPermission, HasPutPermission]
+    permissions_required = ['permission_budget_view']
+    delete_permissions_required = ['permission_budget_delete']
+    post_permissions_required = ['permission_budget_add']
+    put_permissions_required = ['permission_budget_edit']
     filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
     search_fields = ['border_station__station_name', 'border_station__station_code']
     ordering_fields = ['border_station__station_name', 'border_station__station_code', 'month_year', 'date_time_entered', 'date_time_last_updated']
@@ -126,8 +129,11 @@ def previous_data(request, pk, month, year):
 class OtherItemsViewSet(viewsets.ModelViewSet):
     queryset = OtherBudgetItemCost.objects.all()
     serializer_class = OtherBudgetItemCostSerializer
-    permission_classes = [IsAuthenticated, HasPermission]
-    permissions_required = ['permission_budget_manage']
+    permission_classes = [IsAuthenticated, HasPermission, HasDeletePermission, HasPostPermission, HasPutPermission]
+    permissions_required = ['permission_budget_view']
+    delete_permissions_required = ['permission_budget_delete']
+    post_permissions_required = ['permission_budget_add']
+    put_permissions_required = ['permission_budget_edit']
     filter_backends = (filters.DjangoFilterBackend,)
     filter_fields = ('form_section',)
 
@@ -151,7 +157,7 @@ class StaffSalaryViewSet(viewsets.ModelViewSet):
     queryset = StaffSalary.objects.all()
     serializer_class = StaffSalarySerializer
     permission_classes = [IsAuthenticated, HasPermission]
-    permissions_required = ['permission_budget_manage']
+    permissions_required = ['permission_budget_view']
 
     def budget_calc_retrieve(self, request, *args, **kwargs):
         """

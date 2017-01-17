@@ -92,7 +92,7 @@ in the Javascript and run code unique to the current page.
                     </ul>
                 </li>
 
-                {% if request.user.permission_budget_manage %}
+                {% if request.user.permission_budget_view %}
                     <li><a href="{{ CLIENT_DOMAIN }}/budget">Budget Sheets</a></li>
                 {% endif %}
 

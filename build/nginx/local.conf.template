@@ -15,6 +15,10 @@ server {
         alias /data/dreamsuite/static/;
     }
 
+    location /media/ {
+        alias /data/media/;
+    }
+
 	location /robots.txt {
 		 alias /robots.txt;
 	}
