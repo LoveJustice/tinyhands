@@ -16,6 +16,7 @@ from z3c.rml import document
 
 from accounts.mixins import PermissionsRequiredMixin
 from budget.models import BorderStationBudgetCalculation, StaffSalary
+from budget.helpers import MoneyDistributionFormHelper
 from rest_api.authentication import HasPermission
 from static_border_stations.models import Staff, CommitteeMember
 from static_border_stations.serializers import StaffSerializer, CommitteeMemberSerializer
@@ -102,67 +103,15 @@ class PDFView(View, LoginRequiredMixin, PermissionsRequiredMixin):
 
 class MoneyDistributionFormPDFView(PDFView, LoginRequiredMixin, PermissionsRequiredMixin):
     permissions_required = ['permission_budget_view']
-    template_name = 'budget/MoneyDistributionTemplate.rml'
+    template_name = 'budget/MoneyDistributionTemplateV2.rml'
     filename = 'Monthly-Money-Distribution-Form.pdf'
 
     def get_context_data(self):
-
-        station = BorderStationBudgetCalculation.objects.get(pk=self.kwargs['pk'])
-        staffSalaries = StaffSalary.objects.filter(budget_calc_sheet=self.kwargs['pk'])
-        otherItems = station.otherbudgetitemcost_set.all()
-
-        adminMeetings = station.administration_number_of_meetings_per_month * station.administration_number_of_meetings_per_month_multiplier
-
+        budget_id = self.kwargs['pk']
+        mdf_helper = MoneyDistributionFormHelper(budget_id)
         return {
-            'otherItems': otherItems,
-            'name': station.border_station.station_name,
-            'date': station.date_time_entered.date,
-            'number': len(staffSalaries),
-            'staffSalaries': staffSalaries,
-            'salary_total': station.salary_total(),
-            'travel_chair_bool': station.travel_chair_with_bike,
-            'travel_chair': station.travel_chair_with_bike_amount,
-            'travel_manager_bool': station.travel_manager_with_bike,
-            'travel_manager': station.travel_manager_with_bike_amount,
-            'travel_total': station.travel_total(),
-
-            'communication_chair_bool': station.communication_chair,
-            'communication_chair': station.communication_chair_amount,
-            'communication_manager_bool': station.communication_manager,
-            'communication_manager': station.communication_manager_amount,
-            'communication_staff': station.communication_staff_total(),
-            'communication_total': station.communication_total(),
-
-            'admin_meetings': station.administration_number_of_meetings_per_month * station.administration_number_of_meetings_per_month_multiplier,
-            'admin_total': station.administration_total(),
-
-            'medical_total': station.medical_total(),
-
-            'misc_total': station.miscellaneous_total(),
-
-            'shelter_total': station.shelter_total(),
-
-            'food_and_gas_intercepted_girls': station.food_and_gas_number_of_intercepted_girls_multiplier_before * station.food_and_gas_number_of_intercepted_girls * station.food_and_gas_number_of_intercepted_girls_multiplier_after,
-            'food_and_gas_limbo_girls': station.food_and_gas_limbo_girls_multiplier * station.food_and_gas_number_of_limbo_girls * station.food_and_gas_number_of_days,
-            'food_gas_total': station.food_and_gas_total(),
-
-            'awareness_contact_cards_bool': station.awareness_contact_cards,
-            'awareness_contact_cards': station.awareness_contact_cards_amount,
-            'awareness_awareness_party_bool': station.awareness_awareness_party_boolean,
-            'awareness_awareness_party': station.awareness_awareness_party,
-            'awareness_sign_boards_bool': station.awareness_sign_boards_boolean,
-            'awareness_sign_boards': station.awareness_sign_boards,
-            'awareness_total': station.awareness_total(),
-
-            'supplies_walkie_talkies_bool': station.supplies_walkie_talkies_boolean,
-            'supplies_walkie_talkies': station.supplies_walkie_talkies_amount,
-            'supplies_recorders_bool': station.supplies_recorders_boolean,
-            'supplies_recorders': station.supplies_recorders_amount,
-            'supplies_binoculars_bool': station.supplies_binoculars_boolean,
-            'supplies_binoculars': station.supplies_binoculars_amount,
-            'supplies_flashlights_bool': station.supplies_flashlights_boolean,
-            'supplies_flashlights': station.supplies_flashlights_amount,
-            'supplies_total': station.supplies_total,
-
-            'monthly_total': station.station_total()
+            'name': mdf_helper.station_name,
+            'date': mdf_helper.date_entered,
+            'sections': mdf_helper.sections,
+            'total': mdf_helper.total
         }

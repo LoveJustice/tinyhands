@@ -7,6 +7,17 @@ from static_border_stations.models import Staff
 
 
 class BorderStationBudgetCalculation(models.Model):
+    TRAVEL = 1
+    MISCELLANEOUS = 2
+    AWARENESS = 3
+    SUPPLIES = 4
+    SHELTER = 5
+    FOOD_AND_GAS = 6
+    COMMUNICATION = 7
+    STAFF = 8
+    MEDICAL = 9
+    ADMINISTRATION = 10
+
     date_time_entered = models.DateTimeField(auto_now_add=True)
     date_time_last_updated = models.DateTimeField(auto_now=True)
 
@@ -24,21 +35,14 @@ class BorderStationBudgetCalculation(models.Model):
     communication_each_staff_multiplier = models.PositiveIntegerField(default=300)
 
     def communication_extra_items_total(self):
-        items = self.otherbudgetitemcost_set.filter(form_section=7)
-        total = 0
-        for item in items:
-            total += item.cost
-        return total
+        return self.other_items_total(self.COMMUNICATION)
 
-    def communication_total(self):
+    def communication_manager_chair_total(self):
         total = 0
         if self.communication_chair:
             total += self.communication_chair_amount
         if self.communication_manager:
             total += self.communication_manager_amount
-        total += self.communication_number_of_staff_with_walkie_talkies * self.communication_number_of_staff_with_walkie_talkies_multiplier
-        total += self.communication_each_staff * self.communication_each_staff_multiplier
-        total += self.communication_extra_items_total()
         return total
 
     def communication_staff_total(self):
@@ -47,12 +51,11 @@ class BorderStationBudgetCalculation(models.Model):
         total += self.communication_each_staff * self.communication_each_staff_multiplier
         return total
 
-    def communication_manager_chair_total(self):
+    def communication_total(self):
         total = 0
-        if self.communication_chair:
-            total += self.communication_chair_amount
-        if self.communication_manager:
-            total += self.communication_manager_amount
+        total += self.communication_manager_chair_total()
+        total += self.communication_staff_total()
+        total += self.communication_extra_items_total()
         return total
 
     travel_chair_with_bike = models.BooleanField(default=False)
@@ -67,25 +70,7 @@ class BorderStationBudgetCalculation(models.Model):
     travel_plus_other = models.PositiveIntegerField(default=0)
 
     def travel_extra_items_total(self):
-        items = self.otherbudgetitemcost_set.filter(form_section=1)
-        total = 0
-        for item in items:
-            total += item.cost
-        return total
-
-    def travel_total(self):
-        total = 0
-        total += self.travel_extra_items_total()
-        if self.travel_chair_with_bike:
-            total += self.travel_chair_with_bike_amount
-        if self.travel_manager_with_bike:
-            total += self.travel_manager_with_bike_amount
-        total += self.travel_number_of_staff_using_bikes * self.travel_number_of_staff_using_bikes_multiplier
-        total += self.travel_last_months_expense_for_sending_girls_home
-        if self.travel_motorbike:
-            total += self.travel_motorbike_amount
-        total += self.travel_plus_other
-        return total
+        return self.other_items_total(self.TRAVEL)
 
     def travel_manager_chair_total(self):
         total = 0
@@ -93,6 +78,20 @@ class BorderStationBudgetCalculation(models.Model):
             total += self.travel_chair_with_bike_amount
         if self.travel_manager_with_bike:
             total += self.travel_manager_with_bike_amount
+        return total
+
+    def travel_staff_bikes_total(self):
+        return self.travel_number_of_staff_using_bikes * self.travel_number_of_staff_using_bikes_multiplier
+
+    def travel_total(self):
+        total = 0
+        total += self.travel_extra_items_total()
+        total += self.travel_manager_chair_total()
+        total += self.travel_staff_bikes_total()
+        total += self.travel_last_months_expense_for_sending_girls_home
+        if self.travel_motorbike:
+            total += self.travel_motorbike_amount
+        total += self.travel_plus_other
         return total
 
     administration_number_of_intercepts_last_month = models.PositiveIntegerField('# of intercepts last month', default=0)
@@ -105,29 +104,29 @@ class BorderStationBudgetCalculation(models.Model):
     administration_registration = models.BooleanField('Registration', default=False)
     administration_registration_amount = models.PositiveIntegerField(default=2000)
 
+    def administration_intercepts_total(self):
+        return self.administration_number_of_intercepts_last_month * self.administration_number_of_intercepts_last_month_multiplier + self.administration_number_of_intercepts_last_month_adder
+
+    def administration_meetings_total(self):
+        return self.administration_number_of_meetings_per_month * self.administration_number_of_meetings_per_month_multiplier
+
+    def administration_extra_items_total(self):
+        return self.other_items_total(self.ADMINISTRATION)
+
     def administration_total(self):
         total = 0
-        total += (self.administration_number_of_intercepts_last_month * self.administration_number_of_intercepts_last_month_multiplier) + self.administration_number_of_intercepts_last_month_adder
-        total += self.administration_number_of_meetings_per_month * self.administration_number_of_meetings_per_month_multiplier
+        total += self.administration_intercepts_total()
+        total += self.administration_meetings_total()
         if self.administration_booth:
             total += self.administration_booth_amount
         if self.administration_registration:
             total += self.administration_registration_amount
         return total + self.administration_extra_items_total()
 
-
-    def administration_extra_items_total(self):
-        items = self.otherbudgetitemcost_set.filter(form_section=10)
-        return sum(item.cost for item in items)
-
     medical_last_months_expense = models.PositiveIntegerField("Last month's medical expense", default=0)
 
     def medical_extra_items_total(self):
-        items = self.otherbudgetitemcost_set.filter(form_section=9)
-        total = 0
-        for item in items:
-            total += item.cost
-        return total
+        return self.other_items_total(self.MEDICAL)
 
     def medical_total(self):
         return self.medical_last_months_expense + self.medical_extra_items_total()
@@ -136,11 +135,7 @@ class BorderStationBudgetCalculation(models.Model):
     miscellaneous_number_of_intercepts_last_month_multiplier = models.PositiveIntegerField(default=300)
 
     def miscellaneous_extra_items_total(self):
-        items = self.otherbudgetitemcost_set.filter(form_section=2)
-        total = 0
-        for item in items:
-            total += item.cost
-        return total
+        return self.other_items_total(self.MISCELLANEOUS)
 
     def miscellaneous_total(self):
         total = self. miscellaneous_extra_items_total()
@@ -156,11 +151,7 @@ class BorderStationBudgetCalculation(models.Model):
     shelter_shelter_two_amount = models.PositiveIntegerField(default=36800)
 
     def shelter_extra_items_total(self):
-        items = self.otherbudgetitemcost_set.filter(form_section=5)
-        total = 0
-        for item in items:
-            total += item.cost
-        return total
+        return self.other_items_total(self.SHELTER)
 
     def shelter_total(self):
         total = 0
@@ -178,18 +169,20 @@ class BorderStationBudgetCalculation(models.Model):
     food_and_gas_number_of_limbo_girls = models.PositiveIntegerField('# of limbo girls', default=0)
     food_and_gas_number_of_days = models.PositiveIntegerField('# of days', default=0)
 
+    def food_and_gas_intercepted_girls_total(self):
+        return self.food_and_gas_number_of_intercepted_girls * self.food_and_gas_number_of_intercepted_girls_multiplier_before * self.food_and_gas_number_of_intercepted_girls_multiplier_after
+
+    def food_and_gas_limbo_girls_total(self):
+        return self.food_and_gas_limbo_girls_multiplier * self.food_and_gas_number_of_limbo_girls * self.food_and_gas_number_of_days
+
     def food_and_gas_extra_items_total(self):
-        items = self.otherbudgetitemcost_set.filter(form_section=6)
-        total = 0
-        for item in items:
-            total += item.cost
-        return total
+        return self.other_items_total(self.FOOD_AND_GAS)
 
     def food_and_gas_total(self):
         total = 0
         total += self.food_and_gas_extra_items_total()
-        total += (self.food_and_gas_number_of_intercepted_girls * self.food_and_gas_number_of_intercepted_girls_multiplier_before * self.food_and_gas_number_of_intercepted_girls_multiplier_after)
-        total += (self.food_and_gas_limbo_girls_multiplier * self.food_and_gas_number_of_limbo_girls * self.food_and_gas_number_of_days)
+        total += self.food_and_gas_intercepted_girls_total()
+        total += self.food_and_gas_limbo_girls_total()
         return total
 
     awareness_contact_cards = models.BooleanField('Contact Cards', default=False)
@@ -201,11 +194,7 @@ class BorderStationBudgetCalculation(models.Model):
     awareness_sign_boards = models.PositiveIntegerField(default=0)
 
     def awareness_extra_items_total(self):
-        items = self.otherbudgetitemcost_set.filter(form_section=3)
-        total = 0
-        for item in items:
-            total += item.cost
-        return total
+        return self.other_items_total(self.AWARENESS)
 
     def awareness_total(self):
         total = self.awareness_extra_items_total()
@@ -227,11 +216,7 @@ class BorderStationBudgetCalculation(models.Model):
     supplies_flashlights_amount = models.PositiveIntegerField(default=0)
 
     def supplies_extra_items_total(self):
-        items = self.otherbudgetitemcost_set.filter(form_section=4)
-        total = 0
-        for item in items:
-            total += item.cost
-        return total
+        return self.other_items_total(self.SUPPLIES)
 
     def supplies_total(self):
         total = self.supplies_extra_items_total()
@@ -247,13 +232,10 @@ class BorderStationBudgetCalculation(models.Model):
 
     def salary_total(self):
         total = 0
-        extra = self.otherbudgetitemcost_set.filter(form_section=8)
         items = self.staffsalary_set.all()
         for item in items:
             total += item.salary
-        for extraitem in extra:
-            total += extraitem.cost
-
+        total += self.other_items_total(self.STAFF)
         return total
 
     def station_total(self):
@@ -272,12 +254,27 @@ class BorderStationBudgetCalculation(models.Model):
 
     members = models.ManyToManyField(Staff, through='StaffSalary')
 
+    def other_items_total(self, section):
+        items = self.otherbudgetitemcost_set.filter(form_section=section)
+        return sum(item.cost for item in items)
+
 
 class OtherBudgetItemCost(models.Model):
+
+    BUDGET_FORM_SECTION_CHOICES = [
+        (BorderStationBudgetCalculation.TRAVEL, 'Travel'),
+        (BorderStationBudgetCalculation.MISCELLANEOUS, 'Miscellaneous'),
+        (BorderStationBudgetCalculation.AWARENESS, 'Awareness'),
+        (BorderStationBudgetCalculation.SUPPLIES, 'Supplies'),
+        (BorderStationBudgetCalculation.SHELTER, 'Shelter'),
+        (BorderStationBudgetCalculation.FOOD_AND_GAS, 'FoodGas'),
+        (BorderStationBudgetCalculation.COMMUNICATION, 'Communication'),
+        (BorderStationBudgetCalculation.STAFF, 'Staff'),
+        (BorderStationBudgetCalculation.MEDICAL, 'Medical'),
+        (BorderStationBudgetCalculation.ADMINISTRATION, 'Administration')
+    ]
     name = models.CharField(max_length=255, blank=False)
     cost = models.PositiveIntegerField(default=0, blank=False)
-
-    BUDGET_FORM_SECTION_CHOICES = [(1, 'Travel'), (2, 'Miscellaneous'), (3, 'Awareness'), (4, 'Supplies'), (5, 'Shelter'), (6, 'FoodGas'), (7, 'Communication'), (8, 'Staff'), (9, 'Medical'), (10, 'Administration')]
     form_section = models.IntegerField(BUDGET_FORM_SECTION_CHOICES, blank=True, null=True)
     budget_item_parent = models.ForeignKey(BorderStationBudgetCalculation, blank=True, null=True, on_delete=models.CASCADE)
 
