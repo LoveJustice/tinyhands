@@ -135,7 +135,7 @@ class BorderStationBudgetCalculation(models.Model):
     miscellaneous_number_of_intercepts_last_month_multiplier = models.PositiveIntegerField(default=300)
 
     def miscellaneous_extra_items_total(self):
-        return self.other_items_total(self.MEDICAL)
+        return self.other_items_total(self.MISCELLANEOUS)
 
     def miscellaneous_total(self):
         total = self. miscellaneous_extra_items_total()
