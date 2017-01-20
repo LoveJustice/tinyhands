@@ -21,7 +21,6 @@ def related_items_helper(self, obj):
             "type": type,
             "objects": [get_response_object_from_type(type, model) for model in relationship.related_model.objects.filter(**{relationship.remote_field.name: obj})]
         })
-    print related_items_list
     return related_items_list
 
 
