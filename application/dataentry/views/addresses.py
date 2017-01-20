@@ -40,7 +40,7 @@ class Address2ViewSet(viewsets.ModelViewSet):
     def there_are_no_related_items(self, address):
         count = 0
         for related_items_and_ids in related_items_helper(self, address):
-            count += len(related_items_and_ids['ids'])
+            count += len(related_items_and_ids['objects'])
         if count > 0:
             return False
         return True
