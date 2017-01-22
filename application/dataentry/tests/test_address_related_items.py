@@ -61,6 +61,8 @@ class Address1RelatedItemsTest(APITestCase):
         new_address1 = Address1Factory.create()
         person = PersonFactory.create(address1=address1)
         vif = VifFactory.create(victim_guardian_address1=address1)
+        viflb = VictimInterviewLocationBoxFactory.create(address1=address1)
+
         url = reverse('Address1RelatedItemsSwap', args=[address1.id, new_address1.id])
         response = self.client.delete(url)
 
