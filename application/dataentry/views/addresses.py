@@ -68,8 +68,9 @@ class Address2ViewSet(viewsets.ModelViewSet):
             return Response({'detail': "Address2 not found"}, status=status.HTTP_404_NOT_FOUND)
         try:
             for addr2 in address.address2_set.all():
-                addr2.address2 = new_address
-                addr2.save()
+                if addr2.id != new_address.id:
+                    addr2.canonical_name = new_address
+                    addr2.save()
 
             for person in address.person_set.all():
                 person.address2 = new_address

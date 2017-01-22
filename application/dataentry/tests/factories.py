@@ -51,6 +51,13 @@ class VifFactory(DjangoModelFactory):
     date_time_last_updated = datetime.datetime(2011, 12, 12, tzinfo=pytz.UTC)
 
 
+class VictimInterviewLocationBoxFactory(DjangoModelFactory):
+    class Meta:
+        model = VictimInterviewLocationBox
+
+    victim_interview = factory.SubFactory(VifFactory)
+
+
 class IntercepteeFactory(DjangoModelFactory):
     class Meta:
         model = Interceptee

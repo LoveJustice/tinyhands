@@ -6,7 +6,7 @@ from dataentry.models import Address2
 from dataentry.models import Person
 from dataentry.models import VictimInterview
 from dataentry.models import VictimInterviewLocationBox
-from dataentry.tests.factories import Address2Factory, Address1Factory, CanonicalNameFactory, PersonFactory, VifFactory
+from dataentry.tests.factories import Address2Factory, Address1Factory, CanonicalNameFactory, PersonFactory, VifFactory, VictimInterviewLocationBoxFactory
 
 
 class Address1RelatedItemsTest(APITestCase):
@@ -61,7 +61,6 @@ class Address1RelatedItemsTest(APITestCase):
         new_address1 = Address1Factory.create()
         person = PersonFactory.create(address1=address1)
         vif = VifFactory.create(victim_guardian_address1=address1)
-
         url = reverse('Address1RelatedItemsSwap', args=[address1.id, new_address1.id])
         response = self.client.delete(url)
 
@@ -70,6 +69,11 @@ class Address1RelatedItemsTest(APITestCase):
         self.assertEqual(Person.objects.filter(address1=address1).count(), 0)
         self.assertEqual(VictimInterview.objects.filter(victim_guardian_address1=address1).count(), 0)
         self.assertEqual(VictimInterviewLocationBox.objects.filter(address1=address1).count(), 0)
+
+        self.assertEqual(Person.objects.filter(address1=new_address1).count(), 1)
+        self.assertEqual(Address2.objects.filter(address1=new_address1).count(), 1)
+        self.assertEqual(VictimInterview.objects.filter(victim_guardian_address1=new_address1).count(), 1)
+        self.assertEqual(VictimInterviewLocationBox.objects.filter(address1=new_address1).count(), 1)
 
 
 class Address2RelatedItemsTest(APITestCase):
@@ -134,15 +138,30 @@ class Address2RelatedItemsTest(APITestCase):
 
     def test_address_related_items_swap(self):
         address2 = Address2Factory.create(canonical_name=Address2Factory.create())
+        related_address2 = Address2Factory.create()
+        related_address2.canonical_name = address2
+        related_address2.save()
+
         new_address2 = Address2Factory.create()
         person = PersonFactory.create(address2=address2)
         vif = VifFactory.create(victim_guardian_address2=address2)
+        viflb = VictimInterviewLocationBoxFactory.create(address2=address2)
 
         url = reverse('Address2RelatedItemsSwap', args=[address2.id, new_address2.id])
         response = self.client.delete(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(Person.objects.filter(address2=address2).count(), 0)
+        self.assertEqual(Address2.objects.filter(address2=address2).count(), 0)
         self.assertEqual(VictimInterview.objects.filter(victim_guardian_address2=address2).count(), 0)
         self.assertEqual(VictimInterviewLocationBox.objects.filter(address2=address2).count(), 0)
-        self.assertEqual(Address2.objects.filter(address2=address2).count(), 0)
+        self.assertEqual(Person.objects.filter(address2=address2).count(), 0)
+
+        self.assertEqual(Person.objects.filter(address2=new_address2).count(), 1)
+        self.assertEqual(Address2.objects.filter(address2=new_address2).count(), 1)
+        self.assertEqual(VictimInterview.objects.filter(victim_guardian_address2=new_address2).count(), 1)
+        self.assertEqual(VictimInterviewLocationBox.objects.filter(address2=new_address2).count(), 1)
+
+
+
+
+
