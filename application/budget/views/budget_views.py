@@ -34,35 +34,37 @@ class BudgetViewSet(viewsets.ModelViewSet):
             self.serializer_class = temp  # put the original serializer back in place
             return super_list_response
 
-
 @api_view(['GET'])
 @permission_classes((IsAuthenticated, ))
-def retrieve_latest_budget_sheet_for_border_station(request, pk):
-    budget_sheet = BorderStationBudgetCalculation.objects.filter(border_station=pk).order_by('-date_time_entered').first()  # Get's you the latest budget sheet for a border stations
+def budget_sheet_by_date(request, pk, month, year):
+    budget_sheets = BorderStationBudgetCalculation.objects.filter(
+        border_station=pk,
+        month_year__year__lte=int(year),
+        month_year__month__lte=int(month)
+    ).order_by('-date_time_entered')
 
-    if budget_sheet:  # if there has been a preview budget sheet
+    if budget_sheets:
+        previous_budget_data = {}
 
-        other_items_serializer = OtherBudgetItemCostSerializer(budget_sheet.otherbudgetitemcost_set.all(), many=True)
-        staff_serializer = StaffSalarySerializer(budget_sheet.staffsalary_set.all(), many=True)
-        budget_serializer = BorderStationBudgetCalculationSerializer(budget_sheet)
+        if (len(budget_sheets) > 1):
+            previous_budget_sheet = budget_sheets[1]
+            other_items_serializer = OtherBudgetItemCostSerializer(previous_budget_sheet.otherbudgetitemcost_set.all(), many=True)
+            staff_serializer = StaffSalarySerializer(previous_budget_sheet.staffsalary_set.all(), many=True)
+            budget_serializer = BorderStationBudgetCalculationSerializer(previous_budget_sheet)
+
+            previous_budget_data['other_items'] = other_items_serializer.data
+            previous_budget_data['staff_salaries'] = staff_serializer.data
+            previous_budget_data['budget_form'] = budget_serializer.data
 
         return Response(
-            {
-                "budget_form": budget_serializer.data,
-                "other_items": other_items_serializer.data,
-                "staff_salaries": staff_serializer.data
-            }
+            {'top_table_data': top_table_data(pk, month, year, budget_sheets),
+             'previous_budget_data': previous_budget_data}
         )
-    # If there hasn't been a previous budget sheet
-    return Response({"budget_form": {"border_station": pk}, "other_items": "", "staff_salaries": "", "None": 1})
 
+    return Response({'top_table_data': 0, 'form': 0, 'staff_salaries': 0, 'other_items': 0})
 
-@api_view(['GET'])
-@permission_classes((IsAuthenticated, ))
-def previous_data(request, pk, month, year):
+def top_table_data(pk, month, year, budget_sheets):
     date = datetime.datetime(int(year), int(month), 15)  # We pass the Month_year as two key-word arguments because the day is always 15
-    budget_sheets = BorderStationBudgetCalculation.objects.filter(border_station=pk, month_year__lte=date).order_by('-date_time_entered')  # filter them so the first element is the most recent
-
     border_station = BorderStation.objects.get(pk=pk)
     staff_count = border_station.staff_set.count()
 
@@ -101,8 +103,7 @@ def previous_data(request, pk, month, year):
         all_cost = 0
         for sheet in budget_sheets:
             all_cost += sheet.station_total()
-        return Response(
-            {
+        return {
                 "all": all_interception_records_count['total'],
                 "all_cost": all_cost/all_interception_records_count_divide,
                 "last_month": last_months_count['total'],
@@ -111,11 +112,11 @@ def previous_data(request, pk, month, year):
                 "last_3_months_cost": last_3_months_cost/last_3_months_count_divide,
                 "staff_count": staff_count,
                 "last_months_total_cost": last_months_cost
-            }
-        )
+        }
+
     # If this border station has not had a previous budget calculation worksheet
-    return Response(
-        {"all": all_interception_records_count['total'],
+    return {
+         "all": all_interception_records_count['total'],
          "all_cost": 0,
          "last_month": last_months_count['total'],
          "last_months_cost": 0,
@@ -123,7 +124,7 @@ def previous_data(request, pk, month, year):
          "last_3_months_cost": 0,
          "staff_count": staff_count,
          "last_months_total_cost": 0
-         })
+    }
 
 
 class OtherItemsViewSet(viewsets.ModelViewSet):
