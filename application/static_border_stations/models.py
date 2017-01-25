@@ -31,6 +31,10 @@ class Person(models.Model):
     class Meta:
         abstract = True
 
+    @property
+    def full_name(self):
+        return self.first_name + ' ' + self.last_name
+
 
 class Staff(Person):
     class Meta:

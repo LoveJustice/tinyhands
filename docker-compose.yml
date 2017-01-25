@@ -38,4 +38,3 @@ nginx:
   env_file:
     - ./common.env
     - ./local.env
-

@@ -5,10 +5,8 @@ MAINTAINER benaduggan
 RUN mkdir -p /data/dreamsuite/static/ /data/media/ /log /test
 
 # Copy in static files
-COPY media/ /data/media/
-COPY static/ /data/dreamsuite/static/
-COPY test /test
 COPY robots.txt /
+COPY test/ /test
 
 # Add our nginx configuration
 COPY run.sh /run.sh
