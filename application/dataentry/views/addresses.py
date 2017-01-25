@@ -40,7 +40,7 @@ class Address2ViewSet(viewsets.ModelViewSet):
     def there_are_no_related_items(self, address):
         count = 0
         for related_items_and_ids in related_items_helper(self, address):
-            count += len(related_items_and_ids['ids'])
+            count += len(related_items_and_ids['objects'])
         if count > 0:
             return False
         return True
@@ -57,6 +57,38 @@ class Address2ViewSet(viewsets.ModelViewSet):
         else:
             logger.debug('Address2 could not be deleted due to related items on the following address1: ' + pk)
             return Response({'detail': "This Address 2 could not be deleted because it is being used by other resources"}, status=status.HTTP_409_CONFLICT)
+
+    @detail_route()
+    def swap_addresses(self, request, pk, pk2):
+        try:
+            address = Address2.objects.get(pk=pk)
+            new_address = Address2.objects.get(pk=pk2)
+        except:
+            logger.error('Could not find Address2 with the following id: ' + pk)
+            return Response({'detail': "Address2 not found"}, status=status.HTTP_404_NOT_FOUND)
+        try:
+            for addr2 in address.address2_set.all():
+                if addr2.id != new_address.id:
+                    addr2.canonical_name = new_address
+                    addr2.save()
+
+            for person in address.person_set.all():
+                person.address2 = new_address
+                person.save()
+
+            for vif in address.victiminterview_set.all():
+                vif.victim_guardian_address2 = new_address
+                vif.save()
+
+            for viflb in address.victiminterviewlocationbox_set.all():
+                viflb.address2 = new_address
+                viflb.save()
+
+            address.delete()
+        except:
+            logger.error('Could not swap addresses: ' + pk + ' ' + pk2)
+            return Response({'detail': "an error occurred"}, status=status.HTTP_404_NOT_FOUND)
+        return Response({"message": "success!"})
 
 
 class Address1ViewSet(viewsets.ModelViewSet):
@@ -86,10 +118,41 @@ class Address1ViewSet(viewsets.ModelViewSet):
         serializer = Address1RelatedItemsSerializer(address)
         return Response(serializer.data)
 
+    @detail_route()
+    def swap_addresses(self, request, pk, pk2):
+        try:
+            address = Address1.objects.get(pk=pk)
+            new_address = Address1.objects.get(pk=pk2)
+        except:
+            logger.error('Could not find Address1 with the following id: ' + pk)
+            return Response({'detail': "Address1 not found"}, status=status.HTTP_404_NOT_FOUND)
+        try:
+            for addr2 in address.address2_set.all():
+                addr2.address1 = new_address
+                addr2.save()
+
+            for person in address.person_set.all():
+                person.address1 = new_address
+                person.save()
+
+            for vif in address.victiminterview_set.all():
+                vif.victim_guardian_address1 = new_address
+                vif.save()
+
+            for viflb in address.victiminterviewlocationbox_set.all():
+                viflb.address1 = new_address
+                viflb.save()
+
+            address.delete()
+        except:
+            logger.error('Could not swap addresses: ' + pk + ' ' + pk2)
+            return Response({'detail': "an error occurred"}, status=status.HTTP_404_NOT_FOUND)
+        return Response({"message": "success!"})
+
     def there_are_no_related_items(self, address):
         count = 0
         for related_items_and_ids in related_items_helper(self, address):
-            count += len(related_items_and_ids['ids'])
+            count += len(related_items_and_ids['objects'])
         if count > 0:
             return False
         return True
