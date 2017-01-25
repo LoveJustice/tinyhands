@@ -1,4 +1,5 @@
-#/bin/bash
+#!/bin/bash
+
 TOP="/data"
 
 # source directories

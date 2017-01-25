@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # If these are not set, automatically set them to those defaults for testing purposes
 ${SSL_CERT_PATH:="/test/ssl_cert.pem"}
 ${SSL_KEY_PATH:="/test/ssl_key.pem"}
