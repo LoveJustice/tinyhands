@@ -2,6 +2,7 @@ from django.db import models
 
 from addresses import Address1, Address2
 from person import Person
+from border_station import BorderStation
 
 
 class VictimInterview(models.Model):
@@ -366,6 +367,8 @@ class VictimInterview(models.Model):
     victim_had_suicidal_thoughts = models.NullBooleanField(null=True)
 
     reported_total_situational_alarms = models.PositiveIntegerField(blank=True, null=True)
+
+    border_station = models.ForeignKey(BorderStation, models.SET_NULL, null=True)
 
     def __unicode__(self):
         return self.vif_number

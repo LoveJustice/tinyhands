@@ -1,4 +1,5 @@
 from django.db import models
+from country import Country
 
 
 class BorderStation(models.Model):
@@ -9,3 +10,4 @@ class BorderStation(models.Model):
     latitude = models.FloatField(null=True)
     longitude = models.FloatField(null=True)
     open = models.BooleanField(default=True)
+    operating_country = models.ForeignKey(Country, models.SET_NULL, null=True)
