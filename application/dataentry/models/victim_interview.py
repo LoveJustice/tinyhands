@@ -368,7 +368,7 @@ class VictimInterview(models.Model):
 
     reported_total_situational_alarms = models.PositiveIntegerField(blank=True, null=True)
 
-    border_station = models.ForeignKey(BorderStation, models.SET_NULL, null=True)
+    border_station = models.ForeignKey(BorderStation, models.SET_NULL, null=True, blank=True)
 
     def __unicode__(self):
         return self.vif_number
