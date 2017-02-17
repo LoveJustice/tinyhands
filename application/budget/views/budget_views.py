@@ -28,40 +28,41 @@ class BudgetViewSet(viewsets.ModelViewSet):
     ordering_fields = ['border_station__station_name', 'border_station__station_code', 'month_year', 'date_time_entered', 'date_time_last_updated']
 
     def list(self, request, *args, **kwargs):
-            temp = self.serializer_class
-            self.serializer_class = BorderStationBudgetCalculationListSerializer  # we want to use a custom serializer just for the list view
-            super_list_response = super(BudgetViewSet, self).list(request, *args, **kwargs)  # call the supers list view with custom serializer
-            self.serializer_class = temp  # put the original serializer back in place
-            return super_list_response
+        temp = self.serializer_class
+        self.serializer_class = BorderStationBudgetCalculationListSerializer  # we want to use a custom serializer just for the list view
+        super_list_response = super(BudgetViewSet, self).list(request, *args, **kwargs)  # call the supers list view with custom serializer
+        self.serializer_class = temp  # put the original serializer back in place
+        return super_list_response
 
 @api_view(['GET'])
 @permission_classes((IsAuthenticated, ))
 def budget_sheet_by_date(request, pk, month, year):
+    form = {}
+    other_items = []
+    staff_salaries = []
+    
+    date = datetime.date(int(year), int(month), 1)
     budget_sheets = BorderStationBudgetCalculation.objects.filter(
         border_station=pk,
-        month_year__year__lte=int(year),
-        month_year__month__lte=int(month)
+        month_year__lte=date
     ).order_by('-date_time_entered')
 
-    if budget_sheets:
-        previous_budget_data = {}
+    if budget_sheets and len(budget_sheets) > 0:
+        previous_budget_sheet = budget_sheets[0]
+        other_items_serializer = OtherBudgetItemCostSerializer(previous_budget_sheet.otherbudgetitemcost_set.all(), many=True)
+        staff_serializer = StaffSalarySerializer(previous_budget_sheet.staffsalary_set.all(), many=True)
+        budget_serializer = BorderStationBudgetCalculationSerializer(previous_budget_sheet)
 
-        if (len(budget_sheets) > 1):
-            previous_budget_sheet = budget_sheets[1]
-            other_items_serializer = OtherBudgetItemCostSerializer(previous_budget_sheet.otherbudgetitemcost_set.all(), many=True)
-            staff_serializer = StaffSalarySerializer(previous_budget_sheet.staffsalary_set.all(), many=True)
-            budget_serializer = BorderStationBudgetCalculationSerializer(previous_budget_sheet)
+        staff_salaries = staff_serializer.data
+        other_items = other_items_serializer.data
+        form = budget_serializer.data
 
-            previous_budget_data['other_items'] = other_items_serializer.data
-            previous_budget_data['staff_salaries'] = staff_serializer.data
-            previous_budget_data['budget_form'] = budget_serializer.data
-
-        return Response(
-            {'top_table_data': top_table_data(pk, month, year, budget_sheets),
-             'previous_budget_data': previous_budget_data}
-        )
-
-    return Response({'top_table_data': 0, 'form': 0, 'staff_salaries': 0, 'other_items': 0})
+    return Response({
+        'top_table_data': top_table_data(pk, month, year, budget_sheets),
+        'form': form,
+        'staff_salaries': staff_salaries,
+        'other_items': other_items
+    })
 
 def top_table_data(pk, month, year, budget_sheets):
     date = datetime.datetime(int(year), int(month), 15)  # We pass the Month_year as two key-word arguments because the day is always 15
