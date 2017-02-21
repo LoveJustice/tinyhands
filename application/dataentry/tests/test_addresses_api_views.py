@@ -2,6 +2,10 @@ from django.core.urlresolvers import reverse
 from rest_framework import status
 from rest_framework.test import APIRequestFactory, APITestCase
 from accounts.tests.factories import Address2UserFactory, BadAddress2UserFactory
+from dataentry.models import Address2
+from dataentry.models import Person
+from dataentry.models import VictimInterview
+from dataentry.models import VictimInterviewLocationBox
 from dataentry.tests.factories import Address2Factory, Address1Factory, CanonicalNameFactory, PersonFactory, VifFactory
 
 
@@ -73,26 +77,6 @@ class Address1Test(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['id'], self.address1_list[0].id)  # 1 is the arg we passed into the url
 
-    def test_retrieve_related_items(self):
-        address2 = Address2Factory.create()
-        address1 = address2.address1
-        person = PersonFactory.create(address1=address1)
-        vif = VifFactory.create(victim_guardian_address1=address1)
-
-        mapperD = {'person': person, 'victiminterview': vif, 'address2': address2 }
-
-        url = reverse('Address1RelatedItems', args=[address1.id])
-        response = self.client.get(url)
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['id'], address1.id)
-
-        related_items = response.data['related_items']
-        for item in related_items:
-            if item['type'] in mapperD:
-                self.assertEqual(True, mapperD[item['type']].id in item['ids'])
-        self.assertEqual(response.data['id'], address1.id)
-
     def test_update_address1(self):
         url = reverse('Address1detail', args=[self.address1_list[0].id])
         data = {'name': "updatedAddress1"}
@@ -112,22 +96,6 @@ class Address1Test(APITestCase):
         # Check that the address doesn't exist anymore
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-
-    def test_remove_address1_with_related_items__should_not_work(self):
-        address2 = Address2Factory.create()
-        address1 = address2.address1
-        person = PersonFactory.create(address1=address1)
-        vif = VifFactory.create(victim_guardian_address1=address1)
-        url = reverse('Address1detail', args=[address1.id])
-
-        for related_object in [address2, person, vif]:
-            response = self.client.delete(url)
-            self.assertEqual(response.status_code, status.HTTP_409_CONFLICT)
-            related_object.delete()
-
-        # All related objects are deleted now, so the Address should be able to be deleted now
-        response = self.client.delete(url)
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_address1_403_if_doesnt_have_permission(self):
         self.bad_user = BadAddress2UserFactory.create()
@@ -288,43 +256,6 @@ class Address2Test(APITestCase):
         self.assertEqual(response.data['id'], address2.id)
         self.assertEqual(response.data['name'], address2.name)
         self.assertEqual(response.data['canonical_name'], None)
-
-    def test_retrieve_related_items_address2(self):
-        address2 = Address2Factory.create()
-
-        related_address2 = Address2Factory.create(canonical_name=address2)
-        person = PersonFactory.create(address2=address2)
-        vif = VifFactory.create(victim_guardian_address2=address2)
-
-        mapperD = {'person': person, 'victiminterview': vif, 'address2': related_address2 }
-
-        url = reverse('Address2RelatedItems', args=[address2.id])
-        response = self.client.get(url)
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['id'], address2.id)
-
-        related_items = response.data['related_items']
-        for item in related_items:
-            if item['type'] in mapperD:
-                self.assertEqual(True, mapperD[item['type']].id in item['ids'])
-        self.assertEqual(response.data['id'], address2.id)
-
-    def test_remove_address2_with_related_items__should_not_work(self):
-        address2 = Address2Factory.create()
-        related_address2 = Address2Factory.create(canonical_name=address2)
-        person = PersonFactory.create(address2=address2)
-        vif = VifFactory.create(victim_guardian_address2=address2)
-        url = reverse('Address2detail', args=[address2.id])
-
-        for related_object in [related_address2, person, vif]:
-            response = self.client.delete(url)
-            self.assertEqual(response.status_code, status.HTTP_409_CONFLICT)
-            related_object.delete()
-
-        # All related objects are deleted now, so the Address should be able to be deleted now
-        response = self.client.delete(url)
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_403_if_doesnt_have_permission(self):
         self.bad_user = BadAddress2UserFactory.create()
