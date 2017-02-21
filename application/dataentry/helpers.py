@@ -5,7 +5,12 @@
         "type": "<model_name>",
         "ids": [1,2,3],
     }]
+
+    Currently this is only used for serializing addresses related items
+    but it could be extended to work on other model types as well
 """
+
+
 def related_items_helper(self, obj):
     related_items_list = []
 
@@ -16,16 +21,21 @@ def related_items_helper(self, obj):
     ]
 
     for relationship in relationships:
-        if relationship.related_model._meta.model_name =='victiminterviewlocationbox':
-            related_items_list.append({
-                "type": relationship.related_model._meta.model_name,
-                "ids": [model.victim_interview_id for model in relationship.related_model.objects.filter(**{relationship.remote_field.name: obj})]
-            })
-            continue
-
+        model_type = relationship.related_model._meta.model_name
         related_items_list.append({
-            "type": relationship.related_model._meta.model_name,
-            "ids": [model.id for model in relationship.related_model.objects.filter(**{relationship.remote_field.name: obj})]
+            "type": model_type,
+            "objects": [get_response_object_from_model_type(model_type, model) for model in relationship.related_model.objects.filter(**{relationship.remote_field.name: obj})]
         })
-
     return related_items_list
+
+
+def get_response_object_from_model_type(model_type, instance):
+    if model_type == 'address2':
+        return {"name": instance.name, "id": instance.id}
+    elif model_type == 'person':
+        return {"name": instance.full_name, "id": instance.id}
+    elif model_type == 'victiminterviewlocationbox':
+        return {"name": instance.victim_interview.vif_number, "id": instance.victim_interview.id}
+    elif model_type == 'victiminterview':
+        return {"name": instance.vif_number, "id": instance.id}
+    return {}

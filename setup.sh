@@ -1,3 +1,5 @@
+#!/bin/bash
+
 echo "Checking for local.env file..."
 
 if [ -e "local.env" ]
