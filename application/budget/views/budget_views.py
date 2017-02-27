@@ -68,8 +68,8 @@ def previous_data(request, pk, month, year):
 
     # Last month data will count records from the 15th of previous month to 14th of budget sheet month
     all_interception_records = InterceptionRecord.objects.annotate(interceptee_count=Count("interceptees")).filter(irf_number__startswith=border_station.station_code)
-    last_months = all_interception_records.filter(date_time_of_interception__gte=(date+relativedelta(months=-1)), date_time_of_interception__lte=date)
-    last_3_months = all_interception_records.filter(date_time_of_interception__gte=(date+relativedelta(months=-3)), date_time_of_interception__lte=date)
+    last_months = all_interception_records.filter(date_time_entered_into_system__gte=(date+relativedelta(months=-1)), date_time_entered_into_system__lte=date)
+    last_3_months = all_interception_records.filter(date_time_entered_into_system__gte=(date+relativedelta(months=-3)), date_time_entered_into_system__lte=date)
 
     last_months_count = last_months.aggregate(total=Sum('number_of_victims'))
     last_3_months_count = last_3_months.aggregate(total=Sum('number_of_victims'))
