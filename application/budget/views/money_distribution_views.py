@@ -28,8 +28,8 @@ class MoneyDistribution(viewsets.ViewSet):
 
     def retrieve(self, request, pk):
         border_station = BorderStationBudgetCalculation.objects.get(pk=pk).border_station
-        staff = border_station.staff_set.all().filter(receives_money_distribution_form=True)
-        committee_members = border_station.committeemember_set.all().filter(receives_money_distribution_form=True).all()
+        staff = border_station.staff_set.all().exclude(email__isnull=True)
+        committee_members = border_station.committeemember_set.all().exclude(email__isnull=True)
 
         staff_serializer = StaffSerializer(staff, many=True)
         committee_members_serializer = CommitteeMemberSerializer(committee_members, many=True)
@@ -46,10 +46,16 @@ class MoneyDistribution(viewsets.ViewSet):
         # send the emails
         for id in staff_ids:
             person = Staff.objects.get(pk=id)
+            if person.receives_money_distribution_form==False:
+                person.receives_money_distribution_form=True
+                person.save()
             self.email_staff_and_committee_members(person, budget_calc_id, 'money_distribution_form')
 
         for id in committee_ids:
             person = CommitteeMember.objects.get(pk=id)
+            if person.receives_money_distribution_form==False:
+                person.receives_money_distribution_form=True
+                person.save()
             self.email_staff_and_committee_members(person, budget_calc_id, 'money_distribution_form')
 
         return Response("Emails Sent!", status=200)
