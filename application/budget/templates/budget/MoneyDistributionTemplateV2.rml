@@ -69,7 +69,7 @@ z3c.rml docs can be found on their github page: https://github.com/zopefoundatio
         <blockTable colWidths="70% 30%" style="budgetGrid">
             {% for item in section.items %}
             <tr>
-                <td>{{ item.name }}</td>
+                <td><para>{{ item.name }}</para></td>
                 <td>{{ item.value|intcomma }}</td>
             </tr>
             {% endfor %}

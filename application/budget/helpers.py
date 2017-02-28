@@ -21,7 +21,10 @@ class BudgetTable:
     def height_required(self):
         # for helping calculate the height required to render the table
         # using points where 1 point = 1/72 of an inch
-        return (len(self.items)+1) * self.ROW_HEIGHT + self.TITLE_HEIGHT
+        # not the greatest but hopefully future devs will find a better way - AS
+        row_count = len(self.items)
+        rows_with_multiline_text = len([item for item in self.items if len(item.name) > 29])
+        return (row_count + rows_with_multiline_text + 1) * self.ROW_HEIGHT + self.TITLE_HEIGHT
 
 
 class MoneyDistributionFormHelper:
