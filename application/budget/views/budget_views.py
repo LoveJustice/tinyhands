@@ -37,7 +37,7 @@ class BudgetViewSet(viewsets.ModelViewSet):
 @api_view(['GET'])
 @permission_classes((IsAuthenticated, ))
 def budget_sheet_by_date(request, pk, month, year):
-    form = {}
+    form = {"border_station": int(pk)}
     other_items = []
     staff_salaries = []
     
@@ -117,11 +117,11 @@ def top_table_data(pk, month, year, budget_sheets):
 
     # If this border station has not had a previous budget calculation worksheet
     return {
-         "all": all_interception_records_count['total'],
+         "all": all_interception_records_count['total'] or 0,
          "all_cost": 0,
-         "last_month": last_months_count['total'],
+         "last_month": last_months_count['total'] or 0,
          "last_months_cost": 0,
-         "last_3_months": last_3_months_count['total'],
+         "last_3_months": last_3_months_count['total'] or 0,
          "last_3_months_cost": 0,
          "staff_count": staff_count,
          "last_months_total_cost": 0
