@@ -50,7 +50,7 @@ class MoneyDistribution(viewsets.ViewSet):
         staff = border_station.staff_set.all()
         committee_members = border_station.committeemember_set.all()
 
-        # Save sending settings and send emails 
+        # Go through all people associated with station, save their settings and send email if selected
         for person in staff:
             if person.id in staff_ids:
                 if person.receives_money_distribution_form == False:
