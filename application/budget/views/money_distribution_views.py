@@ -16,6 +16,7 @@ from z3c.rml import document
 
 from accounts.mixins import PermissionsRequiredMixin
 from budget.models import BorderStationBudgetCalculation, StaffSalary
+from dataentry.models import BorderStation
 from budget.helpers import MoneyDistributionFormHelper
 from rest_api.authentication import HasPermission
 from static_border_stations.models import Staff, CommitteeMember
@@ -43,21 +44,32 @@ class MoneyDistribution(viewsets.ViewSet):
         budget_calc_id = pk
         committee_ids = request.data['committee_ids']
 
-        # send the emails
-        for id in staff_ids:
-            person = Staff.objects.get(pk=id)
-            if person.receives_money_distribution_form==False:
-                person.receives_money_distribution_form=True
-                person.save()
-            self.email_staff_and_committee_members(person, budget_calc_id, 'money_distribution_form')
+        budget_calc = BorderStationBudgetCalculation.objects.get(pk=budget_calc_id)
+        border_station = BorderStation.objects.get(pk=budget_calc.border_station.id)
 
-        for id in committee_ids:
-            person = CommitteeMember.objects.get(pk=id)
-            if person.receives_money_distribution_form==False:
-                person.receives_money_distribution_form=True
-                person.save()
-            self.email_staff_and_committee_members(person, budget_calc_id, 'money_distribution_form')
+        staff = border_station.staff_set.all()
+        committee_members = border_station.committeemember_set.all()
 
+        # Save sending settings and send emails 
+        for person in staff:
+            if person.id in staff_ids:
+                if person.receives_money_distribution_form == False:
+                    person.receives_money_distribution_form = True
+                    person.save()
+                self.email_staff_and_committee_members(person, budget_calc_id, 'money_distribution_form')
+            else:
+                person.receives_money_distribution_form = False
+                person.save()
+
+        for person in committee_members:
+            if person.id in committee_ids:
+                if person.receives_money_distribution_form == False:
+                    person.receives_money_distribution_form = True
+                    person.save()
+                self.email_staff_and_committee_members(person, budget_calc_id, 'money_distribution_form')
+            else:
+                person.receives_money_distribution_form = False
+                person.save()
         return Response("Emails Sent!", status=200)
 
     def email_staff_and_committee_members(self, person, budget_calc_id, template, context={}):
