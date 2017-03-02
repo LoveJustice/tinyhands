@@ -53,7 +53,7 @@ class Address2ViewSet(viewsets.ModelViewSet):
             return Response({'detail' : "Address2 not found"}, status=status.HTTP_404_NOT_FOUND)
 
         if self.there_are_no_related_items(address):
-            logger.info('Delete Address 2 - %s %d', address.name, str(address.id))
+            logging.info('Delete Address 2 - %s %d', address.name, str(address.id))
             return super(Address2ViewSet, self).destroy(request, args, kwargs)
         else:
             logger.debug('Address2 could not be deleted due to related items on the following address1: ' + pk)
@@ -182,7 +182,7 @@ class Address1ViewSet(viewsets.ModelViewSet):
             return Response({'detail': "Address1 not found"}, status=status.HTTP_404_NOT_FOUND)
 
         if self.there_are_no_related_items(address):
-            logger.info('Delete Address 1 - %s %d', address.name, str(address.id))
+            logging.info('Delete Address 1 - %s %d', address.name, str(address.id))
             return super(Address1ViewSet, self).destroy(request, args, kwargs)
         else:
             logger.debug('Address1 could not be deleted due to related items on the following address1: ' + pk)
