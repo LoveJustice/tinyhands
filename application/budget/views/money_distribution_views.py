@@ -1,4 +1,5 @@
 import StringIO
+import logging
 
 from braces.views import LoginRequiredMixin
 from django.conf import settings
@@ -16,11 +17,13 @@ from z3c.rml import document
 
 from accounts.mixins import PermissionsRequiredMixin
 from budget.models import BorderStationBudgetCalculation, StaffSalary
+from dataentry.models import BorderStation
 from budget.helpers import MoneyDistributionFormHelper
 from rest_api.authentication import HasPermission
 from static_border_stations.models import Staff, CommitteeMember
 from static_border_stations.serializers import StaffSerializer, CommitteeMemberSerializer
 
+logger = logging.getLogger(__name__)
 
 class MoneyDistribution(viewsets.ViewSet):
     permission_classes = [IsAuthenticated, HasPermission]
@@ -42,14 +45,18 @@ class MoneyDistribution(viewsets.ViewSet):
         staff_ids = request.data['staff_ids']
         budget_calc_id = pk
         committee_ids = request.data['committee_ids']
+        budget_calc = BorderStationBudgetCalculation.objects.get(pk=budget_calc_id)
+        border_station = BorderStation.objects.get(pk=budget_calc.border_station.id)
 
         # send the emails
         for id in staff_ids:
             person = Staff.objects.get(pk=id)
+            logger.debug("Sending MDF - " + border_station.station_code + " for " + str(budget_calc.month_year) + " to " + person.email)
             self.email_staff_and_committee_members(person, budget_calc_id, 'money_distribution_form')
 
         for id in committee_ids:
             person = CommitteeMember.objects.get(pk=id)
+            logger.debug("Sending MDF - " + border_station.station_code + " for " + str(budget_calc.month_year) + " to " + person.email)
             self.email_staff_and_committee_members(person, budget_calc_id, 'money_distribution_form')
 
         return Response("Emails Sent!", status=200)
