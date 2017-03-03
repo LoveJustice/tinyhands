@@ -51,12 +51,12 @@ class MoneyDistribution(viewsets.ViewSet):
         # send the emails
         for id in staff_ids:
             person = Staff.objects.get(pk=id)
-            logger.debug("Sending MDF - " + border_station.station_code + " for " + str(budget_calc.month_year) + " to " + person.email)
+            logger.info("Sending MDF - %s for %s to %s", border_station.station_code, budget_calc.month_year.strftime("%B %Y"), person.email)
             self.email_staff_and_committee_members(person, budget_calc_id, 'money_distribution_form')
 
         for id in committee_ids:
             person = CommitteeMember.objects.get(pk=id)
-            logger.debug("Sending MDF - " + border_station.station_code + " for " + str(budget_calc.month_year) + " to " + person.email)
+            logger.info("Sending MDF - %s for %s to %s", border_station.station_code, budget_calc.month_year.strftime("%B %Y"), person.email)
             self.email_staff_and_committee_members(person, budget_calc_id, 'money_distribution_form')
 
         return Response("Emails Sent!", status=200)
