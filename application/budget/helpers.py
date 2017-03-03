@@ -8,6 +8,7 @@ BudgetLineItem = namedtuple('budgetItem', ['name', 'value'])
 class BudgetTable:
     ROW_HEIGHT = 18
     TITLE_HEIGHT = 36
+    NAME_LENGTH = 29
 
     def __init__(self, title, items):
         self.title = title
@@ -21,7 +22,9 @@ class BudgetTable:
     def height_required(self):
         # for helping calculate the height required to render the table
         # using points where 1 point = 1/72 of an inch
-        return (len(self.items)+1) * self.ROW_HEIGHT + self.TITLE_HEIGHT
+        # not the greatest but hopefully future devs will find a better way - AS
+        row_count = sum([(len(item.name) // self.NAME_LENGTH) + 1 for item in self.items])
+        return (row_count + 1) * self.ROW_HEIGHT + self.TITLE_HEIGHT
 
 
 class MoneyDistributionFormHelper:
