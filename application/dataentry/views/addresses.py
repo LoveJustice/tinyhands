@@ -89,7 +89,7 @@ class Address2ViewSet(viewsets.ModelViewSet):
             for viflb in viflb_set:
                 viflb.address2 = new_address
                 viflb.save()
-            
+
             affected_objects = len(address2_set) + len(person_set) + len(vif_set) + len(viflb_set)
             logger.info('Swap Address 2 - %s #%d for %s #%d - (%d) Objects Affected', address.name, address.id, new_address.name, new_address.id, affected_objects)
             logger.info('Delete Address 2 - %s #%d', address.name, address.id)
