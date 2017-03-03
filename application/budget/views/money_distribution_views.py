@@ -29,8 +29,8 @@ class MoneyDistribution(viewsets.ViewSet):
 
     def retrieve(self, request, pk):
         border_station = BorderStationBudgetCalculation.objects.get(pk=pk).border_station
-        staff = border_station.staff_set.all().exclude(email__isnull=True)
-        committee_members = border_station.committeemember_set.all().exclude(email__isnull=True)
+        staff = border_station.staff_set.exclude(email__isnull=True)
+        committee_members = border_station.committeemember_set.exclude(email__isnull=True)
 
         staff_serializer = StaffSerializer(staff, many=True)
         committee_members_serializer = CommitteeMemberSerializer(committee_members, many=True)
@@ -40,8 +40,8 @@ class MoneyDistribution(viewsets.ViewSet):
         return Response({"staff_members": staff_serializer.data, "committee_members": committee_members_serializer.data, "pdf_url": pdf_url})
 
     def send_emails(self, request, pk):
-        staff_ids = request.data['staff_ids']
         budget_calc_id = pk
+        staff_ids = request.data['staff_ids']
         committee_ids = request.data['committee_ids']
 
         budget_calc = BorderStationBudgetCalculation.objects.get(pk=budget_calc_id)
@@ -50,19 +50,14 @@ class MoneyDistribution(viewsets.ViewSet):
         staff = border_station.staff_set.all()
         committee_members = border_station.committeemember_set.all()
 
-        # Go through all people associated with station, save their settings and send email if selected
-        for person in staff:
-            if person.id in staff_ids:
-                if person.receives_money_distribution_form == False:
-                    person.receives_money_distribution_form = True
-                    person.save()
-                self.email_staff_and_committee_members(person, budget_calc_id, 'money_distribution_form')
-            else:
-                person.receives_money_distribution_form = False
-                person.save()
 
-        for person in committee_members:
-            if person.id in committee_ids:
+        self.save_recipients_and_email(staff, staff_ids, budget_calc_id)
+        self.save_recipients_and_email(committee_members, committee_ids, budget_calc_id)
+        return Response("Emails Sent!", status=200)
+    
+    def save_recipients_and_email(self, person_list, recipient_ids, budget_calc_id):
+        for person in person_list:
+            if person.id in recipient_ids:
                 if person.receives_money_distribution_form == False:
                     person.receives_money_distribution_form = True
                     person.save()
@@ -70,7 +65,6 @@ class MoneyDistribution(viewsets.ViewSet):
             else:
                 person.receives_money_distribution_form = False
                 person.save()
-        return Response("Emails Sent!", status=200)
 
     def email_staff_and_committee_members(self, person, budget_calc_id, template, context={}):
         context['person'] = person
