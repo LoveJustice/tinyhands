@@ -65,7 +65,7 @@ class MoneyDistribution(viewsets.ViewSet):
                     person.receives_money_distribution_form = True
                     person.save()
                 logger.info("Sending MDF - %s for %s to %s", budget_calc.border_station.station_code, budget_calc.month_year.strftime("%B %Y"), person.email)
-                self.email_staff_and_committee_members(person, budget_calc_id, 'money_distribution_form')
+                self.email_staff_and_committee_members(person, budget_calc.id, 'money_distribution_form')
             else:
                 person.receives_money_distribution_form = False
                 person.save()
