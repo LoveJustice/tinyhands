@@ -188,6 +188,11 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': False,
         },
+        'budget.views': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
     },
 }
 

@@ -1,4 +1,5 @@
 import StringIO
+import logging
 
 from braces.views import LoginRequiredMixin
 from django.conf import settings
@@ -22,6 +23,7 @@ from rest_api.authentication import HasPermission
 from static_border_stations.models import Staff, CommitteeMember
 from static_border_stations.serializers import StaffSerializer, CommitteeMemberSerializer
 
+logger = logging.getLogger(__name__)
 
 class MoneyDistribution(viewsets.ViewSet):
     permission_classes = [IsAuthenticated, HasPermission]
@@ -43,6 +45,8 @@ class MoneyDistribution(viewsets.ViewSet):
         budget_calc_id = pk
         staff_ids = request.data['staff_ids']
         committee_ids = request.data['committee_ids']
+        budget_calc = BorderStationBudgetCalculation.objects.get(pk=budget_calc_id)
+        border_station = BorderStation.objects.get(pk=budget_calc.border_station.id)
 
         budget_calc = BorderStationBudgetCalculation.objects.get(pk=budget_calc_id)
         border_station = BorderStation.objects.get(pk=budget_calc.border_station.id)
@@ -50,18 +54,18 @@ class MoneyDistribution(viewsets.ViewSet):
         staff = border_station.staff_set.all()
         committee_members = border_station.committeemember_set.all()
 
-
-        self.save_recipients_and_email(staff, staff_ids, budget_calc_id)
-        self.save_recipients_and_email(committee_members, committee_ids, budget_calc_id)
+        self.save_recipients_and_email(staff, staff_ids, budget_calc)
+        self.save_recipients_and_email(committee_members, committee_ids, budget_calc)
         return Response("Emails Sent!", status=200)
     
-    def save_recipients_and_email(self, person_list, recipient_ids, budget_calc_id):
+    def save_recipients_and_email(self, person_list, recipient_ids, budget_calc):
         for person in person_list:
             if person.id in recipient_ids:
                 if person.receives_money_distribution_form == False:
                     person.receives_money_distribution_form = True
                     person.save()
-                self.email_staff_and_committee_members(person, budget_calc_id, 'money_distribution_form')
+                logger.info("Sending MDF - %s for %s to %s", budget_calc.border_station.station_code, budget_calc.month_year.strftime("%B %Y"), person.email)
+                self.email_staff_and_committee_members(person, budget_calc.id, 'money_distribution_form')
             else:
                 person.receives_money_distribution_form = False
                 person.save()
@@ -76,6 +80,7 @@ class MoneyDistribution(viewsets.ViewSet):
             recipient_list=[person.email],
             context=context
         )
+        
 
 
 class PDFView(View, LoginRequiredMixin, PermissionsRequiredMixin):
