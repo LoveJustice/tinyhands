@@ -18,6 +18,16 @@ class BorderStationBudgetCalculationListSerializer(serializers.ModelSerializer):
 
 
 class BorderStationBudgetCalculationSerializer(serializers.ModelSerializer):
+    def validate(self, data):
+        borderstation = data["border_station"]
+        monthyear = data["month_year"]
+        print self.instance
+
+        if BorderStationBudgetCalculation.objects.filter(border_station=borderstation, month_year__month=monthyear.month, month_year__year=monthyear.year).count() > 0 and not self.instance:
+            raise serializers.ValidationError('A budget has already been created for this month!')
+        return data
+
+
     class Meta:
         model = BorderStationBudgetCalculation
 
