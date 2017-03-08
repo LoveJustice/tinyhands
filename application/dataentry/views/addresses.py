@@ -53,6 +53,7 @@ class Address2ViewSet(viewsets.ModelViewSet):
             return Response({'detail' : "Address2 not found"}, status=status.HTTP_404_NOT_FOUND)
 
         if self.there_are_no_related_items(address):
+            logger.info('Delete Address 2 - %s #%d', address.name, address.id)
             return super(Address2ViewSet, self).destroy(request, args, kwargs)
         else:
             logger.debug('Address2 could not be deleted due to related items on the following address1: ' + pk)
@@ -67,23 +68,31 @@ class Address2ViewSet(viewsets.ModelViewSet):
             logger.error('Could not find Address2 with the following id: ' + pk)
             return Response({'detail': "Address2 not found"}, status=status.HTTP_404_NOT_FOUND)
         try:
-            for addr2 in address.address2_set.all():
+            address2_set = address.address2_set.all()
+            person_set = address.person_set.all()
+            vif_set = address.victiminterview_set.all()
+            viflb_set = address.victiminterviewlocationbox_set.all()
+
+            for addr2 in address2_set:
                 if addr2.id != new_address.id:
                     addr2.canonical_name = new_address
                     addr2.save()
 
-            for person in address.person_set.all():
+            for person in person_set:
                 person.address2 = new_address
                 person.save()
 
-            for vif in address.victiminterview_set.all():
+            for vif in vif_set:
                 vif.victim_guardian_address2 = new_address
                 vif.save()
 
-            for viflb in address.victiminterviewlocationbox_set.all():
+            for viflb in viflb_set:
                 viflb.address2 = new_address
                 viflb.save()
 
+            affected_objects = len(address2_set) + len(person_set) + len(vif_set) + len(viflb_set)
+            logger.info('Swap Address 2 - %s #%d for %s #%d - (%d) Objects Affected', address.name, address.id, new_address.name, new_address.id, affected_objects)
+            logger.info('Delete Address 2 - %s #%d', address.name, address.id)
             address.delete()
         except:
             logger.error('Could not swap addresses: ' + pk + ' ' + pk2)
@@ -127,22 +136,30 @@ class Address1ViewSet(viewsets.ModelViewSet):
             logger.error('Could not find Address1 with the following id: ' + pk)
             return Response({'detail': "Address1 not found"}, status=status.HTTP_404_NOT_FOUND)
         try:
-            for addr2 in address.address2_set.all():
+            address2_set = address.address2_set.all()
+            person_set = address.person_set.all()
+            vif_set = address.victiminterview_set.all()
+            viflb_set = address.victiminterviewlocationbox_set.all()
+
+            for addr2 in address2_set:
                 addr2.address1 = new_address
                 addr2.save()
 
-            for person in address.person_set.all():
+            for person in person_set:
                 person.address1 = new_address
                 person.save()
 
-            for vif in address.victiminterview_set.all():
+            for vif in vif_set:
                 vif.victim_guardian_address1 = new_address
                 vif.save()
 
-            for viflb in address.victiminterviewlocationbox_set.all():
+            for viflb in viflb_set:
                 viflb.address1 = new_address
                 viflb.save()
 
+            affected_objects = len(address2_set) + len(person_set) + len(vif_set) + len(viflb_set)
+            logger.info('Swap Address 1 - %s #%d for %s #%d - (%d) Objects Affected', address.name, address.id, new_address.name, new_address.id, affected_objects)
+            logger.info('Delete Address 1 - %s #%d', address.name, address.id)
             address.delete()
         except:
             logger.error('Could not swap addresses: ' + pk + ' ' + pk2)
@@ -165,6 +182,7 @@ class Address1ViewSet(viewsets.ModelViewSet):
             return Response({'detail': "Address1 not found"}, status=status.HTTP_404_NOT_FOUND)
 
         if self.there_are_no_related_items(address):
+            logger.info('Delete Address 1 - %s #%d', address.name, address.id)
             return super(Address1ViewSet, self).destroy(request, args, kwargs)
         else:
             logger.debug('Address1 could not be deleted due to related items on the following address1: ' + pk)

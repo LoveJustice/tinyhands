@@ -19,6 +19,16 @@ class BudgetTableTests(TestCase):
 
         self.assertEqual(target.height_required, (len(items)+1)*BudgetTable.ROW_HEIGHT + BudgetTable.TITLE_HEIGHT)
 
+    def test_height_required_should_account_for_items_with_multiline_text(self):
+        items = [
+            BudgetLineItem("one", 1),
+            BudgetLineItem("two", 2),
+            BudgetLineItem("This is a very long line of text to make sure we calculate correctly", 30)
+        ]
+        target = BudgetTable("Table", items)
+
+        self.assertEqual(target.height_required, (len(items)+3)*BudgetTable.ROW_HEIGHT + BudgetTable.TITLE_HEIGHT)
+
 
 class MoneyDistributionFormHelperTests(TestCase):
 
