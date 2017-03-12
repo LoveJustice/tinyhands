@@ -5,7 +5,8 @@ from budget.views import \
     MoneyDistribution, \
     MoneyDistributionFormPDFView, \
     budget_sheet_by_date, \
-    StaffSalaryViewSet
+    StaffSalaryViewSet, \
+    get_top_table_data
 
 list_methods = {'get': 'list', 'post': 'create'}
 detail_methods = {'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}
@@ -13,6 +14,7 @@ detail_methods = {'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}
 urlpatterns = [
         url(r'^budget/$', BudgetViewSet.as_view(list_methods), name='BudgetCalculation'),
         url(r'^budget/(?P<pk>\d+)/$', BudgetViewSet.as_view(detail_methods), name='BudgetCalculationWithId'),
+        url(r'^budget/(?P<pk>\d+)/top_table_data/$', get_top_table_data, name='get_top_table_data'),
 
         url(r'^budget/(?P<parent_pk>\d+)/item/$', OtherItemsViewSet.as_view(list_methods), name='BudgetCalculationWithId'),
         url(r'^budget/(?P<parent_pk>\d+)/item/(?P<pk>\d+)/$', OtherItemsViewSet.as_view(detail_methods), name='BudgetCalculationWithId'),

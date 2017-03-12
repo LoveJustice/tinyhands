@@ -64,6 +64,21 @@ def budget_sheet_by_date(request, pk, month, year):
         'other_items': other_items
     })
 
+
+
+@api_view(['GET'])
+@permission_classes((IsAuthenticated, ))
+def get_top_table_data(request, pk):
+    budget_sheet = BorderStationBudgetCalculation.objects.get(pk=pk)
+
+    budget_sheets = BorderStationBudgetCalculation.objects.filter(
+        border_station=budget_sheet.border_station,
+        month_year__lt=budget_sheet.month_year
+    ).order_by('-date_time_entered')
+
+    return Response(top_table_data(pk, budget_sheet.month_year.month, budget_sheet.month_year.year, budget_sheets))
+
+
 def top_table_data(pk, month, year, budget_sheets):
     date = datetime.datetime(int(year), int(month), 15)  # We pass the Month_year as two key-word arguments because the day is always 15
     border_station = BorderStation.objects.get(pk=pk)
