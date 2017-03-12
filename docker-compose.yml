@@ -12,6 +12,9 @@ db:
 
 web:
   build: .
+  command: /bin/sh -c /data/bin/run.sh
+  stdin_open: true
+  tty: true
   volumes_from:
     - data
   volumes:
