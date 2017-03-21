@@ -10,6 +10,7 @@ from rest_framework.response import Response
 
 from budget.models import BorderStationBudgetCalculation, OtherBudgetItemCost, StaffSalary
 from budget.serializers import BorderStationBudgetCalculationSerializer, OtherBudgetItemCostSerializer, StaffSalarySerializer, BorderStationBudgetCalculationListSerializer
+from dataentry.models import Interceptee
 from dataentry.models import InterceptionRecord
 from rest_api.authentication import HasPermission, HasDeletePermission, HasPostPermission, HasPutPermission
 from static_border_stations.models import BorderStation
@@ -85,46 +86,39 @@ def top_table_data(pk, month, year, budget_sheets):
     staff_count = border_station.staff_set.count()
 
     # Last month data will count records from the 15th of previous month to 14th of budget sheet month
-    all_interception_records = InterceptionRecord.objects.annotate(interceptee_count=Count("interceptees")).filter(irf_number__startswith=border_station.station_code)
-    last_months = all_interception_records.filter(date_time_entered_into_system__gte=(date+relativedelta(months=-1)), date_time_entered_into_system__lte=date)
-    last_3_months = all_interception_records.filter(date_time_entered_into_system__gte=(date+relativedelta(months=-3)), date_time_entered_into_system__lte=date)
+    all_interceptions = Interceptee.objects.filter(interception_record__irf_number__startswith=border_station.station_code, kind='v')
 
-    last_months_count = last_months.aggregate(total=Sum('number_of_victims'))
-    last_3_months_count = last_3_months.aggregate(total=Sum('number_of_victims'))
-    all_interception_records_count = all_interception_records.aggregate(total=Sum('number_of_victims'))
-    
+    last_months_count = all_interceptions.filter(
+            interception_record__date_time_of_interception__gte=date+relativedelta(months=-1),
+            interception_record__date_time_entered_into_system__lte=date).count()
+    last_3_months_count = all_interceptions.filter(
+            interception_record__date_time_of_interception__gte=date+relativedelta(months=-3),
+            interception_record__date_time_entered_into_system__lte=date).count()
+    all_interception_records_count = all_interceptions.count()
+
     if budget_sheets:  # If this border station has had a previous budget calculation worksheet
-        last_3_months_count_divide = last_3_months_count['total']
-        if last_3_months_count['total'] is None:
-            last_3_months_count['total'] = 0
-            last_3_months_count_divide = 1
-        last_months_count_divide = last_months_count['total']
-        if last_months_count['total'] is None:
-            last_months_count['total'] = 0
-            last_months_count_divide = 1
-        all_interception_records_count_divide = all_interception_records_count['total']
-        if all_interception_records_count['total'] is None:
-            all_interception_records_count['total'] = 0
-            all_interception_records_count_divide = 1
+        last_3_months_count_divide = last_3_months_count if last_3_months_count != 0 else 1
+        last_months_count_divide = last_months_count if last_months_count != 0 else 1
+        all_interception_records_count_divide = all_interception_records_count if all_interception_records_count != 0 else 1
+
+        last_months_sheets = budget_sheets.filter(month_year__gte=date+relativedelta(months=-1))
+        last_months_cost = last_months_sheets[0].station_total() if last_months_sheets.count() > 0 else 0
 
         last_3_months_cost = 0
         last_3_months_sheets = budget_sheets.filter(month_year__gte=date+relativedelta(months=-3))
-        last_months_sheets = budget_sheets.filter(month_year__gte=date+relativedelta(months=-1))
-        if last_months_sheets.count() > 0:
-            last_months_cost = last_months_sheets[0].station_total()
-        else:
-            last_months_cost = 0
         for sheet in last_3_months_sheets:
             last_3_months_cost += sheet.station_total()
+
         all_cost = 0
         for sheet in budget_sheets:
             all_cost += sheet.station_total()
+
         return {
-                "all": all_interception_records_count['total'],
+                "all": all_interception_records_count,
                 "all_cost": all_cost/all_interception_records_count_divide,
-                "last_month": last_months_count['total'],
+                "last_month": last_months_count,
                 "last_months_cost": last_months_cost/last_months_count_divide,
-                "last_3_months": last_3_months_count['total'],
+                "last_3_months": last_3_months_count,
                 "last_3_months_cost": last_3_months_cost/last_3_months_count_divide,
                 "staff_count": staff_count,
                 "last_months_total_cost": last_months_cost
@@ -132,11 +126,11 @@ def top_table_data(pk, month, year, budget_sheets):
 
     # If this border station has not had a previous budget calculation worksheet
     return {
-         "all": all_interception_records_count['total'] or 0,
+         "all": all_interception_records_count,
          "all_cost": 0,
-         "last_month": last_months_count['total'] or 0,
+         "last_month": last_months_count,
          "last_months_cost": 0,
-         "last_3_months": last_3_months_count['total'] or 0,
+         "last_3_months": last_3_months_count,
          "last_3_months_cost": 0,
          "staff_count": staff_count,
          "last_months_total_cost": 0
