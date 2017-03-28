@@ -1,3 +1,4 @@
+import datetime
 from django.core import mail
 from django.core.urlresolvers import reverse
 from django.test.testcases import TestCase
@@ -21,7 +22,7 @@ class BudgetCalcApiTests(WebTest):
         self.border_station = BorderStationFactory()
 
     def testCreateBudgetSheet(self):
-        response = self.client.post('/api/budget/', {"border_station": self.border_station.pk})
+        response = self.client.post('/api/budget/', {"border_station": self.border_station.pk, "month_year": "2017-04-15T23:53:08.996000Z"})
         self.assertEqual(response.status_code, 201)
 
     def testRemoveBudgetSheet(self):
@@ -29,7 +30,7 @@ class BudgetCalcApiTests(WebTest):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data['results']), 0)
 
-        response = self.client.post('/api/budget/', {"border_station": self.border_station.pk})
+        response = self.client.post('/api/budget/', {"border_station": self.border_station.pk, "month_year": "2017-04-15T23:53:08.996000Z"})
         budget_id = response.data.get('id')
         self.assertEqual(response.status_code, 201)
 
@@ -47,7 +48,7 @@ class BudgetCalcApiTests(WebTest):
         self.assertEqual(len(response.data['results']), 0)
 
     def testUpdateBudgetSheet(self):
-        response = self.client.post('/api/budget/', {"border_station": self.border_station.pk})
+        response = self.client.post('/api/budget/', {"border_station": self.border_station.pk, "month_year": "2017-04-15T23:53:08.996000Z"})
         budget_id = response.data.get('id')
         self.assertEqual(response.status_code, 201)
 
@@ -55,7 +56,7 @@ class BudgetCalcApiTests(WebTest):
         budget_id = response.data.get('id')
         self.assertEqual(response.status_code, 200)
 
-        response = self.client.put('/api/budget/' + str(budget_id) + '/', {"border_station": self.border_station.pk, "shelter_water": 2})
+        response = self.client.put('/api/budget/' + str(budget_id) + '/', {"border_station": self.border_station.pk, "shelter_water": 2, "month_year": "2017-04-15T23:53:08.996000Z"})
         budget_id = response.data.get('id')
         self.assertEqual(response.status_code, 200)
 
