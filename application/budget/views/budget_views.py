@@ -89,11 +89,11 @@ def top_table_data(pk, month, year, budget_sheets):
     all_interceptions = Interceptee.objects.filter(interception_record__irf_number__startswith=border_station.station_code, kind='v')
 
     last_months_count = all_interceptions.filter(
-            interception_record__date_time_of_interception__gte=date+relativedelta(months=-1),
-            interception_record__date_time_of_interception__lte=date).count()
+            interception_record__date_time_entered_into_system__gte=date+relativedelta(months=-1),
+            interception_record__date_time_entered_into_system__lte=date).count()
     last_3_months_count = all_interceptions.filter(
-            interception_record__date_time_of_interception__gte=date+relativedelta(months=-3),
-            interception_record__date_time_of_interception__lte=date).count()
+            interception_record__date_time_entered_into_system__gte=date+relativedelta(months=-3),
+            interception_record__date_time_entered_into_system__lte=date).count()
     all_interception_records_count = all_interceptions.count()
 
     if budget_sheets:  # If this border station has had a previous budget calculation worksheet
