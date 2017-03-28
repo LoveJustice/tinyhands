@@ -2,7 +2,7 @@ import datetime
 
 from rest_framework import serializers
 
-from dataentry.models import Address1, Address2, SiteSettings, InterceptionRecord, VictimInterview, BorderStation, Person, Interceptee
+from dataentry.models import Address1, Address2, Country, SiteSettings, InterceptionRecord, VictimInterview, BorderStation, Person, Interceptee
 
 from helpers import related_items_helper
 
@@ -16,6 +16,9 @@ class Address1RelatedItemsSerializer(Address1Serializer):
     related_items = serializers.SerializerMethodField()
     get_related_items = related_items_helper
 
+class CountrySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Country
 
 class SiteSettingsSerializer(serializers.ModelSerializer):
     class Meta:
