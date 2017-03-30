@@ -231,12 +231,7 @@ class BorderStationBudgetCalculation(models.Model):
         return total
 
     def salary_total(self):
-        total = 0
-        items = self.staffsalary_set.all()
-        for item in items:
-            total += item.salary
-        total += self.other_items_total(self.STAFF)
-        return total
+        return sum([staff.salary for staff in self.staffsalary_set.exclude(salary__isnull=True)]) + self.other_items_total(self.STAFF)
 
     def station_total(self):
         total = 0
@@ -255,7 +250,7 @@ class BorderStationBudgetCalculation(models.Model):
     members = models.ManyToManyField(Staff, through='StaffSalary')
 
     def other_items_total(self, section):
-        items = self.otherbudgetitemcost_set.filter(form_section=section)
+        items = self.otherbudgetitemcost_set.filter(form_section=section).exclude(cost__isnull=True)
         return sum(item.cost for item in items)
 
 

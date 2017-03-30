@@ -10,6 +10,7 @@ from rest_framework.response import Response
 
 from budget.models import BorderStationBudgetCalculation, OtherBudgetItemCost, StaffSalary
 from budget.serializers import BorderStationBudgetCalculationSerializer, OtherBudgetItemCostSerializer, StaffSalarySerializer, BorderStationBudgetCalculationListSerializer
+from dataentry.models import Interceptee
 from dataentry.models import InterceptionRecord
 from rest_api.authentication import HasPermission, HasDeletePermission, HasPostPermission, HasPutPermission
 from static_border_stations.models import BorderStation
@@ -28,102 +29,112 @@ class BudgetViewSet(viewsets.ModelViewSet):
     ordering_fields = ['border_station__station_name', 'border_station__station_code', 'month_year', 'date_time_entered', 'date_time_last_updated']
 
     def list(self, request, *args, **kwargs):
-            temp = self.serializer_class
-            self.serializer_class = BorderStationBudgetCalculationListSerializer  # we want to use a custom serializer just for the list view
-            super_list_response = super(BudgetViewSet, self).list(request, *args, **kwargs)  # call the supers list view with custom serializer
-            self.serializer_class = temp  # put the original serializer back in place
-            return super_list_response
+        temp = self.serializer_class
+        self.serializer_class = BorderStationBudgetCalculationListSerializer  # we want to use a custom serializer just for the list view
+        super_list_response = super(BudgetViewSet, self).list(request, *args, **kwargs)  # call the supers list view with custom serializer
+        self.serializer_class = temp  # put the original serializer back in place
+        return super_list_response
+
+@api_view(['GET'])
+@permission_classes((IsAuthenticated, ))
+def budget_sheet_by_date(request, pk, month, year):
+    form = {"border_station": int(pk)}
+    other_items = []
+    staff_salaries = []
+    
+    date = datetime.date(int(year), int(month), 1)
+    budget_sheets = BorderStationBudgetCalculation.objects.filter(
+        border_station=pk,
+        month_year__lte=date
+    ).order_by('-date_time_entered')
+
+    if budget_sheets and len(budget_sheets) > 0:
+        previous_budget_sheet = budget_sheets[0]
+        other_items_serializer = OtherBudgetItemCostSerializer(previous_budget_sheet.otherbudgetitemcost_set.all(), many=True)
+        staff_serializer = StaffSalarySerializer(previous_budget_sheet.staffsalary_set.all(), many=True)
+        budget_serializer = BorderStationBudgetCalculationSerializer(previous_budget_sheet)
+
+        staff_salaries = staff_serializer.data
+        other_items = other_items_serializer.data
+        form = budget_serializer.data
+
+    return Response({
+        'top_table_data': top_table_data(pk, month, year, budget_sheets),
+        'form': form,
+        'staff_salaries': staff_salaries,
+        'other_items': other_items
+    })
+
 
 
 @api_view(['GET'])
 @permission_classes((IsAuthenticated, ))
-def retrieve_latest_budget_sheet_for_border_station(request, pk):
-    budget_sheet = BorderStationBudgetCalculation.objects.filter(border_station=pk).order_by('-date_time_entered').first()  # Get's you the latest budget sheet for a border stations
+def get_top_table_data(request, pk):
+    budget_sheet = BorderStationBudgetCalculation.objects.get(pk=pk)
 
-    if budget_sheet:  # if there has been a preview budget sheet
+    budget_sheets = BorderStationBudgetCalculation.objects.filter(
+        border_station=budget_sheet.border_station,
+        month_year__lt=budget_sheet.month_year
+    ).order_by('-date_time_entered')
 
-        other_items_serializer = OtherBudgetItemCostSerializer(budget_sheet.otherbudgetitemcost_set.all(), many=True)
-        staff_serializer = StaffSalarySerializer(budget_sheet.staffsalary_set.all(), many=True)
-        budget_serializer = BorderStationBudgetCalculationSerializer(budget_sheet)
-
-        return Response(
-            {
-                "budget_form": budget_serializer.data,
-                "other_items": other_items_serializer.data,
-                "staff_salaries": staff_serializer.data
-            }
-        )
-    # If there hasn't been a previous budget sheet
-    return Response({"budget_form": {"border_station": pk}, "other_items": "", "staff_salaries": "", "None": 1})
+    return Response(top_table_data(pk, budget_sheet.month_year.month, budget_sheet.month_year.year, budget_sheets))
 
 
-@api_view(['GET'])
-@permission_classes((IsAuthenticated, ))
-def previous_data(request, pk, month, year):
+def top_table_data(pk, month, year, budget_sheets):
     date = datetime.datetime(int(year), int(month), 15)  # We pass the Month_year as two key-word arguments because the day is always 15
-    budget_sheets = BorderStationBudgetCalculation.objects.filter(border_station=pk, month_year__lte=date).order_by('-date_time_entered')  # filter them so the first element is the most recent
-
     border_station = BorderStation.objects.get(pk=pk)
     staff_count = border_station.staff_set.count()
 
     # Last month data will count records from the 15th of previous month to 14th of budget sheet month
-    all_interception_records = InterceptionRecord.objects.annotate(interceptee_count=Count("interceptees")).filter(irf_number__startswith=border_station.station_code)
-    last_months = all_interception_records.filter(date_time_entered_into_system__gte=(date+relativedelta(months=-1)), date_time_entered_into_system__lte=date)
-    last_3_months = all_interception_records.filter(date_time_entered_into_system__gte=(date+relativedelta(months=-3)), date_time_entered_into_system__lte=date)
+    all_interceptions = Interceptee.objects.filter(interception_record__irf_number__startswith=border_station.station_code, kind='v')
 
-    last_months_count = last_months.aggregate(total=Sum('number_of_victims'))
-    last_3_months_count = last_3_months.aggregate(total=Sum('number_of_victims'))
-    all_interception_records_count = all_interception_records.aggregate(total=Sum('number_of_victims'))
-    
+    last_months_count = all_interceptions.filter(
+            interception_record__date_time_entered_into_system__gte=date+relativedelta(months=-1),
+            interception_record__date_time_entered_into_system__lte=date).count()
+    last_3_months_count = all_interceptions.filter(
+            interception_record__date_time_entered_into_system__gte=date+relativedelta(months=-3),
+            interception_record__date_time_entered_into_system__lte=date).count()
+    all_interception_records_count = all_interceptions.count()
+
     if budget_sheets:  # If this border station has had a previous budget calculation worksheet
-        last_3_months_count_divide = last_3_months_count['total']
-        if last_3_months_count['total'] is None:
-            last_3_months_count['total'] = 0
-            last_3_months_count_divide = 1
-        last_months_count_divide = last_months_count['total']
-        if last_months_count['total'] is None:
-            last_months_count['total'] = 0
-            last_months_count_divide = 1
-        all_interception_records_count_divide = all_interception_records_count['total']
-        if all_interception_records_count['total'] is None:
-            all_interception_records_count['total'] = 0
-            all_interception_records_count_divide = 1
+        last_3_months_count_divide = last_3_months_count if last_3_months_count != 0 else 1
+        last_months_count_divide = last_months_count if last_months_count != 0 else 1
+        all_interception_records_count_divide = all_interception_records_count if all_interception_records_count != 0 else 1
+
+        last_months_sheets = budget_sheets.filter(month_year__gte=date+relativedelta(months=-1))
+        last_months_cost = last_months_sheets[0].station_total() if last_months_sheets.count() > 0 else 0
 
         last_3_months_cost = 0
         last_3_months_sheets = budget_sheets.filter(month_year__gte=date+relativedelta(months=-3))
-        last_months_sheets = budget_sheets.filter(month_year__gte=date+relativedelta(months=-1))
-        if last_months_sheets.count() > 0:
-            last_months_cost = last_months_sheets[0].station_total()
-        else:
-            last_months_cost = 0
         for sheet in last_3_months_sheets:
             last_3_months_cost += sheet.station_total()
+
         all_cost = 0
         for sheet in budget_sheets:
             all_cost += sheet.station_total()
-        return Response(
-            {
-                "all": all_interception_records_count['total'],
+
+        return {
+                "all": all_interception_records_count,
                 "all_cost": all_cost/all_interception_records_count_divide,
-                "last_month": last_months_count['total'],
+                "last_month": last_months_count,
                 "last_months_cost": last_months_cost/last_months_count_divide,
-                "last_3_months": last_3_months_count['total'],
+                "last_3_months": last_3_months_count,
                 "last_3_months_cost": last_3_months_cost/last_3_months_count_divide,
                 "staff_count": staff_count,
                 "last_months_total_cost": last_months_cost
-            }
-        )
+        }
+
     # If this border station has not had a previous budget calculation worksheet
-    return Response(
-        {"all": all_interception_records_count['total'],
+    return {
+         "all": all_interception_records_count,
          "all_cost": 0,
-         "last_month": last_months_count['total'],
+         "last_month": last_months_count,
          "last_months_cost": 0,
-         "last_3_months": last_3_months_count['total'],
+         "last_3_months": last_3_months_count,
          "last_3_months_cost": 0,
          "staff_count": staff_count,
          "last_months_total_cost": 0
-         })
+    }
 
 
 class OtherItemsViewSet(viewsets.ModelViewSet):
