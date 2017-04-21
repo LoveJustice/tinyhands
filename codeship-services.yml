@@ -27,9 +27,10 @@ web:
     DB_PORT: 5432
     GOOGLE_APPLICATION_CREDENTIALS: /data/google_cred.json
     DREAMSUITE_LOG: /log/dreamsuite.log
-    SITE_HOSTNAME: localhost
     DJANGO_SECRET_KEY: thisissosecretfordevelopment
-    CLIENT_BASE_URL: http://localhost:3000/#
+    SITE_HOSTNAME: localhost
+    SITE_DOMAIN: http://localhost
+    CLIENT_DOMAIN: http://localhost/#!
     EMAIL_HOST_PASSWORD: notarealpassword
 
 nginx:

@@ -14,8 +14,6 @@ MIDDLEWARE_CLASSES += [
 CORS_ORIGIN_ALLOW_ALL = True
 INSTALLED_APPS.append('debug_toolbar')
 
-SITE_DOMAIN = 'http://localhost'
-CLIENT_DOMAIN = os.environ['CLIENT_BASE_URL']
 
 SPREADSHEET_NAME = 'Tinyhands'
 IRF_WORKSHEET_NAME = 'IRF Entry'
