@@ -4,6 +4,9 @@ from unipath import Path
 import os
 import logging.config
 
+SITE_DOMAIN = os.environ['SITE_DOMAIN']
+CLIENT_DOMAIN = os.environ['CLIENT_DOMAIN']
+
 BASE_DIR = Path(__file__).ancestor(3)
 
 SERVER_EMAIL = 'austin@tinyhands.org'

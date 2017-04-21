@@ -11,9 +11,6 @@ DEBUG = True
 
 ADMINS = [('Ben Duggan', 'benaduggan@gmail.com'), ('Austin Munn', "austin@tinyhands.org"), ("Stan Rishel", "scrishel@sbcglobal.net")]
 
-SITE_DOMAIN = 'https://staging.tinyhandsdreamsuite.org'
-CLIENT_DOMAIN = 'https://staging.tinyhandsdreamsuite.org/#'
-
 SPREADSHEET_NAME = 'Dream Suite - THN Data (Staging)'
 IRF_WORKSHEET_NAME = 'IRF Entry'
 VIF_WORKSHEET_NAME = 'VIF Entry'
