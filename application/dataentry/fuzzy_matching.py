@@ -1,6 +1,6 @@
 from fuzzywuzzy import process
 
-from dataentry.models import Address1, Address2, SiteSettings
+from dataentry.models import Address1, Address2, SiteSettings, Person
 
 
 def match_location(address1_name=None, address2_name=None):
@@ -59,3 +59,15 @@ def match_address2_address1(address2_name, address1_name):
         return address2, address1
     else:
         return None
+    
+def match_person(person_name):
+    results = []
+    choices = {choice.id: choice.full_name
+               for choice in Person.objects.all()
+               }
+    matches = process.extractBests(person_name, choices, score_cutoff=70, limit=5)
+    
+    for match in matches:
+        results.append(Person.objects.get(id=match[2]))
+        
+    return results

@@ -1,6 +1,6 @@
 from django.conf.urls import url
 
-from dataentry.views import Address2ViewSet, Address1ViewSet, GeoCodeAddress1APIView, GeoCodeAddress2APIView, InterceptionRecordViewSet, VictimInterviewViewSet, IntercepteeViewSet, VictimInterviewDetailViewSet, PhotoExporter, IrfCsvExportView, VifCsvExportView
+from dataentry.views import Address2ViewSet, Address1ViewSet, GeoCodeAddress1APIView, GeoCodeAddress2APIView, InterceptionRecordViewSet, VictimInterviewViewSet, IntercepteeViewSet, VictimInterviewDetailViewSet, PhotoExporter, IrfCsvExportView, VifCsvExportView, KnownPersonViewSet
 from dataentry.views import PersonViewSet
 from dataentry.views import SiteSettingsViewSet
 from dataentry.views import CountryViewSet
@@ -50,6 +50,13 @@ urlpatterns = [
 
         #Persons
         url(r'^person/$', PersonViewSet.as_view({'get': 'list'}), name="Person"),
+        
+        #KnownPersons
+        url(r'^knownperson/$', KnownPersonViewSet.as_view({'get': 'list'}), name="KnownPerson"),
+        url(r'^knownperson/fuzzy/$', KnownPersonViewSet.as_view({'get':'fuzzy_match'}), name="KnownPerson"),
+        url(r'^knownperson/aperson/$', KnownPersonViewSet.as_view({'get':'get_person'}), name="KnownPerson"),
+        url(r'^knownperson/forms/$', KnownPersonViewSet.as_view({'get':'person_forms'}), name="KnownPerson"),
+        url(r'^knownperson/group/$', KnownPersonViewSet.as_view({'get':'alias_group'}), name="KnownPerson"),
 
         #Countries
         url(r'^country/$', CountryViewSet.as_view(list), name='Country'),

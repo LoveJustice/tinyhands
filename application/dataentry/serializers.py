@@ -254,6 +254,38 @@ class PersonSerializer(serializers.ModelSerializer):
             'phone_contact',
         ]
 
+class KnownPersonSerializer(serializers.ModelSerializer):
+    aliases = serializers.CharField(source='get_aliases', read_only=True)
+    form_type = serializers.CharField(source='get_form_type', read_only=True)
+    form_number = serializers.CharField(source='get_form_number', read_only=True)
+    form_date = serializers.CharField(source='get_form_date', read_only=True)
+    form_photo = serializers.ImageField(source='get_form_photo', use_url=True, read_only=True)
+    form_kind = serializers.CharField(source='get_form_kind', read_only=True)
+    address1 = Address1Serializer(read_only=True)
+    address2 = Address2Serializer(read_only=True)
+
+    class Meta:
+        model = Person
+        fields = [
+            'id',
+            'full_name',
+            'gender',
+            'age',
+            'address1',
+            'address2',
+            'phone_contact',
+            'alias_group',
+            'aliases',
+            'form_type',
+            'form_number',
+            'form_date',
+            'form_photo',
+            'form_kind',
+        ]
+
+class PersonFormsSerializer(serializers.Serializer):
+    number = serializers.CharField()
+    date = serializers.CharField()
 
 class VictimInterviewSerializer(serializers.ModelSerializer):
     victim_guardian_address1 = Address1Serializer(read_only=True)

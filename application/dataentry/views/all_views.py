@@ -35,7 +35,7 @@ from dataentry.models import BorderStation, SiteSettings, Address2, Address1, In
 from dataentry.forms import IntercepteeForm, InterceptionRecordForm, Address2Form, Address1Form, VictimInterviewForm, VictimInterviewLocationBoxForm, VictimInterviewPersonBoxForm
 from dataentry.dataentry_signals import irf_done
 
-from dataentry.serializers import Address1Serializer, Address2Serializer, InterceptionRecordListSerializer, VictimInterviewListSerializer, VictimInterviewSerializer, PersonSerializer, IntercepteeSerializer, InterceptionRecordSerializer
+from dataentry.serializers import Address1Serializer, Address2Serializer, InterceptionRecordListSerializer, VictimInterviewListSerializer, VictimInterviewSerializer, PersonSerializer, IntercepteeSerializer, InterceptionRecordSerializer, KnownPersonSerializer, PersonFormsSerializer
 from dataentry.dataentry_signals import irf_done, vif_done
 from dataentry.fuzzy_matching import match_location
 
@@ -45,7 +45,7 @@ from accounts.mixins import PermissionsRequiredMixin
 
 from rest_api.authentication import HasPermission, HasDeletePermission, HasPostPermission, HasPutPermission
 
-from dataentry import alert_checkers
+from dataentry import alert_checkers, fuzzy_matching
 
 
 logger = logging.getLogger(__name__)
@@ -378,6 +378,42 @@ class PersonViewSet(viewsets.ModelViewSet):
     ordering_fields = ('full_name', 'age', 'gender', 'phone_contact')
     ordering = ('full_name',)
 
+class KnownPersonViewSet(viewsets.ModelViewSet):
+    queryset = Person.objects.all()
+    serializer_class = KnownPersonSerializer
+    permission_classes = (IsAuthenticated, HasPermission)
+    permissions_required = ['permission_address2_manage']
+    filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
+    search_fields = ('full_name',)
+    ordering_fields = ('full_name', 'age', 'gender', 'phone_contact','aliases',
+            'form_type','form_number','form_date')
+    ordering = ('full_name',)
+
+    def fuzzy_match(self, request):
+        input_name = request.GET['name']
+        results = fuzzy_matching.match_person(input_name)
+        serializer = KnownPersonSerializer(results, many=True, context={'request': request})
+        return Response(serializer.data)
+    
+    def person_forms(self, request):
+        person_id = request.GET['person_id']
+        person = Person.objects.get(id=person_id)
+        forms = person.get_form_data()
+        serializer = PersonFormsSerializer(forms, many=True, context={'request': request})
+        return Response(serializer.data)
+    
+    def alias_group(self, request):
+        group_id = request.GET['group_id']
+        logger.error("Enter group_id=" + group_id);
+        results = Person.objects.filter(alias_group=group_id);
+        serializer = KnownPersonSerializer(results, many=True, context={'request': request})
+        return Response(serializer.data)   
+    
+    def get_person(self, request):
+        person_id = request.GET['person_id']
+        person = Person.objects.get(id=person_id)  
+        serializer = KnownPersonSerializer(person, context={'request': request})
+        return Response(serializer.data)
 
 class InterceptionRecordViewSet(viewsets.ModelViewSet):
     queryset = InterceptionRecord.objects.all()
