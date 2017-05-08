@@ -30,17 +30,17 @@ vif_data = [
     DateCsvField("date", "Date (on Form)"),
     DateTimeCsvField("date_time_entered_into_system", "Date Entered"),
 
-    CopyCsvField("number_of_victims", "Number of Victims", True),
-    CopyCsvField("number_of_traffickers", "Number of Traffickers", True),
+    CopyCsvField("number_of_victims", "Number of Victims", True, numeric_value=True),
+    CopyCsvField("number_of_traffickers", "Number of Traffickers", True, numeric_value=True),
 
-    CopyCsvField("location", "Location", True),
-    CopyCsvField("interviewer", "Interviewer", True),
+    CopyCsvField("location", "Location", True, allow_null_or_blank_import = False),
+    CopyCsvField("interviewer", "Interviewer", True, allow_null_or_blank_import = False),
 
     BooleanCsvField("statement_read_before_beginning", "Statement Read", "Statement was read to the participant", ""),
     BooleanCsvField("permission_to_use_photograph", "Photo Permission", "Permission was given to use photo", ""),
 
-    CopyCsvField("full_name", "1.1 Name", True),
-    MapValueCsvField("gender", "1.2 Gender", { "male":"M", "female":"F", "Unknown":"U"}, export_default="Unknown"),
+    CopyCsvField("full_name", "1.1 Name", True, allow_null_or_blank_import = False),
+    MapValueCsvField("gender", "1.2 Gender", { "male":"M", "female":"F", "Unknown":"U"}, export_default="Unknown", required_nonempty=True),
 
     Address1CsvField("address1", "1.3 Address1"),
     Address2CsvField("address2", "Address2", "address1"),
@@ -48,9 +48,9 @@ vif_data = [
     CopyCsvField("victim_address_ward", "Ward", False),
 
     CopyCsvField("phone_contact", "Phone Number", False),
-    CopyCsvField("age", "1.4 Age", True),
-    CopyCsvField("victim_height", "1.5 Height", True),
-    CopyCsvField("victim_weight", "1.6 Weight", True),
+    CopyCsvField("age", "1.4 Age", True, numeric_value=True),
+    CopyCsvField("victim_height", "1.5 Height", True, numeric_value=True),
+    CopyCsvField("victim_weight", "1.6 Weight", True, numeric_value=True),
 
     GroupBooleanCsv("victim_caste", "1.7 Caste"),
     CopyCsvField("victim_caste_other_value", "Other Caste", False),
@@ -61,7 +61,7 @@ vif_data = [
     GroupBooleanCsv("victim_marital_status", "1.9 Marital Status"),
     GroupBooleanCsv("victim_lives_with", "1.10 Live With"),
     CopyCsvField("victim_lives_with_other_value", "Live With Other", False),
-    CopyCsvField("victim_num_in_family", "1.11 Number of Family Members", True),
+    CopyCsvField("victim_num_in_family", "1.11 Number of Family Members", True, numeric_value=True),
 
     GroupBooleanCsv("victim_primary_guardian", "1.12 Guardian"),
     Address1CsvField("victim_guardian_address1", "1.13 Guardian Address1"),
@@ -84,7 +84,7 @@ vif_data = [
     BooleanCsvField("manpower_involved","3.1 Involvement of Manpower",
             "Manpower was involved","Manpower was not involved"),
     BooleanCsvField("victim_recruited_in_village", "3.2 Recruited from Village",
-            "Was recruited from village", "Was not recruited from village"),
+            "Was recruited from village", "Was not recruited from village", allow_null_or_blank_import = False),
     GroupBooleanCsv("brokers_relation_to_victim", "3.3 Broker's Relation to Victim"),
     CopyCsvField("brokers_relation_to_victim_other_value", "Broker's Relation Other", False),
 
@@ -117,7 +117,7 @@ vif_data = [
     GroupBooleanCsv("victim_primary_means_of_travel", "4.2 Primary Means of Travel"),
     CopyCsvField("victim_primary_means_of_travel_other_value", "Other Means of Travel", False),
     BooleanCsvField("victim_stayed_somewhere_between", "4.3 Transit Stay",
-            "Stayed somewhere in transit", "Did not stay anywhere in transit"),
+            "Stayed somewhere in transit", "Did not stay anywhere in transit", allow_null_or_blank_import = False),
     FormatCsvFields("victim_how_long_stayed_between_days", "4.4 Transit Stay Duration",
               "Stayed for {victim_how_long_stayed_between_days} days starting on {victim_how_long_stayed_between_start_date}",
               "victim_how_long_stayed_between_start_date"),
@@ -128,9 +128,9 @@ vif_data = [
             "Was not free to go outside"),
     CopyCsvField("victim_was_free_to_go_out_explanation", "Transit Free Explanation", False),
 
-    CopyCsvField("how_many_others_in_situation", "4.7 Number of Others", True),
+    CopyCsvField("how_many_others_in_situation", "4.7 Number of Others", True, numeric_value=True),
 
-    CopyCsvField("others_in_situation_age_of_youngest", "4.8 Age of Youngest", True),
+    CopyCsvField("others_in_situation_age_of_youngest", "4.8 Age of Youngest", True, numeric_value=True),
 
     GroupBooleanCsv("passport_made", "4.9 Passport Made"),
 
@@ -174,7 +174,7 @@ vif_data = [
             }),
 
     BooleanCsvField("victim_knew_details_about_destination", "5.2 Desination Details",
-            "Know details about destination", "Don't know details about destination"),
+            "Know details about destination", "Don't know details about destination", allow_null_or_blank_import = False),
     BooleanCsvField("other_involved_person_in_india", "5.3 India Contact Sending Girls Overseas",
             "Knows of someone in India who sends girls overseas",""),
     BooleanCsvField("other_involved_husband_trafficker", "Husband Trafficker",
@@ -199,10 +199,10 @@ vif_data = [
     GroupBooleanCsv("victim_heard_gospel", "6.3 Heard the Gospel"),
     GroupBooleanCsv("victim_beliefs_now", "6.4 What They Believe Now"),
 
-    CopyCsvField("tiny_hands_rating_border_staff", "6.5 Rating of Border Staff", True),
-    CopyCsvField("tiny_hands_rating_shelter_staff", "Rating of Shelter Staff", True),
-    CopyCsvField("tiny_hands_rating_trafficking_awareness", "Rating of Trafficking Awareness", True),
-    CopyCsvField("tiny_hands_rating_shelter_accommodations", "Rating of Shelter Accommodations", True),
+    CopyCsvField("tiny_hands_rating_border_staff", "6.5 Rating of Border Staff", True, numeric_value=True),
+    CopyCsvField("tiny_hands_rating_shelter_staff", "Rating of Shelter Staff", True, numeric_value=True),
+    CopyCsvField("tiny_hands_rating_trafficking_awareness", "Rating of Trafficking Awareness", True, numeric_value=True),
+    CopyCsvField("tiny_hands_rating_shelter_accommodations", "Rating of Shelter Accommodations", True, numeric_value=True),
     CopyCsvField("how_can_we_serve_you_better", "6.6 How Can We Better Serve You", False),
 
     BooleanCsvField("guardian_knew_was_travelling_to_india", "7.1 Guardian Know",
@@ -255,7 +255,7 @@ vif_data = [
     BooleanCsvField("victim_had_suicidal_thoughts", "7.10 Suicidal Thoughts",
             "They expressed suicidal thoughts", "They did not express any suicidal thoughts"),
 
-    CopyCsvField("reported_total_situational_alarms", "Total Home Situational Alarms Listed", True),
+    CopyCsvField("reported_total_situational_alarms", "Total Home Situational Alarms Listed", True, numeric_value=True),
     FunctionValueExportOnlyCsv("get_calculated_situational_alarms", "Total Home Situational Alarms Calculated"),
 
     LegalActionCsv("legal_action_against_traffickers", "8.1 Legal Action"),
@@ -271,7 +271,7 @@ vif_data = [
                 "There are other people or places they know of involved in trafficking",
                 "There are not any other people or places they know of involved in trafficking"),
 
-    BooleanCsvField("has_signature", "Staff Signature on Form", "Form is signed by staff", "Form is not signed by staff"),
+    BooleanCsvField("has_signature", "Staff Signature on Form", "Form is signed by staff", "Form is not signed by staff", allow_null_or_blank_import = False),
 
     CopyCsvField("case_notes", "Case Notes", False)
 ]
@@ -282,8 +282,8 @@ person_box_data = [
     GroupBooleanCsv("who_is_this_relationship", "{}Relationship"),
     GroupBooleanCsv("who_is_this_role", "{}Role"),
     CopyCsvField("address_ward", "{}Ward", False),
-    CopyCsvField("height", "{}Height", True),
-    CopyCsvField("weight", "{}Weight", True),
+    CopyCsvField("height", "{}Height", True, numeric_value=True),
+    CopyCsvField("weight", "{}Weight", True, numeric_value=True),
     GroupBooleanCsv("physical_description", "{}Physical Description"),
     CopyCsvField("appearance_other", "{}Appearance", False),
     GroupBooleanCsv("occupation", "{}Occupation"),
@@ -302,7 +302,7 @@ person_box_person_data = [
     Address1CsvField("address1", "{}Address1"),
     Address2CsvField("address2", "{}Address2", "address1"),
     CopyCsvField("phone_contact", "{}Phone", False),
-    CopyCsvField("age", "{}Age", True),
+    CopyCsvField("age", "{}Age", True, numeric_value=True),
 ]
 
 victim_data = [
@@ -348,7 +348,7 @@ def get_vif_export_rows(vifs):
     for field in vif_data:
         vif_headers.append(field.title)
 
-    for i in range(1, 9+1):
+    for i in range(1, 4+1):
         for field in person_box_person_data:
             prefix = person_box_prefix % i
             vif_headers.append(field.title.format(prefix))
@@ -358,7 +358,7 @@ def get_vif_export_rows(vifs):
             vif_headers.append(field.title.format(prefix))
 
 
-        if i < 9:
+        if i < 4:
             for field in location_box_data:
                 prefix = location_box_prefix % i
                 vif_headers.append(field.title.format(prefix))
@@ -442,14 +442,15 @@ def import_vif_row(vifDict):
     location_boxes=[]
     person_boxes=[]
     person_box_persons=[] 
-    for idx in range(1,10):
+    for idx in range(1,4+1):
         
         prefix = person_box_prefix % idx
         found = False
         for field in person_box_person_data:
-            tmp = vifDict.get(spreadsheet_header_from_export_header(field.title.format(prefix)))
-            if tmp is not None:
-                found = True
+            if spreadsheet_header_from_export_header(field.title.format(prefix)) in vifDict:
+                tmp = vifDict.get(spreadsheet_header_from_export_header(field.title.format(prefix)))
+                if tmp is not None:
+                    found = True
                 break
         if found:
             tmp_person = Person()
@@ -479,10 +480,11 @@ def import_vif_row(vifDict):
         prefix = location_box_prefix % idx
         found = False
         for field in location_box_data:
-            tmp = vifDict.get(spreadsheet_header_from_export_header(field.title.format(prefix)))
-            if tmp is not None:
-                found = True
-                break
+            if spreadsheet_header_from_export_header(field.title.format(prefix)) in vifDict:
+                tmp = vifDict.get(spreadsheet_header_from_export_header(field.title.format(prefix)))
+                if tmp is not None:
+                    found = True
+                    break
          
         if found: 
             tmp_location = VictimInterviewLocationBox()   

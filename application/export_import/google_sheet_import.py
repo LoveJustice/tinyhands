@@ -1,10 +1,9 @@
 from google_sheet import GoogleSheet
 from google_sheet_names import spreadsheet_header_from_export_header
-from irf_io import import_irf_row, get_irf_export_rows
-from vif_io import import_vif_row, get_vif_export_rows
 
 from django.conf import settings
 
+import importlib
 import logging
 
 logger = logging.getLogger(__name__);
@@ -54,17 +53,44 @@ class GoogleSheetImport (GoogleSheet):
                         self.update_cell(row_idx, self.issue_idx, err_string)
                 else:
                     self.update_cell(row_idx, self.key_column_index, GoogleSheetImport.IMPORT_SUCCESS)
-                    self.update_cell(key_idx+2, self.issue_idx, " ")
-                    
+                    self.update_cell(key_idx+2, self.issue_idx, " ")           
+    
     @staticmethod
-    def import_irfs():
-        import_sheet = GoogleSheetImport(settings.SPREADSHEET_NAME, settings.IRF_IMPORT_WORKSHEET_NAME, 'Import Status', get_irf_export_rows, 'Import Issues', 'IRF number', import_irf_row)
-        import_sheet.import_rows()
+    def import_data(data_type):
+        import_settings = ['spreadsheet', 'sheet', 'import_function', 'status_column', 'issue_column']
         
-    @staticmethod
-    def import_vifs():
-        import_sheet = GoogleSheetImport(settings.SPREADSHEET_NAME, settings.VIF_IMPORT_WORKSHEET_NAME, 'Import Status', get_vif_export_rows, 'Import Issues', 'VIF number', import_vif_row)
-        import_sheet.import_rows()
+        data_setting = None
+        if data_type in settings.SPREADSHEET_CONFIG:
+            data_setting = settings.SPREADSHEET_CONFIG[data_type]
+        else:
+            logger.error('Unable to find setting for data type ' + data_type)
+            return
         
+        if 'key_column' not in data_setting:
+            logger.error('Unable to find key_column for data type' + data_type)
+        
+        if 'import' not in data_setting:
+            logger.error('Unable to find import settings for data type ' + data_type)
+            return
+        
+        for setting in import_settings:
+            if setting not in data_setting['import']:
+                logger.error('Unable to find import setting ' + setting + ' for data type ' + data_type)
+                return
+            
+        mod_name, func_name = data_setting['import']['import_function'].rsplit('.',1)
+        mod = importlib.import_module(mod_name)
+        func = getattr(mod, func_name)
+        
+        import_sheet = GoogleSheetImport(
+                data_setting['import']['spreadsheet'], 
+                data_setting['import']['sheet'],
+                data_setting['import']['status_column'], 
+                None, 
+                data_setting['import']['issue_column'],
+                data_setting['key_column'],
+                func)
+        import_sheet.import_rows()
+
         
         

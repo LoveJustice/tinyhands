@@ -21,9 +21,9 @@ class GoogleSheetWorkQueue(Thread):
     def __init__(self):
         try:
             logger.debug("In __init__") 
-            self.irf_sheet = GoogleSheet(settings.SPREADSHEET_NAME, settings.IRF_WORKSHEET_NAME, 'IRF Number', get_irf_export_rows)
+            self.irf_sheet = GoogleSheet.from_settings('IRF')
             logger.debug("Returned for allocating IRF have_credentails=" + str(self.irf_sheet.credentials)) 
-            self.vif_sheet = GoogleSheet(settings.SPREADSHEET_NAME, settings.VIF_WORKSHEET_NAME, 'VIF Number', get_vif_export_rows)
+            self.vif_sheet = GoogleSheet.from_settings('VIF')
             logger.debug("Returned from allocating VIF have_credentails=" + str(self.vif_sheet.credentials)) 
             if self.irf_sheet.credentials and self.vif_sheet.credentials:
                 logger.debug("have credentials")
