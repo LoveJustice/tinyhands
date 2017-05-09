@@ -1,6 +1,8 @@
 from google_sheet_basic import GoogleSheetBasic
 from google_sheet_names import spreadsheet_header_from_export_header
 
+from django.conf import settings
+import importlib
 import logging
 
 logger = logging.getLogger(__name__);
@@ -18,6 +20,39 @@ class GoogleSheet (GoogleSheetBasic):
         logger.debug("After find key column")
         self.refresh_keys()
         logger.debug("After refresh keys")
+        
+    @staticmethod
+    def from_settings(data_type):
+        sheet_settings = ['spreadsheet', 'sheet', 'export_function']
+        
+        data_setting = None
+        if data_type in settings.SPREADSHEET_CONFIG:
+            data_setting = settings.SPREADSHEET_CONFIG[data_type]
+        else:
+            logger.error('Unable to find setting for data type ' + data_type)
+            return
+        
+        if 'key_column' not in data_setting:
+            logger.error('Unable to find key_column for data type' + data_type)
+        
+        if 'export' not in data_setting:
+            logger.error('Unable to find export settings for data type ' + data_type)
+            return
+        
+        for setting in sheet_settings:
+            if setting not in data_setting['export']:
+                logger.error('Unable to find export setting ' + setting + ' for data type ' + data_type)
+                return
+            
+        mod_name, func_name = data_setting['export']['export_function'].rsplit('.',1)
+        mod = importlib.import_module(mod_name)
+        func = getattr(mod, func_name)
+        
+        return GoogleSheet(
+            data_setting['export']['spreadsheet'], 
+            data_setting['export']['sheet'],
+            data_setting['key_column'],
+            func)
         
         
     def get_column_names(self):
