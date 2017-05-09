@@ -30,12 +30,12 @@ SPREADSHEET_CONFIG = {
     'VIF': {
         'key_column': 'VIF Number',
         'export': {
-            'spreadsheet':'Dream Suite - THN Data (Staging)',
+            'spreadsheet':'Dream Suite - THN VIFs (Staging)',
             'sheet':'VIF Entry',         
             'export_function': 'export_import.vif_io.get_vif_export_rows',
             },
         'import': {
-            'spreadsheet':'Dream Suite - THN Data (Staging)',
+            'spreadsheet':'Dream Suite - THN VIFs (Staging)',
             'sheet':'VIF Import',
             'import_function': 'export_import.vif_io.import_vif_row',
             'status_column': 'Import Status',

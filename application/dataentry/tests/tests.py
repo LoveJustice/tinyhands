@@ -136,7 +136,7 @@ class ExportTesting(WebTest):
         csv_file = open("dataentry/tests/temp/vif.csv", "r")
         reader = csv.reader(csv_file, delimiter=',')
         for rows in reader:
-            if rows[569][-1] != ",":
+            if rows[378][-1] != ",":
                 self.assertTrue(True)
             else:
                 self.assertTrue(False)
