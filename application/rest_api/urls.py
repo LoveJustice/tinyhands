@@ -57,6 +57,8 @@ urlpatterns = [
         url(r'^knownperson/aperson/$', KnownPersonViewSet.as_view({'get':'get_person'}), name="KnownPerson"),
         url(r'^knownperson/forms/$', KnownPersonViewSet.as_view({'get':'person_forms'}), name="KnownPerson"),
         url(r'^knownperson/group/$', KnownPersonViewSet.as_view({'get':'alias_group'}), name="KnownPerson"),
+        url(r'^knownperson/(?P<pk>\d+)/addgroup/(?P<pk2>\d+)/$', KnownPersonViewSet.as_view({'put':'add_alias_group'}), name="KnownPerson"),
+        url(r'^knownperson/(?P<pk>\d+)/removegroup/$', KnownPersonViewSet.as_view({'put':'remove_alias_group'}), name="KnownPerson"),
 
         #Countries
         url(r'^country/$', CountryViewSet.as_view(list), name='Country'),

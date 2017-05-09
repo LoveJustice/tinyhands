@@ -7,6 +7,7 @@ import re
 import shutil
 import logging
 
+from django.db import transaction
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core import serializers
@@ -32,6 +33,7 @@ from braces.views import LoginRequiredMixin
 from fuzzywuzzy import process
 
 from dataentry.models import BorderStation, SiteSettings, Address2, Address1, Interceptee, Person, InterceptionRecord, VictimInterview, VictimInterviewLocationBox, VictimInterviewPersonBox
+from dataentry.models.alias_group import AliasGroup
 from dataentry.forms import IntercepteeForm, InterceptionRecordForm, Address2Form, Address1Form, VictimInterviewForm, VictimInterviewLocationBoxForm, VictimInterviewPersonBoxForm
 from dataentry.dataentry_signals import irf_done
 
@@ -404,7 +406,6 @@ class KnownPersonViewSet(viewsets.ModelViewSet):
     
     def alias_group(self, request):
         group_id = request.GET['group_id']
-        logger.error("Enter group_id=" + group_id);
         results = Person.objects.filter(alias_group=group_id);
         serializer = KnownPersonSerializer(results, many=True, context={'request': request})
         return Response(serializer.data)   
@@ -414,6 +415,55 @@ class KnownPersonViewSet(viewsets.ModelViewSet):
         person = Person.objects.get(id=person_id)  
         serializer = KnownPersonSerializer(person, context={'request': request})
         return Response(serializer.data)
+    
+    def add_alias_group(self, request, pk, pk2):
+        try:
+            person1 = Person.objects.get(id=pk)
+            person2 = Person.objects.get(id=pk2)
+            alias_group = None
+            if person1.alias_group is not None:
+                alias_group = person1.alias_group
+    
+            if person2.alias_group is not None:
+                if alias_group is not None:
+                    logger.error("Cannot make alias group from two persons where both are already in alias groups")
+                    return Response({'detail': "Both persons already in alias group"}, status=status.HTTP_409_CONFLICT)
+                alias_group = person2.alias_group
+            
+            with transaction.atomic():
+                if alias_group is None:
+                    alias_group = AliasGroup()
+                    alias_group.save()
+        
+                person1.alias_group = alias_group
+                person1.save()
+                person2.alias_group = alias_group
+                person2.save()
+        except:
+            logger.error('Failed to add to alias group: ' + pk + ' ' + pk2)
+            return Response({'detail': "an error occurred"}, status=status.HTTP_404_NOT_FOUND)
+            
+        return Response({"message": "success!"})
+            
+    def remove_alias_group (self, request, pk):
+        person = Person.objects.get(id=pk)
+        if person.alias_group is None:
+            return
+        
+        with transaction.atomic():
+            alias_group = person.alias_group
+            person.alias_group = None
+            person.save()
+            
+            # check remaining members of the group
+            members = Person.objects.filter(alias_group = alias_group)
+            if len(members) < 2:
+                # only one member left in the alias group - delete the alias group
+                for member in members:
+                    member.delete()
+                alias_group.delete()
+        
+           
 
 class InterceptionRecordViewSet(viewsets.ModelViewSet):
     queryset = InterceptionRecord.objects.all()
