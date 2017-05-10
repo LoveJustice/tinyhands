@@ -5,9 +5,6 @@ import logging
 import traceback
 from dataentry.models.interception_record import InterceptionRecord
 from export_import.google_sheet import GoogleSheet
-from django.conf import settings
-from irf_io import get_irf_export_rows
-from vif_io import get_vif_export_rows
 from dataentry.models.victim_interview import VictimInterview
 from dataentry.dataentry_signals import irf_done, vif_done
 

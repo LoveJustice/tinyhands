@@ -100,7 +100,7 @@ class GoogleSheetBasic:
                 return
         
         return GoogleSheetBasic(
-            data_setting['replace']['spreadsheet'], 
+            data_setting['replace']['spreadsheet'],
             data_setting['replace']['sheet'])
         
     def delete_request(self, first_row, last_row):

@@ -34,7 +34,7 @@ SPREADSHEET_CONFIG = {
         'key_column': 'VIF Number',
         'export': {
             'spreadsheet':'Tinyhands VIFs',
-            'sheet':'VIF Entry',         
+            'sheet':'VIF Entry',
             'export_function': 'export_import.vif_io.get_vif_export_rows',
             },
         'import': {

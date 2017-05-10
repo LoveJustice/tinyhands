@@ -53,7 +53,7 @@ class GoogleSheetImport (GoogleSheet):
                         self.update_cell(row_idx, self.issue_idx, err_string)
                 else:
                     self.update_cell(row_idx, self.key_column_index, GoogleSheetImport.IMPORT_SUCCESS)
-                    self.update_cell(key_idx+2, self.issue_idx, " ")           
+                    self.update_cell(key_idx+2, self.issue_idx, " ")
     
     @staticmethod
     def import_data(data_type):
@@ -83,10 +83,10 @@ class GoogleSheetImport (GoogleSheet):
         func = getattr(mod, func_name)
         
         import_sheet = GoogleSheetImport(
-                data_setting['import']['spreadsheet'], 
+                data_setting['import']['spreadsheet'],
                 data_setting['import']['sheet'],
-                data_setting['import']['status_column'], 
-                None, 
+                data_setting['import']['status_column'],
+                None,
                 data_setting['import']['issue_column'],
                 data_setting['key_column'],
                 func)

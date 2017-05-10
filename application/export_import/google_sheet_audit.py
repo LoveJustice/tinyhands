@@ -1,11 +1,7 @@
-from django.conf import settings
-
 import logging
 
 from export_import.google_sheet_basic import GoogleSheetBasic
 from google_sheet import GoogleSheet
-from irf_io import get_irf_export_rows
-from vif_io import get_vif_export_rows
 from address2_io import get_address2_export_rows
 
 from dataentry.models.interception_record import InterceptionRecord

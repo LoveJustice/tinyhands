@@ -33,11 +33,8 @@ class CopyCsvField:
             elif not self.use_none_for_blank:
                 value = ""
         else:
-            if self.numeric_value:
-                try:
-                    int_val = int(value)
-                except ValueError:
-                    errs.append(column_title)
+            if self.numeric_value and not value.isdigit():
+                errs.append(column_title)
           
         setattr(instance, self.data_name, value)
             

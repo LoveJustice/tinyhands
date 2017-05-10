@@ -49,7 +49,7 @@ class GoogleSheet (GoogleSheetBasic):
         func = getattr(mod, func_name)
         
         return GoogleSheet(
-            data_setting['export']['spreadsheet'], 
+            data_setting['export']['spreadsheet'],
             data_setting['export']['sheet'],
             data_setting['key_column'],
             func)
