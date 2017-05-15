@@ -340,6 +340,8 @@ location_box_data = [
             "Associated with PB {associated_with_person_value}"),
 ]
 
+person_boxes_to_export_or_import = 4
+
 def get_vif_export_rows(vifs):
     rows = []
 
@@ -348,7 +350,7 @@ def get_vif_export_rows(vifs):
     for field in vif_data:
         vif_headers.append(field.title)
 
-    for i in range(1, 4+1):
+    for i in range(1, person_boxes_to_export_import+1):
         for field in person_box_person_data:
             prefix = person_box_prefix % i
             vif_headers.append(field.title.format(prefix))
@@ -358,7 +360,7 @@ def get_vif_export_rows(vifs):
             vif_headers.append(field.title.format(prefix))
 
 
-        if i < 4:
+        if i < person_boxes_to_export_or_import:
             for field in location_box_data:
                 prefix = location_box_prefix % i
                 vif_headers.append(field.title.format(prefix))
@@ -442,7 +444,7 @@ def import_vif_row(vifDict):
     location_boxes=[]
     person_boxes=[]
     person_box_persons=[] 
-    for idx in range(1,4+1):
+    for idx in range(1,person_boxes_to_export_or_import+1):
         
         prefix = person_box_prefix % idx
         found = False

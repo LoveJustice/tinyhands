@@ -158,9 +158,8 @@ class GoogleSheetBasic:
         if "values" in result:
             return result["values"]
         else:
-            tmp = []
-            tmp.append([])
-            return tmp
+            # No data in requested range
+            return [[]]
     
     def update_cell(self, row, col, val):
         body = {
