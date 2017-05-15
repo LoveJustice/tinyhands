@@ -350,7 +350,7 @@ def get_vif_export_rows(vifs):
     for field in vif_data:
         vif_headers.append(field.title)
 
-    for i in range(1, person_boxes_to_export_import+1):
+    for i in range(1, person_boxes_to_export_or_import+1):
         for field in person_box_person_data:
             prefix = person_box_prefix % i
             vif_headers.append(field.title.format(prefix))
