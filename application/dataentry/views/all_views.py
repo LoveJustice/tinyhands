@@ -397,6 +397,12 @@ class KnownPersonViewSet(viewsets.ModelViewSet):
         serializer = KnownPersonSerializer(results, many=True, context={'request': request})
         return Response(serializer.data)
     
+    def partial_phone(self, request):
+        input_phone = request.GET['phone']
+        results = Person.objects.filter(phone_contact__contains=input_phone)
+        serializer = KnownPersonSerializer(results, many=True, context={'request': request})
+        return Response(serializer.data)
+    
     def person_forms(self, request):
         person_id = request.GET['person_id']
         person = Person.objects.get(id=person_id)
@@ -446,22 +452,29 @@ class KnownPersonViewSet(viewsets.ModelViewSet):
         return Response({"message": "success!"})
             
     def remove_alias_group (self, request, pk):
-        person = Person.objects.get(id=pk)
-        if person.alias_group is None:
-            return
-        
-        with transaction.atomic():
-            alias_group = person.alias_group
-            person.alias_group = None
-            person.save()
+        try:
+            person = Person.objects.get(id=pk)
+            if person.alias_group is None:
+                return
             
-            # check remaining members of the group
-            members = Person.objects.filter(alias_group = alias_group)
-            if len(members) < 2:
-                # only one member left in the alias group - delete the alias group
-                for member in members:
-                    member.delete()
-                alias_group.delete()
+            with transaction.atomic():
+                alias_group = person.alias_group
+                person.alias_group = None
+                person.save()
+                
+                # check remaining members of the group
+                members = Person.objects.filter(alias_group = alias_group)
+                if len(members) < 2:
+                    # only one member left in the alias group - delete the alias group
+                    for member in members:
+                        member.alias_group = None
+                        member.save()
+                    alias_group.delete()
+        except:
+            logger.error('Failed to remove from alias group: ' + pk)
+            return Response({'detail': "an error occurred"}, status=status.HTTP_404_NOT_FOUND)
+                
+        return Response({"message": "success!"})
         
            
 

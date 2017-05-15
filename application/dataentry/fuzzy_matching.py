@@ -65,7 +65,7 @@ def match_person(person_name):
     choices = {choice.id: choice.full_name
                for choice in Person.objects.all()
                }
-    matches = process.extractBests(person_name, choices, score_cutoff=70, limit=5)
+    matches = process.extractBests(person_name, choices, score_cutoff=70, limit=11)
     
     for match in matches:
         results.append(Person.objects.get(id=match[2]))

@@ -54,6 +54,7 @@ urlpatterns = [
         #KnownPersons
         url(r'^knownperson/$', KnownPersonViewSet.as_view({'get': 'list'}), name="KnownPerson"),
         url(r'^knownperson/fuzzy/$', KnownPersonViewSet.as_view({'get':'fuzzy_match'}), name="KnownPerson"),
+        url(r'^knownperson/phone/$', KnownPersonViewSet.as_view({'get':'partial_phone'}), name="KnownPerson"),
         url(r'^knownperson/aperson/$', KnownPersonViewSet.as_view({'get':'get_person'}), name="KnownPerson"),
         url(r'^knownperson/forms/$', KnownPersonViewSet.as_view({'get':'person_forms'}), name="KnownPerson"),
         url(r'^knownperson/group/$', KnownPersonViewSet.as_view({'get':'alias_group'}), name="KnownPerson"),
