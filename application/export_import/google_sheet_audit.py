@@ -1,11 +1,7 @@
-from django.conf import settings
-
 import logging
 
 from export_import.google_sheet_basic import GoogleSheetBasic
 from google_sheet import GoogleSheet
-from irf_io import get_irf_export_rows
-from vif_io import get_vif_export_rows
 from address2_io import get_address2_export_rows
 
 from dataentry.models.interception_record import InterceptionRecord
@@ -23,7 +19,7 @@ def audit_exports():
       
 def audit_irf():
     logger.info("Begin IRF audit")
-    irf_gs = GoogleSheet(settings.SPREADSHEET_NAME, settings.IRF_WORKSHEET_NAME, 'IRF Number', get_irf_export_rows)
+    irf_gs = GoogleSheet.from_settings('IRF')
     
     db_irfs = InterceptionRecord.objects.all()
     irf_gs.audit(db_irfs, 'irf_number')
@@ -31,7 +27,7 @@ def audit_irf():
 
 def audit_vif():
     logger.info("Begin IRF audit")
-    vif_gs = GoogleSheet(settings.SPREADSHEET_NAME, settings.VIF_WORKSHEET_NAME, 'VIF Number', get_vif_export_rows)
+    vif_gs = GoogleSheet.from_settings('VIF')
     
     db_vifs = VictimInterview.objects.all()
     vif_gs.audit(db_vifs, 'vif_number')
@@ -39,7 +35,7 @@ def audit_vif():
     
 def replace_address2():
     logger.info("Begin replace Address2")
-    addr2 = GoogleSheetBasic(settings.SPREADSHEET_NAME, settings.ADDRESS2_WORKSHEET_NAME)
+    addr2 = GoogleSheetBasic.from_settings('ADDRESS2')
     
     db_addr2 = Address2.objects.all().order_by('address1__name', 'name')
     new_rows = get_address2_export_rows(db_addr2)

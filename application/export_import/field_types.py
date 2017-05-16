@@ -11,12 +11,13 @@ def no_translation(title):
 
 # export/import field value - no translation
 class CopyCsvField:
-    def __init__(self, data_name, title, use_none_for_blank, export_null_or_blank_as="", allow_null_or_blank_import = True):
+    def __init__(self, data_name, title, use_none_for_blank, export_null_or_blank_as="", allow_null_or_blank_import = True, numeric_value = False):
         self.data_name = data_name
         self.title = title
         self.use_none_for_blank = use_none_for_blank
         self.export_null_or_blank_as = export_null_or_blank_as
         self.allow_null_or_blank_import = allow_null_or_blank_import
+        self.numeric_value = numeric_value
 
     def importField(self, instance, csv_map, title_prefix = None, name_translation = no_translation):
         errs = []
@@ -31,6 +32,9 @@ class CopyCsvField:
                 errs.append(column_title)
             elif not self.use_none_for_blank:
                 value = ""
+        else:
+            if self.numeric_value and not value.isdigit():
+                errs.append(column_title)
           
         setattr(instance, self.data_name, value)
             
@@ -142,9 +146,9 @@ class BooleanCsvField:
         if value is None:
             value = ""
         
-        if value == self.true_string:
+        if value == self.true_string or value.upper() == 'YES' or value.upper() == 'TRUE':
             value = True
-        elif value == self.false_string:
+        elif value == self.false_string or value.upper() == 'NO' or value.upper() == 'FALSE':
             value = False
         elif self.allow_null_or_blank_import:
             if value == "":
