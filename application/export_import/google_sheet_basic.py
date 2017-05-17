@@ -3,6 +3,7 @@ import logging
 
 from oauth2client.client import GoogleCredentials
 from apiclient import discovery
+from django.conf import settings
 
 logger = logging.getLogger(__name__);
 
@@ -78,6 +79,30 @@ class GoogleSheetBasic:
         
         logger.debug("after get metadata")
         
+    @staticmethod
+    def from_settings(data_type):
+        sheet_settings = ['spreadsheet', 'sheet']
+        
+        data_setting = None
+        if data_type in settings.SPREADSHEET_CONFIG:
+            data_setting = settings.SPREADSHEET_CONFIG[data_type]
+        else:
+            logger.error('Unable to find setting for data type ' + data_type)
+            return
+        
+        if 'replace' not in data_setting:
+            logger.error('Unable to find export settings for data type ' + data_type)
+            return
+        
+        for setting in sheet_settings:
+            if setting not in data_setting['replace']:
+                logger.error('Unable to find replace setting ' + setting + ' for data type ' + data_type)
+                return
+        
+        return GoogleSheetBasic(
+            data_setting['replace']['spreadsheet'],
+            data_setting['replace']['sheet'])
+        
     def delete_request(self, first_row, last_row):
         req = {
             "deleteDimension": {
@@ -130,7 +155,11 @@ class GoogleSheetBasic:
         rng = self.sheet_name + "!" + self.convert_notation(start_row, start_col) + ":" + self.convert_notation(end_row, end_col)
         
         result = GoogleSheetBasic.sheet_service.spreadsheets().values().get(spreadsheetId=self.spreadsheet_id, range=rng, majorDimension=majorDimension).execute()
-        return result["values"]
+        if "values" in result:
+            return result["values"]
+        else:
+            # No data in requested range
+            return [[]]
     
     def update_cell(self, row, col, val):
         body = {
