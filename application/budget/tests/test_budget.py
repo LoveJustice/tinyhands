@@ -55,7 +55,6 @@ class BorderStationBudgetCalculationTests(TestCase):
     def test_miscellaneous_total_calculates_correct_value(self):
         fields = [
             self.target.miscellaneous_extra_items_total(),
-            self.target.miscellaneous_number_of_intercepts_last_month * self.target.miscellaneous_number_of_intercepts_last_month_multiplier
         ]
         expected_total = sum(fields)
 

@@ -122,11 +122,7 @@ class MoneyDistributionFormHelper:
 
     @property
     def miscellaneous_items(self):
-        items = []
-        intercepts_total = self.budget.miscellaneous_number_of_intercepts_last_month * self.budget.miscellaneous_number_of_intercepts_last_month_multiplier
-        if intercepts_total > 0:
-            items.append(BudgetLineItem('Intercepts (' + str(self.budget.miscellaneous_number_of_intercepts_last_month_multiplier) + ' each)', intercepts_total))
-        return items + self.get_other_items(BorderStationBudgetCalculation.MISCELLANEOUS)
+        return self.get_other_items(BorderStationBudgetCalculation.MISCELLANEOUS)
 
     @property
     def shelter_items(self):
