@@ -131,16 +131,8 @@ class BorderStationBudgetCalculation(models.Model):
     def medical_total(self):
         return self.medical_last_months_expense + self.medical_extra_items_total()
 
-    miscellaneous_number_of_intercepts_last_month = models.PositiveIntegerField('# of intercepts last month', default=0)
-    miscellaneous_number_of_intercepts_last_month_multiplier = models.PositiveIntegerField(default=300)
-
-    def miscellaneous_extra_items_total(self):
-        return self.other_items_total(self.MISCELLANEOUS)
-
     def miscellaneous_total(self):
-        total = self. miscellaneous_extra_items_total()
-        total += self.miscellaneous_number_of_intercepts_last_month * self.miscellaneous_number_of_intercepts_last_month_multiplier
-        return total
+        return self.other_items_total(self.MISCELLANEOUS)
 
     shelter_rent = models.PositiveIntegerField(default=0)
     shelter_water = models.PositiveIntegerField(default=0)
