@@ -4,7 +4,7 @@ from addresses import Address1, Address2
 from alias_group import AliasGroup
 
 class PersonFormData:
-    photo = '' 
+    photo = ''
 
 class Person(models.Model):
     GENDER_CHOICES = [('M', 'm'), ('F', 'f')]
@@ -47,7 +47,7 @@ class Person(models.Model):
     def get_form_number(self):
         if not hasattr(self,'forms'):
             self.get_form_data()
-            
+
         if len(self.forms) > 0:
             return self.forms[0].number
         else:
@@ -56,7 +56,7 @@ class Person(models.Model):
     def get_form_date(self):
         if not hasattr(self,'forms'):
             self.get_form_data()
-            
+
         if len(self.forms) > 0:
             return self.forms[0].date
         else:
@@ -70,7 +70,7 @@ class Person(models.Model):
             return self.photo
         else:
             return ''
-   
+
     def get_form_kind(self):
         if not hasattr(self, 'forms'):
             self.get_form_data()
@@ -79,15 +79,15 @@ class Person(models.Model):
             return self.forms[0].kind
         else:
             return ''
-    
+
     def get_form_data(self):
         import interceptee
         import victim_interview
         import  person_box
-        
+
         self.forms = []
         self.photo = ''
-        
+
         vifs = victim_interview.VictimInterview.objects.filter(victim = self)
         if len(vifs) > 0:
             for vif in vifs:
@@ -98,7 +98,7 @@ class Person(models.Model):
                 form.photo = ''
                 form.kind = 'Victim'
                 self.forms.append(form)
-        
+
         person_boxes = person_box.VictimInterviewPersonBox.objects.filter(person = self)
         if len(person_boxes) > 0:
             for person_box in person_boxes:
@@ -116,8 +116,7 @@ class Person(models.Model):
                                 form.kind = field.verbose_name
                                 break
                 self.forms.append(form)
-                
-                
+
         interceptees = interceptee.Interceptee.objects.filter(person = self)
         if len(interceptees) > 0:
             for interceptee in interceptees:
@@ -132,9 +131,8 @@ class Person(models.Model):
                 elif form.kind == 'v':
                     form.kind = 'Victim'
                 self.forms.append(form)
-                
+
                 if self.photo == '' and form.photo is not None:
                     self.photo = form.photo
-        
+
         return self.forms
-    
