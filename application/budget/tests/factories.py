@@ -56,8 +56,6 @@ class BorderStationBudgetCalculationFactory(DjangoModelFactory):
 
     medical_last_months_expense = FuzzyInteger(1000, 3000)
 
-    miscellaneous_number_of_intercepts_last_month = FuzzyInteger(1, 4)
-    miscellaneous_number_of_intercepts_last_month_multiplier = FuzzyInteger(100, 300)
 
     shelter_rent = FuzzyInteger(200, 400)
     shelter_water = FuzzyInteger(200, 400)
