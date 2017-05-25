@@ -254,7 +254,7 @@ class PersonSerializer(serializers.ModelSerializer):
             'phone_contact',
         ]
 
-class KnownPersonSerializer(serializers.ModelSerializer):
+class IDManagementSerializer(serializers.ModelSerializer):
     aliases = serializers.CharField(source='get_aliases', read_only=True)
     form_type = serializers.CharField(source='get_form_type', read_only=True)
     form_number = serializers.CharField(source='get_form_number', read_only=True)

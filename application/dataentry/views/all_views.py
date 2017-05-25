@@ -37,7 +37,7 @@ from dataentry.models.alias_group import AliasGroup
 from dataentry.forms import IntercepteeForm, InterceptionRecordForm, Address2Form, Address1Form, VictimInterviewForm, VictimInterviewLocationBoxForm, VictimInterviewPersonBoxForm
 from dataentry.dataentry_signals import irf_done
 
-from dataentry.serializers import Address1Serializer, Address2Serializer, InterceptionRecordListSerializer, VictimInterviewListSerializer, VictimInterviewSerializer, PersonSerializer, IntercepteeSerializer, InterceptionRecordSerializer, KnownPersonSerializer, PersonFormsSerializer
+from dataentry.serializers import Address1Serializer, Address2Serializer, InterceptionRecordListSerializer, VictimInterviewListSerializer, VictimInterviewSerializer, PersonSerializer, IntercepteeSerializer, InterceptionRecordSerializer, IDManagementSerializer, PersonFormsSerializer
 from dataentry.dataentry_signals import irf_done, vif_done
 from dataentry.fuzzy_matching import match_location
 
@@ -380,9 +380,9 @@ class PersonViewSet(viewsets.ModelViewSet):
     ordering_fields = ('full_name', 'age', 'gender', 'phone_contact')
     ordering = ('full_name',)
 
-class KnownPersonViewSet(viewsets.ModelViewSet):
+class IDManagementViewSet(viewsets.ModelViewSet):
     queryset = Person.objects.all()
-    serializer_class = KnownPersonSerializer
+    serializer_class = IDManagementSerializer
     permission_classes = (IsAuthenticated, HasPermission)
     permissions_required = ['permission_address2_manage']
     filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
@@ -394,13 +394,13 @@ class KnownPersonViewSet(viewsets.ModelViewSet):
     def fuzzy_match(self, request):
         input_name = request.GET['name']
         results = fuzzy_matching.match_person(input_name)
-        serializer = KnownPersonSerializer(results, many=True, context={'request': request})
+        serializer = IDManagementSerializer(results, many=True, context={'request': request})
         return Response(serializer.data)
     
     def partial_phone(self, request):
         input_phone = request.GET['phone']
         results = Person.objects.filter(phone_contact__contains=input_phone)
-        serializer = KnownPersonSerializer(results, many=True, context={'request': request})
+        serializer = IDManagementSerializer(results, many=True, context={'request': request})
         return Response(serializer.data)
     
     def person_forms(self, request):
@@ -413,13 +413,13 @@ class KnownPersonViewSet(viewsets.ModelViewSet):
     def alias_group(self, request):
         group_id = request.GET['group_id']
         results = Person.objects.filter(alias_group=group_id);
-        serializer = KnownPersonSerializer(results, many=True, context={'request': request})
+        serializer = IDManagementSerializer(results, many=True, context={'request': request})
         return Response(serializer.data)   
     
     def get_person(self, request):
         person_id = request.GET['person_id']
         person = Person.objects.get(id=person_id)  
-        serializer = KnownPersonSerializer(person, context={'request': request})
+        serializer = IDManagementSerializer(person, context={'request': request})
         return Response(serializer.data)
     
     def add_alias_group(self, request, pk, pk2):
