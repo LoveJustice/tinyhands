@@ -50,7 +50,7 @@ urlpatterns = [
 
         #Persons
         url(r'^person/$', PersonViewSet.as_view({'get': 'list'}), name="Person"),
-        
+
         #KnownPersons
         url(r'^idmgmt/$', IDManagementViewSet.as_view({'get': 'list'}), name="KnownPerson"),
         url(r'^idmgmt/fuzzy/$', IDManagementViewSet.as_view({'get':'fuzzy_match'}), name="IDManagement"),

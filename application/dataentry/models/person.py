@@ -16,13 +16,14 @@ class Person(models.Model):
     address2 = models.ForeignKey(Address2, null=True, blank=True)
     phone_contact = models.CharField(max_length=255, blank=True)
     alias_group = models.ForeignKey(AliasGroup, null=True)
+    aliases = None
 
     def get_aliases(self):
-        if hasattr(self, 'aliases'):
+        if self.aliases is not None:
             return self.aliases
 
         if self.alias_group is None:
-            return ''
+            self.aliases = ''
         else:
             alias_persons = Person.objects.filter(alias_group = self.alias_group).order_by('full_name')
             sep = ''
@@ -37,7 +38,7 @@ class Person(models.Model):
     def get_form_type(self):
         if not hasattr(self, 'forms'):
             self.get_form_data()
-        
+
         if len(self.forms) > 0:
             return self.forms[0].type
         else:

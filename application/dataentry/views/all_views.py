@@ -47,7 +47,7 @@ from accounts.mixins import PermissionsRequiredMixin
 
 from rest_api.authentication import HasPermission, HasDeletePermission, HasPostPermission, HasPutPermission
 
-from dataentry import alert_checkers, fuzzy_matching
+from dataentry import fuzzy_matching
 
 
 logger = logging.getLogger(__name__)
@@ -396,7 +396,7 @@ class IDManagementViewSet(viewsets.ModelViewSet):
         results = fuzzy_matching.match_person(input_name)
         serializer = IDManagementSerializer(results, many=True, context={'request': request})
         return Response(serializer.data)
-    
+
     def partial_phone(self, request):
         input_phone = request.GET['phone']
         results = Person.objects.filter(phone_contact__contains=input_phone)
@@ -414,11 +414,11 @@ class IDManagementViewSet(viewsets.ModelViewSet):
         group_id = request.GET['group_id']
         results = Person.objects.filter(alias_group=group_id);
         serializer = IDManagementSerializer(results, many=True, context={'request': request})
-        return Response(serializer.data)   
+        return Response(serializer.data)
     
     def get_person(self, request):
         person_id = request.GET['person_id']
-        person = Person.objects.get(id=person_id)  
+        person = Person.objects.get(id=person_id)
         serializer = IDManagementSerializer(person, context={'request': request})
         return Response(serializer.data)
     

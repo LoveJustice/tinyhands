@@ -59,7 +59,7 @@ def match_address2_address1(address2_name, address1_name):
         return address2, address1
     else:
         return None
-    
+
 def match_person(person_name):
     results = []
     choices = {choice.id: choice.full_name
