@@ -45,7 +45,7 @@ from accounts.mixins import PermissionsRequiredMixin
 
 from rest_api.authentication import HasPermission, HasDeletePermission, HasPostPermission, HasPutPermission
 
-
+from dataentry import alert_checkers
 
 logger = logging.getLogger(__name__)
 
