@@ -31,7 +31,7 @@ class IDManagementTest(APITestCase):
 
         self.person_list[3].phone_contact = self.phone_match + '01'
         self.person_list[4].phone_contact = self.phone_match + '02'
-        
+
         self.person_list[3].full_name = "Raymond Smith"
         self.person_list[4].full_name = "Raymond Smythe"
 
@@ -128,5 +128,3 @@ class IDManagementTest(APITestCase):
         person2 = Person.objects.get(id=self.person_list[4].id)
         self.assertTrue(person1.alias_group is None, "person1 alias group is not None")
         self.assertTrue(person2.alias_group is None, "person2 alias group is not None")
-
-        
