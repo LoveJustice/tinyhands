@@ -115,11 +115,14 @@ def top_table_data(pk, month, year, budget_sheets):
 
         return {
                 "all": all_interception_records_count,
-                "all_cost": all_cost/all_interception_records_count_divide,
+                "all_cost": all_cost,
+                "all_int_cost": all_cost/all_interception_records_count_divide,
                 "last_month": last_months_count,
-                "last_months_cost": last_months_cost/last_months_count_divide,
+                "last_months_cost": last_months_cost,
+                "last_months_int_cost": last_months_cost/last_months_count_divide,
                 "last_3_months": last_3_months_count,
-                "last_3_months_cost": last_3_months_cost/last_3_months_count_divide,
+                "last_3_months_cost": last_3_months_cost,
+                "last_3_months_int_cost": last_3_months_cost/last_3_months_count_divide,
                 "staff_count": staff_count,
                 "last_months_total_cost": last_months_cost
         }
