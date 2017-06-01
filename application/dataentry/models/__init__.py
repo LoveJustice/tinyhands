@@ -17,3 +17,5 @@ from person import Person
 from victim_interview import VictimInterview
 
 from country import Country
+
+from alias_group import AliasGroup

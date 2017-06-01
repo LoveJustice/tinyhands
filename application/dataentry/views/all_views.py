@@ -47,7 +47,6 @@ from rest_api.authentication import HasPermission, HasDeletePermission, HasPostP
 
 from dataentry import alert_checkers
 
-
 logger = logging.getLogger(__name__)
 
 @login_required
