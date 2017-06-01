@@ -1,9 +1,10 @@
 from django.conf.urls import url
 
-from dataentry.views import Address2ViewSet, Address1ViewSet, GeoCodeAddress1APIView, GeoCodeAddress2APIView, InterceptionRecordViewSet, VictimInterviewViewSet, IntercepteeViewSet, VictimInterviewDetailViewSet, PhotoExporter, IrfCsvExportView, VifCsvExportView, IDManagementViewSet
+from dataentry.views import Address2ViewSet, Address1ViewSet, GeoCodeAddress1APIView, GeoCodeAddress2APIView, InterceptionRecordViewSet, VictimInterviewViewSet, IntercepteeViewSet, VictimInterviewDetailViewSet, PhotoExporter, IrfCsvExportView, VifCsvExportView
 from dataentry.views import PersonViewSet
 from dataentry.views import SiteSettingsViewSet
 from dataentry.views import CountryViewSet
+from dataentry.views import IDManagementViewSet
 
 
 list = {'get': 'list', 'post': 'create'}
@@ -52,14 +53,14 @@ urlpatterns = [
         url(r'^person/$', PersonViewSet.as_view({'get': 'list'}), name="Person"),
 
         #KnownPersons
-        url(r'^idmgmt/$', IDManagementViewSet.as_view({'get': 'list'}), name="KnownPerson"),
-        url(r'^idmgmt/fuzzy/$', IDManagementViewSet.as_view({'get':'fuzzy_match'}), name="IDManagement"),
-        url(r'^idmgmt/phone/$', IDManagementViewSet.as_view({'get':'partial_phone'}), name="IDManagement"),
-        url(r'^idmgmt/aperson/$', IDManagementViewSet.as_view({'get':'get_person'}), name="IDManagement"),
-        url(r'^idmgmt/forms/$', IDManagementViewSet.as_view({'get':'person_forms'}), name="IDManagement"),
-        url(r'^idmgmt/group/$', IDManagementViewSet.as_view({'get':'alias_group'}), name="IDManagement"),
-        url(r'^idmgmt/(?P<pk>\d+)/addgroup/(?P<pk2>\d+)/$', IDManagementViewSet.as_view({'put':'add_alias_group'}), name="IDManagement"),
-        url(r'^idmgmt/(?P<pk>\d+)/removegroup/$', IDManagementViewSet.as_view({'put':'remove_alias_group'}), name="IDManagement"),
+        url(r'^idmgmt/$', IDManagementViewSet.as_view({'get': 'list'}), name="IDManagement"),
+        url(r'^idmgmt/fuzzy/$', IDManagementViewSet.as_view({'get':'fuzzy_match'}), name="IDManagementFuzzy"),
+        url(r'^idmgmt/phone/$', IDManagementViewSet.as_view({'get':'partial_phone'}), name="IDManagementPhone"),
+        url(r'^idmgmt/aperson/$', IDManagementViewSet.as_view({'get':'get_person'}), name="IDManagementPerson"),
+        url(r'^idmgmt/forms/$', IDManagementViewSet.as_view({'get':'person_forms'}), name="IDManagementForms"),
+        url(r'^idmgmt/group/$', IDManagementViewSet.as_view({'get':'alias_group'}), name="IDManagementGroup"),
+        url(r'^idmgmt/(?P<pk>\d+)/addgroup/(?P<pk2>\d+)/$', IDManagementViewSet.as_view({'put':'add_alias_group'}), name="IDManagementAdd"),
+        url(r'^idmgmt/(?P<pk>\d+)/removegroup/$', IDManagementViewSet.as_view({'put':'remove_alias_group'}), name="IDManagementRemove"),
 
         #Countries
         url(r'^country/$', CountryViewSet.as_view(list), name='Country'),

@@ -63,7 +63,7 @@ class IntercepteeFactory(DjangoModelFactory):
         model = Interceptee
 
     person = factory.SubFactory(PersonFactory)
-    photo = 'foo.png'
+    photo = 'interceptee_photos/clownFish.jpg'
     interception_record = factory.SubFactory(IrfFactory)
     kind = 'v'
 
@@ -113,3 +113,14 @@ class Address2Factory(DjangoModelFactory):
     address1 = factory.SubFactory(Address1Factory)
     canonical_name = factory.SubFactory(CanonicalNameFactory)
     verified = FuzzyChoice([True, False])
+    
+class PersonBoxFactory(DjangoModelFactory):
+    class Meta:
+        model = VictimInterviewPersonBox
+        
+    person = factory.SubFactory(PersonFactory)
+    victim_interview = factory.SubFactory(VifFactory)  
+
+class AliasGroupFactory(DjangoModelFactory):
+    class Meta:
+        model = AliasGroup

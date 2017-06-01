@@ -61,11 +61,21 @@ def match_address2_address1(address2_name, address1_name):
         return None
 
 def match_person(person_name):
+    fuzzy_limit = 11
+    fuzzy_score_cutoff=80
+    try:
+         site_settings = SiteSettings.objects.all()[0]
+         fuzzy_score_cutoff = site_settings.get_setting_value_by_name('idmanagement_name_cutoff')
+         fuzzy_limit = site_settings.get_setting_value_by_name('idmanagement_name_limit')
+    except:
+        # use default hard coded values
+        pass
+    
     results = []
     choices = {choice.id: choice.full_name
                for choice in Person.objects.all()
                }
-    matches = process.extractBests(person_name, choices, score_cutoff=80, limit=11)
+    matches = process.extractBests(person_name, choices, score_cutoff=fuzzy_score_cutoff, fuzzy_limit=limit)
 
     for match in matches:
         results.append(Person.objects.get(id=match[2]))
