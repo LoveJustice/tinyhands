@@ -4,7 +4,7 @@ from rest_framework.test import APIRequestFactory, APITestCase
 from dataentry.models import Person
 from dataentry.models import VictimInterview
 from accounts.tests.factories import SuperUserFactory
-from dataentry.tests.factories import PersonFactory, VifFactory, IrfFactory, IntercepteeFactory, PersonBoxFactory, AliasGroupFactory
+from dataentry.tests.factories import PersonFactory, VifFactory, IrfFactory, IntercepteeNoPhotoFactory, PersonBoxFactory, AliasGroupFactory
 
 class IDManagementTest(APITestCase):
     def setUp(self):
@@ -12,7 +12,7 @@ class IDManagementTest(APITestCase):
         self.person_list = PersonFactory.create_batch(11)
         self.user = SuperUserFactory.create()
         self.client.force_authenticate(user=self.user)
-        self.interceptee_list = IntercepteeFactory.create_batch(3)
+        self.interceptee_list = IntercepteeNoPhotoFactory.create_batch(3)
         self.pb_list = PersonBoxFactory.create_batch(2)
         self.irf_list = IrfFactory.create_batch(2)
         self.vif_list = VifFactory.create_batch(2)

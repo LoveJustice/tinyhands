@@ -63,10 +63,19 @@ class IntercepteeFactory(DjangoModelFactory):
         model = Interceptee
 
     person = factory.SubFactory(PersonFactory)
-    photo = 'interceptee_photos/clownFish.jpg'
+    photo = 'foo.png'
     interception_record = factory.SubFactory(IrfFactory)
     kind = 'v'
 
+# Photo will cause IDManagement test to fail.  Photo is required for photo_exporter test.
+class IntercepteeNoPhotoFactory(DjangoModelFactory):
+    class Meta:
+        model = Interceptee
+
+    person = factory.SubFactory(PersonFactory)
+    photo = None
+    interception_record = factory.SubFactory(IrfFactory)
+    kind = 'v'
 
 class SiteSettingsFactory(DjangoModelFactory):
     class Meta:
