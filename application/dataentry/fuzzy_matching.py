@@ -67,17 +67,17 @@ def match_person(person_name):
          site_settings = SiteSettings.objects.all()[0]
          fuzzy_score_cutoff = site_settings.get_setting_value_by_name('idmanagement_name_cutoff')
          fuzzy_limit = site_settings.get_setting_value_by_name('idmanagement_name_limit')
-    except:
+    except BaseException:
         # use default hard coded values
         pass
-    
+
     results = []
     choices = {choice.id: choice.full_name
                for choice in Person.objects.all()
                }
-    matches = process.extractBests(person_name, choices, score_cutoff=fuzzy_score_cutoff, fuzzy_limit=limit)
+    matches = process.extractBests(person_name, choices, score_cutoff=fuzzy_score_cutoff, limit=fuzzy_limit)
 
     for match in matches:
         results.append(Person.objects.get(id=match[2]))
-   
+
     return results

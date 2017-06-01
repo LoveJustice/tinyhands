@@ -32,7 +32,6 @@ from braces.views import LoginRequiredMixin
 from fuzzywuzzy import process
 
 from dataentry.models import BorderStation, SiteSettings, Address2, Address1, Interceptee, Person, InterceptionRecord, VictimInterview, VictimInterviewLocationBox, VictimInterviewPersonBox
-from dataentry.models.alias_group import AliasGroup
 from dataentry.forms import IntercepteeForm, InterceptionRecordForm, Address2Form, Address1Form, VictimInterviewForm, VictimInterviewLocationBoxForm, VictimInterviewPersonBoxForm
 from dataentry.dataentry_signals import irf_done
 
@@ -46,7 +45,6 @@ from accounts.mixins import PermissionsRequiredMixin
 
 from rest_api.authentication import HasPermission, HasDeletePermission, HasPostPermission, HasPutPermission
 
-from dataentry import fuzzy_matching
 
 
 logger = logging.getLogger(__name__)

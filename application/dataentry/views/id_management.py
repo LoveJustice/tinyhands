@@ -59,7 +59,7 @@ class IDManagementViewSet(viewsets.ModelViewSet):
         try:
             person1 = Person.objects.get(id=pk)
             person2 = Person.objects.get(id=pk2)
-        except:
+        except ObjectDoesNotExist:
             logger.error('Failed to add to alias group: ' + pk + ' ' + pk2)
             return Response({'detail': "an error occurred"}, status=status.HTTP_404_NOT_FOUND)
 
@@ -78,12 +78,12 @@ class IDManagementViewSet(viewsets.ModelViewSet):
                 if alias_group is None:
                     alias_group = AliasGroup()
                     alias_group.save()
-                
+
                 person1.alias_group = alias_group
                 person1.save()
                 person2.alias_group = alias_group
                 person2.save()
-        except:
+        except BaseException:
             logger.error('Failed to add to alias group: ' + pk + ' ' + pk2)
             return Response({'detail': "an error occurred"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -94,7 +94,7 @@ class IDManagementViewSet(viewsets.ModelViewSet):
             person = Person.objects.get(id=pk)
             if person.alias_group is None:
                 return
-        except:
+        except ObjectDoesNotExist:
             logger.error('Failed to remove from alias group: ' + pk)
             return Response({'detail': "an error occurred"}, status=status.HTTP_404_NOT_FOUND)
 
@@ -112,7 +112,7 @@ class IDManagementViewSet(viewsets.ModelViewSet):
                         member.alias_group = None
                         member.save()
                     alias_group.delete()
-        except:
+        except BaseException:
             logger.error('Failed to remove from alias group: ' + pk)
             return Response({'detail': "an error occurred"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
