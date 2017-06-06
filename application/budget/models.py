@@ -261,7 +261,7 @@ class OtherBudgetItemCost(models.Model):
         (BorderStationBudgetCalculation.ADMINISTRATION, 'Administration')
     ]
     name = models.CharField(max_length=255, blank=False)
-    cost = models.PositiveIntegerField(default=0, blank=False)
+    cost = models.IntegerField(default=0, blank=False)
     form_section = models.IntegerField(BUDGET_FORM_SECTION_CHOICES, blank=True, null=True)
     budget_item_parent = models.ForeignKey(BorderStationBudgetCalculation, blank=True, null=True, on_delete=models.CASCADE)
 
