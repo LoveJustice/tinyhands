@@ -67,6 +67,15 @@ class IntercepteeFactory(DjangoModelFactory):
     interception_record = factory.SubFactory(IrfFactory)
     kind = 'v'
 
+# Photo will cause IDManagement test to fail.  Photo is required for photo_exporter test.
+class IntercepteeNoPhotoFactory(DjangoModelFactory):
+    class Meta:
+        model = Interceptee
+
+    person = factory.SubFactory(PersonFactory)
+    photo = None
+    interception_record = factory.SubFactory(IrfFactory)
+    kind = 'v'
 
 class SiteSettingsFactory(DjangoModelFactory):
     class Meta:
@@ -113,3 +122,14 @@ class Address2Factory(DjangoModelFactory):
     address1 = factory.SubFactory(Address1Factory)
     canonical_name = factory.SubFactory(CanonicalNameFactory)
     verified = FuzzyChoice([True, False])
+    
+class PersonBoxFactory(DjangoModelFactory):
+    class Meta:
+        model = VictimInterviewPersonBox
+        
+    person = factory.SubFactory(PersonFactory)
+    victim_interview = factory.SubFactory(VifFactory)  
+
+class AliasGroupFactory(DjangoModelFactory):
+    class Meta:
+        model = AliasGroup
