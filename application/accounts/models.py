@@ -32,6 +32,8 @@ class DefaultPermissionsSet(models.Model):
     permission_budget_add = models.BooleanField(default=False)
     permission_budget_edit = models.BooleanField(default=False)
     permission_budget_delete = models.BooleanField(default=False)
+    
+    permission_can_receive_mdf = models.BooleanField(default=False)
 
     def __unicode__(self):
         return self.name
@@ -106,6 +108,8 @@ class Account(AbstractBaseUser, PermissionsMixin):
     permission_budget_add = models.BooleanField(default=False)
     permission_budget_edit = models.BooleanField(default=False)
     permission_budget_delete = models.BooleanField(default=False)
+
+    permission_can_receive_mdf = models.BooleanField(default=False)
 
     date_joined = models.DateTimeField(default=timezone.now)
 

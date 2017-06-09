@@ -22,6 +22,8 @@ from budget.helpers import MoneyDistributionFormHelper
 from rest_api.authentication import HasPermission
 from static_border_stations.models import Staff, CommitteeMember
 from static_border_stations.serializers import StaffSerializer, CommitteeMemberSerializer
+from accounts.models import Account
+from accounts.serializers import AccountsSerializer
 
 logger = logging.getLogger(__name__)
 
@@ -33,18 +35,21 @@ class MoneyDistribution(viewsets.ViewSet):
         border_station = BorderStationBudgetCalculation.objects.get(pk=pk).border_station
         staff = border_station.staff_set.exclude(email__isnull=True)
         committee_members = border_station.committeemember_set.exclude(email__isnull=True)
+        national_staff = Account.objects.filter(permission_can_receive_mdf=True)
 
         staff_serializer = StaffSerializer(staff, many=True)
         committee_members_serializer = CommitteeMemberSerializer(committee_members, many=True)
+        national_staff_serializer = AccountsSerializer(national_staff, many=True)
 
         pdf_url = settings.SITE_DOMAIN + reverse('MdfPdf', kwargs={"pk": pk})
 
-        return Response({"staff_members": staff_serializer.data, "committee_members": committee_members_serializer.data, "pdf_url": pdf_url})
+        return Response({"staff_members": staff_serializer.data, "committee_members": committee_members_serializer.data, "national_staff_members": national_staff_serializer.data, "pdf_url": pdf_url})
 
     def send_emails(self, request, pk):
         budget_calc_id = pk
         staff_ids = request.data['staff_ids']
         committee_ids = request.data['committee_ids']
+        national_staff_ids = request.data['national_staff_ids']
         budget_calc = BorderStationBudgetCalculation.objects.get(pk=budget_calc_id)
         border_station = BorderStation.objects.get(pk=budget_calc.border_station.id)
 
@@ -53,11 +58,13 @@ class MoneyDistribution(viewsets.ViewSet):
 
         staff = border_station.staff_set.all()
         committee_members = border_station.committeemember_set.all()
+        national_staff = Account.objects.filter(permission_can_receive_mdf=True)
 
         self.save_recipients_and_email(staff, staff_ids, budget_calc)
         self.save_recipients_and_email(committee_members, committee_ids, budget_calc)
+        self.email_national_staff(national_staff, national_staff_ids, budget_calc)
         return Response("Emails Sent!", status=200)
-    
+
     def save_recipients_and_email(self, person_list, recipient_ids, budget_calc):
         for person in person_list:
             if person.id in recipient_ids:
@@ -68,7 +75,13 @@ class MoneyDistribution(viewsets.ViewSet):
                 self.email_staff_and_committee_members(person, budget_calc.id, 'money_distribution_form')
             else:
                 person.receives_money_distribution_form = False
-                person.save()
+                person.save()    
+    
+    def email_national_staff(self, staff_list, recipient_ids, budget_calc):
+        for staff in staff_list:
+            if staff.id in recipient_ids:
+                logger.info("Sending MDF - %s for %s to %s", budget_calc.border_station.station_code, budget_calc.month_year.strftime("%B %Y"), staff.email)
+                self.email_staff_and_committee_members(staff, budget_calc.id, 'money_distribution_form')        
 
     def email_staff_and_committee_members(self, person, budget_calc_id, template, context={}):
         context['person'] = person
