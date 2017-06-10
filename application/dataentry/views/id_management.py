@@ -20,8 +20,7 @@ class IDManagementViewSet(viewsets.ModelViewSet):
     permissions_required = ['permission_irf_edit', 'permission_vif_edit']
     filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
     search_fields = ('full_name',)
-    ordering_fields = ('full_name', 'age', 'gender', 'phone_contact','aliases',
-            'form_type','form_number','form_date')
+    ordering_fields = ('full_name', 'age', 'gender', 'phone_contact', 'address1__name', 'address2__name')
     ordering = ('full_name',)
 
     def fuzzy_match(self, request):
