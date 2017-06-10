@@ -26,6 +26,11 @@ class Question(models.Model):
     answer_type = models.ForeignKey(AnswerType, null=True)
     description = models.CharField(max_length=100)
     layout = models.CharField(max_length=100) # "1.4.2.1"
+    
+class QuestionTranslation(models.Model):
+    question = models.ForeignKey(Question, null=True)
+    language = models.ForeignKey(Language, null=True)
+    text = models.CharField(max_length=100)
 
 class AnswerType(models.Model):
     name = models.CharField(max_length=100) # Multiple Choice, Int, Address, Phone Num, etc.
@@ -71,3 +76,30 @@ class ConditionTranslation(models.Model):
     language = models.ForeignKey(Language, null=True)
     text = models.CharField(max_length=100) # Longer?
     # This would allow for a message to be displayed if condition is satisfied
+    
+class ExportImport(models.Model):
+    description = models.CharField(max_length=100)
+    implement_clas_name = models.CharField(max_length=100)
+    
+class Export_Import_Question(models.Model):
+    export_import = models.ForeignKey(ExportImport, null=True)
+    question = models.ForeignKey(Question, null=True)
+    position = models.PositiveIntegerField()
+    field_type = models.CharField(max_length=100)
+    export_name = models.CharField(max_length=100)
+    arguments_json = JSONField()
+
+class GoogleSheet(models.Model):
+    export_import = models.ForeignKey(ExportImport, null=True)
+    export_or_import = models.CharField(max_length=10)
+    spreadsheet_name = models.CharField(max_length=100)
+    sheet_name = models.CharField(max_length=100)
+    
+class ExportImportForeignKey(models.Model):
+    export_import = models.ForeignKey(ExportImport, null=True)
+    fk_export_import = models.ForeignKey(ExportImport, null=True)
+    position = models.PositiveIntegerField()
+    export_prefix = models.CharField(max_length=100)
+
+    
+    
