@@ -5,7 +5,7 @@ from dataentry.models import Country
 class Form(models.Model):
     form_type = models.ForeignKey(FormType, null=True)
     country = models.ForeignKey(Country, null=True)
-    export_sheet = models.CharField(max_length=100)
+    storage = models.ForeignKey(Storage)
     start_date = models.DateTimeField(auto_now_add=True)
     end_date = models.DateTimeField(null=True)
 
@@ -20,6 +20,12 @@ class Category(models.Model):
 
 class CategoryType(models.Model):
     name = models.CharField(max_length=100) # Grid, Card, etc.
+
+# Typically, there will be multiple instances of card data
+# CardForm identifies a separate subform for the data on a card
+class CardForm(models.Model):
+    category = models.ForeignKey(Category)
+    subform = models.ForeignKey(Form)
 
 class Question(models.Model):
     category = models.ForeignKey(Category, null=True)
@@ -77,6 +83,40 @@ class ConditionTranslation(models.Model):
     text = models.CharField(max_length=100) # Longer?
     # This would allow for a message to be displayed if condition is satisfied
     
+#
+# QuestionStorage is used to specify that the question response will be
+# stored in a field of the forms model as opposed to being stored as a
+# generic response.
+# For example, an entry could specify that the response to the 'IRF Number'
+# question would be stored in the field name 'irf_number'
+# Foreign storage is used when one or more question responses should be stored in a
+# separate form.  For example, we would like to store the responses for
+# questions related to a person using the Person model.
+class QuestionStorage(models.Model):
+    question = models.ForeignKey(Question, null=True)
+    field_name = models.CharField(max_length=100)
+    foreign_storage = models.ForeignKey(Storage, null=True)
+
+#
+# Storage is used to describe the relationship between questions on a form
+# and the storage of that data in models.  For example, the VIF model contains
+# two instance of the Person model - the victim and the guardian.  To reflect
+# this we could have data like
+#   id   model_name        parent_storage    foreign_key_field_name
+#   10   VictimInterview   null              null
+#   11   Person            10                victim
+#   12   Address1          11                address1
+#   13   Address2          11                address2
+#   14   Person            10                guardian
+#   15   Address1          14                address1
+#   16   Address2          14                address2
+class Storage(model.Model):
+    model_name = models.CharField(max_length=100)
+    parent_storage = models.ForeignKey(Storage, null=True)
+    foreign_key_field_name = models.ForeignKey(Question, null=True)
+
+
+ 
 class ExportImport(models.Model):
     description = models.CharField(max_length=100)
     implement_clas_name = models.CharField(max_length=100)
