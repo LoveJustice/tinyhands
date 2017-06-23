@@ -857,6 +857,7 @@
           </table>
           <br/>
           <div class="row last-form-area">
+            <!-- Procedures -->
             <div class="col-xs-6">
               <p class="bg-danger">You must complete each of these procedures for this IRF to be
                 considered correctly filled out. Tick each box to indicate that
@@ -871,8 +872,9 @@
               <br/>
               {{ form.name_came_up_before_value.label_tag }}  {{ form.name_came_up_before_value|attr:"style: width: 100px"|attr:"data-placement: bottom" }}<br/>
               <strong>8.3</strong>&nbsp;{{ form.scan_and_submit_same_day|attr:"data-placement: bottom" }} {{ form.scan_and_submit_same_day.label_tag }}
-            </div>
-            <div class="col-xs-6">
+              
+              <br /> <br />
+              <!-- Type of intercept -->
               <h3 style="margin-top: 0" class="text-center">Type of Intercept</h3>
               <div class="checkbox-group-marker" id="interception_type">
                 <span class="checkbox-group">
@@ -902,15 +904,25 @@
               <strong>9.7</strong>&nbsp;{{ form.how_sure_was_trafficking.label_tag }}<br/>
               <strong>Rate from 1-5</strong> <small>(1 = not at all sure, 5 = absolutely sure)</small> {{ form.how_sure_was_trafficking|attr:'style: width: 40px' }}
 
+              <br /> <br />
+            </div>
+            <div class="col-xs-6">
               <div class="signature-box text-center">
                 <p><strong>I certify that I have followed procedures and filled<br/>out this form correctly, completely, and accurately.</strong></p>
 
                 {{ form.has_signature }} {{ form.has_signature.label_tag }}
               </div>
+              <br />
+              <div class="bg-danger clearfix">
+                <div class="pull-left" style="margin-right: 20px">{{ form.scanned_form.label_tag }}</div> {{ form.scanned_form|add_class:"pull-left" }}
+              </div>
+              <br />
+              <div class="black-box clearfix">
+                <div class="label-inside-field">
+                  {{ form.case_notes|attr:"rows:10" }}
+                </div>
+              </div>
             </div>
-          </div>
-          <div class="bg-danger clearfix">
-            <div class="pull-left" style="margin-right: 20px">{{ form.scanned_form.label_tag }}</div> {{ form.scanned_form|add_class:"pull-left" }}
           </div>
         </div>
         <div class="col-xs-2">
