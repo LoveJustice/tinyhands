@@ -917,9 +917,13 @@
                 <div class="pull-left" style="margin-right: 20px">{{ form.scanned_form.label_tag }}</div> {{ form.scanned_form|add_class:"pull-left" }}
               </div>
               <br />
+
               <div class="black-box clearfix">
-                <div class="label-inside-field">
+                <div>
+                  {{ form.case_notes.label_tag }}:
+                    <br>
                   {{ form.case_notes|attr:"rows:10" }}
+
                 </div>
               </div>
             </div>
