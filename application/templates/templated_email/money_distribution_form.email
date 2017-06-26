@@ -1,12 +1,15 @@
 {% block subject %}New Money Distribution Form Is Available!{% endblock %}
 
 {% block html %}
-<p>Hello {{ person.first_name }},</p>
+<p>Dear {{ station_name }} Subcommittee,</p>
 
-<p>Click <a href="{{ site }}{% url 'MdfPdf' budget_calc_id %}">this link</a> to view the new money distribution form for your Border Station!</p>
+<p>Jaimashi.</p>
 
+<p>Please click <a href="{{ site }}{% url 'MdfPdf' budget_calc_id %}">this link</a> to view the new Money Distribution Form for your border station.</p>
 
-<p>Cheers,</p>
-<p>The Tiny Hands Admins</p>
+<p>Thank you for your perseverance and hard work!</p>
 
+<p>Blessings,</p>
+
+<p>THN National Office</p>
 {% endblock %}
