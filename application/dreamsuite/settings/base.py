@@ -11,6 +11,7 @@ BASE_DIR = Path(__file__).ancestor(3)
 
 SERVER_EMAIL = 'austin@tinyhands.org'
 
+BORDER_STATION_EMAIL_SENDER = "sheital@tinyhands.org"
 ADMIN_EMAIL_SENDER = SERVER_EMAIL
 DEFAULT_FROM_EMAIL = SERVER_EMAIL
 
