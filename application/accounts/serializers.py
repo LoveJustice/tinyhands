@@ -24,6 +24,13 @@ class AccountsSerializer(serializers.ModelSerializer):
         exclude = ['password', 'activation_key', 'groups', 'user_permissions', 'is_staff', 'is_superuser']
 
 
+class AccountMDFSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Account
+        fields = ['id', 'email', 'first_name', 'last_name']
+
+
+
 class DefaultPermissionsSetSerializer(serializers.ModelSerializer):
     is_used_by_accounts = serializers.BooleanField(read_only=True)
     name = serializers.CharField(

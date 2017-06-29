@@ -23,9 +23,10 @@ from rest_api.authentication import HasPermission
 from static_border_stations.models import Staff, CommitteeMember
 from static_border_stations.serializers import StaffSerializer, CommitteeMemberSerializer
 from accounts.models import Account
-from accounts.serializers import AccountsSerializer
+from accounts.serializers import AccountMDFSerializer
 
 logger = logging.getLogger(__name__)
+
 
 class MoneyDistribution(viewsets.ViewSet):
     permission_classes = [IsAuthenticated, HasPermission]
@@ -40,7 +41,7 @@ class MoneyDistribution(viewsets.ViewSet):
 
         staff_serializer = StaffSerializer(staff, many=True)
         committee_members_serializer = CommitteeMemberSerializer(committee_members, many=True)
-        national_staff_serializer = AccountsSerializer(national_staff, many=True)
+        national_staff_serializer = AccountMDFSerializer(national_staff, many=True)
 
         pdf_url = settings.SITE_DOMAIN + reverse('MdfPdf', kwargs={"uuid": budget.mdf_uuid})
 
@@ -51,19 +52,18 @@ class MoneyDistribution(viewsets.ViewSet):
         staff_ids = request.data['staff_ids']
         committee_ids = request.data['committee_ids']
         national_staff_ids = request.data['national_staff_ids']
-        budget_calc = BorderStationBudgetCalculation.objects.get(pk=budget_calc_id)
-        border_station = BorderStation.objects.get(pk=budget_calc.border_station.id)
 
         budget_calc = BorderStationBudgetCalculation.objects.get(pk=budget_calc_id)
         border_station = BorderStation.objects.get(pk=budget_calc.border_station.id)
 
         staff = border_station.staff_set.all()
         committee_members = border_station.committeemember_set.all()
-        national_staff = Account.objects.filter(permission_can_receive_mdf=True)
+        national_staff = Account.objects.filter(permission_can_receive_mdf=True, id__in=national_staff_ids)
 
         self.save_recipients_and_email(staff, staff_ids, budget_calc)
         self.save_recipients_and_email(committee_members, committee_ids, budget_calc)
-        self.email_national_staff(national_staff, national_staff_ids, budget_calc)
+
+        self.email_national_staff(national_staff, budget_calc)
         return Response("Emails Sent!", status=200)
 
     def save_recipients_and_email(self, person_list, recipient_ids, budget_calc):
@@ -72,22 +72,20 @@ class MoneyDistribution(viewsets.ViewSet):
                 if person.receives_money_distribution_form == False:
                     person.receives_money_distribution_form = True
                     person.save()
-                logger.info("Sending MDF - %s for %s to %s", budget_calc.border_station.station_code, budget_calc.month_year.strftime("%B %Y"), person.email)
-                self.email_staff_and_committee_members(person, budget_calc.mdf_uuid, budget_calc.border_station.station_name, 'money_distribution_form')
+                self.email_staff_and_committee_members(person, budget_calc, 'money_distribution_form')
             else:
                 person.receives_money_distribution_form = False
-                person.save()    
-    
-    def email_national_staff(self, staff_list, recipient_ids, budget_calc):
-        for staff in staff_list:
-            if staff.id in recipient_ids:
-                logger.info("Sending MDF - %s for %s to %s", budget_calc.border_station.station_code, budget_calc.month_year.strftime("%B %Y"), staff.email)
-                self.email_staff_and_committee_members(staff, budget_calc.id, 'money_distribution_form')        
+                person.save()
 
-    def email_staff_and_committee_members(self, person, mdf_uuid, station_name, template, context={}):
+    def email_national_staff(self, staff_list, budget_calc):
+        for staff in staff_list:
+            self.email_staff_and_committee_members(staff, budget_calc, 'money_distribution_form')
+
+    def email_staff_and_committee_members(self, person, budget_calc, template, context={}):
+        logger.info("Sending MDF - %s for %s to %s", budget_calc.border_station.station_code, budget_calc.month_year.strftime("%B %Y"), person.email)
         context['person'] = person
-        context['mdf_uuid'] = mdf_uuid
-        context['station_name'] = station_name
+        context['mdf_uuid'] = budget_calc.mdf_uuid
+        context['station_name'] = budget_calc.border_station.station_name
         context['site'] = settings.SITE_DOMAIN
         send_templated_mail(
             template_name=template,
