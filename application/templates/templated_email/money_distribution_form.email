@@ -5,7 +5,7 @@
 
 <p>Jaimashi.</p>
 
-<p>Please click <a href="{{ site }}{% url 'MdfPdf' budget_calc_id %}">this link</a> to view the new Money Distribution Form for your border station.</p>
+<p>Please click <a href="{{ site }}{% url 'MdfPdf' mdf_uuid %}">this link</a> to view the new Money Distribution Form for your border station.</p>
 
 <p>Thank you for your perseverance and hard work!</p>
 

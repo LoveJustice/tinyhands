@@ -29,9 +29,9 @@ class BudgetTable:
 
 class MoneyDistributionFormHelper:
 
-    def __init__(self, budget_id):
-        self.budget = BorderStationBudgetCalculation.objects.get(pk=budget_id)
-        self.staff_salaries = StaffSalary.objects.filter(budget_calc_sheet=budget_id)
+    def __init__(self, budget_mdf_uuid):
+        self.budget = BorderStationBudgetCalculation.objects.get(mdf_uuid=budget_mdf_uuid)
+        self.staff_salaries = StaffSalary.objects.filter(budget_calc_sheet__mdf_uuid=budget_mdf_uuid)
 
     @property
     def sections(self):

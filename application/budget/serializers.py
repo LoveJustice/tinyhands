@@ -8,6 +8,7 @@ class BorderStationBudgetCalculationListSerializer(serializers.ModelSerializer):
         model = BorderStationBudgetCalculation
         fields = [
             'id',
+            'mdf_uuid',
             'border_station',
             'month_year',
             'date_time_entered',
