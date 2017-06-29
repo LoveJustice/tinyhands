@@ -21,6 +21,8 @@ class BorderStationBudgetCalculationFactory(DjangoModelFactory):
     class Meta:
         model = BorderStationBudgetCalculation
 
+    mdf_uuid = "e788c527-7102-4e9c-a391-1b73653a03c5"
+
     border_station = factory.SubFactory(BorderStationFactory)
     month_year = datetime.datetime(2015, 5, 5, 5, tzinfo=pytz.UTC)
 
