@@ -32,7 +32,8 @@ class MoneyDistribution(viewsets.ViewSet):
     permissions_required = ['permission_budget_view']
 
     def retrieve(self, request, pk):
-        border_station = BorderStationBudgetCalculation.objects.get(pk=pk).border_station
+        budget = BorderStationBudgetCalculation.objects.get(pk=pk)
+        border_station = budget.border_station
         staff = border_station.staff_set.exclude(email__isnull=True)
         committee_members = border_station.committeemember_set.exclude(email__isnull=True)
         national_staff = Account.objects.filter(permission_can_receive_mdf=True)
@@ -41,7 +42,7 @@ class MoneyDistribution(viewsets.ViewSet):
         committee_members_serializer = CommitteeMemberSerializer(committee_members, many=True)
         national_staff_serializer = AccountsSerializer(national_staff, many=True)
 
-        pdf_url = settings.SITE_DOMAIN + reverse('MdfPdf', kwargs={"pk": pk})
+        pdf_url = settings.SITE_DOMAIN + reverse('MdfPdf', kwargs={"uuid": budget.mdf_uuid})
 
         return Response({"staff_members": staff_serializer.data, "committee_members": committee_members_serializer.data, "national_staff_members": national_staff_serializer.data, "pdf_url": pdf_url})
 
@@ -72,7 +73,7 @@ class MoneyDistribution(viewsets.ViewSet):
                     person.receives_money_distribution_form = True
                     person.save()
                 logger.info("Sending MDF - %s for %s to %s", budget_calc.border_station.station_code, budget_calc.month_year.strftime("%B %Y"), person.email)
-                self.email_staff_and_committee_members(person, budget_calc.id, 'money_distribution_form')
+                self.email_staff_and_committee_members(person, budget_calc.mdf_uuid, budget_calc.border_station.station_name, 'money_distribution_form')
             else:
                 person.receives_money_distribution_form = False
                 person.save()    
@@ -83,13 +84,14 @@ class MoneyDistribution(viewsets.ViewSet):
                 logger.info("Sending MDF - %s for %s to %s", budget_calc.border_station.station_code, budget_calc.month_year.strftime("%B %Y"), staff.email)
                 self.email_staff_and_committee_members(staff, budget_calc.id, 'money_distribution_form')        
 
-    def email_staff_and_committee_members(self, person, budget_calc_id, template, context={}):
+    def email_staff_and_committee_members(self, person, mdf_uuid, station_name, template, context={}):
         context['person'] = person
-        context['budget_calc_id'] = budget_calc_id
+        context['mdf_uuid'] = mdf_uuid
+        context['station_name'] = station_name
         context['site'] = settings.SITE_DOMAIN
         send_templated_mail(
             template_name=template,
-            from_email=settings.ADMIN_EMAIL_SENDER,
+            from_email=settings.BORDER_STATION_EMAIL_SENDER,
             recipient_list=[person.email],
             context=context
         )
@@ -137,8 +139,8 @@ class MoneyDistributionFormPDFView(PDFView, LoginRequiredMixin, PermissionsRequi
     filename = 'Monthly-Money-Distribution-Form.pdf'
 
     def get_context_data(self):
-        budget_id = self.kwargs['pk']
-        mdf_helper = MoneyDistributionFormHelper(budget_id)
+        budget_mdf_uuid = self.kwargs['uuid']
+        mdf_helper = MoneyDistributionFormHelper(budget_mdf_uuid)
         return {
             'name': mdf_helper.station_name,
             'date': mdf_helper.date_entered,

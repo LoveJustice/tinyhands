@@ -11,6 +11,7 @@ BASE_DIR = Path(__file__).ancestor(3)
 
 SERVER_EMAIL = 'austin@tinyhands.org'
 
+BORDER_STATION_EMAIL_SENDER = "sheital@tinyhands.org"
 ADMIN_EMAIL_SENDER = SERVER_EMAIL
 DEFAULT_FROM_EMAIL = SERVER_EMAIL
 
@@ -20,7 +21,7 @@ EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
 EMAIL_PORT = 2525
 EMAIL_USE_TLS = True
 
-#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 ALERT_INTERVAL_IN_DAYS = 30
 
