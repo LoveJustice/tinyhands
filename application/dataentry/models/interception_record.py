@@ -187,6 +187,8 @@ class InterceptionRecord(models.Model):
 
     has_signature = models.BooleanField('Scanned form has signature?', default=False)
 
+    case_notes = models.TextField('Case Notes', blank=True)
+
     scanned_form = models.FileField('Attach scanned copy of form (pdf or image)', upload_to='scanned_irf_forms', default='', blank=True)
 
     border_station = models.ForeignKey(BorderStation,  models.SET_NULL, null=True, blank=True)

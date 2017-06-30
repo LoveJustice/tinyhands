@@ -65,18 +65,19 @@ class MoneyDistribution(viewsets.ViewSet):
                     person.receives_money_distribution_form = True
                     person.save()
                 logger.info("Sending MDF - %s for %s to %s", budget_calc.border_station.station_code, budget_calc.month_year.strftime("%B %Y"), person.email)
-                self.email_staff_and_committee_members(person, budget_calc.id, 'money_distribution_form')
+                self.email_staff_and_committee_members(person, budget_calc.id, budget_calc.border_station.station_name, 'money_distribution_form')
             else:
                 person.receives_money_distribution_form = False
                 person.save()
 
-    def email_staff_and_committee_members(self, person, budget_calc_id, template, context={}):
+    def email_staff_and_committee_members(self, person, budget_calc_id, station_name, template, context={}):
         context['person'] = person
         context['budget_calc_id'] = budget_calc_id
+        context['station_name'] = station_name
         context['site'] = settings.SITE_DOMAIN
         send_templated_mail(
             template_name=template,
-            from_email=settings.ADMIN_EMAIL_SENDER,
+            from_email=settings.BORDER_STATION_EMAIL_SENDER,
             recipient_list=[person.email],
             context=context
         )
