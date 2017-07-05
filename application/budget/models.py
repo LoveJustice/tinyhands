@@ -1,3 +1,4 @@
+import uuid
 from datetime import datetime
 
 from django.db import models
@@ -17,6 +18,8 @@ class BorderStationBudgetCalculation(models.Model):
     STAFF = 8
     MEDICAL = 9
     ADMINISTRATION = 10
+
+    mdf_uuid = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
 
     date_time_entered = models.DateTimeField(auto_now_add=True)
     date_time_last_updated = models.DateTimeField(auto_now=True)
