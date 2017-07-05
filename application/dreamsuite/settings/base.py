@@ -1,8 +1,9 @@
-from dreamsuite.private import SECRET_KEY
 from django.contrib import messages
 from unipath import Path
 import os
 import logging.config
+
+SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
 
 SITE_DOMAIN = os.environ['SITE_DOMAIN']
 CLIENT_DOMAIN = os.environ['CLIENT_DOMAIN']
@@ -16,12 +17,8 @@ ADMIN_EMAIL_SENDER = SERVER_EMAIL
 DEFAULT_FROM_EMAIL = SERVER_EMAIL
 
 EMAIL_HOST = 'smtpcorp.com'
-EMAIL_HOST_USER = 'tinyhands'
-EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
 EMAIL_PORT = 2525
 EMAIL_USE_TLS = True
-
-# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 ALERT_INTERVAL_IN_DAYS = 30
 
@@ -31,7 +28,6 @@ SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
 
 FIXTURE_DIRS = (
     os.path.join(BASE_DIR, 'fixtures'),
-    # os.path.join(BASE_DIR, 'dataentry/fixtures'),
 )
 
 AUTH_USER_MODEL = 'accounts.Account'

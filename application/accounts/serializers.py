@@ -27,8 +27,12 @@ class AccountsSerializer(serializers.ModelSerializer):
 class AccountMDFSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
-        fields = ['id', 'email', 'first_name', 'last_name']
+        fields = ['id', 'email', 'first_name', 'last_name', 'receives_money_distribution_form']
 
+    def get_receives_money_distribution_form(self, obj):
+        return True
+
+    receives_money_distribution_form = serializers.SerializerMethodField(read_only=True)
 
 
 class DefaultPermissionsSetSerializer(serializers.ModelSerializer):
