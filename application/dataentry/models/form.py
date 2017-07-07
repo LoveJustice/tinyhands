@@ -3,7 +3,7 @@ from django.contrib.postgres.fields import JSONField
 from dataentry.models import Country
 
 class Form(models.Model):
-    form_type = models.ForeignKey(FormType, null=True)
+    form_type = models.ForeignKey(FormType)
     country = models.ForeignKey(Country, null=True)
     storage = models.ForeignKey(Storage)
     start_date = models.DateTimeField(auto_now_add=True)
@@ -13,8 +13,8 @@ class FormType(models.Model):
     name = models.CharField(max_length=100) # IRF, VIF, CEF, etc.
 
 class Category(models.Model):
-    form = models.ForeignKey(Form, null=True)
-    category_type = models.ForeignKey(CategoryType, null=True)
+    form = models.ForeignKey(Form)
+    category_type = models.ForeignKey(CategoryType)
     name = models.CharField(max_length=100)
     order = models.PositiveIntegerField(null=True, blank=True)
 
@@ -28,22 +28,22 @@ class CardForm(models.Model):
     subform = models.ForeignKey(Form)
 
 class Question(models.Model):
-    category = models.ForeignKey(Category, null=True)
-    answer_type = models.ForeignKey(AnswerType, null=True)
+    category = models.ForeignKey(Category)
+    answer_type = models.ForeignKey(AnswerType)
     description = models.CharField(max_length=100)
     layout = models.CharField(max_length=100) # "1.4.2.1"
     
 class QuestionTranslation(models.Model):
-    question = models.ForeignKey(Question, null=True)
-    language = models.ForeignKey(Language, null=True)
+    question = models.ForeignKey(Question)
+    language = models.ForeignKey(Language)
     text = models.CharField(max_length=100)
 
 class AnswerType(models.Model):
     name = models.CharField(max_length=100) # Multiple Choice, Int, Address, Phone Num, etc.
 
 class Answer(models.Model):
-    question = models.ForeignKey(Question, null=True)
-    answer_type = models.ForeignKey(AnswerType, null=True)
+    question = models.ForeignKey(Question)
+    answer_type = models.ForeignKey(AnswerType)
     value = models.CharField(max_length=100)
     layout = models.CharField(max_length=100)
 
@@ -63,23 +63,23 @@ class Language(models.Model):
     name = models.CharField(max_length=100)
 
 class CategoryTranslation(models.Model):
-    category = models.ForeignKey(Category, null=True)
-    language = models.ForeignKey(Language, null=True)
+    category = models.ForeignKey(Category)
+    language = models.ForeignKey(Language)
     text = models.CharField(max_length=100)
 
 class AnswerTranslation(models.Model):
-    answer = models.ForeignKey(Answer, null=True)
-    language = models.ForeignKey(Language, null=True)
+    answer = models.ForeignKey(Answer)
+    language = models.ForeignKey(Language)
     text = models.CharField(max_length=100) # Longer?
 
 class PromptTranslation(models.Model):
-    prompt = models.ForeignKey(Prompt, null=True)
-    language = models.ForeignKey(Language, null=True)
+    prompt = models.ForeignKey(Prompt)
+    language = models.ForeignKey(Language)
     text = models.CharField(max_length=100) # Longer?
 
 class ConditionTranslation(models.Model):
-    condition = models.ForeignKey(Condition, null=True)
-    language = models.ForeignKey(Language, null=True)
+    condition = models.ForeignKey(Condition)
+    language = models.ForeignKey(Language)
     text = models.CharField(max_length=100) # Longer?
     # This would allow for a message to be displayed if condition is satisfied
     
@@ -93,7 +93,7 @@ class ConditionTranslation(models.Model):
 # separate form.  For example, we would like to store the responses for
 # questions related to a person using the Person model.
 class QuestionStorage(models.Model):
-    question = models.ForeignKey(Question, null=True)
+    question = models.ForeignKey(Question)
     field_name = models.CharField(max_length=100)
     foreign_storage = models.ForeignKey(Storage, null=True)
 
@@ -118,28 +118,33 @@ class Storage(model.Model):
 
  
 class ExportImport(models.Model):
-    description = models.CharField(max_length=100)
-    implement_clas_name = models.CharField(max_length=100)
+    description = models.CharField(max_length=100, null = True)
+    implement_class_name = models.CharField(max_length=100, null=True)
     
 class Export_Import_Question(models.Model):
-    export_import = models.ForeignKey(ExportImport, null=True)
-    question = models.ForeignKey(Question, null=True)
+    export_import = models.ForeignKey(ExportImport)
+    question = models.ForeignKey(Question)
     position = models.PositiveIntegerField()
     field_type = models.CharField(max_length=100)
     export_name = models.CharField(max_length=100)
     arguments_json = JSONField()
 
 class GoogleSheet(models.Model):
-    export_import = models.ForeignKey(ExportImport, null=True)
+    export_import = models.ForeignKey(ExportImport)
     export_or_import = models.CharField(max_length=10)
     spreadsheet_name = models.CharField(max_length=100)
     sheet_name = models.CharField(max_length=100)
+    key_column = models.CharField(max_length=100)
+    import_status_column = models.CharField(max_length=100, null = True)
+    import_issue_column = models.CharField(max_length=100, null=True)
     
-class ExportImportForeignKey(models.Model):
+    
+class ExportImportCard(models.Model):
     export_import = models.ForeignKey(ExportImport, null=True)
-    fk_export_import = models.ForeignKey(ExportImport, null=True)
-    position = models.PositiveIntegerField()
-    export_prefix = models.CharField(max_length=100)
+    card_export_import = models.ForeignKey(ExportImport, null=True)
+    start_position = models.PositiveIntegerField()
+    prefix = models.CharField(max_length=100)
+    max_instances = models.PositiveIntegerField()
 
     
     
