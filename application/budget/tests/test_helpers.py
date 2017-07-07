@@ -34,7 +34,7 @@ class MoneyDistributionFormHelperTests(TestCase):
 
     def setUp(self):
         self.budget = BorderStationBudgetCalculationFactory()
-        self.target = MoneyDistributionFormHelper(self.budget.id)
+        self.target = MoneyDistributionFormHelper(self.budget.mdf_uuid)
 
     def test_sections_should_return_budget_tables_for_each_section(self):
         result = self.target.sections
