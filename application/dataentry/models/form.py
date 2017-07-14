@@ -146,5 +146,28 @@ class ExportImportCard(models.Model):
     prefix = models.CharField(max_length=100)
     max_instances = models.PositiveIntegerField()
 
+# Class to store an instance of the IRF data.
+# This should contain data that is common for all IRFs and is not expected to be changed
+class Irf(Models.Model):
+    form = models.ForeignKey(Form)
+    irf_number = models.CharField('IRF #:', max_length=20, unique=True)
+    date_time_of_interception = models.DateTimeField('Date/Time:')
+
+# Store the responses to questions that are not stored directly in the Irf model.  Includes questions that may
+# be changed in the future.  For "Open Response" and "Multi Other Response" where an non-standard answer has
+# been provided, the value of answer will be null.
+class IrfResponse(Models.Model):
+    irf = models.ForeignKey(Irf)
+    question = models.ForeignKey(Question)
+    answer = models.ForeignKey(Answer, null = True)
+
+# IrfResponseTranslation contains the text response value from the "Open Response" or
+# Multi Other Response" where an non-standard answer has been provided.
+class IrfResponseTranslation(Models.Model):
+    irf_response = models.ForeignKey(IrfResponse)
+    language = models.ForeignKey(Language)
+    answer_text = models.CharField(max_length=100)
+    
+
     
     
