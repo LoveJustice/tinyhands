@@ -28,9 +28,12 @@ class CardForm(models.Model):
     subform = models.ForeignKey(Form)
 
 class Question(models.Model):
-    category = models.ForeignKey(Category)
     answer_type = models.ForeignKey(AnswerType)
     description = models.CharField(max_length=100)
+
+class QuestionLayout(models.Model):
+    question = models.ForeignKey(Question)
+    category = models.ForeignKey(Category)
     layout = models.CharField(max_length=100) # "1.4.2.1"
     
 class QuestionTranslation(models.Model):
@@ -45,6 +48,10 @@ class Answer(models.Model):
     question = models.ForeignKey(Question)
     answer_type = models.ForeignKey(AnswerType)
     value = models.CharField(max_length=100)
+
+class AnswerLayout(models.Model):
+    answer = models.ForeignKey(Answer)
+    category = models.ForeignKey(Category)
     layout = models.CharField(max_length=100)
 
 class Prompt(models.Model):
