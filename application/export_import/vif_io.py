@@ -68,7 +68,15 @@ vif_data = [
     Address2CsvField("victim_guardian_address2", "Guardian Address2", "victim_guardian_address1"),
     CopyCsvField("victim_guardian_address_ward", "Guardian Ward", False),
     CopyCsvField("victim_guardian_phone", "Guardian Phone Number", False),
-    GroupBooleanCsv("victim_parents_marital_status", "1.14 Parents' Marital Status"),
+    MapFieldCsv("victim_parents_marital_status", "1.14 Parents' Marital Status",
+            {
+                "Single" : "victim_parents_marital_status_single",
+                "Married" : "victim_parents_marital_status_married",
+                "Widow" : "victim_parents_marital_status_widow",
+                "My father has other wives" : "victim_parents_marital_status_father_has_other_wives",
+                "Separated (Legally married)" : "victim_parents_marital_separated",
+                "Divorced" : "victim_parents_marital_divorced"
+            }),
 
     GroupBooleanCsv("victim_education_level", "1.15 Education Level"),
     BooleanCsvField("victim_is_literate", "1.16 Literacy", "Literate", "Illiterate"),
