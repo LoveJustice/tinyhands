@@ -19,7 +19,7 @@ class IDManagementViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated, HasPermission)
     permissions_required = ['permission_irf_edit', 'permission_vif_edit']
     filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
-    search_fields = ('full_name',)
+    search_fields = ('full_name','phone_contact')
     ordering_fields = ('full_name', 'age', 'gender', 'phone_contact', 'address1__name', 'address2__name')
     ordering = ('full_name',)
 
