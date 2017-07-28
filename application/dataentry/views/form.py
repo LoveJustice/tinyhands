@@ -52,6 +52,91 @@ Assumptions for below are based on JSON coming in as such
         }
     ]
 }
+
+The following would be the JSON for the form layout
+{
+    "form_id":
+    "country_id":        // Is country_id displayed?  Does the client need to know?
+    "categories":[
+        "category_id":
+        "type":
+        "name":
+        "order":        // Do we need this or is order in the array enough?
+        "prompts": [
+            {
+                "prompt_description":
+                "prompt_layout":
+            }
+        ],
+        "questions": [
+            {
+                "question_id":
+                "question_layout":
+                "answer_type":
+                "answers": [
+                    {
+                        "answer_id":
+                        "answer_layout":
+                        "answer_text":
+                    }
+                ]
+            }
+        ]
+    ]
+}
+
+The following would be the JSON for the form data
+{
+    "form_id":
+    "storage_id":
+    "country":
+    "base_form": [
+        {
+            "question_id":
+            "answer_id":
+            "storage_id":
+        },
+        {
+            "question_id":
+            "answer_text":
+            "storage_id":
+        },
+        {
+            "question_id":
+            "answer_id":
+            "answer_text":
+            "storage_id":
+        }
+    ]
+    "card_types": [
+        {
+            "category_id":
+            "cards": [
+                {
+                    "storage_id":
+                    "card_form": [                  
+                        {
+                            "question_id":
+                            "answer_id":
+                            "storage_id":
+                        },
+                        {
+                            "question_id":
+                            "answer_text":
+                            "storage_id":
+                        },
+                        {
+                            "question_id":
+                            "answer_id":
+                            "answer_text":
+                            "storage_id":
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
 '''
 
 # Right now assuming only IRFs

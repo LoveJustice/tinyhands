@@ -55,6 +55,7 @@ class AnswerLayout(models.Model):
     layout = models.CharField(max_length=100)
 
 class Prompt(models.Model):
+    category = models.ForeignKey(Category)
     layout = models.CharField(max_length=100)
     description = models.CharField(max_length=100)
 
