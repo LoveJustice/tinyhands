@@ -3,8 +3,10 @@ import datetime
 from rest_framework import serializers
 
 from dataentry.models import Address1, Address2, Country, SiteSettings, InterceptionRecord, VictimInterview, BorderStation, Person, Interceptee
+from static_border_stations.serializers import LocationSerializer
 
 from helpers import related_items_helper
+
 
 
 class Address1Serializer(serializers.ModelSerializer):
@@ -76,6 +78,7 @@ class BorderStationSerializer(serializers.ModelSerializer):
     number_of_interceptions = serializers.SerializerMethodField(read_only=True)
     number_of_staff = serializers.SerializerMethodField(read_only=True)
     ytd_interceptions = serializers.SerializerMethodField(read_only=True)
+    location_set = LocationSerializer(many=True, read_only=True)
 
     def get_number_of_interceptions(self, obj):
         return Interceptee.objects.filter(interception_record__irf_number__startswith=obj.station_code, kind='v').count()
