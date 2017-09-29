@@ -5,6 +5,7 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
     '139.162.52.72',
     'staging.tinyhandsdreamsuite.org',
+    'staging.dreamsuite.org',
 ]
 
 DEBUG = True
