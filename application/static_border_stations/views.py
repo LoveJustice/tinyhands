@@ -1,7 +1,9 @@
-from rest_framework import filters, viewsets
+from rest_framework import viewsets
 from rest_framework.decorators import list_route, api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+
+from django_filters import rest_framework as filters
 
 from dataentry.models import BorderStation
 from dataentry.serializers import BorderStationSerializer

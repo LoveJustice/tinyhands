@@ -1,6 +1,7 @@
 import logging
 
-from rest_framework import filters
+from django_filters import rest_framework as filters
+from rest_framework import filters as fs
 from rest_framework import status
 from rest_framework import viewsets
 from rest_framework.decorators import detail_route, list_route
@@ -21,7 +22,7 @@ class Address2ViewSet(viewsets.ModelViewSet):
     serializer_class = Address2Serializer
     permission_classes = (IsAuthenticated, HasPermission)
     permissions_required = ['permission_address2_manage']
-    filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
+    filter_backends = (fs.SearchFilter, fs.OrderingFilter,)
     search_fields = ('name',)
     ordering_fields = ('name', 'address1__name', 'longitude', 'latitude', 'level', 'verified', 'canonical_name__name')
     ordering = ('name',)
@@ -105,7 +106,7 @@ class Address1ViewSet(viewsets.ModelViewSet):
     serializer_class = Address1Serializer
     permission_classes = (IsAuthenticated, HasPermission)
     permissions_required = ['permission_address2_manage']
-    filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
+    filter_backends = (fs.SearchFilter, fs.OrderingFilter,)
     search_fields = ('name',)
     ordering_fields = ('name', 'longitude', 'latitude', 'level', 'completed')
     ordering = ('name',)

@@ -19,8 +19,10 @@ from django.shortcuts import redirect, render
 from django.template.loader import render_to_string
 from django.views.generic import ListView, View, CreateView, TemplateView
 
+from django_filters import rest_framework as filters
+
+from rest_framework import filters as fs
 from rest_framework import status
-from rest_framework import filters
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
@@ -372,7 +374,7 @@ class PersonViewSet(viewsets.ModelViewSet):
     serializer_class = PersonSerializer
     permission_classes = (IsAuthenticated, HasPermission)
     permissions_required = ['permission_address2_manage']
-    filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
+    filter_backends = (fs.SearchFilter, fs.OrderingFilter,)
     search_fields = ('full_name',)
     ordering_fields = ('full_name', 'age', 'gender', 'phone_contact')
     ordering = ('full_name',)
@@ -385,7 +387,7 @@ class InterceptionRecordViewSet(viewsets.ModelViewSet):
     permissions_required = ['permission_irf_view']
     delete_permissions_required = ['permission_irf_delete']
 
-    filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
+    filter_backends = (fs.SearchFilter, fs.OrderingFilter,)
     search_fields = ('irf_number',)
     ordering_fields = (
         'irf_number', 'staff_name', 'number_of_victims', 'number_of_traffickers', 'date_time_of_interception',
@@ -440,7 +442,7 @@ class VictimInterviewViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated, HasPermission, HasDeletePermission,)
     permissions_required = ['permission_vif_view']
     delete_permissions_required = ['permission_vif_delete']
-    filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
+    filter_backends = (fs.SearchFilter, fs.OrderingFilter,)
     search_fields = ('vif_number',)
     ordering_fields = (
         'vif_number', 'interviewer', 'number_of_victims', 'number_of_traffickers', 'date',
