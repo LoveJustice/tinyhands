@@ -19,8 +19,6 @@ from django.shortcuts import redirect, render
 from django.template.loader import render_to_string
 from django.views.generic import ListView, View, CreateView, TemplateView
 
-from django_filters import rest_framework as filters
-
 from rest_framework import filters as fs
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes

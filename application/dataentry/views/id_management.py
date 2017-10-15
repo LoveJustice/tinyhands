@@ -7,7 +7,6 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_api.authentication import HasPermission
 from rest_framework import filters as fs
-from django_filters import rest_framework as filters
 
 
 from dataentry import fuzzy_matching
