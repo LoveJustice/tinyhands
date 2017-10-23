@@ -161,6 +161,7 @@ class InterceptionRecordCreateView(LoginRequiredMixin, PermissionsRequiredMixin,
     def forms_valid(self, form, inlines):
         form.instance.form_entered_by = self.request.user
         form.instance.date_form_received = date.today()
+        form.instance.border_station = BorderStation.objects.get(station_code=form.instance.irf_number[:3])
         form = form.save()
         interceptees = []
         for formset in inlines:
@@ -186,6 +187,7 @@ class InterceptionRecordUpdateView(LoginRequiredMixin, PermissionsRequiredMixin,
 
 
     def forms_valid(self, form, inlines):
+        form.instance.border_station = BorderStation.objects.get(station_code=form.instance.irf_number[:3])
         form = form.save()
         interceptees = []
         for formset in inlines:
