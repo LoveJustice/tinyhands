@@ -2,10 +2,12 @@ import logging
 
 from django.db import transaction
 
-from rest_framework import filters, status, viewsets
+from rest_framework import status, viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_api.authentication import HasPermission
+from rest_framework import filters as fs
+
 
 from dataentry import fuzzy_matching
 from dataentry.serializers import IDManagementSerializer, PersonFormsSerializer
@@ -18,7 +20,7 @@ class IDManagementViewSet(viewsets.ModelViewSet):
     serializer_class = IDManagementSerializer
     permission_classes = (IsAuthenticated, HasPermission)
     permissions_required = ['permission_irf_edit', 'permission_vif_edit']
-    filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
+    filter_backends = (fs.SearchFilter, fs.OrderingFilter,)
     search_fields = ('full_name','phone_contact')
     ordering_fields = ('full_name', 'age', 'gender', 'phone_contact', 'address1__name', 'address2__name')
     ordering = ('full_name',)

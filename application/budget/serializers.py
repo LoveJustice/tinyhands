@@ -30,6 +30,7 @@ class BorderStationBudgetCalculationSerializer(serializers.ModelSerializer):
 
 
     class Meta:
+        fields = '__all__'
         model = BorderStationBudgetCalculation
 
     default = True
@@ -37,9 +38,11 @@ class BorderStationBudgetCalculationSerializer(serializers.ModelSerializer):
 
 class OtherBudgetItemCostSerializer(serializers.ModelSerializer):
     class Meta:
+        fields = '__all__'
         model = OtherBudgetItemCost
 
 
 class StaffSalarySerializer(serializers.ModelSerializer):
     class Meta:
+        fields = '__all__'
         model = StaffSalary

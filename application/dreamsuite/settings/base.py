@@ -46,7 +46,6 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'bootstrapform',
     'imagekit',
-    'storages',
     'dataentry',
     'accounts',
     'events',
@@ -57,8 +56,8 @@ INSTALLED_APPS = [
     'rest_api',
     'rest_framework',
     'django_extensions',
-    'bootstrap_pagination',
     'rest_framework.authtoken',
+    'django_filters'
 ]
 
 
@@ -146,7 +145,7 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PAGINATION_CLASS': 'rest_api.pagination.DefaultPagination',
     'PAGE_SIZE': 25,
-    'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.DjangoFilterBackend',),
+    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
 }
 
