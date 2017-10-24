@@ -64,6 +64,9 @@ class Address2ViewSet(viewsets.ModelViewSet):
         try:
             address = Address2.objects.get(pk=pk)
             new_address = Address2.objects.get(pk=pk2)
+
+            if new_address in address.address2_set.all():
+                return Response({'detail': "You cannot swap addresses with a child address 2"}, status=status.HTTP_400_BAD_REQUEST)    
         except:
             logger.error('Could not find Address2 with the following id: ' + pk)
             return Response({'detail': "Address2 not found"}, status=status.HTTP_404_NOT_FOUND)
