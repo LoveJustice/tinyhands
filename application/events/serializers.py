@@ -5,6 +5,7 @@ from events.models import Event
 class EventsSerializer(serializers.ModelSerializer):
 
     class Meta:
+        fields = '__all__'
         model = Event
 
     def validate(self, data):

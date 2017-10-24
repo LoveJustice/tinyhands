@@ -1,8 +1,5 @@
 from .base import *
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
-
 DEBUG = True
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
@@ -17,7 +14,6 @@ MIDDLEWARE_CLASSES += [
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True
-INSTALLED_APPS.append('debug_toolbar')
 
 SPREADSHEET_CONFIG = {
     'IRF': {
