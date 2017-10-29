@@ -21,16 +21,16 @@ class MDFExporter(BasePDFCreator):
 
 
 class MDFBulkExporter():
-    def __init__(self, mdf_id_list):
-        self.mdf_id_list = mdf_id_list
+    def __init__(self, budgets):
+        self.budgets = budgets
 
     def create(self):
         output = StringIO()
         mdf_zip = zipfile.ZipFile(output, 'w')
 
-        for mdf_id in self.mdf_id_list:
-            pdf = MDFExporter(mdf_id).create()
-            mdf_zip.writestr(str(mdf_id) + '.pdf', pdf.getvalue())
+        for budget in self.budgets:
+            pdf = MDFExporter(budget).create()
+            mdf_zip.writestr(budget.mdf_file_name(), pdf.getvalue())
         mdf_zip.close()
         
         return output

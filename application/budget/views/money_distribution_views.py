@@ -99,28 +99,30 @@ class MDFExportViewSet(viewsets.GenericViewSet):
     permissions_required = ['permission_budget_view']
 
     def get_mdf_pdf(self, request, uuid):
-        logger.info("Generating MDF PDF %s for %s", uuid, request.user)
-        pdf_buffer = MDFExporter(uuid).create()
-        return self.create_response('application/pdf', 'Monthly-Money-Distribution-Form.pdf', pdf_buffer)
+        budget = BorderStationBudgetCalculation.objects.get(mdf_uuid=uuid)
+
+        logger.info("Generating MDF PDF %s for %s", budget.mdf_file_name(), request.user)
+        pdf_buffer = MDFExporter(budget).create()
+        return self.create_response('application/pdf', budget.mdf_file_name(), pdf_buffer)
 
     def get_mdf_pdf_bulk(self, request, month, year):
         logger.info("Generating MDF Zip for %d %d for %s", month, year, request.user)
 
-        mdf_ids = self.get_mdfs(month, year)
-        if len(mdf_ids) == 0:
+        budgets = self.get_budgets(month, year)
+        if len(budgets) == 0:
             return Response({'detail' : "No MDFs found for the specific month and year"}, status = status.HTTP_404_NOT_FOUND)
 
-        zip_buffer = MDFBulkExporter(mdf_ids).create()
-        return self.create_response('application/zip', "mdfs-{}-{}.zip".format(month, year), zip_buffer)
+        zip_buffer = MDFBulkExporter(budgets).create()
+        return self.create_response('application/zip', "{}-{}-mdfs.zip".format(month, year), zip_buffer)
 
     def count_mdfs_for_month_year(self, request, month, year):
-        return Response({"count": len(self.get_mdfs(month, year))})
+        return Response({"count": len(self.get_budgets(month, year))})
 
-    def get_mdfs(self, month, year):
+    def get_budgets(self, month, year):
         startDate = datetime.date(int(year), int(month), 1)
-        endDate = datetime.date(int(year), int(month), 31)
-        queryset = BorderStationBudgetCalculation.objects.filter(month_year__gte=startDate, month_year__lte=endDate)
-        return [budget.mdf_uuid for budget in queryset]
+        endDate = datetime.date(int(year), int(month), 28)
+        return BorderStationBudgetCalculation.objects.filter(month_year__gte=startDate, month_year__lte=endDate)
+        
 
     def create_response(self, content_type, filename, buffer):
         response = HttpResponse(buffer.getvalue(), content_type=content_type)
