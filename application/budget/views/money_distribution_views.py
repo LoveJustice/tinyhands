@@ -1,20 +1,15 @@
 import logging
 import datetime
 
-from braces.views import LoginRequiredMixin
 from django.conf import settings
-from django.core.exceptions import ImproperlyConfigured
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
-from django.views.generic import View
 from rest_framework import viewsets
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from templated_email import send_templated_mail
-from rest_framework.decorators import api_view, permission_classes
 
-from accounts.mixins import PermissionsRequiredMixin
 from budget.models import BorderStationBudgetCalculation, StaffSalary
 from dataentry.models import BorderStation
 from rest_api.authentication import HasPermission

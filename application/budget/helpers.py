@@ -1,6 +1,6 @@
 from collections import namedtuple
 
-from budget.models import BorderStationBudgetCalculation, StaffSalary
+from budget.models import BorderStationBudgetCalculation
 
 BudgetLineItem = namedtuple('budgetItem', ['name', 'value'])
 
