@@ -8,7 +8,6 @@ from rest_framework.test import APIRequestFactory
 
 from accounts.tests.factories import SuperUserFactory
 from budget.tests.factories import BorderStationBudgetCalculationFactory
-from budget.views import MoneyDistributionFormPDFView
 from static_border_stations.tests.factories import BorderStationFactory
 from static_border_stations.tests.factories import StaffFactory, CommitteeMemberFactory
 
@@ -73,7 +72,6 @@ class MoneyDistributionWebTests(WebTest, TestCase):
         self.border_station = BorderStationFactory.create()
         self.budget_calc_sheet = BorderStationBudgetCalculationFactory.create(border_station=self.border_station)
         self.superuser = SuperUserFactory.create()
-        self.MDFView = MoneyDistributionFormPDFView(kwargs={"pk": str(self.budget_calc_sheet.id)})
         self.client = APIClient()
         self.client.force_authenticate(user=self.superuser)
 

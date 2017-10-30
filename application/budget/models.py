@@ -248,6 +248,9 @@ class BorderStationBudgetCalculation(models.Model):
         items = self.otherbudgetitemcost_set.filter(form_section=section).exclude(cost__isnull=True)
         return sum(item.cost for item in items)
 
+    def mdf_file_name(self):
+        return '{}-{}-{}-MDF.pdf'.format(self.border_station.station_code, self.month_year.month, self.month_year.year)
+
 
 class OtherBudgetItemCost(models.Model):
 
