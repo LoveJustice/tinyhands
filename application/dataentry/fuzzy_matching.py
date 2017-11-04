@@ -1,6 +1,7 @@
 from fuzzywuzzy import process
+from itertools import chain
 
-from dataentry.models import Address1, Address2, SiteSettings, Person
+from dataentry.models import Address1, Address2, SiteSettings, Person, Interceptee, VictimInterview
 
 
 def match_location(address1_name=None, address2_name=None):
@@ -60,9 +61,14 @@ def match_address2_address1(address2_name, address1_name):
     else:
         return None
 
-def match_person(person_name):
+def match_person(person_name, excludes):
     fuzzy_limit = 11
     fuzzy_score_cutoff=80
+    victim_ids = []
+    if excludes != None and excludes == 'victims':
+        irf_victim_ids = Interceptee.objects.filter(kind = 'v').values_list('person', flat=True)
+        vif_victim_ids = VictimInterview.objects.all().values_list('victim', flat=True)
+        victim_ids = list(chain(irf_victim_ids, vif_victim_ids))
     try:
          site_settings = SiteSettings.objects.all()[0]
          fuzzy_score_cutoff = site_settings.get_setting_value_by_name('idmanagement_name_cutoff')
@@ -73,7 +79,7 @@ def match_person(person_name):
 
     results = []
     choices = {choice.id: choice.full_name
-               for choice in Person.objects.all()
+               for choice in Person.objects.all().exclude(id__in = victim_ids)
                }
     matches = process.extractBests(person_name, choices, score_cutoff=fuzzy_score_cutoff, limit=fuzzy_limit)
 
