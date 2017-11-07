@@ -1,32 +1,26 @@
-import StringIO
 import logging
+import datetime
 
-from braces.views import LoginRequiredMixin
 from django.conf import settings
-from django.core.exceptions import ImproperlyConfigured
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
-from django.template.loader import render_to_string
-from django.views.generic import View
-from lxml import etree
 from rest_framework import viewsets
+from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from templated_email import send_templated_mail
-from z3c.rml import document
 
-from accounts.mixins import PermissionsRequiredMixin
 from budget.models import BorderStationBudgetCalculation, StaffSalary
 from dataentry.models import BorderStation
-from budget.helpers import MoneyDistributionFormHelper
 from rest_api.authentication import HasPermission
 from static_border_stations.models import Staff, CommitteeMember
 from static_border_stations.serializers import StaffSerializer, CommitteeMemberSerializer
 from accounts.models import Account
 from accounts.serializers import AccountMDFSerializer
 
-logger = logging.getLogger(__name__)
+from budget.pdfexports.mdf_exports import MDFExporter, MDFBulkExporter
 
+logger = logging.getLogger(__name__)
 
 class MoneyDistribution(viewsets.ViewSet):
     permission_classes = [IsAuthenticated, HasPermission]
@@ -95,53 +89,38 @@ class MoneyDistribution(viewsets.ViewSet):
         )
         
 
-
-class PDFView(View, LoginRequiredMixin, PermissionsRequiredMixin):
+class MDFExportViewSet(viewsets.GenericViewSet):
+    permission_classes = (IsAuthenticated, HasPermission)
     permissions_required = ['permission_budget_view']
-    filename = 'report.pdf'
-    template_name = ''
 
-    def get_filename(self):
-        return self.filename
+    def get_mdf_pdf(self, request, uuid):
+        budget = BorderStationBudgetCalculation.objects.get(mdf_uuid=uuid)
 
-    def get_context_data(self):
-        return {}
+        logger.info("Generating MDF PDF %s for %s", budget.mdf_file_name(), request.user)
+        pdf_buffer = MDFExporter(budget).create()
+        return self.create_response('application/pdf', budget.mdf_file_name(), pdf_buffer)
 
-    def dispatch(self, request, *args, **kwargs):
-        if self.template_name == '':
-            raise ImproperlyConfigured(
-                "A template_name must be specified for the rml template.")
+    def get_mdf_pdf_bulk(self, request, month, year):
+        logger.info("Generating MDF Zip for %d %d for %s", month, year, request.user)
 
-        # Use StringIO and not cStringIO because cStringIO can't accept unicode characters
-        buf = StringIO.StringIO()
-        rml = render_to_string(self.template_name, self.get_context_data())
+        budgets = self.get_budgets(month, year)
+        if len(budgets) == 0:
+            return Response({'detail' : "No MDFs found for the specific month and year"}, status = status.HTTP_404_NOT_FOUND)
 
-        self.rml = render_to_string(self.template_name, self.get_context_data())
+        zip_buffer = MDFBulkExporter(budgets).create()
+        return self.create_response('application/zip', "{}-{}-mdfs.zip".format(month, year), zip_buffer)
 
-        buf.write(rml)
-        buf.seek(0)
-        root = etree.parse(buf).getroot()
-        doc = document.Document(root)
+    def count_mdfs_for_month_year(self, request, month, year):
+        return Response({"count": len(self.get_budgets(month, year))})
 
-        response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = "filename=%s" % self.get_filename()
+    def get_budgets(self, month, year):
+        startDate = datetime.date(int(year), int(month), 1)
+        endDate = datetime.date(int(year), int(month), 28)
+        return BorderStationBudgetCalculation.objects.filter(month_year__gte=startDate, month_year__lte=endDate)
+        
+
+    def create_response(self, content_type, filename, buffer):
+        response = HttpResponse(buffer.getvalue(), content_type=content_type)
+        response['Content-Disposition'] = "filename=%s" % filename
         response['X-Frame-Options'] = "*"
-
-        doc.process(response)
         return response
-
-
-class MoneyDistributionFormPDFView(PDFView, LoginRequiredMixin, PermissionsRequiredMixin):
-    permissions_required = ['permission_budget_view']
-    template_name = 'budget/MoneyDistributionTemplateV2.rml'
-    filename = 'Monthly-Money-Distribution-Form.pdf'
-
-    def get_context_data(self):
-        budget_mdf_uuid = self.kwargs['uuid']
-        mdf_helper = MoneyDistributionFormHelper(budget_mdf_uuid)
-        return {
-            'name': mdf_helper.station_name,
-            'date': mdf_helper.date_entered,
-            'sections': mdf_helper.sections,
-            'total': mdf_helper.total
-        }
