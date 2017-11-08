@@ -95,6 +95,7 @@ class SuperUserFactory(UserFactory):
     permission_budget_add = True
     permission_budget_edit = True
     permission_budget_delete = True
+    permission_person_match = True
     user_designation = factory.SubFactory(SuperUserDesignation)
 
 

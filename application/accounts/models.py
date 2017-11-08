@@ -20,6 +20,7 @@ class DefaultPermissionsSet(models.Model):
     permission_vif_add = models.BooleanField(default=False)
     permission_vif_edit = models.BooleanField(default=False)
     permission_vif_delete = models.BooleanField(default=False)
+    permission_person_match = models.BooleanField(default=False)
     permission_accounts_manage = models.BooleanField(default=False)
     permission_receive_investigation_alert = models.BooleanField(default=False)
     permission_receive_legal_alert = models.BooleanField(default=False)
@@ -32,7 +33,6 @@ class DefaultPermissionsSet(models.Model):
     permission_budget_add = models.BooleanField(default=False)
     permission_budget_edit = models.BooleanField(default=False)
     permission_budget_delete = models.BooleanField(default=False)
-    
     permission_can_receive_mdf = models.BooleanField(default=False)
 
     def __unicode__(self):
@@ -96,6 +96,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
     permission_vif_add = models.BooleanField(default=False)
     permission_vif_edit = models.BooleanField(default=False)
     permission_vif_delete = models.BooleanField(default=False)
+    permission_person_match = models.BooleanField(default=False)
     permission_accounts_manage = models.BooleanField(default=False)
     permission_receive_investigation_alert = models.BooleanField(default=False)
     permission_receive_legal_alert = models.BooleanField(default=False)

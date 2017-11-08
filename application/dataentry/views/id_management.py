@@ -7,11 +7,12 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_api.authentication import HasPermission
 from rest_framework import filters as fs
+from itertools import chain
 
 
 from dataentry import fuzzy_matching
 from dataentry.serializers import IDManagementSerializer, PersonFormsSerializer
-from dataentry.models import AliasGroup, Person
+from dataentry.models import AliasGroup, Person, Interceptee, VictimInterview
 
 logger = logging.getLogger(__name__)
 
@@ -24,18 +25,6 @@ class IDManagementViewSet(viewsets.ModelViewSet):
     search_fields = ('full_name','phone_contact')
     ordering_fields = ('full_name', 'age', 'gender', 'phone_contact', 'address1__name', 'address2__name')
     ordering = ('full_name',)
-
-    def fuzzy_match(self, request):
-        input_name = request.GET['name']
-        results = fuzzy_matching.match_person(input_name)
-        serializer = IDManagementSerializer(results, many=True, context={'request': request})
-        return Response(serializer.data)
-
-    def partial_phone(self, request):
-        input_phone = request.GET['phone']
-        results = Person.objects.filter(phone_contact__contains=input_phone)
-        serializer = IDManagementSerializer(results, many=True, context={'request': request})
-        return Response(serializer.data)
 
     def person_forms(self, request):
         person_id = request.GET['person_id']
@@ -119,3 +108,32 @@ class IDManagementViewSet(viewsets.ModelViewSet):
 
         return Response({"message": "success!"})
 
+
+class TraffickerCheckViewSet(viewsets.ViewSet):
+    serializer_class = IDManagementSerializer
+    permission_classes = (IsAuthenticated, HasPermission)
+    permissions_required = ['permission_person_match']
+    
+    def fuzzy_match(self, request):
+        input_name = request.GET['name']
+        if 'exclude' in request.GET:
+            excludes = request.GET['exclude']
+        else:
+            excludes = ''
+        results = fuzzy_matching.match_person(input_name, excludes)
+        serializer = IDManagementSerializer(results, many=True, context={'request': request})
+        return Response(serializer.data)
+
+    def partial_phone(self, request):
+        input_phone = request.GET['phone']
+        victim_ids = []
+        if 'exclude' in request.GET:
+            excludes = request.GET['exclude']
+            if excludes != None and excludes == 'victims':
+                irf_victim_ids = Interceptee.objects.filter(kind = 'v').values_list('person', flat=True)
+                vif_victim_ids = VictimInterview.objects.all().values_list('victim', flat=True)
+                victim_ids = list(chain(irf_victim_ids, vif_victim_ids))
+            
+        results = Person.objects.filter(phone_contact__contains=input_phone).exclude(id__in = victim_ids)
+        serializer = IDManagementSerializer(results, many=True, context={'request': request})
+        return Response(serializer.data)
