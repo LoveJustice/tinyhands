@@ -163,6 +163,20 @@ class Address2RelatedItemsTest(APITestCase):
         self.assertEqual(VictimInterview.objects.filter(victim_guardian_address2=new_address2).count(), 1)
         self.assertEqual(VictimInterviewLocationBox.objects.filter(address2=new_address2).count(), 1)
 
+    def test_address_related_items_swap(self):
+        address2 = Address2Factory.create(canonical_name=Address2Factory.create())
+        related_address2 = Address2Factory.create()
+        related_address2.canonical_name = address2
+        related_address2.save()
+
+        person = PersonFactory.create(address2=address2)
+        vif = VifFactory.create(victim_guardian_address2=address2)
+        viflb = VictimInterviewLocationBoxFactory.create(address2=address2)
+
+        url = reverse('Address2RelatedItemsSwap', args=[address2.id, related_address2.id])
+        response = self.client.delete(url)
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
 
 

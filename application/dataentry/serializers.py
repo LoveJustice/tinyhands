@@ -11,6 +11,7 @@ from helpers import related_items_helper
 
 class Address1Serializer(serializers.ModelSerializer):
     class Meta:
+        fields = '__all__'
         model = Address1
 
 
@@ -20,21 +21,24 @@ class Address1RelatedItemsSerializer(Address1Serializer):
 
 class CountrySerializer(serializers.ModelSerializer):
     class Meta:
+        fields = '__all__'
         model = Country
 
 class SiteSettingsSerializer(serializers.ModelSerializer):
     class Meta:
+        fields = '__all__'
         model = SiteSettings
 
 
 class CanonicalNameSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Address2
         fields = ['id', 'name']
+        model = Address2
 
 
 class Address2Serializer(serializers.ModelSerializer):
     class Meta:
+        fields = '__all__'
         model = Address2
         depth = 1
 
@@ -73,6 +77,7 @@ class Address2RelatedItemsSerializer(Address2Serializer):
 
 class BorderStationSerializer(serializers.ModelSerializer):
     class Meta:
+        fields = '__all__'
         model = BorderStation
 
     number_of_interceptions = serializers.SerializerMethodField(read_only=True)
@@ -123,6 +128,7 @@ class InterceptionRecordListSerializer(serializers.ModelSerializer):
 
 class InterceptionRecordSerializer(serializers.ModelSerializer):
     class Meta:
+        fields = '__all__'
         model = InterceptionRecord
 
     def validate(self, data):
