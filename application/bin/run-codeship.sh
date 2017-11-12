@@ -2,4 +2,5 @@
 
 sleep 30s
 
-python /data/manage.py test
+cd /data/
+/usr/local/bin/python manage.py test
