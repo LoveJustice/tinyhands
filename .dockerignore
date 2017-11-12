@@ -7,7 +7,8 @@ common.env
 deploybot_args.env
 
 application/google_cred.json
-application/etc/google_cred.json
+application/etc/*
+application/fixtures/sanitized-data.json
 application/media/CACHE/*
 application/media/interceptee_photos/*
 application/media/scanned_irf_forms/*
