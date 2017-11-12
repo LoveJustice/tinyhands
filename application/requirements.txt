@@ -23,7 +23,6 @@ ipdb==0.10.3
 lxml==4.1.0
 oauth2client==4.1.2
 parse==1.8.2
-pilkit==2.0
 Pillow==4.3.0
 preppy==2.4.1
 psycopg2==2.7.3.1

@@ -1,8 +1,3 @@
-data:
-  image: silintl/data-volume:latest
-  volumes:
-      - ./application:/data
-
 db:
   image: postgres
   expose:
@@ -12,8 +7,9 @@ web:
   build:
     image: tusoftwarestudio/dreamsuite
     dockerfile_path: Dockerfile
-  volumes_from:
-    - data
+  volumes:
+    - /tmp:/log
+    - ./application:/data
   links:
     - db
   expose:
@@ -40,8 +36,9 @@ nginx:
     dockerfile_path: Dockerfile
   links:
     - web
-  volumes_from:
-    - data
+  volumes:
+    - /tmp:/log
+    - ./application:/data
   ports:
     - "80:80"
     - "443:443"

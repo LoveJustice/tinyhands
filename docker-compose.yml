@@ -9,7 +9,7 @@ services:
 
   web:
     build: .
-    command: /bin/sh -c /data/bin/run.sh
+    command: /bin/sh /data/bin/run.sh
     stdin_open: true
     tty: true
     volumes:
