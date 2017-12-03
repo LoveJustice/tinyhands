@@ -195,4 +195,7 @@ LOGGING = {
     },
 }
 
+FCM_PROJECT_ID = os.environ['FCM_PROJECT_ID']
+FCM_KEY_FILE = '/run/secrets/firebase_key'
+
 logging.config.dictConfig(LOGGING)

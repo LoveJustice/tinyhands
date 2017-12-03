@@ -1,4 +1,4 @@
-version: "3"
+version: "3.1"
 
 services:
   db:
@@ -22,6 +22,8 @@ services:
       - ./local.env
     depends_on:
       - db
+    secrets:
+    - firebase_key
 
   nginx:
     build: build/nginx
@@ -37,3 +39,7 @@ services:
       - ./common.env
       - ./local.env
 
+
+secrets:
+  firebase_key:
+    file: ./firebase_key.json
