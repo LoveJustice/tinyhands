@@ -10,11 +10,17 @@ FCM_SCOPE = "https://www.googleapis.com/auth/firebase.messaging"
 
 
 def get_firebase_service():
-    return FirebaseMessageService(settings.FCM_PROJECT_ID, _get_access_token())
+    return FirebaseMessageService(_get_project_id(), _get_access_token())
+
+
+def _get_project_id():
+    with open(settings.FCM_KEY_PATH) as firebase_key:
+        firebase_data = json.load(firebase_key)
+    return firebase_data['project_id']
 
 
 def _get_access_token():
-    credentials = ServiceAccountCredentials.from_json_keyfile_name(settings.FCM_KEY_FILE, FCM_SCOPE)
+    credentials = ServiceAccountCredentials.from_json_keyfile_name(settings.FCM_KEY_PATH, FCM_SCOPE)
     access_token_info = credentials.get_access_token()
     return access_token_info.access_token
 

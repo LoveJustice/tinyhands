@@ -7,6 +7,7 @@ SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
 
 SITE_DOMAIN = os.environ['SITE_DOMAIN']
 CLIENT_DOMAIN = os.environ['CLIENT_DOMAIN']
+FCM_KEY_PATH = os.environ['FCM_KEY_PATH']
 
 BASE_DIR = Path(__file__).ancestor(3)
 
@@ -194,8 +195,5 @@ LOGGING = {
         },
     },
 }
-
-FCM_PROJECT_ID = os.environ['FCM_PROJECT_ID']
-FCM_KEY_FILE = '/run/secrets/firebase_key'
 
 logging.config.dictConfig(LOGGING)

@@ -22,8 +22,6 @@ services:
       - ./local.env
     depends_on:
       - db
-    secrets:
-    - firebase_key
 
   nginx:
     build: build/nginx
@@ -38,8 +36,3 @@ services:
     env_file:
       - ./common.env
       - ./local.env
-
-
-secrets:
-  firebase_key:
-    file: ./firebase_key.json
