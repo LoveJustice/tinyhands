@@ -28,6 +28,7 @@ web:
     SITE_DOMAIN: http://localhost
     CLIENT_DOMAIN: http://localhost/#!
     EMAIL_HOST_PASSWORD: notarealpassword
+    FCM_KEY_PATH: /not/a/real/path
 
 nginx:
   build:
