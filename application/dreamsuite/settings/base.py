@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'bootstrapform',
     'imagekit',
     'dataentry',
+    'firebase',
     'accounts',
     'events',
     'portal',
