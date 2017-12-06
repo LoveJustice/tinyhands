@@ -8,7 +8,7 @@ from django.utils.timezone import make_aware
 from fuzzywuzzy import process
 
 from accounts.models import Alert
-from dataentry.models import Interceptee, SiteSettings, InterceptionRecord, RedFlags, InterceptionAlert, BorderStation
+from dataentry.models import Interceptee, SiteSettings, RedFlags, InterceptionAlert, BorderStation
 from dataentry_signals import irf_done
 from dataentry_signals import vif_done
 
@@ -267,8 +267,8 @@ class IRFAlertChecker(object):
     
     def create_interception_alerts(self):
         logger.debug('In create_interception_alerts')
-        dict = {}
-        dict['datetimeOfInterception'] = str(self.irf.date_time_of_interception)
+        alert_dict = {}
+        alert_dict['datetimeOfInterception'] = str(self.irf.date_time_of_interception)
         
         border = {}
         location = {}    
@@ -285,7 +285,7 @@ class IRFAlertChecker(object):
                     location['longitude'] = borderStation.longitude
                 else:
                     location['longitude'] = 0.0
-        except:
+        except Exception:
             border['name'] = 'UNKNOWN'
             location['latitude'] = 0.0
             location['longitude'] = 0.0
@@ -297,11 +297,11 @@ class IRFAlertChecker(object):
             location['name'] = ''
         
         border['location'] = location
-        dict['borderStation'] = border
+        alert_dict['borderStation'] = border
         
         red_flags = self.get_red_flags()
         logger.debug('red_flags=' + red_flags)
-        dict['redFlags'] = red_flags
+        alert_dict['redFlags'] = red_flags
         
                     
         for interceptee in self.interceptees:
@@ -316,15 +316,15 @@ class IRFAlertChecker(object):
                 intercept = {}
                 intercept['name'] = first_name
                 intercept['age'] = interceptee.person.age                
-                dict['intercept'] = intercept
+                alert_dict['intercept'] = intercept
                 
                 # initial save to get the id initialized
                 interception_alert = InterceptionAlert()
                 interception_alert.json = '{}'
                 interception_alert.save()
-                dict['id'] = interception_alert.id
+                alert_dict['id'] = interception_alert.id
                 
-                interception_alert.json = json.dumps(dict)
+                interception_alert.json = json.dumps(alert_dict)
                 logger.debug('json=' + interception_alert.json)
                 interception_alert.save()
     
@@ -336,12 +336,12 @@ class IRFAlertChecker(object):
         
         try:
             item_limit = site_settings.get_setting_value_by_name('interception_alert_item_limit')
-        except:
+        except Exception:
             pass
         
         try:
             length_limit = site_settings.get_setting_value_by_name('interception_alert_length_limit')
-        except:
+        except Exception:
             pass
         
         red_flags = RedFlags.objects.order_by('priority')
@@ -360,7 +360,7 @@ class IRFAlertChecker(object):
                     item_count += 1
                     if item_limit > 0 and item_count >= item_limit:
                         break              
-            except:
+            except Exception:
                 pass
             
         return result
