@@ -14,15 +14,6 @@ class InterceptionAlertViewSet(viewsets.ModelViewSet):
     
     def get_interception_alerts(self, request):
         latest_id = request.GET.get('latest_id',0)
-        print latest_id
-        results = InterceptionAlert.objects.filter(id__gt=latest_id).order_by('id')
-        print results
-        response_data = '['
-        sep =''
-        for result in results:
-            response_data += sep + result.json
-            sep=','
-        response_data += ']'
-        print response_data
-       
-        return Response(response_data)
+        results = self.queryset.filter(id__gt=latest_id).order_by('id')
+
+        return Response([alert.json for alert in results])

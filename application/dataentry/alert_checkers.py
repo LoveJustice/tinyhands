@@ -113,13 +113,9 @@ class IRFAlertChecker(object):
             logger.debug('Enter handle_irf_done')
             irf = kwargs.get("irf")
             interceptees = kwargs.get("interceptees")
-            logger.debug('here')
             if irf is not None and interceptees is not None:
-                logger.debug('here2')
                 irfAlertChecker = IRFAlertChecker(irf, interceptees)
-                logger.debug('here3')
                 irfAlertChecker.check_them()
-                logger.debug('here4')
                 if 'interception_alert' in kwargs and kwargs['interception_alert'] == True:
                     logger.debug('Found interception_alert')
                     irfAlertChecker.create_interception_alerts()
@@ -235,7 +231,6 @@ class IRFAlertChecker(object):
         """
         traff_format = ''
         trafficker_in_custody = self.irf.trafficker_taken_into_custody
-        #logger.debug("trafficker_in_custody=" + trafficker_in_custody)
         trafficker_in_custody_list = []
         if trafficker_in_custody is not None:
             traffickers = trafficker_in_custody.split(',')
