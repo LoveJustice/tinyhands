@@ -184,7 +184,7 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': False,
         },
-        'dataentry.views': {
+        'dataentry': {
             'handlers': ['file'],
             'level': 'DEBUG',
             'propagate': False,
