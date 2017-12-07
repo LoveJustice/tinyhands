@@ -8,7 +8,7 @@ from django.utils.timezone import make_aware
 from fuzzywuzzy import process
 
 from accounts.models import Alert
-from dataentry.models import Interceptee, SiteSettings, RedFlags, InterceptionAlert, BorderStation
+from dataentry.models import Interceptee, SiteSettings, RedFlags, InterceptionAlert
 from dataentry_signals import irf_done
 from dataentry_signals import vif_done
 
