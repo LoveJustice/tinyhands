@@ -1,6 +1,5 @@
 from django.apps import AppConfig
 
-from dataentry.dataentry_signals import irf_done
 from notifications import send_interception_alert_notification
 
 
@@ -13,4 +12,6 @@ class FirebaseConfig(AppConfig):
     verbose_name = 'Firebase'
 
     def ready(self):
-        irf_done.connect(on_irf_done, weak=False, dispatch_uid="IRFFirebaseNotification")
+        #add signal listener here
+        #signal.connect(on_irf_done, weak=False, dispatch_uid=
+        pass
