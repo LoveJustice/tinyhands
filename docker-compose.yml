@@ -36,4 +36,3 @@ services:
     env_file:
       - ./common.env
       - ./local.env
-
