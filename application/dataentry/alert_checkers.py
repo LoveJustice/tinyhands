@@ -266,25 +266,15 @@ class IRFAlertChecker(object):
         alert_dict['datetimeOfInterception'] = str(self.irf.date_time_of_interception)
         
         border = {}
-        location = {}    
-        try:
-            code = self.irf.irf_number[:3].upper()
-            borderStation = BorderStation.objects.get(station_code=code)
-            if borderStation != None:
-                border['name'] = borderStation.station_name
-                if borderStation.latitude != None:
-                    location['latitude'] = borderStation.latitude
-                else:
-                    location['latitude'] = 0.0
-                if borderStation.longitude != None:
-                    location['longitude'] = borderStation.longitude
-                else:
-                    location['longitude'] = 0.0
-        except Exception:
+        location = {}
+        if self.irf.border_station != None:
+            border['name'] = self.irf.border_station.station_name
+            location['latitude'] = self.irf.border_station.latitude
+            location['longitude'] = self.irf.border_station.longitude
+        else:
             border['name'] = 'UNKNOWN'
             location['latitude'] = 0.0
             location['longitude'] = 0.0
-            
         
         if self.irf.location != None:
             location['name'] = self.irf.location
