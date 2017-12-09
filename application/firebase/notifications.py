@@ -28,7 +28,7 @@ def _get_fcm_messages_url_for_project(project_id):
     return 'https://fcm.googleapis.com/v1/projects/' + project_id + '/messages:send'
 
 
-def _build_request_data(topic, title, body):
+def _build_message_data(topic, title, body):
     return {
         'message': {
             'topic': topic,
@@ -46,7 +46,7 @@ def _send_message(project_id, access_token, topic, title, body):
     request.add_header('Authorization', 'Bearer ' + access_token)
     request.add_header('Content-Type', 'application/json')
 
-    data = _build_request_data(topic, title, body)
+    data = _build_message_data(topic, title, body)
     request.add_data(json.dumps(data))
     response = urlopen(request)
     if response.getcode() == 200:
@@ -55,6 +55,6 @@ def _send_message(project_id, access_token, topic, title, body):
         return False
 
 
-def send_interception_alert_notification():
-    return _send_message(_get_project_id(), _get_access_token(), TOPIC_INTERCEPTION_ALERT, 'Project Beautiful', 'New Interception Alert')
+def send_interception_alert_notification(message):
+    return _send_message(_get_project_id(), _get_access_token(), TOPIC_INTERCEPTION_ALERT, 'Project Beautiful', message)
 
