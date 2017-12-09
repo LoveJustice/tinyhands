@@ -55,6 +55,6 @@ def _send_message(project_id, access_token, topic, title, body):
         return False
 
 
-def send_interception_alert_notification():
-    return _send_message(_get_project_id(), _get_access_token(), TOPIC_INTERCEPTION_ALERT, 'Project Beautiful', 'New Interception Alert')
+def send_interception_alert_notification(message):
+    return _send_message(_get_project_id(), _get_access_token(), TOPIC_INTERCEPTION_ALERT, 'Project Beautiful', message)
 
