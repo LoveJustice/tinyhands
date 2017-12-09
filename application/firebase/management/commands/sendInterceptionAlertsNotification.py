@@ -23,5 +23,8 @@ class Command(BaseCommand):
 
     @staticmethod
     def create_message(alert_count):
-        message = str(alert_count) + ' new victims intercepted in the past 24 hours'
+        if alert_count == 1:
+            message = '1 new victim intercepted in the past 24 hours'
+        else:
+            message = str(alert_count) + ' new victims intercepted in the past 24 hours'
         return message
