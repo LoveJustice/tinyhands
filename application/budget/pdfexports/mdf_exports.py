@@ -1,7 +1,7 @@
 from budget.pdfexports.pdf_creator import BasePDFCreator
 from budget.helpers import MoneyDistributionFormHelper
 import zipfile
-from io import StringIO
+from io import BytesIO
 
 
 class MDFExporter(BasePDFCreator):
@@ -25,7 +25,7 @@ class MDFBulkExporter():
         self.budgets = budgets
 
     def create(self):
-        output = StringIO()
+        output = BytesIO()
         mdf_zip = zipfile.ZipFile(output, 'w')
 
         for budget in self.budgets:
