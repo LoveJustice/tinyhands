@@ -1,6 +1,6 @@
 from django.db import models
 from accounts.models import Account
-from border_station import BorderStation
+from .border_station import BorderStation
 
 
 def set_weight(self, weight):

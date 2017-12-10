@@ -113,7 +113,7 @@ class ExportTesting(WebTest):
         today = date.today()
         result = response['Content-Disposition']
         expected_result = 'attachment; filename=irf-all-data-%d-%d-%d.csv' % (today.year, today.month, today.day)
-        self.assertEquals(result, expected_result)
+        self.assertEqual(result, expected_result)
 
     def test_to_see_if_user_can_export_vif(self):
         response = self.app.get(reverse('VictimInterviewCsvExport'), user=self.user)
@@ -124,7 +124,7 @@ class ExportTesting(WebTest):
         today = date.today()
         result = response['Content-Disposition']
         expected_result = 'attachment; filename=vif-all-data-%d-%d-%d.csv' % (today.year, today.month, today.day)
-        self.assertEquals(result, expected_result)
+        self.assertEqual(result, expected_result)
 
     def test_that_no_extra_commas_in_vif_export(self):
         response = self.app.get(reverse('VictimInterviewCsvExport'), user=self.user)

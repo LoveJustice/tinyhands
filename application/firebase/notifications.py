@@ -1,7 +1,7 @@
 from django.conf import settings
 import json
 from oauth2client.service_account import ServiceAccountCredentials
-from urllib2 import Request, urlopen
+from urllib.request import Request, urlopen
 
 
 TOPIC_INTERCEPTION_ALERT = "interception-alert"
@@ -15,7 +15,7 @@ def _get_project_id():
             firebase_data = json.load(firebase_key)
         return firebase_data['project_id']
     except:
-        print 'Unable to load firebase key file'
+        print('Unable to load firebase key file')
 
 
 def _get_access_token():

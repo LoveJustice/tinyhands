@@ -1,5 +1,5 @@
-from field_types import Address1CsvField
-from field_types import CopyCsvField
+from .field_types import Address1CsvField
+from .field_types import CopyCsvField
 
 address2_data = [
 	Address1CsvField('address1', 'Address1 name'),

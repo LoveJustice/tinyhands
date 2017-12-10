@@ -1,5 +1,5 @@
 from django.db import models
-from country import Country
+from .country import Country
 
 
 class BorderStation(models.Model):

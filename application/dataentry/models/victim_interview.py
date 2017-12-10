@@ -1,8 +1,8 @@
 from django.db import models
 
-from addresses import Address1, Address2
-from person import Person
-from border_station import BorderStation
+from .addresses import Address1, Address2
+from .person import Person
+from .border_station import BorderStation
 
 
 class VictimInterview(models.Model):

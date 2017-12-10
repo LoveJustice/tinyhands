@@ -1,7 +1,7 @@
 from budget.pdfexports.pdf_creator import BasePDFCreator
 from budget.helpers import MoneyDistributionFormHelper
 import zipfile
-from StringIO import StringIO
+from io import StringIO
 
 
 class MDFExporter(BasePDFCreator):

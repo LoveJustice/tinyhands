@@ -9,8 +9,8 @@ from fuzzywuzzy import process
 
 from accounts.models import Alert
 from dataentry.models import Interceptee, SiteSettings, RedFlags, InterceptionAlert
-from dataentry_signals import irf_done
-from dataentry_signals import vif_done
+from .dataentry_signals import irf_done
+from .dataentry_signals import vif_done
 
 logger = logging.getLogger(__name__)
 

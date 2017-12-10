@@ -30,4 +30,4 @@ docker-compose run --rm web sh /data/bin/install_test_db.sh
 
 
 echo "Collecting Static files and symlinking them..."
-docker-compose run --rm web ./manage.py collectstatic -l --noinput
+docker-compose run --rm web python /data/manage.py collectstatic -l --noinput
