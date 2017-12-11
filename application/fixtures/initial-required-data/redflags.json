@@ -1,281 +1,371 @@
 [
 	{
 		"model": "dataentry.redflags",
-		"pk": 1,
+		"pk": 32,
 		"fields": {
 			"priority": 2,
 			"field": "fake_medical_documents",
-			"text": "3.33 Going for treatment, fake medical documents"
+			"text": "Carrying fake medical docs"
 		}
 	},
 	{
 		"model": "dataentry.redflags",
-		"pk": 2,
-		"fields": {
-			"priority": 1,
-			"field": "doesnt_know_going_to_india",
-			"text": "3.13 Doesn't know he/she's going to India"
-		}
-	},
-	{
-		"model": "dataentry.redflags",
-		"pk": 3,
+		"pk": 33,
 		"fields": {
 			"priority": 3,
 			"field": "not_enrolled_in_school",
-			"text": "3.30 Called, not enrolled in school"
+			"text": "Lied about school enrollment"
 		}
 	},
 	{
 		"model": "dataentry.redflags",
-		"pk": 4,
+		"pk": 34,
 		"fields": {
 			"priority": 4,
 			"field": "not_real_job",
-			"text": "3.23 Called, not a real job"
+			"text": "Fake job offer"
 		}
 	},
 	{
 		"model": "dataentry.redflags",
-		"pk": 5,
+		"pk": 35,
 		"fields": {
 			"priority": 5,
 			"field": "running_away_under_18",
-			"text": "3.15 Running away from home (under 18)"
+			"text": "Running away"
 		}
 	},
 	{
 		"model": "dataentry.redflags",
-		"pk": 6,
+		"pk": 36,
 		"fields": {
 			"priority": 6,
 			"field": "caste_not_same_as_relative",
-			"text": "3.10 Caste not the same as alleged relative"
+			"text": "Different caste from relative"
 		}
 	},
 	{
 		"model": "dataentry.redflags",
-		"pk": 7,
+		"pk": 37,
 		"fields": {
 			"priority": 7,
 			"field": "wife_under_18",
-			"text": "3.2 Wife is under 18"
+			"text": "Under 18"
 		}
 	},
 	{
 		"model": "dataentry.redflags",
-		"pk": 8,
+		"pk": 38,
 		"fields": {
 			"priority": 8,
 			"field": "traveling_with_someone_not_with_her",
-			"text": "3.5 Was traveling with someone not with him/her"
+			"text": "Traveling partner not present"
 		}
 	},
 	{
 		"model": "dataentry.redflags",
-		"pk": 9,
+		"pk": 39,
 		"fields": {
 			"priority": 9,
 			"field": "doesnt_know_school_name",
-			"text": "3.28 Going to study, does not know school's name and location"
+			"text": "Unsure of school details"
 		}
 	},
 	{
 		"model": "dataentry.redflags",
-		"pk": 10,
+		"pk": 40,
 		"fields": {
 			"priority": 10,
 			"field": "job_too_good_to_be_true",
-			"text": "3.22 Job is too good to be true"
+			"text": "Fake job offer"
 		}
 	},
 	{
 		"model": "dataentry.redflags",
-		"pk": 11,
+		"pk": 41,
 		"fields": {
 			"priority": 11,
 			"field": "passport_with_broker",
-			"text": "3.21 Passport is with a broker"
+			"text": "Broker has her passport"
 		}
 	},
 	{
 		"model": "dataentry.redflags",
-		"pk": 12,
+		"pk": 42,
 		"fields": {
 			"priority": 12,
 			"field": "shopping_overnight_stuff_in_bags",
-			"text": "3.26 Shopping - stuff for overnight stay in bags"
+			"text": "Lied about going shopping"
 		}
 	},
 	{
 		"model": "dataentry.redflags",
-		"pk": 13,
-		"fields": {
-			"priority": 13,
-			"field": "valid_gulf_country_visa",
-			"text": "3.20 Has a valid Gulf country visa in passport"
-		}
-	},
-	{
-		"model": "dataentry.redflags",
-		"pk": 14,
+		"pk": 43,
 		"fields": {
 			"priority": 14,
 			"field": "caught_in_lie",
-			"text": "3.11 Caught in a lie or contradiction"
+			"text": "Story included contradictions"
 		}
 	},
 	{
 		"model": "dataentry.redflags",
-		"pk": 15,
+		"pk": 44,
 		"fields": {
 			"priority": 15,
 			"field": "no_school_phone",
-			"text": "3.29 Going to study, no phone number for school"
+			"text": "Unsure of school details"
 		}
 	},
 	{
 		"model": "dataentry.redflags",
-		"pk": 16,
+		"pk": 45,
 		"fields": {
 			"priority": 16,
 			"field": "meeting_someone_across_border",
-			"text": "3.3 Is meeting someone just across border"
+			"text": "Meeting up across the border"
 		}
 	},
 	{
 		"model": "dataentry.redflags",
-		"pk": 17,
+		"pk": 46,
 		"fields": {
 			"priority": 17,
 			"field": "no_medical_appointment",
-			"text": "3.34 Called doctor, no medical appointment"
+			"text": "Going to see the doctor without a medical appointment"
 		}
 	},
 	{
 		"model": "dataentry.redflags",
-		"pk": 18,
+		"pk": 47,
 		"fields": {
 			"priority": 18,
 			"field": "less_than_2_weeks_before_eloping",
-			"text": "3.8 Met less than 2 weeks before eloping"
+			"text": "Met less than 2 weeks before eloping"
 		}
 	},
 	{
 		"model": "dataentry.redflags",
-		"pk": 19,
+		"pk": 48,
 		"fields": {
 			"priority": 19,
 			"field": "no_medical_documents",
-			"text": "3.32 Going for treatment, doesn't have medical documents"
+			"text": "Going to Dr. without medical docs"
 		}
 	},
 	{
 		"model": "dataentry.redflags",
-		"pk": 20,
+		"pk": 49,
 		"fields": {
 			"priority": 20,
-			"field": "seen_in_last_month_in_nepal",
-			"text": "3.4 Meeting someone he/she's seen in Nepal"
+			"field": "meeting_someone_across_border",
+			"text": "Meeting someone they met in Nepal"
 		}
 	},
 	{
 		"model": "dataentry.redflags",
-		"pk": 21,
+		"pk": 50,
 		"fields": {
 			"priority": 21,
 			"field": "no_bags_long_trip",
-			"text": "3.25 No bags though claim to be going for a long time"
+			"text": "Traveling long-term without bags"
 		}
 	},
 	{
 		"model": "dataentry.redflags",
-		"pk": 22,
+		"pk": 51,
 		"fields": {
 			"priority": 22,
 			"field": "no_company_phone",
-			"text": "3.18 Going for job, no company phone number"
+			"text": "Going for a job without knowing company details"
 		}
 	},
 	{
 		"model": "dataentry.redflags",
-		"pk": 23,
+		"pk": 52,
 		"fields": {
 			"priority": 23,
 			"field": "running_away_over_18",
-			"text": "3.14 Running away from home (over 18)"
+			"text": "Running away"
 		}
 	},
 	{
 		"model": "dataentry.redflags",
-		"pk": 24,
+		"pk": 53,
 		"fields": {
 			"priority": 24,
 			"field": "between_2_12_weeks_before_eloping",
-			"text": "3.9 Met 2 - 12 weeks before eloping"
+			"text": "Met less than 12 weeks before eloping"
 		}
 	},
 	{
 		"model": "dataentry.redflags",
-		"pk": 25,
+		"pk": 54,
 		"fields": {
 			"priority": 25,
 			"field": "married_in_past_2_weeks",
-			"text": "3.6 Was married in the past two weeks"
+			"text": "Married in past 2 weeks"
 		}
 	},
 	{
 		"model": "dataentry.redflags",
-		"pk": 26,
+		"pk": 55,
 		"fields": {
 			"priority": 26,
 			"field": "no_enrollment_docs",
-			"text": "3.27 Going to study, no documentation of enrollment"
+			"text": "Going to begin school without enrollment docs"
 		}
 	},
 	{
 		"model": "dataentry.redflags",
-		"pk": 27,
+		"pk": 56,
 		"fields": {
 			"priority": 27,
 			"field": "no_address_in_india",
-			"text": "3.17 Going for job, no address in India"
+			"text": "Going for a job without knowing company details"
 		}
 	},
 	{
 		"model": "dataentry.redflags",
-		"pk": 28,
+		"pk": 57,
 		"fields": {
 			"priority": 28,
 			"field": "married_in_past_2_8_weeks",
-			"text": "3.7 Was married within the past 2-8 weeks"
+			"text": "Married in past 2-8 weeks"
 		}
 	},
 	{
 		"model": "dataentry.redflags",
-		"pk": 29,
+		"pk": 58,
 		"fields": {
 			"priority": 29,
 			"field": "reluctant_treatment_info",
-			"text": "3.31 Reluctant to give info about treatment"
+			"text": "Reluctant to discuss medical treatment"
 		}
 	},
 	{
 		"model": "dataentry.redflags",
-		"pk": 30,
+		"pk": 59,
 		"fields": {
 			"priority": 30,
 			"field": "couldnt_confirm_job",
-			"text": "3.24 Called, could not confirm job"
+			"text": "Could not confirm job offer"
 		}
 	},
 	{
 		"model": "dataentry.redflags",
-		"pk": 31,
+		"pk": 60,
 		"fields": {
 			"priority": 31,
 			"field": "no_appointment_letter",
-			"text": "3.19 Going for job, no appointment letter"
+			"text": "Going for a job without an offer letter"
+		}
+	},
+	{
+		"model": "dataentry.redflags",
+		"pk": 61,
+		"fields": {
+			"priority": 101,
+			"field": "noticed_drugged_or_drowsy",
+			"text": "Looked drugged or drowsy"
+		}
+	},
+	{
+		"model": "dataentry.redflags",
+		"pk": 62,
+		"fields": {
+			"priority": 102,
+			"field": "noticed_nervous_or_afraid",
+			"text": "Looked nervous or afraid"
+		}
+	},
+	{
+		"model": "dataentry.redflags",
+		"pk": 63,
+		"fields": {
+			"priority": 103,
+			"field": "noticed_village_dress",
+			"text": "Was wearing village dress"
+		}
+	},
+	{
+		"model": "dataentry.redflags",
+		"pk": 64,
+		"fields": {
+			"priority": 104,
+			"field": "noticed_young_looking",
+			"text": "Looked very young"
+		}
+	},
+	{
+		"model": "dataentry.redflags",
+		"pk": 65,
+		"fields": {
+			"priority": 105,
+			"field": "noticed_hesitant",
+			"text": "Looked hesitant and uncertain"
+		}
+	},
+	{
+		"model": "dataentry.redflags",
+		"pk": 66,
+		"fields": {
+			"priority": 106,
+			"field": "noticed_hurrying",
+			"text": "Was in a hurry"
+		}
+	},
+	{
+		"model": "dataentry.redflags",
+		"pk": 67,
+		"fields": {
+			"priority": 107,
+			"field": "noticed_waiting_sitting",
+			"text": "Was sitting/waiting"
+		}
+	},
+	{
+		"model": "dataentry.redflags",
+		"pk": 68,
+		"fields": {
+			"priority": 108,
+			"field": "noticed_walking_to_border",
+			"text": "Was walking to the border"
+		}
+	},
+	{
+		"model": "dataentry.redflags",
+		"pk": 69,
+		"fields": {
+			"priority": 109,
+			"field": "noticed_carrying_full_bags",
+			"text": "Was carrying full bags"
+		}
+	},
+	{
+		"model": "dataentry.redflags",
+		"pk": 70,
+		"fields": {
+			"priority": 110,
+			"field": "noticed_new_clothes",
+			"text": "Was wearing new clothes"
+		}
+	},
+	{
+		"model": "dataentry.redflags",
+		"pk": 71,
+		"fields": {
+			"priority": 111,
+			"field": "noticed_dirty_clothes",
+			"text": "Was wearing dirty clothes"
+		}
+	},
+	{
+		"model": "dataentry.redflags",
+		"pk": 72,
+		"fields": {
+			"priority": 112,
+			"field": "noticed_roaming_around",
+			"text": "Was roaming around and looked aimless"
 		}
 	}
 ]
