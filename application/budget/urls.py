@@ -4,6 +4,7 @@ from budget.views import \
     OtherItemsViewSet, \
     MoneyDistribution, \
     MDFExportViewSet, \
+    get_mdf_pdf, \
     budget_sheet_by_date, \
     StaffSalaryViewSet, \
     get_top_table_data
@@ -26,7 +27,7 @@ urlpatterns = [
         url(r'^budget/(?P<parent_pk>\d+)/staff_salary/(?P<pk>\d+)/$', StaffSalaryViewSet.as_view({'put': 'update', 'delete': 'destroy'}), name="rest_api_staff_salary_detail_api"),
 
         url(r'^mdf/(?P<pk>\d+)/$', MoneyDistribution.as_view({'get': 'retrieve', 'post': 'send_emails'}), name="MDFViewSet"),
-        url(r'^mdf/(?P<uuid>[0-9A-Fa-f-]+)/pdf/$', MDFExportViewSet.as_view({'get': 'get_mdf_pdf'}), name="MdfPdf"),
+        url(r'^mdf/(?P<uuid>[0-9A-Fa-f-]+)/pdf/$', get_mdf_pdf, name="MdfPdf"),
         url(r'^mdf/(?P<month>\d+)/(?P<year>\d+)/pdf/$', MDFExportViewSet.as_view({'get': 'get_mdf_pdf_bulk'}), name="MdfPdfbulk"),
         url(r'^mdf/(?P<month>\d+)/(?P<year>\d+)/count/$', MDFExportViewSet.as_view({'get': 'count_mdfs_for_month_year'}), name="MdfPdfbulkCount"),
 ]
