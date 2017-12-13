@@ -90,8 +90,6 @@ class MoneyDistribution(viewsets.ViewSet):
         
 
 class MDFExportViewSet(viewsets.GenericViewSet):
-    permission_classes = (IsAuthenticated, HasPermission)
-    permissions_required = ['permission_budget_view']
 
     def get_mdf_pdf(self, request, uuid):
         budget = BorderStationBudgetCalculation.objects.get(mdf_uuid=uuid)
