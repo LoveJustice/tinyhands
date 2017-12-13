@@ -1,4 +1,5 @@
 import datetime
+import json
 
 from rest_framework import serializers
 
@@ -321,7 +322,11 @@ class IntercepteeSerializer(serializers.ModelSerializer):
         ]
     person = PersonSerializer()
     
+
 class InterceptionAlertSerializer(serializers.ModelSerializer):
     class Meta:
         model = InterceptionAlert
         fields = ['json']
+
+    def to_representation(self, obj):
+        return json.loads(obj.json)
