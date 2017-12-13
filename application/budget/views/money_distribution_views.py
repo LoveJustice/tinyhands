@@ -93,13 +93,6 @@ class MDFExportViewSet(viewsets.GenericViewSet):
     permission_classes = (IsAuthenticated, HasPermission)
     permissions_required = ['permission_budget_view']
 
-    def get_mdf_pdf(self, request, uuid):
-        budget = BorderStationBudgetCalculation.objects.get(mdf_uuid=uuid)
-
-        logger.info("Generating MDF PDF %s for %s", budget.mdf_file_name(), request.user)
-        pdf_buffer = MDFExporter(budget).create()
-        return self.create_response('application/pdf', budget.mdf_file_name(), pdf_buffer)
-
     def get_mdf_pdf_bulk(self, request, month, year):
         logger.info("Generating MDF Zip for %d %d for %s", month, year, request.user)
 
@@ -124,3 +117,15 @@ class MDFExportViewSet(viewsets.GenericViewSet):
         response['Content-Disposition'] = "filename=%s" % filename
         response['X-Frame-Options'] = "*"
         return response
+
+def get_mdf_pdf(request, uuid):
+    budget = BorderStationBudgetCalculation.objects.get(mdf_uuid=uuid)
+
+    logger.info("Generating MDF PDF %s for %s", budget.mdf_file_name(), request.user)
+    pdf_buffer = MDFExporter(budget).create()
+
+    response = HttpResponse(pdf_buffer.getvalue(), content_type='application/pdf')
+    response['Content-Disposition'] = "filename=%s" % budget.mdf_file_name()
+    response['X-Frame-Options'] = "*"
+    
+    return response
