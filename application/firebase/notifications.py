@@ -1,10 +1,13 @@
+from datetime import timedelta
 from django.conf import settings
 import json
 from oauth2client.service_account import ServiceAccountCredentials
 from urllib2 import Request, urlopen
 
+from notification_builder import FirebaseNotificationBuilder
 
-TOPIC_INTERCEPTION_ALERT = "interception-alert"
+
+TOPIC_GENERAL = "general"
 
 FCM_SCOPE = "https://www.googleapis.com/auth/firebase.messaging"
 
@@ -29,15 +32,13 @@ def _get_fcm_messages_url_for_project(project_id):
 
 
 def _build_message_data(topic, title, body):
-    return {
-        'message': {
-            'topic': topic,
-            'notification': {
-                'body': body,
-                'title': title
-            }
-        }
-    }
+    return FirebaseNotificationBuilder()\
+        .with_topic(topic)\
+        .with_title(title)\
+        .with_body(body)\
+        .with_priority(FirebaseNotificationBuilder.PRIORITY_NORMAL)\
+        .with_ttl(timedelta(hours=12))\
+        .build()
 
 
 def _send_message(project_id, access_token, topic, title, body):
@@ -48,6 +49,7 @@ def _send_message(project_id, access_token, topic, title, body):
 
     data = _build_message_data(topic, title, body)
     request.add_data(json.dumps(data))
+
     response = urlopen(request)
     if response.getcode() == 200:
         return True
@@ -56,5 +58,5 @@ def _send_message(project_id, access_token, topic, title, body):
 
 
 def send_interception_alert_notification(message):
-    return _send_message(_get_project_id(), _get_access_token(), TOPIC_INTERCEPTION_ALERT, 'Project Beautiful', message)
+    return _send_message(_get_project_id(), _get_access_token(), TOPIC_GENERAL, 'Project Beautiful', message)
 
