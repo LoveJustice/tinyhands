@@ -47,3 +47,4 @@ chmod 777 "${PHOTO}" "${IRF_FORM}" "${VIF_FORM}" "${TOP}/media" "${TOP}/dreamsui
 cd "$TOP"
 python /data/manage.py migrate
 python /data/manage.py loaddata fixtures/sanitized-data.json
+python /data/manage.py loaddata fixtures/initial-required-data/*
