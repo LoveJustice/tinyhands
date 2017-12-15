@@ -13,4 +13,4 @@ class InterceptionAlertViewSet(viewsets.ModelViewSet):
     
     def get_queryset(self):
         latest_id = self.request.GET.get('latest_id',0)
-        return InterceptionAlert.objects.filter(id__gt=latest_id).order_by('id')
+        return InterceptionAlert.objects.filter(id__gt=latest_id).order_by('-id')
