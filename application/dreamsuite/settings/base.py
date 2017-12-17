@@ -59,7 +59,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_extensions',
     'rest_framework.authtoken',
-    'django_filters'
+    'django_filters',
+    'prettyjson'
 ]
 
 
