@@ -12,6 +12,7 @@ DEBUG = True
 
 ADMINS = [('Ben Duggan', 'benaduggan@gmail.com'), ('Austin Munn', "austin@tinyhands.org"), ("Stan Rishel", "scrishel@sbcglobal.net")]
 
+IMPORT_ACCOUNT_EMAIL = 'ashishm@tinyhands.org'
 SPREADSHEET_CONFIG = {
     'IRF': {
         'key_column' : 'IRF Number',

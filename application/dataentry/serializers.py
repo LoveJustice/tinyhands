@@ -1,8 +1,9 @@
 import datetime
+import json
 
 from rest_framework import serializers
 
-from dataentry.models import Address1, Address2, Country, SiteSettings, InterceptionRecord, VictimInterview, BorderStation, Person, Interceptee
+from dataentry.models import Address1, Address2, Country, SiteSettings, InterceptionRecord, VictimInterview, BorderStation, Person, Interceptee, InterceptionAlert
 from static_border_stations.serializers import LocationSerializer
 
 from helpers import related_items_helper
@@ -320,3 +321,12 @@ class IntercepteeSerializer(serializers.ModelSerializer):
             'person',
         ]
     person = PersonSerializer()
+    
+
+class InterceptionAlertSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = InterceptionAlert
+        fields = ['json']
+
+    def to_representation(self, obj):
+        return json.loads(obj.json)

@@ -12,3 +12,5 @@ current_date = str(datetime.date.today())
 
 errorlog = "/log/%s-gunicorn_error.log" % current_date
 accesslog = "/log/%s-gunicorn_access.log" % current_date
+
+chdir='/data'

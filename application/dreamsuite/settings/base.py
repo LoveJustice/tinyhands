@@ -7,6 +7,7 @@ SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
 
 SITE_DOMAIN = os.environ['SITE_DOMAIN']
 CLIENT_DOMAIN = os.environ['CLIENT_DOMAIN']
+FCM_KEY_PATH = os.environ['FCM_KEY_PATH']
 
 BASE_DIR = Path(__file__).ancestor(3)
 
@@ -47,6 +48,7 @@ INSTALLED_APPS = [
     'bootstrapform',
     'imagekit',
     'dataentry',
+    'firebase',
     'accounts',
     'events',
     'portal',
@@ -182,7 +184,7 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': False,
         },
-        'dataentry.views': {
+        'dataentry': {
             'handlers': ['file'],
             'level': 'DEBUG',
             'propagate': False,
