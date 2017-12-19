@@ -11,3 +11,6 @@ class BorderStation(models.Model):
     longitude = models.FloatField(null=True)
     open = models.BooleanField(default=True)
     operating_country = models.ForeignKey(Country, models.SET_NULL, null=True, blank=True)
+
+    def __str__(self):
+        return self.station_name
