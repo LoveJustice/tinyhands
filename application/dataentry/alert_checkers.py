@@ -338,10 +338,10 @@ class IRFAlertChecker(object):
                 value = getattr(self.irf, red_flag.field)
                 if value != None and value == True:
                     logger.debug("field=" + red_flag.field + " text=" + red_flag.text + " sep=" + sep)
-                    if length_limit > 0 and len(result) + len(red_flag.text) + 1 > length_limit:
+                    if length_limit > 0 and len(result) + len(red_flag.text) + 2 > length_limit:
                         break
                     result += sep + red_flag.text
-                    sep = ',' 
+                    sep = ', ' 
                     item_count += 1
                     if item_limit > 0 and item_count >= item_limit:
                         break              
