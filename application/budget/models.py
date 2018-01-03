@@ -251,6 +251,9 @@ class BorderStationBudgetCalculation(models.Model):
     def mdf_file_name(self):
         return '{}-{}-{}-MDF.pdf'.format(self.border_station.station_code, self.month_year.month, self.month_year.year)
 
+    def __str__(self):
+        return "{} - {}".format(self.border_station.station_name, self.month_year)
+
 
 class OtherBudgetItemCost(models.Model):
 
