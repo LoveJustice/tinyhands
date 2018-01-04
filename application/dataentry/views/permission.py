@@ -49,8 +49,18 @@ class UserLocationPermissionViewSet(viewsets.ModelViewSet):
     def update_permissions(self, request, pk):
         txt = 'success!'
         data = JSONParser().parse(request)
+        if 'permission_id' in data:
+            permission_id = int(data['permission_id'])
+        elif 'permission_group' in data:
+            permission_group = data['permission_group']
+            permission_id = None
+        else:
+            permission_group = None
+            permission_id = None
+            
+        permission_list = data['permissions']
         new_permissions = []
-        for perm_data in data:
+        for perm_data in permission_list:
             serializer = UserLocationPermissionSerializer(data=perm_data)
             if serializer.is_valid():
                 perm_obj = serializer.create_local()
@@ -58,9 +68,11 @@ class UserLocationPermissionViewSet(viewsets.ModelViewSet):
             else:
                 print "is not valid"
         
-        issues = UserLocationPermission.check_valid_permission_set(pk, new_permissions)
+        issues = UserLocationPermission.check_valid_permission_set(pk, new_permissions, permission_id, permission_group)
         if len(issues) > 0:
             txt = issues[0]
+        else:
+            UserLocationPermission.update_permission_set (pk, new_permissions, permission_id, permission_group)
             
         return Response({"message": txt})
     
@@ -95,7 +107,7 @@ class UserLocationPermissionViewSet(viewsets.ModelViewSet):
             results = results.filter(country__id=tmp) | results.filter(country=None).filter(station=None)
         
         serializer = UserLocationPermissionSerializer(results, many=True, context={'request': request})
-        return Response(serializer.data, pk)
+        return Response(serializer.data)
     
     def user_countries(self, request):
         perms = self.effective_query(request, pk)
