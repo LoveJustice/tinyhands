@@ -331,5 +331,5 @@ class InterceptionAlertSerializer(serializers.ModelSerializer):
     def to_representation(self, obj):
         alert_response = json.loads(obj.json)
         alert_response['id'] = obj.id
-        alert_response['datetimeOfAlert'] = obj.created
+        alert_response['datetimeOfAlert'] = str(obj.created)
         return alert_response
