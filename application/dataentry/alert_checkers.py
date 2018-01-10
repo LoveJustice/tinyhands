@@ -303,15 +303,10 @@ class IRFAlertChecker(object):
                 intercept['age'] = interceptee.person.age                
                 alert_dict['intercept'] = intercept
                 
-                # initial save to get the id initialized
                 interception_alert = InterceptionAlert()
-                interception_alert.json = '{}'
-                interception_alert.save()
-                alert_dict['id'] = interception_alert.id
-                
                 interception_alert.json = json.dumps(alert_dict)
-                logger.debug('json=' + interception_alert.json)
                 interception_alert.save()
+                logger.debug('json=' + interception_alert.json)
     
     def get_red_flags(self):
         logger.debug('get_red_flags')

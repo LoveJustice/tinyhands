@@ -329,4 +329,7 @@ class InterceptionAlertSerializer(serializers.ModelSerializer):
         fields = ['json']
 
     def to_representation(self, obj):
-        return json.loads(obj.json)
+        alert_response = json.loads(obj.json)
+        alert_response['id'] = obj.id
+        alert_response['datetimeOfAlert'] = str(obj.created)
+        return alert_response
