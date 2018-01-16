@@ -5,6 +5,7 @@ from rest_framework import filters as fs
 from rest_framework.parsers import JSONParser
 
 from dataentry.models import Permission, UserLocationPermission, Country, BorderStation
+from accounts.models import Account
 from dataentry.serializers import PermissionSerializer, UserLocationPermissionSerializer, CountrySerializer, BorderStationSerializer
 
 class PermissionViewSet(viewsets.ModelViewSet):
@@ -23,28 +24,25 @@ class UserLocationPermissionViewSet(viewsets.ModelViewSet):
     
     def user_permissions(self, request, pk):
         results = self.queryset.filter(account__id=pk)
-        if 'country_id' in request.GET:
-            tmp = int(request.GET['country_id'])
-            results = results.filter(country__id=tmp)
-          
-        if 'station_id' in request.GET:
-            tmp = int(request.GET['station_id'])
-            results = results.filter(station__id=tmp)
-        
-        if 'permission_id' in request.GET:
-            tmp = int(request.GET['permission_id'])
-            results = results.filter(permission__id=tmp)
-        
-        if 'permission_group' in request.GET:
-            tmp = request.GET['permission_group']
-            results = results.filter(permission__permission_group=tmp)
-        
-        if 'action' in request.GET:
-            tmp = request.GET['action']
-            results = results.filter(permission__action=tmp)
         
         serializer = UserLocationPermissionSerializer(results, many=True, context={'request': request})
         return Response(serializer.data)
+    
+    def update_account_permission (self, pk):
+        account_perms = Permission.objects.filter(account_permission_name__isnull=False)
+        user_perms = UserLocationPermission.objects.filter(account=pk).filter(country__isnull=True).filter(station__isnull=True)
+        the_account = Account.objects.get(id=pk)
+        for account_perm in account_perms:
+            value = False;
+            for user_perm in user_perms:
+                if account_perm.id == user_perm.permission.id:
+                    value = True
+                    break
+            
+            setattr(the_account, account_perm.account_permission_name, value)
+        
+        the_account.save();
+                
     
     def update_permissions(self, request, pk):
         txt = 'success!'
@@ -65,16 +63,15 @@ class UserLocationPermissionViewSet(viewsets.ModelViewSet):
             if serializer.is_valid():
                 perm_obj = serializer.create_local()
                 new_permissions.append(perm_obj)
-            else:
-                print "is not valid"
         
         issues = UserLocationPermission.check_valid_permission_set(pk, new_permissions, permission_id, permission_group)
         if len(issues) > 0:
             txt = issues[0]
         else:
             UserLocationPermission.update_permission_set (pk, new_permissions, permission_id, permission_group)
+            self.update_account_permission(pk)
             
-        return Response({"message": txt})
+        return Response({"data": data})
     
     def effective_query(self, request, pk):
         results = self.queryset.filter(account__id=pk)        
@@ -93,23 +90,7 @@ class UserLocationPermissionViewSet(viewsets.ModelViewSet):
             
         return results;
     
-    def effective_permissions(self, request, pk):
-        results = self.effective_query(request, pk)
-        
-        if 'station_id' in request.GET:
-            # when station is specified, include global permissions and permissions for the station's country as well as those for the station
-            tmp = int(request.GET['station_id'])
-            the_station = BorderStation.objects.get(id=tmp)
-            results = results.filter(station__id=tmp) | results.filter(country__id=the_station.id) | results.filter(country=None).filter(station=None)        
-        elif 'country_id' in request.GET:
-            # when country is specified, include global permissions as well as those for the country
-            tmp = int(request.GET['country_id'])
-            results = results.filter(country__id=tmp) | results.filter(country=None).filter(station=None)
-        
-        serializer = UserLocationPermissionSerializer(results, many=True, context={'request': request})
-        return Response(serializer.data)
-    
-    def user_countries(self, request):
+    def user_countries(self, request, pk):
         perms = self.effective_query(request, pk)
         results = None
         

@@ -70,7 +70,6 @@ urlpatterns = [
        
        url(r'^permission/$', PermissionViewSet.as_view({'get':'list'}), name='Permission'),
        url(r'^user_permission/(?P<pk>\d+)/$', UserLocationPermissionViewSet.as_view({'get':'user_permissions', 'put':'update_permissions'}), name='UserLocationPermission'),
-       url(r'^user_permission/effective/(?P<pk>\d+)/$', UserLocationPermissionViewSet.as_view({'get':'effective_permissions'}), name='UserPermissionEffective'),
        url(r'^user_permission/countries/(?P<pk>\d+)/$', UserLocationPermissionViewSet.as_view({'get':'user_countries'}), name='UserPermissionCountries'),
         url(r'^user_permission/stations/(?P<pk>\d+)/$', UserLocationPermissionViewSet.as_view({'get':'user_stations'}), name='UserPermissionStations'),
 ]
