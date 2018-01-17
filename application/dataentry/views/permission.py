@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import filters as fs
 from rest_framework.parsers import JSONParser
+from rest_framework import status
 
 from dataentry.models import Permission, UserLocationPermission, Country, BorderStation
 from accounts.models import Account
@@ -11,7 +12,7 @@ from dataentry.serializers import PermissionSerializer, UserLocationPermissionSe
 class PermissionViewSet(viewsets.ModelViewSet):
     queryset = Permission.objects.all()
     serializer_class = PermissionSerializer
-    #permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     filter_backends = (fs.SearchFilter, fs.OrderingFilter,)
     search_fields = ('permission_group','action')
     ordering_fields = ('permission_group', 'action')
@@ -20,7 +21,7 @@ class PermissionViewSet(viewsets.ModelViewSet):
 class UserLocationPermissionViewSet(viewsets.ModelViewSet):
     queryset = UserLocationPermission.objects.all()
     serializer_class = UserLocationPermissionSerializer
-    #permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     
     def user_permissions(self, request, pk):
         results = self.queryset.filter(account__id=pk)
@@ -45,7 +46,6 @@ class UserLocationPermissionViewSet(viewsets.ModelViewSet):
                 
     
     def update_permissions(self, request, pk):
-        txt = 'success!'
         data = JSONParser().parse(request)
         if 'permission_id' in data:
             permission_id = int(data['permission_id'])
@@ -55,6 +55,8 @@ class UserLocationPermissionViewSet(viewsets.ModelViewSet):
         else:
             permission_group = None
             permission_id = None
+        
+        user_permissions = UserLocationPermission.objects.filter(account__id = request.user.id)
             
         permission_list = data['permissions']
         new_permissions = []
@@ -67,11 +69,13 @@ class UserLocationPermissionViewSet(viewsets.ModelViewSet):
         issues = UserLocationPermission.check_valid_permission_set(pk, new_permissions, permission_id, permission_group)
         if len(issues) > 0:
             txt = issues[0]
+            code = status.HTTP_500_INTERNAL_SERVER_ERROR
         else:
-            UserLocationPermission.update_permission_set (pk, new_permissions, permission_id, permission_group)
-            self.update_account_permission(pk)
+            code = UserLocationPermission.update_permission_set (pk, new_permissions, permission_id, permission_group, user_permissions)
+            if code == status.HTTP_200_OK:
+                self.update_account_permission(pk)
             
-        return Response({"data": data})
+        return Response({"data": data}, code)
     
     def effective_query(self, request, pk):
         results = self.queryset.filter(account__id=pk)        

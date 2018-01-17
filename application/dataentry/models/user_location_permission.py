@@ -1,9 +1,9 @@
 from django.db import models
+from rest_framework import status
 from accounts.models import Account
 from border_station import BorderStation
 from country import Country
 from permission import Permission
-from django.conf.urls.static import static
 
 import logging
 
@@ -118,7 +118,7 @@ class UserLocationPermission(models.Model):
         return issues
     
     @staticmethod
-    def update_permission_set (account_id, new_permissions, permission_id, permission_group):
+    def update_permission_set (account_id, new_permissions, permission_id, permission_group, user_permissions):
         add_permissions = {}
         remove_permissions = {}
         for perm in new_permissions:
@@ -139,6 +139,34 @@ class UserLocationPermission(models.Model):
                     remove_permissions.pop(str(previous), None)
                     add_permissions.pop(str(new), None)
         
+        # check if user has the permission to remove the requested permissions
+        for perm in remove_permissions.values():
+            perm_ok = False
+            for user_perm in user_permissions:
+                if ((user_perm.country is None and user_perm.station is None) or
+                    (perm.country is not None and perm.country == user_perm.country) or
+                    (perm.station is not None and perm.station == user_perm.station)):
+                    perm_ok = True
+                    break
+            
+            if not perm_ok:
+                logger.debug("user does not have permissions to remove the permission " + str(perm))
+                return status.HTTP_401_UNAUTHORIZED
+        
+        # check if user has the permission to add the requested permissions
+        for perm in add_permissions.values():
+            perm_ok = False
+            for user_perm in user_permissions:
+                if ((user_perm.country is None and user_perm.station is None) or
+                    (perm.country is not None and perm.country == user_perm.country) or
+                    (perm.station is not None and perm.station == user_perm.station)):
+                    perm_ok = True
+                    break
+            
+            if not perm_ok:
+                logger.debug("user does not have permissions to add the permission " + str(perm))
+                return status.HTTP_401_UNAUTHORIZED
+            
         for perm in remove_permissions.values():
             logger.debug("removing " + str(perm))
             perm.delete()
@@ -146,6 +174,8 @@ class UserLocationPermission(models.Model):
         for perm in add_permissions.values():
             logger.debug("adding " + str(perm))
             perm.save();
+        
+        return status.HTTP_200_OK
     
     def __str__(self):
         return str(self.account) + "," + str(self.country) + "," + str(self.station) + "," + str(self.permission)

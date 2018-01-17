@@ -2,7 +2,7 @@ import time
 
 from django.core.urlresolvers import reverse
 from rest_framework import status
-from rest_framework.test import APIRequestFactory, APITestCase
+from rest_framework.test import APIRequestFactory, APITestCase, APIClient
 from dataentry.models import Permission, UserLocationPermission, Country, BorderStation
 from accounts.models import Account, DefaultPermissionsSet
 from accounts.tests.factories import SuperUserFactory
@@ -41,6 +41,9 @@ class PermissionTest(APITestCase):
         return result
         
     def setUp(self):
+        user = SuperUserFactory.create()
+        self.client = APIClient()
+        self.client.force_authenticate(user=user)
         
         self.globalCount += 1
         self.nepal = self.get_or_create_country('Nepal')
@@ -55,12 +58,15 @@ class PermissionTest(APITestCase):
         
         self.account = SuperUserFactory.create()
         
+        self.permissions = []
+        
         tmp = UserLocationPermission()
         tmp.account = self.account
         tmp.country = None
         tmp.station = None
         tmp.permission = Permission.objects.get(permission_group = 'IRF', action='VIEW')
         tmp.save()
+        self.permissions.append(tmp)
         
         tmp = UserLocationPermission()
         tmp.account = self.account
@@ -68,6 +74,7 @@ class PermissionTest(APITestCase):
         tmp.station = self.nepal_bs2
         tmp.permission = Permission.objects.get(permission_group = 'IRF', action='ADD')
         tmp.save()
+        self.permissions.append(tmp)
         
         tmp = UserLocationPermission()
         tmp.account = self.account
@@ -75,6 +82,7 @@ class PermissionTest(APITestCase):
         tmp.station = self.thailand_bs
         tmp.permission = Permission.objects.get(permission_group = 'IRF', action='ADD')
         tmp.save()
+        self.permissions.append(tmp)
         
         tmp = UserLocationPermission()
         tmp.account = self.account
@@ -82,6 +90,7 @@ class PermissionTest(APITestCase):
         tmp.station = self.nepal_bs2
         tmp.permission = Permission.objects.get(permission_group = 'IRF', action='EDIT')
         tmp.save()
+        self.permissions.append(tmp)
         
         tmp = UserLocationPermission()
         tmp.account = self.account
@@ -89,6 +98,7 @@ class PermissionTest(APITestCase):
         tmp.station = self.thailand_bs
         tmp.permission = Permission.objects.get(permission_group = 'IRF', action='EDIT')
         tmp.save()
+        self.permissions.append(tmp)
         
         tmp = UserLocationPermission()
         tmp.account = self.account
@@ -96,6 +106,7 @@ class PermissionTest(APITestCase):
         tmp.station = None
         tmp.permission = Permission.objects.get(permission_group = 'VIF', action='VIEW')
         tmp.save()
+        self.permissions.append(tmp)
         
         tmp = UserLocationPermission()
         tmp.account = self.account
@@ -103,6 +114,7 @@ class PermissionTest(APITestCase):
         tmp.station = None
         tmp.permission = Permission.objects.get(permission_group = 'VIF', action='ADD')
         tmp.save()
+        self.permissions.append(tmp)
         
         tmp = UserLocationPermission()
         tmp.account = self.account
@@ -110,6 +122,7 @@ class PermissionTest(APITestCase):
         tmp.station = None
         tmp.permission = Permission.objects.get(permission_group = 'VIF', action='EDIT')
         tmp.save()
+        self.permissions.append(tmp)
         
         
             
@@ -123,6 +136,32 @@ class PermissionTest(APITestCase):
     def test_list_user_permissions(self):
         url = reverse('UserLocationPermission', args=[self.account.id])
         response = self.client.get(url)
+        
+    def test_update_user_permissions(self):
+        url = reverse('UserLocationPermission', args=[self.account.id])
+        new_perm =  {
+            "permissions":[
+                {
+                    "account": self.account.id,
+                    "country": None,
+                    "station": None,
+                    "permission": Permission.objects.get(permission_group = 'IRF', action='VIEW').id
+                },
+                {
+                    "account": self.account.id,
+                    "country": None,
+                    "station": None,
+                    "permission": Permission.objects.get(permission_group = 'ACCOUNTS', action='MANAGE').id
+                },
+                {
+                    "account": self.account.id,
+                    "country": None,
+                    "station": self.nepal_bs2.id,
+                    "permission": Permission.objects.get(permission_group = 'IRF', action='ADD').id
+                }
+            ]
+        }
+        response = self.client.put(url, new_perm)
         
     def test_list_user_countries(self):
         url = reverse('UserPermissionCountries', args=[self.account.id])
