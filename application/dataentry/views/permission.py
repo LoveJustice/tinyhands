@@ -68,7 +68,6 @@ class UserLocationPermissionViewSet(viewsets.ModelViewSet):
         
         issues = UserLocationPermission.check_valid_permission_set(pk, new_permissions, permission_id, permission_group)
         if len(issues) > 0:
-            txt = issues[0]
             code = status.HTTP_500_INTERNAL_SERVER_ERROR
         else:
             code = UserLocationPermission.update_permission_set (pk, new_permissions, permission_id, permission_group, user_permissions)
