@@ -352,3 +352,12 @@ class UserLocationPermissionSerializer(serializers.ModelSerializer):
         perm.permission = self.validated_data.get('permission')
         
         return perm
+
+class UserLocationPermissionEntrySerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    level = serializers.CharField()
+
+class UserLocationPermissionListSerializer(serializers.Serializer):
+    account_id = serializers.IntegerField()
+    name = serializers.CharField()
+    permissions = UserLocationPermissionEntrySerializer(many=True)

@@ -69,6 +69,7 @@ urlpatterns = [
        url(r'^intercept-alerts/$', InterceptionAlertViewSet.as_view({'get':'list'}), name='InterceptionAlert'), 
        
        url(r'^permission/$', PermissionViewSet.as_view({'get':'list'}), name='Permission'),
+       url(r'^user_permission_list/$', UserLocationPermissionViewSet.as_view({'get':'user_permission_list'}), name='UserLocationPermissionList'),
        url(r'^user_permission/(?P<pk>\d+)/$', UserLocationPermissionViewSet.as_view({'get':'user_permissions', 'put':'update_permissions'}), name='UserLocationPermission'),
        url(r'^user_permission/countries/(?P<pk>\d+)/$', UserLocationPermissionViewSet.as_view({'get':'user_countries'}), name='UserPermissionCountries'),
         url(r'^user_permission/stations/(?P<pk>\d+)/$', UserLocationPermissionViewSet.as_view({'get':'user_stations'}), name='UserPermissionStations'),

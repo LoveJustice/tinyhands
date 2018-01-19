@@ -4,10 +4,12 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import filters as fs
 from rest_framework.parsers import JSONParser
 from rest_framework import status
+from django.db.models import Q
+import json
 
 from dataentry.models import Permission, UserLocationPermission, Country, BorderStation
 from accounts.models import Account
-from dataentry.serializers import PermissionSerializer, UserLocationPermissionSerializer, CountrySerializer, BorderStationSerializer
+from dataentry.serializers import PermissionSerializer, UserLocationPermissionSerializer, CountrySerializer, BorderStationSerializer, UserLocationPermissionListSerializer
 
 class PermissionViewSet(viewsets.ModelViewSet):
     queryset = Permission.objects.all()
@@ -146,4 +148,47 @@ class UserLocationPermissionViewSet(viewsets.ModelViewSet):
         
         serializer = BorderStationSerializer(results, many=True, context={'request': request})
         return Response(serializer.data)
+    
+    def user_permission_list(self, request):
+        
+        if 'station_id' in request.GET:
+            tmp = int(request.GET['station_id'])
+            station = BorderStation.objects.get(id=tmp)
+            perms = self.queryset.filter(Q(country__isnull=True) & Q(station__isnull=True) | Q(country__id=station.operating_country.id) | Q(station__id=tmp))
+        elif 'country_id' in request.GET:
+            tmp = int(request.GET['country_id'])
+            perms = self.queryset.filter(Q(country__isnull=True) & Q(station__isnull=True) | Q(country__id=tmp))
+        else:
+            perms = self.queryset.filter(Q(country__isnull=True) & Q(station__isnull=True))
+        
+        perms = perms.order_by('account__first_name', 'account__last_name', 'account__id')
+        
+        last_id = None
+        working = None
+        results = []
+        for perm in perms:
+            if working is None or last_id != perm.account.id:
+                if working is not None:
+                    results.append(working)
+                working = {
+                    'account_id' : perm.account.id,
+                    'name' : perm.account.first_name + " " + perm.account.last_name,
+                    'permissions':[]
+                }
+                last_id = perm.account.id
+                
+            entry = {'id' : perm.permission_id}
+            if perm.station is not None:
+                entry['level'] = 'S'
+            elif perm.country is not None:
+                entry['level'] = 'C'
+            else:
+                entry['level'] = 'G'
+            working['permissions'].append(entry)
+        
+        if working is not None:
+            results.append(working)
+
+        serializer = UserLocationPermissionListSerializer(results, many=True, context={'request': request})   
+        return Response(serializer.data) 
                     
