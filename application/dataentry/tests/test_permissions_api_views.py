@@ -187,3 +187,21 @@ class PermissionTest(APITestCase):
         url = reverse('UserPermissionStations', args=[self.account.id])
         response = self.client.get(url + "?country_id=" + str(self.thailand.id))
         self.assertEqual(len(response.data), 1)
+        
+    def test_permissions_list_global(self):
+        url = reverse('UserLocationPermissionList')
+        response = self.client.get(url)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(len(response.data[0]['permissions']), 1)
+        
+    def test_permissions_list_nepal(self):
+        url = reverse('UserLocationPermissionList')
+        response = self.client.get(url  + "?country_id=" + str(self.nepal.id))
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(len(response.data[0]['permissions']), 4)
+        
+    def test_permissions_list_nepal_bs(self):
+        url = reverse('UserLocationPermissionList')
+        response = self.client.get(url  + "?station_id=" + str(self.nepal_bs2.id))
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(len(response.data[0]['permissions']), 6)
