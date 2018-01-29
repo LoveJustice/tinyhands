@@ -5,7 +5,6 @@ from rest_framework import filters as fs
 from rest_framework.parsers import JSONParser
 from rest_framework import status
 from django.db.models import Q
-import json
 
 from dataentry.models import Permission, UserLocationPermission, Country, BorderStation
 from accounts.models import Account
