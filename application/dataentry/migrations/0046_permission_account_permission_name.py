@@ -54,7 +54,7 @@ class Migration(migrations.Migration):
         
         migrations.RunSQL("INSERT INTO dataentry_permission (permission_group, action, min_level, account_permission_name) values ('STATIONS', 'VIEW','GLOBAL','permission_border_stations_view');"),
         migrations.RunSQL("INSERT INTO dataentry_permission (permission_group, action, min_level, account_permission_name) values ('STATIONS', 'ADD','GLOBAL','permission_border_stations_add');"),
-        migrations.RunSQL("INSERT INTO dataentry_permission (permission_group, action, min_level, account_permission_name) values ('STATIONS', 'EDIT','GLOBAL','permission_border_stations_add');"),
+        migrations.RunSQL("INSERT INTO dataentry_permission (permission_group, action, min_level, account_permission_name) values ('STATIONS', 'EDIT','GLOBAL','permission_border_stations_edit');"),
         migrations.RunSQL("INSERT INTO dataentry_permission (permission_group, action, min_level, account_permission_name) values ('STATIONS', 'DELETE','GLOBAL','permission_border_stations_delete');"),
         
         migrations.RunSQL("INSERT INTO dataentry_permission (permission_group, action, min_level, account_permission_name) values ('BUDGETS', 'VIEW','GLOBAL','permission_budget_view');"),
