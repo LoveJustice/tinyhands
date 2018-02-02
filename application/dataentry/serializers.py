@@ -3,7 +3,7 @@ import json
 
 from rest_framework import serializers
 
-from dataentry.models import Address1, Address2, Country, SiteSettings, InterceptionRecord, VictimInterview, BorderStation, Person, Interceptee, InterceptionAlert
+from dataentry.models import Address1, Address2, Country, SiteSettings, InterceptionRecord, VictimInterview, BorderStation, Person, Interceptee, InterceptionAlert, Permission, UserLocationPermission
 from static_border_stations.serializers import LocationSerializer
 
 from helpers import related_items_helper
@@ -333,3 +333,31 @@ class InterceptionAlertSerializer(serializers.ModelSerializer):
         alert_response['id'] = obj.id
         alert_response['datetimeOfAlert'] = str(obj.created)
         return alert_response
+
+class PermissionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Permission
+        fields = ['id', 'permission_group', 'action', 'min_level']
+        
+class UserLocationPermissionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserLocationPermission
+        fields = ['id', 'account', 'country', 'station', 'permission']
+        
+    def create_local(self):
+        perm = UserLocationPermission()
+        perm.account = self.validated_data.get('account')
+        perm.country = self.validated_data.get('country')  
+        perm.station = self.validated_data.get('station')           
+        perm.permission = self.validated_data.get('permission')
+        
+        return perm
+
+class UserLocationPermissionEntrySerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    level = serializers.CharField()
+
+class UserLocationPermissionListSerializer(serializers.Serializer):
+    account_id = serializers.IntegerField()
+    name = serializers.CharField()
+    permissions = UserLocationPermissionEntrySerializer(many=True)
