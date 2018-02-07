@@ -1,6 +1,5 @@
 from rest_framework import viewsets
 from rest_framework.decorators import list_route, api_view, permission_classes
-from rest_framework.parsers import JSONParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
@@ -9,7 +8,6 @@ from django_filters import rest_framework as filters
 
 from dataentry.models import BorderStation, UserLocationPermission
 from dataentry.serializers import BorderStationSerializer
-from rest_api.authentication import HasPermission, HasPostPermission, HasPutPermission
 from static_border_stations.models import Staff, CommitteeMember, Location
 from static_border_stations.serializers import StaffSerializer, CommitteeMemberSerializer, LocationSerializer
 
