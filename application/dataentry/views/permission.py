@@ -145,6 +145,7 @@ class UserLocationPermissionViewSet(viewsets.ModelViewSet):
                 else:
                     results = stations.filter(id = perm.station.id)
         
+        results = results.order_by('station_name')
         serializer = BorderStationSerializer(results, many=True, context={'request': request})
         return Response(serializer.data)
     

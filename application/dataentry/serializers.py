@@ -2,12 +2,26 @@ import datetime
 import json
 
 from rest_framework import serializers
+from rest_framework.exceptions import APIException
+from django.utils.encoding import force_text
+from rest_framework import status
 
 from dataentry.models import Address1, Address2, Country, SiteSettings, InterceptionRecord, VictimInterview, BorderStation, Person, Interceptee, InterceptionAlert, Permission, UserLocationPermission
 from static_border_stations.serializers import LocationSerializer
 
 from helpers import related_items_helper
 
+class CustomValidation(APIException):
+    status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+    default_detail = 'A server error occurred'
+    
+    def __init__(self, detail, field, status_code):
+        if status_code is not None:
+            self.status_code = status_code
+            if detail is not None:
+                self.detail = {field: [force_text(detail), ]}
+            else:
+                self.detail = {'detail': force_text(self.default_detail)}
 
 
 class Address1Serializer(serializers.ModelSerializer):
@@ -94,7 +108,26 @@ class BorderStationSerializer(serializers.ModelSerializer):
 
     def get_ytd_interceptions(self, obj):
         return Interceptee.objects.filter(interception_record__irf_number__startswith=obj.station_code, kind='v', interception_record__date_time_of_interception__year=datetime.date.today().year).count()
-
+    
+    def create(self, validated_data):
+        country = validated_data.get('operating_country', None)
+        if country is None:
+            raise CustomValidation('Operating Country must be populated', 'operating_country', status.HTTP_400_BAD_REQUEST)
+        elif not UserLocationPermission.has_session_permission(self.context['request'], 'STATIONS', 'ADD', country.id, None):
+            raise CustomValidation('You are not authorized to add border stations in ' + country.name, 'operating_country', status.HTTP_401_UNAUTHORIZED)
+        return BorderStation.objects.create(**validated_data)
+        
+    def update(self, instance, validated_data):
+        country = validated_data.get('operating_country', instance.operating_country)
+        if country is None:
+            raise CustomValidation('Operating Country must be populated', 'operating_country', status.HTTP_400_BAD_REQUEST)
+        if not UserLocationPermission.has_session_permission(self.context['request'], 'STATIONS', 'EDIT', country.id, instance.id):
+            raise CustomValidation('You are not authorized to edit the border station ' + instance.station_name, 'operating_country', status.HTTP_401_UNAUTHORIZED)
+        if country != instance.operating_country and not UserLocationPermission.has_session_permission(self.context['request'], 'STATIONS', 'EDIT', instance.operating_country.id, instance.id):
+            raise CustomValidation('You are not authorized to edit border stations in ' + instance.operating_country.name, 'operating_country', status.HTTP_401_UNAUTHORIZED)
+        
+        return super(BorderStationSerializer,self).update(instance, validated_data)
+        
 
 class InterceptionRecordListSerializer(serializers.ModelSerializer):
     class Meta:

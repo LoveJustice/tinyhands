@@ -153,7 +153,7 @@ class BadVifUserFactory(UserFactory):
     permission_vif_view = False
     permission_vif_delete = False
     user_designation = factory.SubFactory(EditUserDesignation)
-
+    
 
 class AlertFactory(DjangoModelFactory):
     class Meta:

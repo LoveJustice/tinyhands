@@ -176,6 +176,21 @@ class UserLocationPermission(models.Model):
             perm.save();
         
         return status.HTTP_200_OK
+            
+    @staticmethod
+    def has_session_permission(request, group, action, country_id, station_id):
+        has_permission = False
+        
+        permission_list = UserLocationPermission.objects.filter(account__id = request.user.id).filter(permission__permission_group = group).filter(permission__action = action)
+        for perm in permission_list:
+            if ((perm.country is None and perm.station is None) or
+                (perm.station is None and perm.country.id == country_id) or
+                (perm.station is not None and perm.station.id == station_id)):
+                has_permission = True
+                break
+
+
+        return has_permission
     
     def __str__(self):
         return str(self.account) + "," + str(self.country) + "," + str(self.station) + "," + str(self.permission)
