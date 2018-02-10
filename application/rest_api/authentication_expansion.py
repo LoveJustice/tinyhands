@@ -6,7 +6,7 @@ class RequestPermission(permissions.BasePermission):
     message = 'You do not have the right permission to access this data'
 
     # Check if permission is enabled at any level
-    def has_permission(self, request, view, method, permissions_required):
+    def custom_has_permission(self, request, view, method, permissions_required):
         if request.method == method or method == "ANY":
             for permission in permissions_required:
                 perms = UserLocationPermission.objects.filter(account__id=request.user.id, permission__permission_group=permission['permission_group'], permission__action=permission['action'])
@@ -16,7 +16,7 @@ class RequestPermission(permissions.BasePermission):
         return True
     
     # Check if permission is enabled for specific object (e.g for a particular country or station)
-    def has_object_permission(self, request, view, method, permissions_required, obj):
+    def custom_has_object_permission(self, request, view, method, permissions_required, obj):
         if request.method == method or method == "ANY":
             # Need to have a way to access the country id and border station id from the object
             # Assume each model will implement property get methods for country_id and border_station_id
@@ -40,41 +40,41 @@ class RequestPermission(permissions.BasePermission):
 
 class HasPermission(RequestPermission):
     def has_permission(self, request, view):
-        return super(HasPermission, self).has_permission(request, view, "ANY", view.permissions_required)
+        return self.custom_has_permission(request, view, "ANY", view.permissions_required)
     
     def has_object_permission(self, request, view, obj):
-        return super(HasPermission, self).has_object_permission(request, view, "ANY", view.permissions_required, obj)
+        return self.custom_has_object_permission(request, view, "ANY", view.permissions_required, obj)
 
 
 class HasDeletePermission(RequestPermission):
     def has_permission(self, request, view):
-        return super(HasDeletePermission, self).has_permission(request, view, "DELETE", view.delete_permissions_required)
+        return self.custom_has_permission(request, view, "DELETE", view.delete_permissions_required)
     
     def has_object_permission(self, request, view, obj):
-        return super(HasDeletePermission, self).has_object_permission(request, view, "DELETE", view.delete_permissions_required, obj)
+        return self.custom_has_object_permission(request, view, "DELETE", view.delete_permissions_required, obj)
 
 
 class HasGetPermission(RequestPermission):
     def has_permission(self, request, view):
-        return super(HasGetPermission, self).has_permission(request, view, "GET", view.get_permissions_required)
+        return self.custom_has_permission(request, view, "GET", view.get_permissions_required)
     
     def has_object_permission(self, request, view, obj):
-        return super(HasGetPermission, self).has_object_permission(request, view, "GET", view.get_permissions_required, obj)
+        return self.custom_has_object_permission(request, view, "GET", view.get_permissions_required, obj)
 
 
 class HasPostPermission(RequestPermission):
     def has_permission(self, request, view):
-        return super(HasPostPermission, self).has_permission(request, view, "POST", view.post_permissions_required)
+        return self.custom_has_permission(request, view, "POST", view.post_permissions_required)
 
     def has_object_permission(self, request, view, obj):
-        return super(HasPostPermission, self).has_object_permission(request, view, "POST", view.post_permissions_required, obj)
+        return self.custom_has_object_permission(request, view, "POST", view.post_permissions_required, obj)
 
 class HasPutPermission(RequestPermission):
     def has_permission(self, request, view):
-        return super(HasPutPermission, self).has_permission(request, view, "PUT", view.put_permissions_required)
+        return self.custom_has_permission(request, view, "PUT", view.put_permissions_required)
     
     def has_object_permission(self, request, view, obj):
-        return super(HasPutPermission, self).has_object_permission(request, view, "PUT", view.put_permissions_required, obj)
+        return self.custom_has_object_permission(request, view, "PUT", view.put_permissions_required, obj)
 
 
 class HasUserDesignation(permissions.BasePermission):  # Designation Based Permissions
