@@ -80,7 +80,7 @@ class HasPutPermission(RequestPermission):
 class HasUserDesignation(permissions.BasePermission):  # Designation Based Permissions
     message = 'You do not have the right user designation to access this data'
 
-    def has_permission(self, request, view, required_user_designation):
+    def custom_has_permission(self, request, view, required_user_designation):
         if request.user.user_designation.name != required_user_designation:
             return False
         return True
@@ -88,4 +88,4 @@ class HasUserDesignation(permissions.BasePermission):  # Designation Based Permi
 
 class IsSuperAdministrator(HasUserDesignation):
     def has_permission(self, request, view):
-        return super(IsSuperAdministrator, self).has_permission(request, view, 'Super Administrator')
+        return custom_has_permission(request, view, 'Super Administrator')
