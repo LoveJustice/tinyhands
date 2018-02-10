@@ -30,6 +30,11 @@ class UserLocationPermission(models.Model):
             
         return True;
     
+    def includes_location(self, country_id, station_id):
+        return ((self.country is None and self.station is None) or
+                (self.station is None and self.country.id == country_id) or
+                (self.station is not None and self.station.id == station_id))
+    
     @staticmethod
     def test_match(obj1, obj2):
         if obj1 is None:
@@ -183,9 +188,7 @@ class UserLocationPermission(models.Model):
         
         permission_list = UserLocationPermission.objects.filter(account__id = request.user.id).filter(permission__permission_group = group).filter(permission__action = action)
         for perm in permission_list:
-            if ((perm.country is None and perm.station is None) or
-                (perm.station is None and perm.country.id == country_id) or
-                (perm.station is not None and perm.station.id == station_id)):
+            if perm.includes_location(country_id, station_id):
                 has_permission = True
                 break
 

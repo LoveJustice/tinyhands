@@ -3,7 +3,7 @@ from django.conf.urls import url
 from static_border_stations.views import *
 
 list_methods = {'get': 'list', 'post': 'create'}
-detail_methods = {'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}
+detail_methods = {'get': 'retrieve', 'put': 'update'}
 
 
 urlpatterns = [

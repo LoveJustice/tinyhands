@@ -204,7 +204,7 @@ class BorderStationsTests(RestApiTestCase):
         url = reverse('BorderStationDetail', args=[self.border_station.id])
 
         response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
     
     def test_get_BorderStation_without_country_permission_should_deny(self):
         perm_country = CountryFactory.create()
@@ -213,7 +213,7 @@ class BorderStationsTests(RestApiTestCase):
         url = reverse('BorderStationDetail', args=[self.border_station.id])
 
         response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
     
     def test_get_BorderStation_without_station_permission_should_deny(self):
         perm_station = BorderStationFactory.create()
@@ -222,7 +222,7 @@ class BorderStationsTests(RestApiTestCase):
         url = reverse('BorderStationDetail', args=[self.border_station.id])
 
         response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         
     def test_create_BorderStation_without_permission_should_deny(self):
         usr = GenericUserWithPermissions.create([{'group':'STATIONS', 'action':'VIEW', 'country': None, 'station': None},])
@@ -241,7 +241,7 @@ class BorderStationsTests(RestApiTestCase):
         }
 
         response = self.client.post(url, data=data)
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         
     def test_create_BorderStation_without_country_permission_should_deny(self):
         perm_country = CountryFactory.create()
@@ -261,7 +261,7 @@ class BorderStationsTests(RestApiTestCase):
         }
 
         response = self.client.post(url, data=data)
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_get_station_id__no_code_should_return_neg1(self):
         usr = GenericUserWithPermissions.create([{'group':'STATIONS', 'action':'VIEW', 'country': None, 'station': None},])
