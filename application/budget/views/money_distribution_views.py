@@ -8,11 +8,12 @@ from rest_framework import viewsets
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from django.db.models import Q, Exists, OuterRef
 from templated_email import send_templated_mail
 
 from budget.models import BorderStationBudgetCalculation, StaffSalary
-from dataentry.models import BorderStation
-from rest_api.authentication import HasPermission
+from dataentry.models import BorderStation, UserLocationPermission
+from rest_api.authentication_expansion import HasPermission
 from static_border_stations.models import Staff, CommitteeMember
 from static_border_stations.serializers import StaffSerializer, CommitteeMemberSerializer
 from accounts.models import Account
@@ -24,14 +25,24 @@ logger = logging.getLogger(__name__)
 
 class MoneyDistribution(viewsets.ViewSet):
     permission_classes = [IsAuthenticated, HasPermission]
-    permissions_required = ['permission_budget_view']
+    permissions_required = [{'permission_group':'BUDGETS', 'action':'VIEW'},]
 
     def retrieve(self, request, pk):
         budget = BorderStationBudgetCalculation.objects.get(pk=pk)
         border_station = budget.border_station
         staff = border_station.staff_set.exclude(email__isnull=True)
         committee_members = border_station.committeemember_set.exclude(email__isnull=True)
-        national_staff = Account.objects.filter(permission_can_receive_mdf=True)
+        
+        # find all permissions for MDF Notification for the specified border station
+        can_receive_mdf = UserLocationPermission.objects.filter(
+            Q(permission__permission_group = 'NOTIFICATIONS') & Q(permission__action = 'MDF') &
+            (Q(country = None) & Q(station=None) | Q(country__id = border_station.operating_country.id) | Q(station__id = border_station.id)))
+        # add outer reference to account for the located permissions
+        can_receive_mdf = can_receive_mdf.filter(account=OuterRef('pk'))
+        # annotate the accounts that have permissions for receiving the MDF
+        account_annotated = Account.objects.annotate(national_staff = Exists(can_receive_mdf))
+        # select the annotated accounts
+        national_staff = account_annotated.filter(national_staff=True)
 
         staff_serializer = StaffSerializer(staff, many=True)
         committee_members_serializer = CommitteeMemberSerializer(committee_members, many=True)
@@ -91,7 +102,7 @@ class MoneyDistribution(viewsets.ViewSet):
 
 class MDFExportViewSet(viewsets.GenericViewSet):
     permission_classes = (IsAuthenticated, HasPermission)
-    permissions_required = ['permission_budget_view']
+    permissions_required = [{'permission_group':'BUDGETS', 'action':'VIEW'},]
 
     def get_mdf_pdf(self, request, uuid):
         budget = BorderStationBudgetCalculation.objects.get(mdf_uuid=uuid)
