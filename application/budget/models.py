@@ -1,3 +1,4 @@
+import uuid
 from datetime import datetime
 
 from django.db import models
@@ -17,6 +18,8 @@ class BorderStationBudgetCalculation(models.Model):
     STAFF = 8
     MEDICAL = 9
     ADMINISTRATION = 10
+
+    mdf_uuid = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
 
     date_time_entered = models.DateTimeField(auto_now_add=True)
     date_time_last_updated = models.DateTimeField(auto_now=True)
@@ -245,6 +248,12 @@ class BorderStationBudgetCalculation(models.Model):
         items = self.otherbudgetitemcost_set.filter(form_section=section).exclude(cost__isnull=True)
         return sum(item.cost for item in items)
 
+    def mdf_file_name(self):
+        return '{}-{}-{}-MDF.pdf'.format(self.border_station.station_code, self.month_year.month, self.month_year.year)
+
+    def __str__(self):
+        return "{} - {}".format(self.border_station.station_name, self.month_year)
+
 
 class OtherBudgetItemCost(models.Model):
 
@@ -261,7 +270,7 @@ class OtherBudgetItemCost(models.Model):
         (BorderStationBudgetCalculation.ADMINISTRATION, 'Administration')
     ]
     name = models.CharField(max_length=255, blank=False)
-    cost = models.PositiveIntegerField(default=0, blank=False)
+    cost = models.IntegerField(default=0, blank=False)
     form_section = models.IntegerField(BUDGET_FORM_SECTION_CHOICES, blank=True, null=True)
     budget_item_parent = models.ForeignKey(BorderStationBudgetCalculation, blank=True, null=True, on_delete=models.CASCADE)
 

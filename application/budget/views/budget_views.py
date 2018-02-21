@@ -2,11 +2,13 @@ import datetime
 
 from dateutil.relativedelta import relativedelta
 from django.db.models import Count, Sum
-from rest_framework import filters, viewsets
+from rest_framework import viewsets
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.decorators import list_route
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework import filters as fs
+from django_filters import rest_framework as filters
 
 from budget.models import BorderStationBudgetCalculation, OtherBudgetItemCost, StaffSalary
 from budget.serializers import BorderStationBudgetCalculationSerializer, OtherBudgetItemCostSerializer, StaffSalarySerializer, BorderStationBudgetCalculationListSerializer
@@ -24,7 +26,7 @@ class BudgetViewSet(viewsets.ModelViewSet):
     delete_permissions_required = ['permission_budget_delete']
     post_permissions_required = ['permission_budget_add']
     put_permissions_required = ['permission_budget_edit']
-    filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
+    filter_backends = (fs.SearchFilter, fs.OrderingFilter,)
     search_fields = ['border_station__station_name', 'border_station__station_code']
     ordering_fields = ['border_station__station_name', 'border_station__station_code', 'month_year', 'date_time_entered', 'date_time_last_updated']
 
@@ -115,11 +117,14 @@ def top_table_data(pk, month, year, budget_sheets):
 
         return {
                 "all": all_interception_records_count,
-                "all_cost": all_cost/all_interception_records_count_divide,
+                "all_cost": all_cost,
+                "all_int_cost": all_cost/all_interception_records_count_divide,
                 "last_month": last_months_count,
-                "last_months_cost": last_months_cost/last_months_count_divide,
+                "last_months_cost": last_months_cost,
+                "last_months_int_cost": last_months_cost/last_months_count_divide,
                 "last_3_months": last_3_months_count,
-                "last_3_months_cost": last_3_months_cost/last_3_months_count_divide,
+                "last_3_months_cost": last_3_months_cost,
+                "last_3_months_int_cost": last_3_months_cost/last_3_months_count_divide,
                 "staff_count": staff_count,
                 "last_months_total_cost": last_months_cost
         }

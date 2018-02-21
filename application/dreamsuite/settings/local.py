@@ -2,6 +2,8 @@ from .base import *
 
 DEBUG = True
 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 INSTALLED_APPS += [
     'corsheaders',
 ]
@@ -12,8 +14,8 @@ MIDDLEWARE_CLASSES += [
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True
-INSTALLED_APPS.append('debug_toolbar')
 
+IMPORT_ACCOUNT_EMAIL = 'test_sup@example.com'
 SPREADSHEET_CONFIG = {
     'IRF': {
         'key_column' : 'IRF Number',

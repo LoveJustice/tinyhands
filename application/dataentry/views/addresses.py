@@ -1,6 +1,6 @@
 import logging
 
-from rest_framework import filters
+from rest_framework import filters as fs
 from rest_framework import status
 from rest_framework import viewsets
 from rest_framework.decorators import detail_route, list_route
@@ -21,7 +21,7 @@ class Address2ViewSet(viewsets.ModelViewSet):
     serializer_class = Address2Serializer
     permission_classes = (IsAuthenticated, HasPermission)
     permissions_required = ['permission_address2_manage']
-    filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
+    filter_backends = (fs.SearchFilter, fs.OrderingFilter,)
     search_fields = ('name',)
     ordering_fields = ('name', 'address1__name', 'longitude', 'latitude', 'level', 'verified', 'canonical_name__name')
     ordering = ('name',)
@@ -64,6 +64,9 @@ class Address2ViewSet(viewsets.ModelViewSet):
         try:
             address = Address2.objects.get(pk=pk)
             new_address = Address2.objects.get(pk=pk2)
+
+            if new_address in address.address2_set.all():
+                return Response({'detail': "You cannot swap addresses with a child address 2"}, status=status.HTTP_400_BAD_REQUEST)    
         except:
             logger.error('Could not find Address2 with the following id: ' + pk)
             return Response({'detail': "Address2 not found"}, status=status.HTTP_404_NOT_FOUND)
@@ -105,7 +108,7 @@ class Address1ViewSet(viewsets.ModelViewSet):
     serializer_class = Address1Serializer
     permission_classes = (IsAuthenticated, HasPermission)
     permissions_required = ['permission_address2_manage']
-    filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
+    filter_backends = (fs.SearchFilter, fs.OrderingFilter,)
     search_fields = ('name',)
     ordering_fields = ('name', 'longitude', 'latitude', 'level', 'completed')
     ordering = ('name',)

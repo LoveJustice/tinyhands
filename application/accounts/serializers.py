@@ -17,11 +17,25 @@ class AccountsSerializer(serializers.ModelSerializer):
         return account
 
     def get_user_designation_name(self, obj):
-        return obj.user_designation.name
+        if obj.user_designation is None or obj.user_designation.name is None:
+            return ""
+        else:
+            return obj.user_designation.name
 
     class Meta:
         model = Account
         exclude = ['password', 'activation_key', 'groups', 'user_permissions', 'is_staff', 'is_superuser']
+
+
+class AccountMDFSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Account
+        fields = ['id', 'email', 'first_name', 'last_name', 'receives_money_distribution_form']
+
+    def get_receives_money_distribution_form(self, obj):
+        return True
+
+    receives_money_distribution_form = serializers.SerializerMethodField(read_only=True)
 
 
 class DefaultPermissionsSetSerializer(serializers.ModelSerializer):

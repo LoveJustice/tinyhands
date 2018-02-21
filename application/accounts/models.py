@@ -20,6 +20,7 @@ class DefaultPermissionsSet(models.Model):
     permission_vif_add = models.BooleanField(default=False)
     permission_vif_edit = models.BooleanField(default=False)
     permission_vif_delete = models.BooleanField(default=False)
+    permission_person_match = models.BooleanField(default=False)
     permission_accounts_manage = models.BooleanField(default=False)
     permission_receive_investigation_alert = models.BooleanField(default=False)
     permission_receive_legal_alert = models.BooleanField(default=False)
@@ -32,6 +33,7 @@ class DefaultPermissionsSet(models.Model):
     permission_budget_add = models.BooleanField(default=False)
     permission_budget_edit = models.BooleanField(default=False)
     permission_budget_delete = models.BooleanField(default=False)
+    permission_can_receive_mdf = models.BooleanField(default=False)
 
     def __unicode__(self):
         return self.name
@@ -84,7 +86,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
 
-    user_designation = models.ForeignKey(DefaultPermissionsSet, related_name='accounts', on_delete=models.CASCADE)
+    user_designation = models.ForeignKey(DefaultPermissionsSet, related_name='accounts', on_delete=models.CASCADE, null=True)
 
     permission_irf_view = models.BooleanField(default=False)
     permission_irf_add = models.BooleanField(default=False)
@@ -94,6 +96,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
     permission_vif_add = models.BooleanField(default=False)
     permission_vif_edit = models.BooleanField(default=False)
     permission_vif_delete = models.BooleanField(default=False)
+    permission_person_match = models.BooleanField(default=False)
     permission_accounts_manage = models.BooleanField(default=False)
     permission_receive_investigation_alert = models.BooleanField(default=False)
     permission_receive_legal_alert = models.BooleanField(default=False)
@@ -106,6 +109,8 @@ class Account(AbstractBaseUser, PermissionsMixin):
     permission_budget_add = models.BooleanField(default=False)
     permission_budget_edit = models.BooleanField(default=False)
     permission_budget_delete = models.BooleanField(default=False)
+
+    permission_can_receive_mdf = models.BooleanField(default=False)
 
     date_joined = models.DateTimeField(default=timezone.now)
 

@@ -6,12 +6,14 @@ common.env
 .codeship.aes
 deploybot_args.env
 
-application/.idea
-application/media/*
-application/static/*
 application/google_cred.json
-application/etc/google_cred.json
-
+application/etc/*
+application/fixtures/sanitized-data.json
+application/media/CACHE/*
+application/media/interceptee_photos/*
+application/media/scanned_irf_forms/*
+application/media/scanned_vif_forms/*
+application/media/unassociated_photos/*
 
 \#*#
 .vscode/*

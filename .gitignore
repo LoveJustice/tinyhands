@@ -5,6 +5,7 @@
 *.sw[op]
 *~
 codeship.aes
+.DS_Store
 
 google_cred.json
 dreamsuite_tag

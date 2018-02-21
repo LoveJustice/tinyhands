@@ -8,6 +8,7 @@ class BorderStationBudgetCalculationListSerializer(serializers.ModelSerializer):
         model = BorderStationBudgetCalculation
         fields = [
             'id',
+            'mdf_uuid',
             'border_station',
             'month_year',
             'date_time_entered',
@@ -21,7 +22,6 @@ class BorderStationBudgetCalculationSerializer(serializers.ModelSerializer):
     def validate(self, data):
         borderstation = data["border_station"]
         monthyear = data["month_year"]
-        print self.instance
 
         if BorderStationBudgetCalculation.objects.filter(border_station=borderstation, month_year__month=monthyear.month, month_year__year=monthyear.year).count() > 0 and not self.instance:
             raise serializers.ValidationError('A budget has already been created for this month!')
@@ -29,6 +29,7 @@ class BorderStationBudgetCalculationSerializer(serializers.ModelSerializer):
 
 
     class Meta:
+        fields = '__all__'
         model = BorderStationBudgetCalculation
 
     default = True
@@ -36,9 +37,11 @@ class BorderStationBudgetCalculationSerializer(serializers.ModelSerializer):
 
 class OtherBudgetItemCostSerializer(serializers.ModelSerializer):
     class Meta:
+        fields = '__all__'
         model = OtherBudgetItemCost
 
 
 class StaffSalarySerializer(serializers.ModelSerializer):
     class Meta:
+        fields = '__all__'
         model = StaffSalary

@@ -1,4 +1,23 @@
 server {
+    listen 80;
+    server_name     ${OLD_SITE_HOSTNAME};
+    location / {
+        rewrite     ^ https://${SITE_HOSTNAME}$request_uri permanent;
+    }
+}
+
+server {
+    server_name     ${OLD_SITE_HOSTNAME};
+    listen 443 ssl;
+    ssl on;
+    ssl_certificate_key ${OLD_SSL_KEY_PATH};
+    ssl_certificate ${OLD_SSL_CERT_PATH};
+    location / {
+        rewrite     ^ https://${SITE_HOSTNAME}$request_uri permanent;
+    }
+}
+
+server {
     listen          80;
     server_name     ${SITE_HOSTNAME};
     location / {
@@ -44,7 +63,7 @@ server {
         alias /robots.txt;
     }
 
-	location ~ ^/(data-entry|api|login|logout|interceptee_fuzzy_matching)/ {
+	location ~ ^/(data-entry|api|login|logout|interceptee_fuzzy_matching|admin)/ {
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;

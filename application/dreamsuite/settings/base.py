@@ -1,26 +1,25 @@
-from dreamsuite.private import SECRET_KEY
 from django.contrib import messages
 from unipath import Path
 import os
 import logging.config
 
+SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
+
 SITE_DOMAIN = os.environ['SITE_DOMAIN']
 CLIENT_DOMAIN = os.environ['CLIENT_DOMAIN']
+FCM_KEY_PATH = os.environ['FCM_KEY_PATH']
 
 BASE_DIR = Path(__file__).ancestor(3)
 
 SERVER_EMAIL = 'austin@tinyhands.org'
 
+BORDER_STATION_EMAIL_SENDER = "sheital@tinyhands.org"
 ADMIN_EMAIL_SENDER = SERVER_EMAIL
 DEFAULT_FROM_EMAIL = SERVER_EMAIL
 
 EMAIL_HOST = 'smtpcorp.com'
-EMAIL_HOST_USER = 'tinyhands'
-EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
 EMAIL_PORT = 2525
 EMAIL_USE_TLS = True
-
-#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 ALERT_INTERVAL_IN_DAYS = 30
 
@@ -30,7 +29,6 @@ SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
 
 FIXTURE_DIRS = (
     os.path.join(BASE_DIR, 'fixtures'),
-    # os.path.join(BASE_DIR, 'dataentry/fixtures'),
 )
 
 AUTH_USER_MODEL = 'accounts.Account'
@@ -49,8 +47,8 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'bootstrapform',
     'imagekit',
-    'storages',
     'dataentry',
+    'firebase',
     'accounts',
     'events',
     'portal',
@@ -60,8 +58,8 @@ INSTALLED_APPS = [
     'rest_api',
     'rest_framework',
     'django_extensions',
-    'bootstrap_pagination',
     'rest_framework.authtoken',
+    'django_filters'
 ]
 
 
@@ -149,7 +147,7 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PAGINATION_CLASS': 'rest_api.pagination.DefaultPagination',
     'PAGE_SIZE': 25,
-    'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.DjangoFilterBackend',),
+    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
 }
 
@@ -186,7 +184,7 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': False,
         },
-        'dataentry.views': {
+        'dataentry': {
             'handlers': ['file'],
             'level': 'DEBUG',
             'propagate': False,

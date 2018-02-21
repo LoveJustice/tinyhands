@@ -1,6 +1,6 @@
 from collections import namedtuple
 
-from budget.models import BorderStationBudgetCalculation, StaffSalary
+from budget.models import BorderStationBudgetCalculation
 
 BudgetLineItem = namedtuple('budgetItem', ['name', 'value'])
 
@@ -29,9 +29,9 @@ class BudgetTable:
 
 class MoneyDistributionFormHelper:
 
-    def __init__(self, budget_id):
-        self.budget = BorderStationBudgetCalculation.objects.get(pk=budget_id)
-        self.staff_salaries = StaffSalary.objects.filter(budget_calc_sheet=budget_id)
+    def __init__(self, budget=None):
+        self.budget = budget
+        self.staff_salaries = budget.staffsalary_set.all()
 
     @property
     def sections(self):

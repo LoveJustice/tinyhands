@@ -1,14 +1,18 @@
 import datetime
+import json
 
 from rest_framework import serializers
 
-from dataentry.models import Address1, Address2, Country, SiteSettings, InterceptionRecord, VictimInterview, BorderStation, Person, Interceptee
+from dataentry.models import Address1, Address2, Country, SiteSettings, InterceptionRecord, VictimInterview, BorderStation, Person, Interceptee, InterceptionAlert, Permission, UserLocationPermission
+from static_border_stations.serializers import LocationSerializer
 
 from helpers import related_items_helper
 
 
+
 class Address1Serializer(serializers.ModelSerializer):
     class Meta:
+        fields = '__all__'
         model = Address1
 
 
@@ -18,21 +22,24 @@ class Address1RelatedItemsSerializer(Address1Serializer):
 
 class CountrySerializer(serializers.ModelSerializer):
     class Meta:
+        fields = '__all__'
         model = Country
 
 class SiteSettingsSerializer(serializers.ModelSerializer):
     class Meta:
+        fields = '__all__'
         model = SiteSettings
 
 
 class CanonicalNameSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Address2
         fields = ['id', 'name']
+        model = Address2
 
 
 class Address2Serializer(serializers.ModelSerializer):
     class Meta:
+        fields = '__all__'
         model = Address2
         depth = 1
 
@@ -71,11 +78,13 @@ class Address2RelatedItemsSerializer(Address2Serializer):
 
 class BorderStationSerializer(serializers.ModelSerializer):
     class Meta:
+        fields = '__all__'
         model = BorderStation
 
     number_of_interceptions = serializers.SerializerMethodField(read_only=True)
     number_of_staff = serializers.SerializerMethodField(read_only=True)
     ytd_interceptions = serializers.SerializerMethodField(read_only=True)
+    location_set = LocationSerializer(many=True, read_only=True)
 
     def get_number_of_interceptions(self, obj):
         return Interceptee.objects.filter(interception_record__irf_number__startswith=obj.station_code, kind='v').count()
@@ -120,6 +129,7 @@ class InterceptionRecordListSerializer(serializers.ModelSerializer):
 
 class InterceptionRecordSerializer(serializers.ModelSerializer):
     class Meta:
+        fields = '__all__'
         model = InterceptionRecord
 
     def validate(self, data):
@@ -254,6 +264,38 @@ class PersonSerializer(serializers.ModelSerializer):
             'phone_contact',
         ]
 
+class IDManagementSerializer(serializers.ModelSerializer):
+    aliases = serializers.CharField(source='get_aliases', read_only=True)
+    form_type = serializers.CharField(source='get_form_type', read_only=True)
+    form_number = serializers.CharField(source='get_form_number', read_only=True)
+    form_date = serializers.CharField(source='get_form_date', read_only=True)
+    form_photo = serializers.ImageField(source='get_form_photo', use_url=True, read_only=True)
+    form_kind = serializers.CharField(source='get_form_kind', read_only=True)
+    address1 = Address1Serializer(read_only=True)
+    address2 = Address2Serializer(read_only=True)
+
+    class Meta:
+        model = Person
+        fields = [
+            'id',
+            'full_name',
+            'gender',
+            'age',
+            'address1',
+            'address2',
+            'phone_contact',
+            'alias_group',
+            'aliases',
+            'form_type',
+            'form_number',
+            'form_date',
+            'form_photo',
+            'form_kind',
+        ]
+
+class PersonFormsSerializer(serializers.Serializer):
+    number = serializers.CharField()
+    date = serializers.CharField()
 
 class VictimInterviewSerializer(serializers.ModelSerializer):
     victim_guardian_address1 = Address1Serializer(read_only=True)
@@ -279,3 +321,43 @@ class IntercepteeSerializer(serializers.ModelSerializer):
             'person',
         ]
     person = PersonSerializer()
+    
+
+class InterceptionAlertSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = InterceptionAlert
+        fields = ['json']
+
+    def to_representation(self, obj):
+        alert_response = json.loads(obj.json)
+        alert_response['id'] = obj.id
+        alert_response['datetimeOfAlert'] = str(obj.created)
+        return alert_response
+
+class PermissionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Permission
+        fields = ['id', 'permission_group', 'action', 'min_level']
+        
+class UserLocationPermissionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserLocationPermission
+        fields = ['id', 'account', 'country', 'station', 'permission']
+        
+    def create_local(self):
+        perm = UserLocationPermission()
+        perm.account = self.validated_data.get('account')
+        perm.country = self.validated_data.get('country')  
+        perm.station = self.validated_data.get('station')           
+        perm.permission = self.validated_data.get('permission')
+        
+        return perm
+
+class UserLocationPermissionEntrySerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    level = serializers.CharField()
+
+class UserLocationPermissionListSerializer(serializers.Serializer):
+    account_id = serializers.IntegerField()
+    name = serializers.CharField()
+    permissions = UserLocationPermissionEntrySerializer(many=True)
