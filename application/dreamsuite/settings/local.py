@@ -15,6 +15,7 @@ MIDDLEWARE_CLASSES += [
 
 CORS_ORIGIN_ALLOW_ALL = True
 
+IMPORT_ACCOUNT_EMAIL = 'test_sup@example.com'
 SPREADSHEET_CONFIG = {
     'IRF': {
         'key_column' : 'IRF Number',

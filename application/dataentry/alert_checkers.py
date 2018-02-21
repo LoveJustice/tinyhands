@@ -303,15 +303,10 @@ class IRFAlertChecker(object):
                 intercept['age'] = interceptee.person.age                
                 alert_dict['intercept'] = intercept
                 
-                # initial save to get the id initialized
                 interception_alert = InterceptionAlert()
-                interception_alert.json = '{}'
-                interception_alert.save()
-                alert_dict['id'] = interception_alert.id
-                
                 interception_alert.json = json.dumps(alert_dict)
-                logger.debug('json=' + interception_alert.json)
                 interception_alert.save()
+                logger.debug('json=' + interception_alert.json)
     
     def get_red_flags(self):
         logger.debug('get_red_flags')
@@ -338,10 +333,10 @@ class IRFAlertChecker(object):
                 value = getattr(self.irf, red_flag.field)
                 if value != None and value == True:
                     logger.debug("field=" + red_flag.field + " text=" + red_flag.text + " sep=" + sep)
-                    if length_limit > 0 and len(result) + len(red_flag.text) + 1 > length_limit:
+                    if length_limit > 0 and len(result) + len(red_flag.text) + 2 > length_limit:
                         break
                     result += sep + red_flag.text
-                    sep = ',' 
+                    sep = ', ' 
                     item_count += 1
                     if item_limit > 0 and item_count >= item_limit:
                         break              

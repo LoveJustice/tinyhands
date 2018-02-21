@@ -34,16 +34,29 @@ class Person(models.Model):
     @property
     def full_name(self):
         return self.first_name + ' ' + self.last_name
+    
+    def get_country_id(self):
+        if self.border_station is None or self.border_station.operating_country is None:
+            return None
+        return self.border_station.operating_country.id
+    
+    def get_border_station_id(self):
+        if self.border_station is None:
+            return None
+        return self.border_station.id
 
+    def __str__(self):
+        return self.full_name
 
 class Staff(Person):
     class Meta:
         abstract = False
-
+        
 
 class CommitteeMember(Person):
     class Meta:
         abstract = False
+        
 
 
 class Location(models.Model):
@@ -51,3 +64,13 @@ class Location(models.Model):
     latitude = models.FloatField(null=True)
     longitude = models.FloatField(null=True)
     border_station = models.ForeignKey(BorderStation, null=True)
+    
+    def get_country_id(self):
+        if self.border_station is None or self.border_station.operating_country is None:
+            return None
+        return self.border_station.operating_country.id
+    
+    def get_border_station_id(self):
+        if self.border_station is None:
+            return None
+        return self.border_station.id

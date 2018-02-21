@@ -6,3 +6,4 @@ from .csv_exporter import *
 from .country import *
 from .id_management import *
 from .interception_alert import *
+from .permission import *

@@ -7,7 +7,7 @@ from django_filters import rest_framework as filters
 
 from dataentry.models import BorderStation
 from dataentry.serializers import BorderStationSerializer
-from rest_api.authentication import HasPermission, HasPostPermission, HasPutPermission
+from rest_api.authentication_expansion import HasPermission, HasPostPermission, HasPutPermission
 from static_border_stations.models import Staff, CommitteeMember, Location
 from static_border_stations.serializers import StaffSerializer, CommitteeMemberSerializer, LocationSerializer
 
@@ -16,9 +16,9 @@ class BorderStationViewSet(viewsets.ModelViewSet):
     queryset = BorderStation.objects.all()
     serializer_class = BorderStationSerializer
     permission_classes = (IsAuthenticated, HasPermission, HasPostPermission, HasPutPermission)
-    permissions_required = ['permission_border_stations_view']
-    post_permissions_required = ['permission_border_stations_add']
-    put_permissions_required = ['permission_border_stations_edit']
+    permissions_required = [{'permission_group':'STATIONS', 'action':'VIEW'},]
+    post_permissions_required = [{'permission_group':'STATIONS', 'action':'ADD'},]
+    put_permissions_required = [{'permission_group':'STATIONS', 'action':'EDIT'},]
     
     @list_route()
     def list_all(self, request):
@@ -50,9 +50,9 @@ class BorderStationRestAPI(viewsets.ModelViewSet):
     filter_backends = (filters.DjangoFilterBackend,)
     filter_fields = ('border_station',)
     permission_classes = (IsAuthenticated, HasPermission, HasPostPermission, HasPutPermission)
-    permissions_required = ['permission_border_stations_view']
-    post_permissions_required = ['permission_border_stations_add']
-    put_permissions_required = ['permission_border_stations_edit']
+    permissions_required = [{'permission_group':'STATIONS', 'action':'VIEW'},]
+    post_permissions_required = [{'permission_group':'STATIONS', 'action':'ADD'},]
+    put_permissions_required = [{'permission_group':'STATIONS', 'action':'EDIT'},]
 
 
 class LocationViewSet(BorderStationRestAPI):

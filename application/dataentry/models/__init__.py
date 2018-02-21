@@ -11,3 +11,5 @@ from .country import Country
 from .alias_group import AliasGroup
 from .red_flags import RedFlags
 from .interception_alert import InterceptionAlert
+from .permission import Permission
+from .user_location_permission import UserLocationPermission

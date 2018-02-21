@@ -17,7 +17,10 @@ class AccountsSerializer(serializers.ModelSerializer):
         return account
 
     def get_user_designation_name(self, obj):
-        return obj.user_designation.name
+        if obj.user_designation is None or obj.user_designation.name is None:
+            return ""
+        else:
+            return obj.user_designation.name
 
     class Meta:
         model = Account

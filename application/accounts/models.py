@@ -86,7 +86,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
 
-    user_designation = models.ForeignKey(DefaultPermissionsSet, related_name='accounts', on_delete=models.CASCADE)
+    user_designation = models.ForeignKey(DefaultPermissionsSet, related_name='accounts', on_delete=models.CASCADE, null=True)
 
     permission_irf_view = models.BooleanField(default=False)
     permission_irf_add = models.BooleanField(default=False)
