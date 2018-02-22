@@ -1,4 +1,4 @@
-FROM python:2.7-alpine
+FROM python:3.6-alpine
 MAINTAINER benaduggan
 ENV PYTHONUNBUFFERED 1
 
@@ -29,7 +29,7 @@ RUN set -ex \
     && pip install -U pip \
     && LIBRARY_PATH=/lib:/usr/lib /bin/sh -c "pip install --no-cache-dir -r /requirements.txt" \
     && runDeps="$( \
-            scanelf --needed --nobanner --recursive /usr/local/lib/python2.7/ \
+            scanelf --needed --nobanner --recursive /usr/local/lib/python3.6/ \
                     | awk '{ gsub(/,/, "\nso:", $2); print "so:" $2 }' \
                     | sort -u \
                     | xargs -r apk info --installed \
@@ -40,3 +40,4 @@ RUN set -ex \
 
 # Make the directory for our code and logging
 RUN mkdir -p /data /log
+WORKDIR /data

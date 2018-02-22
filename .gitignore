@@ -24,7 +24,7 @@ db.sqlite3.prod
 
 # Ignore files in STATIC_ROOT
 application/dreamsuite/static/*
-
+application/dreamsuite/tests/temp/*
 
 application/.config/
 application/google_cred.json

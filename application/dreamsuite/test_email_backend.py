@@ -32,7 +32,7 @@ class EmailBackend(BaseEmailBackend):
             try:
                 stream_created = self.open()
                 for message in email_messages:
-		    if SMTP_ERROR_EMAIL in message.recipients():
+                    if SMTP_ERROR_EMAIL in message.recipients():
                         raise smtplib.SMTPException()
                     self.write_message(message)
                     self.stream.flush()  # flush after each message

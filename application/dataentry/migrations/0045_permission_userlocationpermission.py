@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('dataentry', '0044_interceptionalert_redflags'),
+        ('dataentry', '0001_initial'),
     ]
 
     operations = [

@@ -1,6 +1,6 @@
 import logging
 import zipfile
-from StringIO import StringIO
+from io import StringIO
 from datetime import datetime
 from time import strptime, mktime
 

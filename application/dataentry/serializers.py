@@ -6,7 +6,7 @@ from rest_framework import serializers
 from dataentry.models import Address1, Address2, Country, SiteSettings, InterceptionRecord, VictimInterview, BorderStation, Person, Interceptee, InterceptionAlert, Permission, UserLocationPermission
 from static_border_stations.serializers import LocationSerializer
 
-from helpers import related_items_helper
+from .helpers import related_items_helper
 
 
 

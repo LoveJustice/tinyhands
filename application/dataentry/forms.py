@@ -46,7 +46,7 @@ class DreamSuitePaperForm(forms.ModelForm):
             ):
                 initial = self.initial.get(field_name)
                 if initial is not None:
-                    self.initial[field_name] = [unicode(initial)]
+                    self.initial[field_name] = [str(initial)]
 
     def clean(self):
         cleaned_data = super(DreamSuitePaperForm, self).clean()
@@ -107,7 +107,7 @@ class InterceptionRecordForm(DreamSuitePaperForm):
 
     def __init__(self, *args, **kwargs):
         super(InterceptionRecordForm, self).__init__(*args, **kwargs)
-        for field_name, field in self.fields.iteritems():
+        for field_name, field in self.fields.items():
             if type(field) == forms.fields.BooleanField:
                 try:
                     model_field = InterceptionRecord._meta.get_field(field_name)
@@ -140,7 +140,7 @@ class InterceptionRecordForm(DreamSuitePaperForm):
     def ensure_at_least_one_interceptee(self, cleaned_data):
         if len([
             (key, value) for key, value in self.data.items()
-                if key.startswith('interceptees') and key.endswith('name') and value != u''
+                if key.startswith('interceptees') and key.endswith('name') and value != ''
         ]) == 0:
             self._errors['interceptees'] = self.error_class(['At least one interceptee must be listed.'])
 
@@ -689,7 +689,7 @@ class VictimInterviewForm(DreamSuitePaperForm):
         # Determine the number of pbs and lbs. I can't come up with a better way than this
         self.num_pbs = 0
         self.num_lbs = 0
-        for field_name, value in self.data.iteritems():
+        for field_name, value in self.data.items():
             if self.data[field_name]:
                 if field_name.startswith('person_boxes-'):
                     try:
@@ -854,7 +854,7 @@ class VictimInterviewPersonBoxForm(DreamSuitePaperForm):
         super(VictimInterviewPersonBoxForm, self).__init__(*args, **kwargs)
         initial = self.initial.get('gender')
         if initial is not None:
-            self.initial['gender'] = [unicode(initial)]
+            self.initial['gender'] = [str(initial)]
         self.fields['address1'] = Address1Field(label="Address 1")
         self.fields['address2'] = Address2Field(label="Address 2")
         self.fields['name'] = CharField(required=False)

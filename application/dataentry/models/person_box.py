@@ -1,7 +1,7 @@
 from django.db import models
 
-from victim_interview import VictimInterview
-from person import Person
+from .victim_interview import VictimInterview
+from .person import Person
 
 
 class VictimInterviewPersonBox(models.Model):

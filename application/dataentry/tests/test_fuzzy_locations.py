@@ -12,24 +12,24 @@ class FuzzyLocationMatchingTest(TestCase):
     def test_address1_matching_works(self):
         original = Address1.objects.all()[0]
         matches = match_location(address1_name=original.name)
-        self.assertEquals(original, matches[0])
+        self.assertEqual(original, matches[0])
 
     def test_address1_match_found_if_one_character_off(self):
         original = Address1.objects.all()[0]
         close_name = original.name + "s"
         matches = match_location(address1_name=close_name)
-        self.assertEquals(original, matches[0])
+        self.assertEqual(original, matches[0])
 
     def test_address2_matching_works(self):
         original = Address2.objects.all()[0]
         matches = match_location(address2_name=original.name)
-        self.assertEquals(original, matches[0])
+        self.assertEqual(original, matches[0])
 
     def test_address2_match_found_if_one_character_off(self):
         original = Address2.objects.all()[0]
         close_name = original.name + "s"
         matches = match_location(address2_name=close_name)
-        self.assertEquals(original, matches[0])
+        self.assertEqual(original, matches[0])
 
     def test_filter_by_address1(self):
         Address2.objects.all().delete()
@@ -40,7 +40,7 @@ class FuzzyLocationMatchingTest(TestCase):
         matches = match_location(original.address1.name, original.name)
 
         # Address2Factory associates a new Address1 with each Address2
-        self.assertEquals(len(matches), 1)
+        self.assertEqual(len(matches), 1)
 
     def test_filter_by_address1_multiple_address2s(self):
         Address2.objects.all().delete()
@@ -53,4 +53,4 @@ class FuzzyLocationMatchingTest(TestCase):
 
         # Now there should only be 2 valid Address2s for this address1
         matches = match_location(original.address1.name, original.name)
-        self.assertEquals(len(matches), 2)
+        self.assertEqual(len(matches), 2)

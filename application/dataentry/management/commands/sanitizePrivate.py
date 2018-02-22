@@ -88,7 +88,7 @@ class Command(BaseCommand):
                         setattr(instance, method_name, self.select_photo())
                         modified = True
                 except AttributeError as e:
-                    print e
+                    print(e)
                 except Exception as e:
                     self.stderr.write("WHAT?? {} - {}".format(type(e), e))
                     exit(1)
@@ -101,7 +101,7 @@ class Command(BaseCommand):
                         setattr(instance, method_name, self.generate_name())
                         modified = True
                 except AttributeError as e:
-                    print e
+                    print(e)
                 except Exception as e:
                     self.stderr.write("WHAT?? {} - {}".format(type(e), e))
                     exit(1)
@@ -114,7 +114,7 @@ class Command(BaseCommand):
                         setattr(instance, method_name, self.generate_phone(value))
                         modified = True
                 except AttributeError as e:
-                    print e
+                    print(e)
                 except Exception as e:
                     self.stderr.write("WHAT?? {} - {}".format(type(e), e))
                     exit(1)
@@ -127,7 +127,7 @@ class Command(BaseCommand):
                         setattr(instance, method_name, self.select_file(file_prefix))
                         modified = True
                 except AttributeError as e:
-                    print e
+                    print(e)
                 except Exception as e:
                     self.stderr.write("WHAT?? {} - {}".format(type(e), e))
                     exit(1)
@@ -162,7 +162,7 @@ class Command(BaseCommand):
 
     def sanitize_email(self):
         for instance in Account.objects.all():
-            instance.email = self.get_next_email().next()
+            instance.email = next(self.get_next_email())
             instance.permission_receive_email = False
             instance.save()
 
