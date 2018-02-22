@@ -1,9 +1,9 @@
 from django.db import models
 from rest_framework import status
 from accounts.models import Account
-from border_station import BorderStation
-from country import Country
-from permission import Permission
+from .border_station import BorderStation
+from .country import Country
+from .permission import Permission
 
 import logging
 
