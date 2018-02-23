@@ -32,7 +32,7 @@ class UserLocationPermissionViewSet(viewsets.ModelViewSet):
     
     def update_account_permission (self, pk):
         account_perms = Permission.objects.filter(account_permission_name__isnull=False)
-        user_perms = UserLocationPermission.objects.filter(account=pk).filter(country__isnull=True).filter(station__isnull=True)
+        user_perms = UserLocationPermission.objects.filter(account=pk)
         the_account = Account.objects.get(id=pk)
         for account_perm in account_perms:
             value = False;
@@ -145,6 +145,8 @@ class UserLocationPermissionViewSet(viewsets.ModelViewSet):
                 else:
                     results = stations.filter(id = perm.station.id)
         
+        if results != None:
+            results = results.order_by('station_name')
         serializer = BorderStationSerializer(results, many=True, context={'request': request})
         return Response(serializer.data)
     

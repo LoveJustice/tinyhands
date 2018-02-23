@@ -1,9 +1,9 @@
 from django.db import models
 from rest_framework import status
 from accounts.models import Account
-from border_station import BorderStation
-from country import Country
-from permission import Permission
+from .border_station import BorderStation
+from .country import Country
+from .permission import Permission
 
 import logging
 
@@ -29,6 +29,11 @@ class UserLocationPermission(models.Model):
             return False
             
         return True;
+    
+    def includes_location(self, country_id, station_id):
+        return ((self.country is None and self.station is None) or
+                (self.station is None and self.country.id == country_id) or
+                (self.station is not None and self.station.id == station_id))
     
     @staticmethod
     def test_match(obj1, obj2):
@@ -176,6 +181,19 @@ class UserLocationPermission(models.Model):
             perm.save();
         
         return status.HTTP_200_OK
+            
+    @staticmethod
+    def has_session_permission(request, group, action, country_id, station_id):
+        has_permission = False
+        
+        permission_list = UserLocationPermission.objects.filter(account__id = request.user.id).filter(permission__permission_group = group).filter(permission__action = action)
+        for perm in permission_list:
+            if perm.includes_location(country_id, station_id):
+                has_permission = True
+                break
+
+
+        return has_permission
     
     def __str__(self):
         return str(self.account) + "," + str(self.country) + "," + str(self.station) + "," + str(self.permission)

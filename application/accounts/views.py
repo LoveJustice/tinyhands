@@ -56,10 +56,10 @@ class AccountViewSet(ModelViewSet):
 def password_reset(request):
     try:
         # Check if the email belongs to one of the accounts in the database
-        if not request.data.has_key("email"):
+        email = request.data.get('email','')
+        if email == '':
             return Response({"message": "An email was not included in the request!"}, HTTP_400_BAD_REQUEST)
-        email = request.data.get('email')
-
+        
         account = Account.objects.filter(email=email).first()
         if not account:
             return Response({"message": "An account with that email was not found!"}, HTTP_404_NOT_FOUND)

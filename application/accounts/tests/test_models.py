@@ -9,9 +9,9 @@ class TestDefaultPermissionSet(TestCase):
         self.su_permission_set = SuperUserDesignation.create()
 
     def test_is_used_by_account(self):
-        self.assertEquals(False, self.su_permission_set.is_used_by_accounts())
+        self.assertEqual(False, self.su_permission_set.is_used_by_accounts())
         SuperUserFactory.create()
-        self.assertEquals(True, self.su_permission_set.is_used_by_accounts())
+        self.assertEqual(True, self.su_permission_set.is_used_by_accounts())
 
     def test_email_accounts(self):
         pass
@@ -38,10 +38,10 @@ class TestAccount(TestCase):
         self.user = SuperUserFactory.create(email="bob@test.org", first_name="Bob", last_name="Test")
 
     def test_get_username(self):
-        self.assertEquals("bob@test.org", self.user.get_username())
+        self.assertEqual("bob@test.org", self.user.get_username())
 
     def test_get_short_name(self):
-        self.assertEquals("Bob", self.user.get_short_name())
+        self.assertEqual("Bob", self.user.get_short_name())
 
     def test_get_full_name(self):
-        self.assertEquals("Bob Test", self.user.get_full_name())
+        self.assertEqual("Bob Test", self.user.get_full_name())

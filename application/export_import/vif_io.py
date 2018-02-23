@@ -5,24 +5,24 @@ from dataentry.models import VictimInterview
 from dataentry.models import VictimInterviewLocationBox
 from dataentry.models import VictimInterviewPersonBox
 
-from field_types import Address1CsvField
-from field_types import Address2CsvField
-from field_types import BooleanCsvField
-from field_types import BorderStationExportOnlyCsv
-from field_types import BrokerPromisesCsv
-from field_types import CopyCsvField
-from field_types import DateCsvField
-from field_types import DateTimeCsvField
-from field_types import FirDofeCsv
-from field_types import FormatCsvFields
-from field_types import FunctionValueExportOnlyCsv
-from field_types import GroupBooleanCsv
-from field_types import LegalActionCsv
-from field_types import MapFieldCsv
-from field_types import MapValueCsvField
-from field_types import VictimHowExpensePaidCsv
-from field_types import VictimWhereGoingCsv
-from google_sheet_names import spreadsheet_header_from_export_header
+from .field_types import Address1CsvField
+from .field_types import Address2CsvField
+from .field_types import BooleanCsvField
+from .field_types import BorderStationExportOnlyCsv
+from .field_types import BrokerPromisesCsv
+from .field_types import CopyCsvField
+from .field_types import DateCsvField
+from .field_types import DateTimeCsvField
+from .field_types import FirDofeCsv
+from .field_types import FormatCsvFields
+from .field_types import FunctionValueExportOnlyCsv
+from .field_types import GroupBooleanCsv
+from .field_types import LegalActionCsv
+from .field_types import MapFieldCsv
+from .field_types import MapValueCsvField
+from .field_types import VictimHowExpensePaidCsv
+from .field_types import VictimWhereGoingCsv
+from .google_sheet_names import spreadsheet_header_from_export_header
 
 vif_data = [
     CopyCsvField("vif_number", "VIF Number", False),

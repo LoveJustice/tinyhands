@@ -1,6 +1,6 @@
 from django.db import models
-from addresses import Address1, Address2
-from victim_interview import VictimInterview
+from .addresses import Address1, Address2
+from .victim_interview import VictimInterview
 
 
 class VictimInterviewLocationBox(models.Model):

@@ -1,7 +1,7 @@
 from django.db import models
 
-from addresses import Address1, Address2
-from alias_group import AliasGroup
+from .addresses import Address1, Address2
+from .alias_group import AliasGroup
 
 class PersonFormData:
     photo = ''
@@ -81,9 +81,9 @@ class Person(models.Model):
             return ''
 
     def get_form_data(self):
-        import interceptee
-        import victim_interview
-        import  person_box
+        from . import interceptee
+        from . import victim_interview
+        from . import person_box
 
         self.forms = []
         self.photo = ''

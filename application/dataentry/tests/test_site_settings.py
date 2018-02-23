@@ -24,9 +24,9 @@ class SiteSettingsTest(TestCase):
     def test_get_setting_by_name(self):
         setting = self.site_settings.get_setting_by_name("address1_cutoff")
         self.assertIsNotNone(setting)
-        self.assertEquals(setting['name'], "address1_cutoff")
-        self.assertEquals(setting['value'], 70)
-        self.assertEquals(setting['description'], "asdfasdf")
+        self.assertEqual(setting['name'], "address1_cutoff")
+        self.assertEqual(setting['value'], 70)
+        self.assertEqual(setting['description'], "asdfasdf")
 
     def test_get_setting_by_name__invalid_setting_name(self):
         self.assertRaises(ValueError, self.site_settings.get_setting_by_name, 'address4_cutoff')
@@ -34,7 +34,7 @@ class SiteSettingsTest(TestCase):
     def test_date_updated_gets_autoupdated(self):
         tmp = self.site_settings.date_time_last_updated
         self.site_settings.save()
-        self.assertNotEquals(tmp, self.site_settings.date_time_last_updated)
+        self.assertNotEqual(tmp, self.site_settings.date_time_last_updated)
 
     def test_site_settings_structure(self):
         self.assertIsNotNone(self.site_settings.data)
