@@ -5,3 +5,6 @@ class Country(models.Model):
     latitude = models.FloatField()
     longitude = models.FloatField()
     zoom_level = models.IntegerField(null=True, blank=True)
+
+    def __str__(self):
+        return self.name

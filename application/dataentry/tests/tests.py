@@ -25,7 +25,7 @@ class TestModels(WebTest):
     def fuzzySetUp(self, cut_off_number, match_name):
         cut_off_number = float(cut_off_number)
 
-        with open('dataentry/tests/non_victims.csv', 'rb') as csvfile:
+        with open('dataentry/tests/non_victims.csv', 'r') as csvfile:
             reader = csv.reader(csvfile)
             names = [row[2] for row in reader]
             entered_name = match_name
@@ -113,7 +113,7 @@ class ExportTesting(WebTest):
         today = date.today()
         result = response['Content-Disposition']
         expected_result = 'attachment; filename=irf-all-data-%d-%d-%d.csv' % (today.year, today.month, today.day)
-        self.assertEquals(result, expected_result)
+        self.assertEqual(result, expected_result)
 
     def test_to_see_if_user_can_export_vif(self):
         response = self.app.get(reverse('VictimInterviewCsvExport'), user=self.user)
@@ -124,13 +124,13 @@ class ExportTesting(WebTest):
         today = date.today()
         result = response['Content-Disposition']
         expected_result = 'attachment; filename=vif-all-data-%d-%d-%d.csv' % (today.year, today.month, today.day)
-        self.assertEquals(result, expected_result)
+        self.assertEqual(result, expected_result)
 
     def test_that_no_extra_commas_in_vif_export(self):
         response = self.app.get(reverse('VictimInterviewCsvExport'), user=self.user)
         result = response.normal_body
         csv_file = open("dataentry/tests/temp/vif.csv", "w")
-        csv_file.write(result)
+        csv_file.write(result.decode())
         csv_file.close()
 
         csv_file = open("dataentry/tests/temp/vif.csv", "r")
@@ -144,11 +144,8 @@ class ExportTesting(WebTest):
     def test_to_make_sure_no_offset_in_irf_export_file(self):
         response = self.app.get(reverse('InterceptionRecordCsvExport'), user=self.user)
         result = response.normal_body
-        temp = list(result)  # this is a temp fix to add an extra comma that is missing
-        temp[4356] = ','
-        result = "".join(temp)
         csv_file = open("dataentry/tests/temp/irf.csv", "w")
-        csv_file.write(result)
+        csv_file.write(result.decode())
         csv_file.close()
 
         csv_file = open("dataentry/tests/temp/irf.csv", "r")

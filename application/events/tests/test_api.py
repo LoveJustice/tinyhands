@@ -272,9 +272,9 @@ class CalendarFeedAPITests(RestApiTestCase):
 
         response = self.client.get(url, {'start': start_date, 'end': end_date})
 
-        self.assertEquals(len(response.data), 1)
-        self.assertEquals(response.data[0]['title'], event.title)
-        self.assertEquals(response.data[0]['location'], event.location)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]['title'], event.title)
+        self.assertEqual(response.data[0]['location'], event.location)
 
     def test_when_event_is_repeated_should_return_multiple_events(self):
         url = reverse('EventCalendarFeed')
@@ -293,11 +293,11 @@ class CalendarFeedAPITests(RestApiTestCase):
 
         response = self.client.get(url, {'start': start_date, 'end': end_date})
 
-        self.assertEquals(len(response.data), 2)
-        self.assertEquals(response.data[0]['title'], repeated_event.title)
-        self.assertEquals(response.data[0]['location'], repeated_event.location)
-        self.assertEquals(response.data[1]['title'], repeated_event.title)
-        self.assertEquals(response.data[1]['location'], repeated_event.location)
+        self.assertEqual(len(response.data), 2)
+        self.assertEqual(response.data[0]['title'], repeated_event.title)
+        self.assertEqual(response.data[0]['location'], repeated_event.location)
+        self.assertEqual(response.data[1]['title'], repeated_event.title)
+        self.assertEqual(response.data[1]['location'], repeated_event.location)
 
 
 class DashboardFeedAPITests(RestApiTestCase):
@@ -322,13 +322,13 @@ class DashboardFeedAPITests(RestApiTestCase):
 
         for idx, day in enumerate(response.data):
             if idx == 0:
-                self.assertEquals(day[1]['title'], event.title)
-                self.assertEquals(day[1]['location'], event.location)
+                self.assertEqual(day[1]['title'], event.title)
+                self.assertEqual(day[1]['location'], event.location)
             elif idx == 1:
-                self.assertEquals(day[1]['title'], event2.title)
-                self.assertEquals(day[1]['location'], event2.location)
+                self.assertEqual(day[1]['title'], event2.title)
+                self.assertEqual(day[1]['location'], event2.location)
             else:
-                self.assertEquals(len(day), 1)
+                self.assertEqual(len(day), 1)
 
     def test_when_event_is_repeated_should_return_multiple_events_that_occur_in_week(self):
         url = reverse('EventDashboardFeed')
@@ -348,10 +348,10 @@ class DashboardFeedAPITests(RestApiTestCase):
 
         for idx, day in enumerate(response.data):
             if idx == 0:
-                self.assertEquals(day[1]['title'], repeated_event.title)
-                self.assertEquals(day[1]['location'], repeated_event.location)
+                self.assertEqual(day[1]['title'], repeated_event.title)
+                self.assertEqual(day[1]['location'], repeated_event.location)
             elif idx == 1:
-                self.assertEquals(day[1]['title'], repeated_event.title)
-                self.assertEquals(day[1]['location'], repeated_event.location)
+                self.assertEqual(day[1]['title'], repeated_event.title)
+                self.assertEqual(day[1]['location'], repeated_event.location)
             else:
-                self.assertEquals(len(day), 1)
+                self.assertEqual(len(day), 1)

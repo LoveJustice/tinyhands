@@ -3,8 +3,8 @@ from django.db import models
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
 
-from person import Person
-from interception_record import InterceptionRecord
+from .person import Person
+from .interception_record import InterceptionRecord
 
 
 class Interceptee(models.Model):

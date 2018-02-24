@@ -1,5 +1,5 @@
-from google_sheet import GoogleSheet
-from google_sheet_names import spreadsheet_header_from_export_header
+from .google_sheet import GoogleSheet
+from .google_sheet_names import spreadsheet_header_from_export_header
 
 from django.conf import settings
 

@@ -5,9 +5,16 @@ from factory.django import DjangoModelFactory
 from factory.fuzzy import FuzzyText, FuzzyFloat
 
 from accounts.tests.factories import UserFactory, ViewUserDesignation
-from dataentry.models import BorderStation
+from dataentry.models import BorderStation, Country, Permission, UserLocationPermission
 from static_border_stations.models import Staff, CommitteeMember, Location
 
+class CountryFactory(DjangoModelFactory):
+    class Meta:
+        model = Country
+        
+    name = 'Test Country'
+    latitude = 1
+    longitude = 1
 
 class BorderStationFactory(DjangoModelFactory):
     class Meta:
@@ -19,6 +26,7 @@ class BorderStationFactory(DjangoModelFactory):
     latitude = 1
     longitude = 1
     open = True
+    operating_country = factory.SubFactory(CountryFactory)
 
 
 class StaffFactory(DjangoModelFactory):
@@ -52,30 +60,24 @@ class CommitteeMemberFactory(DjangoModelFactory):
     receives_money_distribution_form = True
     border_station = factory.SubFactory(BorderStationFactory)
 
-
-class UnauthorizedBorderStationUser(UserFactory):
-    permission_border_stations_view = False
-    user_designation = factory.SubFactory(ViewUserDesignation)
-
-
-class ViewBorderStationUser(UserFactory):
-    permission_border_stations_view = True
-    user_designation = factory.SubFactory(ViewUserDesignation)
-
-
-class EditBorderStationUser(UserFactory):
-    permission_border_stations_edit = True
-    permission_border_stations_view = True
-    user_designation = factory.SubFactory(ViewUserDesignation)
-
-
-class AddBorderStationUser(UserFactory):
-    permission_border_stations_add = True
-    permission_border_stations_view = True
-    user_designation = factory.SubFactory(ViewUserDesignation)
+class GenericUser(UserFactory):
+    pass
+    
+class GenericUserWithPermissions():
+    @staticmethod
+    def create(permission_configuration):
+        user = GenericUser.create()
+        for config in permission_configuration:
+            perm = Permission.objects.get(permission_group=config['group'], action=config['action'])
+            
+            ulp = UserLocationPermission()
+            ulp.account = user
+            ulp.permission = perm
+            ulp.country = config['country']
+            ulp.station = config['station']
+            ulp.save()
+        
+        return user
+            
 
 
-class DeleteBorderStationUser(UserFactory):
-    permission_border_stations_delete = True
-    permission_border_stations_view = True
-    user_designation = factory.SubFactory(ViewUserDesignation)

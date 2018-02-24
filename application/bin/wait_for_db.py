@@ -10,6 +10,7 @@ while True:
     try: # to connect to the database
         s.connect((host, port))
         s.close()
+        print("Successfully connected to db!")
         break
     except socket.error as ex:
         print ("waiting for db...")

@@ -251,6 +251,16 @@ class BorderStationBudgetCalculation(models.Model):
     def mdf_file_name(self):
         return '{}-{}-{}-MDF.pdf'.format(self.border_station.station_code, self.month_year.month, self.month_year.year)
 
+    def get_country_id(self):
+        if self.border_station is None or self.border_station.operating_country is None:
+            return None
+        return self.border_station.operating_country.id  
+    
+    def get_border_station_id(self):
+        if self.border_station is None:
+            return None
+        return self.border_station.id
+    
     def __str__(self):
         return "{} - {}".format(self.border_station.station_name, self.month_year)
 
@@ -273,6 +283,16 @@ class OtherBudgetItemCost(models.Model):
     cost = models.IntegerField(default=0, blank=False)
     form_section = models.IntegerField(BUDGET_FORM_SECTION_CHOICES, blank=True, null=True)
     budget_item_parent = models.ForeignKey(BorderStationBudgetCalculation, blank=True, null=True, on_delete=models.CASCADE)
+    
+    def get_country_id(self):
+        if self.budget_item_parent is None or self.budget_item_parent.border_station is None or self.budget_item_parent.border_station.operating_country is None:
+            return None
+        return self.budget_item_parent.border_station.operating_country.id  
+    
+    def get_border_station_id(self):
+        if self.budget_item_parent is None or self.budget_item_parent.border_station is None:
+            return None
+        return self.budget_item_parent.border_station.id
 
 
 class StaffSalary(models.Model):
@@ -280,3 +300,13 @@ class StaffSalary(models.Model):
 
     budget_calc_sheet = models.ForeignKey(BorderStationBudgetCalculation, blank=True, null=True, on_delete=models.CASCADE)
     staff_person = models.ForeignKey(Staff, blank=True, null=True, on_delete=models.CASCADE)
+    
+    def get_country_id(self):
+        if self.budget_calc_sheet is None or self.budget_calc_sheet.border_station is None or self.budget_calc_sheet.border_station.operating_country is None:
+            return None
+        return self.budget_calc_sheet.border_station.operating_country.id  
+    
+    def get_border_station_id(self):
+        if self.budget_calc_sheet is None or self.budget_calc_sheet.border_station is None:
+            return None
+        return self.budget_calc_sheet.border_station.id

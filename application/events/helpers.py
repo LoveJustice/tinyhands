@@ -25,8 +25,8 @@ def get_repeated_events(events, start_date_range, end_date_range):
                             description=event.description, is_repeat=event.is_repeat, repetition=event.repetition,
                             ends=event.ends, id=event.id)
                 items.append(rep_event)
-            start_date = start_date_generator.next()
-            end_date = end_date_generator.next()
+            start_date = next(start_date_generator)
+            end_date = next(end_date_generator)
     return items
 
 

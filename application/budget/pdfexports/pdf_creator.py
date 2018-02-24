@@ -1,4 +1,4 @@
-import StringIO
+from io import StringIO, BytesIO
 from z3c.rml import document
 from django.template.loader import render_to_string
 from lxml import etree
@@ -10,7 +10,7 @@ class BasePDFCreator(object):
         self.data = data
 
     def create(self):
-        buffer = StringIO.StringIO()
+        buffer = StringIO()
         rml = render_to_string(self.template_name, self.data)
 
         buffer.write(rml)
@@ -18,7 +18,7 @@ class BasePDFCreator(object):
         root = etree.parse(buffer).getroot()
         doc = document.Document(root)
 
-        new_buffer = StringIO.StringIO()
+        new_buffer = BytesIO()
         doc.process(new_buffer)
         
         return new_buffer

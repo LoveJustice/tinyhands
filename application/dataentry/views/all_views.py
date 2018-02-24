@@ -60,7 +60,7 @@ class SearchFormsMixin(object):
     Number = None
 
     def __init__(self, *args, **kw):
-        for key, value in kw.iteritems():
+        for key, value in kw.items():
             if value == "name":
                 self.Name = key
             elif value == "number":
@@ -105,7 +105,7 @@ class IntercepteeInline(InlineFormSet):
 
 class IRFImageAssociationMixin(object):
     def forms_invalid(self, form, inlines):
-        for name, file in self.request.FILES.iteritems():
+        for name, file in self.request.FILES.items():
             match = re.match(r"interceptees-(\d+)-photo", name)
             irf_num = self.request.POST.get("irf_number")
 

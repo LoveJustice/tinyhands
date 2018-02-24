@@ -9,12 +9,14 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import filters as fs
 from django_filters import rest_framework as filters
+from django.db.models import Q
 
 from budget.models import BorderStationBudgetCalculation, OtherBudgetItemCost, StaffSalary
 from budget.serializers import BorderStationBudgetCalculationSerializer, OtherBudgetItemCostSerializer, StaffSalarySerializer, BorderStationBudgetCalculationListSerializer
 from dataentry.models import Interceptee
 from dataentry.models import InterceptionRecord
-from rest_api.authentication import HasPermission, HasDeletePermission, HasPostPermission, HasPutPermission
+from dataentry.models import UserLocationPermission
+from rest_api.authentication_expansion import HasPermission, HasDeletePermission, HasPostPermission, HasPutPermission
 from static_border_stations.models import BorderStation
 
 
@@ -22,15 +24,37 @@ class BudgetViewSet(viewsets.ModelViewSet):
     queryset = BorderStationBudgetCalculation.objects.all()
     serializer_class = BorderStationBudgetCalculationSerializer
     permission_classes = [IsAuthenticated, HasPermission, HasDeletePermission, HasPostPermission, HasPutPermission]
-    permissions_required = ['permission_budget_view']
-    delete_permissions_required = ['permission_budget_delete']
-    post_permissions_required = ['permission_budget_add']
-    put_permissions_required = ['permission_budget_edit']
+    permissions_required = [{'permission_group':'BUDGETS', 'action':'VIEW'},]
+    delete_permissions_required = [{'permission_group':'BUDGETS', 'action':'DELETE'},]
+    post_permissions_required = [{'permission_group':'BUDGETS', 'action':'ADD'},]
+    put_permissions_required = [{'permission_group':'BUDGETS', 'action':'EDIT'},]
     filter_backends = (fs.SearchFilter, fs.OrderingFilter,)
     search_fields = ['border_station__station_name', 'border_station__station_code']
     ordering_fields = ['border_station__station_name', 'border_station__station_code', 'month_year', 'date_time_entered', 'date_time_last_updated']
 
+    def or_qfilter(self, qfilter, element):
+        if qfilter == None:
+            qfilter = element
+        else:
+            qfilter = qfilter | element
+        return qfilter
+    
     def list(self, request, *args, **kwargs):
+        ulps = UserLocationPermission.objects.filter(account__id = request.user.id, permission__permission_group = 'BUDGETS', permission__action='VIEW')
+        qfilter = None
+        for ulp in ulps:
+            if ulp.country is None:
+                if ulp.station is None:
+                    qfilter = None
+                    break;
+                else:
+                    qfilter = self.or_qfilter(qfilter, Q(border_station__id = ulp.station.id))
+            else:
+                qfilter = self.or_qfilter(qfilter, Q(border_station__operating_country__id = ulp.country.id))
+        
+        if qfilter is not None:
+            self.queryset = self.queryset.filter(qfilter)               
+            
         temp = self.serializer_class
         self.serializer_class = BorderStationBudgetCalculationListSerializer  # we want to use a custom serializer just for the list view
         super_list_response = super(BudgetViewSet, self).list(request, *args, **kwargs)  # call the supers list view with custom serializer
@@ -146,10 +170,10 @@ class OtherItemsViewSet(viewsets.ModelViewSet):
     queryset = OtherBudgetItemCost.objects.all()
     serializer_class = OtherBudgetItemCostSerializer
     permission_classes = [IsAuthenticated, HasPermission, HasDeletePermission, HasPostPermission, HasPutPermission]
-    permissions_required = ['permission_budget_view']
-    delete_permissions_required = ['permission_budget_delete']
-    post_permissions_required = ['permission_budget_add']
-    put_permissions_required = ['permission_budget_edit']
+    permissions_required = [{'permission_group':'BUDGETS', 'action':'VIEW'},]
+    delete_permissions_required = [{'permission_group':'BUDGETS', 'action':'DELETE'},]
+    post_permissions_required = [{'permission_group':'BUDGETS', 'action':'ADD'},]
+    put_permissions_required = [{'permission_group':'BUDGETS', 'action':'EDIT'},]
     filter_backends = (filters.DjangoFilterBackend,)
     filter_fields = ('form_section',)
 
@@ -173,7 +197,7 @@ class StaffSalaryViewSet(viewsets.ModelViewSet):
     queryset = StaffSalary.objects.all()
     serializer_class = StaffSalarySerializer
     permission_classes = [IsAuthenticated, HasPermission]
-    permissions_required = ['permission_budget_view']
+    permissions_required = [{'permission_group':'BUDGETS', 'action':'VIEW'},]
 
     def budget_calc_retrieve(self, request, *args, **kwargs):
         """

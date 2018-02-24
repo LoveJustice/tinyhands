@@ -1,8 +1,8 @@
 import logging
 
 from export_import.google_sheet_basic import GoogleSheetBasic
-from google_sheet import GoogleSheet
-from address2_io import get_address2_export_rows
+from .google_sheet import GoogleSheet
+from .address2_io import get_address2_export_rows
 
 from dataentry.models.interception_record import InterceptionRecord
 from dataentry.models.victim_interview import VictimInterview

@@ -25,33 +25,33 @@ class TallyApiTests(WebTest):
     def test(self):
         response = self.app.get(reverse('tally_day_api'), user=self.superuser)
         json = response.json
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
         # Check Year to date interceptions - we set up 3 interceptees, so it should be 3
-        self.assertEquals(json['ytd'], 3)
+        self.assertEqual(json['ytd'], 3)
 
         # make sure we are getting the past 7 days
-        self.assertEquals(len(json), 3)
-        self.assertEquals(json['id'], self.superuser.id)
+        self.assertEqual(len(json), 3)
+        self.assertEqual(json['id'], self.superuser.id)
 
         # Test that today entry is right
         today = json['days'][0]
         today_date = timezone.datetime.strptime(today['date'], '%Y-%m-%dT%H:%M:%S.%f')
-        self.assertEquals(today_date.year, self.day1.year)
-        self.assertEquals(today_date.month, self.day1.month)
-        self.assertEquals(today_date.day, self.day1.day)
+        self.assertEqual(today_date.year, self.day1.year)
+        self.assertEqual(today_date.month, self.day1.month)
+        self.assertEqual(today_date.day, self.day1.day)
 
         today_interceptions = today['interceptions']
         station_code = self.irf_one.irf_number[:3]
-        self.assertEquals(today_interceptions[station_code], 2)
+        self.assertEqual(today_interceptions[station_code], 2)
         
         # Test that yesterday entry is right
         yesterday = json['days'][1]
         yesterday_date = timezone.datetime.strptime(yesterday['date'], '%Y-%m-%dT%H:%M:%S.%f')
-        self.assertEquals(yesterday_date.year, self.day2.year)
-        self.assertEquals(yesterday_date.month, self.day2.month)
-        self.assertEquals(yesterday_date.day, self.day2.day)
+        self.assertEqual(yesterday_date.year, self.day2.year)
+        self.assertEqual(yesterday_date.month, self.day2.month)
+        self.assertEqual(yesterday_date.day, self.day2.day)
     
         yesterday_interceptions = yesterday['interceptions']
         station_code = self.irf_two.irf_number[:3]
-        self.assertEquals(yesterday_interceptions[station_code], 1)
+        self.assertEqual(yesterday_interceptions[station_code], 1)

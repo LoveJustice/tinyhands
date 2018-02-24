@@ -28,7 +28,7 @@ class TallyDaysView(APIView):
                 station_code = record.irf_number[:3]
                 victims = record.interceptees.filter(kind='v')
                 count = len(victims)
-                if station_code not in interceptions.keys():
+                if station_code not in list(interceptions.keys()):
                     interceptions[station_code] = 0
                 interceptions[station_code] += count
             foo.append(day_records)
