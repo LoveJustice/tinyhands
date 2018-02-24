@@ -10,16 +10,17 @@ class Form(models.Model):
     end_date = models.DateTimeField(null=True)
 
 class FormType(models.Model):
-    name = models.CharField(max_length=100) # IRF, VIF, CEF, etc.
+    name = models.CharField() # IRF, VIF, CEF, etc.
 
 class Category(models.Model):
     form = models.ForeignKey(Form)
     category_type = models.ForeignKey(CategoryType)
-    name = models.CharField(max_length=100)
+    name = models.CharField()
     order = models.PositiveIntegerField(null=True, blank=True)
+    column_layout = models.CharField()
 
 class CategoryType(models.Model):
-    name = models.CharField(max_length=100) # Grid, Card, etc.
+    name = models.CharField() # Grid, Card, etc.
 
 # Typically, there will be multiple instances of card data
 # CardForm identifies a separate subform for the data on a card
@@ -29,35 +30,32 @@ class CardForm(models.Model):
 
 class Question(models.Model):
     answer_type = models.ForeignKey(AnswerType)
-    description = models.CharField(max_length=100)
+    description = models.CharField()
 
 class QuestionLayout(models.Model):
     question = models.ForeignKey(Question)
     category = models.ForeignKey(Category)
-    layout = models.CharField(max_length=100) # "1.4.2.1"
-    
-class QuestionTranslation(models.Model):
-    question = models.ForeignKey(Question)
-    language = models.ForeignKey(Language)
-    text = models.CharField(max_length=100)
+    layout = models.CharField() # "1.4.2.1"
+    span = models.PositiveIntegerField(null=True)
 
 class AnswerType(models.Model):
-    name = models.CharField(max_length=100) # Multiple Choice, Int, Address, Phone Num, etc.
+    name = models.CharField() # Multiple Choice, Int, Address, Phone Num, etc.
 
 class Answer(models.Model):
     question = models.ForeignKey(Question)
     answer_type = models.ForeignKey(AnswerType)
-    value = models.CharField(max_length=100)
+    value = models.CharField(null=True)
+    params=models.JSONField()   # custom parameters for this answer type
 
 class AnswerLayout(models.Model):
     answer = models.ForeignKey(Answer)
     category = models.ForeignKey(Category)
-    layout = models.CharField(max_length=100)
+    layout = models.CharField()
 
 class Prompt(models.Model):
     category = models.ForeignKey(Category)
-    layout = models.CharField(max_length=100)
-    description = models.CharField(max_length=100)
+    layout = models.CharField()
+    description = models.CharField()
 
 class Condition(models.Model):
     condition = JSONField() 
@@ -66,31 +64,7 @@ class Condition(models.Model):
     # Second dictionary associates question with answer (dereferenced to use value in this example)
     # Points would make sense for conditions that may cummulate in their severity
 
-# -- Translation Models --
-class Language(models.Model):
-    name = models.CharField(max_length=100)
 
-class CategoryTranslation(models.Model):
-    category = models.ForeignKey(Category)
-    language = models.ForeignKey(Language)
-    text = models.CharField(max_length=100)
-
-class AnswerTranslation(models.Model):
-    answer = models.ForeignKey(Answer)
-    language = models.ForeignKey(Language)
-    text = models.CharField(max_length=100) # Longer?
-
-class PromptTranslation(models.Model):
-    prompt = models.ForeignKey(Prompt)
-    language = models.ForeignKey(Language)
-    text = models.CharField(max_length=100) # Longer?
-
-class ConditionTranslation(models.Model):
-    condition = models.ForeignKey(Condition)
-    language = models.ForeignKey(Language)
-    text = models.CharField(max_length=100) # Longer?
-    # This would allow for a message to be displayed if condition is satisfied
-    
 #
 # QuestionStorage is used to specify that the question response will be
 # stored in a field of the forms model as opposed to being stored as a
