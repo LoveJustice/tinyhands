@@ -370,7 +370,7 @@ class VictimInterview(models.Model):
 
     border_station = models.ForeignKey(BorderStation, models.SET_NULL, null=True, blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.vif_number
 
     def victim_address1_as_string(self):

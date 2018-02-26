@@ -14,5 +14,6 @@ class Migration(migrations.Migration):
     operations = [
         migrations.RunSQL("UPDATE dataentry_permission SET min_level = 'COUNTRY' where permission_group = 'STATIONS' and action = 'ADD';"),
         migrations.RunSQL("UPDATE dataentry_permission SET min_level = 'STATION' where permission_group = 'STATIONS' and action in ('VIEW', 'EDIT');"),
+        migrations.RunSQL("DELETE FROM dataentry_userlocationpermission where permission_id in (select id from dataentry_permission where permission_group = 'STATIONS' and action = 'DELETE');"),
 	    migrations.RunSQL("DELETE FROM dataentry_permission where permission_group = 'STATIONS' and action = 'DELETE';"),
     ]
