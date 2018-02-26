@@ -25,7 +25,7 @@ class Interceptee(models.Model):
     class Meta:
         ordering = ['id']
 
-    def __unicode__(self):
+    def __str__(self):
         return "{} ({})".format(self.person.full_name, self.id)
 
     def address1_as_string(self):

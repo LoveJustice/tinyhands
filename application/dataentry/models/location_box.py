@@ -53,5 +53,5 @@ class VictimInterviewLocationBox(models.Model):
     associated_with_person = models.NullBooleanField(null=True)
     associated_with_person_value = models.IntegerField(blank=True, null=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return "VIF {}".format(self.victim_interview.vif_number)
