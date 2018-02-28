@@ -48,7 +48,7 @@ def _send_message(project_id, access_token, topic, title, body):
     request.add_header('Content-Type', 'application/json')
 
     data = _build_message_data(topic, title, body)
-    request.add_data(json.dumps(data))
+    request.data = json.dumps(data)
 
     response = urlopen(request)
     if response.getcode() == 200:
