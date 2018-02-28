@@ -4,7 +4,7 @@ import json
 from oauth2client.service_account import ServiceAccountCredentials
 from urllib.request import Request, urlopen
 
-from notification_builder import FirebaseNotificationBuilder
+from .notification_builder import FirebaseNotificationBuilder
 
 
 TOPIC_GENERAL = "general"
