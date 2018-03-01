@@ -17,8 +17,8 @@ def _get_project_id():
         with open(settings.FCM_KEY_PATH) as firebase_key:
             firebase_data = json.load(firebase_key)
         return firebase_data['project_id']
-    except:
-        print('Unable to load firebase key file')
+    except FileNotFoundError:
+        print('Cannot find firebase key file')
 
 
 def _get_access_token():
@@ -48,7 +48,7 @@ def _send_message(project_id, access_token, topic, title, body):
     request.add_header('Content-Type', 'application/json')
 
     data = _build_message_data(topic, title, body)
-    request.data = json.dumps(data)
+    request.data = json.dumps(data).encode('utf8')
 
     response = urlopen(request)
     if response.getcode() == 200:
