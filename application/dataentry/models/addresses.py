@@ -32,6 +32,9 @@ class Address2(models.Model):
     canonical_name = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE)
     verified = models.BooleanField(default=False)
 
+    class Meta:
+        unique_together = ("name", "address1")
+    
     def __str__(self):
         return self.name
 
