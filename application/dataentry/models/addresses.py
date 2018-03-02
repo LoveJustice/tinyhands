@@ -19,7 +19,7 @@ class Address1(models.Model):
     level = models.CharField(max_length=255, choices=LEVEL_CHOICES, default="District")
     completed = models.BooleanField(default=False)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
@@ -32,7 +32,7 @@ class Address2(models.Model):
     canonical_name = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE)
     verified = models.BooleanField(default=False)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     @property
