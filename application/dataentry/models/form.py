@@ -2,23 +2,24 @@ from django.db import models
 from django.contrib.postgres.fields import JSONField
 from dataentry.models import Country
 
-class FormType(models.Model):
-    name = models.CharField(max_length=126) # IRF, VIF, CEF, etc.
-
 #
 # Storage is used to describe the relationship between questions on a form
 # and the storage of that data in models.  For example, the VIF model contains
 # two instance of the Person model - the victim and the guardian.  To reflect
 # this we could have data like
-#   id   model_name        parent_storage    foreign_key_field_parent
-#   10   VictimInterview   null              null
-#   11   Person            10                victim
-#   14   Person            10                guardian
+#   id   model_name        parent_storage    foreign_key_field_parent    foreign_key_field_child
+#   10   VictimInterview   null              null                        null
+#   11   Person            10                victim                      null                    
+#   14   Person            10                guardian                    null
 class Storage(models.Model):
     model_name = models.CharField(max_length=126)
     parent_storage = models.ForeignKey('self', null=True)
     foreign_key_field_parent = models.CharField(max_length=126, null=True)
     foreign_key_field_child = models.CharField(max_length=126, null=True)
+
+class FormType(models.Model):
+    name = models.CharField(max_length=126) # IRF, VIF, CEF, etc.
+
 
 class Form(models.Model):
     form_type = models.ForeignKey(FormType)
@@ -43,9 +44,6 @@ class CardStorage(models.Model):
     category = models.ForeignKey(Category)
     storage = models.ForeignKey(Storage)
 
-class AnswerType(models.Model):
-    name = models.CharField(max_length=126) # Multiple Choice, Int, Address, Phone Num, etc.
-
 class Question(models.Model): 
     prompt = models.CharField(max_length=126)
     descriptionCate = models.CharField(max_length=126)
@@ -60,6 +58,9 @@ class QuestionStorage(Storage):
     question = models.ForeignKey(Question)
     storage = models.ForeignKey(Storage)
     field_name = models.CharField(max_length=126)
+
+class AnswerType(models.Model):
+    name = models.CharField(max_length=126) # Multiple Choice, Int, Address, Phone Num, etc.
     
 class Answer(models.Model):
     question = models.ForeignKey(Question)
@@ -129,7 +130,12 @@ class ExportImportCard(models.Model):
 class Irf(models.Model):
     form = models.ForeignKey(Form)
     irf_number = models.CharField('IRF #:', max_length=20, unique=True)
+    number_of_victims = models.PositiveIntegerField('# of victims:', null=True, blank=True)
+    location = models.CharField('Location:', max_length=255)
     date_time_of_interception = models.DateTimeField('Date/Time:')
+    number_of_traffickers = models.PositiveIntegerField('# of traffickers', null=True, blank=True)
+    staff_name = models.CharField('Staff Name:', max_length=255)
+    
 
 # Store the responses to questions that are not stored directly in the Irf model.  Includes questions that may
 # be changed in the future.  For "Open Response" and "Multi Other Response" where an non-standard answer has
@@ -137,7 +143,7 @@ class Irf(models.Model):
 class IrfResponse(models.Model):
     irf = models.ForeignKey(Irf)
     question = models.ForeignKey(Question)
-    answer = models.ForeignKey(Answer, null = True)
+    value = models.CharField(max_length=100000, null=True)
 
 
     
