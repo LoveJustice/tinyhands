@@ -7,12 +7,14 @@ from dataentry.models import Country
 # and the storage of that data in models.  For example, the VIF model contains
 # two instance of the Person model - the victim and the guardian.  To reflect
 # this we could have data like
-#   id   model_name        parent_storage    foreign_key_field_parent    foreign_key_field_child
-#   10   VictimInterview   null              null                        null
-#   11   Person            10                victim                      null                    
-#   14   Person            10                guardian                    null
+#   id   module_name                   form model_name            response_model_name parent_storage foreign_key_field_parent    foreign_key_field_child
+#   10   dataentry.models.vif          Vif                        VifResponse         null           null                        null
+#   11   dataentry.models.person_box   VictimInterviewPersonBox   null                10             null                        victim_interview                    
+#   14   dataentry.models.location_box VictimInterviewLocationBox null                10             null                        victim_interview
 class Storage(models.Model):
-    model_name = models.CharField(max_length=126)
+    module_name = models.CharField(max_length=126)
+    form_model_name = models.CharField(max_length=126)
+    response_model_name = models.CharField(max_length=126, null=True)
     parent_storage = models.ForeignKey('self', null=True)
     foreign_key_field_parent = models.CharField(max_length=126, null=True)
     foreign_key_field_child = models.CharField(max_length=126, null=True)
@@ -20,22 +22,12 @@ class Storage(models.Model):
 class FormType(models.Model):
     name = models.CharField(max_length=126) # IRF, VIF, CEF, etc.
 
-
 class Form(models.Model):
     form_type = models.ForeignKey(FormType)
-    country = models.ForeignKey(Country, null=True)
+    country = models.ForeignKey(Country)
     storage = models.ForeignKey(Storage)
     start_date = models.DateTimeField(auto_now_add=True)
     end_date = models.DateTimeField(null=True)
-    
-    def to_form_dict(self, environment): 
-        form_dict = {}
-        form_dict['name'] = self.form_type.name
-        form_dict['country_id'] = self.form_type.country.id
-        
-        return form_dict
-            
-        
 
 class CategoryType(models.Model):
     name = models.CharField(max_length=126) # Grid, Card, etc.
@@ -46,16 +38,6 @@ class Category(models.Model):
     name = models.CharField(max_length=126)
     order = models.PositiveIntegerField(null=True, blank=True)
     column_layout = models.CharField(max_length=126)
-    
-    def to_form_dict(self, environment): 
-        form_dict = {}
-        form_dict['id'] = self.id
-        form_dict['name'] = self.name
-        form_dict['type'] = 'grid'
-        form_dict['order'] = self.order
-        form_dict['layout'] = self.layout
-        
-        return form_dict
 
 # Typically, there will be multiple instances of card data
 # CardForm identifies a separate subform for the data on a card
@@ -71,30 +53,12 @@ class Question(models.Model):
     description = models.CharField(max_length=126)
     answer_type = models.ForeignKey(AnswerType)
     params=JSONField()   # custom parameters for this question type
-    
-    
-    def to_form_dict(self, environment):
-        form_dict = {}
-        form_dict['prompt'] = self.prompt
-        form_dict['answer_type'] = self.answer_type
-        for key, value in parms.items():
-            form_dict[key] = value
-        return form_dict
 
 class QuestionLayout(models.Model):
     question = models.ForeignKey(Question)
     category = models.ForeignKey(Category)
     layout = models.CharField(max_length=126) # "1.4.2.1"
     span = models.PositiveIntegerField(null=True)
-    
-    def to_form_dict(self, environment):
-        form_dict = {}
-        form_dict['layout'] = self.layout
-        form_dict['span'] = self.span
-        form_dict.update(self.question.to_form_dict)
-        
-        return form_dict
-
     
 class Answer(models.Model):
     question = models.ForeignKey(Question)
@@ -114,156 +78,34 @@ class PreviewLayout(models.Model):
     layout = models.CharField(max_length=126)
     span = models.PositiveIntegerField(null=True)
     answer_type = models.ForeignKey(AnswerType)
-    
-    def to_form_dict(self, environment):
-        preview_dict = {}
-        preview_dict['question_id'] = self.question.id
-        if self.answer_part is not None:
-            preview_dict['answer_part'] = self.answer_part
-        preview_dict['span'] = self.span
-        preview_dict['layout'] = self.layout
-        preview_dict['display_type'] = answer_type.name
-        return preview_dict
 
-class AnswerDictionary:
-    @staticmethod
-    def additional_parameters(answer):
-        additional = {}
-        for key, value in answer.params.items():
-            additional[key] = value
-        return additional
-    
-    @staticmethod
-    def evaluate_query(answer, environment):
-        data = []
-        module_name = answer.params.get('module')
-        model_name = answer.params.get('model')
-        filter_list = answer.params.get('filter')
-        field = answer.params.get('field')
-        if module_name is not None and model_name is not None and filter_list is not None and field is not None:
-            mod = __import__(module, fromlist=[model_name])
-            the_model = getattr(mod, model_name, None)
-            if the_model is not None:
-                queryset = the_model.objects.all()
-                for filter in filter_list:
-                    queryset = queryset.eval(filter) 
-                for obj in queryset:
-                    val = getattr(obj, field, default=None)
-                    if val is not None:
-                        data.append(val)
+# Identifies validation for IRF or VIF form
+#  GENERIC
+#    - not_blank_or_null verifies that the answers to the questions are not blank or null
+#    - at_least_one_true verifies that at least one of the answers to the questions is true
+#  CUSTOM
+#    - at_least_one_interceptee verifies that there is at least one interceptee on the IRF
+#    - name_came_up_before verifies the answer for the name came up before question on the IRF
+#    - trafficker_custody verifies answer for the trafficker taken into custody question on the IRF
+class FormValidationType(models.Model):
+    name = models.CharField(max_length=126)
 
-        return data
-    
-    @staticmethod
-    def string_to_form_dict(answers, environment):
-        answer_dict = {}
-        answer_dict.update(additional_parameters(answer[0]))
-        return answer_dict
-    
-    @staticmethod
-    def radio_button_to_form_dict(answers, environment):
-        answer_dict = {}
-        choices = []
-        for answer in answers:
-            choice_dict = {}
-            choice_dict['value'] = answer.value
-            choice_dict.update(additional_parameters(answer))
-                
-            answer_layout = AnswerLayout.objects.get(answer=answer)
-            choice['layout'] = answer_layout.layout
-            choice['span'] = answer_layout.span
-            choices.append(choice)
-        answer_dict['choices'] = choices
-            
-        return answer_dict
-        
-    @staticmethod
-    def dropdown_to_form_dict(answers, environment):
-        answer_dict = {}
-        choices = []
-        for answer in answers:
-            if answer.value is None:
-                choices = choices + evaluate_query(answer, environment)
-            else:
-                choice = {}
-                choice['value'] = answer.value
-                choices.append(choice)
-        
-        answer_dict['choices'] = choices
-            
-        return answer_dict
-    
-    @staticmethod
-    def address_to_form_dict(answers, environment):
-        answer_dict = {}
-        for answer in answers:
-            answer_layout = AnswerLayout.objects.get(answer=answer)
-            element = {}
-            element['layout'] = answer_layout.layout
-            element['span'] = answer_layout.span
-            answer_dict[answer.value] = element
-        return answer_dict
-    
-    @staticmethod
-    def person_to_form_dict(answers, environment):
-        answer_dict = {}
-        for answer in answers:
-            answer_layout = AnswerLayout.objects.get(answer=answer)
-            element = {}
-            element['layout'] = answer_layout.layout
-            element['span'] = answer_layout.span
-            answer_dict[answer.value] = element
-        return answer_dict
-    
-class QuestionLayoutDictionary:
-    process_answers = {
-        'String' : AnswerDictionary.string_to_form_dict,
-        'RadioButtion' : AnswerDictionary.radio_button_to_form_dict,
-        'Dropdown' : AnswerDictionary.dropdown_to_form_dict,
-        'Address' : AnswerDictionary.address_to_form_dict,
-        'Person' : AnswerDictionary.person_to_form_dict,
-    }
-    
-    @staticmethod
-    def to_form_dict(question_layout):
-        question_dict = question_layout.to_form_dict(environment)
-        
-        answers = Answer.objects.filter(question = question_layout.question)
-        if question_layout.question.answer_type.name in process_answers:
-            answer_dict = process_answers[question_layout.question.answer_type.name](answer_layouts, environment)
-            form_dict.update(answer_dict)    
-        return question_dict
+# form - the form on which the question(s) should be validated
+# trigger - question whose answer determines if the validation should be performed
+#    If trigger question is not null and the answer to the trigger question is true, the validation should be performed
+#    If trigger question is null, the validation should always be performed
+# validation_type - Is the type of validation to be performed on the questions
+# error_warning_message - message returned to client when validation fails
+class FormValidation(models.Model):
+    form = models.ForeignKey(Form)
+    trigger = models.ForeignKey(Question, null=True)
+    validation_type = models.ForeignKey(FormValidationType)
+    error_warning_message = models.CharField(max_length=126)
 
-class CategoryDictionary:
-    @staticmethod
-    def to_form_dict(category, environment):
-        
-        category_dict = category.to_form_dist(environment)
-        
-        question_list = []
-        questions = QuestionLayout.objects.filter(category=category)
-        for question in questions:
-            question_list.append(QuestionLayoutDictionary.to_form_dict(question, environment))
-        category_dict['questions'] = question_list
-        
-        preview_list = []
-        previews + PreviewLayout.objects.filter(category=category)
-        for preview in previews:
-            preview_list.append(preview.to_form_dict(environment))
-        category_dict['preview'] = preview_list
-        return category_dict
-    
-class FormDictionary:
-    @staticmethod
-    def to_form_dict (form, environment):
-        form_dict = form.to_form_dict(environment)
-        category_list = []
-        categories = Category.objects.filter(form = form)
-        for category in categories:
-            category_list.append(category.to_form_dict(environment))
-        
-        form_dict['categories'] = category_list
-        return form_dict
+# Set of questions to be validated for the FormValidation
+class FormValidationQuestion(models.Model):
+    validation = models.ForeignKey(FormValidation)
+    question = models.ForeignKey(Question)
 
 class Condition(models.Model):
     condition = JSONField() 
@@ -286,7 +128,9 @@ class QuestionStorage(models.Model):
     field_name = models.CharField(max_length=100)
     foreign_storage = models.ForeignKey(Storage, null=True)
 
- 
+ #
+ #  Work still needed on the export/import classes
+ #
 class ExportImport(models.Model):
     description = models.CharField(max_length=126, null = True)
     implement_class_name = models.CharField(max_length=126, null=True)
@@ -332,10 +176,6 @@ class Irf(models.Model):
 # be changed in the future.  For "Open Response" and "Multi Other Response" where an non-standard answer has
 # been provided, the value of answer will be null.
 class IrfResponse(models.Model):
-    irf = models.ForeignKey(Irf)
+    parent = models.ForeignKey(Irf)
     question = models.ForeignKey(Question)
     value = models.CharField(max_length=100000, null=True)
-
-
-    
-    
