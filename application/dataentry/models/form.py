@@ -1,6 +1,13 @@
+from datetime import date
 from django.db import models
 from django.contrib.postgres.fields import JSONField
-from dataentry.models import Country
+from .border_station import BorderStation
+from .country import Country
+
+from imagekit.models import ImageSpecField
+from imagekit.processors import ResizeToFill
+
+from .person import Person
 
 #
 # Storage is used to describe the relationship between questions on a form
@@ -28,6 +35,15 @@ class Form(models.Model):
     storage = models.ForeignKey(Storage)
     start_date = models.DateTimeField(auto_now_add=True)
     end_date = models.DateTimeField(null=True)
+    
+    @staticmethod
+    def current_form(form_type, country):
+        today = date.today()
+        form_list = Form.objects.filter(form_type=form_type, country=country, start_date__lte=today, end_date__gte=today)
+        if len(form_list) > 0:
+            return form_list[0]
+        else:
+            return None
 
 class CategoryType(models.Model):
     name = models.CharField(max_length=126) # Grid, Card, etc.
@@ -37,7 +53,6 @@ class Category(models.Model):
     category_type = models.ForeignKey(CategoryType)
     name = models.CharField(max_length=126)
     order = models.PositiveIntegerField(null=True, blank=True)
-    column_layout = models.CharField(max_length=126)
 
 # Typically, there will be multiple instances of card data
 # CardForm identifies a separate subform for the data on a card
@@ -49,35 +64,22 @@ class AnswerType(models.Model):
     name = models.CharField(max_length=126) # Multiple Choice, Int, Address, Phone Num, etc.
 
 class Question(models.Model): 
-    prompt = models.CharField(max_length=126)
-    description = models.CharField(max_length=126)
+    prompt = models.CharField(max_length=126, blank=True)
+    description = models.CharField(max_length=126, null=True)
     answer_type = models.ForeignKey(AnswerType)
-    params=JSONField()   # custom parameters for this question type
+    params=JSONField(null=True)   # custom parameters for this question type
 
 class QuestionLayout(models.Model):
     question = models.ForeignKey(Question)
     category = models.ForeignKey(Category)
-    layout = models.CharField(max_length=126) # "1.4.2.1"
-    span = models.PositiveIntegerField(null=True)
+    weight = models.IntegerField(default=0)
     
 class Answer(models.Model):
     question = models.ForeignKey(Question)
     value = models.CharField(max_length=100000, null=True)
     code = models.CharField(max_length=125, null=True)
-    params=JSONField()   # custom parameters for this answer type
+    params=JSONField(null=True)   # custom parameters for this answer type
 
-class AnswerLayout(models.Model):
-    answer = models.ForeignKey(Answer)
-    category = models.ForeignKey(Category)
-    layout = models.CharField
-
-class PreviewLayout(models.Model):
-    question = models.ForeignKey(Question)
-    answer_part = models.CharField(max_length=126, null=True)
-    category = models.ForeignKey(Category)
-    layout = models.CharField(max_length=126)
-    span = models.PositiveIntegerField(null=True)
-    answer_type = models.ForeignKey(AnswerType)
 
 # Identifies validation for IRF or VIF form
 #  GENERIC
@@ -90,6 +92,12 @@ class PreviewLayout(models.Model):
 class FormValidationType(models.Model):
     name = models.CharField(max_length=126)
 
+# basic_error  - prevents form from being saved (cannot save form with pending status)
+# submit_error - prevents form from being submitted (cannot save form with active status)
+# warning      - can be overridden to allow the form to be submitted
+class FormValidationLevel(models.Model):
+    name = models.CharField(max_length=126)
+
 # form - the form on which the question(s) should be validated
 # trigger - question whose answer determines if the validation should be performed
 #    If trigger question is not null and the answer to the trigger question is true, the validation should be performed
@@ -98,6 +106,7 @@ class FormValidationType(models.Model):
 # error_warning_message - message returned to client when validation fails
 class FormValidation(models.Model):
     form = models.ForeignKey(Form)
+    level = models.ForeignKey(FormValidationLevel)
     trigger = models.ForeignKey(Question, null=True)
     validation_type = models.ForeignKey(FormValidationType)
     error_warning_message = models.CharField(max_length=126)
@@ -120,13 +129,9 @@ class Condition(models.Model):
 # generic response.
 # For example, an entry could specify that the response to the 'IRF Number'
 # question would be stored in the field name 'irf_number'
-# Foreign storage is used when one or more question responses should be stored in a
-# separate form.  For example, we would like to store the responses for
-# questions related to a person using the Person model.
 class QuestionStorage(models.Model):
     question = models.ForeignKey(Question)
     field_name = models.CharField(max_length=100)
-    foreign_storage = models.ForeignKey(Storage, null=True)
 
  #
  #  Work still needed on the export/import classes
@@ -160,22 +165,23 @@ class ExportImportCard(models.Model):
     prefix = models.CharField(max_length=126)
     max_instances = models.PositiveIntegerField()
 
-# Class to store an instance of the IRF data.
-# This should contain data that is common for all IRFs and is not expected to be changed
-class Irf(models.Model):
-    form = models.ForeignKey(Form)
-    irf_number = models.CharField('IRF #:', max_length=20, unique=True)
-    number_of_victims = models.PositiveIntegerField('# of victims:', null=True, blank=True)
-    location = models.CharField('Location:', max_length=255)
-    date_time_of_interception = models.DateTimeField('Date/Time:')
-    number_of_traffickers = models.PositiveIntegerField('# of traffickers', null=True, blank=True)
-    staff_name = models.CharField('Staff Name:', max_length=255)
+class BaseForm(models.Model):
+    status = models.CharField('Status', max_length=10, default='pending')
+    station = models.ForeignKey(BorderStation)
     
-
-# Store the responses to questions that are not stored directly in the Irf model.  Includes questions that may
-# be changed in the future.  For "Open Response" and "Multi Other Response" where an non-standard answer has
-# been provided, the value of answer will be null.
-class IrfResponse(models.Model):
-    parent = models.ForeignKey(Irf)
+    class Meta:
+        abstract = True
+        
+class BaseResponse(models.Model):
     question = models.ForeignKey(Question)
     value = models.CharField(max_length=100000, null=True)
+    
+    class Meta:
+        abstract = True
+        
+class BaseCard(models.Model):
+    class Meta:
+        abstract = True
+    
+    def setParent(self, the_parent):
+        raise NotImplementedError("set parent not defined in card model")
