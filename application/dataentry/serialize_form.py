@@ -1,641 +1,767 @@
-import logging
-import traceback
-
-from datetime import date
-from rest_framework import status
-
+from dateutil import parser
+from rest_framework import serializers
 from django.core.exceptions import ObjectDoesNotExist
 
-from .models.form import Answer, CardStorage, Category, Form, Question, QuestionLayout, QuestionStorage, Storage
-from .models.border_station import BorderStation
-from .models.addresses import Address1, Address2
-from .models.person import Person
+from dataentry.models.addresses import Address1, Address2
+from dataentry.models.border_station import BorderStation
+from dataentry.models.form import Answer, Category, Form, Question, QuestionLayout
+from dataentry.models.person import Person
 from .form_data import FormData, CardData
 
-
-logger = logging.getLogger(__name__);
-
-class SerializeForm:
-    def __init__(self):
-        self.response_code = status.HTTP_200_OK
-        self.detail = []
-        
-    def person_serialize(self, question, field_value=None, response_value=None):
-        if field_value is not None:
-            person = field_value
-        elif response_value is not None:
-            try:
-                person = Person.objects.get(id=int(response_value))
-            except ObjectDoesNotExist:
-                logger.error('person for question ' + str(question.id) + ' is not found')
-                self.response_code = status.HTTP_500_INTERNAL_SERVER_ERROR
-                person = None
-        else:
-            person = None
-        
-        if person is not None:
-            data = {}
-            data['storage_id'] = person.id
-            data['name'] = { 'value': person.full_name }
-            if person.address2 is not None:
-                data['address1'] = {
-                        'id': person.address2.address1.id,
-                        'value': person.address2.address1.name
-                    }
-                data['address2'] = {
-                        'id': person.address2.id,
-                        'value': person.address2.name
-                    }
-            if person.phone_contact is not None:
-                data['phone'] = {'value': person.phone_contact }
-                
-            if person.gender == 'M':
-                data['gender'] = {'value': 'Male' }
-            elif person.gender == 'F':
-                data['gender'] = {'value': 'Female' }
-            else:
-                data['gender'] = {'value': 'Unknown' }
-            
-            if person.age is not None:
-                data['age'] = {'value': person.age }
-            
-            return data
-        else:
-            return None
-      
-    def address_serialize(self, question, field_value=None, response_value=None):
-        if field_value is not None:
-           address2 = field_value
-        elif response_value is not None:
-            try:
-                address2 = Address2.objects.get(id=int(response_value))
-            except ObjectDoesNotExist:
-                logger.error('address2 for question ' + str(question.id) + ' is not found')
-                self.response_code = status.HTTP_500_INTERNAL_SERVER_ERROR
-                address2 = None
-        else:
-            address2 = None
-        
-        if address2 is not None:
-            addr1 = {}
-            addr1['id'] = address2.address1.id
-            addr1['value'] = address2.address1.name
-            
-            addr2 = {}
-            addr2['id'] = address2.id
-            addr2['value'] = address2.name
-            
-            return {'address1':addr1, 'address2': addr2}
-        else:
-            return None
-             
-    def radiobutton_serialize(self, question, field_value=None, response_value=None):
-        data = {}
-        
-        if field_value is not None:
-            code = field_value
-        elif response_value is not None:
-            code = rsponse_value
-        else:
-            code = None
-        
-        if code is not None:
-            try:
-                answer = Answer.objects.get(question=question, code=code)
-                val = { "value": answer.value }
-            except ObjectDoesNotExist:
-                val = { "value": code }
-        else:
-            val = None
-        
-        return val
-       
-    def dropdown_serialize(self, question, field_value=None, response_value=None):
-        data = {}
-        
-        if field_value is not None:
-            code = field_value
-        elif response_value is not None:
-            code = rsponse_value
-        else:
-            code =  None
-        
-        if code is not None:
-            try:
-                answer = Answer.objects.get(question=question, code=code)
-                val = { "value": answer.value }
-            except ObjectDoesNotExist:
-                val = { "value": code }
-        else:
-            val = None
-        
-        return val
-    
-    def checkbox_serialize(self, question, field_value=None, response_value=None):
-        if field_value is not None:
-            if isinstance(field_value, bool):
-                if field_value == True:
-                    val = 'True'
-                elif field_value == False:
-                    val = 'False'
-            else:
-                val = field_value
-        elif response_value is not None:
-            val = response_value
-        else:
-            val = None
-        
-        if val is not None:
-            return {'value': val }
-        else:
-            return None
-    
-    def date_time_serialize(self, question, field_value=None, response_value=None):
-        if field_value is not None:
-            val = str(field_value)
-        elif response_value is not None:
-            val = rsponse_value
-        else:
-            val = None
-        
-        if val is not None:
-            return {'value': val }
-        else:
-            return None 
-    
-    def image_serialize(self, question, field_value=None, response_value=None):
-        if field_value is not None:
-            val = str(field_value)
-        elif response_value is not None:
-            val = response_value
-        else:
-            val = None
-        
-        if val is not None:
-            return {'value':val}
-        else:
-            return None
-            
-    question_serialization_method = {
-        'Person': person_serialize,
-        'Address': address_serialize,
-        'RadioButton': radiobutton_serialize,
-        'Checkbox': checkbox_serialize,
-        'Dropdown': dropdown_serialize,
-        'DateTime': date_time_serialize,
-        'Image': image_serialize
-    }
-                
-    def serializeResponses(self, question_layouts, form_data):
-        question_list = []
-        object = form_data.form_object
-        for question_layout in question_layouts:
-            question = question_layout.question
-            question_data = { 'question_id': question.id }
-            
-            tmp_val = form_data.get_answer(question)
-            storage = form_data.get_answer_storage(question)
-            if tmp_val is not None:
-                if question.answer_type.name in self.question_serialization_method:
-                    if form_data.in_form_object(question):
-                        val = self.question_serialization_method[question.answer_type.name](self,question, field_value=tmp_val)
-                    else:
-                        val = self.question_serialization_method[question.answer_type.name](self,question, response_value=tmp_val)   
-                else:
-                    val = { "value": tmp_val }
-            else:
-                val = None
-            
-            if val is not None:
-                question_data['response']  = val
-                if storage is not None:
-                    question_data['storage_id'] = storage
-                question_list.append(question_data)
-                
-        return question_list
-    
-    # Serialize category that is not of type card
-    def serializeCategory(self, form_data, category):
-        question_layouts = QuestionLayout.objects.filter(category=category)
-        return self.serializeResponses(question_layouts, form_data)
-    
-    # Serialize all cards for a given category
-    def serialize_cards(self, form_data, category):
-        question_layouts = QuestionLayout.objects.filter(category=category)
-        
-        card_data = {
-            'category_id': category.id
-        }
-        instance_list = []
-        
-        cards = form_data.card_dict[category.id]
-        for card in cards:
-            data = {"storage_id": card.form_object.id}
-            data['responses'] = self.serializeResponses(question_layouts, card)
-            instance_list.append(data)
-        
-        card_data['instances'] = instance_list
-        return card_data
-
-    
-    def serialize(self, form_data):
-        object = form_data.form_object
-        response_model = form_data.response_model
-            
-        form_dict = {}
-        form_dict['form_id'] = object.id
-        form_dict['station_id'] = object.station.id
-        form_dict['country_id'] = object.station.operating_country.id
-        form_dict['status'] = object.status
-        
-        form_dict['storage_id'] = object.id
-        
-        categories = Category.objects.filter(form = form_data.form)
-       
-        response_list = []
-        card_list = []
-        for category in categories:
-            if category.category_type.name == 'card':
-                try:
-                    card_list.append(self.serialize_cards(form_data, category))
-                except Exception as e:
-                    logger.error('Failed to serialize cards for category ' + category.name + ' ' + traceback.format_exc())
-                    self.response_code = status.HTTP_500_INTERNAL_SERVER_ERROR
-            else:
-                try:
-                    response_list = response_list + self.serializeCategory(form_data, category)
-                except Exception as e:
-                    logger.error('Failed to serialize responses for category ' + category.name + ' ' + traceback.format_exc())
-                    self.response_code = status.HTTP_500_INTERNAL_SERVER_ERROR
-                
-        form_dict['responses'] = response_list
-        form_dict['cards'] = card_list
-        
-        return form_dict
-    
-
-    def person_deserialize(self, response, question, return_as_string, mode):
-        storage_id = response.get('storage_id')
-        tmp = response.get('name')
-        if tmp is not None:
-            name = tmp.get('value')
-        else:
-            name = None
-            
-        tmp = response.get('phone')
-        if tmp is not None:
-            phone = tmp.get('value')
-        else:
-            phone = None
-            
-        tmp = response.get('gender')
-        if tmp is not None:
-            gender = tmp.get('value')
-        else:
-            gender = 'Unknown'
-        if gender == 'Female':
-            gender_code = 'F'
-        elif gender == 'Male':
-            gender_code = 'M'
-        else:
-            gender_code = 'U'
-            
-        tmp = response.get('age')
-        if tmp is not None:
-            age = tmp.get('value')
-        else:
-            age = None
-        
-        address1_dict = response.get('address1')
-        address2_dict = response.get('address2')
-        
-        if address1_dict is not None and address2_dict is not None:
-            address1_id = address1_dict.get('id')
-            if address1_id is None:
-                address_name = address1_dict.get('value')
-                try:
-                    # check for an existing address1 with the same name
-                    address1 = Address1.objects.get(name=address_name)
-                except ObjectDoesNotExist:
-                    address1 = Address1()
-                    address1.name = address_name
-                    address1.save()
-            else:
-                address1 = Address1.objects.get(id=address1_id)
-            
-            address2_id = address2_dict.get('id')
-            if address2_id is None:
-                address_name = address2_dict.get('value')
-                try:
-                    address2 = Address2.get(address1=address1, name=address_name)
-                except ObjectDoesNotExist:
-                    address2 = Address2()
-                    address2.address1 = address1
-                    address2.name = address_name
-                    address2.save()
-            else:
-                address2 = Address2.objects.get(id = address2_id)
-        
-        
-        if storage_id is None:
-            person = Person()
-            person.address1 = address1
-            person.address2 = address2
-            person.full_name = name
-            person.phone = phone
-            person.gender = gender_code
-            person.age = age
-            person.save()
-        else:
-            person = Person.objects.get(id=storage_id)
-            # person object may only be modified in IRF mode
-            # create new person object if changes and not in IRF mode
-            if mode != 'IRF' and (
-                    person.address1 != address1 or
-                    person.address2 != address2 or
-                    person.name != name or
-                    person.phone != phone or
-                    person.gender != gender_code or
-                    person.age != age):
-                person = Person()
-                
-            person.address1 = address1
-            person.address2 = address2
-            person.name = name
-            person.phone = phone
-            person.gender = gender_code
-            person.age = age
-            person.save()
-            
-        if return_as_string:
-            return str(person.id)
-            
-        return person  
-    
-    def address_deserialize(self, response, question, return_as_string, mode):
-        address1_dict = response.get('address1')
-        address2_dict = response.get('address2')
-        
-        if address1_dict is not None and address2_dict is not None:
-            address1_id = address1_dict.get('id')
-            if address1_id is None:
-                address_name = address1_dict.get('name')
-                try:
-                    # check for an existing address1 with the same name
-                    address1 = Address1.objects.get(name=address_name)
-                except ObjectDoesNotExist:
-                    address1 = Address1()
-                    address1.name = address_name
-                    address1.save()
-            else:
-                address1 = Address1.objects.get(id=address1_id)
-            
-            address2_id = address2_dict.get('id')
-            if address2_id is None:
-                address_name = address2_dict.get('name')
-                try:
-                    address2 = Address2.get(address1=address1, name=address_name)
-                except ObjectDoesNotExist:
-                    address2 = Address2()
-                    address2.address1 = address1
-                    address2.name = address_name
-                    address2.save()
-            else:
-                address2 = Address2.get(id = address2_id)
-        else:
-            address2 = None
-        
-        if return_as_string:
-            return str(address2.id)
-        
-        return address2
-    
-    def textbox_entry_allowed(self, question):
+def textbox_entry_allowed(question):
         found = False
         answers = Answer.objects.filter(question=question)
-        for answer in answers:
-            if 'TEXTBOX' in answer.params.upper():
-                found = True
-                break
+        if question.params is not None and 'textbox' in question.params:
+            found = True
+        else:
+            for answer in answers:
+                if answer.params is not None and 'textbox' in answer.params:
+                    found = True
+                    break
         
         return found
+        
+class ResponseStringSerializer(serializers.Serializer):
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        ret['value'] = serializers.CharField().to_representation(instance)
+        return ret
     
-    def radiobutton_deserialize(self, response, question, return_as_string, mode):
-        value = response.get('value')
-        try:
-            answer = Answer.objects.get(question=question, value=value)
-            if answer.code is not None:
-                value = answer.code
-        except ObjectDoesNotExist:
-            # value could not be found in the set of answers, but may be texbox entry
-            if not self.textbox_entry_allowed(question):
-                self.response_code = status.HTTP_400_BAD_REQUEST
-                msg = "Unable to locate answer value " + value + " for radio button question " + str(question.id)
-                logger.error(msg)
-                self.detail.append(msg)
+    def to_internal_value(self, data):
+        value = data.get('value')
         
-        return value
-        
-        
-       
-    def dropdown_deserialize(self, response, question, return_as_string, mode):
-        value = response.get('value')
-        try:
-            answer = Answer.objects.get(question=question, value=value)
-            if answer.code is not None:
-                value = answer.code
-        except ObjectDoesNotExist:
-            # value could not be found in the set of answers, but may be texbox entry
-            if not self.textbox_entry_allowed(question):
-                self.response_code = status.HTTP_400_BAD_REQUEST
-                msg = "Unable to locate answer value " + value + " for drop down question " + str(question.id)
-                logger.error(msg)
-                self.detail.append(msg)
-        
-        return value
+        return {
+            'value':value
+            }
     
-    def checkbox_deserialize(self, response, question, return_as_string, mode):
-        value = response.get('value')
-        if not 'TEXTBOX' in question.params.upper():
-            if not return_as_string:
+    def get_or_create(self):
+        return self.validated_data.get('value')
+    
+class ResponseIntegerSerializer(serializers.Serializer):
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        ret['value'] = serializers.IntegerField().to_representation(instance)
+        return ret
+    
+    def to_internal_value(self, data):
+        value = data.get('value')
+        if value is not None:
+            value = int(value)
+        
+        return {
+            'value':value
+            }
+    
+    def get_or_create(self):
+        return self.validated_data.get('value')
+ 
+class ResponseFloatSerializer(serializers.Serializer):
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        ret['value'] = serializers.FloatField().to_representation(instance)
+        return ret
+ 
+    def to_internal_value(self, data):
+        value = data.get('value')
+        if value is not None:
+            value = float(value)
+        
+        return {
+            'value':value
+            }
+        
+    def get_or_create(self):
+        return self.validated_data.get('value')
+        
+class ResponseRadioButtonSerializer(serializers.Serializer):
+    def to_representation(self, instance):
+        question = self.context['question']
+        ret = super().to_representation(instance)
+        if instance is not None:
+            try:
+                answer = Answer.objects.get(question=question, code=instance)
+                value = answer.value
+            except ObjectDoesNotExist:
+                value = instance
+        else:
+            value = None
+        
+        ret['value'] = serializers.CharField().to_representation(value)
+        return ret
+    
+    def to_internal_value(self, data):
+        question = self.context['question']
+        value = data.get('value')
+        if value is not None:
+            try:
+                answer = Answer.objects.get(question=question, value=value)
+                if answer.code is not None:
+                    value = answer.code
+            except ObjectDoesNotExist:
+                # value could not be found in the set of answers, but may be text box entry
+                # check if text box entry is allowed for this question
+                if not textbox_entry_allowed(question):
+                    raise serializers.ValidationError({
+                        str(question.id):'RadioButton value "' + value + '" does not match any answers'
+                        })
+        
+        return {
+            'value':value
+            }
+        
+    def get_or_create(self):
+        return self.validated_data.get('value')
+ 
+class ResponseDropdownSerializer(serializers.Serializer):
+    def to_representation(self, instance):
+        question = self.context['question']
+        ret = super().to_representation(instance)
+        if instance is not None:
+            try:
+                answer = Answer.objects.get(question=question, code=instance)
+                value = answer.value
+            except ObjectDoesNotExist:
+                value = instance
+        else:
+            value = None
+        
+        ret['value'] = serializers.CharField().to_representation(value)
+        return ret
+
+    def to_internal_value(self, data):
+        question = self.context['question']
+        value = data.get('value')
+        if value is not None:
+            try:
+                answer = Answer.objects.get(question=question, value=value)
+                if answer.code is not None:
+                    value = answer.code
+            except ObjectDoesNotExist:
+                # value could not be found in the set of answers, but may be text box entry
+                # check if text box entry is allowed for this question
+                if not textbox_entry_allowed(question):
+                    raise serializers.ValidationError({
+                        str(question.id):'Dropdown value "' + value + '" does not match any answers'
+                        })
+        
+        return {
+            'value':value
+            }
+        
+    def get_or_create(self):
+        return self.validated_data.get('value')
+ 
+class ResponseCheckboxSerializer(serializers.Serializer):
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        ret['value'] = serializers.CharField().to_representation(instance)
+        return ret
+    
+    def to_internal_value(self, data):
+        question = self.context['question']
+        return_as_string = self.context.get('return_as_string')
+        value = data.get('value')
+        if value is not None and not textbox_entry_allowed(question):
+            if return_as_string is None or not return_as_string:
                 if value.upper() == 'TRUE':
                     value = True
                 elif value.upper() == 'FALSE':
                     value = False
                 else:
-                    self.response_code = status.HTTP_400_BAD_REQUEST
-                    msg = 'Checkbox value is neither True or False for question ' + str(question.id) + ' assuming False'
-                    self.detail.append(msg)
-                    logger.error(msg)
-                    value = False
+                    raise serializers.ValidationError({
+                        str(question.id):'Checkbox value is neither True nor False'
+                        })
             else:
                 if not (value.upper() == 'TRUE' or value.upper() == 'FALSE'):
-                    self.response_code = status.HTTP_400_BAD_REQUEST
-                    msg = 'Checkbox value is neither True or False for question ' + str(question.id) + ' assuming False'
-                    self.detail.append(msg)
-                    logger.error(msg)
-                    value = 'False'
+                    raise serializers.ValidationError({
+                        str(question.id):'Checkbox value is neither True nor False'
+                        })
         
-        return value
-            
-    
-    question_deserialization_method = {
-        'Person': person_deserialize,
-        'Address': address_deserialize,
-        'RadioButton': radiobutton_deserialize,
-        'Dropdown': dropdown_deserialize
-    }
-    
-    def deserialize_responses (self, responses, form, form_model_class, response_model_class, mode):
-        response_object_dict = {}
-        for response in responses:
-            question_id = response['question_id']
-            question = Question.objects.get(id=question_id)
-            the_response = response.get('response')
-            storage_id = response.get('storage_id')
-            try:
-                question_storage = QuestionStorage.objects.get(question = question)
-                if question.answer_type.name in self.question_deserialization_method:
-                    val = self.question_deserialization_method[question.answer_type.name](self, the_response, question, False, mode)
-                else:
-                    val = the_response.get('value')
-                setattr(form, question_storage.field_name, val) 
-            except ObjectDoesNotExist:
-                if response_model_class is not None:
-                    if storage_id is None:
-                        response_object = response_model_class()
-                        response_object.parent = form
-                        response_object.question = question
-                    else:
-                        response_object = response_model_class.objects.get(id=storage_id)
-                        
-                    if question.answer_type.name in self.question_deserialization_method:
-                        response_object.value = self.question_deserialization_method[question.answer_type.name](self, response, question, True, mode)
-                    else:
-                        response_object.value = the_response.get('value')
-                        
-                    response_object_dict[question_id] = response_object
-                else:
-                    logger.error ('Question storage is not specified and there is no response model class defined for question id=' + question_id)
-                    self.response_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+        return {
+            'value': value
+            }
         
-        return response_object_dict
-    
-    def deserialize_cards (self, cards, form, mode):
-        card_dict = {}
-        for card in cards:
-            category_id = card['category_id']
-            card_storage = CardStorage.objects.get(category__id = category_id)
-            storage = Storage.objects.get(id=card_storage.storage.id)
-            mod = __import__(storage.module_name, fromlist=[storage.form_model_name, storage.response_model_name])
-            card_model_class = getattr(mod, storage.form_model_name)
-            if storage.response_model_name is not None:
-                response_model_class = getattr(mod, storage.response_model_name, None)
-            else:
-                response_model_class = None
-            
-            instance_list = card['instances']
-            card_list = []
-            for inst in instance_list:
-                storage_id = inst.get('storage_id')
-                if storage_id is None:
-                    inst_object = card_model_class()
-                else:
-                    inst_object = card_model_class.objects.get(id=storage_id)
-                
-                responses = inst['responses']
-                responses_to_save = self.deserialize_responses(responses, inst_object, card_model_class, response_model_class, mode)
-                
-                card_list.append(CardData(inst_object, card_model_class, response_model_class, response_dict = responses_to_save))
-                
-            card_dict[category_id] = card_list
-        
-        return card_dict            
-    
-    def deserialize(self, form_dict, mode):
-        self.response_code = status.HTTP_200_OK
-        self.detail = []
-        
-        form = Form.objects.get(id=form_dict['form_id'])
-        form_status = form_dict['status']
-        ignore_warnings = form_dict.get('ignore_warnings')
-        if ignore_warnings is  None or ignore_warnings.upper() != 'TRUE':
-            ignore_warnings = 'False'
-        
-        storage = Storage.objects.get(id=form.storage.id)
-        mod = __import__(storage.module_name, fromlist=[storage.form_model_name, storage.response_model_name])
-        form_model_class = getattr(mod, storage.form_model_name)
-        response_model_class = getattr(mod, storage.response_model_name, None)
-        storage_id = form_dict.get('storage_id')
-        if storage_id is None:
-            form_instance = form_model_class()
-            station_id = form_dict['station_id']
-            form_instance.station = BorderStation.objects.get(id=station_id)
+    def get_or_create(self):
+        return self.validated_data.get('value')
+
+class ResponseAddressSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    name = serializers.CharField()
+
+class ResponseAddress1Serializer(ResponseAddressSerializer):
+    def get_or_create(self):
+        question = self.context['question']
+        id = self.validated_data.get('id')
+        name = self.validated_data.get('name')
+        if id is None:
+            address = Address1()
+            address.name = name
+            address.save()
         else:
-            form_instance = form_model_class.objects.get(id=storage_id)
+            try:
+                address = Address1.objects.get(id=int(id))
+            except ObjectDoesNotExist:
+                raise serializers.ValidationError({
+                        str(question.id):'Address1 id ' + id + ' does not exist'
+                        })
+        
+        return address
+    
+class ResponseAddress2Serializer(ResponseAddressSerializer):
+    def get_or_create(self):
+        question = self.context['question']
+        address1 = self.context['address1']
+        id = self.validated_data.get('id')
+        name = self.validated_data.get('name')
+        if id is None:
+            if address1 is not None:
+                address = Address2()
+                address.name = name
+                address.address1 = address1
+                address.save()
+            else:
+               raise serializers.ValidationError({
+                        str(question.id):'Attempting to create Address2, but no Address1 provided'
+                        }) 
+        else:
+            try:
+                address = Address2.objects.get(id=int(id))
+            except ObjectDoesNotExist:
+                raise serializers.ValidationError({
+                        str(question.id):'Address2 id ' + id + ' does not exist'
+                        })
+        
+        return address
+
+ 
+class ResponseAddressPairSerializer(serializers.Serializer):
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        if instance is not None:
+            tmp = ResponseAddressSerializer(instance.address1)
+            ret['address1'] = tmp.data
+            tmp = ResponseAddressSerializer(instance.address2)
+            ret['address2'] = tmp.data
             
-        form_instance.status = form_status
+        return ret
+    
+    def to_internal_value(self, data):
+        question = self.context['question']
+        address1_data = data.get('address1')
+        if address1_data is not None:
+            self.address1_serializer = ResponseAddress1Serializer(data=address1_data, context=dict(self.context))
+            self.address1_serializer.is_valid()
+            address1 = self.address1_serializer.validated_data
+        else:
+            address1 = None
         
-        responses = form_dict['responses']
-        responses_to_save = self.deserialize_responses(responses, form_instance, form_model_class, response_model_class, mode)
+        address2_data = data.get('address2')
+        if address2_data is not None:
+            self.address2_serializer = ResponseAddress1Serializer(data=address2_data, context=dict(self.context))
+            self.address2_serializer.is_valid()
+            address2 = self.address2_serializer.validated_data
+        else:
+            address2 = None
         
-        cards = form_dict['cards']
-        cards_to_save = self.deserialize_cards(cards, form, mode)
+        return {
+            'address1':address1,
+            'address2':address2
+            }
         
-        object_to_save = {"form": form_instance, "responses": responses_to_save, "cards": cards_to_save, "ignore_warnings": ignore_warnings }
+    def get_or_create(self):
+        address1_vd = self.validated_data.get('address1')
+        address2_vd = self.validated_data.get('address2')
         
-        form_data = FormData(form_instance, response_dict = responses_to_save, card_dict = cards_to_save, response_model=response_model_class, form=form)
+        if address1_vd is not None and address2_vd is not None:
+            address1 = self.address1_serializer.get_or_create()
+            self.address2_serializer.context['address1'] = address1
+            
+            address2 = self.address2_serializer.get_or_create()
+        else:
+            address2 = None
+        
+        return address2
+ 
+class ResponsePhoneSerializer(serializers.Serializer):
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        ret['value'] = serializers.CharField().to_representation(instance)
+        return ret
+    
+    def to_internal_value(self, data):
+        value = data.get('value')
+        if value is not None:
+            value = int(value)
+        
+        return {
+            'value':value
+            }
+    
+    def get_or_create(self):
+        return self.validated_data.get('value')
+ 
+class ResponseDateSerializer(serializers.Serializer):
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        ret['value'] = serializers.DateField().to_representation(instance)
+        return ret
+    
+    def to_internal_value(self, data):
+        value = data.get('value')
+        if value is not None:
+            dt = parser.parse(value).date()
+        else:
+            dt = None
+            
+        return {
+            'value':dt
+            }
+        
+    def get_or_create(self):
+        return self.validated_data.get('value')
+ 
+class ResponseDateTimeSerializer(serializers.Serializer):
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        ret['value'] = serializers.DateTimeField().to_representation(instance)
+        return ret
+    
+    def to_internal_value(self, data):
+        value = data.get('value')
+        if value is not None:
+            dt = parser.parse(value)
+        else:
+            dt = None
+        return {
+            'value':dt
+            }
+        
+    def get_or_create(self):
+        return self.validated_data.get('value')
+
+class ResponseImageHolder:
+    def __init__(self, image):
+        self.value = image
+
+class ResponseImageHolderSerializer(serializers.Serializer):
+    value = serializers.ImageField()
+
+class ResponseImageSerializer(serializers.Serializer):
+    def to_representation(self, instance):
+        holder = ResponseImageHolder(instance)
+        serializer = ResponseImageHolderSerializer(holder)
+        return serializer.data
+    
+    def to_internal_value(self, data):
+        self.holderSerializer = ResponseImageHolderSerializer(data=data)
+        self.holderSerializer.is_valid()
+        return {}
+    
+    def get_or_create(self):
+        return None
+    
+class ResponseImageSerializerOld(serializers.Serializer):
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        ret['value'] = serializers.ImageField(use_url=True).to_representation(instance)
+        return ret
+    
+    def to_internal_value(self, data):
+        value = data.get('value')
+        if value is not None:
+            image = serializers.ImageField().to_internal_value(value)
+        else:
+            image = None
+        
+        return {'image':image}
+    
+    def get_or_create(self):
+        return self.validated_data.get('image')
+ 
+class ResponsePersonSerializer(serializers.Serializer):     
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        if instance is not None:
+            ret['storage_id'] = serializers.IntegerField().to_representation(instance.id)
+            tmp = ResponseStringSerializer(instance.full_name)
+            ret['name'] = tmp.data
+            tmp = ResponseAddressSerializer(instance.address1)
+            ret['address1'] = tmp.data
+            tmp = ResponseAddressSerializer(instance.address2)
+            ret['address2'] = tmp.data
+            tmp = ResponseStringSerializer(instance.phone_contact)
+            ret['phone'] = tmp.data
+            if instance.gender == 'F':
+                gender = 'Female'
+            elif instance.gender == 'M':
+                gender = 'Male'
+            else:
+                gender = 'Unknown'    
+            tmp = ResponseStringSerializer(gender)
+            ret['gender'] = tmp.data
+            tmp = ResponseIntegerSerializer(instance.age)
+            ret['age'] = tmp.data
+            tmp = ResponseDateSerializer(instance.birthdate)
+            ret['birthdate'] = tmp.data
+            tmp = ResponseStringSerializer(instance.passport)
+            ret['passport'] = tmp.data
+            tmp = ResponseStringSerializer(instance.nationality)
+            ret['nationality'] = tmp.data
+            
+        return ret
+    
+    def to_internal_value(self, data):
+        ret = {}
+        storage_id = data.get('storage_id')
+        if storage_id is not None:
+            ret['storage_id'] = int(storage_id)
+        
+        tmp = data.get('name')
+        if tmp is not None:  
+            ret['name'] = tmp.get('value')
+        
+        address1 = data.get('address1')
+        self.address1_serializer = ResponseAddress1Serializer(data=address1, context=dict(self.context))
+        self.address1_serializer.is_valid()
+        address2 = data.get('address2')
+        self.address2_serializer = ResponseAddress2Serializer(data=address2, context=dict(self.context))
+        self.address2_serializer.is_valid()
+        
+        tmp = data.get('phone')
+        if tmp is not None:
+            ret['phone'] = tmp.get('value')
+        
+        tmp = data.get('gender')
+        if tmp is not None:
+            gender = tmp.get('value')
+            if gender.upper() == 'FEMALE':
+                ret['gender'] = 'F'
+            elif gender.upper() == 'MALE':
+                ret['gender'] = 'M'
+            else:
+                ret['gender'] = 'U'
+        
+        tmp = data.get('age')
+        if tmp is not None:
+            age = tmp.get('value')
+            if age is not None:
+                ret['age'] = int(age)
+                
+        tmp = data.get('birthdate')
+        if tmp is not None:          
+            birthdate = tmp.get('value')
+            if birthdate is not None:
+                ret['birthdate'] = parser.parse(birthdate).date()
+                         
+        tmp = data.get('birthdate')
+        if tmp is not None:
+            ret['passport'] = tmp.get('value')
+            
+        tmp = data.get('nationality')
+        if tmp is not None:
+            ret['nationality'] = tmp.get('value')
+        
+        return ret
+    
+    def match_address(self, address_object1, address_object2):
+        match = True
+        if (address_object1 is None and address_object2 is not None or
+            address_object1 is not None and address_object2 is None):
+            match = False
+        else:
+            if address_object1.id != address_object2.id:
+                match = False
+        
+        return match
+            
+
+    def get_or_create(self):
+        mode = self.context.get('mode')
+        storage_id = self.validated_data.get('storage_id')
+        name = self.validated_data.get('name')
+        address1 = self.address1_serializer.get_or_create()
+        self.address2_serializer.context['address1'] = address1
+        address2 = self.address2_serializer.get_or_create()
+        phone = self.validated_data.get('phone')
+        gender = self.validated_data.get('gender')
+        age = self.validated_data.get('age')
+        birthdate = self.validated_data.get('birthdate')
+        passport = self.validated_data.get('passport')
+        nationality = self.validated_data.get('nationality')
+        
+        update_data = False
+        if storage_id is None:
+            person = Person()
+            update_data = True
+        else:
+            person = Person.objects.get(id=storage_id)
+            if (
+                person.full_name != name or
+                not self.match_address(person.address1, address1) or
+                not self.match_address(person.address2, address2) or
+                person.phone_contact != phone or
+                person.gender != gender or
+                person.age != age or
+                person.birthdate != birthdate or
+                person.passport != passport or
+                person.nationality != nationality):
+                update_data = True
+                if mode != 'IRF':
+                    person = Person()
+        
+        if update_data:
+            person.full_name = name
+            person.address1 = self.address1_serializer.get_or_create()
+            self.address2_serializer.context['address1'] = address1
+            person.address2 = self.address2_serializer.get_or_create()
+            person.phone_contact = phone
+            person.gender = gender
+            person.age = age
+            person.birthdate = birthdate
+            person.passport = passport
+            person.nationality = nationality
+            person.save()
+        
+        return person 
+        
+class QuestionResponseSerializer(serializers.Serializer):    
+    answer_type_to_serializer = {
+        'String':ResponseStringSerializer,
+        'Integer':ResponseIntegerSerializer,
+        'Float':ResponseFloatSerializer,
+        'RadioButton':ResponseRadioButtonSerializer,
+        'Dropdown':ResponseDropdownSerializer,
+        'Checkbox':ResponseCheckboxSerializer,
+        'Address':ResponseAddressPairSerializer,
+        'Phone':ResponsePhoneSerializer,
+        'Date':ResponseDateSerializer,
+        'DateTime':ResponseDateTimeSerializer,
+        'Image':ResponseImageSerializer,
+        'Person':ResponsePersonSerializer,
+        }
+    
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        form_data = self.context['form_data']
+        
+        answer = form_data.get_answer(instance)
+        ret['question_id']  = serializers.IntegerField().to_representation(instance.id)
+        ret['storage_id'] = serializers.IntegerField().to_representation(form_data.get_answer_storage(instance))
+        if answer is not None:
+            serializer = self.answer_type_to_serializer[instance.answer_type.name](answer, context={'question':instance})
+            ret['response'] = serializer.data
+        else:
+            ret['response'] = {'value':None}
+        
+        return ret
+    
+    def to_internal_value(self, data):
+        question_id = data.get('question_id')
+        question = Question.objects.get(id=int(question_id))
+        storage_id = data.get('storage_id')
+        answer = data.get('response')
+        context=dict(self.context)
+        context['question'] = question
+        self.response_serializer = self.answer_type_to_serializer[question.answer_type.name](data=answer, context=context)
+        self.response_serializer.is_valid()
+        return {
+            'question': question,
+            'storage_id': int(storage_id),
+            'response': self.response_serializer.validated_data
+            }
+        
+    def get_or_create(self):
+        form_data = self.context['form_data']
+        self.response_serializer.is_valid()
+        question = self.validated_data.get('question')
+        storage_id = self.validated_data.get('storage_id')
+        response = self.response_serializer.get_or_create()
+        
+        form_data.set_answer(question, response, storage_id)
+        return response
+
+class QuestionLayoutSerializer(serializers.Serializer):
+    def to_representation(self, instance):
+        serializer = QuestionResponseSerializer(instance.question, context=dict(self.context))
+        return serializer.data
+    
+    def to_internal_value(self, data):
+        self.layout_serializer = QuestionResponseSerializer(data=data, context=dict(self.context))
+        self.layout_serializer.is_valid()
+        return self.layout_serializer.validated_data
+    
+    def get_or_create(self):
+        self.layout_serializer.context['form_data'] = self.context['form_data']
+        return self.layout_serializer.get_or_create()
+        
+
+class CardSerializer(serializers.Serializer):
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        ret['storage_id'] = serializers.IntegerField().to_representation(instance.form_object.id)
+        category = self.context['category']
+        question_layouts = QuestionLayout.objects.filter(category__form = instance.form_data.form, category=category).order_by('question__id')
+        serializer = QuestionLayoutSerializer(question_layouts, many=True, context={'form_data':instance})
+        ret['responses'] = serializer.data
+        return ret
+    
+    def to_internal_value(self, data):
+        tmp = data.get('storage_id')
+        storage_id = int(tmp)
+        
+        responses = data.get('responses')
+        self.response_serializers = []
+        for response in responses:
+            context = dict(self.context)
+            serializer = QuestionLayoutSerializer(data=response, context=context)
+            serializer.is_valid()
+            self.response_serializers.append(serializer)
+        
+        return {
+            'storage_id':storage_id
+            }
+    
+    def get_or_create(self):
+        category = self.context['category']
+        form_data = self.context['form_data']
+        
+        storage_id = self.validated_data.get('storage_id')
+        blank_id = self.context.get('clear_storage_id')
+        if blank_id is not None:
+            storage_id = None
+            
+        if storage_id is None:
+            card_object = form_data.category_form_dict[category.id].form_model()
+            card = CardData(card_object, form_data.category_form_dict[category.id], response_dict={})
+            card.form_data = form_data
+            form_data.card_dict[category.id].append(card)
+        else:
+            card = form_data.find_card(category, storage_id)
+        
+        for serializer in self.response_serializers:
+            serializer.context['form_data'] = card
+            serializer.get_or_create()   
+        
+
+class CardCategorySerializer(serializers.Serializer):
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        ret['category_id'] = serializers.IntegerField().to_representation(instance.id)
+        form_data = self.context['form_data']
+        if instance.id in form_data.card_dict:
+            serializer = CardSerializer(form_data.card_dict[instance.id], many=True, context={'category':instance, 'form_data':form_data})
+        else:
+            serializer = CardSerializer(None, many=True)
+        ret['instances'] = serializer.data
+        
+        return ret
+    
+    def to_internal_value (self, data):
+        tmp = data.get('category_id')
+        category_id = serializers.IntegerField().to_internal_value(tmp)
+        category = Category.objects.get(id=category_id)
+        
+        instances = data.get('instances')
+        self.card_instance_serializers = []
+        ret = []
+        for instance in instances:
+            context = dict(self.context)
+            context['category'] = category
+            serializer = CardSerializer(data=instance, context=context)
+            serializer.is_valid()
+            #ret.append(serializer.data)
+            self.card_instance_serializers.append(serializer)
+        
+        return ret
+        
+    def get_or_create(self):
+        form_data = self.context.get('form_data')
+        for serializer in self.card_instance_serializers:
+            serializer.context['form_data'] = form_data
+            serializer.get_or_create()
+        
+
+class FormDataSerializer(serializers.Serializer):
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        ret['station_id'] = serializers.IntegerField().to_representation(instance.form_object.station.id)
+        ret['country_id'] = serializers.IntegerField().to_representation(instance.form_object.station.operating_country.id)
+        ret['status'] = serializers.CharField().to_representation(instance.form_object.status)
+        ret['storage_id'] = serializers.IntegerField().to_representation(instance.form_object.id)
+        
+        question_layouts = QuestionLayout.objects.filter(category__form = instance.form).exclude(category__category_type__name = 'card').order_by('question__id')
+        serializer = QuestionLayoutSerializer(question_layouts, many=True, context={'form_data':instance})
+        ret['responses'] = serializer.data
+        
+        card_types = Category.objects.filter(form = instance.form, category_type__name = 'card')
+        serializer = CardCategorySerializer(list(card_types), many=True, context={'form_data':instance})
+        ret['cards'] = serializer.data
+        
+        return ret
+    
+    def to_internal_value(self, data):
+        tmp = data.get('station_id')
+        station_id = serializers.IntegerField().to_internal_value(tmp)
+        tmp = data.get('country_id')
+        country_id = serializers.IntegerField().to_internal_value(tmp)
+        status = data.get('status')
+        tmp = data.get('storage_id')
+        blank_id = self.context.get('clear_storage_id')
+        if blank_id is not None:
+            tmp = None
+        
+        if tmp is None:
+            storage_id = None
+        else:
+            storage_id = serializers.IntegerField().to_internal_value(tmp)
+        
+        responses = data.get('responses')
+        responses_data = []
+        self.form_serializers = []
+        for response in responses:
+            serializer = QuestionLayoutSerializer(data=response, context=dict(self.context))
+            serializer.is_valid()
+            self.form_serializers.append(serializer)
+        
+        self.card_serializers = []
+        cards = data.get('cards')
+        for card in cards:
+            serializer = CardCategorySerializer(data=card, context=dict(self.context))
+            serializer.is_valid()
+            self.card_serializers.append(serializer)
+        
+        return {
+            'station_id':station_id,
+            'country_id': country_id,
+            'status': status,
+            'storage_id':storage_id,
+            }
+            
+    def get_or_create(self):
+        form_type = self.context.get('form_type')
+        storage_id = self.validated_data.get('storage_id')
+        country_id = self.validated_data.get('country_id')
+        station_id = self.validated_data.get('station_id')
+        
+        form = Form.current_form(form_type, country_id)
+        form_class = form.find_form_class()
+        if storage_id is None:
+            form_object = form_class()
+            station = BorderStation.objects.get(id=station_id)
+            form_object.station = station
+        else:
+            form_object = form_class.objects.get(id=storage_id)
+        
+        form_data = FormData(form_object, form)
+        form_data.form_object.status = self.validated_data.get('status')
+        
+        for serializer in self.form_serializers:
+            serializer.context['form_data'] = form_data
+            serializer.get_or_create()
+        
+        for serializer in self.card_serializers:
+            serializer.context['form_data'] = form_data
+            serializer.get_or_create()
         
         return form_data
-    
-    def find_old_objects_to_remove(self, form_dict, new_object):
-        objects_to_remove = []
-        existing_object = self.find_existing_object(form_dict, new_object)
-        if existing_object is None:
-            return objects_to_remove
         
-        old_responses = existing_object['responses']
-        new_responses = new_object['responses']
-        for old_response in old_responses:
-            found = False
-            for new_response in new_responses:
-                if old_response.id == new_response.id:
-                    found = True
-                    break
-            
-            if not found:
-                objects_to_remove.append(old_response)
-        
-        old_cards = existing_object['cards']
-        new_cards = new_object['cards']
-        for old_card in old_cards:
-            old_form = old_card['form']
-            found_card = None
-            for new_card in new_cards:
-                new_form = new_card['form']
-                if type(old_form) == type(new_form) and old_form.id == new_form.id:
-                    found_card = new_card
-                    break
-            
-            if found_card is None:
-                objects_to_remove.append(old_form)
-                objects_to_remove += old_card['responses']
-            else:
-                old_responses = old_card['responses']
-                new_responses = found_card['responses']
-                for old_response in old_responses:
-                    found = False
-                    for new_response in new_responses:
-                        if old_response.id == new_response.id:
-                            found = True
-                            break
-                    
-                    if not found:
-                        objects_to_remove.append(old_response)
-                        
-        return objects_to_remove
-            
-    
-        
-            
-            

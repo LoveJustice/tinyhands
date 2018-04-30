@@ -14,5 +14,5 @@ from .interception_alert import InterceptionAlert
 from .permission import Permission
 from .user_location_permission import UserLocationPermission
 from .form import *
-from .irf import Irf, IrfResponse
-from .intercepted import Intercepted
+from .irf_nepal import IrfNepal, IntercepteeNepal
+from .irf_india import IrfIndia, IntercepteeIndia

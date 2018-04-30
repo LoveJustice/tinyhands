@@ -4,7 +4,7 @@ from dataentry.views import Address2ViewSet, Address1ViewSet, GeoCodeAddress1API
 from dataentry.views import PersonViewSet
 from dataentry.views import SiteSettingsViewSet
 from dataentry.views import CountryViewSet
-from dataentry.views import IDManagementViewSet, TraffickerCheckViewSet
+from dataentry.views import IDManagementViewSet, TraffickerCheckViewSet, IrfFormViewSet
 
 
 list = {'get': 'list', 'post': 'create'}
@@ -73,4 +73,6 @@ urlpatterns = [
        url(r'^user_permission/(?P<pk>\d+)/$', UserLocationPermissionViewSet.as_view({'get':'user_permissions', 'put':'update_permissions'}), name='UserLocationPermission'),
        url(r'^user_permission/countries/(?P<pk>\d+)/$', UserLocationPermissionViewSet.as_view({'get':'user_countries'}), name='UserPermissionCountries'),
         url(r'^user_permission/stations/(?P<pk>\d+)/$', UserLocationPermissionViewSet.as_view({'get':'user_stations'}), name='UserPermissionStations'),
+        
+        url(r'^irfNew/(?P<country_id>\d+)/(?P<pk>\d+)', IrfFormViewSet.as_view({'get':'retrieve'}), name='irfNew'),
 ]

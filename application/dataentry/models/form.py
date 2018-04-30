@@ -1,6 +1,9 @@
 from datetime import date
 from django.db import models
 from django.contrib.postgres.fields import JSONField
+
+from accounts.models import Account
+
 from .border_station import BorderStation
 from .country import Country
 
@@ -36,6 +39,11 @@ class Form(models.Model):
     start_date = models.DateTimeField(auto_now_add=True)
     end_date = models.DateTimeField(null=True)
     
+    def find_form_class(self):
+        mod = __import__(self.storage.module_name, fromlist=[self.storage.form_model_name])
+        form_class = getattr(mod, self.storage.form_model_name)
+        return form_class
+        
     @staticmethod
     def current_form(form_type, country):
         today = date.today()
@@ -44,6 +52,7 @@ class Form(models.Model):
             return form_list[0]
         else:
             return None
+    
 
 class CategoryType(models.Model):
     name = models.CharField(max_length=126) # Grid, Card, etc.
@@ -168,9 +177,19 @@ class ExportImportCard(models.Model):
 class BaseForm(models.Model):
     status = models.CharField('Status', max_length=10, default='pending')
     station = models.ForeignKey(BorderStation)
+    date_time_entered_into_system = models.DateTimeField(auto_now_add=True)
+    date_time_last_updated = models.DateTimeField(auto_now=True)
+    form_entered_by = models.ForeignKey(Account, related_name='%(class)s_entered_by', null=True)
     
     class Meta:
         abstract = True
+    
+    # Overridden in subclass as needed
+    def pre_save(self, form_data):
+        pass
+    
+    def post_save(self, form_data):
+        pass
         
 class BaseResponse(models.Model):
     question = models.ForeignKey(Question)

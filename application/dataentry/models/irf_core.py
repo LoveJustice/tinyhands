@@ -1,13 +1,16 @@
-from datetime import date
+from dateutil.parser import parse
 from django.db import models
-from django.contrib.postgres.fields import JSONField
-from .country import Country
-from .form import BaseForm, BaseResponse, Question
+from imagekit.models import ImageSpecField
+from imagekit.processors import ResizeToFill
+
 from .person import Person
+from .form import BaseCard
+from .form import BaseForm
+from dataentry.form_data import FormData
 
 # Class to store an instance of the IRF data.
 # This should contain data that is common for all IRFs and is not expected to be changed
-class Irf(BaseForm):
+class IrfCore(BaseForm):
     irf_number = models.CharField('IRF #:', max_length=20, unique=True)
     number_of_victims = models.PositiveIntegerField('# of victims:', null=True, blank=True)
     location = models.CharField('Location:', max_length=255)
@@ -48,13 +51,12 @@ class Irf(BaseForm):
     talked_to_family_member = models.CharField(max_length=127, blank=True)
     
     reported_total_red_flags = models.IntegerField('Reported Total Red Flag Points:', null=True, blank=True)
+    computed_total_red_flags = models.IntegerField('Computed Total Red Flag Points:', null=True, blank=True)
     
-    contact_noticed = models.BooleanField('Contact', default=False)
-    staff_noticed = models.BooleanField('Staff', default=False)
+    who_noticed = models.CharField(max_length=127, blank=True)
     staff_who_noticed = models.CharField('Staff who noticed:', max_length=255, blank=True)
     
-    trafficking_suspected = models.BooleanField('Trafficking suspected', default=False)
-    high_risk_no_evidence = models.BooleanField('High risk of being trafficked, but no evidence of trafficking', default=False)
+    type_of_intercept = models.CharField(max_length=127, blank=True)
     trafficker_taken_into_custody = models.CharField(max_length=20, null=True, blank=True)
     
     HOW_SURE_TRAFFICKING_CHOICES = [
@@ -67,8 +69,21 @@ class Irf(BaseForm):
     how_sure_was_trafficking = models.IntegerField(
         'How sure are you that it was trafficking case?',
         choices=HOW_SURE_TRAFFICKING_CHOICES)
+    
+    convinced_by_staff = models.CharField(max_length=127, default='False')
+    convinced_by_family = models.CharField(max_length=127, default='False')
+    convinced_by_police = models.CharField(max_length=127, default='False')
 
     has_signature = models.BooleanField('Scanned form has signature?', default=False)
+    
+    class Meta:
+        abstract = True
+    
+    def post_save(self, form_data):
+        base_date = form_data.form_object.date_time_of_interception.date()
+        for card_list in form_data.card_dict.values():
+            for card in card_list:
+                card.form_object.person.sync_age_birthdate(base_date)
     
     def to_str(self, value):
         if value is None:
@@ -79,18 +94,40 @@ class Irf(BaseForm):
     def __str__(self):
         return self.to_str(self.id) + ":" + self.to_str(self.irf_number) + ", " + self.to_str(self.number_of_victims) + ", " + self.to_str(self.location )+ ", " + self.to_str(self.number_of_traffickers) + ", " + self.to_str(self.staff_name)
     
-
-# Store the responses to questions that are not stored directly in the Irf model.  Includes questions that may
-# be changed in the future.  For "Open Response" and "Multi Other Response" where an non-standard answer has
-# been provided, the value of answer will be null.
-class IrfResponse(BaseResponse):
-    parent = models.ForeignKey(Irf)
+    @staticmethod
+    def key_field_name():
+        return 'irf_number'
     
-    def to_str(self, value):
-        if value is None:
-            return 'None'
-        else:
-            return str(value)
-        
-    def __str__(self):
-        return self.to_str(self.id) + ":" + self.to_str(self.parent.id) + ", " + self.to_str(self.question.id) + ", " + self.to_str(self.value)
+class IntercepteeCore(BaseCard):
+    KIND_CHOICES = [
+        ('v', 'Victim'),
+        ('t', 'Trafficker'),
+        ('u', 'Unknown'),
+    ]
+    photo = models.ImageField(upload_to='interceptee_photos', default='', blank=True)
+    photo_thumbnail = ImageSpecField(source='photo',
+                                     processors=[ResizeToFill(200, 200)],
+                                     format='JPEG',
+                                     options={'quality': 80})
+    kind = models.CharField(max_length=4, choices=KIND_CHOICES)
+    relation_to = models.CharField(max_length=255, blank=True)
+    person = models.ForeignKey(Person, null=True, blank=True)
+
+    class Meta:
+        abstract = True
+
+
+    def address1_as_string(self):
+        rtn = ''
+        try:
+            rtn = self.person.address1
+        finally:
+            return rtn
+
+    def address2_as_string(self):
+        rtn = ''
+        try:
+            rtn = self.person.address2
+        finally:
+            return rtn
+    
