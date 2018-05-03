@@ -107,19 +107,19 @@ def get_top_table_data(request, pk):
 
 
 def top_table_data(pk, month, year, budget_sheets):
-    date = datetime.datetime(int(year), int(month), 15)  # We pass the Month_year as two key-word arguments because the day is always 15
+    date = datetime.datetime(int(year), int(month), 1)  # We pass the Month_year as two key-word arguments because the day is always 1
     border_station = BorderStation.objects.get(pk=pk)
     staff_count = border_station.staff_set.count()
-
-    # Last month data will count records from the 15th of previous month to 14th of budget sheet month
+    
+    # Last month data will count records from the 1st of this month to end of this month by pulling data less than the first of next month
     all_interceptions = Interceptee.objects.filter(interception_record__irf_number__startswith=border_station.station_code, kind='v')
 
     last_months_count = all_interceptions.filter(
-            interception_record__date_time_entered_into_system__gte=date+relativedelta(months=-1),
-            interception_record__date_time_entered_into_system__lte=date).count()
+            interception_record__date_time_entered_into_system__gte=date,
+            interception_record__date_time_entered_into_system__lt=date+relativedelta(months=1)).count()
     last_3_months_count = all_interceptions.filter(
-            interception_record__date_time_entered_into_system__gte=date+relativedelta(months=-3),
-            interception_record__date_time_entered_into_system__lte=date).count()
+            interception_record__date_time_entered_into_system__gte=date+relativedelta(months=-2),
+            interception_record__date_time_entered_into_system__lt=date+relativedelta(months=1)).count()
     all_interception_records_count = all_interceptions.count()
 
     if budget_sheets:  # If this border station has had a previous budget calculation worksheet
