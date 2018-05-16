@@ -202,9 +202,8 @@ class FormData:
             self.form_object.post_save(self)
     
     @staticmethod
-    def find_form(form_type, country_id):
-        country = Country.objects.get(id=country_id)
-        form = Form.current_form(form_type, country)
+    def find_form(form_type_name, country_id):
+        form = Form.current_form(form_type_name, country_id)
         return form
             
     @staticmethod

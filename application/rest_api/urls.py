@@ -74,5 +74,6 @@ urlpatterns = [
        url(r'^user_permission/countries/(?P<pk>\d+)/$', UserLocationPermissionViewSet.as_view({'get':'user_countries'}), name='UserPermissionCountries'),
         url(r'^user_permission/stations/(?P<pk>\d+)/$', UserLocationPermissionViewSet.as_view({'get':'user_stations'}), name='UserPermissionStations'),
         
+        url(r'^irfNew/$', IrfFormViewSet.as_view({'get':'list'}), name='irfNew'),
         url(r'^irfNew/(?P<country_id>\d+)/(?P<pk>\d+)', IrfFormViewSet.as_view({'get':'retrieve'}), name='irfNew'),
 ]

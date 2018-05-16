@@ -743,7 +743,7 @@ class FormDataSerializer(serializers.Serializer):
         country_id = self.validated_data.get('country_id')
         station_id = self.validated_data.get('station_id')
         
-        form = Form.current_form(form_type, country_id)
+        form = Form.current_form(form_type.name, country_id)
         form_class = form.find_form_class()
         if storage_id is None:
             form_object = form_class()

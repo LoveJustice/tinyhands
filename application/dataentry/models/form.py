@@ -45,9 +45,9 @@ class Form(models.Model):
         return form_class
         
     @staticmethod
-    def current_form(form_type, country):
+    def current_form(form_type_name, country_id):
         today = date.today()
-        form_list = Form.objects.filter(form_type=form_type, country=country, start_date__lte=today, end_date__gte=today)
+        form_list = Form.objects.filter(form_type__name=form_type_name, country__id=country_id, start_date__lte=today, end_date__gte=today)
         if len(form_list) > 0:
             return form_list[0]
         else:
@@ -175,7 +175,7 @@ class ExportImportCard(models.Model):
     max_instances = models.PositiveIntegerField()
 
 class BaseForm(models.Model):
-    status = models.CharField('Status', max_length=10, default='pending')
+    status = models.CharField('Status', max_length=20, default='pending')
     station = models.ForeignKey(BorderStation)
     date_time_entered_into_system = models.DateTimeField(auto_now_add=True)
     date_time_last_updated = models.DateTimeField(auto_now=True)
