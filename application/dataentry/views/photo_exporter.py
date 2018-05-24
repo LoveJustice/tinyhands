@@ -106,6 +106,9 @@ class PhotoExporter(viewsets.GenericViewSet):
             else:
                 photos_qs = photos_qs.union(tmp_qs.values_list('photo', 'person__full_name', 'interception_record__irf_number'))
         
+        if photos_qs is None:
+            photos_qs = Interceptee.objects.none()
+            
         return photos_qs
 
     def count_photos_in_date_range(self, request, start_date, end_date):
