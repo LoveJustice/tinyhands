@@ -197,7 +197,7 @@ class UserLocationPermission(models.Model):
         
         permission_list = UserLocationPermission.objects.filter(account__id = request.user.id).filter(permission__permission_group = group).filter(permission__action = action)
         for perm in permission_list:
-            if perm.includes_location(country_id, station_id):
+            if perm.includes_location(int(country_id), int(station_id)):
                 has_permission = True
                 break
 

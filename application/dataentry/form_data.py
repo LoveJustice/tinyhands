@@ -69,12 +69,18 @@ class CardData:
         
         return storage
     
-    def save_object(self):
+    def save(self):
         self.form_object.set_parent(self.form_data.form_object)
         self.form_object.save()
         for response in self.response_dict.values():
             response.parent = self.form_object
             response.save()
+    
+    def delete(self):
+        for response in self.response_dict.values():
+            response.delete()
+            
+        self.form_object.delete()
         
 
 class FormData:
@@ -186,7 +192,7 @@ class FormData:
         
         return storage
     
-    def save_object(self):
+    def save(self):
         with transaction.atomic():
             self.form_object.pre_save(self)
             
@@ -200,6 +206,17 @@ class FormData:
                     card.save_object()
             
             self.form_object.post_save(self)
+    
+    def delete(self):
+        with transaction.atomic():
+            for card_list in self.card_dict.values():
+                for card in card_list:
+                    card.delete()
+            
+            for response in self.response_dict.values():
+                response.delete()
+            
+            self.form_object.delete()
     
     @staticmethod
     def find_form(form_type_name, country_id):

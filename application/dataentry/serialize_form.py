@@ -7,6 +7,9 @@ from dataentry.models.border_station import BorderStation
 from dataentry.models.form import Answer, Category, Form, Question, QuestionLayout
 from dataentry.models.person import Person
 from .form_data import FormData, CardData
+from .validate_form import ValidateForm
+
+mask_private = 'mask_private'
 
 def textbox_entry_allowed(question):
         found = False
@@ -20,11 +23,24 @@ def textbox_entry_allowed(question):
                     break
         
         return found
+
+def is_private_value(question, match_value):
+    if question.params is not None and match_value in question.params and question.params[match_value] == 'private':
+        return True
+    else:
+        return False
+
+def private_mask(context, value):
+    question = context['question']
+    if mask_private in context and context[mask_private] == True and is_private_value(question, 'value'):
+        return None
+    else:
+        return value
         
 class ResponseStringSerializer(serializers.Serializer):
     def to_representation(self, instance):
         ret = super().to_representation(instance)
-        ret['value'] = serializers.CharField().to_representation(instance)
+        ret['value'] = private_mask(self.context, serializers.CharField().to_representation(instance))
         return ret
     
     def to_internal_value(self, data):
@@ -40,7 +56,7 @@ class ResponseStringSerializer(serializers.Serializer):
 class ResponseIntegerSerializer(serializers.Serializer):
     def to_representation(self, instance):
         ret = super().to_representation(instance)
-        ret['value'] = serializers.IntegerField().to_representation(instance)
+        ret['value'] = private_mask(self.context, serializers.IntegerField().to_representation(instance))
         return ret
     
     def to_internal_value(self, data):
@@ -58,7 +74,7 @@ class ResponseIntegerSerializer(serializers.Serializer):
 class ResponseFloatSerializer(serializers.Serializer):
     def to_representation(self, instance):
         ret = super().to_representation(instance)
-        ret['value'] = serializers.FloatField().to_representation(instance)
+        ret['value'] = private_mask(self.context, serializers.FloatField().to_representation(instance))
         return ret
  
     def to_internal_value(self, data):
@@ -86,7 +102,7 @@ class ResponseRadioButtonSerializer(serializers.Serializer):
         else:
             value = None
         
-        ret['value'] = serializers.CharField().to_representation(value)
+        ret['value'] = private_mask(self.context, serializers.CharField().to_representation(value))
         return ret
     
     def to_internal_value(self, data):
@@ -125,7 +141,7 @@ class ResponseDropdownSerializer(serializers.Serializer):
         else:
             value = None
         
-        ret['value'] = serializers.CharField().to_representation(value)
+        ret['value'] = private_mask(self.context, serializers.CharField().to_representation(value))
         return ret
 
     def to_internal_value(self, data):
@@ -154,7 +170,7 @@ class ResponseDropdownSerializer(serializers.Serializer):
 class ResponseCheckboxSerializer(serializers.Serializer):
     def to_representation(self, instance):
         ret = super().to_representation(instance)
-        ret['value'] = serializers.CharField().to_representation(instance)
+        ret['value'] = private_mask(self.context, serializers.CharField().to_representation(instance))
         return ret
     
     def to_internal_value(self, data):
@@ -238,10 +254,21 @@ class ResponseAddressPairSerializer(serializers.Serializer):
     def to_representation(self, instance):
         ret = super().to_representation(instance)
         if instance is not None:
-            tmp = ResponseAddressSerializer(instance.address1)
-            ret['address1'] = tmp.data
-            tmp = ResponseAddressSerializer(instance.address2)
-            ret['address2'] = tmp.data
+            question = self.context['question']
+            if mask_private in self.context and self.context[mask_private] == True and question.params is not None:
+                private_data = True
+            else:
+                private_data = False
+            if private_data and is_private_value(question, 'address1'):
+                ret['address1'] = None
+            else:
+                tmp = ResponseAddressSerializer(instance.address1)
+                ret['address1'] = tmp.data
+            if private_data and is_private_value(question, 'address2'):
+                ret['address2'] = None
+            else:
+                tmp = ResponseAddressSerializer(instance.address2)
+                ret['address2'] = tmp.data
             
         return ret
     
@@ -285,7 +312,7 @@ class ResponseAddressPairSerializer(serializers.Serializer):
 class ResponsePhoneSerializer(serializers.Serializer):
     def to_representation(self, instance):
         ret = super().to_representation(instance)
-        ret['value'] = serializers.CharField().to_representation(instance)
+        ret['value'] = private_mask(self.context, serializers.CharField().to_representation(instance))
         return ret
     
     def to_internal_value(self, data):
@@ -303,7 +330,7 @@ class ResponsePhoneSerializer(serializers.Serializer):
 class ResponseDateSerializer(serializers.Serializer):
     def to_representation(self, instance):
         ret = super().to_representation(instance)
-        ret['value'] = serializers.DateField().to_representation(instance)
+        ret['value'] = private_mask(self.context, serializers.DateField().to_representation(instance))
         return ret
     
     def to_internal_value(self, data):
@@ -323,7 +350,7 @@ class ResponseDateSerializer(serializers.Serializer):
 class ResponseDateTimeSerializer(serializers.Serializer):
     def to_representation(self, instance):
         ret = super().to_representation(instance)
-        ret['value'] = serializers.DateTimeField().to_representation(instance)
+        ret['value'] = private_mask(self.context, serializers.DateTimeField().to_representation(instance))
         return ret
     
     def to_internal_value(self, data):
@@ -348,9 +375,14 @@ class ResponseImageHolderSerializer(serializers.Serializer):
 
 class ResponseImageSerializer(serializers.Serializer):
     def to_representation(self, instance):
-        holder = ResponseImageHolder(instance)
-        serializer = ResponseImageHolderSerializer(holder)
-        return serializer.data
+        question = self.context['question']
+        if mask_private in self.context and self.context[mask_private] == True and is_private_value(question, 'value'): 
+            ret = super().to_representation(instance)
+            ret['value'] = None
+        else:   
+            holder = ResponseImageHolder(instance)
+            serializer = ResponseImageHolderSerializer(holder)
+            return serializer.data
     
     def to_internal_value(self, data):
         self.holderSerializer = ResponseImageHolderSerializer(data=data)
@@ -360,53 +392,67 @@ class ResponseImageSerializer(serializers.Serializer):
     def get_or_create(self):
         return None
     
-class ResponseImageSerializerOld(serializers.Serializer):
-    def to_representation(self, instance):
-        ret = super().to_representation(instance)
-        ret['value'] = serializers.ImageField(use_url=True).to_representation(instance)
-        return ret
-    
-    def to_internal_value(self, data):
-        value = data.get('value')
-        if value is not None:
-            image = serializers.ImageField().to_internal_value(value)
-        else:
-            image = None
-        
-        return {'image':image}
-    
-    def get_or_create(self):
-        return self.validated_data.get('image')
- 
 class ResponsePersonSerializer(serializers.Serializer):     
     def to_representation(self, instance):
+        question = self.context['question']
+        if mask_private in self.context and self.context[mask_private] == True and question.params is not None:
+            private_data = True
+        else:
+            private_data = False
         ret = super().to_representation(instance)
         if instance is not None:
             ret['storage_id'] = serializers.IntegerField().to_representation(instance.id)
-            tmp = ResponseStringSerializer(instance.full_name)
-            ret['name'] = tmp.data
-            tmp = ResponseAddressSerializer(instance.address1)
-            ret['address1'] = tmp.data
-            tmp = ResponseAddressSerializer(instance.address2)
-            ret['address2'] = tmp.data
-            tmp = ResponseStringSerializer(instance.phone_contact)
-            ret['phone'] = tmp.data
-            if instance.gender == 'F':
-                gender = 'Female'
-            elif instance.gender == 'M':
-                gender = 'Male'
+            if private_data and is_private_value(question, 'name'):
+                ret['name'] = None
             else:
-                gender = 'Unknown'    
-            tmp = ResponseStringSerializer(gender)
-            ret['gender'] = tmp.data
-            tmp = ResponseIntegerSerializer(instance.age)
-            ret['age'] = tmp.data
-            tmp = ResponseDateSerializer(instance.birthdate)
-            ret['birthdate'] = tmp.data
-            tmp = ResponseStringSerializer(instance.passport)
-            ret['passport'] = tmp.data
-            tmp = ResponseStringSerializer(instance.nationality)
-            ret['nationality'] = tmp.data
+                tmp = ResponseStringSerializer(instance.full_name, context=self.context)
+                ret['name'] = tmp.data
+            if private_data and is_private_value(question, 'address1'):
+                ret['address1'] = None
+            else:
+                tmp = ResponseAddressSerializer(instance.address1, context=self.context)
+                ret['address1'] = tmp.data
+            if private_data and is_private_value(question, 'address2'):
+                ret['address2'] = None
+            else:
+                tmp = ResponseAddressSerializer(instance.address2, context=self.context)
+                ret['address2'] = tmp.data
+            if private_data and is_private_value(question, 'phone'):
+                ret['phone'] = None
+            else:
+                tmp = ResponseStringSerializer(instance.phone_contact, context=self.context)
+                ret['phone'] = tmp.data
+            if private_data and is_private_value(question, 'gender'):
+                ret['gender'] = None
+            else:
+                if instance.gender == 'F':
+                    gender = 'Female'
+                elif instance.gender == 'M':
+                    gender = 'Male'
+                else:
+                    gender = 'Unknown'    
+                tmp = ResponseStringSerializer(gender, context=self.context)
+                ret['gender'] = tmp.data
+            if private_data and is_private_value(question, 'age'):
+                ret['age'] = None
+            else:
+                tmp = ResponseIntegerSerializer(instance.age, context=self.context)
+                ret['age'] = tmp.data
+            if private_data and is_private_value(question, 'birthdate'):
+                ret['birthdate'] = None
+            else:
+                tmp = ResponseDateSerializer(instance.birthdate, context=self.context)
+                ret['birthdate'] = tmp.data
+            if private_data and is_private_value(question, 'passport'):
+                ret['passport'] = None
+            else:
+                tmp = ResponseStringSerializer(instance.passport, context=self.context)
+                ret['passport'] = tmp.data
+            if private_data and is_private_value(question, 'nationality'):
+                ret['nationality'] = None
+            else:
+                tmp = ResponseStringSerializer(instance.nationality, context=self.context)
+                ret['nationality'] = tmp.data
             
         return ret
     
@@ -548,7 +594,7 @@ class QuestionResponseSerializer(serializers.Serializer):
         ret['question_id']  = serializers.IntegerField().to_representation(instance.id)
         ret['storage_id'] = serializers.IntegerField().to_representation(form_data.get_answer_storage(instance))
         if answer is not None:
-            serializer = self.answer_type_to_serializer[instance.answer_type.name](answer, context={'question':instance})
+            serializer = self.answer_type_to_serializer[instance.answer_type.name](answer, context=self.context)
             ret['response'] = serializer.data
         else:
             ret['response'] = {'value':None}
@@ -582,7 +628,9 @@ class QuestionResponseSerializer(serializers.Serializer):
 
 class QuestionLayoutSerializer(serializers.Serializer):
     def to_representation(self, instance):
-        serializer = QuestionResponseSerializer(instance.question, context=dict(self.context))
+        context = dict(self.context)
+        context['question'] = instance.question
+        serializer = QuestionResponseSerializer(instance.question, context=context)
         return serializer.data
     
     def to_internal_value(self, data):
@@ -601,7 +649,9 @@ class CardSerializer(serializers.Serializer):
         ret['storage_id'] = serializers.IntegerField().to_representation(instance.form_object.id)
         category = self.context['category']
         question_layouts = QuestionLayout.objects.filter(category__form = instance.form_data.form, category=category).order_by('question__id')
-        serializer = QuestionLayoutSerializer(question_layouts, many=True, context={'form_data':instance})
+        context = dict(self.context)
+        context['form_data'] = instance
+        serializer = QuestionLayoutSerializer(question_layouts, many=True, context=context)
         ret['responses'] = serializer.data
         return ret
     
@@ -647,9 +697,11 @@ class CardCategorySerializer(serializers.Serializer):
     def to_representation(self, instance):
         ret = super().to_representation(instance)
         ret['category_id'] = serializers.IntegerField().to_representation(instance.id)
-        form_data = self.context['form_data']
+        context = dict(self.context)
+        context['category'] = instance
+        form_data = context['form_data']
         if instance.id in form_data.card_dict:
-            serializer = CardSerializer(form_data.card_dict[instance.id], many=True, context={'category':instance, 'form_data':form_data})
+            serializer = CardSerializer(form_data.card_dict[instance.id], many=True, context=context)
         else:
             serializer = CardSerializer(None, many=True)
         ret['instances'] = serializer.data
@@ -688,13 +740,18 @@ class FormDataSerializer(serializers.Serializer):
         ret['country_id'] = serializers.IntegerField().to_representation(instance.form_object.station.operating_country.id)
         ret['status'] = serializers.CharField().to_representation(instance.form_object.status)
         ret['storage_id'] = serializers.IntegerField().to_representation(instance.form_object.id)
+        if self.context is not None:
+            context = dict(self.context)
+        else:
+            context = {}
         
         question_layouts = QuestionLayout.objects.filter(category__form = instance.form).exclude(category__category_type__name = 'card').order_by('question__id')
-        serializer = QuestionLayoutSerializer(question_layouts, many=True, context={'form_data':instance})
+        context['form_data'] = instance
+        serializer = QuestionLayoutSerializer(question_layouts, many=True, context=context)
         ret['responses'] = serializer.data
         
         card_types = Category.objects.filter(form = instance.form, category_type__name = 'card')
-        serializer = CardCategorySerializer(list(card_types), many=True, context={'form_data':instance})
+        serializer = CardCategorySerializer(list(card_types), many=True, context=context)
         ret['cards'] = serializer.data
         
         return ret
@@ -736,21 +793,25 @@ class FormDataSerializer(serializers.Serializer):
             'status': status,
             'storage_id':storage_id,
             }
-            
-    def get_or_create(self):
+        
+    def validate_form(self, form, form_data):
+        validate = ValidateForm(form, form_data)
+        validate.validate()
+        if len(validate.errors) > 0:
+            raise serializers.ValidationError(validate.errors[0])
+        elif len(validate.warnings) > 0:
+            raise serializers.ValidationError(validate.errors[0])
+
+    def create(self, validated_data):
         form_type = self.context.get('form_type')
-        storage_id = self.validated_data.get('storage_id')
         country_id = self.validated_data.get('country_id')
         station_id = self.validated_data.get('station_id')
         
         form = Form.current_form(form_type.name, country_id)
         form_class = form.find_form_class()
-        if storage_id is None:
-            form_object = form_class()
-            station = BorderStation.objects.get(id=station_id)
-            form_object.station = station
-        else:
-            form_object = form_class.objects.get(id=storage_id)
+        form_object = form_class()
+        station = BorderStation.objects.get(id=station_id)
+        form_object.station = station
         
         form_data = FormData(form_object, form)
         form_data.form_object.status = self.validated_data.get('status')
@@ -763,5 +824,25 @@ class FormDataSerializer(serializers.Serializer):
             serializer.context['form_data'] = form_data
             serializer.get_or_create()
         
+        self.validate_form(form, form_data)
+        form_data.save()
         return form_data
+    
+def update(self, instance, validated_data):
+        form_data = instance
+        form_type = self.context.get('form_type')
+        form = Form.current_form(form_type.name, form_data.form_object.station.operating_country.id)
+        form_data.form_object.status = self.validated_data.get('status')
         
+        for serializer in self.form_serializers:
+            serializer.context['form_data'] = form_data
+            serializer.get_or_create()
+        
+        for serializer in self.card_serializers:
+            serializer.context['form_data'] = form_data
+            serializer.get_or_create()
+            
+        self.validate_form(form, form_data)
+        form_data.save()
+        
+        return form_data

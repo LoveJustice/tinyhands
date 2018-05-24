@@ -1,13 +1,15 @@
 import json
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import filters as fs
+from rest_framework.permissions import IsAuthenticated
 
 from braces.views import LoginRequiredMixin
 from accounts.mixins import PermissionsRequiredMixin
 
 from django.views.generic import CreateView
+from django.core.exceptions import ObjectDoesNotExist
 from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSet
 from dataentry.serialize_form import FormDataSerializer
 from dataentry.serializers import CountrySerializer
@@ -61,6 +63,7 @@ class IrfListSerializer(serializers.Serializer):
         return UserLocationPermission.has_permission_in_list(perm_list, self.perm_group_name,'APPROVE', obj.station.operating_country.id, obj.station.id)
 
 class IrfFormViewSet(viewsets.ModelViewSet):
+    permission_classes = (IsAuthenticated, )
     serializer_class = IrfListSerializer
     filter_backends = (fs.SearchFilter, fs.OrderingFilter,)
     search_fields = ('irf_number',)
@@ -71,10 +74,18 @@ class IrfFormViewSet(viewsets.ModelViewSet):
     form_type_name = 'IRF'
     perm_group_name = 'IRF'
     
-    def get_serializer_context(self):
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return IrfListSerializer
+        else:
+            return FormDataSerializer
+    
+    def get_serializer_context(self): 
         return self.serializer_context
     
     def get_queryset(self):
+        if self.action != 'list':
+            return None
         in_country = self.request.GET.get('country_ids')
         status = self.request.GET.get('status', 'approved')
         search = self.request.GET.get('search')
@@ -170,11 +181,49 @@ class IrfFormViewSet(viewsets.ModelViewSet):
                 
         return queryset
     
-    def retrieve(self, request, country_id, pk):
+    def create(self, request):
+        serializer = FormDataSerializer(data=request.data)
+        return Response(status=status.HTTP_201_CREATED)
+    
+    def my_retrieve(self, request, country_id, pk):
+        self.serializer_context = {}
+        form = Form.current_form(self.form_type_name, country_id)
+        try:
+            irf = FormData.find_object_by_id(pk, form)
+        except ObjectDoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        
+        read_access = UserLocationPermission.has_session_permission(request, 'IRF', 'VIEW', country_id, irf.station.id)
+        edit_access = UserLocationPermission.has_session_permission(request, 'IRF', 'EDIT', country_id, irf.station.id)
+        
+        if not read_access:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+                
+        if not edit_access:
+            self.serializer_context['mask_private'] = True
+            
+        form_data = FormData(irf, form)
+        serializer = FormDataSerializer(form_data, context=self.serializer_context)
+        
+        resp_data = serializer.data
+       
+        return Response(resp_data)
+    
+    def update(self, request, country_id, pk):
         form = Form.current_form(self.form_type_name, country_id)
         irf = FormData.find_object_by_id(pk, form)
+        if irf is None:
+            return Response({'detail' : "IRF not found"}, status=status.HTTP_404_NOT_FOUND)
         form_data = FormData(irf, form)
-        serializer = FormDataSerializer(form_data)
-       
-        return Response(serializer.data)
+        serializer = FormDataSerializer(form_data, data=request.data)
+        return Response(status=status.status.HTTP_200_OK)
+    
+    def destroy(self, request, country_id, pk):
+        form = Form.current_form(self.form_type_name, country_id)
+        irf = FormData.find_object_by_id(pk, form)
+        if irf is None:
+            return Response({'detail' : "IRF not found"}, status=status.HTTP_404_NOT_FOUND)
+        form_data = FormData(irf, form)
+        form_data.delete()
+
 

@@ -57,7 +57,6 @@ class IrfCore(BaseForm):
     staff_who_noticed = models.CharField('Staff who noticed:', max_length=255, blank=True)
     
     type_of_intercept = models.CharField(max_length=127, blank=True)
-    trafficker_taken_into_custody = models.CharField(max_length=20, null=True, blank=True)
     
     HOW_SURE_TRAFFICKING_CHOICES = [
         (1, '1 - Not at all sure'),
@@ -112,6 +111,7 @@ class IntercepteeCore(BaseCard):
     kind = models.CharField(max_length=4, choices=KIND_CHOICES)
     relation_to = models.CharField(max_length=255, blank=True)
     person = models.ForeignKey(Person, null=True, blank=True)
+    trafficker_taken_into_custody = models.BooleanField('taken_into_custody', default=False)
 
     class Meta:
         abstract = True
