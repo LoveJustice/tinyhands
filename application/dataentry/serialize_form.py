@@ -1,3 +1,4 @@
+import json
 from dateutil import parser
 from rest_framework import serializers
 from django.core.exceptions import ObjectDoesNotExist
@@ -605,6 +606,8 @@ class QuestionResponseSerializer(serializers.Serializer):
         question_id = data.get('question_id')
         question = Question.objects.get(id=int(question_id))
         storage_id = data.get('storage_id')
+        if storage_id is not None:
+            storage_id = int(storage_id)
         answer = data.get('response')
         context=dict(self.context)
         context['question'] = question
@@ -612,7 +615,7 @@ class QuestionResponseSerializer(serializers.Serializer):
         self.response_serializer.is_valid()
         return {
             'question': question,
-            'storage_id': int(storage_id),
+            'storage_id': storage_id,
             'response': self.response_serializer.validated_data
             }
         
@@ -657,7 +660,10 @@ class CardSerializer(serializers.Serializer):
     
     def to_internal_value(self, data):
         tmp = data.get('storage_id')
-        storage_id = int(tmp)
+        if tmp is not None:
+            storage_id = int(tmp)
+        else:
+            storage_id = None
         
         responses = data.get('responses')
         self.response_serializers = []
@@ -763,6 +769,12 @@ class FormDataSerializer(serializers.Serializer):
         country_id = serializers.IntegerField().to_internal_value(tmp)
         status = data.get('status')
         tmp = data.get('storage_id')
+        tmp = data.get('ignore_warnings')
+        if tmp is not None and tmp.upper() == 'TRUE':
+            ignore_warnings = True
+        else:
+            ignore_warnings = False
+        
         blank_id = self.context.get('clear_storage_id')
         if blank_id is not None:
             tmp = None
@@ -787,62 +799,64 @@ class FormDataSerializer(serializers.Serializer):
             serializer.is_valid()
             self.card_serializers.append(serializer)
         
+        form_type = self.context.get('form_type')
+        form = Form.current_form(form_type.name, country_id)
+        if self.instance is None:    
+            form_class = form.find_form_class()
+            form_object = form_class()
+            station = BorderStation.objects.get(id=station_id)
+            form_object.station = station
+            form_data = FormData(form_object, form)
+        else:
+            form_data = self.instance
+        
+        form_data.form_object.status = status
+        for serializer in self.form_serializers:
+            serializer.context['form_data'] = form_data
+            serializer.get_or_create()
+        
+        for serializer in self.card_serializers:
+            serializer.context['form_data'] = form_data
+            serializer.get_or_create()
+        
+        self.validate_form(form, form_data, ignore_warnings)
+        
+        self.form_data = form_data
+             
         return {
             'station_id':station_id,
             'country_id': country_id,
             'status': status,
             'storage_id':storage_id,
             }
+    
+    def get_country_id(self):
+        if self.form_data is None or self.form_data.form_object is None or self.form_data.form_object.station is None or self.form_data.form_object.station.operating_country is None:
+            return None
+        else:
+            return self.form_data.form_object.station.operating_country.id
+    
+    def get_station_id(self):
+        if self.form_data is None or self.form_data.form_object is None or self.form_data.form_object.station is None:
+            return None
+        else:
+            return self.form_data.form_object.station.id
         
-    def validate_form(self, form, form_data):
-        validate = ValidateForm(form, form_data)
+    def validate_form(self, form, form_data, ignore_warnings):
+        validate = ValidateForm(form, form_data, ignore_warnings)
         validate.validate()
+        self.the_errors = validate.errors
+        self.the_warnings = validate.warnings
         if len(validate.errors) > 0:
             raise serializers.ValidationError(validate.errors[0])
         elif len(validate.warnings) > 0:
-            raise serializers.ValidationError(validate.errors[0])
+            raise serializers.ValidationError(validate.warnings[0])
 
     def create(self, validated_data):
-        form_type = self.context.get('form_type')
-        country_id = self.validated_data.get('country_id')
-        station_id = self.validated_data.get('station_id')
-        
-        form = Form.current_form(form_type.name, country_id)
-        form_class = form.find_form_class()
-        form_object = form_class()
-        station = BorderStation.objects.get(id=station_id)
-        form_object.station = station
-        
-        form_data = FormData(form_object, form)
-        form_data.form_object.status = self.validated_data.get('status')
-        
-        for serializer in self.form_serializers:
-            serializer.context['form_data'] = form_data
-            serializer.get_or_create()
-        
-        for serializer in self.card_serializers:
-            serializer.context['form_data'] = form_data
-            serializer.get_or_create()
-        
-        self.validate_form(form, form_data)
-        form_data.save()
-        return form_data
+        self.form_data.save()
+        return self.form_data
     
-def update(self, instance, validated_data):
-        form_data = instance
-        form_type = self.context.get('form_type')
-        form = Form.current_form(form_type.name, form_data.form_object.station.operating_country.id)
-        form_data.form_object.status = self.validated_data.get('status')
+    def update(self, instance, validated_data):
+        self.form_data.save()
         
-        for serializer in self.form_serializers:
-            serializer.context['form_data'] = form_data
-            serializer.get_or_create()
-        
-        for serializer in self.card_serializers:
-            serializer.context['form_data'] = form_data
-            serializer.get_or_create()
-            
-        self.validate_form(form, form_data)
-        form_data.save()
-        
-        return form_data
+        return self.form_data

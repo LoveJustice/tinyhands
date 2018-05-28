@@ -203,7 +203,7 @@ class FormData:
             
             for card_list in self.card_dict.values():
                 for card in card_list:
-                    card.save_object()
+                    card.save()
             
             self.form_object.post_save(self)
     

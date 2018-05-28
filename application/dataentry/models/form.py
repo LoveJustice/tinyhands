@@ -117,6 +117,7 @@ class FormValidation(models.Model):
     form = models.ForeignKey(Form)
     level = models.ForeignKey(FormValidationLevel)
     trigger = models.ForeignKey(Question, null=True)
+    trigger_value = models.CharField(max_length=126, null=True)
     validation_type = models.ForeignKey(FormValidationType)
     error_warning_message = models.CharField(max_length=126)
 

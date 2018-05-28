@@ -45,7 +45,7 @@ class ValidateForm:
                 self.add_error_or_warning(self.question_map[question.id], category_index, validation)
             
     
-    def at_least_one_true(self, form_data, validation, validation_questions, category_index):      
+    def at_least_one_true(self, form_data, validation, validation_questions, category_index):   
         for validation_question in validation_questions:
             question = validation_question.question
             answer = form_data.get_answer(question)
@@ -56,21 +56,20 @@ class ValidateForm:
         self.add_error_or_warning(self.question_map[question.id], category_index, validation)
     
     def at_least_one_card (self, form_data, validation, questions, category_index):
-        if len(questions) < 1:
-            logger.error("at_least_one_card validation requires at least one question")
-            self.response_code = status.HTTP_500_INTERNAL_SERVER_ERROR
-            return
-        category_id = questions[0].category.id
-        if category_id not in form_data.card_dict or len(form_data.card_dict[category_id]) < 1:
-            self.add_error_or_warning(self.question_map[questions[0].question.id], None, validation)
+        
+        for cat_list in form_data.card_dict.values():
+            if len(cat_list) > 0:
+                return
+                
+        self.add_error_or_warning('CARD', None, validation)
     
     def custom_trafficker_custody(self, form_data, validation, questions, category_index):
-        if (questions) < 1:
+        if len(questions) < 1:
             logger.error("custom_trafficker_custody validation requires at least one question")
             self.response_code = status.HTTP_500_INTERNAL_SERVER_ERROR
             return
         
-        answer = form_data.get_answer(questions[0].question, form, responses)
+        answer = form_data.get_answer(questions[0].question)
         if answer is not None and answer.strip() != '':
             traffickers = answer.split(',')
             for trafficker in traffickers:
@@ -80,14 +79,26 @@ class ValidateForm:
                 elif int(trafficker) < 1 or int(trafficker) > 12:
                     self.add_error_or_warning(self.question_map[questions[0].question.id], category_index, validation)
                     break
+    
+    def form_id_station_code(self, form_data, validation, questions, category_index):
+        if len(questions) < 1:
+            logger.error("form_id_station_code validation requires at least one question")
+            return
+        
+        question = questions[0].question
+        answer = form_data.get_answer(question)
+        station_code = form_data.form_object.station.station_code
+        if not answer.startswith(station_code):
+            self.add_error_or_warning(self.question_map[question.id], category_index, validation)            
 
     
-    def __init__(self, form, form_data):
+    def __init__(self, form, form_data, ignore_warnings):
         self.validations = {
             'not_blank_or_null': self.not_blank_or_null,
             'at_least_one_true': self.at_least_one_true,
             'at_least_one_card': self.at_least_one_card,
-            'trafficker_custody': self.custom_trafficker_custody
+            'trafficker_custody': self.custom_trafficker_custody,
+            'form_id_station_code': self.form_id_station_code
         }
         
         self.validations_to_perform = {
@@ -97,16 +108,15 @@ class ValidateForm:
         self.main_form = 'main_form'
         self.form_data = form_data
         self.form = form
-        self.data = form_data['form']
-        self.responses = form_data['responses']
-        self.cards = form_data['cards']
+        self.data = form_data.form
+        self.responses = form_data.response_dict
+        self.cards = form_data.card_dict
         self.response_code = status.HTTP_200_OK
         
-        if self.form_data.form_object.status == 'active':
+        if self.form_data.form_object.status == 'approved':   
             self.validations_to_perform['submit_error'] = True
-        check_warning = form_data['ignore_warnings'].upper() != 'TRUE'
-        if self.form_data.form_object.status == 'active' and check_warning:
-            self.validations_to_perform['warning'] = True
+            if not ignore_warnings:
+                self.validations_to_perform['warning'] = True
 
         self.errors = []
         self.warnings = []
@@ -141,26 +151,36 @@ class ValidateForm:
                     self.validation_set[set_key].append(validation)
             else:                   
                 validation_questions = FormValidationQuestion.objects.filter(validation=validation)
-                for validation_question in validation_questions:
-                    set_key = question_to_validation_set[validation_question.question.id]
-                    if set_key not in self.validation_set:
-                        self.validation_set[set_key] = [ validation ]
-                    else:
-                        self.validation_set[set_key].append(validation)
+                if len(validation_questions) > 0:
+                    for validation_question in validation_questions:
+                        set_key = question_to_validation_set[validation_question.question.id]
+                        if set_key not in self.validation_set:
+                            self.validation_set[set_key] = [ validation ]
+                        else:
+                            self.validation_set[set_key].append(validation)
+                        
+                        break
+                else:
+                    self.validation_set[self.main_form].append(validation)
                     
-                    break
    
     
-    def perform_validation(self, form_data, category_index=None):
+    def perform_validation(self, validation, form_data, category_index=None):
         if validation.level.name in self.validations_to_perform:
             if validation.trigger is not None:
                 trigger_value = form_data.get_answer(validation.trigger)
-                if type(trigger_value) is bool and trigger_value:
-                    should_validate = True
-                elif type(trigger_value) is str and trigger_value.upper() == 'TRUE':
-                    should_validate = True
+                if validation.trigger_value is not None:
+                    if trigger_value == validation.trigger_value:
+                        should_validate = True
+                    else:
+                        should_validate = False
                 else:
-                    should_validate = False
+                    if type(trigger_value) is bool and trigger_value:
+                        should_validate = True
+                    elif type(trigger_value) is str and trigger_value.upper() == 'TRUE':
+                        should_validate = True
+                    else:
+                        should_validate = False
             else:
                 should_validate = True
         
@@ -184,10 +204,10 @@ class ValidateForm:
                 
                 if category_id in self.validation_set:
                     for validation in self.validation_set[category_id]:
-                        if validation.validation_type_name in self.validations:
+                        if validation.validation_type.name in self.validations:
                             self.perform_validation(validation, card, category_index=card_index)
                         else:
-                            logger.error("validation #" + validation.id + " specifies an unimplemented validation:" + validation.validation_type.name)
+                            logger.error("validation #" + str(validation.id) + " specifies an unimplemented validation:" + validation.validation_type.name)
                             self.response_code = status.HTTP_500_INTERNAL_SERVER_ERROR
             
         

@@ -14,8 +14,8 @@ from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineForm
 from dataentry.serialize_form import FormDataSerializer
 from dataentry.serializers import CountrySerializer
 
-from dataentry.form_data import Form, FormData
-from dataentry.models import BorderStation, Country, IrfCore, UserLocationPermission
+from dataentry.form_data import Form, FormData, FormType
+from dataentry.models import BorderStation, Country, IrfCore, IrfNepal, UserLocationPermission
 
 class BorderStationOverviewSerializer(serializers.ModelSerializer):
     operating_country = CountrySerializer()
@@ -172,18 +172,28 @@ class IrfFormViewSet(viewsets.ModelViewSet):
                         queryset = tmp_queryset
                     else:
                         queryset = queryset.union(tmp_queryset)
-                else:
-                    # just in case there are no models on which to do a real query, keep a model to create an empty queryset
-                    empty_form_model = form_model
                     
-        if queryset is None and empty_form_model is not None:
-            queryset = empty_form_model.objects.none()
+        if queryset is None:
+            queryset = IrfNepal.objects.none()
                 
         return queryset
     
     def create(self, request):
-        serializer = FormDataSerializer(data=request.data)
-        return Response(status=status.HTTP_201_CREATED)
+        form_type = FormType.objects.get(name=self.form_type_name)
+        self.serializer_context = {'form_type':form_type}
+        serializer = FormDataSerializer(data=request.data, context=self.serializer_context)
+        if serializer.is_valid():
+            if not UserLocationPermission.has_session_permission(request, 'IRF', 'ADD', serializer.get_country_id(), serializer.get_station_id()):
+                return Response(status=status.HTTP_401_UNAUTHORIZED)
+            form_data = serializer.save()
+            serializer2 = FormDataSerializer(form_data, context=self.serializer_context)
+            return Response(serializer2.data, status=status.HTTP_200_OK)
+        else:
+            ret = {
+                'errors': serializer.the_errors,
+                'warnings':serializer.the_warnings
+                }
+            return Response(ret, status=status.HTTP_400_BAD_REQUEST)
     
     def my_retrieve(self, request, country_id, pk):
         self.serializer_context = {}
@@ -215,15 +225,33 @@ class IrfFormViewSet(viewsets.ModelViewSet):
         if irf is None:
             return Response({'detail' : "IRF not found"}, status=status.HTTP_404_NOT_FOUND)
         form_data = FormData(irf, form)
-        serializer = FormDataSerializer(form_data, data=request.data)
-        return Response(status=status.status.HTTP_200_OK)
+
+        self.serializer_context = {'form_type':form.form_type}
+        serializer = FormDataSerializer(form_data, data=request.data, context=self.serializer_context)
+        if serializer.is_valid():
+            if not UserLocationPermission.has_session_permission(request, 'IRF', 'EDIT', serializer.get_country_id(), serializer.get_station_id()):
+                return Response(status=status.HTTP_401_UNAUTHORIZED)
+            form_data = serializer.save()
+            serializer2 = FormDataSerializer(form_data, context=self.serializer_context)
+            return Response(serializer2.data, status=status.HTTP_200_OK)
+        else:
+            ret = {
+                'errors': serializer.the_errors,
+                'warnings':serializer.the_warnings
+                }
+            return Response(ret, status=status.HTTP_400_BAD_REQUEST)
     
     def destroy(self, request, country_id, pk):
         form = Form.current_form(self.form_type_name, country_id)
-        irf = FormData.find_object_by_id(pk, form)
-        if irf is None:
+        try:
+            irf = FormData.find_object_by_id(pk, form)
+        except ObjectDoesNotExist:
             return Response({'detail' : "IRF not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+        if not UserLocationPermission.has_session_permission(request, 'IRF', 'DELETE', irf.station.operating_country.id, irf.station.id):
+                return Response(status=status.HTTP_401_UNAUTHORIZED)
         form_data = FormData(irf, form)
         form_data.delete()
+        return Response(status=status.HTTP_200_OK)
 
 
