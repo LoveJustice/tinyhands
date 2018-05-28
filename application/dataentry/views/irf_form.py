@@ -10,6 +10,7 @@ from accounts.mixins import PermissionsRequiredMixin
 
 from django.views.generic import CreateView
 from django.core.exceptions import ObjectDoesNotExist
+from django.db import IntegrityError
 from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSet
 from dataentry.serialize_form import FormDataSerializer
 from dataentry.serializers import CountrySerializer
@@ -185,7 +186,14 @@ class IrfFormViewSet(viewsets.ModelViewSet):
         if serializer.is_valid():
             if not UserLocationPermission.has_session_permission(request, 'IRF', 'ADD', serializer.get_country_id(), serializer.get_station_id()):
                 return Response(status=status.HTTP_401_UNAUTHORIZED)
-            form_data = serializer.save()
+            try:
+                form_data = serializer.save()
+            except IntegrityError:
+                ret = {
+                    'errors': 'Duplicate IRF number',
+                    'warnings':[]
+                }
+                return Response(ret, status=status.HTTP_400_BAD_REQUEST)
             serializer2 = FormDataSerializer(form_data, context=self.serializer_context)
             return Response(serializer2.data, status=status.HTTP_200_OK)
         else:

@@ -769,6 +769,10 @@ class FormDataSerializer(serializers.Serializer):
         country_id = serializers.IntegerField().to_internal_value(tmp)
         status = data.get('status')
         tmp = data.get('storage_id')
+        if self.instance is None and tmp is not None:
+            self.the_errors = ["storage_id for form specified on create",]
+            self.the_warnings = []
+            raise serializers.ValidationError("storage_id for form specified on create");
         tmp = data.get('ignore_warnings')
         if tmp is not None and tmp.upper() == 'TRUE':
             ignore_warnings = True
@@ -801,7 +805,7 @@ class FormDataSerializer(serializers.Serializer):
         
         form_type = self.context.get('form_type')
         form = Form.current_form(form_type.name, country_id)
-        if self.instance is None:    
+        if self.instance is None:
             form_class = form.find_form_class()
             form_object = form_class()
             station = BorderStation.objects.get(id=station_id)
