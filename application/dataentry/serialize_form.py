@@ -118,9 +118,9 @@ class ResponseRadioButtonSerializer(serializers.Serializer):
                 # value could not be found in the set of answers, but may be text box entry
                 # check if text box entry is allowed for this question
                 if not textbox_entry_allowed(question):
-                    raise serializers.ValidationError({
-                        str(question.id):'RadioButton value "' + value + '" does not match any answers'
-                        })
+                    raise serializers.ValidationError(
+                        str(question.id) + ':RadioButton value "' + value + '" does not match any answers'
+                        )
         
         return {
             'value':value
@@ -157,9 +157,9 @@ class ResponseDropdownSerializer(serializers.Serializer):
                 # value could not be found in the set of answers, but may be text box entry
                 # check if text box entry is allowed for this question
                 if not textbox_entry_allowed(question):
-                    raise serializers.ValidationError({
-                        str(question.id):'Dropdown value "' + value + '" does not match any answers'
-                        })
+                    raise serializers.ValidationError(
+                        str(question.id) + ':Dropdown value "' + value + '" does not match any answers'
+                        )
         
         return {
             'value':value
@@ -185,14 +185,14 @@ class ResponseCheckboxSerializer(serializers.Serializer):
                 elif value.upper() == 'FALSE':
                     value = False
                 else:
-                    raise serializers.ValidationError({
-                        str(question.id):'Checkbox value is neither True nor False'
-                        })
+                    raise serializers.ValidationError(
+                        str(question.id) + ':Checkbox value is neither True nor False'
+                        )
             else:
                 if not (value.upper() == 'TRUE' or value.upper() == 'FALSE'):
-                    raise serializers.ValidationError({
-                        str(question.id):'Checkbox value is neither True nor False'
-                        })
+                    raise serializers.ValidationError(
+                        str(question.id) + ':Checkbox value is neither True nor False'
+                        )
         
         return {
             'value': value
@@ -211,16 +211,19 @@ class ResponseAddress1Serializer(ResponseAddressSerializer):
         id = self.validated_data.get('id')
         name = self.validated_data.get('name')
         if id is None:
-            address = Address1()
-            address.name = name
-            address.save()
+            if name is not None:
+                address = Address1()
+                address.name = name
+                address.save()
+            else:
+                address = None
         else:
             try:
                 address = Address1.objects.get(id=int(id))
             except ObjectDoesNotExist:
-                raise serializers.ValidationError({
-                        str(question.id):'Address1 id ' + id + ' does not exist'
-                        })
+                raise serializers.ValidationError(
+                        str(question.id) + ':Address1 id ' + id + ' does not exist'
+                        )
         
         return address
     
@@ -231,22 +234,25 @@ class ResponseAddress2Serializer(ResponseAddressSerializer):
         id = self.validated_data.get('id')
         name = self.validated_data.get('name')
         if id is None:
-            if address1 is not None:
-                address = Address2()
-                address.name = name
-                address.address1 = address1
-                address.save()
+            if name is not None:
+                if address1 is not None:
+                    address = Address2()
+                    address.name = name
+                    address.address1 = address1
+                    address.save()
+                else:
+                    raise serializers.ValidationError(
+                            str(question.id) + ':Attempting to create Address2, but no Address1 provided'
+                            )
             else:
-               raise serializers.ValidationError({
-                        str(question.id):'Attempting to create Address2, but no Address1 provided'
-                        }) 
+                address = None
         else:
             try:
                 address = Address2.objects.get(id=int(id))
             except ObjectDoesNotExist:
-                raise serializers.ValidationError({
-                        str(question.id):'Address2 id ' + id + ' does not exist'
-                        })
+                raise serializers.ValidationError(
+                        str(question.id) + ':Address2 id ' + id + ' does not exist'
+                        )
         
         return address
 
@@ -500,7 +506,7 @@ class ResponsePersonSerializer(serializers.Serializer):
             if birthdate is not None:
                 ret['birthdate'] = parser.parse(birthdate).date()
                          
-        tmp = data.get('birthdate')
+        tmp = data.get('passport')
         if tmp is not None:
             ret['passport'] = tmp.get('value')
             
@@ -515,7 +521,7 @@ class ResponsePersonSerializer(serializers.Serializer):
         if (address_object1 is None and address_object2 is not None or
             address_object1 is not None and address_object2 is None):
             match = False
-        else:
+        elif address_object1 is not None and address_object2 is not None:
             if address_object1.id != address_object2.id:
                 match = False
         
@@ -593,7 +599,8 @@ class QuestionResponseSerializer(serializers.Serializer):
         
         answer = form_data.get_answer(instance)
         ret['question_id']  = serializers.IntegerField().to_representation(instance.id)
-        ret['storage_id'] = serializers.IntegerField().to_representation(form_data.get_answer_storage(instance))
+        if form_data.get_answer_storage(instance) is not None:
+            ret['storage_id'] = serializers.IntegerField().to_representation(form_data.get_answer_storage(instance))
         if answer is not None:
             serializer = self.answer_type_to_serializer[instance.answer_type.name](answer, context=self.context)
             ret['response'] = serializer.data
@@ -649,7 +656,8 @@ class QuestionLayoutSerializer(serializers.Serializer):
 class CardSerializer(serializers.Serializer):
     def to_representation(self, instance):
         ret = super().to_representation(instance)
-        ret['storage_id'] = serializers.IntegerField().to_representation(instance.form_object.id)
+        if instance.form_object.id is not None:
+            ret['storage_id'] = serializers.IntegerField().to_representation(instance.form_object.id)
         category = self.context['category']
         question_layouts = QuestionLayout.objects.filter(category__form = instance.form_data.form, category=category).order_by('question__id')
         context = dict(self.context)
@@ -693,10 +701,11 @@ class CardSerializer(serializers.Serializer):
             form_data.card_dict[category.id].append(card)
         else:
             card = form_data.find_card(category, storage_id)
+            card.is_valid = True
         
         for serializer in self.response_serializers:
             serializer.context['form_data'] = card
-            serializer.get_or_create()   
+            serializer.get_or_create()
         
 
 class CardCategorySerializer(serializers.Serializer):
@@ -745,7 +754,8 @@ class FormDataSerializer(serializers.Serializer):
         ret['station_id'] = serializers.IntegerField().to_representation(instance.form_object.station.id)
         ret['country_id'] = serializers.IntegerField().to_representation(instance.form_object.station.operating_country.id)
         ret['status'] = serializers.CharField().to_representation(instance.form_object.status)
-        ret['storage_id'] = serializers.IntegerField().to_representation(instance.form_object.id)
+        if instance.form_object.id is not None:
+            ret['storage_id'] = serializers.IntegerField().to_representation(instance.form_object.id)
         if self.context is not None:
             context = dict(self.context)
         else:
@@ -763,6 +773,8 @@ class FormDataSerializer(serializers.Serializer):
         return ret
     
     def to_internal_value(self, data):
+        self.the_errors = []
+        self.the_warnings = []
         tmp = data.get('station_id')
         station_id = serializers.IntegerField().to_internal_value(tmp)
         tmp = data.get('country_id')
@@ -813,6 +825,7 @@ class FormDataSerializer(serializers.Serializer):
             form_data = FormData(form_object, form)
         else:
             form_data = self.instance
+            form_data.invalidate_cards()
         
         form_data.form_object.status = status
         for serializer in self.form_serializers:
@@ -849,8 +862,8 @@ class FormDataSerializer(serializers.Serializer):
     def validate_form(self, form, form_data, ignore_warnings):
         validate = ValidateForm(form, form_data, ignore_warnings)
         validate.validate()
-        self.the_errors = validate.errors
-        self.the_warnings = validate.warnings
+        self.the_errors.append(validate.errors)
+        self.the_warnings.append(validate.warnings)
         if len(validate.errors) > 0:
             raise serializers.ValidationError(validate.errors[0])
         elif len(validate.warnings) > 0:

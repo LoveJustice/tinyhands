@@ -22,7 +22,33 @@ class IrfFactory(DjangoModelFactory):
     staff_name = "Joe Test"
 
     how_sure_was_trafficking = 5
+    
+class MbzStationFactory(DjangoModelFactory):
+    class Meta:
+        django_get_or_create = ('station_code',)
+        model = BorderStation
+    
+    station_code = 'MBZ'
+    station_name = 'Malbazar'
+    open = True
+    operating_country = Country.objects.get(name='India')
+    
+class IrfIndiaFactory(DjangoModelFactory):
+    class Meta:
+        model = IrfIndia
+    
+    station = factory.SubFactory(MbzStationFactory)
 
+    form_entered_by = factory.SubFactory(SuperUserFactory)
+
+    irf_number = factory.Sequence(lambda n: 'MBZ{0}'.format(n))
+    date_time_of_interception = FuzzyDateTime(datetime.datetime(2008, 1, 1, tzinfo=pytz.UTC), datetime.datetime(2012, 1, 1, tzinfo=pytz.UTC))
+    status = 'approved'
+
+    location = "India"
+    staff_name = "Joe Test"
+
+    how_sure_was_trafficking = 5 
 
 class PersonFactory(DjangoModelFactory):
     class Meta:

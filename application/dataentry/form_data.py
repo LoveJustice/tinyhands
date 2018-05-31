@@ -24,11 +24,15 @@ class CardData:
         self.form_data = form_data
         self.form_object = card
         self.category_form = category_form
+        self.is_valid = True
         
         if response_dict is None:
             self.load_responses()
         else:
             self.response_dict = response_dict
+    
+    def invalidate_card(self):
+        self.is_valid = False
     
     def in_form_object(self, question):
         return question.id in self.form_data.question_storage
@@ -192,6 +196,11 @@ class FormData:
         
         return storage
     
+    def invalidate_cards(self):
+        for card_list in self.card_dict.values():
+                for card in card_list:
+                    card.invalidate()        
+    
     def save(self):
         with transaction.atomic():
             self.form_object.pre_save(self)
@@ -203,7 +212,10 @@ class FormData:
             
             for card_list in self.card_dict.values():
                 for card in card_list:
-                    card.save()
+                    if card.is_valid:
+                        card.save()
+                    else:
+                        card.delete()
             
             self.form_object.post_save(self)
     

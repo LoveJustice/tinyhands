@@ -166,7 +166,7 @@ class PermissionTest(APITestCase):
     def test_list_user_countries(self):
         url = reverse('UserPermissionCountries', args=[self.account.id])
         response = self.client.get(url)
-        self.assertEqual(len(response.data), 3)
+        self.assertEqual(len(response.data), 4)
     
     def test_list_user_countries_group(self):
         url = reverse('UserPermissionCountries', args=[self.account.id])

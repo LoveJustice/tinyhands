@@ -148,7 +148,6 @@ class Person(models.Model):
             if base_date.month < 7:
                 birth_year = birth_year - 1
             self.birthdate = date(birth_year,7,1)
-            print ('birthdate for', self.id, self.birthdate)
             self.save()
         elif self.age is None and self.birthdate is not None:
             delta = base_date - self.birthdate
