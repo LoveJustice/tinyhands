@@ -213,11 +213,12 @@ class IrfFormViewSet(viewsets.ModelViewSet):
         
         read_access = UserLocationPermission.has_session_permission(request, 'IRF', 'VIEW', country_id, irf.station.id)
         edit_access = UserLocationPermission.has_session_permission(request, 'IRF', 'EDIT', country_id, irf.station.id)
+        private_access = UserLocationPermission.has_session_permission(request, 'IRF', 'VIEW PI', country_id, irf.station.id)
         
         if not read_access:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
                 
-        if not edit_access:
+        if not edit_access and not private_access:
             self.serializer_context['mask_private'] = True
             
         form_data = FormData(irf, form)
