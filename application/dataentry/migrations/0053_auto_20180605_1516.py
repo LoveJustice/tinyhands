@@ -12,4 +12,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        migrations.RunSQL("INSERT INTO dataentry_permission (permission_group, action, min_level, account_permission_name) values ('IRF', 'VIEW PI','STATION',null);"),
     ]
