@@ -22,7 +22,7 @@ class IrfFactory(DjangoModelFactory):
     staff_name = "Joe Test"
 
     how_sure_was_trafficking = 5
-    
+
 class MbzStationFactory(DjangoModelFactory):
     class Meta:
         django_get_or_create = ('station_code',)
@@ -31,7 +31,13 @@ class MbzStationFactory(DjangoModelFactory):
     station_code = 'MBZ'
     station_name = 'Malbazar'
     open = True
-    operating_country = Country.objects.get(name='India')
+    operating_country = None
+
+    @factory.post_generation
+    def mbox(self, create, extracted, **kwargs):
+        self.operating_country = Country.objects.get(name='India')
+        self.save()
+        
     
 class IrfIndiaFactory(DjangoModelFactory):
     class Meta:
