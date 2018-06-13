@@ -825,7 +825,9 @@ class FormDataSerializer(serializers.Serializer):
             form_data = FormData(form_object, form)
         else:
             form_data = self.instance
-            form_data.invalidate_cards()
+            for card_list in form_data.card_dict.values():
+                for card in card_list:
+                    card.invalidate_card()
         
         form_data.form_object.status = status
         for serializer in self.form_serializers:
