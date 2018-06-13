@@ -149,31 +149,38 @@ class QuestionStorage(models.Model):
 class ExportImport(models.Model):
     description = models.CharField(max_length=126, null = True)
     implement_class_name = models.CharField(max_length=126, null=True)
-    
-class Export_Import_Question(models.Model):
+    form = models.ForeignKey(Form)
+
+class ExportImportQuestion(models.Model):
     export_import = models.ForeignKey(ExportImport)
     question = models.ForeignKey(Question)
-    position = models.PositiveIntegerField()
     field_type = models.CharField(max_length=126)
     export_name = models.CharField(max_length=126)
-    arguments_json = JSONField()
+    arguments_json = JSONField(null=True)
 
 class GoogleSheet(models.Model):
     export_import = models.ForeignKey(ExportImport)
     export_or_import = models.CharField(max_length=10)
     spreadsheet_name = models.CharField(max_length=126)
     sheet_name = models.CharField(max_length=126)
-    key_column = models.CharField(max_length=126)
+    key_question = models.ForeignKey(Question)
     import_status_column = models.CharField(max_length=126, null = True)
     import_issue_column = models.CharField(max_length=126, null=True)
-    
-    
+
 class ExportImportCard(models.Model):
-    export_import = models.ForeignKey(ExportImport, related_name='export_import_base', null=True)
-    card_export_import = models.ForeignKey(ExportImport, related_name='export_import_card', null=True)
-    start_position = models.PositiveIntegerField()
+    export_import = models.ForeignKey(ExportImport, related_name='export_import_base')
+    category = models.ForeignKey(Category, related_name='export_import_card')
     prefix = models.CharField(max_length=126)
     max_instances = models.PositiveIntegerField()
+
+# data fields to be exported for which there is no question
+class ExportImportField(models.Model):
+    export_import = models.ForeignKey(ExportImport)
+    card = models.foreignKey(ExportImportCard, null=True)
+    field_name = models.CharField(max_length=126)
+    field_type = models.CharField(max_length=126)
+    export_name = models.CharField(max_length=126)
+    arguments_json = JSONField(null=True)
 
 class BaseForm(models.Model):
     status = models.CharField('Status', max_length=20, default='pending')
