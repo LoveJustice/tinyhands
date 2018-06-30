@@ -148,13 +148,13 @@ class QuestionStorage(models.Model):
  #
 class ExportImport(models.Model):
     description = models.CharField(max_length=126, null = True)
+    implement_module = models.CharField(max_length=126, null=True)
     implement_class_name = models.CharField(max_length=126, null=True)
     form = models.ForeignKey(Form)
 
 class ExportImportQuestion(models.Model):
     export_import = models.ForeignKey(ExportImport)
     question = models.ForeignKey(Question)
-    field_type = models.CharField(max_length=126)
     export_name = models.CharField(max_length=126)
     arguments_json = JSONField(null=True)
 
@@ -163,7 +163,7 @@ class GoogleSheet(models.Model):
     export_or_import = models.CharField(max_length=10)
     spreadsheet_name = models.CharField(max_length=126)
     sheet_name = models.CharField(max_length=126)
-    key_question = models.ForeignKey(Question)
+    key_field_name = models.CharField(max_length=126)
     import_status_column = models.CharField(max_length=126, null = True)
     import_issue_column = models.CharField(max_length=126, null=True)
 
@@ -176,9 +176,9 @@ class ExportImportCard(models.Model):
 # data fields to be exported for which there is no question
 class ExportImportField(models.Model):
     export_import = models.ForeignKey(ExportImport)
-    card = models.foreignKey(ExportImportCard, null=True)
+    card = models.ForeignKey(ExportImportCard, null=True)
     field_name = models.CharField(max_length=126)
-    field_type = models.CharField(max_length=126)
+    answer_type = models.ForeignKey(AnswerType, related_name='field_answer_type')
     export_name = models.CharField(max_length=126)
     arguments_json = JSONField(null=True)
 
@@ -191,6 +191,10 @@ class BaseForm(models.Model):
     
     class Meta:
         abstract = True
+    
+    # Overridden in subclass
+    def get_key(self):
+        return None
     
     # Overridden in subclass as needed
     def pre_save(self, form_data):

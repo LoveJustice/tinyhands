@@ -199,7 +199,7 @@ class FormData:
     def invalidate_cards(self):
         for card_list in self.card_dict.values():
                 for card in card_list:
-                    card.invalidate()        
+                    card.invalidate_card()        
     
     def save(self):
         with transaction.atomic():
@@ -229,6 +229,12 @@ class FormData:
                 response.delete()
             
             self.form_object.delete()
+    
+    def __str__(self):
+        if self.form_object is not None:
+            return str(self.form_object)
+        else:
+            return None
     
     @staticmethod
     def find_form(form_type_name, country_id):

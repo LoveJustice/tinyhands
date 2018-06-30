@@ -16,6 +16,7 @@ from dataentry.serialize_form import FormDataSerializer
 from dataentry.serializers import CountrySerializer
 
 from dataentry.form_data import Form, FormData, FormType
+from dataentry.dataentry_signals import form_done
 from dataentry.models import BorderStation, Country, IrfCore, IrfNepal, UserLocationPermission
 
 class BorderStationOverviewSerializer(serializers.ModelSerializer):
@@ -195,6 +196,7 @@ class IrfFormViewSet(viewsets.ModelViewSet):
                 }
                 return Response(ret, status=status.HTTP_400_BAD_REQUEST)
             serializer2 = FormDataSerializer(form_data, context=self.serializer_context)
+            form_done.send_robust(sender=self.__class__, form_data=form_data)
             return Response(serializer2.data, status=status.HTTP_200_OK)
         else:
             ret = {
@@ -242,6 +244,7 @@ class IrfFormViewSet(viewsets.ModelViewSet):
                 return Response(status=status.HTTP_401_UNAUTHORIZED)
             form_data = serializer.save()
             serializer2 = FormDataSerializer(form_data, context=self.serializer_context)
+            form_done.send_robust(sender=self.__class__, form_data=form_data)
             return Response(serializer2.data, status=status.HTTP_200_OK)
         else:
             ret = {
@@ -261,6 +264,7 @@ class IrfFormViewSet(viewsets.ModelViewSet):
                 return Response(status=status.HTTP_401_UNAUTHORIZED)
         form_data = FormData(irf, form)
         form_data.delete()
+        form_done.send_robust(sender=self.__class__, form_data=form_data, remove=True)
         return Response(status=status.HTTP_200_OK)
 
 
