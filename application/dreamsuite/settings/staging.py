@@ -54,5 +54,13 @@ SPREADSHEET_CONFIG = {
             'spreadsheet':'Dream Suite - THN Data (Staging)',
             'sheet':'Address2 Export',
             }
+        },
+    'Traffickers': {
+        'key_column': 'id',
+        'export': {
+            'spreadsheet':'Trafficker Photos',
+            'sheet':'Interceptee_Photos',
+            'export_function': 'export_import.trafficker_io.get_trafficker_export_rows',
+            },
         }
     }
