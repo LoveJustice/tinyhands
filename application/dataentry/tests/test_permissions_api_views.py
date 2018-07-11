@@ -131,7 +131,7 @@ class PermissionTest(APITestCase):
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['count'], 23)
+        self.assertEqual(response.data['count'], 25)
     
     def test_list_user_permissions(self):
         url = reverse('UserLocationPermission', args=[self.account.id])
@@ -166,7 +166,7 @@ class PermissionTest(APITestCase):
     def test_list_user_countries(self):
         url = reverse('UserPermissionCountries', args=[self.account.id])
         response = self.client.get(url)
-        self.assertEqual(len(response.data), 3)
+        self.assertEqual(len(response.data), 4)
     
     def test_list_user_countries_group(self):
         url = reverse('UserPermissionCountries', args=[self.account.id])

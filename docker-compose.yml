@@ -2,7 +2,7 @@ version: "3"
 
 services:
   db:
-    image: postgres
+    image: postgres:9.6
     container_name: db
     ports:
       - "5432"
@@ -13,7 +13,7 @@ services:
     stdin_open: true
     tty: true
     volumes:
-      - /tmp:/log
+      - ./tmp:/log
       - ./application:/data
     expose:
       - "9001"
@@ -28,7 +28,7 @@ services:
     depends_on:
       - web
     volumes:
-      - /tmp:/log
+      - ./tmp:/log
       - ./application:/data
     ports:
       - "80:80"
