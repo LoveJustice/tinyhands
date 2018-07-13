@@ -2,6 +2,7 @@ import json
 from dateutil import parser
 from rest_framework import serializers
 from django.core.exceptions import ObjectDoesNotExist
+import traceback
 
 from dataentry.models.addresses import Address1, Address2
 from dataentry.models.border_station import BorderStation
@@ -170,29 +171,18 @@ class ResponseDropdownSerializer(serializers.Serializer):
  
 class ResponseCheckboxSerializer(serializers.Serializer):
     def to_representation(self, instance):
+        question = self.context['question']
         ret = super().to_representation(instance)
-        ret['value'] = private_mask(self.context, serializers.CharField().to_representation(instance))
+        if textbox_entry_allowed(question):
+            ret['value'] = private_mask(self.context, serializers.CharField().to_representation(instance))
+        else:
+            ret['value'] = private_mask(self.context, serializers.BooleanField().to_representation(instance))
         return ret
     
     def to_internal_value(self, data):
         question = self.context['question']
         return_as_string = self.context.get('return_as_string')
         value = data.get('value')
-        if value is not None and not textbox_entry_allowed(question):
-            if return_as_string is None or not return_as_string:
-                if value.upper() == 'TRUE':
-                    value = True
-                elif value.upper() == 'FALSE':
-                    value = False
-                else:
-                    raise serializers.ValidationError(
-                        str(question.id) + ':Checkbox value is neither True nor False'
-                        )
-            else:
-                if not (value.upper() == 'TRUE' or value.upper() == 'FALSE'):
-                    raise serializers.ValidationError(
-                        str(question.id) + ':Checkbox value is neither True nor False'
-                        )
         
         return {
             'value': value
@@ -392,12 +382,28 @@ class ResponseImageSerializer(serializers.Serializer):
             return serializer.data
     
     def to_internal_value(self, data):
-        self.holderSerializer = ResponseImageHolderSerializer(data=data)
-        self.holderSerializer.is_valid()
+        question = self.context['question']
+        if question.params is not None and 'subdirectory' in question.params:
+            subdirectory = question.params['subdirectory']
+        else:
+            subdirectory = ''
+        if isinstance(data,dict) and 'value' in data and isinstance(data['value'],dict) and 'name' in data['value']:
+            self.image_name = subdirectory + data['value']['name']
+        else:
+            
+            self.image_name = None
+        
         return {}
     
     def get_or_create(self):
-        return None
+        if self.image_name is not None:
+            return self.image_name
+        else:
+            form_data = self.context['form_data']
+            question = self.context['question']
+            return form_data.get_answer(question)
+        
+        
     
 class ResponsePersonSerializer(serializers.Serializer):     
     def to_representation(self, instance):
@@ -481,8 +487,10 @@ class ResponsePersonSerializer(serializers.Serializer):
         self.address2_serializer.is_valid()
         
         tmp = data.get('phone')
-        if tmp is not None:
+        if tmp is not None and tmp.get('value') is not None:
             ret['phone'] = tmp.get('value')
+        else:
+            ret['phone'] = ''
         
         tmp = data.get('gender')
         if tmp is not None:
@@ -507,12 +515,16 @@ class ResponsePersonSerializer(serializers.Serializer):
                 ret['birthdate'] = parser.parse(birthdate).date()
                          
         tmp = data.get('passport')
-        if tmp is not None:
+        if tmp is not None and tmp.get('value') is not None:
             ret['passport'] = tmp.get('value')
+        else:
+            ret['passport'] = ''
             
         tmp = data.get('nationality')
-        if tmp is not None:
+        if tmp is not None and tmp.get('value') is not None:
             ret['nationality'] = tmp.get('value')
+        else:
+            ret['nationality'] = ''
         
         return ret
     
@@ -631,6 +643,7 @@ class QuestionResponseSerializer(serializers.Serializer):
         self.response_serializer.is_valid()
         question = self.validated_data.get('question')
         storage_id = self.validated_data.get('storage_id')
+        self.response_serializer.context['form_data'] = form_data
         response = self.response_serializer.get_or_create()
         
         form_data.set_answer(question, response, storage_id)
@@ -780,25 +793,22 @@ class FormDataSerializer(serializers.Serializer):
         tmp = data.get('country_id')
         country_id = serializers.IntegerField().to_internal_value(tmp)
         status = data.get('status')
-        tmp = data.get('storage_id')
-        if self.instance is None and tmp is not None:
-            self.the_errors = ["storage_id for form specified on create",]
-            self.the_warnings = []
-            raise serializers.ValidationError("storage_id for form specified on create");
         tmp = data.get('ignore_warnings')
         if tmp is not None and tmp.upper() == 'TRUE':
             ignore_warnings = True
         else:
             ignore_warnings = False
-        
-        blank_id = self.context.get('clear_storage_id')
-        if blank_id is not None:
-            tmp = None
+            
+        tmp = data.get('storage_id', None)
+        if self.instance is None and tmp is not None:
+            self.the_errors = ["storage_id for form specified on create",]
+            self.the_warnings = []
+            raise serializers.ValidationError("storage_id for form specified on create");
         
         if tmp is None:
             storage_id = None
         else:
-            storage_id = serializers.IntegerField().to_internal_value(tmp)
+            storage_id = serializers.IntegerField().to_internal_value(tmp)       
         
         responses = data.get('responses')
         responses_data = []
@@ -823,6 +833,8 @@ class FormDataSerializer(serializers.Serializer):
             station = BorderStation.objects.get(id=station_id)
             form_object.station = station
             form_data = FormData(form_object, form)
+            request_user = self.context.get('request.user')
+            form_data.form_object.form_entered_by = request_user
         else:
             form_data = self.instance
             for card_list in form_data.card_dict.values():
@@ -838,15 +850,14 @@ class FormDataSerializer(serializers.Serializer):
             serializer.context['form_data'] = form_data
             serializer.get_or_create()
         
-        self.validate_form(form, form_data, ignore_warnings)
-        
         self.form_data = form_data
+        
+        self.validate_form(form, form_data, ignore_warnings)
              
         return {
             'station_id':station_id,
             'country_id': country_id,
             'status': status,
-            'storage_id':storage_id,
             }
     
     def get_country_id(self):
@@ -864,8 +875,8 @@ class FormDataSerializer(serializers.Serializer):
     def validate_form(self, form, form_data, ignore_warnings):
         validate = ValidateForm(form, form_data, ignore_warnings)
         validate.validate()
-        self.the_errors.append(validate.errors)
-        self.the_warnings.append(validate.warnings)
+        self.the_errors = self.the_errors + validate.errors
+        self.the_warnings = self.the_warnings + validate.warnings
         if len(validate.errors) > 0:
             raise serializers.ValidationError(validate.errors[0])
         elif len(validate.warnings) > 0:

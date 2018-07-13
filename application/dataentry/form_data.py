@@ -183,8 +183,11 @@ class FormData:
         if self.in_form_object(question):
             setattr(self.form_object, self.question_storage[question.id].field_name, answer)
         else:
-            self.response_dict[question.id].value = answer
-            self.response_dict[question.id].id = storage_id
+            if question.id in self.response_dict:
+                self.response_dict[question.id].value = answer
+                self.response_dict[question.id].id = storage_id
+            else:
+                 logger.error("Unable to locate question with id " + str(question.id) + " in response_dict")
     
     def get_answer_storage(self, question):
         if self.in_form_object(question):

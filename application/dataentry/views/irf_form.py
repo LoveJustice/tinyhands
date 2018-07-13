@@ -4,12 +4,16 @@ from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import filters as fs
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 
 from braces.views import LoginRequiredMixin
 from accounts.mixins import PermissionsRequiredMixin
+import traceback
+import json
 
 from django.views.generic import CreateView
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.files.storage import default_storage
 from django.db import IntegrityError
 from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSet
 from dataentry.serialize_form import FormDataSerializer
@@ -64,6 +68,7 @@ class IrfListSerializer(serializers.Serializer):
         return UserLocationPermission.has_permission_in_list(perm_list, self.perm_group_name,'APPROVE', obj.station.operating_country.id, obj.station.id)
 
 class IrfFormViewSet(viewsets.ModelViewSet):
+    parser_classes = (MultiPartParser,FormParser,JSONParser)
     permission_classes = (IsAuthenticated, )
     serializer_class = IrfListSerializer
     filter_backends = (fs.SearchFilter, fs.OrderingFilter,)
@@ -179,21 +184,61 @@ class IrfFormViewSet(viewsets.ModelViewSet):
                 
         return queryset
     
+    def save_files(self, files, subdirectory):
+        for file_obj in files:
+            filename = file_obj.name
+            with default_storage.open(subdirectory + filename, 'wb+') as destination:
+                for chunk in file_obj.chunks():
+                    destination.write(chunk)
+    
+    def extract_data(self, request):
+        if 'main' in request.data:
+            request_string = request.data['main']
+            request_json = json.loads(request_string)
+        
+            cnt = 0
+            images = []
+            while 'images[' + str(cnt) + ']' in request.data:
+                images.append(request.data['images[' + str(cnt) + ']'])
+                cnt += 1
+            
+            self.save_files(images, 'interceptee_photos/')
+            
+            cnt = 0
+            scanned = []
+            while 'scanned[' + str(cnt) + ']' in request.data:
+                scanned.append(request.data['scanned[' + str(cnt) + ']'])
+                cnt += 1
+            
+            self.save_files(scanned, 'scanned_irf_forms/')
+        else:
+            request_json = None
+        
+        return request_json
+    
     def create(self, request):
         form_type = FormType.objects.get(name=self.form_type_name)
-        self.serializer_context = {'form_type':form_type}
-        serializer = FormDataSerializer(data=request.data, context=self.serializer_context)
+        request_json = self.extract_data(request)
+        self.serializer_context = {'form_type':form_type, 'request.user':request.user}
+        serializer = FormDataSerializer(data=request_json, context=self.serializer_context)
         if serializer.is_valid():
             if not UserLocationPermission.has_session_permission(request, 'IRF', 'ADD', serializer.get_country_id(), serializer.get_station_id()):
                 return Response(status=status.HTTP_401_UNAUTHORIZED)
             try:
                 form_data = serializer.save()
-            except IntegrityError:
-                ret = {
-                    'errors': 'Duplicate IRF number',
-                    'warnings':[]
-                }
-                return Response(ret, status=status.HTTP_400_BAD_REQUEST)
+            except IntegrityError as exc:
+                if 'unique constraint' in exc.args[0]:
+                    ret = {
+                        'errors': [ exc.args[0] ],
+                        'warnings':[]
+                    }
+                    return Response(ret, status=status.HTTP_400_BAD_REQUEST)
+                else:
+                    ret = {
+                        'errors': [exc.args[0]],
+                        'warnings':[]
+                    }
+                    return Response(ret, status=status.HTTP_400_BAD_REQUEST)
             serializer2 = FormDataSerializer(form_data, context=self.serializer_context)
             return Response(serializer2.data, status=status.HTTP_200_OK)
         else:
@@ -234,9 +279,10 @@ class IrfFormViewSet(viewsets.ModelViewSet):
         if irf is None:
             return Response({'detail' : "IRF not found"}, status=status.HTTP_404_NOT_FOUND)
         form_data = FormData(irf, form)
+        request_json = self.extract_data(request)
 
         self.serializer_context = {'form_type':form.form_type}
-        serializer = FormDataSerializer(form_data, data=request.data, context=self.serializer_context)
+        serializer = FormDataSerializer(form_data, data=request_json, context=self.serializer_context)
         if serializer.is_valid():
             if not UserLocationPermission.has_session_permission(request, 'IRF', 'EDIT', serializer.get_country_id(), serializer.get_station_id()):
                 return Response(status=status.HTTP_401_UNAUTHORIZED)

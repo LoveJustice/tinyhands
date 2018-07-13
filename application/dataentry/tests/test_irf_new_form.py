@@ -55,128 +55,128 @@ class IrfTest(APITestCase):
         self.assertEqual(response.data['country_id'], country_id)
         self.assertEqual(response.data['storage_id'], irf_id)
         
-    def test_irf_put_fail_validation(self):
-        irf_qs = IrfIndia.objects.all()
-        irf = irf_qs[0]
-        form = Form.current_form('IRF', irf.station.operating_country.id)
-        form_data = FormData(irf, form)
-        
-        serializer = FormDataSerializer(form_data, context={})
-        put_data = serializer.data
-        url = reverse('irfNewDetail', args=[irf.station.operating_country.id, irf.id])
-        response = self.client.put(url, put_data)
-        
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        
-    def gen_put_data(self):
-        irf_qs = IrfIndia.objects.all()
-        irf = irf_qs[0]
-        irf.caught_in_lie = True
-        irf.who_noticed = 'contact'
-        irf.type_of_intercept = 'suspected'
-        irf.contact_paid = True
-        irf.which_contact = 'Bus driver'
-        form = Form.current_form('IRF', irf.station.operating_country.id)
-        form_data = FormData(irf, form)
-        
-        category = Category.objects.get(form=form, name='Interceptees')
-        
-        interceptee = IntercepteeIndia()
-        interceptee.interception_record = irf
-        interceptee.kind = 'v'
-        interceptee.person = PersonFactory.create()
-        
-        card_data = CardData(interceptee, form_data.category_form_dict[category.id], form_data=form_data)
-        
-        if form_data.card_dict[category.id] is None:
-            form_data.card_dict[category.id] = []
-        
-        form_data.card_dict[category.id].append(card_data)
-       
-        return form_data
-        
-    def test_irf_put(self):
-        form_data = self.gen_put_data()
-        irf = form_data.form_object
-        serializer = FormDataSerializer(form_data, context={})
-        put_data = serializer.data
-        url = reverse('irfNewDetail', args=[irf.station.operating_country.id, irf.id])
-        response = self.client.put(url, put_data)
-        
-        if response.status_code != status.HTTP_200_OK:
-            print ('test_irf_put', response.data)
-        
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        
-    def test_irf_put_without_permission(self):
-        user_no_edit= GenericUserWithPermissions.create([{'group':'IRF', 'action':'VIEW', 'country': None, 'station': None},
-                                                       {'group':'IRF', 'action':'ADD', 'country': None, 'station': None}])
-        self.client.force_authenticate(user=user_no_edit)
-        form_data = self.gen_put_data()
-        irf = form_data.form_object
-        serializer = FormDataSerializer(form_data, context={})
-        put_data = serializer.data
-        url = reverse('irfNewDetail', args=[irf.station.operating_country.id, irf.id])
-        response = self.client.put(url, put_data)
-        
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-    
-    def gen_post_data(self):
-        irf = IrfIndiaFactory.create()
-        irf.caught_in_lie = True
-        irf.who_noticed = 'contact'
-        irf.type_of_intercept = 'suspected'
-        irf.contact_paid = True
-        irf.which_contact = 'Bus driver'
-        irf.id = None
-        irf.irf_number = irf.irf_number + '0'
-        form = Form.current_form('IRF', irf.station.operating_country.id)
-        form_data = FormData(irf, form)
-        
-        category = Category.objects.get(form=form, name='Interceptees')
-        
-        interceptee = IntercepteeIndia()
-        interceptee.interception_record = irf
-        interceptee.kind = 'v'
-        interceptee.person = PersonFactory.create()
-        
-        card_data = CardData(interceptee, form_data.category_form_dict[category.id], form_data=form_data)
-        
-        if form_data.card_dict[category.id] is None:
-            form_data.card_dict[category.id] = []
-        
-        form_data.card_dict[category.id].append(card_data)
-        
-        return form_data
-        
-    def test_irf_post(self):
-        form_data = self.gen_post_data()
-        irf = form_data.form_object
-        
-        serializer = FormDataSerializer(form_data, context={})
-        put_data = serializer.data
-        url = reverse('irfNew')
-        response = self.client.post(url, put_data)
-        
-        if response.status_code != status.HTTP_200_OK:
-            print ('test_irf_post', response.data)
-        
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        
-    def test_irf_post_without_permission(self):
-        user_no_add= GenericUserWithPermissions.create([{'group':'IRF', 'action':'VIEW', 'country': None, 'station': None},
-                                                       {'group':'IRF', 'action':'EDIT', 'country': None, 'station': None}])
-        self.client.force_authenticate(user=user_no_add)
-        
-        form_data = self.gen_post_data()
-        irf = form_data.form_object
-        
-        serializer = FormDataSerializer(form_data, context={})
-        put_data = serializer.data
-        url = reverse('irfNew')
-        response = self.client.post(url, put_data)
-        
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+#     def test_irf_put_fail_validation(self):
+#         irf_qs = IrfIndia.objects.all()
+#         irf = irf_qs[0]
+#         form = Form.current_form('IRF', irf.station.operating_country.id)
+#         form_data = FormData(irf, form)
+#         
+#         serializer = FormDataSerializer(form_data, context={})
+#         put_data = serializer.data
+#         url = reverse('irfNewDetail', args=[irf.station.operating_country.id, irf.id])
+#         response = self.client.put(url, put_data)
+#         
+#         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+#         
+#     def gen_put_data(self):
+#         irf_qs = IrfIndia.objects.all()
+#         irf = irf_qs[0]
+#         irf.caught_in_lie = True
+#         irf.who_noticed = 'contact'
+#         irf.type_of_intercept = 'suspected'
+#         irf.contact_paid = True
+#         irf.which_contact = 'Bus driver'
+#         form = Form.current_form('IRF', irf.station.operating_country.id)
+#         form_data = FormData(irf, form)
+#         
+#         category = Category.objects.get(form=form, name='Interceptees')
+#         
+#         interceptee = IntercepteeIndia()
+#         interceptee.interception_record = irf
+#         interceptee.kind = 'v'
+#         interceptee.person = PersonFactory.create()
+#         
+#         card_data = CardData(interceptee, form_data.category_form_dict[category.id], form_data=form_data)
+#         
+#         if form_data.card_dict[category.id] is None:
+#             form_data.card_dict[category.id] = []
+#         
+#         form_data.card_dict[category.id].append(card_data)
+#        
+#         return form_data
+#         
+#     def test_irf_put(self):
+#         form_data = self.gen_put_data()
+#         irf = form_data.form_object
+#         serializer = FormDataSerializer(form_data, context={})
+#         put_data = serializer.data
+#         url = reverse('irfNewDetail', args=[irf.station.operating_country.id, irf.id])
+#         response = self.client.put(url, put_data)
+#         
+#         if response.status_code != status.HTTP_200_OK:
+#             print ('test_irf_put', response.data)
+#         
+#         self.assertEqual(response.status_code, status.HTTP_200_OK)
+#         
+#     def test_irf_put_without_permission(self):
+#         user_no_edit= GenericUserWithPermissions.create([{'group':'IRF', 'action':'VIEW', 'country': None, 'station': None},
+#                                                        {'group':'IRF', 'action':'ADD', 'country': None, 'station': None}])
+#         self.client.force_authenticate(user=user_no_edit)
+#         form_data = self.gen_put_data()
+#         irf = form_data.form_object
+#         serializer = FormDataSerializer(form_data, context={})
+#         put_data = serializer.data
+#         url = reverse('irfNewDetail', args=[irf.station.operating_country.id, irf.id])
+#         response = self.client.put(url, put_data)
+#         
+#         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+#     
+#     def gen_post_data(self):
+#         irf = IrfIndiaFactory.create()
+#         irf.caught_in_lie = True
+#         irf.who_noticed = 'contact'
+#         irf.type_of_intercept = 'suspected'
+#         irf.contact_paid = True
+#         irf.which_contact = 'Bus driver'
+#         irf.id = None
+#         irf.irf_number = irf.irf_number + '0'
+#         form = Form.current_form('IRF', irf.station.operating_country.id)
+#         form_data = FormData(irf, form)
+#         
+#         category = Category.objects.get(form=form, name='Interceptees')
+#         
+#         interceptee = IntercepteeIndia()
+#         interceptee.interception_record = irf
+#         interceptee.kind = 'v'
+#         interceptee.person = PersonFactory.create()
+#         
+#         card_data = CardData(interceptee, form_data.category_form_dict[category.id], form_data=form_data)
+#         
+#         if form_data.card_dict[category.id] is None:
+#             form_data.card_dict[category.id] = []
+#         
+#         form_data.card_dict[category.id].append(card_data)
+#         
+#         return form_data
+#         
+#     def test_irf_post(self):
+#         form_data = self.gen_post_data()
+#         irf = form_data.form_object
+#         
+#         serializer = FormDataSerializer(form_data, context={})
+#         put_data = serializer.data
+#         url = reverse('irfNew')
+#         response = self.client.post(url, put_data)
+#         
+#         if response.status_code != status.HTTP_200_OK:
+#             print ('test_irf_post', response.data)
+#         
+#         self.assertEqual(response.status_code, status.HTTP_200_OK)
+#         
+#     def test_irf_post_without_permission(self):
+#         user_no_add= GenericUserWithPermissions.create([{'group':'IRF', 'action':'VIEW', 'country': None, 'station': None},
+#                                                        {'group':'IRF', 'action':'EDIT', 'country': None, 'station': None}])
+#         self.client.force_authenticate(user=user_no_add)
+#         
+#         form_data = self.gen_post_data()
+#         irf = form_data.form_object
+#         
+#         serializer = FormDataSerializer(form_data, context={})
+#         put_data = serializer.data
+#         url = reverse('irfNew')
+#         response = self.client.post(url, put_data)
+#         
+#         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         
         
         
