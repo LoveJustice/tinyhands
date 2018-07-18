@@ -26,6 +26,7 @@ class BorderStationFactory(DjangoModelFactory):
     latitude = 1
     longitude = 1
     open = True
+    time_zone = 'Asia/Kathmandu'
     operating_country = factory.SubFactory(CountryFactory)
 
 
