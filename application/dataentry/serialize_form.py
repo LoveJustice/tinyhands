@@ -1,4 +1,5 @@
 import json
+from django.conf import settings
 from dateutil import parser
 from rest_framework import serializers
 from django.core.exceptions import ObjectDoesNotExist
@@ -363,23 +364,17 @@ class ResponseDateTimeSerializer(serializers.Serializer):
     def get_or_create(self):
         return self.validated_data.get('value')
 
-class ResponseImageHolder:
-    def __init__(self, image):
-        self.value = image
-
-class ResponseImageHolderSerializer(serializers.Serializer):
-    value = serializers.ImageField()
-
 class ResponseImageSerializer(serializers.Serializer):
     def to_representation(self, instance):
         question = self.context['question']
         if mask_private in self.context and self.context[mask_private] == True and is_private_value(question, 'value'): 
             ret = super().to_representation(instance)
             ret['value'] = None
-        else:   
-            holder = ResponseImageHolder(instance)
-            serializer = ResponseImageHolderSerializer(holder)
-            return serializer.data
+        else:
+            ret = super().to_representation(instance)
+            ret['value'] = settings.MEDIA_URL + instance.name
+        
+        return ret
     
     def to_internal_value(self, data):
         question = self.context['question']
