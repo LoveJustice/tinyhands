@@ -157,7 +157,7 @@ class GoogleSheet (GoogleSheetBasic):
             key_value = getattr(db_obj, key_field)
             if not key_value in sheet_keys:
                 db_data_to_export.append(db_obj)
-                logger.debug("audit - export " + key_value + "for sheet " + self.sheet_name)
+                logger.debug("audit - export " + str(key_value) + "for sheet " + self.sheet_name)
                 
         new_rows = self.export_method(db_data_to_export)
         logger.debug("export_method returned row count " + str(len(new_rows)))

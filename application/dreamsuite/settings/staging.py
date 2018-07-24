@@ -1,14 +1,19 @@
 from .base import *
 
-ALLOWED_HOSTS = [
-    'localhost',
-    '127.0.0.1',
-    '139.162.52.72',
-    'staging.tinyhandsdreamsuite.org',
-    'staging.dreamsuite.org',
+DEBUG = True
+
+ALLOWED_HOSTS = ['*']
+
+INSTALLED_APPS += [
+    'corsheaders',
 ]
 
-DEBUG = True
+MIDDLEWARE_CLASSES += [
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
+]
+
+CORS_ORIGIN_ALLOW_ALL = True
 
 ADMINS = [('Ben Duggan', 'benaduggan@gmail.com'), ('Austin Munn', "austin@tinyhands.org"), ("Stan Rishel", "scrishel@sbcglobal.net")]
 
@@ -49,5 +54,13 @@ SPREADSHEET_CONFIG = {
             'spreadsheet':'Dream Suite - THN Data (Staging)',
             'sheet':'Address2 Export',
             }
+        },
+    'Traffickers': {
+        'key_column': 'id',
+        'export': {
+            'spreadsheet':'Trafficker Photos',
+            'sheet':'Interceptee_Photos',
+            'export_function': 'export_import.trafficker_io.get_trafficker_export_rows',
+            },
         }
     }

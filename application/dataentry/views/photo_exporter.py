@@ -126,8 +126,8 @@ class PhotoExporter(viewsets.GenericViewSet):
         imagezip = zipfile.ZipFile(f, 'w')
         for photoTuple in photos:
             try:
-                image_file = open(settings.MEDIA_ROOT + '/' + photoTuple[0])
-                imagezip.writestr(str(photoTuple[2]) + '-' + str(photoTuple[1]) + '.jpg', image_file.read())
+                with open(settings.MEDIA_ROOT + '/' + photoTuple[0], "rb") as image_file:
+                    imagezip.writestr(str(photoTuple[2]) + '-' + str(photoTuple[1]) + '.jpg', image_file.read())
             except:
                 logger.error('Could not find photo: ' + photoTuple[1] + '.jpg')
         imagezip.close()
