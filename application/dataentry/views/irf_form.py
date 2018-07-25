@@ -1,4 +1,5 @@
 import json
+import pytz
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework import serializers
@@ -39,9 +40,9 @@ class IrfListSerializer(serializers.Serializer):
     number_of_victims = serializers.IntegerField()
     number_of_traffickers = serializers.IntegerField()
     staff_name = serializers.CharField()
-    date_time_of_interception = serializers.DateTimeField()
-    date_time_entered_into_system = serializers.DateTimeField()
-    date_time_last_updated = serializers.DateTimeField()
+    date_time_of_interception = serializers.SerializerMethodField(read_only=True)
+    date_time_entered_into_system = serializers.SerializerMethodField(read_only=True)
+    date_time_last_updated = serializers.SerializerMethodField(read_only=True)
     station = BorderStationOverviewSerializer()
     can_view = serializers.SerializerMethodField(read_only=True)
     can_edit = serializers.SerializerMethodField(read_only=True)
@@ -49,6 +50,22 @@ class IrfListSerializer(serializers.Serializer):
     can_approve = serializers.SerializerMethodField(read_only=True)
     
     perm_group_name = 'IRF'
+    
+    def adjust_date_time_for_tz(self, date_time, tz_name):
+        tz = pytz.timezone(tz_name)
+        date_time = date_time.astimezone(tz)
+        date_time = date_time.replace(microsecond=0)
+        date_time = date_time.replace(tzinfo=None)
+        return str(date_time)
+    
+    def get_date_time_of_interception(self, obj):
+        return self.adjust_date_time_for_tz (obj.date_time_of_interception, obj.station.time_zone)
+    
+    def get_date_time_entered_into_system(self, obj):
+        return self.adjust_date_time_for_tz (obj.date_time_entered_into_system, obj.station.time_zone)
+    
+    def get_date_time_last_updated(self, obj):
+        return self.adjust_date_time_for_tz (obj.date_time_last_updated, obj.station.time_zone)                                   
     
     def get_can_view(self, obj):
         perm_list = self.context.get('perm_list')

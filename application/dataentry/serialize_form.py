@@ -1,8 +1,10 @@
 import json
+import pytz
 from django.conf import settings
 from dateutil import parser
 from rest_framework import serializers
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils.timezone import make_naive, localtime, make_aware
 import traceback
 
 from dataentry.models.addresses import Address1, Address2
@@ -347,14 +349,26 @@ class ResponseDateSerializer(serializers.Serializer):
  
 class ResponseDateTimeSerializer(serializers.Serializer):
     def to_representation(self, instance):
-        ret = super().to_representation(instance)
-        ret['value'] = private_mask(self.context, serializers.DateTimeField().to_representation(instance))
+        #ret = super().to_representation(instance)
+        #naive = private_mask(self.context, serializers.DateTimeField().to_representation(instance))
+        ret = {}
+        if instance is not None:
+            time_zone = self.context['time_zone']
+            tz = pytz.timezone(time_zone)
+            date_time = instance.astimezone(tz)
+            ret['value'] = str(date_time.replace(tzinfo=None))
+        else:
+             ret['value']= None
         return ret
     
     def to_internal_value(self, data):
         value = data.get('value')
         if value is not None:
-            dt = parser.parse(value)
+            local_time = parser.parse(value)
+            local_time = local_time.replace(tzinfo=None)
+            time_zone = self.context['time_zone']
+            tz = pytz.timezone(time_zone)
+            dt = tz.localize(local_time) 
         else:
             dt = None
         return {
@@ -771,6 +785,7 @@ class FormDataSerializer(serializers.Serializer):
         
         question_layouts = QuestionLayout.objects.filter(category__form = instance.form).exclude(category__category_type__name = 'card').order_by('question__id')
         context['form_data'] = instance
+        context['time_zone'] = instance.form_object.station.time_zone
         serializer = QuestionLayoutSerializer(question_layouts, many=True, context=context)
         ret['responses'] = serializer.data
         
@@ -800,6 +815,9 @@ class FormDataSerializer(serializers.Serializer):
             self.the_warnings = []
             raise serializers.ValidationError("storage_id for form specified on create");
         
+        station = BorderStation.objects.get(id=station_id)
+        self.context['time_zone'] = station.time_zone
+        
         if tmp is None:
             storage_id = None
         else:
@@ -825,7 +843,6 @@ class FormDataSerializer(serializers.Serializer):
         if self.instance is None:
             form_class = form.find_form_class()
             form_object = form_class()
-            station = BorderStation.objects.get(id=station_id)
             form_object.station = station
             form_data = FormData(form_object, form)
             request_user = self.context.get('request.user')

@@ -32,6 +32,7 @@ class MbzStationFactory(DjangoModelFactory):
     station_name = 'Malbazar'
     open = True
     operating_country = None
+    time_zone = 'Asia/Kolkata'
 
     @factory.post_generation
     def mbox(self, create, extracted, **kwargs):
