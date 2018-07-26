@@ -21,4 +21,7 @@ urlpatterns = [
 
         url(r'^staff/$', StaffViewSet.as_view(list_methods), name="Staff"),
         url(r'^staff/(?P<pk>\d+)/$', StaffViewSet.as_view(detail_methods), name="StaffDetail"),
+        
+                
+        url(r'^timezones/$', TimeZoneViewSet.as_view({'get':'get_time_zones'}), name='TimeZones'),
 ]
