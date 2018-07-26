@@ -1,11 +1,8 @@
-import json
 import pytz
 from django.conf import settings
 from dateutil import parser
 from rest_framework import serializers
 from django.core.exceptions import ObjectDoesNotExist
-from django.utils.timezone import make_naive, localtime, make_aware
-import traceback
 
 from dataentry.models.addresses import Address1, Address2
 from dataentry.models.border_station import BorderStation
@@ -183,8 +180,6 @@ class ResponseCheckboxSerializer(serializers.Serializer):
         return ret
     
     def to_internal_value(self, data):
-        question = self.context['question']
-        return_as_string = self.context.get('return_as_string')
         value = data.get('value')
         
         return {
@@ -201,9 +196,9 @@ class ResponseAddressSerializer(serializers.Serializer):
 class ResponseAddress1Serializer(ResponseAddressSerializer):
     def get_or_create(self):
         question = self.context['question']
-        id = self.validated_data.get('id')
+        address_id = self.validated_data.get('id')
         name = self.validated_data.get('name')
-        if id is None:
+        if address_id is None:
             if name is not None:
                 address = Address1()
                 address.name = name
@@ -212,10 +207,10 @@ class ResponseAddress1Serializer(ResponseAddressSerializer):
                 address = None
         else:
             try:
-                address = Address1.objects.get(id=int(id))
+                address = Address1.objects.get(id=int(address_id))
             except ObjectDoesNotExist:
                 raise serializers.ValidationError(
-                        str(question.id) + ':Address1 id ' + id + ' does not exist'
+                        str(question.id) + ':Address1 id ' + address_id + ' does not exist'
                         )
         
         return address
@@ -224,9 +219,9 @@ class ResponseAddress2Serializer(ResponseAddressSerializer):
     def get_or_create(self):
         question = self.context['question']
         address1 = self.context['address1']
-        id = self.validated_data.get('id')
+        address_id = self.validated_data.get('id')
         name = self.validated_data.get('name')
-        if id is None:
+        if address_id is None:
             if name is not None:
                 if address1 is not None:
                     address = Address2()
@@ -241,10 +236,10 @@ class ResponseAddress2Serializer(ResponseAddressSerializer):
                 address = None
         else:
             try:
-                address = Address2.objects.get(id=int(id))
+                address = Address2.objects.get(id=int(address_id))
             except ObjectDoesNotExist:
                 raise serializers.ValidationError(
-                        str(question.id) + ':Address2 id ' + id + ' does not exist'
+                        str(question.id) + ':Address2 id ' + address_id + ' does not exist'
                         )
         
         return address
@@ -818,13 +813,7 @@ class FormDataSerializer(serializers.Serializer):
         station = BorderStation.objects.get(id=station_id)
         self.context['time_zone'] = station.time_zone
         
-        if tmp is None:
-            storage_id = None
-        else:
-            storage_id = serializers.IntegerField().to_internal_value(tmp)       
-        
         responses = data.get('responses')
-        responses_data = []
         self.form_serializers = []
         for response in responses:
             serializer = QuestionLayoutSerializer(data=response, context=dict(self.context))

@@ -1,5 +1,4 @@
 import logging
-import traceback
 
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import status
@@ -41,7 +40,7 @@ class ValidateForm:
         for validation_question in validation_questions:
             question = validation_question.question
             answer = form_data.get_answer(question)
-            if answer is None or type(answer) is str and answer.strip() == '':
+            if answer is None or isinstance(answer, str) and answer.strip() == '':
                 if general:
                     category_name = ''
                 else:
@@ -53,7 +52,7 @@ class ValidateForm:
         for validation_question in validation_questions:
             question = validation_question.question
             answer = form_data.get_answer(question)
-            if answer is not None and (type(answer) is bool and answer == True or type(answer) is str and answer.upper() == 'TRUE'):
+            if answer is not None and (isinstance(answer, bool) and answer == True or isinstance(answer, str) and answer.upper() == 'TRUE'):
                 # found at least one true response
                 return
         
@@ -187,9 +186,9 @@ class ValidateForm:
                     else:
                         should_validate = False
                 else:
-                    if type(trigger_value) is bool and trigger_value:
+                    if isinstance(trigger_value, bool) and trigger_value:
                         should_validate = True
-                    elif type(trigger_value) is str and trigger_value.upper() == 'TRUE':
+                    elif isinstance(trigger_value, str) and trigger_value.upper() == 'TRUE':
                         should_validate = True
                     else:
                         should_validate = False

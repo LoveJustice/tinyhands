@@ -7,21 +7,16 @@ from rest_framework import filters as fs
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 
-from braces.views import LoginRequiredMixin
-from accounts.mixins import PermissionsRequiredMixin
 import traceback
-import json
 
-from django.views.generic import CreateView
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.files.storage import default_storage
 from django.db import IntegrityError
-from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSet
 from dataentry.serialize_form import FormDataSerializer
 from dataentry.serializers import CountrySerializer
 
-from dataentry.form_data import Form, FormData, FormType
-from dataentry.models import BorderStation, Country, IrfCore, IrfNepal, UserLocationPermission
+from dataentry.form_data import Form, FormData
+from dataentry.models import BorderStation, Country, FormType, IrfNepal, UserLocationPermission
 
 class BorderStationOverviewSerializer(serializers.ModelSerializer):
     operating_country = CountrySerializer()
@@ -143,14 +138,14 @@ class IrfFormViewSet(viewsets.ModelViewSet):
                 break
             
             if perm.country is not None:
-                id = perm.country.id
-                if id in country_list and id not in selected_countries:
-                    selected_countries.append(id)
+                country_id = perm.country.id
+                if country_id in country_list and country_id not in selected_countries:
+                    selected_countries.append(country_id)
             
             if perm.station is not None:
-                id = perm.station.operating_country.id
-                if id in country_list and id not in selected_countries:
-                    selected_countries.append(id)
+                country_id = perm.station.operating_country.id
+                if country_id in country_list and country_id not in selected_countries:
+                    selected_countries.append(country_id)
         
         # For each selected country where an IRF form exists, query the country IRF table
         # If VIEW permission is country wide, query all IRFs.  Otherwise query based on stations with VIEW permission

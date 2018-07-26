@@ -7,11 +7,6 @@ from accounts.models import Account
 from .border_station import BorderStation
 from .country import Country
 
-from imagekit.models import ImageSpecField
-from imagekit.processors import ResizeToFill
-
-from .person import Person
-
 #
 # Storage is used to describe the relationship between questions on a form
 # and the storage of that data in models.  For example, the VIF model contains
