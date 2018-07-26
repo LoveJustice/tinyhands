@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from budget.models import BorderStationBudgetCalculation, OtherBudgetItemCost, StaffSalary
 from dataentry.serializers import BorderStationSerializer
+from static_border_stations.models import Staff
 
 
 class BorderStationBudgetCalculationListSerializer(serializers.ModelSerializer):
@@ -45,3 +46,10 @@ class StaffSalarySerializer(serializers.ModelSerializer):
     class Meta:
         fields = '__all__'
         model = StaffSalary
+        
+    def to_representation(self, instance):
+        data = super(StaffSalarySerializer, self).to_representation(instance)
+        staff = Staff.objects.get(id=data['staff_person'])
+        data['staff_first_name'] = staff.first_name 
+        data['staff_last_name'] = staff.last_name
+        return data
