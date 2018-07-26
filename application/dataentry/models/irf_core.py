@@ -1,4 +1,3 @@
-from dateutil.parser import parse
 from django.db import models
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
@@ -6,7 +5,6 @@ from imagekit.processors import ResizeToFill
 from .person import Person
 from .form import BaseCard
 from .form import BaseForm
-from dataentry.form_data import FormData
 
 # Class to store an instance of the IRF data.
 # This should contain data that is common for all IRFs and is not expected to be changed
@@ -121,6 +119,8 @@ class IntercepteeCore(BaseCard):
         rtn = ''
         try:
             rtn = self.person.address1
+        except Exception:
+            pass
         finally:
             return rtn
 

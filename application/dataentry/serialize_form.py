@@ -268,7 +268,6 @@ class ResponseAddressPairSerializer(serializers.Serializer):
         return ret
     
     def to_internal_value(self, data):
-        question = self.context['question']
         address1_data = data.get('address1')
         if address1_data is not None:
             self.address1_serializer = ResponseAddress1Serializer(data=address1_data, context=dict(self.context))

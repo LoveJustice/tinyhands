@@ -13,4 +13,4 @@ for model in FormType Storage Form CategoryType Category CardStorage AnswerType 
 do
 	./manage.py dumpdata dataentry.$model >> $tmpFile
 done
-cat $tmpFile | sed -e 's/\]\[/,/g' > $outFile
+sed -e 's/\]\[/,/g' < $tmpFile > $outFile

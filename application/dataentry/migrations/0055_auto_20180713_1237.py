@@ -3,9 +3,7 @@
 from __future__ import unicode_literals
 import os
 
-from django.conf import settings
 from django.db import migrations, models
-import django.db.models.deletion
 
 from django.core.management import call_command
 from django.core.management.color import no_style
@@ -47,19 +45,19 @@ class Migration(migrations.Migration):
     ]
     
     def ensure_countries(apps, schema_editor):
-        id = 1
+        country_id = 1
         for country_name in country_names:
             country = Country()
-            country.id = id
+            country.id = country_id
             country.name = country_name
             country.latitude = 0
             country.longitude = 0
             try:
                 country.save()
-            except:
+            except Exception:
                 pass
             
-            id = id + 1
+            country_id = country_id + 1
             
         sequence_sql = connection.ops.sequence_reset_sql(no_style(), [Country,])
         with connection.cursor() as cursor:
@@ -75,7 +73,7 @@ class Migration(migrations.Migration):
     def unload_prior(apps, schema_editor):
         for model_name in reversed(form_model_names):
             my_model = apps.get_model(app_name, model_name)
-            rc = my_model.objects.all().delete()
+            my_model.objects.all().delete()
 
     operations = [
         migrations.AlterField(
