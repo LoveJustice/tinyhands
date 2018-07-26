@@ -121,13 +121,15 @@ class IntercepteeCore(BaseCard):
             rtn = self.person.address1
         except Exception:
             pass
-        finally:
-            return rtn
+        
+        return rtn
 
     def address2_as_string(self):
         rtn = ''
         try:
             rtn = self.person.address2
-        finally:
-            return rtn
+        except Exception:
+            pass
+        
+        return rtn
     
