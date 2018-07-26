@@ -13,3 +13,8 @@ from .red_flags import RedFlags
 from .interception_alert import InterceptionAlert
 from .permission import Permission
 from .user_location_permission import UserLocationPermission
+from .form import *
+from .irf_core import IrfCore
+from .irf_nepal import IrfNepal, IntercepteeNepal
+from .irf_india import IrfIndia, IntercepteeIndia
+from .irf_south_africa import IrfSouthAfrica, IntercepteeSouthAfrica
