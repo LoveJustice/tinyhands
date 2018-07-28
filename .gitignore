@@ -16,6 +16,7 @@ dreamsuite_tag
 .idea/
 .nfs*
 .vagrant/
+tmp/
 
 \#*#
 
