@@ -1,3 +1,4 @@
+from datetime import date
 from django.db import models
 
 from .addresses import Address1, Address2
@@ -16,6 +17,9 @@ class Person(models.Model):
     address2 = models.ForeignKey(Address2, null=True, blank=True)
     phone_contact = models.CharField(max_length=255, blank=True)
     alias_group = models.ForeignKey(AliasGroup, null=True)
+    birthdate = models.DateField(null=True)
+    passport = models.CharField(max_length=127, blank=True, default='')
+    nationality = models.CharField(max_length=127, blank=True, default='')
     aliases = None
 
     def get_aliases(self):
@@ -136,3 +140,16 @@ class Person(models.Model):
                     self.photo = form.photo
 
         return self.forms
+    
+    def sync_age_birthdate(self, base_date):
+        if self.age is not None and self.birthdate is None:
+            # approximate the birth date
+            birth_year = base_date.year - self.age
+            if base_date.month < 7:
+                birth_year = birth_year - 1
+            self.birthdate = date(birth_year,7,1)
+            self.save()
+        elif self.age is None and self.birthdate is not None:
+            delta = base_date - self.birthdate
+            self.age = delta.days // 365
+            self.save()
