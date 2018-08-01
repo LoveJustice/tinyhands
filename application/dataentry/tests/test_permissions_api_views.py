@@ -131,7 +131,8 @@ class PermissionTest(APITestCase):
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['count'], 25)
+        db_permissions = Permission.objects.all()
+        self.assertEqual(response.data['count'], len(db_permissions))
     
     def test_list_user_permissions(self):
         url = reverse('UserLocationPermission', args=[self.account.id])

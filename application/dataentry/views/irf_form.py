@@ -105,6 +105,68 @@ class IrfFormViewSet(viewsets.ModelViewSet):
         in_country = self.request.GET.get('country_ids')
         status = self.request.GET.get('status', 'approved')
         search = self.request.GET.get('search')
+                
+        countries = Country.objects.all()
+        all_country_list = []
+        for country in countries:
+            all_country_list.append(country.id)
+        
+        country_list = []
+        if in_country is not None and in_country != '':
+            # client provided a list of countries to consider
+            for cntry in in_country.split(','):
+                country_list.append(int(cntry))
+        else:
+            # client did not provide a list - so consider all countries
+           country_list = all_country_list
+        
+        account_id = self.request.user.id
+        
+        station_list = []
+        form_list = []
+        tmp_station_list = BorderStation.objects.filter(operating_country__in=country_list)
+        perm_list = UserLocationPermission.objects.filter(account__id=account_id, permission__permission_group=self.perm_group_name).exclude(permission__action='ADD')
+        self.serializer_context = {'perm_list':perm_list}
+        for station in tmp_station_list:
+            if (UserLocationPermission.has_permission_in_list(perm_list, self.perm_group_name, None, station.operating_country.id, station.id)):
+                station_list.append(station)
+                form = Form.current_form(self.form_type_name, station.id)
+                if form is not None and form not in form_list:
+                    form_list.append(form)
+        
+        queryset = None
+        for form in form_list:
+            mod = __import__(form.storage.module_name, fromlist=[form.storage.form_model_name])
+            form_model = getattr(mod, form.storage.form_model_name)
+            
+            tmp_queryset = form_model.objects.filter(station__in=station_list, status=status).only(
+                    'id', 'irf_number', 'form_entered_by', 'number_of_victims', 'number_of_traffickers', 'staff_name', 
+                    'station', 'date_time_of_interception', 'date_time_entered_into_system',
+                    'date_time_last_updated')
+            
+            # If query is for in-progress status IRFs, only include IRFs that were entered by the requesters account
+            if status == 'in-progress':
+                tmp_queryset = tmp_queryset.filter(form_entered_by__id=account_id)
+                
+            if search is not None:
+                tmp_queryset = tmp_queryset.filter(irf_number__contains=search)
+            
+            if queryset is None:
+                queryset = tmp_queryset
+            else:
+                queryset = queryset.union(tmp_queryset)
+            
+        if queryset is None:
+            queryset = IrfNepal.objects.none()
+                
+        return queryset
+        
+    def get_queryset_old(self):
+        if self.action != 'list':
+            return None
+        in_country = self.request.GET.get('country_ids')
+        status = self.request.GET.get('status', 'approved')
+        search = self.request.GET.get('search')
         
         countries = Country.objects.all()
         all_country_list = []
@@ -258,17 +320,19 @@ class IrfFormViewSet(viewsets.ModelViewSet):
                 }
             return Response(ret, status=status.HTTP_400_BAD_REQUEST)
     
-    def my_retrieve(self, request, country_id, pk):
+    def my_retrieve(self, request, station_id, pk):
         self.serializer_context = {}
-        form = Form.current_form(self.form_type_name, country_id)
+        form = Form.current_form(self.form_type_name, station_id)
+        if form is None:
+            return Response(status=status.HTTP_404_NOT_FOUND)
         try:
             irf = FormData.find_object_by_id(pk, form)
         except ObjectDoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
         
-        read_access = UserLocationPermission.has_session_permission(request, 'IRF', 'VIEW', country_id, irf.station.id)
-        edit_access = UserLocationPermission.has_session_permission(request, 'IRF', 'EDIT', country_id, irf.station.id)
-        private_access = UserLocationPermission.has_session_permission(request, 'IRF', 'VIEW PI', country_id, irf.station.id)
+        read_access = UserLocationPermission.has_session_permission(request, 'IRF', 'VIEW', irf.station.operating_country.id, irf.station.id)
+        edit_access = UserLocationPermission.has_session_permission(request, 'IRF', 'EDIT', irf.station.operating_country.id, irf.station.id)
+        private_access = UserLocationPermission.has_session_permission(request, 'IRF', 'VIEW PI', irf.station.operating_country.id, irf.station.id)
         
         if not read_access:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
@@ -283,8 +347,8 @@ class IrfFormViewSet(viewsets.ModelViewSet):
        
         return Response(resp_data)
     
-    def update(self, request, country_id, pk):
-        form = Form.current_form(self.form_type_name, country_id)
+    def update(self, request, station_id, pk):
+        form = Form.current_form(self.form_type_name, station_id)
         irf = FormData.find_object_by_id(pk, form)
         if irf is None:
             return Response({'detail' : "IRF not found"}, status=status.HTTP_404_NOT_FOUND)
@@ -306,8 +370,8 @@ class IrfFormViewSet(viewsets.ModelViewSet):
                 }
             return Response(ret, status=status.HTTP_400_BAD_REQUEST)
     
-    def destroy(self, request, country_id, pk):
-        form = Form.current_form(self.form_type_name, country_id)
+    def destroy(self, request, station_id, pk):
+        form = Form.current_form(self.form_type_name, station_id)
         try:
             irf = FormData.find_object_by_id(pk, form)
         except ObjectDoesNotExist:

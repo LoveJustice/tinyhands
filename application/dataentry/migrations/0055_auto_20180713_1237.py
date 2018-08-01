@@ -122,7 +122,7 @@ class Migration(migrations.Migration):
             field=models.CharField(max_length=127, null=True),
         ),
                   
-        migrations.RunPython(ensure_countries),
-        migrations.RunPython(unload_prior),
-        migrations.RunPython(load_fixture),
+        #migrations.RunPython(ensure_countries),
+        #migrations.RunPython(unload_prior),
+        #migrations.RunPython(load_fixture),
     ]

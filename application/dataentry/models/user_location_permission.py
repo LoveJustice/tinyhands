@@ -186,7 +186,7 @@ class UserLocationPermission(models.Model):
     def has_permission_in_list(perm_list, group, action, country_id, station_id):
         if perm_list is not None:
             for perm in perm_list:
-                if perm.permission.permission_group == group and perm.permission.action == action and perm.includes_location(country_id, station_id):
+                if perm.permission.permission_group == group and (action is None or perm.permission.action == action) and perm.includes_location(country_id, station_id):
                     return True
         
         return False
