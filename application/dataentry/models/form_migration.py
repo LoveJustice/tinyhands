@@ -1,5 +1,4 @@
 import os
-from django.db import migrations, models
 from django.core.management import call_command
 from django.core.exceptions import ObjectDoesNotExist
 from .form import Form

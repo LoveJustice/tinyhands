@@ -1,11 +1,9 @@
-import json
-
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from django.core.exceptions import ObjectDoesNotExist
 
-from dataentry.models import Form, FormType
-from dataentry.serializers import BorderStation, Form, FormSerializer, FormTypeSerializer
+from dataentry.models import BorderStation, Form, FormType
+from dataentry.serializers import FormSerializer, FormTypeSerializer
 
 class FormTypeViewSet(viewsets.ModelViewSet):
     queryset = FormType.objects.all()

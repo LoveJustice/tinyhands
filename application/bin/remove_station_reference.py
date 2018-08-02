@@ -9,15 +9,15 @@ if len(sys.argv) != 3:
     print ("must provide input and output file names")
     sys.exit()
 
-str = open(sys.argv[1], 'r').read()
-db_objs = json.loads(str)
+fixture = open(sys.argv[1], 'r').read()
+db_objs = json.loads(fixture)
 
 for db_obj in db_objs:
     if db_obj['model'] == 'dataentry.form':
         db_obj['fields']['stations'] = []
 
 
-out_str = json.dumps(db_objs)
+out_fixture = json.dumps(db_objs)
 
 with open(sys.argv[2], "w") as out_file:
-    out_file.write(out_str)
+    out_file.write(out_fixture)
