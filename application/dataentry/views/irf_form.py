@@ -348,10 +348,11 @@ class IrfFormViewSet(viewsets.ModelViewSet):
         return Response(resp_data)
     
     def update(self, request, station_id, pk):
+        print ('station_id', station_id)
         form = Form.current_form(self.form_type_name, station_id)
         irf = FormData.find_object_by_id(pk, form)
         if irf is None:
-            return Response({'detail' : "IRF not found"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'errors' : ["IRF not found"], 'warnings':[]}, status=status.HTTP_404_NOT_FOUND)
         form_data = FormData(irf, form)
         request_json = self.extract_data(request)
 
@@ -375,7 +376,7 @@ class IrfFormViewSet(viewsets.ModelViewSet):
         try:
             irf = FormData.find_object_by_id(pk, form)
         except ObjectDoesNotExist:
-            return Response({'detail' : "IRF not found"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'errors' : ["IRF not found"], 'warnings':[]}, status=status.HTTP_404_NOT_FOUND)
         
         if not UserLocationPermission.has_session_permission(request, 'IRF', 'DELETE', irf.station.operating_country.id, irf.station.id):
                 return Response(status=status.HTTP_401_UNAUTHORIZED)

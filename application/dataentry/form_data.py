@@ -266,7 +266,10 @@ class FormData:
     @staticmethod
     def find_object_by_id(obj_id, form):
         form_class = form.find_form_class()
-        form_object = form_class.objects.get(id=obj_id)       
+        try:
+            form_object = form_class.objects.get(id=obj_id)
+        except ObjectDoesNotExist:
+            form_object = None   
         
         return form_object
             
