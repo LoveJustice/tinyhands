@@ -348,7 +348,6 @@ class IrfFormViewSet(viewsets.ModelViewSet):
         return Response(resp_data)
     
     def update(self, request, station_id, pk):
-        print ('station_id', station_id)
         form = Form.current_form(self.form_type_name, station_id)
         irf = FormData.find_object_by_id(pk, form)
         if irf is None:
