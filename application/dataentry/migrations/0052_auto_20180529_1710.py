@@ -75,6 +75,6 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RunPython(ensure_countries),
-        migrations.RunPython(unload_prior),
-        migrations.RunPython(load_fixture),
+        #migrations.RunPython(unload_prior),
+        #migrations.RunPython(load_fixture),
     ]

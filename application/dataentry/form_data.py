@@ -234,8 +234,8 @@ class FormData:
             self.form_object.delete()
     
     @staticmethod
-    def find_form(form_type_name, country_id):
-        form = Form.current_form(form_type_name, country_id)
+    def find_form(form_type_name, station_id):
+        form = Form.current_form(form_type_name, station_id)
         return form
             
     @staticmethod
@@ -245,12 +245,12 @@ class FormData:
         return form_class
     
     @staticmethod
-    def find_object_by_number(key_value, form_type_name, country=None):
+    def find_object_by_number(key_value, form_type_name, station=None):
         form_object = None
-        if country is None:
+        if station is None:
             forms = Form.objects.filter(form_type__name=form_type_name)
         else:
-            forms = Form.objects.filter(form_type__name=form_type_name, operating_country=country)
+            forms = Form.objects.filter(form_type__name=form_type_name, stations = station)
             
         for form in forms:
             mod = __import__(form.storage.module_name, fromlist=[form.storage.form_model_name])
@@ -266,7 +266,10 @@ class FormData:
     @staticmethod
     def find_object_by_id(obj_id, form):
         form_class = form.find_form_class()
-        form_object = form_class.objects.get(id=obj_id)       
+        try:
+            form_object = form_class.objects.get(id=obj_id)
+        except ObjectDoesNotExist:
+            form_object = None   
         
         return form_object
             

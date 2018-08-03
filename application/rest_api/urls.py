@@ -5,6 +5,7 @@ from dataentry.views import PersonViewSet
 from dataentry.views import SiteSettingsViewSet
 from dataentry.views import CountryViewSet
 from dataentry.views import IDManagementViewSet, TraffickerCheckViewSet, IrfFormViewSet
+from dataentry.views import FormViewSet, FormTypeViewSet
 
 
 list = {'get': 'list', 'post': 'create'}
@@ -75,5 +76,9 @@ urlpatterns = [
         url(r'^user_permission/stations/(?P<pk>\d+)/$', UserLocationPermissionViewSet.as_view({'get':'user_stations'}), name='UserPermissionStations'),
         
         url(r'^irfNew/$', IrfFormViewSet.as_view(list), name='irfNew'),
-        url(r'^irfNew/(?P<country_id>\d+)/(?P<pk>\d+)', IrfFormViewSet.as_view({'get': 'my_retrieve', 'put': 'update', 'delete': 'destroy'}), name='irfNewDetail'),
+        url(r'^irfNew/(?P<station_id>\d+)/(?P<pk>\d+)', IrfFormViewSet.as_view({'get': 'my_retrieve', 'put': 'update', 'delete': 'destroy'}), name='irfNewDetail'),
+        
+        url(r'^forms/$', FormViewSet.as_view({'get':'list'}), name='forns'),
+        url(r'^forms/types/$', FormTypeViewSet.as_view({'get':'list'}), name='fornTypes'),
+        url(r'^forms/(?P<station_id>\d+)/station_forms/$', FormViewSet.as_view({'put':'set_forms'}), name='setForms')
 ]

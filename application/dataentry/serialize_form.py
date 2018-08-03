@@ -827,7 +827,7 @@ class FormDataSerializer(serializers.Serializer):
             self.card_serializers.append(serializer)
         
         form_type = self.context.get('form_type')
-        form = Form.current_form(form_type.name, country_id)
+        form = Form.current_form(form_type.name, station.id)
         if self.instance is None:
             form_class = form.find_form_class()
             form_object = form_class()

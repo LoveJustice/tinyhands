@@ -3,7 +3,7 @@ import json
 
 from rest_framework import serializers
 
-from dataentry.models import Address1, Address2, Country, SiteSettings, InterceptionRecord, VictimInterview, BorderStation, Person, Interceptee, InterceptionAlert, Permission, UserLocationPermission
+from dataentry.models import Address1, Address2, Country, SiteSettings, InterceptionRecord, VictimInterview, BorderStation, Person, Interceptee, InterceptionAlert, Permission, UserLocationPermission, Form, FormType
 from static_border_stations.serializers import LocationSerializer
 
 from .helpers import related_items_helper
@@ -361,3 +361,15 @@ class UserLocationPermissionListSerializer(serializers.Serializer):
     account_id = serializers.IntegerField()
     name = serializers.CharField()
     permissions = UserLocationPermissionEntrySerializer(many=True)
+    
+class FormTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = '__all__'
+        model = FormType 
+        
+class FormSerializer(serializers.ModelSerializer):
+    form_type = FormTypeSerializer()
+    
+    class Meta:
+        fields = ['id', 'form_name', 'form_type']
+        model = Form   
