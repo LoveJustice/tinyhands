@@ -232,6 +232,8 @@ class IrfFormViewSet(viewsets.ModelViewSet):
             return Response(status=status.HTTP_404_NOT_FOUND)
         try:
             irf = FormData.find_object_by_id(pk, form)
+            if irf is None:
+                return Response(status=status.HTTP_404_NOT_FOUND)
         except ObjectDoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
         

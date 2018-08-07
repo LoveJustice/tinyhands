@@ -21,6 +21,7 @@ class IrfNepal(IrfCore):
     no_company_phone = models.BooleanField('No company phone number', default=False)
     no_appointment_letter = models.BooleanField('No Appointment Letter', default=False)
     valid_gulf_country_visa = models.BooleanField('Has a valid gulf country visa in passport', default=False)
+    going_to_gulf_through_india = models.BooleanField('Going to Gulf for work through India', default=False)
     
     no_bags_long_trip = models.BooleanField('No bags though claim to be going for a long time', default=False)
     shopping_overnight_stuff_in_bags = models.BooleanField('Shopping - Stuff for overnight stay in bags', default=False)
