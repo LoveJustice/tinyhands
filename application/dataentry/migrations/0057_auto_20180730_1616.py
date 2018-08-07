@@ -61,6 +61,6 @@ class Migration(migrations.Migration):
             field=models.ManyToManyField(to='dataentry.BorderStation'),
         ),
         migrations.RunSQL("INSERT INTO dataentry_permission (permission_group, action, min_level, account_permission_name) values ('STATIONS', 'SET_FORMS','GLOBAL',null);"),
-        migrations.RunPython(unload_prior),
-        migrations.RunPython(load_fixture),
+        #migrations.RunPython(unload_prior),
+        #migrations.RunPython(load_fixture),
     ]

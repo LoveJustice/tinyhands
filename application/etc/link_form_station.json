@@ -1,0 +1,23 @@
+[
+	{
+		"form":"irfNepal",
+		"station_codes":[
+			"BGN","BHD","BHW","BRT","CND","DHD","DHU","DNG",
+			"GAR","GLC","GLR","GRG","HTD","INW","JBN","JNK",
+			"KTM","KVT","LHN","MGL","MHN","MLW","NPJ","NRG",
+			"PRS","PST","RBR","SLG","TKP","TTP"
+		]
+	},
+	{
+		"form":"irfSouthAfrica",
+		"station_codes":["JHB"]
+	},
+	{
+		"form":"irfIndia",
+		"station_codes":["CSG","MBZ","PNT"]
+	},
+	{
+		"form":"irfBangladesh",
+		"station_codes":["CTG","DAC","DLA","JSR","RJH"]
+	}
+]

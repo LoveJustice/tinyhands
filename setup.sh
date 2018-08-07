@@ -26,8 +26,10 @@ docker-compose build
 
 
 echo "Initializing and installing sanitized data..."
-docker-compose run --rm web sh /data/bin/install_test_db.sh
+docker-compose run --rm web sh ./bin/install_test_db.sh
 
+echo "Linking forms with stations..."
+docker-compose run --rm web python ./manage.py linkFormStation
 
 echo "Collecting Static files and symlinking them..."
-docker-compose run --rm web python /data/manage.py collectstatic -l --noinput
+docker-compose run --rm web python ./manage.py collectstatic -l --noinput
