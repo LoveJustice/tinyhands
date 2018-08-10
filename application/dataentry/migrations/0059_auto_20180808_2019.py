@@ -8,7 +8,7 @@ import django.db.models.deletion
 
 from dataentry.models.form_migration import FormMigration
 
-FormMigration.fixture_filename = 'form_data_20180807.json'
+FormMigration.fixture_filename = 'form_data_20180810.json'
 
 class Migration(migrations.Migration):
 
