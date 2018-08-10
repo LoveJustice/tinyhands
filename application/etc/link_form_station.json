@@ -19,5 +19,9 @@
 	{
 		"form":"irfBangladesh",
 		"station_codes":["CTG","DAC","DLA","JSR","RJH"]
+	},
+	{
+		"form":"irfMalawi",
+		"station_codes":["BLT","LLG","PLB"]
 	}
 ]
