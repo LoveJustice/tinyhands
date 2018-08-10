@@ -224,6 +224,23 @@ class IrfFormViewSet(viewsets.ModelViewSet):
                 'warnings':serializer.the_warnings
                 }
             return Response(ret, status=status.HTTP_400_BAD_REQUEST)
+        
+    def retrieve_blank_form(self, request, station_id):
+        self.serializer_context = {}
+        form = Form.current_form(self.form_type_name, station_id)
+        if form is None:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        form_class = FormData.get_form_class(form)
+        irf = form_class()
+        station = BorderStation.objects.get(id=station_id)
+        irf.station = station
+        add_access = UserLocationPermission.has_session_permission(request, 'IRF', 'ADD', irf.station.operating_country.id, irf.station.id)
+        if not add_access:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        
+        form_data = FormData(irf, form)
+        serializer = FormDataSerializer(form_data, context=self.serializer_context)
+        return Response(serializer.data)
     
     def my_retrieve(self, request, station_id, pk):
         self.serializer_context = {}
