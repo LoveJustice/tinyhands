@@ -28,9 +28,6 @@ class IrfMalawi(IrfCore):
     no_company_website = models.BooleanField('Could not find company website', default=False)
     distant_relative_paying_for_education = models.BooleanField('Distant relative is paying for education', default=False)
     no_school_website = models.BooleanField('No school website', default=False)
-    destination_other_caught_in_lie = models.BooleanField('Caught in a lie or contradiction', default=False)
-    destination_other_red_flag = models.CharField(max_length=127, blank=True)
-    destination_other = models.CharField(max_length=127, blank=True)
     
     # Family - Malawi specific
     
