@@ -1,6 +1,7 @@
 import json
 
 from django.core.urlresolvers import reverse
+from django.core.management import call_command
 from rest_framework import status
 from rest_framework.test import APITestCase
 from accounts.tests.factories import BadIrfUserFactory, SuperUserFactory
@@ -13,6 +14,7 @@ from static_border_stations.tests.factories import GenericUserWithPermissions
 
 class IrfTest(APITestCase):
     def setUp(self):
+        call_command('loaddata', 'fixtures/initial-required-data/form_data.json', verbosity=0)
         self.irf_list = IrfIndiaFactory.create_batch(20)
         self.user = GenericUserWithPermissions.create([{'group':'IRF', 'action':'VIEW', 'country': None, 'station': None},
                                                        {'group':'IRF', 'action':'EDIT', 'country': None, 'station': None},
