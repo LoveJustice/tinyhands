@@ -380,7 +380,10 @@ class ResponseImageSerializer(serializers.Serializer):
             ret['value'] = None
         else:
             ret = super().to_representation(instance)
-            ret['value'] = settings.MEDIA_URL + instance.name
+            if instance.name is not None and instance.name != '':
+                ret['value'] = settings.MEDIA_URL + instance.name
+            else:
+                ret['value'] = ''
         
         return ret
     

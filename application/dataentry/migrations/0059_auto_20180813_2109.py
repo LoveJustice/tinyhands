@@ -6,10 +6,6 @@ from django.conf import settings
 from django.db import migrations, models
 import django.db.models.deletion
 
-from dataentry.models.form_migration import FormMigration
-
-FormMigration.fixture_filename = 'form_data_20180813.json'
-
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -127,5 +123,4 @@ class Migration(migrations.Migration):
             name='person',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='dataentry.Person'),
         ),
-        migrations.RunPython(FormMigration.migrate),
     ]
