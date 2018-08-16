@@ -165,5 +165,5 @@ class Migration(migrations.Migration):
             name='person',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='dataentry.Person'),
         ),
-        migrations.RunPython(FormMigration.migrate),  
+        #migrations.RunPython(FormMigration.migrate),  
     ]
