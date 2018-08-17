@@ -1,7 +1,10 @@
+import logging
 from django.db import transaction
 from django.core.exceptions import ObjectDoesNotExist
 
 from .models.form import CardStorage, Category, Form, QuestionLayout, QuestionStorage, Storage
+
+logger = logging.getLogger(__name__);
 
 class CategoryForm:
     def __init__(self, category, card_class, card_response_class, foreign_key_field_parent):
@@ -132,8 +135,7 @@ class FormData:
         self.load_question_storage(form)
         
         self.response_dict = {}
-        if the_object.id is not None:
-            self.load_responses()
+        self.load_responses()
             
         self.card_dict = {}
         self.category_form_dict = {}

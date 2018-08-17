@@ -1,6 +1,7 @@
 import pytz
 from django.conf import settings
 from dateutil import parser
+from datetime import datetime
 from rest_framework import serializers
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -380,7 +381,10 @@ class ResponseImageSerializer(serializers.Serializer):
             ret['value'] = None
         else:
             ret = super().to_representation(instance)
-            ret['value'] = settings.MEDIA_URL + instance.name
+            if instance.name is not None and instance.name != '':
+                ret['value'] = settings.MEDIA_URL + instance.name
+            else:
+                ret['value'] = ''
         
         return ret
     
@@ -883,6 +887,7 @@ class FormDataSerializer(serializers.Serializer):
             raise serializers.ValidationError(validate.warnings[0])
 
     def create(self, validated_data):
+        self.form_data.form_object.date_time_last_updated = datetime.now()
         self.form_data.save()
         return self.form_data
     

@@ -77,6 +77,8 @@ urlpatterns = [
         
         url(r'^irfNew/$', IrfFormViewSet.as_view(list), name='irfNew'),
         url(r'^irfNew/(?P<station_id>\d+)/(?P<pk>\d+)', IrfFormViewSet.as_view({'get': 'my_retrieve', 'put': 'update', 'delete': 'destroy'}), name='irfNewDetail'),
+        url(r'^irfNew/blank/(?P<station_id>\d+)', IrfFormViewSet.as_view({'get': 'retrieve_blank_form'}), name='irfNewBlank'),
+        
         
         url(r'^forms/$', FormViewSet.as_view({'get':'list'}), name='forns'),
         url(r'^forms/types/$', FormTypeViewSet.as_view({'get':'list'}), name='fornTypes'),

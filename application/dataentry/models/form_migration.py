@@ -23,8 +23,6 @@ class FormMigration:
         'FormValidationQuestion',
         ]
     
-    fixture_filename = None
-    
     # preserve existing connections between form and border stations
     @staticmethod
     def get_form_to_station_references():
@@ -38,9 +36,8 @@ class FormMigration:
         return reference_list
 
     @staticmethod
-    def load_fixture(apps, schema_editor):
-        fixture_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../fixtures'))
-        fixture_file = os.path.join(fixture_dir, FormMigration.fixture_filename)
+    def load_fixture(apps, schema_editor, fixture_dir, fixture_filename):
+        fixture_file = os.path.join(fixture_dir, fixture_filename)
         call_command('loaddata', fixture_file) 
     
     @staticmethod
@@ -66,12 +63,13 @@ class FormMigration:
                            ' to station with code ' + reference['station_code'])
 
     @staticmethod
-    def migrate(apps, schema_editor):
-        file_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../fixtures')) + '/' + FormMigration.fixture_filename
+    def migrate(apps, schema_editor, fixture_filename):
+        fixture_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../fixtures'))
+        file_path = fixture_dir + '/' + fixture_filename
         if os.access(file_path, os.R_OK):
             reference_list = FormMigration.get_form_to_station_references()
             FormMigration.unload_prior(apps, schema_editor)
-            FormMigration.load_fixture(apps, schema_editor)
+            FormMigration.load_fixture(apps, schema_editor, fixture_dir, fixture_filename)
             FormMigration.restore_form_to_station_references(reference_list)
         else:
             print('Fixture ' + file_path + 'not found - skipping form migration')
