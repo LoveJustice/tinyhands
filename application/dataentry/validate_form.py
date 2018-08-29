@@ -1,5 +1,4 @@
 import logging
-import traceback
 
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import status
@@ -37,33 +36,40 @@ class ValidateForm:
         
         return answer
 
-    def not_blank_or_null(self, form_data, validation, validation_questions, category_index):
+    def not_blank_or_null(self, form_data, validation, validation_questions, category_index, general):
         for validation_question in validation_questions:
             question = validation_question.question
             answer = form_data.get_answer(question)
-            if answer is None or type(answer) is str and answer.strip() == '':
-                self.add_error_or_warning(self.question_map[question.id], category_index, validation)
+            if answer is None or isinstance(answer, str) and answer.strip() == '':
+                if general:
+                    category_name = ''
+                else:
+                    category_name = self.question_map[question.id]
+                self.add_error_or_warning(category_name, category_index, validation)
             
     
-    def at_least_one_true(self, form_data, validation, validation_questions, category_index):   
+    def at_least_one_true(self, form_data, validation, validation_questions, category_index, general):   
         for validation_question in validation_questions:
             question = validation_question.question
             answer = form_data.get_answer(question)
-            if answer is not None and (type(answer) is bool and answer == True or type(answer) is str and answer.upper() == 'TRUE'):
+            if answer is not None and (isinstance(answer, bool) and answer == True or isinstance(answer, str) and answer.upper() == 'TRUE'):
                 # found at least one true response
                 return
-
-        self.add_error_or_warning(self.question_map[question.id], category_index, validation)
-    
-    def at_least_one_card (self, form_data, validation, questions, category_index):
         
+        if general:
+            category_name = ''
+        else:
+            category_name = self.question_map[question.id]
+        self.add_error_or_warning(category_name, category_index, validation)
+    
+    def at_least_one_card (self, form_data, validation, questions, category_index, general):
         for cat_list in form_data.card_dict.values():
             if len(cat_list) > 0:
                 return
-                
+            
         self.add_error_or_warning('CARD', None, validation)
     
-    def custom_trafficker_custody(self, form_data, validation, questions, category_index):
+    def custom_trafficker_custody(self, form_data, validation, questions, category_index, general):
         if len(questions) < 1:
             logger.error("custom_trafficker_custody validation requires at least one question")
             self.response_code = status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -80,16 +86,20 @@ class ValidateForm:
                     self.add_error_or_warning(self.question_map[questions[0].question.id], category_index, validation)
                     break
     
-    def form_id_station_code(self, form_data, validation, questions, category_index):
+    def form_id_station_code(self, form_data, validation, questions, category_index, general):
         if len(questions) < 1:
             logger.error("form_id_station_code validation requires at least one question")
             return
         
         question = questions[0].question
+        if general:
+            category_name = ''
+        else:
+            category_name = self.question_map[question.id]
         answer = form_data.get_answer(question)
         station_code = form_data.form_object.station.station_code
         if not answer.startswith(station_code):
-            self.add_error_or_warning(self.question_map[question.id], category_index, validation)            
+            self.add_error_or_warning(category_name, category_index, validation)            
 
     
     def __init__(self, form, form_data, ignore_warnings):
@@ -175,9 +185,9 @@ class ValidateForm:
                     else:
                         should_validate = False
                 else:
-                    if type(trigger_value) is bool and trigger_value:
+                    if isinstance(trigger_value, bool) and trigger_value:
                         should_validate = True
-                    elif type(trigger_value) is str and trigger_value.upper() == 'TRUE':
+                    elif isinstance(trigger_value, str) and trigger_value.upper() == 'TRUE':
                         should_validate = True
                     else:
                         should_validate = False
@@ -186,7 +196,15 @@ class ValidateForm:
         
             if should_validate:
                 questions = FormValidationQuestion.objects.filter(validation=validation)
-                self.validations[validation.validation_type.name](form_data, validation, questions, category_index)
+                general = False
+                the_category = None
+                for question in questions:
+                    if the_category is None:
+                        the_category = self.question_map[question.question.id]
+                    elif the_category != self.question_map[question.question.id]:
+                        general = True
+                        break                           
+                self.validations[validation.validation_type.name](form_data, validation, questions, category_index, general)
          
     def validate(self):
         if self.main_form in self.validation_set:

@@ -21,6 +21,7 @@ class IrfNepal(IrfCore):
     no_company_phone = models.BooleanField('No company phone number', default=False)
     no_appointment_letter = models.BooleanField('No Appointment Letter', default=False)
     valid_gulf_country_visa = models.BooleanField('Has a valid gulf country visa in passport', default=False)
+    going_to_gulf_through_india = models.BooleanField('Going to Gulf for work through India', default=False)
     
     no_bags_long_trip = models.BooleanField('No bags though claim to be going for a long time', default=False)
     shopping_overnight_stuff_in_bags = models.BooleanField('Shopping - Stuff for overnight stay in bags', default=False)
@@ -61,7 +62,7 @@ class IrfNepal(IrfCore):
 
     # Action
     noticed_waiting_sitting = models.BooleanField('Waiting / sitting', default=False)
-    noticed_on_train = models.BooleanField('on train', default=False)
+    noticed_walking_to_border = models.BooleanField('Walking to border', default=False)
     noticed_roaming_around = models.BooleanField('Roaming around', default=False)
     noticed_exiting_vehicle = models.BooleanField('Exiting vehicle', default=False)
     noticed_heading_to_vehicle = models.BooleanField('Heading to vehicle', default=False)

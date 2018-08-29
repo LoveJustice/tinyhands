@@ -52,5 +52,13 @@ SPREADSHEET_CONFIG = {
             'spreadsheet':'Tinyhands',
             'sheet':'Address2 Export',
             }
+        },
+    'Traffickers': {
+        'key_column': 'id',
+        'export': {
+            'spreadsheet':'Trafficker Photos',
+            'sheet':'Interceptee_Photos',
+            'export_function': 'export_import.trafficker_io.get_trafficker_export_rows',
+            },
         }
     }

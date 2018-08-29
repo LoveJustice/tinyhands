@@ -1,7 +1,10 @@
+import logging
 from django.db import transaction
 from django.core.exceptions import ObjectDoesNotExist
 
-from .models.form import CardStorage, Category, Form, FormType, QuestionLayout, QuestionStorage, Storage
+from .models.form import CardStorage, Category, Form, QuestionLayout, QuestionStorage, Storage
+
+logger = logging.getLogger(__name__);
 
 class CategoryForm:
     def __init__(self, category, card_class, card_response_class, foreign_key_field_parent):
@@ -97,11 +100,11 @@ class FormData:
         else:
             self.response_dict = {}
             
-    def load_cards(self, category, object):
+    def load_cards(self, category, the_object):
         card_list = []
         category_form = self.category_form_dict[category.id]
         
-        cards = eval('category_form.form_model.objects.filter(' + category_form.foreign_key_field_parent + '__id=object.id)')
+        cards = eval('category_form.form_model.objects.filter(' + category_form.foreign_key_field_parent + '__id=the_object.id)')
         for card in cards:
             card_list.append(CardData(card, category_form, form_data=self))
         
@@ -115,11 +118,11 @@ class FormData:
             self.question_storage[question_storage.question.id] = question_storage
             
     
-    def __init__(self, object, form):
+    def __init__(self, the_object, form):
         self.form = form
-        self.form_object = object
-        self.form_model = object.__class__
-        storage = Storage.objects.get(form_model_name = object.__class__.__name__)
+        self.form_object = the_object
+        self.form_model = the_object.__class__
+        storage = Storage.objects.get(form_model_name = the_object.__class__.__name__)
         if storage.response_model_name is not None:
             mod = __import__(storage.module_name, fromlist=[storage.response_model_name])
             self.response_model = getattr(mod, storage.response_model_name, None)
@@ -132,8 +135,7 @@ class FormData:
         self.load_question_storage(form)
         
         self.response_dict = {}
-        if object.id is not None:
-            self.load_responses()
+        self.load_responses()
             
         self.card_dict = {}
         self.category_form_dict = {}
@@ -148,17 +150,17 @@ class FormData:
                 card_response_model = None
             category_form = CategoryForm(category, card_model, card_response_model, card_storage.storage.foreign_key_field_parent)
             self.category_form_dict[category.id] = category_form
-            if object.id is None:
+            if the_object.id is None:
                 self.card_dict[category.id] = []
             else:
-                card_list = self.load_cards(category, object)
+                card_list = self.load_cards(category, the_object)
                 self.card_dict[category.id] = card_list
                 
-    def find_card(self, category, id):
+    def find_card(self, category, card_id):
         ret = None
         card_list = self.card_dict[category.id]
         for card in card_list:
-            if card.form_object.id == id:
+            if card.form_object.id == card_id:
                 ret = card
                 break
         
@@ -183,8 +185,11 @@ class FormData:
         if self.in_form_object(question):
             setattr(self.form_object, self.question_storage[question.id].field_name, answer)
         else:
-            self.response_dict[question.id].value = answer
-            self.response_dict[question.id].id = storage_id
+            if question.id in self.response_dict:
+                self.response_dict[question.id].value = answer
+                self.response_dict[question.id].id = storage_id
+            else:
+                 logger.error("Unable to locate question with id " + str(question.id) + " in response_dict")
     
     def get_answer_storage(self, question):
         if self.in_form_object(question):
@@ -237,8 +242,8 @@ class FormData:
             return None
     
     @staticmethod
-    def find_form(form_type_name, country_id):
-        form = Form.current_form(form_type_name, country_id)
+    def find_form(form_type_name, station_id):
+        form = Form.current_form(form_type_name, station_id)
         return form
             
     @staticmethod
@@ -248,12 +253,12 @@ class FormData:
         return form_class
     
     @staticmethod
-    def find_object_by_number(key_value, form_type_name, country=None):
+    def find_object_by_number(key_value, form_type_name, station=None):
         form_object = None
-        if country is None:
+        if station is None:
             forms = Form.objects.filter(form_type__name=form_type_name)
         else:
-            forms = Form.objects.filter(form_type__name=form_type_name, operating_country=country)
+            forms = Form.objects.filter(form_type__name=form_type_name, stations = station)
             
         for form in forms:
             mod = __import__(form.storage.module_name, fromlist=[form.storage.form_model_name])
@@ -267,9 +272,12 @@ class FormData:
         return form_object
     
     @staticmethod
-    def find_object_by_id(id, form):
+    def find_object_by_id(obj_id, form):
         form_class = form.find_form_class()
-        form_object = form_class.objects.get(id=id)       
+        try:
+            form_object = form_class.objects.get(id=obj_id)
+        except ObjectDoesNotExist:
+            form_object = None   
         
         return form_object
             

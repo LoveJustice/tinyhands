@@ -1,16 +1,12 @@
-from datetime import date
+import datetime
 from django.db import models
 from django.contrib.postgres.fields import JSONField
+from django.utils.timezone import make_aware
 
 from accounts.models import Account
 
 from .border_station import BorderStation
 from .country import Country
-
-from imagekit.models import ImageSpecField
-from imagekit.processors import ResizeToFill
-
-from .person import Person
 
 #
 # Storage is used to describe the relationship between questions on a form
@@ -34,10 +30,12 @@ class FormType(models.Model):
 
 class Form(models.Model):
     form_type = models.ForeignKey(FormType)
-    country = models.ForeignKey(Country)
     storage = models.ForeignKey(Storage)
     start_date = models.DateTimeField(auto_now_add=True)
     end_date = models.DateTimeField(null=True)
+    form_name = models.CharField(max_length=126)
+    
+    stations = models.ManyToManyField(BorderStation)
     
     def find_form_class(self):
         mod = __import__(self.storage.module_name, fromlist=[self.storage.form_model_name])
@@ -45,9 +43,9 @@ class Form(models.Model):
         return form_class
         
     @staticmethod
-    def current_form(form_type_name, country_id):
-        today = date.today()
-        form_list = Form.objects.filter(form_type__name=form_type_name, country__id=country_id, start_date__lte=today, end_date__gte=today)
+    def current_form(form_type_name, station_id):
+        today = make_aware(datetime.datetime.now())
+        form_list = Form.objects.filter(form_type__name=form_type_name, start_date__lte=today, end_date__gte=today, stations__id=station_id)
         if len(form_list) > 0:
             return form_list[0]
         else:

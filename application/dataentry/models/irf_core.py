@@ -1,4 +1,3 @@
-from dateutil.parser import parse
 from django.db import models
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
@@ -6,7 +5,6 @@ from imagekit.processors import ResizeToFill
 from .person import Person
 from .form import BaseCard
 from .form import BaseForm
-from dataentry.form_data import FormData
 
 # Class to store an instance of the IRF data.
 # This should contain data that is common for all IRFs and is not expected to be changed
@@ -53,10 +51,10 @@ class IrfCore(BaseForm):
     reported_total_red_flags = models.IntegerField('Reported Total Red Flag Points:', null=True, blank=True)
     computed_total_red_flags = models.IntegerField('Computed Total Red Flag Points:', null=True, blank=True)
     
-    who_noticed = models.CharField(max_length=127, blank=True)
+    who_noticed = models.CharField(max_length=127, null=True)
     staff_who_noticed = models.CharField('Staff who noticed:', max_length=255, blank=True)
     
-    type_of_intercept = models.CharField(max_length=127, blank=True)
+    type_of_intercept = models.CharField(max_length=127, null=True)
     
     HOW_SURE_TRAFFICKING_CHOICES = [
         (1, '1 - Not at all sure'),
@@ -67,7 +65,7 @@ class IrfCore(BaseForm):
     ]
     how_sure_was_trafficking = models.IntegerField(
         'How sure are you that it was trafficking case?',
-        choices=HOW_SURE_TRAFFICKING_CHOICES)
+        choices=HOW_SURE_TRAFFICKING_CHOICES, null=True)
     
     convinced_by_staff = models.CharField(max_length=127, default='False')
     convinced_by_family = models.CharField(max_length=127, default='False')
@@ -127,13 +125,17 @@ class IntercepteeCore(BaseCard):
         rtn = ''
         try:
             rtn = self.person.address1
-        finally:
-            return rtn
+        except Exception:
+            pass
+        
+        return rtn
 
     def address2_as_string(self):
         rtn = ''
         try:
             rtn = self.person.address2
-        finally:
-            return rtn
+        except Exception:
+            pass
+        
+        return rtn
     
