@@ -38,6 +38,7 @@ class IrfListSerializer(serializers.Serializer):
     date_time_entered_into_system = serializers.SerializerMethodField(read_only=True)
     date_time_last_updated = serializers.SerializerMethodField(read_only=True)
     station = BorderStationOverviewSerializer()
+    form_name = serializers.SerializerMethodField(read_only=True)
     can_view = serializers.SerializerMethodField(read_only=True)
     can_edit = serializers.SerializerMethodField(read_only=True)
     can_delete = serializers.SerializerMethodField(read_only=True)
@@ -59,7 +60,14 @@ class IrfListSerializer(serializers.Serializer):
         return self.adjust_date_time_for_tz (obj.date_time_entered_into_system, obj.station.time_zone)
     
     def get_date_time_last_updated(self, obj):
-        return self.adjust_date_time_for_tz (obj.date_time_last_updated, obj.station.time_zone)                                   
+        return self.adjust_date_time_for_tz (obj.date_time_last_updated, obj.station.time_zone)
+    
+    def get_form_name(self, obj):
+        forms = Form.objects.filter(form_type__name='IRF', stations__id=obj.station.id)
+        if len(forms) > 0:
+            return forms[0].form_name
+        else:
+            return None
     
     def get_can_view(self, obj):
         perm_list = self.context.get('perm_list')
