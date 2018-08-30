@@ -73,7 +73,7 @@ class IrfNepal(IrfCore):
     noticed_on_the_phone = models.BooleanField('On the phone', default=False)
     noticed_other_sign = models.CharField(max_length=127, default='False')
     
-    case_notes = models.TextField('Case Notes', blank=True)
+    reason_for_intercept = models.TextField('Reason For Intercept', blank=True)
     scanned_form = models.FileField('Attach scanned copy of form (pdf or image)', upload_to='scanned_irf_forms', default='', blank=True)
     
 class IntercepteeNepal(IntercepteeCore):
