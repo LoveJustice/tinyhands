@@ -4,6 +4,9 @@ from __future__ import unicode_literals
 
 from django.db import migrations, models
 
+def migrate_forms(apps, schema_editor):
+    # Invoke form migration with specific file containing lastest form data
+    FormMigration.migrate(apps, schema_editor, 'form_data_20180831.json')
 
 class Migration(migrations.Migration):
 
@@ -44,4 +47,5 @@ class Migration(migrations.Migration):
             name='reason_for_intercept',
             field=models.TextField(blank=True, verbose_name='Reason For Intercept'),
         ),
+        migrations.RunPython(migrate_forms),
     ]
