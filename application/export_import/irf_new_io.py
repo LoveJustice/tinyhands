@@ -10,16 +10,16 @@ def get_form_export_rows(objs):
     print ("In get_form_export_rows")
     
     export_factory = ExportToGoogleSheetFactory()
-    form = ExportFormFactory.find_by_instance(objs[0])
-    if form is None:
+    forms = ExportFormFactory.find_by_instance(objs[0])
+    if len(forms) < 1:
         # log form not found
         return []
-    export_sheet = export_factory.find(form)
+    export_sheet = export_factory.find(forms[0])
     if export_sheet is None:
         # log sheet not found
         return []
     
-    for irf in irfs:
+    for irf in objs:
         export_sheet.process_object(irf)
         
     return export_sheet.rows
