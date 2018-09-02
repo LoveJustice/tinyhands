@@ -302,77 +302,6 @@ class ExportImport(models.Model):
     implement_class_name = models.CharField(max_length=126, null=True)
     form = models.ForeignKey(Form)
 
-class ExportImportQuestion(models.Model):
-    export_import = models.ForeignKey(ExportImport)
-    question = models.ForeignKey(Question)
-    export_name = models.CharField(max_length=126)
-    arguments_json = JSONField(null=True)
-    
-    def format_DateTime(self, answer, station):
-        tz = pytz.timezone(station.time_zone)
-        date_time = answer.astimezone(tz)
-        return str(date_time.replace(tzinfo=None))
-    
-    def format_parts(self, answer):
-        if self.arguments_json is not None and 'part' in self.arguments_json:
-            part_list = self.arguments_json['part'].split('.')
-            formatted_answer = answer
-            for part in part_list:
-                if formatted_answer is None:
-                    break
-                formatted_answer = getattr(formatted_answer, part, None)
-        else:
-            # log error
-            formatted_answer = None
-        
-        return formatted_answer
-    
-    def format_Address(self, answer, station):
-        return self.format_parts(answer)
-    
-    def format_Person(self, answer, station):
-        return self.format_parts(answer)
-    
-    def format_answer_map(self, answer):
-        if self.arguments_json is not None and 'answer_map' in self.arguments_json and self.arguments_json['answer_map'] == True:
-            answers = Answer.objects.filter(question=self.question, code=answer)
-            if len(answers) > 0:
-                formatted_answer = answers[0].value
-            else:
-                formatted_answer = answer
-        else:
-            formatted_answer = answer
-        
-        return formatted_answer
-    
-    def format_RadioButton(self, answer, station):
-        return [self.format_answer_map(answer)]
-    
-    def format_DropDown(self, answer, station):
-        return [self.format_answer_map(answer)]
-    
-    def export_value(self, form_data, main_data):
-        answer = form_data.get_answer(self.question)
-        if answer is not None:
-            format_method_name = 'format_' + self.question.answer_type.name
-            format_method = getattr(self, format_method_name, None)
-            if format_method is not None:
-                answer = format_method(answer, main_data.form_object.station)
-        
-        if self.arguments_json is not None and 'map' in self.arguments_json:
-            the_map = self.arguments_json['map']
-            print ('mapping', answer, the_map)
-            if answer in the_map:
-                answer = the_map[answer]
-            elif 'default' in the_map:
-                answer = the_map['default']
-                
-        if answer is None:
-            answer = ''
-                
-        return answer
-        
-
 class GoogleSheet(models.Model):
     export_import = models.ForeignKey(ExportImport)
     export_or_import = models.CharField(max_length=10)
@@ -387,8 +316,6 @@ class ExportImportCard(models.Model):
     category = models.ForeignKey(Category, related_name='export_import_card')
     prefix = models.CharField(max_length=126)
     max_instances = models.PositiveIntegerField()
-    
-
 
 # data fields to be exported for which there is no question
 class ExportImportField(models.Model):
