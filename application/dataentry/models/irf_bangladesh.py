@@ -66,10 +66,11 @@ class IrfBangladesh(IrfCore):
     walking_to_border = models.BooleanField('Walking to border', default=False)
     
      # Final Procedures - Bangladesh specific
-    case_notes = models.TextField('Case Notes', blank=True)
+    reason_for_intercept = models.TextField('Reason For Intercept', blank=True)
     scan_submit_og_same_day = models.BooleanField('Scan and submint OG the same day', default=False)
     scanned_form = models.FileField('Attach scanned copy of form (pdf or image)', upload_to='scanned_irf_forms', default='', blank=True)
     call_project_manager = models.BooleanField('Call Project Manager to confirm intercept', default=False)
+    case_notes = models.TextField('Case Notes', blank=True)
     
 class IntercepteeBangladesh(IntercepteeCore):
     interception_record = models.ForeignKey(IrfBangladesh, related_name='interceptees', on_delete=models.CASCADE)

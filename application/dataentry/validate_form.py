@@ -48,7 +48,7 @@ class ValidateForm:
                 self.add_error_or_warning(category_name, category_index, validation)
             
     
-    def at_least_one_true(self, form_data, validation, validation_questions, category_index, general):   
+    def at_least_one_true(self, form_data, validation, validation_questions, category_index, general):
         for validation_question in validation_questions:
             question = validation_question.question
             answer = form_data.get_answer(question)
@@ -63,7 +63,7 @@ class ValidateForm:
         self.add_error_or_warning(category_name, category_index, validation)
     
     def at_least_one_card (self, form_data, validation, questions, category_index, general):
-        for cat_list in form_data.card_dict.values():
+        for cat_list in form_data.form_data.card_dict.values():
             if len(cat_list) > 0:
                 return
             
@@ -223,7 +223,7 @@ class ValidateForm:
                 if category_id in self.validation_set:
                     for validation in self.validation_set[category_id]:
                         if validation.validation_type.name in self.validations:
-                            self.perform_validation(validation, card, category_index=card_index)
+                            self.perform_validation(validation, card, category_index=category_count)
                         else:
                             logger.error("validation #" + str(validation.id) + " specifies an unimplemented validation:" + validation.validation_type.name)
                             self.response_code = status.HTTP_500_INTERNAL_SERVER_ERROR
