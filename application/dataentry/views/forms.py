@@ -25,7 +25,6 @@ class FormViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
     
     def set_forms(self, request, station_id):
-        print ('enter setform')
         try:
             station = BorderStation.objects.get(id=station_id)
         except ObjectDoesNotExist:
@@ -42,7 +41,6 @@ class FormViewSet(viewsets.ModelViewSet):
                     break
         
             if not found:
-                print ('remove', current_form.id)
                 remove_forms.append(current_form)
         
         add_forms = []        
@@ -57,7 +55,6 @@ class FormViewSet(viewsets.ModelViewSet):
                 try:
                     the_form = Form.objects.get(id=new_form)
                     add_forms.append(the_form)
-                    print ('add', the_form.id)
                 except ObjectDoesNotExist:
                     return Response(status=status.HTTP_400_BAD_REQUEST)
         

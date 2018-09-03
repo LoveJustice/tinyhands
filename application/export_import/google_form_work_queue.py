@@ -32,7 +32,6 @@ class GoogleFormWorkQueue(Thread):
     def run(self):
         while True:
             work = self.work_queue.get()
-            print('in run')
             logger.info("in run " + str(work[0]))
             try:
                 self.internal_update(work[0], work[1])
@@ -50,7 +49,6 @@ class GoogleFormWorkQueue(Thread):
     
     def find_sheet(self, obj, station, form_type):
         export_forms = ExportFormFactory.find_by_instance(obj)
-        print ('find_sheet', export_forms)
         if len(export_forms) < 1:
             sheet = None
         else:
@@ -68,7 +66,6 @@ class GoogleFormWorkQueue(Thread):
         return sheet
     
     def internal_update(self, obj, remove):
-        print("internal_update")
         station = obj.station
         form_type = obj.get_form_type_name()
         if station in self.sheet_dict and form_type in self.sheet_dict[station]:
@@ -78,7 +75,6 @@ class GoogleFormWorkQueue(Thread):
             
         if sheet is not None:
             if remove == True:
-                print('remove is true')
                 obj = None
             sheet.update(obj.get_key(), obj)
         
@@ -91,22 +87,18 @@ class GoogleFormWorkQueue(Thread):
                 logger.debug("Back from creating GoogleFormWorkQueue")
     
             work = [form_data, remove, 0]
-            print("before put")
             GoogleFormWorkQueue.instance.work_queue.put(work)
-            print("after put")
             logger.debug("added to work queue form data=" + str(form_data))
         except:
-            print("Exception thrown " + traceback.format_exc())
             logger.warn("Exception thrown " + traceback.format_exc())
         
     @staticmethod
     def handle_form_done_signal(sender, **kwargs):
-        print("handle_form_done_signal")
         form_data = kwargs.get("form_data")
         remove = kwargs.get("remove")
         if remove is None:
             remove = False
-        print('form_object', form_data.form_object)
+
         GoogleFormWorkQueue.update_form(form_data.form_object, remove)
         
         

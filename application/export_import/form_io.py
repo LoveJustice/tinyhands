@@ -7,8 +7,6 @@ def get_form_export_rows(objs):
     if len(objs) < 1:
         return []
     
-    print ("In get_form_export_rows")
-    
     export_factory = ExportToGoogleSheetFactory()
     forms = ExportFormFactory.find_by_instance(objs[0])
     if len(forms) < 1:

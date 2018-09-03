@@ -227,7 +227,6 @@ class Question(models.Model):
         
         if self.export_params is not None and 'map' in self.export_params and len(answer_list) == 1:
             the_map = self.export_params['map']
-            print ('mapping', answer_list, the_map)
             if answer_list[0] in the_map:
                 answer_list = [the_map[answer_list[0]]]
             elif 'default' in the_map:
@@ -335,7 +334,6 @@ class ExportImportField(models.Model):
     arguments_json = JSONField(null=True)
     
     def format_DateTime(self, answer, station):
-        print('in field format date/time', station)
         tz = pytz.timezone(station.time_zone)
         date_time = answer.astimezone(tz)
         return str(date_time.replace(tzinfo=None))
@@ -364,14 +362,12 @@ class ExportImportField(models.Model):
         answer = getattr(form_obj, self.field_name)
         if answer is not None:
             format_method_name = 'format_' + self.answer_type.name
-            print ('field export_value', format_method_name)
             format_method = getattr(self, format_method_name, None)
             if format_method is not None:
                 answer = format_method(answer, main_data.form_object.station)
         
         if self.arguments_json is not None and 'map' in self.arguments_json:
             the_map = self.arguments_json['map']
-            print ('mapping', answer, the_map)
             if answer in the_map:
                 answer = the_map[answer]
             elif 'default' in the_map:

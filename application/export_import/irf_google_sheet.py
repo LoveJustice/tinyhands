@@ -3,7 +3,6 @@ from dataentry.form_data import FormData
 
 class IrfGoogleSheet(ExportToGoogleSheet):
     def __init__(self, export_form):
-        print('IrfGoogleSheet-init')
         super().__init__(export_form)
         self.rows = []
         self.export_form = export_form
@@ -23,7 +22,6 @@ class IrfGoogleSheet(ExportToGoogleSheet):
         self.rows.append(headers)
             
     def process_object(self, obj):
-        print('IrfGoogleSheet-process')
         base_row = []
         form_data = FormData(obj, self.export_form.export_import.form)
         
@@ -71,7 +69,5 @@ class IrfGoogleSheet(ExportToGoogleSheet):
                 row.append(ie_field.export_value(victim.form_object, form_data))
         
             self.rows.append(row)
-            
-        print (self.rows)
             
         return self.rows
