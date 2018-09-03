@@ -63,7 +63,7 @@ class ValidateForm:
         self.add_error_or_warning(category_name, category_index, validation)
     
     def at_least_one_card (self, form_data, validation, questions, category_index, general):
-        for cat_list in form_data.form_data.card_dict.values():
+        for cat_list in form_data.card_dict.values():
             if len(cat_list) > 0:
                 return
             
