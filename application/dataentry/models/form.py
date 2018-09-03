@@ -150,7 +150,14 @@ class Question(models.Model):
         else:
             formatted_answer_list = []
             formatted_answer_list.append(getattr(answer, 'full_name', ''))
-            formatted_answer_list.append(getattr(answer, 'gender', ''))
+            tmp = getattr(answer, 'gender', 'Unknown')
+            if tmp.upper() == 'F':
+                tmp = 'Female'
+            elif tmp.upper() == 'M':
+                tmp = 'Male'
+            else:
+                tmp = 'Unknown'
+            formatted_answer_list.append(tmp)
             formatted_answer_list.append(getattr(answer, 'age',''))
             tmp = getattr(answer, 'address1', None)
             if tmp is None:
@@ -302,7 +309,7 @@ class ExportImport(models.Model):
     implement_class_name = models.CharField(max_length=126, null=True)
     form = models.ForeignKey(Form)
 
-class GoogleSheet(models.Model):
+class GoogleSheetConfig(models.Model):
     export_import = models.ForeignKey(ExportImport)
     export_or_import = models.CharField(max_length=10)
     spreadsheet_name = models.CharField(max_length=126)
@@ -310,7 +317,8 @@ class GoogleSheet(models.Model):
     key_field_name = models.CharField(max_length=126)
     import_status_column = models.CharField(max_length=126, null = True)
     import_issue_column = models.CharField(max_length=126, null=True)
-
+    suppress_column_warnings = models.BooleanField(default=True)
+    
 class ExportImportCard(models.Model):
     export_import = models.ForeignKey(ExportImport, related_name='export_import_base')
     category = models.ForeignKey(Category, related_name='export_import_card')

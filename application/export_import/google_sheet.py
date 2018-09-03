@@ -1,5 +1,6 @@
 from .google_sheet_basic import GoogleSheetBasic
 from .google_sheet_names import spreadsheet_header_from_export_header
+from .form_io import get_form_export_rows
 
 from django.conf import settings
 import importlib
@@ -9,12 +10,13 @@ logger = logging.getLogger(__name__);
 
 class GoogleSheet (GoogleSheetBasic):
     extra_allocation  = 20
-    def __init__(self, spreadsheet_name, sheet_name, key_column_name, export_method):
+    def __init__(self, spreadsheet_name, sheet_name, key_column_name, export_method, suppress_column_warnings=False):
         GoogleSheetBasic.__init__(self, spreadsheet_name, sheet_name)
         logger.debug("In __init__")
         self.column_map = None
         self.get_column_names()
         self.export_method = export_method
+        self.suppress_colunn_warnings = suppress_column_warnings
         
         self.find_key_column(key_column_name)
         logger.debug("After find key column")
@@ -53,7 +55,11 @@ class GoogleSheet (GoogleSheetBasic):
             data_setting['export']['sheet'],
             data_setting['key_column'],
             func)
-        
+    
+    @staticmethod
+    def from_form_config(config):
+        return GoogleSheet(config.spreadsheet_name + settings.SPREADSHEET_SUFFIX, config.sheet_name, config.key_field_name, get_form_export_rows,
+                                    suppress_column_warnings = config.suppress_column_warnings)
         
     def get_column_names(self):
         results = self.get_data(1, 0, 1, self.colCount-1)
@@ -75,15 +81,22 @@ class GoogleSheet (GoogleSheetBasic):
         self.key_values = results[0]
         
     def map_headers(self, headers):
+        headers_mapped = []
         column_map = []
         for column_idx in range(len(self.column_names)):
             column_map.append(None)
             for export_idx in range(len(headers)):
                 if spreadsheet_header_from_export_header(self.column_names[column_idx]) == spreadsheet_header_from_export_header(headers[export_idx]):
                     column_map[column_idx] = export_idx
+                    headers_mapped.append(headers[export_idx])
                     break
-            if column_map[column_idx] == None:
+            if column_map[column_idx] == None and self.suppress_colunn_warnings == False:
                 logger.warn( "Export does not contain data for column " + self.column_names[column_idx])
+        
+        if not self.suppress_colunn_warnings:
+            for export_idx in range(len(headers)):
+                if not headers[export_idx] in headers_mapped:
+                    logger.warn('Exported data for field ' + headers[export_idx] + ' has no corresponding colunn in Google Sheet')
         
         self.column_map = column_map
         
@@ -161,4 +174,6 @@ class GoogleSheet (GoogleSheetBasic):
                 
         new_rows = self.export_method(db_data_to_export)
         logger.debug("export_method returned row count " + str(len(new_rows)))
-        self.append_rows(new_rows)                    
+        if len(new_rows) > 1:
+            self.append_rows(new_rows)
+                     

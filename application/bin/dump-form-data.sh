@@ -10,7 +10,7 @@ tmpFile2=/tmp/tmp2$$
 outFile=fixtures/form_data_$tag.json
 rm -f $tmpFile
 
-for model in FormType Storage Form CategoryType Category CardStorage AnswerType Question QuestionLayout QuestionStorage Answer FormValidationLevel FormValidationType FormValidation FormValidationQuestion
+for model in FormType Storage Form CategoryType Category CardStorage AnswerType Question QuestionLayout QuestionStorage Answer FormValidationLevel FormValidationType FormValidation FormValidationQuestion ExportImport ExportImportCard ExportImportField GoogleSheetConfig
 do
 	./manage.py dumpdata dataentry.$model >> $tmpFile
 done
