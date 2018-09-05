@@ -1,5 +1,7 @@
 import json
 import pytz
+import traceback
+
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework import serializers
@@ -206,34 +208,44 @@ class IrfFormViewSet(viewsets.ModelViewSet):
         form_type = FormType.objects.get(name=self.form_type_name)
         request_json = self.extract_data(request)
         self.serializer_context = {'form_type':form_type, 'request.user':request.user}
-        serializer = FormDataSerializer(data=request_json, context=self.serializer_context)
-        if serializer.is_valid():
-            if not UserLocationPermission.has_session_permission(request, 'IRF', 'ADD', serializer.get_country_id(), serializer.get_station_id()):
-                return Response(status=status.HTTP_401_UNAUTHORIZED)
-            try:
-                form_data = serializer.save()
-            except IntegrityError as exc:
-                if 'unique constraint' in exc.args[0]:
-                    ret = {
-                        'errors': [ exc.args[0] ],
-                        'warnings':[]
+        try:
+            serializer = FormDataSerializer(data=request_json, context=self.serializer_context)
+            if serializer.is_valid():
+                if not UserLocationPermission.has_session_permission(request, 'IRF', 'ADD', serializer.get_country_id(), serializer.get_station_id()):
+                    return Response(status=status.HTTP_401_UNAUTHORIZED)
+                try:
+                    form_data = serializer.save()
+                    serializer2 = FormDataSerializer(form_data, context=self.serializer_context)
+                    form_done.send_robust(sender=self.__class__, form_data=form_data)
+                    ret = serializer2.data
+                    rtn_status = status.HTTP_200_OK
+                except IntegrityError as exc:
+                    if 'unique constraint' in exc.args[0]:
+                        ret = {
+                            'errors': [ exc.args[0] ],
+                            'warnings':[]
+                        }
+                        rtn_status=status.HTTP_400_BAD_REQUEST
+                    else:
+                        ret = {
+                            'errors': [exc.args[0]],
+                            'warnings':[]
+                        }
+                        rtn_status=status.HTTP_400_BAD_REQUEST
+            else:
+                ret = {
+                    'errors': serializer.the_errors,
+                    'warnings':serializer.the_warnings
                     }
-                    return Response(ret, status=status.HTTP_400_BAD_REQUEST)
-                else:
-                    ret = {
-                        'errors': [exc.args[0]],
-                        'warnings':[]
-                    }
-                    return Response(ret, status=status.HTTP_400_BAD_REQUEST)
-            serializer2 = FormDataSerializer(form_data, context=self.serializer_context)
-            form_done.send_robust(sender=self.__class__, form_data=form_data)
-            return Response(serializer2.data, status=status.HTTP_200_OK)
-        else:
+                rtn_status=status.HTTP_400_BAD_REQUEST
+        except Exception:
             ret = {
-                'errors': serializer.the_errors,
-                'warnings':serializer.the_warnings
+                'errors': 'Internal Error:' + traceback.format_exc(),
+                'warnings':[]
                 }
-            return Response(ret, status=status.HTTP_400_BAD_REQUEST)
+            rtn_status = status.HTTP_500_INTERNAL_SERVER_ERROR
+            
+        return Response (ret, status=rtn_status)
         
     def retrieve_blank_form(self, request, station_id):
         self.serializer_context = {}
@@ -290,20 +302,42 @@ class IrfFormViewSet(viewsets.ModelViewSet):
         request_json = self.extract_data(request)
 
         self.serializer_context = {'form_type':form.form_type}
-        serializer = FormDataSerializer(form_data, data=request_json, context=self.serializer_context)
-        if serializer.is_valid():
-            if not UserLocationPermission.has_session_permission(request, 'IRF', 'EDIT', serializer.get_country_id(), serializer.get_station_id()):
-                return Response(status=status.HTTP_401_UNAUTHORIZED)
-            form_data = serializer.save()
-            serializer2 = FormDataSerializer(form_data, context=self.serializer_context)
-            form_done.send_robust(sender=self.__class__, form_data=form_data)
-            return Response(serializer2.data, status=status.HTTP_200_OK)
-        else:
+        try:
+            serializer = FormDataSerializer(form_data, data=request_json, context=self.serializer_context)
+        
+            if serializer.is_valid():
+                if not UserLocationPermission.has_session_permission(request, 'IRF', 'EDIT', serializer.get_country_id(), serializer.get_station_id()):
+                    return Response(status=status.HTTP_401_UNAUTHORIZED)
+                form_data = serializer.save()
+                serializer2 = FormDataSerializer(form_data, context=self.serializer_context)
+                form_done.send_robust(sender=self.__class__, form_data=form_data)
+                rtn_status = status.HTTP_200_OK
+                ret = serializer2.data
+            else:
+                if serializer.the_errors is not None and len(serializer.the_errors) > 0:
+                    rtn_errors = serializer.the_errors
+                elif serializer.errors is not None and len(serializer.errors) > 0:
+                    rtn_errors = serializer.errors
+                else:
+                    rtn_errors = []
+                    
+                if serializer.the_warnings is not None and len(serializer.the_warnings) > 0:
+                    rtn_warnings = serializer.the_warnings
+                else:
+                    rtn_warnings = []
+                ret = {
+                    'errors': rtn_errors,
+                    'warnings':rtn_warnings
+                    }
+                rtn_status = status.HTTP_400_BAD_REQUEST
+        except Exception:
             ret = {
-                'errors': serializer.the_errors,
-                'warnings':serializer.the_warnings
+                'errors': 'Internal Error:' + traceback.format_exc(),
+                'warnings':[]
                 }
-            return Response(ret, status=status.HTTP_400_BAD_REQUEST)
+            rtn_status = status.HTTP_500_INTERNAL_SERVER_ERROR
+       
+        return Response (ret, status=rtn_status)
     
     def destroy(self, request, station_id, pk):
         form = Form.current_form(self.form_type_name, station_id)
