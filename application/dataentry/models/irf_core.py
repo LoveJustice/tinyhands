@@ -67,9 +67,9 @@ class IrfCore(BaseForm):
         'How sure are you that it was trafficking case?',
         choices=HOW_SURE_TRAFFICKING_CHOICES, null=True)
     
-    convinced_by_staff = models.CharField(max_length=127, default='False')
-    convinced_by_family = models.CharField(max_length=127, default='False')
-    convinced_by_police = models.CharField(max_length=127, default='False')
+    convinced_by_staff = models.CharField(max_length=127, blank=True)
+    convinced_by_family = models.CharField(max_length=127, blank=True)
+    convinced_by_police = models.CharField(max_length=127, blank=True)
 
     has_signature = models.BooleanField('Scanned form has signature?', default=False)
     
