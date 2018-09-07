@@ -1,5 +1,3 @@
-from dataentry.models import FormType
-
 from .export_form import ExportFormFactory, ExportToGoogleSheetFactory
 
 # assumes all objects in objs list are for the same form

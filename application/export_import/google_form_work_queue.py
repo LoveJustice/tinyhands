@@ -7,9 +7,7 @@ from django.conf import settings
 
 from export_import.google_sheet import GoogleSheet
 from dataentry.dataentry_signals import form_done
-from .form_io import get_form_export_rows
 from .export_form import ExportFormFactory
-from dataentry.models import FormType
 
 logger = logging.getLogger(__name__);
 
@@ -19,13 +17,12 @@ class GoogleFormWorkQueue(Thread):
     sheet_dict = {}
     
     def __init__(self):
-        sheet_cache = {}
         try:
             Thread.__init__(self)
             self.work_queue = Queue()
             self.daemon = True
             self.start()
-        except:
+        except Exception:
             logger.warn("Exception thrown " + traceback.format_exc())
     
     def reinitialize(self):
