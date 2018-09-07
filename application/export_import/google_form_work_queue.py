@@ -34,7 +34,7 @@ class GoogleFormWorkQueue(Thread):
             logger.info("in run " + str(work[0]))
             try:
                 self.internal_update(work[0], work[1])
-            except:
+            except Exception:
                 logger.error("Failed to process " + str(work[0]) + " on attempt " + str(work[2]))
                 self.reinitialize();
                 work[2] = work[2] + 1
@@ -92,7 +92,7 @@ class GoogleFormWorkQueue(Thread):
             work = [form_object, remove, 0]
             GoogleFormWorkQueue.instance.work_queue.put(work)
             logger.debug("added to work queue form data=" + str(form_data))
-        except:
+        except Exception:
             logger.warn("Exception thrown " + traceback.format_exc())
         
     @staticmethod
