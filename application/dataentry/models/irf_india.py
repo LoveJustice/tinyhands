@@ -77,7 +77,7 @@ class IrfIndia(IrfCore):
     call_subcommittee = models.BooleanField('Call Subcommittee Chairperson/Vice-Chairperson/Secretary', default=False)
     call_project_manager = models.BooleanField('Call Project Manager to confirm intercept', default=False)
     
-    case_notes = models.TextField('Case Notes', blank=True)
+    reason_for_intercept = models.TextField('Reason For Intercept', blank=True)
     scanned_form = models.FileField('Attach scanned copy of form (pdf or image)', upload_to='scanned_irf_forms', default='', blank=True)
     
 class IntercepteeIndia(IntercepteeCore):
