@@ -3,6 +3,7 @@ import logging
 from export_import.google_sheet_basic import GoogleSheetBasic
 from .google_sheet import GoogleSheet
 from .address2_io import get_address2_export_rows
+from .export_form import ExportToGoogleSheet
 
 from dataentry.models.interception_record import InterceptionRecord
 from dataentry.models.victim_interview import VictimInterview
@@ -13,6 +14,7 @@ logger = logging.getLogger(__name__);
 
 def audit_exports():
     logger.info("Begin audit")
+    ExportToGoogleSheet.audit_forms()
     audit_irf()
     audit_vif()
     audit_traffickers()
@@ -63,5 +65,9 @@ def replace_address2():
     
     addr2.append_rows(new_rows)
     logger.info("Complete replace Address2")
+
+
+        
+    
     
             

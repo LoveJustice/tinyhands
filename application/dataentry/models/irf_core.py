@@ -82,6 +82,12 @@ class IrfCore(BaseForm):
             for card in card_list:
                 card.form_object.person.sync_age_birthdate(base_date)
     
+    def get_key(self):
+        return self.irf_number
+    
+    def get_form_type_name(self):
+        return 'IRF'
+    
     def to_str(self, value):
         if value is None:
             return 'None'

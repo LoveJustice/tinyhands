@@ -1,6 +1,7 @@
 from django.contrib import messages
 from unipath import Path
 import os
+import sys
 import logging.config
 
 SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
@@ -105,6 +106,8 @@ STATIC_URL = '/static/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+TEST_ENVIRONMENT = len(sys.argv) > 1 and sys.argv[1] == 'test'
 
 MESSAGE_TAGS = {
     messages.constants.ERROR: 'danger'  # Fix up for Bootstrap.

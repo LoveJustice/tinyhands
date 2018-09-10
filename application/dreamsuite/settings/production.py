@@ -55,3 +55,4 @@ SPREADSHEET_CONFIG = {
             },
         }
     }
+SPREADSHEET_SUFFIX=''

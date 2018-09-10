@@ -1,3 +1,4 @@
+import pytz
 import datetime
 from django.db import models
 from django.contrib.postgres.fields import JSONField
@@ -75,6 +76,163 @@ class Question(models.Model):
     description = models.CharField(max_length=126, null=True)
     answer_type = models.ForeignKey(AnswerType)
     params=JSONField(null=True)   # custom parameters for this question type
+    export_name = models.CharField(max_length=126, null=True)
+    export_params = JSONField(null=True)
+    
+    def export_header_Address(self, prefix):
+        if self.export_name is not None and  self.export_name != '':
+            prefix = prefix + export_name + ' '
+ 
+        export_header_list = [
+            prefix + 'address1', 
+            prefix + 'address2']
+        
+        return export_header_list
+        
+    
+    def export_header_Person(self, prefix):
+        if self.export_name is not None and  self.export_name != '':
+            prefix = prefix + export_name + ' '
+    
+        export_header_list = [
+            prefix + 'name', 
+            prefix + 'gender',
+            prefix + 'age',
+            prefix + 'address1',
+            prefix + 'address2',
+            prefix + 'phone',
+            prefix + 'birthdate',
+            prefix + 'passport',
+            prefix + 'nationality',
+            ]
+        
+        return export_header_list
+    
+    def export_headers(self, prefix):
+        header_method_name = 'export_header_' + self.answer_type.name
+        header_method = getattr(self, header_method_name, None)
+        if header_method is not None:
+            headers = header_method(prefix)
+        else:
+            if self.export_name is None:
+                headers = [prefix + '']
+            else:
+                headers = [prefix + self.export_name]
+        
+        return headers
+    
+    def format_DateTime(self, answer, station):
+        if answer is None:
+            formatted_answer_list = ['']
+        else:
+            tz = pytz.timezone(station.time_zone)
+            date_time = answer.astimezone(tz)
+            formatted_answer_list = [str(date_time.replace(tzinfo=None))]
+        return formatted_answer_list
+    
+    def format_Address(self, answer, station):
+        if answer is None:
+            formatted_answer_list = [
+                    '',
+                    ''
+                ]
+        else:
+            formatted_answer_list = [
+                    answer.address1.name,
+                    answer.name
+                ]
+        
+        return formatted_answer_list
+    
+    def format_Person(self, answer, station):
+        if answer is None:
+            formatted_answer_list = ['','','','','','','','','']
+        else:
+            formatted_answer_list = []
+            formatted_answer_list.append(getattr(answer, 'full_name', ''))
+            tmp = getattr(answer, 'gender', 'Unknown')
+            if tmp.upper() == 'F':
+                tmp = 'Female'
+            elif tmp.upper() == 'M':
+                tmp = 'Male'
+            else:
+                tmp = 'Unknown'
+            formatted_answer_list.append(tmp)
+            formatted_answer_list.append(getattr(answer, 'age',''))
+            tmp = getattr(answer, 'address1', None)
+            if tmp is None:
+                formatted_answer_list.append('')
+            else:
+                formatted_answer_list.append(tmp.name)
+            tmp = getattr(answer, 'address2', None)
+            if tmp is None:
+                formatted_answer_list.append('')
+            else:
+                formatted_answer_list.append(tmp.name)
+            formatted_answer_list.append(getattr(answer, 'phone_contact', ''))
+            tmp = getattr(answer, 'birthdate', None)
+            if tmp is None:
+                formatted_answer_list.append('')
+            else:
+                formatted_answer_list.append(str(tmp))
+            formatted_answer_list.append(getattr(answer, 'passport',''))
+            formatted_answer_list.append(getattr(answer, 'nationality',''))
+        
+        return formatted_answer_list
+    
+    def format_answer_map(self, answer):
+        if self.export_params is not None and 'answer_map' in self.export_params and self.export_params['answer_map'] == True:
+            answers = Answer.objects.filter(question=self.question, code=answer)
+            if len(answers) > 0:
+                formatted_answer = answers[0].value
+            else:
+                formatted_answer = answer
+        else:
+            formatted_answer = answer
+        
+        return [formatted_answer]
+    
+    def format_RadioButton(self, answer, station):
+        if answer is None:
+            formatted_answer = ['']
+        else:
+            formatted_answer = self.format_answer_map(answer)
+        return formatted_answer
+    
+    def format_DropDown(self, answer, station):
+        if answer is None:
+            formatted_answer = ['']
+        else:
+            formatted_answer = self.format_answer_map(answer)
+        return formatted_answer
+    
+    def format_default(self, answer, station):
+        if answer is None:
+            formatted_answer_list = ['']
+        else:
+            formatted_answer_list = [answer]
+        return formatted_answer_list
+    
+    def export_value(self, form_data, main_data):
+        if form_data is None:
+            answer = None
+        else:
+            answer = form_data.get_answer(self)
+        format_method_name = 'format_' + self.answer_type.name
+        format_method = getattr(self, format_method_name, None)
+        if format_method is not None:
+            answer_list = format_method(answer, main_data.form_object.station)
+        else:
+            answer_list = self.format_default(answer, main_data.form_object.station)
+        
+        if self.export_params is not None and 'map' in self.export_params and len(answer_list) == 1:
+            the_map = self.export_params['map']
+            if answer_list[0] in the_map:
+                answer_list = [the_map[answer_list[0]]]
+            elif 'default' in the_map:
+                answer_list = [the_map['default']]
+                
+        return answer_list
 
 class QuestionLayout(models.Model):
     question = models.ForeignKey(Question)
@@ -146,32 +304,76 @@ class QuestionStorage(models.Model):
  #
 class ExportImport(models.Model):
     description = models.CharField(max_length=126, null = True)
+    implement_module = models.CharField(max_length=126, null=True)
     implement_class_name = models.CharField(max_length=126, null=True)
-    
-class Export_Import_Question(models.Model):
-    export_import = models.ForeignKey(ExportImport)
-    question = models.ForeignKey(Question)
-    position = models.PositiveIntegerField()
-    field_type = models.CharField(max_length=126)
-    export_name = models.CharField(max_length=126)
-    arguments_json = JSONField()
+    form = models.ForeignKey(Form)
 
-class GoogleSheet(models.Model):
+class GoogleSheetConfig(models.Model):
     export_import = models.ForeignKey(ExportImport)
     export_or_import = models.CharField(max_length=10)
     spreadsheet_name = models.CharField(max_length=126)
     sheet_name = models.CharField(max_length=126)
-    key_column = models.CharField(max_length=126)
+    key_field_name = models.CharField(max_length=126)
     import_status_column = models.CharField(max_length=126, null = True)
     import_issue_column = models.CharField(max_length=126, null=True)
-    
+    suppress_column_warnings = models.BooleanField(default=True)
     
 class ExportImportCard(models.Model):
-    export_import = models.ForeignKey(ExportImport, related_name='export_import_base', null=True)
-    card_export_import = models.ForeignKey(ExportImport, related_name='export_import_card', null=True)
-    start_position = models.PositiveIntegerField()
+    export_import = models.ForeignKey(ExportImport, related_name='export_import_base')
+    category = models.ForeignKey(Category, related_name='export_import_card')
     prefix = models.CharField(max_length=126)
     max_instances = models.PositiveIntegerField()
+
+# data fields to be exported for which there is no question
+class ExportImportField(models.Model):
+    export_import = models.ForeignKey(ExportImport)
+    card = models.ForeignKey(ExportImportCard, null=True)
+    field_name = models.CharField(max_length=126)
+    answer_type = models.ForeignKey(AnswerType, related_name='field_answer_type')
+    export_name = models.CharField(max_length=126)
+    arguments_json = JSONField(null=True)
+    
+    def format_DateTime(self, answer, station):
+        tz = pytz.timezone(station.time_zone)
+        date_time = answer.astimezone(tz)
+        return str(date_time.replace(tzinfo=None))
+    
+    def format_parts(self, answer):
+        if self.arguments_json is not None and 'part' in self.arguments_json:
+            part_list = self.arguments_json['part'].split('.')
+            formatted_answer = answer
+            for part in part_list:
+                if formatted_answer is None:
+                    break
+                formatted_answer = getattr(formatted_answer, part, None)
+        else:
+            # log error
+            formatted_answer = None
+        
+        return formatted_answer
+    
+    def format_Address(self, answer, station):
+        return self.format_parts(answer)
+    
+    def format_Person(self, answer, station):
+        return self.format_parts(answer)
+    
+    def export_value(self, form_obj, main_data):
+        answer = getattr(form_obj, self.field_name)
+        if answer is not None:
+            format_method_name = 'format_' + self.answer_type.name
+            format_method = getattr(self, format_method_name, None)
+            if format_method is not None:
+                answer = format_method(answer, main_data.form_object.station)
+        
+        if self.arguments_json is not None and 'map' in self.arguments_json:
+            the_map = self.arguments_json['map']
+            if answer in the_map:
+                answer = the_map[answer]
+            elif 'default' in the_map:
+                answer = the_map['default']
+                
+        return answer
 
 class BaseForm(models.Model):
     status = models.CharField('Status', max_length=20, default='pending')
@@ -182,6 +384,10 @@ class BaseForm(models.Model):
     
     class Meta:
         abstract = True
+    
+    # Overridden in subclass
+    def get_key(self):
+        return None
     
     # Overridden in subclass as needed
     def pre_save(self, form_data):

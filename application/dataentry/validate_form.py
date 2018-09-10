@@ -16,9 +16,11 @@ class ValidateForm:
             msg = category_name + ':' + validation.error_warning_message 
             
         if validation.level.name == 'warning':
-            self.warnings.append(msg)
+            if msg not in self.warnings:
+                self.warnings.append(msg)
         else:
-            self.errors.append(msg)
+            if msg not in self.errors:
+                self.errors.append(msg)
         
         self.response_code = status.HTTP_400_BAD_REQUEST
 
@@ -63,9 +65,15 @@ class ValidateForm:
         self.add_error_or_warning(category_name, category_index, validation)
     
     def at_least_one_card (self, form_data, validation, questions, category_index, general):
-        for cat_list in form_data.card_dict.values():
-            if len(cat_list) > 0:
-                return
+        if getattr(form_data, 'card_dict', None) is None:
+            tmp_validation = FormValidation()
+            tmp_validation.level = validation.level
+            tmp_validation.error_warning_message = 'Incorrect configuration for validation:' + validation.error_warning_message
+            self.add_error_or_warning('CARD', None, tmp_validation)
+        else:          
+            for cat_list in form_data.card_dict.values():
+                if len(cat_list) > 0:
+                    return
             
         self.add_error_or_warning('CARD', None, validation)
     
@@ -116,6 +124,7 @@ class ValidateForm:
         }
         
         self.main_form = 'main_form'
+        self.invalid = 'invalid'
         self.form_data = form_data
         self.form = form
         self.data = form_data.form
@@ -153,25 +162,29 @@ class ValidateForm:
         self.validation_set = {}
         validations = FormValidation.objects.filter(form=self.form)
         for validation in validations:
+            set_key = None
             if validation.trigger is not None:
                 set_key = question_to_validation_set[validation.trigger.id]
-                if set_key not in self.validation_set:
-                    self.validation_set[set_key] = [ validation ]
-                else:
-                    self.validation_set[set_key].append(validation)
-            else:                   
-                validation_questions = FormValidationQuestion.objects.filter(validation=validation)
-                if len(validation_questions) > 0:
-                    for validation_question in validation_questions:
-                        set_key = question_to_validation_set[validation_question.question.id]
-                        if set_key not in self.validation_set:
-                            self.validation_set[set_key] = [ validation ]
-                        else:
-                            self.validation_set[set_key].append(validation)
-                        
+            
+            validation_questions = FormValidationQuestion.objects.filter(validation=validation)
+            if len(validation_questions) > 0:
+                for validation_question in validation_questions:
+                    tmp_key = question_to_validation_set[validation_question.question.id]
+                    if set_key is None:
+                        set_key = tmp_key
+                    elif set_key != tmp_key:
+                        self.errors.append('Validation mixes main form and card questions. Validation id=' + str(validation.id) + 
+                                           ' with message=' + validation.error_warning_message)
+                        set_key = self.invalid
                         break
-                else:
-                    self.validation_set[self.main_form].append(validation)
+                
+            if set_key is None:
+                set_key = self.main_form
+            
+            if set_key in self.validation_set:
+                self.validation_set[set_key].append(validation)
+            else:
+                self.validation_set[set_key] = [validation]
                     
    
     
