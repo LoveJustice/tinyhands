@@ -1,5 +1,6 @@
 from threading import Thread
 from multiprocessing import Queue
+from django.conf import settings
 
 import logging
 import traceback
@@ -86,6 +87,9 @@ class GoogleSheetWorkQueue(Thread):
         
     @staticmethod
     def update_form(form_number, form_type):
+        if settings.TEST_ENVIRONMENT:
+            # Test environment, doe not initialize thread or attempt to update google sheet
+            return
         try:
             logger.debug("form_number=" + form_number + ", form_type=" + form_type)
             if GoogleSheetWorkQueue.instance is None:

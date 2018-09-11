@@ -35,9 +35,9 @@ def process_answer(in_answer, arguments):
         
         return out_answer
 
-def export_answer_value(object, ie_question):
+def export_answer_value(obj, ie_question):
     
-    tmp_answer = object.get_answer(ie_question.question)
+    tmp_answer = obj.get_answer(ie_question.question)
     if ie_question.question.answer_type.name in answer_type_method:
         tmp_answer = answer_type_method[ie_question.question.answer_type.name](tmp_answer, ie_question.arguments_json)
         
@@ -53,8 +53,8 @@ def export_answer_value(object, ie_question):
         
     return answer
 
-def export_field_value(object, ie_field):
-    tmp_answer = object.get_field(ie_field.field_name)
+def export_field_value(obj, ie_field):
+    tmp_answer = obj.get_field(ie_field.field_name)
     
     if ie_field.export_type in answer_type_method:
         tmp_answer = answer_type_method[ie_field.export_type](tmp_answer, ie_field.arguments_json)

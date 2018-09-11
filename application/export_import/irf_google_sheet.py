@@ -51,7 +51,7 @@ class IrfGoogleSheet(ExportToGoogleSheet):
                 base_row.append(ie_field.export_value(trafficker.form_object, form_data))
         
         remaining = self.trafficker_card.max_instances - trafficker_count
-        for idx in range(0,remaining):
+        for _ in range(0,remaining):
             for question in questions_fields.questions:
                 base_row = base_row + question.export_value(None, form_data)
             for ie_field in questions_fields.fields:

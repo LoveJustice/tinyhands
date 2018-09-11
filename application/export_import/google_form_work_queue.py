@@ -3,11 +3,11 @@ from multiprocessing import Queue
 
 import logging
 import traceback
+from django.conf import settings
+
 from export_import.google_sheet import GoogleSheet
 from dataentry.dataentry_signals import form_done
-from .form_io import get_form_export_rows
 from .export_form import ExportFormFactory
-from dataentry.models import FormType
 
 logger = logging.getLogger(__name__);
 
@@ -17,13 +17,12 @@ class GoogleFormWorkQueue(Thread):
     sheet_dict = {}
     
     def __init__(self):
-        sheet_cache = {}
         try:
             Thread.__init__(self)
             self.work_queue = Queue()
             self.daemon = True
             self.start()
-        except:
+        except Exception:
             logger.warn("Exception thrown " + traceback.format_exc())
     
     def reinitialize(self):
@@ -35,7 +34,7 @@ class GoogleFormWorkQueue(Thread):
             logger.info("in run " + str(work[0]))
             try:
                 self.internal_update(work[0], work[1])
-            except:
+            except Exception:
                 logger.error("Failed to process " + str(work[0]) + " on attempt " + str(work[2]))
                 self.reinitialize();
                 work[2] = work[2] + 1
@@ -79,21 +78,29 @@ class GoogleFormWorkQueue(Thread):
             sheet.update(obj.get_key(), obj)
         
     @staticmethod
-    def update_form(form_data, remove):
+    def update_form(form_object, remove):
+        if form_object.status != 'approved':
+            logger.debug('Form ' + form_object.get_key() + ' not exported with status='+form_object.status)
+            # only export approved forms
+            return
         try:
-            logger.debug("form_data=" + str(form_data))
+            logger.debug("form_data=" + str(form_object))
             if GoogleFormWorkQueue.instance is None:
                 GoogleFormWorkQueue.instance = GoogleFormWorkQueue()          
                 logger.debug("Back from creating GoogleFormWorkQueue")
     
-            work = [form_data, remove, 0]
+            work = [form_object, remove, 0]
             GoogleFormWorkQueue.instance.work_queue.put(work)
             logger.debug("added to work queue form data=" + str(form_data))
-        except:
+        except Exception:
             logger.warn("Exception thrown " + traceback.format_exc())
         
     @staticmethod
     def handle_form_done_signal(sender, **kwargs):
+        if settings.TEST_ENVIRONMENT:
+            # Test environment, doe not initialize thread or attempt to update google sheet
+            return
+        
         form_data = kwargs.get("form_data")
         remove = kwargs.get("remove")
         if remove is None:

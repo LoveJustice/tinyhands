@@ -14,10 +14,10 @@ class Command(BaseCommand):
             export_forms = form_factory.find(station, form_type)
             google_sheet = factory.find(export_forms[0])
             
-            str = '"' + sheet.spreadsheet_name + '","' + sheet.sheet_name +'"'
+            string_val = '"' + sheet.spreadsheet_name + '","' + sheet.sheet_name +'"'
             for col in google_sheet.rows[0]:
-                str = str + ',"' + col + '"'
+                string_val = string_val + ',"' + col + '"'
             
-            print (str)
+            print (string_val)
             
             
