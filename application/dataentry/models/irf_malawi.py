@@ -36,8 +36,8 @@ class IrfMalawi(IrfCore):
     name_of_contact = models.CharField(max_length=127, default='', blank=True)
     initial_signs = models.CharField(max_length=127, default='', blank=True)
     
-    # Final Malawi - Bangladesh specific
-    reason_for_intercept = models.TextField('Reason For Intercept', blank=True)
+    # Final Procedures - Malawi specific
+    case_notes = models.TextField('Case Notes', blank=True)
     scanned_form = models.FileField('Attach scanned copy of form (pdf or image)', upload_to='scanned_irf_forms', default='', blank=True)
     interception_made = models.CharField(max_length=127, null=True)
     handed_over_to =  models.CharField(max_length=127, default='', blank=True)
