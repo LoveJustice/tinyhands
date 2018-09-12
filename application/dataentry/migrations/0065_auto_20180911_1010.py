@@ -4,9 +4,13 @@ from __future__ import unicode_literals
 
 from django.db import migrations, models
 
+from dataentry.models.form_migration import FormMigration
+
+def migrate_forms(apps, schema_editor):
+    # Invoke form migration with specific file containing lastest form data
+    FormMigration.migrate(apps, schema_editor, 'form_data_20180911.json')
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('dataentry', '0064_auto_20180902_2311'),
     ]
@@ -44,4 +48,5 @@ class Migration(migrations.Migration):
             name='known_place_bangladesh',
             field=models.CharField(default='False', max_length=127),
         ),
+        migrations.RunPython(migrate_forms),
     ]
