@@ -6,7 +6,7 @@ from django.db import migrations, models
 
 def migrate_forms(apps, schema_editor):
     # Invoke form migration with specific file containing lastest form data
-    FormMigration.migrate(apps, schema_editor, 'form_data_20180911.json')
+    FormMigration.migrate(apps, schema_editor, 'form_data_20180913.json')
 
 class Migration(migrations.Migration):
 
@@ -47,4 +47,5 @@ class Migration(migrations.Migration):
             name='known_place_bangladesh',
             field=models.CharField(default='False', max_length=127),
         ),
+        migrations.RunPython(migrate_forms),
     ]
