@@ -316,6 +316,8 @@ class IrfFormViewSet(viewsets.ModelViewSet):
             else:
                 if serializer.the_errors is not None and len(serializer.the_errors) > 0:
                     rtn_errors = serializer.the_errors
+                elif serializer.errors is not None and len(serializer.errors) > 0:
+                     rtn_errors = serializer.errors
                 else:
                     rtn_errors = []
                     
