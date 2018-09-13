@@ -72,7 +72,7 @@ class IrfIndia(IrfCore):
     noticed_in_a_cart = models.BooleanField('In a cart', default=False)
     noticed_carrying_a_baby = models.BooleanField('Carrying a baby', default=False)
     noticed_on_the_phone = models.BooleanField('On the phone', default=False)
-    noticed_other_sign = models.CharField(max_length=127, default='False')
+    noticed_other_sign = models.CharField(max_length=127, blank=True)
     
     call_subcommittee = models.BooleanField('Call Subcommittee Chairperson/Vice-Chairperson/Secretary', default=False)
     call_project_manager = models.BooleanField('Call Project Manager to confirm intercept', default=False)

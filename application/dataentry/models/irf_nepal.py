@@ -71,7 +71,7 @@ class IrfNepal(IrfCore):
     noticed_in_a_cart = models.BooleanField('In a cart', default=False)
     noticed_carrying_a_baby = models.BooleanField('Carrying a baby', default=False)
     noticed_on_the_phone = models.BooleanField('On the phone', default=False)
-    noticed_other_sign = models.CharField(max_length=127, default='False')
+    noticed_other_sign = models.CharField(max_length=127, blank=True)
     
     reason_for_intercept = models.TextField('Reason For Intercept', blank=True)
     scanned_form = models.FileField('Attach scanned copy of form (pdf or image)', upload_to='scanned_irf_forms', default='', blank=True)
