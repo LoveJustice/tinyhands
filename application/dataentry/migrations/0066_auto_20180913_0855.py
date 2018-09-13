@@ -47,7 +47,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='irfbangladesh',
             name='known_place_bangladesh',
-            field=models.CharField(default='False', max_length=127),
+            field=models.CharField(blank=True, max_length=127),
         ),
         migrations.RunPython(migrate_forms),
     ]
