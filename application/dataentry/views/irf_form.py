@@ -249,7 +249,7 @@ class IrfFormViewSet(viewsets.ModelViewSet):
             else:
                 rtn_warnings = []
             
-            if len(rtn_errors) < 1 and len(rtn_warnings < 1):
+            if len(rtn_errors) < 1 and len(rtn_warnings) < 1:
                 rtn_errors = serializer._errors
             ret = {
                 'errors': rtn_errors,
@@ -336,7 +336,7 @@ class IrfFormViewSet(viewsets.ModelViewSet):
                 else:
                     rtn_warnings = []
                 
-                if len(rtn_errors) < 1 and len(rtn_warnings < 1):
+                if len(rtn_errors) < 1 and len(rtn_warnings) < 1:
                     rtn_errors = serializer._errors
                 ret = {
                     'errors': rtn_errors,
