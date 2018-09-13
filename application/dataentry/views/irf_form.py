@@ -239,9 +239,21 @@ class IrfFormViewSet(viewsets.ModelViewSet):
                     }
                 rtn_status=status.HTTP_400_BAD_REQUEST
         except Exception:
+            if serializer.the_errors is not None and len(serializer.the_errors) > 0:
+                rtn_errors = serializer.the_errors
+            else:
+                rtn_errors = []
+                
+            if serializer.the_warnings is not None and len(serializer.the_warnings) > 0:
+                rtn_warnings = serializer.the_warnings
+            else:
+                rtn_warnings = []
+            
+            if len(rtn_errors) < 1 and len(rtn_warnings < 1):
+                rtn_errors = serializer._errors
             ret = {
-                'errors': 'Internal Error:' + traceback.format_exc(),
-                'warnings':[]
+                'errors': rtn_errors,
+                'warnings':rtn_warnings
                 }
             rtn_status = status.HTTP_500_INTERNAL_SERVER_ERROR
             
@@ -316,8 +328,6 @@ class IrfFormViewSet(viewsets.ModelViewSet):
             else:
                 if serializer.the_errors is not None and len(serializer.the_errors) > 0:
                     rtn_errors = serializer.the_errors
-                elif serializer.errors is not None and len(serializer.errors) > 0:
-                     rtn_errors = serializer.errors
                 else:
                     rtn_errors = []
                     
@@ -325,6 +335,9 @@ class IrfFormViewSet(viewsets.ModelViewSet):
                     rtn_warnings = serializer.the_warnings
                 else:
                     rtn_warnings = []
+                
+                if len(rtn_errors) < 1 and len(rtn_warnings < 1):
+                    rtn_errors = serializer._errors
                 ret = {
                     'errors': rtn_errors,
                     'warnings':rtn_warnings
