@@ -16,9 +16,9 @@ class IrfBangladesh(IrfCore):
     where_going_india = models.BooleanField('India', default=False)
     where_going_middle_east = models.BooleanField('Middle East', default=False)
     where_going_dont_know = models.BooleanField("Don't know", default=False)
-    where_going_other = models.CharField("Other", max_length=127, default='False')
+    where_going_other = models.CharField("Other", max_length=127, blank=True)
     
-    purpose_for_going_other = models.CharField("Other", max_length=127, default='False')
+    purpose_for_going_other = models.CharField("Other", max_length=127, blank=True)
     
     no_address_at_destination = models.BooleanField('No address at destination', default=False)
     no_company_phone = models.BooleanField('No company phone number', default=False)
