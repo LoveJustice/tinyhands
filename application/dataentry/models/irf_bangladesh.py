@@ -24,7 +24,7 @@ class IrfBangladesh(IrfCore):
     no_company_phone = models.BooleanField('No company phone number', default=False)
     no_appointment_letter = models.BooleanField('No Appointment Letter', default=False)
     valid_gulf_country_visa = models.BooleanField('Has a valid gulf country visa in passport', default=False)
-    known_place_bangladesh = models.BooleanField('Known place in Bangladesh', default=False)
+    known_place_bangladesh = models.CharField(max_length=127, blank=True)
     heading_for_border = models.BooleanField('Heading for a border area', default=False)
     
     # Family - Bangladesh specific
