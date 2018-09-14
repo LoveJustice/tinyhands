@@ -7,3 +7,5 @@ from .country import *
 from .id_management import *
 from .interception_alert import *
 from .permission import *
+from .irf_form import *
+from .forms import *

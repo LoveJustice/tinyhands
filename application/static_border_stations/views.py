@@ -1,3 +1,5 @@
+import pytz
+
 from rest_framework import viewsets
 from rest_framework.decorators import list_route, api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -84,3 +86,7 @@ class StaffViewSet(BorderStationRestAPI):
         self.object_list = self.filter_queryset(self.get_queryset().filter(border_station=self.kwargs['pk']))
         serializer = self.get_serializer(self.object_list, many=True)
         return Response(serializer.data)
+
+class TimeZoneViewSet(viewsets.ViewSet):
+    def get_time_zones(self, request):
+        return Response(pytz.all_timezones)

@@ -71,6 +71,7 @@ class BorderStationsTests(RestApiTestCase):
             "longitude": 1,
             "open": True,
             "operating_country": country.id,
+            "time_zone": "Asia/Kathmandu",
         }
 
         response = self.client.post(url, data=data)
@@ -91,6 +92,7 @@ class BorderStationsTests(RestApiTestCase):
             "longitude": 1,
             "open": True,
             "operating_country": country.id,
+            "time_zone": "Asia/Kathmandu",
         }
 
         response = self.client.post(url, data=data)
@@ -140,6 +142,7 @@ class BorderStationsTests(RestApiTestCase):
             "latitude": 1,
             "longitude": 1,
             "open": True,
+            "time_zone": "Asia/Kathmandu",
         }
 
         response = self.client.put(url, data=data)
@@ -159,6 +162,7 @@ class BorderStationsTests(RestApiTestCase):
             "latitude": 1,
             "longitude": 1,
             "open": True,
+            "time_zone": "Asia/Kathmandu",
         }
 
         response = self.client.put(url, data=data)
@@ -178,6 +182,7 @@ class BorderStationsTests(RestApiTestCase):
             "latitude": 1,
             "longitude": 1,
             "open": True,
+            "time_zone": "Asia/Kathmandu",
         }
 
         response = self.client.put(url, data=data)

@@ -3,17 +3,21 @@ import logging
 from export_import.google_sheet_basic import GoogleSheetBasic
 from .google_sheet import GoogleSheet
 from .address2_io import get_address2_export_rows
+from .export_form import ExportToGoogleSheet
 
 from dataentry.models.interception_record import InterceptionRecord
 from dataentry.models.victim_interview import VictimInterview
+from dataentry.models.interceptee import Interceptee
 from dataentry.models.addresses import Address2
 
 logger = logging.getLogger(__name__);
 
 def audit_exports():
     logger.info("Begin audit")
+    ExportToGoogleSheet.audit_forms()
     audit_irf()
     audit_vif()
+    audit_traffickers()
     replace_address2()
     logger.info("Complete audit")
       
@@ -32,6 +36,14 @@ def audit_vif():
     db_vifs = VictimInterview.objects.all()
     vif_gs.audit(db_vifs, 'vif_number')
     logger.info("Complete IRF audit")
+
+def audit_traffickers():
+    logger.info("begin Trafficker audit")
+    trafficker_gs = GoogleSheet.from_settings('Traffickers')
+    
+    db_traffickers = Interceptee.objects.filter(kind='t').exclude(photo__isnull=True)
+    trafficker_gs.audit(db_traffickers, 'id')
+    logger.info("Complete Trafficker audit")
     
 def replace_address2():
     logger.info("Begin replace Address2")
@@ -53,5 +65,9 @@ def replace_address2():
     
     addr2.append_rows(new_rows)
     logger.info("Complete replace Address2")
+
+
+        
+    
     
             

@@ -3,6 +3,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 from accounts.tests.factories import BadIrfUserFactory, SuperUserFactory
 from dataentry.tests.factories import IntercepteeFactory
+from dataentry.models import Permission, UserLocationPermission
 
 
 class PhotoTest(APITestCase):
@@ -10,6 +11,10 @@ class PhotoTest(APITestCase):
         IntercepteeFactory.create_batch(20)
         self.user = SuperUserFactory.create()
         self.client.force_authenticate(user=self.user)
+        ulp = UserLocationPermission()
+        ulp.account = self.user
+        ulp.permission = Permission.objects.get(permission_group='FORMS', action='CLASSIC')
+        ulp.save()
 
     def test_photo_count_contains_all_photos(self):
         url = reverse('PhotoExporterCount', kwargs={"start_date": "8-4-2007", "end_date": "8-4-2013"})
