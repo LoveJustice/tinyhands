@@ -402,15 +402,25 @@ class ImportBangladesh:
             },
         }
     
-    def process(self, in_file, renumber_file):
+    def process(self, in_file):
+        self.create_address1s()
+
         self.form = Form.objects.get(form_name='irfBangladesh')
         renumber = {}
         count = 1
-        with open(renumber_file) as renum:
+        with open('import_bangladesh/renumber.csv') as renum:
             reader = csv.DictReader(renum)
             for row in reader:
                 renumber[count] = {'old':row['Old'],'new':row['New']}
                 count += 1
+        
+        self.cleaned = {}
+        with open('import_bangladesh/cleaned_address.csv') as cleaned_address:
+            reader = csv.DictReader(cleaned_address)
+            for row in reader:
+                irf_number = row['IRF #']
+                if irf_number is not None and irf_number.strip() != '':
+                    self.cleaned[irf_number] = row              
                 
         count = 1
         with open(in_file) as csvfile:
@@ -423,7 +433,14 @@ class ImportBangladesh:
         irf = IrfBangladesh()
         row = dict(in_row)
         
-        if row['IRF #'].strip() == renum['old'].strip():
+        irf_number = row['IRF #'].strip()
+        if irf_number in self.cleaned:
+            cleaned_addresses = self.cleaned[irf_number]
+        else:
+            print('Unable to find new address for IRF # ', irf_number)
+            return
+        
+        if irf_number == renum['old'].strip():
             row['IRF #'] = renum['new']
         else:
             print('renumber fail ',row['IRF #'],renum['old'])
@@ -504,16 +521,16 @@ class ImportBangladesh:
             print (irf.irf_number, exc.args[0])
             return
         
-        for idx in range(1,4):
+        for idx in range(1,3):
             prefix = 'Victim ' + str(idx) + ' '
             addr_prefix = 'V' + str(idx) + ' '
-            self.create_interceptee(row, 'v', prefix, addr_prefix, irf)
+            self.create_interceptee(row, 'v', prefix, addr_prefix, irf, cleaned_addresses)
             
         
         for idx in range(1,3):
             prefix = 'Trafficker ' + str(idx) + ' '
             addr_prefix = 'T' + str(idx) + ' '
-            self.create_interceptee(row, 't', prefix, addr_prefix, irf)
+            self.create_interceptee(row, 't', prefix, addr_prefix, irf, cleaned_addresses)
         
         irf.status = 'approved'
         form_data = FormData(irf, self.form)
@@ -522,24 +539,46 @@ class ImportBangladesh:
         if len(validate.errors) < 1:
             irf.save()
     
-    def check_create_address1(self, row, prefix):
-        addr_name = row[prefix + 'Address 1']
+    def create_address1s(self):
+        with open('import_bangladesh/geo.csv') as geo:
+            reader = csv.DictReader(geo)
+            for row in reader:
+                name = row['Address 1'].strip()
+                if name is None or name == '':
+                    continue
+                addresses = Address1.objects.filter(name=name)
+                if len(addresses) > 0:
+                    continue
+                
+                address1 = Address1()
+                address1.name = name
+                tmp = row['A1Lat']
+                if tmp is None or tmp == '':
+                    tmp = 0.0
+                address1.latitude = tmp
+                tmp = row['A1Long']
+                if tmp is None or tmp == '':
+                    tmp = 0.0
+                address1.longitude = tmp
+                address1.level = 'District'
+                address1.save()
+    
+    def check_create_address1(self, row, cleaned_address, prefix):
+        addr_name = cleaned_address[prefix + 'Address 1']
         if addr_name is None or addr_name.strip() == '':
             return None
         
         addresses = Address1.objects.filter(name=addr_name)
         if len(addresses) < 1:
-            address1 = Address1()
-            address1.name = addr_name
-            address1.level = row[prefix + 'Address 1 Level']
-            address1.save()
+            print('Address 1 not found for name', addr_name)
+            return None
         else:
             address1 = addresses[0]
         
         return address1
         
-    def check_create_address2(self, row, prefix, address1):
-        addr_name = row[prefix + 'Address 2']
+    def check_create_address2(self, row, cleaned_address, prefix, address1):
+        addr_name = cleaned_address[prefix + 'Address 2']
         if addr_name is None or addr_name.strip() == '':
             addr_name = 'Unknown'
         
@@ -556,7 +595,7 @@ class ImportBangladesh:
         return address2        
         
                 
-    def create_interceptee(self, row, kind, prefix, address_prefix, irf):   
+    def create_interceptee(self, row, kind, prefix, address_prefix, irf, cleaned_addresses):   
         name = row[prefix + 'Full Name']
         if name is None or name.strip() == '':
             # Cannot create if we do not have a name
@@ -581,9 +620,9 @@ class ImportBangladesh:
             age = None
         person.age = age
         person.phone_contact = row[prefix + 'Phone Contact']
-        person.address1 = self.check_create_address1(row, address_prefix)
+        person.address1 = self.check_create_address1(row, cleaned_addresses, address_prefix)
         if person.address1 != None:
-            person.address2 = self.check_create_address2(row, address_prefix, person.address1)
+            person.address2 = self.check_create_address2(row, cleaned_addresses, address_prefix, person.address1)
         person.save()
         
         interceptee = IntercepteeBangladesh()
