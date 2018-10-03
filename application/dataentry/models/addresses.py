@@ -7,9 +7,11 @@ LEVEL_CHOICES = [
     ('City', 'City'),
     ('VDC', 'VDC'),
     ('Block', 'Block'),
-    ('Building', 'Building')
+    ('Building', 'Building'),
+    ('Village', 'Village'),
+    ('Post Office', 'Post Office'),
+    ('Upozilla', 'Upozilla'),
 ]
-
 
 class Address1(models.Model):
     name = models.CharField(max_length=255)
