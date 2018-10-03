@@ -28,6 +28,9 @@ docker-compose build
 echo "Initializing and installing sanitized data..."
 docker-compose run --rm web sh ./bin/install_test_db.sh
 
+echo "Load form data"
+docker-compose run --rm web python ./manage.py formLatest
+
 echo "Linking forms with stations..."
 docker-compose run --rm web python ./manage.py linkFormStation
 

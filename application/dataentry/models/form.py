@@ -26,6 +26,12 @@ class Storage(models.Model):
     foreign_key_field_parent = models.CharField(max_length=126, null=True)
     foreign_key_field_child = models.CharField(max_length=126, null=True)
 
+# Keep track of checksum of currently loaded form_data.json file so that changes
+# to that file can be automatically detected on startup and the new file can be loaded
+class FormVersion(models.Model):
+    checksum = models.IntegerField()
+    blocks = models.IntegerField()
+
 class FormType(models.Model):
     name = models.CharField(max_length=126) # IRF, VIF, CEF, etc.
 

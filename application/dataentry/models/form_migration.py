@@ -1,7 +1,7 @@
 import os
 from django.core.management import call_command
 from django.core.exceptions import ObjectDoesNotExist
-from .form import Form
+from .form import Form, FormVersion
 from .border_station import BorderStation
 
 class FormMigration:
@@ -21,6 +21,10 @@ class FormMigration:
         'FormValidationType',
         'FormValidation',
         'FormValidationQuestion',
+        'ExportImport',
+        'ExportImportCard',
+        'ExportImportField',
+        'GoogleSheetConfig',
         ]
     
     # preserve existing connections between form and border stations
@@ -38,10 +42,10 @@ class FormMigration:
     @staticmethod
     def load_fixture(apps, schema_editor, fixture_dir, fixture_filename):
         fixture_file = os.path.join(fixture_dir, fixture_filename)
-        call_command('loaddata', fixture_file) 
+        call_command('loaddata', fixture_file)
     
     @staticmethod
-    def unload_prior(apps, schema_editor):
+    def unload_prior(apps):
         for model_name in reversed(FormMigration.form_model_names):
             my_model = apps.get_model('dataentry', model_name)
             my_model.objects.all().delete()
@@ -64,12 +68,40 @@ class FormMigration:
 
     @staticmethod
     def migrate(apps, schema_editor, fixture_filename):
-        fixture_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../fixtures'))
-        file_path = fixture_dir + '/' + fixture_filename
-        if os.access(file_path, os.R_OK):
-            reference_list = FormMigration.get_form_to_station_references()
-            FormMigration.unload_prior(apps, schema_editor)
-            FormMigration.load_fixture(apps, schema_editor, fixture_dir, fixture_filename)
-            FormMigration.restore_form_to_station_references(reference_list)
-        else:
-            print('Fixture ' + file_path + 'not found - skipping form migration')
+        # No longer used, but old migrations still reference this method
+        return
+#         fixture_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../fixtures'))
+#         file_path = fixture_dir + '/' + fixture_filename
+#         if os.access(file_path, os.R_OK):
+#             reference_list = FormMigration.get_form_to_station_references()
+#             FormMigration.unload_prior(apps)
+#             FormMigration.load_fixture(apps, schema_editor, fixture_dir, fixture_filename)
+#             FormMigration.restore_form_to_station_references(reference_list)
+#         else:
+#             print('Fixture ' + file_path + 'not found - skipping form migration')
+    
+        
+    @staticmethod
+    def check_load_form_data(apps, file_name, checksum_list):
+        if len(checksum_list) != 2:
+            print('Invalid checksum list', checksum_list)
+            return
+        
+        try:
+            form_version = FormVersion.objects.get(id=1)
+            if form_version.checksum == int(checksum_list[0]) and form_version.blocks == int(checksum_list[1]):
+                print('Checksum values match - no need to reload form data')
+                return
+        except Exception:
+            form_version = FormVersion()
+            form_version.id = 1
+        
+        print('Reloading form data') 
+        reference_list = FormMigration.get_form_to_station_references()
+        FormMigration.unload_prior(apps)
+        call_command('loaddata', file_name) 
+        FormMigration.restore_form_to_station_references(reference_list)
+        
+        form_version.checksum = int(checksum_list[0])
+        form_version.blocks = int(checksum_list[1])
+        form_version.save()
