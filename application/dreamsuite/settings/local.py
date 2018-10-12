@@ -8,7 +8,7 @@ INSTALLED_APPS += [
     'corsheaders',
 ]
 
-MIDDLEWARE_CLASSES += [
+MIDDLEWARE += [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
 ]
