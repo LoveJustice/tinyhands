@@ -181,7 +181,10 @@ class ResponseCheckboxSerializer(serializers.Serializer):
         return ret
     
     def to_internal_value(self, data):
+        question = self.context['question']
         value = data.get('value')
+        if value is None and not textbox_entry_allowed(question):
+            value = False
         
         return {
             'value': value
@@ -330,7 +333,7 @@ class ResponseDateSerializer(serializers.Serializer):
     
     def to_internal_value(self, data):
         value = data.get('value')
-        if value is not None:
+        if value is not None and value.strip() != '':
             dt = parser.parse(value).date()
         else:
             dt = None
@@ -516,9 +519,9 @@ class ResponsePersonSerializer(serializers.Serializer):
                 ret['age'] = int(age)
                 
         tmp = data.get('birthdate')
-        if tmp is not None:          
+        if tmp is not None:        
             birthdate = tmp.get('value')
-            if birthdate is not None:
+            if birthdate is not None and birthdate.strip() != '':
                 ret['birthdate'] = parser.parse(birthdate).date()
                          
         tmp = data.get('passport')

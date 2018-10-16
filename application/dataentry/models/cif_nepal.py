@@ -20,17 +20,32 @@ class CifNepal(CifCore):
 
 class PotentialVictimNepal(PotentialVictimCore):
     cif = models.ForeignKey(CifNepal)
+    
+    def set_parent(self, the_parent):
+        self.cif = the_parent
 
 class TransporationNepal(TransporationCore):
     cif = models.ForeignKey(CifNepal)
+    
+    def set_parent(self, the_parent):
+        self.cif = the_parent
 
 class PersonBoxNepal(PersonBoxCore):
     cif = models.ForeignKey(CifNepal)
+    
+    def set_parent(self, the_parent):
+        self.cif = the_parent
 
 class LocationBoxNepal(LocationBoxCore):
     cif = models.ForeignKey(CifNepal)
+    
+    def set_parent(self, the_parent):
+        self.cif = the_parent
 
 class VehicleBoxNepal(VehicleBoxCore):
     cif = models.ForeignKey(CifNepal)
+    
+    def set_parent(self, the_parent):
+        self.cif = the_parent
 
 

@@ -52,7 +52,7 @@ class CifListSerializer(serializers.Serializer):
         return str(date_time)
     
     def get_date_time_of_interview(self, obj):
-        return self.adjust_date_time_for_tz (obj.interview_date, obj.station.time_zone)
+        return str(obj.interview_date)
     
     def get_date_time_entered_into_system(self, obj):
         return self.adjust_date_time_for_tz (obj.date_time_entered_into_system, obj.station.time_zone)
@@ -90,7 +90,6 @@ class CifFormViewSet(viewsets.ModelViewSet):
         return self.serializer_context
     
     def get_queryset(self):
-        print('get_queryset')
         if self.action != 'list':
             return None
         in_country = self.request.GET.get('country_ids')
@@ -129,7 +128,6 @@ class CifFormViewSet(viewsets.ModelViewSet):
         for form in form_list:
             mod = __import__(form.storage.module_name, fromlist=[form.storage.form_model_name])
             form_model = getattr(mod, form.storage.form_model_name)
-            print ('form_model', form.storage.module_name, form.storage.form_model_name)
             
             tmp_queryset = form_model.objects.filter(station__in=station_list, status=status).only(
                     'id', 'cif_number', 'form_entered_by', 'number_of_victims', 'number_of_traffickers', 'staff_name', 
@@ -235,7 +233,6 @@ class CifFormViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
     
     def my_retrieve(self, request, station_id, pk):
-        print('in my_retrieve')
         self.serializer_context = {}
         form = Form.current_form(self.form_type_name, station_id)
         if form is None:

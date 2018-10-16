@@ -9,12 +9,14 @@ class CifCore(BaseForm):
     cif_number = models.CharField('CIF #:', max_length=20, unique=True)
     number_of_victims = models.PositiveIntegerField('# of victims:', null=True, blank=True)
     staff_name = models.CharField('Staff Name:', max_length=126, null=True)
-    interview_date = models.DateTimeField('Date/Time:')
+    interview_date = models.DateField(null=True)
     number_of_traffickers = models.PositiveIntegerField('# of traffickers', null=True, blank=True)
     location = models.CharField('Location:', max_length=126, null=True)
     source_of_intelligence = models.CharField('Source of intelligence:', max_length=126, null=True)
     informant_number = models.PositiveIntegerField('Informant #', null=True, blank=True)
+    incident_date = models.DateField(null=True)
     pv_signed_form = models.BooleanField('PV signature', default=False)
+    consent_for_fundraising = models.BooleanField('Consent for fundraising', default=False)
     
     # Main PV
     main_pv = models.ForeignKey(Person, null=True, blank=True)
@@ -23,13 +25,14 @@ class CifCore(BaseForm):
     education = models.CharField('Occupation', max_length=126, null=True)
     guardian_name = models.CharField('Guardian Name', max_length=126, null=True)
     guardian_phone = models.CharField('Guardian Name', max_length=126, null=True)
-    guardian_phone = models.CharField('Guardian Phone', max_length=126, null=True)
     guardian_relationship = models.CharField('Guardian Social Media', max_length=126, null=True)
     other_possible_victims = models.BooleanField('other possible victims', default=False)
     
     # Recruitment
     recruited_agency = models.BooleanField(default=False)
+    recruited_agency_pb = models.CharField('Social Media', max_length=126, null=True)
     recruited_broker = models.BooleanField(default=False)
+    recruited_broker_pb = models.CharField('Social Media', max_length=126, null=True)
     recruited_no = models.BooleanField(default=False)
     how_recruited_promised_job = models.BooleanField(default=False)
     how_recruited_married = models.BooleanField(default=False)
@@ -47,13 +50,18 @@ class CifCore(BaseForm):
     how_recruited_broker_other = models.CharField(max_length=126, null=True)
     known_broker_years = models.PositiveIntegerField(null=True, blank=True)
     known_broker_months = models.PositiveIntegerField(null=True, blank=True)
+    known_broker_pb = models.CharField(max_length=126, null=True)
     married_broker_years = models.PositiveIntegerField(null=True, blank=True)
     married_broker_months = models.PositiveIntegerField(null=True, blank=True)
+    married_broker_pb = models.CharField(max_length=126, null=True)
     travel_expenses_paid_themselves = models.BooleanField(default=False)
     travel_expenses_paid_by_broker = models.BooleanField(default=False)
-    travel_expenses_self_paid_amount = models.CharField(max_length=126, null=True)
-    travel_expenses_broker_paid_amount = models.CharField(max_length=126, null=True)
+    travel_expenses_paid_to_broker = models.BooleanField(default=False)
+    travel_expenses_paid_by_broker_repaid = models.BooleanField(default=False)
+    travel_expenses_paid_to_broker_amount = models.CharField(max_length=126, null=True)
+    travel_expenses_broker_repaid_amount = models.CharField(max_length=126, null=True)
     expected_earning = models.CharField(max_length=126, null=True)
+    expected_earning_pb = models.CharField(max_length=126, null=True)
     
     # Travel
     purpose_for_leaving_education = models.BooleanField(default=False)
@@ -63,7 +71,7 @@ class CifCore(BaseForm):
     purpose_for_leaving_medical = models.BooleanField(default=False)
     purpose_for_leaving_job_hotel = models.BooleanField(default=False)
     purpose_for_leaving_job_household = models.BooleanField(default=False)
-    purpose_for_leaving_other = models.BooleanField(default=False)
+    purpose_for_leaving_other = models.CharField(max_length=126, null=True)
     planned_destination = models.CharField(max_length=126, null=True)
     border_cross_night = models.BooleanField(default=False)
     border_cross_off_road = models.BooleanField(default=False)
@@ -83,9 +91,7 @@ class CifCore(BaseForm):
     permission_contact_phone = models.CharField(max_length=126, null=True)
     
     # Legal
-    legal_action_taken_no = models.BooleanField(default=False)
-    legal_action_taken_no_pv_willing = models.BooleanField(default=False)
-    legal_action_taken_case_filed = models.BooleanField(default=False)
+    legal_action_taken = models.CharField(max_length=126, null=True)
     legal_action_taken_case_type = models.CharField(max_length=126, null=True)
     legal_action_taken_filed_against = models.CharField(max_length=126, null=True)
     legal_action_taken_staff_do_not_believe = models.BooleanField(default=False)
@@ -169,25 +175,37 @@ class TransporationCore(BaseCard):
     transportation_kind = models.CharField(max_length=126, null=True)
     transportation_order_number = models.PositiveIntegerField(null=True, blank=True)
     transportation_date  = models.DateField('Date:', null=True)
+    transportation_crossing = models.CharField(max_length=126, null=True)
     
     class Meta:
         abstract = True
 
 
 class PersonBoxCore(BaseCard):
+    pb_number = models.PositiveIntegerField(null=True, blank=True)
     person = models.ForeignKey(Person)
     case_filed_against = models.CharField(max_length=126, null=True)
     arrested = models.CharField(max_length=126, null=True)
     social_media = models.CharField(max_length=126, null=True)
     role = models.CharField(max_length=126, null=True)
+    relation_to_pv = models.CharField(max_length=126, null=True)
     appearance = models.CharField(max_length=126, null=True)
     occupation = models.CharField(max_length=126, null=True)
+    definitely_trafficked_many = models.BooleanField(default=False)
+    has_trafficked_some = models.BooleanField(default=False)
+    suspected_trafficker = models.BooleanField(default=False)
+    dont_believe_trafficker = models.BooleanField(default=False)
+    pv_definitely_trafficked_many = models.BooleanField(default=False)
+    pv_has_trafficked_some = models.BooleanField(default=False)
+    pv_suspected_trafficker = models.BooleanField(default=False)
+    pv_dont_believe_trafficker = models.BooleanField(default=False)
     associated_lb = models.CharField(max_length=126, null=True)
     
     class Meta:
         abstract = True
 
 class LocationBoxCore(BaseCard):
+    lb_number = models.PositiveIntegerField(null=True, blank=True)
     place = models.CharField(max_length=126, null=True)
     place_kind = models.CharField(max_length=126, null=True)
     country = models.CharField(max_length=126, null=True)
@@ -204,10 +222,12 @@ class LocationBoxCore(BaseCard):
     pv_stayed_start_date  = models.DateField('Date:', null=True)
     pv_attempt_hide_not_applicable = models.BooleanField(default=False)
     pv_attempt_hide_no = models.BooleanField(default=False)
-    pv_attempt_hide_yes = models.CharField(max_length=126, null=True)
+    pv_attempt_hide_yes = models.BooleanField(default=False)
+    pv_attempt_hide_explaination = models.CharField(max_length=126, null=True)
     pv_free_to_go_not_applicable = models.BooleanField(default=False)
     pv_free_to_go_yes = models.BooleanField(default=False)
-    pv_free_to_go_no = models.CharField(max_length=126, null=True)
+    pv_free_to_go_no = models.BooleanField(default=False)
+    pv_free_to_go_explaination = models.CharField(max_length=126, null=True)
     number_other_pvs_at_location = models.CharField(max_length=126, null=True)
     associated_pb = models.CharField(max_length=126, null=True)
     
@@ -215,6 +235,7 @@ class LocationBoxCore(BaseCard):
         abstract = True
 
 class VehicleBoxCore(BaseCard):
+    vb_number = models.PositiveIntegerField(null=True, blank=True)
     license_plate = models.CharField(max_length=126, null=True)
     vehicle_type = models.CharField(max_length=126, null=True)
     description = models.CharField(max_length=126, null=True)
