@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='IntercepteeKenya',
+            name='IntercepteeAfrica',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('photo', models.ImageField(blank=True, default='', upload_to='interceptee_photos')),
@@ -29,7 +29,7 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name='IrfKenya',
+            name='IrfAfrica',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('status', models.CharField(default='pending', max_length=20, verbose_name='Status')),
@@ -115,7 +115,7 @@ class Migration(migrations.Migration):
                 ('scanned_form', models.FileField(blank=True, default='', upload_to='scanned_irf_forms', verbose_name='Attach scanned copy of form (pdf or image)')),
                 ('interception_made', models.CharField(max_length=127, null=True)),
                 ('handed_over_to', models.CharField(blank=True, default='', max_length=127)),
-                ('form_entered_by', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='irfkenya_entered_by', to=settings.AUTH_USER_MODEL)),
+                ('form_entered_by', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='irfafrica_entered_by', to=settings.AUTH_USER_MODEL)),
                 ('station', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='dataentry.BorderStation')),
             ],
             options={
@@ -123,12 +123,12 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.AddField(
-            model_name='intercepteekenya',
+            model_name='intercepteeafrica',
             name='interception_record',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='interceptees', to='dataentry.IrfKenya'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='interceptees', to='dataentry.IrfAfrica'),
         ),
         migrations.AddField(
-            model_name='intercepteekenya',
+            model_name='intercepteeafrica',
             name='person',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='dataentry.Person'),
         ),

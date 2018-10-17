@@ -137,8 +137,8 @@
         "model": "dataentry.storage",
         "pk": 11,
         "fields": {
-            "module_name": "dataentry.models.irf_kenya",
-            "form_model_name": "IrfKenya",
+            "module_name": "dataentry.models.irf_africa",
+            "form_model_name": "IrfAfrica",
             "response_model_name": null,
             "parent_storage": null,
             "foreign_key_field_parent": null,
@@ -149,8 +149,8 @@
         "model": "dataentry.storage",
         "pk": 12,
         "fields": {
-            "module_name": "dataentry.models.irf_kenya",
-            "form_model_name": "IntercepteeKenya",
+            "module_name": "dataentry.models.irf_africa",
+            "form_model_name": "IntercepteeAfrica",
             "response_model_name": null,
             "parent_storage": 11,
             "foreign_key_field_parent": "interception_record",
@@ -249,7 +249,7 @@
             "storage": 11,
             "start_date": "2018-04-01T00:00:00Z",
             "end_date": "2118-12-31T00:00:00Z",
-            "form_name": "irfKenya",
+            "form_name": "irfAfrica",
             "stations": []
         }
     },

@@ -1,8 +1,8 @@
 from django.db import models
 from .irf_core import IrfCore, IntercepteeCore
 
-class IrfKenya(IrfCore):
-    # Group - Kenya specific
+class IrfAfrica(IrfCore):
+    # Group - Africa specific
     who_in_group_alone = models.BooleanField('Alone', default=False)
     who_in_group_relative = models.BooleanField('Own brother, sister / relative', default=False)
     meeting_someone_across_border = models.BooleanField('Is meeting a someone just across border', default=False)
@@ -23,7 +23,7 @@ class IrfKenya(IrfCore):
     non_relative_met_within_past_2_months = models.BooleanField('Met within the past 2 months', default=False)
     mobile_phone_taken_away = models.BooleanField('Their mobile phone was taken away', default=False)
     
-    # Destination - Kenya specific
+    # Destination - Africa specific
     doesnt_speak_local_language = models.BooleanField("Doesn't speak English", default=False)
     doesnt_speak_destination_language = models.BooleanField("Doesn't speak language of destination", default=False)
     where_going_middle_east = models.BooleanField("Going to a country in the Middle East / Persian Gulf", default=False)
@@ -37,21 +37,21 @@ class IrfKenya(IrfCore):
     distant_relative_paying_for_education = models.BooleanField('Distant relative is paying for education', default=False)
     no_school_website = models.BooleanField('No school website', default=False)
     
-    # Family - Kenya specific
+    # Family - Africa specific
     
-    # Signs - Kenya specific
+    # Signs - Africa specific
     which_contact = models.CharField(max_length=127, blank=True)
     name_of_contact = models.CharField(max_length=127, default='', blank=True)
     initial_signs = models.CharField(max_length=127, default='', blank=True)
     
-    # Final Procedures - Kenya specific
+    # Final Procedures - Africa specific
     case_notes = models.TextField('Case Notes', blank=True)
     scanned_form = models.FileField('Attach scanned copy of form (pdf or image)', upload_to='scanned_irf_forms', default='', blank=True)
     interception_made = models.CharField(max_length=127, null=True)
     handed_over_to =  models.CharField(max_length=127, default='', blank=True)
     
-class IntercepteeKenya(IntercepteeCore):
-    interception_record = models.ForeignKey(IrfKenya, related_name='interceptees', on_delete=models.CASCADE)
+class IntercepteeAfrica(IntercepteeCore):
+    interception_record = models.ForeignKey(IrfAfrica, related_name='interceptees', on_delete=models.CASCADE)
 
     class Meta:
         ordering = ['id']

@@ -20,4 +20,4 @@ from .irf_india import IrfIndia, IntercepteeIndia
 from .irf_south_africa import IrfSouthAfrica, IntercepteeSouthAfrica
 from .irf_bangladesh import IrfBangladesh, IntercepteeBangladesh
 from .irf_malawi import IrfMalawi, IntercepteeMalawi
-from .irf_kenya import IrfKenya, IntercepteeKenya
+from .irf_africa import IrfAfrica, IntercepteeAfrica
