@@ -639,7 +639,7 @@
     },
     {
         "model": "dataentry.category",
-        "pk": 38,
+        "pk": 50,
         "fields": {
             "form": 10,
             "category_type": 1,
@@ -649,7 +649,7 @@
     },
     {
         "model": "dataentry.category",
-        "pk": 39,
+        "pk": 51,
         "fields": {
             "form": 10,
             "category_type": 1,
@@ -659,7 +659,7 @@
     },
     {
         "model": "dataentry.category",
-        "pk": 40,
+        "pk": 52,
         "fields": {
             "form": 10,
             "category_type": 1,
@@ -669,7 +669,7 @@
     },
     {
         "model": "dataentry.category",
-        "pk": 41,
+        "pk": 53,
         "fields": {
             "form": 10,
             "category_type": 1,
@@ -679,7 +679,7 @@
     },
     {
         "model": "dataentry.category",
-        "pk": 42,
+        "pk": 54,
         "fields": {
             "form": 10,
             "category_type": 1,
@@ -689,7 +689,7 @@
     },
     {
         "model": "dataentry.category",
-        "pk": 43,
+        "pk": 55,
         "fields": {
             "form": 10,
             "category_type": 2,
@@ -699,7 +699,7 @@
     },
     {
         "model": "dataentry.category",
-        "pk": 44,
+        "pk": 56,
         "fields": {
             "form": 10,
             "category_type": 1,
@@ -751,7 +751,7 @@
         "model": "dataentry.cardstorage",
         "pk": 6,
         "fields": {
-            "category": 43,
+            "category": 55,
             "storage": 12
         }
     },
@@ -3728,7 +3728,7 @@
     },
     {
         "model": "dataentry.question",
-        "pk": 288,
+        "pk": 500,
         "fields": {
             "prompt": "Group of young women / kids",
             "description": null,
@@ -3740,7 +3740,7 @@
     },
     {
         "model": "dataentry.question",
-        "pk": 289,
+        "pk": 501,
         "fields": {
             "prompt": "Their phone was taken away",
             "description": null,
@@ -3752,7 +3752,7 @@
     },
     {
         "model": "dataentry.question",
-        "pk": 290,
+        "pk": 502,
         "fields": {
             "prompt": "Doesn't speak language of destination",
             "description": null,
@@ -3764,7 +3764,7 @@
     },
     {
         "model": "dataentry.question",
-        "pk": 291,
+        "pk": 503,
         "fields": {
             "prompt": "Going abroad for domestic work",
             "description": null,
@@ -3776,7 +3776,7 @@
     },
     {
         "model": "dataentry.question",
-        "pk": 292,
+        "pk": 504,
         "fields": {
             "prompt": "Just graduated",
             "description": null,
@@ -3788,7 +3788,7 @@
     },
     {
         "model": "dataentry.question",
-        "pk": 293,
+        "pk": 505,
         "fields": {
             "prompt": "Have visa for domestic work in passport",
             "description": null,
@@ -3800,7 +3800,7 @@
     },
     {
         "model": "dataentry.question",
-        "pk": 294,
+        "pk": 506,
         "fields": {
             "prompt": "Non-relative met within past 2 months",
             "description": null,
@@ -8351,7 +8351,7 @@
         "pk": 529,
         "fields": {
             "question": 6,
-            "category": 38,
+            "category": 50,
             "weight": 0
         }
     },
@@ -8360,7 +8360,7 @@
         "pk": 530,
         "fields": {
             "question": 5,
-            "category": 38,
+            "category": 50,
             "weight": 0
         }
     },
@@ -8369,7 +8369,7 @@
         "pk": 531,
         "fields": {
             "question": 4,
-            "category": 38,
+            "category": 50,
             "weight": 0
         }
     },
@@ -8378,7 +8378,7 @@
         "pk": 532,
         "fields": {
             "question": 3,
-            "category": 38,
+            "category": 50,
             "weight": 0
         }
     },
@@ -8387,7 +8387,7 @@
         "pk": 533,
         "fields": {
             "question": 2,
-            "category": 38,
+            "category": 50,
             "weight": 0
         }
     },
@@ -8396,7 +8396,7 @@
         "pk": 534,
         "fields": {
             "question": 1,
-            "category": 38,
+            "category": 50,
             "weight": 0
         }
     },
@@ -8404,8 +8404,8 @@
         "model": "dataentry.questionlayout",
         "pk": 535,
         "fields": {
-            "question": 288,
-            "category": 39,
+            "question": 500,
+            "category": 51,
             "weight": 0
         }
     },
@@ -8414,7 +8414,7 @@
         "pk": 536,
         "fields": {
             "question": 277,
-            "category": 39,
+            "category": 51,
             "weight": 0
         }
     },
@@ -8423,7 +8423,7 @@
         "pk": 537,
         "fields": {
             "question": 31,
-            "category": 39,
+            "category": 51,
             "weight": 0
         }
     },
@@ -8432,7 +8432,7 @@
         "pk": 538,
         "fields": {
             "question": 30,
-            "category": 39,
+            "category": 51,
             "weight": 0
         }
     },
@@ -8441,7 +8441,7 @@
         "pk": 539,
         "fields": {
             "question": 276,
-            "category": 39,
+            "category": 51,
             "weight": 0
         }
     },
@@ -8450,7 +8450,7 @@
         "pk": 540,
         "fields": {
             "question": 275,
-            "category": 39,
+            "category": 51,
             "weight": 0
         }
     },
@@ -8459,7 +8459,7 @@
         "pk": 541,
         "fields": {
             "question": 274,
-            "category": 39,
+            "category": 51,
             "weight": 0
         }
     },
@@ -8468,7 +8468,7 @@
         "pk": 542,
         "fields": {
             "question": 25,
-            "category": 39,
+            "category": 51,
             "weight": 0
         }
     },
@@ -8477,7 +8477,7 @@
         "pk": 543,
         "fields": {
             "question": 24,
-            "category": 39,
+            "category": 51,
             "weight": 0
         }
     },
@@ -8486,7 +8486,7 @@
         "pk": 544,
         "fields": {
             "question": 23,
-            "category": 39,
+            "category": 51,
             "weight": 0
         }
     },
@@ -8495,7 +8495,7 @@
         "pk": 545,
         "fields": {
             "question": 216,
-            "category": 39,
+            "category": 51,
             "weight": 0
         }
     },
@@ -8504,7 +8504,7 @@
         "pk": 546,
         "fields": {
             "question": 21,
-            "category": 39,
+            "category": 51,
             "weight": 0
         }
     },
@@ -8513,7 +8513,7 @@
         "pk": 547,
         "fields": {
             "question": 273,
-            "category": 39,
+            "category": 51,
             "weight": 0
         }
     },
@@ -8522,7 +8522,7 @@
         "pk": 548,
         "fields": {
             "question": 14,
-            "category": 39,
+            "category": 51,
             "weight": 0
         }
     },
@@ -8531,7 +8531,7 @@
         "pk": 549,
         "fields": {
             "question": 13,
-            "category": 39,
+            "category": 51,
             "weight": 0
         }
     },
@@ -8540,7 +8540,7 @@
         "pk": 550,
         "fields": {
             "question": 12,
-            "category": 39,
+            "category": 51,
             "weight": 0
         }
     },
@@ -8549,7 +8549,7 @@
         "pk": 551,
         "fields": {
             "question": 244,
-            "category": 39,
+            "category": 51,
             "weight": 0
         }
     },
@@ -8558,7 +8558,7 @@
         "pk": 552,
         "fields": {
             "question": 243,
-            "category": 39,
+            "category": 51,
             "weight": 0
         }
     },
@@ -8567,7 +8567,7 @@
         "pk": 553,
         "fields": {
             "question": 213,
-            "category": 39,
+            "category": 51,
             "weight": 0
         }
     },
@@ -8576,7 +8576,7 @@
         "pk": 554,
         "fields": {
             "question": 272,
-            "category": 39,
+            "category": 51,
             "weight": 0
         }
     },
@@ -8585,7 +8585,7 @@
         "pk": 555,
         "fields": {
             "question": 10,
-            "category": 39,
+            "category": 51,
             "weight": 0
         }
     },
@@ -8593,8 +8593,8 @@
         "model": "dataentry.questionlayout",
         "pk": 556,
         "fields": {
-            "question": 289,
-            "category": 39,
+            "question": 501,
+            "category": 51,
             "weight": 0
         }
     },
@@ -8603,7 +8603,7 @@
         "pk": 557,
         "fields": {
             "question": 36,
-            "category": 40,
+            "category": 52,
             "weight": 0
         }
     },
@@ -8612,7 +8612,7 @@
         "pk": 558,
         "fields": {
             "question": 39,
-            "category": 40,
+            "category": 52,
             "weight": 0
         }
     },
@@ -8621,7 +8621,7 @@
         "pk": 559,
         "fields": {
             "question": 41,
-            "category": 40,
+            "category": 52,
             "weight": 0
         }
     },
@@ -8630,7 +8630,7 @@
         "pk": 560,
         "fields": {
             "question": 55,
-            "category": 40,
+            "category": 52,
             "weight": 0
         }
     },
@@ -8639,7 +8639,7 @@
         "pk": 561,
         "fields": {
             "question": 56,
-            "category": 40,
+            "category": 52,
             "weight": 0
         }
     },
@@ -8648,7 +8648,7 @@
         "pk": 562,
         "fields": {
             "question": 57,
-            "category": 40,
+            "category": 52,
             "weight": 0
         }
     },
@@ -8657,7 +8657,7 @@
         "pk": 563,
         "fields": {
             "question": 58,
-            "category": 40,
+            "category": 52,
             "weight": 0
         }
     },
@@ -8666,7 +8666,7 @@
         "pk": 564,
         "fields": {
             "question": 61,
-            "category": 40,
+            "category": 52,
             "weight": 0
         }
     },
@@ -8675,7 +8675,7 @@
         "pk": 565,
         "fields": {
             "question": 62,
-            "category": 40,
+            "category": 52,
             "weight": 0
         }
     },
@@ -8684,7 +8684,7 @@
         "pk": 566,
         "fields": {
             "question": 63,
-            "category": 40,
+            "category": 52,
             "weight": 0
         }
     },
@@ -8693,7 +8693,7 @@
         "pk": 567,
         "fields": {
             "question": 64,
-            "category": 40,
+            "category": 52,
             "weight": 0
         }
     },
@@ -8702,7 +8702,7 @@
         "pk": 568,
         "fields": {
             "question": 70,
-            "category": 40,
+            "category": 52,
             "weight": 0
         }
     },
@@ -8711,7 +8711,7 @@
         "pk": 569,
         "fields": {
             "question": 201,
-            "category": 40,
+            "category": 52,
             "weight": 0
         }
     },
@@ -8720,7 +8720,7 @@
         "pk": 570,
         "fields": {
             "question": 245,
-            "category": 40,
+            "category": 52,
             "weight": 0
         }
     },
@@ -8729,7 +8729,7 @@
         "pk": 572,
         "fields": {
             "question": 280,
-            "category": 40,
+            "category": 52,
             "weight": 0
         }
     },
@@ -8738,7 +8738,7 @@
         "pk": 575,
         "fields": {
             "question": 283,
-            "category": 40,
+            "category": 52,
             "weight": 0
         }
     },
@@ -8747,7 +8747,7 @@
         "pk": 576,
         "fields": {
             "question": 284,
-            "category": 40,
+            "category": 52,
             "weight": 0
         }
     },
@@ -8756,7 +8756,7 @@
         "pk": 577,
         "fields": {
             "question": 285,
-            "category": 40,
+            "category": 52,
             "weight": 0
         }
     },
@@ -8765,7 +8765,7 @@
         "pk": 578,
         "fields": {
             "question": 193,
-            "category": 40,
+            "category": 52,
             "weight": 0
         }
     },
@@ -8774,7 +8774,7 @@
         "pk": 579,
         "fields": {
             "question": 268,
-            "category": 40,
+            "category": 52,
             "weight": 0
         }
     },
@@ -8783,7 +8783,7 @@
         "pk": 580,
         "fields": {
             "question": 246,
-            "category": 40,
+            "category": 52,
             "weight": 0
         }
     },
@@ -8791,8 +8791,8 @@
         "model": "dataentry.questionlayout",
         "pk": 581,
         "fields": {
-            "question": 290,
-            "category": 40,
+            "question": 502,
+            "category": 52,
             "weight": 0
         }
     },
@@ -8800,8 +8800,8 @@
         "model": "dataentry.questionlayout",
         "pk": 582,
         "fields": {
-            "question": 291,
-            "category": 40,
+            "question": 503,
+            "category": 52,
             "weight": 0
         }
     },
@@ -8809,8 +8809,8 @@
         "model": "dataentry.questionlayout",
         "pk": 583,
         "fields": {
-            "question": 292,
-            "category": 40,
+            "question": 504,
+            "category": 52,
             "weight": 0
         }
     },
@@ -8818,8 +8818,8 @@
         "model": "dataentry.questionlayout",
         "pk": 584,
         "fields": {
-            "question": 293,
-            "category": 40,
+            "question": 505,
+            "category": 52,
             "weight": 0
         }
     },
@@ -8827,8 +8827,8 @@
         "model": "dataentry.questionlayout",
         "pk": 585,
         "fields": {
-            "question": 294,
-            "category": 39,
+            "question": 506,
+            "category": 51,
             "weight": 0
         }
     },
@@ -8837,7 +8837,7 @@
         "pk": 586,
         "fields": {
             "question": 73,
-            "category": 41,
+            "category": 53,
             "weight": 0
         }
     },
@@ -8846,7 +8846,7 @@
         "pk": 587,
         "fields": {
             "question": 74,
-            "category": 41,
+            "category": 53,
             "weight": 0
         }
     },
@@ -8855,7 +8855,7 @@
         "pk": 588,
         "fields": {
             "question": 77,
-            "category": 41,
+            "category": 53,
             "weight": 0
         }
     },
@@ -8864,7 +8864,7 @@
         "pk": 589,
         "fields": {
             "question": 78,
-            "category": 41,
+            "category": 53,
             "weight": 0
         }
     },
@@ -8873,7 +8873,7 @@
         "pk": 590,
         "fields": {
             "question": 79,
-            "category": 41,
+            "category": 53,
             "weight": 0
         }
     },
@@ -8882,7 +8882,7 @@
         "pk": 591,
         "fields": {
             "question": 82,
-            "category": 41,
+            "category": 53,
             "weight": 0
         }
     },
@@ -8891,7 +8891,7 @@
         "pk": 592,
         "fields": {
             "question": 91,
-            "category": 42,
+            "category": 54,
             "weight": 0
         }
     },
@@ -8900,7 +8900,7 @@
         "pk": 593,
         "fields": {
             "question": 92,
-            "category": 42,
+            "category": 54,
             "weight": 0
         }
     },
@@ -8909,7 +8909,7 @@
         "pk": 594,
         "fields": {
             "question": 106,
-            "category": 42,
+            "category": 54,
             "weight": 0
         }
     },
@@ -8918,7 +8918,7 @@
         "pk": 595,
         "fields": {
             "question": 261,
-            "category": 42,
+            "category": 54,
             "weight": 0
         }
     },
@@ -8927,7 +8927,7 @@
         "pk": 596,
         "fields": {
             "question": 262,
-            "category": 42,
+            "category": 54,
             "weight": 0
         }
     },
@@ -8936,7 +8936,7 @@
         "pk": 597,
         "fields": {
             "question": 7,
-            "category": 43,
+            "category": 55,
             "weight": 0
         }
     },
@@ -8945,7 +8945,7 @@
         "pk": 598,
         "fields": {
             "question": 8,
-            "category": 43,
+            "category": 55,
             "weight": 0
         }
     },
@@ -8954,7 +8954,7 @@
         "pk": 599,
         "fields": {
             "question": 9,
-            "category": 43,
+            "category": 55,
             "weight": 0
         }
     },
@@ -8963,7 +8963,7 @@
         "pk": 600,
         "fields": {
             "question": 11,
-            "category": 43,
+            "category": 55,
             "weight": 0
         }
     },
@@ -8972,7 +8972,7 @@
         "pk": 601,
         "fields": {
             "question": 143,
-            "category": 44,
+            "category": 56,
             "weight": 0
         }
     },
@@ -8981,7 +8981,7 @@
         "pk": 602,
         "fields": {
             "question": 144,
-            "category": 44,
+            "category": 56,
             "weight": 0
         }
     },
@@ -8990,7 +8990,7 @@
         "pk": 603,
         "fields": {
             "question": 146,
-            "category": 44,
+            "category": 56,
             "weight": 0
         }
     },
@@ -8999,7 +8999,7 @@
         "pk": 604,
         "fields": {
             "question": 147,
-            "category": 44,
+            "category": 56,
             "weight": 0
         }
     },
@@ -9008,7 +9008,7 @@
         "pk": 605,
         "fields": {
             "question": 151,
-            "category": 44,
+            "category": 56,
             "weight": 0
         }
     },
@@ -9017,7 +9017,7 @@
         "pk": 606,
         "fields": {
             "question": 152,
-            "category": 44,
+            "category": 56,
             "weight": 0
         }
     },
@@ -9026,7 +9026,7 @@
         "pk": 607,
         "fields": {
             "question": 263,
-            "category": 44,
+            "category": 56,
             "weight": 0
         }
     },
@@ -9035,7 +9035,7 @@
         "pk": 608,
         "fields": {
             "question": 264,
-            "category": 44,
+            "category": 56,
             "weight": 0
         }
     },
@@ -9044,7 +9044,7 @@
         "pk": 609,
         "fields": {
             "question": 218,
-            "category": 39,
+            "category": 51,
             "weight": 0
         }
     },
@@ -9053,7 +9053,7 @@
         "pk": 610,
         "fields": {
             "question": 247,
-            "category": 39,
+            "category": 51,
             "weight": 0
         }
     },
@@ -10965,7 +10965,7 @@
         "model": "dataentry.questionstorage",
         "pk": 246,
         "fields": {
-            "question": 288,
+            "question": 500,
             "field_name": "group_young_women_kids"
         }
     },
@@ -10973,7 +10973,7 @@
         "model": "dataentry.questionstorage",
         "pk": 247,
         "fields": {
-            "question": 289,
+            "question": 501,
             "field_name": "mobile_phone_taken_away"
         }
     },
@@ -10981,7 +10981,7 @@
         "model": "dataentry.questionstorage",
         "pk": 248,
         "fields": {
-            "question": 290,
+            "question": 502,
             "field_name": "doesnt_speak_destination_language"
         }
     },
@@ -10989,7 +10989,7 @@
         "model": "dataentry.questionstorage",
         "pk": 249,
         "fields": {
-            "question": 291,
+            "question": 503,
             "field_name": "going_abroad_domestic_work"
         }
     },
@@ -10997,7 +10997,7 @@
         "model": "dataentry.questionstorage",
         "pk": 250,
         "fields": {
-            "question": 292,
+            "question": 504,
             "field_name": "job_just_graduated"
         }
     },
@@ -11005,7 +11005,7 @@
         "model": "dataentry.questionstorage",
         "pk": 251,
         "fields": {
-            "question": 293,
+            "question": 505,
             "field_name": "visa_for_domestic_work"
         }
     },
@@ -11013,7 +11013,7 @@
         "model": "dataentry.questionstorage",
         "pk": 252,
         "fields": {
-            "question": 294,
+            "question": 506,
             "field_name": "non_relative_met_within_past_2_months"
         }
     },
