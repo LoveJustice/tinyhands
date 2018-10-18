@@ -81,6 +81,7 @@ class BorderStationSerializer(serializers.ModelSerializer):
         fields = '__all__'
         model = BorderStation
 
+    country_name = serializers.SerializerMethodField(read_only=True)
     number_of_interceptions = serializers.SerializerMethodField(read_only=True)
     number_of_staff = serializers.SerializerMethodField(read_only=True)
     ytd_interceptions = serializers.SerializerMethodField(read_only=True)
@@ -94,6 +95,9 @@ class BorderStationSerializer(serializers.ModelSerializer):
 
     def get_ytd_interceptions(self, obj):
         return Interceptee.objects.filter(interception_record__irf_number__startswith=obj.station_code, kind='v', interception_record__date_time_of_interception__year=datetime.date.today().year).count()
+
+    def get_country_name(self, obj):
+        return obj.operating_country.name or "No Country"
 
 
 class InterceptionRecordListSerializer(serializers.ModelSerializer):
