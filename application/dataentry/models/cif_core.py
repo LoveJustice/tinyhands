@@ -167,6 +167,7 @@ class CifCore(BaseForm):
 class PotentialVictimCore(BaseCard):
     person = models.ForeignKey(Person)
     social_media = models.CharField(max_length=126, null=True)
+    flag_count = models.PositiveIntegerField(null=True, blank=True)
     
     class Meta:
         abstract = True
@@ -176,6 +177,7 @@ class TransporationCore(BaseCard):
     transportation_order_number = models.PositiveIntegerField(null=True, blank=True)
     transportation_date  = models.DateField('Date:', null=True)
     transportation_crossing = models.CharField(max_length=126, null=True)
+    flag_count = models.PositiveIntegerField(null=True, blank=True)
     
     class Meta:
         abstract = True
@@ -200,6 +202,7 @@ class PersonBoxCore(BaseCard):
     pv_suspected_trafficker = models.BooleanField(default=False)
     pv_dont_believe_trafficker = models.BooleanField(default=False)
     associated_lb = models.CharField(max_length=126, null=True)
+    flag_count = models.PositiveIntegerField(null=True, blank=True)
     
     class Meta:
         abstract = True
@@ -230,6 +233,7 @@ class LocationBoxCore(BaseCard):
     pv_free_to_go_explaination = models.CharField(max_length=126, null=True)
     number_other_pvs_at_location = models.CharField(max_length=126, null=True)
     associated_pb = models.CharField(max_length=126, null=True)
+    flag_count = models.PositiveIntegerField(null=True, blank=True)
     
     class Meta:
         abstract = True
@@ -240,6 +244,7 @@ class VehicleBoxCore(BaseCard):
     vehicle_type = models.CharField(max_length=126, null=True)
     description = models.CharField(max_length=126, null=True)
     associated_pb = models.CharField(max_length=126, null=True)
+    flag_count = models.PositiveIntegerField(null=True, blank=True)
     
     class Meta:
         abstract = True

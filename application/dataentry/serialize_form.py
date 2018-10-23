@@ -681,6 +681,9 @@ class CardSerializer(serializers.Serializer):
         ret = super().to_representation(instance)
         if instance.form_object.id is not None:
             ret['storage_id'] = serializers.IntegerField().to_representation(instance.form_object.id)
+        ret['flag_count'] = getattr(instance.form_object, 'flag_count', None)
+        if ret['flag_count'] is None:
+            ret['flag_count'] = 0
         category = self.context['category']
         question_layouts = QuestionLayout.objects.filter(category__form = instance.form_data.form, category=category).order_by('question__id')
         context = dict(self.context)
@@ -696,6 +699,12 @@ class CardSerializer(serializers.Serializer):
         else:
             storage_id = None
         
+        tmp = data.get('flag_count')
+        if tmp is None:
+            flag_count = 0
+        else:
+            flag_count = int(tmp)
+        
         responses = data.get('responses')
         self.response_serializers = []
         for response in responses:
@@ -705,7 +714,8 @@ class CardSerializer(serializers.Serializer):
             self.response_serializers.append(serializer)
         
         return {
-            'storage_id':storage_id
+            'storage_id':storage_id,
+            'flag_count':flag_count
             }
     
     def get_or_create(self):
@@ -713,6 +723,7 @@ class CardSerializer(serializers.Serializer):
         form_data = self.context['form_data']
         
         storage_id = self.validated_data.get('storage_id')
+        flag_count = self.validated_data.get('flag_count')
         blank_id = self.context.get('clear_storage_id')
         if blank_id is not None:
             storage_id = None
@@ -725,6 +736,9 @@ class CardSerializer(serializers.Serializer):
         else:
             card = form_data.find_card(category, storage_id)
             card.is_valid = True
+        
+        if hasattr(card.form_object, 'flag_count'):
+            card.form_object.flag_count = flag_count
         
         for serializer in self.response_serializers:
             serializer.context['form_data'] = card
