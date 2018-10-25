@@ -56,12 +56,16 @@ class CifCore(BaseForm):
     married_broker_pb = models.CharField(max_length=126, null=True)
     travel_expenses_paid_themselves = models.BooleanField(default=False)
     travel_expenses_paid_by_broker = models.BooleanField(default=False)
+    travel_expenses_paid_by_broker_pb = models.CharField(max_length=126, null=True)
     travel_expenses_paid_to_broker = models.BooleanField(default=False)
+    travel_expenses_paid_to_broker_pb = models.CharField(max_length=126, null=True)
     travel_expenses_paid_by_broker_repaid = models.BooleanField(default=False)
+    travel_expenses_paid_by_broker_repaid_pb = models.CharField(max_length=126, null=True)
     travel_expenses_paid_to_broker_amount = models.CharField(max_length=126, null=True)
     travel_expenses_broker_repaid_amount = models.CharField(max_length=126, null=True)
     expected_earning = models.CharField(max_length=126, null=True)
     expected_earning_pb = models.CharField(max_length=126, null=True)
+    suspected_trafficker_count = models.PositiveIntegerField(null=True, blank=True)
     
     # Travel
     purpose_for_leaving_education = models.BooleanField(default=False)
@@ -76,8 +80,7 @@ class CifCore(BaseForm):
     border_cross_night = models.BooleanField(default=False)
     border_cross_off_road = models.BooleanField(default=False)
     border_cross_foot = models.BooleanField(default=False)
-    border_cross_bus = models.BooleanField(default=False)
-    border_cross_rickshaw = models.BooleanField(default=False)
+    border_cross_vehicle = models.BooleanField(default=False)
     id_made_no = models.BooleanField(default=False)
     id_made_real = models.BooleanField(default=False)
     id_made_fake = models.BooleanField(default=False)
@@ -162,6 +165,12 @@ class CifCore(BaseForm):
 
     class Meta:
         abstract = True
+    
+    def get_key(self):
+        return self.cif_number
+    
+    def get_form_type_name(self):
+        return 'CIF'
 
 
 class PotentialVictimCore(BaseCard):

@@ -117,12 +117,7 @@ class ResponseRadioButtonSerializer(serializers.Serializer):
                 if answer.code is not None:
                     value = answer.code
             except ObjectDoesNotExist:
-                # value could not be found in the set of answers, but may be text box entry
-                # check if text box entry is allowed for this question
-                if not textbox_entry_allowed(question):
-                    raise serializers.ValidationError(
-                        str(question.id) + ':RadioButton value "' + value + '" does not match any answers'
-                        )
+               pass
         
         return {
             'value':value
@@ -214,7 +209,7 @@ class ResponseAddress1Serializer(ResponseAddressSerializer):
                 address = Address1.objects.get(id=int(address_id))
             except ObjectDoesNotExist:
                 raise serializers.ValidationError(
-                        str(question.id) + ':Address1 id ' + address_id + ' does not exist'
+                        str(question.id) + ':Address1 id ' + str(address_id) + ' does not exist'
                         )
         
         return address
@@ -266,7 +261,7 @@ class ResponseAddressPairSerializer(serializers.Serializer):
             if private_data and is_private_value(question, 'address2'):
                 ret['address2'] = None
             else:
-                tmp = ResponseAddressSerializer(instance.address2)
+                tmp = ResponseAddressSerializer(instance)
                 ret['address2'] = tmp.data
             
         return ret
@@ -282,7 +277,7 @@ class ResponseAddressPairSerializer(serializers.Serializer):
         
         address2_data = data.get('address2')
         if address2_data is not None:
-            self.address2_serializer = ResponseAddress1Serializer(data=address2_data, context=dict(self.context))
+            self.address2_serializer = ResponseAddress2Serializer(data=address2_data, context=dict(self.context))
             self.address2_serializer.is_valid()
             address2 = self.address2_serializer.validated_data
         else:
@@ -332,6 +327,7 @@ class ResponseDateSerializer(serializers.Serializer):
         return ret
     
     def to_internal_value(self, data):
+        question = self.context['question']
         value = data.get('value')
         if value is not None and value.strip() != '':
             dt = parser.parse(value).date()
