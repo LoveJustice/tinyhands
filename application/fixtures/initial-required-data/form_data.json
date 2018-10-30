@@ -104,7 +104,7 @@
             "module_name": "dataentry.models.irf_bangladesh",
             "form_model_name": "IntercepteeBangladesh",
             "response_model_name": null,
-            "parent_storage": null,
+            "parent_storage": 7,
             "foreign_key_field_parent": "interception_record",
             "foreign_key_field_child": null
         }
@@ -128,7 +128,31 @@
             "module_name": "dataentry.models.irf_malawi",
             "form_model_name": "IntercepteeMalawi",
             "response_model_name": null,
+            "parent_storage": 9,
+            "foreign_key_field_parent": "interception_record",
+            "foreign_key_field_child": null
+        }
+    },
+    {
+        "model": "dataentry.storage",
+        "pk": 20,
+        "fields": {
+            "module_name": "dataentry.models.irf_africa",
+            "form_model_name": "IrfAfrica",
+            "response_model_name": null,
             "parent_storage": null,
+            "foreign_key_field_parent": null,
+            "foreign_key_field_child": null
+        }
+    },
+    {
+        "model": "dataentry.storage",
+        "pk": 21,
+        "fields": {
+            "module_name": "dataentry.models.irf_africa",
+            "form_model_name": "IntercepteeAfrica",
+            "response_model_name": null,
+            "parent_storage": 10,
             "foreign_key_field_parent": "interception_record",
             "foreign_key_field_child": null
         }
@@ -214,6 +238,18 @@
             "start_date": "2018-04-01T00:00:00Z",
             "end_date": "2118-12-31T00:00:00Z",
             "form_name": "irfMalawi",
+            "stations": []
+        }
+    },
+    {
+        "model": "dataentry.form",
+        "pk": 10,
+        "fields": {
+            "form_type": 1,
+            "storage": 20,
+            "start_date": "2018-04-01T00:00:00Z",
+            "end_date": "2118-12-31T00:00:00Z",
+            "form_name": "irfAfrica",
             "stations": []
         }
     },
@@ -602,6 +638,76 @@
         }
     },
     {
+        "model": "dataentry.category",
+        "pk": 50,
+        "fields": {
+            "form": 10,
+            "category_type": 1,
+            "name": "Top Box",
+            "order": 1
+        }
+    },
+    {
+        "model": "dataentry.category",
+        "pk": 51,
+        "fields": {
+            "form": 10,
+            "category_type": 1,
+            "name": "Group",
+            "order": 2
+        }
+    },
+    {
+        "model": "dataentry.category",
+        "pk": 52,
+        "fields": {
+            "form": 10,
+            "category_type": 1,
+            "name": "Destination",
+            "order": 3
+        }
+    },
+    {
+        "model": "dataentry.category",
+        "pk": 53,
+        "fields": {
+            "form": 10,
+            "category_type": 1,
+            "name": "Family",
+            "order": 4
+        }
+    },
+    {
+        "model": "dataentry.category",
+        "pk": 54,
+        "fields": {
+            "form": 10,
+            "category_type": 1,
+            "name": "Signs",
+            "order": 5
+        }
+    },
+    {
+        "model": "dataentry.category",
+        "pk": 55,
+        "fields": {
+            "form": 10,
+            "category_type": 2,
+            "name": "Interceptees",
+            "order": 6
+        }
+    },
+    {
+        "model": "dataentry.category",
+        "pk": 56,
+        "fields": {
+            "form": 10,
+            "category_type": 1,
+            "name": "Final Procedures",
+            "order": 7
+        }
+    },
+    {
         "model": "dataentry.cardstorage",
         "pk": null,
         "fields": {
@@ -639,6 +745,14 @@
         "fields": {
             "category": 36,
             "storage": 10
+        }
+    },
+    {
+        "model": "dataentry.cardstorage",
+        "pk": null,
+        "fields": {
+            "category": 55,
+            "storage": 21
         }
     },
     {
@@ -3613,6 +3727,90 @@
         }
     },
     {
+        "model": "dataentry.question",
+        "pk": 500,
+        "fields": {
+            "prompt": "Group of young women / kids",
+            "description": null,
+            "answer_type": 6,
+            "params": null,
+            "export_name": "Group of young women or children",
+            "export_params": null
+        }
+    },
+    {
+        "model": "dataentry.question",
+        "pk": 501,
+        "fields": {
+            "prompt": "Their phone was taken away",
+            "description": null,
+            "answer_type": 6,
+            "params": null,
+            "export_name": "Phone was taken away",
+            "export_params": null
+        }
+    },
+    {
+        "model": "dataentry.question",
+        "pk": 502,
+        "fields": {
+            "prompt": "Doesn't speak language of destination",
+            "description": null,
+            "answer_type": 6,
+            "params": null,
+            "export_name": "Doesn't speak language of destination",
+            "export_params": null
+        }
+    },
+    {
+        "model": "dataentry.question",
+        "pk": 503,
+        "fields": {
+            "prompt": "Going abroad for domestic work",
+            "description": null,
+            "answer_type": 6,
+            "params": null,
+            "export_name": "Going abroad for domestic work",
+            "export_params": null
+        }
+    },
+    {
+        "model": "dataentry.question",
+        "pk": 504,
+        "fields": {
+            "prompt": "Just graduated",
+            "description": null,
+            "answer_type": 6,
+            "params": null,
+            "export_name": "Just graduated",
+            "export_params": null
+        }
+    },
+    {
+        "model": "dataentry.question",
+        "pk": 505,
+        "fields": {
+            "prompt": "Have visa for domestic work in passport",
+            "description": null,
+            "answer_type": 6,
+            "params": null,
+            "export_name": "Have visa for domestic work in passport",
+            "export_params": null
+        }
+    },
+    {
+        "model": "dataentry.question",
+        "pk": 506,
+        "fields": {
+            "prompt": "Non-relative met within past 2 months",
+            "description": null,
+            "answer_type": 6,
+            "params": null,
+            "export_name": "Non-relative met within past 2 months",
+            "export_params": null
+        }
+    },
+    {
         "model": "dataentry.questionlayout",
         "pk": null,
         "fields": {
@@ -8145,6 +8343,717 @@
         "fields": {
             "question": 11,
             "category": 13,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 6,
+            "category": 50,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 5,
+            "category": 50,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 4,
+            "category": 50,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 3,
+            "category": 50,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 2,
+            "category": 50,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 1,
+            "category": 50,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 500,
+            "category": 51,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 277,
+            "category": 51,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 31,
+            "category": 51,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 30,
+            "category": 51,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 276,
+            "category": 51,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 275,
+            "category": 51,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 274,
+            "category": 51,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 25,
+            "category": 51,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 24,
+            "category": 51,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 23,
+            "category": 51,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 216,
+            "category": 51,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 21,
+            "category": 51,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 273,
+            "category": 51,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 14,
+            "category": 51,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 13,
+            "category": 51,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 12,
+            "category": 51,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 244,
+            "category": 51,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 243,
+            "category": 51,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 213,
+            "category": 51,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 272,
+            "category": 51,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 10,
+            "category": 51,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 501,
+            "category": 51,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 506,
+            "category": 51,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 218,
+            "category": 51,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 247,
+            "category": 51,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 36,
+            "category": 52,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 39,
+            "category": 52,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 41,
+            "category": 52,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 55,
+            "category": 52,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 56,
+            "category": 52,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 57,
+            "category": 52,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 58,
+            "category": 52,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 61,
+            "category": 52,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 62,
+            "category": 52,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 63,
+            "category": 52,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 64,
+            "category": 52,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 70,
+            "category": 52,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 201,
+            "category": 52,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 245,
+            "category": 52,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 280,
+            "category": 52,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 283,
+            "category": 52,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 284,
+            "category": 52,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 285,
+            "category": 52,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 193,
+            "category": 52,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 268,
+            "category": 52,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 246,
+            "category": 52,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 502,
+            "category": 52,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 503,
+            "category": 52,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 504,
+            "category": 52,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 505,
+            "category": 52,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 73,
+            "category": 53,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 74,
+            "category": 53,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 77,
+            "category": 53,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 78,
+            "category": 53,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 79,
+            "category": 53,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 82,
+            "category": 53,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 91,
+            "category": 54,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 92,
+            "category": 54,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 106,
+            "category": 54,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 261,
+            "category": 54,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 262,
+            "category": 54,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 7,
+            "category": 55,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 8,
+            "category": 55,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 9,
+            "category": 55,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 11,
+            "category": 55,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 143,
+            "category": 56,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 144,
+            "category": 56,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 146,
+            "category": 56,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 147,
+            "category": 56,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 151,
+            "category": 56,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 152,
+            "category": 56,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 263,
+            "category": 56,
+            "weight": 0
+        }
+    },
+    {
+        "model": "dataentry.questionlayout",
+        "pk": null,
+        "fields": {
+            "question": 264,
+            "category": 56,
             "weight": 0
         }
     },
@@ -10050,6 +10959,62 @@
         "fields": {
             "question": 286,
             "field_name": "scan_submit_og_same_day"
+        }
+    },
+    {
+        "model": "dataentry.questionstorage",
+        "pk": null,
+        "fields": {
+            "question": 500,
+            "field_name": "group_young_women_kids"
+        }
+    },
+    {
+        "model": "dataentry.questionstorage",
+        "pk": null,
+        "fields": {
+            "question": 501,
+            "field_name": "mobile_phone_taken_away"
+        }
+    },
+    {
+        "model": "dataentry.questionstorage",
+        "pk": null,
+        "fields": {
+            "question": 502,
+            "field_name": "doesnt_speak_destination_language"
+        }
+    },
+    {
+        "model": "dataentry.questionstorage",
+        "pk": null,
+        "fields": {
+            "question": 503,
+            "field_name": "going_abroad_domestic_work"
+        }
+    },
+    {
+        "model": "dataentry.questionstorage",
+        "pk": null,
+        "fields": {
+            "question": 504,
+            "field_name": "job_just_graduated"
+        }
+    },
+    {
+        "model": "dataentry.questionstorage",
+        "pk": null,
+        "fields": {
+            "question": 505,
+            "field_name": "visa_for_domestic_work"
+        }
+    },
+    {
+        "model": "dataentry.questionstorage",
+        "pk": null,
+        "fields": {
+            "question": 506,
+            "field_name": "non_relative_met_within_past_2_months"
         }
     },
     {
@@ -12168,6 +13133,16 @@
         }
     },
     {
+        "model": "dataentry.exportimport",
+        "pk": 5,
+        "fields": {
+            "description": "Export Africa IRF",
+            "implement_module": "export_import.irf_google_sheet",
+            "implement_class_name": "IrfGoogleSheet",
+            "form": 10
+        }
+    },
+    {
         "model": "dataentry.exportimportcard",
         "pk": 1,
         "fields": {
@@ -12248,6 +13223,26 @@
         }
     },
     {
+        "model": "dataentry.exportimportcard",
+        "pk": 9,
+        "fields": {
+            "export_import": 5,
+            "category": 55,
+            "prefix": "Victim ",
+            "max_instances": 1
+        }
+    },
+    {
+        "model": "dataentry.exportimportcard",
+        "pk": 10,
+        "fields": {
+            "export_import": 5,
+            "category": 55,
+            "prefix": "Trafficker %d ",
+            "max_instances": 5
+        }
+    },
+    {
         "model": "dataentry.exportimportfield",
         "pk": null,
         "fields": {
@@ -12344,6 +13339,32 @@
         "pk": null,
         "fields": {
             "export_import": 4,
+            "card": null,
+            "field_name": "date_time_entered_into_system",
+            "answer_type": 10,
+            "export_name": "Date/Time Entered into System",
+            "arguments_json": null
+        }
+    },
+    {
+        "model": "dataentry.exportimportfield",
+        "pk": null,
+        "fields": {
+            "export_import": 5,
+            "card": null,
+            "field_name": "station",
+            "answer_type": 1,
+            "export_name": "Station",
+            "arguments_json": {
+                "part": "station_name"
+            }
+        }
+    },
+    {
+        "model": "dataentry.exportimportfield",
+        "pk": null,
+        "fields": {
+            "export_import": 5,
             "card": null,
             "field_name": "date_time_entered_into_system",
             "answer_type": 10,
