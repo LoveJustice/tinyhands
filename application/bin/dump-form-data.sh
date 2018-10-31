@@ -22,5 +22,5 @@ do
 done
 sed -e 's/\]\[/,/g' < $tmpFile > $tmpFile2
 python /data/bin/remove_station_reference.py $tmpFile2 $tmpFile3
-python -m json.tool < $tmpFile3 > $outFile
+python /data/bin/format_form_data.py < $tmpFile3 > $outFile
 rm -f $tmpFile $tmpFile2 $tmpFile3 $tmpFile4
