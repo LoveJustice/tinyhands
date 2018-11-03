@@ -1,6 +1,8 @@
 import os
 from django.core.management import call_command
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.management.color import no_style
+from django.db import connection
 from .form import Form, FormVersion
 from .border_station import BorderStation
 
@@ -46,9 +48,16 @@ class FormMigration:
     
     @staticmethod
     def unload_prior(apps):
+        class_models = []
         for model_name in reversed(FormMigration.form_model_names):
             my_model = apps.get_model('dataentry', model_name)
+            class_models.append(my_model)
             my_model.objects.all().delete()
+            
+        sequence_sql = connection.ops.sequence_reset_sql(no_style(), class_models)
+        with connection.cursor() as cursor:
+            for sql in sequence_sql:
+                cursor.execute(sql)
     
     # restore connections between form and border stations
     @staticmethod

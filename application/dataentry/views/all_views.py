@@ -94,8 +94,11 @@ class SearchFormsMixin(object):
 
 class IntercepteeInline(InlineFormSet):
     model = Interceptee
-    extra = 12
-    max_num = 12
+    factory_kwargs = {
+        'extra': 12,
+        'max_num': 12
+    }
+
 
     def get_factory_kwargs(self):
         kwargs = super(IntercepteeInline, self).get_factory_kwargs()
@@ -213,7 +216,9 @@ class InterceptionRecordDetailView(InterceptionRecordUpdateView):
 
 class PersonBoxInline(InlineFormSet):
     model = VictimInterviewPersonBox
-    extra = 12
+    factory_kwargs = {
+        'extra': 12
+    }
 
     def get_factory_kwargs(self):
         kwargs = super(PersonBoxInline, self).get_factory_kwargs()
@@ -223,7 +228,9 @@ class PersonBoxInline(InlineFormSet):
 
 class LocationBoxInline(InlineFormSet):
     model = VictimInterviewLocationBox
-    extra = 8
+    factory_kwargs = {
+        'extra': 8
+    }
 
     def get_factory_kwargs(self):
         kwargs = super(LocationBoxInline, self).get_factory_kwargs()
