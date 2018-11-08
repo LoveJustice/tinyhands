@@ -171,6 +171,10 @@ class CifCore(BaseForm):
     
     def get_form_type_name(self):
         return 'CIF'
+    
+    @staticmethod
+    def key_field_name():
+        return 'cif_number'
 
 
 class PotentialVictimCore(BaseCard):
