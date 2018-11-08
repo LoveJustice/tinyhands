@@ -10,7 +10,6 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 
 from django.core.exceptions import ObjectDoesNotExist
-from django.core.files.storage import default_storage
 from django.db import IntegrityError
 from dataentry.serialize_form import FormDataSerializer
 from dataentry.serializers import CountrySerializer

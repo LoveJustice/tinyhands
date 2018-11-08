@@ -327,7 +327,6 @@ class ResponseDateSerializer(serializers.Serializer):
         return ret
     
     def to_internal_value(self, data):
-        question = self.context['question']
         value = data.get('value')
         if value is not None and value.strip() != '':
             dt = parser.parse(value).date()
