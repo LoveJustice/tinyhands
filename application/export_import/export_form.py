@@ -3,7 +3,6 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from dataentry.models import ExportImportCard, ExportImportField, Form, FormType, GoogleSheetConfig, QuestionLayout
 from dataentry.form_data import FormData
-from _sqlite3 import Row
 
 logger = logging.getLogger(__name__);
 
@@ -146,7 +145,6 @@ class ExportToGoogleSheet:
         for idx in range(0, ei_card.max_instances):
             found = False
             for card_data in cards:
-                index_data = getattr(card_data.form_object, ei_card.index_field_name, None)
                 if getattr(card_data.form_object, ei_card.index_field_name, None) == idx+1:
                     found = True
                     row = row + self.export_card_data(card_data, form_data, questions_fields)
