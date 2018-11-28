@@ -81,6 +81,7 @@ urlpatterns = [
         
         
         url(r'^forms/$', FormViewSet.as_view({'get':'list'}), name='forns'),
+        url(r'^forms/config/(?P<form_name>\w+)/$', FormViewSet.as_view({'get':'form_config'}), name='formConfig'),
         url(r'^forms/types/$', FormTypeViewSet.as_view({'get':'list'}), name='fornTypes'),
         url(r'^forms/(?P<station_id>\d+)/station_forms/$', FormViewSet.as_view({'put':'set_forms'}), name='setForms'),
         
