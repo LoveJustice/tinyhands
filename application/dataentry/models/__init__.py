@@ -21,3 +21,4 @@ from .irf_south_africa import IrfSouthAfrica, IntercepteeSouthAfrica
 from .irf_bangladesh import IrfBangladesh, IntercepteeBangladesh
 from .irf_malawi import IrfMalawi, IntercepteeMalawi
 from .irf_africa import IrfAfrica, IntercepteeAfrica
+from .cif_nepal import CifNepal, LocationBoxNepal, PersonBoxNepal, PotentialVictimNepal, TransporationNepal, VehicleBoxNepal

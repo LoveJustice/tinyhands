@@ -117,12 +117,7 @@ class ResponseRadioButtonSerializer(serializers.Serializer):
                 if answer.code is not None:
                     value = answer.code
             except ObjectDoesNotExist:
-                # value could not be found in the set of answers, but may be text box entry
-                # check if text box entry is allowed for this question
-                if not textbox_entry_allowed(question):
-                    raise serializers.ValidationError(
-                        str(question.id) + ':RadioButton value "' + value + '" does not match any answers'
-                        )
+               pass
         
         return {
             'value':value
@@ -181,7 +176,10 @@ class ResponseCheckboxSerializer(serializers.Serializer):
         return ret
     
     def to_internal_value(self, data):
+        question = self.context['question']
         value = data.get('value')
+        if value is None and not textbox_entry_allowed(question):
+            value = False
         
         return {
             'value': value
@@ -211,7 +209,7 @@ class ResponseAddress1Serializer(ResponseAddressSerializer):
                 address = Address1.objects.get(id=int(address_id))
             except ObjectDoesNotExist:
                 raise serializers.ValidationError(
-                        str(question.id) + ':Address1 id ' + address_id + ' does not exist'
+                        str(question.id) + ':Address1 id ' + str(address_id) + ' does not exist'
                         )
         
         return address
@@ -263,7 +261,7 @@ class ResponseAddressPairSerializer(serializers.Serializer):
             if private_data and is_private_value(question, 'address2'):
                 ret['address2'] = None
             else:
-                tmp = ResponseAddressSerializer(instance.address2)
+                tmp = ResponseAddressSerializer(instance)
                 ret['address2'] = tmp.data
             
         return ret
@@ -279,7 +277,7 @@ class ResponseAddressPairSerializer(serializers.Serializer):
         
         address2_data = data.get('address2')
         if address2_data is not None:
-            self.address2_serializer = ResponseAddress1Serializer(data=address2_data, context=dict(self.context))
+            self.address2_serializer = ResponseAddress2Serializer(data=address2_data, context=dict(self.context))
             self.address2_serializer.is_valid()
             address2 = self.address2_serializer.validated_data
         else:
@@ -330,7 +328,7 @@ class ResponseDateSerializer(serializers.Serializer):
     
     def to_internal_value(self, data):
         value = data.get('value')
-        if value is not None:
+        if value is not None and value.strip() != '':
             dt = parser.parse(value).date()
         else:
             dt = None
@@ -516,9 +514,9 @@ class ResponsePersonSerializer(serializers.Serializer):
                 ret['age'] = int(age)
                 
         tmp = data.get('birthdate')
-        if tmp is not None:          
+        if tmp is not None:        
             birthdate = tmp.get('value')
-            if birthdate is not None:
+            if birthdate is not None and birthdate.strip() != '':
                 ret['birthdate'] = parser.parse(birthdate).date()
                          
         tmp = data.get('passport')
@@ -678,6 +676,9 @@ class CardSerializer(serializers.Serializer):
         ret = super().to_representation(instance)
         if instance.form_object.id is not None:
             ret['storage_id'] = serializers.IntegerField().to_representation(instance.form_object.id)
+        ret['flag_count'] = getattr(instance.form_object, 'flag_count', None)
+        if ret['flag_count'] is None:
+            ret['flag_count'] = 0
         category = self.context['category']
         question_layouts = QuestionLayout.objects.filter(category__form = instance.form_data.form, category=category).order_by('question__id')
         context = dict(self.context)
@@ -693,6 +694,12 @@ class CardSerializer(serializers.Serializer):
         else:
             storage_id = None
         
+        tmp = data.get('flag_count')
+        if tmp is None:
+            flag_count = 0
+        else:
+            flag_count = int(tmp)
+        
         responses = data.get('responses')
         self.response_serializers = []
         for response in responses:
@@ -702,7 +709,8 @@ class CardSerializer(serializers.Serializer):
             self.response_serializers.append(serializer)
         
         return {
-            'storage_id':storage_id
+            'storage_id':storage_id,
+            'flag_count':flag_count
             }
     
     def get_or_create(self):
@@ -710,6 +718,7 @@ class CardSerializer(serializers.Serializer):
         form_data = self.context['form_data']
         
         storage_id = self.validated_data.get('storage_id')
+        flag_count = self.validated_data.get('flag_count')
         blank_id = self.context.get('clear_storage_id')
         if blank_id is not None:
             storage_id = None
@@ -722,6 +731,9 @@ class CardSerializer(serializers.Serializer):
         else:
             card = form_data.find_card(category, storage_id)
             card.is_valid = True
+        
+        if hasattr(card.form_object, 'flag_count'):
+            card.form_object.flag_count = flag_count
         
         for serializer in self.response_serializers:
             serializer.context['form_data'] = card
