@@ -76,12 +76,6 @@ class IrfCore(BaseForm):
     class Meta:
         abstract = True
     
-    def post_save(self, form_data):
-        base_date = form_data.form_object.date_time_of_interception.date()
-        for card_list in form_data.card_dict.values():
-            for card in card_list:
-                card.form_object.person.sync_age_birthdate(base_date)
-    
     def get_key(self):
         return self.irf_number
     
