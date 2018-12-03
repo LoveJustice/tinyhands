@@ -244,6 +244,7 @@ class QuestionLayout(models.Model):
     question = models.ForeignKey(Question)
     category = models.ForeignKey(Category)
     weight = models.IntegerField(default=0)
+    form_config = JSONField(null=True)
     
 class Answer(models.Model):
     question = models.ForeignKey(Question)
