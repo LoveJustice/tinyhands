@@ -126,7 +126,7 @@ class ExportToGoogleSheet:
         row = []
         for question in questions_fields.questions:
             row = row + question.export_value(None, form_data)
-        for ie_field in questions_fields.fields:
+        for _ in questions_fields.fields:
             row.append('')
         return row
     
