@@ -111,7 +111,7 @@
 {"model": "dataentry.question", "pk": 1, "fields": {"prompt": "Irf Number", "description": null, "answer_type": 1, "params": null, "export_name": "IRF Number", "export_params": null}},
 {"model": "dataentry.question", "pk": 2, "fields": {"prompt": "# of Victims", "description": null, "answer_type": 2, "params": null, "export_name": "# of Victims", "export_params": null}},
 {"model": "dataentry.question", "pk": 3, "fields": {"prompt": "Location", "description": null, "answer_type": 1, "params": null, "export_name": "Location", "export_params": null}},
-{"model": "dataentry.question", "pk": 4, "fields": {"prompt": "Date/Time", "description": null, "answer_type": 10, "params": null, "export_name": "Date/Time of Interception", "export_params": null}},
+{"model": "dataentry.question", "pk": 4, "fields": {"prompt": "Date/Time", "description": null, "answer_type": 10, "params": {"form_date": "True"}, "export_name": "Date/Time of Interception", "export_params": null}},
 {"model": "dataentry.question", "pk": 5, "fields": {"prompt": "# of Traffickers", "description": null, "answer_type": 2, "params": null, "export_name": "# of Traffickers", "export_params": null}},
 {"model": "dataentry.question", "pk": 6, "fields": {"prompt": "Staff Name", "description": null, "answer_type": 1, "params": null, "export_name": "Staff Name", "export_params": null}},
 {"model": "dataentry.question", "pk": 7, "fields": {"prompt": "", "description": "Interceptee image", "answer_type": 12, "params": {"subdirectory": "interceptee_photos/"}, "export_name": "Image", "export_params": null}},

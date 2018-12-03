@@ -330,6 +330,10 @@ class ResponseDateSerializer(serializers.Serializer):
         value = data.get('value')
         if value is not None and value.strip() != '':
             dt = parser.parse(value).date()
+            question = self.context['question']
+            if question.params is not None and 'form_date' in question.params:
+                form_date_holder = self.context.get('form_date_holder')
+                form_date_holder['form_date'] = dt
         else:
             dt = None
             
@@ -361,7 +365,11 @@ class ResponseDateTimeSerializer(serializers.Serializer):
             local_time = local_time.replace(tzinfo=None)
             time_zone = self.context['time_zone']
             tz = pytz.timezone(time_zone)
-            dt = tz.localize(local_time) 
+            dt = tz.localize(local_time)
+            question = self.context['question']
+            if question.params is not None and 'form_date' in question.params:
+                form_date_holder = self.context.get('form_date_holder')
+                form_date_holder['form_date'] = dt.date()
         else:
             dt = None
         return {
@@ -456,6 +464,10 @@ class ResponsePersonSerializer(serializers.Serializer):
             else:
                 tmp = ResponseIntegerSerializer(instance.age, context=self.context)
                 ret['age'] = tmp.data
+            if private_data and is_private_value(question, 'estimated_current_age'):
+                ret['estimated_current_age'] = None
+            else:
+               ret['estimated_current_age'] = instance.estimate_current_age(datetime.now().date())
             if private_data and is_private_value(question, 'birthdate'):
                 ret['birthdate'] = None
             else:
@@ -547,6 +559,10 @@ class ResponsePersonSerializer(serializers.Serializer):
 
     def get_or_create(self):
         mode = self.context.get('mode')
+        form_base_date = self.context.get('form_date_holder').get('form_date')
+        print('form_base_date', form_base_date)
+        if form_base_date is None:
+            form_base_date = datetime.now().date()
         storage_id = self.validated_data.get('storage_id')
         name = self.validated_data.get('name')
         address1 = self.address1_serializer.get_or_create()
@@ -590,6 +606,7 @@ class ResponsePersonSerializer(serializers.Serializer):
             person.birthdate = birthdate
             person.passport = passport
             person.nationality = nationality
+            person.set_estimated_birthdate(form_base_date)
             person.save()
         
         return person 
@@ -827,6 +844,8 @@ class FormDataSerializer(serializers.Serializer):
         
         station = BorderStation.objects.get(id=station_id)
         self.context['time_zone'] = station.time_zone
+        form_date_holder = {'form_date':None}
+        self.context['form_date_holder'] = form_date_holder
         
         responses = data.get('responses')
         self.form_serializers = []

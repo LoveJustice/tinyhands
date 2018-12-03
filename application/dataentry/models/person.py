@@ -18,6 +18,7 @@ class Person(models.Model):
     phone_contact = models.CharField(max_length=255, blank=True)
     alias_group = models.ForeignKey(AliasGroup, null=True)
     birthdate = models.DateField(null=True)
+    estimated_birthdate= models.DateField(null=True)
     passport = models.CharField(max_length=127, blank=True, default='')
     nationality = models.CharField(max_length=127, blank=True, default='')
     aliases = None
@@ -141,15 +142,21 @@ class Person(models.Model):
 
         return self.forms
     
-    def sync_age_birthdate(self, base_date):
-        if self.age is not None and self.birthdate is None:
-            # approximate the birth date
+    def set_estimated_birthdate(self, base_date):
+        if self.birthdate is not None:
+            self.estimated_birthdate = self.birthdate
+        elif self.age is not None:
             birth_year = base_date.year - self.age
             if base_date.month < 7:
                 birth_year = birth_year - 1
-            self.birthdate = date(birth_year,7,1)
-            self.save()
-        elif self.age is None and self.birthdate is not None:
-            delta = base_date - self.birthdate
-            self.age = delta.days // 365
-            self.save()
+            self.estimated_birthdate = date(birth_year,7,1)
+        else:
+            self.estimated_birthdate = None
+    
+    def estimate_current_age(self, base_date):
+        if self.estimated_birthdate is not None:
+            delta = base_date - self.estimated_birthdate
+            return delta.days // 365
+        else:
+            return None
+            
