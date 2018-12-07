@@ -56,7 +56,7 @@ class Command(BaseCommand):
                 
                 validation_questions = FormValidationQuestion.objects.filter(validation=validation)
                 for validation_question in validation_questions:
-                    new_validation_question = FormValidationQuestion.objects.get(id=validation.id)
+                    new_validation_question = FormValidationQuestion.objects.get(id=validation_question.id)
                     new_validation_question.id = None
                     new_validation_question.validation = new_validation
                     new_validation_question.save()
