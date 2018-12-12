@@ -9,6 +9,7 @@ from dataentry.models.addresses import Address1, Address2
 from dataentry.models.border_station import BorderStation
 from dataentry.models.form import Answer, Category, Form, Question, QuestionLayout
 from dataentry.models.person import Person
+from dataentry.models.alias_group import AliasGroup
 from .form_data import FormData, CardData
 from .validate_form import ValidateForm
 
@@ -543,6 +544,8 @@ class ResponsePersonSerializer(serializers.Serializer):
         else:
             ret['nationality'] = ''
         
+        ret['link_id'] = data.get('link_id')
+        
         return ret
     
     def match_address(self, address_object1, address_object2):
@@ -608,6 +611,20 @@ class ResponsePersonSerializer(serializers.Serializer):
             person.nationality = nationality
             person.set_estimated_birthdate(form_base_date)
             person.save()
+        
+        link_id = self.validated_data.get('link_id')
+        if link_id is not None:
+            link_person = Person.objects.get(id=link_id)
+            if link_person.alias_group is not None:
+                person.alias_group = link_person.alias_group
+                person.save()
+            else:
+                alias_group = AliasGroup()
+                alias_group.save()
+                link_person.alias_group = alias_group
+                person.alias_group = alias_group
+                link_person.save()
+                person.save()
         
         return person 
         
