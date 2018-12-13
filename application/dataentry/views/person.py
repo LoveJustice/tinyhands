@@ -2,9 +2,9 @@ from rest_framework import filters as fs
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from rest_api.authentication import HasPermission, HasDeletePermission, HasPostPermission, HasPutPermission
+from rest_api.authentication import HasPermission, HasDeletePermission, HasPostPermission
 
-from dataentry.models import CardStorage, Form, Interceptee, Person, Question
+from dataentry.models import CardStorage, Form, Person, Question
 from dataentry.serializers import PersonSerializer
 from dataentry.serialize_form import ResponsePersonSerializer
 
