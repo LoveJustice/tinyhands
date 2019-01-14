@@ -1,6 +1,6 @@
 # Dream Suite
 
-Tiny Hands International
+Love Justice International
 
 ![Codeship Status](https://app.codeship.com/projects/79c5fb20-1e83-0132-0c4f-7a12a542bc63/status?branch=master)
 
