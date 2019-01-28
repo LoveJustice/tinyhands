@@ -85,8 +85,8 @@ class Command(BaseCommand):
             'who_noticed':{
                     'operation':Command.process_radio,
                     'map_values':{
-                        'contact_noticed':'contact',
-                        'staff_noticed':'staff'
+                        'staff_noticed':'staff',
+                        'contact_noticed':'contact'
 
                     }
                 },
@@ -171,12 +171,12 @@ class Command(BaseCommand):
             dest_irf.save()
             
             # Add location if it is not already present for the station
-            tmp = Location.objects.filter(border_station=station, name=source_irf.location)
-            if len(tmp) < 1:
-                location = Location()
-                location.name = source_irf.location
-                location.border_station = station
-                location.save()
+            #tmp = Location.objects.filter(border_station=station, name=source_irf.location)
+            #if len(tmp) < 1:
+                #location = Location()
+                #location.name = source_irf.location
+                #location.border_station = station
+                #location.save()
         
         # Copy data from interceptees in Interceptee model to IntercepteeNepal model
         print('Migrating Interceptees')
