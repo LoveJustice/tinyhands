@@ -141,7 +141,52 @@ class Command(BaseCommand):
             'station_id':{
                     'operation':Command.change_name,
                     'from_name':'border_station_id'
-                }
+                },
+            'group_missed_call': {
+                    'operation':Command.process_no_value,
+                },
+            'group_facebook': {
+                    'operation':Command.process_no_value,
+                },
+            'group_other_website': {
+                    'operation':Command.process_no_value,
+                },
+            'who_in_group_engaged': {
+                    'operation':Command.process_no_value,
+                },
+            'who_in_group_dating': {
+                    'operation':Command.process_no_value,
+                },
+            'relationship_to_get_married': {
+                    'operation':Command.process_no_value,
+                },
+            'contradiction_between_stories': {
+                    'operation':Command.process_no_value,
+                },
+            'where_going_someone_paid_expenses': {
+                    'operation':Command.process_no_value,
+                },
+            'family_doesnt_know_where_going_18_23s': {
+                    'operation':Command.process_no_value,
+                },
+            'family_doesnt_know_where_going_18_23': {
+                    'operation':Command.process_no_value,
+                },
+            'family_unwilling_to_let_go_18_23': {
+                    'operation':Command.process_no_value,
+                },
+            'over_23_family_unwilling_to_let_go': {
+                    'operation':Command.process_no_value,
+                },
+            'noticed_on_train': {
+                    'operation':Command.process_no_value,
+                },
+            'reason_for_intercept': {
+                    'operation':Command.process_no_value,
+                },
+            'evidence_categorization': {
+                    'operation':Command.process_no_value,
+                },
         }
         
         # Copy data from IRFs in Interception model to IrfNepal model
