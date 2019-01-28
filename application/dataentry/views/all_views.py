@@ -376,17 +376,6 @@ def interceptee_fuzzy_matching(request):
     return HttpResponse(json.dumps(matches), content_type="application/json")
 
 
-class PersonViewSet(viewsets.ModelViewSet):
-    queryset = Person.objects.all()
-    serializer_class = PersonSerializer
-    permission_classes = (IsAuthenticated, HasPermission)
-    permissions_required = ['permission_address2_manage']
-    filter_backends = (fs.SearchFilter, fs.OrderingFilter,)
-    search_fields = ('full_name',)
-    ordering_fields = ('full_name', 'age', 'gender', 'phone_contact')
-    ordering = ('full_name',)
-
-
 class InterceptionRecordViewSet(viewsets.ModelViewSet):
     queryset = InterceptionRecord.objects.all()
     serializer_class = InterceptionRecordSerializer
