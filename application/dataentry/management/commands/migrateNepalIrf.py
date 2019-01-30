@@ -3,20 +3,19 @@ from django.core.management.base import BaseCommand
 from django.core.management.color import no_style
 
 from dataentry.models import BorderStation, InterceptionRecord, IrfNepal, Interceptee, IntercepteeNepal
-from static_border_stations.models import Location
 
 class Command(BaseCommand):
     @staticmethod
-    def process_constant(source, dest, name, config):
+    def process_constant(source, dest, name, config, interceptees):
         value = config.get('value')
         setattr(dest, name, value)
     
     @staticmethod
-    def process_no_value(source, dest, name, config):
+    def process_no_value(source, dest, name, config, interceptees):
         pass
     
     @staticmethod
-    def process_or (source, dest, name, config):
+    def process_or (source, dest, name, config, interceptees):
         value = False
         for field in config.get('from_list'):
             tmp = getattr(source, field)
@@ -28,7 +27,7 @@ class Command(BaseCommand):
             
     
     @staticmethod
-    def process_radio(source, dest, name, config):
+    def process_radio(source, dest, name, config, interceptees):
         value = None
         for key, val in config['map_values'].items():
             tmp = getattr(source, key)
@@ -44,15 +43,48 @@ class Command(BaseCommand):
         setattr(dest, name, value)
     
     @staticmethod
-    def process_red_flags(source, dest, name, config):
+    def process_red_flags(source, dest, name, config, interceptees):
         value = source.calculate_total_red_flags()
         setattr(dest, name, value)
         
     @staticmethod
-    def change_name(source, dest, name, config):
+    def change_name(source, dest, name, config, interceptees):
         from_name = config.get('from_name')
         value = getattr(source, from_name)
         setattr(dest, name, value)
+    
+    @staticmethod
+    def victim_between_18_and_23(source, dest, name, config, victims):
+        from_name = config.get('from_name')
+        value = getattr(source, from_name)
+        set_value = False
+        if value:
+            set_value = False
+            for interceptee in victims:
+                if (interceptee.person is not None and interceptee.person.age is not None and
+                    interceptee.person.age >=18 and interceptee.person.age <= 23):
+                    set_value = True
+                    break
+        
+        setattr(dest,name, set_value)
+    
+    @staticmethod
+    def victim_over_23(source, dest, name, config, victims):
+        from_name = config.get('from_name')
+        value = getattr(source, from_name)
+        set_value = False
+        if value:
+            for interceptee in victims:
+                if (interceptee.person is not None and interceptee.person.age is not None and
+                    interceptee.person.age >=18 and interceptee.person.age <= 23):
+                    # If there is a victim of age between 18 and 23, then this flag should not be set
+                    set_value = False
+                    break
+                if (interceptee.person is not None and (interceptee.person.age is None or
+                    interceptee.person.age > 23)):
+                    set_value = True
+        
+        setattr(dest,name, set_value)
         
     def handle(self, *args, **options):
         custom_processing = {
@@ -166,17 +198,17 @@ class Command(BaseCommand):
             'where_going_someone_paid_expenses': {
                     'operation':Command.process_no_value,
                 },
-            'family_doesnt_know_where_going_18_23s': {
-                    'operation':Command.process_no_value,
-                },
             'family_doesnt_know_where_going_18_23': {
-                    'operation':Command.process_no_value,
+                    'operation':Command.victim_between_18_and_23,
+                    'from_name':'over_18_family_doesnt_know'
                 },
             'family_unwilling_to_let_go_18_23': {
-                    'operation':Command.process_no_value,
+                    'operation':Command.victim_between_18_and_23,
+                    'from_name':'over_18_family_unwilling'
                 },
             'over_23_family_unwilling_to_let_go': {
-                    'operation':Command.process_no_value,
+                    'operation':Command.victim_over_23,
+                    'from_name':'over_18_family_unwilling'
                 },
             'noticed_on_train': {
                     'operation':Command.process_no_value,
@@ -193,6 +225,7 @@ class Command(BaseCommand):
         print('Migrating IRFs')
         source_irfs = InterceptionRecord.objects.all()
         for source_irf in source_irfs:
+            interceptees = Interceptee.objects.filter(interception_record = source_irf, kind = 'v')
             source_dict = source_irf.__dict__
             dest_irf = IrfNepal()
             
@@ -200,7 +233,7 @@ class Command(BaseCommand):
                 if attr in custom_processing:
                     config = custom_processing[attr]
                     operation = config['operation']
-                    operation(source_irf, dest_irf, attr, config)
+                    operation(source_irf, dest_irf, attr, config, interceptees)
                 else:
                     if attr not in source_dict:
                         print ('attribute', attr, 'not found in source IRF')
