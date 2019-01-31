@@ -10,10 +10,7 @@ class Command(BaseCommand):
     def process_other_checkbox_value(source, dest, name, config):
         other_text_field = config.get('other_text_field')
         other_value = getattr(source, other_text_field)
-        if other_value != "":
-            setattr(dest, name, other_value)
-        else:
-            setattr(dest, name, "")
+        setattr(dest, name, other_value)
       
     def handle(self, *args, **options):
         custom_processing = {
