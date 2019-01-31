@@ -9,3 +9,5 @@ from .interception_alert import *
 from .permission import *
 from .irf_form import *
 from .forms import *
+from .cif_form import *
+from .person import *

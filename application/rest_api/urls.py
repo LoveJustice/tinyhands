@@ -4,7 +4,7 @@ from dataentry.views import Address2ViewSet, Address1ViewSet, GeoCodeAddress1API
 from dataentry.views import PersonViewSet
 from dataentry.views import SiteSettingsViewSet
 from dataentry.views import CountryViewSet
-from dataentry.views import IDManagementViewSet, TraffickerCheckViewSet, IrfFormViewSet
+from dataentry.views import IDManagementViewSet, TraffickerCheckViewSet, IrfFormViewSet, CifFormViewSet
 from dataentry.views import FormViewSet, FormTypeViewSet
 
 
@@ -52,6 +52,7 @@ urlpatterns = [
 
         #Persons
         url(r'^person/$', PersonViewSet.as_view({'get': 'list'}), name="Person"),
+        url(r'^person/associated/(?P<station_id>\d+)/(?P<form_number>\w+)/$', PersonViewSet.as_view({'get': 'associated_persons'}), name="AssociatedPersons"),
 
         #KnownPersons
         url(r'^idmgmt/$', IDManagementViewSet.as_view({'get': 'list'}), name="IDManagement"),
@@ -81,6 +82,11 @@ urlpatterns = [
         
         
         url(r'^forms/$', FormViewSet.as_view({'get':'list'}), name='forns'),
+        url(r'^forms/config/(?P<form_name>\w+)/$', FormViewSet.as_view({'get':'form_config'}), name='formConfig'),
         url(r'^forms/types/$', FormTypeViewSet.as_view({'get':'list'}), name='fornTypes'),
-        url(r'^forms/(?P<station_id>\d+)/station_forms/$', FormViewSet.as_view({'put':'set_forms'}), name='setForms')
+        url(r'^forms/(?P<station_id>\d+)/station_forms/$', FormViewSet.as_view({'put':'set_forms'}), name='setForms'),
+        
+        url(r'^cif/$', CifFormViewSet.as_view(list), name='cif'),
+        url(r'^cif/(?P<station_id>\d+)/(?P<pk>\d+)', CifFormViewSet.as_view({'get': 'my_retrieve', 'put': 'update', 'delete': 'destroy'}), name='cifDetail'),
+        url(r'^cif/blank/(?P<station_id>\d+)', CifFormViewSet.as_view({'get': 'retrieve_blank_form'}), name='cifBlank'),
 ]

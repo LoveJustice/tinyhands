@@ -2,6 +2,7 @@ import logging
 from django.core.exceptions import ObjectDoesNotExist
 
 from dataentry.models import ExportImportCard, ExportImportField, Form, FormType, GoogleSheetConfig, QuestionLayout
+from dataentry.form_data import FormData
 
 logger = logging.getLogger(__name__);
 
@@ -59,7 +60,7 @@ class ExportForm:
             self.headers = self.headers + element.format_headers(prefix=ei_card.prefix, max_count=ei_card.max_instances)
     
     def get_category(self, category_id):
-        for category in card_dict.keys():
+        for category in self.category_dict.keys():
             if category_id == category.id:
                 return category
         
@@ -113,43 +114,72 @@ class ExportToGoogleSheet:
         for obj in obj_list:
             process_object(obj)
     
+    def export_card_data(self, card_data, form_data, questions_fields):
+        row = []
+        for question in questions_fields.questions:
+            row = row + question.export_value(card_data, form_data)
+        for ie_field in questions_fields.fields:
+            row.append(ie_field.export_value(card_data.form_object, form_data))
+        return row
+    
+    def export_blank_card(self, form_data, questions_fields):
+        row = []
+        for question in questions_fields.questions:
+            row = row + question.export_value(None, form_data)
+        for _ in questions_fields.fields:
+            row.append('')
+        return row
+    
+    def process_unindexed_card(self, cards, ei_card, form_data, questions_fields):
+        row = []
+        limit = min(len(cards), ei_card.max_instances)
+        for idx in range(0,limit):
+            row = row + self.export_card_data(cards[idx], form_data, questions_fields)
+        
+        for idx in range(0, ei_card.max_instances - limit):
+            row = row + self.export_blank_card(form_data, questions_fields)
+        return row
+    
+    def process_indexed_card(self, cards, ei_card, form_data, questions_fields):
+        row = []
+        for idx in range(0, ei_card.max_instances):
+            found = False
+            for card_data in cards:
+                if getattr(card_data.form_object, ei_card.index_field_name, None) == idx+1:
+                    found = True
+                    row = row + self.export_card_data(card_data, form_data, questions_fields)
+                    break
+                
+            if not found:
+                row = row + self.export_blank_card(form_data, questions_fields)
+                  
+        return row
+    
     def process_object(self, obj):
         row = []
-        form_data = FormData(obj, export_form.export_import.form)
+        form_data = FormData(obj, self.export_form.export_import.form)
         
         for question in self.export_form.main_form.questions:
             row = row + question.export_value(form_data, form_data)
         for ie_field in self.export_form.main_form.fields:
             row.append(ie_field.export_value(form_data.form_object, form_data))
-            
-        for category_id in form_data.card_dict.keys():
+ 
+        for ei_card in self.export_form.ei_cards:
+            category_id = ei_card.category.id
             category = self.export_form.get_category(category_id)
-            if category is None:
-                cards = []
-            else:
-                cards = form_data.card_dict[category_id]
-
-            ei_card = self.export_form.ei_cards[category]
-            
-            if category not in self.export_form.category_dict:
+            if category is None or category not in self.export_form.category_dict:
                 continue
+        
+            cards = form_data.card_dict[category_id]
+            if cards is None:
+                cards = []
                 
             questions_fields = self.export_form.category_dict[category]
-            
-            limit = min(len(cards), ei_card.max_instances)
-            for idx in range(0,limit):
-                card_data = cards[idx]
-                for question in questions_fields.questions:
-                    row = row + question.export_value(card_data, form_data)
-                for ie_field in questions_fields.fields:
-                    row.append(ie_field.export_value(card_data.form_object, form_data))
-            
-            for idx in range(0, ei_card.max_instances - limit):
-                for question in questions_fields.questions:
-                    row = row + question.export_value(None, form_data)
-                for ie_field in questions_fields.fields:
-                    row.append('')
-        
+            if ei_card.index_field_name is None:
+                row = row + self.process_unindexed_card(cards, ei_card, form_data, questions_fields)
+            else:
+                row = row + self.process_indexed_card(cards, ei_card, form_data, questions_fields)
+
         self.rows.append(row)
         return row
     

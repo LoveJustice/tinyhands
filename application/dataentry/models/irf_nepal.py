@@ -7,12 +7,20 @@ class IrfNepal(IrfCore):
     meeting_someone_across_border = models.BooleanField('Is meeting a someone just across border', default=False)
     seen_in_last_month_in_nepal = models.BooleanField("Meeting someone she's seen in Nepal in the last month", default=False)
     traveling_with_someone_not_with_them = models.BooleanField('Was travelling with someone not with them', default=False)
+    group_missed_call = models.BooleanField('Missed Call', default=False)
+    group_facebook = models.BooleanField('Facebook', default=False)
+    group_other_website = models.CharField(max_length=127, blank=True)
+    who_in_group_engaged = models.BooleanField('Fiancée', default=False)
+    who_in_group_dating = models.BooleanField('Boyfriend / Girlfriend', default=False)
+    relationship_to_get_married = models.BooleanField('Coming to get married', default=False)
     wife_under_18 = models.BooleanField('Wife is under 18', default=False)
     less_than_2_weeks_before_eloping = models.BooleanField('Less than 2 weeks before eloping', default=False)
     between_2_12_weeks_before_eloping = models.BooleanField('2-12 weeks before eloping', default=False)
     caste_not_same_as_relative = models.BooleanField('Caste not the same as alleged relative', default=False)
-    
+    contradiction_between_stories = models.BooleanField('Contradiction between stories', default=False)
+
     doesnt_know_going_to_india = models.BooleanField("Doesn't know she's going to India", default=False)
+    where_going_someone_paid_expenses = models.BooleanField('Non relatives paid for their travel', default=False)
     where_going_visit = models.BooleanField('Visit / Family / Returning Home', default=False)
     where_going_shopping = models.BooleanField('Shopping', default=False)
     where_going_treatment = models.BooleanField('Treatment', default=False)
@@ -34,9 +42,10 @@ class IrfNepal(IrfCore):
     doesnt_know_villiage_details = models.BooleanField("Doesn't know details about village", default=False)
     reluctant_villiage_info = models.BooleanField('Reluctant to give info about village', default=False)
     
-    over_18_family_doesnt_know = models.BooleanField('Family members do not know they is going to India', default=False)
-    over_18_family_unwilling = models.BooleanField('Family members unwilling to let them go', default=False)
-    
+    family_doesnt_know_where_going_18_23 = models.BooleanField('18-23 Family doesnt know where they are going', default=False)
+    family_unwilling_to_let_go_18_23 = models.BooleanField('18-23 Family unwilling to let them go', default=False)
+    over_23_family_unwilling_to_let_go = models.BooleanField('Over 23 Family unwilling to let them go', default=False)
+
     which_contact = models.CharField(max_length=127, blank=True)
     contact_paid = models.NullBooleanField(null=True)
     contact_paid_how_much = models.CharField('How much?', max_length=255, blank=True)
@@ -62,7 +71,7 @@ class IrfNepal(IrfCore):
 
     # Action
     noticed_waiting_sitting = models.BooleanField('Waiting / sitting', default=False)
-    noticed_walking_to_border = models.BooleanField('Walking to border', default=False)
+    noticed_on_train = models.BooleanField('On a train', default=False)
     noticed_roaming_around = models.BooleanField('Roaming around', default=False)
     noticed_exiting_vehicle = models.BooleanField('Exiting vehicle', default=False)
     noticed_heading_to_vehicle = models.BooleanField('Heading to vehicle', default=False)
@@ -74,6 +83,8 @@ class IrfNepal(IrfCore):
     noticed_other_sign = models.CharField(max_length=127, blank=True)
     
     case_notes = models.TextField('Case Notes', blank=True)
+    reason_for_intercept = models.TextField('Primary reason for intercept', blank=True)
+    evidence_categorization = models.CharField(max_length=127, null=True)
     scanned_form = models.FileField('Attach scanned copy of form (pdf or image)', upload_to='scanned_irf_forms', default='', blank=True)
     
 class IntercepteeNepal(IntercepteeCore):

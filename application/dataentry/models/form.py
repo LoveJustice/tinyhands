@@ -87,7 +87,7 @@ class Question(models.Model):
     
     def export_header_Address(self, prefix):
         if self.export_name is not None and  self.export_name != '':
-            prefix = prefix + export_name + ' '
+            prefix = prefix + self.export_name + ' '
  
         export_header_list = [
             prefix + 'address1', 
@@ -244,6 +244,7 @@ class QuestionLayout(models.Model):
     question = models.ForeignKey(Question)
     category = models.ForeignKey(Category)
     weight = models.IntegerField(default=0)
+    form_config = JSONField(null=True)
     
 class Answer(models.Model):
     question = models.ForeignKey(Question)
@@ -329,6 +330,7 @@ class ExportImportCard(models.Model):
     category = models.ForeignKey(Category, related_name='export_import_card')
     prefix = models.CharField(max_length=126)
     max_instances = models.PositiveIntegerField()
+    index_field_name = models.CharField(max_length=126, null=True)
 
 # data fields to be exported for which there is no question
 class ExportImportField(models.Model):
