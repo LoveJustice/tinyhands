@@ -48,6 +48,13 @@ class Command(BaseCommand):
             setattr(dest, name, value)
     
     @staticmethod
+    def not_value(source, dest, name, config):
+        from_name = config.get('from_name')
+        value = getattr(source, from_name)
+        if value is not None:
+            setattr(dest, name, not value)
+    
+    @staticmethod
     def source_greater_zero(source, dest, name, config):
         from_name = config.get('from_name')
         value = getattr(source, from_name)
@@ -64,12 +71,15 @@ class Command(BaseCommand):
             if tmp == True:
                 value = val['prefix']
                 if 'other_value' in val:
+                    
                     other_value = val['other_value']
                     if other_value is not None and other_value != '':
+                        value2 = getattr(source, other_value)
                         if value != '':
-                            value = value + ' ' + other_value
+                            value = value + ' ' + value2
                         else:
-                            value = other_value
+                            value = value2
+
                 break
         
         setattr(dest, name, value)
@@ -288,7 +298,7 @@ class Command(BaseCommand):
                     'operation':Command.process_radio,
                     'map_values':{
                         'which_place_india_meetpoint':'Meet Point',
-                        'which_place_manpower':' Recruitment Agency',
+                        'which_place_manpower':'Recruitment Agency',
                         'which_place_transit_hideout':'Transit Location',
                         'which_place_destination':'Destination',
                         'which_place_passport':'Source of ID',
@@ -356,7 +366,6 @@ class Command(BaseCommand):
                 'guardian_name',
                 'recruited_agency_pb',
                 'recruited_broker_pb',
-                'recruited_no',
                 'how_recruited_promised_job',
                 'how_recruited_married',
                 'how_recruited_promised_marriage',
@@ -462,7 +471,7 @@ class Command(BaseCommand):
                 },
             'source_of_intelligence': {
                     'operation':Command.process_constant,
-                    'value':'interception'
+                    'value':'Intercept'
                 },
             'incident_date':{
                 'operation':Command.change_name,
@@ -497,15 +506,15 @@ class Command(BaseCommand):
             'education':{
                     'operation':Command.process_radio,
                     'map_values':{
-                        'victim_education_level_none':'none',
-                        'victim_education_level_informal':'primary',
-                        'victim_education_level_primary':'primary',
-                        'victim_education_level_grade_4_8':'primary',
-                        'victim_education_level_grade_9_10':'secondary',
-                        'victim_education_level_slc':'secondary',
-                        'victim_education_level_11_12':'secondary',
-                        'victim_education_level_bachelors':'university',
-                        'victim_education_level_masters':'university'
+                        'victim_education_level_none':'None/Illiterate',
+                        'victim_education_level_informal':'Primary',
+                        'victim_education_level_primary':'Primary',
+                        'victim_education_level_grade_4_8':'Primary',
+                        'victim_education_level_grade_9_10':'Secondary',
+                        'victim_education_level_slc':'Secondary',
+                        'victim_education_level_11_12':'Secondary',
+                        'victim_education_level_bachelors':'University',
+                        'victim_education_level_masters':'University'
                     }
                 },
             'guardian_phone':{
@@ -515,11 +524,11 @@ class Command(BaseCommand):
             'guardian_relationship':{
                     'operation':Command.process_radio,
                     'map_values':{
-                        'victim_primary_guardian_own_parents':'parent',
-                        'victim_primary_guardian_husband':'other relative',
-                        'victim_primary_guardian_other_relative':'other relative',
-                        'victim_primary_guardian_non_relative':'non-relative',
-                        'victim_primary_guardian_no_one':'no one'
+                        'victim_primary_guardian_own_parents':'Own Parent(s)',
+                        'victim_primary_guardian_husband':'Other Relative',
+                        'victim_primary_guardian_other_relative':'Other Relative',
+                        'victim_primary_guardian_non_relative':'Non-relative',
+                        'victim_primary_guardian_no_one':'No one(I have no guardian)'
                     }
                 },
             'other_possible_victims':{
@@ -528,6 +537,10 @@ class Command(BaseCommand):
                 },
             'recruited_agency':{
                 'operation':Command.change_name,
+                    'from_name':'manpower_involved'
+                },
+            'recruited_no':{
+                'operation':Command.not_value,
                     'from_name':'manpower_involved'
                 },
             'recruited_broker':{
@@ -658,8 +671,6 @@ class Command(BaseCommand):
             'planned_destination': {
                     'operation':Command.linked_other,
                     'linked_values':{
-                        'victim_where_going_region_india':{'prefix':'India'},
-                        'victim_where_going_region_gulf':{'prefix':'Unknown Gulf Location'},
                         'victim_where_going_india_delhi':{'prefix':'Delhi, India'},
                         'victim_where_going_india_mumbai':{'prefix':'Mumbai, India'},
                         'victim_where_going_india_surat':{'prefix':'Surat, India'},
@@ -670,6 +681,7 @@ class Command(BaseCommand):
                         'victim_where_going_india_bihar':{'prefix':'Bihar, India'},
                         'victim_where_going_india_didnt_know':{'prefix':'Unknown location in India'},
                         'victim_where_going_india_other':{'prefix':'India', 'other_value':'victim_where_going_india_other_value'},
+                        'victim_where_going_region_india':{'prefix':'India'},
                         'victim_where_going_gulf_lebanon':{'prefix':'Lebanon'},
                         'victim_where_going_gulf_dubai':{'prefix':'Dubai, UAE'},
                         'victim_where_going_gulf_malaysia':{'prefix':'Malaysia'},
@@ -678,7 +690,8 @@ class Command(BaseCommand):
                         'victim_where_going_gulf_kuwait':{'prefix':'Kuwait'},
                         'victim_where_going_gulf_qatar':{'prefix':'Qatar'},
                         'victim_where_going_gulf_didnt_know':{'prefix':'Unknown Gulf Location'},
-                        'victim_where_going_gulf_other':{'prefix':'Gulf', 'other_value':'victim_where_going_gulf_other_value'}
+                        'victim_where_going_gulf_other':{'prefix':'Gulf', 'other_value':'victim_where_going_gulf_other_value'},
+                        'victim_where_going_region_gulf':{'prefix':'Unknown Gulf Location'}
                     }
                 },
             'border_cross_vehicle':{
@@ -723,7 +736,7 @@ class Command(BaseCommand):
                     'operation':Command.process_radio,
                     'map_values':{
                         'legal_action_against_traffickers_fir_filed':'FIR filed',
-                        'legal_action_against_traffickers_dofe_complaint':'DoFE compaint',
+                        'legal_action_against_traffickers_dofe_complaint':'DoFE complaint',
                     }
                 },
             'legal_action_taken_filed_against':{
