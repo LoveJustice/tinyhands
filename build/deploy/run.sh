@@ -6,9 +6,9 @@ chmod 400 /root/.ssh/id_rsa
 
 if [ "$CI_BRANCH" = "master" ]
 then
-  HOST=dreamsuite.org
+  HOST=searchlightdata.org
 else
-  HOST=staging.dreamsuite.org
+  HOST=staging.searchlightdata.org
 fi
 
 echo $CI_BRANCH
