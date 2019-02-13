@@ -63,7 +63,7 @@ class IrfBangladesh(IrfCore):
     noticed_in_a_cart = models.BooleanField('In a cart', default=False)
     noticed_carrying_a_baby = models.BooleanField('Carrying a baby', default=False)
     noticed_on_the_phone = models.BooleanField('On the phone', default=False)
-    walking_to_border = models.BooleanField('Walking to border', default=False)
+    noticed_walking_to_border = models.BooleanField('Walking to border', default=False)
     
      # Final Procedures - Bangladesh specific
     reason_for_intercept = models.TextField('Reason For Intercept', blank=True)

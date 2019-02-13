@@ -12,6 +12,11 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        migrations.RenameField(
+            model_name='irfbangladesh',
+            old_name='walking_to_border',
+            new_name='noticed_walking_to_border',
+        ),
         migrations.RemoveField(
             model_name='irfnepal',
             name='noticed_on_train',
