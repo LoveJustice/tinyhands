@@ -657,6 +657,7 @@
 {"model": "dataentry.questionlayout", "pk": null, "fields": {"question": 132, "category": 5, "weight": 0, "form_config": null}},
 {"model": "dataentry.questionlayout", "pk": null, "fields": {"question": 133, "category": 5, "weight": 0, "form_config": null}},
 {"model": "dataentry.questionlayout", "pk": null, "fields": {"question": 134, "category": 5, "weight": 0, "form_config": null}},
+{"model": "dataentry.questionlayout", "pk": null, "fields": {"question": 135, "category": 5, "weight": 0, "form_config": null}},
 {"model": "dataentry.questionlayout", "pk": null, "fields": {"question": 146, "category": 7, "weight": 0, "form_config": null}},
 {"model": "dataentry.questionlayout", "pk": null, "fields": {"question": 608, "category": 7, "weight": 0, "form_config": null}},
 {"model": "dataentry.questionlayout", "pk": null, "fields": {"question": 609, "category": 7, "weight": 0, "form_config": null}},
