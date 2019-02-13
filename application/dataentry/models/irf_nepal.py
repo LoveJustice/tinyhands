@@ -71,7 +71,7 @@ class IrfNepal(IrfCore):
 
     # Action
     noticed_waiting_sitting = models.BooleanField('Waiting / sitting', default=False)
-    noticed_on_train = models.BooleanField('On a train', default=False)
+    noticed_walking_to_border = models.BooleanField('Walking to border', default=False)
     noticed_roaming_around = models.BooleanField('Roaming around', default=False)
     noticed_exiting_vehicle = models.BooleanField('Exiting vehicle', default=False)
     noticed_heading_to_vehicle = models.BooleanField('Heading to vehicle', default=False)
