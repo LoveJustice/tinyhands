@@ -17,6 +17,7 @@ fi
 PHOTO="${TOP}/media/interceptee_photos"
 IRF_FORM="${TOP}/media/scanned_irf_forms"
 VIF_FORM="${TOP}/media/scanned_vif_forms"
+CIF_FORM="${TOP}/media/cif_attachments"
 
 if [ -e "${TOP}/fixtures/sanitized-data.json" ]
 then
@@ -31,6 +32,7 @@ gunzip -f sanitized-data.json.gz
 mkdir -p "${PHOTO}"
 mkdir -p "${IRF_FORM}"
 mkdir -p "${VIF_FORM}"
+mkdir -p "${CIF_FORM}"
 mkdir -p "${TOP}/dreamsuite/static"
 
 cd "${PHOTO_SRC}"
