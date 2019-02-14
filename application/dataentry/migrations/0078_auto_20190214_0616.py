@@ -26,6 +26,6 @@ class Migration(migrations.Migration):
             name='noticed_walking_to_border',
             field=models.BooleanField(default=False, verbose_name='Walking to border'),
         ),
-        migrations.RunSQL("UPDATE dataentry_irfnepal SET noticed_walking_to_border = (select noticed_walking_to_border from dataentry_interceptionrecord where dataentry_interceptionrecord.id = dataentry_irfnepal.id)  where dataentry_interceptionrecord.id = dataentry_irfnepal.id) where id in (select id from dataentry_interceptionrecord);"),
+        migrations.RunSQL("UPDATE dataentry_irfnepal SET noticed_walking_to_border = (select noticed_walking_to_border from dataentry_interceptionrecord where dataentry_interceptionrecord.id = dataentry_irfnepal.id) where id in (select id from dataentry_interceptionrecord);"),
         
     ]
