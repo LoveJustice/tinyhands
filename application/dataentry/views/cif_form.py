@@ -10,6 +10,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.files.storage import default_storage
 from django.db import IntegrityError
 from dataentry.serialize_form import FormDataSerializer
 from dataentry.serializers import CountrySerializer
@@ -151,10 +152,25 @@ class CifFormViewSet(viewsets.ModelViewSet):
                 
         return queryset
     
+    def save_files(self, files, subdirectory):
+        for file_obj in files:
+            filename = file_obj.name
+            with default_storage.open(subdirectory + filename, 'wb+') as destination:
+                for chunk in file_obj.chunks():
+                    destination.write(chunk)
+    
     def extract_data(self, request):
         if 'main' in request.data:
             request_string = request.data['main']
             request_json = json.loads(request_string)
+            
+            cnt = 0
+            scanned = []
+            while 'scanned[' + str(cnt) + ']' in request.data:
+                scanned.append(request.data['scanned[' + str(cnt) + ']'])
+                cnt += 1
+            
+            self.save_files(scanned, 'cif_attachments/')
         else:
             request_json = None
         
