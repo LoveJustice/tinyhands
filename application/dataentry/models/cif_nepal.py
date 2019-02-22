@@ -1,6 +1,6 @@
 from django.db import models
 
-from .cif_core import CifCore, LocationBoxCore, PersonBoxCore, PotentialVictimCore, TransporationCore, VehicleBoxCore
+from .cif_core import CifAttachment, CifCore, LocationBoxCore, PersonBoxCore, PotentialVictimCore, TransporationCore, VehicleBoxCore
 
 class CifNepal(CifCore):
     # Recruitment
@@ -47,5 +47,12 @@ class VehicleBoxNepal(VehicleBoxCore):
     
     def set_parent(self, the_parent):
         self.cif = the_parent
+
+class CifAttachmentNepal(CifAttachment):
+    cif = models.ForeignKey(CifNepal)
+    
+    def set_parent(self, the_parent):
+        self.cif = the_parent
+    
 
 

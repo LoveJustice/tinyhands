@@ -563,7 +563,6 @@ class ResponsePersonSerializer(serializers.Serializer):
     def get_or_create(self):
         mode = self.context.get('mode')
         form_base_date = self.context.get('form_date_holder').get('form_date')
-        print('form_base_date', form_base_date)
         if form_base_date is None:
             form_base_date = datetime.now().date()
         storage_id = self.validated_data.get('storage_id')
