@@ -127,14 +127,17 @@ class Command(BaseCommand):
         setattr(dest, name, dest_value)          
                 
     @staticmethod
-    def process_person_boxes(vif):
+    def process_person_boxes(vif, cif):
         pb_no_processing = [
                 'case_filed_against',
                 'arrested',
                 'social_media',
                 'relation_to_pv',
                 'associated_lb',
-                'pb_number'         # set in code
+                # set in manually code
+                'pb_number',
+                'id',
+                'cif_id'
             ]
         pb_custom_processing = {
             'role':{
@@ -243,10 +246,6 @@ class Command(BaseCommand):
                     'operation':Command.change_name,
                     'from_name':'victim_believes_not_trafficker'
                 },
-                'cif_id':{
-                    'operation':Command.change_name,
-                    'from_name':'victim_interview_id'
-                },
                 'flag_count': {
                     'operation':Command.process_constant,
                     'value':0
@@ -271,12 +270,14 @@ class Command(BaseCommand):
                     setattr(dest_pb, attr, value)
             
             dest_pb.pb_number = pb_number
+            dest_pb.id = None
+            dest_pb.cif = cif
             dest_pb.save()
             
             pb_number = pb_number + 1
             
     @staticmethod
-    def process_location_boxes(vif):
+    def process_location_boxes(vif, cif):
         lb_no_processing = [
                 'country',
                 'pv_stayed_not_applicable',
@@ -291,7 +292,10 @@ class Command(BaseCommand):
                 'pv_free_to_go_no',
                 'pv_free_to_go_explaination',
                 'number_other_pvs_at_location',
-                'lb_number'
+                'lb_number',
+                # set manually in code
+                'id',
+                'cif_id',
             ]
         lb_custom_processing = {
             'place':{
@@ -325,10 +329,6 @@ class Command(BaseCommand):
                 'operation':Command.change_name,
                 'from_name':'associated_with_person_value'
             },
-            'cif_id':{
-                'operation':Command.change_name,
-                'from_name':'victim_interview_id'
-            },
             'flag_count': {
                 'operation':Command.process_constant,
                 'value':0
@@ -353,6 +353,8 @@ class Command(BaseCommand):
                     setattr(dest_lb, attr, value)
             
             dest_lb.lb_number = lb_number
+            dest_lb.id = None
+            dest_lb.cif = cif
             dest_lb.save()
             
             lb_number = lb_number + 1
@@ -822,8 +824,15 @@ class Command(BaseCommand):
         
         # Copy data from IRFs in Interception model to IrfNepal model
         print('Migrating VIFs')
+        cifs_created = 0
+        cifs_existing = 0
         source_vifs = VictimInterview.objects.all()
         for source_vif in source_vifs:
+            existing_cifs = CifNepal.objects.filter(cif_number=source_vif.vif_number)
+            if len(existing_cifs) > 0:
+                # VIF has already been migrated - skip to next
+                cifs_existing = cifs_existing + 1
+                continue
             source_dict = source_vif.__dict__
             dest_cif = CifNepal()
             
@@ -842,12 +851,14 @@ class Command(BaseCommand):
             # Many VictimInterview entries do not have the border station field set, but it is required in the IrfNepal
             station_code = dest_cif.cif_number[:3].upper()
             station = BorderStation.objects.get(station_code=station_code)
-            dest_cif.station = station          
+            dest_cif.station = station
+            dest_cif.id = None
             
             dest_cif.save()
+            cifs_created = cifs_created + 1
             
-            Command.process_person_boxes(source_vif)
-            Command.process_location_boxes(source_vif)
+            Command.process_person_boxes(source_vif, dest_cif)
+            Command.process_location_boxes(source_vif, dest_cif)
         
         print ('Reset sequences')
         sequence_sql = connection.ops.sequence_reset_sql(no_style(), [CifNepal, PersonBoxNepal, LocationBoxNepal])
@@ -855,5 +866,5 @@ class Command(BaseCommand):
             for sql in sequence_sql:
                 cursor.execute(sql)
                 
-        print('Migration complete')
+        print('CIFs migrated ' + str(cifs_created) + ', CIFs previously migrated ' + str(cifs_existing))
                     
