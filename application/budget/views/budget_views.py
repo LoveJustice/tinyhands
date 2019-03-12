@@ -16,6 +16,7 @@ from budget.serializers import BorderStationBudgetCalculationSerializer, OtherBu
 from dataentry.models import Interceptee
 from dataentry.models import InterceptionRecord
 from dataentry.models import UserLocationPermission
+from dataentry.models import Country
 from rest_api.authentication_expansion import HasPermission, HasDeletePermission, HasPostPermission, HasPutPermission
 from static_border_stations.models import BorderStation
 
@@ -40,16 +41,35 @@ class BudgetViewSet(viewsets.ModelViewSet):
         return qfilter
     
     def list(self, request, *args, **kwargs):
+        in_country = self.request.GET.get('country_ids')
+        countries = Country.objects.all()
+        all_country_list = []
+        for country in countries:
+            all_country_list.append(country.id)
+        
+        country_list = []
+        if in_country is not None and in_country != '':
+            # client provided a list of countries to consider
+            for cntry in in_country.split(','):
+                country_list.append(int(cntry))
+        else:
+            # client did not provide a list - so consider all countries
+           country_list = all_country_list
+           
         ulps = UserLocationPermission.objects.filter(account__id = request.user.id, permission__permission_group = 'BUDGETS', permission__action='VIEW')
         qfilter = None
         for ulp in ulps:
             if ulp.country is None:
                 if ulp.station is None:
-                    qfilter = None
+                    if in_country is None:
+                        qfilter = None
+                    else:
+                        for country_id in country_list:
+                            qfilter = self.or_qfilter(qfilter, Q(border_station__operating_country__id = country_id))
                     break;
-                else:
+                elif ulp.station.operating_country.id in country_list:
                     qfilter = self.or_qfilter(qfilter, Q(border_station__id = ulp.station.id))
-            else:
+            elif ulp.country.id in country_list:
                 qfilter = self.or_qfilter(qfilter, Q(border_station__operating_country__id = ulp.country.id))
         
         if qfilter is not None:
