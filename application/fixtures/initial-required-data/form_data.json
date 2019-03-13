@@ -1817,7 +1817,7 @@
 {"model": "dataentry.questionstorage", "pk": null, "fields": {"question": 484, "field_name": "pv_has_trafficked_some"}},
 {"model": "dataentry.questionstorage", "pk": null, "fields": {"question": 485, "field_name": "pv_suspected_trafficker"}},
 {"model": "dataentry.questionstorage", "pk": null, "fields": {"question": 486, "field_name": "pv_dont_believe_trafficker"}},
-{"model": "dataentry.questionstorage", "pk": null, "fields": {"question": 487, "field_name": "transportation_description"}},
+{"model": "dataentry.questionstorage", "pk": null, "fields": {"question": 487, "field_name": "transportation_crossing"}},
 {"model": "dataentry.questionstorage", "pk": null, "fields": {"question": 488, "field_name": "pv_attempt_hide_explaination"}},
 {"model": "dataentry.questionstorage", "pk": null, "fields": {"question": 489, "field_name": "pv_free_to_go_explaination"}},
 {"model": "dataentry.questionstorage", "pk": null, "fields": {"question": 490, "field_name": "suspected_trafficker_count"}},

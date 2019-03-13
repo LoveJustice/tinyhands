@@ -189,7 +189,7 @@ class TransporationCore(BaseCard):
     transportation_kind = models.CharField(max_length=126, null=True)
     transportation_order_number = models.PositiveIntegerField(null=True, blank=True)
     transportation_date  = models.DateField('Date:', null=True)
-    transportation_description = models.TextField(null=True, blank=True)
+    transportation_crossing = models.CharField(max_length=126, null=True)
     flag_count = models.PositiveIntegerField(null=True, blank=True)
     
     class Meta:
