@@ -111,7 +111,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='irfsouthafrica',
             name='believe_they_are_pvot',
-            field=models.BooleanField(default=False, verbose_name='Do they believe they are PVOT?'),
+            field=models.NullBooleanField(verbose_name='Do they believe they are PVOT?'),
         ),
         migrations.AddField(
             model_name='irfsouthafrica',
@@ -196,7 +196,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='irfsouthafrica',
             name='require_assistance',
-            field=models.BooleanField(default=False, verbose_name='Do they require assistance?'),
+            field=models.NullBooleanField(verbose_name='Do they require assistance?'),
         ),
         migrations.AddField(
             model_name='irfsouthafrica',
