@@ -1,12 +1,13 @@
 from django.db import models
-from .irf_core import IrfCore, IntercepteeCore
+from .irf_core import IrfAttachment, IrfCore, IntercepteeCore
 
 class IrfIndia(IrfCore):
     who_in_group_alone = models.BooleanField('Alone', default=False)
     who_in_group_relative = models.BooleanField('Own brother, sister / relative', default=False)
-    meeting_someone_across_border = models.BooleanField('Is meeting a someone just across border', default=False)
     seen_in_last_month_in_nepal = models.BooleanField("Meeting someone she's seen in Nepal in the last month", default=False)
+    waiting_for_someone_location = models.BooleanField("Waiting for someone in that location", default=False)
     traveling_with_someone_not_with_them = models.BooleanField('Was travelling with someone not with them', default=False)
+    on_way_to_get_married = models.BooleanField('On their way to get married', default=False)
     less_than_2_weeks_before_eloping = models.BooleanField('Less than 2 weeks before eloping', default=False)
     between_2_12_weeks_before_eloping = models.BooleanField('2-12 weeks before eloping', default=False)
     caste_not_same_as_relative = models.BooleanField('Caste not the same as alleged relative', default=False)
@@ -15,8 +16,12 @@ class IrfIndia(IrfCore):
     group_other_website = models.CharField(max_length=127, blank=True)
     
     group_never_met_before = models.BooleanField("Meeting someone they haven't met before", default=False)
-    group_wife_girl_nepali_bengali = models.BooleanField('Wife/girl is Nepali/Bengali', default=False)
-    group_wife_girl_indian = models.BooleanField('Wife/girl is Indian under 18', default=False)
+    who_in_group_engaged = models.BooleanField("Engaged", default=False)
+    who_in_group_dating = models.BooleanField("Dating Couple", default=False)
+    wife_under_18 = models.BooleanField("Wife/fiancee is under 18", default=False)
+    girl_from_nepal_bangladesh = models.BooleanField("Girl is from Nepal or Bangladesh", default=False)
+    relationship_to_get_married = models.BooleanField("On their way to get married", default=False)
+    contradiction_between_stories = models.BooleanField("Contradiction between stories", default=False)
     
     where_going_visit = models.BooleanField('Visit / Family / Returning Home', default=False)
     where_going_shopping = models.BooleanField('Shopping', default=False)
@@ -29,14 +34,14 @@ class IrfIndia(IrfCore):
     no_address_at_destination = models.BooleanField('No address at destination', default=False)
     no_company_phone = models.BooleanField('No company phone number', default=False)
     no_appointment_letter = models.BooleanField('No Appointment Letter', default=False)
-    valid_gulf_country_visa = models.BooleanField('Has a valid gulf country visa in passport', default=False)
     going_to_gulf_through_india = models.BooleanField('Going to Gulf for work through India', default=False)
     
     no_bags_long_trip = models.BooleanField('No bags though claim to be going for a long time', default=False)
     shopping_overnight_stuff_in_bags = models.BooleanField('Shopping - Stuff for overnight stay in bags', default=False)
     
-    over_18_family_doesnt_know = models.BooleanField('Family members do not know they is going to India', default=False)
-    over_18_family_unwilling = models.BooleanField('Family members unwilling to let them go', default=False)
+    family_doesnt_know_where_going_18_23 = models.BooleanField('18-23, family does not know where they are going', default=False)
+    family_unwilling_to_let_go_18_23 = models.BooleanField('18-23, family unwilling to let them go', default=False)
+    over_23_family_unwilling_to_let_go = models.BooleanField('Over 23, family unwilling to let them go', default=False)
     
     which_contact = models.CharField(max_length=127, blank=True)
     contact_paid = models.NullBooleanField(null=True)
@@ -72,13 +77,14 @@ class IrfIndia(IrfCore):
     noticed_in_a_cart = models.BooleanField('In a cart', default=False)
     noticed_carrying_a_baby = models.BooleanField('Carrying a baby', default=False)
     noticed_on_the_phone = models.BooleanField('On the phone', default=False)
-    noticed_other_sign = models.CharField(max_length=127, blank=True)
+    
+    interview_findings = models.CharField(max_length=127, blank=True)
+    reason_believe_trafficked  = models.TextField('What is the primary reason you believe this person is being trafficked or is at high risk of being trafficked', default='', blank=True)
     
     call_subcommittee = models.BooleanField('Call Subcommittee Chairperson/Vice-Chairperson/Secretary', default=False)
     call_project_manager = models.BooleanField('Call Project Manager to confirm intercept', default=False)
     
     case_notes = models.TextField('Case Notes', blank=True)
-    scanned_form = models.FileField('Attach scanned copy of form (pdf or image)', upload_to='scanned_irf_forms', default='', blank=True)
     
 class IntercepteeIndia(IntercepteeCore):
     interception_record = models.ForeignKey(IrfIndia, related_name='interceptees', on_delete=models.CASCADE)
@@ -88,6 +94,12 @@ class IntercepteeIndia(IntercepteeCore):
 
     def __str__(self):
         return "{} ({})".format(self.person.full_name, self.id)
+    
+    def set_parent(self, the_parent):
+        self.interception_record = the_parent
+
+class IrfAttachmentIndia(IrfAttachment):
+    interception_record = models.ForeignKey(IrfIndia)
     
     def set_parent(self, the_parent):
         self.interception_record = the_parent
