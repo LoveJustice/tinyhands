@@ -502,7 +502,7 @@
 {"model": "dataentry.question", "pk": 433, "fields": {"prompt": "Person in charge", "description": null, "answer_type": 1, "params": null, "export_name": "Person in charge", "export_params": null}},
 {"model": "dataentry.question", "pk": 434, "fields": {"prompt": "Nearby landmarks", "description": null, "answer_type": 1, "params": null, "export_name": "Nearby landmarks", "export_params": null}},
 {"model": "dataentry.question", "pk": 435, "fields": {"prompt": "Stayed N/A", "description": null, "answer_type": 6, "params": null, "export_name": "Stayed N/A", "export_params": null}},
-{"model": "dataentry.question", "pk": 436, "fields": {"prompt": "Stayed days", "description": null, "answer_type": 5, "params": null, "export_name": "Stayed days", "export_params": null}},
+{"model": "dataentry.question", "pk": 436, "fields": {"prompt": "Stayed days", "description": null, "answer_type": 2, "params": null, "export_name": "Stayed days", "export_params": null}},
 {"model": "dataentry.question", "pk": 437, "fields": {"prompt": "Stayed date", "description": null, "answer_type": 9, "params": null, "export_name": "Stayed date", "export_params": null}},
 {"model": "dataentry.question", "pk": 438, "fields": {"prompt": "Attempt hide N/A", "description": null, "answer_type": 6, "params": null, "export_name": "Attempt hide N/A", "export_params": null}},
 {"model": "dataentry.question", "pk": 439, "fields": {"prompt": "Attempt hide no", "description": null, "answer_type": 6, "params": null, "export_name": "Attempt hide no", "export_params": null}},
