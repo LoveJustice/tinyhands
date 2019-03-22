@@ -13,7 +13,7 @@ class CifCore(BaseForm):
     number_of_traffickers = models.PositiveIntegerField('# of traffickers', null=True, blank=True)
     location = models.CharField('Location:', max_length=126, null=True)
     source_of_intelligence = models.CharField('Source of intelligence:', max_length=126, null=True)
-    informant_number = models.PositiveIntegerField('Informant #', null=True, blank=True)
+    informant_number = models.CharField('Informant #', max_length=126, null=True, blank=True)
     incident_date = models.DateField(null=True)
     pv_signed_form = models.BooleanField('PV signature', default=False)
     consent_for_fundraising = models.BooleanField('Consent for fundraising', default=False)
