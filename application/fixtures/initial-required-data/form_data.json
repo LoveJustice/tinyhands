@@ -358,7 +358,7 @@
 {"model": "dataentry.question", "pk": 287, "fields": {"prompt": "CIF #", "description": null, "answer_type": 1, "params": null, "export_name": "CIF Number", "export_params": null}},
 {"model": "dataentry.question", "pk": 288, "fields": {"prompt": "Interview Date", "description": null, "answer_type": 9, "params": {"form_date": "True"}, "export_name": "Interview Date", "export_params": null}},
 {"model": "dataentry.question", "pk": 289, "fields": {"prompt": "Source of Intelligence", "description": null, "answer_type": 4, "params": null, "export_name": "Source of Intelligence", "export_params": null}},
-{"model": "dataentry.question", "pk": 290, "fields": {"prompt": "Informant #", "description": null, "answer_type": 2, "params": null, "export_name": "Informant Number", "export_params": null}},
+{"model": "dataentry.question", "pk": 290, "fields": {"prompt": "Informant #", "description": null, "answer_type": 1, "params": null, "export_name": "Informant Number", "export_params": null}},
 {"model": "dataentry.question", "pk": 291, "fields": {"prompt": "PV Signature", "description": null, "answer_type": 6, "params": null, "export_name": "PV Signature", "export_params": null}},
 {"model": "dataentry.question", "pk": 292, "fields": {"prompt": "", "description": "CIF main person", "answer_type": 14, "params": null, "export_name": "", "export_params": null}},
 {"model": "dataentry.question", "pk": 293, "fields": {"prompt": "Email/Facebook ID", "description": null, "answer_type": 1, "params": null, "export_name": "Social Media", "export_params": null}},
