@@ -43,20 +43,6 @@ class Migration(migrations.Migration):
     ]
     
     def ensure_countries(apps, schema_editor):
-        assign_id = 1
-        for country_name in country_names:
-            country = Country()
-            country.id = assign_id
-            country.name = country_name
-            country.latitude = 0
-            country.longitude = 0
-            try:
-                country.save()
-            except Exception:
-                pass
-            
-            assign_id = assign_id + 1
-            
         sequence_sql = connection.ops.sequence_reset_sql(no_style(), [Country,])
         with connection.cursor() as cursor:
             for sql in sequence_sql:
@@ -74,7 +60,10 @@ class Migration(migrations.Migration):
             my_model.objects.all().delete()
 
     operations = [
-        migrations.RunPython(ensure_countries),
-        #migrations.RunPython(unload_prior),
-        #migrations.RunPython(load_fixture),
+        migrations.RunSQL("INSERT INTO dataentry_country (id, name, latitude, longitude, zoom_level) values (1, 'Nepal',0,0,0) on conflict do nothing;"),
+        migrations.RunSQL("INSERT INTO dataentry_country (id, name, latitude, longitude, zoom_level) values (2, 'South Africa',0,0,0) on conflict do nothing;"),
+        migrations.RunSQL("INSERT INTO dataentry_country (id, name, latitude, longitude, zoom_level) values (3, 'Thailand',0,0,0) on conflict do nothing;"),
+        migrations.RunSQL("INSERT INTO dataentry_country (id, name, latitude, longitude, zoom_level) values (4, 'India',0,0,0) on conflict do nothing;"),
+        
+        migrations.RunPython(ensure_countries)
     ]
