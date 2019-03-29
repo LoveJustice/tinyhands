@@ -1,8 +1,17 @@
 from django.db import models
-from .irf_core import IrfCore, IntercepteeCore
+from .irf_core import IrfAttachment, IrfCore, IntercepteeCore
 
 class IrfBangladesh(IrfCore):
     # Group - Bangladesh specific
+    group_missed_call = models.BooleanField('Missed Call', default=False)
+    group_facebook = models.BooleanField('Facebook', default=False)
+    group_other_website = models.CharField(max_length=127, blank=True)
+    who_in_group_engaged = models.BooleanField('Engaged', default=False)
+    who_in_group_dating = models.BooleanField('Dating Couple', default=False)
+
+    group_never_met_before = models.BooleanField('Meeting someone for the first time', default=False)
+    relationship_to_get_married = models.BooleanField('On their way to get married ', default=False)
+    
     who_in_group_alone = models.BooleanField('Alone', default=False)
     who_in_group_relative = models.BooleanField('Own brother, sister / relative', default=False)
     less_than_2_weeks_before_eloping = models.BooleanField('Less than 2 weeks before eloping', default=False)
@@ -10,15 +19,19 @@ class IrfBangladesh(IrfCore):
     caste_not_same_as_relative = models.BooleanField('Caste not the same as alleged relative', default=False)
     waiting_likely_trafficker = models.BooleanField('Waiting for someone who fits description of trafficker', default=False)
     group_wife_girl_nepali_bengali = models.BooleanField('Wife/girl is Nepali/Bengali', default=False)
-    
+    contradiction_between_stories = models.BooleanField('Contradiction between stories', default=False)
+
     # Destination - Bangladesh specific
     where_going_border_area = models.BooleanField('Border Area', default=False)
     where_going_india = models.BooleanField('India', default=False)
     where_going_middle_east = models.BooleanField('Middle East', default=False)
     where_going_dont_know = models.BooleanField("Don't know", default=False)
     where_going_other = models.CharField("Other", max_length=127, blank=True)
+    where_going_to_hotel = models.BooleanField('To Hotel', default=False)
     
     purpose_for_going_other = models.CharField("Other", max_length=127, blank=True)
+    
+    exploitative_situation = models.BooleanField('Escaping an exploitative situation', default=False)
     
     no_address_at_destination = models.BooleanField('No address at destination', default=False)
     no_company_phone = models.BooleanField('No company phone number', default=False)
@@ -26,6 +39,12 @@ class IrfBangladesh(IrfCore):
     valid_gulf_country_visa = models.BooleanField('Has a valid gulf country visa in passport', default=False)
     known_place_bangladesh = models.CharField(max_length=127, blank=True)
     heading_for_border = models.BooleanField('Heading for a border area', default=False)
+    dont_know_which_city = models.BooleanField("Don't know which town/city", default=False)
+    traveling_through_india = models.BooleanField('Traveling through India', default=False)
+    purpose_for_leaving_marriage = models.BooleanField('Marriage', default=False)
+    dont_know_who_marry = models.BooleanField(" Doesn't know person they are going to marry", default=False)
+    money_or_job_for_marriage = models.BooleanField('Was promised money or a job in exchange', default=False)
+    unrealistic_benefit_for_marriage = models.BooleanField('Was promised unrealistic benefits for her family in exchange', default=False)
     
     # Family - Bangladesh specific
     doesnt_know_villiage_details = models.BooleanField("Doesn't know details about village", default=False)
@@ -41,7 +60,6 @@ class IrfBangladesh(IrfCore):
     noticed_hesitant = models.BooleanField('Hesitant', default=False)
     noticed_nervous_or_afraid = models.BooleanField('Nervous or afraid', default=False)
     noticed_hurrying = models.BooleanField('Hurrying', default=False)
-    noticed_drugged_or_drowsy = models.BooleanField('Drugged or drowsy', default=False)
 
     noticed_new_clothes = models.BooleanField('New clothes', default=False)
     noticed_dirty_clothes = models.BooleanField('Dirty clothes', default=False)
@@ -67,10 +85,8 @@ class IrfBangladesh(IrfCore):
     
      # Final Procedures - Bangladesh specific
     reason_for_intercept = models.TextField('Reason For Intercept', blank=True)
-    scan_submit_og_same_day = models.BooleanField('Scan and submint OG the same day', default=False)
-    scanned_form = models.FileField('Attach scanned copy of form (pdf or image)', upload_to='scanned_irf_forms', default='', blank=True)
-    call_project_manager = models.BooleanField('Call Project Manager to confirm intercept', default=False)
     case_notes = models.TextField('Case Notes', blank=True)
+    interview_findings = models.CharField(max_length=127, blank=True)
     
 class IntercepteeBangladesh(IntercepteeCore):
     interception_record = models.ForeignKey(IrfBangladesh, related_name='interceptees', on_delete=models.CASCADE)
@@ -80,6 +96,12 @@ class IntercepteeBangladesh(IntercepteeCore):
 
     def __str__(self):
         return "{} ({})".format(self.person.full_name, self.id)
+    
+    def set_parent(self, the_parent):
+        self.interception_record = the_parent
+        
+class IrfAttachmentBangladesh(IrfAttachment):
+    interception_record = models.ForeignKey(IrfBangladesh)
     
     def set_parent(self, the_parent):
         self.interception_record = the_parent
