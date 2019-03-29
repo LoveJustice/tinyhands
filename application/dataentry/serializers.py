@@ -82,7 +82,6 @@ class BorderStationSerializer(serializers.ModelSerializer):
         model = BorderStation
 
     country_name = serializers.SerializerMethodField(read_only=True)
-    country_currency = serializers.SerializerMethodField(read_only=True)
     number_of_interceptions = serializers.SerializerMethodField(read_only=True)
     number_of_staff = serializers.SerializerMethodField(read_only=True)
     ytd_interceptions = serializers.SerializerMethodField(read_only=True)
@@ -99,9 +98,6 @@ class BorderStationSerializer(serializers.ModelSerializer):
 
     def get_country_name(self, obj):
         return obj.operating_country.name or "No Country"
-    
-    def get_country_currency(self, obj):
-        return obj.operating_country.currency or ""
 
 
 class InterceptionRecordListSerializer(serializers.ModelSerializer):
