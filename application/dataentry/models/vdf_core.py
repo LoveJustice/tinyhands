@@ -9,7 +9,7 @@ class VdfCore(BaseForm):
     # Top Box
     vdf_number = models.CharField('IRF #:', max_length=20, unique=True)
     staff_name = models.CharField('Staff Name:', max_length=255)
-    discharge_date = models.DateField('Incident date', null=True)
+    interview_date = models.DateField('Interview date', null=True)
     location = models.CharField('Location:', max_length=255)
     
     # Victim/Family Info
@@ -51,7 +51,6 @@ class VdfCore(BaseForm):
     shelter_accomodation = models.PositiveIntegerField('Shelter Accomodations', null=True, blank=True)
     
     # Release Information
-    victim_still_at_shelter = models.CharField('Is victim still in the care of Border Station?', max_length=126, null=True)
     date_victim_left = models.DateField('What date did victim leave the care of the Station', null=True)
     someone_pick_up_victim = models.CharField('Did someone pick up victim from the station?', max_length=126, null=True)
     who_victim_released = models.CharField('If yes, who was the victim released to?', max_length=126, null=True)
@@ -65,10 +64,14 @@ class VdfCore(BaseForm):
     guardian_signature = models.BooleanField('Guardian Signature', default=False)
     case_notes = models.TextField('Case Notes', blank=True)
 
-
-
     class Meta:
         abstract = True
+    
+    def get_key(self):
+        return self.vdf_number
+    
+    def get_form_type_name(self):
+        return 'VDF'
 
 class VdfAttachment(BaseCard):
     attachment_number = models.PositiveIntegerField(null=True, blank=True)

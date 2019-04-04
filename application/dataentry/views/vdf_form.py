@@ -34,7 +34,7 @@ class VdfListSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     vdf_number = serializers.CharField()
     staff_name = serializers.CharField()
-    date_of_discharge = serializers.SerializerMethodField(read_only=True)
+    date_of_interview = serializers.SerializerMethodField(read_only=True)
     date_time_entered_into_system = serializers.SerializerMethodField(read_only=True)
     date_time_last_updated = serializers.SerializerMethodField(read_only=True)
     station = BorderStationOverviewSerializer()
@@ -49,8 +49,8 @@ class VdfListSerializer(serializers.Serializer):
         date_time = date_time.replace(tzinfo=None)
         return str(date_time)
     
-    def get_date_of_discharge(self, obj):
-        return str(obj.discharge_date.year) + '-' + str(obj.discharge_date.month) + '-' + str(obj.discharge_date.day)
+    def get_date_of_interview(self, obj):
+        return str(obj.interview_date.year) + '-' + str(obj.interview_date.month) + '-' + str(obj.interview_date.day)
     
     def get_date_time_entered_into_system(self, obj):
         return self.adjust_date_time_for_tz (obj.date_time_entered_into_system, obj.station.time_zone)
@@ -72,9 +72,9 @@ class VdfFormViewSet(viewsets.ModelViewSet):
     filter_backends = (fs.SearchFilter, fs.OrderingFilter,)
     search_fields = ('vdf_number',)
     ordering_fields = (
-        'vdf_number', 'staff_name', 'date_of_discharge',
+        'vdf_number', 'staff_name', 'date_of_interview',
         'date_time_entered_into_system', 'date_time_last_updated',)
-    ordering = ('-discharge_date',)
+    ordering = ('-interview_date',)
     form_type_name = 'VDF'
     perm_group_name = 'VDF'
     
@@ -129,7 +129,7 @@ class VdfFormViewSet(viewsets.ModelViewSet):
             
             tmp_queryset = form_model.objects.filter(station__in=station_list, status=status).only(
                     'id', 'vdf_number', 'form_entered_by', 'staff_name', 
-                    'station', 'discharge_date', 'date_time_entered_into_system',
+                    'station', 'interview_date', 'date_time_entered_into_system',
                     'date_time_last_updated')
             
             # If query is for in-progress status VDFs, only include VDFs that were entered by the requesters account
