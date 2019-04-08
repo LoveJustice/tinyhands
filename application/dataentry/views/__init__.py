@@ -11,3 +11,4 @@ from .irf_form import *
 from .forms import *
 from .cif_form import *
 from .person import *
+from .vdf_form import *
