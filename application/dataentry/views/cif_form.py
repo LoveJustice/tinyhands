@@ -45,6 +45,9 @@ class CifListSerializer(serializers.Serializer):
     perm_group_name = 'CIF'
     
     def adjust_date_time_for_tz(self, date_time, tz_name):
+        if date_time is None:
+            return ''
+        
         tz = pytz.timezone(tz_name)
         date_time = date_time.astimezone(tz)
         date_time = date_time.replace(microsecond=0)
@@ -52,6 +55,9 @@ class CifListSerializer(serializers.Serializer):
         return str(date_time)
     
     def get_date_time_of_interview(self, obj):
+        if obj is None or obj.interview_date is None:
+            return ''
+        
         return str(obj.interview_date.year) + '-' + str(obj.interview_date.month) + '-' + str(obj.interview_date.day)
         #return str(obj.interview_date)
     
@@ -211,21 +217,9 @@ class CifFormViewSet(viewsets.ModelViewSet):
                     }
                 rtn_status=status.HTTP_400_BAD_REQUEST
         except Exception:
-            if serializer.the_errors is not None and len(serializer.the_errors) > 0:
-                rtn_errors = serializer.the_errors
-            else:
-                rtn_errors = []
-                
-            if serializer.the_warnings is not None and len(serializer.the_warnings) > 0:
-                rtn_warnings = serializer.the_warnings
-            else:
-                rtn_warnings = []
-            
-            if len(rtn_errors) < 1 and len(rtn_warnings) < 1:
-                rtn_errors = serializer._errors
             ret = {
-                'errors': rtn_errors,
-                'warnings':rtn_warnings
+                'errors': 'Internal Error:' + traceback.format_exc(),
+                'warnings':[]
                 }
             rtn_status = status.HTTP_500_INTERNAL_SERVER_ERROR
             
