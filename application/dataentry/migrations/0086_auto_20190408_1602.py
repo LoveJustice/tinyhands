@@ -96,4 +96,6 @@ class Migration(migrations.Migration):
             name='social_media',
             field=models.CharField(max_length=1024, null=True),
         ),
+        migrations.RunSQL("INSERT INTO dataentry_permission (permission_group, action, min_level, account_permission_name) values ('VDF', 'VIEW PI','STATION',null);"),
+        migrations.RunSQL("INSERT INTO dataentry_permission (permission_group, action, min_level, account_permission_name) values ('CIF', 'VIEW PI','STATION',null);"),
     ]

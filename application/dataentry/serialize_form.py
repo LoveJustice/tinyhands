@@ -551,7 +551,10 @@ class ResponsePersonSerializer(serializers.Serializer):
                 tmp = ResponseIdentificationSerializer(person_identifier, context=self.context)
                 identifier_data[tmp.data['type']['value']]= tmp.data
             
-            ret['identifiers'] = identifier_data
+            if private_data and is_private_value(question, 'identifiers'):
+                ret['identifiers'] = []
+            else:
+                ret['identifiers'] = identifier_data
             
         return ret
     
