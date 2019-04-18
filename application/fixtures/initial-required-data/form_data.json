@@ -2505,6 +2505,7 @@
 {"model": "dataentry.exportimport", "pk": 4, "fields": {"description": "Export Malawi", "implement_module": "export_import.irf_google_sheet", "implement_class_name": "IrfGoogleSheet", "form": 9}},
 {"model": "dataentry.exportimport", "pk": 5, "fields": {"description": "Export Africa IRF", "implement_module": "export_import.irf_google_sheet", "implement_class_name": "IrfGoogleSheet", "form": 10}},
 {"model": "dataentry.exportimport", "pk": 6, "fields": {"description": "Export Nepal CIF", "implement_module": "export_import.export_form", "implement_class_name": "ExportToGoogleSheet", "form": 6}},
+{"model": "dataentry.exportimport", "pk": 7, "fields": {"description": "Export South Africa IRF", "implement_module": "export_import.irf_google_sheet", "implement_class_name": "IrfGoogleSheet", "form": 4}},
 {"model": "dataentry.exportimportcard", "pk": 1, "fields": {"export_import": 1, "category": 6, "prefix": "Victim ", "max_instances": 1, "index_field_name": null}},
 {"model": "dataentry.exportimportcard", "pk": 2, "fields": {"export_import": 1, "category": 6, "prefix": "Trafficker %d ", "max_instances": 5, "index_field_name": null}},
 {"model": "dataentry.exportimportcard", "pk": 3, "fields": {"export_import": 2, "category": 13, "prefix": "Victim ", "max_instances": 1, "index_field_name": null}},
@@ -2520,6 +2521,8 @@
 {"model": "dataentry.exportimportcard", "pk": 13, "fields": {"export_import": 6, "category": 45, "prefix": "PB %d ", "max_instances": 6, "index_field_name": "pb_number"}},
 {"model": "dataentry.exportimportcard", "pk": 14, "fields": {"export_import": 6, "category": 46, "prefix": "LB %d ", "max_instances": 4, "index_field_name": "lb_number"}},
 {"model": "dataentry.exportimportcard", "pk": 15, "fields": {"export_import": 6, "category": 47, "prefix": "VB %d ", "max_instances": 6, "index_field_name": "vb_number"}},
+{"model": "dataentry.exportimportcard", "pk": 16, "fields": {"export_import": 7, "category": 22, "prefix": "Victim ", "max_instances": 1, "index_field_name": null}},
+{"model": "dataentry.exportimportcard", "pk": 17, "fields": {"export_import": 7, "category": 22, "prefix": "Trafficker %d ", "max_instances": 5, "index_field_name": null}},
 {"model": "dataentry.exportimportfield", "pk": null, "fields": {"export_import": 1, "card": null, "field_name": "station", "answer_type": 1, "export_name": "Station", "arguments_json": {"part": "station_name"}}},
 {"model": "dataentry.exportimportfield", "pk": null, "fields": {"export_import": 1, "card": null, "field_name": "date_time_entered_into_system", "answer_type": 10, "export_name": "Date/Time Entered into System", "arguments_json": null}},
 {"model": "dataentry.exportimportfield", "pk": null, "fields": {"export_import": 2, "card": null, "field_name": "station", "answer_type": 1, "export_name": "Station", "arguments_json": {"part": "station_name"}}},
@@ -2532,9 +2535,12 @@
 {"model": "dataentry.exportimportfield", "pk": null, "fields": {"export_import": 5, "card": null, "field_name": "date_time_entered_into_system", "answer_type": 10, "export_name": "Date/Time Entered into System", "arguments_json": null}},
 {"model": "dataentry.exportimportfield", "pk": null, "fields": {"export_import": 6, "card": null, "field_name": "station", "answer_type": 1, "export_name": "Station", "arguments_json": {"part": "station_name"}}},
 {"model": "dataentry.exportimportfield", "pk": null, "fields": {"export_import": 6, "card": null, "field_name": "date_time_entered_into_system", "answer_type": 10, "export_name": "Date/Time Entered into System", "arguments_json": null}},
+{"model": "dataentry.exportimportfield", "pk": null, "fields": {"export_import": 7, "card": null, "field_name": "station", "answer_type": 1, "export_name": "Station", "arguments_json": {"part": "station_name"}}},
+{"model": "dataentry.exportimportfield", "pk": null, "fields": {"export_import": 7, "card": null, "field_name": "date_time_entered_into_system", "answer_type": 10, "export_name": "Date/Time Entered into System", "arguments_json": null}},
 {"model": "dataentry.googlesheetconfig", "pk": null, "fields": {"export_import": 1, "export_or_import": "export", "spreadsheet_name": "Nepal IRF", "sheet_name": "IRF Export", "key_field_name": "IRF Number", "import_status_column": null, "import_issue_column": null, "suppress_column_warnings": true}},
 {"model": "dataentry.googlesheetconfig", "pk": null, "fields": {"export_import": 2, "export_or_import": "export", "spreadsheet_name": "India IRF", "sheet_name": "IRF Export", "key_field_name": "IRF Number", "import_status_column": null, "import_issue_column": null, "suppress_column_warnings": true}},
 {"model": "dataentry.googlesheetconfig", "pk": null, "fields": {"export_import": 3, "export_or_import": "export", "spreadsheet_name": "Bangladesh IRF", "sheet_name": "IRF Export", "key_field_name": "IRF Number", "import_status_column": null, "import_issue_column": null, "suppress_column_warnings": true}},
 {"model": "dataentry.googlesheetconfig", "pk": null, "fields": {"export_import": 4, "export_or_import": "export", "spreadsheet_name": "Malawi IRF", "sheet_name": "IRF Export", "key_field_name": "IRF Number", "import_status_column": null, "import_issue_column": null, "suppress_column_warnings": true}},
-{"model": "dataentry.googlesheetconfig", "pk": null, "fields": {"export_import": 6, "export_or_import": "export", "spreadsheet_name": "Nepal CIF", "sheet_name": "CIF Export", "key_field_name": "CIF Number", "import_status_column": null, "import_issue_column": null, "suppress_column_warnings": true}}
+{"model": "dataentry.googlesheetconfig", "pk": null, "fields": {"export_import": 6, "export_or_import": "export", "spreadsheet_name": "Nepal CIF", "sheet_name": "CIF Export", "key_field_name": "CIF Number", "import_status_column": null, "import_issue_column": null, "suppress_column_warnings": true}},
+{"model": "dataentry.googlesheetconfig", "pk": null, "fields": {"export_import": 7, "export_or_import": "export", "spreadsheet_name": "South Africa IRF", "sheet_name": "IRF Export", "key_field_name": "IRF Number", "import_status_column": null, "import_issue_column": null, "suppress_column_warnings": true}}
 ]
