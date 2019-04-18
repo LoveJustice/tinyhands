@@ -6,6 +6,13 @@ from .models.form import CardStorage, Category, Form, QuestionLayout, QuestionSt
 
 logger = logging.getLogger(__name__);
 
+class PersonContainer:
+    def __init__(self, person, current_person_identifications, remove_person_identifications, question):
+        self.person = person
+        self.current_identifications = current_person_identifications
+        self.remove_identifications = remove_person_identifications
+        self.question = question
+
 class CategoryForm:
     def __init__(self, category, card_class, card_response_class, foreign_key_field_parent):
         self.category = category
@@ -28,6 +35,7 @@ class CardData:
         self.form_object = card
         self.category_form = category_form
         self.is_valid = True
+        self.person_containers = []
         
         if response_dict is None:
             self.load_responses()
@@ -77,6 +85,16 @@ class CardData:
         return storage
     
     def save(self):
+        # first store any person data assoicated with the card
+        for person_container in self.person_containers:
+            person_container.person.save()
+            for remove_identification in person_container.remove_identifications:
+                remove_identification.delete()
+            for current_identification in person_container.current_identifications:
+                current_identification.person = person_container.person
+                current_identification.save()
+            self.set_answer(person_container.question, person_container.person, None)
+                
         self.form_object.set_parent(self.form_data.form_object)
         self.form_object.save()
         for response in self.response_dict.values():
@@ -122,6 +140,7 @@ class FormData:
         self.form = form
         self.form_object = the_object
         self.form_model = the_object.__class__
+        self.person_containers = []
         storage = Storage.objects.get(form_model_name = the_object.__class__.__name__)
         if storage.response_model_name is not None:
             mod = __import__(storage.module_name, fromlist=[storage.response_model_name])
@@ -209,6 +228,15 @@ class FormData:
     def save(self):
         with transaction.atomic():
             self.form_object.pre_save(self)
+            
+            for person_container in self.person_containers:
+                person_container.person.save()
+                for remove_identification in person_container.remove_identifications:
+                    remove_identification.delete()
+                for current_identification in person_container.current_identifications:
+                    current_identification.person = person_container.person
+                    current_identification.save()
+                self.set_answer(person_container.question, person_container.person, None)
             
             self.form_object.save()
             for response in self.response_dict.values():

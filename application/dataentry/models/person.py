@@ -19,7 +19,6 @@ class Person(models.Model):
     alias_group = models.ForeignKey(AliasGroup, null=True)
     birthdate = models.DateField(null=True)
     estimated_birthdate= models.DateField(null=True)
-    passport = models.CharField(max_length=127, blank=True, default='')
     nationality = models.CharField(max_length=127, blank=True, default='')
     aliases = None
 
@@ -159,4 +158,28 @@ class Person(models.Model):
             return delta.days // 365
         else:
             return None
+        
+    def __str__(self):
+        val = 'Person(id='+self.id + ',  full_name=' + self.full_name + ', address1 '
+        if self.address1 is not None:
+            val = val + 'id=' + self.address1.id
+        else:
+            val = val + 'None'
+        
+        val = val + ', address2 '
+        
+        if self.address2 is not None:
+            val = val + 'id=' + self.address2.id
+        else:
+            val = val + 'None'
+        
+        val = val + ', alias_group id='
+        if self.alias_group is not None:
+            val = val + self.alias_group.id
+        else:
+            val = val + 'None'
+        
+        val = val + ')'
+        return val
+        
             

@@ -14,6 +14,7 @@ class CifNepal(CifCore):
     case_exploration_under_16_separated = models.BooleanField( default=False)
     case_exploration_under_18_sent_job = models.BooleanField( default=False)
     case_exploration_under_16_sexually_abused = models.BooleanField( default=False)
+    case_exploration_gulf_country = models.BooleanField( default=False)
     case_exploration_female_18_30_gulf_country = models.BooleanField( default=False)
     case_exploration_detained_against_will = models.BooleanField( default=False)
     case_exploration_abused = models.BooleanField( default=False)
