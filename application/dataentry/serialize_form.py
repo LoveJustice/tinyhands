@@ -615,10 +615,11 @@ class ResponsePersonSerializer(serializers.Serializer):
         
         self.identifer_serializers = []
         tmp = data.get('identifiers')
-        for identifier_type in tmp:
-            serializer = ResponseIdentificationSerializer(data=tmp[identifier_type], context=dict(self.context))
-            serializer.is_valid()
-            self.identifer_serializers.append(serializer)
+        if tmp is not None:
+            for identifier_type in tmp:
+                serializer = ResponseIdentificationSerializer(data=tmp[identifier_type], context=dict(self.context))
+                serializer.is_valid()
+                self.identifer_serializers.append(serializer)
         
         return ret
     

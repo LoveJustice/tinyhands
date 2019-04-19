@@ -26,3 +26,4 @@ from .irf_benin import IrfBenin, IntercepteeBenin
 from .cif_nepal import CifNepal, LocationBoxNepal, PersonBoxNepal, PotentialVictimNepal, TransporationNepal, VehicleBoxNepal
 from .cif_india import CifIndia, LocationBoxIndia, PersonBoxIndia, PotentialVictimIndia, TransporationIndia, VehicleBoxIndia
 from .vdf_nepal import VdfNepal, VdfAttachmentNepal
+from .vdf_india import VdfIndia, VdfAttachmentIndia

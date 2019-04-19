@@ -202,27 +202,16 @@ class VdfFormViewSet(viewsets.ModelViewSet):
                         }
                         rtn_status=status.HTTP_400_BAD_REQUEST
             else:
+                print ('serializer not valid')
                 ret = {
                     'errors': serializer.the_errors,
                     'warnings':serializer.the_warnings
                     }
                 rtn_status=status.HTTP_400_BAD_REQUEST
         except Exception:
-            if serializer.the_errors is not None and len(serializer.the_errors) > 0:
-                rtn_errors = serializer.the_errors
-            else:
-                rtn_errors = []
-                
-            if serializer.the_warnings is not None and len(serializer.the_warnings) > 0:
-                rtn_warnings = serializer.the_warnings
-            else:
-                rtn_warnings = []
-            
-            if len(rtn_errors) < 1 and len(rtn_warnings) < 1:
-                rtn_errors = getattr(serializer, '_errors', [])
             ret = {
-                'errors': rtn_errors,
-                'warnings':rtn_warnings
+                'errors': 'Internal Error:' + traceback.format_exc(),
+                'warnings':[]
                 }
             rtn_status = status.HTTP_500_INTERNAL_SERVER_ERROR
             

@@ -45,5 +45,9 @@
 			"KTM","KVT","LHN","MGL","MHN","MLW","NPJ","NRG",
 			"PRS","PST","RBR","SLG","TKP","TTP"
 		]
+	},
+	{
+		"form":"vdfIndia",
+		"station_codes":["CSG","MBZ","PNT"]
 	}
 ]
