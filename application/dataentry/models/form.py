@@ -417,3 +417,7 @@ class BaseCard(models.Model):
     
     def setParent(self, the_parent):
         raise NotImplementedError("set parent not defined in card model")
+    
+    def is_private(self):
+        return False
+    

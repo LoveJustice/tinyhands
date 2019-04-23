@@ -269,8 +269,12 @@ class CifAttachment(BaseCard):
     attachment_number = models.PositiveIntegerField(null=True, blank=True)
     description = models.CharField(max_length=126, null=True)
     attachment = models.FileField('Attach scanned copy of form (pdf or image)', upload_to='cif_attachments')
+    private_card = models.BooleanField(default=False)
     
     class Meta:
         abstract = True
+    
+    def is_private(self):
+        return self.private_card
 
 
