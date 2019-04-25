@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
                 ('attachment_number', models.PositiveIntegerField(blank=True, null=True)),
                 ('description', models.CharField(max_length=126, null=True)),
                 ('attachment', models.FileField(upload_to='vdf_attachments', verbose_name='Attach scanned copy of form (pdf or image)')),
-                ('private_card', models.BooleanField(default=False)),
+                ('private_card', models.BooleanField(default=True)),
             ],
             options={
                 'abstract': False,
