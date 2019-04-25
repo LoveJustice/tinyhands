@@ -62,9 +62,11 @@ class FormViewSet(viewsets.ModelViewSet):
                     if key == 'RadioItems':
                         for quest, val in value.items():
                             config['RadioItems'][quest] = val
+                    elif key == 'FormDefault':
+                        config['FormDefault'][layout.question.id] = value
                     else:
                         config[key] = value
-        
+
     def form_config(self, request, form_name):
         config = {
             'Person': [],
@@ -73,6 +75,7 @@ class FormViewSet(viewsets.ModelViewSet):
             'Date':[],
             'RadioOther':[],
             'RadioItems':{},
+            'FormDefault':{},
             }
         
         form = Form.objects.get(form_name=form_name)
@@ -89,6 +92,7 @@ class FormViewSet(viewsets.ModelViewSet):
                 'Date':[],
                 'RadioOther':[],
                 'RadioItems':{},
+                'FormDefault':{},
                 }
             layouts = QuestionLayout.objects.filter(category=card).order_by('question__id')
             self.config_answers(config[card.name], layouts)
