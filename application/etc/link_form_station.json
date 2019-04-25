@@ -51,6 +51,10 @@
 		"station_codes":["CTG","DAC","DLA","JSR","RJH"]
 	},
 	{
+		"form":"vdfBangladesh",
+		"station_codes":["CTG","DAC","DLA","JSR","RJH"]
+	},
+	{
 		"form":"irfMalawi",
 		"station_codes":["BLT","LLG","PLB"]
 	}
