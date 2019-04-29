@@ -817,6 +817,8 @@ class CardSerializer(serializers.Serializer):
         context['form_data'] = instance
         serializer = QuestionLayoutSerializer(question_layouts, many=True, context=context)
         ret['responses'] = serializer.data
+        if mask_private in context and context[mask_private] == True and instance.form_object.is_private():
+            ret = {}
         return ret
     
     def to_internal_value(self, data):
@@ -880,7 +882,12 @@ class CardCategorySerializer(serializers.Serializer):
         context['category'] = instance
         form_data = context['form_data']
         if instance.id in form_data.card_dict:
-            serializer = CardSerializer(form_data.card_dict[instance.id], many=True, context=context)
+            cards = []
+            for card in form_data.card_dict[instance.id]:
+                if card.form_object.is_private() and mask_private in context and context[mask_private] == True:
+                    continue
+                cards.append(card)
+            serializer = CardSerializer(cards, many=True, context=context)
         else:
             serializer = CardSerializer(None, many=True)
         ret['instances'] = serializer.data
