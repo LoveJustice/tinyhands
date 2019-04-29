@@ -18,6 +18,15 @@
 		]
 	},
 	{
+		"form":"vdfNepal",
+		"station_codes":[
+			"BGN","BHD","BHW","BRT","CND","DHD","DHU","DNG",
+			"GAR","GLC","GLR","GRG","HTD","INW","JBN","JNK",
+			"KTM","KVT","LHN","MGL","MHN","MLW","NPJ","NRG",
+			"PRS","PST","RBR","SLG","TKP","TTP"
+		]
+	},
+	{
 		"form":"irfSouthAfrica",
 		"station_codes":["JHB"]
 	},
@@ -30,24 +39,19 @@
 		"station_codes":["CSG","MBZ","PNT"]
 	},
 	{
+		"form":"vdfIndia",
+		"station_codes":["CSG","MBZ","PNT"]
+	},
+	{
 		"form":"irfBangladesh",
+		"station_codes":["CTG","DAC","DLA","JSR","RJH"]
+	},
+	{
+		"form":"cifBangladesh",
 		"station_codes":["CTG","DAC","DLA","JSR","RJH"]
 	},
 	{
 		"form":"irfMalawi",
 		"station_codes":["BLT","LLG","PLB"]
-	},
-	{
-		"form":"vdfNepal",
-		"station_codes":[
-			"BGN","BHD","BHW","BRT","CND","DHD","DHU","DNG",
-			"GAR","GLC","GLR","GRG","HTD","INW","JBN","JNK",
-			"KTM","KVT","LHN","MGL","MHN","MLW","NPJ","NRG",
-			"PRS","PST","RBR","SLG","TKP","TTP"
-		]
-	},
-	{
-		"form":"vdfIndia",
-		"station_codes":["CSG","MBZ","PNT"]
 	}
 ]
