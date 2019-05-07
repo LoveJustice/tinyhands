@@ -228,7 +228,6 @@ class CifFormViewSet(viewsets.ModelViewSet):
     def retrieve_blank_form(self, request, station_id):
         self.serializer_context = {}
         form = Form.current_form(self.form_type_name, station_id)
-        print('retrieve', form, self.form_type_name)
         if form is None:
             return Response(status=status.HTTP_404_NOT_FOUND)
         form_class = FormData.get_form_class(form)

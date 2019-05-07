@@ -50,6 +50,7 @@ class GoogleFormWorkQueue(Thread):
         export_forms = ExportFormFactory.find_by_instance(obj)
         if len(export_forms) < 1:
             sheet = None
+            logger.debug('No export found for station ' + station.station_name + ' form_type ' + form_type)
         else:
             config = export_forms[0].google_sheet_config
             if config is None:
@@ -91,7 +92,7 @@ class GoogleFormWorkQueue(Thread):
     
             work = [form_object, remove, 0]
             GoogleFormWorkQueue.instance.work_queue.put(work)
-            logger.debug("added to work queue form data=" + str(form_data))
+            logger.debug("added to work queue form data=" + str(form_object))
         except Exception:
             logger.warn("Exception thrown " + traceback.format_exc())
         
