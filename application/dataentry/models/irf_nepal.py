@@ -1,5 +1,5 @@
 from django.db import models
-from .irf_core import IrfCore, IntercepteeCore
+from .irf_core import IrfAttachment, IrfCore, IntercepteeCore
 
 class IrfNepal(IrfCore):
     who_in_group_alone = models.BooleanField('Alone', default=False)
@@ -85,7 +85,6 @@ class IrfNepal(IrfCore):
     case_notes = models.TextField('Case Notes', blank=True)
     reason_for_intercept = models.TextField('Primary reason for intercept', blank=True)
     evidence_categorization = models.CharField(max_length=127, null=True)
-    scanned_form = models.FileField('Attach scanned copy of form (pdf or image)', upload_to='scanned_irf_forms', default='', blank=True)
     
 class IntercepteeNepal(IntercepteeCore):
     interception_record = models.ForeignKey(IrfNepal, related_name='interceptees', on_delete=models.CASCADE)
@@ -95,6 +94,12 @@ class IntercepteeNepal(IntercepteeCore):
 
     def __str__(self):
         return "{} ({})".format(self.person.full_name, self.id)
+    
+    def set_parent(self, the_parent):
+        self.interception_record = the_parent
+
+class IrfAttachmentNepal(IrfAttachment):
+    interception_record = models.ForeignKey(IrfNepal)
     
     def set_parent(self, the_parent):
         self.interception_record = the_parent
