@@ -36,7 +36,9 @@ class FormViewSet(viewsets.ModelViewSet):
     @staticmethod
     def person_config(config, layout):
         config['Person'].append(layout.question.id)
-    
+        if layout.form_config is not None and 'RadioItems' in layout.form_config:
+            config['RadioOther'].append(layout.question.id)
+            
     @staticmethod
     def radio_config(config, layout):
         if layout.question.params is not None and 'textbox' in layout.question.params:
