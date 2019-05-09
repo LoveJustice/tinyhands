@@ -5,6 +5,7 @@
 *.sw[op]
 *~
 codeship.aes
+deploycfg_key_*
 .DS_Store
 
 google_cred.json
