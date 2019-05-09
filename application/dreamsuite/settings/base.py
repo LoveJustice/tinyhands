@@ -3,6 +3,7 @@ from unipath import Path
 import os
 import sys
 import logging.config
+import datetime
 
 SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
 
@@ -36,6 +37,7 @@ AUTH_USER_MODEL = 'accounts.Account'
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_URL = '/logout/'
+EXPIRING_TOKEN_LIFESPAN = datetime.timedelta(hours=10)
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -146,7 +148,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.TokenAuthentication',
+        'accounts.expiring_token_authentication.ExpiringTokenAuthentication',
     ),
     'DEFAULT_PAGINATION_CLASS': 'rest_api.pagination.DefaultPagination',
     'PAGE_SIZE': 25,

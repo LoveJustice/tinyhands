@@ -5,6 +5,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 
 from django.contrib.auth import views as auth_views
+from accounts import views as account_views
 from dataentry import views as dataentry_views
 from static_border_stations import views as static_border_stations_views
 
@@ -24,6 +25,7 @@ urlpatterns = [
 
     url(r'^login/$', auth_views.login, {'template_name': 'login.html'}, name='login'),
     url(r'^logout/$', auth_views.logout_then_login, name='logout'),
+    url(r'^api-token-auth/', account_views.ObtainExpiringAuthToken.as_view()),
 
     url(r'^admin/', include(admin.site.urls)),
     url(r'^interceptee_fuzzy_matching/', dataentry_views.interceptee_fuzzy_matching, name='interceptee_fuzzy_matching'),
