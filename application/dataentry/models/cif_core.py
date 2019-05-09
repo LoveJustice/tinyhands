@@ -20,19 +20,19 @@ class CifCore(BaseForm):
     
     # Main PV
     main_pv = models.ForeignKey(Person, null=True, blank=True)
-    social_media = models.CharField('Social Media', max_length=126, null=True)
+    social_media = models.CharField('Social Media', max_length=1024, null=True)
     occupation = models.CharField('Occupation', max_length=126, null=True)
     education = models.CharField('Occupation', max_length=126, null=True)
     guardian_name = models.CharField('Guardian Name', max_length=126, null=True)
-    guardian_phone = models.CharField('Guardian Name', max_length=126, null=True)
-    guardian_relationship = models.CharField('Guardian Social Media', max_length=126, null=True)
+    guardian_phone = models.CharField('Guardian Phone', max_length=126, null=True)
+    guardian_relationship = models.CharField('Guardian Relationship', max_length=1024, null=True)
     other_possible_victims = models.BooleanField('other possible victims', default=False)
     
     # Recruitment
     recruited_agency = models.BooleanField(default=False)
-    recruited_agency_pb = models.CharField('Social Media', max_length=126, null=True)
+    recruited_agency_pb = models.CharField('Agency PB', max_length=126, null=True)
     recruited_broker = models.BooleanField(default=False)
-    recruited_broker_pb = models.CharField('Social Media', max_length=126, null=True)
+    recruited_broker_pb = models.CharField('Broker PB', max_length=126, null=True)
     recruited_no = models.BooleanField(default=False)
     how_recruited_promised_job = models.BooleanField(default=False)
     how_recruited_married = models.BooleanField(default=False)
@@ -50,9 +50,11 @@ class CifCore(BaseForm):
     how_recruited_broker_other = models.CharField(max_length=126, null=True)
     known_broker_years = models.PositiveIntegerField(null=True, blank=True)
     known_broker_months = models.PositiveIntegerField(null=True, blank=True)
+    known_broker_days = models.PositiveIntegerField(null=True, blank=True)
     known_broker_pb = models.CharField(max_length=126, null=True)
     married_broker_years = models.PositiveIntegerField(null=True, blank=True)
     married_broker_months = models.PositiveIntegerField(null=True, blank=True)
+    married_broker_days = models.PositiveIntegerField(null=True, blank=True)
     married_broker_pb = models.CharField(max_length=126, null=True)
     travel_expenses_paid_themselves = models.BooleanField(default=False)
     travel_expenses_paid_by_broker = models.BooleanField(default=False)
@@ -81,6 +83,7 @@ class CifCore(BaseForm):
     border_cross_off_road = models.BooleanField(default=False)
     border_cross_foot = models.BooleanField(default=False)
     border_cross_vehicle = models.BooleanField(default=False)
+    border_cross_air = models.BooleanField(default=False)
     id_made_no = models.BooleanField(default=False)
     id_made_real = models.BooleanField(default=False)
     id_made_fake = models.BooleanField(default=False)
@@ -97,7 +100,6 @@ class CifCore(BaseForm):
     legal_action_taken = models.CharField(max_length=126, null=True)
     legal_action_taken_case_type = models.CharField(max_length=126, null=True)
     legal_action_taken_filed_against = models.CharField(max_length=126, null=True)
-    legal_action_taken_staff_do_not_believe = models.BooleanField(default=False)
     legal_action_taken_staff_police_not_enough_info = models.BooleanField(default=False)
     legal_action_taken_staff_trafficker_ran = models.BooleanField(default=False)
     legal_action_taken_staff_trafficker_relative = models.BooleanField(default=False)
@@ -111,6 +113,7 @@ class CifCore(BaseForm):
     officer_name = models.CharField(max_length=126, null=True)
     police_station_took_statement = models.BooleanField(default=False)
     police_station_took_statement_privately = models.BooleanField(default=False)
+    police_station_threats_prevented_statement = models.BooleanField(default=False)
     police_station_victim_name_given_to_media = models.BooleanField(default=False)
     police_station_gave_trafficker_access_to_pv = models.BooleanField(default=False)
     police_interact_disrespectful = models.BooleanField(default=False)
@@ -179,7 +182,7 @@ class CifCore(BaseForm):
 
 class PotentialVictimCore(BaseCard):
     person = models.ForeignKey(Person)
-    social_media = models.CharField(max_length=126, null=True)
+    social_media = models.CharField(max_length=1024, null=True)
     flag_count = models.PositiveIntegerField(null=True, blank=True)
     
     class Meta:
@@ -201,7 +204,7 @@ class PersonBoxCore(BaseCard):
     person = models.ForeignKey(Person)
     case_filed_against = models.CharField(max_length=126, null=True)
     arrested = models.CharField(max_length=126, null=True)
-    social_media = models.CharField(max_length=126, null=True)
+    social_media = models.CharField(max_length=1024, null=True)
     role = models.CharField(max_length=126, null=True)
     relation_to_pv = models.CharField(max_length=126, null=True)
     appearance = models.CharField(max_length=126, null=True)
@@ -266,8 +269,12 @@ class CifAttachment(BaseCard):
     attachment_number = models.PositiveIntegerField(null=True, blank=True)
     description = models.CharField(max_length=126, null=True)
     attachment = models.FileField('Attach scanned copy of form (pdf or image)', upload_to='cif_attachments')
+    private_card = models.BooleanField(default=True)
     
     class Meta:
         abstract = True
+    
+    def is_private(self):
+        return self.private_card
 
 

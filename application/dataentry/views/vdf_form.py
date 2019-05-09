@@ -17,7 +17,7 @@ from dataentry.serializers import CountrySerializer
 from dataentry.dataentry_signals import form_done
 
 from dataentry.form_data import Form, FormData
-from dataentry.models import BorderStation, Country, FormType, CifNepal, UserLocationPermission
+from dataentry.models import BorderStation, Country, FormType, VdfNepal, UserLocationPermission
 
 class BorderStationOverviewSerializer(serializers.ModelSerializer):
     operating_country = CountrySerializer()
@@ -30,36 +30,27 @@ class BorderStationOverviewSerializer(serializers.ModelSerializer):
         ]
         model = BorderStation
 
-class CifListSerializer(serializers.Serializer):
+class VdfListSerializer(serializers.Serializer):
     id = serializers.IntegerField()
-    cif_number = serializers.CharField()
-    number_of_victims = serializers.IntegerField()
-    number_of_traffickers = serializers.IntegerField()
+    vdf_number = serializers.CharField()
     staff_name = serializers.CharField()
-    date_time_of_interview = serializers.SerializerMethodField(read_only=True)
+    date_of_interview = serializers.SerializerMethodField(read_only=True)
     date_time_entered_into_system = serializers.SerializerMethodField(read_only=True)
     date_time_last_updated = serializers.SerializerMethodField(read_only=True)
     station = BorderStationOverviewSerializer()
     form_name = serializers.SerializerMethodField(read_only=True)
     
-    perm_group_name = 'CIF'
+    perm_group_name = 'VDF'
     
     def adjust_date_time_for_tz(self, date_time, tz_name):
-        if date_time is None:
-            return ''
-        
         tz = pytz.timezone(tz_name)
         date_time = date_time.astimezone(tz)
         date_time = date_time.replace(microsecond=0)
         date_time = date_time.replace(tzinfo=None)
         return str(date_time)
     
-    def get_date_time_of_interview(self, obj):
-        if obj is None or obj.interview_date is None:
-            return ''
-        
+    def get_date_of_interview(self, obj):
         return str(obj.interview_date.year) + '-' + str(obj.interview_date.month) + '-' + str(obj.interview_date.day)
-        #return str(obj.interview_date)
     
     def get_date_time_entered_into_system(self, obj):
         return self.adjust_date_time_for_tz (obj.date_time_entered_into_system, obj.station.time_zone)
@@ -68,28 +59,28 @@ class CifListSerializer(serializers.Serializer):
         return self.adjust_date_time_for_tz (obj.date_time_last_updated, obj.station.time_zone)
     
     def get_form_name(self, obj):
-        forms = Form.objects.filter(form_type__name='CIF', stations__id=obj.station.id)
+        forms = Form.objects.filter(form_type__name='VDF', stations__id=obj.station.id)
         if len(forms) > 0:
             return forms[0].form_name
         else:
             return None
     
-class CifFormViewSet(viewsets.ModelViewSet):
+class VdfFormViewSet(viewsets.ModelViewSet):
     parser_classes = (MultiPartParser,FormParser,JSONParser)
     permission_classes = (IsAuthenticated, )
-    serializer_class = CifListSerializer
+    serializer_class = VdfListSerializer
     filter_backends = (fs.SearchFilter, fs.OrderingFilter,)
-    search_fields = ('cif_number',)
+    search_fields = ('vdf_number',)
     ordering_fields = (
-        'cif_number', 'staff_name', 'number_of_victims', 'number_of_traffickers', 'interview_date',
+        'vdf_number', 'staff_name', 'date_of_interview',
         'date_time_entered_into_system', 'date_time_last_updated',)
     ordering = ('-interview_date',)
-    form_type_name = 'CIF'
-    perm_group_name = 'CIF'
+    form_type_name = 'VDF'
+    perm_group_name = 'VDF'
     
     def get_serializer_class(self):
         if self.action == 'list':
-            return CifListSerializer
+            return VdfListSerializer
         else:
             return FormDataSerializer
     
@@ -137,16 +128,16 @@ class CifFormViewSet(viewsets.ModelViewSet):
             form_model = getattr(mod, form.storage.form_model_name)
             
             tmp_queryset = form_model.objects.filter(station__in=station_list, status=status).only(
-                    'id', 'cif_number', 'form_entered_by', 'number_of_victims', 'number_of_traffickers', 'staff_name', 
+                    'id', 'vdf_number', 'form_entered_by', 'staff_name', 
                     'station', 'interview_date', 'date_time_entered_into_system',
                     'date_time_last_updated')
             
-            # If query is for in-progress status CIFs, only include CIFs that were entered by the requesters account
+            # If query is for in-progress status VDFs, only include VDFs that were entered by the requesters account
             if status == 'in-progress':
                 tmp_queryset = tmp_queryset.filter(form_entered_by__id=account_id)
                 
             if search is not None:
-                tmp_queryset = tmp_queryset.filter(cif_number__contains=search)
+                tmp_queryset = tmp_queryset.filter(vdf_number__contains=search)
             
             if queryset is None:
                 queryset = tmp_queryset
@@ -154,7 +145,7 @@ class CifFormViewSet(viewsets.ModelViewSet):
                 queryset = queryset.union(tmp_queryset)
             
         if queryset is None:
-            queryset = CifNepal.objects.none()
+            queryset = VdfNepal.objects.none()
                 
         return queryset
     
@@ -176,7 +167,7 @@ class CifFormViewSet(viewsets.ModelViewSet):
                 scanned.append(request.data['scanned[' + str(cnt) + ']'])
                 cnt += 1
             
-            self.save_files(scanned, 'cif_attachments/')
+            self.save_files(scanned, 'vdf_attachments/')
         else:
             request_json = None
         
@@ -189,7 +180,7 @@ class CifFormViewSet(viewsets.ModelViewSet):
         try:
             serializer = FormDataSerializer(data=request_json, context=self.serializer_context)
             if serializer.is_valid():
-                if not UserLocationPermission.has_session_permission(request, 'CIF', 'ADD', serializer.get_country_id(), serializer.get_station_id()):
+                if not UserLocationPermission.has_session_permission(request, 'VDF', 'ADD', serializer.get_country_id(), serializer.get_station_id()):
                     return Response(status=status.HTTP_401_UNAUTHORIZED)
                 try:
                     form_data = serializer.save()
@@ -211,6 +202,7 @@ class CifFormViewSet(viewsets.ModelViewSet):
                         }
                         rtn_status=status.HTTP_400_BAD_REQUEST
             else:
+                print ('serializer not valid')
                 ret = {
                     'errors': serializer.the_errors,
                     'warnings':serializer.the_warnings
@@ -228,18 +220,17 @@ class CifFormViewSet(viewsets.ModelViewSet):
     def retrieve_blank_form(self, request, station_id):
         self.serializer_context = {}
         form = Form.current_form(self.form_type_name, station_id)
-        print('retrieve', form, self.form_type_name)
         if form is None:
             return Response(status=status.HTTP_404_NOT_FOUND)
         form_class = FormData.get_form_class(form)
-        cif = form_class()
+        vdf = form_class()
         station = BorderStation.objects.get(id=station_id)
-        cif.station = station
-        add_access = UserLocationPermission.has_session_permission(request, 'CIF', 'ADD', cif.station.operating_country.id, cif.station.id)
+        vdf.station = station
+        add_access = UserLocationPermission.has_session_permission(request, 'VDF', 'ADD', vdf.station.operating_country.id, vdf.station.id)
         if not add_access:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
         
-        form_data = FormData(cif, form)
+        form_data = FormData(vdf, form)
         serializer = FormDataSerializer(form_data, context=self.serializer_context)
         return Response(serializer.data)
     
@@ -249,15 +240,15 @@ class CifFormViewSet(viewsets.ModelViewSet):
         if form is None:
             return Response(status=status.HTTP_404_NOT_FOUND)
         try:
-            cif = FormData.find_object_by_id(pk, form)
-            if cif is None:
+            vdf = FormData.find_object_by_id(pk, form)
+            if vdf is None:
                 return Response(status=status.HTTP_404_NOT_FOUND)
         except ObjectDoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
         
-        read_access = UserLocationPermission.has_session_permission(request, 'CIF', 'VIEW', cif.station.operating_country.id, cif.station.id)
-        edit_access = UserLocationPermission.has_session_permission(request, 'CIF', 'EDIT', cif.station.operating_country.id, cif.station.id)
-        private_access = UserLocationPermission.has_session_permission(request, 'CIF', 'VIEW PI', cif.station.operating_country.id, cif.station.id)
+        read_access = UserLocationPermission.has_session_permission(request, 'VDF', 'VIEW', vdf.station.operating_country.id, vdf.station.id)
+        edit_access = UserLocationPermission.has_session_permission(request, 'VDF', 'EDIT', vdf.station.operating_country.id, vdf.station.id)
+        private_access = UserLocationPermission.has_session_permission(request, 'VDF', 'VIEW PI', vdf.station.operating_country.id, vdf.station.id)
         
         if not read_access:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
@@ -265,7 +256,7 @@ class CifFormViewSet(viewsets.ModelViewSet):
         if not edit_access and not private_access:
             self.serializer_context['mask_private'] = True
             
-        form_data = FormData(cif, form)
+        form_data = FormData(vdf, form)
         serializer = FormDataSerializer(form_data, context=self.serializer_context)
         
         resp_data = serializer.data
@@ -274,10 +265,10 @@ class CifFormViewSet(viewsets.ModelViewSet):
     
     def update(self, request, station_id, pk):
         form = Form.current_form(self.form_type_name, station_id)
-        cif = FormData.find_object_by_id(pk, form)
-        if cif is None:
-            return Response({'errors' : ["CIF not found"], 'warnings':[]}, status=status.HTTP_404_NOT_FOUND)
-        form_data = FormData(cif, form)
+        vdf = FormData.find_object_by_id(pk, form)
+        if vdf is None:
+            return Response({'errors' : ["VDF not found"], 'warnings':[]}, status=status.HTTP_404_NOT_FOUND)
+        form_data = FormData(vdf, form)
         request_json = self.extract_data(request)
 
         self.serializer_context = {'form_type':form.form_type}
@@ -285,7 +276,7 @@ class CifFormViewSet(viewsets.ModelViewSet):
             serializer = FormDataSerializer(form_data, data=request_json, context=self.serializer_context)
         
             if serializer.is_valid():
-                if not UserLocationPermission.has_session_permission(request, 'CIF', 'EDIT', serializer.get_country_id(), serializer.get_station_id()):
+                if not UserLocationPermission.has_session_permission(request, 'VDF', 'EDIT', serializer.get_country_id(), serializer.get_station_id()):
                     return Response(status=status.HTTP_401_UNAUTHORIZED)
                 form_data = serializer.save()
                 serializer2 = FormDataSerializer(form_data, context=self.serializer_context)
@@ -304,7 +295,7 @@ class CifFormViewSet(viewsets.ModelViewSet):
                     rtn_warnings = []
                 
                 if len(rtn_errors) < 1 and len(rtn_warnings) < 1:
-                    rtn_errors = serializer._errors
+                    rtn_errors = getattr(serializer, '_errors', [])
                 ret = {
                     'errors': rtn_errors,
                     'warnings':rtn_warnings
@@ -322,13 +313,13 @@ class CifFormViewSet(viewsets.ModelViewSet):
     def destroy(self, request, station_id, pk):
         form = Form.current_form(self.form_type_name, station_id)
         try:
-            cif = FormData.find_object_by_id(pk, form)
+            vdf = FormData.find_object_by_id(pk, form)
         except ObjectDoesNotExist:
-            return Response({'errors' : ["CIF not found"], 'warnings':[]}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'errors' : ["VDF not found"], 'warnings':[]}, status=status.HTTP_404_NOT_FOUND)
         
-        if not UserLocationPermission.has_session_permission(request, 'CIF', 'DELETE', cif.station.operating_country.id, cif.station.id):
+        if not UserLocationPermission.has_session_permission(request, 'VDF', 'DELETE', vdf.station.operating_country.id, vdf.station.id):
                 return Response(status=status.HTTP_401_UNAUTHORIZED)
-        form_data = FormData(cif, form)
+        form_data = FormData(vdf, form)
         form_data.delete()
         form_done.send_robust(sender=self.__class__, form_data=form_data, remove=True)
         return Response(status=status.HTTP_200_OK)

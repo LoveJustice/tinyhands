@@ -16,6 +16,7 @@ from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from dataentry.models import BorderStation
 from dataentry.models import Form
 from dataentry.models import Interceptee
 from dataentry.models import InterceptionRecord
@@ -65,7 +66,7 @@ class PhotoExporter(viewsets.GenericViewSet):
             return self.get_photos_old(start, end)
         
         all_stations = False
-        countries_with_perms = []
+        stations_with_perms = []
         irf_view_perms = UserLocationPermission.objects.filter(account=request.user, permission__permission_group='IRF',
                                                                permission__action='VIEW')
         for perm in irf_view_perms:
@@ -73,15 +74,17 @@ class PhotoExporter(viewsets.GenericViewSet):
                 all_stations = True
                 break
             if perm.country is None:
-                if perm.station.operating_country not in countries_with_perms:
-                    countries_with_perms.append(perm.station.operating_country)
+                if perm.station not in stations_with_perms:
+                    stations_with_perms.append(perm.station)
             else:
-                if perm.country not in countries_with_perms:
-                    countries_with_perms.append(perm.country)
+                if perm.country not in stations_with_perms:
+                    stations = BorderStation.objects.filter(operating_country=perm.country)
+                    for station in stations:
+                        stations_with_perms.append(station)
             
         forms = Form.objects.filter(form_type__name = 'IRF')
         if not all_stations:
-            forms = forms.filter(country__in=countries_with_perms)
+            forms = forms.filter(stations__in=stations_with_perms)
         
         parent_storage_list = []
         for form in forms:
@@ -95,6 +98,11 @@ class PhotoExporter(viewsets.GenericViewSet):
         for storage in interceptee_storage_qs:
             mod = __import__(storage.module_name, fromlist=[storage.form_model_name])
             card_model = getattr(mod, storage.form_model_name, None)
+            try:
+                card_model._meta.get_field('photo')
+            except:
+                # Not an interceptee model
+                continue
             tmp_qs = card_model.objects.filter(interception_record__date_time_of_interception__gte=start,
                                           interception_record__date_time_of_interception__lte=end,
                                           interception_record__status='approved').exclude(photo="")
