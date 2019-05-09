@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo $CI_COMMIT_ID > /dreamsuite_tag
-echo -e $PRIVATE_SSH_KEY > /root/.ssh/id_rsa
+echo -e $PRIVATE_SSH_KEY | base64 -d > /root/.ssh/id_rsa
 chmod 400 /root/.ssh/id_rsa
 
 if [ "$CI_BRANCH" = "master" ]
