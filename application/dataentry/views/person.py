@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_api.authentication import HasPermission
 
-from dataentry.models import CardStorage, Form, Person, Question
+from dataentry.models import Form, FormCategory, Person, Question
 from dataentry.serializers import PersonSerializer
 from dataentry.serialize_form import ResponsePersonSerializer
 
@@ -25,10 +25,10 @@ class PersonViewSet(viewsets.ModelViewSet):
             irf_number = irf_number[:-1]
             
         form = Form.current_form('IRF',station_id)
-        card_storages = CardStorage.objects.filter(category__name='Interceptees', category__form = form)
+        form_categories = FormCategory.objects.filter(name='Interceptees', form=form)
         persons_data = []
-        if len(card_storages) > 0:
-            storage = card_storages[0].storage
+        if len(form_categories) > 0:
+            storage = form_categories[0].storage
             mod = __import__(storage.module_name, fromlist=[storage.form_model_name])
             interceptee_class = getattr(mod, storage.form_model_name)
             
