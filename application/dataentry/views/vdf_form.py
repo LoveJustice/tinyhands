@@ -202,7 +202,6 @@ class VdfFormViewSet(viewsets.ModelViewSet):
                         }
                         rtn_status=status.HTTP_400_BAD_REQUEST
             else:
-                print ('serializer not valid')
                 ret = {
                     'errors': serializer.the_errors,
                     'warnings':serializer.the_warnings

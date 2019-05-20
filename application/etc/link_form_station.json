@@ -31,6 +31,10 @@
 		"station_codes":["JHB"]
 	},
 	{
+		"form":"cifSouthAfrica",
+		"station_codes":["JHB"]
+	},
+	{
 		"form":"irfIndia",
 		"station_codes":["CSG","MBZ","PNT"]
 	},
