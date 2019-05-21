@@ -6,6 +6,11 @@ from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, Permis
 from django.utils import timezone
 from django.core.urlresolvers import reverse
 
+from rest_framework.authtoken.models import Token
+from datetime import timedelta
+from django.conf import settings
+
+
 from templated_email import send_templated_mail
 from django.conf import settings
 
@@ -199,3 +204,26 @@ class Alert(models.Model):
 
     def is_legal(self):
         return self.code in self.LEGAL_CODES
+
+class ExpiringToken(Token):
+
+    """Extend Token to add an expired method."""
+
+    class Meta(object):
+        proxy = True
+
+    def expired(self):
+        """Return boolean indicating token expiration."""
+        now = timezone.now()
+        if self.created < now - self.get_lifespan():
+            return True
+        return False
+
+    def get_lifespan(self):
+        try:
+            val = settings.EXPIRING_TOKEN_LIFESPAN
+        except AttributeError:
+            val = timedelta(days=30)
+
+        return val
+
