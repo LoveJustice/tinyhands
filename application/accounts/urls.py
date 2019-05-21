@@ -1,12 +1,12 @@
 from django.conf.urls import url
 from accounts.views import *
-from rest_framework.authtoken import views
 
 list = {'get': 'list', 'post': 'create'}
 detail = {'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}
 
 urlpatterns = [
-        url(r'^login/', views.obtain_auth_token),
+        url(r'^login/', ObtainExpiringAuthToken.as_view()),
+        url(r'^logout/', Logout.as_view(), name='Logout'),
         url(r'^me/$', CurrentUserView.as_view(), name="CurrentUser"),
 
         url(r'^account/$', AccountViewSet.as_view(list), name="AccountList"),
