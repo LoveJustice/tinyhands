@@ -13,7 +13,6 @@ class FormMigration:
         'Form',
         'CategoryType',
         'Category',
-        'CardStorage',
         'AnswerType',
         'Question',
         'QuestionLayout',

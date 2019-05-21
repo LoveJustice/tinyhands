@@ -1,7 +1,7 @@
 import logging
 from django.core.exceptions import ObjectDoesNotExist
 
-from dataentry.models import ExportImportCard, ExportImportField, Form, FormType, GoogleSheetConfig, QuestionLayout
+from dataentry.models import ExportImportCard, ExportImportField, Form, FormCategory, FormType, GoogleSheetConfig, QuestionLayout
 from dataentry.form_data import FormData
 
 logger = logging.getLogger(__name__);
@@ -36,7 +36,12 @@ class ExportForm:
         for ei_card in self.ei_cards:
             self.category_dict[ei_card.category] = ExportElement()
         
-        question_layouts = QuestionLayout.objects.filter(category__form = self.export_import.form).order_by('category__order', 'question__id')
+        form_categories = FormCategory.objects.filter(form=self.export_import.form)
+        category_list = []
+        for form_category in form_categories:
+            category_list.append(form_category.category)
+            
+        question_layouts = QuestionLayout.objects.filter(category__in = category_list).order_by('category__id', 'question__id')
         for question_layout in question_layouts:
             category = question_layout.category
             if category.category_type.name == 'card':

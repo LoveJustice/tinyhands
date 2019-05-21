@@ -8,7 +8,7 @@ from rest_framework.test import APITestCase
 from accounts.tests.factories import BadIrfUserFactory, SuperUserFactory
 from dataentry.tests.factories import IrfIndiaFactory, MbzStationFactory, PersonFactory
 from dataentry.models import Form, IrfIndia, IntercepteeIndia
-from dataentry.form_data import FormData, CardData, Category
+from dataentry.form_data import FormData, CardData, FormCategory
 from dataentry.serialize_form import FormDataSerializer
 
 from static_border_stations.tests.factories import GenericUserWithPermissions
@@ -84,8 +84,9 @@ class IrfTest(APITestCase):
         irf.which_contact = 'Bus driver'
         form = Form.current_form('IRF', irf.station.id)
         form_data = FormData(irf, form)
-         
-        category = Category.objects.get(form=form, name='Interceptees')
+        
+        form_category = FormCategory.objects.get(form=form, name='Interceptees')
+        category = form_category.category
          
         interceptee = IntercepteeIndia()
         interceptee.interception_record = irf

@@ -2,7 +2,7 @@ import logging
 from django.db import transaction
 from django.core.exceptions import ObjectDoesNotExist
 
-from .models.form import CardStorage, Category, Form, QuestionLayout, QuestionStorage, Storage
+from .models.form import Form, FormCategory, QuestionLayout, QuestionStorage, Storage
 
 logger = logging.getLogger(__name__);
 
@@ -122,7 +122,7 @@ class FormData:
         card_list = []
         category_form = self.category_form_dict[category.id]
         
-        cards = eval('category_form.form_model.objects.filter(' + category_form.foreign_key_field_parent + '__id=the_object.id)')
+        cards = eval('category_form.form_model.objects.filter(' + category_form.foreign_key_field_parent + '__id=the_object.id)').order_by('id')
         for card in cards:
             card_list.append(CardData(card, category_form, form_data=self))
         
@@ -130,7 +130,11 @@ class FormData:
     
     def load_question_storage(self, form):
         self.question_storage = {}
-        question_ids = list(QuestionLayout.objects.filter(category__form = form).values_list('question_id', flat=True))
+        form_categories = FormCategory.objects.filter(form=form)
+        category_list = []
+        for form_category in form_categories:
+            category_list.append(form_category.category)
+        question_ids = list(QuestionLayout.objects.filter(category__in = category_list).values_list('question_id', flat=True))
         question_storage_list = QuestionStorage.objects.filter(question__id__in=question_ids)
         for question_storage in question_storage_list:
             self.question_storage[question_storage.question.id] = question_storage
@@ -158,22 +162,21 @@ class FormData:
             
         self.card_dict = {}
         self.category_form_dict = {}
-        categories = Category.objects.filter(form = self.form, category_type__name = 'card')
-        for category in categories:
-            card_storage = CardStorage.objects.get(category=category)
-            mod = __import__(card_storage.storage.module_name, fromlist=[card_storage.storage.form_model_name, card_storage.storage.response_model_name])
-            card_model = getattr(mod, card_storage.storage.form_model_name, None)
-            if card_storage.storage.response_model_name is not None:
-                card_response_model = getattr(mod, card_storage.storage.response_model_name, None)
+        form_categories = FormCategory.objects.filter(form=self.form, category__category_type__name = 'card')
+        for form_category in form_categories:
+            mod = __import__(form_category.storage.module_name, fromlist=[form_category.storage.form_model_name, form_category.storage.response_model_name])
+            card_model = getattr(mod, form_category.storage.form_model_name, None)
+            if form_category.storage.response_model_name is not None:
+                card_response_model = getattr(mod, form_category.storage.response_model_name, None)
             else:
                 card_response_model = None
-            category_form = CategoryForm(category, card_model, card_response_model, card_storage.storage.foreign_key_field_parent)
-            self.category_form_dict[category.id] = category_form
+            category_form = CategoryForm(form_category.category, card_model, card_response_model, form_category.storage.foreign_key_field_parent)
+            self.category_form_dict[form_category.category.id] = category_form
             if the_object.id is None:
-                self.card_dict[category.id] = []
+                self.card_dict[form_category.category.id] = []
             else:
-                card_list = self.load_cards(category, the_object)
-                self.card_dict[category.id] = card_list
+                card_list = self.load_cards(form_category.category, the_object)
+                self.card_dict[form_category.category.id] = card_list
                 
     def find_card(self, category, card_id):
         ret = None

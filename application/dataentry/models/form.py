@@ -63,16 +63,17 @@ class CategoryType(models.Model):
     name = models.CharField(max_length=126) # Grid, Card, etc.
 
 class Category(models.Model):
-    form = models.ForeignKey(Form)
     category_type = models.ForeignKey(CategoryType)
+    description = models.CharField(max_length=126)
+    
+class FormCategory(models.Model):
+    form = models.ForeignKey(Form)
+    category = models.ForeignKey(Category)
     name = models.CharField(max_length=126)
     order = models.PositiveIntegerField(null=True, blank=True)
-
-# Typically, there will be multiple instances of card data
-# CardForm identifies a separate subform for the data on a card
-class CardStorage(models.Model):
-    category = models.ForeignKey(Category)
-    storage = models.ForeignKey(Storage)
+    
+    # Only needed for card type category
+    storage = models.ForeignKey(Storage, null=True)
 
 class AnswerType(models.Model):
     name = models.CharField(max_length=126) # Multiple Choice, Int, Address, Phone Num, etc.
