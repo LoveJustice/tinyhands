@@ -7,7 +7,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from dataentry.models.addresses import Address1, Address2
 from dataentry.models.border_station import BorderStation
-from dataentry.models.form import Answer, Category, Form, Question, QuestionLayout
+from dataentry.models.form import Answer, Category, Form, FormCategory, Question, QuestionLayout
 from dataentry.models.person import Person
 from dataentry.models.person_identification import PersonIdentification
 from dataentry.models.alias_group import AliasGroup
@@ -812,7 +812,7 @@ class CardSerializer(serializers.Serializer):
         if ret['flag_count'] is None:
             ret['flag_count'] = 0
         category = self.context['category']
-        question_layouts = QuestionLayout.objects.filter(category__form = instance.form_data.form, category=category).order_by('question__id')
+        question_layouts = QuestionLayout.objects.filter(category=category).order_by('question__id')
         context = dict(self.context)
         context['form_data'] = instance
         serializer = QuestionLayoutSerializer(question_layouts, many=True, context=context)
@@ -918,7 +918,6 @@ class CardCategorySerializer(serializers.Serializer):
             serializer.context['form_data'] = form_data
             serializer.get_or_create()
         
-
 class FormDataSerializer(serializers.Serializer):
     def to_representation(self, instance):
         ret = super().to_representation(instance)
@@ -932,14 +931,22 @@ class FormDataSerializer(serializers.Serializer):
         else:
             context = {}
         
-        question_layouts = QuestionLayout.objects.filter(category__form = instance.form).exclude(category__category_type__name = 'card').order_by('question__id')
+        base_categories = []
+        card_categories = []
+        form_categories = FormCategory.objects.filter(form=instance.form)
+        for form_category in form_categories:
+            if form_category.category.category_type.name == 'card':
+                card_categories.append(form_category.category)
+            else:
+                base_categories.append(form_category.category)
+        
+        question_layouts = QuestionLayout.objects.filter(category__in = base_categories).order_by('question__id')
         context['form_data'] = instance
         context['time_zone'] = instance.form_object.station.time_zone
         serializer = QuestionLayoutSerializer(question_layouts, many=True, context=context)
         ret['responses'] = serializer.data
         
-        card_types = Category.objects.filter(form = instance.form, category_type__name = 'card')
-        serializer = CardCategorySerializer(list(card_types), many=True, context=context)
+        serializer = CardCategorySerializer(card_categories, many=True, context=context)
         ret['cards'] = serializer.data
         
         return ret

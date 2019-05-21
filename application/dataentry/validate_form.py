@@ -3,7 +3,7 @@ import logging
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import status
 
-from .models.form import Category, FormValidation, FormValidationQuestion, QuestionLayout, QuestionStorage
+from .models.form import FormCategory, FormValidation, FormValidationQuestion, QuestionLayout, QuestionStorage
 
 logger = logging.getLogger(__name__);
 
@@ -149,11 +149,12 @@ class ValidateForm:
         #     Each entry has a list of validations to be performed
         question_to_validation_set = {}
         
-        categories = Category.objects.filter(form = form)
-        for category in categories:
+        form_categories = FormCategory.objects.filter(form=form)
+        for form_category in form_categories:
+            category = form_category.category
             layouts = QuestionLayout.objects.filter(category=category)
             for layout in layouts:
-                self.question_map[layout.question.id] = category.name
+                self.question_map[layout.question.id] = form_category.name
                 if category.category_type.name == 'card':
                     question_to_validation_set[layout.question.id] = category.id
                 else:
