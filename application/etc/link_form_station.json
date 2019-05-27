@@ -59,7 +59,11 @@
 		"station_codes":["CTG","DAC","DLA","JSR","RJH"]
 	},
 	{
-		"form":"irfMalawi",
-		"station_codes":["BLT","LLG","PLB"]
+		"form":"irfBenin",
+		"station_codes":["COT"]
+	},
+	{
+		"form":"irfIndia",
+		"station_codes":["CSG","MBZ","PNT"]
 	}
 ]

@@ -78,7 +78,6 @@ class BaseFormViewSet(viewsets.ModelViewSet):
                 tmp_queryset = tmp_queryset.filter(form_entered_by__id=account_id)
                 
             if search is not None:
-                print ('queryset count1', tmp_queryset.count())
                 tmp_queryset = self.filter_key(tmp_queryset, search)
             
             if queryset is None:
