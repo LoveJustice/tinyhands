@@ -31,6 +31,10 @@
 		"station_codes":["JHB"]
 	},
 	{
+		"form":"cifSouthAfrica",
+		"station_codes":["JHB"]
+	},
+	{
 		"form":"irfIndia",
 		"station_codes":["CSG","MBZ","PNT"]
 	},
@@ -55,7 +59,15 @@
 		"station_codes":["CTG","DAC","DLA","JSR","RJH"]
 	},
 	{
-		"form":"irfMalawi",
-		"station_codes":["BLT","LLG","PLB"]
+		"form":"irfBenin",
+		"station_codes":["COT"]
+	},
+	{
+		"form":"irfUganda",
+		"station_codes":["BUS", "KLA"]
+	},
+	{
+		"form":"irfIndia",
+		"station_codes":["CSG","MBZ","PNT"]
 	}
 ]

@@ -9,6 +9,12 @@ from rest_framework.status import *
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
+from rest_framework.authtoken.serializers import AuthTokenSerializer
+from rest_framework.authtoken.views import ObtainAuthToken
+
+from .models import ExpiringToken
+
+
 from accounts.models import Account, DefaultPermissionsSet, make_activation_key
 from accounts.serializers import AccountsSerializer, DefaultPermissionsSetSerializer
 from rest_api.authentication import HasPermission
@@ -111,3 +117,34 @@ class ResendActivationEmailView(APIView):
             account.send_activation_email('activate')
             email_sent = True
         return Response(email_sent)
+
+class Logout(APIView):
+    def get(self, request):
+        request.user.auth_token.delete()
+        return Response(status=status.HTTP_200_OK)
+
+class ObtainExpiringAuthToken(ObtainAuthToken):
+
+    model = ExpiringToken
+
+    def post(self, request):
+        """Respond to POSTed username/password with token."""
+        serializer = AuthTokenSerializer(data=request.data)
+
+        if serializer.is_valid():
+            token, _ = ExpiringToken.objects.get_or_create(
+                user=serializer.validated_data['user']
+            )
+
+            if token.expired():
+                # If the token is expired, generate a new one.
+                token.delete()
+                token = ExpiringToken.objects.create(
+                    user=serializer.validated_data['user']
+                )
+
+            data = {'token': token.key}
+            return Response(data)
+
+        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+

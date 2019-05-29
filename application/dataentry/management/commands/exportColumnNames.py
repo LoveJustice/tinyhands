@@ -9,7 +9,10 @@ class Command(BaseCommand):
         factory = ExportToGoogleSheetFactory()
         sheets = GoogleSheetConfig.objects.all()
         for sheet in sheets:
-            station = sheet.export_import.form.stations.all()[0]
+            stations = sheet.export_import.form.stations.all()
+            if len(stations) < 1:
+                continue
+            station = stations[0]
             form_type = sheet.export_import.form.form_type
             export_forms = form_factory.find(station, form_type)
             google_sheet = factory.find(export_forms[0])

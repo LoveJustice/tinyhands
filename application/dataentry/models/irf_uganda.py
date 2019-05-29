@@ -1,8 +1,8 @@
 from django.db import models
 from .irf_core import IrfAttachment, IrfCore, IntercepteeCore
 
-class IrfBenin(IrfCore):
-    # Group - Benin specific
+class IrfUganda(IrfCore):
+    # Group - Uganda specific
     group_young_women_kids = models.BooleanField('Group of young women or kids', default=False)
     group_facebook = models.BooleanField('Facebook', default=False)
     group_other_website = models.CharField(max_length=127, blank=True)
@@ -25,10 +25,13 @@ class IrfBenin(IrfCore):
     mobile_phone_taken_away = models.BooleanField('Their mobile phone was taken away', default=False)
     contradiction_between_stories = models.BooleanField('Contradiction between stories', default=False)
     
-    # Destination - Benin specific
+    # Destination - Uganda specific
+    where_going_middle_east = models.BooleanField("Going to a country in the Middle East / Persian Gulf", default=False)
     doesnt_speak_destination_language = models.BooleanField("Doesn't speak language of destination", default=False)
     where_going_doesnt_know = models.BooleanField("Doesn't know where they are going", default=False)
     person_speaking_on_their_behalf = models.BooleanField('Person is not speaking on their own behalf / someone is speaking for them', default=False)
+    going_abroad_domestic_work = models.BooleanField('Going abroad for domestic work', default=False)
+    visa_for_domestic_work = models.BooleanField('Have visa for domestic work in passport', default=False)
     destination_other = models.CharField(max_length=127, blank=True)
     employment_massage_parlor = models.BooleanField('Massage parlor', default=False)
     no_company_website = models.BooleanField('Could not find company website', default=False)
@@ -36,20 +39,20 @@ class IrfBenin(IrfCore):
     no_school_website = models.BooleanField('No school website', default=False)
     purpose_for_going_other = models.CharField(max_length=127, blank=True)
     
-    # Family - Benin specific
+    # Family - Uganda specific
     case_notes = models.TextField('Case Notes', blank=True)
     
-    # Signs - Benin specific
+    # Signs - Uganda specific
     which_contact = models.CharField(max_length=127, blank=True)
     name_of_contact = models.CharField(max_length=127, default='', blank=True)
     initial_signs = models.CharField(max_length=127, default='', blank=True)
     
-    # Final Procedures - Benin specific
+    # Final Procedures - Uganda specific
     evidence_categorization = models.CharField(max_length=127, null=True)
     reason_for_intercept = models.TextField('Primary reason for intercept', blank=True)
     
-class IntercepteeBenin(IntercepteeCore):
-    interception_record = models.ForeignKey(IrfBenin, related_name='interceptees', on_delete=models.CASCADE)
+class IntercepteeUganda(IntercepteeCore):
+    interception_record = models.ForeignKey(IrfUganda, related_name='interceptees', on_delete=models.CASCADE)
 
     class Meta:
         ordering = ['id']
@@ -60,8 +63,8 @@ class IntercepteeBenin(IntercepteeCore):
     def set_parent(self, the_parent):
         self.interception_record = the_parent
 
-class IrfAttachmentBenin(IrfAttachment):
-    interception_record = models.ForeignKey(IrfBenin)
+class IrfAttachmentUganda(IrfAttachment):
+    interception_record = models.ForeignKey(IrfUganda)
     
     def set_parent(self, the_parent):
         self.interception_record = the_parent

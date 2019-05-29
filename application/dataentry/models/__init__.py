@@ -23,9 +23,11 @@ from .irf_bangladesh import IrfBangladesh, IntercepteeBangladesh, IrfAttachmentB
 from .irf_malawi import IrfMalawi, IntercepteeMalawi
 from .irf_africa import IrfAfrica, IntercepteeAfrica
 from .irf_benin import IrfBenin, IntercepteeBenin
+from .irf_uganda import IrfUganda, IntercepteeUganda
 from .cif_bangladesh import CifBangladesh, LocationBoxBangladesh, PersonBoxBangladesh, PotentialVictimBangladesh, TransporationBangladesh, VehicleBoxBangladesh, CifAttachmentBangladesh
 from .cif_nepal import CifNepal, LocationBoxNepal, PersonBoxNepal, PotentialVictimNepal, TransporationNepal, VehicleBoxNepal, CifAttachmentNepal
 from .cif_india import CifIndia, LocationBoxIndia, PersonBoxIndia, PotentialVictimIndia, TransporationIndia, VehicleBoxIndia, CifAttachmentIndia
+from .cif_south_africa import CifSouthAfrica, LocationBoxSouthAfrica, PersonBoxSouthAfrica, PotentialVictimSouthAfrica, TransporationSouthAfrica, VehicleBoxSouthAfrica, CifAttachmentSouthAfrica
 from .vdf_bangladesh import VdfBangladesh, VdfAttachmentBangladesh
 from .vdf_nepal import VdfNepal, VdfAttachmentNepal
 from .vdf_india import VdfIndia, VdfAttachmentIndia

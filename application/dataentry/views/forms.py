@@ -3,7 +3,7 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response
 from django.core.exceptions import ObjectDoesNotExist
 
-from dataentry.models import BorderStation, Category, Form, FormType, QuestionLayout
+from dataentry.models import BorderStation, FormCategory, Form, FormType, QuestionLayout
 from dataentry.serializers import FormSerializer, FormTypeSerializer
 
 class FormTypeViewSet(viewsets.ModelViewSet):
@@ -81,13 +81,17 @@ class FormViewSet(viewsets.ModelViewSet):
             }
         
         form = Form.objects.get(form_name=form_name)
-        layouts = QuestionLayout.objects.filter(category__form=form, category__category_type__name='grid').order_by('question__id')
+        categories = []
+        form_categories = FormCategory.objects.filter(form=form)
+        for form_category in form_categories:
+            categories.append(form_category.category)
+        layouts = QuestionLayout.objects.filter(category__in=categories, category__category_type__name='grid').order_by('question__id')
         self.config_answers(config, layouts)
         
-        cards = Category.objects.filter(form=form, category_type__name='card')
-        for card in cards:
-            config[card.name] = {
-                'Category': card.id,
+        form_categories = FormCategory.objects.filter(category__in=categories, category__category_type__name = 'card')
+        for formCategory in form_categories:
+            config[formCategory.name] = {
+                'Category': formCategory.category.id,
                 'Person': [],
                 'Address':[],
                 'Basic':[],
@@ -96,8 +100,9 @@ class FormViewSet(viewsets.ModelViewSet):
                 'RadioItems':{},
                 'FormDefault':{},
                 }
-            layouts = QuestionLayout.objects.filter(category=card).order_by('question__id')
-            self.config_answers(config[card.name], layouts)
+            
+            layouts = QuestionLayout.objects.filter(category=formCategory.category).order_by('question__id')
+            self.config_answers(config[formCategory.name], layouts)
         
         return Response(config, status=status.HTTP_200_OK)       
     
