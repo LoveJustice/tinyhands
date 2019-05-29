@@ -72,6 +72,10 @@ class VdfCore(BaseForm):
     
     def get_form_type_name(self):
         return 'VDF'
+    
+    @staticmethod
+    def key_field_name():
+        return 'vdf_number'
 
 class VdfAttachment(BaseCard):
     attachment_number = models.PositiveIntegerField(null=True, blank=True)
