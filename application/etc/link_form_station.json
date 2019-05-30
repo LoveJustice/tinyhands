@@ -67,6 +67,10 @@
 		"station_codes":["BUS", "KLA"]
 	},
 	{
+		"form":"irfKenya",
+		"station_codes":["NBI", "MBS"]
+	},
+	{
 		"form":"irfIndia",
 		"station_codes":["CSG","MBZ","PNT"]
 	}
