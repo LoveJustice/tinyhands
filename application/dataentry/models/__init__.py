@@ -32,3 +32,4 @@ from .cif_south_africa import CifSouthAfrica, LocationBoxSouthAfrica, PersonBoxS
 from .vdf_bangladesh import VdfBangladesh, VdfAttachmentBangladesh
 from .vdf_nepal import VdfNepal, VdfAttachmentNepal
 from .vdf_india import VdfIndia, VdfAttachmentIndia
+from .monthly_report import MonthlyReport

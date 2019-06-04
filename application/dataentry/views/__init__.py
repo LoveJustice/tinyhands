@@ -12,3 +12,4 @@ from .forms import *
 from .cif_form import *
 from .person import *
 from .vdf_form import *
+from .monthly_report_form import *
