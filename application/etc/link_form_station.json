@@ -71,11 +71,23 @@
 		"station_codes":["COT"]
 	},
 	{
+		"form":"cifBenin",
+		"station_codes":["COT"]
+	},
+	{
 		"form":"irfUganda",
 		"station_codes":["BUS", "KLA"]
 	},
 	{
+		"form":"cifUganda",
+		"station_codes":["BUS", "KLA"]
+	},
+	{
 		"form":"irfKenya",
+		"station_codes":["NBI", "MBS"]
+	},
+	{
+		"form":"cifKenya",
 		"station_codes":["NBI", "MBS"]
 	},
 	{
@@ -84,6 +96,10 @@
 	},
 	{
 		"form":"irfMalawi",
+		"station_codes":["BLT","LLG","PLB"]
+	},
+	{
+		"form":"cifMalawi",
 		"station_codes":["BLT","LLG","PLB"]
 	}
 ]
