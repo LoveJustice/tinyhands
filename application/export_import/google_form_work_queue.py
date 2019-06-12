@@ -80,7 +80,7 @@ class GoogleFormWorkQueue(Thread):
         
     @staticmethod
     def update_form(form_object, remove):
-        if form_object.status != 'approved':
+        if form_object.status == 'in-progress':
             logger.debug('Form ' + form_object.get_key() + ' not exported with status='+form_object.status)
             # only export approved forms
             return
