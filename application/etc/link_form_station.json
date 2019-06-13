@@ -77,5 +77,9 @@
 	{
 		"form":"irfIndia",
 		"station_codes":["CSG","MBZ","PNT"]
+	},
+	{
+		"form":"irfMalawi",
+		"station_codes":["BLT","LLG","PLB"]
 	}
 ]
