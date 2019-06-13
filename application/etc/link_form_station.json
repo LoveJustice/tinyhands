@@ -47,6 +47,10 @@
 		"station_codes":["CSG","MBZ","PNT"]
 	},
 	{
+		"form":"monthlyReportIndia",
+		"station_codes":["CSG","MBZ","PNT"]
+	},
+	{
 		"form":"irfBangladesh",
 		"station_codes":["CTG","DAC","DLA","JSR","RJH"]
 	},
