@@ -67,6 +67,10 @@
 		"station_codes":["COT"]
 	},
 	{
+		"form":"vdfBenin",
+		"station_codes":["COT"]
+	},
+	{
 		"form":"irfUganda",
 		"station_codes":["BUS", "KLA"]
 	},
