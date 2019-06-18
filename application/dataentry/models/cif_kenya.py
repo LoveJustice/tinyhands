@@ -2,7 +2,7 @@ from django.db import models
 
 from .cif_core import CifAttachment, CifCore, LocationBoxCore, PersonBoxCore, PotentialVictimCore, TransporationCore, VehicleBoxCore
 
-class CifSouthAfrica(CifCore):
+class CifKenya(CifCore):
     # Recruitment
     how_recruited_promised_education = models.BooleanField(default=False)
     how_recruited_broker_asked_pb_work_visa = models.BooleanField(default=False)
@@ -18,39 +18,39 @@ class CifSouthAfrica(CifCore):
     legal_action_taken_staff_couldnt_reestablish_contact = models.BooleanField(default=False)
     
 
-class PotentialVictimSouthAfrica(PotentialVictimCore):
-    cif = models.ForeignKey(CifSouthAfrica)
+class PotentialVictimKenya(PotentialVictimCore):
+    cif = models.ForeignKey(CifKenya)
     
     def set_parent(self, the_parent):
         self.cif = the_parent
 
-class TransporationSouthAfrica(TransporationCore):
-    cif = models.ForeignKey(CifSouthAfrica)
+class TransporationKenya(TransporationCore):
+    cif = models.ForeignKey(CifKenya)
     
     def set_parent(self, the_parent):
         self.cif = the_parent
 
-class PersonBoxSouthAfrica(PersonBoxCore):
-    cif = models.ForeignKey(CifSouthAfrica)
+class PersonBoxKenya(PersonBoxCore):
+    cif = models.ForeignKey(CifKenya)
     how_well_does_pv_know = models.CharField(max_length=126, null=True)
     
     def set_parent(self, the_parent):
         self.cif = the_parent
 
-class LocationBoxSouthAfrica(LocationBoxCore):
-    cif = models.ForeignKey(CifSouthAfrica)
+class LocationBoxKenya(LocationBoxCore):
+    cif = models.ForeignKey(CifKenya)
     
     def set_parent(self, the_parent):
         self.cif = the_parent
 
-class VehicleBoxSouthAfrica(VehicleBoxCore):
-    cif = models.ForeignKey(CifSouthAfrica)
+class VehicleBoxKenya(VehicleBoxCore):
+    cif = models.ForeignKey(CifKenya)
     
     def set_parent(self, the_parent):
         self.cif = the_parent
 
-class CifAttachmentSouthAfrica(CifAttachment):
-    cif = models.ForeignKey(CifSouthAfrica)
+class CifAttachmentKenya(CifAttachment):
+    cif = models.ForeignKey(CifKenya)
     
     def set_parent(self, the_parent):
         self.cif = the_parent
