@@ -284,6 +284,19 @@ class FormData:
         return form_class
     
     @staticmethod
+    def get_form_card_class(form, card_name):
+        card_class = None
+        try:
+            form_category = FormCategory.objects.get(form=form, name=card_name)
+            if form_category.storage is not None:
+                mod = __import__(form_category.storage.module_name, fromlist=[form_category.storage.form_model_name])
+                card_class = getattr(mod, form_category.storage.form_model_name)
+        except ObjectDoesNotExist:
+            pass
+        
+        return card_class
+    
+    @staticmethod
     def find_object_by_number(key_value, form_type_name, station=None):
         form_object = None
         if station is None:

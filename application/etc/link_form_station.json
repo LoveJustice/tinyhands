@@ -28,23 +28,23 @@
 	},
 	{
 		"form":"irfSouthAfrica",
-		"station_codes":["JHB"]
+		"station_codes":["CTA", "JHB", "MUS"]
 	},
 	{
 		"form":"cifSouthAfrica",
-		"station_codes":["JHB"]
+		"station_codes":["CTA", "JHB", "MUS"]
 	},
 	{
 		"form":"irfIndia",
-		"station_codes":["CSG","MBZ","PNT"]
+		"station_codes":["APD","CSG","JGN","KIR","MBZ","MLD","PNT"]
 	},
 	{
 		"form":"cifIndia",
-		"station_codes":["CSG","MBZ","PNT"]
+		"station_codes":["APD","CSG","JGN","KIR","MBZ","MLD","PNT"]
 	},
 	{
 		"form":"vdfIndia",
-		"station_codes":["CSG","MBZ","PNT"]
+		"station_codes":["APD","CSG","JGN","KIR","MBZ","MLD","PNT"]
 	},
 	{
 		"form":"monthlyReportIndia",
@@ -89,10 +89,6 @@
 	{
 		"form":"cifKenya",
 		"station_codes":["NBI", "MBS"]
-	},
-	{
-		"form":"irfIndia",
-		"station_codes":["CSG","MBZ","PNT"]
 	},
 	{
 		"form":"irfMalawi",

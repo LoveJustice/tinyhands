@@ -1,5 +1,10 @@
 import pytz
+from datetime import timedelta
 
+from django.utils import timezone
+
+from rest_framework import status
+from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import filters as fs
 from rest_framework.permissions import IsAuthenticated
@@ -118,5 +123,37 @@ class IrfFormViewSet(BaseFormViewSet):
     
     def filter_key(self, queryset, search):
         return queryset.filter(irf_number__contains=search)
+    
+    def tally(self, request):
+        results = {'id': request.user.id}
+        self.action = 'list'
+        queryset = self.get_queryset();
+        today = timezone.now().now()
+        dates = [today - timedelta(days=x) for x in range(7)]
+        day_records_list = []
+        for date in dates:
+            day_records = {'date': date, 'interceptions': {}}
+            interceptions = day_records['interceptions']
+            records = queryset.filter(date_time_entered_into_system__year=date.year, date_time_entered_into_system__month=date.month, date_time_entered_into_system__day=date.day)
+            for record in records:
+                station_code = record.irf_number[:3]
+                victims = record.interceptees.filter(kind='v')
+                count = len(victims)
+                if station_code not in list(interceptions.keys()):
+                    interceptions[station_code] = 0
+                interceptions[station_code] += count
+            
+            day_records_list.append(day_records)
+            
+        results['days'] = day_records_list
+        ytd_records = queryset.filter(date_time_entered_into_system__year=today.year)
+        ytd_count = 0
+        for record in ytd_records:
+            victims = record.interceptees.filter(kind='v')
+            ytd_count += len(victims)
+        results['ytd'] = ytd_count
+        
+        return Response(results, status=status.HTTP_200_OK)
+        
 
 
