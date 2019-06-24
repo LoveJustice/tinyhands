@@ -28,11 +28,11 @@
 	},
 	{
 		"form":"irfSouthAfrica",
-		"station_codes":["CTA", "JHB", "MUS"]
+		"station_codes":["CTA", "JNB", "MUS"]
 	},
 	{
 		"form":"cifSouthAfrica",
-		"station_codes":["CTA", "JHB", "MUS"]
+		"station_codes":["CTA", "JNB", "MUS"]
 	},
 	{
 		"form":"irfIndia",
