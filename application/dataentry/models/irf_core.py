@@ -73,6 +73,24 @@ class IrfCore(BaseForm):
 
     has_signature = models.BooleanField('Scanned form has signature?', default=False)
     
+    #Logbook
+    logbook_incomplete_questions = models.CharField(max_length=127, blank=True)
+    logbook_incomplete_sections = models.CharField(max_length=127, blank=True)
+    logbook_information_complete = models.DateField(null=True)
+    logbook_notes = models.TextField('Logbook Notes', blank=True)
+    
+    logbook_first_verification = models.CharField(max_length=127, blank=True)
+    logbook_first_reason = models.TextField('First Reason', blank=True)
+    logbook_followup_call = models.CharField(max_length=127, blank=True)
+    logbook_first_verification_date = models.DateField(null=True)
+    
+    logbook_leadership_review = models.CharField(max_length=127, blank=True)
+    logbook_second_verification = models.CharField(max_length=127, blank=True)
+    logbook_second_reason = models.TextField('Second Reason', blank=True)
+    logbook_second_verification_date = models.DateField(null=True)
+
+    
+    
     class Meta:
         abstract = True
     

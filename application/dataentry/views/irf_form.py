@@ -13,6 +13,7 @@ from dataentry.models import IrfNepal, UserLocationPermission
 
 class IrfListSerializer(serializers.Serializer):
     id = serializers.IntegerField()
+    status = serializers.CharField()
     irf_number = serializers.CharField()
     number_of_victims = serializers.IntegerField()
     number_of_traffickers = serializers.IntegerField()
@@ -110,7 +111,7 @@ class IrfFormViewSet(BaseFormViewSet):
     def get_list_field_names(self):
         return ['id', 'irf_number', 'form_entered_by', 'number_of_victims', 'number_of_traffickers', 'staff_name', 
                     'station', 'date_time_of_interception', 'date_time_entered_into_system',
-                    'date_time_last_updated']
+                    'date_time_last_updated', 'status']
         
     def get_empty_queryset(self):
         return IrfNepal.objects.none()

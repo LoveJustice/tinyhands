@@ -114,7 +114,9 @@ class UserLocationPermissionViewSet(viewsets.ModelViewSet):
                     results |= Country.objects.filter(id=perm.station.operating_country.id)
                 else:
                     results = Country.objects.filter(id=perm.station.operating_country.id)       
-            
+        
+        if results is not None:
+            results = results.order_by('name')    
         serializer = CountrySerializer(results, many=True, context={'request': request})
         return Response(serializer.data)
     
