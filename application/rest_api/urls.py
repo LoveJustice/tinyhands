@@ -40,6 +40,7 @@ urlpatterns = [
         #SiteSettings
         url(r'^site-settings/$', SiteSettingsViewSet.as_view({'get': 'retrieve_custom'}), name="SiteSettings"),
         url(r'^site-settings/(?P<pk>\d+)/$', SiteSettingsViewSet.as_view({'put': 'update'}), name="SiteSettingsUpdate"),
+        url(r'^site-settings/google_map_key/$', SiteSettingsViewSet.as_view({'get': 'retrieve_google_map_key'}), name="SiteSettings"),
 
         # VIFs
         url(r'^vif/$', VictimInterviewViewSet.as_view(list), name="VictimInterview"),
