@@ -132,9 +132,9 @@ class UserLocationPermissionViewSet(viewsets.ModelViewSet):
         
         if 'country_id' in request.GET:
             tmp = int(request.GET['country_id'])
-            stations = BorderStation.objects.filter(operating_country__id = tmp)
+            stations = BorderStation.objects.filter(operating_country__id = tmp, open=True)
         else:
-            stations = BorderStation.objects.all()
+            stations = BorderStation.objects.filter(open=True)
         
         for perm in perms.iterator():
             if perm.country is None and perm.station is None:
