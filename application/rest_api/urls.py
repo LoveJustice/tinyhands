@@ -2,7 +2,7 @@ from django.conf.urls import url
 
 from dataentry.views import Address2ViewSet, Address1ViewSet, GeoCodeAddress1APIView, GeoCodeAddress2APIView, InterceptionRecordViewSet, VictimInterviewViewSet, IntercepteeViewSet, VictimInterviewDetailViewSet, PhotoExporter, IrfCsvExportView, VifCsvExportView, InterceptionAlertViewSet, PermissionViewSet, UserLocationPermissionViewSet
 from dataentry.views import PersonViewSet
-from dataentry.views import SiteSettingsViewSet
+from dataentry.views import SiteSettingsViewSet, GoogleMapKeyViewSet
 from dataentry.views import CountryViewSet
 from dataentry.views import IDManagementViewSet, TraffickerCheckViewSet, IrfFormViewSet, CifFormViewSet, VdfFormViewSet
 from dataentry.views import FormViewSet, FormTypeViewSet
@@ -40,7 +40,7 @@ urlpatterns = [
         #SiteSettings
         url(r'^site-settings/$', SiteSettingsViewSet.as_view({'get': 'retrieve_custom'}), name="SiteSettings"),
         url(r'^site-settings/(?P<pk>\d+)/$', SiteSettingsViewSet.as_view({'put': 'update'}), name="SiteSettingsUpdate"),
-        url(r'^site-settings/google_map_key/$', SiteSettingsViewSet.as_view({'get': 'retrieve_google_map_key'}), name="SiteSettings"),
+        url(r'^site-settings/google_map_key/$', GoogleMapKeyViewSet.as_view({'get': 'retrieve_google_map_key'}), name="GoogleMapKey"),
 
         # VIFs
         url(r'^vif/$', VictimInterviewViewSet.as_view(list), name="VictimInterview"),
