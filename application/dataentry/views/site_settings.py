@@ -17,6 +17,9 @@ class SiteSettingsViewSet(viewsets.ModelViewSet):
         site_settings = SiteSettings.objects.all()[0]
         return Response(SiteSettingsSerializer(site_settings).data)
     
+class GoogleMapKeyViewSet(viewsets.ViewSet):
+    permission_classes = (IsAuthenticated,)
+    
     def retrieve_google_map_key(self, request):
         key_file = os.environ['GOOGLE_MAP_KEY']
         try:
