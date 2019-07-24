@@ -25,6 +25,11 @@ class Storage(models.Model):
     parent_storage = models.ForeignKey('self', null=True)
     foreign_key_field_parent = models.CharField(max_length=126, null=True)
     foreign_key_field_child = models.CharField(max_length=126, null=True)
+    
+    def get_form_storage_class(self):
+        mod = __import__(self.module_name, fromlist=[self.form_model_name])
+        form_class = getattr(mod, self.form_model_name, None)
+        return form_class
 
 # Keep track of checksum of currently loaded form_data.json file so that changes
 # to that file can be automatically detected on startup and the new file can be loaded
