@@ -52,7 +52,7 @@ z3c.rml docs can be found on their github page: https://github.com/zopefoundatio
     </stylesheet>
 
     <story>
-        <para style="title"><u>Tiny Hands Nepal – Monthly Money Distribution Form</u></para>
+        <para style="title"><u>Monthly Money Distribution Form</u></para>
         <blockTable colWidths="50% 50%" style="infoGrid">
             <tr>
                 <td>Station: {{ name }}</td>
