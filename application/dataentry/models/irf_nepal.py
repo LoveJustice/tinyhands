@@ -83,8 +83,6 @@ class IrfNepal(IrfCore):
     noticed_other_sign = models.CharField(max_length=127, blank=True)
     
     case_notes = models.TextField('Case Notes', blank=True)
-    reason_for_intercept = models.TextField('Primary reason for intercept', blank=True)
-    evidence_categorization = models.CharField(max_length=127, null=True)
     
 class IntercepteeNepal(IntercepteeCore):
     interception_record = models.ForeignKey(IrfNepal, related_name='interceptees', on_delete=models.CASCADE)

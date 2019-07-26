@@ -85,8 +85,8 @@ class IrfTest(APITestCase):
         irf.number_of_victims = 1
         irf.number_of_traffickers = 0
         
-        irf.interview_findings = 'Some Evidence of Trafficking'
-        irf.reason_believe_trafficked = 'Primary reason'
+        irf.evidence_categorization = 'Some Evidence of Trafficking'
+        irf.reason_for_intercept = 'Primary reason'
         irf.convinced_by_police = 'Police convinced or forced to stop'
         form = Form.current_form('IRF', irf.station.id)
         form_data = FormData(irf, form)

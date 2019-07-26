@@ -21,7 +21,6 @@ from .irf_india import IrfIndia, IntercepteeIndia, IrfAttachmentIndia
 from .irf_south_africa import IrfSouthAfrica, IntercepteeSouthAfrica, IrfAttachmentSouthAfrica
 from .irf_bangladesh import IrfBangladesh, IntercepteeBangladesh, IrfAttachmentBangladesh
 from .irf_malawi import IrfMalawi, IntercepteeMalawi
-from .irf_africa import IrfAfrica, IntercepteeAfrica
 from .irf_benin import IrfBenin, IntercepteeBenin
 from .irf_uganda import IrfUganda, IntercepteeUganda, IrfAttachmentUganda
 from .irf_kenya import IrfKenya, IntercepteeKenya, IrfAttachmentKenya

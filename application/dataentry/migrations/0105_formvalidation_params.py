@@ -3,7 +3,7 @@
 from __future__ import unicode_literals
 
 import django.contrib.postgres.fields.jsonb
-from django.db import migrations
+from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
@@ -17,5 +17,77 @@ class Migration(migrations.Migration):
             model_name='formvalidation',
             name='params',
             field=django.contrib.postgres.fields.jsonb.JSONField(null=True),
+        ),
+        migrations.RenameField(
+            model_name='irfbangladesh',
+            old_name='interview_findings',
+            new_name='evidence_categorization',
+        ),
+        migrations.RenameField(
+            model_name='irfindia',
+            old_name='interview_findings',
+            new_name='evidence_categorization',
+        ),
+        migrations.RenameField(
+            model_name='irfsouthafrica',
+            old_name='interview_findings',
+            new_name='evidence_categorization',
+        ),
+        migrations.RenameField(
+            model_name='irfindia',
+            old_name='reason_believe_trafficked',
+            new_name='reason_for_intercept',
+        ),
+        migrations.RenameField(
+            model_name='irfsouthafrica',
+            old_name='reason_believe_trafficked',
+            new_name='reason_for_intercept',
+        ),
+        migrations.RemoveField(
+            model_name='intercepteeafrica',
+            name='interception_record',
+        ),
+        migrations.RemoveField(
+            model_name='intercepteeafrica',
+            name='person',
+        ),
+        migrations.RemoveField(
+            model_name='irfafrica',
+            name='form_entered_by',
+        ),
+        migrations.RemoveField(
+            model_name='irfafrica',
+            name='station',
+        ),
+        migrations.AlterField(
+            model_name='irfbangladesh',
+            name='evidence_categorization',
+            field=models.CharField(max_length=127, null=True),
+        ),
+        migrations.AlterField(
+            model_name='irfbangladesh',
+            name='reason_for_intercept',
+            field=models.TextField(blank=True, verbose_name='Primary reason for intercept'),
+        ),
+        migrations.AlterField(
+            model_name='irfindia',
+            name='evidence_categorization',
+            field=models.CharField(max_length=127, null=True),
+        ),
+        migrations.AlterField(
+            model_name='irfindia',
+            name='reason_for_intercept',
+            field=models.TextField(blank=True, verbose_name='Primary reason for intercept'),
+        ),
+        migrations.AlterField(
+            model_name='irfsouthafrica',
+            name='reason_for_intercept',
+            field=models.TextField(blank=True, verbose_name='Primary reason for intercept'),
+        ),
+        migrations.DeleteModel(
+            name='IntercepteeAfrica',
+        ),
+        migrations.DeleteModel(
+            name='IrfAfrica',
         ),
     ]

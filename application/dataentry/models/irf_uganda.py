@@ -48,8 +48,6 @@ class IrfUganda(IrfCore):
     initial_signs = models.CharField(max_length=127, default='', blank=True)
     
     # Final Procedures - Uganda specific
-    evidence_categorization = models.CharField(max_length=127, null=True)
-    reason_for_intercept = models.TextField('Primary reason for intercept', blank=True)
     
 class IntercepteeUganda(IntercepteeCore):
     interception_record = models.ForeignKey(IrfUganda, related_name='interceptees', on_delete=models.CASCADE)
