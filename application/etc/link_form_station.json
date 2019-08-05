@@ -28,26 +28,22 @@
 	},
 	{
 		"form":"irfSouthAfrica",
-		"station_codes":["CTA", "JNB", "MUS"]
+		"station_codes":["JHB"]
 	},
 	{
 		"form":"cifSouthAfrica",
-		"station_codes":["CTA", "JNB", "MUS"]
+		"station_codes":["JHB"]
 	},
 	{
 		"form":"irfIndia",
-		"station_codes":["APD","CSG","JGN","KIR","MBZ","MLD","PNT"]
+		"station_codes":["CSG","MBZ","PNT"]
 	},
 	{
 		"form":"cifIndia",
-		"station_codes":["APD","CSG","JGN","KIR","MBZ","MLD","PNT"]
+		"station_codes":["CSG","MBZ","PNT"]
 	},
 	{
 		"form":"vdfIndia",
-		"station_codes":["APD","CSG","JGN","KIR","MBZ","MLD","PNT"]
-	},
-	{
-		"form":"monthlyReportIndia",
 		"station_codes":["CSG","MBZ","PNT"]
 	},
 	{
@@ -67,19 +63,7 @@
 		"station_codes":["COT"]
 	},
 	{
-		"form":"vdfBenin",
-		"station_codes":["COT"]
-	},
-	{
-		"form":"cifBenin",
-		"station_codes":["COT"]
-	},
-	{
 		"form":"irfUganda",
-		"station_codes":["BUS", "KLA"]
-	},
-	{
-		"form":"cifUganda",
 		"station_codes":["BUS", "KLA"]
 	},
 	{
@@ -87,19 +71,7 @@
 		"station_codes":["NBI", "MBS"]
 	},
 	{
-		"form":"cifKenya",
-		"station_codes":["NBI", "MBS"]
-	},
-	{
-		"form":"irfMalawi",
-		"station_codes":["BLT","LLG","PLB"]
-	},
-	{
-		"form":"cifMalawi",
-		"station_codes":["BLT","LLG","PLB"]
-	},
-	{
-		"form":"irfTanzania",
-		"station_codes":["DAR"]
+		"form":"irfIndia",
+		"station_codes":["CSG","MBZ","PNT"]
 	}
 ]

@@ -134,7 +134,9 @@ class IrfSouthAfrica(IrfCore):
     cif = models.BooleanField('CIF', default=False)
     
     # Final Procedures
+    interview_findings = models.CharField(max_length=127, null=True)
     case_notes = models.TextField('Case Notes', default='', blank=True)
+    reason_believe_trafficked = models.TextField('What is the primary reason you believe this person is being trafficked or is at high risk of being trafficked', default='', blank=True)
     interception_made = models.CharField(max_length=127, null=True)
     handed_over_to =  models.CharField(max_length=127, default='', blank=True)
 

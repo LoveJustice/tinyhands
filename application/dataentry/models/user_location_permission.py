@@ -150,17 +150,13 @@ class UserLocationPermission(models.Model):
             for user_perm in user_permissions:
                 if ((user_perm.country is None and user_perm.station is None) or
                     (perm.country is not None and perm.country == user_perm.country) or
-                    (perm.station is not None and perm.station == user_perm.station) or
-                    (perm.station is not None and user_perm.country is not None and perm.station.operating_country == user_perm.country)):
+                    (perm.station is not None and perm.station == user_perm.station)):
                     perm_ok = True
                     break
             
             if not perm_ok:
                 logger.debug("user does not have permissions to remove the permission " + str(perm))
-                return {
-                    'code':status.HTTP_401_UNAUTHORIZED,
-                    'error':"user does not have permissions to remove the permission " + str(perm)
-                    }
+                return status.HTTP_401_UNAUTHORIZED
         
         # check if user has the permission to add the requested permissions
         for perm in add_permissions.values():
@@ -168,17 +164,13 @@ class UserLocationPermission(models.Model):
             for user_perm in user_permissions:
                 if ((user_perm.country is None and user_perm.station is None) or
                     (perm.country is not None and perm.country == user_perm.country) or
-                    (perm.station is not None and perm.station == user_perm.station) or
-                    (perm.station is not None and user_perm.country is not None and perm.station.operating_country == user_perm.country)):
+                    (perm.station is not None and perm.station == user_perm.station)):
                     perm_ok = True
                     break
             
             if not perm_ok:
                 logger.debug("user does not have permissions to add the permission " + str(perm))
-                return {
-                    'code':status.HTTP_401_UNAUTHORIZED,
-                    'error':"user does not have permissions to add the permission " + str(perm)
-                    }
+                return status.HTTP_401_UNAUTHORIZED
             
         for perm in remove_permissions.values():
             logger.debug("removing " + str(perm))
@@ -188,7 +180,7 @@ class UserLocationPermission(models.Model):
             logger.debug("adding " + str(perm))
             perm.save();
         
-        return {'code':status.HTTP_200_OK}
+        return status.HTTP_200_OK
     
     @staticmethod
     def has_permission_in_list(perm_list, group, action, country_id, station_id):

@@ -5,7 +5,6 @@ from rest_framework import serializers
 
 from dataentry.models import Address1, Address2, Country, SiteSettings, InterceptionRecord, VictimInterview, BorderStation, Person, Interceptee, InterceptionAlert, Permission, UserLocationPermission, Form, FormType
 from static_border_stations.serializers import LocationSerializer
-from dataentry.form_data import FormData
 
 from .helpers import related_items_helper
 
@@ -88,32 +87,15 @@ class BorderStationSerializer(serializers.ModelSerializer):
     number_of_staff = serializers.SerializerMethodField(read_only=True)
     ytd_interceptions = serializers.SerializerMethodField(read_only=True)
     location_set = LocationSerializer(many=True, read_only=True)
-    
-    def get_interceptee_class(self, obj):
-        interceptee_class = None
-        form = FormData.find_form('IRF', obj.id)
-        if form is not None:
-            interceptee_class = FormData.get_form_card_class(form, 'Interceptees')
-        
-        return interceptee_class
 
     def get_number_of_interceptions(self, obj):
-        interceptee_class = self.get_interceptee_class(obj)
-        if interceptee_class is not None:
-            return interceptee_class.objects.filter(interception_record__station=obj, kind='v').count()
-        else:
-            return 0
+        return Interceptee.objects.filter(interception_record__irf_number__startswith=obj.station_code, kind='v').count()
 
     def get_number_of_staff(self, obj):
         return obj.staff_set.all().count()
 
     def get_ytd_interceptions(self, obj):
-        interceptee_class = self.get_interceptee_class(obj)
-        if interceptee_class is not None:
-            return interceptee_class.objects.filter(interception_record__station=obj, kind='v',
-                                                    interception_record__date_time_entered_into_system__year=datetime.date.today().year).count()
-        else:
-            return 0
+        return Interceptee.objects.filter(interception_record__irf_number__startswith=obj.station_code, kind='v', interception_record__date_time_of_interception__year=datetime.date.today().year).count()
 
     def get_country_name(self, obj):
         return obj.operating_country.name or "No Country"
