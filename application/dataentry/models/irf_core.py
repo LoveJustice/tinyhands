@@ -70,6 +70,9 @@ class IrfCore(BaseForm):
     convinced_by_staff = models.CharField(max_length=127, blank=True)
     convinced_by_family = models.CharField(max_length=127, blank=True)
     convinced_by_police = models.CharField(max_length=127, blank=True)
+    
+    evidence_categorization = models.CharField(max_length=127, null=True)
+    reason_for_intercept = models.TextField('Primary reason for intercept', blank=True)
 
     has_signature = models.BooleanField('Scanned form has signature?', default=False)
     

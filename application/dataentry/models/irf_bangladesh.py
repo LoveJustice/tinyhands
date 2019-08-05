@@ -84,9 +84,7 @@ class IrfBangladesh(IrfCore):
     noticed_walking_to_border = models.BooleanField('Walking to border', default=False)
     
      # Final Procedures - Bangladesh specific
-    reason_for_intercept = models.TextField('Reason For Intercept', blank=True)
     case_notes = models.TextField('Case Notes', blank=True)
-    interview_findings = models.CharField(max_length=127, blank=True)
     
 class IntercepteeBangladesh(IntercepteeCore):
     interception_record = models.ForeignKey(IrfBangladesh, related_name='interceptees', on_delete=models.CASCADE)

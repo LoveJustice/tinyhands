@@ -54,8 +54,6 @@ class IrfMalawi(IrfCore):
     # Final Procedures - Malawi specific
     case_notes = models.TextField('Case Notes', blank=True)
     handed_over_to =  models.CharField(max_length=127, default='', blank=True)
-    evidence_categorization = models.CharField(max_length=127, null=True)
-    reason_for_intercept = models.TextField('Primary reason for intercept', blank=True)
     
 class IntercepteeMalawi(IntercepteeCore):
     interception_record = models.ForeignKey(IrfMalawi, related_name='interceptees', on_delete=models.CASCADE)
