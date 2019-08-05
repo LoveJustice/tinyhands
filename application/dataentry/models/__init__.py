@@ -22,6 +22,9 @@ from .irf_south_africa import IrfSouthAfrica, IntercepteeSouthAfrica, IrfAttachm
 from .irf_bangladesh import IrfBangladesh, IntercepteeBangladesh, IrfAttachmentBangladesh
 from .irf_malawi import IrfMalawi, IntercepteeMalawi
 from .irf_benin import IrfBenin, IntercepteeBenin
+from .irf_ghana import IrfGhana, IntercepteeGhana, IrfAttachmentGhana
+from .irf_sierra_leone import IrfSierraLeone, IntercepteeSierraLeone, IrfAttachmentSierraLeone
+from .irf_tanzania import IrfTanzania, IntercepteeTanzania, IrfAttachmentTanzania
 from .irf_uganda import IrfUganda, IntercepteeUganda, IrfAttachmentUganda
 from .irf_kenya import IrfKenya, IntercepteeKenya, IrfAttachmentKenya
 from .cif_bangladesh import CifBangladesh, LocationBoxBangladesh, PersonBoxBangladesh, PotentialVictimBangladesh, TransporationBangladesh, VehicleBoxBangladesh, CifAttachmentBangladesh
