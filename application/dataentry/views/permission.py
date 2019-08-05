@@ -57,8 +57,7 @@ class UserLocationPermissionViewSet(viewsets.ModelViewSet):
             permission_group = None
             permission_id = None
         
-        user_permissions = UserLocationPermission.objects.filter(account__id = request.user.id, permission__permission_group='ACCOUNTS',
-                                                                 permission__action='MANAGE')
+        user_permissions = UserLocationPermission.objects.filter(account__id = request.user.id)
             
         permission_list = data['permissions']
         new_permissions = []
@@ -70,18 +69,13 @@ class UserLocationPermissionViewSet(viewsets.ModelViewSet):
         
         issues = UserLocationPermission.check_valid_permission_set(pk, new_permissions, permission_id, permission_group)
         if len(issues) > 0:
-            return_data = {'error_text':issues[0]}
             code = status.HTTP_500_INTERNAL_SERVER_ERROR
         else:
-            result = UserLocationPermission.update_permission_set (pk, new_permissions, permission_id, permission_group, user_permissions)
-            code = result['code']
+            code = UserLocationPermission.update_permission_set (pk, new_permissions, permission_id, permission_group, user_permissions)
             if code == status.HTTP_200_OK:
                 self.update_account_permission(pk)
-                return_data = data
-            else:
-                return_data = {'error_text':result['error']}
             
-        return Response(return_data, code)
+        return Response({"data": data}, code)
     
     def effective_query(self, request, pk):
         results = self.queryset.filter(account__id=pk)        
@@ -120,9 +114,7 @@ class UserLocationPermissionViewSet(viewsets.ModelViewSet):
                     results |= Country.objects.filter(id=perm.station.operating_country.id)
                 else:
                     results = Country.objects.filter(id=perm.station.operating_country.id)       
-        
-        if results is not None:
-            results = results.order_by('name')    
+            
         serializer = CountrySerializer(results, many=True, context={'request': request})
         return Response(serializer.data)
     
@@ -132,9 +124,9 @@ class UserLocationPermissionViewSet(viewsets.ModelViewSet):
         
         if 'country_id' in request.GET:
             tmp = int(request.GET['country_id'])
-            stations = BorderStation.objects.filter(operating_country__id = tmp, open=True)
+            stations = BorderStation.objects.filter(operating_country__id = tmp)
         else:
-            stations = BorderStation.objects.filter(open=True)
+            stations = BorderStation.objects.all()
         
         for perm in perms.iterator():
             if perm.country is None and perm.station is None:

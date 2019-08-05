@@ -17,8 +17,6 @@ from dataentry.models import Interceptee
 from dataentry.models import InterceptionRecord
 from dataentry.models import UserLocationPermission
 from dataentry.models import Country
-from dataentry.models import Form
-from dataentry.models import FormCategory
 from rest_api.authentication_expansion import HasPermission, HasDeletePermission, HasPostPermission, HasPutPermission
 from static_border_stations.models import BorderStation
 
@@ -133,16 +131,8 @@ def top_table_data(pk, month, year, budget_sheets):
     border_station = BorderStation.objects.get(pk=pk)
     staff_count = border_station.staff_set.count()
     
-    form = Form.current_form('IRF',border_station.id)
-    form_categories = FormCategory.objects.filter(form=form, name='Interceptees')
-    if len(form_categories) < 0 or form_categories[0].storage is None:
-        return None
-    
-    form_class = form_categories[0].storage.get_form_storage_class()
-    
-    
     # Last month data will count records from the 1st of this month to end of this month by pulling data less than the first of next month
-    all_interceptions = form_class.objects.filter(interception_record__irf_number__startswith=border_station.station_code, kind='v')
+    all_interceptions = Interceptee.objects.filter(interception_record__irf_number__startswith=border_station.station_code, kind='v')
 
     last_months_count = all_interceptions.filter(
             interception_record__date_time_entered_into_system__gte=date,

@@ -32,7 +32,7 @@ class TransporationSouthAfrica(TransporationCore):
 
 class PersonBoxSouthAfrica(PersonBoxCore):
     cif = models.ForeignKey(CifSouthAfrica)
-    how_well_does_pv_know = models.CharField(max_length=126, null=True)
+    how_well_does_pv_know = models.PositiveIntegerField(null=True, blank=True)
     
     def set_parent(self, the_parent):
         self.cif = the_parent
