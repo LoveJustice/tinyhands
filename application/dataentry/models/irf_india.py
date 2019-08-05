@@ -78,9 +78,6 @@ class IrfIndia(IrfCore):
     noticed_carrying_a_baby = models.BooleanField('Carrying a baby', default=False)
     noticed_on_the_phone = models.BooleanField('On the phone', default=False)
     
-    interview_findings = models.CharField(max_length=127, blank=True)
-    reason_believe_trafficked  = models.TextField('What is the primary reason you believe this person is being trafficked or is at high risk of being trafficked', default='', blank=True)
-    
     call_subcommittee = models.BooleanField('Call Subcommittee Chairperson/Vice-Chairperson/Secretary', default=False)
     call_project_manager = models.BooleanField('Call Project Manager to confirm intercept', default=False)
     

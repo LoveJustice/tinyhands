@@ -22,6 +22,7 @@ web:
     DB_HOST: db
     DB_PORT: 5432
     GOOGLE_APPLICATION_CREDENTIALS: /data/google_cred.json
+    GOOGLE_MAP_KEY: /data/google_map_key.txt
     DREAMSUITE_LOG: /log/dreamsuite.log
     DJANGO_SECRET_KEY: thisissosecretfordevelopment
     SITE_HOSTNAME: localhost

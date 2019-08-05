@@ -2,10 +2,11 @@ from django.conf.urls import url
 
 from dataentry.views import Address2ViewSet, Address1ViewSet, GeoCodeAddress1APIView, GeoCodeAddress2APIView, InterceptionRecordViewSet, VictimInterviewViewSet, IntercepteeViewSet, VictimInterviewDetailViewSet, PhotoExporter, IrfCsvExportView, VifCsvExportView, InterceptionAlertViewSet, PermissionViewSet, UserLocationPermissionViewSet
 from dataentry.views import PersonViewSet
-from dataentry.views import SiteSettingsViewSet
+from dataentry.views import SiteSettingsViewSet, GoogleMapKeyViewSet
 from dataentry.views import CountryViewSet
 from dataentry.views import IDManagementViewSet, TraffickerCheckViewSet, IrfFormViewSet, CifFormViewSet, VdfFormViewSet
 from dataentry.views import FormViewSet, FormTypeViewSet
+from dataentry.views import MonthlyReportFormViewSet
 
 list = {'get': 'list', 'post': 'create'}
 detail = {'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}
@@ -39,6 +40,7 @@ urlpatterns = [
         #SiteSettings
         url(r'^site-settings/$', SiteSettingsViewSet.as_view({'get': 'retrieve_custom'}), name="SiteSettings"),
         url(r'^site-settings/(?P<pk>\d+)/$', SiteSettingsViewSet.as_view({'put': 'update'}), name="SiteSettingsUpdate"),
+        url(r'^site-settings/google_map_key/$', GoogleMapKeyViewSet.as_view({'get': 'retrieve_google_map_key'}), name="GoogleMapKey"),
 
         # VIFs
         url(r'^vif/$', VictimInterviewViewSet.as_view(list), name="VictimInterview"),
@@ -78,6 +80,7 @@ urlpatterns = [
         url(r'^irfNew/$', IrfFormViewSet.as_view(list), name='irfNew'),
         url(r'^irfNew/(?P<station_id>\d+)/(?P<pk>\d+)', IrfFormViewSet.as_view({'get': 'my_retrieve', 'put': 'update', 'delete': 'destroy'}), name='irfNewDetail'),
         url(r'^irfNew/blank/(?P<station_id>\d+)', IrfFormViewSet.as_view({'get': 'retrieve_blank_form'}), name='irfNewBlank'),
+        url(r'^irfNew/tally/$', IrfFormViewSet.as_view({'get': 'tally'}), name='irfNewTally'),
         
         
         url(r'^forms/$', FormViewSet.as_view({'get':'list'}), name='forns'),
@@ -92,4 +95,8 @@ urlpatterns = [
         url(r'^vdf/$', VdfFormViewSet.as_view(list), name='vdf'),
         url(r'^vdf/(?P<station_id>\d+)/(?P<pk>\d+)', VdfFormViewSet.as_view({'get': 'my_retrieve', 'put': 'update', 'delete': 'destroy'}), name='vdfDetail'),
         url(r'^vdf/blank/(?P<station_id>\d+)', VdfFormViewSet.as_view({'get': 'retrieve_blank_form'}), name='vdfBlank'),
+        
+        url(r'^monthly_report/$', MonthlyReportFormViewSet.as_view(list), name='monthlyReport'),
+        url(r'^monthly_report/(?P<station_id>\d+)/(?P<pk>\d+)', MonthlyReportFormViewSet.as_view({'get': 'my_retrieve', 'put': 'update', 'delete': 'destroy'}), name='monthlyReportDetail'),
+        url(r'^monthly_report/blank/(?P<station_id>\d+)', MonthlyReportFormViewSet.as_view({'get': 'retrieve_blank_form'}), name='monthlyReportBlank'), 
 ]

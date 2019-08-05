@@ -60,6 +60,7 @@ class BorderStationRestAPI(viewsets.ModelViewSet):
 class LocationViewSet(BorderStationRestAPI):
     queryset = Location.objects.all()
     serializer_class = LocationSerializer
+    ordering = ('name',)
     
     def retrieve_border_station_locations(self, request, *args, **kwargs):
         """
@@ -78,6 +79,7 @@ class CommitteeMemberViewSet(BorderStationRestAPI):
 class StaffViewSet(BorderStationRestAPI):
     queryset = Staff.objects.all()
     serializer_class = StaffSerializer
+    ordering = ('email',)
 
     def retrieve_border_station_staff(self, request, *args, **kwargs):
         """
