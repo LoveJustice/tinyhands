@@ -289,6 +289,7 @@ class FormValidation(models.Model):
     trigger_value = models.CharField(max_length=126, null=True)
     validation_type = models.ForeignKey(FormValidationType)
     error_warning_message = models.CharField(max_length=126)
+    params=JSONField(null=True)
 
 # Set of questions to be validated for the FormValidation
 class FormValidationQuestion(models.Model):

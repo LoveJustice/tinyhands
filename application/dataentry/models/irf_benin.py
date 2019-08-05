@@ -44,9 +44,6 @@ class IrfBenin(IrfCore):
     name_of_contact = models.CharField(max_length=127, default='', blank=True)
     initial_signs = models.CharField(max_length=127, default='', blank=True)
     
-    # Final Procedures - Benin specific
-    evidence_categorization = models.CharField(max_length=127, null=True)
-    reason_for_intercept = models.TextField('Primary reason for intercept', blank=True)
     
 class IntercepteeBenin(IntercepteeCore):
     interception_record = models.ForeignKey(IrfBenin, related_name='interceptees', on_delete=models.CASCADE)
