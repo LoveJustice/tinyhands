@@ -35,6 +35,9 @@ class IrfBenin(IrfCore):
     distant_relative_paying_for_education = models.BooleanField('Distant relative is paying for education', default=False)
     no_school_website = models.BooleanField('No school website', default=False)
     purpose_for_going_other = models.CharField(max_length=127, blank=True)
+    job_confirmed = models.BooleanField('Job confirmed', default=False)
+    valid_id_or_enrollment_documents = models.BooleanField('Valid ID card or enrollment documents', default=False)
+    enrollment_confirmed = models.BooleanField('Enrollment confirmed', default=False)
     
     # Family - Benin specific
     case_notes = models.TextField('Case Notes', blank=True)

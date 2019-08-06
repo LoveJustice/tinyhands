@@ -97,5 +97,9 @@
 	{
 		"form":"cifMalawi",
 		"station_codes":["BLT","LLG","PLB"]
+	},
+	{
+		"form":"irfTanzania",
+		"station_codes":["DAR"]
 	}
 ]
