@@ -3,13 +3,13 @@
 {% block html %}
 <p>Dear {{ station_name }} Subcommittee,</p>
 
-<p>Jaimashi.</p>
+<p>Greetings!</p>
 
-<p>Please click <a href="{{ site }}{% url 'MdfPdf' mdf_uuid %}">this link</a> to view the new Money Distribution Form for your border station.</p>
+<p>Please click <a href="{{ site }}{% url 'MdfPdf' mdf_uuid %}">this link</a> to view the new Money Distribution Form for your transit station.</p>
 
 <p>Thank you for your perseverance and hard work!</p>
 
 <p>Blessings,</p>
 
-<p>THN National Office</p>
+<p>National Office</p>
 {% endblock %}
