@@ -11,6 +11,7 @@ from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.files.storage import default_storage
 from django.db import IntegrityError
+from django.db.models import Q
 from dataentry.serialize_form import FormDataSerializer
 from dataentry.serializers import CountrySerializer
 from dataentry.dataentry_signals import form_done
@@ -35,8 +36,16 @@ class BaseFormViewSet(viewsets.ModelViewSet):
         if self.action != 'list':
             return None
         in_country = self.request.GET.get('country_ids')
-        status = self.request.GET.get('status', 'approved')
+        status = self.request.GET.get('status', 'approved,first-verification,second-verification')
         search = self.request.GET.get('search')
+        
+        status_list = []
+        in_progress=False
+        for stat in status.split(','):
+            if stat == 'in-progress':
+                in_progress = True
+            else:
+                status_list.append(stat)
                 
         countries = Country.objects.all()
         all_country_list = []
@@ -71,12 +80,11 @@ class BaseFormViewSet(viewsets.ModelViewSet):
             mod = __import__(form.storage.module_name, fromlist=[form.storage.form_model_name])
             form_model = getattr(mod, form.storage.form_model_name)
             
-            tmp_queryset = form_model.objects.filter(station__in=station_list, status=status).only(*self.get_list_field_names())
-            
-            # If query is for in-progress status CIFs, only include CIFs that were entered by the requesters account
-            if status == 'in-progress':
-                tmp_queryset = tmp_queryset.filter(form_entered_by__id=account_id)
-                
+            if in_progress:
+                tmp_queryset = form_model.objects.filter((Q(status='in-progress')&Q(form_entered_by__id=account_id)|Q(status__in=status_list))&Q(station__in=station_list)).only(*self.get_list_field_names())
+            else:
+                tmp_queryset = form_model.objects.filter(Q(status__in=status_list)&Q(station__in=station_list)).only(*self.get_list_field_names())
+      
             if search is not None:
                 tmp_queryset = self.filter_key(tmp_queryset, search)
             

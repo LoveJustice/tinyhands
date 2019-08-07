@@ -37,11 +37,27 @@ class ValidateForm:
                     answer = response.value
         
         return answer
+    
+    def get_answer_part(self, full_answer, validation, the_part):
+        answer = full_answer
+        if full_answer is not None and validation.params is not None and the_part in validation.params:
+            tmp = validation.params[the_part]
+            if tmp is not None:
+                part_names = tmp.split('.')
+                for part_name in part_names:
+                    answer = getattr(answer, part_name, None)
+                    if answer is None:
+                        break
+        
+        return answer
+        
 
     def not_blank_or_null(self, form_data, validation, validation_questions, category_index, general):
         for validation_question in validation_questions:
             question = validation_question.question
-            answer = form_data.get_answer(question)
+            full_answer = form_data.get_answer(question)
+            answer = self.get_answer_part(full_answer, validation, 'part')
+                
             if answer is None or isinstance(answer, str) and answer.strip() == '':
                 if general:
                     category_name = ''
@@ -53,8 +69,9 @@ class ValidateForm:
     def at_least_one_true(self, form_data, validation, validation_questions, category_index, general):
         for validation_question in validation_questions:
             question = validation_question.question
-            answer = form_data.get_answer(question)
-            if answer is not None and (isinstance(answer, bool) and answer == True or isinstance(answer, str) and answer.upper() == 'TRUE'):
+            full_answer = form_data.get_answer(question)
+            answer = self.get_answer_part(full_answer, validation, 'part')
+            if answer is not None and (isinstance(answer, bool) and answer == True or isinstance(answer, str) and answer.strip() != ''):
                 # found at least one true response
                 return
         
@@ -65,14 +82,15 @@ class ValidateForm:
         self.add_error_or_warning(category_name, category_index, validation)
     
     def at_least_one_card (self, form_data, validation, questions, category_index, general):
-        if getattr(form_data, 'card_dict', None) is None:
+        if getattr(form_data, 'card_dict', None) is None or validation.params is None or 'category_id' not in validation.params:
             tmp_validation = FormValidation()
             tmp_validation.level = validation.level
             tmp_validation.error_warning_message = 'Incorrect configuration for validation:' + validation.error_warning_message
             self.add_error_or_warning('CARD', None, tmp_validation)
-        else:          
-            for cat_list in form_data.card_dict.values():
-                if len(cat_list) > 0:
+        else:
+            category_id = validation.params['category_id']
+            if category_id in form_data.card_dict:
+                if len(form_data.card_dict[category_id]):
                     return
             
         self.add_error_or_warning('CARD', None, validation)

@@ -82,6 +82,12 @@ class IrfTest(APITestCase):
         irf.type_of_intercept = 'suspected'
         irf.contact_paid = True
         irf.which_contact = 'Bus driver'
+        irf.number_of_victims = 1
+        irf.number_of_traffickers = 0
+        
+        irf.evidence_categorization = 'Some Evidence of Trafficking'
+        irf.reason_for_intercept = 'Primary reason'
+        irf.convinced_by_police = 'Police convinced or forced to stop'
         form = Form.current_form('IRF', irf.station.id)
         form_data = FormData(irf, form)
         

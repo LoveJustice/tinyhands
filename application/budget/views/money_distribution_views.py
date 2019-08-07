@@ -60,33 +60,35 @@ class MoneyDistribution(viewsets.ViewSet):
 
         budget_calc = BorderStationBudgetCalculation.objects.get(pk=budget_calc_id)
         border_station = BorderStation.objects.get(pk=budget_calc.border_station.id)
+        
+        email_sender = border_station.operating_country.mdf_sender_email
 
         staff = border_station.staff_set.all()
         committee_members = border_station.committeemember_set.all()
         national_staff = Account.objects.filter(permission_can_receive_mdf=True, id__in=national_staff_ids)
 
-        self.save_recipients_and_email(staff, staff_ids, budget_calc)
-        self.save_recipients_and_email(committee_members, committee_ids, budget_calc)
+        self.save_recipients_and_email(staff, staff_ids, budget_calc, email_sender)
+        self.save_recipients_and_email(committee_members, committee_ids, budget_calc, email_sender)
 
-        self.email_national_staff(national_staff, budget_calc)
+        self.email_national_staff(national_staff, budget_calc, email_sender)
         return Response("Emails Sent!", status=200)
 
-    def save_recipients_and_email(self, person_list, recipient_ids, budget_calc):
+    def save_recipients_and_email(self, person_list, recipient_ids, budget_calc, email_sender):
         for person in person_list:
             if person.id in recipient_ids:
                 if person.receives_money_distribution_form == False:
                     person.receives_money_distribution_form = True
                     person.save()
-                self.email_staff_and_committee_members(person, budget_calc, 'money_distribution_form')
+                self.email_staff_and_committee_members(person, budget_calc, 'money_distribution_form', email_sender)
             else:
                 person.receives_money_distribution_form = False
                 person.save()
 
-    def email_national_staff(self, staff_list, budget_calc):
+    def email_national_staff(self, staff_list, budget_calc, email_sender):
         for staff in staff_list:
-            self.email_staff_and_committee_members(staff, budget_calc, 'money_distribution_form')
+            self.email_staff_and_committee_members(staff, budget_calc, 'money_distribution_form', email_sender)
 
-    def email_staff_and_committee_members(self, person, budget_calc, template, context={}):
+    def email_staff_and_committee_members(self, person, budget_calc, template, email_sender, context={}):
         logger.info("Sending MDF - %s for %s to %s", budget_calc.border_station.station_code, budget_calc.month_year.strftime("%B %Y"), person.email)
         context['person'] = person
         context['mdf_uuid'] = budget_calc.mdf_uuid
@@ -94,7 +96,7 @@ class MoneyDistribution(viewsets.ViewSet):
         context['site'] = settings.SITE_DOMAIN
         send_templated_mail(
             template_name=template,
-            from_email=settings.BORDER_STATION_EMAIL_SENDER,
+            from_email=email_sender,
             recipient_list=[person.email],
             context=context
         )
