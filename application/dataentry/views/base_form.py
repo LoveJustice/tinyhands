@@ -32,6 +32,16 @@ class BorderStationOverviewSerializer(serializers.ModelSerializer):
 
 
 class BaseFormViewSet(viewsets.ModelViewSet):
+    def build_query_filter(self, status_list, station_list, in_progress, account_id):
+        if in_progress:
+            q_filter = Q(status='in-progress')&Q(form_entered_by__id=account_id)
+        else:
+            q_filter = Q()
+        
+        q_filter = q_filter | Q(status__in=status_list)&Q(station__in=station_list)
+        
+        return q_filter
+    
     def get_queryset(self):
         if self.action != 'list':
             return None
@@ -75,15 +85,13 @@ class BaseFormViewSet(viewsets.ModelViewSet):
                 if form is not None and form not in form_list:
                     form_list.append(form)
         
+        q_filter = self.build_query_filter(status_list, station_list, in_progress, account_id)
         queryset = None
         for form in form_list:
             mod = __import__(form.storage.module_name, fromlist=[form.storage.form_model_name])
             form_model = getattr(mod, form.storage.form_model_name)
             
-            if in_progress:
-                tmp_queryset = form_model.objects.filter((Q(status='in-progress')&Q(form_entered_by__id=account_id)|Q(status__in=status_list))&Q(station__in=station_list)).only(*self.get_list_field_names())
-            else:
-                tmp_queryset = form_model.objects.filter(Q(status__in=status_list)&Q(station__in=station_list)).only(*self.get_list_field_names())
+            tmp_queryset = form_model.objects.filter(q_filter).only(*self.get_list_field_names())
       
             if search is not None:
                 tmp_queryset = self.filter_key(tmp_queryset, search)
