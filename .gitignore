@@ -44,6 +44,7 @@ application/src/*
 application/log/*
 application/.idea
 application/fixtures/sanitized-data.json
+application/google_map_key.txt
 build/nginx/media/*
 build/nginx/static/*
 
