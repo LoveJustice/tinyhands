@@ -35,6 +35,9 @@ from .cif_benin import CifBenin, LocationBoxBenin, PersonBoxBenin, PotentialVict
 from .cif_kenya import CifKenya, LocationBoxKenya, PersonBoxKenya, PotentialVictimKenya, TransporationKenya, VehicleBoxKenya, CifAttachmentKenya
 from .cif_malawi import CifMalawi, LocationBoxMalawi, PersonBoxMalawi, PotentialVictimMalawi, TransporationMalawi, VehicleBoxMalawi, CifAttachmentMalawi
 from .cif_uganda import CifUganda, LocationBoxUganda, PersonBoxUganda, PotentialVictimUganda, TransporationUganda, VehicleBoxUganda, CifAttachmentUganda
+from .cif_sierra_leone import CifSierraLeone, LocationBoxSierraLeone, PersonBoxSierraLeone, PotentialVictimSierraLeone, TransporationSierraLeone, VehicleBoxSierraLeone, CifAttachmentSierraLeone
+from .cif_ghana import CifGhana, LocationBoxGhana, PersonBoxGhana, PotentialVictimGhana, TransporationGhana, VehicleBoxGhana, CifAttachmentGhana
+from .cif_tanzania import CifTanzania, LocationBoxTanzania, PersonBoxTanzania, PotentialVictimTanzania, TransporationTanzania, VehicleBoxTanzania, CifAttachmentTanzania
 from .vdf_bangladesh import VdfBangladesh, VdfAttachmentBangladesh
 from .vdf_nepal import VdfNepal, VdfAttachmentNepal
 from .vdf_india import VdfIndia, VdfAttachmentIndia
