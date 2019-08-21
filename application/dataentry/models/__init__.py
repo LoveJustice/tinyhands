@@ -18,6 +18,7 @@ from .form import *
 from .irf_core import IrfCore
 from .irf_nepal import IrfNepal, IntercepteeNepal
 from .irf_india import IrfIndia, IntercepteeIndia, IrfAttachmentIndia
+from .irf_india_network import IrfIndiaNetwork, IntercepteeIndiaNetwork, IrfAttachmentIndiaNetwork
 from .irf_south_africa import IrfSouthAfrica, IntercepteeSouthAfrica, IrfAttachmentSouthAfrica
 from .irf_bangladesh import IrfBangladesh, IntercepteeBangladesh, IrfAttachmentBangladesh
 from .irf_malawi import IrfMalawi, IntercepteeMalawi
