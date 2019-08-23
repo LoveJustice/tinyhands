@@ -46,7 +46,7 @@ class BaseFormViewSet(viewsets.ModelViewSet):
         if self.action != 'list':
             return None
         in_country = self.request.GET.get('country_ids')
-        status = self.request.GET.get('status', 'approved,first-verification,second-verification')
+        status = self.request.GET.get('status', 'approved')
         search = self.request.GET.get('search')
         
         status_list = []
