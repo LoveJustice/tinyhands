@@ -22,7 +22,7 @@ httplib2==0.11.3
 ipdb==0.11
 lxml==4.2.5
 oauth2client==4.1.3
-opencv-python==4.1.0
+opencv-python==4.1.0.25
 parse==1.9.0
 Pillow==4.3.0
 preppy==2.6.0
