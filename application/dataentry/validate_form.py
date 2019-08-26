@@ -1,7 +1,9 @@
 import logging
+import pytz
 
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import status
+from datetime import date, datetime
 
 from .models.form import FormCategory, FormValidation, FormValidationQuestion, QuestionLayout, QuestionStorage
 
@@ -125,16 +127,39 @@ class ValidateForm:
         answer = form_data.get_answer(question)
         station_code = form_data.form_object.station.station_code
         if not answer.startswith(station_code):
-            self.add_error_or_warning(category_name, category_index, validation)            
+            self.add_error_or_warning(category_name, category_index, validation)
+            
+    def prevent_future_date(self, form_data, validation, validation_questions, category_index, general):
+        if getattr(form_data, 'form_data', None) is not None:
+            tz = pytz.timezone(form_data.form_data.form_object.station.time_zone)
+        else:
+            tz = pytz.timezone(form_data.form_object.station.time_zone)
+        now = datetime.now(tz)
+        for validation_question in validation_questions:
+            question = validation_question.question
+            full_answer = form_data.get_answer(question)
+            answer = self.get_answer_part(full_answer, validation, 'part')
+            if answer is not None and answer != '':
+                if isinstance(answer, date):
+                    test_datetime = datetime(answer.year, answer.month, answer.day)
+                elif isinstance(answer, datetime):
+                    test_datetime = datetime(answer.year, answer.month, answer.day, answer.hour, answer.minute, answer.second)
+                else:
+                    continue
+            
+                test_datetime = test_datetime.astimezone(tz)
+                if test_datetime > now:
+                    category_name = self.question_map[question.id] + ':' + question.prompt
+                    self.add_error_or_warning(category_name, category_index, validation)   
 
-    
     def __init__(self, form, form_data, ignore_warnings):
         self.validations = {
             'not_blank_or_null': self.not_blank_or_null,
             'at_least_one_true': self.at_least_one_true,
             'at_least_one_card': self.at_least_one_card,
             'trafficker_custody': self.custom_trafficker_custody,
-            'form_id_station_code': self.form_id_station_code
+            'form_id_station_code': self.form_id_station_code,
+            'prevent_future_date': self.prevent_future_date,
         }
         
         self.validations_to_perform = {
@@ -150,7 +175,7 @@ class ValidateForm:
         self.cards = form_data.card_dict
         self.response_code = status.HTTP_200_OK
         
-        if self.form_data.form_object.status == 'approved':   
+        if self.form_data.form_object.status != 'in-progress':   
             self.validations_to_perform['submit_error'] = True
             if not ignore_warnings:
                 self.validations_to_perform['warning'] = True
