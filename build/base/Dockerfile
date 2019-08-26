@@ -25,7 +25,23 @@ RUN set -ex \
             jpeg-dev \
             libjpeg \
             curl \
-            rsync \
+            rsync \ 
+            python-opencv \ 
+            libopencv-dev \ 
+            libav-tools  \ 
+            libjpeg-dev \ 
+            libpng-dev \ 
+            libtiff-dev \ 
+            libjasper-dev \ 
+            libgtk2.0-dev \ 
+            python-numpy \ 
+            python-pycurl \ 
+            libatlas-base-dev \
+            webp \ 
+            python-opencv \ 
+            qt5-default \
+            libvtk6-dev \ 
+            zlib1g-dev 
     && pip install -U pip \
     && LIBRARY_PATH=/lib:/usr/lib /bin/sh -c "pip install --no-cache-dir -r /requirements.txt" \
     && runDeps="$( \
@@ -40,4 +56,26 @@ RUN set -ex \
 
 # Make the directory for our code and logging
 RUN mkdir -p /data /log
+
+# Install Open CV - Warning, this takes absolutely forever
+RUN mkdir -p ~/opencv cd ~/opencv && \
+    wget https://github.com/opencv/opencv/archive/4.1.0.zip && \
+    unzip 4.1.0.zip && \
+    rm 4.1.0.zip && \
+    mv opencv-4.1.0 OpenCV && \
+    cd OpenCV && \
+    mkdir build && \ 
+    cd build && \
+    cmake \
+    -DWITH_QT=ON \ 
+    -DWITH_OPENGL=ON \ 
+    -DFORCE_VTK=ON \
+    -DWITH_TBB=ON \
+    -DWITH_GDAL=ON \
+    -DWITH_XINE=ON \
+    -DBUILD_EXAMPLES=ON .. && \
+    make -j4 && \
+    make install && \ 
+    ldconfig
+
 WORKDIR /data

@@ -68,3 +68,5 @@ error.log
 
 local.env
 deploybot_args.env
+
+OpenCV
