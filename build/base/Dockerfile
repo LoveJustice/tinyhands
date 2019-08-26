@@ -41,7 +41,7 @@ RUN set -ex \
             python-opencv \ 
             qt5-default \
             libvtk6-dev \ 
-            zlib1g-dev 
+            zlib1g-dev \
     && pip install -U pip \
     && LIBRARY_PATH=/lib:/usr/lib /bin/sh -c "pip install --no-cache-dir -r /requirements.txt" \
     && runDeps="$( \
