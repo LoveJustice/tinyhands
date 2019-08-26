@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import login
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
 from rest_framework import status
@@ -143,8 +144,18 @@ class ObtainExpiringAuthToken(ObtainAuthToken):
                     user=serializer.validated_data['user']
                 )
 
-            data = {'token': token.key}
+            login(request, serializer.validated_data['user'], None)
+            data = {
+                'token': token.key,
+                'sessionid': request.session.session_key
+            }
             return Response(data)
 
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
+class AuthenticateRequest(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request):
+        return Response(status=status.HTTP_200_OK)
+        

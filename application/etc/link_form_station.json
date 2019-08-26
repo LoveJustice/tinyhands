@@ -121,5 +121,9 @@
 	{
 		"form":"cifSierraLeone",
 		"station_codes":["XXB"]
+	},
+	{
+		"form":"irfIndiaNetwork",
+		"station_codes":["ANV"]
 	}
 ]
