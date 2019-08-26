@@ -101,5 +101,29 @@
 	{
 		"form":"irfTanzania",
 		"station_codes":["DAR"]
+	},
+	{
+		"form":"cifTanzania",
+		"station_codes":["DAR"]
+	},
+	{
+		"form":"irfGhana",
+		"station_codes":["XAA"]
+	},
+	{
+		"form":"cifGhana",
+		"station_codes":["XAA"]
+	},
+	{
+		"form":"irfSierraLeone",
+		"station_codes":["XXB"]
+	},
+	{
+		"form":"cifSierraLeone",
+		"station_codes":["XXB"]
+	},
+	{
+		"form":"irfIndiaNetwork",
+		"station_codes":["ANV"]
 	}
 ]
