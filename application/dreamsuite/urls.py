@@ -14,6 +14,7 @@ admin.autodiscover()
 
 urlpatterns = [
     url(r'^$', dataentry_views.home, name='home'),
+    url(r'^auth', account_views.AuthenticateRequest.as_view(), name='auth'),
     url(r'^data-entry/', include('dataentry.urls')),
 
     url(r'^api/', include('accounts.urls')),
