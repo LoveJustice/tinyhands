@@ -110,6 +110,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 PUBLIC_ROOT = os.path.join(BASE_DIR, 'public')
+PUBLIC_URL = '/public/'
 
 TEST_ENVIRONMENT = len(sys.argv) > 1 and sys.argv[1] == 'test'
 

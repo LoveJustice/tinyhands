@@ -8,7 +8,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dataentry', '0106_auto_20190801_1559'),
+        ('dataentry', '0108_auto_20190813_1249'),
     ]
 
     operations = [
@@ -29,6 +29,11 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='intercepteeindia',
+            name='anonymized_photo',
+            field=models.CharField(max_length=126, null=True),
+        ),
+        migrations.AddField(
+            model_name='intercepteeindianetwork',
             name='anonymized_photo',
             field=models.CharField(max_length=126, null=True),
         ),
