@@ -22,10 +22,9 @@ def anonymize_photo_receiver(sender, form_data, **kwargs):
             if len(card_dict[card_list]) > 0 and hasattr(card_dict[card_list][0].form_object, 'photo'):
                 for card in card_dict[card_list]:
                     card_object = card.form_object
-                    photo_name = card_object.photo.path.split("/")[-1]
 
                     ## If interceptee is a victim and picture is not null and is not present in public folder
-                    if card_object.kind == 'v' and  card_object.photo != '' and not os.path.exists(settings.PUBLIC_ROOT + '/interceptee_photos/'+ photo_name):
+                    if card_object.kind == 'v' and  card_object.photo != '' and not os.path.exists(settings.PUBLIC_ROOT + '/interceptee_photos/'+ card_object.photo.path.split("/")[-1]):
                         anonymize_file_name = anonymize_photo(card_object.photo.path)
                         # Set anonymize_photo field to empty string if no faces were found, otherwise the file name including interceptee_photos
                         card_object.anonymized_photo = anonymize_file_name

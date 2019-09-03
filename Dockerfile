@@ -1,4 +1,4 @@
-FROM tusoftwarestudio/tinyhands-base:latest
+FROM opencv-base
 MAINTAINER benaduggan
 
 COPY application/ /data/
