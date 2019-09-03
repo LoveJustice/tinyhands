@@ -8,9 +8,10 @@ from django.utils.timezone import make_aware
 from fuzzywuzzy import process
 
 from accounts.models import Alert
-from dataentry.models import Interceptee, SiteSettings, RedFlags, InterceptionAlert
+from dataentry.models import Interceptee, SiteSettings, RedFlags, FormCategory
 from .dataentry_signals import irf_done
 from .dataentry_signals import vif_done
+from .dataentry_signals import background_form_done
 
 logger = logging.getLogger(__name__)
 
@@ -344,6 +345,95 @@ class IRFAlertChecker(object):
                 pass
             
         return result
+    
+class FormAlertChecker:
+    def __init__(self, form_data, remove):
+        self.form_data = form_data
+        self.remove = remove
+    
+    def process(self):
+        if self.form_data.form_object.get_form_type_name() == 'IRF':
+            self.trafficker_name_match()
+    
+    def trafficker_name_match(self):
+        my_interceptee_class = None
+        form_categories = FormCategory.objects.filter(name='Interceptees', form__form_type__name='IRF')
+        people_dict = {}
+        for form_category in form_categories:
+            storage = form_category.storage
+            if storage is None:
+                continue
+            mod = __import__(storage.module_name, fromlist=[storage.form_model_name])
+            card_class = getattr(mod, storage.form_model_name)
+            
+            if form_category.form.id == self.form_data.form.id:
+                interceptees = card_class.objects.exclude(interception_record = self.form_data.form_object)
+                my_interceptee_class = card_class
+            else:
+                interceptees = card_class.objects.all()
+            
+            for interceptee in interceptees:
+                if interceptee.person is not None and interceptee.person.full_name is not None and interceptee.person.full_name != '':
+                    people_dict[interceptee] = interceptee.person.full_name
+        
+        custody_list = []
+        trafficker_list = []
+        trafficker_in_custody_list = []
+        site_settings = SiteSettings.objects.all()[0]
+        
+        my_interceptees = my_interceptee_class.objects.all()
+        for interceptee in my_interceptees:
+            if interceptee.kind == 't':
+                if interceptee.trafficker_taken_into_custody:
+                    custody_list.append(interceptee.person.full_name)
+                tmplist = []
+                p = interceptee.person
+                onePersonMatches = process.extractBests(p.full_name, people_dict, score_cutoff=site_settings.get_setting_value_by_name('person_cutoff'), limit=site_settings.get_setting_value_by_name('person_limit'))
+                logger.debug(onePersonMatches)
+                for match in onePersonMatches:
+                    tmplist.append((match[1], match[2].person))
+                tmplist.insert(0, (0, interceptee.person))
+                trafficker_list.append(tmplist)
+        
+        trafficker_in_custody = self.format_trafficker_in_custody(custody_list)
+        if len(trafficker_list) > 0:
+            Alert.objects.send_alert("Name Match",
+                                     context={"irf": self.form_data.form_object,
+                                              "trafficker_list": trafficker_list,
+                                              "trafficker_in_custody": trafficker_in_custody})
+            return True
+        return False
+    
+    def format_trafficker_in_custody(self, custody_list):
+        traff_format = ''
+        if len(custody_list) > 0:       
+            for custody_index in range(0, len(custody_list)-1):
+                if traff_format != '':
+                    traff_format = traff_format + ', ' + custody_list[custody_index]
+                else:
+                    traff_format = custody_list[custody_index]
+            
+            if traff_format == '':
+                # Only one trafficker in custody
+                traff_format = custody_list[0] + ' was'
+            else:
+                traff_format = traff_format + ' and ' + custody_list[len(custody_list)-1] + ' were'
+        
+        return traff_format
+        
+    
+    @staticmethod
+    def process_form(sender, **kwargs):
+        form_data = kwargs.get("form_data")
+        remove = kwargs.get("remove")
+        if remove is None:
+            remove = False    
+        if form_data is None:
+            return
+        
+        checker = FormAlertChecker(form_data, remove)
+        checker.process()
       
 irf_done.connect(IRFAlertChecker.handle_irf_done, weak=False, dispatch_uid="IRFAlertChecker")
 vif_done.connect(VIFAlertChecker.handle_vif_done, weak=False, dispatch_uid="VIFAlertChecker")
+background_form_done.connect(FormAlertChecker.process_form, weak=False, dispatch_uid="FormAlertChecker")

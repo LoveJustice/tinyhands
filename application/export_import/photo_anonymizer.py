@@ -6,10 +6,10 @@ from django.dispatch import receiver
 from django.conf import settings
 
 from dataentry.models import ExportImportCard, ExportImport
-from dataentry.dataentry_signals import form_done
+from dataentry.dataentry_signals import background_form_done
 
 
-@receiver(form_done)
+@receiver(background_form_done)
 def anonymize_photo_receiver(sender, form_data, **kwargs):
     # IRF model object is form_data.form_object.
     if form_data.form.form_type.name == 'IRF':
@@ -22,7 +22,6 @@ def anonymize_photo_receiver(sender, form_data, **kwargs):
             if len(card_dict[card_list]) > 0 and hasattr(card_dict[card_list][0].form_object, 'photo'):
                 for card in card_dict[card_list]:
                     card_object = card.form_object
-                    
                     ## If interceptee is a victim and picture is not null and is not present in public folder
                     if card_object.kind == 'v' and  card_object.photo != '' and not os.path.exists(settings.PUBLIC_ROOT + '/interceptee_photos/'+ card_object.photo.path.split("/")[-1]):
                         anonymize_file_name = anonymize_photo(card_object.photo.path)
