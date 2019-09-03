@@ -2,6 +2,7 @@ from threading import Thread
 from multiprocessing import Queue
 import logging
 import traceback
+from django.conf import settings
 
 from dataentry.dataentry_signals import form_done, background_form_done
 
@@ -46,6 +47,10 @@ class BackgroundFormWork(Thread):
                     
     @staticmethod
     def add_work(sender, **kwargs):
+        if settings.TEST_ENVIRONMENT:
+            # Test environment, doe not initialize thread or attempt to update google sheet
+            return
+        
         form_data = kwargs.get("form_data")
         remove = kwargs.get("remove")
         if remove is None:
