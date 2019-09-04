@@ -50,6 +50,10 @@ server {
     location /static/ {
         alias /data/dreamsuite/static/;
     }
+    
+    location /public/ {
+    	alias /data/public/;
+    }
 
     location /media/ {
     	auth_request /auth;
