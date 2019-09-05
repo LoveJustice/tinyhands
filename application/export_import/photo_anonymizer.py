@@ -33,7 +33,7 @@ def anonymize_photo_receiver(sender, form_data, **kwargs):
 def anonymize_photo(image_path):
     image_name = image_path.split("/")[-1]
     image = cv2.imread(image_path)
-    if image is not None:
+    try:
         result_image = image.copy()
 
         # Specify the trained cascade classifier
@@ -68,4 +68,6 @@ def anonymize_photo(image_path):
         
             cv2.imwrite(write_path, result_image)
             return 'interceptee_photos/' + image_name
+        return ''
+    except:
         return ''
