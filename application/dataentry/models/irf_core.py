@@ -127,6 +127,7 @@ class IntercepteeCore(BaseCard):
                                      processors=[ResizeToFill(200, 200)],
                                      format='JPEG',
                                      options={'quality': 80})
+    anonymized_photo = models.CharField(max_length=126, null=True)
     kind = models.CharField(max_length=4, choices=KIND_CHOICES)
     relation_to = models.CharField(max_length=255, blank=True)
     person = models.ForeignKey(Person, null=True, blank=True)
