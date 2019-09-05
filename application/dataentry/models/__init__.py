@@ -31,6 +31,7 @@ from .irf_kenya import IrfKenya, IntercepteeKenya, IrfAttachmentKenya
 from .cif_bangladesh import CifBangladesh, LocationBoxBangladesh, PersonBoxBangladesh, PotentialVictimBangladesh, TransporationBangladesh, VehicleBoxBangladesh, CifAttachmentBangladesh
 from .cif_nepal import CifNepal, LocationBoxNepal, PersonBoxNepal, PotentialVictimNepal, TransporationNepal, VehicleBoxNepal, CifAttachmentNepal
 from .cif_india import CifIndia, LocationBoxIndia, PersonBoxIndia, PotentialVictimIndia, TransporationIndia, VehicleBoxIndia, CifAttachmentIndia
+from .cif_osi import CifOsi, LocationBoxOsi, PersonBoxOsi, PotentialVictimOsi, TransporationOsi, VehicleBoxOsi, CifAttachmentOsi
 from .cif_south_africa import CifSouthAfrica, LocationBoxSouthAfrica, PersonBoxSouthAfrica, PotentialVictimSouthAfrica, TransporationSouthAfrica, VehicleBoxSouthAfrica, CifAttachmentSouthAfrica
 from .cif_benin import CifBenin, LocationBoxBenin, PersonBoxBenin, PotentialVictimBenin, TransporationBenin, VehicleBoxBenin, CifAttachmentBenin
 from .cif_kenya import CifKenya, LocationBoxKenya, PersonBoxKenya, PotentialVictimKenya, TransporationKenya, VehicleBoxKenya, CifAttachmentKenya
