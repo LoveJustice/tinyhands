@@ -16,7 +16,7 @@ server {
     }
     
     location /public/ {
-    	alias /data/public_media/;
+    	alias /data/public/;
     }
 
     location /media/ {
