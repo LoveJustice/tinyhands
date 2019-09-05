@@ -14,6 +14,7 @@ admin.autodiscover()
 
 urlpatterns = [
     url(r'^$', dataentry_views.home, name='home'),
+    url(r'^auth', account_views.AuthenticateRequest.as_view(), name='auth'),
     url(r'^data-entry/', include('dataentry.urls')),
 
     url(r'^api/', include('accounts.urls')),
@@ -30,4 +31,4 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^interceptee_fuzzy_matching/', dataentry_views.interceptee_fuzzy_matching, name='interceptee_fuzzy_matching'),
     url(r'^get_station_id/', static_border_stations_views.get_station_id, name='get_station_id')
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.PUBLIC_URL, document_root=settings.PUBLIC_ROOT)
