@@ -40,6 +40,7 @@ foo[1-9].*
 
 # for now in dev we check in /media
 application/media/
+application/public/
 application/src/*
 application/log/*
 application/.idea

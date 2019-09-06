@@ -2,6 +2,7 @@ import pytz
 from datetime import timedelta
 
 from django.utils import timezone
+from django.db.models import Q
 
 from rest_framework import status
 from rest_framework.response import Response
@@ -18,7 +19,7 @@ from dataentry.models import IrfNepal, UserLocationPermission
 
 class IrfListSerializer(serializers.Serializer):
     id = serializers.IntegerField()
-    status = serializers.CharField()
+    status = serializers.SerializerMethodField(read_only=True)
     irf_number = serializers.CharField()
     number_of_victims = serializers.IntegerField()
     number_of_traffickers = serializers.IntegerField()
@@ -34,6 +35,32 @@ class IrfListSerializer(serializers.Serializer):
     can_approve = serializers.SerializerMethodField(read_only=True)
     
     perm_group_name = 'IRF'
+    
+    def get_evidence_code(self, value):
+        code = ''
+        if value is None:
+            code = ''
+        elif value.startswith('Clear Evidence'):
+            code = 'CE'
+        elif value.startswith('Some Evidence'):
+            code = 'SE'
+        elif value.startswith('High Risk'):
+            code='HR'
+        elif value.startswith('Should Not have Intercepted'):
+            code = 'SNHI'
+        
+        return code
+    
+    def get_status(self, obj):
+        if obj.status == 'approved':
+            if obj.evidence_categorization is None:
+                status = 'old'
+            else:
+                status = 'submitted'
+        else:
+            status = obj.status
+            
+        return status
     
     def adjust_date_time_for_tz(self, date_time, tz_name):
         tz = pytz.timezone(tz_name)
@@ -86,6 +113,34 @@ class IrfFormViewSet(BaseFormViewSet):
         'date_time_entered_into_system', 'date_time_last_updated',)
     ordering = ('-date_time_of_interception',)
     
+    def or_filter(self, current_qfilter, new_qfilter):
+        if current_qfilter is None:
+            return new_qfilter
+        else:
+            return current_qfilter | new_qfilter
+        
+    def build_query_filter(self, status_list, station_list, in_progress, account_id):
+        if len(status_list) < 1:
+            if in_progress:
+                return Q(status='in-progress')&Q(form_entered_by__id=account_id)
+            else:
+                return Q()
+        
+        if status_list[0] == '!invalid':
+            q_filter = Q(status='in-progress')&Q(form_entered_by__id=account_id)|~Q(status='in-progress')&~Q(status='invalid')
+        else:
+            q_filter = Q(status=status_list[0])
+        
+        if len(status_list) > 1:
+            if status_list[1] == '!None':
+                q_filter = q_filter & Q(evidence_categorization__isnull=False)
+            elif status_list[1] == 'None':
+                q_filter = q_filter & Q(evidence_categorization__isnull=True)
+            else:
+                q_filter = q_filter & Q(logbook_second_verification__startswith=status_list[1])
+        
+        return q_filter
+    
     def get_serializer_class(self):
         if self.action == 'list':
             return IrfListSerializer
@@ -116,7 +171,8 @@ class IrfFormViewSet(BaseFormViewSet):
     def get_list_field_names(self):
         return ['id', 'irf_number', 'form_entered_by', 'number_of_victims', 'number_of_traffickers', 'staff_name', 
                     'station', 'date_time_of_interception', 'date_time_entered_into_system',
-                    'date_time_last_updated', 'status']
+                    'date_time_last_updated', 'status', 'evidence_categorization', 'logbook_first_verification',
+                    'logbook_second_verification']
         
     def get_empty_queryset(self):
         return IrfNepal.objects.none()

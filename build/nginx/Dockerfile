@@ -2,7 +2,7 @@ FROM nginx
 MAINTAINER benaduggan
 
 # Make a directory for the nginx logs
-RUN mkdir -p /data/dreamsuite/static/ /data/media/ /log /test
+RUN mkdir -p /data/dreamsuite/static/ /data/media/ /log /test /data/public/
 
 # Copy in static files
 COPY robots.txt /

@@ -78,6 +78,7 @@ class FormViewSet(viewsets.ModelViewSet):
             'RadioOther':[],
             'RadioItems':{},
             'FormDefault':{},
+            'ExportNames':{},
             }
         
         form = Form.objects.get(form_name=form_name)
@@ -87,6 +88,9 @@ class FormViewSet(viewsets.ModelViewSet):
             categories.append(form_category.category)
         layouts = QuestionLayout.objects.filter(category__in=categories, category__category_type__name='grid').order_by('question__id')
         self.config_answers(config, layouts)
+        
+        for layout in layouts:
+            config['ExportNames'][layout.question.id] = layout.question.export_name
         
         form_categories = FormCategory.objects.filter(category__in=categories, category__category_type__name = 'card')
         for formCategory in form_categories:
@@ -103,6 +107,9 @@ class FormViewSet(viewsets.ModelViewSet):
             
             layouts = QuestionLayout.objects.filter(category=formCategory.category).order_by('question__id')
             self.config_answers(config[formCategory.name], layouts)
+            
+            for layout in layouts:
+                config['ExportNames'][layout.question.id] = layout.question.export_name
         
         return Response(config, status=status.HTTP_200_OK)       
     
