@@ -136,6 +136,8 @@ class TraffickerCheckViewSet(viewsets.ViewSet):
                 results = Person.objects.filter(phone_contact__contains=input_phone, id__in=suspect_ids)
             else:
                 results = Person.objects.filter(phone_contact__contains=input_phone)
+        else:
+            results = Person.objects.filter(phone_contact__contains=input_phone)
             
         serializer = IDManagementSerializer(results, many=True, context={'request': request})
         return Response(serializer.data)
