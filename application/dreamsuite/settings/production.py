@@ -5,6 +5,7 @@ ALLOWED_HOSTS = [
     'tinyhandsdreamsuite.org',
     'dreamsuite.org',
     'searchlightdata.org',
+    'web',
 ]
 
 ADMINS = [('Ben Duggan', 'benaduggan@gmail.com'), ('Austin Munn', "austin@tinyhands.org"), ("Stan Rishel", "scrishel@sbcglobal.net")]
