@@ -47,6 +47,15 @@ class Person(models.Model):
             return self.forms[0].type
         else:
             return ''
+    
+    def get_form_name(self):
+        if not hasattr(self, 'forms'):
+            self.get_form_data()
+
+        if len(self.forms) > 0:
+            return self.forms[0].form_name
+        else:
+            return ''
 
     def get_form_number(self):
         if not hasattr(self,'forms'):
@@ -83,61 +92,144 @@ class Person(models.Model):
             return self.forms[0].kind
         else:
             return ''
+    
+    def get_station_id(self):
+        if not hasattr(self, 'forms'):
+            self.get_form_data()
+
+        if len(self.forms) > 0:
+            return self.forms[0].station_id
+        else:
+            return ''
+    
+    def get_country_id(self):
+        if not hasattr(self, 'forms'):
+            self.get_form_data()
+
+        if len(self.forms) > 0:
+            return self.forms[0].country_id
+        else:
+            return ''
+    
+    def get_form_id(self):
+        if not hasattr(self, 'forms'):
+            self.get_form_data()
+
+        if len(self.forms) > 0:
+            return self.forms[0].form_id
+        else:
+            return ''
 
     def get_form_data(self):
         from . import interceptee
         from . import victim_interview
         from . import person_box
+        from . import Form, FormCategory
 
         self.forms = []
         self.photo = ''
-
-        vifs = victim_interview.VictimInterview.objects.filter(victim = self)
-        if len(vifs) > 0:
-            for vif in vifs:
-                form = PersonFormData()
-                form.type = 'VIF'
-                form.number = vif.vif_number
-                form.date = vif.date
-                form.photo = ''
-                form.kind = 'Victim'
-                self.forms.append(form)
-
-        person_boxes = person_box.VictimInterviewPersonBox.objects.filter(person = self)
-        if len(person_boxes) > 0:
-            for person_box in person_boxes:
-                form = PersonFormData()
-                form.type = 'VIF'
-                form.number = person_box.victim_interview.vif_number
-                form.date = person_box.victim_interview.date
-                form.photo = ''
-                form.kind = 'Trafficker'
-                for field in person_box._meta.fields:
-                    if field.name.startswith('who_is_this_role'):
-                        value = getattr(person_boxes[0], field.name)
-                        if value:
-                            if isinstance(field, models.BooleanField) or isinstance(field, models.NullBooleanField):
-                                form.kind = field.verbose_name
-                                break
-                self.forms.append(form)
-
-        interceptees = interceptee.Interceptee.objects.filter(person = self)
-        if len(interceptees) > 0:
-            for interceptee in interceptees:
-                form = PersonFormData()
-                form.type = 'IRF'
-                form.number = interceptee.interception_record.irf_number
-                form.date = interceptee.interception_record.date_time_of_interception.date()
-                form.photo = interceptee.photo_thumbnail
-                form.kind = interceptees[0].kind
-                if form.kind == 't':
-                    form.kind = 'Trafficker'
-                elif form.kind == 'v':
-                    form.kind = 'Victim'
-                self.forms.append(form)
-
-                if self.photo == '' and form.photo is not None:
-                    self.photo = form.photo
+        
+        if self.id == 3279:
+            print('in get_form_data')
+        
+        vdf_forms = Form.objects.filter(form_type__name='VDF')
+        for vdf_form in vdf_forms:
+            vdf_class = vdf_form.storage.get_form_storage_class()
+            vdfs = vdf_class.objects.filter(victim=self)
+            for vdf in vdfs:
+                form_entry = PersonFormData()
+                form_entry.form_id = vdf.id
+                form_entry.type = 'VDF'
+                form_entry.form_name = vdf_form.form_name
+                form_entry.number = vdf.vdf_number
+                form_entry.date = vdf.interview_date
+                form_entry.photo = ''
+                form_entry.kind = 'PVOT'
+                form_entry.station_id = vdf.station.id
+                form_entry.country_id = vdf.station.operating_country.id
+                self.forms.append(form_entry)
+        
+        cif_forms = Form.objects.filter(form_type__name='CIF')
+        for cif_form in cif_forms:
+            cif_class = cif_form.storage.get_form_storage_class()
+            cifs = cif_class.objects.filter(main_pv=self)
+            for cif in cifs:
+                form_entry = PersonFormData()
+                form_entry.form_id = cif.id
+                form_entry.type = 'CIF'
+                form_entry.form_name = cif_form.form_name
+                form_entry.number = cif.cif_number
+                form_entry.date = cif.incident_date
+                form_entry.photo = ''
+                form_entry.kind = 'PVOT'
+                form_entry.station_id = cif.station.id
+                form_entry.country_id = cif.station.operating_country.id
+                self.forms.append(form_entry)
+            
+            form_categories = FormCategory.objects.filter(form=cif_form, name='OtherPotentialVictims')
+            if len(form_categories) == 1:
+                other_victims_class = form_categories[0].storage.get_form_storage_class()
+                other_victims = other_victims_class.objects.filter(person=self)
+                for other_victim in other_victims:
+                    form_entry = PersonFormData()
+                    form_entry.form_id = other_victim.cif.id
+                    form_entry.type = 'CIF'
+                    form_entry.form_name = cif_form.form_name
+                    form_entry.number = other_victim.cif.cif_number
+                    form_entry.date = other_victim.cif.incident_date
+                    form_entry.photo = ''
+                    form_entry.kind = 'PVOT'
+                    form_entry.station_id = other_victim.cif.station.id
+                    form_entry.country_id = other_victim.cif.station.operating_country.id
+                    self.forms.append(form_entry)
+            
+            form_categories = FormCategory.objects.filter(form=cif_form, name='PersonBoxes')
+            if len(form_categories) == 1:
+                person_box_class = form_categories[0].storage.get_form_storage_class()
+                person_boxes = person_box_class.objects.filter(person=self)
+                if self.id == 3279:
+                    print('person_boxes', len(person_boxes))
+                for person_box in person_boxes:
+                    form_entry = PersonFormData()
+                    form_entry.form_id = person_box.cif.id
+                    form_entry.type = 'CIF'
+                    form_entry.form_name = cif_form.form_name
+                    form_entry.number = person_box.cif.cif_number
+                    form_entry.date = person_box.cif.incident_date
+                    form_entry.photo = ''
+                    form_entry.kind = 'Suspect'
+                    for field in person_box._meta.fields:
+                        if field.name.startswith('role_'):
+                            value = getattr(person_box, field.name)
+                            if value:
+                                if isinstance(field, models.BooleanField) or isinstance(field, models.NullBooleanField):
+                                    form_entry.kind = field.verbose_name
+                                    break
+                    form_entry.station_id = person_box.cif.station.id
+                    form_entry.country_id = person_box.cif.station.operating_country.id
+                    self.forms.append(form_entry)
+                    
+        irf_forms = Form.objects.filter(form_type__name='IRF')
+        for irf_form in irf_forms:
+            form_categories = FormCategory.objects.filter(form=irf_form, name='Interceptees')
+            if len(form_categories) == 1:
+                interceptee_class = form_categories[0].storage.get_form_storage_class()
+                interceptees = interceptee_class.objects.filter(person=self)
+                for interceptee in interceptees:
+                    form_entry = PersonFormData()
+                    form_entry.form_id = interceptee.interception_record.id
+                    form_entry.type = 'IRF'
+                    form_entry.form_name = irf_form.form_name
+                    form_entry.number = interceptee.interception_record.irf_number
+                    form_entry.date = interceptee.interception_record.date_time_of_interception.date()
+                    form_entry.photo = ''
+                    if interceptee.kind == 'v':
+                        form_entry.kind = 'PVOT'
+                    else:
+                        form_entry.kind = 'Suspect'
+                    form_entry.station_id = interceptee.interception_record.station.id
+                    form_entry.country_id = interceptee.interception_record.station.operating_country.id
+                    self.forms.append(form_entry)
 
         return self.forms
     
