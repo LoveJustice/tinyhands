@@ -129,9 +129,6 @@ class Person(models.Model):
         self.forms = []
         self.photo = ''
         
-        if self.id == 3279:
-            print('in get_form_data')
-        
         vdf_forms = Form.objects.filter(form_type__name='VDF')
         for vdf_form in vdf_forms:
             vdf_class = vdf_form.storage.get_form_storage_class()
@@ -187,8 +184,6 @@ class Person(models.Model):
             if len(form_categories) == 1:
                 person_box_class = form_categories[0].storage.get_form_storage_class()
                 person_boxes = person_box_class.objects.filter(person=self)
-                if self.id == 3279:
-                    print('person_boxes', len(person_boxes))
                 for person_box in person_boxes:
                     form_entry = PersonFormData()
                     form_entry.form_id = person_box.cif.id
