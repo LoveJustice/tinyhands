@@ -1,10 +1,11 @@
 from django.core.urlresolvers import reverse
 from rest_framework import status
 from rest_framework.test import APIRequestFactory, APITestCase
-from dataentry.models import Person
+from dataentry.models import Person, IntercepteeIndia
 from dataentry.models import VictimInterview
 from accounts.tests.factories import SuperUserFactory
-from dataentry.tests.factories import PersonFactory, VifFactory, IrfFactory, IntercepteeNoPhotoFactory, PersonBoxFactory, AliasGroupFactory
+from dataentry.tests.factories import PersonFactory, CifIndiaFactory, IrfIndiaFactory, IntercepteeIndiaNoPhotoFactory, PersonBoxIndiaFactory, AliasGroupFactory
+from dataentry.management.commands.formLatest import Command
 
 class IDManagementTest(APITestCase):
     def setUp(self):
@@ -12,19 +13,19 @@ class IDManagementTest(APITestCase):
         self.person_list = PersonFactory.create_batch(11)
         self.user = SuperUserFactory.create()
         self.client.force_authenticate(user=self.user)
-        self.interceptee_list = IntercepteeNoPhotoFactory.create_batch(3)
-        self.pb_list = PersonBoxFactory.create_batch(2)
-        self.irf_list = IrfFactory.create_batch(2)
-        self.vif_list = VifFactory.create_batch(2)
+        self.interceptee_list = IntercepteeIndiaNoPhotoFactory.create_batch(3)
+        self.pb_list = PersonBoxIndiaFactory.create_batch(2)
+        self.irf_list = IrfIndiaFactory.create_batch(2)
+        self.cif_list = CifIndiaFactory.create_batch(2)
         self.alias_list = AliasGroupFactory.create_batch(1)
 
         self.interceptee_list[0].person = self.person_list[0]
         self.pb_list[0].person = self.person_list[0]
         self.pb_list[1].person = self.person_list[0]
         self.interceptee_list[1].person = self.person_list[1]
-        self.vif_list[0].victim = self.person_list[2]
+        self.cif_list[0].main_pv = self.person_list[2]
         self.interceptee_list[2].person = self.person_list[3]
-        self.vif_list[1].victim = self.person_list[4]
+        self.cif_list[1].main_pv = self.person_list[4]
 
         self.person_list[3].alias_group = self.alias_list[0]
         self.person_list[4].alias_group = self.alias_list[0]
@@ -39,8 +40,8 @@ class IDManagementTest(APITestCase):
         self.interceptee_list[1].interception_record = self.irf_list[1]
         self.interceptee_list[2].interception_record = self.irf_list[1]
 
-        self.pb_list[0].victim_interview = self.vif_list[0]
-        self.pb_list[1].victim_interview = self.vif_list[1]
+        self.pb_list[0].cif = self.cif_list[0]
+        self.pb_list[1].cif = self.cif_list[1]
 
         for idx in range(0,3):
             self.interceptee_list[idx].save()
@@ -49,7 +50,7 @@ class IDManagementTest(APITestCase):
             self.pb_list[idx].save()
 
         for idx in range(0,2):
-            self.vif_list[idx].save()
+            self.cif_list[idx].save()
 
         for idx in range(0,5):
             self.person_list[idx].save()
@@ -60,7 +61,7 @@ class IDManagementTest(APITestCase):
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['count'], 20)
+        self.assertEqual(response.data['count'], 16)
 
     def test_fuzzy_search(self):
         url = reverse('IDManagementFuzzy')
@@ -81,6 +82,9 @@ class IDManagementTest(APITestCase):
         self.assertEqual(len(response.data), 2)
 
     def test_person_forms(self):
+        command = Command()
+        command.handle([],[])
+
         url = reverse('IDManagementForms')
         data = {'person_id': self.person_list[0].id}
 
@@ -94,8 +98,8 @@ class IDManagementTest(APITestCase):
             cmpForm.append(response.data[idx]['number'])
 
         self.assertTrue(self.irf_list[0].irf_number in cmpForm, "missing irf")
-        self.assertTrue(self.vif_list[0].vif_number in cmpForm, "missing vif1")
-        self.assertTrue(self.vif_list[1].vif_number in cmpForm, "missing vif2")
+        self.assertTrue(self.cif_list[0].cif_number in cmpForm, "missing cif1")
+        self.assertTrue(self.cif_list[1].cif_number in cmpForm, "missing cif2")
 
     def test_add_alias(self):
         url = reverse('IDManagementAdd', args=[self.person_list[1].id, self.person_list[2].id])
