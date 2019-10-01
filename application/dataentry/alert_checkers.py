@@ -436,4 +436,4 @@ class FormAlertChecker:
       
 irf_done.connect(IRFAlertChecker.handle_irf_done, weak=False, dispatch_uid="IRFAlertChecker")
 vif_done.connect(VIFAlertChecker.handle_vif_done, weak=False, dispatch_uid="VIFAlertChecker")
-form_done.connect(FormAlertChecker.process_form, weak=False, dispatch_uid="FormAlertChecker")
+#form_done.connect(FormAlertChecker.process_form, weak=False, dispatch_uid="FormAlertChecker")
