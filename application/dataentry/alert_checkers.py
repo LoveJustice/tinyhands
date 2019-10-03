@@ -11,7 +11,7 @@ from accounts.models import Alert
 from dataentry.models import Interceptee, SiteSettings, RedFlags, FormCategory
 from .dataentry_signals import irf_done
 from .dataentry_signals import vif_done
-from .dataentry_signals import background_form_done
+from .dataentry_signals import form_done
 
 logger = logging.getLogger(__name__)
 
@@ -436,4 +436,4 @@ class FormAlertChecker:
       
 irf_done.connect(IRFAlertChecker.handle_irf_done, weak=False, dispatch_uid="IRFAlertChecker")
 vif_done.connect(VIFAlertChecker.handle_vif_done, weak=False, dispatch_uid="VIFAlertChecker")
-background_form_done.connect(FormAlertChecker.process_form, weak=False, dispatch_uid="FormAlertChecker")
+#form_done.connect(FormAlertChecker.process_form, weak=False, dispatch_uid="FormAlertChecker")
