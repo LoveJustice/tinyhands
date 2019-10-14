@@ -7,6 +7,7 @@ from django.core.management.base import BaseCommand
 from dataentry.models.irf_nepal import IrfNepal
 from dataentry.models.vdf_nepal import VdfNepal
 from dataentry.models.cif_nepal import CifNepal
+from dataentry.models.form import Form
 
 class Command(BaseCommand):
     def add_arguments(self, parser):
@@ -151,6 +152,47 @@ class Command(BaseCommand):
                     
                     setattr(cif, field, value)
             cif.save()
+    
+    def valid_date(self, the_date):
+        if the_date is None or the_date == '':
+            return False
+        else:
+            return True
+    
+    def fill_dates(self):
+        for form_type in ['IRF', 'CIF', 'VDF']:
+            forms = Form.objects.filter(form_type__name=form_type)
+            for form in forms:
+                form_class = form.storage.get_form_storage_class()
+                form_instances = form_class.objects.all()
+                for form_instance in form_instances:
+                    modified = False
+                    if form_instance.status == 'in-progress':
+                        continue
+                    if form_type == 'IRF' and (form_instance.evidence_categorization is None or form_instance.evidence_categorization == ''):
+                        continue
+                    
+                    if form_type == 'IRF' and self.valid_date(form_instance.logbook_second_verification_date) and not self.valid_date(form_instance.logbook_first_verification_date):
+                        form_instance.logbook_first_verification_date = form_instance.logbook_second_verification_date
+                        modified = True
+                    
+                    if not self.valid_date(form_instance.logbook_received):
+                        form_instance.logbook_received = form_instance.date_time_entered_into_system
+                        modified = True
+                    
+                    if not self.valid_date(form_instance.logbook_submitted):
+                        if self.valid_date(form_instance.logbook_information_complete):
+                            form_instance.logbook_submitted = form_instance.logbook_information_complete
+                        else:
+                            form_instance.logbook_submitted = form_instance.logbook_received
+                        modified = True
+                    
+                    if not self.valid_date(form_instance.logbook_information_complete):
+                        form_instance.logbook_information_complete = form_instance.logbook_submitted
+                        modified = True
+                    
+                    if modified:
+                        form_instance.save()
 
 
     def handle(self, *args, **options):
@@ -159,3 +201,6 @@ class Command(BaseCommand):
         with open(in_file) as csvfile:
             reader = csv.DictReader(csvfile)
             self.process_logbook(reader)
+        
+        
+        self.fill_dates()
