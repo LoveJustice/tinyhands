@@ -52,8 +52,11 @@ class IndicatorHistory(models.Model):
             result[name] = value
     
     @staticmethod
-    def calculate_indicators(start_date, end_date, country, check_photos=None):
-        start_validation_date = datetime.date(2017,9,1)
+    def calculate_indicators(start_date, end_date, country, check_photos=None, include_latest_date = False):
+        if country.verification_start_year is None or country.verification_start_month is None:
+            start_validation_date = None
+        else:
+            start_validation_date = datetime.date(country.verification_start_year,country.verification_start_month,1)
         station_list = BorderStation.objects.filter(operating_country=country)
         results = {}
         
@@ -74,6 +77,8 @@ class IndicatorHistory(models.Model):
                 'VDF':{}
                 }
         
+        latest_date = None
+        
         # general form information
         for form_type in ['IRF','CIF','VDF']:
             for station in station_list:
@@ -93,30 +98,48 @@ class IndicatorHistory(models.Model):
                                         logbook_first_verification_date__lte=end_date)
                     IndicatorHistory.calculate_irf_first_verification(results, query_set, start_date, end_date)
                     
-                    query_set = form_class.objects.filter(station__in=station_list,
-                                                          logbook_submitted__gte=start_validation_date,
-                                                          logbook_submitted__lte=end_date).exclude(logbook_first_verification_date__lte=end_date)
-                    IndicatorHistory.calculate_irf_backlog(results, query_set, 'v1')
+                    if start_validation_date is not None:
+                        query_set = form_class.objects.filter(station__in=station_list,
+                                                              logbook_submitted__gte=start_validation_date,
+                                                              logbook_submitted__lte=end_date,
+                                                              evidence_categorization__isnull=False).exclude(logbook_first_verification_date__lte=end_date)
+                        IndicatorHistory.calculate_irf_backlog(results, query_set, 'v1')
                     
                     query_set = form_class.objects.filter(station__in=station_list,
                                         logbook_second_verification_date__gte=start_date,
                                         logbook_second_verification_date__lte=end_date)
                     IndicatorHistory.calculate_irf_second_verification(results, query_set, start_date, end_date)
                     
-                    query_set = form_class.objects.filter(station__in=station_list,
-                                                          logbook_first_verification_date__gte=start_validation_date,
-                                                          logbook_first_verification_date__lte=end_date).exclude(logbook_second_verification_date__lte=end_date)
-                    IndicatorHistory.calculate_irf_backlog(results, query_set, 'v2')
+                    if start_validation_date is not None:
+                        query_set = form_class.objects.filter(station__in=station_list,
+                                                              logbook_first_verification_date__gte=start_validation_date,
+                                                              logbook_first_verification_date__lte=end_date,
+                                                              evidence_categorization__isnull=False).exclude(logbook_second_verification_date__lte=end_date)
+                        IndicatorHistory.calculate_irf_backlog(results, query_set, 'v2')
                     
                     interceptee_class = IndicatorHistory.get_class(class_cache, 'Interceptee', station)
                     if interceptee_class is not None:
                         query_set = interceptee_class.objects.filter(photo__in=check_photos.keys())
                         IndicatorHistory.process_photos(results, query_set, check_photos, start_date, end_date)
                     
+                if include_latest_date:
+                    query_set = form_class.objects.all().exclude(logbook_submitted__isnull=True).order_by("-logbook_submitted")[:1]
+                    if len(query_set) > 0:
+                        if latest_date is None:
+                            latest_date = query_set[0].logbook_submitted
+                        elif latest_date < query_set[0].logbook_submitted:
+                            latest_date = query_set[0].logbook_submitted
+                    
                 forms_processed.append(form_class)
         
         for prefix in ['irf','vdf', 'cif', 'photos', 'v1', 'v2']:
             IndicatorHistory.compute_lag(results, prefix)
+        
+        if include_latest_date:
+            if latest_date is None:
+                results['latestDate'] = ''
+            else:
+                results['latestDate'] = str(latest_date)
 
         return results
     

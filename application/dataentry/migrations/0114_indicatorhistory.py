@@ -24,4 +24,19 @@ class Migration(migrations.Migration):
                 ('country', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='dataentry.Country')),
             ],
         ),
+        migrations.AddField(
+            model_name='country',
+            name='verification_goals',
+            field=django.contrib.postgres.fields.jsonb.JSONField(null=True),
+        ),
+        migrations.AddField(
+            model_name='country',
+            name='verification_start_month',
+            field=models.PositiveIntegerField(null=True),
+        ),
+        migrations.AddField(
+            model_name='country',
+            name='verification_start_year',
+            field=models.PositiveIntegerField(null=True),
+        ),
     ]

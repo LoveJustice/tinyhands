@@ -12,6 +12,11 @@ class Command(BaseCommand):
             action='store_true',
             help='Remove eisting indicator history if present and calculate indicators for all countries',
         )
+        parser.add_argument(
+            '--country',
+            action='append',
+            type=str,
+        )
         
     def handle(self, *args, **options):
         now = datetime.datetime.now()
@@ -22,22 +27,31 @@ class Command(BaseCommand):
             end_year = now.year
             end_month = now.month - 1
         
+        if options['country']:
+            values = options['country']
+            if len(values) > 0:
+                countries = Country.objects.filter(name=values[0]).order_by('id')
+            else:
+                print ('country option specified, but no country name provided')
+                return
+        else:
+            countries = Country.objects.all().order_by('id')
+        
         if options['all']:
             print ('Calculating idicators for all countries from 2017-9 through ' + str(end_year) + '-' + str(end_month))
-            IndicatorHistory.objects.all().delete()
+            IndicatorHistory.objects.filter(country__in=countries).delete()
             start_year = 2017
             start_month = 9
             always_store_indicators = False
         else:
             print ('Calculating idicators for all countries for the month ' + str(end_year) + '-' + str(end_month))
-            IndicatorHistory.objects.filter(year=end_year, month=end_month).delete()
+            IndicatorHistory.objects.filter(year=end_year, month=end_month, country__in=countries).delete()
             start_year = end_year
             start_month = end_month
             always_store_indicators = True
-
-        countries = Country.objects.all()
         
         for country in countries:
+            #print(country.name)
             found_indicators = always_store_indicators
             for year in range(start_year, end_year+1):
                 if year == start_year:
