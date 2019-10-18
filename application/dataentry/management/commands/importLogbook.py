@@ -175,7 +175,6 @@ class Command(BaseCommand):
                 if (form_class == irf_class and self.valid_date(form_instance.logbook_first_verification_date) 
                         and form_instance.logbook_second_verification != ''
                         and not self.valid_date(form_instance.logbook_second_verification_date)):
-                    print(form_instance.irf_number)
                     form_instance.logbook_second_verification_date = form_instance.logbook_first_verification_date
                     modified = True
                 
@@ -225,7 +224,7 @@ class Command(BaseCommand):
         
         with open(in_file) as csvfile:
             reader = csv.DictReader(csvfile)
-            #self.process_logbook(reader, irf_class, cif_class, vdf_class)
+            self.process_logbook(reader, irf_class, cif_class, vdf_class)
         
         
         self.fill_dates(irf_class, cif_class, vdf_class)
