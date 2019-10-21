@@ -53,7 +53,7 @@ class IrfListSerializer(serializers.Serializer):
     
     def get_status(self, obj):
         if obj.status == 'approved':
-            if obj.evidence_categorization is None:
+            if obj.evidence_categorization is None or obj.evidence_categorization == '':
                 status = 'old'
             else:
                 status = 'submitted'
@@ -133,9 +133,9 @@ class IrfFormViewSet(BaseFormViewSet):
         
         if len(status_list) > 1:
             if status_list[1] == '!None':
-                q_filter = q_filter & Q(evidence_categorization__isnull=False)
+                q_filter = q_filter & Q(evidence_categorization__isnull=False) & ~Q(evidence_categorization='')
             elif status_list[1] == 'None':
-                q_filter = q_filter & Q(evidence_categorization__isnull=True)
+                q_filter = q_filter & (Q(evidence_categorization__isnull=True) | Q(evidence_categorization=''))
             else:
                 q_filter = q_filter & Q(logbook_second_verification__startswith=status_list[1])
         

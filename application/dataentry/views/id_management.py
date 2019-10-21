@@ -11,7 +11,7 @@ from itertools import chain
 
 from dataentry import fuzzy_matching
 from dataentry.serializers import IDManagementSerializer, PersonFormsSerializer
-from dataentry.models import AliasGroup, Person, Interceptee, VictimInterview, Form, FormCategory
+from dataentry.models import AliasGroup, Person, PersonFormCache, Interceptee, VictimInterview
 
 logger = logging.getLogger(__name__)
 
@@ -28,8 +28,14 @@ class IDManagementViewSet(viewsets.ModelViewSet):
     def person_forms(self, request):
         person_id = request.GET['person_id']
         person = Person.objects.get(id=person_id)
-        forms = person.get_form_data()
-        serializer = PersonFormsSerializer(forms, many=True, context={'request': request})
+        person_forms = []
+        forms = PersonFormCache.get_form_data(person)
+        for form in forms:
+            obj = form.get_detail_as_object()
+            if obj is not None:
+                person_forms.append(obj)
+            
+        serializer = PersonFormsSerializer(person_forms, many=True, context={'request': request})
         return Response(serializer.data)
 
     def alias_group(self, request):
