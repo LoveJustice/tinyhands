@@ -6,7 +6,7 @@ from .interception_record import InterceptionRecord
 from .location_box import VictimInterviewLocationBox
 from .person_box import VictimInterviewPersonBox
 from .person_identification import PersonIdentification
-from .person import Person
+from .person import Person, PersonFormCache
 from .victim_interview import VictimInterview
 from .country import Country
 from .alias_group import AliasGroup
@@ -45,3 +45,4 @@ from .vdf_nepal import VdfNepal, VdfAttachmentNepal
 from .vdf_india import VdfIndia, VdfAttachmentIndia
 from .vdf_benin import VdfBenin, VdfAttachmentBenin
 from .monthly_report import MonthlyReport
+from .indicator_history import IndicatorHistory

@@ -242,6 +242,12 @@ class Command(BaseCommand):
         sanitized = 0
 
         sanitized += self.sanitize(Interceptee, ['photo'], [], [], [], None)
+        interceptee_stores = Storage.objects.filter(form_model_name__startswith='Interceptee')
+        for interceptee_store in interceptee_stores:
+            interceptee_class = interceptee_store.get_form_storage_class()
+            sanitized += self.sanitize(interceptee_class, ['photo'], [], [], [], None)
+            
+        
         sanitized += self.sanitize(InterceptionRecord, [], [], [], ['scanned_form'], self.irf_file_prefix)
         sanitized += self.sanitize(VictimInterview, [],
                                    ['interviewer', 'legal_action_fir_against_value', 'legal_action_dofe_against_value'],

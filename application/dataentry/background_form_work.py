@@ -63,4 +63,4 @@ class BackgroundFormWork(Thread):
         BackgroundFormWork.instance.work_queue.put(work)
         logger.debug("added to background queue form data=" + work)
                     
-form_done.connect(BackgroundFormWork.add_work, weak=False, dispatch_uid="BackgroundFormWork")
+#form_done.connect(BackgroundFormWork.add_work, weak=False, dispatch_uid="BackgroundFormWork")
