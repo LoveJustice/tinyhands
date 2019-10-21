@@ -101,5 +101,5 @@ urlpatterns = [
         url(r'^monthly_report/(?P<station_id>\d+)/(?P<pk>\d+)', MonthlyReportFormViewSet.as_view({'get': 'my_retrieve', 'put': 'update', 'delete': 'destroy'}), name='monthlyReportDetail'),
         url(r'^monthly_report/blank/(?P<station_id>\d+)', MonthlyReportFormViewSet.as_view({'get': 'retrieve_blank_form'}), name='monthlyReportBlank'),
         
-        url(r'^indicators/$', IndicatorsViewSet.as_view({'get': 'calculate_indicators'}), name='indicators'),
+        url(r'^indicators/(?P<country_id>\d+)$', IndicatorsViewSet.as_view({'get': 'calculate_indicators'}), name='indicators'),
 ]
