@@ -4,12 +4,11 @@ import datetime
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.management.base import BaseCommand
 
-from dataentry.models.irf_nepal import IrfNepal
-from dataentry.models.vdf_nepal import VdfNepal
-from dataentry.models.cif_nepal import CifNepal
+from dataentry.models.form import Form
 
 class Command(BaseCommand):
     def add_arguments(self, parser):
+        parser.add_argument('base_form_name', nargs='+', type=str)
         parser.add_argument('in_file', nargs='+', type=str)
         
     def has_data(self, value):
@@ -18,11 +17,12 @@ class Command(BaseCommand):
         else:
             return False
     
-    def process_logbook(self, dictReader):
+    def process_logbook(self, dictReader, irf_class, cif_class, vdf_class):
+        
         for row in dictReader:
-            self.process_irf_logbook(IrfNepal, row)
-            self.process_vdf_logbook(VdfNepal, row)
-            self.process_cif_logbook(CifNepal, row)
+            self.process_irf_logbook(irf_class, row)
+            self.process_vdf_logbook(vdf_class, row)
+            self.process_cif_logbook(cif_class, row)
         
         
     def process_irf_logbook(self, irf_class, row):
@@ -151,11 +151,80 @@ class Command(BaseCommand):
                     
                     setattr(cif, field, value)
             cif.save()
-
+    
+    def valid_date(self, the_date):
+        if the_date is None or the_date == '':
+            return False
+        else:
+            return True
+    
+    def fill_dates(self, irf_class, cif_class, vdf_class):
+        for form_class in [irf_class, cif_class, vdf_class]:
+            form_instances = form_class.objects.all()
+            for form_instance in form_instances:
+                modified = False
+                if form_instance.status == 'in-progress':
+                    continue
+                if form_class == irf_class and (form_instance.evidence_categorization is None or form_instance.evidence_categorization == ''):
+                    continue
+                
+                if form_class == irf_class and self.valid_date(form_instance.logbook_second_verification_date) and not self.valid_date(form_instance.logbook_first_verification_date):
+                    form_instance.logbook_first_verification_date = form_instance.logbook_second_verification_date
+                    modified = True
+                
+                if (form_class == irf_class and self.valid_date(form_instance.logbook_first_verification_date) 
+                        and form_instance.logbook_second_verification != ''
+                        and not self.valid_date(form_instance.logbook_second_verification_date)):
+                    form_instance.logbook_second_verification_date = form_instance.logbook_first_verification_date
+                    modified = True
+                
+                if not self.valid_date(form_instance.logbook_received):
+                    form_instance.logbook_received = form_instance.date_time_entered_into_system
+                    modified = True
+                
+                if not self.valid_date(form_instance.logbook_submitted):
+                    if self.valid_date(form_instance.logbook_information_complete):
+                        form_instance.logbook_submitted = form_instance.logbook_information_complete
+                    else:
+                        form_instance.logbook_submitted = form_instance.logbook_received
+                    modified = True
+                
+                if not self.valid_date(form_instance.logbook_information_complete):
+                    form_instance.logbook_information_complete = form_instance.logbook_received
+                    modified = True
+                
+                if modified:
+                    form_instance.save()
 
     def handle(self, *args, **options):
         in_file = options['in_file'][0]
+        base_form = options['base_form_name'][0]
+        
+        forms = Form.objects.filter(form_name='irf' + base_form)
+        if len(forms) == 1:
+            irf_class = forms[0].storage.get_form_storage_class()
+        else:
+            print('Unable to find form irf' + base_form_name)
+            return
+        
+        forms = Form.objects.filter(form_name='cif' + base_form)
+        if len(forms) == 1:
+            cif_class = forms[0].storage.get_form_storage_class()
+        else:
+            print('Unable to find form cif' + base_form_name)
+            return
+        
+        forms = Form.objects.filter(form_name='vdf' + base_form)
+        if len(forms) == 1:
+            vdf_class = forms[0].storage.get_form_storage_class()
+        else:
+           print('Unable to find form vdf' + base_form_name)
+           return
+        
         
         with open(in_file) as csvfile:
             reader = csv.DictReader(csvfile)
-            self.process_logbook(reader)
+            self.process_logbook(reader, irf_class, cif_class, vdf_class)
+        
+        
+        self.fill_dates(irf_class, cif_class, vdf_class)
