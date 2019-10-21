@@ -72,6 +72,7 @@ class PersonFactory(DjangoModelFactory):
     gender = 'm'
 
 
+
 class VifFactory(DjangoModelFactory):
     class Meta:
         model = VictimInterview
@@ -88,6 +89,14 @@ class VifFactory(DjangoModelFactory):
     date_time_entered_into_system = datetime.datetime(2011, 12, 12, tzinfo=pytz.UTC)
     date_time_last_updated = datetime.datetime(2011, 12, 12, tzinfo=pytz.UTC)
 
+class CifIndiaFactory(DjangoModelFactory):
+    class Meta:
+            model = CifIndia
+    
+    cif_number = factory.Sequence(lambda n: 'BHD{0}'.format(n))
+    date_time_entered_into_system = datetime.datetime(2011, 12, 12, tzinfo=pytz.UTC)
+    date_time_last_updated = datetime.datetime(2011, 12, 12, tzinfo=pytz.UTC)
+    station = factory.SubFactory(MbzStationFactory)
 
 class VictimInterviewLocationBoxFactory(DjangoModelFactory):
     class Meta:
@@ -105,6 +114,15 @@ class IntercepteeFactory(DjangoModelFactory):
     interception_record = factory.SubFactory(IrfFactory)
     kind = 'v'
 
+class IntercepteeIndiaFactory(DjangoModelFactory):
+    class Meta:
+        model = IntercepteeIndia
+
+    person = factory.SubFactory(PersonFactory)
+    photo = 'foo.png'
+    interception_record = factory.SubFactory(IrfIndiaFactory)
+    kind = 'v'
+
 # Photo will cause IDManagement test to fail.  Photo is required for photo_exporter test.
 class IntercepteeNoPhotoFactory(DjangoModelFactory):
     class Meta:
@@ -113,6 +131,16 @@ class IntercepteeNoPhotoFactory(DjangoModelFactory):
     person = factory.SubFactory(PersonFactory)
     photo = None
     interception_record = factory.SubFactory(IrfFactory)
+    kind = 'v'
+
+# Photo will cause IDManagement test to fail.  Photo is required for photo_exporter test.
+class IntercepteeIndiaNoPhotoFactory(DjangoModelFactory):
+    class Meta:
+        model = IntercepteeIndia
+
+    person = factory.SubFactory(PersonFactory)
+    photo = None
+    interception_record = factory.SubFactory(IrfIndiaFactory)
     kind = 'v'
 
 class SiteSettingsFactory(DjangoModelFactory):
@@ -166,7 +194,14 @@ class PersonBoxFactory(DjangoModelFactory):
         model = VictimInterviewPersonBox
         
     person = factory.SubFactory(PersonFactory)
-    victim_interview = factory.SubFactory(VifFactory)  
+    victim_interview = factory.SubFactory(VifFactory)
+
+class PersonBoxIndiaFactory(DjangoModelFactory):
+    class Meta:
+        model = PersonBoxIndia
+        
+    person = factory.SubFactory(PersonFactory)
+    cif = factory.SubFactory(CifIndiaFactory)  
 
 class AliasGroupFactory(DjangoModelFactory):
     class Meta:
