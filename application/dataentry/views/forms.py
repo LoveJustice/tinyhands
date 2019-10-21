@@ -1,10 +1,35 @@
 import json
+import pytz
 from rest_framework import viewsets, status
 from rest_framework.response import Response
+from rest_framework import serializers
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Q
 
-from dataentry.models import BorderStation, FormCategory, Form, FormType, QuestionLayout
+from dataentry.models import BaseForm, BorderStation, FormCategory, Form, FormType, QuestionLayout
 from dataentry.serializers import FormSerializer, FormTypeSerializer
+
+class RelatedForm:
+    def __init__(self, id, form_number, form_type, form_name, staff_name, station_id, country_id, time_entered, time_last_edited):
+        self.id = id
+        self.form_number = form_number
+        self.form_type = form_type
+        self.form_name = form_name
+        self.staff_name = staff_name
+        self.country_id = country_id
+        self.station_id = station_id
+        self.time_entered = time_entered
+        self.time_last_edited = time_last_edited
+
+class RelatedFormsSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    form_number = serializers.CharField()
+    form_type = serializers.CharField()
+    form_name = serializers.CharField()
+    staff_name = serializers.CharField()
+    station_id = serializers.IntegerField()
+    time_entered = serializers.CharField()
+    time_last_edited = serializers.CharField()        
 
 class FormTypeViewSet(viewsets.ModelViewSet):
     queryset = FormType.objects.all()
@@ -154,4 +179,57 @@ class FormViewSet(viewsets.ModelViewSet):
             the_form.stations.add(station)
                 
         return Response(request.data, status=status.HTTP_200_OK)
+    
+    def adjust_date_time_for_tz(self, date_time, tz_name):
+        tz = pytz.timezone(tz_name)
+        date_time.replace(tzinfo=pytz.UTC)
+        date_time = date_time.astimezone(tz)
+        date_time = date_time.replace(microsecond=0)
+        date_time = date_time.replace(tzinfo=None)
+        return str(date_time)
+    
+    def related_forms(self, request, station_id, form_number):
+        station = BorderStation.objects.get(id=station_id)
+        if not form_number.startswith(station.station_code):
+            return Response({'errors' : ['form number ' + form_number + " does not start with the station code"]},status=status.HTTP_400_BAD_REQUEST)
+        
+        base_number = form_number
+        for idx in range(len(station.station_code), len(form_number)):
+            if form_number[idx] < '0' or form_number[idx] > '9':
+                base_number = form_number[:idx]
+                break
+        
+        base_length = len(base_number)
+        if base_length <= len(station.station_code):
+            return Response({'errors' : ['form number ' + form_number + ' is not in standard format']},status=status.HTTP_400_BAD_REQUEST)
+        
+        print (form_number, base_number)
+        
+        results = []
+        forms = Form.objects.filter(stations=station, form_type__name__in=['IRF','CIF','VDF'])
+        for form in forms:
+            form_class = form.storage.get_form_storage_class()
+            key_field = form_class.key_field_name()
+            form_objects = form_class.objects.filter(Q((key_field+'__startswith', base_number)))
+            print(form_class, len(form_objects))
+            for form_object in form_objects:
+                key_value = form_object.get_key()
+                if len(key_value) > base_length and key_value[base_length] >= '0' and key_value[base_length] <= '9':
+                    print ('not related form', key_value)
+                    # form number has another digit after the base_number -> not related form
+                    continue
+                obj = RelatedForm(form_object.id,
+                                  form_object.get_key(),
+                                  form_object.get_form_type_name(),
+                                  form.form_name,
+                                  form_object.staff_name,
+                                  form_object.station.id,
+                                  form_object.station.operating_country.id,
+                                  self.adjust_date_time_for_tz (form_object.date_time_entered_into_system, form_object.station.time_zone),
+                                  self.adjust_date_time_for_tz (form_object.date_time_last_updated, form_object.station.time_zone))
+
+                results.append(obj)
+        serializer = RelatedFormsSerializer(results, many=True)
+            
+        return Response(serializer.data)
         
