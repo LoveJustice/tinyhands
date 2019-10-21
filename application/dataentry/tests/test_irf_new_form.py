@@ -1,4 +1,5 @@
 import json
+import datetime
 
 from django.conf import settings
 from django.core.management import call_command
@@ -84,6 +85,7 @@ class IrfTest(APITestCase):
         irf.which_contact = 'Bus driver'
         irf.number_of_victims = 1
         irf.number_of_traffickers = 0
+        irf.logbook_received = datetime.datetime.now().date()
         
         irf.evidence_categorization = 'Some Evidence of Trafficking'
         irf.reason_for_intercept = 'Primary reason'
