@@ -17,8 +17,10 @@ class CifListSerializer(serializers.Serializer):
     number_of_victims = serializers.IntegerField()
     number_of_traffickers = serializers.IntegerField()
     staff_name = serializers.CharField()
-    date_time_of_interview = serializers.SerializerMethodField(read_only=True)
-    date_time_entered_into_system = serializers.SerializerMethodField(read_only=True)
+    pvot_name = serializers.SerializerMethodField(read_only=True)
+    source_of_intelligence  = serializers.CharField()
+    date_of_interview = serializers.SerializerMethodField(read_only=True)
+    date_entered_into_system = serializers.SerializerMethodField(read_only=True)
     date_time_last_updated = serializers.SerializerMethodField(read_only=True)
     station = BorderStationOverviewSerializer()
     form_name = serializers.SerializerMethodField(read_only=True)
@@ -33,15 +35,21 @@ class CifListSerializer(serializers.Serializer):
         date_time = date_time.replace(tzinfo=None)
         return str(date_time)
     
-    def get_date_time_of_interview(self, obj):
+    def get_pvot_name(self, obj):
+        return obj.main_pv.full_name
+        
+        
+    def get_date_of_interview(self, obj):
         if obj is None or obj.interview_date is None:
             return ''
         
         return str(obj.interview_date.year) + '-' + str(obj.interview_date.month) + '-' + str(obj.interview_date.day)
         #return str(obj.interview_date)
     
-    def get_date_time_entered_into_system(self, obj):
-        return self.adjust_date_time_for_tz (obj.date_time_entered_into_system, obj.station.time_zone)
+    def get_date_entered_into_system(self, obj):
+        date_time=self.adjust_date_time_for_tz (obj.date_time_entered_into_system, obj.station.time_zone)
+        date_parts = date_time.split(' ')
+        return date_parts[0]
     
     def get_date_time_last_updated(self, obj):
         return self.adjust_date_time_for_tz (obj.date_time_last_updated, obj.station.time_zone)
@@ -60,7 +68,7 @@ class CifFormViewSet(BaseFormViewSet):
     filter_backends = (fs.SearchFilter, fs.OrderingFilter,)
     search_fields = ('cif_number',)
     ordering_fields = (
-        'cif_number', 'staff_name', 'number_of_victims', 'number_of_traffickers', 'interview_date',
+        'cif_number', 'staff_name', 'main_pv__full_name', 'source_of_intelligence', 'number_of_victims', 'number_of_traffickers', 'interview_date',
         'date_time_entered_into_system', 'date_time_last_updated',)
     ordering = ('-interview_date',)
     
@@ -90,7 +98,7 @@ class CifFormViewSet(BaseFormViewSet):
     def get_list_field_names(self):
         return ['id', 'cif_number', 'form_entered_by', 'number_of_victims', 'number_of_traffickers', 'staff_name', 
                     'station', 'interview_date', 'date_time_entered_into_system',
-                    'date_time_last_updated']
+                    'date_time_last_updated', 'main_pv', 'source_of_intelligence']
         
     def get_empty_queryset(self):
         return CifNepal.objects.none()
