@@ -1,4 +1,5 @@
 import json
+import datetime
 import traceback
 
 from rest_framework import viewsets, status
@@ -131,6 +132,11 @@ class BaseFormViewSet(viewsets.ModelViewSet):
             request_json = None
         
         return request_json
+
+    def logbook_submit(self, form_data):
+        if form_data.form_object.logbook_submitted is None and form_data.form_object.status != 'in-progress':
+            form_data.form_object.logbook_submitted = datetime.datetime.now().date()
+            form_data.form_object.save()
     
     def create(self, request):
         form_type = FormType.objects.get(name=self.get_form_type_name())
@@ -144,6 +150,7 @@ class BaseFormViewSet(viewsets.ModelViewSet):
                     return Response(status=status.HTTP_401_UNAUTHORIZED)
                 try:
                     form_data = serializer.save()
+                    self.logbook_submit(form_data)
                     serializer2 = FormDataSerializer(form_data, context=self.serializer_context)
                     form_done.send_robust(sender=self.__class__, form_data=form_data)
                     ret = serializer2.data
@@ -240,6 +247,7 @@ class BaseFormViewSet(viewsets.ModelViewSet):
                         serializer.get_country_id(), serializer.get_station_id()):
                     return Response(status=status.HTTP_401_UNAUTHORIZED)
                 form_data = serializer.save()
+                self.logbook_submit(form_data)
                 serializer2 = FormDataSerializer(form_data, context=self.serializer_context)
                 form_done.send_robust(sender=self.__class__, form_data=form_data)
                 rtn_status = status.HTTP_200_OK
