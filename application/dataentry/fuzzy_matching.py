@@ -1,7 +1,7 @@
 from fuzzywuzzy import process
 from itertools import chain
 
-from dataentry.models import Address1, Address2, SiteSettings, Person, Interceptee, VictimInterview
+from dataentry.models import Address1, Address2, SiteSettings, Person, Interceptee, VictimInterview, Form, FormCategory
 
 
 def match_location(address1_name=None, address2_name=None):
@@ -61,14 +61,17 @@ def match_address2_address1(address2_name, address1_name):
     else:
         return None
 
-def match_person(person_name, excludes):
+def match_person(person_name, filter):
     fuzzy_limit = 11
     fuzzy_score_cutoff=80
-    victim_ids = []
-    if excludes != None and excludes == 'victims':
-        irf_victim_ids = Interceptee.objects.filter(kind = 'v').values_list('person', flat=True)
-        vif_victim_ids = VictimInterview.objects.all().values_list('victim', flat=True)
-        victim_ids = list(chain(irf_victim_ids, vif_victim_ids))
+    if filter != None and filter == 'PVOT':
+        victims = pvot_ids()
+        choices = {choice.id: choice.full_name for choice in Person.objects.filter(id__in = victims)}
+    elif filter != None and filter == 'Suspect':
+        suspects = suspect_ids()
+        choices = {choice.id: choice.full_name for choice in Person.objects.filter(id__in = suspects)}
+    else:
+        choices = {choice.id: choice.full_name for choice in Person.objects.all()}
     try:
          site_settings = SiteSettings.objects.all()[0]
          fuzzy_score_cutoff = site_settings.get_setting_value_by_name('idmanagement_name_cutoff')
@@ -78,12 +81,65 @@ def match_person(person_name, excludes):
         pass
 
     results = []
-    choices = {choice.id: choice.full_name
-               for choice in Person.objects.all().exclude(id__in = victim_ids)
-               }
     matches = process.extractBests(person_name, choices, score_cutoff=fuzzy_score_cutoff, limit=fuzzy_limit)
 
     for match in matches:
         results.append(Person.objects.get(id=match[2]))
 
     return results
+
+def pvot_ids():
+    irf_victim_ids = Interceptee.objects.filter(kind = 'v').values_list('person', flat=True)
+    vif_victim_ids = VictimInterview.objects.all().values_list('victim', flat=True)
+    victim_ids = list(chain(irf_victim_ids, vif_victim_ids))
+    
+    form_categories = FormCategory.objects.filter(form__form_type__name='IRF', name='Interceptees')
+    for form_category in form_categories:
+        mod = __import__(form_category.storage.module_name, fromlist=[form_category.storage.form_model_name])
+        interceptee_class = getattr(mod, form_category.storage.form_model_name, None)           
+        irf_victim_ids = interceptee_class.objects.filter(kind = 'v').values_list('person', flat=True)
+        victim_ids = victim_ids + list(irf_victim_ids)
+    
+    cif_forms = Form.objects.filter(form_type__name='CIF')
+    for cif_form in cif_forms:
+        mod = __import__(cif_form.storage.module_name, fromlist=[cif_form.storage.form_model_name])
+        cif_class = getattr(mod, cif_form.storage.form_model_name, None)
+        cif_victim_ids = cif_class.objects.all().values_list('main_pv', flat=True)
+        victim_ids = victim_ids + list(cif_victim_ids)
+    
+    potential_victims = FormCategory.objects.filter(form__form_type__name='CIF', name='OtherPotentialVictims')
+    for potential_victim in potential_victims:
+        mod = __import__(potential_victim.storage.module_name, fromlist=[potential_victim.storage.form_model_name])
+        potential_victim_class = getattr(mod, potential_victim.storage.form_model_name, None)           
+        potential_victim_ids = potential_victim_class.objects.all().values_list('person', flat=True)
+        victim_ids = victim_ids + list(potential_victim_ids)
+    
+    vdf_forms = Form.objects.filter(form_type__name='VDF')
+    for vdf_form in vdf_forms:
+        mod = __import__(vdf_form.storage.module_name, fromlist=[vdf_form.storage.form_model_name])
+        vdf_class = getattr(mod, vdf_form.storage.form_model_name, None)
+        vdf_victim_ids = vdf_class.objects.all().values_list('victim', flat=True)
+        victim_ids = victim_ids + list(vdf_victim_ids)
+    
+    return victim_ids
+
+def suspect_ids():
+    irf_suspect_ids = Interceptee.objects.filter(kind = 't').values_list('person', flat=True)
+    suspect_ids = list(irf_suspect_ids)
+
+    form_categories = FormCategory.objects.filter(form__form_type__name='IRF', name='Interceptees')
+    for form_category in form_categories:
+        mod = __import__(form_category.storage.module_name, fromlist=[form_category.storage.form_model_name])
+        interceptee_class = getattr(mod, form_category.storage.form_model_name, None)           
+        irf_suspect_ids = interceptee_class.objects.filter(kind = 't').values_list('person', flat=True)
+        suspect_ids = suspect_ids + list(irf_suspect_ids)
+    
+    person_boxes = FormCategory.objects.filter(form__form_type__name='CIF', name='PersonBoxes')
+    for person_box in person_boxes:
+        mod = __import__(person_box.storage.module_name, fromlist=[person_box.storage.form_model_name])
+        person_box_class = getattr(mod, person_box.storage.form_model_name, None)           
+        person_box_suspect_ids = person_box_class.objects.all().values_list('person', flat=True)
+        suspect_ids = suspect_ids + list(person_box_suspect_ids)
+        
+    return suspect_ids
+    

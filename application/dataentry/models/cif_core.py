@@ -165,6 +165,14 @@ class CifCore(BaseForm):
     reported_blue_flags = models.PositiveIntegerField(null=True, blank=True)
     total_blue_flags = models.PositiveIntegerField(null=True, blank=True)
     case_notes = models.TextField('Case Notes', blank=True)
+    
+    #Logbook
+    logbook_received = models.DateField(null=True)
+    logbook_incomplete_questions = models.CharField(max_length=127, blank=True)
+    logbook_incomplete_sections = models.CharField(max_length=127, blank=True)
+    logbook_information_complete = models.DateField(null=True)
+    logbook_notes = models.TextField('Logbook Notes', blank=True)
+    logbook_submitted = models.DateField(null=True)
 
     class Meta:
         abstract = True
@@ -205,14 +213,14 @@ class PersonBoxCore(BaseCard):
     case_filed_against = models.CharField(max_length=126, null=True)
     arrested = models.CharField(max_length=126, null=True)
     social_media = models.CharField(max_length=1024, null=True)
-    role_broker = models.BooleanField(default=False)
-    role_companion = models.BooleanField(default=False)
-    role_host = models.BooleanField(default=False)
-    role_id_facilitator = models.BooleanField(default=False)
-    role_agent = models.BooleanField(default=False)
-    role_witness = models.BooleanField(default=False)
-    role_complainant = models.BooleanField(default=False)
-    role_other = models.CharField(max_length=126, null=True)
+    role_broker = models.BooleanField('Broker', default=False)
+    role_companion = models.BooleanField('Companion', default=False)
+    role_host = models.BooleanField('Host', default=False)
+    role_id_facilitator = models.BooleanField('ID Facilitator', default=False)
+    role_agent = models.BooleanField('Agent', default=False)
+    role_witness = models.BooleanField('Witness', default=False)
+    role_complainant = models.BooleanField('Complainant', default=False)
+    role_other = models.CharField('Other', max_length=126, null=True)
     relation_to_pv = models.CharField(max_length=126, null=True)
     appearance = models.CharField(max_length=126, null=True)
     occupation = models.CharField(max_length=126, null=True)

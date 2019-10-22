@@ -293,10 +293,14 @@ class PersonSerializer(serializers.ModelSerializer):
 class IDManagementSerializer(serializers.ModelSerializer):
     aliases = serializers.CharField(source='get_aliases', read_only=True)
     form_type = serializers.CharField(source='get_form_type', read_only=True)
+    form_name = serializers.CharField(source='get_form_name', read_only=True)
     form_number = serializers.CharField(source='get_form_number', read_only=True)
     form_date = serializers.CharField(source='get_form_date', read_only=True)
     form_photo = serializers.ImageField(source='get_form_photo', use_url=True, read_only=True)
     form_kind = serializers.CharField(source='get_form_kind', read_only=True)
+    station_id = serializers.CharField(source='get_station_id', read_only=True)
+    country_id = serializers.CharField(source='get_country_id', read_only=True)
+    form_id = serializers.CharField(source='get_form_id', read_only=True)
     address1 = Address1Serializer(read_only=True)
     address2 = Address2Serializer(read_only=True)
 
@@ -313,15 +317,23 @@ class IDManagementSerializer(serializers.ModelSerializer):
             'alias_group',
             'aliases',
             'form_type',
+            'form_name',
             'form_number',
             'form_date',
             'form_photo',
             'form_kind',
+            'station_id',
+            'country_id',
+            'form_id'
         ]
 
 class PersonFormsSerializer(serializers.Serializer):
     number = serializers.CharField()
     date = serializers.CharField()
+    form_name = serializers.CharField()
+    station_id = serializers.CharField()
+    country_id= serializers.CharField()
+    form_id= serializers.CharField()
 
 class VictimInterviewSerializer(serializers.ModelSerializer):
     victim_guardian_address1 = Address1Serializer(read_only=True)

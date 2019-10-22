@@ -63,6 +63,14 @@ class VdfCore(BaseForm):
     victim_signature = models.BooleanField('Victim Signature', default=False)
     guardian_signature = models.BooleanField('Guardian Signature', default=False)
     case_notes = models.TextField('Case Notes', blank=True)
+    
+    #Logbook
+    logbook_received = models.DateField(null=True)
+    logbook_incomplete_questions = models.CharField(max_length=127, blank=True)
+    logbook_incomplete_sections = models.CharField(max_length=127, blank=True)
+    logbook_information_complete = models.DateField(null=True)
+    logbook_notes = models.TextField('Logbook Notes', blank=True)
+    logbook_submitted = models.DateField(null=True)
 
     class Meta:
         abstract = True

@@ -924,6 +924,10 @@ class FormDataSerializer(serializers.Serializer):
         ret['station_id'] = serializers.IntegerField().to_representation(instance.form_object.station.id)
         ret['country_id'] = serializers.IntegerField().to_representation(instance.form_object.station.operating_country.id)
         ret['status'] = serializers.CharField().to_representation(instance.form_object.status)
+        if instance.form_object.form_entered_by is not None:
+            ret['form_entered_by'] = serializers.CharField().to_representation(instance.form_object.form_entered_by.first_name) + ' ' + serializers.CharField().to_representation(instance.form_object.form_entered_by.last_name)
+        else:
+            ret['form_entered_by'] = ''
         if instance.form_object.id is not None:
             ret['storage_id'] = serializers.IntegerField().to_representation(instance.form_object.id)
         if self.context is not None:

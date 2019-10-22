@@ -9,10 +9,9 @@ from rest_api.authentication import HasPermission
 from rest_framework import filters as fs
 from itertools import chain
 
-
 from dataentry import fuzzy_matching
 from dataentry.serializers import IDManagementSerializer, PersonFormsSerializer
-from dataentry.models import AliasGroup, Person, Interceptee, VictimInterview
+from dataentry.models import AliasGroup, Person, PersonFormCache, Interceptee, VictimInterview
 
 logger = logging.getLogger(__name__)
 
@@ -29,8 +28,14 @@ class IDManagementViewSet(viewsets.ModelViewSet):
     def person_forms(self, request):
         person_id = request.GET['person_id']
         person = Person.objects.get(id=person_id)
-        forms = person.get_form_data()
-        serializer = PersonFormsSerializer(forms, many=True, context={'request': request})
+        person_forms = []
+        forms = PersonFormCache.get_form_data(person)
+        for form in forms:
+            obj = form.get_detail_as_object()
+            if obj is not None:
+                person_forms.append(obj)
+            
+        serializer = PersonFormsSerializer(person_forms, many=True, context={'request': request})
         return Response(serializer.data)
 
     def alias_group(self, request):
@@ -116,24 +121,29 @@ class TraffickerCheckViewSet(viewsets.ViewSet):
     
     def fuzzy_match(self, request):
         input_name = request.GET['name']
-        if 'exclude' in request.GET:
-            excludes = request.GET['exclude']
+        if 'filter' in request.GET:
+            filter = request.GET['filter']
         else:
-            excludes = ''
-        results = fuzzy_matching.match_person(input_name, excludes)
+            filter = ''
+        results = fuzzy_matching.match_person(input_name, filter)
         serializer = IDManagementSerializer(results, many=True, context={'request': request})
         return Response(serializer.data)
 
     def partial_phone(self, request):
         input_phone = request.GET['phone']
         victim_ids = []
-        if 'exclude' in request.GET:
-            excludes = request.GET['exclude']
-            if excludes != None and excludes == 'victims':
-                irf_victim_ids = Interceptee.objects.filter(kind = 'v').values_list('person', flat=True)
-                vif_victim_ids = VictimInterview.objects.all().values_list('victim', flat=True)
-                victim_ids = list(chain(irf_victim_ids, vif_victim_ids))
+        if 'filter' in request.GET:
+            filter = request.GET['filter']
+            if filter is not None and filter == 'PVOT':
+                victim_ids = fuzzy_matching.pvot_ids()
+                results = Person.objects.filter(phone_contact__contains=input_phone, id__in=victim_ids)
+            elif filter is not None and filter == 'Suspect':
+                suspect_ids = fuzzy_matching.suspect_ids()
+                results = Person.objects.filter(phone_contact__contains=input_phone, id__in=suspect_ids)
+            else:
+                results = Person.objects.filter(phone_contact__contains=input_phone)
+        else:
+            results = Person.objects.filter(phone_contact__contains=input_phone)
             
-        results = Person.objects.filter(phone_contact__contains=input_phone).exclude(id__in = victim_ids)
         serializer = IDManagementSerializer(results, many=True, context={'request': request})
         return Response(serializer.data)
