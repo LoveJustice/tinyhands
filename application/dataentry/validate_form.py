@@ -1,5 +1,6 @@
 import logging
 import pytz
+import re
 
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import status
@@ -128,7 +129,20 @@ class ValidateForm:
         station_code = form_data.form_object.station.station_code
         if not answer.startswith(station_code):
             self.add_error_or_warning(category_name, category_index, validation)
-            
+    
+    def regex_match(self, form_data, validation, questions, category_index, general):
+        if validation.params is None or 'regex' not in validation.params:
+            return
+        
+        regex = validation.params['regex']
+        
+        for validation_question in questions:
+            question = validation_question.question
+            answer = form_data.get_answer(question)
+            result = re.match(regex, answer)
+            if result is None:
+                 self.add_error_or_warning(self.question_map[question.id], category_index, validation)
+        
     def prevent_future_date(self, form_data, validation, validation_questions, category_index, general):
         if getattr(form_data, 'form_data', None) is not None:
             tz = pytz.timezone(form_data.form_data.form_object.station.time_zone)
@@ -160,6 +174,7 @@ class ValidateForm:
             'trafficker_custody': self.custom_trafficker_custody,
             'form_id_station_code': self.form_id_station_code,
             'prevent_future_date': self.prevent_future_date,
+            'regular_expression': self.regex_match,
         }
         
         self.validations_to_perform = {
