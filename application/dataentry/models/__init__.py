@@ -28,6 +28,7 @@ from .irf_sierra_leone import IrfSierraLeone, IntercepteeSierraLeone, IrfAttachm
 from .irf_tanzania import IrfTanzania, IntercepteeTanzania, IrfAttachmentTanzania
 from .irf_uganda import IrfUganda, IntercepteeUganda, IrfAttachmentUganda
 from .irf_kenya import IrfKenya, IntercepteeKenya, IrfAttachmentKenya
+from .irf_zimbabwe import IrfZimbabwe, IntercepteeZimbabwe, IrfAttachmentZimbabwe
 from .cif_bangladesh import CifBangladesh, LocationBoxBangladesh, PersonBoxBangladesh, PotentialVictimBangladesh, TransporationBangladesh, VehicleBoxBangladesh, CifAttachmentBangladesh
 from .cif_nepal import CifNepal, LocationBoxNepal, PersonBoxNepal, PotentialVictimNepal, TransporationNepal, VehicleBoxNepal, CifAttachmentNepal
 from .cif_india import CifIndia, LocationBoxIndia, PersonBoxIndia, PotentialVictimIndia, TransporationIndia, VehicleBoxIndia, CifAttachmentIndia
