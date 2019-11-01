@@ -104,7 +104,7 @@ class Question(models.Model):
     
     def export_header_Person(self, prefix):
         if self.export_name is not None and  self.export_name != '':
-            prefix = prefix + export_name + ' '
+            prefix = prefix + self.export_name + ' '
     
         export_header_list = [
             prefix + 'name', 
