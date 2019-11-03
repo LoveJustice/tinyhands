@@ -125,5 +125,9 @@
 	{
 		"form":"irfIndiaNetwork",
 		"station_codes":["ANV"]
+	},
+	{
+		"form":"irfZimbabwe",
+		"station_codes":["CHZ", "HRE", "RUT"]
 	}
 ]
