@@ -126,7 +126,7 @@ class MonthlyReport(BaseForm):
         unique_together = ("station", "year", "month")
     
     def get_key(self):
-        return self.id
+        return str(self.id)
     
     def get_form_type_name(self):
         return 'MONTHLY_REPORT'
