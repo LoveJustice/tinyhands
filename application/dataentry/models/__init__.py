@@ -28,6 +28,8 @@ from .irf_sierra_leone import IrfSierraLeone, IntercepteeSierraLeone, IrfAttachm
 from .irf_tanzania import IrfTanzania, IntercepteeTanzania, IrfAttachmentTanzania
 from .irf_uganda import IrfUganda, IntercepteeUganda, IrfAttachmentUganda
 from .irf_kenya import IrfKenya, IntercepteeKenya, IrfAttachmentKenya
+from .irf_zimbabwe import IrfZimbabwe, IntercepteeZimbabwe, IrfAttachmentZimbabwe
+from .irf_cambodia import IrfCambodia, IntercepteeCambodia, IrfAttachmentCambodia
 from .cif_bangladesh import CifBangladesh, LocationBoxBangladesh, PersonBoxBangladesh, PotentialVictimBangladesh, TransporationBangladesh, VehicleBoxBangladesh, CifAttachmentBangladesh
 from .cif_nepal import CifNepal, LocationBoxNepal, PersonBoxNepal, PotentialVictimNepal, TransporationNepal, VehicleBoxNepal, CifAttachmentNepal
 from .cif_india import CifIndia, LocationBoxIndia, PersonBoxIndia, PotentialVictimIndia, TransporationIndia, VehicleBoxIndia, CifAttachmentIndia
@@ -40,6 +42,7 @@ from .cif_uganda import CifUganda, LocationBoxUganda, PersonBoxUganda, Potential
 from .cif_sierra_leone import CifSierraLeone, LocationBoxSierraLeone, PersonBoxSierraLeone, PotentialVictimSierraLeone, TransporationSierraLeone, VehicleBoxSierraLeone, CifAttachmentSierraLeone
 from .cif_ghana import CifGhana, LocationBoxGhana, PersonBoxGhana, PotentialVictimGhana, TransporationGhana, VehicleBoxGhana, CifAttachmentGhana
 from .cif_tanzania import CifTanzania, LocationBoxTanzania, PersonBoxTanzania, PotentialVictimTanzania, TransporationTanzania, VehicleBoxTanzania, CifAttachmentTanzania
+from .cif_zimbabwe import CifZimbabwe, LocationBoxZimbabwe, PersonBoxZimbabwe, PotentialVictimZimbabwe, TransporationZimbabwe, VehicleBoxZimbabwe, CifAttachmentZimbabwe
 from .vdf_bangladesh import VdfBangladesh, VdfAttachmentBangladesh
 from .vdf_nepal import VdfNepal, VdfAttachmentNepal
 from .vdf_india import VdfIndia, VdfAttachmentIndia
