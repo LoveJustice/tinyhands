@@ -134,6 +134,9 @@ class BaseFormViewSet(viewsets.ModelViewSet):
         return request_json
 
     def logbook_submit(self, form_data):
+        if not hasattr(form_data.form_object, 'logbook_submitted'):
+            return
+        
         if form_data.form_object.logbook_submitted is None and form_data.form_object.status != 'in-progress':
             form_data.form_object.logbook_submitted = datetime.datetime.now().date()
             form_data.form_object.save()

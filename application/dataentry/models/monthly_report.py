@@ -21,6 +21,10 @@ class MonthlyReport(BaseForm):
     
     # LOGISTICS & REGISTRATION
     logistics_wdo_every_3_months = models.CharField(max_length=126, null=True)
+    logistics_progress_reports_cdo = models.CharField(max_length=126, null=True)
+    logistics_progress_reports_ddc = models.CharField(max_length=126, null=True)
+    logistics_progress_reports_women_children = models.CharField(max_length=126, null=True)
+    logistics_progress_police = models.CharField(max_length=126, null=True)
     logistics_submit_local_law_enforcement = models.CharField(max_length=126, null=True)
     logistics_signed = models.BooleanField(default=False)
     logistics_signed_by = models.CharField(max_length=126, null=True)
@@ -70,12 +74,14 @@ class MonthlyReport(BaseForm):
     
     # VICTIM ENGAGEMENT
     engagement_questioned = models.CharField(max_length=126, null=True)
+    engagement_number_of_vdfs = models.PositiveIntegerField(default=0, null=True)
     engagement_signed = models.BooleanField(default=False)
     engagement_signed_by = models.CharField(max_length=126, null=True)
     engagement_points = models.PositiveIntegerField(default=0)
 
     # RECORDS
     records_log_book = models.CharField(max_length=126, null=True)
+    shelter_log_book = models.CharField(max_length=126, null=True)
     records_irf_fully_filled_out = models.CharField(max_length=126, null=True)
     records_photo_percent = models.CharField(max_length=126, null=True)
     records_vdf_percent = models.CharField(max_length=126, null=True)
@@ -85,12 +91,18 @@ class MonthlyReport(BaseForm):
 
     # AFTERCARE
     aftercare_eduction_chori = models.CharField(max_length=126, null=True)
+    aftercare_eduction_dhuwani = models.CharField(max_length=126, null=True)
     aftercare_eduction_tdmgd = models.CharField(max_length=126, null=True)
+    aftercare_eduction_nepalese_homes = models.CharField(max_length=126, null=True)
+    aftercare_eduction_top_women_jobs = models.CharField(max_length=126, null=True)
     aftercare_eduction_mtv_exit = models.CharField(max_length=126, null=True)
     aftercare_tracts = models.CharField(max_length=126, null=True)
     aftercare_bibles = models.CharField(max_length=126, null=True)
     aftercare_messagebook = models.CharField(max_length=126, null=True)
     aftercare_film = models.CharField(max_length=126, null=True)
+    aftercare_only_female_staff_in_shelter = models.CharField(max_length=126, null=True)
+    aftercare_always_1_staff_in_shelter = models.CharField(max_length=126, null=True)
+    aftercare_victims_tested_std = models.CharField(max_length=126, null=True)
     aftercare_interview_recorded = models.CharField(max_length=126, null=True)
     aftercare_interview_private = models.CharField(max_length=126, null=True)
     aftercare_interview_only_staff_sc_police = models.CharField(max_length=126, null=True)
@@ -104,6 +116,8 @@ class MonthlyReport(BaseForm):
     paralegal_set_to_national_office = models.CharField(max_length=126, null=True)
     paralegal_num_cifs_to_national_office = models.PositiveIntegerField(null=True)
     paralegal_percent_cif_clear_envidence_cases = models.CharField(max_length=126, null=True)
+    paralegal_active_case_update_to_nation_office = models.CharField(max_length=126, null=True)
+    paralegal_arrests_last_month = models.PositiveIntegerField(default=0, null=True)
     paralegal_signed = models.BooleanField(default=False)
     paralegal_signed_by = models.CharField(max_length=126, null=True)
     paralegal_points = models.PositiveIntegerField(default=0)
@@ -126,7 +140,7 @@ class MonthlyReport(BaseForm):
         unique_together = ("station", "year", "month")
     
     def get_key(self):
-        return self.id
+        return str(self.id)
     
     def get_form_type_name(self):
         return 'MONTHLY_REPORT'
