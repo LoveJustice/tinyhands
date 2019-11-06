@@ -27,6 +27,15 @@
 		]
 	},
 	{
+		"form":"monthlyReportNepal",
+		"station_codes":[
+			"BGN","BHD","BHW","BRT","CND","DHD","DHU","DNG",
+			"GAR","GLC","GLR","GRG","HTD","INW","JBN","JNK",
+			"KTM","KVT","LHN","MGL","MHN","MLW","NPJ","NRG",
+			"PRS","PST","RBR","SLG","TKP","TTP"
+		]
+	},
+	{
 		"form":"irfSouthAfrica",
 		"station_codes":["CTA", "JNB", "MUS"]
 	},
@@ -80,6 +89,10 @@
 	},
 	{
 		"form":"cifUganda",
+		"station_codes":["BUS", "KLA"]
+	},
+	{
+		"form":"vdfUganda",
 		"station_codes":["BUS", "KLA"]
 	},
 	{
