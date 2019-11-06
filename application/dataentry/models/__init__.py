@@ -47,5 +47,6 @@ from .vdf_bangladesh import VdfBangladesh, VdfAttachmentBangladesh
 from .vdf_nepal import VdfNepal, VdfAttachmentNepal
 from .vdf_india import VdfIndia, VdfAttachmentIndia
 from .vdf_benin import VdfBenin, VdfAttachmentBenin
+from .vdf_uganda import VdfUganda, VdfAttachmentUganda
 from .monthly_report import MonthlyReport
 from .indicator_history import IndicatorHistory
