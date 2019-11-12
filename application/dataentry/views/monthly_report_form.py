@@ -4,12 +4,13 @@ from rest_framework import serializers
 from rest_framework import filters as fs
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
+from rest_framework.response import Response
 
 from dataentry.serialize_form import FormDataSerializer
 from .base_form import BaseFormViewSet, BorderStationOverviewSerializer
 
 from dataentry.form_data import Form, FormData
-from dataentry.models import MonthlyReport
+from dataentry.models import BorderStation, Country, MonthlyReport
 
 class MonthlyReportListSerializer(serializers.Serializer):
     id = serializers.IntegerField()
@@ -82,4 +83,81 @@ class MonthlyReportFormViewSet(BaseFormViewSet):
     
     def filter_key(self, queryset, search):
         return queryset.filter(station__station_code__contains=search)
+    
+    def compute_total(self, totals, field_name, value):
+        if field_name in totals:
+            totals[field_name] = totals[field_name] + value
+        else:
+            totals[field_name] = value
+    
+    def summary(self, request, country_id, year, month):
+        country = Country.objects.get(id=country_id)
+        point_heading = {
+                "govern_points":"Governance",
+                "logistics_points":"Logistics & Registration",
+                "human_points":"Human Resources",
+                "awareness_points":"Awareness",
+                "security_points":"Security",
+                "accounting_points":"Accounting",
+                "engagement_points":"Victim Engagement",
+                "records_points":"Records",
+                "aftercare_points":"Aftercare",
+                "paralegal_points":"Paralegal",
+                "investigations_points":"Investigations"
+            }
+        
+        options = country.options
+        if options is None or 'monthly_report_sections' not in options:
+            # If sections are not specified in country table, then assume all sections
+            report_sections = point_heading.keys()
+        else:
+            report_sections = options['monthly_report_sections']
+
+        stations = BorderStation.objects.filter(operating_country=country)
+        reports = MonthlyReport.objects.filter(year=year, month=month, station__in=stations).order_by("station__station_code")
+        results = {
+                "headings":["Station"],
+                "reports":[],
+                "averages":["Average"]
+            }
+        
+        for field_name in report_sections:
+            results["headings"].append(point_heading[field_name])
+        results["headings"].append("Average")
+        
+        section_totals = {}
+        report_count = 0
+        for report in reports:
+            report_count += 1
+            report_data = [report.station.station_code]
+            
+            total = 0
+            count = 0
+            for field_name in report_sections:
+                heading = point_heading[field_name]
+                val = getattr(report, field_name)
+                report_data.append(val)
+                self.compute_total(section_totals, heading, val)
+                count += 1
+                total += val
+            
+            if count  > 0:
+                val = total/count
+                report_data.append(val)
+                self.compute_total(section_totals, 'Average', val)
+            else:
+                report_data.append('NA')
+                self.compute_total(section_totals, 'Average', 0)
+            results["reports"].append(report_data)
+        
+        if report_count> 0:
+            for heading in results["headings"]:
+                if heading == 'Station':
+                    continue
+                results["averages"].append(section_totals[heading]/report_count)
+        
+        print(results)
+            
+        return Response (results)
+            
 

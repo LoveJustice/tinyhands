@@ -11,6 +11,7 @@ class Country(models.Model):
     verification_start_year = models.PositiveIntegerField(null=True)
     verification_start_month = models.PositiveIntegerField(null=True)
     verification_goals = JSONField(null=True)
+    options = JSONField(null=True)
 
     def __str__(self):
         return self.name
