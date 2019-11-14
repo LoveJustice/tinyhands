@@ -114,7 +114,9 @@ class IrfTest(APITestCase):
         form_data = self.gen_put_data()
         irf = form_data.form_object
         serializer = FormDataSerializer(form_data, context={})
-        put_data = {'main':json.dumps(serializer.data)}
+        the_data = serializer.data
+        the_data['ignore_warnings'] = 'TRUE'
+        put_data = {'main':json.dumps(the_data)}
         url = reverse('irfNewDetail', args=[irf.station.id, irf.id])
         response = self.client.put(url, put_data)
           

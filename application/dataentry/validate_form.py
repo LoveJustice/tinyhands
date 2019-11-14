@@ -98,6 +98,57 @@ class ValidateForm:
             
         self.add_error_or_warning('CARD', None, validation)
     
+    def match_filter (self, card, filter):
+        if 'question_id' not in filter or 'value' not in filter or 'operation' not in filter:
+            return -1
+        
+        question = Question.objects.get(id=filter['question_id'])
+        answer = card.get_answer(question)
+        rv = 0
+        if filter['operation'] == '=' and answer == filter['value']:
+            rv = 1
+        elif filter['operation'] == '!=' and answer != filter['value']:
+            rv = 1
+        
+        return rv     
+    
+    def card_count (self, form_data, validation, questions, category_index, general):
+        if validation.params is not None and 'category_name' in validation.params:
+            category_name = validation.params['category_name']
+        else:
+            category_name = ''
+        if (getattr(form_data, 'card_dict', None) is None or validation.params is None or 'category_id' not in validation.params or
+                ('min_count' not in validation.params and 'max_count' not in validation.params)):
+            tmp_validation = FormValidation()
+            tmp_validation.level = validation.level
+            tmp_validation.error_warning_message = 'Incorrect configuration for validation:' + validation.error_warning_message
+            self.add_error_or_warning(category_name, None, tmp_validation)
+        else:
+            card_count = 0
+            category_id = validation.params['category_id']
+            if category_id in form_data.card_dict:
+                for card in form_data.card_dict[category_id]:
+                    if 'filter' in validation.params:
+                        match_result = self.match_filter(card, validation.params['filter'])
+                        if match_result >= 0:
+                            card_count += match_result
+                        else:
+                            tmp_validation = FormValidation()
+                            tmp_validation.level = validation.level
+                            tmp_validation.error_warning_message = 'Incorrect filter for validation:' + validation.error_warning_message
+                            self.add_error_or_warning(category_name, None, tmp_validation)
+                    else:
+                        card_count += 1
+            
+            if 'min_count' in validation.params:
+                if card_count >= validation.params['min_count']:
+                    return
+            else:
+                if card_count <= validation.params['max_count']:
+                    return
+            
+        self.add_error_or_warning(category_name, None, validation)
+    
     def custom_trafficker_custody(self, form_data, validation, questions, category_index, general):
         if len(questions) < 1:
             logger.error("custom_trafficker_custody validation requires at least one question")
@@ -196,6 +247,7 @@ class ValidateForm:
             'form_id_station_code': self.form_id_station_code,
             'prevent_future_date': self.prevent_future_date,
             'regular_expression': self.regex_match,
+            'card_count': self.card_count,
         }
         
         self.validations_to_perform = {
