@@ -1,0 +1,402 @@
+[
+    {
+        "model": "dataentry.permission",
+        "pk": 1,
+        "fields": {
+            "permission_group": "IRF",
+            "action": "VIEW",
+            "min_level": "STATION",
+            "account_permission_name": "permission_irf_view"
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 2,
+        "fields": {
+            "permission_group": "IRF",
+            "action": "ADD",
+            "min_level": "STATION",
+            "account_permission_name": "permission_irf_add"
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 3,
+        "fields": {
+            "permission_group": "IRF",
+            "action": "EDIT",
+            "min_level": "STATION",
+            "account_permission_name": "permission_irf_edit"
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 4,
+        "fields": {
+            "permission_group": "IRF",
+            "action": "DELETE",
+            "min_level": "STATION",
+            "account_permission_name": "permission_irf_delete"
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 5,
+        "fields": {
+            "permission_group": "IRF",
+            "action": "APPROVE",
+            "min_level": "STATION",
+            "account_permission_name": null
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 6,
+        "fields": {
+            "permission_group": "VIF",
+            "action": "VIEW",
+            "min_level": "GLOBAL",
+            "account_permission_name": "permission_vif_view"
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 7,
+        "fields": {
+            "permission_group": "VIF",
+            "action": "ADD",
+            "min_level": "GLOBAL",
+            "account_permission_name": "permission_vif_add"
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 8,
+        "fields": {
+            "permission_group": "VIF",
+            "action": "EDIT",
+            "min_level": "GLOBAL",
+            "account_permission_name": "permission_vif_edit"
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 9,
+        "fields": {
+            "permission_group": "VIF",
+            "action": "DELETE",
+            "min_level": "GLOBAL",
+            "account_permission_name": "permission_vif_delete"
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 10,
+        "fields": {
+            "permission_group": "VIF",
+            "action": "APPROVE",
+            "min_level": "GLOBAL",
+            "account_permission_name": null
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 11,
+        "fields": {
+            "permission_group": "STATIONS",
+            "action": "VIEW",
+            "min_level": "STATION",
+            "account_permission_name": "permission_border_stations_view"
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 12,
+        "fields": {
+            "permission_group": "STATIONS",
+            "action": "ADD",
+            "min_level": "COUNTRY",
+            "account_permission_name": "permission_border_stations_add"
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 13,
+        "fields": {
+            "permission_group": "STATIONS",
+            "action": "EDIT",
+            "min_level": "STATION",
+            "account_permission_name": "permission_border_stations_edit"
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 15,
+        "fields": {
+            "permission_group": "BUDGETS",
+            "action": "VIEW",
+            "min_level": "STATION",
+            "account_permission_name": "permission_budget_view"
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 16,
+        "fields": {
+            "permission_group": "BUDGETS",
+            "action": "ADD",
+            "min_level": "STATION",
+            "account_permission_name": "permission_budget_add"
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 17,
+        "fields": {
+            "permission_group": "BUDGETS",
+            "action": "EDIT",
+            "min_level": "STATION",
+            "account_permission_name": "permission_budget_edit"
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 18,
+        "fields": {
+            "permission_group": "BUDGETS",
+            "action": "DELETE",
+            "min_level": "STATION",
+            "account_permission_name": "permission_budget_delete"
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 19,
+        "fields": {
+            "permission_group": "NOTIFICATIONS",
+            "action": "INVESTIGATION",
+            "min_level": "GLOBAL",
+            "account_permission_name": "permission_receive_investigation_alert"
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 20,
+        "fields": {
+            "permission_group": "NOTIFICATIONS",
+            "action": "LEGAL",
+            "min_level": "GLOBAL",
+            "account_permission_name": "permission_receive_legal_alert"
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 21,
+        "fields": {
+            "permission_group": "NOTIFICATIONS",
+            "action": "MDF",
+            "min_level": "COUNTRY",
+            "account_permission_name": "permission_can_receive_mdf"
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 22,
+        "fields": {
+            "permission_group": "PERSONS",
+            "action": "TRAFFICKER MATCH",
+            "min_level": "GLOBAL",
+            "account_permission_name": "permission_person_match"
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 23,
+        "fields": {
+            "permission_group": "ACCOUNTS",
+            "action": "MANAGE",
+            "min_level": "STATION",
+            "account_permission_name": "permission_accounts_manage"
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 24,
+        "fields": {
+            "permission_group": "ADDRESSES",
+            "action": "MANAGE",
+            "min_level": "GLOBAL",
+            "account_permission_name": "permission_address2_manage"
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 25,
+        "fields": {
+            "permission_group": "FORMS",
+            "action": "CLASSIC",
+            "min_level": "GLOBAL",
+            "account_permission_name": null
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 26,
+        "fields": {
+            "permission_group": "IRF",
+            "action": "VIEW PI",
+            "min_level": "STATION",
+            "account_permission_name": null
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 27,
+        "fields": {
+            "permission_group": "STATIONS",
+            "action": "SET_FORMS",
+            "min_level": "GLOBAL",
+            "account_permission_name": null
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 28,
+        "fields": {
+            "permission_group": "CIF",
+            "action": "VIEW",
+            "min_level": "STATION",
+            "account_permission_name": null
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 29,
+        "fields": {
+            "permission_group": "CIF",
+            "action": "ADD",
+            "min_level": "STATION",
+            "account_permission_name": null
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 30,
+        "fields": {
+            "permission_group": "CIF",
+            "action": "EDIT",
+            "min_level": "STATION",
+            "account_permission_name": null
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 31,
+        "fields": {
+            "permission_group": "CIF",
+            "action": "DELETE",
+            "min_level": "STATION",
+            "account_permission_name": null
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 32,
+        "fields": {
+            "permission_group": "VDF",
+            "action": "VIEW",
+            "min_level": "STATION",
+            "account_permission_name": null
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 33,
+        "fields": {
+            "permission_group": "VDF",
+            "action": "ADD",
+            "min_level": "STATION",
+            "account_permission_name": null
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 34,
+        "fields": {
+            "permission_group": "VDF",
+            "action": "EDIT",
+            "min_level": "STATION",
+            "account_permission_name": null
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 35,
+        "fields": {
+            "permission_group": "VDF",
+            "action": "DELETE",
+            "min_level": "STATION",
+            "account_permission_name": null
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 36,
+        "fields": {
+            "permission_group": "VDF",
+            "action": "VIEW PI",
+            "min_level": "STATION",
+            "account_permission_name": null
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 37,
+        "fields": {
+            "permission_group": "CIF",
+            "action": "VIEW PI",
+            "min_level": "STATION",
+            "account_permission_name": null
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 38,
+        "fields": {
+            "permission_group": "MONTHLY_REPORT",
+            "action": "VIEW",
+            "min_level": "STATION",
+            "account_permission_name": null
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 39,
+        "fields": {
+            "permission_group": "MONTHLY_REPORT",
+            "action": "ADD",
+            "min_level": "STATION",
+            "account_permission_name": null
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 40,
+        "fields": {
+            "permission_group": "MONTHLY_REPORT",
+            "action": "EDIT",
+            "min_level": "STATION",
+            "account_permission_name": null
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 41,
+        "fields": {
+            "permission_group": "MONTHLY_REPORT",
+            "action": "DELETE",
+            "min_level": "STATION",
+            "account_permission_name": null
+        }
+    }
+]
