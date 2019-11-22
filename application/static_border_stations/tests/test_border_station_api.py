@@ -13,6 +13,7 @@ class RestApiTestCase(APITestCase):
 
 
 class BorderStationsTests(RestApiTestCase):
+    fixtures = ['initial-required-data/Country.json', 'initial-required-data/Permission.json']
     def setUp(self):
         self.border_station = BorderStationFactory.create(open=False)
         self.other_border_stations = BorderStationFactory.create_batch(4)

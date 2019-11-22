@@ -7353,6 +7353,4 @@ class Migration(migrations.Migration):
             name='monthlyreport',
             unique_together=set([('station', 'year', 'month')]),
         ),
-        
-        migrations.RunPython(load_permission_fixture),
     ]
