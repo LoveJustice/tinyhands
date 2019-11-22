@@ -15,6 +15,7 @@ from dataentry.serialize_form import FormDataSerializer
 from static_border_stations.tests.factories import GenericUserWithPermissions
 
 class IrfTest(APITestCase):
+    fixtures = ['initial-required-data/Country.json', 'initial-required-data/Permission.json']
     def setUp(self):
         form_data_file = settings.BASE_DIR + '/fixtures/initial-required-data/form_data.json'
         call_command('loaddata', form_data_file, verbosity=0)
@@ -114,7 +115,9 @@ class IrfTest(APITestCase):
         form_data = self.gen_put_data()
         irf = form_data.form_object
         serializer = FormDataSerializer(form_data, context={})
-        put_data = {'main':json.dumps(serializer.data)}
+        the_data = serializer.data
+        the_data['ignore_warnings'] = 'TRUE'
+        put_data = {'main':json.dumps(the_data)}
         url = reverse('irfNewDetail', args=[irf.station.id, irf.id])
         response = self.client.put(url, put_data)
           

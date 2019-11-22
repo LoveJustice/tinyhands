@@ -44,6 +44,10 @@
 		"station_codes":["CTA", "JNB", "MUS"]
 	},
 	{
+		"form":"vdfSouthAfrica",
+		"station_codes":["CTA", "JNB", "MUS"]
+	},
+	{
 		"form":"irfIndia",
 		"station_codes":["APD","CSG","JGN","KIR","MBZ","MLD","PNT"]
 	},
@@ -57,7 +61,7 @@
 	},
 	{
 		"form":"monthlyReportIndia",
-		"station_codes":["CSG","MBZ","PNT"]
+		"station_codes":["APD","CSG","JGN","KIR","MBZ","MLD","PNT"]
 	},
 	{
 		"form":"irfBangladesh",
@@ -104,6 +108,10 @@
 		"station_codes":["NBI", "MBS"]
 	},
 	{
+		"form":"vdfKenya",
+		"station_codes":["NBI", "MBS"]
+	},
+	{
 		"form":"irfMalawi",
 		"station_codes":["BLT","LLG","PLB"]
 	},
@@ -112,11 +120,19 @@
 		"station_codes":["BLT","LLG","PLB"]
 	},
 	{
+		"form":"vdfMalawi",
+		"station_codes":["BLT","LLG","PLB"]
+	},
+	{
 		"form":"irfTanzania",
 		"station_codes":["DAR"]
 	},
 	{
 		"form":"cifTanzania",
+		"station_codes":["DAR"]
+	},
+	{
+		"form":"vdfTanzania",
 		"station_codes":["DAR"]
 	},
 	{
@@ -141,6 +157,10 @@
 	},
 	{
 		"form":"irfZimbabwe",
+		"station_codes":["CHZ", "HRE", "RUT"]
+	},
+	{
+		"form":"vdfZimbabwe",
 		"station_codes":["CHZ", "HRE", "RUT"]
 	}
 ]
