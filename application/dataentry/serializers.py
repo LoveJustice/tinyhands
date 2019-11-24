@@ -296,7 +296,7 @@ class IDManagementSerializer(serializers.ModelSerializer):
     form_name = serializers.CharField(source='get_form_name', read_only=True)
     form_number = serializers.CharField(source='get_form_number', read_only=True)
     form_date = serializers.CharField(source='get_form_date', read_only=True)
-    form_photo = serializers.ImageField(source='get_form_photo', use_url=True, read_only=True)
+    form_photo = serializers.CharField(source='get_form_photo', read_only=True)
     form_kind = serializers.CharField(source='get_form_kind', read_only=True)
     station_id = serializers.CharField(source='get_station_id', read_only=True)
     country_id = serializers.CharField(source='get_country_id', read_only=True)
