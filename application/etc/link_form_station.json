@@ -162,5 +162,9 @@
 	{
 		"form":"vdfZimbabwe",
 		"station_codes":["CHZ", "HRE", "RUT"]
+	},
+	{
+		"form":"irfNamibia",
+		"station_codes":["WHK"]
 	}
 ]
