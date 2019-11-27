@@ -8,6 +8,7 @@ from dataentry.tests.factories import PersonFactory, CifIndiaFactory, IrfIndiaFa
 from dataentry.management.commands.formLatest import Command
 
 class IDManagementTest(APITestCase):
+    fixtures = ['initial-required-data/Country.json', 'initial-required-data/Permission.json']
     def setUp(self):
         self.phone_match = '9876543210'
         self.person_list = PersonFactory.create_batch(11)

@@ -1,0 +1,50 @@
+[
+    {
+        "fields": {
+            "currency": "Rs.%20",
+            "latitude": 28.394857,
+            "longitude": 84.124008,
+            "mdf_sender_email": "support@dreamsuite.org",
+            "name": "Nepal",
+            "zoom_level": 7
+        },
+        "model": "dataentry.country",
+        "pk": 1
+    },
+    {
+        "fields": {
+            "currency": "R%20",
+            "latitude": -30.113405,
+            "longitude": 25.756546,
+            "mdf_sender_email": "support@dreamsuite.org",
+            "name": "South Africa",
+            "zoom_level": 5
+        },
+        "model": "dataentry.country",
+        "pk": 2
+    },
+    {
+        "fields": {
+            "currency": "",
+            "latitude": 0.0,
+            "longitude": 0.0,
+            "mdf_sender_email": "support@dreamsuite.org",
+            "name": "Thailand",
+            "zoom_level": 0
+        },
+        "model": "dataentry.country",
+        "pk": 3
+    },
+    {
+        "fields": {
+            "currency": "Rs.%20",
+            "latitude": 22.1531122,
+            "longitude": 78.9200868,
+            "mdf_sender_email": "support@dreamsuite.org",
+            "name": "India",
+            "zoom_level": 5
+        },
+        "model": "dataentry.country",
+        "pk": 4
+    }
+]

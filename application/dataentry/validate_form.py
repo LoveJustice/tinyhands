@@ -2,11 +2,11 @@ import logging
 import pytz
 import re
 
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import FieldDoesNotExist, ObjectDoesNotExist
 from rest_framework import status
 from datetime import date, datetime
 
-from .models.form import FormCategory, FormValidation, FormValidationQuestion, QuestionLayout, QuestionStorage
+from .models.form import FormCategory, FormValidation, FormValidationLevel, FormValidationQuestion, Question, QuestionLayout, QuestionStorage
 
 logger = logging.getLogger(__name__);
 
@@ -98,6 +98,57 @@ class ValidateForm:
             
         self.add_error_or_warning('CARD', None, validation)
     
+    def match_filter (self, card, filter):
+        if 'question_id' not in filter or 'value' not in filter or 'operation' not in filter:
+            return -1
+        
+        question = Question.objects.get(id=filter['question_id'])
+        answer = card.get_answer(question)
+        rv = 0
+        if filter['operation'] == '=' and answer == filter['value']:
+            rv = 1
+        elif filter['operation'] == '!=' and answer != filter['value']:
+            rv = 1
+        
+        return rv     
+    
+    def card_count (self, form_data, validation, questions, category_index, general):
+        if validation.params is not None and 'category_name' in validation.params:
+            category_name = validation.params['category_name']
+        else:
+            category_name = ''
+        if (getattr(form_data, 'card_dict', None) is None or validation.params is None or 'category_id' not in validation.params or
+                ('min_count' not in validation.params and 'max_count' not in validation.params)):
+            tmp_validation = FormValidation()
+            tmp_validation.level = validation.level
+            tmp_validation.error_warning_message = 'Incorrect configuration for validation:' + validation.error_warning_message
+            self.add_error_or_warning(category_name, None, tmp_validation)
+        else:
+            card_count = 0
+            category_id = validation.params['category_id']
+            if category_id in form_data.card_dict:
+                for card in form_data.card_dict[category_id]:
+                    if 'filter' in validation.params:
+                        match_result = self.match_filter(card, validation.params['filter'])
+                        if match_result >= 0:
+                            card_count += match_result
+                        else:
+                            tmp_validation = FormValidation()
+                            tmp_validation.level = validation.level
+                            tmp_validation.error_warning_message = 'Incorrect filter for validation:' + validation.error_warning_message
+                            self.add_error_or_warning(category_name, None, tmp_validation)
+                    else:
+                        card_count += 1
+            
+            if 'min_count' in validation.params:
+                if card_count >= validation.params['min_count']:
+                    return
+            else:
+                if card_count <= validation.params['max_count']:
+                    return
+            
+        self.add_error_or_warning(category_name, None, validation)
+    
     def custom_trafficker_custody(self, form_data, validation, questions, category_index, general):
         if len(questions) < 1:
             logger.error("custom_trafficker_custody validation requires at least one question")
@@ -164,7 +215,28 @@ class ValidateForm:
                 test_datetime = test_datetime.astimezone(tz)
                 if test_datetime > now:
                     category_name = self.question_map[question.id] + ':' + question.prompt
-                    self.add_error_or_warning(category_name, category_index, validation)   
+                    self.add_error_or_warning(category_name, category_index, validation)
+    
+    def check_not_null (self, category_id, form_data, category_index=None):
+        validation = FormValidation()
+        validation.level = FormValidationLevel.objects.get(name='basic_error')
+        form_class = type(form_data.form_object)
+        
+        if category_id == self.main_form:
+            question_layouts = QuestionLayout.objects.filter(category__in=self.main_categories)
+        else:
+            question_layouts = QuestionLayout.objects.filter(category__id=category_id)
+            
+        for question_layout in question_layouts:
+            question = question_layout.question
+            question_storage = QuestionStorage.objects.get(question=question)
+            answer = form_data.get_answer(question)
+            try:
+                if not form_class._meta.get_field(question_storage.field_name).null and answer is None:
+                    validation.error_warning_message = question.prompt + ' must be entered'
+                    self.add_error_or_warning(self.question_map[question.id], category_index, validation)               
+            except FieldDoesNotExist:
+                pass
 
     def __init__(self, form, form_data, ignore_warnings):
         self.validations = {
@@ -175,6 +247,7 @@ class ValidateForm:
             'form_id_station_code': self.form_id_station_code,
             'prevent_future_date': self.prevent_future_date,
             'regular_expression': self.regex_match,
+            'card_count': self.card_count,
         }
         
         self.validations_to_perform = {
@@ -197,6 +270,7 @@ class ValidateForm:
 
         self.errors = []
         self.warnings = []
+        self.main_categories = []
         
         # Map a question id to a category name
         self.question_map = {}
@@ -210,6 +284,8 @@ class ValidateForm:
         form_categories = FormCategory.objects.filter(form=form)
         for form_category in form_categories:
             category = form_category.category
+            if category.category_type.name != 'card':
+                self.main_categories.append(category)
             layouts = QuestionLayout.objects.filter(category=category)
             for layout in layouts:
                 self.question_map[layout.question.id] = form_category.name
@@ -217,6 +293,8 @@ class ValidateForm:
                     question_to_validation_set[layout.question.id] = category.id
                 else:
                     question_to_validation_set[layout.question.id] = self.main_form
+                    
+        self.question_to_validation_set = question_to_validation_set
         
         self.validation_set = {}
         validations = FormValidation.objects.filter(form=self.form)
@@ -279,6 +357,7 @@ class ValidateForm:
                 self.validations[validation.validation_type.name](form_data, validation, questions, category_index, general)
          
     def validate(self):
+        self.check_not_null (self.main_form, self.form_data)
         if self.main_form in self.validation_set:
             for validation in self.validation_set[self.main_form]:
                 if validation.validation_type.name in self.validations:
@@ -291,6 +370,8 @@ class ValidateForm:
             category_count = 0
             for card in card_list:
                 category_count += 1
+                
+                self.check_not_null (category_id, card, category_index=category_count)
                 
                 if category_id in self.validation_set:
                     for validation in self.validation_set[category_id]:

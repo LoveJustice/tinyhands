@@ -10,6 +10,7 @@ from accounts.tests.factories import SuperUserFactory
 
 
 class PermissionTest(APITestCase):
+    fixtures = ['initial-required-data/Country.json', 'initial-required-data/Permission.json']
     globalCount = 0
     
     def get_or_create_country(self, name):

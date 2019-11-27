@@ -27,11 +27,24 @@
 		]
 	},
 	{
+		"form":"monthlyReportNepal",
+		"station_codes":[
+			"BGN","BHD","BHW","BRT","CND","DHD","DHU","DNG",
+			"GAR","GLC","GLR","GRG","HTD","INW","JBN","JNK",
+			"KTM","KVT","LHN","MGL","MHN","MLW","NPJ","NRG",
+			"PRS","PST","RBR","SLG","TKP","TTP"
+		]
+	},
+	{
 		"form":"irfSouthAfrica",
 		"station_codes":["CTA", "JNB", "MUS"]
 	},
 	{
 		"form":"cifSouthAfrica",
+		"station_codes":["CTA", "JNB", "MUS"]
+	},
+	{
+		"form":"vdfSouthAfrica",
 		"station_codes":["CTA", "JNB", "MUS"]
 	},
 	{
@@ -48,7 +61,7 @@
 	},
 	{
 		"form":"monthlyReportIndia",
-		"station_codes":["CSG","MBZ","PNT"]
+		"station_codes":["APD","CSG","JGN","KIR","MBZ","MLD","PNT"]
 	},
 	{
 		"form":"irfBangladesh",
@@ -83,11 +96,19 @@
 		"station_codes":["BUS", "KLA"]
 	},
 	{
+		"form":"vdfUganda",
+		"station_codes":["BUS", "KLA"]
+	},
+	{
 		"form":"irfKenya",
 		"station_codes":["NBI", "MBS"]
 	},
 	{
 		"form":"cifKenya",
+		"station_codes":["NBI", "MBS"]
+	},
+	{
+		"form":"vdfKenya",
 		"station_codes":["NBI", "MBS"]
 	},
 	{
@@ -99,11 +120,19 @@
 		"station_codes":["BLT","LLG","PLB"]
 	},
 	{
+		"form":"vdfMalawi",
+		"station_codes":["BLT","LLG","PLB"]
+	},
+	{
 		"form":"irfTanzania",
 		"station_codes":["DAR"]
 	},
 	{
 		"form":"cifTanzania",
+		"station_codes":["DAR"]
+	},
+	{
+		"form":"vdfTanzania",
 		"station_codes":["DAR"]
 	},
 	{
@@ -129,5 +158,13 @@
 	{
 		"form":"irfZimbabwe",
 		"station_codes":["CHZ", "HRE", "RUT"]
+	},
+	{
+		"form":"vdfZimbabwe",
+		"station_codes":["CHZ", "HRE", "RUT"]
+	},
+	{
+		"form":"irfNamibia",
+		"station_codes":["WHK"]
 	}
 ]

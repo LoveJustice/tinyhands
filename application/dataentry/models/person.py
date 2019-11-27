@@ -242,7 +242,8 @@ class PersonFormCache(models.Model):
                         form_entry['form_name'] = irf_form.form_name
                         form_entry['number'] = interceptee.interception_record.irf_number
                         form_entry['date'] = str(interceptee.interception_record.date_time_of_interception.date())
-                        form_entry['photo'] = ''
+                        if interceptee.photo is not None and interceptee.photo != '':
+                            form_entry['photo'] = interceptee.photo.url
                         if interceptee.kind == 'v':
                             form_entry['kind'] = 'PVOT'
                         else:

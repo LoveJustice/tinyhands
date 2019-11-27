@@ -29,6 +29,7 @@ from .irf_tanzania import IrfTanzania, IntercepteeTanzania, IrfAttachmentTanzani
 from .irf_uganda import IrfUganda, IntercepteeUganda, IrfAttachmentUganda
 from .irf_kenya import IrfKenya, IntercepteeKenya, IrfAttachmentKenya
 from .irf_zimbabwe import IrfZimbabwe, IntercepteeZimbabwe, IrfAttachmentZimbabwe
+from .irf_namibia import IrfNamibia, IntercepteeNamibia, IrfAttachmentNamibia
 from .irf_cambodia import IrfCambodia, IntercepteeCambodia, IrfAttachmentCambodia
 from .cif_bangladesh import CifBangladesh, LocationBoxBangladesh, PersonBoxBangladesh, PotentialVictimBangladesh, TransporationBangladesh, VehicleBoxBangladesh, CifAttachmentBangladesh
 from .cif_nepal import CifNepal, LocationBoxNepal, PersonBoxNepal, PotentialVictimNepal, TransporationNepal, VehicleBoxNepal, CifAttachmentNepal
@@ -47,5 +48,11 @@ from .vdf_bangladesh import VdfBangladesh, VdfAttachmentBangladesh
 from .vdf_nepal import VdfNepal, VdfAttachmentNepal
 from .vdf_india import VdfIndia, VdfAttachmentIndia
 from .vdf_benin import VdfBenin, VdfAttachmentBenin
+from .vdf_uganda import VdfUganda, VdfAttachmentUganda
+from .vdf_kenya import VdfKenya, VdfAttachmentKenya
+from .vdf_malawi import VdfMalawi, VdfAttachmentMalawi
+from .vdf_south_africa import VdfSouthAfrica, VdfAttachmentSouthAfrica
+from .vdf_tanzania import VdfTanzania, VdfAttachmentTanzania
+from .vdf_zimbabwe import VdfZimbabwe, VdfAttachmentZimbabwe
 from .monthly_report import MonthlyReport
 from .indicator_history import IndicatorHistory
