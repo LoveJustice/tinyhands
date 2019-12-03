@@ -59,6 +59,7 @@ class VdfCore(BaseForm):
     where_victim_sent = models.CharField('Where was the victim sent', max_length=126, null=True)
 
     # Final Procedures
+    fundraising_purpose = models.CharField('how we can use your photo and the information collected during this interviewfor operational fundraising purposes.', max_length=126, null=True)
     consent_to_use_information = models.CharField('I give consent to use any information I have shared throughout the duration of my time with the staff for operational and awareness purposes', max_length=126, null=True)
     victim_signature = models.BooleanField('Victim Signature', default=False)
     guardian_signature = models.BooleanField('Guardian Signature', default=False)
