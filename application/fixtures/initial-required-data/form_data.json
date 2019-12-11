@@ -1155,7 +1155,7 @@
 {"model": "dataentry.question", "pk": 421, "fields": {"prompt": "Appearance", "description": null, "answer_type": 1, "params": null, "export_name": "Appearance", "export_params": null}},
 {"model": "dataentry.question", "pk": 422, "fields": {"prompt": "Occupation", "description": null, "answer_type": 4, "params": {"textbox": "True"}, "export_name": "Occupation", "export_params": null}},
 {"model": "dataentry.question", "pk": 423, "fields": {"prompt": "Associated LB", "description": null, "answer_type": 1, "params": {"textbox": "True"}, "export_name": "Associated LB", "export_params": null}},
-{"model": "dataentry.question", "pk": 424, "fields": {"prompt": "Place", "description": null, "answer_type": 4, "params": null, "export_name": "Place", "export_params": null}},
+{"model": "dataentry.question", "pk": 424, "fields": {"prompt": "Place", "description": null, "answer_type": 4, "params": {"textbox": "True"}, "export_name": "Place", "export_params": null}},
 {"model": "dataentry.question", "pk": 425, "fields": {"prompt": "Place kind", "description": null, "answer_type": 4, "params": {"textbox": "True"}, "export_name": "Place kind", "export_params": null}},
 {"model": "dataentry.question", "pk": 426, "fields": {"prompt": "Country", "description": null, "answer_type": 4, "params": {"textbox": "True"}, "export_name": "Country", "export_params": null}},
 {"model": "dataentry.question", "pk": 427, "fields": {"prompt": "Address", "description": null, "answer_type": 7, "params": null, "export_name": "Address", "export_params": null}},
