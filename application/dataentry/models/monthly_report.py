@@ -10,6 +10,7 @@ class MonthlyReport(BaseForm):
     # Governance
     govern_num_subcommittee_meetings= models.CharField(max_length=126, null=True)
     govern_num_sc_visits = models.CharField(max_length=126, null=True)
+    govern_core_values = models.CharField(max_length=126, null=True)
     govern_coord_records = models.BooleanField(default=False)
     govern_coord_security = models.BooleanField(default=False)
     govern_coord_aftercare = models.BooleanField(default=False)
@@ -20,10 +21,10 @@ class MonthlyReport(BaseForm):
     govern_points = models.PositiveIntegerField(default=0)
     
     # LOGISTICS & REGISTRATION
-    logistics_wdo_every_3_months = models.CharField(max_length=126, null=True)
-    logistics_progress_reports_cdo = models.CharField(max_length=126, null=True)
-    logistics_progress_reports_ddc = models.CharField(max_length=126, null=True)
-    logistics_progress_reports_women_children = models.CharField(max_length=126, null=True)
+    logistics_progress_ngo = models.CharField(max_length=126, null=True)
+    logistics_progress_cdo = models.CharField(max_length=126, null=True)
+    logistics_progress_municipal_rural = models.CharField(max_length=126, null=True)
+    logistics_progress_ward = models.CharField(max_length=126, null=True)
     logistics_progress_police = models.CharField(max_length=126, null=True)
     logistics_submit_local_law_enforcement = models.CharField(max_length=126, null=True)
     logistics_signed = models.BooleanField(default=False)
@@ -33,6 +34,7 @@ class MonthlyReport(BaseForm):
     # HUMAN RESOURCES 
     human_staff_hours = models.CharField(max_length=126, null=True)
     human_appointment_and_contract = models.CharField(max_length=126, null=True)
+    human_anti_corruption = models.CharField(max_length=126, null=True)
     human_information_to_national_office = models.CharField(max_length=126, null=True)
     human_percent_tms_exam = models.CharField(max_length=126, null=True)
     human_percent_coordinator_exam = models.CharField(max_length=126, null=True)
@@ -75,6 +77,8 @@ class MonthlyReport(BaseForm):
     # VICTIM ENGAGEMENT
     engagement_questioned = models.CharField(max_length=126, null=True)
     engagement_number_of_vdfs = models.PositiveIntegerField(default=0, null=True)
+    engagement_intercept_poster = models.CharField(max_length=126, null=True)
+    engagement_movement_poster = models.CharField(max_length=126, null=True)
     engagement_signed = models.BooleanField(default=False)
     engagement_signed_by = models.CharField(max_length=126, null=True)
     engagement_points = models.PositiveIntegerField(default=0)
@@ -96,6 +100,7 @@ class MonthlyReport(BaseForm):
     aftercare_eduction_nepalese_homes = models.CharField(max_length=126, null=True)
     aftercare_eduction_top_women_jobs = models.CharField(max_length=126, null=True)
     aftercare_eduction_mtv_exit = models.CharField(max_length=126, null=True)
+    aftercare_eduction_touch = models.CharField(max_length=126, null=True)
     aftercare_tracts = models.CharField(max_length=126, null=True)
     aftercare_bibles = models.CharField(max_length=126, null=True)
     aftercare_messagebook = models.CharField(max_length=126, null=True)
@@ -118,6 +123,8 @@ class MonthlyReport(BaseForm):
     paralegal_percent_cif_clear_envidence_cases = models.CharField(max_length=126, null=True)
     paralegal_active_case_update_to_nation_office = models.CharField(max_length=126, null=True)
     paralegal_arrests_last_month = models.PositiveIntegerField(default=0, null=True)
+    paralegal_gd_last_month = models.PositiveIntegerField(default=0, null=True)
+    paralegal_when_to_file_case_poster = models.CharField(max_length=126, null=True)
     paralegal_signed = models.BooleanField(default=False)
     paralegal_signed_by = models.CharField(max_length=126, null=True)
     paralegal_points = models.PositiveIntegerField(default=0)
