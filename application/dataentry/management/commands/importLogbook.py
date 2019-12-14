@@ -10,12 +10,31 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('base_form_name', nargs='+', type=str)
         parser.add_argument('in_file', nargs='+', type=str)
+        parser.add_argument(
+            '--dateFormat',
+            action='append',
+            type=str,
+        )
         
     def has_data(self, value):
         if value is not None and value != '' and value != '-':
             return True
         else:
             return False
+        
+    def parse_date(self, date_string):
+        value = None
+        for date_format in self.date_formats:
+            try:
+                value = datetime.datetime.strptime(date_string, date_format).date()
+                break
+            except:
+                pass
+            
+        if value is None:
+            print ('Unable to parse date string ' + date_string,self.date_formats)
+            
+        return value
     
     def process_logbook(self, dictReader, irf_class, cif_class, vdf_class):
         
@@ -64,7 +83,7 @@ class Command(BaseCommand):
                     if value == 'Not Clear Evidence of Trafficking - But Right to Intercept (because of High Risk of Trafficking)':
                         value = 'High Risk of Trafficking'
                     if field in date_fields:
-                        value = datetime.datetime.strptime(value, '%m/%d/%Y').date()
+                        value = self.parse_date(value)
                     elif field not in long_fields and len(value) > 127:
                         value = value[:126]
                     
@@ -85,7 +104,6 @@ class Command(BaseCommand):
     def process_vdf_logbook(self, vdf_class, row):
         column_field = {
             "Date VDF Received":"logbook_received",
-            "Date VDF Entered":"logbook_submitted",
             "Date VDF Entered":"logbook_submitted",
             "Were there incomplete questions on the VDF that prevented submission?":"logbook_incomplete_questions",
             "Please list incomplete VDF sections that prevented submission":"logbook_incomplete_sections",
@@ -110,7 +128,7 @@ class Command(BaseCommand):
                 value = row[column]
                 if value is not None and value != '' and value != '-':
                     if field in date_fields:
-                        value = datetime.datetime.strptime(value, '%m/%d/%Y').date()
+                        value = self.parse_date(value)
                     elif field not in long_fields and len(value) > 127:
                         value = value[:126]
                     
@@ -120,7 +138,6 @@ class Command(BaseCommand):
     def process_cif_logbook(self, cif_class, row):
         column_field = {
             "Date CIF Received":"logbook_received",
-            "Date CIF Entered":"logbook_submitted",
             "Date CIF Entered":"logbook_submitted",
             "Were there incomplete questions on the CIF that prevented submission?":"logbook_incomplete_questions",
             "Please list incomplete CIF sections that prevented submission":"logbook_incomplete_sections",
@@ -145,7 +162,7 @@ class Command(BaseCommand):
                 value = row[column]
                 if value is not None and value != '' and value != '-':
                     if field in date_fields:
-                        value = datetime.datetime.strptime(value, '%m/%d/%Y').date()
+                        value = self.parse_date(value)
                     elif field not in long_fields and len(value) > 127:
                         value = value[:126]
                     
@@ -199,6 +216,10 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         in_file = options['in_file'][0]
         base_form = options['base_form_name'][0]
+        if options['dateFormat']:
+            self.date_formats = options['dateFormat']
+        else:
+            self.date_formats = ['%m/%d/%Y']
         
         forms = Form.objects.filter(form_name='irf' + base_form)
         if len(forms) == 1:
