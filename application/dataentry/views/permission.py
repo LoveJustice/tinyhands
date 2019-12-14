@@ -6,7 +6,7 @@ from rest_framework.parsers import JSONParser
 from rest_framework import status
 from django.db.models import Q
 
-from dataentry.models import Permission, UserLocationPermission, Country, BorderStation
+from dataentry.models import Permission, UserLocationPermission, Country, BorderStation, Form
 from accounts.models import Account
 from dataentry.serializers import PermissionSerializer, UserLocationPermissionSerializer, CountrySerializer, BorderStationSerializer, UserLocationPermissionListSerializer
 
@@ -100,6 +100,19 @@ class UserLocationPermissionViewSet(viewsets.ModelViewSet):
             
         return results;
     
+    def get_country_ids_with_form(self, request, countries):
+        if 'permission_group' not in request.GET:
+            return []
+        
+        form_countries = []
+        stations = BorderStation.objects.filter(operating_country__in=countries)
+        for station in stations:
+            if Form.current_form(request.GET['permission_group' ], station.id) is not None:
+                if station.operating_country.id not in form_countries:
+                    form_countries.append(station.operating_country.id)
+        
+        return form_countries
+                
     def user_countries(self, request, pk):
         perms = self.effective_query(request, pk)
         results = None
@@ -122,9 +135,22 @@ class UserLocationPermissionViewSet(viewsets.ModelViewSet):
                     results = Country.objects.filter(id=perm.station.operating_country.id)       
         
         if results is not None:
+            if 'form_present' in request.GET:
+                results = results.filter(id__in=self.get_country_ids_with_form(request, results))
             results = results.order_by('name')    
         serializer = CountrySerializer(results, many=True, context={'request': request})
         return Response(serializer.data)
+    
+    def get_station_ids_with_form(self, request, stations):
+        if 'permission_group' not in request.GET:
+            return []
+        
+        form_stations = []
+        for station in stations:
+            if Form.current_form(request.GET['permission_group'], station.id) is not None:
+                form_stations.append(station.id)
+        
+        return form_stations
     
     def user_stations(self, request, pk):
         perms = self.effective_query(request, pk)
@@ -154,7 +180,10 @@ class UserLocationPermissionViewSet(viewsets.ModelViewSet):
                     results = stations.filter(id = perm.station.id)
         
         if results != None:
+            if 'form_present' in request.GET:
+                results = results.filter(id__in=self.get_station_ids_with_form(request, results))
             results = results.order_by('station_name')
+            
         serializer = BorderStationSerializer(results, many=True, context={'request': request})
         return Response(serializer.data)
     
