@@ -12,11 +12,11 @@ logger = logging.getLogger(__name__);
 
 class ValidateForm:
     # Format and add a message to the error or warning lists
-    def add_error_or_warning(self, category_name, category_index, validation):
+    def add_error_or_warning(self, category_name, category_index, validation, data_string=''):
         if category_index is not None:
-            msg = category_name + ' ' + str(category_index) + ':' + validation.error_warning_message
+            msg = category_name + ' ' + str(category_index) + ':' + validation.error_warning_message + ' ' + data_string
         else:
-            msg = category_name + ':' + validation.error_warning_message 
+            msg = category_name + ':' + validation.error_warning_message + ' ' + data_string
             
         if validation.level.name == 'warning':
             if msg not in self.warnings:
@@ -179,7 +179,7 @@ class ValidateForm:
         answer = form_data.get_answer(question)
         station_code = form_data.form_object.station.station_code
         if not answer.startswith(station_code):
-            self.add_error_or_warning(category_name, category_index, validation)
+            self.add_error_or_warning(category_name, category_index, validation, '"' + station_code + '"')
     
     def regex_match(self, form_data, validation, questions, category_index, general):
         if validation.params is None or 'regex' not in validation.params:

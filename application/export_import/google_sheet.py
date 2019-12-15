@@ -167,7 +167,7 @@ class GoogleSheet (GoogleSheetBasic):
         
         db_data_to_export = []
         for db_obj in db_data:
-            key_value = getattr(db_obj, key_field)
+            key_value = str(getattr(db_obj, key_field))
             if not key_value in sheet_keys:
                 db_data_to_export.append(db_obj)
                 logger.debug("audit - export " + str(key_value) + "for sheet " + self.sheet_name)

@@ -72,9 +72,12 @@ class IndicatorHistory(models.Model):
         forms_processed = []
         class_cache = {
                 'IRF':{},
-                'Interceptee':{},
                 'CIF':{},
                 'VDF':{}
+                }
+        
+        storage_cache = {
+                'IRF_Interceptees':{},
                 }
         
         latest_date = None
@@ -90,7 +93,7 @@ class IndicatorHistory(models.Model):
                 
                 query_set = form_class.objects.filter(station__in=station_list,
                                         logbook_submitted__gte=start_date, logbook_submitted__lte=end_date)
-                form_method[form_type](results, query_set, start_date, end_date, class_cache)
+                form_method[form_type](results, query_set, start_date, end_date, class_cache, form_type)
                 
                 if form_type == 'IRF':
                     query_set = form_class.objects.filter(station__in=station_list,
@@ -117,13 +120,13 @@ class IndicatorHistory(models.Model):
                                                               evidence_categorization__isnull=False).exclude(logbook_second_verification_date__lte=end_date)
                         IndicatorHistory.calculate_irf_backlog(results, query_set, 'v2')
                     
-                    interceptee_class = IndicatorHistory.get_class(class_cache, 'Interceptee', station)
-                    if interceptee_class is not None:
-                        query_set = interceptee_class.objects.filter(photo__in=check_photos.keys())
+                    interceptee_storage = IndicatorHistory.get_card_storage(storage_cache, form_type, 'Interceptees', station)
+                    if interceptee_storage is not None:
+                        query_set = interceptee_storage.get_form_storage_class().objects.filter(photo__in=check_photos.keys())
                         IndicatorHistory.process_photos(results, query_set, check_photos, start_date, end_date)
                     
                 if include_latest_date:
-                    query_set = form_class.objects.all().exclude(logbook_submitted__isnull=True).order_by("-logbook_submitted")[:1]
+                    query_set = form_class.objects.filter(station__in=station_list).exclude(logbook_submitted__isnull=True).order_by("-logbook_submitted")[:1]
                     if len(query_set) > 0:
                         if latest_date is None:
                             latest_date = query_set[0].logbook_submitted
@@ -134,6 +137,12 @@ class IndicatorHistory(models.Model):
         
         for prefix in ['irf','vdf', 'cif', 'photos', 'v1', 'v2']:
             IndicatorHistory.compute_lag(results, prefix)
+            
+            if prefix + 'Count' in results and prefix + 'OriginalFormCount' in results:
+                if  results[prefix + 'Count'] > 0:
+                    results[prefix + 'OriginalFormPercent'] = round(results[prefix + 'OriginalFormCount'] * 100 / results [prefix + 'Count'],2)
+                else:
+                    results[prefix + 'OriginalFormPercent'] = '-'
         
         if include_latest_date:
             if latest_date is None:
@@ -161,23 +170,32 @@ class IndicatorHistory(models.Model):
         if station in class_cache[type]:
             the_class = class_cache[type][station]
         else:
-            if type != 'Interceptee':
-                form = Form.current_form(type, station.id)
-                if form is None:
-                    the_class = None
-                else:
-                    the_class = form.storage.get_form_storage_class()
+            form = Form.current_form(type, station.id)
+            if form is None:
+                the_class = None
             else:
-                form = Form.current_form('IRF', station.id)
-                form_categories = FormCategory.objects.filter(form=form, name='Interceptees')
-                if len(form_categories) == 1 and form_categories[0].storage is not None:
-                    the_class = form_categories[0].storage.get_form_storage_class()
-                else:
-                    the_class = None
+                the_class = form.storage.get_form_storage_class()
 
             class_cache[type][station] = the_class
         
         return the_class
+    
+    @staticmethod
+    def get_card_storage(storage_cache, form_type, form_category_name, station):
+        type = form_type + "_" + form_category_name
+        if station in storage_cache[type]:
+            the_storage = storage_cache[type][station]
+        else:
+            form = Form.current_form(form_type, station.id)
+            form_categories = FormCategory.objects.filter(form=form, name=form_category_name)
+            if len(form_categories) == 1 and form_categories[0].storage is not None:
+                the_storage = form_categories[0].storage
+            else:
+                the_storage = None
+
+            storage_cache[type][station] = the_storage
+            
+        return the_storage
     
     @staticmethod
     def compute_lag(results, prefix):
@@ -195,9 +213,9 @@ class IndicatorHistory(models.Model):
         lag_count = 0
         
         for irf in query_set:
-            if IndicatorHistory.date_in_range(irf.logbook_information_complete, None, None):
+            if IndicatorHistory.date_in_range(irf.logbook_submitted, None, None):
                 lag_count += 1
-                lag_time += IndicatorHistory.work_days(irf.logbook_information_complete, irf.logbook_first_verification_date)
+                lag_time += IndicatorHistory.work_days(irf.logbook_submitted, irf.logbook_first_verification_date)
         
         IndicatorHistory.add_result(results, 'v1TotalLag', lag_time)
         IndicatorHistory.add_result(results, 'v1Count', lag_count)
@@ -220,11 +238,15 @@ class IndicatorHistory(models.Model):
         IndicatorHistory.add_result(results, 'v2Count', lag_count)
      
     @staticmethod
-    def calculate_form_indicators (results, query_set, prefix):
+    def calculate_form_indicators (results, query_set, form_type):
+        storage_cache = {
+                form_type + '_Attachments':{},
+                }
         submitted_count = 0
         total_lag = 0
         interceptee_count = 0
         interceptee_photo_count = 0
+        original_form_attached_count = 0
         
         for entry in query_set:
             submitted_count += 1
@@ -237,21 +259,28 @@ class IndicatorHistory(models.Model):
                 start_date = entry.date_time_entered_into_system.date()
             
             total_lag += IndicatorHistory.work_days(start_date, entry.logbook_submitted)
+            storage = IndicatorHistory.get_card_storage(storage_cache, form_type, 'Attachments', entry.station)
+            if storage is not None:
+                orig_attachments = storage.get_form_storage_class().objects.filter(Q((storage.foreign_key_field_parent,entry)) & Q(('option','Original Form')))
+                if len(orig_attachments) > 0:
+                    original_form_attached_count += 1
+            
         
-        IndicatorHistory.add_result(results, prefix + 'Count', submitted_count)
-        IndicatorHistory.add_result(results, prefix + 'TotalLag', total_lag)
+        IndicatorHistory.add_result(results, form_type.lower() + 'Count', submitted_count)
+        IndicatorHistory.add_result(results, form_type.lower() + 'TotalLag', total_lag)
+        IndicatorHistory.add_result(results, form_type.lower() + 'OriginalFormCount', original_form_attached_count)
     
     @staticmethod
-    def calculate_irf_indicators(results, query_set, start_date, end_date, class_cache):
-        IndicatorHistory.calculate_form_indicators(results, query_set, 'irf')
+    def calculate_irf_indicators(results, query_set, start_date, end_date, class_cache, form_type):
+        IndicatorHistory.calculate_form_indicators(results, query_set, form_type)
     
     @staticmethod
-    def calculate_vdf_indicators(results, query_set, start_date, end_date, class_cache):
-        IndicatorHistory.calculate_form_indicators(results, query_set, 'vdf')
+    def calculate_vdf_indicators(results, query_set, start_date, end_date, class_cache, form_type):
+        IndicatorHistory.calculate_form_indicators(results, query_set, form_type)
     
     @staticmethod
-    def calculate_cif_indicators(results, query_set, start_date, end_date, class_cache):
-        IndicatorHistory.calculate_form_indicators(results, query_set, 'cif')
+    def calculate_cif_indicators(results, query_set, start_date, end_date, class_cache, form_type):
+        IndicatorHistory.calculate_form_indicators(results, query_set, form_type)
     
     @staticmethod
     def get_modified_photos(start_date, end_date):
