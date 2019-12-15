@@ -202,6 +202,11 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': False,
         },
+        'googleapiclient':{
+            'handlers': ['file'],
+            'level': 'ERROR',
+            'propagate': True,
+        }
     },
 }
 
