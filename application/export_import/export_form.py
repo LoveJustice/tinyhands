@@ -1,4 +1,6 @@
 import logging
+import datetime
+import time
 from django.core.exceptions import ObjectDoesNotExist
 
 from dataentry.models import ExportImportCard, ExportImportField, Form, FormCategory, FormType, GoogleSheetConfig, QuestionLayout
@@ -189,22 +191,28 @@ class ExportToGoogleSheet:
         return row
     
     @staticmethod
-    def audit_forms():
+    def audit_forms(forms):
         logger.info("Begin audit_forms")
         audit_sheets = GoogleSheetConfig.objects.filter(export_or_import='export')
+        if forms:
+            audit_sheets = audit_sheets.filter(export_import__form__form_name__in=forms)
+        sleep_time = 0
         for audit_sheet in audit_sheets:
+            if sleep_time > 0:
+                time.sleep(sleep_time)
+            start_time = datetime.datetime.now();
             logger.info("Begin audit of form " + audit_sheet.export_import.form.form_name)
             stations = audit_sheet.export_import.form.stations.all()
             if len(stations) < 1:
-                # no stations for the form, so we cannot audit
+                logger.info("No stations assigned form " + audit_sheet.export_import.form.form_name)
                 continue
             
             storage = audit_sheet.export_import.form.storage
             mod = __import__(storage.module_name, fromlist=[storage.form_model_name])
             form_model = getattr(mod, storage.form_model_name, None)
-            forms_to_audit = form_model.objects.filter(status='approved', station__in=stations)
+            forms_to_audit = form_model.objects.filter(station__in=stations).exclude(status='in-progress')
             if len(forms_to_audit) < 1:
-                # no forms to audit
+                logger.info("No data for form " + audit_sheet.export_import.form.form_name)
                 continue
             
             export_form = ExportFormFactory.find_by_instance(forms_to_audit[0])
@@ -215,7 +223,11 @@ class ExportToGoogleSheet:
             google_sheet = google_sheet_class.from_form_config(export_sheet.google_sheet_config)
             google_sheet.audit(forms_to_audit, forms_to_audit[0].key_field_name())
             logger.info("Complete audit of form " + audit_sheet.export_import.form.form_name)
-        
+            end_time = datetime.datetime.now()
+            elapsed = (end_time - start_time).total_seconds()
+            if elapsed < 10:
+                sleep_time = 10 - elapsed
+                  
         logger.info("Complete audit_forms")
 
 class ExportToGoogleSheetFactory:
