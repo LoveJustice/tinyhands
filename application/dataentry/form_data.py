@@ -246,12 +246,15 @@ class FormData:
                 response.parent = self.form_object
                 response.save()
             
-            for card_list in self.card_dict.values():
+            for card_key, card_list in self.card_dict.items():
+                new_card_list = []
                 for card in card_list:
                     if card.is_valid:
                         card.save()
+                        new_card_list.append(card)
                     else:
                         card.delete()
+                self.card_dict[card_key] = new_card_list
             
             self.form_object.post_save(self)
     
