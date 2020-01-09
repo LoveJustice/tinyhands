@@ -16,7 +16,8 @@ class MDFExporter(BasePDFCreator):
             'name': mdf_helper.station_name,
             'date': mdf_helper.date_entered,
             'sections': mdf_helper.sections,
-            'total': mdf_helper.total
+            'total': mdf_helper.total,
+            'notes': mdf_helper.notes
         }
 
 
