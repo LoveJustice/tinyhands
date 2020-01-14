@@ -76,6 +76,10 @@
 		"station_codes":["CTG","DAC","DLA","JSR","RJH"]
 	},
 	{
+		"form":"monthlyReportBangladesh",
+		"station_codes":["CTG","DAC","DLA","JSR","RJH"]
+	},
+	{
 		"form":"irfBenin",
 		"station_codes":["COT"]
 	},
@@ -162,5 +166,9 @@
 	{
 		"form":"vdfZimbabwe",
 		"station_codes":["CHZ", "HRE", "RUT"]
+	},
+	{
+		"form":"irfNamibia",
+		"station_codes":["WHK"]
 	}
 ]

@@ -243,6 +243,8 @@ class BorderStationBudgetCalculation(models.Model):
         return total
 
     members = models.ManyToManyField(Staff, through='StaffSalary')
+    
+    notes = models.TextField('Notes', blank=True)
 
     def other_items_total(self, section):
         items = self.otherbudgetitemcost_set.filter(form_section=section).exclude(cost__isnull=True)

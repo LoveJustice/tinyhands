@@ -142,7 +142,7 @@ class MonthlyReportFormViewSet(BaseFormViewSet):
                 total += val
             
             if count  > 0:
-                val = total/count
+                val = round(total/count,1)
                 report_data.append(val)
                 self.compute_total(section_totals, 'Average', val)
             else:
@@ -154,7 +154,7 @@ class MonthlyReportFormViewSet(BaseFormViewSet):
             for heading in results["headings"]:
                 if heading == 'Station':
                     continue
-                results["averages"].append(section_totals[heading]/report_count)
+                results["averages"].append(round(section_totals[heading]/report_count,1))
         
         print(results)
             

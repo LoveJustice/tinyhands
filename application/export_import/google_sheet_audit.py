@@ -12,13 +12,16 @@ from dataentry.models.addresses import Address2
 
 logger = logging.getLogger(__name__);
 
-def audit_exports():
+def audit_exports(forms):
     logger.info("Begin audit")
-    ExportToGoogleSheet.audit_forms()
-    audit_irf()
-    audit_vif()
-    audit_traffickers()
-    replace_address2()
+    if forms is not None and len(forms) > 0:
+        ExportToGoogleSheet.audit_forms(forms)
+    else:
+        ExportToGoogleSheet.audit_forms(None)
+        #audit_irf()
+        #audit_vif()
+        #audit_traffickers()
+        replace_address2()
     logger.info("Complete audit")
       
 def audit_irf():
