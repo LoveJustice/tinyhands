@@ -39,7 +39,7 @@ class FormTypeViewSet(viewsets.ModelViewSet):
 class FormViewSet(viewsets.ModelViewSet):
     queryset = Form.objects.all()
     serializer_class = FormSerializer
-    ordering = ('form_type__name','name',)
+    ordering = ('form_type__name','form_name',)
     
     def list(self, request):
         form_qs = self.queryset
@@ -47,7 +47,7 @@ class FormViewSet(viewsets.ModelViewSet):
             form_qs = form_qs.filter(form_type__name=request.GET['type_name'])
         if 'station_id' in request.GET:
             form_qs = form_qs.filter(stations__id = request.GET['station_id'])
-        serializer = self.get_serializer(form_qs, many=True)
+        serializer = self.get_serializer(form_qs.order_by('form_type__name','form_name'), many=True)
         return Response(serializer.data)
     
     @staticmethod
