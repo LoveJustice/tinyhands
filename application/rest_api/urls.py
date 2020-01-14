@@ -104,4 +104,5 @@ urlpatterns = [
         url(r'^monthly_report/summary/(?P<country_id>\d+)/(?P<year>\d+)/(?P<month>\d+)/$', MonthlyReportFormViewSet.as_view({'get': 'summary'}), name='monthlyReportSummary'),
         
         url(r'^indicators/(?P<country_id>\d+)$', IndicatorsViewSet.as_view({'get': 'calculate_indicators'}), name='indicators'),
+        url(r'^collection_indicators/(?P<country_id>\d+)/$', IndicatorsViewSet.as_view({'get': 'get_collection_indicators'}), name='collectionIndicators'),
 ]
