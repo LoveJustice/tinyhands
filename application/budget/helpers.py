@@ -170,6 +170,10 @@ class MoneyDistributionFormHelper:
         if self.budget.supplies_flashlights_boolean:
             items.append(BudgetLineItem('Flashlights', self.budget.supplies_flashlights_amount))
         return items + self.get_other_items(BorderStationBudgetCalculation.SUPPLIES)
+    
+    @property
+    def notes(self):
+        return self.budget.notes
 
     def get_other_items(self, section):
         other_items = self.budget.otherbudgetitemcost_set.filter(form_section=section)
