@@ -1,6 +1,6 @@
 from django.db import models
 
-from .form import BaseForm
+from .form import BaseForm, BaseCard
 
 class MonthlyReport(BaseForm):
     # Top
@@ -155,4 +155,18 @@ class MonthlyReport(BaseForm):
     @staticmethod
     def key_field_name():
         return 'id'
+
+class MonthlyReportAttachment(BaseCard):
+    monthly_report = models.ForeignKey(MonthlyReport)
+    attachment_number = models.PositiveIntegerField(null=True, blank=True)
+    description = models.CharField(max_length=126, null=True)
+    attachment = models.FileField('Attach scanned copy of form (pdf or image)', upload_to='mrf_attachments')
+    private_card = models.BooleanField(default=True)
+    option = models.CharField(max_length=126, null=True)
+    
+    def is_private(self):
+        return self.private_card
+
+    def set_parent(self, the_parent):
+        self.monthly_report = the_parent
 

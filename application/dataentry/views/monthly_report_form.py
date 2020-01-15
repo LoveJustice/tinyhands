@@ -71,7 +71,12 @@ class MonthlyReportFormViewSet(BaseFormViewSet):
         return 'MONTHLY_REPORT'
     
     def get_element_paths(self):
-        return []
+        return [
+            {
+                'element':'scanned',
+                'path':'mrf_attachments/'
+            }
+        ]
     
     def get_list_field_names(self):
         return ['id', 'year', 'month', 'form_entered_by',
