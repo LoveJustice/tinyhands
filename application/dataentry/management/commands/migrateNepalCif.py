@@ -1,4 +1,5 @@
 import numbers
+import os.path
 
 from django.db import connection
 from django.core.management.base import BaseCommand
@@ -137,21 +138,36 @@ class Command(BaseCommand):
                 # set in manually code
                 'pb_number',
                 'id',
-                'cif_id'
+                'cif_id',
+                'role_host',
+                'role_witness',
+                'role_complainant',
             ]
         pb_custom_processing = {
-            'role':{
+            'role_other':{
                     'operation':Command.process_radio,
                     'map_values':{
-                        'who_is_this_role_broker':'Broker',
-                        'who_is_this_role_companion':'Companion',
                         'who_is_this_role_india_trafficker':'India Trafficker',
                         'who_is_this_role_contact_of_husband':'Husband',
                         'who_is_this_role_known_trafficker':'Trafficker',
-                        'who_is_this_role_manpower':'Manpower',
-                        'who_is_this_role_passport':'ID Facilitator',
                         'who_is_this_role_sex_industry':'Sex Industry',
                     },
+                },
+            'role_broker':{
+                    'operation':Command.change_name,
+                    'from_name':'who_is_this_role_broker'
+                },
+            'role_companion':{
+                    'operation':Command.change_name,
+                    'from_name':'who_is_this_role_companion'
+                },
+            'role_id_facilitator':{
+                    'operation':Command.change_name,
+                    'from_name':'who_is_this_role_passport'
+                },
+            'role_agent':{
+                    'operation':Command.change_name,
+                    'from_name':'who_is_this_role_manpower'
                 },
             'appearance':{
                     'operation':Command.append_to,
@@ -359,8 +375,6 @@ class Command(BaseCommand):
             
             lb_number = lb_number + 1
         
-        
-        
     def handle(self, *args, **options):
         main_no_processing = [
                 'informant_number',
@@ -376,12 +390,15 @@ class Command(BaseCommand):
                 'how_recruited_broker_approached_pb',
                 'how_recruited_broker_called_pv',
                 'known_broker_pb',
+                'known_broker_days',
                 'married_broker_pb',
+                'married_broker_days',
                 'travel_expenses_broker_repaid_amount',
                 'expected_earning_pb',
                 'border_cross_night',
                 'border_cross_off_road',
                 'border_cross_foot',
+                'border_cross_air',
                 'id_source_pb',
                 'permission_contact_pv',
                 'permission_contact_whats_app',
@@ -399,6 +416,7 @@ class Command(BaseCommand):
                 'police_interact_disrespectful',
                 'police_interact_unprofessional',
                 'police_interact_resistant_to_fir',
+                'police_station_threats_prevented_statement',
                 'police_interact_none',
                 'victim_statement_certified',
                 'victim_statement_certified_date',
@@ -452,7 +470,14 @@ class Command(BaseCommand):
                 'suspected_trafficker_count',
                 'travel_expenses_paid_by_broker_pb',
                 'travel_expenses_paid_by_broker_repaid_pb',
-                'travel_expenses_paid_to_broker_pb'
+                'travel_expenses_paid_to_broker_pb',
+                'logbook_received',
+                'logbook_incomplete_questions',
+                'logbook_incomplete_sections',
+                'logbook_information_complete',
+                'logbook_notes',
+                'logbook_submitted',
+                'case_exploration_gulf_country',
             ]
         main_custom_processing = {
             'status': {
