@@ -15,7 +15,7 @@ class PersonFormData:
 class Person(models.Model):
     GENDER_CHOICES = [('M', 'm'), ('F', 'f')]
 
-    full_name = models.CharField(max_length=255)
+    full_name = models.CharField(max_length=255, null=True, blank=True)
     gender = models.CharField(max_length=4, choices=GENDER_CHOICES, blank=True)
     age = models.PositiveIntegerField(null=True, blank=True)
     address1 = models.ForeignKey(Address1, null=True, blank=True)
