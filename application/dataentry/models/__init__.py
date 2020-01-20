@@ -58,5 +58,5 @@ from .vdf_rwanda import VdfRwanda, VdfAttachmentRwanda
 from .vdf_south_africa import VdfSouthAfrica, VdfAttachmentSouthAfrica
 from .vdf_tanzania import VdfTanzania, VdfAttachmentTanzania
 from .vdf_zimbabwe import VdfZimbabwe, VdfAttachmentZimbabwe
-from .monthly_report import MonthlyReport
+from .monthly_report import MonthlyReport, MonthlyReportAttachment
 from .indicator_history import IndicatorHistory
