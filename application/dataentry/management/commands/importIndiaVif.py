@@ -630,7 +630,10 @@ class Command(BaseCommand):
             "Knew how bad it was, but didn't think that was happening to her":"Knew how bad it was, but didn't think it was happening to them",
             }},
         'case_notes': {'operation':Processing.copy_value, 'source':'Case Notes'},
-        'consent_to_use_information':{'operation':Processing.no_processing},
+        'consent_to_use_information':{'operation':Processing.set_map, 'source':"Permission to use photograph?",'map':{
+            "Check the box if this question on form is signed":"Yes",
+            "":"No"
+            }},
         'date_time_entered_into_system':{'operation':Processing.no_processing},
         'date_time_last_updated':{'operation':Processing.no_processing},
         'date_victim_left':{'operation':Processing.no_processing},
@@ -651,7 +654,8 @@ class Command(BaseCommand):
         'feel_safe_with_guardian':{'operation':Processing.copy_value, 'source':"7.4 Do you feel safe at home with your guardian?"},
         'form_entered_by_id':{'operation':Processing.no_processing},
         'fundraising_purpose':{'operation':Processing.set_map, 'source':"Permission to use photograph?",'map':{
-            "Check the box if this question on form is signed":"I give permission to use my story and photograph anywhere",
+            "Check the box if this question on form is signed":"I give permission to use my story and cropped photograph, but not in home country",
+            "":"I do not give permission to use my story or photograph"
             }},
         'guardian_drink_alcohol':{'operation':Processing.set_map, 'source':"7.7 Does the guardian drink alcohol?",'map':{
             "Constnatly":"Frequent/Severe",
