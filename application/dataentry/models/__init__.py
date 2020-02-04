@@ -46,6 +46,8 @@ from .cif_ghana import CifGhana, LocationBoxGhana, PersonBoxGhana, PotentialVict
 from .cif_tanzania import CifTanzania, LocationBoxTanzania, PersonBoxTanzania, PotentialVictimTanzania, TransporationTanzania, VehicleBoxTanzania, CifAttachmentTanzania
 from .cif_zimbabwe import CifZimbabwe, LocationBoxZimbabwe, PersonBoxZimbabwe, PotentialVictimZimbabwe, TransporationZimbabwe, VehicleBoxZimbabwe, CifAttachmentZimbabwe
 from .cif_namibia import CifNamibia, LocationBoxNamibia, PersonBoxNamibia, PotentialVictimNamibia, TransporationNamibia, VehicleBoxNamibia, CifAttachmentNamibia
+from .cif_india_network import CifIndiaNetwork, LocationBoxIndiaNetwork, PersonBoxIndiaNetwork, PotentialVictimIndiaNetwork, TransporationIndiaNetwork, VehicleBoxIndiaNetwork, CifAttachmentIndiaNetwork
+from .cif_rwanda import CifRwanda, LocationBoxRwanda, PersonBoxRwanda, PotentialVictimRwanda, TransporationRwanda, VehicleBoxRwanda, CifAttachmentRwanda
 from .vdf_bangladesh import VdfBangladesh, VdfAttachmentBangladesh
 from .vdf_nepal import VdfNepal, VdfAttachmentNepal
 from .vdf_india import VdfIndia, VdfAttachmentIndia
