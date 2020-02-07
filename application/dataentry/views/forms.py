@@ -203,19 +203,15 @@ class FormViewSet(viewsets.ModelViewSet):
         if base_length <= len(station.station_code):
             return Response({'errors' : ['form number ' + form_number + ' is not in standard format']},status=status.HTTP_400_BAD_REQUEST)
         
-        print (form_number, base_number)
-        
         results = []
         forms = Form.objects.filter(stations=station, form_type__name__in=['IRF','CIF','VDF'])
         for form in forms:
             form_class = form.storage.get_form_storage_class()
             key_field = form_class.key_field_name()
             form_objects = form_class.objects.filter(Q((key_field+'__startswith', base_number)))
-            print(form_class, len(form_objects))
             for form_object in form_objects:
                 key_value = form_object.get_key()
                 if len(key_value) > base_length and key_value[base_length] >= '0' and key_value[base_length] <= '9':
-                    print ('not related form', key_value)
                     # form number has another digit after the base_number -> not related form
                     continue
                 obj = RelatedForm(form_object.id,

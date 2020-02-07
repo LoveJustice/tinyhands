@@ -75,7 +75,7 @@ class BaseFormViewSet(viewsets.ModelViewSet):
         account_id = self.request.user.id
         
         station_list = []
-        form_list = []
+        form_storage_list = []
         tmp_station_list = BorderStation.objects.filter(operating_country__in=country_list)
         perm_list = UserLocationPermission.objects.filter(account__id=account_id, permission__permission_group=self.get_perm_group_name()).exclude(permission__action='ADD')
         self.serializer_context = {'perm_list':perm_list}
@@ -83,17 +83,16 @@ class BaseFormViewSet(viewsets.ModelViewSet):
             if (UserLocationPermission.has_permission_in_list(perm_list, self.get_perm_group_name(), None, station.operating_country.id, station.id)):
                 station_list.append(station)
                 form = Form.current_form(self.get_form_type_name(), station.id)
-                if form is not None and form not in form_list:
-                    form_list.append(form)
+                if form is not None and form.storage not in form_storage_list:
+                    form_storage_list.append(form.storage)
         
         q_filter = self.build_query_filter(status_list, station_list, in_progress, account_id)
         queryset = None
-        for form in form_list:
-            mod = __import__(form.storage.module_name, fromlist=[form.storage.form_model_name])
-            form_model = getattr(mod, form.storage.form_model_name)
+        for form_storage in form_storage_list:
+            mod = __import__(form_storage.module_name, fromlist=[form_storage.form_model_name])
+            form_model = getattr(mod, form_storage.form_model_name)
             
-            tmp_queryset = form_model.objects.filter(q_filter).only(*self.get_list_field_names())
-      
+            tmp_queryset = form_model.objects.filter(q_filter).only(*self.get_list_field_names())      
             if search is not None:
                 tmp_queryset = self.filter_key(tmp_queryset, search)
             
