@@ -1,8 +1,8 @@
 from django.core.urlresolvers import reverse
 from rest_framework import status
 from rest_framework.test import APIRequestFactory, APITestCase
-from dataentry.models import Person, IntercepteeIndia
-from dataentry.models import VictimInterview
+from dataentry.models import Person, IntercepteeCommon
+from dataentry.models import VictimInterview, BorderStation, Form
 from accounts.tests.factories import SuperUserFactory
 from dataentry.tests.factories import PersonFactory, CifIndiaFactory, IrfIndiaFactory, IntercepteeIndiaNoPhotoFactory, PersonBoxIndiaFactory, AliasGroupFactory
 from dataentry.management.commands.formLatest import Command
@@ -85,7 +85,18 @@ class IDManagementTest(APITestCase):
     def test_person_forms(self):
         command = Command()
         command.handle([],[])
-
+        
+        station = self.irf_list[0].station
+        form = Form.objects.get(form_name='irfIndia')
+        form.stations.add(station)
+        form.save()
+        form = Form.objects.get(form_name='cifIndia')
+        form.stations.add(station)
+        form.save()
+        form = Form.objects.get(form_name='vdfIndia')
+        form.stations.add(station)
+        form.save()
+        
         url = reverse('IDManagementForms')
         data = {'person_id': self.person_list[0].id}
 
