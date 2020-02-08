@@ -15,7 +15,7 @@ from dataentry.serialize_form import FormDataSerializer
 from .base_form import BaseFormViewSet, BorderStationOverviewSerializer
 
 from dataentry.form_data import Form, FormData
-from dataentry.models import IrfNepal, UserLocationPermission
+from dataentry.models import IrfCommon, UserLocationPermission
 
 class IrfListSerializer(serializers.Serializer):
     id = serializers.IntegerField()
@@ -175,7 +175,7 @@ class IrfFormViewSet(BaseFormViewSet):
                     'logbook_second_verification']
         
     def get_empty_queryset(self):
-        return IrfNepal.objects.none()
+        return IrfCommon.objects.none()
     
     def filter_key(self, queryset, search):
         return queryset.filter(irf_number__contains=search)

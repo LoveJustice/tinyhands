@@ -157,7 +157,7 @@ class PersonFormCache(models.Model):
             vdf_forms = Form.objects.filter(form_type__name='VDF')
             for vdf_form in vdf_forms:
                 vdf_class = vdf_form.storage.get_form_storage_class()
-                vdfs = vdf_class.objects.filter(victim=person)
+                vdfs = vdf_class.objects.filter(victim=person, station__in = vdf_form.stations.all())
                 for vdf in vdfs:
                     form_entry = {}
                     form_entry['form_id'] = vdf.id
@@ -174,7 +174,7 @@ class PersonFormCache(models.Model):
             cif_forms = Form.objects.filter(form_type__name='CIF')
             for cif_form in cif_forms:
                 cif_class = cif_form.storage.get_form_storage_class()
-                cifs = cif_class.objects.filter(main_pv=person)
+                cifs = cif_class.objects.filter(main_pv=person, station__in=cif_form.stations.all())
                 for cif in cifs:
                     form_entry = {}
                     form_entry['form_id'] = cif.id
@@ -191,7 +191,7 @@ class PersonFormCache(models.Model):
                 form_categories = FormCategory.objects.filter(form=cif_form, name='OtherPotentialVictims')
                 if len(form_categories) == 1:
                     other_victims_class = form_categories[0].storage.get_form_storage_class()
-                    other_victims = other_victims_class.objects.filter(person=person)
+                    other_victims = other_victims_class.objects.filter(person=person, cif__station__in=cif_form.stations.all())
                     for other_victim in other_victims:
                         form_entry = {}
                         form_entry['form_id'] = other_victim.cif.id
@@ -208,7 +208,7 @@ class PersonFormCache(models.Model):
                 form_categories = FormCategory.objects.filter(form=cif_form, name='PersonBoxes')
                 if len(form_categories) == 1:
                     person_box_class = form_categories[0].storage.get_form_storage_class()
-                    person_boxes = person_box_class.objects.filter(person=person)
+                    person_boxes = person_box_class.objects.filter(person=person, cif__station__in=cif_form.stations.all())
                     for person_box in person_boxes:
                         form_entry = {}
                         form_entry['form_id'] = person_box.cif.id
@@ -234,7 +234,7 @@ class PersonFormCache(models.Model):
                 form_categories = FormCategory.objects.filter(form=irf_form, name='Interceptees')
                 if len(form_categories) == 1:
                     interceptee_class = form_categories[0].storage.get_form_storage_class()
-                    interceptees = interceptee_class.objects.filter(person=person)
+                    interceptees = interceptee_class.objects.filter(person=person, interception_record__station__in=irf_form.stations.all())
                     for interceptee in interceptees:
                         form_entry = {}
                         form_entry['form_id'] = interceptee.interception_record.id
