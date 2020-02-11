@@ -1,5 +1,5 @@
 django-templated-email==2.2.0
-Django==1.11.16
+Django==1.11.28
 django-bootstrap-form==3.4
 django-cors-headers==2.4.0
 django-braces==1.13.0
