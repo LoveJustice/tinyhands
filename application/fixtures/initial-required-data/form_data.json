@@ -2807,7 +2807,7 @@
 {"model": "dataentry.questionlayout", "pk": null, "fields": {"question": 419, "category": 114, "weight": 0, "form_config": null}},
 {"model": "dataentry.questionlayout", "pk": null, "fields": {"question": 418, "category": 114, "weight": 0, "form_config": null}},
 {"model": "dataentry.questionlayout", "pk": null, "fields": {"question": 417, "category": 114, "weight": 0, "form_config": null}},
-{"model": "dataentry.questionlayout", "pk": null, "fields": {"question": 9, "category": 114, "weight": 0, "form_config": {"RadioItems": {"9": ["Nepali", "Indian"]}}}},
+{"model": "dataentry.questionlayout", "pk": null, "fields": {"question": 9, "category": 114, "weight": 0, "form_config": null}},
 {"model": "dataentry.questionlayout", "pk": null, "fields": {"question": 489, "category": 115, "weight": 0, "form_config": null}},
 {"model": "dataentry.questionlayout", "pk": null, "fields": {"question": 488, "category": 115, "weight": 0, "form_config": null}},
 {"model": "dataentry.questionlayout", "pk": null, "fields": {"question": 481, "category": 115, "weight": 0, "form_config": {"IndexQuestion": 481}}},

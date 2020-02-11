@@ -1,6 +1,7 @@
+from string import Template
 from django.core.management.base import BaseCommand
 from django.db.models import Q
-from django.db import transaction
+from django.db import connection, transaction
 
 from dataentry.models import BorderStation, Form, FormCategory, Storage
 
@@ -12,6 +13,12 @@ class Command(BaseCommand):
             'PotentialVictim', 'Transporation', 'PersonBox','LocationBox', 'VehicleBox', 'CifAttachment',
             'VdfAttachment'
         ]
+    sql_template = Template(
+                'UPDATE $new '\
+                'SET date_time_entered_into_system=$old.date_time_entered_into_system,'\
+                'date_time_last_updated=$old.date_time_last_updated '\
+                'FROM $old '\
+                'WHERE $old.$key = $new.$key')
     def add_arguments(self, parser):
         parser.add_argument('form_type', nargs='+', type=str)
     
@@ -55,30 +62,40 @@ class Command(BaseCommand):
         source_form_objects = old_model.objects.all()
         
         with transaction.atomic():
+            old_objs = []
             for source_form_object in source_form_objects:
-                with transaction.atomic():
-                    old_objs = []
-                    dest_form_object = new_model()
-                    self.copy_object(source_form_object, dest_form_object)
-                    dest_form_object.save()
-                    dest_form_object.date_time_entered_into_system = source_form_object.date_time_entered_into_system
-                    dest_form_object.save()
-                    
-                    for card_map in card_mapping:
-                        source_class = card_map['source_class']
-                        dest_class = card_map['dest_class']
-                        foreign_key_name = card_map['foreign_key_name']
-                        source_cards = source_class.objects.filter(Q((foreign_key_name, source_form_object)))
-                        for source_card in source_cards:
-                            dest_card = card_map['dest_class']()
-                            self.copy_object(source_card, dest_card)
-                            setattr(dest_card, foreign_key_name, dest_form_object)
-                            old_objs.append(source_card)
-                            dest_card.save()
+                dest_form_object = new_model()
+                self.copy_object(source_form_object, dest_form_object)
+                dest_form_object.save()
+                
+                for card_map in card_mapping:
+                    source_class = card_map['source_class']
+                    dest_class = card_map['dest_class']
+                    foreign_key_name = card_map['foreign_key_name']
+                    source_cards = source_class.objects.filter(Q((foreign_key_name, source_form_object)))
+                    for source_card in source_cards:
+                        dest_card = card_map['dest_class']()
+                        self.copy_object(source_card, dest_card)
+                        setattr(dest_card, foreign_key_name, dest_form_object)
+                        old_objs.append(source_card)
+                        dest_card.save()
+                   
                             
-                    old_objs.append(source_form_object)
-                    for old_obj in old_objs:
-                        old_obj.delete()
+                old_objs.append(source_form_object)
+            
+            old_table = 'dataentry_' + form.storage.form_model_name.lower()
+            new_table = 'dataentry_' + new_storage.form_model_name.lower()
+            table_key = form.form_type.name.lower() + '_number'
+
+            sql = Command.sql_template.substitute(new=new_table, old=old_table, key=table_key)
+            cursor = connection.cursor()
+            cursor.execute(sql)
+            
+            sql = 'DELETE FROM dataentry_personformcache'
+            cursor.execute(sql)
+                
+            for old_obj in old_objs:
+                old_obj.delete()
             
             form.storage = new_storage
             form.save()
