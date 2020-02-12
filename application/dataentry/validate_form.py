@@ -297,7 +297,7 @@ class ValidateForm:
         self.question_to_validation_set = question_to_validation_set
         
         self.validation_set = {}
-        validations = FormValidation.objects.filter(form=self.form)
+        validations = FormValidation.objects.filter(form=self.form) | FormValidation.objects.filter(form_type=form.form_type)
         for validation in validations:
             set_key = None
             if validation.trigger is not None:
