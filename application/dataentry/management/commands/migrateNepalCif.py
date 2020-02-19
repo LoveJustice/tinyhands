@@ -5,7 +5,7 @@ from django.db import connection
 from django.core.management.base import BaseCommand
 from django.core.management.color import no_style
 
-from dataentry.models import BorderStation, CifNepal, LocationBoxNepal, PersonBoxNepal, VdfNepal, VictimInterview, VictimInterviewLocationBox, VictimInterviewPersonBox
+from dataentry.models import BorderStation, CifNepal, LocationBoxNepal, PersonBoxNepal, VictimInterview, VictimInterviewLocationBox, VictimInterviewPersonBox
 
 class Command(BaseCommand):
     @staticmethod
@@ -125,41 +125,7 @@ class Command(BaseCommand):
             elif value is not None and str(value) != '':
                 dest_value = Command.append_value(dest_value, prefix + str(value))
         
-        setattr(dest, name, dest_value)
-
-    @staticmethod
-    def bookean_yes_no(source, dest, name, config):
-        from_name = config['from_name']
-        value = getattr(source, from_name)
-        if value is not None:
-            if value == True:
-                value = 'Yes'
-            else:
-                value = 'No'
-        
-        setattr(dest, name, value) 
-        
-    @staticmethod
-    def bookean_yes_no_na(source, dest, name, config):
-        from_name = config['from_name']
-        value = getattr(source, from_name)
-        if value is None:
-            value = 'N/A'
-        elif value == True:
-            value = 'Yes'
-        else:
-            value = 'No'
-        
-        setattr(dest, name, value) 
-    
-    @staticmethod
-    def map_value_to_text(source, dest, name, config):
-        from_name = config['from_name']
-        #for key, val in config['map_values'].items():
-        value = getattr(source, from_name)
-        if value in config['map_values']:
-            setattr(dest, name, config['map_values'][value])
-            
+        setattr(dest, name, dest_value)          
                 
     @staticmethod
     def process_person_boxes(vif, cif):
@@ -408,252 +374,6 @@ class Command(BaseCommand):
             dest_lb.save()
             
             lb_number = lb_number + 1
-    
-    def process_vdf(self, vif):
-        vdf_no_processing = [
-            'date_victim_left',
-            'form_entered_by_id',
-            'guardian_name',
-            'guardian_signature',
-            'logbook_received',
-            'logbook_incomplete_questions',
-            'logbook_incomplete_sections',
-            'logbook_information_complete',
-            'logbook_notes',
-            'logbook_submitted',
-            'share_gospel_film',
-            'share_gospel_tract',
-            'share_gospel_oral',
-            'share_gospel_testimony',
-            'share_gospel_book',
-            'share_gospel_other',
-            'someone_pick_up_victim',
-            'staff_share_gospel',
-            'who_victim_released',
-            'who_victim_released_name',
-            'who_victim_released_phone',
-            'where_victim_sent',
-            ]
-        vdf_custom_processing = {
-            'awareness_of_exploitation_before_interception':{
-                    'operation':Command.process_radio,
-                    'map_values':{
-                        'awareness_before_interception_had_heard_not_how_bad':'Had heard, but never knew how bad it was until I was intercepted by TH/LJ',
-                        'awareness_before_interception_knew_how_bad_not_happening_to_her':"Knew how bad it was, but didn't think it was happening to them",
-                        'awareness_before_interception_never_heard':'Had never heard about it',
-                    },
-                },
-            'consent_to_use_information':{
-                    'operation':Command.map_value_to_text,
-                    'from_name':'permission_to_use_photograph',
-                    'map_values':{
-                        True:'Yes',
-                        False:'No',
-                    },
-                },
-            'do_you_want_to_go_home':{
-                    'operation':Command.bookean_yes_no_na,
-                    'from_name':'victim_wants_to_go_home',
-                },
-            'emotional_abuse':{
-                    'operation':Command.process_radio,
-                    'map_values':{
-                        'victim_home_had_emotional_abuse_never':'Never',
-                        'victim_home_had_emotional_abuse_rarely':'Rarely/Minor',
-                        'victim_home_had_emotional_abuse_frequently':'Frequent/Severe',
-                    },
-                },
-            'express_suicidal_thoughts':{
-                    'operation':Command.bookean_yes_no,
-                    'from_name':'victim_wants_to_go_home',
-                },
-            'family_economic_situation': {
-                    'operation':Command.process_radio,
-                    'map_values':{
-                        'victim_family_economic_situation_no_basic_needs':'Unable to meet basic needs',
-                        'victim_family_economic_situation_difficult_basic_needs':'Able to meet only basic needs, but it is very difficult',
-                        'victim_family_economic_situation_comfortable_basic_needs':'Comfortably meet basic needs, and can afford to buy some non-essential goods/services',
-                        'victim_family_economic_situation_wealthy':'Wealthy',
-                    },
-                },
-            'family_guardian_pressure':{
-                    'operation':Command.bookean_yes_no_na,
-                    'from_name':'family_pressured_victim',
-                },
-            'feel_safe_with_guardian':{
-                    'operation':Command.bookean_yes_no_na,
-                    'from_name':'victim_feels_safe_at_home',
-                },
-            'fundraising_purpose':{
-                    'operation':Command.map_value_to_text,
-                    'from_name':'permission_to_use_photograph',
-                    'map_values':{
-                        True:'I give permission to use my story and cropped photograph, but not in home country',
-                        False:'I do not give permission to use my story or photograph',
-                    },
-                },
-            'guardian_drink_alcohol':{
-                    'operation':Command.process_radio,
-                    'map_values':{
-                        'victim_guardian_drinks_alcohol_never':'Never',
-                        'victim_guardian_drinks_alcohol_occasionally':'Rarely/Minor',
-                        'victim_guardian_drinks_alcohol_all_the_time':'Frequent/Severe',
-                    },
-                },
-            'guardian_know_destination':{
-                    'operation':Command.bookean_yes_no_na,
-                    'from_name':'guardian_knew_was_travelling_to_india',
-                },
-            'guardian_phone':{
-                'operation':Command.change_name,
-                    'from_name':'victim_guardian_phone'
-                },
-            'guardian_use_drugs':{
-                    'operation':Command.process_radio,
-                    'map_values':{
-                        'victim_guardian_uses_drugs_never':'Never',
-                        'victim_guardian_uses_drugs_occasionally':'Occasionally',
-                        'victim_guardian_uses_drugs_all_the_time':'All the Time',
-                    },
-                },
-            'interview_date':{
-                'operation':Command.change_name,
-                    'from_name':'date'
-                },
-            'occupation':{
-                    'operation':Command.process_radio,
-                    'map_values':{
-                        'victim_occupation_unemployed':'unemployed',
-                        'victim_occupation_farmer':'farmer',
-                        'victim_occupation_wage_laborer':'wage laborer',
-                        'victim_occupation_business_owner':'business owner',
-                        'victim_occupation_migrant_worker':'migrant worker',
-                        'victim_occupation_tailoring':'tailoring',
-                        'victim_occupation_housewife':'housewife',
-                        'victim_occupation_animal_husbandry':'animal husbandry',
-                        'victim_occupation_domestic_work':'domestic work',
-                        'victim_occupation_shopkeeper':'shopkeeper',
-                        'victim_occupation_hotel':'hotel',
-                        'victim_occupation_factory':'factory',
-                    },
-                    'other_value':'victim_occupation_other_value'
-                },
-            'physical_abuse':{
-                    'operation':Command.process_radio,
-                    'map_values':{
-                        'victim_home_had_physical_abuse_never':'Never',
-                        'victim_home_had_physical_abuse_rarely':'Rarely/Minor',
-                        'victim_home_had_physical_abuse_frequently':'Frequent/Severe',
-                    },
-                },
-            'sexual_abuse':{
-                    'operation':Command.process_radio,
-                    'map_values':{
-                        'victim_home_had_sexual_abuse_never':'Never',
-                        'victim_home_had_sexual_abuse_rarely':'Rarely/Minor',
-                        'victim_home_had_sexual_abuse_frequently':'Frequent/Severe',
-                    },
-                },
-            'shelter_accomodation':{
-                'operation':Command.change_name,
-                    'from_name':'tiny_hands_rating_shelter_accommodations'
-                },
-            'shelter_staff_polite':{
-                'operation':Command.change_name,
-                    'from_name':'tiny_hands_rating_shelter_staff'
-                },
-            'staff_name':{
-                'operation':Command.change_name,
-                    'from_name':'interviewer'
-                },
-            'station_id':{
-                'operation':Command.change_name,
-                    'from_name':'border_station_id'
-                },
-            'station_recommendation_for_victim':{
-                    'operation':Command.process_radio,
-                    'map_values':{
-                        'interviewer_recommendation_send_home':'Send victim home to stay with guardians',
-                        'interviewer_recommendation_send_to_other_relatives':'Send the victim to stay with other relatives',
-                        'interviewer_recommendation_find_other_place':'TH/LJ needs to help them find another place to go',
-                    },
-                },
-            'status': {
-                    'operation':Command.process_constant,
-                    'value':'approved'
-                },
-            'total_situational_alarms':{
-                'operation':Command.change_name,
-                    'from_name':'reported_total_situational_alarms'
-                },
-            'transit_staff_polite':{
-                'operation':Command.change_name,
-                    'from_name':'tiny_hands_rating_border_staff'
-                },
-            'trafficking_awareness':{
-                'operation':Command.change_name,
-                    'from_name':'tiny_hands_rating_trafficking_awareness'
-                },
-            'try_to_send_overseas_again':{
-                    'operation':Command.bookean_yes_no_na,
-                    'from_name':'family_will_try_sending_again',
-                },
-            'vdf_number':{
-                'operation':Command.change_name,
-                    'from_name':'vif_number'
-                },
-            'victim_heard_message_before':{
-                    'operation':Command.process_radio,
-                    'map_values':{
-                        'victim_heard_gospel_no':'No',
-                        'victim_heard_gospel_heard_name_only':'No',
-                        'victim_heard_gospel_heard_but_never_believed':"Yes - heard but didn't believe",
-                        'victim_heard_gospel_already_believer':'Yes - heard and was believer',
-                    },
-                },
-            'victim_signature':{
-                'operation':Command.change_name,
-                    'from_name':'has_signature'
-                },
-            'what_victim_believes_now':{
-                    'operation':Command.process_radio,
-                    'map_values':{
-                        'victim_beliefs_now_doesnt_believe':"Don't believe",
-                        'victim_beliefs_now_believes_no_church':"Do believe, but don't plan on going to center",
-                        'victim_beliefs_now_believes_and_church':'Do believe and plan on going to center',
-                    },
-                },
-            }
-        
-        existing_vdfs = VdfNepal.objects.filter(vdf_number=vif.vif_number)
-        if len(existing_vdfs) > 0:
-            return 0
-        
-        source_dict = vif.__dict__
-        
-        dest_vdf = VdfNepal()
-        for attr in dest_vdf.__dict__.keys():
-                if attr in vdf_custom_processing:
-                    config = vdf_custom_processing[attr]
-                    operation = config['operation']
-                    operation(vif, dest_vdf, attr, config)
-                elif attr not in vdf_no_processing:
-                    if attr not in source_dict:
-                        print ('VDF attribute', attr, 'not found in source VIF')
-                        continue
-                        
-                    value = getattr(vif, attr)
-                    setattr(dest_vdf, attr, value)
-        
-        # Many VictimInterview entries do not have the border station field set, but it is required in the IrfNepal
-        station_code = dest_vdf.vdf_number[:3].upper()
-        station = BorderStation.objects.get(station_code=station_code)
-        dest_vdf.station = station
-        dest_vdf.id = None
-        
-        dest_vdf.save()
-        
-        return 1
         
     def handle(self, *args, **options):
         main_no_processing = [
@@ -1131,10 +851,8 @@ class Command(BaseCommand):
         print('Migrating VIFs')
         cifs_created = 0
         cifs_existing = 0
-        vdfs_created = 0
         source_vifs = VictimInterview.objects.all()
         for source_vif in source_vifs:
-            vdfs_created += self.process_vdf(source_vif)
             existing_cifs = CifNepal.objects.filter(cif_number=source_vif.vif_number)
             if len(existing_cifs) > 0:
                 # VIF has already been migrated - skip to next
@@ -1173,5 +891,5 @@ class Command(BaseCommand):
             for sql in sequence_sql:
                 cursor.execute(sql)
                 
-        print('CIFs migrated ' + str(cifs_created) + ', CIFs previously migrated ' + str(cifs_existing), 'VDFs migrated ' + str(vdfs_created))
+        print('CIFs migrated ' + str(cifs_created) + ', CIFs previously migrated ' + str(cifs_existing))
                     
