@@ -8,6 +8,7 @@ from dataentry.views import IDManagementViewSet, TraffickerCheckViewSet, IrfForm
 from dataentry.views import FormViewSet, FormTypeViewSet
 from dataentry.views import MonthlyReportFormViewSet
 from dataentry.views import IndicatorsViewSet
+from help.views import VideoViewSet
 
 list = {'get': 'list', 'post': 'create'}
 detail = {'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}
@@ -105,4 +106,6 @@ urlpatterns = [
         
         url(r'^indicators/(?P<country_id>\d+)$', IndicatorsViewSet.as_view({'get': 'calculate_indicators'}), name='indicators'),
         url(r'^collection_indicators/(?P<country_id>\d+)/$', IndicatorsViewSet.as_view({'get': 'get_collection_indicators'}), name='collectionIndicators'),
+        
+        url(r'help/video/$', VideoViewSet.as_view({'get':'list'}), name='helpVideo'),
 ]
