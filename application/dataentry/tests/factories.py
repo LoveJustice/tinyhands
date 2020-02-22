@@ -42,7 +42,7 @@ class MbzStationFactory(DjangoModelFactory):
     
 class IrfIndiaFactory(DjangoModelFactory):
     class Meta:
-        model = IrfIndia
+        model = IrfCommon
     
     station = factory.SubFactory(MbzStationFactory)
 
@@ -91,7 +91,7 @@ class VifFactory(DjangoModelFactory):
 
 class CifIndiaFactory(DjangoModelFactory):
     class Meta:
-            model = CifIndia
+            model = CifCommon
     
     cif_number = factory.Sequence(lambda n: 'BHD{0}'.format(n))
     date_time_entered_into_system = datetime.datetime(2011, 12, 12, tzinfo=pytz.UTC)
@@ -116,7 +116,7 @@ class IntercepteeFactory(DjangoModelFactory):
 
 class IntercepteeIndiaFactory(DjangoModelFactory):
     class Meta:
-        model = IntercepteeIndia
+        model = IntercepteeCommon
 
     person = factory.SubFactory(PersonFactory)
     photo = 'foo.png'
@@ -136,7 +136,7 @@ class IntercepteeNoPhotoFactory(DjangoModelFactory):
 # Photo will cause IDManagement test to fail.  Photo is required for photo_exporter test.
 class IntercepteeIndiaNoPhotoFactory(DjangoModelFactory):
     class Meta:
-        model = IntercepteeIndia
+        model = IntercepteeCommon
 
     person = factory.SubFactory(PersonFactory)
     photo = None
@@ -198,7 +198,7 @@ class PersonBoxFactory(DjangoModelFactory):
 
 class PersonBoxIndiaFactory(DjangoModelFactory):
     class Meta:
-        model = PersonBoxIndia
+        model = PersonBoxCommon
         
     person = factory.SubFactory(PersonFactory)
     cif = factory.SubFactory(CifIndiaFactory)  
