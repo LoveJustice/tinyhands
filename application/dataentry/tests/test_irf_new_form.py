@@ -8,7 +8,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 from accounts.tests.factories import BadIrfUserFactory, SuperUserFactory
 from dataentry.tests.factories import IrfIndiaFactory, MbzStationFactory, PersonFactory
-from dataentry.models import Form, IrfIndia, IntercepteeIndia
+from dataentry.models import Form, IrfCommon, IntercepteeCommon
 from dataentry.form_data import FormData, CardData, FormCategory
 from dataentry.serialize_form import FormDataSerializer
 
@@ -64,7 +64,7 @@ class IrfTest(APITestCase):
         self.assertEqual(response.data['storage_id'], irf_id)
         
     def test_irf_put_fail_validation(self):
-        irf_qs = IrfIndia.objects.all()
+        irf_qs = IrfCommon.objects.all()
         irf = irf_qs[0]
         form = Form.current_form('IRF', irf.station.id)
         form_data = FormData(irf, form)
@@ -77,7 +77,7 @@ class IrfTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
          
     def gen_put_data(self):
-        irf_qs = IrfIndia.objects.all()
+        irf_qs = IrfCommon.objects.all()
         irf = irf_qs[0]
         irf.caught_in_lie = True
         irf.who_noticed = 'contact'
@@ -97,7 +97,7 @@ class IrfTest(APITestCase):
         form_category = FormCategory.objects.get(form=form, name='Interceptees')
         category = form_category.category
          
-        interceptee = IntercepteeIndia()
+        interceptee = IntercepteeCommon()
         interceptee.interception_record = irf
         interceptee.kind = 'v'
         interceptee.person = PersonFactory.create()

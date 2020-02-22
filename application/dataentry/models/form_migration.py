@@ -2,9 +2,10 @@ import os
 from django.core.management import call_command
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.management.color import no_style
-from django.db import connection
+from django.db import connection, transaction
 from .form import Form, FormVersion
 from .border_station import BorderStation
+from dataentry.models import Category, Form, FormCategory, QuestionLayout, QuestionStorage
 
 class FormMigration:
     form_model_names = [
@@ -88,6 +89,65 @@ class FormMigration:
 #         else:
 #             print('Fixture ' + file_path + 'not found - skipping form migration')
     
+    @staticmethod
+    def buildView(form_type_name):
+        cxn = transaction.get_connection()
+        if cxn.in_atomic_block:
+            in_transaction = True
+        else:
+            in_transaction = False
+            
+        all_stations = []
+        forms = Form.objects.filter(form_type__name=form_type_name)
+        for form in forms:
+            for station in form.stations.all():
+                if station.station_code not in all_stations:
+                    all_stations.append(station.station_code)
+        
+        all_stations_length = len(all_stations)
+        
+        # build map from field question information is stored in to list of stations that store that information
+        storage_map = {}
+        form_categories = FormCategory.objects.filter(form__in=forms)
+        for form_category in form_categories:
+            layouts = QuestionLayout.objects.filter(category=form_category.category)
+            for layout in layouts:
+                question_storage = QuestionStorage.objects.get(question=layout.question)
+                field = question_storage.field_name
+                if field not in storage_map:
+                    storage_map[field] = []
+                
+                for station in form_category.form.stations.all():
+                    if station.station_code not in storage_map[field]:
+                        storage_map[field].append(station.station_code)
+        
+        sql = 'CREATE or REPLACE VIEW ' + form_type_name.lower() + 'combined as select '
+        storage_class = forms[0].storage.get_form_storage_class()
+        dummy = storage_class()
+        sep = ''
+        for member in dummy.__dict__.keys(): 
+            if member == '_state':
+                continue
+            if member in storage_map and len(storage_map[member]) < all_stations_length:
+                    sql += sep + 'CASE WHEN s.station_code in ('
+                    sep2=''
+                    for code in storage_map[member]:
+                        sql += sep2 + "'" + code + "'"
+                        sep2 = ','
+                    sql += ') THEN ' + 'f.' + member + '  ELSE null END as ' + member
+            else:
+                sql += sep + 'f.' + member
+            
+            sep = ','  
+        
+        sql += ' from dataentry_' + form_type_name.lower() + 'common as f inner join dataentry_borderstation as s on f.station_id = s.id'
+        
+        cursor = connection.cursor()
+        cursor.execute(sql)
+        if not in_transaction:
+            transaction.commit()
+        
+        print ('View ' + form_type_name.lower() + 'combined recreated')
         
     @staticmethod
     def check_load_form_data(apps, file_name, checksum_list):
@@ -113,3 +173,7 @@ class FormMigration:
         form_version.checksum = int(checksum_list[0])
         form_version.blocks = int(checksum_list[1])
         form_version.save()
+        
+        FormMigration.buildView('IRF')
+        FormMigration.buildView('CIF')
+        FormMigration.buildView('VDF')
