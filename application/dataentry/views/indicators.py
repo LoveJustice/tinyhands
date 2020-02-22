@@ -206,7 +206,6 @@ class IndicatorsViewSet(viewsets.ViewSet):
                 if irf.logbook_received is not None:
                     result.irf_lag_count += 1
                     result.irf_lag_total += IndicatorHistory.work_days(irf.date_time_of_interception.date(), irf.logbook_received)
-                    print(irf.irf_number, result.irf_lag_count, result.irf_lag_total)
                 if irf.logbook_second_verification_date is not None:
                     result.irf_forms_verified += 1
                     if irf.logbook_second_verification.lower().startswith('clear'):
@@ -238,8 +237,6 @@ class IndicatorsViewSet(viewsets.ViewSet):
         total_result = CollectionResults('Totals')
         total_result.sum_list(results)
         total_result.compute_values()
-        
-        print (total_result.__dict__)
         
         all_results = [total_result.__dict__]
         for result in results:

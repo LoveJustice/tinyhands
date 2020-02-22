@@ -31,6 +31,7 @@ from .irf_kenya import IrfKenya, IntercepteeKenya, IrfAttachmentKenya
 from .irf_zimbabwe import IrfZimbabwe, IntercepteeZimbabwe, IrfAttachmentZimbabwe
 from .irf_namibia import IrfNamibia, IntercepteeNamibia, IrfAttachmentNamibia
 from .irf_cambodia import IrfCambodia, IntercepteeCambodia, IrfAttachmentCambodia
+from .irf_common import IrfCommon, IntercepteeCommon, IrfAttachmentCommon
 from .irf_rwanda import IrfRwanda, IntercepteeRwanda, IrfAttachmentRwanda
 from .cif_bangladesh import CifBangladesh, LocationBoxBangladesh, PersonBoxBangladesh, PotentialVictimBangladesh, TransporationBangladesh, VehicleBoxBangladesh, CifAttachmentBangladesh
 from .cif_nepal import CifNepal, LocationBoxNepal, PersonBoxNepal, PotentialVictimNepal, TransporationNepal, VehicleBoxNepal, CifAttachmentNepal
@@ -48,6 +49,7 @@ from .cif_zimbabwe import CifZimbabwe, LocationBoxZimbabwe, PersonBoxZimbabwe, P
 from .cif_namibia import CifNamibia, LocationBoxNamibia, PersonBoxNamibia, PotentialVictimNamibia, TransporationNamibia, VehicleBoxNamibia, CifAttachmentNamibia
 from .cif_india_network import CifIndiaNetwork, LocationBoxIndiaNetwork, PersonBoxIndiaNetwork, PotentialVictimIndiaNetwork, TransporationIndiaNetwork, VehicleBoxIndiaNetwork, CifAttachmentIndiaNetwork
 from .cif_rwanda import CifRwanda, LocationBoxRwanda, PersonBoxRwanda, PotentialVictimRwanda, TransporationRwanda, VehicleBoxRwanda, CifAttachmentRwanda
+from .cif_common import CifCommon, LocationBoxCommon, PersonBoxCommon, PotentialVictimCommon, TransportationCommon, VehicleBoxCommon, CifAttachmentCommon
 from .vdf_bangladesh import VdfBangladesh, VdfAttachmentBangladesh
 from .vdf_nepal import VdfNepal, VdfAttachmentNepal
 from .vdf_india import VdfIndia, VdfAttachmentIndia
@@ -60,5 +62,6 @@ from .vdf_rwanda import VdfRwanda, VdfAttachmentRwanda
 from .vdf_south_africa import VdfSouthAfrica, VdfAttachmentSouthAfrica
 from .vdf_tanzania import VdfTanzania, VdfAttachmentTanzania
 from .vdf_zimbabwe import VdfZimbabwe, VdfAttachmentZimbabwe
+from .vdf_common import VdfCommon, VdfAttachmentCommon
 from .monthly_report import MonthlyReport, MonthlyReportAttachment
 from .indicator_history import IndicatorHistory

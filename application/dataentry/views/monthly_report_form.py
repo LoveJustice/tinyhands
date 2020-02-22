@@ -160,8 +160,6 @@ class MonthlyReportFormViewSet(BaseFormViewSet):
                 if heading == 'Station':
                     continue
                 results["averages"].append(round(section_totals[heading]/report_count,1))
-        
-        print(results)
             
         return Response (results)
             

@@ -9,7 +9,7 @@ from dataentry.serialize_form import FormDataSerializer
 from .base_form import BaseFormViewSet, BorderStationOverviewSerializer
 
 from dataentry.form_data import Form, FormData
-from dataentry.models import VdfNepal
+from dataentry.models import VdfCommon
 
 class VdfListSerializer(serializers.Serializer):
     id = serializers.IntegerField()
@@ -88,7 +88,7 @@ class VdfFormViewSet(BaseFormViewSet):
                 'date_time_last_updated']
         
     def get_empty_queryset(self):
-        return VdfNepal.objects.none()
+        return VdfCommon.objects.none()
     
     def filter_key(self, queryset, search):
         return queryset.filter(vdf_number__contains=search)

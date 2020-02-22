@@ -9,7 +9,7 @@ from dataentry.serialize_form import FormDataSerializer
 from .base_form import BaseFormViewSet, BorderStationOverviewSerializer
 
 from dataentry.form_data import Form, FormData
-from dataentry.models import CifNepal
+from dataentry.models import CifCommon
 
 class CifListSerializer(serializers.Serializer):
     id = serializers.IntegerField()
@@ -101,7 +101,7 @@ class CifFormViewSet(BaseFormViewSet):
                     'date_time_last_updated', 'main_pv', 'source_of_intelligence']
         
     def get_empty_queryset(self):
-        return CifNepal.objects.none()
+        return CifCommon.objects.none()
     
     def filter_key(self, queryset, search):
         return queryset.filter(cif_number__contains=search)

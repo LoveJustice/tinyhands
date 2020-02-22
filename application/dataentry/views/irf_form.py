@@ -15,7 +15,7 @@ from dataentry.serialize_form import FormDataSerializer
 from .base_form import BaseFormViewSet, BorderStationOverviewSerializer
 
 from dataentry.form_data import Form, FormData
-from dataentry.models import IrfNepal, UserLocationPermission
+from dataentry.models import IrfCommon, UserLocationPermission
 
 class IrfListSerializer(serializers.Serializer):
     id = serializers.IntegerField()
@@ -122,14 +122,14 @@ class IrfFormViewSet(BaseFormViewSet):
     def build_query_filter(self, status_list, station_list, in_progress, account_id):
         if len(status_list) < 1:
             if in_progress:
-                return Q(status='in-progress')&Q(form_entered_by__id=account_id)
+                return Q(status='in-progress')&Q(form_entered_by__id=account_id)&Q(station__in=station_list)
             else:
-                return Q()
+                return Q(station__in=station_list)
         
         if status_list[0] == '!invalid':
-            q_filter = Q(status='in-progress')&Q(form_entered_by__id=account_id)|~Q(status='in-progress')&~Q(status='invalid')
+            q_filter = Q(status='in-progress')&Q(form_entered_by__id=account_id)|~Q(status='in-progress')&~Q(status='invalid')&Q(station__in=station_list)
         else:
-            q_filter = Q(status=status_list[0])
+            q_filter = Q(status=status_list[0])&Q(station__in=station_list)
         
         if len(status_list) > 1:
             if status_list[1] == '!None':
@@ -175,7 +175,7 @@ class IrfFormViewSet(BaseFormViewSet):
                     'logbook_second_verification']
         
     def get_empty_queryset(self):
-        return IrfNepal.objects.none()
+        return IrfCommon.objects.none()
     
     def filter_key(self, queryset, search):
         return queryset.filter(irf_number__contains=search)
