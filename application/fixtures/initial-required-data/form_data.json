@@ -1,5 +1,5 @@
 [
-{"model": "dataentry.formtype", "pk": 1, "fields": {"name": "IRF"}},
+{"model": "dataentry.formtype", "pk": 1, "fields": {"name": "IRF"}}, 
 {"model": "dataentry.formtype", "pk": 2, "fields": {"name": "CIF"}},
 {"model": "dataentry.formtype", "pk": 3, "fields": {"name": "VDF"}},
 {"model": "dataentry.formtype", "pk": 4, "fields": {"name": "MONTHLY_REPORT"}},
