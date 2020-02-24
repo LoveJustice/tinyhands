@@ -212,6 +212,11 @@ class CifCommon(BaseForm):
     @staticmethod
     def key_field_name():
         return 'cif_number'
+    
+    class Meta:
+        indexes = [
+            models.Index(fields=['logbook_submitted', 'station'])
+        ]
 
 
 class PotentialVictimCommon(BaseCard):
