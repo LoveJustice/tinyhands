@@ -5,7 +5,7 @@ from django.conf import settings
 from django.core.management import call_command
 from django.core.urlresolvers import reverse
 from rest_framework import status
-from rest_framework.test import APITestCase
+from rest_framework.test import APITransactionTestCase
 from accounts.tests.factories import BadIrfUserFactory, SuperUserFactory
 from dataentry.tests.factories import IrfIndiaFactory, MbzStationFactory, PersonFactory
 from dataentry.models import Form, IrfCommon, IntercepteeCommon
@@ -14,7 +14,7 @@ from dataentry.serialize_form import FormDataSerializer
 
 from static_border_stations.tests.factories import GenericUserWithPermissions
 
-class IrfTest(APITestCase):
+class IrfTest(APITransactionTestCase):
     fixtures = ['initial-required-data/Country.json', 'initial-required-data/Permission.json']
     def setUp(self):
         form_data_file = settings.BASE_DIR + '/fixtures/initial-required-data/form_data.json'

@@ -13,6 +13,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.files.storage import default_storage
 from django.db import IntegrityError
 from django.db.models import Q
+from django.db import transaction
 from dataentry.serialize_form import FormDataSerializer
 from dataentry.serializers import CountrySerializer
 from dataentry.dataentry_signals import form_done
@@ -144,11 +145,13 @@ class BaseFormViewSet(viewsets.ModelViewSet):
         form_type = FormType.objects.get(name=self.get_form_type_name())
         request_json = self.extract_data(request, self.get_element_paths())
         self.serializer_context = {'form_type':form_type, 'request.user':request.user}
+        transaction.set_autocommit(False)
         try:
             serializer = FormDataSerializer(data=request_json, context=self.serializer_context)
             if serializer.is_valid():
                 if not UserLocationPermission.has_session_permission(request, self.get_form_type_name(), 'ADD',
                         serializer.get_country_id(), serializer.get_station_id()):
+                    transaction.rollback()
                     return Response(status=status.HTTP_401_UNAUTHORIZED)
                 try:
                     form_data = serializer.save()
@@ -157,7 +160,9 @@ class BaseFormViewSet(viewsets.ModelViewSet):
                     form_done.send_robust(sender=self.__class__, form_data=form_data)
                     ret = serializer2.data
                     rtn_status = status.HTTP_200_OK
+                    transaction.commit()
                 except IntegrityError as exc:
+                    transaction.rollback()
                     if 'unique constraint' in exc.args[0]:
                         ret = {
                             'errors': [ exc.args[0] ],
@@ -171,18 +176,21 @@ class BaseFormViewSet(viewsets.ModelViewSet):
                         }
                         rtn_status=status.HTTP_400_BAD_REQUEST
             else:
+                transaction.rollback()
                 ret = {
                     'errors': serializer.the_errors,
                     'warnings':serializer.the_warnings
                     }
                 rtn_status=status.HTTP_400_BAD_REQUEST
         except Exception:
+            transaction.rollback()
             ret = {
                     'errors': 'Internal Error:' + traceback.format_exc(),
                     'warnings':[]
                 }
             rtn_status = status.HTTP_500_INTERNAL_SERVER_ERROR
-            
+        
+        transaction.set_autocommit(True)
         return Response (ret, status=rtn_status)
     
     def retrieve_blank_form(self, request, station_id):
@@ -241,6 +249,7 @@ class BaseFormViewSet(viewsets.ModelViewSet):
         request_json = self.extract_data(request, self.get_element_paths())
 
         self.serializer_context = {'form_type':form.form_type}
+        transaction.set_autocommit(False)
         try:
             serializer = FormDataSerializer(form_data, data=request_json, context=self.serializer_context)
         
@@ -254,7 +263,9 @@ class BaseFormViewSet(viewsets.ModelViewSet):
                 form_done.send_robust(sender=self.__class__, form_data=form_data)
                 rtn_status = status.HTTP_200_OK
                 ret = serializer2.data
+                transaction.commit()
             else:
+                transaction.rollback()
                 if serializer.the_errors is not None and len(serializer.the_errors) > 0:
                     rtn_errors = serializer.the_errors
                 else:
@@ -273,12 +284,14 @@ class BaseFormViewSet(viewsets.ModelViewSet):
                     }
                 rtn_status = status.HTTP_400_BAD_REQUEST
         except Exception:
+            transaction.rollback()
             ret = {
                 'errors': 'Internal Error:' + traceback.format_exc(),
                 'warnings':[]
                 }
             rtn_status = status.HTTP_500_INTERNAL_SERVER_ERROR
-       
+            
+        transaction.set_autocommit(True)
         return Response (ret, status=rtn_status)
     
     def destroy(self, request, station_id, pk):
