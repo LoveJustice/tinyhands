@@ -417,6 +417,13 @@ class IrfCommon(BaseForm):
     def key_field_name():
         return 'irf_number'
     
+    class Meta:
+        indexes = [
+            models.Index(fields=['logbook_submitted', 'station']),
+            models.Index(fields=['logbook_first_verification_date', 'station']),
+            models.Index(fields=['logbook_second_verification_date', 'station']),
+        ]
+    
 class IntercepteeCommon(BaseCard):
     KIND_CHOICES = [
         ('v', 'Victim'),
@@ -424,7 +431,7 @@ class IntercepteeCommon(BaseCard):
         ('u', 'Unknown'),
     ]
     interception_record = models.ForeignKey(IrfCommon, related_name='interceptees', on_delete=models.CASCADE)
-    photo = models.ImageField(upload_to='interceptee_photos', default='', blank=True)
+    photo = models.ImageField(db_index=True, upload_to='interceptee_photos', default='', blank=True)
     photo_thumbnail = ImageSpecField(source='photo',
                                      processors=[ResizeToFill(200, 200)],
                                      format='JPEG',

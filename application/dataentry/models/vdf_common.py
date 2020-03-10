@@ -82,6 +82,11 @@ class VdfCommon(BaseForm):
     @staticmethod
     def key_field_name():
         return 'vdf_number'
+    
+    class Meta:
+        indexes = [
+            models.Index(fields=['logbook_submitted', 'station'])
+        ]
 
 class VdfAttachmentCommon(BaseCard):
     attachment_number = models.PositiveIntegerField(null=True, blank=True)
