@@ -22,16 +22,6 @@ CIF_FORM="${TOP}/media/cif_attachments"
 VDF_FORM="${TOP}/media/vdf_attachments"
 MR_FORM="${TOP}/media/mrf_attachments"
 
-if [ -e "${TOP}/fixtures/sanitized-data.json" ]
-then
-    echo "There is already a data file at ${TOP}/fixtures/sanitized-data.json, it will be overwritten!"
-    echo "continuing..."
-fi
-
-cp "${DB_SRC}/sanitized-data.json.gz" "${TOP}/fixtures"
-cd "${TOP}/fixtures"
-#gunzip -f sanitized-data.json.gz
-
 mkdir -p "${PHOTO}"
 mkdir -p "${PUBLIC_PHOTO}"
 mkdir -p "${IRF_FORM}"
@@ -57,7 +47,3 @@ python /data/bin/wait_for_db.py
 
 python /data/manage.py makemigrations
 python /data/manage.py migrate
-python /data/manage.py loaddata fixtures/initial-required-data/Country.json
-python /data/manage.py loaddata fixtures/initial-required-data/Permission.json
-python /data/manage.py loaddata fixtures/sanitized-data.json
-python /data/manage.py loaddata fixtures/initial-required-data/*
