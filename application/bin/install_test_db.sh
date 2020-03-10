@@ -30,7 +30,7 @@ fi
 
 cp "${DB_SRC}/sanitized-data.json.gz" "${TOP}/fixtures"
 cd "${TOP}/fixtures"
-gunzip -f sanitized-data.json.gz
+#gunzip -f sanitized-data.json.gz
 
 mkdir -p "${PHOTO}"
 mkdir -p "${PUBLIC_PHOTO}"
