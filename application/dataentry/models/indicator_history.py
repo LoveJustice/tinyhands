@@ -122,7 +122,7 @@ class IndicatorHistory(models.Model):
                     
                     interceptee_storage = IndicatorHistory.get_card_storage(storage_cache, form_type, 'Interceptees', station)
                     if interceptee_storage is not None:
-                        query_set = interceptee_storage.get_form_storage_class().objects.filter(photo__in=check_photos.keys())
+                        query_set = interceptee_storage.get_form_storage_class().objects.filter(interception_record__station__in=station_list, photo__in=check_photos.keys())
                         IndicatorHistory.process_photos(results, query_set, check_photos, start_date, end_date)
                     
                 if include_latest_date:
