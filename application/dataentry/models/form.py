@@ -430,7 +430,7 @@ class BaseForm(models.Model):
     station = models.ForeignKey(BorderStation)
     date_time_entered_into_system = models.DateTimeField(auto_now_add=True)
     date_time_last_updated = models.DateTimeField(auto_now=True)
-    form_entered_by = models.ForeignKey(Account, related_name='%(class)s_entered_by', null=True)
+    form_entered_by = models.ForeignKey(Account, related_name='%(class)s_entered_by', null=True, on_delete=models.SET_NULL)
     
     class Meta:
         abstract = True
