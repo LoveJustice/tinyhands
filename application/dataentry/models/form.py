@@ -110,13 +110,23 @@ class Question(models.Model):
             prefix + 'name', 
             prefix + 'gender',
             prefix + 'age',
-            prefix + 'address1',
-            prefix + 'address2',
+            prefix + 'address',
+            prefix + 'latitude',
+            prefix + 'longitude',
+            prefix + 'address notes',
             prefix + 'phone',
             prefix + 'birthdate',
             prefix + 'passport',
             prefix + 'nationality',
             ]
+        
+        return export_header_list
+    
+    def export_header_ArcGisAddress(self, prefix):
+        if self.export_name is not None and  self.export_name != '':
+            prefix = prefix + self.export_name + ' '
+ 
+        export_header_list = [prefix]
         
         return export_header_list
     
@@ -171,16 +181,29 @@ class Question(models.Model):
                 tmp = 'Unknown'
             formatted_answer_list.append(tmp)
             formatted_answer_list.append(getattr(answer, 'age',''))
-            tmp = getattr(answer, 'address1', None)
+            tmp = getattr(answer, 'address', None)
             if tmp is None:
                 formatted_answer_list.append('')
             else:
-                formatted_answer_list.append(tmp.name)
-            tmp = getattr(answer, 'address2', None)
+                if 'address' in tmp:
+                    formatted_answer_list.append(tmp['address'])
+                else:
+                    formatted_answer_list.append('')
+            tmp = getattr(answer, 'latitude', None)
             if tmp is None:
                 formatted_answer_list.append('')
             else:
-                formatted_answer_list.append(tmp.name)
+                formatted_answer_list.append(tmp)
+            tmp = getattr(answer, 'longitude', None)
+            if tmp is None:
+                formatted_answer_list.append('')
+            else:
+                formatted_answer_list.append(tmp)
+            tmp = getattr(answer, 'address_notes', None)
+            if tmp is None:
+                formatted_answer_list.append('')
+            else:
+                formatted_answer_list.append(tmp)
             formatted_answer_list.append(getattr(answer, 'phone_contact', ''))
             tmp = getattr(answer, 'birthdate', None)
             if tmp is None:
@@ -217,6 +240,17 @@ class Question(models.Model):
         else:
             formatted_answer = self.format_answer_map(answer)
         return formatted_answer
+    
+    def format_ArcGisAddress(self, answer, station):
+        if answer is None:
+            formatted_answer = ''
+        else:
+            if 'address' in answer:
+                formatted_answer = answer['address']
+            else:
+                formatted_answer = ''
+        
+        return [ formatted_answer ]
     
     def format_default(self, answer, station):
         if answer is None:
