@@ -482,7 +482,17 @@ class ResponseIdentificationSerializer(serializers.Serializer):
             identification.location = location
         
         return identification
-                
+
+class ResponseJsonSerializer(serializers.Serializer):
+    """ Serializer for JSONField -- required to make field writable"""
+    def to_internal_value(self, data):
+        return {
+            'value': data
+            }
+    def to_representation(self, value):
+        return value
+    def get_or_create(self):
+        return self.validated_data.get('value')                
     
 class ResponsePersonSerializer(serializers.Serializer):     
     def to_representation(self, instance):
@@ -509,6 +519,29 @@ class ResponsePersonSerializer(serializers.Serializer):
             else:
                 tmp = ResponseAddressSerializer(instance.address2, context=self.context)
                 ret['address2'] = tmp.data
+            if private_data and is_private_value(question, 'address'):
+                ret['address'] = None
+            else:
+                ret['address'] = ResponseJsonSerializer().to_representation(instance.address)
+            if private_data and is_private_value(question, 'latitude'):
+                ret['latitude'] = {'value':None}
+            elif instance.latitude is None:
+                ret['latitude'] = {'value':None}
+            else:
+                tmp =  ResponseFloatSerializer(instance.latitude, context=self.context)
+                ret['latitude'] = tmp.data
+            if private_data and is_private_value(question, 'longitude'):
+                ret['longitude'] = {'value':None}
+            elif instance.longitude is None:
+                ret['longitude'] = {'value':None}
+            else:
+                tmp =  ResponseFloatSerializer(instance.longitude, context=self.context)
+                ret['longitude'] = tmp.data
+            if private_data and is_private_value(question, 'address_notes'):
+                ret['address_notes'] = None
+            else:
+                tmp =  ResponseStringSerializer(instance.address_notes, context=self.context)
+                ret['address_notes'] = tmp.data
             if private_data and is_private_value(question, 'phone'):
                 ret['phone'] = None
             else:
@@ -529,6 +562,7 @@ class ResponsePersonSerializer(serializers.Serializer):
                 ret['age'] = None
             else:
                 tmp = ResponseIntegerSerializer(instance.age, context=self.context)
+                
                 ret['age'] = tmp.data
             if private_data and is_private_value(question, 'estimated_current_age'):
                 ret['estimated_current_age'] = None
@@ -575,6 +609,27 @@ class ResponsePersonSerializer(serializers.Serializer):
         self.address2_serializer = ResponseAddress2Serializer(data=address2, context=dict(self.context))
         self.address2_serializer.is_valid()
         
+        tmp = data.get('address')
+        self.address_serializer = ResponseJsonSerializer(data=tmp, context=dict(self.context))
+        self.address_serializer.is_valid()
+       
+        tmp = data.get('latitude')
+        if tmp is not None:
+            ret['latitude'] = tmp.get('value')
+            
+        tmp = data.get('longitude')
+        if tmp is not None:
+            ret['longitude'] = tmp.get('value')
+            
+        tmp = data.get('address_notes')
+        if tmp is not None:
+            if tmp.get('value') is None:
+                ret['address_notes'] = ''
+            else:
+                ret['address_notes'] = tmp.get('value')
+        else:
+            ret['address_notes'] = ''
+            
         tmp = data.get('phone')
         if tmp is not None and tmp.get('value') is not None:
             ret['phone'] = tmp.get('value')
@@ -601,10 +656,8 @@ class ResponsePersonSerializer(serializers.Serializer):
         if tmp is not None:        
             birthdate = tmp.get('value')
             if birthdate is not None and birthdate.strip() != '':
-                ret['birthdate'] = parser.parse(birthdate).date()
-        
+                ret['birthdate'] = parser.parse(birthdate).date() 
        
-            
         tmp = data.get('nationality')
         if tmp is not None and tmp.get('value') is not None:
             ret['nationality'] = tmp.get('value')
@@ -646,6 +699,10 @@ class ResponsePersonSerializer(serializers.Serializer):
         address1 = self.address1_serializer.get_or_create()
         self.address2_serializer.context['address1'] = address1
         address2 = self.address2_serializer.get_or_create()
+        address = self.address_serializer.get_or_create()
+        latitude = self.validated_data.get('latitude')
+        longitude = self.validated_data.get('longitude')
+        address_notes = self.validated_data.get('address_notes')
         phone = self.validated_data.get('phone')
         gender = self.validated_data.get('gender')
         age = self.validated_data.get('age')
@@ -677,20 +734,25 @@ class ResponsePersonSerializer(serializers.Serializer):
                 person.full_name != name or
                 not self.match_address(person.address1, address1) or
                 not self.match_address(person.address2, address2) or
+                address != person.address or
+                latitude != person.latitude or
+                longitude != person.longitude or
+                address_notes != person.address_notes or
                 person.phone_contact != phone or
                 person.gender != gender or
                 person.age != age or
                 person.birthdate != birthdate or
                 person.nationality != nationality):
                 update_data = True
-                if mode != 'IRF':
-                    person = Person()
         
         if update_data:
             person.full_name = name
-            person.address1 = self.address1_serializer.get_or_create()
-            self.address2_serializer.context['address1'] = address1
-            person.address2 = self.address2_serializer.get_or_create()
+            person.address1 = address1
+            person.address2 = address2
+            person.address = address
+            person.latitude = latitude
+            person.longitude = longitude
+            person.address_notes = address_notes
             person.phone_contact = phone
             person.gender = gender
             person.age = age
@@ -740,6 +802,7 @@ class QuestionResponseSerializer(serializers.Serializer):
         'DateTime':ResponseDateTimeSerializer,
         'Image':ResponseImageSerializer,
         'Person':ResponsePersonSerializer,
+        'ArcGisAddress':ResponseJsonSerializer,
         }
     
     def to_representation(self, instance):

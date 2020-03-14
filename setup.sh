@@ -24,8 +24,19 @@ fi
 echo "Building containers..."
 docker-compose build
 
+docker-compose kill
+docker-compose rm -f db
+docker-compose run --rm web python ./bin/wait_for_db.py
+
+mkdir -p backups
+cp application/etc/sanitized_backup.sql backups/sanitized_backup.sql
+CONTAINER_ID=`docker ps | grep postgres | awk '{print $1}'`
+echo "Container $CONTAINER_ID"
+COMMAND="cat /backups/sanitized_backup.sql | psql -U postgres -d postgres"
 
 echo "Initializing and installing sanitized data..."
+docker exec $CONTAINER_ID sh -c ''"$COMMAND"''
+
 docker-compose run --rm web sh ./bin/install_test_db.sh
 
 echo "Load form data"

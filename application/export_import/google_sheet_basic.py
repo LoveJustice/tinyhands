@@ -144,7 +144,11 @@ class GoogleSheetBasic:
     def convert_notation(self, row_index, column_index):
         notation = ''
         if column_index >= 26:
-            notation += chr(column_index // 26 + 64)
+            prefix = column_index // 26
+            if prefix >= 27:
+                notation += chr((prefix-1) // 26 + 64) + chr((prefix-1) % 26 + 65)
+            else:
+                notation += chr(prefix + 64)
         notation += chr(column_index % 26 + 65)
         if row_index is not None:
             notation += str(row_index)
