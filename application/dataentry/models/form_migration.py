@@ -97,14 +97,7 @@ class FormMigration:
         else:
             in_transaction = False
             
-        all_stations = []
         forms = Form.objects.filter(form_type__name=form_type_name)
-        for form in forms:
-            for station in form.stations.all():
-                if station.station_code not in all_stations:
-                    all_stations.append(station.station_code)
-        
-        all_stations_length = len(all_stations)
         
         # build map from field question information is stored in to list of stations that store that information
         storage_map = {}
@@ -117,9 +110,8 @@ class FormMigration:
                 if field not in storage_map:
                     storage_map[field] = []
                 
-                for station in form_category.form.stations.all():
-                    if station.station_code not in storage_map[field]:
-                        storage_map[field].append(station.station_code)
+                if form_category.form.form_name not in storage_map[field]:
+                    storage_map[field].append(form_category.form.form_name)
         
         sql = 'CREATE or REPLACE VIEW ' + form_type_name.lower() + 'combined as select '
         storage_class = forms[0].storage.get_form_storage_class()
@@ -128,8 +120,8 @@ class FormMigration:
         for member in dummy.__dict__.keys(): 
             if member == '_state':
                 continue
-            if member in storage_map and len(storage_map[member]) < all_stations_length:
-                    sql += sep + 'CASE WHEN s.station_code in ('
+            if member in storage_map and len(storage_map[member]) < len(forms):
+                    sql += sep + 'CASE WHEN fn.form_name in ('
                     sep2=''
                     for code in storage_map[member]:
                         sql += sep2 + "'" + code + "'"
@@ -140,7 +132,16 @@ class FormMigration:
             
             sep = ','  
         
-        sql += ' from dataentry_' + form_type_name.lower() + 'common as f inner join dataentry_borderstation as s on f.station_id = s.id'
+        sql += ', fn.form_name from dataentry_' + form_type_name.lower() + 'common as f inner join '\
+            '(select s.id, min(f2.form_name) as form_name '\
+            'from dataentry_borderstation as s '\
+            'inner join dataentry_form_stations as fs on s.id = fs.borderstation_id '\
+            'inner join dataentry_form as f2 on fs.form_id = f2.id '\
+            'inner join dataentry_formtype as f3 on f2.form_type_id = f3.id '\
+            "where f3.name='" + form_type_name + "' "\
+            'group by s.id) as fn '\
+            'on f.station_id = fn.id'
+            
         
         cursor = connection.cursor()
         cursor.execute(sql)
