@@ -144,6 +144,7 @@ class FormMigration:
             
         
         cursor = connection.cursor()
+        cursor.execute('DROP VIEW IF EXISTS ' + form_type_name.lower() + 'combined')
         cursor.execute(sql)
         if not in_transaction:
             transaction.commit()

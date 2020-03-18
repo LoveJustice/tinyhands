@@ -16,6 +16,10 @@ class IrfCommon(BaseForm):
     number_of_traffickers = models.PositiveIntegerField('# of traffickers', null=True, blank=True)
     staff_name = models.CharField('Staff Name:', max_length=255)
     
+    profile_children = models.BooleanField('Child(ren)', default=False)
+    profile_migrant = models.BooleanField('Migrant', default=False)
+    profile_other = models.CharField(max_length=255, blank=True)
+    
     drugged_or_drowsy = models.BooleanField('Girl appears drugged or drowsy', default=False)
     who_in_group_husbandwife = models.BooleanField('Husband / Wife', default=False)
     married_in_past_2_weeks = models.BooleanField('Married in the past 2 weeks', default=False).set_weight(15)
@@ -86,6 +90,8 @@ class IrfCommon(BaseForm):
     who_in_group_kids_under_5 = models.BooleanField('With kid(s) under 5 years old', default=False)
     relatives_organized_travel = models.BooleanField('Relative(s) organized their travel', default=False)
     relatives_paid_expenses = models.BooleanField('Relative(s) paid their travel expenses', default=False)
+    
+    industry = models.CharField('Industry', max_length=126, blank=True)
     
     where_going_destination = models.CharField('Location:', max_length=126, blank=True)
     where_going_doesnt_know = models.BooleanField("Doesn't know where they are going", default=False)  
@@ -269,6 +275,25 @@ class IrfCommon(BaseForm):
     
     family_unwilling_take_them_back = models.BooleanField('Called, family unwilling to receive them back', default=False)
     
+    vulnerability_insufficient_resource = models.BooleanField('insufficient resources_to live/get home', default=False)
+    vulnerability_minor_without_guardian = models.BooleanField('Minor unaccompanied by guardian', default=False)
+    vulnerability_family_unwilling = models.BooleanField('Family unwilling to let them go', default=False)
+    
+    signs_treatment = models.BooleanField('Treatment - no documentation / knowledge', default=False)
+    signs_forged_false_documentation = models.BooleanField('Forged or falsified documents', default=False)
+    signs_confirmed_deception = models.BooleanField('Called place and confirmed deception', default=False)
+    signs_other = models.CharField(max_length=127, blank=True)
+    
+    control_led_other_country = models.BooleanField('Led to other country without their knowledge', default=False)
+    control_traveling_because_of_threat = models.BooleanField('Traveling because of a threat', default=False)
+    control_owes_debt = models.BooleanField('Owes debt to person who recruited/paid travel', default=False)
+    control_job = models.CharField(max_length=127, blank=True)
+    control_promised_pay = models.CharField(max_length=127, blank=True)
+    control_normal_pay = models.CharField(max_length=127, blank=True)
+    control_promised_double = models.BooleanField('Promised pay more than double normal pay', default=False)
+    control_promised_higher = models.BooleanField('Promised pay a little higher than normal pay', default=False)
+    control_no_address_phone = models.BooleanField('No address / phone number (of job)', default=False)
+    
     reported_total_red_flags = models.IntegerField('Reported Total Red Flag Points:', null=True, blank=True)
     computed_total_red_flags = models.IntegerField('Computed Total Red Flag Points:', null=True, blank=True)
     
@@ -368,6 +393,7 @@ class IrfCommon(BaseForm):
     
     convinced_by_staff = models.CharField(max_length=127, blank=True)
     convinced_by_family = models.CharField(max_length=127, blank=True)
+    convinced_family_phone = models.CharField(max_length=127, blank=True)
     convinced_by_police = models.CharField(max_length=127, blank=True)
     
     evidence_categorization = models.CharField(max_length=127, null=True)
@@ -441,6 +467,7 @@ class IntercepteeCommon(BaseCard):
     relation_to = models.CharField(max_length=255, blank=True)
     person = models.ForeignKey(Person, null=True, blank=True)
     trafficker_taken_into_custody = models.BooleanField('taken_into_custody', default=False)
+    not_physically_present = models.BooleanField('Not physically present', default=False)
 
     def address1_as_string(self):
         rtn = ''
