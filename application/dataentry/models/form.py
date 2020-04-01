@@ -317,14 +317,13 @@ class FormValidationLevel(models.Model):
 # validation_type - Is the type of validation to be performed on the questions
 # error_warning_message - message returned to client when validation fails
 class FormValidation(models.Model):
-    form = models.ForeignKey(Form, null=True)
-    form_type = models.ForeignKey(FormType, null=True)
     level = models.ForeignKey(FormValidationLevel)
     trigger = models.ForeignKey(Question, null=True)
     trigger_value = models.CharField(max_length=126, null=True)
     validation_type = models.ForeignKey(FormValidationType)
     error_warning_message = models.CharField(max_length=126)
     params=JSONField(null=True)
+    forms = models.ManyToManyField(Form)
 
 # Set of questions to be validated for the FormValidation
 class FormValidationQuestion(models.Model):

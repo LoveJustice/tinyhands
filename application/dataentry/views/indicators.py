@@ -180,6 +180,11 @@ class IndicatorsViewSet(viewsets.ViewSet):
     def get_collection_indicators(self, request, country_id):
         start_date = request.GET['start_date']
         end_date = request.GET['end_date']
+        
+        return Response(IndicatorsViewSet.compute_collection_indicators(start_date, end_date, country_id))
+    
+    @staticmethod
+    def compute_collection_indicators(start_date, end_date, country_id):
         results = []
         station_list = BorderStation.objects.filter(operating_country__id=country_id).order_by('station_code')
         for station in station_list:
@@ -200,7 +205,6 @@ class IndicatorsViewSet(viewsets.ViewSet):
             for irf in irfs:
                 evidence = False
                 result.irf_count += 1
-                self.irf_count = 0
                 if irf.logbook_incomplete_questions.lower() == 'no':
                     result.irf_compliance_count += 1
                 if irf.logbook_received is not None:
@@ -227,8 +231,8 @@ class IndicatorsViewSet(viewsets.ViewSet):
                     if victim.photo is not None and victim.photo != '':
                         result.photo_count += 1
                     
-                self.cif_indicators_for_irf(result, irf)
-                self.vdf_indicators_for_irf(result, irf)
+                IndicatorsViewSet.cif_indicators_for_irf(result, irf)
+                IndicatorsViewSet.vdf_indicators_for_irf(result, irf)
             if station.open or result.irf_count > 0:
                 # only include stations that are open or have IRFs present in the time period
                 result.compute_values()
@@ -242,12 +246,11 @@ class IndicatorsViewSet(viewsets.ViewSet):
         for result in results:
             all_results.append(result.__dict__)
         
-        return Response(all_results)
-        
+        return all_results
             
             
-            
-    def cif_indicators_for_irf(self, result, irf):
+    @staticmethod        
+    def cif_indicators_for_irf(result, irf):
         form = Form.current_form('CIF', irf.station.id)
         if form is None:
             return
@@ -268,7 +271,8 @@ class IndicatorsViewSet(viewsets.ViewSet):
             if irf.logbook_second_verification.lower().startswith('clear') or irf.logbook_second_verification.lower().startswith('some'):
                         result.cif_with_evidence_count += 1
     
-    def vdf_indicators_for_irf(self, result, irf):
+    @staticmethod
+    def vdf_indicators_for_irf(result, irf):
         form = Form.current_form('VDF', irf.station.id)
         if form is None:
             return
