@@ -237,6 +237,19 @@ class ValidateForm:
                     self.add_error_or_warning(self.question_map[question.id], category_index, validation)               
             except FieldDoesNotExist:
                 pass
+    
+    def all_false(self, form_data, validation, validation_questions, category_index, general):
+        for validation_question in validation_questions:
+            question = validation_question.question
+            full_answer = form_data.get_answer(question)
+            answer = self.get_answer_part(full_answer, validation, 'part')
+            if answer is not None and (isinstance(answer, bool) and answer == True or isinstance(answer, str) and answer.strip() != ''):
+                if general:
+                    category_name = ''
+                else:
+                    category_name = self.question_map[question.id]
+                self.add_error_or_warning(category_name, category_index, validation)
+                return
 
     def __init__(self, form, form_data, ignore_warnings):
         self.validations = {
@@ -248,6 +261,7 @@ class ValidateForm:
             'prevent_future_date': self.prevent_future_date,
             'regular_expression': self.regex_match,
             'card_count': self.card_count,
+            'all_false': self.all_false,
         }
         
         self.validations_to_perform = {
@@ -297,7 +311,7 @@ class ValidateForm:
         self.question_to_validation_set = question_to_validation_set
         
         self.validation_set = {}
-        validations = FormValidation.objects.filter(form=self.form) | FormValidation.objects.filter(form_type=form.form_type)
+        validations = FormValidation.objects.filter(forms=self.form)
         for validation in validations:
             set_key = None
             if validation.trigger is not None:
@@ -306,14 +320,15 @@ class ValidateForm:
             validation_questions = FormValidationQuestion.objects.filter(validation=validation)
             if len(validation_questions) > 0:
                 for validation_question in validation_questions:
-                    tmp_key = question_to_validation_set[validation_question.question.id]
-                    if set_key is None:
-                        set_key = tmp_key
-                    elif set_key != tmp_key:
-                        self.errors.append('Validation mixes main form and card questions. Validation id=' + str(validation.id) + 
-                                           ' with message=' + validation.error_warning_message)
-                        set_key = self.invalid
-                        break
+                    if validation_question.question.id in question_to_validation_set:
+                        tmp_key = question_to_validation_set[validation_question.question.id]
+                        if set_key is None:
+                            set_key = tmp_key
+                        elif set_key != tmp_key:
+                            self.errors.append('Validation mixes main form and card questions. Validation id=' + str(validation.id) + 
+                                               ' with message=' + validation.error_warning_message)
+                            set_key = self.invalid
+                            break
                 
             if set_key is None:
                 set_key = self.main_form
@@ -351,7 +366,7 @@ class ValidateForm:
                 for question in questions:
                     if the_category is None:
                         the_category = self.question_map[question.question.id]
-                    elif the_category != self.question_map[question.question.id]:
+                    elif question.question.id in self.question_map and the_category != self.question_map[question.question.id]:
                         general = True
                         break                           
                 self.validations[validation.validation_type.name](form_data, validation, questions, category_index, general)
