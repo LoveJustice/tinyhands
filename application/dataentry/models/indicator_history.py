@@ -10,7 +10,7 @@ from django.contrib.postgres.fields import JSONField
 from .border_station import BorderStation
 from .country import Country
 
-from dataentry.models import BorderStation, Form, FormCategory
+from dataentry.models import BorderStation, Form, FormCategory, IntercepteeCommon
 
 class IndicatorHistory(models.Model):
     country = models.ForeignKey(Country)
@@ -211,14 +211,17 @@ class IndicatorHistory(models.Model):
     def calculate_irf_first_verification(results, query_set, start_date, end_date):
         lag_time = 0
         lag_count = 0
+        victim_count = 0
         
         for irf in query_set:
             if IndicatorHistory.date_in_range(irf.logbook_submitted, None, None):
                 lag_count += 1
                 lag_time += IndicatorHistory.work_days(irf.logbook_submitted, irf.logbook_first_verification_date)
+                victim_count += IntercepteeCommon.objects.filter(interception_record=irf, kind='v').count()
         
         IndicatorHistory.add_result(results, 'v1TotalLag', lag_time)
         IndicatorHistory.add_result(results, 'v1Count', lag_count)
+        IndicatorHistory.add_result(results, 'v1VictimCount', victim_count)
 
     @staticmethod
     def calculate_irf_backlog(results, query_set, prefix):
@@ -228,14 +231,17 @@ class IndicatorHistory(models.Model):
     def calculate_irf_second_verification(results, query_set, start_date, end_date):
         lag_time = 0
         lag_count = 0
+        victim_count = 0
         
         for irf in query_set:
             if IndicatorHistory.date_in_range(irf.logbook_first_verification_date, None, None):
                 lag_count += 1
                 lag_time += IndicatorHistory.work_days(irf.logbook_first_verification_date, irf.logbook_second_verification_date)
+                victim_count += IntercepteeCommon.objects.filter(interception_record=irf, kind='v').count()
         
         IndicatorHistory.add_result(results, 'v2TotalLag', lag_time)
         IndicatorHistory.add_result(results, 'v2Count', lag_count)
+        IndicatorHistory.add_result(results, 'v2VictimCount', victim_count)
      
     @staticmethod
     def calculate_form_indicators (results, query_set, form_type):
