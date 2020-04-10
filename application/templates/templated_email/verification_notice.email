@@ -1,0 +1,8 @@
+{% block subject %}IRF {{ irf_number }} ready for verification{% endblock %}
+
+{% block html %}
+<p>Hi {{ account.first_name }},</p>
+
+<p><a href="{{ url }}">IRF {{ irf_number }}></a> has just been {{ event }} and is ready for {{ stage }} verification.</p>
+
+{% endblock %}
