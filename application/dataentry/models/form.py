@@ -149,7 +149,10 @@ class Question(models.Model):
         else:
             tz = pytz.timezone(station.time_zone)
             date_time = answer.astimezone(tz)
-            formatted_answer_list = [str(date_time.replace(tzinfo=None))]
+            if (date_time.second == 1):
+                formatted_answer_list = [str(date_time.replace(tzinfo=None))[:10]]
+            else:
+                formatted_answer_list = [str(date_time.replace(tzinfo=None))]
         return formatted_answer_list
     
     def format_Address(self, answer, station):

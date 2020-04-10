@@ -356,12 +356,16 @@ class ResponseDateTimeSerializer(serializers.Serializer):
             tz = pytz.timezone(time_zone)
             date_time = instance.astimezone(tz)
             ret['value'] = str(date_time.replace(tzinfo=None))
+            if (date_time.second == 1):
+                ret['value'] = ret['value'][:10]
         else:
              ret['value']= None
         return ret
     
     def to_internal_value(self, data):
         value = data.get('value')
+        if len(value) == 10:
+            value = value + ' 12:00:01'
         if value is not None:
             local_time = parser.parse(value)
             local_time = local_time.replace(tzinfo=None)
