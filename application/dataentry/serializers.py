@@ -311,6 +311,7 @@ class IDManagementSerializer(serializers.ModelSerializer):
             'full_name',
             'gender',
             'age',
+            'address',
             'address1',
             'address2',
             'phone_contact',
