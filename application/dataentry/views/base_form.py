@@ -141,10 +141,17 @@ class BaseFormViewSet(viewsets.ModelViewSet):
             form_data.form_object.logbook_submitted = datetime.datetime.now().date()
             form_data.form_object.save()
     
+    def pre_process(self, request, form_data):
+        pass
+    
+    def post_process(self, request, form_data):
+        pass
+    
     def create(self, request):
         form_type = FormType.objects.get(name=self.get_form_type_name())
         request_json = self.extract_data(request, self.get_element_paths())
         self.serializer_context = {'form_type':form_type, 'request.user':request.user}
+        self.pre_process(request, None)
         transaction.set_autocommit(False)
         try:
             serializer = FormDataSerializer(data=request_json, context=self.serializer_context)
@@ -161,6 +168,7 @@ class BaseFormViewSet(viewsets.ModelViewSet):
                     ret = serializer2.data
                     rtn_status = status.HTTP_200_OK
                     transaction.commit()
+                    self.post_process(request, form_data)
                 except IntegrityError as exc:
                     transaction.rollback()
                     if 'unique constraint' in exc.args[0]:
@@ -246,6 +254,7 @@ class BaseFormViewSet(viewsets.ModelViewSet):
         if the_form is None:
             return Response({'errors' : [self.get_form_type_name() + " not found"], 'warnings':[]}, status=status.HTTP_404_NOT_FOUND)
         form_data = FormData(the_form, form)
+        self.pre_process(request, form_data)
         request_json = self.extract_data(request, self.get_element_paths())
 
         self.serializer_context = {'form_type':form.form_type}
@@ -264,6 +273,8 @@ class BaseFormViewSet(viewsets.ModelViewSet):
                 rtn_status = status.HTTP_200_OK
                 ret = serializer2.data
                 transaction.commit()
+                transaction.set_autocommit(True)
+                self.post_process(request, form_data)
             else:
                 transaction.rollback()
                 if serializer.the_errors is not None and len(serializer.the_errors) > 0:
