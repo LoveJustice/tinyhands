@@ -14,3 +14,4 @@ from .person import *
 from .vdf_form import *
 from .monthly_report_form import *
 from .indicators import *
+from .border_station_form import *

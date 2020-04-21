@@ -21,6 +21,15 @@ class BorderStation(models.Model):
     
     def get_border_station_id(self):
         return self.id
+    
+    def get_key(self):
+        return station_code
+    
+    def pre_save(self, form_data):
+        pass
+    
+    def post_save(self, form_data):
+        pass
 
     def __str__(self):
         return self.station_name
