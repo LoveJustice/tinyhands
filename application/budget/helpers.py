@@ -1,5 +1,7 @@
 from collections import namedtuple
 
+from time import strftime
+
 from budget.models import BorderStationBudgetCalculation
 
 BudgetLineItem = namedtuple('budgetItem', ['name', 'value'])
@@ -178,3 +180,7 @@ class MoneyDistributionFormHelper:
     def get_other_items(self, section):
         other_items = self.budget.otherbudgetitemcost_set.filter(form_section=section)
         return [BudgetLineItem(item.name, item.cost) for item in other_items]
+
+    @property
+    def report_month(self):
+        return self.budget.month_year.strftime('%B %Y')
