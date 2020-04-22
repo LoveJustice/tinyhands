@@ -57,7 +57,10 @@ class Form(models.Model):
     @staticmethod
     def current_form(form_type_name, station_id):
         today = make_aware(datetime.datetime.now())
-        form_list = Form.objects.filter(form_type__name=form_type_name, start_date__lte=today, end_date__gte=today, stations__id=station_id)
+        if station_id is None:
+            form_list = Form.objects.filter(form_type__name=form_type_name, start_date__lte=today, end_date__gte=today)
+        else:
+            form_list = Form.objects.filter(form_type__name=form_type_name, start_date__lte=today, end_date__gte=today, stations__id=station_id)
         if len(form_list) > 0:
             return form_list[0]
         else:
