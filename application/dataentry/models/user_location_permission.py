@@ -202,10 +202,14 @@ class UserLocationPermission(models.Model):
     @staticmethod
     def has_session_permission(request, group, action, country_id, station_id):
         has_permission = False
+        if country_id is not None:
+            country_id = int(country_id)
+        if station_id is not None:
+            station_id = int(station_id)
         
         permission_list = UserLocationPermission.objects.filter(account__id = request.user.id).filter(permission__permission_group = group).filter(permission__action = action)
         for perm in permission_list:
-            if perm.includes_location(int(country_id), int(station_id)):
+            if perm.includes_location(country_id, station_id):
                 has_permission = True
                 break
 

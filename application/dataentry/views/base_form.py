@@ -156,7 +156,7 @@ class BaseFormViewSet(viewsets.ModelViewSet):
         try:
             serializer = FormDataSerializer(data=request_json, context=self.serializer_context)
             if serializer.is_valid():
-                if not UserLocationPermission.has_session_permission(request, self.get_form_type_name(), 'ADD',
+                if not UserLocationPermission.has_session_permission(request, self.get_perm_group_name(), 'ADD',
                         serializer.get_country_id(), serializer.get_station_id()):
                     transaction.rollback()
                     return Response(status=status.HTTP_401_UNAUTHORIZED)
@@ -208,12 +208,13 @@ class BaseFormViewSet(viewsets.ModelViewSet):
             return Response(status=status.HTTP_404_NOT_FOUND)
         form_class = FormData.get_form_class(form)
         the_form = form_class()
-        station = BorderStation.objects.get(id=station_id)
-        the_form.station = station
-        add_access = UserLocationPermission.has_session_permission(request, self.get_form_type_name(), 'ADD', 
+        if station_id is not None:
+            station = BorderStation.objects.get(id=station_id)
+            the_form.station = station
+            add_access = UserLocationPermission.has_session_permission(request, self.get_perm_group_name(), 'ADD', 
                     the_form.station.operating_country.id, the_form.station.id)
-        if not add_access:
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
+            if not add_access:
+                return Response(status=status.HTTP_401_UNAUTHORIZED)
         
         form_data = FormData(the_form, form)
         serializer = FormDataSerializer(form_data, context=self.serializer_context)
@@ -231,9 +232,15 @@ class BaseFormViewSet(viewsets.ModelViewSet):
         except ObjectDoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
         
-        read_access = UserLocationPermission.has_session_permission(request, self.get_perm_group_name(), 'VIEW', the_form.station.operating_country.id, the_form.station.id)
-        edit_access = UserLocationPermission.has_session_permission(request, self.get_perm_group_name(), 'EDIT', the_form.station.operating_country.id, the_form.station.id)
-        private_access = UserLocationPermission.has_session_permission(request, self.get_perm_group_name(), 'VIEW PI', the_form.station.operating_country.id, the_form.station.id)
+        
+        if hasattr(the_form, 'station'):
+            station = the_form.station
+        else:
+            station = BorderStation.objects.get(id=pk)
+            
+        read_access = UserLocationPermission.has_session_permission(request, self.get_perm_group_name(), 'VIEW', station.operating_country.id, station.id)
+        edit_access = UserLocationPermission.has_session_permission(request, self.get_perm_group_name(), 'EDIT', station.operating_country.id, station.id)
+        private_access = UserLocationPermission.has_session_permission(request, self.get_perm_group_name(), 'VIEW PI', station.operating_country.id, station.id)
         
         if not read_access:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
@@ -261,9 +268,8 @@ class BaseFormViewSet(viewsets.ModelViewSet):
         transaction.set_autocommit(False)
         try:
             serializer = FormDataSerializer(form_data, data=request_json, context=self.serializer_context)
-        
             if serializer.is_valid():
-                if not UserLocationPermission.has_session_permission(request, self.get_form_type_name(), 'EDIT',
+                if not UserLocationPermission.has_session_permission(request, self.get_perm_group_name(), 'EDIT',
                         serializer.get_country_id(), serializer.get_station_id()):
                     return Response(status=status.HTTP_401_UNAUTHORIZED)
                 form_data = serializer.save()
@@ -312,7 +318,7 @@ class BaseFormViewSet(viewsets.ModelViewSet):
         except ObjectDoesNotExist:
             return Response({'errors' : [self.get_form_type_name() + " not found"], 'warnings':[]}, status=status.HTTP_404_NOT_FOUND)
         
-        if not UserLocationPermission.has_session_permission(request, self.get_form_type_name(), 'DELETE',
+        if not UserLocationPermission.has_session_permission(request, self.get_perm_group_name(), 'DELETE',
                 the_form.station.operating_country.id, the_form.station.id):
             return Response(status=status.HTTP_401_UNAUTHORIZED)
         form_data = FormData(the_form, form)

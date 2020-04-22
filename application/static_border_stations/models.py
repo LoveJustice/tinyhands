@@ -47,6 +47,12 @@ class Person(models.Model):
 
     def __str__(self):
         return self.full_name
+    
+    def set_parent(self, the_parent):
+        self.border_station = the_parent
+    
+    def is_private(self):
+        return False
 
 class Staff(Person):
     class Meta:
@@ -74,3 +80,9 @@ class Location(models.Model):
         if self.border_station is None:
             return None
         return self.border_station.id
+    
+    def set_parent(self, the_parent):
+        self.border_station = the_parent
+    
+    def is_private(self):
+        return False

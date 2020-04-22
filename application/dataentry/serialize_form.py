@@ -496,7 +496,34 @@ class ResponseJsonSerializer(serializers.Serializer):
     def to_representation(self, value):
         return value
     def get_or_create(self):
-        return self.validated_data.get('value')                
+        return self.validated_data.get('value')   
+
+class ResponseMultiReferenceSerializer(serializers.Serializer):
+    """ Serializer for JSONField -- required to make field writable"""
+    def to_internal_value(self, data):
+        object_list = []
+        question = self.context['question']
+        if question.params is not None and 'module_name' in question.params:
+            module_name = question.params['module_name']
+            form_model_name = question.params['form_model_name']
+            mod = __import__(module_name, fromlist=[form_model_name])
+            form_class = getattr(mod, form_model_name, None)
+            for obj_id in data['value']:
+                obj = form_class.objects.get(id=obj_id)
+                object_list.append(obj)
+        return {
+            'value': {'question':question, 'object_list':object_list}
+            }
+    def to_representation(self, value):
+        ids = []
+        if value is not None:
+            for element in value.all():
+                ids.append(element.id)
+        return {'value':ids}
+    def get_or_create(self):
+        form_data = self.context['form_data']
+        value = self.validated_data.get('value')
+        form_data.set_multi_reference(value['question'], value['object_list'])          
     
 class ResponsePersonSerializer(serializers.Serializer):     
     def to_representation(self, instance):
@@ -807,6 +834,7 @@ class QuestionResponseSerializer(serializers.Serializer):
         'Image':ResponseImageSerializer,
         'Person':ResponsePersonSerializer,
         'ArcGisAddress':ResponseJsonSerializer,
+        'MultiReference':ResponseMultiReferenceSerializer,
         }
     
     def to_representation(self, instance):
@@ -849,8 +877,8 @@ class QuestionResponseSerializer(serializers.Serializer):
         storage_id = self.validated_data.get('storage_id')
         self.response_serializer.context['form_data'] = form_data
         response = self.response_serializer.get_or_create()
-        
-        form_data.set_answer(question, response, storage_id)
+        if question.answer_type.name != 'MultiReference':
+            form_data.set_answer(question, response, storage_id)
         return response
 
 class QuestionLayoutSerializer(serializers.Serializer):
@@ -988,11 +1016,13 @@ class CardCategorySerializer(serializers.Serializer):
 class FormDataSerializer(serializers.Serializer):
     def to_representation(self, instance):
         ret = super().to_representation(instance)
-        ret['station_id'] = serializers.IntegerField().to_representation(instance.form_object.station.id)
-        ret['station_code'] = serializers.CharField().to_representation(instance.form_object.station.station_code)
-        ret['country_id'] = serializers.IntegerField().to_representation(instance.form_object.station.operating_country.id)
-        ret['status'] = serializers.CharField().to_representation(instance.form_object.status)
-        if instance.form_object.form_entered_by is not None:
+        if hasattr(instance.form_object, 'station'):
+            ret['station_id'] = serializers.IntegerField().to_representation(instance.form_object.station.id)
+            ret['station_code'] = serializers.CharField().to_representation(instance.form_object.station.station_code)
+            ret['country_id'] = serializers.IntegerField().to_representation(instance.form_object.station.operating_country.id)
+        if hasattr(instance.form_object, 'status'):
+            ret['status'] = serializers.CharField().to_representation(instance.form_object.status)
+        if hasattr(instance.form_object, 'status') and hasattr(instance.form_object, 'form_entered_by') and instance.form_object.form_entered_by is not None:
             ret['form_entered_by'] = serializers.CharField().to_representation(instance.form_object.form_entered_by.first_name) + ' ' + serializers.CharField().to_representation(instance.form_object.form_entered_by.last_name)
         else:
             ret['form_entered_by'] = ''
@@ -1014,7 +1044,8 @@ class FormDataSerializer(serializers.Serializer):
         
         question_layouts = QuestionLayout.objects.filter(category__in = base_categories).order_by('question__id')
         context['form_data'] = instance
-        context['time_zone'] = instance.form_object.station.time_zone
+        if hasattr(instance.form_object, 'station'):
+            context['time_zone'] = instance.form_object.station.time_zone
         serializer = QuestionLayoutSerializer(question_layouts, many=True, context=context)
         ret['responses'] = serializer.data
         
@@ -1027,24 +1058,33 @@ class FormDataSerializer(serializers.Serializer):
         self.the_errors = []
         self.the_warnings = []
         tmp = data.get('station_id')
-        station_id = serializers.IntegerField().to_internal_value(tmp)
+        if tmp is None:
+            station_id = None
+        else:
+            station_id = serializers.IntegerField().to_internal_value(tmp)
         tmp = data.get('country_id')
-        country_id = serializers.IntegerField().to_internal_value(tmp)
+        if tmp is None:
+            country_id = None
+        else:
+            country_id = serializers.IntegerField().to_internal_value(tmp)
         status = data.get('status')
         tmp = data.get('ignore_warnings')
         if tmp is not None and tmp.upper() == 'TRUE':
             ignore_warnings = True
         else:
             ignore_warnings = False
-            
+         
         tmp = data.get('storage_id', None)
         if self.instance is None and tmp is not None:
             self.the_errors = ["storage_id for form specified on create",]
             self.the_warnings = []
             raise serializers.ValidationError("storage_id for form specified on create");
         
-        station = BorderStation.objects.get(id=station_id)
-        self.context['time_zone'] = station.time_zone
+        if station_id is not None:
+            station = BorderStation.objects.get(id=station_id)
+            self.context['time_zone'] = station.time_zone
+        else:
+            station = None
         form_date_holder = {'form_date':None}
         self.context['form_date_holder'] = form_date_holder
         
@@ -1063,11 +1103,12 @@ class FormDataSerializer(serializers.Serializer):
             self.card_serializers.append(serializer)
         
         form_type = self.context.get('form_type')
-        form = Form.current_form(form_type.name, station.id)
+        form = Form.current_form(form_type.name, station_id)
         if self.instance is None:
             form_class = form.find_form_class()
             form_object = form_class()
-            form_object.station = station
+            if station is not None:
+                form_object.station = station
             form_data = FormData(form_object, form)
             request_user = self.context.get('request.user')
             form_data.form_object.form_entered_by = request_user
@@ -1097,14 +1138,22 @@ class FormDataSerializer(serializers.Serializer):
             }
     
     def get_country_id(self):
-        if self.form_data is None or self.form_data.form_object is None or self.form_data.form_object.station is None or self.form_data.form_object.station.operating_country is None:
-            return None
+        if self.form_data is None or self.form_data.form_object is None or not hasattr(self.form_data.form_object, 'station') or self.form_data.form_object.station is None or self.form_data.form_object.station.operating_country is None:
+            country_method = getattr(self.form_data.form_object, "get_country_id", None)
+            if callable(country_method):
+                return country_method()
+            else:
+                return None
         else:
             return self.form_data.form_object.station.operating_country.id
     
     def get_station_id(self):
-        if self.form_data is None or self.form_data.form_object is None or self.form_data.form_object.station is None:
-            return None
+        if self.form_data is None or self.form_data.form_object is None or not hasattr(self.form_data.form_object, 'station') or self.form_data.form_object.station is None:
+            station_method = getattr(self.form_data.form_object, "get_station_id", None)
+            if callable(station_method):
+                return station_method()
+            else:
+                return None
         else:
             return self.form_data.form_object.station.id
         
