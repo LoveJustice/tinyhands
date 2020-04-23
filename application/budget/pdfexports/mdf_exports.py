@@ -15,6 +15,7 @@ class MDFExporter(BasePDFCreator):
         return {
             'name': mdf_helper.station_name,
             'date': mdf_helper.date_entered,
+            'month': mdf_helper.report_month,
             'sections': mdf_helper.sections,
             'total': mdf_helper.total,
             'notes': mdf_helper.notes

@@ -36,6 +36,7 @@ class CardData:
         self.category_form = category_form
         self.is_valid = True
         self.person_containers = []
+        self.multi_reference = []
         
         if response_dict is None:
             self.load_responses()
@@ -49,13 +50,16 @@ class CardData:
         return question.id in self.form_data.question_storage
             
     def get_answer(self, question):
-        if self.in_form_object(question):
-            answer = getattr(self.form_object, self.form_data.question_storage[question.id].field_name, None)
-        else:
-            if question.id in self.response_dict:
-                answer = self.response_dict[question.id].value
+        try:
+            if self.in_form_object(question):
+                answer = getattr(self.form_object, self.form_data.question_storage[question.id].field_name, None)
             else:
-                answer = None
+                if question.id in self.response_dict:
+                    answer = self.response_dict[question.id].value
+                else:
+                    answer = None
+        except ValueError as ve:
+            answer = None
         
         return answer
     
@@ -73,6 +77,13 @@ class CardData:
             card_response.value = answer
             
             self.response_dict[question.id] = card_response
+        
+    def set_multi_reference(self, question, object_list):
+        tmp = {
+            'question':question,
+            'object_list': object_list
+            }
+        self.multi_reference.append(tmp)
     
     def get_answer_storage(self, question):
         if self.in_form_object(question):
@@ -94,12 +105,19 @@ class CardData:
                 current_identification.person = person_container.person
                 current_identification.save()
             self.set_answer(person_container.question, person_container.person, None)
-                
+        
         self.form_object.set_parent(self.form_data.form_object)
         self.form_object.save()
         for response in self.response_dict.values():
             response.parent = self.form_object
             response.save()
+        
+        for multi_ref in self.multi_reference:
+            answer = getattr(self.form_object, self.question_storage[multi_ref['question'].id].field_name, None)
+            answer.clear()
+            for obj_ref in multi_ref['object_list']:
+                answer.add(obj_ref)
+            self.form_object.save()
     
     def delete(self):
         for response in self.response_dict.values():
@@ -145,6 +163,7 @@ class FormData:
         self.form_object = the_object
         self.form_model = the_object.__class__
         self.person_containers = []
+        self.multi_reference = []
         storage = Storage.objects.get(form_model_name = the_object.__class__.__name__)
         if storage.response_model_name is not None:
             mod = __import__(storage.module_name, fromlist=[storage.response_model_name])
@@ -193,13 +212,16 @@ class FormData:
         return question.id in self.question_storage
     
     def get_answer(self, question):
-        if self.in_form_object(question):
-            answer = getattr(self.form_object, self.question_storage[question.id].field_name, None)
-        else:
-            if question.id in self.response_dict:
-                answer = self.response_dict[question.id].value
+        try:
+            if self.in_form_object(question):
+                answer = getattr(self.form_object, self.question_storage[question.id].field_name, None)
             else:
-                answer = None
+                if question.id in self.response_dict:
+                    answer = self.response_dict[question.id].value
+                else:
+                    answer = None
+        except ValueError as ve:
+            answer = None
         
         return answer
     
@@ -212,6 +234,13 @@ class FormData:
                 self.response_dict[question.id].id = storage_id
             else:
                  logger.error("Unable to locate question with id " + str(question.id) + " in response_dict")
+    
+    def set_multi_reference(self, question, object_list):
+        tmp = {
+            'question':question,
+            'object_list': object_list
+            }
+        self.multi_reference.append(tmp)
     
     def get_answer_storage(self, question):
         if self.in_form_object(question):
@@ -245,6 +274,13 @@ class FormData:
             for response in self.response_dict.values():
                 response.parent = self.form_object
                 response.save()
+            
+            for multi_ref in self.multi_reference:
+                answer = getattr(self.form_object, self.question_storage[multi_ref['question'].id].field_name, None)
+                answer.clear()
+                for obj_ref in multi_ref['object_list']:
+                    answer.add(obj_ref)
+                self.form_object.save()
             
             for card_key, card_list in self.card_dict.items():
                 new_card_list = []

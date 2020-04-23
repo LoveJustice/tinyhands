@@ -57,7 +57,10 @@ class Form(models.Model):
     @staticmethod
     def current_form(form_type_name, station_id):
         today = make_aware(datetime.datetime.now())
-        form_list = Form.objects.filter(form_type__name=form_type_name, start_date__lte=today, end_date__gte=today, stations__id=station_id)
+        if station_id is None:
+            form_list = Form.objects.filter(form_type__name=form_type_name, start_date__lte=today, end_date__gte=today)
+        else:
+            form_list = Form.objects.filter(form_type__name=form_type_name, start_date__lte=today, end_date__gte=today, stations__id=station_id)
         if len(form_list) > 0:
             return form_list[0]
         else:
@@ -149,7 +152,10 @@ class Question(models.Model):
         else:
             tz = pytz.timezone(station.time_zone)
             date_time = answer.astimezone(tz)
-            formatted_answer_list = [str(date_time.replace(tzinfo=None))]
+            if (date_time.second == 1):
+                formatted_answer_list = [str(date_time.replace(tzinfo=None))[:10]]
+            else:
+                formatted_answer_list = [str(date_time.replace(tzinfo=None))]
         return formatted_answer_list
     
     def format_Address(self, answer, station):
