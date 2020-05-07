@@ -30,6 +30,23 @@ class Person(models.Model):
     estimated_birthdate= models.DateField(null=True)
     nationality = models.CharField(max_length=127, blank=True, default='')
     aliases = None
+    
+    photo = models.ImageField(upload_to='interceptee_photos', default='', blank=True)
+    anonymized_photo = models.CharField(max_length=126, null=True)
+    
+    case_filed_against = models.CharField(max_length=126, null=True)
+    arrested = models.CharField(max_length=126, null=True)
+    social_media = models.CharField(max_length=1024, null=True)
+    role = models.CharField(max_length=126, null=True)
+    appearance = models.CharField(max_length=126, null=True)
+    occupation = models.CharField(max_length=126, null=True)
+    interviewer_believes = models.CharField(max_length=126, null=True)
+    pv_believes = models.CharField(max_length=126, null=True)
+    
+    education = models.CharField('Occupation', max_length=126, null=True)
+    guardian_name = models.CharField('Guardian Name', max_length=126, null=True)
+    guardian_phone = models.CharField('Guardian Phone', max_length=126, null=True)
+    guardian_relationship = models.CharField('Guardian Relationship', max_length=1024, null=True)
 
     def get_aliases(self):
         if self.aliases is not None:
@@ -246,9 +263,9 @@ class PersonFormCache(models.Model):
                         form_entry['form_name'] = irf_form.form_name
                         form_entry['number'] = interceptee.interception_record.irf_number
                         form_entry['date'] = str(interceptee.interception_record.date_time_of_interception.date())
-                        if interceptee.photo is not None and interceptee.photo != '':
-                            form_entry['photo'] = interceptee.photo.url
-                        if interceptee.kind == 'v':
+                        if interceptee.person.photo is not None and interceptee.person.photo != '':
+                            form_entry['photo'] = interceptee.person.photo.url
+                        if interceptee.person.role == 'PVOT':
                             form_entry['kind'] = 'PVOT'
                         else:
                             form_entry['kind'] = 'Suspect'

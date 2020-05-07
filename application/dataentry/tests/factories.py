@@ -70,6 +70,8 @@ class PersonFactory(DjangoModelFactory):
     age = FuzzyInteger(20, 40)
     phone_contact = str(FuzzyInteger(100000000000, 999999999999).fuzz())
     gender = 'm'
+    role = 'PVOT'
+    photo = None
 
 
 
@@ -129,9 +131,7 @@ class IntercepteeNoPhotoFactory(DjangoModelFactory):
         model = Interceptee
 
     person = factory.SubFactory(PersonFactory)
-    photo = None
     interception_record = factory.SubFactory(IrfFactory)
-    kind = 'v'
 
 # Photo will cause IDManagement test to fail.  Photo is required for photo_exporter test.
 class IntercepteeIndiaNoPhotoFactory(DjangoModelFactory):
@@ -139,9 +139,7 @@ class IntercepteeIndiaNoPhotoFactory(DjangoModelFactory):
         model = IntercepteeCommon
 
     person = factory.SubFactory(PersonFactory)
-    photo = None
     interception_record = factory.SubFactory(IrfIndiaFactory)
-    kind = 'v'
 
 class SiteSettingsFactory(DjangoModelFactory):
     class Meta:

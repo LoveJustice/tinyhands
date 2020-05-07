@@ -156,7 +156,7 @@ class IRFAlertChecker(object):
         trafficker_in_custody = self.trafficker_in_custody()
 
         for interceptee in self.interceptees:
-            if interceptee.kind == 't':
+            if interceptee.person.role == 'Suspect':
                 tmplist = []
                 p = interceptee.person
                 onePersonMatches = process.extractBests(p.full_name, people_dict, score_cutoff=site_settings.get_setting_value_by_name('person_cutoff'), limit=site_settings.get_setting_value_by_name('person_limit'))
@@ -191,7 +191,7 @@ class IRFAlertChecker(object):
         certainty_points = self.irf.how_sure_was_trafficking
         trafficker_list = []
         for intercep in self.interceptees:
-            if intercep.kind == 't' and intercep.photo not in [None, '']:
+            if intercep.person.role == 'Suspect' and intercep.photo not in [None, '']:
                 trafficker_list.append(intercep.person)
 
         if len(trafficker_list) > 0:
@@ -291,7 +291,7 @@ class IRFAlertChecker(object):
         
                     
         for interceptee in self.interceptees:
-            if interceptee.kind == 'v':
+            if interceptee.person.role == 'PVOT':
                 logger.debug('Interceptee - ' + interceptee.person.full_name)
                   
                 full_name = interceptee.person.full_name
@@ -383,7 +383,7 @@ class FormAlertChecker:
         
         my_interceptees = my_interceptee_class.objects.all()
         for interceptee in my_interceptees:
-            if interceptee.kind == 't':
+            if interceptee.person.role == 'Suspect':
                 if interceptee.trafficker_taken_into_custody:
                     custody_list.append(interceptee.person.full_name)
                 tmplist = []

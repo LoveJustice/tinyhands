@@ -89,7 +89,7 @@ def match_person(person_name, filter):
     return results
 
 def pvot_ids():
-    irf_victim_ids = Interceptee.objects.filter(kind = 'v').values_list('person', flat=True)
+    irf_victim_ids = Interceptee.objects.filter(person__role = 'PVOT').values_list('person', flat=True)
     vif_victim_ids = VictimInterview.objects.all().values_list('victim', flat=True)
     victim_ids = list(chain(irf_victim_ids, vif_victim_ids))
     
@@ -97,7 +97,7 @@ def pvot_ids():
     for form_category in form_categories:
         mod = __import__(form_category.storage.module_name, fromlist=[form_category.storage.form_model_name])
         interceptee_class = getattr(mod, form_category.storage.form_model_name, None)           
-        irf_victim_ids = interceptee_class.objects.filter(kind = 'v').values_list('person', flat=True)
+        irf_victim_ids = interceptee_class.objects.filter(person__role = 'PVOT').values_list('person', flat=True)
         victim_ids = victim_ids + list(irf_victim_ids)
     
     cif_forms = Form.objects.filter(form_type__name='CIF')
@@ -124,14 +124,14 @@ def pvot_ids():
     return victim_ids
 
 def suspect_ids():
-    irf_suspect_ids = Interceptee.objects.filter(kind = 't').values_list('person', flat=True)
+    irf_suspect_ids = Interceptee.objects.filter(person__role = 'Suspect').values_list('person', flat=True)
     suspect_ids = list(irf_suspect_ids)
 
     form_categories = FormCategory.objects.filter(form__form_type__name='IRF', name='Interceptees')
     for form_category in form_categories:
         mod = __import__(form_category.storage.module_name, fromlist=[form_category.storage.form_model_name])
         interceptee_class = getattr(mod, form_category.storage.form_model_name, None)           
-        irf_suspect_ids = interceptee_class.objects.filter(kind = 't').values_list('person', flat=True)
+        irf_suspect_ids = interceptee_class.objects.filter(person__role = 'Suspect').values_list('person', flat=True)
         suspect_ids = suspect_ids + list(irf_suspect_ids)
     
     person_boxes = FormCategory.objects.filter(form__form_type__name='CIF', name='PersonBoxes')
