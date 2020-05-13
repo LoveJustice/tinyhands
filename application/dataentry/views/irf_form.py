@@ -50,7 +50,7 @@ class IrfListSerializer(serializers.Serializer):
             code = 'SE'
         elif value.startswith('High Risk'):
             code='HR'
-        elif value.startswith('Should Not have Intercepted'):
+        elif value.startswith('Should not count as an Intercept'):
             code = 'SNHI'
         
         return code

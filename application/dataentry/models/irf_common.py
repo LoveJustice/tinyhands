@@ -401,6 +401,8 @@ class IrfCommon(BaseForm):
     
     call_subcommittee = models.BooleanField('Call Subcommittee Chairperson/Vice-Chairperson/Secretary', default=False)
     call_project_manager = models.BooleanField('Call Project Manager to confirm intercept', default=False)
+    
+    rescue = models.BooleanField('Rescue', default=False)
 
     has_signature = models.BooleanField('Scanned form has signature?', default=False)
     
@@ -421,6 +423,8 @@ class IrfCommon(BaseForm):
     logbook_second_verification = models.CharField(max_length=127, blank=True)
     logbook_second_reason = models.TextField('Second Reason', blank=True)
     logbook_second_verification_date = models.DateField(null=True)
+    
+    logbook_champion_verification = models.BooleanField('Champion verification', default=False)
     
     logbook_back_corrected = models.TextField('Back Corrected', blank=True)
     
