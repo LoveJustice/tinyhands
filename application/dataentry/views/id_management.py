@@ -1,4 +1,5 @@
 import logging
+import traceback
 
 from django.db import transaction
 
@@ -11,7 +12,7 @@ from itertools import chain
 
 from dataentry import fuzzy_matching
 from dataentry.serializers import IDManagementSerializer, PersonFormsSerializer
-from dataentry.models import AliasGroup, Person, PersonFormCache, Interceptee, VictimInterview
+from dataentry.models import MasterPerson, Person, PersonFormCache, Interceptee, VictimInterview
 
 logger = logging.getLogger(__name__)
 
@@ -40,7 +41,7 @@ class IDManagementViewSet(viewsets.ModelViewSet):
 
     def alias_group(self, request):
         group_id = request.GET['group_id']
-        results = Person.objects.filter(alias_group=group_id);
+        results = Person.objects.filter(master_person__id=group_id);
         serializer = IDManagementSerializer(results, many=True, context={'request': request})
         return Response(serializer.data)
 
@@ -59,25 +60,19 @@ class IDManagementViewSet(viewsets.ModelViewSet):
             return Response({'detail': "an error occurred"}, status=status.HTTP_404_NOT_FOUND)
 
         try:
-            alias_group = None
-            if person1.alias_group is not None:
-                alias_group = person1.alias_group
-
-            if person2.alias_group is not None:
-                if alias_group is not None:
-                    logger.error("Cannot make alias group from two persons where both are already in alias groups")
-                    return Response({'detail': "Both persons already in alias group"}, status=status.HTTP_409_CONFLICT)
-                alias_group = person2.alias_group
-
+            master1 = person1.master_person
+            master2 = person2.master_person
+            
             with transaction.atomic():
-                if alias_group is None:
-                    alias_group = AliasGroup()
-                    alias_group.save()
-
-                person1.alias_group = alias_group
-                person1.save()
-                person2.alias_group = alias_group
-                person2.save()
+                members = Person.objects.filter(master_person=master2)
+                for member in members:
+                    member.master_person = master1
+                    member.save()
+                    master1.update(member)
+                
+                master1.save() 
+                master2.delete()
+            
         except BaseException:
             logger.error('Failed to add to alias group: ' + pk + ' ' + pk2)
             return Response({'detail': "an error occurred"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -87,7 +82,7 @@ class IDManagementViewSet(viewsets.ModelViewSet):
     def remove_alias_group (self, request, pk):
         try:
             person = Person.objects.get(id=pk)
-            if person.alias_group is None:
+            if person.master_person is None:
                 return
         except ObjectDoesNotExist:
             logger.error('Failed to remove from alias group: ' + pk)
@@ -95,18 +90,17 @@ class IDManagementViewSet(viewsets.ModelViewSet):
 
         try:
             with transaction.atomic():
-                alias_group = person.alias_group
-                person.alias_group = None
+                master = person.master_person
+                master_person = MasterPerson()
+                master_person.update(person)
+                master_person.save()
+                person.master_person = master_person
                 person.save()
 
                 # check remaining members of the group
-                members = Person.objects.filter(alias_group = alias_group)
-                if len(members) < 2:
-                    # only one member left in the alias group - delete the alias group
-                    for member in members:
-                        member.alias_group = None
-                        member.save()
-                    alias_group.delete()
+                members = Person.objects.filter(master_person = master)
+                if len(members) < 1:
+                    master.delete()
         except BaseException:
             logger.error('Failed to remove from alias group: ' + pk)
             return Response({'detail': "an error occurred"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

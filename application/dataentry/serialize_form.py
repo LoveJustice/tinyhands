@@ -10,7 +10,7 @@ from dataentry.models.border_station import BorderStation
 from dataentry.models.form import Answer, Category, Form, FormCategory, Question, QuestionLayout
 from dataentry.models.person import Person
 from dataentry.models.person_identification import PersonIdentification
-from dataentry.models.alias_group import AliasGroup
+from dataentry.models.master_person import MasterPerson
 from .form_data import FormData, CardData, PersonContainer
 from .validate_form import ValidateForm
 
@@ -578,7 +578,7 @@ class ResponsePersonSerializer(serializers.Serializer):
                 name = field.name
                 if name in map_name:
                     name = map_name[name]
-                if field.name not in ['id','gender','address1','address2','arrested','phone_contact','alias_group']:
+                if field.name not in ['id','gender','address1','address2','arrested','phone_contact','master_person']:
                     if private_data and is_private_value(question, field.name):
                         ret[name] = {'value':None }
                     else:
@@ -715,17 +715,19 @@ class ResponsePersonSerializer(serializers.Serializer):
         
         person.set_estimated_birthdate(form_base_date)
         
+        master_person = None
         link_id = self.validated_data.get('link_id')
         if link_id is not None:
             link_person = Person.objects.get(id=link_id)
-            if link_person.alias_group is not None:
-                person.alias_group = link_person.alias_group
-            else:
-                alias_group = AliasGroup()
-                alias_group.save()
-                link_person.alias_group = alias_group
-                person.alias_group = alias_group
-                link_person.save()
+            if link_person.master_person is not None:
+               master_person = link_person.master_person
+        
+        if master_person is None:
+            master_person = MasterPerson()
+        
+        master_person.update(person)
+        master_person.save()
+        person.master_person = master_person
         
         remove_identifiers = []
         for person_identifier in person_identifiers:

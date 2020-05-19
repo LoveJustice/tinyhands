@@ -303,6 +303,7 @@ class IDManagementSerializer(serializers.ModelSerializer):
     form_id = serializers.CharField(source='get_form_id', read_only=True)
     address1 = Address1Serializer(read_only=True)
     address2 = Address2Serializer(read_only=True)
+    alias_group = serializers.CharField(source='get_master_person_id', read_only=True)
 
     class Meta:
         model = Person

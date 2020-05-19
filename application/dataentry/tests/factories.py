@@ -60,7 +60,13 @@ class IrfIndiaFactory(DjangoModelFactory):
     which_contact = 'Bus driver'
     contact_paid = False
 
-    how_sure_was_trafficking = 5 
+    how_sure_was_trafficking = 5
+
+class MasterPersonFactory(DjangoModelFactory):
+    class Meta:
+        model = MasterPerson
+    
+    gender = 'm' 
 
 class PersonFactory(DjangoModelFactory):
     class Meta:
@@ -72,8 +78,7 @@ class PersonFactory(DjangoModelFactory):
     gender = 'm'
     role = 'PVOT'
     photo = None
-
-
+    master_person = factory.SubFactory(MasterPersonFactory)
 
 class VifFactory(DjangoModelFactory):
     class Meta:

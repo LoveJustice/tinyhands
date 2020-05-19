@@ -159,6 +159,7 @@ class BaseFormViewSet(viewsets.ModelViewSet):
                 if not UserLocationPermission.has_session_permission(request, self.get_perm_group_name(), 'ADD',
                         serializer.get_country_id(), serializer.get_station_id()):
                     transaction.rollback()
+                    transaction.set_autocommit(True)
                     return Response(status=status.HTTP_401_UNAUTHORIZED)
                 try:
                     form_data = serializer.save()
@@ -168,9 +169,12 @@ class BaseFormViewSet(viewsets.ModelViewSet):
                     ret = serializer2.data
                     rtn_status = status.HTTP_200_OK
                     transaction.commit()
+                    transaction.set_autocommit(True)
                     self.post_process(request, form_data)
                 except IntegrityError as exc:
                     transaction.rollback()
+                    transaction.set_autocommit(True)
+                    print ('Transaction rollback1')
                     if 'unique constraint' in exc.args[0]:
                         ret = {
                             'errors': [ exc.args[0] ],
@@ -185,6 +189,7 @@ class BaseFormViewSet(viewsets.ModelViewSet):
                         rtn_status=status.HTTP_400_BAD_REQUEST
             else:
                 transaction.rollback()
+                transaction.set_autocommit(True)
                 ret = {
                     'errors': serializer.the_errors,
                     'warnings':serializer.the_warnings
@@ -192,13 +197,13 @@ class BaseFormViewSet(viewsets.ModelViewSet):
                 rtn_status=status.HTTP_400_BAD_REQUEST
         except Exception:
             transaction.rollback()
+            transaction.set_autocommit(True)
             ret = {
                     'errors': 'Internal Error:' + traceback.format_exc(),
                     'warnings':[]
                 }
             rtn_status = status.HTTP_500_INTERNAL_SERVER_ERROR
         
-        transaction.set_autocommit(True)
         return Response (ret, status=rtn_status)
     
     def retrieve_blank_form(self, request, station_id):
@@ -283,6 +288,7 @@ class BaseFormViewSet(viewsets.ModelViewSet):
                 self.post_process(request, form_data)
             else:
                 transaction.rollback()
+                transaction.set_autocommit(True)
                 if serializer.the_errors is not None and len(serializer.the_errors) > 0:
                     rtn_errors = serializer.the_errors
                 else:
@@ -302,13 +308,13 @@ class BaseFormViewSet(viewsets.ModelViewSet):
                 rtn_status = status.HTTP_400_BAD_REQUEST
         except Exception:
             transaction.rollback()
+            transaction.set_autocommit(True)
             ret = {
                 'errors': 'Internal Error:' + traceback.format_exc(),
                 'warnings':[]
                 }
             rtn_status = status.HTTP_500_INTERNAL_SERVER_ERROR
             
-        transaction.set_autocommit(True)
         return Response (ret, status=rtn_status)
     
     def destroy(self, request, station_id, pk):
