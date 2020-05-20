@@ -9,6 +9,7 @@ from .addresses import Address1, Address2
 from .alias_group import AliasGroup
 from .master_person import MasterPerson, AddressType, PhoneType
 from .form import Form, FormCategory
+from accounts.models import Account
 
 class PersonFormData:
     photo = ''
@@ -17,6 +18,10 @@ class Person(models.Model):
     GENDER_CHOICES = [('M', 'm'), ('F', 'f')]
     
     master_person = models.ForeignKey(MasterPerson)
+    master_set_by = models.ForeignKey(Account, related_name='%(class)s_entered_by', null=True, on_delete=models.SET_NULL)
+    master_set_date = models.DateTimeField(auto_now_add=True)
+    master_set_notes = models.TextField('Match Notes', blank=True)
+    
     full_name = models.CharField(max_length=255, null=True, blank=True)
     gender = models.CharField(max_length=4, choices=GENDER_CHOICES, blank=True)
     age = models.PositiveIntegerField(null=True, blank=True)

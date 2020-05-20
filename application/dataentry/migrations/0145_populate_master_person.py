@@ -3,34 +3,11 @@
 from __future__ import unicode_literals
 
 import django.contrib.postgres.fields.jsonb
-from django.db import migrations, models
+from django.db import migrations, models, connection
+from collections import namedtuple
 import django.db.models.deletion
 from dataentry.models.master_person import MasterPerson
 from dataentry.models.person import Person
-
-def create_master_persons(apps, schema_editor):
-    # Create and link master person for those persons that have alias groups
-    persons = Person.objects.filter(alias_group__isnull=False).order_by('alias_group__id', 'id')
-    last_alias_group = None
-    for person in persons:
-        if last_alias_group is None or last_alias_group != person.alias_group:
-            master_person = MasterPerson()
-        
-        last_alias_group = person.alias_group
-        
-        master_person.update(person)
-        master_person.save()
-        person.master_person = master_person
-        person.save()
-    
-    # Create new master person for each person not in alias group        
-    persons = Person.objects.filter(master_person__id=0)
-    for person in persons:
-        master_person = MasterPerson()
-        master_person.update(person)
-        master_person.save()
-        person.master_person = master_person
-        person.save()
 
 
 class Migration(migrations.Migration):
@@ -40,5 +17,133 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(create_master_persons),
+        #Create and populate temporary master person table
+        migrations.RunSQL(
+            "CREATE TABLE master_temp ("\
+                "id serial NOT NULL,"\
+                "alias_group_id int4,"\
+                "person_id int4)"
+            ),
+        migrations.RunSQL(
+            "CREATE INDEX master_temp_alias_group ON master_temp USING btree (alias_group_id)"
+            ),
+        migrations.RunSQL(
+            "CREATE INDEX master_temp_person ON master_temp USING btree (person_id)"
+            ),
+        migrations.RunSQL(
+            "insert into master_temp (alias_group_id, person_id) "\
+                "select alias_group_id, min(id) as person_id from dataentry_person where alias_group_id is not null group by alias_group_id"
+            ),
+        migrations.RunSQL(
+            "insert into master_temp (alias_group_id, person_id) "\
+                "select NULL, id as person_id from dataentry_person where alias_group_id is null"
+            ),
+        
+        #Populate real master person table
+        migrations.RunSQL(
+            "insert into dataentry_masterperson (id, full_name, gender, birthdate, estimated_birthdate, nationality) "\
+                "select mt.id, dp.full_name, dp.gender, case when dp.birthdate is not null then dp.birthdate else dp.estimated_birthdate end as birthdate,"\
+                    "case when dp.birthdate is null and dp.estimated_birthdate is not null then true else false end as estimated_birthdate,"\
+                    "dp.nationality "\
+                "from master_temp mt, dataentry_person dp "\
+                "where mt.person_id = dp.id"
+            ),
+        migrations.RunSQL("select setval('dataentry_masterperson_id_seq',(select max(id) + 1 from dataentry_masterperson), true)"),
+        migrations.RunSQL(
+            "update dataentry_person as dp "\
+            "set master_person_id = (select id from master_temp where alias_group_id = dp.alias_group_id) "\
+            "where dp.alias_group_id is not null"
+            ),
+        migrations.RunSQL(
+            "update dataentry_person as dp "\
+            "set master_person_id = (select id from master_temp where person_id = dp.id) "\
+            "where dp.alias_group_id is null"
+            ),
+        migrations.RunSQL(
+            "update dataentry_masterperson as mp "\
+            "set full_name = (select full_name from dataentry_person where master_person_id = mp.id and full_name is not null and full_name != '') "\
+            "where (full_name is null or full_name = '') and exists (select full_name from dataentry_person where master_person_id = mp.id and full_name is not null and full_name != '')"
+            ),
+        migrations.RunSQL(
+            "update dataentry_masterperson as mp "\
+            "set gender = (select min(gender) from dataentry_person where master_person_id = mp.id and gender != '') "\
+            "where gender = '' and exists (select gender from dataentry_person where master_person_id = mp.id and gender != '')"
+            ),
+        migrations.RunSQL(
+            "update dataentry_masterperson as mp "\
+            "set birthdate = (select birthdate from dataentry_person where master_person_id = mp.id and birthdate is not null), estimated_birthdate = false "\
+            "where birthdate is null and exists (select birthdate from dataentry_person where master_person_id = mp.id and birthdate is not null)"
+            ),
+        migrations.RunSQL(
+            "update dataentry_masterperson as mp "\
+            "set birthdate = (select min(estimated_birthdate) from dataentry_person where master_person_id = mp.id and estimated_birthdate is not null), estimated_birthdate = true "\
+            "where birthdate is null and exists (select estimated_birthdate from dataentry_person where master_person_id = mp.id and estimated_birthdate is not null)"
+            ),
+        migrations.RunSQL(
+            "update dataentry_masterperson as mp "\
+            "set nationality = (select min(nationality) from dataentry_person where master_person_id = mp.id and nationality != '') "\
+            "where nationality = '' and exists (select nationality from dataentry_person where master_person_id = mp.id and nationality != '')"
+            ),
+        
+        #Populate master_set_by_id, master_set_date and master_set_notes in person table
+        migrations.RunSQL(
+            "update dataentry_person as dp "\
+            "set master_set_by_id = (select irf.form_entered_by_id from dataentry_irfcommon as irf, dataentry_intercepteecommon as inter where inter.person_id = dp.id and inter.interception_record_id = irf.id) "\
+            "where exists (select true from dataentry_irfcommon as irf, dataentry_intercepteecommon as inter where inter.person_id = dp.id and inter.interception_record_id = irf.id)"
+        ),
+        migrations.RunSQL(
+            "update dataentry_person as dp "\
+            "set master_set_date = (select case when irf.logbook_submitted is not null then irf.logbook_submitted else irf.date_time_entered_into_system end from dataentry_irfcommon as irf, dataentry_intercepteecommon as inter where inter.person_id = dp.id and inter.interception_record_id = irf.id) "\
+            "where exists (select true from dataentry_irfcommon as irf, dataentry_intercepteecommon as inter where inter.person_id = dp.id and inter.interception_record_id = irf.id)"
+        ),
+        migrations.RunSQL(
+            "update dataentry_person as dp "\
+            "set master_set_by_id = (select min(cif.form_entered_by_id) from dataentry_cifcommon as cif where cif.main_pv_id = dp.id) "\
+            "where exists (select true from dataentry_cifcommon as cif where cif.main_pv_id = dp.id)"
+        ),
+        migrations.RunSQL(
+            "update dataentry_person as dp "\
+            "set master_set_date = (select min(case when cif.logbook_submitted is not null then cif.logbook_submitted else cif.date_time_entered_into_system end) from dataentry_cifcommon as cif where cif.main_pv_id = dp.id) "\
+            "where exists (select true from dataentry_cifcommon as cif where cif.main_pv_id = dp.id)"
+        ),
+        migrations.RunSQL(
+            "update dataentry_person as dp "\
+            "set master_set_by_id = (select min(cif.form_entered_by_id) from dataentry_cifcommon as cif, dataentry_potentialvictimcommon as pv where pv.person_id = dp.id and pv.cif_id = cif.id) "\
+            "where exists (select true from dataentry_cifcommon as cif, dataentry_potentialvictimcommon as pv where pv.person_id = dp.id and pv.cif_id = cif.id)"
+        ),
+        migrations.RunSQL(
+            "update dataentry_person as dp "\
+            "set master_set_date = (select min(case when cif.logbook_submitted is not null then cif.logbook_submitted else cif.date_time_entered_into_system end) from dataentry_cifcommon as cif, dataentry_potentialvictimcommon as pv where pv.person_id = dp.id and pv.cif_id = cif.id) "\
+            "where exists (select true from dataentry_cifcommon as cif, dataentry_potentialvictimcommon as pv where pv.person_id = dp.id and pv.cif_id = cif.id)"
+        ),
+        migrations.RunSQL(
+            "update dataentry_person as dp "\
+            "set master_set_by_id = (select min(cif.form_entered_by_id) from dataentry_cifcommon as cif, dataentry_personboxcommon as pb where pb.person_id = dp.id and pb.cif_id = cif.id) "\
+            "where exists (select true from dataentry_cifcommon as cif, dataentry_personboxcommon as pb where pb.person_id = dp.id and pb.cif_id = cif.id)"
+        ),
+        migrations.RunSQL(
+            "update dataentry_person as dp "\
+            "set master_set_date = (select min(case when cif.logbook_submitted is not null then cif.logbook_submitted else cif.date_time_entered_into_system end) from dataentry_cifcommon as cif, dataentry_personboxcommon as pb where pb.person_id = dp.id and pb.cif_id = cif.id) "\
+            "where exists (select true from dataentry_cifcommon as cif, dataentry_personboxcommon as pb where pb.person_id = dp.id and pb.cif_id = cif.id)"
+        ),
+        migrations.RunSQL(
+            "update dataentry_person as dp "\
+            "set master_set_by_id = (select min(vdf.form_entered_by_id) from dataentry_vdfcommon as vdf where vdf.victim_id = dp.id) "\
+            "where exists (select true from dataentry_vdfcommon as vdf where vdf.victim_id = dp.id)"
+        ),
+        migrations.RunSQL(
+            "update dataentry_person as dp "\
+            "set master_set_date = (select min(case when vdf.logbook_submitted is not null then vdf.logbook_submitted else vdf.date_time_entered_into_system end) from dataentry_vdfcommon as vdf where vdf.victim_id = dp.id) "\
+            "where exists (select true from dataentry_vdfcommon as vdf where vdf.victim_id = dp.id)"
+        ),
+        migrations.RunSQL(
+            "update dataentry_person "\
+            "set master_set_notes = 'Initial master person migration' "\
+            "where master_person_id is not null"
+        ),
+        
+        #Remove temporary table
+        migrations.RunSQL("DROP TABLE master_temp"),
+
+        
     ]

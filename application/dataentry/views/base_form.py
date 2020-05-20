@@ -269,7 +269,7 @@ class BaseFormViewSet(viewsets.ModelViewSet):
         self.pre_process(request, form_data)
         request_json = self.extract_data(request, self.get_element_paths())
 
-        self.serializer_context = {'form_type':form.form_type}
+        self.serializer_context = {'form_type':form.form_type, 'request.user':request.user}
         transaction.set_autocommit(False)
         try:
             serializer = FormDataSerializer(form_data, data=request_json, context=self.serializer_context)

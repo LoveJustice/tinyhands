@@ -578,7 +578,7 @@ class ResponsePersonSerializer(serializers.Serializer):
                 name = field.name
                 if name in map_name:
                     name = map_name[name]
-                if field.name not in ['id','gender','address1','address2','arrested','phone_contact','master_person']:
+                if field.name not in ['id','gender','address1','address2','arrested','phone_contact','master_person', 'master_set_by']:
                     if private_data and is_private_value(question, field.name):
                         ret[name] = {'value':None }
                     else:
@@ -666,6 +666,10 @@ class ResponsePersonSerializer(serializers.Serializer):
             if value is not None and value.strip() != '':
                 ret[field] = parser.parse(value).date()
         
+        tmp = data.get('link_id')
+        if tmp is not None:
+            ret['link_id'] = tmp
+        
         return ret
     
     def match_address(self, address_object1, address_object2):
@@ -688,9 +692,11 @@ class ResponsePersonSerializer(serializers.Serializer):
         if storage_id is None:
             person = Person()
             person_identifiers = []
+            master_person = None
         else:
             person = Person.objects.get(id=storage_id)
             person_identifiers = PersonIdentification.objects.filter(person=person)
+            master_person = person.master_person
         
         person.full_name = self.validated_data.get('name')
         if self.address_serializer is None:
@@ -715,7 +721,6 @@ class ResponsePersonSerializer(serializers.Serializer):
         
         person.set_estimated_birthdate(form_base_date)
         
-        master_person = None
         link_id = self.validated_data.get('link_id')
         if link_id is not None:
             link_person = Person.objects.get(id=link_id)
@@ -728,6 +733,13 @@ class ResponsePersonSerializer(serializers.Serializer):
         master_person.update(person)
         master_person.save()
         person.master_person = master_person
+        if storage_id is None:
+            person.master_set_by = self.context.get('request.user')
+            person.master_set_date = datetime.now().date()
+            if link_id is not None:
+                person.master_set_notes = 'Linked from IRF person'
+            else:
+                person.master_set_notes = 'Initial person creation'
         
         remove_identifiers = []
         for person_identifier in person_identifiers:
