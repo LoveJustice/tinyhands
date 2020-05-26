@@ -27,12 +27,6 @@ class CifCommon(BaseForm):
     
     # Main PV
     main_pv = models.ForeignKey(Person, null=True, blank=True)
-    social_media = models.CharField('Social Media', max_length=1024, null=True)
-    occupation = models.CharField('Occupation', max_length=126, null=True)
-    education = models.CharField('Occupation', max_length=126, null=True)
-    guardian_name = models.CharField('Guardian Name', max_length=126, null=True)
-    guardian_phone = models.CharField('Guardian Phone', max_length=126, null=True)
-    guardian_relationship = models.CharField('Guardian Relationship', max_length=1024, null=True)
     other_possible_victims = models.BooleanField('other possible victims', default=False)
     
     # Recruitment
@@ -222,7 +216,6 @@ class CifCommon(BaseForm):
 
 class PotentialVictimCommon(BaseCard):
     person = models.ForeignKey(Person)
-    social_media = models.CharField(max_length=1024, null=True)
     flag_count = models.PositiveIntegerField(null=True, blank=True)
     cif = models.ForeignKey(CifCommon)
     
@@ -244,28 +237,7 @@ class TransportationCommon(BaseCard):
 class PersonBoxCommon(BaseCard):
     pb_number = models.PositiveIntegerField(null=True, blank=True)
     person = models.ForeignKey(Person)
-    case_filed_against = models.CharField(max_length=126, null=True)
-    arrested = models.CharField(max_length=126, null=True)
-    social_media = models.CharField(max_length=1024, null=True)
-    role_broker = models.BooleanField('Broker', default=False)
-    role_companion = models.BooleanField('Companion', default=False)
-    role_host = models.BooleanField('Host', default=False)
-    role_id_facilitator = models.BooleanField('ID Facilitator', default=False)
-    role_agent = models.BooleanField('Agent', default=False)
-    role_witness = models.BooleanField('Witness', default=False)
-    role_complainant = models.BooleanField('Complainant', default=False)
-    role_other = models.CharField('Other', max_length=126, null=True)
     relation_to_pv = models.CharField(max_length=126, null=True)
-    appearance = models.CharField(max_length=126, null=True)
-    occupation = models.CharField(max_length=126, null=True)
-    definitely_trafficked_many = models.BooleanField(default=False)
-    has_trafficked_some = models.BooleanField(default=False)
-    suspected_trafficker = models.BooleanField(default=False)
-    dont_believe_trafficker = models.BooleanField(default=False)
-    pv_definitely_trafficked_many = models.BooleanField(default=False)
-    pv_has_trafficked_some = models.BooleanField(default=False)
-    pv_suspected_trafficker = models.BooleanField(default=False)
-    pv_dont_believe_trafficker = models.BooleanField(default=False)
     associated_lb = models.CharField(max_length=126, null=True)
     flag_count = models.PositiveIntegerField(null=True, blank=True)
     cif = models.ForeignKey(CifCommon)

@@ -451,22 +451,9 @@ class IrfCommon(BaseForm):
         ]
     
 class IntercepteeCommon(BaseCard):
-    KIND_CHOICES = [
-        ('v', 'Victim'),
-        ('t', 'Trafficker'),
-        ('u', 'Unknown'),
-    ]
     interception_record = models.ForeignKey(IrfCommon, related_name='interceptees', on_delete=models.CASCADE)
-    photo = models.ImageField(db_index=True, upload_to='interceptee_photos', default='', blank=True)
-    photo_thumbnail = ImageSpecField(source='photo',
-                                     processors=[ResizeToFill(200, 200)],
-                                     format='JPEG',
-                                     options={'quality': 80})
-    anonymized_photo = models.CharField(max_length=126, null=True)
-    kind = models.CharField(max_length=4, choices=KIND_CHOICES)
     relation_to = models.CharField(max_length=255, blank=True)
     person = models.ForeignKey(Person, null=True, blank=True)
-    trafficker_taken_into_custody = models.BooleanField('taken_into_custody', default=False)
     not_physically_present = models.BooleanField('Not physically present', default=False)
 
     def address1_as_string(self):

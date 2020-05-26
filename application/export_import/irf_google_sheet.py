@@ -37,7 +37,7 @@ class IrfGoogleSheet(ExportToGoogleSheet):
         
         trafficker_count = 0
         for trafficker in cards:
-            if trafficker.form_object.kind.upper() != 'T':
+            if trafficker.form_object.person.role.upper() != 'SUSPECT':
                 # victim card
                 continue
             
@@ -58,7 +58,7 @@ class IrfGoogleSheet(ExportToGoogleSheet):
                 base_row.append('')
         
         for victim in cards:
-            if victim.form_object.kind.upper() != 'V':
+            if victim.form_object.person.role.upper() != 'PVOT':
                 continue
             
             row = list(base_row)

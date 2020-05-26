@@ -223,12 +223,12 @@ class IndicatorsViewSet(viewsets.ViewSet):
                     elif irf.logbook_second_verification.lower().startswith('high'):
                         result.high_risk_count += 1
                     
-                victims = interceptee_storage.get_form_storage_class().objects.filter(interception_record=irf, kind='v')
+                victims = interceptee_storage.get_form_storage_class().objects.filter(interception_record=irf, person__role='PVOT')
                 for victim in victims:
                     result.victim_count += 1
                     if evidence:
                         result.victim_evidence_count += 1
-                    if victim.photo is not None and victim.photo != '':
+                    if victim.person.photo is not None and victim.person.photo != '':
                         result.photo_count += 1
                     
                 IndicatorsViewSet.cif_indicators_for_irf(result, irf)

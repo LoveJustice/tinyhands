@@ -14,9 +14,6 @@ class VdfCommon(BaseForm):
     
     # Victim/Family Info
     victim = models.ForeignKey(Person, null=True, blank=True)
-    occupation = models.CharField('Occupation', max_length=126, null=True)
-    guardian_name = models.CharField('Guardian Name', max_length=126, null=True)
-    guardian_phone = models.CharField('Guardian Phone', max_length=126, null=True)
     
     # Home Situation Assessment
     guardian_know_destination = models.CharField('Did your guardian know you were traveling to intended destination?', max_length=126, null=True)

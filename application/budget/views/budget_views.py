@@ -142,7 +142,7 @@ def top_table_data(pk, month, year, budget_sheets):
     
     
     # Last month data will count records from the 1st of this month to end of this month by pulling data less than the first of next month
-    all_interceptions = form_class.objects.filter(interception_record__irf_number__startswith=border_station.station_code, kind='v')
+    all_interceptions = form_class.objects.filter(interception_record__irf_number__startswith=border_station.station_code, person__role='PVOT')
 
     last_months_count = all_interceptions.filter(
             interception_record__date_time_entered_into_system__gte=date,

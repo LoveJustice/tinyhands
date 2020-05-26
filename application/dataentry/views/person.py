@@ -34,7 +34,7 @@ class PersonViewSet(viewsets.ModelViewSet):
             
             interceptees = interceptee_class.objects.filter(interception_record__irf_number=irf_number)
             if kind is not None:
-                interceptees = interceptees.filter(kind=kind)
+                interceptees = interceptees.filter(person__role=kind)
             person_ids = []
             for interceptee in interceptees:
                 if interceptee.person is not None:

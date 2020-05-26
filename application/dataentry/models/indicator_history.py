@@ -122,7 +122,7 @@ class IndicatorHistory(models.Model):
                     
                     interceptee_storage = IndicatorHistory.get_card_storage(storage_cache, form_type, 'Interceptees', station)
                     if interceptee_storage is not None:
-                        query_set = interceptee_storage.get_form_storage_class().objects.filter(interception_record__station__in=station_list, photo__in=check_photos.keys())
+                        query_set = interceptee_storage.get_form_storage_class().objects.filter(interception_record__station__in=station_list, person__photo__in=check_photos.keys())
                         IndicatorHistory.process_photos(results, query_set, check_photos, start_date, end_date)
                     
                 if include_latest_date:
@@ -217,7 +217,7 @@ class IndicatorHistory(models.Model):
             if IndicatorHistory.date_in_range(irf.logbook_submitted, None, None):
                 lag_count += 1
                 lag_time += IndicatorHistory.work_days(irf.logbook_submitted, irf.logbook_first_verification_date)
-                victim_count += IntercepteeCommon.objects.filter(interception_record=irf, kind='v').count()
+                victim_count += IntercepteeCommon.objects.filter(interception_record=irf, person__role='PVOT').count()
         
         IndicatorHistory.add_result(results, 'v1TotalLag', lag_time)
         IndicatorHistory.add_result(results, 'v1Count', lag_count)
@@ -237,7 +237,7 @@ class IndicatorHistory(models.Model):
             if IndicatorHistory.date_in_range(irf.logbook_first_verification_date, None, None):
                 lag_count += 1
                 lag_time += IndicatorHistory.work_days(irf.logbook_first_verification_date, irf.logbook_second_verification_date)
-                victim_count += IntercepteeCommon.objects.filter(interception_record=irf, kind='v').count()
+                victim_count += IntercepteeCommon.objects.filter(interception_record=irf, person__role='PVOT').count()
         
         IndicatorHistory.add_result(results, 'v2TotalLag', lag_time)
         IndicatorHistory.add_result(results, 'v2Count', lag_count)
@@ -314,7 +314,7 @@ class IndicatorHistory(models.Model):
         for interceptee in query_set:
             irf = interceptee.interception_record
             time_zone = pytz.timezone(irf.station.time_zone)
-            modification_time = check_photos[interceptee.photo]
+            modification_time = check_photos[interceptee.person.photo]
             local_date = modification_time.astimezone(time_zone).date()
             if local_date >= start_date and local_date <= end_date:
                 photos_uploaded += 1
