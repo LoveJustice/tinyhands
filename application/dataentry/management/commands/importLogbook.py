@@ -89,7 +89,7 @@ class Command(BaseCommand):
                     
                     setattr(irf, field, value)
             
-            if irf.logbook_second_verification == 'Should Not have Intercepted or Should Not have Completed IRF (because there is Not a High Risk of Trafficking)':
+            if irf.logbook_second_verification == 'Should not count as an Intercept':
                 irf.status = 'invalid'
             elif irf.logbook_second_verification is not None and irf.logbook_second_verification != '':
                 irf.status='second-verification'
