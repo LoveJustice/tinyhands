@@ -16,6 +16,7 @@ class IrfCommon(BaseForm):
     number_of_traffickers = models.PositiveIntegerField('# of traffickers', null=True, blank=True)
     staff_name = models.CharField('Staff Name:', max_length=255)
     
+    profile = models.CharField(max_length=1024, blank=True)
     profile_children = models.BooleanField('Child(ren)', default=False)
     profile_migrant = models.BooleanField('Migrant', default=False)
     profile_other = models.CharField(max_length=255, blank=True)
@@ -91,9 +92,9 @@ class IrfCommon(BaseForm):
     relatives_organized_travel = models.BooleanField('Relative(s) organized their travel', default=False)
     relatives_paid_expenses = models.BooleanField('Relative(s) paid their travel expenses', default=False)
     
-    industry = models.CharField('Industry', max_length=126, blank=True)
+    industry = models.CharField('Industry', max_length=1024, blank=True)
     
-    where_going_destination = models.CharField('Location:', max_length=126, blank=True)
+    where_going_destination = models.CharField('Location:', max_length=1024, blank=True)
     where_going_doesnt_know = models.BooleanField("Doesn't know where they are going", default=False)  
     where_going_job = models.BooleanField('Job', default=False)
     employment_massage_parlor = models.BooleanField('Massage parlor', default=False)
