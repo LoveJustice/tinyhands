@@ -7,14 +7,21 @@ from django.contrib.postgres.fields import JSONField
 
 from .addresses import Address1, Address2
 from .alias_group import AliasGroup
+from .master_person import MasterPerson, AddressType, PhoneType
 from .form import Form, FormCategory
+from accounts.models import Account
 
 class PersonFormData:
     photo = ''
 
 class Person(models.Model):
     GENDER_CHOICES = [('M', 'm'), ('F', 'f')]
-
+    
+    master_person = models.ForeignKey(MasterPerson)
+    master_set_by = models.ForeignKey(Account, related_name='%(class)s_entered_by', null=True, on_delete=models.SET_NULL)
+    master_set_date = models.DateTimeField(auto_now_add=True)
+    master_set_notes = models.TextField('Match Notes', blank=True)
+    
     full_name = models.CharField(max_length=255, null=True, blank=True)
     gender = models.CharField(max_length=4, choices=GENDER_CHOICES, blank=True)
     age = models.PositiveIntegerField(null=True, blank=True)
@@ -24,7 +31,11 @@ class Person(models.Model):
     latitude = models.FloatField(null=True)
     longitude = models.FloatField(null=True)
     address_notes = models.TextField('Address Notes', blank=True)
+    address_verified = models.BooleanField('Address Verified', default=False)
+    address_type = models.ForeignKey(AddressType, null=True)
     phone_contact = models.CharField(max_length=255, blank=True)
+    phone_verified = models.BooleanField('Phone Verified', default=False)
+    phone_type = models.ForeignKey(PhoneType, null=True)
     alias_group = models.ForeignKey(AliasGroup, null=True)
     birthdate = models.DateField(null=True)
     estimated_birthdate= models.DateField(null=True)
@@ -52,10 +63,10 @@ class Person(models.Model):
         if self.aliases is not None:
             return self.aliases
 
-        if self.alias_group is None:
+        if self.master_person is None:
             self.aliases = ''
         else:
-            alias_persons = Person.objects.filter(alias_group = self.alias_group).order_by('full_name')
+            alias_persons = Person.objects.filter(master_person = self.master_person).order_by('full_name')
             sep = ''
             self.aliases = ''
             for alias_person in alias_persons:
@@ -64,6 +75,12 @@ class Person(models.Model):
                     sep = ','
 
         return self.aliases
+    
+    def get_master_person_id(self):
+        if self.master_person is None:
+            return None
+        else:
+            return self.master_person.id
     
     def get_form_element(self, element_name):
         if not hasattr(self, 'forms'):
@@ -133,9 +150,9 @@ class Person(models.Model):
         else:
             val = val + 'None'
         
-        val = val + ', alias_group id='
-        if self.alias_group is not None:
-            val = val + str(self.alias_group.id)
+        val = val + ', master_person id='
+        if self.master_person is not None:
+            val = val + str(self.master_person.id)
         else:
             val = val + 'None'
         
