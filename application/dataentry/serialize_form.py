@@ -590,7 +590,8 @@ class ResponsePersonSerializer(serializers.Serializer):
                             if the_type in map_type:
                                 the_type = map_type[the_type]
                             tmp = getattr(serializers, the_type, None)
-                            ret[name] = { 'value':tmp().to_representation(value) }
+                            if tmp is not None:
+                                ret[name] = { 'value':tmp().to_representation(value) }
         
         return ret
     
