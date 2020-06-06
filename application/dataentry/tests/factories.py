@@ -60,7 +60,13 @@ class IrfIndiaFactory(DjangoModelFactory):
     which_contact = 'Bus driver'
     contact_paid = False
 
-    how_sure_was_trafficking = 5 
+    how_sure_was_trafficking = 5
+
+class MasterPersonFactory(DjangoModelFactory):
+    class Meta:
+        model = MasterPerson
+    
+    gender = 'm' 
 
 class PersonFactory(DjangoModelFactory):
     class Meta:
@@ -70,8 +76,9 @@ class PersonFactory(DjangoModelFactory):
     age = FuzzyInteger(20, 40)
     phone_contact = str(FuzzyInteger(100000000000, 999999999999).fuzz())
     gender = 'm'
-
-
+    role = 'PVOT'
+    photo = None
+    master_person = factory.SubFactory(MasterPersonFactory)
 
 class VifFactory(DjangoModelFactory):
     class Meta:
@@ -129,9 +136,7 @@ class IntercepteeNoPhotoFactory(DjangoModelFactory):
         model = Interceptee
 
     person = factory.SubFactory(PersonFactory)
-    photo = None
     interception_record = factory.SubFactory(IrfFactory)
-    kind = 'v'
 
 # Photo will cause IDManagement test to fail.  Photo is required for photo_exporter test.
 class IntercepteeIndiaNoPhotoFactory(DjangoModelFactory):
@@ -139,9 +144,7 @@ class IntercepteeIndiaNoPhotoFactory(DjangoModelFactory):
         model = IntercepteeCommon
 
     person = factory.SubFactory(PersonFactory)
-    photo = None
     interception_record = factory.SubFactory(IrfIndiaFactory)
-    kind = 'v'
 
 class SiteSettingsFactory(DjangoModelFactory):
     class Meta:

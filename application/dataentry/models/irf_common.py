@@ -16,6 +16,7 @@ class IrfCommon(BaseForm):
     number_of_traffickers = models.PositiveIntegerField('# of traffickers', null=True, blank=True)
     staff_name = models.CharField('Staff Name:', max_length=255)
     
+    profile = models.CharField(max_length=1024, blank=True)
     profile_children = models.BooleanField('Child(ren)', default=False)
     profile_migrant = models.BooleanField('Migrant', default=False)
     profile_other = models.CharField(max_length=255, blank=True)
@@ -91,9 +92,9 @@ class IrfCommon(BaseForm):
     relatives_organized_travel = models.BooleanField('Relative(s) organized their travel', default=False)
     relatives_paid_expenses = models.BooleanField('Relative(s) paid their travel expenses', default=False)
     
-    industry = models.CharField('Industry', max_length=126, blank=True)
+    industry = models.CharField('Industry', max_length=1024, blank=True)
     
-    where_going_destination = models.CharField('Location:', max_length=126, blank=True)
+    where_going_destination = models.CharField('Location:', max_length=1024, blank=True)
     where_going_doesnt_know = models.BooleanField("Doesn't know where they are going", default=False)  
     where_going_job = models.BooleanField('Job', default=False)
     employment_massage_parlor = models.BooleanField('Massage parlor', default=False)
@@ -401,6 +402,8 @@ class IrfCommon(BaseForm):
     
     call_subcommittee = models.BooleanField('Call Subcommittee Chairperson/Vice-Chairperson/Secretary', default=False)
     call_project_manager = models.BooleanField('Call Project Manager to confirm intercept', default=False)
+    
+    rescue = models.BooleanField('Rescue', default=False)
 
     has_signature = models.BooleanField('Scanned form has signature?', default=False)
     
@@ -421,6 +424,8 @@ class IrfCommon(BaseForm):
     logbook_second_verification = models.CharField(max_length=127, blank=True)
     logbook_second_reason = models.TextField('Second Reason', blank=True)
     logbook_second_verification_date = models.DateField(null=True)
+    
+    logbook_champion_verification = models.BooleanField('Champion verification', default=False)
     
     logbook_back_corrected = models.TextField('Back Corrected', blank=True)
     
@@ -451,22 +456,9 @@ class IrfCommon(BaseForm):
         ]
     
 class IntercepteeCommon(BaseCard):
-    KIND_CHOICES = [
-        ('v', 'Victim'),
-        ('t', 'Trafficker'),
-        ('u', 'Unknown'),
-    ]
     interception_record = models.ForeignKey(IrfCommon, related_name='interceptees', on_delete=models.CASCADE)
-    photo = models.ImageField(db_index=True, upload_to='interceptee_photos', default='', blank=True)
-    photo_thumbnail = ImageSpecField(source='photo',
-                                     processors=[ResizeToFill(200, 200)],
-                                     format='JPEG',
-                                     options={'quality': 80})
-    anonymized_photo = models.CharField(max_length=126, null=True)
-    kind = models.CharField(max_length=4, choices=KIND_CHOICES)
     relation_to = models.CharField(max_length=255, blank=True)
     person = models.ForeignKey(Person, null=True, blank=True)
-    trafficker_taken_into_custody = models.BooleanField('taken_into_custody', default=False)
     not_physically_present = models.BooleanField('Not physically present', default=False)
 
     def address1_as_string(self):

@@ -100,7 +100,7 @@ class BorderStationSerializer(serializers.ModelSerializer):
     def get_number_of_interceptions(self, obj):
         interceptee_class = self.get_interceptee_class(obj)
         if interceptee_class is not None:
-            return interceptee_class.objects.filter(interception_record__station=obj, kind='v').count()
+            return interceptee_class.objects.filter(interception_record__station=obj, person__role='PVOT').count()
         else:
             return 0
 
@@ -110,7 +110,7 @@ class BorderStationSerializer(serializers.ModelSerializer):
     def get_ytd_interceptions(self, obj):
         interceptee_class = self.get_interceptee_class(obj)
         if interceptee_class is not None:
-            return interceptee_class.objects.filter(interception_record__station=obj, kind='v',
+            return interceptee_class.objects.filter(interception_record__station=obj, person__role='PVOT',
                                                     interception_record__date_time_entered_into_system__year=datetime.date.today().year).count()
         else:
             return 0
@@ -303,6 +303,7 @@ class IDManagementSerializer(serializers.ModelSerializer):
     form_id = serializers.CharField(source='get_form_id', read_only=True)
     address1 = Address1Serializer(read_only=True)
     address2 = Address2Serializer(read_only=True)
+    alias_group = serializers.CharField(source='get_master_person_id', read_only=True)
 
     class Meta:
         model = Person
@@ -352,10 +353,8 @@ class IntercepteeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Interceptee
         fields = [
-            'photo',
             'id',
             'interception_record',
-            'kind',
             'relation_to',
             'person',
         ]

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from dataentry.models import InterceptionRecord, VictimInterview, Address1, Address2, BorderStation, AliasGroup, Country, Person, InterceptionAlert, SiteSettings, Interceptee
+from dataentry.models import InterceptionRecord, VictimInterview, Address1, Address2, BorderStation, Country, Person, InterceptionAlert, SiteSettings, Interceptee
 
 class SiteSettingsAdmin(admin.ModelAdmin):
     model = SiteSettings
@@ -41,7 +41,6 @@ admin.site.register(Address1, Address1Admin)
 admin.site.register(BorderStation, BorderStationAdmin)
 admin.site.register(Address2, Address2Admin)
 
-admin.site.register(AliasGroup)
 admin.site.register(Interceptee)
 admin.site.register(Country)
 admin.site.register(Person)

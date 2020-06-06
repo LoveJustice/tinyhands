@@ -10,7 +10,7 @@ from dataentry.models.border_station import BorderStation
 from dataentry.models.form import Answer, Category, Form, FormCategory, Question, QuestionLayout
 from dataentry.models.person import Person
 from dataentry.models.person_identification import PersonIdentification
-from dataentry.models.alias_group import AliasGroup
+from dataentry.models.master_person import MasterPerson
 from .form_data import FormData, CardData, PersonContainer
 from .validate_form import ValidateForm
 
@@ -525,61 +525,21 @@ class ResponseMultiReferenceSerializer(serializers.Serializer):
         value = self.validated_data.get('value')
         form_data.set_multi_reference(value['question'], value['object_list'])          
     
-class ResponsePersonSerializer(serializers.Serializer):     
+class ResponsePersonSerializer(serializers.Serializer):
     def to_representation(self, instance):
+        map_type = {'PositiveIntegerField':'IntegerField','TextField':'CharField'}
+        map_name = {'full_name':'name'}
         question = self.context['question']
         if mask_private in self.context and self.context[mask_private] == True and question.params is not None:
             private_data = True
         else:
             private_data = False
         ret = super().to_representation(instance)
+        
         if instance is not None:
             ret['storage_id'] = serializers.IntegerField().to_representation(instance.id)
-            if private_data and is_private_value(question, 'name'):
-                ret['name'] = None
-            else:
-                tmp = ResponseStringSerializer(instance.full_name, context=self.context)
-                ret['name'] = tmp.data
-            if private_data and is_private_value(question, 'address1'):
-                ret['address1'] = None
-            else:
-                tmp = ResponseAddressSerializer(instance.address1, context=self.context)
-                ret['address1'] = tmp.data
-            if private_data and is_private_value(question, 'address2'):
-                ret['address2'] = None
-            else:
-                tmp = ResponseAddressSerializer(instance.address2, context=self.context)
-                ret['address2'] = tmp.data
-            if private_data and is_private_value(question, 'address'):
-                ret['address'] = None
-            else:
-                ret['address'] = ResponseJsonSerializer().to_representation(instance.address)
-            if private_data and is_private_value(question, 'latitude'):
-                ret['latitude'] = {'value':None}
-            elif instance.latitude is None:
-                ret['latitude'] = {'value':None}
-            else:
-                tmp =  ResponseFloatSerializer(instance.latitude, context=self.context)
-                ret['latitude'] = tmp.data
-            if private_data and is_private_value(question, 'longitude'):
-                ret['longitude'] = {'value':None}
-            elif instance.longitude is None:
-                ret['longitude'] = {'value':None}
-            else:
-                tmp =  ResponseFloatSerializer(instance.longitude, context=self.context)
-                ret['longitude'] = tmp.data
-            if private_data and is_private_value(question, 'address_notes'):
-                ret['address_notes'] = None
-            else:
-                tmp =  ResponseStringSerializer(instance.address_notes, context=self.context)
-                ret['address_notes'] = tmp.data
-            if private_data and is_private_value(question, 'phone'):
-                ret['phone'] = None
-            else:
-                tmp = ResponseStringSerializer(instance.phone_contact, context=self.context)
-                ret['phone'] = tmp.data
             if private_data and is_private_value(question, 'gender'):
-                ret['gender'] = None
+                ret['gender'] = {'value':None }
             else:
                 if instance.gender == 'F':
                     gender = 'Female'
@@ -589,27 +549,20 @@ class ResponsePersonSerializer(serializers.Serializer):
                     gender = 'Unknown'    
                 tmp = ResponseStringSerializer(gender, context=self.context)
                 ret['gender'] = tmp.data
-            if private_data and is_private_value(question, 'age'):
-                ret['age'] = None
+            if private_data and is_private_value(question, 'arrested'):
+                ret['arrested'] = {'value':None }
             else:
-                tmp = ResponseIntegerSerializer(instance.age, context=self.context)
-                
-                ret['age'] = tmp.data
+                tmp = ResponseStringSerializer(instance.arrested, context=self.context)
+                ret['arrested'] = tmp.data
+            if private_data and is_private_value(question, 'phone'):
+                ret['phone'] = {'value':None }
+            else:
+                tmp = ResponseStringSerializer(instance.phone_contact, context=self.context)
+                ret['phone'] = tmp.data
             if private_data and is_private_value(question, 'estimated_current_age'):
-                ret['estimated_current_age'] = None
+                ret['estimated_current_age'] = {'value':None }
             else:
-               ret['estimated_current_age'] = instance.estimate_current_age(datetime.now().date())
-            if private_data and is_private_value(question, 'birthdate'):
-                ret['birthdate'] = None
-            else:
-                tmp = ResponseDateSerializer(instance.birthdate, context=self.context)
-                ret['birthdate'] = tmp.data
-            if private_data and is_private_value(question, 'nationality'):
-                ret['nationality'] = None
-            else:
-                tmp = ResponseStringSerializer(instance.nationality, context=self.context)
-                ret['nationality'] = tmp.data
-            
+               ret['estimated_current_age'] = { 'value':instance.estimate_current_age(datetime.now().date())}
             person_identifiers = PersonIdentification.objects.filter(person=instance)
             identifier_data = {}
             for person_identifier in person_identifiers:
@@ -620,52 +573,52 @@ class ResponsePersonSerializer(serializers.Serializer):
                 ret['identifiers'] = []
             else:
                 ret['identifiers'] = identifier_data
-            
+                
+            for field in Person._meta.fields:
+                name = field.name
+                if name in map_name:
+                    name = map_name[name]
+                if field.name not in ['id','gender','address1','address2','arrested','phone_contact','master_person', 'master_set_by']:
+                    if private_data and is_private_value(question, field.name):
+                        ret[name] = {'value':None }
+                    else:
+                        value = getattr(instance, field.name, None)
+                        if value is None:
+                            ret[name] = {'value':None }
+                        else:
+                            the_type = field.get_internal_type()
+                            if the_type in map_type:
+                                the_type = map_type[the_type]
+                            tmp = getattr(serializers, the_type, None)
+                            if tmp is not None:
+                                ret[name] = { 'value':tmp().to_representation(value) }
+        
         return ret
     
     def to_internal_value(self, data):
         ret = {}
-        storage_id = data.get('storage_id')
-        if storage_id is not None:
-            ret['storage_id'] = int(storage_id)
-        
-        tmp = data.get('name')
-        if tmp is not None:  
-            ret['name'] = tmp.get('value')
-        
-        address1 = data.get('address1')
-        self.address1_serializer = ResponseAddress1Serializer(data=address1, context=dict(self.context))
-        self.address1_serializer.is_valid()
-        address2 = data.get('address2')
-        self.address2_serializer = ResponseAddress2Serializer(data=address2, context=dict(self.context))
-        self.address2_serializer.is_valid()
+
+        tmp = data.get('storage_id')
+        if tmp is not None:
+            ret['storage_id'] = int(tmp)
         
         tmp = data.get('address')
-        self.address_serializer = ResponseJsonSerializer(data=tmp, context=dict(self.context))
-        self.address_serializer.is_valid()
-       
-        tmp = data.get('latitude')
         if tmp is not None:
-            ret['latitude'] = tmp.get('value')
-            
-        tmp = data.get('longitude')
-        if tmp is not None:
-            ret['longitude'] = tmp.get('value')
-            
-        tmp = data.get('address_notes')
-        if tmp is not None:
-            if tmp.get('value') is None:
-                ret['address_notes'] = ''
-            else:
-                ret['address_notes'] = tmp.get('value')
+            self.address_serializer = ResponseJsonSerializer(data=tmp.get('value'), context=dict(self.context))
+            self.address_serializer.is_valid()
         else:
-            ret['address_notes'] = ''
-            
-        tmp = data.get('phone')
-        if tmp is not None and tmp.get('value') is not None:
-            ret['phone'] = tmp.get('value')
+            self.address_serializer = None
+        
+        tmp = data.get('photo')
+        question = self.context['question']
+        if question.params is not None and 'subdirectory' in question.params:
+            subdirectory = question.params['subdirectory']
         else:
-            ret['phone'] = ''
+            subdirectory = ''
+        if isinstance(tmp,dict) and 'value' in tmp and isinstance(tmp['value'],dict) and 'name' in tmp['value']:
+            ret['photo'] = subdirectory + tmp['value']['name']
+        else:  
+            ret['photo'] = None
         
         tmp = data.get('gender')
         if tmp is not None:
@@ -677,26 +630,6 @@ class ResponsePersonSerializer(serializers.Serializer):
             else:
                 ret['gender'] = 'U'
         
-        tmp = data.get('age')
-        if tmp is not None:
-            age = tmp.get('value')
-            if age is not None:
-                ret['age'] = int(age)
-                
-        tmp = data.get('birthdate')
-        if tmp is not None:        
-            birthdate = tmp.get('value')
-            if birthdate is not None and birthdate.strip() != '':
-                ret['birthdate'] = parser.parse(birthdate).date() 
-       
-        tmp = data.get('nationality')
-        if tmp is not None and tmp.get('value') is not None:
-            ret['nationality'] = tmp.get('value')
-        else:
-            ret['nationality'] = ''
-        
-        ret['link_id'] = data.get('link_id')
-        
         self.identifer_serializers = []
         tmp = data.get('identifiers')
         if tmp is not None:
@@ -704,6 +637,39 @@ class ResponsePersonSerializer(serializers.Serializer):
                 serializer = ResponseIdentificationSerializer(data=tmp[identifier_type], context=dict(self.context))
                 serializer.is_valid()
                 self.identifer_serializers.append(serializer)
+        
+        # null allowed
+        for field in ['name', 'latitude', 'longitude','appearance','arrested','case_filed_against',
+                      'education', 'guardian_name','guardian_phone','guardian_relationship',
+                      'interviewer_believes', 'pv_believes', 'occupation', 'role', 'social_media']:
+            tmp = data.get(field)
+            if tmp is not None and tmp.get('value') is not None:
+                ret[field] = tmp.get('value')
+        
+        # null not allowed
+        for field in ['address_notes', 'phone', 'nationality']:
+            tmp = data.get(field)
+            if tmp is not None and tmp.get('value') is not None:
+                ret[field] = tmp.get('value')
+            else:
+                ret[field] = ''
+        
+        # Integer
+        for field in ['age']:
+            tmp = data.get(field)
+            if tmp is not None and tmp.get('value') is not None:
+                ret[field] = int(tmp.get('value'))
+                
+        # Date
+        for field in ['birthdate']:
+            tmp = data.get(field)
+            value = tmp.get('value')
+            if value is not None and value.strip() != '':
+                ret[field] = parser.parse(value).date()
+        
+        tmp = data.get('link_id')
+        if tmp is not None:
+            ret['link_id'] = tmp
         
         return ret
     
@@ -717,91 +683,64 @@ class ResponsePersonSerializer(serializers.Serializer):
                 match = False
         
         return match
-            
-
+    
     def get_or_create(self):
         question = self.context['question']
-        mode = self.context.get('mode')
         form_base_date = self.context.get('form_date_holder').get('form_date')
         if form_base_date is None:
             form_base_date = datetime.now().date()
         storage_id = self.validated_data.get('storage_id')
-        name = self.validated_data.get('name')
-        address1 = self.address1_serializer.get_or_create()
-        self.address2_serializer.context['address1'] = address1
-        address2 = self.address2_serializer.get_or_create()
-        address = self.address_serializer.get_or_create()
-        latitude = self.validated_data.get('latitude')
-        longitude = self.validated_data.get('longitude')
-        address_notes = self.validated_data.get('address_notes')
-        phone = self.validated_data.get('phone')
-        gender = self.validated_data.get('gender')
-        age = self.validated_data.get('age')
-        birthdate = self.validated_data.get('birthdate')
-        nationality = self.validated_data.get('nationality')
+        if storage_id is None:
+            person = Person()
+            person_identifiers = []
+            master_person = None
+        else:
+            person = Person.objects.get(id=storage_id)
+            person_identifiers = PersonIdentification.objects.filter(person=person)
+            master_person = person.master_person
+        
+        person.full_name = self.validated_data.get('name')
+        if self.address_serializer is None:
+            person.address = None
+        else:
+            person.address = self.address_serializer.get_or_create()
+        if self.validated_data.get('photo') is not None:
+            person.photo = self.validated_data.get('photo')
+        if self.validated_data.get('phone') is not None:
+            person.phone_contact = self.validated_data.get('phone')
+        
+        for element in ['latitude','longitude','address_notes','gender','age','birthdate','nationality',
+                        'appearance','arrested','case_filed_against','education','guardian_name','guardian_phone',
+                        'guardian_relationship','interviewer_believes','occupation','pv_believes','role',
+                        'social_media']:
+            tmp = self.validated_data.get(element)
+            setattr(person, element, tmp)
         
         new_identifiers = []
         for identifier_serializer in self.identifer_serializers:
             new_identifiers.append(identifier_serializer.get_or_create())
-            
         
-        update_data = False
-        if storage_id is None:
-            person = Person()
-            update_data = True
-            person_identifiers = []
-        else:
-            person = Person.objects.get(id=storage_id)
-            person_identifiers = PersonIdentification.objects.filter(person=person)
-            id_match = True
-            if len(person_identifiers) != len(new_identifiers):
-                id_match = False
-            else:
-                for new_id in new_identifiers:
-                    if new_id.id is None:
-                        id_match = False
-            if (
-                id_match != True or
-                person.full_name != name or
-                not self.match_address(person.address1, address1) or
-                not self.match_address(person.address2, address2) or
-                address != person.address or
-                latitude != person.latitude or
-                longitude != person.longitude or
-                address_notes != person.address_notes or
-                person.phone_contact != phone or
-                person.gender != gender or
-                person.age != age or
-                person.birthdate != birthdate or
-                person.nationality != nationality):
-                update_data = True
-        
-        if update_data:
-            person.full_name = name
-            person.address1 = address1
-            person.address2 = address2
-            person.address = address
-            person.latitude = latitude
-            person.longitude = longitude
-            person.address_notes = address_notes
-            person.phone_contact = phone
-            person.gender = gender
-            person.age = age
-            person.birthdate = birthdate
-            person.nationality = nationality
-            person.set_estimated_birthdate(form_base_date)
+        person.set_estimated_birthdate(form_base_date)
         
         link_id = self.validated_data.get('link_id')
         if link_id is not None:
             link_person = Person.objects.get(id=link_id)
-            if link_person.alias_group is not None:
-                person.alias_group = link_person.alias_group
+            if link_person.master_person is not None:
+               master_person = link_person.master_person
+        
+        if master_person is None:
+            master_person = MasterPerson()
+        
+        master_person.update(person)
+        master_person.save()
+        person.master_person = master_person
+        if storage_id is None:
+            person.master_set_by = self.context.get('request.user')
+            person.master_set_date = datetime.now().date()
+            if link_id is not None:
+                person.master_set_notes = 'Linked from IRF person'
             else:
-                alias_group = AliasGroup()
-                alias_group.save()
-                link_person.alias_group = alias_group
-                person.alias_group = alias_group
-                link_person.save()
+                person.master_set_notes = 'Initial person creation'
         
         remove_identifiers = []
         for person_identifier in person_identifiers:
@@ -817,7 +756,7 @@ class ResponsePersonSerializer(serializers.Serializer):
         form_data = self.context['form_data']
         form_data.person_containers.append(PersonContainer(person, new_identifiers, remove_identifiers, question))
         
-        return person 
+        return person
         
 class QuestionResponseSerializer(serializers.Serializer):    
     answer_type_to_serializer = {

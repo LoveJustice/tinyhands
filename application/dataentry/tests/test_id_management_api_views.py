@@ -18,7 +18,6 @@ class IDManagementTest(APITestCase):
         self.pb_list = PersonBoxIndiaFactory.create_batch(2)
         self.irf_list = IrfIndiaFactory.create_batch(2)
         self.cif_list = CifIndiaFactory.create_batch(2)
-        self.alias_list = AliasGroupFactory.create_batch(1)
 
         self.interceptee_list[0].person = self.person_list[0]
         self.pb_list[0].person = self.person_list[0]
@@ -28,8 +27,7 @@ class IDManagementTest(APITestCase):
         self.interceptee_list[2].person = self.person_list[3]
         self.cif_list[1].main_pv = self.person_list[4]
 
-        self.person_list[3].alias_group = self.alias_list[0]
-        self.person_list[4].alias_group = self.alias_list[0]
+        self.person_list[3].master_person = self.person_list[4].master_person
 
         self.person_list[3].phone_contact = self.phone_match + '01'
         self.person_list[4].phone_contact = self.phone_match + '02'
@@ -121,13 +119,11 @@ class IDManagementTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         person1 = Person.objects.get(id=self.person_list[1].id)
         person2 = Person.objects.get(id=self.person_list[2].id)
-        self.assertFalse(person1.alias_group is None, "person1 alias group is None")
-        self.assertFalse(person2.alias_group is None, "person2 alias group is None")
-        self.assertEqual(person1.alias_group.id, person2.alias_group.id)
+        self.assertEqual(person1.master_person.id, person2.master_person.id)
 
     def test_alias_members(self):
         url = reverse('IDManagementGroup')
-        data = {'group_id': self.alias_list[0].id}
+        data = {'group_id': self.person_list[3].master_person.id}
 
         response = self.client.get(url, data)
 
@@ -142,5 +138,4 @@ class IDManagementTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         person1 = Person.objects.get(id=self.person_list[3].id)
         person2 = Person.objects.get(id=self.person_list[4].id)
-        self.assertTrue(person1.alias_group is None, "person1 alias group is not None")
-        self.assertTrue(person2.alias_group is None, "person2 alias group is not None")
+        self.assertTrue(person1.master_person != person2.master_person, "master persons still match after remove")

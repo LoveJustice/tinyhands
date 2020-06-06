@@ -50,7 +50,7 @@ class IrfListSerializer(serializers.Serializer):
             code = 'SE'
         elif value.startswith('High Risk'):
             code='HR'
-        elif value.startswith('Should Not have Intercepted'):
+        elif value.startswith('Should not count as an Intercept'):
             code = 'SNHI'
         
         return code
@@ -197,7 +197,7 @@ class IrfFormViewSet(BaseFormViewSet):
             records = queryset.filter(date_time_entered_into_system__year=date.year, date_time_entered_into_system__month=date.month, date_time_entered_into_system__day=date.day)
             for record in records:
                 station_code = record.irf_number[:3]
-                victims = record.interceptees.filter(kind='v')
+                victims = record.interceptees.filter(person__role='PVOT')
                 count = len(victims)
                 if station_code not in list(interceptions.keys()):
                     interceptions[station_code] = 0
@@ -209,7 +209,7 @@ class IrfFormViewSet(BaseFormViewSet):
         ytd_records = queryset.filter(date_time_entered_into_system__year=today.year)
         ytd_count = 0
         for record in ytd_records:
-            victims = record.interceptees.filter(kind='v')
+            victims = record.interceptees.filter(person__role='PVOT')
             ytd_count += len(victims)
         results['ytd'] = ytd_count
         

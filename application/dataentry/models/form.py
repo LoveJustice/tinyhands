@@ -108,21 +108,14 @@ class Question(models.Model):
     def export_header_Person(self, prefix):
         if self.export_name is not None and  self.export_name != '':
             prefix = prefix + self.export_name + ' '
-    
-        export_header_list = [
-            prefix + 'name', 
-            prefix + 'gender',
-            prefix + 'age',
-            prefix + 'address',
-            prefix + 'latitude',
-            prefix + 'longitude',
-            prefix + 'address notes',
-            prefix + 'phone',
-            prefix + 'birthdate',
-            prefix + 'passport',
-            prefix + 'nationality',
-            ]
+            
+        if self.export_params is None or self.export_params['export_parts'] is None:
+            return []
         
+        export_header_list = []
+        for part in self.export_params['export_parts']:
+            export_header_list.append(prefix + part['label'])
+
         return export_header_list
     
     def export_header_ArcGisAddress(self, prefix):
@@ -173,51 +166,31 @@ class Question(models.Model):
         return formatted_answer_list
     
     def format_Person(self, answer, station):
+        if self.export_params is None or self.export_params['export_parts'] is None:
+            return []
+        formatted_answer_list = [];
         if answer is None:
-            formatted_answer_list = ['','','','','','','','','']
+            for part in self.export_params['export_parts']:
+                formatted_answer_list.append('')
         else:
-            formatted_answer_list = []
-            formatted_answer_list.append(getattr(answer, 'full_name', ''))
-            tmp = getattr(answer, 'gender', 'Unknown')
-            if tmp.upper() == 'F':
-                tmp = 'Female'
-            elif tmp.upper() == 'M':
-                tmp = 'Male'
-            else:
-                tmp = 'Unknown'
-            formatted_answer_list.append(tmp)
-            formatted_answer_list.append(getattr(answer, 'age',''))
-            tmp = getattr(answer, 'address', None)
-            if tmp is None:
-                formatted_answer_list.append('')
-            else:
-                if 'address' in tmp:
-                    formatted_answer_list.append(tmp['address'])
-                else:
-                    formatted_answer_list.append('')
-            tmp = getattr(answer, 'latitude', None)
-            if tmp is None:
-                formatted_answer_list.append('')
-            else:
-                formatted_answer_list.append(tmp)
-            tmp = getattr(answer, 'longitude', None)
-            if tmp is None:
-                formatted_answer_list.append('')
-            else:
-                formatted_answer_list.append(tmp)
-            tmp = getattr(answer, 'address_notes', None)
-            if tmp is None:
-                formatted_answer_list.append('')
-            else:
-                formatted_answer_list.append(tmp)
-            formatted_answer_list.append(getattr(answer, 'phone_contact', ''))
-            tmp = getattr(answer, 'birthdate', None)
-            if tmp is None:
-                formatted_answer_list.append('')
-            else:
-                formatted_answer_list.append(str(tmp))
-            formatted_answer_list.append(getattr(answer, 'passport',''))
-            formatted_answer_list.append(getattr(answer, 'nationality',''))
+            for part in self.export_params['export_parts']:
+                value = getattr(answer, part['field'], '')
+                if part['field'] == 'gender':
+                    if value == 'F':
+                        value = 'Female'
+                    elif value == 'M':
+                        value = 'Male'
+                    else:
+                        value = 'Unknown'
+                elif part['field'] == 'address' and value is not None and value != '':
+                    value = value['address']
+                elif part['field'] == 'ID':
+                    value = ''
+                    ids = answer.personidentification_set.all()
+                    for id in ids:
+                        value += id.type + ':' + id.number + ','
+               
+                formatted_answer_list.append(value)
         
         return formatted_answer_list
     
