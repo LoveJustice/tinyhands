@@ -9,8 +9,9 @@ from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from rest_api.authentication import HasPermission
 from django.core.files.storage import default_storage
 from django.db import transaction
+from django.db.models import Q
 
-from dataentry.models import MasterPerson, PersonBoxCommon, PersonPhone, PersonAddress, PersonSocialMedia, PersonDocument
+from dataentry.models import MasterPerson, PersonBoxCommon, PersonPhone, PersonAddress, PersonSocialMedia, PersonDocument, PersonMatch
 from dataentry.serializers import MasterPersonSerializer, PersonAddressSerializer, PersonPhoneSerializer, PersonSocialMediaSerializer, PersonDocumentSerializer, PersonInMasterSerializer
 
 class MasterPersonViewSet(viewsets.ModelViewSet):
@@ -81,7 +82,7 @@ class MasterPersonViewSet(viewsets.ModelViewSet):
             ret = None
             rtn_status = None
             if serializer.is_valid():
-                updated_master_person = serializer.save()
+                serializer.save()
                 
                 if ret is None:
                     ret = self.update_sub_model_list(PersonAddressSerializer, master_person.personaddress_set.all(), request_json.get('personaddress_set'), True)
@@ -90,7 +91,7 @@ class MasterPersonViewSet(viewsets.ModelViewSet):
                 if ret is None:
                     self.update_sub_model_list(PersonSocialMediaSerializer, master_person.personsocialmedia_set.all(), request_json.get('personsocialmedia_set'), True)
                 if ret is None:
-                    self.update_sub_model_list(PersonDocumentSerializer, master_person.persondocument_set.all(), request_json.get('persondocument_set'), True, allow_update=False)
+                    self.update_sub_model_list(PersonDocumentSerializer, master_person.persondocument_set.all(), request_json.get('persondocument_set'), True)
                 if ret is None:
                     self.update_sub_model_list(PersonInMasterSerializer, master_person.person_set.all(), request_json.get('person_set'), False)
                 
@@ -98,24 +99,27 @@ class MasterPersonViewSet(viewsets.ModelViewSet):
                     transaction.rollback()
                     rtn_status = status.HTTP_400_BAD_REQUEST
                 else:
-                    serializer2 = MasterPersonSerializer(updated_master_person)
-                    ret = serializer2.data
                     transaction.commit()
+                    transaction.set_autocommit(True)
+                    updated_master_person = MasterPerson.objects.get(id=pk)
+                    serializer2 = self.serializer_class(updated_master_person, context={'request': request})
+                    ret = serializer2.data
                     rtn_status = status.HTTP_200_OK
             else:
                 transaction.rollback()
+                transaction.set_autocommit(True)
                 ret = serializer.errors
                 rtn_status = status.HTTP_400_BAD_REQUEST
         
         except:
             transaction.rollback()
+            transaction.set_autocommit(True)
             ret = {
                 'errors': 'Internal Error:' + traceback.format_exc(),
                 'warnings':[]
                 }
             rtn_status = status.HTTP_500_INTERNAL_SERVER_ERROR
         
-        transaction.set_autocommit(True)
         return Response (ret, status=rtn_status)
     
     def retrieve_type(self, request, type_name):
@@ -188,7 +192,7 @@ class MasterPersonViewSet(viewsets.ModelViewSet):
                     setattr(new_document, field, getattr(document, field))
                 new_document.save()
             
-            serializer = MasterPersonSerializer(master)
+            serializer = self.serializer_class(master, context={'request': request})
             ret = serializer.data
             transaction.commit()
             rtn_status = status.HTTP_200_OK
@@ -203,6 +207,22 @@ class MasterPersonViewSet(viewsets.ModelViewSet):
         return Response (ret, status=rtn_status)
             
 
-    def retrieve_matches(self, request, id):
-        pass
+    def retrieve_matches(self, request, id, type_id):
+        matches = []
+        results = PersonMatch.objects.filter(Q(master1__id=id) | Q(master2__id=id), match_type__id=type_id)
+        for result in results:
+            match = {
+                'match_type':type_id,
+                'match_date':result.match_date,
+                'notes':result.notes,
+                }
+            if result.master1.id == int(id):
+                serializer = self.serializer_class(result.master2, context={'request': request})
+            else:
+                serializer = self.serializer_class(result.master1, context={'request': request})
+            
+            match['master_person'] = serializer.data
+            matches.append(match)
+        
+        return Response (matches)
         

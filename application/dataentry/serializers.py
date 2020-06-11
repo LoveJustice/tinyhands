@@ -489,12 +489,19 @@ class PersonDocumentSerializer(serializers.ModelSerializer):
         obj.master_person = validated_data.get('master_person')
         obj.file_location = validated_data.get('file_location')
         obj.document_type = validated_data.get('document_type')
+        print('document create', obj.file_location, obj.document_type)
         obj.save()
         return obj
     
     def update(self, instance, validated_data):
-        instance.file_location = validated_data.get('file_location', instance.file_location)
+        tmp = validated_data.get('file_location', instance.file_location)
+        if tmp is not None:
+            parts = tmp.split('/')
+            tmp = 'person_documents/' + parts[len(parts)-1]
+
+        instance.file_location = tmp
         instance.document_type = validated_data.get('document_type', instance.document_type)
+        print('document update', instance.file_location, instance.document_type)
         instance.save()
         return instance
 
@@ -508,6 +515,7 @@ class MasterPersonSerializer(serializers.ModelSerializer):
             'birthdate',
             'estimated_birthdate',
             'nationality',
+            'appearance',
             'notes',
             'personaddress_set',
             'personphone_set',
