@@ -2,6 +2,8 @@ from django.db import models
 from datetime import date
 from django.contrib.postgres.fields import JSONField
 
+from accounts.models import Account
+
 class MasterPerson (models.Model):
     GENDER_CHOICES = [('M', 'm'), ('F', 'f')]
 
@@ -12,6 +14,7 @@ class MasterPerson (models.Model):
     nationality = models.CharField(max_length=127, blank=True, default='')
     appearance = models.TextField('Appearance', blank=True)
     notes = models.TextField('Notes', blank=True)
+    active = models.BooleanField(default=True)
 
     # invoked when new person is linked to the master person
     def update(self, person):
@@ -88,3 +91,5 @@ class PersonMatch (models.Model):
     master2 = models.ForeignKey(MasterPerson, related_name='master2')
     notes = models.TextField('Notes', blank=True)
     match_date = models.DateField(auto_now=True)
+    matched_by = models.ForeignKey(Account, null=True, on_delete=models.SET_NULL)
+    

@@ -489,7 +489,6 @@ class PersonDocumentSerializer(serializers.ModelSerializer):
         obj.master_person = validated_data.get('master_person')
         obj.file_location = validated_data.get('file_location')
         obj.document_type = validated_data.get('document_type')
-        print('document create', obj.file_location, obj.document_type)
         obj.save()
         return obj
     
@@ -501,7 +500,6 @@ class PersonDocumentSerializer(serializers.ModelSerializer):
 
         instance.file_location = tmp
         instance.document_type = validated_data.get('document_type', instance.document_type)
-        print('document update', instance.file_location, instance.document_type)
         instance.save()
         return instance
 

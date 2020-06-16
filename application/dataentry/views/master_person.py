@@ -1,5 +1,7 @@
 import json
 import traceback
+from datetime import date
+from datetime import datetime
 
 from rest_framework import filters as fs
 from rest_framework import viewsets, status
@@ -11,7 +13,8 @@ from django.core.files.storage import default_storage
 from django.db import transaction
 from django.db.models import Q
 
-from dataentry.models import MasterPerson, PersonBoxCommon, PersonPhone, PersonAddress, PersonSocialMedia, PersonDocument, PersonMatch
+from dataentry.models import MasterPerson, PersonBoxCommon, PersonPhone, PersonAddress, PersonSocialMedia, PersonDocument, PersonMatch, MatchType
+from dataentry.models import MatchHistory, MatchAction
 from dataentry.serializers import MasterPersonSerializer, PersonAddressSerializer, PersonPhoneSerializer, PersonSocialMediaSerializer, PersonDocumentSerializer, PersonInMasterSerializer
 
 class MasterPersonViewSet(viewsets.ModelViewSet):
@@ -192,6 +195,36 @@ class MasterPersonViewSet(viewsets.ModelViewSet):
                     setattr(new_document, field, getattr(document, field))
                 new_document.save()
             
+            match_history = MatchHistory()
+            match_history.master1 = master
+            match_history.master2 = None
+            match_history.person = person
+            match_history.notes = notes 
+            match_history.match_type = None
+            match_history.action = MatchAction.objects.get(name='remove from master person')
+            match_history.timstamp = datetime.now()
+            match_history.save()
+            
+            match_history = MatchHistory()
+            match_history.master1 = master
+            match_history.master2 = None
+            match_history.person = None
+            match_history.notes = notes 
+            match_history.match_type = None
+            match_history.action = MatchAction.objects.get(name='create master person')
+            match_history.timstamp = datetime.now()
+            match_history.save()
+            
+            match_history = MatchHistory()
+            match_history.master1 = new_master
+            match_history.master2 = None
+            match_history.person = person
+            match_history.notes = notes 
+            match_history.match_type = None
+            match_history.action = MatchAction.objects.get(name='add to master person')
+            match_history.timstamp = datetime.now()
+            match_history.save()
+            
             serializer = self.serializer_class(master, context={'request': request})
             ret = serializer.data
             transaction.commit()
@@ -212,8 +245,10 @@ class MasterPersonViewSet(viewsets.ModelViewSet):
         results = PersonMatch.objects.filter(Q(master1__id=id) | Q(master2__id=id), match_type__id=type_id)
         for result in results:
             match = {
+                'id':result.id,
                 'match_type':type_id,
                 'match_date':result.match_date,
+                'matched_by':result.matched_by.get_full_name(),
                 'notes':result.notes,
                 }
             if result.master1.id == int(id):
@@ -225,4 +260,133 @@ class MasterPersonViewSet(viewsets.ModelViewSet):
             matches.append(match)
         
         return Response (matches)
+    
+    def update_match(self, request, id):
+        person_match = PersonMatch.objects.get(id=id)
+        tmp = request.data.get('match_type')
+        match_type = MatchType.objects.get(id=tmp)
+        person_match.match_type = match_type
+        person_match.notes = request.data.get('notes','')
+        person_match.match_date = date.today()
+        person_match.master_set_by = request.user
+        person_match.save()
+        
+        match_history = MatchHistory()
+        match_history.master1 = person_match.master1
+        match_history.master2 = person_match.master2
+        match_history.person = None
+        match_history.notes = request.data.get('notes','')
+        match_history.match_type = match_type
+        match_history.action = MatchAction.objects.get(name='update match')
+        match_history.timstamp = datetime.now()
+        match_history.save()
+        return Response({}, status.HTTP_200_OK)
+    
+    def merge_master_persons(self, request, id1, id2):
+        master1 = MasterPerson.objects.get(id=id1)
+        master2 = MasterPerson.objects.get(id=id2)
+        
+        transaction.set_autocommit(False)
+        try:
+            master1.full_name = request.data['full_name']
+            master1.birthdate = request.data['birthdate']
+            master1.estimated_birthdate = request.data['estimated_birthdate']
+            master1.gender = request.data['gender']
+            master1.nationality = request.data['nationality']
+            if len(master1.appearance) < 1:
+                master1.appearance = master2.appearance
+            else:
+                master1.appearance = "\n" + master2.appearance
+            if len(master1.notes) < 1:
+                master1.notes = master2.notes
+            else:
+                master1.notes += "\n" + master2.notes
+            master1.save()
+            
+            for address in master2.personaddress_set.all():
+                address.master_person = master1
+                address.save()
+        
+            for phone in master2.personphone_set.all():
+                phone.master_person = master1
+                phone.save()
+            
+            for social in master2.personsocialmedia_set.all():
+                social.master_person = master1
+                social.save()
+            
+            for document in master2.persondocument_set.all():
+                document.master_person = master1
+                document.save()
+            
+            param_notes = request.data['notes']
+            for person in master2.person_set.all():
+                person.master_person = master1
+                person.master_set_notes = param_notes
+                person.master_set_date = date.today()
+                person.master_set_by = request.user
+                person.save()
+                
+                match_history = MatchHistory()
+                match_history.master1 = master2
+                match_history.master2 = None
+                match_history.person = person
+                match_history.notes = param_notes
+                match_history.match_type = None
+                match_history.action = MatchAction.objects.get(name='remove from master person')
+                match_history.timstamp = datetime.now()
+                match_history.save()
+                
+                match_history = MatchHistory()
+                match_history.master1 = master1
+                match_history.master2 = None
+                match_history.person = person
+                match_history.notes = param_notes
+                match_history.match_type = None
+                match_history.action = MatchAction.objects.get(name='add to master person')
+                match_history.timstamp = datetime.now()
+                match_history.save()
+                
+            master2.active = False
+            master2.save()
+            
+            results = PersonMatch.objects.filter(Q(master1=master2) | Q(master2=master2))
+            for match in results:
+                match.delete()
+            
+            match_history = MatchHistory()
+            match_history.master1 = master1
+            match_history.master2 = master2
+            match_history.person = None
+            match_history.notes = param_notes
+            match_history.match_type = None
+            match_history.action = MatchAction.objects.get(name='merge master persons')
+            match_history.timstamp = datetime.now()
+            match_history.save()
+            
+            match_history = MatchHistory()
+            match_history.master1 = master2
+            match_history.master2 = None
+            match_history.person = None
+            match_history.notes = param_notes
+            match_history.match_type = None
+            match_history.action = MatchAction.objects.get(name='deactivate master person')
+            match_history.timstamp = datetime.now()
+            match_history.save()
+            
+            transaction.commit()
+            rtn_status = status.HTTP_200_OK
+            serializer = self.serializer_class(master1, context={'request': request})
+            ret = serializer.data 
+        except:
+            transaction.rollback()
+            ret = {
+                'errors': 'Internal Error:' + traceback.format_exc(),
+                'warnings':[]
+                }
+            rtn_status = status.HTTP_500_INTERNAL_SERVER_ERROR
+        
+        return Response (ret, status=rtn_status)
+        
+        
         
