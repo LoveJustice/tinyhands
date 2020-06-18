@@ -143,4 +143,19 @@ class Migration(migrations.Migration):
         migrations.RunSQL("insert into dataentry_matchaction (name) values('remove from master person') "),
         migrations.RunSQL("insert into dataentry_matchaction (name) values('merge master persons') "),
         migrations.RunSQL("insert into dataentry_matchaction (name) values('deactivate master person') "),
+        
+        migrations.RunSQL(
+            "insert into dataentry_matchhistory (master1_id, notes, action_id, matched_by_id, timestamp) "\
+                "select master_person_id, min(master_set_notes),1,min(master_set_by_id), min(master_set_date) "\
+                "from dataentry_person "\
+                "group by master_person_id"
+            ),
+        migrations.RunSQL(
+            "insert into dataentry_matchhistory (master1_id, person_id, notes, action_id, matched_by_id, timestamp) "\
+                "select master_person_id, id, master_set_notes,2,master_set_by_id, master_set_date "\
+                "from dataentry_person "
+            ),
+        migrations.RunSQL(
+            "insert into dataentry_permission (permission_group, action, min_level)  values ('PERSON_MANAGEMENT','EDIT','GLOBAL')"
+            ),
     ]

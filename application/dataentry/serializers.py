@@ -542,6 +542,7 @@ class IDManagementSerializer(serializers.ModelSerializer):
     address1 = Address1Serializer(read_only=True)
     address2 = Address2Serializer(read_only=True)
     alias_group = serializers.CharField(source='get_master_person_id', read_only=True)
+    master_person = serializers.CharField(source='get_master_person_id', read_only=True)
 
     class Meta:
         model = Person
@@ -555,6 +556,7 @@ class IDManagementSerializer(serializers.ModelSerializer):
             'address2',
             'phone_contact',
             'alias_group',
+            'master_person',
             'aliases',
             'form_type',
             'form_name',

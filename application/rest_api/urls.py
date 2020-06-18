@@ -65,6 +65,7 @@ urlpatterns = [
          url(r'^master-person/remove/(?P<id>\d+)/(?P<person_id>\d+)/$', MasterPersonViewSet.as_view({'put':'remove_person'}), name='MasterPersonRemove'),
          url(r'^master-person/match/(?P<id>\d+)/(?P<type_id>\d+)/$', MasterPersonViewSet.as_view({'get':'retrieve_matches'}), name='MasterPersonMatch'),
          url(r'^master-person/update-match/(?P<id>\d+)/$', MasterPersonViewSet.as_view({'put':'update_match'}), name='MasterPersonUpdateMatch'),
+         url(r'^master-person/create-match/$', MasterPersonViewSet.as_view({'put':'create_match'}), name='MasterPersonCreateMatch'),
          url(r'^master-person/merge/(?P<id1>\d+)/(?P<id2>\d+)/$', MasterPersonViewSet.as_view({'put':'merge_master_persons'}), name='MasterPersonMerge'),
 
         #KnownPersons

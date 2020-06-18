@@ -14,7 +14,7 @@ from django.db import transaction
 from django.db.models import Q
 
 from dataentry.models import MasterPerson, PersonBoxCommon, PersonPhone, PersonAddress, PersonSocialMedia, PersonDocument, PersonMatch, MatchType
-from dataentry.models import MatchHistory, MatchAction
+from dataentry.models import MatchHistory, MatchAction, UserLocationPermission
 from dataentry.serializers import MasterPersonSerializer, PersonAddressSerializer, PersonPhoneSerializer, PersonSocialMediaSerializer, PersonDocumentSerializer, PersonInMasterSerializer
 
 class MasterPersonViewSet(viewsets.ModelViewSet):
@@ -66,6 +66,9 @@ class MasterPersonViewSet(viewsets.ModelViewSet):
     def update(self, request, pk):
         request_string = request.data['main']
         request_json = json.loads(request_string)
+        perm_list = UserLocationPermission.objects.filter(account__id=request.user.id, permission__permission_group='PERSON_MANAGEMENT')
+        if len(perm_list) < 1:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
         
         cnt = 0;
         while 'document[' + str(cnt) + ']' in request.data:
@@ -141,6 +144,10 @@ class MasterPersonViewSet(viewsets.ModelViewSet):
         master = MasterPerson.objects.get(id=id)
         persons = master.person_set.all()
         
+        perm_list = UserLocationPermission.objects.filter(account__id=request.user.id, permission__permission_group='PERSON_MANAGEMENT')
+        if len(perm_list) < 1:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        
         pbs = PersonBoxCommon.objects.filter(person__in=persons)
         for pb in pbs:
             if pb.relation_to_pv is not None and pb.relation_to_pv != '':
@@ -159,12 +166,18 @@ class MasterPersonViewSet(viewsets.ModelViewSet):
         master = MasterPerson.objects.get(id=id)
         person = master.person_set.get(id=person_id)
         
+        perm_list = UserLocationPermission.objects.filter(account__id=request.user.id, permission__permission_group='PERSON_MANAGEMENT')
+        if len(perm_list) < 1:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        
+        notes = request.data.get('notes', '')
         transaction.set_autocommit(False)
         try:
             new_master = MasterPerson()
             new_master.update(person)
             new_master.save()
             person.master_person = new_master
+            person.master_set_notes = notes
             person.save()
             
             for phone in master.personphone_set.all():
@@ -202,6 +215,7 @@ class MasterPersonViewSet(viewsets.ModelViewSet):
             match_history.notes = notes 
             match_history.match_type = None
             match_history.action = MatchAction.objects.get(name='remove from master person')
+            match_history.matched_by = request.user
             match_history.timstamp = datetime.now()
             match_history.save()
             
@@ -212,6 +226,7 @@ class MasterPersonViewSet(viewsets.ModelViewSet):
             match_history.notes = notes 
             match_history.match_type = None
             match_history.action = MatchAction.objects.get(name='create master person')
+            match_history.matched_by = request.user
             match_history.timstamp = datetime.now()
             match_history.save()
             
@@ -222,6 +237,7 @@ class MasterPersonViewSet(viewsets.ModelViewSet):
             match_history.notes = notes 
             match_history.match_type = None
             match_history.action = MatchAction.objects.get(name='add to master person')
+            match_history.matched_by = request.user
             match_history.timstamp = datetime.now()
             match_history.save()
             
@@ -242,15 +258,22 @@ class MasterPersonViewSet(viewsets.ModelViewSet):
 
     def retrieve_matches(self, request, id, type_id):
         matches = []
+        perm_list = UserLocationPermission.objects.filter(account__id=request.user.id, permission__permission_group='PERSON_MANAGEMENT')
+        if len(perm_list) < 1:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        
         results = PersonMatch.objects.filter(Q(master1__id=id) | Q(master2__id=id), match_type__id=type_id)
         for result in results:
             match = {
                 'id':result.id,
                 'match_type':type_id,
                 'match_date':result.match_date,
-                'matched_by':result.matched_by.get_full_name(),
                 'notes':result.notes,
                 }
+            if result.matched_by is None:
+                match['matched_by'] = ''
+            else:
+                match['matched_by'] = result.matched_by.get_full_name()
             if result.master1.id == int(id):
                 serializer = self.serializer_class(result.master2, context={'request': request})
             else:
@@ -262,13 +285,17 @@ class MasterPersonViewSet(viewsets.ModelViewSet):
         return Response (matches)
     
     def update_match(self, request, id):
+        perm_list = UserLocationPermission.objects.filter(account__id=request.user.id, permission__permission_group='PERSON_MANAGEMENT')
+        if len(perm_list) < 1:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        
         person_match = PersonMatch.objects.get(id=id)
         tmp = request.data.get('match_type')
         match_type = MatchType.objects.get(id=tmp)
         person_match.match_type = match_type
         person_match.notes = request.data.get('notes','')
         person_match.match_date = date.today()
-        person_match.master_set_by = request.user
+        person_match.matched_by = request.user
         person_match.save()
         
         match_history = MatchHistory()
@@ -278,11 +305,47 @@ class MasterPersonViewSet(viewsets.ModelViewSet):
         match_history.notes = request.data.get('notes','')
         match_history.match_type = match_type
         match_history.action = MatchAction.objects.get(name='update match')
+        match_history.matched_by = request.user
         match_history.timstamp = datetime.now()
         match_history.save()
         return Response({}, status.HTTP_200_OK)
     
+    def create_match(self, request):
+        perm_list = UserLocationPermission.objects.filter(account__id=request.user.id, permission__permission_group='PERSON_MANAGEMENT')
+        if len(perm_list) < 1:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        
+        person_match = PersonMatch()
+        tmp = request.data.get('match_type')
+        match_type = MatchType.objects.get(id=tmp)
+        tmp = request.data.get('master1')
+        person_match.master1 = MasterPerson.objects.get(id=tmp)
+        tmp = request.data.get('master2')
+        person_match.master2 = MasterPerson.objects.get(id=tmp)
+        person_match.match_type = match_type
+        person_match.notes = request.data.get('notes','')
+        person_match.match_date = date.today()
+        person_match.matched_by = request.user
+        person_match.save()
+        
+        match_history = MatchHistory()
+        match_history.master1 = person_match.master1
+        match_history.master2 = person_match.master2
+        match_history.person = None
+        match_history.notes = request.data.get('notes','')
+        match_history.match_type = match_type
+        match_history.action = MatchAction.objects.get(name='create match')
+        match_history.matched_by = request.user
+        match_history.timstamp = datetime.now()
+        match_history.save()
+        return Response({}, status.HTTP_200_OK)
+        
+    
     def merge_master_persons(self, request, id1, id2):
+        perm_list = UserLocationPermission.objects.filter(account__id=request.user.id, permission__permission_group='PERSON_MANAGEMENT')
+        if len(perm_list) < 1:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        
         master1 = MasterPerson.objects.get(id=id1)
         master2 = MasterPerson.objects.get(id=id2)
         
@@ -334,6 +397,7 @@ class MasterPersonViewSet(viewsets.ModelViewSet):
                 match_history.notes = param_notes
                 match_history.match_type = None
                 match_history.action = MatchAction.objects.get(name='remove from master person')
+                match_history.matched_by = request.user
                 match_history.timstamp = datetime.now()
                 match_history.save()
                 
@@ -344,6 +408,7 @@ class MasterPersonViewSet(viewsets.ModelViewSet):
                 match_history.notes = param_notes
                 match_history.match_type = None
                 match_history.action = MatchAction.objects.get(name='add to master person')
+                match_history.matched_by = request.user
                 match_history.timstamp = datetime.now()
                 match_history.save()
                 
@@ -361,6 +426,7 @@ class MasterPersonViewSet(viewsets.ModelViewSet):
             match_history.notes = param_notes
             match_history.match_type = None
             match_history.action = MatchAction.objects.get(name='merge master persons')
+            match_history.matched_by = request.user
             match_history.timstamp = datetime.now()
             match_history.save()
             
@@ -371,6 +437,7 @@ class MasterPersonViewSet(viewsets.ModelViewSet):
             match_history.notes = param_notes
             match_history.match_type = None
             match_history.action = MatchAction.objects.get(name='deactivate master person')
+            match_history.matched_by = request.user
             match_history.timstamp = datetime.now()
             match_history.save()
             
