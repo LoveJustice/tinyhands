@@ -73,7 +73,7 @@ class Command(BaseCommand):
         'sample_200dpi.pdf', 'sample_300dpi.pdf', 'sample_400dpi.pdf', 'sample_720dpi.pdf',
         'sample_240dpi.pdf', 'sample_360dpi.pdf', 'sample_600dpi.pdf', 'sample_800dpi.pdf']
 
-    def sanitize(self, model, photo_methods, name_methods, phone_methods, file_methods, file_prefix):
+    def sanitize(self, model, photo_fields=[], name_fields=[], phone_fields=[], file_fields=[], file_prefix=None, text_fields=[]):
         class_name = model.__name__
         processed = 0
 
@@ -81,11 +81,11 @@ class Command(BaseCommand):
             modified = False
 
             # Sanitize images
-            for method_name in photo_methods:
+            for field_name in photo_fields:
                 try:
-                    value = getattr(instance, method_name)
+                    value = getattr(instance, field_name)
                     if value is not None:
-                        setattr(instance, method_name, self.select_photo())
+                        setattr(instance, field_name, self.select_photo())
                         modified = True
                 except AttributeError as e:
                     print(e)
@@ -94,11 +94,11 @@ class Command(BaseCommand):
                     exit(1)
 
             # Sanitize names
-            for method_name in name_methods:
+            for field_name in name_fields:
                 try:
-                    value = getattr(instance, method_name)
+                    value = getattr(instance, field_name)
                     if value is not None:
-                        setattr(instance, method_name, self.generate_name())
+                        setattr(instance, field_name, self.generate_name())
                         modified = True
                 except AttributeError as e:
                     print(e)
@@ -107,11 +107,11 @@ class Command(BaseCommand):
                     exit(1)
 
             # Sanitize phone numbers
-            for method_name in phone_methods:
+            for field_name in phone_fields:
                 try:
-                    value = getattr(instance, method_name)
+                    value = getattr(instance, field_name)
                     if value is not None:
-                        setattr(instance, method_name, self.generate_phone(value))
+                        setattr(instance, field_name, self.generate_phone(value))
                         modified = True
                 except AttributeError as e:
                     print(e)
@@ -120,17 +120,30 @@ class Command(BaseCommand):
                     exit(1)
 
             # Sanitize scanned files
-            for method_name in file_methods:
+            for field_name in file_fields:
                 try:
-                    value = getattr(instance, method_name)
+                    value = getattr(instance, field_name)
                     if value is not None:
-                        setattr(instance, method_name, self.select_file(file_prefix))
+                        setattr(instance, field_name, self.select_file(file_prefix))
                         modified = True
                 except AttributeError as e:
                     print(e)
                 except Exception as e:
                     self.stderr.write("WHAT?? {} - {}".format(type(e), e))
                     exit(1)
+            
+            for field_name in test_fields:
+                try:
+                    value = getattr(instance, field_name)
+                    if value is not None:
+                        setattr(instance, field_name, 'PRIVATE')
+                        modified = True
+                except AttributeError as e:
+                    print(e)
+                except Exception as e:
+                    self.stderr.write("WHAT?? {} - {}".format(type(e), e))
+                    exit(1)
+                    
 
             if modified:
                 instance.save()
@@ -240,22 +253,30 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         sanitized = 0
+        # Clean old forms
+        Interceptee.objects.all().delete()
+        InterceptionRecord.objects.all().delete()
+        VictimInterviewPersonBox.objects.all().delete()
+        VictimInterviewLocationBox.objects.all().delete()
+        victimInterview.objects.all().delete()
 
-        sanitized += self.sanitize(Interceptee, ['photo'], [], [], [], None)
-        interceptee_stores = Storage.objects.filter(form_model_name__startswith='Interceptee')
-        for interceptee_store in interceptee_stores:
-            interceptee_class = interceptee_store.get_form_storage_class()
-            sanitized += self.sanitize(interceptee_class, ['photo'], [], [], [], None)
-            
+        sanitized += self.sanitize(Budget, text_fields=['notes'])
+        sanitized += self.sanitize(CifCommon, name_fields=['staff_name'], text_fields=['officer_name','case_notes'])
+        sanitized += self.sanitize(CifAttachmentCommon, file_fields=['attachment'], file_prefix='cif_attachments')
+        sanitized += self.sanitize(IrfCommon, name_fields=['staff_name'], text_fields=['ims_case_number','case_notes','reason_for_intercept'])
+        sanitized += self.sanitize(IrfAttachmentCommon, file_fields=['attachment'], file_prefix='scanned_irf_forms')
+        sanitized += self.sanitize(MasterPerson, name_fields=['full_name'], text_fields=['notes'])
+        sanitized += self.sanitize(Person, name_fields=['full_name','guardian_name'], phone_fields=['phone_contact'],
+                text_fields=['master_set_notes', 'appearance', 'address_notes'])
+        sanitized += self.sanitize(PersonAddress, text_fields=['address_notes'])
+        sanitized += self.sanitize(PersonDocument, file_fields=['file_location'], file_prefix='person_documents')
+        sanitized += self.sanitize(PersonIdentification, text_fields=['number'])
+        sanitized += self.sanitize(PersonPhone, phone_fields=['number'])
+        sanitized += self.sanitize(PersonSocialMedia, text_fields=['social_media'])
+        sanitized += self.sanitize(VdfCommon, name_fields=['staff_name','who_victim_released_name'], phone_fields=['who_victim_released_phone'],
+                text_fields=['where_victim_sent', 'case_notes'])
+        sanitized += self.sanitize(VdfAttachmentCommon, file_fields=['attachment'], file_prefix='vdf_attachments')
         
-        sanitized += self.sanitize(InterceptionRecord, [], [], [], ['scanned_form'], self.irf_file_prefix)
-        sanitized += self.sanitize(VictimInterview, [],
-                                   ['interviewer', 'legal_action_fir_against_value', 'legal_action_dofe_against_value'],
-                                   ['victim_guardian_phone'], ['scanned_form'], self.vif_file_prefix
-                                   )
-        sanitized += self.sanitize(VictimInterviewPersonBox, [], [], [], [], None)
-        sanitized += self.sanitize(VictimInterviewLocationBox, [], ['person_in_charge'], ['phone'], [], None)
-        sanitized += self.sanitize(Person, [], ['full_name'], ['phone_contact'], [], [])
 
         self.sanitize_email()
         self.create_test_users()
