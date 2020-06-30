@@ -11,6 +11,7 @@ from dataentry.models.form import Answer, Category, Form, FormCategory, Question
 from dataentry.models.person import Person
 from dataentry.models.person_identification import PersonIdentification
 from dataentry.models.master_person import MasterPerson
+from dataentry.models.match_history import MatchHistory, MatchAction
 from .form_data import FormData, CardData, PersonContainer
 from .validate_form import ValidateForm
 
@@ -733,14 +734,42 @@ class ResponsePersonSerializer(serializers.Serializer):
         
         master_person.update(person)
         master_person.save()
+        
+        if link_id is None:
+            notes = 'Linked from IRF person'
+            match_history = MatchHistory()
+            match_history.master1 = master_person
+            match_history.master2 = None
+            match_history.person = None
+            match_history.notes = notes 
+            match_history.match_type = None
+            match_history.action = MatchAction.objects.get(name='create master person')
+            match_history.matched_by = self.context.get('request.user')
+            match_history.timstamp = datetime.now()
+            match_history.save()
+        else:
+            notes = 'Initial person creation'
+            
         person.master_person = master_person
+        person.save()
         if storage_id is None:
             person.master_set_by = self.context.get('request.user')
             person.master_set_date = datetime.now().date()
             if link_id is not None:
-                person.master_set_notes = 'Linked from IRF person'
+                person.master_set_notes = notes
             else:
-                person.master_set_notes = 'Initial person creation'
+                person.master_set_notes = notes
+            
+            match_history = MatchHistory()
+            match_history.master1 = master_person
+            match_history.master2 = None
+            match_history.person = person
+            match_history.notes = notes 
+            match_history.match_type = None
+            match_history.action = MatchAction.objects.get(name='add to master person')
+            match_history.matched_by = self.context.get('request.user')
+            match_history.timstamp = datetime.now()
+            match_history.save()
         
         remove_identifiers = []
         for person_identifier in person_identifiers:
@@ -755,6 +784,7 @@ class ResponsePersonSerializer(serializers.Serializer):
         
         form_data = self.context['form_data']
         form_data.person_containers.append(PersonContainer(person, new_identifiers, remove_identifiers, question))
+        person.save
         
         return person
         

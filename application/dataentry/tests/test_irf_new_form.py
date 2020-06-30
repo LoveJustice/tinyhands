@@ -8,7 +8,7 @@ from rest_framework import status
 from rest_framework.test import APITransactionTestCase
 from accounts.tests.factories import BadIrfUserFactory, SuperUserFactory
 from dataentry.tests.factories import IrfIndiaFactory, MbzStationFactory, PersonFactory
-from dataentry.models import Form, IrfCommon, IntercepteeCommon
+from dataentry.models import Form, IrfCommon, IntercepteeCommon, MatchAction
 from dataentry.form_data import FormData, CardData, FormCategory
 from dataentry.serialize_form import FormDataSerializer
 
@@ -23,6 +23,12 @@ class IrfTest(APITransactionTestCase):
         self.user = GenericUserWithPermissions.create([{'group':'IRF', 'action':'VIEW', 'country': None, 'station': None},
                                                        {'group':'IRF', 'action':'EDIT', 'country': None, 'station': None},
                                                        {'group':'IRF', 'action':'ADD', 'country': None, 'station': None}])
+        
+        for name in ['create master person','add to master person','create match','update match','remove from master person','merge master persons','deactivate master person']:
+            match_action = MatchAction()
+            match_action.name = name
+            match_action.save()
+        
         self.client.force_authenticate(user=self.user)
         self.form = Form.objects.get(form_name='irfIndia')
         self.form.stations.add(MbzStationFactory())

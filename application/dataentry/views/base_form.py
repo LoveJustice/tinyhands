@@ -174,7 +174,6 @@ class BaseFormViewSet(viewsets.ModelViewSet):
                 except IntegrityError as exc:
                     transaction.rollback()
                     transaction.set_autocommit(True)
-                    print ('Transaction rollback1')
                     if 'unique constraint' in exc.args[0]:
                         ret = {
                             'errors': [ exc.args[0] ],
