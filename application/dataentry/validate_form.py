@@ -107,7 +107,6 @@ class ValidateForm:
             answer = card.get_answer(question, value=False)
             parts = filter['part'].split('.')
             for part in parts:
-                print('match-answer', answer, part)
                 if answer is None:
                     break
                 answer = getattr(answer, part)
