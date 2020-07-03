@@ -7,7 +7,7 @@ from dataentry.models import Permission, UserLocationPermission
 
 
 class PhotoTest(APITestCase):
-    fixtures = ['initial-required-data/Country.json', 'initial-required-data/Permission.json']
+    fixtures = ['initial-required-data/Region.json','initial-required-data/Country.json', 'initial-required-data/Permission.json']
     def setUp(self):
         IntercepteeFactory.create_batch(20)
         self.user = SuperUserFactory.create()

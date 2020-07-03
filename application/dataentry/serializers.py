@@ -3,7 +3,7 @@ import json
 
 from rest_framework import serializers
 
-from dataentry.models import Address1, Address2, Country, SiteSettings, InterceptionRecord, VictimInterview, BorderStation, MasterPerson, Person
+from dataentry.models import Address1, Address2, Region, Country, SiteSettings, InterceptionRecord, VictimInterview, BorderStation, MasterPerson, Person
 from dataentry.models import Interceptee, InterceptionAlert, Permission, UserLocationPermission, Form, FormType, PersonAddress, PersonPhone, PersonSocialMedia, PersonDocument
 from dataentry.models import AddressType, DocumentType, PhoneType, SocialMediaType, PersonIdentification
 from static_border_stations.serializers import LocationSerializer
@@ -22,6 +22,11 @@ class Address1Serializer(serializers.ModelSerializer):
 class Address1RelatedItemsSerializer(Address1Serializer):
     related_items = serializers.SerializerMethodField()
     get_related_items = related_items_helper
+
+class RegionSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = '__all__'
+        model = Region
 
 class CountrySerializer(serializers.ModelSerializer):
     class Meta:

@@ -12,7 +12,7 @@ class RestApiTestCase(APITestCase):
 
 
 class LocationTests(RestApiTestCase):
-    fixtures = ['initial-required-data/Country.json', 'initial-required-data/Permission.json']
+    fixtures = ['initial-required-data/Region.json','initial-required-data/Country.json', 'initial-required-data/Permission.json']
     def setUp(self):
         self.location = LocationFactory.create()
         self.other_location = LocationFactory.create_batch(4)

@@ -4,7 +4,7 @@ from budget.models import BorderStationBudgetCalculation, OtherBudgetItemCost, S
 
 
 class BorderStationBudgetCalculationTests(TestCase):
-    fixtures = ['initial-required-data/Country.json', 'initial-required-data/Permission.json']
+    fixtures = ['initial-required-data/Region.json','initial-required-data/Country.json', 'initial-required-data/Permission.json']
     def setUp(self):
         self.target = BorderStationBudgetCalculationFactory()
 
