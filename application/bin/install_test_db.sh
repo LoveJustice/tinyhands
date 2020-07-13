@@ -17,17 +17,17 @@ fi
 PHOTO="${TOP}/media/interceptee_photos"
 PUBLIC_PHOTO="${TOP}/public/interceptee_photos"
 IRF_FORM="${TOP}/media/scanned_irf_forms"
-VIF_FORM="${TOP}/media/scanned_vif_forms"
 CIF_FORM="${TOP}/media/cif_attachments"
 VDF_FORM="${TOP}/media/vdf_attachments"
-MR_FORM="${TOP}/media/mrf_attachments"
+MP_FORM="${TOP}/media/vdf_attachments"
+MR_FORM="${TOP}/media/person_documents"
 
 mkdir -p "${PHOTO}"
 mkdir -p "${PUBLIC_PHOTO}"
 mkdir -p "${IRF_FORM}"
-mkdir -p "${VIF_FORM}"
 mkdir -p "${CIF_FORM}"
 mkdir -p "${VDF_FORM}"
+mkdir -p "${MP_FORM}"
 mkdir -p "${MR_FORM}"
 mkdir -p "${TOP}/dreamsuite/static"
 
@@ -36,7 +36,10 @@ cp * "${PHOTO}"
 
 cd "${FORM_SRC}"
 cp * "${IRF_FORM}"
-cp * "${VIF_FORM}"
+cp * "${CIF_FORM}"
+cp * "${VDF_FORM}"
+cp * "${MP_FORM}"
+cp * "${MR_FORM}"
 
 # Fix permissions for Docker
 chmod 777 "${PHOTO}" "${PUBLIC_PHOTO}" "${IRF_FORM}" "${VIF_FORM}" "${TOP}/media" "${TOP}/dreamsuite/static" "${TOP}/src"
