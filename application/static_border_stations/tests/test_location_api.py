@@ -46,7 +46,10 @@ class LocationTests(RestApiTestCase):
             "name": "asdfasdf",
             "latitude": 1,
             "longitude": 1,
+            "location_type":"monitoring",
             "border_station": self.location.border_station.id,
+            "first_date":"2019-03-15",
+            "last_date":None,
         }
 
         response = self.client.post(url, data=data)
@@ -72,7 +75,10 @@ class LocationTests(RestApiTestCase):
             "name": "asdfasdf",
             "latitude": 1,
             "longitude": 1,
+            "location_type":"office",
             "border_station": self.location.border_station.id,
+            "first_date":"2019-03-15",
+            "last_date":"2020-05-15",
         }
 
         response = self.client.put(url, data=data)

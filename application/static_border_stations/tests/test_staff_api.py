@@ -41,6 +41,8 @@ class StaffTests(RestApiTestCase):
             "position": "asdf",
             "receives_money_distribution_form": True,
             "border_station": self.staff.border_station_id,
+            "first_date":"2019-03-15",
+            "last_date":None,
         }
 
         response = self.client.post(url, data=data)
