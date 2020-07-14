@@ -29,10 +29,11 @@ class IrfListSerializer(serializers.Serializer):
     number_of_traffickers = serializers.IntegerField()
     staff_name = serializers.CharField()
     date_time_of_interception = serializers.SerializerMethodField(read_only=True)
-    date_time_entered_into_system = serializers.SerializerMethodField(read_only=True)
     date_time_last_updated = serializers.SerializerMethodField(read_only=True)
     station = BorderStationOverviewSerializer()
     form_name = serializers.SerializerMethodField(read_only=True)
+    logbook_first_verification_date = serializers.DateField()
+    logbook_second_verification_date = serializers.DateField()
     can_view = serializers.SerializerMethodField(read_only=True)
     can_edit = serializers.SerializerMethodField(read_only=True)
     can_delete = serializers.SerializerMethodField(read_only=True)
@@ -114,7 +115,7 @@ class IrfFormViewSet(BaseFormViewSet):
     search_fields = ('irf_number',)
     ordering_fields = (
         'irf_number', 'staff_name', 'number_of_victims', 'number_of_traffickers', 'date_time_of_interception',
-        'date_time_entered_into_system', 'date_time_last_updated',)
+        'date_time_last_updated', 'logbook_second_verification_date',)
     ordering = ('-date_time_of_interception',)
     
     def or_filter(self, current_qfilter, new_qfilter):
@@ -142,6 +143,15 @@ class IrfFormViewSet(BaseFormViewSet):
                 q_filter = q_filter & (Q(evidence_categorization__isnull=True) | Q(evidence_categorization=''))
             else:
                 q_filter = q_filter & Q(logbook_second_verification__startswith=status_list[1])
+        
+        verification_filter = self.request.GET.get('verification_filter', None)
+        if verification_filter is not None and verification_filter != 'None':
+            verification_start = self.request.GET.get('verification_start', None)
+            verification_end = self.request.GET.get('verification_end', None)
+            if verification_filter == 'First Verification':
+                q_filter = q_filter & Q(logbook_first_verification_date__gte=verification_start) & Q(logbook_first_verification_date__lte=verification_end)
+            else:
+                q_filter = q_filter & Q(logbook_second_verification_date__gte=verification_start) & Q(logbook_second_verification_date__lte=verification_end)
         
         return q_filter
     
@@ -174,9 +184,8 @@ class IrfFormViewSet(BaseFormViewSet):
     
     def get_list_field_names(self):
         return ['id', 'irf_number', 'form_entered_by', 'number_of_victims', 'number_of_traffickers', 'staff_name', 
-                    'station', 'date_time_of_interception', 'date_time_entered_into_system',
-                    'date_time_last_updated', 'status', 'evidence_categorization', 'logbook_first_verification',
-                    'logbook_second_verification']
+                    'station', 'date_time_of_interception', 'date_time_last_updated', 'status', 'evidence_categorization', 'logbook_first_verification',
+                    'logbook_first_verification_date', 'logbook_second_verification', 'logbook_second_verification_date']
         
     def get_empty_queryset(self):
         return IrfCommon.objects.none()
