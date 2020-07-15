@@ -6,6 +6,7 @@ from rest_framework import serializers
 from dataentry.models import Address1, Address2, Region, Country, SiteSettings, InterceptionRecord, VictimInterview, BorderStation, MasterPerson, Person
 from dataentry.models import Interceptee, InterceptionAlert, Permission, UserLocationPermission, Form, FormType, PersonAddress, PersonPhone, PersonSocialMedia, PersonDocument
 from dataentry.models import AddressType, DocumentType, PhoneType, SocialMediaType, PersonIdentification
+from dataentry.models import OperationsData
 from static_border_stations.serializers import LocationSerializer
 from dataentry.form_data import FormData
 
@@ -655,4 +656,37 @@ class FormSerializer(serializers.ModelSerializer):
     
     class Meta:
         fields = ['id', 'form_name', 'form_type']
-        model = Form   
+        model = Form
+
+class OperationsDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = '__all__'
+        model = OperationsData
+        fields = fields = [
+            'id',
+            'year_month',
+            'compliance',
+            'budget',
+            'intercepts',
+            'arrests',
+            'gospel',
+            'empowerment',
+            'convictions',
+            'station_code',
+            'station_name',
+            'station_open',
+        ]
+        
+    station_code = serializers.SerializerMethodField(read_only=True)
+    station_name = serializers.SerializerMethodField(read_only=True)
+    station_open = serializers.SerializerMethodField(read_only=True)
+    
+    def get_station_code(self, obj):
+        return obj.station.station_code
+
+    def get_station_name(self, obj):
+        return obj.station.station_name
+    
+    def get_station_open(self, obj):
+        return obj.station.open
+    

@@ -24,3 +24,4 @@ from .monthly_report import MonthlyReport, MonthlyReportAttachment
 from .indicator_history import IndicatorHistory
 from .region import Region
 from .interception_cache import InterceptionCache
+from .operations_data import OperationsData

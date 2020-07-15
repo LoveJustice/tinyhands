@@ -1,8 +1,10 @@
 import datetime
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.management.base import BaseCommand
 from django.conf import settings
 
 from export_import.google_sheet import GoogleSheet
+from dataentry.models import BorderStation, OperationsData
 from export_import.data_indicator_io import get_data_collection_indicator_export_rows, get_data_entry_indicator_export_rows
 
 class Command(BaseCommand):
@@ -24,6 +26,35 @@ class Command(BaseCommand):
         spreadsheet = 'Data Indicators' + settings.SPREADSHEET_SUFFIX
         sheet = GoogleSheet(spreadsheet,'Collection', 'year month', get_data_collection_indicator_export_rows)
         sheet.update(year_month, year_month)
+        
+        indicators = get_data_collection_indicator_export_rows([year_month])
+        first = True
+        station_code = None
+        compliance = None
+        for indicator in indicators:
+            if first:
+                for idx in range(len(indicator)):
+                    if indicator[idx] == 'station code':
+                        station_code = idx
+                    if indicator[idx] == 'Total':
+                        compliance = idx
+                
+                first = False
+                continue
+            
+            if indicator[station_code] == 'Totals':
+                continue
+            station = BorderStation.objects.get(station_code=indicator[station_code])
+            try:
+                value = float(indicator[compliance])
+                try:
+                    operations_data = OperationsData.objects.get(station=station, year_month=year_month)
+                    operations_data.compliance = value
+                    operations_data.save()
+                except ObjectDoesNotExist:
+                    pass
+            except:
+                pass
         
     def handle(self, *args, **options):
         indicator_type = options.get('indicatorType')[0].lower()

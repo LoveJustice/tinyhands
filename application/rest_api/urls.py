@@ -10,6 +10,7 @@ from dataentry.views import FormViewSet, FormTypeViewSet
 from dataentry.views import MonthlyReportFormViewSet
 from dataentry.views import IndicatorsViewSet
 from dataentry.views import BorderStationFormViewSet
+from dataentry.views import OperationsDataViewSet
 from help.views import VideoViewSet
 
 list = {'get': 'list', 'post': 'create'}
@@ -126,4 +127,10 @@ urlpatterns = [
         url(r'^border_station/$', BorderStationFormViewSet.as_view({'post': 'create'}), name="borderStation"),
         url(r'^border_station/(?P<pk>\d+)/$', BorderStationFormViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}), name="borderStationForm"),
         url(r'^border_station/blank/', BorderStationFormViewSet.as_view({'get': 'retrieve_blank'}), name='borderStationBlank'),
+        
+        url(r'^operations-dashboard/(?P<country_id>\d+)/$', OperationsDataViewSet.as_view({'get': 'retrieve_dashboard'}), name='retrieveDashboard'),
+        url(r'^operations-data/country/(?P<country_id>\d+)/(?P<year_month>\d+)/$', OperationsDataViewSet.as_view({'get': 'retrieve_country_data'}), name='retrieveCountryOperations'),
+        url(r'^operations-data/country/$', OperationsDataViewSet.as_view({'put': 'set_country_data'}), name='setCountryOperations'),
+        url(r'^operations-data/(?P<pk>\d+)/$', OperationsDataViewSet.as_view({'get': 'retrieve', 'put': 'update'}), name='operationsData'),
+        
 ]
