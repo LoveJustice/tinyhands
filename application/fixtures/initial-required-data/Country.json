@@ -24,7 +24,11 @@
             "vdfOriginalFormPercent": 100
         },
         "options": null,
-        "region": 2
+        "region": 2,
+        "exchange_rate": 112.0,
+        "prior_intercepts": 0,
+        "prior_arrests": 0,
+        "prior_convictions": 0
     }
 },
 {
@@ -41,7 +45,11 @@
         "verification_start_month": 10,
         "verification_goals": null,
         "options": null,
-        "region": 1
+        "region": 1,
+        "exchange_rate": 1.0,
+        "prior_intercepts": 0,
+        "prior_arrests": 0,
+        "prior_convictions": 0
     }
 },
 {
@@ -82,7 +90,11 @@
                 "investigations_points"
             ]
         },
-        "region": 2
+        "region": 2,
+        "exchange_rate": 1.0,
+        "prior_intercepts": 0,
+        "prior_arrests": 0,
+        "prior_convictions": 0
     }
 },
 {
@@ -110,7 +122,11 @@
             "vdfOriginalFormPercent": 100
         },
         "options": null,
-        "region": 2
+        "region": 2,
+        "exchange_rate": 1.0,
+        "prior_intercepts": 0,
+        "prior_arrests": 0,
+        "prior_convictions": 0
     }
 },
 {
@@ -127,7 +143,11 @@
         "verification_start_month": 2,
         "verification_goals": null,
         "options": null,
-        "region": 1
+        "region": 1,
+        "exchange_rate": 1.0,
+        "prior_intercepts": 0,
+        "prior_arrests": 0,
+        "prior_convictions": 0
     }
 },
 {
@@ -144,7 +164,11 @@
         "verification_start_month": null,
         "verification_goals": null,
         "options": null,
-        "region": 1
+        "region": 1,
+        "exchange_rate": 1.0,
+        "prior_intercepts": 0,
+        "prior_arrests": 0,
+        "prior_convictions": 0
     }
 },
 {
@@ -172,7 +196,11 @@
             "vdfOriginalFormPercent": 100
         },
         "options": null,
-        "region": 1
+        "region": 1,
+        "exchange_rate": 1.0,
+        "prior_intercepts": 0,
+        "prior_arrests": 0,
+        "prior_convictions": 0
     }
 },
 {
@@ -200,7 +228,11 @@
             "vdfOriginalFormPercent": 100
         },
         "options": null,
-        "region": 1
+        "region": 1,
+        "exchange_rate": 1.0,
+        "prior_intercepts": 0,
+        "prior_arrests": 0,
+        "prior_convictions": 0
     }
 },
 {
@@ -217,7 +249,11 @@
         "verification_start_month": null,
         "verification_goals": null,
         "options": null,
-        "region": 1
+        "region": 1,
+        "exchange_rate": 1.0,
+        "prior_intercepts": 0,
+        "prior_arrests": 0,
+        "prior_convictions": 0
     }
 },
 {
@@ -234,7 +270,11 @@
         "verification_start_month": null,
         "verification_goals": null,
         "options": null,
-        "region": 1
+        "region": 1,
+        "exchange_rate": 1.0,
+        "prior_intercepts": 0,
+        "prior_arrests": 0,
+        "prior_convictions": 0
     }
 },
 {
@@ -251,7 +291,11 @@
         "verification_start_month": null,
         "verification_goals": null,
         "options": null,
-        "region": 1
+        "region": 1,
+        "exchange_rate": 1.0,
+        "prior_intercepts": 0,
+        "prior_arrests": 0,
+        "prior_convictions": 0
     }
 },
 {
@@ -268,7 +312,11 @@
         "verification_start_month": null,
         "verification_goals": null,
         "options": null,
-        "region": 2
+        "region": 2,
+        "exchange_rate": 1.0,
+        "prior_intercepts": 0,
+        "prior_arrests": 0,
+        "prior_convictions": 0
     }
 },
 {
@@ -296,7 +344,11 @@
             "vdfOriginalFormPercent": 100
         },
         "options": null,
-        "region": 2
+        "region": 2,
+        "exchange_rate": 1.0,
+        "prior_intercepts": 0,
+        "prior_arrests": 0,
+        "prior_convictions": 0
     }
 },
 {
@@ -313,7 +365,11 @@
         "verification_start_month": null,
         "verification_goals": null,
         "options": null,
-        "region": 1
+        "region": 1,
+        "exchange_rate": 1.0,
+        "prior_intercepts": 0,
+        "prior_arrests": 0,
+        "prior_convictions": 0
     }
 },
 {
@@ -330,7 +386,11 @@
         "verification_start_month": null,
         "verification_goals": null,
         "options": null,
-        "region": 2
+        "region": 2,
+        "exchange_rate": 1.0,
+        "prior_intercepts": 0,
+        "prior_arrests": 0,
+        "prior_convictions": 0
     }
 },
 {
@@ -358,7 +418,11 @@
             "vdfOriginalFormPercent": 100
         },
         "options": null,
-        "region": 1
+        "region": 1,
+        "exchange_rate": 1.0,
+        "prior_intercepts": 0,
+        "prior_arrests": 0,
+        "prior_convictions": 0
     }
 },
 {
@@ -386,7 +450,11 @@
             "vdfOriginalFormPercent": 100
         },
         "options": null,
-        "region": 1
+        "region": 1,
+        "exchange_rate": 1.0,
+        "prior_intercepts": 0,
+        "prior_arrests": 0,
+        "prior_convictions": 0
     }
 }
 ]
