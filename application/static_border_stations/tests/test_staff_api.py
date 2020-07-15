@@ -12,7 +12,7 @@ class RestApiTestCase(APITestCase):
 
 
 class StaffTests(RestApiTestCase):
-    fixtures = ['initial-required-data/Country.json', 'initial-required-data/Permission.json']
+    fixtures = ['initial-required-data/Region.json','initial-required-data/Country.json', 'initial-required-data/Permission.json']
     def setUp(self):
         self.staff = StaffFactory.create()
         self.other_staff = StaffFactory.create_batch(4)

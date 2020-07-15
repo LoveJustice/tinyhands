@@ -19,7 +19,7 @@ from dataentry.serialize_form import FormDataSerializer
 from .base_form import BaseFormViewSet, BorderStationOverviewSerializer
 
 from dataentry.form_data import Form, FormData
-from dataentry.models import IrfCommon, UserLocationPermission
+from dataentry.models import IntercepteeCommon, InterceptionCache, IrfCommon, UserLocationPermission
 
 class IrfListSerializer(serializers.Serializer):
     id = serializers.IntegerField()
@@ -223,7 +223,52 @@ class IrfFormViewSet(BaseFormViewSet):
         results['ytd'] = ytd_count
         
         return Response(results, status=status.HTTP_200_OK)
+     
+    
+    @staticmethod
+    def get_six_month_tally():
+        today = timezone.now().now()
+        try:
+            cache = InterceptionCache.objects.get(reference_date=today)
+        except:
+            start_date = today - timedelta(days=180)
+            interceptions = IntercepteeCommon.objects.filter(person__role='PVOT',
+                                                interception_record__logbook_second_verification_date__gte=start_date,
+                                                interception_record__logbook_second_verification_date__lte=today).order_by(
+                                                    'interception_record__station__operating_country__region__name',
+                                                    'interception_record__station__operating_country__name'
+                                                    )
+            results= {'count':0, 'regions':[]}                                    
+            region_results = {'name':'', 'count':0, 'countries':[]}
+            country_results = {'name':'', 'count':0}
+            for interception in interceptions:
+                if interception.interception_record.station.operating_country.name != country_results['name']:
+                    if country_results['count'] > 0:
+                        region_results['countries'].append(country_results)
+                        region_results['count'] += country_results['count']
+                    country_results = {'name':interception.interception_record.station.operating_country.name, 'count':1}
+                else:
+                    country_results['count'] += 1
+                if interception.interception_record.station.operating_country.region.name != region_results['name']:
+                    if region_results['count'] > 0:
+                        results['regions'].append(region_results)
+                        results['count'] += region_results['count']
+                    region_results = {'name':interception.interception_record.station.operating_country.region.name, 'count':0, 'countries':[]}
+            if country_results['count'] > 0:
+                region_results['countries'].append(country_results)
+                region_results['count'] += country_results['count']
+                results['regions'].append(region_results)
+                results['count'] += region_results['count']
         
+                cache = InterceptionCache()
+                cache.reference_date = today
+            cache.interceptions = results
+            cache.save()
+        
+        return cache.interceptions
+    
+    def six_month_tally(self, request):        
+        return Response(IrfFormViewSet.get_six_month_tally(), status=status.HTTP_200_OK)
 
     def pre_process(self, request, form_data):
         if form_data is not None:

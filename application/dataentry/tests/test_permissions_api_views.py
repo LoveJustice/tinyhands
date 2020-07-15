@@ -3,14 +3,14 @@ import time
 from django.core.urlresolvers import reverse
 from rest_framework import status
 from rest_framework.test import APIRequestFactory, APITestCase, APIClient
-from dataentry.models import Permission, UserLocationPermission, Country, BorderStation
+from dataentry.models import Permission, UserLocationPermission, Country, BorderStation, Region
 from accounts.models import Account, DefaultPermissionsSet
 from accounts.tests.factories import SuperUserFactory
 
 
 
 class PermissionTest(APITestCase):
-    fixtures = ['initial-required-data/Country.json', 'initial-required-data/Permission.json']
+    fixtures = ['initial-required-data/Region.json','initial-required-data/Country.json', 'initial-required-data/Permission.json']
     globalCount = 0
     
     def get_or_create_country(self, name):
@@ -22,6 +22,7 @@ class PermissionTest(APITestCase):
             tmp.name = name
             tmp.latitude = 0
             tmp.longitude = 0
+            tmp.region = Region.objects.get(name='Asia')
             tmp.save()
             result = Country.objects.get(name=name)
         
@@ -168,7 +169,7 @@ class PermissionTest(APITestCase):
     def test_list_user_countries(self):
         url = reverse('UserPermissionCountries', args=[self.account.id])
         response = self.client.get(url)
-        self.assertEqual(len(response.data), 4)
+        self.assertEqual(len(response.data), 18)
     
     def test_list_user_countries_group(self):
         url = reverse('UserPermissionCountries', args=[self.account.id])
