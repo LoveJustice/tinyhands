@@ -103,7 +103,15 @@ class ValidateForm:
             return -1
         
         question = Question.objects.get(id=filter['question_id'])
-        answer = card.get_answer(question)
+        if 'part' in filter:
+            answer = card.get_answer(question, value=False)
+            parts = filter['part'].split('.')
+            for part in parts:
+                if answer is None:
+                    break
+                answer = getattr(answer, part)
+        else:
+           answer = card.get_answer(question) 
         rv = 0
         if filter['operation'] == '=' and answer == filter['value']:
             rv = 1
@@ -250,6 +258,40 @@ class ValidateForm:
                     category_name = self.question_map[question.id]
                 self.add_error_or_warning(category_name, category_index, validation)
                 return
+            
+    def interceptee_count_match (self, form_data, validation, questions, category_index, general):
+        category_name = 'Interceptees'
+        if (getattr(form_data, 'card_dict', None) is None or validation.params is None or 
+                'category_id' not in validation.params or
+                'count_question_id' not in validation.params or
+                'filter' not in validation.params):
+            tmp_validation = FormValidation()
+            tmp_validation.level = validation.level
+            tmp_validation.error_warning_message = 'Incorrect configuration for validation:' + validation.error_warning_message
+            self.add_error_or_warning(category_name, None, tmp_validation)
+        else:
+            card_count = 0
+            category_id = validation.params['category_id']
+            count_question = Question.objects.get(id=validation.params['count_question_id'])
+            count_to_match = form_data.get_answer(count_question)
+            if category_id in form_data.card_dict:
+                for card in form_data.card_dict[category_id]:
+                    if 'filter' in validation.params:
+                        match_result = self.match_filter(card, validation.params['filter'])
+                        if match_result >= 0:
+                            card_count += match_result
+                        else:
+                            tmp_validation = FormValidation()
+                            tmp_validation.level = validation.level
+                            tmp_validation.error_warning_message = 'Incorrect filter for validation:' + validation.error_warning_message
+                            self.add_error_or_warning(category_name, None, tmp_validation)
+                    else:
+                        card_count += 1
+            
+            if count_to_match == card_count:
+                    return
+            
+        self.add_error_or_warning(category_name, None, validation)
 
     def __init__(self, form, form_data, ignore_warnings):
         self.validations = {
@@ -262,6 +304,7 @@ class ValidateForm:
             'regular_expression': self.regex_match,
             'card_count': self.card_count,
             'all_false': self.all_false,
+            'interceptee_count_match':self.interceptee_count_match,
         }
         
         self.validations_to_perform = {

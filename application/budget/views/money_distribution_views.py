@@ -113,23 +113,23 @@ class MDFExportViewSet(viewsets.GenericViewSet):
         pdf_buffer = MDFExporter(budget).create()
         return self.create_response('application/pdf', budget.mdf_file_name(), pdf_buffer)
 
-    def get_mdf_pdf_bulk(self, request, month, year):
+    def get_mdf_pdf_bulk(self, request, month, year, country_id):
         logger.info("Generating MDF Zip for %d %d for %s", month, year, request.user)
 
-        budgets = self.get_budgets(month, year)
+        budgets = self.get_budgets(month, year, country_id)
         if len(budgets) == 0:
             return Response({'detail' : "No MDFs found for the specific month and year"}, status = status.HTTP_404_NOT_FOUND)
 
         zip_buffer = MDFBulkExporter(budgets).create()
         return self.create_response('application/zip', "{}-{}-mdfs.zip".format(month, year), zip_buffer)
 
-    def count_mdfs_for_month_year(self, request, month, year):
-        return Response({"count": len(self.get_budgets(month, year))})
+    def count_mdfs_for_month_year(self, request, month, year, country_id):
+        return Response({"count": len(self.get_budgets(month, year, country_id))})
 
-    def get_budgets(self, month, year):
+    def get_budgets(self, month, year, country_id):
         startDate = datetime.date(int(year), int(month), 1)
         endDate = datetime.date(int(year), int(month), 28)
-        return BorderStationBudgetCalculation.objects.filter(month_year__gte=startDate, month_year__lte=endDate)
+        return BorderStationBudgetCalculation.objects.filter(month_year__gte=startDate, month_year__lte=endDate, border_station__operating_country__id = country_id)
         
 
     def create_response(self, content_type, filename, buffer):

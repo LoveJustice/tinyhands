@@ -90,6 +90,7 @@ urlpatterns = [
        url(r'^user_permission_list/$', UserLocationPermissionViewSet.as_view({'get':'user_permission_list'}), name='UserLocationPermissionList'),
        url(r'^user_permission/(?P<pk>\d+)/$', UserLocationPermissionViewSet.as_view({'get':'user_permissions', 'put':'update_permissions'}), name='UserLocationPermission'),
        url(r'^user_permission/countries/(?P<pk>\d+)/$', UserLocationPermissionViewSet.as_view({'get':'user_countries'}), name='UserPermissionCountries'),
+       url(r'^user_permission/countries/current-user/$', UserLocationPermissionViewSet.as_view({'get':'user_countries_current_user'}), name='UserPermissionCountriesCurrent'),
         url(r'^user_permission/stations/(?P<pk>\d+)/$', UserLocationPermissionViewSet.as_view({'get':'user_stations'}), name='UserPermissionStations'),
         
         url(r'^irfNew/$', IrfFormViewSet.as_view(list), name='irfNew'),

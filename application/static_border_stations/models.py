@@ -1,3 +1,4 @@
+import datetime
 from django.db import models
 from dataentry.models import BorderStation
 
@@ -57,19 +58,22 @@ class Person(models.Model):
 class Staff(Person):
     class Meta:
         abstract = False
+    first_date = models.DateField(default=datetime.datetime.now)
+    last_date = models.DateField(null=True)
         
 
 class CommitteeMember(Person):
     class Meta:
         abstract = False
-        
-
 
 class Location(models.Model):
     name = models.CharField(max_length=255, blank=True)
     latitude = models.FloatField(null=True)
     longitude = models.FloatField(null=True)
     border_station = models.ForeignKey(BorderStation, null=True)
+    location_type = models.CharField(max_length=255)
+    first_date = models.DateField(default=datetime.datetime.now)
+    last_date = models.DateField(null=True)
     
     def get_country_id(self):
         if self.border_station is None or self.border_station.operating_country is None:
