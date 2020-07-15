@@ -112,6 +112,10 @@ class UserLocationPermissionViewSet(viewsets.ModelViewSet):
                     form_countries.append(station.operating_country.id)
         
         return form_countries
+    
+    # uses user id of requesting user
+    def user_countries_current_user(self, request):
+        return self.user_countries(request, request.user.id)
                 
     def user_countries(self, request, pk):
         perms = self.effective_query(request, pk)
