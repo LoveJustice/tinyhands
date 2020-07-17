@@ -50,7 +50,7 @@ class OperationsDataViewSet(viewsets.ModelViewSet):
     
     def apply_exchange_rate(self, value, rate):
         if value is not None:
-            value = int (value / rate)
+            value = int (value / rate + .5)
         
         return value
     
@@ -94,6 +94,7 @@ class OperationsDataViewSet(viewsets.ModelViewSet):
             for entry in entries:
                 if dash_station is None or dash_station['station_code'] != entry.station.station_code:
                     if dash_station is not None:
+                        dash_station['6month_budget'] = self.apply_exchange_rate(dash_station['6month_budget'], country.exchange_rate)
                         dashboard['entries'].append(dash_station)
                     dash_station = {
                         'station_name':entry.station.station_name,
@@ -121,11 +122,12 @@ class OperationsDataViewSet(viewsets.ModelViewSet):
                         if dash_station[element] is None or dash_station[element] == '':
                             dash_station[element] = 0
             
-                self.sum_element(dash_station, '6month_budget', self.apply_exchange_rate(entry.budget, country.exchange_rate), 0)
+                self.sum_element(dash_station, '6month_budget', entry.budget, 0)
                 for element in ['intercepts', 'arrests', 'gospel', 'empowerment', 'cifs']:
                     self.sum_element(dash_station, '6month_' + element, getattr(entry, element), 0)
         
             if dash_station is not None:
+                dash_station['6month_budget'] = self.apply_exchange_rate(dash_station['6month_budget'], country.exchange_rate)
                 dashboard['entries'].append(dash_station)
             
         for element in [
@@ -134,6 +136,10 @@ class OperationsDataViewSet(viewsets.ModelViewSet):
                     'last_budget', 'last_intercepts',  'last_arrests', 'last_gospel', 'last_empowerment']:
             for entry in dashboard['entries']:
                 self.sum_element(dashboard['totals'], element, entry.get(element, None), 0)
+        
+        self.sum_element(dashboard['totals'], 'to_date_intercepts', country.prior_intercepts)
+        self.sum_element(dashboard['totals'], 'to_date_arrests', country.prior_arrests)
+        self.sum_element(dashboard['totals'], 'to_date_convictions', country.prior_convictions)
         
         for element in ['monthly_report', 'compliance']:
             if dashboard['totals'].get(element, None) is not None:
