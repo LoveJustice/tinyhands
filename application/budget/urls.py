@@ -27,6 +27,6 @@ urlpatterns = [
 
         url(r'^mdf/(?P<pk>\d+)/$', MoneyDistribution.as_view({'get': 'retrieve', 'post': 'send_emails'}), name="MDFViewSet"),
         url(r'^mdf/(?P<uuid>[0-9A-Fa-f-]+)/pdf/$', MDFExportViewSet.as_view({'get': 'get_mdf_pdf'}, permission_classes=[]), name="MdfPdf"),
-        url(r'^mdf/(?P<month>\d+)/(?P<year>\d+)/pdf/$', MDFExportViewSet.as_view({'get': 'get_mdf_pdf_bulk'}), name="MdfPdfbulk"),
-        url(r'^mdf/(?P<month>\d+)/(?P<year>\d+)/count/$', MDFExportViewSet.as_view({'get': 'count_mdfs_for_month_year'}), name="MdfPdfbulkCount"),
+        url(r'^mdf/(?P<month>\d+)/(?P<year>\d+)/(?P<country_id>\d+)/pdf/$', MDFExportViewSet.as_view({'get': 'get_mdf_pdf_bulk'}), name="MdfPdfbulk"),
+        url(r'^mdf/(?P<month>\d+)/(?P<year>\d+)/(?P<country_id>\d+)/count/$', MDFExportViewSet.as_view({'get': 'count_mdfs_for_month_year'}), name="MdfPdfbulkCount"),
 ]

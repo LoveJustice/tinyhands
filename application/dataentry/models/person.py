@@ -7,7 +7,7 @@ from django.contrib.postgres.fields import JSONField
 
 from .addresses import Address1, Address2
 from .alias_group import AliasGroup
-from .master_person import MasterPerson, AddressType, PhoneType
+from .master_person import MasterPerson, AddressType, PhoneType, SocialMediaType
 from .form import Form, FormCategory
 from accounts.models import Account
 
@@ -19,7 +19,7 @@ class Person(models.Model):
     
     master_person = models.ForeignKey(MasterPerson)
     master_set_by = models.ForeignKey(Account, related_name='%(class)s_entered_by', null=True, on_delete=models.SET_NULL)
-    master_set_date = models.DateTimeField(auto_now_add=True)
+    master_set_date = models.DateField(auto_now_add=True)
     master_set_notes = models.TextField('Match Notes', blank=True)
     
     full_name = models.CharField(max_length=255, null=True, blank=True)
@@ -48,6 +48,8 @@ class Person(models.Model):
     case_filed_against = models.CharField(max_length=126, null=True)
     arrested = models.CharField(max_length=126, null=True)
     social_media = models.CharField(max_length=1024, null=True)
+    social_media_verified = models.BooleanField('Social Media Verified', default=False)
+    social_media_type = models.ForeignKey(SocialMediaType, null=True)
     role = models.CharField(max_length=126, null=True)
     appearance = models.CharField(max_length=126, null=True)
     occupation = models.CharField(max_length=126, null=True)

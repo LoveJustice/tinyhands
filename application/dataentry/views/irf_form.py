@@ -19,7 +19,7 @@ from dataentry.serialize_form import FormDataSerializer
 from .base_form import BaseFormViewSet, BorderStationOverviewSerializer
 
 from dataentry.form_data import Form, FormData
-from dataentry.models import IrfCommon, UserLocationPermission
+from dataentry.models import IntercepteeCommon, InterceptionCache, IrfCommon, UserLocationPermission
 
 class IrfListSerializer(serializers.Serializer):
     id = serializers.IntegerField()
@@ -29,10 +29,11 @@ class IrfListSerializer(serializers.Serializer):
     number_of_traffickers = serializers.IntegerField()
     staff_name = serializers.CharField()
     date_time_of_interception = serializers.SerializerMethodField(read_only=True)
-    date_time_entered_into_system = serializers.SerializerMethodField(read_only=True)
     date_time_last_updated = serializers.SerializerMethodField(read_only=True)
     station = BorderStationOverviewSerializer()
     form_name = serializers.SerializerMethodField(read_only=True)
+    logbook_first_verification_date = serializers.DateField()
+    logbook_second_verification_date = serializers.DateField()
     can_view = serializers.SerializerMethodField(read_only=True)
     can_edit = serializers.SerializerMethodField(read_only=True)
     can_delete = serializers.SerializerMethodField(read_only=True)
@@ -114,7 +115,7 @@ class IrfFormViewSet(BaseFormViewSet):
     search_fields = ('irf_number',)
     ordering_fields = (
         'irf_number', 'staff_name', 'number_of_victims', 'number_of_traffickers', 'date_time_of_interception',
-        'date_time_entered_into_system', 'date_time_last_updated',)
+        'date_time_last_updated', 'logbook_second_verification_date',)
     ordering = ('-date_time_of_interception',)
     
     def or_filter(self, current_qfilter, new_qfilter):
@@ -142,6 +143,15 @@ class IrfFormViewSet(BaseFormViewSet):
                 q_filter = q_filter & (Q(evidence_categorization__isnull=True) | Q(evidence_categorization=''))
             else:
                 q_filter = q_filter & Q(logbook_second_verification__startswith=status_list[1])
+        
+        verification_filter = self.request.GET.get('verification_filter', None)
+        if verification_filter is not None and verification_filter != 'None':
+            verification_start = self.request.GET.get('verification_start', None)
+            verification_end = self.request.GET.get('verification_end', None)
+            if verification_filter == 'First Verification':
+                q_filter = q_filter & Q(logbook_first_verification_date__gte=verification_start) & Q(logbook_first_verification_date__lte=verification_end)
+            else:
+                q_filter = q_filter & Q(logbook_second_verification_date__gte=verification_start) & Q(logbook_second_verification_date__lte=verification_end)
         
         return q_filter
     
@@ -174,9 +184,8 @@ class IrfFormViewSet(BaseFormViewSet):
     
     def get_list_field_names(self):
         return ['id', 'irf_number', 'form_entered_by', 'number_of_victims', 'number_of_traffickers', 'staff_name', 
-                    'station', 'date_time_of_interception', 'date_time_entered_into_system',
-                    'date_time_last_updated', 'status', 'evidence_categorization', 'logbook_first_verification',
-                    'logbook_second_verification']
+                    'station', 'date_time_of_interception', 'date_time_last_updated', 'status', 'evidence_categorization', 'logbook_first_verification',
+                    'logbook_first_verification_date', 'logbook_second_verification', 'logbook_second_verification_date']
         
     def get_empty_queryset(self):
         return IrfCommon.objects.none()
@@ -214,7 +223,52 @@ class IrfFormViewSet(BaseFormViewSet):
         results['ytd'] = ytd_count
         
         return Response(results, status=status.HTTP_200_OK)
+     
+    
+    @staticmethod
+    def get_six_month_tally():
+        today = timezone.now().now()
+        try:
+            cache = InterceptionCache.objects.get(reference_date=today)
+        except:
+            start_date = today - timedelta(days=180)
+            interceptions = IntercepteeCommon.objects.filter(person__role='PVOT',
+                                                interception_record__logbook_second_verification_date__gte=start_date,
+                                                interception_record__logbook_second_verification_date__lte=today).order_by(
+                                                    'interception_record__station__operating_country__region__name',
+                                                    'interception_record__station__operating_country__name'
+                                                    )
+            results= {'count':0, 'regions':[]}                                    
+            region_results = {'name':'', 'count':0, 'countries':[]}
+            country_results = {'name':'', 'count':0}
+            for interception in interceptions:
+                if interception.interception_record.station.operating_country.name != country_results['name']:
+                    if country_results['count'] > 0:
+                        region_results['countries'].append(country_results)
+                        region_results['count'] += country_results['count']
+                    country_results = {'name':interception.interception_record.station.operating_country.name, 'count':1}
+                else:
+                    country_results['count'] += 1
+                if interception.interception_record.station.operating_country.region.name != region_results['name']:
+                    if region_results['count'] > 0:
+                        results['regions'].append(region_results)
+                        results['count'] += region_results['count']
+                    region_results = {'name':interception.interception_record.station.operating_country.region.name, 'count':0, 'countries':[]}
+            if country_results['count'] > 0:
+                region_results['countries'].append(country_results)
+                region_results['count'] += country_results['count']
+                results['regions'].append(region_results)
+                results['count'] += region_results['count']
         
+                cache = InterceptionCache()
+                cache.reference_date = today
+            cache.interceptions = results
+            cache.save()
+        
+        return cache.interceptions
+    
+    def six_month_tally(self, request):        
+        return Response(IrfFormViewSet.get_six_month_tally(), status=status.HTTP_200_OK)
 
     def pre_process(self, request, form_data):
         if form_data is not None:

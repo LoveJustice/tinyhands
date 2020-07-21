@@ -3,7 +3,9 @@ import json
 
 from rest_framework import serializers
 
-from dataentry.models import Address1, Address2, Country, SiteSettings, InterceptionRecord, VictimInterview, BorderStation, Person, Interceptee, InterceptionAlert, Permission, UserLocationPermission, Form, FormType
+from dataentry.models import Address1, Address2, Region, Country, SiteSettings, InterceptionRecord, VictimInterview, BorderStation, MasterPerson, Person
+from dataentry.models import Interceptee, InterceptionAlert, Permission, UserLocationPermission, Form, FormType, PersonAddress, PersonPhone, PersonSocialMedia, PersonDocument
+from dataentry.models import AddressType, DocumentType, PhoneType, SocialMediaType, PersonIdentification
 from static_border_stations.serializers import LocationSerializer
 from dataentry.form_data import FormData
 
@@ -20,6 +22,11 @@ class Address1Serializer(serializers.ModelSerializer):
 class Address1RelatedItemsSerializer(Address1Serializer):
     related_items = serializers.SerializerMethodField()
     get_related_items = related_items_helper
+
+class RegionSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = '__all__'
+        model = Region
 
 class CountrySerializer(serializers.ModelSerializer):
     class Meta:
@@ -277,18 +284,254 @@ class VictimInterviewLocationBoxSerializer(serializers.ModelSerializer):
         model = VictimInterview
         exclude = []
 
+class AddressTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AddressType
+        fields = '__all__'
+
+class PhoneTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PhoneType
+        fields = '__all__'
+                
+class SocialMediaTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PhoneType
+        fields = '__all__'
+
+class PersonIdentificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PersonIdentification
+        fields = '__all__'
 
 class PersonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Person
         fields = [
+            'id',
             'full_name',
             'gender',
             'age',
             'address1',
             'address2',
+            'address',
+            'latitude',
+            'longitude',
+            'address_notes',
+            'address_verified',
+            'address_type',
             'phone_contact',
+            'phone_verified',
+            'phone_type',
+            'birthdate',
+            'estimated_birthdate',
+            'nationality',
+            'photo',
+            'case_filed_against',
+            'arrested',
+            'social_media',
+            'social_media_type',
+            'role',
+            'appearance',
+            'occupation',
+            'interviewer_believes',
+            'pv_believes',
+            'form_id',
+            'form_type',
+            'form_number',
+            'station_id',
+            'master_set_by',
+            'master_set_date',
+            'master_set_notes',
+            'personidentification_set',
         ]
+        
+    form_number = serializers.CharField(source='get_form_number', read_only=True)
+    form_type = serializers.CharField(source='get_form_type', read_only=True)
+    station_id = serializers.CharField(source='get_station_id', read_only=True)
+    form_id = serializers.CharField(source='get_form_id', read_only=True)
+    master_set_by = serializers.SerializerMethodField(read_only=True)
+    personidentification_set = PersonIdentificationSerializer(many=True)
+        
+    def get_master_set_by(self, obj):
+        if obj.master_set_by is not None:
+            return obj.master_set_by.get_full_name()
+        else:
+            return None
+
+class PersonInMasterSerializer(PersonSerializer):
+    class Meta:
+        model = Person
+        fields = [
+            'id',
+            'full_name',
+            'gender',
+            'age',
+            'address1',
+            'address2',
+            'address',
+            'latitude',
+            'longitude',
+            'address_notes',
+            'address_verified',
+            'address_type',
+            'phone_contact',
+            'phone_verified',
+            'phone_type',
+            'birthdate',
+            'estimated_birthdate',
+            'nationality',
+            'photo',
+            'case_filed_against',
+            'arrested',
+            'social_media',
+            'social_media_verified',
+            'social_media_type',
+            'role',
+            'appearance',
+            'occupation',
+            'interviewer_believes',
+            'pv_believes',
+            'form_id',
+            'form_type',
+            'form_number',
+            'station_id',
+            'master_set_by',
+            'master_set_date',
+            'master_set_notes',
+            'personidentification_set',
+        ]
+        extra_kwargs = {
+            'id':{'read_only': True},
+            'full_name':{'read_only': True},
+            'gender':{'read_only': True},
+            'age':{'read_only': True},
+            'address1':{'read_only': True},
+            'address2':{'read_only': True},
+            'address':{'read_only': True},
+            'latitude':{'read_only': True},
+            'longitude':{'read_only': True},
+            'address_notes':{'read_only': True},
+            'address_notes':{'read_only': True},
+            'phone_contact':{'read_only': True},
+            'birthdate':{'read_only': True},
+            'estimated_birthdate':{'read_only': True},
+            'nationality':{'read_only': True},
+            'photo':{'read_only': True},
+            'case_filed_against':{'read_only': True},
+            'arrested':{'read_only': True},
+            'social_media':{'read_only': True},
+            'role':{'read_only': True},
+            'appearance':{'read_only': True},
+            'occupation':{'read_only': True},
+            'interviewer_believes':{'read_only': True},
+            'pv_believes':{'read_only': True},
+            'form_id':{'read_only': True},
+            'form_type':{'read_only': True},
+            'form_number':{'read_only': True},
+            'station_id':{'read_only': True},
+            'master_set_by':{'read_only': True},
+            'master_set_date':{'read_only': True},
+            'master_set_notes':{'read_only': True},
+            'personidentification_set':{'read_only': True},
+        }
+    
+    def update(self, instance, validated_data):
+        instance.address_verified = validated_data.get('address_verified', instance.address_verified)
+        instance.address_type = validated_data.get('address_type', instance.address_type)
+        instance.phone_verified = validated_data.get('phone_verified', instance.phone_verified)
+        instance.phone_type = validated_data.get('phone_type', instance.phone_type)
+        instance.social_media_verified = validated_data.get('social_media_verified', instance.social_media_verified)
+        instance.social_media_type = validated_data.get('social_media_type', instance.social_media_type)
+        instance.save()
+        return instance
+
+class PersonAddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PersonAddress
+        fields = '__all__'
+        
+class PersonPhoneSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PersonPhone
+        fields = '__all__'
+
+class PersonSocialMediaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PersonSocialMedia
+        fields = '__all__'
+
+class PersonDocumentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PersonDocument
+        fields = '__all__'
+        
+    def to_internal_value(self, data):
+        ret = {}
+        
+        id = data.get('id')
+        if id is not None:
+            ret['id'] = id
+        
+        tmp = data.get('master_person_id')
+        master_person = MasterPerson.objects.get(id=tmp)
+        if master_person is not None:
+            ret['master_person'] = master_person
+        
+        file_location = data.get('file_location')
+        if file_location is not None:
+            ret['file_location'] = 'person_documents/' + file_location
+        
+        tmp = data.get('document_type')
+        document_type = DocumentType.objects.get(id=tmp)
+        if document_type is not None:
+            ret['document_type'] = document_type
+        
+        return ret
+    
+    def create(self, validated_data):
+        obj = PersonDocument()
+        obj.master_person = validated_data.get('master_person')
+        obj.file_location = validated_data.get('file_location')
+        obj.document_type = validated_data.get('document_type')
+        obj.save()
+        return obj
+    
+    def update(self, instance, validated_data):
+        tmp = validated_data.get('file_location', instance.file_location)
+        if tmp is not None:
+            parts = tmp.split('/')
+            tmp = 'person_documents/' + parts[len(parts)-1]
+
+        instance.file_location = tmp
+        instance.document_type = validated_data.get('document_type', instance.document_type)
+        instance.save()
+        return instance
+
+class MasterPersonSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MasterPerson
+        fields = [
+            'id',
+            'full_name',
+            'gender',
+            'birthdate',
+            'estimated_birthdate',
+            'nationality',
+            'appearance',
+            'notes',
+            'personaddress_set',
+            'personphone_set',
+            'personsocialmedia_set',
+            'persondocument_set',
+            'person_set',
+        ]
+    
+    personaddress_set = PersonAddressSerializer(many=True, read_only=True)
+    personphone_set = PersonPhoneSerializer(many=True, read_only=True)
+    personsocialmedia_set = PersonSocialMediaSerializer(many=True, read_only=True)
+    persondocument_set = PersonDocumentSerializer(many=True, read_only=True)
+    person_set = PersonInMasterSerializer(many=True, read_only=True)
 
 class IDManagementSerializer(serializers.ModelSerializer):
     aliases = serializers.CharField(source='get_aliases', read_only=True)
@@ -304,6 +547,7 @@ class IDManagementSerializer(serializers.ModelSerializer):
     address1 = Address1Serializer(read_only=True)
     address2 = Address2Serializer(read_only=True)
     alias_group = serializers.CharField(source='get_master_person_id', read_only=True)
+    master_person = serializers.CharField(source='get_master_person_id', read_only=True)
 
     class Meta:
         model = Person
@@ -317,6 +561,7 @@ class IDManagementSerializer(serializers.ModelSerializer):
             'address2',
             'phone_contact',
             'alias_group',
+            'master_person',
             'aliases',
             'form_type',
             'form_name',

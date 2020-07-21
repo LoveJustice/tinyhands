@@ -1,9 +1,10 @@
 from django.conf.urls import url
 
 from dataentry.views import Address2ViewSet, Address1ViewSet, GeoCodeAddress1APIView, GeoCodeAddress2APIView, InterceptionRecordViewSet, VictimInterviewViewSet, IntercepteeViewSet, VictimInterviewDetailViewSet, PhotoExporter, IrfCsvExportView, VifCsvExportView, InterceptionAlertViewSet, PermissionViewSet, UserLocationPermissionViewSet
-from dataentry.views import PersonViewSet
+from dataentry.views import PersonViewSet, MasterPersonViewSet
 from dataentry.views import SiteSettingsViewSet, GoogleMapKeyViewSet
 from dataentry.views import CountryViewSet
+from dataentry.views import RegionViewSet
 from dataentry.views import IDManagementViewSet, TraffickerCheckViewSet, IrfFormViewSet, CifFormViewSet, VdfFormViewSet
 from dataentry.views import FormViewSet, FormTypeViewSet
 from dataentry.views import MonthlyReportFormViewSet
@@ -57,6 +58,16 @@ urlpatterns = [
         #Persons
         url(r'^person/$', PersonViewSet.as_view({'get': 'list'}), name="Person"),
         url(r'^person/associated/(?P<station_id>\d+)/(?P<form_number>\w+)/$', PersonViewSet.as_view({'get': 'associated_persons'}), name="AssociatedPersons"),
+        
+         url(r'^master-person/$', MasterPersonViewSet.as_view({'get': 'list'}), name="MasterPerson"),
+         url(r'^master-person/(?P<pk>\d+)/$', MasterPersonViewSet.as_view(detail), name='MasterPersonDetail'),
+         url(r'^master-person/type/(?P<type_name>[^/]+)/$', MasterPersonViewSet.as_view({'get':'retrieve_type'}), name='MasterPersonType'),
+         url(r'^master-person/pv-relations/(?P<id>\d+)/$', MasterPersonViewSet.as_view({'get':'retrieve_pv_relations'}), name='MasterPersonRelations'),
+         url(r'^master-person/remove/(?P<id>\d+)/(?P<person_id>\d+)/$', MasterPersonViewSet.as_view({'put':'remove_person'}), name='MasterPersonRemove'),
+         url(r'^master-person/match/(?P<id>\d+)/(?P<type_id>\d+)/$', MasterPersonViewSet.as_view({'get':'retrieve_matches'}), name='MasterPersonMatch'),
+         url(r'^master-person/update-match/(?P<id>\d+)/$', MasterPersonViewSet.as_view({'put':'update_match'}), name='MasterPersonUpdateMatch'),
+         url(r'^master-person/create-match/$', MasterPersonViewSet.as_view({'put':'create_match'}), name='MasterPersonCreateMatch'),
+         url(r'^master-person/merge/(?P<id1>\d+)/(?P<id2>\d+)/$', MasterPersonViewSet.as_view({'put':'merge_master_persons'}), name='MasterPersonMerge'),
 
         #KnownPersons
         url(r'^idmgmt/$', IDManagementViewSet.as_view({'get': 'list'}), name="IDManagement"),
@@ -68,6 +79,7 @@ urlpatterns = [
         url(r'^idmgmt/(?P<pk>\d+)/addgroup/(?P<pk2>\d+)/$', IDManagementViewSet.as_view({'put':'add_alias_group'}), name="IDManagementAdd"),
         url(r'^idmgmt/(?P<pk>\d+)/removegroup/$', IDManagementViewSet.as_view({'put':'remove_alias_group'}), name="IDManagementRemove"),
 
+        url(r'^region/$', RegionViewSet.as_view(list), name='Region'),
         #Countries
         url(r'^country/$', CountryViewSet.as_view(list), name='Country'),
         url(r'^country/(?P<pk>\d+)/$', CountryViewSet.as_view(detail), name='Countrydetail'),
@@ -78,12 +90,14 @@ urlpatterns = [
        url(r'^user_permission_list/$', UserLocationPermissionViewSet.as_view({'get':'user_permission_list'}), name='UserLocationPermissionList'),
        url(r'^user_permission/(?P<pk>\d+)/$', UserLocationPermissionViewSet.as_view({'get':'user_permissions', 'put':'update_permissions'}), name='UserLocationPermission'),
        url(r'^user_permission/countries/(?P<pk>\d+)/$', UserLocationPermissionViewSet.as_view({'get':'user_countries'}), name='UserPermissionCountries'),
+       url(r'^user_permission/countries/current-user/$', UserLocationPermissionViewSet.as_view({'get':'user_countries_current_user'}), name='UserPermissionCountriesCurrent'),
         url(r'^user_permission/stations/(?P<pk>\d+)/$', UserLocationPermissionViewSet.as_view({'get':'user_stations'}), name='UserPermissionStations'),
         
         url(r'^irfNew/$', IrfFormViewSet.as_view(list), name='irfNew'),
         url(r'^irfNew/(?P<station_id>\d+)/(?P<pk>\d+)', IrfFormViewSet.as_view({'get': 'my_retrieve', 'put': 'update', 'delete': 'destroy'}), name='irfNewDetail'),
         url(r'^irfNew/blank/(?P<station_id>\d+)', IrfFormViewSet.as_view({'get': 'retrieve_blank_form'}), name='irfNewBlank'),
         url(r'^irfNew/tally/$', IrfFormViewSet.as_view({'get': 'tally'}), name='irfNewTally'),
+        url(r'^irfNew/six-month-tally/$', IrfFormViewSet.as_view({'get': 'six_month_tally'}), name='sixMonthTally'),
         
         
         url(r'^forms/$', FormViewSet.as_view({'get':'list'}), name='forns'),

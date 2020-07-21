@@ -10,7 +10,8 @@ from .person import Person, PersonFormCache
 from .victim_interview import VictimInterview
 from .country import Country
 from .alias_group import AliasGroup
-from .master_person import MasterPerson
+from .master_person import MasterPerson, PersonAddress, PersonPhone, PersonSocialMedia, PersonDocument, AddressType, DocumentType, PhoneType, SocialMediaType, PersonMatch, MatchType
+from .match_history import MatchAction, MatchHistory
 from .red_flags import RedFlags
 from .interception_alert import InterceptionAlert
 from .permission import Permission
@@ -21,3 +22,5 @@ from .cif_common import CifCommon, LocationBoxCommon, PersonBoxCommon, Potential
 from .vdf_common import VdfCommon, VdfAttachmentCommon
 from .monthly_report import MonthlyReport, MonthlyReportAttachment
 from .indicator_history import IndicatorHistory
+from .region import Region
+from .interception_cache import InterceptionCache

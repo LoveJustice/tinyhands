@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.postgres.fields import JSONField
 
+from .region import Region
+
 class Country(models.Model):
     name = models.CharField(max_length=100)
     latitude = models.FloatField()
@@ -12,6 +14,7 @@ class Country(models.Model):
     verification_start_month = models.PositiveIntegerField(null=True)
     verification_goals = JSONField(null=True)
     options = JSONField(null=True)
+    region = models.ForeignKey(Region)
 
     def __str__(self):
         return self.name

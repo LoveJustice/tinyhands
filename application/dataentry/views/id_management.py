@@ -9,15 +9,15 @@ from rest_framework.response import Response
 from rest_api.authentication import HasPermission
 from rest_framework import filters as fs
 from itertools import chain
+from django.db.models import Q
 
 from dataentry import fuzzy_matching
 from dataentry.serializers import IDManagementSerializer, PersonFormsSerializer
-from dataentry.models import MasterPerson, Person, PersonFormCache, Interceptee, VictimInterview
+from dataentry.models import MasterPerson, Person, PersonFormCache, Interceptee, VictimInterview, PersonMatch
 
 logger = logging.getLogger(__name__)
 
 class IDManagementViewSet(viewsets.ModelViewSet):
-    queryset = Person.objects.all()
     serializer_class = IDManagementSerializer
     permission_classes = (IsAuthenticated, HasPermission)
     permissions_required = ['permission_irf_edit', 'permission_vif_edit']
@@ -25,6 +25,22 @@ class IDManagementViewSet(viewsets.ModelViewSet):
     search_fields = ('full_name','phone_contact')
     ordering_fields = ('full_name', 'age', 'gender', 'phone_contact', 'address1__name', 'address2__name')
     ordering = ('full_name',)
+    
+    def get_queryset(self):    
+        queryset = Person.objects.all()
+        exclude_master_person_id = self.request.GET.get('exclude_master_person_id')
+        if exclude_master_person_id is not None:
+            exclude_list = [exclude_master_person_id]
+            results = PersonMatch.objects.filter(Q(master1__id=exclude_master_person_id) | Q(master2__id=exclude_master_person_id))
+            for result in results:
+                if result.master1.id == int(exclude_master_person_id):
+                    exclude_list.append(result.master2.id)
+                else:
+                    exclude_list.append(result.master1.id)
+                    
+            queryset = queryset.exclude(master_person__id__in=exclude_list)
+        
+        return queryset
 
     def person_forms(self, request):
         person_id = request.GET['person_id']
