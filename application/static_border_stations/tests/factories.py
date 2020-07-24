@@ -21,7 +21,6 @@ class CountryFactory(DjangoModelFactory):
     name = 'Test Country'
     latitude = 1
     longitude = 1
-    exchange_rate = 1
     region = factory.SubFactory(RegionFactory)
 
 class BorderStationFactory(DjangoModelFactory):

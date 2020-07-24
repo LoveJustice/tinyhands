@@ -25,7 +25,6 @@
         },
         "options": null,
         "region": 2,
-        "exchange_rate": 112.0,
         "prior_intercepts": 0,
         "prior_arrests": 0,
         "prior_convictions": 0
@@ -46,7 +45,6 @@
         "verification_goals": null,
         "options": null,
         "region": 1,
-        "exchange_rate": 1.0,
         "prior_intercepts": 0,
         "prior_arrests": 0,
         "prior_convictions": 0
@@ -91,7 +89,6 @@
             ]
         },
         "region": 2,
-        "exchange_rate": 1.0,
         "prior_intercepts": 0,
         "prior_arrests": 0,
         "prior_convictions": 0
@@ -123,7 +120,6 @@
         },
         "options": null,
         "region": 2,
-        "exchange_rate": 1.0,
         "prior_intercepts": 0,
         "prior_arrests": 0,
         "prior_convictions": 0
@@ -144,7 +140,6 @@
         "verification_goals": null,
         "options": null,
         "region": 1,
-        "exchange_rate": 1.0,
         "prior_intercepts": 0,
         "prior_arrests": 0,
         "prior_convictions": 0
@@ -165,7 +160,6 @@
         "verification_goals": null,
         "options": null,
         "region": 1,
-        "exchange_rate": 1.0,
         "prior_intercepts": 0,
         "prior_arrests": 0,
         "prior_convictions": 0
@@ -197,7 +191,6 @@
         },
         "options": null,
         "region": 1,
-        "exchange_rate": 1.0,
         "prior_intercepts": 0,
         "prior_arrests": 0,
         "prior_convictions": 0
@@ -229,7 +222,6 @@
         },
         "options": null,
         "region": 1,
-        "exchange_rate": 1.0,
         "prior_intercepts": 0,
         "prior_arrests": 0,
         "prior_convictions": 0
@@ -250,7 +242,6 @@
         "verification_goals": null,
         "options": null,
         "region": 1,
-        "exchange_rate": 1.0,
         "prior_intercepts": 0,
         "prior_arrests": 0,
         "prior_convictions": 0
@@ -271,7 +262,6 @@
         "verification_goals": null,
         "options": null,
         "region": 1,
-        "exchange_rate": 1.0,
         "prior_intercepts": 0,
         "prior_arrests": 0,
         "prior_convictions": 0
@@ -292,7 +282,6 @@
         "verification_goals": null,
         "options": null,
         "region": 1,
-        "exchange_rate": 1.0,
         "prior_intercepts": 0,
         "prior_arrests": 0,
         "prior_convictions": 0
@@ -313,7 +302,6 @@
         "verification_goals": null,
         "options": null,
         "region": 2,
-        "exchange_rate": 1.0,
         "prior_intercepts": 0,
         "prior_arrests": 0,
         "prior_convictions": 0
@@ -345,7 +333,6 @@
         },
         "options": null,
         "region": 2,
-        "exchange_rate": 1.0,
         "prior_intercepts": 0,
         "prior_arrests": 0,
         "prior_convictions": 0
@@ -366,7 +353,6 @@
         "verification_goals": null,
         "options": null,
         "region": 1,
-        "exchange_rate": 1.0,
         "prior_intercepts": 0,
         "prior_arrests": 0,
         "prior_convictions": 0
@@ -387,7 +373,6 @@
         "verification_goals": null,
         "options": null,
         "region": 2,
-        "exchange_rate": 1.0,
         "prior_intercepts": 0,
         "prior_arrests": 0,
         "prior_convictions": 0
@@ -419,7 +404,6 @@
         },
         "options": null,
         "region": 1,
-        "exchange_rate": 1.0,
         "prior_intercepts": 0,
         "prior_arrests": 0,
         "prior_convictions": 0
@@ -451,7 +435,6 @@
         },
         "options": null,
         "region": 1,
-        "exchange_rate": 1.0,
         "prior_intercepts": 0,
         "prior_arrests": 0,
         "prior_convictions": 0

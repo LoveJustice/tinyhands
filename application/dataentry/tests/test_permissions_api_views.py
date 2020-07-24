@@ -22,7 +22,6 @@ class PermissionTest(APITestCase):
             tmp.name = name
             tmp.latitude = 0
             tmp.longitude = 0
-            tmp.exchange_rate = 1
             tmp.region = Region.objects.get(name='Asia')
             tmp.save()
             result = Country.objects.get(name=name)
