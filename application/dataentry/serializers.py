@@ -2,11 +2,12 @@ import datetime
 import json
 
 from rest_framework import serializers
+from django.db.models import Sum
 
 from dataentry.models import Address1, Address2, Region, Country, SiteSettings, InterceptionRecord, VictimInterview, BorderStation, MasterPerson, Person
 from dataentry.models import Interceptee, InterceptionAlert, Permission, UserLocationPermission, Form, FormType, PersonAddress, PersonPhone, PersonSocialMedia, PersonDocument
 from dataentry.models import AddressType, DocumentType, PhoneType, SocialMediaType, PersonIdentification
-from dataentry.models import OperationsData
+from dataentry.models import StationStatistics, LocationStatistics, LocationStaff
 from static_border_stations.serializers import LocationSerializer
 from dataentry.form_data import FormData
 
@@ -658,10 +659,10 @@ class FormSerializer(serializers.ModelSerializer):
         fields = ['id', 'form_name', 'form_type']
         model = Form
 
-class OperationsDataSerializer(serializers.ModelSerializer):
+class StationStatisticsSerializer(serializers.ModelSerializer):
     class Meta:
         fields = '__all__'
-        model = OperationsData
+        model = StationStatistics
         fields = fields = [
             'id',
             'year_month',
@@ -676,10 +677,22 @@ class OperationsDataSerializer(serializers.ModelSerializer):
             'station_name',
             'station_open',
         ]
-        
+    
+    intercepts = serializers.SerializerMethodField(read_only=True)
+    arrests = serializers.SerializerMethodField(read_only=True)
+    staff = serializers.SerializerMethodField(read_only=True)
     station_code = serializers.SerializerMethodField(read_only=True)
     station_name = serializers.SerializerMethodField(read_only=True)
     station_open = serializers.SerializerMethodField(read_only=True)
+    
+    def get_intercepts(self, obj):
+        return LocationStatistics.objects.filter(station=obj.station, year_month=obj.year_month).aggregate(Sum('intercepts'))['intercepts__sum']
+    
+    def get_arrests(self, obj):
+        return LocationStatistics.objects.filter(station=obj.station, year_month=obj.year_month).aggregate(Sum('arrests'))['arrests__sum']
+    
+    def get_staff(self, obj):
+        return LocationStaff.objects.filter(location__station=obj.station, year_month=obj.year_month).aggregate(Sum('work_portion'))['work_portion__sum']
     
     def get_station_code(self, obj):
         return obj.station.station_code
@@ -689,4 +702,12 @@ class OperationsDataSerializer(serializers.ModelSerializer):
     
     def get_station_open(self, obj):
         return obj.station.open
+
+class LocationStaffSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = '__all__'
+        model = LocationStaff 
+    
+    
+    
     

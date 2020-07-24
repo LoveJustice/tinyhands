@@ -9,19 +9,18 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
+        ('static_border_stations', '0003_auto_20200721_1709'),
         ('dataentry', '0147_auto_20200702_1306'),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='OperationsData',
+            name='StationStatistics',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('year_month', models.PositiveIntegerField()),
                 ('compliance', models.FloatField(null=True)),
                 ('budget', models.PositiveIntegerField(null=True)),
-                ('intercepts', models.PositiveIntegerField(null=True)),
-                ('arrests', models.PositiveIntegerField(null=True)),
                 ('gospel', models.PositiveIntegerField(null=True)),
                 ('empowerment', models.PositiveIntegerField(null=True)),
                 ('cifs', models.PositiveIntegerField(null=True)),
@@ -29,11 +28,29 @@ class Migration(migrations.Migration):
                 ('station', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='dataentry.BorderStation')),
             ],
         ),
-        migrations.AddField(
-            model_name='country',
-            name='exchange_rate',
-            field=models.FloatField(default=1.0),
-            preserve_default=False,
+        migrations.CreateModel(
+            name='LocationStatistics',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('year_month', models.PositiveIntegerField()),
+                ('intercepts', models.PositiveIntegerField(null=True)),
+                ('arrests', models.PositiveIntegerField(null=True)),
+                ('location', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='static_border_stations.Location')),
+                ('station', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='dataentry.BorderStation')),
+            ],
+        ),
+        migrations.CreateModel(
+            name='CountryExchange',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('year_month', models.PositiveIntegerField()),
+                ('exchange_rate', models.FloatField(default=1)),
+            ],
+        ),
+         migrations.AddField(
+            model_name='countryexchange',
+            name='country',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='dataentry.Country'),
         ),
         migrations.AddField(
             model_name='borderstation',
@@ -54,6 +71,16 @@ class Migration(migrations.Migration):
             model_name='country',
             name='prior_intercepts',
             field=models.IntegerField(default=0),
+        ),
+        migrations.CreateModel(
+            name='LocationStaff',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('year_month', models.PositiveIntegerField()),
+                ('work_fraction', models.FloatField(null=True)),
+                ('location', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='static_border_stations.Location')),
+                ('staff', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='static_border_stations.Staff')),
+            ],
         ),
         
         migrations.RunSQL("insert into dataentry_permission (permission_group, action, min_level)  values ('STATION_STATISTICS','VIEW','COUNTRY')"),

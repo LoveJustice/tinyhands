@@ -4,7 +4,7 @@ import datetime
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.management.base import BaseCommand
 
-from dataentry.models import BorderStation, OperationsData
+from dataentry.models import BorderStation, StationStatistics
 
 class Command(BaseCommand):
     def add_arguments(self, parser):
@@ -58,9 +58,9 @@ class Command(BaseCommand):
                     year_month_csv = ' ' + str(year) + ' ' + str_month
                     
                     try:
-                        entry = OperationsData.objects.get(station=station, year_month=year_month)
+                        entry = StationStatistics.objects.get(station=station, year_month=year_month)
                     except ObjectDoesNotExist:
-                        entry = OperationsData()
+                        entry = StationStatistics()
                         entry.station = station
                         entry.year_month = year_month
                     

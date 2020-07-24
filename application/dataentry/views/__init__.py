@@ -17,4 +17,4 @@ from .monthly_report_form import *
 from .indicators import *
 from .border_station_form import *
 from .region import *
-from .operations_dashboard import *
+from .statistics_dashboard import *

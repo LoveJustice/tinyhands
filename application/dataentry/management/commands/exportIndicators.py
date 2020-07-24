@@ -4,7 +4,7 @@ from django.core.management.base import BaseCommand
 from django.conf import settings
 
 from export_import.google_sheet import GoogleSheet
-from dataentry.models import BorderStation, OperationsData
+from dataentry.models import BorderStation, StationStatistics
 from export_import.data_indicator_io import get_data_collection_indicator_export_rows, get_data_entry_indicator_export_rows
 
 class Command(BaseCommand):
@@ -48,7 +48,7 @@ class Command(BaseCommand):
             try:
                 value = float(indicator[compliance])
                 try:
-                    operations_data = OperationsData.objects.get(station=station, year_month=year_month)
+                    operations_data = StationStatistics.objects.get(station=station, year_month=year_month)
                     operations_data.compliance = value
                     operations_data.save()
                 except ObjectDoesNotExist:

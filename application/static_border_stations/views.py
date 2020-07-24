@@ -66,7 +66,7 @@ class LocationViewSet(BorderStationRestAPI):
         """
             retrieve all locations for a particular border_station
         """
-        self.object_list = self.filter_queryset(self.get_queryset().filter(border_station=self.kwargs['pk'], last_date__isnull=True))
+        self.object_list = self.filter_queryset(self.get_queryset().filter(border_station=self.kwargs['pk'], active=True)).order_by('name')
         serializer = self.get_serializer(self.object_list, many=True)
         return Response(serializer.data)
 

@@ -6,7 +6,8 @@ from django.core.management.base import BaseCommand
 from django.apps import apps
 
 from budget.models import BorderStationBudgetCalculation
-from dataentry.models import BorderStation, CifCommon, IntercepteeCommon, OperationsData
+from dataentry.models import BorderStation, CifCommon, Country, CountryExchange, IntercepteeCommon, LocationStatistics, StationStatistics
+from static_border_stations.models import Location
 
 
 
@@ -23,6 +24,10 @@ class Command(BaseCommand):
             action='append',
             type=int,
         )
+        
+    def location_tag(self, station, name):
+        return station.station_code + "_" + name.lower()
+
         
     def handle(self, *args, **options):
         current_date = datetime.datetime.now()
@@ -51,12 +56,79 @@ class Command(BaseCommand):
         last_country = None
             
         year_month = year * 100 + month
+        
+        if month == 1:
+            prior_year_month = (year - 1)*100 + 12
+        else:
+            prior_year_month = year_month - 1
+        
+        # create exchange rate entries
+        countries = Country.objects.all()
+        for country in countries:
+            try:
+                exchange = CountryExchange.objects.get(country=country, year_month=year_month)
+            except ObjectDoesNotExist:
+                exchange = CountryExchange()
+                exchange.country = country
+                exchange.year_month = year_month
+            
+            try:
+                prior = CountryExchange.objects.get(country=country, year_month=prior_year_month)
+                exchange.exchange_rate = prior.exchange_rate
+            except ObjectDoesNotExist:
+                exchange.exchange_rate = 1.0
+            
+            exchange.save()
+            
+        
+        location_map = {}
+        for location_statistics in LocationStatistics.objects.filter(year_month=year_month):
+            if location_statistics.location is not None:
+                location_tag = self.location_tag(location_statistics.station, location_statistic.location.name)
+            else:
+                location_tag = self.location_tag(location_statistics.station, '_other')
+            location_statistics.intercepts = 0
+            location_map[location_tag] = location_statistics
+        
+        intercepts = IntercepteeCommon.objects.filter(
+                person__role = 'PVOT',
+                interception_record__logbook_second_verification_date__gte=start_date,
+                interception_record__logbook_second_verification_date__lte=end_date
+                )
+        for intercept in intercepts:
+            location_tag = self.location_tag(intercept.interception_record.station, intercept.interception_record.location)
+            if location_tag not in location_map:
+                try:
+                    location = Location.objects.get(border_station=intercept.interception_record.station, name__iexact=intercept.interception_record.location)
+                    location_statistics = LocationStatistics()
+                    location_statistics.year_month = year_month
+                    location_statistics.location = location
+                    location_statistics.station = intercept.interception_record.station
+                    location_statistics.intercepts = 0
+                    location_statistics.arrests = 0
+                    location_map[location_tag] = location_statistics
+                except ObjectDoesNotExist: 
+                    location_tag = self.location_tag(intercept.interception_record.station, '_other')
+                    if location_tag not in location_map:
+                        location_statistics = LocationStatistics()
+                        location_statistics.year_month = year_month
+                        location_statistics.location = None
+                        location_statistics.station = intercept.interception_record.station
+                        location_statistics.intercepts = 0
+                        location_statistics.arrests = 0
+                        location_map[location_tag] = location_statistics
+                
+            location_map[location_tag].intercepts += 1
+        
+        for location_tag in location_map.keys():
+            location_map[location_tag].save()
+        
         border_stations = BorderStation.objects.all().order_by('operating_country')
         for station in border_stations:
             try:
-                entry = OperationsData.objects.get(year_month=year_month, station=station)
+                entry = StationStatistics.objects.get(year_month=year_month, station=station)
             except ObjectDoesNotExist:
-                entry = OperationsData()
+                entry = StationStatistics()
                 entry.year_month = year_month
                 entry.station = station
                 entry.save()
@@ -69,15 +141,6 @@ class Command(BaseCommand):
             except ObjectDoesNotExist:
                 pass
             
-            # interceptions
-            entry.intercepts = IntercepteeCommon.objects.filter(
-                person__role = 'PVOT',
-                interception_record__logbook_second_verification_date__gte=start_date,
-                interception_record__logbook_second_verification_date__lte=end_date,
-                interception_record__station=station
-                ).count()
-            
-            # arrests
             # gospel
             # empowerment
             
