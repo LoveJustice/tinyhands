@@ -9,10 +9,10 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Sum
 from django.db import transaction
 from dataentry.models import StationStatistics
-from dataentry.serializers import StationStatisticsSerializer, LocationStaffSerializer
+from dataentry.serializers import StationStatisticsSerializer, LocationStaffSerializer, LocationStatisticsSerializer
 from rest_api.authentication import HasPostPermission, HasPutPermission, HasDeletePermission
 
-from dataentry.models import Country, CountryExchange, LocationStaff, LocationStatistics, StationStatistics, MonthlyReport
+from dataentry.models import BorderStation, Country, CountryExchange, LocationStaff, LocationStatistics, StationStatistics, MonthlyReport
 from static_border_stations.models import Location, Staff
 
 logger = logging.getLogger(__name__)
@@ -178,5 +178,48 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
         location_staff.save()
         serializer = LocationStaffSerializer(location_staff, context={'request': request})
         return Response(serializer.data)
+    
+    def retrieve_location_statistics(self, request, station_id, year_month):
+        results = LocationStatistics.objects.filter(station__id=station_id, year_month=year_month)
+        current_locations = []
+        for result in results:
+            current_locations.append(result.location)
+        staff_entries = LocationStaff.objects.filter(location__border_station__id=station_id, year_month=year_month).exclude(location__in=current_locations)
+        if len(staff_entries) > 0:
+            for entry in staff_entries:
+                location_statistics = LocationStatistics()
+                location_statistics.station = entry.location.border_station
+                location_statistics.location = entry.location
+                location_statistics.year_month = entry.year_month
+                location_statistics.save()
+            results = LocationStatistics.objects.filter(station__id=station_id, year_month=year_month)
+            
+        serializer = LocationStatisticsSerializer(results, many=True, context={'request':request})
+        return Response(serializer.data)
+    
+    def update_location_statistics(self, request):
+        location_id = request.data['location']
+        station_id = request.data['station']
+        year_month = request.data['year_month']
+        arrests = request.data['arrests']
+        try:
+            location_statistics = LocationStatistics.objects.get(location__id=location_id, year_month=year_month)
+        except ObjectDoesNotExist:
+            station = BorderStation.objects.get(id=station_id)
+            if location_id is None:
+                location = None
+            else:
+                location = Location.objects.get(id=location_id)
+            location_statistics = LocationStatistics()
+            location_statistics.location = location
+            location_statistics.station = station
+            location_statistics.year_month = year_month
+        
+        location_statistics.arrests = arrests
+        location_statistics.save()
+        serializer = LocationStatisticsSerializer(location_statistics, context={'request': request})
+        return Response(serializer.data)
+        
+        
             
 

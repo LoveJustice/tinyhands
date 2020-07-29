@@ -9,9 +9,6 @@ from budget.models import BorderStationBudgetCalculation
 from dataentry.models import BorderStation, CifCommon, Country, CountryExchange, IntercepteeCommon, LocationStatistics, StationStatistics
 from static_border_stations.models import Location
 
-
-
-
 class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument(
@@ -84,7 +81,7 @@ class Command(BaseCommand):
         location_map = {}
         for location_statistics in LocationStatistics.objects.filter(year_month=year_month):
             if location_statistics.location is not None:
-                location_tag = self.location_tag(location_statistics.station, location_statistic.location.name)
+                location_tag = self.location_tag(location_statistics.station, location_statistics.location.name)
             else:
                 location_tag = self.location_tag(location_statistics.station, '_other')
             location_statistics.intercepts = 0
@@ -105,7 +102,6 @@ class Command(BaseCommand):
                     location_statistics.location = location
                     location_statistics.station = intercept.interception_record.station
                     location_statistics.intercepts = 0
-                    location_statistics.arrests = 0
                     location_map[location_tag] = location_statistics
                 except ObjectDoesNotExist: 
                     location_tag = self.location_tag(intercept.interception_record.station, '_other')
@@ -115,7 +111,6 @@ class Command(BaseCommand):
                         location_statistics.location = None
                         location_statistics.station = intercept.interception_record.station
                         location_statistics.intercepts = 0
-                        location_statistics.arrests = 0
                         location_map[location_tag] = location_statistics
                 
             location_map[location_tag].intercepts += 1

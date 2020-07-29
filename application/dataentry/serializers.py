@@ -13,8 +13,6 @@ from dataentry.form_data import FormData
 
 from .helpers import related_items_helper
 
-
-
 class Address1Serializer(serializers.ModelSerializer):
     class Meta:
         fields = '__all__'
@@ -706,7 +704,25 @@ class StationStatisticsSerializer(serializers.ModelSerializer):
 class LocationStaffSerializer(serializers.ModelSerializer):
     class Meta:
         fields = '__all__'
-        model = LocationStaff 
+        model = LocationStaff
+
+class LocationStatisticsSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = [
+            'id',
+            'year_month',
+            'location',
+            'station',
+            'staff',
+            'intercepts',
+            'arrests',
+            ]
+        model = LocationStatistics
+    
+    staff = serializers.SerializerMethodField(read_only=True)
+
+    def get_staff(self, obj):
+        return LocationStaff.objects.filter(location=obj.location, year_month=obj.year_month).aggregate(Sum('work_fraction'))['work_fraction__sum']
     
     
     
