@@ -18,6 +18,7 @@ class Country(models.Model):
     prior_intercepts = models.IntegerField(default=0)
     prior_arrests = models.IntegerField(default=0)
     prior_convictions = models.IntegerField(default=0)
+    enable_all_locations = models.BooleanField(default=False)
     
 
     def __str__(self):

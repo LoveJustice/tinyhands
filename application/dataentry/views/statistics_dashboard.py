@@ -9,7 +9,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Sum
 from django.db import transaction
 from dataentry.models import StationStatistics
-from dataentry.serializers import StationStatisticsSerializer, LocationStaffSerializer, LocationStatisticsSerializer
+from dataentry.serializers import StationStatisticsSerializer, LocationStaffSerializer, LocationStatisticsSerializer, CountryExchangeSerializer
 from rest_api.authentication import HasPostPermission, HasPutPermission, HasDeletePermission
 
 from dataentry.models import BorderStation, Country, CountryExchange, LocationStaff, LocationStatistics, StationStatistics, MonthlyReport
@@ -26,6 +26,111 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
         results = StationStatistics.objects.filter(station__operating_country__id=country_id, year_month=year_month).order_by('station__non_transit', 'station__station_name')
         
         serializer = StationStatisticsSerializer(results , many=True, context={'request': request})
+        return Response(serializer.data)
+    
+    def update_station_data(self, request):
+        station_id = request.data['station']
+        year_month = request.data['year_month']
+        budget = request.data['budget']
+        gospel = request.data['gospel']
+        empowerment = request.data['empowerment']
+        station = BorderStation.objects.get(id=station_id)
+        try:
+            station_statistics = StationStatistics.objects.get(station=station, year_month=year_month)
+        except ObjectDoesNotExist:
+            station_statistics = StationStatistics()
+            station_statistics.station = station
+            station_statistics.year_month = year_month
+            
+        station_statistics.budget = budget
+        station_statistics.gospel = gospel
+        station_statistics.empowerment = empowerment
+        if not station.operating_country.enable_all_locations:
+            # if enable_all_lcoations is not true, then the staff and arrests can be updated here
+            other_location = Location.get_or_create_other_location(station)
+            general_staff = Staff.get_or_create_general_staff(station)
+            staff_value = request.data['staff']
+            if staff is not None and staff != '':
+                try:
+                    location_staff = LocationStaff.objects.get(location=other_location, staff=general_staff, year_month=year_month)
+                    location_staff.work_fraction = staff_value
+                    save()
+                except ObjectDoesNotExist:
+                    # LocationStaff does not exist and new values are blank - so ignore
+                    pass
+            else:
+                try:
+                    location_staff = LocationStaff.objects.get(location=other_location, staff=general_staff, year_month=year_month)
+                except ObjectDoesNotExist:
+                    location_staff = LocationStaff()
+                    location_staff.location = other_location
+                    location_staff.staff = general_staff
+                    year_month = year_month
+                    
+                location_staff.work_fraction = staff_value
+                save()
+            
+            arrests = request.data['arrests']
+            if arrests is not None and arrests != '':
+                try:
+                    location_statistics = LocationStatistics.objects.get(location=otherLocation, year_month=year_month)
+                    location_statistics.arrests = arrests
+                    save()
+                except ObjectDoesNotExist:
+                    # LocationStatistics does not exist and new valuse are blank - so ignore
+                    pass
+            else:
+                try:
+                    location_statistics = LocationStatistics.objects.get(location=otherLocation, year_month=year_month)
+                except ObjectDoesNotExist:
+                    location_statistics = LocationStatistics()
+                    location_statistics.location = other_location
+                    year_month = year_month
+                
+                location_statistics.arrests = arrests
+                location_statistics.save()
+                
+        station_statistics.save()
+        serializer = StationStatisticsSerializer(station_statistics, context={'request': request})
+        return Response(serializer.data)
+    
+    def get_exchange_rate(self, request, country_id, year_month):
+        try:
+            exchange = CountryExchange.objects.get(country__id=country_id, year_month=year_month)
+        except ObjectDoesNotExist:
+            exchange = CountryExchange()
+            exchange.country = Country.objects.get(id=country_id)
+            exchange.year_month = year_month
+            
+            year = int(year_month) // 100
+            month = int(year_month) % 100
+            month -= 1
+            if month < 1:
+                month = 12
+                year -= 1
+            try:
+                prior = CountryExchange.objects.get(country__id=country_id, year_month=(year * 100 + month))
+                exchange.exchange_rate = prior.exchange_rate
+            except:
+                exchange.exchange_rate = 1
+            exchange.save()
+        serializer = CountryExchangeSerializer(exchange, context={'request': request})
+        return Response(serializer.data)
+    
+    def update_exchange_rate(self, request):
+        country_id = request.data['country']
+        year_month = request.data['year_month']
+        exchange_rate = request.data['exchange_rate']
+        
+        try:
+            exchange = CountryExchange.objects.get(country__id=country_id, year_month=year_month)
+        except:
+            exchange = CountryExchange()
+            exchange.country = Country.objects.get(id=country_id)
+            exchange.year_month = year_month
+        exchange.exchange_rate = exchange_rate
+        exchange.save()
+        serializer = CountryExchangeSerializer(exchange, context={'request': request})
         return Response(serializer.data)
     
     def set_country_data(self, request):
@@ -119,7 +224,9 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
                         }
                     dash_station['to_date_intercepts'] = LocationStatistics.objects.filter(station=entry.station).aggregate(Sum('intercepts'))['intercepts__sum']
                     dash_station['to_date_arrests'] = LocationStatistics.objects.filter(station=entry.station, year_month=entry.year_month).aggregate(Sum('arrests'))['arrests__sum']
-                    dash_station['to_date_convictions'] = StationStatistics.objects.filter(station=entry.station).aggregate(Sum('convictions'))['convictions__sum']
+                    station_stats = StationStatistics.objects.filter(station=entry.station)
+                    for station_stat in station_stats:
+                        self.sum_element(dash_station, 'to_date_budget', self.apply_exchange_rate(station_stat.budget, station_stat.station.operating_country, station_stat.year_month))
                     try:
                         monthly = MonthlyReport.objects.get(station=entry.station, year=year, month=month)
                         dash_station['monthly_report'] = monthly.average_points
@@ -127,10 +234,10 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
                         dash_station['monthly_report'] = None
                     
                     for element in ['last_budget', 'last_intercepts', 'last_arrests', 'last_gospel', 'last_empowerment', 'last_cifs',
-                                    'to_date_intercepts', 'to_date_arrests', 'to_date_convictions']:
+                                    'to_date_intercepts', 'to_date_arrests']:
                         if dash_station[element] is None or dash_station[element] == '':
                             dash_station[element] = 0
-            
+                    
                 self.sum_element(dash_station, '6month_budget', self.apply_exchange_rate(entry.budget, entry.station.operating_country, entry.year_month), 0)
                 for element in ['intercepts', 'arrests', 'gospel', 'empowerment', 'cifs']:
                     self.sum_element(dash_station, '6month_' + element, getattr(entry, element), 0)

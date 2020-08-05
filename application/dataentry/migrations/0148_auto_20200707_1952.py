@@ -25,7 +25,7 @@ class Migration(migrations.Migration):
                 ('empowerment', models.PositiveIntegerField(null=True)),
                 ('cifs', models.PositiveIntegerField(null=True)),
                 ('convictions', models.PositiveIntegerField(null=True)),
-                ('station', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='dataentry.BorderStation')),
+                ('station', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='dataentry.BorderStation')),
             ],
         ),
         migrations.CreateModel(
@@ -35,8 +35,7 @@ class Migration(migrations.Migration):
                 ('year_month', models.PositiveIntegerField()),
                 ('intercepts', models.PositiveIntegerField(null=True)),
                 ('arrests', models.PositiveIntegerField(null=True)),
-                ('location', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='static_border_stations.Location')),
-                ('station', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='dataentry.BorderStation')),
+                ('location', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='static_border_stations.Location')),
             ],
         ),
         migrations.CreateModel(
@@ -72,14 +71,19 @@ class Migration(migrations.Migration):
             name='prior_intercepts',
             field=models.IntegerField(default=0),
         ),
+        migrations.AddField(
+            model_name='country',
+            name='enable_all_locations',
+            field=models.BooleanField(default=False),
+        ),
         migrations.CreateModel(
             name='LocationStaff',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('year_month', models.PositiveIntegerField()),
                 ('work_fraction', models.FloatField(null=True)),
-                ('location', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='static_border_stations.Location')),
-                ('staff', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='static_border_stations.Staff')),
+                ('location', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='static_border_stations.Location')),
+                ('staff', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='static_border_stations.Staff')),
             ],
         ),
         
