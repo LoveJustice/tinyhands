@@ -680,10 +680,10 @@ class StationStatisticsSerializer(serializers.ModelSerializer):
     staff = serializers.SerializerMethodField(read_only=True)
     
     def get_intercepts(self, obj):
-        return LocationStatistics.objects.filter(station=obj.station, year_month=obj.year_month).aggregate(Sum('intercepts'))['intercepts__sum']
+        return LocationStatistics.objects.filter(location__border_station=obj.station, year_month=obj.year_month).aggregate(Sum('intercepts'))['intercepts__sum']
     
     def get_arrests(self, obj):
-        return LocationStatistics.objects.filter(station=obj.station, year_month=obj.year_month).aggregate(Sum('arrests'))['arrests__sum']
+        return LocationStatistics.objects.filter(location__border_station=obj.station, year_month=obj.year_month).aggregate(Sum('arrests'))['arrests__sum']
     
     def get_staff(self, obj):
         return LocationStaff.objects.filter(location__border_station=obj.station, year_month=obj.year_month).aggregate(Sum('work_fraction'))['work_fraction__sum']
@@ -700,7 +700,6 @@ class LocationStatisticsSerializer(serializers.ModelSerializer):
             'id',
             'year_month',
             'location',
-            'station',
             'staff',
             'intercepts',
             'arrests',

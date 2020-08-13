@@ -35,20 +35,17 @@ class Command(BaseCommand):
         else:
             month = current_date.month
             year = current_date.year
-            if (current_date.day < 6):
-                month -= 2
-            else:
-                month -= 1
+            month -= 1
             if month < 1:
                 month = 12 + month
                 year -= 1
         
         if month > 11:
-            end_date = str(year+1) + '-01-05'
+            end_date = str(year+1) + '-01-01'
         else:
-            end_date = str(year) + '-' + str(month+1) + '-05'
+            end_date = str(year) + '-' + str(month+1) + '-01'
         
-        start_date = str(year) + '-' + str(month) + '-06'
+        start_date = str(year) + '-' + str(month) + '-01'
         
         last_country = None
             
@@ -90,7 +87,7 @@ class Command(BaseCommand):
         intercepts = IntercepteeCommon.objects.filter(
                 person__role = 'PVOT',
                 interception_record__logbook_second_verification_date__gte=start_date,
-                interception_record__logbook_second_verification_date__lte=end_date
+                interception_record__logbook_second_verification_date__lt=end_date
                 )
         for intercept in intercepts:
             location_tag = self.location_tag(intercept.interception_record.station, intercept.interception_record.location)
@@ -100,16 +97,15 @@ class Command(BaseCommand):
                     location_statistics = LocationStatistics()
                     location_statistics.year_month = year_month
                     location_statistics.location = location
-                    location_statistics.station = intercept.interception_record.station
                     location_statistics.intercepts = 0
                     location_map[location_tag] = location_statistics
-                except ObjectDoesNotExist: 
-                    location_tag = self.location_tag(intercept.interception_record.station, '_other')
+                except ObjectDoesNotExist:
+                    location = Location.get_or_create_other_location(intercept.interception_record.station)
+                    location_tag = self.location_tag(intercept.interception_record.station, location.name)
                     if location_tag not in location_map:
                         location_statistics = LocationStatistics()
                         location_statistics.year_month = year_month
-                        location_statistics.location = None
-                        location_statistics.station = intercept.interception_record.station
+                        location_statistics.location = location
                         location_statistics.intercepts = 0
                         location_map[location_tag] = location_statistics
                 
@@ -140,10 +136,7 @@ class Command(BaseCommand):
             # empowerment
             
             # cif count 
-            entry.cifs = CifCommon.objects.filter(
-                logbook_submitted__gte=start_date,
-                logbook_submitted__lte=end_date,
-                station=station).count()
+            
             
             # convictions
             

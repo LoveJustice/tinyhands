@@ -23,7 +23,6 @@ class Migration(migrations.Migration):
                 ('budget', models.PositiveIntegerField(null=True)),
                 ('gospel', models.PositiveIntegerField(null=True)),
                 ('empowerment', models.PositiveIntegerField(null=True)),
-                ('cifs', models.PositiveIntegerField(null=True)),
                 ('convictions', models.PositiveIntegerField(null=True)),
                 ('station', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='dataentry.BorderStation')),
             ],

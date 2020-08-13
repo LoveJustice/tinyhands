@@ -62,7 +62,7 @@ class Staff(Person):
     first_date = models.DateField(default=datetime.datetime.now)
     last_date = models.DateField(null=True)
     
-    general_staff = '~general_staff'
+    general_staff = '__general_staff'
     
     @staticmethod 
     def get_or_create_general_staff(border_station):
@@ -74,7 +74,7 @@ class Staff(Person):
             general.border_station = border_station
             general.first_date = datetime.datetime.now()
             general.last_date = general.first_date
-            save()
+            general.save()
         
         return general
 
@@ -90,7 +90,7 @@ class Location(models.Model):
     location_type = models.CharField(max_length=255)
     active = models.BooleanField(default=True)
     
-    other_name = '~Other'
+    other_name = '__Other'
     
     def get_country_id(self):
         if self.border_station is None or self.border_station.operating_country is None:
@@ -115,6 +115,7 @@ class Location(models.Model):
         except ObjectDoesNotExist:
             location = Location()
             location.name = Location.other_name
+            location.border_station = border_station
             location.active = False
             location.location_type = 'monitoring'
             location.save()
