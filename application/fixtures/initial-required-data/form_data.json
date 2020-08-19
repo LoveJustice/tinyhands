@@ -3617,6 +3617,7 @@
 {"model": "dataentry.questionlayout", "pk": null, "fields": {"question": 9, "category": 184, "weight": 0, "form_config": null}},
 {"model": "dataentry.questionlayout", "pk": null, "fields": {"question": 975, "category": 184, "weight": 0, "form_config": null}},
 {"model": "dataentry.questionlayout", "pk": null, "fields": {"question": 976, "category": 184, "weight": 0, "form_config": null}},
+{"model": "dataentry.questionlayout", "pk": null, "fields": {"question": 234, "category": 192, "weight": 0, "form_config": null}},
 {"model": "dataentry.questionstorage", "pk": null, "fields": {"question": 1, "field_name": "irf_number"}},
 {"model": "dataentry.questionstorage", "pk": null, "fields": {"question": 2, "field_name": "number_of_victims"}},
 {"model": "dataentry.questionstorage", "pk": null, "fields": {"question": 3, "field_name": "location"}},
