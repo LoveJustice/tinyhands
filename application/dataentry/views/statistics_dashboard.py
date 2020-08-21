@@ -225,7 +225,7 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
                         }
                     dash_station['to_date_intercepts'] = LocationStatistics.objects.filter(location__border_station=entry.station).aggregate(Sum('intercepts'))['intercepts__sum']
                     dash_station['to_date_arrests'] = LocationStatistics.objects.filter(location__border_station=entry.station).aggregate(Sum('arrests'))['arrests__sum']
-                    cifs = CifCommon.objects.filter(logbook_submitted__gte=start_date,logbook_submitted__lt=end_date,station=entry.station).count()
+                    cifs = CifCommon.objects.filter(interview_date__gte=start_date,interview_date__lt=end_date,station=entry.station).count()
                     dash_station['6month_cifs'] = cifs
                     station_stats = StationStatistics.objects.filter(station=entry.station)
                     for station_stat in station_stats:

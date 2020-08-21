@@ -15,6 +15,7 @@ class Command(BaseCommand):
         parser.add_argument('startYearMonth', nargs='+', type=int)
         parser.add_argument('endYearMonth', nargs='+', type=int)
         parser.add_argument('--fix', action='append', type=str)
+        parser.add_argument('--country', action='append', type=str)
     def handle(self, *args, **options):
         mode = options.get('mode')[0]
         file_name = options.get('filename')[0]
@@ -56,7 +57,7 @@ class Command(BaseCommand):
         elif (mode == 'location'):
             self.processLocationStatistics(file_name, start_year, start_month, end_year, end_month, fixes['mapping'])
         elif (mode == 'arrest'):
-            self.processArrests(file_name)
+            self.processArrests(file_name, start_year, start_month, end_year, end_month, options['country'][0])
     
     def process_fixes(self, fix_file, fixes):
         with open(fix_file) as csvfile:
@@ -163,7 +164,7 @@ class Command(BaseCommand):
                         entry.year_month = year_month
                     
                     modified = False
-                    for key in ['Int']:
+                    for key in self.location_map.keys():
                         if key + year_month_csv in row:
                             value = row[key + year_month_csv]
                             value = value.replace(',','')
@@ -196,7 +197,7 @@ class Command(BaseCommand):
                                 setattr(entry, self.staff_map[key], value)
                                 modified = True
                     if modified:
-                            entry.save()
+                        entry.save()
                     
                     month += 1
                     if month > 12:
@@ -303,7 +304,7 @@ class Command(BaseCommand):
         else:
             results[station_name][year_month] = 1
         
-    def processArrests (self, file_name):
+    def processArrests (self, file_name, start_year, start_month, end_year, end_month, country):
         results = {}
         with open(file_name) as csvfile:
             reader = csv.DictReader(csvfile)
@@ -317,20 +318,77 @@ class Command(BaseCommand):
                 if row['Active Station'] != '' and row['Active Arrested'] != '':
                     self.processArrest(row['Active Station'], row['Active Arrested'], results)
         
-        for key in results.keys():
-            try:
-                station = BorderStation.objects.get(station_name=key)
-            except ObjectDoesNotExist:
-                print ("Unable to find station with name", key)
-                continue
-            
-            for year_month in results[key].keys():
-                location_total = LocationStatistics.objects.filter(location__border_station=station, year_month=year_month).aggregate(Sum('arrests'))['arrests__sum']
+        stations = BorderStation.objects.filter(operating_country__name=country)
+        start_year_month = 100 * start_year + start_month
+        for station in stations:
+            year=start_year
+            month = start_month
+            year_month = 100 * year + month
+            end_year_month = 100 * end_year + end_month
+            if station.station_name in results:
+                station_result = results[station.station_name]
+                expected_total = 0
+                for key in station_result.keys():
+                    expected_total += station_result[key]
+                    
+            else:
+                station_result = {}
+                expected_total = 0
+            other_location = Location.get_or_create_other_location(station)
+            total = 0
+           
+            while year_month <= end_year_month:
+                location_total = LocationStatistics.objects.filter(location__border_station=station, year_month=year_month).exclude(
+                    location=other_location).aggregate(Sum('arrests'))['arrests__sum']
                 if location_total is None:
                     location_total = 0
                 
-                if location_total > results[key][year_month]:
-                    print (key, year_month, location_total, results[key][year_month], "********")
+                if year_month in station_result:
+                    result_total = station_result[year_month]
+                    #print (station.station_name, 'result_total', year_month, result_total)
+                    total += result_total
                 else:
-                    print (key, year_month, location_total, results[key][year_month])
-                    
+                    result_total = 0
+                
+                if location_total > result_total:
+                    diff = result_total
+                    entries = LocationStatistics.objects.filter(location__border_station=station, year_month=year_month)
+                    for entry in entries:
+                        entry.arrests = 0
+                        entry.save()
+                else:
+                    diff = result_total - location_total
+                
+                if diff > 0:
+                    try:
+                        location_stats = LocationStatistics.objects.get(location=other_location, year_month=year_month)
+                    except ObjectDoesNotExist:
+                        location_stats = LocationStatistics()
+                        location_stats.location = other_location
+                        location_stats.year_month = year_month
+                    location_stats.arrests = diff
+                    location_stats.save()
+                
+                month += 1
+                if month > 12:
+                    month = 1
+                    year += 1
+                year_month = 100 * year + month
+            
+            print (station.station_name, expected_total, total)
+            
+            # Process arrests prior to the starting date
+            for year_month in station_result.keys():
+                if year_month < start_year_month:
+                    try:
+                        location_stats = LocationStatistics.objects.get(location=other_location, year_month=year_month)
+                    except ObjectDoesNotExist:
+                        location_stats = LocationStatistics()
+                        location_stats.location = other_location
+                        location_stats.year_month = year_month
+                    location_stats.arrests = station_result[year_month]
+                    total += station_result[year_month]
+                    location_stats.save()
+            
+            print (station.station_name, expected_total, total, station_result)
+            
