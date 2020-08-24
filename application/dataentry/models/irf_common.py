@@ -461,8 +461,8 @@ class IntercepteeCommon(BaseCard):
     relation_to = models.CharField(max_length=255, blank=True)
     person = models.ForeignKey(Person, null=True, blank=True)
     not_physically_present = models.BooleanField('Not physically present', default=False)
-    consent_to_use_photo = models.CharField(max_length=255, blank=True)
-    consent_to_use_information = models.CharField(max_length=255, blank=True)
+    consent_to_use_photo = models.CharField(max_length=255, null=True)
+    consent_to_use_information = models.CharField(max_length=255, null=True)
 
     def address1_as_string(self):
         rtn = ''

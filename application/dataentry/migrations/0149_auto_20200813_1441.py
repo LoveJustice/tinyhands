@@ -15,12 +15,12 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='intercepteecommon',
             name='consent_to_use_information',
-            field=models.CharField(blank=True, max_length=255),
+            field=models.CharField(null=True, max_length=255),
         ),
         migrations.AddField(
             model_name='intercepteecommon',
             name='consent_to_use_photo',
-            field=models.CharField(blank=True, max_length=255),
+            field=models.CharField(null=True, max_length=255),
         ),
         migrations.AddField(
             model_name='irfcommon',
