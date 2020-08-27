@@ -8,6 +8,7 @@ from dataentry.models import Address1, Address2, Region, Country, SiteSettings, 
 from dataentry.models import Interceptee, InterceptionAlert, Permission, UserLocationPermission, Form, FormType, PersonAddress, PersonPhone, PersonSocialMedia, PersonDocument
 from dataentry.models import AddressType, DocumentType, PhoneType, SocialMediaType, PersonIdentification
 from dataentry.models import StationStatistics, LocationStatistics, LocationStaff, CountryExchange
+from dataentry.models import PendingMatch
 from static_border_stations.serializers import LocationSerializer
 from dataentry.form_data import FormData
 
@@ -715,4 +716,48 @@ class CountryExchangeSerializer(serializers.ModelSerializer):
     class Meta:
         fields = '__all__'
         model = CountryExchange
+
+class PersonMatchSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = [
+            'country_id',
+            'match_id',
+            'master1_id',
+            'master1_name',
+            'master1_age',
+            'master2_id',
+            'master2_name',
+            'master2_age',
+            'match',
+            'notes',
+            ]
+        model = PendingMatch
     
+    match_id = serializers.SerializerMethodField(read_only=True)
+    master1_id = serializers.SerializerMethodField(read_only=True)
+    master1_name = serializers.SerializerMethodField(read_only=True)
+    master1_age = serializers.SerializerMethodField(read_only=True)
+    master2_id = serializers.SerializerMethodField(read_only=True)
+    master2_name = serializers.SerializerMethodField(read_only=True)
+    master2_age = serializers.SerializerMethodField(read_only=True)
+    match = serializers.SerializerMethodField(read_only=True)
+    notes = serializers.SerializerMethodField(read_only=True)
+    
+    def get_match_id(self, obj):
+        return obj.person_match.id
+    def get_master1_id(self, obj):
+        return obj.person_match.master1.id
+    def get_master1_name(self, obj):
+        return obj.person_match.master1.full_name
+    def get_master1_age(self, obj):
+        return obj.person_match.master1.age
+    def get_master2_id(self, obj):
+        return obj.person_match.master2.id
+    def get_master2_name(self, obj):
+        return obj.person_match.master2.full_name
+    def get_master2_age(self, obj):
+        return obj.person_match.master2.age
+    def get_match(self, obj):
+        return obj.person_match.match_type.name
+    def get_notes(self, obj):
+        return obj.person_match.notes
