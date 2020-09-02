@@ -725,9 +725,11 @@ class PersonMatchSerializer(serializers.ModelSerializer):
             'master1_id',
             'master1_name',
             'master1_age',
+            'master1_address',
             'master2_id',
             'master2_name',
             'master2_age',
+            'master2_address',
             'match',
             'notes',
             ]
@@ -737,9 +739,11 @@ class PersonMatchSerializer(serializers.ModelSerializer):
     master1_id = serializers.SerializerMethodField(read_only=True)
     master1_name = serializers.SerializerMethodField(read_only=True)
     master1_age = serializers.SerializerMethodField(read_only=True)
+    master1_address = serializers.SerializerMethodField(read_only=True)
     master2_id = serializers.SerializerMethodField(read_only=True)
     master2_name = serializers.SerializerMethodField(read_only=True)
     master2_age = serializers.SerializerMethodField(read_only=True)
+    master2_address = serializers.SerializerMethodField(read_only=True)
     match = serializers.SerializerMethodField(read_only=True)
     notes = serializers.SerializerMethodField(read_only=True)
     
@@ -751,12 +755,28 @@ class PersonMatchSerializer(serializers.ModelSerializer):
         return obj.person_match.master1.full_name
     def get_master1_age(self, obj):
         return obj.person_match.master1.age
+    def get_master1_address(self, obj):
+        address = ''
+        persons = Person.objects.filter(master_person=obj.person_match.master1)
+        for person in persons:
+             if person.address is not None and 'address' in person.address:
+                address = person.address['address']
+                break
+        return address
     def get_master2_id(self, obj):
         return obj.person_match.master2.id
     def get_master2_name(self, obj):
         return obj.person_match.master2.full_name
     def get_master2_age(self, obj):
         return obj.person_match.master2.age
+    def get_master2_address(self, obj):
+        address = ''
+        persons = Person.objects.filter(master_person=obj.person_match.master2)
+        for person in persons:
+            if person.address is not None and 'address' in person.address:
+                address = person.address['address']
+                break
+        return address
     def get_match(self, obj):
         return obj.person_match.match_type.name
     def get_notes(self, obj):
