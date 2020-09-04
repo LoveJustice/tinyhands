@@ -4,14 +4,17 @@ server {
     location / {
         rewrite     ^ https://${SITE_HOSTNAME}$request_uri permanent;
     }
+    location /.well-known {
+        root /var/www/certbot/.well-known;
+    }
 }
 
 server {
     server_name     ${OLD_SITE_HOSTNAME};
     listen 443 ssl;
     ssl on;
-    ssl_certificate_key ${OLD_SSL_KEY_PATH};
-    ssl_certificate ${OLD_SSL_CERT_PATH};
+    ssl_certificate_key ${SSL_KEY_PATH};
+    ssl_certificate ${SSL_CERT_PATH};
     location / {
         rewrite     ^ https://${SITE_HOSTNAME}$request_uri permanent;
     }
@@ -22,6 +25,9 @@ server {
     server_name     ${SITE_HOSTNAME};
     location / {
         rewrite     ^ https://$server_name$request_uri permanent;
+    }
+    location /.well-known {
+        root /var/www/certbot/.well-known;
     }
 }
 
