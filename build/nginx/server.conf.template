@@ -1,11 +1,12 @@
 server {
     listen 80;
     server_name     ${OLD_SITE_HOSTNAME};
-    location / {
-        rewrite     ^ https://${SITE_HOSTNAME}$request_uri permanent;
-    }
     location /.well-known {
         root /var/www/certbot/.well-known;
+    }
+    
+    location / {
+        rewrite     ^ https://${SITE_HOSTNAME}$request_uri permanent;
     }
 }
 
@@ -23,11 +24,12 @@ server {
 server {
     listen          80;
     server_name     ${SITE_HOSTNAME};
-    location / {
-        rewrite     ^ https://$server_name$request_uri permanent;
-    }
     location /.well-known {
         root /var/www/certbot/.well-known;
+    }
+
+    location / {
+        rewrite     ^ https://$server_name$request_uri permanent;
     }
 }
 
