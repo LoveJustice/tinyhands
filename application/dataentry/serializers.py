@@ -731,6 +731,8 @@ class PersonMatchSerializer(serializers.ModelSerializer):
             'master2_age',
             'master2_address',
             'match',
+            'match_date',
+            'matched_by',
             'notes',
             ]
         model = PendingMatch
@@ -745,6 +747,8 @@ class PersonMatchSerializer(serializers.ModelSerializer):
     master2_age = serializers.SerializerMethodField(read_only=True)
     master2_address = serializers.SerializerMethodField(read_only=True)
     match = serializers.SerializerMethodField(read_only=True)
+    match_date = serializers.SerializerMethodField(read_only=True)
+    matched_by = serializers.SerializerMethodField(read_only=True)
     notes = serializers.SerializerMethodField(read_only=True)
     
     def get_match_id(self, obj):
@@ -779,5 +783,12 @@ class PersonMatchSerializer(serializers.ModelSerializer):
         return address
     def get_match(self, obj):
         return obj.person_match.match_type.name
+    def get_match_date(self, obj):
+        return obj.person_match.match_date
+    def get_matched_by(self, obj):
+        name = ''
+        if obj.person_match.matched_by is not None:
+            name = obj.person_match.matched_by.get_full_name()
+        return name
     def get_notes(self, obj):
         return obj.person_match.notes
