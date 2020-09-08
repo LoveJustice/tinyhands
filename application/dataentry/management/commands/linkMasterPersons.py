@@ -53,6 +53,7 @@ class Command(BaseCommand):
             reader = csv.DictReader(csvfile)
             for row in reader:
                 data = {
+                    'notes':notes,
                     'match_type':match_type.id,
                     'master1':int(row['mid_a']),
                     'master2':int(row['mid_b'])

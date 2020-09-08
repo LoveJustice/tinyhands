@@ -1,5 +1,6 @@
 import json
 import traceback
+import logging
 from datetime import date
 from datetime import datetime
 
@@ -17,6 +18,8 @@ from dataentry.models import MasterPerson, PersonBoxCommon, PersonPhone, PersonA
 from dataentry.models import MatchHistory, MatchAction, UserLocationPermission
 from dataentry.models.pending_match import PendingMatch
 from dataentry.serializers import MasterPersonSerializer, PersonAddressSerializer, PersonMatchSerializer, PersonPhoneSerializer, PersonSocialMediaSerializer, PersonDocumentSerializer, PersonInMasterSerializer
+
+logger = logging.getLogger(__name__)
 
 class MasterPersonViewSet(viewsets.ModelViewSet):
     parser_classes = (MultiPartParser,FormParser,JSONParser)
@@ -445,13 +448,16 @@ class MasterPersonViewSet(viewsets.ModelViewSet):
             
             transaction.commit()
             rtn_status = status.HTTP_200_OK
-            serializer = self.serializer_class(master1, context={'request': request})
-            ret = serializer.data 
+            ret = {
+                'master':master1
+                }
         except:
+            logger.error(traceback.format_exc())
             transaction.rollback()
             ret = {
                 'errors': 'Internal Error:' + traceback.format_exc(),
-                'warnings':[]
+                'warnings':[],
+                'master': None
                 }
             rtn_status = status.HTTP_500_INTERNAL_SERVER_ERROR
         
@@ -468,6 +474,10 @@ class MasterPersonViewSet(viewsets.ModelViewSet):
         transaction.set_autocommit(False)
         result = MasterPersonViewSet.merge_master_persons_base(id1, id2, request.user, request.data)
         transaction.set_autocommit(True)
+        
+        if result['ret']['master'] is not None:
+            serializer = self.serializer_class(result['ret']['master'], context={'request': request})
+            result['ret'] = serializer.data
         
         return Response (result['ret'], status=result['status'])
         
