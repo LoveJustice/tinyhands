@@ -4,8 +4,8 @@ from .country import Country
 
 class PendingMatch(models.Model):
     the_key = models.CharField(max_length=100, primary_key=True)
-    person_match = models.ForeignKey(PersonMatch)
-    country = models.ForeignKey(Country)
+    person_match = models.ForeignKey(PersonMatch, on_delete=models.DO_NOTHING)
+    country = models.ForeignKey(Country, on_delete=models.DO_NOTHING)
     
     class Meta:
         managed=False
