@@ -15,6 +15,18 @@ class Country(models.Model):
     verification_goals = JSONField(null=True)
     options = JSONField(null=True)
     region = models.ForeignKey(Region)
+    prior_intercepts = models.IntegerField(default=0)
+    prior_arrests = models.IntegerField(default=0)
+    prior_convictions = models.IntegerField(default=0)
+    enable_all_locations = models.BooleanField(default=False)
+    
 
     def __str__(self):
         return self.name
+
+class CountryExchange(models.Model):
+    year_month = models.PositiveIntegerField()
+    country = models.ForeignKey(Country)
+    exchange_rate = models.FloatField(default=1)
+    
+    

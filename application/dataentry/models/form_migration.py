@@ -152,6 +152,55 @@ class FormMigration:
         print ('View ' + form_type_name.lower() + 'combined recreated')
         
     @staticmethod
+    def pending_match_view():
+        cxn = transaction.get_connection()
+        if cxn.in_atomic_block:
+            in_transaction = True
+        else:
+            in_transaction = False
+        sql ="create view pendingmatch AS select distinct cast(dm.id as CHAR) || '-' || cast(dj.operating_country_id as CHAR) as the_key, dm.id as person_match_id, dj.operating_country_id as country_id "\
+            'from dataentry_personmatch dm, ( '\
+                'select distinct db.operating_country_id, dp.master_person_id '\
+                'from dataentry_cifcommon dc '\
+                    'inner join dataentry_person dp on dc.main_pv_id = dp.id '\
+                    'inner join dataentry_borderstation db on db.id = dc.station_id '\
+                'union '\
+                'select distinct db.operating_country_id, dp.master_person_id '\
+                'from dataentry_cifcommon dc '\
+                    'inner join dataentry_personboxcommon dp1 on dc.id = dp1.cif_id '\
+                    'inner join dataentry_person dp on dp1.person_id = dp.id '\
+                    'inner join dataentry_borderstation db on db.id = dc.station_id '\
+                    'union '\
+                'select distinct db.operating_country_id, dp.master_person_id '\
+                'from dataentry_cifcommon dc '\
+                    'inner join dataentry_potentialvictimcommon dp1 on dc.id = dp1.cif_id '\
+                    'inner join dataentry_person dp on dp1.person_id = dp.id '\
+                    'inner join dataentry_borderstation db on db.id = dc.station_id '\
+                'union '\
+                'select distinct db.operating_country_id, dp.master_person_id '\
+                'from dataentry_vdfcommon dv '\
+                    'inner join dataentry_person dp on dv.victim_id = dp.id '\
+                    'inner join dataentry_borderstation db on db.id = dv.station_id '\
+                'union '\
+                'select distinct db.operating_country_id, dp.master_person_id '\
+                'from dataentry_irfcommon di '\
+                    'inner join dataentry_person dp on di.broker_id = dp.id '\
+                    'inner join dataentry_borderstation db on db.id = di.station_id '\
+                'union '\
+                'select distinct db.operating_country_id, dp.master_person_id '\
+                'from dataentry_irfcommon di '\
+                    'inner join dataentry_intercepteecommon di2 on di2.interception_record_id = di.id '\
+                    'inner join dataentry_person dp on di2.person_id = dp.id '\
+                    'inner join dataentry_borderstation db on db.id = di.station_id) dj '\
+            'where dm.master1_id = dj.master_person_id or dm.master2_id = dj.master_person_id '
+
+        cursor = connection.cursor()
+        cursor.execute('DROP VIEW IF EXISTS pendingmatch')
+        cursor.execute(sql)
+        if not in_transaction:
+            transaction.commit()
+        
+    @staticmethod
     def check_load_form_data(apps, file_name, checksum_list):
         if len(checksum_list) != 2:
             print('Invalid checksum list', checksum_list)
@@ -179,3 +228,4 @@ class FormMigration:
         FormMigration.buildView('IRF')
         FormMigration.buildView('CIF')
         FormMigration.buildView('VDF')
+        FormMigration.pending_match_view()

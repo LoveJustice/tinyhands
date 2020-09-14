@@ -279,6 +279,13 @@ class IrfCommon(BaseForm):
     vulnerability_insufficient_resource = models.BooleanField('insufficient resources_to live/get home', default=False)
     vulnerability_minor_without_guardian = models.BooleanField('Minor unaccompanied by guardian', default=False)
     vulnerability_family_unwilling = models.BooleanField('Family unwilling to let them go', default=False)
+    vulnerability_first_time_traveling_abroad = models.BooleanField('First time traveling abroad', default=False)
+    vulnerability_doesnt_speak_english = models.BooleanField("Doesn't speak English", default=False)
+    vulnerability_non_relative_paid_flight = models.BooleanField('Non-relative paid for flight', default=False)
+    vulnerability_paid_flight_in_cash = models.BooleanField('Non-relative paid for flight', default=False)
+    vulnerability_connection_host_unclear = models.BooleanField('Connection to host/suspect limited or unclear', default=False)
+    vulnerability_doesnt_have_required_visa = models.BooleanField("Doesn't have required visa/docs", default=False)
+
     
     signs_treatment = models.BooleanField('Treatment - no documentation / knowledge', default=False)
     signs_forged_false_documentation = models.BooleanField('Forged or falsified documents', default=False)
@@ -376,6 +383,14 @@ class IrfCommon(BaseForm):
     case_report = models.BooleanField('Case report', default=False)
     cif = models.BooleanField('CIF', default=False)
     
+    immigration_lj_entry = models.CharField(max_length=127, null=True)
+    immigration_lj_transit = models.CharField(max_length=127, null=True)
+    immigration_lj_exit = models.CharField(max_length=127, null=True)
+    immigration_entry = models.CharField(max_length=127, null=True)
+    immigration_transit = models.CharField(max_length=127, null=True)
+    immigration_exit = models.CharField(max_length=127, null=True)
+    immigration_case_number = models.CharField(max_length=127, null=True)
+    
     type_of_intercept = models.CharField(max_length=127, null=True)
     case_notes = models.TextField('Case Notes', blank=True)
     interception_made = models.CharField(max_length=127, null=True)
@@ -460,6 +475,8 @@ class IntercepteeCommon(BaseCard):
     relation_to = models.CharField(max_length=255, blank=True)
     person = models.ForeignKey(Person, null=True, blank=True)
     not_physically_present = models.BooleanField('Not physically present', default=False)
+    consent_to_use_photo = models.CharField(max_length=255, null=True)
+    consent_to_use_information = models.CharField(max_length=255, null=True)
 
     def address1_as_string(self):
         rtn = ''

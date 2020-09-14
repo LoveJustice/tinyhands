@@ -42,8 +42,8 @@ docker-compose run --rm web sh ./bin/install_test_db.sh
 echo "Load form data"
 docker-compose run --rm web python ./manage.py formLatest
 
-echo "Linking forms with stations..."
-docker-compose run --rm web python ./manage.py linkFormStation
+#echo "Linking forms with stations..."
+#docker-compose run --rm web python ./manage.py linkFormStation
 
 echo "Collecting Static files and symlinking them..."
 docker-compose run --rm web python ./manage.py collectstatic -l --noinput
