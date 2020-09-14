@@ -1,5 +1,6 @@
 import json
 import traceback
+import logging
 from datetime import date
 from datetime import datetime
 
@@ -17,6 +18,8 @@ from dataentry.models import MasterPerson, PersonBoxCommon, PersonPhone, PersonA
 from dataentry.models import MatchHistory, MatchAction, UserLocationPermission
 from dataentry.models.pending_match import PendingMatch
 from dataentry.serializers import MasterPersonSerializer, PersonAddressSerializer, PersonMatchSerializer, PersonPhoneSerializer, PersonSocialMediaSerializer, PersonDocumentSerializer, PersonInMasterSerializer
+
+logger = logging.getLogger(__name__)
 
 class MasterPersonViewSet(viewsets.ModelViewSet):
     parser_classes = (MultiPartParser,FormParser,JSONParser)
@@ -104,6 +107,7 @@ class MasterPersonViewSet(viewsets.ModelViewSet):
                 
                 if ret is not None:
                     transaction.rollback()
+                    transaction.set_autocommit(True)
                     rtn_status = status.HTTP_400_BAD_REQUEST
                 else:
                     transaction.commit()
@@ -311,52 +315,52 @@ class MasterPersonViewSet(viewsets.ModelViewSet):
         match_history.save()
         return Response({}, status.HTTP_200_OK)
     
-    def create_match(self, request):
-        perm_list = UserLocationPermission.objects.filter(account__id=request.user.id, permission__permission_group='PERSON_MANAGEMENT')
-        if len(perm_list) < 1:
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
-        
+    @staticmethod
+    def create_match_base(user, data):
         person_match = PersonMatch()
-        tmp = request.data.get('match_type')
+        tmp = data.get('match_type')
         match_type = MatchType.objects.get(id=tmp)
-        tmp = request.data.get('master1')
+        tmp = data.get('master1')
         person_match.master1 = MasterPerson.objects.get(id=tmp)
-        tmp = request.data.get('master2')
+        tmp = data.get('master2')
         person_match.master2 = MasterPerson.objects.get(id=tmp)
         person_match.match_type = match_type
-        person_match.notes = request.data.get('notes','')
+        person_match.notes = data.get('notes','')
         person_match.match_date = date.today()
-        person_match.matched_by = request.user
+        person_match.matched_by = user
         person_match.save()
         
         match_history = MatchHistory()
         match_history.master1 = person_match.master1
         match_history.master2 = person_match.master2
         match_history.person = None
-        match_history.notes = request.data.get('notes','')
+        match_history.notes = data.get('notes','')
         match_history.match_type = match_type
         match_history.action = MatchAction.objects.get(name='create match')
-        match_history.matched_by = request.user
+        match_history.matched_by = user
         match_history.timstamp = datetime.now()
         match_history.save()
-        return Response({}, status.HTTP_200_OK)
-        
     
-    def merge_master_persons(self, request, id1, id2):
+    def create_match(self, request):
         perm_list = UserLocationPermission.objects.filter(account__id=request.user.id, permission__permission_group='PERSON_MANAGEMENT')
         if len(perm_list) < 1:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
         
+        MasterPersonViewSet.create_match_base(request.user, request.data)
+        return Response({}, status.HTTP_200_OK)
+    
+    @staticmethod
+    def merge_master_persons_base(id1, id2, user, data):
         master1 = MasterPerson.objects.get(id=id1)
         master2 = MasterPerson.objects.get(id=id2)
         
-        transaction.set_autocommit(False)
+        
         try:
-            master1.full_name = request.data['full_name']
-            master1.birthdate = request.data['birthdate']
-            master1.estimated_birthdate = request.data['estimated_birthdate']
-            master1.gender = request.data['gender']
-            master1.nationality = request.data['nationality']
+            master1.full_name = data['full_name']
+            master1.birthdate = data['birthdate']
+            master1.estimated_birthdate = data['estimated_birthdate']
+            master1.gender = data['gender']
+            master1.nationality = data['nationality']
             if len(master1.appearance) < 1:
                 master1.appearance = master2.appearance
             else:
@@ -383,12 +387,12 @@ class MasterPersonViewSet(viewsets.ModelViewSet):
                 document.master_person = master1
                 document.save()
             
-            param_notes = request.data['notes']
+            param_notes = data['notes']
             for person in master2.person_set.all():
                 person.master_person = master1
                 person.master_set_notes = param_notes
                 person.master_set_date = date.today()
-                person.master_set_by = request.user
+                person.master_set_by = user
                 person.save()
                 
                 match_history = MatchHistory()
@@ -398,7 +402,7 @@ class MasterPersonViewSet(viewsets.ModelViewSet):
                 match_history.notes = param_notes
                 match_history.match_type = None
                 match_history.action = MatchAction.objects.get(name='remove from master person')
-                match_history.matched_by = request.user
+                match_history.matched_by = user
                 match_history.timstamp = datetime.now()
                 match_history.save()
                 
@@ -409,7 +413,7 @@ class MasterPersonViewSet(viewsets.ModelViewSet):
                 match_history.notes = param_notes
                 match_history.match_type = None
                 match_history.action = MatchAction.objects.get(name='add to master person')
-                match_history.matched_by = request.user
+                match_history.matched_by = user
                 match_history.timstamp = datetime.now()
                 match_history.save()
                 
@@ -427,7 +431,7 @@ class MasterPersonViewSet(viewsets.ModelViewSet):
             match_history.notes = param_notes
             match_history.match_type = None
             match_history.action = MatchAction.objects.get(name='merge master persons')
-            match_history.matched_by = request.user
+            match_history.matched_by = user
             match_history.timstamp = datetime.now()
             match_history.save()
             
@@ -438,23 +442,44 @@ class MasterPersonViewSet(viewsets.ModelViewSet):
             match_history.notes = param_notes
             match_history.match_type = None
             match_history.action = MatchAction.objects.get(name='deactivate master person')
-            match_history.matched_by = request.user
+            match_history.matched_by = user
             match_history.timstamp = datetime.now()
             match_history.save()
             
             transaction.commit()
             rtn_status = status.HTTP_200_OK
-            serializer = self.serializer_class(master1, context={'request': request})
-            ret = serializer.data 
+            ret = {
+                'master':master1
+                }
         except:
+            logger.error(traceback.format_exc())
             transaction.rollback()
             ret = {
                 'errors': 'Internal Error:' + traceback.format_exc(),
-                'warnings':[]
+                'warnings':[],
+                'master': None
                 }
             rtn_status = status.HTTP_500_INTERNAL_SERVER_ERROR
         
-        return Response (ret, status=rtn_status)
+        return {
+            'ret':ret,
+            'status':rtn_status
+            }
+        
+    def merge_master_persons(self, request, id1, id2):
+        perm_list = UserLocationPermission.objects.filter(account__id=request.user.id, permission__permission_group='PERSON_MANAGEMENT')
+        if len(perm_list) < 1:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        
+        transaction.set_autocommit(False)
+        result = MasterPersonViewSet.merge_master_persons_base(id1, id2, request.user, request.data)
+        transaction.set_autocommit(True)
+        
+        if result['ret']['master'] is not None:
+            serializer = self.serializer_class(result['ret']['master'], context={'request': request})
+            result['ret'] = serializer.data
+        
+        return Response (result['ret'], status=result['status'])
         
 class PendingMatchViewSet(viewsets.ModelViewSet):
     serializer_class = PersonMatchSerializer
