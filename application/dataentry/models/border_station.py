@@ -12,6 +12,7 @@ class BorderStation(models.Model):
     open = models.BooleanField(default=True)
     operating_country = models.ForeignKey(Country, models.SET_NULL, null=True, blank=True)
     time_zone = models.CharField(max_length=127, blank=False)
+    non_transit = models.BooleanField(default=False)
     
     def get_country_id(self):
         if self.operating_country is None:

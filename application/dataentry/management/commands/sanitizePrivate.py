@@ -215,7 +215,6 @@ class Command(BaseCommand):
 
     def select_photo(self):
         new_photo = self.photo_prefix + random.choice(self.sample_photos)
-        print ('Photo', new_photo)
         return new_photo
     
     def select_address(self, longitude, latitude):
