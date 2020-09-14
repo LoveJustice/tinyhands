@@ -15,7 +15,8 @@ from django.db.models import Q
 
 from dataentry.models import MasterPerson, PersonBoxCommon, PersonPhone, PersonAddress, PersonSocialMedia, PersonDocument, PersonMatch, MatchType
 from dataentry.models import MatchHistory, MatchAction, UserLocationPermission
-from dataentry.serializers import MasterPersonSerializer, PersonAddressSerializer, PersonPhoneSerializer, PersonSocialMediaSerializer, PersonDocumentSerializer, PersonInMasterSerializer
+from dataentry.models.pending_match import PendingMatch
+from dataentry.serializers import MasterPersonSerializer, PersonAddressSerializer, PersonMatchSerializer, PersonPhoneSerializer, PersonSocialMediaSerializer, PersonDocumentSerializer, PersonInMasterSerializer
 
 class MasterPersonViewSet(viewsets.ModelViewSet):
     parser_classes = (MultiPartParser,FormParser,JSONParser)
@@ -455,5 +456,20 @@ class MasterPersonViewSet(viewsets.ModelViewSet):
         
         return Response (ret, status=rtn_status)
         
-        
+class PendingMatchViewSet(viewsets.ModelViewSet):
+    serializer_class = PersonMatchSerializer
+    filter_backends = (fs.SearchFilter, fs.OrderingFilter,)
+    search_fields = ('person_match__master1__full_name','person_match__master2__full_name')
+    ordering_fields = ('person_match__master1__full_name','person_match__master2__full_name')
+    ordering = ('person_match__master1__full_name',)
+    
+    def get_queryset(self):
+        queryset = PendingMatch.objects.all()
+        in_country = self.request.GET.get('country')
+        if in_country is not None:
+            queryset = queryset.filter(country__id=in_country)
+        match_type = self.request.GET.get('match')
+        if match_type is not None:
+            queryset = queryset.filter(person_match__match_type__name=match_type)
+        return queryset
         
