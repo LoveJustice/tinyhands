@@ -285,6 +285,7 @@ class IrfCommon(BaseForm):
     vulnerability_paid_flight_in_cash = models.BooleanField('Non-relative paid for flight', default=False)
     vulnerability_connection_host_unclear = models.BooleanField('Connection to host/suspect limited or unclear', default=False)
     vulnerability_doesnt_have_required_visa = models.BooleanField("Doesn't have required visa/docs", default=False)
+
     
     signs_treatment = models.BooleanField('Treatment - no documentation / knowledge', default=False)
     signs_forged_false_documentation = models.BooleanField('Forged or falsified documents', default=False)
