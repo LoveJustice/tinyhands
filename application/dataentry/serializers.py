@@ -8,7 +8,7 @@ from dataentry.models import Address1, Address2, Region, Country, SiteSettings, 
 from dataentry.models import Interceptee, InterceptionAlert, Permission, UserLocationPermission, Form, FormType, PersonAddress, PersonPhone, PersonSocialMedia, PersonDocument
 from dataentry.models import AddressType, DocumentType, PhoneType, SocialMediaType, PersonIdentification
 from dataentry.models import StationStatistics, LocationStatistics, LocationStaff, CountryExchange
-from dataentry.models import PendingMatch
+from dataentry.models import PendingMatch, Audit, AuditSample
 from static_border_stations.serializers import LocationSerializer
 from dataentry.form_data import FormData
 
@@ -792,3 +792,80 @@ class PersonMatchSerializer(serializers.ModelSerializer):
         return name
     def get_notes(self, obj):
         return obj.person_match.notes
+
+class AuditSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Audit
+        fields = [field.name for field in model._meta.fields] # all the model fields
+        fields = fields + ['form_name', 'country_name', 'total_samples', 'samples_complete', 'total_incorrect', 'result', 'author_name']
+        
+    form_name = serializers.SerializerMethodField(read_only=True)
+    country_name = serializers.SerializerMethodField(read_only=True)
+    total_samples = serializers.SerializerMethodField(read_only=True)
+    samples_complete = serializers.SerializerMethodField(read_only=True)
+    total_incorrect = serializers.SerializerMethodField(read_only=True)
+    result = serializers.SerializerMethodField(read_only=True)
+    author_name = serializers.SerializerMethodField(read_only=True)
+    
+    def get_form_name(self, obj):
+        return obj.form.form_name
+    
+    def get_country_name(self, obj):
+        return obj.country.name
+    
+    def get_total_samples(self, obj):
+        return AuditSample.objects.filter(audit=obj).count();
+    
+    def get_samples_complete(self, obj):
+        return AuditSample.objects.filter(audit=obj).exclude(completion_date__isnull=True).count()
+    
+    def get_total_incorrect(self, obj):
+        completed = AuditSample.objects.filter(audit=obj).exclude(completion_date__isnull=True)
+        total_incorrect = 0
+        for sample in completed:
+            for value in sample.results.values():
+                if value is not None:
+                    total_incorrect += value
+        return total_incorrect
+    
+    def get_author_name(self, obj):
+        if obj.author is None:
+            return None
+        else:
+            return obj.author.get_full_name()
+    
+    def get_result(self, obj):
+        return 'TBD'
+    
+class AuditSampleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AuditSample
+        fields = [field.name for field in model._meta.fields] # all the model fields
+        fields = fields + ['auditor_name', 'form_type', 'form_name', 'country_id', 'station_id']
+        
+    auditor_name = serializers.SerializerMethodField(read_only=True)
+    form_type = serializers.SerializerMethodField(read_only=True)
+    form_name = serializers.SerializerMethodField(read_only=True)
+    country_id = serializers.SerializerMethodField(read_only=True)
+    station_id = serializers.SerializerMethodField(read_only=True)
+    
+    def get_auditor_name(self, obj):
+        if obj.auditor is None:
+            return None
+        else:
+            return obj.auditor.get_full_name()
+    
+    def get_form_type(self, obj):
+        return obj.audit.form.form_type.name
+
+    def get_form_name(self, obj):
+        return obj.audit.form.form_name
+    
+    def get_country_id(self, obj):
+        return obj.audit.country_id
+    
+    def get_station_id(self, obj):
+        storage_class = obj.audit.form.storage.get_form_storage_class()
+        form = storage_class.objects.get(id=obj.form_id)
+        return form.station.id
+    

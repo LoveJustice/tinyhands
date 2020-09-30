@@ -2,12 +2,13 @@ import json
 import pytz
 from rest_framework import viewsets, status
 from rest_framework.response import Response
+from rest_framework import filters as fs
 from rest_framework import serializers
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 
-from dataentry.models import BaseForm, BorderStation, FormCategory, Form, FormType, QuestionLayout
-from dataentry.serializers import FormSerializer, FormTypeSerializer
+from dataentry.models import BaseForm, BorderStation, Country, FormCategory, Form, FormType, QuestionLayout
+from dataentry.serializers import FormSerializer, FormTypeSerializer, CountrySerializer
 
 class RelatedForm:
     def __init__(self, id, form_number, form_type, form_name, staff_name, station_id, country_id, time_entered, time_last_edited):
@@ -34,6 +35,8 @@ class RelatedFormsSerializer(serializers.Serializer):
 class FormTypeViewSet(viewsets.ModelViewSet):
     queryset = FormType.objects.all()
     serializer_class = FormTypeSerializer
+    filter_backends = (fs.SearchFilter, fs.OrderingFilter,)
+    ordering_fields = ('name',)
     ordering = ('name',)
     
 class FormViewSet(viewsets.ModelViewSet):
@@ -104,13 +107,15 @@ class FormViewSet(viewsets.ModelViewSet):
             'RadioItems':{},
             'FormDefault':{},
             'ExportNames':{},
+            'Categories':[],
             }
         
         form = Form.objects.get(form_name=form_name)
         categories = []
-        form_categories = FormCategory.objects.filter(form=form)
+        form_categories = FormCategory.objects.filter(form=form).order_by("order")
         for form_category in form_categories:
             categories.append(form_category.category)
+            config['Categories'].append(form_category.name)
         layouts = QuestionLayout.objects.filter(category__in=categories, category__category_type__name='grid').order_by('question__id')
         self.config_answers(config, layouts)
         
@@ -228,4 +233,15 @@ class FormViewSet(viewsets.ModelViewSet):
         serializer = RelatedFormsSerializer(results, many=True)
             
         return Response(serializer.data)
+    
+    def get_form_countries(self, request, form_id):
+        form = Form.objects.get(id=form_id)
+        stations = form.stations.all()
+        country_ids = []
+        for station in stations:
+            country_ids.append(station.operating_country.id)
+        countries = Country.objects.filter(id__in=country_ids)
+        serializer = CountrySerializer(countries, many=True)
+        return Response(serializer.data)
+            
         

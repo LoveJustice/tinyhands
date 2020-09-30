@@ -5,6 +5,7 @@ from dataentry.views import PersonViewSet, MasterPersonViewSet, PendingMatchView
 from dataentry.views import SiteSettingsViewSet, GoogleMapKeyViewSet
 from dataentry.views import CountryViewSet
 from dataentry.views import RegionViewSet
+from dataentry.views import AuditViewSet, AuditSampleViewSet
 from dataentry.views import IDManagementViewSet, TraffickerCheckViewSet, IrfFormViewSet, CifFormViewSet, VdfFormViewSet
 from dataentry.views import FormViewSet, FormTypeViewSet
 from dataentry.views import MonthlyReportFormViewSet
@@ -107,6 +108,7 @@ urlpatterns = [
         url(r'^forms/types/$', FormTypeViewSet.as_view({'get':'list'}), name='fornTypes'),
         url(r'^forms/(?P<station_id>\d+)/station_forms/$', FormViewSet.as_view({'put':'set_forms'}), name='setForms'),
         url(r'^forms/related/(?P<station_id>\d+)/(?P<form_number>[^/]+)/$', FormViewSet.as_view({'get':'related_forms'}), name='relatedForms'),
+        url(r'^forms/countries/(?P<form_id>\d+)/$', FormViewSet.as_view({'get':'get_form_countries'}), name='formCountries'),
         
         url(r'^cif/$', CifFormViewSet.as_view(list), name='cif'),
         url(r'^cif/(?P<station_id>\d+)/(?P<pk>\d+)', CifFormViewSet.as_view({'get': 'my_retrieve', 'put': 'update', 'delete': 'destroy'}), name='cifDetail'),
@@ -139,5 +141,11 @@ urlpatterns = [
         url(r'^location-statistics/$', StationStatisticsViewSet.as_view({'put': 'update_location_statistics'}), name='setLocationStatistics'),
         url(r'^exchange-rate/(?P<country_id>\d+)/(?P<year_month>\d+)/$', StationStatisticsViewSet.as_view({'get': 'get_exchange_rate'}), name='getExchangeRate'),
         url(r'^exchange-rate/$', StationStatisticsViewSet.as_view({'put': 'update_exchange_rate'}), name='updateExchangeRate'),
+        
+        #Countries
+        url(r'^audit/$', AuditViewSet.as_view(list), name='Audit'),
+        url(r'^audit/(?P<pk>\d+)/$', AuditViewSet.as_view(detail), name='Auditdetail'),
+        url(r'^audit-sample/$', AuditSampleViewSet.as_view(list), name='Audit'),
+        url(r'^audit-sample/(?P<pk>\d+)/$', AuditSampleViewSet.as_view(detail), name='Auditdetail'),
 
 ]
