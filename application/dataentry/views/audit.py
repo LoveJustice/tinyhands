@@ -15,7 +15,7 @@ class AuditViewSet(viewsets.ModelViewSet):
     filter_backends = (fs.SearchFilter, fs.OrderingFilter,)
     search_fields = ('form__form_name',)
     ordering_fields = ('end_date',)
-    ordering = ('end_date',)
+    ordering = ('-end_date',)
     
     def get_queryset(self):
         countries = Country.objects.all()
@@ -23,7 +23,7 @@ class AuditViewSet(viewsets.ModelViewSet):
         country = self.request.GET.get('country')
         perm_list = UserLocationPermission.objects.filter(account__id=self.request.user.id, permission__permission_group='AUDIT', permission__action='VIEW')
         for country_entry in countries:
-            if country is not None and country != country_entry.id:
+            if country is not None and int(country) != country_entry.id:
                 continue
             if UserLocationPermission.has_permission_in_list(perm_list, 'AUDIT', 'VIEW', country_entry.id, None):
                 include_countries.append(country_entry)
@@ -49,7 +49,6 @@ class AuditViewSet(viewsets.ModelViewSet):
             candidates.append(candidate)
         
         number_to_sample = int (len(candidates) * audit.percent_to_sample / 100 +0.5)
-        print('number of candidates', len(candidates), 'percent', audit.percent_to_sample, 'number to sample', number_to_sample)
         random.seed()
         for idx in range(0,number_to_sample):
             selected = random.randint(0,len(candidates)-1)
@@ -60,14 +59,33 @@ class AuditViewSet(viewsets.ModelViewSet):
             audit_sample.form_number = sample.get_key()
             audit_sample.results = results
             audit_sample.save()
+    
+    def has_permission(self, account_id, action, country_id):
+        perm_list = UserLocationPermission.objects.filter(account__id=account_id, permission__permission_group='AUDIT', permission__action=action)
+        return UserLocationPermission.has_permission_in_list(perm_list, 'AUDIT', action, country_id, None)
             
     def create(self, request):
+        country_id = int(request.data['country'])
+        if not self.has_permission(self.request.user.id, 'ADD', country_id):
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
         serializer = AuditSerializer(data=request.data)
         if serializer.is_valid():
             audit = serializer.save()
             self.create_samples(audit)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def update(self, request, pk):
+        audit = Audit.objects.get(id=pk)
+        if not self.has_permission(self.request.user.id, 'EDIT', audit.country.id):
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        serializer = AuditSerializer(audit, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
 
 class AuditSampleViewSet(viewsets.ModelViewSet):
     serializer_class = AuditSampleSerializer
@@ -77,6 +95,10 @@ class AuditSampleViewSet(viewsets.ModelViewSet):
     ordering_fields = ('id',)
     ordering = ('id',)
     
+    def has_permission(self, account_id, action, country_id):
+        perm_list = UserLocationPermission.objects.filter(account__id=account_id, permission__permission_group='AUDIT', permission__action=action)
+        return UserLocationPermission.has_permission_in_list(perm_list, 'AUDIT', action, country_id, None)
+    
     def get_queryset(self):
         audit_id = self.request.GET.get('audit_id')
         if audit_id is not None:
@@ -84,3 +106,16 @@ class AuditSampleViewSet(viewsets.ModelViewSet):
         else:
             queryset = AuditSample.objects.all()
         return queryset
+    
+    def update(self, request, pk):
+        audit_sample = AuditSample.objects.get(id=pk)
+        if not self.has_permission(self.request.user.id, 'SUBMIT_SAMPLE', audit_sample.audit.country.id):
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        serializer=AuditSampleSerializer(audit_sample, request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+    

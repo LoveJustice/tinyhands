@@ -797,18 +797,22 @@ class AuditSerializer(serializers.ModelSerializer):
     class Meta:
         model = Audit
         fields = [field.name for field in model._meta.fields] # all the model fields
-        fields = fields + ['form_name', 'country_name', 'total_samples', 'samples_complete', 'total_incorrect', 'result', 'author_name']
+        fields = fields + ['form_name', 'form_type_name', 'country_name', 'total_samples', 'samples_complete', 'total_incorrect', 'samples_passed', 'author_name']
         
     form_name = serializers.SerializerMethodField(read_only=True)
+    form_type_name = serializers.SerializerMethodField(read_only=True)
     country_name = serializers.SerializerMethodField(read_only=True)
     total_samples = serializers.SerializerMethodField(read_only=True)
     samples_complete = serializers.SerializerMethodField(read_only=True)
     total_incorrect = serializers.SerializerMethodField(read_only=True)
-    result = serializers.SerializerMethodField(read_only=True)
+    samples_passed = serializers.SerializerMethodField(read_only=True)
     author_name = serializers.SerializerMethodField(read_only=True)
     
     def get_form_name(self, obj):
         return obj.form.form_name
+    
+    def get_form_type_name(self, obj):
+        return obj.form.form_type.name;
     
     def get_country_name(self, obj):
         return obj.country.name
@@ -834,8 +838,23 @@ class AuditSerializer(serializers.ModelSerializer):
         else:
             return obj.author.get_full_name()
     
-    def get_result(self, obj):
-        return 'TBD'
+    def get_samples_passed (self, obj):
+        total_questions = 0
+        for section in obj.template:
+            if section['questions'] is not None:
+                total_questions += section['questions']
+                
+        completed = AuditSample.objects.filter(audit=obj).exclude(completion_date__isnull=True)
+        passed = 0
+        for sample in completed:
+            total_incorrect = 0
+            for value in sample.results.values():
+                if value is not None:
+                    total_incorrect += value
+            
+            if (total_questions - total_incorrect)/total_questions >= 0.95:
+                passed += 1
+        return passed
     
 class AuditSampleSerializer(serializers.ModelSerializer):
     class Meta:
