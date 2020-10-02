@@ -92,7 +92,7 @@ class AuditSampleViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
     filter_backends = (fs.SearchFilter, fs.OrderingFilter,)
     search_fields = ('id',)
-    ordering_fields = ('id',)
+    ordering_fields = ('id','form_number')
     ordering = ('id',)
     
     def has_permission(self, account_id, action, country_id):
