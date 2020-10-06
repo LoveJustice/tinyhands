@@ -129,6 +129,7 @@ class MonthlyReport(BaseForm):
     paralegal_arrests_last_month = models.PositiveIntegerField(default=0, null=True)
     paralegal_gd_last_month = models.PositiveIntegerField(default=0, null=True)
     paralegal_when_to_file_case_poster = models.CharField(max_length=126, null=True)
+    paralegal_legal_advisor_appointed = models.CharField(max_length=126, null=True)
     paralegal_signed = models.BooleanField(default=False)
     paralegal_signed_by = models.CharField(max_length=126, null=True)
     paralegal_points = models.PositiveIntegerField(default=0)
