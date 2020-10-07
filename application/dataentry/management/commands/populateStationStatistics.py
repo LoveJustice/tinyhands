@@ -78,9 +78,9 @@ class Command(BaseCommand):
         location_map = {}
         for location_statistics in LocationStatistics.objects.filter(year_month=year_month):
             if location_statistics.location is not None:
-                location_tag = self.location_tag(location_statistics.station, location_statistics.location.name)
+                location_tag = self.location_tag(location_statistics.location.border_station, location_statistics.location.name)
             else:
-                location_tag = self.location_tag(location_statistics.station, '_other')
+                location_tag = self.location_tag(location_statistics.location.border_station, '_other')
             location_statistics.intercepts = 0
             location_map[location_tag] = location_statistics
         
