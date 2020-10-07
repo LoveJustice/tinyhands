@@ -385,7 +385,7 @@ class Command(BaseCommand):
         sanitized += self.sanitize(PersonPhone, phone_fields=['number'])
         sanitized += self.sanitize(PersonSocialMedia, text_fields=['social_media'])
         sanitized += self.sanitize(VdfCommon, name_fields=['staff_name','who_victim_released_name'], phone_fields=['who_victim_released_phone'],
-                text_fields=['where_victim_sent', 'case_notes'])
+                text_fields=['why_sent_home_with_with_alarms', 'where_victim_sent_details', 'case_notes'])
         sanitized += self.sanitize(VdfAttachmentCommon, file_fields=['attachment'], file_prefix='vdf_attachments/')
         
         self.set_master_person_name()

@@ -268,7 +268,7 @@ class IndicatorsViewSet(viewsets.ViewSet):
             if cif.interview_date is not None and cif.logbook_received is not None:
                 result.cif_lag_count += 1
                 result.cif_lag_total += IndicatorHistory.work_days(cif.interview_date, cif.logbook_received)
-            if irf.logbook_second_verification.lower().startswith('clear') or irf.logbook_second_verification.lower().startswith('some'):
+            if irf.evidence_categorization.lower().startswith('clear') or irf.evidence_categorization.lower().startswith('some'):
                         result.cif_with_evidence_count += 1
     
     @staticmethod

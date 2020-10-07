@@ -66,7 +66,7 @@ def password_reset(request):
         email = request.data.get('email','')
         if email == '':
             return Response({"message": "An email was not included in the request!"}, HTTP_400_BAD_REQUEST)
-        
+
         account = Account.objects.filter(email=email).first()
         if not account:
             return Response({"message": "An account with that email was not found!"}, HTTP_404_NOT_FOUND)
@@ -121,7 +121,8 @@ class ResendActivationEmailView(APIView):
 
 class Logout(APIView):
     def get(self, request):
-        request.user.auth_token.delete()
+        if hasattr(request.user, 'auth_token'):
+            request.user.auth_token.delete()
         return Response(status=status.HTTP_200_OK)
 
 class ObtainExpiringAuthToken(ObtainAuthToken):
@@ -155,7 +156,7 @@ class ObtainExpiringAuthToken(ObtainAuthToken):
 
 class AuthenticateRequest(APIView):
     permission_classes = [IsAuthenticated]
-    
+
     def get(self, request):
         return Response(status=status.HTTP_200_OK)
-        
+
