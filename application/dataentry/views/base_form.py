@@ -54,10 +54,13 @@ class BaseFormViewSet(viewsets.ModelViewSet):
         status_list = []
         in_progress=False
         for stat in status.split(','):
-            if stat == 'in-progress':
-                in_progress = True
-            else:
-                status_list.append(stat)
+            # Earlier feature to only allow author to view in-progress forms
+            # has been disabled
+            #if stat == 'in-progress':
+            #    in_progress = True
+            #else:
+            #    status_list.append(stat)
+            status_list.append(stat)
                 
         countries = Country.objects.all()
         all_country_list = []
