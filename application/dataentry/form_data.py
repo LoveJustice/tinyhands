@@ -75,6 +75,7 @@ class CardData:
                 card_response.parent = self.form_data.form_object
                 card_response.question = question
             else:
+                print("set_answer - response", question.id)
                 card_response = self.category_form.response_model()
                 
             card_response.value = answer
