@@ -9,7 +9,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dataentry', '0158_auto_20201026_1419'),
+        ('dataentry', '0159_india_ghana_irf'),
     ]
 
     operations = [
