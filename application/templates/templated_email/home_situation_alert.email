@@ -1,0 +1,15 @@
+{% block subject %}Home Situation Alert  {{ vdf.vdf_number}}!{% endblock %}
+
+{% block html %}
+    <p>VDF: {{ vdf.vdf_number }}</p>
+    <p>Staff who completed the VDF: {{ vdf.form_entered_by.first_name }} {{ vdf.form_entered_by.last_name }}</p>
+	<p>Potential Victim Phone Number: {{ vdf.victim.phone_contact }}</p>
+	<p>Victim Sent To: {{ victim_sent }}</p>
+	{% if vdf.someone_pick_up_victim == 'Yes' %}
+		<p>Release Information</p>
+		<p>Released To: {{ vdf.who_victim_released }}</p>
+		<p>Name: {{ vdf.who_victim_released_name }}</p>
+		<p>Number: {{ vdf.who_victim_released_phone }}</p>
+	{% endif %}
+	<p>This form scored {{ vdf.total_situational_alarms }}. Please follow-up with transit monitoring staff in charge to ensure there is a safe plan in place for the potential victim.</p> 
+{% endblock %}

@@ -101,10 +101,16 @@ class AuditSampleViewSet(viewsets.ModelViewSet):
     
     def get_queryset(self):
         audit_id = self.request.GET.get('audit_id')
+        completed = self.request.GET.get('completed')
         if audit_id is not None:
             queryset = AuditSample.objects.filter(audit__id=audit_id)
         else:
             queryset = AuditSample.objects.all()
+        if completed is not None:
+            if completed == 'true':
+                queryset = queryset.filter(completion_date__isnull=False)
+            else:
+                queryset = queryset.filter(completion_date__isnull=True)
         return queryset
     
     def update(self, request, pk):
