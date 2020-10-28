@@ -8,7 +8,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dataentry', '0157_legalcase_legalcaseattachment_legalcasesuspect_legalcasevictim'),
+        ('dataentry', '0158_home_situation_alert'),
     ]
 
     operations = [

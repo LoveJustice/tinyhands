@@ -4,12 +4,14 @@ from rest_framework import serializers
 from rest_framework import filters as fs
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
+from django.conf import settings
+from templated_email import send_templated_mail
 
 from dataentry.serialize_form import FormDataSerializer
 from .base_form import BaseFormViewSet, BorderStationOverviewSerializer
 
 from dataentry.form_data import Form, FormData
-from dataentry.models import VdfCommon
+from dataentry.models import VdfCommon, UserLocationPermission
 
 class VdfListSerializer(serializers.Serializer):
     id = serializers.IntegerField()
@@ -92,4 +94,50 @@ class VdfFormViewSet(BaseFormViewSet):
     
     def filter_key(self, queryset, search):
         return queryset.filter(vdf_number__contains=search)
+    
+    def pre_process(self, request, form_data):
+        if form_data is not None:
+            self.logbook_submitted = form_data.form_object.logbook_submitted
+        else:
+            self.logbook_submitted = None
+    
+    def send_home_situation_alert(self, ulp, context):
+        print('send_home_situation_alert')
+        email_sender = settings.SERVER_EMAIL
+        for user_location_permission in ulp:
+            print('send_home_situation_alert - loop', user_location_permission.account.email)
+            send_templated_mail(
+                template_name='home_situation_alert',
+                from_email=email_sender,
+                recipient_list=[user_location_permission.account.email],
+                context=context
+            )
+    
+    def post_process(self, request, form_data):
+        vdf = form_data.form_object
+        if vdf.total_situational_alarms < 10 or self.logbook_submitted is not None or vdf.logbook_submitted is None:  #TEMP
+            return
+        
+        victim_sent = vdf.where_victim_sent
+        if vdf.where_victim_sent_details is not None and vdf.where_victim_sent_details != '':
+            victim_sent += ':' + vdf.where_victim_sent_details
+        
+        context = {
+            'vdf': vdf,
+            'victim_sent': victim_sent,
+            }
+        
+        # Global permission to receive notification
+        ulp1 = UserLocationPermission.objects.filter(permission__permission_group = 'NOTIFICATIONS', permission__action = 'HSA', station=None, country=None)
+        
+        # Country permission to receive notification
+        ulp2 = UserLocationPermission.objects.filter(permission__permission_group = 'NOTIFICATIONS', permission__action = 'HSA', station=None, country=form_data.form_object.station.operating_country)
+        
+        # station permission to receive notification
+        ulp3 = UserLocationPermission.objects.filter(permission__permission_group = 'NOTIFICATIONS', permission__action = 'HSA', station=form_data.form_object.station)
+        
+        print('permissions found', len(ulp1),len(ulp2),len(ulp3))
+        ulp = (ulp1 | ulp2 | ulp3).distinct()
+        self.send_home_situation_alert(ulp, context)
+            
 
