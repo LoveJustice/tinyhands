@@ -435,11 +435,13 @@ class IrfCommon(BaseForm):
     logbook_first_reason = models.TextField('First Reason', blank=True)
     logbook_followup_call = models.CharField(max_length=127, blank=True)
     logbook_first_verification_date = models.DateField(null=True)
+    logbook_first_verification_name = models.CharField(max_length=127, blank=True)
     
     logbook_leadership_review = models.CharField(max_length=127, blank=True)
     logbook_second_verification = models.CharField(max_length=127, blank=True)
     logbook_second_reason = models.TextField('Second Reason', blank=True)
     logbook_second_verification_date = models.DateField(null=True)
+    logbook_second_verification_name = models.CharField(max_length=127, blank=True)
     
     logbook_champion_verification = models.BooleanField('Champion verification', default=False)
     
