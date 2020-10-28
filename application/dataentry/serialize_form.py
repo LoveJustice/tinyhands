@@ -660,6 +660,15 @@ class ResponsePersonSerializer(serializers.Serializer):
             tmp = data.get(field)
             if tmp is not None and tmp.get('value') is not None:
                 ret[field] = int(tmp.get('value'))
+        
+        # Boolean
+        for field in ['phone_verified']:
+            tmp = data.get(field)
+            print('phone_verified', tmp)
+            if tmp is not None and tmp.get('value') is not None:
+                ret[field] = int(tmp.get('value'))
+            else:
+                ret[field] = False
                 
         # Date
         for field in ['birthdate']:
@@ -712,7 +721,7 @@ class ResponsePersonSerializer(serializers.Serializer):
         
         for element in ['latitude','longitude','address_notes','gender','age','birthdate','nationality',
                         'appearance','arrested','case_filed_against','education','guardian_name','guardian_phone',
-                        'guardian_relationship','interviewer_believes','occupation','pv_believes','role',
+                        'guardian_relationship','interviewer_believes','occupation','pv_believes','phone_verified','role',
                         'social_media']:
             tmp = self.validated_data.get(element)
             setattr(person, element, tmp)

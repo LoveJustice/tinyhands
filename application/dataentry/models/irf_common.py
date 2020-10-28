@@ -291,6 +291,7 @@ class IrfCommon(BaseForm):
     signs_forged_false_documentation = models.BooleanField('Forged or falsified documents', default=False)
     signs_confirmed_deception = models.BooleanField('Called place and confirmed deception', default=False)
     signs_other = models.CharField(max_length=127, blank=True)
+    signs_fake_documentation = models.BooleanField('Fake documents', default=False)
     
     control_led_other_country = models.BooleanField('Led to other country without their knowledge', default=False)
     control_traveling_because_of_threat = models.BooleanField('Traveling because of a threat', default=False)
