@@ -13,6 +13,7 @@ class BorderStation(models.Model):
     operating_country = models.ForeignKey(Country, models.SET_NULL, null=True, blank=True)
     time_zone = models.CharField(max_length=127, blank=False)
     non_transit = models.BooleanField(default=False)
+    auto_number= models.CharField(max_length=127, null=True)
     
     def get_country_id(self):
         if self.operating_country is None:
