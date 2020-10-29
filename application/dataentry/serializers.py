@@ -8,7 +8,7 @@ from dataentry.models import Address1, Address2, Region, Country, SiteSettings, 
 from dataentry.models import Interceptee, InterceptionAlert, Permission, UserLocationPermission, Form, FormType, PersonAddress, PersonPhone, PersonSocialMedia, PersonDocument
 from dataentry.models import AddressType, DocumentType, PhoneType, SocialMediaType, PersonIdentification
 from dataentry.models import StationStatistics, LocationStatistics, LocationStaff, CountryExchange
-from dataentry.models import PendingMatch, Audit, AuditSample
+from dataentry.models import PendingMatch, Audit, AuditSample, LegalCase, LegalCaseSuspect, LegalCaseVictim
 from static_border_stations.serializers import LocationSerializer
 from dataentry.form_data import FormData
 
@@ -887,4 +887,40 @@ class AuditSampleSerializer(serializers.ModelSerializer):
         storage_class = obj.audit.form.storage.get_form_storage_class()
         form = storage_class.objects.get(id=obj.form_id)
         return form.station.id
+    
+class LegalCaseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LegalCase
+        fields = [field.name for field in model._meta.fields] # all the model fields
+        fields = fields + ['form_name','country_id','station_code','number_victims','number_suspects','number_arrests']
+    
+    form_name = serializers.SerializerMethodField(read_only=True)
+    country_id = serializers.SerializerMethodField(read_only=True)
+    station_code = serializers.SerializerMethodField(read_only=True)
+    number_victims = serializers.SerializerMethodField(read_only=True)
+    number_suspects = serializers.SerializerMethodField(read_only=True)
+    number_arrests = serializers.SerializerMethodField(read_only=True)
+    
+    def get_form_name(self, obj):
+        forms = Form.objects.filter(form_type__name='LEGAL_CASE', stations__id=obj.station.id)
+        if len(forms) > 0:
+            return forms[0].form_name
+        else:
+            return None
+    
+    def get_country_id(self, obj):
+        return obj.station.operating_country.id
+    
+    def get_station_code(self, obj):
+        return obj.station.station_code
+    
+    def get_number_victims(self, obj):
+        return LegalCaseVictim.objects.filter(legal_case=obj).count()
+    
+    def get_number_suspects(self, obj):
+        return LegalCaseSuspect.objects.filter(legal_case=obj).count()
+    
+    def get_number_arrests(self, obj):
+        return LegalCaseSuspect.objects.filter(legal_case=obj, arrest_status__startswith="Yes").count()
+    
     
