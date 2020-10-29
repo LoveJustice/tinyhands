@@ -40,7 +40,8 @@ class LegalCaseSuspect(BaseCard):
     imprisonment_months = models.PositiveIntegerField(null=True, blank=True)
     imprisonment_days = models.PositiveIntegerField(null=True, blank=True)
     imprisonment_total_days = models.PositiveIntegerField(null=True, blank=True)
-    fine_amount = models.CharField(max_length=255, null=True)
+    fine_amount = models.PositiveIntegerField(null=True, blank=True)
+    fine_currency = models.CharField(max_length=255, null=True)
     
     
     def set_parent(self, the_parent):
