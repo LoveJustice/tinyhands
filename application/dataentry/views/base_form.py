@@ -19,7 +19,7 @@ from dataentry.serializers import CountrySerializer
 from dataentry.dataentry_signals import form_done
 
 from dataentry.form_data import Form, FormData
-from dataentry.models import BorderStation, Country, FormType, UserLocationPermission
+from dataentry.models import AutoNumber, BorderStation, Country, FormType, UserLocationPermission
 
 class BorderStationOverviewSerializer(serializers.ModelSerializer):
     operating_country = CountrySerializer()
@@ -150,6 +150,17 @@ class BaseFormViewSet(viewsets.ModelViewSet):
     def post_process(self, request, form_data):
         pass
     
+    def check_form_number(self, form_data):
+        if hasattr(form_data.form_object, 'station'):
+            auto_number = form_data.form_object.station.auto_number
+        else:
+            return True
+        if auto_number is None or auto_number != form_data.form.form_type.name:
+            return True
+        
+        form_number = form_data.form_object.get_key()
+        return AutoNumber.check_number(form_data.form_object.station, form_data.form, form_number)
+    
     def create(self, request):
         form_type = FormType.objects.get(name=self.get_form_type_name())
         request_json = self.extract_data(request, self.get_element_paths())
@@ -166,14 +177,23 @@ class BaseFormViewSet(viewsets.ModelViewSet):
                     return Response(status=status.HTTP_401_UNAUTHORIZED)
                 try:
                     form_data = serializer.save()
-                    self.logbook_submit(form_data)
-                    serializer2 = FormDataSerializer(form_data, context=self.serializer_context)
-                    form_done.send_robust(sender=self.__class__, form_data=form_data)
-                    ret = serializer2.data
-                    rtn_status = status.HTTP_200_OK
-                    transaction.commit()
-                    transaction.set_autocommit(True)
-                    self.post_process(request, form_data)
+                    if self.check_form_number(form_data):
+                        self.logbook_submit(form_data)
+                        serializer2 = FormDataSerializer(form_data, context=self.serializer_context)
+                        form_done.send_robust(sender=self.__class__, form_data=form_data)
+                        ret = serializer2.data
+                        rtn_status = status.HTTP_200_OK
+                        transaction.commit()
+                        transaction.set_autocommit(True)
+                        self.post_process(request, form_data)
+                    else:
+                        transaction.rollback()
+                        transaction.set_autocommit(True)
+                        ret = {
+                            'errors':['Form number exceeds highest number allocated for station'],
+                            'warnings':[]
+                            }
+                        rtn_status=status.HTTP_400_BAD_REQUEST
                 except IntegrityError as exc:
                     transaction.rollback()
                     transaction.set_autocommit(True)
@@ -222,6 +242,9 @@ class BaseFormViewSet(viewsets.ModelViewSet):
                     the_form.station.operating_country.id, the_form.station.id)
             if not add_access:
                 return Response(status=status.HTTP_401_UNAUTHORIZED)
+            if station.auto_number is not None and station.auto_number == form.form_type.name:
+                the_number = AutoNumber.get_next_number(station, form)
+                setattr(the_form, form_class.key_field_name(), the_number)
         
         form_data = FormData(the_form, form)
         serializer = FormDataSerializer(form_data, context=self.serializer_context)
@@ -280,14 +303,23 @@ class BaseFormViewSet(viewsets.ModelViewSet):
                         serializer.get_country_id(), serializer.get_station_id()):
                     return Response(status=status.HTTP_401_UNAUTHORIZED)
                 form_data = serializer.save()
-                self.logbook_submit(form_data)
-                serializer2 = FormDataSerializer(form_data, context=self.serializer_context)
-                form_done.send_robust(sender=self.__class__, form_data=form_data)
-                rtn_status = status.HTTP_200_OK
-                ret = serializer2.data
-                transaction.commit()
-                transaction.set_autocommit(True)
-                self.post_process(request, form_data)
+                if self.check_form_number(form_data):
+                    self.logbook_submit(form_data)
+                    serializer2 = FormDataSerializer(form_data, context=self.serializer_context)
+                    form_done.send_robust(sender=self.__class__, form_data=form_data)
+                    rtn_status = status.HTTP_200_OK
+                    ret = serializer2.data
+                    transaction.commit()
+                    transaction.set_autocommit(True)
+                    self.post_process(request, form_data)
+                else:
+                    transaction.rollback()
+                    transaction.set_autocommit(True)
+                    ret = {
+                        'errors':['Form number exceeds highest number allocated for station'],
+                        'warnings':[]
+                        }
+                    rtn_status=status.HTTP_400_BAD_REQUEST
             else:
                 transaction.rollback()
                 transaction.set_autocommit(True)
