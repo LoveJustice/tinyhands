@@ -17,6 +17,8 @@ class LegalCase(BaseForm):
     appealed = models.BooleanField(default=False)
     lawyer_name = models.CharField(max_length=255, null=True)
     lawyer_phone = models.CharField(max_length=255, null=True)
+    source = models.CharField(max_length=255, null=True)
+    missing_data_count = models.PositiveIntegerField(null=True, blank=True)
     
     def get_key(self):
         return self.legal_case_number
@@ -31,10 +33,11 @@ class LegalCase(BaseForm):
 class LegalCaseSuspect(BaseCard):
     legal_case = models.ForeignKey(LegalCase, on_delete=models.CASCADE)
     person = models.ForeignKey(Person, null=True)
-    named_on_charge_sheet = models.BooleanField(default=False)
+    named_on_charge_sheet = models.CharField(max_length=255, null=True)
     arrest_date = models.DateField(null=True)
     arrest_status = models.CharField(max_length=255, null=True)
     verdict = models.CharField(max_length=255, null=True)
+    named_in_verdict = models.CharField(max_length=255, null=True)
     verdict_date = models.DateField(null=True)
     imprisonment_years = models.PositiveIntegerField(null=True, blank=True)
     imprisonment_months = models.PositiveIntegerField(null=True, blank=True)

@@ -997,6 +997,7 @@ class FormDataSerializer(serializers.Serializer):
         if hasattr(instance.form_object, 'station'):
             ret['station_id'] = serializers.IntegerField().to_representation(instance.form_object.station.id)
             ret['station_code'] = serializers.CharField().to_representation(instance.form_object.station.station_code)
+            ret['station_name'] = serializers.CharField().to_representation(instance.form_object.station.station_name)
             ret['country_id'] = serializers.IntegerField().to_representation(instance.form_object.station.operating_country.id)
         if hasattr(instance.form_object, 'status'):
             ret['status'] = serializers.CharField().to_representation(instance.form_object.status)
