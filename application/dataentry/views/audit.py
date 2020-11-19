@@ -13,7 +13,7 @@ class AuditViewSet(viewsets.ModelViewSet):
     serializer_class = AuditSerializer
     permission_classes = (IsAuthenticated,)
     filter_backends = (fs.SearchFilter, fs.OrderingFilter,)
-    search_fields = ('form__form_name',)
+    search_fields = ('form_name',)
     ordering_fields = ('end_date',)
     ordering = ('-end_date',)
     
@@ -42,7 +42,7 @@ class AuditViewSet(viewsets.ModelViewSet):
         for section in audit.template:
             results[section['name']] = None
             
-        data_class = audit.form.storage.get_form_storage_class()
+        data_class = audit.get_form().storage.get_form_storage_class()
         candidates_queryset = data_class.objects.filter(station__operating_country=audit.country)
         candidates = []
         for candidate in candidates_queryset:
