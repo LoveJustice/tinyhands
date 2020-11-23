@@ -17,6 +17,8 @@ class CollectionResults:
         self.victim_count = 0
         self.victim_evidence_count = 0
         self.photo_count = 0
+        self.phone_count = 0
+        self.phone_verified_count = 0
         self.irf_compliance_count = 0
         self.irf_lag_total = 0
         self.irf_lag_count = 0
@@ -59,6 +61,7 @@ class CollectionResults:
         
         self.vdf_percent = self.compute_percent(self.vdf_count, self.victim_count)
         self.photo_percent = self.compute_percent(self.photo_count, self.victim_count)
+        self.phone_verified_percent = self.compute_percent(self.phone_verified_count, self.phone_count)
         self.compliance_percent = self.compute_percent(self.irf_compliance_count +self.cif_compliance_count +  self.vdf_compliance_count,
                             self.irf_count + self.cif_count + self.vdf_count)
         if self.irf_lag_count > 0:
@@ -105,6 +108,9 @@ class CollectionResults:
         if self.valid_intercept_percent != '':
             metric_present += 1
             metric_total += self.valid_intercept_percent
+        if self.phone_verified_percent != '':
+            metric_present += 1
+            metric_total += self.phone_verified_percent
         if metric_present > 0:
             self.compliance_total = math.floor(metric_total/metric_present + 0.5)
         else:
@@ -117,6 +123,8 @@ class CollectionResults:
             self.victim_count += entry.victim_count
             self.victim_evidence_count += entry.victim_evidence_count
             self.photo_count += entry.photo_count
+            self.phone_count += entry.phone_count
+            self.phone_verified_count += entry.phone_verified_count
             self.irf_compliance_count += entry.irf_compliance_count
             self.irf_lag_total += entry.irf_lag_total
             self.irf_lag_count += entry.irf_lag_count
@@ -201,7 +209,7 @@ class IndicatorsViewSet(viewsets.ViewSet):
             
             result = CollectionResults(station.station_code)
             irf_class = form.storage.get_form_storage_class()
-            irfs = irf_class.objects.filter(station=station, logbook_submitted__gte=start_date, logbook_submitted__lte=end_date)
+            irfs = irf_class.objects.filter(station=station, logbook_second_verification_date__gte=start_date, logbook_second_verification_date__lte=end_date)
             for irf in irfs:
                 evidence = False
                 result.irf_count += 1
@@ -230,6 +238,10 @@ class IndicatorsViewSet(viewsets.ViewSet):
                         result.victim_evidence_count += 1
                     if victim.person.photo is not None and victim.person.photo != '':
                         result.photo_count += 1
+                    if victim.person.phone_contact is not None and victim.person.phone_contact != '':
+                        result.phone_count += 1
+                        if victim.person.phone_verified:
+                            result.phone_verified_count += 1
                     
                 IndicatorsViewSet.cif_indicators_for_irf(result, irf)
                 IndicatorsViewSet.vdf_indicators_for_irf(result, irf)
