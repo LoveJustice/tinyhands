@@ -209,7 +209,7 @@ class IndicatorsViewSet(viewsets.ViewSet):
             
             result = CollectionResults(station.station_code)
             irf_class = form.storage.get_form_storage_class()
-            irfs = irf_class.objects.filter(station=station, logbook_submitted__gte=start_date, logbook_submitted__lte=end_date)
+            irfs = irf_class.objects.filter(station=station, logbook_second_verification_date__gte=start_date, logbook_second_verification_date__lte=end_date)
             for irf in irfs:
                 evidence = False
                 result.irf_count += 1
