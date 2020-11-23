@@ -171,6 +171,9 @@ class UserLocationPermissionViewSet(viewsets.ModelViewSet):
         if 'include_closed' not in request.GET:
             stations = stations.filter(open=True)
         
+        if 'transit_only' in request.GET:
+            stations = stations.exclude(non_transit=True)
+        
         for perm in perms.iterator():
             if perm.country is None and perm.station is None:
                 results = stations
