@@ -797,9 +797,9 @@ class AuditSerializer(serializers.ModelSerializer):
     class Meta:
         model = Audit
         fields = [field.name for field in model._meta.fields] # all the model fields
-        fields = fields + ['form_name', 'form_type_name', 'country_name', 'total_samples', 'samples_complete', 'total_incorrect', 'samples_passed', 'author_name']
+        fields = fields + ['form', 'form_type_name', 'country_name', 'total_samples', 'samples_complete', 'total_incorrect', 'samples_passed', 'author_name']
         
-    form_name = serializers.SerializerMethodField(read_only=True)
+    form = serializers.SerializerMethodField(read_only=True)
     form_type_name = serializers.SerializerMethodField(read_only=True)
     country_name = serializers.SerializerMethodField(read_only=True)
     total_samples = serializers.SerializerMethodField(read_only=True)
@@ -808,11 +808,15 @@ class AuditSerializer(serializers.ModelSerializer):
     samples_passed = serializers.SerializerMethodField(read_only=True)
     author_name = serializers.SerializerMethodField(read_only=True)
     
-    def get_form_name(self, obj):
-        return obj.form.form_name
+    def get_form_by_name(self, obj):
+        form = Form.objects.get(form_name=obj.form_name)
+        return form
+    
+    def get_form(self, obj):
+        return self.get_form_by_name(obj).id
     
     def get_form_type_name(self, obj):
-        return obj.form.form_type.name;
+        return self.get_form_by_name(obj).form_type.name;
     
     def get_country_name(self, obj):
         return obj.country.name
@@ -875,18 +879,20 @@ class AuditSampleSerializer(serializers.ModelSerializer):
             return obj.auditor.get_full_name()
     
     def get_form_type(self, obj):
-        return obj.audit.form.form_type.name
+        form = Form.objects.get(form_name=obj.audit.form_name)
+        return form.form_type.name
 
     def get_form_name(self, obj):
-        return obj.audit.form.form_name
+        return obj.audit.form_name
     
     def get_country_id(self, obj):
         return obj.audit.country_id
     
     def get_station_id(self, obj):
-        storage_class = obj.audit.form.storage.get_form_storage_class()
-        form = storage_class.objects.get(id=obj.form_id)
-        return form.station.id
+        form = Form.objects.get(form_name=obj.audit.form_name)
+        storage_class = form.storage.get_form_storage_class()
+        form_instance = storage_class.objects.get(id=obj.form_id)
+        return form_instance.station.id
     
 class LegalCaseSerializer(serializers.ModelSerializer):
     class Meta:

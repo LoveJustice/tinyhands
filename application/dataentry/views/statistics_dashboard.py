@@ -6,13 +6,13 @@ from rest_framework.response import Response
 from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Sum
+from django.db.models import Count, Sum
 from django.db import transaction
 from dataentry.models import StationStatistics
 from dataentry.serializers import StationStatisticsSerializer, LocationStaffSerializer, LocationStatisticsSerializer, CountryExchangeSerializer
 from rest_api.authentication import HasPostPermission, HasPutPermission, HasDeletePermission
 
-from dataentry.models import BorderStation, CifCommon, Country, CountryExchange, LocationStaff, LocationStatistics, StationStatistics, MonthlyReport
+from dataentry.models import BorderStation, CifCommon, Country, CountryExchange, IrfCommon, LegalCaseSuspect, LocationStaff, LocationStatistics, StationStatistics, MonthlyReport, VdfCommon
 from static_border_stations.models import Location, Staff
 
 logger = logging.getLogger(__name__)
@@ -225,6 +225,19 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
                         }
                     dash_station['to_date_intercepts'] = LocationStatistics.objects.filter(location__border_station=entry.station).aggregate(Sum('intercepts'))['intercepts__sum']
                     dash_station['to_date_arrests'] = LocationStatistics.objects.filter(location__border_station=entry.station).aggregate(Sum('arrests'))['arrests__sum']
+                    dash_station['to_date_gospel'] = StationStatistics.objects.filter(station=entry.station).aggregate(Sum('gospel'))['gospel__sum']
+                    dash_station['to_date_conv'] = StationStatistics.objects.filter(station=entry.station).aggregate(Sum('convictions'))['convictions__sum']
+                    dash_station['to_date_irfs'] = IrfCommon.objects.filter(station=entry.station).count()
+                    dash_station['to_date_cifs'] = CifCommon.objects.filter(station=entry.station).count()
+                    dash_station['to_date_vdfs'] = VdfCommon.objects.filter(station=entry.station).count()
+                    verdicts = LegalCaseSuspect.objects.filter(legal_case__station=entry.station, verdict_date__isnull=False, legal_case__charge_sheet_date__isnull=False)
+                    dash_station['to_date_case_days'] = 0
+                    dash_station['to_date_case_count'] = 0
+                    for verdict in verdicts:
+                        dash_station['to_date_case_days'] = (verdict.verdict_date - verdict.legal_case.charge_sheet_date).days
+                        dash_station['to_date_case_count'] += 1
+                        
+                            
                     cifs = CifCommon.objects.filter(interview_date__gte=start_date,interview_date__lt=end_date,station=entry.station).count()
                     dash_station['6month_cifs'] = cifs
                     station_stats = StationStatistics.objects.filter(station=entry.station)
@@ -237,7 +250,8 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
                         dash_station['monthly_report'] = None
                     
                     for element in ['last_budget', 'last_intercepts', 'last_arrests', 'last_gospel', 'last_empowerment',
-                                    'to_date_intercepts', 'to_date_arrests']:
+                                    'to_date_intercepts', 'to_date_arrests', 'to_date_gospel','to_date_irfs', 'to_date_cifs',
+                                    'to_date_vdfs', 'to_date_conv', 'to_date_case_days', 'to_date_case_count']:
                         if dash_station[element] is None or dash_station[element] == '':
                             dash_station[element] = 0
                     
@@ -250,18 +264,19 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
             
         for element in [
                     'monthly_report', 'compliance', '6month_budget', '6month_intercepts','6month_arrests','6month_gospel', '6month_empowerment', '6month_cifs',
-                    'to_date_budget', 'to_date_intercepts', 'to_date_arrests', 'to_date_convictions',
+                    'to_date_budget', 'to_date_intercepts', 'to_date_arrests', 'to_date_convictions', 'to_date_gospel','to_date_irfs', 'to_date_cifs',
+                    'to_date_vdfs', 'to_date_conv', 'to_date_case_days', 'to_date_case_count',
                     'last_budget', 'last_intercepts',  'last_arrests', 'last_gospel', 'last_empowerment']:
             for entry in dashboard['entries']:
                 self.sum_element(dashboard['totals'], element, entry.get(element, None), 0)
         
-        
-        dashboard['to_date'] = {
-                'intercepts': dashboard['totals']['to_date_intercepts'],
-                'arrests':dashboard['totals']['to_date_arrests']
-            }
-        self.sum_element(dashboard['to_date'], 'intercepts', country.prior_intercepts)
-        self.sum_element(dashboard['to_date'], 'arrests', country.prior_arrests)
+        if len(dashboard['totals']) > 0:
+            dashboard['to_date'] = {
+                    'intercepts': dashboard['totals']['to_date_intercepts'],
+                    'arrests':dashboard['totals']['to_date_arrests']
+                }
+            self.sum_element(dashboard['to_date'], 'intercepts', country.prior_intercepts)
+            self.sum_element(dashboard['to_date'], 'arrests', country.prior_arrests)
         
         for element in ['monthly_report', 'compliance']:
             if dashboard['totals'].get(element, None) is not None:

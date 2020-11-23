@@ -6,7 +6,7 @@ from .country import Country
 from accounts.models import Account
 
 class Audit(models.Model):
-    form = models.ForeignKey(Form)
+    form_name = models.CharField(max_length=126)
     country = models.ForeignKey(Country)
     start_date = models.DateField()
     end_date = models.DateField()
@@ -15,6 +15,10 @@ class Audit(models.Model):
     notes = models.TextField(blank=True)
     template = JSONField(null=True)
         # contains array of objects with section name and question count
+        
+    def get_form(self):
+        form = Form.objects.get(form_name=self.form_name)
+        return form
     
 class AuditSample(models.Model):
     audit = models.ForeignKey(Audit)
