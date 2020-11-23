@@ -72,7 +72,7 @@ class Command(BaseCommand):
                 else:
                     year_month += '0' + str(now.month - 1)
             else:
-                year_month += str(now.month)
+                year_month += str(now.month - 1)
         if indicator_type == 'collection':    
             self.export_collection_indicators(year_month)
         elif indicator_type =='entry':
