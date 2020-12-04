@@ -6,7 +6,7 @@ from .interception_record import InterceptionRecord
 from .location_box import VictimInterviewLocationBox
 from .person_box import VictimInterviewPersonBox
 from .person_identification import PersonIdentification
-from .person import Person, PersonFormCache
+from .person import Person, PersonForm
 from .victim_interview import VictimInterview
 from .country import Country, CountryExchange
 from .alias_group import AliasGroup

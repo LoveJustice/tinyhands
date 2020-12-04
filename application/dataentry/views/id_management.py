@@ -13,7 +13,7 @@ from django.db.models import Q
 
 from dataentry import fuzzy_matching
 from dataentry.serializers import IDManagementSerializer, PersonFormsSerializer
-from dataentry.models import MasterPerson, Person, PersonFormCache, Interceptee, VictimInterview, PersonMatch
+from dataentry.models import MasterPerson, Person, PersonForm, Interceptee, VictimInterview, PersonMatch
 
 logger = logging.getLogger(__name__)
 
@@ -46,7 +46,7 @@ class IDManagementViewSet(viewsets.ModelViewSet):
         person_id = request.GET['person_id']
         person = Person.objects.get(id=person_id)
         person_forms = []
-        forms = PersonFormCache.get_form_data(person)
+        forms = PersonForm.get_form_data(person)
         for form in forms:
             obj = form.get_detail_as_object()
             if obj is not None:

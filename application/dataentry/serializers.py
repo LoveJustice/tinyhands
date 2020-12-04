@@ -5,7 +5,7 @@ from rest_framework import serializers
 from django.db.models import Sum
 
 from dataentry.models import Address1, Address2, Region, Country, SiteSettings, InterceptionRecord, VictimInterview, BorderStation, MasterPerson, Person
-from dataentry.models import Interceptee, InterceptionAlert, Permission, UserLocationPermission, Form, FormType, PersonAddress, PersonPhone, PersonSocialMedia, PersonDocument
+from dataentry.models import Interceptee, InterceptionAlert, Permission, UserLocationPermission, Form, FormType, PersonAddress, PersonPhone, PersonSocialMedia, PersonDocument, PersonForm
 from dataentry.models import AddressType, DocumentType, PhoneType, SocialMediaType, PersonIdentification
 from dataentry.models import StationStatistics, LocationStatistics, LocationStaff, CountryExchange
 from dataentry.models import PendingMatch, Audit, AuditSample, LegalCase, LegalCaseSuspect, LegalCaseVictim
@@ -534,21 +534,34 @@ class MasterPersonSerializer(serializers.ModelSerializer):
     persondocument_set = PersonDocumentSerializer(many=True, read_only=True)
     person_set = PersonInMasterSerializer(many=True, read_only=True)
 
-class IDManagementSerializer(serializers.ModelSerializer):
-    aliases = serializers.CharField(source='get_aliases', read_only=True)
+class PersonFormSerializer(serializers.ModelSerializer):
+    form_id = serializers.CharField(source='get_form_id', read_only=True)
     form_type = serializers.CharField(source='get_form_type', read_only=True)
     form_name = serializers.CharField(source='get_form_name', read_only=True)
     form_number = serializers.CharField(source='get_form_number', read_only=True)
     form_date = serializers.CharField(source='get_form_date', read_only=True)
-    form_photo = serializers.CharField(source='get_form_photo', read_only=True)
-    form_kind = serializers.CharField(source='get_form_kind', read_only=True)
     station_id = serializers.CharField(source='get_station_id', read_only=True)
     country_id = serializers.CharField(source='get_country_id', read_only=True)
-    form_id = serializers.CharField(source='get_form_id', read_only=True)
+    
+    class Meta:
+        model = PersonForm
+        fields = [
+            'form_id',
+            'form_type',
+            'form_name',
+            'form_number',
+            'form_date',
+            'station_id',
+            'country_id'
+        ]
+
+class IDManagementSerializer(serializers.ModelSerializer):
+    aliases = serializers.CharField(source='get_aliases', read_only=True)
     address1 = Address1Serializer(read_only=True)
     address2 = Address2Serializer(read_only=True)
     alias_group = serializers.CharField(source='get_master_person_id', read_only=True)
     master_person = serializers.CharField(source='get_master_person_id', read_only=True)
+    form = PersonFormSerializer(source="get_form", read_only=True)
 
     class Meta:
         model = Person
@@ -561,18 +574,12 @@ class IDManagementSerializer(serializers.ModelSerializer):
             'address1',
             'address2',
             'phone_contact',
+            'role',
+            'photo',
             'alias_group',
             'master_person',
             'aliases',
-            'form_type',
-            'form_name',
-            'form_number',
-            'form_date',
-            'form_photo',
-            'form_kind',
-            'station_id',
-            'country_id',
-            'form_id'
+            'form'
         ]
 
 class PersonFormsSerializer(serializers.Serializer):

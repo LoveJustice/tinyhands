@@ -3,6 +3,8 @@ from collections import namedtuple
 from django.db import models
 from django.db import transaction
 from django.contrib.postgres.fields import JSONField
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes.fields import GenericForeignKey
 
 
 from .addresses import Address1, Address2
@@ -84,41 +86,57 @@ class Person(models.Model):
         else:
             return self.master_person.id
     
-    def get_form_element(self, element_name):
+    
+    def get_form(self):
         if not hasattr(self, 'forms'):
-            self.forms = PersonFormCache.get_form_data(self)
+            self.forms = PersonForm.get_form_data(self)
         
-        if len(self.forms) > 0 and element_name in self.forms[0].form_detail:
-            return self.forms[0].form_detail[element_name]
+        if len(self.forms) > 0:
+            return self.forms[0]
         else:
-            return '' 
-
+            return None
+    
     def get_form_type(self):
-        return self.get_form_element('type')
+        form = self.get_form()
+        if form is not None:
+            return form.get_form_type()
+        else:
+            return ''
     
     def get_form_name(self):
-        return self.get_form_element('form_name')
-
+        form = self.get_form()
+        if form is not None:
+            return form.get_form_name()
+        else:
+            return ''
+    
     def get_form_number(self):
-        return self.get_form_element('number')
-
+        form = self.get_form()
+        if form is not None:
+            return form.get_form_number()
+        else:
+            return ''
+    
     def get_form_date(self):
-        return self.get_form_element('date')
-
-    def get_form_photo(self):
-        return self.get_form_element('photo')
-
-    def get_form_kind(self):
-        return self.get_form_element('kind')
-    
-    def get_station_id(self):
-        return self.get_form_element('station_id')
-    
-    def get_country_id(self):
-        return self.get_form_element('country_id')
+        form = self.get_form()
+        if form is not None:
+            return form.get_form_date()
+        else:
+            return ''
     
     def get_form_id(self):
-        return self.get_form_element('form_id')
+        form = self.get_form()
+        if form is not None:
+            return form.get_form_id()
+        else:
+            return ''
+    
+    def get_station_id(self):
+        form = self.get_form()
+        if form is not None:
+            return form.get_station_id()
+        else:
+            return ''
     
     def set_estimated_birthdate(self, base_date):
         if self.birthdate is not None:
@@ -161,28 +179,75 @@ class Person(models.Model):
         val = val + ')'
         return val
         
-
-class PersonFormCache(models.Model):
+class PersonForm(models.Model):
     person = models.ForeignKey(Person)
-    form_detail = JSONField(null=True)
+    content_type = models.ForeignKey(ContentType, null=True)
+    object_id = models.PositiveIntegerField(null=True)
+    content_object=GenericForeignKey('content_type', 'object_id')
     creation_time = models.DateTimeField(auto_now_add=True)
     
-    @staticmethod
-    def get_form_data(person):
-        person_forms = list(PersonFormCache.objects.filter(person=person))
-        
-        if len(person_forms) == 0:
-            person_forms = PersonFormCache.load_cache(person)
-        
-        return person_forms
+    def get_form_id(self):
+        if self.content_object is None:
+            return ''
+        return self.content_object.id
+     
+    def get_form_type(self):
+        if self.content_object is None:
+            return ''
+        return self.content_object.get_form_type_name()
+    
+    def get_form_name(self):
+        if self.content_object is None:
+            return ''
+        form = Form.current_form(self.content_object.get_form_type_name(), self.content_object.station.id)
+        if form is not None:
+            return form.form_name
+        else:
+            return ''
+    
+    def get_form_number(self):
+        if self.content_object is None:
+            return ''
+        return self.content_object.get_key()
+    
+    def get_form_date(self):
+        if self.content_object is None:
+            return ''
+        return self.content_object.get_form_date()
+    
+    def get_station_id(self):
+        if self.content_object is None:
+            return ''
+        return self.content_object.station.id
+    
+    def get_country_id(self):
+        if self.content_object is None:
+            return ''
+        return self.content_object.station.operating_country.id
     
     def get_detail_as_object(self):
-        if 'form_id' in self.form_detail:
-            value = namedtuple("FormDetail", self.form_detail.keys())(*self.form_detail.values())
-        else:
-            value = None
+        if self.get_form_id() == '':
+            return None
         
-        return value
+        form_dict = {
+            'form_id': self.get_form_id(),
+            'type': self.get_form_type(),
+            'form_name': self.get_form_name(),
+            'number': self.get_form_number(),
+            'date': self.get_form_date(),
+            'station_id': self.get_station_id(),
+            'country_id': self.get_country_id()
+            }
+        return namedtuple("FormDetail", form_dict.keys())(*form_dict.values())
+
+    @staticmethod
+    def get_form_data(person):
+        person_forms = list(PersonForm.objects.filter(person=person))
+        
+        if len(person_forms) == 0:
+            person_forms = PersonForm.load_cache(person)
+        
+        return person_forms
     
     @staticmethod
     def load_cache(person):
@@ -190,7 +255,7 @@ class PersonFormCache(models.Model):
         person_forms = []
         
         with transaction.atomic():
-            old_forms = PersonFormCache.objects.filter(person=person)
+            old_forms = PersonForm.objects.filter(person=person)
             for old_form in old_forms:
                 old_form.delete()
             
@@ -199,16 +264,8 @@ class PersonFormCache(models.Model):
                 vdf_class = vdf_form.storage.get_form_storage_class()
                 vdfs = vdf_class.objects.filter(victim=person, station__in = vdf_form.stations.all())
                 for vdf in vdfs:
-                    form_entry = {}
-                    form_entry['form_id'] = vdf.id
-                    form_entry['type'] = 'VDF'
-                    form_entry['form_name'] = vdf_form.form_name
-                    form_entry['number'] = vdf.vdf_number
-                    form_entry['date'] = str(vdf.interview_date)
-                    form_entry['photo'] = ''
-                    form_entry['kind'] = 'PVOT'
-                    form_entry['station_id'] = vdf.station.id
-                    form_entry['country_id'] = vdf.station.operating_country.id
+                    form_entry = PersonForm()
+                    form_entry.content_object = vdf
                     forms.append(form_entry)
             
             cif_forms = Form.objects.filter(form_type__name='CIF')
@@ -216,16 +273,8 @@ class PersonFormCache(models.Model):
                 cif_class = cif_form.storage.get_form_storage_class()
                 cifs = cif_class.objects.filter(main_pv=person, station__in=cif_form.stations.all())
                 for cif in cifs:
-                    form_entry = {}
-                    form_entry['form_id'] = cif.id
-                    form_entry['type'] = 'CIF'
-                    form_entry['form_name'] = cif_form.form_name
-                    form_entry['number'] = cif.cif_number
-                    form_entry['date'] = str(cif.incident_date)
-                    form_entry['photo'] = ''
-                    form_entry['kind'] = 'PVOT'
-                    form_entry['station_id'] = cif.station.id
-                    form_entry['country_id'] = cif.station.operating_country.id
+                    form_entry = PersonForm()
+                    form_entry.content_object = cif
                     forms.append(form_entry)
                 
                 form_categories = FormCategory.objects.filter(form=cif_form, name='OtherPotentialVictims')
@@ -233,16 +282,8 @@ class PersonFormCache(models.Model):
                     other_victims_class = form_categories[0].storage.get_form_storage_class()
                     other_victims = other_victims_class.objects.filter(person=person, cif__station__in=cif_form.stations.all())
                     for other_victim in other_victims:
-                        form_entry = {}
-                        form_entry['form_id'] = other_victim.cif.id
-                        form_entry['type'] = 'CIF'
-                        form_entry['form_name'] = cif_form.form_name
-                        form_entry['number'] = other_victim.cif.cif_number
-                        form_entry['date'] = str(other_victim.cif.incident_date)
-                        form_entry['photo'] = ''
-                        form_entry['kind'] = 'PVOT'
-                        form_entry['station_id'] = other_victim.cif.station.id
-                        form_entry['country_id'] = other_victim.cif.station.operating_country.id
+                        form_entry = PersonForm()
+                        form_entry.content_object = other_victim.cif
                         forms.append(form_entry)
                 
                 form_categories = FormCategory.objects.filter(form=cif_form, name='PersonBoxes')
@@ -250,23 +291,8 @@ class PersonFormCache(models.Model):
                     person_box_class = form_categories[0].storage.get_form_storage_class()
                     person_boxes = person_box_class.objects.filter(person=person, cif__station__in=cif_form.stations.all())
                     for person_box in person_boxes:
-                        form_entry = {}
-                        form_entry['form_id'] = person_box.cif.id
-                        form_entry['type'] = 'CIF'
-                        form_entry['form_name'] = cif_form.form_name
-                        form_entry['number'] = person_box.cif.cif_number
-                        form_entry['date'] = str(person_box.cif.incident_date)
-                        form_entry['photo'] = ''
-                        form_entry['kind'] = 'Suspect'
-                        for field in person_box._meta.fields:
-                            if field.name.startswith('role_'):
-                                value = getattr(person_box, field.name)
-                                if value:
-                                    if isinstance(field, models.BooleanField) or isinstance(field, models.NullBooleanField):
-                                        form_entry['kind'] = field.verbose_name
-                                        break
-                        form_entry['station_id'] = person_box.cif.station.id
-                        form_entry['country_id'] = person_box.cif.station.operating_country.id
+                        form_entry = PersonForm()
+                        form_entry.content_object = person_box.cif
                         forms.append(form_entry)
                         
             irf_forms = Form.objects.filter(form_type__name='IRF')
@@ -276,38 +302,43 @@ class PersonFormCache(models.Model):
                     interceptee_class = form_categories[0].storage.get_form_storage_class()
                     interceptees = interceptee_class.objects.filter(person=person, interception_record__station__in=irf_form.stations.all())
                     for interceptee in interceptees:
-                        form_entry = {}
-                        form_entry['form_id'] = interceptee.interception_record.id
-                        form_entry['type'] = 'IRF'
-                        form_entry['form_name'] = irf_form.form_name
-                        form_entry['number'] = interceptee.interception_record.irf_number
-                        form_entry['date'] = str(interceptee.interception_record.date_time_of_interception.date())
-                        if interceptee.person.photo is not None and interceptee.person.photo != '':
-                            form_entry['photo'] = interceptee.person.photo.url
-                        if interceptee.person.role == 'PVOT':
-                            form_entry['kind'] = 'PVOT'
-                        else:
-                            form_entry['kind'] = 'Suspect'
-                        form_entry['station_id'] = interceptee.interception_record.station.id
-                        form_entry['country_id'] = interceptee.interception_record.station.operating_country.id
+                        form_entry = PersonForm()
+                        form_entry.content_object = interceptee.interception_record
+                        forms.append(form_entry)
+            
+            legal_forms = Form.objects.filter(form_type__name="LEGAL_CASE")
+            for legal_form in legal_forms:
+                form_categories = FormCategory.objects.filter(form=legal_form, name='Suspects')
+                if len(form_categories) == 1:
+                    suspect_class = form_categories[0].storage.get_form_storage_class()
+                    suspects = suspect_class.objects.filter(person=person, legal_case__station__in=legal_form.stations.all())
+                    for suspect in suspects:
+                        form_entry = PersonForm()
+                        form_entry.content_object = suspect.legal_case
+                        forms.append(form_entry)
+                
+                form_categories = FormCategory.objects.filter(form=legal_form, name='Victims')
+                if len(form_categories) == 1:
+                    victim_class = form_categories[0].storage.get_form_storage_class()
+                    victims = victim_class.objects.filter(person=person, legal_case__station__in=legal_form.stations.all())
+                    for victim in victims:
+                        form_entry = PersonForm()
+                        form_entry.content_object = victim.legal_case
                         forms.append(form_entry)
             
             if len(forms) > 0:
                 for form in forms:
-                    cache_entry = PersonFormCache()
-                    cache_entry.person = person
-                    cache_entry.form_detail = form
-                    cache_entry.save()
-                    person_forms.append(cache_entry)
+                    form.person = person
+                    form.save()
+                    person_forms.append(form)
             else:
-                cache_entry = PersonFormCache()
-                cache_entry.person = person
-                cache_entry.form_detail = {}
-                cache_entry.save()
-                person_forms.append(cache_entry)
-            
+                form = PersonForm()
+                form.person = person
+                form.save()
+                person_forms.append(form)
 
         return person_forms
+
         
         
     
