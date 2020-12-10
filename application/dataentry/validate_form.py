@@ -365,7 +365,7 @@ class ValidateForm:
         self.cards = form_data.card_dict
         self.response_code = status.HTTP_200_OK
         
-        if self.form_data.form_object.status != 'in-progress':   
+        if getattr(self.form_data.form_object, 'status', None) is not None and self.form_data.form_object.status != 'in-progress':   
             self.validations_to_perform['submit_error'] = True
             if not ignore_warnings:
                 self.validations_to_perform['warning'] = True
