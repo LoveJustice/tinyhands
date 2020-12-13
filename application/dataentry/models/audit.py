@@ -13,6 +13,7 @@ class Audit(models.Model):
     percent_to_sample = models.FloatField(100)
     author = models.ForeignKey(Account, null=True, on_delete=models.SET_NULL)
     notes = models.TextField(blank=True)
+    forms_in_range = models.PositiveIntegerField(null=True)
     template = JSONField(null=True)
         # contains array of objects with section name and question count
         
@@ -25,8 +26,9 @@ class AuditSample(models.Model):
     form_id = models.PositiveIntegerField()
     form_number = models.CharField(max_length=126)
     auditor = models.ForeignKey(Account, null=True, on_delete=models.SET_NULL)
-    detail_notes = models.TextField(blank=True)
+    detail_notes = models.TextField(blank=True)     # AKA auditor notes
     high_level_notes = models.TextField(blank=True)
+    monitor_notes = models.TextField(blank=True)
     completion_date = models.DateField(null=True)
     results = JSONField(null=True)
         # contains array of objects with section name incorrect count
