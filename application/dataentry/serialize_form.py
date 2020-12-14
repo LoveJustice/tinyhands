@@ -1,8 +1,10 @@
 import pytz
+import traceback
 from django.conf import settings
 from dateutil import parser
 from datetime import datetime
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 from django.core.exceptions import ObjectDoesNotExist
 
 from dataentry.models.addresses import Address1, Address2
@@ -664,7 +666,6 @@ class ResponsePersonSerializer(serializers.Serializer):
         # Boolean
         for field in ['phone_verified']:
             tmp = data.get(field)
-            print('phone_verified', tmp)
             if tmp is not None and tmp.get('value') is not None:
                 ret[field] = int(tmp.get('value'))
             else:
@@ -994,6 +995,17 @@ class CardCategorySerializer(serializers.Serializer):
 class FormDataSerializer(serializers.Serializer):
     def to_representation(self, instance):
         ret = super().to_representation(instance)
+        self.the_errors = []
+        self.the_warnings = []
+        try:
+            self.validate_form(instance.form, instance, False, mode="retrieve")
+            ret['errors'] = []
+            ret['warnings'] = []
+        except ValidationError:
+            ret['errors'] = self.the_errors
+            ret['warnings'] = self.the_warnings
+            
+
         if hasattr(instance.form_object, 'station'):
             ret['station_id'] = serializers.IntegerField().to_representation(instance.form_object.station.id)
             ret['station_code'] = serializers.CharField().to_representation(instance.form_object.station.station_code)
@@ -1136,8 +1148,8 @@ class FormDataSerializer(serializers.Serializer):
         else:
             return self.form_data.form_object.station.id
         
-    def validate_form(self, form, form_data, ignore_warnings):
-        validate = ValidateForm(form, form_data, ignore_warnings)
+    def validate_form(self, form, form_data, ignore_warnings, mode="update"):
+        validate = ValidateForm(form, form_data, ignore_warnings, mode=mode)
         validate.validate()
         self.the_errors = self.the_errors + validate.errors
         self.the_warnings = self.the_warnings + validate.warnings

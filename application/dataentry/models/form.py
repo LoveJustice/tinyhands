@@ -303,6 +303,8 @@ class FormValidation(models.Model):
     error_warning_message = models.CharField(max_length=126)
     params=JSONField(null=True)
     forms = models.ManyToManyField(Form)
+    retrieve = models.BooleanField()
+    update = models.BooleanField()
 
 # Set of questions to be validated for the FormValidation
 class FormValidationQuestion(models.Model):

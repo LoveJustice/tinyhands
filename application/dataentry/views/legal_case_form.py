@@ -11,6 +11,7 @@ from .base_form import BaseFormViewSet
 from dataentry.form_data import Form, FormData
 from dataentry.models import LegalCase
 from dataentry.serializers import LegalCaseSerializer
+from dataentry.validate_form import ValidateForm
 
     
 class LegalCaseFormViewSet(BaseFormViewSet):
@@ -52,5 +53,12 @@ class LegalCaseFormViewSet(BaseFormViewSet):
     
     def filter_key(self, queryset, search):
         return queryset
+    
+    def post_process(self, request, form_data):
+        validate = ValidateForm(form_data.form, form_data, False, mode="retrieve")
+        validate.validate()
+        form_data.form_object.missing_data_count = len(validate.warnings)
+        form_data.form_object.save()
+            
     
 
