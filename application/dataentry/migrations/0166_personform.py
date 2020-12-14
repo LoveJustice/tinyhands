@@ -10,7 +10,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('contenttypes', '0002_remove_content_type_name'),
-        ('dataentry', '0165_auto_20201112_1939'),
+        ('dataentry', '0166_auditsample_monitor_notes'),
     ]
 
     operations = [
