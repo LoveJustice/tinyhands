@@ -48,6 +48,9 @@ class AuditViewSet(viewsets.ModelViewSet):
         for candidate in candidates_queryset:
             candidates.append(candidate)
         
+        audit.forms_in_range = len(candidates)
+        audit.save()
+        
         number_to_sample = int (len(candidates) * audit.percent_to_sample / 100 +0.5)
         random.seed()
         for idx in range(0,number_to_sample):
@@ -85,6 +88,16 @@ class AuditViewSet(viewsets.ModelViewSet):
             return Response(serializer.data)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def update_notes(self, request, pk):
+        audit = Audit.objects.get(id=pk)
+        if not self.has_permission(self.request.user.id, 'SUBMIT_SAMPLE', audit.country.id):
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        audit.notes = request.data['notes']
+        audit.save()
+        serializer = AuditSerializer(audit)
+        return Response(serializer.data)
+        
         
 
 class AuditSampleViewSet(viewsets.ModelViewSet):
