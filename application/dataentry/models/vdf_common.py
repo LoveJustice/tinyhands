@@ -81,6 +81,9 @@ class VdfCommon(BaseForm):
     def get_form_type_name(self):
         return 'VDF'
     
+    def get_form_date(self):
+        return self.interview_date
+    
     @staticmethod
     def key_field_name():
         return 'vdf_number'
