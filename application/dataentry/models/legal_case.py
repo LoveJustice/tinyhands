@@ -26,6 +26,9 @@ class LegalCase(BaseForm):
     def get_form_type_name(self):
         return 'LEGAL_CASE'
     
+    def get_form_date(self):
+        return self.charge_sheet_date
+    
     @staticmethod
     def key_field_name():
         return 'legal_case_number'

@@ -453,6 +453,9 @@ class IrfCommon(BaseForm):
     def get_form_type_name(self):
         return 'IRF'
     
+    def get_form_date(self):
+        return self.date_time_of_interception.date()
+    
     def to_str(self, value):
         if value is None:
             return 'None'

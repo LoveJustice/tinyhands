@@ -102,10 +102,8 @@ class VdfFormViewSet(BaseFormViewSet):
             self.logbook_submitted = None
     
     def send_home_situation_alert(self, ulp, context):
-        print('send_home_situation_alert')
         email_sender = settings.SERVER_EMAIL
         for user_location_permission in ulp:
-            print('send_home_situation_alert - loop', user_location_permission.account.email)
             send_templated_mail(
                 template_name='home_situation_alert',
                 from_email=email_sender,
@@ -136,7 +134,7 @@ class VdfFormViewSet(BaseFormViewSet):
         # station permission to receive notification
         ulp3 = UserLocationPermission.objects.filter(permission__permission_group = 'NOTIFICATIONS', permission__action = 'HSA', station=form_data.form_object.station)
         
-        print('permissions found', len(ulp1),len(ulp2),len(ulp3))
+        
         ulp = (ulp1 | ulp2 | ulp3).distinct()
         self.send_home_situation_alert(ulp, context)
             

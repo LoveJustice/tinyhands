@@ -204,6 +204,9 @@ class CifCommon(BaseForm):
     def get_form_type_name(self):
         return 'CIF'
     
+    def get_form_date(self):
+        return self.incident_date
+    
     @staticmethod
     def key_field_name():
         return 'cif_number'

@@ -91,7 +91,7 @@ class Command(BaseCommand):
             cursor = connection.cursor()
             cursor.execute(sql)
             
-            sql = 'DELETE FROM dataentry_personformcache'
+            sql = 'DELETE FROM dataentry_personform'
             cursor.execute(sql)
                 
             for old_obj in old_objs:
