@@ -107,3 +107,12 @@ class VdfAttachmentCommon(BaseCard):
     def is_private(self):
         return self.private_card
     
+class GospelVerification(BaseForm):
+    vdf = models.ForeignKey(VdfCommon)
+    profess_to_accept_christ = models.CharField(max_length=126, null=True)
+    survey_complete = models.CharField(max_length=126, null=True)
+    searchlight_edited = models.CharField(max_length=126, null=True)
+    date_of_followup = models.DateField('Interview date', null=True)
+    followup_person = models.CharField(max_length=126, null=True)
+    
+    

@@ -6,7 +6,7 @@ from dataentry.views import SiteSettingsViewSet, GoogleMapKeyViewSet
 from dataentry.views import CountryViewSet
 from dataentry.views import RegionViewSet
 from dataentry.views import AuditViewSet, AuditSampleViewSet
-from dataentry.views import IDManagementViewSet, TraffickerCheckViewSet, IrfFormViewSet, CifFormViewSet, VdfFormViewSet
+from dataentry.views import IDManagementViewSet, TraffickerCheckViewSet, IrfFormViewSet, CifFormViewSet, VdfFormViewSet, GospelVerificationViewSet
 from dataentry.views import FormViewSet, FormTypeViewSet
 from dataentry.views import MonthlyReportFormViewSet
 from dataentry.views import IndicatorsViewSet
@@ -118,6 +118,8 @@ urlpatterns = [
         url(r'^vdf/$', VdfFormViewSet.as_view(list), name='vdf'),
         url(r'^vdf/(?P<station_id>\d+)/(?P<pk>\d+)', VdfFormViewSet.as_view({'get': 'my_retrieve', 'put': 'update', 'delete': 'destroy'}), name='vdfDetail'),
         url(r'^vdf/blank/(?P<station_id>\d+)', VdfFormViewSet.as_view({'get': 'retrieve_blank_form'}), name='vdfBlank'),
+        url(r'^gospel-verification/$', GospelVerificationViewSet.as_view({'get': 'list'}), name='gospelVerificationList'),
+        url(r'^gospel-verification/(?P<station_id>\d+)/(?P<pk>\d+)/$', GospelVerificationViewSet.as_view({'get': 'my_retrieve', 'put': 'update'}), name='gospelVerificationDetail'),
         
         url(r'^monthly_report/$', MonthlyReportFormViewSet.as_view(list), name='monthlyReport'),
         url(r'^monthly_report/(?P<station_id>\d+)/(?P<pk>\d+)', MonthlyReportFormViewSet.as_view({'get': 'my_retrieve', 'put': 'update', 'delete': 'destroy'}), name='monthlyReportDetail'),

@@ -1005,7 +1005,8 @@ class FormDataSerializer(serializers.Serializer):
             ret['errors'] = self.the_errors
             ret['warnings'] = self.the_warnings
             
-
+        if hasattr(instance, 'form'):
+            ret['form_name'] = instance.form.form_name
         if hasattr(instance.form_object, 'station'):
             ret['station_id'] = serializers.IntegerField().to_representation(instance.form_object.station.id)
             ret['station_code'] = serializers.CharField().to_representation(instance.form_object.station.station_code)
