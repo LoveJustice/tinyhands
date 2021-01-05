@@ -13,7 +13,6 @@ class LegalCase(BaseForm):
     charge_sheet_date = models.DateField(null=True)
     case_type = models.CharField(max_length=255, null=True)
     date_last_contacted = models.DateField(null=True)
-    comment = models.TextField(blank=True)
     appealed = models.BooleanField(default=False)
     lawyer_name = models.CharField(max_length=255, null=True)
     lawyer_phone = models.CharField(max_length=255, null=True)
@@ -32,6 +31,17 @@ class LegalCase(BaseForm):
     @staticmethod
     def key_field_name():
         return 'legal_case_number'
+
+class LegalCaseTimeline(BaseCard):
+    legal_case = models.ForeignKey(LegalCase, on_delete=models.CASCADE)
+    comment_date = models.DateField()
+    comment = models.TextField()
+    added_by = models.CharField(max_length=255, null=True)
+    date_added = models.DateField(auto_now_add=True)
+    date_removed = models.DateField(null=True)
+    
+    def set_parent(self, the_parent):
+        self.legal_case = the_parent
     
 class LegalCaseSuspect(BaseCard):
     legal_case = models.ForeignKey(LegalCase, on_delete=models.CASCADE)
