@@ -43,7 +43,6 @@ class GoogleFormWorkQueue(Thread):
                     self.work_queue.put(work);
                 else:
                     logger.error("GoogleFormWorkQueue.run Failed to process " + str(work[0]) + " on attempt " + str(work[1]) + " - giving up\n" + traceback.format_exc())
-                    self.send_exception_mail(traceback.format_exc())
                     break
     
     def find_sheet(self, obj, station, form_type):

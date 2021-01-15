@@ -202,27 +202,30 @@ class ExportToGoogleSheet:
                 time.sleep(sleep_time)
             start_time = datetime.datetime.now();
             logger.info("Begin audit of form " + audit_sheet.export_import.form.form_name)
-            stations = audit_sheet.export_import.form.stations.all()
-            if len(stations) < 1:
-                logger.info("No stations assigned form " + audit_sheet.export_import.form.form_name)
-                continue
-            
-            storage = audit_sheet.export_import.form.storage
-            mod = __import__(storage.module_name, fromlist=[storage.form_model_name])
-            form_model = getattr(mod, storage.form_model_name, None)
-            forms_to_audit = form_model.objects.filter(station__in=stations).exclude(status='in-progress')
-            if len(forms_to_audit) < 1:
-                logger.info("No data for form " + audit_sheet.export_import.form.form_name)
-                continue
-            
-            export_form = ExportFormFactory.find_by_instance(forms_to_audit[0])
-            factory = ExportToGoogleSheetFactory()
-            export_sheet = factory.find(export_form[0])
-            mod = __import__('export_import.google_sheet', fromlist=['GoogleSheet'])
-            google_sheet_class = getattr(mod, 'GoogleSheet', None)
-            google_sheet = google_sheet_class.from_form_config(export_sheet.google_sheet_config)
-            google_sheet.audit(forms_to_audit, forms_to_audit[0].key_field_name())
-            logger.info("Complete audit of form " + audit_sheet.export_import.form.form_name)
+            try:
+                stations = audit_sheet.export_import.form.stations.all()
+                if len(stations) < 1:
+                    logger.info("No stations assigned form " + audit_sheet.export_import.form.form_name)
+                    continue
+                
+                storage = audit_sheet.export_import.form.storage
+                mod = __import__(storage.module_name, fromlist=[storage.form_model_name])
+                form_model = getattr(mod, storage.form_model_name, None)
+                forms_to_audit = form_model.objects.filter(station__in=stations).exclude(status='in-progress')
+                if len(forms_to_audit) < 1:
+                    logger.info("No data for form " + audit_sheet.export_import.form.form_name)
+                    continue
+                
+                export_form = ExportFormFactory.find_by_instance(forms_to_audit[0])
+                factory = ExportToGoogleSheetFactory()
+                export_sheet = factory.find(export_form[0])
+                mod = __import__('export_import.google_sheet', fromlist=['GoogleSheet'])
+                google_sheet_class = getattr(mod, 'GoogleSheet', None)
+                google_sheet = google_sheet_class.from_form_config(export_sheet.google_sheet_config)
+                google_sheet.audit(forms_to_audit, forms_to_audit[0].key_field_name())
+                logger.info("Complete audit of form " + audit_sheet.export_import.form.form_name)
+            except:
+                logger.error("Faild audit of form "  + audit_sheet.export_import.form.form_name)
             end_time = datetime.datetime.now()
             elapsed = (end_time - start_time).total_seconds()
             if elapsed < 10:
