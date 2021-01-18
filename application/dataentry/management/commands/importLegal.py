@@ -2,11 +2,13 @@ import csv
 import json
 import requests
 import traceback
+from datetime import date
 from django.db import transaction, IntegrityError
 from django.core.management.base import BaseCommand
 from django.core.exceptions import ObjectDoesNotExist
-from dataentry.models import IrfCommon, IntercepteeCommon, LegalCase, LegalCaseSuspect, LegalCaseVictim, MasterPerson, Person
+from dataentry.models import IrfCommon, IntercepteeCommon, LegalCase, LegalCaseSuspect, LegalCaseTimeline, LegalCaseVictim, MasterPerson, Person
 from dataentry.models import BorderStation
+
 
 class Command(BaseCommand):
     def add_arguments(self, parser):
@@ -163,10 +165,6 @@ class Command(BaseCommand):
                     'name':'Last Contacted?',
                     'field':'date_last_contacted',
                 },
-                {
-                    'name':'What is Next Step? / Case Comments',
-                    'field':'comment',
-                },
             ]
         
         
@@ -200,6 +198,14 @@ class Command(BaseCommand):
             if field is not None and value != '':
                 setattr(legal_case, field, value)
         legal_case.save()
+        
+        comment = row['What is Next Step? / Case Comments']
+        if comment is not None and comment != '':
+            timeline = LegalCaseTimeline()
+            timeline.legal_case = legal_case
+            timeline.comment = comment
+            timeline.comment_date = date.today()
+            timeline.save()
         
         try:
             irf = IrfCommon.objects.get(irf_number=legal_case.legal_case_number)
