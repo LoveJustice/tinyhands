@@ -9,9 +9,10 @@ from templated_email import send_templated_mail
 
 from dataentry.serialize_form import FormDataSerializer
 from .base_form import BaseFormViewSet, BorderStationOverviewSerializer
+from dataentry.serializers import GospelVerificationSerializer
 
 from dataentry.form_data import Form, FormData
-from dataentry.models import VdfCommon, UserLocationPermission
+from dataentry.models import VdfCommon, GospelVerification, UserLocationPermission
 
 class VdfListSerializer(serializers.Serializer):
     id = serializers.IntegerField()
@@ -113,7 +114,24 @@ class VdfFormViewSet(BaseFormViewSet):
     
     def post_process(self, request, form_data):
         vdf = form_data.form_object
-        if vdf.total_situational_alarms < 10 or self.logbook_submitted is not None or vdf.logbook_submitted is None:  #TEMP
+        
+        if self.logbook_submitted is not None or vdf.logbook_submitted is None:
+            # Only process on the first submit
+            return
+        
+        if vdf.victim_heard_message_before != 'Yes - heard and was believer' and vdf.what_victim_believes_now.startswith('Do believe'):
+            existing_entry = GospelVerification.objects.filter(vdf=vdf)
+            if len(existing_entry) < 1:
+                gospel_verification = GospelVerification()
+                gospel_verification.vdf = vdf
+                gospel_verification.station = vdf.station
+                gospel_verification.status = 'approved'
+                gospel_verification.form_entered_by = vdf.form_entered_by
+                gospel_verification.save()
+        
+        
+        
+        if vdf.total_situational_alarms < 10: 
             return
         
         victim_sent = vdf.where_victim_sent
@@ -137,5 +155,53 @@ class VdfFormViewSet(BaseFormViewSet):
         
         ulp = (ulp1 | ulp2 | ulp3).distinct()
         self.send_home_situation_alert(ulp, context)
-            
+
+class GospelVerificationViewSet(BaseFormViewSet):
+    permission_classes = (IsAuthenticated, )
+    serializer_class = GospelVerificationSerializer
+    filter_backends = (fs.SearchFilter, fs.OrderingFilter,)
+    search_fields = ('vdf__vdf_number','vdf__victim__full_name')
+    ordering_fields = [
+        'id', 'vdf__vdf_number', 'vdf__victim__full_name', 'vdf__interview_date', 
+        'date_of_followup', 'profess_to_accept_christ']
+    ordering = ('-vdf__interview_date',)
+    
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        filter = self.request.GET.get('filter')
+        if  filter is not None:
+            parts = filter.split(':')
+            if len(parts) == 2:
+                if parts[1] == 'True':
+                    parts[1] = True
+                elif parts[1] == 'False':
+                    parts[1] = False
+                queryset = queryset.filter(**{parts[0]:parts[1],})
+        
+        return queryset
+    
+    def filter_key(self, queryset, search):
+        return queryset
+    
+    def get_perm_group_name(self):
+        return 'GOSPEL_VERIFICATION'
+    
+    def get_form_type_name(self):
+        return 'GOSPEL_VERIFICATION'
+    
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return GospelVerificationSerializer
+        else:
+            return FormDataSerializer
+    
+    def get_empty_queryset(self):
+        return GospelVerification.objects.none()
+    
+    def get_list_field_names(self):
+        return ['id', 'station', 'vdf', 'profess_to_accept_christ', 'survey_complete', 
+                'searchlight_edited', 'date_of_followup', 'followup_person']
+        
+    def get_element_paths(self):
+        return []
 
