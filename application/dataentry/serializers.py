@@ -9,6 +9,7 @@ from dataentry.models import Interceptee, InterceptionAlert, Permission, UserLoc
 from dataentry.models import AddressType, DocumentType, PhoneType, SocialMediaType, PersonIdentification
 from dataentry.models import StationStatistics, LocationStatistics, LocationStaff, CountryExchange
 from dataentry.models import PendingMatch, Audit, AuditSample, LegalCase, LegalCaseSuspect, LegalCaseVictim
+from dataentry.models import GospelVerification
 from static_border_stations.serializers import LocationSerializer
 from dataentry.form_data import FormData
 
@@ -936,4 +937,31 @@ class LegalCaseSerializer(serializers.ModelSerializer):
     def get_number_arrests(self, obj):
         return LegalCaseSuspect.objects.filter(legal_case=obj, arrest_status__startswith="Yes").count()
     
+class GospelVerificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GospelVerification
+        fields = [field.name for field in model._meta.fields] # all the model fields
+        fields = fields + ['vdf_number','pv_name','vdf_date', 'form_name', 'country']   
+        
+    vdf_number = serializers.SerializerMethodField(read_only=True)
+    pv_name = serializers.SerializerMethodField(read_only=True)
+    vdf_date = serializers.SerializerMethodField(read_only=True)
+    form_name = serializers.SerializerMethodField(read_only=True)
+    country = serializers.SerializerMethodField(read_only=True)
+    
+    
+    def get_vdf_number(self, obj):
+        return obj.vdf.vdf_number
+    def get_pv_name(self, obj):
+        return obj.vdf.victim.full_name
+    def get_vdf_date(self, obj):
+        return obj.vdf.interview_date
+    def get_country(self, obj):
+        return obj.station.operating_country.id
+    def get_form_name(self, obj):
+        forms = Form.objects.filter(form_type__name='GOSPEL_VERIFICATION', stations__id=obj.station.id)
+        if len(forms) > 0:
+            return forms[0].form_name
+        else:
+            return None
     

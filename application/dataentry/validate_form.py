@@ -320,7 +320,6 @@ class ValidateForm:
             return
         
         match_result = self.match_filter(form_data.form_data, validation.params['filter'])
-        print('not_blank_or_null_card_filter_main', match_result)
         if match_result is None or match_result == 0:
             return
         

@@ -19,7 +19,7 @@ from .user_location_permission import UserLocationPermission
 from .form import *
 from .irf_common import IrfCommon, IntercepteeCommon, IrfAttachmentCommon
 from .cif_common import CifCommon, LocationBoxCommon, PersonBoxCommon, PotentialVictimCommon, TransportationCommon, VehicleBoxCommon, CifAttachmentCommon
-from .vdf_common import VdfCommon, VdfAttachmentCommon
+from .vdf_common import VdfCommon, VdfAttachmentCommon, GospelVerification
 from .monthly_report import MonthlyReport, MonthlyReportAttachment
 from .indicator_history import IndicatorHistory
 from .region import Region
@@ -29,5 +29,5 @@ from .location_statistics import LocationStatistics
 from .location_staff import LocationStaff
 from .pending_match import PendingMatch
 from .audit import Audit, AuditSample
-from .legal_case import LegalCase, LegalCaseSuspect, LegalCaseVictim, LegalCaseAttachment
+from .legal_case import LegalCase, LegalCaseSuspect, LegalCaseVictim, LegalCaseAttachment, LegalCaseTimeline
 from .auto_number import AutoNumber
