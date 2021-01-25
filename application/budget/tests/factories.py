@@ -30,8 +30,6 @@ class BorderStationBudgetCalculationFactory(DjangoModelFactory):
     communication_chair_amount = FuzzyInteger(200, 800)
     communication_manager = True
     communication_manager_amount = FuzzyInteger(200, 800)
-    communication_number_of_staff_with_walkie_talkies = FuzzyInteger(1, 4)
-    communication_number_of_staff_with_walkie_talkies_multiplier = 100
     communication_each_staff = FuzzyInteger(1, 4)
     communication_each_staff_multiplier = 300
 
@@ -39,11 +37,6 @@ class BorderStationBudgetCalculationFactory(DjangoModelFactory):
     travel_chair_with_bike_amount = FuzzyInteger(1800, 2200)
     travel_manager_with_bike = True
     travel_manager_with_bike_amount = FuzzyInteger(1800, 2200)
-    travel_number_of_staff_using_bikes = FuzzyInteger(1, 4)
-    travel_number_of_staff_using_bikes_multiplier = 1000
-    travel_last_months_expense_for_sending_girls_home = FuzzyInteger(100, 220)
-    travel_motorbike = True
-    travel_motorbike_amount = FuzzyInteger(2000, 3000)
     travel_plus_other = FuzzyInteger(1000, 2000)
 
     administration_number_of_intercepts_last_month = FuzzyInteger(1, 4)
@@ -53,19 +46,16 @@ class BorderStationBudgetCalculationFactory(DjangoModelFactory):
     administration_number_of_meetings_per_month_multiplier = 600
     administration_booth = True
     administration_booth_amount = FuzzyInteger(1000, 3000)
-    administration_registration = True
-    administration_registration_amount = FuzzyInteger(1000, 3000)
-
-    medical_last_months_expense = FuzzyInteger(1000, 3000)
+    administration_office = True
+    administration_office_amount = FuzzyInteger(1000, 3000)
 
 
-    shelter_rent = FuzzyInteger(200, 400)
-    shelter_water = FuzzyInteger(200, 400)
-    shelter_electricity = FuzzyInteger(200, 400)
-    shelter_shelter_startup = True
-    shelter_shelter_startup_amount = FuzzyInteger(200, 400)
-    shelter_shelter_two = True
-    shelter_shelter_two_amount = FuzzyInteger(200, 400)
+    shelter_rent = True
+    shelter_rent_amount = FuzzyInteger(200, 400)
+    shelter_water = True
+    shelter_water_amount = FuzzyInteger(200, 400)
+    shelter_electricity = True
+    shelter_electricity_amount = FuzzyInteger(200, 400)
 
     food_and_gas_number_of_intercepted_girls = FuzzyInteger(1, 4)
     food_and_gas_number_of_intercepted_girls_multiplier_before = 100
@@ -81,15 +71,6 @@ class BorderStationBudgetCalculationFactory(DjangoModelFactory):
     awareness_awareness_party = FuzzyInteger(300, 500)
     awareness_sign_boards_boolean = True
     awareness_sign_boards = FuzzyInteger(200, 400)
-
-    supplies_walkie_talkies_boolean = True
-    supplies_walkie_talkies_amount = FuzzyInteger(200, 400)
-    supplies_recorders_boolean = True
-    supplies_recorders_amount = FuzzyInteger(200, 400)
-    supplies_binoculars_boolean = True
-    supplies_binoculars_amount = FuzzyInteger(200, 400)
-    supplies_flashlights_boolean = True
-    supplies_flashlights_amount = FuzzyInteger(200, 400)
 
     # members
     member1 = factory.RelatedFactory(StaffSalaryFactory, 'budget_calc_sheet')
