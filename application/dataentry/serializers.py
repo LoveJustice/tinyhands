@@ -102,7 +102,7 @@ class BorderStationSerializer(serializers.ModelSerializer):
         interceptee_class = None
         form = FormData.find_form('IRF', obj.id)
         if form is not None:
-            interceptee_class = FormData.get_form_card_class(form, 'Interceptees')
+            interceptee_class = FormData.get_form_card_class(form, 'People')
         
         return interceptee_class
 
