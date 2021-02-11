@@ -1,11 +1,18 @@
 server {
     listen 80;
     server_name     ${OLD_SITE_HOSTNAME};
-    
-    location /.well-known/acme-challenge/ {
-	    root /var/www/certbot;
-	}
-	
+        
+    location / {
+        rewrite     ^ https://${SITE_HOSTNAME}$request_uri permanent;
+    }
+}
+
+server {
+    server_name     ${OLD_SITE_HOSTNAME};
+    listen 443 ssl;
+    ssl on;
+    ssl_certificate_key ${OLD_SSL_KEY_PATH};
+    ssl_certificate ${OLD_SSL_CERT_PATH};
     location / {
         rewrite     ^ https://${SITE_HOSTNAME}$request_uri permanent;
     }
@@ -14,10 +21,6 @@ server {
 server {
     listen          80;
     server_name     ${SITE_HOSTNAME};
-    
-    location /.well-known/acme-challenge/ {
-	    root /var/www/certbot;
-	}
     
     location / {
         rewrite     ^ https://$server_name$request_uri permanent;
