@@ -297,7 +297,7 @@ class PersonForm(models.Model):
                         
             irf_forms = Form.objects.filter(form_type__name='IRF')
             for irf_form in irf_forms:
-                form_categories = FormCategory.objects.filter(form=irf_form, name='Interceptees')
+                form_categories = FormCategory.objects.filter(form=irf_form, name='People')
                 if len(form_categories) == 1:
                     interceptee_class = form_categories[0].storage.get_form_storage_class()
                     interceptees = interceptee_class.objects.filter(person=person, interception_record__station__in=irf_form.stations.all())

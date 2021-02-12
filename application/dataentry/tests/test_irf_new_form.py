@@ -100,7 +100,7 @@ class IrfTest(APITransactionTestCase):
         form = Form.current_form('IRF', irf.station.id)
         form_data = FormData(irf, form)
         
-        form_category = FormCategory.objects.get(form=form, name='Interceptees')
+        form_category = FormCategory.objects.get(form=form, name='People')
         category = form_category.category
          
         interceptee = IntercepteeCommon()
