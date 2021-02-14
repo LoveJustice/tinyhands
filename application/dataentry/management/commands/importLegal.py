@@ -176,20 +176,21 @@ class Command(BaseCommand):
             return
         legal_case.status = status
         tmp = row['Type of Case']
-        case_type = ''
+        legal_case.case_type = ''
         if tmp is not None:
             tmp = tmp.lower()
-            sep = ''
+            legal_case.case_type = tmp
             if tmp.find('trafficking') >= 0:
-                case_type += sep + 'Human Trafficking'
-                sep = ';'
+                legal_case.case_type = 'human trafficking'
+                legal_case.human_trafficking = True
             if tmp.find('rape') >= 0:
-                case_type += sep + 'Rape'
-                sep = ';'
+                if legal_case.human_trafficking == False:
+                    legal_case.case_type = 'rape'
+                else:
+                    legal_case.specific_code_law = 'Human Trafficking & Rape'
             if tmp.find('public') >= 0:
-                case_type += sep + 'Public Case'
-                sep = ';'
-        legal_case.case_type = case_type
+                legal_case.case_type =  'public case'
+                
         legal_case.source = 'Intercept'
             
         for column in columns:
@@ -208,7 +209,12 @@ class Command(BaseCommand):
             timeline.save()
         
         try:
-            irf = IrfCommon.objects.get(irf_number=legal_case.legal_case_number)
+            base_number = legal_case.legal_case_number
+            for idx in range(len(legal_case.station.station_code), len(base_number)):
+                if base_number[idx] < '0' or base_number[idx] > '9':
+                    base_number = base_number[:idx]
+                    break
+            irf = IrfCommon.objects.get(irf_number=base_number)
             interceptees = IntercepteeCommon.objects.filter(interception_record=irf)
         except ObjectDoesNotExist:
             print ("could not find IRF for IRF number ", legal_case.legal_case_number)

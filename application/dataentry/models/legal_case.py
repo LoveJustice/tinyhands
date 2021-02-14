@@ -12,6 +12,8 @@ class LegalCase(BaseForm):
     court_case = models.CharField(max_length=255, null=True)
     charge_sheet_date = models.DateField(null=True)
     case_type = models.CharField(max_length=255, null=True)
+    specific_code_law = models.TextField(null=True)
+    human_trafficking = models.BooleanField(default=False)
     date_last_contacted = models.DateField(null=True)
     appealed = models.BooleanField(default=False)
     lawyer_name = models.CharField(max_length=255, null=True)
