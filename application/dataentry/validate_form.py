@@ -281,7 +281,7 @@ class ValidateForm:
                 return
             
     def interceptee_count_match (self, form_data, validation, questions, category_index, general):
-        category_name = 'Interceptees'
+        category_name = 'People'
         if (getattr(form_data, 'card_dict', None) is None or validation.params is None or 
                 'category_id' not in validation.params or
                 'count_question_id' not in validation.params or
