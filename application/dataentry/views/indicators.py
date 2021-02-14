@@ -200,7 +200,7 @@ class IndicatorsViewSet(viewsets.ViewSet):
             if form is None:
                 continue
             
-            form_categories = FormCategory.objects.filter(form=form, name='Interceptees')
+            form_categories = FormCategory.objects.filter(form=form, name='People')
             if len(form_categories) == 1 and form_categories[0].storage is not None:
                 interceptee_storage = form_categories[0].storage
             else:

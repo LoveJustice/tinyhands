@@ -148,6 +148,7 @@ urlpatterns = [
         #Audits
         url(r'^audit/$', AuditViewSet.as_view(list), name='Audit'),
         url(r'^audit/(?P<pk>\d+)/$', AuditViewSet.as_view(detail), name='Auditdetail'),
+        url(r'^audit/sample-size/$', AuditViewSet.as_view({'get':'sample_size'}), name='Auditdetail'),
         url(r'^audit-notes/(?P<pk>\d+)/$', AuditViewSet.as_view({'put':'update_notes'}), name='AuditNotes'),
         url(r'^audit-sample/$', AuditSampleViewSet.as_view(list), name='Audit'),
         url(r'^audit-sample/(?P<pk>\d+)/$', AuditSampleViewSet.as_view(detail), name='Auditdetail'),

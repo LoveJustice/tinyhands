@@ -102,7 +102,7 @@ class BorderStationSerializer(serializers.ModelSerializer):
         interceptee_class = None
         form = FormData.find_form('IRF', obj.id)
         if form is not None:
-            interceptee_class = FormData.get_form_card_class(form, 'Interceptees')
+            interceptee_class = FormData.get_form_card_class(form, 'People')
         
         return interceptee_class
 
@@ -864,7 +864,7 @@ class AuditSerializer(serializers.ModelSerializer):
                 if value is not None:
                     total_incorrect += value
             
-            if (total_questions - total_incorrect)/total_questions >= 0.95:
+            if total_questions > 0 and (total_questions - total_incorrect)/total_questions >= 0.95:
                 passed += 1
         return passed
     
