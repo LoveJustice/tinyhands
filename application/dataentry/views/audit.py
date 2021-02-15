@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework import filters as fs
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
-from dataentry.models import Audit, AuditSample, Country, UserLocationPermission
+from dataentry.models import Audit, AuditSample, Country, Form, UserLocationPermission
 from dataentry.serializers import AuditSerializer, AuditSampleSerializer
 from rest_api.authentication import HasPostPermission, HasPutPermission, HasDeletePermission
 
@@ -43,7 +43,8 @@ class AuditViewSet(viewsets.ModelViewSet):
             results[section['name']] = None
             
         data_class = audit.get_form().storage.get_form_storage_class()
-        candidates_queryset = data_class.objects.filter(station__operating_country=audit.country)
+        candidates_queryset = data_class.objects.filter(station__operating_country=audit.country,
+                    logbook_submitted__gte=audit.start_date, logbook_submitted__lte=audit.end_date)
         candidates = []
         for candidate in candidates_queryset:
             candidates.append(candidate)
@@ -62,6 +63,29 @@ class AuditViewSet(viewsets.ModelViewSet):
             audit_sample.form_number = sample.get_key()
             audit_sample.results = results
             audit_sample.save()
+    
+    def sample_size(self, request):
+        country = self.request.GET.get('country')        
+        form_id = self.request.GET.get('form')
+        start = self.request.GET.get('start')
+        end = self.request.GET.get('end')
+        percent = self.request.GET.get('percent')
+        percent = float(percent)
+        
+        form = Form.objects.get(id=form_id)
+        data_class = form.storage.get_form_storage_class()
+        candidates_count = data_class.objects.filter(station__operating_country_id=country,
+                    logbook_submitted__gte=start, logbook_submitted__lte=end).count()
+        number_to_sample = int (candidates_count * percent / 100 +0.5)
+        
+        resp={
+            'candidates':candidates_count,
+            'sample_size':number_to_sample
+            }
+            
+           
+        return Response(resp)
+        
     
     def has_permission(self, account_id, action, country_id):
         perm_list = UserLocationPermission.objects.filter(account__id=account_id, permission__permission_group='AUDIT', permission__action=action)

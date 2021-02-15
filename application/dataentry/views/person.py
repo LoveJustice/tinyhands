@@ -25,7 +25,7 @@ class PersonViewSet(viewsets.ModelViewSet):
             irf_number = irf_number[:-1]
             
         form = Form.current_form('IRF',station_id)
-        form_categories = FormCategory.objects.filter(name='Interceptees', form=form)
+        form_categories = FormCategory.objects.filter(name='People', form=form)
         persons_data = []
         if len(form_categories) > 0:
             storage = form_categories[0].storage
