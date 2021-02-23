@@ -77,7 +77,7 @@ class IndicatorHistory(models.Model):
                 }
         
         storage_cache = {
-                'IRF_Interceptees':{},
+                'IRF_People':{},
                 }
         
         latest_date = None
