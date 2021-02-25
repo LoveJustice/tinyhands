@@ -3893,7 +3893,7 @@
 {"model": "dataentry.questionstorage", "pk": null, "fields": {"question": 402, "field_name": "exploitation_debt_bondage_pb"}},
 {"model": "dataentry.questionstorage", "pk": null, "fields": {"question": 403, "field_name": "exploitation_debt_bondage_lb"}},
 {"model": "dataentry.questionstorage", "pk": null, "fields": {"question": 404, "field_name": "exploitation_forced_labor_exp"}},
-{"model": "dataentry.questionstorage", "pk": null, "fields": {"question": 405, "field_name": "exploitation_forced_labor_exp"}},
+{"model": "dataentry.questionstorage", "pk": null, "fields": {"question": 405, "field_name": "exploitation_forced_labor_occ"}},
 {"model": "dataentry.questionstorage", "pk": null, "fields": {"question": 406, "field_name": "exploitation_forced_labor_pb"}},
 {"model": "dataentry.questionstorage", "pk": null, "fields": {"question": 407, "field_name": "exploitation_forced_labor_lb"}},
 {"model": "dataentry.questionstorage", "pk": null, "fields": {"question": 408, "field_name": "exploitation_organ_removal_exp"}},
