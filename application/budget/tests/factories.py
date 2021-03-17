@@ -5,15 +5,16 @@ import pytz
 from factory.django import DjangoModelFactory
 from factory.fuzzy import FuzzyInteger
 
-from budget.models import BorderStationBudgetCalculation, OtherBudgetItemCost, StaffSalary
+from budget.models import BorderStationBudgetCalculation, OtherBudgetItemCost, StaffBudgetItem
 from static_border_stations.tests.factories import BorderStationFactory, StaffFactory
 
 
-class StaffSalaryFactory(DjangoModelFactory):
+class StaffBudgetItemFactory(DjangoModelFactory):
     class Meta:
-        model = StaffSalary
+        model = StaffBudgetItem
 
-    salary = factory.fuzzy.FuzzyInteger(200, 800)
+    cost = factory.fuzzy.FuzzyInteger(200, 800)
+    type_name = 'Salary'
     staff_person = factory.SubFactory(StaffFactory)
 
 
@@ -28,15 +29,9 @@ class BorderStationBudgetCalculationFactory(DjangoModelFactory):
 
     communication_chair = True
     communication_chair_amount = FuzzyInteger(200, 800)
-    communication_manager = True
-    communication_manager_amount = FuzzyInteger(200, 800)
-    communication_each_staff = FuzzyInteger(1, 4)
-    communication_each_staff_multiplier = 300
 
     travel_chair_with_bike = True
     travel_chair_with_bike_amount = FuzzyInteger(1800, 2200)
-    travel_manager_with_bike = True
-    travel_manager_with_bike_amount = FuzzyInteger(1800, 2200)
     travel_plus_other = FuzzyInteger(1000, 2000)
 
     administration_number_of_intercepts_last_month = FuzzyInteger(1, 4)
@@ -73,8 +68,8 @@ class BorderStationBudgetCalculationFactory(DjangoModelFactory):
     awareness_sign_boards = FuzzyInteger(200, 400)
 
     # members
-    member1 = factory.RelatedFactory(StaffSalaryFactory, 'budget_calc_sheet')
-    member2 = factory.RelatedFactory(StaffSalaryFactory, 'budget_calc_sheet')
+    member1 = factory.RelatedFactory(StaffBudgetItemFactory, 'budget_calc_sheet')
+    member2 = factory.RelatedFactory(StaffBudgetItemFactory, 'budget_calc_sheet')
 
     @factory.post_generation
     def post(self, created, extracted, **kwargs):

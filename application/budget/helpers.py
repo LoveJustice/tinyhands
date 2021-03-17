@@ -28,12 +28,120 @@ class BudgetTable:
         row_count = sum([(len(item.name) // self.NAME_LENGTH) + 1 for item in self.items])
         return (row_count + 1) * self.ROW_HEIGHT + self.TITLE_HEIGHT
 
+class StaffEntry:
+    def __init__(self, staff_person, staff_data, headers):
+        self.name = staff_person.first_name + ' ' + staff_person.last_name
+        self.values = []
+        self.sub_total = 0
+        
+        total = 0
+        for header in headers:
+            if header in staff_data[staff_person]:
+                value = staff_data[staff_person][header]
+                if value is not None:
+                    self.values.append(value)
+                    total += value
+                else:
+                     self.values.append('')
+            else:
+                self.values.append('')
+        
+        # sub total of salary and benefits        
+        self.values.append(total)
+        
+        value = ''
+        if 'Communication' in staff_data[staff_person]:
+            value = staff_data[staff_person]['Communication']
+            if value is not None:
+                total += value
+            else:
+                value = ''
+        self.values.append(value)
+        
+        value = ''
+        if 'Travel' in staff_data[staff_person]:
+            value = staff_data[staff_person]['Travel']
+            if value is not None:
+                total += value
+            else:
+                value = ''
+        self.values.append(value)
+        
+        self.values.append(total)
+        
+
+class StaffData:
+    def __init__(self, budget):
+        self.staff_list = []
+        self.staff_totals = []
+        self.headers = ['Salary']
+        
+        trailing_headers = ['Sub-Total', 'Communication', 'Travel', 'Total']
+        
+        staff_data = {}
+        staff_order = []
+        
+        staff_items = budget.staffbudgetitem_set.all().order_by('staff_person__first_name', 'staff_person__last_name', 'type_name')
+        for staff_item in staff_items:
+            if staff_item.type_name not in self.headers and staff_item.type_name not in trailing_headers:
+                self.headers.append(staff_item.type_name)\
+            
+            if staff_item.staff_person not in staff_order:
+                staff_order.append(staff_item.staff_person)
+            
+            if staff_item.staff_person not in staff_data:
+                staff_data[staff_item.staff_person] = {}
+            staff_data[staff_item.staff_person][staff_item.type_name] = staff_item.cost
+        
+        for staff_person in staff_order:
+            if staff_person.last_name.find('general_staff') >= 0:
+                continue
+            self.staff_list.append(StaffEntry(staff_person, staff_data, self.headers))
+        
+        for idx in range(0, len(self.headers) + 4):
+            total = 0
+            for person_idx in range(0, len(self.staff_list)):
+                value = self.staff_list[person_idx].values[idx]
+                if value is not None and value != '':
+                    total += value
+            
+            self.staff_totals.append(total)
+    
+    @property
+    def added_headers(self):
+        return self.headers
+    
+    @property
+    def column_format(self):
+        column_format = '20%'
+        for idx in range(0, len(self.headers)+4):
+            column_format += ' 8%'
+    
+        return column_format
+    
+    @property
+    def salaries_and_benefits_total(self):
+        return self.staff_totals[len(self.headers)]
+    
+    @property
+    def communication_total(self):
+        return self.staff_totals[len(self.headers)+1]
+    
+    @property
+    def travel_total(self):
+        return self.staff_totals[len(self.headers)+2]
+
 
 class MoneyDistributionFormHelper:
 
     def __init__(self, budget=None):
         self.budget = budget
-        self.staff_salaries = budget.staffsalary_set.all()
+        self.staff_salaries = budget.staffbudgetitem_set.all()
+        self.staff_data = StaffData(budget)
+    
+    @property
+    def staff(self):
+        return self.staff_data
 
     @property
     def sections(self):
@@ -41,9 +149,9 @@ class MoneyDistributionFormHelper:
         yield BudgetTable("Communication", self.communication_items)
         yield BudgetTable("Travel", self.travel_items)
         yield BudgetTable("Administration", self.administration_items)
-        yield BudgetTable("Miscellaneous", self.miscellaneous_items)
         yield BudgetTable("Potential Victim Care", self.potential_victim_care_items)
         yield BudgetTable("Awareness", self.awareness_items)
+        yield BudgetTable("Miscellaneous", self.miscellaneous_items)
 
     @property
     def total(self):
@@ -59,10 +167,7 @@ class MoneyDistributionFormHelper:
 
     @property
     def salary_and_benefit_items(self):
-        items = []
-        for entry in self.staff_salaries:
-            if entry.staff_person.full_name.find('general_staff') <  0:
-                items.append(BudgetLineItem(entry.staff_person.full_name, entry.salary))
+        items = [BudgetLineItem('Staff salaries & benefits (breakdown on page 1)', self.staff_data.salaries_and_benefits_total)]
         return items + self.get_other_items(BorderStationBudgetCalculation.STAFF_BENEFITS)
 
     @property
@@ -70,12 +175,7 @@ class MoneyDistributionFormHelper:
         items = []
         if self.budget.communication_chair:
             items.append(BudgetLineItem('Chair', self.budget.communication_chair_amount))
-        if self.budget.communication_manager:
-            items.append(BudgetLineItem('Manager', self.budget.communication_manager_amount))
-        if self.budget.communication_each_staff > 0:
-            title = 'Staff (' + str(self.budget.communication_each_staff_multiplier) + ' each)'
-            value = self.budget.communication_each_staff * self.budget.communication_each_staff_multiplier
-            items.append(BudgetLineItem(title, value))
+        items.append(BudgetLineItem('Staff Communication', self.staff_data.communication_total))
         return items + self.get_other_items(BorderStationBudgetCalculation.COMMUNICATION)
 
     @property
@@ -83,10 +183,7 @@ class MoneyDistributionFormHelper:
         items = []
         if self.budget.travel_chair_with_bike:
             items.append(BudgetLineItem('Chair', self.budget.travel_chair_with_bike_amount))
-        if self.budget.travel_manager_with_bike:
-            items.append(BudgetLineItem('Manager', self.budget.travel_manager_with_bike_amount))
-        if self.budget.travel_plus_other > 0:
-            items.append(BudgetLineItem('Other', self.budget.travel_plus_other))
+        items.append(BudgetLineItem('Staff Travel', self.staff_data.travel_total))
         return items + self.get_other_items(BorderStationBudgetCalculation.TRAVEL)
 
     @property

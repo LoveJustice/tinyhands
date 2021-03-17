@@ -57,17 +57,17 @@ class MoneyDistributionFormHelperTests(TestCase):
     def test_staff_salary_items_should_return_list_of_salary_and_benefit_items(self):
         result = self.target.salary_and_benefit_items
 
-        self.assertEqual(len(result), 3)
+        self.assertEqual(len(result), 2)
 
     def test_communication_items_should_return_list_of_communication_items(self):
         result = self.target.communication_items
 
-        self.assertEqual(len(result), 4)
+        self.assertEqual(len(result), 3)
 
     def test_travel_items_should_return_list_of_travel_items(self):
         result = self.target.travel_items
 
-        self.assertEqual(len(result), 4)
+        self.assertEqual(len(result), 3)
 
     def test_administration_items_should_return_list_of_administration_items(self):
         result = self.target.administration_items

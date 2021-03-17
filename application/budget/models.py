@@ -27,10 +27,6 @@ class BorderStationBudgetCalculation(models.Model):
 
     communication_chair = models.BooleanField(default=False)
     communication_chair_amount = models.PositiveIntegerField('for chair', default=1000)
-    communication_manager = models.BooleanField(default=False)
-    communication_manager_amount = models.PositiveIntegerField('for manager', default=1000)
-    communication_each_staff = models.PositiveIntegerField('each staff', default=0)
-    communication_each_staff_multiplier = models.PositiveIntegerField(default=300)
 
     def communication_extra_items_total(self):
         return self.other_items_total(self.COMMUNICATION)
@@ -39,26 +35,17 @@ class BorderStationBudgetCalculation(models.Model):
         total = 0
         if self.communication_chair:
             total += self.communication_chair_amount
-        if self.communication_manager:
-            total += self.communication_manager_amount
-        return total
-
-    def communication_staff_total(self):
-        total = 0
-        total += self.communication_each_staff * self.communication_each_staff_multiplier
         return total
 
     def communication_total(self):
         total = 0
         total += self.communication_manager_chair_total()
-        total += self.communication_staff_total()
         total += self.communication_extra_items_total()
+        total += self.staff_items_total('Communication')
         return total
 
     travel_chair_with_bike = models.BooleanField(default=False)
     travel_chair_with_bike_amount = models.PositiveIntegerField('for chair (if has bike)', default=2000)
-    travel_manager_with_bike = models.BooleanField(default=False)
-    travel_manager_with_bike_amount = models.PositiveIntegerField('for manager (if has bike)', default=2000)
     travel_plus_other = models.PositiveIntegerField(default=0)
 
     def travel_extra_items_total(self):
@@ -68,18 +55,13 @@ class BorderStationBudgetCalculation(models.Model):
         total = 0
         if self.travel_chair_with_bike:
             total += self.travel_chair_with_bike_amount
-        if self.travel_manager_with_bike:
-            total += self.travel_manager_with_bike_amount
         return total
-
-    def travel_staff_bikes_total(self):
-        return 0
 
     def travel_total(self):
         total = 0
         total += self.travel_extra_items_total()
         total += self.travel_manager_chair_total()
-        total += self.travel_staff_bikes_total()
+        total += self.staff_items_total('Travel')
         total += self.travel_plus_other
         return total
 
@@ -179,7 +161,7 @@ class BorderStationBudgetCalculation(models.Model):
         return total
 
     def salary_total(self):
-        return sum([staff.salary for staff in self.staffsalary_set.exclude(salary__isnull=True)])
+        return sum([staff.cost for staff in self.staffbudgetitem_set.exclude(cost__isnull=True).exclude(type_name='Communication').exclude(type_name='Travel')])
     
     def staff_and_benefits_total(self):
         return self.salary_total() + self.other_items_total(self.STAFF_BENEFITS)
@@ -194,13 +176,15 @@ class BorderStationBudgetCalculation(models.Model):
         total += self.miscellaneous_total()
         total += self.travel_total()
         return total
-
-    members = models.ManyToManyField(Staff, through='StaffSalary')
     
     notes = models.TextField('Notes', blank=True)
 
     def other_items_total(self, section):
         items = self.otherbudgetitemcost_set.filter(form_section=section).exclude(cost__isnull=True)
+        return sum(item.cost for item in items)
+    
+    def staff_items_total(self, the_type):
+        items = self.staffbudgetitem_set.filter(type_name=the_type).exclude(cost__isnull=True)
         return sum(item.cost for item in items)
 
     def mdf_file_name(self):
@@ -247,11 +231,12 @@ class OtherBudgetItemCost(models.Model):
         return self.budget_item_parent.border_station.id
 
 
-class StaffSalary(models.Model):
-    salary = models.PositiveIntegerField(default=0, blank=True, null=True)
-
+class StaffBudgetItem(models.Model):
     budget_calc_sheet = models.ForeignKey(BorderStationBudgetCalculation, blank=True, null=True, on_delete=models.CASCADE)
     staff_person = models.ForeignKey(Staff, blank=True, null=True, on_delete=models.CASCADE)
+    type_name = models.CharField(max_length=255, blank=False)
+    description = models.TextField('Description', blank=True)
+    cost = models.IntegerField(default=0, blank=True, null=True)
     
     def get_country_id(self):
         if self.budget_calc_sheet is None or self.budget_calc_sheet.border_station is None or self.budget_calc_sheet.border_station.operating_country is None:
@@ -262,3 +247,6 @@ class StaffSalary(models.Model):
         if self.budget_calc_sheet is None or self.budget_calc_sheet.border_station is None:
             return None
         return self.budget_calc_sheet.border_station.id
+    
+    
+

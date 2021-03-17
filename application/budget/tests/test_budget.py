@@ -1,6 +1,6 @@
 from django.test import TestCase
 from budget.tests.factories import BorderStationBudgetCalculationFactory
-from budget.models import BorderStationBudgetCalculation, OtherBudgetItemCost, StaffSalary
+from budget.models import BorderStationBudgetCalculation, OtherBudgetItemCost, StaffBudgetItem
 
 
 class BorderStationBudgetCalculationTests(TestCase):
@@ -11,8 +11,7 @@ class BorderStationBudgetCalculationTests(TestCase):
     def test_communication_total_calculates_correct_value(self):
         fields = [
             self.target.communication_extra_items_total(),
-            self.target.communication_manager_chair_total(),
-            self.target.communication_staff_total()
+            self.target.communication_manager_chair_total()
         ]
         expected_total = sum(fields)
 
@@ -73,7 +72,7 @@ class BorderStationBudgetCalculationTests(TestCase):
         self.assertEqual(self.target.awareness_total(), expected_total)
 
     def test_salary_total_calculates_correct_value(self):
-        expected_total = sum([item.salary for item in self.target.staffsalary_set.all()])
+        expected_total = sum([item.cost for item in self.target.staffbudgetitem_set.all()])
         print('test_salary_total_calculates_correct_value', expected_total)
         expected_total += self.target.other_items_total(BorderStationBudgetCalculation.STAFF_BENEFITS)
 

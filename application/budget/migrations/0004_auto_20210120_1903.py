@@ -121,10 +121,49 @@ class Migration(migrations.Migration):
             name='shelter_water',
             field=models.BooleanField(default=False, verbose_name='Water'),
         ),
+        migrations.RemoveField(
+            model_name='borderstationbudgetcalculation',
+            name='communication_each_staff',
+        ),
+        migrations.RemoveField(
+            model_name='borderstationbudgetcalculation',
+            name='communication_each_staff_multiplier',
+        ),
+        migrations.RemoveField(
+            model_name='borderstationbudgetcalculation',
+            name='communication_manager',
+        ),
+        migrations.RemoveField(
+            model_name='borderstationbudgetcalculation',
+            name='communication_manager_amount',
+        ),
+        migrations.RemoveField(
+            model_name='borderstationbudgetcalculation',
+            name='travel_manager_with_bike',
+        ),
+        migrations.RemoveField(
+            model_name='borderstationbudgetcalculation',
+            name='travel_manager_with_bike_amount',
+        ),
         migrations.AlterField(
             model_name='otherbudgetitemcost',
             name='form_section',
             field=models.IntegerField(blank=True, null=True, verbose_name=[(1, 'Travel'), (2, 'Miscellaneous'), (3, 'Awareness'), (5, 'Potential Victim Care'), (7, 'Communication'), (8, 'Staff & Benefits'), (10, 'Administration')]),
+        ),
+         migrations.RemoveField(
+            model_name='staffsalary',
+            name='budget_calc_sheet',
+        ),
+        migrations.RemoveField(
+            model_name='staffsalary',
+            name='staff_person',
+        ),
+        migrations.RemoveField(
+            model_name='borderstationbudgetcalculation',
+            name='members',
+        ),
+        migrations.DeleteModel(
+            name='StaffSalary',
         ),
         migrations.RunSQL("update budget_borderstationbudgetcalculation set shelter_electricity=true"),
         migrations.RunSQL("update budget_borderstationbudgetcalculation set shelter_rent=true"),

@@ -10,13 +10,12 @@ z3c.rml docs can be found on their github page: https://github.com/zopefoundatio
 <!DOCTYPE document SYSTEM "rml.dtd">
 <document filename="outfile.pdf">
     <template  showBoundary="0">
-        <pageTemplate id="first" pagesize="LETTER">
+        <pageTemplate id="first" pagesize="LEDGER">
             <pageGraphics>
                 <setFont name="Helvetica" size="10"/>
             </pageGraphics>
-            <frame id="title" x1=".5in" y1="10in" width="7.5in" height=".6in"/>
-            <frame id="leftColumn" x1=".5in" y1=".5in" width="3.5in" height="9.5in"/>
-            <frame id="rightColumn" x1="4.5in" y1=".5in" width="3.5in" height="9.5in"/>
+            <frame id="title" x1=".5in" y1="10in" width="16in" height=".6in"/>
+            <frame id="staff_budget" x1=".5in" y1=".5in" width="16in" height="9.5in"/>
 
         </pageTemplate>
         <pageTemplate id="following" pagesize="LETTER">
@@ -31,6 +30,8 @@ z3c.rml docs can be found on their github page: https://github.com/zopefoundatio
             fontSize="14"
             alignment="center"
             spaceAfter="7"/>
+        <paraStyle name="numberAlign"
+        	alignment="right"/>
         <paraStyle name="tableHeader"
             fontName="Helvetica-Bold"
             fontSize="12"
@@ -39,9 +40,20 @@ z3c.rml docs can be found on their github page: https://github.com/zopefoundatio
             borderColor="black"
             leading="16"
             backColor="lightgrey"/>
+        <paraStyle name="staffHeader"
+        	fontName="Helvetica-Bold"
+            fontSize="10"
+            alignment="center"
+            />    
         <paraStyle name="monthlyTotal"
             fontName="Helvetica-Bold"
             fontSize="14"/>
+        <blockTableStyle id="staffGrid">
+            <lineStyle kind="grid"  colorName="black" thickness="1" start="0,0" stop="-4,-1" />
+            <lineStyle kind="grid"  colorName="green" thickness="2" start="-3,0" stop="-3,-1" />
+            <lineStyle kind="grid"  colorName="red" thickness="2" start="-2,0" stop="-2,-1" />
+            <lineStyle kind="grid"  colorName="black" thickness="2" start="-1,0" stop="-1,-1" />
+        </blockTableStyle>
         <blockTableStyle id="infoGrid">
             <lineStyle kind="grid"  colorName="black" thickness="1" start="0,0" stop="-1,-1" />
         </blockTableStyle>
@@ -59,9 +71,37 @@ z3c.rml docs can be found on their github page: https://github.com/zopefoundatio
                 <td>Date: {{ date|date:"F d, Y"}}</td>
             </tr>
         </blockTable>
-
-        <nextFrame/>
+        
+        <nextFrame name="staff_budget"/>
+         <blockTable alignment="LEFT" colWidths="{{ staff.column_format }}" style="staffGrid">
+         	<tr>
+         		<td><para style="staffHeader">Name</para></td>
+         		{% for header in staff.headers %}
+         			<td><para style="staffHeader">{{ header }}</para></td>
+         		{% endfor %}
+         		<td><para style="staffHeader">Sub-Total</para></td>
+         		<td><para style="staffHeader">Communication</para></td>
+         		<td><para style="staffHeader">Travel</para></td>
+         		<td><para style="staffHeader">Total</para></td>
+         	</tr>
+            {% for entry in staff.staff_list %}
+            	<tr>
+	            	<td><para>{{ entry.name }}</para></td>
+	            	{% for value in entry.values %}
+	            		<td><para style="numberAlign">{{ value }}</para></td>
+	            	{% endfor %}
+            	</tr>
+            {% endfor %}
+            <tr>
+         		<td><para><b>Total</b></para></td>
+         		{% for value in staff.staff_totals %}
+         			<td><para style="numberAlign"><b>{{ value }}</b></para></td>
+         		{% endfor %}
+         	</tr>
+        </blockTable>
+       
         <setNextTemplate name="following" />
+        <nextFrame/>
 
         {% for section in sections %}
         <condPageBreak height="{{ section.height_required }}"/>

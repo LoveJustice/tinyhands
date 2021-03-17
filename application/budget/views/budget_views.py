@@ -11,8 +11,8 @@ from rest_framework import filters as fs
 from django_filters import rest_framework as filters
 from django.db.models import Q
 
-from budget.models import BorderStationBudgetCalculation, OtherBudgetItemCost, StaffSalary
-from budget.serializers import BorderStationBudgetCalculationSerializer, OtherBudgetItemCostSerializer, StaffSalarySerializer, BorderStationBudgetCalculationListSerializer
+from budget.models import BorderStationBudgetCalculation, OtherBudgetItemCost, StaffBudgetItem
+from budget.serializers import BorderStationBudgetCalculationSerializer, OtherBudgetItemCostSerializer, StaffBudgetItemSerializer, BorderStationBudgetCalculationListSerializer
 from dataentry.models import Interceptee
 from dataentry.models import InterceptionRecord
 from dataentry.models import UserLocationPermission
@@ -99,17 +99,17 @@ def budget_sheet_by_date(request, pk, month, year):
     if budget_sheets and len(budget_sheets) > 0:
         previous_budget_sheet = budget_sheets[0]
         other_items_serializer = OtherBudgetItemCostSerializer(previous_budget_sheet.otherbudgetitemcost_set.all(), many=True)
-        staff_serializer = StaffSalarySerializer(previous_budget_sheet.staffsalary_set.all(), many=True)
+        staff_serializer = StaffBudgetItemSerializer(previous_budget_sheet.staffbudgetitem_set.all(), many=True)
         budget_serializer = BorderStationBudgetCalculationSerializer(previous_budget_sheet)
 
-        staff_salaries = staff_serializer.data
+        staff_items = staff_serializer.data
         other_items = other_items_serializer.data
         form = budget_serializer.data
 
     return Response({
         'top_table_data': top_table_data(pk, month, year, budget_sheets),
         'form': form,
-        'staff_salaries': staff_salaries,
+        'staff_items': staff_items,
         'other_items': other_items
     })
 
@@ -222,10 +222,9 @@ class OtherItemsViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(other_items_list, many=True)
         return Response(serializer.data)
 
-
-class StaffSalaryViewSet(viewsets.ModelViewSet):
-    queryset = StaffSalary.objects.all()
-    serializer_class = StaffSalarySerializer
+class StaffBudgetItemViewSet(viewsets.ModelViewSet):
+    queryset = StaffBudgetItem.objects.all()
+    serializer_class = StaffBudgetItemSerializer
     permission_classes = [IsAuthenticated, HasPermission]
     permissions_required = [{'permission_group':'BUDGETS', 'action':'VIEW'},]
 
