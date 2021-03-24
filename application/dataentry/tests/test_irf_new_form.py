@@ -94,7 +94,7 @@ class IrfTest(APITransactionTestCase):
         irf.number_of_traffickers = 0
         irf.logbook_received = datetime.datetime.now().date()
         
-        irf.evidence_categorization = 'Some Evidence of Trafficking'
+        irf.evidence_categorization = 'Evidence of Trafficking'
         irf.reason_for_intercept = 'Primary reason'
         irf.convinced_by_police = 'Police convinced or forced to stop'
         form = Form.current_form('IRF', irf.station.id)
