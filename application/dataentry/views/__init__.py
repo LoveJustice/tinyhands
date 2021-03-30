@@ -20,3 +20,4 @@ from .region import *
 from .statistics_dashboard import *
 from .audit import *
 from .legal_case_form import *
+from .client_diagnostic import *

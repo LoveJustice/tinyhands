@@ -310,6 +310,15 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
         location_id = request.data['location']
         staff_id = request.data['staff']
         year_month = request.data['year_month']
+        location = Location.objects.get(id=location_id)
+        try:
+            station_statistics = StationStatistics.objects.get(station=location.border_station, year_month=year_month)
+        except ObjectDoesNotExist:
+            station_statistics = StationStatistics()
+            station_statistics.station = location.border_station
+            station_statistics.year_month = year_month
+            station_statistics.save()
+        
         try:
             location_staff = LocationStaff.objects.get(location__id=location_id, staff__id=staff_id, year_month=year_month)
         except ObjectDoesNotExist:
@@ -351,6 +360,15 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
     def update_location_statistics(self, request):
         location_id = request.data['location']
         year_month = request.data['year_month']
+        location = Location.objects.get(id=location_id)
+        try:
+            station_statistics = StationStatistics.objects.get(station=location.border_station, year_month=year_month)
+        except ObjectDoesNotExist:
+            station_statistics = StationStatistics()
+            station_statistics.station = location.border_station
+            station_statistics.year_month = year_month
+            station_statistics.save()
+            
         if request.data['arrests'] == '':
             arrests = None
         else:
