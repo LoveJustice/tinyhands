@@ -41,21 +41,6 @@ class IrfListSerializer(serializers.Serializer):
     
     perm_group_name = 'IRF'
     
-    def get_evidence_code(self, value):
-        code = ''
-        if value is None:
-            code = ''
-        elif value.startswith('Clear Evidence'):
-            code = 'CE'
-        elif value.startswith('Some Evidence'):
-            code = 'SE'
-        elif value.startswith('High Risk'):
-            code='HR'
-        elif value.startswith('Should not count as an Intercept'):
-            code = 'SNHI'
-        
-        return code
-    
     def get_status(self, obj):
         if obj.status == 'approved':
             if obj.evidence_categorization is None or obj.evidence_categorization == '':
