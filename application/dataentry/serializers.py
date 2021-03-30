@@ -10,6 +10,7 @@ from dataentry.models import AddressType, DocumentType, PhoneType, SocialMediaTy
 from dataentry.models import StationStatistics, LocationStatistics, LocationStaff, CountryExchange
 from dataentry.models import PendingMatch, Audit, AuditSample, LegalCase, LegalCaseSuspect, LegalCaseVictim
 from dataentry.models import GospelVerification
+from dataentry.models import ClientDiagnostic
 from static_border_stations.serializers import LocationSerializer
 from dataentry.form_data import FormData
 
@@ -964,4 +965,10 @@ class GospelVerificationSerializer(serializers.ModelSerializer):
             return forms[0].form_name
         else:
             return None
+
+class ClientDiagnosticSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = '__all__'
+        model = ClientDiagnostic
+
     
