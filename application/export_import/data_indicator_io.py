@@ -26,10 +26,8 @@ def get_data_collection_indicator_export_rows(year_months):
             'VDFs in Compliance Percent',
             'VDF Collection Lag Time',
             'Total Number of Verified Forms',
-            'Clear Evidence',
-            'Clear Evidence Percent',
-            'Some Evidence',
-            'Some Evidence Percent',
+            'Evidence',
+            'Evidence Percent',
             'Invalid Intercept',
             'Invalid Intercept Percent',
             'High Risk of Trafficking',
@@ -38,8 +36,9 @@ def get_data_collection_indicator_export_rows(year_months):
             'V Photos Percent',
             'Compliance Percent',
             'Collection Lag Time',
-            'Clear Cases with CIF Percent',
+            'Evidence Cases with CIF Percent',
             'Percent of Valid Intercepts',
+            'Percent Phone Numbers Verified',
             'Total'
         ]
     
@@ -84,10 +83,8 @@ def get_data_collection_indicator_export_rows(year_months):
             row.append(result['vdf_lag'])
             
             row.append(result['verified_forms'])
-            row.append(result['clear_evidence_count'])
-            row.append(result['clear_evidence_percent'])
-            row.append(result['some_evidence_count'])
-            row.append(result['some_evidence_percent'])
+            row.append(result['evidence_count'])
+            row.append(result['evidence_percent'])
             row.append(result['invalid_intercept_count'])
             row.append(result['invalid_intercept_percent'])
             row.append(result['high_risk_count'])
@@ -97,8 +94,9 @@ def get_data_collection_indicator_export_rows(year_months):
             row.append(result['photo_percent'])
             row.append(result['compliance_percent'])
             row.append(result['collection_lag_time'])
-            row.append(result['clear_case_cif_percent'])
+            row.append(result['evidence_cif_percent'])
             row.append(result['valid_intercept_percent'])
+            row.append(result['phone_verified_percent'])
             row.append(result['compliance_total'])
             
             rows.append(row)
