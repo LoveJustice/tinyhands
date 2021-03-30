@@ -23,8 +23,7 @@ class CollectionResults:
         self.irf_lag_total = 0
         self.irf_lag_count = 0
         self.irf_forms_verified = 0
-        self.clear_evidence_count = 0
-        self.some_evidence_count = 0
+        self.evidence_count = 0
         self.invalid_intercept_count = 0
         self.high_risk_count = 0
         
@@ -53,9 +52,8 @@ class CollectionResults:
         
         self.vdf_compliance_percent = self.compute_percent(self.vdf_compliance_count, self.vdf_count)
         
-        self.verified_forms = self.clear_evidence_count + self.some_evidence_count + self.invalid_intercept_count + self.high_risk_count
-        self.clear_evidence_percent = self.compute_percent(self.clear_evidence_count, self.verified_forms)
-        self.some_evidence_percent = self.compute_percent(self.some_evidence_count, self.verified_forms)
+        self.verified_forms = self.evidence_count + self.invalid_intercept_count + self.high_risk_count
+        self.evidence_percent = self.compute_percent(self.evidence_count, self.verified_forms)
         self.invalid_intercept_percent = self.compute_percent(self.invalid_intercept_count, self.verified_forms)
         self.high_risk_percent = self.compute_percent(self.high_risk_count, self.verified_forms)
         
@@ -84,9 +82,9 @@ class CollectionResults:
                 self.collection_lag_time = 0
         else:
             self.collection_lag_time = ''
-        self.clear_case_cif_percent = self.compute_percent(self.cif_with_evidence_count, self.victim_evidence_count)
-        self.valid_intercept_percent = self.compute_percent(self.clear_evidence_count + self.some_evidence_count + self.high_risk_count,
-                            self.clear_evidence_count + self.some_evidence_count + self.high_risk_count + self.invalid_intercept_count)
+        self.evidence_cif_percent = self.compute_percent(self.cif_with_evidence_count, self.victim_evidence_count)
+        self.valid_intercept_percent = self.compute_percent(self.evidence_count + self.high_risk_count,
+                            self.evidence_count + self.high_risk_count + self.invalid_intercept_count)
         
         metric_present = 0
         metric_total = 0
@@ -102,9 +100,9 @@ class CollectionResults:
         if self.collection_lag_time != '':
             metric_present += 1
             metric_total += self.collection_lag_time
-        if self.clear_case_cif_percent != '':
+        if self.evidence_cif_percent != '':
             metric_present += 1
-            metric_total += self.clear_case_cif_percent
+            metric_total += self.evidence_cif_percent
         if self.valid_intercept_percent != '':
             metric_present += 1
             metric_total += self.valid_intercept_percent
@@ -129,8 +127,7 @@ class CollectionResults:
             self.irf_lag_total += entry.irf_lag_total
             self.irf_lag_count += entry.irf_lag_count
             self.irf_forms_verified += entry.irf_forms_verified
-            self.clear_evidence_count += entry.clear_evidence_count
-            self.some_evidence_count += entry.some_evidence_count
+            self.evidence_count += entry.evidence_count
             self.invalid_intercept_count += entry.invalid_intercept_count
             self.high_risk_count += entry.high_risk_count
             
@@ -220,11 +217,8 @@ class IndicatorsViewSet(viewsets.ViewSet):
                     result.irf_lag_total += IndicatorHistory.work_days(irf.date_time_of_interception.date(), irf.logbook_received)
                 if irf.evidence_categorization is not None:
                     result.irf_forms_verified += 1
-                    if irf.evidence_categorization.lower().startswith('clear'):
-                        result.clear_evidence_count += 1
-                        evidence = True
-                    elif irf.evidence_categorization.lower().startswith('some'):
-                        result.some_evidence_count += 1
+                    if irf.evidence_categorization.lower().startswith('evidence'):
+                        result.evidence_count += 1
                         evidence = True
                     elif irf.evidence_categorization.lower().startswith('should'):
                         result.invalid_intercept_count += 1
@@ -280,7 +274,7 @@ class IndicatorsViewSet(viewsets.ViewSet):
             if cif.interview_date is not None and cif.logbook_received is not None:
                 result.cif_lag_count += 1
                 result.cif_lag_total += IndicatorHistory.work_days(cif.interview_date, cif.logbook_received)
-            if irf.evidence_categorization is not None and (irf.evidence_categorization.lower().startswith('clear') or irf.evidence_categorization.lower().startswith('some')):
+            if irf.evidence_categorization is not None and (irf.evidence_categorization.lower().startswith('evidence')):
                         result.cif_with_evidence_count += 1
     
     @staticmethod
