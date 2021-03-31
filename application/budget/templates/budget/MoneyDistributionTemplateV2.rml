@@ -88,9 +88,9 @@ z3c.rml docs can be found on their github page: https://github.com/zopefoundatio
             	<tr>
 	            	<td><para>{{ entry.name }}</para></td>
 	            	{% for value in entry.values %}
-	            		<td><para style="numberAlign">{{ value }}</para></td>
+	            		<td><para style="numberAlign">{{ value.cost }} <super>{{ value.foot_note }}</super></para></td>
 	            	{% endfor %}
-            	</tr>
+            	</tr>up
             {% endfor %}
             <tr>
          		<td><para><b>Total</b></para></td>
@@ -99,6 +99,10 @@ z3c.rml docs can be found on their github page: https://github.com/zopefoundatio
          		{% endfor %}
          	</tr>
         </blockTable>
+	<para></para>
+	{% for foot_note in staff.foot_notes %}
+		<para>{{ foot_note }}</para>
+	{% endfor %}
        
         <setNextTemplate name="following" />
         <nextFrame/>

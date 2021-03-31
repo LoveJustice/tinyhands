@@ -28,6 +28,11 @@ class BudgetTable:
         row_count = sum([(len(item.name) // self.NAME_LENGTH) + 1 for item in self.items])
         return (row_count + 1) * self.ROW_HEIGHT + self.TITLE_HEIGHT
 
+class StaffValue:
+    def __init__(self, cost, foot_note):
+        self.cost = cost
+        self.foot_note = foot_note
+
 class StaffEntry:
     def __init__(self, staff_person, staff_data, headers):
         self.name = staff_person.first_name + ' ' + staff_person.last_name
@@ -38,36 +43,36 @@ class StaffEntry:
         for header in headers:
             if header in staff_data[staff_person]:
                 value = staff_data[staff_person][header]
-                if value is not None:
+                if value is not None and value.cost is not None:
                     self.values.append(value)
-                    total += value
+                    total += value.cost
                 else:
-                     self.values.append('')
+                     self.values.append(StaffValue('',''))
             else:
-                self.values.append('')
+                self.values.append(StaffValue('',''))
         
         # sub total of salary and benefits        
-        self.values.append(total)
+        self.values.append(StaffValue(total,''))
         
-        value = ''
+        value = StaffValue('','')
         if 'Communication' in staff_data[staff_person]:
             value = staff_data[staff_person]['Communication']
-            if value is not None:
-                total += value
+            if value is not None and value.cost is not None:
+                total += value.cost
             else:
-                value = ''
+                value = StaffValue('','')
         self.values.append(value)
         
-        value = ''
+        value = StaffValue('','')
         if 'Travel' in staff_data[staff_person]:
             value = staff_data[staff_person]['Travel']
-            if value is not None:
-                total += value
+            if value is not None and value.cost is not None:
+                total += value.cost
             else:
-                value = ''
+                value = StaffValue('','')
         self.values.append(value)
         
-        self.values.append(total)
+        self.values.append(StaffValue(total,''))
         
 
 class StaffData:
@@ -75,12 +80,13 @@ class StaffData:
         self.staff_list = []
         self.staff_totals = []
         self.headers = ['Salary']
+        self.foot_notes = []
         
         trailing_headers = ['Sub-Total', 'Communication', 'Travel', 'Total']
         
         staff_data = {}
         staff_order = []
-        
+        foot_note_count = 0
         staff_items = budget.staffbudgetitem_set.all().order_by('staff_person__first_name', 'staff_person__last_name', 'type_name')
         for staff_item in staff_items:
             if staff_item.type_name not in self.headers and staff_item.type_name not in trailing_headers:
@@ -91,7 +97,13 @@ class StaffData:
             
             if staff_item.staff_person not in staff_data:
                 staff_data[staff_item.staff_person] = {}
-            staff_data[staff_item.staff_person][staff_item.type_name] = staff_item.cost
+            if staff_item.description is not None and staff_item.description != '':
+                foot_note_count += 1
+                foot_note = '*' + str(foot_note_count)
+                self.foot_notes.append(foot_note + ":" + staff_item.description)
+            else:
+                foot_note = '';
+            staff_data[staff_item.staff_person][staff_item.type_name] = StaffValue(staff_item.cost, foot_note)
         
         for staff_person in staff_order:
             if staff_person.last_name.find('general_staff') >= 0:
@@ -102,8 +114,8 @@ class StaffData:
             total = 0
             for person_idx in range(0, len(self.staff_list)):
                 value = self.staff_list[person_idx].values[idx]
-                if value is not None and value != '':
-                    total += value
+                if value is not None and value.cost != '':
+                    total += value.cost
             
             self.staff_totals.append(total)
     
