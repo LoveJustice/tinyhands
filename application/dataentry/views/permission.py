@@ -16,8 +16,8 @@ class PermissionViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     filter_backends = (fs.SearchFilter, fs.OrderingFilter,)
     search_fields = ('permission_group','action')
-    ordering_fields = ('permission_group', 'action')
-    ordering = ('permission_group','action')
+    ordering_fields = ('permission_group', 'display_order', 'action')
+    ordering = ('permission_group','display_order', 'action')
     
 class UserLocationPermissionViewSet(viewsets.ModelViewSet):
     queryset = UserLocationPermission.objects.all()
