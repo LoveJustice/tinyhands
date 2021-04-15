@@ -375,6 +375,9 @@ class Command(BaseCommand):
         sanitized += self.sanitize(CifAttachmentCommon, file_fields=['attachment'], file_prefix='cif_attachments/')
         sanitized += self.sanitize(IrfCommon, name_fields=['staff_name'], text_fields=['ims_case_number','case_notes','reason_for_intercept'])
         sanitized += self.sanitize(IrfAttachmentCommon, file_fields=['attachment'], file_prefix='scanned_irf_forms/')
+        sanitized += self.sanitize(LegalCase, text_fields=['lawyer_name'],phone_fields=['lawyer_phone'])
+        sanitized += self.sanitize(LegalCaseTimeline, text_fields=['comment'])
+        sanitized += self.sanitize(LegalCaseVictim, phone_fields=['alternate_phone'])
         sanitized += self.sanitize(LocationBoxCommon, text_fields=['address_notes'], address_fields=[{'address':'address','longitude':'longitude','latitude':'latitude'}])
         sanitized += self.sanitize(MasterPerson,  text_fields=['notes'])
         sanitized += self.sanitize(Person, photo_fields=['photo'], name_fields=['full_name','guardian_name'], phone_fields=['phone_contact'],
