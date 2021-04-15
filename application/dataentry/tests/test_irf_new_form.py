@@ -8,14 +8,14 @@ from rest_framework import status
 from rest_framework.test import APITransactionTestCase
 from accounts.tests.factories import BadIrfUserFactory, SuperUserFactory
 from dataentry.tests.factories import IrfIndiaFactory, MbzStationFactory, PersonFactory
-from dataentry.models import Form, IrfCommon, IntercepteeCommon
+from dataentry.models import Form, IrfCommon, IntercepteeCommon, MatchAction
 from dataentry.form_data import FormData, CardData, FormCategory
 from dataentry.serialize_form import FormDataSerializer
 
 from static_border_stations.tests.factories import GenericUserWithPermissions
 
 class IrfTest(APITransactionTestCase):
-    fixtures = ['initial-required-data/Country.json', 'initial-required-data/Permission.json']
+    fixtures = ['initial-required-data/Region.json','initial-required-data/Country.json', 'initial-required-data/Permission.json']
     def setUp(self):
         form_data_file = settings.BASE_DIR + '/fixtures/initial-required-data/form_data.json'
         call_command('loaddata', form_data_file, verbosity=0)
@@ -23,6 +23,12 @@ class IrfTest(APITransactionTestCase):
         self.user = GenericUserWithPermissions.create([{'group':'IRF', 'action':'VIEW', 'country': None, 'station': None},
                                                        {'group':'IRF', 'action':'EDIT', 'country': None, 'station': None},
                                                        {'group':'IRF', 'action':'ADD', 'country': None, 'station': None}])
+        
+        for name in ['create master person','add to master person','create match','update match','remove from master person','merge master persons','deactivate master person']:
+            match_action = MatchAction()
+            match_action.name = name
+            match_action.save()
+        
         self.client.force_authenticate(user=self.user)
         self.form = Form.objects.get(form_name='irfIndia')
         self.form.stations.add(MbzStationFactory())
@@ -88,13 +94,13 @@ class IrfTest(APITransactionTestCase):
         irf.number_of_traffickers = 0
         irf.logbook_received = datetime.datetime.now().date()
         
-        irf.evidence_categorization = 'Some Evidence of Trafficking'
+        irf.evidence_categorization = 'Evidence of Trafficking'
         irf.reason_for_intercept = 'Primary reason'
         irf.convinced_by_police = 'Police convinced or forced to stop'
         form = Form.current_form('IRF', irf.station.id)
         form_data = FormData(irf, form)
         
-        form_category = FormCategory.objects.get(form=form, name='Interceptees')
+        form_category = FormCategory.objects.get(form=form, name='People')
         category = form_category.category
          
         interceptee = IntercepteeCommon()

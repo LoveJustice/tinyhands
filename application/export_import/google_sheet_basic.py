@@ -75,6 +75,7 @@ class GoogleSheetBasic:
         self.spreadsheet_id = self.find_spreadsheet(spreadsheet_name)
         if self.spreadsheet_id is None:
             logger.error("spreadsheet " + spreadsheet_name + " not found")
+            assert (self.spreadsheet_id is not None),'spreadsheet "' + spreadsheet_name + '" is present'
         self.get_sheet_metadata()
         
         logger.debug("after get metadata")

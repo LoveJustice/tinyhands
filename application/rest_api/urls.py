@@ -1,14 +1,19 @@
 from django.conf.urls import url
 
 from dataentry.views import Address2ViewSet, Address1ViewSet, GeoCodeAddress1APIView, GeoCodeAddress2APIView, InterceptionRecordViewSet, VictimInterviewViewSet, IntercepteeViewSet, VictimInterviewDetailViewSet, PhotoExporter, IrfCsvExportView, VifCsvExportView, InterceptionAlertViewSet, PermissionViewSet, UserLocationPermissionViewSet
-from dataentry.views import PersonViewSet
+from dataentry.views import PersonViewSet, MasterPersonViewSet, PendingMatchViewSet
 from dataentry.views import SiteSettingsViewSet, GoogleMapKeyViewSet
 from dataentry.views import CountryViewSet
-from dataentry.views import IDManagementViewSet, TraffickerCheckViewSet, IrfFormViewSet, CifFormViewSet, VdfFormViewSet
+from dataentry.views import RegionViewSet
+from dataentry.views import AuditViewSet, AuditSampleViewSet
+from dataentry.views import IDManagementViewSet, TraffickerCheckViewSet, IrfFormViewSet, CifFormViewSet, VdfFormViewSet, GospelVerificationViewSet
 from dataentry.views import FormViewSet, FormTypeViewSet
 from dataentry.views import MonthlyReportFormViewSet
 from dataentry.views import IndicatorsViewSet
 from dataentry.views import BorderStationFormViewSet
+from dataentry.views import StationStatisticsViewSet
+from dataentry.views import LegalCaseFormViewSet
+from dataentry.views import ClientDiagnosticViewSet
 from help.views import VideoViewSet
 
 list = {'get': 'list', 'post': 'create'}
@@ -57,6 +62,17 @@ urlpatterns = [
         #Persons
         url(r'^person/$', PersonViewSet.as_view({'get': 'list'}), name="Person"),
         url(r'^person/associated/(?P<station_id>\d+)/(?P<form_number>\w+)/$', PersonViewSet.as_view({'get': 'associated_persons'}), name="AssociatedPersons"),
+        
+         url(r'^master-person/$', MasterPersonViewSet.as_view({'get': 'list'}), name="MasterPerson"),
+         url(r'^master-person/(?P<pk>\d+)/$', MasterPersonViewSet.as_view(detail), name='MasterPersonDetail'),
+         url(r'^master-person/type/(?P<type_name>[^/]+)/$', MasterPersonViewSet.as_view({'get':'retrieve_type'}), name='MasterPersonType'),
+         url(r'^master-person/pv-relations/(?P<id>\d+)/$', MasterPersonViewSet.as_view({'get':'retrieve_pv_relations'}), name='MasterPersonRelations'),
+         url(r'^master-person/remove/(?P<id>\d+)/(?P<person_id>\d+)/$', MasterPersonViewSet.as_view({'put':'remove_person'}), name='MasterPersonRemove'),
+         url(r'^master-person/match/(?P<id>\d+)/(?P<type_id>\d+)/$', MasterPersonViewSet.as_view({'get':'retrieve_matches'}), name='MasterPersonMatch'),
+         url(r'^master-person/update-match/(?P<id>\d+)/$', MasterPersonViewSet.as_view({'put':'update_match'}), name='MasterPersonUpdateMatch'),
+         url(r'^master-person/create-match/$', MasterPersonViewSet.as_view({'put':'create_match'}), name='MasterPersonCreateMatch'),
+         url(r'^master-person/merge/(?P<id1>\d+)/(?P<id2>\d+)/$', MasterPersonViewSet.as_view({'put':'merge_master_persons'}), name='MasterPersonMerge'),
+         url(r'^pending-match/$', PendingMatchViewSet.as_view({'get': 'list'}), name='PendingMatch'),
 
         #KnownPersons
         url(r'^idmgmt/$', IDManagementViewSet.as_view({'get': 'list'}), name="IDManagement"),
@@ -68,6 +84,7 @@ urlpatterns = [
         url(r'^idmgmt/(?P<pk>\d+)/addgroup/(?P<pk2>\d+)/$', IDManagementViewSet.as_view({'put':'add_alias_group'}), name="IDManagementAdd"),
         url(r'^idmgmt/(?P<pk>\d+)/removegroup/$', IDManagementViewSet.as_view({'put':'remove_alias_group'}), name="IDManagementRemove"),
 
+        url(r'^region/$', RegionViewSet.as_view(list), name='Region'),
         #Countries
         url(r'^country/$', CountryViewSet.as_view(list), name='Country'),
         url(r'^country/(?P<pk>\d+)/$', CountryViewSet.as_view(detail), name='Countrydetail'),
@@ -78,12 +95,14 @@ urlpatterns = [
        url(r'^user_permission_list/$', UserLocationPermissionViewSet.as_view({'get':'user_permission_list'}), name='UserLocationPermissionList'),
        url(r'^user_permission/(?P<pk>\d+)/$', UserLocationPermissionViewSet.as_view({'get':'user_permissions', 'put':'update_permissions'}), name='UserLocationPermission'),
        url(r'^user_permission/countries/(?P<pk>\d+)/$', UserLocationPermissionViewSet.as_view({'get':'user_countries'}), name='UserPermissionCountries'),
+       url(r'^user_permission/countries/current-user/$', UserLocationPermissionViewSet.as_view({'get':'user_countries_current_user'}), name='UserPermissionCountriesCurrent'),
         url(r'^user_permission/stations/(?P<pk>\d+)/$', UserLocationPermissionViewSet.as_view({'get':'user_stations'}), name='UserPermissionStations'),
         
         url(r'^irfNew/$', IrfFormViewSet.as_view(list), name='irfNew'),
         url(r'^irfNew/(?P<station_id>\d+)/(?P<pk>\d+)', IrfFormViewSet.as_view({'get': 'my_retrieve', 'put': 'update', 'delete': 'destroy'}), name='irfNewDetail'),
         url(r'^irfNew/blank/(?P<station_id>\d+)', IrfFormViewSet.as_view({'get': 'retrieve_blank_form'}), name='irfNewBlank'),
         url(r'^irfNew/tally/$', IrfFormViewSet.as_view({'get': 'tally'}), name='irfNewTally'),
+        url(r'^irfNew/six-month-tally/$', IrfFormViewSet.as_view({'get': 'six_month_tally'}), name='sixMonthTally'),
         
         
         url(r'^forms/$', FormViewSet.as_view({'get':'list'}), name='forns'),
@@ -91,6 +110,7 @@ urlpatterns = [
         url(r'^forms/types/$', FormTypeViewSet.as_view({'get':'list'}), name='fornTypes'),
         url(r'^forms/(?P<station_id>\d+)/station_forms/$', FormViewSet.as_view({'put':'set_forms'}), name='setForms'),
         url(r'^forms/related/(?P<station_id>\d+)/(?P<form_number>[^/]+)/$', FormViewSet.as_view({'get':'related_forms'}), name='relatedForms'),
+        url(r'^forms/countries/(?P<form_id>\d+)/$', FormViewSet.as_view({'get':'get_form_countries'}), name='formCountries'),
         
         url(r'^cif/$', CifFormViewSet.as_view(list), name='cif'),
         url(r'^cif/(?P<station_id>\d+)/(?P<pk>\d+)', CifFormViewSet.as_view({'get': 'my_retrieve', 'put': 'update', 'delete': 'destroy'}), name='cifDetail'),
@@ -99,6 +119,8 @@ urlpatterns = [
         url(r'^vdf/$', VdfFormViewSet.as_view(list), name='vdf'),
         url(r'^vdf/(?P<station_id>\d+)/(?P<pk>\d+)', VdfFormViewSet.as_view({'get': 'my_retrieve', 'put': 'update', 'delete': 'destroy'}), name='vdfDetail'),
         url(r'^vdf/blank/(?P<station_id>\d+)', VdfFormViewSet.as_view({'get': 'retrieve_blank_form'}), name='vdfBlank'),
+        url(r'^gospel-verification/$', GospelVerificationViewSet.as_view({'get': 'list'}), name='gospelVerificationList'),
+        url(r'^gospel-verification/(?P<station_id>\d+)/(?P<pk>\d+)/$', GospelVerificationViewSet.as_view({'get': 'my_retrieve', 'put': 'update'}), name='gospelVerificationDetail'),
         
         url(r'^monthly_report/$', MonthlyReportFormViewSet.as_view(list), name='monthlyReport'),
         url(r'^monthly_report/(?P<station_id>\d+)/(?P<pk>\d+)', MonthlyReportFormViewSet.as_view({'get': 'my_retrieve', 'put': 'update', 'delete': 'destroy'}), name='monthlyReportDetail'),
@@ -113,4 +135,28 @@ urlpatterns = [
         url(r'^border_station/$', BorderStationFormViewSet.as_view({'post': 'create'}), name="borderStation"),
         url(r'^border_station/(?P<pk>\d+)/$', BorderStationFormViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}), name="borderStationForm"),
         url(r'^border_station/blank/', BorderStationFormViewSet.as_view({'get': 'retrieve_blank'}), name='borderStationBlank'),
+        
+        url(r'^operations-dashboard/(?P<country_id>\d+)/$', StationStatisticsViewSet.as_view({'get': 'retrieve_dashboard'}), name='retrieveDashboard'),
+        url(r'^station-data/country/(?P<country_id>\d+)/(?P<year_month>\d+)/$', StationStatisticsViewSet.as_view({'get': 'retrieve_country_data'}), name='retrieveCountryOperations'),
+        url(r'^station-data/country/$', StationStatisticsViewSet.as_view({'put': 'update_station_data'}), name='setCountryOperations'),
+        url(r'^location-staff/(?P<station_id>\d+)/(?P<year_month>\d+)/$', StationStatisticsViewSet.as_view({'get': 'retrieve_location_staff'}), name='retrieveLocationStaff'),
+        url(r'^location-staff/$', StationStatisticsViewSet.as_view({'put': 'update_location_staff'}), name='setLocationStaff'),
+        url(r'^location-statistics/(?P<station_id>\d+)/(?P<year_month>\d+)/$', StationStatisticsViewSet.as_view({'get': 'retrieve_location_statistics'}), name='retrieveLocationStatistics'),
+        url(r'^location-statistics/$', StationStatisticsViewSet.as_view({'put': 'update_location_statistics'}), name='setLocationStatistics'),
+        url(r'^exchange-rate/(?P<country_id>\d+)/(?P<year_month>\d+)/$', StationStatisticsViewSet.as_view({'get': 'get_exchange_rate'}), name='getExchangeRate'),
+        url(r'^exchange-rate/$', StationStatisticsViewSet.as_view({'put': 'update_exchange_rate'}), name='updateExchangeRate'),
+        
+        #Audits
+        url(r'^audit/$', AuditViewSet.as_view(list), name='Audit'),
+        url(r'^audit/(?P<pk>\d+)/$', AuditViewSet.as_view(detail), name='Auditdetail'),
+        url(r'^audit/sample-size/$', AuditViewSet.as_view({'get':'sample_size'}), name='Auditdetail'),
+        url(r'^audit-notes/(?P<pk>\d+)/$', AuditViewSet.as_view({'put':'update_notes'}), name='AuditNotes'),
+        url(r'^audit-sample/$', AuditSampleViewSet.as_view(list), name='Audit'),
+        url(r'^audit-sample/(?P<pk>\d+)/$', AuditSampleViewSet.as_view(detail), name='Auditdetail'),
+
+        url(r'^legal-case/$', LegalCaseFormViewSet.as_view(list), name='legalCase'),
+        url(r'^legal-case/(?P<station_id>\d+)/(?P<pk>\d+)', LegalCaseFormViewSet.as_view({'get': 'my_retrieve', 'put': 'update', 'delete': 'destroy'}), name='legalCaseDetail'),
+        url(r'^legal-case/blank/(?P<station_id>\d+)', LegalCaseFormViewSet.as_view({'get': 'retrieve_blank_form'}), name='legalCaseBlank'),
+        
+         url(r'^diagnostic/$', ClientDiagnosticViewSet.as_view(list), name='Diagnostic'),
 ]

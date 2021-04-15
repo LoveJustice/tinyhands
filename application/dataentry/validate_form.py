@@ -85,25 +85,37 @@ class ValidateForm:
         self.add_error_or_warning(category_name, category_index, validation)
     
     def at_least_one_card (self, form_data, validation, questions, category_index, general):
+        if validation.params is None or 'category_name' not in validation.params:
+            category_name = 'CARD'
+        else:
+            category_name = validation.params['category_name']
         if getattr(form_data, 'card_dict', None) is None or validation.params is None or 'category_id' not in validation.params:
             tmp_validation = FormValidation()
             tmp_validation.level = validation.level
             tmp_validation.error_warning_message = 'Incorrect configuration for validation:' + validation.error_warning_message
-            self.add_error_or_warning('CARD', None, tmp_validation)
+            self.add_error_or_warning(category_name, None, tmp_validation)
         else:
             category_id = validation.params['category_id']
             if category_id in form_data.card_dict:
                 if len(form_data.card_dict[category_id]):
                     return
             
-        self.add_error_or_warning('CARD', None, validation)
+        self.add_error_or_warning(category_name, None, validation)
     
     def match_filter (self, card, filter):
         if 'question_id' not in filter or 'value' not in filter or 'operation' not in filter:
             return -1
         
         question = Question.objects.get(id=filter['question_id'])
-        answer = card.get_answer(question)
+        if 'part' in filter:
+            answer = card.get_answer(question, value=False)
+            parts = filter['part'].split('.')
+            for part in parts:
+                if answer is None:
+                    break
+                answer = getattr(answer, part)
+        else:
+           answer = card.get_answer(question) 
         rv = 0
         if filter['operation'] == '=' and answer == filter['value']:
             rv = 1
@@ -181,6 +193,23 @@ class ValidateForm:
         if not answer.startswith(station_code):
             self.add_error_or_warning(category_name, category_index, validation, '"' + station_code + '"')
     
+    def regex_inner_match(self, form_data, validation, questions, category_index, general):
+        result = None
+        if validation.params is None or 'regex' not in validation.params:
+            result = -1
+            return result
+        
+        regex = validation.params['regex']
+        
+        for validation_question in questions:
+            question = validation_question.question
+            answer = form_data.get_answer(question)
+            result = re.match(regex, answer)
+            if result is None:
+                break
+        
+        return result
+    
     def regex_match(self, form_data, validation, questions, category_index, general):
         if validation.params is None or 'regex' not in validation.params:
             return
@@ -250,8 +279,63 @@ class ValidateForm:
                     category_name = self.question_map[question.id]
                 self.add_error_or_warning(category_name, category_index, validation)
                 return
+            
+    def interceptee_count_match (self, form_data, validation, questions, category_index, general):
+        category_name = 'People'
+        if (getattr(form_data, 'card_dict', None) is None or validation.params is None or 
+                'category_id' not in validation.params or
+                'count_question_id' not in validation.params or
+                'filter' not in validation.params):
+            tmp_validation = FormValidation()
+            tmp_validation.level = validation.level
+            tmp_validation.error_warning_message = 'Incorrect configuration for validation:' + validation.error_warning_message
+            self.add_error_or_warning(category_name, None, tmp_validation)
+        else:
+            card_count = 0
+            category_id = validation.params['category_id']
+            count_question = Question.objects.get(id=validation.params['count_question_id'])
+            count_to_match = form_data.get_answer(count_question)
+            if category_id in form_data.card_dict:
+                for card in form_data.card_dict[category_id]:
+                    if 'filter' in validation.params:
+                        match_result = self.match_filter(card, validation.params['filter'])
+                        if match_result >= 0:
+                            card_count += match_result
+                        else:
+                            tmp_validation = FormValidation()
+                            tmp_validation.level = validation.level
+                            tmp_validation.error_warning_message = 'Incorrect filter for validation:' + validation.error_warning_message
+                            self.add_error_or_warning(category_name, None, tmp_validation)
+                    else:
+                        card_count += 1
+            
+            if count_to_match == card_count:
+                    return
+            
+        self.add_error_or_warning(category_name, None, validation)
+    
+    # verify that answer value for question in a card is not null or blank when a value in the main form matches a value
+    def not_blank_or_null_card_filter_main(self, form_data, validation, validation_questions, category_index, general):
+        if 'filter' not in validation.params or getattr(form_data, 'form_data',None) is None:
+            return
+        
+        match_result = self.match_filter(form_data.form_data, validation.params['filter'])
+        if match_result is None or match_result == 0:
+            return
+        
+        for validation_question in validation_questions:
+            question = validation_question.question
+            full_answer = form_data.get_answer(question)
+            answer = self.get_answer_part(full_answer, validation, 'part')
+                
+            if answer is None or isinstance(answer, str) and answer.strip() == '':
+                if general:
+                    category_name = ''
+                else:
+                    category_name = self.question_map[question.id]
+                self.add_error_or_warning(category_name, category_index, validation)
 
-    def __init__(self, form, form_data, ignore_warnings):
+    def __init__(self, form, form_data, ignore_warnings, mode='update'):
         self.validations = {
             'not_blank_or_null': self.not_blank_or_null,
             'at_least_one_true': self.at_least_one_true,
@@ -262,6 +346,9 @@ class ValidateForm:
             'regular_expression': self.regex_match,
             'card_count': self.card_count,
             'all_false': self.all_false,
+            'interceptee_count_match':self.interceptee_count_match,
+            'not_blank_or_null_card_filter_main':self.not_blank_or_null_card_filter_main,
+            
         }
         
         self.validations_to_perform = {
@@ -277,7 +364,7 @@ class ValidateForm:
         self.cards = form_data.card_dict
         self.response_code = status.HTTP_200_OK
         
-        if self.form_data.form_object.status != 'in-progress':   
+        if getattr(self.form_data.form_object, 'status', None) is not None and self.form_data.form_object.status != 'in-progress':   
             self.validations_to_perform['submit_error'] = True
             if not ignore_warnings:
                 self.validations_to_perform['warning'] = True
@@ -311,7 +398,10 @@ class ValidateForm:
         self.question_to_validation_set = question_to_validation_set
         
         self.validation_set = {}
-        validations = FormValidation.objects.filter(forms=self.form)
+        if mode == 'retrieve':
+            validations = FormValidation.objects.filter(forms=self.form, retrieve=True)
+        else:
+            validations = FormValidation.objects.filter(forms=self.form, update=True)
         for validation in validations:
             set_key = None
             if validation.trigger is not None:

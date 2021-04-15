@@ -1,0 +1,16 @@
+[
+{
+    "model": "dataentry.region",
+    "pk": 1,
+    "fields": {
+        "name": "Africa"
+    }
+},
+{
+    "model": "dataentry.region",
+    "pk": 2,
+    "fields": {
+        "name": "Asia"
+    }
+}
+]

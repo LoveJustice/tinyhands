@@ -12,7 +12,7 @@ class RestApiTestCase(APITestCase):
 
 
 class StaffTests(RestApiTestCase):
-    fixtures = ['initial-required-data/Country.json', 'initial-required-data/Permission.json']
+    fixtures = ['initial-required-data/Region.json','initial-required-data/Country.json', 'initial-required-data/Permission.json']
     def setUp(self):
         self.staff = StaffFactory.create()
         self.other_staff = StaffFactory.create_batch(4)
@@ -41,6 +41,8 @@ class StaffTests(RestApiTestCase):
             "position": "asdf",
             "receives_money_distribution_form": True,
             "border_station": self.staff.border_station_id,
+            "first_date":"2019-03-15",
+            "last_date":None,
         }
 
         response = self.client.post(url, data=data)

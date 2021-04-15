@@ -1,50 +1,443 @@
 [
-    {
-        "fields": {
-            "currency": "Rs.%20",
-            "latitude": 28.394857,
-            "longitude": 84.124008,
-            "mdf_sender_email": "support@dreamsuite.org",
-            "name": "Nepal",
-            "zoom_level": 7
+{
+    "model": "dataentry.country",
+    "pk": 1,
+    "fields": {
+        "name": "Nepal",
+        "latitude": 28.394857,
+        "longitude": 84.124008,
+        "zoom_level": 7,
+        "currency": "Rs.%20",
+        "mdf_sender_email": "support@dreamsuite.org",
+        "verification_start_year": 2017,
+        "verification_start_month": 9,
+        "verification_goals": {
+            "v1Lag": 4,
+            "v2Lag": 7,
+            "cifLag": 5,
+            "irfLag": 5,
+            "vdfLag": 5,
+            "v1Backlog": 10,
+            "v2Backlog": 10,
+            "cifOriginalFormPercent": 100,
+            "irfOriginalFormPercent": 100,
+            "vdfOriginalFormPercent": 100
         },
-        "model": "dataentry.country",
-        "pk": 1
-    },
-    {
-        "fields": {
-            "currency": "R%20",
-            "latitude": -30.113405,
-            "longitude": 25.756546,
-            "mdf_sender_email": "support@dreamsuite.org",
-            "name": "South Africa",
-            "zoom_level": 5
-        },
-        "model": "dataentry.country",
-        "pk": 2
-    },
-    {
-        "fields": {
-            "currency": "",
-            "latitude": 0.0,
-            "longitude": 0.0,
-            "mdf_sender_email": "support@dreamsuite.org",
-            "name": "Thailand",
-            "zoom_level": 0
-        },
-        "model": "dataentry.country",
-        "pk": 3
-    },
-    {
-        "fields": {
-            "currency": "Rs.%20",
-            "latitude": 22.1531122,
-            "longitude": 78.9200868,
-            "mdf_sender_email": "support@dreamsuite.org",
-            "name": "India",
-            "zoom_level": 5
-        },
-        "model": "dataentry.country",
-        "pk": 4
+        "options": null,
+        "region": 2,
+        "prior_intercepts": 0,
+        "prior_arrests": 0,
+        "prior_convictions": 0
     }
+},
+{
+    "model": "dataentry.country",
+    "pk": 2,
+    "fields": {
+        "name": "South Africa",
+        "latitude": -30.113405,
+        "longitude": 25.756546,
+        "zoom_level": 5,
+        "currency": "R%20",
+        "mdf_sender_email": "support@dreamsuite.org",
+        "verification_start_year": 2019,
+        "verification_start_month": 10,
+        "verification_goals": null,
+        "options": null,
+        "region": 1,
+        "prior_intercepts": 0,
+        "prior_arrests": 0,
+        "prior_convictions": 0
+    }
+},
+{
+    "model": "dataentry.country",
+    "pk": 4,
+    "fields": {
+        "name": "India",
+        "latitude": 23.0592563,
+        "longitude": 83.4927822,
+        "zoom_level": 6,
+        "currency": "Rs.%20",
+        "mdf_sender_email": "support@dreamsuite.org",
+        "verification_start_year": 2018,
+        "verification_start_month": 8,
+        "verification_goals": {
+            "v1Lag": 5,
+            "v2Lag": 7,
+            "cifLag": 5,
+            "irfLag": 7,
+            "vdfLag": 7,
+            "v1Backlog": 10,
+            "v2Backlog": 10,
+            "cifOriginalFormPercent": 100,
+            "irfOriginalFormPercent": 100,
+            "vdfOriginalFormPercent": 100
+        },
+        "options": {
+            "monthly_report_sections": [
+                "govern_points",
+                "human_points",
+                "awareness_points",
+                "security_points",
+                "accounting_points",
+                "engagement_points",
+                "records_points",
+                "aftercare_points",
+                "paralegal_points",
+                "investigations_points"
+            ]
+        },
+        "region": 2,
+        "prior_intercepts": 0,
+        "prior_arrests": 0,
+        "prior_convictions": 0
+    }
+},
+{
+    "model": "dataentry.country",
+    "pk": 5,
+    "fields": {
+        "name": "Bangladesh",
+        "latitude": 23.641197,
+        "longitude": 90.5168622,
+        "zoom_level": 7,
+        "currency": "Tk%20",
+        "mdf_sender_email": "support@dreamsuite.org",
+        "verification_start_year": 2019,
+        "verification_start_month": 8,
+        "verification_goals": {
+            "v1Lag": 4,
+            "v2Lag": 7,
+            "cifLag": 5,
+            "irfLag": 5,
+            "vdfLag": 5,
+            "v1Backlog": 10,
+            "v2Backlog": 10,
+            "cifOriginalFormPercent": 100,
+            "irfOriginalFormPercent": 100,
+            "vdfOriginalFormPercent": 100
+        },
+        "options": null,
+        "region": 2,
+        "prior_intercepts": 0,
+        "prior_arrests": 0,
+        "prior_convictions": 0
+    }
+},
+{
+    "model": "dataentry.country",
+    "pk": 6,
+    "fields": {
+        "name": "Malawi",
+        "latitude": -13.133834,
+        "longitude": 33.987283,
+        "zoom_level": 6,
+        "currency": "MK%20",
+        "mdf_sender_email": "support@dreamsuite.org",
+        "verification_start_year": 2019,
+        "verification_start_month": 2,
+        "verification_goals": null,
+        "options": null,
+        "region": 1,
+        "prior_intercepts": 0,
+        "prior_arrests": 0,
+        "prior_convictions": 0
+    }
+},
+{
+    "model": "dataentry.country",
+    "pk": 7,
+    "fields": {
+        "name": "Zimbabwe",
+        "latitude": -19.239717,
+        "longitude": 29.781641,
+        "zoom_level": 6,
+        "currency": "$%20",
+        "mdf_sender_email": "support@dreamsuite.org",
+        "verification_start_year": null,
+        "verification_start_month": null,
+        "verification_goals": null,
+        "options": null,
+        "region": 1,
+        "prior_intercepts": 0,
+        "prior_arrests": 0,
+        "prior_convictions": 0
+    }
+},
+{
+    "model": "dataentry.country",
+    "pk": 8,
+    "fields": {
+        "name": "Uganda",
+        "latitude": 1.232437,
+        "longitude": 32.573641,
+        "zoom_level": 6,
+        "currency": "USh%20",
+        "mdf_sender_email": "support@dreamsuite.org",
+        "verification_start_year": null,
+        "verification_start_month": null,
+        "verification_goals": {
+            "v1Lag": 3,
+            "v2Lag": 3,
+            "cifLag": 3,
+            "irfLag": 3,
+            "vdfLag": 3,
+            "v1Backlog": 3,
+            "v2Backlog": 3,
+            "cifOriginalFormPercent": 100,
+            "irfOriginalFormPercent": 100,
+            "vdfOriginalFormPercent": 100
+        },
+        "options": null,
+        "region": 1,
+        "prior_intercepts": 0,
+        "prior_arrests": 0,
+        "prior_convictions": 0
+    }
+},
+{
+    "model": "dataentry.country",
+    "pk": 9,
+    "fields": {
+        "name": "Kenya",
+        "latitude": 0.760694,
+        "longitude": 38.0213,
+        "zoom_level": 6,
+        "currency": "K%20",
+        "mdf_sender_email": "support@dreamsuite.org",
+        "verification_start_year": null,
+        "verification_start_month": null,
+        "verification_goals": {
+            "v1Lag": 4,
+            "v2Lag": 7,
+            "cifLag": 2,
+            "irfLag": 4,
+            "vdfLag": 4,
+            "v1Backlog": 5,
+            "v2Backlog": 7,
+            "cifOriginalFormPercent": 100,
+            "irfOriginalFormPercent": 100,
+            "vdfOriginalFormPercent": 100
+        },
+        "options": null,
+        "region": 1,
+        "prior_intercepts": 0,
+        "prior_arrests": 0,
+        "prior_convictions": 0
+    }
+},
+{
+    "model": "dataentry.country",
+    "pk": 10,
+    "fields": {
+        "name": "Benin",
+        "latitude": 8.582405,
+        "longitude": 2.095511,
+        "zoom_level": 6,
+        "currency": "CFA%20",
+        "mdf_sender_email": "support@dreamsuite.org",
+        "verification_start_year": null,
+        "verification_start_month": null,
+        "verification_goals": null,
+        "options": null,
+        "region": 1,
+        "prior_intercepts": 0,
+        "prior_arrests": 0,
+        "prior_convictions": 0
+    }
+},
+{
+    "model": "dataentry.country",
+    "pk": 24,
+    "fields": {
+        "name": "Tanzania",
+        "latitude": -5.9365761,
+        "longitude": 34.997455,
+        "zoom_level": 6,
+        "currency": "TSh%20",
+        "mdf_sender_email": "support@dreamsuite.org",
+        "verification_start_year": null,
+        "verification_start_month": null,
+        "verification_goals": null,
+        "options": null,
+        "region": 1,
+        "prior_intercepts": 0,
+        "prior_arrests": 0,
+        "prior_convictions": 0
+    }
+},
+{
+    "model": "dataentry.country",
+    "pk": 25,
+    "fields": {
+        "name": "Sierra Leone",
+        "latitude": 8.4679506,
+        "longitude": -11.8570888,
+        "zoom_level": 8,
+        "currency": "Le%20",
+        "mdf_sender_email": "support@dreamsuite.org",
+        "verification_start_year": null,
+        "verification_start_month": null,
+        "verification_goals": null,
+        "options": null,
+        "region": 1,
+        "prior_intercepts": 0,
+        "prior_arrests": 0,
+        "prior_convictions": 0
+    }
+},
+{
+    "model": "dataentry.country",
+    "pk": 26,
+    "fields": {
+        "name": "Mongolia",
+        "latitude": 46.8705046,
+        "longitude": 104.7033176,
+        "zoom_level": 6,
+        "currency": "%E2%82%AE",
+        "mdf_sender_email": "support@dreamsuite.org",
+        "verification_start_year": null,
+        "verification_start_month": null,
+        "verification_goals": null,
+        "options": null,
+        "region": 2,
+        "prior_intercepts": 0,
+        "prior_arrests": 0,
+        "prior_convictions": 0
+    }
+},
+{
+    "model": "dataentry.country",
+    "pk": 27,
+    "fields": {
+        "name": "India Network",
+        "latitude": 26.6167538,
+        "longitude": 77.2510125,
+        "zoom_level": 5,
+        "currency": "Rs.%20",
+        "mdf_sender_email": "support@dreamsuite.org",
+        "verification_start_year": 2019,
+        "verification_start_month": 6,
+        "verification_goals": {
+            "v1Lag": 5,
+            "v2Lag": 7,
+            "cifLag": 5,
+            "irfLag": 7,
+            "vdfLag": 7,
+            "v1Backlog": 10,
+            "v2Backlog": 10,
+            "cifOriginalFormPercent": 100,
+            "irfOriginalFormPercent": 100,
+            "vdfOriginalFormPercent": 100
+        },
+        "options": null,
+        "region": 2,
+        "prior_intercepts": 0,
+        "prior_arrests": 0,
+        "prior_convictions": 0
+    }
+},
+{
+    "model": "dataentry.country",
+    "pk": 28,
+    "fields": {
+        "name": "Ghana",
+        "latitude": 7.8197257,
+        "longitude": -1.2710955,
+        "zoom_level": 7,
+        "currency": "GH%E2%82%B5%20",
+        "mdf_sender_email": "support@dreamsuite.org",
+        "verification_start_year": null,
+        "verification_start_month": null,
+        "verification_goals": null,
+        "options": null,
+        "region": 1,
+        "prior_intercepts": 0,
+        "prior_arrests": 0,
+        "prior_convictions": 0
+    }
+},
+{
+    "model": "dataentry.country",
+    "pk": 29,
+    "fields": {
+        "name": "Cambodia",
+        "latitude": 12.4395346,
+        "longitude": 105.5350189,
+        "zoom_level": 7,
+        "currency": "KHR%20",
+        "mdf_sender_email": "support@dreamsuite.org",
+        "verification_start_year": null,
+        "verification_start_month": null,
+        "verification_goals": null,
+        "options": null,
+        "region": 2,
+        "prior_intercepts": 0,
+        "prior_arrests": 0,
+        "prior_convictions": 0
+    }
+},
+{
+    "model": "dataentry.country",
+    "pk": 32,
+    "fields": {
+        "name": "Namibia",
+        "latitude": -22.8461243,
+        "longitude": 17.1612927,
+        "zoom_level": 6,
+        "currency": "R%20",
+        "mdf_sender_email": "support@dreamsuite.org",
+        "verification_start_year": null,
+        "verification_start_month": null,
+        "verification_goals": {
+            "v1Lag": 5,
+            "v2Lag": 7,
+            "cifLag": 5,
+            "irfLag": 7,
+            "vdfLag": 7,
+            "v1Backlog": 10,
+            "v2Backlog": 10,
+            "cifOriginalFormPercent": 100,
+            "irfOriginalFormPercent": 100,
+            "vdfOriginalFormPercent": 100
+        },
+        "options": null,
+        "region": 1,
+        "prior_intercepts": 0,
+        "prior_arrests": 0,
+        "prior_convictions": 0
+    }
+},
+{
+    "model": "dataentry.country",
+    "pk": 33,
+    "fields": {
+        "name": "Rwanda",
+        "latitude": -1.910415,
+        "longitude": 29.928231,
+        "zoom_level": 8,
+        "currency": "FRw%20",
+        "mdf_sender_email": "support@dreamsuite.org",
+        "verification_start_year": null,
+        "verification_start_month": null,
+        "verification_goals": {
+            "v1Lag": 3,
+            "v2Lag": 3,
+            "cifLag": 3,
+            "irfLag": 3,
+            "vdfLag": 3,
+            "v1Backlog": 3,
+            "v2Backlog": 3,
+            "cifOriginalFormPercent": 100,
+            "irfOriginalFormPercent": 100,
+            "vdfOriginalFormPercent": 100
+        },
+        "options": null,
+        "region": 1,
+        "prior_intercepts": 0,
+        "prior_arrests": 0,
+        "prior_convictions": 0
+    }
+}
 ]

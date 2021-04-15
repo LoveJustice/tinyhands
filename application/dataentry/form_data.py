@@ -49,13 +49,16 @@ class CardData:
     def in_form_object(self, question):
         return question.id in self.form_data.question_storage
             
-    def get_answer(self, question):
+    def get_answer(self, question, value=True):
         try:
             if self.in_form_object(question):
                 answer = getattr(self.form_object, self.form_data.question_storage[question.id].field_name, None)
             else:
                 if question.id in self.response_dict:
-                    answer = self.response_dict[question.id].value
+                    if value:
+                        answer = self.response_dict[question.id].value
+                    else:
+                        answer = self.response_dict[question.id]
                 else:
                     answer = None
         except ValueError as ve:
@@ -72,6 +75,7 @@ class CardData:
                 card_response.parent = self.form_data.form_object
                 card_response.question = question
             else:
+                print("set_answer - response", question.id)
                 card_response = self.category_form.response_model()
                 
             card_response.value = answer
@@ -211,13 +215,16 @@ class FormData:
     def in_form_object(self, question):
         return question.id in self.question_storage
     
-    def get_answer(self, question):
+    def get_answer(self, question, value=True):
         try:
             if self.in_form_object(question):
                 answer = getattr(self.form_object, self.question_storage[question.id].field_name, None)
             else:
                 if question.id in self.response_dict:
-                    answer = self.response_dict[question.id].value
+                    if value:
+                        answer = self.response_dict[question.id].value
+                    else:
+                        answer = self.response_dict[question.id]
                 else:
                     answer = None
         except ValueError as ve:

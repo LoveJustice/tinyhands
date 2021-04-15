@@ -279,11 +279,20 @@ class IrfCommon(BaseForm):
     vulnerability_insufficient_resource = models.BooleanField('insufficient resources_to live/get home', default=False)
     vulnerability_minor_without_guardian = models.BooleanField('Minor unaccompanied by guardian', default=False)
     vulnerability_family_unwilling = models.BooleanField('Family unwilling to let them go', default=False)
+    vulnerability_first_time_traveling_abroad = models.BooleanField('First time traveling abroad', default=False)
+    vulnerability_doesnt_speak_english = models.BooleanField("Doesn't speak English", default=False)
+    vulnerability_non_relative_paid_flight = models.BooleanField('Non-relative paid for flight', default=False)
+    vulnerability_paid_flight_in_cash = models.BooleanField('Non-relative paid for flight', default=False)
+    vulnerability_connection_host_unclear = models.BooleanField('Connection to host/suspect limited or unclear', default=False)
+    vulnerability_doesnt_have_required_visa = models.BooleanField("Doesn't have required visa/docs", default=False)
+    vulnerability_family_friend_arranged_travel = models.BooleanField("Friend/Family arranged travel/job/studies", default=False)
+
     
     signs_treatment = models.BooleanField('Treatment - no documentation / knowledge', default=False)
     signs_forged_false_documentation = models.BooleanField('Forged or falsified documents', default=False)
     signs_confirmed_deception = models.BooleanField('Called place and confirmed deception', default=False)
     signs_other = models.CharField(max_length=127, blank=True)
+    signs_fake_documentation = models.BooleanField('Fake documents', default=False)
     
     control_led_other_country = models.BooleanField('Led to other country without their knowledge', default=False)
     control_traveling_because_of_threat = models.BooleanField('Traveling because of a threat', default=False)
@@ -376,6 +385,14 @@ class IrfCommon(BaseForm):
     case_report = models.BooleanField('Case report', default=False)
     cif = models.BooleanField('CIF', default=False)
     
+    immigration_lj_entry = models.CharField(max_length=127, null=True)
+    immigration_lj_transit = models.CharField(max_length=127, null=True)
+    immigration_lj_exit = models.CharField(max_length=127, null=True)
+    immigration_entry = models.CharField(max_length=127, null=True)
+    immigration_transit = models.CharField(max_length=127, null=True)
+    immigration_exit = models.CharField(max_length=127, null=True)
+    immigration_case_number = models.CharField(max_length=127, null=True)
+    
     type_of_intercept = models.CharField(max_length=127, null=True)
     case_notes = models.TextField('Case Notes', blank=True)
     interception_made = models.CharField(max_length=127, null=True)
@@ -419,11 +436,13 @@ class IrfCommon(BaseForm):
     logbook_first_reason = models.TextField('First Reason', blank=True)
     logbook_followup_call = models.CharField(max_length=127, blank=True)
     logbook_first_verification_date = models.DateField(null=True)
+    logbook_first_verification_name = models.CharField(max_length=127, blank=True)
     
     logbook_leadership_review = models.CharField(max_length=127, blank=True)
     logbook_second_verification = models.CharField(max_length=127, blank=True)
     logbook_second_reason = models.TextField('Second Reason', blank=True)
     logbook_second_verification_date = models.DateField(null=True)
+    logbook_second_verification_name = models.CharField(max_length=127, blank=True)
     
     logbook_champion_verification = models.BooleanField('Champion verification', default=False)
     
@@ -434,6 +453,9 @@ class IrfCommon(BaseForm):
     
     def get_form_type_name(self):
         return 'IRF'
+    
+    def get_form_date(self):
+        return self.date_time_of_interception.date()
     
     def to_str(self, value):
         if value is None:
@@ -460,6 +482,8 @@ class IntercepteeCommon(BaseCard):
     relation_to = models.CharField(max_length=255, blank=True)
     person = models.ForeignKey(Person, null=True, blank=True)
     not_physically_present = models.BooleanField('Not physically present', default=False)
+    consent_to_use_photo = models.CharField(max_length=255, null=True)
+    consent_to_use_information = models.CharField(max_length=255, null=True)
 
     def address1_as_string(self):
         rtn = ''

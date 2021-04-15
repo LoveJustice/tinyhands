@@ -17,12 +17,13 @@ class CollectionResults:
         self.victim_count = 0
         self.victim_evidence_count = 0
         self.photo_count = 0
+        self.phone_count = 0
+        self.phone_verified_count = 0
         self.irf_compliance_count = 0
         self.irf_lag_total = 0
         self.irf_lag_count = 0
         self.irf_forms_verified = 0
-        self.clear_evidence_count = 0
-        self.some_evidence_count = 0
+        self.evidence_count = 0
         self.invalid_intercept_count = 0
         self.high_risk_count = 0
         
@@ -51,14 +52,14 @@ class CollectionResults:
         
         self.vdf_compliance_percent = self.compute_percent(self.vdf_compliance_count, self.vdf_count)
         
-        self.verified_forms = self.clear_evidence_count + self.some_evidence_count + self.invalid_intercept_count + self.high_risk_count
-        self.clear_evidence_percent = self.compute_percent(self.clear_evidence_count, self.verified_forms)
-        self.some_evidence_percent = self.compute_percent(self.some_evidence_count, self.verified_forms)
+        self.verified_forms = self.evidence_count + self.invalid_intercept_count + self.high_risk_count
+        self.evidence_percent = self.compute_percent(self.evidence_count, self.verified_forms)
         self.invalid_intercept_percent = self.compute_percent(self.invalid_intercept_count, self.verified_forms)
         self.high_risk_percent = self.compute_percent(self.high_risk_count, self.verified_forms)
         
         self.vdf_percent = self.compute_percent(self.vdf_count, self.victim_count)
         self.photo_percent = self.compute_percent(self.photo_count, self.victim_count)
+        self.phone_verified_percent = self.compute_percent(self.phone_verified_count, self.phone_count)
         self.compliance_percent = self.compute_percent(self.irf_compliance_count +self.cif_compliance_count +  self.vdf_compliance_count,
                             self.irf_count + self.cif_count + self.vdf_count)
         if self.irf_lag_count > 0:
@@ -81,9 +82,9 @@ class CollectionResults:
                 self.collection_lag_time = 0
         else:
             self.collection_lag_time = ''
-        self.clear_case_cif_percent = self.compute_percent(self.cif_with_evidence_count, self.victim_evidence_count)
-        self.valid_intercept_percent = self.compute_percent(self.clear_evidence_count + self.some_evidence_count + self.high_risk_count,
-                            self.clear_evidence_count + self.some_evidence_count + self.high_risk_count + self.invalid_intercept_count)
+        self.evidence_cif_percent = self.compute_percent(self.cif_with_evidence_count, self.victim_evidence_count)
+        self.valid_intercept_percent = self.compute_percent(self.evidence_count + self.high_risk_count,
+                            self.evidence_count + self.high_risk_count + self.invalid_intercept_count)
         
         metric_present = 0
         metric_total = 0
@@ -99,12 +100,15 @@ class CollectionResults:
         if self.collection_lag_time != '':
             metric_present += 1
             metric_total += self.collection_lag_time
-        if self.clear_case_cif_percent != '':
+        if self.evidence_cif_percent != '':
             metric_present += 1
-            metric_total += self.clear_case_cif_percent
+            metric_total += self.evidence_cif_percent
         if self.valid_intercept_percent != '':
             metric_present += 1
             metric_total += self.valid_intercept_percent
+        if self.phone_verified_percent != '':
+            metric_present += 1
+            metric_total += self.phone_verified_percent
         if metric_present > 0:
             self.compliance_total = math.floor(metric_total/metric_present + 0.5)
         else:
@@ -117,12 +121,13 @@ class CollectionResults:
             self.victim_count += entry.victim_count
             self.victim_evidence_count += entry.victim_evidence_count
             self.photo_count += entry.photo_count
+            self.phone_count += entry.phone_count
+            self.phone_verified_count += entry.phone_verified_count
             self.irf_compliance_count += entry.irf_compliance_count
             self.irf_lag_total += entry.irf_lag_total
             self.irf_lag_count += entry.irf_lag_count
             self.irf_forms_verified += entry.irf_forms_verified
-            self.clear_evidence_count += entry.clear_evidence_count
-            self.some_evidence_count += entry.some_evidence_count
+            self.evidence_count += entry.evidence_count
             self.invalid_intercept_count += entry.invalid_intercept_count
             self.high_risk_count += entry.high_risk_count
             
@@ -192,7 +197,7 @@ class IndicatorsViewSet(viewsets.ViewSet):
             if form is None:
                 continue
             
-            form_categories = FormCategory.objects.filter(form=form, name='Interceptees')
+            form_categories = FormCategory.objects.filter(form=form, name='People')
             if len(form_categories) == 1 and form_categories[0].storage is not None:
                 interceptee_storage = form_categories[0].storage
             else:
@@ -201,7 +206,7 @@ class IndicatorsViewSet(viewsets.ViewSet):
             
             result = CollectionResults(station.station_code)
             irf_class = form.storage.get_form_storage_class()
-            irfs = irf_class.objects.filter(station=station, logbook_submitted__gte=start_date, logbook_submitted__lte=end_date)
+            irfs = irf_class.objects.filter(station=station, logbook_second_verification_date__gte=start_date, logbook_second_verification_date__lte=end_date)
             for irf in irfs:
                 evidence = False
                 result.irf_count += 1
@@ -210,17 +215,14 @@ class IndicatorsViewSet(viewsets.ViewSet):
                 if irf.logbook_received is not None:
                     result.irf_lag_count += 1
                     result.irf_lag_total += IndicatorHistory.work_days(irf.date_time_of_interception.date(), irf.logbook_received)
-                if irf.logbook_second_verification_date is not None:
+                if irf.evidence_categorization is not None:
                     result.irf_forms_verified += 1
-                    if irf.logbook_second_verification.lower().startswith('clear'):
-                        result.clear_evidence_count += 1
+                    if irf.evidence_categorization.lower().startswith('evidence'):
+                        result.evidence_count += 1
                         evidence = True
-                    elif irf.logbook_second_verification.lower().startswith('some'):
-                        result.some_evidence_count += 1
-                        evidence = True
-                    elif irf.logbook_second_verification.lower().startswith('should'):
+                    elif irf.evidence_categorization.lower().startswith('should'):
                         result.invalid_intercept_count += 1
-                    elif irf.logbook_second_verification.lower().startswith('high'):
+                    elif irf.evidence_categorization.lower().startswith('high'):
                         result.high_risk_count += 1
                     
                 victims = interceptee_storage.get_form_storage_class().objects.filter(interception_record=irf, person__role='PVOT')
@@ -230,6 +232,10 @@ class IndicatorsViewSet(viewsets.ViewSet):
                         result.victim_evidence_count += 1
                     if victim.person.photo is not None and victim.person.photo != '':
                         result.photo_count += 1
+                    if victim.person.phone_contact is not None and victim.person.phone_contact != '':
+                        result.phone_count += 1
+                        if victim.person.phone_verified:
+                            result.phone_verified_count += 1
                     
                 IndicatorsViewSet.cif_indicators_for_irf(result, irf)
                 IndicatorsViewSet.vdf_indicators_for_irf(result, irf)
@@ -268,7 +274,7 @@ class IndicatorsViewSet(viewsets.ViewSet):
             if cif.interview_date is not None and cif.logbook_received is not None:
                 result.cif_lag_count += 1
                 result.cif_lag_total += IndicatorHistory.work_days(cif.interview_date, cif.logbook_received)
-            if irf.logbook_second_verification.lower().startswith('clear') or irf.logbook_second_verification.lower().startswith('some'):
+            if irf.evidence_categorization is not None and (irf.evidence_categorization.lower().startswith('evidence')):
                         result.cif_with_evidence_count += 1
     
     @staticmethod

@@ -77,7 +77,7 @@ class IndicatorHistory(models.Model):
                 }
         
         storage_cache = {
-                'IRF_Interceptees':{},
+                'IRF_People':{},
                 }
         
         latest_date = None
@@ -120,7 +120,7 @@ class IndicatorHistory(models.Model):
                                                               evidence_categorization__isnull=False).exclude(logbook_second_verification_date__lte=end_date)
                         IndicatorHistory.calculate_irf_backlog(results, query_set, 'v2')
                     
-                    interceptee_storage = IndicatorHistory.get_card_storage(storage_cache, form_type, 'Interceptees', station)
+                    interceptee_storage = IndicatorHistory.get_card_storage(storage_cache, form_type, 'People', station)
                     if interceptee_storage is not None:
                         query_set = interceptee_storage.get_form_storage_class().objects.filter(interception_record__station__in=station_list, person__photo__in=check_photos.keys())
                         IndicatorHistory.process_photos(results, query_set, check_photos, start_date, end_date)

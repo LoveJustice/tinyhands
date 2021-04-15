@@ -30,6 +30,9 @@ class VdfCommon(BaseForm):
     express_suicidal_thoughts = models.CharField('Did the victim express any suicidal thoughts at any point?', max_length=126, null=True)
     total_situational_alarms = models.PositiveIntegerField('Total Situational Alarms', null=True, blank=True)
     station_recommendation_for_victim = models.CharField('What is the Border Station recommendation about where the victim should go?', max_length=126, null=True)
+    is_evidence_that_guardians_sold = models.CharField('Did the victim express any suicidal thoughts at any point?', max_length=126, null=True)
+    evidence_that_guardians_sold = models.CharField('If yes, what evidence?', max_length=126, null=True)
+    why_sent_home_with_with_alarms = models.CharField('If the potential victim has 10 or more total Home Situation Alarms and you recommend sending the potential victim home to stay with guardians, why?', max_length=126, null=True)
 
     # Awareness/Assessment
     staff_share_gospel = models.CharField('Did the staff share the gospel with the victim?', max_length=126, null=True)
@@ -54,10 +57,12 @@ class VdfCommon(BaseForm):
     who_victim_released_name = models.CharField('Name of person whom the victim was released to', max_length=126, null=True)
     who_victim_released_phone = models.CharField('Phone Number', max_length=126, null=True)
     where_victim_sent = models.CharField('Where was the victim sent', max_length=126, null=True)
+    where_victim_sent_details = models.CharField('Where was the victim sent details', max_length=126, null=True)
 
     # Final Procedures
     fundraising_purpose = models.CharField('how we can use your photo and the information collected during this interviewfor operational fundraising purposes.', max_length=126, null=True)
     consent_to_use_information = models.CharField('I give consent to use any information I have shared throughout the duration of my time with the staff for operational and awareness purposes', max_length=126, null=True)
+    consent_to_use_photo = models.CharField('Do you consent to us using your photo this way?', max_length=126, null=True)
     victim_signature = models.BooleanField('Victim Signature', default=False)
     guardian_signature = models.BooleanField('Guardian Signature', default=False)
     case_notes = models.TextField('Case Notes', blank=True)
@@ -75,6 +80,9 @@ class VdfCommon(BaseForm):
     
     def get_form_type_name(self):
         return 'VDF'
+    
+    def get_form_date(self):
+        return self.interview_date
     
     @staticmethod
     def key_field_name():
@@ -98,4 +106,13 @@ class VdfAttachmentCommon(BaseCard):
         
     def is_private(self):
         return self.private_card
+    
+class GospelVerification(BaseForm):
+    vdf = models.ForeignKey(VdfCommon)
+    profess_to_accept_christ = models.CharField(max_length=126, null=True)
+    survey_complete = models.CharField(max_length=126, null=True)
+    searchlight_edited = models.CharField(max_length=126, null=True)
+    date_of_followup = models.DateField('Interview date', null=True)
+    followup_person = models.CharField(max_length=126, null=True)
+    
     

@@ -13,7 +13,7 @@ from static_border_stations.tests.factories import StaffFactory, CommitteeMember
 
 
 class BudgetCalcApiTests(WebTest):
-    fixtures = ['initial-required-data/Country.json', 'initial-required-data/Permission.json']
+    fixtures = ['initial-required-data/Region.json', 'initial-required-data/Country.json', 'initial-required-data/Permission.json']
     def setUp(self):
         self.factory = APIRequestFactory()
         self.user = GenericUserWithPermissions.create([

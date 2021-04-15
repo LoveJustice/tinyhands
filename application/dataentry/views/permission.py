@@ -16,8 +16,8 @@ class PermissionViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     filter_backends = (fs.SearchFilter, fs.OrderingFilter,)
     search_fields = ('permission_group','action')
-    ordering_fields = ('permission_group', 'action')
-    ordering = ('permission_group','action')
+    ordering_fields = ('permission_group', 'display_order', 'action')
+    ordering = ('permission_group','display_order', 'action')
     
 class UserLocationPermissionViewSet(viewsets.ModelViewSet):
     queryset = UserLocationPermission.objects.all()
@@ -112,6 +112,10 @@ class UserLocationPermissionViewSet(viewsets.ModelViewSet):
                     form_countries.append(station.operating_country.id)
         
         return form_countries
+    
+    # uses user id of requesting user
+    def user_countries_current_user(self, request):
+        return self.user_countries(request, request.user.id)
                 
     def user_countries(self, request, pk):
         perms = self.effective_query(request, pk)
@@ -137,6 +141,8 @@ class UserLocationPermissionViewSet(viewsets.ModelViewSet):
         if results is not None:
             if 'form_present' in request.GET:
                 results = results.filter(id__in=self.get_country_ids_with_form(request, results))
+            if 'enable_all_locations' in request.GET:
+                results = results.filter(enable_all_locations=True)
             results = results.order_by('name')    
         serializer = CountrySerializer(results, many=True, context={'request': request})
         return Response(serializer.data)
@@ -158,9 +164,15 @@ class UserLocationPermissionViewSet(viewsets.ModelViewSet):
         
         if 'country_id' in request.GET:
             tmp = int(request.GET['country_id'])
-            stations = BorderStation.objects.filter(operating_country__id = tmp, open=True)
+            stations = BorderStation.objects.filter(operating_country__id = tmp)
         else:
-            stations = BorderStation.objects.filter(open=True)
+            stations = BorderStation.objects.all()
+        
+        if 'include_closed' not in request.GET:
+            stations = stations.filter(open=True)
+        
+        if 'transit_only' in request.GET:
+            stations = stations.exclude(non_transit=True)
         
         for perm in perms.iterator():
             if perm.country is None and perm.station is None:

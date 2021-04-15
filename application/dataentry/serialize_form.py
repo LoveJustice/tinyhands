@@ -1,8 +1,10 @@
 import pytz
+import traceback
 from django.conf import settings
 from dateutil import parser
 from datetime import datetime
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 from django.core.exceptions import ObjectDoesNotExist
 
 from dataentry.models.addresses import Address1, Address2
@@ -11,6 +13,7 @@ from dataentry.models.form import Answer, Category, Form, FormCategory, Question
 from dataentry.models.person import Person
 from dataentry.models.person_identification import PersonIdentification
 from dataentry.models.master_person import MasterPerson
+from dataentry.models.match_history import MatchHistory, MatchAction
 from .form_data import FormData, CardData, PersonContainer
 from .validate_form import ValidateForm
 
@@ -659,6 +662,14 @@ class ResponsePersonSerializer(serializers.Serializer):
             tmp = data.get(field)
             if tmp is not None and tmp.get('value') is not None:
                 ret[field] = int(tmp.get('value'))
+        
+        # Boolean
+        for field in ['phone_verified']:
+            tmp = data.get(field)
+            if tmp is not None and tmp.get('value') is not None:
+                ret[field] = int(tmp.get('value'))
+            else:
+                ret[field] = False
                 
         # Date
         for field in ['birthdate']:
@@ -711,7 +722,7 @@ class ResponsePersonSerializer(serializers.Serializer):
         
         for element in ['latitude','longitude','address_notes','gender','age','birthdate','nationality',
                         'appearance','arrested','case_filed_against','education','guardian_name','guardian_phone',
-                        'guardian_relationship','interviewer_believes','occupation','pv_believes','role',
+                        'guardian_relationship','interviewer_believes','occupation','pv_believes','phone_verified','role',
                         'social_media']:
             tmp = self.validated_data.get(element)
             setattr(person, element, tmp)
@@ -733,14 +744,42 @@ class ResponsePersonSerializer(serializers.Serializer):
         
         master_person.update(person)
         master_person.save()
+        
+        if link_id is None:
+            notes = 'Linked from IRF person'
+            match_history = MatchHistory()
+            match_history.master1 = master_person
+            match_history.master2 = None
+            match_history.person = None
+            match_history.notes = notes 
+            match_history.match_type = None
+            match_history.action = MatchAction.objects.get(name='create master person')
+            match_history.matched_by = self.context.get('request.user')
+            match_history.timstamp = datetime.now()
+            match_history.save()
+        else:
+            notes = 'Initial person creation'
+            
         person.master_person = master_person
+        person.save()
         if storage_id is None:
             person.master_set_by = self.context.get('request.user')
             person.master_set_date = datetime.now().date()
             if link_id is not None:
-                person.master_set_notes = 'Linked from IRF person'
+                person.master_set_notes = notes
             else:
-                person.master_set_notes = 'Initial person creation'
+                person.master_set_notes = notes
+            
+            match_history = MatchHistory()
+            match_history.master1 = master_person
+            match_history.master2 = None
+            match_history.person = person
+            match_history.notes = notes 
+            match_history.match_type = None
+            match_history.action = MatchAction.objects.get(name='add to master person')
+            match_history.matched_by = self.context.get('request.user')
+            match_history.timstamp = datetime.now()
+            match_history.save()
         
         remove_identifiers = []
         for person_identifier in person_identifiers:
@@ -755,6 +794,7 @@ class ResponsePersonSerializer(serializers.Serializer):
         
         form_data = self.context['form_data']
         form_data.person_containers.append(PersonContainer(person, new_identifiers, remove_identifiers, question))
+        person.save
         
         return person
         
@@ -955,9 +995,22 @@ class CardCategorySerializer(serializers.Serializer):
 class FormDataSerializer(serializers.Serializer):
     def to_representation(self, instance):
         ret = super().to_representation(instance)
+        self.the_errors = []
+        self.the_warnings = []
+        try:
+            self.validate_form(instance.form, instance, False, mode="retrieve")
+            ret['errors'] = []
+            ret['warnings'] = []
+        except ValidationError:
+            ret['errors'] = self.the_errors
+            ret['warnings'] = self.the_warnings
+            
+        if hasattr(instance, 'form'):
+            ret['form_name'] = instance.form.form_name
         if hasattr(instance.form_object, 'station'):
             ret['station_id'] = serializers.IntegerField().to_representation(instance.form_object.station.id)
             ret['station_code'] = serializers.CharField().to_representation(instance.form_object.station.station_code)
+            ret['station_name'] = serializers.CharField().to_representation(instance.form_object.station.station_name)
             ret['country_id'] = serializers.IntegerField().to_representation(instance.form_object.station.operating_country.id)
         if hasattr(instance.form_object, 'status'):
             ret['status'] = serializers.CharField().to_representation(instance.form_object.status)
@@ -1096,8 +1149,8 @@ class FormDataSerializer(serializers.Serializer):
         else:
             return self.form_data.form_object.station.id
         
-    def validate_form(self, form, form_data, ignore_warnings):
-        validate = ValidateForm(form, form_data, ignore_warnings)
+    def validate_form(self, form, form_data, ignore_warnings, mode="update"):
+        validate = ValidateForm(form, form_data, ignore_warnings, mode=mode)
         validate.validate()
         self.the_errors = self.the_errors + validate.errors
         self.the_warnings = self.the_warnings + validate.warnings

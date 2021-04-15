@@ -12,7 +12,7 @@ class RestApiTestCase(APITestCase):
 
 
 class CommitteeMemberTests(RestApiTestCase):
-    fixtures = ['initial-required-data/Country.json', 'initial-required-data/Permission.json']
+    fixtures = ['initial-required-data/Region.json','initial-required-data/Country.json', 'initial-required-data/Permission.json']
     def setUp(self):
         self.committee_member = CommitteeMemberFactory.create()
         self.other_committee_members = CommitteeMemberFactory.create_batch(4)
