@@ -630,7 +630,7 @@ class InterceptionAlertSerializer(serializers.ModelSerializer):
 class PermissionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Permission
-        fields = ['id', 'permission_group', 'action', 'min_level']
+        fields = ['id', 'permission_group', 'action', 'min_level', 'display_order']
         
 class UserLocationPermissionSerializer(serializers.ModelSerializer):
     class Meta:
