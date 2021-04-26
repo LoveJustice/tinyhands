@@ -86,6 +86,18 @@ class GenericUserWithPermissions():
             ulp.save()
         
         return user
+    
+    @staticmethod
+    def add_permission(user, permission_configuration):
+        for config in permission_configuration:
+            perm = Permission.objects.get(permission_group=config['group'], action=config['action'])
+            
+            ulp = UserLocationPermission()
+            ulp.account = user
+            ulp.permission = perm
+            ulp.country = config['country']
+            ulp.station = config['station']
+            ulp.save()
             
 
 
