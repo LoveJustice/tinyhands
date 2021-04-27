@@ -12,3 +12,6 @@ class StationStatistics(models.Model):
     convictions = models.PositiveIntegerField(null=True)
     active_monitor_locations = models.PositiveIntegerField(null=True)
     modified_date = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+       unique_together = ("year_month", "station")
