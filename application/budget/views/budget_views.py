@@ -88,7 +88,7 @@ class BudgetViewSet(viewsets.ModelViewSet):
 def budget_sheet_by_date(request, pk, month, year):
     form = {"border_station": int(pk)}
     other_items = []
-    staff_salaries = []
+    staff_items = []
     
     date = datetime.date(int(year), int(month), 1)
     budget_sheets = BorderStationBudgetCalculation.objects.filter(
