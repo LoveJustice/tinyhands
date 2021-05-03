@@ -13,13 +13,14 @@ class LegalCase(BaseForm):
     charge_sheet_date = models.DateField(null=True)
     case_type = models.CharField(max_length=255, null=True)
     specific_code_law = models.TextField(null=True)
-    human_trafficking = models.BooleanField(default=False)
+    human_trafficking = models.CharField(max_length=255, null=True)
     date_last_contacted = models.DateField(null=True)
     appealed = models.BooleanField(default=False)
     lawyer_name = models.CharField(max_length=255, null=True)
     lawyer_phone = models.CharField(max_length=255, null=True)
     source = models.CharField(max_length=255, null=True)
     missing_data_count = models.PositiveIntegerField(null=True, blank=True)
+    location = models.CharField(max_length=255, null=True)
     
     def get_key(self):
         return self.legal_case_number
@@ -50,10 +51,12 @@ class LegalCaseSuspect(BaseCard):
     person = models.ForeignKey(Person, null=True)
     named_on_charge_sheet = models.CharField(max_length=255, null=True)
     arrest_date = models.DateField(null=True)
+    arrest_submitted_date = models.DateField(null=True)
     arrest_status = models.CharField(max_length=255, null=True)
     verdict = models.CharField(max_length=255, null=True)
     named_in_verdict = models.CharField(max_length=255, null=True)
     verdict_date = models.DateField(null=True)
+    verdict_submitted_date = models.DateField(null=True)
     imprisonment_years = models.PositiveIntegerField(null=True, blank=True)
     imprisonment_months = models.PositiveIntegerField(null=True, blank=True)
     imprisonment_days = models.PositiveIntegerField(null=True, blank=True)
