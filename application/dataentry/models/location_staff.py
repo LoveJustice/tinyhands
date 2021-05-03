@@ -8,3 +8,4 @@ class LocationStaff(models.Model):
     location = models.ForeignKey(Location, on_delete=models.PROTECT)
     staff = models.ForeignKey(Staff, on_delete=models.PROTECT)
     work_fraction = models.FloatField(null=True)
+    modified_date = models.DateTimeField(auto_now=True)

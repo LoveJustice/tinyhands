@@ -82,6 +82,9 @@ class Command(BaseCommand):
             else:
                 location_tag = self.location_tag(location_statistics.location.border_station, '_other')
             location_statistics.intercepts = 0
+            location_statistics.intercepts_evidence = 0
+            location_statistics.intercepts_high_risk = 0
+            location_statistics.intercepts_invalid = 0
             location_map[location_tag] = location_statistics
         
         intercepts = IntercepteeCommon.objects.filter(
@@ -98,6 +101,9 @@ class Command(BaseCommand):
                     location_statistics.year_month = year_month
                     location_statistics.location = location
                     location_statistics.intercepts = 0
+                    location_statistics.intercepts_evidence = 0
+                    location_statistics.intercepts_high_risk = 0
+                    location_statistics.intercepts_invalid = 0
                     location_map[location_tag] = location_statistics
                 except ObjectDoesNotExist:
                     location = Location.get_or_create_other_location(intercept.interception_record.station)
@@ -107,9 +113,18 @@ class Command(BaseCommand):
                         location_statistics.year_month = year_month
                         location_statistics.location = location
                         location_statistics.intercepts = 0
+                        location_statistics.intercepts_evidence = 0
+                        location_statistics.intercepts_high_risk = 0
+                        location_statistics.intercepts_invalid = 0
                         location_map[location_tag] = location_statistics
                 
             location_map[location_tag].intercepts += 1
+            if intercept.interception_record.logbook_second_verification.startswith('Evidence'):
+                location_map[location_tag].intercepts_evidence += 1
+            elif intercept.interception_record.logbook_second_verification.startswith('High'):
+                location_map[location_tag].intercepts_high_risk += 1
+            elif intercept.interception_record.logbook_second_verification.startswith('Should not'):
+                location_map[location_tag].intercepts_invalid += 1
         
         for location_tag in location_map.keys():
             location_map[location_tag].save()
@@ -122,6 +137,8 @@ class Command(BaseCommand):
                 entry = StationStatistics()
                 entry.year_month = year_month
                 entry.station = station
+                locations = Location.objects.filter(border_station = station, location_type = 'monitoring', active = True)
+                entry.active_monitor_locations = len(locations)
                 entry.save()
             
             # Collections
