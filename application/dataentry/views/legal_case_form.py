@@ -20,7 +20,7 @@ class LegalCaseFormViewSet(BaseFormViewSet):
     serializer_class = LegalCaseSerializer
     filter_backends = (fs.SearchFilter, fs.OrderingFilter,)
     search_fields = ('legal_case_number', 'police_case', 'court_case')
-    ordering_fields = ['id', 'legal_case_number', 'form_entered_by', ]
+    ordering_fields = ['legal_case_number', 'charge_sheet_date','case_type','date_last_contacted','missing_data_count' ]
     ordering = ('legal_case_number',)
     
     def get_serializer_class(self):
