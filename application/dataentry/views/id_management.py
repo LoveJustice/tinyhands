@@ -13,32 +13,36 @@ from django.db.models import Q
 
 from dataentry import fuzzy_matching
 from dataentry.serializers import IDManagementSerializer, PersonFormsSerializer
-from dataentry.models import MasterPerson, Person, PersonForm, Interceptee, VictimInterview, PersonMatch
+from dataentry.models import MasterPerson, Person, PersonForm, Interceptee, VictimInterview, PersonMatch, UserLocationPermission
 
 logger = logging.getLogger(__name__)
 
 class IDManagementViewSet(viewsets.ModelViewSet):
     serializer_class = IDManagementSerializer
     permission_classes = (IsAuthenticated, HasPermission)
-    permissions_required = ['permission_irf_edit', 'permission_vif_edit']
+    permissions_required = []
     filter_backends = (fs.SearchFilter, fs.OrderingFilter,)
     search_fields = ('full_name','phone_contact')
     ordering_fields = ('full_name', 'age', 'gender', 'phone_contact', 'address1__name', 'address2__name')
     ordering = ('full_name',)
     
-    def get_queryset(self):    
-        queryset = Person.objects.all()
-        exclude_master_person_id = self.request.GET.get('exclude_master_person_id')
-        if exclude_master_person_id is not None:
-            exclude_list = [exclude_master_person_id]
-            results = PersonMatch.objects.filter(Q(master1__id=exclude_master_person_id) | Q(master2__id=exclude_master_person_id))
-            for result in results:
-                if result.master1.id == int(exclude_master_person_id):
-                    exclude_list.append(result.master2.id)
-                else:
-                    exclude_list.append(result.master1.id)
-                    
-            queryset = queryset.exclude(master_person__id__in=exclude_list)
+    def get_queryset(self):
+        perm_list = UserLocationPermission.objects.filter(account__id=self.request.user.id, permission__permission_group='PERSON_MANAGEMENT')
+        if len(perm_list) < 1:
+            queryset = Person.objects.none()
+        else:    
+            queryset = Person.objects.all()
+            exclude_master_person_id = self.request.GET.get('exclude_master_person_id')
+            if exclude_master_person_id is not None:
+                exclude_list = [exclude_master_person_id]
+                results = PersonMatch.objects.filter(Q(master1__id=exclude_master_person_id) | Q(master2__id=exclude_master_person_id))
+                for result in results:
+                    if result.master1.id == int(exclude_master_person_id):
+                        exclude_list.append(result.master2.id)
+                    else:
+                        exclude_list.append(result.master1.id)
+                        
+                queryset = queryset.exclude(master_person__id__in=exclude_list)
         
         return queryset
 

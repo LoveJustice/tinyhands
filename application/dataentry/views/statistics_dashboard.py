@@ -23,7 +23,13 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated, )
     
     def retrieve_country_data(self, request, country_id, year_month):
-        results = StationStatistics.objects.filter(station__operating_country__id=country_id, year_month=year_month).order_by('station__non_transit', 'station__station_name')
+        results = []
+        results_qs = StationStatistics.objects.filter(station__operating_country__id=country_id, year_month=year_month, station__non_transit=False).order_by('station__station_name')
+        for entry in results_qs:
+            results.append(entry)
+        results_qs = StationStatistics.objects.filter(station__operating_country__id=country_id, year_month=year_month, station__non_transit=True).order_by('station__station_name')
+        for entry in results_qs:
+            results.append(entry)
         
         serializer = StationStatisticsSerializer(results , many=True, context={'request': request})
         return Response(serializer.data)

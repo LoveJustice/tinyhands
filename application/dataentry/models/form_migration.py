@@ -184,11 +184,6 @@ class FormMigration:
                 'union '\
                 'select distinct db.operating_country_id, dp.master_person_id '\
                 'from dataentry_irfcommon di '\
-                    'inner join dataentry_person dp on di.broker_id = dp.id '\
-                    'inner join dataentry_borderstation db on db.id = di.station_id '\
-                'union '\
-                'select distinct db.operating_country_id, dp.master_person_id '\
-                'from dataentry_irfcommon di '\
                     'inner join dataentry_intercepteecommon di2 on di2.interception_record_id = di.id '\
                     'inner join dataentry_person dp on di2.person_id = dp.id '\
                     'inner join dataentry_borderstation db on db.id = di.station_id) dj '\

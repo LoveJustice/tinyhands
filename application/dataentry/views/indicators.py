@@ -215,14 +215,14 @@ class IndicatorsViewSet(viewsets.ViewSet):
                 if irf.logbook_received is not None:
                     result.irf_lag_count += 1
                     result.irf_lag_total += IndicatorHistory.work_days(irf.date_time_of_interception.date(), irf.logbook_received)
-                if irf.evidence_categorization is not None:
+                if irf.logbook_second_verification is not None:
                     result.irf_forms_verified += 1
-                    if irf.evidence_categorization.lower().startswith('evidence'):
+                    if irf.logbook_second_verification.lower().startswith('evidence'):
                         result.evidence_count += 1
                         evidence = True
-                    elif irf.evidence_categorization.lower().startswith('should'):
+                    elif irf.logbook_second_verification.lower().startswith('should'):
                         result.invalid_intercept_count += 1
-                    elif irf.evidence_categorization.lower().startswith('high'):
+                    elif irf.logbook_second_verification.lower().startswith('high'):
                         result.high_risk_count += 1
                     
                 victims = interceptee_storage.get_form_storage_class().objects.filter(interception_record=irf, person__role='PVOT')

@@ -6,6 +6,7 @@ from dataentry.models import VictimInterview, BorderStation, Form
 from accounts.tests.factories import SuperUserFactory
 from dataentry.tests.factories import PersonFactory, CifIndiaFactory, IrfIndiaFactory, IntercepteeIndiaNoPhotoFactory, PersonBoxIndiaFactory, AliasGroupFactory
 from dataentry.management.commands.formLatest import Command
+from static_border_stations.tests.factories import GenericUserWithPermissions
 
 class IDManagementTest(APITestCase):
     fixtures = ['initial-required-data/Region.json','initial-required-data/Country.json', 'initial-required-data/Permission.json']
@@ -13,6 +14,7 @@ class IDManagementTest(APITestCase):
         self.phone_match = '9876543210'
         self.person_list = PersonFactory.create_batch(11)
         self.user = SuperUserFactory.create()
+        GenericUserWithPermissions.add_permission(self.user, [{'group':'PERSON_MANAGEMENT', 'action':'EDIT', 'country': None, 'station': None},])
         self.client.force_authenticate(user=self.user)
         self.interceptee_list = IntercepteeIndiaNoPhotoFactory.create_batch(3)
         self.pb_list = PersonBoxIndiaFactory.create_batch(2)

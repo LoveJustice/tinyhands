@@ -17,3 +17,15 @@ class SiteSettings(models.Model):
             if setting['name'] == setting_name:
                 return setting
         raise ValueError('Setting with name "' + setting_name + '" not found')
+    
+    def set_setting_value_by_name(self, setting_name, value):
+        found = False
+        for setting in self.data:
+            if setting['name'] == setting_name:
+                setting['value'] = value
+                found = True
+                break
+        
+        if not found:
+            setting = {'name':setting_name, 'value':value}
+            self.data.append(setting)
