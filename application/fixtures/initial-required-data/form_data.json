@@ -2926,7 +2926,7 @@
 {"model": "dataentry.questionlayout", "pk": null, "fields": {"question": 1003, "category": 208, "weight": 0, "form_config": null}},
 {"model": "dataentry.questionlayout", "pk": null, "fields": {"question": 1004, "category": 208, "weight": 0, "form_config": null}},
 {"model": "dataentry.questionlayout", "pk": null, "fields": {"question": 1005, "category": 208, "weight": 0, "form_config": null}},
-{"model": "dataentry.questionlayout", "pk": null, "fields": {"question": 1008, "category": 208, "weight": 0, "form_config": {"RadioItems": {"1008": ["human trafficking", "rape"]}}}},
+{"model": "dataentry.questionlayout", "pk": null, "fields": {"question": 1008, "category": 208, "weight": 0, "form_config": {"RadioItems": {"1008": ["Human Trafficking", "Rape"]}}}},
 {"model": "dataentry.questionlayout", "pk": null, "fields": {"question": 9, "category": 209, "weight": 0, "form_config": null}},
 {"model": "dataentry.questionlayout", "pk": null, "fields": {"question": 1009, "category": 209, "weight": 0, "form_config": null}},
 {"model": "dataentry.questionlayout", "pk": null, "fields": {"question": 1010, "category": 209, "weight": 0, "form_config": null}},
