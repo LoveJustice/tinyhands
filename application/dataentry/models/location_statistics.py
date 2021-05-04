@@ -12,3 +12,6 @@ class LocationStatistics(models.Model):
     intercepts_invalid = models.PositiveIntegerField(null=True)
     arrests = models.PositiveIntegerField(null=True)
     modified_date = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+       unique_together = ("year_month", "location")
