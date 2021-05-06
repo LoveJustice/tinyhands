@@ -19,7 +19,8 @@ class MDFExporter(BasePDFCreator):
             'staff': mdf_helper.staff,
             'sections': mdf_helper.sections,
             'total': mdf_helper.total,
-            'notes': mdf_helper.notes
+            'notes': mdf_helper.notes,
+            'past_money_sent':mdf_helper.past_money_sent_subtotal
         }
 
 

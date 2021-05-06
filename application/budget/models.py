@@ -15,6 +15,7 @@ class BorderStationBudgetCalculation(models.Model):
     COMMUNICATION = 7
     STAFF_BENEFITS = 8
     ADMINISTRATION = 10
+    PAST_MONTH_SENT = 11
 
     mdf_uuid = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
 
@@ -96,6 +97,9 @@ class BorderStationBudgetCalculation(models.Model):
 
     def miscellaneous_total(self):
         return self.other_items_total(self.MISCELLANEOUS)
+    
+    def past_month_sent_total(self):
+        return self.other_items_total(self.PAST_MONTH_SENT)
     
     shelter_rent = models.BooleanField('Rent', default=False)
     shelter_rent_amount = models.PositiveIntegerField(default=0)
@@ -213,7 +217,8 @@ class OtherBudgetItemCost(models.Model):
         (BorderStationBudgetCalculation.POTENTIAL_VICTIM_CARE, 'Potential Victim Care'),
         (BorderStationBudgetCalculation.COMMUNICATION, 'Communication'),
         (BorderStationBudgetCalculation.STAFF_BENEFITS, 'Staff & Benefits'),
-        (BorderStationBudgetCalculation.ADMINISTRATION, 'Administration')
+        (BorderStationBudgetCalculation.ADMINISTRATION, 'Administration'),
+        (BorderStationBudgetCalculation.PAST_MONTH_SENT, 'Past Month Sent Money')
     ]
     name = models.CharField(max_length=255, blank=False)
     cost = models.IntegerField(default=0, blank=False)

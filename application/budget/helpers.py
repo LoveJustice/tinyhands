@@ -267,3 +267,7 @@ class MoneyDistributionFormHelper:
     @property
     def report_month(self):
         return self.budget.month_year.strftime('%B %Y')
+    
+    @property
+    def past_money_sent_subtotal(self):
+        return self.budget.past_month_sent_total
