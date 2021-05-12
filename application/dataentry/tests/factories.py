@@ -51,8 +51,6 @@ class IrfIndiaFactory(DjangoModelFactory):
     irf_number = factory.Sequence(lambda n: 'MBZ{0}'.format(n))
     date_time_of_interception = FuzzyDateTime(datetime.datetime(2008, 1, 1, tzinfo=pytz.UTC), datetime.datetime(2012, 1, 1, tzinfo=pytz.UTC))
     status = 'approved'
-    who_in_group_husbandwife = True
-    not_real_job = True
 
     location = "India"
     staff_name = "Joe Test"

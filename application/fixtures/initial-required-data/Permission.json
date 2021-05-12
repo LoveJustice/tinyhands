@@ -398,5 +398,35 @@
             "min_level": "STATION",
             "account_permission_name": null
         }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 42,
+        "fields": {
+            "permission_group": "NOTIFICATIONS",
+            "action": "IRF_SUBMITTED",
+            "min_level": "STATION",
+            "account_permission_name": null
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 43,
+        "fields": {
+            "permission_group": "NOTIFICATIONS",
+            "action": "IRF_VERIFIED",
+            "min_level": "STATION",
+            "account_permission_name": null
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 44,
+        "fields": {
+            "permission_group": "PERSON_MANAGEMENT",
+            "action": "EDIT",
+            "min_level": "GLOBAL",
+            "account_permission_name": null
+        }
     }
 ]
