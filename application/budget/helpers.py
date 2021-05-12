@@ -28,25 +28,142 @@ class BudgetTable:
         row_count = sum([(len(item.name) // self.NAME_LENGTH) + 1 for item in self.items])
         return (row_count + 1) * self.ROW_HEIGHT + self.TITLE_HEIGHT
 
+class StaffValue:
+    def __init__(self, cost, foot_note):
+        self.cost = cost
+        self.foot_note = foot_note
+
+class StaffEntry:
+    def __init__(self, staff_person, staff_data, headers):
+        self.name = staff_person.first_name + ' ' + staff_person.last_name
+        self.values = []
+        self.sub_total = 0
+        
+        total = 0
+        for header in headers:
+            if header in staff_data[staff_person]:
+                value = staff_data[staff_person][header]
+                if value is not None and value.cost is not None:
+                    self.values.append(value)
+                    total += value.cost
+                else:
+                     self.values.append(StaffValue('',''))
+            else:
+                self.values.append(StaffValue('',''))
+        
+        # sub total of salary and benefits        
+        self.values.append(StaffValue(total,''))
+        
+        value = StaffValue('','')
+        if 'Communication' in staff_data[staff_person]:
+            value = staff_data[staff_person]['Communication']
+            if value is not None and value.cost is not None:
+                total += value.cost
+            else:
+                value = StaffValue('','')
+        self.values.append(value)
+        
+        value = StaffValue('','')
+        if 'Travel' in staff_data[staff_person]:
+            value = staff_data[staff_person]['Travel']
+            if value is not None and value.cost is not None:
+                total += value.cost
+            else:
+                value = StaffValue('','')
+        self.values.append(value)
+        
+        self.values.append(StaffValue(total,''))
+        
+
+class StaffData:
+    def __init__(self, budget):
+        self.staff_list = []
+        self.staff_totals = []
+        self.headers = ['Salary']
+        self.foot_notes = []
+        
+        trailing_headers = ['Sub-Total', 'Communication', 'Travel', 'Total']
+        
+        staff_data = {}
+        staff_order = []
+        foot_note_count = 0
+        staff_items = budget.staffbudgetitem_set.all().order_by('staff_person__first_name', 'staff_person__last_name', 'type_name')
+        for staff_item in staff_items:
+            if staff_item.type_name not in self.headers and staff_item.type_name not in trailing_headers:
+                self.headers.append(staff_item.type_name)\
+            
+            if staff_item.staff_person not in staff_order:
+                staff_order.append(staff_item.staff_person)
+            
+            if staff_item.staff_person not in staff_data:
+                staff_data[staff_item.staff_person] = {}
+            if staff_item.description is not None and staff_item.description != '':
+                foot_note_count += 1
+                foot_note = '*' + str(foot_note_count)
+                self.foot_notes.append(foot_note + ":" + staff_item.description)
+            else:
+                foot_note = '';
+            staff_data[staff_item.staff_person][staff_item.type_name] = StaffValue(staff_item.cost, foot_note)
+        
+        for staff_person in staff_order:
+            if staff_person.last_name.find('general_staff') >= 0:
+                continue
+            self.staff_list.append(StaffEntry(staff_person, staff_data, self.headers))
+        
+        for idx in range(0, len(self.headers) + 4):
+            total = 0
+            for person_idx in range(0, len(self.staff_list)):
+                value = self.staff_list[person_idx].values[idx]
+                if value is not None and value.cost != '':
+                    total += value.cost
+            
+            self.staff_totals.append(total)
+    
+    @property
+    def added_headers(self):
+        return self.headers
+    
+    @property
+    def column_format(self):
+        column_format = '20%'
+        for idx in range(0, len(self.headers)+4):
+            column_format += ' 8%'
+    
+        return column_format
+    
+    @property
+    def salaries_and_benefits_total(self):
+        return self.staff_totals[len(self.headers)]
+    
+    @property
+    def communication_total(self):
+        return self.staff_totals[len(self.headers)+1]
+    
+    @property
+    def travel_total(self):
+        return self.staff_totals[len(self.headers)+2]
+
 
 class MoneyDistributionFormHelper:
 
     def __init__(self, budget=None):
         self.budget = budget
-        self.staff_salaries = budget.staffsalary_set.all()
+        self.staff_salaries = budget.staffbudgetitem_set.all()
+        self.staff_data = StaffData(budget)
+    
+    @property
+    def staff(self):
+        return self.staff_data
 
     @property
     def sections(self):
-        yield BudgetTable("Staff Salaries", self.staff_salary_items)
+        yield BudgetTable("Salaries & Benefits", self.salary_and_benefit_items)
         yield BudgetTable("Communication", self.communication_items)
         yield BudgetTable("Travel", self.travel_items)
         yield BudgetTable("Administration", self.administration_items)
-        yield BudgetTable("Medical", self.medical_items)
-        yield BudgetTable("Miscellaneous", self.miscellaneous_items)
-        yield BudgetTable("Shelter", self.shelter_items)
-        yield BudgetTable("Food & Gas", self.food_gas_items)
+        yield BudgetTable("Potential Victim Care", self.potential_victim_care_items)
         yield BudgetTable("Awareness", self.awareness_items)
-        yield BudgetTable("Supplies", self.supplies_items)
+        yield BudgetTable("Miscellaneous", self.miscellaneous_items)
 
     @property
     def total(self):
@@ -61,25 +178,16 @@ class MoneyDistributionFormHelper:
         return self.budget.border_station.station_name
 
     @property
-    def staff_salary_items(self):
-        items = [BudgetLineItem(entry.staff_person.full_name, entry.salary) for entry in self.staff_salaries]
-        return items + self.get_other_items(BorderStationBudgetCalculation.STAFF)
+    def salary_and_benefit_items(self):
+        items = [BudgetLineItem('Staff salaries & benefits (breakdown on page 1)', self.staff_data.salaries_and_benefits_total)]
+        return items + self.get_other_items(BorderStationBudgetCalculation.STAFF_BENEFITS)
 
     @property
     def communication_items(self):
         items = []
         if self.budget.communication_chair:
             items.append(BudgetLineItem('Chair', self.budget.communication_chair_amount))
-        if self.budget.communication_manager:
-            items.append(BudgetLineItem('Manager', self.budget.communication_manager_amount))
-        if self.budget.communication_number_of_staff_with_walkie_talkies > 0:
-            title = 'Staff with Walkie Talkies (' + str(self.budget.communication_number_of_staff_with_walkie_talkies_multiplier) + ' each)'
-            value = self.budget.communication_number_of_staff_with_walkie_talkies  * self.budget.communication_number_of_staff_with_walkie_talkies_multiplier
-            items.append(BudgetLineItem(title, value))
-        if self.budget.communication_each_staff > 0:
-            title = 'Staff (' + str(self.budget.communication_each_staff_multiplier) + ' each)'
-            value = self.budget.communication_each_staff * self.budget.communication_each_staff_multiplier
-            items.append(BudgetLineItem(title, value))
+        items.append(BudgetLineItem('Staff Communication', self.staff_data.communication_total))
         return items + self.get_other_items(BorderStationBudgetCalculation.COMMUNICATION)
 
     @property
@@ -87,17 +195,7 @@ class MoneyDistributionFormHelper:
         items = []
         if self.budget.travel_chair_with_bike:
             items.append(BudgetLineItem('Chair', self.budget.travel_chair_with_bike_amount))
-        if self.budget.travel_manager_with_bike:
-            items.append(BudgetLineItem('Manager', self.budget.travel_manager_with_bike_amount))
-        staff_bikes_total = self.budget.travel_staff_bikes_total()
-        if staff_bikes_total > 0:
-            items.append(BudgetLineItem('Staff using bikes', staff_bikes_total))
-        if self.budget.travel_last_months_expense_for_sending_girls_home > 0:
-            items.append(BudgetLineItem('Sending girls home', self.budget.travel_last_months_expense_for_sending_girls_home))
-        if self.budget.travel_motorbike:
-            items.append(BudgetLineItem('Motorbike', self.budget.travel_motorbike_amount))
-        if self.budget.travel_plus_other > 0:
-            items.append(BudgetLineItem('Other', self.budget.travel_plus_other))
+        items.append(BudgetLineItem('Staff Travel', self.staff_data.travel_total))
         return items + self.get_other_items(BorderStationBudgetCalculation.TRAVEL)
 
     @property
@@ -111,8 +209,8 @@ class MoneyDistributionFormHelper:
             items.append(BudgetLineItem('Meetings', meetings_total))
         if self.budget.administration_booth:
             items.append(BudgetLineItem('Booth', self.budget.administration_booth_amount))
-        if self.budget.administration_registration:
-            items.append(BudgetLineItem('Registration', self.budget.administration_registration_amount))
+        if self.budget.administration_office:
+            items.append(BudgetLineItem('Office', self.budget.administration_office_amount))
         return items + self.get_other_items(BorderStationBudgetCalculation.ADMINISTRATION)
 
     @property
@@ -127,27 +225,25 @@ class MoneyDistributionFormHelper:
         return self.get_other_items(BorderStationBudgetCalculation.MISCELLANEOUS)
 
     @property
-    def shelter_items(self):
+    def potential_victim_care_items(self):
         items = []
-        shelter_rent_and_utilities = self.budget.shelter_rent + self.budget.shelter_electricity + self.budget.shelter_water
+        shelter_rent_and_utilities = 0
+        if self.budget.shelter_rent:
+            shelter_rent_and_utilities += self.budget.shelter_rent_amount
+        if self.budget.shelter_electricity:
+            shelter_rent_and_utilities += self.budget.shelter_electricity_amount
+        if self.budget.shelter_water:
+            shelter_rent_and_utilities += self.budget.shelter_water_amount
         if shelter_rent_and_utilities > 0:
             items.append(BudgetLineItem('Rent (plus utilities)', shelter_rent_and_utilities))
-        if self.budget.shelter_shelter_startup:
-            items.append(BudgetLineItem('Shelter Startup', self.budget.shelter_shelter_startup_amount))
-        if self.budget.shelter_shelter_two:
-            items.append(BudgetLineItem('Shelter 2', self.budget.shelter_shelter_two_amount))
-        return items + self.get_other_items(BorderStationBudgetCalculation.SHELTER)
-
-    @property
-    def food_gas_items(self):
-        items = []
+            
         intercepted_girls_total = self.budget.food_and_gas_intercepted_girls_total()
         limbo_girls_total = self.budget.food_and_gas_limbo_girls_total()
         if intercepted_girls_total > 0:
             items.append(BudgetLineItem('Intercepted Girls', intercepted_girls_total))
         if limbo_girls_total > 0:
             items.append(BudgetLineItem('Limbo Girls', limbo_girls_total))
-        return items + self.get_other_items(BorderStationBudgetCalculation.FOOD_AND_GAS)
+        return items + self.get_other_items(BorderStationBudgetCalculation.POTENTIAL_VICTIM_CARE)
 
     @property
     def awareness_items(self):
@@ -159,19 +255,6 @@ class MoneyDistributionFormHelper:
         if self.budget.awareness_sign_boards_boolean:
             items.append(BudgetLineItem('Sign Boards', self.budget.awareness_sign_boards))
         return items + self.get_other_items(BorderStationBudgetCalculation.AWARENESS)
-
-    @property
-    def supplies_items(self):
-        items = []
-        if self.budget.supplies_walkie_talkies_boolean:
-            items.append(BudgetLineItem('Walkie Talkies', self.budget.supplies_walkie_talkies_amount))
-        if self.budget.supplies_recorders_boolean:
-            items.append(BudgetLineItem('Recorders', self.budget.supplies_recorders_amount))
-        if self.budget.supplies_binoculars_boolean:
-            items.append(BudgetLineItem('Binoculars', self.budget.supplies_binoculars_amount))
-        if self.budget.supplies_flashlights_boolean:
-            items.append(BudgetLineItem('Flashlights', self.budget.supplies_flashlights_amount))
-        return items + self.get_other_items(BorderStationBudgetCalculation.SUPPLIES)
     
     @property
     def notes(self):

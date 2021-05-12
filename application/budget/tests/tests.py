@@ -265,16 +265,16 @@ class BudgetCalcApiTests(WebTest):
         budget_id = response.data.get('id')
         self.assertEqual(response.status_code, 200)
 
-        response = self.client.put('/api/budget/' + str(budget_id) + '/', {"border_station": self.border_station.pk, "shelter_water": 2, "month_year": "2017-04-15T23:53:08.996000Z"})
+        response = self.client.put('/api/budget/' + str(budget_id) + '/', {"border_station": self.border_station.pk, "shelter_water_amount": 2, "month_year": "2017-04-15T23:53:08.996000Z"})
         budget_id = response.data.get('id')
         self.assertEqual(response.status_code, 200)
 
         response = self.client.get('/api/budget/' + str(budget_id) + '/')
 
-        shelter_water = response.data["shelter_water"]
+        shelter_water_amount = response.data["shelter_water_amount"]
         self.assertEqual(response.data.get('id'), budget_id)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(shelter_water, 2)
+        self.assertEqual(shelter_water_amount, 2)
     
     def testUpdateBudgetSheetNoPermission(self):
         user = GenericUserWithPermissions.create([
@@ -292,7 +292,7 @@ class BudgetCalcApiTests(WebTest):
         budget_id = response.data.get('id')
         self.assertEqual(response.status_code, 200)
 
-        response = client.put('/api/budget/' + str(budget_id) + '/', {"border_station": self.border_station.pk, "shelter_water": 2, "month_year": "2017-04-15T23:53:08.996000Z"})
+        response = client.put('/api/budget/' + str(budget_id) + '/', {"border_station": self.border_station.pk, "shelter_water_amount": 2, "month_year": "2017-04-15T23:53:08.996000Z"})
         budget_id = response.data.get('id')
         self.assertEqual(response.status_code, 403)
     
@@ -313,16 +313,16 @@ class BudgetCalcApiTests(WebTest):
         budget_id = response.data.get('id')
         self.assertEqual(response.status_code, 200)
 
-        response = client.put('/api/budget/' + str(budget_id) + '/', {"border_station": self.border_station.pk, "shelter_water": 2, "month_year": "2017-04-15T23:53:08.996000Z"})
+        response = client.put('/api/budget/' + str(budget_id) + '/', {"border_station": self.border_station.pk, "shelter_water_amount": 2, "month_year": "2017-04-15T23:53:08.996000Z"})
         budget_id = response.data.get('id')
         self.assertEqual(response.status_code, 200)
 
         response = client.get('/api/budget/' + str(budget_id) + '/')
 
-        shelter_water = response.data["shelter_water"]
+        shelter_water_amount = response.data["shelter_water_amount"]
         self.assertEqual(response.data.get('id'), budget_id)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(shelter_water, 2)
+        self.assertEqual(shelter_water_amount, 2)
     
     def testUpdateBudgetSheetCountryNoPermission(self):
         border_station = BorderStationFactory()
@@ -342,7 +342,7 @@ class BudgetCalcApiTests(WebTest):
         budget_id = response.data.get('id')
         self.assertEqual(response.status_code, 200)
 
-        response = client.put('/api/budget/' + str(budget_id) + '/', {"border_station": self.border_station.pk, "shelter_water": 2, "month_year": "2017-04-15T23:53:08.996000Z"})
+        response = client.put('/api/budget/' + str(budget_id) + '/', {"border_station": self.border_station.pk, "shelter_water_amount": 2, "month_year": "2017-04-15T23:53:08.996000Z"})
         budget_id = response.data.get('id')
         self.assertEqual(response.status_code, 403)
     
@@ -363,16 +363,16 @@ class BudgetCalcApiTests(WebTest):
         budget_id = response.data.get('id')
         self.assertEqual(response.status_code, 200)
 
-        response = client.put('/api/budget/' + str(budget_id) + '/', {"border_station": self.border_station.pk, "shelter_water": 2, "month_year": "2017-04-15T23:53:08.996000Z"})
+        response = client.put('/api/budget/' + str(budget_id) + '/', {"border_station": self.border_station.pk, "shelter_water_amount": 2, "month_year": "2017-04-15T23:53:08.996000Z"})
         budget_id = response.data.get('id')
         self.assertEqual(response.status_code, 200)
 
         response = client.get('/api/budget/' + str(budget_id) + '/')
 
-        shelter_water = response.data["shelter_water"]
+        shelter_water_amount = response.data["shelter_water_amount"]
         self.assertEqual(response.data.get('id'), budget_id)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(shelter_water, 2)
+        self.assertEqual(shelter_water_amount, 2)
     
     def testUpdateBudgetSheetStationNoPermission(self):
         border_station = BorderStationFactory()
@@ -392,7 +392,7 @@ class BudgetCalcApiTests(WebTest):
         budget_id = response.data.get('id')
         self.assertEqual(response.status_code, 200)
 
-        response = client.put('/api/budget/' + str(budget_id) + '/', {"border_station": self.border_station.pk, "shelter_water": 2, "month_year": "2017-04-15T23:53:08.996000Z"})
+        response = client.put('/api/budget/' + str(budget_id) + '/', {"border_station": self.border_station.pk, "shelter_water_amount": 2, "month_year": "2017-04-15T23:53:08.996000Z"})
         budget_id = response.data.get('id')
         self.assertEqual(response.status_code, 403)
 
