@@ -49,7 +49,8 @@ z3c.rml docs can be found on their github page: https://github.com/zopefoundatio
             fontName="Helvetica-Bold"
             fontSize="14"/>
         <blockTableStyle id="staffGrid">
-            <lineStyle kind="grid"  colorName="black" thickness="1" start="0,0" stop="-4,-1" />
+            <lineStyle kind="grid"  colorName="black" thickness="1" start="0,0" stop="-5,-1" />
+            <lineStyle kind="grid"  colorName="black" thickness="2" start="-4,0" stop="-4,-1" />
             <lineStyle kind="grid"  colorName="green" thickness="2" start="-3,0" stop="-3,-1" />
             <lineStyle kind="grid"  colorName="red" thickness="2" start="-2,0" stop="-2,-1" />
             <lineStyle kind="grid"  colorName="black" thickness="2" start="-1,0" stop="-1,-1" />

@@ -179,14 +179,14 @@ class MoneyDistributionFormHelper:
 
     @property
     def salary_and_benefit_items(self):
-        items = [BudgetLineItem('Staff salaries & benefits (breakdown on page 1)', self.staff_data.salaries_and_benefits_total)]
+        items = [BudgetLineItem('Salaries & benefits (breakdown on page 1)', self.staff_data.salaries_and_benefits_total)]
         return items + self.get_other_items(BorderStationBudgetCalculation.STAFF_BENEFITS)
 
     @property
     def communication_items(self):
         items = []
         if self.budget.communication_chair:
-            items.append(BudgetLineItem('Chair', self.budget.communication_chair_amount))
+            items.append(BudgetLineItem('SC Chair', self.budget.communication_chair_amount))
         items.append(BudgetLineItem('Staff Communication', self.staff_data.communication_total))
         return items + self.get_other_items(BorderStationBudgetCalculation.COMMUNICATION)
 
@@ -194,7 +194,7 @@ class MoneyDistributionFormHelper:
     def travel_items(self):
         items = []
         if self.budget.travel_chair_with_bike:
-            items.append(BudgetLineItem('Chair', self.budget.travel_chair_with_bike_amount))
+            items.append(BudgetLineItem('SC Chair', self.budget.travel_chair_with_bike_amount))
         items.append(BudgetLineItem('Staff Travel', self.staff_data.travel_total))
         return items + self.get_other_items(BorderStationBudgetCalculation.TRAVEL)
 
@@ -203,7 +203,7 @@ class MoneyDistributionFormHelper:
         items = []
         intercepts_total = self.budget.administration_intercepts_total()
         if intercepts_total > 0:
-            items.append(BudgetLineItem('Intercepts', intercepts_total))
+            items.append(BudgetLineItem('Stationary', intercepts_total))
         meetings_total = self.budget.administration_meetings_total()
         if meetings_total > 0:
             items.append(BudgetLineItem('Meetings', meetings_total))
