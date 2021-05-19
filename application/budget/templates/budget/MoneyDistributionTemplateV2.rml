@@ -47,7 +47,7 @@ z3c.rml docs can be found on their github page: https://github.com/zopefoundatio
             />    
         <paraStyle name="monthlyTotal"
             fontName="Helvetica-Bold"
-            fontSize="14"
+            fontSize="12"
             spaceAfter="7"/>
         <paraStyle name="Notes"
             spaceAfter="7"/>
@@ -135,7 +135,7 @@ z3c.rml docs can be found on their github page: https://github.com/zopefoundatio
 
         <spacer length="5"/>
         <para style="monthlyTotal">
-            <b><u>Monthly Total:</u></b> <font color="#c00000">{{ total|intcomma }}</font>
+            <b><u>Monthly Distribution Subtotal:</u></b> <font color="#c00000">{{ total|intcomma }}</font>
         </para>
         <spacer length="10"/>
         <para style="Notes">
