@@ -88,26 +88,6 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
                     
                 location_staff.work_fraction = staff_value
                 location_staff.save()
-            
-            arrests = request.data['arrests']
-            if arrests is None:
-                try:
-                    location_statistics = LocationStatistics.objects.get(location=other_location, year_month=year_month)
-                    location_statistics.arrests = None
-                    location_statistics.save()
-                except ObjectDoesNotExist:
-                    # LocationStatistics does not exist and new valuse are blank - so ignore
-                    pass
-            else:
-                try:
-                    location_statistics = LocationStatistics.objects.get(location=other_location, year_month=year_month)
-                except ObjectDoesNotExist:
-                    location_statistics = LocationStatistics()
-                    location_statistics.location = other_location
-                    location_statistics.year_month = year_month
-                
-                location_statistics.arrests = arrests
-                location_statistics.save()
         
         station_statistics.save()
         serializer = StationStatisticsSerializer(station_statistics, context={'request': request})
@@ -196,6 +176,9 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
         current_date = datetime.datetime.now()
         month = current_date.month
         year = current_date.year
+        next_month = current_date
+        next_month.replace(day=1)
+        
         if (current_date.day < 6):
             month -= 2
         else:
