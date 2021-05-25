@@ -327,7 +327,7 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
     
     def retrieve_location_statistics(self, request, station_id, year_month):
         station = BorderStation.objects.get(id=station_id)
-        results = LocationStatistics.objects.filter(location__border_station__id=station_id, year_month=year_month)
+        results = LocationStatistics.objects.filter(location__border_station__id=station_id, location__location_type='monitoring', year_month=year_month)
         current_locations = []
         for result in results:
             current_locations.append(result.location)
