@@ -142,6 +142,7 @@ urlpatterns = [
         url(r'^location-staff/(?P<station_id>\d+)/(?P<year_month>\d+)/$', StationStatisticsViewSet.as_view({'get': 'retrieve_location_staff'}), name='retrieveLocationStaff'),
         url(r'^location-staff/$', StationStatisticsViewSet.as_view({'put': 'update_location_staff'}), name='setLocationStaff'),
         url(r'^location-statistics/(?P<station_id>\d+)/(?P<year_month>\d+)/$', StationStatisticsViewSet.as_view({'get': 'retrieve_location_statistics'}), name='retrieveLocationStatistics'),
+        url(r'^location-statistics/$', StationStatisticsViewSet.as_view({'put': 'update_location_statistics'}), name='setLocationStatistics'),
         url(r'^exchange-rate/(?P<country_id>\d+)/(?P<year_month>\d+)/$', StationStatisticsViewSet.as_view({'get': 'get_exchange_rate'}), name='getExchangeRate'),
         url(r'^exchange-rate/$', StationStatisticsViewSet.as_view({'put': 'update_exchange_rate'}), name='updateExchangeRate'),
         
