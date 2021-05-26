@@ -69,6 +69,8 @@ class LocationViewSet(BorderStationRestAPI):
         self.object_list = self.filter_queryset(self.get_queryset().filter(border_station=self.kwargs['pk']))
         if request.GET.get('include_inactive') is None:
             self.object_list = self.object_list.filter(active=True)
+        if request.GET.get('location_type') is not None:
+            self.object_list = self.object_list.filter(location_type=request.GET.get('location_type'))
         self.object_list = self.object_list.order_by('-active', 'name')
         serializer = self.get_serializer(self.object_list, many=True)
         return Response(serializer.data)
