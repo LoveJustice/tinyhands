@@ -27,7 +27,7 @@ class CifCommon(BaseForm):
     
     # Main PV
     main_pv = models.ForeignKey(Person, null=True, blank=True)
-    other_possible_victims = models.CharField(max_length=126, null=True)
+    other_possible_victims = models.BooleanField('other possible victims', default=False)
     
     # Recruitment
     recruited_agency = models.BooleanField(default=False)
