@@ -1,11 +1,11 @@
 from django.conf.urls import url
 from budget.views import \
     BudgetViewSet, \
+    StaffBudgetItemViewSet, \
     OtherItemsViewSet, \
     MoneyDistribution, \
     MDFExportViewSet, \
     budget_sheet_by_date, \
-    StaffSalaryViewSet, \
     get_top_table_data
 
 list_methods = {'get': 'list', 'post': 'create'}
@@ -21,9 +21,9 @@ urlpatterns = [
 
         url(r'^budget/(?P<pk>\d+)/(?P<month>\d+)/(?P<year>\d+)/$', budget_sheet_by_date, name="rest_api_budget_sheet_by_date"),
 
-        url(r'^budget/staff_salary/$', StaffSalaryViewSet.as_view(list_methods), name="rest_api_staff_salary_list_api"),
-        url(r'^budget/(?P<parent_pk>\d+)/staff_salary/$', StaffSalaryViewSet.as_view({'get': 'budget_calc_retrieve'}), name="rest_api_staff_salary_detail_api"),
-        url(r'^budget/(?P<parent_pk>\d+)/staff_salary/(?P<pk>\d+)/$', StaffSalaryViewSet.as_view({'put': 'update', 'delete': 'destroy'}), name="rest_api_staff_salary_detail_api"),
+        url(r'^budget/staff_item/$', StaffBudgetItemViewSet.as_view(list_methods), name="rest_api_staff_item_list_api"),
+        url(r'^budget/(?P<parent_pk>\d+)/staff_item/$', StaffBudgetItemViewSet.as_view({'get': 'budget_calc_retrieve'}), name="rest_api_staff_item_detail_api"),
+        url(r'^budget/(?P<parent_pk>\d+)/staff_item/(?P<pk>\d+)/$', StaffBudgetItemViewSet.as_view({'put': 'update', 'delete': 'destroy'}), name="rest_api_staff_item_detail_api"),
 
         url(r'^mdf/(?P<pk>\d+)/$', MoneyDistribution.as_view({'get': 'retrieve', 'post': 'send_emails'}), name="MDFViewSet"),
         url(r'^mdf/(?P<uuid>[0-9A-Fa-f-]+)/pdf/$', MDFExportViewSet.as_view({'get': 'get_mdf_pdf'}, permission_classes=[]), name="MdfPdf"),
