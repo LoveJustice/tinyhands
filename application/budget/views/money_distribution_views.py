@@ -11,7 +11,7 @@ from rest_framework.response import Response
 from django.db.models import Q, Exists, OuterRef
 from templated_email import send_templated_mail
 
-from budget.models import BorderStationBudgetCalculation, StaffSalary
+from budget.models import BorderStationBudgetCalculation
 from dataentry.models import BorderStation, UserLocationPermission
 from rest_api.authentication_expansion import HasPermission
 from static_border_stations.models import Staff, CommitteeMember

@@ -124,7 +124,7 @@ class Command(BaseCommand):
             # Budget
             try:
                 budget = BorderStationBudgetCalculation.objects.get(border_station=station, month_year__year=year, month_year__month=month)
-                entry.budget = budget.station_total()
+                entry.budget = budget.station_total() + budget.past_month_sent_total()
             except ObjectDoesNotExist:
                 pass
             
