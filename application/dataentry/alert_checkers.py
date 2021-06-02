@@ -357,7 +357,7 @@ class FormAlertChecker:
     
     def trafficker_name_match(self):
         my_interceptee_class = None
-        form_categories = FormCategory.objects.filter(name='Interceptees', form__form_type__name='IRF')
+        form_categories = FormCategory.objects.filter(name='People', form__form_type__name='IRF')
         people_dict = {}
         for form_category in form_categories:
             storage = form_category.storage

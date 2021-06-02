@@ -13,6 +13,7 @@ from dataentry.views import IndicatorsViewSet
 from dataentry.views import BorderStationFormViewSet
 from dataentry.views import StationStatisticsViewSet
 from dataentry.views import LegalCaseFormViewSet
+from dataentry.views import ClientDiagnosticViewSet
 from help.views import VideoViewSet
 
 list = {'get': 'list', 'post': 'create'}
@@ -148,6 +149,7 @@ urlpatterns = [
         #Audits
         url(r'^audit/$', AuditViewSet.as_view(list), name='Audit'),
         url(r'^audit/(?P<pk>\d+)/$', AuditViewSet.as_view(detail), name='Auditdetail'),
+        url(r'^audit/sample-size/$', AuditViewSet.as_view({'get':'sample_size'}), name='Auditdetail'),
         url(r'^audit-notes/(?P<pk>\d+)/$', AuditViewSet.as_view({'put':'update_notes'}), name='AuditNotes'),
         url(r'^audit-sample/$', AuditSampleViewSet.as_view(list), name='Audit'),
         url(r'^audit-sample/(?P<pk>\d+)/$', AuditSampleViewSet.as_view(detail), name='Auditdetail'),
@@ -155,4 +157,6 @@ urlpatterns = [
         url(r'^legal-case/$', LegalCaseFormViewSet.as_view(list), name='legalCase'),
         url(r'^legal-case/(?P<station_id>\d+)/(?P<pk>\d+)', LegalCaseFormViewSet.as_view({'get': 'my_retrieve', 'put': 'update', 'delete': 'destroy'}), name='legalCaseDetail'),
         url(r'^legal-case/blank/(?P<station_id>\d+)', LegalCaseFormViewSet.as_view({'get': 'retrieve_blank_form'}), name='legalCaseBlank'),
+        
+         url(r'^diagnostic/$', ClientDiagnosticViewSet.as_view(list), name='Diagnostic'),
 ]

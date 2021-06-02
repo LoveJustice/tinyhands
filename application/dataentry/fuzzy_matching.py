@@ -93,7 +93,7 @@ def pvot_ids():
     vif_victim_ids = VictimInterview.objects.all().values_list('victim', flat=True)
     victim_ids = list(chain(irf_victim_ids, vif_victim_ids))
     
-    form_categories = FormCategory.objects.filter(form__form_type__name='IRF', name='Interceptees')
+    form_categories = FormCategory.objects.filter(form__form_type__name='IRF', name='People')
     for form_category in form_categories:
         mod = __import__(form_category.storage.module_name, fromlist=[form_category.storage.form_model_name])
         interceptee_class = getattr(mod, form_category.storage.form_model_name, None)           
@@ -127,7 +127,7 @@ def suspect_ids():
     irf_suspect_ids = Interceptee.objects.filter(person__role = 'Suspect').values_list('person', flat=True)
     suspect_ids = list(irf_suspect_ids)
 
-    form_categories = FormCategory.objects.filter(form__form_type__name='IRF', name='Interceptees')
+    form_categories = FormCategory.objects.filter(form__form_type__name='IRF', name='People')
     for form_category in form_categories:
         mod = __import__(form_category.storage.module_name, fromlist=[form_category.storage.form_model_name])
         interceptee_class = getattr(mod, form_category.storage.form_model_name, None)           

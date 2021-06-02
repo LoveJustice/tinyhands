@@ -22,10 +22,6 @@ class Command(BaseCommand):
             type=int,
         )
         
-    def location_tag(self, station, name):
-        return station.station_code + "_" + name.lower()
-
-        
     def handle(self, *args, **options):
         current_date = datetime.datetime.now()
         
@@ -74,15 +70,12 @@ class Command(BaseCommand):
             
             exchange.save()
             
-        
-        location_map = {}
         for location_statistics in LocationStatistics.objects.filter(year_month=year_month):
-            if location_statistics.location is not None:
-                location_tag = self.location_tag(location_statistics.location.border_station, location_statistics.location.name)
-            else:
-                location_tag = self.location_tag(location_statistics.location.border_station, '_other')
             location_statistics.intercepts = 0
-            location_map[location_tag] = location_statistics
+            location_statistics.intercepts_evidence = 0
+            location_statistics.intercepts_high_risk = 0
+            location_statistics.intercepts_invalid = 0
+            location_statistics.save()
         
         intercepts = IntercepteeCommon.objects.filter(
                 person__role = 'PVOT',
@@ -90,29 +83,30 @@ class Command(BaseCommand):
                 interception_record__logbook_second_verification_date__lt=end_date
                 )
         for intercept in intercepts:
-            location_tag = self.location_tag(intercept.interception_record.station, intercept.interception_record.location)
-            if location_tag not in location_map:
-                try:
-                    location = Location.objects.get(border_station=intercept.interception_record.station, name__iexact=intercept.interception_record.location)
-                    location_statistics = LocationStatistics()
-                    location_statistics.year_month = year_month
-                    location_statistics.location = location
-                    location_statistics.intercepts = 0
-                    location_map[location_tag] = location_statistics
-                except ObjectDoesNotExist:
-                    location = Location.get_or_create_other_location(intercept.interception_record.station)
-                    location_tag = self.location_tag(intercept.interception_record.station, location.name)
-                    if location_tag not in location_map:
-                        location_statistics = LocationStatistics()
-                        location_statistics.year_month = year_month
-                        location_statistics.location = location
-                        location_statistics.intercepts = 0
-                        location_map[location_tag] = location_statistics
-                
-            location_map[location_tag].intercepts += 1
-        
-        for location_tag in location_map.keys():
-            location_map[location_tag].save()
+            try:
+                location = Location.objects.get(border_station=intercept.interception_record.station, name__iexact=intercept.interception_record.location)
+            except ObjectDoesNotExist:
+                location = Location.get_or_create_other_location(intercept.interception_record.station)
+            
+            try:
+                location_statistics = LocationStatistics.objects.get(location=location, year_month = year_month)
+            except ObjectDoesNotExist:
+                location_statistics = LocationStatistics()
+                location_statistics.year_month = year_month
+                location_statistics.location = location
+                location_statistics.intercepts = 0
+                location_statistics.intercepts_evidence = 0
+                location_statistics.intercepts_high_risk = 0
+                location_statistics.intercepts_invalid = 0
+            
+            location_statistics.intercepts += 1
+            if intercept.interception_record.logbook_second_verification.startswith('Evidence'):
+                location_statistics.intercepts_evidence += 1
+            elif intercept.interception_record.logbook_second_verification.startswith('High'):
+                location_statistics.intercepts_high_risk += 1
+            elif intercept.interception_record.logbook_second_verification.startswith('Should not'):
+                location_statistics.intercepts_invalid += 1
+            location_statistics.save() 
         
         border_stations = BorderStation.objects.all().order_by('operating_country')
         for station in border_stations:
@@ -122,6 +116,8 @@ class Command(BaseCommand):
                 entry = StationStatistics()
                 entry.year_month = year_month
                 entry.station = station
+                locations = Location.objects.filter(border_station = station, location_type = 'monitoring', active = True)
+                entry.active_monitor_locations = len(locations)
                 entry.save()
             
             # Collections

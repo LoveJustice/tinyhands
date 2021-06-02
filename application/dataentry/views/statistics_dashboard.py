@@ -23,7 +23,13 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated, )
     
     def retrieve_country_data(self, request, country_id, year_month):
-        results = StationStatistics.objects.filter(station__operating_country__id=country_id, year_month=year_month).order_by('station__non_transit', 'station__station_name')
+        results = []
+        results_qs = StationStatistics.objects.filter(station__operating_country__id=country_id, year_month=year_month, station__non_transit=False).order_by('station__station_name')
+        for entry in results_qs:
+            results.append(entry)
+        results_qs = StationStatistics.objects.filter(station__operating_country__id=country_id, year_month=year_month, station__non_transit=True).order_by('station__station_name')
+        for entry in results_qs:
+            results.append(entry)
         
         serializer = StationStatisticsSerializer(results , many=True, context={'request': request})
         return Response(serializer.data)
@@ -31,10 +37,20 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
     def update_station_data(self, request):
         station_id = request.data['station']
         year_month = request.data['year_month']
-        budget = request.data['budget']
-        gospel = request.data['gospel']
-        empowerment = request.data['empowerment']
         station = BorderStation.objects.get(id=station_id)
+        if request.data['budget'] == '':
+            budget = None
+        else:
+            budget = request.data['budget']
+        if request.data['gospel'] == '':
+            gospel = None
+        else:
+            gospel = request.data['gospel']
+        if request.data['empowerment'] == '':
+            empowerment = None
+        else:
+            empowerment = request.data['empowerment']
+            
         try:
             station_statistics = StationStatistics.objects.get(station=station, year_month=year_month)
         except ObjectDoesNotExist:
@@ -49,11 +65,14 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
             # if enable_all_lcoations is not true, then the staff and arrests can be updated here
             other_location = Location.get_or_create_other_location(station)
             general_staff = Staff.get_or_create_general_staff(station)
-            staff_value = request.data['staff']
-            if staff_value is None or staff_value == '':
+            if request.data['staff'] == '':
+                staff_value = None
+            else:
+                staff_value = request.data['staff']
+            if staff_value is None:
                 try:
                     location_staff = LocationStaff.objects.get(location=other_location, staff=general_staff, year_month=year_month)
-                    location_staff.work_fraction = staff_value
+                    location_staff.work_fraction = None
                     location_staff.save()
                 except ObjectDoesNotExist:
                     # LocationStaff does not exist and new values are blank - so ignore
@@ -71,10 +90,10 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
                 location_staff.save()
             
             arrests = request.data['arrests']
-            if arrests is None or arrests == '':
+            if arrests is None:
                 try:
                     location_statistics = LocationStatistics.objects.get(location=other_location, year_month=year_month)
-                    location_statistics.arrests = arrests
+                    location_statistics.arrests = None
                     location_statistics.save()
                 except ObjectDoesNotExist:
                     # LocationStatistics does not exist and new valuse are blank - so ignore
@@ -89,7 +108,7 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
                 
                 location_statistics.arrests = arrests
                 location_statistics.save()
-                
+        
         station_statistics.save()
         serializer = StationStatisticsSerializer(station_statistics, context={'request': request})
         return Response(serializer.data)
@@ -297,6 +316,15 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
         location_id = request.data['location']
         staff_id = request.data['staff']
         year_month = request.data['year_month']
+        location = Location.objects.get(id=location_id)
+        try:
+            station_statistics = StationStatistics.objects.get(station=location.border_station, year_month=year_month)
+        except ObjectDoesNotExist:
+            station_statistics = StationStatistics()
+            station_statistics.station = location.border_station
+            station_statistics.year_month = year_month
+            station_statistics.save()
+        
         try:
             location_staff = LocationStaff.objects.get(location__id=location_id, staff__id=staff_id, year_month=year_month)
         except ObjectDoesNotExist:
@@ -305,24 +333,31 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
             location_staff.location = Location.objects.get(id=location_id)
             location_staff.staff = Staff.objects.get(id=staff_id)
         
-        location_staff.work_fraction = request.data['work_fraction']
+        if request.data['work_fraction'] == '':
+            work_fraction = None
+        else:
+            work_fraction = request.data['work_fraction']
+        location_staff.work_fraction = work_fraction
         location_staff.save()
         serializer = LocationStaffSerializer(location_staff, context={'request': request})
         return Response(serializer.data)
     
     def retrieve_location_statistics(self, request, station_id, year_month):
         station = BorderStation.objects.get(id=station_id)
-        results = LocationStatistics.objects.filter(location__border_station__id=station_id, year_month=year_month)
+        results = LocationStatistics.objects.filter(location__border_station__id=station_id, location__location_type='monitoring', year_month=year_month)
         current_locations = []
         for result in results:
             current_locations.append(result.location)
-        staff_entries = LocationStaff.objects.filter(location__border_station__id=station_id, year_month=year_month).exclude(location__in=current_locations)
+        staff_entries = LocationStaff.objects.filter(location__border_station__id=station_id, year_month=year_month).exclude(location__in=current_locations).order_by('location')
         if len(staff_entries) > 0:
+            last_location = None
             for entry in staff_entries:
-                location_statistics = LocationStatistics()
-                location_statistics.location = entry.location
-                location_statistics.year_month = entry.year_month
-                location_statistics.save()
+                if entry.location != last_location:
+                    last_location = entry.location
+                    location_statistics = LocationStatistics()
+                    location_statistics.location = entry.location
+                    location_statistics.year_month = entry.year_month
+                    location_statistics.save()
             results = LocationStatistics.objects.filter(location__border_station__id=station_id, year_month=year_month)
             
         serializer = LocationStatisticsSerializer(results, many=True, context={'request':request})
@@ -331,11 +366,22 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
     def update_location_statistics(self, request):
         location_id = request.data['location']
         year_month = request.data['year_month']
-        arrests = request.data['arrests']
+        location = Location.objects.get(id=location_id)
+        try:
+            station_statistics = StationStatistics.objects.get(station=location.border_station, year_month=year_month)
+        except ObjectDoesNotExist:
+            station_statistics = StationStatistics()
+            station_statistics.station = location.border_station
+            station_statistics.year_month = year_month
+            station_statistics.save()
+            
+        if request.data['arrests'] == '':
+            arrests = None
+        else:
+            arrests = request.data['arrests']
         try:
             location_statistics = LocationStatistics.objects.get(location__id=location_id, year_month=year_month)
         except ObjectDoesNotExist:
-            station = BorderStation.objects.get(id=station_id)
             if location_id is None:
                 location = None
             else:

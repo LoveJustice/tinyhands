@@ -10,6 +10,7 @@ from dataentry.models import AddressType, DocumentType, PhoneType, SocialMediaTy
 from dataentry.models import StationStatistics, LocationStatistics, LocationStaff, CountryExchange
 from dataentry.models import PendingMatch, Audit, AuditSample, LegalCase, LegalCaseSuspect, LegalCaseVictim
 from dataentry.models import GospelVerification
+from dataentry.models import ClientDiagnostic
 from static_border_stations.serializers import LocationSerializer
 from dataentry.form_data import FormData
 
@@ -102,7 +103,7 @@ class BorderStationSerializer(serializers.ModelSerializer):
         interceptee_class = None
         form = FormData.find_form('IRF', obj.id)
         if form is not None:
-            interceptee_class = FormData.get_form_card_class(form, 'Interceptees')
+            interceptee_class = FormData.get_form_card_class(form, 'People')
         
         return interceptee_class
 
@@ -629,7 +630,7 @@ class InterceptionAlertSerializer(serializers.ModelSerializer):
 class PermissionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Permission
-        fields = ['id', 'permission_group', 'action', 'min_level']
+        fields = ['id', 'permission_group', 'action', 'min_level', 'display_order']
         
 class UserLocationPermissionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -864,7 +865,7 @@ class AuditSerializer(serializers.ModelSerializer):
                 if value is not None:
                     total_incorrect += value
             
-            if (total_questions - total_incorrect)/total_questions >= 0.95:
+            if total_questions > 0 and (total_questions - total_incorrect)/total_questions >= 0.95:
                 passed += 1
         return passed
     
@@ -964,4 +965,10 @@ class GospelVerificationSerializer(serializers.ModelSerializer):
             return forms[0].form_name
         else:
             return None
+
+class ClientDiagnosticSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = '__all__'
+        model = ClientDiagnostic
+
     

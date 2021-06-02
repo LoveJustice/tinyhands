@@ -134,7 +134,7 @@ def top_table_data(pk, month, year, budget_sheets):
     staff_count = border_station.staff_set.count()
     
     form = Form.current_form('IRF',border_station.id)
-    form_categories = FormCategory.objects.filter(form=form, name='Interceptees')
+    form_categories = FormCategory.objects.filter(form=form, name='People')
     if len(form_categories) < 0 or form_categories[0].storage is None:
         return None
     
