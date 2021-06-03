@@ -344,11 +344,11 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
     
     def retrieve_location_statistics(self, request, station_id, year_month):
         station = BorderStation.objects.get(id=station_id)
-        results = LocationStatistics.objects.filter(location__border_station__id=station_id, location__location_type='monitoring', year_month=year_month)
+        results = LocationStatistics.objects.filter(location__border_station__id=station_id, year_month=year_month)
         current_locations = []
         for result in results:
             current_locations.append(result.location)
-        staff_entries = LocationStaff.objects.filter(location__border_station__id=station_id, location__location_type='monitoring', year_month=year_month).exclude(location__in=current_locations).order_by('location')
+        staff_entries = LocationStaff.objects.filter(location__border_station__id=station_id, year_month=year_month).exclude(location__in=current_locations).order_by('location')
         if len(staff_entries) > 0:
             last_location = None
             for entry in staff_entries:
@@ -358,7 +358,7 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
                     location_statistics.location = entry.location
                     location_statistics.year_month = entry.year_month
                     location_statistics.save()
-            results = LocationStatistics.objects.filter(location__border_station__id=station_id, location__location_type='monitoring', year_month=year_month)
+            results = LocationStatistics.objects.filter(location__border_station__id=station_id, year_month=year_month)
             
         serializer = LocationStatisticsSerializer(results, many=True, context={'request':request})
         return Response(serializer.data)
