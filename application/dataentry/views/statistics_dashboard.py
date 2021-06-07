@@ -290,7 +290,6 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
     
     def retrieve_location_staff(self, request, station_id, year_month):
         station = BorderStation.objects.get(id=station_id)
-        Location.get_or_create_other_location(station)
         results = LocationStaff.objects.filter(location__border_station__id=station_id, year_month=year_month)
         serializer = LocationStaffSerializer(results, many=True, context={'request': request})
         return Response(serializer.data)
