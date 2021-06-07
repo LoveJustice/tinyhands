@@ -1,5 +1,5 @@
 from django.contrib import admin
-from budget.models import BorderStationBudgetCalculation, OtherBudgetItemCost, StaffSalary
+from budget.models import BorderStationBudgetCalculation, OtherBudgetItemCost
 
 
 class BorderStationBudgetCalculationAdminModel(admin.ModelAdmin):
@@ -14,15 +14,8 @@ class OtherBudgetItemCostAdminModel(admin.ModelAdmin):
     list_display = ['budget_item_parent', 'form_section', 'name', 'cost']
 
 
-class StaffSalaryAdminModel(admin.ModelAdmin):
-    model = StaffSalary
-    search_fields = ['budget_calc_sheet', 'salary', 'staff_person']
-    list_display = ['budget_calc_sheet', 'salary', 'staff_person']
-
-
 admin.site.register(BorderStationBudgetCalculation, BorderStationBudgetCalculationAdminModel)
 admin.site.register(OtherBudgetItemCost, OtherBudgetItemCostAdminModel)
-admin.site.register(StaffSalary, StaffSalaryAdminModel)
 
 
 

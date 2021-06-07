@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from budget.models import BorderStationBudgetCalculation, OtherBudgetItemCost, StaffSalary
+from budget.models import BorderStationBudgetCalculation, OtherBudgetItemCost, StaffBudgetItem
 from dataentry.serializers import BorderStationSerializer
 from static_border_stations.models import Staff
 
@@ -40,16 +40,23 @@ class OtherBudgetItemCostSerializer(serializers.ModelSerializer):
     class Meta:
         fields = '__all__'
         model = OtherBudgetItemCost
+        
 
-
-class StaffSalarySerializer(serializers.ModelSerializer):
+class StaffBudgetItemSerializer(serializers.ModelSerializer):
     class Meta:
-        fields = '__all__'
-        model = StaffSalary
+        model = StaffBudgetItem
+        fields = [field.name for field in model._meta.fields] # all the model fields
+        fields = fields + ['staff_first_name','staff_last_name','position']
     
-    def to_representation(self, instance):
-        data = super(StaffSalarySerializer, self).to_representation(instance)
-        staff = Staff.objects.get(id=data['staff_person'])
-        data['staff_first_name'] = staff.first_name 
-        data['staff_last_name'] = staff.last_name
-        return data
+    staff_first_name = serializers.SerializerMethodField(read_only=True)
+    staff_last_name = serializers.SerializerMethodField(read_only=True)
+    position = serializers.SerializerMethodField(read_only=True)
+    
+    def get_staff_first_name(self, obj):
+        return obj.staff_person.first_name
+    def get_staff_last_name(self, obj):
+        return obj.staff_person.last_name
+    def get_position(self, obj):
+        return obj.staff_person.position
+        
+        
