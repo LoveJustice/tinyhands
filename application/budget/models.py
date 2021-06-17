@@ -16,6 +16,7 @@ class BorderStationBudgetCalculation(models.Model):
     STAFF_BENEFITS = 8
     ADMINISTRATION = 10
     PAST_MONTH_SENT = 11
+    LIMBO = 12
 
     mdf_uuid = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
 
@@ -128,14 +129,12 @@ class BorderStationBudgetCalculation(models.Model):
     food_and_gas_number_of_intercepted_girls_multiplier_before = models.PositiveIntegerField(default=100)
     food_and_gas_number_of_intercepted_girls_multiplier_after = models.PositiveIntegerField(default=3)
     food_and_gas_limbo_girls_multiplier = models.PositiveIntegerField(default=100)
-    food_and_gas_number_of_limbo_girls = models.PositiveIntegerField('# of limbo girls', default=0)
-    food_and_gas_number_of_days = models.PositiveIntegerField('# of days', default=0)
 
     def food_and_gas_intercepted_girls_total(self):
         return self.food_and_gas_number_of_intercepted_girls * self.food_and_gas_number_of_intercepted_girls_multiplier_before * self.food_and_gas_number_of_intercepted_girls_multiplier_after
 
     def food_and_gas_limbo_girls_total(self):
-        return self.food_and_gas_limbo_girls_multiplier * self.food_and_gas_number_of_limbo_girls * self.food_and_gas_number_of_days
+        return self.food_and_gas_limbo_girls_multiplier * self.other_items_total(self.LIMBO)
 
     def food_and_gas_total(self):
         total = 0
@@ -148,8 +147,6 @@ class BorderStationBudgetCalculation(models.Model):
     awareness_contact_cards_amount = models.PositiveIntegerField(default=0)
     awareness_awareness_party_boolean = models.BooleanField("Awareness Party", default=False)
     awareness_awareness_party = models.PositiveIntegerField(default=0)
-    awareness_sign_boards_boolean = models.BooleanField("Sign Boards", default=False)
-    awareness_sign_boards = models.PositiveIntegerField(default=0)
 
     def awareness_extra_items_total(self):
         return self.other_items_total(self.AWARENESS)
@@ -160,8 +157,6 @@ class BorderStationBudgetCalculation(models.Model):
             total += self.awareness_contact_cards_amount
         if self.awareness_awareness_party_boolean:
             total += self.awareness_awareness_party
-        if self.awareness_sign_boards_boolean:
-            total += self.awareness_sign_boards
         return total
 
     def salary_total(self):
@@ -218,7 +213,8 @@ class OtherBudgetItemCost(models.Model):
         (BorderStationBudgetCalculation.COMMUNICATION, 'Communication'),
         (BorderStationBudgetCalculation.STAFF_BENEFITS, 'Staff & Benefits'),
         (BorderStationBudgetCalculation.ADMINISTRATION, 'Administration'),
-        (BorderStationBudgetCalculation.PAST_MONTH_SENT, 'Past Month Sent Money')
+        (BorderStationBudgetCalculation.PAST_MONTH_SENT, 'Past Month Sent Money'),
+        (BorderStationBudgetCalculation.LIMBO, 'Limbo Potential Victims')
     ]
     name = models.CharField(max_length=255, blank=False)
     cost = models.IntegerField(default=0, blank=False)

@@ -4,7 +4,7 @@ from time import strftime
 
 from budget.models import BorderStationBudgetCalculation
 
-BudgetLineItem = namedtuple('budgetItem', ['name', 'value'])
+BudgetLineItem = namedtuple('budgetItem', ['name', 'value', 'footnote'])
 
 
 class BudgetTable:
@@ -179,23 +179,23 @@ class MoneyDistributionFormHelper:
 
     @property
     def salary_and_benefit_items(self):
-        items = [BudgetLineItem('Salaries & benefits (breakdown on page 1)', self.staff_data.salaries_and_benefits_total)]
+        items = [BudgetLineItem('Salaries & benefits (breakdown on page 1)', self.staff_data.salaries_and_benefits_total,'')]
         return items + self.get_other_items(BorderStationBudgetCalculation.STAFF_BENEFITS)
 
     @property
     def communication_items(self):
         items = []
         if self.budget.communication_chair:
-            items.append(BudgetLineItem('SC Chair', self.budget.communication_chair_amount))
-        items.append(BudgetLineItem('Staff Communication', self.staff_data.communication_total))
+            items.append(BudgetLineItem('SC Chair', self.budget.communication_chair_amount,''))
+        items.append(BudgetLineItem('Staff Communication', self.staff_data.communication_total,''))
         return items + self.get_other_items(BorderStationBudgetCalculation.COMMUNICATION)
 
     @property
     def travel_items(self):
         items = []
         if self.budget.travel_chair_with_bike:
-            items.append(BudgetLineItem('SC Chair', self.budget.travel_chair_with_bike_amount))
-        items.append(BudgetLineItem('Staff Travel', self.staff_data.travel_total))
+            items.append(BudgetLineItem('SC Chair', self.budget.travel_chair_with_bike_amount,''))
+        items.append(BudgetLineItem('Staff Travel', self.staff_data.travel_total,''))
         return items + self.get_other_items(BorderStationBudgetCalculation.TRAVEL)
 
     @property
@@ -203,21 +203,21 @@ class MoneyDistributionFormHelper:
         items = []
         intercepts_total = self.budget.administration_intercepts_total()
         if intercepts_total > 0:
-            items.append(BudgetLineItem('Stationary', intercepts_total))
+            items.append(BudgetLineItem('Stationary', intercepts_total,''))
         meetings_total = self.budget.administration_meetings_total()
         if meetings_total > 0:
-            items.append(BudgetLineItem('Meetings', meetings_total))
+            items.append(BudgetLineItem('Meetings', meetings_total,''))
         if self.budget.administration_booth:
-            items.append(BudgetLineItem('Booth', self.budget.administration_booth_amount))
+            items.append(BudgetLineItem('Booth', self.budget.administration_booth_amount,''))
         if self.budget.administration_office:
-            items.append(BudgetLineItem('Office', self.budget.administration_office_amount))
+            items.append(BudgetLineItem('Office', self.budget.administration_office_amount,''))
         return items + self.get_other_items(BorderStationBudgetCalculation.ADMINISTRATION)
 
     @property
     def medical_items(self):
         items = []
         if self.budget.medical_last_months_expense > 0:
-            items.append(BudgetLineItem('Expense', self.budget.medical_last_months_expense))
+            items.append(BudgetLineItem('Expense', self.budget.medical_last_months_expense,''))
         return items + self.get_other_items(BorderStationBudgetCalculation.MEDICAL)
 
     @property
@@ -235,25 +235,35 @@ class MoneyDistributionFormHelper:
         if self.budget.shelter_water:
             shelter_rent_and_utilities += self.budget.shelter_water_amount
         if shelter_rent_and_utilities > 0:
-            items.append(BudgetLineItem('Rent (plus utilities)', shelter_rent_and_utilities))
+            items.append(BudgetLineItem('Rent (plus utilities)', shelter_rent_and_utilities,''))
             
         intercepted_girls_total = self.budget.food_and_gas_intercepted_girls_total()
         limbo_girls_total = self.budget.food_and_gas_limbo_girls_total()
         if intercepted_girls_total > 0:
-            items.append(BudgetLineItem('Intercepted Girls', intercepted_girls_total))
+            items.append(BudgetLineItem('Intercepted PVs', intercepted_girls_total,''))
         if limbo_girls_total > 0:
-            items.append(BudgetLineItem('Limbo Girls', limbo_girls_total))
+            items.append(BudgetLineItem('Limbo PVs', limbo_girls_total,'*1'))
         return items + self.get_other_items(BorderStationBudgetCalculation.POTENTIAL_VICTIM_CARE)
+    
+    @property
+    def limbo_footnote(self):
+        footnote = ''
+        if self.budget.other_items_total(BorderStationBudgetCalculation.LIMBO) > 0:
+            for limbo in self.get_other_items(BorderStationBudgetCalculation.LIMBO):
+                if len(footnote) > 0:
+                    footnote += ','
+                footnote += limbo.name + '(' + str(limbo.value) + ')'
+            footnote = '*1:' + footnote
+
+        return footnote
 
     @property
     def awareness_items(self):
         items = []
         if self.budget.awareness_contact_cards:
-            items.append(BudgetLineItem('Contact Cards', self.budget.awareness_contact_cards_amount))
+            items.append(BudgetLineItem('Contact Cards', self.budget.awareness_contact_cards_amount,''))
         if self.budget.awareness_awareness_party_boolean:
-            items.append(BudgetLineItem('Awareness Party', self.budget.awareness_awareness_party))
-        if self.budget.awareness_sign_boards_boolean:
-            items.append(BudgetLineItem('Sign Boards', self.budget.awareness_sign_boards))
+            items.append(BudgetLineItem('Awareness Party', self.budget.awareness_awareness_party,''))
         return items + self.get_other_items(BorderStationBudgetCalculation.AWARENESS)
     
     @property
@@ -262,7 +272,7 @@ class MoneyDistributionFormHelper:
 
     def get_other_items(self, section):
         other_items = self.budget.otherbudgetitemcost_set.filter(form_section=section)
-        return [BudgetLineItem(item.name, item.cost) for item in other_items]
+        return [BudgetLineItem(item.name, item.cost,'') for item in other_items]
 
     @property
     def report_month(self):
