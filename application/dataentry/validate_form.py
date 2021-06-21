@@ -121,6 +121,9 @@ class ValidateForm:
             rv = 1
         elif filter['operation'] == '!=' and answer != filter['value']:
             rv = 1
+        elif filter['operation'] == '~=':
+            if re.match(filter['value'], answer) is not None:
+                rv = 1
         
         return rv     
     
@@ -129,7 +132,8 @@ class ValidateForm:
             category_name = validation.params['category_name']
         else:
             category_name = ''
-        if (getattr(form_data, 'card_dict', None) is None or validation.params is None or 'category_id' not in validation.params or
+        if (getattr(form_data, 'card_dict', None) is None or validation.params is None or 
+                ('category_id' not in validation.params and 'category_name' not in validation.params) or
                 ('min_count' not in validation.params and 'max_count' not in validation.params)):
             tmp_validation = FormValidation()
             tmp_validation.level = validation.level
@@ -137,7 +141,16 @@ class ValidateForm:
             self.add_error_or_warning(category_name, None, tmp_validation)
         else:
             card_count = 0
-            category_id = validation.params['category_id']
+            if 'category_id' in validation.params:
+                category_id = validation.params['category_id']
+            else:
+                category_id = self.find_category_id_by_name(form_data, category_name)
+                if category_id is None:
+                    tmp_validation = FormValidation()
+                    tmp_validation.level = validation.level
+                    tmp_validation.error_warning_message = 'Category name ' + category_name + ' not found:' + validation.error_warning_message
+                    self.add_error_or_warning(category_name, None, tmp_validation)
+                    
             if category_id in form_data.card_dict:
                 for card in form_data.card_dict[category_id]:
                     if 'filter' in validation.params:
@@ -334,6 +347,123 @@ class ValidateForm:
                 else:
                     category_name = self.question_map[question.id]
                 self.add_error_or_warning(category_name, category_index, validation)
+    
+    def find_category_id_by_name(self, form_data, name):
+        if getattr(form_data, 'form_data', None) is None:
+            the_form = form_data
+        else:
+            the_form = form_data.form_data
+        try:
+            form_category = FormCategory.objects.get(form=the_form.form, name=name)
+            category_id = form_category.category.id
+        except ObjectDoesNotExist:
+            category_id = None
+        return category_id
+            
+    
+    def card_reference(self, form_data, validation, validation_questions, category_index, general):
+        regex = '[0-9][0-9,]*'
+        if general or validation_questions[0].question.id not in self.question_map:
+            category_name = ''
+        else:
+            category_name = self.question_map[validation_questions[0].question.id]
+            
+        if getattr(form_data, 'form_data', None) is None:
+            base_form = form_data
+        else:
+            base_form = form_data.form_data
+            
+        if (getattr(base_form, 'card_dict', None) is None or validation.params is None or 'category_name' not in validation.params or
+                'number_field' not in validation.params):
+            tmp_validation = FormValidation()
+            tmp_validation.level = validation.level
+            tmp_validation.error_warning_message = 'Incorrect configuration for validation:' + validation.error_warning_message
+            self.add_error_or_warning(category_name, None, tmp_validation)
+            return
+        
+        number_field = validation.params['number_field']
+        card_category_name = validation.params['category_name']
+        
+        try:
+            form_category = FormCategory.objects.get(form=base_form.form, name=card_category_name)
+            category_id = form_category.category.id
+        except ObjectDoesNotExist:
+            tmp_validation = FormValidation()
+            tmp_validation.level = validation.level
+            tmp_validation.error_warning_message = 'Category name ' + card_category_name + ' not found for form:' + validation.error_warning_message
+            self.add_error_or_warning(category_name, category_index, tmp_validation)
+            return
+        
+        if category_id in base_form.card_dict:
+            cards = base_form.card_dict[category_id]
+        else:
+            cards = []
+
+        for validation_question in validation_questions:
+            question=validation_question.question
+            full_answer = form_data.get_answer(question)
+            if full_answer is None or full_answer == '':
+                continue
+            
+            full_answer = str(full_answer)
+            if not re.match(r"[0-9][0-9,]*$", full_answer):
+                tmp_validation = FormValidation()
+                tmp_validation.level = validation.level
+                tmp_validation.error_warning_message = 'Incorrect card reference format:' + validation.error_warning_message
+                self.add_error_or_warning(category_name, category_index, tmp_validation)
+                continue
+            
+            check_numbers = full_answer.split(',')
+            for check_number in check_numbers:
+                if check_number == '':
+                    continue
+                
+                found = False
+                for card in cards:
+                    card_number = getattr(card.form_object, number_field)
+                    if card_number == int(check_number):
+                        found = True
+                
+                if not found:
+                    tmp_validation = FormValidation()
+                    tmp_validation.level = validation.level
+                    tmp_validation.error_warning_message =  validation.error_warning_message + ' the ' + card_category_name + ' card number ' + check_number + ' is not present'
+                    self.add_error_or_warning(category_name, category_index, tmp_validation)
+    
+    def person_validation(self, form_data, validation, validation_questions, category_index, general):
+        if general:
+            category_name = ''
+        else:
+            category_name = self.question_map[validation_questions[0].question.id]
+            
+        if 'all_of' in validation.params:
+            parts = validation.params['all_of']
+            all_present = True
+        elif 'one_of' in validation.params:
+            parts = validation.params['one_of']
+            all_present = False
+        else:
+            tmp_validation = FormValidation()
+            tmp_validation.level = validation.level
+            tmp_validation.error_warning_message = 'Incorrect configuration for validation:' + validation.error_warning_message
+            self.add_error_or_warning(category_name, None, tmp_validation)
+            return
+        
+        found = False
+        for validation_question in validation_questions:
+            answer = form_data.get_answer(validation_question.question)
+            for part in parts:
+                value = getattr(answer, part, None)
+                if value is None or value == '' or (part == 'gender' and value == 'U'):
+                    if all_present:
+                        found = False
+                        break
+                else:
+                    found = True
+        
+        if not found:
+            self.add_error_or_warning(category_name, category_index, validation)
+            
 
     def __init__(self, form, form_data, ignore_warnings, mode='update'):
         self.validations = {
@@ -348,7 +478,8 @@ class ValidateForm:
             'all_false': self.all_false,
             'interceptee_count_match':self.interceptee_count_match,
             'not_blank_or_null_card_filter_main':self.not_blank_or_null_card_filter_main,
-            
+            'card_reference':self.card_reference,
+            'person_validation':self.person_validation,
         }
         
         self.validations_to_perform = {
@@ -442,8 +573,8 @@ class ValidateForm:
                 else:
                     if isinstance(trigger_value, bool) and trigger_value:
                         should_validate = True
-                    elif isinstance(trigger_value, str) and trigger_value.upper() == 'TRUE':
-                        should_validate = True
+                    elif isinstance(trigger_value, str) and trigger_value != '' and trigger_value.upper() != 'FALSE':
+                        should_validate = True 
                     else:
                         should_validate = False
             else:
@@ -455,7 +586,8 @@ class ValidateForm:
                 the_category = None
                 for question in questions:
                     if the_category is None:
-                        the_category = self.question_map[question.question.id]
+                        if question.question.id in self.question_map:
+                            the_category = self.question_map[question.question.id]
                     elif question.question.id in self.question_map and the_category != self.question_map[question.question.id]:
                         general = True
                         break                           
@@ -485,8 +617,5 @@ class ValidateForm:
                         else:
                             logger.error("validation #" + str(validation.id) + " specifies an unimplemented validation:" + validation.validation_type.name)
                             self.response_code = status.HTTP_500_INTERNAL_SERVER_ERROR
-            
-        
-        
             
                 
