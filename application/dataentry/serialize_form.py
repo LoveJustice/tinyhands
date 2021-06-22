@@ -69,6 +69,8 @@ class ResponseIntegerSerializer(serializers.Serializer):
     
     def to_internal_value(self, data):
         value = data.get('value')
+        if value == '':
+            value = None
         if value is not None:
             value = int(value)
         

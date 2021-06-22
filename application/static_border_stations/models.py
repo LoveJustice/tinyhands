@@ -91,6 +91,7 @@ class Location(models.Model):
     active = models.BooleanField(default=True)
     
     other_name = '__Other'
+    leave_name = 'Leave'
     
     def get_country_id(self):
         if self.border_station is None or self.border_station.operating_country is None:
@@ -115,6 +116,20 @@ class Location(models.Model):
         except ObjectDoesNotExist:
             location = Location()
             location.name = Location.other_name
+            location.border_station = border_station
+            location.active = False
+            location.location_type = 'monitoring'
+            location.save()
+        
+        return location
+    
+    @staticmethod
+    def get_or_create_leave_location(border_station):
+        try:
+            location = Location.objects.get(border_station=border_station, name=Location.leave_name)
+        except ObjectDoesNotExist:
+            location = Location()
+            location.name = Location.leave_name
             location.border_station = border_station
             location.active = False
             location.location_type = 'monitoring'
