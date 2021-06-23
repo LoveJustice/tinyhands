@@ -90,7 +90,7 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
                 location_staff.save()
             
             arrests = request.data['arrests']
-            if arrests is None:
+            if arrests is None or arrests=="":
                 try:
                     location_statistics = LocationStatistics.objects.get(location=other_location, year_month=year_month)
                     location_statistics.arrests = None
