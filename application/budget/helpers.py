@@ -252,7 +252,7 @@ class MoneyDistributionFormHelper:
             for limbo in self.get_other_items(BorderStationBudgetCalculation.LIMBO):
                 if len(footnote) > 0:
                     footnote += ','
-                footnote += limbo.name + '(' + str(limbo.value) + ')'
+                footnote += limbo.name + '(' + str(self.budget.food_and_gas_limbo_girls_multiplier * limbo.value) + ')'
             footnote = '*1:' + footnote
 
         return footnote
