@@ -108,7 +108,6 @@ class MonthlyReportFormViewSet(BaseFormViewSet):
                 "records_points":"Records",
                 "aftercare_points":"Aftercare",
                 "paralegal_points":"Paralegal",
-                "investigations_points":"Investigations"
             }
         
         options = country.options

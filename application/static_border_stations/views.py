@@ -66,7 +66,10 @@ class LocationViewSet(BorderStationRestAPI):
         """
             retrieve all locations for a particular border_station
         """
-        self.object_list = self.filter_queryset(self.get_queryset().filter(border_station=self.kwargs['pk']))
+        station = BorderStation.objects.get(id=self.kwargs['pk'])
+        Location.get_or_create_other_location(station)
+        Location.get_or_create_leave_location(station)
+        self.object_list = self.filter_queryset(self.get_queryset().filter(border_station=station))
         if request.GET.get('include_inactive') is None:
             self.object_list = self.object_list.filter(active=True)
         if request.GET.get('location_type') is not None:

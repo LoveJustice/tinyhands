@@ -14,6 +14,7 @@ class VdfCommon(BaseForm):
     
     # Victim/Family Info
     victim = models.ForeignKey(Person, null=True, blank=True)
+    relationship_to_guardian = models.CharField(max_length=126, null=True)
     
     # Home Situation Assessment
     guardian_know_destination = models.CharField('Did your guardian know you were traveling to intended destination?', max_length=126, null=True)
@@ -32,6 +33,7 @@ class VdfCommon(BaseForm):
     station_recommendation_for_victim = models.CharField('What is the Border Station recommendation about where the victim should go?', max_length=126, null=True)
     is_evidence_that_guardians_sold = models.CharField('Did the victim express any suicidal thoughts at any point?', max_length=126, null=True)
     evidence_that_guardians_sold = models.CharField('If yes, what evidence?', max_length=126, null=True)
+    contact_national_office = models.CharField(max_length=126, null=True)
     why_sent_home_with_with_alarms = models.CharField('If the potential victim has 10 or more total Home Situation Alarms and you recommend sending the potential victim home to stay with guardians, why?', max_length=126, null=True)
 
     # Awareness/Assessment
@@ -42,6 +44,7 @@ class VdfCommon(BaseForm):
     share_gospel_testimony = models.BooleanField('Shared Personal Testimony', default=False)
     share_gospel_book = models.BooleanField('Message Book', default=False)
     share_gospel_other = models.CharField('Other', max_length=126, null=True)
+    share_gospel_why_not = models.TextField(blank=True)
     awareness_of_exploitation_before_interception = models.CharField('Before you were intercepted, were you aware that migrants going abroad are often deceived and end up in very exploitative situations?', max_length=126, null=True)
     victim_heard_message_before = models.CharField('Had you ever heard the message before?', max_length=126, null=True)
     what_victim_believes_now = models.CharField('What do you believe now?', max_length=126, null=True)
@@ -58,6 +61,17 @@ class VdfCommon(BaseForm):
     who_victim_released_phone = models.CharField('Phone Number', max_length=126, null=True)
     where_victim_sent = models.CharField('Where was the victim sent', max_length=126, null=True)
     where_victim_sent_details = models.CharField('Where was the victim sent details', max_length=126, null=True)
+    how_pv_released =  models.CharField(max_length=126, null=True)
+    service_education_about_ht = models.BooleanField('Education about HT', default=False)
+    service_legal_support = models.BooleanField('Legal Support', default=False)
+    service_medical_support = models.BooleanField('Medical Support ', default=False)
+    service_travel_support = models.BooleanField('Travel Support', default=False)
+    service_food = models.BooleanField('Food', default=False)
+    service_safe_foreign_employment = models.BooleanField('Safe Foreign Employment Info', default=False)
+    country_pv_sent = models.CharField('What country was the PV sent back to?', max_length=126, null=True)
+    pv_spent_time_at_shelter = models.CharField('Did the PV spend time at LJ’s short-term shelter?', max_length=126, null=True)
+    shelter_nights = models.PositiveIntegerField('nights', null=True, blank=True)
+    interaction_hours = models.PositiveIntegerField('hours', null=True, blank=True)
 
     # Final Procedures
     fundraising_purpose = models.CharField('how we can use your photo and the information collected during this interviewfor operational fundraising purposes.', max_length=126, null=True)
