@@ -4,6 +4,7 @@ from rest_framework import serializers
 from rest_framework import filters as fs
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
+from rest_framework.response import Response
 from django.conf import settings
 from templated_email import send_templated_mail
 
@@ -119,7 +120,8 @@ class VdfFormViewSet(BaseFormViewSet):
             # Only process on the first submit
             return
         
-        if vdf.victim_heard_message_before != 'Yes - heard and was believer' and vdf.what_victim_believes_now.startswith('Do believe'):
+        if ((vdf.victim_heard_message_before != 'Yes - heard and was believer' and vdf.what_victim_believes_now.startswith('Do believe')) or
+            vdf.what_victim_believes_now == 'Came to believe that Jesus is the one true God'):
             existing_entry = GospelVerification.objects.filter(vdf=vdf)
             if len(existing_entry) < 1:
                 gospel_verification = GospelVerification()
@@ -163,7 +165,7 @@ class GospelVerificationViewSet(BaseFormViewSet):
     search_fields = ('vdf__vdf_number','vdf__victim__full_name')
     ordering_fields = [
         'id', 'vdf__vdf_number', 'vdf__victim__full_name', 'vdf__interview_date', 
-        'date_of_followup', 'profess_to_accept_christ']
+        'date_of_followup']
     ordering = ('-vdf__interview_date',)
     
     def get_queryset(self):
@@ -171,6 +173,7 @@ class GospelVerificationViewSet(BaseFormViewSet):
         filter = self.request.GET.get('filter')
         if  filter is not None:
             parts = filter.split(':')
+            
             if len(parts) == 2:
                 if parts[1] == 'True':
                     parts[1] = True
@@ -199,9 +202,53 @@ class GospelVerificationViewSet(BaseFormViewSet):
         return GospelVerification.objects.none()
     
     def get_list_field_names(self):
-        return ['id', 'station', 'vdf', 'profess_to_accept_christ', 'survey_complete', 
-                'searchlight_edited', 'date_of_followup', 'followup_person']
+        return ['id', 'station', 'vdf', 'searchlight_edited', 'date_of_followup', 'followup_person']
         
     def get_element_paths(self):
         return []
+    
+    def retrieve_by_form_number(self, request, station_id, form_number):
+        self.serializer_context = {}
+        form = Form.current_form(self.get_form_type_name(), station_id)
+        the_obj = form.find_form_class().objects.get(vdf__vdf_number=form_number)
+        if form is None:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        try:
+            the_form = FormData.find_object_by_id(the_obj.id, form)
+            if the_form is None:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+        except ObjectDoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        
+        
+        if hasattr(the_form, 'station'):
+            station = the_form.station
+        else:
+            station = BorderStation.objects.get(id=pk)
+            
+        read_access = UserLocationPermission.has_session_permission(request, self.get_perm_group_name(), 'VIEW', station.operating_country.id, station.id)
+        edit_access = UserLocationPermission.has_session_permission(request, self.get_perm_group_name(), 'EDIT', station.operating_country.id, station.id)
+        private_access = UserLocationPermission.has_session_permission(request, self.get_perm_group_name(), 'VIEW PI', station.operating_country.id, station.id)
+        
+        if not read_access:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+                
+        if not edit_access and not private_access:
+            self.serializer_context['mask_private'] = True
+            
+        form_data = FormData(the_form, form)
+        serializer = FormDataSerializer(form_data, context=self.serializer_context)
+        
+        resp_data = serializer.data
+       
+        return Response(resp_data)
+    
+    def update_vdf_gospel (self, request, pk):
+        vdf = VdfCommon.objects.get(id=pk)
+        vdf.what_victim_believes_now = request.data['believesNow']
+        vdf.save()
+        vdf = VdfCommon.objects.get(id=pk)
+        
+        return Response({"message": "success!"})
+        
 

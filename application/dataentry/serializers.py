@@ -942,14 +942,14 @@ class GospelVerificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = GospelVerification
         fields = [field.name for field in model._meta.fields] # all the model fields
-        fields = fields + ['vdf_number','pv_name','vdf_date', 'form_name', 'country']   
+        fields = fields + ['vdf_number','pv_name','vdf_date', 'form_name', 'country', 'profess_to_accept_christ']   
         
     vdf_number = serializers.SerializerMethodField(read_only=True)
     pv_name = serializers.SerializerMethodField(read_only=True)
     vdf_date = serializers.SerializerMethodField(read_only=True)
     form_name = serializers.SerializerMethodField(read_only=True)
     country = serializers.SerializerMethodField(read_only=True)
-    
+    profess_to_accept_christ = serializers.SerializerMethodField(read_only=True)
     
     def get_vdf_number(self, obj):
         return obj.vdf.vdf_number
@@ -965,6 +965,14 @@ class GospelVerificationSerializer(serializers.ModelSerializer):
             return forms[0].form_name
         else:
             return None
+    def get_profess_to_accept_christ(self, obj):
+        if obj.date_of_followup is not None:
+            if obj.vdf.what_victim_believes_now == 'Came to believe that Jesus is the one true God':
+                return 'Yes'
+            else:
+                return 'No'
+        
+        return ''
 
 class ClientDiagnosticSerializer(serializers.ModelSerializer):
     class Meta:

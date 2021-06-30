@@ -121,6 +121,8 @@ urlpatterns = [
         url(r'^vdf/blank/(?P<station_id>\d+)', VdfFormViewSet.as_view({'get': 'retrieve_blank_form'}), name='vdfBlank'),
         url(r'^gospel-verification/$', GospelVerificationViewSet.as_view({'get': 'list'}), name='gospelVerificationList'),
         url(r'^gospel-verification/(?P<station_id>\d+)/(?P<pk>\d+)/$', GospelVerificationViewSet.as_view({'get': 'my_retrieve', 'put': 'update'}), name='gospelVerificationDetail'),
+        url(r'^gospel-vdf-update/(?P<pk>\d+)/$', GospelVerificationViewSet.as_view({'put': 'update_vdf_gospel'}), name='gospelVdfUpdate'),
+        url(r'^gospel-verification/vdf-number/(?P<station_id>\d+)/(?P<form_number>[^/]+)/$', GospelVerificationViewSet.as_view({'get': 'retrieve_by_form_number'}), name='gospelVerificationFormNumber'),
         
         url(r'^monthly_report/$', MonthlyReportFormViewSet.as_view(list), name='monthlyReport'),
         url(r'^monthly_report/(?P<station_id>\d+)/(?P<pk>\d+)', MonthlyReportFormViewSet.as_view({'get': 'my_retrieve', 'put': 'update', 'delete': 'destroy'}), name='monthlyReportDetail'),
