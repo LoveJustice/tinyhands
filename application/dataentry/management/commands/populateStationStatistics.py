@@ -8,7 +8,7 @@ from django.db.models import Count
 
 from budget.models import BorderStationBudgetCalculation
 from dataentry.models import BorderStation, CifCommon, Country, CountryExchange, IntercepteeCommon, LegalCaseSuspect, LocationStatistics, StationStatistics
-from static_border_stations.models import Location
+from static_border_stations.models import CommitteeMember, Location
 
 class Command(BaseCommand):
     def add_arguments(self, parser):
@@ -148,6 +148,7 @@ class Command(BaseCommand):
                 entry.year_month = year_month
                 entry.station = station
                 locations = Location.objects.filter(border_station = station, location_type = 'monitoring', active = True)
+                entry.subcommittee_members = CommitteeMember.objects.filter(border_station = station).count()
                 entry.active_monitor_locations = len(locations)
                 if 'legal_arrest_and_conviction' in country.options and country.options['legal_arrest_and_conviction']:
                     entry.convictions = 0
