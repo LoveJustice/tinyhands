@@ -84,7 +84,8 @@ class Command(BaseCommand):
         intercepts = IntercepteeCommon.objects.filter(
                 person__role = 'PVOT',
                 interception_record__logbook_second_verification_date__gte=start_date,
-                interception_record__logbook_second_verification_date__lt=end_date
+                interception_record__logbook_second_verification_date__lt=end_date,
+                interception_record__date_time_of_interception__gte='2020-10-01'
                 )
         for intercept in intercepts:
             try:
@@ -106,13 +107,14 @@ class Command(BaseCommand):
                     location_statistics.arrests = 0
                 location_statistics.convictions = 0
             
-            location_statistics.intercepts += 1
+            
             if intercept.interception_record.logbook_second_verification.startswith('Evidence'):
                 location_statistics.intercepts_evidence += 1
             elif intercept.interception_record.logbook_second_verification.startswith('High'):
                 location_statistics.intercepts_high_risk += 1
             elif intercept.interception_record.logbook_second_verification.startswith('Should not'):
                 location_statistics.intercepts_invalid += 1
+            location_statistics.intercepts = location_statistics.intercepts_evidence + location_statistics.intercepts_high_risk
             location_statistics.save()
         
         if 'legal_arrest_and_conviction' in country.options and country.options['legal_arrest_and_conviction']:
