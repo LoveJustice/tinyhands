@@ -56,16 +56,12 @@ class BorderStationBudgetCalculationFactory(DjangoModelFactory):
     food_and_gas_number_of_intercepted_girls_multiplier_before = 100
     food_and_gas_number_of_intercepted_girls_multiplier_after = 3
     food_and_gas_limbo_girls_multiplier = 100
-    food_and_gas_number_of_limbo_girls = FuzzyInteger(1, 4)
-    food_and_gas_number_of_days = FuzzyInteger(1, 7)
 
     awareness_contact_cards = True
     awareness_contact_cards_boolean_amount = FuzzyInteger(1000, 4000)
     awareness_contact_cards_amount = FuzzyInteger(100, 300)
     awareness_awareness_party_boolean = True
     awareness_awareness_party = FuzzyInteger(300, 500)
-    awareness_sign_boards_boolean = True
-    awareness_sign_boards = FuzzyInteger(200, 400)
 
     # members
     member1 = factory.RelatedFactory(StaffBudgetItemFactory, 'budget_calc_sheet')
