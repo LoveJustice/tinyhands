@@ -4,9 +4,10 @@ from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.management.base import BaseCommand
 from django.apps import apps
+from django.db.models import Count
 
 from budget.models import BorderStationBudgetCalculation
-from dataentry.models import BorderStation, CifCommon, Country, CountryExchange, IntercepteeCommon, LocationStatistics, StationStatistics
+from dataentry.models import BorderStation, CifCommon, Country, CountryExchange, IntercepteeCommon, LegalCaseSuspect, LocationStatistics, StationStatistics
 from static_border_stations.models import Location
 
 class Command(BaseCommand):
@@ -75,6 +76,9 @@ class Command(BaseCommand):
             location_statistics.intercepts_evidence = 0
             location_statistics.intercepts_high_risk = 0
             location_statistics.intercepts_invalid = 0
+            if 'legal_arrest_and_conviction' in country.options and country.options['legal_arrest_and_conviction']:
+                location_statistics.arrests = 0
+            location_statistics.convictions = 0
             location_statistics.save()
         
         intercepts = IntercepteeCommon.objects.filter(
@@ -99,6 +103,9 @@ class Command(BaseCommand):
                 location_statistics.intercepts_evidence = 0
                 location_statistics.intercepts_high_risk = 0
                 location_statistics.intercepts_invalid = 0
+                if 'legal_arrest_and_conviction' in country.options and country.options['legal_arrest_and_conviction']:
+                    location_statistics.arrests = 0
+                location_statistics.convictions = 0
             
             
             if intercept.interception_record.logbook_second_verification.startswith('Evidence'):
@@ -108,7 +115,31 @@ class Command(BaseCommand):
             elif intercept.interception_record.logbook_second_verification.startswith('Should not'):
                 location_statistics.intercepts_invalid += 1
             location_statistics.intercepts = location_statistics.intercepts_evidence + location_statistics.intercepts_high_risk
-            location_statistics.save() 
+            location_statistics.save()
+        
+        if 'legal_arrest_and_conviction' in country.options and country.options['legal_arrest_and_conviction']:
+            # Count arrests
+            suspects = LegalCaseSuspect.objects.filter(arrest_submitted_date__gte=start_date, arrest_submitted_date__lt=end_date)
+            for suspect in suspects:
+                try:
+                    location = Location.objects.get(border_station=suspect.legal_case.station, name__iexact=suspect.legal_case.location)
+                except ObjectDoesNotExist:
+                    location = Location.get_or_create_other_location(intercept.interception_record.station)
+                
+                try:
+                    location_statistics = LocationStatistics.objects.get(location=location, year_month = year_month)
+                except ObjectDoesNotExist:
+                    location_statistics = LocationStatistics()
+                    location_statistics.year_month = year_month
+                    location_statistics.location = location
+                    location_statistics.intercepts = 0
+                    location_statistics.intercepts_evidence = 0
+                    location_statistics.intercepts_high_risk = 0
+                    location_statistics.intercepts_invalid = 0
+                    location_statistics.arrests = 0
+                    location_statistics.convictions = 0
+                
+                location_statistics.arrests += 1
         
         border_stations = BorderStation.objects.all().order_by('operating_country')
         for station in border_stations:
@@ -120,23 +151,31 @@ class Command(BaseCommand):
                 entry.station = station
                 locations = Location.objects.filter(border_station = station, location_type = 'monitoring', active = True)
                 entry.active_monitor_locations = len(locations)
+                if 'legal_arrest_and_conviction' in country.options and country.options['legal_arrest_and_conviction']:
+                    entry.convictions = 0
                 entry.save()
             
-            # Collections
             # Budget
             try:
                 budget = BorderStationBudgetCalculation.objects.get(border_station=station, month_year__year=year, month_year__month=month)
-                entry.budget = budget.station_total() + budget.past_month_sent_total()
+                entry.budget = budget.station_total()
             except ObjectDoesNotExist:
                 pass
             
             # gospel
             # empowerment
+            if 'legal_arrest_and_conviction' in country.options and country.options['legal_arrest_and_conviction']:
+                #convictions
+                convictions = LegalCaseSuspect.objects.filter(
+                        verdict='Conviction',
+                        legal_case__station = station,
+                        verdict_submitted_date__gte=start_date,
+                        verdict_submitted_date__lt=end_date
+                    ).count()
             
             # cif count 
             
-            
-            # convictions
-            
             entry.save()
+            
+            
         
