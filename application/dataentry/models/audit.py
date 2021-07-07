@@ -33,4 +33,5 @@ class AuditSample(models.Model):
     results = JSONField(null=True)
         # contains array of objects with section name incorrect count
     corrected = models.CharField(max_length=126)
+    no_paper_form = models.BooleanField('No Paper form', default=False)
     
