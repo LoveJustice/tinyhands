@@ -41,7 +41,8 @@ class VdfListSerializer(serializers.Serializer):
             return str(obj.interview_date.year) + '-' + str(obj.interview_date.month) + '-' + str(obj.interview_date.day)
     
     def get_date_time_entered_into_system(self, obj):
-        return self.adjust_date_time_for_tz (obj.date_time_entered_into_system, obj.station.time_zone)
+        tmp_date = self.adjust_date_time_for_tz (obj.date_time_entered_into_system, obj.station.time_zone)
+        return tmp_date[0:10]
     
     def get_date_time_last_updated(self, obj):
         return self.adjust_date_time_for_tz (obj.date_time_last_updated, obj.station.time_zone)
