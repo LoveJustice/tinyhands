@@ -8,22 +8,22 @@ from budget.models import BorderStationBudgetCalculation
 class BudgetTableTests(TestCase):
 
     def test_total_should_return_sum_of_item_values(self):
-        items = [BudgetLineItem("one", 1), BudgetLineItem("two", 2)]
+        items = [BudgetLineItem("one", 1, ''), BudgetLineItem("two", 2, '')]
         target = BudgetTable("Table", items)
 
         self.assertEqual(target.total, sum([item.value for item in items]))
 
     def test_height_required_should_equal_correct_height(self):
-        items = [BudgetLineItem("one", 1), BudgetLineItem("two", 2)]
+        items = [BudgetLineItem("one", 1, ''), BudgetLineItem("two", 2, '')]
         target = BudgetTable("Table", items)
 
         self.assertEqual(target.height_required, (len(items)+1)*BudgetTable.ROW_HEIGHT + BudgetTable.TITLE_HEIGHT)
 
     def test_height_required_should_account_for_items_with_multiline_text(self):
         items = [
-            BudgetLineItem("one", 1),
-            BudgetLineItem("two", 2),
-            BudgetLineItem("This is a very long line of text to make sure we calculate correctly", 30)
+            BudgetLineItem("one", 1, ''),
+            BudgetLineItem("two", 2, ''),
+            BudgetLineItem("This is a very long line of text to make sure we calculate correctly", 30, '')
         ]
         target = BudgetTable("Table", items)
 
@@ -82,7 +82,7 @@ class MoneyDistributionFormHelperTests(TestCase):
     def test_awareness_items_should_return_list_of_awareness_items(self):
         result = self.target.awareness_items
 
-        self.assertEqual(len(result), 4)
+        self.assertEqual(len(result), 3)
 
     def test_get_other_items_should_return_other_items_for_section(self):
         result = self.target.get_other_items(BorderStationBudgetCalculation.ADMINISTRATION)

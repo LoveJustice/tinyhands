@@ -69,6 +69,9 @@ z3c.rml docs can be found on their github page: https://github.com/zopefoundatio
             <lineStyle kind="grid" colorName="black" thickness="1" start="0,0" stop="-1,-1" />
             <blockTextColor start="-1,-1" stop="-1,-1" colorName="#c00000"/>
         </blockTableStyle>
+        <blockTableStyle id="signatureLine">
+            <lineStyle kind="LINEBELOW"  colorName="black" thickness="1" start="0,0" stop="-1,-1" />
+        </blockTableStyle>
     </stylesheet>
 
     <story>
@@ -121,7 +124,7 @@ z3c.rml docs can be found on their github page: https://github.com/zopefoundatio
         <blockTable colWidths="70% 30%" style="budgetGrid">
             {% for item in section.items %}
             <tr>
-                <td><para>{{ item.name }}</para></td>
+                <td><para>{{ item.name }}<super>{{ item.footnote }}</super></para></td>
                 <td>{{ item.value|intcomma }}</td>
             </tr>
             {% endfor %}
@@ -147,6 +150,16 @@ z3c.rml docs can be found on their github page: https://github.com/zopefoundatio
         	</para>
         	<para></para>
         	<para>This total has already been sent and is not included in the monthly distribution.</para>
+        {% endif %}
+        <para style="Notes">
+        	<b>Subcommittee signoff</b>
+        </para>
+        <blockTable colWidths="100%" style="signatureLine">
+        	<tr><td></td></tr>
+        </blockTable>
+        <spacer length="10"/>
+        {% if limbo_footnote != '' %}
+        	<para>{{ limbo_footnote }}</para>
         {% endif %}
     </story>
 </document>

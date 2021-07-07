@@ -65,7 +65,6 @@ class BorderStationBudgetCalculationTests(TestCase):
             self.target.awareness_extra_items_total(),
             self.target.awareness_contact_cards_amount,
             self.target.awareness_awareness_party,
-            self.target.awareness_sign_boards,
         ]
         expected_total = sum(fields)
 

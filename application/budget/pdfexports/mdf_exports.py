@@ -20,7 +20,8 @@ class MDFExporter(BasePDFCreator):
             'sections': mdf_helper.sections,
             'total': mdf_helper.total,
             'notes': mdf_helper.notes,
-            'past_money_sent':mdf_helper.past_money_sent_subtotal
+            'past_money_sent':mdf_helper.past_money_sent_subtotal,
+            'limbo_footnote':mdf_helper.limbo_footnote
         }
 
 

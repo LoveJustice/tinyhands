@@ -34,7 +34,7 @@ class VdfCommon(BaseForm):
     is_evidence_that_guardians_sold = models.CharField('Did the victim express any suicidal thoughts at any point?', max_length=126, null=True)
     evidence_that_guardians_sold = models.CharField('If yes, what evidence?', max_length=126, null=True)
     contact_national_office = models.CharField(max_length=126, null=True)
-    why_sent_home_with_with_alarms = models.CharField('If the potential victim has 10 or more total Home Situation Alarms and you recommend sending the potential victim home to stay with guardians, why?', max_length=126, null=True)
+    why_sent_home_with_with_alarms = models.TextField('If the potential victim has 10 or more total Home Situation Alarms and you recommend sending the potential victim home to stay with guardians, why?', max_length=126, null=True)
 
     # Awareness/Assessment
     staff_share_gospel = models.CharField('Did the staff share the gospel with the victim?', max_length=126, null=True)
