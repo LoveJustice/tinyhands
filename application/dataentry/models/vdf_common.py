@@ -34,7 +34,8 @@ class VdfCommon(BaseForm):
     is_evidence_that_guardians_sold = models.CharField('Did the victim express any suicidal thoughts at any point?', max_length=126, null=True)
     evidence_that_guardians_sold = models.CharField('If yes, what evidence?', max_length=126, null=True)
     contact_national_office = models.CharField(max_length=126, null=True)
-    why_sent_home_with_with_alarms = models.TextField('If the potential victim has 10 or more total Home Situation Alarms and you recommend sending the potential victim home to stay with guardians, why?', max_length=126, null=True)
+    why_sent_home_with_with_alarms = models.TextField('If the potential victim has 10 or more total Home Situation Alarms and you recommend sending the potential victim home to stay with guardians, why?', null=True)
+
 
     # Awareness/Assessment
     staff_share_gospel = models.CharField('Did the staff share the gospel with the victim?', max_length=126, null=True)
@@ -123,10 +124,23 @@ class VdfAttachmentCommon(BaseCard):
     
 class GospelVerification(BaseForm):
     vdf = models.ForeignKey(VdfCommon)
-    profess_to_accept_christ = models.CharField(max_length=126, null=True)
-    survey_complete = models.CharField(max_length=126, null=True)
     searchlight_edited = models.CharField(max_length=126, null=True)
+    form_changes = models.CharField(max_length=126, null=True)
+    reason_for_change = models.TextField(null=True)
+    staff_who_shared = models.CharField(max_length=126, null=True)
+    how_pv_professed = models.TextField(null=True)
+    shared_resources = models.TextField(null=True)
+    connect_with_church = models.TextField(null=True)
     date_of_followup = models.DateField('Interview date', null=True)
     followup_person = models.CharField(max_length=126, null=True)
     
-    
+    @property
+    def profess_to_accept_christ(self):
+        if self.date_of_followup is not None:
+            if (self.vdf.what_victim_believes_now == 'Came to believe that Jesus is the one true God'
+                or self.vdf.what_victim_believes_now == 'Already believes Jesus is the one true God'):
+                return 'Yes'
+            else:
+                return 'No'
+        
+        return ''
