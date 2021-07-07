@@ -196,14 +196,17 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
         current_date = datetime.datetime.now()
         month = current_date.month
         year = current_date.year
-        if (current_date.day < 6):
-            month -= 2
-        else:
-            month -= 1
+        
+        month -= 1
         if month < 1:
             month = 12 + month
             year -= 1
         
+        start_staff = str(year) + '-' + str(month) + '-01'
+        if month == 12:
+            end_staff = str(year+1) + '-01-01'
+        else:
+            end_staff = str(year) + '-' + str(month+1) + '-01'
         end_year_month = year * 100 + month
         end_date = str(year) + '-' + str(month) + '-01'
         if month < 6:
@@ -241,6 +244,9 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
                         'last_arrests':entry.arrests,
                         'last_gospel':entry.gospel,
                         'last_empowerment':entry.empowerment,
+                        'last_staff_count': (Staff.objects.filter(border_station=entry.station, first_date__lt=end_staff, last_date__isnull=True).count() +
+                                             Staff.objects.filter(border_station=entry.station, first_date__lt=end_staff, first_date__gte=start_staff).count()),
+                        'last_subcommittee_count':entry.subcommittee_members
                         }
                     dash_station['to_date_intercepts'] = LocationStatistics.objects.filter(location__border_station=entry.station).aggregate(Sum('intercepts'))['intercepts__sum']
                     dash_station['to_date_arrests'] = LocationStatistics.objects.filter(location__border_station=entry.station).aggregate(Sum('arrests'))['arrests__sum']
@@ -285,7 +291,7 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
                     'monthly_report', 'compliance', '6month_budget', '6month_intercepts','6month_arrests','6month_gospel', '6month_empowerment', '6month_cifs',
                     'to_date_budget', 'to_date_intercepts', 'to_date_arrests', 'to_date_convictions', 'to_date_gospel','to_date_irfs', 'to_date_cifs',
                     'to_date_vdfs', 'to_date_conv', 'to_date_case_days', 'to_date_case_count',
-                    'last_budget', 'last_intercepts',  'last_arrests', 'last_gospel', 'last_empowerment']:
+                    'last_budget', 'last_intercepts',  'last_arrests', 'last_gospel', 'last_empowerment','last_staff_count','last_subcommittee_count']:
             for entry in dashboard['entries']:
                 self.sum_element(dashboard['totals'], element, entry.get(element, None), 0)
         
