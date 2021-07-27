@@ -34,7 +34,11 @@ class AuditViewSet(viewsets.ModelViewSet):
         if country is not None:
             queryset = queryset.filter(country__id=country)
         if form_type is not None:
-             queryset = queryset.filter(form__form_type__id=form_type)
+            forms = Form.objects.filter(form_type__id=form_type)
+            form_names = []
+            for form in forms:
+                form_names.append(form.form_name)
+            queryset = queryset.filter(form_name__in=form_names)
         return queryset
     
     def create_samples(self, audit):

@@ -865,7 +865,7 @@ class AuditSerializer(serializers.ModelSerializer):
                 if value is not None:
                     total_incorrect += value
             
-            if total_questions > 0 and (total_questions - total_incorrect)/total_questions >= 0.95:
+            if not sample.no_paper_form and total_questions > 0 and (total_questions - total_incorrect)/total_questions >= 0.95:
                 passed += 1
         return passed
     
