@@ -243,5 +243,15 @@ class FormViewSet(viewsets.ModelViewSet):
         countries = Country.objects.filter(id__in=country_ids)
         serializer = CountrySerializer(countries, many=True)
         return Response(serializer.data)
+    
+    def get_form_versions(self, request, form_id, country_id):
+        form = Form.objects.get(id=form_id)
+        storage_class = form.find_form_class()
+        stations = form.stations.filter(operating_country__id=country_id)
+        version_list = storage_class.objects.filter(station__in=stations).values_list('form_version', flat=True)
+        version_set = set(version_list)
+        version_set.remove(None)
+        return Response(sorted(version_set))
+        
             
         

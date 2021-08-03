@@ -15,6 +15,7 @@ class Audit(models.Model):
     notes = models.TextField(blank=True)
     forms_in_range = models.PositiveIntegerField(null=True)
     template = JSONField(null=True)
+    form_version = models.CharField(max_length=126, blank=True)
         # contains array of objects with section name and question count
         
     def get_form(self):
