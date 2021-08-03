@@ -46,6 +46,7 @@ class Form(models.Model):
     start_date = models.DateTimeField(auto_now_add=True)
     end_date = models.DateTimeField(null=True)
     form_name = models.CharField(max_length=126)
+    version = models.CharField(max_length=126, null=True)
     
     stations = models.ManyToManyField(BorderStation)
     
@@ -411,6 +412,7 @@ class BaseForm(models.Model):
     date_time_entered_into_system = models.DateTimeField(auto_now_add=True)
     date_time_last_updated = models.DateTimeField(auto_now=True)
     form_entered_by = models.ForeignKey(Account, related_name='%(class)s_entered_by', null=True, on_delete=models.SET_NULL)
+    form_version = models.CharField(max_length=126, null=True)
     
     class Meta:
         abstract = True

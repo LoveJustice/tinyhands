@@ -111,6 +111,8 @@ urlpatterns = [
         url(r'^forms/(?P<station_id>\d+)/station_forms/$', FormViewSet.as_view({'put':'set_forms'}), name='setForms'),
         url(r'^forms/related/(?P<station_id>\d+)/(?P<form_number>[^/]+)/$', FormViewSet.as_view({'get':'related_forms'}), name='relatedForms'),
         url(r'^forms/countries/(?P<form_id>\d+)/$', FormViewSet.as_view({'get':'get_form_countries'}), name='formCountries'),
+        url(r'^forms/versions/(?P<form_id>\d+)/(?P<country_id>\d+)/$', FormViewSet.as_view({'get':'get_form_versions'}), name='formVersions'),
+        
         
         url(r'^cif/$', CifFormViewSet.as_view(list), name='cif'),
         url(r'^cif/(?P<station_id>\d+)/(?P<pk>\d+)', CifFormViewSet.as_view({'get': 'my_retrieve', 'put': 'update', 'delete': 'destroy'}), name='cifDetail'),
