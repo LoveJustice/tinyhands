@@ -1101,6 +1101,8 @@ class FormDataSerializer(serializers.Serializer):
         if self.instance is None:
             form_class = form.find_form_class()
             form_object = form_class()
+            if form.version is not None:
+                form_object.form_version = form.version
             if station is not None:
                 form_object.station = station
             form_data = FormData(form_object, form)
