@@ -274,7 +274,7 @@ class BudgetCalcApiTests(WebTest):
         shelter_water_amount = response.data["shelter_water_amount"]
         self.assertEqual(response.data.get('id'), budget_id)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(shelter_water_amount, 2)
+        self.assertEqual(shelter_water_amount, '2.00')
     
     def testUpdateBudgetSheetNoPermission(self):
         user = GenericUserWithPermissions.create([
@@ -322,7 +322,7 @@ class BudgetCalcApiTests(WebTest):
         shelter_water_amount = response.data["shelter_water_amount"]
         self.assertEqual(response.data.get('id'), budget_id)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(shelter_water_amount, 2)
+        self.assertEqual(shelter_water_amount, '2.00')
     
     def testUpdateBudgetSheetCountryNoPermission(self):
         border_station = BorderStationFactory()
@@ -372,7 +372,7 @@ class BudgetCalcApiTests(WebTest):
         shelter_water_amount = response.data["shelter_water_amount"]
         self.assertEqual(response.data.get('id'), budget_id)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(shelter_water_amount, 2)
+        self.assertEqual(shelter_water_amount, '2.00')
     
     def testUpdateBudgetSheetStationNoPermission(self):
         border_station = BorderStationFactory()
