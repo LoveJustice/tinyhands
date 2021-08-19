@@ -14,6 +14,7 @@ class Command(BaseCommand):
         parser.add_argument('filename', nargs='+', type=str)
         parser.add_argument('startYearMonth', nargs='+', type=int)
         parser.add_argument('endYearMonth', nargs='+', type=int)
+        parser.add_argument('--include', action='append', type=str)
         parser.add_argument('--fix', action='append', type=str)
         parser.add_argument('--country', action='append', type=str)
     def handle(self, *args, **options):
@@ -50,14 +51,51 @@ class Command(BaseCommand):
         if options['fix']:
             self.process_fixes(options['fix'][0], fixes)
         
-        if (mode == 'station_pre'):
-            self.process_station_statistics(file_name, start_year, start_month, end_year, end_month, True)
-        elif (mode == 'station_post'):
-            self.process_station_statistics(file_name, start_year, start_month, end_year, end_month, False)
+        if mode == 'station' or mode == 'location':
+            if not options['include']:
+                print('Must define included values for station or location mode')
+                return
+            
+            to_include = {'Ast':False, 'Int':False,'Staff':False}
+            includes = options['include'][0].split(',')
+            for include in includes:
+                if include == '':
+                    continue
+                if include not in to_include:
+                    print ('Unknown included value type ', include)
+                    return
+                to_include[include] = True
+        
+        if (mode == 'station'):
+            self.process_station_statistics(file_name, start_year, start_month, end_year, end_month, to_include)
         elif (mode == 'location'):
-            self.processLocationStatistics(file_name, start_year, start_month, end_year, end_month, fixes['mapping'])
+            self.processLocationStatistics(file_name, start_year, start_month, end_year, end_month, fixes['mapping'], to_include)
         elif (mode == 'arrest'):
             self.processArrests(file_name, start_year, start_month, end_year, end_month, options['country'][0])
+    
+    def reset_location_data(self, station, year_month, to_include):
+        location_statistics = LocationStatistics.objects.filter(location__border_station=station, year_month=year_month)
+        for location_statistic in location_statistics:
+            modified = False
+            for key in self.location_map.keys():
+                if key in to_include and to_include[key] and getattr(location_statistic, self.location_map[key], None) is not None:
+                    setattr(location_statistic, self.location_map[key], None)
+                    modified = True
+            
+            if modified:
+                location_statistic.save()
+    
+    def reset_location_staff(self, station, year_month, to_include):
+        location_staff_list = LocationStaff.objects.filter(location__border_station=station, year_month=year_month)
+        for location_staff in location_staff_list:
+            modified = False
+            for key in self.staff_map.keys():
+                if key in to_include and to_include[key] and getattr(location_staff, self.staff_map[key], None) is not None:
+                    setattr(location_staff, self.staff_map[key], None)
+                    modified = True
+            
+            if modified:
+                location_staff.save()
     
     def process_fixes(self, fix_file, fixes):
         with open(fix_file) as csvfile:
@@ -113,7 +151,42 @@ class Command(BaseCommand):
             #print("MAPPING", fixes['mapping'])
                     
                     
-    def processLocationStatistics(self, file_name, start_year, start_month, end_year, end_month, mapping):
+    def processLocationStatistics(self, file_name, start_year, start_month, end_year, end_month, mapping, to_include):
+        process_location_statistics = False
+        for key in self.location_map.keys():
+            if key in to_include and to_include[key]:
+                process_location_statistics = True
+        
+        process_location_staff = False
+        for key in self.staff_map.keys():
+            if key in to_include and to_include[key]:
+                process_location_staff = True
+                
+        with open(file_name) as csvfile:
+            reader = csv.DictReader(csvfile)
+            for row in reader:
+                tmp_station_code = row['Station Code']
+                try:
+                    station = BorderStation.objects.get(station_code=station_code)
+                except:
+                    continue
+                
+                month = start_month
+                year = start_year
+                
+                while year*100+month <= end_year*100+end_month:
+                    if month < 10:
+                        str_month = '0' + str(month)
+                    else:
+                        str_month = str(month)
+                    year_month = str(year) + str_month
+                    year_month_csv = ' ' + str(year) + ' ' + str_month
+                    
+                    if process_location_statistics:
+                        self.reset_location_data(station, year_month, to_include)
+                    if process_location_staff:
+                        self.reset_location_staff(station, year_month, to_include)
+            
         skip = False
         with open(file_name) as csvfile:
             reader = csv.DictReader(csvfile)
@@ -156,48 +229,49 @@ class Command(BaseCommand):
                     year_month = str(year) + str_month
                     year_month_csv = ' ' + str(year) + ' ' + str_month
                     
-                    try:
-                        entry = LocationStatistics.objects.get(location=location, year_month=year_month)
-                    except ObjectDoesNotExist:
-                        entry = LocationStatistics()
-                        entry.location = location
-                        entry.year_month = year_month
-                    
-                    modified = False
-                    for key in self.location_map.keys():
-                        if key + year_month_csv in row:
-                            value = row[key + year_month_csv]
-                            value = value.replace(',','')
-                            old_value = getattr(entry, self.location_map[key])
-                            if old_value is None:
-                                old_value = 0
-                            if value != '':
-                                setattr(entry, self.location_map[key], old_value + int(value))
-                                #print (station.station_code, location.name, key + year_month_csv, old_value, value, entry.id)
-                                modified = True
+                    if process_location_statistics:
+                        try:
+                            entry = LocationStatistics.objects.get(location=location, year_month=year_month)
+                        except ObjectDoesNotExist:
+                            entry = LocationStatistics()
+                            entry.location = location
+                            entry.year_month = year_month
                         
-                    if modified:
+                        modified = False
+                        for key in self.location_map.keys():
+                            if key + year_month_csv in row:
+                                value = row[key + year_month_csv]
+                                value = value.replace(',','')
+                                old_value = getattr(entry, self.location_map[key])
+                                if old_value is None:
+                                    old_value = 0
+                                if value != '':
+                                    setattr(entry, self.location_map[key], old_value + int(value))
+                                    #print (station.station_code, location.name, key + year_month_csv, old_value, value, entry.id)
+                                    modified = True
+                            
+                        if modified:
+                                entry.save()
+                    if process_location_staff:
+                        general_staff = Staff.get_or_create_general_staff(station)
+                        try:
+                            entry = LocationStaff.objects.get(location=location, staff=general_staff, year_month=year_month)
+                        except ObjectDoesNotExist:
+                            entry = LocationStaff()
+                            entry.location = location
+                            entry.staff = general_staff
+                            entry.year_month = year_month
+                        
+                        modified = False
+                        for key in self.staff_map.keys():
+                            if key + year_month_csv in row:
+                                value = row[key + year_month_csv]
+                                value = value.replace(',','')
+                                if value != '':
+                                    setattr(entry, self.staff_map[key], value)
+                                    modified = True
+                        if modified:
                             entry.save()
-                    
-                    general_staff = Staff.get_or_create_general_staff(station)
-                    try:
-                        entry = LocationStaff.objects.get(location=location, staff=general_staff, year_month=year_month)
-                    except ObjectDoesNotExist:
-                        entry = LocationStaff()
-                        entry.location = location
-                        entry.staff = general_staff
-                        entry.year_month = year_month
-                    
-                    modified = False
-                    for key in self.staff_map.keys():
-                        if key + year_month_csv in row:
-                            value = row[key + year_month_csv]
-                            value = value.replace(',','')
-                            if value != '':
-                                setattr(entry, self.staff_map[key], value)
-                                modified = True
-                    if modified:
-                        entry.save()
                     
                     month += 1
                     if month > 12:
@@ -205,7 +279,17 @@ class Command(BaseCommand):
                         month = 1
                         
                         
-    def process_station_statistics(self, file_name, start_year, start_month, end_year, end_month, include_arrests_and_staff):
+    def process_station_statistics(self, file_name, start_year, start_month, end_year, end_month, to_include):
+        process_location_statistics = False
+        for key in self.location_map.keys():
+            if key in to_include and to_include[key]:
+                process_location_statistics = True
+        
+        process_location_staff = False
+        for key in self.staff_map.keys():
+            if key in to_include and to_include[key]:
+                process_location_staff = True
+                
         with open(file_name) as csvfile:
             reader = csv.DictReader(csvfile)
             for row in reader:
@@ -243,7 +327,9 @@ class Command(BaseCommand):
                     
                     entry.save()
                     
-                    if include_arrests_and_staff:
+                    if process_location_statistics:
+                        self.reset_location_data (station, year_month, to_include)
+                        
                         other_location = Location.get_or_create_other_location(station)
                         try:
                             entry = LocationStatistics.objects.get(location=other_location, year_month=year_month)
@@ -253,15 +339,28 @@ class Command(BaseCommand):
                             entry.year_month = year_month
                         
                         modified = False
-                        for key in ['Int']:
-                            if key + year_month_csv in row:
+                        for key in self.location_map.keys():
+                            #print (year_month, key, to_include[key], key + year_month_csv in row)
+                            if to_include[key] and key + year_month_csv in row:
                                 value = row[key + year_month_csv]
                                 value = value.replace(',','')
                                 if value != '':
                                     setattr(entry, self.location_map[key], value)
                                     modified = True
+                            
                         if modified:
                                 entry.save()
+                    
+                    if process_location_staff:
+                        self.reset_location_staff(station, year_month, to_include)
+                        
+                        other_location = Location.get_or_create_other_location(station)
+                        try:
+                            entry = LocationStatistics.objects.get(location=other_location, year_month=year_month)
+                        except ObjectDoesNotExist:
+                            entry = LocationStatistics()
+                            entry.location = other_location
+                            entry.year_month = year_month
                         
                         general_staff = Staff.get_or_create_general_staff(station)
                         try:
@@ -274,7 +373,7 @@ class Command(BaseCommand):
                         
                         modified = False
                         for key in self.staff_map.keys():
-                            if key + year_month_csv in row:
+                            if to_include[key] and key + year_month_csv in row:
                                 value = row[key + year_month_csv]
                                 value = value.replace(',','')
                                 if value != '':

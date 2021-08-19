@@ -1,5 +1,6 @@
 import logging
 import datetime
+from decimal import Decimal
 
 from rest_framework import filters as fs
 from rest_framework.response import Response
@@ -176,12 +177,12 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
     def apply_exchange_rate(self, value, country, year_month):
         try:
             exchange = CountryExchange.objects.get(country=country, year_month=year_month)
-            rate = exchange.exchange_rate
+            rate = Decimal(exchange.exchange_rate)
         except:
             rate = 1.0
         
         if value is not None:
-            value = int(value * 100 / rate)/100
+            value = int(value * 100 / Decimal(rate))/100
         
         return value
     
