@@ -1,11 +1,13 @@
 import pytz
 
+from rest_framework import status
 from rest_framework import serializers
 from rest_framework import filters as fs
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from rest_framework.response import Response
 from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist
 from templated_email import send_templated_mail
 
 from dataentry.serialize_form import FormDataSerializer
@@ -211,10 +213,10 @@ class GospelVerificationViewSet(BaseFormViewSet):
     def retrieve_by_form_number(self, request, station_id, form_number):
         self.serializer_context = {}
         form = Form.current_form(self.get_form_type_name(), station_id)
-        the_obj = form.find_form_class().objects.get(vdf__vdf_number=form_number)
         if form is None:
             return Response(status=status.HTTP_404_NOT_FOUND)
         try:
+            the_obj = form.find_form_class().objects.get(vdf__vdf_number=form_number)
             the_form = FormData.find_object_by_id(the_obj.id, form)
             if the_form is None:
                 return Response(status=status.HTTP_404_NOT_FOUND)

@@ -25,7 +25,8 @@ def get_station_stats_export_rows(objs):
     location_stats_headers = ['Intercepts', 'Arrests', 'Evidence Intercepts','High Risk Intercepts', 'Invalid Intercepts']
     location_staff_headers = ['Staff']
     monthly_report_headers = ['SMR']
-    headers = station_stats_headers + location_stats_headers + location_staff_headers + monthly_report_headers
+    country_exchange_headers = ['Exchange Rate']
+    headers = station_stats_headers + location_stats_headers + location_staff_headers + monthly_report_headers + country_exchange_headers
     
     rows = []
     rows.append(headers)
@@ -64,6 +65,12 @@ def get_station_stats_export_rows(objs):
         row.append(fmt(monthly_report.average_points))
     except ObjectDoesNotExist:
         row.append('')
+    
+    try:
+        exchange = CountryExchange.objects.get(year_month=year_month, country=station_stats.station.operating_country)
+        row.append(exchange.exchange_rate)
+    except:
+        row.append('');
     
     rows.append(row)
     return rows
