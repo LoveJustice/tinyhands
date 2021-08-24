@@ -13,7 +13,8 @@ class IrfCommon(BaseForm):
     irf_number = models.CharField('IRF #:', max_length=20, unique=True)
     number_of_victims = models.PositiveIntegerField('# of victims:', null=True, blank=True)
     location = models.CharField('Location:', max_length=255)
-    date_time_of_interception = models.DateTimeField('Date/Time:')
+    date_of_interception = models.DateField('Interception date', null=True, default=None)
+    time_of_interception = models.TimeField(null=True)
     number_of_traffickers = models.PositiveIntegerField('# of traffickers', null=True, blank=True)
     staff_name = models.CharField('Staff Name:', max_length=255)
     
@@ -154,7 +155,7 @@ class IrfCommon(BaseForm):
         return 'IRF'
     
     def get_form_date(self):
-        return self.date_time_of_interception.date()
+        return self.date_of_interception
     
     def to_str(self, value):
         if value is None:

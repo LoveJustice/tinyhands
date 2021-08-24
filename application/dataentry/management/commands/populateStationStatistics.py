@@ -85,7 +85,7 @@ class Command(BaseCommand):
                 person__role = 'PVOT',
                 interception_record__logbook_second_verification_date__gte=start_date,
                 interception_record__logbook_second_verification_date__lt=end_date,
-                interception_record__date_time_of_interception__gte='2020-10-01'
+                interception_record__date_of_interception__gte='2020-10-01'
                 )
         for intercept in intercepts:
             try:
