@@ -1,7 +1,7 @@
 import datetime
 import factory
 from factory.django import DjangoModelFactory
-from factory.fuzzy import FuzzyInteger, FuzzyFloat, FuzzyChoice, FuzzyDateTime
+from factory.fuzzy import FuzzyInteger, FuzzyFloat, FuzzyChoice, FuzzyDate, FuzzyDateTime
 import pytz
 
 from accounts.tests.factories import SuperUserFactory
@@ -49,7 +49,7 @@ class IrfIndiaFactory(DjangoModelFactory):
     form_entered_by = factory.SubFactory(SuperUserFactory)
 
     irf_number = factory.Sequence(lambda n: 'MBZ{0}'.format(n))
-    date_time_of_interception = FuzzyDateTime(datetime.datetime(2008, 1, 1, tzinfo=pytz.UTC), datetime.datetime(2012, 1, 1, tzinfo=pytz.UTC))
+    date_of_interception = FuzzyDate(datetime.datetime(2008, 1, 1, tzinfo=pytz.UTC), datetime.datetime(2012, 1, 1, tzinfo=pytz.UTC))
     status = 'approved'
 
     location = "India"

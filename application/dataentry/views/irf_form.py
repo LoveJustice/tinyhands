@@ -60,7 +60,10 @@ class IrfListSerializer(serializers.Serializer):
         return str(date_time)
     
     def get_date_time_of_interception(self, obj):
-        return self.adjust_date_time_for_tz (obj.date_time_of_interception, obj.station.time_zone)
+        date_time_of_interception = str(obj.date_of_interception)
+        if obj.time_of_interception is not None:
+            date_time_of_interception += ' ' + str(obj.time_of_interception)
+        return date_time_of_interception
     
     def get_date_time_entered_into_system(self, obj):
         return self.adjust_date_time_for_tz (obj.date_time_entered_into_system, obj.station.time_zone)
@@ -99,9 +102,9 @@ class IrfFormViewSet(BaseFormViewSet):
     filter_backends = (fs.SearchFilter, fs.OrderingFilter,)
     search_fields = ('irf_number',)
     ordering_fields = (
-        'irf_number', 'staff_name', 'number_of_victims', 'number_of_traffickers', 'date_time_of_interception',
+        'irf_number', 'staff_name', 'number_of_victims', 'number_of_traffickers', 'date_of_interception', 'time_of_interception',
         'date_time_last_updated', 'logbook_second_verification_date',)
-    ordering = ('-date_time_of_interception',)
+    ordering = ('-date_of_interception', '-time_of_interception')
     
     def or_filter(self, current_qfilter, new_qfilter):
         if current_qfilter is None:
@@ -129,14 +132,17 @@ class IrfFormViewSet(BaseFormViewSet):
             else:
                 q_filter = q_filter & Q(logbook_second_verification__startswith=status_list[1])
         
-        verification_filter = self.request.GET.get('verification_filter', None)
-        if verification_filter is not None and verification_filter != 'None':
-            verification_start = self.request.GET.get('verification_start', None)
-            verification_end = self.request.GET.get('verification_end', None)
-            if verification_filter == 'First Verification':
-                q_filter = q_filter & Q(logbook_first_verification_date__gte=verification_start) & Q(logbook_first_verification_date__lte=verification_end)
-            else:
-                q_filter = q_filter & Q(logbook_second_verification_date__gte=verification_start) & Q(logbook_second_verification_date__lte=verification_end)
+        date_filter = self.request.GET.get('date_filter', None)
+        if date_filter is not None and date_filter != 'None':
+            date_start = self.request.GET.get('date_start', None)
+            date_end = self.request.GET.get('date_end', None)
+            if date_filter == 'First Verification':
+                q_filter = q_filter & Q(logbook_first_verification_date__gte=date_start) & Q(logbook_first_verification_date__lte=date_end)
+            elif date_filter == 'Second Verification':
+                q_filter = q_filter & Q(logbook_second_verification_date__gte=date_start) & Q(logbook_second_verification_date__lte=date_end)
+            elif date_filter == 'Interception':
+                q_filter = q_filter & Q(date_of_interception__gte=date_start) & Q(date_of_interception__lte=date_end)
+                
         
         return q_filter
     
@@ -169,7 +175,7 @@ class IrfFormViewSet(BaseFormViewSet):
     
     def get_list_field_names(self):
         return ['id', 'irf_number', 'form_entered_by', 'number_of_victims', 'number_of_traffickers', 'staff_name', 
-                    'station', 'date_time_of_interception', 'date_time_last_updated', 'status', 'evidence_categorization', 'logbook_first_verification',
+                    'station', 'date_of_interception', 'time_of_interception', 'date_time_last_updated', 'status', 'evidence_categorization', 'logbook_first_verification',
                     'logbook_first_verification_date', 'logbook_second_verification', 'logbook_second_verification_date']
         
     def get_empty_queryset(self):
@@ -278,7 +284,7 @@ class IrfFormViewSet(BaseFormViewSet):
     def post_process(self, request, form_data):
         try:
             start_check = datetime.datetime(2020,4,1, tzinfo=datetime.timezone.utc)
-            if form_data.form_object.logbook_second_verification_date is not None or form_data.form_object.date_time_of_interception < start_check:
+            if form_data.form_object.logbook_second_verification_date is not None or form_data.form_object.date_of_interception < start_check.date():
                 return
             context = {
                 'irf_number': form_data.form_object.irf_number,
