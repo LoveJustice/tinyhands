@@ -214,7 +214,7 @@ class IndicatorsViewSet(viewsets.ViewSet):
                     result.irf_compliance_count += 1
                 if irf.logbook_received is not None:
                     result.irf_lag_count += 1
-                    result.irf_lag_total += IndicatorHistory.work_days(irf.date_time_of_interception.date(), irf.logbook_received)
+                    result.irf_lag_total += IndicatorHistory.work_days(irf.date_of_interception, irf.logbook_received)
                 if irf.logbook_second_verification is not None:
                     result.irf_forms_verified += 1
                     if irf.logbook_second_verification.lower().startswith('evidence'):

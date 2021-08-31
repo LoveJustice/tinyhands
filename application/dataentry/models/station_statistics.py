@@ -6,7 +6,7 @@ class StationStatistics(models.Model):
     year_month = models.PositiveIntegerField()
     station = models.ForeignKey(BorderStation, on_delete=models.PROTECT)
     compliance = models.FloatField(null=True)
-    budget = models.PositiveIntegerField(null=True)
+    budget = models.DecimalField(max_digits=17, decimal_places=2, null=True)
     gospel = models.PositiveIntegerField(null=True)
     empowerment = models.PositiveIntegerField(null=True)
     convictions = models.PositiveIntegerField(null=True)
