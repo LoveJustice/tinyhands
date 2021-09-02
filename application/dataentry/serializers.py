@@ -3,6 +3,7 @@ import json
 
 from rest_framework import serializers
 from django.db.models import Sum
+from django.core.exceptions import ObjectDoesNotExist
 
 from dataentry.models import Address1, Address2, Region, Country, SiteSettings, InterceptionRecord, VictimInterview, BorderStation, MasterPerson, Person
 from dataentry.models import Interceptee, InterceptionAlert, Permission, UserLocationPermission, Form, FormType, PersonAddress, PersonPhone, PersonSocialMedia, PersonDocument, PersonForm
@@ -900,8 +901,11 @@ class AuditSampleSerializer(serializers.ModelSerializer):
     def get_station_id(self, obj):
         form = Form.objects.get(form_name=obj.audit.form_name)
         storage_class = form.storage.get_form_storage_class()
-        form_instance = storage_class.objects.get(id=obj.form_id)
-        return form_instance.station.id
+        try:
+            form_instance = storage_class.objects.get(id=obj.form_id)
+            return form_instance.station.id
+        except ObjectDoesNotExist:
+            return None
     
 class LegalCaseSerializer(serializers.ModelSerializer):
     class Meta:
