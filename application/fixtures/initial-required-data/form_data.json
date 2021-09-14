@@ -3174,7 +3174,7 @@
 {"model": "dataentry.questionlayout", "pk": null, "fields": {"question": 1046, "category": 218, "weight": 0, "form_config": null}},
 {"model": "dataentry.questionlayout", "pk": null, "fields": {"question": 1059, "category": 220, "weight": 0, "form_config": {"RadioItems": {"1059": ["Home to stay with guardians", "Sent to stay with other relatives", "Sent to Partner Organization", "Social Welfare"]}}}},
 {"model": "dataentry.questionlayout", "pk": null, "fields": {"question": 682, "category": 220, "weight": 0, "form_config": null}},
-{"model": "dataentry.questionlayout", "pk": null, "fields": {"question": 1048, "category": 220, "weight": 0, "form_config": {"RadioItems": {"1048": ["Someone came to pick the PV up from the station/shelter", " Staff sent PV home on a bus", " Staff accompanied the PV home", "Staff handed PV off to partner organization", "Staff handed PV over topolice /governmentwelfare office"]}}}},
+{"model": "dataentry.questionlayout", "pk": null, "fields": {"question": 1048, "category": 220, "weight": 0, "form_config": {"RadioItems": {"1048": ["Someone came to pick the PV up from the station/shelter", "Staff arranged transportation for the PV to travel alone", "Staff accompanied the PV during travel"]}}}},
 {"model": "dataentry.questionlayout", "pk": null, "fields": {"question": 1049, "category": 220, "weight": 0, "form_config": null}},
 {"model": "dataentry.questionlayout", "pk": null, "fields": {"question": 1050, "category": 220, "weight": 0, "form_config": null}},
 {"model": "dataentry.questionlayout", "pk": null, "fields": {"question": 1051, "category": 220, "weight": 0, "form_config": null}},
