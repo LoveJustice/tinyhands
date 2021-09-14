@@ -84,7 +84,8 @@ class IrfCommon(BaseForm):
     control_passport_with_broker = models.BooleanField('Passport is with a broker', default=False).set_weight(40)
     control_relationship_to_get_married = models.BooleanField('On their way to get married ', default=False)
     control_reported_total_red_flags = models.IntegerField('Reported Total Red Flag Points:', null=True, blank=True)
-    control_status_known_trafficker = models.BooleanField('Is a know trafficker', default=False)
+    control_status_known_trafficker = models.BooleanField('Is a known trafficker', default=False)
+    control_connected_known_trafficker = models.BooleanField('Is connected to a known trafficker', default=False)
     control_traveling_with_someone_not_with_them = models.BooleanField('Was travelling with someone not with them', default=False)
     control_under_18_family_unwilling = models.BooleanField('Family unwilling to let her go', default=False).set_weight(60)
     control_where_going_someone_paid_expenses = models.BooleanField('Non relatives paid for their travel', default=False)
@@ -126,6 +127,7 @@ class IrfCommon(BaseForm):
     immigration_exit = models.CharField(max_length=127, null=True)
     immigration_case_number = models.CharField(max_length=127, null=True)
     reason_for_intercept = models.TextField('Primary reason for intercept', blank=True)
+    flight_number = models.CharField(max_length=127, null=True)
     
     # Compliance
     logbook_received = models.DateField(null=True)
