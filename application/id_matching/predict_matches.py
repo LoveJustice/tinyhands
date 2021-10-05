@@ -61,14 +61,14 @@ def get_top_matches(dfp, df, cutoff=0.9, max=10):
             ["{0:.2f}%".format(val * 100) for val in dfp2['Match_Prob']],
             index=dfp2.index)
         dfp2 = dfp2[['Match_Prob', 'form_number', 'form', 'Original Name', 'Original Name_cleaned_match',
-                     'o_name_phonetic_code_match', 'Phone', 'Phone_match', 'social_media_match']]
+                     'o_name_phonetic_code_match', 'Phone', 'Phone_match', 'social_media_match', 'id_1','id_2']]
         dfp2.columns = ['Match_Prob', 'Form Number', 'Form', 'Name', 'Name Match',
-                     'Phonetic Name Match', 'Phone', 'Phone Match', 'Social Media Match']
+                     'Phonetic Name Match', 'Phone', 'Phone Match', 'Social Media Match','id1','id2']
         dfp2 = dfp2.head(max)
         dfp2.index = np.arange(1, len(dfp2)+1)
         return dfp2
-    else:
-        print("No Matches with > {:.0%} probability".format(cutoff))
+    #else:
+        #print("No Matches with > {:.0%} probability".format(cutoff))
 
 
 def get_coef_df(df, cl):

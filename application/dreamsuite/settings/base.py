@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'events',
     'portal',
     'budget',
+    'id_matching',
     'util',
     'static_border_stations',
     'rest_api',
@@ -204,6 +205,11 @@ LOGGING = {
             'propagate': False,
         },
         'googleapiclient':{
+            'handlers': ['file'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+        'recordlinkage':{
             'handlers': ['file'],
             'level': 'ERROR',
             'propagate': True,

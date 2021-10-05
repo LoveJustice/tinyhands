@@ -9,7 +9,7 @@ import re
 from recordlinkage.preprocessing import clean
 from recordlinkage.preprocessing import phonetic
 
-import db_conn as dc
+from . import db_conn as dc
 
 
 def get_irf_person_ids(irfs, intees):

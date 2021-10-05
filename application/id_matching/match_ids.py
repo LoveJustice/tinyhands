@@ -13,7 +13,7 @@ import pre_proc as pp
 
 pd.options.mode.chained_assignment = None
 
-db_cred = '/home/amunn/tinyhands/application/id_matching/database.ini'
+db_cred = '/data/id_matching/database.ini'
 #db_cred = 'database.ini'
 
 print('-- Start --')
@@ -28,7 +28,7 @@ match_can_df = lnk.adjust_scores(match_can_df, 'Phone', 0.6)
 
 print('-- Evaluated Scores --')
 
-lr = pm.load_classifier('/home/amunn/tinyhands/application/id_matching/lr_all.pkl')
+lr = pm.load_classifier('/data/id_matching/lr_all.pkl')
 #lr = pm.load_classifier("lr2.pkl")
 
 match_can_p = pm.get_predictions(match_can_df, lr)

@@ -5,29 +5,35 @@ Module for connecting to Searchlight postgresql database and executing queries.
 from configparser import ConfigParser
 import pandas as pd
 import psycopg2
+from django.db import connection
 from dataentry.models import Person
 
 
 class DB_Conn(object):
     """This is a class for establishing a connection with the database."""
     def __init__(self, db_filename, section='postgresql'):
-        # create a parser
-        parser = ConfigParser()
-        # read config file
-        parser.read(str(db_filename))
-        db = {}
-        if parser.has_section(section):
-            params = parser.items(section)
-            for param in params:
-                db[param[0]] = param[1]
+        
+        if db_filename is not None:
+            # create a parser
+            parser = ConfigParser()
+            # read config file
+            parser.read(str(db_filename))
+            #db = {}
+            if parser.has_section(section):
+                params = parser.items(section)
+                for param in params:
+                    db[param[0]] = param[1]
+            else:
+                raise Exception('Section {0} not found in the {1} file'.format(section, db_filename))
+    
+            params = db
+    
+            conn = psycopg2.connect(**params)
+            self.conn = conn
+            self.cur = conn.cursor()
         else:
-            raise Exception('Section {0} not found in the {1} file'.format(section, db_filename))
-
-        params = db
-
-        conn = psycopg2.connect(**params)
-        self.conn = conn
-        self.cur = conn.cursor()
+            self.conn = None
+            self.cur = connection.cursor()
 
     def ex_query(self, select_query):
         """Execute query and return dataframe."""
@@ -41,15 +47,14 @@ class DB_Conn(object):
     def close_conn(self):
         """Close the cursor and the connection."""
         self.cur.close()
-        self.conn.close()
-        print("PostgreSQL connection is closed")
+        if self.conn is not None:
+            self.conn.close()
 
 #WIP Fix this
 def get_sl_data(db_cred):
     # Check to see if it opens a separate thread
-    #dbc = DB_Conn(db_cred)
-    dp = Person.objects.raw('SELECT * FROM dataentry_person;')
-    #dp = dbc.ex_query("SELECT * FROM public.dataentry_person;")
+    dbc = DB_Conn(db_cred)
+    dp = dbc.ex_query("SELECT * FROM public.dataentry_person;")
     intees = dbc.ex_query("SELECT person_id, interception_record_id FROM public.dataentry_intercepteecommon;")
     irfs = dbc.ex_query("SELECT id, irf_number FROM public.dataentry_irfcommon;")
     cifs = dbc.ex_query("SELECT id, main_pv_id, cif_number FROM public.dataentry_cifcommon;")
@@ -60,4 +65,4 @@ def get_sl_data(db_cred):
     dbc.close_conn()
     return dp, intees, irfs, cifs, vdfs, pbs, c, bs
 
-get_sl_data('/home/amunn/tinyhands/application/id_matching/database.ini')
+#get_sl_data('/data/dataentry/id_matching/database.ini')
