@@ -5,8 +5,8 @@ ENV PYTHONUNBUFFERED 1
 
 ADD requirements.txt /requirements.txt
 RUN apk update
-RUN apk add make automake gcc g++ subversion openssl ca-certificates cmake linux-headers && update-ca-certificates && pip install numpy
-
+RUN pip install --upgrade pip
+RUN apk add make automake gcc g++ subversion openssl ca-certificates cmake linux-headers && update-ca-certificates && pip install numpy && pip install pandas
 
 ENV OPENCV_VERSION=3.1.0
 RUN mkdir /opt && cd /opt \

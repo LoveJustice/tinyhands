@@ -62,6 +62,9 @@ class Person(models.Model):
     guardian_name = models.CharField('Guardian Name', max_length=126, null=True)
     guardian_phone = models.CharField('Guardian Phone', max_length=126, null=True)
     guardian_relationship = models.CharField('Guardian Relationship', max_length=1024, null=True)
+    
+    last_modified_time = models.DateTimeField(auto_now=True)
+    last_match_time = models.DateTimeField(null=True)
 
     def get_aliases(self):
         if self.aliases is not None:
