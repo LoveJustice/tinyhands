@@ -21,6 +21,7 @@ google-api-python-client==1.7.4
 httplib2==0.11.3
 ipdb==0.11
 lxml==4.2.5
+matplotlib==3.3.4
 oauth2client==4.1.3
 parse==1.9.0
 Pillow==8.1.1
@@ -30,7 +31,10 @@ Pygments==2.2.0
 python-dateutil==2.7.3
 python-Levenshtein==0.12.0
 pytz==2018.5
+recordlinkage==0.14
 reportlab==3.5.9
+seaborn==0.11.2
 six==1.11.0
+scikit-learn==0.23.2
 Unipath==1.1
 z3c.rml==3.5.1

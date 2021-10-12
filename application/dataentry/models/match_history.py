@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.postgres.fields import JSONField
 
 from .person import Person
 from .master_person import MasterPerson, MatchType
@@ -16,3 +17,4 @@ class MatchHistory(models.Model):
     action = models.ForeignKey(MatchAction)    # create MP, create match , remove, merge, type change
     timestamp = models.DateTimeField(auto_now_add=True)
     matched_by = models.ForeignKey(Account, null=True, on_delete=models.SET_NULL)
+    match_results = JSONField(null=True)
