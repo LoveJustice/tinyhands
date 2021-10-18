@@ -1,0 +1,13 @@
+{% block subject %}Border stations that have less than three committee members in {{ country }} {% endblock %}
+
+{% block html %}
+<p>Hello {{ account.first_name }},</p>
+
+<p>The following border stations have less than three committee members:</p>
+
+  {{ station_list }}
+
+<p>Cheers,</p>
+<p>The Searchlight Admins</p>
+
+{% endblock %}
