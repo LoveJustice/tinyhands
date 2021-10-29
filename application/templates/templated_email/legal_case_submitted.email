@@ -1,0 +1,8 @@
+{% block subject %}Legal Case {{ legal_case_number }} has been submitted{% endblock %}
+
+{% block html %}
+<p>Hi {{ account.first_name }},</p>
+
+<p><a href="{{ url }}">Legal Case {{ legal_case_number }}></a> has just been submitted.</p>
+
+{% endblock %}
