@@ -1,9 +1,9 @@
-{% block subject %}Border stations that have less than three committee members in {{ country }} {% endblock %}
+{% block subject %}Border stations with less than 3 SC members in {{ country }} {% endblock %}
 
 {% block html %}
 <p>Hello {{ account.first_name }},</p>
 
-<p>The following border stations have less than three committee members:</p>
+<p>The following stations have less than three SC members:</p>
 
   {{ station_list }}
 
