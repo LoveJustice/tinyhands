@@ -1035,7 +1035,7 @@
 {"model": "dataentry.question", "pk": 441, "fields": {"prompt": "Free to go N/A", "description": null, "answer_type": 6, "params": null, "export_name": "Free to go N/A", "export_params": null}},
 {"model": "dataentry.question", "pk": 442, "fields": {"prompt": "Free to go yes", "description": null, "answer_type": 6, "params": null, "export_name": "Free to go yes", "export_params": null}},
 {"model": "dataentry.question", "pk": 443, "fields": {"prompt": "Free to go no", "description": null, "answer_type": 6, "params": null, "export_name": "Free to go no", "export_params": null}},
-{"model": "dataentry.question", "pk": 444, "fields": {"prompt": "Number of other PVs", "description": null, "answer_type": 1, "params": null, "export_name": "Number of other PVs", "export_params": null}},
+{"model": "dataentry.question", "pk": 444, "fields": {"prompt": "Number of other PVs", "description": null, "answer_type": 2, "params": null, "export_name": "Number of other PVs", "export_params": null}},
 {"model": "dataentry.question", "pk": 445, "fields": {"prompt": "Associated PB", "description": null, "answer_type": 1, "params": null, "export_name": "Associated PB", "export_params": null}},
 {"model": "dataentry.question", "pk": 446, "fields": {"prompt": "License plate", "description": null, "answer_type": 1, "params": null, "export_name": "License plate", "export_params": null}},
 {"model": "dataentry.question", "pk": 447, "fields": {"prompt": "Vehicle type", "description": null, "answer_type": 4, "params": {"textbox": "True"}, "export_name": "Vehicle type", "export_params": null}},
