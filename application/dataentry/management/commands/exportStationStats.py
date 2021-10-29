@@ -21,7 +21,7 @@ def get_station_stats_export_rows(objs):
     station_id = objs[0]['station_id']
     year_month = objs[0]['year_month']
     
-    station_stats_headers = ['Key', 'Station', 'Station Code', 'Country', 'Year Month', 'Convictions', 'Empowerment', 'Budget', 'gospel', '#Active Monitoring Locations']
+    station_stats_headers = ['Key', 'Station', 'Station Code', 'Country', 'Year Month', 'Convictions', 'Empowerment', 'Budget', 'gospel', '#Active Monitoring Locations', 'Committee']
     location_stats_headers = ['Intercepts', 'Arrests', 'Evidence Intercepts','High Risk Intercepts', 'Invalid Intercepts']
     location_staff_headers = ['Staff']
     monthly_report_headers = ['SMR']
@@ -45,6 +45,7 @@ def get_station_stats_export_rows(objs):
         row.append(fmt(station_stats.budget))
         row.append(fmt(station_stats.gospel))
         row.append(fmt(station_stats.active_monitor_locations))
+        row.append(fmt(station_stats.subcommittee_members))
     except ObjectDoesNotExist:
         # If no StationStatistics then ignore
         return rows;

@@ -65,4 +65,11 @@ def get_sl_data(db_cred):
     dbc.close_conn()
     return dp, intees, irfs, cifs, vdfs, pbs, c, bs
 
+def get_sl_data2(db_cred):
+    # Check to see if it opens a separate thread
+    dbc = DB_Conn(db_cred)
+    slp = dbc.ex_query("SELECT * FROM public.id_match_source;")
+    dbc.close_conn()
+    return slp
+
 #get_sl_data('/data/dataentry/id_matching/database.ini')
