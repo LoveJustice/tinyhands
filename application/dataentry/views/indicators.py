@@ -219,13 +219,15 @@ class IndicatorsViewSet(viewsets.ViewSet):
                     result.irf_forms_verified += 1
                     if irf.logbook_second_verification.lower().startswith('evidence'):
                         result.evidence_count += 1
-                        evidence = True
                     elif irf.logbook_second_verification.lower().startswith('should'):
                         result.invalid_intercept_count += 1
                     elif irf.logbook_second_verification.lower().startswith('high'):
                         result.high_risk_count += 1
+                if irf.evidence_categorization is not None and irf.evidence_categorization.lower().startswith('evidence'):
+                    evidence = True
                     
-                victims = interceptee_storage.get_form_storage_class().objects.filter(interception_record=irf, person__role='PVOT')
+                victims = interceptee_storage.get_form_storage_class().objects.filter(interception_record=irf, person__role='PVOT',
+                                                                                      not_physically_present=False)
                 for victim in victims:
                     result.victim_count += 1
                     if evidence:
