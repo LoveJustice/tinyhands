@@ -154,3 +154,25 @@ def get_and_pre_process_all(db_cred):
 
     slp = get_features(slp)
     return slp
+
+def get_and_pre_process_all2(db_cred):
+
+    slp = dc.get_sl_data2(db_cred)
+    slp.set_index('id', inplace=True)
+
+    keep_cols = ['Original Name',
+                 'Age',
+                 'Gender',
+                 'Phone',
+                 'birthdate',
+                 'nationality',
+                 'social_media',
+                 'country',
+                 'irf_number',
+                 'form_number',
+                 'form' ]
+
+    slp.columns = keep_cols
+
+    slp = get_features(slp)
+    return slp

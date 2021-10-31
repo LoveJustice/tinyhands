@@ -20,7 +20,7 @@ class Command(BaseCommand):
         
     def handle(self, *args, **options):
         first = datetime.datetime.now()
-        persons_to_match = pp.get_and_pre_process_all(None)
+        persons_to_match = pp.get_and_pre_process_all2(None)
         classifier = pm.load_classifier('/data/id_matching/lr_all.pkl')
         stats = {
             "existing_match":0,

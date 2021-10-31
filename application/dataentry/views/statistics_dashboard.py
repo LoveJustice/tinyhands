@@ -247,8 +247,7 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
                         'last_arrests':entry.arrests,
                         'last_gospel':entry.gospel,
                         'last_empowerment':entry.empowerment,
-                        'last_staff_count': (Staff.objects.filter(border_station=entry.station, first_date__lt=end_staff, last_date__isnull=True).count() +
-                                             Staff.objects.filter(border_station=entry.station, first_date__lt=end_staff, first_date__gte=start_staff).count()),
+                        'last_staff_count': LocationStaff.objects.filter(location__border_station=entry.station, year_month=end_year_month).aggregate(Sum('work_fraction'))['work_fraction__sum'],
                         'last_subcommittee_count':entry.subcommittee_members
                         }
                     dash_station['to_date_intercepts'] = LocationStatistics.objects.filter(location__border_station=entry.station).aggregate(Sum('intercepts'))['intercepts__sum']
