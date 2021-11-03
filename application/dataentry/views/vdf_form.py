@@ -66,6 +66,7 @@ class VdfFormViewSet(BaseFormViewSet):
         'id', 'vdf_number', 'form_entered_by', 'staff_name', 
         'station', 'interview_date', 'date_time_entered_into_system',
         'date_time_last_updated']
+    ordering = ('-interview_date')
     
     def get_serializer_class(self):
         if self.action == 'list':
