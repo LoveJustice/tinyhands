@@ -12,5 +12,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunSQL("update dataentry_personidentification set type='ID#' where type='Citizenship'"),
+        migrations.RunSQL("update dataentry_personidentification set type='Other ID#' where type='Citizenship' or type='ID#'"),
     ]

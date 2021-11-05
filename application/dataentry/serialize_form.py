@@ -457,7 +457,7 @@ class ResponseIdentificationSerializer(serializers.Serializer):
             raise serializers.ValidationError("person identifier type may nto be None or blank");
         
         tmp = data.get('number')
-        if tmp is not None:  
+        if tmp is not None and tmp.get('value') != '':  
             ret['number'] = tmp.get('value')
         else:
             raise serializers.ValidationError("person identifier number may nto be None or blank");
@@ -640,8 +640,8 @@ class ResponsePersonSerializer(serializers.Serializer):
         if tmp is not None:
             for identifier_type in tmp:
                 serializer = ResponseIdentificationSerializer(data=tmp[identifier_type], context=dict(self.context))
-                serializer.is_valid()
-                self.identifer_serializers.append(serializer)
+                if serializer.is_valid():
+                    self.identifer_serializers.append(serializer)
         
         # null allowed
         for field in ['name', 'latitude', 'longitude','appearance','arrested','case_filed_against',
