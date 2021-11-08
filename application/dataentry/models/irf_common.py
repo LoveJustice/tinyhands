@@ -85,6 +85,7 @@ class IrfCommon(BaseForm):
     control_married_in_past_2_8_weeks = models.BooleanField('Married within the past 2-8 weeks', default=False).set_weight(10)
     control_married_in_past_2_weeks = models.BooleanField('Married in the past 2 weeks', default=False).set_weight(15)
     control_mobile_phone_taken_away = models.BooleanField('Their mobile phone was taken away', default=False)
+    control_abducted = models.BooleanField('Abducted', default=False)
     control_not_real_job = models.BooleanField('Not a real job', default=False).set_weight(55)
     control_passport_with_broker = models.BooleanField('Passport is with a broker', default=False).set_weight(40)
     control_relationship_to_get_married = models.BooleanField('On their way to get married ', default=False)
