@@ -14,7 +14,7 @@ from django.core.files.storage import default_storage
 from django.db import transaction
 from django.db.models import Q
 
-from dataentry.models import MasterPerson, PersonBoxCommon, PersonPhone, PersonAddress, PersonSocialMedia, PersonDocument, PersonMatch, MatchType
+from dataentry.models import MasterPerson, Person, PersonBoxCommon, PersonPhone, PersonAddress, PersonSocialMedia, PersonDocument, PersonMatch, MatchType
 from dataentry.models import MatchHistory, MatchAction, UserLocationPermission
 from dataentry.models.pending_match import PendingMatch
 from dataentry.serializers import MasterPersonSerializer, PersonAddressSerializer, PersonMatchSerializer, PersonPhoneSerializer, PersonSocialMediaSerializer, PersonDocumentSerializer, PersonInMasterSerializer
@@ -490,6 +490,14 @@ class PendingMatchViewSet(viewsets.ModelViewSet):
     
     def get_queryset(self):
         queryset = PendingMatch.objects.all()
+        role = self.request.GET.get('role')
+        if role is not None and role != '':
+            if role == 'PV':
+                master_persons = Person.objects.filter(role__contains='PVOT').values_list('master_person__id',flat=True)
+            else:
+                master_persons = Person.objects.filter(role__isnull=False).exclude(role__contains='PVOT').values_list('master_person__id',flat=True)
+            queryset = queryset.filter(Q(person_match__master1__id__in=master_persons) | Q(person_match__master2__id__in=master_persons))
+                
         in_country = self.request.GET.get('country')
         if in_country is not None:
             queryset = queryset.filter(country__id=in_country)
