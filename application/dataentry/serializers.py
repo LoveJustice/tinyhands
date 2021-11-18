@@ -730,7 +730,6 @@ class CountryExchangeSerializer(serializers.ModelSerializer):
 class PersonMatchSerializer(serializers.ModelSerializer):
     class Meta:
         fields = [
-            'country_id',
             'match_id',
             'master1_id',
             'master1_name',
@@ -744,6 +743,7 @@ class PersonMatchSerializer(serializers.ModelSerializer):
             'match_date',
             'matched_by',
             'notes',
+            'match_results',
             ]
         model = PendingMatch
     
@@ -760,6 +760,7 @@ class PersonMatchSerializer(serializers.ModelSerializer):
     match_date = serializers.SerializerMethodField(read_only=True)
     matched_by = serializers.SerializerMethodField(read_only=True)
     notes = serializers.SerializerMethodField(read_only=True)
+    match_results = serializers.SerializerMethodField(read_only=True)
     
     def get_match_id(self, obj):
         return obj.person_match.id
@@ -802,6 +803,8 @@ class PersonMatchSerializer(serializers.ModelSerializer):
         return name
     def get_notes(self, obj):
         return obj.person_match.notes
+    def get_match_results(self, obj):
+        return obj.person_match.match_results
 
 class AuditSerializer(serializers.ModelSerializer):
     class Meta:
