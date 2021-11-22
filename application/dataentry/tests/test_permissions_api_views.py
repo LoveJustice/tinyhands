@@ -102,30 +102,6 @@ class PermissionTest(APITestCase):
         tmp.save()
         self.permissions.append(tmp)
         
-        tmp = UserLocationPermission()
-        tmp.account = self.account
-        tmp.country = self.nepal
-        tmp.station = None
-        tmp.permission = Permission.objects.get(permission_group = 'VIF', action='VIEW')
-        tmp.save()
-        self.permissions.append(tmp)
-        
-        tmp = UserLocationPermission()
-        tmp.account = self.account
-        tmp.country = self.nepal
-        tmp.station = None
-        tmp.permission = Permission.objects.get(permission_group = 'VIF', action='ADD')
-        tmp.save()
-        self.permissions.append(tmp)
-        
-        tmp = UserLocationPermission()
-        tmp.account = self.account
-        tmp.country = self.nepal
-        tmp.station = None
-        tmp.permission = Permission.objects.get(permission_group = 'VIF', action='EDIT')
-        tmp.save()
-        self.permissions.append(tmp)
-        
         
             
     def test_list_permissions(self):
@@ -170,12 +146,7 @@ class PermissionTest(APITestCase):
         url = reverse('UserPermissionCountries', args=[self.account.id])
         response = self.client.get(url)
         self.assertEqual(len(response.data), 18)
-    
-    def test_list_user_countries_group(self):
-        url = reverse('UserPermissionCountries', args=[self.account.id])
-        response = self.client.get(url + "?permission_group=" + 'VIF')
-        self.assertEqual(len(response.data), 1)
-    
+   
     def test_list_user_stations(self):
         url = reverse('UserPermissionStations', args=[self.account.id])
         response = self.client.get(url)
@@ -201,10 +172,10 @@ class PermissionTest(APITestCase):
         url = reverse('UserLocationPermissionList')
         response = self.client.get(url  + "?country_id=" + str(self.nepal.id))
         self.assertEqual(len(response.data), 1)
-        self.assertEqual(len(response.data[0]['permissions']), 4)
+        self.assertEqual(len(response.data[0]['permissions']), 1)
         
     def test_permissions_list_nepal_bs(self):
         url = reverse('UserLocationPermissionList')
         response = self.client.get(url  + "?station_id=" + str(self.nepal_bs2.id))
         self.assertEqual(len(response.data), 1)
-        self.assertEqual(len(response.data[0]['permissions']), 6)
+        self.assertEqual(len(response.data[0]['permissions']), 3)

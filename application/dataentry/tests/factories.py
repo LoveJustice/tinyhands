@@ -78,6 +78,18 @@ class PersonFactory(DjangoModelFactory):
     photo = None
     master_person = factory.SubFactory(MasterPersonFactory)
 
+class PersonWithPhotoFactory(DjangoModelFactory):
+    class Meta:
+        model = Person
+
+    full_name = factory.Sequence(lambda n: 'John Doe {0}'.format(n))
+    age = FuzzyInteger(20, 40)
+    phone_contact = str(FuzzyInteger(100000000000, 999999999999).fuzz())
+    gender = 'm'
+    role = 'PVOT'
+    photo = 'foo.png'
+    master_person = factory.SubFactory(MasterPersonFactory)
+
 class VifFactory(DjangoModelFactory):
     class Meta:
         model = VictimInterview
@@ -123,10 +135,8 @@ class IntercepteeIndiaFactory(DjangoModelFactory):
     class Meta:
         model = IntercepteeCommon
 
-    person = factory.SubFactory(PersonFactory)
-    photo = 'foo.png'
+    person = factory.SubFactory(PersonWithPhotoFactory)
     interception_record = factory.SubFactory(IrfIndiaFactory)
-    kind = 'v'
 
 # Photo will cause IDManagement test to fail.  Photo is required for photo_exporter test.
 class IntercepteeNoPhotoFactory(DjangoModelFactory):
