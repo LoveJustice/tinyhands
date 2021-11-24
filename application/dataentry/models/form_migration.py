@@ -158,7 +158,7 @@ class FormMigration:
             in_transaction = True
         else:
             in_transaction = False
-        sql ="create view pendingmatch AS select distinct cast(dm.id as CHAR) || '-' || cast(dj.operating_country_id as CHAR) as the_key, dm.id as person_match_id, dj.operating_country_id as country_id "\
+        sql ="create view pendingmatchwithcountry AS select distinct cast(dm.id as CHAR) || '-' || cast(dj.operating_country_id as CHAR) as the_key, dm.id as person_match_id, dj.operating_country_id as country_id "\
             'from dataentry_personmatch dm, ( '\
                 'select distinct db.operating_country_id, dp.master_person_id '\
                 'from dataentry_cifcommon dc '\
@@ -190,7 +190,10 @@ class FormMigration:
             'where dm.master1_id = dj.master_person_id or dm.master2_id = dj.master_person_id '
 
         cursor = connection.cursor()
+        cursor.execute('DROP VIEW IF EXISTS pendingmatchwithcountry')
         cursor.execute('DROP VIEW IF EXISTS pendingmatch')
+        cursor.execute(sql)
+        sql ="create view pendingmatch AS select distinct person_match_id as id, person_match_id from pendingmatchwithcountry"
         cursor.execute(sql)
         if not in_transaction:
             transaction.commit()

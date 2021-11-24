@@ -40,15 +40,7 @@ def update_matches(id, persons_to_match, classifier, stats):
                         person_match.master2 = person2.master_person
                         person_match.match_type = suggested_match
                         person_match.notes = notes
-                        person_match.save()
-                        
-                        match_history = MatchHistory()
-                        match_history.master1 = person1.master_person
-                        match_history.master2 = person2.master_person
-                        match_history.match_type = suggested_match
-                        match_history.action = create_match
-                        match_history.notes = notes
-                        match_history.match_results = {
+                        person_match.match_results = {
                             'Match_Prob':str(possible_matches.iloc[idx]['Match_Prob']),
                             'Form Number':str(possible_matches.iloc[idx]['Form Number']),
                             'Form':str(possible_matches.iloc[idx]['Form']),
@@ -57,6 +49,15 @@ def update_matches(id, persons_to_match, classifier, stats):
                             'Phone Match':str(possible_matches.iloc[idx]['Phone Match']),
                             'Social Media Match':str(possible_matches.iloc[idx]['Social Media Match']),
                             }
+                        person_match.save()
+                        
+                        match_history = MatchHistory()
+                        match_history.master1 = person1.master_person
+                        match_history.master2 = person2.master_person
+                        match_history.match_type = suggested_match
+                        match_history.action = create_match
+                        match_history.notes = notes
+                        match_history.match_results = person_match.match_results
                         match_history.save()
                         stats['new_match'] += 1
             else:

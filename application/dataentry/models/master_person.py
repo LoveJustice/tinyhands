@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.postgres.fields import JSONField
 from datetime import date
 from django.contrib.postgres.fields import JSONField
 
@@ -92,4 +93,5 @@ class PersonMatch (models.Model):
     notes = models.TextField('Notes', blank=True)
     match_date = models.DateField(auto_now=True)
     matched_by = models.ForeignKey(Account, null=True, on_delete=models.SET_NULL)
+    match_results = JSONField(null=True)
     

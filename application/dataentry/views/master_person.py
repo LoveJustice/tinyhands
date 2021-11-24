@@ -16,7 +16,7 @@ from django.db.models import Q
 
 from dataentry.models import MasterPerson, Person, PersonBoxCommon, PersonPhone, PersonAddress, PersonSocialMedia, PersonDocument, PersonMatch, MatchType
 from dataentry.models import MatchHistory, MatchAction, UserLocationPermission
-from dataentry.models.pending_match import PendingMatch
+from dataentry.models.pending_match import PendingMatch, PendingMatchWithCountry
 from dataentry.serializers import MasterPersonSerializer, PersonAddressSerializer, PersonMatchSerializer, PersonPhoneSerializer, PersonSocialMediaSerializer, PersonDocumentSerializer, PersonInMasterSerializer
 
 logger = logging.getLogger(__name__)
@@ -274,6 +274,7 @@ class MasterPersonViewSet(viewsets.ModelViewSet):
                 'match_type':type_id,
                 'match_date':result.match_date,
                 'notes':result.notes,
+                'match_results':result.match_results
                 }
             if result.matched_by is None:
                 match['matched_by'] = ''
@@ -350,6 +351,37 @@ class MasterPersonViewSet(viewsets.ModelViewSet):
         return Response({}, status.HTTP_200_OK)
     
     @staticmethod
+    def merge_person_match(match1, match2):
+        if match1.match_results is not None and 'Match_Prob' in match1.match_results:
+            match_prob1 = match1.match_results['Match_Prob']
+        else:
+            match_prob1 = None
+        if match2.match_results is not None and 'Match_Prob' in match2.match_results:
+            match_prob2 = match2.match_results['Match_Prob']
+        else:
+            match_prob2 = None  
+        if match_prob1 is not None:
+            if match_prob2 is not None:
+                if match_prob2 > match_prob1:
+                    match1.match_results = match2.match_results
+        elif match_prob2 is not None:
+            match1.match_results = match2.match_results
+            
+        if match1.notes is not None and match1.notes != '':
+            if match2.notes is not None and match2.notes != '' and match2.notes != match1.notes:
+                match1.notes = match1.notes + '\n' + match2.notes 
+        elif match2.notes is not None and match2.notes != '':
+            match1.notes = match2.notes
+        
+        """
+         Currently we want the match type with the lowest ID.  If additional match types are added
+         in the future, this code may need to be altered.
+         """
+        if match2.match_type.id < match1.match_type.id:
+            match1.match_type = match2.match_type
+            
+    
+    @staticmethod
     def merge_master_persons_base(id1, id2, user, data):
         master1 = MasterPerson.objects.get(id=id1)
         master2 = MasterPerson.objects.get(id=id2)
@@ -420,9 +452,27 @@ class MasterPersonViewSet(viewsets.ModelViewSet):
             master2.active = False
             master2.save()
             
-            results = PersonMatch.objects.filter(Q(master1=master2) | Q(master2=master2))
+            # exact matches need to be removed
+            results = PersonMatch.objects.filter(Q(master1=master2, master2=master1) | Q(master1=master1, master2=master2))
             for match in results:
                 match.delete()
+            
+            results = PersonMatch.objects.filter(Q(master1=master2) | Q(master2=master2))
+            for match in results:
+                if match.master1 == master2:
+                    match.master1 = master1
+                    existing_matches = PersonMatch.objects.filter(Q(master1=master1, master2=match.master2) | Q(master1=match.master2, master2=master1))
+                    if len(existing_matches) == 1:
+                        MasterPersonViewSet.merge_person_match(match, existing_matches[0])
+                        existing_matches[0].delete()
+                    match.save()
+                else:  #match.master2 == master2
+                    match.master2 = master1
+                    existing_matches = PersonMatch.objects.filter(Q(master1=master1, master2=match.master1) | Q(master1=match.master1, master2=master1))
+                    if len(existing_matches) == 1:
+                        MasterPersonViewSet.merge_person_match(match, existing_matches[0])
+                        existing_matches[0].delete()
+                    match.save()
             
             match_history = MatchHistory()
             match_history.master1 = master1
@@ -489,20 +539,22 @@ class PendingMatchViewSet(viewsets.ModelViewSet):
     ordering = ('person_match__master1__full_name',)
     
     def get_queryset(self):
-        queryset = PendingMatch.objects.all()
+        qs = PendingMatchWithCountry.objects.all()
         role = self.request.GET.get('role')
         if role is not None and role != '':
             if role == 'PV':
                 master_persons = Person.objects.filter(role__contains='PVOT').values_list('master_person__id',flat=True)
             else:
                 master_persons = Person.objects.filter(role__isnull=False).exclude(role__contains='PVOT').values_list('master_person__id',flat=True)
-            queryset = queryset.filter(Q(person_match__master1__id__in=master_persons) | Q(person_match__master2__id__in=master_persons))
+            qs = qs.filter(Q(person_match__master1__id__in=master_persons) | Q(person_match__master2__id__in=master_persons))
                 
         in_country = self.request.GET.get('country')
         if in_country is not None:
-            queryset = queryset.filter(country__id=in_country)
+            qs = qs.filter(country__id=in_country)
         match_type = self.request.GET.get('match')
         if match_type is not None:
-            queryset = queryset.filter(person_match__match_type__name=match_type)
+            qs = qs.filter(person_match__match_type__name=match_type)
+        match_ids = qs.values_list('person_match', flat=True)
+        queryset = PendingMatch.objects.filter(person_match__in=match_ids)
         return queryset
         
