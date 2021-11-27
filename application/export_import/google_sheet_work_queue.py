@@ -21,7 +21,6 @@ class GoogleSheetWorkQueue(Thread):
             logger.debug("In __init__") 
             self.irf_sheet = GoogleSheet.from_settings('IRF')
             logger.debug("Returned for allocating IRF have_credentails=" + str(self.irf_sheet.credentials)) 
-            self.vif_sheet = GoogleSheet.from_settings('VIF')
             logger.debug("Returned from allocating VIF have_credentails=" + str(self.vif_sheet.credentials)) 
             if self.irf_sheet.credentials and self.vif_sheet.credentials:
                 logger.debug("have credentials")
@@ -46,8 +45,6 @@ class GoogleSheetWorkQueue(Thread):
             try:
                 if work[0] == 'IRF':
                     self.internal_update_irf(work[1])
-                elif work[0] == 'VIF':
-                    self.internal_update_vif(work[1])
                 elif work[0] == "SHUTDOWN":
                     self.work_queue.close()
                     self.have_credentials = False
@@ -113,8 +110,7 @@ class GoogleSheetWorkQueue(Thread):
         
     @staticmethod
     def handle_vif_done_signal(sender, **kwargs):
-        vif_number = kwargs.get("vif_number")
-        GoogleSheetWorkQueue.update_form(vif_number, 'VIF')
+        pass
         
 irf_done.connect(GoogleSheetWorkQueue.handle_irf_done_signal, weak=False, dispatch_uid="GoogleSheetWorkQueue")
 vif_done.connect(GoogleSheetWorkQueue.handle_vif_done_signal, weak=False, dispatch_uid="GoogleSheetWorkQueue")

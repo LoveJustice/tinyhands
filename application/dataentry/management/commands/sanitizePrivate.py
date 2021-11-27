@@ -328,8 +328,6 @@ class Command(BaseCommand):
     def all_permissions(self, account):
         perms = Permission.objects.all()
         for perm in perms:
-            if perm.action == 'CLASSIC':
-                continue
             ulp = UserLocationPermission()
             ulp.account = account
             ulp.country = None
