@@ -19,7 +19,6 @@ def audit_exports(forms):
     else:
         ExportToGoogleSheet.audit_forms(None)
         #audit_irf()
-        #audit_vif()
         #audit_traffickers()
         replace_address2()
     logger.info("Complete audit")
@@ -30,14 +29,6 @@ def audit_irf():
     
     db_irfs = InterceptionRecord.objects.all()
     irf_gs.audit(db_irfs, 'irf_number')
-    logger.info("Complete IRF audit")
-
-def audit_vif():
-    logger.info("Begin IRF audit")
-    vif_gs = GoogleSheet.from_settings('VIF')
-    
-    db_vifs = VictimInterview.objects.all()
-    vif_gs.audit(db_vifs, 'vif_number')
     logger.info("Complete IRF audit")
 
 def audit_traffickers():

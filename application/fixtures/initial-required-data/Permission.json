@@ -231,16 +231,6 @@
     },
     {
         "model": "dataentry.permission",
-        "pk": 25,
-        "fields": {
-            "permission_group": "FORMS",
-            "action": "CLASSIC",
-            "min_level": "GLOBAL",
-            "account_permission_name": null
-        }
-    },
-    {
-        "model": "dataentry.permission",
         "pk": 26,
         "fields": {
             "permission_group": "IRF",

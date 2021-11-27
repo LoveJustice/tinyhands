@@ -59,11 +59,6 @@ class PhotoExporter(viewsets.GenericViewSet):
     def get_photos(self, request, start_date, end_date):
         start = timezone.make_aware(datetime.fromtimestamp(mktime(strptime(start_date, '%m-%d-%Y'))), timezone.get_default_timezone())
         end = timezone.make_aware(datetime.fromtimestamp(mktime(strptime(end_date, '%m-%d-%Y'))), timezone.get_default_timezone())
-        perms = UserLocationPermission.objects.filter(account=request.user, permission__permission_group='FORMS',
-                                                     permission__action='CLASSIC')
-        if len(perms) > 0:
-            # Support old Nepal forms until they are no longer in use
-            return self.get_photos_old(start, end)
         
         all_stations = False
         stations_with_perms = []
@@ -130,7 +125,6 @@ class PhotoExporter(viewsets.GenericViewSet):
         for i in range(len(photos)):
             photos[i] = [str(x) for x in photos[i]]
 
-        print('photos', photos)
         f = BytesIO()
         imagezip = zipfile.ZipFile(f, 'w')
         for photoTuple in photos:
