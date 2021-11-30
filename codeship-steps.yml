@@ -12,7 +12,7 @@
   encrypted_dockercfg_path: dockercfg.encrypted
 
 - name: push_nginx
-  tag: ^(master|develop)
+  tag: ^(master|develop|ops-man-nginx-routes)
   image_name: tusoftwarestudio/dreamsuite-nginx
   image_tag: "{{ .CommitID }}"
   service: nginx
