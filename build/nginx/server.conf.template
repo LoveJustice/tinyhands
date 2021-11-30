@@ -86,20 +86,21 @@ server {
 
 
     # --- Routes for Operations Management (Ops Dashboard) ---
+    # Check the server's docker-compose.yml to find the real file locations
 
     # React javascript client
-    location /ops_management {
+    location /ops-management {
         alias /data/ops_management/dist/;
     }
 
     # Routing to Django server
-    location ^/ops_management/(rest)/ {
+    location ~ ^/ops-management/(rest)/ {
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
         proxy_connect_timeout 300s;
         proxy_read_timeout 300s;
-        proxy_pass http://web:9002;
+        proxy_pass http://127.0.0.1:9002;
     }
 }
