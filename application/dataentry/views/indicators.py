@@ -15,8 +15,11 @@ class CollectionResults:
         
         self.irf_count = 0
         self.victim_count = 0
+        self.victim_consent_count = 0
+        self.suspect_count = 0
         self.victim_evidence_count = 0
         self.photo_count = 0
+        self.suspect_photo_count = 0
         self.phone_count = 0
         self.phone_verified_count = 0
         self.irf_compliance_count = 0
@@ -43,6 +46,21 @@ class CollectionResults:
             return ''
         else:
             return math.floor(numerator * 100 / denominator + 0.5)
+    
+    def score_lag(self, lag_time):
+        score = 0
+        if lag_time <= 1:
+            score = 100
+        elif lag_time <= 2:
+            score = 90
+        elif lag_time <= 3:
+            score = 80
+        elif lag_time <= 7:
+            score = 60
+        elif lag_time <= 30:
+            score = 30
+        
+        return score
         
     def compute_values(self):
         self.irf_compliance_percent = self.compute_percent(self.irf_compliance_count, self.irf_count)
@@ -58,30 +76,38 @@ class CollectionResults:
         self.high_risk_percent = self.compute_percent(self.high_risk_count, self.verified_forms)
         
         self.vdf_percent = self.compute_percent(self.vdf_count, self.victim_count)
-        self.photo_percent = self.compute_percent(self.photo_count, self.victim_count)
+        self.photo_percent = self.compute_percent(self.photo_count, self.victim_consent_count)
+        self.suspect_photo_percent = self.compute_percent(self.suspect_photo_count, self.suspect_count)
         self.phone_verified_percent = self.compute_percent(self.phone_verified_count, self.phone_count)
         self.compliance_percent = self.compute_percent(self.irf_compliance_count +self.cif_compliance_count +  self.vdf_compliance_count,
                             self.irf_count + self.cif_count + self.vdf_count)
+        
+        lag_count_numerator = 0
+        lag_count_denominator = 0
         if self.irf_lag_count > 0:
             self.irf_lag = math.floor(self.irf_lag_total / self.irf_lag_count + 0.5)
+            lag_count_denominator += 1
+            lag_count_numerator += self.score_lag(self.irf_lag)
         else:
             self.irf_lag = 0
         if self.cif_lag_count > 0:
             self.cif_lag = math.floor(self.cif_lag_total / self.cif_lag_count + 0.5)
+            lag_count_denominator += 1
+            lag_count_numerator += self.score_lag(self.cif_lag)
         else:
             self.cif_lag = 0
         if self.vdf_lag_count > 0:
             self.vdf_lag = math.floor(self.vdf_lag_total / self.vdf_lag_count + 0.5)
+            lag_count_denominator += 1
+            lag_count_numerator += self.score_lag(self.vdf_lag)
         else:
             self.vdf_lag = 0
-        if self.irf_count > 0:
-            self.collection_lag_time = math.floor(-3.45 * (self.irf_lag + self.cif_lag + self.vdf_lag)/3 + 103.5)
-            if self.collection_lag_time > 100:
-                self.collection_lag_time = 100
-            elif self.collection_lag_time < 0:
-                self.collection_lag_time = 0
+        
+        if lag_count_denominator > 0:
+            self.collection_lag_time = math.floor(lag_count_numerator / lag_count_denominator + 0.5)
         else:
             self.collection_lag_time = ''
+                
         self.evidence_cif_percent = self.compute_percent(self.cif_with_evidence_count, self.victim_evidence_count)
         self.valid_intercept_percent = self.compute_percent(self.evidence_count + self.high_risk_count,
                             self.evidence_count + self.high_risk_count + self.invalid_intercept_count)
@@ -89,26 +115,26 @@ class CollectionResults:
         metric_present = 0
         metric_total = 0
         if self.vdf_percent != '':
-            metric_present += 1
-            metric_total += self.vdf_percent
+            metric_present += 0.15
+            metric_total += self.vdf_percent * 0.15
         if self.photo_percent != '':
-            metric_present += 1
-            metric_total += self.photo_percent
+            metric_present += 0.1
+            metric_total += self.photo_percent * 0.1
         if self.compliance_percent != '':
-            metric_present += 1
-            metric_total += self.compliance_percent
+            metric_present += 0.2
+            metric_total += self.compliance_percent * 0.2
         if self.collection_lag_time != '':
-            metric_present += 1
-            metric_total += self.collection_lag_time
+            metric_present += 0.15
+            metric_total += self.collection_lag_time * 0.15
         if self.evidence_cif_percent != '':
-            metric_present += 1
-            metric_total += self.evidence_cif_percent
+            metric_present += 0.15
+            metric_total += self.evidence_cif_percent * 0.15
         if self.valid_intercept_percent != '':
-            metric_present += 1
-            metric_total += self.valid_intercept_percent
+            metric_present += 0.1
+            metric_total += self.valid_intercept_percent * 0.1
         if self.phone_verified_percent != '':
-            metric_present += 1
-            metric_total += self.phone_verified_percent
+            metric_present += 0.1
+            metric_total += self.phone_verified_percent * 0.1
         if metric_present > 0:
             self.compliance_total = math.floor(metric_total/metric_present + 0.5)
         else:
@@ -119,8 +145,11 @@ class CollectionResults:
         for entry in the_list:
             self.irf_count += entry.irf_count
             self.victim_count += entry.victim_count
+            self.victim_consent_count += entry.victim_consent_count
+            self.suspect_count += entry.suspect_count
             self.victim_evidence_count += entry.victim_evidence_count
             self.photo_count += entry.photo_count
+            self.suspect_photo_count += entry.suspect_photo_count
             self.phone_count += entry.phone_count
             self.phone_verified_count += entry.phone_verified_count
             self.irf_compliance_count += entry.irf_compliance_count
@@ -232,12 +261,21 @@ class IndicatorsViewSet(viewsets.ViewSet):
                     result.victim_count += 1
                     if evidence:
                         result.victim_evidence_count += 1
-                    if victim.person.photo is not None and victim.person.photo != '':
-                        result.photo_count += 1
+                    if victim.consent_to_use_photo == 'Yes':
+                        result.victim_consent_count += 1
+                        if victim.person.photo is not None and victim.person.photo != '':
+                            result.photo_count += 1
                     if victim.person.phone_contact is not None and victim.person.phone_contact != '':
                         result.phone_count += 1
                         if victim.person.phone_verified:
                             result.phone_verified_count += 1
+                
+                suspects = interceptee_storage.get_form_storage_class().objects.filter(interception_record=irf, person__role='Suspect',
+                                                                                      not_physically_present=False)
+                for suspect in suspects:
+                    result.suspect_count += 1
+                    if suspect.person.photo is not None and suspect.person.photo != '':
+                        result.suspect_photo_count += 1
                     
                 IndicatorsViewSet.cif_indicators_for_irf(result, irf)
                 IndicatorsViewSet.vdf_indicators_for_irf(result, irf)
