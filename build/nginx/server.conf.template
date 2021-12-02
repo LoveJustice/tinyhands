@@ -61,7 +61,7 @@ server {
     
     location /auth {
     	internal;
-	    proxy_pass              http://web.tinyhands_default:9001;
+	    proxy_pass              http://web:9001;
 	    proxy_pass_request_body off;
 	    proxy_set_header        Content-Length "";
     }
@@ -81,7 +81,7 @@ server {
         proxy_set_header X-Forwarded-Proto $scheme;
         proxy_connect_timeout 300s;
         proxy_read_timeout 300s;
-        proxy_pass http://web.tinyhands_default:9001;
+        proxy_pass http://web:9001;
 	}
 
 
@@ -102,6 +102,6 @@ server {
         proxy_connect_timeout 300s;
         proxy_read_timeout 300s;
         # Assumes bridge_for_ops_man external network in your docker compose file
-        proxy_pass http://web.bridge_for_ops_man:8000;
+        proxy_pass http://opsweb:8000;
     }
 }
