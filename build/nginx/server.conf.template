@@ -101,6 +101,6 @@ server {
         proxy_set_header X-Forwarded-Proto $scheme;
         proxy_connect_timeout 300s;
         proxy_read_timeout 300s;
-        proxy_pass http://bridge_for_ops_man.ops-management-django_web_1:8000;
+        proxy_pass http://ops-management-django_web_1.bridge_for_ops_man:8000;
     }
 }
