@@ -24,6 +24,7 @@ class CollectionResults:
         self.phone_verified_count = 0
         self.irf_compliance_count = 0
         self.irf_lag_total = 0
+        self.irf_lag_percent_total = 0
         self.irf_lag_count = 0
         self.irf_forms_verified = 0
         self.evidence_count = 0
@@ -33,12 +34,14 @@ class CollectionResults:
         self.cif_count = 0
         self.cif_compliance_count = 0
         self.cif_lag_total = 0
+        self.cif_lag_percent_total = 0
         self.cif_lag_count = 0
         self.cif_with_evidence_count = 0
         
         self.vdf_count = 0
         self.vdf_compliance_count = 0
         self.vdf_lag_total = 0
+        self.vdf_lag_percent_total = 0
         self.vdf_lag_count = 0
     
     def compute_percent(self, numerator, denominator):
@@ -87,19 +90,19 @@ class CollectionResults:
         if self.irf_lag_count > 0:
             self.irf_lag = math.floor(self.irf_lag_total / self.irf_lag_count + 0.5)
             lag_count_denominator += 1
-            lag_count_numerator += self.score_lag(self.irf_lag)
+            lag_count_numerator += math.floor(self.irf_lag_percent_total/self.irf_lag_count + 0.5)
         else:
             self.irf_lag = 0
         if self.cif_lag_count > 0:
             self.cif_lag = math.floor(self.cif_lag_total / self.cif_lag_count + 0.5)
             lag_count_denominator += 1
-            lag_count_numerator += self.score_lag(self.cif_lag)
+            lag_count_numerator += math.floor(self.cif_lag_percent_total/self.cif_lag_count + 0.5)
         else:
             self.cif_lag = 0
         if self.vdf_lag_count > 0:
             self.vdf_lag = math.floor(self.vdf_lag_total / self.vdf_lag_count + 0.5)
             lag_count_denominator += 1
-            lag_count_numerator += self.score_lag(self.vdf_lag)
+            lag_count_numerator += math.floor(self.vdf_lag_percent_total/self.vdf_lag_count + 0.5)
         else:
             self.vdf_lag = 0
         
@@ -154,6 +157,7 @@ class CollectionResults:
             self.phone_verified_count += entry.phone_verified_count
             self.irf_compliance_count += entry.irf_compliance_count
             self.irf_lag_total += entry.irf_lag_total
+            self.irf_lag_percent_total += entry.irf_lag_percent_total
             self.irf_lag_count += entry.irf_lag_count
             self.irf_forms_verified += entry.irf_forms_verified
             self.evidence_count += entry.evidence_count
@@ -163,12 +167,14 @@ class CollectionResults:
             self.cif_count += entry.cif_count
             self.cif_compliance_count += entry.cif_compliance_count
             self.cif_lag_total += entry.cif_lag_total
+            self.cif_lag_percent_total += entry.cif_lag_percent_total
             self.cif_lag_count += entry.cif_lag_count
             self.cif_with_evidence_count += entry.cif_with_evidence_count
             
             self.vdf_count += entry.vdf_count
             self.vdf_compliance_count += entry.vdf_compliance_count
             self.vdf_lag_total += entry.vdf_lag_total
+            self.vdf_lag_percent_total += entry.vdf_lag_percent_total
             self.vdf_lag_count += entry.vdf_lag_count
 
 class IndicatorsViewSet(viewsets.ViewSet):
@@ -218,6 +224,22 @@ class IndicatorsViewSet(viewsets.ViewSet):
         return Response(IndicatorsViewSet.compute_collection_indicators(start_date, end_date, country_id))
     
     @staticmethod
+    def score_lag(lag_time):
+        score = 0
+        if lag_time <= 1:
+            score = 100
+        elif lag_time <= 2:
+            score = 90
+        elif lag_time <= 3:
+            score = 80
+        elif lag_time <= 7:
+            score = 60
+        elif lag_time <= 30:
+            score = 30
+        
+        return score
+    
+    @staticmethod
     def compute_collection_indicators(start_date, end_date, country_id):
         results = []
         station_list = BorderStation.objects.filter(operating_country__id=country_id).order_by('station_code')
@@ -242,8 +264,10 @@ class IndicatorsViewSet(viewsets.ViewSet):
                 if irf.logbook_incomplete_questions.lower() == 'no':
                     result.irf_compliance_count += 1
                 if irf.logbook_received is not None:
+                    work_days = IndicatorHistory.work_days(irf.date_of_interception, irf.logbook_received)
                     result.irf_lag_count += 1
-                    result.irf_lag_total += IndicatorHistory.work_days(irf.date_of_interception, irf.logbook_received)
+                    result.irf_lag_total += work_days
+                    result.irf_lag_percent_total += IndicatorsViewSet.score_lag(work_days)
                 if irf.logbook_second_verification is not None:
                     result.irf_forms_verified += 1
                     if irf.logbook_second_verification.lower().startswith('evidence'):
@@ -312,8 +336,10 @@ class IndicatorsViewSet(viewsets.ViewSet):
             if cif.logbook_incomplete_questions.lower() == 'no':
                 result.cif_compliance_count += 1
             if cif.interview_date is not None and cif.logbook_received is not None:
+                work_days = IndicatorHistory.work_days(cif.interview_date, cif.logbook_received)
                 result.cif_lag_count += 1
-                result.cif_lag_total += IndicatorHistory.work_days(cif.interview_date, cif.logbook_received)
+                result.cif_lag_total += work_days
+                result.cif_lag_percent_total += IndicatorsViewSet.score_lag(work_days)
             if irf.evidence_categorization is not None and (irf.evidence_categorization.lower().startswith('evidence')):
                         result.cif_with_evidence_count += 1
     
@@ -334,6 +360,8 @@ class IndicatorsViewSet(viewsets.ViewSet):
             if vdf.logbook_incomplete_questions.lower() == 'no':
                 result.vdf_compliance_count += 1
             if vdf.interview_date is not None and vdf.logbook_received is not None:
+                work_days = IndicatorHistory.work_days(vdf.interview_date, vdf.logbook_received)
                 result.vdf_lag_count += 1
-                result.vdf_lag_total += IndicatorHistory.work_days(vdf.interview_date, vdf.logbook_received)
+                result.vdf_lag_total += work_days
+                result.vdf_lag_percent_total += IndicatorsViewSet.score_lag(work_days)
             
