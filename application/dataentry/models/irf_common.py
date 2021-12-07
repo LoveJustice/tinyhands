@@ -48,6 +48,8 @@ class IrfCommon(BaseForm):
     vulnerability_doesnt_have_required_visa = models.BooleanField("Doesn't have required visa/docs", default=False)
     vulnerability_family_friend_arranged_travel = models.BooleanField("Friend/Family arranged travel/job/studies", default=False)
     vulnerability_where_going_doesnt_know = models.BooleanField("Doesn't know where they are going", default=False)
+    vulnerability_meeting_someone_met_online = models.BooleanField("Going to meet someone they met online", default=False)
+    vulnerability_travel_arranged_by_other = models.BooleanField("Transportation arranged by someone else", default=False)
     
     vulnerability_no_id = models.BooleanField("Does not have any form of ID", default=False)
     vulnerability_bus_driver_payment_at_destination = models.BooleanField("Bus driver expecting payment for travel at destination", default=False)
