@@ -83,4 +83,25 @@ server {
         proxy_read_timeout 300s;
         proxy_pass http://web:9001;
 	}
+
+
+    # --- Routes for Operations Management (Ops Dashboard) ---
+
+    # React javascript client
+    location /ops-management {
+        # Check the server's docker-compose.yml's mounted volumes for the location on the server
+        alias /data/ops_management/dist/;
+    }
+
+    # Routing to Django server
+    location ~ ^/ops-management/(rest)/ {
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_connect_timeout 300s;
+        proxy_read_timeout 300s;
+        # Assumes bridge_for_ops_man external network in your docker compose file
+        proxy_pass http://opsweb:8000;
+    }
 }
