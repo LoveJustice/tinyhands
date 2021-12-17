@@ -312,6 +312,7 @@ class MasterPersonViewSet(viewsets.ModelViewSet):
         match_history.match_type = match_type
         match_history.action = MatchAction.objects.get(name='update match')
         match_history.matched_by = request.user
+        match_history.match_results = person_match.match_results
         match_history.timstamp = datetime.now()
         match_history.save()
         return Response({}, status.HTTP_200_OK)
@@ -339,6 +340,7 @@ class MasterPersonViewSet(viewsets.ModelViewSet):
         match_history.match_type = match_type
         match_history.action = MatchAction.objects.get(name='create match')
         match_history.matched_by = user
+        match_history.match_results = person_match.match_results
         match_history.timstamp = datetime.now()
         match_history.save()
     
