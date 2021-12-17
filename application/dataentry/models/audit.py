@@ -22,6 +22,35 @@ class Audit(models.Model):
         form = Form.objects.get(form_name=self.form_name)
         return form
     
+    def get_question_count(self):
+        questions = 0
+        for section in self.template:
+            if section['questions']:
+                questions += section['questions']
+        return questions
+    
+    def get_samples_complete(self):
+        return AuditSample.objects.filter(audit=self, completion_date__isnull=False).count()
+    
+    def get_sample_count(self):
+        return AuditSample.objects.filter(audit=self).count()
+    
+    def get_total_incorrect(self):
+        completed = AuditSample.objects.filter(audit=self).exclude(completion_date__isnull=True)
+        total_incorrect = 0
+        for sample in completed:
+            for value in sample.results.values():
+                if value is not None:
+                    total_incorrect += value
+        return total_incorrect
+    
+    def accuracy(self):
+        result = '-'
+        total_questions = self.get_question_count() * self.get_samples_complete()
+        if total_questions > 0:
+            result = round((total_questions - self.get_total_incorrect()) * 100 / total_questions, 1)
+        return result
+    
 class AuditSample(models.Model):
     audit = models.ForeignKey(Audit)
     form_id = models.PositiveIntegerField()

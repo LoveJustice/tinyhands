@@ -7,7 +7,7 @@ from rest_framework import status, viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from dataentry.models import BorderStation, Country, Form, FormCategory, IndicatorHistory, SiteSettings
+from dataentry.models import Audit, AuditSample, BorderStation, Country, Form, FormCategory, IndicatorHistory, SiteSettings
 
 class CollectionResults:
     def __init__(self, label):
@@ -215,7 +215,35 @@ class IndicatorsViewSet(viewsets.ViewSet):
             history.append(results_entry)
         
         results['history'] = history
+        
+        #Audits
+        exclude_audits = AuditSample.objects.filter(completion_date__isnull=True).values_list('audit__id',flat=True)
+        audit_results = {}
+        for form_type in ['IRF','CIF','VDF']:
+            audit = self.latest_audit(form_type, country_id, exclude_audits)
+            if audit is None:
+                audit_results[form_type] = {
+                        'label': 'Last ' + form_type + ' Audit (none)',
+                        'value': ''
+                    }
+            else:
+                
+                audit_results[form_type] = {
+                        'label': 'Last ' + form_type + ' Audit (' + str(audit.start_date.month) + '/' + str(audit.start_date.year) + ' to ' + \
+                                str(audit.end_date.month) + '/' + str(audit.end_date.year) + ')',
+                        'value': audit.accuracy()
+                    }
+        results['audit'] = audit_results         
+        
         return Response(results)
+    
+    def latest_audit(self, type_name, country_id, exclude_audits):
+        audit = None
+        form_names = Form.objects.filter(form_type__name=type_name).values_list('form_name', flat=True)
+        audits = Audit.objects.filter(country__id=country_id, form_name__in=form_names).exclude(id__in=exclude_audits).order_by('-end_date')
+        if len(audits) > 0:
+            audit = audits[0]
+        return audit
     
     def get_collection_indicators(self, request, country_id):
         start_date = request.GET['start_date']
