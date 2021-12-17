@@ -83,10 +83,8 @@ class AuditViewSet(viewsets.ModelViewSet):
         data_class = form.storage.get_form_storage_class()
         candidates = data_class.objects.filter(station__operating_country_id=country,
                     logbook_submitted__gte=start, logbook_submitted__lte=end)
-        print('before', len(candidates))
         if form_version is not None and form_version != '':
             candidates = candidates.filter(form_version=form_version)
-            print('after', len(candidates))
         candidates_count = candidates.count()
         number_to_sample = int (candidates_count * percent / 100 +0.5)
         number_to_sample = int (candidates_count * percent / 100 +0.5)

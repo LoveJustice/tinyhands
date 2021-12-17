@@ -3,7 +3,7 @@
   command: sh /data/bin/run-codeship.sh
 
 - name: push_dreamsuite
-  tag: ^(master|develop)
+  tag: ^(master|develop|ops-man-nginx-routes)
   image_name: tusoftwarestudio/dreamsuite
   image_tag: "{{ .CommitID }}"
   service: web
@@ -12,7 +12,7 @@
   encrypted_dockercfg_path: dockercfg.encrypted
 
 - name: push_nginx
-  tag: ^(master|develop)
+  tag: ^(master|develop|ops-man-nginx-routes)
   image_name: tusoftwarestudio/dreamsuite-nginx
   image_tag: "{{ .CommitID }}"
   service: nginx
@@ -21,6 +21,6 @@
   encrypted_dockercfg_path: dockercfg.encrypted
 
 - name: deploy
-  tag: ^(master|develop)
+  tag: ^(master|develop|ops-man-nginx-routes)
   service: deploy
   command: sh /run.sh
