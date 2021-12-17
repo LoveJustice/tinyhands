@@ -12,6 +12,7 @@ from dataentry.models import StationStatistics, LocationStatistics, LocationStaf
 from dataentry.models import PendingMatch, Audit, AuditSample, LegalCase, LegalCaseSuspect, LegalCaseVictim
 from dataentry.models import GospelVerification
 from dataentry.models import ClientDiagnostic
+from dataentry.models import ProjectCategory
 from static_border_stations.serializers import LocationSerializer
 from dataentry.form_data import FormData
 
@@ -99,6 +100,7 @@ class BorderStationSerializer(serializers.ModelSerializer):
     number_of_staff = serializers.SerializerMethodField(read_only=True)
     ytd_interceptions = serializers.SerializerMethodField(read_only=True)
     location_set = LocationSerializer(many=True, read_only=True)
+    project_category_name = serializers.SerializerMethodField(read_only=True)
     
     def get_interceptee_class(self, obj):
         interceptee_class = None
@@ -131,6 +133,9 @@ class BorderStationSerializer(serializers.ModelSerializer):
     
     def get_country_currency(self, obj):
         return obj.operating_country.currency or ""
+    
+    def get_project_category_name(self, obj):
+        return obj.project_category.name
 
 
 class InterceptionRecordListSerializer(serializers.ModelSerializer):
@@ -985,5 +990,10 @@ class ClientDiagnosticSerializer(serializers.ModelSerializer):
     class Meta:
         fields = '__all__'
         model = ClientDiagnostic
+
+class ProjectCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = '__all__'
+        model = ProjectCategory
 
     

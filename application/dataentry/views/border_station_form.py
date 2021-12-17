@@ -4,12 +4,14 @@ from rest_framework import serializers
 from rest_framework import filters as fs
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
+from rest_framework.response import Response
 
 from dataentry.serialize_form import FormDataSerializer
 from .base_form import BaseFormViewSet, BorderStationOverviewSerializer
 
 from dataentry.form_data import Form, FormData
-from dataentry.models import BorderStation
+from dataentry.models import BorderStation, ProjectCategory
+from dataentry.serializers import ProjectCategorySerializer
 
 
     
@@ -24,7 +26,7 @@ class BorderStationFormViewSet(BaseFormViewSet):
         return self.serializer_context
 
     def get_perm_group_name(self):
-        return 'STATIONS'
+        return 'PROJECTS'
     
     def get_form_type_name(self):
         return 'BORDER_STATION'
@@ -49,4 +51,9 @@ class BorderStationFormViewSet(BaseFormViewSet):
     
     def update(self, request, pk):
         return super().update(request, None, pk)
+    
+    def get_project_categories(self, request):
+        qs = ProjectCategory.objects.all().order_by('sort_order')
+        serializer = ProjectCategorySerializer(qs, many=True, context={'request': request})
+        return Response(serializer.data) 
 

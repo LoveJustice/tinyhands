@@ -15,7 +15,7 @@ from dataentry.serialize_form import FormDataSerializer
 from static_border_stations.tests.factories import GenericUserWithPermissions
 
 class IrfTest(APITransactionTestCase):
-    fixtures = ['initial-required-data/Region.json','initial-required-data/Country.json', 'initial-required-data/Permission.json']
+    fixtures = ['initial-required-data/Region.json','initial-required-data/Country.json', 'initial-required-data/Permission.json', 'initial-required-data/ProjectCategory.json']
     def setUp(self):
         form_data_file = settings.BASE_DIR + '/fixtures/initial-required-data/form_data.json'
         call_command('loaddata', form_data_file, verbosity=0)

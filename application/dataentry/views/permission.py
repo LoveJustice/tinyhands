@@ -148,12 +148,16 @@ class UserLocationPermissionViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
     
     def get_station_ids_with_form(self, request, stations):
-        if 'permission_group' not in request.GET:
-            return []
+        if 'form_type' not in request.GET:
+            if 'permission_group' not in request.GET:
+                return []
+            form_type = request.GET['permission_group']
+        else:
+            form_type = request.GET['form_type']
         
         form_stations = []
         for station in stations:
-            if Form.current_form(request.GET['permission_group'], station.id) is not None:
+            if Form.current_form(form_type, station.id) is not None:
                 form_stations.append(station.id)
         
         return form_stations
@@ -164,15 +168,15 @@ class UserLocationPermissionViewSet(viewsets.ModelViewSet):
         
         if 'country_id' in request.GET:
             tmp = int(request.GET['country_id'])
-            stations = BorderStation.objects.filter(operating_country__id = tmp)
+            stations = BorderStation.objects.filter(operating_country__id = tmp).order_by('project_category__sprt_prder','station_name')
         else:
             stations = BorderStation.objects.all()
         
         if 'include_closed' not in request.GET:
             stations = stations.filter(open=True)
         
-        if 'transit_only' in request.GET:
-            stations = stations.exclude(non_transit=True)
+        if 'feature' in request.GET:
+            stations = stations.filter(features__contains=request.GET['feature'])
         
         for perm in perms.iterator():
             if perm.country is None and perm.station is None:

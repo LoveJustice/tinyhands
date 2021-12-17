@@ -5,7 +5,7 @@
         "fields": {
             "permission_group": "IRF",
             "action": "VIEW",
-            "min_level": "STATION",
+            "min_level": "PROJECT",
             "account_permission_name": "permission_irf_view"
         }
     },
@@ -15,7 +15,7 @@
         "fields": {
             "permission_group": "IRF",
             "action": "ADD",
-            "min_level": "STATION",
+            "min_level": "PROJECT",
             "account_permission_name": "permission_irf_add"
         }
     },
@@ -25,7 +25,7 @@
         "fields": {
             "permission_group": "IRF",
             "action": "EDIT",
-            "min_level": "STATION",
+            "min_level": "PROJECT",
             "account_permission_name": "permission_irf_edit"
         }
     },
@@ -35,7 +35,7 @@
         "fields": {
             "permission_group": "IRF",
             "action": "DELETE",
-            "min_level": "STATION",
+            "min_level": "PROJECT",
             "account_permission_name": "permission_irf_delete"
         }
     },
@@ -45,7 +45,7 @@
         "fields": {
             "permission_group": "IRF",
             "action": "APPROVE",
-            "min_level": "STATION",
+            "min_level": "PROJECT",
             "account_permission_name": null
         }
     },
@@ -103,9 +103,9 @@
         "model": "dataentry.permission",
         "pk": 11,
         "fields": {
-            "permission_group": "STATIONS",
+            "permission_group": "PROJECTS",
             "action": "VIEW",
-            "min_level": "STATION",
+            "min_level": "PROJECT",
             "account_permission_name": "permission_border_stations_view"
         }
     },
@@ -113,7 +113,7 @@
         "model": "dataentry.permission",
         "pk": 12,
         "fields": {
-            "permission_group": "STATIONS",
+            "permission_group": "PROJECTS",
             "action": "ADD",
             "min_level": "COUNTRY",
             "account_permission_name": "permission_border_stations_add"
@@ -123,9 +123,9 @@
         "model": "dataentry.permission",
         "pk": 13,
         "fields": {
-            "permission_group": "STATIONS",
+            "permission_group": "PROJECTS",
             "action": "EDIT",
-            "min_level": "STATION",
+            "min_level": "PROJECT",
             "account_permission_name": "permission_border_stations_edit"
         }
     },
@@ -135,7 +135,7 @@
         "fields": {
             "permission_group": "BUDGETS",
             "action": "VIEW",
-            "min_level": "STATION",
+            "min_level": "PROJECT",
             "account_permission_name": "permission_budget_view"
         }
     },
@@ -145,7 +145,7 @@
         "fields": {
             "permission_group": "BUDGETS",
             "action": "ADD",
-            "min_level": "STATION",
+            "min_level": "PROJECT",
             "account_permission_name": "permission_budget_add"
         }
     },
@@ -155,7 +155,7 @@
         "fields": {
             "permission_group": "BUDGETS",
             "action": "EDIT",
-            "min_level": "STATION",
+            "min_level": "PROJECT",
             "account_permission_name": "permission_budget_edit"
         }
     },
@@ -165,7 +165,7 @@
         "fields": {
             "permission_group": "BUDGETS",
             "action": "DELETE",
-            "min_level": "STATION",
+            "min_level": "PROJECT",
             "account_permission_name": "permission_budget_delete"
         }
     },
@@ -215,7 +215,7 @@
         "fields": {
             "permission_group": "ACCOUNTS",
             "action": "MANAGE",
-            "min_level": "STATION",
+            "min_level": "PROJECT",
             "account_permission_name": "permission_accounts_manage"
         }
     },
@@ -235,7 +235,7 @@
         "fields": {
             "permission_group": "IRF",
             "action": "VIEW PI",
-            "min_level": "STATION",
+            "min_level": "PROJECT",
             "account_permission_name": null
         }
     },
@@ -243,7 +243,7 @@
         "model": "dataentry.permission",
         "pk": 27,
         "fields": {
-            "permission_group": "STATIONS",
+            "permission_group": "PROJECTS",
             "action": "SET_FORMS",
             "min_level": "GLOBAL",
             "account_permission_name": null
@@ -255,7 +255,7 @@
         "fields": {
             "permission_group": "CIF",
             "action": "VIEW",
-            "min_level": "STATION",
+            "min_level": "PROJECT",
             "account_permission_name": null
         }
     },
@@ -265,7 +265,7 @@
         "fields": {
             "permission_group": "CIF",
             "action": "ADD",
-            "min_level": "STATION",
+            "min_level": "PROJECT",
             "account_permission_name": null
         }
     },
@@ -275,7 +275,7 @@
         "fields": {
             "permission_group": "CIF",
             "action": "EDIT",
-            "min_level": "STATION",
+            "min_level": "PROJECT",
             "account_permission_name": null
         }
     },
@@ -285,7 +285,7 @@
         "fields": {
             "permission_group": "CIF",
             "action": "DELETE",
-            "min_level": "STATION",
+            "min_level": "PROJECT",
             "account_permission_name": null
         }
     },
@@ -295,7 +295,7 @@
         "fields": {
             "permission_group": "VDF",
             "action": "VIEW",
-            "min_level": "STATION",
+            "min_level": "PROJECT",
             "account_permission_name": null
         }
     },
@@ -305,7 +305,7 @@
         "fields": {
             "permission_group": "VDF",
             "action": "ADD",
-            "min_level": "STATION",
+            "min_level": "PROJECT",
             "account_permission_name": null
         }
     },
@@ -315,7 +315,7 @@
         "fields": {
             "permission_group": "VDF",
             "action": "EDIT",
-            "min_level": "STATION",
+            "min_level": "PROJECT",
             "account_permission_name": null
         }
     },
@@ -325,7 +325,7 @@
         "fields": {
             "permission_group": "VDF",
             "action": "DELETE",
-            "min_level": "STATION",
+            "min_level": "PROJECT",
             "account_permission_name": null
         }
     },
@@ -335,7 +335,7 @@
         "fields": {
             "permission_group": "VDF",
             "action": "VIEW PI",
-            "min_level": "STATION",
+            "min_level": "PROJECT",
             "account_permission_name": null
         }
     },
@@ -345,7 +345,7 @@
         "fields": {
             "permission_group": "CIF",
             "action": "VIEW PI",
-            "min_level": "STATION",
+            "min_level": "PROJECT",
             "account_permission_name": null
         }
     },
@@ -355,7 +355,7 @@
         "fields": {
             "permission_group": "MONTHLY_REPORT",
             "action": "VIEW",
-            "min_level": "STATION",
+            "min_level": "PROJECT",
             "account_permission_name": null
         }
     },
@@ -365,7 +365,7 @@
         "fields": {
             "permission_group": "MONTHLY_REPORT",
             "action": "ADD",
-            "min_level": "STATION",
+            "min_level": "PROJECT",
             "account_permission_name": null
         }
     },
@@ -375,7 +375,7 @@
         "fields": {
             "permission_group": "MONTHLY_REPORT",
             "action": "EDIT",
-            "min_level": "STATION",
+            "min_level": "PROJECT",
             "account_permission_name": null
         }
     },
@@ -385,7 +385,7 @@
         "fields": {
             "permission_group": "MONTHLY_REPORT",
             "action": "DELETE",
-            "min_level": "STATION",
+            "min_level": "PROJECT",
             "account_permission_name": null
         }
     },
@@ -395,7 +395,7 @@
         "fields": {
             "permission_group": "NOTIFICATIONS",
             "action": "IRF_SUBMITTED",
-            "min_level": "STATION",
+            "min_level": "PROJECT",
             "account_permission_name": null
         }
     },
@@ -405,7 +405,7 @@
         "fields": {
             "permission_group": "NOTIFICATIONS",
             "action": "IRF_VERIFIED",
-            "min_level": "STATION",
+            "min_level": "PROJECT",
             "account_permission_name": null
         }
     },
