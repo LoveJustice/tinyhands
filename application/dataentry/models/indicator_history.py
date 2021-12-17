@@ -232,16 +232,20 @@ class IndicatorHistory(models.Model):
         lag_time = 0
         lag_count = 0
         victim_count = 0
+        change_count = 0
         
         for irf in query_set:
             if IndicatorHistory.date_in_range(irf.logbook_first_verification_date, None, None):
                 lag_count += 1
                 lag_time += IndicatorHistory.work_days(irf.logbook_first_verification_date, irf.logbook_second_verification_date)
                 victim_count += IntercepteeCommon.objects.filter(interception_record=irf, person__role='PVOT').count()
+                if irf.logbook_first_verification != irf.logbook_second_verification:
+                    change_count += 1
         
         IndicatorHistory.add_result(results, 'v2TotalLag', lag_time)
         IndicatorHistory.add_result(results, 'v2Count', lag_count)
         IndicatorHistory.add_result(results, 'v2VictimCount', victim_count)
+        IndicatorHistory.add_result(results, 'v2ChangeCount', change_count)
      
     @staticmethod
     def calculate_form_indicators (results, query_set, form_type):
