@@ -32,4 +32,9 @@ class Migration(migrations.Migration):
             name='project_category',
             field=models.ForeignKey(default=dataentry.models.border_station.get_border_station_default_category, null=True, on_delete=django.db.models.deletion.SET_NULL, to='dataentry.ProjectCategory'),
         ),
+        migrations.AlterField(
+            model_name='permission',
+            name='min_level',
+            field=models.CharField(default='PROJECT', max_length=100),
+        ),
     ]

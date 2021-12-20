@@ -56,7 +56,7 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
         station_statistics.budget = budget
         station_statistics.gospel = gospel
         station_statistics.empowerment = empowerment
-        if station.features.contains('hasStaff') and (not station.operating_country.enable_all_locations or not station.features.contains('hasLocationStaff')):
+        if 'hasStaff' in station.features and (not station.operating_country.enable_all_locations or not 'hasLocationStaffing' in station.features):
             other_location = Location.get_or_create_other_location(station)
             general_staff = Staff.get_or_create_general_staff(station)
             if request.data['staff'] == '':
