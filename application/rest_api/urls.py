@@ -139,6 +139,7 @@ urlpatterns = [
         url(r'^border_station/$', BorderStationFormViewSet.as_view({'post': 'create'}), name="borderStation"),
         url(r'^border_station/(?P<pk>\d+)/$', BorderStationFormViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}), name="borderStationForm"),
         url(r'^border_station/blank/', BorderStationFormViewSet.as_view({'get': 'retrieve_blank'}), name='borderStationBlank'),
+        url(r'^border_station/category/', BorderStationFormViewSet.as_view({'get': 'get_project_categories'}), name='borderStationCategory'),
         
         url(r'^operations-dashboard/(?P<country_id>\d+)/$', StationStatisticsViewSet.as_view({'get': 'retrieve_dashboard'}), name='retrieveDashboard'),
         url(r'^station-data/country/(?P<country_id>\d+)/(?P<year_month>\d+)/$', StationStatisticsViewSet.as_view({'get': 'retrieve_country_data'}), name='retrieveCountryOperations'),
