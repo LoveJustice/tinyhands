@@ -1,0 +1,1 @@
+[{"model": "dataentry.projectcategory", "pk": 1, "fields": {"name": "Transit Stations", "sort_order": 1}}, {"model": "dataentry.projectcategory", "pk": 2, "fields": {"name": "Impact Multiplying", "sort_order": 2}}, {"model": "dataentry.projectcategory", "pk": 3, "fields": {"name": "Admin", "sort_order": 3}}]

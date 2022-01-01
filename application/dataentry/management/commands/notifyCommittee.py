@@ -13,7 +13,7 @@ class Command(BaseCommand):
         email_sender = settings.SERVER_EMAIL
         ulp1 = UserLocationPermission.objects.filter(permission__permission_group = 'NOTIFICATIONS', permission__action = 'COMMITTEE', station=None, country=None)
         for country in countries:
-            stations = BorderStation.objects.filter(operating_country=country, non_transit=False).order_by("station_name")
+            stations = BorderStation.objects.filter(operating_country=country, features__contains='hasSubcommittee').order_by("station_name")
             station_list = ''
             for station in stations:
                 committee_count = CommitteeMember.objects.filter(border_station=station).count();

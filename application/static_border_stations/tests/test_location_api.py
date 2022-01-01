@@ -28,7 +28,7 @@ class LocationTests(RestApiTestCase):
     # Viewset Methods
 
     def test_return_all_Locations(self):
-        usr = GenericUserWithPermissions.create([{'group':'STATIONS', 'action':'VIEW', 'country': None, 'station': None},])
+        usr = GenericUserWithPermissions.create([{'group':'PROJECTS', 'action':'VIEW', 'country': None, 'station': None},])
         self.login(usr)
         url = reverse('Location')
 
@@ -38,7 +38,7 @@ class LocationTests(RestApiTestCase):
         self.assertEqual(response.data['count'], 5)
 
     def test_create_Location(self):
-        usr = GenericUserWithPermissions.create([{'group':'STATIONS', 'action':'VIEW', 'country': None, 'station': None},{'group':'STATIONS', 'action':'ADD', 'country': None, 'station': None}])
+        usr = GenericUserWithPermissions.create([{'group':'PROJECTS', 'action':'VIEW', 'country': None, 'station': None},{'group':'PROJECTS', 'action':'ADD', 'country': None, 'station': None}])
         self.login(usr)
         url = reverse('Location')
 
@@ -58,7 +58,7 @@ class LocationTests(RestApiTestCase):
         self.assertEqual(data['name'], response.data['name'])
 
     def test_get_Location(self):
-        usr = GenericUserWithPermissions.create([{'group':'STATIONS', 'action':'VIEW', 'country': None, 'station': None},{'group':'STATIONS', 'action':'VIEW', 'country': None, 'station': None}])
+        usr = GenericUserWithPermissions.create([{'group':'PROJECTS', 'action':'VIEW', 'country': None, 'station': None},{'group':'PROJECTS', 'action':'VIEW', 'country': None, 'station': None}])
         self.login(usr)
         url = reverse('LocationsForBorderStation', args=[self.location.border_station.id])
 
@@ -67,7 +67,7 @@ class LocationTests(RestApiTestCase):
         self.assertEqual(self.location.name, response.data[0]['name'])
 
     def test_update_Location(self):
-        usr = GenericUserWithPermissions.create([{'group':'STATIONS', 'action':'VIEW', 'country': None, 'station': None},{'group':'STATIONS', 'action':'EDIT', 'country': None, 'station': None}])
+        usr = GenericUserWithPermissions.create([{'group':'PROJECTS', 'action':'VIEW', 'country': None, 'station': None},{'group':'PROJECTS', 'action':'EDIT', 'country': None, 'station': None}])
         self.login(usr)
         url = reverse('LocationDetail', args=[self.location.id])
 
@@ -86,7 +86,7 @@ class LocationTests(RestApiTestCase):
         self.assertEqual(data['name'], response.data['name'])
         
     def test_delete_Location(self):
-        usr = GenericUserWithPermissions.create([{'group':'STATIONS', 'action':'VIEW', 'country': None, 'station': None},{'group':'STATIONS', 'action':'EDIT', 'country': None, 'station': None}])
+        usr = GenericUserWithPermissions.create([{'group':'PROJECTS', 'action':'VIEW', 'country': None, 'station': None},{'group':'PROJECTS', 'action':'EDIT', 'country': None, 'station': None}])
         self.login(usr)
         delete_url = reverse('LocationDetail', args=[self.location.id])
         url = reverse('LocationsForBorderStation', args=[self.location.border_station.id])
@@ -102,7 +102,7 @@ class LocationTests(RestApiTestCase):
             mem.border_station = self.location.border_station
             mem.save()
 
-        usr = GenericUserWithPermissions.create([{'group':'STATIONS', 'action':'VIEW', 'country': None, 'station': None},])
+        usr = GenericUserWithPermissions.create([{'group':'PROJECTS', 'action':'VIEW', 'country': None, 'station': None},])
         self.login(usr)
         url = reverse('LocationsForBorderStation', args=[self.location.border_station.id])
 

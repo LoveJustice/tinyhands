@@ -190,8 +190,8 @@ class FormMigration:
             'where dm.master1_id = dj.master_person_id or dm.master2_id = dj.master_person_id '
 
         cursor = connection.cursor()
-        cursor.execute('DROP VIEW IF EXISTS pendingmatchwithcountry')
         cursor.execute('DROP VIEW IF EXISTS pendingmatch')
+        cursor.execute('DROP VIEW IF EXISTS pendingmatchwithcountry')
         cursor.execute(sql)
         sql ="create view pendingmatch AS select distinct person_match_id as id, person_match_id from pendingmatchwithcountry"
         cursor.execute(sql)

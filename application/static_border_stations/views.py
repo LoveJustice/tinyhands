@@ -18,9 +18,9 @@ class BorderStationViewSet(viewsets.ModelViewSet):
     queryset = BorderStation.objects.all()
     serializer_class = BorderStationSerializer
     permission_classes = (IsAuthenticated, HasPermission, HasPostPermission, HasPutPermission)
-    permissions_required = [{'permission_group':'STATIONS', 'action':'VIEW'},]
-    post_permissions_required = [{'permission_group':'STATIONS', 'action':'ADD'},]
-    put_permissions_required = [{'permission_group':'STATIONS', 'action':'EDIT'},]
+    permissions_required = [{'permission_group':'PROJECTS', 'action':'VIEW'},]
+    post_permissions_required = [{'permission_group':'PROJECTS', 'action':'ADD'},]
+    put_permissions_required = [{'permission_group':'PROJECTS', 'action':'EDIT'},]
     
     @list_route()
     def list_all(self, request):
@@ -52,9 +52,9 @@ class BorderStationRestAPI(viewsets.ModelViewSet):
     filter_backends = (filters.DjangoFilterBackend,)
     filter_fields = ('border_station',)
     permission_classes = (IsAuthenticated, HasPermission, HasPostPermission, HasPutPermission)
-    permissions_required = [{'permission_group':'STATIONS', 'action':'VIEW'},]
-    post_permissions_required = [{'permission_group':'STATIONS', 'action':'ADD'},]
-    put_permissions_required = [{'permission_group':'STATIONS', 'action':'EDIT'},]
+    permissions_required = [{'permission_group':'PROJECTS', 'action':'VIEW'},]
+    post_permissions_required = [{'permission_group':'PROJECTS', 'action':'ADD'},]
+    put_permissions_required = [{'permission_group':'PROJECTS', 'action':'EDIT'},]
 
 
 class LocationViewSet(BorderStationRestAPI):

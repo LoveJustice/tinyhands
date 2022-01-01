@@ -270,7 +270,7 @@ class IndicatorsViewSet(viewsets.ViewSet):
     @staticmethod
     def compute_collection_indicators(start_date, end_date, country_id):
         results = []
-        station_list = BorderStation.objects.filter(operating_country__id=country_id).order_by('station_code')
+        station_list = BorderStation.objects.filter(operating_country__id=country_id, features__contains='hasForms').order_by('station_code')
         for station in station_list:
             form = Form.current_form('IRF', station.id)
             if form is None:
