@@ -94,7 +94,7 @@ class PhotoExporter(viewsets.GenericViewSet):
             mod = __import__(storage.module_name, fromlist=[storage.form_model_name])
             card_model = getattr(mod, storage.form_model_name, None)
             try:
-                card_model._meta.get_field('photo')
+                card_model._meta.get_field('person')
             except:
                 # Not an interceptee model
                 continue
