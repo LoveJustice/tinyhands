@@ -28,7 +28,7 @@ class CommitteeMemberTests(RestApiTestCase):
     # Viewset Methods
 
     def test_return_all_CommitteeMembers(self):
-        usr = GenericUserWithPermissions.create([{'group':'STATIONS', 'action':'VIEW', 'country': None, 'station': None},])
+        usr = GenericUserWithPermissions.create([{'group':'PROJECTS', 'action':'VIEW', 'country': None, 'station': None},])
         self.login(usr)
         url = reverse('CommitteeMember')
 
@@ -38,7 +38,7 @@ class CommitteeMemberTests(RestApiTestCase):
         self.assertEqual(response.data['count'], 5)
 
     def test_create_CommitteeMember(self):
-        usr = GenericUserWithPermissions.create([{'group':'STATIONS', 'action':'VIEW', 'country': None, 'station': None},{'group':'STATIONS', 'action':'ADD', 'country': None, 'station': None}])
+        usr = GenericUserWithPermissions.create([{'group':'PROJECTS', 'action':'VIEW', 'country': None, 'station': None},{'group':'PROJECTS', 'action':'ADD', 'country': None, 'station': None}])
         self.login(usr)
         url = reverse('CommitteeMember')
 
@@ -58,7 +58,7 @@ class CommitteeMemberTests(RestApiTestCase):
         self.assertEqual(data['email'], response.data['email'])
 
     def test_get_CommitteeMember(self):
-        usr = GenericUserWithPermissions.create([{'group':'STATIONS', 'action':'VIEW', 'country': None, 'station': None},])
+        usr = GenericUserWithPermissions.create([{'group':'PROJECTS', 'action':'VIEW', 'country': None, 'station': None},])
         self.login(usr)
         url = reverse('CommitteeMemberDetail', args=[self.committee_member.id])
 
@@ -67,7 +67,7 @@ class CommitteeMemberTests(RestApiTestCase):
         self.assertEqual(self.committee_member.email, response.data['email'])
 
     def test_update_CommitteeMember(self):
-        usr = GenericUserWithPermissions.create([{'group':'STATIONS', 'action':'VIEW', 'country': None, 'station': None},{'group':'STATIONS', 'action':'EDIT', 'country': None, 'station': None}])
+        usr = GenericUserWithPermissions.create([{'group':'PROJECTS', 'action':'VIEW', 'country': None, 'station': None},{'group':'PROJECTS', 'action':'EDIT', 'country': None, 'station': None}])
         self.login(usr)
         url = reverse('CommitteeMemberDetail', args=[self.committee_member.id])
 
@@ -86,7 +86,7 @@ class CommitteeMemberTests(RestApiTestCase):
         self.assertEqual(data['email'], response.data['email'])
 
     def test_delete_CommitteeMember(self):
-        usr = GenericUserWithPermissions.create([{'group':'STATIONS', 'action':'VIEW', 'country': None, 'station': None},{'group':'STATIONS', 'action':'EDIT', 'country': None, 'station': None}])
+        usr = GenericUserWithPermissions.create([{'group':'PROJECTS', 'action':'VIEW', 'country': None, 'station': None},{'group':'PROJECTS', 'action':'EDIT', 'country': None, 'station': None}])
         self.login(usr)
         url = reverse('CommitteeMemberDetail', args=[self.committee_member.id])
 
@@ -98,7 +98,7 @@ class CommitteeMemberTests(RestApiTestCase):
             mem.border_station = self.committee_member.border_station
             mem.save()
 
-        usr = GenericUserWithPermissions.create([{'group':'STATIONS', 'action':'VIEW', 'country': None, 'station': None},])
+        usr = GenericUserWithPermissions.create([{'group':'PROJECTS', 'action':'VIEW', 'country': None, 'station': None},])
         self.login(usr)
         url = reverse('CommitteeMember') + "?border_station=" + str(self.committee_member.border_station_id)
 
