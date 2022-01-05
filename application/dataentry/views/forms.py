@@ -28,6 +28,7 @@ class RelatedFormsSerializer(serializers.Serializer):
     form_type = serializers.CharField()
     form_name = serializers.CharField()
     staff_name = serializers.CharField()
+    country_id = serializers.IntegerField()
     station_id = serializers.IntegerField()
     time_entered = serializers.CharField()
     time_last_edited = serializers.CharField()        
@@ -209,7 +210,7 @@ class FormViewSet(viewsets.ModelViewSet):
             return Response({'errors' : ['form number ' + form_number + ' is not in standard format']},status=status.HTTP_400_BAD_REQUEST)
         
         results = []
-        forms = Form.objects.filter(stations=station, form_type__name__in=['IRF','CIF','VDF'])
+        forms = Form.objects.filter(stations=station, form_type__name__in=['IRF','CIF','VDF', 'LEGAL_CASE'])
         for form in forms:
             form_class = form.storage.get_form_storage_class()
             key_field = form_class.key_field_name()
@@ -219,11 +220,12 @@ class FormViewSet(viewsets.ModelViewSet):
                 if len(key_value) > base_length and key_value[base_length] >= '0' and key_value[base_length] <= '9':
                     # form number has another digit after the base_number -> not related form
                     continue
+                staff_name = getattr(form_object, 'staff_name', None)
                 obj = RelatedForm(form_object.id,
                                   form_object.get_key(),
                                   form_object.get_form_type_name(),
                                   form.form_name,
-                                  form_object.staff_name,
+                                  staff_name,
                                   form_object.station.id,
                                   form_object.station.operating_country.id,
                                   self.adjust_date_time_for_tz (form_object.date_time_entered_into_system, form_object.station.time_zone),
