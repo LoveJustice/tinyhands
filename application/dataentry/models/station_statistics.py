@@ -11,6 +11,7 @@ class StationStatistics(models.Model):
     empowerment = models.PositiveIntegerField(null=True)
     convictions = models.PositiveIntegerField(null=True)
     active_monitor_locations = models.PositiveIntegerField(null=True)
+    active_shelters = models.PositiveIntegerField(null=True)
     subcommittee_members = models.PositiveIntegerField(null=True)
     modified_date = models.DateTimeField(auto_now=True)
     
