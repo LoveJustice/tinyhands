@@ -29,7 +29,7 @@ class BorderStationsTests(RestApiTestCase):
     # Viewset Methods
 
     def test_return_all_BorderStations(self):
-        usr = GenericUserWithPermissions.create([{'group':'STATIONS', 'action':'VIEW', 'country': None, 'station': None},])
+        usr = GenericUserWithPermissions.create([{'group':'PROJECTS', 'action':'VIEW', 'country': None, 'station': None},])
         self.login(usr)
         url = reverse('BorderStation')
 
@@ -39,7 +39,7 @@ class BorderStationsTests(RestApiTestCase):
         self.assertEqual(len(response.data), 5)
 
     def test_when_open_param_set_to_true_should_return_open_border_stations(self):
-        usr = GenericUserWithPermissions.create([{'group':'STATIONS', 'action':'VIEW', 'country': None, 'station': None},])
+        usr = GenericUserWithPermissions.create([{'group':'PROJECTS', 'action':'VIEW', 'country': None, 'station': None},])
         self.login(usr)
         url = reverse('BorderStation')
 
@@ -49,7 +49,7 @@ class BorderStationsTests(RestApiTestCase):
         self.assertEqual(len(response.data), 4)
 
     def test_when_open_param_set_to_false_should_return_closed_border_stations(self):
-        usr = GenericUserWithPermissions.create([{'group':'STATIONS', 'action':'VIEW', 'country': None, 'station': None},])
+        usr = GenericUserWithPermissions.create([{'group':'PROJECTS', 'action':'VIEW', 'country': None, 'station': None},])
         self.login(usr)
         url = reverse('BorderStation')
 
@@ -59,7 +59,7 @@ class BorderStationsTests(RestApiTestCase):
         self.assertEqual(len(response.data), 1)
 
     def test_create_BorderStation_global(self):
-        usr = GenericUserWithPermissions.create([{'group':'STATIONS', 'action':'VIEW', 'country': None, 'station': None},{'group':'STATIONS', 'action':'ADD', 'country': None, 'station': None}])
+        usr = GenericUserWithPermissions.create([{'group':'PROJECTS', 'action':'VIEW', 'country': None, 'station': None},{'group':'PROJECTS', 'action':'ADD', 'country': None, 'station': None}])
         self.login(usr)
         country = CountryFactory.create()
         url = reverse('BorderStation')
@@ -81,7 +81,7 @@ class BorderStationsTests(RestApiTestCase):
     
     def test_create_BorderStation_country(self):
         country = CountryFactory.create()
-        usr = GenericUserWithPermissions.create([{'group':'STATIONS', 'action':'VIEW', 'country': None, 'station': None},{'group':'STATIONS', 'action':'ADD', 'country': country, 'station': None}])
+        usr = GenericUserWithPermissions.create([{'group':'PROJECTS', 'action':'VIEW', 'country': None, 'station': None},{'group':'PROJECTS', 'action':'ADD', 'country': country, 'station': None}])
         self.login(usr)
         url = reverse('BorderStation')
 
@@ -101,7 +101,7 @@ class BorderStationsTests(RestApiTestCase):
         self.assertEqual(data['station_name'], response.data['station_name'])
 
     def test_get_BorderStation_global(self):
-        usr = GenericUserWithPermissions.create([{'group':'STATIONS', 'action':'VIEW', 'country': None, 'station': None},{'group':'STATIONS', 'action':'VIEW', 'country': None, 'station': None}])
+        usr = GenericUserWithPermissions.create([{'group':'PROJECTS', 'action':'VIEW', 'country': None, 'station': None},{'group':'PROJECTS', 'action':'VIEW', 'country': None, 'station': None}])
         self.login(usr)
         url = reverse('BorderStationDetail', args=[self.border_station.id])
 
@@ -111,7 +111,7 @@ class BorderStationsTests(RestApiTestCase):
         self.assertEqual(self.border_station.id, response.data['id'])
         
     def test_get_BorderStation_country(self):
-        usr = GenericUserWithPermissions.create([{'group':'STATIONS', 'action':'VIEW', 'country': None, 'station': None},{'group':'STATIONS', 'action':'VIEW', 'country': self.border_station.operating_country, 'station': None}])
+        usr = GenericUserWithPermissions.create([{'group':'PROJECTS', 'action':'VIEW', 'country': None, 'station': None},{'group':'PROJECTS', 'action':'VIEW', 'country': self.border_station.operating_country, 'station': None}])
         self.login(usr)
         url = reverse('BorderStationDetail', args=[self.border_station.id])
 
@@ -121,7 +121,7 @@ class BorderStationsTests(RestApiTestCase):
         self.assertEqual(self.border_station.id, response.data['id'])
         
     def test_get_BorderStation_station(self):
-        usr = GenericUserWithPermissions.create([{'group':'STATIONS', 'action':'VIEW', 'country': None, 'station': None},{'group':'STATIONS', 'action':'VIEW', 'country': None, 'station': self.border_station}])
+        usr = GenericUserWithPermissions.create([{'group':'PROJECTS', 'action':'VIEW', 'country': None, 'station': None},{'group':'PROJECTS', 'action':'VIEW', 'country': None, 'station': self.border_station}])
         self.login(usr)
         url = reverse('BorderStationDetail', args=[self.border_station.id])
 
@@ -131,7 +131,7 @@ class BorderStationsTests(RestApiTestCase):
         self.assertEqual(self.border_station.id, response.data['id'])
 
     def test_update_BorderStation_global(self):
-        usr = GenericUserWithPermissions.create([{'group':'STATIONS', 'action':'VIEW', 'country': None, 'station': None},{'group':'STATIONS', 'action':'EDIT', 'country': None, 'station': None},])
+        usr = GenericUserWithPermissions.create([{'group':'PROJECTS', 'action':'VIEW', 'country': None, 'station': None},{'group':'PROJECTS', 'action':'EDIT', 'country': None, 'station': None},])
         self.login(usr)
         url = reverse('BorderStationDetail', args=[self.border_station.id])
 
@@ -151,7 +151,7 @@ class BorderStationsTests(RestApiTestCase):
         self.assertEqual(data['station_name'], response.data['station_name'])
     
     def test_update_BorderStation_country(self):
-        usr = GenericUserWithPermissions.create([{'group':'STATIONS', 'action':'VIEW', 'country': None, 'station': None},{'group':'STATIONS', 'action':'EDIT', 'country': self.border_station.operating_country, 'station': None},])
+        usr = GenericUserWithPermissions.create([{'group':'PROJECTS', 'action':'VIEW', 'country': None, 'station': None},{'group':'PROJECTS', 'action':'EDIT', 'country': self.border_station.operating_country, 'station': None},])
         self.login(usr)
         url = reverse('BorderStationDetail', args=[self.border_station.id])
 
@@ -171,7 +171,7 @@ class BorderStationsTests(RestApiTestCase):
         self.assertEqual(data['station_name'], response.data['station_name'])
         
     def test_update_BorderStation_station(self):
-        usr = GenericUserWithPermissions.create([{'group':'STATIONS', 'action':'VIEW', 'country': None, 'station': None},{'group':'STATIONS', 'action':'EDIT', 'country': None, 'station': self.border_station},])
+        usr = GenericUserWithPermissions.create([{'group':'PROJECTS', 'action':'VIEW', 'country': None, 'station': None},{'group':'PROJECTS', 'action':'EDIT', 'country': None, 'station': self.border_station},])
         self.login(usr)
         url = reverse('BorderStationDetail', args=[self.border_station.id])
 
@@ -191,7 +191,7 @@ class BorderStationsTests(RestApiTestCase):
         self.assertEqual(data['station_name'], response.data['station_name'])
 
     def test_delete_BorderStation(self):
-        usr = GenericUserWithPermissions.create([{'group':'STATIONS', 'action':'VIEW', 'country': None, 'station': None},])
+        usr = GenericUserWithPermissions.create([{'group':'PROJECTS', 'action':'VIEW', 'country': None, 'station': None},])
         self.login(usr)
         url = reverse('BorderStationDetail', args=[self.border_station.id])
 
@@ -214,7 +214,7 @@ class BorderStationsTests(RestApiTestCase):
     
     def test_get_BorderStation_without_country_permission_should_deny(self):
         perm_country = CountryFactory.create()
-        usr = GenericUserWithPermissions.create([{'group':'STATIONS', 'action':'VIEW', 'country': perm_country, 'station': None},])
+        usr = GenericUserWithPermissions.create([{'group':'PROJECTS', 'action':'VIEW', 'country': perm_country, 'station': None},])
         self.login(usr)
         url = reverse('BorderStationDetail', args=[self.border_station.id])
 
@@ -223,7 +223,7 @@ class BorderStationsTests(RestApiTestCase):
     
     def test_get_BorderStation_without_station_permission_should_deny(self):
         perm_station = BorderStationFactory.create()
-        usr = GenericUserWithPermissions.create([{'group':'STATIONS', 'action':'VIEW', 'country': None, 'station': perm_station},])
+        usr = GenericUserWithPermissions.create([{'group':'PROJECTS', 'action':'VIEW', 'country': None, 'station': perm_station},])
         self.login(usr)
         url = reverse('BorderStationDetail', args=[self.border_station.id])
 
@@ -231,7 +231,7 @@ class BorderStationsTests(RestApiTestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         
     def test_create_BorderStation_without_permission_should_deny(self):
-        usr = GenericUserWithPermissions.create([{'group':'STATIONS', 'action':'VIEW', 'country': None, 'station': None},])
+        usr = GenericUserWithPermissions.create([{'group':'PROJECTS', 'action':'VIEW', 'country': None, 'station': None},])
         self.login(usr)
         country = CountryFactory.create()
         url = reverse('BorderStation')
@@ -251,7 +251,7 @@ class BorderStationsTests(RestApiTestCase):
         
     def test_create_BorderStation_without_country_permission_should_deny(self):
         perm_country = CountryFactory.create()
-        usr = GenericUserWithPermissions.create([{'group':'STATIONS', 'action':'VIEW', 'country': None, 'station': None},{'group':'STATIONS', 'action':'VIEW', 'country': perm_country, 'station': None},])
+        usr = GenericUserWithPermissions.create([{'group':'PROJECTS', 'action':'VIEW', 'country': None, 'station': None},{'group':'PROJECTS', 'action':'VIEW', 'country': perm_country, 'station': None},])
         self.login(usr)
         country = CountryFactory.create()
         url = reverse('BorderStation')
@@ -270,7 +270,7 @@ class BorderStationsTests(RestApiTestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_get_station_id__no_code_should_return_neg1(self):
-        usr = GenericUserWithPermissions.create([{'group':'STATIONS', 'action':'VIEW', 'country': None, 'station': None},])
+        usr = GenericUserWithPermissions.create([{'group':'PROJECTS', 'action':'VIEW', 'country': None, 'station': None},])
         self.login(usr)
         url = reverse('get_station_id')
         response = self.client.get(url + "?code=")
@@ -278,7 +278,7 @@ class BorderStationsTests(RestApiTestCase):
         self.assertEqual(-1, response.data)
 
     def test_get_station_id__invalid_code_should_return_neg1(self):
-        usr = GenericUserWithPermissions.create([{'group':'STATIONS', 'action':'VIEW', 'country': None, 'station': None},])
+        usr = GenericUserWithPermissions.create([{'group':'PROJECTS', 'action':'VIEW', 'country': None, 'station': None},])
         self.login(usr)
         url = reverse('get_station_id')
         response = self.client.get(url + "?code=ZZZ")
@@ -286,7 +286,7 @@ class BorderStationsTests(RestApiTestCase):
         self.assertEqual(-1, response.data)
 
     def test_get_station_id__valid_code_should_return_border_station_id(self):
-        usr = GenericUserWithPermissions.create([{'group':'STATIONS', 'action':'VIEW', 'country': None, 'station': None},])
+        usr = GenericUserWithPermissions.create([{'group':'PROJECTS', 'action':'VIEW', 'country': None, 'station': None},])
         self.login(usr)
         url = reverse('get_station_id')
         response = self.client.get(url + "?code=" + self.border_station.station_code)

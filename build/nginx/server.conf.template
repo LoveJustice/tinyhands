@@ -83,4 +83,6 @@ server {
         proxy_read_timeout 300s;
         proxy_pass http://web:9001;
 	}
+
+
 }

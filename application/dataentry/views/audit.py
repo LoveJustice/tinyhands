@@ -47,8 +47,13 @@ class AuditViewSet(viewsets.ModelViewSet):
             results[section['name']] = None
             
         data_class = audit.get_form().storage.get_form_storage_class()
-        candidates_queryset = data_class.objects.filter(station__operating_country=audit.country,
-                    logbook_submitted__gte=audit.start_date, logbook_submitted__lte=audit.end_date)
+        if audit.get_form().form_type.name == 'IRF':
+            candidates_queryset = data_class.objects.filter(station__operating_country=audit.country,
+                        logbook_second_verification_date__gte=audit.start_date,
+                        logbook_second_verification_date__lte=audit.end_date).exclude(logbook_second_verification__startswith='Should not count')
+        else:
+            candidates_queryset = data_class.objects.filter(station__operating_country=audit.country,
+                        logbook_submitted__gte=audit.start_date, logbook_submitted__lte=audit.end_date)
         if len(audit.form_version) > 0:
             candidates_queryset = candidates_queryset.filter(form_version=audit.form_version)
         candidates = []
@@ -81,14 +86,16 @@ class AuditViewSet(viewsets.ModelViewSet):
         
         form = Form.objects.get(id=form_id)
         data_class = form.storage.get_form_storage_class()
-        candidates = data_class.objects.filter(station__operating_country_id=country,
-                    logbook_submitted__gte=start, logbook_submitted__lte=end)
-        print('before', len(candidates))
+        if form.form_type.name == 'IRF':
+            candidates = data_class.objects.filter(station__operating_country=country,
+                        logbook_second_verification_date__gte=start,
+                        logbook_second_verification_date__lte=end).exclude(logbook_second_verification__startswith='Should not count')
+        else:
+            candidates = data_class.objects.filter(station__operating_country_id=country,
+                        logbook_submitted__gte=start, logbook_submitted__lte=end)
         if form_version is not None and form_version != '':
             candidates = candidates.filter(form_version=form_version)
-            print('after', len(candidates))
         candidates_count = candidates.count()
-        number_to_sample = int (candidates_count * percent / 100 +0.5)
         number_to_sample = int (candidates_count * percent / 100 +0.5)
         
         resp={

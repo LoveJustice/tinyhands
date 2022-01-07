@@ -158,6 +158,9 @@ class Command(BaseCommand):
             if entry.active_monitor_locations is None:
                 locations = Location.objects.filter(border_station = station, location_type = 'monitoring', active = True)
                 entry.active_monitor_locations = len(locations)
+            if entry.active_shelters is None:
+                shelters = Location.objects.filter(border_station = station, location_type = 'shelter', active = True)
+                entry.active_shelters = len(shelters)
             if 'legal_arrest_and_conviction' in country.options and country.options['legal_arrest_and_conviction'] and entry.convictions is None:
                 entry.convictions = 0
             
