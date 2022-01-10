@@ -24,15 +24,9 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated, )
     
     def retrieve_country_data(self, request, country_id, year_month):
-        results = []
-        results_qs = StationStatistics.objects.filter(station__operating_country__id=country_id, year_month=year_month, station__non_transit=False).order_by('station__station_name')
-        for entry in results_qs:
-            results.append(entry)
-        results_qs = StationStatistics.objects.filter(station__operating_country__id=country_id, year_month=year_month, station__non_transit=True).order_by('station__station_name')
-        for entry in results_qs:
-            results.append(entry)
+        results_qs = StationStatistics.objects.filter(station__operating_country__id=country_id, year_month=year_month).order_by('station__project_category__sort_order','station__station_name')
         
-        serializer = StationStatisticsSerializer(results , many=True, context={'request': request})
+        serializer = StationStatisticsSerializer(results_qs , many=True, context={'request': request})
         return Response(serializer.data)
     
     def update_station_data(self, request):
@@ -62,8 +56,7 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
         station_statistics.budget = budget
         station_statistics.gospel = gospel
         station_statistics.empowerment = empowerment
-        if not station.operating_country.enable_all_locations or station.non_transit:
-            # if enable_all_lcoations is not true or non_transit is ture, then the staff can be updated here
+        if 'hasStaff' in station.features and (not station.operating_country.enable_all_locations or not 'hasLocationStaffing' in station.features):
             other_location = Location.get_or_create_other_location(station)
             general_staff = Staff.get_or_create_general_staff(station)
             if request.data['staff'] == '':
@@ -223,71 +216,71 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
             'month':datetime.date(year, month, 1).strftime('%B %Y'),
             'entries':[],
             'totals':{}}
-        for non_transit in [False, True]:
-            entries = StationStatistics.objects.filter(
-                station__operating_country__id=country_id,
-                station__non_transit=non_transit,
-                year_month__gte=start_year_month,
-                year_month__lte=end_year_month).order_by('station__station_name', '-year_month')
-            
-            dash_station = None
-            for entry in entries:
-                setattr(entry, 'intercepts', LocationStatistics.objects.filter(location__border_station=entry.station, year_month=entry.year_month).aggregate(Sum('intercepts'))['intercepts__sum'])
-                setattr(entry, 'arrests', LocationStatistics.objects.filter(location__border_station=entry.station, year_month=entry.year_month).aggregate(Sum('arrests'))['arrests__sum'])
-                if dash_station is None or dash_station['station_code'] != entry.station.station_code:
-                    if dash_station is not None:
-                        dashboard['entries'].append(dash_station)
-                    dash_station = {
-                        'station_name':entry.station.station_name,
-                        'station_code':entry.station.station_code,
-                        'station_open':entry.station.open,
-                        'compliance':entry.compliance,
-                        'last_budget':self.apply_exchange_rate(entry.budget, entry.station.operating_country, entry.year_month),
-                        'last_intercepts':entry.intercepts,
-                        'last_arrests':entry.arrests,
-                        'last_gospel':entry.gospel,
-                        'last_empowerment':entry.empowerment,
-                        'last_staff_count': LocationStaff.objects.filter(location__border_station=entry.station, year_month=end_year_month).aggregate(Sum('work_fraction'))['work_fraction__sum'],
-                        'last_subcommittee_count':entry.subcommittee_members
-                        }
-                    dash_station['to_date_intercepts'] = LocationStatistics.objects.filter(location__border_station=entry.station).aggregate(Sum('intercepts'))['intercepts__sum']
-                    dash_station['to_date_arrests'] = LocationStatistics.objects.filter(location__border_station=entry.station).aggregate(Sum('arrests'))['arrests__sum']
-                    dash_station['to_date_gospel'] = StationStatistics.objects.filter(station=entry.station).aggregate(Sum('gospel'))['gospel__sum']
-                    dash_station['to_date_conv'] = StationStatistics.objects.filter(station=entry.station).aggregate(Sum('convictions'))['convictions__sum']
-                    dash_station['to_date_irfs'] = IrfCommon.objects.filter(station=entry.station).count()
-                    dash_station['to_date_cifs'] = CifCommon.objects.filter(station=entry.station).count()
-                    dash_station['to_date_vdfs'] = VdfCommon.objects.filter(station=entry.station).count()
-                    verdicts = LegalCaseSuspect.objects.filter(legal_case__station=entry.station, verdict_date__isnull=False, legal_case__charge_sheet_date__isnull=False)
-                    dash_station['to_date_case_days'] = 0
-                    dash_station['to_date_case_count'] = 0
-                    for verdict in verdicts:
-                        dash_station['to_date_case_days'] = (verdict.verdict_date - verdict.legal_case.charge_sheet_date).days
-                        dash_station['to_date_case_count'] += 1
-                        
-                            
-                    cifs = CifCommon.objects.filter(interview_date__gte=start_date,interview_date__lt=end_date,station=entry.station).count()
-                    dash_station['6month_cifs'] = cifs
-                    station_stats = StationStatistics.objects.filter(station=entry.station)
-                    for station_stat in station_stats:
-                        self.sum_element(dash_station, 'to_date_budget', self.apply_exchange_rate(station_stat.budget, station_stat.station.operating_country, station_stat.year_month))
-                    try:
-                        monthly = MonthlyReport.objects.get(station=entry.station, year=year, month=month)
-                        dash_station['monthly_report'] = monthly.average_points
-                    except ObjectDoesNotExist:
-                        dash_station['monthly_report'] = None
+                
+        entries = StationStatistics.objects.filter(
+            station__operating_country__id=country_id,
+            station__features__contains='hasProjectStats',
+            year_month__gte=start_year_month,
+            year_month__lte=end_year_month).order_by('station__project_category__sort_order','station__station_name', '-year_month')
+        
+        dash_station = None
+        for entry in entries:
+            setattr(entry, 'intercepts', LocationStatistics.objects.filter(location__border_station=entry.station, year_month=entry.year_month).aggregate(Sum('intercepts'))['intercepts__sum'])
+            setattr(entry, 'arrests', LocationStatistics.objects.filter(location__border_station=entry.station, year_month=entry.year_month).aggregate(Sum('arrests'))['arrests__sum'])
+            if dash_station is None or dash_station['station_code'] != entry.station.station_code:
+                if dash_station is not None:
+                    dashboard['entries'].append(dash_station)
+                dash_station = {
+                    'station_name':entry.station.station_name,
+                    'station_code':entry.station.station_code,
+                    'station_open':entry.station.open,
+                    'compliance':entry.compliance,
+                    'last_budget':self.apply_exchange_rate(entry.budget, entry.station.operating_country, entry.year_month),
+                    'last_intercepts':entry.intercepts,
+                    'last_arrests':entry.arrests,
+                    'last_gospel':entry.gospel,
+                    'last_empowerment':entry.empowerment,
+                    'last_staff_count': LocationStaff.objects.filter(location__border_station=entry.station, year_month=end_year_month).aggregate(Sum('work_fraction'))['work_fraction__sum'],
+                    'last_subcommittee_count':entry.subcommittee_members
+                    }
+                dash_station['to_date_intercepts'] = LocationStatistics.objects.filter(location__border_station=entry.station).aggregate(Sum('intercepts'))['intercepts__sum']
+                dash_station['to_date_arrests'] = LocationStatistics.objects.filter(location__border_station=entry.station).aggregate(Sum('arrests'))['arrests__sum']
+                dash_station['to_date_gospel'] = StationStatistics.objects.filter(station=entry.station).aggregate(Sum('gospel'))['gospel__sum']
+                dash_station['to_date_conv'] = StationStatistics.objects.filter(station=entry.station).aggregate(Sum('convictions'))['convictions__sum']
+                dash_station['to_date_irfs'] = IrfCommon.objects.filter(station=entry.station).count()
+                dash_station['to_date_cifs'] = CifCommon.objects.filter(station=entry.station).count()
+                dash_station['to_date_vdfs'] = VdfCommon.objects.filter(station=entry.station).count()
+                verdicts = LegalCaseSuspect.objects.filter(legal_case__station=entry.station, verdict_date__isnull=False, legal_case__charge_sheet_date__isnull=False)
+                dash_station['to_date_case_days'] = 0
+                dash_station['to_date_case_count'] = 0
+                for verdict in verdicts:
+                    dash_station['to_date_case_days'] = (verdict.verdict_date - verdict.legal_case.charge_sheet_date).days
+                    dash_station['to_date_case_count'] += 1
                     
-                    for element in ['last_budget', 'last_intercepts', 'last_arrests', 'last_gospel', 'last_empowerment',
-                                    'to_date_intercepts', 'to_date_arrests', 'to_date_gospel','to_date_irfs', 'to_date_cifs',
-                                    'to_date_vdfs', 'to_date_conv', 'to_date_case_days', 'to_date_case_count']:
-                        if dash_station[element] is None or dash_station[element] == '':
-                            dash_station[element] = 0
+                        
+                cifs = CifCommon.objects.filter(interview_date__gte=start_date,interview_date__lt=end_date,station=entry.station).count()
+                dash_station['6month_cifs'] = cifs
+                station_stats = StationStatistics.objects.filter(station=entry.station)
+                for station_stat in station_stats:
+                    self.sum_element(dash_station, 'to_date_budget', self.apply_exchange_rate(station_stat.budget, station_stat.station.operating_country, station_stat.year_month))
+                try:
+                    monthly = MonthlyReport.objects.get(station=entry.station, year=year, month=month)
+                    dash_station['monthly_report'] = monthly.average_points
+                except ObjectDoesNotExist:
+                    dash_station['monthly_report'] = None
+                
+                for element in ['last_budget', 'last_intercepts', 'last_arrests', 'last_gospel', 'last_empowerment',
+                                'to_date_intercepts', 'to_date_arrests', 'to_date_gospel','to_date_irfs', 'to_date_cifs',
+                                'to_date_vdfs', 'to_date_conv', 'to_date_case_days', 'to_date_case_count']:
+                    if dash_station[element] is None or dash_station[element] == '':
+                        dash_station[element] = 0
                     
                 self.sum_element(dash_station, '6month_budget', self.apply_exchange_rate(entry.budget, entry.station.operating_country, entry.year_month), 0)
                 for element in ['intercepts', 'arrests', 'gospel', 'empowerment']:
                     self.sum_element(dash_station, '6month_' + element, getattr(entry, element), 0)
         
-            if dash_station is not None:
-                dashboard['entries'].append(dash_station)
+        if dash_station is not None:
+            dashboard['entries'].append(dash_station)
             
         for element in [
                     'monthly_report', 'compliance', '6month_budget', '6month_intercepts','6month_arrests','6month_gospel', '6month_empowerment', '6month_cifs',
