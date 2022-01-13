@@ -2753,7 +2753,7 @@
 {"model": "dataentry.questionlayout", "pk": null, "fields": {"question": 58, "category": 130, "weight": 0, "form_config": null}},
 {"model": "dataentry.questionlayout", "pk": null, "fields": {"question": 45, "category": 130, "weight": 0, "form_config": null}},
 {"model": "dataentry.questionlayout", "pk": null, "fields": {"question": 30, "category": 130, "weight": 0, "form_config": null}},
-{"model": "dataentry.questionlayout", "pk": null, "fields": {"question": 156, "category": 130, "weight": 0, "form_config": null}},
+{"model": "dataentry.questionlayout", "pk": null, "fields": {"question": 977, "category": 130, "weight": 0, "form_config": null}},
 {"model": "dataentry.questionlayout", "pk": null, "fields": {"question": 713, "category": 130, "weight": 0, "form_config": null}},
 {"model": "dataentry.questionlayout", "pk": null, "fields": {"question": 74, "category": 130, "weight": 0, "form_config": null}},
 {"model": "dataentry.questionlayout", "pk": null, "fields": {"question": 968, "category": 128, "weight": 0, "form_config": null}},
