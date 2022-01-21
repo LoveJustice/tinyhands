@@ -36,7 +36,7 @@ server {
     ssl_certificate_key ${SSL_KEY_PATH};
     ssl_certificate ${SSL_CERT_PATH};
 
-    client_max_body_size 20m;
+    client_max_body_size 100m;
 
     location /favicon.ico {
         alias /data/dreamsuite/static/images/favicon.ico;
