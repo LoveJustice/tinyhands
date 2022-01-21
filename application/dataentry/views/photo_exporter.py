@@ -98,9 +98,9 @@ class PhotoExporter(viewsets.GenericViewSet):
             except:
                 # Not an interceptee model
                 continue
-            tmp_qs = card_model.objects.filter(interception_record__date_of_interception__gte=start,
-                                          interception_record__date_of_interception__lte=end,
-                                          interception_record__status='approved').exclude(person__photo="")
+            tmp_qs = card_model.objects.filter(interception_record__logbook_second_verification_date__gte=start,
+                                          interception_record__logbook_second_verification_date__lte=end,
+                                          interception_record__status='second-verification').exclude(person__photo="")
             if station_filter is not None:
                 tmp_qs = tmp_qs.filter(station_filter)
                 
