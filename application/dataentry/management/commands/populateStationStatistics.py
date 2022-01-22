@@ -7,7 +7,7 @@ from django.apps import apps
 from django.db.models import Count
 
 from budget.models import BorderStationBudgetCalculation
-from dataentry.models import BorderStation, CifCommon, Country, CountryExchange, IntercepteeCommon, LegalCaseSuspect, LocationStatistics, StationStatistics
+from dataentry.models import BorderStation, CifCommon, Country, CountryExchange, GospelVerification, IntercepteeCommon, LegalCaseSuspect, LocationStatistics, StationStatistics
 from static_border_stations.models import  CommitteeMember, Location
 
 class Command(BaseCommand):
@@ -71,16 +71,25 @@ class Command(BaseCommand):
             
             exchange.save()
         
-        # clear location statistics entries for the month
-        for location_statistics in LocationStatistics.objects.filter(year_month=year_month):
-            location_statistics.intercepts = 0
-            location_statistics.intercepts_evidence = 0
-            location_statistics.intercepts_high_risk = 0
-            location_statistics.intercepts_invalid = 0
-            country = location_statistics.location.border_station.operating_country
-            if 'legal_arrest_and_conviction' in country.options and country.options['legal_arrest_and_conviction']:
-                location_statistics.arrests = 0
-            location_statistics.save()
+        # make sure location statistics exists for each active location
+        locations = Location.objects.filter(active=True)
+        for location in locations:
+            if location.border_station is not None and 'hasProjectStats' in location.border_station.features:
+                try:
+                    location_statistics = LocationStatistics.objects.get(location=location, year_month=year_month)
+                except ObjectDoesNotExist:
+                    location_statistics = LocationStatistics()
+                    location_statistics.location = location
+                    location_statistics.year_month = year_month
+                
+                location_statistics.intercepts = 0
+                location_statistics.intercepts_evidence = 0
+                location_statistics.intercepts_high_risk = 0
+                location_statistics.intercepts_invalid = 0
+                country = location_statistics.location.border_station.operating_country
+                if 'legal_arrest_and_conviction' in country.options and country.options['legal_arrest_and_conviction']:
+                    location_statistics.arrests = 0
+                location_statistics.save()
         
         intercepts = IntercepteeCommon.objects.filter(
                 person__role = 'PVOT',
@@ -170,6 +179,11 @@ class Command(BaseCommand):
                 entry.budget = budget.station_total()
             except ObjectDoesNotExist:
                 pass
+            
+            entry.gospel = GospelVerification.objects.filter(vdf__station=station,
+                                                            form_changes = 'No',
+                                                            date_of_followup__gte=start_date,
+                                                            date_of_followup__lt=end_date).count()
             
             # gospel
             # empowerment
