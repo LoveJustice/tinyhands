@@ -13,7 +13,7 @@ FCM_KEY_PATH = os.environ['FCM_KEY_PATH']
 
 BASE_DIR = Path(__file__).ancestor(3)
 
-SERVER_EMAIL = 'support@dreamsuite.org'
+SERVER_EMAIL = 'support@searchlightdata.org'
 
 BORDER_STATION_EMAIL_SENDER = "sheital@tinyhands.org"
 ADMIN_EMAIL_SENDER = SERVER_EMAIL
