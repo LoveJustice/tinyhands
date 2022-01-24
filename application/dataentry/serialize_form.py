@@ -1054,7 +1054,7 @@ class FormDataSerializer(serializers.Serializer):
         self.the_errors = []
         self.the_warnings = []
         last_update = data.get('last_updated')
-        if last_update < int(round(self.instance.form_object.date_time_last_updated.timestamp())):
+        if self.instance is not None and last_update < int(round(self.instance.form_object.date_time_last_updated.timestamp())):
             self.the_errors = ["This form was updated by another user.  Please reopen form and reapply changes",]
             self.the_warnings = []
             raise serializers.ValidationError("storage_id for form specified on create");
