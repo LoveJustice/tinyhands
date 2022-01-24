@@ -37,10 +37,6 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
             budget = None
         else:
             budget = request.data['budget']
-        if request.data['gospel'] == '':
-            gospel = None
-        else:
-            gospel = request.data['gospel']
         if request.data['empowerment'] == '':
             empowerment = None
         else:
@@ -54,7 +50,6 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
             station_statistics.year_month = year_month
             
         station_statistics.budget = budget
-        station_statistics.gospel = gospel
         station_statistics.empowerment = empowerment
         if 'hasStaff' in station.features and (not station.operating_country.enable_all_locations or not 'hasLocationStaffing' in station.features):
             other_location = Location.get_or_create_other_location(station)

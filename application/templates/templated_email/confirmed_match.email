@@ -1,0 +1,6 @@
+{% block subject %}Confirmed {{ roles }} match for {{ countries }}{% endblock %}
+
+{% block html %}
+	<p>{{ staff_name }} confirmed a match for <a href="{{ url }}">{{ person_name }}</a> </p>
+    <p>Notes: {{ notes }} {{ match_date }}</p>
+{% endblock %}

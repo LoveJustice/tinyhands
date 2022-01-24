@@ -3,6 +3,7 @@ import traceback
 import logging
 from datetime import date
 from datetime import datetime
+from templated_email import send_templated_mail
 
 from rest_framework import filters as fs
 from rest_framework import viewsets, status
@@ -11,10 +12,12 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from rest_api.authentication import HasPermission
 from django.core.files.storage import default_storage
+from django.core.exceptions import ObjectDoesNotExist
+from django.conf import settings
 from django.db import transaction
 from django.db.models import Q
 
-from dataentry.models import MasterPerson, Person, PersonBoxCommon, PersonPhone, PersonAddress, PersonSocialMedia, PersonDocument, PersonMatch, MatchType
+from dataentry.models import MasterPerson, Person, PersonForm, PersonBoxCommon, PersonPhone, PersonAddress, PersonSocialMedia, PersonDocument, PersonMatch, MatchType
 from dataentry.models import MatchHistory, MatchAction, UserLocationPermission
 from dataentry.models.pending_match import PendingMatch, PendingMatchWithCountry
 from dataentry.serializers import MasterPersonSerializer, PersonAddressSerializer, PersonMatchSerializer, PersonPhoneSerializer, PersonSocialMediaSerializer, PersonDocumentSerializer, PersonInMasterSerializer
@@ -312,6 +315,7 @@ class MasterPersonViewSet(viewsets.ModelViewSet):
         match_history.match_type = match_type
         match_history.action = MatchAction.objects.get(name='update match')
         match_history.matched_by = request.user
+        match_history.match_results = person_match.match_results
         match_history.timstamp = datetime.now()
         match_history.save()
         return Response({}, status.HTTP_200_OK)
@@ -339,6 +343,7 @@ class MasterPersonViewSet(viewsets.ModelViewSet):
         match_history.match_type = match_type
         match_history.action = MatchAction.objects.get(name='create match')
         match_history.matched_by = user
+        match_history.match_results = person_match.match_results
         match_history.timstamp = datetime.now()
         match_history.save()
     
@@ -382,7 +387,7 @@ class MasterPersonViewSet(viewsets.ModelViewSet):
             
     
     @staticmethod
-    def merge_master_persons_base(id1, id2, user, data):
+    def merge_master_persons_base(id1, id2, user, data, request):
         master1 = MasterPerson.objects.get(id=id1)
         master2 = MasterPerson.objects.get(id=id2)
         
@@ -496,6 +501,58 @@ class MasterPersonViewSet(viewsets.ModelViewSet):
             match_history.timstamp = datetime.now()
             match_history.save()
             
+            roles = []
+            countries = []
+            country_names = []
+            for person in master1.person_set.all():
+                if person.role is not None and person.role != '':
+                    individual_roles = person.role.split(';')
+                    for individual_role in individual_roles:
+                        if individual_role not in roles:
+                            roles.append(individual_role)
+                
+                try:
+                    person_forms = PersonForm.objects.filter(person=person)
+                    for person_form in person_forms:
+                        if person_form.content_object is not None:
+                            country = person_form.content_object.station.operating_country
+                            if country.name not in country_names:
+                                country_names.append(country.name)
+                                countries.append(person_form.content_object.station.operating_country)
+                except ObjectDoesNotExist:
+                    pass
+            
+            context = {
+                'roles': ', '.join(map(str, roles)),
+                'countries': ', '.join(map(str, country_names)),
+                'url': settings.CLIENT_DOMAIN + '/PersonManagement?id=' + str(master1.id),
+                'staff_name': request.user.get_full_name(),
+                'person_name': master1.full_name,
+                'notes': param_notes,
+                'match_date': str(datetime.now().date())
+                }
+            
+            
+            accounts = []
+            ulp = UserLocationPermission.objects.filter(permission__permission_group = 'NOTIFICATIONS', permission__action = 'CONFIRMED_MATCH', station=None, country=None)
+            for user_location_permission in ulp:
+                if user_location_permission.account not in accounts:
+                    accounts.append(user_location_permission.account)
+                        
+            for country in countries:
+                ulp = UserLocationPermission.objects.filter(permission__permission_group = 'NOTIFICATIONS', permission__action = 'CONFIRMED_MATCH', station=None, country=country)
+                for user_location_permission in ulp:
+                    if user_location_permission.account not in accounts:
+                        accounts.append(user_location_permission.account)
+                
+            for account in accounts:
+                send_templated_mail(
+                    template_name='confirmed_match',
+                    from_email=settings.SERVER_EMAIL,
+                    recipient_list=[account.email],
+                    context=context
+                )
+                
             transaction.commit()
             rtn_status = status.HTTP_200_OK
             ret = {
@@ -522,7 +579,7 @@ class MasterPersonViewSet(viewsets.ModelViewSet):
             return Response(status=status.HTTP_401_UNAUTHORIZED)
         
         transaction.set_autocommit(False)
-        result = MasterPersonViewSet.merge_master_persons_base(id1, id2, request.user, request.data)
+        result = MasterPersonViewSet.merge_master_persons_base(id1, id2, request.user, request.data, request)
         transaction.set_autocommit(True)
         
         if result['ret']['master'] is not None:

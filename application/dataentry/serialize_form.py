@@ -1009,6 +1009,8 @@ class FormDataSerializer(serializers.Serializer):
             
         if hasattr(instance, 'form'):
             ret['form_name'] = instance.form.form_name
+        if hasattr(instance.form_object, 'date_time_last_updated') and instance.form_object.date_time_last_updated is not None:
+            ret['last_updated'] = int(round(instance.form_object.date_time_last_updated.timestamp()))
         if hasattr(instance.form_object, 'station'):
             ret['station_id'] = serializers.IntegerField().to_representation(instance.form_object.station.id)
             ret['station_code'] = serializers.CharField().to_representation(instance.form_object.station.station_code)
@@ -1051,6 +1053,11 @@ class FormDataSerializer(serializers.Serializer):
     def to_internal_value(self, data):
         self.the_errors = []
         self.the_warnings = []
+        last_update = data.get('last_updated')
+        if last_update < int(round(self.instance.form_object.date_time_last_updated.timestamp())):
+            self.the_errors = ["This form was updated by another user.  Please reopen form and reapply changes",]
+            self.the_warnings = []
+            raise serializers.ValidationError("storage_id for form specified on create");
         tmp = data.get('station_id')
         if tmp is None:
             station_id = None
