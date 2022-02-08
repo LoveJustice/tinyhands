@@ -106,6 +106,14 @@ class Command(BaseCommand):
             
             try:
                 location_statistics = LocationStatistics.objects.get(location=location, year_month = year_month)
+                if location_statistics.intercepts is None:
+                    location_statistics.intercepts = 0
+                if location_statistics.intercepts_evidence is None:
+                    location_statistics.intercepts_evidence = 0
+                if location_statistics.intercepts_high_risk is None:
+                    location_statistics.intercepts_high_risk = 0
+                if location_statistics.intercepts_invalid is None:
+                    location_statistics.intercepts_invalid = 0
             except ObjectDoesNotExist:
                 location_statistics = LocationStatistics()
                 location_statistics.year_month = year_month
@@ -150,6 +158,7 @@ class Command(BaseCommand):
                         location_statistics.arrests = 0
                     
                     location_statistics.arrests += 1
+                    location_statistics.save()
         
         border_stations = BorderStation.objects.all().order_by('operating_country')
         for station in border_stations:
