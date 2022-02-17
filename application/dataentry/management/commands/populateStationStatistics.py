@@ -7,7 +7,7 @@ from django.apps import apps
 from django.db.models import Count
 
 from budget.models import BorderStationBudgetCalculation
-from dataentry.models import BorderStation, CifCommon, Country, CountryExchange, GospelVerification, IntercepteeCommon, LegalCaseSuspect, LocationStatistics, StationStatistics
+from dataentry.models import BorderStation, CifCommon, Country, CountryExchange, Gospel, GospelVerification, IntercepteeCommon, LegalCaseSuspect, LocationStatistics, StationStatistics
 from static_border_stations.models import  CommitteeMember, Location
 
 class Command(BaseCommand):
@@ -180,12 +180,15 @@ class Command(BaseCommand):
             except ObjectDoesNotExist:
                 pass
             
-            entry.gospel = GospelVerification.objects.filter(vdf__station=station,
+            # gospel
+            entry.gospel = (GospelVerification.objects.filter(vdf__station=station,
                                                             form_changes = 'No',
                                                             date_of_followup__gte=start_date,
-                                                            date_of_followup__lt=end_date).count()
+                                                            date_of_followup__lt=end_date).count() +
+                            Gospel.objects.filter(station=station,
+                                                            date_time_entered_into_system__gte=start_date,
+                                                            date_time_entered_into_system__lt=end_date).count())
             
-            # gospel
             # empowerment
             if 'legal_arrest_and_conviction' in country.options and country.options['legal_arrest_and_conviction']:
                 # Count convictions

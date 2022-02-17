@@ -15,6 +15,7 @@ from dataentry.views import StationStatisticsViewSet
 from dataentry.views import LegalCaseFormViewSet
 from dataentry.views import ClientDiagnosticViewSet
 from dataentry.views import EmpowermentViewSet
+from dataentry.views import GospelViewSet
 from help.views import VideoViewSet
 
 list = {'get': 'list', 'post': 'create'}
@@ -167,6 +168,10 @@ urlpatterns = [
         url(r'^emp/$', EmpowermentViewSet.as_view(list), name='Empowerment'),
         url(r'^emp/(?P<pk>\d+)/$', EmpowermentViewSet.as_view(detail), name='EmpowermentDetail'),
         url(r'^emp/blank/(?P<station_id>\d+)/$', EmpowermentViewSet.as_view({'get': 'retrieve_blank'}), name='EmpowermentBlank'),
+        
+        url(r'^gsp/$', GospelViewSet.as_view(list), name='Gospel'),
+        url(r'^gsp/(?P<pk>\d+)/$', GospelViewSet.as_view(detail), name='Gospeldetail'),
+        url(r'^gsp/blank/(?P<station_id>\d+)/$', GospelViewSet.as_view({'get': 'retrieve_blank'}), name='GospelBlank'),
         
         url(r'^diagnostic/$', ClientDiagnosticViewSet.as_view(list), name='Diagnostic'),
 ]
