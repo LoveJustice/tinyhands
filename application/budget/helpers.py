@@ -2,7 +2,7 @@ from collections import namedtuple
 
 from time import strftime
 
-from budget.models import BorderStationBudgetCalculation
+from budget.models import BorderStationBudgetCalculation, OtherBudgetItemCost
 
 BudgetLineItem = namedtuple('budgetItem', ['name', 'value', 'footnote'])
 
@@ -34,27 +34,37 @@ class StaffValue:
         self.foot_note = foot_note
 
 class StaffEntry:
-    def __init__(self, staff_person, staff_data, headers):
+    def __init__(self, staff_person, staff_data, headers, convert_headers):
         self.name = staff_person.first_name + ' ' + staff_person.last_name
         self.values = []
-        self.sub_total = 0
+        sub_total = 0
         
         total = 0
         for header in headers:
-            if header in staff_data[staff_person]:
-                value = staff_data[staff_person][header]
+            if header in convert_headers:
+                find_header = convert_headers[header]
+            else:
+                find_header = header
+            if find_header in staff_data[staff_person]:
+                value = staff_data[staff_person][find_header]
                 if value is not None and value.cost is not None:
                     self.values.append(value)
-                    total += value.cost
+                    if header == 'Deductions':
+                        total -= value.cost
+                        sub_total -= value.cost
+                    else:
+                        total += value.cost
+                        if header == 'Gross Pay':
+                            sub_total += value.cost
                 else:
                      self.values.append(StaffValue('',''))
             else:
-                self.values.append(StaffValue('',''))
+                if header == 'Net Pay':
+                    self.values.append(StaffValue(sub_total, ''))
+                else:
+                    self.values.append(StaffValue('',''))
+            
         
-        # sub total of salary and benefits        
-        self.values.append(StaffValue(total,''))
-        
-        value = StaffValue('','')
         if 'Communication' in staff_data[staff_person]:
             value = staff_data[staff_person]['Communication']
             if value is not None and value.cost is not None:
@@ -79,18 +89,29 @@ class StaffData:
     def __init__(self, budget):
         self.staff_list = []
         self.staff_totals = []
-        self.headers = ['Salary']
+        self.headers = ['Gross Pay', 'Deductions','Net Pay']
         self.foot_notes = []
         
-        trailing_headers = ['Sub-Total', 'Communication', 'Travel', 'Total']
+        trailing_headers = ['Communication', 'Travel', 'Total']
+        
+        # map desired header name to exisint type name
+        convert_headers = {
+            'Gross Pay':'Salary'
+            }
+        
+        inverted_headers = {value: key for key, value in convert_headers.items()}
         
         staff_data = {}
         staff_order = []
         foot_note_count = 0
         staff_items = budget.staffbudgetitem_set.all().order_by('staff_person__first_name', 'staff_person__last_name', 'type_name')
         for staff_item in staff_items:
-            if staff_item.type_name not in self.headers and staff_item.type_name not in trailing_headers:
-                self.headers.append(staff_item.type_name)\
+            if staff_item.type_name in inverted_headers:
+                header_name = inverted_headers[staff_item.type_name]
+            else:
+                header_name = staff_item.type_name
+            if header_name not in self.headers and header_name not in trailing_headers:
+                self.headers.append(header_name)
             
             if staff_item.staff_person not in staff_order:
                 staff_order.append(staff_item.staff_person)
@@ -108,9 +129,9 @@ class StaffData:
         for staff_person in staff_order:
             if staff_person.last_name.find('general_staff') >= 0:
                 continue
-            self.staff_list.append(StaffEntry(staff_person, staff_data, self.headers))
+            self.staff_list.append(StaffEntry(staff_person, staff_data, self.headers, convert_headers))
         
-        for idx in range(0, len(self.headers) + 4):
+        for idx in range(0, len(self.headers) + 3):
             total = 0
             for person_idx in range(0, len(self.staff_list)):
                 value = self.staff_list[person_idx].values[idx]
@@ -133,16 +154,72 @@ class StaffData:
     
     @property
     def salaries_and_benefits_total(self):
-        return self.staff_totals[len(self.headers)]
+        total = 0
+        for idx in range(2,len(self.headers)):
+            total += self.staff_totals[idx]
+        return total
     
     @property
     def communication_total(self):
-        return self.staff_totals[len(self.headers)+1]
+        return self.staff_totals[len(self.headers)+0]
     
     @property
     def travel_total(self):
-        return self.staff_totals[len(self.headers)+2]
+        return self.staff_totals[len(self.headers)+1]
+    
+class MoneyNotSpentData:
+    def __init__(self, budget=None):
+        self.budget = budget
+        self.items = []
+        self.totals = {
+            'deduct': 0,
+            'not_deduct': 0
+            }
+        
+        section_name_map = {}
+        for section in OtherBudgetItemCost.BUDGET_FORM_SECTION_CHOICES:
+            section_name_map[section[0]] = section[1]
+        
+        not_spent = self.budget.otherbudgetitemcost_set.filter(form_section=BorderStationBudgetCalculation.MONEY_NOT_SPENT).order_by('id')
+        
+        for item in not_spent:
+            section_name = ''
+            if item.associated_section is not None:
+                section_name = section_name_map[item.associated_section]
+                
+            self.items.append ({
+                'description': item.name,
+                'section': section_name,
+                'deduct': item.deduct,
+                'cost': item.cost
+                })
+            if item.deduct == 'Yes':
+                self.totals['deduct'] += item.cost
+            else:
+                self.totals['not_deduct'] += item.cost
 
+class PastMonthSentMoney:
+     def __init__(self, budget=None):
+        self.budget = budget
+        self.items = []
+        self.total = 0
+        
+        section_name_map = {}
+        for section in OtherBudgetItemCost.BUDGET_FORM_SECTION_CHOICES:
+            section_name_map[section[0]] = section[1]
+            
+        past_sent = self.budget.otherbudgetitemcost_set.filter(form_section=BorderStationBudgetCalculation.PAST_MONTH_SENT).order_by('id')
+        for item in past_sent:
+            section_name = ''
+            if item.associated_section is not None:
+                section_name = section_name_map[item.associated_section]
+            self.items.append ({
+                'description': item.name,
+                'section': section_name,
+                'cost': item.cost
+                })
+            self.total += item.cost
+        
 
 class MoneyDistributionFormHelper:
 
@@ -150,6 +227,8 @@ class MoneyDistributionFormHelper:
         self.budget = budget
         self.staff_salaries = budget.staffbudgetitem_set.all()
         self.staff_data = StaffData(budget)
+        self.money_not_spent_data = MoneyNotSpentData(budget)
+        self.past_sent = PastMonthSentMoney(budget)
     
     @property
     def staff(self):
@@ -163,11 +242,16 @@ class MoneyDistributionFormHelper:
         yield BudgetTable("Administration", self.administration_items)
         yield BudgetTable("Potential Victim Care", self.potential_victim_care_items)
         yield BudgetTable("Awareness", self.awareness_items)
+        yield BudgetTable('Money Not Spent', self.money_not_spent_items)
         yield BudgetTable("Miscellaneous", self.miscellaneous_items)
 
     @property
     def total(self):
         return self.budget.station_total
+    
+    @property
+    def station_total(self):
+        return self.total() + self.staff.staff_totals[1]
 
     @property
     def date_entered(self):
@@ -265,6 +349,19 @@ class MoneyDistributionFormHelper:
         if self.budget.awareness_awareness_party_boolean:
             items.append(BudgetLineItem('Awareness Party', self.budget.awareness_awareness_party,''))
         return items + self.get_other_items(BorderStationBudgetCalculation.AWARENESS)
+    
+    @property
+    def money_not_spent_total(self):
+        total = 0
+        not_spent_items = self.budget.otherbudgetitemcost_set.filter(form_section=BorderStationBudgetCalculation.MONEY_NOT_SPENT, deduct='Yes')
+        for not_spent in not_spent_items:
+            total += not_spent.cost
+        return total
+    
+    @property
+    def money_not_spent_items(self):
+        items = [BudgetLineItem('Money Not Spent(to deduct) (breakdown on page 1)', self.money_not_spent_total,'')]
+        return items
     
     @property
     def notes(self):

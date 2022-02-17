@@ -17,6 +17,7 @@ class BorderStationBudgetCalculation(models.Model):
     ADMINISTRATION = 10
     PAST_MONTH_SENT = 11
     LIMBO = 12
+    MONEY_NOT_SPENT = 13
 
     mdf_uuid = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
 
@@ -160,10 +161,17 @@ class BorderStationBudgetCalculation(models.Model):
         return total
 
     def salary_total(self):
-        return sum([staff.cost for staff in self.staffbudgetitem_set.exclude(cost__isnull=True).exclude(type_name='Communication').exclude(type_name='Travel')])
+        total = sum([staff.cost for staff in self.staffbudgetitem_set.exclude(cost__isnull=True).exclude(
+                type_name='Communication').exclude(type_name='Travel').exclude(type_name='Deductions')])
+        total -= sum([staff.cost for staff in self.staffbudgetitem_set.filter(type_name='Deductions').exclude(cost__isnull=True)])
+        return total
     
     def staff_and_benefits_total(self):
         return self.salary_total() + self.other_items_total(self.STAFF_BENEFITS)
+    
+    def money_not_spent_to_deduct(self):
+        items = self.otherbudgetitemcost_set.filter(form_section=self.MONEY_NOT_SPENT, deduct='Yes').exclude(cost__isnull=True)
+        return sum(item.cost for item in items)
 
     def station_total(self):
         total = 0
@@ -174,6 +182,7 @@ class BorderStationBudgetCalculation(models.Model):
         total += self.administration_total()
         total += self.miscellaneous_total()
         total += self.travel_total()
+        total -= self.money_not_spent_to_deduct()
         return total
     
     notes = models.TextField('Notes', blank=True)
@@ -214,12 +223,15 @@ class OtherBudgetItemCost(models.Model):
         (BorderStationBudgetCalculation.STAFF_BENEFITS, 'Staff & Benefits'),
         (BorderStationBudgetCalculation.ADMINISTRATION, 'Administration'),
         (BorderStationBudgetCalculation.PAST_MONTH_SENT, 'Past Month Sent Money'),
-        (BorderStationBudgetCalculation.LIMBO, 'Limbo Potential Victims')
+        (BorderStationBudgetCalculation.LIMBO, 'Limbo Potential Victims'),
+        (BorderStationBudgetCalculation.MONEY_NOT_SPENT, 'Money Not Spent')
     ]
     name = models.CharField(max_length=255, blank=False)
     cost = models.DecimalField(max_digits=17, decimal_places=2, default=0, blank=False)
     form_section = models.IntegerField(BUDGET_FORM_SECTION_CHOICES, blank=True, null=True)
     budget_item_parent = models.ForeignKey(BorderStationBudgetCalculation, blank=True, null=True, on_delete=models.CASCADE)
+    associated_section = models.IntegerField(BUDGET_FORM_SECTION_CHOICES, blank=True, null=True)
+    deduct = models.CharField(max_length=255, blank=True, null=True)
     
     def get_country_id(self):
         if self.budget_item_parent is None or self.budget_item_parent.border_station is None or self.budget_item_parent.border_station.operating_country is None:
@@ -248,6 +260,8 @@ class StaffBudgetItem(models.Model):
         if self.budget_calc_sheet is None or self.budget_calc_sheet.border_station is None:
             return None
         return self.budget_calc_sheet.border_station.id
+
+    
     
     
 

@@ -212,7 +212,7 @@ class OtherItemsViewSet(viewsets.ModelViewSet):
             I'm overriding this method to retrieve all
             of the budget items for a particular budget calculation sheet
         """
-        self.object_list = self.filter_queryset(self.get_queryset().filter(budget_item_parent=self.kwargs['parent_pk']))
+        self.object_list = self.filter_queryset(self.get_queryset().filter(budget_item_parent=self.kwargs['parent_pk'])).order_by('id')
         serializer = self.get_serializer(self.object_list, many=True)
         return Response(serializer.data)
 

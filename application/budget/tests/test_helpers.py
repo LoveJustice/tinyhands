@@ -41,7 +41,7 @@ class MoneyDistributionFormHelperTests(TestCase):
 
         count = sum(1 for _ in result)
 
-        self.assertEqual(count, 7)
+        self.assertEqual(count, 8)
 
     def test_total_should_return_total_budget_cost(self):
         result = self.target.total

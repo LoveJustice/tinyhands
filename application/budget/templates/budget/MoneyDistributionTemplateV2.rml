@@ -40,6 +40,11 @@ z3c.rml docs can be found on their github page: https://github.com/zopefoundatio
             borderColor="black"
             leading="16"
             backColor="lightgrey"/>
+        <paraStyle name="tableHeader2"
+            fontName="Helvetica-Bold"
+            fontSize="12"
+            alignment="center"
+            backColor="lightgrey"/>
         <paraStyle name="staffHeader"
         	fontName="Helvetica-Bold"
             fontSize="10"
@@ -56,11 +61,24 @@ z3c.rml docs can be found on their github page: https://github.com/zopefoundatio
             fontSize="12"
             spaceAfter="7"/>
         <blockTableStyle id="staffGrid">
-            <lineStyle kind="grid"  colorName="black" thickness="1" start="0,0" stop="-5,-1" />
-            <lineStyle kind="grid"  colorName="black" thickness="2" start="-4,0" stop="-4,-1" />
-            <lineStyle kind="grid"  colorName="green" thickness="2" start="-3,0" stop="-3,-1" />
-            <lineStyle kind="grid"  colorName="red" thickness="2" start="-2,0" stop="-2,-1" />
-            <lineStyle kind="grid"  colorName="black" thickness="2" start="-1,0" stop="-1,-1" />
+        <lineStyle kind="LINEBEFORE"  colorName="black" thickness="1" start="0,0" stop="0,0" />
+        	<lineStyle kind="LINEAFTER"  colorName="black" thickness="1" start="-1,0" stop="-1,-1" />
+        	<lineStyle kind="LINEABOVE"  colorName="black" thickness="1" start="0,0" stop="-1,0" />
+            <lineStyle kind="grid"  colorName="black" thickness="1" start="0,1" stop="-4,-1" />
+            <lineStyle kind="grid"  colorName="green" thickness="2" start="-3,1" stop="-3,-1" />
+            <lineStyle kind="grid"  colorName="red" thickness="2" start="-2,1" stop="-2,-1" />
+            <lineStyle kind="grid"  colorName="black" thickness="2" start="-1,1" stop="-1,-1" />
+            <blockBackground colorName="lightgrey" start="1,1" stop="2,-1" />
+            <blockSpan start="0,0" stop="-1,0"/>
+            <blockBackground colorName="lightgrey" start="0,0" stop="-1,0" />
+        </blockTableStyle>
+        <blockTableStyle id="wideGrid">
+        	<lineStyle kind="LINEBEFORE"  colorName="black" thickness="1" start="0,0" stop="0,0" />
+        	<lineStyle kind="LINEAFTER"  colorName="black" thickness="1" start="-1,0" stop="-1,-1" />
+        	<lineStyle kind="LINEABOVE"  colorName="black" thickness="1" start="0,0" stop="-1,0" />
+            <lineStyle kind="grid"  colorName="black" thickness="1" start="0,1" stop="-1,-1" />
+            <blockSpan start="0,0" stop="-1,0"/>
+            <blockBackground colorName="lightgrey" start="0,0" stop="-1,0" />     
         </blockTableStyle>
         <blockTableStyle id="infoGrid">
             <lineStyle kind="grid"  colorName="black" thickness="1" start="0,0" stop="-1,-1" />
@@ -86,11 +104,13 @@ z3c.rml docs can be found on their github page: https://github.com/zopefoundatio
         <nextFrame name="staff_budget"/>
          <blockTable alignment="LEFT" colWidths="{{ staff.column_format }}" style="staffGrid">
          	<tr>
+         		<td><para style="tableHeader2">Staff Items Detail</para></td>
+         	</tr>
+         	<tr>
          		<td><para style="staffHeader">Name</para></td>
          		{% for header in staff.headers %}
          			<td><para style="staffHeader">{{ header }}</para></td>
          		{% endfor %}
-         		<td><para style="staffHeader">Sub-Total</para></td>
          		<td><para style="staffHeader">Communication</para></td>
          		<td><para style="staffHeader">Travel</para></td>
          		<td><para style="staffHeader">Total</para></td>
@@ -110,10 +130,65 @@ z3c.rml docs can be found on their github page: https://github.com/zopefoundatio
          		{% endfor %}
          	</tr>
         </blockTable>
-	<para></para>
-	{% for foot_note in staff.foot_notes %}
-		<para>{{ foot_note }}</para>
-	{% endfor %}
+		<para></para>
+		{% for foot_note in staff.foot_notes %}
+			<para>{{ foot_note }}</para>
+		{% endfor %}
+		<spacer length="20"/>
+		<blockTable alignment="LEFT" colWidths="20% 20% 10% 10%" style="wideGrid">
+			<tr>
+				<td ><para style="tableHeader2">Money Not Spent Detail</para></td>
+			</tr>
+         	<tr>
+         		<td><para style="staffHeader">Description</para></td>
+         		<td><para style="staffHeader">Budget Category</para></td>
+         		<td><para style="staffHeader">Deduct</para></td>
+         		<td><para style="staffHeader">Total</para></td>
+         	</tr>
+         	{% for entry in not_spent.items %}
+         		<tr>
+         			<td><para>{{ entry.description }}</para></td>
+         			<td><para>{{ entry.section }}</para></td>
+         			<td><para>{{ entry.deduct }}</para></td>
+         			<td><para style="numberAlign">{{ entry.cost }}</para></td>
+         		</tr>
+         	{% endfor %}
+         	<tr>
+         		<td><para><b>Total (to deduct)</b></para></td>
+         		<td></td>
+         		<td></td>
+         		<td><para style="numberAlign"><b>{{ not_spent.totals.deduct }}</b></para></td>
+         	</tr>
+         	<tr>
+         		<td><para>Total (not deduct)</para></td>
+         		<td></td>
+         		<td></td>
+         		<td><para style="numberAlign">{{ not_spent.totals.not_deduct }}</para></td>
+         	</tr>
+        </blockTable>
+        <spacer length="20"/>
+		<blockTable alignment="LEFT" colWidths="20% 20% 10%" style="wideGrid">
+			<tr>
+				<td><para style="tableHeader2">Past Month Sent Money Detail</para></td>
+			</tr>
+         	<tr>
+         		<td><para style="staffHeader">Description</para></td>
+         		<td><para style="staffHeader">Budget Category</para></td>
+         		<td><para style="staffHeader">Total</para></td>
+         	</tr>
+         	{% for entry in past_sent.items %}
+         		<tr>
+         			<td><para>{{ entry.description }}</para></td>
+         			<td><para>{{ entry.section }}</para></td>
+         			<td><para style="numberAlign">{{ entry.cost }}</para></td>
+         		</tr>
+         	{% endfor %}
+         	<tr>
+         		<td><para><b>Total</b></para></td>
+				<td></td>
+         		<td><para style="numberAlign"><b>{{ past_sent.total }}</b></para></td>
+         	</tr>
+        </blockTable>
        
         <setNextTemplate name="following" />
         <nextFrame/>
@@ -140,6 +215,9 @@ z3c.rml docs can be found on their github page: https://github.com/zopefoundatio
         <para style="monthlyTotal">
             <b><u>Monthly Distribution Subtotal:</u></b> <font color="#c00000">{{ total|intcomma }}</font>
         </para>
+        <para style="monthlyTotal">
+            <b><u>Station Subtotal:</u></b> <font color="#c00000">{{ station_total|intcomma }}</font>
+        </para>
         <spacer length="10"/>
         <para style="Notes">
             <b><u>Notes:</u></b> {{ notes }}
@@ -149,8 +227,9 @@ z3c.rml docs can be found on their github page: https://github.com/zopefoundatio
         		<b><u>Past Month Sent Money Subtotal</u></b> <font color="#c00000">{{ past_money_sent|intcomma }}</font>
         	</para>
         	<para></para>
-        	<para>This total has already been sent and is not included in the monthly distribution.</para>
+        	<para>This total has already been sent and is not included in the monthly distribution. (breakdown on page 1)</para>
         {% endif %}
+        <spacer length="10"/>
         <para style="Notes">
         	<b>Subcommittee signoff</b>
         </para>

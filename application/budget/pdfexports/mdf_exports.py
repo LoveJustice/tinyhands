@@ -17,9 +17,12 @@ class MDFExporter(BasePDFCreator):
             'date': mdf_helper.date_entered,
             'month': mdf_helper.report_month,
             'staff': mdf_helper.staff,
+            'not_spent': mdf_helper.money_not_spent_data,
             'sections': mdf_helper.sections,
             'total': mdf_helper.total,
+            'station_total': mdf_helper.station_total,
             'notes': mdf_helper.notes,
+            'past_sent':mdf_helper.past_sent,
             'past_money_sent':mdf_helper.past_money_sent_subtotal,
             'limbo_footnote':mdf_helper.limbo_footnote
         }
