@@ -22,3 +22,4 @@ from .audit import *
 from .legal_case_form import *
 from .client_diagnostic import *
 from .empowerment import *
+from .gospel import *

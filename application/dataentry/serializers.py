@@ -14,6 +14,7 @@ from dataentry.models import GospelVerification
 from dataentry.models import ClientDiagnostic
 from dataentry.models import ProjectCategory
 from dataentry.models import Empowerment
+from dataentry.models import Gospel
 from static_border_stations.serializers import LocationSerializer
 from dataentry.form_data import FormData
 
@@ -1002,6 +1003,27 @@ class EmpowermentSerializer(serializers.ModelSerializer):
         model = Empowerment
         fields = [field.name for field in model._meta.fields] # all the model fields
         fields = fields + ['levels', 'station_name', 'country_name']
+    
+    station_name = serializers.SerializerMethodField(read_only=True)
+    country_name = serializers.SerializerMethodField(read_only=True)
+    
+    def get_station_name (self, obj):
+        if obj.station is not None:
+            return obj.station.station_name;
+        else:
+            return None
+    
+    def get_country_name (self, obj):
+        if obj.station is not None and obj.station.operating_country is not None:
+            return obj.station.operating_country.name;
+        else:
+            return None
+
+class GospelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Gospel
+        fields = [field.name for field in model._meta.fields] # all the model fields
+        fields = fields + ['station_name', 'country_name']
     
     station_name = serializers.SerializerMethodField(read_only=True)
     country_name = serializers.SerializerMethodField(read_only=True)

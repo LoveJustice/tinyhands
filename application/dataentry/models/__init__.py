@@ -33,3 +33,4 @@ from .legal_case import LegalCase, LegalCaseSuspect, LegalCaseVictim, LegalCaseA
 from .auto_number import AutoNumber
 from .client_diagnostic import ClientDiagnostic
 from .empowerment import Empowerment
+from .gospel import Gospel
