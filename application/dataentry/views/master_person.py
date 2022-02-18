@@ -614,4 +614,11 @@ class PendingMatchViewSet(viewsets.ModelViewSet):
         match_ids = qs.values_list('person_match', flat=True)
         queryset = PendingMatch.objects.filter(person_match__in=match_ids)
         return queryset
+    
+    def retrieve_by_person_match_id(self, request, pk):
+        pending_match = PendingMatch.objects.get(person_match_id=pk);
+        serializer = PersonMatchSerializer(pending_match)
+        return Response(serializer.data)
+        
+
         
