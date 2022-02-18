@@ -1,11 +1,42 @@
 import datetime
 import pytz
+from templated_email import send_templated_mail
+from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 
-from dataentry.models import MatchAction, MatchHistory, MatchType, Person, PersonMatch
+from dataentry.models import MatchAction, MatchHistory, MatchType, Person, PersonForm, PersonMatch, UserLocationPermission
 
 import id_matching.link_records as lnk
 import id_matching.predict_matches as pm
+
+def get_forms_and_countries(master_person):
+    forms_and_countries = {
+        'forms':[],
+        'countries':[]
+        }
+    persons = Person.objects.filter(master_person=master_person)
+    for person in persons:
+        person_forms = PersonForm.objects.filter(person=person)
+        for person_form in person_forms:
+            forms_and_countries['forms'].append(person_form.get_form_number())
+            forms_and_countries['countries'].append(person_form.get_country())
+    
+    return forms_and_countries
+
+def send_match_notification(context, countries):
+    to_list = []
+    ulps = UserLocationPermission.objects.filter(permission__permission_group='NOTIFICATIONS', permission__action='SUGGESTED_MATCH')
+    
+    for ulp in ulps:
+        if ulp.country is None or ulp.country in countries and ulp.account.email not in to_list:
+            to_list.append(ulp.account.email)
+    
+    send_templated_mail(
+            template_name='suggested_match',
+            from_email=settings.ADMIN_EMAIL_SENDER,
+            recipient_list=to_list,
+            context=context
+        )
 
 def update_matches(id, persons_to_match, classifier, stats):
     notes = 'Automated suggested match'
@@ -50,6 +81,19 @@ def update_matches(id, persons_to_match, classifier, stats):
                             'Social Media Match':str(possible_matches.iloc[idx]['Social Media Match']),
                             }
                         person_match.save()
+                        if possible_matches.iloc[idx]['Match_Prob'] is not None and possible_matches.iloc[idx]['Match_Prob'][0:2] == '99':
+                            results1 = get_forms_and_countries(person1.master_person)
+                            results2 = get_forms_and_countries(person2.master_person)
+                            country_set = set(results1['countries']).update(set(results2['countries']))
+                            context = {
+                                    'match_prob': possible_matches.iloc[idx]['Match_Prob'],
+                                    'name1': person1.master_person.full_name,
+                                    'forms1': ', '.join(map(str, results1['forms'])),
+                                    'name2': person2.master_person.full_name,
+                                    'forms2': ', '.join(map(str, results2['forms'])),
+                                    'url': settings.CLIENT_DOMAIN + '/PersonManagementPendingList?pending=' + str(person_match.id)
+                                }
+                            send_match_notification(context, country_set)
                         
                         match_history = MatchHistory()
                         match_history.master1 = person1.master_person

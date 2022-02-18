@@ -223,6 +223,11 @@ class PersonForm(models.Model):
             return ''
         return self.content_object.station.id
     
+    def get_country(self):
+        if self.content_object is None:
+            return ''
+        return self.content_object.station.operating_country
+    
     def get_country_id(self):
         if self.content_object is None:
             return ''

@@ -73,7 +73,8 @@ urlpatterns = [
          url(r'^master-person/update-match/(?P<id>\d+)/$', MasterPersonViewSet.as_view({'put':'update_match'}), name='MasterPersonUpdateMatch'),
          url(r'^master-person/create-match/$', MasterPersonViewSet.as_view({'put':'create_match'}), name='MasterPersonCreateMatch'),
          url(r'^master-person/merge/(?P<id1>\d+)/(?P<id2>\d+)/$', MasterPersonViewSet.as_view({'put':'merge_master_persons'}), name='MasterPersonMerge'),
-         url(r'^pending-match/$', PendingMatchViewSet.as_view({'get': 'list'}), name='PendingMatch'),
+         url(r'^pending-match/$', PendingMatchViewSet.as_view({'get': 'list'}), name='PendingMatchList'),
+         url(r'^pending-match/(?P<pk>\d+)/$', PendingMatchViewSet.as_view({'get': 'retrieve_by_person_match_id'}), name='PendingMatch'),
 
         #KnownPersons
         url(r'^idmgmt/$', IDManagementViewSet.as_view({'get': 'list'}), name="IDManagement"),
