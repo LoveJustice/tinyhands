@@ -14,6 +14,7 @@ from dataentry.views import BorderStationFormViewSet
 from dataentry.views import StationStatisticsViewSet
 from dataentry.views import LegalCaseFormViewSet
 from dataentry.views import ClientDiagnosticViewSet
+from dataentry.views import EmpowermentViewSet
 from help.views import VideoViewSet
 
 list = {'get': 'list', 'post': 'create'}
@@ -72,7 +73,8 @@ urlpatterns = [
          url(r'^master-person/update-match/(?P<id>\d+)/$', MasterPersonViewSet.as_view({'put':'update_match'}), name='MasterPersonUpdateMatch'),
          url(r'^master-person/create-match/$', MasterPersonViewSet.as_view({'put':'create_match'}), name='MasterPersonCreateMatch'),
          url(r'^master-person/merge/(?P<id1>\d+)/(?P<id2>\d+)/$', MasterPersonViewSet.as_view({'put':'merge_master_persons'}), name='MasterPersonMerge'),
-         url(r'^pending-match/$', PendingMatchViewSet.as_view({'get': 'list'}), name='PendingMatch'),
+         url(r'^pending-match/$', PendingMatchViewSet.as_view({'get': 'list'}), name='PendingMatchList'),
+         url(r'^pending-match/(?P<pk>\d+)/$', PendingMatchViewSet.as_view({'get': 'retrieve_by_person_match_id'}), name='PendingMatch'),
 
         #KnownPersons
         url(r'^idmgmt/$', IDManagementViewSet.as_view({'get': 'list'}), name="IDManagement"),
@@ -163,5 +165,9 @@ urlpatterns = [
         url(r'^legal-case/(?P<station_id>\d+)/(?P<pk>\d+)', LegalCaseFormViewSet.as_view({'get': 'my_retrieve', 'put': 'update', 'delete': 'destroy'}), name='legalCaseDetail'),
         url(r'^legal-case/blank/(?P<station_id>\d+)', LegalCaseFormViewSet.as_view({'get': 'retrieve_blank_form'}), name='legalCaseBlank'),
         
-         url(r'^diagnostic/$', ClientDiagnosticViewSet.as_view(list), name='Diagnostic'),
+        url(r'^emp/$', EmpowermentViewSet.as_view(list), name='Empowerment'),
+        url(r'^emp/(?P<pk>\d+)/$', EmpowermentViewSet.as_view(detail), name='EmpowermentDetail'),
+        url(r'^emp/blank/(?P<station_id>\d+)/$', EmpowermentViewSet.as_view({'get': 'retrieve_blank'}), name='EmpowermentBlank'),
+        
+        url(r'^diagnostic/$', ClientDiagnosticViewSet.as_view(list), name='Diagnostic'),
 ]
