@@ -7,7 +7,7 @@ from django.apps import apps
 from django.db.models import Count
 
 from budget.models import BorderStationBudgetCalculation
-from dataentry.models import BorderStation, CifCommon, Country, CountryExchange, GospelVerification, IntercepteeCommon, LegalCaseSuspect, LocationStatistics, StationStatistics
+from dataentry.models import BorderStation, CifCommon, Country, CountryExchange, Gospel, GospelVerification, IntercepteeCommon, LegalCaseSuspect, LocationStatistics, StationStatistics
 from static_border_stations.models import  CommitteeMember, Location
 
 class Command(BaseCommand):
@@ -106,6 +106,14 @@ class Command(BaseCommand):
             
             try:
                 location_statistics = LocationStatistics.objects.get(location=location, year_month = year_month)
+                if location_statistics.intercepts is None:
+                    location_statistics.intercepts = 0
+                if location_statistics.intercepts_evidence is None:
+                    location_statistics.intercepts_evidence = 0
+                if location_statistics.intercepts_high_risk is None:
+                    location_statistics.intercepts_high_risk = 0
+                if location_statistics.intercepts_invalid is None:
+                    location_statistics.intercepts_invalid = 0
             except ObjectDoesNotExist:
                 location_statistics = LocationStatistics()
                 location_statistics.year_month = year_month
@@ -150,6 +158,7 @@ class Command(BaseCommand):
                         location_statistics.arrests = 0
                     
                     location_statistics.arrests += 1
+                    location_statistics.save()
         
         border_stations = BorderStation.objects.all().order_by('operating_country')
         for station in border_stations:
@@ -180,12 +189,15 @@ class Command(BaseCommand):
             except ObjectDoesNotExist:
                 pass
             
-            entry.gospel = GospelVerification.objects.filter(vdf__station=station,
+            # gospel
+            entry.gospel = (GospelVerification.objects.filter(vdf__station=station,
                                                             form_changes = 'No',
                                                             date_of_followup__gte=start_date,
-                                                            date_of_followup__lt=end_date).count()
+                                                            date_of_followup__lt=end_date).count() +
+                            Gospel.objects.filter(station=station,
+                                                            date_time_entered_into_system__gte=start_date,
+                                                            date_time_entered_into_system__lt=end_date).count())
             
-            # gospel
             # empowerment
             if 'legal_arrest_and_conviction' in country.options and country.options['legal_arrest_and_conviction']:
                 # Count convictions
