@@ -10,6 +10,7 @@ class Empowerment(models.Model):
     full_name = models.CharField(max_length=255, null=True, blank=True)
     gender = models.CharField(max_length=4, blank=True)
     age = models.PositiveIntegerField(null=True, blank=True)
+    vdf_number = models.CharField(max_length=255, null=True, blank=True)
     
     pre_emp_usd = models.DecimalField(max_digits=17, decimal_places=2)
     pre_emp_local = models.CharField(max_length=255, null=True, blank=True)
