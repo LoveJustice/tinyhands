@@ -12,4 +12,5 @@ class Gospel(models.Model):
     age = models.PositiveIntegerField(null=True, blank=True)
     staff_name = models.CharField(max_length=126, null=True)
     notes = models.TextField(blank=True)
+    profession_date = models.DateField(null=True)
     

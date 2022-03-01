@@ -77,7 +77,7 @@ class Person(models.Model):
             sep = ''
             self.aliases = ''
             for alias_person in alias_persons:
-                if self.aliases.find(alias_person.full_name) == -1:
+                if alias_person.full_name is not None and self.aliases.find(alias_person.full_name) == -1:
                     self.aliases = self.aliases + sep + alias_person.full_name
                     sep = ','
 
