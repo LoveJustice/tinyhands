@@ -7,7 +7,7 @@ from rest_framework import status, viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from dataentry.models import Audit, AuditSample, BorderStation, Country, Form, FormCategory, IndicatorHistory, SiteSettings
+from dataentry.models import Audit, AuditSample, BorderStation, Country, Form, FormCategory, IndicatorHistory, IntercepteeCommon, IrfCommon, SiteSettings
 
 class CollectionResults:
     def __init__(self, label):
@@ -89,20 +89,23 @@ class CollectionResults:
         lag_count_denominator = 0
         if self.irf_lag_count > 0:
             self.irf_lag = math.floor(self.irf_lag_total / self.irf_lag_count + 0.5)
+            self.irf_lag_score = math.floor(self.irf_lag_percent_total/self.irf_lag_count + 0.5)
             lag_count_denominator += 1
-            lag_count_numerator += math.floor(self.irf_lag_percent_total/self.irf_lag_count + 0.5)
+            lag_count_numerator += self.irf_lag_score
         else:
             self.irf_lag = 0
         if self.cif_lag_count > 0:
             self.cif_lag = math.floor(self.cif_lag_total / self.cif_lag_count + 0.5)
+            self.cif_lag_score = math.floor(self.cif_lag_percent_total/self.cif_lag_count + 0.5)
             lag_count_denominator += 1
-            lag_count_numerator += math.floor(self.cif_lag_percent_total/self.cif_lag_count + 0.5)
+            lag_count_numerator += self.cif_lag_score
         else:
             self.cif_lag = 0
         if self.vdf_lag_count > 0:
             self.vdf_lag = math.floor(self.vdf_lag_total / self.vdf_lag_count + 0.5)
+            self.vdf_lag_score = math.floor(self.vdf_lag_percent_total/self.vdf_lag_count + 0.5)
             lag_count_denominator += 1
-            lag_count_numerator += math.floor(self.vdf_lag_percent_total/self.vdf_lag_count + 0.5)
+            lag_count_numerator += self.vdf_lag_score
         else:
             self.vdf_lag = 0
         
@@ -345,7 +348,24 @@ class IndicatorsViewSet(viewsets.ViewSet):
             all_results.append(result.__dict__)
         
         return all_results
+     
+    @staticmethod
+    def cifs_for_irf(irf):
+        results = []
+        form = Form.current_form('CIF', irf.station.id)
+        if form is None:
+            return results
+        
+        match_pattern = irf.irf_number + "(\\.[0-9]+|[A-Z])$"
+        cifs = form.storage.get_form_storage_class().objects.filter(cif_number__startswith=irf.irf_number)
+        for cif in cifs:  
+            match = re.match(match_pattern, cif.cif_number)
+            if match is None:
+                continue
             
+            results.append(cif)
+        
+        return results 
             
     @staticmethod        
     def cif_indicators_for_irf(result, irf):
@@ -370,6 +390,23 @@ class IndicatorsViewSet(viewsets.ViewSet):
                 result.cif_lag_percent_total += IndicatorsViewSet.score_lag(work_days)
             if irf.evidence_categorization is not None and (irf.evidence_categorization.lower().startswith('evidence')):
                         result.cif_with_evidence_count += 1
+    @staticmethod
+    def vdfs_for_irf(irf):
+        results = []
+        form = Form.current_form('VDF', irf.station.id)
+        if form is None:
+            return results
+        
+        match_pattern = irf.irf_number + "[A-Z]$"
+        vdfs = form.storage.get_form_storage_class().objects.filter(vdf_number__startswith=irf.irf_number)
+        for vdf in vdfs:  
+            match = re.match(match_pattern, vdf.vdf_number)
+            if match is None:
+                continue
+            
+            results.append(vdf)
+        
+        return results 
     
     @staticmethod
     def vdf_indicators_for_irf(result, irf):
@@ -392,4 +429,266 @@ class IndicatorsViewSet(viewsets.ViewSet):
                 result.vdf_lag_count += 1
                 result.vdf_lag_total += work_days
                 result.vdf_lag_percent_total += IndicatorsViewSet.score_lag(work_days)
+    
+    def getVictimDetail(self, start_date, end_date, project_code, country_id, detail_data):
+        victims = IntercepteeCommon.objects.filter(
+                person__role='PVOT',
+                not_physically_present=False,
+                interception_record__station__operating_country__id=country_id,
+                interception_record__logbook_second_verification_date__gte=start_date,
+                interception_record__logbook_second_verification_date__lte=end_date).order_by('person__full_name')
+        
+        if project_code != 'Totals':
+            victims = victims.filter(interception_record__station__station_code = project_code)
+        table_data = {
+            'labels': ['Victim Name', 'IRF Number', 'Evidence', 'Phone Number', 'Verified Phone Number', 'Photo' ],
+            'rows': []
+            }
+        with_evidence_count = 0;
+        with_phone_count = 0
+        with_phone_verified = 0
+        with_photo = 0
+        for victim in victims:
+            row = []
+            row.append({'value': victim.person.full_name})
+            row.append({'value': victim.interception_record.irf_number})
+            if victim.interception_record.evidence_categorization is not None and victim.interception_record.evidence_categorization.lower().startswith('evidence'):
+                row.append({'value': 'Yes'})
+                with_evidence_count += 1
+            else:
+                row.append({'value': 'No'})
+            if victim.person.phone_contact is not None and victim.person.phone_contact != '':
+                row.append({'value': 'Yes'})
+                with_phone_count += 1
+                if victim.person.phone_verified:
+                    row.append({'value': 'Yes'})
+                    with_phone_verified += 1
+                else:
+                    row.append({'value': 'No'})
+            else:
+                row.append({'value': 'No'})
+                row.append({'value': ''})
+            if victim.person.photo is not None and victim.person.photo != '':
+                row.append({'value': 'Yes'})
+                with_photo += 1
+            else:
+                row.append({'value': 'No'})
+            table_data['rows'].append(row)
+            
+        detail_data['table_data'] = table_data
+        detail_data['text'].append('Number of Victims: ' + str(len(victims)))
+        detail_data['text'].append('Victims with evidence: ' + str(with_evidence_count))
+        detail_data['text'].append('Victims with phone number: ' + str(with_phone_count))
+        detail_data['text'].append('Victims with phone number verified: ' + str(with_phone_verified))
+        detail_data['text'].append('Victims with photo: ' + str(with_photo))
+        detail_data['text'].append('V Photos %: ' + str(with_photo * 100 / len(victims)))
+        
+    
+    def getSuspectDetail(self, start_date, end_date, project_code, country_id, detail_data):
+        suspects = IntercepteeCommon.objects.filter(
+                person__role='Suspect',
+                not_physically_present=False,
+                interception_record__station__operating_country__id=country_id,
+                interception_record__logbook_second_verification_date__gte=start_date,
+                interception_record__logbook_second_verification_date__lte=end_date).order_by('person__full_name')
+        
+        if project_code != 'Totals':
+            suspects = suspects.filter(interception_record__station__station_code = project_code)
+        table_data = {
+            'labels': ['Suspect Name', 'IRF Number',  'Photo' ],
+            'rows': []
+            }
+        
+        with_photo = 0
+        for suspect in suspects:
+            row = []
+            row.append({'value': suspect.person.full_name})
+            row.append({'value': suspect.interception_record.irf_number})
+            if suspect.person.photo is not None and suspect.person.photo != '':
+                row.append({'value': 'Yes'})
+                with_photo += 1
+            else:
+                row.append({'value': 'No'})
+            table_data['rows'].append(row)
+            
+        detail_data['table_data'] = table_data
+        detail_data['text'].append('Number of Suspects: ' + str(len(suspects)))
+        detail_data['text'].append('Suspects with photo: ' + str(with_photo))
+        detail_data['text'].append('S Photos %: ' + str(with_photo * 100 / len(suspects)))
+    
+    def getIrfDetailList(self, start_date, end_date, project_code, country_id):
+        irfs = IrfCommon.objects.filter(station__operating_country__id=country_id, logbook_second_verification_date__gte=start_date,
+                                 logbook_second_verification_date__lte=end_date)
+        if project_code != 'Totals':
+            irfs = irfs.filter(station__station_code = project_code)
+        return irfs
+        
+    def getIrfDetail(self, start_date, end_date, project_code, country_id, detail_data):
+        irfs = self.getIrfDetailList(start_date, end_date, project_code, country_id)
+        table_data = {
+            'labels': ['IRF Number', 'Compliant', 'Lag Time', 'Lag Score', 'Initial Evidence Category', 'Verified Evidence Category'],
+            'rows': []
+            }
+        
+        total_work_days = 0
+        compliant_count = 0
+        lag_total_score = 0
+        for irf in irfs:
+            row = []
+            row.append({'value': irf.irf_number})
+            if irf.logbook_incomplete_questions.lower() == 'no':
+                compliant_count += 1
+                row.append({'value': 'Yes'})
+            else:
+                row.append({'value': 'No'})
+            work_days = IndicatorHistory.work_days(irf.date_of_interception, irf.logbook_received)
+            total_work_days += work_days
+            row.append({'value': work_days})
+            lag_score = self.score_lag(work_days)
+            lag_total_score += lag_score
+            row.append({'value': lag_score})
+            row.append({'value': irf.evidence_categorization})
+            row.append({'value': irf.logbook_second_verification})
+            table_data['rows'].append(row)
+        
+        detail_data['table_data'] = table_data
+        if len(irfs) > 0:
+            detail_data['text'].append('# of IRFs = ' + str(len(irfs)))
+            detail_data['text'].append('IRFs in Compliance # = ' + str(compliant_count))
+            detail_data['text'].append('Average IRF collection lag time = ' + str(math.floor(total_work_days/len(irfs) + 0.5)))
+            detail_data['text'].append('Average IRF collection lag score = ' + str(math.floor(lag_total_score/len(irfs) + 0.5)))
+
+    def getCifDetail(self, start_date, end_date, project_code, country_id, detail_data):
+        irfs = self.getIrfDetailList(start_date, end_date, project_code, country_id)
+        table_data = {
+            'labels': ['CIF Number', 'Compliant', 'Lag Time', 'Lag Score','Evidence'],
+            'rows': []
+            }
+        
+        cif_count = 0
+        total_work_days = 0
+        with_evidence_count = 0
+        lag_count = 0
+        lag_total_score = 0
+        compliant_count = 0
+        for irf in irfs:
+            cifs = IndicatorsViewSet.cifs_for_irf(irf)
+            for cif in cifs:
+                cif_count += 1
+                row = []
+                row.append({'value': cif.cif_number})
+                if cif.logbook_incomplete_questions.lower() == 'no':
+                    compliant_count += 1
+                    row.append({'value': 'Yes'})
+                else:
+                    row.append({'value': 'No'})
+                if cif.interview_date is not None and cif.logbook_received is not None:
+                    work_days = IndicatorHistory.work_days(cif.interview_date, cif.logbook_received)
+                    total_work_days += work_days
+                    lag_total_score += self.score_lag(work_days)
+                    lag_count += 1
+                    row.append({'value': work_days})
+                    row.append({'value': self.score_lag(work_days)})
+                else:
+                    row.append({'value': 'Missing date(s)'})
+                    row.append({'value': ''})
+                if irf.evidence_categorization is not None and irf.evidence_categorization.lower().startswith('evidence'):
+                    row.append({'value': 'Yes'})
+                    with_evidence_count += 1
+                else:
+                    row.append({'value': 'No'})
+                table_data['rows'].append(row)
+        
+        detail_data['table_data'] = table_data
+        if len(detail_data['table_data']['rows']) > 0:
+            detail_data['text'].append('# of CIFs = ' + str(cif_count))
+            detail_data['text'].append('CIFs in Compliance # = ' + str(compliant_count))
+            detail_data['text'].append('Average CIF collection lag time = ' + str(math.floor(total_work_days/lag_count + 0.5)))
+            detail_data['text'].append('Average CIF collection lag score = ' + str(math.floor(lag_total_score/lag_count + 0.5)))
+            detail_data['text'].append('CIFs with evidence count: ' + str(with_evidence_count))
+    
+    def getVdfDetail(self, start_date, end_date, project_code, country_id, detail_data):
+        irfs = self.getIrfDetailList(start_date, end_date, project_code, country_id)
+        table_data = {
+            'labels': ['VDF Number', 'Compliant', 'Lag Time', 'Lag Score'],
+            'rows': []
+            }
+        vdf_count = 0
+        compliant_count = 0
+        total_work_days = 0
+        lag_count = 0
+        lag_total_score = 0
+        for irf in irfs:
+            vdfs = IndicatorsViewSet.vdfs_for_irf(irf)
+            for vdf in vdfs:
+                vdf_count += 1
+                row = []
+                row.append({'value': vdf.vdf_number})
+                if vdf.logbook_incomplete_questions.lower() == 'no':
+                    compliant_count += 1
+                    row.append({'value': 'Yes'})
+                else:
+                    row.append({'value': 'No'})
+                if vdf.interview_date is not None and vdf.logbook_received is not None:
+                    work_days = IndicatorHistory.work_days(vdf.interview_date, vdf.logbook_received)
+                    total_work_days += work_days
+                    lag_total_score += self.score_lag(work_days)
+                    lag_count += 1
+                    row.append({'value': work_days})
+                    row.append({'value': self.score_lag(work_days)})
+                else:
+                    row.append({'value': 'Missing date(s)'})
+                    row.append({'value': ''})
+                table_data['rows'].append(row)
+        
+        detail_data['table_data'] = table_data
+        if len(detail_data['table_data']['rows']) > 0:
+            detail_data['text'].append('# of VDFs = ' + str(vdf_count))
+            detail_data['text'].append('VDFs in Compliance # = ' + str(compliant_count))
+            detail_data['text'].append('Average VDF collection lag time = ' + str(math.floor(total_work_days/lag_count + 0.5)))
+            detail_data['text'].append('Average VDF collection lag score = ' + str(math.floor(lag_total_score/lag_count + 0.5)))
+    
+    def collection_details(self, request):
+        start_date = request.GET['start_date']
+        end_date = request.GET['end_date']
+        type = request.GET['type']
+        country_id = request.GET['country_id']
+        project_code = request.GET['project']
+        
+        detail_data = {
+            'header':"Details for " + type + " for project " + project_code,
+            'text': [],
+            'table_data': None
+            }
+             
+        function_dict = {
+            '# of Victims':self.getVictimDetail,
+            'IRFs':self.getIrfDetail,
+            'IRFs in Compliance #':self.getIrfDetail,
+            'IRF Collection Lag Time':self.getIrfDetail,
+            'CIFs':self.getCifDetail,
+            'CIFs in Compliance #':self.getCifDetail,
+            'CIF Collection Lag Time':self.getCifDetail,
+            '# of CIFs with "Evidence"':self.getCifDetail,
+            'VDFs':self.getVdfDetail,
+            'VDFs in Compliance #':self.getVdfDetail,
+            'VDF Collection Lag Time':self.getVdfDetail,
+            'Total# of Verified Forms':self.getIrfDetail,
+            'Evidence of Trafficking':self.getIrfDetail,
+            'Evidence of Trafficking %':None,
+            'Invalid Intercept':self.getIrfDetail,
+            'Invalid Intercept %':None,
+            'High Risk of Trafficking':self.getIrfDetail,
+            'High Risk of Trafficking %':None,
+            'V Photos %':self.getVictimDetail,
+            'S Photos %':self.getSuspectDetail,
+            };
+        
+        if type in function_dict and function_dict[type] is not None:
+            function_dict[type](start_date, end_date, project_code, country_id, detail_data)
+        else:
+            detail_data['text'].append('No Details for type ' + type)
+        
+        return Response(detail_data)
+            
             

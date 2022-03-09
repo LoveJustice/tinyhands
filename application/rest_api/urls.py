@@ -136,6 +136,7 @@ urlpatterns = [
         
         url(r'^indicators/(?P<country_id>\d+)$', IndicatorsViewSet.as_view({'get': 'calculate_indicators'}), name='indicators'),
         url(r'^collection_indicators/(?P<country_id>\d+)/$', IndicatorsViewSet.as_view({'get': 'get_collection_indicators'}), name='collectionIndicators'),
+        url(r'^collection_indicators/detail/$', IndicatorsViewSet.as_view({'get': 'collection_details'}), name='collectionDetails'),
         
         url(r'help/video/$', VideoViewSet.as_view({'get':'list'}), name='helpVideo'),
         
