@@ -77,7 +77,7 @@ class Person(models.Model):
             sep = ''
             self.aliases = ''
             for alias_person in alias_persons:
-                if self.aliases.find(alias_person.full_name) == -1:
+                if alias_person.full_name is not None and self.aliases.find(alias_person.full_name) == -1:
                     self.aliases = self.aliases + sep + alias_person.full_name
                     sep = ','
 
@@ -222,6 +222,11 @@ class PersonForm(models.Model):
         if self.content_object is None:
             return ''
         return self.content_object.station.id
+    
+    def get_country(self):
+        if self.content_object is None:
+            return ''
+        return self.content_object.station.operating_country
     
     def get_country_id(self):
         if self.content_object is None:

@@ -32,3 +32,5 @@ from .audit import Audit, AuditSample
 from .legal_case import LegalCase, LegalCaseSuspect, LegalCaseVictim, LegalCaseAttachment, LegalCaseTimeline
 from .auto_number import AutoNumber
 from .client_diagnostic import ClientDiagnostic
+from .empowerment import Empowerment
+from .gospel import Gospel
