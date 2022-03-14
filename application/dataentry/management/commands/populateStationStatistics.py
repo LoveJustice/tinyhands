@@ -63,21 +63,25 @@ class Command(BaseCommand):
                 exchange.country = country
                 exchange.year_month = year_month
             
-            try:
-                prior = CountryExchange.objects.get(country=country, year_month=prior_year_month)
-                exchange.exchange_rate = prior.exchange_rate
-            except ObjectDoesNotExist:
-                exchange.exchange_rate = 1.0
+            if exchange.exchange_rate is None or exchange.exchange_rate == 1.0:
+                try:
+                    prior = CountryExchange.objects.get(country=country, year_month=prior_year_month)
+                    exchange.exchange_rate = prior.exchange_rate
+                except ObjectDoesNotExist:
+                    exchange.exchange_rate = 1.0
             
             exchange.save()
         
         # make sure location statistics exists for each active location
-        locations = Location.objects.filter(active=True)
+        locations = Location.objects.all()
         for location in locations:
             if location.border_station is not None and 'hasProjectStats' in location.border_station.features:
                 try:
                     location_statistics = LocationStatistics.objects.get(location=location, year_month=year_month)
                 except ObjectDoesNotExist:
+                    if not location.active:
+                        # Not an active location and no existing entry - skip location
+                        continue
                     location_statistics = LocationStatistics()
                     location_statistics.location = location
                     location_statistics.year_month = year_month
