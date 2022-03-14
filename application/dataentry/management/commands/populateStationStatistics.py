@@ -63,11 +63,12 @@ class Command(BaseCommand):
                 exchange.country = country
                 exchange.year_month = year_month
             
-            try:
-                prior = CountryExchange.objects.get(country=country, year_month=prior_year_month)
-                exchange.exchange_rate = prior.exchange_rate
-            except ObjectDoesNotExist:
-                exchange.exchange_rate = 1.0
+            if exchange.exchange_rate is None or exchange.exchange_rate == 1.0:
+                try:
+                    prior = CountryExchange.objects.get(country=country, year_month=prior_year_month)
+                    exchange.exchange_rate = prior.exchange_rate
+                except ObjectDoesNotExist:
+                    exchange.exchange_rate = 1.0
             
             exchange.save()
         
