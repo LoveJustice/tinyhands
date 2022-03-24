@@ -474,14 +474,15 @@ class IndicatorsViewSet(viewsets.ViewSet):
             else:
                 row.append({'value': 'No'})
             table_data['rows'].append(row)
-            
+
+        photo_percentage = str(with_photo * 100 / len(victims)) if len(victims) > 0 else ''
         detail_data['table_data'] = table_data
-        detail_data['text'].append('Number of Victims: ' + str(len(victims)))
-        detail_data['text'].append('Victims with evidence: ' + str(with_evidence_count))
-        detail_data['text'].append('Victims with phone number: ' + str(with_phone_count))
-        detail_data['text'].append('Victims with phone number verified: ' + str(with_phone_verified))
-        detail_data['text'].append('Victims with photo: ' + str(with_photo))
-        detail_data['text'].append('V Photos %: ' + str(with_photo * 100 / len(victims)))
+        detail_data['text'].append('# PVs: ' + str(len(victims)))
+        detail_data['text'].append('PVs with evidence: ' + str(with_evidence_count))
+        detail_data['text'].append('PVs with phone number: ' + str(with_phone_count))
+        detail_data['text'].append('PVs with phone number verified: ' + str(with_phone_verified))
+        detail_data['text'].append('PVs with photo: ' + str(with_photo))
+        detail_data['text'].append('PV Photos %: ' + photo_percentage)
         
     
     def getSuspectDetail(self, start_date, end_date, project_code, country_id, detail_data):
@@ -510,11 +511,12 @@ class IndicatorsViewSet(viewsets.ViewSet):
             else:
                 row.append({'value': 'No'})
             table_data['rows'].append(row)
-            
+
+        photo_percentage = str(with_photo * 100 / len(suspects)) if len(suspects) > 0 else ''
         detail_data['table_data'] = table_data
-        detail_data['text'].append('Number of Suspects: ' + str(len(suspects)))
+        detail_data['text'].append('# Suspects: ' + str(len(suspects)))
         detail_data['text'].append('Suspects with photo: ' + str(with_photo))
-        detail_data['text'].append('S Photos %: ' + str(with_photo * 100 / len(suspects)))
+        detail_data['text'].append('S Photos %: ' + photo_percentage)
     
     def getIrfDetailList(self, start_date, end_date, project_code, country_id):
         irfs = IrfCommon.objects.filter(station__operating_country__id=country_id, logbook_second_verification_date__gte=start_date,
@@ -553,8 +555,8 @@ class IndicatorsViewSet(viewsets.ViewSet):
         
         detail_data['table_data'] = table_data
         if len(irfs) > 0:
-            detail_data['text'].append('# of IRFs = ' + str(len(irfs)))
-            detail_data['text'].append('IRFs in Compliance # = ' + str(compliant_count))
+            detail_data['text'].append('# IRFs = ' + str(len(irfs)))
+            detail_data['text'].append('# IRFs in Compliance = ' + str(compliant_count))
             detail_data['text'].append('Average IRF collection lag time = ' + str(math.floor(total_work_days/len(irfs) + 0.5)))
             detail_data['text'].append('Average IRF collection lag score = ' + str(math.floor(lag_total_score/len(irfs) + 0.5)))
 
@@ -601,8 +603,8 @@ class IndicatorsViewSet(viewsets.ViewSet):
         
         detail_data['table_data'] = table_data
         if len(detail_data['table_data']['rows']) > 0:
-            detail_data['text'].append('# of CIFs = ' + str(cif_count))
-            detail_data['text'].append('CIFs in Compliance # = ' + str(compliant_count))
+            detail_data['text'].append('# CIFs = ' + str(cif_count))
+            detail_data['text'].append('# CIFs in Compliance = ' + str(compliant_count))
             detail_data['text'].append('Average CIF collection lag time = ' + str(math.floor(total_work_days/lag_count + 0.5)))
             detail_data['text'].append('Average CIF collection lag score = ' + str(math.floor(lag_total_score/lag_count + 0.5)))
             detail_data['text'].append('CIFs with evidence count: ' + str(with_evidence_count))
@@ -644,7 +646,7 @@ class IndicatorsViewSet(viewsets.ViewSet):
         detail_data['table_data'] = table_data
         if len(detail_data['table_data']['rows']) > 0:
             detail_data['text'].append('# of VDFs = ' + str(vdf_count))
-            detail_data['text'].append('VDFs in Compliance # = ' + str(compliant_count))
+            detail_data['text'].append('# VDFs in Compliance = ' + str(compliant_count))
             detail_data['text'].append('Average VDF collection lag time = ' + str(math.floor(total_work_days/lag_count + 0.5)))
             detail_data['text'].append('Average VDF collection lag score = ' + str(math.floor(lag_total_score/lag_count + 0.5)))
     
@@ -662,25 +664,25 @@ class IndicatorsViewSet(viewsets.ViewSet):
             }
              
         function_dict = {
-            '# of Victims':self.getVictimDetail,
+            '# PVs':self.getVictimDetail,
             'IRFs':self.getIrfDetail,
             'IRFs in Compliance #':self.getIrfDetail,
             'IRF Collection Lag Time':self.getIrfDetail,
             'CIFs':self.getCifDetail,
             'CIFs in Compliance #':self.getCifDetail,
             'CIF Collection Lag Time':self.getCifDetail,
-            '# of CIFs with "Evidence"':self.getCifDetail,
+            'CIFs with Evidence #':self.getCifDetail,
             'VDFs':self.getVdfDetail,
             'VDFs in Compliance #':self.getVdfDetail,
             'VDF Collection Lag Time':self.getVdfDetail,
-            'Total# of Verified Forms':self.getIrfDetail,
+            'Total # Verified Forms':self.getIrfDetail,
             'Evidence of Trafficking':self.getIrfDetail,
             'Evidence of Trafficking %':None,
             'Invalid Intercept':self.getIrfDetail,
             'Invalid Intercept %':None,
             'High Risk of Trafficking':self.getIrfDetail,
             'High Risk of Trafficking %':None,
-            'V Photos %':self.getVictimDetail,
+            'PV Photos %':self.getVictimDetail,
             'S Photos %':self.getSuspectDetail,
             };
         
