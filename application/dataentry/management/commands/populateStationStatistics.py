@@ -187,11 +187,14 @@ class Command(BaseCommand):
                 entry.convictions = 0
             
             # Budget
+            """
             try:
                 budget = BorderStationBudgetCalculation.objects.get(border_station=station, month_year__year=year, month_year__month=month)
-                entry.budget = budget.station_total()
+                if entry.budget is None:
+                    entry.budget = budget.station_total()
             except ObjectDoesNotExist:
                 pass
+            """
             
             # gospel
             entry.gospel = (GospelVerification.objects.filter(vdf__station=station,
