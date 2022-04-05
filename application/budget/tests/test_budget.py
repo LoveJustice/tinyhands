@@ -21,7 +21,6 @@ class BorderStationBudgetCalculationTests(TestCase):
         fields = [
             self.target.travel_extra_items_total(),
             self.target.travel_manager_chair_total(),
-            self.target.travel_plus_other
         ]
         expected_total = sum(fields)
 
@@ -31,8 +30,8 @@ class BorderStationBudgetCalculationTests(TestCase):
         fields = [
             self.target.administration_intercepts_total(),
             self.target.administration_meetings_total(),
-            self.target.administration_booth_amount,
-            self.target.administration_office_amount,
+            self.target.booth_amount,
+            self.target.office_amount,
             self.target.administration_extra_items_total()
         ]
         expected_total = sum(fields)
@@ -63,8 +62,8 @@ class BorderStationBudgetCalculationTests(TestCase):
     def test_awareness_total_calculates_correct_value(self):
         fields = [
             self.target.awareness_extra_items_total(),
-            self.target.awareness_contact_cards_amount,
-            self.target.awareness_awareness_party,
+            self.target.contact_cards_amount,
+            self.target.awareness_party,
         ]
         expected_total = sum(fields)
 

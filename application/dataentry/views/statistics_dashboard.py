@@ -301,6 +301,27 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
         
         return Response (dashboard, status=status.HTTP_200_OK)
     
+    """
+        Need custom method to retrieve staff for a location for a particular year month.  This needs to return all
+        staff currently assigned to work at the station.  It also needs to include any staff who were assigned to work
+        at the station in that year and month, but are not currently assigned.
+    """
+    def retrieve_location_staff_staff(self, request, station_id, year_month):
+        staff = []
+        # Get any staff that already has stats for the project for the year/month
+        stats_for_month_list = LocationStatistics.object.filter(location__border_station__id=station_id, year_month=year_month)
+        for stats in stats_for_month_list:
+            if stats.staff not in staff:
+                staff.append(stats.staff)
+        # Get active staff currently assigned on the project
+        works_on_list = WorksOnProject.objects.filter(border_station__id=station_id)
+        for works_on in works_on_list:
+            if works_on.staff not in staff and works_on.staff.last_date is None:
+                staff.append(works_on.staff)
+        
+        serializer = self.get_serializer(staff, many=True)
+        return Response(serializer.data)
+    
     def retrieve_location_staff(self, request, station_id, year_month):
         station = BorderStation.objects.get(id=station_id)
         results = LocationStaff.objects.filter(location__border_station__id=station_id, year_month=year_month)

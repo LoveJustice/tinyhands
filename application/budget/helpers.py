@@ -277,8 +277,8 @@ class MoneyDistributionFormHelper:
     @property
     def travel_items(self):
         items = []
-        if self.budget.travel_chair_with_bike:
-            items.append(BudgetLineItem('SC Chair', self.budget.travel_chair_with_bike_amount,''))
+        if self.budget.travel_chair:
+            items.append(BudgetLineItem('SC Chair', self.budget.travel_chair_amount,''))
         items.append(BudgetLineItem('Staff Travel', self.staff_data.travel_total,''))
         return items + self.get_other_items(BorderStationBudgetCalculation.TRAVEL)
 
@@ -291,10 +291,10 @@ class MoneyDistributionFormHelper:
         meetings_total = self.budget.administration_meetings_total()
         if meetings_total > 0:
             items.append(BudgetLineItem('Meetings', meetings_total,''))
-        if self.budget.administration_booth:
-            items.append(BudgetLineItem('Booth', self.budget.administration_booth_amount,''))
-        if self.budget.administration_office:
-            items.append(BudgetLineItem('Office', self.budget.administration_office_amount,''))
+        if self.budget.booth:
+            items.append(BudgetLineItem('Booth', self.budget.booth_amount,''))
+        if self.budget.office:
+            items.append(BudgetLineItem('Office', self.budget.office_amount,''))
         return items + self.get_other_items(BorderStationBudgetCalculation.ADMINISTRATION)
 
     @property
@@ -336,7 +336,7 @@ class MoneyDistributionFormHelper:
             for limbo in self.get_other_items(BorderStationBudgetCalculation.LIMBO):
                 if len(footnote) > 0:
                     footnote += ','
-                footnote += limbo.name + '(' + str(self.budget.food_and_gas_limbo_girls_multiplier * limbo.value) + ')'
+                footnote += limbo.name + '(' + str(self.budget.limbo_girls_multiplier * limbo.value) + ')'
             footnote = '*1:' + footnote
 
         return footnote
@@ -344,10 +344,10 @@ class MoneyDistributionFormHelper:
     @property
     def awareness_items(self):
         items = []
-        if self.budget.awareness_contact_cards:
-            items.append(BudgetLineItem('Contact Cards', self.budget.awareness_contact_cards_amount,''))
-        if self.budget.awareness_awareness_party_boolean:
-            items.append(BudgetLineItem('Awareness Party', self.budget.awareness_awareness_party,''))
+        if self.budget.contact_cards:
+            items.append(BudgetLineItem('Contact Cards', self.budget.contact_cards_amount,''))
+        if self.budget.awareness_party_boolean:
+            items.append(BudgetLineItem('Awareness Party', self.budget.awareness_party,''))
         return items + self.get_other_items(BorderStationBudgetCalculation.AWARENESS)
     
     @property

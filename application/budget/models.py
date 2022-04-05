@@ -18,6 +18,8 @@ class BorderStationBudgetCalculation(models.Model):
     PAST_MONTH_SENT = 11
     LIMBO = 12
     MONEY_NOT_SPENT = 13
+    IMPACT_MULTIPLYING = 14
+    RENT_UTILITIES = 15
 
     mdf_uuid = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
 
@@ -47,17 +49,16 @@ class BorderStationBudgetCalculation(models.Model):
         total += self.staff_items_total('Communication')
         return total
 
-    travel_chair_with_bike = models.BooleanField(default=False)
-    travel_chair_with_bike_amount = models.DecimalField('for chair (if has bike)', max_digits=17, decimal_places=2, default=2000)
-    travel_plus_other = models.DecimalField(max_digits=17, decimal_places=2, default=0)
+    travel_chair = models.BooleanField(default=False)
+    travel_chair_amount = models.DecimalField('for chair (if has bike)', max_digits=17, decimal_places=2, default=2000)
 
     def travel_extra_items_total(self):
         return self.other_items_total(self.TRAVEL)
 
     def travel_manager_chair_total(self):
         total = 0
-        if self.travel_chair_with_bike:
-            total += self.travel_chair_with_bike_amount
+        if self.travel_chair:
+            total += self.travel_chair_amount
         return total
 
     def travel_total(self):
@@ -65,24 +66,23 @@ class BorderStationBudgetCalculation(models.Model):
         total += self.travel_extra_items_total()
         total += self.travel_manager_chair_total()
         total += self.staff_items_total('Travel')
-        total += self.travel_plus_other
         return total
 
-    administration_number_of_intercepts_last_month = models.PositiveIntegerField('# of intercepts last month', default=0)
-    administration_number_of_intercepts_last_month_multiplier = models.DecimalField(max_digits=17, decimal_places=2, default=20)
-    administration_number_of_intercepts_last_month_adder = models.DecimalField(max_digits=17, decimal_places=2, default=1000)
-    administration_number_of_meetings_per_month = models.PositiveIntegerField('# of meetings per month', default=0)
-    administration_number_of_meetings_per_month_multiplier = models.DecimalField(max_digits=17, decimal_places=2, default=600)
-    administration_booth = models.BooleanField('Booth', default=False)
-    administration_booth_amount = models.DecimalField(max_digits=17, decimal_places=2, default=30000)
-    administration_office = models.BooleanField('Office', default=False)
-    administration_office_amount = models.DecimalField(max_digits=17, decimal_places=2, default=2000)
+    number_of_intercepts_last_month = models.PositiveIntegerField('# of intercepts last month', default=0)
+    number_of_intercepts_last_month_multiplier = models.DecimalField(max_digits=17, decimal_places=2, default=20)
+    number_of_intercepts_last_month_adder = models.DecimalField(max_digits=17, decimal_places=2, default=1000)
+    number_of_meetings_per_month = models.PositiveIntegerField('# of meetings per month', default=0)
+    number_of_meetings_per_month_multiplier = models.DecimalField(max_digits=17, decimal_places=2, default=600)
+    booth = models.BooleanField('Booth', default=False)
+    booth_amount = models.DecimalField(max_digits=17, decimal_places=2, default=30000)
+    office = models.BooleanField('Office', default=False)
+    office_amount = models.DecimalField(max_digits=17, decimal_places=2, default=2000)
 
     def administration_intercepts_total(self):
-        return self.administration_number_of_intercepts_last_month * self.administration_number_of_intercepts_last_month_multiplier + self.administration_number_of_intercepts_last_month_adder
+        return self.number_of_intercepts_last_month * self.number_of_intercepts_last_month_multiplier + self.number_of_intercepts_last_month_adder
 
     def administration_meetings_total(self):
-        return self.administration_number_of_meetings_per_month * self.administration_number_of_meetings_per_month_multiplier
+        return self.number_of_meetings_per_month * self.number_of_meetings_per_month_multiplier
 
     def administration_extra_items_total(self):
         return self.other_items_total(self.ADMINISTRATION)
@@ -91,10 +91,10 @@ class BorderStationBudgetCalculation(models.Model):
         total = 0
         total += self.administration_intercepts_total()
         total += self.administration_meetings_total()
-        if self.administration_booth:
-            total += self.administration_booth_amount
-        if self.administration_office:
-            total += self.administration_office_amount
+        if self.booth:
+            total += self.booth_amount
+        if self.office:
+            total += self.office_amount
         return total + self.administration_extra_items_total()
 
     def miscellaneous_total(self):
@@ -126,16 +126,16 @@ class BorderStationBudgetCalculation(models.Model):
     def pv_total(self):
         return self.shelter_total() + self.food_and_gas_total() + self.pv_extra_items_total()
 
-    food_and_gas_number_of_intercepted_girls = models.PositiveIntegerField('# of intercepted girls', default=0)
-    food_and_gas_number_of_intercepted_girls_multiplier_before = models.DecimalField(max_digits=17, decimal_places=2, default=100)
-    food_and_gas_number_of_intercepted_girls_multiplier_after = models.PositiveIntegerField(default=3)
-    food_and_gas_limbo_girls_multiplier = models.DecimalField(max_digits=17, decimal_places=2, default=100)
+    number_of_intercepted_pvs = models.PositiveIntegerField('# of intercepted girls', default=0)
+    food_per_pv_amount = models.DecimalField(max_digits=17, decimal_places=2, default=100)
+    number_of_pv_days = models.PositiveIntegerField(default=3)
+    limbo_girls_multiplier = models.DecimalField(max_digits=17, decimal_places=2, default=100)
 
     def food_and_gas_intercepted_girls_total(self):
-        return self.food_and_gas_number_of_intercepted_girls * self.food_and_gas_number_of_intercepted_girls_multiplier_before * self.food_and_gas_number_of_intercepted_girls_multiplier_after
+        return self.number_of_intercepted_pvs * self.food_per_pv_amount * self.number_of_pv_days
 
     def food_and_gas_limbo_girls_total(self):
-        return self.food_and_gas_limbo_girls_multiplier * self.other_items_total(self.LIMBO)
+        return self.limbo_girls_multiplier * self.other_items_total(self.LIMBO)
 
     def food_and_gas_total(self):
         total = 0
@@ -143,21 +143,20 @@ class BorderStationBudgetCalculation(models.Model):
         total += self.food_and_gas_limbo_girls_total()
         return total
 
-    awareness_contact_cards = models.BooleanField('Contact Cards', default=False)
-    awareness_contact_cards_boolean_amount = models.DecimalField(max_digits=17, decimal_places=2, default=4000)
-    awareness_contact_cards_amount = models.DecimalField(max_digits=17, decimal_places=2, default=0)
-    awareness_awareness_party_boolean = models.BooleanField("Awareness Party", default=False)
-    awareness_awareness_party = models.DecimalField(max_digits=17, decimal_places=2, default=0)
+    contact_cards = models.BooleanField('Contact Cards', default=False)
+    contact_cards_amount = models.DecimalField(max_digits=17, decimal_places=2, default=0)
+    awareness_party_boolean = models.BooleanField("Awareness Party", default=False)
+    awareness_party = models.DecimalField(max_digits=17, decimal_places=2, default=0)
 
     def awareness_extra_items_total(self):
         return self.other_items_total(self.AWARENESS)
 
     def awareness_total(self):
         total = self.awareness_extra_items_total()
-        if self.awareness_contact_cards:
-            total += self.awareness_contact_cards_amount
-        if self.awareness_awareness_party_boolean:
-            total += self.awareness_awareness_party
+        if self.contact_cards:
+            total += self.contact_cards_amount
+        if self.awareness_party_boolean:
+            total += self.awareness_party
         return total
 
     def salary_total(self):
@@ -232,6 +231,7 @@ class OtherBudgetItemCost(models.Model):
     budget_item_parent = models.ForeignKey(BorderStationBudgetCalculation, blank=True, null=True, on_delete=models.CASCADE)
     associated_section = models.IntegerField(BUDGET_FORM_SECTION_CHOICES, blank=True, null=True)
     deduct = models.CharField(max_length=255, blank=True, null=True)
+    work_project = models.ForeignKey(BorderStation, null=True)
     
     def get_country_id(self):
         if self.budget_item_parent is None or self.budget_item_parent.border_station is None or self.budget_item_parent.border_station.operating_country is None:
@@ -250,6 +250,7 @@ class StaffBudgetItem(models.Model):
     type_name = models.CharField(max_length=255, blank=False)
     description = models.TextField('Description', blank=True)
     cost = models.DecimalField(max_digits=17, decimal_places=2, default=0, blank=True, null=True)
+    work_project = models.ForeignKey(BorderStation, null=True)
     
     def get_country_id(self):
         if self.budget_calc_sheet is None or self.budget_calc_sheet.border_station is None or self.budget_calc_sheet.border_station.operating_country is None:
