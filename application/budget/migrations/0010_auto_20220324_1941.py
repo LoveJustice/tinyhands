@@ -128,18 +128,4 @@ class Migration(migrations.Migration):
             new_name='awareness_party',
         ),
         
-        migrations.RunSQL("update budget_otherbudgetitemcost "\
-                          "set work_project_id = ("\
-                          "select  border_station_id "\
-                          "from budget_borderstationbudgetcalculation "\
-                          "where id = budget_otherbudgetitemcost.budget_item_parent_id)"),
-        migrations.RunSQL("update budget_staffbudgetitem "\
-                          "set work_project_id = ("\
-                          "select  border_station_id "\
-                          "from budget_borderstationbudgetcalculation "\
-                          "where id = budget_staffbudgetitem.budget_calc_sheet_id)"),
-        migrations.RunSQL("update budget_otherbudgetitemcost "\
-                          "set form_section = 10" \
-                          "where form_section = 2"),
-        
     ]
