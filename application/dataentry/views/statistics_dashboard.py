@@ -270,9 +270,9 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
                     if dash_station[element] is None or dash_station[element] == '':
                         dash_station[element] = 0
                     
-                self.sum_element(dash_station, '6month_budget', self.apply_exchange_rate(entry.budget, entry.station.operating_country, entry.year_month), 0)
-                for element in ['intercepts', 'arrests', 'gospel', 'empowerment']:
-                    self.sum_element(dash_station, '6month_' + element, getattr(entry, element), 0)
+            self.sum_element(dash_station, '6month_budget', self.apply_exchange_rate(entry.budget, entry.station.operating_country, entry.year_month), 0)
+            for element in ['intercepts', 'arrests', 'gospel', 'empowerment']:
+                self.sum_element(dash_station, '6month_' + element, getattr(entry, element), 0)
         
         if dash_station is not None:
             dashboard['entries'].append(dash_station)
