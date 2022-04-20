@@ -127,5 +127,19 @@ class Migration(migrations.Migration):
             old_name='awareness_awareness_party',
             new_name='awareness_party',
         ),
+        migrations.AlterField(
+            model_name='otherbudgetitemcost',
+            name='associated_section',
+            field=models.IntegerField(blank=True, null=True, verbose_name=[(1, 'Staff Travel'), (2, 'Miscellaneous'), (3, 'Awareness'), (5, 'Potential Victim Care'), (7, 'Communication'), (8, 'Salaries & Benefits'), (10, 'Administration'), (11, 'Past Month Sent Money'), (12, 'Limbo Potential Victims'), (13, 'Money Not Spent'), (14, 'Operational Expenses'), (15, 'Rent & Utilities')]),
+        ),
+        migrations.AlterField(
+            model_name='otherbudgetitemcost',
+            name='form_section',
+            field=models.IntegerField(blank=True, null=True, verbose_name=[(1, 'Staff Travel'), (2, 'Miscellaneous'), (3, 'Awareness'), (5, 'Potential Victim Care'), (7, 'Communication'), (8, 'Salaries & Benefits'), (10, 'Administration'), (11, 'Past Month Sent Money'), (12, 'Limbo Potential Victims'), (13, 'Money Not Spent'), (14, 'Operational Expenses'), (15, 'Rent & Utilities')]),
+        ),
+        migrations.AlterUniqueTogether(
+            name='staffbudgetitem',
+            unique_together=set([('budget_calc_sheet', 'staff_person', 'type_name', 'work_project')]),
+        ),
         
     ]
