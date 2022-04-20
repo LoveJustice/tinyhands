@@ -158,16 +158,16 @@ def top_table_data(pk, month, year, budget_sheets):
         all_interception_records_count_divide = all_interception_records_count if all_interception_records_count != 0 else 1
 
         last_months_sheets = budget_sheets.filter(month_year__gte=date+relativedelta(months=-1))
-        last_months_cost = last_months_sheets[0].station_total() if last_months_sheets.count() > 0 else 0
+        last_months_cost = last_months_sheets[0].station_total(last_months_sheets[0].border_station) if last_months_sheets.count() > 0 else 0
 
         last_3_months_cost = 0
         last_3_months_sheets = budget_sheets.filter(month_year__gte=date+relativedelta(months=-3))
         for sheet in last_3_months_sheets:
-            last_3_months_cost += sheet.station_total()
+            last_3_months_cost += sheet.station_total(sheet.border_station)
 
         all_cost = 0
         for sheet in budget_sheets:
-            all_cost += sheet.station_total()
+            all_cost += sheet.station_total(sheet.border_station)
 
         return {
                 "all": all_interception_records_count,

@@ -1,31 +1,51 @@
 from budget.pdfexports.pdf_creator import BasePDFCreator
-from budget.helpers import MoneyDistributionFormHelper
+from budget.helpers import MoneyDistributionFormHelper, Footnote
+from dataentry.models import BorderStation
 import zipfile
 from io import BytesIO
 
 
 class MDFExporter(BasePDFCreator):
-    template_name = 'budget/MoneyDistributionTemplateV2.rml'
+    template_name = 'budget/MoneyDistributionTemplate.rml'
 
-    def __init__(self, mdf_id):
-        super(MDFExporter, self).__init__(self.template_name, self.get_mdf_data(mdf_id))
+    def __init__(self, mdf):
+        super(MDFExporter, self).__init__(self.template_name, self.get_mdf_data(mdf))
 
-    def get_mdf_data(self, mdf_id):
-        mdf_helper = MoneyDistributionFormHelper(mdf_id)
+    def get_mdf_data(self, mdf):
+        self.mdf_list = []
+        first_page_footnote = Footnote()
+        second_page_footnote = Footnote()
+        impact_multiplying_list = BorderStation.objects.filter(
+                operating_country=mdf.border_station.operating_country, project_category__name='Impact Multiplying')
+        main_mdf_helper = MoneyDistributionFormHelper(mdf, mdf.border_station, first_page_footnote, second_page_footnote)
+        distribution_subtotal = main_mdf_helper.total
+        station_subtotal = main_mdf_helper.station_total
+        self.mdf_list.append(main_mdf_helper)
+        for impact_multiplying in impact_multiplying_list:
+            impact_mdf = MoneyDistributionFormHelper(mdf, impact_multiplying, first_page_footnote, second_page_footnote)
+            distribution_subtotal += impact_mdf.total
+            station_subtotal += impact_mdf.station_total
+            self.mdf_list.append(impact_mdf)
         return {
-            'name': mdf_helper.station_name,
-            'date': mdf_helper.date_entered,
-            'month': mdf_helper.report_month,
-            'staff': mdf_helper.staff,
-            'not_spent': mdf_helper.money_not_spent_data,
-            'sections': mdf_helper.sections,
-            'total': mdf_helper.total,
-            'station_total': mdf_helper.station_total,
-            'notes': mdf_helper.notes,
-            'past_sent':mdf_helper.past_sent,
-            'past_money_sent':mdf_helper.past_money_sent_subtotal,
-            'limbo_footnote':mdf_helper.limbo_footnote
+            'name': main_mdf_helper.station_name,
+            'date': main_mdf_helper.date_entered,
+            'month': main_mdf_helper.report_month,
+            'mdfs':self.mdf_list,
+            'first_footnotes': first_page_footnote,
+            'second_footnotes': second_page_footnote,
+            'distribution_subtotal': distribution_subtotal,
+            'station_subtotal': station_subtotal,
+            'other_detail': self.otherDetailPresent()
         }
+    
+    def otherDetailPresent(self):
+        for mdf in self.mdf_list:
+            if mdf.money_not_spent_data.has_data():
+                return True
+            if mdf.past_sent.has_data():
+                return True
+        
+        return False
 
 
 class MDFBulkExporter():

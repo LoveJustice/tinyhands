@@ -62,13 +62,13 @@ class BorderStationBudgetCalculationFactory(DjangoModelFactory):
     awareness_party = FuzzyInteger(300, 500)
 
     # members
-    member1 = factory.RelatedFactory(StaffBudgetItemFactory, 'budget_calc_sheet')
-    member2 = factory.RelatedFactory(StaffBudgetItemFactory, 'budget_calc_sheet')
+    member1 = factory.RelatedFactory(StaffBudgetItemFactory, 'budget_calc_sheet', work_project=border_station)
+    member2 = factory.RelatedFactory(StaffBudgetItemFactory, 'budget_calc_sheet', work_project=border_station)
 
     @factory.post_generation
     def post(self, created, extracted, **kwargs):
         for section in [x[0] for x in OtherBudgetItemCost.BUDGET_FORM_SECTION_CHOICES]:
-            OtherBudgetItemCostFactory(form_section=section, budget_item_parent=self)
+            OtherBudgetItemCostFactory(form_section=section, work_project=self.border_station, budget_item_parent=self)
 
 
 class OtherBudgetItemCostFactory(DjangoModelFactory):

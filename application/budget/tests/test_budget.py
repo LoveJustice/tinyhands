@@ -8,19 +8,10 @@ class BorderStationBudgetCalculationTests(TestCase):
     def setUp(self):
         self.target = BorderStationBudgetCalculationFactory()
 
-    def test_communication_total_calculates_correct_value(self):
-        fields = [
-            self.target.communication_extra_items_total(),
-            self.target.communication_manager_chair_total()
-        ]
-        expected_total = sum(fields)
-
-        self.assertEqual(self.target.communication_total(), expected_total)
-
     def test_travel_total_calculates_correct_value(self):
         fields = [
             self.target.travel_extra_items_total(),
-            self.target.travel_manager_chair_total(),
+            self.target.staff_project_items_total('Travel', self.target.border_station)
         ]
         expected_total = sum(fields)
 
@@ -30,21 +21,13 @@ class BorderStationBudgetCalculationTests(TestCase):
         fields = [
             self.target.administration_intercepts_total(),
             self.target.administration_meetings_total(),
-            self.target.booth_amount,
-            self.target.office_amount,
+            self.target.travel_manager_chair_total(),
+            self.target.communication_manager_chair_total(),
             self.target.administration_extra_items_total()
         ]
         expected_total = sum(fields)
 
         self.assertEqual(self.target.administration_total(), expected_total)
-
-    def test_miscellaneous_total_calculates_correct_value(self):
-        fields = [
-            self.target.miscellaneous_total(),
-        ]
-        expected_total = sum(fields)
-
-        self.assertEqual(self.target.miscellaneous_total(), expected_total)
 
     def test_pv_total_calculates_correct_value(self):
         shelter_fields = [
@@ -70,8 +53,7 @@ class BorderStationBudgetCalculationTests(TestCase):
         self.assertEqual(self.target.awareness_total(), expected_total)
 
     def test_salary_total_calculates_correct_value(self):
-        expected_total = sum([item.cost for item in self.target.staffbudgetitem_set.all()])
-        print('test_salary_total_calculates_correct_value', expected_total)
-        expected_total += self.target.other_items_total(BorderStationBudgetCalculation.STAFF_BENEFITS)
+        expected_total = sum([item.cost for item in self.target.staffbudgetitem_set.filter(work_project=self.target.border_station).exclude(type_name='Travel')])
+        expected_total += self.target.other_project_items_total(BorderStationBudgetCalculation.STAFF_BENEFITS, self.target.border_station)
 
-        self.assertEqual(self.target.staff_and_benefits_total(), expected_total)
+        self.assertEqual(self.target.salary_and_benefits_total(self.target.border_station), expected_total)
