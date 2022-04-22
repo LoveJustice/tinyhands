@@ -30,7 +30,8 @@ docker-compose run --rm web python ./bin/wait_for_db.py
 
 mkdir -p backups
 cp application/etc/sanitized_backup.sql backups/sanitized_backup.sql
-CONTAINER_ID=`docker ps | grep postgres | awk '{print $1}'`
+# OD also has a postgres container. Adding version was a hacky way for it to get Searchlight's
+CONTAINER_ID=`docker ps | grep postgres:9.6 | awk '{print $1}'`
 echo "Container $CONTAINER_ID"
 COMMAND="cat /backups/sanitized_backup.sql | psql -U postgres -d postgres"
 
