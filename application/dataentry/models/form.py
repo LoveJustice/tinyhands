@@ -80,50 +80,6 @@ class FormCategory(models.Model):
     category = models.ForeignKey(Category)
     name = models.CharField(max_length=126)
     order = models.PositiveIntegerField(null=True, blank=True)
-    # Json list for helping format the question, all properties will be added to the model on serialization
-    # An example with a radio button and a checkbox:
-    # {
-    #     "questions": [
-    #         {
-    #             "type": "radio",
-    #             "prompt": "# of subcommittee mettings",
-    #             "options": [
-    #                 {
-    #                     "label": "0",
-    #                     "format": "col-md-1",
-    #                     "points": 0
-    #                 },
-    #                 {
-    #                     "label": "1",
-    #                     "format": "col-md-1",
-    #                     "points": 20
-    #                 },
-    #                 {
-    #                     "label": "2",
-    #                     "format": "col-md-1",
-    #                     "points": 30
-    #                 },
-    #                 {
-    #                     "label": ">2",
-    #                     "format": "col-md-1",
-    #                     "points": 40
-    #                 }
-    #             ],
-    #             "question_id": 716,
-    #             "prompt_format": "col-md-2 control-label"
-    #         }
-    #     ],
-    #     "checkboxes": [
-    #         {
-    #             "type": "checkbox",
-    #             "label": "Records",
-    #             "format": "col-md-2",
-    #             "points": 5,
-    #             "question_id": 718
-    #         }
-    #     ]
-    # }
-    form_category_question_config = JSONField(null=True)
     
     # Only needed for card type category
     storage = models.ForeignKey(Storage, null=True)
@@ -309,7 +265,7 @@ class QuestionLayout(models.Model):
     category = models.ForeignKey(Category)
     weight = models.IntegerField(default=0)
     form_config = JSONField(null=True)
-
+    
 class Answer(models.Model):
     question = models.ForeignKey(Question)
     value = models.CharField(max_length=100000, null=True)
