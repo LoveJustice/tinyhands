@@ -2,6 +2,7 @@ import pytz
 
 from rest_framework import serializers
 from rest_framework import filters as fs
+from django_filters import rest_framework as filters
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from rest_framework.response import Response
@@ -47,13 +48,14 @@ class MonthlyReportFormViewSet(BaseFormViewSet):
     parser_classes = (MultiPartParser,FormParser,JSONParser)
     permission_classes = (IsAuthenticated, )
     serializer_class = MonthlyReportListSerializer
-    filter_backends = (fs.SearchFilter, fs.OrderingFilter,)
+    filter_backends = (fs.SearchFilter, fs.OrderingFilter,filters.DjangoFilterBackend,)
     search_fields = ('station__station_code',)
     ordering_fields = [
         'year', 'month',
         'date_time_entered_into_system',
         'date_time_last_updated']
     ordering = ('-year','-month')
+    filter_fields = ('year','month',)
     
     def get_serializer_class(self):
         if self.action == 'list':
