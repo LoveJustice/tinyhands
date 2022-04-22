@@ -1,5 +1,3 @@
-from typing import Optional
-
 import pytz
 import traceback
 from django.conf import settings
@@ -802,7 +800,7 @@ class ResponsePersonSerializer(serializers.Serializer):
         
         return person
         
-class QuestionResponseSerializer(serializers.Serializer):
+class QuestionResponseSerializer(serializers.Serializer):    
     answer_type_to_serializer = {
         'String':ResponseStringSerializer,
         'Integer':ResponseIntegerSerializer,
@@ -819,37 +817,10 @@ class QuestionResponseSerializer(serializers.Serializer):
         'ArcGisAddress':ResponseJsonSerializer,
         'MultiReference':ResponseMultiReferenceSerializer,
         }
-
-    answer_type_to_ui_type = {
-        'String': 'text',
-        'Integer': 'text',
-        'Float': None,
-        'RadioButton': 'radio',
-        # Only used once in UI in hardcoded HTML, change to 'select' if needed later
-        'Dropdown': None,
-        # Checkbox is the default if type is undefined in the UI
-        'Checkbox': None,
-        # Not used
-        'Address': None,
-        # Only used once in hardcoded HTML, change to 'text' if needed later
-        'Phone': None,
-        # This is used a few times, I think all in hardcoded HTML, but putting 'date' just in case
-        'Date': 'date',
-        # Only used in export
-        'DateTime': None,
-        # Only used once in hardcoded html
-        'Image': None,
-        # Used a few times, the UI has its own mapping for now
-        'Person': None,
-        # Only used once in hardcoded html
-        'ArcGisAddress': None,
-        # This is used once in UI, id hardcoded in loop with lots of custom code
-        'MultiReference': None,
-    }
     
-    def to_representation(self, instance: Question):
+    def to_representation(self, instance):
         ret = super().to_representation(instance)
-        form_data: FormData = self.context['form_data']
+        form_data = self.context['form_data']
         
         answer = form_data.get_answer(instance)
         ret['question_id']  = serializers.IntegerField().to_representation(instance.id)
@@ -860,9 +831,7 @@ class QuestionResponseSerializer(serializers.Serializer):
             ret['response'] = serializer.data
         else:
             ret['response'] = {'value':None}
-        ret['type'] = self.answer_type_to_ui_type[instance.answer_type.name]
-        # Don't use prompt from the question itself, get the country specific verbaige from
-        # ret['prompt'] = instance.prompt
+        
         return ret
     
     def to_internal_value(self, data):
@@ -893,37 +862,8 @@ class QuestionResponseSerializer(serializers.Serializer):
             form_data.set_answer(question, response, storage_id)
         return response
 
-class FormCategorySerializer(serializers.ModelSerializer):
-    name = serializers.ReadOnlyField()
-    order = serializers.ReadOnlyField()
-    layout = serializers.SerializerMethodField()
-    # questions = QuestionResponseSerializer(many=True)
-
-    class Meta:
-        model = FormCategory
-        fields = ('name', 'order', 'layout')
-
-    def get_layout(self, instance: FormCategory):
-        form_category_question_groups: Optional[dict] = instance.form_category_question_config
-        if form_category_question_groups is None:
-            return None
-        question_layouts_for_category = instance.category.questionlayout_set.all()
-        for question_group_key in form_category_question_groups.keys():
-            question_group = form_category_question_groups[question_group_key]
-            for question_or_header in question_group:
-                if 'question_id' in question_or_header:
-                    question_id = question_or_header['question_id']
-                    found_layout = next((layout for layout in question_layouts_for_category if layout.question_id == question_id), None)
-                    question_layout_dict = QuestionLayoutSerializer(
-                        found_layout,
-                        context=self.context
-                    ).data
-                    # This could also be named question_layout, they are the same object serialized
-                    question_or_header['question_response'] = question_layout_dict
-        return form_category_question_groups
-
 class QuestionLayoutSerializer(serializers.Serializer):
-    def to_representation(self, instance: QuestionLayout):
+    def to_representation(self, instance):
         context = dict(self.context)
         context['question'] = instance.question
         serializer = QuestionResponseSerializer(instance.question, context=context)
@@ -1107,12 +1047,6 @@ class FormDataSerializer(serializers.Serializer):
         
         serializer = CardCategorySerializer(card_categories, many=True, context=context)
         ret['cards'] = serializer.data
-        form_categories.prefetch_related('category',
-                                         'category__questionlayout_set',
-                                         'category__questionlayout_set__question')
-        serializer = FormCategorySerializer(form_categories, many=True, context=context)
-        categories = serializer.data
-        ret['categories'] = sorted(categories, key=lambda category: category['order'])
         
         return ret
     
