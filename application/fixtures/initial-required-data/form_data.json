@@ -4736,6 +4736,7 @@
 {"model": "dataentry.exportimport", "pk": 60, "fields": {"description": "Export Burkina Faso IRF", "implement_module": "export_import.irf_google_sheet", "implement_class_name": "IrfGoogleSheet", "form": 65}},
 {"model": "dataentry.exportimport", "pk": 61, "fields": {"description": "Export Zambia IRF", "implement_module": "export_import.irf_google_sheet", "implement_class_name": "IrfGoogleSheet", "form": 66}},
 {"model": "dataentry.exportimport", "pk": 62, "fields": {"description": "vdfZambia", "implement_module": "export_import.export_form", "implement_class_name": "ExportToGoogleSheet", "form": 68}},
+{"model": "dataentry.exportimport", "pk": 63, "fields": {"description": "Export Burundi IRF", "implement_module": "export_import.irf_google_sheet", "implement_class_name": "IrfGoogleSheet", "form": 69}},
 {"model": "dataentry.exportimportcard", "pk": 1, "fields": {"export_import": 1, "category": 184, "prefix": "Victim ", "max_instances": 1, "index_field_name": null}},
 {"model": "dataentry.exportimportcard", "pk": 2, "fields": {"export_import": 1, "category": 184, "prefix": "Trafficker %d ", "max_instances": 5, "index_field_name": null}},
 {"model": "dataentry.exportimportcard", "pk": 3, "fields": {"export_import": 2, "category": 184, "prefix": "Victim ", "max_instances": 1, "index_field_name": null}},
@@ -4862,6 +4863,8 @@
 {"model": "dataentry.exportimportcard", "pk": 126, "fields": {"export_import": 60, "category": 184, "prefix": "Trafficker %d ", "max_instances": 5, "index_field_name": null}},
 {"model": "dataentry.exportimportcard", "pk": 127, "fields": {"export_import": 61, "category": 184, "prefix": "Victim ", "max_instances": 1, "index_field_name": null}},
 {"model": "dataentry.exportimportcard", "pk": 128, "fields": {"export_import": 61, "category": 184, "prefix": "Trafficker %d ", "max_instances": 5, "index_field_name": null}},
+{"model": "dataentry.exportimportcard", "pk": 129, "fields": {"export_import": 63, "category": 184, "prefix": "Victim ", "max_instances": 1, "index_field_name": null}},
+{"model": "dataentry.exportimportcard", "pk": 130, "fields": {"export_import": 63, "category": 184, "prefix": "Trafficker %d ", "max_instances": 5, "index_field_name": null}},
 {"model": "dataentry.exportimportfield", "pk": null, "fields": {"export_import": 1, "card": null, "field_name": "station", "answer_type": 1, "export_name": "Station", "arguments_json": {"part": "station_name"}}},
 {"model": "dataentry.exportimportfield", "pk": null, "fields": {"export_import": 1, "card": null, "field_name": "date_time_entered_into_system", "answer_type": 10, "export_name": "Date/Time Entered into System", "arguments_json": null}},
 {"model": "dataentry.exportimportfield", "pk": null, "fields": {"export_import": 2, "card": null, "field_name": "station", "answer_type": 1, "export_name": "Station", "arguments_json": {"part": "station_name"}}},
@@ -5004,6 +5007,9 @@
 {"model": "dataentry.exportimportfield", "pk": null, "fields": {"export_import": 61, "card": null, "field_name": "station", "answer_type": 1, "export_name": "Station", "arguments_json": {"part": "station_name"}}},
 {"model": "dataentry.exportimportfield", "pk": null, "fields": {"export_import": 61, "card": null, "field_name": "date_time_entered_into_system", "answer_type": 10, "export_name": "Date/Time Entered into System", "arguments_json": null}},
 {"model": "dataentry.exportimportfield", "pk": null, "fields": {"export_import": 61, "card": null, "field_name": "status", "answer_type": 1, "export_name": "Status", "arguments_json": null}},
+{"model": "dataentry.exportimportfield", "pk": null, "fields": {"export_import": 63, "card": null, "field_name": "station", "answer_type": 1, "export_name": "Station", "arguments_json": {"part": "station_name"}}},
+{"model": "dataentry.exportimportfield", "pk": null, "fields": {"export_import": 63, "card": null, "field_name": "date_time_entered_into_system", "answer_type": 10, "export_name": "Date/Time Entered into System", "arguments_json": null}},
+{"model": "dataentry.exportimportfield", "pk": null, "fields": {"export_import": 63, "card": null, "field_name": "status", "answer_type": 1, "export_name": "Status", "arguments_json": null}},
 {"model": "dataentry.googlesheetconfig", "pk": null, "fields": {"export_import": 1, "export_or_import": "export", "spreadsheet_name": "Nepal IRF", "sheet_name": "IRF Export", "key_field_name": "IRF Number", "import_status_column": null, "import_issue_column": null, "suppress_column_warnings": true}},
 {"model": "dataentry.googlesheetconfig", "pk": null, "fields": {"export_import": 2, "export_or_import": "export", "spreadsheet_name": "India IRF", "sheet_name": "IRF Export", "key_field_name": "IRF Number", "import_status_column": null, "import_issue_column": null, "suppress_column_warnings": true}},
 {"model": "dataentry.googlesheetconfig", "pk": null, "fields": {"export_import": 3, "export_or_import": "export", "spreadsheet_name": "Bangladesh IRF", "sheet_name": "IRF Export", "key_field_name": "IRF Number", "import_status_column": null, "import_issue_column": null, "suppress_column_warnings": true}},
@@ -5063,5 +5069,6 @@
 {"model": "dataentry.googlesheetconfig", "pk": null, "fields": {"export_import": 59, "export_or_import": "export", "spreadsheet_name": "Liberia IRF", "sheet_name": "IRF Export", "key_field_name": "IRF Number", "import_status_column": null, "import_issue_column": null, "suppress_column_warnings": true}},
 {"model": "dataentry.googlesheetconfig", "pk": null, "fields": {"export_import": 60, "export_or_import": "export", "spreadsheet_name": "Burkina Faso IRF", "sheet_name": "IRF Export", "key_field_name": "IRF Number", "import_status_column": null, "import_issue_column": null, "suppress_column_warnings": true}},
 {"model": "dataentry.googlesheetconfig", "pk": null, "fields": {"export_import": 61, "export_or_import": "export", "spreadsheet_name": "Zambia IRF", "sheet_name": "IRF Export", "key_field_name": "IRF Number", "import_status_column": null, "import_issue_column": null, "suppress_column_warnings": true}},
-{"model": "dataentry.googlesheetconfig", "pk": null, "fields": {"export_import": 62, "export_or_import": "export", "spreadsheet_name": "Zambia VDF", "sheet_name": "VDF Export", "key_field_name": "VDF Number", "import_status_column": null, "import_issue_column": null, "suppress_column_warnings": true}}
+{"model": "dataentry.googlesheetconfig", "pk": null, "fields": {"export_import": 62, "export_or_import": "export", "spreadsheet_name": "Zambia VDF", "sheet_name": "VDF Export", "key_field_name": "VDF Number", "import_status_column": null, "import_issue_column": null, "suppress_column_warnings": true}},
+{"model": "dataentry.googlesheetconfig", "pk": null, "fields": {"export_import": 63, "export_or_import": "export", "spreadsheet_name": "Burundi IRF", "sheet_name": "IRF Export", "key_field_name": "IRF Number", "import_status_column": null, "import_issue_column": null, "suppress_column_warnings": true}}
 ]
