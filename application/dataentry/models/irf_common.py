@@ -50,6 +50,7 @@ class IrfCommon(BaseForm):
     vulnerability_where_going_doesnt_know = models.BooleanField("Doesn't know where they are going", default=False)
     vulnerability_meeting_someone_met_online = models.BooleanField("Going to meet someone they met online", default=False)
     vulnerability_travel_arranged_by_other = models.BooleanField("Transportation arranged by someone else", default=False)
+    vulnerability_travel_met_recently = models.BooleanField("Is or was traveling with someone they met recently", default=False)
     
     vulnerability_no_id = models.BooleanField("Does not have any form of ID", default=False)
     vulnerability_bus_driver_payment_at_destination = models.BooleanField("Bus driver expecting payment for travel at destination", default=False)
@@ -98,6 +99,7 @@ class IrfCommon(BaseForm):
     control_under_18_family_unwilling = models.BooleanField('Family unwilling to let her go', default=False).set_weight(60)
     control_where_going_someone_paid_expenses = models.BooleanField('Non relatives paid for their travel', default=False)
     control_wife_under_18 = models.BooleanField("Wife/fiancee is under 18", default=False)
+    control_under_18_recruited_for_work = models.BooleanField("Under 18, recruited for work", default=False)
     
     #Contact/Staff
     case_notes = models.TextField('Case Notes', blank=True)

@@ -245,6 +245,7 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
                 dash_station['to_date_irfs'] = IrfCommon.objects.filter(station=entry.station).count()
                 dash_station['to_date_cifs'] = CifCommon.objects.filter(station=entry.station).count()
                 dash_station['to_date_vdfs'] = VdfCommon.objects.filter(station=entry.station).count()
+                dash_station['to_date_emp'] = StationStatistics.objects.filter(station=entry.station).aggregate(Sum('empowerment'))['empowerment__sum']
                 verdicts = LegalCaseSuspect.objects.filter(legal_case__station=entry.station, verdict_date__isnull=False, legal_case__charge_sheet_date__isnull=False)
                 dash_station['to_date_case_days'] = 0
                 dash_station['to_date_case_count'] = 0
@@ -266,7 +267,7 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
                 
                 for element in ['last_budget', 'last_intercepts', 'last_arrests', 'last_gospel', 'last_empowerment',
                                 'to_date_intercepts', 'to_date_arrests', 'to_date_gospel','to_date_irfs', 'to_date_cifs',
-                                'to_date_vdfs', 'to_date_conv', 'to_date_case_days', 'to_date_case_count']:
+                                'to_date_vdfs', 'to_date_emp', 'to_date_conv', 'to_date_case_days', 'to_date_case_count']:
                     if dash_station[element] is None or dash_station[element] == '':
                         dash_station[element] = 0
                     
@@ -280,7 +281,7 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
         for element in [
                     'monthly_report', 'compliance', '6month_budget', '6month_intercepts','6month_arrests','6month_gospel', '6month_empowerment', '6month_cifs',
                     'to_date_budget', 'to_date_intercepts', 'to_date_arrests', 'to_date_convictions', 'to_date_gospel','to_date_irfs', 'to_date_cifs',
-                    'to_date_vdfs', 'to_date_conv', 'to_date_case_days', 'to_date_case_count',
+                    'to_date_vdfs', 'to_date_emp', 'to_date_conv', 'to_date_case_days', 'to_date_case_count',
                     'last_budget', 'last_intercepts',  'last_arrests', 'last_gospel', 'last_empowerment','last_staff_count','last_subcommittee_count']:
             for entry in dashboard['entries']:
                 self.sum_element(dashboard['totals'], element, entry.get(element, None), 0)
