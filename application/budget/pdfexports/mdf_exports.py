@@ -15,8 +15,7 @@ class MDFExporter(BasePDFCreator):
         self.mdf_list = []
         first_page_footnote = Footnote()
         second_page_footnote = Footnote()
-        impact_multiplying_list = BorderStation.objects.filter(
-                operating_country=mdf.border_station.operating_country, project_category__name='Impact Multiplying')
+        impact_multiplying_list = BorderStation.objects.filter(mdf_project=mdf.border_station)
         main_mdf_helper = MoneyDistributionFormHelper(mdf, mdf.border_station, first_page_footnote, second_page_footnote)
         distribution_subtotal = main_mdf_helper.total
         station_subtotal = main_mdf_helper.station_total

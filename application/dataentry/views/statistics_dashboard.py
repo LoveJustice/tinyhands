@@ -209,6 +209,7 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
         country = Country.objects.get(id=country_id)
         dashboard={
             'month':datetime.date(year, month, 1).strftime('%B %Y'),
+            'categories':[],
             'entries':[],
             'totals':{}}
                 
@@ -219,12 +220,27 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
             year_month__lte=end_year_month).order_by('station__project_category__sort_order','station__station_name', '-year_month')
         
         dash_station = None
+        print('here')
+        categories = []
         for entry in entries:
             setattr(entry, 'intercepts', LocationStatistics.objects.filter(location__border_station=entry.station, year_month=entry.year_month).aggregate(Sum('intercepts'))['intercepts__sum'])
             setattr(entry, 'arrests', LocationStatistics.objects.filter(location__border_station=entry.station, year_month=entry.year_month).aggregate(Sum('arrests'))['arrests__sum'])
+            if entry.station.project_category.name not in categories:
+                if dash_station is not None:
+                    category['entries'].append(dash_station)
+                    dash_station = None
+                categories.append(entry.station.project_category.name)
+                print('category name', entry.station.project_category.name, 'code', entry.station.station_code)
+                category ={
+                    'name': entry.station.project_category.name,
+                    'entries': [],
+                    'subtotals': {}
+                    }
+                dashboard['categories'].append(category)
+                
             if dash_station is None or dash_station['station_code'] != entry.station.station_code:
                 if dash_station is not None:
-                    dashboard['entries'].append(dash_station)
+                    category['entries'].append(dash_station)
                 dash_station = {
                     'station_name':entry.station.station_name,
                     'station_code':entry.station.station_code,
@@ -276,15 +292,17 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
                 self.sum_element(dash_station, '6month_' + element, getattr(entry, element), 0)
         
         if dash_station is not None:
-            dashboard['entries'].append(dash_station)
+            category['entries'].append(dash_station)
             
         for element in [
                     'monthly_report', 'compliance', '6month_budget', '6month_intercepts','6month_arrests','6month_gospel', '6month_empowerment', '6month_cifs',
                     'to_date_budget', 'to_date_intercepts', 'to_date_arrests', 'to_date_convictions', 'to_date_gospel','to_date_irfs', 'to_date_cifs',
                     'to_date_vdfs', 'to_date_emp', 'to_date_conv', 'to_date_case_days', 'to_date_case_count',
                     'last_budget', 'last_intercepts',  'last_arrests', 'last_gospel', 'last_empowerment','last_staff_count','last_subcommittee_count']:
-            for entry in dashboard['entries']:
-                self.sum_element(dashboard['totals'], element, entry.get(element, None), 0)
+            for category in dashboard['categories']:
+                for entry in category['entries']:
+                    self.sum_element(category['subtotals'], element, entry.get(element, None), 0)
+                self.sum_element(dashboard['totals'], element, category['subtotals'].get(element, None), 0)
         
         if len(dashboard['totals']) > 0:
             dashboard['to_date'] = {
@@ -295,10 +313,15 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
             self.sum_element(dashboard['to_date'], 'arrests', country.prior_arrests)
         
         for element in ['monthly_report', 'compliance']:
-            if dashboard['totals'].get(element, None) is not None:
-                populatedEntries = self.countPopulated(dashboard['entries'], element)
-                if populatedEntries > 0:
-                    dashboard['totals'][element] /= populatedEntries
+            total_populated = 0
+            for category in dashboard['categories']:
+                if category['subtotals'].get(element, None) is not None:
+                    populatedEntries = self.countPopulated(category['entries'], element)
+                    total_populated += populatedEntries
+                    if populatedEntries > 0:
+                        category['subtotals'][element] /= populatedEntries
+            if dashboard['totals'].get(element, None) is not None and total_populated > 0:
+                dashboard['totals'][element] /= total_populated
         
         return Response (dashboard, status=status.HTTP_200_OK)
     
