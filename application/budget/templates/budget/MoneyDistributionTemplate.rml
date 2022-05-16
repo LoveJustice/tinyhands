@@ -216,10 +216,10 @@ z3c.rml docs can be found on their github page: https://github.com/zopefoundatio
         <nextFrame/>
 		{% for mdf in mdfs %}
 			{% if mdf.money_not_spent_total != 0 or mdf.station_total != 0 or mdf.past_money_sent_total != 0 %}
+				<condPageBreak height="{{ mdf.height_required }}"/>
 				<para style="projectHeader">{{ mdf.project.station_name }}</para>
 			{% endif %}
 	        {% for section in mdf.sections %}
-	        	
 	        	{% if section.total != 0 %}
 			        <condPageBreak height="{{ section.height_required }}"/>
 			        <para style="tableHeader">{{ section.title }} ({{ mdf.project.station_code }})</para>

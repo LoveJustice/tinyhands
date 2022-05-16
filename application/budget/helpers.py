@@ -412,3 +412,14 @@ class MoneyDistributionFormHelper:
             total += past_sent.cost
         return total
     
+    @property
+    def height_required(self):
+        # for helping calculate the height required to render the project title
+        # and the first budget tble for thep rojecct
+        height = BudgetTable.TITLE_HEIGHT
+        for section in self.sections:
+            height += section.height_required
+            break
+        
+        return height
+    
