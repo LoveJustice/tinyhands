@@ -153,7 +153,7 @@ z3c.rml docs can be found on their github page: https://github.com/zopefoundatio
 	        	{% if mdf.past_sent.has_data %} 
 					<blockTable alignment="LEFT" colWidths="40% 40% 20%" style="wideGrid">
 						<tr>
-							<td><para style="tableHeader2">Past Month Sent Money Detail ({{ mdf.project.station_code }})</para></td>
+							<td><para style="tableHeader2">{{ mdf.project.project_category.name }}: Past Month Sent Money Detail ({{ mdf.project.station_name }} {{ mdf.project.station_code }})</para></td>
 						</tr>
 			         	<tr>
 			         		<td><para style="staffHeader">Description</para></td>
@@ -180,7 +180,7 @@ z3c.rml docs can be found on their github page: https://github.com/zopefoundatio
 	        	{% if mdf.money_not_spent_data.has_data %} 
 					<blockTable alignment="LEFT" colWidths="40% 40% 20% 20%" style="wideGrid">
 						<tr>
-							<td ><para style="tableHeader2">Money Not Spent Detail ({{ mdf.project.station_code }})</para></td>
+							<td ><para style="tableHeader2">{{ mdf.project.project_category.name }}: Money Not Spent Detail ({{ mdf.project.station_name }} {{ mdf.project.station_code }})</para></td>
 						</tr>
 			         	<tr>
 			         		<td><para style="staffHeader">Description</para></td>

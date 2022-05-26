@@ -46,7 +46,7 @@ class MoneyDistributionFormHelperTests(TestCase):
         self.assertEqual(count, 6)
 
     def test_total_should_return_total_budget_cost(self):
-        result = self.target.total
+        result = self.target.project_total
 
         self.assertEqual(result, self.budget.station_total(self.budget.border_station))
 
