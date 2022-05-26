@@ -237,6 +237,7 @@ class MoneyDistributionFormHelper:
         self.money_not_spent_data = MoneyNotSpentData(budget, project)
         self.past_sent = PastMonthSentMoney(budget, project)
         self.second_footnote = second_page_footnote
+        self.format = "{:,.2f}"
     
     @property
     def staff(self):
@@ -255,14 +256,48 @@ class MoneyDistributionFormHelper:
             yield BudgetTable("Staff Salaries & Benefits", self.salary_and_benefit_items)
             yield BudgetTable("Operational Expenses", self.operational_expense_items)
             
-
-    @property
-    def total(self):
-        return self.budget.station_total(self.project)
+    
     
     @property
-    def station_total(self):
-        return self.budget.station_total(self.project) + self.budget.staff_salary_and_benefits_deductions(self.project)
+    def total_height(self):
+        return 5 * BudgetTable.ROW_HEIGHT 
+    
+    @property
+    def project_total(self):
+        return self.budget.station_total(self.project)
+    
+    def project_total_formula(self):
+        formula = '('
+        sep = ''
+        for section in self.sections:
+            formula += sep + self.format.format(section.total) + ' (' + section.title + ')'
+            sep = ' + '
+                
+        formula += ' = ' + self.format.format(self.project_total) + ')'
+        return formula
+    
+    @property
+    def distribution_total(self):
+        return self.budget.station_total(self.project) - self.money_not_spent_total
+    
+    @property
+    def distribution_total_formula(self):
+        formula = '(' + self.format.format(self.project_total) + ' (Project Total) - '
+        formula += self.format.format(self.money_not_spent_total) + ' (Money Not Spent) = '    
+        formula += self.format.format(self.distribution_total) + ')'
+        return formula
+    
+    @property
+    def full_total(self):
+        return self.distribution_total + self.budget.staff_salary_and_benefits_deductions(self.project) + self.past_money_sent_total
+    
+    @property
+    def full_total_formula(self):
+        formula = '(' + self.format.format(self.distribution_total) + ' (Monthly Distribution Subtotal) + '
+        formula += self.format.format(self.budget.staff_salary_and_benefits_deductions(self.project)) + ' (Salary Deductions) + '
+        formula += self.format.format(self.past_money_sent_total) + ' (Past Month Sent Money Subtotal) = '   
+        formula += self.format.format(self.full_total) + ')'
+        return formula
 
     @property
     def date_entered(self):

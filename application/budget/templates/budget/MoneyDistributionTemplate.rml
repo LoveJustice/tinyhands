@@ -61,17 +61,17 @@ z3c.rml docs can be found on their github page: https://github.com/zopefoundatio
             alignment="center"
             />    
         <paraStyle name="monthlyTotal"
-            fontName="Helvetica-Bold"
+            fontName="Helvetica"
             fontSize="10"
-            spaceAfter="7"/>
+            spaceAfter="5"/>
         <paraStyle name="Notes"
             spaceAfter="7"/>
         <paraStyle name="pastSent"
-            fontName="Helvetica-Bold"
+            fontName="Helvetica"
             fontSize="10"
             spaceAfter="7"/>
         <paraStyle name="finalTotal"
-            fontName="Helvetica-Bold"
+            fontName="Helvetica"
             fontSize="12"
             spaceAfter="7"/>
         <blockTableStyle id="staffGrid">
@@ -117,7 +117,7 @@ z3c.rml docs can be found on their github page: https://github.com/zopefoundatio
         	{% if mdf.staff_data.has_data %}
 		        <blockTable alignment="LEFT" colWidths="{{ mdf.staff_data.column_format }}" style="staffGrid">
 		         	<tr>
-		         		<td><para style="tableHeader2">Staff Items Detail ({{ mdf.project.station_code }})</para></td>
+		         		<td><para style="tableHeader2">{{ mdf.project.project_category.name }}: Salaries &amp; Benefits ({{ mdf.project.station_name }} {{ mdf.project.station_code }})</para></td>
 		         	</tr>
 		         	<tr>
 		         		<td><para style="staffHeader">Name</para></td>
@@ -149,6 +149,33 @@ z3c.rml docs can be found on their github page: https://github.com/zopefoundatio
 		{% if other_detail %}
 	        <setNextTemplate name="otherDetail" />
 	        <nextFrame/>
+	        {% for mdf in mdfs %}
+	        	{% if mdf.past_sent.has_data %} 
+					<blockTable alignment="LEFT" colWidths="40% 40% 20%" style="wideGrid">
+						<tr>
+							<td><para style="tableHeader2">Past Month Sent Money Detail ({{ mdf.project.station_code }})</para></td>
+						</tr>
+			         	<tr>
+			         		<td><para style="staffHeader">Description</para></td>
+			         		<td><para style="staffHeader">Budget Category</para></td>
+			         		<td><para style="staffHeader">Total</para></td>
+			         	</tr>
+			         	{% for entry in mdf.past_sent.items %}
+			         		<tr>
+			         			<td><para>{{ entry.description }}</para></td>
+			         			<td><para>{{ entry.section }}</para></td>
+			         			<td><para style="numberAlign">{{ entry.cost }}</para></td>
+			         		</tr>
+			         	{% endfor %}
+			         	<tr>
+			         		<td><para><b>Total</b></para></td>
+							<td></td>
+			         		<td><para style="numberAlign"><b>{{ mdf.past_sent.total }}</b></para></td>
+			         	</tr>
+			        </blockTable>
+		        {% endif %}
+	        {% endfor %}
+	        <spacer length="20"/>
 	        {% for mdf in mdfs %}
 	        	{% if mdf.money_not_spent_data.has_data %} 
 					<blockTable alignment="LEFT" colWidths="40% 40% 20% 20%" style="wideGrid">
@@ -184,45 +211,18 @@ z3c.rml docs can be found on their github page: https://github.com/zopefoundatio
 			        </blockTable>
 		        {% endif %}
 	        {% endfor %}
-	        <spacer length="20"/>
-	        {% for mdf in mdfs %}
-	        	{% if mdf.past_sent.has_data %} 
-					<blockTable alignment="LEFT" colWidths="40% 40% 20%" style="wideGrid">
-						<tr>
-							<td><para style="tableHeader2">Past Month Sent Money Detail ({{ mdf.project.station_code }})</para></td>
-						</tr>
-			         	<tr>
-			         		<td><para style="staffHeader">Description</para></td>
-			         		<td><para style="staffHeader">Budget Category</para></td>
-			         		<td><para style="staffHeader">Total</para></td>
-			         	</tr>
-			         	{% for entry in mdf.past_sent.items %}
-			         		<tr>
-			         			<td><para>{{ entry.description }}</para></td>
-			         			<td><para>{{ entry.section }}</para></td>
-			         			<td><para style="numberAlign">{{ entry.cost }}</para></td>
-			         		</tr>
-			         	{% endfor %}
-			         	<tr>
-			         		<td><para><b>Total</b></para></td>
-							<td></td>
-			         		<td><para style="numberAlign"><b>{{ mdf.past_sent.total }}</b></para></td>
-			         	</tr>
-			        </blockTable>
-		        {% endif %}
-	        {% endfor %}
         {% endif %}
         <setNextTemplate name="budget" />
         <nextFrame/>
 		{% for mdf in mdfs %}
 			{% if mdf.money_not_spent_total != 0 or mdf.station_total != 0 or mdf.past_money_sent_total != 0 %}
 				<condPageBreak height="{{ mdf.height_required }}"/>
-				<para style="projectHeader">{{ mdf.project.station_name }}</para>
+				<para style="projectHeader">{{ mdf.project.project_category.name }}: {{ mdf.project.station_name }}</para>
 			{% endif %}
 	        {% for section in mdf.sections %}
-	        	{% if section.total != 0 %}
+	        	{% if section.full_total != 0 %}
 			        <condPageBreak height="{{ section.height_required }}"/>
-			        <para style="tableHeader">{{ section.title }} ({{ mdf.project.station_code }})</para>
+			        <para style="tableHeader">{{ section.title }}</para>
 			        <blockTable colWidths="70% 30%" style="budgetGrid">
 			            {% for item in section.items %}
 			            <tr>
@@ -239,39 +239,55 @@ z3c.rml docs can be found on their github page: https://github.com/zopefoundatio
 		        {% endif %}
 	        {% endfor %}
 	        
-	        {% if mdf.money_not_spent_total != 0 %}
-	        	<spacer length="5"/>
-	        	<para style="monthlyTotal">
-		            <b><u>Money Not Spent(to deduct) ({{ mdf.project.station_code }}):</u></b> <font color="#c00000">{{ mdf.money_not_spent_total|intcomma }}</font>
-		        </para>
-		        <para></para>
-		        <para>Money not spent breakdown on page 2</para>
-	        {% endif %}
-	        {% if mdf.station_total != 0 %}
-	        	<spacer length="5"/>
-		        <para style="monthlyTotal">
-		            <b><u>Monthly Distribution Subtotal ({{ mdf.project.station_code }}):</u></b> <font color="#c00000">{{ mdf.total|intcomma }}</font>
-		        </para>
-		        <para style="monthlyTotal">
-		            <b><u>Station Subtotal ({{ mdf.project.station_code }}):</u></b> <font color="#c00000">{{ mdf.station_total|intcomma }}</font>
-		        </para>
-	        {% endif %}
-	        {% if mdf.past_money_sent_total != 0 %}
-	        	<spacer length="10"/>
-	        	<para style="pastSent">
-	        		<b><u>Past Month Sent Money Subtotal ({{ mdf.project.station_code }})</u></b> <font color="#c00000">{{ mdf.past_money_sent_total|intcomma }}</font>
-	        	</para>
-	        	<para></para>
-	        	<para>This total has already been sent and is not included in the monthly distribution. (breakdown on page 2)</para>
-	        {% endif %}
+        	<spacer length="5"/>
+        	<condPageBreak height="{{ mdf.total_height }}"/>
+        	<para style="monthlyTotal">
+	            <u>Project Total {{ mdf.total_height }}({{ mdf.project.station_code }}):</u> <font color="#c00000">{{ mdf.project_total|intcomma }}</font>
+	        </para>
+	        <para>{{ mdf.project_total_formula }}</para>
+	        
+        	<spacer length="5"/>
+        	<condPageBreak height="{{ mdf.total_height }}"/>
+        	<para style="monthlyTotal">
+	            <u>Money Not Spent(to deduct) ({{ mdf.project.station_code }}):</u> <font color="#c00000">{{ mdf.money_not_spent_total|intcomma }}</font>
+	        </para>
+	        <para></para>
+	        <para>Money not spent breakdown on page 2</para>
+	        
+        	<spacer length="5"/>
+        	<condPageBreak height="{{ mdf.total_height }}"/>
+	        <para style="monthlyTotal">
+	            <b><u>Monthly Distribution Subtotal ({{ mdf.project.station_code }}):</u></b> <font color="#c00000">{{ mdf.distribution_total|intcomma }}</font>
+	        </para>
+	        <para>{{ mdf.distribution_total_formula }}</para>
+	    	
+        	<spacer length="10"/>
+        	<condPageBreak height="{{ mdf.total_height }}"/>
+        	<para style="pastSent">
+        		<u>Past Month Sent Money Subtotal ({{ mdf.project.station_code }})</u> <font color="#c00000">{{ mdf.past_money_sent_total|intcomma }}</font>
+        	</para>
+        	<para></para>
+        	<para>This total has already been sent and is not included in the monthly distribution. (breakdown on page 2)</para>
+
+	    	<spacer length="5"/>
+	    	<condPageBreak height="{{ mdf.total_height }}"/>
+	        <para style="monthlyTotal">
+	            <u>Full Project Cost ({{ mdf.project.station_code }}):</u> <font color="#c00000">{{ mdf.full_total|intcomma }}</font>
+	        </para>
+	        <para>{{ mdf.full_total_formula }}</para>
+		        
 	        <spacer length="15"/>
         {% endfor %}
 		<para style="finalTotal">
             <b><u>Monthly Distribution Total:</u></b> <font color="#c00000">{{ distribution_subtotal|intcomma }}</font>
         </para>
+        <para>{{ distribution_formula }}</para>
+        <spacer length="5"/>
         <para style="finalTotal">
-            <b><u>Station Total:</u></b> <font color="#c00000">{{ station_subtotal|intcomma }}</font>
+            <u>Full Projects Total:</u> <font color="#c00000">{{ station_subtotal|intcomma }}</font>
         </para>
+        <para>{{ full_formula }}</para>
+        <spacer length="5"/>
         {% for footnote in second_footnotes.footnotes %}
 			<para>{{ footnote }}</para>
 		{% endfor %}

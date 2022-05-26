@@ -213,7 +213,6 @@ class BorderStationBudgetCalculation(models.Model):
             total += self.travel_total()
         else:
             total += self.impact_multiplying_total(project)
-        total -= self.money_not_spent_to_deduct_total(project)
         return total
     
     notes = models.TextField('Notes', blank=True)

@@ -13,18 +13,25 @@ class MDFExporter(BasePDFCreator):
 
     def get_mdf_data(self, mdf):
         self.mdf_list = []
+        format = "{:,.2f}"
         first_page_footnote = Footnote()
         second_page_footnote = Footnote()
         impact_multiplying_list = BorderStation.objects.filter(mdf_project=mdf.border_station)
         main_mdf_helper = MoneyDistributionFormHelper(mdf, mdf.border_station, first_page_footnote, second_page_footnote)
-        distribution_subtotal = main_mdf_helper.total
-        station_subtotal = main_mdf_helper.station_total
+        distribution_subtotal = main_mdf_helper.distribution_total
+        distribution_formula = '(' + format.format(main_mdf_helper.distribution_total) + ' (Monthly Distribution Subtotal (' + main_mdf_helper.project.station_code + '))'
+        station_subtotal = main_mdf_helper.full_total
+        full_formula = '(' + format.format(main_mdf_helper.full_total) + ' (Full Project Cost (' + main_mdf_helper.project.station_code + '))'
         self.mdf_list.append(main_mdf_helper)
         for impact_multiplying in impact_multiplying_list:
             impact_mdf = MoneyDistributionFormHelper(mdf, impact_multiplying, first_page_footnote, second_page_footnote)
-            distribution_subtotal += impact_mdf.total
-            station_subtotal += impact_mdf.station_total
+            distribution_subtotal += impact_mdf.distribution_total
+            distribution_formula += ' + ' + format.format(impact_mdf.distribution_total) + ' (Monthly Distribution Subtotal (' + impact_mdf.project.station_code + '))'
+            station_subtotal += impact_mdf.full_total
+            full_formula += ' + ' + format.format(impact_mdf.full_total) + ' (Full Project Cost (' + impact_mdf.project.station_code + '))'
             self.mdf_list.append(impact_mdf)
+        distribution_formula += ' = ' + format.format(distribution_subtotal) + ')'
+        full_formula += ' = ' + format.format(station_subtotal) + ')'
         return {
             'name': main_mdf_helper.station_name,
             'date': main_mdf_helper.date_entered,
@@ -33,7 +40,9 @@ class MDFExporter(BasePDFCreator):
             'first_footnotes': first_page_footnote,
             'second_footnotes': second_page_footnote,
             'distribution_subtotal': distribution_subtotal,
+            'distribution_formula': distribution_formula,
             'station_subtotal': station_subtotal,
+            'full_formula': full_formula,
             'other_detail': self.otherDetailPresent()
         }
     
