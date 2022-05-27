@@ -56,6 +56,8 @@ class IrfCommon(BaseForm):
     vulnerability_bus_driver_payment_at_destination = models.BooleanField("Bus driver expecting payment for travel at destination", default=False)
     vulnerability_first_time_traveling_to_city = models.BooleanField("Travelling to city from rural area for first time", default=False)
     vulnerability_no_mobile_phone = models.BooleanField("Does not own mobile phone", default=False)
+    vulnerability_stranded_or_abandoned = models.BooleanField("Stranded/abandoned", default=False)
+   
     
     evade_appearance_avoid_officials = models.BooleanField('Avoiding officials/hesitant to talk', default=False)
     evade_caught_in_lie = models.BooleanField('Caught in a lie or contradiction', default=False).set_weight(35)
@@ -91,6 +93,7 @@ class IrfCommon(BaseForm):
     control_abducted = models.BooleanField('Abducted', default=False)
     control_not_real_job = models.BooleanField('Not a real job', default=False).set_weight(55)
     control_passport_with_broker = models.BooleanField('Passport is with a broker', default=False).set_weight(40)
+    control_id_or_permit_with_broker = models.BooleanField('Passport is with a broker', default=False).set_weight(6)
     control_relationship_to_get_married = models.BooleanField('On their way to get married ', default=False)
     control_reported_total_red_flags = models.IntegerField('Reported Total Red Flag Points:', null=True, blank=True)
     control_status_known_trafficker = models.BooleanField('Is a known trafficker', default=False)
@@ -100,6 +103,7 @@ class IrfCommon(BaseForm):
     control_where_going_someone_paid_expenses = models.BooleanField('Non relatives paid for their travel', default=False)
     control_wife_under_18 = models.BooleanField("Wife/fiancee is under 18", default=False)
     control_under_18_recruited_for_work = models.BooleanField("Under 18, recruited for work", default=False)
+    control_under_16_recruited_for_work = models.BooleanField("Under 16, recruited for work", default=False)
     
     #Contact/Staff
     case_notes = models.TextField('Case Notes', blank=True)
