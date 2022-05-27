@@ -242,7 +242,7 @@ z3c.rml docs can be found on their github page: https://github.com/zopefoundatio
         	<spacer length="5"/>
         	<condPageBreak height="{{ mdf.total_height }}"/>
         	<para style="monthlyTotal">
-	            <u>Project Total {{ mdf.total_height }}({{ mdf.project.station_code }}):</u> <font color="#c00000">{{ mdf.project_total|intcomma }}</font>
+	            <u>Project Total ({{ mdf.project.station_code }}):</u> <font color="#c00000">{{ mdf.project_total|intcomma }}</font>
 	        </para>
 	        <para>{{ mdf.project_total_formula }}</para>
 	        
