@@ -17,6 +17,9 @@ class BorderStationBudgetCalculation(models.Model):
     ADMINISTRATION = 10
     PAST_MONTH_SENT = 11
     LIMBO = 12
+    MONEY_NOT_SPENT = 13
+    IMPACT_MULTIPLYING = 14
+    RENT_UTILITIES = 15
 
     mdf_uuid = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
 
@@ -27,80 +30,104 @@ class BorderStationBudgetCalculation(models.Model):
 
     border_station = models.ForeignKey(BorderStation, on_delete=models.CASCADE)
 
+    def other_project_items_total(self, section, project):
+        items = self.otherbudgetitemcost_set.filter(form_section=section, work_project=project).exclude(cost__isnull=True)
+        return sum(item.cost for item in items)
+    
+    def staff_project_items_total(self, the_type, project):
+        items = self.staffbudgetitem_set.filter(type_name=the_type,work_project=project).exclude(cost__isnull=True)
+        return sum(item.cost for item in items)
+    
+    def staff_salary_and_benefits_deductions(self, project):
+        total = sum([staff.cost for staff in self.staffbudgetitem_set.filter(work_project=project, type_name='Deductions').exclude(cost__isnull=True)])
+        return total
+    
+    def staff_salary_and_benefits_total(self, project):
+        total = sum([staff.cost for staff in self.staffbudgetitem_set.filter(work_project=project).
+                     exclude(cost__isnull=True).exclude(type_name='Travel').exclude(type_name='Deductions')])
+        total -= self.staff_salary_and_benefits_deductions(project)
+        return total
+    
+    def salary_and_benefits_extra_items_total(self, project):
+        total = self.other_project_items_total(self.STAFF_BENEFITS, project)
+        return total
+    
+    def salary_and_benefits_total(self, project):
+        total = self.staff_salary_and_benefits_total(project) + self.salary_and_benefits_extra_items_total(project)
+        return total
+    
+    booth = models.BooleanField('Booth', default=False)
+    booth_amount = models.DecimalField(max_digits=17, decimal_places=2, default=30000)
+    office = models.BooleanField('Office', default=False)
+    office_amount = models.DecimalField(max_digits=17, decimal_places=2, default=2000)
+    
+    def rent_and_utilities_extra_total(self):
+        total = self.other_project_items_total(self.RENT_UTILITIES, self.border_station)
+        return total
+    
+    def rent_and_utilities_total(self):
+        total = self.rent_and_utilities_extra_total()
+        if self.booth:
+            total += self.booth_amount
+        if self.office:
+            total += self.office_amount
+        return total
+
     communication_chair = models.BooleanField(default=False)
     communication_chair_amount = models.DecimalField('for chair', max_digits=17, decimal_places=2, default=1000)
-
-    def communication_extra_items_total(self):
-        return self.other_items_total(self.COMMUNICATION)
-
+    
     def communication_manager_chair_total(self):
         total = 0
         if self.communication_chair:
             total += self.communication_chair_amount
         return total
-
-    def communication_total(self):
-        total = 0
-        total += self.communication_manager_chair_total()
-        total += self.communication_extra_items_total()
-        total += self.staff_items_total('Communication')
-        return total
-
-    travel_chair_with_bike = models.BooleanField(default=False)
-    travel_chair_with_bike_amount = models.DecimalField('for chair (if has bike)', max_digits=17, decimal_places=2, default=2000)
-    travel_plus_other = models.DecimalField(max_digits=17, decimal_places=2, default=0)
-
-    def travel_extra_items_total(self):
-        return self.other_items_total(self.TRAVEL)
+    
+    travel_chair = models.BooleanField(default=False)
+    travel_chair_amount = models.DecimalField('for chair (if has bike)', max_digits=17, decimal_places=2, default=2000)
 
     def travel_manager_chair_total(self):
         total = 0
-        if self.travel_chair_with_bike:
-            total += self.travel_chair_with_bike_amount
+        if self.travel_chair:
+            total += self.travel_chair_amount
         return total
 
-    def travel_total(self):
-        total = 0
-        total += self.travel_extra_items_total()
-        total += self.travel_manager_chair_total()
-        total += self.staff_items_total('Travel')
-        total += self.travel_plus_other
-        return total
-
-    administration_number_of_intercepts_last_month = models.PositiveIntegerField('# of intercepts last month', default=0)
-    administration_number_of_intercepts_last_month_multiplier = models.DecimalField(max_digits=17, decimal_places=2, default=20)
-    administration_number_of_intercepts_last_month_adder = models.DecimalField(max_digits=17, decimal_places=2, default=1000)
-    administration_number_of_meetings_per_month = models.PositiveIntegerField('# of meetings per month', default=0)
-    administration_number_of_meetings_per_month_multiplier = models.DecimalField(max_digits=17, decimal_places=2, default=600)
-    administration_booth = models.BooleanField('Booth', default=False)
-    administration_booth_amount = models.DecimalField(max_digits=17, decimal_places=2, default=30000)
-    administration_office = models.BooleanField('Office', default=False)
-    administration_office_amount = models.DecimalField(max_digits=17, decimal_places=2, default=2000)
+    number_of_intercepts_last_month = models.PositiveIntegerField('# of intercepts last month', default=0)
+    number_of_intercepts_last_month_multiplier = models.DecimalField(max_digits=17, decimal_places=2, default=20)
+    number_of_intercepts_last_month_adder = models.DecimalField(max_digits=17, decimal_places=2, default=1000)
+    number_of_meetings_per_month = models.PositiveIntegerField('# of meetings per month', default=0)
+    number_of_meetings_per_month_multiplier = models.DecimalField(max_digits=17, decimal_places=2, default=600)
+    
 
     def administration_intercepts_total(self):
-        return self.administration_number_of_intercepts_last_month * self.administration_number_of_intercepts_last_month_multiplier + self.administration_number_of_intercepts_last_month_adder
+        return self.number_of_intercepts_last_month * self.number_of_intercepts_last_month_multiplier + self.number_of_intercepts_last_month_adder
 
     def administration_meetings_total(self):
-        return self.administration_number_of_meetings_per_month * self.administration_number_of_meetings_per_month_multiplier
+        return self.number_of_meetings_per_month * self.number_of_meetings_per_month_multiplier
 
     def administration_extra_items_total(self):
-        return self.other_items_total(self.ADMINISTRATION)
+        return self.other_project_items_total(self.ADMINISTRATION, self.border_station)
 
     def administration_total(self):
         total = 0
         total += self.administration_intercepts_total()
         total += self.administration_meetings_total()
-        if self.administration_booth:
-            total += self.administration_booth_amount
-        if self.administration_office:
-            total += self.administration_office_amount
+        total += self.travel_manager_chair_total()
+        total += self.communication_manager_chair_total();
         return total + self.administration_extra_items_total()
 
-    def miscellaneous_total(self):
-        return self.other_items_total(self.MISCELLANEOUS)
+    def travel_extra_items_total(self):
+        return self.other_project_items_total(self.TRAVEL, self.border_station)
+
+    def travel_total(self):
+        total = 0
+        total += self.travel_extra_items_total()
+        total += self.staff_project_items_total('Travel', self.border_station)
+        return total
     
-    def past_month_sent_total(self):
-        return self.other_items_total(self.PAST_MONTH_SENT)
+    def staff_travel_total(self):
+        total = self.staff_project_items_total('Travel', self.border_station)
+        total += staff.travel_extra_items_total()
+        return total
     
     shelter_rent = models.BooleanField('Rent', default=False)
     shelter_rent_amount = models.DecimalField(max_digits=17, decimal_places=2, default=0)
@@ -120,21 +147,21 @@ class BorderStationBudgetCalculation(models.Model):
         return total
     
     def pv_extra_items_total(self):
-        return self.other_items_total(self.POTENTIAL_VICTIM_CARE)
+        return self.staff_project_items_total(self.POTENTIAL_VICTIM_CARE, self.border_station)
     
     def pv_total(self):
         return self.shelter_total() + self.food_and_gas_total() + self.pv_extra_items_total()
 
-    food_and_gas_number_of_intercepted_girls = models.PositiveIntegerField('# of intercepted girls', default=0)
-    food_and_gas_number_of_intercepted_girls_multiplier_before = models.DecimalField(max_digits=17, decimal_places=2, default=100)
-    food_and_gas_number_of_intercepted_girls_multiplier_after = models.PositiveIntegerField(default=3)
-    food_and_gas_limbo_girls_multiplier = models.DecimalField(max_digits=17, decimal_places=2, default=100)
+    number_of_intercepted_pvs = models.PositiveIntegerField('# of intercepted girls', default=0)
+    food_per_pv_amount = models.DecimalField(max_digits=17, decimal_places=2, default=100)
+    number_of_pv_days = models.PositiveIntegerField(default=3)
+    limbo_girls_multiplier = models.DecimalField(max_digits=17, decimal_places=2, default=100)
 
     def food_and_gas_intercepted_girls_total(self):
-        return self.food_and_gas_number_of_intercepted_girls * self.food_and_gas_number_of_intercepted_girls_multiplier_before * self.food_and_gas_number_of_intercepted_girls_multiplier_after
+        return self.number_of_intercepted_pvs * self.food_per_pv_amount * self.number_of_pv_days
 
     def food_and_gas_limbo_girls_total(self):
-        return self.food_and_gas_limbo_girls_multiplier * self.other_items_total(self.LIMBO)
+        return self.limbo_girls_multiplier * self.other_project_items_total(self.LIMBO, self.border_station)
 
     def food_and_gas_total(self):
         total = 0
@@ -142,49 +169,53 @@ class BorderStationBudgetCalculation(models.Model):
         total += self.food_and_gas_limbo_girls_total()
         return total
 
-    awareness_contact_cards = models.BooleanField('Contact Cards', default=False)
-    awareness_contact_cards_boolean_amount = models.DecimalField(max_digits=17, decimal_places=2, default=4000)
-    awareness_contact_cards_amount = models.DecimalField(max_digits=17, decimal_places=2, default=0)
-    awareness_awareness_party_boolean = models.BooleanField("Awareness Party", default=False)
-    awareness_awareness_party = models.DecimalField(max_digits=17, decimal_places=2, default=0)
+    contact_cards = models.BooleanField('Contact Cards', default=False)
+    contact_cards_amount = models.DecimalField(max_digits=17, decimal_places=2, default=0)
+    awareness_party_boolean = models.BooleanField("Awareness Party", default=False)
+    awareness_party = models.DecimalField(max_digits=17, decimal_places=2, default=0)
 
     def awareness_extra_items_total(self):
-        return self.other_items_total(self.AWARENESS)
+        return self.other_project_items_total(self.AWARENESS, self.border_station)
 
     def awareness_total(self):
         total = self.awareness_extra_items_total()
-        if self.awareness_contact_cards:
-            total += self.awareness_contact_cards_amount
-        if self.awareness_awareness_party_boolean:
-            total += self.awareness_awareness_party
+        if self.contact_cards:
+            total += self.contact_cards_amount
+        if self.awareness_party_boolean:
+            total += self.awareness_party
         return total
-
-    def salary_total(self):
-        return sum([staff.cost for staff in self.staffbudgetitem_set.exclude(cost__isnull=True).exclude(type_name='Communication').exclude(type_name='Travel')])
     
-    def staff_and_benefits_total(self):
-        return self.salary_total() + self.other_items_total(self.STAFF_BENEFITS)
+    def supplies_and_awareness_total(self):
+        total = self.awareness_extra_items_total()
+        if self.contact_cards:
+            total += self.contact_cards_amount
+        if self.awareness_party_boolean:
+            total += self.awareness_party
+        return total
+      
+    def money_not_spent_to_deduct_total(self, project):
+        items = self.otherbudgetitemcost_set.filter(form_section=self.MONEY_NOT_SPENT, deduct='Yes', work_project=project).exclude(cost__isnull=True)
+        return sum(item.cost for item in items)
+    
+    def past_month_sent_total(self, project):
+        return self.other_project_items_total(self.PAST_MONTH_SENT, project)
+    
+    def impact_multiplying_total(self, project):
+        return self.other_project_items_total(self.IMPACT_MULTIPLYING, project)
 
-    def station_total(self):
+    def station_total(self, project):
         total = 0
-        total += self.staff_and_benefits_total()
-        total += self.awareness_total()
-        total += self.pv_total()
-        total += self.communication_total()
-        total += self.administration_total()
-        total += self.miscellaneous_total()
-        total += self.travel_total()
+        total += self.salary_and_benefits_total(project)
+        if project == self.border_station:
+            total += self.awareness_total()
+            total += self.pv_total()
+            total += self.administration_total()
+            total += self.travel_total()
+        else:
+            total += self.impact_multiplying_total(project)
         return total
     
     notes = models.TextField('Notes', blank=True)
-
-    def other_items_total(self, section):
-        items = self.otherbudgetitemcost_set.filter(form_section=section).exclude(cost__isnull=True)
-        return sum(item.cost for item in items)
-    
-    def staff_items_total(self, the_type):
-        items = self.staffbudgetitem_set.filter(type_name=the_type).exclude(cost__isnull=True)
-        return sum(item.cost for item in items)
 
     def mdf_file_name(self):
         return '{}-{}-{}-MDF.pdf'.format(self.border_station.station_code, self.month_year.month, self.month_year.year)
@@ -206,20 +237,26 @@ class BorderStationBudgetCalculation(models.Model):
 class OtherBudgetItemCost(models.Model):
 
     BUDGET_FORM_SECTION_CHOICES = [
-        (BorderStationBudgetCalculation.TRAVEL, 'Travel'),
+        (BorderStationBudgetCalculation.TRAVEL, 'Staff Travel'),
         (BorderStationBudgetCalculation.MISCELLANEOUS, 'Miscellaneous'),
         (BorderStationBudgetCalculation.AWARENESS, 'Awareness'),
         (BorderStationBudgetCalculation.POTENTIAL_VICTIM_CARE, 'Potential Victim Care'),
         (BorderStationBudgetCalculation.COMMUNICATION, 'Communication'),
-        (BorderStationBudgetCalculation.STAFF_BENEFITS, 'Staff & Benefits'),
+        (BorderStationBudgetCalculation.STAFF_BENEFITS, 'Salaries & Benefits'),
         (BorderStationBudgetCalculation.ADMINISTRATION, 'Administration'),
         (BorderStationBudgetCalculation.PAST_MONTH_SENT, 'Past Month Sent Money'),
-        (BorderStationBudgetCalculation.LIMBO, 'Limbo Potential Victims')
+        (BorderStationBudgetCalculation.LIMBO, 'Limbo Potential Victims'),
+        (BorderStationBudgetCalculation.MONEY_NOT_SPENT, 'Money Not Spent'),
+        (BorderStationBudgetCalculation.IMPACT_MULTIPLYING, 'Operational Expenses'),
+        (BorderStationBudgetCalculation.RENT_UTILITIES, 'Rent & Utilities'),
     ]
     name = models.CharField(max_length=255, blank=False)
     cost = models.DecimalField(max_digits=17, decimal_places=2, default=0, blank=False)
     form_section = models.IntegerField(BUDGET_FORM_SECTION_CHOICES, blank=True, null=True)
     budget_item_parent = models.ForeignKey(BorderStationBudgetCalculation, blank=True, null=True, on_delete=models.CASCADE)
+    associated_section = models.IntegerField(BUDGET_FORM_SECTION_CHOICES, blank=True, null=True)
+    deduct = models.CharField(max_length=255, blank=True, null=True)
+    work_project = models.ForeignKey(BorderStation, null=True)
     
     def get_country_id(self):
         if self.budget_item_parent is None or self.budget_item_parent.border_station is None or self.budget_item_parent.border_station.operating_country is None:
@@ -238,6 +275,10 @@ class StaffBudgetItem(models.Model):
     type_name = models.CharField(max_length=255, blank=False)
     description = models.TextField('Description', blank=True)
     cost = models.DecimalField(max_digits=17, decimal_places=2, default=0, blank=True, null=True)
+    work_project = models.ForeignKey(BorderStation, null=True)
+    
+    class Meta:
+       unique_together = ("budget_calc_sheet", "staff_person", 'type_name', 'work_project')
     
     def get_country_id(self):
         if self.budget_calc_sheet is None or self.budget_calc_sheet.border_station is None or self.budget_calc_sheet.border_station.operating_country is None:
@@ -248,6 +289,8 @@ class StaffBudgetItem(models.Model):
         if self.budget_calc_sheet is None or self.budget_calc_sheet.border_station is None:
             return None
         return self.budget_calc_sheet.border_station.id
+
+    
     
     
 

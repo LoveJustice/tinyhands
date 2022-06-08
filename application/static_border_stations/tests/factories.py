@@ -5,8 +5,14 @@ from factory.django import DjangoModelFactory
 from factory.fuzzy import FuzzyText, FuzzyFloat
 
 from accounts.tests.factories import UserFactory, ViewUserDesignation
-from dataentry.models import BorderStation, Country, Permission, Region, UserLocationPermission
+from dataentry.models import BorderStation, Country, Permission, ProjectCategory, Region, UserLocationPermission
 from static_border_stations.models import Staff, CommitteeMember, Location
+
+class ProjectCategoryFactory(DjangoModelFactory):
+    class Meta:
+        model = ProjectCategory
+    
+    name = 'Transit Monitoring'
 
 class RegionFactory(DjangoModelFactory):
     class Meta:
@@ -35,6 +41,7 @@ class BorderStationFactory(DjangoModelFactory):
     open = True
     time_zone = 'Asia/Kathmandu'
     operating_country = factory.SubFactory(CountryFactory)
+    project_category = factory.SubFactory(ProjectCategoryFactory)
 
 
 class StaffFactory(DjangoModelFactory):

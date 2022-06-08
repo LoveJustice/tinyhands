@@ -136,4 +136,14 @@ class Location(models.Model):
             location.save()
         
         return location
-            
+  
+class WorksOnProject(models.Model):
+    staff = models.ForeignKey(Staff)
+    border_station = models.ForeignKey(BorderStation)
+    work_percent = models.PositiveIntegerField()
+    
+    class Meta:
+       unique_together = ("staff", "border_station")
+    
+    def set_parent(self, parent):
+        self.staff = parent
