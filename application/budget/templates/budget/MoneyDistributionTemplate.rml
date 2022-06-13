@@ -1,689 +1,295 @@
-<!-- This is very simple RML template for illustrative purposes.  -->
-<!--                                                              -->
-<!-- A basic RML template has three sections.  The 'template'     -->
-<!-- section is where you define fixed position elements, along   -->
-<!-- with 'frames' containing  flowing text.  The 'stylesheet'    -->
-<!-- section contains re-useable text style definitions.  The     -->
-<!-- 'story' section contains the text and graphics which fill    -->
-<!-- up the frames defined in the template section.               -->
-<!--                                                              -->
-<!-- For more information, please read the documentation at       -->
-<!-- http://www.reportlab.com/software/documentation/             -->
+<!--
+Created By Andrew Smith
+
+PDF is generated using reportlab and the RML implementation provided by z3c.rml
+
+z3c.rml docs can be found on their github page: https://github.com/zopefoundation/z3c.rml
+-->
+{% load humanize %}
 
 <!DOCTYPE document SYSTEM "rml.dtd">
-<document filename="test.pdf">
-
-    <template showBoundary="0">
-        <!--define a 'frame' into which the content will flow.-->
-        <pageTemplate id="main">
+<document filename="outfile.pdf">
+    <template  showBoundary="0">
+        <pageTemplate id="first" pagesize="LEDGER">
             <pageGraphics>
-                <setFont name="Helvetica-Bold" size="18"/>
-                <drawString x="35" y="783">Money Distribution Document</drawString>
-                <setFont name="Helvetica-Oblique" size="12"/>
-                <setFont name="Helvetica-BoldOblique" size="18"/>
                 <setFont name="Helvetica" size="10"/>
             </pageGraphics>
-            <frame id="first" x1="35" y1="700" width="260" height="50"/>
-            <frame id="second" x1="300" y1="700" width="260" height="50"/>
-            <frame id="third" x1="35" y1="45" width="185" height="675"/>
-            <frame id="fourth" x1="300" y1="45" width="185" height="675"/>
+            <frame id="title" x1=".5in" y1="10in" width="16in" height=".6in"/>
+            <frame id="staff_budget" x1=".5in" y1=".5in" width="16in" height="9.5in"/>
+        </pageTemplate>
+        <pageTemplate id="otherDetail" pagesize="LETTER">
+            <frame id="rightColumn" x1=".5in" y1=".5in" width="7.5in" height="10in"/>
+        </pageTemplate>
+        <pageTemplate id="budget" pagesize="LETTER">
+            <frame id="leftColumn" x1=".5in" y1=".5in" width="3.5in" height="10in"/>
+            <frame id="rightColumn" x1="4.5in" y1=".5in" width="3.5in" height="10in"/>
         </pageTemplate>
     </template>
 
     <stylesheet>
-        <!-- define a text style -->
-        <paraStyle name="normal" fontName="Helvetica" fontSize="10" leading="12" spaceAfter="12" />
-        <paraStyle name="header" fontName="Helvetica" fontSize="14" leading="12" spaceAfter="12" />
-
+        <paraStyle name="title"
+            fontName="Helvetica-Bold"
+            fontSize="14"
+            alignment="center"
+            spaceAfter="7"/>
+        <paraStyle name="numberAlign"
+        	alignment="right"/>
+        <paraStyle name="tableHeader"
+            fontName="Helvetica-Bold"
+            fontSize="12"
+            alignment="center"
+            borderWidth="1"
+            borderColor="black"
+            leading="16"
+            backColor="lightgrey"/>
+        <paraStyle name="projectHeader"
+            fontName="Helvetica-Bold"
+            fontSize="12"
+            alignment="center"
+            borderWidth="1"
+            borderColor="black"
+            leading="16"
+            backColor="lightblue"/>
+        <paraStyle name="tableHeader2"
+            fontName="Helvetica-Bold"
+            fontSize="12"
+            alignment="center"
+            backColor="lightgrey"/>
+        <paraStyle name="staffHeader"
+        	fontName="Helvetica-Bold"
+            fontSize="10"
+            alignment="center"
+            />    
+        <paraStyle name="monthlyTotal"
+            fontName="Helvetica"
+            fontSize="10"
+            spaceAfter="5"/>
+        <paraStyle name="Notes"
+            spaceAfter="7"/>
+        <paraStyle name="pastSent"
+            fontName="Helvetica"
+            fontSize="10"
+            spaceAfter="7"/>
+        <paraStyle name="finalTotal"
+            fontName="Helvetica"
+            fontSize="12"
+            spaceAfter="7"/>
+        <blockTableStyle id="staffGrid">
+        	<lineStyle kind="LINEBEFORE"  colorName="black" thickness="1" start="0,0" stop="0,0" />
+        	<lineStyle kind="LINEAFTER"  colorName="black" thickness="1" start="-1,0" stop="-1,-1" />
+        	<lineStyle kind="LINEABOVE"  colorName="black" thickness="1" start="0,0" stop="-1,0" />
+            <lineStyle kind="grid"  colorName="black" thickness="1" start="0,1" stop="-1,-1" />
+            <lineStyle kind="grid"  colorName="black" thickness="2" start="-1,1" stop="-1,-1" />
+            <blockBackground colorName="lightgrey" start="1,1" stop="2,-1" />
+            <blockSpan start="0,0" stop="-1,0"/>
+            <blockBackground colorName="lightgrey" start="0,0" stop="-1,0" />
+        </blockTableStyle>
+        <blockTableStyle id="wideGrid">
+        	<lineStyle kind="LINEBEFORE"  colorName="black" thickness="1" start="0,0" stop="0,0" />
+        	<lineStyle kind="LINEAFTER"  colorName="black" thickness="1" start="-1,0" stop="-1,-1" />
+        	<lineStyle kind="LINEABOVE"  colorName="black" thickness="1" start="0,0" stop="-1,0" />
+            <lineStyle kind="grid"  colorName="black" thickness="1" start="0,1" stop="-1,-1" />
+            <blockSpan start="0,0" stop="-1,0"/>
+            <blockBackground colorName="lightgrey" start="0,0" stop="-1,0" />     
+        </blockTableStyle>
+        <blockTableStyle id="infoGrid">
+            <lineStyle kind="grid"  colorName="black" thickness="1" start="0,0" stop="-1,-1" />
+        </blockTableStyle>
+        <blockTableStyle id="budgetGrid" keepWithNext="true">
+            <lineStyle kind="grid" colorName="black" thickness="1" start="0,0" stop="-1,-1" />
+            <blockTextColor start="-1,-1" stop="-1,-1" colorName="#c00000"/>
+        </blockTableStyle>
+        <blockTableStyle id="signatureLine">
+            <lineStyle kind="LINEBELOW"  colorName="black" thickness="1" start="0,0" stop="-1,-1" />
+        </blockTableStyle>
     </stylesheet>
 
-
-
     <story>
-        <!--The elements in this section will fill up the frames -->
-        <!--defined in the <template> section above.             -->
-        <!--The text inside double hashes is replaced dynamically-->
-        <!--inside Default.aspx-->
-
-
-        <para style="header">
-            <b>Station Name</b>: {{ name }}
-        </para>
-
+    	<nextFrame name="staff_budget"/>
+        <para style="title"><u>{{ month }} Monthly Distribution Form</u></para>
+        <blockTable colWidths="50% 50%" style="infoGrid">
+            <tr>
+                <td>Station: {{ name }}</td>
+                <td>Date: {{ date|date:"F d, Y"}}</td>
+            </tr>
+        </blockTable>
+        {% for mdf in mdfs %}
+        	{% if mdf.staff_data.has_data %}
+		        <blockTable alignment="LEFT" colWidths="{{ mdf.staff_data.column_format }}" style="staffGrid">
+		         	<tr>
+		         		<td><para style="tableHeader2">{{ mdf.project.project_category.name }}: Salaries &amp; Benefits ({{ mdf.project.station_name }} {{ mdf.project.station_code }})</para></td>
+		         	</tr>
+		         	<tr>
+		         		<td><para style="staffHeader">Name</para></td>
+		         		{% for header in mdf.staff_data.headers %}
+		         			<td><para style="staffHeader">{{ header }}</para></td>
+		         		{% endfor %}
+		         		<td><para style="staffHeader">Total</para></td>
+		         	</tr>
+		            {% for entry in mdf.staff_data.staff_list %}
+		            	<tr>
+			            	<td><para>{{ entry.name }}</para></td>
+			            	{% for value in entry.values %}
+			            		<td><para style="numberAlign">{{ value.cost }} <super>{{ value.foot_note }}</super></para></td>
+			            	{% endfor %}
+		            	</tr>up
+		            {% endfor %}
+		            <tr>
+		         		<td><para><b>Total</b></para></td>
+		         		{% for value in mdf.staff_data.staff_totals %}
+		         			<td><para style="numberAlign"><b>{{ value }}</b></para></td>
+		         		{% endfor %}
+		         	</tr>
+		        </blockTable>
+	        {% endif %}
+        {% endfor %}
+        {% for footnote in first_footnotes.footnotes %}
+			<para>{{ footnote }}</para>
+		{% endfor %}
+		{% if other_detail %}
+	        <setNextTemplate name="otherDetail" />
+	        <nextFrame/>
+	        {% for mdf in mdfs %}
+	        	{% if mdf.past_sent.has_data %} 
+					<blockTable alignment="LEFT" colWidths="40% 40% 20%" style="wideGrid">
+						<tr>
+							<td><para style="tableHeader2">{{ mdf.project.project_category.name }}: Past Month Sent Money Detail ({{ mdf.project.station_name }} {{ mdf.project.station_code }})</para></td>
+						</tr>
+			         	<tr>
+			         		<td><para style="staffHeader">Description</para></td>
+			         		<td><para style="staffHeader">Budget Category</para></td>
+			         		<td><para style="staffHeader">Total</para></td>
+			         	</tr>
+			         	{% for entry in mdf.past_sent.items %}
+			         		<tr>
+			         			<td><para>{{ entry.description }}</para></td>
+			         			<td><para>{{ entry.section }}</para></td>
+			         			<td><para style="numberAlign">{{ entry.cost }}</para></td>
+			         		</tr>
+			         	{% endfor %}
+			         	<tr>
+			         		<td><para><b>Total</b></para></td>
+							<td></td>
+			         		<td><para style="numberAlign"><b>{{ mdf.past_sent.total }}</b></para></td>
+			         	</tr>
+			        </blockTable>
+		        {% endif %}
+	        {% endfor %}
+	        <spacer length="20"/>
+	        {% for mdf in mdfs %}
+	        	{% if mdf.money_not_spent_data.has_data %} 
+					<blockTable alignment="LEFT" colWidths="40% 40% 20% 20%" style="wideGrid">
+						<tr>
+							<td ><para style="tableHeader2">{{ mdf.project.project_category.name }}: Money Not Spent Detail ({{ mdf.project.station_name }} {{ mdf.project.station_code }})</para></td>
+						</tr>
+			         	<tr>
+			         		<td><para style="staffHeader">Description</para></td>
+			         		<td><para style="staffHeader">Budget Category</para></td>
+			         		<td><para style="staffHeader">Deduct</para></td>
+			         		<td><para style="staffHeader">Total</para></td>
+			         	</tr>
+			         	{% for entry in mdf.money_not_spent_data.items %}
+			         		<tr>
+			         			<td><para>{{ entry.description }}</para></td>
+			         			<td><para>{{ entry.section }}</para></td>
+			         			<td><para>{{ entry.deduct }}</para></td>
+			         			<td><para style="numberAlign">{{ entry.cost }}</para></td>
+			         		</tr>
+			         	{% endfor %}
+			         	<tr>
+			         		<td><para><b>Total (to deduct)</b></para></td>
+			         		<td></td>
+			         		<td></td>
+			         		<td><para style="numberAlign"><b>{{ mdf.money_not_spent_data.totals.deduct }}</b></para></td>
+			         	</tr>
+			         	<tr>
+			         		<td><para>Total (not deduct)</para></td>
+			         		<td></td>
+			         		<td></td>
+			         		<td><para style="numberAlign">{{ mdf.money_not_spent_data.totals.not_deduct }}</para></td>
+			         	</tr>
+			        </blockTable>
+		        {% endif %}
+	        {% endfor %}
+        {% endif %}
+        <setNextTemplate name="budget" />
         <nextFrame/>
+		{% for mdf in mdfs %}
+			{% if mdf.money_not_spent_total != 0 or mdf.station_total != 0 or mdf.past_money_sent_total != 0 %}
+				<condPageBreak height="{{ mdf.height_required }}"/>
+				<para style="projectHeader">{{ mdf.project.project_category.name }}: {{ mdf.project.station_name }}</para>
+			{% endif %}
+	        {% for section in mdf.sections %}
+	        	{% if section.full_total != 0 %}
+			        <condPageBreak height="{{ section.height_required }}"/>
+			        <para style="tableHeader">{{ section.title }}</para>
+			        <blockTable colWidths="70% 30%" style="budgetGrid">
+			            {% for item in section.items %}
+			            <tr>
+			                <td><para>{{ item.name }}<super>{{ item.footnote }}</super></para></td>
+			                <td>{{ item.value|intcomma }}</td>
+			            </tr>
+			            {% endfor %}
+			            <tr>
+			                <td><para><b><u>Total</u></b></para></td>
+			                <td>{{ section.total|intcomma }}</td>
+			            </tr>
+			        </blockTable>
+			        <spacer length="10"/>
+		        {% endif %}
+	        {% endfor %}
+	        
+        	<spacer length="5"/>
+        	<condPageBreak height="{{ mdf.total_height }}"/>
+        	<para style="monthlyTotal">
+	            <u>Project Total ({{ mdf.project.station_code }}):</u> <font color="#c00000">{{ mdf.project_total|intcomma }}</font>
+	        </para>
+	        <para>{{ mdf.project_total_formula }}</para>
+	        
+        	<spacer length="5"/>
+        	<condPageBreak height="{{ mdf.total_height }}"/>
+        	<para style="monthlyTotal">
+	            <u>Money Not Spent(to deduct) ({{ mdf.project.station_code }}):</u> <font color="#c00000">{{ mdf.money_not_spent_total|intcomma }}</font>
+	        </para>
+	        <para></para>
+	        <para>Money not spent breakdown on page 2</para>
+	        
+        	<spacer length="5"/>
+        	<condPageBreak height="{{ mdf.total_height }}"/>
+	        <para style="monthlyTotal">
+	            <b><u>Monthly Distribution Subtotal ({{ mdf.project.station_code }}):</u></b> <font color="#c00000">{{ mdf.distribution_total|intcomma }}</font>
+	        </para>
+	        <para>{{ mdf.distribution_total_formula }}</para>
+	    	
+        	<spacer length="10"/>
+        	<condPageBreak height="{{ mdf.total_height }}"/>
+        	<para style="pastSent">
+        		<u>Past Month Sent Money Subtotal ({{ mdf.project.station_code }})</u> <font color="#c00000">{{ mdf.past_money_sent_total|intcomma }}</font>
+        	</para>
+        	<para></para>
+        	<para>This total has already been sent and is not included in the monthly distribution. (breakdown on page 2)</para>
 
-        <para style="header">
-            <b>Date</b>: {{ date }}
+	    	<spacer length="5"/>
+	    	<condPageBreak height="{{ mdf.total_height }}"/>
+	        <para style="monthlyTotal">
+	            <u>Full Project Cost ({{ mdf.project.station_code }}):</u> <font color="#c00000">{{ mdf.full_total|intcomma }}</font>
+	        </para>
+	        <para>{{ mdf.full_total_formula }}</para>
+		        
+	        <spacer length="15"/>
+        {% endfor %}
+		<para style="finalTotal">
+            <b><u>Monthly Distribution Total:</u></b> <font color="#c00000">{{ distribution_subtotal|intcomma }}</font>
         </para>
-        <spacer length="10"/>
-
-        <nextFrame/>
-
-        <spacer length="10"/>
-
-        <para style="header">
-                <b>Staff Salaries</b>
+        <para>{{ distribution_formula }}</para>
+        <spacer length="5"/>
+        <para style="finalTotal">
+            <u>Full Projects Total:</u> <font color="#c00000">{{ station_subtotal|intcomma }}</font>
         </para>
-
-        <blockTable>
-            {% for staffSalary in staffSalaries %}
-            <tr>
-                <td align="left">
-                    <para style="normal">
-                        {{ staffSalary.staff_person.first_name }} {{ staffSalary.staff_person.last_name}}:
-                    </para>
-                </td>
-                <td align="right">
-                    <para style="normal" alignment="right">
-                        {{ staffSalary.salary }}
-                    </para>
-                </td>
-            </tr>
-            {% endfor %}
-
-            {% for item in otherItems %}
-                {% if item.form_section == 8 %}
-                    <tr>
-                        <td align="left">
-                            <para style="normal">
-                                {{ item.name }}:
-                            </para>
-                        </td>
-                        <td align="right">
-                            <para style="normal" alignment="right">
-                                {{ item.cost }}
-                            </para>
-                        </td>
-                    </tr>
-                {% endif %}
-            {% endfor %}
-
-            {% if salary_total == 0 %}
-            <tr>
-                <td align="left">
-                    <para style="normal">
-                        No staff.
-                    </para>
-                </td>
-            </tr>
-            {% endif %}
-
-            {% if salary_total > 0 %}
-            <tr>
-                <td align="left">
-                    <para style="normal">
-                        Total:
-                    </para>
-                </td>
-                <td align="right">
-                    <para style="normal" alignment="right">
-                        {{ salary_total }}
-                    </para>
-                </td>
-            </tr>
-            {% endif %}
-            
-        </blockTable>
-
-        <spacer length="10"/>
-
-        <!--Communication-->
-        <para style="header">
-            <b>Communication</b>
-        </para>
-
-        <blockTable>
-
-            {% for item in otherItems %}
-                {% if item.form_section == 7 %}
-                    <tr>
-                        <td align="left">
-                            <para style="normal">
-                                {{ item.name }}:
-                            </para>
-                        </td>
-                        <td align="right">
-                            <para style="normal" alignment="right">
-                                {{ item.cost }}
-                            </para>
-                        </td>
-                    </tr>
-                {% endif %}
-            {% endfor %}
-
-            {% if communication_chair_bool  %}
-                <tr>
-                    <td align="left">
-                        <para style="normal">
-                            Chair:
-                        </para>
-                    </td>
-                    <td align="right">
-                        <para style="normal" alignment="right">
-                            {{ communication_chair }}
-                        </para>
-                    </td>
-                </tr>
-            {% endif %}
-
-            {% if communication_manager_bool  %}
-                <tr>
-                    <td align="left">
-                        <para style="normal">
-                            Manager:
-                        </para>
-                    </td>
-                    <td align="right">
-                        <para style="normal" alignment="right">
-                            {{ communication_manager }}
-                        </para>
-                    </td>
-                </tr>
-            {% endif %}
-
-            {% if communication_staff %}
-                <tr>
-                    <td align="left">
-                        <para style="normal">
-                            Staff:
-                        </para>
-                    </td>
-                    <td align="right">
-                        <para style="normal" alignment="right">
-                            {{ communication_staff }}
-                        </para>
-                    </td>
-                </tr>
-            {% endif %}
-
-            <tr>
-                <td align="left">
-                    <para style="normal">
-                        Total:
-                    </para>
-                </td>
-                <td align="right">
-                    <para style="normal" alignment="right">
-                        {{ communication_total }}
-                    </para>
-                </td>
-            </tr>
-        </blockTable>
-
-        <spacer length="10"/>
-
-        <!--Travel-->
-        <para style="header">
-            <b>Travel</b>
-        </para>
-
-        <blockTable>
-            {% if travel_chair_bool  %}
-                <tr>
-                    <td align="left">
-                        <para style="normal">
-                            Chair:
-                        </para>
-                    </td>
-                    <td align="right">
-                        <para style="normal" alignment="right">
-                            {{ travel_chair }}
-                        </para>
-                    </td>
-                </tr>
-            {% endif %}
-
-            {% if travel_manager_bool %}
-                <tr>
-                    <td align="left">
-                        <para style="normal">
-                            Manager:
-                        </para>
-                    </td>
-                    <td align="right">
-                        <para style="normal" alignment="right">
-                            {{ travel_manager }}
-                        </para>
-                    </td>
-                </tr>
-            {% endif %}
-
-            {% for item in otherItems %}
-                {% if item.form_section == 1 %}
-                    <tr>
-                        <td align="left">
-                            <para style="normal">
-                                {{ item.name }}:
-                            </para>
-                        </td>
-                        <td align="right">
-                            <para style="normal" alignment="right">
-                                {{ item.cost }}
-                            </para>
-                        </td>
-                    </tr>
-                {% endif %}
-            {% endfor %}
-
-            <tr>
-                <td align="left">
-                    <para style="normal">
-                        Total:
-                    </para>
-                </td>
-                <td align="right">
-                    <para style="normal" alignment="right">
-                        {{ travel_total }}
-                    </para>
-                </td>
-            </tr>
-        </blockTable>
-
-        <spacer length="10"/>
-
-        <!--Administration-->
-        <para style="header">
-            <b>Administration</b>
-        </para>
-
-        <blockTable>
-            <tr>
-                <td align="left">
-                    <para style="normal">
-                        Meetings:
-                    </para>
-                </td>
-                <td align="right">
-                    <para style="normal" alignment="right">
-                        {{ admin_meetings }}
-                    </para>
-                </td>
-            </tr>
-
-            <tr>
-                <td align="left">
-                    <para style="normal">
-                        Total:
-                    </para>
-                </td>
-                <td align="right">
-                    <para style="normal" alignment="right">
-                        {{ admin_total }}
-                    </para>
-                </td>
-            </tr>
-        </blockTable>
-
-        <spacer length="10"/>
-
-        <!--Medical-->
-        <para style="header">
-            <b>Medical</b>
-        </para>
-
-        <blockTable>
-            <tr>
-                <td align="left">
-                    <para style="normal">
-                        Total:
-                    </para>
-                </td>
-                <td align="right">
-                    <para style="normal" alignment="right">
-                        {{ medical_total }}
-                    </para>
-                </td>
-            </tr>
-        </blockTable>
-
-        <spacer length="10"/>
-
-        <!--Miscellaneous-->
-        <para style="header">
-            <b>Miscellaneous</b>
-        </para>
-
-        <blockTable>
-            {% for item in otherItems %}
-                {% if item.form_section == 2 %}
-
-                    <tr>
-                        <td align="left">
-                            <para style="normal">
-                                {{ item.name }}:
-                            </para>
-                        </td>
-                        <td align="right">
-                            <para style="normal" alignment="right">
-                                {{ item.cost }}
-                            </para>
-                        </td>
-                    </tr>
-                {% endif %}
-            {% endfor %}
-
-            <tr>
-                <td align="left">
-                    <para style="normal">
-                        Total:
-                    </para>
-                </td>
-                <td align="right">
-                    <para style="normal" alignment="right">
-                        {{ misc_total }}
-                    </para>
-                </td>
-            </tr>
-        </blockTable>
-
-
-        <nextFrame/>
-
-        <spacer length="10"/>
-
-        <!--Shelter-->
-        <para style="header">
-            <b>Shelter</b>
-        </para>
-
-        <blockTable>
-
-            {% for item in otherItems %}
-                {% if item.form_section == 5 %}
-                    <tr>
-                        <td align="left">
-                            <para style="normal">
-                                {{ item.name }}:
-                            </para>
-                        </td>
-                        <td align="right">
-                            <para style="normal" alignment="right">
-                                {{ item.cost }}
-                            </para>
-                        </td>
-                    </tr>
-                {% endif %}
-            {% endfor %}
-
-            <tr>
-                <td align="left">
-                    <para style="normal">
-                        Total:
-                    </para>
-                </td>
-                <td align="right">
-                    <para style="normal" alignment="right">
-                        {{ shelter_total }}
-                    </para>
-                </td>
-            </tr>
-        </blockTable>
-
-        <spacer length="10"/>
-
-        <!--Food and Gas-->
-        <para style="header">
-            <b>Food &amp; Gas</b>
-        </para>
-
-        <blockTable>
-
-            {% for item in otherItems %}
-                {% if item.form_section == 6 %}
-                    <tr>
-                        <td align="left">
-                            <para style="normal">
-                                {{ item.name }}:
-                            </para>
-                        </td>
-                        <td align="right">
-                            <para style="normal" alignment="right">
-                                {{ item.cost }}
-                            </para>
-                        </td>
-                    </tr>
-                {% endif %}
-            {% endfor %}
-
-            <tr>
-                <td align="left">
-                    <para style="normal">
-                        Intercepted Girls:
-                    </para>
-                </td>
-                <td align="right">
-                    <para style="normal" alignment="right">
-                        {{ food_and_gas_intercepted_girls }}
-                    </para>
-                </td>
-            </tr>
-
-            <tr>
-                <td align="left">
-                    <para style="normal">
-                        Limbo Girls:
-                    </para>
-                </td>
-                <td align="right">
-                    <para style="normal" alignment="right">
-                        {{ food_and_gas_limbo_girls }}
-                    </para>
-                </td>
-            </tr>
-
-            <tr>
-                <td align="left">
-                    <para style="normal">
-                        Total:
-                    </para>
-                </td>
-                <td align="right">
-                    <para style="normal" alignment="right">
-                        {{ food_gas_total }}
-                    </para>
-                </td>
-            </tr>
-        </blockTable>
-
-        <spacer length="10"/>
-
-        <!--Awareness-->
-        <para style="header">
-            <b>Awareness</b>
-        </para>
-
-        <blockTable>
-            {% if awareness_contact_cards_bool %}
-                <tr>
-                    <td align="left">
-                        <para style="normal">
-                            Contact Cards:
-                        </para>
-                    </td>
-                    <td align="right">
-                        <para style="normal" alignment="right">
-                            {{ awareness_contact_cards }}
-                        </para>
-                    </td>
-                </tr>
-            {% endif %}
-
-            {% if awareness_awareness_party_bool %}
-                <tr>
-                    <td align="left">
-                        <para style="normal">
-                            Awareness Party:
-                        </para>
-                    </td>
-                    <td align="right">
-                        <para style="normal" alignment="right">
-                            {{ awareness_awareness_party }}
-                        </para>
-                    </td>
-                </tr>
-            {% endif %}
-
-            {% if awareness_sign_boards_bool %}
-                <tr>
-                    <td align="left">
-                        <para style="normal">
-                            Sign Boards:
-                        </para>
-                    </td>
-                    <td align="right">
-                        <para style="normal" alignment="right">
-                            {{ awareness_sign_boards }}
-                        </para>
-                    </td>
-                </tr>
-            {% endif %}
-
-            {% for item in otherItems %}
-                {% if item.form_section == 3 %}
-                    <tr>
-                        <td align="left">
-                            <para style="normal">
-                                {{ item.name }}:
-                            </para>
-                        </td>
-                        <td align="right">
-                            <para style="normal" alignment="right">
-                                {{ item.cost }}
-                            </para>
-                        </td>
-                    </tr>
-                {% endif %}
-            {% endfor %}
-
-            <tr>
-                <td align="left">
-                    <para style="normal">
-                        Awareness Total:
-                    </para>
-                </td>
-                <td align="right">
-                    <para style="normal" alignment="right">
-                        {{ awareness_total }}
-                    </para>
-                </td>
-            </tr>
-        </blockTable>
-
-        <spacer length="10"/>
-
-        <!--Supplies-->
-        <para style="header">
-            <b>Supplies</b>
-        </para>
-
-        <blockTable>
-            {% if supplies_walkie_talkies_bool %}
-                <tr>
-                    <td align="left">
-                        <para style="normal">
-                            Walkie Talkies:
-                        </para>
-                    </td>
-                    <td align="right">
-                        <para style="normal" alignment="right">
-                            {{ supplies_walkie_talkies }}
-                        </para>
-                    </td>
-                </tr>
-            {% endif %}
-
-            {% if supplies_recorders_bool %}
-                <tr>
-                    <td align="left">
-                        <para style="normal">
-                            Recorders:
-                        </para>
-                    </td>
-                    <td align="right">
-                        <para style="normal" alignment="right">
-                            {{ supplies_recorders }}
-                        </para>
-                    </td>
-                </tr>
-            {% endif %}
-
-            {% if supplies_binoculars_bool %}
-                <tr>
-                    <td align="left">
-                        <para style="normal">
-                            Binoculars:
-                        </para>
-                    </td>
-                    <td align="right">
-                        <para style="normal" alignment="right">
-                            {{ supplies_binoculars }}
-                        </para>
-                    </td>
-                </tr>
-            {% endif %}
-
-            {% if supplies_flashlights_bool %}
-                <tr>
-                    <td align="left">
-                        <para style="normal">
-                            Flashlights:
-                        </para>
-                    </td>
-                    <td align="right">
-                        <para style="normal" alignment="right">
-                            {{ supplies_flashlights }}
-                        </para>
-                    </td>
-                </tr>
-            {% endif %}
-
-            {% for item in otherItems %}
-                {% if item.form_section == 4 %}
-                    <tr>
-                        <td align="left">
-                            <para style="normal">
-                                {{ item.name }}:
-                            </para>
-                        </td>
-                        <td align="right">
-                            <para style="normal" alignment="right">
-                                {{ item.cost }}
-                            </para>
-                        </td>
-                    </tr>
-                {% endif %}
-            {% endfor %}
-            <tr>
-                <td align="left">
-                    <para style="normal">
-                        Supplies Total:
-                    </para>
-                </td>
-                <td align="right">
-                    <para style="normal" alignment="right">
-                        {{ supplies_total }}
-                    </para>
-                </td>
-            </tr>
-        </blockTable>
-
-        <spacer length="10"/>
-
-        <blockTable>
-            <tr>
-                <td align="left">
-                    <para style="normal">
-                        Monthly Total:
-                    </para>
-                </td>
-                <td align="right">
-                    <para style="normal" alignment="right">
-                        {{ monthly_total }}
-                    </para>
-                </td>
-            </tr>
-        </blockTable>
-
+        <para>{{ full_formula }}</para>
+        <spacer length="5"/>
+        {% for footnote in second_footnotes.footnotes %}
+			<para>{{ footnote }}</para>
+		{% endfor %}
     </story>
 </document>
-
