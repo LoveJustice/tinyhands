@@ -5,6 +5,8 @@ from imagekit.processors import ResizeToFill
 from .person import Person
 from .form import BaseCard
 from .form import BaseForm
+from .form import FormCategory
+from accounts.models import Account
 
 # Class to store an instance of the IRF data.
 # This should contain data that is common for all IRFs and is not expected to be changed
@@ -158,9 +160,9 @@ class IrfCommon(BaseForm):
     logbook_followup_call = models.CharField(max_length=127, blank=True)
     logbook_first_verification_date = models.DateField(null=True)
     logbook_first_verification_name = models.CharField(max_length=127, blank=True)
-    logbook_second_verification = models.CharField(max_length=127, blank=True)
+    verified_evidence_categorization = models.CharField(max_length=127, blank=True)
     logbook_second_reason = models.TextField('Second Reason', blank=True)
-    logbook_second_verification_date = models.DateField(null=True)
+    verified_date = models.DateField(null=True)
     logbook_second_verification_name = models.CharField(max_length=127, blank=True)
     
     logbook_champion_verification = models.BooleanField('Champion verification', default=False)
@@ -187,11 +189,16 @@ class IrfCommon(BaseForm):
     def key_field_name():
         return 'irf_number'
     
+    @staticmethod
+    def has_blind_verification(country):
+        blind_verification_forms = FormCategory.objects.filter(name='Verification', category__category_type__name='card', form__form_type__name = 'IRF', form__stations__operating_country=country)
+        return (len(blind_verification_forms) > 0)
+        
     class Meta:
         indexes = [
             models.Index(fields=['logbook_submitted', 'station']),
             models.Index(fields=['logbook_first_verification_date', 'station']),
-            models.Index(fields=['logbook_second_verification_date', 'station']),
+            models.Index(fields=['verified_date', 'station']),
         ]
     
 class IntercepteeCommon(BaseCard):
@@ -239,4 +246,32 @@ class IrfAttachmentCommon(BaseCard):
         
     def is_private(self):
         return self.private_card
+
+class IrfVerification(BaseCard):
+    INITIAL = 1
+    TIE_BREAK = 2
+    TIE_BREAK_REVIEW = 3
+    OVERRIDE = 4
+    
+    VERIFICATION_TYPE_CHOICES = [
+        (INITIAL, 'Initial Verification'),
+        (TIE_BREAK, 'Tie Break'),
+        (TIE_BREAK_REVIEW, 'Tie Break Review'),
+        (OVERRIDE, 'Override'),
+    ]
+    
+    interception_record = models.ForeignKey(IrfCommon)
+    
+    verification_type = models.IntegerField(VERIFICATION_TYPE_CHOICES)
+    followup_call = models.CharField(max_length=127, blank=True)
+    followup_details = models.TextField('followup details', blank=True)
+    
+    evidence_categorization = models.CharField(max_length=127)
+    reason = models.TextField('reason', blank=True)
+    verified_date = models.DateField()
+    verifier = models.ForeignKey(Account, null=True, on_delete=models.SET_NULL)
+    
+    def set_parent(self, the_parent):
+        self.interception_record = the_parent
+    
     

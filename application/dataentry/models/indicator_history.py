@@ -109,15 +109,15 @@ class IndicatorHistory(models.Model):
                         IndicatorHistory.calculate_irf_backlog(results, query_set, 'v1')
                     
                     query_set = form_class.objects.filter(station__in=station_list,
-                                        logbook_second_verification_date__gte=start_date,
-                                        logbook_second_verification_date__lte=end_date)
+                                        verified_date__gte=start_date,
+                                        verified_date__lte=end_date)
                     IndicatorHistory.calculate_irf_second_verification(results, query_set, start_date, end_date)
                     
                     if start_validation_date is not None:
                         query_set = form_class.objects.filter(station__in=station_list,
                                                               logbook_first_verification_date__gte=start_validation_date,
                                                               logbook_first_verification_date__lte=end_date,
-                                                              evidence_categorization__isnull=False).exclude(logbook_second_verification_date__lte=end_date)
+                                                              evidence_categorization__isnull=False).exclude(verified_date__lte=end_date)
                         IndicatorHistory.calculate_irf_backlog(results, query_set, 'v2')
                     
                     interceptee_storage = IndicatorHistory.get_card_storage(storage_cache, form_type, 'People', station)
@@ -237,9 +237,9 @@ class IndicatorHistory(models.Model):
         for irf in query_set:
             if IndicatorHistory.date_in_range(irf.logbook_first_verification_date, None, None):
                 lag_count += 1
-                lag_time += IndicatorHistory.work_days(irf.logbook_first_verification_date, irf.logbook_second_verification_date)
+                lag_time += IndicatorHistory.work_days(irf.logbook_first_verification_date, irf.verified_date)
                 victim_count += IntercepteeCommon.objects.filter(interception_record=irf, person__role='PVOT').count()
-                if irf.logbook_first_verification != irf.logbook_second_verification:
+                if irf.logbook_first_verification != irf.verified_evidence_categorization:
                     change_count += 1
         
         IndicatorHistory.add_result(results, 'v2TotalLag', lag_time)

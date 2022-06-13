@@ -19,7 +19,7 @@ from dataentry.serialize_form import FormDataSerializer
 from .base_form import BaseFormViewSet, BorderStationOverviewSerializer
 
 from dataentry.form_data import Form, FormData
-from dataentry.models import IntercepteeCommon, InterceptionCache, IrfCommon, UserLocationPermission
+from dataentry.models import IntercepteeCommon, InterceptionCache, IrfCommon, IrfVerification, UserLocationPermission
 
 class IrfListSerializer(serializers.Serializer):
     id = serializers.IntegerField()
@@ -33,7 +33,7 @@ class IrfListSerializer(serializers.Serializer):
     station = BorderStationOverviewSerializer()
     form_name = serializers.SerializerMethodField(read_only=True)
     logbook_first_verification_date = serializers.DateField()
-    logbook_second_verification_date = serializers.DateField()
+    verified_date = serializers.DateField()
     can_view = serializers.SerializerMethodField(read_only=True)
     can_edit = serializers.SerializerMethodField(read_only=True)
     can_delete = serializers.SerializerMethodField(read_only=True)
@@ -103,7 +103,7 @@ class IrfFormViewSet(BaseFormViewSet):
     search_fields = ('irf_number',)
     ordering_fields = (
         'irf_number', 'staff_name', 'number_of_victims', 'number_of_traffickers', 'date_of_interception', 'time_of_interception',
-        'date_time_last_updated', 'logbook_second_verification_date',)
+        'date_time_last_updated', 'verified_date',)
     ordering = ('-date_of_interception', '-time_of_interception')
     
     def or_filter(self, current_qfilter, new_qfilter):
@@ -112,7 +112,21 @@ class IrfFormViewSet(BaseFormViewSet):
         else:
             return current_qfilter | new_qfilter
         
-    def build_query_filter(self, status_list, station_list, in_progress, account_id):
+    def build_query_filter(self, status_list, in_station_list, in_progress, account_id):
+        can_verify = self.request.GET.get('may_verify', None)
+        exclude_account_verified_irfs = []
+        if can_verify == 'true':
+            perm_list = UserLocationPermission.objects.filter(account__id=account_id,
+                                                              permission__permission_group=self.get_perm_group_name(),
+                                                              permission__action='EDIT')
+            station_list = []
+            for station in in_station_list:
+                if (UserLocationPermission.has_permission_in_list(perm_list, self.get_perm_group_name(), 'EDIT', station.operating_country.id, station.id)):
+                    station_list.append(station)
+            exclude_account_verified_irfs = IrfVerification.objects.filter(verifier__id = account_id).values_list('interception_record__id', flat = True)
+        else:
+            station_list = in_station_list
+                    
         if len(status_list) < 1:
             if in_progress:
                 return Q(status='in-progress')&Q(form_entered_by__id=account_id)&Q(station__in=station_list)
@@ -122,7 +136,17 @@ class IrfFormViewSet(BaseFormViewSet):
         if status_list[0] == '!invalid':
             q_filter = Q(status='in-progress')&Q(form_entered_by__id=account_id)|~Q(status='in-progress')&~Q(status='invalid')&Q(station__in=station_list)
         else:
-            q_filter = Q(status=status_list[0])&Q(station__in=station_list)
+            q_filter = None
+            filter_parts = status_list[0].split('|')
+            for filter_part in filter_parts:
+                if q_filter is None:
+                    q_filter = Q(status=filter_part)
+                else:
+                    q_filter = q_filter | Q(status=filter_part)
+            q_filter = (q_filter)&Q(station__in=station_list)
+        
+        if can_verify == 'true':
+            q_filter = q_filter & ~Q(id__in=exclude_account_verified_irfs)
         
         if len(status_list) > 1:
             if status_list[1] == '!None':
@@ -130,7 +154,7 @@ class IrfFormViewSet(BaseFormViewSet):
             elif status_list[1] == 'None':
                 q_filter = q_filter & (Q(evidence_categorization__isnull=True) | Q(evidence_categorization=''))
             else:
-                q_filter = q_filter & Q(logbook_second_verification__startswith=status_list[1])
+                q_filter = q_filter & Q(verified_evidence_categorization__startswith=status_list[1])
         
         date_filter = self.request.GET.get('date_filter', None)
         if date_filter is not None and date_filter != 'None':
@@ -139,7 +163,7 @@ class IrfFormViewSet(BaseFormViewSet):
             if date_filter == 'First Verification':
                 q_filter = q_filter & Q(logbook_first_verification_date__gte=date_start) & Q(logbook_first_verification_date__lte=date_end)
             elif date_filter == 'Second Verification':
-                q_filter = q_filter & Q(logbook_second_verification_date__gte=date_start) & Q(logbook_second_verification_date__lte=date_end)
+                q_filter = q_filter & Q(verified_date__gte=date_start) & Q(verified_date__lte=date_end)
             elif date_filter == 'Interception':
                 q_filter = q_filter & Q(date_of_interception__gte=date_start) & Q(date_of_interception__lte=date_end)
                 
@@ -176,7 +200,7 @@ class IrfFormViewSet(BaseFormViewSet):
     def get_list_field_names(self):
         return ['id', 'irf_number', 'form_entered_by', 'number_of_victims', 'number_of_traffickers', 'staff_name', 
                     'station', 'date_of_interception', 'time_of_interception', 'date_time_last_updated', 'status', 'evidence_categorization', 'logbook_first_verification',
-                    'logbook_first_verification_date', 'logbook_second_verification', 'logbook_second_verification_date']
+                    'logbook_first_verification_date', 'verified_evidence_categorization', 'verified_date']
         
     def get_empty_queryset(self):
         return IrfCommon.objects.none()
@@ -224,8 +248,8 @@ class IrfFormViewSet(BaseFormViewSet):
         except:
             start_date = today - timedelta(days=180)
             interceptions = IntercepteeCommon.objects.filter(person__role='PVOT',
-                                                interception_record__logbook_second_verification_date__gte=start_date,
-                                                interception_record__logbook_second_verification_date__lte=today).order_by(
+                                                interception_record__verified_date__gte=start_date,
+                                                interception_record__verified_date__lte=today).order_by(
                                                     'interception_record__station__operating_country__region__name',
                                                     'interception_record__station__operating_country__name'
                                                     )
@@ -284,7 +308,7 @@ class IrfFormViewSet(BaseFormViewSet):
     def post_process(self, request, form_data):
         try:
             start_check = datetime.datetime(2020,4,1, tzinfo=datetime.timezone.utc)
-            if form_data.form_object.logbook_second_verification_date is not None or form_data.form_object.date_of_interception < start_check.date():
+            if form_data.form_object.verified_date is not None or form_data.form_object.date_of_interception < start_check.date():
                 return
             context = {
                 'irf_number': form_data.form_object.irf_number,
