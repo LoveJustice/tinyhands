@@ -289,27 +289,52 @@ class IrfFormViewSet(BaseFormViewSet):
         if form_data is not None:
             self.logbook_submitted = form_data.form_object.logbook_submitted
             self.logbook_first_verification_date = form_data.form_object.logbook_first_verification_date
+            self.status = form_data.form_object.status
         else:
             self.logbook_submitted = None
             self.logbook_first_verification_date = None
+            self.status = None
     
-    def send_verification_email(self, ulp, context):
+    def send_verification_email(self, ulp, context, template_name):
         email_sender = settings.SERVER_EMAIL
         for user_location_permission in ulp:
             context['account'] = user_location_permission.account
             
             send_templated_mail(
-                template_name='verification_notice',
+                template_name=template_name,
                 from_email=email_sender,
                 recipient_list=[user_location_permission.account.email],
                 context=context
             )
     
+    def verifier_context(self, form_data, context):
+        verifications = IrfVerification.objects.filter(interception_record=form_data.form_object).order_by('id')
+        initial = []
+        tie_break = {}
+        for verification in verifications:
+            if verification.verification_type == IrfVerification.INITIAL:
+                initial.append({
+                        'verifier': verification.verifier.first_name + ' ' + verification.verifier.last_name,
+                        'evidence_category': verification.evidence_categorization,
+                        'reason': verification.reason
+                    })
+            elif verification.verification_type == IrfVerification.TIE_BREAK or verification.verification_type == IrfVerification.TIE_BREAK_REVIEW:
+                tie_break = {
+                        'verifier': verification.verifier.first_name + ' ' + verification.verifier.last_name,
+                        'evidence_category': verification.evidence_categorization,
+                        'reason': verification.reason
+                    }
+        
+        context['initial'] = initial
+        context['tie_break'] = tie_break
+        context['initial_reviewers'] = initial[0]['verifier'] + ' and ' + initial[1]['verifier']
+    
     def post_process(self, request, form_data):
         try:
             start_check = datetime.datetime(2020,4,1, tzinfo=datetime.timezone.utc)
-            if form_data.form_object.verified_date is not None or form_data.form_object.date_of_interception < start_check.date():
+            if form_data.form_object.date_of_interception < start_check.date():
                 return
+            blind_verification = IrfCommon.has_blind_verification(form_data.form_object.station.operating_country)
             context = {
                 'irf_number': form_data.form_object.irf_number,
                 'url': (settings.CLIENT_DOMAIN + '/irf/' + form_data.form.form_name[3:].lower() + ':?id=' + str(form_data.form_object.id) +
@@ -318,16 +343,39 @@ class IrfFormViewSet(BaseFormViewSet):
                    '&isViewing=false' + 
                    '&formName=' + form_data.form.form_name)
                 }
-            if self.logbook_first_verification_date is None and form_data.form_object.logbook_first_verification_date is not None:
-                context['event'] = 'verified'
-                context['stage'] = 'second'
-                action='IRF_VERIFIED'
-            elif self.logbook_submitted is None and form_data.form_object.logbook_submitted is not None and form_data.form_object.logbook_first_verification_date is None:
-                context['event'] = 'entered'
-                context['stage'] = 'first'
-                action='IRF_SUBMITTED'
+            if blind_verification:
+                new_status = form_data.form_object.status
+                if new_status != self.status:
+                    if new_status == 'approved':
+                        context['event'] = 'entered'
+                        context['stage'] = 'initial'
+                        action='IRF_SUBMITTED'
+                        template_name='verification_notice'
+                    elif new_status == 'verification-tie':
+                        template_name='verification_tie_notice'
+                        action='IRF_VERIFIED'
+                    elif new_status == 'verified' and self.status == 'verification-tie':
+                        template_name='verification_tie_resolved'
+                        action='IRF_TIE_RESOLVED'
+                        self.verifier_context(form_data, context)
+                    else:
+                        return
+                else:
+                    return
             else:
-                return
+                if form_data.form_object.verified_date is not None:
+                    return
+                template_name='verification_notice'
+                if self.logbook_first_verification_date is None and form_data.form_object.logbook_first_verification_date is not None:
+                    context['event'] = 'verified'
+                    context['stage'] = 'second'
+                    action='IRF_VERIFIED'
+                elif self.logbook_submitted is None and form_data.form_object.logbook_submitted is not None and form_data.form_object.logbook_first_verification_date is None:
+                    context['event'] = 'entered'
+                    context['stage'] = 'first'
+                    action='IRF_SUBMITTED'
+                else:
+                    return
             
             # Global permission to receive notification
             ulp1 = UserLocationPermission.objects.filter(permission__permission_group = 'NOTIFICATIONS', permission__action = action, station=None, country=None)
@@ -339,7 +387,7 @@ class IrfFormViewSet(BaseFormViewSet):
             ulp3 = UserLocationPermission.objects.filter(permission__permission_group = 'NOTIFICATIONS', permission__action = action, station=form_data.form_object.station)
             
             ulp = (ulp1 | ulp2 | ulp3).distinct()
-            self.send_verification_email(ulp, context)
+            self.send_verification_email(ulp, context, template_name)
         except:
             print (traceback.format_exc())
 

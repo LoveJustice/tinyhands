@@ -31,4 +31,5 @@ class Migration(migrations.Migration):
             model_name='irfcommon',
             index=models.Index(fields=['verified_date', 'station'], name='dataentry_i_verifie_666b5c_idx'),
         ),
+        migrations.RunSQL("insert into dataentry_permission (permission_group, action, min_level, display_order)  values ('NOTIFICATIONS','IRF_TIE_RESOLVED','STATION',-1)"),
     ]
