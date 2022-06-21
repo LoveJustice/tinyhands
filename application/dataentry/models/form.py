@@ -20,7 +20,7 @@ from .country import Country
 #   14   dataentry.models.location_box VictimInterviewLocationBox null                10             null                        victim_interview
 class Storage(models.Model):
     module_name = models.CharField(max_length=126)
-    form_model_name = models.CharField(max_length=126)
+    form_model_name = models.CharField(max_length=126, unique=True)
     response_model_name = models.CharField(max_length=126, null=True)
     parent_storage = models.ForeignKey('self', null=True)
     foreign_key_field_parent = models.CharField(max_length=126, null=True)
@@ -39,13 +39,14 @@ class FormVersion(models.Model):
 
 class FormType(models.Model):
     name = models.CharField(max_length=126) # IRF, VIF, CEF, etc.
+    tag_enalbed = models.BooleanField(default=False)
 
 class Form(models.Model):
     form_type = models.ForeignKey(FormType)
     storage = models.ForeignKey(Storage)
     start_date = models.DateTimeField(auto_now_add=True)
     end_date = models.DateTimeField(null=True)
-    form_name = models.CharField(max_length=126)
+    form_name = models.CharField(max_length=126, unique=True)
     version = models.CharField(max_length=126, null=True)
     
     stations = models.ManyToManyField(BorderStation)
@@ -72,6 +73,7 @@ class CategoryType(models.Model):
     name = models.CharField(max_length=126) # Grid, Card, etc.
 
 class Category(models.Model):
+    form_tag = models.CharField(max_length=126, unique=True)
     category_type = models.ForeignKey(CategoryType)
     description = models.CharField(max_length=126)
     
@@ -131,7 +133,8 @@ class FormCategory(models.Model):
 class AnswerType(models.Model):
     name = models.CharField(max_length=126) # Multiple Choice, Int, Address, Phone Num, etc.
 
-class Question(models.Model): 
+class Question(models.Model):
+    form_tag = models.CharField(max_length=126, unique=True)
     prompt = models.CharField(max_length=126, blank=True)
     description = models.CharField(max_length=126, null=True)
     answer_type = models.ForeignKey(AnswerType)
@@ -341,6 +344,7 @@ class FormValidationLevel(models.Model):
 # validation_type - Is the type of validation to be performed on the questions
 # error_warning_message - message returned to client when validation fails
 class FormValidation(models.Model):
+    form_tag = models.CharField(max_length=126, unique=True)
     level = models.ForeignKey(FormValidationLevel)
     trigger = models.ForeignKey(Question, null=True)
     trigger_value = models.CharField(max_length=126, null=True)
@@ -377,6 +381,7 @@ class QuestionStorage(models.Model):
  #  Work still needed on the export/import classes
  #
 class ExportImport(models.Model):
+    form_tag = models.CharField(max_length=126, unique=True)
     description = models.CharField(max_length=126, null = True)
     implement_module = models.CharField(max_length=126, null=True)
     implement_class_name = models.CharField(max_length=126, null=True)
