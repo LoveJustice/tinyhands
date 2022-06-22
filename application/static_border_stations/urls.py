@@ -11,6 +11,7 @@ urlpatterns = [
         url(r'^border-station/(?P<pk>\d+)/$', BorderStationViewSet.as_view(detail_methods), name="BorderStationDetail"),
         url(r'^border-station/(?P<pk>\d+)/location/$', LocationViewSet.as_view({'get': 'retrieve_border_station_locations', 'put': 'update', 'delete': 'destroy'}), name="LocationsForBorderStation"),
         url(r'^border-station/(?P<pk>\d+)/staff/$', StaffViewSet.as_view({'get': 'retrieve_border_station_staff', 'put': 'update', 'delete': 'destroy'}), name="StaffForBorderStation"),
+        url(r'^border-station/(?P<pk>\d+)/staff/work/$', StaffViewSet.as_view({'put': 'update_border_station_staff_work'}), name="StaffWork"),
         url(r'^get_station_id/', get_station_id, name='get_station_id'),
 
         url(r'^committee-member/$', CommitteeMemberViewSet.as_view(list_methods), name="CommitteeMember"),
