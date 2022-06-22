@@ -58,31 +58,6 @@ class AccountViewSet(ModelViewSet):
         serializer = self.get_serializer(accounts, many=True)
         return Response(serializer.data)
 
-"""
-    Allow retrieval of account names for accounts that do not have account management
-    permissions, but do have IRF form permissions.  This is used to retrieve the names
-    for display in the IRF verifications.
-"""
-class AccountNameViewSet(ModelViewSet):
-    queryset = Account.objects.all()
-    serializer_class = AccountsSerializer
-    permission_classes = [IsAuthenticated, HasPermission]
-    permissions_required = []
-    
-    def get_account_name(self, request, pk):
-        mod = __import__('dataentry.models.user_location_permission', fromlist=['UserLocationPermission'])
-        form_class = getattr(mod, 'UserLocationPermission', None)
-        permissions = form_class.objects.filter(account__id=request.user.id, permission__permission_group='IRF')
-        if len(permissions) < 1:
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
-        
-        account = Account.objects.get(id=pk)
-        if account is not None:
-            account_name = account.first_name + ' ' + account.last_name
-        else:
-            account_name = ''
-        return Response(account_name)
-
 
 @api_view(['POST'])
 def password_reset(request):

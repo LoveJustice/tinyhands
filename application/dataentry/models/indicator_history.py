@@ -10,7 +10,7 @@ from django.contrib.postgres.fields import JSONField
 from .border_station import BorderStation
 from .country import Country
 
-from dataentry.models import BorderStation, Form, FormCategory, IntercepteeCommon, IrfCommon, IrfVerification
+from dataentry.models import BorderStation, Form, FormCategory, IntercepteeCommon
 
 class IndicatorHistory(models.Model):
     country = models.ForeignKey(Country)
@@ -52,84 +52,7 @@ class IndicatorHistory(models.Model):
             result[name] = value
     
     @staticmethod
-    def compute_pre_blind_verification(results, form_class, station_list, start_date, end_date, start_validation_date):
-        query_set = form_class.objects.filter(station__in=station_list,
-                                        logbook_first_verification_date__gte=start_date,
-                                        logbook_first_verification_date__lte=end_date)
-        IndicatorHistory.calculate_irf_first_verification(results, query_set, start_date, end_date)
-        
-        if start_validation_date is not None:
-            query_set = form_class.objects.filter(station__in=station_list,
-                                                  logbook_submitted__gte=start_validation_date,
-                                                  logbook_submitted__lte=end_date,
-                                                  evidence_categorization__isnull=False).exclude(logbook_first_verification_date__lte=end_date)
-            IndicatorHistory.calculate_irf_backlog(results, query_set, 'v1')
-        
-        query_set = form_class.objects.filter(station__in=station_list,
-                            verified_date__gte=start_date,
-                            verified_date__lte=end_date)
-        IndicatorHistory.calculate_irf_second_verification(results, query_set, start_date, end_date)
-        
-        if start_validation_date is not None:
-            query_set = form_class.objects.filter(station__in=station_list,
-                                                  logbook_first_verification_date__gte=start_validation_date,
-                                                  logbook_first_verification_date__lte=end_date,
-                                                  evidence_categorization__isnull=False).exclude(verified_date__lte=end_date)
-            IndicatorHistory.calculate_irf_backlog(results, query_set, 'v2')
-        
-
-    
-    @staticmethod
-    def compute_blind_verification(results, form_class, station_list, start_date, end_date, start_validation_date):
-        query_set = form_class.objects.filter(station__in=station_list, logbook_submitted__lte=end_date, evidence_categorization__isnull=False).exclude(verified_date__lt=start_date)
-        if start_validation_date is not None:
-            query_set = query_set.filter(logbook_submitted__gte=start_validation_date)
-        initial_lag_count = 0
-        initial_lag_time = 0
-        initial_victim_count = 0
-        initial_backlog = 0
-        tie_lag_count = 0
-        tie_lag_time = 0
-        tie_victim_count = 0
-        tie_backlog = 0;
-        for irf in query_set:
-            initial_date = None
-            tie_date = None
-            for verification in irf.irfverification_set.all().order_by('verified_date'):
-                if verification.verification_type == IrfVerification.INITIAL:
-                    initial_date = verification.verified_date
-                    
-                if verification.verification_type == IrfVerification.TIE_BREAK:
-                    if verification.verified_date <= end_date:
-                        tie_date = verification.verified_date
-            
-            if irf.status == 'approved' or initial_date is not None and initial_date > end_date:
-                initial_backlog += 1
-            elif IndicatorHistory.date_in_range(initial_date, start_date, end_date) and irf.status != 'approved':
-                initial_lag_count += 1
-                initial_lag_time += IndicatorHistory.work_days(irf.logbook_submitted, initial_date)
-                initial_victim_count += IntercepteeCommon.objects.filter(interception_record=irf, person__role='PVOT').count()
-                
-            if tie_date is None or tie_date > end_date:
-                tie_backlog += 1
-            elif IndicatorHistory.date_in_range(tie_date, start_date, end_date):
-                tie_lag_count += 1
-                tie_lag_time += IndicatorHistory.work_days(initial_date, tie_date)
-                tie_victim_count += IntercepteeCommon.objects.filter(interception_record=irf, person__role='PVOT').count()
-        
-        IndicatorHistory.add_result(results, 'v1TotalLag', initial_lag_time)
-        IndicatorHistory.add_result(results, 'v1Count', initial_lag_count)
-        IndicatorHistory.add_result(results, 'v1VictimCount', initial_victim_count)
-        IndicatorHistory.add_result(results, 'v1Backlog', initial_backlog)
-        IndicatorHistory.add_result(results, 'v2TotalLag', tie_lag_time)
-        IndicatorHistory.add_result(results, 'v2Count', tie_lag_count)
-        IndicatorHistory.add_result(results, 'v2VictimCount', tie_victim_count)
-        IndicatorHistory.add_result(results, 'v2Backlog', tie_backlog)
-    
-    @staticmethod
     def calculate_indicators(start_date, end_date, country, check_photos=None, include_latest_date = False):
-        has_blind_verification = IrfCommon.has_blind_verification(country)
-
         if country.verification_start_year is None or country.verification_start_month is None:
             start_validation_date = None
         else:
@@ -173,11 +96,30 @@ class IndicatorHistory(models.Model):
                 form_method[form_type](results, query_set, start_date, end_date, class_cache, form_type)
                 
                 if form_type == 'IRF':
-                    if has_blind_verification:
-                        IndicatorHistory.compute_blind_verification(results, form_class, station_list, start_date, end_date, start_validation_date)
-                    else:
-                        IndicatorHistory.compute_pre_blind_verification(results, form_class, station_list, start_date, end_date, start_validation_date)
-                        
+                    query_set = form_class.objects.filter(station__in=station_list,
+                                        logbook_first_verification_date__gte=start_date,
+                                        logbook_first_verification_date__lte=end_date)
+                    IndicatorHistory.calculate_irf_first_verification(results, query_set, start_date, end_date)
+                    
+                    if start_validation_date is not None:
+                        query_set = form_class.objects.filter(station__in=station_list,
+                                                              logbook_submitted__gte=start_validation_date,
+                                                              logbook_submitted__lte=end_date,
+                                                              evidence_categorization__isnull=False).exclude(logbook_first_verification_date__lte=end_date)
+                        IndicatorHistory.calculate_irf_backlog(results, query_set, 'v1')
+                    
+                    query_set = form_class.objects.filter(station__in=station_list,
+                                        logbook_second_verification_date__gte=start_date,
+                                        logbook_second_verification_date__lte=end_date)
+                    IndicatorHistory.calculate_irf_second_verification(results, query_set, start_date, end_date)
+                    
+                    if start_validation_date is not None:
+                        query_set = form_class.objects.filter(station__in=station_list,
+                                                              logbook_first_verification_date__gte=start_validation_date,
+                                                              logbook_first_verification_date__lte=end_date,
+                                                              evidence_categorization__isnull=False).exclude(logbook_second_verification_date__lte=end_date)
+                        IndicatorHistory.calculate_irf_backlog(results, query_set, 'v2')
+                    
                     interceptee_storage = IndicatorHistory.get_card_storage(storage_cache, form_type, 'People', station)
                     if interceptee_storage is not None:
                         query_set = interceptee_storage.get_form_storage_class().objects.filter(interception_record__station__in=station_list, person__photo__in=check_photos.keys())
@@ -295,9 +237,9 @@ class IndicatorHistory(models.Model):
         for irf in query_set:
             if IndicatorHistory.date_in_range(irf.logbook_first_verification_date, None, None):
                 lag_count += 1
-                lag_time += IndicatorHistory.work_days(irf.logbook_first_verification_date, irf.verified_date)
+                lag_time += IndicatorHistory.work_days(irf.logbook_first_verification_date, irf.logbook_second_verification_date)
                 victim_count += IntercepteeCommon.objects.filter(interception_record=irf, person__role='PVOT').count()
-                if irf.logbook_first_verification != irf.verified_evidence_categorization:
+                if irf.logbook_first_verification != irf.logbook_second_verification:
                     change_count += 1
         
         IndicatorHistory.add_result(results, 'v2TotalLag', lag_time)

@@ -56,9 +56,9 @@ class Command(BaseCommand):
             "Follow-Up Call Completed?":"logbook_followup_call",
             "Date Verification was complete":"logbook_first_verification_date",
             "Reviewed by Leadership":"logbook_leadership_review",
-            "Leadership's Verification":"verified_evidence_categorization",
+            "Leadership's Verification":"logbook_second_verification",
             "Leaderhip's Reason for Change":"logbook_second_reason",
-            "Date Leadership's Verification was Complete":"verified_date",
+            "Date Leadership's Verification was Complete":"logbook_second_verification_date",
             "Date IRF Entered":"logbook_submitted",
             "Back Corrected Form":"logbook_back_corrected"
             }
@@ -66,7 +66,7 @@ class Command(BaseCommand):
             "logbook_received",
             "logbook_information_complete",
             "logbook_first_verification_date",
-            "verified_date",
+            "logbook_second_verification_date",
             "logbook_submitted"
             ]
         long_fields = [
@@ -89,9 +89,9 @@ class Command(BaseCommand):
                     
                     setattr(irf, field, value)
             
-            if irf.verified_evidence_categorization == 'Should not count as an Intercept':
+            if irf.logbook_second_verification == 'Should not count as an Intercept':
                 irf.status = 'invalid'
-            elif irf.verified_evidence_categorization is not None and irf.verified_evidence_categorization != '':
+            elif irf.logbook_second_verification is not None and irf.logbook_second_verification != '':
                 irf.status='second-verification'
             elif irf.logbook_first_verification is not None and irf.logbook_first_verification != '':
                 irf.status='first-verification'
@@ -185,14 +185,14 @@ class Command(BaseCommand):
                 if form_class == irf_class and (form_instance.evidence_categorization is None or form_instance.evidence_categorization == ''):
                     continue
                 
-                if form_class == irf_class and self.valid_date(form_instance.verified_date) and not self.valid_date(form_instance.logbook_first_verification_date):
-                    form_instance.logbook_first_verification_date = form_instance.verified_date
+                if form_class == irf_class and self.valid_date(form_instance.logbook_second_verification_date) and not self.valid_date(form_instance.logbook_first_verification_date):
+                    form_instance.logbook_first_verification_date = form_instance.logbook_second_verification_date
                     modified = True
                 
                 if (form_class == irf_class and self.valid_date(form_instance.logbook_first_verification_date) 
-                        and form_instance.verified_evidence_categorization != ''
-                        and not self.valid_date(form_instance.verified_date)):
-                    form_instance.verified_date = form_instance.logbook_first_verification_date
+                        and form_instance.logbook_second_verification != ''
+                        and not self.valid_date(form_instance.logbook_second_verification_date)):
+                    form_instance.logbook_second_verification_date = form_instance.logbook_first_verification_date
                     modified = True
                 
                 if not self.valid_date(form_instance.logbook_received):
