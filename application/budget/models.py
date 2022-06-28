@@ -211,6 +211,7 @@ class BorderStationBudgetCalculation(models.Model):
             total += self.pv_total()
             total += self.administration_total()
             total += self.travel_total()
+            total += self.rent_and_utilities_total()
         else:
             total += self.impact_multiplying_total(project)
         return total
