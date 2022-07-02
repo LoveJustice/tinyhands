@@ -5,7 +5,8 @@ from django.core.management.color import no_style
 from django.db import connection, transaction
 from .form import Form, FormVersion
 from .border_station import BorderStation
-from dataentry.models import Category, Form, FormCategory, QuestionLayout, QuestionStorage
+from dataentry.models import Category, Form, FormCategory, FormType, QuestionLayout, QuestionStorage
+from export_import.load_form_data import LoadFormData
 
 class FormMigration:
     form_model_names = [
@@ -199,29 +200,68 @@ class FormMigration:
             transaction.commit()
         
     @staticmethod
-    def check_load_form_data(apps, file_name, checksum_list):
-        if len(checksum_list) != 2:
-            print('Invalid checksum list', checksum_list)
+    def check_load_form_data(apps, checksums):
+        base = 'form_data'
+        basic_form_data = base + '.json'
+        if base + '.json' not in checksums:
+            print ('Base form data file ' + basic_form_data + ' was not found cannot check or load form data')
             return
         
+        reload = False
         try:
-            form_version = FormVersion.objects.get(id=1)
-            if form_version.checksum == int(checksum_list[0]) and form_version.blocks == int(checksum_list[1]):
-                print('Checksum values match - no need to reload form data')
-                return
+            form_version = FormVersion.objects.get(file=basic_form_data)
+            if form_version.checksum != checksums[basic_form_data]['checksum'] or form_version.blocks != checksums[basic_form_data]['blocks']:
+                print (basic_form_data, ' checksum does not match')
+                reload = True
         except Exception:
-            form_version = FormVersion()
-            form_version.id = 1
+            print (basic_form_data, ' exception')
+            reload = True
+        
+        for tag_file in checksums.keys():
+            if tag_file == basic_form_data:
+                continue
+            try:
+                form_version = FormVersion.objects.get(file=tag_file)
+                if form_version.checksum != checksums[tag_file]['checksum'] or form_version.blocks != checksums[tag_file]['blocks']:
+                    print(tag_file,'checksum does not match')
+                    reload = True
+            except Exception:
+                print(tag_file,'no checksum value in database')
+                reload = True
+            
+        if not reload:
+            print ('checksums match - no need to reload form data')
+            return
         
         print('Reloading form data') 
         reference_list = FormMigration.get_form_to_station_references()
         FormMigration.unload_prior(apps)
-        call_command('loaddata', file_name) 
+        load_form_data = LoadFormData()
+        load_form_data.load() 
         FormMigration.restore_form_to_station_references(reference_list)
         
-        form_version.checksum = int(checksum_list[0])
-        form_version.blocks = int(checksum_list[1])
+        try:
+            form_version = FormVersion.objects.get(file=basic_form_data)
+        except Exception:
+            form_version = FormVersion()
+            form_version.file = basic_form_data
+        
+        form_version.checksum = checksums[basic_form_data]['checksum']
+        form_version.blocks = checksums[basic_form_data]['blocks']
         form_version.save()
+        
+        tag_form_types = FormType.objects.filter(tag_enabled=True)
+        for form_type in tag_form_types:
+            tag_form_name = base + '_' + form_type.name  + '.json'
+            try:
+                form_version = FormVersion.objects.get(file=tag_form_name)
+            except Exception:
+                form_version = FormVersion()
+                form_version.file = tag_form_name
+            
+            form_version.checksum = checksums[tag_form_name]['checksum']
+            form_version.blocks = checksums[tag_form_name]['blocks']
+            form_version.save()
         
         FormMigration.buildView('IRF')
         FormMigration.buildView('CIF')

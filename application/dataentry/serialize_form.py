@@ -850,12 +850,13 @@ class QuestionResponseSerializer(serializers.Serializer):
         'MultiReference': None,
     }
     
-    def to_representation(self, instance: Question):
+    def to_representation(self, instance):
         ret = super().to_representation(instance)
         form_data: FormData = self.context['form_data']
         
         answer = form_data.get_answer(instance)
         ret['question_id']  = serializers.IntegerField().to_representation(instance.id)
+        ret['question_tag']  = serializers.CharField().to_representation(instance.form_tag)
         if form_data.get_answer_storage(instance) is not None:
             ret['storage_id'] = serializers.IntegerField().to_representation(form_data.get_answer_storage(instance))
         if answer is not None:
