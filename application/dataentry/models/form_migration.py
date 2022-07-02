@@ -50,7 +50,7 @@ class FormMigration:
     
     @staticmethod
     def unload_prior(apps):
-        class_models = []
+        class_models = [apps.get_model('dataentry', 'FormVersion')]
         for model_name in reversed(FormMigration.form_model_names):
             my_model = apps.get_model('dataentry', model_name)
             class_models.append(my_model)
