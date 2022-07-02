@@ -251,6 +251,7 @@
    "model": "dataentry.storage",
    "pk": 63,
    "fields": {
+      "form_tag": "MonthlyReport",
       "module_name": "dataentry.models.monthly_report",
       "form_model_name": "MonthlyReport",
       "response_model_name": null,
@@ -263,6 +264,7 @@
    "model": "dataentry.storage",
    "pk": 180,
    "fields": {
+      "form_tag": "MonthlyReportAttachment",
       "module_name": "dataentry.models.monthly_report",
       "form_model_name": "MonthlyReportAttachment",
       "response_model_name": null,
@@ -275,6 +277,7 @@
    "model": "dataentry.storage",
    "pk": 181,
    "fields": {
+      "form_tag": "IrfCommon",
       "module_name": "dataentry.models.irf_common",
       "form_model_name": "IrfCommon",
       "response_model_name": null,
@@ -287,6 +290,7 @@
    "model": "dataentry.storage",
    "pk": 182,
    "fields": {
+      "form_tag": "IntercepteeCommon",
       "module_name": "dataentry.models.irf_common",
       "form_model_name": "IntercepteeCommon",
       "response_model_name": null,
@@ -299,6 +303,7 @@
    "model": "dataentry.storage",
    "pk": 183,
    "fields": {
+      "form_tag": "IrfAttachmentCommon",
       "module_name": "dataentry.models.irf_common",
       "form_model_name": "IrfAttachmentCommon",
       "response_model_name": null,
@@ -311,6 +316,7 @@
    "model": "dataentry.storage",
    "pk": 184,
    "fields": {
+      "form_tag": "CifCommon",
       "module_name": "dataentry.models.cif_common",
       "form_model_name": "CifCommon",
       "response_model_name": null,
@@ -323,6 +329,7 @@
    "model": "dataentry.storage",
    "pk": 185,
    "fields": {
+      "form_tag": "PotentialVictimCommon",
       "module_name": "dataentry.models.cif_common",
       "form_model_name": "PotentialVictimCommon",
       "response_model_name": null,
@@ -335,6 +342,7 @@
    "model": "dataentry.storage",
    "pk": 186,
    "fields": {
+      "form_tag": "TransportationCommon",
       "module_name": "dataentry.models.cif_common",
       "form_model_name": "TransportationCommon",
       "response_model_name": null,
@@ -347,6 +355,7 @@
    "model": "dataentry.storage",
    "pk": 187,
    "fields": {
+      "form_tag": "PersonBoxCommon",
       "module_name": "dataentry.models.cif_common",
       "form_model_name": "PersonBoxCommon",
       "response_model_name": null,
@@ -359,6 +368,7 @@
    "model": "dataentry.storage",
    "pk": 188,
    "fields": {
+      "form_tag": "LocationBoxCommon",
       "module_name": "dataentry.models.cif_common",
       "form_model_name": "LocationBoxCommon",
       "response_model_name": null,
@@ -371,6 +381,7 @@
    "model": "dataentry.storage",
    "pk": 189,
    "fields": {
+      "form_tag": "VehicleBoxCommon",
       "module_name": "dataentry.models.cif_common",
       "form_model_name": "VehicleBoxCommon",
       "response_model_name": null,
@@ -383,6 +394,7 @@
    "model": "dataentry.storage",
    "pk": 190,
    "fields": {
+      "form_tag": "CifAttachmentCommon",
       "module_name": "dataentry.models.cif_common",
       "form_model_name": "CifAttachmentCommon",
       "response_model_name": null,
@@ -395,6 +407,7 @@
    "model": "dataentry.storage",
    "pk": 191,
    "fields": {
+      "form_tag": "VdfCommon",
       "module_name": "dataentry.models.vdf_common",
       "form_model_name": "VdfCommon",
       "response_model_name": null,
@@ -407,6 +420,7 @@
    "model": "dataentry.storage",
    "pk": 192,
    "fields": {
+      "form_tag": "VdfAttachmentCommon",
       "module_name": "dataentry.models.vdf_common",
       "form_model_name": "VdfAttachmentCommon",
       "response_model_name": null,
@@ -419,6 +433,7 @@
    "model": "dataentry.storage",
    "pk": 193,
    "fields": {
+      "form_tag": "BorderStation",
       "module_name": "dataentry.models.border_station",
       "form_model_name": "BorderStation",
       "response_model_name": null,
@@ -431,6 +446,7 @@
    "model": "dataentry.storage",
    "pk": 194,
    "fields": {
+      "form_tag": "CommitteeMember",
       "module_name": "static_border_stations.models",
       "form_model_name": "CommitteeMember",
       "response_model_name": null,
@@ -443,6 +459,7 @@
    "model": "dataentry.storage",
    "pk": 195,
    "fields": {
+      "form_tag": "Staff",
       "module_name": "static_border_stations.models",
       "form_model_name": "Staff",
       "response_model_name": null,
@@ -455,6 +472,7 @@
    "model": "dataentry.storage",
    "pk": 196,
    "fields": {
+      "form_tag": "Location",
       "module_name": "static_border_stations.models",
       "form_model_name": "Location",
       "response_model_name": null,
@@ -467,6 +485,7 @@
    "model": "dataentry.storage",
    "pk": 197,
    "fields": {
+      "form_tag": "LegalCase",
       "module_name": "dataentry.models.legal_case",
       "form_model_name": "LegalCase",
       "response_model_name": null,
@@ -479,6 +498,7 @@
    "model": "dataentry.storage",
    "pk": 198,
    "fields": {
+      "form_tag": "LegalCaseSuspect",
       "module_name": "dataentry.models.legal_case",
       "form_model_name": "LegalCaseSuspect",
       "response_model_name": null,
@@ -491,6 +511,7 @@
    "model": "dataentry.storage",
    "pk": 199,
    "fields": {
+      "form_tag": "LegalCaseVictim",
       "module_name": "dataentry.models.legal_case",
       "form_model_name": "LegalCaseVictim",
       "response_model_name": null,
@@ -503,6 +524,7 @@
    "model": "dataentry.storage",
    "pk": 200,
    "fields": {
+      "form_tag": "LegalCaseAttachment",
       "module_name": "dataentry.models.legal_case",
       "form_model_name": "LegalCaseAttachment",
       "response_model_name": null,
@@ -515,6 +537,7 @@
    "model": "dataentry.storage",
    "pk": 201,
    "fields": {
+      "form_tag": "GospelVerification",
       "module_name": "dataentry.models.vdf_common",
       "form_model_name": "GospelVerification",
       "response_model_name": null,
@@ -527,6 +550,7 @@
    "model": "dataentry.storage",
    "pk": 202,
    "fields": {
+      "form_tag": "LegalCaseTimeline",
       "module_name": "dataentry.models.legal_case",
       "form_model_name": "LegalCaseTimeline",
       "response_model_name": null,
@@ -539,23 +563,12 @@
    "model": "dataentry.storage",
    "pk": 203,
    "fields": {
+      "form_tag": "BorderStationBudgetCalculation",
       "module_name": "account.budget",
       "form_model_name": "BorderStationBudgetCalculation",
       "response_model_name": null,
       "parent_storage": null,
       "foreign_key_field_parent": null,
-      "foreign_key_field_child": null
-   }
-},
-{
-   "model": "dataentry.storage",
-   "pk": 204,
-   "fields": {
-      "module_name": "dataentry.models.irf_common",
-      "form_model_name": "IrfVerification",
-      "response_model_name": null,
-      "parent_storage": 181,
-      "foreign_key_field_parent": "interception_record",
       "foreign_key_field_child": null
    }
 },
@@ -1421,7 +1434,7 @@
    "model": "dataentry.category",
    "pk": 1,
    "fields": {
-      "form_tag": "irfTopBox",
+      "form_tag": "replaceMe1",
       "category_type": 1,
       "description": "Top Box - common IRF"
    }
@@ -1430,7 +1443,7 @@
    "model": "dataentry.category",
    "pk": 2,
    "fields": {
-      "form_tag": "irfResourcesNepal",
+      "form_tag": "replaceMe2",
       "category_type": 1,
       "description": "Resources/Safety for IRF Nepal"
    }
@@ -1439,16 +1452,16 @@
    "model": "dataentry.category",
    "pk": 11,
    "fields": {
-      "form_tag": "irfResourcesIndia",
+      "form_tag": "replaceMe11",
       "category_type": 1,
-      "description": "Resources for IRF India"
+      "description": "Family for IRF India"
    }
 },
 {
    "model": "dataentry.category",
    "pk": 16,
    "fields": {
-      "form_tag": "irfResourcesSouthAfrica",
+      "form_tag": "replaceMe16",
       "category_type": 1,
       "description": "Resources/Safety for IRF South Africa"
    }
@@ -1457,7 +1470,7 @@
    "model": "dataentry.category",
    "pk": 17,
    "fields": {
-      "form_tag": "irfResourcesNamibia",
+      "form_tag": "replaceMe17",
       "category_type": 1,
       "description": "Resources/Safety for IRF Namibia"
    }
@@ -1466,7 +1479,7 @@
    "model": "dataentry.category",
    "pk": 18,
    "fields": {
-      "form_tag": "irfFinalImmigration",
+      "form_tag": "replaceMe18",
       "category_type": 1,
       "description": "Final Procedures with immigration IRF common"
    }
@@ -1475,7 +1488,7 @@
    "model": "dataentry.category",
    "pk": 25,
    "fields": {
-      "form_tag": "irfResourcesBangladesh",
+      "form_tag": "replaceMe25",
       "category_type": 1,
       "description": "Resources/Safety for IRF Bangladesh"
    }
@@ -1484,7 +1497,7 @@
    "model": "dataentry.category",
    "pk": 33,
    "fields": {
-      "form_tag": "irfResourcesMailawi",
+      "form_tag": "replaceMe33",
       "category_type": 1,
       "description": "Resources/Safety for IRF Malawi"
    }
@@ -1493,7 +1506,7 @@
    "model": "dataentry.category",
    "pk": 38,
    "fields": {
-      "form_tag": "cifTopBoxNepal",
+      "form_tag": "replaceMe38",
       "category_type": 1,
       "description": "Top for CIF Nepal"
    }
@@ -1502,7 +1515,7 @@
    "model": "dataentry.category",
    "pk": 39,
    "fields": {
-      "form_tag": "cifMainPvNepal",
+      "form_tag": "replaceMe39",
       "category_type": 1,
       "description": "Main PV for CIF Nepal"
    }
@@ -1511,7 +1524,7 @@
    "model": "dataentry.category",
    "pk": 40,
    "fields": {
-      "form_tag": "cifOtherPvs",
+      "form_tag": "replaceMe40",
       "category_type": 2,
       "description": "OtherPotentialVictims - common CIF"
    }
@@ -1520,7 +1533,7 @@
    "model": "dataentry.category",
    "pk": 41,
    "fields": {
-      "form_tag": "cifRecruitmentNepal",
+      "form_tag": "replaceMe41",
       "category_type": 1,
       "description": "Recruitment for CIF Nepal"
    }
@@ -1529,7 +1542,7 @@
    "model": "dataentry.category",
    "pk": 42,
    "fields": {
-      "form_tag": "cifTravelNepal",
+      "form_tag": "replaceMe42",
       "category_type": 1,
       "description": "Travel for CIF Nepal"
    }
@@ -1538,7 +1551,7 @@
    "model": "dataentry.category",
    "pk": 43,
    "fields": {
-      "form_tag": "cifTransportation",
+      "form_tag": "replaceMe43",
       "category_type": 2,
       "description": "Transportations - common CIF"
    }
@@ -1547,7 +1560,7 @@
    "model": "dataentry.category",
    "pk": 44,
    "fields": {
-      "form_tag": "cifLegalNepal",
+      "form_tag": "replaceMe44",
       "category_type": 1,
       "description": "Legal for CIF Nepal"
    }
@@ -1556,7 +1569,7 @@
    "model": "dataentry.category",
    "pk": 45,
    "fields": {
-      "form_tag": "cifPersonBoxNepal",
+      "form_tag": "replaceMe45",
       "category_type": 2,
       "description": "PersonBoxes for CIF Nepal"
    }
@@ -1565,7 +1578,7 @@
    "model": "dataentry.category",
    "pk": 46,
    "fields": {
-      "form_tag": "cifLocationBoxNepal",
+      "form_tag": "replaceMe46",
       "category_type": 2,
       "description": "LocationBoxes for CIF Nepal"
    }
@@ -1574,7 +1587,7 @@
    "model": "dataentry.category",
    "pk": 47,
    "fields": {
-      "form_tag": "cifVehicleBox",
+      "form_tag": "replaceMe47",
       "category_type": 2,
       "description": "VehicleBoxes - common CIF"
    }
@@ -1583,7 +1596,7 @@
    "model": "dataentry.category",
    "pk": 48,
    "fields": {
-      "form_tag": "cifFinalNepal",
+      "form_tag": "replaceMe48",
       "category_type": 1,
       "description": "Final for CIF Nepal"
    }
@@ -1592,7 +1605,7 @@
    "model": "dataentry.category",
    "pk": 57,
    "fields": {
-      "form_tag": "cifAttachment",
+      "form_tag": "replaceMe57",
       "category_type": 2,
       "description": "Attachments - common CIF"
    }
@@ -1601,7 +1614,7 @@
    "model": "dataentry.category",
    "pk": 58,
    "fields": {
-      "form_tag": "irfAttachment",
+      "form_tag": "replaceMe58",
       "category_type": 2,
       "description": "Attachments - common IRF"
    }
@@ -1610,7 +1623,7 @@
    "model": "dataentry.category",
    "pk": 61,
    "fields": {
-      "form_tag": "vdfTopBox",
+      "form_tag": "replaceMe61",
       "category_type": 1,
       "description": "Top Box - common VDF"
    }
@@ -1619,7 +1632,7 @@
    "model": "dataentry.category",
    "pk": 62,
    "fields": {
-      "form_tag": "vdfVictim",
+      "form_tag": "replaceMe62",
       "category_type": 1,
       "description": "Victim/Family Info - common VDF"
    }
@@ -1628,7 +1641,7 @@
    "model": "dataentry.category",
    "pk": 67,
    "fields": {
-      "form_tag": "vdfAttachment",
+      "form_tag": "replaceMe67",
       "category_type": 2,
       "description": "Attachments - common VDF"
    }
@@ -1637,7 +1650,7 @@
    "model": "dataentry.category",
    "pk": 68,
    "fields": {
-      "form_tag": "cifTopBoxIndia",
+      "form_tag": "replaceMe68",
       "category_type": 1,
       "description": "Top for CIF India"
    }
@@ -1646,7 +1659,7 @@
    "model": "dataentry.category",
    "pk": 69,
    "fields": {
-      "form_tag": "cifMainPvIndia",
+      "form_tag": "replaceMe69",
       "category_type": 1,
       "description": "Main PV for CIF India"
    }
@@ -1655,7 +1668,7 @@
    "model": "dataentry.category",
    "pk": 71,
    "fields": {
-      "form_tag": "cifRecruitmentIndia",
+      "form_tag": "replaceMe71",
       "category_type": 1,
       "description": "Recruitment for CIF India"
    }
@@ -1664,7 +1677,7 @@
    "model": "dataentry.category",
    "pk": 72,
    "fields": {
-      "form_tag": "cifTravelIndia",
+      "form_tag": "replaceMe72",
       "category_type": 1,
       "description": "Travel for CIF India"
    }
@@ -1673,7 +1686,7 @@
    "model": "dataentry.category",
    "pk": 74,
    "fields": {
-      "form_tag": "cifLegalIndia",
+      "form_tag": "replaceMe74",
       "category_type": 1,
       "description": "Legal for CIF India"
    }
@@ -1682,7 +1695,7 @@
    "model": "dataentry.category",
    "pk": 75,
    "fields": {
-      "form_tag": "cifPersonBoxIndia",
+      "form_tag": "replaceMe75",
       "category_type": 2,
       "description": "PersonBoxes for CIF India"
    }
@@ -1691,7 +1704,7 @@
    "model": "dataentry.category",
    "pk": 76,
    "fields": {
-      "form_tag": "cifLocationIndia",
+      "form_tag": "replaceMe76",
       "category_type": 2,
       "description": "LocationBoxes for CIF India"
    }
@@ -1700,7 +1713,7 @@
    "model": "dataentry.category",
    "pk": 78,
    "fields": {
-      "form_tag": "cifFinalIndia",
+      "form_tag": "replaceMe78",
       "category_type": 1,
       "description": "Final for CIF India"
    }
@@ -1709,7 +1722,7 @@
    "model": "dataentry.category",
    "pk": 87,
    "fields": {
-      "form_tag": "cifTopBoxBangladesh",
+      "form_tag": "replaceMe87",
       "category_type": 1,
       "description": "Top for CIF Bangladesh"
    }
@@ -1718,7 +1731,7 @@
    "model": "dataentry.category",
    "pk": 88,
    "fields": {
-      "form_tag": "cifMainPvBangladesh",
+      "form_tag": "replaceMe88",
       "category_type": 1,
       "description": "Main PV for CIF Bangladesh"
    }
@@ -1727,7 +1740,7 @@
    "model": "dataentry.category",
    "pk": 90,
    "fields": {
-      "form_tag": "cifRecuritmentBangladesh",
+      "form_tag": "replaceMe90",
       "category_type": 1,
       "description": "Recruitment for CIF Bangladesh"
    }
@@ -1736,7 +1749,7 @@
    "model": "dataentry.category",
    "pk": 91,
    "fields": {
-      "form_tag": "cifTravleBangladesh",
+      "form_tag": "replaceMe91",
       "category_type": 1,
       "description": "Travel for CIF Bangladesh"
    }
@@ -1745,7 +1758,7 @@
    "model": "dataentry.category",
    "pk": 93,
    "fields": {
-      "form_tag": "cifLegalBangladesh",
+      "form_tag": "replaceMe93",
       "category_type": 1,
       "description": "Legal for CIF Bangladesh"
    }
@@ -1754,7 +1767,7 @@
    "model": "dataentry.category",
    "pk": 94,
    "fields": {
-      "form_tag": "cifPersonBoxBangladesh",
+      "form_tag": "replaceMe94",
       "category_type": 2,
       "description": "PersonBoxes for CIF Bangladesh"
    }
@@ -1763,7 +1776,7 @@
    "model": "dataentry.category",
    "pk": 95,
    "fields": {
-      "form_tag": "cifLocationBoxBangladesh",
+      "form_tag": "replaceMe95",
       "category_type": 2,
       "description": "LocationBoxes for CIF Bangladesh"
    }
@@ -1772,7 +1785,7 @@
    "model": "dataentry.category",
    "pk": 97,
    "fields": {
-      "form_tag": "cifFinalBangladesh",
+      "form_tag": "replaceMe97",
       "category_type": 1,
       "description": "Final for CIF Bangladesh"
    }
@@ -1781,7 +1794,7 @@
    "model": "dataentry.category",
    "pk": 107,
    "fields": {
-      "form_tag": "cifTopBoxAfrica",
+      "form_tag": "replaceMe107",
       "category_type": 1,
       "description": "Top for CIF Africa Region"
    }
@@ -1790,7 +1803,7 @@
    "model": "dataentry.category",
    "pk": 108,
    "fields": {
-      "form_tag": "cifMainPvAfrica",
+      "form_tag": "replaceMe108",
       "category_type": 1,
       "description": "Main PV for CIF Africa Region"
    }
@@ -1799,7 +1812,7 @@
    "model": "dataentry.category",
    "pk": 110,
    "fields": {
-      "form_tag": "cifRecruitmentAfrica",
+      "form_tag": "replaceMe110",
       "category_type": 1,
       "description": "Recruitment for CIF Africa Region"
    }
@@ -1808,7 +1821,7 @@
    "model": "dataentry.category",
    "pk": 111,
    "fields": {
-      "form_tag": "cifTravelAfrica",
+      "form_tag": "replaceMe111",
       "category_type": 1,
       "description": "Travel for CIF Africa Region"
    }
@@ -1817,7 +1830,7 @@
    "model": "dataentry.category",
    "pk": 113,
    "fields": {
-      "form_tag": "cifLegalAfrica",
+      "form_tag": "replaceMe113",
       "category_type": 1,
       "description": "Legal for CIF Africa Region"
    }
@@ -1826,7 +1839,7 @@
    "model": "dataentry.category",
    "pk": 114,
    "fields": {
-      "form_tag": "cirPersonBoxAfrica",
+      "form_tag": "replaceMe114",
       "category_type": 2,
       "description": "PersonBoxes for CIF Africa Region"
    }
@@ -1835,7 +1848,7 @@
    "model": "dataentry.category",
    "pk": 115,
    "fields": {
-      "form_tag": "cifLocationBoxAfrica",
+      "form_tag": "replaceMe115",
       "category_type": 2,
       "description": "LocationBoxes for CIF Africa Region"
    }
@@ -1844,7 +1857,7 @@
    "model": "dataentry.category",
    "pk": 117,
    "fields": {
-      "form_tag": "cifFinalAfrica",
+      "form_tag": "replaceMe117",
       "category_type": 1,
       "description": "Final for CIF Africa Region"
    }
@@ -1853,7 +1866,7 @@
    "model": "dataentry.category",
    "pk": 118,
    "fields": {
-      "form_tag": "irfResourcesBenin",
+      "form_tag": "replaceMe118",
       "category_type": 1,
       "description": "Resources/Safety for IRF Benin"
    }
@@ -1862,7 +1875,7 @@
    "model": "dataentry.category",
    "pk": 124,
    "fields": {
-      "form_tag": "irfResourcesUganda",
+      "form_tag": "replaceMe124",
       "category_type": 1,
       "description": "Resources/Safety for IRF Uganda"
    }
@@ -1871,7 +1884,7 @@
    "model": "dataentry.category",
    "pk": 128,
    "fields": {
-      "form_tag": "irfProfile",
+      "form_tag": "replaceMe128",
       "category_type": 1,
       "description": "Profile for IRF common"
    }
@@ -1880,7 +1893,7 @@
    "model": "dataentry.category",
    "pk": 130,
    "fields": {
-      "form_tag": "irfResourcesKenya",
+      "form_tag": "replaceMe130",
       "category_type": 1,
       "description": "Resources/Safety for IRF Kenya Land"
    }
@@ -1889,7 +1902,7 @@
    "model": "dataentry.category",
    "pk": 133,
    "fields": {
-      "form_tag": "srmGovernance",
+      "form_tag": "replaceMe133",
       "category_type": 1,
       "description": "Governance for common monthly report"
    }
@@ -1898,7 +1911,7 @@
    "model": "dataentry.category",
    "pk": 134,
    "fields": {
-      "form_tag": "smrLogistics",
+      "form_tag": "replaceMe134",
       "category_type": 1,
       "description": "Logistics & Registration for common monthly report"
    }
@@ -1907,7 +1920,7 @@
    "model": "dataentry.category",
    "pk": 135,
    "fields": {
-      "form_tag": "smrHumanResources",
+      "form_tag": "replaceMe135",
       "category_type": 1,
       "description": "Human Resources for common monthly report"
    }
@@ -1916,7 +1929,7 @@
    "model": "dataentry.category",
    "pk": 136,
    "fields": {
-      "form_tag": "smrAwareness",
+      "form_tag": "replaceMe136",
       "category_type": 1,
       "description": "Awareness for common monthly report"
    }
@@ -1925,7 +1938,7 @@
    "model": "dataentry.category",
    "pk": 137,
    "fields": {
-      "form_tag": "smrSecurity",
+      "form_tag": "replaceMe137",
       "category_type": 1,
       "description": "Security for common monthly report"
    }
@@ -1934,7 +1947,7 @@
    "model": "dataentry.category",
    "pk": 138,
    "fields": {
-      "form_tag": "smrAccounting",
+      "form_tag": "replaceMe138",
       "category_type": 1,
       "description": "Accounting for common monthly report"
    }
@@ -1943,7 +1956,7 @@
    "model": "dataentry.category",
    "pk": 139,
    "fields": {
-      "form_tag": "smrVictimEngagement",
+      "form_tag": "replaceMe139",
       "category_type": 1,
       "description": "Victim Enagement for common monthly report"
    }
@@ -1952,7 +1965,7 @@
    "model": "dataentry.category",
    "pk": 140,
    "fields": {
-      "form_tag": "smrRecords",
+      "form_tag": "replaceMe140",
       "category_type": 1,
       "description": "Records for common monthly report"
    }
@@ -1961,7 +1974,7 @@
    "model": "dataentry.category",
    "pk": 141,
    "fields": {
-      "form_tag": "smrParalegal",
+      "form_tag": "replaceMe141",
       "category_type": 1,
       "description": "Paralegal for common monthly report"
    }
@@ -1970,7 +1983,7 @@
    "model": "dataentry.category",
    "pk": 142,
    "fields": {
-      "form_tag": "smrAftercareIndia",
+      "form_tag": "replaceMe142",
       "category_type": 1,
       "description": "Aftercare for India monthly report"
    }
@@ -1979,7 +1992,7 @@
    "model": "dataentry.category",
    "pk": 143,
    "fields": {
-      "form_tag": "smrFinalIndia",
+      "form_tag": "replaceMe143",
       "category_type": 1,
       "description": "Final for India monthly report"
    }
@@ -1988,7 +2001,7 @@
    "model": "dataentry.category",
    "pk": 144,
    "fields": {
-      "form_tag": "smrInvestigations",
+      "form_tag": "replaceMe144",
       "category_type": 1,
       "description": "Investigations for common monthly report"
    }
@@ -1997,7 +2010,7 @@
    "model": "dataentry.category",
    "pk": 146,
    "fields": {
-      "form_tag": "irfResourcesTanzania",
+      "form_tag": "replaceMe146",
       "category_type": 1,
       "description": "Resource/Safety for IRF Tanzania"
    }
@@ -2006,7 +2019,7 @@
    "model": "dataentry.category",
    "pk": 153,
    "fields": {
-      "form_tag": "irfResourcesGhana",
+      "form_tag": "replaceMe153",
       "category_type": 1,
       "description": "Resources/Safety for IRF Ghana"
    }
@@ -2015,7 +2028,7 @@
    "model": "dataentry.category",
    "pk": 157,
    "fields": {
-      "form_tag": "irfResourcesSierraLeone",
+      "form_tag": "replaceMe157",
       "category_type": 1,
       "description": "Resources/Safety for IRF Sierra Leone"
    }
@@ -2024,7 +2037,7 @@
    "model": "dataentry.category",
    "pk": 161,
    "fields": {
-      "form_tag": "cifTopBoxOsi",
+      "form_tag": "replaceMe161",
       "category_type": 1,
       "description": "Top for CIF OSI"
    }
@@ -2033,7 +2046,7 @@
    "model": "dataentry.category",
    "pk": 162,
    "fields": {
-      "form_tag": "cifMainPvOsi",
+      "form_tag": "replaceMe162",
       "category_type": 1,
       "description": "Main PV for CIF OSI"
    }
@@ -2042,7 +2055,7 @@
    "model": "dataentry.category",
    "pk": 163,
    "fields": {
-      "form_tag": "cifRecuitmentOsi",
+      "form_tag": "replaceMe163",
       "category_type": 1,
       "description": "Recruitment for CIF OSI"
    }
@@ -2051,7 +2064,7 @@
    "model": "dataentry.category",
    "pk": 164,
    "fields": {
-      "form_tag": "cifTravelOsi",
+      "form_tag": "replaceMe164",
       "category_type": 1,
       "description": "Travel for CIF OSI"
    }
@@ -2060,7 +2073,7 @@
    "model": "dataentry.category",
    "pk": 165,
    "fields": {
-      "form_tag": "cifLegalOsi",
+      "form_tag": "replaceMe165",
       "category_type": 1,
       "description": "Legal for CIF India OSI"
    }
@@ -2069,7 +2082,7 @@
    "model": "dataentry.category",
    "pk": 166,
    "fields": {
-      "form_tag": "cifPersonBoxOsi",
+      "form_tag": "replaceMe166",
       "category_type": 2,
       "description": "PersonBoxes for CIF OSI"
    }
@@ -2078,7 +2091,7 @@
    "model": "dataentry.category",
    "pk": 167,
    "fields": {
-      "form_tag": "cifLocationBoxOsi",
+      "form_tag": "replaceMe167",
       "category_type": 2,
       "description": "LocationBoxes for CIF OSI"
    }
@@ -2087,7 +2100,7 @@
    "model": "dataentry.category",
    "pk": 168,
    "fields": {
-      "form_tag": "cifFinalOsi",
+      "form_tag": "replaceMe168",
       "category_type": 1,
       "description": "Final for CIF OSI"
    }
@@ -2096,7 +2109,7 @@
    "model": "dataentry.category",
    "pk": 169,
    "fields": {
-      "form_tag": "cifCompliance",
+      "form_tag": "replaceMe169",
       "category_type": 1,
       "description": "Compliance  for common CIF"
    }
@@ -2105,7 +2118,7 @@
    "model": "dataentry.category",
    "pk": 170,
    "fields": {
-      "form_tag": "vdfCompliance",
+      "form_tag": "replaceMe170",
       "category_type": 1,
       "description": "Compliance for common VDF"
    }
@@ -2114,7 +2127,7 @@
    "model": "dataentry.category",
    "pk": 173,
    "fields": {
-      "form_tag": "irfResourcesCambodia",
+      "form_tag": "replaceMe173",
       "category_type": 1,
       "description": "Resources/Safety for IRF Cambodia"
    }
@@ -2123,7 +2136,7 @@
    "model": "dataentry.category",
    "pk": 178,
    "fields": {
-      "form_tag": "irfResourcesZimbabwe",
+      "form_tag": "replaceMe178",
       "category_type": 1,
       "description": "Resources/Safety for IRF Zimbabwe"
    }
@@ -2132,7 +2145,7 @@
    "model": "dataentry.category",
    "pk": 183,
    "fields": {
-      "form_tag": "irfResourcesRwanda",
+      "form_tag": "replaceMe183",
       "category_type": 1,
       "description": "Resources/Safety for IRF Rwanda"
    }
@@ -2141,7 +2154,7 @@
    "model": "dataentry.category",
    "pk": 184,
    "fields": {
-      "form_tag": "irfIntercepteeWithConsent",
+      "form_tag": "replaceMe184",
       "category_type": 2,
       "description": "Interceptee with consent"
    }
@@ -2150,7 +2163,7 @@
    "model": "dataentry.category",
    "pk": 188,
    "fields": {
-      "form_tag": "smrAttachment",
+      "form_tag": "replaceMe188",
       "category_type": 2,
       "description": "Attachments - common Monthly Report"
    }
@@ -2159,7 +2172,7 @@
    "model": "dataentry.category",
    "pk": 190,
    "fields": {
-      "form_tag": "irfArea",
+      "form_tag": "replaceMe190",
       "category_type": 1,
       "description": "Area/Industry for common IRF"
    }
@@ -2168,7 +2181,7 @@
    "model": "dataentry.category",
    "pk": 191,
    "fields": {
-      "form_tag": "irfResourcesIndiaNetwork",
+      "form_tag": "replaceMe191",
       "category_type": 1,
       "description": "Resources/Safety for India Network"
    }
@@ -2177,7 +2190,7 @@
    "model": "dataentry.category",
    "pk": 192,
    "fields": {
-      "form_tag": "irfControl",
+      "form_tag": "replaceMe192",
       "category_type": 1,
       "description": "Control common IRF"
    }
@@ -2186,7 +2199,7 @@
    "model": "dataentry.category",
    "pk": 193,
    "fields": {
-      "form_tag": "irfContact",
+      "form_tag": "replaceMe193",
       "category_type": 1,
       "description": "Contact/Staff common IRF"
    }
@@ -2195,7 +2208,7 @@
    "model": "dataentry.category",
    "pk": 194,
    "fields": {
-      "form_tag": "irfFinal",
+      "form_tag": "replaceMe194",
       "category_type": 1,
       "description": "Final common IRF"
    }
@@ -2204,7 +2217,7 @@
    "model": "dataentry.category",
    "pk": 196,
    "fields": {
-      "form_tag": "borderStationDetail",
+      "form_tag": "replaceMe196",
       "category_type": 1,
       "description": "Detail for Border Station"
    }
@@ -2213,7 +2226,7 @@
    "model": "dataentry.category",
    "pk": 197,
    "fields": {
-      "form_tag": "borderStationCommittee",
+      "form_tag": "replaceMe197",
       "category_type": 2,
       "description": "Committee Member for Border Station"
    }
@@ -2222,7 +2235,7 @@
    "model": "dataentry.category",
    "pk": 198,
    "fields": {
-      "form_tag": "borderStationStaff",
+      "form_tag": "replaceMe198",
       "category_type": 2,
       "description": "Staff for Border Station"
    }
@@ -2231,7 +2244,7 @@
    "model": "dataentry.category",
    "pk": 199,
    "fields": {
-      "form_tag": "borderStationLocation",
+      "form_tag": "replaceMe199",
       "category_type": 2,
       "description": "Location for Border Station"
    }
@@ -2240,7 +2253,7 @@
    "model": "dataentry.category",
    "pk": 200,
    "fields": {
-      "form_tag": "borderStationForms",
+      "form_tag": "replaceMe200",
       "category_type": 1,
       "description": "Forms for Border Station"
    }
@@ -2249,7 +2262,7 @@
    "model": "dataentry.category",
    "pk": 201,
    "fields": {
-      "form_tag": "vdfHomeSituationV2",
+      "form_tag": "replaceMe201",
       "category_type": 1,
       "description": "Home Situation Assessment  - common VDF V2"
    }
@@ -2258,7 +2271,7 @@
    "model": "dataentry.category",
    "pk": 202,
    "fields": {
-      "form_tag": "vdfAwarenessV2",
+      "form_tag": "replaceMe202",
       "category_type": 1,
       "description": "Awareness/Assessment - common VDF V2"
    }
@@ -2267,7 +2280,7 @@
    "model": "dataentry.category",
    "pk": 203,
    "fields": {
-      "form_tag": "vdfReleaseV2",
+      "form_tag": "replaceMe203",
       "category_type": 1,
       "description": "Release Information - common VDF V2"
    }
@@ -2276,7 +2289,7 @@
    "model": "dataentry.category",
    "pk": 205,
    "fields": {
-      "form_tag": "vdfFinalV2",
+      "form_tag": "replaceMe205",
       "category_type": 1,
       "description": "Final Procedures - common VDF V2"
    }
@@ -2285,7 +2298,7 @@
    "model": "dataentry.category",
    "pk": 206,
    "fields": {
-      "form_tag": "irfResourcesUsa",
+      "form_tag": "replaceMe206",
       "category_type": 1,
       "description": "Resources/Safety for IRF USA"
    }
@@ -2294,7 +2307,7 @@
    "model": "dataentry.category",
    "pk": 207,
    "fields": {
-      "form_tag": "irfResourcesIndonesia",
+      "form_tag": "replaceMe207",
       "category_type": 1,
       "description": "Resources/Safety for IRF Indonesia"
    }
@@ -2303,7 +2316,7 @@
    "model": "dataentry.category",
    "pk": 208,
    "fields": {
-      "form_tag": "legalMain",
+      "form_tag": "replaceMe208",
       "category_type": 1,
       "description": "Legal Case"
    }
@@ -2312,7 +2325,7 @@
    "model": "dataentry.category",
    "pk": 209,
    "fields": {
-      "form_tag": "legalSuspect",
+      "form_tag": "replaceMe209",
       "category_type": 2,
       "description": "Legal Case Suspect"
    }
@@ -2321,7 +2334,7 @@
    "model": "dataentry.category",
    "pk": 210,
    "fields": {
-      "form_tag": "legalVictim",
+      "form_tag": "replaceMe210",
       "category_type": 2,
       "description": "Legal Case Victim"
    }
@@ -2330,7 +2343,7 @@
    "model": "dataentry.category",
    "pk": 211,
    "fields": {
-      "form_tag": "legalAttachment",
+      "form_tag": "replaceMe211",
       "category_type": 2,
       "description": "Legal Case Attachment"
    }
@@ -2339,7 +2352,7 @@
    "model": "dataentry.category",
    "pk": 212,
    "fields": {
-      "form_tag": "gospelVerification",
+      "form_tag": "replaceMe212",
       "category_type": 1,
       "description": "Gospel Verification"
    }
@@ -2348,7 +2361,7 @@
    "model": "dataentry.category",
    "pk": 213,
    "fields": {
-      "form_tag": "legalTimeline",
+      "form_tag": "replaceMe213",
       "category_type": 2,
       "description": "Legal Case Timeline"
    }
@@ -2357,7 +2370,7 @@
    "model": "dataentry.category",
    "pk": 214,
    "fields": {
-      "form_tag": "irfCompliance",
+      "form_tag": "replaceMe214",
       "category_type": 1,
       "description": "Compliance for common IRF"
    }
@@ -2366,7 +2379,7 @@
    "model": "dataentry.category",
    "pk": 215,
    "fields": {
-      "form_tag": "irfVerification",
+      "form_tag": "replaceMe215",
       "category_type": 1,
       "description": "Verification for common IRF"
    }
@@ -2375,16 +2388,16 @@
    "model": "dataentry.category",
    "pk": 216,
    "fields": {
-      "form_tag": "irfResourcesLesotho",
+      "form_tag": "replaceMe216",
       "category_type": 1,
-      "description": "Resources for IRF Lesotho"
+      "description": "Group for IRF Lesotho"
    }
 },
 {
    "model": "dataentry.category",
    "pk": 217,
    "fields": {
-      "form_tag": "irfResourcesMozambique",
+      "form_tag": "replaceMe217",
       "category_type": 1,
       "description": "Resources/Safety for IRF Mozambique"
    }
@@ -2393,7 +2406,7 @@
    "model": "dataentry.category",
    "pk": 218,
    "fields": {
-      "form_tag": "vdfHomeSituationV2021.6",
+      "form_tag": "replaceMe218",
       "category_type": 1,
       "description": "Home Situation Assessment  - common VDF V2021.6"
    }
@@ -2402,7 +2415,7 @@
    "model": "dataentry.category",
    "pk": 219,
    "fields": {
-      "form_tag": "vdfAwarenessV2021.6",
+      "form_tag": "replaceMe219",
       "category_type": 1,
       "description": "Awareness/Assessment - common VDF V2021.6"
    }
@@ -2411,7 +2424,7 @@
    "model": "dataentry.category",
    "pk": 220,
    "fields": {
-      "form_tag": "vdfReleaseV2021.6",
+      "form_tag": "replaceMe220",
       "category_type": 1,
       "description": "Release Information - common VDF V2021.6"
    }
@@ -2420,7 +2433,7 @@
    "model": "dataentry.category",
    "pk": 222,
    "fields": {
-      "form_tag": "vdfFinalV2021.6",
+      "form_tag": "replaceMe222",
       "category_type": 1,
       "description": "Final Procedures - common VDF V2021.6"
    }
@@ -2429,7 +2442,7 @@
    "model": "dataentry.category",
    "pk": 223,
    "fields": {
-      "form_tag": "vdfVictimV2021.6",
+      "form_tag": "replaceMe223",
       "category_type": 1,
       "description": "Victim/Family Info - common VDF V2021.6"
    }
@@ -2438,7 +2451,7 @@
    "model": "dataentry.category",
    "pk": 224,
    "fields": {
-      "form_tag": "irfResourcesLiberia",
+      "form_tag": "replaceMe224",
       "category_type": 1,
       "description": "Resources/Safety for IRF Liberia"
    }
@@ -2447,7 +2460,7 @@
    "model": "dataentry.category",
    "pk": 225,
    "fields": {
-      "form_tag": "irfResourcesBurkinaFaso",
+      "form_tag": "replaceMe225",
       "category_type": 1,
       "description": "Resources/Safety for IRF Burkina Faso"
    }
@@ -2456,7 +2469,7 @@
    "model": "dataentry.category",
    "pk": 226,
    "fields": {
-      "form_tag": "irfControlLiberia",
+      "form_tag": "replaceMe226",
       "category_type": 1,
       "description": "Control for IRF Liberia"
    }
@@ -2465,7 +2478,7 @@
    "model": "dataentry.category",
    "pk": 227,
    "fields": {
-      "form_tag": "irfResourcesZambia",
+      "form_tag": "replaceMe227",
       "category_type": 1,
       "description": "Resources/Safety for IRF Zambia"
    }
@@ -2474,7 +2487,7 @@
    "model": "dataentry.category",
    "pk": 228,
    "fields": {
-      "form_tag": "irfControlBurundi",
+      "form_tag": "replaceMe228",
       "category_type": 1,
       "description": "Control for IRF Burundi"
    }
@@ -2483,7 +2496,7 @@
    "model": "dataentry.category",
    "pk": 229,
    "fields": {
-      "form_tag": "irfResourcesBurundi",
+      "form_tag": "replaceMe229",
       "category_type": 1,
       "description": "Resources/Safety for IRF Burundi"
    }
@@ -2492,7 +2505,7 @@
    "model": "dataentry.category",
    "pk": 230,
    "fields": {
-      "form_tag": "irfResourcesEcuador",
+      "form_tag": "replaceMe230",
       "category_type": 1,
       "description": "Resources/Safety for IRF Ecuador"
    }
@@ -2501,27 +2514,9 @@
    "model": "dataentry.category",
    "pk": 231,
    "fields": {
-      "form_tag": "irfControlIndonesia",
+      "form_tag": "replaceMe231",
       "category_type": 1,
       "description": "Control for IRF Ecuador & Indonesia"
-   }
-},
-{
-   "model": "dataentry.category",
-   "pk": 232,
-   "fields": {
-      "form_tag": "irfBlindVerificationCard",
-      "category_type": 2,
-      "description": "Verification Card"
-   }
-},
-{
-   "model": "dataentry.category",
-   "pk": 233,
-   "fields": {
-      "form_tag": "irfBlindVerificationMain",
-      "category_type": 1,
-      "description": "Verification IRF Main"
    }
 },
 {
@@ -13599,6 +13594,17 @@
 {
    "model": "dataentry.formcategory",
    "fields": {
+      "form": 1,
+      "category": 215,
+      "name": "Verification",
+      "order": 11,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
       "form": 26,
       "category": 1,
       "name": "Top Box",
@@ -14912,28 +14918,6 @@
       "category": 215,
       "name": "Verification",
       "order": 11,
-      "form_category_question_config": null,
-      "storage": null
-   }
-},
-{
-   "model": "dataentry.formcategory",
-   "fields": {
-      "form": 1,
-      "category": 232,
-      "name": "Verification",
-      "order": 11,
-      "form_category_question_config": null,
-      "storage": 204
-   }
-},
-{
-   "model": "dataentry.formcategory",
-   "fields": {
-      "form": 1,
-      "category": 233,
-      "name": "Verificaton Main",
-      "order": 12,
       "form_category_question_config": null,
       "storage": null
    }
@@ -23017,97 +23001,6 @@
    }
 },
 {
-   "model": "dataentry.question",
-   "pk": 1088,
-   "fields": {
-      "form_tag": "question1088",
-      "prompt": "Verification type",
-      "description": null,
-      "answer_type": 2,
-      "params": null,
-      "export_name": "Verification type",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "pk": 1089,
-   "fields": {
-      "form_tag": "question1089",
-      "prompt": "Follow-up call",
-      "description": null,
-      "answer_type": 1,
-      "params": null,
-      "export_name": "Follow-up call",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "pk": 1090,
-   "fields": {
-      "form_tag": "question1090",
-      "prompt": "Follow-up detail",
-      "description": null,
-      "answer_type": 1,
-      "params": null,
-      "export_name": "Follow-up detail",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "pk": 1091,
-   "fields": {
-      "form_tag": "question1091",
-      "prompt": "Evidence category",
-      "description": null,
-      "answer_type": 1,
-      "params": null,
-      "export_name": "Evidence category",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "pk": 1092,
-   "fields": {
-      "form_tag": "question1092",
-      "prompt": "Reason",
-      "description": null,
-      "answer_type": 1,
-      "params": null,
-      "export_name": "Reason",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "pk": 1093,
-   "fields": {
-      "form_tag": "question1093",
-      "prompt": "Verified date",
-      "description": null,
-      "answer_type": 9,
-      "params": null,
-      "export_name": "Verified date",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "pk": 1094,
-   "fields": {
-      "form_tag": "question1094",
-      "prompt": "Verifier",
-      "description": null,
-      "answer_type": 2,
-      "params": null,
-      "export_name": "Verifier",
-      "export_params": null
-   }
-},
-{
    "model": "dataentry.questionlayout",
    "fields": {
       "question": 1,
@@ -24956,7 +24849,7 @@
       "category": 57,
       "weight": 0,
       "form_config": {
-         "IndexQuestion": "question_identifier"
+         "IndexQuestion": 610
       }
    }
 },
@@ -24985,7 +24878,7 @@
       "category": 58,
       "weight": 0,
       "form_config": {
-         "IndexQuestion": "question_identifier"
+         "IndexQuestion": 610
       }
    }
 },
@@ -25050,7 +24943,7 @@
       "category": 67,
       "weight": 0,
       "form_config": {
-         "IndexQuestion": "question_identifier"
+         "IndexQuestion": 610
       }
    }
 },
@@ -32909,7 +32802,7 @@
       "category": 188,
       "weight": 0,
       "form_config": {
-         "IndexQuestion": "question_identifier"
+         "IndexQuestion": 610
       }
    }
 },
@@ -33623,7 +33516,7 @@
       "category": 194,
       "weight": 0,
       "form_config": {
-         "TotalFlagId": "question_identifier"
+         "TotalFlagId": 144
       }
    }
 },
@@ -35873,7 +35766,7 @@
       "category": 18,
       "weight": 0,
       "form_config": {
-         "TotalFlagId": "question_identifier"
+         "TotalFlagId": 144
       }
    }
 },
@@ -36961,7 +36854,7 @@
       "category": 211,
       "weight": 0,
       "form_config": {
-         "IndexQuestion": "question_identifier"
+         "IndexQuestion": 610
       }
    }
 },
@@ -41185,87 +41078,6 @@
    }
 },
 {
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 1088,
-      "category": 232,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 1089,
-      "category": 232,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 1090,
-      "category": 232,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 1091,
-      "category": 232,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 1092,
-      "category": 232,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 1093,
-      "category": 232,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 1094,
-      "category": 232,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 819,
-      "category": 233,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 821,
-      "category": 233,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
    "model": "dataentry.questionstorage",
    "fields": {
       "question": 1,
@@ -44048,7 +43860,7 @@
    "model": "dataentry.questionstorage",
    "fields": {
       "question": 819,
-      "field_name": "verified_evidence_categorization"
+      "field_name": "logbook_second_verification"
    }
 },
 {
@@ -44062,7 +43874,7 @@
    "model": "dataentry.questionstorage",
    "fields": {
       "question": 821,
-      "field_name": "verified_date"
+      "field_name": "logbook_second_verification_date"
    }
 },
 {
@@ -45417,55 +45229,6 @@
    }
 },
 {
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": 1088,
-      "field_name": "verification_type"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": 1089,
-      "field_name": "followup_call"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": 1090,
-      "field_name": "followup_details"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": 1091,
-      "field_name": "evidence_categorization"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": 1092,
-      "field_name": "reason"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": 1093,
-      "field_name": "verified_date"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": 1094,
-      "field_name": "verifier_id"
-   }
-},
-{
    "model": "dataentry.answer",
    "fields": {
       "question": 82,
@@ -46472,7 +46235,7 @@
    "model": "dataentry.formvalidation",
    "pk": 1,
    "fields": {
-      "form_tag": "irfFormNumberStartWithStationCode",
+      "form_tag": "replaceMe1",
       "level": 1,
       "trigger": null,
       "trigger_value": null,
@@ -46482,9 +46245,14 @@
       "retrieve": false,
       "update": true,
       "forms": [
+         64,
          1,
          2,
+         65,
          4,
+         66,
+         69,
+         70,
          8,
          9,
          17,
@@ -46501,12 +46269,7 @@
          54,
          55,
          59,
-         60,
-         64,
-         65,
-         66,
-         69,
-         70
+         60
       ]
    }
 },
@@ -46514,7 +46277,7 @@
    "model": "dataentry.formvalidation",
    "pk": 2,
    "fields": {
-      "form_tag": "irfPvNumberMatchCards",
+      "form_tag": "replaceMe2",
       "level": 2,
       "trigger": null,
       "trigger_value": null,
@@ -46524,9 +46287,14 @@
       "retrieve": false,
       "update": true,
       "forms": [
+         64,
          1,
          2,
+         65,
          4,
+         66,
+         69,
+         70,
          8,
          9,
          17,
@@ -46543,12 +46311,7 @@
          54,
          55,
          59,
-         60,
-         64,
-         65,
-         66,
-         69,
-         70
+         60
       ]
    }
 },
@@ -46556,7 +46319,7 @@
    "model": "dataentry.formvalidation",
    "pk": 3,
    "fields": {
-      "form_tag": "irfSuspectNumberMatchCards",
+      "form_tag": "replaceMe3",
       "level": 3,
       "trigger": null,
       "trigger_value": null,
@@ -46566,9 +46329,14 @@
       "retrieve": false,
       "update": true,
       "forms": [
+         64,
          1,
          2,
+         65,
          4,
+         66,
+         69,
+         70,
          8,
          9,
          17,
@@ -46585,12 +46353,7 @@
          54,
          55,
          59,
-         60,
-         64,
-         65,
-         66,
-         69,
-         70
+         60
       ]
    }
 },
@@ -46598,7 +46361,7 @@
    "model": "dataentry.formvalidation",
    "pk": 4,
    "fields": {
-      "form_tag": "irfLocationEntered",
+      "form_tag": "replaceMe4",
       "level": 3,
       "trigger": null,
       "trigger_value": null,
@@ -46608,9 +46371,14 @@
       "retrieve": false,
       "update": true,
       "forms": [
+         64,
          1,
          2,
+         65,
          4,
+         66,
+         69,
+         70,
          8,
          9,
          17,
@@ -46628,12 +46396,7 @@
          55,
          56,
          59,
-         60,
-         64,
-         65,
-         66,
-         69,
-         70
+         60
       ]
    }
 },
@@ -46641,7 +46404,7 @@
    "model": "dataentry.formvalidation",
    "pk": 5,
    "fields": {
-      "form_tag": "irfStaffEntered",
+      "form_tag": "replaceMe5",
       "level": 2,
       "trigger": null,
       "trigger_value": null,
@@ -46651,9 +46414,14 @@
       "retrieve": false,
       "update": true,
       "forms": [
+         64,
          1,
          2,
+         65,
          4,
+         66,
+         69,
+         70,
          8,
          9,
          17,
@@ -46670,12 +46438,7 @@
          54,
          55,
          59,
-         60,
-         64,
-         65,
-         66,
-         69,
-         70
+         60
       ]
    }
 },
@@ -46683,7 +46446,7 @@
    "model": "dataentry.formvalidation",
    "pk": 7,
    "fields": {
-      "form_tag": "irfContactEntered",
+      "form_tag": "replaceMe7",
       "level": 2,
       "trigger": null,
       "trigger_value": null,
@@ -46693,9 +46456,14 @@
       "retrieve": false,
       "update": true,
       "forms": [
+         64,
          1,
          2,
+         65,
          4,
+         66,
+         69,
+         70,
          8,
          9,
          17,
@@ -46712,12 +46480,7 @@
          54,
          55,
          59,
-         60,
-         64,
-         65,
-         66,
-         69,
-         70
+         60
       ]
    }
 },
@@ -46725,7 +46488,7 @@
    "model": "dataentry.formvalidation",
    "pk": 9,
    "fields": {
-      "form_tag": "irfPrimaryReasonEntered",
+      "form_tag": "replaceMe9",
       "level": 2,
       "trigger": null,
       "trigger_value": null,
@@ -46735,9 +46498,14 @@
       "retrieve": false,
       "update": true,
       "forms": [
+         64,
          1,
          2,
+         65,
          4,
+         66,
+         69,
+         70,
          8,
          17,
          18,
@@ -46753,12 +46521,7 @@
          54,
          55,
          59,
-         60,
-         64,
-         65,
-         66,
-         69,
-         70
+         60
       ]
    }
 },
@@ -46766,7 +46529,7 @@
    "model": "dataentry.formvalidation",
    "pk": 10,
    "fields": {
-      "form_tag": "irfHowSureEntered",
+      "form_tag": "replaceMe10",
       "level": 3,
       "trigger": null,
       "trigger_value": null,
@@ -46776,9 +46539,14 @@
       "retrieve": false,
       "update": true,
       "forms": [
+         64,
          1,
          2,
+         65,
          4,
+         66,
+         69,
+         70,
          8,
          9,
          17,
@@ -46795,12 +46563,7 @@
          54,
          55,
          59,
-         60,
-         64,
-         65,
-         66,
-         69,
-         70
+         60
       ]
    }
 },
@@ -46808,7 +46571,7 @@
    "model": "dataentry.formvalidation",
    "pk": 12,
    "fields": {
-      "form_tag": "irfIntercepteeNameEntered",
+      "form_tag": "replaceMe12",
       "level": 2,
       "trigger": null,
       "trigger_value": null,
@@ -46820,9 +46583,14 @@
       "retrieve": false,
       "update": true,
       "forms": [
+         64,
          1,
          2,
+         65,
          4,
+         66,
+         69,
+         70,
          8,
          9,
          17,
@@ -46839,12 +46607,7 @@
          54,
          55,
          59,
-         60,
-         64,
-         65,
-         66,
-         69,
-         70
+         60
       ]
    }
 },
@@ -46852,7 +46615,7 @@
    "model": "dataentry.formvalidation",
    "pk": 13,
    "fields": {
-      "form_tag": "irfIntercepteeGenderEntered",
+      "form_tag": "replaceMe13",
       "level": 2,
       "trigger": null,
       "trigger_value": null,
@@ -46864,9 +46627,14 @@
       "retrieve": false,
       "update": true,
       "forms": [
+         64,
          1,
          2,
+         65,
          4,
+         66,
+         69,
+         70,
          8,
          9,
          17,
@@ -46883,12 +46651,7 @@
          54,
          55,
          59,
-         60,
-         64,
-         65,
-         66,
-         69,
-         70
+         60
       ]
    }
 },
@@ -46896,7 +46659,7 @@
    "model": "dataentry.formvalidation",
    "pk": 101,
    "fields": {
-      "form_tag": "irfWhyVictimStopped",
+      "form_tag": "replaceMe101",
       "level": 3,
       "trigger": null,
       "trigger_value": null,
@@ -46906,9 +46669,14 @@
       "retrieve": false,
       "update": true,
       "forms": [
+         64,
          1,
          2,
+         65,
          4,
+         66,
+         69,
+         70,
          8,
          9,
          17,
@@ -46925,12 +46693,7 @@
          54,
          55,
          59,
-         60,
-         64,
-         65,
-         66,
-         69,
-         70
+         60
       ]
    }
 },
@@ -46938,7 +46701,7 @@
    "model": "dataentry.formvalidation",
    "pk": 166,
    "fields": {
-      "form_tag": "irfMustBeCurrentOrPriorDate",
+      "form_tag": "replaceMe166",
       "level": 2,
       "trigger": null,
       "trigger_value": null,
@@ -46948,9 +46711,14 @@
       "retrieve": false,
       "update": true,
       "forms": [
+         64,
          1,
          2,
+         65,
          4,
+         66,
+         69,
+         70,
          8,
          9,
          17,
@@ -46967,12 +46735,7 @@
          54,
          55,
          59,
-         60,
-         64,
-         65,
-         66,
-         69,
-         70
+         60
       ]
    }
 },
@@ -46980,7 +46743,7 @@
    "model": "dataentry.formvalidation",
    "pk": 177,
    "fields": {
-      "form_tag": "irfBirthdateMustBeCurrentOrPriorDate",
+      "form_tag": "replaceMe177",
       "level": 2,
       "trigger": null,
       "trigger_value": null,
@@ -46992,9 +46755,14 @@
       "retrieve": false,
       "update": true,
       "forms": [
+         64,
          1,
          2,
+         65,
          4,
+         66,
+         69,
+         70,
          8,
          9,
          17,
@@ -47011,12 +46779,7 @@
          54,
          55,
          59,
-         60,
-         64,
-         65,
-         66,
-         69,
-         70
+         60
       ]
    }
 },
@@ -47024,7 +46787,7 @@
    "model": "dataentry.formvalidation",
    "pk": 185,
    "fields": {
-      "form_tag": "irfDateReceivedMustBeCurrentOrPriorDate",
+      "form_tag": "replaceMe185",
       "level": 3,
       "trigger": null,
       "trigger_value": null,
@@ -47034,9 +46797,14 @@
       "retrieve": true,
       "update": true,
       "forms": [
+         64,
          1,
          2,
+         65,
          4,
+         66,
+         69,
+         70,
          8,
          9,
          17,
@@ -47053,12 +46821,7 @@
          54,
          55,
          59,
-         60,
-         64,
-         65,
-         66,
-         69,
-         70
+         60
       ]
    }
 },
@@ -47066,7 +46829,7 @@
    "model": "dataentry.formvalidation",
    "pk": 214,
    "fields": {
-      "form_tag": "cifFormNumberInvalid",
+      "form_tag": "replaceMe214",
       "level": 3,
       "trigger": null,
       "trigger_value": null,
@@ -47101,7 +46864,7 @@
    "model": "dataentry.formvalidation",
    "pk": 215,
    "fields": {
-      "form_tag": "cifFormNumberStartWithStationCode",
+      "form_tag": "replaceMe215",
       "level": 1,
       "trigger": null,
       "trigger_value": null,
@@ -47134,7 +46897,7 @@
    "model": "dataentry.formvalidation",
    "pk": 238,
    "fields": {
-      "form_tag": "vdfNumberStartWithStationCode",
+      "form_tag": "replaceMe238",
       "level": 1,
       "trigger": null,
       "trigger_value": null,
@@ -47165,7 +46928,7 @@
    "model": "dataentry.formvalidation",
    "pk": 242,
    "fields": {
-      "form_tag": "vdfFormNumberInvalid",
+      "form_tag": "replaceMe242",
       "level": 3,
       "trigger": null,
       "trigger_value": null,
@@ -47198,7 +46961,7 @@
    "model": "dataentry.formvalidation",
    "pk": 276,
    "fields": {
-      "form_tag": "cifMissingOriginalFormAttachment",
+      "form_tag": "replaceMe276",
       "level": 3,
       "trigger": null,
       "trigger_value": null,
@@ -47240,7 +47003,7 @@
    "model": "dataentry.formvalidation",
    "pk": 277,
    "fields": {
-      "form_tag": "irfMissingOriginalFormAttachment",
+      "form_tag": "replaceMe277",
       "level": 3,
       "trigger": null,
       "trigger_value": null,
@@ -47259,9 +47022,14 @@
       "retrieve": false,
       "update": true,
       "forms": [
+         64,
          1,
          2,
+         65,
          4,
+         66,
+         69,
+         70,
          8,
          9,
          17,
@@ -47278,12 +47046,7 @@
          54,
          55,
          59,
-         60,
-         64,
-         65,
-         66,
-         69,
-         70
+         60
       ]
    }
 },
@@ -47291,7 +47054,7 @@
    "model": "dataentry.formvalidation",
    "pk": 278,
    "fields": {
-      "form_tag": "vdfMissingOriginalFormAttachment",
+      "form_tag": "replaceMe278",
       "level": 3,
       "trigger": null,
       "trigger_value": null,
@@ -47331,7 +47094,7 @@
    "model": "dataentry.formvalidation",
    "pk": 341,
    "fields": {
-      "form_tag": "irfJobShoudBeEntered",
+      "form_tag": "replaceMe341",
       "level": 3,
       "trigger": 934,
       "trigger_value": "",
@@ -47341,9 +47104,14 @@
       "retrieve": false,
       "update": true,
       "forms": [
+         64,
          1,
          2,
+         65,
          4,
+         66,
+         69,
+         70,
          8,
          9,
          17,
@@ -47360,12 +47128,7 @@
          54,
          55,
          59,
-         60,
-         64,
-         65,
-         66,
-         69,
-         70
+         60
       ]
    }
 },
@@ -47373,7 +47136,7 @@
    "model": "dataentry.formvalidation",
    "pk": 342,
    "fields": {
-      "form_tag": "irfPromisedPayShouldBeEntered",
+      "form_tag": "replaceMe342",
       "level": 3,
       "trigger": 935,
       "trigger_value": "",
@@ -47383,9 +47146,14 @@
       "retrieve": false,
       "update": true,
       "forms": [
+         64,
          1,
          2,
+         65,
          4,
+         66,
+         69,
+         70,
          8,
          9,
          17,
@@ -47402,12 +47170,7 @@
          54,
          55,
          59,
-         60,
-         64,
-         65,
-         66,
-         69,
-         70
+         60
       ]
    }
 },
@@ -47415,7 +47178,7 @@
    "model": "dataentry.formvalidation",
    "pk": 343,
    "fields": {
-      "form_tag": "irfNormalPayShouldBeEntered",
+      "form_tag": "replaceMe343",
       "level": 3,
       "trigger": 936,
       "trigger_value": "",
@@ -47425,9 +47188,14 @@
       "retrieve": false,
       "update": true,
       "forms": [
+         64,
          1,
          2,
+         65,
          4,
+         66,
+         69,
+         70,
          8,
          9,
          17,
@@ -47444,12 +47212,7 @@
          54,
          55,
          59,
-         60,
-         64,
-         65,
-         66,
-         69,
-         70
+         60
       ]
    }
 },
@@ -47457,7 +47220,7 @@
    "model": "dataentry.formvalidation",
    "pk": 344,
    "fields": {
-      "form_tag": "irfProfileInfoShouldBeEntered",
+      "form_tag": "replaceMe344",
       "level": 3,
       "trigger": null,
       "trigger_value": null,
@@ -47467,9 +47230,14 @@
       "retrieve": false,
       "update": true,
       "forms": [
+         64,
          1,
          2,
+         65,
          4,
+         66,
+         69,
+         70,
          8,
          9,
          17,
@@ -47486,12 +47254,7 @@
          54,
          55,
          59,
-         60,
-         64,
-         65,
-         66,
-         69,
-         70
+         60
       ]
    }
 },
@@ -47499,7 +47262,7 @@
    "model": "dataentry.formvalidation",
    "pk": 345,
    "fields": {
-      "form_tag": "irfAreaInfoShouldBeEntered",
+      "form_tag": "replaceMe345",
       "level": 3,
       "trigger": null,
       "trigger_value": null,
@@ -47509,9 +47272,14 @@
       "retrieve": false,
       "update": true,
       "forms": [
+         64,
          1,
          2,
+         65,
          4,
+         66,
+         69,
+         70,
          8,
          9,
          17,
@@ -47528,12 +47296,7 @@
          54,
          55,
          59,
-         60,
-         64,
-         65,
-         66,
-         69,
-         70
+         60
       ]
    }
 },
@@ -47541,7 +47304,7 @@
    "model": "dataentry.formvalidation",
    "pk": 346,
    "fields": {
-      "form_tag": "irfResourcesInfoShouldBeEntered",
+      "form_tag": "replaceMe346",
       "level": 3,
       "trigger": null,
       "trigger_value": null,
@@ -47551,9 +47314,14 @@
       "retrieve": false,
       "update": true,
       "forms": [
+         64,
          1,
          2,
+         65,
          4,
+         66,
+         69,
+         70,
          8,
          9,
          17,
@@ -47570,12 +47338,7 @@
          54,
          55,
          59,
-         60,
-         64,
-         65,
-         66,
-         69,
-         70
+         60
       ]
    }
 },
@@ -47583,7 +47346,7 @@
    "model": "dataentry.formvalidation",
    "pk": 350,
    "fields": {
-      "form_tag": "irfAtLeastOneIntercepteeMustBeEntered",
+      "form_tag": "replaceMe350",
       "level": 2,
       "trigger": null,
       "trigger_value": null,
@@ -47596,9 +47359,14 @@
       "retrieve": false,
       "update": true,
       "forms": [
+         64,
          1,
          2,
+         65,
          4,
+         66,
+         69,
+         70,
          8,
          9,
          17,
@@ -47615,12 +47383,7 @@
          54,
          55,
          59,
-         60,
-         64,
-         65,
-         66,
-         69,
-         70
+         60
       ]
    }
 },
@@ -47628,12 +47391,12 @@
    "model": "dataentry.formvalidation",
    "pk": 351,
    "fields": {
-      "form_tag": "irfPvCountDoesNotMatch",
+      "form_tag": "replaceMe351",
       "level": 3,
       "trigger": null,
       "trigger_value": null,
       "validation_type": 9,
-      "error_warning_message": "PV count does not match the number of interceptees identified as PV",
+      "error_warning_message": "PVOT count does not match the number of interceptees identified as PVOT",
       "params": {
          "filter": {
             "part": "role",
@@ -47647,9 +47410,14 @@
       "retrieve": false,
       "update": true,
       "forms": [
+         64,
          1,
          2,
+         65,
          4,
+         66,
+         69,
+         70,
          8,
          9,
          17,
@@ -47666,12 +47434,7 @@
          54,
          55,
          59,
-         60,
-         64,
-         65,
-         66,
-         69,
-         70
+         60
       ]
    }
 },
@@ -47679,7 +47442,7 @@
    "model": "dataentry.formvalidation",
    "pk": 352,
    "fields": {
-      "form_tag": "irfSuspectCountDoesNotMatch",
+      "form_tag": "replaceMe352",
       "level": 3,
       "trigger": null,
       "trigger_value": null,
@@ -47698,9 +47461,14 @@
       "retrieve": false,
       "update": true,
       "forms": [
+         64,
          1,
          2,
+         65,
          4,
+         66,
+         69,
+         70,
          8,
          9,
          17,
@@ -47717,12 +47485,7 @@
          54,
          55,
          59,
-         60,
-         64,
-         65,
-         66,
-         69,
-         70
+         60
       ]
    }
 },
@@ -47730,7 +47493,7 @@
    "model": "dataentry.formvalidation",
    "pk": 353,
    "fields": {
-      "form_tag": "legalChargeSheetDataShouldBeEntered",
+      "form_tag": "replaceMe353",
       "level": 3,
       "trigger": null,
       "trigger_value": null,
@@ -47748,7 +47511,7 @@
    "model": "dataentry.formvalidation",
    "pk": 354,
    "fields": {
-      "form_tag": "legalCaseTypeShouldBeEntered",
+      "form_tag": "replaceMe354",
       "level": 3,
       "trigger": null,
       "trigger_value": null,
@@ -47766,7 +47529,7 @@
    "model": "dataentry.formvalidation",
    "pk": 355,
    "fields": {
-      "form_tag": "legalDateLastContactedShouldBeEntered",
+      "form_tag": "replaceMe355",
       "level": 3,
       "trigger": null,
       "trigger_value": null,
@@ -47784,7 +47547,7 @@
    "model": "dataentry.formvalidation",
    "pk": 356,
    "fields": {
-      "form_tag": "legalAtLeastOneTimelineEntryShouldBePresent",
+      "form_tag": "replaceMe356",
       "level": 3,
       "trigger": null,
       "trigger_value": null,
@@ -47805,7 +47568,7 @@
    "model": "dataentry.formvalidation",
    "pk": 357,
    "fields": {
-      "form_tag": "legalChargeSheetAttachment",
+      "form_tag": "replaceMe357",
       "level": 3,
       "trigger": null,
       "trigger_value": null,
@@ -47832,7 +47595,7 @@
    "model": "dataentry.formvalidation",
    "pk": 358,
    "fields": {
-      "form_tag": "legalAtLeastOneSuspect",
+      "form_tag": "replaceMe358",
       "level": 3,
       "trigger": null,
       "trigger_value": null,
@@ -47853,7 +47616,7 @@
    "model": "dataentry.formvalidation",
    "pk": 359,
    "fields": {
-      "form_tag": "legalAtLeastOneVictim",
+      "form_tag": "replaceMe359",
       "level": 3,
       "trigger": null,
       "trigger_value": null,
@@ -47874,7 +47637,7 @@
    "model": "dataentry.formvalidation",
    "pk": 360,
    "fields": {
-      "form_tag": "legalNameShouldBeEntered",
+      "form_tag": "replaceMe360",
       "level": 3,
       "trigger": null,
       "trigger_value": null,
@@ -47892,7 +47655,7 @@
    "model": "dataentry.formvalidation",
    "pk": 361,
    "fields": {
-      "form_tag": "legalNameInChargeSheetShouldBeEntered",
+      "form_tag": "replaceMe361",
       "level": 3,
       "trigger": null,
       "trigger_value": null,
@@ -47910,7 +47673,7 @@
    "model": "dataentry.formvalidation",
    "pk": 362,
    "fields": {
-      "form_tag": "legalArrestStatusShouldBeEntered",
+      "form_tag": "replaceMe362",
       "level": 3,
       "trigger": null,
       "trigger_value": null,
@@ -47928,7 +47691,7 @@
    "model": "dataentry.formvalidation",
    "pk": 363,
    "fields": {
-      "form_tag": "legalArrestDateShouldBeEntered",
+      "form_tag": "replaceMe363",
       "level": 3,
       "trigger": 1010,
       "trigger_value": "Yes - But Has Been Released",
@@ -47944,9 +47707,63 @@
 },
 {
    "model": "dataentry.formvalidation",
+   "pk": 364,
+   "fields": {
+      "form_tag": "replaceMe364",
+      "level": 3,
+      "trigger": 1010,
+      "trigger_value": "Yes - But Released on Bail",
+      "validation_type": 1,
+      "error_warning_message": "Arrest  Date should be entered",
+      "params": null,
+      "retrieve": true,
+      "update": true,
+      "forms": [
+         56
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "pk": 365,
+   "fields": {
+      "form_tag": "replaceMe365",
+      "level": 3,
+      "trigger": 1010,
+      "trigger_value": "Yes - In Prison",
+      "validation_type": 1,
+      "error_warning_message": "Arrest  Date should be entered",
+      "params": null,
+      "retrieve": true,
+      "update": true,
+      "forms": [
+         56
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "pk": 366,
+   "fields": {
+      "form_tag": "replaceMe366",
+      "level": 3,
+      "trigger": 1010,
+      "trigger_value": "Yes - In Police Custody",
+      "validation_type": 1,
+      "error_warning_message": "Arrest  Date should be entered",
+      "params": null,
+      "retrieve": true,
+      "update": true,
+      "forms": [
+         56
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
    "pk": 367,
    "fields": {
-      "form_tag": "legalVerdictDateShouldBeEntered",
+      "form_tag": "replaceMe367",
       "level": 3,
       "trigger": 1012,
       "trigger_value": null,
@@ -47964,7 +47781,7 @@
    "model": "dataentry.formvalidation",
    "pk": 368,
    "fields": {
-      "form_tag": "legalImprisonmentPeriodShouldBeEntered",
+      "form_tag": "replaceMe368",
       "level": 3,
       "trigger": 1012,
       "trigger_value": "Conviction",
@@ -47982,7 +47799,7 @@
    "model": "dataentry.formvalidation",
    "pk": 369,
    "fields": {
-      "form_tag": "legalVerdictAttachment",
+      "form_tag": "replaceMe369",
       "level": 3,
       "trigger": 997,
       "trigger_value": "closed",
@@ -48009,7 +47826,7 @@
    "model": "dataentry.formvalidation",
    "pk": 370,
    "fields": {
-      "form_tag": "legalVerdictShouldBeEntered",
+      "form_tag": "replaceMe370",
       "level": 3,
       "trigger": null,
       "trigger_value": null,
@@ -48033,7 +47850,7 @@
    "model": "dataentry.formvalidation",
    "pk": 374,
    "fields": {
-      "form_tag": "legalPoliceCaseShouldBeEntered",
+      "form_tag": "replaceMe374",
       "level": 3,
       "trigger": null,
       "trigger_value": null,
@@ -48051,7 +47868,7 @@
    "model": "dataentry.formvalidation",
    "pk": 375,
    "fields": {
-      "form_tag": "legalHmanTraffickingNarrativeShouldBeEntered",
+      "form_tag": "replaceMe375",
       "level": 3,
       "trigger": null,
       "trigger_value": null,
@@ -48069,7 +47886,7 @@
    "model": "dataentry.formvalidation",
    "pk": 376,
    "fields": {
-      "form_tag": "legalLocationShouldBeEntered",
+      "form_tag": "replaceMe376",
       "level": 3,
       "trigger": null,
       "trigger_value": null,
@@ -48087,7 +47904,7 @@
    "model": "dataentry.formvalidation",
    "pk": 378,
    "fields": {
-      "form_tag": "cifSouceOfIntelligenceShouldBeEntered",
+      "form_tag": "replaceMe378",
       "level": 3,
       "trigger": null,
       "trigger_value": null,
@@ -48098,20 +47915,20 @@
       "update": true,
       "forms": [
          6,
+         38,
          12,
          14,
          16,
+         49,
+         50,
+         51,
          22,
          23,
          24,
          25,
          29,
          30,
-         31,
-         38,
-         49,
-         50,
-         51
+         31
       ]
    }
 },
@@ -48119,7 +47936,7 @@
    "model": "dataentry.formvalidation",
    "pk": 379,
    "fields": {
-      "form_tag": "cifAtLeastOneOfNameGenderAgeShouldBeEntered",
+      "form_tag": "replaceMe379",
       "level": 3,
       "trigger": null,
       "trigger_value": null,
@@ -48159,7 +47976,7 @@
    "model": "dataentry.formvalidation",
    "pk": 380,
    "fields": {
-      "form_tag": "cifAtListOneOtherPV",
+      "form_tag": "replaceMe380",
       "level": 3,
       "trigger": 299,
       "trigger_value": null,
@@ -48195,7 +48012,7 @@
    "model": "dataentry.formvalidation",
    "pk": 381,
    "fields": {
-      "form_tag": "cifRecruitmentLocationBox",
+      "form_tag": "replaceMe381",
       "level": 3,
       "trigger": 302,
       "trigger_value": null,
@@ -48236,7 +48053,7 @@
    "model": "dataentry.formvalidation",
    "pk": 382,
    "fields": {
-      "form_tag": "cifRecruitmentAgencyPersonBox",
+      "form_tag": "replaceMe382",
       "level": 3,
       "trigger": 302,
       "trigger_value": null,
@@ -48269,7 +48086,7 @@
    "model": "dataentry.formvalidation",
    "pk": 383,
    "fields": {
-      "form_tag": "cifRecruitmentBrokerPersonBox",
+      "form_tag": "replaceMe383",
       "level": 3,
       "trigger": 303,
       "trigger_value": null,
@@ -48302,7 +48119,7 @@
    "model": "dataentry.formvalidation",
    "pk": 384,
    "fields": {
-      "form_tag": "cifDestinationShouldBeEntered",
+      "form_tag": "replaceMe384",
       "level": 3,
       "trigger": null,
       "trigger_value": null,
@@ -48313,20 +48130,20 @@
       "update": true,
       "forms": [
          6,
+         38,
          12,
          14,
          16,
+         49,
+         50,
+         51,
          22,
          23,
          24,
          25,
          29,
          30,
-         31,
-         38,
-         49,
-         50,
-         51
+         31
       ]
    }
 },
@@ -48334,7 +48151,7 @@
    "model": "dataentry.formvalidation",
    "pk": 385,
    "fields": {
-      "form_tag": "cifDestinationLocationBoxShouldBeEntered",
+      "form_tag": "replaceMe385",
       "level": 3,
       "trigger": 339,
       "trigger_value": null,
@@ -48353,20 +48170,20 @@
       "update": true,
       "forms": [
          6,
+         38,
          12,
          14,
          16,
+         49,
+         50,
+         51,
          22,
          23,
          24,
          25,
          29,
          30,
-         31,
-         38,
-         49,
-         50,
-         51
+         31
       ]
    }
 },
@@ -48374,7 +48191,7 @@
    "model": "dataentry.formvalidation",
    "pk": 386,
    "fields": {
-      "form_tag": "cifBestWayToContactShouldBeEntered",
+      "form_tag": "replaceMe386",
       "level": 3,
       "trigger": 347,
       "trigger_value": null,
@@ -48385,20 +48202,20 @@
       "update": true,
       "forms": [
          6,
+         38,
          12,
          14,
          16,
+         49,
+         50,
+         51,
          22,
          23,
          24,
          25,
          29,
          30,
-         31,
-         38,
-         49,
-         50,
-         51
+         31
       ]
    }
 },
@@ -48406,7 +48223,7 @@
    "model": "dataentry.formvalidation",
    "pk": 387,
    "fields": {
-      "form_tag": "cifNameGenderAndAgeShouldBeEntered",
+      "form_tag": "replaceMe387",
       "level": 3,
       "trigger": 289,
       "trigger_value": "Victim",
@@ -48423,20 +48240,20 @@
       "update": true,
       "forms": [
          6,
+         38,
          12,
          14,
          16,
+         49,
+         50,
+         51,
          22,
          23,
          24,
          25,
          29,
          30,
-         31,
-         38,
-         49,
-         50,
-         51
+         31
       ]
    }
 },
@@ -48444,7 +48261,7 @@
    "model": "dataentry.formvalidation",
    "pk": 388,
    "fields": {
-      "form_tag": "cifTravelExpensesPaidShouldBeentered",
+      "form_tag": "replaceMe388",
       "level": 3,
       "trigger": 289,
       "trigger_value": "Victim",
@@ -48455,20 +48272,20 @@
       "update": true,
       "forms": [
          6,
+         38,
          12,
          14,
          16,
+         49,
+         50,
+         51,
          22,
          23,
          24,
          25,
          29,
          30,
-         31,
-         38,
-         49,
-         50,
-         51
+         31
       ]
    }
 },
@@ -48476,7 +48293,7 @@
    "model": "dataentry.formvalidation",
    "pk": 389,
    "fields": {
-      "form_tag": "cifMainPurposeForTravel",
+      "form_tag": "replaceMe389",
       "level": 3,
       "trigger": 289,
       "trigger_value": "Victim",
@@ -48487,20 +48304,20 @@
       "update": true,
       "forms": [
          6,
+         38,
          12,
          14,
          16,
+         49,
+         50,
+         51,
          22,
          23,
          24,
          25,
          29,
          30,
-         31,
-         38,
-         49,
-         50,
-         51
+         31
       ]
    }
 },
@@ -48508,7 +48325,7 @@
    "model": "dataentry.formvalidation",
    "pk": 390,
    "fields": {
-      "form_tag": "cifIdWithBrokerShouldBeEntered",
+      "form_tag": "replaceMe390",
       "level": 3,
       "trigger": 289,
       "trigger_value": "Victim",
@@ -48519,20 +48336,20 @@
       "update": true,
       "forms": [
          6,
+         38,
          12,
          14,
          16,
+         49,
+         50,
+         51,
          22,
          23,
          24,
          25,
          29,
          30,
-         31,
-         38,
-         49,
-         50,
-         51
+         31
       ]
    }
 },
@@ -48540,7 +48357,7 @@
    "model": "dataentry.formvalidation",
    "pk": 391,
    "fields": {
-      "form_tag": "cifMayContactPvShouldBeEntered",
+      "form_tag": "replaceMe391",
       "level": 3,
       "trigger": 289,
       "trigger_value": "Victim",
@@ -48551,20 +48368,20 @@
       "update": true,
       "forms": [
          6,
+         38,
          12,
          14,
          16,
+         49,
+         50,
+         51,
          22,
          23,
          24,
          25,
          29,
          30,
-         31,
-         38,
-         49,
-         50,
-         51
+         31
       ]
    }
 },
@@ -48572,7 +48389,7 @@
    "model": "dataentry.formvalidation",
    "pk": 392,
    "fields": {
-      "form_tag": "cifDidSomeoneRecruitShouldBeEntered",
+      "form_tag": "replaceMe392",
       "level": 3,
       "trigger": null,
       "trigger_value": null,
@@ -48608,7 +48425,7 @@
    "model": "dataentry.formvalidation",
    "pk": 393,
    "fields": {
-      "form_tag": "cifHowPvMetBrokerShouldBeEntered",
+      "form_tag": "replaceMe393",
       "level": 3,
       "trigger": null,
       "trigger_value": null,
@@ -48644,7 +48461,7 @@
    "model": "dataentry.formvalidation",
    "pk": 394,
    "fields": {
-      "form_tag": "cifHowLongPvKnewBrokerShouldBeEntered",
+      "form_tag": "replaceMe394",
       "level": 3,
       "trigger": null,
       "trigger_value": null,
@@ -48680,7 +48497,7 @@
    "model": "dataentry.formvalidation",
    "pk": 395,
    "fields": {
-      "form_tag": "CifPvMarriedToSuspectShouldBeEntered",
+      "form_tag": "replaceMe395",
       "level": 3,
       "trigger": null,
       "trigger_value": null,
@@ -48716,7 +48533,7 @@
    "model": "dataentry.formvalidation",
    "pk": 396,
    "fields": {
-      "form_tag": "cifHowTravelPaidShouldBeEntered",
+      "form_tag": "replaceMe396",
       "level": 3,
       "trigger": null,
       "trigger_value": null,
@@ -48752,7 +48569,7 @@
    "model": "dataentry.formvalidation",
    "pk": 397,
    "fields": {
-      "form_tag": "cifJobBrokerPromise",
+      "form_tag": "replaceMe397",
       "level": 3,
       "trigger": null,
       "trigger_value": null,
@@ -48788,7 +48605,7 @@
    "model": "dataentry.formvalidation",
    "pk": 398,
    "fields": {
-      "form_tag": "cifIdMadeForPv",
+      "form_tag": "replaceMe398",
       "level": 3,
       "trigger": null,
       "trigger_value": null,
@@ -48824,7 +48641,7 @@
    "model": "dataentry.formvalidation",
    "pk": 399,
    "fields": {
-      "form_tag": "cifForcedProstitutionPersonBox",
+      "form_tag": "replaceMe399",
       "level": 3,
       "trigger": null,
       "trigger_value": null,
@@ -48860,7 +48677,7 @@
    "model": "dataentry.formvalidation",
    "pk": 400,
    "fields": {
-      "form_tag": "cifSexualAbusePersonBox",
+      "form_tag": "replaceMe400",
       "level": 3,
       "trigger": null,
       "trigger_value": null,
@@ -48896,7 +48713,7 @@
    "model": "dataentry.formvalidation",
    "pk": 401,
    "fields": {
-      "form_tag": "cifPhysicalAbusePersonBox",
+      "form_tag": "replaceMe401",
       "level": 3,
       "trigger": null,
       "trigger_value": null,
@@ -48932,7 +48749,7 @@
    "model": "dataentry.formvalidation",
    "pk": 402,
    "fields": {
-      "form_tag": "cifDebitBondagePersonBox",
+      "form_tag": "replaceMe402",
       "level": 3,
       "trigger": null,
       "trigger_value": null,
@@ -48968,7 +48785,7 @@
    "model": "dataentry.formvalidation",
    "pk": 403,
    "fields": {
-      "form_tag": "cifForcedLaborPersonBox",
+      "form_tag": "replaceMe403",
       "level": 3,
       "trigger": null,
       "trigger_value": null,
@@ -49004,7 +48821,7 @@
    "model": "dataentry.formvalidation",
    "pk": 404,
    "fields": {
-      "form_tag": "cifForcedOrganRemovalPersonBox",
+      "form_tag": "replaceMe404",
       "level": 3,
       "trigger": null,
       "trigger_value": null,
@@ -49040,7 +48857,7 @@
    "model": "dataentry.formvalidation",
    "pk": 405,
    "fields": {
-      "form_tag": "cifOtherExploitationPersonBox",
+      "form_tag": "replaceMe405",
       "level": 3,
       "trigger": null,
       "trigger_value": null,
@@ -49076,7 +48893,7 @@
    "model": "dataentry.formvalidation",
    "pk": 406,
    "fields": {
-      "form_tag": "cifForcedProstitutionLocationBox",
+      "form_tag": "replaceMe406",
       "level": 3,
       "trigger": null,
       "trigger_value": null,
@@ -49112,7 +48929,7 @@
    "model": "dataentry.formvalidation",
    "pk": 407,
    "fields": {
-      "form_tag": "cifSexualAbuseLocationBox",
+      "form_tag": "replaceMe407",
       "level": 3,
       "trigger": null,
       "trigger_value": null,
@@ -49148,7 +48965,7 @@
    "model": "dataentry.formvalidation",
    "pk": 408,
    "fields": {
-      "form_tag": "cifPhysicalAbuseLocationBox",
+      "form_tag": "replaceMe408",
       "level": 3,
       "trigger": null,
       "trigger_value": null,
@@ -49184,7 +49001,7 @@
    "model": "dataentry.formvalidation",
    "pk": 409,
    "fields": {
-      "form_tag": "cifDebitBondageLocationBox",
+      "form_tag": "replaceMe409",
       "level": 3,
       "trigger": null,
       "trigger_value": null,
@@ -49220,7 +49037,7 @@
    "model": "dataentry.formvalidation",
    "pk": 410,
    "fields": {
-      "form_tag": "cifForcedLaborLocationBox",
+      "form_tag": "replaceMe410",
       "level": 3,
       "trigger": null,
       "trigger_value": null,
@@ -49256,7 +49073,7 @@
    "model": "dataentry.formvalidation",
    "pk": 411,
    "fields": {
-      "form_tag": "cifForcedOrganRemovalLocationBox",
+      "form_tag": "replaceMe411",
       "level": 3,
       "trigger": null,
       "trigger_value": null,
@@ -49292,7 +49109,7 @@
    "model": "dataentry.formvalidation",
    "pk": 412,
    "fields": {
-      "form_tag": "cifOtherExploitationLocationBox",
+      "form_tag": "replaceMe412",
       "level": 3,
       "trigger": null,
       "trigger_value": null,
@@ -49328,7 +49145,7 @@
    "model": "dataentry.formvalidation",
    "pk": 413,
    "fields": {
-      "form_tag": "cifWhichPlace",
+      "form_tag": "replaceMe413",
       "level": 3,
       "trigger": null,
       "trigger_value": null,
@@ -49361,7 +49178,7 @@
    "model": "dataentry.formvalidation",
    "pk": 414,
    "fields": {
-      "form_tag": "cifKindOfPlace",
+      "form_tag": "replaceMe414",
       "level": 3,
       "trigger": null,
       "trigger_value": null,
@@ -49394,7 +49211,7 @@
    "model": "dataentry.formvalidation",
    "pk": 415,
    "fields": {
-      "form_tag": "cifAssociatedPb",
+      "form_tag": "replaceMe415",
       "level": 3,
       "trigger": null,
       "trigger_value": null,
@@ -49430,7 +49247,7 @@
    "model": "dataentry.formvalidation",
    "pk": 416,
    "fields": {
-      "form_tag": "cifRoleShouldBeEntered",
+      "form_tag": "replaceMe416",
       "level": 3,
       "trigger": null,
       "trigger_value": null,
@@ -49467,7 +49284,7 @@
    "model": "dataentry.formvalidation",
    "pk": 417,
    "fields": {
-      "form_tag": "cifAssociatedLocation",
+      "form_tag": "replaceMe417",
       "level": 3,
       "trigger": null,
       "trigger_value": null,
@@ -49503,7 +49320,7 @@
    "model": "dataentry.formvalidation",
    "pk": 418,
    "fields": {
-      "form_tag": "cifNumberOfPvsShouldBeEntered",
+      "form_tag": "replaceMe418",
       "level": 3,
       "trigger": 289,
       "trigger_value": "Victim",
@@ -49514,20 +49331,20 @@
       "update": true,
       "forms": [
          6,
+         38,
          12,
          14,
          16,
+         49,
+         50,
+         51,
          22,
          23,
          24,
          25,
          29,
          30,
-         31,
-         38,
-         49,
-         50,
-         51
+         31
       ]
    }
 },
@@ -49535,7 +49352,7 @@
    "model": "dataentry.formvalidation",
    "pk": 419,
    "fields": {
-      "form_tag": "cifNumberOfSuspectsShouldBeEntered",
+      "form_tag": "replaceMe419",
       "level": 3,
       "trigger": 289,
       "trigger_value": "Victim",
@@ -49546,20 +49363,20 @@
       "update": true,
       "forms": [
          6,
+         38,
          12,
          14,
          16,
+         49,
+         50,
+         51,
          22,
          23,
          24,
          25,
          29,
          30,
-         31,
-         38,
-         49,
-         50,
-         51
+         31
       ]
    }
 },
@@ -49567,7 +49384,7 @@
    "model": "dataentry.formvalidation",
    "pk": 420,
    "fields": {
-      "form_tag": "cifInterviewerShouldBeEntered",
+      "form_tag": "replaceMe420",
       "level": 3,
       "trigger": 289,
       "trigger_value": "Victim",
@@ -49578,20 +49395,20 @@
       "update": true,
       "forms": [
          6,
+         38,
          12,
          14,
          16,
+         49,
+         50,
+         51,
          22,
          23,
          24,
          25,
          29,
          30,
-         31,
-         38,
-         49,
-         50,
-         51
+         31
       ]
    }
 },
@@ -49599,7 +49416,7 @@
    "model": "dataentry.formvalidation",
    "pk": 421,
    "fields": {
-      "form_tag": "cifShouldBeSignedByPv",
+      "form_tag": "replaceMe421",
       "level": 3,
       "trigger": 289,
       "trigger_value": "Victim",
@@ -49610,20 +49427,20 @@
       "update": true,
       "forms": [
          6,
+         38,
          12,
          14,
          16,
+         49,
+         50,
+         51,
          22,
          23,
          24,
          25,
          29,
          30,
-         31,
-         38,
-         49,
-         50,
-         51
+         31
       ]
    }
 },
@@ -49631,7 +49448,7 @@
    "model": "dataentry.formvalidation",
    "pk": 422,
    "fields": {
-      "form_tag": "legalArrestDateMustBeEnteredWithArrestStatus",
+      "form_tag": "replaceMe422",
       "level": 2,
       "trigger": 1010,
       "trigger_value": "Yes - But Has Been Released",
@@ -49649,12 +49466,66 @@
    "model": "dataentry.formvalidation",
    "pk": 423,
    "fields": {
-      "form_tag": "legaVerdictDateMustBeEnteredWhenthereIsAVerdict",
+      "form_tag": "replaceMe423",
       "level": 2,
       "trigger": 1012,
       "trigger_value": null,
       "validation_type": 1,
       "error_warning_message": "Verdict date must be enetered when verdict is entered",
+      "params": null,
+      "retrieve": true,
+      "update": true,
+      "forms": [
+         56
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "pk": 424,
+   "fields": {
+      "form_tag": "replaceMe424",
+      "level": 2,
+      "trigger": 1010,
+      "trigger_value": "Yes - But Released on Bail",
+      "validation_type": 1,
+      "error_warning_message": "Arrest date must be entered when arrest status has been entered",
+      "params": null,
+      "retrieve": true,
+      "update": true,
+      "forms": [
+         56
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "pk": 425,
+   "fields": {
+      "form_tag": "replaceMe425",
+      "level": 2,
+      "trigger": 1010,
+      "trigger_value": "Yes - In Prison",
+      "validation_type": 1,
+      "error_warning_message": "Arrest date must be entered when arrest status has been entered",
+      "params": null,
+      "retrieve": true,
+      "update": true,
+      "forms": [
+         56
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "pk": 426,
+   "fields": {
+      "form_tag": "replaceMe426",
+      "level": 2,
+      "trigger": 1010,
+      "trigger_value": "Yes - In Police Custody",
+      "validation_type": 1,
+      "error_warning_message": "Arrest date must be entered when arrest status has been entered",
       "params": null,
       "retrieve": true,
       "update": true,
@@ -50121,6 +49992,27 @@
 {
    "model": "dataentry.formvalidationquestion",
    "fields": {
+      "validation": 364,
+      "question": 1011
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": 365,
+      "question": 1011
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": 366,
+      "question": 1011
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
       "validation": 367,
       "question": 1013
    }
@@ -50574,10 +50466,31 @@
    }
 },
 {
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": 424,
+      "question": 1011
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": 425,
+      "question": 1011
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": 426,
+      "question": 1011
+   }
+},
+{
    "model": "dataentry.exportimport",
    "pk": 1,
    "fields": {
-      "form_tag": "irfNepal",
+      "form_tag": "replaceMe1",
       "description": "Export Nepal IRF",
       "implement_module": "export_import.irf_google_sheet",
       "implement_class_name": "IrfGoogleSheet",
@@ -50588,7 +50501,7 @@
    "model": "dataentry.exportimport",
    "pk": 2,
    "fields": {
-      "form_tag": "irfIndia",
+      "form_tag": "replaceMe2",
       "description": "Export India IRF",
       "implement_module": "export_import.irf_google_sheet",
       "implement_class_name": "IrfGoogleSheet",
@@ -50599,7 +50512,7 @@
    "model": "dataentry.exportimport",
    "pk": 3,
    "fields": {
-      "form_tag": "irfBangladesh",
+      "form_tag": "replaceMe3",
       "description": "Export Bangladesh IRF",
       "implement_module": "export_import.irf_google_sheet",
       "implement_class_name": "IrfGoogleSheet",
@@ -50610,7 +50523,7 @@
    "model": "dataentry.exportimport",
    "pk": 4,
    "fields": {
-      "form_tag": "irfMalawi",
+      "form_tag": "replaceMe4",
       "description": "Export Malawi IRF",
       "implement_module": "export_import.irf_google_sheet",
       "implement_class_name": "IrfGoogleSheet",
@@ -50621,7 +50534,7 @@
    "model": "dataentry.exportimport",
    "pk": 6,
    "fields": {
-      "form_tag": "cifNepal",
+      "form_tag": "replaceMe6",
       "description": "Export Nepal CIF",
       "implement_module": "export_import.export_form",
       "implement_class_name": "ExportToGoogleSheet",
@@ -50632,7 +50545,7 @@
    "model": "dataentry.exportimport",
    "pk": 7,
    "fields": {
-      "form_tag": "irfSouthAfrica",
+      "form_tag": "replaceMe7",
       "description": "Export South Africa IRF",
       "implement_module": "export_import.irf_google_sheet",
       "implement_class_name": "IrfGoogleSheet",
@@ -50643,7 +50556,7 @@
    "model": "dataentry.exportimport",
    "pk": 8,
    "fields": {
-      "form_tag": "cifBangladesh",
+      "form_tag": "replaceMe8",
       "description": "cifBangladesh",
       "implement_module": "export_import.export_form",
       "implement_class_name": "ExportToGoogleSheet",
@@ -50654,7 +50567,7 @@
    "model": "dataentry.exportimport",
    "pk": 9,
    "fields": {
-      "form_tag": "cifIndia",
+      "form_tag": "replaceMe9",
       "description": "cifIndia",
       "implement_module": "export_import.export_form",
       "implement_class_name": "ExportToGoogleSheet",
@@ -50665,7 +50578,7 @@
    "model": "dataentry.exportimport",
    "pk": 10,
    "fields": {
-      "form_tag": "cifSouthAfrica",
+      "form_tag": "replaceMe10",
       "description": "cifSouthAfrica",
       "implement_module": "export_import.export_form",
       "implement_class_name": "ExportToGoogleSheet",
@@ -50676,7 +50589,7 @@
    "model": "dataentry.exportimport",
    "pk": 11,
    "fields": {
-      "form_tag": "vdfBangladesh",
+      "form_tag": "replaceMe11",
       "description": "vdfBangladesh",
       "implement_module": "export_import.export_form",
       "implement_class_name": "ExportToGoogleSheet",
@@ -50687,7 +50600,7 @@
    "model": "dataentry.exportimport",
    "pk": 12,
    "fields": {
-      "form_tag": "vdfIndia",
+      "form_tag": "replaceMe12",
       "description": "vdfIndia",
       "implement_module": "export_import.export_form",
       "implement_class_name": "ExportToGoogleSheet",
@@ -50698,7 +50611,7 @@
    "model": "dataentry.exportimport",
    "pk": 13,
    "fields": {
-      "form_tag": "vdfNepal",
+      "form_tag": "replaceMe13",
       "description": "vdfNepal",
       "implement_module": "export_import.export_form",
       "implement_class_name": "ExportToGoogleSheet",
@@ -50709,7 +50622,7 @@
    "model": "dataentry.exportimport",
    "pk": 14,
    "fields": {
-      "form_tag": "irfBenin",
+      "form_tag": "replaceMe14",
       "description": "Export Benin IRF",
       "implement_module": "export_import.irf_google_sheet",
       "implement_class_name": "IrfGoogleSheet",
@@ -50720,7 +50633,7 @@
    "model": "dataentry.exportimport",
    "pk": 15,
    "fields": {
-      "form_tag": "irfUganda",
+      "form_tag": "replaceMe15",
       "description": "Export Uganda IRF",
       "implement_module": "export_import.irf_google_sheet",
       "implement_class_name": "IrfGoogleSheet",
@@ -50731,7 +50644,7 @@
    "model": "dataentry.exportimport",
    "pk": 16,
    "fields": {
-      "form_tag": "irfKenya",
+      "form_tag": "replaceMe16",
       "description": "Export Kenya IRF",
       "implement_module": "export_import.irf_google_sheet",
       "implement_class_name": "IrfGoogleSheet",
@@ -50742,7 +50655,7 @@
    "model": "dataentry.exportimport",
    "pk": 17,
    "fields": {
-      "form_tag": "smrInda",
+      "form_tag": "replaceMe17",
       "description": "Export India Monthly Report",
       "implement_module": "export_import.export_form",
       "implement_class_name": "ExportToGoogleSheet",
@@ -50753,7 +50666,7 @@
    "model": "dataentry.exportimport",
    "pk": 18,
    "fields": {
-      "form_tag": "vdfBenin",
+      "form_tag": "replaceMe18",
       "description": "vdfBenin",
       "implement_module": "export_import.export_form",
       "implement_class_name": "ExportToGoogleSheet",
@@ -50764,7 +50677,7 @@
    "model": "dataentry.exportimport",
    "pk": 19,
    "fields": {
-      "form_tag": "cifBenin",
+      "form_tag": "replaceMe19",
       "description": "cifBenin",
       "implement_module": "export_import.export_form",
       "implement_class_name": "ExportToGoogleSheet",
@@ -50775,7 +50688,7 @@
    "model": "dataentry.exportimport",
    "pk": 20,
    "fields": {
-      "form_tag": "cifKenya",
+      "form_tag": "replaceMe20",
       "description": "cifKenya",
       "implement_module": "export_import.export_form",
       "implement_class_name": "ExportToGoogleSheet",
@@ -50786,7 +50699,7 @@
    "model": "dataentry.exportimport",
    "pk": 21,
    "fields": {
-      "form_tag": "cifMalawi",
+      "form_tag": "replaceMe21",
       "description": "cifMalawi",
       "implement_module": "export_import.export_form",
       "implement_class_name": "ExportToGoogleSheet",
@@ -50797,7 +50710,7 @@
    "model": "dataentry.exportimport",
    "pk": 22,
    "fields": {
-      "form_tag": "cifUganda",
+      "form_tag": "replaceMe22",
       "description": "cifUganda",
       "implement_module": "export_import.export_form",
       "implement_class_name": "ExportToGoogleSheet",
@@ -50808,7 +50721,7 @@
    "model": "dataentry.exportimport",
    "pk": 23,
    "fields": {
-      "form_tag": "irfTanzania",
+      "form_tag": "replaceMe23",
       "description": "Export Tanzania IRF",
       "implement_module": "export_import.irf_google_sheet",
       "implement_class_name": "IrfGoogleSheet",
@@ -50819,7 +50732,7 @@
    "model": "dataentry.exportimport",
    "pk": 24,
    "fields": {
-      "form_tag": "irfGhana",
+      "form_tag": "replaceMe24",
       "description": "Export Ghana IRF",
       "implement_module": "export_import.irf_google_sheet",
       "implement_class_name": "IrfGoogleSheet",
@@ -50830,7 +50743,7 @@
    "model": "dataentry.exportimport",
    "pk": 25,
    "fields": {
-      "form_tag": "irfSierraLeone",
+      "form_tag": "replaceMe25",
       "description": "Export Sierra Leone IRF",
       "implement_module": "export_import.irf_google_sheet",
       "implement_class_name": "IrfGoogleSheet",
@@ -50841,7 +50754,7 @@
    "model": "dataentry.exportimport",
    "pk": 26,
    "fields": {
-      "form_tag": "cifSierraLeone",
+      "form_tag": "replaceMe26",
       "description": "cifSierraLeone",
       "implement_module": "export_import.export_form",
       "implement_class_name": "ExportToGoogleSheet",
@@ -50852,7 +50765,7 @@
    "model": "dataentry.exportimport",
    "pk": 27,
    "fields": {
-      "form_tag": "cifGhana",
+      "form_tag": "replaceMe27",
       "description": "cifGhana",
       "implement_module": "export_import.export_form",
       "implement_class_name": "ExportToGoogleSheet",
@@ -50863,7 +50776,7 @@
    "model": "dataentry.exportimport",
    "pk": 28,
    "fields": {
-      "form_tag": "cifTanzania",
+      "form_tag": "replaceMe28",
       "description": "cifTanzania",
       "implement_module": "export_import.export_form",
       "implement_class_name": "ExportToGoogleSheet",
@@ -50874,7 +50787,7 @@
    "model": "dataentry.exportimport",
    "pk": 29,
    "fields": {
-      "form_tag": "irfIndiaNetwork",
+      "form_tag": "replaceMe29",
       "description": "Export India Network IRF",
       "implement_module": "export_import.irf_google_sheet",
       "implement_class_name": "IrfGoogleSheet",
@@ -50885,7 +50798,7 @@
    "model": "dataentry.exportimport",
    "pk": 30,
    "fields": {
-      "form_tag": "cifOsi",
+      "form_tag": "replaceMe30",
       "description": "cifOsi",
       "implement_module": "export_import.export_form",
       "implement_class_name": "ExportToGoogleSheet",
@@ -50896,7 +50809,7 @@
    "model": "dataentry.exportimport",
    "pk": 31,
    "fields": {
-      "form_tag": "smrNepal",
+      "form_tag": "replaceMe31",
       "description": "Export Nepal Monthly Report",
       "implement_module": "export_import.export_form",
       "implement_class_name": "ExportToGoogleSheet",
@@ -50907,7 +50820,7 @@
    "model": "dataentry.exportimport",
    "pk": 32,
    "fields": {
-      "form_tag": "irfCambodia",
+      "form_tag": "replaceMe32",
       "description": "Export Cambodia IRF",
       "implement_module": "export_import.irf_google_sheet",
       "implement_class_name": "IrfGoogleSheet",
@@ -50918,7 +50831,7 @@
    "model": "dataentry.exportimport",
    "pk": 33,
    "fields": {
-      "form_tag": "vdfUganda",
+      "form_tag": "replaceMe33",
       "description": "vdfUganda",
       "implement_module": "export_import.export_form",
       "implement_class_name": "ExportToGoogleSheet",
@@ -50929,7 +50842,7 @@
    "model": "dataentry.exportimport",
    "pk": 34,
    "fields": {
-      "form_tag": "irfZimbabwi",
+      "form_tag": "replaceMe34",
       "description": "Export Zimbabwi IRF",
       "implement_module": "export_import.irf_google_sheet",
       "implement_class_name": "IrfGoogleSheet",
@@ -50940,7 +50853,7 @@
    "model": "dataentry.exportimport",
    "pk": 35,
    "fields": {
-      "form_tag": "cifZimbabwi",
+      "form_tag": "replaceMe35",
       "description": "Export Zimbabwi CIF",
       "implement_module": "export_import.export_form",
       "implement_class_name": "ExportToGoogleSheet",
@@ -50951,7 +50864,7 @@
    "model": "dataentry.exportimport",
    "pk": 36,
    "fields": {
-      "form_tag": "vdfKenya",
+      "form_tag": "replaceMe36",
       "description": "vdfKenya",
       "implement_module": "export_import.export_form",
       "implement_class_name": "ExportToGoogleSheet",
@@ -50962,7 +50875,7 @@
    "model": "dataentry.exportimport",
    "pk": 37,
    "fields": {
-      "form_tag": "vdfMalawi",
+      "form_tag": "replaceMe37",
       "description": "vdfMalawi",
       "implement_module": "export_import.export_form",
       "implement_class_name": "ExportToGoogleSheet",
@@ -50973,7 +50886,7 @@
    "model": "dataentry.exportimport",
    "pk": 38,
    "fields": {
-      "form_tag": "vdfSouthAfrica",
+      "form_tag": "replaceMe38",
       "description": "vdfSouthAfrica",
       "implement_module": "export_import.export_form",
       "implement_class_name": "ExportToGoogleSheet",
@@ -50984,7 +50897,7 @@
    "model": "dataentry.exportimport",
    "pk": 39,
    "fields": {
-      "form_tag": "vdfTanzania",
+      "form_tag": "replaceMe39",
       "description": "vdfTanzania",
       "implement_module": "export_import.export_form",
       "implement_class_name": "ExportToGoogleSheet",
@@ -50995,7 +50908,7 @@
    "model": "dataentry.exportimport",
    "pk": 40,
    "fields": {
-      "form_tag": "vdfZimbabwe",
+      "form_tag": "replaceMe40",
       "description": "vdfZimbabwe",
       "implement_module": "export_import.export_form",
       "implement_class_name": "ExportToGoogleSheet",
@@ -51006,7 +50919,7 @@
    "model": "dataentry.exportimport",
    "pk": 41,
    "fields": {
-      "form_tag": "irfNamibia",
+      "form_tag": "replaceMe41",
       "description": "Export Namibia IRF",
       "implement_module": "export_import.irf_google_sheet",
       "implement_class_name": "IrfGoogleSheet",
@@ -51017,7 +50930,7 @@
    "model": "dataentry.exportimport",
    "pk": 42,
    "fields": {
-      "form_tag": "smrBangladesh",
+      "form_tag": "replaceMe42",
       "description": "Export Bangladesh Monthly Report",
       "implement_module": "export_import.export_form",
       "implement_class_name": "ExportToGoogleSheet",
@@ -51028,7 +50941,7 @@
    "model": "dataentry.exportimport",
    "pk": 43,
    "fields": {
-      "form_tag": "irfRwanda",
+      "form_tag": "replaceMe43",
       "description": "Export Rwanda IRF",
       "implement_module": "export_import.irf_google_sheet",
       "implement_class_name": "IrfGoogleSheet",
@@ -51039,7 +50952,7 @@
    "model": "dataentry.exportimport",
    "pk": 44,
    "fields": {
-      "form_tag": "vdfRwanda",
+      "form_tag": "replaceMe44",
       "description": "Export Rwanda VDF",
       "implement_module": "export_import.export_form",
       "implement_class_name": "ExportToGoogleSheet",
@@ -51050,7 +50963,7 @@
    "model": "dataentry.exportimport",
    "pk": 45,
    "fields": {
-      "form_tag": "vdfIndiaNetwork",
+      "form_tag": "replaceMe45",
       "description": "Export India Network VDF",
       "implement_module": "export_import.export_form",
       "implement_class_name": "ExportToGoogleSheet",
@@ -51061,7 +50974,7 @@
    "model": "dataentry.exportimport",
    "pk": 46,
    "fields": {
-      "form_tag": "cifNamibia",
+      "form_tag": "replaceMe46",
       "description": "Export Namibia CIF",
       "implement_module": "export_import.export_form",
       "implement_class_name": "ExportToGoogleSheet",
@@ -51072,7 +50985,7 @@
    "model": "dataentry.exportimport",
    "pk": 47,
    "fields": {
-      "form_tag": "cifIndiaNetwrk",
+      "form_tag": "replaceMe47",
       "description": "Export India Network CIF",
       "implement_module": "export_import.export_form",
       "implement_class_name": "ExportToGoogleSheet",
@@ -51083,7 +50996,7 @@
    "model": "dataentry.exportimport",
    "pk": 48,
    "fields": {
-      "form_tag": "cifRwanda",
+      "form_tag": "replaceMe48",
       "description": "Export Rwanda CIF",
       "implement_module": "export_import.export_form",
       "implement_class_name": "ExportToGoogleSheet",
@@ -51094,7 +51007,7 @@
    "model": "dataentry.exportimport",
    "pk": 49,
    "fields": {
-      "form_tag": "vdfGhana",
+      "form_tag": "replaceMe49",
       "description": "vdfGhana",
       "implement_module": "export_import.export_form",
       "implement_class_name": "ExportToGoogleSheet",
@@ -51105,7 +51018,7 @@
    "model": "dataentry.exportimport",
    "pk": 50,
    "fields": {
-      "form_tag": "irfUsa",
+      "form_tag": "replaceMe50",
       "description": "Export USA IRF",
       "implement_module": "export_import.irf_google_sheet",
       "implement_class_name": "IrfGoogleSheet",
@@ -51116,7 +51029,7 @@
    "model": "dataentry.exportimport",
    "pk": 51,
    "fields": {
-      "form_tag": "irfIndonesia",
+      "form_tag": "replaceMe51",
       "description": "Export Indonesia IRF",
       "implement_module": "export_import.irf_google_sheet",
       "implement_class_name": "IrfGoogleSheet",
@@ -51127,7 +51040,7 @@
    "model": "dataentry.exportimport",
    "pk": 52,
    "fields": {
-      "form_tag": "vdfNamibia",
+      "form_tag": "replaceMe52",
       "description": "vdfNamibia",
       "implement_module": "export_import.export_form",
       "implement_class_name": "ExportToGoogleSheet",
@@ -51138,7 +51051,7 @@
    "model": "dataentry.exportimport",
    "pk": 53,
    "fields": {
-      "form_tag": "irfLesotho",
+      "form_tag": "replaceMe53",
       "description": "Export Lesotho IRF",
       "implement_module": "export_import.irf_google_sheet",
       "implement_class_name": "IrfGoogleSheet",
@@ -51149,7 +51062,7 @@
    "model": "dataentry.exportimport",
    "pk": 54,
    "fields": {
-      "form_tag": "irfMozambique",
+      "form_tag": "replaceMe54",
       "description": "Export Mozambique IRF",
       "implement_module": "export_import.irf_google_sheet",
       "implement_class_name": "IrfGoogleSheet",
@@ -51160,7 +51073,7 @@
    "model": "dataentry.exportimport",
    "pk": 55,
    "fields": {
-      "form_tag": "vdfMozambique",
+      "form_tag": "replaceMe55",
       "description": "Export Mozambique VDF",
       "implement_module": "export_import.export_form",
       "implement_class_name": "ExportToGoogleSheet",
@@ -51171,7 +51084,7 @@
    "model": "dataentry.exportimport",
    "pk": 56,
    "fields": {
-      "form_tag": "vdfSierraLeone",
+      "form_tag": "replaceMe56",
       "description": "Export Sierra Leone VDF",
       "implement_module": "export_import.export_form",
       "implement_class_name": "ExportToGoogleSheet",
@@ -51182,7 +51095,7 @@
    "model": "dataentry.exportimport",
    "pk": 57,
    "fields": {
-      "form_tag": "vdfLesotho",
+      "form_tag": "replaceMe57",
       "description": "Export Lesotho VDF",
       "implement_module": "export_import.export_form",
       "implement_class_name": "ExportToGoogleSheet",
@@ -51193,7 +51106,7 @@
    "model": "dataentry.exportimport",
    "pk": 58,
    "fields": {
-      "form_tag": "stationStatsNepal",
+      "form_tag": "replaceMe58",
       "description": "Export Station Stats",
       "implement_module": "custom",
       "implement_class_name": "custom",
@@ -51204,7 +51117,7 @@
    "model": "dataentry.exportimport",
    "pk": 59,
    "fields": {
-      "form_tag": "irfLiberia",
+      "form_tag": "replaceMe59",
       "description": "Export Liberia IRF",
       "implement_module": "export_import.irf_google_sheet",
       "implement_class_name": "IrfGoogleSheet",
@@ -51215,7 +51128,7 @@
    "model": "dataentry.exportimport",
    "pk": 60,
    "fields": {
-      "form_tag": "irfBurkinaFaso",
+      "form_tag": "replaceMe60",
       "description": "Export Burkina Faso IRF",
       "implement_module": "export_import.irf_google_sheet",
       "implement_class_name": "IrfGoogleSheet",
@@ -51226,7 +51139,7 @@
    "model": "dataentry.exportimport",
    "pk": 61,
    "fields": {
-      "form_tag": "irfZambia",
+      "form_tag": "replaceMe61",
       "description": "Export Zambia IRF",
       "implement_module": "export_import.irf_google_sheet",
       "implement_class_name": "IrfGoogleSheet",
@@ -51237,7 +51150,7 @@
    "model": "dataentry.exportimport",
    "pk": 62,
    "fields": {
-      "form_tag": "vdfZambia",
+      "form_tag": "replaceMe62",
       "description": "vdfZambia",
       "implement_module": "export_import.export_form",
       "implement_class_name": "ExportToGoogleSheet",
@@ -51248,7 +51161,7 @@
    "model": "dataentry.exportimport",
    "pk": 63,
    "fields": {
-      "form_tag": "irfBurundi",
+      "form_tag": "replaceMe63",
       "description": "Export Burundi IRF",
       "implement_module": "export_import.irf_google_sheet",
       "implement_class_name": "IrfGoogleSheet",
@@ -51259,7 +51172,7 @@
    "model": "dataentry.exportimport",
    "pk": 64,
    "fields": {
-      "form_tag": "irfEcuador",
+      "form_tag": "replaceMe64",
       "description": "Export Ecuador IRF",
       "implement_module": "export_import.irf_google_sheet",
       "implement_class_name": "IrfGoogleSheet",

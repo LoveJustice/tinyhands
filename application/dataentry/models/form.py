@@ -20,16 +20,13 @@ from .country import Country
 #   11   dataentry.models.person_box   VictimInterviewPersonBox   null                10             null                        victim_interview                    
 #   14   dataentry.models.location_box VictimInterviewLocationBox null                10             null                        victim_interview
 class Storage(models.Model):
+    form_tag = models.CharField(max_length=126, unique=True)
     module_name = models.CharField(max_length=126)
-    form_model_name = models.CharField(max_length=126, unique=True)
+    form_model_name = models.CharField(max_length=126)
     response_model_name = models.CharField(max_length=126, null=True)
     parent_storage = models.ForeignKey('self', null=True)
     foreign_key_field_parent = models.CharField(max_length=126, null=True)
     foreign_key_field_child = models.CharField(max_length=126, null=True)
-    
-    @property
-    def form_tag(self):
-        return self.form_model_name
     
     def get_form_storage_class(self):
         mod = __import__(self.module_name, fromlist=[self.form_model_name])
@@ -37,15 +34,11 @@ class Storage(models.Model):
         return form_class
     
     @staticmethod
-    def get_by_form_tag(tag):
-        return Storage.objects.get(form_model_name = tag)
-    
-    @staticmethod
     def get_objects_by_form_type(form_type_list):
         cls = globals()['Form']
         forms = cls.get_objects_by_form_type(form_type_list)
-        model_names = set(forms.values_list('storage__form_model_name', flat=True))
-        qs = Storage.objects.filter(Q(form_model_name__in=model_names) | Q(parent_storage__form_model_name__in=model_names)).distinct().order_by('id')
+        model_names = set(forms.values_list('storage__form_tag', flat=True))
+        qs = Storage.objects.filter(Q(form_tag__in=model_names) | Q(parent_storage__form_tag__in=model_names)).distinct().order_by('id')
         return qs        
 
 # Keep track of checksum of currently loaded form_data.json file so that changes
