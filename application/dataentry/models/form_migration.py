@@ -15,6 +15,7 @@ class FormMigration:
         'Form',
         'CategoryType',
         'Category',
+        'FormCategory',
         'AnswerType',
         'Question',
         'QuestionLayout',
