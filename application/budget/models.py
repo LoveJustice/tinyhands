@@ -147,7 +147,7 @@ class BorderStationBudgetCalculation(models.Model):
         return total
     
     def pv_extra_items_total(self):
-        return self.staff_project_items_total(self.POTENTIAL_VICTIM_CARE, self.border_station)
+        return self.other_project_items_total(self.POTENTIAL_VICTIM_CARE, self.border_station)
     
     def pv_total(self):
         return self.shelter_total() + self.food_and_gas_total() + self.pv_extra_items_total()
@@ -211,6 +211,7 @@ class BorderStationBudgetCalculation(models.Model):
             total += self.pv_total()
             total += self.administration_total()
             total += self.travel_total()
+            total += self.rent_and_utilities_total()
         else:
             total += self.impact_multiplying_total(project)
         return total
