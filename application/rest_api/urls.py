@@ -150,6 +150,7 @@ urlpatterns = [
         url(r'^station-data/country/(?P<country_id>\d+)/(?P<year_month>\d+)/$', StationStatisticsViewSet.as_view({'get': 'retrieve_country_data'}), name='retrieveCountryOperations'),
         url(r'^station-data/country/$', StationStatisticsViewSet.as_view({'put': 'update_station_data'}), name='setCountryOperations'),
         url(r'^location-staff/(?P<station_id>\d+)/(?P<year_month>\d+)/$', StationStatisticsViewSet.as_view({'get': 'retrieve_location_staff'}), name='retrieveLocationStaff'),
+        url(r'^location-staff-staff/(?P<station_id>\d+)/(?P<year_month>\d+)/$', StationStatisticsViewSet.as_view({'get': 'retrieve_location_staff_staff'}), name='retrieveLocationStaffStaff'),
         url(r'^location-staff/$', StationStatisticsViewSet.as_view({'put': 'update_location_staff'}), name='setLocationStaff'),
         url(r'^location-statistics/(?P<station_id>\d+)/(?P<year_month>\d+)/$', StationStatisticsViewSet.as_view({'get': 'retrieve_location_statistics'}), name='retrieveLocationStatistics'),
         url(r'^location-statistics/$', StationStatisticsViewSet.as_view({'put': 'update_location_statistics'}), name='setLocationStatistics'),

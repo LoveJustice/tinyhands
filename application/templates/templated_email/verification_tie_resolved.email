@@ -1,0 +1,22 @@
+{% block subject %} Tie Resolution for IRF {{ irf_number }}{% endblock %}
+
+{% block html %}
+<p>Hi {{ account.first_name }},</p>
+
+<p><a href="{{ url }}">IRF {{ irf_number }}></a> had a disagreement between {{ initial_reviewers }} and was reviewed by {{ tie_break.verifier }}.  Below is a summary of the verificaitons and resolution:</p>
+{% for i in initial %}
+<p>Initial Verification - {{ i.verifier }}</p>
+<p>Verification Category - {{ i.evidence_category }}</p>
+<p>Reason - {{ i.reason }}</p>
+{% endfor %}
+
+<p>Tie Break Verification - {{ tie_break.verifier }}</p>
+<p>Verification Category - {{ tie_break.evidence_category }}</p>
+<p>Reason - {{ tie_break.reason }}</p>
+
+<p>To review the details of this case, please visit the link above and if you would like to contest the tie break verification, please contact hannah@lovejustice.ngo.</p>
+
+<p>Cheers,</p>
+<p>SL Team</p>
+
+{% endblock %}

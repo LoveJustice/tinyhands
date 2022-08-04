@@ -1,0 +1,11 @@
+{% block subject %}Tie for IRF {{ irf_number }}{% endblock %}
+
+{% block html %}
+<p>Hi {{ account.first_name }},</p>
+
+<p><a href="{{ url }}">IRF {{ irf_number }}></a> has a tie and is awaiting a tie-breaking verification.</p>
+
+<p>Cheers,</p>
+<p>SL Team</p>
+
+{% endblock %}

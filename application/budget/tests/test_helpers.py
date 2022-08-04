@@ -1,7 +1,7 @@
 from django.test import TestCase
 
 from budget.tests.factories import BorderStationBudgetCalculationFactory
-from budget.helpers import BudgetLineItem, BudgetTable, MoneyDistributionFormHelper
+from budget.helpers import BudgetLineItem, BudgetTable, Footnote, MoneyDistributionFormHelper
 from budget.models import BorderStationBudgetCalculation
 
 
@@ -34,19 +34,21 @@ class MoneyDistributionFormHelperTests(TestCase):
 
     def setUp(self):
         self.budget = BorderStationBudgetCalculationFactory()
-        self.target = MoneyDistributionFormHelper(self.budget)
+        self.footnote1 = Footnote()
+        self.footnote2 = Footnote()
+        self.target = MoneyDistributionFormHelper(self.budget, self.budget.border_station, self.footnote1, self.footnote2)
 
     def test_sections_should_return_budget_tables_for_each_section(self):
         result = self.target.sections
 
         count = sum(1 for _ in result)
 
-        self.assertEqual(count, 7)
+        self.assertEqual(count, 6)
 
     def test_total_should_return_total_budget_cost(self):
-        result = self.target.total
+        result = self.target.project_total
 
-        self.assertEqual(result, self.budget.station_total)
+        self.assertEqual(result, self.budget.station_total(self.budget.border_station))
 
     def test_date_entered_should_return_date_budget_was_entered(self):
         self.assertEqual(self.target.date_entered, self.budget.date_time_entered.date())
@@ -59,20 +61,15 @@ class MoneyDistributionFormHelperTests(TestCase):
 
         self.assertEqual(len(result), 2)
 
-    def test_communication_items_should_return_list_of_communication_items(self):
-        result = self.target.communication_items
-
-        self.assertEqual(len(result), 3)
-
     def test_travel_items_should_return_list_of_travel_items(self):
-        result = self.target.travel_items
+        result = self.target.staff_travel_items
 
-        self.assertEqual(len(result), 3)
+        self.assertEqual(len(result), 1)
 
     def test_administration_items_should_return_list_of_administration_items(self):
         result = self.target.administration_items
 
-        self.assertEqual(len(result), 5)
+        self.assertEqual(len(result), 4)
 
     def test_shelter_items_should_return_list_of_potential_victim_care_items(self):
         result = self.target.potential_victim_care_items
@@ -80,11 +77,11 @@ class MoneyDistributionFormHelperTests(TestCase):
         self.assertEqual(len(result), 4)
 
     def test_awareness_items_should_return_list_of_awareness_items(self):
-        result = self.target.awareness_items
+        result = self.target.supplies_and_awareness_items
 
-        self.assertEqual(len(result), 3)
+        self.assertEqual(len(result), 4)
 
     def test_get_other_items_should_return_other_items_for_section(self):
-        result = self.target.get_other_items(BorderStationBudgetCalculation.ADMINISTRATION)
+        result = self.target.get_other_items(BorderStationBudgetCalculation.ADMINISTRATION, self.budget.border_station)
 
         self.assertEqual(len(result), 1)
