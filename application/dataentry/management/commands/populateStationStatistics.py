@@ -63,21 +63,25 @@ class Command(BaseCommand):
                 exchange.country = country
                 exchange.year_month = year_month
             
-            try:
-                prior = CountryExchange.objects.get(country=country, year_month=prior_year_month)
-                exchange.exchange_rate = prior.exchange_rate
-            except ObjectDoesNotExist:
-                exchange.exchange_rate = 1.0
+            if exchange.exchange_rate is None or exchange.exchange_rate == 1.0:
+                try:
+                    prior = CountryExchange.objects.get(country=country, year_month=prior_year_month)
+                    exchange.exchange_rate = prior.exchange_rate
+                except ObjectDoesNotExist:
+                    exchange.exchange_rate = 1.0
             
             exchange.save()
         
         # make sure location statistics exists for each active location
-        locations = Location.objects.filter(active=True)
+        locations = Location.objects.all()
         for location in locations:
             if location.border_station is not None and 'hasProjectStats' in location.border_station.features:
                 try:
                     location_statistics = LocationStatistics.objects.get(location=location, year_month=year_month)
                 except ObjectDoesNotExist:
+                    if not location.active:
+                        # Not an active location and no existing entry - skip location
+                        continue
                     location_statistics = LocationStatistics()
                     location_statistics.location = location
                     location_statistics.year_month = year_month
@@ -93,8 +97,8 @@ class Command(BaseCommand):
         
         intercepts = IntercepteeCommon.objects.filter(
                 person__role = 'PVOT',
-                interception_record__logbook_second_verification_date__gte=start_date,
-                interception_record__logbook_second_verification_date__lt=end_date,
+                interception_record__verified_date__gte=start_date,
+                interception_record__verified_date__lt=end_date,
                 interception_record__date_of_interception__gte='2020-10-01'
                 )
         for intercept in intercepts:
@@ -126,11 +130,11 @@ class Command(BaseCommand):
                     location_statistics.arrests = 0
             
             
-            if intercept.interception_record.logbook_second_verification.startswith('Evidence'):
+            if intercept.interception_record.verified_evidence_categorization.startswith('Evidence'):
                 location_statistics.intercepts_evidence += 1
-            elif intercept.interception_record.logbook_second_verification.startswith('High'):
+            elif intercept.interception_record.verified_evidence_categorization.startswith('High'):
                 location_statistics.intercepts_high_risk += 1
-            elif intercept.interception_record.logbook_second_verification.startswith('Should not'):
+            elif intercept.interception_record.verified_evidence_categorization.startswith('Should not'):
                 location_statistics.intercepts_invalid += 1
             location_statistics.intercepts = location_statistics.intercepts_evidence + location_statistics.intercepts_high_risk
             location_statistics.save()
@@ -183,11 +187,14 @@ class Command(BaseCommand):
                 entry.convictions = 0
             
             # Budget
+            """
             try:
                 budget = BorderStationBudgetCalculation.objects.get(border_station=station, month_year__year=year, month_year__month=month)
-                entry.budget = budget.station_total()
+                if entry.budget is None:
+                    entry.budget = budget.station_total()
             except ObjectDoesNotExist:
                 pass
+            """
             
             # gospel
             entry.gospel = (GospelVerification.objects.filter(vdf__station=station,

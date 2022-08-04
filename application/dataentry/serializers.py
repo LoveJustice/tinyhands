@@ -137,7 +137,10 @@ class BorderStationSerializer(serializers.ModelSerializer):
         return obj.operating_country.currency or ""
     
     def get_project_category_name(self, obj):
-        return obj.project_category.name
+        if obj.project_category is not None:
+            return obj.project_category.name
+        else:
+            return None
 
 
 class InterceptionRecordListSerializer(serializers.ModelSerializer):

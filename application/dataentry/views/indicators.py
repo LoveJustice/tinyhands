@@ -9,6 +9,7 @@ from rest_framework.response import Response
 
 from dataentry.models import Audit, AuditSample, BorderStation, Country, Form, FormCategory, IndicatorHistory, IntercepteeCommon, IrfCommon, SiteSettings
 
+
 class CollectionResults:
     def __init__(self, label):
         self.label = label
@@ -236,7 +237,8 @@ class IndicatorsViewSet(viewsets.ViewSet):
                                 str(audit.end_date.month) + '/' + str(audit.end_date.year) + ')',
                         'value': audit.accuracy()
                     }
-        results['audit'] = audit_results         
+        results['audit'] = audit_results 
+        results['blind'] = IrfCommon.has_blind_verification(country)
         
         return Response(results)
     
@@ -288,7 +290,7 @@ class IndicatorsViewSet(viewsets.ViewSet):
             
             result = CollectionResults(station.station_code)
             irf_class = form.storage.get_form_storage_class()
-            irfs = irf_class.objects.filter(station=station, logbook_second_verification_date__gte=start_date, logbook_second_verification_date__lte=end_date)
+            irfs = irf_class.objects.filter(station=station, verified_date__gte=start_date, verified_date__lte=end_date)
             for irf in irfs:
                 evidence = False
                 result.irf_count += 1
@@ -299,13 +301,13 @@ class IndicatorsViewSet(viewsets.ViewSet):
                     result.irf_lag_count += 1
                     result.irf_lag_total += work_days
                     result.irf_lag_percent_total += IndicatorsViewSet.score_lag(work_days)
-                if irf.logbook_second_verification is not None:
+                if irf.verified_evidence_categorization is not None:
                     result.irf_forms_verified += 1
-                    if irf.logbook_second_verification.lower().startswith('evidence'):
+                    if irf.verified_evidence_categorization.lower().startswith('evidence'):
                         result.evidence_count += 1
-                    elif irf.logbook_second_verification.lower().startswith('should'):
+                    elif irf.verified_evidence_categorization.lower().startswith('should'):
                         result.invalid_intercept_count += 1
-                    elif irf.logbook_second_verification.lower().startswith('high'):
+                    elif irf.verified_evidence_categorization.lower().startswith('high'):
                         result.high_risk_count += 1
                 if irf.evidence_categorization is not None and irf.evidence_categorization.lower().startswith('evidence'):
                     evidence = True

@@ -106,6 +106,8 @@ urlpatterns = [
         url(r'^irfNew/blank/(?P<station_id>\d+)', IrfFormViewSet.as_view({'get': 'retrieve_blank_form'}), name='irfNewBlank'),
         url(r'^irfNew/tally/$', IrfFormViewSet.as_view({'get': 'tally'}), name='irfNewTally'),
         url(r'^irfNew/six-month-tally/$', IrfFormViewSet.as_view({'get': 'six_month_tally'}), name='sixMonthTally'),
+        url(r'^irfNew/attachments/(?P<start_date>(\d+)-(\d+)-\d+)/(?P<end_date>\d+-\d+-\d+)/$', IrfFormViewSet.as_view({'get': 'export_attachments'}), name="AttachmentExporter"),
+        url(r'^irfNew/attachments/(?P<start_date>(\d+)-(\d+)-\d+)/(?P<end_date>\d+-\d+-\d+)/count/$', IrfFormViewSet.as_view({'get': 'count_attachments_in_date_range'}), name="AttachmentExporterCount"),
         
         
         url(r'^forms/$', FormViewSet.as_view({'get':'list'}), name='forns'),
@@ -149,6 +151,7 @@ urlpatterns = [
         url(r'^station-data/country/(?P<country_id>\d+)/(?P<year_month>\d+)/$', StationStatisticsViewSet.as_view({'get': 'retrieve_country_data'}), name='retrieveCountryOperations'),
         url(r'^station-data/country/$', StationStatisticsViewSet.as_view({'put': 'update_station_data'}), name='setCountryOperations'),
         url(r'^location-staff/(?P<station_id>\d+)/(?P<year_month>\d+)/$', StationStatisticsViewSet.as_view({'get': 'retrieve_location_staff'}), name='retrieveLocationStaff'),
+        url(r'^location-staff-staff/(?P<station_id>\d+)/(?P<year_month>\d+)/$', StationStatisticsViewSet.as_view({'get': 'retrieve_location_staff_staff'}), name='retrieveLocationStaffStaff'),
         url(r'^location-staff/$', StationStatisticsViewSet.as_view({'put': 'update_location_staff'}), name='setLocationStaff'),
         url(r'^location-statistics/(?P<station_id>\d+)/(?P<year_month>\d+)/$', StationStatisticsViewSet.as_view({'get': 'retrieve_location_statistics'}), name='retrieveLocationStatistics'),
         url(r'^location-statistics/$', StationStatisticsViewSet.as_view({'put': 'update_location_statistics'}), name='setLocationStatistics'),

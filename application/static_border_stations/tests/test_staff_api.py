@@ -3,6 +3,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase, APIClient
 
 from static_border_stations.tests.factories import *
+from static_border_stations.models import WorksOnProject
 
 
 class RestApiTestCase(APITestCase):
@@ -13,9 +14,18 @@ class RestApiTestCase(APITestCase):
 
 class StaffTests(RestApiTestCase):
     fixtures = ['initial-required-data/Region.json','initial-required-data/Country.json', 'initial-required-data/Permission.json']
+    def add_works_on(self, staff, border_station):
+        works_on = WorksOnProject()
+        works_on.staff = staff
+        works_on.border_station = border_station
+        works_on.work_percent = 100
+        works_on.save()
+        
     def setUp(self):
         self.staff = StaffFactory.create()
+        self.add_works_on(self.staff, self.staff.border_station)
         self.other_staff = StaffFactory.create_batch(4)
+        
 
     # Authentication Methods
 
@@ -94,6 +104,7 @@ class StaffTests(RestApiTestCase):
         for mem in self.other_staff:
             mem.border_station = self.staff.border_station
             mem.save()
+            self.add_works_on(mem, self.staff.border_station)
 
         self.login(usr)
         url = reverse('StaffForBorderStation', args=[self.staff.border_station.id])

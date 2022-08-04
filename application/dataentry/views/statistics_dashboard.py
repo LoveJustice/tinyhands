@@ -209,6 +209,7 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
         country = Country.objects.get(id=country_id)
         dashboard={
             'month':datetime.date(year, month, 1).strftime('%B %Y'),
+            'categories':[],
             'entries':[],
             'totals':{}}
                 
@@ -219,12 +220,27 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
             year_month__lte=end_year_month).order_by('station__project_category__sort_order','station__station_name', '-year_month')
         
         dash_station = None
+        print('here')
+        categories = []
         for entry in entries:
             setattr(entry, 'intercepts', LocationStatistics.objects.filter(location__border_station=entry.station, year_month=entry.year_month).aggregate(Sum('intercepts'))['intercepts__sum'])
             setattr(entry, 'arrests', LocationStatistics.objects.filter(location__border_station=entry.station, year_month=entry.year_month).aggregate(Sum('arrests'))['arrests__sum'])
+            if entry.station.project_category.name not in categories:
+                if dash_station is not None:
+                    category['entries'].append(dash_station)
+                    dash_station = None
+                categories.append(entry.station.project_category.name)
+                print('category name', entry.station.project_category.name, 'code', entry.station.station_code)
+                category ={
+                    'name': entry.station.project_category.name,
+                    'entries': [],
+                    'subtotals': {}
+                    }
+                dashboard['categories'].append(category)
+                
             if dash_station is None or dash_station['station_code'] != entry.station.station_code:
                 if dash_station is not None:
-                    dashboard['entries'].append(dash_station)
+                    category['entries'].append(dash_station)
                 dash_station = {
                     'station_name':entry.station.station_name,
                     'station_code':entry.station.station_code,
@@ -245,6 +261,7 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
                 dash_station['to_date_irfs'] = IrfCommon.objects.filter(station=entry.station).count()
                 dash_station['to_date_cifs'] = CifCommon.objects.filter(station=entry.station).count()
                 dash_station['to_date_vdfs'] = VdfCommon.objects.filter(station=entry.station).count()
+                dash_station['to_date_emp'] = StationStatistics.objects.filter(station=entry.station).aggregate(Sum('empowerment'))['empowerment__sum']
                 verdicts = LegalCaseSuspect.objects.filter(legal_case__station=entry.station, verdict_date__isnull=False, legal_case__charge_sheet_date__isnull=False)
                 dash_station['to_date_case_days'] = 0
                 dash_station['to_date_case_count'] = 0
@@ -266,24 +283,26 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
                 
                 for element in ['last_budget', 'last_intercepts', 'last_arrests', 'last_gospel', 'last_empowerment',
                                 'to_date_intercepts', 'to_date_arrests', 'to_date_gospel','to_date_irfs', 'to_date_cifs',
-                                'to_date_vdfs', 'to_date_conv', 'to_date_case_days', 'to_date_case_count']:
+                                'to_date_vdfs', 'to_date_emp', 'to_date_conv', 'to_date_case_days', 'to_date_case_count']:
                     if dash_station[element] is None or dash_station[element] == '':
                         dash_station[element] = 0
                     
-                self.sum_element(dash_station, '6month_budget', self.apply_exchange_rate(entry.budget, entry.station.operating_country, entry.year_month), 0)
-                for element in ['intercepts', 'arrests', 'gospel', 'empowerment']:
-                    self.sum_element(dash_station, '6month_' + element, getattr(entry, element), 0)
+            self.sum_element(dash_station, '6month_budget', self.apply_exchange_rate(entry.budget, entry.station.operating_country, entry.year_month), 0)
+            for element in ['intercepts', 'arrests', 'gospel', 'empowerment']:
+                self.sum_element(dash_station, '6month_' + element, getattr(entry, element), 0)
         
         if dash_station is not None:
-            dashboard['entries'].append(dash_station)
+            category['entries'].append(dash_station)
             
         for element in [
                     'monthly_report', 'compliance', '6month_budget', '6month_intercepts','6month_arrests','6month_gospel', '6month_empowerment', '6month_cifs',
                     'to_date_budget', 'to_date_intercepts', 'to_date_arrests', 'to_date_convictions', 'to_date_gospel','to_date_irfs', 'to_date_cifs',
-                    'to_date_vdfs', 'to_date_conv', 'to_date_case_days', 'to_date_case_count',
+                    'to_date_vdfs', 'to_date_emp', 'to_date_conv', 'to_date_case_days', 'to_date_case_count',
                     'last_budget', 'last_intercepts',  'last_arrests', 'last_gospel', 'last_empowerment','last_staff_count','last_subcommittee_count']:
-            for entry in dashboard['entries']:
-                self.sum_element(dashboard['totals'], element, entry.get(element, None), 0)
+            for category in dashboard['categories']:
+                for entry in category['entries']:
+                    self.sum_element(category['subtotals'], element, entry.get(element, None), 0)
+                self.sum_element(dashboard['totals'], element, category['subtotals'].get(element, None), 0)
         
         if len(dashboard['totals']) > 0:
             dashboard['to_date'] = {
@@ -294,12 +313,38 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
             self.sum_element(dashboard['to_date'], 'arrests', country.prior_arrests)
         
         for element in ['monthly_report', 'compliance']:
-            if dashboard['totals'].get(element, None) is not None:
-                populatedEntries = self.countPopulated(dashboard['entries'], element)
-                if populatedEntries > 0:
-                    dashboard['totals'][element] /= populatedEntries
+            total_populated = 0
+            for category in dashboard['categories']:
+                if category['subtotals'].get(element, None) is not None:
+                    populatedEntries = self.countPopulated(category['entries'], element)
+                    total_populated += populatedEntries
+                    if populatedEntries > 0:
+                        category['subtotals'][element] /= populatedEntries
+            if dashboard['totals'].get(element, None) is not None and total_populated > 0:
+                dashboard['totals'][element] /= total_populated
         
         return Response (dashboard, status=status.HTTP_200_OK)
+    
+    """
+        Need custom method to retrieve staff for a location for a particular year month.  This needs to return all
+        staff currently assigned to work at the station.  It also needs to include any staff who were assigned to work
+        at the station in that year and month, but are not currently assigned.
+    """
+    def retrieve_location_staff_staff(self, request, station_id, year_month):
+        staff = []
+        # Get any staff that already has stats for the project for the year/month
+        stats_for_month_list = LocationStatistics.object.filter(location__border_station__id=station_id, year_month=year_month)
+        for stats in stats_for_month_list:
+            if stats.staff not in staff:
+                staff.append(stats.staff)
+        # Get active staff currently assigned on the project
+        works_on_list = WorksOnProject.objects.filter(border_station__id=station_id)
+        for works_on in works_on_list:
+            if works_on.staff not in staff and works_on.staff.last_date is None:
+                staff.append(works_on.staff)
+        
+        serializer = self.get_serializer(staff, many=True)
+        return Response(serializer.data)
     
     def retrieve_location_staff(self, request, station_id, year_month):
         station = BorderStation.objects.get(id=station_id)

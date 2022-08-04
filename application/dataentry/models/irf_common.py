@@ -5,6 +5,8 @@ from imagekit.processors import ResizeToFill
 from .person import Person
 from .form import BaseCard
 from .form import BaseForm
+from .form import FormCategory
+from accounts.models import Account
 
 # Class to store an instance of the IRF data.
 # This should contain data that is common for all IRFs and is not expected to be changed
@@ -50,11 +52,14 @@ class IrfCommon(BaseForm):
     vulnerability_where_going_doesnt_know = models.BooleanField("Doesn't know where they are going", default=False)
     vulnerability_meeting_someone_met_online = models.BooleanField("Going to meet someone they met online", default=False)
     vulnerability_travel_arranged_by_other = models.BooleanField("Transportation arranged by someone else", default=False)
+    vulnerability_travel_met_recently = models.BooleanField("Is or was traveling with someone they met recently", default=False)
     
     vulnerability_no_id = models.BooleanField("Does not have any form of ID", default=False)
     vulnerability_bus_driver_payment_at_destination = models.BooleanField("Bus driver expecting payment for travel at destination", default=False)
     vulnerability_first_time_traveling_to_city = models.BooleanField("Travelling to city from rural area for first time", default=False)
     vulnerability_no_mobile_phone = models.BooleanField("Does not own mobile phone", default=False)
+    vulnerability_stranded_or_abandoned = models.BooleanField("Stranded/abandoned", default=False)
+   
     
     evade_appearance_avoid_officials = models.BooleanField('Avoiding officials/hesitant to talk', default=False)
     evade_caught_in_lie = models.BooleanField('Caught in a lie or contradiction', default=False).set_weight(35)
@@ -90,6 +95,7 @@ class IrfCommon(BaseForm):
     control_abducted = models.BooleanField('Abducted', default=False)
     control_not_real_job = models.BooleanField('Not a real job', default=False).set_weight(55)
     control_passport_with_broker = models.BooleanField('Passport is with a broker', default=False).set_weight(40)
+    control_id_or_permit_with_broker = models.BooleanField('Passport is with a broker', default=False).set_weight(6)
     control_relationship_to_get_married = models.BooleanField('On their way to get married ', default=False)
     control_reported_total_red_flags = models.IntegerField('Reported Total Red Flag Points:', null=True, blank=True)
     control_status_known_trafficker = models.BooleanField('Is a known trafficker', default=False)
@@ -98,6 +104,8 @@ class IrfCommon(BaseForm):
     control_under_18_family_unwilling = models.BooleanField('Family unwilling to let her go', default=False).set_weight(60)
     control_where_going_someone_paid_expenses = models.BooleanField('Non relatives paid for their travel', default=False)
     control_wife_under_18 = models.BooleanField("Wife/fiancee is under 18", default=False)
+    control_under_18_recruited_for_work = models.BooleanField("Under 18, recruited for work", default=False)
+    control_under_16_recruited_for_work = models.BooleanField("Under 16, recruited for work", default=False)
     
     #Contact/Staff
     case_notes = models.TextField('Case Notes', blank=True)
@@ -152,9 +160,9 @@ class IrfCommon(BaseForm):
     logbook_followup_call = models.CharField(max_length=127, blank=True)
     logbook_first_verification_date = models.DateField(null=True)
     logbook_first_verification_name = models.CharField(max_length=127, blank=True)
-    logbook_second_verification = models.CharField(max_length=127, blank=True)
+    verified_evidence_categorization = models.CharField(max_length=127, blank=True)
     logbook_second_reason = models.TextField('Second Reason', blank=True)
-    logbook_second_verification_date = models.DateField(null=True)
+    verified_date = models.DateField(null=True)
     logbook_second_verification_name = models.CharField(max_length=127, blank=True)
     
     logbook_champion_verification = models.BooleanField('Champion verification', default=False)
@@ -181,11 +189,16 @@ class IrfCommon(BaseForm):
     def key_field_name():
         return 'irf_number'
     
+    @staticmethod
+    def has_blind_verification(country):
+        blind_verification_forms = FormCategory.objects.filter(name='Verification', category__category_type__name='card', form__form_type__name = 'IRF', form__stations__operating_country=country)
+        return (len(blind_verification_forms) > 0)
+        
     class Meta:
         indexes = [
             models.Index(fields=['logbook_submitted', 'station']),
             models.Index(fields=['logbook_first_verification_date', 'station']),
-            models.Index(fields=['logbook_second_verification_date', 'station']),
+            models.Index(fields=['verified_date', 'station']),
         ]
     
 class IntercepteeCommon(BaseCard):
@@ -233,4 +246,32 @@ class IrfAttachmentCommon(BaseCard):
         
     def is_private(self):
         return self.private_card
+
+class IrfVerification(BaseCard):
+    INITIAL = 1
+    TIE_BREAK = 2
+    TIE_BREAK_REVIEW = 3
+    OVERRIDE = 4
+    
+    VERIFICATION_TYPE_CHOICES = [
+        (INITIAL, 'Initial Verification'),
+        (TIE_BREAK, 'Tie Break'),
+        (TIE_BREAK_REVIEW, 'Tie Break Review'),
+        (OVERRIDE, 'Override'),
+    ]
+    
+    interception_record = models.ForeignKey(IrfCommon)
+    
+    verification_type = models.IntegerField(VERIFICATION_TYPE_CHOICES)
+    followup_call = models.CharField(max_length=127, blank=True)
+    followup_details = models.TextField('followup details', blank=True)
+    
+    evidence_categorization = models.CharField(max_length=127)
+    reason = models.TextField('reason', blank=True)
+    verified_date = models.DateField()
+    verifier = models.ForeignKey(Account, null=True, on_delete=models.SET_NULL)
+    
+    def set_parent(self, the_parent):
+        self.interception_record = the_parent
+    
     

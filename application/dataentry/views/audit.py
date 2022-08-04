@@ -49,8 +49,8 @@ class AuditViewSet(viewsets.ModelViewSet):
         data_class = audit.get_form().storage.get_form_storage_class()
         if audit.get_form().form_type.name == 'IRF':
             candidates_queryset = data_class.objects.filter(station__operating_country=audit.country,
-                        logbook_second_verification_date__gte=audit.start_date,
-                        logbook_second_verification_date__lte=audit.end_date).exclude(logbook_second_verification__startswith='Should not count')
+                        verified_date__gte=audit.start_date,
+                        verified_date__lte=audit.end_date).exclude(verified_evidence_categorization__startswith='Should not count')
         else:
             candidates_queryset = data_class.objects.filter(station__operating_country=audit.country,
                         logbook_submitted__gte=audit.start_date, logbook_submitted__lte=audit.end_date)
@@ -88,8 +88,8 @@ class AuditViewSet(viewsets.ModelViewSet):
         data_class = form.storage.get_form_storage_class()
         if form.form_type.name == 'IRF':
             candidates = data_class.objects.filter(station__operating_country=country,
-                        logbook_second_verification_date__gte=start,
-                        logbook_second_verification_date__lte=end).exclude(logbook_second_verification__startswith='Should not count')
+                        verified_date__gte=start,
+                        verified_date__lte=end).exclude(verified_evidence_categorization__startswith='Should not count')
         else:
             candidates = data_class.objects.filter(station__operating_country_id=country,
                         logbook_submitted__gte=start, logbook_submitted__lte=end)

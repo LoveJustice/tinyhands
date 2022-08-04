@@ -30,19 +30,18 @@ class BorderStationBudgetCalculationFactory(DjangoModelFactory):
     communication_chair = True
     communication_chair_amount = FuzzyInteger(200, 800)
 
-    travel_chair_with_bike = True
-    travel_chair_with_bike_amount = FuzzyInteger(1800, 2200)
-    travel_plus_other = FuzzyInteger(1000, 2000)
+    travel_chair = True
+    travel_chair_amount = FuzzyInteger(1800, 2200)
 
-    administration_number_of_intercepts_last_month = FuzzyInteger(1, 4)
-    administration_number_of_intercepts_last_month_multiplier = 20
-    administration_number_of_intercepts_last_month_adder = FuzzyInteger(1000, 2000)
-    administration_number_of_meetings_per_month = FuzzyInteger(1, 4)
-    administration_number_of_meetings_per_month_multiplier = 600
-    administration_booth = True
-    administration_booth_amount = FuzzyInteger(1000, 3000)
-    administration_office = True
-    administration_office_amount = FuzzyInteger(1000, 3000)
+    number_of_intercepts_last_month = FuzzyInteger(1, 4)
+    number_of_intercepts_last_month_multiplier = 20
+    number_of_intercepts_last_month_adder = FuzzyInteger(1000, 2000)
+    number_of_meetings_per_month = FuzzyInteger(1, 4)
+    number_of_meetings_per_month_multiplier = 600
+    booth = True
+    booth_amount = FuzzyInteger(1000, 3000)
+    office = True
+    office_amount = FuzzyInteger(1000, 3000)
 
 
     shelter_rent = True
@@ -52,25 +51,24 @@ class BorderStationBudgetCalculationFactory(DjangoModelFactory):
     shelter_electricity = True
     shelter_electricity_amount = FuzzyInteger(200, 400)
 
-    food_and_gas_number_of_intercepted_girls = FuzzyInteger(1, 4)
-    food_and_gas_number_of_intercepted_girls_multiplier_before = 100
-    food_and_gas_number_of_intercepted_girls_multiplier_after = 3
-    food_and_gas_limbo_girls_multiplier = 100
+    number_of_intercepted_pvs = FuzzyInteger(1, 4)
+    food_per_pv_amount = 100
+    number_of_pv_days = 3
+    limbo_girls_multiplier = 100
 
-    awareness_contact_cards = True
-    awareness_contact_cards_boolean_amount = FuzzyInteger(1000, 4000)
-    awareness_contact_cards_amount = FuzzyInteger(100, 300)
-    awareness_awareness_party_boolean = True
-    awareness_awareness_party = FuzzyInteger(300, 500)
+    contact_cards = True
+    contact_cards_amount = FuzzyInteger(100, 300)
+    awareness_party_boolean = True
+    awareness_party = FuzzyInteger(300, 500)
 
     # members
-    member1 = factory.RelatedFactory(StaffBudgetItemFactory, 'budget_calc_sheet')
-    member2 = factory.RelatedFactory(StaffBudgetItemFactory, 'budget_calc_sheet')
+    member1 = factory.RelatedFactory(StaffBudgetItemFactory, 'budget_calc_sheet', work_project=border_station)
+    member2 = factory.RelatedFactory(StaffBudgetItemFactory, 'budget_calc_sheet', work_project=border_station)
 
     @factory.post_generation
     def post(self, created, extracted, **kwargs):
         for section in [x[0] for x in OtherBudgetItemCost.BUDGET_FORM_SECTION_CHOICES]:
-            OtherBudgetItemCostFactory(form_section=section, budget_item_parent=self)
+            OtherBudgetItemCostFactory(form_section=section, work_project=self.border_station, budget_item_parent=self)
 
 
 class OtherBudgetItemCostFactory(DjangoModelFactory):
