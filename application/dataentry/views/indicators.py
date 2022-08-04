@@ -437,8 +437,8 @@ class IndicatorsViewSet(viewsets.ViewSet):
                 person__role='PVOT',
                 not_physically_present=False,
                 interception_record__station__operating_country__id=country_id,
-                interception_record__logbook_second_verification_date__gte=start_date,
-                interception_record__logbook_second_verification_date__lte=end_date).order_by('person__full_name')
+                interception_record__verified_date__gte=start_date,
+                interception_record__verified_date__lte=end_date).order_by('person__full_name')
         
         if project_code != 'Totals':
             victims = victims.filter(interception_record__station__station_code = project_code)
@@ -492,8 +492,8 @@ class IndicatorsViewSet(viewsets.ViewSet):
                 person__role='Suspect',
                 not_physically_present=False,
                 interception_record__station__operating_country__id=country_id,
-                interception_record__logbook_second_verification_date__gte=start_date,
-                interception_record__logbook_second_verification_date__lte=end_date).order_by('person__full_name')
+                interception_record__verified_date__gte=start_date,
+                interception_record__verified_date__lte=end_date).order_by('person__full_name')
         
         if project_code != 'Totals':
             suspects = suspects.filter(interception_record__station__station_code = project_code)
@@ -521,8 +521,8 @@ class IndicatorsViewSet(viewsets.ViewSet):
         detail_data['text'].append('S Photos %: ' + photo_percentage)
     
     def getIrfDetailList(self, start_date, end_date, project_code, country_id):
-        irfs = IrfCommon.objects.filter(station__operating_country__id=country_id, logbook_second_verification_date__gte=start_date,
-                                 logbook_second_verification_date__lte=end_date)
+        irfs = IrfCommon.objects.filter(station__operating_country__id=country_id, verified_date__gte=start_date,
+                                 verified_date__lte=end_date)
         if project_code != 'Totals':
             irfs = irfs.filter(station__station_code = project_code)
         return irfs
@@ -552,7 +552,7 @@ class IndicatorsViewSet(viewsets.ViewSet):
             lag_total_score += lag_score
             row.append({'value': lag_score})
             row.append({'value': irf.evidence_categorization})
-            row.append({'value': irf.logbook_second_verification})
+            row.append({'value': irf.verified_evidence_categorization})
             table_data['rows'].append(row)
         
         detail_data['table_data'] = table_data
