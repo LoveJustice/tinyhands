@@ -420,8 +420,8 @@ class IrfFormViewSet(BaseFormViewSet):
                     for station in stations:
                         stations_with_perms.append(station)
         
-        qs = IrfAttachmentCommon.objects.filter(interception_record__logbook_second_verification_date__gte=start,
-                                           interception_record__logbook_second_verification_date__lte=end)
+        qs = IrfAttachmentCommon.objects.filter(interception_record__verified_date__gte=start,
+                                           interception_record__verified_date__lte=end)
         if not all_stations:
             qs = qs.filter(interception_record__station__in = stations_with_perms)
         
