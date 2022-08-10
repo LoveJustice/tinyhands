@@ -106,6 +106,8 @@ urlpatterns = [
         url(r'^irfNew/blank/(?P<station_id>\d+)', IrfFormViewSet.as_view({'get': 'retrieve_blank_form'}), name='irfNewBlank'),
         url(r'^irfNew/tally/$', IrfFormViewSet.as_view({'get': 'tally'}), name='irfNewTally'),
         url(r'^irfNew/six-month-tally/$', IrfFormViewSet.as_view({'get': 'six_month_tally'}), name='sixMonthTally'),
+        url(r'^irfNew/attachments/(?P<start_date>(\d+)-(\d+)-\d+)/(?P<end_date>\d+-\d+-\d+)/$', IrfFormViewSet.as_view({'get': 'export_attachments'}), name="AttachmentExporter"),
+        url(r'^irfNew/attachments/(?P<start_date>(\d+)-(\d+)-\d+)/(?P<end_date>\d+-\d+-\d+)/count/$', IrfFormViewSet.as_view({'get': 'count_attachments_in_date_range'}), name="AttachmentExporterCount"),
         
         
         url(r'^forms/$', FormViewSet.as_view({'get':'list'}), name='forns'),
@@ -136,6 +138,7 @@ urlpatterns = [
         
         url(r'^indicators/(?P<country_id>\d+)$', IndicatorsViewSet.as_view({'get': 'calculate_indicators'}), name='indicators'),
         url(r'^collection_indicators/(?P<country_id>\d+)/$', IndicatorsViewSet.as_view({'get': 'get_collection_indicators'}), name='collectionIndicators'),
+        url(r'^collection_indicators/detail/$', IndicatorsViewSet.as_view({'get': 'collection_details'}), name='collectionDetails'),
         
         url(r'help/video/$', VideoViewSet.as_view({'get':'list'}), name='helpVideo'),
         
