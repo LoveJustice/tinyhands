@@ -34,8 +34,6 @@ def get_station_stats_export_rows(objs):
     row = []
     row.append(key)
     
-    work_days = 21
-    
     try:
         station_stats = StationStatistics.objects.get(station__id=station_id, year_month=year_month)
         row.append(fmt(station_stats.station.station_name))
@@ -49,9 +47,6 @@ def get_station_stats_export_rows(objs):
         row.append(fmt(station_stats.active_monitor_locations))
         row.append(fmt(station_stats.active_shelters))
         row.append(fmt(station_stats.subcommittee_members))
-        work_days = station_stats.work_days
-        if work_days is None or work_days == 0:
-            work_days = 21
     except ObjectDoesNotExist:
         # If no StationStatistics then ignore
         return rows;
@@ -65,10 +60,7 @@ def get_station_stats_export_rows(objs):
     row.append(fmt(sums['intercepts_invalid__sum']))
     
     sums = LocationStaff.objects.filter(location__border_station__id = station_id, year_month = year_month).aggregate(Sum('work_fraction'))
-    if sums['work_fraction__sum'] is not None:
-        row.append(fmt(sums['work_fraction__sum']/work_days))
-    else:
-        row.append('')
+    row.append(fmt(sums['work_fraction__sum']))
     
     try:
         monthly_report = MonthlyReport.objects.get(station__id=station_id, year = year_month//100, month=year_month%100)

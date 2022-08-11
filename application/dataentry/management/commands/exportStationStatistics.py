@@ -95,7 +95,6 @@ class Command(BaseCommand):
         gospel = 0
         empowerment = 0
         budget = 0
-        work_days = 0
         for statistic in statistics:
             if statistic.gospel is not None:
                 gospel += statistic.gospel
@@ -103,8 +102,6 @@ class Command(BaseCommand):
                 empowerment += statistic.empowerment
             if statistic.budget is not None:
                 budget += Command.apply_exchange_rate(statistic.budget, station.operating_country, statistic.year_month)
-            if statistic.work_days is not None:
-                work_days += statistic.work_days
         
         
         if start is None:
@@ -113,10 +110,10 @@ class Command(BaseCommand):
         else:
             sum_location = LocationStatistics.objects.filter(location__border_station=station, year_month__gte=start, year_month__lte=end).aggregate(Sum('intercepts'), Sum('arrests'))
             sum_staff = LocationStaff.objects.filter(location__border_station=station, year_month__gte=start, year_month__lte=end).aggregate(Sum('work_fraction'))
-        if sum_staff['work_fraction__sum'] is None or work_days == 0:
+        if sum_staff['work_fraction__sum'] is None:
             station_data.append(0)
         else:
-            station_data.append(sum_staff['work_fraction__sum']/work_days)
+            station_data.append(sum_staff['work_fraction__sum'])
         if sum_location['intercepts__sum'] is None:
             station_data.append(0)
         else:

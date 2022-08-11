@@ -694,7 +694,6 @@ class StationStatisticsSerializer(serializers.ModelSerializer):
             'convictions',
             'station',
             'staff',
-            'work_days'
         ]
     
     intercepts = serializers.SerializerMethodField(read_only=True)
@@ -708,15 +707,7 @@ class StationStatisticsSerializer(serializers.ModelSerializer):
         return LocationStatistics.objects.filter(location__border_station=obj.station, year_month=obj.year_month).aggregate(Sum('arrests'))['arrests__sum']
     
     def get_staff(self, obj):
-        work_days = StationStatistics.objects.get(station=obj.station, year_month=obj.year_month).work_days
-        if work_days is None:
-            work_days = 21
-        total_days = LocationStaff.objects.filter(location__border_station=obj.station, year_month=obj.year_month).aggregate(Sum('work_fraction'))['work_fraction__sum']
-        if total_days is None:
-            staff = None
-        else:
-            staff = total_days / work_days
-        return staff
+        return LocationStaff.objects.filter(location__border_station=obj.station, year_month=obj.year_month).aggregate(Sum('work_fraction'))['work_fraction__sum']
     
 
 class LocationStaffSerializer(serializers.ModelSerializer):
@@ -739,15 +730,7 @@ class LocationStatisticsSerializer(serializers.ModelSerializer):
     staff = serializers.SerializerMethodField(read_only=True)
 
     def get_staff(self, obj):
-        work_days = StationStatistics.objects.get(station=obj.location.border_station, year_month=obj.year_month).work_days
-        if work_days is None:
-            work_days = 21
-        total_days = LocationStaff.objects.filter(location=obj.location, year_month=obj.year_month).aggregate(Sum('work_fraction'))['work_fraction__sum']
-        if total_days is None:
-            staff = None
-        else:
-            staff = total_days / work_days
-        return staff
+        return LocationStaff.objects.filter(location=obj.location, year_month=obj.year_month).aggregate(Sum('work_fraction'))['work_fraction__sum']
     
 class CountryExchangeSerializer(serializers.ModelSerializer):
     class Meta:

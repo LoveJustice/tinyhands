@@ -22,7 +22,6 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
     queryset = StationStatistics.objects.all()
     serializer_class = StationStatisticsSerializer
     permission_classes = (IsAuthenticated, )
-    search_fields = ('station__id',)
     
     def retrieve_country_data(self, request, country_id, year_month):
         results_qs = StationStatistics.objects.filter(station__operating_country__id=country_id, year_month=year_month).order_by('station__project_category__sort_order','station__station_name')
@@ -42,8 +41,6 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
             empowerment = None
         else:
             empowerment = request.data['empowerment']
-        
-        
             
         try:
             station_statistics = StationStatistics.objects.get(station=station, year_month=year_month)
@@ -54,16 +51,9 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
             
         station_statistics.budget = budget
         station_statistics.empowerment = empowerment
-        
-        work_days = request.GET.get('work_days')
-        if work_days != '':
-            station_statistics.work_days = work_days
-            
         if 'hasStaff' in station.features and (not station.operating_country.enable_all_locations or not 'hasLocationStaffing' in station.features):
             other_location = Location.get_or_create_other_location(station)
             general_staff = Staff.get_or_create_general_staff(station)
-            if station_statistics.work_days is None:
-                station_statistics.work_days = 21   
             if request.data['staff'] == '':
                 staff_value = None
             else:
@@ -84,8 +74,8 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
                     location_staff.location = other_location
                     location_staff.staff = general_staff
                     location_staff.year_month = year_month
-               
-                location_staff.work_fraction = float(staff_value) * station_statistics.work_days
+                    
+                location_staff.work_fraction = staff_value
                 location_staff.save()
             
         if not station.operating_country.enable_all_locations:
@@ -230,6 +220,7 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
             year_month__lte=end_year_month).order_by('station__project_category__sort_order','station__station_name', '-year_month')
         
         dash_station = None
+        print('here')
         categories = []
         for entry in entries:
             setattr(entry, 'intercepts', LocationStatistics.objects.filter(location__border_station=entry.station, year_month=entry.year_month).aggregate(Sum('intercepts'))['intercepts__sum'])
@@ -239,6 +230,7 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
                     category['entries'].append(dash_station)
                     dash_station = None
                 categories.append(entry.station.project_category.name)
+                print('category name', entry.station.project_category.name, 'code', entry.station.station_code)
                 category ={
                     'name': entry.station.project_category.name,
                     'entries': [],
@@ -247,14 +239,6 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
                 dashboard['categories'].append(category)
                 
             if dash_station is None or dash_station['station_code'] != entry.station.station_code:
-                staff_days = LocationStaff.objects.filter(location__border_station=entry.station, year_month=end_year_month).aggregate(Sum('work_fraction'))['work_fraction__sum']
-                if staff_days is None:
-                    staff_count = None
-                else:
-                    if entry.work_days is None:
-                        staff_count = staff_days / 21
-                    else:
-                        staff_count = staff_days / entry.work_days
                 if dash_station is not None:
                     category['entries'].append(dash_station)
                 dash_station = {
@@ -267,10 +251,9 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
                     'last_arrests':entry.arrests,
                     'last_gospel':entry.gospel,
                     'last_empowerment':entry.empowerment,
-                    'last_staff_count': staff_count,
+                    'last_staff_count': LocationStaff.objects.filter(location__border_station=entry.station, year_month=end_year_month).aggregate(Sum('work_fraction'))['work_fraction__sum'],
                     'last_subcommittee_count':entry.subcommittee_members
                     }
-               
                 dash_station['to_date_intercepts'] = LocationStatistics.objects.filter(location__border_station=entry.station).aggregate(Sum('intercepts'))['intercepts__sum']
                 dash_station['to_date_arrests'] = LocationStatistics.objects.filter(location__border_station=entry.station).aggregate(Sum('arrests'))['arrests__sum']
                 dash_station['to_date_gospel'] = StationStatistics.objects.filter(station=entry.station).aggregate(Sum('gospel'))['gospel__sum']
