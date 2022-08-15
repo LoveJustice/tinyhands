@@ -1,6 +1,6 @@
 import logging
 import pytz
-from datetime import datetime
+from datetime import datetime, timezone
 from datetime import timedelta
 import traceback
 from time import strptime, mktime
@@ -339,7 +339,7 @@ class IrfFormViewSet(BaseFormViewSet):
     
     def post_process(self, request, form_data):
         try:
-            start_check = datetime.datetime(2020,4,1, tzinfo=datetime.timezone.utc)
+            start_check = datetime(2020,4,1, tzinfo=timezone.utc)
             if form_data.form_object.date_of_interception < start_check.date():
                 return
             blind_verification = IrfCommon.has_blind_verification(form_data.form_object.station.operating_country)
