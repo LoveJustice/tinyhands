@@ -55,7 +55,7 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
         station_statistics.budget = budget
         station_statistics.empowerment = empowerment
         
-        work_days = request.GET.get('work_days')
+        work_days = request.data.get('work_days', '')
         if work_days != '':
             station_statistics.work_days = work_days
             
