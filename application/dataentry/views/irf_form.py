@@ -1,11 +1,16 @@
+import logging
 import pytz
-import datetime
+from datetime import datetime, timezone
 from datetime import timedelta
 import traceback
+from time import strptime, mktime
+import zipfile
+from io import BytesIO
 
 from django.utils import timezone
 from django.db.models import Q
 from django.conf import settings
+from django.http import HttpResponse
 from templated_email import send_templated_mail
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -20,7 +25,10 @@ from dataentry.serialize_form import FormDataSerializer
 from .base_form import BaseFormViewSet, BorderStationOverviewSerializer
 
 from dataentry.form_data import Form, FormData
-from dataentry.models import Incident, IntercepteeCommon, InterceptionCache, IrfCommon, IrfVerification, UserLocationPermission
+from dataentry.models import BorderStation, Incident, IntercepteeCommon, InterceptionCache, IrfAttachmentCommon, IrfCommon, IrfVerification, UserLocationPermission
+
+logger = logging.getLogger(__name__)
+
 
 class IrfListSerializer(serializers.Serializer):
     id = serializers.IntegerField()
@@ -347,7 +355,7 @@ class IrfFormViewSet(BaseFormViewSet):
     
     def post_process(self, request, form_data):
         try:
-            start_check = datetime.datetime(2020,4,1, tzinfo=datetime.timezone.utc)
+            start_check = datetime(2020,4,1, tzinfo=timezone.utc)
             if form_data.form_object.date_of_interception < start_check.date():
                 return
             blind_verification = IrfCommon.has_blind_verification(form_data.form_object.station.operating_country)
@@ -406,4 +414,63 @@ class IrfFormViewSet(BaseFormViewSet):
             self.send_verification_email(ulp, context, template_name)
         except:
             print (traceback.format_exc())
+    
+    def get_attachments(self, request, start_date, end_date):
+        start = datetime.fromtimestamp(mktime(strptime(start_date, '%m-%d-%Y')))
+        end = datetime.fromtimestamp(mktime(strptime(end_date, '%m-%d-%Y')))
+        
+        all_stations = False
+        stations_with_perms = []
+        irf_view_perms = UserLocationPermission.objects.filter(account=request.user, permission__permission_group='IRF',
+                                                               permission__action='VIEW PI')
+        for perm in irf_view_perms:
+            if perm.country is None and perm.station is None:
+                all_stations = True
+                break
+            if perm.country is None:
+                if perm.station not in stations_with_perms:
+                    stations_with_perms.append(perm.station)
+            else:
+                if perm.country not in stations_with_perms:
+                    stations = BorderStation.objects.filter(operating_country=perm.country)
+                    for station in stations:
+                        stations_with_perms.append(station)
+        
+        qs = IrfAttachmentCommon.objects.filter(interception_record__verified_date__gte=start,
+                                           interception_record__verified_date__lte=end)
+        if not all_stations:
+            qs = qs.filter(interception_record__station__in = stations_with_perms)
+        
+        attachments = qs.values_list('attachment', 'option', 'attachment_number', 'interception_record__irf_number',
+                                     'interception_record__station__operating_country__name')
+        return attachments
+    
+    def count_attachments_in_date_range(self, request, start_date, end_date):
+        return Response({"count": self.get_attachments(request, start_date, end_date).count()})
+    
+    def export_attachments(self, request, start_date, end_date):
+        attachments = list(self.get_attachments(request, start_date, end_date))
+        if len(attachments) == 0:
+            return Response({'detail' : "No attachments found in specified date range"}, status = status.HTTP_400_BAD_REQUEST)
 
+        for i in range(len(attachments)):
+            attachments[i] = [str(x) for x in attachments[i]]
+
+        f = BytesIO()
+        imagezip = zipfile.ZipFile(f, 'w')
+        for attachmentTuple in attachments:
+            try:
+                file_index = attachmentTuple[0].rfind('/')
+                if file_index == -1:
+                    zip_path = attachmentTuple[4] + '/' + attachmentTuple[3] + '/' + attachmentTuple[0]
+                else:
+                    zip_path = attachmentTuple[4] + '/' + attachmentTuple[3] + '/' + attachmentTuple[0][file_index+1:]
+                with open(settings.MEDIA_ROOT + '/' + attachmentTuple[0], "rb") as image_file:
+                    imagezip.writestr(zip_path, image_file.read())
+            except:
+                logger.error('Could not find photo: ' + attachmentTuple[1] + '.jpg')
+        imagezip.close()
+
+        response = HttpResponse(f.getvalue(), content_type="application/zip")
+        response['Content-Disposition'] = 'attachment; filename=irfattachments ' + start_date + ' to ' + end_date + '.zip'
+        return response

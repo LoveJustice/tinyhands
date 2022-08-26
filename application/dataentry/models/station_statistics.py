@@ -13,6 +13,7 @@ class StationStatistics(models.Model):
     active_monitor_locations = models.PositiveIntegerField(null=True)
     active_shelters = models.PositiveIntegerField(null=True)
     subcommittee_members = models.PositiveIntegerField(null=True)
+    work_days = models.PositiveIntegerField(null=True)
     modified_date = models.DateTimeField(auto_now=True)
     
     class Meta:
