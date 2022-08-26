@@ -7,6 +7,7 @@ from django.utils import timezone
 from django.db.models import Q
 from django.conf import settings
 from templated_email import send_templated_mail
+from django.core.exceptions import ObjectDoesNotExist
 
 from rest_framework import status
 from rest_framework.response import Response
@@ -19,7 +20,7 @@ from dataentry.serialize_form import FormDataSerializer
 from .base_form import BaseFormViewSet, BorderStationOverviewSerializer
 
 from dataentry.form_data import Form, FormData
-from dataentry.models import IntercepteeCommon, InterceptionCache, IrfCommon, IrfVerification, UserLocationPermission
+from dataentry.models import Incident, IntercepteeCommon, InterceptionCache, IrfCommon, IrfVerification, UserLocationPermission
 
 class IrfListSerializer(serializers.Serializer):
     id = serializers.IntegerField()
@@ -58,6 +59,7 @@ class IrfListSerializer(serializers.Serializer):
         date_time = date_time.replace(microsecond=0)
         date_time = date_time.replace(tzinfo=None)
         return str(date_time)
+    
     
     def get_date_time_of_interception(self, obj):
         date_time_of_interception = str(obj.date_of_interception)
@@ -306,6 +308,20 @@ class IrfFormViewSet(BaseFormViewSet):
                 recipient_list=[user_location_permission.account.email],
                 context=context
             )
+    
+    def post_create(self, form_data):
+        try:
+            # should only find Incident if IRF was created then deleted and now is being created again
+            Incident.objects.get(incident_number=form_data.form_object.irf_number)
+        except ObjectDoesNotExist:
+            # Normal case
+            incident = Incident()
+            
+        incident.status = 'approved'
+        incident.station = form_data.form_object.station
+        incident.form_entered_by = form_data.form_object.form_entered_by
+        incident.incident_number = form_data.form_object.irf_number
+        incident.save()
     
     def verifier_context(self, form_data, context):
         verifications = IrfVerification.objects.filter(interception_record=form_data.form_object).order_by('id')

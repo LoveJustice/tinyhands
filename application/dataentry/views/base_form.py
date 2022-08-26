@@ -84,7 +84,8 @@ class BaseFormViewSet(viewsets.ModelViewSet):
         perm_list = UserLocationPermission.objects.filter(account__id=account_id, permission__permission_group=self.get_perm_group_name()).exclude(permission__action='ADD')
         self.serializer_context = {'perm_list':perm_list}
         for station in tmp_station_list:
-            if (UserLocationPermission.has_permission_in_list(perm_list, self.get_perm_group_name(), None, station.operating_country.id, station.id)):
+            form_list = Form.objects.filter(form_type__name=self.get_form_type_name(), stations=station)
+            if len(form_list) > 0 and UserLocationPermission.has_permission_in_list(perm_list, self.get_perm_group_name(), None, station.operating_country.id, station.id):
                 station_list.append(station)
                 form = Form.current_form(self.get_form_type_name(), station.id)
                 if form is not None and form.storage not in form_storage_list:
@@ -150,6 +151,9 @@ class BaseFormViewSet(viewsets.ModelViewSet):
     def post_process(self, request, form_data):
         pass
     
+    def post_create(self, form_data):
+        pass
+    
     def check_form_number(self, form_data):
         if hasattr(form_data.form_object, 'station'):
             auto_number = form_data.form_object.station.auto_number
@@ -178,6 +182,7 @@ class BaseFormViewSet(viewsets.ModelViewSet):
                 try:
                     form_data = serializer.save()
                     if self.check_form_number(form_data):
+                        self.post_create(form_data)
                         self.logbook_submit(form_data)
                         serializer2 = FormDataSerializer(form_data, context=self.serializer_context)
                         form_done.send_robust(sender=self.__class__, form_data=form_data)
@@ -228,6 +233,9 @@ class BaseFormViewSet(viewsets.ModelViewSet):
         
         return Response (ret, status=rtn_status)
     
+    def custom_create_blank(self, form_object):
+        pass
+    
     def retrieve_blank_form(self, request, station_id):
         self.serializer_context = {}
         form = Form.current_form(self.get_form_type_name(), station_id)
@@ -235,6 +243,7 @@ class BaseFormViewSet(viewsets.ModelViewSet):
             return Response(status=status.HTTP_404_NOT_FOUND)
         form_class = FormData.get_form_class(form)
         the_form = form_class()
+        self.custom_create_blank(the_form)
         if station_id is not None:
             station = BorderStation.objects.get(id=station_id)
             the_form.station = station
