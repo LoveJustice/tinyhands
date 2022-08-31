@@ -124,6 +124,8 @@ class MonthlyReportFormViewSet(BaseFormViewSet):
             report_sections = options['monthly_report_sections']
 
         stations = BorderStation.objects.filter(operating_country=country)
+        # This is mostly accurate, but we don't keep track of if a station closes and reopens
+        # On historical reports, the months that the station was closed would look like missing SMR months
         stations_that_should_have_reports = stations.filter(open=True,
                                                             project_category__name='Transit Monitoring',
                                                             date_established__lte=datetime.datetime(int(year), int(month), 1, 1))
