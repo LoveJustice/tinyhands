@@ -712,7 +712,7 @@ class StationStatisticsSerializer(serializers.ModelSerializer):
         if work_days is None:
             work_days = 21
         total_days = LocationStaff.objects.filter(location__border_station=obj.station, year_month=obj.year_month).aggregate(Sum('work_fraction'))['work_fraction__sum']
-        if total_days is None:
+        if total_days is None or work_days == 0:
             staff = None
         else:
             staff = total_days / work_days
