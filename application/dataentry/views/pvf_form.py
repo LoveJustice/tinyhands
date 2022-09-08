@@ -130,7 +130,7 @@ class PvfFormViewSet(BaseFormViewSet):
             # Only process on the first submit
             return
         
-        if ((vdf.victim_heard_message_before != 'Yes - heard and was believer' and vdf.what_victim_believes_now.startswith('Do believe')) or
+        if ((vdf.victim_heard_message_before != 'Yes - heard and was believer' and vdf.what_victim_believes_now is not None and vdf.what_victim_believes_now.startswith('Do believe')) or
             vdf.what_victim_believes_now == 'Came to believe that Jesus is the one true God'):
             existing_entry = GospelVerification.objects.filter(vdf=vdf)
             if len(existing_entry) < 1:
