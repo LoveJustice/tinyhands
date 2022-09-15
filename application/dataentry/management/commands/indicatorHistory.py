@@ -71,20 +71,14 @@ class Command(BaseCommand):
                 else:
                     last_month = 12
                 
-                print('before loop', year, first_month, last_month+1)
                 for month in range(first_month, last_month+1):
                     IndicatorHistory.objects.filter(year=year, month=month, country__in=countries).delete()
-                    print ('delete', year, month, countries)
         else:
             print ('Calculating idicators for all countries for the month ' + str(end_year) + '-' + str(end_month))
             IndicatorHistory.objects.filter(year=end_year, month=end_month, country__in=countries).delete()
             start_year = end_year
             start_month = end_month
             always_store_indicators = True
-        
-        
-        if True:
-            return
         
         for country in countries:
             #print(country.name)
