@@ -111,7 +111,8 @@ class IndicatorHistory(models.Model):
                 initial_victim_count += IntercepteeCommon.objects.filter(interception_record=irf, person__role='PVOT').count()
                 
             if tie_date is None or tie_date > end_date:
-                tie_backlog += 1
+                if irf.status == 'verification-tie':
+                    tie_backlog += 1
             elif IndicatorHistory.date_in_range(tie_date, start_date, end_date):
                 tie_lag_count += 1
                 tie_lag_time += IndicatorHistory.work_days(initial_date, tie_date)
