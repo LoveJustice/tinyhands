@@ -8,7 +8,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dataentry', '0230_auto_20220803_1408'),
+        ('dataentry', '0231_auto_20220816_1613'),
     ]
 
     operations = [
@@ -23,7 +23,7 @@ class Migration(migrations.Migration):
                         'select id from dataentry_borderstation '\
                         'where operating_country_id in ('\
                                 'select id from dataentry_country '\
-                                "where name in ('South Africa','Indonesia','Mozambique')))"
+                                "where name in ('South Africa','Indonesia','Mozambique','Burundi','Ecuador')))"
         ),
         migrations.RunSQL(
             'insert into dataentry_irfverification (interception_record_id, verification_type, followup_call, followup_details, evidence_categorization,'\
@@ -36,7 +36,7 @@ class Migration(migrations.Migration):
                         'select id from dataentry_borderstation '\
                         'where operating_country_id in ('\
                                 'select id from dataentry_country '\
-                                "where name in ('South Africa','Indonesia','Mozambique')))"
+                                "where name in ('South Africa','Indonesia','Mozambique','Burundi','Ecuador')))"
         ),
         migrations.RunSQL(
             'update dataentry_irfcommon '\
@@ -45,7 +45,7 @@ class Migration(migrations.Migration):
                     'select id from dataentry_borderstation '\
                     'where operating_country_id in ('\
                             'select id from dataentry_country '\
-                            "where name in ('South Africa','Indonesia','Mozambique')))"
+                            "where name in ('South Africa','Indonesia','Mozambique','Burundi','Ecuador')))"
         ),
         migrations.RunSQL(
             'update dataentry_irfcommon '\
@@ -54,6 +54,6 @@ class Migration(migrations.Migration):
                     'select id from dataentry_borderstation '\
                     'where operating_country_id in ('\
                             'select id from dataentry_country '\
-                            "where name in ('South Africa','Indonesia','Mozambique')))"
+                            "where name in ('South Africa','Indonesia','Mozambique','Burundi','Ecuador')))"
         ),
     ]
