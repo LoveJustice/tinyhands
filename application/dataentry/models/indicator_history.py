@@ -110,9 +110,16 @@ class IndicatorHistory(models.Model):
                 initial_lag_time += IndicatorHistory.work_days(irf.logbook_submitted, initial_date)
                 initial_victim_count += IntercepteeCommon.objects.filter(interception_record=irf, person__role='PVOT').count()
                 
-            if tie_date is None or tie_date > end_date:
+            if tie_date is None:
+                if irf.status == 'verification-tie':
+                    # There has been a verification tie and the tie break has not been completed
+                    tie_backlog += 1
+                # else no verification tie has occurred
+            elif tie_date > end_date:
+                # The tie break has been completed, but it was after the end date
                 tie_backlog += 1
             elif IndicatorHistory.date_in_range(tie_date, start_date, end_date):
+                # tie break has been completed within the time range - compute the lag
                 tie_lag_count += 1
                 tie_lag_time += IndicatorHistory.work_days(initial_date, tie_date)
                 tie_victim_count += IntercepteeCommon.objects.filter(interception_record=irf, person__role='PVOT').count()
