@@ -24,7 +24,7 @@ from dataentry.serialize_form import FormDataSerializer
 from .base_form import BaseFormViewSet, BorderStationOverviewSerializer
 
 from dataentry.form_data import Form, FormData
-from dataentry.models import BorderStation, IntercepteeCommon, InterceptionCache, IrfAttachmentCommon, IrfCommon, UserLocationPermission
+from dataentry.models import BorderStation, IntercepteeCommon, InterceptionCache, IrfAttachmentCommon, IrfCommon, UserLocationPermission, IrfVerification
 
 logger = logging.getLogger(__name__)
 
