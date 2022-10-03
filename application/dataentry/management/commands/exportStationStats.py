@@ -21,7 +21,7 @@ def get_station_stats_export_rows(objs):
     station_id = objs[0]['station_id']
     year_month = objs[0]['year_month']
     
-    station_stats_headers = ['Key', 'Station', 'Station Code', 'Country', 'Year Month', 'Convictions', 'Empowerment', 'Budget', 'gospel', '#Active Monitoring Locations', '#Active Shelters', 'Committee']
+    station_stats_headers = ['Key', 'Station', 'Station Code', 'Category', 'Country', 'Year Month', 'Convictions', 'Empowerment', 'Budget', 'gospel', '#Active Monitoring Locations', '#Active Shelters', 'Committee']
     location_stats_headers = ['Intercepts', 'Arrests', 'Evidence Intercepts','High Risk Intercepts', 'Invalid Intercepts']
     location_staff_headers = ['Staff']
     monthly_report_headers = ['SMR']
@@ -40,6 +40,7 @@ def get_station_stats_export_rows(objs):
         station_stats = StationStatistics.objects.get(station__id=station_id, year_month=year_month)
         row.append(fmt(station_stats.station.station_name))
         row.append(fmt(station_stats.station.station_code))
+        row.append(fmt(station_stats.station.project_category.name))
         row.append(fmt(station_stats.station.operating_country.name))
         row.append(fmt(station_stats.year_month))
         row.append(fmt(station_stats.convictions))
