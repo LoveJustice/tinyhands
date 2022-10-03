@@ -254,7 +254,10 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
                     if entry.work_days is None:
                         staff_count = staff_days / 21
                     else:
-                        staff_count = staff_days / entry.work_days
+                        if entry.work_days> 0:
+                            staff_count = staff_days / entry.work_days
+                        else:
+                            staff_count = None
                 if dash_station is not None:
                     category['entries'].append(dash_station)
                 dash_station = {
@@ -275,7 +278,12 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
                 dash_station['to_date_arrests'] = LocationStatistics.objects.filter(location__border_station=entry.station).aggregate(Sum('arrests'))['arrests__sum']
                 dash_station['to_date_gospel'] = StationStatistics.objects.filter(station=entry.station).aggregate(Sum('gospel'))['gospel__sum']
                 dash_station['to_date_conv'] = StationStatistics.objects.filter(station=entry.station).aggregate(Sum('convictions'))['convictions__sum']
-                dash_station['to_date_irfs'] = IrfCommon.objects.filter(station=entry.station).count()
+                dash_station['to_date_irfs'] = IrfCommon.objects.filter(station=entry.station).\
+                        exclude(logbook_submitted__isnull = True).\
+                        exclude(verified_evidence_categorization__startswith = 'Should').\
+                        exclude(verified_date__isnull=True, evidence_categorization__gt = '').\
+                        exclude(verified_date__gte = end_date).\
+                        count()
                 dash_station['to_date_cifs'] = CifCommon.objects.filter(station=entry.station).count()
                 dash_station['to_date_vdfs'] = VdfCommon.objects.filter(station=entry.station).count()
                 dash_station['to_date_emp'] = StationStatistics.objects.filter(station=entry.station).aggregate(Sum('empowerment'))['empowerment__sum']
