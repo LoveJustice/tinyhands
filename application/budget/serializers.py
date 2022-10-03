@@ -14,6 +14,7 @@ class BorderStationBudgetCalculationListSerializer(serializers.ModelSerializer):
             'month_year',
             'date_time_entered',
             'date_time_last_updated',
+            'date_finalized',
         ]
 
     border_station = BorderStationSerializer(read_only=True)

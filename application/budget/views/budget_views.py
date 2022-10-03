@@ -19,8 +19,10 @@ from dataentry.models import UserLocationPermission
 from dataentry.models import Country
 from dataentry.models import Form
 from dataentry.models import FormCategory
+from dataentry.models import StationStatistics
 from rest_api.authentication_expansion import HasPermission, HasDeletePermission, HasPostPermission, HasPutPermission
 from static_border_stations.models import BorderStation
+from budget.pdfexports.mdf_exports import MDFExporter
 
 
 class BudgetViewSet(viewsets.ModelViewSet):
@@ -82,6 +84,33 @@ class BudgetViewSet(viewsets.ModelViewSet):
         super_list_response = super(BudgetViewSet, self).list(request, *args, **kwargs)  # call the supers list view with custom serializer
         self.serializer_class = temp  # put the original serializer back in place
         return super_list_response
+    
+    def finalize(self, request, pk):
+        budget = BorderStationBudgetCalculation.objects.get(id=pk)
+        if budget.date_finalized is None:
+            budget.date_finalized = datetime.date.today()
+            budget.save()
+            
+            mdf_exporter = MDFExporter(budget)
+            mdf_data = mdf_exporter.get_mdf_data(budget)
+            x = budget.month_year
+            year_month = budget.month_year.year * 100 + budget.month_year.month
+            print('year_month', year_month)
+            print('mdfs len', len(mdf_data['mdfs']))
+            for mdf in mdf_data['mdfs']:
+                print('loop', mdf.project.id, mdf.full_total)
+                try:
+                    stats = StationStatistics.objects.get(station=mdf.project, year_month=year_month)
+                except:
+                    stats = StationStatistics()
+                    stats.station = mdf.project
+                    stats.year_month = year_month
+                stats.budget = mdf.full_total
+                stats.save()
+                
+        return Response('')
+                
+            
 
 @api_view(['GET'])
 @permission_classes((IsAuthenticated, ))

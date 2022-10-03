@@ -15,6 +15,7 @@ urlpatterns = [
         url(r'^budget/$', BudgetViewSet.as_view(list_methods), name='BudgetCalculation'),
         url(r'^budget/(?P<pk>\d+)/$', BudgetViewSet.as_view(detail_methods), name='BudgetCalculationWithId'),
         url(r'^budget/(?P<pk>\d+)/top_table_data/$', get_top_table_data, name='get_top_table_data'),
+        url(r'^budget/(?P<pk>\d+)/finalize/$', BudgetViewSet.as_view({'put':'finalize'}), name='BudgetFinalize'),
 
         url(r'^budget/(?P<parent_pk>\d+)/item/$', OtherItemsViewSet.as_view(list_methods), name='BudgetCalculationWithId'),
         url(r'^budget/(?P<parent_pk>\d+)/item/(?P<pk>\d+)/$', OtherItemsViewSet.as_view(detail_methods), name='BudgetCalculationWithId'),
