@@ -16,7 +16,7 @@ class CollectionResults:
         
         self.irf_count = 0
         self.victim_count = 0
-        self.victim_consent_count = 0
+        self.victim_present_count = 0
         self.suspect_count = 0
         self.victim_evidence_count = 0
         self.photo_count = 0
@@ -80,7 +80,7 @@ class CollectionResults:
         self.high_risk_percent = self.compute_percent(self.high_risk_count, self.verified_forms)
         
         self.vdf_percent = self.compute_percent(self.vdf_count, self.victim_count)
-        self.photo_percent = self.compute_percent(self.photo_count, self.victim_consent_count)
+        self.photo_percent = self.compute_percent(self.photo_count, self.victim_present_count)
         self.suspect_photo_percent = self.compute_percent(self.suspect_photo_count, self.suspect_count)
         self.phone_verified_percent = self.compute_percent(self.phone_verified_count, self.phone_count)
         self.compliance_percent = self.compute_percent(self.irf_compliance_count +self.cif_compliance_count +  self.vdf_compliance_count,
@@ -152,7 +152,7 @@ class CollectionResults:
         for entry in the_list:
             self.irf_count += entry.irf_count
             self.victim_count += entry.victim_count
-            self.victim_consent_count += entry.victim_consent_count
+            self.victim_present_count += entry.victim_present_count
             self.suspect_count += entry.suspect_count
             self.victim_evidence_count += entry.victim_evidence_count
             self.photo_count += entry.photo_count
@@ -312,14 +312,13 @@ class IndicatorsViewSet(viewsets.ViewSet):
                 if irf.evidence_categorization is not None and irf.evidence_categorization.lower().startswith('evidence'):
                     evidence = True
                     
-                victims = interceptee_storage.get_form_storage_class().objects.filter(interception_record=irf, person__role='PVOT',
-                                                                                      not_physically_present=False)
+                victims = interceptee_storage.get_form_storage_class().objects.filter(interception_record=irf, person__role='PVOT')
                 for victim in victims:
                     result.victim_count += 1
                     if evidence:
                         result.victim_evidence_count += 1
-                    if victim.consent_to_use_photo == 'Yes':
-                        result.victim_consent_count += 1
+                    if not victim.not_physically_present:
+                        result.victim_present_count += 1
                         if victim.person.photo is not None and victim.person.photo != '':
                             result.photo_count += 1
                     if victim.person.phone_contact is not None and victim.person.phone_contact != '':
