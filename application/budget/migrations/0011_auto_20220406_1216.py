@@ -23,6 +23,6 @@ class Migration(migrations.Migration):
                           "from budget_borderstationbudgetcalculation "\
                           "where id = budget_staffbudgetitem.budget_calc_sheet_id)"),
         migrations.RunSQL("update budget_otherbudgetitemcost "\
-                          "set form_section = 10" \
+                          "set form_section = 10 " \
                           "where form_section = 2"),
     ]

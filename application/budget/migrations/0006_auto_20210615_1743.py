@@ -28,6 +28,6 @@ class Migration(migrations.Migration):
                     "id as budget_item_parent_id "\
                 "from budget_borderstationbudgetcalculation "\
                 "where food_and_gas_limbo_girls_multiplier > 0 "\
-                    "and food_and_gas_number_of_limbo_girls > 0"\
+                    "and food_and_gas_number_of_limbo_girls > 0 "\
                     "and food_and_gas_number_of_days > 0"),
     ]
