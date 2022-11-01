@@ -165,10 +165,20 @@ class BaseFormViewSet(viewsets.ModelViewSet):
         form_number = form_data.form_object.get_key()
         return AutoNumber.check_number(form_data.form_object.station, form_data.form, form_number)
     
+    # Override in subclass to enable common master person
+    def has_common_master_person(self):
+        return False
+    
+    #Override in subclass when common master person is enabled
+    def get_common_master_person(self, form):
+        return None
+    
     def create(self, request):
         form_type = FormType.objects.get(name=self.get_form_type_name())
         request_json = self.extract_data(request, self.get_element_paths())
         self.serializer_context = {'form_type':form_type, 'request.user':request.user}
+        if self.has_common_master_person():
+            self.serializer_context['common_master_person'] = {'value':None}
         self.pre_process(request, None)
         transaction.set_autocommit(False)
         try:
@@ -304,6 +314,8 @@ class BaseFormViewSet(viewsets.ModelViewSet):
         request_json = self.extract_data(request, self.get_element_paths())
 
         self.serializer_context = {'form_type':form.form_type, 'request.user':request.user}
+        if self.has_common_master_person():
+            self.serializer_context['common_master_person'] = {'value':self.get_common_master_person(the_form)}
         transaction.set_autocommit(False)
         try:
             serializer = FormDataSerializer(form_data, data=request_json, context=self.serializer_context)

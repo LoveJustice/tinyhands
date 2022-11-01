@@ -742,14 +742,23 @@ class ResponsePersonSerializer(serializers.Serializer):
         
         person.set_estimated_birthdate(form_base_date)
         
-        link_id = self.validated_data.get('link_id')
-        if link_id is not None:
-            link_person = Person.objects.get(id=link_id)
-            if link_person.master_person is not None:
-               master_person = link_person.master_person
+        master_person = None
+        if 'common_master_person' in self.context:
+            master_person = self.context['common_master_person']['value']
         
+        link_id = None
         if master_person is None:
-            master_person = MasterPerson()
+            link_id = self.validated_data.get('link_id')
+            if link_id is not None:
+                link_person = Person.objects.get(id=link_id)
+                if link_person.master_person is not None:
+                   master_person = link_person.master_person
+        
+            if master_person is None:
+                master_person = MasterPerson()
+            
+            if 'common_master_person' in self.context:
+                self.context['common_master_person']['value'] = master_person
         
         master_person.update(person)
         master_person.save()

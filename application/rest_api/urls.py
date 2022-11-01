@@ -6,7 +6,7 @@ from dataentry.views import SiteSettingsViewSet, GoogleMapKeyViewSet
 from dataentry.views import CountryViewSet
 from dataentry.views import RegionViewSet
 from dataentry.views import AuditViewSet, AuditSampleViewSet
-from dataentry.views import IDManagementViewSet, TraffickerCheckViewSet, IrfFormViewSet, CifFormViewSet, PvfFormViewSet, VdfFormViewSet, GospelVerificationViewSet
+from dataentry.views import IDManagementViewSet, TraffickerCheckViewSet, IrfFormViewSet, CifFormViewSet, PvfFormViewSet, SfFormViewSet, VdfFormViewSet, GospelVerificationViewSet
 from dataentry.views import FormViewSet, FormTypeViewSet
 from dataentry.views import MonthlyReportFormViewSet
 from dataentry.views import IndicatorsViewSet
@@ -136,6 +136,11 @@ urlpatterns = [
         url(r'^pvf/$', PvfFormViewSet.as_view(list), name='pvf'),
         url(r'^pvf/(?P<station_id>\d+)/(?P<pk>\d+)', PvfFormViewSet.as_view({'get': 'my_retrieve', 'put': 'update', 'delete': 'destroy'}), name='pvfDetail'),
         url(r'^pvf/blank/(?P<station_id>\d+)', PvfFormViewSet.as_view({'get': 'retrieve_blank_form'}), name='pvfBlank'),
+        
+        url(r'^sf/$', SfFormViewSet.as_view(list), name='sf'),
+        url(r'^sf/(?P<station_id>\d+)/(?P<pk>\d+)', SfFormViewSet.as_view({'get': 'my_retrieve', 'put': 'update', 'delete': 'destroy'}), name='sfDetail'),
+        url(r'^sf/blank/(?P<station_id>\d+)', SfFormViewSet.as_view({'get': 'retrieve_blank_form'}), name='sfBlank'),
+        url(r'^sf/associated/(?P<pk>\d+)', SfFormViewSet.as_view({'get': 'get_associated_incidents', 'put': 'set_associated_incidents'}), name='sfAssociated'),
         
         url(r'^monthly_report/$', MonthlyReportFormViewSet.as_view(list), name='monthlyReport'),
         url(r'^monthly_report/(?P<station_id>\d+)/(?P<pk>\d+)', MonthlyReportFormViewSet.as_view({'get': 'my_retrieve', 'put': 'update', 'delete': 'destroy'}), name='monthlyReportDetail'),

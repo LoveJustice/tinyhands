@@ -565,6 +565,10 @@ class BaseForm(models.Model):
     class Meta:
         abstract = True
     
+    # Override in subclass when common master person is enabled
+    def get_common_master_person(self):
+        return None
+    
     # Overridden in subclass
     def get_key(self):
         return None

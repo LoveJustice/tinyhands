@@ -35,3 +35,4 @@ from .client_diagnostic import ClientDiagnostic
 from .empowerment import Empowerment
 from .gospel import Gospel
 from .incident import Incident
+from .suspect import Suspect, SuspectInformation, SuspectAssociation, SuspectEvaluation, SuspectLegal, SuspectAttachment
