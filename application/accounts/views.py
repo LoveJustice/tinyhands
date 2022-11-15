@@ -1,3 +1,5 @@
+import logging
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
 from django.http import HttpResponse
@@ -13,12 +15,16 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.authtoken.views import ObtainAuthToken
 
+from util.auth0 import get_auth0_users, update_django_user_if_exists
 from .models import ExpiringToken
 
 
 from accounts.models import Account, DefaultPermissionsSet, make_activation_key
 from accounts.serializers import AccountsSerializer, DefaultPermissionsSetSerializer
 from rest_api.authentication import HasPermission
+
+
+logger = logging.getLogger(__name__)
 
 
 @login_required
@@ -68,14 +74,14 @@ class AccountNameViewSet(ModelViewSet):
     serializer_class = AccountsSerializer
     permission_classes = [IsAuthenticated, HasPermission]
     permissions_required = []
-    
+
     def get_account_name(self, request, pk):
         mod = __import__('dataentry.models.user_location_permission', fromlist=['UserLocationPermission'])
         form_class = getattr(mod, 'UserLocationPermission', None)
         permissions = form_class.objects.filter(account__id=request.user.id, permission__permission_group='IRF')
         if len(permissions) < 1:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
-        
+
         account = Account.objects.get(id=pk)
         if account is not None:
             account_name = account.first_name + ' ' + account.last_name
@@ -185,3 +191,12 @@ class AuthenticateRequest(APIView):
     def get(self, request):
         return Response(status=status.HTTP_200_OK)
 
+
+@api_view(['POST'])
+def sync_django_accounts_with_auth0_users(request):
+    logger.info('Start syncing django accounts with auth0 users')
+    auth0_users = get_auth0_users()
+    for auth0_user in auth0_users:
+        django_account = update_django_user_if_exists(auth0_user)
+    logger.info('Finished syncing django accounts with auth0 users')
+    return Response(status=status.HTTP_200_OK)

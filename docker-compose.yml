@@ -27,6 +27,8 @@ services:
     depends_on:
       - db
 
+  # On windows, is this exiting with code 127?
+  # Change line endings to LF for env files, Dockerfile, run.sh, etc and rebuild with 'docker-compose up nginx --build'
   nginx:
     build: build/nginx
     depends_on:
