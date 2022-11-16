@@ -236,7 +236,6 @@ def update_django_user_if_exists(auth0_user: dict):
         logger.debug(f'No SL user for auth0 user with email {email}, skipping.')
         return None
 
-    # TODO should I update their email? Thats the username field in SL which seems dangerous.
     account.auth0_id = auth0_id
 
     if not ONLY_UPDATE_AUTH0_ID:
