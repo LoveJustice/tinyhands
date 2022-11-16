@@ -231,7 +231,7 @@ def update_django_user_if_exists(auth0_user: dict):
     auth0_id = auth0_user['user_id'].replace('|', '.')
     email = auth0_user['email']
     try:
-        account = Account.objects.get(email=email)
+        account = Account.objects.get(email__iexact=email)
     except Account.DoesNotExist:
         logger.debug(f'No SL user for auth0 user with email {email}, skipping.')
         return None
