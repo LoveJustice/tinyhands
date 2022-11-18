@@ -22,6 +22,19 @@ class Suspect(BaseForm):
     merged_vehicle = models.CharField(max_length=126, null=True)
     merged_plate_number = models.CharField(max_length=126, null=True)
     
+    def get_key(self):
+        return self.sf_number
+    
+    def get_form_type_name(self):
+        return 'SF'
+    
+    def get_form_date(self):
+        return self.date_time_last_updated.date()
+    
+    @staticmethod
+    def key_field_name():
+        return 'sf_number'
+    
     def get_common_master_person(self):
         # cannot directly reference SuspectInformation as it is declared later
         mod = __import__('dataentry.models.suspect', fromlist=['SuspectInformation'])

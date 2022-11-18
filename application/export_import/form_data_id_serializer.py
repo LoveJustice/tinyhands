@@ -3,6 +3,12 @@ from dataentry.models.form import *
 
 class Serializer(form_data_serializer.Serializer):
     def init_adjustments(self):
+        self.adjustments[FormType] = {'dropId':False}
+        self.adjustments[CategoryType] = {'dropId':False}
+        self.adjustments[AnswerType] = {'dropId':False}
+        self.adjustments[FormValidationLevel] = {'dropId':False}
+        self.adjustments[FormValidationType] = {'dropId':False} 
+            
         self.adjustments[Storage] = {'dropId':False}
         self.adjustments[Form] = {'dropId': False, 'clear-m2m': 'stations'}
         self.adjustments[Category] = {'dropId': False}

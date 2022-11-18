@@ -7,7 +7,7 @@ from rest_framework import serializers
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 
-from dataentry.models import BaseForm, BorderStation, Country, FormCategory, Form, FormType, QuestionLayout
+from dataentry.models import BaseForm, BorderStation, Country, FormCategory, Form, FormType, Incident, QuestionLayout
 from dataentry.serializers import FormSerializer, FormTypeSerializer, CountrySerializer
 
 class RelatedForm:
@@ -216,6 +216,14 @@ class FormViewSet(viewsets.ModelViewSet):
         date_time = date_time.replace(tzinfo=None)
         return str(date_time)
     
+    def map_form_type(self, form_type, station): 
+       mapped = form_type
+       if form_type == 'VDF':
+           pvf_forms = station.form_set.filter(form_type__name = 'PVF')
+           if len(pvf_forms) > 0:
+               return 'PVF'
+       return mapped
+    
     def related_forms(self, request, station_id, form_number):
         station = BorderStation.objects.get(id=station_id)
         if not form_number.startswith(station.station_code):
@@ -232,7 +240,19 @@ class FormViewSet(viewsets.ModelViewSet):
             return Response({'errors' : ['form number ' + form_number + ' is not in standard format']},status=status.HTTP_400_BAD_REQUEST)
         
         results = []
-        forms = Form.objects.filter(stations=station, form_type__name__in=['IRF','CIF','VDF', 'LEGAL_CASE'])
+        incident = Incident.objects.get(incident_number = base_number)
+        obj = RelatedForm(incident.id,
+                base_number,
+                'Incident',
+                'Incident',
+                getattr(incident, 'staff_name', None),
+                incident.station.id,
+                incident.station.operating_country.id,
+                self.adjust_date_time_for_tz (incident.date_time_entered_into_system, incident.station.time_zone),
+                self.adjust_date_time_for_tz (incident.date_time_last_updated, incident.station.time_zone))
+        results.append(obj)
+        
+        forms = Form.objects.filter(stations=station, form_type__name__in=['IRF','CIF','VDF', 'LEGAL_CASE', 'PVF', 'SF','LF'])
         for form in forms:
             form_class = form.storage.get_form_storage_class()
             key_field = form_class.key_field_name()
@@ -242,10 +262,13 @@ class FormViewSet(viewsets.ModelViewSet):
                 if len(key_value) > base_length and key_value[base_length] >= '0' and key_value[base_length] <= '9':
                     # form number has another digit after the base_number -> not related form
                     continue
+                if len(form_object.station.form_set.filter(id=form.id)) < 1:
+                    continue
+                
                 staff_name = getattr(form_object, 'staff_name', None)
                 obj = RelatedForm(form_object.id,
                                   form_object.get_key(),
-                                  form_object.get_form_type_name(),
+                                  self.map_form_type(form_object.get_form_type_name(), form_object.station),
                                   form.form_name,
                                   staff_name,
                                   form_object.station.id,

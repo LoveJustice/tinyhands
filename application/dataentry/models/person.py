@@ -202,7 +202,12 @@ class PersonForm(models.Model):
     def get_form_type(self):
         if self.content_object is None:
             return ''
-        return self.content_object.get_form_type_name()
+        form_type = self.content_object.get_form_type_name()
+        if form_type == 'VDF':
+            forms = self.content_object.station.form_set.filter(form_type__name='PVF')
+            if len(forms) > 0:
+                form_type = 'PVF'
+        return form_type
     
     def get_form_name(self):
         if self.content_object is None:
@@ -281,6 +286,15 @@ class PersonForm(models.Model):
                     form_entry.content_object = vdf
                     forms.append(form_entry)
             
+            pvf_forms = Form.objects.filter(form_type__name='PVF')
+            for pvf_form in pvf_forms:
+                pvf_class = pvf_form.storage.get_form_storage_class()
+                pvfs = pvf_class.objects.filter(victim=person, station__in = pvf_form.stations.all())
+                for pvf in pvfs:
+                    form_entry = PersonForm()
+                    form_entry.content_object = pvf
+                    forms.append(form_entry)
+            
             cif_forms = Form.objects.filter(form_type__name='CIF')
             for cif_form in cif_forms:
                 cif_class = cif_form.storage.get_form_storage_class()
@@ -306,6 +320,24 @@ class PersonForm(models.Model):
                     for person_box in person_boxes:
                         form_entry = PersonForm()
                         form_entry.content_object = person_box.cif
+                        forms.append(form_entry)
+            
+            sf_forms = Form.objects.filter(form_type__name='SF')
+            for sf_form in sf_forms:
+                sf_class = sf_form.storage.get_form_storage_class()
+                sfs = sf_class.objects.filter(merged_person=person, station__in=sf_form.stations.all())
+                for sf in sfs:
+                    form_entry = PersonForm()
+                    form_entry.content_object = sf
+                    forms.append(form_entry)
+
+                form_categories = FormCategory.objects.filter(form=sf_form, name='Information')
+                if len(form_categories) == 1:
+                    suspect_info_class = form_categories[0].storage.get_form_storage_class()
+                    suspect_infos = suspect_info_class.objects.filter(person=person, suspect__station__in=sf_form.stations.all())
+                    for suspect_info in suspect_infos:
+                        form_entry = PersonForm()
+                        form_entry.content_object = suspect_info.suspect
                         forms.append(form_entry)
                         
             irf_forms = Form.objects.filter(form_type__name='IRF')

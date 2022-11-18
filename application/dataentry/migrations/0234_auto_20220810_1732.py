@@ -373,11 +373,11 @@ class Migration(migrations.Migration):
             name='exploit_sexual_abuse',
             field=models.BooleanField(default=False),
         ),
-        migrations.RunSQL("insert into dataentry_permission (permission_group, action, min_level, display_order)  values ('PVF','VIEW','STATION',1)"),
-        migrations.RunSQL("insert into dataentry_permission (permission_group, action, min_level, display_order)  values ('PVF','VIEW PI','STATION',2)"),
-        migrations.RunSQL("insert into dataentry_permission (permission_group, action, min_level, display_order)  values ('PVF','EDIT','STATION',3)"),
-        migrations.RunSQL("insert into dataentry_permission (permission_group, action, min_level, display_order)  values ('PVF','ADD','STATION',4)"),
-        migrations.RunSQL("insert into dataentry_permission (permission_group, action, min_level, display_order)  values ('PVF','DELETE','STATION',5)"),
+        migrations.RunSQL("insert into dataentry_permission (permission_group, action, min_level, display_order)  values ('PVF','VIEW','PROJECT',1)"),
+        migrations.RunSQL("insert into dataentry_permission (permission_group, action, min_level, display_order)  values ('PVF','VIEW PI','PROJECT',2)"),
+        migrations.RunSQL("insert into dataentry_permission (permission_group, action, min_level, display_order)  values ('PVF','EDIT','PROJECT',3)"),
+        migrations.RunSQL("insert into dataentry_permission (permission_group, action, min_level, display_order)  values ('PVF','ADD','PROJECT',4)"),
+        migrations.RunSQL("insert into dataentry_permission (permission_group, action, min_level, display_order)  values ('PVF','DELETE','PROJECT',5)"),
         migrations.RunSQL("insert into dataentry_incident (status, station_id, form_entered_by_id, incident_number, incident_date, summary, date_time_entered_into_system, date_time_last_updated) "\
                           "select 'approved', station_id, form_entered_by_id, irf_number as incident_number, case when date_of_interception is null then '2022-08-01' else date_of_interception end, '', date_time_entered_into_system, date_time_last_updated from dataentry_irfcommon"),
     ]

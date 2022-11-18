@@ -114,10 +114,10 @@ class SfFormViewSet(BaseFormViewSet):
         return ['id']
         
     def get_empty_queryset(self):
-        return SfCommon.objects.none()
+        return Suspect.objects.none()
     
     def filter_key(self, queryset, search):
-        return queryset.filter(vdf_number__contains=search)
+        return queryset.filter(sf_number__contains=search)
     
     def custom_create_blank(self, form_object):
         form_object.victim = Person()
