@@ -2,7 +2,7 @@
 {
    "model": "dataentry.storage",
    "fields": {
-      "form_tag": "Suspect",
+      "form_tag": "Sf",
       "module_name": "dataentry.models.suspect",
       "form_model_name": "Suspect",
       "response_model_name": null,
@@ -14,11 +14,11 @@
 {
    "model": "dataentry.storage",
    "fields": {
-      "form_tag": "SuspectInformation",
+      "form_tag": "SfInformation",
       "module_name": "dataentry.models.suspect",
       "form_model_name": "SuspectInformation",
       "response_model_name": null,
-      "parent_storage": "Suspect",
+      "parent_storage": "Sf",
       "foreign_key_field_parent": "suspect",
       "foreign_key_field_child": null
    }
@@ -26,11 +26,11 @@
 {
    "model": "dataentry.storage",
    "fields": {
-      "form_tag": "SuspectAssociation",
+      "form_tag": "SfAssociation",
       "module_name": "dataentry.models.suspect",
       "form_model_name": "SuspectAssociation",
       "response_model_name": null,
-      "parent_storage": "Suspect",
+      "parent_storage": "Sf",
       "foreign_key_field_parent": "suspect",
       "foreign_key_field_child": null
    }
@@ -38,11 +38,11 @@
 {
    "model": "dataentry.storage",
    "fields": {
-      "form_tag": "SuspectEvaluation",
+      "form_tag": "SfEvaluation",
       "module_name": "dataentry.models.suspect",
       "form_model_name": "SuspectEvaluation",
       "response_model_name": null,
-      "parent_storage": "Suspect",
+      "parent_storage": "Sf",
       "foreign_key_field_parent": "suspect",
       "foreign_key_field_child": null
    }
@@ -50,11 +50,11 @@
 {
    "model": "dataentry.storage",
    "fields": {
-      "form_tag": "SuspectLegal",
+      "form_tag": "SfLegal",
       "module_name": "dataentry.models.suspect",
       "form_model_name": "SuspectLegal",
       "response_model_name": null,
-      "parent_storage": "Suspect",
+      "parent_storage": "Sf",
       "foreign_key_field_parent": "suspect",
       "foreign_key_field_child": null
    }
@@ -62,11 +62,11 @@
 {
    "model": "dataentry.storage",
    "fields": {
-      "form_tag": "SuspectAttachment",
+      "form_tag": "SfAttachment",
       "module_name": "dataentry.models.suspect",
       "form_model_name": "SuspectAttachment",
       "response_model_name": null,
-      "parent_storage": "Suspect",
+      "parent_storage": "Sf",
       "foreign_key_field_parent": "suspect",
       "foreign_key_field_child": null
    }
@@ -75,7 +75,7 @@
    "model": "dataentry.form",
    "fields": {
       "form_type": 11,
-      "storage": "Suspect",
+      "storage": "Sf",
       "start_date": "2022-10-08T04:00:00Z",
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "sfNepal",
@@ -86,56 +86,56 @@
 {
    "model": "dataentry.category",
    "fields": {
-      "form_tag": "suspectTop",
+      "form_tag": "sfTop",
       "category_type": 1,
-      "description": "Top - suspect"
+      "description": "Top - SF"
    }
 },
 {
    "model": "dataentry.category",
    "fields": {
-      "form_tag": "suspectInformation",
+      "form_tag": "sfInformation",
       "category_type": 2,
-      "description": "Information - suspect"
+      "description": "Information - SF"
    }
 },
 {
    "model": "dataentry.category",
    "fields": {
-      "form_tag": "suspectAssociation",
+      "form_tag": "sfAssociation",
       "category_type": 2,
-      "description": "Association - suspect"
+      "description": "Association - SF"
    }
 },
 {
    "model": "dataentry.category",
    "fields": {
-      "form_tag": "suspectEvaluation",
+      "form_tag": "sfEvaluation",
       "category_type": 2,
-      "description": "Evaluation - suspect"
+      "description": "Evaluation - SF"
    }
 },
 {
    "model": "dataentry.category",
    "fields": {
-      "form_tag": "suspectLegal",
+      "form_tag": "sfLegal",
       "category_type": 2,
-      "description": "Legal - suspect"
+      "description": "Legal - SF"
    }
 },
 {
    "model": "dataentry.category",
    "fields": {
-      "form_tag": "suspcectAttachment",
+      "form_tag": "sfAttachment",
       "category_type": 2,
-      "description": "Attachment - suspect"
+      "description": "Attachment - SF"
    }
 },
 {
    "model": "dataentry.formcategory",
    "fields": {
       "form": "sfNepal",
-      "category": "suspectTop",
+      "category": "sfTop",
       "name": "Top",
       "order": 1,
       "form_category_question_config": null,
@@ -146,55 +146,55 @@
    "model": "dataentry.formcategory",
    "fields": {
       "form": "sfNepal",
-      "category": "suspectInformation",
+      "category": "sfInformation",
       "name": "Information",
       "order": 2,
       "form_category_question_config": null,
-      "storage": "SuspectInformation"
+      "storage": "SfInformation"
    }
 },
 {
    "model": "dataentry.formcategory",
    "fields": {
       "form": "sfNepal",
-      "category": "suspectAssociation",
+      "category": "sfAssociation",
       "name": "Association",
       "order": 3,
       "form_category_question_config": null,
-      "storage": "SuspectAssociation"
+      "storage": "SfAssociation"
    }
 },
 {
    "model": "dataentry.formcategory",
    "fields": {
       "form": "sfNepal",
-      "category": "suspectEvaluation",
+      "category": "sfEvaluation",
       "name": "Evaluation",
       "order": 4,
       "form_category_question_config": null,
-      "storage": "SuspectEvaluation"
+      "storage": "SfEvaluation"
    }
 },
 {
    "model": "dataentry.formcategory",
    "fields": {
       "form": "sfNepal",
-      "category": "suspectLegal",
+      "category": "sfLegal",
       "name": "Legal",
       "order": 5,
       "form_category_question_config": null,
-      "storage": "SuspectLegal"
+      "storage": "SfLegal"
    }
 },
 {
    "model": "dataentry.formcategory",
    "fields": {
       "form": "sfNepal",
-      "category": "suspcectAttachment",
+      "category": "sfAttachment",
       "name": "Attachments",
       "order": 6,
       "form_category_question_config": null,
-      "storage": "SuspectAttachment"
+      "storage": "SfAttachment"
    }
 },
 {
@@ -729,7 +729,7 @@
    "model": "dataentry.questionlayout",
    "fields": {
       "question": "sfInformationSourceType",
-      "category": "suspectInformation",
+      "category": "sfInformation",
       "weight": 0,
       "form_config": null
    }
@@ -738,7 +738,7 @@
    "model": "dataentry.questionlayout",
    "fields": {
       "question": "sfInformationSourceTitle",
-      "category": "suspectInformation",
+      "category": "sfInformation",
       "weight": 0,
       "form_config": null
    }
@@ -747,7 +747,7 @@
    "model": "dataentry.questionlayout",
    "fields": {
       "question": "sfInformationPerson",
-      "category": "suspectInformation",
+      "category": "sfInformation",
       "weight": 0,
       "form_config": null
    }
@@ -756,7 +756,7 @@
    "model": "dataentry.questionlayout",
    "fields": {
       "question": "sfInformationVehicle",
-      "category": "suspectInformation",
+      "category": "sfInformation",
       "weight": 0,
       "form_config": null
    }
@@ -765,7 +765,7 @@
    "model": "dataentry.questionlayout",
    "fields": {
       "question": "sfInformationPlateNumber",
-      "category": "suspectInformation",
+      "category": "sfInformation",
       "weight": 0,
       "form_config": null
    }
@@ -774,7 +774,7 @@
    "model": "dataentry.questionlayout",
    "fields": {
       "question": "sfInformationIncident",
-      "category": "suspectInformation",
+      "category": "sfInformation",
       "weight": 0,
       "form_config": null
    }
@@ -783,7 +783,7 @@
    "model": "dataentry.questionlayout",
    "fields": {
       "question": "sfAssociationIncident",
-      "category": "suspectAssociation",
+      "category": "sfAssociation",
       "weight": 0,
       "form_config": null
    }
@@ -792,7 +792,7 @@
    "model": "dataentry.questionlayout",
    "fields": {
       "question": "sfAssociationPvs",
-      "category": "suspectAssociation",
+      "category": "sfAssociation",
       "weight": 0,
       "form_config": null
    }
@@ -801,7 +801,7 @@
    "model": "dataentry.questionlayout",
    "fields": {
       "question": "sfAssociationSuspects",
-      "category": "suspectAssociation",
+      "category": "sfAssociation",
       "weight": 0,
       "form_config": null
    }
@@ -810,7 +810,7 @@
    "model": "dataentry.questionlayout",
    "fields": {
       "question": "sfAssociationLocations",
-      "category": "suspectAssociation",
+      "category": "sfAssociation",
       "weight": 0,
       "form_config": null
    }
@@ -819,7 +819,7 @@
    "model": "dataentry.questionlayout",
    "fields": {
       "question": "sfAssociationNarrative",
-      "category": "suspectAssociation",
+      "category": "sfAssociation",
       "weight": 0,
       "form_config": null
    }
@@ -828,7 +828,7 @@
    "model": "dataentry.questionlayout",
    "fields": {
       "question": "sfEvaluationIncident",
-      "category": "suspectEvaluation",
+      "category": "sfEvaluation",
       "weight": 0,
       "form_config": null
    }
@@ -837,7 +837,7 @@
    "model": "dataentry.questionlayout",
    "fields": {
       "question": "sfEvaluationEvaluatorType",
-      "category": "suspectEvaluation",
+      "category": "sfEvaluation",
       "weight": 0,
       "form_config": null
    }
@@ -846,7 +846,7 @@
    "model": "dataentry.questionlayout",
    "fields": {
       "question": "sfEvaluationEvaluatorName",
-      "category": "suspectEvaluation",
+      "category": "sfEvaluation",
       "weight": 0,
       "form_config": null
    }
@@ -855,7 +855,7 @@
    "model": "dataentry.questionlayout",
    "fields": {
       "question": "sfEvaluationEvaluation",
-      "category": "suspectEvaluation",
+      "category": "sfEvaluation",
       "weight": 0,
       "form_config": null
    }
@@ -864,7 +864,7 @@
    "model": "dataentry.questionlayout",
    "fields": {
       "question": "sfLegalIncident",
-      "category": "suspectLegal",
+      "category": "sfLegal",
       "weight": 0,
       "form_config": null
    }
@@ -873,7 +873,7 @@
    "model": "dataentry.questionlayout",
    "fields": {
       "question": "sfLegalArrested",
-      "category": "suspectLegal",
+      "category": "sfLegal",
       "weight": 0,
       "form_config": null
    }
@@ -882,7 +882,7 @@
    "model": "dataentry.questionlayout",
    "fields": {
       "question": "sfLegalArrestDate",
-      "category": "suspectLegal",
+      "category": "sfLegal",
       "weight": 0,
       "form_config": null
    }
@@ -891,7 +891,7 @@
    "model": "dataentry.questionlayout",
    "fields": {
       "question": "sfLegalPoliceCase",
-      "category": "suspectLegal",
+      "category": "sfLegal",
       "weight": 0,
       "form_config": null
    }
@@ -900,7 +900,7 @@
    "model": "dataentry.questionlayout",
    "fields": {
       "question": "sfLegalChargeSheetDate",
-      "category": "suspectLegal",
+      "category": "sfLegal",
       "weight": 0,
       "form_config": null
    }
@@ -909,7 +909,7 @@
    "model": "dataentry.questionlayout",
    "fields": {
       "question": "sfLegalCrimesCharged",
-      "category": "suspectLegal",
+      "category": "sfLegal",
       "weight": 0,
       "form_config": null
    }
@@ -918,7 +918,7 @@
    "model": "dataentry.questionlayout",
    "fields": {
       "question": "sfLegalPvAttempt",
-      "category": "suspectLegal",
+      "category": "sfLegal",
       "weight": 0,
       "form_config": null
    }
@@ -927,7 +927,7 @@
    "model": "dataentry.questionlayout",
    "fields": {
       "question": "sfLegalPvUnable",
-      "category": "suspectLegal",
+      "category": "sfLegal",
       "weight": 0,
       "form_config": null
    }
@@ -936,7 +936,7 @@
    "model": "dataentry.questionlayout",
    "fields": {
       "question": "sfLegalLocationAttempt",
-      "category": "suspectLegal",
+      "category": "sfLegal",
       "weight": 0,
       "form_config": null
    }
@@ -945,7 +945,7 @@
    "model": "dataentry.questionlayout",
    "fields": {
       "question": "sfLegalLocationUnable",
-      "category": "suspectLegal",
+      "category": "sfLegal",
       "weight": 0,
       "form_config": null
    }
@@ -954,7 +954,7 @@
    "model": "dataentry.questionlayout",
    "fields": {
       "question": "sfLegalLocationLastAddress",
-      "category": "suspectLegal",
+      "category": "sfLegal",
       "weight": 0,
       "form_config": null
    }
@@ -963,7 +963,7 @@
    "model": "dataentry.questionlayout",
    "fields": {
       "question": "sfLegalLocationLastLatitude",
-      "category": "suspectLegal",
+      "category": "sfLegal",
       "weight": 0,
       "form_config": null
    }
@@ -972,7 +972,7 @@
    "model": "dataentry.questionlayout",
    "fields": {
       "question": "sfLegalLocationLastLongitude",
-      "category": "suspectLegal",
+      "category": "sfLegal",
       "weight": 0,
       "form_config": null
    }
@@ -981,7 +981,7 @@
    "model": "dataentry.questionlayout",
    "fields": {
       "question": "sfLegalLocationLastNotes",
-      "category": "suspectLegal",
+      "category": "sfLegal",
       "weight": 0,
       "form_config": null
    }
@@ -990,7 +990,7 @@
    "model": "dataentry.questionlayout",
    "fields": {
       "question": "sfLegalLocationLastDate",
-      "category": "suspectLegal",
+      "category": "sfLegal",
       "weight": 0,
       "form_config": null
    }
@@ -999,7 +999,7 @@
    "model": "dataentry.questionlayout",
    "fields": {
       "question": "sfLegalPoliceAttempt",
-      "category": "suspectLegal",
+      "category": "sfLegal",
       "weight": 0,
       "form_config": null
    }
@@ -1008,7 +1008,7 @@
    "model": "dataentry.questionlayout",
    "fields": {
       "question": "sfLegalPoliceUnable",
-      "category": "suspectLegal",
+      "category": "sfLegal",
       "weight": 0,
       "form_config": null
    }
@@ -1017,7 +1017,7 @@
    "model": "dataentry.questionlayout",
    "fields": {
       "question": "sfAttachmentNumber",
-      "category": "suspcectAttachment",
+      "category": "sfAttachment",
       "weight": 0,
       "form_config": {
          "IndexQuestion": "sfAttachmentNumber"
@@ -1028,7 +1028,7 @@
    "model": "dataentry.questionlayout",
    "fields": {
       "question": "sfAttachmentDescription",
-      "category": "suspcectAttachment",
+      "category": "sfAttachment",
       "weight": 0,
       "form_config": null
    }
@@ -1037,7 +1037,7 @@
    "model": "dataentry.questionlayout",
    "fields": {
       "question": "sfAttachmentAttachment",
-      "category": "suspcectAttachment",
+      "category": "sfAttachment",
       "weight": 0,
       "form_config": null
    }
@@ -1046,7 +1046,7 @@
    "model": "dataentry.questionlayout",
    "fields": {
       "question": "sfAttachmentPrivate",
-      "category": "suspcectAttachment",
+      "category": "sfAttachment",
       "weight": 0,
       "form_config": null
    }
@@ -1055,7 +1055,7 @@
    "model": "dataentry.questionlayout",
    "fields": {
       "question": "sfAttachmentOption",
-      "category": "suspcectAttachment",
+      "category": "sfAttachment",
       "weight": 0,
       "form_config": null
    }
@@ -1064,7 +1064,7 @@
    "model": "dataentry.questionlayout",
    "fields": {
       "question": "sfInformationInterviewerName",
-      "category": "suspectInformation",
+      "category": "sfInformation",
       "weight": 0,
       "form_config": null
    }
@@ -1073,7 +1073,7 @@
    "model": "dataentry.questionlayout",
    "fields": {
       "question": "sfInformationInterviewDate",
-      "category": "suspectInformation",
+      "category": "sfInformation",
       "weight": 0,
       "form_config": null
    }
@@ -1082,7 +1082,7 @@
    "model": "dataentry.questionlayout",
    "fields": {
       "question": "sfTopSfNumber",
-      "category": "suspectTop",
+      "category": "sfTop",
       "weight": 0,
       "form_config": null
    }
@@ -1091,7 +1091,7 @@
    "model": "dataentry.questionlayout",
    "fields": {
       "question": "sfInformationInterviewLocation",
-      "category": "suspectInformation",
+      "category": "sfInformation",
       "weight": 0,
       "form_config": null
    }
@@ -1100,7 +1100,7 @@
    "model": "dataentry.questionlayout",
    "fields": {
       "question": "sfTopMergedPerson",
-      "category": "suspectTop",
+      "category": "sfTop",
       "weight": 0,
       "form_config": null
    }
@@ -1109,7 +1109,7 @@
    "model": "dataentry.questionlayout",
    "fields": {
       "question": "sfTopMergedVehicle",
-      "category": "suspectTop",
+      "category": "sfTop",
       "weight": 0,
       "form_config": null
    }
@@ -1118,7 +1118,7 @@
    "model": "dataentry.questionlayout",
    "fields": {
       "question": "sfTopMergedPlateNumber",
-      "category": "suspectTop",
+      "category": "sfTop",
       "weight": 0,
       "form_config": null
    }

@@ -26,3 +26,4 @@ from .gospel import *
 from .pvf_form import *
 from .incident import *
 from .sf_form import *
+from .lf_form import *

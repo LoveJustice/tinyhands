@@ -15,7 +15,22 @@ class LocationForm(BaseForm):
     # Initially only one Incident
     incidents = models.ManyToManyField(Incident)
     
+    merged_place = models.CharField(max_length=126, null=True)
+    merged_place_detail = models.CharField(max_length=126, null=True)
+    merged_place_kind = models.CharField(max_length=126, null=True)
+    merged_address = JSONField(null=True)
+    merged_latitude = models.FloatField(null=True)
+    merged_longitude = models.FloatField(null=True)
+    merged_phone = models.CharField(max_length=126, null=True)
+    merged_name_signboard = models.CharField(max_length=126, null=True)
+    merged_location_in_town = models.CharField(max_length=126, null=True)
+    merged_color = models.CharField(max_length=126, null=True)
+    merged_number_of_levels = models.CharField(max_length=126, null=True)
+    merged_description = models.TextField('Descriptive Features', blank=True) # address notes
+    merged_nearby_landmarks = models.CharField(max_length=126, null=True)
+    
     evidence = models.TextField(blank=True)
+    how_facilitate = models.TextField(blank=True)
     
 class LocationInformation(BaseCard):
     lf = models.ForeignKey(LocationForm, on_delete=models.CASCADE)

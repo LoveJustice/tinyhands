@@ -614,7 +614,7 @@
    "model": "dataentry.storage",
    "pk": 202,
    "fields": {
-      "form_tag": "LegalCaseTimeline",
+      "form_tag": "s",
       "module_name": "dataentry.models.legal_case",
       "form_model_name": "LegalCaseTimeline",
       "response_model_name": null,
