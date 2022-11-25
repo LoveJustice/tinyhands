@@ -1,6 +1,6 @@
 #FROM python:3.6-alpine
 FROM python:3-alpine3.6
-MAINTAINER benaduggan
+MAINTAINER bradleo99
 ENV PYTHONUNBUFFERED 1
 
 ADD requirements.txt /requirements.txt
