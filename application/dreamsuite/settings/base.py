@@ -174,8 +174,8 @@ JWT_AUTH = {
     'JWT_DECODE_HANDLER':
         'util.auth0.jwt_decode_token',
     'JWT_ALGORITHM': 'RS256',
-    'JWT_AUDIENCE': os.environ['AUTH0_AUDIENCE_ID'],
-    'JWT_ISSUER': os.environ['AUTH0_DOMAIN'],
+    'JWT_AUDIENCE': os.environ.get('AUTH0_AUDIENCE_ID', 'UNSET_AUTH0_AUDIENCE_ID'),
+    'JWT_ISSUER': os.environ.get('AUTH0_DOMAIN', 'UNSET_AUTH0_DOMAIN'),
     'JWT_AUTH_HEADER_PREFIX': 'Bearer',
 }
 
