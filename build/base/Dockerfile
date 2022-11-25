@@ -6,20 +6,22 @@ ENV PYTHONUNBUFFERED 1
 ADD requirements.txt /requirements.txt
 RUN apk update
 RUN pip install --upgrade pip
-RUN apk add make automake gcc g++ subversion openssl ca-certificates cmake linux-headers && update-ca-certificates && pip install numpy && pip install pandas
+# Numpy and pandas are needed for matplotlib, not sure why they are in an earlier build step, though
+RUN apk add make automake gcc g++ subversion openssl ca-certificates cmake linux-headers \
+    && update-ca-certificates \
+    && pip install numpy==1.19.5 \
+    && pip install pandas==1.1.5
 
 ENV OPENCV_VERSION=3.1.0
 RUN mkdir /opt && cd /opt \
     && wget https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.zip \
     && unzip ${OPENCV_VERSION}.zip \
-    && rm -rf ${OPENCV_VERSION}.zip 
+    && rm -rf ${OPENCV_VERSION}.zip
 
 # Install and set up CMake and then Open CV - Warning, this takes absolutely forever
 
 ENV CC /usr/bin/clang
 ENV CXX /usr/bin/clang++
-
-
 
 RUN mkdir -p /opt/opencv-${OPENCV_VERSION}/build \
     && cd /opt/opencv-${OPENCV_VERSION}/build \
@@ -88,6 +90,8 @@ RUN set -ex \
             tiff-dev \
             libwebp-dev \
             clang-dev \
+            libffi-dev \
+            cargo \
     && pip install -U pip \
     && LIBRARY_PATH=/lib:/usr/lib /bin/sh -c "pip install --no-cache-dir -r /requirements.txt" \
     && runDeps="$( \
@@ -99,8 +103,6 @@ RUN set -ex \
     )" \
     && apk add --virtual .python-rundeps $runDeps \
     && apk del .build-deps
-
-
 
 # Make the directory for our code and logging
 RUN mkdir -p /data /log
