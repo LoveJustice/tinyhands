@@ -1,0 +1,11 @@
+{% block subject %}High probability suggested match{% endblock %}
+
+{% block html %}
+<p>A case was found where two master persons have a high probability of matching.</p>
+
+<p>First person: {{ name1 }} with forms: {{ forms1 }}</p>
+<p>Second person: {{ name2 }} with forms: {{ forms2 }}</p>
+
+<p><a href="{{ url }}">
+
+{% endblock %}
