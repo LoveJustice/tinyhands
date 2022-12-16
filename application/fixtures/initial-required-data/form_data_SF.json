@@ -612,7 +612,9 @@
       "prompt": "attachment",
       "description": null,
       "answer_type": 12,
-      "params": null,
+      "params": {
+         "subdirectory": "sf_attachments/"
+      },
       "export_name": "attachment",
       "export_params": null
    }

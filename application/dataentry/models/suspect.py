@@ -130,7 +130,7 @@ class SuspectAttachment(BaseCard):
     suspect = models.ForeignKey(Suspect, on_delete=models.CASCADE)
     attachment_number = models.PositiveIntegerField(null=True, blank=True)
     description = models.CharField(max_length=126, null=True)
-    attachment = models.FileField('Attach scanned copy of form (pdf or image)', upload_to='suspect_attachments')
+    attachment = models.FileField('Attach scanned copy of form (pdf or image)', upload_to='sf_attachments')
     private_card = models.BooleanField(default=True)
     option = models.CharField(max_length=126, null=True)
     

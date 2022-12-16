@@ -32,6 +32,19 @@ class LocationForm(BaseForm):
     evidence = models.TextField(blank=True)
     how_facilitate = models.TextField(blank=True)
     
+    def get_key(self):
+        return self.lf_number
+    
+    def get_form_type_name(self):
+        return 'LF'
+    
+    def get_form_date(self):
+        return self.date_time_last_updated.date()
+    
+    @staticmethod
+    def key_field_name():
+        return 'lf_number'
+    
 class LocationInformation(BaseCard):
     lf = models.ForeignKey(LocationForm, on_delete=models.CASCADE)
     incident = models.ForeignKey(Incident, on_delete=models.CASCADE, null=True)
@@ -76,7 +89,7 @@ class LocationAssociation(BaseCard):
     suspects_associative = models.CharField(max_length=126, null=True)
     
     def set_parent(self, the_parent):
-        self.suspect = the_parent
+        self.lf = the_parent
     
 class LocationEvaluation(BaseCard):
     lf = models.ForeignKey(LocationForm, on_delete=models.CASCADE)
@@ -86,18 +99,18 @@ class LocationEvaluation(BaseCard):
     evaluation = models.CharField(max_length=126, null=True)
     
     def set_parent(self, the_parent):
-        self.suspect = the_parent
+        self.lf = the_parent
 
 class LocationAttachment(BaseCard):
     lf = models.ForeignKey(LocationForm, on_delete=models.CASCADE)
     attachment_number = models.PositiveIntegerField(null=True, blank=True)
     description = models.CharField(max_length=126, null=True)
-    attachment = models.FileField('Attach scanned copy of form (pdf or image)', upload_to='suspect_attachments')
+    attachment = models.FileField('Attach scanned copy of form (pdf or image)', upload_to='lf_attachments')
     private_card = models.BooleanField(default=True)
     option = models.CharField(max_length=126, null=True)
     
     def set_parent(self, the_parent):
-        self.suspect = the_parent
+        self.lf = the_parent
         
     def is_private(self):
         return self.private_card

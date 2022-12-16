@@ -3,9 +3,11 @@ from datetime import datetime
 from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.contenttypes.models import ContentType
 
-from dataentry.models import BorderStation, CifCommon, Form, Incident, PersonIdentification, VdfCommon, VdfAttachmentCommon
+from dataentry.models import BorderStation, CifCommon, Form, Incident, PersonIdentification, VdfCommon, VdfAttachmentCommon, PersonForm
 from dataentry.models import Suspect, SuspectInformation, SuspectAssociation, SuspectAttachment, SuspectEvaluation, SuspectLegal
+from dataentry.models import LocationForm, LocationInformation, LocationAssociation, LocationAttachment, LocationEvaluation
 
 class Command(BaseCommand):
     def add_arguments(self, parser):
@@ -29,18 +31,25 @@ class Command(BaseCommand):
                 return
         
         new_forms = {}
-        for form_type in ['pvf','sf']:
+        for form_type in ['pvf','sf','lf']:
             form = Form.objects.get(form_name=form_type + country_name)
             new_forms[form_type] = form
+        
+        cif_type = ContentType.objects.get(app_label='dataentry', model='cifcommon')
             
         with transaction.atomic():
             pvfs = VdfCommon.objects.filter(station__operating_country__name=country_name)
             for pvf in pvfs:
                 incident = self.get_incident_from_form(pvf)   
             
+            cif_count = 0
+            print('Populating from CIFs')
             cifs = CifCommon.objects.filter(station__operating_country__name=country_name)
             for cif in cifs:
                 incident = self.get_incident_from_form(cif)
+                cif_count += 1
+                if cif_count % 1000 == 0:
+                    print(cif_count)
                 
                 pvfs = VdfCommon.objects.filter(station=incident.station, vdf_number__startswith=incident.incident_number)
                 for pvf in pvfs:
@@ -63,6 +72,23 @@ class Command(BaseCommand):
                             self.create_suspect_form(pb, cif, incident)
                         else:
                             self.update_suspect_form(sfs[0], pb, cif, incident)
+                
+                lfs = LocationForm.objects.filter(lf_number__startswith=incident.incident_number)
+                for lb in cif.locationboxcommon_set.all():
+                    found = False
+                    for lf in lfs:
+                        if self.match_location(lf, lb):
+                            self.update_lf(lf, lb, cif, incident)
+                            found = True
+                            break
+                    
+                    if not found:
+                        self.create_lf(lb, cif, incident)
+                
+                # Remove PersonForm entries that linked to CIF
+                person_forms = PersonForm.objects.filter(content_type=cif_type, object_id=cif.id)
+                for person_form in person_forms:
+                    person_form.delete()
             
             for station in stations:
                 vdf_forms = station.form_set.filter(form_type__name = 'VDF')
@@ -75,7 +101,7 @@ class Command(BaseCommand):
                 if len(cif_forms) == 1:
                     station.form_set.remove(cif_forms[0])
                     station.form_set.add(new_forms['sf'])
-                    #station.form_set.add(new_forms['lf'])
+                    station.form_set.add(new_forms['lf'])
                     station.save()
                         
     def get_incident_from_form(self, form_object):
@@ -429,5 +455,121 @@ class Command(BaseCommand):
             eval.save()
         
         self.update_suspect_attachment(cif, suspect_form)
+        
+    def match_location(self, lf, lb):
+        result = False
+        if lf.merged_address is not None and 'address' in lf.merged_address and lb.address is not None and 'address' in lb.address:
+            result = (lf.merged_address['address'] == lb.address['address'] and lf.merged_place == lb.place and 
+                      lf.merged_place_kind == lb.place_kind and lf.merged_description == lb.address_notes)
+        
+        return result
+        
+    def create_lf(self, lb, cif, incident):
+        lf = LocationForm()
+        
+        next_suffix = 'A'
+        existing_suspects = LocationForm.objects.filter(incidents=incident)
+        for existing_suspect in existing_suspects:
+            suffix = existing_suspect.lf_number[len(incident.incident_number)]
+            if suffix >= next_suffix:
+                next_suffix = chr(ord(suffix) + 1)
+        
+        lf.lf_number = incident.incident_number + next_suffix
+        lf.station = cif.station
+        lf.status = 'approved'
+        lf.save()
+        lf.incidents.add(incident)
+        lf.save()
+        
+        self.update_lf(lf, lb, cif, incident)
+    
+    def update_lf(self, lf, lb, cif, incident):
+        info = LocationInformation()
+        info.lf =lf
+        info.incident = incident
+        info.source_type = cif.source_of_intelligence
+        if info.source_type == 'Informant #' and cif.main_pv.full_name == '':
+            info.source_title = ''
+        else:
+            info.source_title = cif.main_pv.full_name
+        info.interviewer_name = cif.staff_name if cif.staff_name is not None else ''
+        info.interview_date = cif.interview_date
+        info.location = cif.location if cif.location is not None else ''
+        info.place = lb.place
+        info.place_kind = lb.place_kind
+        info.address = lb.address
+        info.latitude = lb.latitude
+        info.longitude = lb.longitude
+        info.phone = lb.phone
+        info.name_signboard = lb.name_signboard
+        info.location_in_town = lb.location_in_town
+        info.color = lb.color
+        info.number_of_levels = lb.number_of_levels
+        info.description = lb.address_notes
+        info.nearby_landmarks = lb.nearby_landmarks
+        
+        info.save()
+        
+        infos = LocationInformation.objects.filter(lf=lf)
+        for field in ['place','place_kind','address','latitude','longitude','phone',
+                      'name_signboard','location_in_town','color','number_of_levels',
+                      'description','nearby_landmarks']:
+            current_merged = getattr(lf, 'merged_' + field, None)
+            for info in infos:
+                if current_merged is None or current_merged == '':
+                    tmp = getattr(info, field, None)
+                    if tmp is not None and tmp != '':
+                        setattr(lf, 'merged_' + field, tmp)
+                        break
+        lf.save()
+        
+        assoc = LocationAssociation()
+        assoc.lf =lf
+        assoc.incident = incident
+        assoc.source_type = cif.source_of_intelligence
+        if assoc.source_type == 'Informant #' and cif.main_pv.full_name == '':
+            assoc.source_title = ''
+        else:
+            assoc.source_title = cif.main_pv.full_name
+        assoc.interviewer_name = cif.staff_name if cif.staff_name is not None else ''
+        assoc.interview_date = cif.interview_date
+        assoc.location = cif.location if cif.location is not None else ''
+        assoc.person_in_charge = lb.person_in_charge
+        assoc.pvs_visited = cif.main_pv.full_name
+        if lb.pv_stayed_days is not None and lb.pv_stayed_days != '':
+            assoc.stay_how_long = lb.pv_stayed_days
+            assoc.start_date = lb.pv_stayed_start_date
+        elif lb.pv_stayed_not_applicable:
+            assoc.stay_how_long = 'N/A (Not Applicable)'
+        if lb.pv_attempt_hide_yes:
+            assoc.attempt_hide = 'Yes'
+            assoc.attempt_explanation = lb.pv_attempt_hide_explaination
+        elif lb.pv_attempt_hide_no:
+            assoc.attempt_hide = 'No'
+        if lb.pv_free_to_go_no:
+            assoc.free_to_go = 'No'
+            assoc.free_to_go_explanation = lb.pv_free_to_go_explaination
+        elif lb.pv_free_to_go_yes:
+             assoc.free_to_go = 'Yes'
+        assoc.suspects_associative = self.pb_instance_name(cif, lb.associated_pb)
+        assoc.save()
+        
+        attachment_number = 0
+        for attachment in lf.locationattachment_set.all():
+            if attachment.attachment_number > attachment_number:
+                attachment_number = attachment.attachment_number
+        
+        for attachment in cif.cifattachmentcommon_set.all():
+            attachment_number += 1
+            new_attachment = LocationAttachment()
+            new_attachment.lf = lf
+            new_attachment.attachment_number = attachment_number
+            new_attachment.description = attachment.description
+            new_attachment.attachment = attachment.attachment
+            new_attachment.private_card = attachment.private_card
+            new_attachment.option = attachment.option
+            new_attachment.save()
+        
+                
              
         

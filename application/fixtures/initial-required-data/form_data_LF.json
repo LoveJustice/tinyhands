@@ -187,7 +187,7 @@
    "fields": {
       "form": "lfNepal",
       "category": "lfAttachment",
-      "name": "Attachment",
+      "name": "Attachments",
       "order": 6,
       "form_category_question_config": null,
       "storage": "LfAttachment"
@@ -618,8 +618,10 @@
       "form_tag": "lfAssociationSourceType",
       "prompt": "Source Type",
       "description": null,
-      "answer_type": 1,
-      "params": null,
+      "answer_type": 4,
+      "params": {
+         "textbox": "True"
+      },
       "export_name": "Source Type",
       "export_params": null
    }
@@ -702,8 +704,10 @@
       "form_tag": "lfAssociationPvsStayHowLong",
       "prompt": "How long did the PV Stay",
       "description": null,
-      "answer_type": 2,
-      "params": null,
+      "answer_type": 4,
+      "params": {
+         "textbox": "True"
+      },
       "export_name": "PVs Stay how long",
       "export_params": null
    }
@@ -883,7 +887,9 @@
       "prompt": "attachment",
       "description": null,
       "answer_type": 12,
-      "params": null,
+      "params": {
+         "subdirectory": "lf_attachments/"
+      },
       "export_name": "attachment",
       "export_params": null
    }
@@ -1224,7 +1230,18 @@
       "question": "lfAssociationSourceType",
       "category": "lfAssociation",
       "weight": 0,
-      "form_config": null
+      "form_config": {
+         "RadioItems": {
+            "AssociationModalController": [
+               "Intercept",
+               "Operation",
+               "Victim",
+               "Police",
+               "Trafficker",
+               "OSI"
+            ]
+         }
+      }
    }
 },
 {
@@ -1287,7 +1304,13 @@
       "question": "lfAssociationPvsStayHowLong",
       "category": "lfAssociation",
       "weight": 0,
-      "form_config": null
+      "form_config": {
+         "RadioItems": {
+            "lfAssociationPvsStayHowLong": [
+               "N/A (Not Applicable)"
+            ]
+         }
+      }
    }
 },
 {
@@ -1404,7 +1427,9 @@
       "question": "lfAttachmentNumber",
       "category": "lfAttachment",
       "weight": 0,
-      "form_config": null
+      "form_config": {
+         "IndexQuestion": "lfAttachmentNumber"
+      }
    }
 },
 {
@@ -1545,7 +1570,7 @@
    "model": "dataentry.questionstorage",
    "fields": {
       "question": "lfInformationIncident",
-      "field_name": "incident"
+      "field_name": "incident_id"
    }
 },
 {
@@ -1678,7 +1703,7 @@
    "model": "dataentry.questionstorage",
    "fields": {
       "question": "lfAssociationIncident",
-      "field_name": "incident"
+      "field_name": "incident_id"
    }
 },
 {
@@ -1783,7 +1808,7 @@
    "model": "dataentry.questionstorage",
    "fields": {
       "question": "lfEvaluationIncident",
-      "field_name": "incident"
+      "field_name": "incident_id"
    }
 },
 {

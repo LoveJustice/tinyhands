@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django.core.exceptions import ObjectDoesNotExist
 
-from dataentry.models import Incident, IntercepteeCommon, Suspect, SuspectInformation, VdfCommon
+from dataentry.models import Incident, IntercepteeCommon, LocationForm, LocationInformation, Suspect, SuspectInformation, VdfCommon
 from dataentry.serializers import IncidentSerializer
 
 class IncidentViewSet(viewsets.ModelViewSet):
@@ -87,6 +87,17 @@ class IncidentViewSet(viewsets.ModelViewSet):
             
             suspect_infos = SuspectInformation.objects.filter(incident__incident_number=incident_number)
             for suspect_info in suspect_infos:
-                names['suspect']['forms'].append({'text':suspect_info.person.full_name, 'title':'SF ' + suspect_info.suspect.sf_number})     
+                names['suspect']['forms'].append({'text':suspect_info.person.full_name, 'title':'SF ' + suspect_info.suspect.sf_number})  
+            
+            lfs =  LocationForm.objects.filter(lf_number__startswith=incident_number)
+            for lf in lfs:
+                if lf.merged_address is not None and 'address' in lf.merged_address and IncidentViewSet.is_matching_form(lf.lf_number, incident_number):
+                    names['address']['forms'].append({'text':lf.merged_address['address'], 'title':'LF ' + lf.lf_number})
+            
+            location_infos = LocationInformation.objects.filter(incident__incident_number = incident_number)
+            for location_info in location_infos:
+                if location_info.address is not None and 'address' in location_info.address:
+                    names['address']['forms'].append({'text':location_info.address['address'], 'title':'LF ' + lf.lf_number})
+                
 
         return Response(names)

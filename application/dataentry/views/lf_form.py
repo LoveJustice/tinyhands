@@ -21,19 +21,23 @@ from dataentry.models import Person, UserLocationPermission, Incident, LocationF
 class LfListSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     lf_number = serializers.SerializerMethodField(read_only=True)
-    address_text = serializers.SerializerMethodField(read_only=True)
+    merged_place = serializers.CharField()
+    merged_place_kind = serializers.CharField()
+    address = serializers.SerializerMethodField(read_only=True)
     station = BorderStationOverviewSerializer()
     form_name = serializers.SerializerMethodField(read_only=True)
     incident = serializers.SerializerMethodField(read_only=True)
     
-    
-    perm_group_name = 'SF'
+    perm_group_name = 'LF'
     
     def get_lf_number(self, obj):
-        return obj.sf_number
+        return obj.lf_number
     
-    def get_address_text(self, obj):
-        return obj.merged_address.address
+    def get_address(self, obj):
+        address = ''
+        if obj.merged_address is not None and 'address' in obj.merged_address:
+            address = obj.merged_address['address']
+        return address
     
     def get_form_name(self, obj):
         forms = Form.objects.filter(form_type__name='LF', stations__id=obj.station.id)
@@ -60,9 +64,9 @@ class LfFormViewSet(BaseFormViewSet):
     permission_classes = (IsAuthenticated, )
     serializer_class = LfListSerializer
     filter_backends = (fs.SearchFilter, fs.OrderingFilter,)
-    search_fields = ('lf_number', 'merged_address__address')
+    search_fields = ['lf_number',]
     ordering_fields = [
-        'id', 'lf_number', 'merged_address__address']
+        'id', 'lf_number', 'merged_place', 'merged_place_kind']
     ordering = ('-lf_number')
     
     def get_serializer_class(self):
