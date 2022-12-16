@@ -255,6 +255,16 @@ class Migration(migrations.Migration):
             name='lf',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='dataentry.LocationForm'),
         ),
+         migrations.AlterField(
+            model_name='locationattachment',
+            name='attachment',
+            field=models.FileField(upload_to='lf_attachments', verbose_name='Attach scanned copy of form (pdf or image)'),
+        ),
+        migrations.AlterField(
+            model_name='suspectattachment',
+            name='attachment',
+            field=models.FileField(upload_to='sf_attachments', verbose_name='Attach scanned copy of form (pdf or image)'),
+        ),
         migrations.RunSQL("insert into dataentry_permission (permission_group, action, min_level, display_order)  values ('SF','VIEW','PROJECT',1)"),
         migrations.RunSQL("insert into dataentry_permission (permission_group, action, min_level, display_order)  values ('SF','VIEW PI','PROJECT',2)"),
         migrations.RunSQL("insert into dataentry_permission (permission_group, action, min_level, display_order)  values ('SF','EDIT','PROJECT',3)"),
