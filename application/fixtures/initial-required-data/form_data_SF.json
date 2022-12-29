@@ -86,6 +86,14 @@
 {
    "model": "dataentry.category",
    "fields": {
+      "form_tag": "sfCompliance",
+      "category_type": 1,
+      "description": "Compliance - common SF"
+   }
+},
+{
+   "model": "dataentry.category",
+   "fields": {
       "form_tag": "sfTop",
       "category_type": 1,
       "description": "Top - SF"
@@ -195,6 +203,89 @@
       "order": 6,
       "form_category_question_config": null,
       "storage": "SfAttachment"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfNepal",
+      "category": "sfCompliance",
+      "name": "Compliance",
+      "order": 7,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "sfComplianceDateComplete",
+      "prompt": "Date Complete Information was Received",
+      "description": null,
+      "answer_type": 9,
+      "params": null,
+      "export_name": "Date Complete Information was Received",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "sfComplianceDateReceived",
+      "prompt": "Date Form Received",
+      "description": null,
+      "answer_type": 9,
+      "params": null,
+      "export_name": "Date Form Received",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "sfComplianceDateSubmitted",
+      "prompt": "Date Form Submitted",
+      "description": null,
+      "answer_type": 9,
+      "params": null,
+      "export_name": "Date Form Submitted",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "sfComplianceIncomplete",
+      "prompt": "Were there incomplete questions on the IRF that prevented submission?",
+      "description": null,
+      "answer_type": 4,
+      "params": null,
+      "export_name": "Were there incomplete questions on the IRF that prevented submission?",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "sfComplianceIncompleteSections",
+      "prompt": "Please list incomplete sections that prevented submission",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Incomplete sections list",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "sfComplianceNotes",
+      "prompt": "notes",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Logbook notes",
+      "export_params": null
    }
 },
 {
@@ -730,6 +821,60 @@
 {
    "model": "dataentry.questionlayout",
    "fields": {
+      "question": "sfComplianceDateComplete",
+      "category": "sfCompliance",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "sfComplianceDateReceived",
+      "category": "sfCompliance",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "sfComplianceDateSubmitted",
+      "category": "sfCompliance",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "sfComplianceIncomplete",
+      "category": "sfCompliance",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "sfComplianceIncompleteSections",
+      "category": "sfCompliance",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "sfComplianceNotes",
+      "category": "sfCompliance",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
       "question": "sfInformationSourceType",
       "category": "sfInformation",
       "weight": 0,
@@ -1123,6 +1268,48 @@
       "category": "sfTop",
       "weight": 0,
       "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "sfComplianceDateReceived",
+      "field_name": "logbook_received"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "sfComplianceIncomplete",
+      "field_name": "logbook_incomplete_questions"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "sfComplianceIncompleteSections",
+      "field_name": "logbook_incomplete_sections"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "sfComplianceDateComplete",
+      "field_name": "logbook_information_complete"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "sfComplianceNotes",
+      "field_name": "logbook_notes"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "sfComplianceDateSubmitted",
+      "field_name": "logbook_submitted"
    }
 },
 {

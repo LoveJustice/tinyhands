@@ -300,6 +300,12 @@ class Command(BaseCommand):
         suspect.status = 'approved'
         suspect.sf_number = incident.incident_number + next_suffix
         suspect.merged_person = merged_person
+        suspect.logbook_received = cif.logbook_received
+        suspect.logbook_incomplete_questions = cif.logbook_incomplete_questions
+        suspect.logbook_incomplete_sections = cif.logbook_incomplete_sections
+        suspect.logbook_information_complete = cif.logbook_information_complete
+        suspect.logbook_notes = cif.logbook_notes
+        suspect.logbook_submitted  = cif.logbook_submitted
         suspect.save()
         
         suspect.incidents.add(incident)
@@ -476,6 +482,12 @@ class Command(BaseCommand):
         
         lf.lf_number = incident.incident_number + next_suffix
         lf.station = cif.station
+        lf.logbook_received = cif.logbook_received
+        lf.logbook_incomplete_questions = cif.logbook_incomplete_questions
+        lf.logbook_incomplete_sections = cif.logbook_incomplete_sections
+        lf.logbook_information_complete = cif.logbook_information_complete
+        lf.logbook_notes = cif.logbook_notes
+        lf.logbook_submitted  = cif.logbook_submitted
         lf.status = 'approved'
         lf.save()
         lf.incidents.add(incident)

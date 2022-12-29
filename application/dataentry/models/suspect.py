@@ -22,6 +22,14 @@ class Suspect(BaseForm):
     merged_vehicle = models.CharField(max_length=126, null=True)
     merged_plate_number = models.CharField(max_length=126, null=True)
     
+    #Logbook
+    logbook_received = models.DateField(null=True)
+    logbook_incomplete_questions = models.CharField(max_length=127, blank=True)
+    logbook_incomplete_sections = models.CharField(max_length=127, blank=True)
+    logbook_information_complete = models.DateField(null=True)
+    logbook_notes = models.TextField('Logbook Notes', blank=True)
+    logbook_submitted = models.DateField(null=True)
+    
     def get_key(self):
         return self.sf_number
     
