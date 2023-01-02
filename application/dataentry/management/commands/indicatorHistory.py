@@ -48,6 +48,8 @@ class Command(BaseCommand):
                 start_year_month = values[0]
             else:
                 start_year_month = None
+        else:
+            start_year_month = None
         
         if options['all']:
             print ('Calculating idicators for all countries from 2017-9 through ' + str(end_year) + '-' + str(end_month))
