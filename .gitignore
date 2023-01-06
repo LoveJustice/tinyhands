@@ -70,3 +70,7 @@ error.log
 local.env
 deploybot_args.env
 /venv/*
+codeship.aes
+codeship_deploy_key
+codeship_deploy_key.pub
+codeship.env
