@@ -32,7 +32,7 @@ class Command(BaseCommand):
         
         new_forms = {}
         for form_type in ['pvf','sf','lf']:
-            form = Form.objects.get(form_name=form_type + country_name)
+            form = Form.objects.get(form_name=form_type + country_name.replace(' ',''))
             new_forms[form_type] = form
         
         cif_type = ContentType.objects.get(app_label='dataentry', model='cifcommon')

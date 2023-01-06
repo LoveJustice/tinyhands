@@ -72,6 +72,30 @@
    }
 },
 {
+   "model": "dataentry.form",
+   "fields": {
+      "form_type": 10,
+      "storage": "Lf",
+      "start_date": "2022-10-08T04:00:00Z",
+      "end_date": "2118-12-31T00:00:00Z",
+      "form_name": "lfIndia",
+      "version": "V2022.6",
+      "stations": []
+   }
+},
+{
+   "model": "dataentry.form",
+   "fields": {
+      "form_type": 10,
+      "storage": "Lf",
+      "start_date": "2022-10-08T04:00:00Z",
+      "end_date": "2118-12-31T00:00:00Z",
+      "form_name": "lfIndiaNetwork",
+      "version": "V2022.6",
+      "stations": []
+   }
+},
+{
    "model": "dataentry.category",
    "fields": {
       "form_tag": "lfTop",
@@ -216,6 +240,182 @@
    "model": "dataentry.formcategory",
    "fields": {
       "form": "lfNepal",
+      "category": "lfCompliance",
+      "name": "Compliance",
+      "order": 7,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfIndia",
+      "category": "lfTop",
+      "name": "Top",
+      "order": 1,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfIndia",
+      "category": "lfMerged",
+      "name": "Merged",
+      "order": 2,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfIndia",
+      "category": "lfInformation",
+      "name": "Information",
+      "order": 2,
+      "form_category_question_config": null,
+      "storage": "LfInformation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfIndia",
+      "category": "lfAssociation",
+      "name": "Association",
+      "order": 3,
+      "form_category_question_config": null,
+      "storage": "LfAssociation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfIndia",
+      "category": "lfEvaluation",
+      "name": "Evaluation",
+      "order": 4,
+      "form_category_question_config": null,
+      "storage": "LfEvaluation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfIndia",
+      "category": "lfNarrative",
+      "name": "Narrative",
+      "order": 5,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfIndia",
+      "category": "lfAttachment",
+      "name": "Attachments",
+      "order": 6,
+      "form_category_question_config": null,
+      "storage": "LfAttachment"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfIndia",
+      "category": "lfCompliance",
+      "name": "Compliance",
+      "order": 7,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfIndiaNetwork",
+      "category": "lfTop",
+      "name": "Top",
+      "order": 1,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfIndiaNetwork",
+      "category": "lfMerged",
+      "name": "Merged",
+      "order": 2,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfIndiaNetwork",
+      "category": "lfInformation",
+      "name": "Information",
+      "order": 2,
+      "form_category_question_config": null,
+      "storage": "LfInformation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfIndiaNetwork",
+      "category": "lfAssociation",
+      "name": "Association",
+      "order": 3,
+      "form_category_question_config": null,
+      "storage": "LfAssociation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfIndiaNetwork",
+      "category": "lfEvaluation",
+      "name": "Evaluation",
+      "order": 4,
+      "form_category_question_config": null,
+      "storage": "LfEvaluation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfIndiaNetwork",
+      "category": "lfNarrative",
+      "name": "Narrative",
+      "order": 5,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfIndiaNetwork",
+      "category": "lfAttachment",
+      "name": "Attachments",
+      "order": 6,
+      "form_category_question_config": null,
+      "storage": "LfAttachment"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfIndiaNetwork",
       "category": "lfCompliance",
       "name": "Compliance",
       "order": 7,
