@@ -86,16 +86,18 @@ class ValidateForm:
     
     def at_least_one_card (self, form_data, validation, questions, category_index, general):
         if validation.params is None or 'category_name' not in validation.params:
-            category_name = 'CARD'
+            category_name = ''
+            category_id = None
         else:
             category_name = validation.params['category_name']
-        if getattr(form_data, 'card_dict', None) is None or validation.params is None or 'category_id' not in validation.params:
+            category_id = self.find_category_id_by_name(form_data, category_name)
+        if (getattr(form_data, 'card_dict', None) is None or validation.params is None or
+                category_name == '' or category_id is None):
             tmp_validation = FormValidation()
             tmp_validation.level = validation.level
             tmp_validation.error_warning_message = 'Incorrect configuration for validation:' + validation.error_warning_message
             self.add_error_or_warning(category_name, None, tmp_validation)
         else:
-            category_id = validation.params['category_id']
             if category_id in form_data.card_dict:
                 if len(form_data.card_dict[category_id]):
                     return
@@ -103,10 +105,10 @@ class ValidateForm:
         self.add_error_or_warning(category_name, None, validation)
     
     def match_filter (self, card, filter):
-        if 'question_id' not in filter or 'value' not in filter or 'operation' not in filter:
+        if 'question_tag' not in filter or 'value' not in filter or 'operation' not in filter:
             return -1
         
-        question = Question.objects.get(id=filter['question_id'])
+        question = Question.objects.get(form_tag=filter['question_tag'])
         if 'part' in filter:
             answer = card.get_answer(question, value=False)
             parts = filter['part'].split('.')
@@ -130,27 +132,19 @@ class ValidateForm:
     def card_count (self, form_data, validation, questions, category_index, general):
         if validation.params is not None and 'category_name' in validation.params:
             category_name = validation.params['category_name']
+            category_id = self.find_category_id_by_name(form_data, category_name)
         else:
             category_name = ''
+            category_id = None
+        card_count = 0
         if (getattr(form_data, 'card_dict', None) is None or validation.params is None or 
-                ('category_id' not in validation.params and 'category_name' not in validation.params) or
+                category_name == '' or category_id is None or
                 ('min_count' not in validation.params and 'max_count' not in validation.params)):
             tmp_validation = FormValidation()
             tmp_validation.level = validation.level
             tmp_validation.error_warning_message = 'Incorrect configuration for validation:' + validation.error_warning_message
             self.add_error_or_warning(category_name, None, tmp_validation)
         else:
-            card_count = 0
-            if 'category_id' in validation.params:
-                category_id = validation.params['category_id']
-            else:
-                category_id = self.find_category_id_by_name(form_data, category_name)
-                if category_id is None:
-                    tmp_validation = FormValidation()
-                    tmp_validation.level = validation.level
-                    tmp_validation.error_warning_message = 'Category name ' + category_name + ' not found:' + validation.error_warning_message
-                    self.add_error_or_warning(category_name, None, tmp_validation)
-                    
             if category_id in form_data.card_dict:
                 for card in form_data.card_dict[category_id]:
                     if 'filter' in validation.params:
@@ -295,9 +289,10 @@ class ValidateForm:
             
     def interceptee_count_match (self, form_data, validation, questions, category_index, general):
         category_name = 'People'
+        category_id = self.find_category_id_by_name(form_data, category_name)
         if (getattr(form_data, 'card_dict', None) is None or validation.params is None or 
-                'category_id' not in validation.params or
-                'count_question_id' not in validation.params or
+                category_id is None or
+                'count_question_tag' not in validation.params or
                 'filter' not in validation.params):
             tmp_validation = FormValidation()
             tmp_validation.level = validation.level
@@ -305,8 +300,7 @@ class ValidateForm:
             self.add_error_or_warning(category_name, None, tmp_validation)
         else:
             card_count = 0
-            category_id = validation.params['category_id']
-            count_question = Question.objects.get(id=validation.params['count_question_id'])
+            count_question = Question.objects.get(form_tag=validation.params['count_question_tag'])
             count_to_match = form_data.get_answer(count_question)
             if category_id in form_data.card_dict:
                 for card in form_data.card_dict[category_id]:
