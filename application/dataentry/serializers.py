@@ -681,9 +681,8 @@ class FormSerializer(serializers.ModelSerializer):
 
 class StationStatisticsSerializer(serializers.ModelSerializer):
     class Meta:
-        fields = '__all__'
         model = StationStatistics
-        fields = fields = [
+        fields = [
             'id',
             'year_month',
             'compliance',
@@ -695,12 +694,14 @@ class StationStatisticsSerializer(serializers.ModelSerializer):
             'convictions',
             'station',
             'staff',
-            'work_days'
+            'work_days',
+            'is_station_open_now'
         ]
     
     intercepts = serializers.SerializerMethodField(read_only=True)
     arrests = serializers.SerializerMethodField(read_only=True)
     staff = serializers.SerializerMethodField(read_only=True)
+    is_station_open_now = serializers.SerializerMethodField(read_only=True)
     
     def get_intercepts(self, obj):
         return LocationStatistics.objects.filter(location__border_station=obj.station, year_month=obj.year_month).aggregate(Sum('intercepts'))['intercepts__sum']
@@ -718,6 +719,11 @@ class StationStatisticsSerializer(serializers.ModelSerializer):
         else:
             staff = total_days / work_days
         return staff
+
+    def get_is_station_open_now(self, obj: StationStatistics):
+        station = obj.station
+        return station.open
+
     
 
 class LocationStaffSerializer(serializers.ModelSerializer):
