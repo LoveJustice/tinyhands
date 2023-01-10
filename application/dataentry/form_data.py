@@ -75,7 +75,6 @@ class CardData:
                 card_response.parent = self.form_data.form_object
                 card_response.question = question
             else:
-                print("set_answer - response", question.id)
                 card_response = self.category_form.response_model()
                 
             card_response.value = answer
@@ -168,7 +167,8 @@ class FormData:
         self.form_model = the_object.__class__
         self.person_containers = []
         self.multi_reference = []
-        storage = Storage.objects.get(form_model_name = the_object.__class__.__name__)
+        storage_list = Storage.objects.filter(form_model_name = the_object.__class__.__name__)
+        storage = storage_list[0]
         if storage.response_model_name is not None:
             mod = __import__(storage.module_name, fromlist=[storage.response_model_name])
             self.response_model = getattr(mod, storage.response_model_name, None)

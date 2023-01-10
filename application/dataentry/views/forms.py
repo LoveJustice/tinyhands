@@ -7,7 +7,7 @@ from rest_framework import serializers
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 
-from dataentry.models import BaseForm, BorderStation, Country, FormCategory, Form, FormType, QuestionLayout
+from dataentry.models import BaseForm, BorderStation, Country, FormCategory, Form, FormType, Incident, QuestionLayout
 from dataentry.serializers import FormSerializer, FormTypeSerializer, CountrySerializer
 
 class RelatedForm:
@@ -54,26 +54,29 @@ class FormViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(form_qs.order_by('form_type__name','form_name'), many=True)
         return Response(serializer.data)
     
-    @staticmethod
-    def address_config(config, layout):
-        config['Address'].append(layout.question.id)
-    
-    @staticmethod
-    def date_config(config, layout):
-        config['Date'].append(layout.question.id)
-    
-    @staticmethod
-    def person_config(config, layout):
-        config['Person'].append(layout.question.id)
-        if layout.form_config is not None and 'RadioItems' in layout.form_config:
-            config['RadioOther'].append(layout.question.id)
-            
-    @staticmethod
-    def radio_config(config, layout):
-        if layout.question.params is not None and 'textbox' in layout.question.params:
-            config['RadioOther'].append(layout.question.id)
+    def identifier(self, question):
+        self.tag_map[question.form_tag] = question.id
+        if hasattr(self, 'identifier_type') and self.identifier_type == 'tag':
+            return question.form_tag
         else:
-            config['Basic'].append(layout.question.id)
+            return question.id
+    
+    def address_config(self, config, layout):
+        config['Address'].append(self.identifier(layout.question))
+    
+    def date_config(self, config, layout):
+        config['Date'].append(self.identifier(layout.question))
+    
+    def person_config(self, config, layout):
+        config['Person'].append(self.identifier(layout.question))
+        if layout.form_config is not None and 'RadioItems' in layout.form_config:
+            config['RadioOther'].append(self.identifier(layout.question))
+            
+    def radio_config(self, config, layout):
+        if layout.question.params is not None and 'textbox' in layout.question.params:
+            config['RadioOther'].append(self.identifier(layout.question))
+        else:
+            config['Basic'].append(self.identifier(layout.question))
     
     def config_answers(self, config, layouts):
         answer_config = {
@@ -84,19 +87,30 @@ class FormViewSet(viewsets.ModelViewSet):
             }
         for layout in layouts:
             if layout.question.answer_type.name in answer_config:
-                answer_config[layout.question.answer_type.name](config, layout)
+                answer_config[layout.question.answer_type.name](self, config, layout)
             else:
-                config['Basic'].append(layout.question.id)
+                config['Basic'].append(self.identifier(layout.question))
             
             if layout.form_config is not None:
                 for key, value in layout.form_config.items():
                     if key == 'RadioItems':
                         for quest, val in value.items():
-                            config['RadioItems'][quest] = val
+                            if hasattr(self, 'identifier_type') and self.identifier_type == 'tag':
+                                config['RadioItems'][layout.question.form_tag] = val
+                            else: 
+                                config['RadioItems'][quest] = val
                     elif key == 'FormDefault':
-                        config['FormDefault'][layout.question.id] = value
+                        config['FormDefault'][self.identifier(layout.question)] = value
                     else:
-                        config[key] = value
+                        if key == 'question_identifier':
+                            key1 = self.identifier(layout.question)
+                        else:
+                            key1 = key
+                        if value == 'question_identifier':
+                            value1 = self.identifier(layout.question)
+                        else:
+                            value1 = value
+                        config[key1] = value1
 
     def form_config(self, request, form_name):
         config = {
@@ -109,8 +123,12 @@ class FormViewSet(viewsets.ModelViewSet):
             'FormDefault':{},
             'ExportNames':{},
             'Categories':[],
+            'tagMap':{}
             }
         
+        self.tag_map = {}
+        self.identifier_type = self.request.GET.get('identifier')
+        config['useTags'] = self.identifier_type == 'tag'
         form = Form.objects.get(form_name=form_name)
         categories = []
         form_categories = FormCategory.objects.filter(form=form).order_by("order")
@@ -121,12 +139,13 @@ class FormViewSet(viewsets.ModelViewSet):
         self.config_answers(config, layouts)
         
         for layout in layouts:
-            config['ExportNames'][layout.question.id] = layout.question.export_name
+            config['ExportNames'][self.identifier(layout.question)] = layout.question.export_name
         
         form_categories = FormCategory.objects.filter(category__in=categories, category__category_type__name = 'card')
         for formCategory in form_categories:
             config[formCategory.name] = {
                 'Category': formCategory.category.id,
+                'Category_tag': formCategory.category.form_tag,
                 'Person': [],
                 'Address':[],
                 'Basic':[],
@@ -140,7 +159,10 @@ class FormViewSet(viewsets.ModelViewSet):
             self.config_answers(config[formCategory.name], layouts)
             
             for layout in layouts:
-                config['ExportNames'][layout.question.id] = layout.question.export_name
+                config['ExportNames'][self.identifier(layout.question)] = layout.question.export_name
+        
+        if self.identifier_type == 'tag':    
+            config['tagMap'] = self.tag_map
         
         return Response(config, status=status.HTTP_200_OK)       
     
@@ -194,6 +216,14 @@ class FormViewSet(viewsets.ModelViewSet):
         date_time = date_time.replace(tzinfo=None)
         return str(date_time)
     
+    def map_form_type(self, form_type, station): 
+       mapped = form_type
+       if form_type == 'VDF':
+           pvf_forms = station.form_set.filter(form_type__name = 'PVF')
+           if len(pvf_forms) > 0:
+               return 'PVF'
+       return mapped
+    
     def related_forms(self, request, station_id, form_number):
         station = BorderStation.objects.get(id=station_id)
         if not form_number.startswith(station.station_code):
@@ -210,7 +240,19 @@ class FormViewSet(viewsets.ModelViewSet):
             return Response({'errors' : ['form number ' + form_number + ' is not in standard format']},status=status.HTTP_400_BAD_REQUEST)
         
         results = []
-        forms = Form.objects.filter(stations=station, form_type__name__in=['IRF','CIF','VDF', 'LEGAL_CASE'])
+        incident = Incident.objects.get(incident_number = base_number)
+        obj = RelatedForm(incident.id,
+                base_number,
+                'Incident',
+                'Incident',
+                getattr(incident, 'staff_name', None),
+                incident.station.id,
+                incident.station.operating_country.id,
+                self.adjust_date_time_for_tz (incident.date_time_entered_into_system, incident.station.time_zone),
+                self.adjust_date_time_for_tz (incident.date_time_last_updated, incident.station.time_zone))
+        results.append(obj)
+        
+        forms = Form.objects.filter(stations=station, form_type__name__in=['IRF','CIF','VDF', 'LEGAL_CASE', 'PVF', 'SF','LF'])
         for form in forms:
             form_class = form.storage.get_form_storage_class()
             key_field = form_class.key_field_name()
@@ -220,10 +262,13 @@ class FormViewSet(viewsets.ModelViewSet):
                 if len(key_value) > base_length and key_value[base_length] >= '0' and key_value[base_length] <= '9':
                     # form number has another digit after the base_number -> not related form
                     continue
+                if len(form_object.station.form_set.filter(id=form.id)) < 1:
+                    continue
+                
                 staff_name = getattr(form_object, 'staff_name', None)
                 obj = RelatedForm(form_object.id,
                                   form_object.get_key(),
-                                  form_object.get_form_type_name(),
+                                  self.map_form_type(form_object.get_form_type_name(), form_object.station),
                                   form.form_name,
                                   staff_name,
                                   form_object.station.id,

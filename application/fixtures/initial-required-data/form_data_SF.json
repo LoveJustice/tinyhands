@@ -1,0 +1,2068 @@
+[
+{
+   "model": "dataentry.storage",
+   "fields": {
+      "form_tag": "Sf",
+      "module_name": "dataentry.models.suspect",
+      "form_model_name": "Suspect",
+      "response_model_name": null,
+      "parent_storage": null,
+      "foreign_key_field_parent": null,
+      "foreign_key_field_child": null
+   }
+},
+{
+   "model": "dataentry.storage",
+   "fields": {
+      "form_tag": "SfInformation",
+      "module_name": "dataentry.models.suspect",
+      "form_model_name": "SuspectInformation",
+      "response_model_name": null,
+      "parent_storage": "Sf",
+      "foreign_key_field_parent": "suspect",
+      "foreign_key_field_child": null
+   }
+},
+{
+   "model": "dataentry.storage",
+   "fields": {
+      "form_tag": "SfAssociation",
+      "module_name": "dataentry.models.suspect",
+      "form_model_name": "SuspectAssociation",
+      "response_model_name": null,
+      "parent_storage": "Sf",
+      "foreign_key_field_parent": "suspect",
+      "foreign_key_field_child": null
+   }
+},
+{
+   "model": "dataentry.storage",
+   "fields": {
+      "form_tag": "SfEvaluation",
+      "module_name": "dataentry.models.suspect",
+      "form_model_name": "SuspectEvaluation",
+      "response_model_name": null,
+      "parent_storage": "Sf",
+      "foreign_key_field_parent": "suspect",
+      "foreign_key_field_child": null
+   }
+},
+{
+   "model": "dataentry.storage",
+   "fields": {
+      "form_tag": "SfLegal",
+      "module_name": "dataentry.models.suspect",
+      "form_model_name": "SuspectLegal",
+      "response_model_name": null,
+      "parent_storage": "Sf",
+      "foreign_key_field_parent": "suspect",
+      "foreign_key_field_child": null
+   }
+},
+{
+   "model": "dataentry.storage",
+   "fields": {
+      "form_tag": "SfAttachment",
+      "module_name": "dataentry.models.suspect",
+      "form_model_name": "SuspectAttachment",
+      "response_model_name": null,
+      "parent_storage": "Sf",
+      "foreign_key_field_parent": "suspect",
+      "foreign_key_field_child": null
+   }
+},
+{
+   "model": "dataentry.form",
+   "fields": {
+      "form_type": 11,
+      "storage": "Sf",
+      "start_date": "2022-10-08T04:00:00Z",
+      "end_date": "2118-12-31T00:00:00Z",
+      "form_name": "sfNepal",
+      "version": "V2022.6",
+      "stations": []
+   }
+},
+{
+   "model": "dataentry.form",
+   "fields": {
+      "form_type": 11,
+      "storage": "Sf",
+      "start_date": "2022-10-08T04:00:00Z",
+      "end_date": "2118-12-31T00:00:00Z",
+      "form_name": "sfIndia",
+      "version": "V2022.6",
+      "stations": []
+   }
+},
+{
+   "model": "dataentry.form",
+   "fields": {
+      "form_type": 11,
+      "storage": "Sf",
+      "start_date": "2022-10-08T04:00:00Z",
+      "end_date": "2118-12-31T00:00:00Z",
+      "form_name": "sfIndiaNetwork",
+      "version": "V2022.6",
+      "stations": []
+   }
+},
+{
+   "model": "dataentry.form",
+   "fields": {
+      "form_type": 11,
+      "storage": "Sf",
+      "start_date": "2022-10-08T04:00:00Z",
+      "end_date": "2118-12-31T00:00:00Z",
+      "form_name": "sfGhana",
+      "version": "V2022.6",
+      "stations": []
+   }
+},
+{
+   "model": "dataentry.form",
+   "fields": {
+      "form_type": 11,
+      "storage": "Sf",
+      "start_date": "2022-10-08T04:00:00Z",
+      "end_date": "2118-12-31T00:00:00Z",
+      "form_name": "sfKenya",
+      "version": "V2022.6",
+      "stations": []
+   }
+},
+{
+   "model": "dataentry.form",
+   "fields": {
+      "form_type": 11,
+      "storage": "Sf",
+      "start_date": "2022-10-08T04:00:00Z",
+      "end_date": "2118-12-31T00:00:00Z",
+      "form_name": "sfSouthAfrica",
+      "version": "V2022.6",
+      "stations": []
+   }
+},
+{
+   "model": "dataentry.category",
+   "fields": {
+      "form_tag": "sfCompliance",
+      "category_type": 1,
+      "description": "Compliance - common SF"
+   }
+},
+{
+   "model": "dataentry.category",
+   "fields": {
+      "form_tag": "sfTop",
+      "category_type": 1,
+      "description": "Top - SF"
+   }
+},
+{
+   "model": "dataentry.category",
+   "fields": {
+      "form_tag": "sfInformation",
+      "category_type": 2,
+      "description": "Information - SF"
+   }
+},
+{
+   "model": "dataentry.category",
+   "fields": {
+      "form_tag": "sfAssociation",
+      "category_type": 2,
+      "description": "Association - SF"
+   }
+},
+{
+   "model": "dataentry.category",
+   "fields": {
+      "form_tag": "sfEvaluation",
+      "category_type": 2,
+      "description": "Evaluation - SF"
+   }
+},
+{
+   "model": "dataentry.category",
+   "fields": {
+      "form_tag": "sfLegal",
+      "category_type": 2,
+      "description": "Legal - SF"
+   }
+},
+{
+   "model": "dataentry.category",
+   "fields": {
+      "form_tag": "sfAttachment",
+      "category_type": 2,
+      "description": "Attachment - SF"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfNepal",
+      "category": "sfTop",
+      "name": "Top",
+      "order": 1,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfNepal",
+      "category": "sfInformation",
+      "name": "Information",
+      "order": 2,
+      "form_category_question_config": null,
+      "storage": "SfInformation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfNepal",
+      "category": "sfAssociation",
+      "name": "Association",
+      "order": 3,
+      "form_category_question_config": null,
+      "storage": "SfAssociation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfNepal",
+      "category": "sfEvaluation",
+      "name": "Evaluation",
+      "order": 4,
+      "form_category_question_config": null,
+      "storage": "SfEvaluation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfNepal",
+      "category": "sfLegal",
+      "name": "Legal",
+      "order": 5,
+      "form_category_question_config": null,
+      "storage": "SfLegal"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfNepal",
+      "category": "sfAttachment",
+      "name": "Attachments",
+      "order": 6,
+      "form_category_question_config": null,
+      "storage": "SfAttachment"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfNepal",
+      "category": "sfCompliance",
+      "name": "Compliance",
+      "order": 7,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfIndia",
+      "category": "sfTop",
+      "name": "Top",
+      "order": 1,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfIndia",
+      "category": "sfInformation",
+      "name": "Information",
+      "order": 2,
+      "form_category_question_config": null,
+      "storage": "SfInformation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfIndia",
+      "category": "sfAssociation",
+      "name": "Association",
+      "order": 3,
+      "form_category_question_config": null,
+      "storage": "SfAssociation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfIndia",
+      "category": "sfEvaluation",
+      "name": "Evaluation",
+      "order": 4,
+      "form_category_question_config": null,
+      "storage": "SfEvaluation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfIndia",
+      "category": "sfLegal",
+      "name": "Legal",
+      "order": 5,
+      "form_category_question_config": null,
+      "storage": "SfLegal"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfIndia",
+      "category": "sfAttachment",
+      "name": "Attachments",
+      "order": 6,
+      "form_category_question_config": null,
+      "storage": "SfAttachment"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfIndia",
+      "category": "sfCompliance",
+      "name": "Compliance",
+      "order": 7,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfIndiaNetwork",
+      "category": "sfTop",
+      "name": "Top",
+      "order": 1,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfIndiaNetwork",
+      "category": "sfInformation",
+      "name": "Information",
+      "order": 2,
+      "form_category_question_config": null,
+      "storage": "SfInformation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfIndiaNetwork",
+      "category": "sfAssociation",
+      "name": "Association",
+      "order": 3,
+      "form_category_question_config": null,
+      "storage": "SfAssociation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfIndiaNetwork",
+      "category": "sfEvaluation",
+      "name": "Evaluation",
+      "order": 4,
+      "form_category_question_config": null,
+      "storage": "SfEvaluation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfIndiaNetwork",
+      "category": "sfLegal",
+      "name": "Legal",
+      "order": 5,
+      "form_category_question_config": null,
+      "storage": "SfLegal"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfIndiaNetwork",
+      "category": "sfAttachment",
+      "name": "Attachments",
+      "order": 6,
+      "form_category_question_config": null,
+      "storage": "SfAttachment"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfIndiaNetwork",
+      "category": "sfCompliance",
+      "name": "Compliance",
+      "order": 7,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfGhana",
+      "category": "sfTop",
+      "name": "Top",
+      "order": 1,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfGhana",
+      "category": "sfInformation",
+      "name": "Information",
+      "order": 2,
+      "form_category_question_config": null,
+      "storage": "SfInformation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfGhana",
+      "category": "sfAssociation",
+      "name": "Association",
+      "order": 3,
+      "form_category_question_config": null,
+      "storage": "SfAssociation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfGhana",
+      "category": "sfEvaluation",
+      "name": "Evaluation",
+      "order": 4,
+      "form_category_question_config": null,
+      "storage": "SfEvaluation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfGhana",
+      "category": "sfLegal",
+      "name": "Legal",
+      "order": 5,
+      "form_category_question_config": null,
+      "storage": "SfLegal"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfGhana",
+      "category": "sfAttachment",
+      "name": "Attachments",
+      "order": 6,
+      "form_category_question_config": null,
+      "storage": "SfAttachment"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfGhana",
+      "category": "sfCompliance",
+      "name": "Compliance",
+      "order": 7,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfKenya",
+      "category": "sfTop",
+      "name": "Top",
+      "order": 1,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfKenya",
+      "category": "sfInformation",
+      "name": "Information",
+      "order": 2,
+      "form_category_question_config": null,
+      "storage": "SfInformation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfKenya",
+      "category": "sfAssociation",
+      "name": "Association",
+      "order": 3,
+      "form_category_question_config": null,
+      "storage": "SfAssociation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfKenya",
+      "category": "sfEvaluation",
+      "name": "Evaluation",
+      "order": 4,
+      "form_category_question_config": null,
+      "storage": "SfEvaluation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfKenya",
+      "category": "sfLegal",
+      "name": "Legal",
+      "order": 5,
+      "form_category_question_config": null,
+      "storage": "SfLegal"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfKenya",
+      "category": "sfAttachment",
+      "name": "Attachments",
+      "order": 6,
+      "form_category_question_config": null,
+      "storage": "SfAttachment"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfKenya",
+      "category": "sfCompliance",
+      "name": "Compliance",
+      "order": 7,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfSouthAfrica",
+      "category": "sfTop",
+      "name": "Top",
+      "order": 1,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfSouthAfrica",
+      "category": "sfInformation",
+      "name": "Information",
+      "order": 2,
+      "form_category_question_config": null,
+      "storage": "SfInformation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfSouthAfrica",
+      "category": "sfAssociation",
+      "name": "Association",
+      "order": 3,
+      "form_category_question_config": null,
+      "storage": "SfAssociation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfSouthAfrica",
+      "category": "sfEvaluation",
+      "name": "Evaluation",
+      "order": 4,
+      "form_category_question_config": null,
+      "storage": "SfEvaluation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfSouthAfrica",
+      "category": "sfLegal",
+      "name": "Legal",
+      "order": 5,
+      "form_category_question_config": null,
+      "storage": "SfLegal"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfSouthAfrica",
+      "category": "sfAttachment",
+      "name": "Attachments",
+      "order": 6,
+      "form_category_question_config": null,
+      "storage": "SfAttachment"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfSouthAfrica",
+      "category": "sfCompliance",
+      "name": "Compliance",
+      "order": 7,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "sfComplianceDateComplete",
+      "prompt": "Date Complete Information was Received",
+      "description": null,
+      "answer_type": 9,
+      "params": null,
+      "export_name": "Date Complete Information was Received",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "sfComplianceDateReceived",
+      "prompt": "Date Form Received",
+      "description": null,
+      "answer_type": 9,
+      "params": null,
+      "export_name": "Date Form Received",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "sfComplianceDateSubmitted",
+      "prompt": "Date Form Submitted",
+      "description": null,
+      "answer_type": 9,
+      "params": null,
+      "export_name": "Date Form Submitted",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "sfComplianceIncomplete",
+      "prompt": "Were there incomplete questions on the IRF that prevented submission?",
+      "description": null,
+      "answer_type": 4,
+      "params": null,
+      "export_name": "Were there incomplete questions on the IRF that prevented submission?",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "sfComplianceIncompleteSections",
+      "prompt": "Please list incomplete sections that prevented submission",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Incomplete sections list",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "sfComplianceNotes",
+      "prompt": "notes",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Logbook notes",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "sfInformationSourceType",
+      "prompt": "Source Type",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Source Type",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "sfInformationSourceTitle",
+      "prompt": "Source Title",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Source Title",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "sfInformationPerson",
+      "prompt": "",
+      "description": null,
+      "answer_type": 14,
+      "params": null,
+      "export_name": "Person",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "sfInformationVehicle",
+      "prompt": "Vehicle",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Vehicle",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "sfInformationPlateNumber",
+      "prompt": "Plate Number",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Plate Number",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "sfInformationIncident",
+      "prompt": "Incident",
+      "description": null,
+      "answer_type": 2,
+      "params": null,
+      "export_name": "Incident",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "sfAssociationIncident",
+      "prompt": "Incident",
+      "description": null,
+      "answer_type": 2,
+      "params": null,
+      "export_name": "Incident",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "sfAssociationPvs",
+      "prompt": "Associated PVs",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Associated PVs",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "sfAssociationSuspects",
+      "prompt": "Associated Suspects",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Associated Suspects",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "sfAssociationLocations",
+      "prompt": "Associated Locations",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Associated Locations",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "sfAssociationNarrative",
+      "prompt": "Narrative",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Narrative",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "sfEvaluationIncident",
+      "prompt": "Incident",
+      "description": null,
+      "answer_type": 2,
+      "params": null,
+      "export_name": "Narrative",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "sfEvaluationEvaluatorType",
+      "prompt": "Evaluator Type",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Evaluator Type",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "sfEvaluationEvaluatorName",
+      "prompt": "Evaluator Name",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Evaluator Name",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "sfEvaluationEvaluation",
+      "prompt": "Evaluation",
+      "description": null,
+      "answer_type": 4,
+      "params": null,
+      "export_name": "Evaluation",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "sfLegalIncident",
+      "prompt": "Incident",
+      "description": null,
+      "answer_type": 2,
+      "params": null,
+      "export_name": "Incident",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "sfLegalArrested",
+      "prompt": "Arrested",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Arrested",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "sfLegalArrestDate",
+      "prompt": "Arrest Date",
+      "description": null,
+      "answer_type": 9,
+      "params": null,
+      "export_name": "Arrest Date",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "sfLegalPoliceCase",
+      "prompt": "Police Case",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Police Case",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "sfLegalChargeSheetDate",
+      "prompt": "Charge Sheet Date",
+      "description": null,
+      "answer_type": 9,
+      "params": null,
+      "export_name": "Charge Sheet Date",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "sfLegalCrimesCharged",
+      "prompt": "Crimes Charged",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Crimes Charged",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "sfLegalPvAttempt",
+      "prompt": "PV attempt to file",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "PV attempt to file",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "sfLegalPvUnable",
+      "prompt": "PV unable to file",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "PV unable to file",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "sfLegalLocationAttempt",
+      "prompt": "Location attempt to file",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Location attempt to file",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "sfLegalLocationUnable",
+      "prompt": "Location unable to file",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Location unable to file",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "sfLegalLocationLastAddress",
+      "prompt": "Location Last Address",
+      "description": null,
+      "answer_type": 11,
+      "params": null,
+      "export_name": "Location Last Address",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "sfLegalLocationLastLatitude",
+      "prompt": "Location Last Latitude",
+      "description": null,
+      "answer_type": 3,
+      "params": null,
+      "export_name": "Location Last Latitude",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "sfLegalLocationLastLongitude",
+      "prompt": "Location Last Longitude",
+      "description": null,
+      "answer_type": 3,
+      "params": null,
+      "export_name": "Location Last Longitude",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "sfLegalLocationLastNotes",
+      "prompt": "Location Last Notes",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Location Last Notes",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "sfLegalLocationLastDate",
+      "prompt": "Location Last Date",
+      "description": null,
+      "answer_type": 9,
+      "params": null,
+      "export_name": "Location Last Date",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "sfLegalPoliceAttempt",
+      "prompt": "Police Attempt",
+      "description": null,
+      "answer_type": 6,
+      "params": null,
+      "export_name": "Police Attempt",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "sfLegalPoliceUnable",
+      "prompt": "Police Unable",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Police Unable",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "sfAttachmentNumber",
+      "prompt": "attachment number",
+      "description": null,
+      "answer_type": 2,
+      "params": null,
+      "export_name": "attachment number",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "sfAttachmentDescription",
+      "prompt": "description",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "description",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "sfAttachmentAttachment",
+      "prompt": "attachment",
+      "description": null,
+      "answer_type": 12,
+      "params": {
+         "subdirectory": "sf_attachments/"
+      },
+      "export_name": "attachment",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "sfAttachmentPrivate",
+      "prompt": "Attachment contains private data",
+      "description": null,
+      "answer_type": 6,
+      "params": null,
+      "export_name": "Attachment contains private data",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "sfAttachmentOption",
+      "prompt": "Option",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Option",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "sfInformationInterviewerName",
+      "prompt": "Interviewer Name",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Interviewer Name",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "sfInformationInterviewDate",
+      "prompt": "Interview Date",
+      "description": null,
+      "answer_type": 9,
+      "params": null,
+      "export_name": "Interview Date",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "sfTopSfNumber",
+      "prompt": "SF Number",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "SF Number",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "sfInformationInterviewLocation",
+      "prompt": "Location",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Interview Location",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "sfTopMergedPerson",
+      "prompt": "",
+      "description": null,
+      "answer_type": 14,
+      "params": null,
+      "export_name": "Merged Person",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "sfTopMergedVehicle",
+      "prompt": "Vehicle",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Merged Vehicle",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "sfTopMergedPlateNumber",
+      "prompt": "Plate Number",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Merged Plate Number",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "sfComplianceDateComplete",
+      "category": "sfCompliance",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "sfComplianceDateReceived",
+      "category": "sfCompliance",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "sfComplianceDateSubmitted",
+      "category": "sfCompliance",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "sfComplianceIncomplete",
+      "category": "sfCompliance",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "sfComplianceIncompleteSections",
+      "category": "sfCompliance",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "sfComplianceNotes",
+      "category": "sfCompliance",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "sfInformationSourceType",
+      "category": "sfInformation",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "sfInformationSourceTitle",
+      "category": "sfInformation",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "sfInformationPerson",
+      "category": "sfInformation",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "sfInformationVehicle",
+      "category": "sfInformation",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "sfInformationPlateNumber",
+      "category": "sfInformation",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "sfInformationIncident",
+      "category": "sfInformation",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "sfAssociationIncident",
+      "category": "sfAssociation",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "sfAssociationPvs",
+      "category": "sfAssociation",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "sfAssociationSuspects",
+      "category": "sfAssociation",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "sfAssociationLocations",
+      "category": "sfAssociation",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "sfAssociationNarrative",
+      "category": "sfAssociation",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "sfEvaluationIncident",
+      "category": "sfEvaluation",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "sfEvaluationEvaluatorType",
+      "category": "sfEvaluation",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "sfEvaluationEvaluatorName",
+      "category": "sfEvaluation",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "sfEvaluationEvaluation",
+      "category": "sfEvaluation",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "sfLegalIncident",
+      "category": "sfLegal",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "sfLegalArrested",
+      "category": "sfLegal",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "sfLegalArrestDate",
+      "category": "sfLegal",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "sfLegalPoliceCase",
+      "category": "sfLegal",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "sfLegalChargeSheetDate",
+      "category": "sfLegal",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "sfLegalCrimesCharged",
+      "category": "sfLegal",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "sfLegalPvAttempt",
+      "category": "sfLegal",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "sfLegalPvUnable",
+      "category": "sfLegal",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "sfLegalLocationAttempt",
+      "category": "sfLegal",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "sfLegalLocationUnable",
+      "category": "sfLegal",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "sfLegalLocationLastAddress",
+      "category": "sfLegal",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "sfLegalLocationLastLatitude",
+      "category": "sfLegal",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "sfLegalLocationLastLongitude",
+      "category": "sfLegal",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "sfLegalLocationLastNotes",
+      "category": "sfLegal",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "sfLegalLocationLastDate",
+      "category": "sfLegal",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "sfLegalPoliceAttempt",
+      "category": "sfLegal",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "sfLegalPoliceUnable",
+      "category": "sfLegal",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "sfAttachmentNumber",
+      "category": "sfAttachment",
+      "weight": 0,
+      "form_config": {
+         "IndexQuestion": "sfAttachmentNumber"
+      }
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "sfAttachmentDescription",
+      "category": "sfAttachment",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "sfAttachmentAttachment",
+      "category": "sfAttachment",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "sfAttachmentPrivate",
+      "category": "sfAttachment",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "sfAttachmentOption",
+      "category": "sfAttachment",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "sfInformationInterviewerName",
+      "category": "sfInformation",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "sfInformationInterviewDate",
+      "category": "sfInformation",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "sfTopSfNumber",
+      "category": "sfTop",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "sfInformationInterviewLocation",
+      "category": "sfInformation",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "sfTopMergedPerson",
+      "category": "sfTop",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "sfTopMergedVehicle",
+      "category": "sfTop",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "sfTopMergedPlateNumber",
+      "category": "sfTop",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "sfComplianceDateReceived",
+      "field_name": "logbook_received"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "sfComplianceIncomplete",
+      "field_name": "logbook_incomplete_questions"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "sfComplianceIncompleteSections",
+      "field_name": "logbook_incomplete_sections"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "sfComplianceDateComplete",
+      "field_name": "logbook_information_complete"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "sfComplianceNotes",
+      "field_name": "logbook_notes"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "sfComplianceDateSubmitted",
+      "field_name": "logbook_submitted"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "sfInformationSourceType",
+      "field_name": "source_type"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "sfInformationSourceTitle",
+      "field_name": "source_title"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "sfInformationPerson",
+      "field_name": "person"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "sfInformationVehicle",
+      "field_name": "vehicle"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "sfInformationPlateNumber",
+      "field_name": "plate_number"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "sfInformationIncident",
+      "field_name": "incident_id"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "sfAssociationIncident",
+      "field_name": "incident_id"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "sfAssociationPvs",
+      "field_name": "associated_pvs"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "sfAssociationSuspects",
+      "field_name": "associated_suspects"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "sfAssociationLocations",
+      "field_name": "associated_locations"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "sfAssociationNarrative",
+      "field_name": "narrative"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "sfEvaluationIncident",
+      "field_name": "incident_id"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "sfEvaluationEvaluatorType",
+      "field_name": "evaluator_type"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "sfEvaluationEvaluatorName",
+      "field_name": "evaluator_name"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "sfEvaluationEvaluation",
+      "field_name": "evaluation"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "sfLegalIncident",
+      "field_name": "incident_id"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "sfLegalArrested",
+      "field_name": "arrested"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "sfLegalArrestDate",
+      "field_name": "arrest_date"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "sfLegalPoliceCase",
+      "field_name": "police_case"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "sfLegalChargeSheetDate",
+      "field_name": "charge_sheet_date"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "sfLegalCrimesCharged",
+      "field_name": "crimes_charged"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "sfLegalPvAttempt",
+      "field_name": "pv_attempt"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "sfLegalPvUnable",
+      "field_name": "pv_unable"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "sfLegalLocationAttempt",
+      "field_name": "location_attempt"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "sfLegalLocationUnable",
+      "field_name": "location_unable"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "sfLegalLocationLastAddress",
+      "field_name": "location_last_address"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "sfLegalLocationLastLatitude",
+      "field_name": "location_last_latitude"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "sfLegalLocationLastLongitude",
+      "field_name": "location_last_longitude"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "sfLegalLocationLastNotes",
+      "field_name": "location_last_address_notes"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "sfLegalLocationLastDate",
+      "field_name": "location_last_date"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "sfLegalPoliceAttempt",
+      "field_name": "police_attempt"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "sfLegalPoliceUnable",
+      "field_name": "police_unable"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "sfAttachmentNumber",
+      "field_name": "attachment_number"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "sfAttachmentDescription",
+      "field_name": "description"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "sfAttachmentAttachment",
+      "field_name": "attachment"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "sfAttachmentPrivate",
+      "field_name": "private_card"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "sfAttachmentOption",
+      "field_name": "option"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "sfInformationInterviewerName",
+      "field_name": "interviewer_name"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "sfInformationInterviewDate",
+      "field_name": "interview_date"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "sfTopSfNumber",
+      "field_name": "sf_number"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "sfInformationInterviewLocation",
+      "field_name": "location"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "sfTopMergedPerson",
+      "field_name": "merged_person"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "sfTopMergedVehicle",
+      "field_name": "merged_vehicle"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "sfTopMergedPlateNumber",
+      "field_name": "merged_plate_number"
+   }
+}
+]

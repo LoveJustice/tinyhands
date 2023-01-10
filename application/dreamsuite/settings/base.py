@@ -120,6 +120,11 @@ MESSAGE_TAGS = {
     messages.constants.ERROR: 'danger'  # Fix up for Bootstrap.
 }
 
+SERIALIZATION_MODULES = {
+        "form_data_id": "export_import.form_data_id_serializer",
+        "form_data_tag": "export_import.form_data_tag_serializer",
+    }
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
