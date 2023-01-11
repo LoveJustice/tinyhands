@@ -16,6 +16,77 @@ class VdfCommon(BaseForm):
     victim = models.ForeignKey(Person, null=True, blank=True)
     relationship_to_guardian = models.CharField(max_length=126, null=True)
     
+    # Recruitment for PVF
+    # Recruiting agency/brokers in many to many relationship declared in Suspect model
+    pv_recruited_no = models.CharField(max_length=126, null=True)
+    pv_recruited_agency = models.CharField(max_length=126, null=True)
+    pv_recruited_broker = models.CharField(max_length=126, null=True)
+    recruited_agency_name = models.CharField(max_length=126, null=True)
+    recruited_broker_names = models.CharField(max_length=126, null=True)
+    pv_recruited_how =  models.CharField(max_length=1024, null=True)
+    pv_expenses_paid_how = models.CharField(max_length=126, null=True)
+    pv_paid_broker_amount =  models.CharField(max_length=126, null=True)
+    pv_paid_broker_currency =  models.CharField(max_length=126, null=True)
+    broker_paid_amount =  models.CharField(max_length=126, null=True)
+    broker_paid_currency =  models.CharField(max_length=126, null=True)
+    pv_left_home_date = models.DateField(null=True)
+    job_promised  =  models.CharField(max_length=126, null=True)
+    job_promised_amount  =  models.CharField(max_length=126, null=True)
+    job_promised_currency  =  models.CharField(max_length=126, null=True)
+    
+    # Travel for PVF
+    pv_traveled_how = models.CharField(max_length=126, null=True)
+    pv_thinks_they_were_trafficked = models.CharField(max_length=126, null=True)
+    
+    # Exploitation for PVF
+    exploit_prostitution = models.BooleanField(default=False)
+    exploit_prostitution_began_years = models.CharField(max_length=126, null=True)
+    exploit_prostitution_began_days = models.CharField(max_length=126, null=True)
+    exploit_prostitution_lasted_years = models.CharField(max_length=126, null=True)
+    exploit_prostitution_lasted_days = models.CharField(max_length=126, null=True)
+    exploit_prostitution_explain = models.CharField(max_length=1024, null=True)
+    exploit_prostitution_suspects = models.CharField(max_length=1024, null=True)
+
+    exploit_sexual_abuse = models.BooleanField(default=False)
+    exploit_sexual_abuse_began_years = models.CharField(max_length=126, null=True)
+    exploit_sexual_abuse_began_days = models.CharField(max_length=126, null=True)
+    exploit_sexual_abuse_lasted_years = models.CharField(max_length=126, null=True)
+    exploit_sexual_abuse_lasted_days = models.CharField(max_length=126, null=True)
+    exploit_sexual_abuse_explain = models.CharField(max_length=1024, null=True)
+    exploit_sexual_abuse_suspects = models.CharField(max_length=1024, null=True)
+    
+    exploit_physical_abuse = models.BooleanField(default=False)
+    exploit_physical_abuse_began_years = models.CharField(max_length=126, null=True)
+    exploit_physical_abuse_began_days = models.CharField(max_length=126, null=True)
+    exploit_physical_abuse_lasted_years = models.CharField(max_length=126, null=True)
+    exploit_physical_abuse_lasted_days = models.CharField(max_length=126, null=True)
+    exploit_physical_abuse_explain = models.CharField(max_length=1024, null=True)
+    exploit_physical_abuse_suspects = models.CharField(max_length=1024, null=True)
+    
+    exploit_debt_bondage = models.BooleanField(default=False)
+    exploit_debt_bondage_began_years = models.CharField(max_length=126, null=True)
+    exploit_debt_bondage_began_days = models.CharField(max_length=126, null=True)
+    exploit_debt_bondage_lasted_years = models.CharField(max_length=126, null=True)
+    exploit_debt_bondage_lasted_days = models.CharField(max_length=126, null=True)
+    exploit_debt_bondage_explain = models.CharField(max_length=1024, null=True)
+    exploit_debt_bondage_suspects = models.CharField(max_length=1024, null=True)
+    
+    exploit_forced_labor = models.BooleanField(default=False)
+    exploit_forced_labor_began_years = models.CharField(max_length=126, null=True)
+    exploit_forced_labor_began_days = models.CharField(max_length=126, null=True)
+    exploit_forced_labor_lasted_years = models.CharField(max_length=126, null=True)
+    exploit_forced_labor_lasted_days = models.CharField(max_length=126, null=True)
+    exploit_forced_labor_explain = models.CharField(max_length=1024, null=True)
+    exploit_forced_labor_suspects = models.CharField(max_length=1024, null=True)
+    
+    exploit_other = models.CharField(max_length=126, null=True)
+    exploit_other_began_years = models.CharField(max_length=126, null=True)
+    exploit_other_began_days = models.CharField(max_length=126, null=True)
+    exploit_other_lasted_years = models.CharField(max_length=126, null=True)
+    exploit_other_lasted_days = models.CharField(max_length=126, null=True)
+    exploit_other_explain = models.CharField(max_length=1024, null=True)
+    exploit_other_suspects = models.CharField(max_length=1024, null=True)
+    
     # Home Situation Assessment
     guardian_know_destination = models.CharField('Did your guardian know you were traveling to intended destination?', max_length=126, null=True)
     family_guardian_pressure = models.CharField("Did your family/guardian pressure you in any way to accept the broker's offer?", max_length=126, null=True)
@@ -46,9 +117,11 @@ class VdfCommon(BaseForm):
     share_gospel_book = models.BooleanField('Message Book', default=False)
     share_gospel_other = models.CharField('Other', max_length=126, null=True)
     share_gospel_why_not = models.TextField(blank=True)
+    share_gospel_connect_to_local_church = models.TextField(blank=True)
     awareness_of_exploitation_before_interception = models.CharField('Before you were intercepted, were you aware that migrants going abroad are often deceived and end up in very exploitative situations?', max_length=126, null=True)
     victim_heard_message_before = models.CharField('Had you ever heard the message before?', max_length=126, null=True)
     what_victim_believes_now = models.CharField('What do you believe now?', max_length=126, null=True)
+    victim_testimony = models.TextField(blank=True)
     transit_staff_polite = models.PositiveIntegerField('Transit Staff Polite and Respectful', null=True, blank=True)
     trafficking_awareness = models.PositiveIntegerField('Trafficking Awareness', null=True, blank=True)
     shelter_staff_polite = models.PositiveIntegerField('Shelter Staff Polite and Respectful', null=True, blank=True)
@@ -73,6 +146,8 @@ class VdfCommon(BaseForm):
     pv_spent_time_at_shelter = models.CharField('Did the PV spend time at LJ’s short-term shelter?', max_length=126, null=True)
     shelter_nights = models.PositiveIntegerField('nights', null=True, blank=True)
     interaction_hours = models.PositiveIntegerField('hours', null=True, blank=True)
+    overnight_lodging = models.CharField(max_length=126, null=True)
+    other_shelter  = models.CharField(max_length=126, null=True)
 
     # Final Procedures
     fundraising_purpose = models.CharField('how we can use your photo and the information collected during this interviewfor operational fundraising purposes.', max_length=126, null=True)

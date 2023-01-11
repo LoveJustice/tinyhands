@@ -547,7 +547,8 @@ class ResponsePersonSerializer(serializers.Serializer):
         ret = super().to_representation(instance)
         
         if instance is not None:
-            ret['storage_id'] = serializers.IntegerField().to_representation(instance.id)
+            if instance.id is not None:
+                ret['storage_id'] = serializers.IntegerField().to_representation(instance.id)
             if private_data and is_private_value(question, 'gender'):
                 ret['gender'] = {'value':None }
             else:
@@ -651,7 +652,8 @@ class ResponsePersonSerializer(serializers.Serializer):
         # null allowed
         for field in ['name', 'latitude', 'longitude','appearance','arrested','case_filed_against',
                       'education', 'guardian_name','guardian_phone','guardian_relationship',
-                      'interviewer_believes', 'pv_believes', 'occupation', 'role', 'social_media']:
+                      'interviewer_believes', 'occupation', 'other_contact_name', 'other_contact_phone',
+                      'pv_believes', 'role', 'social_media', 'social_media_platform', 'whatsApp']:
             tmp = data.get(field)
             if tmp is not None and tmp.get('value') is not None:
                 ret[field] = tmp.get('value')
@@ -729,8 +731,8 @@ class ResponsePersonSerializer(serializers.Serializer):
         
         for element in ['latitude','longitude','address_notes','gender','age','birthdate','nationality',
                         'appearance','arrested','case_filed_against','education','guardian_name','guardian_phone',
-                        'guardian_relationship','interviewer_believes','occupation','pv_believes','phone_verified','role',
-                        'social_media']:
+                        'guardian_relationship','interviewer_believes','occupation','other_contact_name','other_contact_phone',
+                        'pv_believes','phone_verified','role','social_media','social_media_platform','whatsApp']:
             tmp = self.validated_data.get(element)
             setattr(person, element, tmp)
         
@@ -740,14 +742,23 @@ class ResponsePersonSerializer(serializers.Serializer):
         
         person.set_estimated_birthdate(form_base_date)
         
-        link_id = self.validated_data.get('link_id')
-        if link_id is not None:
-            link_person = Person.objects.get(id=link_id)
-            if link_person.master_person is not None:
-               master_person = link_person.master_person
+        master_person = None
+        if 'common_master_person' in self.context:
+            master_person = self.context['common_master_person']['value']
         
+        link_id = None
         if master_person is None:
-            master_person = MasterPerson()
+            link_id = self.validated_data.get('link_id')
+            if link_id is not None:
+                link_person = Person.objects.get(id=link_id)
+                if link_person.master_person is not None:
+                   master_person = link_person.master_person
+        
+            if master_person is None:
+                master_person = MasterPerson()
+            
+            if 'common_master_person' in self.context:
+                self.context['common_master_person']['value'] = master_person
         
         master_person.update(person)
         master_person.save()
@@ -850,12 +861,13 @@ class QuestionResponseSerializer(serializers.Serializer):
         'MultiReference': None,
     }
     
-    def to_representation(self, instance: Question):
+    def to_representation(self, instance):
         ret = super().to_representation(instance)
         form_data: FormData = self.context['form_data']
         
         answer = form_data.get_answer(instance)
         ret['question_id']  = serializers.IntegerField().to_representation(instance.id)
+        ret['question_tag']  = serializers.CharField().to_representation(instance.form_tag)
         if form_data.get_answer_storage(instance) is not None:
             ret['storage_id'] = serializers.IntegerField().to_representation(form_data.get_answer_storage(instance))
         if answer is not None:

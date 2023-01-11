@@ -7,7 +7,9 @@ from rest_framework import status, viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from dataentry.models import Audit, AuditSample, BorderStation, Country, Form, FormCategory, IndicatorHistory, IntercepteeCommon, IrfCommon, SiteSettings
+from dataentry.models import Audit, AuditSample, BorderStation, Country, Form, FormCategory
+from dataentry.models import IndicatorHistory, IntercepteeCommon, IrfCommon, LocationInformation
+from dataentry.models import SiteSettings, SuspectInformation
 
 
 class CollectionResults:
@@ -44,6 +46,18 @@ class CollectionResults:
         self.vdf_lag_total = 0
         self.vdf_lag_percent_total = 0
         self.vdf_lag_count = 0
+        
+        self.sf_count = 0
+        self.sf_compliance_count = 0
+        self.sf_lag_total = 0
+        self.sf_lag_percent_total = 0
+        self.sf_lag_count = 0
+        
+        self.lf_count = 0
+        self.lf_compliance_count = 0
+        self.lf_lag_total = 0
+        self.lf_lag_percent_total = 0
+        self.lf_lag_count = 0
     
     def compute_percent(self, numerator, denominator):
         if denominator < 1:
@@ -66,13 +80,18 @@ class CollectionResults:
         
         return score
         
-    def compute_values(self):
+    def compute_values(self, pvf_form):
         self.irf_compliance_percent = self.compute_percent(self.irf_compliance_count, self.irf_count)
         
         self.cif_percent = self.compute_percent(self.cif_count, self.victim_count)
         self.cif_compliance_percent = self.compute_percent(self.cif_compliance_count, self.cif_count)
         
         self.vdf_compliance_percent = self.compute_percent(self.vdf_compliance_count, self.vdf_count)
+        
+        self.sf_percent = self.compute_percent(self.sf_count, self.suspect_count)
+        self.sf_compliance_percent = self.compute_percent(self.sf_compliance_count, self.sf_count)
+        
+        self.lf_compliance_percent = self.compute_percent(self.lf_compliance_count, self.lf_count)
         
         self.verified_forms = self.evidence_count + self.invalid_intercept_count + self.high_risk_count
         self.evidence_percent = self.compute_percent(self.evidence_count, self.verified_forms)
@@ -83,8 +102,12 @@ class CollectionResults:
         self.photo_percent = self.compute_percent(self.photo_count, self.victim_present_count)
         self.suspect_photo_percent = self.compute_percent(self.suspect_photo_count, self.suspect_count)
         self.phone_verified_percent = self.compute_percent(self.phone_verified_count, self.phone_count)
-        self.compliance_percent = self.compute_percent(self.irf_compliance_count +self.cif_compliance_count +  self.vdf_compliance_count,
-                            self.irf_count + self.cif_count + self.vdf_count)
+        if pvf_form:
+            self.compliance_percent = self.compute_percent(self.irf_compliance_count + self.sf_compliance_count + self.lf_compliance_count + self.vdf_compliance_count,
+                                self.irf_count + self.sf_count + self.lf_count + self.vdf_count)
+        else:
+            self.compliance_percent = self.compute_percent(self.irf_compliance_count +self.cif_compliance_count + self.vdf_compliance_count,
+                                self.irf_count + self.cif_count + self.vdf_count)
         
         lag_count_numerator = 0
         lag_count_denominator = 0
@@ -109,6 +132,20 @@ class CollectionResults:
             lag_count_numerator += self.vdf_lag_score
         else:
             self.vdf_lag = 0
+        if self.sf_lag_count > 0:
+            self.sf_lag = math.floor(self.sf_lag_total / self.sf_lag_count + 0.5)
+            self.sf_lag_score = math.floor(self.sf_lag_percent_total/self.sf_lag_count + 0.5)
+            lag_count_denominator += 1
+            lag_count_numerator += self.sf_lag_score
+        else:
+            self.sf_lag = 0
+        if self.lf_lag_count > 0:
+            self.lf_lag = math.floor(self.lf_lag_total / self.lf_lag_count + 0.5)
+            self.lf_lag_score = math.floor(self.lf_lag_percent_total/self.lf_lag_count + 0.5)
+            lag_count_denominator += 1
+            lag_count_numerator += self.lf_lag_score
+        else:
+            self.lf_lag = 0
         
         if lag_count_denominator > 0:
             self.collection_lag_time = math.floor(lag_count_numerator / lag_count_denominator + 0.5)
@@ -121,27 +158,41 @@ class CollectionResults:
         
         metric_present = 0
         metric_total = 0
-        if self.vdf_percent != '':
-            metric_present += 0.15
-            metric_total += self.vdf_percent * 0.15
-        if self.photo_percent != '':
-            metric_present += 0.1
-            metric_total += self.photo_percent * 0.1
+        if pvf_form:
+            if self.vdf_percent != '':
+                metric_present += 0.20
+                metric_total += self.vdf_percent * 0.20
+            if self.sf_percent != '':
+                metric_present += 0.20
+                metric_total += self.sf_percent * 0.20
+            if self.photo_percent != '':
+                metric_present += 0.075
+                metric_total += self.photo_percent * 0.075
+            if self.phone_verified_percent != '':
+                metric_present += 0.075
+                metric_total += self.phone_verified_percent * 0.075
+        else:
+            if self.vdf_percent != '':
+                metric_present += 0.15
+                metric_total += self.vdf_percent * 0.15
+            if self.evidence_cif_percent != '':
+                metric_present += 0.15
+                metric_total += self.evidence_cif_percent * 0.15
+            if self.photo_percent != '':
+                metric_present += 0.1
+                metric_total += self.photo_percent * 0.1
+            if self.phone_verified_percent != '':
+                metric_present += 0.1
+                metric_total += self.phone_verified_percent * 0.1
         if self.compliance_percent != '':
             metric_present += 0.2
             metric_total += self.compliance_percent * 0.2
         if self.collection_lag_time != '':
             metric_present += 0.15
             metric_total += self.collection_lag_time * 0.15
-        if self.evidence_cif_percent != '':
-            metric_present += 0.15
-            metric_total += self.evidence_cif_percent * 0.15
         if self.valid_intercept_percent != '':
             metric_present += 0.1
             metric_total += self.valid_intercept_percent * 0.1
-        if self.phone_verified_percent != '':
-            metric_present += 0.1
-            metric_total += self.phone_verified_percent * 0.1
         if metric_present > 0:
             self.compliance_total = math.floor(metric_total/metric_present + 0.5)
         else:
@@ -180,6 +231,18 @@ class CollectionResults:
             self.vdf_lag_total += entry.vdf_lag_total
             self.vdf_lag_percent_total += entry.vdf_lag_percent_total
             self.vdf_lag_count += entry.vdf_lag_count
+            
+            self.sf_count += entry.sf_count
+            self.sf_compliance_count += entry.sf_compliance_count
+            self.sf_lag_total += entry.sf_lag_total
+            self.sf_lag_percent_total += entry.sf_lag_percent_total
+            self.sf_lag_count += entry.sf_lag_count
+            
+            self.lf_count += entry.lf_count
+            self.lf_compliance_count += entry.lf_compliance_count
+            self.lf_lag_total += entry.lf_lag_total
+            self.lf_lag_percent_total += entry.lf_lag_percent_total
+            self.lf_lag_count += entry.lf_lag_count
 
 class IndicatorsViewSet(viewsets.ViewSet):
     def calculate_indicators(self, request, country_id):
@@ -195,7 +258,10 @@ class IndicatorsViewSet(viewsets.ViewSet):
                     'irfLag': 5,
                     'photosLag': 5,
                     'vdfLag': 5,
+                    'pvfLag': 5,
                     'cifLag': 5,
+                    'sfLag': 5,
+                    'lfLag': 5,
                     'v1Lag': 4,
                     'v1Backlog': 10,
                     'v2Lag': 7,
@@ -223,7 +289,7 @@ class IndicatorsViewSet(viewsets.ViewSet):
         #Audits
         exclude_audits = AuditSample.objects.filter(completion_date__isnull=True).values_list('audit__id',flat=True)
         audit_results = {}
-        for form_type in ['IRF','CIF','VDF']:
+        for form_type in ['IRF','CIF','VDF', 'PVF', 'SF', 'LF']:
             audit = self.latest_audit(form_type, country_id, exclude_audits)
             if audit is None:
                 audit_results[form_type] = {
@@ -276,10 +342,15 @@ class IndicatorsViewSet(viewsets.ViewSet):
     def compute_collection_indicators(start_date, end_date, country_id):
         results = []
         station_list = BorderStation.objects.filter(operating_country__id=country_id, features__contains='hasForms').order_by('station_code')
+        pvf_form = False
         for station in station_list:
             form = Form.current_form('IRF', station.id)
             if form is None:
                 continue
+            
+            the_pvf_form = Form.current_form('PVF', station.id)
+            if the_pvf_form is not None:
+                pvf_form = True
             
             form_categories = FormCategory.objects.filter(form=form, name='People')
             if len(form_categories) == 1 and form_categories[0].storage is not None:
@@ -325,24 +396,30 @@ class IndicatorsViewSet(viewsets.ViewSet):
                         result.phone_count += 1
                         if victim.person.phone_verified:
                             result.phone_verified_count += 1
-                
-                suspects = interceptee_storage.get_form_storage_class().objects.filter(interception_record=irf, person__role='Suspect',
-                                                                                      not_physically_present=False)
-                for suspect in suspects:
-                    result.suspect_count += 1
-                    if suspect.person.photo is not None and suspect.person.photo != '':
-                        result.suspect_photo_count += 1
+                if not irf.verified_evidence_categorization.lower().startswith('should'):
+                    suspects = interceptee_storage.get_form_storage_class().objects.filter(interception_record=irf,
+                                                                                           person__role='Suspect',
+                                                                                          not_physically_present=False)
+                    for suspect in suspects:
+                        result.suspect_count += 1
+                        if suspect.person.photo is not None and suspect.person.photo != '':
+                            result.suspect_photo_count += 1
                     
                 IndicatorsViewSet.cif_indicators_for_irf(result, irf)
                 IndicatorsViewSet.vdf_indicators_for_irf(result, irf)
+                IndicatorsViewSet.pvf_indicators_for_irf(result, irf)
+                IndicatorsViewSet.sf_indicators_for_irf(result, irf)
+                IndicatorsViewSet.lf_indicators_for_irf(result, irf)
+                
             if station.open or result.irf_count > 0:
                 # only include stations that are open or have IRFs present in the time period
-                result.compute_values()
+                result.compute_values(pvf_form)
                 results.append(result)
         
         total_result = CollectionResults('Totals')
         total_result.sum_list(results)
-        total_result.compute_values()
+        total_result.compute_values(pvf_form)
+        total_result.pvf_form = pvf_form
         
         all_results = [total_result.__dict__]
         for result in results:
@@ -407,6 +484,60 @@ class IndicatorsViewSet(viewsets.ViewSet):
             
             results.append(vdf)
         
+        return results
+    
+    @staticmethod
+    def pvfs_for_irf(irf):
+        results = []
+        form = Form.current_form('PVF', irf.station.id)
+        if form is None:
+            return results
+        
+        match_pattern = irf.irf_number + "[A-Z]$"
+        vdfs = form.storage.get_form_storage_class().objects.filter(vdf_number__startswith=irf.irf_number)
+        for vdf in vdfs:  
+            match = re.match(match_pattern, vdf.vdf_number)
+            if match is None:
+                continue
+            
+            results.append(vdf)
+        
+        return results
+    
+    @staticmethod
+    def sfs_for_irf(irf):
+        results = []
+        form = Form.current_form('SF', irf.station.id)
+        if form is None:
+            return results
+        
+        match_pattern = irf.irf_number + "[A-Z]$"
+        sfs = form.storage.get_form_storage_class().objects.filter(sf_number__startswith=irf.irf_number)
+        for sf in sfs:  
+            match = re.match(match_pattern, sf.sf_number)
+            if match is None:
+                continue
+            
+            results.append(sf)
+        
+        return results
+    
+    @staticmethod
+    def lfs_for_irf(irf):
+        results = []
+        form = Form.current_form('LF', irf.station.id)
+        if form is None:
+            return results
+        
+        match_pattern = irf.irf_number + "[A-Z]$"
+        lfs = form.storage.get_form_storage_class().objects.filter(lf_number__startswith=irf.irf_number)
+        for lf in lfs:  
+            match = re.match(match_pattern, lf.lf_number)
+            if match is None:
+                continue
+            
+            results.append(lf)
+        
         return results 
     
     @staticmethod
@@ -430,6 +561,74 @@ class IndicatorsViewSet(viewsets.ViewSet):
                 result.vdf_lag_count += 1
                 result.vdf_lag_total += work_days
                 result.vdf_lag_percent_total += IndicatorsViewSet.score_lag(work_days)
+    
+    @staticmethod
+    def pvf_indicators_for_irf(result, irf):
+        form = Form.current_form('PVF', irf.station.id)
+        if form is None:
+            return
+
+        match_pattern = irf.irf_number + "[A-Z]$"
+        vdfs = form.storage.get_form_storage_class().objects.filter(vdf_number__startswith=irf.irf_number)
+        for vdf in vdfs:
+            match = re.match(match_pattern, vdf.vdf_number)
+            if match is None:
+                continue
+            
+            result.vdf_count += 1
+            if vdf.logbook_incomplete_questions.lower() == 'no':
+                result.vdf_compliance_count += 1
+            if vdf.interview_date is not None and vdf.logbook_received is not None:
+                work_days = IndicatorHistory.work_days(vdf.interview_date, vdf.logbook_received)
+                result.vdf_lag_count += 1
+                result.vdf_lag_total += work_days
+                result.vdf_lag_percent_total += IndicatorsViewSet.score_lag(work_days)
+    
+    @staticmethod        
+    def sf_indicators_for_irf(result, irf):
+        form = Form.current_form('SF', irf.station.id)
+        if form is None:
+            return
+        
+        match_pattern = irf.irf_number + "(\\.[0-9]+|[A-Z])$"
+        sfs = form.storage.get_form_storage_class().objects.filter(sf_number__startswith=irf.irf_number)
+        for sf in sfs:  
+            match = re.match(match_pattern, sf.sf_number)
+            if match is None:
+                continue
+            
+            result.sf_count += 1
+            if sf.logbook_incomplete_questions.lower() == 'no':
+                result.sf_compliance_count += 1
+            infos = SuspectInformation.objects.filter(suspect=sf).order_by('id')
+            if len(infos) > 0 and infos[0].interview_date is not None and sf.logbook_received is not None:
+                work_days = IndicatorHistory.work_days(infos[0].interview_date, sf.logbook_received)
+                result.sf_lag_count += 1
+                result.sf_lag_total += work_days
+                result.sf_lag_percent_total += IndicatorsViewSet.score_lag(work_days)
+    
+    @staticmethod        
+    def lf_indicators_for_irf(result, irf):
+        form = Form.current_form('LF', irf.station.id)
+        if form is None:
+            return
+        
+        match_pattern = irf.irf_number + "(\\.[0-9]+|[A-Z])$"
+        lfs = form.storage.get_form_storage_class().objects.filter(lf_number__startswith=irf.irf_number)
+        for lf in lfs:  
+            match = re.match(match_pattern, lf.lf_number)
+            if match is None:
+                continue
+            
+            result.lf_count += 1
+            if lf.logbook_incomplete_questions.lower() == 'no':
+                result.lf_compliance_count += 1
+            infos = LocationInformation.objects.filter(lf=lf).order_by('id')
+            if len(infos) > 0 and infos[0].interview_date is not None and lf.logbook_received is not None:
+                work_days = IndicatorHistory.work_days(infos[0].interview_date, lf.logbook_received)
+                result.lf_lag_count += 1
+                result.lf_lag_total += work_days
+                result.lf_lag_percent_total += IndicatorsViewSet.score_lag(work_days)
     
     def getVictimDetail(self, start_date, end_date, project_code, country_id, detail_data):
         victims = IntercepteeCommon.objects.filter(
@@ -521,7 +720,7 @@ class IndicatorsViewSet(viewsets.ViewSet):
     
     def getIrfDetailList(self, start_date, end_date, project_code, country_id):
         irfs = IrfCommon.objects.filter(station__operating_country__id=country_id, verified_date__gte=start_date,
-                                 verified_date__lte=end_date)
+                                 verified_date__lte=end_date).exclude(evidence_categorization__startswith='Should')
         if project_code != 'Totals':
             irfs = irfs.filter(station__station_code = project_code)
         return irfs
@@ -651,6 +850,131 @@ class IndicatorsViewSet(viewsets.ViewSet):
             detail_data['text'].append('Average VDF collection lag time = ' + str(math.floor(total_work_days/lag_count + 0.5)))
             detail_data['text'].append('Average VDF collection lag score = ' + str(math.floor(lag_total_score/lag_count + 0.5)))
     
+    def getPvfDetail(self, start_date, end_date, project_code, country_id, detail_data):
+        irfs = self.getIrfDetailList(start_date, end_date, project_code, country_id)
+        table_data = {
+            'labels': ['PVF Number', 'Compliant', 'Lag Time', 'Lag Score'],
+            'rows': []
+            }
+        pvf_count = 0
+        compliant_count = 0
+        total_work_days = 0
+        lag_count = 0
+        lag_total_score = 0
+        for irf in irfs:
+            pvfs = IndicatorsViewSet.pvfs_for_irf(irf)
+            for pvf in pvfs:
+                pvf_count += 1
+                row = []
+                row.append({'value': pvf.vdf_number})
+                if pvf.logbook_incomplete_questions.lower() == 'no':
+                    compliant_count += 1
+                    row.append({'value': 'Yes'})
+                else:
+                    row.append({'value': 'No'})
+                if pvf.interview_date is not None and pvf.logbook_received is not None:
+                    work_days = IndicatorHistory.work_days(pvf.interview_date, pvf.logbook_received)
+                    total_work_days += work_days
+                    lag_total_score += self.score_lag(work_days)
+                    lag_count += 1
+                    row.append({'value': work_days})
+                    row.append({'value': self.score_lag(work_days)})
+                else:
+                    row.append({'value': 'Missing date(s)'})
+                    row.append({'value': ''})
+                table_data['rows'].append(row)
+        
+        detail_data['table_data'] = table_data
+        if len(detail_data['table_data']['rows']) > 0:
+            detail_data['text'].append('# of PVFs = ' + str(pvf_count))
+            detail_data['text'].append('# PVFs in Compliance = ' + str(compliant_count))
+            detail_data['text'].append('Average PVF collection lag time = ' + str(math.floor(total_work_days/lag_count + 0.5)))
+            detail_data['text'].append('Average PVF collection lag score = ' + str(math.floor(lag_total_score/lag_count + 0.5)))
+            
+    def getSfDetail(self, start_date, end_date, project_code, country_id, detail_data):
+        irfs = self.getIrfDetailList(start_date, end_date, project_code, country_id)
+        table_data = {
+            'labels': ['SF Number', 'Compliant', 'Lag Time', 'Lag Score'],
+            'rows': []
+            }
+        sf_count = 0
+        compliant_count = 0
+        total_work_days = 0
+        lag_count = 0
+        lag_total_score = 0
+        for irf in irfs:
+            sfs = IndicatorsViewSet.sfs_for_irf(irf)
+            for sf in sfs:
+                sf_count += 1
+                row = []
+                row.append({'value': sf.sf_number})
+                if sf.logbook_incomplete_questions.lower() == 'no':
+                    compliant_count += 1
+                    row.append({'value': 'Yes'})
+                else:
+                    row.append({'value': 'No'})
+                infos = SuspectInformation.objects.filter(suspect=sf).order_by('id')
+                if len(infos) > 0 and infos[0].interview_date is not None and sf.logbook_received is not None:
+                    work_days = IndicatorHistory.work_days(infos[0].interview_date, sf.logbook_received)
+                    total_work_days += work_days
+                    lag_total_score += self.score_lag(work_days)
+                    lag_count += 1
+                    row.append({'value': work_days})
+                    row.append({'value': self.score_lag(work_days)})
+                else:
+                    row.append({'value': 'Missing date(s)'})
+                    row.append({'value': ''})
+                table_data['rows'].append(row)
+        
+        detail_data['table_data'] = table_data
+        if len(detail_data['table_data']['rows']) > 0:
+            detail_data['text'].append('# of SFs = ' + str(sf_count))
+            detail_data['text'].append('# SFs in Compliance = ' + str(compliant_count))
+            detail_data['text'].append('Average SF collection lag time = ' + str(math.floor(total_work_days/lag_count + 0.5)))
+            detail_data['text'].append('Average SF collection lag score = ' + str(math.floor(lag_total_score/lag_count + 0.5)))
+    
+    def getLfDetail(self, start_date, end_date, project_code, country_id, detail_data):
+        irfs = self.getIrfDetailList(start_date, end_date, project_code, country_id)
+        table_data = {
+            'labels': ['SF Number', 'Compliant', 'Lag Time', 'Lag Score'],
+            'rows': []
+            }
+        lf_count = 0
+        compliant_count = 0
+        total_work_days = 0
+        lag_count = 0
+        lag_total_score = 0
+        for irf in irfs:
+            lfs = IndicatorsViewSet.lfs_for_irf(irf)
+            for lf in lfs:
+                lf_count += 1
+                row = []
+                row.append({'value': lf.lf_number})
+                if lf.logbook_incomplete_questions.lower() == 'no':
+                    compliant_count += 1
+                    row.append({'value': 'Yes'})
+                else:
+                    row.append({'value': 'No'})
+                infos = LocationInformation.objects.filter(lf=lf).order_by('id')
+                if len(infos) > 0 and infos[0].interview_date is not None and lf.logbook_received is not None:
+                    work_days = IndicatorHistory.work_days(infos[0].interview_date, lf.logbook_received)
+                    total_work_days += work_days
+                    lag_total_score += self.score_lag(work_days)
+                    lag_count += 1
+                    row.append({'value': work_days})
+                    row.append({'value': self.score_lag(work_days)})
+                else:
+                    row.append({'value': 'Missing date(s)'})
+                    row.append({'value': ''})
+                table_data['rows'].append(row)
+        
+        detail_data['table_data'] = table_data
+        if len(detail_data['table_data']['rows']) > 0:
+            detail_data['text'].append('# of SFs = ' + str(lf_count))
+            detail_data['text'].append('# SFs in Compliance = ' + str(compliant_count))
+            detail_data['text'].append('Average SF collection lag time = ' + str(math.floor(total_work_days/lag_count + 0.5)))
+            detail_data['text'].append('Average SF collection lag score = ' + str(math.floor(lag_total_score/lag_count + 0.5)))
+    
     def collection_details(self, request):
         start_date = request.GET['start_date']
         end_date = request.GET['end_date']
@@ -676,6 +1000,15 @@ class IndicatorsViewSet(viewsets.ViewSet):
             'VDFs':self.getVdfDetail,
             'VDFs in Compliance #':self.getVdfDetail,
             'VDF Collection Lag Time':self.getVdfDetail,
+            'PVFs':self.getPvfDetail,
+            'PVFs in Compliance #':self.getPvfDetail,
+            'PVF Collection Lag Time':self.getPvfDetail,
+            'SFs':self.getSfDetail,
+            'SFs in Compliance #':self.getSfDetail,
+            'SF Collection Lag Time':self.getSfDetail,
+            'LFs':self.getLfDetail,
+            'LFs in Compliance #':self.getLfDetail,
+            'LF Collection Lag Time':self.getLfDetail,
             'Total # Verified Forms':self.getIrfDetail,
             'Evidence of Trafficking':self.getIrfDetail,
             'Evidence of Trafficking %':None,

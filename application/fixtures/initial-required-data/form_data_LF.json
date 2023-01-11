@@ -1,0 +1,2571 @@
+[
+{
+   "model": "dataentry.storage",
+   "fields": {
+      "form_tag": "Lf",
+      "module_name": "dataentry.models.location",
+      "form_model_name": "LocationForm",
+      "response_model_name": null,
+      "parent_storage": null,
+      "foreign_key_field_parent": null,
+      "foreign_key_field_child": null
+   }
+},
+{
+   "model": "dataentry.storage",
+   "fields": {
+      "form_tag": "LfInformation",
+      "module_name": "dataentry.models.location",
+      "form_model_name": "LocationInformation",
+      "response_model_name": null,
+      "parent_storage": "Lf",
+      "foreign_key_field_parent": "lf",
+      "foreign_key_field_child": null
+   }
+},
+{
+   "model": "dataentry.storage",
+   "fields": {
+      "form_tag": "LfAssociation",
+      "module_name": "dataentry.models.location",
+      "form_model_name": "LocationAssociation",
+      "response_model_name": null,
+      "parent_storage": "Lf",
+      "foreign_key_field_parent": "lf",
+      "foreign_key_field_child": null
+   }
+},
+{
+   "model": "dataentry.storage",
+   "fields": {
+      "form_tag": "LfEvaluation",
+      "module_name": "dataentry.models.location",
+      "form_model_name": "LocationEvaluation",
+      "response_model_name": null,
+      "parent_storage": "Lf",
+      "foreign_key_field_parent": "lf",
+      "foreign_key_field_child": null
+   }
+},
+{
+   "model": "dataentry.storage",
+   "fields": {
+      "form_tag": "LfAttachment",
+      "module_name": "dataentry.models.location",
+      "form_model_name": "LocationAttachment",
+      "response_model_name": null,
+      "parent_storage": "Lf",
+      "foreign_key_field_parent": "lf",
+      "foreign_key_field_child": null
+   }
+},
+{
+   "model": "dataentry.form",
+   "fields": {
+      "form_type": 10,
+      "storage": "Lf",
+      "start_date": "2022-10-08T04:00:00Z",
+      "end_date": "2118-12-31T00:00:00Z",
+      "form_name": "lfNepal",
+      "version": "V2022.6",
+      "stations": []
+   }
+},
+{
+   "model": "dataentry.form",
+   "fields": {
+      "form_type": 10,
+      "storage": "Lf",
+      "start_date": "2022-10-08T04:00:00Z",
+      "end_date": "2118-12-31T00:00:00Z",
+      "form_name": "lfIndia",
+      "version": "V2022.6",
+      "stations": []
+   }
+},
+{
+   "model": "dataentry.form",
+   "fields": {
+      "form_type": 10,
+      "storage": "Lf",
+      "start_date": "2022-10-08T04:00:00Z",
+      "end_date": "2118-12-31T00:00:00Z",
+      "form_name": "lfIndiaNetwork",
+      "version": "V2022.6",
+      "stations": []
+   }
+},
+{
+   "model": "dataentry.form",
+   "fields": {
+      "form_type": 10,
+      "storage": "Lf",
+      "start_date": "2022-10-08T04:00:00Z",
+      "end_date": "2118-12-31T00:00:00Z",
+      "form_name": "lfGhana",
+      "version": "V2022.6",
+      "stations": []
+   }
+},
+{
+   "model": "dataentry.form",
+   "fields": {
+      "form_type": 10,
+      "storage": "Lf",
+      "start_date": "2022-10-08T04:00:00Z",
+      "end_date": "2118-12-31T00:00:00Z",
+      "form_name": "lfKenya",
+      "version": "V2022.6",
+      "stations": []
+   }
+},
+{
+   "model": "dataentry.form",
+   "fields": {
+      "form_type": 10,
+      "storage": "Lf",
+      "start_date": "2022-10-08T04:00:00Z",
+      "end_date": "2118-12-31T00:00:00Z",
+      "form_name": "lfSouthAfrica",
+      "version": "V2022.6",
+      "stations": []
+   }
+},
+{
+   "model": "dataentry.category",
+   "fields": {
+      "form_tag": "lfTop",
+      "category_type": 1,
+      "description": "Top - LF"
+   }
+},
+{
+   "model": "dataentry.category",
+   "fields": {
+      "form_tag": "lfInformation",
+      "category_type": 2,
+      "description": "Information - LF"
+   }
+},
+{
+   "model": "dataentry.category",
+   "fields": {
+      "form_tag": "lfAssociation",
+      "category_type": 2,
+      "description": "Association - LF"
+   }
+},
+{
+   "model": "dataentry.category",
+   "fields": {
+      "form_tag": "lfEvaluation",
+      "category_type": 2,
+      "description": "Evaluation - LF"
+   }
+},
+{
+   "model": "dataentry.category",
+   "fields": {
+      "form_tag": "lfNarrative",
+      "category_type": 1,
+      "description": "Narrative - LF"
+   }
+},
+{
+   "model": "dataentry.category",
+   "fields": {
+      "form_tag": "lfAttachment",
+      "category_type": 2,
+      "description": "Attachment - LF"
+   }
+},
+{
+   "model": "dataentry.category",
+   "fields": {
+      "form_tag": "lfMerged",
+      "category_type": 1,
+      "description": "Merged - LF"
+   }
+},
+{
+   "model": "dataentry.category",
+   "fields": {
+      "form_tag": "lfCompliance",
+      "category_type": 1,
+      "description": "Compliance - common LF"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfNepal",
+      "category": "lfTop",
+      "name": "Top",
+      "order": 1,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfNepal",
+      "category": "lfInformation",
+      "name": "Information",
+      "order": 2,
+      "form_category_question_config": null,
+      "storage": "LfInformation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfNepal",
+      "category": "lfAssociation",
+      "name": "Association",
+      "order": 3,
+      "form_category_question_config": null,
+      "storage": "LfAssociation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfNepal",
+      "category": "lfEvaluation",
+      "name": "Evaluation",
+      "order": 4,
+      "form_category_question_config": null,
+      "storage": "LfEvaluation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfNepal",
+      "category": "lfNarrative",
+      "name": "Narrative",
+      "order": 5,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfNepal",
+      "category": "lfAttachment",
+      "name": "Attachments",
+      "order": 6,
+      "form_category_question_config": null,
+      "storage": "LfAttachment"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfNepal",
+      "category": "lfMerged",
+      "name": "Merged",
+      "order": 2,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfNepal",
+      "category": "lfCompliance",
+      "name": "Compliance",
+      "order": 7,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfIndia",
+      "category": "lfTop",
+      "name": "Top",
+      "order": 1,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfIndia",
+      "category": "lfMerged",
+      "name": "Merged",
+      "order": 2,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfIndia",
+      "category": "lfInformation",
+      "name": "Information",
+      "order": 2,
+      "form_category_question_config": null,
+      "storage": "LfInformation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfIndia",
+      "category": "lfAssociation",
+      "name": "Association",
+      "order": 3,
+      "form_category_question_config": null,
+      "storage": "LfAssociation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfIndia",
+      "category": "lfEvaluation",
+      "name": "Evaluation",
+      "order": 4,
+      "form_category_question_config": null,
+      "storage": "LfEvaluation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfIndia",
+      "category": "lfNarrative",
+      "name": "Narrative",
+      "order": 5,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfIndia",
+      "category": "lfAttachment",
+      "name": "Attachments",
+      "order": 6,
+      "form_category_question_config": null,
+      "storage": "LfAttachment"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfIndia",
+      "category": "lfCompliance",
+      "name": "Compliance",
+      "order": 7,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfIndiaNetwork",
+      "category": "lfTop",
+      "name": "Top",
+      "order": 1,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfIndiaNetwork",
+      "category": "lfMerged",
+      "name": "Merged",
+      "order": 2,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfIndiaNetwork",
+      "category": "lfInformation",
+      "name": "Information",
+      "order": 2,
+      "form_category_question_config": null,
+      "storage": "LfInformation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfIndiaNetwork",
+      "category": "lfAssociation",
+      "name": "Association",
+      "order": 3,
+      "form_category_question_config": null,
+      "storage": "LfAssociation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfIndiaNetwork",
+      "category": "lfEvaluation",
+      "name": "Evaluation",
+      "order": 4,
+      "form_category_question_config": null,
+      "storage": "LfEvaluation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfIndiaNetwork",
+      "category": "lfNarrative",
+      "name": "Narrative",
+      "order": 5,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfIndiaNetwork",
+      "category": "lfAttachment",
+      "name": "Attachments",
+      "order": 6,
+      "form_category_question_config": null,
+      "storage": "LfAttachment"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfIndiaNetwork",
+      "category": "lfCompliance",
+      "name": "Compliance",
+      "order": 7,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfGhana",
+      "category": "lfTop",
+      "name": "Top",
+      "order": 1,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfGhana",
+      "category": "lfInformation",
+      "name": "Information",
+      "order": 2,
+      "form_category_question_config": null,
+      "storage": "LfInformation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfGhana",
+      "category": "lfMerged",
+      "name": "Merged",
+      "order": 2,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfGhana",
+      "category": "lfAssociation",
+      "name": "Association",
+      "order": 3,
+      "form_category_question_config": null,
+      "storage": "LfAssociation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfGhana",
+      "category": "lfEvaluation",
+      "name": "Evaluation",
+      "order": 4,
+      "form_category_question_config": null,
+      "storage": "LfEvaluation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfGhana",
+      "category": "lfNarrative",
+      "name": "Narrative",
+      "order": 5,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfGhana",
+      "category": "lfAttachment",
+      "name": "Attachments",
+      "order": 6,
+      "form_category_question_config": null,
+      "storage": "LfAttachment"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfGhana",
+      "category": "lfCompliance",
+      "name": "Compliance",
+      "order": 7,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfKenya",
+      "category": "lfTop",
+      "name": "Top",
+      "order": 1,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfKenya",
+      "category": "lfInformation",
+      "name": "Information",
+      "order": 2,
+      "form_category_question_config": null,
+      "storage": "LfInformation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfKenya",
+      "category": "lfMerged",
+      "name": "Merged",
+      "order": 2,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfKenya",
+      "category": "lfAssociation",
+      "name": "Association",
+      "order": 3,
+      "form_category_question_config": null,
+      "storage": "LfAssociation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfKenya",
+      "category": "lfEvaluation",
+      "name": "Evaluation",
+      "order": 4,
+      "form_category_question_config": null,
+      "storage": "LfEvaluation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfKenya",
+      "category": "lfNarrative",
+      "name": "Narrative",
+      "order": 5,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfKenya",
+      "category": "lfAttachment",
+      "name": "Attachments",
+      "order": 6,
+      "form_category_question_config": null,
+      "storage": "LfAttachment"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfKenya",
+      "category": "lfCompliance",
+      "name": "Compliance",
+      "order": 7,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfSouthAfrica",
+      "category": "lfTop",
+      "name": "Top",
+      "order": 1,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfSouthAfrica",
+      "category": "lfInformation",
+      "name": "Information",
+      "order": 2,
+      "form_category_question_config": null,
+      "storage": "LfInformation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfSouthAfrica",
+      "category": "lfMerged",
+      "name": "Merged",
+      "order": 2,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfSouthAfrica",
+      "category": "lfAssociation",
+      "name": "Association",
+      "order": 3,
+      "form_category_question_config": null,
+      "storage": "LfAssociation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfSouthAfrica",
+      "category": "lfEvaluation",
+      "name": "Evaluation",
+      "order": 4,
+      "form_category_question_config": null,
+      "storage": "LfEvaluation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfSouthAfrica",
+      "category": "lfNarrative",
+      "name": "Narrative",
+      "order": 5,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfSouthAfrica",
+      "category": "lfAttachment",
+      "name": "Attachments",
+      "order": 6,
+      "form_category_question_config": null,
+      "storage": "LfAttachment"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfSouthAfrica",
+      "category": "lfCompliance",
+      "name": "Compliance",
+      "order": 7,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfTopLfNumber",
+      "prompt": "LF Number",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "LF Number",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfMergedPlace",
+      "prompt": "Place",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Merged Place",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfMergedPlaceDetail",
+      "prompt": "Place Detail",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Merged Place Detail",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfMergedPlaceKind",
+      "prompt": "Place Kind",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Merged Place Kind",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfMergedAddress",
+      "prompt": "Address",
+      "description": null,
+      "answer_type": 11,
+      "params": null,
+      "export_name": "Merged Address",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfMergedLatitude",
+      "prompt": "Latitude",
+      "description": null,
+      "answer_type": 3,
+      "params": null,
+      "export_name": "Merged Latitude",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfMergedLongitude",
+      "prompt": "Longitude",
+      "description": null,
+      "answer_type": 3,
+      "params": null,
+      "export_name": "Merged Longitude",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfMergedPhone",
+      "prompt": "Phone",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Merged Phone",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfMergedSignboard",
+      "prompt": "Name on Signboard",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Merged Signboard",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfMergedLocationInTown",
+      "prompt": "Location in Town",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Merged Location in Town",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfMergedColor",
+      "prompt": "Color",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Merged Color",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfMergedNumberOfLevels",
+      "prompt": "Number of Levels",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Merged Number of Levels",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfMergedDescription",
+      "prompt": "Description",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Merged Description",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfMergedLandmarks",
+      "prompt": "Nearby Landmarks",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Merged Landmarks",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfInformationIncident",
+      "prompt": "Incident",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Incident",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfInformationSourceType",
+      "prompt": "Source Type",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Source Type",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfInformationSourceTitle",
+      "prompt": "Source Title",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Source Title",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfInformationInterviewerName",
+      "prompt": "Interviewer Name",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Interviewer Name",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfInformationInterviewDate",
+      "prompt": "Interview Date",
+      "description": null,
+      "answer_type": 9,
+      "params": null,
+      "export_name": "Interview Date",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfInformationLocation",
+      "prompt": "Location",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Location",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfInformationPlace",
+      "prompt": "Place",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Place",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfInformationPlaceDetail",
+      "prompt": "Place Detail",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Place Detail",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfInformationPlaceKind",
+      "prompt": "Place Kind",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Place Kind",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfInformationAddress",
+      "prompt": "Address",
+      "description": null,
+      "answer_type": 11,
+      "params": null,
+      "export_name": "Address",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfInformationLatitude",
+      "prompt": "Latitude",
+      "description": null,
+      "answer_type": 3,
+      "params": null,
+      "export_name": "Latitude",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfInformationLongitude",
+      "prompt": "Longitude",
+      "description": null,
+      "answer_type": 3,
+      "params": null,
+      "export_name": "Longitude",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfInformationPhone",
+      "prompt": "Phone",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Phone",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfInformationSignboard",
+      "prompt": "Name on Signboard",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Signboard",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfInformationLocationInTown",
+      "prompt": "Location in Town",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Location in Town",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfInformationColor",
+      "prompt": "Color",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Color",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfInformationNumberOfLevels",
+      "prompt": "Number of Levels",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Number of Levels",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfInformationDescription",
+      "prompt": "Description",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Description",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfInformationLandmarks",
+      "prompt": "Nearby Landmarks",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Landmarks",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfAssociationIncident",
+      "prompt": "Incident",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Incident",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfAssociationSourceType",
+      "prompt": "Source Type",
+      "description": null,
+      "answer_type": 4,
+      "params": {
+         "textbox": "True"
+      },
+      "export_name": "Source Type",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfAssociationSourceTitle",
+      "prompt": "Source Title",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Source Title",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfAssociationInterviewerName",
+      "prompt": "Interviewer Name",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Interviewer Name",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfAssociationInterviewDate",
+      "prompt": "Interview Date",
+      "description": null,
+      "answer_type": 9,
+      "params": null,
+      "export_name": "Interview Date",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfAssociationLocation",
+      "prompt": "Location",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Location",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfAssociationPersonsInCharge",
+      "prompt": "Persons in Charge",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Persons in Charge",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfAssociationPvsVisited",
+      "prompt": "PVs Visited",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "PVs Visited",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfAssociationPvsStayHowLong",
+      "prompt": "How long did the PV Stay",
+      "description": null,
+      "answer_type": 4,
+      "params": {
+         "textbox": "True"
+      },
+      "export_name": "PVs Stay how long",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfAssociationPvsStayStartDate",
+      "prompt": "starting from",
+      "description": null,
+      "answer_type": 9,
+      "params": null,
+      "export_name": "PVs Stay Start Date",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfAssociationPvHide",
+      "prompt": "Attempt to hide PV's presence",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "PV attempt to hide",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfAssociationPvHideExplain",
+      "prompt": "Attempt to hide explain",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "PV attempt to hide explain",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfAssociationPvFreeToGo",
+      "prompt": "PV free to go",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "PV free to go",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfAssociationPvFreeToGoExplain",
+      "prompt": "PV free to go explain",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "PV free to go explain",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfAssociationSuspects",
+      "prompt": "Suspect associated",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Suspects Associated",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfEvaluationIncident",
+      "prompt": "Incident",
+      "description": null,
+      "answer_type": 2,
+      "params": null,
+      "export_name": "Narrative",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfEvaluationEvaluatorType",
+      "prompt": "Evaluator Type",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Evaluator Type",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfEvaluationEvaluatorName",
+      "prompt": "Evaluator Name",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Evaluator Name",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfEvaluationEvaluation",
+      "prompt": "Evaluation",
+      "description": null,
+      "answer_type": 4,
+      "params": null,
+      "export_name": "Evaluation",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfNarrativeEvidence",
+      "prompt": "Evidence",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Evidence",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfNarrativeFacilitate",
+      "prompt": "how_facilitate",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "How facilitate",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfAttachmentNumber",
+      "prompt": "attachment number",
+      "description": null,
+      "answer_type": 2,
+      "params": null,
+      "export_name": "attachment number",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfAttachmentDescription",
+      "prompt": "description",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "description",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfAttachmentAttachment",
+      "prompt": "attachment",
+      "description": null,
+      "answer_type": 12,
+      "params": {
+         "subdirectory": "lf_attachments/"
+      },
+      "export_name": "attachment",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfAttachmentPrivate",
+      "prompt": "Attachment contains private data",
+      "description": null,
+      "answer_type": 6,
+      "params": null,
+      "export_name": "Attachment contains private data",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfAttachmentOption",
+      "prompt": "Option",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Option",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfComplianceDateComplete",
+      "prompt": "Date Complete Information was Received",
+      "description": null,
+      "answer_type": 9,
+      "params": null,
+      "export_name": "Date Complete Information was Received",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfComplianceDateReceived",
+      "prompt": "Date Form Received",
+      "description": null,
+      "answer_type": 9,
+      "params": null,
+      "export_name": "Date Form Received",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfComplianceDateSubmitted",
+      "prompt": "Date Form Submitted",
+      "description": null,
+      "answer_type": 9,
+      "params": null,
+      "export_name": "Date Form Submitted",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfComplianceIncomplete",
+      "prompt": "Were there incomplete questions on the IRF that prevented submission?",
+      "description": null,
+      "answer_type": 4,
+      "params": null,
+      "export_name": "Were there incomplete questions on the IRF that prevented submission?",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfComplianceIncompleteSections",
+      "prompt": "Please list incomplete sections that prevented submission",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Incomplete sections list",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lfComplianceNotes",
+      "prompt": "notes",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Logbook notes",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfTopLfNumber",
+      "category": "lfTop",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfMergedPlace",
+      "category": "lfMerged",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfMergedPlaceDetail",
+      "category": "lfMerged",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfMergedPlaceKind",
+      "category": "lfMerged",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfMergedAddress",
+      "category": "lfMerged",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfMergedLatitude",
+      "category": "lfMerged",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfMergedLongitude",
+      "category": "lfMerged",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfMergedPhone",
+      "category": "lfMerged",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfMergedSignboard",
+      "category": "lfMerged",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfMergedLocationInTown",
+      "category": "lfMerged",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfMergedColor",
+      "category": "lfMerged",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfMergedNumberOfLevels",
+      "category": "lfMerged",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfMergedDescription",
+      "category": "lfMerged",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfMergedLandmarks",
+      "category": "lfMerged",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfInformationIncident",
+      "category": "lfInformation",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfInformationSourceType",
+      "category": "lfInformation",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfInformationSourceTitle",
+      "category": "lfInformation",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfInformationInterviewerName",
+      "category": "lfInformation",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfInformationInterviewDate",
+      "category": "lfInformation",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfInformationLocation",
+      "category": "lfInformation",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfInformationPlace",
+      "category": "lfInformation",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfInformationPlaceDetail",
+      "category": "lfInformation",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfInformationPlaceKind",
+      "category": "lfInformation",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfInformationAddress",
+      "category": "lfInformation",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfInformationLatitude",
+      "category": "lfInformation",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfInformationLongitude",
+      "category": "lfInformation",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfInformationPhone",
+      "category": "lfInformation",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfInformationSignboard",
+      "category": "lfInformation",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfInformationLocationInTown",
+      "category": "lfInformation",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfInformationColor",
+      "category": "lfInformation",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfInformationNumberOfLevels",
+      "category": "lfInformation",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfInformationDescription",
+      "category": "lfInformation",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfInformationLandmarks",
+      "category": "lfInformation",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfAssociationIncident",
+      "category": "lfAssociation",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfAssociationSourceType",
+      "category": "lfAssociation",
+      "weight": 0,
+      "form_config": {
+         "RadioItems": {
+            "AssociationModalController": [
+               "Intercept",
+               "Operation",
+               "Victim",
+               "Police",
+               "Trafficker",
+               "OSI"
+            ]
+         }
+      }
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfAssociationSourceTitle",
+      "category": "lfAssociation",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfAssociationInterviewerName",
+      "category": "lfAssociation",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfAssociationInterviewDate",
+      "category": "lfAssociation",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfAssociationLocation",
+      "category": "lfAssociation",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfAssociationPersonsInCharge",
+      "category": "lfAssociation",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfAssociationPvsVisited",
+      "category": "lfAssociation",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfAssociationPvsStayHowLong",
+      "category": "lfAssociation",
+      "weight": 0,
+      "form_config": {
+         "RadioItems": {
+            "lfAssociationPvsStayHowLong": [
+               "N/A (Not Applicable)"
+            ]
+         }
+      }
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfAssociationPvsStayStartDate",
+      "category": "lfAssociation",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfAssociationPvHide",
+      "category": "lfAssociation",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfAssociationPvHideExplain",
+      "category": "lfAssociation",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfAssociationPvFreeToGo",
+      "category": "lfAssociation",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfAssociationPvFreeToGoExplain",
+      "category": "lfAssociation",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfAssociationSuspects",
+      "category": "lfAssociation",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfEvaluationIncident",
+      "category": "lfEvaluation",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfEvaluationEvaluatorType",
+      "category": "lfEvaluation",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfEvaluationEvaluatorName",
+      "category": "lfEvaluation",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfEvaluationEvaluation",
+      "category": "lfEvaluation",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfNarrativeEvidence",
+      "category": "lfNarrative",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfNarrativeFacilitate",
+      "category": "lfNarrative",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfAttachmentNumber",
+      "category": "lfAttachment",
+      "weight": 0,
+      "form_config": {
+         "IndexQuestion": "lfAttachmentNumber"
+      }
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfAttachmentDescription",
+      "category": "lfAttachment",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfAttachmentAttachment",
+      "category": "lfAttachment",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfAttachmentPrivate",
+      "category": "lfAttachment",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfAttachmentOption",
+      "category": "lfAttachment",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfComplianceDateComplete",
+      "category": "lfCompliance",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfComplianceDateReceived",
+      "category": "lfCompliance",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfComplianceDateSubmitted",
+      "category": "lfCompliance",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfComplianceIncomplete",
+      "category": "lfCompliance",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfComplianceIncompleteSections",
+      "category": "lfCompliance",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lfComplianceNotes",
+      "category": "lfCompliance",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfTopLfNumber",
+      "field_name": "lf_number"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfMergedPlace",
+      "field_name": "merged_place"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfMergedPlaceDetail",
+      "field_name": "merged_place_detail"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfMergedPlaceKind",
+      "field_name": "merged_place_kind"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfMergedAddress",
+      "field_name": "merged_address"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfMergedLatitude",
+      "field_name": "merged_latitude"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfMergedLongitude",
+      "field_name": "merged_longitude"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfMergedPhone",
+      "field_name": "merged_phone"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfMergedSignboard",
+      "field_name": "merged_name_signboard"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfMergedLocationInTown",
+      "field_name": "merged_location_in_town"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfMergedColor",
+      "field_name": "merged_color"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfMergedNumberOfLevels",
+      "field_name": "merged_number_of_levels"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfMergedDescription",
+      "field_name": "merged_description"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfMergedLandmarks",
+      "field_name": "merged_nearby_landmarks"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfInformationIncident",
+      "field_name": "incident_id"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfInformationSourceType",
+      "field_name": "source_type"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfInformationSourceTitle",
+      "field_name": "source_title"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfInformationInterviewerName",
+      "field_name": "interviewer_name"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfInformationInterviewDate",
+      "field_name": "interview_date"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfInformationLocation",
+      "field_name": "location"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfInformationPlace",
+      "field_name": "place"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfInformationPlaceDetail",
+      "field_name": "place_detail"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfInformationPlaceKind",
+      "field_name": "place_kind"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfInformationAddress",
+      "field_name": "address"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfInformationLatitude",
+      "field_name": "latitude"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfInformationLongitude",
+      "field_name": "longitude"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfInformationPhone",
+      "field_name": "phone"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfInformationSignboard",
+      "field_name": "name_signboard"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfInformationLocationInTown",
+      "field_name": "location_in_town"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfInformationColor",
+      "field_name": "color"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfInformationNumberOfLevels",
+      "field_name": "number_of_levels"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfInformationDescription",
+      "field_name": "description"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfInformationLandmarks",
+      "field_name": "nearby_landmarks"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfAssociationIncident",
+      "field_name": "incident_id"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfAssociationSourceType",
+      "field_name": "source_type"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfAssociationSourceTitle",
+      "field_name": "source_title"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfAssociationInterviewerName",
+      "field_name": "interviewer_name"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfAssociationInterviewDate",
+      "field_name": "interview_date"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfAssociationLocation",
+      "field_name": "location"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfAssociationPersonsInCharge",
+      "field_name": "persons_in_charge"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfAssociationPvsVisited",
+      "field_name": "pvs_visited"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfAssociationPvsStayHowLong",
+      "field_name": "stay_how_long"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfAssociationPvsStayStartDate",
+      "field_name": "start_date"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfAssociationPvHide",
+      "field_name": "attempt_hide"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfAssociationPvHideExplain",
+      "field_name": "attempt_explanation"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfAssociationPvFreeToGo",
+      "field_name": "free_to_go"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfAssociationPvFreeToGoExplain",
+      "field_name": "free_to_go_explanation"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfAssociationSuspects",
+      "field_name": "suspects_associative"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfEvaluationIncident",
+      "field_name": "incident_id"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfEvaluationEvaluatorType",
+      "field_name": "evaluator_type"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfEvaluationEvaluatorName",
+      "field_name": "evaluator_name"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfEvaluationEvaluation",
+      "field_name": "evaluation"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfNarrativeEvidence",
+      "field_name": "evidence"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfNarrativeFacilitate",
+      "field_name": "how_facilitate"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfAttachmentNumber",
+      "field_name": "attachment_number"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfAttachmentDescription",
+      "field_name": "description"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfAttachmentAttachment",
+      "field_name": "attachment"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfAttachmentPrivate",
+      "field_name": "private_card"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfAttachmentOption",
+      "field_name": "option"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfComplianceDateComplete",
+      "field_name": "logbook_information_complete"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfComplianceDateReceived",
+      "field_name": "logbook_received"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfComplianceDateSubmitted",
+      "field_name": "logbook_submitted"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfComplianceIncomplete",
+      "field_name": "logbook_incomplete_questions"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfComplianceIncompleteSections",
+      "field_name": "logbook_incomplete_sections"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lfComplianceNotes",
+      "field_name": "logbook_notes"
+   }
+}
+]

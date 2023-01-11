@@ -58,12 +58,14 @@ def get_sl_data(db_cred):
     intees = dbc.ex_query("SELECT person_id, interception_record_id FROM public.dataentry_intercepteecommon;")
     irfs = dbc.ex_query("SELECT id, irf_number FROM public.dataentry_irfcommon;")
     cifs = dbc.ex_query("SELECT id, main_pv_id, cif_number FROM public.dataentry_cifcommon;")
+    sfs = dbc.ex_query("SELECT id, merged_person_id, sf_number FROM public.dataentry_suspect;")
     vdfs = dbc.ex_query("SELECT id, vdf_number FROM public.dataentry_vdfcommon;")
     pbs = dbc.ex_query("SELECT cif_id, person_id FROM dataentry_personboxcommon;")
+    sis = dbc.ex_query("SELECT sf_id, person_id FROM dataentry_suspectinformation;")
     c = dbc.ex_query("SELECT * FROM public.dataentry_country;")
     bs = dbc.ex_query("SELECT * FROM public.dataentry_borderstation;")
     dbc.close_conn()
-    return dp, intees, irfs, cifs, vdfs, pbs, c, bs
+    return dp, intees, irfs, cifs, sfs, vdfs, pbs, c, bs
 
 def get_sl_data2(db_cred):
     # Check to see if it opens a separate thread

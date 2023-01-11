@@ -15,6 +15,7 @@ from dataentry.models import ClientDiagnostic
 from dataentry.models import ProjectCategory
 from dataentry.models import Empowerment
 from dataentry.models import Gospel
+from dataentry.models import Incident
 from static_border_stations.serializers import LocationSerializer
 from dataentry.form_data import FormData
 
@@ -680,9 +681,8 @@ class FormSerializer(serializers.ModelSerializer):
 
 class StationStatisticsSerializer(serializers.ModelSerializer):
     class Meta:
-        fields = '__all__'
         model = StationStatistics
-        fields = fields = [
+        fields = [
             'id',
             'year_month',
             'compliance',
@@ -694,12 +694,14 @@ class StationStatisticsSerializer(serializers.ModelSerializer):
             'convictions',
             'station',
             'staff',
-            'work_days'
+            'work_days',
+            'is_station_open_now'
         ]
     
     intercepts = serializers.SerializerMethodField(read_only=True)
     arrests = serializers.SerializerMethodField(read_only=True)
     staff = serializers.SerializerMethodField(read_only=True)
+    is_station_open_now = serializers.SerializerMethodField(read_only=True)
     
     def get_intercepts(self, obj):
         return LocationStatistics.objects.filter(location__border_station=obj.station, year_month=obj.year_month).aggregate(Sum('intercepts'))['intercepts__sum']
@@ -717,6 +719,11 @@ class StationStatisticsSerializer(serializers.ModelSerializer):
         else:
             staff = total_days / work_days
         return staff
+
+    def get_is_station_open_now(self, obj: StationStatistics):
+        station = obj.station
+        return station.open
+
     
 
 class LocationStaffSerializer(serializers.ModelSerializer):
@@ -1043,10 +1050,11 @@ class GospelSerializer(serializers.ModelSerializer):
     class Meta:
         model = Gospel
         fields = [field.name for field in model._meta.fields] # all the model fields
-        fields = fields + ['station_name', 'country_name']
+        fields = fields + ['station_name', 'country_name', 'country_id']
     
     station_name = serializers.SerializerMethodField(read_only=True)
     country_name = serializers.SerializerMethodField(read_only=True)
+    country_id = serializers.SerializerMethodField(read_only=True)
     
     def get_station_name (self, obj):
         if obj.station is not None:
@@ -1059,4 +1067,35 @@ class GospelSerializer(serializers.ModelSerializer):
             return obj.station.operating_country.name;
         else:
             return None
+        
+    def get_country_id (self, obj):
+        if obj.station is not None and obj.station.operating_country is not None:
+            return obj.station.operating_country.id;
+        else:
+            return None
+
+class IncidentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Incident
+        fields = [field.name for field in model._meta.fields] # all the model fields
+        fields = fields + ['station_name']
+    
+    station_name = serializers.SerializerMethodField(read_only=True)
+    def get_station_name (self, obj):
+        if obj.station is not None:
+            return obj.station.station_name;
+        else:
+            return None
+    
+    def create(self, validated_data):
+        #incident_number comes in with just the station code.  Add date and sequence number
+        date_match = self.context['request'].data['incident_number'] + self.context['request'].data['incident_date'].replace('-','') + "_"
+        matches = Incident.objects.filter(incident_number__startswith=date_match).order_by('-incident_number')
+        if len(matches) < 1:
+            validated_data['incident_number'] = date_match + '1'
+        else:
+            parts = matches[0].incident_number.split('_')
+            validated_data['incident_number'] = date_match + str(int(parts[1]) + 1)
+        
+        return Incident.objects.create(**validated_data)
     
