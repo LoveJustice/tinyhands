@@ -329,6 +329,7 @@ class IrfFormViewSet(BaseFormViewSet):
         incident.station = form_data.form_object.station
         incident.form_entered_by = form_data.form_object.form_entered_by
         incident.incident_number = form_data.form_object.irf_number
+        incident.incident_date = form_data.form_object.date_of_interception
         incident.save()
     
     def verifier_context(self, form_data, context):
