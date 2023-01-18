@@ -4,7 +4,7 @@ from rest_framework import filters as fs
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from dataentry.models import BorderStation, Gospel, UserLocationPermission
+from dataentry.models import BorderStation, Country, Gospel, UserLocationPermission
 from dataentry.serializers import GospelSerializer
 from rest_api.authentication import HasPostPermission, HasPutPermission, HasDeletePermission
 
@@ -21,6 +21,20 @@ class GospelViewSet(viewsets.ModelViewSet):
     ordering_fields = ('date_time_entered_into_system', 'station__station_name', 'station__operating_country__name')
     ordering = ('date_time_entered_into_system',)
                 
+    def get_queryset(self):
+        countries = Country.objects.all()
+        include_countries = []
+        country_ids = self.request.GET.get('country_ids')
+        perm_list = UserLocationPermission.objects.filter(account__id=self.request.user.id, permission__permission_group='GSP', permission__action='VIEW')
+        for country_entry in countries:
+            if country_ids is not None and str(country_entry.id) not in country_ids:
+                continue
+            if UserLocationPermission.has_permission_in_list(perm_list, 'GSP', 'VIEW', country_entry.id, None):
+                include_countries.append(country_entry)
+        
+        queryset = Gospel.objects.filter(station__operating_country__in=include_countries)
+       
+        return queryset
     
     def retrieve_blank(self, request, station_id):
         station = BorderStation.objects.get(id=station_id)
