@@ -144,6 +144,18 @@
    }
 },
 {
+   "model": "dataentry.form",
+   "fields": {
+      "form_type": 10,
+      "storage": "Lf",
+      "start_date": "2022-10-08T04:00:00Z",
+      "end_date": "2118-12-31T00:00:00Z",
+      "form_name": "lfLiberia",
+      "version": "V2022.6",
+      "stations": []
+   }
+},
+{
    "model": "dataentry.category",
    "fields": {
       "form_tag": "lfTop",
@@ -816,6 +828,83 @@
    "model": "dataentry.formcategory",
    "fields": {
       "form": "lfNamibia",
+      "category": "lfCompliance",
+      "name": "Compliance",
+      "order": 7,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfLiberia",
+      "category": "lfMerged",
+      "name": "Merged",
+      "order": 2,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfLiberia",
+      "category": "lfInformation",
+      "name": "Information",
+      "order": 2,
+      "form_category_question_config": null,
+      "storage": "LfInformation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfLiberia",
+      "category": "lfAssociation",
+      "name": "Association",
+      "order": 3,
+      "form_category_question_config": null,
+      "storage": "LfAssociation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfLiberia",
+      "category": "lfEvaluation",
+      "name": "Evaluation",
+      "order": 4,
+      "form_category_question_config": null,
+      "storage": "LfEvaluation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfLiberia",
+      "category": "lfNarrative",
+      "name": "Narrative",
+      "order": 5,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfLiberia",
+      "category": "lfAttachment",
+      "name": "Attachments",
+      "order": 6,
+      "form_category_question_config": null,
+      "storage": "LfAttachment"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfLiberia",
       "category": "lfCompliance",
       "name": "Compliance",
       "order": 7,
