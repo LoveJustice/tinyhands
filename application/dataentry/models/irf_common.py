@@ -144,7 +144,11 @@ class IrfCommon(BaseForm):
     immigration_exit = models.CharField(max_length=127, null=True)
     immigration_case_number = models.CharField(max_length=127, null=True)
     reason_for_intercept = models.TextField('Primary reason for intercept', blank=True)
+    official_name = models.CharField(max_length=127, null=True)
+    has_offical_signature = models.BooleanField('Has official signature', default=False)
     flight_number = models.CharField(max_length=127, null=True)
+    route = models.TextField('Route', blank=True)
+
     
     # Compliance
     logbook_received = models.DateField(null=True)
