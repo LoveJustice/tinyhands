@@ -144,7 +144,11 @@ class IrfCommon(BaseForm):
     immigration_exit = models.CharField(max_length=127, null=True)
     immigration_case_number = models.CharField(max_length=127, null=True)
     reason_for_intercept = models.TextField('Primary reason for intercept', blank=True)
+    official_name = models.CharField(max_length=127, null=True)
+    has_offical_signature = models.BooleanField('Has official signature', default=False)
     flight_number = models.CharField(max_length=127, null=True)
+    route = models.TextField('Route', blank=True)
+
     
     # Compliance
     logbook_received = models.DateField(null=True)
@@ -205,7 +209,7 @@ class IntercepteeCommon(BaseCard):
     interception_record = models.ForeignKey(IrfCommon, related_name='interceptees', on_delete=models.CASCADE)
     relation_to = models.CharField(max_length=255, blank=True)
     person = models.ForeignKey(Person, null=True, blank=True)
-    not_physically_present = models.BooleanField('Not physically present', default=False)
+    not_physically_present = models.CharField(max_length=127, blank=True)
     consent_to_use_photo = models.CharField(max_length=255, null=True)
     consent_to_use_information = models.CharField(max_length=255, null=True)
 

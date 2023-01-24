@@ -25,6 +25,18 @@ def get_data_collection_indicator_export_rows(year_months):
             'VDFs in Compliance Number',
             'VDFs in Compliance Percent',
             'VDF Collection Lag Time',
+            'PVFs',
+            'PVFs in Compliance Number',
+            'PVFs in Compliance Percent',
+            'PVF Collection Lag Time',
+            'SFs',
+            'SFs in Compliance Number',
+            'SFs in Compliance Percent',
+            'SF Collection Lag Time',
+            'LFs',
+            'LFs in Compliance Number',
+            'LFs in Compliance Percent',
+            'LF Collection Lag Time',
             'Total Number of Verified Forms',
             'Evidence',
             'Evidence Percent',
@@ -33,10 +45,12 @@ def get_data_collection_indicator_export_rows(year_months):
             'High Risk of Trafficking',
             'High Risk of Trafficking Percent',
             'VDF Percent',
+            'PVF Percent',
             'V Photos Percent',
             'Compliance Percent',
             'Collection Lag Time',
             'Evidence Cases with CIF Percent',
+            'IRF Suspect SF Percent',
             'Percent of Valid Intercepts',
             'Percent Phone Numbers Verified',
             'Total'
@@ -56,6 +70,10 @@ def get_data_collection_indicator_export_rows(year_months):
     countries = Country.objects.all()
     for country in countries:
         results = IndicatorsViewSet.compute_collection_indicators(start_date, end_date, country.id)
+        if 'pvf_form' in results[0] and results[0]['pvf_form']:
+            pvf_form = True
+        else:
+            pvf_form = False
         for result in results:
             row = []
             row.append(year_month)
@@ -69,18 +87,71 @@ def get_data_collection_indicator_export_rows(year_months):
             row.append(result['irf_compliance_count'])
             row.append(result['irf_compliance_percent'])
             row.append(result['irf_lag'])
-
-            row.append(result['cif_count'])
-            row.append(result['cif_percent'])
-            row.append(result['cif_compliance_count'])
-            row.append(result['cif_compliance_percent'])
-            row.append(result['cif_lag'])
-            row.append(result['cif_with_evidence_count'])
             
-            row.append(result['vdf_count'])
-            row.append(result['vdf_compliance_count'])
-            row.append(result['vdf_compliance_percent'])
-            row.append(result['vdf_lag'])
+            if pvf_form:
+                # CIFs
+                row.append('')
+                row.append('')
+                row.append('')
+                row.append('')
+                row.append('')
+                row.append('')
+                
+                #VDF
+                row.append('')
+                row.append('')
+                row.append('')
+                row.append('')
+                
+                #PVF
+                row.append(result['vdf_count'])
+                row.append(result['vdf_compliance_count'])
+                row.append(result['vdf_compliance_percent'])
+                row.append(result['vdf_lag'])
+                
+                #SF
+                row.append(result['sf_count'])
+                row.append(result['sf_compliance_count'])
+                row.append(result['sf_compliance_percent'])
+                row.append(result['sf_lag'])
+                
+                #LF
+                row.append(result['lf_count'])
+                row.append(result['lf_compliance_count'])
+                row.append(result['lf_compliance_percent'])
+                row.append(result['lf_lag'])
+            else:
+                #CIF
+                row.append(result['cif_count'])
+                row.append(result['cif_percent'])
+                row.append(result['cif_compliance_count'])
+                row.append(result['cif_compliance_percent'])
+                row.append(result['cif_lag'])
+                row.append(result['cif_with_evidence_count'])
+                
+                #VDF
+                row.append(result['vdf_count'])
+                row.append(result['vdf_compliance_count'])
+                row.append(result['vdf_compliance_percent'])
+                row.append(result['vdf_lag'])
+                
+                #PVF
+                row.append('')
+                row.append('')
+                row.append('')
+                row.append('')
+                
+                #SF
+                row.append('')
+                row.append('')
+                row.append('')
+                row.append('')
+                
+                #LF
+                row.append('')
+                row.append('')
+                row.append('')
+                row.append('')
             
             row.append(result['verified_forms'])
             row.append(result['evidence_count'])
@@ -90,11 +161,24 @@ def get_data_collection_indicator_export_rows(year_months):
             row.append(result['high_risk_count'])
             row.append(result['high_risk_percent'])
             
-            row.append(result['vdf_percent'])
+            if pvf_form:
+                row.append('')
+                row.append(result['vdf_percent'])
+            else:
+                row.append(result['vdf_percent'])
+                row.append('')
+                
             row.append(result['photo_percent'])
             row.append(result['compliance_percent'])
             row.append(result['collection_lag_time'])
-            row.append(result['evidence_cif_percent'])
+            
+            if pvf_form:
+                row.append('')
+                row.append(result['sf_percent'])
+            else:
+                row.append(result['evidence_cif_percent'])
+                row.append('')
+                
             row.append(result['valid_intercept_percent'])
             row.append(result['phone_verified_percent'])
             row.append(result['compliance_total'])
@@ -117,6 +201,15 @@ def get_data_entry_indicator_export_rows(year_months):
         "VDF Lag Time",
         "VDF Forms Entered",
         "VDF Original Form Attached %",
+        "PVF Lag Time",
+        "PVF Forms Entered",
+        "PVF Original Form Attached %",
+        "SF Lag Time",
+        "SF Forms Entered",
+        "SF Original Form Attached %",
+        "LF Lag Time",
+        "LF Forms Entered",
+        "LF Original Form Attached %",
         "CIF Lag Time",
         "CIF Forms Entered",
         "CIF Original Form Attached %", 
@@ -138,6 +231,15 @@ def get_data_entry_indicator_export_rows(year_months):
         "vdfLag",
         "vdfCount",
         "vdfOriginalFormPercent",
+        "pvfLag",
+        "pvfCount",
+        "pvfOriginalFormPercent",
+        "sfLag",
+        "sfCount",
+        "sfOriginalFormPercent",
+        "lfLag",
+        "lfCount",
+        "lfOriginalFormPercent",
         "cifLag",
         "cifCount",
         "cifOriginalFormPercent",

@@ -47,6 +47,26 @@ def get_cif_person_ids(cifs, pbs):
     cif_id['form'] = 'CIF'
     return cif_id
 
+def get_sf_person_ids(sfs, suspect_infos):
+    sf_suspect_infos = pd.merge(suspect_infos[['sf_id', 'person_id']],
+                       sfs[['id', 'sf_number']],
+                       how='left',
+                       left_on='sf_id',
+                       right_on='id')
+    sf_suspect_infos = sf_suspect_infos[['person_id', 'sf_number']]
+    sfs = sfs[['merged_person_id', 'sf_number']]
+    sfs.columns = sf_suspect_infos.columns
+    sf_id = pd.concat([sfs, sf_suspect_infos],
+                       axis=0,
+                       ignore_index=True,
+                       sort=False)
+    sf_id.columns = 'person_id', 'form_number'
+    sf_id['irf_number'] = sf_id['form_number'].str.replace('.', '')
+    sf_id['irf_number'] = sf_id['irf_number'].str[:-1]
+    sf_id = sf_id[['person_id', 'irf_number', 'form_number']]
+    sf_id['form'] = 'SF'
+    return sf_id
+
 
 def get_vdf_person_ids(vdfs):
     """Get a DataFrame of every Person ID that's on a VDF along with the base IRF number and VDF number."""
@@ -124,11 +144,12 @@ def get_features(df):
 
 def get_and_pre_process_all(db_cred):
 
-    dp, intees, irfs, cifs, vdfs, pbs, c, bs = dc.get_sl_data(db_cred)
+    dp, intees, irfs, cifs, sfs, vdfs, pbs, sis, c, bs = dc.get_sl_data(db_cred)
 
     irf_id = get_irf_person_ids(irfs, intees)
     cif_id = get_cif_person_ids(cifs, pbs)
     vdf_id = get_vdf_person_ids(vdfs)
+    sf_id = get_sf_person_ids(sfs, sis)
 
     country_codes = get_country_codes(bs, c)
 

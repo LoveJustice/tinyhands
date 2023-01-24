@@ -1,4 +1,7 @@
 #!/bin/sh
+echo "Use management command dumpFormData"
+
+exit 1
 
 tmpFile=/tmp/tmp$$
 tmpFile2=/tmp/tmp2$$

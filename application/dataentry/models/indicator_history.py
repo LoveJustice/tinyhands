@@ -142,12 +142,21 @@ class IndicatorHistory(models.Model):
         else:
             start_validation_date = datetime.date(country.verification_start_year,country.verification_start_month,1)
         station_list = BorderStation.objects.filter(operating_country=country)
+        
+        pvf_forms = Form.objects.filter(form_type__name='PVF', stations__operating_country=country)
+        pvf_form_present = (len(pvf_forms) > 0)
         results = {}
+        results['pvf_form_present'] = pvf_form_present
+        
+        
         
         form_method = {
             'IRF':IndicatorHistory.calculate_irf_indicators,
             'CIF':IndicatorHistory.calculate_cif_indicators,
             'VDF':IndicatorHistory.calculate_vdf_indicators,
+            'PVF':IndicatorHistory.calculate_pvf_indicators,
+            'SF':IndicatorHistory.calculate_sf_indicators,
+            'LF':IndicatorHistory.calculate_lf_indicators,
             }
         
         if check_photos is None:
@@ -157,7 +166,10 @@ class IndicatorHistory(models.Model):
         class_cache = {
                 'IRF':{},
                 'CIF':{},
-                'VDF':{}
+                'VDF':{},
+                'PVF':{},
+                'SF':{},
+                'LF':{},
                 }
         
         storage_cache = {
@@ -166,8 +178,13 @@ class IndicatorHistory(models.Model):
         
         latest_date = None
         
+        if pvf_form_present:
+            form_types = ['IRF','PVF','SF','LF']
+        else:
+            form_types = ['IRF','CIF','VDF']
+        
         # general form information
-        for form_type in ['IRF','CIF','VDF']:
+        for form_type in form_types:
             for station in station_list:
                 form_class = IndicatorHistory.get_class(class_cache, form_type, station)
                 if form_class is None or form_class in forms_processed:
@@ -200,7 +217,7 @@ class IndicatorHistory(models.Model):
                     
                 forms_processed.append(form_class)
         
-        for prefix in ['irf','vdf', 'cif', 'photos', 'v1', 'v2']:
+        for prefix in ['irf','vdf', 'cif', 'pvf', 'sf', 'lf', 'photos', 'v1', 'v2']:
             IndicatorHistory.compute_lag(results, prefix)
             
             if prefix + 'Count' in results and prefix + 'OriginalFormCount' in results:
@@ -355,6 +372,18 @@ class IndicatorHistory(models.Model):
     
     @staticmethod
     def calculate_cif_indicators(results, query_set, start_date, end_date, class_cache, form_type):
+        IndicatorHistory.calculate_form_indicators(results, query_set, form_type)
+    
+    @staticmethod
+    def calculate_pvf_indicators(results, query_set, start_date, end_date, class_cache, form_type):
+        IndicatorHistory.calculate_form_indicators(results, query_set, form_type)
+    
+    @staticmethod
+    def calculate_sf_indicators(results, query_set, start_date, end_date, class_cache, form_type):
+        IndicatorHistory.calculate_form_indicators(results, query_set, form_type)
+    
+    @staticmethod
+    def calculate_lf_indicators(results, query_set, start_date, end_date, class_cache, form_type):
         IndicatorHistory.calculate_form_indicators(results, query_set, form_type)
     
     @staticmethod

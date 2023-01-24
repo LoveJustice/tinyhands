@@ -1,6 +1,7 @@
 import pytz
 import datetime
 from django.db import models
+from django.db.models import Q
 from django.contrib.postgres.fields import JSONField
 from django.utils.timezone import make_aware
 
@@ -19,8 +20,9 @@ from .country import Country
 #   11   dataentry.models.person_box   VictimInterviewPersonBox   null                10             null                        victim_interview                    
 #   14   dataentry.models.location_box VictimInterviewLocationBox null                10             null                        victim_interview
 class Storage(models.Model):
+    form_tag = models.CharField(max_length=126, unique=True)
     module_name = models.CharField(max_length=126)
-    form_model_name = models.CharField(max_length=126, unique=True)
+    form_model_name = models.CharField(max_length=126)
     response_model_name = models.CharField(max_length=126, null=True)
     parent_storage = models.ForeignKey('self', null=True)
     foreign_key_field_parent = models.CharField(max_length=126, null=True)
@@ -30,16 +32,25 @@ class Storage(models.Model):
         mod = __import__(self.module_name, fromlist=[self.form_model_name])
         form_class = getattr(mod, self.form_model_name, None)
         return form_class
+    
+    @staticmethod
+    def get_objects_by_form_type(form_type_list):
+        cls = globals()['Form']
+        forms = cls.get_objects_by_form_type(form_type_list)
+        model_names = set(forms.values_list('storage__form_tag', flat=True))
+        qs = Storage.objects.filter(Q(form_tag__in=model_names) | Q(parent_storage__form_tag__in=model_names)).distinct().order_by('id')
+        return qs        
 
 # Keep track of checksum of currently loaded form_data.json file so that changes
 # to that file can be automatically detected on startup and the new file can be loaded
 class FormVersion(models.Model):
+    file = models.CharField(max_length=126, unique=True, default='form_data.json')
     checksum = models.IntegerField()
     blocks = models.IntegerField()
 
 class FormType(models.Model):
     name = models.CharField(max_length=126) # IRF, VIF, CEF, etc.
-    tag_enalbed = models.BooleanField(default=False)
+    tag_enabled = models.BooleanField(default=False)
 
 class Form(models.Model):
     form_type = models.ForeignKey(FormType)
@@ -50,6 +61,10 @@ class Form(models.Model):
     version = models.CharField(max_length=126, null=True)
     
     stations = models.ManyToManyField(BorderStation)
+    
+    @property
+    def form_tag(self):
+        return self.form_name
     
     def find_form_class(self):
         mod = __import__(self.storage.module_name, fromlist=[self.storage.form_model_name])
@@ -68,6 +83,14 @@ class Form(models.Model):
         else:
             return None
     
+    @staticmethod
+    def get_by_form_tag(tag):
+        return Form.objects.get(form_name = tag)
+    
+    @staticmethod
+    def get_objects_by_form_type(form_type_list):
+        qs = Form.objects.filter(form_type__name__in=form_type_list).distinct().order_by('id')
+        return qs
 
 class CategoryType(models.Model):
     name = models.CharField(max_length=126) # Grid, Card, etc.
@@ -77,6 +100,14 @@ class Category(models.Model):
     category_type = models.ForeignKey(CategoryType)
     description = models.CharField(max_length=126)
     
+    @staticmethod
+    def get_objects_by_form_type(form_type_list):
+        cls = globals()['FormCategory']
+        form_categories = cls.get_objects_by_form_type(form_type_list)
+        category_tags = set(form_categories.values_list('category__form_tag', flat=True))
+        qs = Category.objects.filter(form_tag__in=category_tags).distinct().order_by('id')
+        return qs
+        
 class FormCategory(models.Model):
     form = models.ForeignKey(Form)
     category = models.ForeignKey(Category)
@@ -129,6 +160,12 @@ class FormCategory(models.Model):
     
     # Only needed for card type category
     storage = models.ForeignKey(Storage, null=True)
+    
+    @staticmethod
+    def get_objects_by_form_type(form_type_list):
+        forms = Form.get_objects_by_form_type(form_type_list)
+        qs = FormCategory.objects.filter(form__in=forms).distinct().order_by('id')
+        return qs
 
 class AnswerType(models.Model):
     name = models.CharField(max_length=126) # Multiple Choice, Int, Address, Phone Num, etc.
@@ -306,18 +343,38 @@ class Question(models.Model):
                 answer_list = [the_map['default']]
                 
         return answer_list
+    
+    @staticmethod
+    def get_objects_by_form_type(form_type_list):
+        cls = globals()['QuestionLayout']
+        layouts = cls.get_objects_by_form_type(form_type_list)
+        question_tags = set(layouts.values_list('question__form_tag', flat=True))
+        qs = Question.objects.filter(form_tag__in=question_tags).distinct().order_by('id')
+        return qs
 
 class QuestionLayout(models.Model):
     question = models.ForeignKey(Question)
     category = models.ForeignKey(Category)
     weight = models.IntegerField(default=0)
     form_config = JSONField(null=True)
+    
+    @staticmethod
+    def get_objects_by_form_type(form_type_list):
+        categories = Category.get_objects_by_form_type(form_type_list)
+        qs = QuestionLayout.objects.filter(category__in=categories).distinct().order_by('id')
+        return qs
 
 class Answer(models.Model):
     question = models.ForeignKey(Question)
     value = models.CharField(max_length=100000, null=True)
     code = models.CharField(max_length=125, null=True)
     params=JSONField(null=True)   # custom parameters for this answer type
+    
+    @staticmethod
+    def get_objects_by_form_type(form_type_list):
+        questions = Question.get_objects_by_form_type(form_type_list)
+        qs = Answer.objects.filter(question__in=questions).distinct().order_by('id')
+        return qs
 
 
 # Identifies validation for IRF or VIF form
@@ -354,11 +411,23 @@ class FormValidation(models.Model):
     forms = models.ManyToManyField(Form)
     retrieve = models.BooleanField()
     update = models.BooleanField()
+    
+    @staticmethod
+    def get_objects_by_form_type(form_type_list):
+        forms = Form.get_objects_by_form_type(form_type_list)
+        qs = FormValidation.objects.filter(forms__in=forms).distinct().order_by('id')
+        return qs
 
 # Set of questions to be validated for the FormValidation
 class FormValidationQuestion(models.Model):
     validation = models.ForeignKey(FormValidation)
     question = models.ForeignKey(Question)
+    
+    @staticmethod
+    def get_objects_by_form_type(form_type_list):
+        validations = FormValidation.get_objects_by_form_type(form_type_list)
+        qs = FormValidationQuestion.objects.filter(validation__in=validations).distinct().order_by('id')
+        return qs
 
 class Condition(models.Model):
     condition = JSONField() 
@@ -376,6 +445,12 @@ class Condition(models.Model):
 class QuestionStorage(models.Model):
     question = models.ForeignKey(Question)
     field_name = models.CharField(max_length=100)
+    
+    @staticmethod
+    def get_objects_by_form_type(form_type_list):
+        questions = Question.get_objects_by_form_type(form_type_list)
+        qs = QuestionStorage.objects.filter(question__in=questions).distinct().order_by('id')
+        return qs
 
  #
  #  Work still needed on the export/import classes
@@ -386,6 +461,12 @@ class ExportImport(models.Model):
     implement_module = models.CharField(max_length=126, null=True)
     implement_class_name = models.CharField(max_length=126, null=True)
     form = models.ForeignKey(Form)
+    
+    @staticmethod
+    def get_objects_by_form_type(form_type_list):
+        forms = Form.get_objects_by_form_type(form_type_list)
+        qs = ExportImport.objects.filter(form__in=forms).distinct().order_by('id')
+        return qs
 
 class GoogleSheetConfig(models.Model):
     export_import = models.ForeignKey(ExportImport)
@@ -397,12 +478,24 @@ class GoogleSheetConfig(models.Model):
     import_issue_column = models.CharField(max_length=126, null=True)
     suppress_column_warnings = models.BooleanField(default=True)
     
+    @staticmethod
+    def get_objects_by_form_type(form_type_list):
+        export_imports = ExportImport.get_objects_by_form_type(form_type_list)
+        qs = GoogleSheetConfig.objects.filter(export_import__in=export_imports).distinct().order_by('id')
+        return qs
+    
 class ExportImportCard(models.Model):
     export_import = models.ForeignKey(ExportImport, related_name='export_import_base')
     category = models.ForeignKey(Category, related_name='export_import_card')
     prefix = models.CharField(max_length=126)
     max_instances = models.PositiveIntegerField()
     index_field_name = models.CharField(max_length=126, null=True)
+    
+    @staticmethod
+    def get_objects_by_form_type(form_type_list):
+        export_imports = ExportImport.get_objects_by_form_type(form_type_list)
+        qs = ExportImportCard.objects.filter(export_import__in=export_imports).distinct().order_by('id')
+        return qs
 
 # data fields to be exported for which there is no question
 class ExportImportField(models.Model):
@@ -454,6 +547,12 @@ class ExportImportField(models.Model):
                 answer = the_map['default']
                 
         return answer
+    
+    @staticmethod
+    def get_objects_by_form_type(form_type_list):
+        export_imports = ExportImport.get_objects_by_form_type(form_type_list)
+        qs = ExportImportField.objects.filter(export_import__in=export_imports).distinct().order_by('id')
+        return qs
 
 class BaseForm(models.Model):
     status = models.CharField('Status', max_length=20, default='pending')
@@ -465,6 +564,10 @@ class BaseForm(models.Model):
     
     class Meta:
         abstract = True
+    
+    # Override in subclass when common master person is enabled
+    def get_common_master_person(self):
+        return None
     
     # Overridden in subclass
     def get_key(self):
