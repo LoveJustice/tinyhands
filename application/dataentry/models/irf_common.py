@@ -59,8 +59,25 @@ class IrfCommon(BaseForm):
     vulnerability_first_time_traveling_to_city = models.BooleanField("Travelling to city from rural area for first time", default=False)
     vulnerability_no_mobile_phone = models.BooleanField("Does not own mobile phone", default=False)
     vulnerability_stranded_or_abandoned = models.BooleanField("Stranded/abandoned", default=False)
-   
     
+    vulnerability_applied_job_doesnt_know_destination = models.BooleanField("Applied for job, but doesn't know destination", default=False)
+    vulnerability_doesnt_speak_local_language = models.BooleanField("Doesn't speak local language", default=False)
+    vulnerability_going_via_india = models.BooleanField("Going to a third country via India", default=False)
+    vulnerability_cost_of_living_higher_than_wages = models.BooleanField("Cost of living in destination much higher than wages", default=False)
+    vulnerability_doesnt_know_job_details = models.BooleanField("Doesn't know what job they are applying for", default=False)
+    vulnerability_using_agent = models.BooleanField("Using an agent", default=False)
+    vulnerability_mpa_excessive_time = models.BooleanField("MPA taking excessive time to process/send migrant", default=False)
+    
+    agreement_contract_language = models.BooleanField("Contract not in a language understood by the PV", default=False)
+    agreement_mpa_not_bearing_cost = models.BooleanField("Company/MPA not bearing cost to Gulf/Malaysia", default=False)
+    agreement_paid_agent = models.BooleanField("Paid money to agent", default=False)
+    agreement_paid_above_standard = models.BooleanField("Paid more than government standard cost", default=False)
+    agreement_no_receipt = models.BooleanField("No bhaar pai (receipt) for full amount of payment", default=False)
+    
+    preparation_unaware_of_process = models.BooleanField("Unaware of official employment migration process", default=False)
+    preparation_did_not_complete = models.CharField(max_length=1024, blank=True)
+    preparation_other = models.CharField(max_length=127, blank=True)
+   
     evade_appearance_avoid_officials = models.BooleanField('Avoiding officials/hesitant to talk', default=False)
     evade_caught_in_lie = models.BooleanField('Caught in a lie or contradiction', default=False).set_weight(35)
     evade_couldnt_confirm_job = models.BooleanField('Could not confirm job', default=False).set_weight(10)
@@ -106,6 +123,32 @@ class IrfCommon(BaseForm):
     control_wife_under_18 = models.BooleanField("Wife/fiancee is under 18", default=False)
     control_under_18_recruited_for_work = models.BooleanField("Under 18, recruited for work", default=False)
     control_under_16_recruited_for_work = models.BooleanField("Under 16, recruited for work", default=False)
+    
+    control_visa_misuse = models.BooleanField("Convinced by agent/MPA to work on visa other than work visa", default=False)
+    control_facilitated_via_third_country = models.BooleanField("Process being fully facilitated by someone to travel to third country via India for work", default=False)
+    control_women_enticed_unsave_area = models.BooleanField("Woman being enticed by agent/MPA to go for domestic work in Gulf/Malaysia", default=False)
+    control_enticed_banned_area = models.BooleanField("Being enticed by agent/MPA to go to banned country for migrant worker", default=False)
+    control_enticed_non_seasonal = models.BooleanField("Being enticed by MPA to go to South Korea or Israel for non-seasonal work", default=False)
+    control_agreement_prepermission_mismatch = models.BooleanField("Job agreement and pre-permission details do not match", default=False)
+    control_invalid_mpa = models.BooleanField("Using an invalid MPA", default=False)
+    control_invalid_lt = models.BooleanField("No/invalid Lt number and/or demand letter", default=False)
+    
+    # SFE additional PV information
+    pv_lt_number_before_counsel = models.BooleanField("Lt # Before Counseling", default=False)
+    pv_lt_number_after_counsel = models.BooleanField("Lt # After Counseling", default=False)
+    pv_closest_contact = models.TextField(blank=True)
+    
+    mpa_agent_not_used = models.BooleanField("Check if PV did not use a MPA or agent", default=False)
+    mpa_name = models.CharField(max_length=127, blank=True)
+    mpa_phone = models.CharField(max_length=127, blank=True)
+    mpa_agent_initiated_contact = models.CharField(max_length=127, blank=True)
+    mpa_agent_how_contacted = models.CharField(max_length=127, blank=True)
+    
+    
+    result_pv_tech_training = models.BooleanField("PV was referred to technical/vocational training", default=False)
+    result_pv_other_education = models.BooleanField("PV was referred to other education", default=False)
+    result_pv_changed_plans = models.CharField(max_length=127, blank=True)
+    result_pv_local_job = models.BooleanField("PV decided to change plans and look for a job within Nepal due to SFE staff’s counseling", default=False)
     
     #Contact/Staff
     case_notes = models.TextField('Case Notes', blank=True)
