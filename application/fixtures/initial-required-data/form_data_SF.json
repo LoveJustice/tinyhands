@@ -180,6 +180,18 @@
    }
 },
 {
+   "model": "dataentry.form",
+   "fields": {
+      "form_type": 11,
+      "storage": "Sf",
+      "start_date": "2022-10-08T04:00:00Z",
+      "end_date": "2118-12-31T00:00:00Z",
+      "form_name": "sfBenin",
+      "version": "V2022.6",
+      "stations": []
+   }
+},
+{
    "model": "dataentry.category",
    "fields": {
       "form_tag": "sfCompliance",
@@ -921,6 +933,83 @@
    "model": "dataentry.formcategory",
    "fields": {
       "form": "sfEthiopia",
+      "category": "sfCompliance",
+      "name": "Compliance",
+      "order": 7,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfBenin",
+      "category": "sfTop",
+      "name": "Top",
+      "order": 1,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfBenin",
+      "category": "sfInformation",
+      "name": "Information",
+      "order": 2,
+      "form_category_question_config": null,
+      "storage": "SfInformation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfBenin",
+      "category": "sfAssociation",
+      "name": "Association",
+      "order": 3,
+      "form_category_question_config": null,
+      "storage": "SfAssociation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfBenin",
+      "category": "sfEvaluation",
+      "name": "Evaluation",
+      "order": 4,
+      "form_category_question_config": null,
+      "storage": "SfEvaluation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfBenin",
+      "category": "sfLegal",
+      "name": "Legal",
+      "order": 5,
+      "form_category_question_config": null,
+      "storage": "SfLegal"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfBenin",
+      "category": "sfAttachment",
+      "name": "Attachments",
+      "order": 6,
+      "form_category_question_config": null,
+      "storage": "SfAttachment"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfBenin",
       "category": "sfCompliance",
       "name": "Compliance",
       "order": 7,
