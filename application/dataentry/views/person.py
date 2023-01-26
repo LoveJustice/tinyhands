@@ -21,12 +21,13 @@ class PersonViewSet(viewsets.ModelViewSet):
     def associated_persons(self, request, station_id, form_number):
         kind = request.GET.get('kind', None)
         irf_number = form_number
-        while irf_number[-1].isalpha():
+        persons_data = []
+        while len(irf_number) > 6 and irf_number[-1].isalpha():
             irf_number = irf_number[:-1]
             
         form = Form.current_form('IRF',station_id)
         form_categories = FormCategory.objects.filter(name='People', form=form)
-        persons_data = []
+        
         if len(form_categories) > 0:
             storage = form_categories[0].storage
             mod = __import__(storage.module_name, fromlist=[storage.form_model_name])
