@@ -10144,7 +10144,7 @@
       "name": "Compliance",
       "order": 10,
       "form_category_question_config": null,
-      "storage": 204
+      "storage": null
    }
 },
 {
@@ -14378,7 +14378,7 @@
    "model": "dataentry.formcategory",
    "fields": {
       "form": 64,
-      "category": 226,
+      "category": 260,
       "name": "Control",
       "order": 5,
       "form_category_question_config": null,
@@ -14400,7 +14400,7 @@
    "model": "dataentry.formcategory",
    "fields": {
       "form": 64,
-      "category": 184,
+      "category": 286,
       "name": "People",
       "order": 7,
       "form_category_question_config": null,
@@ -14444,11 +14444,11 @@
    "model": "dataentry.formcategory",
    "fields": {
       "form": 64,
-      "category": 215,
+      "category": 232,
       "name": "Verification",
       "order": 11,
       "form_category_question_config": null,
-      "storage": null
+      "storage": 204
    }
 },
 {
@@ -15480,6 +15480,17 @@
       "form": 27,
       "category": 233,
       "name": "Verification",
+      "order": 12,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": 64,
+      "category": 233,
+      "name": "Verification Main",
       "order": 12,
       "form_category_question_config": null,
       "storage": null
@@ -39434,15 +39445,6 @@
 {
    "model": "dataentry.questionlayout",
    "fields": {
-      "question": 246,
-      "category": 224,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
       "question": 244,
       "category": 224,
       "weight": 0,
@@ -42298,6 +42300,42 @@
    "fields": {
       "question": 1084,
       "category": 312,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1073,
+      "category": 224,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1083,
+      "category": 224,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1084,
+      "category": 224,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1072,
+      "category": 224,
       "weight": 0,
       "form_config": null
    }
@@ -47777,7 +47815,6 @@
          55,
          59,
          60,
-         64,
          65,
          66,
          69,
