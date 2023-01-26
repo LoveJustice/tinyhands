@@ -274,6 +274,28 @@ class ValidateForm:
             except FieldDoesNotExist:
                 pass
     
+    def check_invalid_date (self, category_id, form_data, category_index=None):
+        validation = FormValidation()
+        validation.level = FormValidationLevel.objects.get(name='basic_error')
+        form_class = type(form_data.form_object)
+        old_date = date(1900,1,1)
+        
+        if category_id == self.main_form:
+            question_layouts = QuestionLayout.objects.filter(category__in=self.main_categories)
+        else:
+            question_layouts = QuestionLayout.objects.filter(category__id=category_id)
+            
+        for question_layout in question_layouts:
+            question = question_layout.question
+            if question.answer_type.name != 'Date':
+                continue
+            
+            answer = form_data.get_answer(question)
+            if answer is not None:
+                if answer < old_date:
+                    validation.error_warning_message = question.prompt + ' has invalid date'
+                    self.add_error_or_warning(self.question_map[question.id], category_index, validation)
+    
     def all_false(self, form_data, validation, validation_questions, category_index, general):
         for validation_question in validation_questions:
             question = validation_question.question
@@ -589,6 +611,7 @@ class ValidateForm:
          
     def validate(self):
         self.check_not_null (self.main_form, self.form_data)
+        self.check_invalid_date (self.main_form, self.form_data)
         if self.main_form in self.validation_set:
             for validation in self.validation_set[self.main_form]:
                 if validation.validation_type.name in self.validations:
@@ -603,6 +626,7 @@ class ValidateForm:
                 category_count += 1
                 
                 self.check_not_null (category_id, card, category_index=category_count)
+                self.check_invalid_date (category_id, card, category_index=category_count)
                 
                 if category_id in self.validation_set:
                     for validation in self.validation_set[category_id]:
