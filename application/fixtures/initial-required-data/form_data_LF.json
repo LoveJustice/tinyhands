@@ -144,6 +144,66 @@
    }
 },
 {
+   "model": "dataentry.form",
+   "fields": {
+      "form_type": 10,
+      "storage": "Lf",
+      "start_date": "2022-10-08T04:00:00Z",
+      "end_date": "2118-12-31T00:00:00Z",
+      "form_name": "lfLiberia",
+      "version": "V2022.6",
+      "stations": []
+   }
+},
+{
+   "model": "dataentry.form",
+   "fields": {
+      "form_type": 10,
+      "storage": "Lf",
+      "start_date": "2022-10-08T04:00:00Z",
+      "end_date": "2118-12-31T00:00:00Z",
+      "form_name": "lfEthiopia",
+      "version": "V2022.6",
+      "stations": []
+   }
+},
+{
+   "model": "dataentry.form",
+   "fields": {
+      "form_type": 10,
+      "storage": "Lf",
+      "start_date": "2022-10-08T04:00:00Z",
+      "end_date": "2118-12-31T00:00:00Z",
+      "form_name": "lfBenin",
+      "version": "V2022.6",
+      "stations": []
+   }
+},
+{
+   "model": "dataentry.form",
+   "fields": {
+      "form_type": 10,
+      "storage": "Lf",
+      "start_date": "2022-10-08T04:00:00Z",
+      "end_date": "2118-12-31T00:00:00Z",
+      "form_name": "lfMalawi",
+      "version": "V2022.6",
+      "stations": []
+   }
+},
+{
+   "model": "dataentry.form",
+   "fields": {
+      "form_type": 10,
+      "storage": "Lf",
+      "start_date": "2022-10-08T04:00:00Z",
+      "end_date": "2118-12-31T00:00:00Z",
+      "form_name": "lfBurkinaFaso",
+      "version": "V2022.6",
+      "stations": []
+   }
+},
+{
    "model": "dataentry.category",
    "fields": {
       "form_tag": "lfTop",
@@ -816,6 +876,446 @@
    "model": "dataentry.formcategory",
    "fields": {
       "form": "lfNamibia",
+      "category": "lfCompliance",
+      "name": "Compliance",
+      "order": 7,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfLiberia",
+      "category": "lfMerged",
+      "name": "Merged",
+      "order": 2,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfLiberia",
+      "category": "lfInformation",
+      "name": "Information",
+      "order": 2,
+      "form_category_question_config": null,
+      "storage": "LfInformation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfLiberia",
+      "category": "lfAssociation",
+      "name": "Association",
+      "order": 3,
+      "form_category_question_config": null,
+      "storage": "LfAssociation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfLiberia",
+      "category": "lfEvaluation",
+      "name": "Evaluation",
+      "order": 4,
+      "form_category_question_config": null,
+      "storage": "LfEvaluation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfLiberia",
+      "category": "lfNarrative",
+      "name": "Narrative",
+      "order": 5,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfLiberia",
+      "category": "lfAttachment",
+      "name": "Attachments",
+      "order": 6,
+      "form_category_question_config": null,
+      "storage": "LfAttachment"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfLiberia",
+      "category": "lfCompliance",
+      "name": "Compliance",
+      "order": 7,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfLiberia",
+      "category": "lfTop",
+      "name": "Top",
+      "order": 1,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfEthiopia",
+      "category": "lfTop",
+      "name": "Top",
+      "order": 1,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfEthiopia",
+      "category": "lfMerged",
+      "name": "Merged",
+      "order": 2,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfEthiopia",
+      "category": "lfInformation",
+      "name": "Information",
+      "order": 2,
+      "form_category_question_config": null,
+      "storage": "LfInformation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfEthiopia",
+      "category": "lfAssociation",
+      "name": "Association",
+      "order": 3,
+      "form_category_question_config": null,
+      "storage": "LfAssociation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfEthiopia",
+      "category": "lfEvaluation",
+      "name": "Evaluation",
+      "order": 4,
+      "form_category_question_config": null,
+      "storage": "LfEvaluation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfEthiopia",
+      "category": "lfNarrative",
+      "name": "Narrative",
+      "order": 5,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfEthiopia",
+      "category": "lfAttachment",
+      "name": "Attachments",
+      "order": 6,
+      "form_category_question_config": null,
+      "storage": "LfAttachment"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfEthiopia",
+      "category": "lfCompliance",
+      "name": "Compliance",
+      "order": 7,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfBenin",
+      "category": "lfTop",
+      "name": "Top",
+      "order": 1,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfBenin",
+      "category": "lfInformation",
+      "name": "Information",
+      "order": 2,
+      "form_category_question_config": null,
+      "storage": "LfInformation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfBenin",
+      "category": "lfMerged",
+      "name": "Merged",
+      "order": 2,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfBenin",
+      "category": "lfAssociation",
+      "name": "Association",
+      "order": 3,
+      "form_category_question_config": null,
+      "storage": "LfAssociation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfBenin",
+      "category": "lfEvaluation",
+      "name": "Evaluation",
+      "order": 4,
+      "form_category_question_config": null,
+      "storage": "LfEvaluation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfBenin",
+      "category": "lfNarrative",
+      "name": "Narrative",
+      "order": 5,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfBenin",
+      "category": "lfAttachment",
+      "name": "Attachments",
+      "order": 6,
+      "form_category_question_config": null,
+      "storage": "LfAttachment"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfBenin",
+      "category": "lfCompliance",
+      "name": "Compliance",
+      "order": 7,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfMalawi",
+      "category": "lfTop",
+      "name": "Top",
+      "order": 1,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfMalawi",
+      "category": "lfInformation",
+      "name": "Information",
+      "order": 2,
+      "form_category_question_config": null,
+      "storage": "LfInformation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfMalawi",
+      "category": "lfMerged",
+      "name": "Merged",
+      "order": 2,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfMalawi",
+      "category": "lfAssociation",
+      "name": "Association",
+      "order": 3,
+      "form_category_question_config": null,
+      "storage": "LfAssociation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfMalawi",
+      "category": "lfEvaluation",
+      "name": "Evaluation",
+      "order": 4,
+      "form_category_question_config": null,
+      "storage": "LfEvaluation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfMalawi",
+      "category": "lfNarrative",
+      "name": "Narrative",
+      "order": 5,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfMalawi",
+      "category": "lfAttachment",
+      "name": "Attachments",
+      "order": 6,
+      "form_category_question_config": null,
+      "storage": "LfAttachment"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfMalawi",
+      "category": "lfCompliance",
+      "name": "Compliance",
+      "order": 7,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfBurkinaFaso",
+      "category": "lfTop",
+      "name": "Top",
+      "order": 1,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfBurkinaFaso",
+      "category": "lfMerged",
+      "name": "Merged",
+      "order": 2,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfBurkinaFaso",
+      "category": "lfInformation",
+      "name": "Information",
+      "order": 2,
+      "form_category_question_config": null,
+      "storage": "LfInformation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfBurkinaFaso",
+      "category": "lfAssociation",
+      "name": "Association",
+      "order": 3,
+      "form_category_question_config": null,
+      "storage": "LfAssociation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfBurkinaFaso",
+      "category": "lfEvaluation",
+      "name": "Evaluation",
+      "order": 4,
+      "form_category_question_config": null,
+      "storage": "LfEvaluation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfBurkinaFaso",
+      "category": "lfNarrative",
+      "name": "Narrative",
+      "order": 5,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfBurkinaFaso",
+      "category": "lfAttachment",
+      "name": "Attachments",
+      "order": 6,
+      "form_category_question_config": null,
+      "storage": "LfAttachment"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "lfBurkinaFaso",
       "category": "lfCompliance",
       "name": "Compliance",
       "order": 7,

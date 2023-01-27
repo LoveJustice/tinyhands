@@ -22,7 +22,7 @@ class IncidentViewSet(viewsets.ModelViewSet):
             
         if form_number.startswith(incident_number):
             is_match = True
-            if form_number[len(incident_number)] == '.':
+            if len(form_number) > len(incident_number) and form_number[len(incident_number)] == '.':
                 for idx in range(len(incident_number)+1, len(form_number)):
                     if form_number[idx] < '0' or form_number[idx] > '9':
                         is_match = False
