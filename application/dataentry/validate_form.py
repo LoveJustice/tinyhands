@@ -147,17 +147,18 @@ class ValidateForm:
         else:
             if category_id in form_data.card_dict:
                 for card in form_data.card_dict[category_id]:
-                    if 'filter' in validation.params:
-                        match_result = self.match_filter(card, validation.params['filter'])
-                        if match_result >= 0:
-                            card_count += match_result
+                    if card.is_valid:
+                        if 'filter' in validation.params:
+                            match_result = self.match_filter(card, validation.params['filter'])
+                            if match_result >= 0:
+                                card_count += match_result
+                            else:
+                                tmp_validation = FormValidation()
+                                tmp_validation.level = validation.level
+                                tmp_validation.error_warning_message = 'Incorrect filter for validation:' + validation.error_warning_message
+                                self.add_error_or_warning(category_name, None, tmp_validation)
                         else:
-                            tmp_validation = FormValidation()
-                            tmp_validation.level = validation.level
-                            tmp_validation.error_warning_message = 'Incorrect filter for validation:' + validation.error_warning_message
-                            self.add_error_or_warning(category_name, None, tmp_validation)
-                    else:
-                        card_count += 1
+                            card_count += 1
             
             if 'min_count' in validation.params:
                 if card_count >= validation.params['min_count']:

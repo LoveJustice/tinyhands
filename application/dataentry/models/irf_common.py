@@ -134,20 +134,20 @@ class IrfCommon(BaseForm):
     control_invalid_lt = models.BooleanField("No/invalid Lt number and/or demand letter", default=False)
     
     # SFE additional PV information
-    pv_lt_number_before_counsel = models.BooleanField("Lt # Before Counseling", default=False)
-    pv_lt_number_after_counsel = models.BooleanField("Lt # After Counseling", default=False)
+    pv_lt_number_before_counsel = models.CharField(max_length=127, blank=True)
+    pv_lt_number_after_counsel = models.CharField(max_length=127, blank=True)
     pv_closest_contact = models.TextField(blank=True)
     
     mpa_agent_not_used = models.BooleanField("Check if PV did not use a MPA or agent", default=False)
-    mpa_name = models.CharField(max_length=127, blank=True)
-    mpa_phone = models.CharField(max_length=127, blank=True)
-    mpa_agent_initiated_contact = models.CharField(max_length=127, blank=True)
-    mpa_agent_how_contacted = models.CharField(max_length=127, blank=True)
+    mpa_name = models.CharField(max_length=127, null=True, blank=True)
+    mpa_phone = models.CharField(max_length=127, null=True, blank=True)
+    mpa_agent_initiated_contact = models.CharField(max_length=127, null=True,blank=True)
+    mpa_agent_how_contacted = models.CharField(max_length=127, null=True, blank=True)
     
     
     result_pv_tech_training = models.BooleanField("PV was referred to technical/vocational training", default=False)
     result_pv_other_education = models.BooleanField("PV was referred to other education", default=False)
-    result_pv_changed_plans = models.CharField(max_length=127, blank=True)
+    result_pv_changed_plans = models.CharField(max_length=127, null=True, blank=True)
     result_pv_local_job = models.BooleanField("PV decided to change plans and look for a job within Nepal due to SFE staff’s counseling", default=False)
     
     #Contact/Staff
