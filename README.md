@@ -83,6 +83,6 @@ To do this:
         (test url on website provided)
 
 After that:
-    - delete contents of fullchain.pem and replace it with top (text above CRT + CA bundle button)
-    - delete contents of privkey.pem and replace it with bottom (text above private key button)
+    - delete contents of tinyhands/certs/fullchain.pem and replace it with top (text above CRT + CA bundle button)
+    - delete contents of tinyhands/certs/privkey.pem and replace it with bottom (text above private key button)
     - docker restart nginx (maybe)
