@@ -1092,10 +1092,13 @@ class IncidentSerializer(serializers.ModelSerializer):
         date_match = self.context['request'].data['incident_number'] + self.context['request'].data['incident_date'].replace('-','') + "_"
         matches = Incident.objects.filter(incident_number__startswith=date_match).order_by('-incident_number')
         if len(matches) < 1:
-            validated_data['incident_number'] = date_match + '1'
+            validated_data['incident_number'] = date_match + '01'
         else:
             parts = matches[0].incident_number.split('_')
-            validated_data['incident_number'] = date_match + str(int(parts[1]) + 1)
+            new_sequence = str(int(parts[1]) + 1)
+            if len(new_sequence) < 2:
+                new_sequence = '0' + new_sequence
+            validated_data['incident_number'] = date_match + str(new_sequence)
         
         return Incident.objects.create(**validated_data)
     
