@@ -83,6 +83,11 @@ To do this:
         (test url on website provided)
 
 After that:
-    - delete contents of tinyhands/certs/fullchain.pem and replace it with top (text above CRT + CA bundle button)
-    - delete contents of tinyhands/certs/privkey.pem and replace it with bottom (text above private key button)
+    - cd tinyhands/certs/
+    - mv fullchain.pem old_fullchain.pem
+    - touch fullchain.pem
+    - vim fullchain.pem and replace it with top (text above CRT + CA bundle button)
+    - mv privkey.pem old_privkey.pem
+    - touch privkey.pem
+    - vim privkey.pem and replace it with bottom (text above private key button)
     - docker restart nginx (maybe)
