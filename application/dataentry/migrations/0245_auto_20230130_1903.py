@@ -79,16 +79,6 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='irfcommon',
-            name='mpa_agent_how_contacted',
-            field=models.CharField(blank=True, max_length=127, null=True),
-        ),
-        migrations.AddField(
-            model_name='irfcommon',
-            name='mpa_agent_initiated_contact',
-            field=models.CharField(blank=True, max_length=127, null=True),
-        ),
-        migrations.AddField(
-            model_name='irfcommon',
             name='mpa_agent_not_used',
             field=models.BooleanField(default=False, verbose_name='Check if PV did not use a MPA or agent'),
         ),
@@ -186,5 +176,35 @@ class Migration(migrations.Migration):
             model_name='irfcommon',
             name='vulnerability_using_agent',
             field=models.BooleanField(default=False, verbose_name='Using an agent'),
+        ),
+        migrations.AddField(
+            model_name='irfcommon',
+            name='agent_how_contacted',
+            field=models.CharField(blank=True, max_length=127, null=True),
+        ),
+        migrations.AddField(
+            model_name='irfcommon',
+            name='agent_is_suspect',
+            field=models.CharField(max_length=127, null=True,blank=True),
+        ),
+        migrations.AddField(
+            model_name='irfcommon',
+            name='agent_who_initiated_contact',
+            field=models.CharField(blank=True, max_length=127, null=True),
+        ),
+        migrations.AddField(
+            model_name='irfcommon',
+            name='mpa_how_contacted',
+            field=models.CharField(blank=True, max_length=127, null=True),
+        ),
+        migrations.AddField(
+            model_name='irfcommon',
+            name='mpa_is_suspect',
+            field=models.CharField(max_length=127, null=True,blank=True),
+        ),
+        migrations.AddField(
+            model_name='irfcommon',
+            name='mpa_who_initiated_contact',
+            field=models.CharField(blank=True, max_length=127, null=True),
         ),
     ]

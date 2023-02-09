@@ -141,8 +141,13 @@ class IrfCommon(BaseForm):
     mpa_agent_not_used = models.BooleanField("Check if PV did not use a MPA or agent", default=False)
     mpa_name = models.CharField(max_length=127, null=True, blank=True)
     mpa_phone = models.CharField(max_length=127, null=True, blank=True)
-    mpa_agent_initiated_contact = models.CharField(max_length=127, null=True,blank=True)
-    mpa_agent_how_contacted = models.CharField(max_length=127, null=True, blank=True)
+    mpa_who_initiated_contact = models.CharField(max_length=127, null=True,blank=True)
+    mpa_how_contacted = models.CharField(max_length=127, null=True, blank=True)
+    mpa_is_suspect = models.CharField(max_length=127, null=True,blank=True)
+    
+    agent_who_initiated_contact = models.CharField(max_length=127, null=True,blank=True)
+    agent_how_contacted = models.CharField(max_length=127, null=True, blank=True)
+    agent_is_suspect = models.CharField(max_length=127, null=True,blank=True)
     
     
     result_pv_tech_training = models.BooleanField("PV was referred to technical/vocational training", default=False)

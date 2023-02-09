@@ -24268,14 +24268,14 @@
    "model": "dataentry.question",
    "pk": 1836,
    "fields": {
-      "form_tag": "irfSfePeopleInitiatedContact",
+      "form_tag": "irfSfePeopleMpaInitiatedContact",
       "prompt": "Who initiated contact?",
       "description": null,
       "answer_type": 4,
       "params": {
          "textbox": "True"
       },
-      "export_name": "Who initiated contact?",
+      "export_name": "MPA:Who initiated contact?",
       "export_params": null
    }
 },
@@ -24283,14 +24283,14 @@
    "model": "dataentry.question",
    "pk": 1837,
    "fields": {
-      "form_tag": "irfSfePeopleHowContact",
+      "form_tag": "irfSfePeopleMpaHowContact",
       "prompt": "How",
       "description": null,
       "answer_type": 4,
       "params": {
          "textbox": "True"
       },
-      "export_name": "How Contacted",
+      "export_name": "MPA:How Contacted",
       "export_params": null
    }
 },
@@ -24343,6 +24343,62 @@
       "answer_type": 6,
       "params": null,
       "export_name": "PV decided to change plans and look for a job within Nepal due to SFE staff\u2019s counseling",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "pk": 2078,
+   "fields": {
+      "form_tag": "irfSfePeopleAgentHowContact",
+      "prompt": "How",
+      "description": null,
+      "answer_type": 4,
+      "params": {
+         "textbox": "True"
+      },
+      "export_name": "Agent:How Contacted",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "pk": 2079,
+   "fields": {
+      "form_tag": "irfSfePeopleAgentInitiatedContact",
+      "prompt": "Who initiated contact?",
+      "description": null,
+      "answer_type": 4,
+      "params": {
+         "textbox": "True"
+      },
+      "export_name": "Agent:Who initiated contact?",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "pk": 2080,
+   "fields": {
+      "form_tag": "irfSfePeopleMpaSuspect",
+      "prompt": "Do you suspect the MPA is attempting to traffic the PV (or others)?",
+      "description": null,
+      "answer_type": 4,
+      "params": null,
+      "export_name": "MPA suspect",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "pk": 2081,
+   "fields": {
+      "form_tag": "irfSfePeopleAgentSuspect",
+      "prompt": "Do you suspect the Agent is attempting to traffic the PV (or others)?",
+      "description": null,
+      "answer_type": 4,
+      "params": null,
+      "export_name": "Agent suspect",
       "export_params": null
    }
 },
@@ -43554,7 +43610,7 @@
          "RadioItems": {
             "1836": [
                "PV",
-               "MPA/Agent"
+               "MPA"
             ]
          }
       }
@@ -43649,6 +43705,59 @@
    "fields": {
       "question": 607,
       "category": 345,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 2078,
+      "category": 344,
+      "weight": 0,
+      "form_config": {
+         "RadioItems": {
+            "1837": [
+               "Phone",
+               "In-person",
+               "Social media",
+               "Email",
+               "Through a relative/friend"
+            ]
+         }
+      }
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 2079,
+      "category": 344,
+      "weight": 0,
+      "form_config": {
+         "RadioItems": {
+            "1836": [
+               "PV",
+               "Agent"
+            ]
+         }
+      }
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 2080,
+      "category": 344,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 2081,
+      "category": 344,
       "weight": 0,
       "form_config": null
    }
@@ -48046,14 +48155,14 @@
    "model": "dataentry.questionstorage",
    "fields": {
       "question": 1836,
-      "field_name": "mpa_agent_initiated_contact"
+      "field_name": "mpa_who_initiated_contact"
    }
 },
 {
    "model": "dataentry.questionstorage",
    "fields": {
       "question": 1837,
-      "field_name": "mpa_agent_how_contacted"
+      "field_name": "mpa_how_contacted"
    }
 },
 {
@@ -48082,6 +48191,34 @@
    "fields": {
       "question": 1841,
       "field_name": "result_pv_local_job"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": 2078,
+      "field_name": "agent_who_initiated_contact"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": 2079,
+      "field_name": "agent_how_contacted"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": 2080,
+      "field_name": "mpa_is_suspect"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": 2081,
+      "field_name": "agent_is_suspect"
    }
 },
 {
@@ -53346,6 +53483,34 @@
    "fields": {
       "validation": 428,
       "question": 924
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": 424,
+      "question": 2078
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": 424,
+      "question": 2079
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": 424,
+      "question": 2080
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": 424,
+      "question": 2081
    }
 },
 {
