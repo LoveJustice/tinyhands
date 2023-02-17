@@ -270,14 +270,6 @@
 {
    "model": "dataentry.category",
    "fields": {
-      "form_tag": "lfAssociation",
-      "category_type": 2,
-      "description": "Association - LF"
-   }
-},
-{
-   "model": "dataentry.category",
-   "fields": {
       "form_tag": "lfEvaluation",
       "category_type": 2,
       "description": "Evaluation - LF"
@@ -341,17 +333,6 @@
    "model": "dataentry.formcategory",
    "fields": {
       "form": "lfNepal",
-      "category": "lfAssociation",
-      "name": "Association",
-      "order": 3,
-      "form_category_question_config": null,
-      "storage": "LfAssociation"
-   }
-},
-{
-   "model": "dataentry.formcategory",
-   "fields": {
-      "form": "lfNepal",
       "category": "lfEvaluation",
       "name": "Evaluation",
       "order": 4,
@@ -440,17 +421,6 @@
    "model": "dataentry.formcategory",
    "fields": {
       "form": "lfIndia",
-      "category": "lfAssociation",
-      "name": "Association",
-      "order": 3,
-      "form_category_question_config": null,
-      "storage": "LfAssociation"
-   }
-},
-{
-   "model": "dataentry.formcategory",
-   "fields": {
-      "form": "lfIndia",
       "category": "lfEvaluation",
       "name": "Evaluation",
       "order": 4,
@@ -522,17 +492,6 @@
       "order": 2,
       "form_category_question_config": null,
       "storage": "LfInformation"
-   }
-},
-{
-   "model": "dataentry.formcategory",
-   "fields": {
-      "form": "lfIndiaNetwork",
-      "category": "lfAssociation",
-      "name": "Association",
-      "order": 3,
-      "form_category_question_config": null,
-      "storage": "LfAssociation"
    }
 },
 {
@@ -616,17 +575,6 @@
    "model": "dataentry.formcategory",
    "fields": {
       "form": "lfGhana",
-      "category": "lfAssociation",
-      "name": "Association",
-      "order": 3,
-      "form_category_question_config": null,
-      "storage": "LfAssociation"
-   }
-},
-{
-   "model": "dataentry.formcategory",
-   "fields": {
-      "form": "lfGhana",
       "category": "lfEvaluation",
       "name": "Evaluation",
       "order": 4,
@@ -698,17 +646,6 @@
       "order": 2,
       "form_category_question_config": null,
       "storage": null
-   }
-},
-{
-   "model": "dataentry.formcategory",
-   "fields": {
-      "form": "lfKenya",
-      "category": "lfAssociation",
-      "name": "Association",
-      "order": 3,
-      "form_category_question_config": null,
-      "storage": "LfAssociation"
    }
 },
 {
@@ -786,17 +723,6 @@
       "order": 2,
       "form_category_question_config": null,
       "storage": null
-   }
-},
-{
-   "model": "dataentry.formcategory",
-   "fields": {
-      "form": "lfSouthAfrica",
-      "category": "lfAssociation",
-      "name": "Association",
-      "order": 3,
-      "form_category_question_config": null,
-      "storage": "LfAssociation"
    }
 },
 {
@@ -874,17 +800,6 @@
       "order": 2,
       "form_category_question_config": null,
       "storage": null
-   }
-},
-{
-   "model": "dataentry.formcategory",
-   "fields": {
-      "form": "lfNamibia",
-      "category": "lfAssociation",
-      "name": "Association",
-      "order": 3,
-      "form_category_question_config": null,
-      "storage": "LfAssociation"
    }
 },
 {
@@ -951,17 +866,6 @@
       "order": 2,
       "form_category_question_config": null,
       "storage": "LfInformation"
-   }
-},
-{
-   "model": "dataentry.formcategory",
-   "fields": {
-      "form": "lfLiberia",
-      "category": "lfAssociation",
-      "name": "Association",
-      "order": 3,
-      "form_category_question_config": null,
-      "storage": "LfAssociation"
    }
 },
 {
@@ -1050,17 +954,6 @@
       "order": 2,
       "form_category_question_config": null,
       "storage": "LfInformation"
-   }
-},
-{
-   "model": "dataentry.formcategory",
-   "fields": {
-      "form": "lfEthiopia",
-      "category": "lfAssociation",
-      "name": "Association",
-      "order": 3,
-      "form_category_question_config": null,
-      "storage": "LfAssociation"
    }
 },
 {
@@ -1138,17 +1031,6 @@
       "order": 2,
       "form_category_question_config": null,
       "storage": null
-   }
-},
-{
-   "model": "dataentry.formcategory",
-   "fields": {
-      "form": "lfBenin",
-      "category": "lfAssociation",
-      "name": "Association",
-      "order": 3,
-      "form_category_question_config": null,
-      "storage": "LfAssociation"
    }
 },
 {
@@ -1226,17 +1108,6 @@
       "order": 2,
       "form_category_question_config": null,
       "storage": null
-   }
-},
-{
-   "model": "dataentry.formcategory",
-   "fields": {
-      "form": "lfMalawi",
-      "category": "lfAssociation",
-      "name": "Association",
-      "order": 3,
-      "form_category_question_config": null,
-      "storage": "LfAssociation"
    }
 },
 {
@@ -1314,17 +1185,6 @@
       "order": 2,
       "form_category_question_config": null,
       "storage": "LfInformation"
-   }
-},
-{
-   "model": "dataentry.formcategory",
-   "fields": {
-      "form": "lfBurkinaFaso",
-      "category": "lfAssociation",
-      "name": "Association",
-      "order": 3,
-      "form_category_question_config": null,
-      "storage": "LfAssociation"
    }
 },
 {
@@ -1402,17 +1262,6 @@
       "order": 2,
       "form_category_question_config": null,
       "storage": "LfInformation"
-   }
-},
-{
-   "model": "dataentry.formcategory",
-   "fields": {
-      "form": "lfBurundi",
-      "category": "lfAssociation",
-      "name": "Association",
-      "order": 3,
-      "form_category_question_config": null,
-      "storage": "LfAssociation"
    }
 },
 {
@@ -1490,17 +1339,6 @@
       "order": 2,
       "form_category_question_config": null,
       "storage": "LfInformation"
-   }
-},
-{
-   "model": "dataentry.formcategory",
-   "fields": {
-      "form": "lfIndonesia",
-      "category": "lfAssociation",
-      "name": "Association",
-      "order": 3,
-      "form_category_question_config": null,
-      "storage": "LfAssociation"
    }
 },
 {
@@ -1578,17 +1416,6 @@
       "order": 2,
       "form_category_question_config": null,
       "storage": "LfInformation"
-   }
-},
-{
-   "model": "dataentry.formcategory",
-   "fields": {
-      "form": "lfLesotho",
-      "category": "lfAssociation",
-      "name": "Association",
-      "order": 3,
-      "form_category_question_config": null,
-      "storage": "LfAssociation"
    }
 },
 {
@@ -1666,17 +1493,6 @@
       "order": 2,
       "form_category_question_config": null,
       "storage": "LfInformation"
-   }
-},
-{
-   "model": "dataentry.formcategory",
-   "fields": {
-      "form": "lfMozambique",
-      "category": "lfAssociation",
-      "name": "Association",
-      "order": 3,
-      "form_category_question_config": null,
-      "storage": "LfAssociation"
    }
 },
 {
@@ -2116,80 +1932,6 @@
       "answer_type": 1,
       "params": null,
       "export_name": "Landmarks",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "fields": {
-      "form_tag": "lfAssociationIncident",
-      "prompt": "Incident",
-      "description": null,
-      "answer_type": 1,
-      "params": null,
-      "export_name": "Incident",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "fields": {
-      "form_tag": "lfAssociationSourceType",
-      "prompt": "Source Type",
-      "description": null,
-      "answer_type": 4,
-      "params": {
-         "textbox": "True"
-      },
-      "export_name": "Source Type",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "fields": {
-      "form_tag": "lfAssociationSourceTitle",
-      "prompt": "Source Title",
-      "description": null,
-      "answer_type": 1,
-      "params": null,
-      "export_name": "Source Title",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "fields": {
-      "form_tag": "lfAssociationInterviewerName",
-      "prompt": "Interviewer Name",
-      "description": null,
-      "answer_type": 1,
-      "params": null,
-      "export_name": "Interviewer Name",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "fields": {
-      "form_tag": "lfAssociationInterviewDate",
-      "prompt": "Interview Date",
-      "description": null,
-      "answer_type": 9,
-      "params": null,
-      "export_name": "Interview Date",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "fields": {
-      "form_tag": "lfAssociationLocation",
-      "prompt": "Location",
-      "description": null,
-      "answer_type": 1,
-      "params": null,
-      "export_name": "Location",
       "export_params": null
    }
 },
@@ -2809,73 +2551,8 @@
 {
    "model": "dataentry.questionlayout",
    "fields": {
-      "question": "lfAssociationIncident",
-      "category": "lfAssociation",
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": "lfAssociationSourceType",
-      "category": "lfAssociation",
-      "weight": 0,
-      "form_config": {
-         "RadioItems": {
-            "AssociationModalController": [
-               "Intercept",
-               "Operation",
-               "Victim",
-               "Police",
-               "Trafficker",
-               "OSI"
-            ]
-         }
-      }
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": "lfAssociationSourceTitle",
-      "category": "lfAssociation",
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": "lfAssociationInterviewerName",
-      "category": "lfAssociation",
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": "lfAssociationInterviewDate",
-      "category": "lfAssociation",
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": "lfAssociationLocation",
-      "category": "lfAssociation",
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
       "question": "lfAssociationPersonsInCharge",
-      "category": "lfAssociation",
+      "category": "lfInformation",
       "weight": 0,
       "form_config": null
    }
@@ -2884,7 +2561,7 @@
    "model": "dataentry.questionlayout",
    "fields": {
       "question": "lfAssociationPvsVisited",
-      "category": "lfAssociation",
+      "category": "lfInformation",
       "weight": 0,
       "form_config": null
    }
@@ -2893,7 +2570,7 @@
    "model": "dataentry.questionlayout",
    "fields": {
       "question": "lfAssociationPvsStayHowLong",
-      "category": "lfAssociation",
+      "category": "lfInformation",
       "weight": 0,
       "form_config": {
          "RadioItems": {
@@ -2908,7 +2585,7 @@
    "model": "dataentry.questionlayout",
    "fields": {
       "question": "lfAssociationPvsStayStartDate",
-      "category": "lfAssociation",
+      "category": "lfInformation",
       "weight": 0,
       "form_config": null
    }
@@ -2917,7 +2594,7 @@
    "model": "dataentry.questionlayout",
    "fields": {
       "question": "lfAssociationPvHide",
-      "category": "lfAssociation",
+      "category": "lfInformation",
       "weight": 0,
       "form_config": null
    }
@@ -2926,7 +2603,7 @@
    "model": "dataentry.questionlayout",
    "fields": {
       "question": "lfAssociationPvHideExplain",
-      "category": "lfAssociation",
+      "category": "lfInformation",
       "weight": 0,
       "form_config": null
    }
@@ -2935,7 +2612,7 @@
    "model": "dataentry.questionlayout",
    "fields": {
       "question": "lfAssociationPvFreeToGo",
-      "category": "lfAssociation",
+      "category": "lfInformation",
       "weight": 0,
       "form_config": null
    }
@@ -2944,7 +2621,7 @@
    "model": "dataentry.questionlayout",
    "fields": {
       "question": "lfAssociationPvFreeToGoExplain",
-      "category": "lfAssociation",
+      "category": "lfInformation",
       "weight": 0,
       "form_config": null
    }
@@ -2953,7 +2630,7 @@
    "model": "dataentry.questionlayout",
    "fields": {
       "question": "lfAssociationSuspects",
-      "category": "lfAssociation",
+      "category": "lfInformation",
       "weight": 0,
       "form_config": null
    }
@@ -3342,48 +3019,6 @@
    "fields": {
       "question": "lfInformationLandmarks",
       "field_name": "nearby_landmarks"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": "lfAssociationIncident",
-      "field_name": "incident_id"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": "lfAssociationSourceType",
-      "field_name": "source_type"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": "lfAssociationSourceTitle",
-      "field_name": "source_title"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": "lfAssociationInterviewerName",
-      "field_name": "interviewer_name"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": "lfAssociationInterviewDate",
-      "field_name": "interview_date"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": "lfAssociationLocation",
-      "field_name": "location"
    }
 },
 {
