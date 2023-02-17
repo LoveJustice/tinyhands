@@ -339,7 +339,7 @@ class IrfFormViewSet(BaseFormViewSet):
     def post_create(self, form_data):
         try:
             # should only find Incident if IRF was created then deleted and now is being created again
-            Incident.objects.get(incident_number=form_data.form_object.irf_number)
+            incident = Incident.objects.get(incident_number=form_data.form_object.irf_number)
         except ObjectDoesNotExist:
             # Normal case
             incident = Incident()
