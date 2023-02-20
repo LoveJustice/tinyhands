@@ -168,6 +168,54 @@
    }
 },
 {
+   "model": "dataentry.form",
+   "fields": {
+      "form_type": 9,
+      "storage": "VdfCommon2",
+      "start_date": "2022-07-01T04:00:00Z",
+      "end_date": "2118-12-31T00:00:00Z",
+      "form_name": "pvfBurundi",
+      "version": "V2022.6",
+      "stations": []
+   }
+},
+{
+   "model": "dataentry.form",
+   "fields": {
+      "form_type": 9,
+      "storage": "VdfCommon2",
+      "start_date": "2022-07-01T04:00:00Z",
+      "end_date": "2118-12-31T00:00:00Z",
+      "form_name": "pvfIndonesia",
+      "version": "V2022.6",
+      "stations": []
+   }
+},
+{
+   "model": "dataentry.form",
+   "fields": {
+      "form_type": 9,
+      "storage": "VdfCommon2",
+      "start_date": "2022-07-01T04:00:00Z",
+      "end_date": "2118-12-31T00:00:00Z",
+      "form_name": "pvfLesotho",
+      "version": "V2022.6",
+      "stations": []
+   }
+},
+{
+   "model": "dataentry.form",
+   "fields": {
+      "form_type": 9,
+      "storage": "VdfCommon2",
+      "start_date": "2022-07-01T04:00:00Z",
+      "end_date": "2118-12-31T00:00:00Z",
+      "form_name": "pvfMozambique",
+      "version": "V2022.6",
+      "stations": []
+   }
+},
+{
    "model": "dataentry.category",
    "fields": {
       "form_tag": "pvfTop",
@@ -1560,6 +1608,446 @@
    "model": "dataentry.formcategory",
    "fields": {
       "form": "pvfBurkinaFaso",
+      "category": "pvfCompliance",
+      "name": "Compliance",
+      "order": 10,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "pvfBurundi",
+      "category": "pvfTop",
+      "name": "Top",
+      "order": 1,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "pvfBurundi",
+      "category": "pvfPvFamily",
+      "name": "PV & Family",
+      "order": 2,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "pvfBurundi",
+      "category": "pvfRecruitment",
+      "name": "Recruitment",
+      "order": 3,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "pvfBurundi",
+      "category": "pvTravelExploitation",
+      "name": "Travel/Exploitation",
+      "order": 4,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "pvfBurundi",
+      "category": "pvfHomeAssessment",
+      "name": "Home Situation Assessment",
+      "order": 5,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "pvfBurundi",
+      "category": "pvfAwareness",
+      "name": "Awareness",
+      "order": 6,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "pvfBurundi",
+      "category": "pvfRelease",
+      "name": "Release Information",
+      "order": 7,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "pvfBurundi",
+      "category": "pvfStaffAssessment",
+      "name": "Staff Assessment",
+      "order": 8,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "pvfBurundi",
+      "category": "pvfAttachment",
+      "name": "Attachments",
+      "order": 9,
+      "form_category_question_config": null,
+      "storage": "VdfAttachmentCommon2"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "pvfBurundi",
+      "category": "pvfCompliance",
+      "name": "Compliance",
+      "order": 10,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "pvfIndonesia",
+      "category": "pvfTop",
+      "name": "Top",
+      "order": 1,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "pvfIndonesia",
+      "category": "pvfPvFamily",
+      "name": "PV & Family",
+      "order": 2,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "pvfIndonesia",
+      "category": "pvfRecruitment",
+      "name": "Recruitment",
+      "order": 3,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "pvfIndonesia",
+      "category": "pvTravelExploitation",
+      "name": "Travel/Exploitation",
+      "order": 4,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "pvfIndonesia",
+      "category": "pvfHomeAssessment",
+      "name": "Home Situation Assessment",
+      "order": 5,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "pvfIndonesia",
+      "category": "pvfAwareness",
+      "name": "Awareness",
+      "order": 6,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "pvfIndonesia",
+      "category": "pvfRelease",
+      "name": "Release Information",
+      "order": 7,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "pvfIndonesia",
+      "category": "pvfStaffAssessment",
+      "name": "Staff Assessment",
+      "order": 8,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "pvfIndonesia",
+      "category": "pvfAttachment",
+      "name": "Attachments",
+      "order": 9,
+      "form_category_question_config": null,
+      "storage": "VdfAttachmentCommon2"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "pvfIndonesia",
+      "category": "pvfCompliance",
+      "name": "Compliance",
+      "order": 10,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "pvfLesotho",
+      "category": "pvfTop",
+      "name": "Top",
+      "order": 1,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "pvfLesotho",
+      "category": "pvfPvFamily",
+      "name": "PV & Family",
+      "order": 2,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "pvfLesotho",
+      "category": "pvfRecruitment",
+      "name": "Recruitment",
+      "order": 3,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "pvfLesotho",
+      "category": "pvTravelExploitation",
+      "name": "Travel/Exploitation",
+      "order": 4,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "pvfLesotho",
+      "category": "pvfHomeAssessment",
+      "name": "Home Situation Assessment",
+      "order": 5,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "pvfLesotho",
+      "category": "pvfAwareness",
+      "name": "Awareness",
+      "order": 6,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "pvfLesotho",
+      "category": "pvfRelease",
+      "name": "Release Information",
+      "order": 7,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "pvfLesotho",
+      "category": "pvfStaffAssessment",
+      "name": "Staff Assessment",
+      "order": 8,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "pvfLesotho",
+      "category": "pvfAttachment",
+      "name": "Attachments",
+      "order": 9,
+      "form_category_question_config": null,
+      "storage": "VdfAttachmentCommon2"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "pvfLesotho",
+      "category": "pvfCompliance",
+      "name": "Compliance",
+      "order": 10,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "pvfMozambique",
+      "category": "pvfTop",
+      "name": "Top",
+      "order": 1,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "pvfMozambique",
+      "category": "pvfPvFamily",
+      "name": "PV & Family",
+      "order": 2,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "pvfMozambique",
+      "category": "pvfRecruitment",
+      "name": "Recruitment",
+      "order": 3,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "pvfMozambique",
+      "category": "pvTravelExploitation",
+      "name": "Travel/Exploitation",
+      "order": 4,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "pvfMozambique",
+      "category": "pvfHomeAssessment",
+      "name": "Home Situation Assessment",
+      "order": 5,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "pvfMozambique",
+      "category": "pvfAwareness",
+      "name": "Awareness",
+      "order": 6,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "pvfMozambique",
+      "category": "pvfRelease",
+      "name": "Release Information",
+      "order": 7,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "pvfMozambique",
+      "category": "pvfStaffAssessment",
+      "name": "Staff Assessment",
+      "order": 8,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "pvfMozambique",
+      "category": "pvfAttachment",
+      "name": "Attachments",
+      "order": 9,
+      "form_category_question_config": null,
+      "storage": "VdfAttachmentCommon2"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "pvfMozambique",
       "category": "pvfCompliance",
       "name": "Compliance",
       "order": 10,

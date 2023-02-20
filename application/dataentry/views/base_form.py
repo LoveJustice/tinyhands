@@ -121,7 +121,9 @@ class BaseFormViewSet(viewsets.ModelViewSet):
     def extract_data(self, request, element_paths):
         if 'main' in request.data:
             request_string = request.data['main']
+            #print(request_string)
             request_json = json.loads(request_string)
+            self.request_json = request_json
             
             for element_path in element_paths:
                 cnt = 0
