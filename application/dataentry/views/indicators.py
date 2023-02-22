@@ -46,6 +46,7 @@ class CollectionResults:
         self.vdf_lag_total = 0
         self.vdf_lag_percent_total = 0
         self.vdf_lag_count = 0
+        self.vdf_gospel_count = 0
         
         self.sf_count = 0
         self.sf_compliance_count = 0
@@ -87,6 +88,7 @@ class CollectionResults:
         self.cif_compliance_percent = self.compute_percent(self.cif_compliance_count, self.cif_count)
         
         self.vdf_compliance_percent = self.compute_percent(self.vdf_compliance_count, self.vdf_count)
+        self.vdf_gospel_percent = self.compute_percent(self.vdf_gospel_count, self.vdf_count)
         
         self.sf_percent = self.compute_percent(self.sf_count, self.suspect_count)
         self.sf_compliance_percent = self.compute_percent(self.sf_compliance_count, self.sf_count)
@@ -231,6 +233,7 @@ class CollectionResults:
             self.vdf_lag_total += entry.vdf_lag_total
             self.vdf_lag_percent_total += entry.vdf_lag_percent_total
             self.vdf_lag_count += entry.vdf_lag_count
+            self.vdf_gospel_count += entry.vdf_gospel_count
             
             self.sf_count += entry.sf_count
             self.sf_compliance_count += entry.sf_compliance_count
@@ -561,6 +564,7 @@ class IndicatorsViewSet(viewsets.ViewSet):
                 result.vdf_lag_count += 1
                 result.vdf_lag_total += work_days
                 result.vdf_lag_percent_total += IndicatorsViewSet.score_lag(work_days)
+            
     
     @staticmethod
     def pvf_indicators_for_irf(result, irf):
@@ -583,6 +587,8 @@ class IndicatorsViewSet(viewsets.ViewSet):
                 result.vdf_lag_count += 1
                 result.vdf_lag_total += work_days
                 result.vdf_lag_percent_total += IndicatorsViewSet.score_lag(work_days)
+            if vdf.staff_share_gospel is not None and vdf.staff_share_gospel.lower() == 'yes':
+                result.vdf_gospel_count += 1
     
     @staticmethod        
     def sf_indicators_for_irf(result, irf):
