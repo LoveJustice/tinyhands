@@ -520,6 +520,25 @@ class Command(BaseCommand):
         info.description = lb.address_notes
         info.nearby_landmarks = lb.nearby_landmarks
         
+        info.person_in_charge = lb.person_in_charge
+        info.pvs_visited = cif.main_pv.full_name
+        if lb.pv_stayed_days is not None and lb.pv_stayed_days != '':
+            info.stay_how_long = lb.pv_stayed_days
+            info.start_date = lb.pv_stayed_start_date
+        elif lb.pv_stayed_not_applicable:
+            info.stay_how_long = 'N/A (Not Applicable)'
+        if lb.pv_attempt_hide_yes:
+            info.attempt_hide = 'Yes'
+            info.attempt_explanation = lb.pv_attempt_hide_explaination
+        elif lb.pv_attempt_hide_no:
+            info.attempt_hide = 'No'
+        if lb.pv_free_to_go_no:
+            info.free_to_go = 'No'
+            info.free_to_go_explanation = lb.pv_free_to_go_explaination
+        elif lb.pv_free_to_go_yes:
+             info.free_to_go = 'Yes'
+        info.suspects_associative = self.pb_instance_name(cif, lb.associated_pb)
+        
         info.save()
         
         infos = LocationInformation.objects.filter(lf=lf)
@@ -534,37 +553,6 @@ class Command(BaseCommand):
                         setattr(lf, 'merged_' + field, tmp)
                         break
         lf.save()
-        
-        assoc = LocationAssociation()
-        assoc.lf =lf
-        assoc.incident = incident
-        assoc.source_type = cif.source_of_intelligence
-        if assoc.source_type == 'Informant #' and cif.main_pv.full_name == '':
-            assoc.source_title = ''
-        else:
-            assoc.source_title = cif.main_pv.full_name
-        assoc.interviewer_name = cif.staff_name if cif.staff_name is not None else ''
-        assoc.interview_date = cif.interview_date
-        assoc.location = cif.location if cif.location is not None else ''
-        assoc.person_in_charge = lb.person_in_charge
-        assoc.pvs_visited = cif.main_pv.full_name
-        if lb.pv_stayed_days is not None and lb.pv_stayed_days != '':
-            assoc.stay_how_long = lb.pv_stayed_days
-            assoc.start_date = lb.pv_stayed_start_date
-        elif lb.pv_stayed_not_applicable:
-            assoc.stay_how_long = 'N/A (Not Applicable)'
-        if lb.pv_attempt_hide_yes:
-            assoc.attempt_hide = 'Yes'
-            assoc.attempt_explanation = lb.pv_attempt_hide_explaination
-        elif lb.pv_attempt_hide_no:
-            assoc.attempt_hide = 'No'
-        if lb.pv_free_to_go_no:
-            assoc.free_to_go = 'No'
-            assoc.free_to_go_explanation = lb.pv_free_to_go_explaination
-        elif lb.pv_free_to_go_yes:
-             assoc.free_to_go = 'Yes'
-        assoc.suspects_associative = self.pb_instance_name(cif, lb.associated_pb)
-        assoc.save()
         
         attachment_number = 0
         for attachment in lf.locationattachment_set.all():
