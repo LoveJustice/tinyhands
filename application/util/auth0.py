@@ -19,12 +19,16 @@ logger = logging.getLogger(__name__)
 
 # Hooked into settings.py
 def jwt_get_username_from_payload_handler(payload):
+
     auth0_id = payload.get('sub').replace('|', '.')
-    # TODO This db hit could be make all calls a bit slower
-    # TODO catch this and throw Permission Denied or something?
-    account = Account.objects.get(auth0_id=auth0_id)
-    authenticate(remote_user=account.get_username())
-    return account.get_username()
+    try:
+        # TODO This db hit could be make all calls a bit slower
+        account = Account.objects.get(auth0_id=auth0_id)
+        username = account.get_username()
+    except Account.DoesNotExist:
+        username = None
+    authenticate(remote_user=username)
+    return username
 
 
 # Hooked into settings.py
