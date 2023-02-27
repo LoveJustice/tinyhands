@@ -75,9 +75,20 @@ class LocationInformation(BaseCard):
     description = models.TextField('Descriptive Features', blank=True) # address notes
     nearby_landmarks = models.CharField(max_length=126, null=True)
     
+    persons_in_charge = models.CharField(max_length=126, null=True)
+    pvs_visited = models.CharField(max_length=126, null=True)
+    stay_how_long = models.CharField(max_length=126, null=True)
+    start_date = models.DateField(null=True, default=None)
+    attempt_hide = models.CharField(max_length=126, null=True)
+    attempt_explanation = models.CharField(max_length=126, null=True)
+    free_to_go = models.CharField(max_length=126, null=True)
+    free_to_go_explanation = models.CharField(max_length=126, null=True)
+    suspects_associative = models.CharField(max_length=126, null=True)
+    
     def set_parent(self, the_parent):
         self.lf = the_parent
 
+# LocationAssociation no longer used information added to LocationInformation
 class LocationAssociation(BaseCard):
     lf = models.ForeignKey(LocationForm, on_delete=models.CASCADE)
     incident = models.ForeignKey(Incident, on_delete=models.CASCADE, null=True)
@@ -85,7 +96,7 @@ class LocationAssociation(BaseCard):
     source_title = models.CharField(max_length=126, blank=True)
     interviewer_name = models.CharField(max_length=126, blank=True)
     interview_date = models.DateField(null=True, default=None)
-    location = models.CharField(max_length=255, blank=True)
+    location = models.CharField(max_length=255, blank=True)    
     persons_in_charge = models.CharField(max_length=126, null=True)
     pvs_visited = models.CharField(max_length=126, null=True)
     stay_how_long = models.CharField(max_length=126, null=True)

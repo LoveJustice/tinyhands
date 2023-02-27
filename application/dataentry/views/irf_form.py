@@ -24,7 +24,7 @@ from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from dataentry.serialize_form import FormDataSerializer
 from .base_form import BaseFormViewSet, BorderStationOverviewSerializer
 
-from dataentry.form_data import Form, FormData
+from dataentry.form_data import Form, FormData, FormCategory
 from dataentry.models import BorderStation, Incident, IntercepteeCommon, InterceptionCache, IrfAttachmentCommon, IrfCommon, IrfVerification, UserLocationPermission
 
 logger = logging.getLogger(__name__)
@@ -294,12 +294,31 @@ class IrfFormViewSet(BaseFormViewSet):
     
     def six_month_tally(self, request):        
         return Response(IrfFormViewSet.get_six_month_tally(), status=status.HTTP_200_OK)
+    
+    def check_duplicates(self, irf, verification_list, duplicate_list):
+        verifications = IrfVerification.objects.filter(interception_record=irf).order_by('id')
+        for verification in verifications:
+            verification_list.append(verification)
+            
+        for v1 in verification_list:
+            for v2 in verification_list:
+                if v2.id <= v1.id:
+                    continue
+                
+                if (v1.interception_record == v2.interception_record and 
+                        v1.verifier == v2.verifier and
+                        v1.verification_type == v2.verification_type):
+                    if v2 not in duplicate_list:
+                        duplicate_list.append(v2)
 
     def pre_process(self, request, form_data):
         if form_data is not None:
             self.logbook_submitted = form_data.form_object.logbook_submitted
             self.logbook_first_verification_date = form_data.form_object.logbook_first_verification_date
             self.status = form_data.form_object.status
+            self.pre_verifications = []
+            self.pre_duplicates = []
+            self.check_duplicates(form_data.form_object, self.pre_verifications, self.pre_duplicates)
         else:
             self.logbook_submitted = None
             self.logbook_first_verification_date = None
@@ -320,7 +339,7 @@ class IrfFormViewSet(BaseFormViewSet):
     def post_create(self, form_data):
         try:
             # should only find Incident if IRF was created then deleted and now is being created again
-            Incident.objects.get(incident_number=form_data.form_object.irf_number)
+            incident = Incident.objects.get(incident_number=form_data.form_object.irf_number)
         except ObjectDoesNotExist:
             # Normal case
             incident = Incident()
@@ -354,7 +373,50 @@ class IrfFormViewSet(BaseFormViewSet):
         context['tie_break'] = tie_break
         context['initial_reviewers'] = initial[0]['verifier'] + ' and ' + initial[1]['verifier']
     
+    def verification_string(self, verification):
+        value = ('{"id":' + str(verification.id) + 
+                 ',"verifier":' + str(verification.verifier.id) +
+                 ',"type":"' + str(verification.verification_type) + '"' +
+                 ',"category":"' + verification.evidence_categorization + '"' +
+                 ',"date":"' + str(verification.verified_date) + '"}')
+        return value
+    
     def post_process(self, request, form_data):
+        self.post_verifications = []
+        self.post_duplicates = []
+        self.check_duplicates(form_data.form_object, self.post_verifications, self.post_duplicates)
+        if len(self.post_duplicates) > 0:
+            msg = 'Duplicate verifications {'
+            msg += '"duplicates":['
+            sep = ''
+            for duplicate in self.post_duplicates:
+                msg += sep + self.verification_string(duplicate)
+                sep = ','
+            msg += '],"priorVerifications":['
+            sep = ''
+            for verify in self.pre_verifications:
+                msg += sep + self.verification_string(verify)
+                sep = ','
+            msg += '],"postVerifications":['
+            sep = ''
+            for verify in self.post_verifications:
+                msg += sep + self.verification_string(verify)
+                sep = ','
+            msg += ']'
+            form_category = FormCategory.objects.get(form=form_data.form, name="Verification")
+            all_cards = self.request_json['cards']
+            for card_type in all_cards:
+                category_id = card_type['category_id']
+                if category_id == form_category.category.id:
+                    msg +=',request:' + str(card_type)
+            msg += '}'
+                
+            logger.error(msg)
+            
+            #Remove the duplicates
+            for duplicate in self.post_duplicates:
+                duplicate.delete()
+            
         try:
             start_check = datetime(2020,4,1, tzinfo=timezone.utc)
             if form_data.form_object.date_of_interception < start_check.date():
