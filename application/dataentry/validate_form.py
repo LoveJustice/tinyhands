@@ -489,7 +489,6 @@ class ValidateForm:
             return
         category_name = self.question_map[validation_questions[0].question.id]
         answer = form_data.get_answer(validation_questions[0].question)
-        print('verification_validation', answer)
         if answer is None or answer == '':
             self.add_error_or_warning(category_name, category_index, validation)
             
