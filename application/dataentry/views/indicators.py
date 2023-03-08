@@ -20,6 +20,7 @@ class CollectionResults:
         self.victim_count = 0
         self.victim_present_count = 0
         self.suspect_count = 0
+        self.suspect_present_count = 0
         self.victim_evidence_count = 0
         self.photo_count = 0
         self.suspect_photo_count = 0
@@ -102,7 +103,7 @@ class CollectionResults:
         
         self.vdf_percent = self.compute_percent(self.vdf_count, self.victim_count)
         self.photo_percent = self.compute_percent(self.photo_count, self.victim_present_count)
-        self.suspect_photo_percent = self.compute_percent(self.suspect_photo_count, self.suspect_count)
+        self.suspect_photo_percent = self.compute_percent(self.suspect_photo_count, self.suspect_present_count)
         self.phone_verified_percent = self.compute_percent(self.phone_verified_count, self.phone_count)
         if pvf_form:
             self.compliance_percent = self.compute_percent(self.irf_compliance_count + self.sf_compliance_count + self.lf_compliance_count + self.vdf_compliance_count,
@@ -207,6 +208,7 @@ class CollectionResults:
             self.victim_count += entry.victim_count
             self.victim_present_count += entry.victim_present_count
             self.suspect_count += entry.suspect_count
+            self.suspect_present_count += entry.suspect_present_count
             self.victim_evidence_count += entry.victim_evidence_count
             self.photo_count += entry.photo_count
             self.suspect_photo_count += entry.suspect_photo_count
@@ -404,9 +406,13 @@ class IndicatorsViewSet(viewsets.ViewSet):
                                                                                            person__role='Suspect',
                                                                                           not_physically_present=False)
                     for suspect in suspects:
-                        result.suspect_count += 1
+                        result.suspect_present_count += 1
                         if suspect.person.photo is not None and suspect.person.photo != '':
                             result.suspect_photo_count += 1
+                    
+                    suspects = interceptee_storage.get_form_storage_class().objects.filter(interception_record=irf,
+                                                                                           person__role='Suspect')
+                    result.suspect_count += len(suspects)
                     
                 IndicatorsViewSet.cif_indicators_for_irf(result, irf)
                 IndicatorsViewSet.vdf_indicators_for_irf(result, irf)
@@ -765,6 +771,56 @@ class IndicatorsViewSet(viewsets.ViewSet):
             detail_data['text'].append('# IRFs in Compliance = ' + str(compliant_count))
             detail_data['text'].append('Average IRF collection lag time = ' + str(math.floor(total_work_days/len(irfs) + 0.5)))
             detail_data['text'].append('Average IRF collection lag score = ' + str(math.floor(lag_total_score/len(irfs) + 0.5)))
+    
+    def getIntercepteeDetail(self, start_date, end_date, project_code, country_id, detail_data):
+        irfs = self.getIrfDetailList(start_date, end_date, project_code, country_id)
+        table_data = {
+            'labels': ['IRF Number', '#PVFs / # PVs', '# SFs / # Suspects'],
+            'rows': []
+            }
+        
+       
+        total_pvots = 0
+        total_suspects = 0
+        total_pvfs = 0
+        total_sfs = 0
+        for irf in irfs:
+            row = []
+            pvot = 0
+            suspect = 0
+            interceptees = IntercepteeCommon.objects.filter(interception_record=irf)
+            for interceptee in interceptees:
+                if interceptee.person.role == 'PVOT':
+                    pvot += 1
+                elif interceptee.person.role == 'Suspect':
+                    suspect += 1
+            
+            
+            pvfs = IndicatorsViewSet.pvfs_for_irf(irf)
+            sfs = IndicatorsViewSet.sfs_for_irf(irf)
+            
+            row.append({'value':irf.irf_number})
+            if len(pvfs) != pvot:
+                row.append({'value':str(len(pvfs)) + ' / ' + str(pvot) + ' **'})
+            else:
+                row.append({'value':str(len(pvfs)) + ' / ' + str(pvot)})
+            if len(sfs) != suspect:
+                row.append({'value':str(len(sfs)) + ' / ' + str(suspect) + ' **'})
+            else:
+                row.append({'value':str(len(sfs)) + ' / ' + str(suspect)})
+            total_pvots += pvot
+            total_suspects += suspect
+            total_pvfs += len(pvfs)
+            total_sfs += len(sfs)
+            
+            table_data['rows'].append(row)
+        
+        detail_data['table_data'] = table_data
+        if len(detail_data['table_data']['rows']) > 0:
+             detail_data['text'].append('# PVFs = ' + str(total_pvfs))
+             detail_data['text'].append('# PVs = ' + str(total_pvots))
+             detail_data['text'].append('# SFs = ' + str(total_sfs))
+             detail_data['text'].append('# Suspects = ' + str(total_suspects))
 
     def getCifDetail(self, start_date, end_date, project_code, country_id, detail_data):
         irfs = self.getIrfDetailList(start_date, end_date, project_code, country_id)
@@ -1024,6 +1080,8 @@ class IndicatorsViewSet(viewsets.ViewSet):
             'High Risk of Trafficking %':None,
             'PV Photos %':self.getVictimDetail,
             'S Photos %':self.getSuspectDetail,
+            'IRF Suspect SF %':self.getIntercepteeDetail,
+            'PVF %':self.getIntercepteeDetail,
             };
         
         if type in function_dict and function_dict[type] is not None:
