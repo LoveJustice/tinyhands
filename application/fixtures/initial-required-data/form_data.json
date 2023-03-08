@@ -312,6 +312,13 @@
    }
 },
 {
+   "model": "dataentry.formvalidationtype",
+   "pk": 13,
+   "fields": {
+      "name": "verification_validation"
+   }
+},
+{
    "model": "dataentry.storage",
    "pk": 63,
    "fields": {
@@ -52730,6 +52737,49 @@
    }
 },
 {
+   "model": "dataentry.formvalidation",
+   "pk": 429,
+   "fields": {
+      "form_tag": "irfVerificationFollowUp",
+      "level": 2,
+      "trigger": 1089,
+      "trigger_value": "Yes",
+      "validation_type": 13,
+      "error_warning_message": "Follow-up call facts must be entered when follow-up call has been completed",
+      "params": null,
+      "retrieve": false,
+      "update": true,
+      "forms": [
+         1,
+         2,
+         4,
+         8,
+         9,
+         17,
+         18,
+         19,
+         26,
+         27,
+         28,
+         32,
+         44,
+         46,
+         55,
+         59,
+         60,
+         64,
+         65,
+         66,
+         69,
+         70,
+         71,
+         92,
+         129,
+         147
+      ]
+   }
+},
+{
    "model": "dataentry.formvalidationquestion",
    "fields": {
       "validation": 1,
@@ -53728,6 +53778,13 @@
    "fields": {
       "validation": 424,
       "question": 2081
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": 429,
+      "question": 1090
    }
 },
 {
