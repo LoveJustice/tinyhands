@@ -480,6 +480,17 @@ class ValidateForm:
         
         if not found:
             self.add_error_or_warning(category_name, category_index, validation)
+    
+    def verification_validation(self, form_data, validation, validation_questions, category_index, general):
+        if len(validation_questions) != 1:
+            logger.error("form_id_station_code validation requires one question")
+            return
+        if form_data.form_object.id is not None:
+            return
+        category_name = self.question_map[validation_questions[0].question.id]
+        answer = form_data.get_answer(validation_questions[0].question)
+        if answer is None or answer == '':
+            self.add_error_or_warning(category_name, category_index, validation)
             
 
     def __init__(self, form, form_data, ignore_warnings, mode='update'):
@@ -497,6 +508,7 @@ class ValidateForm:
             'not_blank_or_null_card_filter_main':self.not_blank_or_null_card_filter_main,
             'card_reference':self.card_reference,
             'person_validation':self.person_validation,
+            'verification_validation':self.verification_validation,
         }
         
         self.validations_to_perform = {
