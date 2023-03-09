@@ -8,7 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from dataentry.models import Audit, AuditSample, BorderStation, Country, Form, FormCategory
-from dataentry.models import IndicatorHistory, IntercepteeCommon, IrfCommon, LocationInformation
+from dataentry.models import Gospel, GospelVerification, IndicatorHistory, IntercepteeCommon, IrfCommon, LocationInformation
 from dataentry.models import SiteSettings, SuspectInformation
 
 
@@ -48,6 +48,9 @@ class CollectionResults:
         self.vdf_lag_percent_total = 0
         self.vdf_lag_count = 0
         self.vdf_gospel_count = 0
+        self.gospel_profession_count = 0
+        self.profession_denominator = 0
+        self.gsp_count = 0
         
         self.sf_count = 0
         self.sf_compliance_count = 0
@@ -90,6 +93,7 @@ class CollectionResults:
         
         self.vdf_compliance_percent = self.compute_percent(self.vdf_compliance_count, self.vdf_count)
         self.vdf_gospel_percent = self.compute_percent(self.vdf_gospel_count, self.vdf_count)
+        self.gospel_profession_percent = self.compute_percent(self.gospel_profession_count, self.profession_denominator)
         
         self.sf_percent = self.compute_percent(self.sf_count, self.suspect_count)
         self.sf_compliance_percent = self.compute_percent(self.sf_compliance_count, self.sf_count)
@@ -236,6 +240,9 @@ class CollectionResults:
             self.vdf_lag_percent_total += entry.vdf_lag_percent_total
             self.vdf_lag_count += entry.vdf_lag_count
             self.vdf_gospel_count += entry.vdf_gospel_count
+            self.gospel_profession_count += entry.gospel_profession_count
+            self.profession_denominator += entry.profession_denominator
+            self.gsp_count += entry.gsp_count
             
             self.sf_count += entry.sf_count
             self.sf_compliance_count += entry.sf_compliance_count
@@ -419,6 +426,9 @@ class IndicatorsViewSet(viewsets.ViewSet):
                 IndicatorsViewSet.pvf_indicators_for_irf(result, irf)
                 IndicatorsViewSet.sf_indicators_for_irf(result, irf)
                 IndicatorsViewSet.lf_indicators_for_irf(result, irf)
+            
+            gsps = Gospel.objects.filter(station=station, date_time_entered_into_system__gte=start_date,  date_time_entered_into_system__lte=end_date)
+            result.gsp_count += len(gsps)
                 
             if station.open or result.irf_count > 0:
                 # only include stations that are open or have IRFs present in the time period
@@ -595,6 +605,12 @@ class IndicatorsViewSet(viewsets.ViewSet):
                 result.vdf_lag_percent_total += IndicatorsViewSet.score_lag(work_days)
             if vdf.staff_share_gospel is not None and vdf.staff_share_gospel.lower() == 'yes':
                 result.vdf_gospel_count += 1
+            if vdf.what_victim_believes_now == 'Came to believe that Jesus is the one true God':
+                gvs = GospelVerification.objects.filter(vdf=vdf, date_of_followup__isnull=False)
+                if len(gvs) > 0:
+                    result.gospel_profession_count += 1
+            if vdf.what_victim_believes_now != 'Already believes Jesus is the one true God':
+                result.profession_denominator += 1
     
     @staticmethod        
     def sf_indicators_for_irf(result, irf):
