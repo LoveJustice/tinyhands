@@ -1112,7 +1112,6 @@ class IndicatorsViewSet(viewsets.ViewSet):
                     
                     table_data['rows'].append(row)
         
-        print(table_data)
         detail_data['table_data'] = table_data
         
     
