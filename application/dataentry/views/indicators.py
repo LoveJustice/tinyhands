@@ -51,6 +51,10 @@ class CollectionResults:
         self.gospel_profession_count = 0
         self.profession_denominator = 0
         self.gsp_count = 0
+        self.gospel_verification_count = 0
+        self.gospel_lag_total = 0
+        self.gospel_lag_count = 0
+        self.gospel_lag_percent_total = 0
         
         self.sf_count = 0
         self.sf_compliance_count = 0
@@ -139,6 +143,11 @@ class CollectionResults:
             lag_count_numerator += self.vdf_lag_score
         else:
             self.vdf_lag = 0
+        if self.gospel_lag_count > 0:
+            self.gospel_lag = math.floor(self.gospel_lag_total / self.gospel_lag_count + 0.5)
+            self.gospel_lag_score = math.floor(self.gospel_lag_percent_total/self.gospel_lag_count + 0.5)
+        else:
+            self.gospel_lag = 0
         if self.sf_lag_count > 0:
             self.sf_lag = math.floor(self.sf_lag_total / self.sf_lag_count + 0.5)
             self.sf_lag_score = math.floor(self.sf_lag_percent_total/self.sf_lag_count + 0.5)
@@ -240,7 +249,11 @@ class CollectionResults:
             self.vdf_lag_percent_total += entry.vdf_lag_percent_total
             self.vdf_lag_count += entry.vdf_lag_count
             self.vdf_gospel_count += entry.vdf_gospel_count
+            self.gospel_lag_total += entry.gospel_lag_total
+            self.gospel_lag_percent_total += entry.gospel_lag_percent_total
+            self.gospel_lag_count += entry.gospel_lag_count
             self.gospel_profession_count += entry.gospel_profession_count
+            self.gospel_verification_count += entry.gospel_verification_count
             self.profession_denominator += entry.profession_denominator
             self.gsp_count += entry.gsp_count
             
@@ -427,7 +440,7 @@ class IndicatorsViewSet(viewsets.ViewSet):
                 IndicatorsViewSet.sf_indicators_for_irf(result, irf)
                 IndicatorsViewSet.lf_indicators_for_irf(result, irf)
             
-            gsps = Gospel.objects.filter(station=station, date_time_entered_into_system__gte=start_date,  date_time_entered_into_system__lte=end_date)
+            gsps = Gospel.objects.filter(station=station, date_time_entered_into_system__date__gte=start_date,  date_time_entered_into_system__date__lte=end_date)
             result.gsp_count += len(gsps)
                 
             if station.open or result.irf_count > 0:
@@ -494,7 +507,7 @@ class IndicatorsViewSet(viewsets.ViewSet):
         if form is None:
             return results
         
-        match_pattern = irf.irf_number + "[A-Z]$"
+        match_pattern = irf.irf_number + "[A-Z]{1,2}$"
         vdfs = form.storage.get_form_storage_class().objects.filter(vdf_number__startswith=irf.irf_number)
         for vdf in vdfs:  
             match = re.match(match_pattern, vdf.vdf_number)
@@ -512,8 +525,8 @@ class IndicatorsViewSet(viewsets.ViewSet):
         if form is None:
             return results
         
-        match_pattern = irf.irf_number + "[A-Z]$"
-        vdfs = form.storage.get_form_storage_class().objects.filter(vdf_number__startswith=irf.irf_number)
+        match_pattern = irf.irf_number + "[A-Z]{1,2}$"
+        vdfs = form.storage.get_form_storage_class().objects.filter(vdf_number__startswith=irf.irf_number, status="approved")
         for vdf in vdfs:  
             match = re.match(match_pattern, vdf.vdf_number)
             if match is None:
@@ -530,8 +543,8 @@ class IndicatorsViewSet(viewsets.ViewSet):
         if form is None:
             return results
         
-        match_pattern = irf.irf_number + "[A-Z]$"
-        sfs = form.storage.get_form_storage_class().objects.filter(sf_number__startswith=irf.irf_number)
+        match_pattern = irf.irf_number + "[A-Z]{1,2}$"
+        sfs = form.storage.get_form_storage_class().objects.filter(sf_number__startswith=irf.irf_number, status="approved")
         for sf in sfs:  
             match = re.match(match_pattern, sf.sf_number)
             if match is None:
@@ -548,8 +561,8 @@ class IndicatorsViewSet(viewsets.ViewSet):
         if form is None:
             return results
         
-        match_pattern = irf.irf_number + "[A-Z]$"
-        lfs = form.storage.get_form_storage_class().objects.filter(lf_number__startswith=irf.irf_number)
+        match_pattern = irf.irf_number + "[A-Z]{1,2}$"
+        lfs = form.storage.get_form_storage_class().objects.filter(lf_number__startswith=irf.irf_number, status="approved")
         for lf in lfs:  
             match = re.match(match_pattern, lf.lf_number)
             if match is None:
@@ -565,7 +578,7 @@ class IndicatorsViewSet(viewsets.ViewSet):
         if form is None:
             return
 
-        match_pattern = irf.irf_number + "[A-Z]$"
+        match_pattern = irf.irf_number + "[A-Z]{1,2}$"
         vdfs = form.storage.get_form_storage_class().objects.filter(vdf_number__startswith=irf.irf_number)
         for vdf in vdfs:
             match = re.match(match_pattern, vdf.vdf_number)
@@ -588,7 +601,7 @@ class IndicatorsViewSet(viewsets.ViewSet):
         if form is None:
             return
 
-        match_pattern = irf.irf_number + "[A-Z]$"
+        match_pattern = irf.irf_number + "[A-Z]{1,2}$"
         vdfs = form.storage.get_form_storage_class().objects.filter(vdf_number__startswith=irf.irf_number)
         for vdf in vdfs:
             match = re.match(match_pattern, vdf.vdf_number)
@@ -605,12 +618,9 @@ class IndicatorsViewSet(viewsets.ViewSet):
                 result.vdf_lag_percent_total += IndicatorsViewSet.score_lag(work_days)
             if vdf.staff_share_gospel is not None and vdf.staff_share_gospel.lower() == 'yes':
                 result.vdf_gospel_count += 1
-            if vdf.what_victim_believes_now == 'Came to believe that Jesus is the one true God':
-                gvs = GospelVerification.objects.filter(vdf=vdf, date_of_followup__isnull=False)
-                if len(gvs) > 0:
-                    result.gospel_profession_count += 1
             if vdf.what_victim_believes_now != 'Already believes Jesus is the one true God':
                 result.profession_denominator += 1
+            IndicatorsViewSet.gospel_indicators_for_vdf(result, vdf)
     
     @staticmethod        
     def sf_indicators_for_irf(result, irf):
@@ -657,6 +667,19 @@ class IndicatorsViewSet(viewsets.ViewSet):
                 result.lf_lag_count += 1
                 result.lf_lag_total += work_days
                 result.lf_lag_percent_total += IndicatorsViewSet.score_lag(work_days)
+    
+    @staticmethod        
+    def gospel_indicators_for_vdf(result, vdf):
+        gospel_verifications = GospelVerification.objects.filter(vdf=vdf, date_of_followup__isnull=False)
+        for gospel_verification in gospel_verifications:
+            result.gospel_verification_count += 1
+            if vdf.what_victim_believes_now == 'Came to believe that Jesus is the one true God':
+                result.gospel_profession_count += 1
+            work_days = IndicatorHistory.work_days(vdf.logbook_submitted, gospel_verification.date_of_followup)
+            result.gospel_lag_total += work_days
+            result.gospel_lag_count += 1
+            result.gospel_lag_percent_total += IndicatorsViewSet.score_lag(work_days) 
+        
     
     def getVictimDetail(self, start_date, end_date, project_code, country_id, detail_data):
         victims = IntercepteeCommon.objects.filter(
@@ -1053,6 +1076,46 @@ class IndicatorsViewSet(viewsets.ViewSet):
             detail_data['text'].append('Average SF collection lag time = ' + str(math.floor(total_work_days/lag_count + 0.5)))
             detail_data['text'].append('Average SF collection lag score = ' + str(math.floor(lag_total_score/lag_count + 0.5)))
     
+    def getGospelDetail(self, start_date, end_date, project_code, country_id, detail_data):
+        irfs = self.getIrfDetailList(start_date, end_date, project_code, country_id).order_by('irf_number')
+        table_data = {
+            'labels': ['VDF Number', 'Date Verified', 'Verified Profession', 'Lag Time'],
+            'rows': []
+            }
+        for irf in irfs:
+            form = Form.current_form('PVF', irf.station.id)
+            if form is None:
+                return
+    
+            match_pattern = irf.irf_number + "[A-Z]{1,2}$"
+            vdfs = form.storage.get_form_storage_class().objects.filter(vdf_number__startswith=irf.irf_number)
+            for vdf in vdfs:
+                match = re.match(match_pattern, vdf.vdf_number)
+                if match is None:
+                    continue
+                
+                gospel_verifications = GospelVerification.objects.filter(vdf=vdf)
+                for gospel_verification in gospel_verifications:
+                    row = []
+                    row.append({'value':vdf.vdf_number})
+                    row.append({'value':gospel_verification.date_of_followup})
+                    if gospel_verification.date_of_followup is not None:
+                        if vdf.what_victim_believes_now == 'Came to believe that Jesus is the one true God':
+                            row.append({'value':'Yes'})
+                        else:
+                            row.append({'value':'No'})
+                        work_days = IndicatorHistory.work_days(vdf.logbook_submitted, gospel_verification.date_of_followup)
+                        row.append({'value':work_days})
+                    else:
+                        row.append({'value':"N/A"})
+                        row.append({'value':"N/A"})
+                    
+                    table_data['rows'].append(row)
+        
+        print(table_data)
+        detail_data['table_data'] = table_data
+        
+    
     def collection_details(self, request):
         start_date = request.GET['start_date']
         end_date = request.GET['end_date']
@@ -1098,6 +1161,8 @@ class IndicatorsViewSet(viewsets.ViewSet):
             'S Photos %':self.getSuspectDetail,
             'IRF Suspect SF %':self.getIntercepteeDetail,
             'PVF %':self.getIntercepteeDetail,
+            'Gospel Verifications #':self.getGospelDetail,
+            'Gospel Verification Lag Time':self.getGospelDetail,
             };
         
         if type in function_dict and function_dict[type] is not None:
