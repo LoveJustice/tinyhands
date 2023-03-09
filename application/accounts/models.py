@@ -92,6 +92,8 @@ class Account(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
 
     user_designation = models.ForeignKey(DefaultPermissionsSet, related_name='accounts', on_delete=models.CASCADE, null=True)
+    role = models.CharField(max_length=127, blank=True)
+    country_name = models.CharField(max_length=127, blank=True)
 
     permission_irf_view = models.BooleanField(default=False)
     permission_irf_add = models.BooleanField(default=False)
