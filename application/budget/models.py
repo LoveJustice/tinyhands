@@ -198,6 +198,8 @@ class BorderStationBudgetCalculation(models.Model):
         items = self.otherbudgetitemcost_set.filter(form_section=self.MONEY_NOT_SPENT, deduct='Yes', work_project=project).exclude(cost__isnull=True)
         return sum(item.cost for item in items)
     
+    past_sent_approved = models.CharField(max_length=127, blank=True)
+    
     def past_month_sent_total(self, project):
         return self.other_project_items_total(self.PAST_MONTH_SENT, project)
     
