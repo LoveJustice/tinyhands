@@ -355,6 +355,7 @@ class PersonSerializer(serializers.ModelSerializer):
             'form_type',
             'form_number',
             'station_id',
+            'master_person_id',
             'master_set_by',
             'master_set_date',
             'master_set_notes',
@@ -367,10 +368,17 @@ class PersonSerializer(serializers.ModelSerializer):
     form_id = serializers.CharField(source='get_form_id', read_only=True)
     master_set_by = serializers.SerializerMethodField(read_only=True)
     personidentification_set = PersonIdentificationSerializer(many=True)
+    master_person_id = serializers.SerializerMethodField(read_only=True)
         
     def get_master_set_by(self, obj):
         if obj.master_set_by is not None:
             return obj.master_set_by.get_full_name()
+        else:
+            return None
+        
+    def get_master_person_id(self, obj):
+        if obj.master_person is not None:
+            return obj.master_person.id
         else:
             return None
 
