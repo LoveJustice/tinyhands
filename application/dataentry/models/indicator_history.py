@@ -9,6 +9,7 @@ from django.contrib.postgres.fields import JSONField
 
 from .border_station import BorderStation
 from .country import Country
+from .holiday import Holiday
 
 from dataentry.models import BorderStation, Form, FormCategory, IntercepteeCommon, IrfCommon, IrfVerification
 
@@ -19,7 +20,7 @@ class IndicatorHistory(models.Model):
     indicators = JSONField()
     
     @staticmethod
-    def work_days (start_date, end_date):
+    def work_days (start_date, end_date, country):
         days_offset = [
                 [0,1,2,3,4,4,4],
                 [0,1,2,3,3,3,4],
@@ -37,6 +38,11 @@ class IndicatorHistory(models.Model):
         weeks = int(days/7)
         partial = days - weeks * 7
         work_days = weeks * 5 + days_offset[start_date.weekday()][partial]
+        holidays = Holiday.objects.filter(country=country, holiday__gte=start_date, holiday__lte=end_date)
+        for holiday in holidays:
+            # Only count Monday through Friday
+            if holiday.holiday.weekday() < 5:
+                work_days -= 1
         
         return work_days
     
@@ -107,7 +113,7 @@ class IndicatorHistory(models.Model):
                 initial_backlog += 1
             elif IndicatorHistory.date_in_range(initial_date, start_date, end_date) and irf.status != 'approved':
                 initial_lag_count += 1
-                initial_lag_time += IndicatorHistory.work_days(irf.logbook_submitted, initial_date)
+                initial_lag_time += IndicatorHistory.work_days(irf.logbook_submitted, initial_date, irf.station.operating_country)
                 initial_victim_count += IntercepteeCommon.objects.filter(interception_record=irf, person__role='PVOT').count()
                 
             if tie_date is None:
@@ -121,7 +127,7 @@ class IndicatorHistory(models.Model):
             elif IndicatorHistory.date_in_range(tie_date, start_date, end_date):
                 # tie break has been completed within the time range - compute the lag
                 tie_lag_count += 1
-                tie_lag_time += IndicatorHistory.work_days(initial_date, tie_date)
+                tie_lag_time += IndicatorHistory.work_days(initial_date, tie_date, irf.station.operating_country)
                 tie_victim_count += IntercepteeCommon.objects.filter(interception_record=irf, person__role='PVOT').count()
         
         IndicatorHistory.add_result(results, 'v1TotalLag', initial_lag_time)
@@ -298,7 +304,7 @@ class IndicatorHistory(models.Model):
         for irf in query_set:
             if IndicatorHistory.date_in_range(irf.logbook_submitted, None, None):
                 lag_count += 1
-                lag_time += IndicatorHistory.work_days(irf.logbook_submitted, irf.logbook_first_verification_date)
+                lag_time += IndicatorHistory.work_days(irf.logbook_submitted, irf.logbook_first_verification_date, irf.station.operating_country)
                 victim_count += IntercepteeCommon.objects.filter(interception_record=irf, person__role='PVOT').count()
         
         IndicatorHistory.add_result(results, 'v1TotalLag', lag_time)
@@ -319,7 +325,7 @@ class IndicatorHistory(models.Model):
         for irf in query_set:
             if IndicatorHistory.date_in_range(irf.logbook_first_verification_date, None, None):
                 lag_count += 1
-                lag_time += IndicatorHistory.work_days(irf.logbook_first_verification_date, irf.verified_date)
+                lag_time += IndicatorHistory.work_days(irf.logbook_first_verification_date, irf.verified_date, irf.station.operating_country)
                 victim_count += IntercepteeCommon.objects.filter(interception_record=irf, person__role='PVOT').count()
                 if irf.logbook_first_verification != irf.verified_evidence_categorization:
                     change_count += 1
@@ -350,7 +356,7 @@ class IndicatorHistory(models.Model):
             else:
                 start_date = entry.date_time_entered_into_system.date()
             
-            total_lag += IndicatorHistory.work_days(start_date, entry.logbook_submitted)
+            total_lag += IndicatorHistory.work_days(start_date, entry.logbook_submitted, entry.station.operating_country)
             storage = IndicatorHistory.get_card_storage(storage_cache, form_type, 'Attachments', entry.station)
             if storage is not None:
                 orig_attachments = storage.get_form_storage_class().objects.filter(Q((storage.foreign_key_field_parent,entry)) & Q(('option','Original Form')))
@@ -423,7 +429,7 @@ class IndicatorHistory(models.Model):
                 else:
                     base_date = irf.date_time_entered_into_system.astimezone(time_zone).date()
                 
-                photo_lag_total += IndicatorHistory.work_days(base_date, local_date)
+                photo_lag_total += IndicatorHistory.work_days(base_date, local_date, irf.station.operating_country)
             
         IndicatorHistory.add_result(results, 'photosCount', photos_uploaded)
         IndicatorHistory.add_result(results, 'photosTotalLag', photo_lag_total)
