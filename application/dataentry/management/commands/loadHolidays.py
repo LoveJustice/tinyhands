@@ -22,3 +22,5 @@ class Command(BaseCommand):
                     holiday.name = row['Public Holidays']
                     holiday.holiday = row['Date (YYYY-MM-DD)']
                     holiday.save()
+                else:
+                    print ('Duplicate of existing date for', country.name,'on ', row['Date (YYYY-MM-DD)'])
