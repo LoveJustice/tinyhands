@@ -393,7 +393,7 @@ class IndicatorsViewSet(viewsets.ViewSet):
                 if irf.logbook_incomplete_questions.lower() == 'no':
                     result.irf_compliance_count += 1
                 if irf.logbook_received is not None:
-                    work_days = IndicatorHistory.work_days(irf.date_of_interception, irf.logbook_received)
+                    work_days = IndicatorHistory.work_days(irf.date_of_interception, irf.logbook_received, irf.station.operating_country)
                     result.irf_lag_count += 1
                     result.irf_lag_total += work_days
                     result.irf_lag_percent_total += IndicatorsViewSet.score_lag(work_days)
@@ -494,7 +494,7 @@ class IndicatorsViewSet(viewsets.ViewSet):
             if cif.logbook_incomplete_questions.lower() == 'no':
                 result.cif_compliance_count += 1
             if cif.interview_date is not None and cif.logbook_received is not None:
-                work_days = IndicatorHistory.work_days(cif.interview_date, cif.logbook_received)
+                work_days = IndicatorHistory.work_days(cif.interview_date, cif.logbook_received, cif.station.operating_country)
                 result.cif_lag_count += 1
                 result.cif_lag_total += work_days
                 result.cif_lag_percent_total += IndicatorsViewSet.score_lag(work_days)
@@ -589,7 +589,7 @@ class IndicatorsViewSet(viewsets.ViewSet):
             if vdf.logbook_incomplete_questions.lower() == 'no':
                 result.vdf_compliance_count += 1
             if vdf.interview_date is not None and vdf.logbook_received is not None:
-                work_days = IndicatorHistory.work_days(vdf.interview_date, vdf.logbook_received)
+                work_days = IndicatorHistory.work_days(vdf.interview_date, vdf.logbook_received, vdf.station.operating_country)
                 result.vdf_lag_count += 1
                 result.vdf_lag_total += work_days
                 result.vdf_lag_percent_total += IndicatorsViewSet.score_lag(work_days)
@@ -612,7 +612,7 @@ class IndicatorsViewSet(viewsets.ViewSet):
             if vdf.logbook_incomplete_questions.lower() == 'no':
                 result.vdf_compliance_count += 1
             if vdf.interview_date is not None and vdf.logbook_received is not None:
-                work_days = IndicatorHistory.work_days(vdf.interview_date, vdf.logbook_received)
+                work_days = IndicatorHistory.work_days(vdf.interview_date, vdf.logbook_received, vdf.station.operating_country)
                 result.vdf_lag_count += 1
                 result.vdf_lag_total += work_days
                 result.vdf_lag_percent_total += IndicatorsViewSet.score_lag(work_days)
@@ -640,7 +640,7 @@ class IndicatorsViewSet(viewsets.ViewSet):
                 result.sf_compliance_count += 1
             infos = SuspectInformation.objects.filter(suspect=sf).order_by('id')
             if len(infos) > 0 and infos[0].interview_date is not None and sf.logbook_received is not None:
-                work_days = IndicatorHistory.work_days(infos[0].interview_date, sf.logbook_received)
+                work_days = IndicatorHistory.work_days(infos[0].interview_date, sf.logbook_received, sf.station.operating_country)
                 result.sf_lag_count += 1
                 result.sf_lag_total += work_days
                 result.sf_lag_percent_total += IndicatorsViewSet.score_lag(work_days)
@@ -663,7 +663,7 @@ class IndicatorsViewSet(viewsets.ViewSet):
                 result.lf_compliance_count += 1
             infos = LocationInformation.objects.filter(lf=lf).order_by('id')
             if len(infos) > 0 and infos[0].interview_date is not None and lf.logbook_received is not None:
-                work_days = IndicatorHistory.work_days(infos[0].interview_date, lf.logbook_received)
+                work_days = IndicatorHistory.work_days(infos[0].interview_date, lf.logbook_received, lf.station.operating_country)
                 result.lf_lag_count += 1
                 result.lf_lag_total += work_days
                 result.lf_lag_percent_total += IndicatorsViewSet.score_lag(work_days)
@@ -675,7 +675,7 @@ class IndicatorsViewSet(viewsets.ViewSet):
             result.gospel_verification_count += 1
             if vdf.what_victim_believes_now == 'Came to believe that Jesus is the one true God':
                 result.gospel_profession_count += 1
-            work_days = IndicatorHistory.work_days(vdf.logbook_submitted, gospel_verification.date_of_followup)
+            work_days = IndicatorHistory.work_days(vdf.logbook_submitted, gospel_verification.date_of_followup, gospel_verification.station.operating_country)
             result.gospel_lag_total += work_days
             result.gospel_lag_count += 1
             result.gospel_lag_percent_total += IndicatorsViewSet.score_lag(work_days) 
@@ -794,7 +794,7 @@ class IndicatorsViewSet(viewsets.ViewSet):
                 row.append({'value': 'Yes'})
             else:
                 row.append({'value': 'No'})
-            work_days = IndicatorHistory.work_days(irf.date_of_interception, irf.logbook_received)
+            work_days = IndicatorHistory.work_days(irf.date_of_interception, irf.logbook_received, irf.station.operating_country)
             total_work_days += work_days
             row.append({'value': work_days})
             lag_score = self.score_lag(work_days)
@@ -886,7 +886,7 @@ class IndicatorsViewSet(viewsets.ViewSet):
                 else:
                     row.append({'value': 'No'})
                 if cif.interview_date is not None and cif.logbook_received is not None:
-                    work_days = IndicatorHistory.work_days(cif.interview_date, cif.logbook_received)
+                    work_days = IndicatorHistory.work_days(cif.interview_date, cif.logbook_received, cif.station.operating_country)
                     total_work_days += work_days
                     lag_total_score += self.score_lag(work_days)
                     lag_count += 1
@@ -933,7 +933,7 @@ class IndicatorsViewSet(viewsets.ViewSet):
                 else:
                     row.append({'value': 'No'})
                 if vdf.interview_date is not None and vdf.logbook_received is not None:
-                    work_days = IndicatorHistory.work_days(vdf.interview_date, vdf.logbook_received)
+                    work_days = IndicatorHistory.work_days(vdf.interview_date, vdf.logbook_received, vdf.station.operating_country)
                     total_work_days += work_days
                     lag_total_score += self.score_lag(work_days)
                     lag_count += 1
@@ -974,7 +974,7 @@ class IndicatorsViewSet(viewsets.ViewSet):
                 else:
                     row.append({'value': 'No'})
                 if pvf.interview_date is not None and pvf.logbook_received is not None:
-                    work_days = IndicatorHistory.work_days(pvf.interview_date, pvf.logbook_received)
+                    work_days = IndicatorHistory.work_days(pvf.interview_date, pvf.logbook_received, pvf.station.operating_country)
                     total_work_days += work_days
                     lag_total_score += self.score_lag(work_days)
                     lag_count += 1
@@ -1016,7 +1016,7 @@ class IndicatorsViewSet(viewsets.ViewSet):
                     row.append({'value': 'No'})
                 infos = SuspectInformation.objects.filter(suspect=sf).order_by('id')
                 if len(infos) > 0 and infos[0].interview_date is not None and sf.logbook_received is not None:
-                    work_days = IndicatorHistory.work_days(infos[0].interview_date, sf.logbook_received)
+                    work_days = IndicatorHistory.work_days(infos[0].interview_date, sf.logbook_received, sf.station.operating_country)
                     total_work_days += work_days
                     lag_total_score += self.score_lag(work_days)
                     lag_count += 1
@@ -1058,7 +1058,7 @@ class IndicatorsViewSet(viewsets.ViewSet):
                     row.append({'value': 'No'})
                 infos = LocationInformation.objects.filter(lf=lf).order_by('id')
                 if len(infos) > 0 and infos[0].interview_date is not None and lf.logbook_received is not None:
-                    work_days = IndicatorHistory.work_days(infos[0].interview_date, lf.logbook_received)
+                    work_days = IndicatorHistory.work_days(infos[0].interview_date, lf.logbook_received, lf.station.operating_country)
                     total_work_days += work_days
                     lag_total_score += self.score_lag(work_days)
                     lag_count += 1
@@ -1104,7 +1104,7 @@ class IndicatorsViewSet(viewsets.ViewSet):
                             row.append({'value':'Yes'})
                         else:
                             row.append({'value':'No'})
-                        work_days = IndicatorHistory.work_days(vdf.logbook_submitted, gospel_verification.date_of_followup)
+                        work_days = IndicatorHistory.work_days(vdf.logbook_submitted, gospel_verification.date_of_followup, gospel_verification.station.operating_country)
                         row.append({'value':work_days})
                     else:
                         row.append({'value':"N/A"})

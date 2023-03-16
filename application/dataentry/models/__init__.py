@@ -37,3 +37,4 @@ from .gospel import Gospel
 from .incident import Incident
 from .suspect import Suspect, SuspectInformation, SuspectAssociation, SuspectEvaluation, SuspectLegal, SuspectAttachment
 from .location import LocationForm, LocationInformation, LocationAssociation, LocationEvaluation, LocationAttachment
+from .holiday import Holiday
