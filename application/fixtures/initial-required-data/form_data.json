@@ -964,7 +964,7 @@
       "start_date": "2019-07-29T04:00:00Z",
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "irfSierraLeone",
-      "version": null,
+      "version": "V2022.8",
       "stations": []
    }
 },
@@ -2554,15 +2554,6 @@
       "form_tag": "irfResourcesBurkinaFaso",
       "category_type": 1,
       "description": "Resources/Safety for IRF Burkina Faso"
-   }
-},
-{
-   "model": "dataentry.category",
-   "pk": 226,
-   "fields": {
-      "form_tag": "irfControlLiberia",
-      "category_type": 1,
-      "description": "Control for IRF Liberia & Sierra Leone"
    }
 },
 {
@@ -6499,7 +6490,7 @@
    "model": "dataentry.formcategory",
    "fields": {
       "form": 28,
-      "category": 184,
+      "category": 286,
       "name": "People",
       "order": 7,
       "form_category_question_config": null,
@@ -12877,7 +12868,7 @@
    "model": "dataentry.formcategory",
    "fields": {
       "form": 28,
-      "category": 226,
+      "category": 260,
       "name": "Control",
       "order": 5,
       "form_category_question_config": null,
@@ -35689,15 +35680,6 @@
 {
    "model": "dataentry.questionlayout",
    "fields": {
-      "question": 246,
-      "category": 157,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
       "question": 280,
       "category": 157,
       "weight": 0,
@@ -40580,249 +40562,6 @@
 {
    "model": "dataentry.questionlayout",
    "fields": {
-      "question": 10,
-      "category": 226,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 17,
-      "category": 226,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 23,
-      "category": 226,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 24,
-      "category": 226,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 25,
-      "category": 226,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 26,
-      "category": 226,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 55,
-      "category": 226,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 57,
-      "category": 226,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 79,
-      "category": 226,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 216,
-      "category": 226,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 247,
-      "category": 226,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 501,
-      "category": 226,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 603,
-      "category": 226,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 712,
-      "category": 226,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 931,
-      "category": 226,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 932,
-      "category": 226,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 933,
-      "category": 226,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 934,
-      "category": 226,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 935,
-      "category": 226,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 936,
-      "category": 226,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 937,
-      "category": 226,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 938,
-      "category": 226,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 939,
-      "category": 226,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 143,
-      "category": 226,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 234,
-      "category": 226,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 1068,
-      "category": 226,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 1076,
-      "category": 226,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
       "question": 1077,
       "category": 194,
       "weight": 0,
@@ -44011,6 +43750,33 @@
    "fields": {
       "question": 1070,
       "category": 178,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1073,
+      "category": 157,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1083,
+      "category": 157,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1084,
+      "category": 157,
       "weight": 0,
       "form_config": null
    }
@@ -49755,7 +49521,6 @@
          1,
          8,
          26,
-         28,
          35,
          46,
          54
@@ -54943,7 +54708,7 @@
    "model": "dataentry.exportimportcard",
    "fields": {
       "export_import": 25,
-      "category": 184,
+      "category": 286,
       "prefix": "Victim ",
       "max_instances": 1,
       "index_field_name": null
@@ -54953,7 +54718,7 @@
    "model": "dataentry.exportimportcard",
    "fields": {
       "export_import": 25,
-      "category": 184,
+      "category": 286,
       "prefix": "Trafficker %d ",
       "max_instances": 5,
       "index_field_name": null
