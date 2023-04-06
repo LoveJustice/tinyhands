@@ -1,5 +1,5 @@
-FROM tusoftwarestudio/dreamsuite:latest
-MAINTAINER benaduggan
+FROM amunn/searchlight:latest
+MAINTAINER amunn33
 
 # Copy in cron configuration
 COPY tinyhands-cron /etc/cron.d/
