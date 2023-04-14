@@ -228,7 +228,7 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
             station__operating_country__id=country_id,
             station__features__contains='hasProjectStats',
             year_month__gte=start_year_month,
-            year_month__lte=end_year_month).order_by('station__project_category__sort_order','station__station_name', '-year_month')
+            year_month__lte=end_year_month).order_by('station__project_category__sort_order','station__station_name', 'station__station_code', '-year_month')
         
         dash_station = None
         categories = []
