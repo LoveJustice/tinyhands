@@ -276,6 +276,18 @@
    }
 },
 {
+   "model": "dataentry.form",
+   "fields": {
+      "form_type": 9,
+      "storage": "VdfCommon2",
+      "start_date": "2022-07-01T04:00:00Z",
+      "end_date": "2118-12-31T00:00:00Z",
+      "form_name": "pvfSierraLeone",
+      "version": "V2022.6",
+      "stations": []
+   }
+},
+{
    "model": "dataentry.category",
    "fields": {
       "form_tag": "pvfTop",
@@ -2658,6 +2670,116 @@
    "model": "dataentry.formcategory",
    "fields": {
       "form": "pvfZimbabwe",
+      "category": "pvfCompliance",
+      "name": "Compliance",
+      "order": 10,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "pvfSierraLeone",
+      "category": "pvfTop",
+      "name": "Top",
+      "order": 1,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "pvfSierraLeone",
+      "category": "pvfPvFamily",
+      "name": "PV & Family",
+      "order": 2,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "pvfSierraLeone",
+      "category": "pvfRecruitment",
+      "name": "Recruitment",
+      "order": 3,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "pvfSierraLeone",
+      "category": "pvTravelExploitation",
+      "name": "Travel/Exploitation",
+      "order": 4,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "pvfSierraLeone",
+      "category": "pvfHomeAssessment",
+      "name": "Home Situation Assessment",
+      "order": 5,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "pvfSierraLeone",
+      "category": "pvfAwareness",
+      "name": "Awareness",
+      "order": 6,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "pvfSierraLeone",
+      "category": "pvfRelease",
+      "name": "Release Information",
+      "order": 7,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "pvfSierraLeone",
+      "category": "pvfStaffAssessment",
+      "name": "Staff Assessment",
+      "order": 8,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "pvfSierraLeone",
+      "category": "pvfAttachment",
+      "name": "Attachments",
+      "order": 9,
+      "form_category_question_config": null,
+      "storage": "VdfAttachmentCommon2"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "pvfSierraLeone",
       "category": "pvfCompliance",
       "name": "Compliance",
       "order": 10,
