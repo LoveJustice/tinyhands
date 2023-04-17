@@ -20,7 +20,7 @@ jobs:
       - run: mkdir -p ~/.ssh/
       - run: echo "$SL_PRIVATE_KEY" > ../private.key
       - run: sudo chmod 600 ../private.key
-      - run: echo "$SL_HOST" > !/.ssh/known_hosts
+      - run: echo "$SL_HOST" > ~/.ssh/known_hosts
       - run: docker push tusoftwarestudio/dreamsuite-nginx:${{ github.sha }}
       - run: docker push tusoftwarestudio/dreamsuite:${{ github.sha }}
       - run: echo ${{ github.sha }} > /dreamsuite_tag
