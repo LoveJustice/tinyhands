@@ -2,9 +2,9 @@ name: tinyhands-default-build-test
 run-name: ${{ github.actor }} tinyhands build & test
 on: [push]
 env: 
-   SL_PRIVATE_KEY: ${{secrets.SL_STAGING_SSH_KEY}}: 
-   SL_HOST: ${{secrets.SL_STAGING_SSH_HOST}}: 
-   SL_USER: ${{secrets.SL_STAGING_SSH_USER}}: 
+   SL_PRIVATE_KEY: ${{secrets.SL_STAGING_SSH_KEY}}
+   SL_HOST: ${{secrets.SL_STAGING_SSH_HOST}}
+   SL_USER: ${{secrets.SL_STAGING_SSH_USER}}
 jobs:
   build-tinyhands:
     runs-on: ubuntu-latest
