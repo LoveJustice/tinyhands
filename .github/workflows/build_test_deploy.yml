@@ -22,11 +22,6 @@ jobs:
 	    echo "$SL_PRIVATE_KEY" > ../private.key
 	    sudo chmod 600 ../private.key
 	    echo "$SL_HOST" > !/.ssh/known_hosts
-	    docker push tusoftwarestudio/dreamsuite-nginx:${{ github.sha }}
-	    docker push tusoftwarestudio/dreamsuite:${{ github.sha }}
-	    echo ${{ github.sha }} > /dreamsuite_tag
-	    scp -i ../private.key /dreamsuite_tag $SL_USER@$SL_HOST:/home/thi/tinyhands/dreamsuite_tag
-	    ssh -i ../private.key /dreamsuite_tag $SL_USER@$SL_HOST 'tinyhands/run.sh'
         shell: bash
 	env: 
 	   SL_PRIVATE_KEY: ${{secrets.SL_STAGING_SSH_KEY}}: 
