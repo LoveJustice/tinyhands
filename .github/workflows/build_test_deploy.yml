@@ -34,5 +34,5 @@ jobs:
       SL_HOST: ${{secrets.SL_STAGING_SSH_HOST}}
       SL_USER: ${{secrets.SL_STAGING_SSH_USER}}
       SL_DOCKER_USER: ${{secrets.SL_DOCKER_USER}}
-      SL_DOCKER_PASSWORD: ${{secrets.SL_PASSWORD}}
+      SL_DOCKER_PASSWORD: ${{secrets.SL_DOCKER_PASSWORD}}
 
