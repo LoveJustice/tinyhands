@@ -28,8 +28,8 @@ jobs:
       - run: docker push amunn/searchlight-nginx:${{ github.sha }}
       - run: docker push amunn/searchlight:${{ github.sha }}
       - run: echo ${{ github.sha }} > ../dreamsuite_tag
-      - run: scp -i $SL_PRIVATE_KEY /dreamsuite_tag $SL_USER@$SL_HOST:/home/thi/tinyhands/dreamsuite_tag
-      - run: ssh -i $SL_PRIVATE_KEY $SL_USER@$SL_HOST 'tinyhands/run.sh'
+      - run: scp -i ../private.key /dreamsuite_tag $SL_USER@$SL_HOST:/home/thi/tinyhands/dreamsuite_tag
+      - run: ssh -i ../private.key $SL_USER@$SL_HOST 'tinyhands/run.sh'
     env: 
       SL_PRIVATE_KEY: ${{secrets.SL_STAGING_SSH_KEY}}
       SL_HOST: ${{secrets.SL_STAGING_SSH_HOST}}
