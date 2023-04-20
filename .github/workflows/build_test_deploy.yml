@@ -15,7 +15,11 @@ jobs:
   deploy-tinyhands:
     runs-on: ubuntu-latest
     needs: [build-test-tinyhands]
-    if: github.ref == 'refs/heads/feature/github-action'
+    on:
+      push:
+         branches:
+            - master
+            - develop
     steps:
       - uses: actions/checkout@v3
       - run: mkdir -p ~/.ssh/
