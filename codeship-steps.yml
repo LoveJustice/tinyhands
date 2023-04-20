@@ -4,7 +4,7 @@
 
 - name: push_dreamsuite
   tag: ^(master|develop|ops-man-nginx-routes)
-  image_name: tusoftwarestudio/dreamsuite
+  image_name: amunn/searchlight
   image_tag: "{{ .CommitID }}"
   service: web
   type: push
@@ -13,7 +13,7 @@
 
 - name: push_nginx
   tag: ^(master|develop|ops-man-nginx-routes)
-  image_name: tusoftwarestudio/dreamsuite-nginx
+  image_name: amunn/searchlight-nginx
   image_tag: "{{ .CommitID }}"
   service: nginx
   type: push
