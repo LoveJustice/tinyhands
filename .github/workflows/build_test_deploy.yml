@@ -53,5 +53,5 @@ jobs:
       - run: scp ../dreamsuite_tag $SL_USER@$SL_HOST:/home/$SL_USER/tinyhands/dreamsuite_tag
       - run: ssh $SL_USER@$SL_HOST 'tinyhands/run.sh'
     env: 
-      SL_HOST: ${{secrets.SL_STAGING_SSH_HOST}}
-      SL_USER: ${{secrets.SL_STAGING_SSH_USER}}
+      SL_HOST: ${{secrets.SL_PROD_SSH_HOST}}
+      SL_USER: ${{secrets.SL_PROD_SSH_USER}}
