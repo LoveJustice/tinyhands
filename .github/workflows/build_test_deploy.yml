@@ -23,7 +23,7 @@ jobs:
     env: 
       SL_DOCKER_USER: ${{secrets.SL_DOCKER_USER}}
       SL_DOCKER_PASSWORD: ${{secrets.SL_DOCKER_PASSWORD}}
-  deplay-staging-tinyhands:
+  deploy-staging-tinyhands:
     runs-on: ubuntu-latest
     needs: [push-image-tinyhands]
     if: github.ref == 'refs/heads/develop'
@@ -39,7 +39,7 @@ jobs:
     env: 
       SL_HOST: ${{secrets.SL_STAGING_SSH_HOST}}
       SL_USER: ${{secrets.SL_STAGING_SSH_USER}}
-  deplay-prod-tinyhands:
+  deploy-prod-tinyhands:
     runs-on: ubuntu-latest
     needs: [push-image-tinyhands]
     if: github.ref == 'refs/heads/master'
