@@ -23,8 +23,8 @@ jobs:
       - name: Install SSH key
         uses: shimataro/ssh-key-action@v2
         with: 
-           key: '$SL_PRIVATE_KEY'
-	   known_hosts: '$SL_KNOWN_HOSTS'
+           key: ${{secrets.SL_STAGING_SSH_KEY}}
+	   known_hosts: ${{secrets.SL_STAGING_KNOWN_HOSTS}}
       - run: scp ../dreamsuite_tag $SL_USER@$SL_HOST:/home/$SL_USER/tinyhands/dreamsuite_tag
       - run: ssh $SL_USER@$SL_HOST 'tinyhands/run.sh'
     env: 
