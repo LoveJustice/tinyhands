@@ -1,0 +1,57 @@
+name: tinyhands-default-build-test
+run-name: ${{ github.actor }} tinyhands build & test
+on:
+   push:
+jobs:
+  build-test-tinyhands:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: ./setup.sh
+      - run: docker-compose run --rm web ./manage.py test
+  push-image-tinyhands:
+    runs-on: ubuntu-latest
+    needs: [build-test-tinyhands]
+    if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop'
+    steps:
+      - uses: actions/checkout@v3
+      - run: mkdir -p ~/.ssh/
+      - run: ./build-containers.sh
+      - run: docker login --username $SL_DOCKER_USER --password $SL_DOCKER_PASSWORD
+      - run: docker push amunn/searchlight-nginx:${{ github.sha }}
+      - run: docker push amunn/searchlight:${{ github.sha }}
+    env: 
+      SL_DOCKER_USER: ${{secrets.SL_DOCKER_USER}}
+      SL_DOCKER_PASSWORD: ${{secrets.SL_DOCKER_PASSWORD}}
+  deploy-staging-tinyhands:
+    runs-on: ubuntu-latest
+    needs: [push-image-tinyhands]
+    if: github.ref == 'refs/heads/develop'
+    steps:
+      - run: echo ${{ github.sha }} > ../dreamsuite_tag
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v2
+        with: 
+           key: ${{ secrets.SL_STAGING_SSH_KEY }}
+           known_hosts: ${{ secrets.SL_STAGING_KNOWN_HOSTS }}
+      - run: scp ../dreamsuite_tag $SL_USER@$SL_HOST:/home/$SL_USER/tinyhands/dreamsuite_tag
+      - run: ssh $SL_USER@$SL_HOST 'tinyhands/run.sh'
+    env: 
+      SL_HOST: ${{secrets.SL_STAGING_SSH_HOST}}
+      SL_USER: ${{secrets.SL_STAGING_SSH_USER}}
+  deploy-prod-tinyhands:
+    runs-on: ubuntu-latest
+    needs: [push-image-tinyhands]
+    if: github.ref == 'refs/heads/master'
+    steps:
+      - run: echo ${{ github.sha }} > ../dreamsuite_tag
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v2
+        with: 
+           key: ${{ secrets.SL_PROD_SSH_KEY }}
+           known_hosts: ${{ secrets.SL_PROD_KNOWN_HOSTS }}
+      - run: scp ../dreamsuite_tag $SL_USER@$SL_HOST:/home/$SL_USER/tinyhands/dreamsuite_tag
+      - run: ssh $SL_USER@$SL_HOST 'tinyhands/run.sh'
+    env: 
+      SL_HOST: ${{secrets.SL_PROD_SSH_HOST}}
+      SL_USER: ${{secrets.SL_PROD_SSH_USER}}

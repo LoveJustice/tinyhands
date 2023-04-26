@@ -1,5 +1,6 @@
 import logging
 import datetime
+from dateutil.relativedelta import relativedelta
 from decimal import Decimal
 
 from rest_framework import filters as fs
@@ -13,7 +14,7 @@ from dataentry.models import StationStatistics
 from dataentry.serializers import StationStatisticsSerializer, LocationStaffSerializer, LocationStatisticsSerializer, CountryExchangeSerializer
 from rest_api.authentication import HasPostPermission, HasPutPermission, HasDeletePermission
 
-from dataentry.models import BorderStation, CifCommon, Country, CountryExchange, IrfCommon, LegalCaseSuspect, LocationStaff, LocationStatistics, StationStatistics, MonthlyReport, VdfCommon
+from dataentry.models import BorderStation, CifCommon, Country, CountryExchange, Gospel, GospelVerification, IntercepteeCommon, IrfCommon, LegalCaseSuspect, LocationStaff, LocationStatistics, StationStatistics, MonthlyReport, VdfCommon
 from static_border_stations.models import Location, Staff
 
 logger = logging.getLogger(__name__)
@@ -227,7 +228,7 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
             station__operating_country__id=country_id,
             station__features__contains='hasProjectStats',
             year_month__gte=start_year_month,
-            year_month__lte=end_year_month).order_by('station__project_category__sort_order','station__station_name', '-year_month')
+            year_month__lte=end_year_month).order_by('station__project_category__sort_order','station__station_name', 'station__station_code', '-year_month')
         
         dash_station = None
         categories = []
@@ -459,7 +460,85 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
         location_statistics.save()
         serializer = LocationStatisticsSerializer(location_statistics, context={'request': request})
         return Response(serializer.data)
+    
+    def get_intercept_detail(self, project, start_date, end_date, detail_data):
+        table_data = {
+            'labels': ['IRF Number', 'Date Verified', '#PV', '#Suspects', 'Evidence Category'],
+            'rows': []
+            }
         
-        
+        irfs = IrfCommon.objects.filter(station=project, verified_date__gte=start_date, verified_date__lt=end_date).order_by('irf_number')
+        for irf in irfs:
+            row = []
+            row.append({'value':irf.irf_number})
+            row.append({'value':irf.verified_date})
+            pv_count = 0
+            suspect_count = 0
+            interceptees = IntercepteeCommon.objects.filter(interception_record=irf)
+            for interceptee in interceptees:
+                if interceptee.person.role == 'PVOT':
+                    pv_count += 1
+                elif interceptee.person.role == 'Suspect':
+                    suspect_count += 1
+            row.append({'value':pv_count})
+            row.append({'value':suspect_count})
+            row.append({'value':irf.verified_evidence_categorization})
+            table_data['rows'].append(row)
             
+        detail_data['table_data'] = table_data
+    
+    def get_gospel_detail(self, project, start_date, end_date, detail_data):
+        table_data = {
+            'labels': ['VDF Number', 'Date Verified', 'Verified Profession'],
+            'rows': []
+            }
+        
+        mini_form = Gospel.objects.filter(station=project,
+                    date_time_entered_into_system__gte=start_date,
+                    date_time_entered_into_system__lt=end_date).count()
+        detail_data['text'].append('Gospel mini-form # ' + str(mini_form))
+        detail_data['text'].append('')
+        detail_data['text'].append('Gospel Verifications:')
+        
+        verifications = GospelVerification.objects.filter(vdf__station=project,
+                                                            form_changes = 'No',
+                                                            date_of_followup__gte=start_date,
+                                                            date_of_followup__lt=end_date)
+        for verification in verifications:
+            row = []
+            row.append({'value':verification.vdf.vdf_number})
+            row.append({'value':verification.date_of_followup})
+            if verification.date_of_followup is not None:
+                if verification.vdf.what_victim_believes_now == 'Came to believe that Jesus is the one true God':
+                    row.append({'value':'Yes'})
+                else:
+                    row.append({'value':'No'})
+            else:
+                row.append({'value':"N/A"})
+            
+            table_data['rows'].append(row)
+            
+        detail_data['table_data'] = table_data   
+        
+    def retrieve_detail(self, request, station_id, year_month, data_type):
+        project = BorderStation.objects.get(id=station_id)
+        start_date = datetime.date(int(year_month)//100, int(year_month) % 100, 1)
+        end_date = start_date  + relativedelta(months=1)
+        detail_data = {
+            'header':"Details for " + data_type + " for project " + project.station_name,
+            'text': [],
+            'table_data': None
+            }
+        
+        function_dict = {
+            'Intercept':self.get_intercept_detail,
+            'Gospel':self.get_gospel_detail,
+            };
+        
+        if data_type in function_dict and function_dict[data_type] is not None:
+            function_dict[data_type](project, start_date, end_date, detail_data)
+        else:
+            detail_data['text'].append('No Details for type ' + data_type)
+        
+        return Response(detail_data)   
 

@@ -7,7 +7,7 @@ db:
 
 web:
   build:
-    image: tusoftwarestudio/dreamsuite
+    image: amunn/searchlight
     dockerfile_path: Dockerfile
   volumes:
     - /tmp:/log
@@ -36,7 +36,7 @@ web:
 nginx:
   build:
     context: build/nginx
-    image: tusoftwarestudio/dreamsuite-nginx
+    image: amunn/searchlight-nginx
     dockerfile_path: Dockerfile
   links:
     - web
