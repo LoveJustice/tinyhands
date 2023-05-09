@@ -147,3 +147,14 @@ class WorksOnProject(models.Model):
     
     def set_parent(self, parent):
         self.staff = parent
+
+class StaffProject(models.Model):
+    staff = models.ForeignKey(Staff)
+    border_station = models.ForeignKey(BorderStation)
+    coordinator = models.CharField(max_length=127)
+    
+    class Meta:
+       unique_together = ("staff", "border_station")
+    
+    def set_parent(self, parent):
+        self.staff = parent

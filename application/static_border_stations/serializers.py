@@ -1,15 +1,20 @@
 
 from rest_framework import serializers
-from static_border_stations.models import Staff, CommitteeMember, Location, WorksOnProject
+from static_border_stations.models import Staff, StaffProject, CommitteeMember, Location, WorksOnProject
 
+class StaffProjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StaffProject
+        fields = [field.name for field in model._meta.fields] # all the model fields
 
 class StaffSerializer(serializers.ModelSerializer):
     class Meta:
         model = Staff
         fields = [field.name for field in model._meta.fields] # all the model fields
-        fields = fields + ['works_on']
-        
+        fields = fields + ['works_on', 'projects']
+    
     works_on = serializers.SerializerMethodField(read_only=True)
+    projects = StaffProjectSerializer()
     
     def get_works_on (self, obj):
         rtn = []
