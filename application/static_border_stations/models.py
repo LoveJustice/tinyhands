@@ -1,4 +1,4 @@
-import datetime
+from datetime import date
 from django.db import models
 from dataentry.models import BorderStation
 from django.core.exceptions import ObjectDoesNotExist
@@ -29,6 +29,7 @@ class Person(models.Model):
     position = models.CharField(max_length=255, blank=True, null=True)
     receives_money_distribution_form = models.BooleanField(default=False)
     border_station = models.ForeignKey(BorderStation, null=True)
+    country = models.ForeignKey('dataentry.Country', null=True)
 
     class Meta:
         abstract = True
@@ -59,7 +60,7 @@ class Person(models.Model):
 class Staff(Person):
     class Meta:
         abstract = False
-    first_date = models.DateField(default=datetime.datetime.now)
+    first_date = models.DateField(default=date.today)
     last_date = models.DateField(null=True)
     
     general_staff = '__general_staff'
@@ -72,7 +73,7 @@ class Staff(Person):
             general = Staff()
             general.last_name = Staff.general_staff
             general.border_station = border_station
-            general.first_date = datetime.datetime.now()
+            general.first_date = date.today()
             general.last_date = general.first_date
             general.save()
         
@@ -151,7 +152,8 @@ class WorksOnProject(models.Model):
 class StaffProject(models.Model):
     staff = models.ForeignKey(Staff)
     border_station = models.ForeignKey(BorderStation)
-    coordinator = models.CharField(max_length=127)
+    coordinator = models.CharField(max_length=127, blank=True)
+    receives_money_distribution_form = models.BooleanField(default=False)
     
     class Meta:
        unique_together = ("staff", "border_station")

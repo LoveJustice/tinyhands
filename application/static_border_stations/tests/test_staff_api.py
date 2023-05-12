@@ -3,7 +3,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase, APIClient
 
 from static_border_stations.tests.factories import *
-from static_border_stations.models import WorksOnProject
+from static_border_stations.models import WorksOnProject, Staff
 
 
 class RestApiTestCase(APITestCase):
@@ -54,6 +54,8 @@ class StaffTests(RestApiTestCase):
             "first_date":"2019-03-15",
             "last_date":None,
         }
+        
+        print('test_create_Staff url', url)
 
         response = self.client.post(url, data=data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -73,6 +75,10 @@ class StaffTests(RestApiTestCase):
         usr = GenericUserWithPermissions.create([{'group':'PROJECTS', 'action':'VIEW', 'country': None, 'station': None},{'group':'PROJECTS', 'action':'EDIT', 'country': None, 'station': None}])
         self.login(usr)
         url = reverse('StaffDetail', args=[self.staff.id])
+        
+        qs = Staff.objects.all()
+        for staff in qs:
+            print('test_update_Staff staff.id', staff.id)
 
         data = {
             "email": "TEST@TEST.COM",
@@ -83,6 +89,8 @@ class StaffTests(RestApiTestCase):
             "receives_money_distribution_form": True,
             "border_station": self.staff.border_station_id,
         }
+        
+        print('test_update_Staff url', url)
 
         response = self.client.put(url, data=data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
