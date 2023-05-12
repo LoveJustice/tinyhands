@@ -1,6 +1,6 @@
 import pytz
 
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.decorators import list_route, api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -121,6 +121,21 @@ class StaffViewSet(BorderStationRestAPI):
     ordering_fields = (
         'first_name', 'last_name', )
     ordering = ('first_name',)
+    
+    def update(self, request, pk=None):
+        staff = Staff.objects.get(id=pk)
+        serializer = self.serializer_class(staff, request.data)
+        if serializer.is_valid():
+            serializer.save()
+            staff = Staff.objects.get(id=pk)
+            serializer = self.serializer_class(staff)
+            ret = serializer.data
+            rtn_status = status.HTTP_200_OK
+        else:
+            ret = {}
+            rtn_status = status.HTTP_400_BAD_REQUEST
+            
+        return Response (ret, status=rtn_status)
     
     def get_queryset(self):
         countries = UserLocationPermission.get_countries_with_permission(self.request.user.id, 'STAFF','VIEW')

@@ -37,23 +37,17 @@ class StaffSerializer(serializers.ModelSerializer):
         return rtn
     
     def to_internal_value(self, data):
-        print('Enter StaffSerializer.to_internal_value', data)
-        
         if 'staffproject_set' in data:
             staff_project = data['staffproject_set']
             data['staffproject_set'] = []
         else:
             data['staffproject_set'] = []
             staff_project = []
-        print('Enter StaffSerializer.to_internal_value before super')
         validated = super().to_internal_value(data)
-        print('Enter StaffSerializer.to_internal_value after super')
         validated['staffproject_set'] = staff_project
-        print('Exit StaffSerializer.to_internal_value', validated)
         return validated
     
     def update(self, instance, validated_data):
-        print('Enter StaffSerializer.update', validated_data)
         staff_project = validated_data['staffproject_set']
         del validated_data['staffproject_set']
         obj = super().update(instance, validated_data)
@@ -83,11 +77,9 @@ class StaffSerializer(serializers.ModelSerializer):
                 entry.coordinator = new_data['coordinator']
                 entry.save()
         
-        print('Exit StaffSerializer.update')
         return obj
 
     def create(self, validated_data):
-        print('Enter StaffSerializer.create', validated_data)
         staff_project = validated_data['staffproject_set']
         del validated_data['staffproject_set']
         obj = super().create(validated_data)
@@ -100,7 +92,6 @@ class StaffSerializer(serializers.ModelSerializer):
             entry.coordinator = new_data['coordinator']
             entry.save()
         
-        print('Exit StaffSerializer.create')
         return obj
 
 
