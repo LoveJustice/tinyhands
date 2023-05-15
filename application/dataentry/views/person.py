@@ -12,7 +12,7 @@ class PersonViewSet(viewsets.ModelViewSet):
     queryset = Person.objects.all()
     serializer_class = PersonSerializer
     permission_classes = (IsAuthenticated, HasPermission)
-    permissions_required = ['permission_address2_manage']
+    permissions_required = []
     filter_backends = (fs.SearchFilter, fs.OrderingFilter,)
     search_fields = ('full_name',)
     ordering_fields = ('full_name', 'age', 'gender', 'phone_contact')
