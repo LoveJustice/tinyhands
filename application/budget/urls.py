@@ -6,7 +6,9 @@ from budget.views import \
     MoneyDistribution, \
     MDFExportViewSet, \
     budget_sheet_by_date, \
-    get_top_table_data
+    get_top_table_data, \
+    ProjectRequestViewSet, \
+    ProjectRequestDiscussionViewSet
 
 list_methods = {'get': 'list', 'post': 'create'}
 detail_methods = {'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}
@@ -30,4 +32,14 @@ urlpatterns = [
         url(r'^mdf/(?P<uuid>[0-9A-Fa-f-]+)/pdf/$', MDFExportViewSet.as_view({'get': 'get_mdf_pdf'}, permission_classes=[]), name="MdfPdf"),
         url(r'^mdf/(?P<month>\d+)/(?P<year>\d+)/(?P<country_id>\d+)/pdf/$', MDFExportViewSet.as_view({'get': 'get_mdf_pdf_bulk'}), name="MdfPdfbulk"),
         url(r'^mdf/(?P<month>\d+)/(?P<year>\d+)/(?P<country_id>\d+)/count/$', MDFExportViewSet.as_view({'get': 'count_mdfs_for_month_year'}), name="MdfPdfbulkCount"),
+        
+        url(r'^project-request/$', ProjectRequestViewSet.as_view(list_methods), name='ProjectRequest'),
+        url(r'^project-request/(?P<pk>\d+)/$', ProjectRequestViewSet.as_view(detail_methods), name='ProjectRequestWithId'),
+        url(r'^project-request/category/(?P<project_id>\d+)/$', ProjectRequestViewSet.as_view({'get': 'get_category_types'}), name='ProjectRequestCategory'),
+        url(r'^project-request/benefits/(?P<project_id>\d+)/$', ProjectRequestViewSet.as_view({'get': 'get_benefit_types'}), name='ProjectRequestBenefits'),
+        url(r'^project-request/multipliers/$', ProjectRequestViewSet.as_view({'get': 'get_multipliers'}), name='ProjectRequestMultipliers'),
+        url(r'^project-request/approve/(?P<pk>\d+)/$', ProjectRequestViewSet.as_view({'put': 'approve'}), name='ProjectRequestApprove'),
+        
+        url(r'^project-request/discussion/$', ProjectRequestDiscussionViewSet.as_view(list_methods), name='ProjectDiscussion'),
+        url(r'^project-request/account/(?P<id>\d+)/$', ProjectRequestDiscussionViewSet.as_view({'get':'get_notify_accounts'}), name='ProjectAccount'),
 ]

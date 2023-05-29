@@ -3,8 +3,10 @@ from datetime import datetime
 
 from django.db import models
 
+from accounts.models import Account
 from dataentry.models import BorderStation
 from static_border_stations.models import Staff
+import budget.mdf_constants as constants
 
 
 class BorderStationBudgetCalculation(models.Model):
@@ -293,6 +295,69 @@ class StaffBudgetItem(models.Model):
         if self.budget_calc_sheet is None or self.budget_calc_sheet.border_station is None:
             return None
         return self.budget_calc_sheet.border_station.id
+
+
+
+class MonthlyDistributionMultipliers(models.Model):
+    name = models.CharField(max_length=127)             # name/description to identify in Project Request
+    category = models.IntegerField(constants.CATEGORY_CHOICES)    # MDF category in which it appears
+    field_name = models.CharField(max_length=127)       # Field name in MDF object  
+    
+class ProjectRequest(models.Model):
+    date_time_entered = models.DateTimeField(auto_now_add=True)
+    date_time_last_updated = models.DateTimeField(auto_now=True)
+    author = models.ForeignKey(Account, null=True, on_delete=models.SET_NULL)  # Original author
+    
+    project = models.ForeignKey(BorderStation, on_delete=models.CASCADE)
+    status = models.CharField(max_length=127, default='Submitted')
+    category = models.IntegerField(constants.REQUEST_CATEGORY_CHOICES_MDF)
+    original_cost = models.DecimalField(max_digits=17, decimal_places=2, default=0, blank=False)
+    cost = models.DecimalField(max_digits=17, decimal_places=2, default=0, blank=False)
+    description = models.TextField('Description', blank=True)
+    monthly = models.BooleanField('Monthly', default=False)
+    staff = models.ForeignKey(Staff, null=True, on_delete=models.SET_NULL)
+    benefit_type_name = models.CharField(max_length=127, blank=True)
+    override_mdf_project = models.ForeignKey(BorderStation, null=True, on_delete=models.CASCADE,
+                                             related_name="override_mdf")
+    comment = models.TextField('Description', blank=True)
+
+class ProjectRequestDiscussion(models.Model):
+    request = models.ForeignKey(ProjectRequest, on_delete=models.CASCADE)
+    author = models.ForeignKey(Account, null=True, on_delete=models.SET_NULL)
+    date_time_entered = models.DateTimeField(auto_now_add=True)
+    notify = models.ForeignKey(Account, null=True, on_delete=models.SET_NULL,
+                               related_name="discussion_notify")   # account of person to be notified for response
+    text = models.TextField('Discussion text', blank=True)
+    
+class ProjectRequestAttachment(models.Model):
+    request = models.ForeignKey(ProjectRequest, on_delete=models.CASCADE)
+    description = models.CharField(max_length=126, null=True)
+    attachment = models.FileField(upload_to='project_request_attachment')
+    option = models.CharField(max_length=127, null=True)    # Type of attachment
+    
+class MonthlyDistributionForm(models.Model):
+    date_time_entered = models.DateTimeField(auto_now_add=True)
+    date_time_last_updated = models.DateTimeField(auto_now=True)
+    status = models.CharField(max_length=127, default='Submitted')
+    month_year = models.PositiveIntegerField()
+    project = models.ForeignKey(BorderStation, on_delete=models.CASCADE)
+    
+    last_month_number_of_intercepted_pvs = models.PositiveIntegerField('# last month PVs', default=0)
+    number_of_pv_days = models.PositiveIntegerField(default=0)
+    
+    requests = models.ManyToManyField(ProjectRequest)
+
+# MDF items that are not ProjectRequest items
+# e.g. categories PAST_MONTH_SENT, MONEY_NOT_SPENT and LIMBO
+class MdfItem(models.Model):
+    mdf = models.ForeignKey(MonthlyDistributionForm, on_delete=models.CASCADE)
+    
+    category = models.IntegerField(constants.MANUAL_CATEGORY_CHOICES)
+    cost = models.DecimalField(max_digits=17, decimal_places=2, default=0, blank=False)
+    description = models.TextField('Description', blank=True)
+    associated_section = models.IntegerField(constants.CATEGORY_CHOICES, blank=True, null=True)
+    deduct = models.CharField(max_length=127, blank=True, null=True)
+    work_project = models.ForeignKey(BorderStation)
 
     
     

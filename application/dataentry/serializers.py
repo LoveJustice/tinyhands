@@ -1086,12 +1086,20 @@ class IncidentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Incident
         fields = [field.name for field in model._meta.fields] # all the model fields
-        fields = fields + ['station_name']
+        fields = fields + ['station_name', 'country_id']
     
     station_name = serializers.SerializerMethodField(read_only=True)
+    country_id = serializers.SerializerMethodField(read_only=True)
+    
     def get_station_name (self, obj):
         if obj.station is not None:
             return obj.station.station_name;
+        else:
+            return None
+    
+    def get_country_id (self, obj):
+        if obj.station is not None:
+            return obj.station.operating_country.id;
         else:
             return None
     
