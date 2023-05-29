@@ -9,6 +9,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('static_border_stations', '0005_auto_20230509_1732'),
+        ('budget', '0010_auto_20220324_1941'),
     ]
 
     operations = [
