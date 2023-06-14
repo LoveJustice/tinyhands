@@ -1,23 +1,28 @@
+import datetime
+import json
 from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated
 from rest_api.authentication_expansion import HasPermission, HasDeletePermission, HasPostPermission, HasPutPermission
 from rest_framework import filters as fs
 from rest_framework.response import Response
+from django.db.models import Q
+from django.core.files.storage import default_storage
+from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist
+from django.db import transaction, IntegrityError
+from templated_email import send_templated_mail
 
+from accounts.models import Account
 import budget.mdf_constants as constants
-from budget.serializers import MonthlyDistributionMultipliersSerializer, ProjectRequestSerializer, ProjectRequestDiscussionSerializer
-from budget.models import MonthlyDistributionForm, MonthlyDistributionMultipliers, ProjectRequest, ProjectRequestDiscussion
+from budget.serializers import MonthlyDistributionMultipliersSerializer, ProjectRequestSerializer, ProjectRequestAttachmentSerializer, ProjectRequestDiscussionSerializer
+from budget.models import MonthlyDistributionForm, MonthlyDistributionMultipliers, ProjectRequest, ProjectRequestAttachment, ProjectRequestDiscussion, ProjectRequestComment
 from dataentry.models import BorderStation, Permission, UserLocationPermission
 from accounts.serializers import AccountsSerializer
 
 class ProjectRequestViewSet(viewsets.ModelViewSet):
     queryset = ProjectRequest.objects.all()
     serializer_class = ProjectRequestSerializer
-    permission_classes = [IsAuthenticated, HasPermission, HasDeletePermission, HasPostPermission, HasPutPermission]
-    permissions_required = [{'permission_group':'PROJECT_REQUEST', 'action':'VIEW'},]
-    delete_permissions_required = [{'permission_group':'PROJECT_REQUEST', 'action':'DELETE'},]
-    post_permissions_required = [{'permission_group':'PROJECT_REQUEST', 'action':'ADD'},]
-    put_permissions_required = [{'permission_group':'PROJECT_REQUEST', 'action':'ADD'},]
+    permission_classes = [IsAuthenticated]
     filter_backends = (fs.SearchFilter, fs.OrderingFilter,)
     search_fields = ['project__station_name', 'status', 'description']
     ordering_fields = ['project__station_name', 'status', 'date_time_entered']
@@ -45,46 +50,165 @@ class ProjectRequestViewSet(viewsets.ModelViewSet):
                 queryset = queryset.filter(monthly=True)
             elif frequency == 'single':
                 queryset = queryset.filter(monthly=False)
+        discussion = self.request.GET.get('discussion')
+        if discussion == 'Includes Me':
+            my_discussions = set(ProjectRequestDiscussion.objects.filter(Q(author=self.request.user.id) | Q(notify=self.request.user)).values_list('request__id', flat=True))
+            queryset = queryset.filter(id__in=my_discussions)
+        elif discussion == 'Waiting on Me':
+            my_discussions = set(ProjectRequestDiscussion.objects.filter(notify=self.request.user,
+                    request__discussion_status='Open').exclude(response=self.request.user).values_list('request__id', flat=True))
+            queryset = queryset.filter(id__in=my_discussions)
 
         return queryset
+    
+    def create(self, request):
+        project_id = request.data['project']
+        project = BorderStation.objects.get(id=project_id)
+        if not UserLocationPermission.has_session_permission(request, 'PROJECT_REQUEST', 'ADD', project.operating_country.id,  project.id):
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        
+        return super().create(request)
     
     def update(self, request, pk):
         current = ProjectRequest.objects.get(id=pk)
         current_status = current.status
-        if UserLocationPermission.has_session_permission(request, 'MDF', 'REVIEW1', current.project.id, current.project.operating_country.id):
+        current_cost = current.cost
+        comment_request = current
+        if not UserLocationPermission.has_session_permission(request, 'PROJECT_REQUEST', 'ADD', current.project.operating_country.id, current.project.id):
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+        if UserLocationPermission.has_session_permission(request, 'MDF', 'REVIEW1', current.project.operating_country.id, current.project.id):
             has_review = True
             has_approve = True
             is_author = False
-        elif UserLocationPermission.has_session_permission(request, 'PROJECT_REQUEST', 'APPROVE', current.project.id, current.project.operating_country.id):
+        elif UserLocationPermission.has_session_permission(request, 'PROJECT_REQUEST', 'APPROVE', current.project.operating_country.id, current.project.id):
             has_review = False
             has_approve = True
             is_author = False
         elif current.author == request.user:
+            has_review = False
+            has_approve = False
             is_author = True
         else:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
         
-        serializer =  ProjectRequestSerializer(current, request.data)
-        if serializer.is_valid():
-            project_request = serializer.save()
-        else:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+        mdf_list = MonthlyDistributionForm.objects.filter(project=current.project, status='Approved', requests=current)
+        on_approved_mdf = (len(mdf_list) > 0) or current.prior_request
+        update_type = None
+        comment = None
+        if 'comment' in request.data and request.data['comment'] != '':
+            comment = request.data['comment']
+        
+        # should be at most one non-approved MDF for the project
+        pending_mdf_list = MonthlyDistributionForm.objects.filter(project=current.project).exclude(status='Approved')
+        
+        if on_approved_mdf:
+            # Either the amount is being changed or the request is completed
+            if current.status != 'Approved':
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+            try:
+                pending_mdf_list[0].requests.remove(current)
+            except ObjectDoesNotExist:
+                pass
+            current.status = 'Approved-Completed'
+        
+            if request.data['status'] != 'Declined':
+                project_request = ProjectRequest.objects.get(id=pk)
+                project_request.id = None
+                if 'cost' not in request.data:
+                    return Response(status=status.HTTP_400_BAD_REQUEST)
+                
+                project_request.cost = request.data['cost']
+                update_type = 'Change Amount'
+                project_request.prior_request = current
+                project_request.save()
+                
+                comment_request = project_request
+                
+                if not has_review:
+                    if len(pending_mdf_list) > 0:
+                        pending_mdf_list[0].status = 'Submitted'
+                        pending_mdf_list[0].save()
+                if project_request.status == 'Approved' and len(pending_mdf_list) > 0:
+                    try:
+                         pending_mdf_list[0].requests.add(project_request)
+                    except IntegrityError:
+                        pass
+            else:
+                # should never occur
+                project_request = current
+                update_type = 'Completed'
             
-        mdf_list = MonthlyDistributionForm.objects.filter(project=project_request.project).exclude(status='Approved')
-        if is_author and project_request.status != 'Submitted':
-            project_request.status = 'Submitted'
-            project_request.save()
-            if len(mdf_list) > 0:
+            current.save()
+        else:
+            # Not on approved MDF
+            serializer =  ProjectRequestSerializer(current, request.data)
+            if serializer.is_valid():
+                project_request = serializer.save()
+            else:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+            
+            if is_author:
+                project_request.cost = project_request.original_cost
+                if project_request.status != 'Submitted':
+                     project_request.status = 'Submitted'
+                project_request.save()
+            
+            if len(pending_mdf_list) > 0:
+                if project_request.status == 'Submitted':
+                    try:
+                        pending_mdf_list[0].requests.remove(project_request)
+                    except ObjectDoesNotExist:
+                        pass
+                else:
+                    try:
+                        pending_mdf_list[0].requests.add(project_request)
+                    except IntegrityError:
+                        pass
+            
+            if project_request.status == 'Declined':
+                update_type = 'Declined'
+            elif current_cost != project_request.cost:
+                update_type = 'Change Amount'
+        
+        if comment is not None and update_type is not None:
+            comment = request.data['comment']
+            if comment is not None and comment != '':
+                # We only want one comment for a project request per MDF.  So we will update
+                # any existing comment that has not yet appeared on an approved MDF.
                 try:
-                    mdf_list[0].requests.remove(project_request)
-                except:
-                    pass
-        elif not has_review:
-            if len(mdf_list) > 0:
-                mdf_list[0].status = 'Submitted'
-                mdf_list[0].save()
+                    # existing comment that has not been assigned to an MDF yet
+                    current_comment = ProjectRequestComment.objects.get(request=comment_request, mdf__isnull=True)
+                except ObjectDoesNotExist:
+                    try:
+                        # existing comment that has been assigned to an MDF that is not yet approved
+                        current_comment = ProjectRequestComment.objects.get(request=comment_request).exclude(mdf__status='Approved')
+                    except ObjectDoesNotExist:
+                        current_comment = ProjectRequestComment()
+                        current_comment.request = comment_request
+                current_comment.type = update_type
+                current_comment.comment = comment
+                current_comment.save() 
         
         serializer =  ProjectRequestSerializer(project_request)
+        return Response(serializer.data)
+    
+    # Change the discussion status without the additional logic of the normal update
+    def update_discussion_status (self, request, pk):
+        project_request = ProjectRequest.objects.get(id=pk)
+        project_request.discussion_status = request.data['discussion_status']
+        project_request.save()
+        
+        discussion = ProjectRequestDiscussion()
+        discussion.request = project_request
+        discussion.author = self.request.user
+        if project_request.discussion_status == 'Open':
+            discussion.text = 'Open Discussion'
+        else:
+            discussion.text = 'Close Discussion'
+        discussion.save()
+        
+        serializer =  ProjectRequestDiscussionSerializer(discussion)
         return Response(serializer.data)
     
     def get_category_types(self, request, project_id):
@@ -116,23 +240,7 @@ class ProjectRequestViewSet(viewsets.ModelViewSet):
     def get_multipliers(self, request):
         multipliers = MonthlyDistributionMultipliers.objects.all().order_by('name')
         serializer = MonthlyDistributionMultipliersSerializer(multipliers, many=True)
-        return Response(serializer.data)
-    
-    def approve(self, request, pk):
-        project_request = ProjectRequest.objects.get(id=pk)
-        if project_request.status != 'Submitted':
-            Response(status=status.HTTP_400_BAD_REQUEST)
-        project_request.status = 'Approved'
-        project_request.save()
-        
-        mdf_list = MonthlyDistributionForm.objects.filter(project=project_request.project).exclude(status='Approved')
-        if len(mdf_list) > 0:
-            mdf_list[0].requests.add(project_request)
-        
-        serializer = ProjectRequestSerializer(project_request)
-        
-        return Response(serializer.data)
-        
+        return Response(serializer.data)        
     
 class ProjectRequestDiscussionViewSet(viewsets.ModelViewSet):
     queryset = ProjectRequestDiscussion.objects.all()
@@ -156,6 +264,36 @@ class ProjectRequestDiscussionViewSet(viewsets.ModelViewSet):
 
         return qs
     
+    def create(self, request):
+        serializer = ProjectRequestDiscussionSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        
+        discussion = serializer.save()
+        for account_id in request.data['notify']:
+            account = Account.objects.get(id=account_id)
+            discussion.notify.add(account)
+        
+            context = {}
+            context['url'] = settings.CLIENT_DOMAIN +'/reviewProjectRequests?id=' + str(discussion.request.id)
+            send_templated_mail(
+                template_name='discussion_notify',
+                from_email=settings.ADMIN_EMAIL_SENDER,
+                recipient_list=[account.email],
+                context=context
+            )
+        
+        open_notify = ProjectRequestDiscussion.objects.filter(request=discussion.request, request__discussion_status='Open', 
+                        notify=discussion.author).exclude(id=discussion.id).exclude(response=discussion.author)
+        for entry in open_notify:
+            try:
+                entry.response.add(discussion.author)
+            except IntegrityError:
+                pass
+        
+        serializer = ProjectRequestDiscussionSerializer(discussion)
+        return Response(serializer.data)
+    
     def get_notify_accounts(self, request, id):
         project_request = ProjectRequest.objects.get(id=id)
         permission = Permission.objects.get(permission_group='PROJECT_REQUEST', action='VIEW')
@@ -170,5 +308,43 @@ class ProjectRequestDiscussionViewSet(viewsets.ModelViewSet):
         serializer = AccountsSerializer(account_list, many=True)
         return Response(serializer.data)
        
-            
+class ProjectRequestAttachmentViewSet(viewsets.ModelViewSet):
+    queryset = ProjectRequestAttachment.objects.all() 
+    serializer_class = ProjectRequestAttachmentSerializer
+    permission_classes = [IsAuthenticated, HasPermission, HasDeletePermission, HasPostPermission, HasPutPermission]
+    permissions_required = [{'permission_group':'PROJECT_REQUEST', 'action':'VIEW'},]
+    delete_permissions_required = [{'permission_group':'PROJECT_REQUEST', 'action':'VIEW'},]
+    post_permissions_required = [{'permission_group':'PROJECT_REQUEST', 'action':'VIEW'},]
+    put_permissions_required = [{'permission_group':'PROJECT_REQUEST', 'action':'VIEW'},] 
+    filter_backends = (fs.SearchFilter, fs.OrderingFilter,)
+    ordering_fields = ['id']
+    ordering = ('-id',)
+    
+    def get_queryset(self):
+        queryset = ProjectRequestAttachment.objects.all() 
+        request_id = self.request.GET.get('request_id')
+        if request_id is not None and request_id != '':
+            queryset = queryset.filter(request__id=request_id)
+        
+        return queryset;
+    
+    def create(self, request):
+        if 'main' in request.data:
+            request_string = request.data['main']
+            request_json = json.loads(request_string)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        
+        if 'scanned' in request.data:
+            file_obj = request.data['scanned']
+            request_json['attachment'] = file_obj
+        
+        serializer = ProjectRequestAttachmentSerializer(data=request_json)
+        if not serializer.is_valid():
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        
+        attachment = serializer.save()
+        
+        serializer = ProjectRequestAttachmentSerializer(attachment)
+        return Response(serializer.data)
     

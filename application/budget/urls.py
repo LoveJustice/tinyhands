@@ -8,7 +8,8 @@ from budget.views import \
     budget_sheet_by_date, \
     get_top_table_data, \
     ProjectRequestViewSet, \
-    ProjectRequestDiscussionViewSet
+    ProjectRequestDiscussionViewSet, \
+    ProjectRequestAttachmentViewSet
 
 list_methods = {'get': 'list', 'post': 'create'}
 detail_methods = {'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}
@@ -39,7 +40,11 @@ urlpatterns = [
         url(r'^project-request/benefits/(?P<project_id>\d+)/$', ProjectRequestViewSet.as_view({'get': 'get_benefit_types'}), name='ProjectRequestBenefits'),
         url(r'^project-request/multipliers/$', ProjectRequestViewSet.as_view({'get': 'get_multipliers'}), name='ProjectRequestMultipliers'),
         url(r'^project-request/approve/(?P<pk>\d+)/$', ProjectRequestViewSet.as_view({'put': 'approve'}), name='ProjectRequestApprove'),
+        url(r'^project-request/discussion-status/(?P<pk>\d+)/$', ProjectRequestViewSet.as_view({'put':'update_discussion_status'}), name='ProjectDiscussionStatus'),
         
         url(r'^project-request/discussion/$', ProjectRequestDiscussionViewSet.as_view(list_methods), name='ProjectDiscussion'),
         url(r'^project-request/account/(?P<id>\d+)/$', ProjectRequestDiscussionViewSet.as_view({'get':'get_notify_accounts'}), name='ProjectAccount'),
+        
+        url(r'^project-request/attachment/$', ProjectRequestAttachmentViewSet.as_view(list_methods), name='ProjectRequestAttachment'),
+        url(r'^project-request/attachment/(?P<pk>\d+)/$', ProjectRequestAttachmentViewSet.as_view({'delete':'destroy'}), name='ProjectRequestAttachmentDelete'),
 ]

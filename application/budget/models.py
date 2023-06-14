@@ -317,23 +317,42 @@ class ProjectRequest(models.Model):
     monthly = models.BooleanField('Monthly', default=False)
     staff = models.ForeignKey(Staff, null=True, on_delete=models.SET_NULL)
     benefit_type_name = models.CharField(max_length=127, blank=True)
+    discussion_status =  models.CharField(max_length=127, default='None')
+    prior_request = models.ForeignKey('self', null=True)
     override_mdf_project = models.ForeignKey(BorderStation, null=True, on_delete=models.CASCADE,
                                              related_name="override_mdf")
-    comment = models.TextField('Description', blank=True)
+    
+    def get_country_id(self):
+        return self.project.operating_country.id
+    
+    def get_border_station_id(self):
+        return self.project.id
 
 class ProjectRequestDiscussion(models.Model):
     request = models.ForeignKey(ProjectRequest, on_delete=models.CASCADE)
     author = models.ForeignKey(Account, null=True, on_delete=models.SET_NULL)
     date_time_entered = models.DateTimeField(auto_now_add=True)
-    notify = models.ForeignKey(Account, null=True, on_delete=models.SET_NULL,
-                               related_name="discussion_notify")   # account of person to be notified for response
     text = models.TextField('Discussion text', blank=True)
+    notify = models.ManyToManyField(Account, related_name="discussion_notify")
+    response = models.ManyToManyField(Account, related_name="discussion_response") # notified accounts that have responded
+    
+    def get_country_id(self):
+        return self.request.project.operating_country.id
+    
+    def get_border_station_id(self):
+        return self.request.project.id
     
 class ProjectRequestAttachment(models.Model):
     request = models.ForeignKey(ProjectRequest, on_delete=models.CASCADE)
     description = models.CharField(max_length=126, null=True)
-    attachment = models.FileField(upload_to='project_request_attachment')
+    attachment = models.FileField(upload_to='project_request_attachments')
     option = models.CharField(max_length=127, null=True)    # Type of attachment
+    
+    def get_country_id(self):
+        return self.request.project.operating_country.id
+    
+    def get_border_station_id(self):
+        return self.request.project.id
     
 class MonthlyDistributionForm(models.Model):
     date_time_entered = models.DateTimeField(auto_now_add=True)
@@ -346,6 +365,19 @@ class MonthlyDistributionForm(models.Model):
     number_of_pv_days = models.PositiveIntegerField(default=0)
     
     requests = models.ManyToManyField(ProjectRequest)
+    
+    def get_country_id(self):
+        return self.project.operating_country.id
+    
+    def get_border_station_id(self):
+        return self.project.id
+
+class ProjectRequestComment(models.Model):
+    request = models.ForeignKey(ProjectRequest, on_delete=models.CASCADE)
+    mdf = models.ForeignKey(MonthlyDistributionForm, on_delete=models.CASCADE, null=True)
+    type =  models.CharField(max_length=127)
+    comment = models.TextField('Description', blank=True)
+    
 
 # MDF items that are not ProjectRequest items
 # e.g. categories PAST_MONTH_SENT, MONEY_NOT_SPENT and LIMBO
@@ -358,6 +390,12 @@ class MdfItem(models.Model):
     associated_section = models.IntegerField(constants.CATEGORY_CHOICES, blank=True, null=True)
     deduct = models.CharField(max_length=127, blank=True, null=True)
     work_project = models.ForeignKey(BorderStation)
+    
+    def get_country_id(self):
+        return self.mdf.project.operating_country.id
+    
+    def get_border_station_id(self):
+        return self.mdf.project.id
 
     
     
