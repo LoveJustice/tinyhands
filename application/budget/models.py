@@ -2,12 +2,15 @@ import uuid
 from datetime import datetime
 
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 
 from accounts.models import Account
 from dataentry.models import BorderStation
 from static_border_stations.models import Staff
 import budget.mdf_constants as constants
-
 
 class BorderStationBudgetCalculation(models.Model):
     TRAVEL = 1
@@ -300,8 +303,7 @@ class StaffBudgetItem(models.Model):
 
 class MonthlyDistributionMultipliers(models.Model):
     name = models.CharField(max_length=127)             # name/description to identify in Project Request
-    category = models.IntegerField(constants.CATEGORY_CHOICES)    # MDF category in which it appears
-    field_name = models.CharField(max_length=127)       # Field name in MDF object  
+    category = models.IntegerField(constants.CATEGORY_CHOICES)    # MDF category in which it appears 
     
 class ProjectRequest(models.Model):
     date_time_entered = models.DateTimeField(auto_now_add=True)
@@ -321,6 +323,7 @@ class ProjectRequest(models.Model):
     prior_request = models.ForeignKey('self', null=True)
     override_mdf_project = models.ForeignKey(BorderStation, null=True, on_delete=models.CASCADE,
                                              related_name="override_mdf")
+    completed_date_time = models.DateTimeField(null=True)
     
     def get_country_id(self):
         return self.project.operating_country.id
@@ -353,16 +356,21 @@ class ProjectRequestAttachment(models.Model):
     
     def get_border_station_id(self):
         return self.request.project.id
+
+
     
 class MonthlyDistributionForm(models.Model):
     date_time_entered = models.DateTimeField(auto_now_add=True)
     date_time_last_updated = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=127, default='Submitted')
-    month_year = models.PositiveIntegerField()
-    project = models.ForeignKey(BorderStation, on_delete=models.CASCADE)
+    # Don't really need date time object, but need the same filed type as
+    # BorderStationBudgetCalculation to be able to sort them together
+    month_year = models.DateTimeField(default=datetime.now)
+    border_station = models.ForeignKey(BorderStation, on_delete=models.CASCADE)
     
     last_month_number_of_intercepted_pvs = models.PositiveIntegerField('# last month PVs', default=0)
     number_of_pv_days = models.PositiveIntegerField(default=0)
+    past_sent_approved = models.CharField(max_length=127, blank=True)
     
     requests = models.ManyToManyField(ProjectRequest)
     
@@ -372,9 +380,62 @@ class MonthlyDistributionForm(models.Model):
     def get_border_station_id(self):
         return self.project.id
 
+class MdfCombined(models.Model):
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey("content_type", "object_id")
+    
+    month_year = models.DateTimeField(default=datetime.now)
+    border_station = models.ForeignKey(BorderStation, on_delete=models.CASCADE)
+    status = models.CharField(max_length=127, default='Submitted')
+    date_time_entered = models.DateTimeField(auto_now_add=True)
+    date_time_last_updated = models.DateTimeField(auto_now=True)
+    
+@receiver(post_save, sender=MonthlyDistributionForm)
+def handle_new_monthly_distribution_form(sender, **kwargs):
+    instance = kwargs.get('instance')
+    content_type = ContentType.objects.get_for_model(instance)
+    try:
+        mdf = MdfCombined.objects.get(content_type=content_type, object_id=instance.id)
+    except:
+        mdf =  MdfCombined()
+        mdf.content_type = content_type
+        mdf.object_id = instance.id
+    
+    mdf.month_year = instance.month_year
+    mdf.border_station = instance.border_station
+    mdf.status = instance.status
+    mdf.date_time_entered = instance.date_time_entered
+    mdf.date_time_last_updated = instance.date_time_last_updated
+    mdf.save()
+
+@receiver(post_save, sender=BorderStationBudgetCalculation)
+def handle_new_budget_calculation(sender, **kwargs):
+    instance = kwargs.get('instance')
+    content_type = ContentType.objects.get_for_model(instance)
+    try:
+        mdf = MdfCombined.objects.get(content_type=content_type, object_id=instance.id)
+    except:
+        mdf =  MdfCombined()
+        mdf.content_type = content_type
+        mdf.object_id = instance.id
+    
+    mdf.month_year = instance.month_year
+    mdf.border_station = instance.border_station
+    mdf.date_time_entered = instance.date_time_entered
+    mdf.date_time_last_updated = instance.date_time_last_updated
+    if instance.date_finalized is None:
+        mdf.status = 'Submitted'
+    else:
+        mdf.status = 'Final'
+    mdf.save()
+        
+    
+    
+
 class ProjectRequestComment(models.Model):
     request = models.ForeignKey(ProjectRequest, on_delete=models.CASCADE)
-    mdf = models.ForeignKey(MonthlyDistributionForm, on_delete=models.CASCADE, null=True)
+    mdf = models.ForeignKey(MonthlyDistributionForm, on_delete=models.SET_NULL, null=True)
     type =  models.CharField(max_length=127)
     comment = models.TextField('Description', blank=True)
     

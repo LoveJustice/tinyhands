@@ -1,8 +1,12 @@
+from dateutil.relativedelta import relativedelta
 from rest_framework import serializers
 from budget.models import BorderStationBudgetCalculation, OtherBudgetItemCost, StaffBudgetItem
-from budget.models import MonthlyDistributionMultipliers, ProjectRequest, ProjectRequestDiscussion, ProjectRequestAttachment, ProjectRequestComment
+from budget.models import MdfItem, ProjectRequest, ProjectRequestDiscussion, ProjectRequestAttachment, ProjectRequestComment
+from budget.models import MonthlyDistributionForm, MonthlyDistributionMultipliers
+from dataentry.models import BorderStation
 from dataentry.serializers import BorderStationSerializer
 from static_border_stations.models import Staff
+from static_border_stations.serializers import StaffSerializer
 from budget.mdf_constants import REQUEST_CATEGORY_CHOICES_MDF
 
 
@@ -184,7 +188,11 @@ class ProjectRequestSerializer(serializers.ModelSerializer):
         comment_list = []
         comments = ProjectRequestComment.objects.filter(request=obj)
         for comment in comments:
-            comment_list.append({'type':comment.type, 'comment':comment.comment})
+            if comment.mdf is not None:
+                mdf_id = comment.mdf.id
+            else:
+                mdf_id = None
+            comment_list.append({'type':comment.type, 'comment':comment.comment, 'mdf':mdf_id})
         
         return comment_list
         
@@ -198,6 +206,97 @@ class ProjectRequestAttachmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProjectRequestAttachment
         fields = [field.name for field in model._meta.fields] # all the model fields
+
+class ProjectRequestCommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProjectRequestComment
+        fields = [field.name for field in model._meta.fields] # all the model fields
+        
+class MdfItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MdfItem
+        fields = [field.name for field in model._meta.fields] # all the model fields
+        
+class MonthlyDistributionFormSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MonthlyDistributionForm
+        fields = [field.name for field in model._meta.fields] # all the model fields
+        fields = fields + ['station_name', 'requests', 'projectrequestcomment_set', 'mdfitem_set', 'related_projects', 'impact_projects',
+                           'related_staff', 'country_id', 'country_currency', 'multiplier_types', 'drop_decimal', 'past_month_sent',
+                           'last_months_total']
     
+    station_name = serializers.SerializerMethodField(read_only=True)   
+    requests = ProjectRequestSerializer(many=True, read_only=True)
+    projectrequestcomment_set = ProjectRequestCommentSerializer(many=True, read_only=True)
+    mdfitem_set = MdfItemSerializer(many=True, read_only=True)
+    related_projects = serializers.SerializerMethodField(read_only=True)
+    impact_projects = serializers.SerializerMethodField(read_only=True)
+    related_staff = serializers.SerializerMethodField(read_only=True)
+    country_id = serializers.SerializerMethodField(read_only=True)
+    country_currency = serializers.SerializerMethodField(read_only=True)
+    multiplier_types = serializers.SerializerMethodField(read_only=True)
+    drop_decimal = serializers.SerializerMethodField(read_only=True)
+    past_month_sent = serializers.SerializerMethodField(read_only=True)
+    last_months_total = serializers.SerializerMethodField(read_only=True)
+    
+    def get_station_name(self, obj):
+        return obj.border_station.station_name
+    
+    def get_related_projects(self, obj):
+        project_ids = ProjectRequest.objects.filter(monthlydistributionform=obj).values_list('project__id', flat=True)
+        border_stations = BorderStation.objects.filter(id__in=project_ids)
+        serializer = BorderStationSerializer(border_stations, many=True)
+        return serializer.data
+    
+    def get_impact_projects(self, obj):
+            impact_projects = BorderStation.objects.filter(mdf_project=obj.border_station)
+            serializer = BorderStationSerializer(impact_projects, many=True)
+            return serializer.data
+    
+    def get_related_staff(self, obj):
+        staff_ids = ProjectRequest.objects.filter(monthlydistributionform=obj, staff__isnull=False).values_list('staff__id', flat=True)
+        staff = Staff.objects.filter(id__in=staff_ids).order_by('first_name', 'last_name')
+        serializer = StaffSerializer(staff, many=True)
+        return serializer.data
+        
+    def get_country_id(self, obj):
+        return obj.border_station.operating_country.id
+    
+    def get_country_currency(self, obj):
+        return obj.border_station.operating_country.currency or ""
+    
+    def get_multiplier_types(self, obj):
+        multipliers = MonthlyDistributionMultipliers.objects.all()
+        serializer = MonthlyDistributionMultipliersSerializer(multipliers, many=True)
+        return serializer.data
+    
+    def get_drop_decimal(self, obj):
+        drop_decimal = False
+        country =  obj.border_station.operating_country
+        if 'drop_decimal' in country.options:
+            drop_decimal = country.options['drop_decimal']
+        return drop_decimal
+    
+    def get_past_month_sent(self, obj) :
+        past_month_sent = False
+        country =  obj.border_station.operating_country
+        if 'pastMonthSent' in country.options and country.options['pastMonthSent']:
+            past_month_sent = True
+        
+        return past_month_sent
+    
+    def get_last_months_total(self, obj):
+        result = None
+        
+        last_month_date = obj.month_year - relativedelta(months=1)
+        mdfs = MonthlyDistributionForm.objects.filter(border_station=obj.border_station, month_year__year=last_month_date.year, month_year__month=last_month_date.month)
+        if len(mdfs) > 0:
+            result = None
+        else:
+            budgets = BorderStationBudgetCalculation.objects.filter(border_station=obj.border_station, month_year__year=last_month_date.year, month_year__month=last_month_date.month)
+            if len(budgets) > 0:
+                result = budgets[0].station_total(obj.border_station)
+        
+        return result
         
         

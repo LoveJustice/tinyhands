@@ -1,4 +1,5 @@
 import datetime
+from dateutil.relativedelta import relativedelta
 import json
 from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated
@@ -77,7 +78,7 @@ class ProjectRequestViewSet(viewsets.ModelViewSet):
         if not UserLocationPermission.has_session_permission(request, 'PROJECT_REQUEST', 'ADD', current.project.operating_country.id, current.project.id):
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 
-        if UserLocationPermission.has_session_permission(request, 'MDF', 'REVIEW1', current.project.operating_country.id, current.project.id):
+        if UserLocationPermission.has_session_permission(request, 'MDF', 'INITIAL_REVIEW', current.project.operating_country.id, current.project.id):
             has_review = True
             has_approve = True
             is_author = False
@@ -92,27 +93,31 @@ class ProjectRequestViewSet(viewsets.ModelViewSet):
         else:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
         
-        mdf_list = MonthlyDistributionForm.objects.filter(project=current.project, status='Approved', requests=current)
-        on_approved_mdf = (len(mdf_list) > 0) or current.prior_request
+        mdf_list = MonthlyDistributionForm.objects.filter(status='Approved', requests=current).order_by('-month_year')
+        print('len(mdf_list)', len(mdf_list))
+        on_approved_mdf = (len(mdf_list) > 0)
+        print(on_approved_mdf, on_approved_mdf)
         update_type = None
         comment = None
         if 'comment' in request.data and request.data['comment'] != '':
             comment = request.data['comment']
         
         # should be at most one non-approved MDF for the project
-        pending_mdf_list = MonthlyDistributionForm.objects.filter(project=current.project).exclude(status='Approved')
+        pending_mdf_list = MonthlyDistributionForm.objects.filter(border_station=current.override_mdf_project).exclude(status='Approved')
         
         if on_approved_mdf:
             # Either the amount is being changed or the request is completed
             if current.status != 'Approved':
                 return Response(status=status.HTTP_400_BAD_REQUEST)
-            try:
-                pending_mdf_list[0].requests.remove(current)
-            except ObjectDoesNotExist:
-                pass
+            
             current.status = 'Approved-Completed'
+            current.completed_date_time = mdf_list[0].month_year + relativedelta(days=1)
         
             if request.data['status'] != 'Declined':
+                try:
+                    pending_mdf_list[0].requests.remove(current)
+                except ObjectDoesNotExist:
+                    pass
                 project_request = ProjectRequest.objects.get(id=pk)
                 project_request.id = None
                 if 'cost' not in request.data:
@@ -140,6 +145,16 @@ class ProjectRequestViewSet(viewsets.ModelViewSet):
                 update_type = 'Completed'
             
             current.save()
+        elif current.prior_request:
+            project_request = current
+            if request.data['status'] != 'Declined':
+                project_request.cost = request.data['cost']
+                update_type = 'Change Amount'
+            else:
+                update_type = 'Completed'
+                project_request.status = 'Approved-Completed'
+                project_request.completed_date_time = project_request.prior_request.completed_date_time
+            project_request.save()
         else:
             # Not on approved MDF
             serializer =  ProjectRequestSerializer(current, request.data)

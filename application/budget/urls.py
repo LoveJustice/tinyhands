@@ -9,7 +9,10 @@ from budget.views import \
     get_top_table_data, \
     ProjectRequestViewSet, \
     ProjectRequestDiscussionViewSet, \
-    ProjectRequestAttachmentViewSet
+    ProjectRequestAttachmentViewSet, \
+    MdfCombinedViewSet, \
+    MonthlyDistributionFormViewSet, \
+    MdfItemViewSet
 
 list_methods = {'get': 'list', 'post': 'create'}
 detail_methods = {'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}
@@ -47,4 +50,12 @@ urlpatterns = [
         
         url(r'^project-request/attachment/$', ProjectRequestAttachmentViewSet.as_view(list_methods), name='ProjectRequestAttachment'),
         url(r'^project-request/attachment/(?P<pk>\d+)/$', ProjectRequestAttachmentViewSet.as_view({'delete':'destroy'}), name='ProjectRequestAttachmentDelete'),
+        
+        url(r'^mdf-combined/$', MdfCombinedViewSet.as_view({'get': 'list'}), name="MDFCombinedViewSet"),
+        url(r'^mdf-pr/$', MonthlyDistributionFormViewSet.as_view({'get': 'list'}), name="MdfPRViewSet"),
+        url(r'^mdf-pr/(?P<pk>\d+)/$', MonthlyDistributionFormViewSet.as_view(detail_methods), name="MdfPRViewSetDetail"),
+        url(r'^mdf-pr/new/(?P<station_id>\d+)/(?P<year>\d+)/(?P<month>\d+)/$', MonthlyDistributionFormViewSet.as_view({'get':'get_new_mdf'}), name="MdfPRViewSet"),
+        
+        url(r'^mdf-item/$', MdfItemViewSet.as_view(list_methods), name='MdfItem'),
+        url(r'^mdf-item/(?P<pk>\d+)/$', MdfItemViewSet.as_view(detail_methods), name='MdfItemDetail'),
 ]

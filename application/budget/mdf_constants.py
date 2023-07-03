@@ -25,14 +25,13 @@ CATEGORY_CHOICES = [
     (RENT_UTILITIES, 'Rent & Utilities'),
 ]
 REQUEST_CATEGORY_CHOICES_MDF = [
-    (TRAVEL, 'Staff Travel'),
-    (AWARENESS, 'Awareness'),
-    (POTENTIAL_VICTIM_CARE, 'Potential Victim Care'),
-    (COMMUNICATION, 'Communication'),
     (STAFF_BENEFITS, 'Salaries & Benefits'),
-    (ADMINISTRATION, 'Administration'),
-    (IMPACT_MULTIPLYING, 'Operational Expenses'),
     (RENT_UTILITIES, 'Rent & Utilities'),
+    (ADMINISTRATION, 'Administration'),
+    (AWARENESS, 'Supplies & Awareness'),
+    (TRAVEL, 'Staff Travel'),
+    (POTENTIAL_VICTIM_CARE, 'Potential Victim Care'),
+    (IMPACT_MULTIPLYING, 'Operational Expenses'),
     (MULTIPLIERS, 'Multipliers')
 ]
 REQUEST_CATEGORY_CHOICES_NO_MDF = [
