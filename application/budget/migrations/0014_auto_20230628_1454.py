@@ -18,7 +18,12 @@ class Migration(migrations.Migration):
         ('budget', '0013_borderstationbudgetcalculation_past_sent_approved'),
     ]
     
-    budget_type = str(ContentType.objects.get(app_label='budget', model='borderstationbudgetcalculation').id)
+    budget_type = '0'
+    try:
+        budget_type = str(ContentType.objects.get(app_label='budget', model='borderstationbudgetcalculation').id)
+    except:
+        # In test environment, ContentType does not work correctly, but in test there is no data to migrate
+        pass
 
     operations = [
         migrations.CreateModel(
