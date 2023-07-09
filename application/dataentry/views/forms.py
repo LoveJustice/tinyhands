@@ -231,7 +231,7 @@ class FormViewSet(viewsets.ModelViewSet):
         
         base_number = form_number
         for idx in range(len(station.station_code), len(form_number)):
-            if form_number[idx] < '0' or form_number[idx] > '9':
+            if (form_number[idx] < '0' or form_number[idx] > '9') and form_number[idx] != '_':
                 base_number = form_number[:idx]
                 break
         
