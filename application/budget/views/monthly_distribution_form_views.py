@@ -12,6 +12,7 @@ from dataentry.models import BorderStation, IntercepteeCommon, StationStatistics
 from dataentry.serializers import CountrySerializer
 from budget.models import BorderStationBudgetCalculation, MonthlyDistributionForm, MdfCombined, MdfItem, ProjectRequest, ProjectRequestComment
 from budget.serializers import MonthlyDistributionFormSerializer, MdfItemSerializer
+from mailbox import MMDF
 
 class BorderStationOverviewSerializer(serializers.ModelSerializer):
     operating_country = CountrySerializer()
@@ -139,8 +140,8 @@ class MonthlyDistributionFormViewSet(viewsets.ModelViewSet):
     
     def approve_mdf(self, request, pk):
         mdf = MonthlyDistributionForm.objects.get(id=pk)
-        if not ((status == 'Submitted' and UserLocationPermission.has_session_permission(request, 'MDF', 'INITIAL_REVIEW', station.operating_country.id, station.id)) or
-             (status == 'Initial Review' and not UserLocationPermission.has_session_permission(request, 'MDF', 'FINAL_REVIEW', station.operating_country.id, station.id))):
+        if not ((mdf.status == 'Submitted' and UserLocationPermission.has_session_permission(request, 'MDF', 'INITIAL_REVIEW', mdf.border_station.operating_country.id, mdf.border_station.id)) or
+             (mdf.status == 'Initial Review' and UserLocationPermission.has_session_permission(request, 'MDF', 'FINAL_REVIEW', mdf.border_station.operating_country.id, mdf.border_station.id))):
             return Response(status=status.HTTP_401_UNAUTHORIZED)
         
         # Close open discussions
@@ -154,43 +155,93 @@ class MonthlyDistributionFormViewSet(viewsets.ModelViewSet):
             project_request.discussion_status = 'Closed'
             project_request.save()
         
-        if UserLocationPermission.has_session_permission(request, 'MDF', 'FINAL_REVIEW', station.operating_country.id, station.id):
+        if mdf.status == 'Submitted':
+            mdf.status = 'Initial Review'
+            mdf.save()
+        else:
+            completed_date_time = mdf.month_year + relativedelta(days=1)
             mdf.status = 'Approved'
             project_requests = mdf.requests.all()
             for project_request in project_requests:
                 if project_request.status == 'Declined':
-                    project_request.status = 'Declined-Approved'
+                    project_request.status = 'Declined-Completed'
+                    project_request.completed_date_time = completed_date_time
                     project_request.save()
-                elif project_request == 'Approved' and not project_request.monthly:
+                elif project_request.status == 'Approved' and project_request.monthly == False:
                     project_request.status = 'Approved-Completed'
+                    project_request.completed_date_time = completed_date_time
                     project_request.save()
-            self.update_stats(mdf)
-        else:
-            mdf.status = 'Initial Review'
-        mdf.save()
+            comments = ProjectRequestComment.objects.filter(mdf__isnull=True, request__in = mdf.requests.all())
+            for comment in comments:
+                comment.mdf = mdf 
+                comment.save()
+            print('mdf status', mdf.status)
+            mdf.save()
+            self.check_update_stats(mdf)
+       
         serializer = self.serializer_class(mdf)
         return Response(serializer.data)
     
-    def update_stats(self, the_mdf):
-        # get a set of all projects on the MDF
-        request_projects = the_mdf.requests.all().values_list('project', flat=True)
-        item_projects = the_mdf.mdfitems_set.all().value_list('work_project', flat=True)
-        projects = set(request_projects + item_projects)
+    def check_update_stats(self, mdf):
+        open_mdf_projects = BorderStation.objects.filter(
+                operating_country=mdf.border_station.operating_country,
+                open=True,
+                features__contains='HasMdf')
+        approved_mdfs = MonthlyDistributionForm.objects.filter(
+                status = 'Approved',
+                border_station__in=open_mdf_projects,
+                month_year__year = mdf.month_year.year,
+                month_year__month = mdf.month_year.month)
+        if len(approved_mdfs) < len(open_mdf_projects):
+            # Not all of the MDFs for the country have been approved
+            return False
         
-        year_month = the_mdf.month_year.year * 100 + the_mdf.month_year.month
+        open_projects = BorderStation.objects.filter(
+                operating_country=mdf.border_station.operating_country,
+                open=True)
         
-        for project in projects:
-            stats = StationStatistics.objects.get(station=project, year_month=year_month)
-            mdfs = MonthlyDistributionForm.objects.filter(
-                Q(month_year__month=the_mdf.month_year.month) &
-                Q(month_year__year=the_mdf.month_year.year) &
-                (Q(requests__project=project) | Q(mdfitem_set__project=project)))
-            
+        year_month = mdf.month_year.year * 100 + mdf.month_year.month
+        for project in open_projects:
             total_budget = 0
-            for mdf in mdfs:
-                total_budget += mdf.station_total(project)
+            for approved_mdf in approved_mdfs:
+                total_budget += approved_mdf.full_total(project)
+            
+            try:
+                stats = StationStatistics.objects.get(station=project, year_month=year_month)
+            except:
+                stats = StationStatistics()
+                stats.station = project
+                stats.year_month = year_month
+            
             stats.budget = total_budget
             stats.save()
+        
+        return True
+    
+    def retrieve_pdf(self, request, pk):
+        mdf = MonthlyDistributionForm.objects.get(pk=pk)
+        border_station = mdf.border_station
+        staff = StaffProject.objects.filter(border_station=border_station).exclude(staff__email__isnull=True).value_list('staff', flat=True)
+        committee_members = border_station.committeemember_set.exclude(email__isnull=True)
+        
+        # find all permissions for MDF Notification for the specified border station
+        can_receive_mdf = UserLocationPermission.objects.filter(
+            Q(permission__permission_group = 'NOTIFICATIONS') & Q(permission__action = 'MDF') &
+            (Q(country = None) & Q(station=None) | Q(country__id = border_station.operating_country.id) | Q(station__id = border_station.id)))
+        # add outer reference to account for the located permissions
+        can_receive_mdf = can_receive_mdf.filter(account=OuterRef('pk'))
+        # annotate the accounts that have permissions for receiving the MDF
+        account_annotated = Account.objects.annotate(national_staff = Exists(can_receive_mdf))
+        # select the annotated accounts
+        national_staff = account_annotated.filter(national_staff=True)
+
+        staff_serializer = StaffSerializer(staff, many=True)
+        committee_members_serializer = CommitteeMemberSerializer(committee_members, many=True)
+        national_staff_serializer = AccountMDFSerializer(national_staff, many=True)
+
+        pdf_url = settings.SITE_DOMAIN + reverse('MdfPdf', kwargs={"uuid": budget.mdf_uuid})
+
+        return Response({"staff_members": staff_serializer.data, "committee_members": committee_members_serializer.data, "national_staff_members": national_staff_serializer.data, "pdf_url": pdf_url})
             
                 
                 

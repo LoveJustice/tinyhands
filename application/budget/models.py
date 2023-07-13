@@ -4,7 +4,7 @@ from datetime import datetime
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 
 from accounts.models import Account
@@ -35,6 +35,7 @@ class BorderStationBudgetCalculation(models.Model):
     month_year = models.DateTimeField(default=datetime.now)
 
     border_station = models.ForeignKey(BorderStation, on_delete=models.CASCADE)
+    mdf_combined = GenericRelation('MdfCombined')
 
     def other_project_items_total(self, section, project):
         items = self.otherbudgetitemcost_set.filter(form_section=section, work_project=project).exclude(cost__isnull=True)
@@ -330,6 +331,22 @@ class ProjectRequest(models.Model):
     
     def get_border_station_id(self):
         return self.project.id
+    
+    @property
+    def category_name(self):
+        name='Unknown'
+        for category in constants.CATEGORY_CHOICES:
+            if self.category == category[0]:
+                name = category[1]
+        return name
+    
+    @property
+    def monthly_string(self):
+        if self.monthly:
+            return 'Y'
+        else:
+            return 'N'
+        
 
 class ProjectRequestDiscussion(models.Model):
     request = models.ForeignKey(ProjectRequest, on_delete=models.CASCADE)
@@ -373,12 +390,186 @@ class MonthlyDistributionForm(models.Model):
     past_sent_approved = models.CharField(max_length=127, blank=True)
     
     requests = models.ManyToManyField(ProjectRequest)
+    mdf_combined = GenericRelation('MdfCombined')
+    
+    def include_request(self, request):
+        result = False
+        if request.status == 'Approved':
+            result = True
+        elif request.status =='Approved-Completed' and request.completed_date_time > self.month_year:
+            result = True
+        return result
+        
+    
+    def salary_and_benefits_total(self, project):
+        total = 0
+        requests = self.requests.filter(project=project, category=constants.STAFF_BENEFITS).exclude(cost__isnull=True)
+        for request in requests:
+            if self.include_request(request):
+                if request.benefit_type_name == 'Deductions':
+                    total -= request.cost
+                else:
+                    total += request.cost
+            
+        return total
+    
+    def staff_salary_and_benefits_deductions(self, project):
+        total = 0
+        requests = self.requests.filter(project=project, category=constants.STAFF_BENEFITS, benefit_type_name='Deductions').exclude(cost__isnull=True)
+        for request in requests:
+            total += request.cost
+            
+        return total
+        
+    
+    def rent_and_utilities_total(self):
+        total = 0
+        requests = self.requests.filter(project=self.border_station, category=constants.RENT_UTILITIES).exclude(cost__isnull=True)
+        for request in requests:
+            if self.include_request(request):
+                total += request.cost
+        return total
+    
+    def administration_total(self):
+        total = 0
+        requests = self.requests.filter(project=self.border_station, category=constants.ADMINISTRATION).exclude(cost__isnull=True)
+        for request in requests:
+            if self.include_request(request):
+                total += request.cost
+        return total
+    
+    def stationary_total(self):
+        total = 0
+        multiplier_type = MonthlyDistributionMultipliers.objects.get(category=constants.AWARENESS)
+        
+        multipliers = self.requests.filter(project=self.border_station, category=constants.MULTIPLIERS,
+                                          description=multiplier_type.name).exclude(cost__isnull=True)
+        for multiplier in multipliers:
+            if self.include_request(multiplier):
+                total += multiplier.cost * self.last_month_number_of_intercepted_pvs
+                break
+        return total  
+        
+    
+    def awareness_total(self):
+        total = 0
+        requests = self.requests.filter(project=self.border_station, category=constants.AWARENESS).exclude(cost__isnull=True)
+        for request in requests:
+            if self.include_request(request):
+                total += request.cost
+        
+        total += self.stationary_total()
+        return total  
+    
+    def travel_total(self):
+        total = 0
+        requests = self.requests.filter(project=self.border_station, category=constants.TRAVEL).exclude(cost__isnull=True)
+        for request in requests:
+            if self.include_request(request):
+                total += request.cost
+        return total
+    
+    def food_and_snacks_intercepted_pv_total(self):
+        total = 0
+        requests = self.requests.filter(project=self.border_station, category=constants.POTENTIAL_VICTIM_CARE).exclude(cost__isnull=True)
+        for request in requests:
+            if self.include_request(request):
+                total += request.cost
+        
+        if self.number_of_pv_days > 0:
+            pv_multiplier_type = MonthlyDistributionMultipliers.objects.get(category=constants.POTENTIAL_VICTIM_CARE)
+            multipliers = self.requests.filter(project=self.border_station, category=constants.MULTIPLIERS,
+                                          description=pv_multiplier_type.name).exclude(cost__isnull=True)
+            for multiplier in multipliers:
+                if self.include_request(multipler):
+                    total += multiplier.cost * self.number_of_pv_days
+                    break
+        return total
+    
+    @property
+    def limbo_girls_multiplier(self):
+        multiplier_value = 0
+        limbo_multiplier_type = MonthlyDistributionMultipliers.objects.get(category=constants.LIMBO)
+        multipliers = self.requests.filter(project=self.border_station, category=constants.MULTIPLIERS,
+                                          description=limbo_multiplier_type.name).exclude(cost__isnull=True)
+        for multiplier in multipliers:
+            if self.include_request(multipler):
+                multiplier_value = multiplier.cost
+                break
+        return multiplier_value
+    
+    def limbo_total(self):
+        total = 0
+        
+        limbo_pvs = self.mdfitem_set.filter(work_project=self.border_station, category=constants.LIMBO).exclude(cost__isnull=True)
+        limbo_pv_days = 0
+        for limbo_pv in limbo_pvs:
+            limbo_pv_days += limbo_pv.cost
+        if limbo_pv_days > 0:
+            total += self.limbo_girls_multiplier * limbo_pv_days
+                    
+            
+        return total
+    
+    def pv_total(self):
+        total = 0
+        total += self.food_and_snacks_intercepted_pv_total()
+        total += self.limbo_total()
+        requests = self.requests.filter(project=self.border_station, category=constants.POTENTIAL_VICTIM_CARE).exclude(cost__isnull=True)
+        for request in requests:
+            if self.include_request(request):
+                total += request.cost
+            
+        return total
+    
+    def impact_multiplying_total(self, project):
+        total = 0
+        requests = self.requests.filter(project=project, category=constants.IMPACT_MULTIPLYING).exclude(cost__isnull=True)
+        for request in requests:
+            if self.include_request(request):
+                total += request.cost
+        return total
+    
+    def money_not_spent_to_deduct_total(self, project):
+        total = 0
+        to_deduct_qs = self.mdfitem_set.filter(work_project=project, category=constants.MONEY_NOT_SPENT, deduct='Yes').exclude(cost__isnull=True)
+        for to_deduct in to_deduct_qs:
+            total += to_deduct.cost
+        return total
+
+    
+    def station_total(self, project):
+        total = 0
+        total += self.salary_and_benefits_total(project)
+        if project == self.border_station:
+            total += self.rent_and_utilities_total()
+            total += self.administration_total()
+            total += self.awareness_total()
+            total += self.travel_total()
+            total += self.pv_total()
+        else:
+            total += self.impact_multiplying_total(project)
+            
+        return total
+    
+    def distribution_total(self, project):
+        return self.station_total(project) - self.money_not_spent_to_deduct_total(project)
+    
+    def full_total(self, project):
+        total = self.station_total(project) + self.staff_salary_and_benefits_deductions(project)
+        past_sent_list = self.mdfitem_set.flter(work_project=project, category=constants.PAST_MONTH_SENT)
+        for past_sent in past_sent_list:
+            total += past_sent.cost
+        return total
     
     def get_country_id(self):
         return self.project.operating_country.id
     
     def get_border_station_id(self):
         return self.project.id
+    
+    def mdf_file_name(self):
+        return '{}-{}-{}-MDF.pdf'.format(self.border_station.station_code, self.month_year.month, self.month_year.year)
 
 class MdfCombined(models.Model):
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
@@ -457,6 +648,25 @@ class MdfItem(models.Model):
     
     def get_border_station_id(self):
         return self.mdf.project.id
+    
+    def category_name_string(self, category_number):
+        name='Unknown'
+        for category in constants.CATEGORY_CHOICES:
+            if category_number == category[0]:
+                name = category[1]
+        return name
+        
+    @property
+    def category_name(self):
+        return self.category_name_string(self.category)
+    
+    @property
+    def associated_section_name(self):
+        name = ''
+        if self.associated_section is not None and self.associated_section != '':
+            name = self.category_name_string(self.associated_section)
+        
+        return name
 
     
     

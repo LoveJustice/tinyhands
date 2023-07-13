@@ -3,7 +3,7 @@ from rest_framework import serializers
 from budget.models import BorderStationBudgetCalculation, OtherBudgetItemCost, StaffBudgetItem
 from budget.models import MdfItem, ProjectRequest, ProjectRequestDiscussion, ProjectRequestAttachment, ProjectRequestComment
 from budget.models import MonthlyDistributionForm, MonthlyDistributionMultipliers
-from dataentry.models import BorderStation
+from dataentry.models import BorderStation, CountryExchange
 from dataentry.serializers import BorderStationSerializer
 from static_border_stations.models import Staff
 from static_border_stations.serializers import StaffSerializer
@@ -223,7 +223,7 @@ class MonthlyDistributionFormSerializer(serializers.ModelSerializer):
         fields = [field.name for field in model._meta.fields] # all the model fields
         fields = fields + ['station_name', 'requests', 'projectrequestcomment_set', 'mdfitem_set', 'related_projects', 'impact_projects',
                            'related_staff', 'country_id', 'country_currency', 'multiplier_types', 'drop_decimal', 'past_month_sent',
-                           'last_months_total']
+                           'exchange_rate', 'last_months_total']
     
     station_name = serializers.SerializerMethodField(read_only=True)   
     requests = ProjectRequestSerializer(many=True, read_only=True)
@@ -237,6 +237,7 @@ class MonthlyDistributionFormSerializer(serializers.ModelSerializer):
     multiplier_types = serializers.SerializerMethodField(read_only=True)
     drop_decimal = serializers.SerializerMethodField(read_only=True)
     past_month_sent = serializers.SerializerMethodField(read_only=True)
+    exchange_rate = serializers.SerializerMethodField(read_only=True)
     last_months_total = serializers.SerializerMethodField(read_only=True)
     
     def get_station_name(self, obj):
@@ -285,17 +286,25 @@ class MonthlyDistributionFormSerializer(serializers.ModelSerializer):
         
         return past_month_sent
     
+    def get_exchange_rate(self, obj):
+        rate = 1
+        year_month = obj.month_year.year * 100 + obj.month_year.month
+        exchange_list = CountryExchange.objects.filter(country=obj.border_station.operating_country, year_month__lte=year_month).order_by('-year_month')
+        if len(exchange_list) > 0:
+            rate = exchange_list[0].exchange_rate
+        return rate
+    
     def get_last_months_total(self, obj):
         result = None
         
         last_month_date = obj.month_year - relativedelta(months=1)
         mdfs = MonthlyDistributionForm.objects.filter(border_station=obj.border_station, month_year__year=last_month_date.year, month_year__month=last_month_date.month)
         if len(mdfs) > 0:
-            result = None
+            result = str(mdfs[0].distribution_total(obj.border_station))
         else:
             budgets = BorderStationBudgetCalculation.objects.filter(border_station=obj.border_station, month_year__year=last_month_date.year, month_year__month=last_month_date.month)
             if len(budgets) > 0:
-                result = budgets[0].station_total(obj.border_station)
+                result = str(budgets[0].station_total(obj.border_station) - budgets[0].money_not_spent_to_deduct_total(obj.border_station))
         
         return result
         

@@ -33,7 +33,7 @@ class Migration(migrations.Migration):
                 ('category', models.IntegerField(verbose_name=[(11, 'Past Month Sent Money'), (12, 'Limbo Potential Victims'), (13, 'Money Not Spent')])),
                 ('cost', models.DecimalField(decimal_places=2, default=0, max_digits=17)),
                 ('description', models.TextField(blank=True, verbose_name='Description')),
-                ('associated_section', models.IntegerField(blank=True, null=True, verbose_name=[(1, 'Staff Travel'), (3, 'Awareness'), (5, 'Potential Victim Care'), (7, 'Communication'), (8, 'Salaries & Benefits'), (10, 'Administration'), (11, 'Past Month Sent Money'), (12, 'Limbo Potential Victims'), (13, 'Money Not Spent'), (14, 'Operational Expenses'), (15, 'Rent & Utilities')])),
+                ('associated_section', models.IntegerField(blank=True, null=True, verbose_name=[(1, 'Staff Travel'), (3, 'Supplies & Awareness'), (5, 'Potential Victim Care'), (7, 'Communication'), (8, 'Salaries & Benefits'), (10, 'Administration'), (11, 'Past Month Sent Money'), (12, 'Limbo Potential Victims'), (13, 'Money Not Spent'), (14, 'Operational Expenses'), (15, 'Rent & Utilities'), (16, 'Multipliers')])),
                 ('deduct', models.CharField(blank=True, max_length=127, null=True)),
             ],
         ),
@@ -56,7 +56,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=127)),
-                ('category', models.IntegerField(verbose_name=[(1, 'Staff Travel'), (3, 'Awareness'), (5, 'Potential Victim Care'), (7, 'Communication'), (8, 'Salaries & Benefits'), (10, 'Administration'), (11, 'Past Month Sent Money'), (12, 'Limbo Potential Victims'), (13, 'Money Not Spent'), (14, 'Operational Expenses'), (15, 'Rent & Utilities')])),
+                ('category', models.IntegerField(verbose_name=[(1, 'Staff Travel'), (3, 'Supplies & Awareness'), (5, 'Potential Victim Care'), (7, 'Communication'), (8, 'Salaries & Benefits'), (10, 'Administration'), (11, 'Past Month Sent Money'), (12, 'Limbo Potential Victims'), (13, 'Money Not Spent'), (14, 'Operational Expenses'), (15, 'Rent & Utilities'), (16, 'Multipliers')])),
             ],
         ),
         migrations.CreateModel(
@@ -78,6 +78,7 @@ class Migration(migrations.Migration):
                 ('prior_request', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='budget.ProjectRequest')),
                 ('project', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='dataentry.BorderStation')),
                 ('staff', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='static_border_stations.Staff')),
+                ('completed_date_time', models.DateTimeField(null=True)),
             ],
         ),
         migrations.CreateModel(

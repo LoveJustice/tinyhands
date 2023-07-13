@@ -42,6 +42,9 @@ class ProjectRequestViewSet(viewsets.ModelViewSet):
             in_country = self.request.GET.get('country_ids')
             if in_country is not None and in_country != '':
                 queryset = queryset.filter(project__operating_country__id__in=in_country.split(','))
+        category = self.request.GET.get('category')
+        if category is not None and category != '':
+            queryset = queryset.filter(category=category)
         status = self.request.GET.get('status')
         if status is not None and status != '':
             queryset = queryset.filter(status=status)
@@ -52,7 +55,9 @@ class ProjectRequestViewSet(viewsets.ModelViewSet):
             elif frequency == 'single':
                 queryset = queryset.filter(monthly=False)
         discussion = self.request.GET.get('discussion')
-        if discussion == 'Includes Me':
+        if discussion == 'Open':
+            queryset = queryset.filter(discussion_status='Open')
+        elif discussion == 'Includes Me':
             my_discussions = set(ProjectRequestDiscussion.objects.filter(Q(author=self.request.user.id) | Q(notify=self.request.user)).values_list('request__id', flat=True))
             queryset = queryset.filter(id__in=my_discussions)
         elif discussion == 'Waiting on Me':
@@ -94,16 +99,21 @@ class ProjectRequestViewSet(viewsets.ModelViewSet):
             return Response(status=status.HTTP_401_UNAUTHORIZED)
         
         mdf_list = MonthlyDistributionForm.objects.filter(status='Approved', requests=current).order_by('-month_year')
-        print('len(mdf_list)', len(mdf_list))
         on_approved_mdf = (len(mdf_list) > 0)
-        print(on_approved_mdf, on_approved_mdf)
         update_type = None
         comment = None
         if 'comment' in request.data and request.data['comment'] != '':
             comment = request.data['comment']
         
+        override_mdf = current.override_mdf_project
+        if request.data['override_mdf_project'] != str(override_mdf.id):
+            current.monthlydistributionform_set.clear()
+            override_mdf = None
+            if request.data['override_mdf_project'] is not None:
+                override_mdf = BorderStation.objects.get(id=request.data['override_mdf_project'])
+        
         # should be at most one non-approved MDF for the project
-        pending_mdf_list = MonthlyDistributionForm.objects.filter(border_station=current.override_mdf_project).exclude(status='Approved')
+        pending_mdf_list = MonthlyDistributionForm.objects.filter(border_station=override_mdf).exclude(status='Approved')
         
         if on_approved_mdf:
             # Either the amount is being changed or the request is completed
@@ -228,8 +238,10 @@ class ProjectRequestViewSet(viewsets.ModelViewSet):
     
     def get_category_types(self, request, project_id):
         response = []
-        station = BorderStation.objects.get(id=project_id)
-        if 'hasMDF' in station.features:
+        if int(project_id) >= 0:
+            station = BorderStation.objects.get(id=project_id)
+        
+        if int(project_id) < 0 or 'hasMDF' in station.features:
             categories = constants.REQUEST_CATEGORY_CHOICES_MDF
         else:
             categories = constants.REQUEST_CATEGORY_CHOICES_NO_MDF

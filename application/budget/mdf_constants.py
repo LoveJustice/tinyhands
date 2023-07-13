@@ -13,7 +13,7 @@ RENT_UTILITIES = 15
 MULTIPLIERS = 16
 CATEGORY_CHOICES = [
     (TRAVEL, 'Staff Travel'),
-    (AWARENESS, 'Awareness'),
+    (AWARENESS, 'Supplies & Awareness'),
     (POTENTIAL_VICTIM_CARE, 'Potential Victim Care'),
     (COMMUNICATION, 'Communication'),
     (STAFF_BENEFITS, 'Salaries & Benefits'),
@@ -23,6 +23,7 @@ CATEGORY_CHOICES = [
     (MONEY_NOT_SPENT, 'Money Not Spent'),
     (IMPACT_MULTIPLYING, 'Operational Expenses'),
     (RENT_UTILITIES, 'Rent & Utilities'),
+    (MULTIPLIERS, 'Multipliers'),
 ]
 REQUEST_CATEGORY_CHOICES_MDF = [
     (STAFF_BENEFITS, 'Salaries & Benefits'),
