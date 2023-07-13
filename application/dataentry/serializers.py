@@ -1096,6 +1096,12 @@ class IncidentSerializer(serializers.ModelSerializer):
             return obj.station.station_name;
         else:
             return None
+        
+    def get_country_id (self, obj):
+        if obj.station is not None:
+            return obj.station.operating_country.id;
+        else:
+            return None
     
     def get_country_id (self, obj):
         if obj.station is not None:

@@ -32,7 +32,6 @@ server {
     access_log /log/nginx_access.log;
     error_log /log/nginx_error.log debug;
 
-    ssl on;
     ssl_certificate_key ${SSL_KEY_PATH};
     ssl_certificate ${SSL_CERT_PATH};
 

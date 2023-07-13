@@ -413,7 +413,7 @@ class IndicatorsViewSet(viewsets.ViewSet):
                     result.victim_count += 1
                     if evidence:
                         result.victim_evidence_count += 1
-                    if not victim.not_physically_present:
+                    if victim.not_physically_present.lower() != 'true':
                         result.victim_present_count += 1
                         if victim.person.photo is not None and victim.person.photo != '':
                             result.photo_count += 1
@@ -684,10 +684,9 @@ class IndicatorsViewSet(viewsets.ViewSet):
     def getVictimDetail(self, start_date, end_date, project_code, country_id, detail_data):
         victims = IntercepteeCommon.objects.filter(
                 person__role='PVOT',
-                not_physically_present=False,
                 interception_record__station__operating_country__id=country_id,
                 interception_record__verified_date__gte=start_date,
-                interception_record__verified_date__lte=end_date).order_by('person__full_name')
+                interception_record__verified_date__lte=end_date).exclude(not_physically_present__iexact='true').order_by('person__full_name')
         
         if project_code != 'Totals':
             victims = victims.filter(interception_record__station__station_code = project_code)
@@ -739,10 +738,9 @@ class IndicatorsViewSet(viewsets.ViewSet):
     def getSuspectDetail(self, start_date, end_date, project_code, country_id, detail_data):
         suspects = IntercepteeCommon.objects.filter(
                 person__role='Suspect',
-                not_physically_present=False,
                 interception_record__station__operating_country__id=country_id,
                 interception_record__verified_date__gte=start_date,
-                interception_record__verified_date__lte=end_date).order_by('person__full_name')
+                interception_record__verified_date__lte=end_date).exclude(not_physically_present__iexact='true').order_by('person__full_name')
         
         if project_code != 'Totals':
             suspects = suspects.filter(interception_record__station__station_code = project_code)

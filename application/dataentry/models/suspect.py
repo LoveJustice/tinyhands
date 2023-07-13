@@ -82,9 +82,9 @@ class SuspectInformation(BaseCard):
 class SuspectAssociation(BaseCard):
     suspect = models.ForeignKey(Suspect, on_delete=models.CASCADE)
     incident = models.ForeignKey(Incident, on_delete=models.CASCADE)
-    associated_pvs = models.CharField(max_length=126, null=True)
-    associated_suspects = models.CharField(max_length=126, null=True)
-    associated_locations = models.CharField(max_length=126, null=True)
+    associated_pvs = models.TextField(null=True)
+    associated_suspects = models.TextField(null=True)
+    associated_locations = models.TextField(null=True)
     narrative = models.TextField('Narrative', blank=True)
     
     def set_parent(self, the_parent):
