@@ -10,7 +10,7 @@ from django.contrib.contenttypes.models import ContentType
 
 from dataentry.models import BorderStation, IntercepteeCommon, StationStatistics, UserLocationPermission
 from dataentry.serializers import CountrySerializer
-from budget.models import BorderStationBudgetCalculation, MonthlyDistributionForm, MdfCombined, MdfItem, ProjectRequest, ProjectRequestComment
+from budget.models import BorderStationBudgetCalculation, MonthlyDistributionForm, MdfCombined, MdfItem, ProjectRequest, ProjectRequestComment, ProjectRequestDiscussion
 from budget.serializers import MonthlyDistributionFormSerializer, MdfItemSerializer
 from mailbox import MMDF
 
@@ -149,7 +149,7 @@ class MonthlyDistributionFormViewSet(viewsets.ModelViewSet):
         for project_request in project_requests:
             discussion = ProjectRequestDiscussion()
             discussion.request = project_request
-            discussion.author = request.user.id
+            discussion.author = request.user
             discussion.text = 'Closed on MDF approval'
             discussion.save()
             project_request.discussion_status = 'Closed'
@@ -175,7 +175,6 @@ class MonthlyDistributionFormViewSet(viewsets.ModelViewSet):
             for comment in comments:
                 comment.mdf = mdf 
                 comment.save()
-            print('mdf status', mdf.status)
             mdf.save()
             self.check_update_stats(mdf)
        
@@ -186,7 +185,7 @@ class MonthlyDistributionFormViewSet(viewsets.ModelViewSet):
         open_mdf_projects = BorderStation.objects.filter(
                 operating_country=mdf.border_station.operating_country,
                 open=True,
-                features__contains='HasMdf')
+                features__contains='hasMDF')
         approved_mdfs = MonthlyDistributionForm.objects.filter(
                 status = 'Approved',
                 border_station__in=open_mdf_projects,

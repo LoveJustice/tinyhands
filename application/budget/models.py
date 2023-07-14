@@ -471,10 +471,6 @@ class MonthlyDistributionForm(models.Model):
     
     def food_and_snacks_intercepted_pv_total(self):
         total = 0
-        requests = self.requests.filter(project=self.border_station, category=constants.POTENTIAL_VICTIM_CARE).exclude(cost__isnull=True)
-        for request in requests:
-            if self.include_request(request):
-                total += request.cost
         
         if self.number_of_pv_days > 0:
             pv_multiplier_type = MonthlyDistributionMultipliers.objects.get(category=constants.POTENTIAL_VICTIM_CARE)
@@ -493,7 +489,7 @@ class MonthlyDistributionForm(models.Model):
         multipliers = self.requests.filter(project=self.border_station, category=constants.MULTIPLIERS,
                                           description=limbo_multiplier_type.name).exclude(cost__isnull=True)
         for multiplier in multipliers:
-            if self.include_request(multipler):
+            if self.include_request(multiplier):
                 multiplier_value = multiplier.cost
                 break
         return multiplier_value
@@ -505,10 +501,10 @@ class MonthlyDistributionForm(models.Model):
         limbo_pv_days = 0
         for limbo_pv in limbo_pvs:
             limbo_pv_days += limbo_pv.cost
+            
         if limbo_pv_days > 0:
             total += self.limbo_girls_multiplier * limbo_pv_days
                     
-            
         return total
     
     def pv_total(self):
@@ -556,8 +552,8 @@ class MonthlyDistributionForm(models.Model):
         return self.station_total(project) - self.money_not_spent_to_deduct_total(project)
     
     def full_total(self, project):
-        total = self.station_total(project) + self.staff_salary_and_benefits_deductions(project)
-        past_sent_list = self.mdfitem_set.flter(work_project=project, category=constants.PAST_MONTH_SENT)
+        total = self.distribution_total(project) + self.staff_salary_and_benefits_deductions(project)
+        past_sent_list = self.mdfitem_set.filter(work_project=project, category=constants.PAST_MONTH_SENT)
         for past_sent in past_sent_list:
             total += past_sent.cost
         return total
