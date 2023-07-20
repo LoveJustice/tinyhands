@@ -30,6 +30,10 @@ class ProjectRequestViewSet(viewsets.ModelViewSet):
     ordering = ('-date_time_entered',)
     
     def get_queryset(self):
+        mdf_id = self.request.GET.get('mdf_id')
+        if mdf_id is not None and mdf_id != '':
+            mdf = MonthlyDistributionForm.objects.get(id=mdf_id)
+            return mdf.requests.filter(discussion_status='Open')
         border_stations = UserLocationPermission.get_stations_with_permission(self.request.user.id, 'PROJECT_REQUEST','VIEW')
         border_station_ids = []
         for border_station in border_stations:
@@ -88,7 +92,7 @@ class ProjectRequestViewSet(viewsets.ModelViewSet):
             has_approve = True
             is_author = False
         elif UserLocationPermission.has_session_permission(request, 'PROJECT_REQUEST', 'APPROVE', current.project.operating_country.id, current.project.id):
-            has_review = False
+            has_review = True
             has_approve = True
             is_author = False
         elif current.author == request.user:
@@ -173,6 +177,7 @@ class ProjectRequestViewSet(viewsets.ModelViewSet):
             else:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
             
+            print('before', project_request.status, is_author, project_request.cost, project_request.original_cost)
             if is_author:
                 project_request.cost = project_request.original_cost
                 if project_request.status != 'Submitted':

@@ -367,15 +367,15 @@ z3c.rml docs can be found on their github page: https://github.com/zopefoundatio
         {% for footnote in second_footnotes.footnotes %}
 			<para>{{ footnote }}</para>
 		{% endfor %}
-		<setNextTemplate name="otherDetail" />
+		<setNextTemplate name="requestDetail" />
         <nextFrame/>
         <nextFrame/>
         {% for mdf in mdfs %}
-	        {% if mdf.has_new_approved_or_pending_request %}
+	        {% if mdf.pending.has_data %}
 	        	<spacer length="20"/>
 	        	<blockTable alignment="LEFT" colWidths="15% 10% 32% 8% 15%, 15%" style="wideGrid">
 	        		<tr>
-						<td ><para style="tableHeader2">New Approved and Pending Requests for ({{ mdf.project.station_name }} {{ mdf.project.station_code }})</para></td>
+						<td ><para style="tableHeader2">Pending Requests for ({{ mdf.project.station_name }} {{ mdf.project.station_code }})</para></td>
 					</tr>
 					<tr>
 						<td><para style="staffHeader">Category</para></td>
@@ -385,36 +385,19 @@ z3c.rml docs can be found on their github page: https://github.com/zopefoundatio
 						<td><para style="staffHeader">Staff</para></td>
 						<td><para style="staffHeader">Benefit</para></td>
 					</tr>
-		        	{% if mdf.new_approved.has_data %}
-		        		<tr>
-							<td><para style="staffHeader">(Approved)</para></td>
+	        		<tr>
+						<td><para style="staffHeader">(Pending)</para></td>
+					</tr>
+					{% for item in mdf.pending.items %}
+						<tr>
+							<td><para>{{ item.category_name }}</para></td>
+							<td><para style="numberAlign">{{ item.cost }}</para></td>
+							<td><para>{{ item.description }}</para></td>
+							<td><para>{{ item.monthly_string }}</para></td>
+							<td><para>{{ item.staff.full_name }}</para></td>
+							<td><para>{{ item.benefit_type_name }}</para></td>
 						</tr>
-						{% for item in mdf.new_approved.items %}
-							<tr>
-								<td><para>{{ item.category_name }}</para></td>
-								<td><para style="numberAlign">{{ item.cost }}</para></td>
-								<td><para>{{ item.description }}</para></td>
-								<td><para>{{ item.monthly_string }}</para></td>
-								<td><para>{{ item.staff.full_name }}</para></td>
-								<td><para>{{ item.benefit_type_name }}</para></td>
-							</tr>
-						{% endfor %}
-		        	{% endif %}
-		        	{% if mdf.pending.has_data %}
-		        		<tr>
-							<td><para style="staffHeader">(Pending)</para></td>
-						</tr>
-						{% for item in mdf.pending.items %}
-							<tr>
-								<td><para>{{ item.category_name }}</para></td>
-								<td><para style="numberAlign">{{ item.cost }}</para></td>
-								<td><para>{{ item.description }}</para></td>
-								<td><para>{{ item.monthly_string }}</para></td>
-								<td><para>{{ item.staff.full_name }}</para></td>
-								<td><para>{{ item.benefit_type_name }}</para></td>
-							</tr>
-						{% endfor %}
-		        	{% endif %}
+					{% endfor %}
 		        </blockTable>
 	        {% endif %}
 	    {% endfor %}

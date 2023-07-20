@@ -205,26 +205,6 @@ class MdfPending:
                     override_mdf_project = self.budget.border_station,
                     date_time_entered__lt=self.budget.date_time_entered).order_by('category', 'staff__first_name', 'staff__last_name', 'benefit_type_name', 'description')
         return item_list
-
-class MdfNewApproved:
-    def __init__(self, budget, project):
-        self.budget = budget
-        self.project = project
-    
-    @property
-    def has_data(self):
-        return len(self.items) > 0
-    
-    @property
-    def items(self):
-        new_requests = []
-        item_list = self.budget.requests.filter(prior_request__isnull=True, project=self.project).order_by('category', 'staff__first_name', 'staff__last_name', 'benefit_type_name', 'description')
-        for entry in item_list:
-            earlier_mdfs = entry.monthlydistributionform_set.filter(month_year__lt=self.budget.month_year)
-            if len(earlier_mdfs) == 0:
-                new_requests.append(entry)
-        
-        return new_requests
         
 
 class MoneyDistributionFormProjectRequestHelper:
@@ -240,7 +220,6 @@ class MoneyDistributionFormProjectRequestHelper:
         self.format = "{:,.2f}"
         self.comments = MdfComments(budget, project)
         self.pending = MdfPending(budget, project)
-        self.new_approved = MdfNewApproved(budget, project)
     
     @property
     def staff(self):
@@ -443,8 +422,4 @@ class MoneyDistributionFormProjectRequestHelper:
             break
         
         return height
-    
-    @property
-    def has_new_approved_or_pending_request(self):
-        return self.pending.has_data or self.new_approved.has_data
     

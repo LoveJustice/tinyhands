@@ -8,6 +8,7 @@ from dataentry.serializers import BorderStationSerializer
 from static_border_stations.models import Staff
 from static_border_stations.serializers import StaffSerializer
 from budget.mdf_constants import REQUEST_CATEGORY_CHOICES_MDF
+import budget.mdf_constants as constants
 
 
 class BorderStationBudgetCalculationListSerializer(serializers.ModelSerializer):
@@ -195,7 +196,6 @@ class ProjectRequestSerializer(serializers.ModelSerializer):
             comment_list.append({'type':comment.type, 'comment':comment.comment, 'mdf':mdf_id})
         
         return comment_list
-        
         
 class MonthlyDistributionMultipliersSerializer(serializers.ModelSerializer):
     class Meta:
