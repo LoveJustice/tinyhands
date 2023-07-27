@@ -52624,6 +52624,42 @@
    }
 },
 {
+   "model": "dataentry.formvalidation",
+   "pk": 430,
+   "fields": {
+      "form_tag": "gospelVerificationConfirmationDetailsMustBeEntered",
+      "level": 2,
+      "trigger": 1060,
+      "trigger_value": "No",
+      "validation_type": 1,
+      "error_warning_message": "Gospel sharing details must be entered",
+      "params": null,
+      "retrieve": false,
+      "update": true,
+      "forms": [
+        58
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "pk": 431,
+   "fields": {
+      "form_tag": "gospelVerificationChangeDetailsMustBeEntered",
+      "level": 2,
+      "trigger": 1060,
+      "trigger_value": "Yes",
+      "validation_type": 1,
+      "error_warning_message": "Reason for changing gospel verification must be entered",
+      "params": null,
+      "retrieve": false,
+      "update": true,
+      "forms": [
+        58
+      ]
+   }
+},
+{
    "model": "dataentry.formvalidationquestion",
    "fields": {
       "validation": 1,
@@ -53629,6 +53665,41 @@
    "fields": {
       "validation": 429,
       "question": 1090
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": 431,
+      "question": 1061
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": 430,
+      "question": 1062
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": 430,
+      "question": 1063
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": 430,
+      "question": 1064
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": 430,
+      "question": 1065
    }
 },
 {
