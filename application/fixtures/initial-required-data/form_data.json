@@ -42165,7 +42165,7 @@
    "model": "dataentry.questionlayout",
    "fields": {
       "question": 1822,
-      "category": 260,
+      "category": 231,
       "weight": 0,
       "form_config": null
    }
