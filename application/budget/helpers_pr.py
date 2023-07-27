@@ -182,10 +182,11 @@ class MdfComments:
         self.changed = MdfCommentType(budget, project, 'Change Amount')
         self.declined = MdfCommentType(budget, project, 'Declined')
         self.completed = MdfCommentType(budget, project, 'Completed')
+        self.pending = MdfPending(budget, project)
     
     @property
     def has_data(self):
-        return self.changed.has_data or self.declined.has_data or self.completed.has_data
+        return self.changed.has_data or self.declined.has_data or self.completed.has_data or self.pending.has_data
         
 
 class MdfPending:
@@ -195,6 +196,7 @@ class MdfPending:
     
     @property
     def has_data(self):
+        print('MdfPending has_data', self.budget.border_station.id, self.project, len(self.items))
         return len(self.items) > 0
     
     @property
@@ -219,7 +221,6 @@ class MoneyDistributionFormProjectRequestHelper:
         self.second_footnote = second_page_footnote
         self.format = "{:,.2f}"
         self.comments = MdfComments(budget, project)
-        self.pending = MdfPending(budget, project)
     
     @property
     def staff(self):
