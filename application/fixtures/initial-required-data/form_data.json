@@ -3191,7 +3191,7 @@
    "model": "dataentry.formcategory",
    "fields": {
       "form": 8,
-      "category": 286,
+      "category": 184,
       "name": "People",
       "order": 7,
       "form_category_question_config": null,
@@ -12976,7 +12976,7 @@
    "model": "dataentry.formcategory",
    "fields": {
       "form": 35,
-      "category": 286,
+      "category": 184,
       "name": "People",
       "order": 7,
       "form_category_question_config": null,
@@ -13174,7 +13174,7 @@
    "model": "dataentry.formcategory",
    "fields": {
       "form": 54,
-      "category": 286,
+      "category": 184,
       "name": "People",
       "order": 7,
       "form_category_question_config": null,
