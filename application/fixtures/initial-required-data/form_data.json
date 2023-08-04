@@ -2589,7 +2589,7 @@
    "fields": {
       "form_tag": "irfControlIndonesia",
       "category_type": 1,
-      "description": "Control for IRF Ecuador & Indonesia & Ethiopia"
+      "description": "Control for IRF Ecuador & Indonesia"
    }
 },
 {
@@ -2725,6 +2725,15 @@
       "form_tag": "irfSfeResult",
       "category_type": 1,
       "description": "Result - common IRF SFE"
+   }
+},
+{
+   "model": "dataentry.category",
+   "pk": 370,
+   "fields": {
+      "form_tag": "irfControlEthiopia",
+      "category_type": 1,
+      "description": "Control for IRF Ethiopia"
    }
 },
 {
@@ -15266,7 +15275,7 @@
    "model": "dataentry.formcategory",
    "fields": {
       "form": 71,
-      "category": 231,
+      "category": 370,
       "name": "Control",
       "order": 5,
       "form_category_question_config": null,
@@ -42164,8 +42173,269 @@
 {
    "model": "dataentry.questionlayout",
    "fields": {
+      "question": 10,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 17,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 23,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 24,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 25,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 26,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 55,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 57,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 79,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 216,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 247,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 501,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 603,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 712,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 931,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 932,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 933,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 934,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 935,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 936,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 937,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 938,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 939,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 143,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 234,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1068,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1076,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1085,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1086,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
       "question": 1822,
-      "category": 231,
+      "category": 370,
       "weight": 0,
       "form_config": null
    }
