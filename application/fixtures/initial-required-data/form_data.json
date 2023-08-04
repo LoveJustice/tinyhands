@@ -2589,7 +2589,7 @@
    "fields": {
       "form_tag": "irfControlIndonesia",
       "category_type": 1,
-      "description": "Control for IRF Ecuador & Indonesia & Ethiopia"
+      "description": "Control for IRF Ecuador & Indonesia"
    }
 },
 {
@@ -2725,6 +2725,15 @@
       "form_tag": "irfSfeResult",
       "category_type": 1,
       "description": "Result - common IRF SFE"
+   }
+},
+{
+   "model": "dataentry.category",
+   "pk": 370,
+   "fields": {
+      "form_tag": "irfControlEthiopia",
+      "category_type": 1,
+      "description": "Control for IRF Ethiopia"
    }
 },
 {
@@ -15266,7 +15275,7 @@
    "model": "dataentry.formcategory",
    "fields": {
       "form": 71,
-      "category": 231,
+      "category": 370,
       "name": "Control",
       "order": 5,
       "form_category_question_config": null,
@@ -15288,7 +15297,7 @@
    "model": "dataentry.formcategory",
    "fields": {
       "form": 71,
-      "category": 184,
+      "category": 286,
       "name": "People",
       "order": 7,
       "form_category_question_config": null,
@@ -42164,6 +42173,276 @@
 {
    "model": "dataentry.questionlayout",
    "fields": {
+      "question": 10,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 17,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 23,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 24,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 25,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 26,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 55,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 57,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 79,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 216,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 247,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 501,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 603,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 712,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 931,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 932,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 933,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 934,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 935,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 936,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 937,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 938,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 939,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 143,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 234,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1068,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1076,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1085,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1086,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1822,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
       "question": 9,
       "category": 286,
       "weight": 0,
@@ -52624,6 +52903,42 @@
    }
 },
 {
+   "model": "dataentry.formvalidation",
+   "pk": 430,
+   "fields": {
+      "form_tag": "gospelVerificationConfirmationDetailsMustBeEntered",
+      "level": 2,
+      "trigger": 1060,
+      "trigger_value": "No",
+      "validation_type": 1,
+      "error_warning_message": "Gospel sharing details must be entered",
+      "params": null,
+      "retrieve": false,
+      "update": true,
+      "forms": [
+        58
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "pk": 431,
+   "fields": {
+      "form_tag": "gospelVerificationChangeDetailsMustBeEntered",
+      "level": 2,
+      "trigger": 1060,
+      "trigger_value": "Yes",
+      "validation_type": 1,
+      "error_warning_message": "Reason for changing gospel verification must be entered",
+      "params": null,
+      "retrieve": false,
+      "update": true,
+      "forms": [
+        58
+      ]
+   }
+},
+{
    "model": "dataentry.formvalidationquestion",
    "fields": {
       "validation": 1,
@@ -53629,6 +53944,41 @@
    "fields": {
       "validation": 429,
       "question": 1090
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": 431,
+      "question": 1061
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": 430,
+      "question": 1062
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": 430,
+      "question": 1063
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": 430,
+      "question": 1064
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": 430,
+      "question": 1065
    }
 },
 {
