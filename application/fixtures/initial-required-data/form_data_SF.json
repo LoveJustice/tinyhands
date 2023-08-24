@@ -3666,5 +3666,52 @@
       "question": "sfTopMergedPlateNumber",
       "field_name": "merged_plate_number"
    }
+},
+{
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "legalCaseArrested",
+      "level": 2,
+      "trigger": null,
+      "trigger_value": null,
+      "validation_type": 1,
+      "error_warning_message": "Legal Case arrested must be entered",
+      "params": null,
+      "retrieve": true,
+      "update": true,
+      "forms": [
+         "sfNepal",
+         "sfIndia",
+         "sfIndiaNetwork",
+         "sfGhana",
+         "sfKenya",
+         "sfSouthAfrica",
+         "sfNamibia",
+         "sfLiberia",
+         "sfEthiopia",
+         "sfBenin",
+         "sfMalawi",
+         "sfBurkinaFaso",
+         "sfBurundi",
+         "sfIndonesia",
+         "sfLesotho",
+         "sfMozambique",
+         "sfUganda",
+         "sfZambia",
+         "sfEcuador",
+         "sfArgentina",
+         "sfZimbabwe",
+         "sfSierraLeone",
+         "sfRwanda",
+         "sfTanzania"
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": "legalCaseArrested",
+      "question": "sfLegalArrested"
+   }
 }
 ]

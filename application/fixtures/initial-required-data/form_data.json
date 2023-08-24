@@ -2585,15 +2585,6 @@
 },
 {
    "model": "dataentry.category",
-   "pk": 231,
-   "fields": {
-      "form_tag": "irfControlIndonesia",
-      "category_type": 1,
-      "description": "Control for IRF Ecuador & Indonesia"
-   }
-},
-{
-   "model": "dataentry.category",
    "pk": 232,
    "fields": {
       "form_tag": "irfBlindVerificationCard",
@@ -23853,6 +23844,19 @@
 },
 {
    "model": "dataentry.question",
+   "pk": 1082,
+   "fields": {
+      "form_tag": "irfSfeControlUnder18Enticed",
+      "prompt": "Under 18 (enticed to work)",
+      "description": null,
+      "answer_type": 6,
+      "params": null,
+      "export_name": "Under 18 enticed to work",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
    "pk": 1083,
    "fields": {
       "form_tag": "question1083",
@@ -41138,267 +41142,6 @@
 {
    "model": "dataentry.questionlayout",
    "fields": {
-      "question": 10,
-      "category": 231,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 17,
-      "category": 231,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 23,
-      "category": 231,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 24,
-      "category": 231,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 25,
-      "category": 231,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 26,
-      "category": 231,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 55,
-      "category": 231,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 57,
-      "category": 231,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 79,
-      "category": 231,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 216,
-      "category": 231,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 247,
-      "category": 231,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 501,
-      "category": 231,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 603,
-      "category": 231,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 712,
-      "category": 231,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 931,
-      "category": 231,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 932,
-      "category": 231,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 933,
-      "category": 231,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 934,
-      "category": 231,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 935,
-      "category": 231,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 936,
-      "category": 231,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 937,
-      "category": 231,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 938,
-      "category": 231,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 939,
-      "category": 231,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 143,
-      "category": 231,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 234,
-      "category": 231,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 1068,
-      "category": 231,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 1076,
-      "category": 231,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 1085,
-      "category": 231,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 1086,
-      "category": 231,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
       "question": 930,
       "category": 230,
       "weight": 0,
@@ -44101,6 +43844,15 @@
    "fields": {
       "question": 1084,
       "category": 183,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1082,
+      "category": 342,
       "weight": 0,
       "form_config": null
    }
@@ -48558,6 +48310,13 @@
    }
 },
 {
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": 1082,
+      "field_name": "control_under_18_recruited_for_work"
+   }
+},
+{
    "model": "dataentry.answer",
    "fields": {
       "question": 82,
@@ -52916,7 +52675,7 @@
       "retrieve": false,
       "update": true,
       "forms": [
-        58
+         58
       ]
    }
 },
@@ -52934,7 +52693,7 @@
       "retrieve": false,
       "update": true,
       "forms": [
-        58
+         58
       ]
    }
 },
