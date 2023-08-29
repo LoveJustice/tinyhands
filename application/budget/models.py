@@ -477,7 +477,7 @@ class MonthlyDistributionForm(models.Model):
             multipliers = self.requests.filter(project=self.border_station, category=constants.MULTIPLIERS,
                                           description=pv_multiplier_type.name).exclude(cost__isnull=True)
             for multiplier in multipliers:
-                if self.include_request(multipler):
+                if self.include_request(multiplier):
                     total += multiplier.cost * self.number_of_pv_days
                     break
         return total
