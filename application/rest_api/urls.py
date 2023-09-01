@@ -17,6 +17,7 @@ from dataentry.views import ClientDiagnosticViewSet
 from dataentry.views import EmpowermentViewSet
 from dataentry.views import GospelViewSet
 from dataentry.views import IncidentViewSet
+from dataentry.views import MonitorAppViewSet
 from help.views import VideoViewSet
 
 list = {'get': 'list', 'post': 'create'}
@@ -201,4 +202,5 @@ urlpatterns = [
         url(r'^incident/names/$', IncidentViewSet.as_view({'get':'get_names_and_addresses'}), name='IncidentNames'),
         
         url(r'^diagnostic/$', ClientDiagnosticViewSet.as_view(list), name='Diagnostic'),
+        url(r'^monitor-form/$', MonitorAppViewSet.as_view({'post':'create'}), name='MonitorApp'),
 ]
