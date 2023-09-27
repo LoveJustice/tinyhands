@@ -12,7 +12,7 @@ from dataentry.views import MonthlyReportFormViewSet
 from dataentry.views import IndicatorsViewSet
 from dataentry.views import BorderStationFormViewSet
 from dataentry.views import StationStatisticsViewSet
-from dataentry.views import LegalCaseFormViewSet
+from legal.views import LegalChargeFormViewSet, LegalChargeCountrySpecificViewSet
 from dataentry.views import ClientDiagnosticViewSet
 from dataentry.views import EmpowermentViewSet
 from dataentry.views import GospelViewSet
@@ -184,9 +184,12 @@ urlpatterns = [
         url(r'^audit-sample/$', AuditSampleViewSet.as_view(list), name='Audit'),
         url(r'^audit-sample/(?P<pk>\d+)/$', AuditSampleViewSet.as_view(detail), name='Auditdetail'),
 
-        url(r'^legal-case/$', LegalCaseFormViewSet.as_view(list), name='legalCase'),
-        url(r'^legal-case/(?P<station_id>\d+)/(?P<pk>\d+)', LegalCaseFormViewSet.as_view({'get': 'my_retrieve', 'put': 'update', 'delete': 'destroy'}), name='legalCaseDetail'),
-        url(r'^legal-case/blank/(?P<station_id>\d+)', LegalCaseFormViewSet.as_view({'get': 'retrieve_blank_form'}), name='legalCaseBlank'),
+        url(r'^legal-charge/$', LegalChargeFormViewSet.as_view(list), name='legalCharge'),
+        url(r'^legal-charge/(?P<station_id>\d+)/(?P<pk>\d+)', LegalChargeFormViewSet.as_view({'get': 'my_retrieve', 'put': 'update', 'delete': 'destroy'}), name='legalChargeDetail'),
+        url(r'^legal-charge/blank/(?P<station_id>\d+)', LegalChargeFormViewSet.as_view({'get': 'retrieve_blank_form'}), name='legalChargeBlank'),
+        url(r'^legal-charge/incident/(?P<pk>\d+)', LegalChargeFormViewSet.as_view({'get': 'get_incident_detail'}), name='legalChargeIncident'),
+        
+        url(r'^legal-charge/country-specific/', LegalChargeCountrySpecificViewSet.as_view({'get': 'list'}), name='legalChargeCountrySpecific'),
         
         url(r'^emp/$', EmpowermentViewSet.as_view(list), name='Empowerment'),
         url(r'^emp/(?P<pk>\d+)/$', EmpowermentViewSet.as_view(detail), name='EmpowermentDetail'),
