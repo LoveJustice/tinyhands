@@ -97,6 +97,7 @@ def migrate_legal_charge(apps, schema_editor):
         court_case.sequence_number = 1     
         court_case.court_case = case.court_case
         theCharges = charge_map[case.case_type]
+        court_case.charges = ''
         sep = ''
         for theCharge in theCharges:
             court_case.charges += sep + theCharge
@@ -220,7 +221,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('dataentry', '0258_auto_20230824_1425'),
+        ('dataentry', '0256_auto_20230710_1452'),
     ]
 
     operations = [
