@@ -25,6 +25,25 @@ def migrate_legal_charge(apps, schema_editor):
     LegalChargeTimeline = apps.get_model("legal", "LegalChargeTimeline")
     LegalChargeVictim = apps.get_model("legal", "LegalChargeVictim")
     
+    LegalChargeCountrySpecific = apps.get_model("legal", "LegalChargeCountrySpecific")
+    Country = apps.get_model("dataentry", "Country")
+    
+    try:
+        nepal = Country.objects.get(name='Nepal')
+        for charge in [
+            'Human Trafficking and Transportation (Control) Act (2064)',
+            'Civil Criminal Procedure Code 2074',
+            'Domestic Violence and Punishment Act 2066',
+            'Foreign Employment Act 2064']:
+            entry = LegalChargeCountrySpecific()
+            entry.country = nepal
+            entry.charge = charge
+            entry.save()
+    except:
+        # test database
+        pass
+    
+    
     source_map = {
         "By the information":"Informant",
         "Intercept":"Intercept",
@@ -55,6 +74,8 @@ def migrate_legal_charge(apps, schema_editor):
         "Sexual Harassment":["Sexual Assault"],
         "Sodomy":["Sexual Assault"],
     };
+    
+    
     
     cases = LegalCase.objects.all()
     for case in cases:
@@ -377,10 +398,6 @@ class Migration(migrations.Migration):
                 ('country', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='dataentry.Country')),
             ],
         ),
-        migrations.RunSQL("insert into legal_legalchargecountryspecific (country_id, charge) values (1, 'Human Trafficking and Transportation (Control) Act (2064)')"),
-        migrations.RunSQL("insert into legal_legalchargecountryspecific (country_id, charge) values (1, 'Civil Criminal Procedure Code 2074')"),
-        migrations.RunSQL("insert into legal_legalchargecountryspecific (country_id, charge) values (1, 'Domestic Violence and Punishment Act 2066')"),
-        migrations.RunSQL("insert into legal_legalchargecountryspecific (country_id, charge) values (1, 'Foreign Employment Act 2064')"),
         
         migrations.RunPython(migrate_legal_charge)
     ]
