@@ -137,6 +137,8 @@ class ValidateForm:
             category_name = ''
             category_id = None
         card_count = 0
+        if getattr(form_data, 'form_data', None) is not None:
+            form_data = form_data.form_data
         if (getattr(form_data, 'card_dict', None) is None or validation.params is None or 
                 category_name == '' or category_id is None or
                 ('min_count' not in validation.params and 'max_count' not in validation.params)):
@@ -144,6 +146,7 @@ class ValidateForm:
             tmp_validation.level = validation.level
             tmp_validation.error_warning_message = 'Incorrect configuration for validation:' + validation.error_warning_message
             self.add_error_or_warning(category_name, None, tmp_validation)
+            return
         else:
             if category_id in form_data.card_dict:
                 for card in form_data.card_dict[category_id]:
@@ -594,8 +597,8 @@ class ValidateForm:
         if validation.level.name in self.validations_to_perform:
             if validation.trigger is not None:
                 trigger_value = form_data.get_answer(validation.trigger)
-                if validation.trigger_value is not None:
-                    if trigger_value == validation.trigger_value:
+                if validation.trigger_value is not None and trigger_value is not None:
+                    if re.match(validation.trigger_value, trigger_value) is not None:
                         should_validate = True
                     else:
                         should_validate = False

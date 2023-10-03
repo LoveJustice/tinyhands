@@ -665,7 +665,7 @@
       "form_tag": "lcVictimAlternatePhone",
       "prompt": "Alternate Phone",
       "description": null,
-      "answer_type": 8,
+      "answer_type": 1,
       "params": null,
       "export_name": "Alternate Phone",
       "export_params": null
@@ -1838,6 +1838,433 @@
    "fields": {
       "question": "lcVerificationSequence",
       "field_name": "court_case_sequence"
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "lcLocation",
+      "level": 3,
+      "trigger": null,
+      "trigger_value": null,
+      "validation_type": 1,
+      "error_warning_message": "Location should be provided",
+      "params": null,
+      "retrieve": true,
+      "update": true,
+      "forms": [
+         "legalCaseCommon"
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "lcChargeSheetDate",
+      "level": 3,
+      "trigger": null,
+      "trigger_value": null,
+      "validation_type": 1,
+      "error_warning_message": "Charge sheet date should be provided",
+      "params": null,
+      "retrieve": true,
+      "update": true,
+      "forms": [
+         "legalCaseCommon"
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "lcPoliceCase",
+      "level": 3,
+      "trigger": null,
+      "trigger_value": null,
+      "validation_type": 1,
+      "error_warning_message": "Police case # should be provided",
+      "params": null,
+      "retrieve": true,
+      "update": true,
+      "forms": [
+         "legalCaseCommon"
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "lcHumanTraffickingNarrative",
+      "level": 3,
+      "trigger": null,
+      "trigger_value": null,
+      "validation_type": 1,
+      "error_warning_message": "Human trafficking narrative should be provided",
+      "params": null,
+      "retrieve": true,
+      "update": true,
+      "forms": [
+         "legalCaseCommon"
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "lcDateLastContacted",
+      "level": 3,
+      "trigger": null,
+      "trigger_value": null,
+      "validation_type": 1,
+      "error_warning_message": "Date last contacted should be provided",
+      "params": null,
+      "retrieve": true,
+      "update": true,
+      "forms": [
+         "legalCaseCommon"
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "lcAtLeastOneCourtCase",
+      "level": 3,
+      "trigger": null,
+      "trigger_value": null,
+      "validation_type": 3,
+      "error_warning_message": "There should be at least one court case",
+      "params": {
+         "category_name": "Court Case"
+      },
+      "retrieve": true,
+      "update": true,
+      "forms": [
+         "legalCaseCommon"
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "lcAtLeastOneSuspect",
+      "level": 3,
+      "trigger": null,
+      "trigger_value": null,
+      "validation_type": 3,
+      "error_warning_message": "There should be at least one suspect",
+      "params": {
+         "category_name": "Suspects"
+      },
+      "retrieve": true,
+      "update": true,
+      "forms": [
+         "legalCaseCommon"
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "lcAtLeastOneVictim",
+      "level": 3,
+      "trigger": null,
+      "trigger_value": null,
+      "validation_type": 3,
+      "error_warning_message": "There should be at least one victim",
+      "params": {
+         "category_name": "Victims"
+      },
+      "retrieve": true,
+      "update": true,
+      "forms": [
+         "legalCaseCommon"
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "lcAtLeastOneTimeline",
+      "level": 3,
+      "trigger": null,
+      "trigger_value": null,
+      "validation_type": 3,
+      "error_warning_message": "There should be at least one timeline entry",
+      "params": {
+         "category_name": "Timeline"
+      },
+      "retrieve": true,
+      "update": true,
+      "forms": [
+         "legalCaseCommon"
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "lcCourtCaseCharge",
+      "level": 3,
+      "trigger": null,
+      "trigger_value": null,
+      "validation_type": 1,
+      "error_warning_message": "Court Case should have at least one charge",
+      "params": null,
+      "retrieve": true,
+      "update": true,
+      "forms": [
+         "legalCaseCommon"
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "lcSuspectArrestStatus",
+      "level": 3,
+      "trigger": null,
+      "trigger_value": null,
+      "validation_type": 1,
+      "error_warning_message": "Suspect arrest status should be provided",
+      "params": null,
+      "retrieve": true,
+      "update": true,
+      "forms": [
+         "legalCaseCommon"
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "lcSuspectNamedInChargeSheet",
+      "level": 3,
+      "trigger": null,
+      "trigger_value": null,
+      "validation_type": 1,
+      "error_warning_message": "Suspect named in charge sheet should be provided",
+      "params": null,
+      "retrieve": true,
+      "update": true,
+      "forms": [
+         "legalCaseCommon"
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "lcSuspectArrestDate",
+      "level": 3,
+      "trigger": "lcSuspectArrestStatus",
+      "trigger_value": "Yes*",
+      "validation_type": 1,
+      "error_warning_message": "Suspect arrest date should be provided",
+      "params": null,
+      "retrieve": true,
+      "update": true,
+      "forms": [
+         "legalCaseCommon"
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "lcSuspectChargeVerdictDate",
+      "level": 3,
+      "trigger": "lcSuspectChargeVerdict",
+      "trigger_value": "(Conviction|Acquittal)",
+      "validation_type": 1,
+      "error_warning_message": "Suspect charge verdict date should be provided",
+      "params": null,
+      "retrieve": true,
+      "update": true,
+      "forms": [
+         "legalCaseCommon"
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "lcSuspectChargeImprisonment",
+      "level": 3,
+      "trigger": "lcSuspectChargeVerdict",
+      "trigger_value": "Conviction",
+      "validation_type": 1,
+      "error_warning_message": "Suspect charge imprisonment period should be provided",
+      "params": null,
+      "retrieve": true,
+      "update": true,
+      "forms": [
+         "legalCaseCommon"
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "lcVerdictWhenClosed",
+      "level": 3,
+      "trigger": null,
+      "trigger_value": null,
+      "validation_type": 10,
+      "error_warning_message": "Verdict should be entered",
+      "params": {
+         "filter": {
+            "value": "closed",
+            "operation": "=",
+            "question_tag": "lcStatus"
+         }
+      },
+      "retrieve": true,
+      "update": true,
+      "forms": [
+         "legalCaseCommon"
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "lcChargeSheetAttacment",
+      "level": 3,
+      "trigger": null,
+      "trigger_value": null,
+      "validation_type": 7,
+      "error_warning_message": "Should have attachment with option \"Charge Sheet\"",
+      "params": {
+         "filter": {
+            "value": "Charge Sheet",
+            "operation": "=",
+            "question_tag": "lcAttachmentOption"
+         },
+         "min_count": 1,
+         "category_name": "Attachments"
+      },
+      "retrieve": true,
+      "update": true,
+      "forms": [
+         "legalCaseCommon"
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "lcVerdictAttacment",
+      "level": 3,
+      "trigger": "lcSuspectChargeVerdict",
+      "trigger_value": "(Conviction|Acquittal)",
+      "validation_type": 7,
+      "error_warning_message": "Should have attachment with option \"Verdict\" when there ihas been a verdict of \"Conviction\" or \"Acquittal\"",
+      "params": {
+         "filter": {
+            "value": "Verdict",
+            "operation": "=",
+            "question_tag": "lcAttachmentOption"
+         },
+         "min_count": 1,
+         "category_name": "Attachments"
+      },
+      "retrieve": true,
+      "update": true,
+      "forms": [
+         "legalCaseCommon"
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": "lcLocation",
+      "question": "lcLocation"
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": "lcChargeSheetDate",
+      "question": "lcChargeSheetDate"
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": "lcPoliceCase",
+      "question": "lcPoliceCase"
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": "lcHumanTraffickingNarrative",
+      "question": "lcHumanTrafficking"
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": "lcDateLastContacted",
+      "question": "lcDateLastContacted"
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": "lcCourtCaseCharge",
+      "question": "lcCourtCaseCharges"
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": "lcSuspectArrestStatus",
+      "question": "lcSuspectArrestStatus"
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": "lcSuspectNamedInChargeSheet",
+      "question": "lcSuspectNamedOnChargeSheet"
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": "lcSuspectArrestDate",
+      "question": "lcSuspectArrestDate"
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": "lcSuspectChargeVerdictDate",
+      "question": "lcSuspectChargeVerdictDate"
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": "lcSuspectChargeImprisonment",
+      "question": "lcSuspectChargeImprisonmentYears"
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": "lcSuspectChargeImprisonment",
+      "question": "lcSuspectChargeImprisonmentDays"
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": "lcVerdictWhenClosed",
+      "question": "lcSuspectChargeVerdict"
    }
 }
 ]
