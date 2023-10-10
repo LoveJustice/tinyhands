@@ -2800,7 +2800,9 @@
       "prompt": "Interview Date",
       "description": null,
       "answer_type": 9,
-      "params": null,
+      "params": {
+         "card_date": "True"
+      },
       "export_name": "Interview Date",
       "export_params": null
    }

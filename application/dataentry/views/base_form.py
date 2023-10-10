@@ -178,7 +178,7 @@ class BaseFormViewSet(viewsets.ModelViewSet):
     def create(self, request):
         form_type = FormType.objects.get(name=self.get_form_type_name())
         request_json = self.extract_data(request, self.get_element_paths())
-        self.serializer_context = {'form_type':form_type, 'request.user':request.user}
+        self.serializer_context = {'form_type':form_type, 'request.user':request.user, 'creation_date':datetime.datetime.now().date()}
         if self.has_common_master_person():
             self.serializer_context['common_master_person'] = {'value':None}
         self.pre_process(request, None)
@@ -315,7 +315,7 @@ class BaseFormViewSet(viewsets.ModelViewSet):
         self.pre_process(request, form_data)
         request_json = self.extract_data(request, self.get_element_paths())
 
-        self.serializer_context = {'form_type':form.form_type, 'request.user':request.user}
+        self.serializer_context = {'form_type':form.form_type, 'request.user':request.user, 'creation_date':form_data.form_object.date_time_entered_into_system.date()}
         if self.has_common_master_person():
             self.serializer_context['common_master_person'] = {'value':self.get_common_master_person(the_form)}
         transaction.set_autocommit(False)

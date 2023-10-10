@@ -346,6 +346,9 @@ class ResponseDateSerializer(serializers.Serializer):
             if question.params is not None and 'form_date' in question.params:
                 form_date_holder = self.context.get('form_date_holder')
                 form_date_holder['form_date'] = dt
+            if question.params is not None and 'card_date' in question.params:
+                form_date_holder = self.context.get('form_date_holder')
+                form_date_holder['card_date'] = dt
         else:
             dt = None
             
@@ -706,9 +709,11 @@ class ResponsePersonSerializer(serializers.Serializer):
     
     def get_or_create(self):
         question = self.context['question']
-        form_base_date = self.context.get('form_date_holder').get('form_date')
+        form_base_date = self.context.get('form_date_holder').get('card_date')
         if form_base_date is None:
-            form_base_date = datetime.now().date()
+            form_base_date = self.context.get('form_date_holder').get('form_date')
+            if form_base_date is None:
+                form_base_date = self.context.get('form_date_holder').get('creation_date')
         storage_id = self.validated_data.get('storage_id')
         if storage_id is None:
             person = Person()
@@ -995,6 +1000,8 @@ class CardSerializer(serializers.Serializer):
         return ret
     
     def to_internal_value(self, data):
+        form_date_holder = self.context.get('form_date_holder')
+        form_date_holder['card_date'] = None
         tmp = data.get('storage_id')
         if tmp is not None:
             storage_id = int(tmp)
@@ -1017,15 +1024,21 @@ class CardSerializer(serializers.Serializer):
         
         return {
             'storage_id':storage_id,
-            'flag_count':flag_count
+            'flag_count':flag_count,
+            'card_date':form_date_holder['card_date'],
             }
     
     def get_or_create(self):
         category = self.context['category']
         form_data = self.context['form_data']
         
+        
         storage_id = self.validated_data.get('storage_id')
         flag_count = self.validated_data.get('flag_count')
+        card_date = self.validated_data.get('card_date')
+        form_date_holder = self.context.get('form_date_holder')
+        form_date_holder['card_date'] = card_date
+        
         blank_id = self.context.get('clear_storage_id')
         if blank_id is not None:
             storage_id = None
@@ -1189,7 +1202,7 @@ class FormDataSerializer(serializers.Serializer):
             self.context['time_zone'] = station.time_zone
         else:
             station = None
-        form_date_holder = {'form_date':None}
+        form_date_holder = {'creation_date':self.context['creation_date'], 'form_date':None, 'card_date':None}
         self.context['form_date_holder'] = form_date_holder
         
         responses = data.get('responses')
