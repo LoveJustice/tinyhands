@@ -59,7 +59,7 @@ class IrfCommon(BaseForm):
     vulnerability_first_time_traveling_to_city = models.BooleanField("Travelling to city from rural area for first time", default=False)
     vulnerability_no_mobile_phone = models.BooleanField("Does not own mobile phone", default=False)
     vulnerability_stranded_or_abandoned = models.BooleanField("Stranded/abandoned", default=False)
-    vulnerability_different_last_name = models.BooleanField("?Last name different from alleged relative", default=False)
+    vulnerability_different_last_name = models.BooleanField("Last name different from alleged relative", default=False)
     
     vulnerability_applied_job_doesnt_know_destination = models.BooleanField("Applied for job, but doesn't know destination", default=False)
     vulnerability_doesnt_speak_local_language = models.BooleanField("Doesn't speak local language", default=False)
