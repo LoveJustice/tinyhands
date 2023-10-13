@@ -42,11 +42,16 @@ class CourtCase(BaseCard):
 class LegalChargeSuspect(BaseCard):
     legal_charge = models.ForeignKey(LegalCharge, on_delete=models.CASCADE)
     sf = models.ForeignKey(Suspect, on_delete=models.CASCADE)
+    arrested = models.CharField(max_length=255, null=True)
     arrest_status = models.CharField(max_length=255, null=True)
     named_on_charge_sheet = models.CharField(max_length=127, null=True)
     arrest_date = models.DateField(null=True)
     arrest_submitted_date = models.DateField(null=True)
     court_cases = models.CharField(max_length=255, null=True) # delimited list of CourtCase sequence numbers
+    verified_attachment = models.CharField(max_length=127, null=True)
+    taken_into_custody = models.CharField(max_length=127, null=True)
+    charged_with_crime = models.CharField(max_length=127, null=True)
+    police_case_or_court_case = models.CharField(max_length=127, null=True)
     
     def set_parent(self, the_parent):
         self.legal_charge = the_parent
@@ -58,7 +63,8 @@ class LegalChargeSuspectCharge(BaseCard):
     legal_charge = models.ForeignKey(LegalCharge, on_delete=models.CASCADE)
     sf = models.ForeignKey(Suspect, on_delete=models.CASCADE)
     court_case_sequence = models.PositiveIntegerField()
-    charge = models.CharField(max_length=127, null=True)       
+    charge = models.CharField(max_length=127, null=True) 
+    was_charged = models.BooleanField(default=True)     
     verdict = models.CharField(max_length=127, null=True)
     sentence_attached = models.CharField(max_length=127, null=True)
     verdict_date = models.DateField(null=True)
@@ -108,18 +114,6 @@ class LegalChargeAttachment(BaseCard):  # Same as current
     
     def is_private(self):
         return self.private_card
-    
-class LegalChargeVerification(BaseCard):
-    legal_charge = models.ForeignKey(LegalCharge, on_delete=models.CASCADE)
-    sf = models.ForeignKey(Suspect, on_delete=models.CASCADE)
-    court_case_sequence = models.PositiveIntegerField()
-    verified_attachment = models.CharField(max_length=127, null=True)
-    taken_into_custody = models.CharField(max_length=127, null=True)
-    charged_with_crime = models.CharField(max_length=127, null=True)
-    police_case_or_court_case = models.CharField(max_length=127, null=True)
-    
-    def set_parent(self, the_parent):
-        self.legal_charge = the_parent
 
 class LegalChargeCountrySpecific(models.Model):
     country = models.ForeignKey(Country, on_delete=models.CASCADE)

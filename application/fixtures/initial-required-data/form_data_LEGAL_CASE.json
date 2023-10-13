@@ -84,18 +84,6 @@
    }
 },
 {
-   "model": "dataentry.storage",
-   "fields": {
-      "form_tag": "LcVerification",
-      "module_name": "legal.models.legal",
-      "form_model_name": "LegalChargeVerification",
-      "response_model_name": null,
-      "parent_storage": "Lc",
-      "foreign_key_field_parent": "legal_charge",
-      "foreign_key_field_child": null
-   }
-},
-{
    "model": "dataentry.form",
    "fields": {
       "form_type": 6,
@@ -161,14 +149,6 @@
       "form_tag": "lfSuspectCharge",
       "category_type": 2,
       "description": "Suspect Charge"
-   }
-},
-{
-   "model": "dataentry.category",
-   "fields": {
-      "form_tag": "lfVerification",
-      "category_type": 2,
-      "description": "Verification"
    }
 },
 {
@@ -246,17 +226,6 @@
       "order": 2,
       "form_category_question_config": null,
       "storage": "LcCourtCase"
-   }
-},
-{
-   "model": "dataentry.formcategory",
-   "fields": {
-      "form": "legalCaseCommon",
-      "category": "lfVerification",
-      "name": "Verification",
-      "order": 8,
-      "form_category_question_config": null,
-      "storage": "LcVerification"
    }
 },
 {
@@ -842,19 +811,7 @@
 {
    "model": "dataentry.question",
    "fields": {
-      "form_tag": "lcVerificationSf",
-      "prompt": "Sf",
-      "description": null,
-      "answer_type": 2,
-      "params": null,
-      "export_name": "Sf",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "fields": {
-      "form_tag": "lcVerificationVerifiedAttachment",
+      "form_tag": "lcSuspectVerifiedAttachment",
       "prompt": "Verified Attachment",
       "description": null,
       "answer_type": 1,
@@ -866,7 +823,7 @@
 {
    "model": "dataentry.question",
    "fields": {
-      "form_tag": "lcVerificationTakenIntoCustody",
+      "form_tag": "lcSuspectTakenIntoCustody",
       "prompt": "Taken into Custody",
       "description": null,
       "answer_type": 1,
@@ -878,7 +835,7 @@
 {
    "model": "dataentry.question",
    "fields": {
-      "form_tag": "lcVerificationChargedWithCrime",
+      "form_tag": "lcSuspectChargedWithCrime",
       "prompt": "Charged with Crime",
       "description": null,
       "answer_type": 1,
@@ -890,7 +847,7 @@
 {
    "model": "dataentry.question",
    "fields": {
-      "form_tag": "lcVerificationPoliceOrCourtCase",
+      "form_tag": "lcSuspectPoliceOrCourtCase",
       "prompt": "Police or Court Case",
       "description": null,
       "answer_type": 1,
@@ -926,12 +883,24 @@
 {
    "model": "dataentry.question",
    "fields": {
-      "form_tag": "lcVerificationSequence",
-      "prompt": "Court Case Sequence",
+      "form_tag": "lcSuspectArrested",
+      "prompt": "Arrested",
       "description": null,
       "answer_type": 1,
       "params": null,
-      "export_name": "Court Case Sequence",
+      "export_name": "Arrested",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcSuspectChargeWasCharged",
+      "prompt": "Charged",
+      "description": null,
+      "answer_type": 6,
+      "params": null,
+      "export_name": "Charged",
       "export_params": null
    }
 },
@@ -1379,8 +1348,8 @@
 {
    "model": "dataentry.questionlayout",
    "fields": {
-      "question": "lcVerificationSf",
-      "category": "lfVerification",
+      "question": "lcSuspectVerifiedAttachment",
+      "category": "legalSuspect",
       "weight": 0,
       "form_config": null
    }
@@ -1388,8 +1357,8 @@
 {
    "model": "dataentry.questionlayout",
    "fields": {
-      "question": "lcVerificationVerifiedAttachment",
-      "category": "lfVerification",
+      "question": "lcSuspectTakenIntoCustody",
+      "category": "legalSuspect",
       "weight": 0,
       "form_config": null
    }
@@ -1397,8 +1366,8 @@
 {
    "model": "dataentry.questionlayout",
    "fields": {
-      "question": "lcVerificationTakenIntoCustody",
-      "category": "lfVerification",
+      "question": "lcSuspectChargedWithCrime",
+      "category": "legalSuspect",
       "weight": 0,
       "form_config": null
    }
@@ -1406,17 +1375,8 @@
 {
    "model": "dataentry.questionlayout",
    "fields": {
-      "question": "lcVerificationChargedWithCrime",
-      "category": "lfVerification",
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": "lcVerificationPoliceOrCourtCase",
-      "category": "lfVerification",
+      "question": "lcSuspectPoliceOrCourtCase",
+      "category": "legalSuspect",
       "weight": 0,
       "form_config": null
    }
@@ -1442,8 +1402,17 @@
 {
    "model": "dataentry.questionlayout",
    "fields": {
-      "question": "lcVerificationSequence",
-      "category": "lfVerification",
+      "question": "lcSuspectArrested",
+      "category": "legalSuspect",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcSuspectChargeWasCharged",
+      "category": "lfSuspectCharge",
       "weight": 0,
       "form_config": null
    }
@@ -1787,35 +1756,28 @@
 {
    "model": "dataentry.questionstorage",
    "fields": {
-      "question": "lcVerificationSf",
-      "field_name": "sf_id"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": "lcVerificationVerifiedAttachment",
+      "question": "lcSuspectVerifiedAttachment",
       "field_name": "verified_attachment"
    }
 },
 {
    "model": "dataentry.questionstorage",
    "fields": {
-      "question": "lcVerificationTakenIntoCustody",
+      "question": "lcSuspectTakenIntoCustody",
       "field_name": "taken_into_custody"
    }
 },
 {
    "model": "dataentry.questionstorage",
    "fields": {
-      "question": "lcVerificationChargedWithCrime",
+      "question": "lcSuspectChargedWithCrime",
       "field_name": "charged_with_crime"
    }
 },
 {
    "model": "dataentry.questionstorage",
    "fields": {
-      "question": "lcVerificationPoliceOrCourtCase",
+      "question": "lcSuspectPoliceOrCourtCase",
       "field_name": "police_case_or_court_case"
    }
 },
@@ -1836,8 +1798,15 @@
 {
    "model": "dataentry.questionstorage",
    "fields": {
-      "question": "lcVerificationSequence",
-      "field_name": "court_case_sequence"
+      "question": "lcSuspectArrested",
+      "field_name": "arrested"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcSuspectChargeWasCharged",
+      "field_name": "was_charged"
    }
 },
 {
