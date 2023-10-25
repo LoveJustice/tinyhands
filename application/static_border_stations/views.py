@@ -22,6 +22,10 @@ class BorderStationViewSet(viewsets.ModelViewSet):
     permissions_required = [{'permission_group':'PROJECTS', 'action':'VIEW'},]
     post_permissions_required = [{'permission_group':'PROJECTS', 'action':'ADD'},]
     put_permissions_required = [{'permission_group':'PROJECTS', 'action':'EDIT'},]
+    filter_backends = (fs.SearchFilter, fs.OrderingFilter,)
+    ordering_fields = (
+        'station_name', 'station_code', 'operating_country__name', 'project_category__name', )
+    ordering = ('station_name',)
     
     @list_route()
     def list_all(self, request):
