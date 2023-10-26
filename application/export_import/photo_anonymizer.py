@@ -9,7 +9,7 @@ from dataentry.models import ExportImportCard, ExportImport
 from dataentry.dataentry_signals import form_done
 
 
-@receiver(form_done)
+#@receiver(form_done)
 def anonymize_photo_receiver(sender, form_data, **kwargs):
     # IRF model object is form_data.form_object.
     if form_data.form.form_type.name == 'IRF':
