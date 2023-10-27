@@ -2,6 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
+from rest_framework import filters as fs
 from rest_framework import status
 from rest_framework.decorators import list_route, api_view
 from rest_framework.permissions import IsAuthenticated
@@ -47,10 +48,14 @@ class AccountActivateClient(APIView):
 
 
 class AccountViewSet(ModelViewSet):
-    queryset = Account.objects.all()
+    queryset = Account.objects.all().exclude(is_deleted=True)
     serializer_class = AccountsSerializer
     permission_classes = [IsAuthenticated, HasPermission]
     permissions_required = ['permission_accounts_manage']
+    filter_backends = (fs.SearchFilter, fs.OrderingFilter,)
+    search_fields = ('first_name','last_name',)
+    ordering_fields = ('last_name', 'first_name',)
+    ordering = ('first_name','last_name')
 
     @list_route()
     def list_all(self, request):

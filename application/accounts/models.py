@@ -125,6 +125,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
         max_length=40,
         default=make_activation_key
     )
+    is_deleted = models.BooleanField(default=False)
 
     objects = AccountManager()
 
