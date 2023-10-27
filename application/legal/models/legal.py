@@ -32,6 +32,7 @@ class CourtCase(BaseCard):
     legal_charge = models.ForeignKey(LegalCharge, on_delete=models.CASCADE)
     sequence_number = models.PositiveIntegerField()     # assigned by the client when adding court case
     court_case = models.CharField(max_length=127, null=True)
+    district_court = models.CharField(max_length=127, null=True)
     status = models.CharField(max_length=127, null=True)
     charges = models.CharField(max_length=255, null=True)
     specific_code_law = models.TextField(null=True)
@@ -64,7 +65,7 @@ class LegalChargeSuspectCharge(BaseCard):
     sf = models.ForeignKey(Suspect, on_delete=models.CASCADE)
     court_case_sequence = models.PositiveIntegerField()
     charge = models.CharField(max_length=127, null=True) 
-    was_charged = models.BooleanField(default=True)     
+    legal_status = models.CharField(max_length=127, null=True)    
     verdict = models.CharField(max_length=127, null=True)
     sentence_attached = models.CharField(max_length=127, null=True)
     verdict_date = models.DateField(null=True)
@@ -92,6 +93,7 @@ class LegalChargeVictim(BaseCard):
 
 class LegalChargeTimeline(BaseCard):  # Same as current
     legal_charge = models.ForeignKey(LegalCharge, on_delete=models.CASCADE)
+    court_case_sequence = models.PositiveIntegerField()
     comment_date = models.DateField()
     comment = models.TextField()
     added_by = models.CharField(max_length=255, null=True)

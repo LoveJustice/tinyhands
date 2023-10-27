@@ -490,7 +490,7 @@
       "form_tag": "lcSuspectChargeSequence",
       "prompt": "Court Case Sequence",
       "description": null,
-      "answer_type": 1,
+      "answer_type": 2,
       "params": null,
       "export_name": "Court Case Sequence",
       "export_params": null
@@ -895,12 +895,36 @@
 {
    "model": "dataentry.question",
    "fields": {
-      "form_tag": "lcSuspectChargeWasCharged",
-      "prompt": "Charged",
+      "form_tag": "lcSuspectChargeLegalStatus",
+      "prompt": "Legal Status",
       "description": null,
-      "answer_type": 6,
+      "answer_type": 1,
       "params": null,
-      "export_name": "Charged",
+      "export_name": "Legal Status",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcTimelineCourtCaseSequence",
+      "prompt": "Court Case Sequence",
+      "description": null,
+      "answer_type": 2,
+      "params": null,
+      "export_name": "Court Case Sequence",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "fields": {
+      "form_tag": "lcCourtCaseDistrictCourt",
+      "prompt": "DistrictCourt",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "DistrictCourt",
       "export_params": null
    }
 },
@@ -1411,8 +1435,26 @@
 {
    "model": "dataentry.questionlayout",
    "fields": {
-      "question": "lcSuspectChargeWasCharged",
+      "question": "lcSuspectChargeLegalStatus",
       "category": "lfSuspectCharge",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcTimelineCourtCaseSequence",
+      "category": "legalTimeline",
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": "lcCourtCaseDistrictCourt",
+      "category": "lfCourtCase",
       "weight": 0,
       "form_config": null
    }
@@ -1805,8 +1847,22 @@
 {
    "model": "dataentry.questionstorage",
    "fields": {
-      "question": "lcSuspectChargeWasCharged",
-      "field_name": "was_charged"
+      "question": "lcSuspectChargeLegalStatus",
+      "field_name": "legal_status"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcTimelineCourtCaseSequence",
+      "field_name": "court_case_sequence"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": "lcCourtCaseDistrictCourt",
+      "field_name": "district_court"
    }
 },
 {
@@ -2146,6 +2202,23 @@
    }
 },
 {
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "legalCaseSuspectChargeLegalStatus",
+      "level": 2,
+      "trigger": null,
+      "trigger_value": null,
+      "validation_type": 1,
+      "error_warning_message": "Legal status must be entered for each suspect charge",
+      "params": null,
+      "retrieve": true,
+      "update": true,
+      "forms": [
+         "legalCaseCommon"
+      ]
+   }
+},
+{
    "model": "dataentry.formvalidationquestion",
    "fields": {
       "validation": "lcLocation",
@@ -2234,6 +2307,13 @@
    "fields": {
       "validation": "lcVerdictWhenClosed",
       "question": "lcSuspectChargeVerdict"
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": "legalCaseSuspectChargeLegalStatus",
+      "question": "lcSuspectChargeLegalStatus"
    }
 }
 ]
