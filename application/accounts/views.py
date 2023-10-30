@@ -162,11 +162,15 @@ class ObtainExpiringAuthToken(ObtainAuthToken):
     def post(self, request):
         """Respond to POSTed username/password with token."""
         serializer = AuthTokenSerializer(data=request.data)
-
+        
         if serializer.is_valid():
+            user = serializer.validated_data['user']
             token, _ = ExpiringToken.objects.get_or_create(
-                user=serializer.validated_data['user']
+                user=user
             )
+            account = Account.objects.filter(email=user).first()
+            if account.is_deleted:
+                return Response('', status=HTTP_400_BAD_REQUEST)
 
             if token.expired():
                 # If the token is expired, generate a new one.
