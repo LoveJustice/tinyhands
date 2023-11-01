@@ -8,7 +8,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dataentry', '0255_auto_20230707_1425'),
+        ('dataentry', '0257_irfcommon_vulnerability_different_last_name'),
     ]
 
     operations = [
