@@ -1,0 +1,384 @@
+<!--
+Created By Andrew Smith
+
+PDF is generated using reportlab and the RML implementation provided by z3c.rml
+
+z3c.rml docs can be found on their github page: https://github.com/zopefoundation/z3c.rml
+-->
+{% load humanize %}
+
+<!DOCTYPE document SYSTEM "rml.dtd">
+<document filename="outfile.pdf">
+    <template  showBoundary="0">
+        <pageTemplate id="first" pagesize="LEDGER">
+            <pageGraphics>
+                <setFont name="Helvetica" size="10"/>
+            </pageGraphics>
+            <frame id="title" x1=".5in" y1="10in" width="16in" height=".6in"/>
+            <frame id="staff_budget" x1=".5in" y1=".5in" width="16in" height="9.5in"/>
+        </pageTemplate>
+        <pageTemplate id="otherDetail" pagesize="LETTER">
+            <frame id="rightColumn" x1=".5in" y1=".5in" width="7.5in" height="10in"/>
+        </pageTemplate>
+        <pageTemplate id="budget" pagesize="LETTER">
+            <frame id="leftColumn" x1=".5in" y1=".5in" width="3.5in" height="10in"/>
+            <frame id="rightColumn" x1="4.5in" y1=".5in" width="3.5in" height="10in"/>
+        </pageTemplate>
+    </template>
+
+    <stylesheet>
+        <paraStyle name="title"
+            fontName="Helvetica-Bold"
+            fontSize="14"
+            alignment="center"
+            spaceAfter="7"/>
+        <paraStyle name="numberAlign"
+        	alignment="right"/>
+        <paraStyle name="tableHeader"
+            fontName="Helvetica-Bold"
+            fontSize="12"
+            alignment="center"
+            borderWidth="1"
+            borderColor="black"
+            leading="16"
+            backColor="lightgrey"/>
+        <paraStyle name="projectHeader"
+            fontName="Helvetica-Bold"
+            fontSize="12"
+            alignment="center"
+            borderWidth="1"
+            borderColor="black"
+            leading="16"
+            backColor="lightblue"/>
+        <paraStyle name="tableHeader2"
+            fontName="Helvetica-Bold"
+            fontSize="12"
+            alignment="center"
+            backColor="lightgrey"/>
+        <paraStyle name="staffHeader"
+        	fontName="Helvetica-Bold"
+            fontSize="10"
+            alignment="center"
+            />    
+        <paraStyle name="monthlyTotal"
+            fontName="Helvetica"
+            fontSize="10"
+            spaceAfter="5"/>
+        <paraStyle name="Notes"
+            spaceAfter="7"/>
+        <paraStyle name="pastSent"
+            fontName="Helvetica"
+            fontSize="10"
+            spaceAfter="7"/>
+        <paraStyle name="finalTotal"
+            fontName="Helvetica"
+            fontSize="12"
+            spaceAfter="7"/>
+        <blockTableStyle id="staffGrid">
+        	<lineStyle kind="LINEBEFORE"  colorName="black" thickness="1" start="0,0" stop="0,0" />
+        	<lineStyle kind="LINEAFTER"  colorName="black" thickness="1" start="-1,0" stop="-1,-1" />
+        	<lineStyle kind="LINEABOVE"  colorName="black" thickness="1" start="0,0" stop="-1,0" />
+            <lineStyle kind="grid"  colorName="black" thickness="1" start="0,1" stop="-1,-1" />
+            <lineStyle kind="grid"  colorName="black" thickness="2" start="-1,1" stop="-1,-1" />
+            <blockBackground colorName="lightgrey" start="1,1" stop="2,-1" />
+            <blockSpan start="0,0" stop="-1,0"/>
+            <blockBackground colorName="lightgrey" start="0,0" stop="-1,0" />
+        </blockTableStyle>
+        <blockTableStyle id="wideGrid">
+        	<lineStyle kind="LINEBEFORE"  colorName="black" thickness="1" start="0,0" stop="0,0" />
+        	<lineStyle kind="LINEAFTER"  colorName="black" thickness="1" start="-1,0" stop="-1,-1" />
+        	<lineStyle kind="LINEABOVE"  colorName="black" thickness="1" start="0,0" stop="-1,0" />
+            <lineStyle kind="grid"  colorName="black" thickness="1" start="0,1" stop="-1,-1" />
+            <blockSpan start="0,0" stop="-1,0"/>
+            <blockBackground colorName="lightgrey" start="0,0" stop="-1,0" />     
+        </blockTableStyle>
+        <blockTableStyle id="infoGrid">
+            <lineStyle kind="grid"  colorName="black" thickness="1" start="0,0" stop="-1,-1" />
+        </blockTableStyle>
+        <blockTableStyle id="budgetGrid" keepWithNext="true">
+            <lineStyle kind="grid" colorName="black" thickness="1" start="0,0" stop="-1,-1" />
+            <blockTextColor start="-1,-1" stop="-1,-1" colorName="#c00000"/>
+        </blockTableStyle>
+        <blockTableStyle id="signatureLine">
+            <lineStyle kind="LINEBELOW"  colorName="black" thickness="1" start="0,0" stop="-1,-1" />
+        </blockTableStyle>
+    </stylesheet>
+
+    <story>
+    	<nextFrame name="staff_budget"/>
+        <para style="title"><u>{{ month }} Monthly Distribution Form</u></para>
+        <blockTable colWidths="50% 50%" style="infoGrid">
+            <tr>
+                <td>Station: {{ name }}</td>
+                <td>Date: {{ date|date:"F d, Y"}}</td>
+            </tr>
+        </blockTable>
+        {% for mdf in mdfs %}
+        	{% if mdf.staff_data.has_data %}
+		        <blockTable alignment="LEFT" colWidths="{{ mdf.staff_data.column_format }}" style="staffGrid">
+		         	<tr>
+		         		<td><para style="tableHeader2">{{ mdf.project.project_category.name }}: Salaries &amp; Benefits ({{ mdf.project.station_name }} {{ mdf.project.station_code }})</para></td>
+		         	</tr>
+		         	<tr>
+		         		<td><para style="staffHeader">Name</para></td>
+		         		{% for header in mdf.staff_data.headers %}
+		         			<td><para style="staffHeader">{{ header }}</para></td>
+		         		{% endfor %}
+		         		<td><para style="staffHeader">Total</para></td>
+		         	</tr>
+		            {% for entry in mdf.staff_data.staff_list %}
+		            	<tr>
+			            	<td><para>{{ entry.name }}</para></td>
+			            	{% for value in entry.values %}
+			            		<td><para style="numberAlign">{{ value.cost }} <super>{{ value.foot_note }}</super></para></td>
+			            	{% endfor %}
+		            	</tr>up
+		            {% endfor %}
+		            <tr>
+		         		<td><para><b>Total</b></para></td>
+		         		{% for value in mdf.staff_data.staff_totals %}
+		         			<td><para style="numberAlign"><b>{{ value }}</b></para></td>
+		         		{% endfor %}
+		         	</tr>
+		        </blockTable>
+	        {% endif %}
+        {% endfor %}
+        {% for footnote in first_footnotes.footnotes %}
+			<para>{{ footnote }}</para>
+		{% endfor %}
+		<spacer length="20"/>
+		{% for mdf in mdfs %}
+	        {% if mdf.comments.has_data %}
+	        	<blockTable alignment="LEFT" colWidths="10% 8% 8% 15% 6% 8%, 15%, 30%" style="wideGrid">
+	        		<tr>
+						<td ><para style="tableHeader2">Comments for ({{ mdf.project.station_name }} {{ mdf.project.station_code }})</para></td>
+					</tr>
+					<tr>
+						<td><para style="staffHeader">Category</para></td>
+						<td><para style="staffHeader">Requested</para></td>
+						<td><para style="staffHeader">Approved</para></td>
+						<td><para style="staffHeader">Description</para></td>
+						<td><para style="staffHeader">Monthly</para></td>
+						<td><para style="staffHeader">Staff</para></td>
+						<td><para style="staffHeader">Benefit</para></td>
+						
+						<td><para style="staffHeader">Comment</para></td>
+					</tr>
+		        	{% if mdf.comments.changed.has_data %}
+		        		<tr>
+							<td><para style="staffHeader">(Changed Amount)</para></td>
+						</tr>
+						{% for item in mdf.comments.changed.item_list %}
+							<tr>
+								<td><para>{{ item.request.category_name }}</para></td>
+								<td><para style="numberAlign">{{ item.request.original_cost }}</para></td>
+								<td><para style="numberAlign">{{ item.request.cost }}</para></td>
+								<td><para>{{ item.request.description }}</para></td>
+								<td><para>{{ item.request.monthly_string }}</para></td>
+								<td><para>{{ item.request.staff.full_name }}</para></td>
+								<td><para>{{ item.request.benefit_type_name }}</para></td>
+								<td><para>{{ item.comment }}</para></td>
+							</tr>
+						{% endfor %}
+		        	{% endif %}
+		        	{% if mdf.comments.completed.has_data %}
+		        		<tr>
+							<td><para style="staffHeader">(Completed)</para></td>
+						</tr>
+						{% for item in mdf.comments.completed.item_list %}
+							<tr>
+								<td><para>{{ item.request.category_name }}</para></td>
+								<td><para style="numberAlign">{{ item.request.original_cost }}</para></td>
+								<td><para style="numberAlign">{{ item.request.cost }}</para></td>
+								<td><para>{{ item.request.description }}</para></td>
+								<td><para>{{ item.request.monthly_string }}</para></td>
+								<td><para>{{ item.request.staff.full_name }}</para></td>
+								<td><para>{{ item.request.benefit_type_name }}</para></td>
+								<td><para>{{ item.comment }}</para></td>
+							</tr>
+						{% endfor %}
+		        	{% endif %}
+		        	{% if mdf.comments.declined.has_data %}
+		        		<tr>
+							<td><para style="staffHeader">(Declined)</para></td>
+						</tr>
+						{% for item in mdf.comments.declined.item_list %}
+							<tr>
+								<td><para>{{ item.request.category_name }}</para></td>
+								<td><para style="numberAlign">{{ item.request.original_cost }}</para></td>
+								<td></td>
+								<td><para>{{ item.request.description }}</para></td>
+								<td><para>{{ item.request.monthly_string }}</para></td>
+								<td><para>{{ item.request.staff.full_name }}</para></td>
+								<td><para>{{ item.request.benefit_type_name }}</para></td>
+								<td><para>{{ item.comment }}</para></td>
+							</tr>
+						{% endfor %}
+		        	{% endif %}
+		        	{% if mdf.comments.pending.has_data %}
+		        		<tr>
+		        			<td><para style="staffHeader">(Pending)</para></td>
+						</tr>
+						{% for item in mdf.comments.pending.items %}
+							<tr>
+								<td><para>{{ item.category_name }}</para></td>
+								<td><para style="numberAlign">{{ item.original_cost }}</para></td>
+								<td></td>
+								<td><para>{{ item.description }}</para></td>
+								<td><para>{{ item.monthly_string }}</para></td>
+								<td><para>{{ item.staff.full_name }}</para></td>
+								<td><para>{{ item.benefit_type_name }}</para></td>
+							</tr>
+						{% endfor %}
+		        {% endif %}
+		        </blockTable>
+	        {% endif %}
+	    {% endfor %}
+		{% if other_detail %}
+	        <setNextTemplate name="otherDetail" />
+	        <nextFrame/>
+	        {% for mdf in mdfs %}
+	        	{% if mdf.past_sent.has_data %} 
+					<blockTable alignment="LEFT" colWidths="40% 40% 20%" style="wideGrid">
+						<tr>
+							<td><para style="tableHeader2">{{ mdf.project.project_category.name }}: Past Month Sent Money Detail ({{ mdf.project.station_name }} {{ mdf.project.station_code }}) - Approved by {{ mdf.budget.past_sent_approved }}</para></td>
+						</tr>
+			         	<tr>
+			         		<td><para style="staffHeader">Description</para></td>
+			         		<td><para style="staffHeader">Budget Category</para></td>
+			         		<td><para style="staffHeader">Total</para></td>
+			         	</tr>
+			         	{% for entry in mdf.past_sent.items %}
+			         		<tr>
+			         			<td><para>{{ entry.description }}</para></td>
+			         			<td><para>{{ entry.section }}</para></td>
+			         			<td><para style="numberAlign">{{ entry.cost }}</para></td>
+			         		</tr>
+			         	{% endfor %}
+			         	<tr>
+			         		<td><para><b>Total</b></para></td>
+							<td></td>
+			         		<td><para style="numberAlign"><b>{{ mdf.past_sent.total }}</b></para></td>
+			         	</tr>
+			        </blockTable>
+		        {% endif %}
+	        {% endfor %}
+	        <spacer length="20"/>
+	        {% for mdf in mdfs %}
+	        	{% if mdf.money_not_spent_data.has_data %} 
+					<blockTable alignment="LEFT" colWidths="40% 40% 20% 20%" style="wideGrid">
+						<tr>
+							<td ><para style="tableHeader2">{{ mdf.project.project_category.name }}: Money Not Spent Detail ({{ mdf.project.station_name }} {{ mdf.project.station_code }})</para></td>
+						</tr>
+			         	<tr>
+			         		<td><para style="staffHeader">Description</para></td>
+			         		<td><para style="staffHeader">Budget Category</para></td>
+			         		<td><para style="staffHeader">Deduct</para></td>
+			         		<td><para style="staffHeader">Total</para></td>
+			         	</tr>
+			         	{% for entry in mdf.money_not_spent_data.items %}
+			         		<tr>
+			         			<td><para>{{ entry.description }}</para></td>
+			         			<td><para>{{ entry.section }}</para></td>
+			         			<td><para>{{ entry.deduct }}</para></td>
+			         			<td><para style="numberAlign">{{ entry.cost }}</para></td>
+			         		</tr>
+			         	{% endfor %}
+			         	<tr>
+			         		<td><para><b>Total (to deduct)</b></para></td>
+			         		<td></td>
+			         		<td></td>
+			         		<td><para style="numberAlign"><b>{{ mdf.money_not_spent_data.totals.deduct }}</b></para></td>
+			         	</tr>
+			         	<tr>
+			         		<td><para>Total (not deduct)</para></td>
+			         		<td></td>
+			         		<td></td>
+			         		<td><para style="numberAlign">{{ mdf.money_not_spent_data.totals.not_deduct }}</para></td>
+			         	</tr>
+			        </blockTable>
+		        {% endif %}
+	        {% endfor %}
+        {% endif %}
+        
+        <setNextTemplate name="budget" />
+        <nextFrame/>
+		{% for mdf in mdfs %}
+			{% if mdf.money_not_spent_total != 0 or mdf.station_total != 0 or mdf.past_money_sent_total != 0 %}
+				<condPageBreak height="{{ mdf.height_required }}"/>
+				<para style="projectHeader">{{ mdf.project.project_category.name }}: {{ mdf.project.station_name }}</para>
+			{% endif %}
+	        {% for section in mdf.sections %}
+	        	{% if section.full_total != 0 %}
+			        <condPageBreak height="{{ section.height_required }}"/>
+			        <para style="tableHeader">{{ section.title }}</para>
+			        <blockTable colWidths="70% 30%" style="budgetGrid">
+			            {% for item in section.items %}
+			            <tr>
+			                <td><para>{{ item.name }}<super>{{ item.footnote }}</super></para></td>
+			                <td>{{ item.value|intcomma }}</td>
+			            </tr>
+			            {% endfor %}
+			            <tr>
+			                <td><para><b><u>Total</u></b></para></td>
+			                <td>{{ section.total|intcomma }}</td>
+			            </tr>
+			        </blockTable>
+			        <spacer length="10"/>
+		        {% endif %}
+	        {% endfor %}
+	        
+        	<spacer length="5"/>
+        	<condPageBreak height="{{ mdf.total_height }}"/>
+        	<para style="monthlyTotal">
+	            <u>Project Total ({{ mdf.project.station_code }}):</u> <font color="#c00000">{{ mdf.project_total|intcomma }}</font>
+	        </para>
+	        <para>{{ mdf.project_total_formula }}</para>
+	        
+        	<spacer length="5"/>
+        	<condPageBreak height="{{ mdf.total_height }}"/>
+        	<para style="monthlyTotal">
+	            <u>Money Not Spent(to deduct) ({{ mdf.project.station_code }}):</u> <font color="#c00000">{{ mdf.money_not_spent_total|intcomma }}</font>
+	        </para>
+	        <para></para>
+	        <para>Money not spent breakdown on page 2</para>
+	        
+        	<spacer length="5"/>
+        	<condPageBreak height="{{ mdf.total_height }}"/>
+	        <para style="monthlyTotal">
+	            <b><u>Monthly Distribution Subtotal ({{ mdf.project.station_code }}):</u></b> <font color="#c00000">{{ mdf.distribution_total|intcomma }}</font>
+	        </para>
+	        <para>{{ mdf.distribution_total_formula }}</para>
+	    	
+        	<spacer length="10"/>
+        	<condPageBreak height="{{ mdf.total_height }}"/>
+        	<para style="pastSent">
+        		<u>Past Month Sent Money Subtotal ({{ mdf.project.station_code }})</u> <font color="#c00000">{{ mdf.past_money_sent_total|intcomma }}</font>
+        	</para>
+        	<para></para>
+        	<para>This total has already been sent and is not included in the monthly distribution. (breakdown on page 2)</para>
+
+	    	<spacer length="5"/>
+	    	<condPageBreak height="{{ mdf.total_height }}"/>
+	        <para style="monthlyTotal">
+	            <u>Full Project Cost ({{ mdf.project.station_code }}):</u> <font color="#c00000">{{ mdf.full_total|intcomma }}</font>
+	        </para>
+	        <para>{{ mdf.full_total_formula }}</para>
+		        
+	        <spacer length="15"/>
+        {% endfor %}
+		<para style="finalTotal">
+            <b><u>Monthly Distribution Total:</u></b> <font color="#c00000">{{ distribution_subtotal|intcomma }}</font>
+        </para>
+        <para>{{ distribution_formula }}</para>
+        <spacer length="5"/>
+        <para style="finalTotal">
+            <u>Full Projects Total:</u> <font color="#c00000">{{ station_subtotal|intcomma }}</font>
+        </para>
+        <para>{{ full_formula }}</para>
+        <spacer length="5"/>
+        {% for footnote in second_footnotes.footnotes %}
+			<para>{{ footnote }}</para>
+		{% endfor %}
+    </story>
+</document>

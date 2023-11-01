@@ -1,16 +1,17 @@
 import pytz
 
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.decorators import list_route, api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from django_filters import rest_framework as filters
+from rest_framework import filters as fs
 
-from dataentry.models import BorderStation
+from dataentry.models import BorderStation, UserLocationPermission
 from dataentry.serializers import BorderStationSerializer
 from rest_api.authentication_expansion import HasPermission, HasPostPermission, HasPutPermission
-from static_border_stations.models import Staff, CommitteeMember, Location, WorksOnProject
+from static_border_stations.models import Staff, CommitteeMember, Location, StaffProject, WorksOnProject
 from static_border_stations.serializers import StaffSerializer, CommitteeMemberSerializer, LocationSerializer
 
 
@@ -21,6 +22,10 @@ class BorderStationViewSet(viewsets.ModelViewSet):
     permissions_required = [{'permission_group':'PROJECTS', 'action':'VIEW'},]
     post_permissions_required = [{'permission_group':'PROJECTS', 'action':'ADD'},]
     put_permissions_required = [{'permission_group':'PROJECTS', 'action':'EDIT'},]
+    filter_backends = (fs.SearchFilter, fs.OrderingFilter,)
+    ordering_fields = (
+        'station_name', 'station_code', 'operating_country__name', 'project_category__name', )
+    ordering = ('station_name',)
     
     @list_route()
     def list_all(self, request):
@@ -35,6 +40,27 @@ class BorderStationViewSet(viewsets.ModelViewSet):
             border_stations = border_stations.filter(open=False)
         serializer = self.get_serializer(border_stations, many=True)
         return Response(serializer.data)
+    
+    def get_queryset(self):
+        border_stations = UserLocationPermission.get_stations_with_permission(self.request.user.id, 'PROJECTS','VIEW')
+        border_station_ids = []
+        for border_station in border_stations:
+            border_station_ids.append(border_station.id)
+        queryset = BorderStation.objects.filter(id__in=border_station_ids)
+        in_country = self.request.GET.get('country_ids')
+        if in_country is not None and in_country != '':
+            queryset = queryset.filter(operating_country__id__in=in_country.split(','))
+
+        project_category = self.request.GET.get('project_category')
+        if project_category is not None and project_category != '':
+            queryset = queryset.filter(project_category__name=project_category)
+
+        include_closed = self.request.GET.get('include_closed')
+        if include_closed is not None and include_closed != 'true':
+            queryset = queryset.filter(open=True)
+
+
+        return queryset
 
 
 @api_view(['GET'])
@@ -90,7 +116,47 @@ class CommitteeMemberViewSet(BorderStationRestAPI):
 class StaffViewSet(BorderStationRestAPI):
     queryset = Staff.objects.all()
     serializer_class = StaffSerializer
-    ordering = ('email',)
+    permission_classes = (IsAuthenticated, HasPermission, HasPostPermission, HasPutPermission)
+    #permissions_required = [{'permission_group':'STAFF', 'action':'VIEW'},]
+    #post_permissions_required = [{'permission_group':'STAFF', 'action':'ADD'},]  
+    #put_permissions_required = [{'permission_group':'STAFF', 'action':'EDIT'},]
+    filter_backends = (fs.SearchFilter, fs.OrderingFilter,) 
+    search_fields = ('first_name', 'last_name',)
+    ordering_fields = (
+        'first_name', 'last_name', )
+    ordering = ('first_name',)
+    
+    def update(self, request, pk=None):
+        staff = Staff.objects.get(id=pk)
+        serializer = self.serializer_class(staff, request.data)
+        if serializer.is_valid():
+            serializer.save()
+            staff = Staff.objects.get(id=pk)
+            serializer = self.serializer_class(staff)
+            ret = serializer.data
+            rtn_status = status.HTTP_200_OK
+        else:
+            ret = {}
+            rtn_status = status.HTTP_400_BAD_REQUEST
+            
+        return Response (ret, status=rtn_status)
+    
+    def get_queryset(self):
+        countries = UserLocationPermission.get_countries_with_permission(self.request.user.id, 'STAFF','VIEW')
+        country_ids = []
+        for country in countries:
+            country_ids.append(country.id)
+        queryset = self.queryset.filter(last_date__isnull=True, country__id__in=country_ids)
+        in_country = self.request.GET.get('country_ids')
+        if in_country is not None and in_country != '':
+            queryset = queryset.filter(country__id__in=in_country.split(','))
+
+        project_id = self.request.GET.get('project_id')
+        if project_id is not None and project_id != '':
+            queryset = queryset.filter(staffproject__border_station__id=project_id)
+
+        return queryset
+
 
     def retrieve_border_station_staff(self, request, *args, **kwargs):
         """
@@ -116,6 +182,12 @@ class StaffViewSet(BorderStationRestAPI):
                     staff.append(financial)
         
         return staff
+    
+    def retrieve_blank(self, request):
+        staff = Staff()
+                
+        serializer = StaffSerializer(staff)
+        return Response(serializer.data)
     
     def retrieve_border_station_staff(self, request, *args, **kwargs):
         """
@@ -146,7 +218,6 @@ class StaffViewSet(BorderStationRestAPI):
         return current
     
     def update_border_station_staff_work(self, request, pk):
-        print ('request.data', request.data)
         for staff in request.data:
             staff_id = self.getValue(staff, ['id'])
             works_on = self.getValue(staff, ['works_on'])
@@ -156,13 +227,10 @@ class StaffViewSet(BorderStationRestAPI):
                 financial_id = self.getValue(work_element, ['financial', 'project_id'])
                 percent = self.getValue(work_element, ['percent'])
                 work_id = self.getValue(work_element, ['works_on', 'project_id'])
-                print('values', pk, staff_id, financial_id, percent, work_id)
                 id = self.getValue(work_element, ['id'])
                 if financial_id is None or percent is None or work_id is None:
-                    print('Bail 1')
                     continue
                 if str(financial_id) != str(pk):
-                    print('Does not match pk', pk)
                     continue
                 
                 staff = Staff.objects.get(id=staff_id)
@@ -175,7 +243,6 @@ class StaffViewSet(BorderStationRestAPI):
                 works_on_project.staff = staff
                 works_on_project.work_percent = percent
                 works_on_project.border_station = border_station
-                print('saving', works_on_project, staff.id, works_on_project.work_percent,  works_on_project.border_station.id)
                 works_on_project.save()
         
         staff = self.getStaff(False, True)
