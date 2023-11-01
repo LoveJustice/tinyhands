@@ -405,6 +405,6 @@ class MoneyDistributionWebTests(WebTest, TestCase):
         self.client.force_authenticate(user=self.superuser)
 
     def testViewMoneyDistributionForm(self):
-        response = self.app.get(reverse('MdfPdf', kwargs={"uuid": self.budget_calc_sheet.mdf_uuid}), user=self.superuser)
+        response = self.app.get(reverse('MdfPdf', kwargs={"uuid": self.budget_calc_sheet.mdf_uuid, "mdf_type":"budget"}), user=self.superuser)
         self.assertGreater(response.request.url.find(str(self.budget_calc_sheet.mdf_uuid)), -1)
         self.assertEqual(response.status_code, 200)

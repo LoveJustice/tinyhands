@@ -7,6 +7,7 @@ detail_methods = {'get': 'retrieve', 'put': 'update'}
 
 
 urlpatterns = [
+        url(r'^border-station/list/$', BorderStationViewSet.as_view({'get': 'list'}), name="BorderStationList"),
         url(r'^border-station/$', BorderStationViewSet.as_view({'get': 'list_all', 'post': 'create'}), name="BorderStation"),  # Detail
         url(r'^border-station/(?P<pk>\d+)/$', BorderStationViewSet.as_view(detail_methods), name="BorderStationDetail"),
         url(r'^border-station/(?P<pk>\d+)/location/$', LocationViewSet.as_view({'get': 'retrieve_border_station_locations', 'put': 'update', 'delete': 'destroy'}), name="LocationsForBorderStation"),
@@ -22,6 +23,7 @@ urlpatterns = [
 
         url(r'^staff/$', StaffViewSet.as_view(list_methods), name="Staff"),
         url(r'^staff/(?P<pk>\d+)/$', StaffViewSet.as_view(detail_methods), name="StaffDetail"),
+        url(r'^staff/blank/$', StaffViewSet.as_view({'get':'retrieve_blank'}), name="StaffBlank"),
         
                 
         url(r'^timezones/$', TimeZoneViewSet.as_view({'get':'get_time_zones'}), name='TimeZones'),
