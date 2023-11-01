@@ -1,5 +1,5 @@
-FROM tusoftwarestudio/tinyhands-base:latest
-MAINTAINER benaduggan
+FROM amunn/searchlight-base:latest
+MAINTAINER amunn33
 
 COPY application/ /data/
 WORKDIR /data/

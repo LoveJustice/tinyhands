@@ -64,6 +64,7 @@ urlpatterns = [
 
         #Persons
         url(r'^person/$', PersonViewSet.as_view({'get': 'list'}), name="Person"),
+        url(r'^person/(?P<pk>\d+)/$', PersonViewSet.as_view({'get': 'retrieve'}), name="PersonDetail"),
         url(r'^person/associated/(?P<station_id>\d+)/(?P<form_number>\w+)/$', PersonViewSet.as_view({'get': 'associated_persons'}), name="AssociatedPersons"),
         
          url(r'^master-person/$', MasterPersonViewSet.as_view({'get': 'list'}), name="MasterPerson"),
@@ -164,6 +165,7 @@ urlpatterns = [
         url(r'^border_station/category/', BorderStationFormViewSet.as_view({'get': 'get_project_categories'}), name='borderStationCategory'),
         
         url(r'^operations-dashboard/(?P<country_id>\d+)/$', StationStatisticsViewSet.as_view({'get': 'retrieve_dashboard'}), name='retrieveDashboard'),
+        url(r'^station-data/detail/(?P<station_id>\d+)/(?P<year_month>\d+)/(?P<data_type>\w+)/$', StationStatisticsViewSet.as_view({'get': 'retrieve_detail'}), name='retrieveStationDetails'),
         url(r'^station-data/country/(?P<country_id>\d+)/(?P<year_month>\d+)/$', StationStatisticsViewSet.as_view({'get': 'retrieve_country_data'}), name='retrieveCountryOperations'),
         url(r'^station-data/country/$', StationStatisticsViewSet.as_view({'put': 'update_station_data'}), name='setCountryOperations'),
         url(r'^location-staff/(?P<station_id>\d+)/(?P<year_month>\d+)/$', StationStatisticsViewSet.as_view({'get': 'retrieve_location_staff'}), name='retrieveLocationStaff'),

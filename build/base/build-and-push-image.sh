@@ -1,4 +1,4 @@
 #!/bin/bash
 
-docker build --no-cache -t tusoftwarestudio/tinyhands-base .
-docker push tusoftwarestudio/tinyhands-base
+docker build --no-cache -t amunn/searchlight-base .
+docker push amunn/searchlight-base

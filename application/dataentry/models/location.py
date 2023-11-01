@@ -76,14 +76,14 @@ class LocationInformation(BaseCard):
     nearby_landmarks = models.CharField(max_length=126, null=True)
     
     persons_in_charge = models.CharField(max_length=126, null=True)
-    pvs_visited = models.CharField(max_length=126, null=True)
+    pvs_visited = models.TextField(null=True)
     stay_how_long = models.CharField(max_length=126, null=True)
     start_date = models.DateField(null=True, default=None)
     attempt_hide = models.CharField(max_length=126, null=True)
     attempt_explanation = models.CharField(max_length=126, null=True)
     free_to_go = models.CharField(max_length=126, null=True)
     free_to_go_explanation = models.CharField(max_length=126, null=True)
-    suspects_associative = models.CharField(max_length=126, null=True)
+    suspects_associative = models.TextField(null=True)
     
     def set_parent(self, the_parent):
         self.lf = the_parent
@@ -97,15 +97,15 @@ class LocationAssociation(BaseCard):
     interviewer_name = models.CharField(max_length=126, blank=True)
     interview_date = models.DateField(null=True, default=None)
     location = models.CharField(max_length=255, blank=True)    
-    persons_in_charge = models.CharField(max_length=126, null=True)
-    pvs_visited = models.CharField(max_length=126, null=True)
+    persons_in_charge = models.TextField(null=True)
+    pvs_visited = models.TextField(null=True)
     stay_how_long = models.CharField(max_length=126, null=True)
     start_date = models.DateField(null=True, default=None)
     attempt_hide = models.CharField(max_length=126, null=True)
     attempt_explanation = models.CharField(max_length=126, null=True)
     free_to_go = models.CharField(max_length=126, null=True)
     free_to_go_explanation = models.CharField(max_length=126, null=True)
-    suspects_associative = models.CharField(max_length=126, null=True)
+    suspects_associative = models.TextField(null=True)
     
     def set_parent(self, the_parent):
         self.lf = the_parent

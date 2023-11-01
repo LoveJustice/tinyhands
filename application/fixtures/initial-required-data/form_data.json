@@ -312,6 +312,13 @@
    }
 },
 {
+   "model": "dataentry.formvalidationtype",
+   "pk": 13,
+   "fields": {
+      "name": "verification_validation"
+   }
+},
+{
    "model": "dataentry.storage",
    "pk": 63,
    "fields": {
@@ -658,7 +665,7 @@
       "start_date": "2018-04-01T00:00:00Z",
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "irfNepal",
-      "version": null,
+      "version": "V2022.8",
       "stations": []
    }
 },
@@ -710,7 +717,7 @@
       "start_date": "2018-04-01T00:00:00Z",
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "irfBangladesh",
-      "version": null,
+      "version": "V2022.8",
       "stations": []
    }
 },
@@ -931,7 +938,7 @@
       "start_date": "2019-07-29T04:00:00Z",
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "irfTanzania",
-      "version": null,
+      "version": "V2022.8",
       "stations": []
    }
 },
@@ -957,7 +964,7 @@
       "start_date": "2019-07-29T04:00:00Z",
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "irfSierraLeone",
-      "version": null,
+      "version": "V2022.8",
       "stations": []
    }
 },
@@ -1021,7 +1028,7 @@
       "storage": 184,
       "start_date": "2019-08-26T04:00:00Z",
       "end_date": "2118-12-31T00:00:00Z",
-      "form_name": "cifOsi",
+      "form_name": "cifOpenSource",
       "version": null,
       "stations": []
    }
@@ -1048,7 +1055,7 @@
       "start_date": "2019-11-01T04:00:00Z",
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "irfCambodia",
-      "version": null,
+      "version": "V2022.8",
       "stations": []
    }
 },
@@ -1074,7 +1081,7 @@
       "start_date": "2019-10-23T04:00:00Z",
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "irfZimbabwe",
-      "version": null,
+      "version": "V2022.8",
       "stations": []
    }
 },
@@ -1191,7 +1198,7 @@
       "start_date": "2020-01-08T05:00:00Z",
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "irfRwanda",
-      "version": null,
+      "version": "V2022.8",
       "stations": []
    }
 },
@@ -1295,7 +1302,7 @@
       "start_date": "2019-11-26T05:00:00Z",
       "end_date": "2118-12-31T00:00:00Z",
       "form_name": "irfUSA",
-      "version": "V2021.10",
+      "version": "V2022.8",
       "stations": []
    }
 },
@@ -1535,6 +1542,19 @@
 },
 {
    "model": "dataentry.form",
+   "pk": 129,
+   "fields": {
+      "form_type": 1,
+      "storage": 181,
+      "start_date": "2018-04-01T00:00:00Z",
+      "end_date": "2118-12-31T00:00:00Z",
+      "form_name": "irfSfeNepal",
+      "version": "V2022.9",
+      "stations": []
+   }
+},
+{
+   "model": "dataentry.form",
    "pk": 147,
    "fields": {
       "form_type": 1,
@@ -1589,15 +1609,6 @@
       "form_tag": "irfResourcesNamibia",
       "category_type": 1,
       "description": "Resources/Safety for IRF Namibia Land"
-   }
-},
-{
-   "model": "dataentry.category",
-   "pk": 18,
-   "fields": {
-      "form_tag": "irfFinalImmigration",
-      "category_type": 1,
-      "description": "Final Procedures with immigration IRF common"
    }
 },
 {
@@ -2259,15 +2270,6 @@
 },
 {
    "model": "dataentry.category",
-   "pk": 184,
-   "fields": {
-      "form_tag": "irfIntercepteeWithConsent",
-      "category_type": 2,
-      "description": "Interceptee with consent"
-   }
-},
-{
-   "model": "dataentry.category",
    "pk": 188,
    "fields": {
       "form_tag": "smrAttachment",
@@ -2291,15 +2293,6 @@
       "form_tag": "irfResourcesIndiaNetwork",
       "category_type": 1,
       "description": "Resources/Safety for India Network"
-   }
-},
-{
-   "model": "dataentry.category",
-   "pk": 192,
-   "fields": {
-      "form_tag": "irfControl",
-      "category_type": 1,
-      "description": "Control common IRF"
    }
 },
 {
@@ -2448,15 +2441,6 @@
 },
 {
    "model": "dataentry.category",
-   "pk": 215,
-   "fields": {
-      "form_tag": "irfVerification",
-      "category_type": 1,
-      "description": "Verification for common IRF"
-   }
-},
-{
-   "model": "dataentry.category",
    "pk": 216,
    "fields": {
       "form_tag": "irfResourcesLesotho",
@@ -2538,15 +2522,6 @@
 },
 {
    "model": "dataentry.category",
-   "pk": 226,
-   "fields": {
-      "form_tag": "irfControlLiberia",
-      "category_type": 1,
-      "description": "Control for IRF Liberia & Sierra Leone"
-   }
-},
-{
-   "model": "dataentry.category",
    "pk": 227,
    "fields": {
       "form_tag": "irfResourcesZambia",
@@ -2570,15 +2545,6 @@
       "form_tag": "irfResourcesEcuador",
       "category_type": 1,
       "description": "Resources/Safety for IRF Ecuador"
-   }
-},
-{
-   "model": "dataentry.category",
-   "pk": 231,
-   "fields": {
-      "form_tag": "irfControlIndonesia",
-      "category_type": 1,
-      "description": "Control for IRF Ecuador & Indonesia & Ethiopia"
    }
 },
 {
@@ -2642,6 +2608,87 @@
       "form_tag": "irfResourcesArgentina",
       "category_type": 1,
       "description": "Resources/Safety for IRF Argentina"
+   }
+},
+{
+   "model": "dataentry.category",
+   "pk": 338,
+   "fields": {
+      "form_tag": "irfSfeTopBox",
+      "category_type": 1,
+      "description": "Top Box - common IRF SFE"
+   }
+},
+{
+   "model": "dataentry.category",
+   "pk": 339,
+   "fields": {
+      "form_tag": "irfSfeArea",
+      "category_type": 1,
+      "description": "Area - common IRF SFE"
+   }
+},
+{
+   "model": "dataentry.category",
+   "pk": 340,
+   "fields": {
+      "form_tag": "irfSfeIndustry",
+      "category_type": 1,
+      "description": "Industry - common IRF SFE"
+   }
+},
+{
+   "model": "dataentry.category",
+   "pk": 341,
+   "fields": {
+      "form_tag": "irfSfeResourcesNepal",
+      "category_type": 1,
+      "description": "Resources for IRF SFE Nepal"
+   }
+},
+{
+   "model": "dataentry.category",
+   "pk": 342,
+   "fields": {
+      "form_tag": "irfSfeControlNepal",
+      "category_type": 1,
+      "description": "Control for IRF SFE Nepal"
+   }
+},
+{
+   "model": "dataentry.category",
+   "pk": 343,
+   "fields": {
+      "form_tag": "irfSfeNarrative",
+      "category_type": 1,
+      "description": "Narrative - common IRF SFE"
+   }
+},
+{
+   "model": "dataentry.category",
+   "pk": 344,
+   "fields": {
+      "form_tag": "irfSfePeopleMainNepal",
+      "category_type": 1,
+      "description": "People main for IRF SFE Nepal"
+   }
+},
+{
+   "model": "dataentry.category",
+   "pk": 345,
+   "fields": {
+      "form_tag": "irfSfeResult",
+      "category_type": 1,
+      "description": "Result - common IRF SFE"
+   }
+},
+{
+   "model": "dataentry.category",
+   "pk": 370,
+   "fields": {
+      "form_tag": "irfControlEthiopia",
+      "category_type": 1,
+      "description": "Control for IRF Ethiopia"
    }
 },
 {
@@ -2857,7 +2904,7 @@
    "model": "dataentry.formcategory",
    "fields": {
       "form": 8,
-      "category": 192,
+      "category": 260,
       "name": "Control",
       "order": 5,
       "form_category_question_config": null,
@@ -3099,7 +3146,7 @@
    "model": "dataentry.formcategory",
    "fields": {
       "form": 8,
-      "category": 184,
+      "category": 286,
       "name": "People",
       "order": 7,
       "form_category_question_config": null,
@@ -6407,7 +6454,7 @@
    "model": "dataentry.formcategory",
    "fields": {
       "form": 28,
-      "category": 184,
+      "category": 286,
       "name": "People",
       "order": 7,
       "form_category_question_config": null,
@@ -9251,7 +9298,7 @@
    "model": "dataentry.formcategory",
    "fields": {
       "form": 35,
-      "category": 192,
+      "category": 260,
       "name": "Control",
       "order": 5,
       "form_category_question_config": null,
@@ -9427,7 +9474,7 @@
    "model": "dataentry.formcategory",
    "fields": {
       "form": 37,
-      "category": 184,
+      "category": 286,
       "name": "People",
       "order": 7,
       "form_category_question_config": null,
@@ -12015,7 +12062,7 @@
    "model": "dataentry.formcategory",
    "fields": {
       "form": 46,
-      "category": 184,
+      "category": 286,
       "name": "People",
       "order": 7,
       "form_category_question_config": null,
@@ -12433,7 +12480,7 @@
    "model": "dataentry.formcategory",
    "fields": {
       "form": 37,
-      "category": 192,
+      "category": 260,
       "name": "Control",
       "order": 5,
       "form_category_question_config": null,
@@ -12785,7 +12832,7 @@
    "model": "dataentry.formcategory",
    "fields": {
       "form": 28,
-      "category": 226,
+      "category": 260,
       "name": "Control",
       "order": 5,
       "form_category_question_config": null,
@@ -12873,7 +12920,7 @@
    "model": "dataentry.formcategory",
    "fields": {
       "form": 46,
-      "category": 192,
+      "category": 260,
       "name": "Control",
       "order": 5,
       "form_category_question_config": null,
@@ -12884,7 +12931,7 @@
    "model": "dataentry.formcategory",
    "fields": {
       "form": 35,
-      "category": 184,
+      "category": 286,
       "name": "People",
       "order": 7,
       "form_category_question_config": null,
@@ -13060,7 +13107,7 @@
    "model": "dataentry.formcategory",
    "fields": {
       "form": 54,
-      "category": 192,
+      "category": 260,
       "name": "Control",
       "order": 5,
       "form_category_question_config": null,
@@ -13082,7 +13129,7 @@
    "model": "dataentry.formcategory",
    "fields": {
       "form": 54,
-      "category": 184,
+      "category": 286,
       "name": "People",
       "order": 7,
       "form_category_question_config": null,
@@ -13093,7 +13140,7 @@
    "model": "dataentry.formcategory",
    "fields": {
       "form": 54,
-      "category": 18,
+      "category": 194,
       "name": "Reason",
       "order": 8,
       "form_category_question_config": null,
@@ -13478,7 +13525,7 @@
    "model": "dataentry.formcategory",
    "fields": {
       "form": 1,
-      "category": 192,
+      "category": 260,
       "name": "Control",
       "order": 5,
       "form_category_question_config": null,
@@ -13500,7 +13547,7 @@
    "model": "dataentry.formcategory",
    "fields": {
       "form": 1,
-      "category": 184,
+      "category": 286,
       "name": "People",
       "order": 7,
       "form_category_question_config": null,
@@ -13643,22 +13690,22 @@
    "model": "dataentry.formcategory",
    "fields": {
       "form": 35,
-      "category": 215,
+      "category": 232,
       "name": "Verification",
       "order": 11,
       "form_category_question_config": null,
-      "storage": null
+      "storage": 204
    }
 },
 {
    "model": "dataentry.formcategory",
    "fields": {
       "form": 37,
-      "category": 215,
+      "category": 232,
       "name": "Verification",
       "order": 11,
       "form_category_question_config": null,
-      "storage": null
+      "storage": 204
    }
 },
 {
@@ -13687,11 +13734,11 @@
    "model": "dataentry.formcategory",
    "fields": {
       "form": 54,
-      "category": 215,
+      "category": 232,
       "name": "Verification",
       "order": 11,
       "form_category_question_config": null,
-      "storage": null
+      "storage": 204
    }
 },
 {
@@ -13764,7 +13811,7 @@
    "model": "dataentry.formcategory",
    "fields": {
       "form": 26,
-      "category": 192,
+      "category": 260,
       "name": "Control",
       "order": 5,
       "form_category_question_config": null,
@@ -13786,7 +13833,7 @@
    "model": "dataentry.formcategory",
    "fields": {
       "form": 26,
-      "category": 184,
+      "category": 286,
       "name": "People",
       "order": 7,
       "form_category_question_config": null,
@@ -15183,7 +15230,7 @@
    "model": "dataentry.formcategory",
    "fields": {
       "form": 71,
-      "category": 231,
+      "category": 370,
       "name": "Control",
       "order": 5,
       "form_category_question_config": null,
@@ -15205,7 +15252,7 @@
    "model": "dataentry.formcategory",
    "fields": {
       "form": 71,
-      "category": 184,
+      "category": 286,
       "name": "People",
       "order": 7,
       "form_category_question_config": null,
@@ -15680,6 +15727,182 @@
       "form": 147,
       "category": 233,
       "name": "Verification Main",
+      "order": 12,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": 129,
+      "category": 338,
+      "name": "Top Box",
+      "order": 1,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": 129,
+      "category": 339,
+      "name": "Area",
+      "order": 2,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": 129,
+      "category": 340,
+      "name": "Industry",
+      "order": 3,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": 129,
+      "category": 341,
+      "name": "Resources",
+      "order": 4,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": 129,
+      "category": 342,
+      "name": "Control",
+      "order": 5,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": 129,
+      "category": 343,
+      "name": "Narrative",
+      "order": 6,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": 129,
+      "category": 344,
+      "name": "People Main",
+      "order": 7,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": 129,
+      "category": 286,
+      "name": "People",
+      "order": 8,
+      "form_category_question_config": null,
+      "storage": 182
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": 129,
+      "category": 345,
+      "name": "Result",
+      "order": 9,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": 129,
+      "category": 58,
+      "name": "Attachments",
+      "order": 10,
+      "form_category_question_config": null,
+      "storage": 183
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": 129,
+      "category": 214,
+      "name": "Compliance",
+      "order": 11,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": 129,
+      "category": 232,
+      "name": "Verification",
+      "order": 12,
+      "form_category_question_config": null,
+      "storage": 204
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": 129,
+      "category": 233,
+      "name": "Verification Main",
+      "order": 13,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": 37,
+      "category": 233,
+      "name": "Verification Main",
+      "order": 12,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": 35,
+      "category": 233,
+      "name": "Verificaton Main",
+      "order": 12,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": 54,
+      "category": 233,
+      "name": "Verificaton Main",
       "order": 12,
       "form_category_question_config": null,
       "storage": null
@@ -21003,58 +21226,6 @@
 },
 {
    "model": "dataentry.question",
-   "pk": 814,
-   "fields": {
-      "form_tag": "question814",
-      "prompt": "Verification",
-      "description": null,
-      "answer_type": 4,
-      "params": null,
-      "export_name": "First Verification",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "pk": 815,
-   "fields": {
-      "form_tag": "question815",
-      "prompt": "Reason",
-      "description": null,
-      "answer_type": 1,
-      "params": null,
-      "export_name": "First Verification Reason",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "pk": 816,
-   "fields": {
-      "form_tag": "question816",
-      "prompt": "Followup call completed",
-      "description": null,
-      "answer_type": 4,
-      "params": null,
-      "export_name": "Followup call completed",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "pk": 817,
-   "fields": {
-      "form_tag": "question817",
-      "prompt": "First Verification Date",
-      "description": null,
-      "answer_type": 9,
-      "params": null,
-      "export_name": "First Verification Date",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
    "pk": 819,
    "fields": {
       "form_tag": "question819",
@@ -21063,19 +21234,6 @@
       "answer_type": 4,
       "params": null,
       "export_name": "Second Verification",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "pk": 820,
-   "fields": {
-      "form_tag": "question820",
-      "prompt": "Reason",
-      "description": null,
-      "answer_type": 1,
-      "params": null,
-      "export_name": "Second Verification Reason",
       "export_params": null
    }
 },
@@ -21802,19 +21960,6 @@
 },
 {
    "model": "dataentry.question",
-   "pk": 941,
-   "fields": {
-      "form_tag": "question941",
-      "prompt": "Not physically present",
-      "description": null,
-      "answer_type": 6,
-      "params": null,
-      "export_name": "Not physically present",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
    "pk": 942,
    "fields": {
       "form_tag": "question942",
@@ -22204,19 +22349,6 @@
 },
 {
    "model": "dataentry.question",
-   "pk": 966,
-   "fields": {
-      "form_tag": "question966",
-      "prompt": "Champion Verification",
-      "description": null,
-      "answer_type": 6,
-      "params": null,
-      "export_name": "Champion Verification",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
    "pk": 967,
    "fields": {
       "form_tag": "question967",
@@ -22308,32 +22440,6 @@
 },
 {
    "model": "dataentry.question",
-   "pk": 975,
-   "fields": {
-      "form_tag": "question975",
-      "prompt": "Consent to use photo",
-      "description": null,
-      "answer_type": 4,
-      "params": null,
-      "export_name": "Consent to use photo",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "pk": 976,
-   "fields": {
-      "form_tag": "question976",
-      "prompt": "Consent to use information",
-      "description": null,
-      "answer_type": 4,
-      "params": null,
-      "export_name": "Consent to use information",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
    "pk": 977,
    "fields": {
       "form_tag": "question977",
@@ -22381,97 +22487,6 @@
       "answer_type": 6,
       "params": null,
       "export_name": "Doesn't have required visa/docs",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "pk": 981,
-   "fields": {
-      "form_tag": "question981",
-      "prompt": "LJ Recommends Entry",
-      "description": null,
-      "answer_type": 4,
-      "params": null,
-      "export_name": "LJ Recommends Entry",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "pk": 982,
-   "fields": {
-      "form_tag": "question982",
-      "prompt": "LJ Recommends Transit",
-      "description": null,
-      "answer_type": 4,
-      "params": null,
-      "export_name": "LJ Recommends Transit",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "pk": 983,
-   "fields": {
-      "form_tag": "question983",
-      "prompt": "LJ Recommends Exit",
-      "description": null,
-      "answer_type": 4,
-      "params": null,
-      "export_name": "LJ Recommends Exit",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "pk": 984,
-   "fields": {
-      "form_tag": "question984",
-      "prompt": "Immigration Decison Entry",
-      "description": null,
-      "answer_type": 4,
-      "params": null,
-      "export_name": "Immigration Decison Entry",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "pk": 985,
-   "fields": {
-      "form_tag": "question985",
-      "prompt": "Immigration Decison Transit",
-      "description": null,
-      "answer_type": 4,
-      "params": null,
-      "export_name": "Immigration Decison Transit",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "pk": 986,
-   "fields": {
-      "form_tag": "question986",
-      "prompt": "Immigration Decison Exit",
-      "description": null,
-      "answer_type": 4,
-      "params": null,
-      "export_name": "Immigration Decison Exit",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "pk": 987,
-   "fields": {
-      "form_tag": "question987",
-      "prompt": "Immigration Case Number",
-      "description": null,
-      "answer_type": 1,
-      "params": null,
-      "export_name": "Immigration Case Number",
       "export_params": null
    }
 },
@@ -22905,32 +22920,6 @@
       "answer_type": 1,
       "params": null,
       "export_name": "Auto Number",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "pk": 1025,
-   "fields": {
-      "form_tag": "question1025",
-      "prompt": "First Verification Name",
-      "description": null,
-      "answer_type": 1,
-      "params": null,
-      "export_name": "First Verification Name",
-      "export_params": null
-   }
-},
-{
-   "model": "dataentry.question",
-   "pk": 1026,
-   "fields": {
-      "form_tag": "question1026",
-      "prompt": "Second Verification Name",
-      "description": null,
-      "answer_type": 1,
-      "params": null,
-      "export_name": "Second Verification Name",
       "export_params": null
    }
 },
@@ -23405,7 +23394,9 @@
       "prompt": "Date",
       "description": null,
       "answer_type": 9,
-      "params": null,
+      "params": {
+         "form_date": "True"
+      },
       "export_name": "Date of interception",
       "export_params": null
    }
@@ -23602,6 +23593,19 @@
       "answer_type": 1,
       "params": null,
       "export_name": "Features",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "pk": 1082,
+   "fields": {
+      "form_tag": "irfSfeControlUnder18Enticed",
+      "prompt": "Under 18 (enticed to work)",
+      "description": null,
+      "answer_type": 6,
+      "params": null,
+      "export_name": "Under 18 enticed to work",
       "export_params": null
    }
 },
@@ -23810,6 +23814,534 @@
       "answer_type": 1,
       "params": null,
       "export_name": "Route",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "pk": 1571,
+   "fields": {
+      "form_tag": "irfBangladeshLastName",
+      "prompt": "Last name different from alleged relative",
+      "description": null,
+      "answer_type": 6,
+      "params": null,
+      "export_name": "Last name different from alleged relative",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "pk": 1807,
+   "fields": {
+      "form_tag": "irfSfeResourcesAppliedDestinationUnknown",
+      "prompt": "Applied for job, but doesn\u2019t know destination",
+      "description": null,
+      "answer_type": 6,
+      "params": null,
+      "export_name": "Applied for job, but doesn\u2019t know destination",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "pk": 1808,
+   "fields": {
+      "form_tag": "irfSfeResourcesDoesntSpeakLocalLanguage",
+      "prompt": "Doesn\u2019t speak Nepali",
+      "description": null,
+      "answer_type": 6,
+      "params": null,
+      "export_name": "Doesn\u2019t speak Nepali",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "pk": 1809,
+   "fields": {
+      "form_tag": "irfSfeResourcesViaIndia",
+      "prompt": "Going to a third country via India",
+      "description": null,
+      "answer_type": 6,
+      "params": null,
+      "export_name": "Going to a third country via India",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "pk": 1810,
+   "fields": {
+      "form_tag": "irfSfeResourcesCostOfLiving",
+      "prompt": "Cost of living in destination much higher than wages",
+      "description": null,
+      "answer_type": 6,
+      "params": null,
+      "export_name": "Cost of living in destination much higher than wages",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "pk": 1811,
+   "fields": {
+      "form_tag": "irfSfeResourcesNoJobDetails",
+      "prompt": "Doesn\u2019t know what job they are applying for",
+      "description": null,
+      "answer_type": 6,
+      "params": null,
+      "export_name": "Doesn\u2019t know what job they are applying for",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "pk": 1812,
+   "fields": {
+      "form_tag": "irfSfeResourcesUsingAgent",
+      "prompt": "Using an agent",
+      "description": null,
+      "answer_type": 6,
+      "params": null,
+      "export_name": "Using an agent",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "pk": 1813,
+   "fields": {
+      "form_tag": "irfSfeResourcesMpaExcessiveTime",
+      "prompt": "MPA taking excessive time to process/send migrant",
+      "description": null,
+      "answer_type": 6,
+      "params": null,
+      "export_name": "MPA taking excessive time to process/send migrant",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "pk": 1814,
+   "fields": {
+      "form_tag": "irfSfeResourcesContractLanguage",
+      "prompt": "Contract not in a language understood by the PV",
+      "description": null,
+      "answer_type": 6,
+      "params": null,
+      "export_name": "Contract not in a language understood by the PV",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "pk": 1815,
+   "fields": {
+      "form_tag": "irfSfeResourcesMpaNotBearingCost",
+      "prompt": "Company/MPA not bearing cost to Gulf/Malaysia",
+      "description": null,
+      "answer_type": 6,
+      "params": null,
+      "export_name": "Company/MPA not bearing cost to Gulf/Malaysia",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "pk": 1816,
+   "fields": {
+      "form_tag": "irfSfeResourcesPaidAgent",
+      "prompt": "Paid money to agent",
+      "description": null,
+      "answer_type": 6,
+      "params": null,
+      "export_name": "Paid money to agent",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "pk": 1817,
+   "fields": {
+      "form_tag": "irfSfeResourcesPaidMoreThanStandard",
+      "prompt": "Paid more than government standard cost",
+      "description": null,
+      "answer_type": 6,
+      "params": null,
+      "export_name": "Paid more than government standard cost",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "pk": 1818,
+   "fields": {
+      "form_tag": "irfSfeResourcesNoReceipt",
+      "prompt": "No bhaar pai (receipt) for full amount of payment",
+      "description": null,
+      "answer_type": 6,
+      "params": null,
+      "export_name": "No bhaar pai (receipt) for full amount of payment",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "pk": 1819,
+   "fields": {
+      "form_tag": "irfSfeResourcesUnawareOfProcess",
+      "prompt": "Unaware of official employment migration process",
+      "description": null,
+      "answer_type": 6,
+      "params": null,
+      "export_name": "Unaware of official employment migration process",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "pk": 1820,
+   "fields": {
+      "form_tag": "irfSfeResourcesNotPrepared",
+      "prompt": "Did not complete at least one of the following",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Did not complete at least one of the following",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "pk": 1821,
+   "fields": {
+      "form_tag": "irfSfeResourcesPreparedOther",
+      "prompt": "Other",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Other",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "pk": 1822,
+   "fields": {
+      "form_tag": "irfSfeControlVisaMisuse",
+      "prompt": "Convinced by agent/MPA to work on visa other than work visa",
+      "description": null,
+      "answer_type": 6,
+      "params": null,
+      "export_name": "Convinced by agent/MPA to work on visa other than work visa",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "pk": 1823,
+   "fields": {
+      "form_tag": "irfSfeControlFacilitatedThirdCountry",
+      "prompt": "Process being fully facilitated by someone to travel to third country via India for work",
+      "description": null,
+      "answer_type": 6,
+      "params": null,
+      "export_name": "Process being fully facilitated by someone to travel to third country via India for work",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "pk": 1824,
+   "fields": {
+      "form_tag": "irfSfeControlWomenEnticedDangerousArea",
+      "prompt": "Woman being enticed by agent/MPA to go for domestic work in Gulf/Malaysia",
+      "description": null,
+      "answer_type": 6,
+      "params": null,
+      "export_name": "Woman being enticed by agent/MPA to go for domestic work in Gulf/Malaysia",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "pk": 1825,
+   "fields": {
+      "form_tag": "irfSfeControlBannedArea",
+      "prompt": "Being enticed by agent/MPA to go to banned country for migrant worker",
+      "description": null,
+      "answer_type": 6,
+      "params": null,
+      "export_name": "Being enticed by agent/MPA to go to banned country for migrant worker",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "pk": 1826,
+   "fields": {
+      "form_tag": "irfSfeControlJobPrepermissionMismatch",
+      "prompt": "Job agreement and pre-permission details do not match",
+      "description": null,
+      "answer_type": 6,
+      "params": null,
+      "export_name": "Job agreement and pre-permission details do not match",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "pk": 1827,
+   "fields": {
+      "form_tag": "irfSfeControlInvalidMpa",
+      "prompt": "Using an invalid MPA",
+      "description": null,
+      "answer_type": 6,
+      "params": null,
+      "export_name": "Using an invalid MPA",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "pk": 1828,
+   "fields": {
+      "form_tag": "irfSfeControlInvalidLt",
+      "prompt": "No/invalid Lt number and/or demand letter",
+      "description": null,
+      "answer_type": 6,
+      "params": null,
+      "export_name": "No/invalid Lt number and/or demand letter",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "pk": 1829,
+   "fields": {
+      "form_tag": "irfSfeControlSeasonal",
+      "prompt": "Being enticed by MPA to go to South Korea or Israel for non-seasonal work",
+      "description": null,
+      "answer_type": 6,
+      "params": null,
+      "export_name": "Being enticed by MPA to go to South Korea or Israel for non-seasonal work",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "pk": 1830,
+   "fields": {
+      "form_tag": "irfSfePeopleLtBefore",
+      "prompt": "Lt # Before Counseling",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Lt # Before Counseling",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "pk": 1831,
+   "fields": {
+      "form_tag": "irfSfePeopleLtAfter",
+      "prompt": "Lt # After Counseling",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "Lt # After Counseling",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "pk": 1832,
+   "fields": {
+      "form_tag": "irfSfePeopleCloseContact",
+      "prompt": "If/when the PV goes abroad in the future, with whom will they keep the closest contact? (Name/Number)",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "If/when the PV goes abroad in the future, with whom will they keep the closest contact? (Name/Number)",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "pk": 1833,
+   "fields": {
+      "form_tag": "irfSfePeopleNoMpaAgent",
+      "prompt": "Check if PV did not use a MPA or agent",
+      "description": null,
+      "answer_type": 6,
+      "params": null,
+      "export_name": "Check if PV did not use a MPA or agent",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "pk": 1834,
+   "fields": {
+      "form_tag": "irfSfePeopleMpaName",
+      "prompt": "MPA Name",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "MPA Name",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "pk": 1835,
+   "fields": {
+      "form_tag": "irfSfePeopleMpaPhone",
+      "prompt": "MPA Phone",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "MPA Phone",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "pk": 1836,
+   "fields": {
+      "form_tag": "irfSfePeopleMpaInitiatedContact",
+      "prompt": "Who initiated contact?",
+      "description": null,
+      "answer_type": 4,
+      "params": {
+         "textbox": "True"
+      },
+      "export_name": "MPA:Who initiated contact?",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "pk": 1837,
+   "fields": {
+      "form_tag": "irfSfePeopleHowContact",
+      "prompt": "How",
+      "description": null,
+      "answer_type": 4,
+      "params": {
+         "textbox": "True"
+      },
+      "export_name": "MPA:How Contacted",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "pk": 1838,
+   "fields": {
+      "form_tag": "irfSfeResultTechTraining",
+      "prompt": "PV was referred to technical/vocational training",
+      "description": null,
+      "answer_type": 6,
+      "params": null,
+      "export_name": "PV was referred to technical/vocational training",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "pk": 1839,
+   "fields": {
+      "form_tag": "irfSfeResultOtherEducation",
+      "prompt": "PV was referred to other education",
+      "description": null,
+      "answer_type": 6,
+      "params": null,
+      "export_name": "PV was referred to other education",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "pk": 1840,
+   "fields": {
+      "form_tag": "irfSfeResultChangePlans",
+      "prompt": "PV decided to change plans and go abroad",
+      "description": null,
+      "answer_type": 1,
+      "params": null,
+      "export_name": "PV decided to change plans and go abroad",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "pk": 1841,
+   "fields": {
+      "form_tag": "irfSfeResultStayLocal",
+      "prompt": "PV decided to change plans and look for a job within Nepal due to SFE staff\u2019s counseling",
+      "description": null,
+      "answer_type": 6,
+      "params": null,
+      "export_name": "PV decided to change plans and look for a job within Nepal due to SFE staff\u2019s counseling",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "pk": 2078,
+   "fields": {
+      "form_tag": "irfSfePeopleAgentHowContact",
+      "prompt": "How",
+      "description": null,
+      "answer_type": 4,
+      "params": {
+         "textbox": "True"
+      },
+      "export_name": "Agent:How Contacted",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "pk": 2079,
+   "fields": {
+      "form_tag": "irfSfePeopleAgentInitiatedContact",
+      "prompt": "Who initiated contact?",
+      "description": null,
+      "answer_type": 4,
+      "params": {
+         "textbox": "True"
+      },
+      "export_name": "Agent:Who initiated contact?",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "pk": 2080,
+   "fields": {
+      "form_tag": "irfSfePeopleMpaSuspect",
+      "prompt": "Do you suspect the MPA is attempting to traffic the PV (or others)?",
+      "description": null,
+      "answer_type": 4,
+      "params": null,
+      "export_name": "MPA suspect",
+      "export_params": null
+   }
+},
+{
+   "model": "dataentry.question",
+   "pk": 2081,
+   "fields": {
+      "form_tag": "irfSfePeopleAgentSuspect",
+      "prompt": "Do you suspect the Agent is attempting to traffic the PV (or others)?",
+      "description": null,
+      "answer_type": 4,
+      "params": null,
+      "export_name": "Agent suspect",
       "export_params": null
    }
 },
@@ -33964,213 +34496,6 @@
 {
    "model": "dataentry.questionlayout",
    "fields": {
-      "question": 10,
-      "category": 192,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 17,
-      "category": 192,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 23,
-      "category": 192,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 24,
-      "category": 192,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 25,
-      "category": 192,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 26,
-      "category": 192,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 55,
-      "category": 192,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 57,
-      "category": 192,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 79,
-      "category": 192,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 216,
-      "category": 192,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 247,
-      "category": 192,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 501,
-      "category": 192,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 603,
-      "category": 192,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 712,
-      "category": 192,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 931,
-      "category": 192,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 932,
-      "category": 192,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 933,
-      "category": 192,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 934,
-      "category": 192,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 935,
-      "category": 192,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 936,
-      "category": 192,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 937,
-      "category": 192,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 938,
-      "category": 192,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 939,
-      "category": 192,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
       "question": 91,
       "category": 193,
       "weight": 0,
@@ -34291,15 +34616,6 @@
    "fields": {
       "question": 256,
       "category": 194,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 143,
-      "category": 192,
       "weight": 0,
       "form_config": null
    }
@@ -34460,15 +34776,6 @@
 {
    "model": "dataentry.questionlayout",
    "fields": {
-      "question": 246,
-      "category": 178,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
       "question": 280,
       "category": 178,
       "weight": 0,
@@ -34929,15 +35236,6 @@
    "model": "dataentry.questionlayout",
    "fields": {
       "question": 244,
-      "category": 157,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 246,
       "category": 157,
       "weight": 0,
       "form_config": null
@@ -35603,15 +35901,6 @@
 {
    "model": "dataentry.questionlayout",
    "fields": {
-      "question": 246,
-      "category": 183,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
       "question": 244,
       "category": 183,
       "weight": 0,
@@ -35693,51 +35982,6 @@
 {
    "model": "dataentry.questionlayout",
    "fields": {
-      "question": 941,
-      "category": 184,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 9,
-      "category": 184,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 975,
-      "category": 184,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 976,
-      "category": 184,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 234,
-      "category": 192,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
       "question": 30,
       "category": 173,
       "weight": 0,
@@ -35811,15 +36055,6 @@
    "model": "dataentry.questionlayout",
    "fields": {
       "question": 244,
-      "category": 173,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 246,
       "category": 173,
       "weight": 0,
       "form_config": null
@@ -36485,170 +36720,6 @@
 {
    "model": "dataentry.questionlayout",
    "fields": {
-      "question": 940,
-      "category": 18,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 607,
-      "category": 18,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 142,
-      "category": 18,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 144,
-      "category": 18,
-      "weight": 0,
-      "form_config": {
-         "TotalFlagId": 144
-      }
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 256,
-      "category": 18,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 249,
-      "category": 18,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 151,
-      "category": 18,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 150,
-      "category": 18,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 149,
-      "category": 18,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 148,
-      "category": 18,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 147,
-      "category": 18,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 981,
-      "category": 18,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 982,
-      "category": 18,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 983,
-      "category": 18,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 984,
-      "category": 18,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 985,
-      "category": 18,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 986,
-      "category": 18,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 987,
-      "category": 18,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
       "question": 74,
       "category": 16,
       "weight": 0,
@@ -36758,15 +36829,6 @@
    "model": "dataentry.questionlayout",
    "fields": {
       "question": 244,
-      "category": 206,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 246,
       "category": 206,
       "weight": 0,
       "form_config": null
@@ -37742,15 +37804,6 @@
 {
    "model": "dataentry.questionlayout",
    "fields": {
-      "question": 246,
-      "category": 25,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
       "question": 280,
       "category": 25,
       "weight": 0,
@@ -37994,15 +38047,6 @@
 {
    "model": "dataentry.questionlayout",
    "fields": {
-      "question": 246,
-      "category": 2,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
       "question": 280,
       "category": 2,
       "weight": 0,
@@ -38084,15 +38128,6 @@
 {
    "model": "dataentry.questionlayout",
    "fields": {
-      "question": 242,
-      "category": 2,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
       "question": 996,
       "category": 2,
       "weight": 0,
@@ -38138,69 +38173,6 @@
 {
    "model": "dataentry.questionlayout",
    "fields": {
-      "question": 814,
-      "category": 215,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 815,
-      "category": 215,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 816,
-      "category": 215,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 817,
-      "category": 215,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 819,
-      "category": 215,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 820,
-      "category": 215,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 821,
-      "category": 215,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
       "question": 861,
       "category": 214,
       "weight": 0,
@@ -38212,33 +38184,6 @@
    "fields": {
       "question": 862,
       "category": 214,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 966,
-      "category": 215,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 1025,
-      "category": 215,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 1026,
-      "category": 215,
       "weight": 0,
       "form_config": null
    }
@@ -38355,15 +38300,6 @@
    "model": "dataentry.questionlayout",
    "fields": {
       "question": 280,
-      "category": 146,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 246,
       "category": 146,
       "weight": 0,
       "form_config": null
@@ -39432,24 +39368,6 @@
 {
    "model": "dataentry.questionlayout",
    "fields": {
-      "question": 1068,
-      "category": 192,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 1069,
-      "category": 18,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
       "question": 1070,
       "category": 217,
       "weight": 0,
@@ -39828,260 +39746,8 @@
 {
    "model": "dataentry.questionlayout",
    "fields": {
-      "question": 10,
-      "category": 226,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 17,
-      "category": 226,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 23,
-      "category": 226,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 24,
-      "category": 226,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 25,
-      "category": 226,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 26,
-      "category": 226,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 55,
-      "category": 226,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 57,
-      "category": 226,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 79,
-      "category": 226,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 216,
-      "category": 226,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 247,
-      "category": 226,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 501,
-      "category": 226,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 603,
-      "category": 226,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 712,
-      "category": 226,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 931,
-      "category": 226,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 932,
-      "category": 226,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 933,
-      "category": 226,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 934,
-      "category": 226,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 935,
-      "category": 226,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 936,
-      "category": 226,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 937,
-      "category": 226,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 938,
-      "category": 226,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 939,
-      "category": 226,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 143,
-      "category": 226,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 234,
-      "category": 226,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 1068,
-      "category": 226,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 1076,
-      "category": 226,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
       "question": 1077,
       "category": 194,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 1077,
-      "category": 18,
       "weight": 0,
       "form_config": null
    }
@@ -40667,267 +40333,6 @@
    "fields": {
       "question": 988,
       "category": 230,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 10,
-      "category": 231,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 17,
-      "category": 231,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 23,
-      "category": 231,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 24,
-      "category": 231,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 25,
-      "category": 231,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 26,
-      "category": 231,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 55,
-      "category": 231,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 57,
-      "category": 231,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 79,
-      "category": 231,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 216,
-      "category": 231,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 247,
-      "category": 231,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 501,
-      "category": 231,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 603,
-      "category": 231,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 712,
-      "category": 231,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 931,
-      "category": 231,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 932,
-      "category": 231,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 933,
-      "category": 231,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 934,
-      "category": 231,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 935,
-      "category": 231,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 936,
-      "category": 231,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 937,
-      "category": 231,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 938,
-      "category": 231,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 939,
-      "category": 231,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 143,
-      "category": 231,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 234,
-      "category": 231,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 1068,
-      "category": 231,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 1076,
-      "category": 231,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 1085,
-      "category": 231,
-      "weight": 0,
-      "form_config": null
-   }
-},
-{
-   "model": "dataentry.questionlayout",
-   "fields": {
-      "question": 1086,
-      "category": 231,
       "weight": 0,
       "form_config": null
    }
@@ -41702,6 +41107,276 @@
    "fields": {
       "question": 1086,
       "category": 260,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 10,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 17,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 23,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 24,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 25,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 26,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 55,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 57,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 79,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 216,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 247,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 501,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 603,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 712,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 931,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 932,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 933,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 934,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 935,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 936,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 937,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 938,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 939,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 143,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 234,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1068,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1076,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1085,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1086,
+      "category": 370,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1822,
+      "category": 370,
       "weight": 0,
       "form_config": null
    }
@@ -42620,6 +42295,852 @@
    "fields": {
       "question": 1084,
       "category": 337,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1,
+      "category": 338,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1066,
+      "category": 338,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1067,
+      "category": 338,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 6,
+      "category": 338,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 3,
+      "category": 338,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 245,
+      "category": 339,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 924,
+      "category": 340,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1807,
+      "category": 341,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 974,
+      "category": 341,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1808,
+      "category": 341,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 78,
+      "category": 341,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 942,
+      "category": 341,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1809,
+      "category": 341,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1810,
+      "category": 341,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1811,
+      "category": 341,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1812,
+      "category": 341,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1813,
+      "category": 341,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1814,
+      "category": 341,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1815,
+      "category": 341,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1816,
+      "category": 341,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1817,
+      "category": 341,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1818,
+      "category": 341,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1819,
+      "category": 341,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1820,
+      "category": 341,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1821,
+      "category": 341,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1822,
+      "category": 342,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1823,
+      "category": 342,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1824,
+      "category": 342,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1825,
+      "category": 342,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1829,
+      "category": 342,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 934,
+      "category": 342,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 935,
+      "category": 342,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 936,
+      "category": 342,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 712,
+      "category": 342,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 937,
+      "category": 342,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 938,
+      "category": 342,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1826,
+      "category": 342,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 57,
+      "category": 342,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 79,
+      "category": 342,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1827,
+      "category": 342,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1828,
+      "category": 342,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 55,
+      "category": 342,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 146,
+      "category": 343,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1830,
+      "category": 344,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1831,
+      "category": 344,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1832,
+      "category": 344,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1833,
+      "category": 344,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1834,
+      "category": 344,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1835,
+      "category": 344,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1836,
+      "category": 344,
+      "weight": 0,
+      "form_config": {
+         "RadioItems": {
+            "1836": [
+               "PV",
+               "MPA"
+            ]
+         }
+      }
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1837,
+      "category": 344,
+      "weight": 0,
+      "form_config": {
+         "RadioItems": {
+            "1837": [
+               "Phone",
+               "In-person",
+               "Social media",
+               "Email",
+               "Through a relative/friend"
+            ]
+         }
+      }
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1838,
+      "category": 345,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1839,
+      "category": 345,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1840,
+      "category": 345,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1841,
+      "category": 345,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 151,
+      "category": 345,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 143,
+      "category": 342,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 144,
+      "category": 345,
+      "weight": 0,
+      "form_config": {
+         "TotalFlagId": 144
+      }
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 607,
+      "category": 345,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 2078,
+      "category": 344,
+      "weight": 0,
+      "form_config": {
+         "RadioItems": {
+            "2078": [
+               "Phone",
+               "In-person",
+               "Social media",
+               "Email",
+               "Through a relative/friend"
+            ]
+         }
+      }
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 2079,
+      "category": 344,
+      "weight": 0,
+      "form_config": {
+         "RadioItems": {
+            "1836": [
+               "PV",
+               "Agent"
+            ]
+         }
+      }
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 2080,
+      "category": 344,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 2081,
+      "category": 344,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1073,
+      "category": 178,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1083,
+      "category": 178,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1084,
+      "category": 178,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1070,
+      "category": 178,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1073,
+      "category": 157,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1083,
+      "category": 157,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1084,
+      "category": 157,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1073,
+      "category": 2,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1083,
+      "category": 2,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1084,
+      "category": 2,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1073,
+      "category": 146,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1083,
+      "category": 146,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1084,
+      "category": 146,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1073,
+      "category": 183,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1083,
+      "category": 183,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1084,
+      "category": 183,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1082,
+      "category": 342,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1076,
+      "category": 25,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1083,
+      "category": 25,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1084,
+      "category": 25,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1571,
+      "category": 25,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1076,
+      "category": 173,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1085,
+      "category": 173,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1086,
+      "category": 173,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1076,
+      "category": 206,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1085,
+      "category": 206,
+      "weight": 0,
+      "form_config": null
+   }
+},
+{
+   "model": "dataentry.questionlayout",
+   "fields": {
+      "question": 1086,
+      "category": 206,
       "weight": 0,
       "form_config": null
    }
@@ -45350,43 +45871,8 @@
 {
    "model": "dataentry.questionstorage",
    "fields": {
-      "question": 814,
-      "field_name": "logbook_first_verification"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": 815,
-      "field_name": "logbook_first_reason"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": 816,
-      "field_name": "logbook_followup_call"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": 817,
-      "field_name": "logbook_first_verification_date"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
       "question": 819,
       "field_name": "verified_evidence_categorization"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": 820,
-      "field_name": "logbook_second_reason"
    }
 },
 {
@@ -45777,13 +46263,6 @@
 {
    "model": "dataentry.questionstorage",
    "fields": {
-      "question": 941,
-      "field_name": "not_physically_present"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
       "question": 942,
       "field_name": "vulnerability_family_unwilling"
    }
@@ -45945,13 +46424,6 @@
 {
    "model": "dataentry.questionstorage",
    "fields": {
-      "question": 966,
-      "field_name": "logbook_champion_verification"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
       "question": 967,
       "field_name": "rescue"
    }
@@ -46001,20 +46473,6 @@
 {
    "model": "dataentry.questionstorage",
    "fields": {
-      "question": 975,
-      "field_name": "consent_to_use_photo"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": 976,
-      "field_name": "consent_to_use_information"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
       "question": 977,
       "field_name": "vulnerability_doesnt_speak_english"
    }
@@ -46038,55 +46496,6 @@
    "fields": {
       "question": 980,
       "field_name": "vulnerability_doesnt_have_required_visa"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": 981,
-      "field_name": "immigration_lj_entry"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": 982,
-      "field_name": "immigration_lj_transit"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": 983,
-      "field_name": "immigration_lj_exit"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": 984,
-      "field_name": "immigration_entry"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": 985,
-      "field_name": "immigration_transit"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": 986,
-      "field_name": "immigration_exit"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": 987,
-      "field_name": "immigration_case_number"
    }
 },
 {
@@ -46318,20 +46727,6 @@
    "fields": {
       "question": 1024,
       "field_name": "auto_number"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": 1025,
-      "field_name": "logbook_first_verification_name"
-   }
-},
-{
-   "model": "dataentry.questionstorage",
-   "fields": {
-      "question": 1026,
-      "field_name": "logbook_second_verification_name"
    }
 },
 {
@@ -46801,6 +47196,293 @@
    "fields": {
       "question": 1570,
       "field_name": "route"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": 1807,
+      "field_name": "vulnerability_applied_job_doesnt_know_destination"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": 1808,
+      "field_name": "vulnerability_doesnt_speak_local_language"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": 1809,
+      "field_name": "vulnerability_going_via_india"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": 1810,
+      "field_name": "vulnerability_cost_of_living_higher_than_wages"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": 1811,
+      "field_name": "vulnerability_doesnt_know_job_details"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": 1812,
+      "field_name": "vulnerability_using_agent"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": 1813,
+      "field_name": "vulnerability_mpa_excessive_time"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": 1814,
+      "field_name": "agreement_contract_language"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": 1815,
+      "field_name": "agreement_mpa_not_bearing_cost"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": 1816,
+      "field_name": "agreement_paid_agent"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": 1817,
+      "field_name": "agreement_paid_above_standard"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": 1818,
+      "field_name": "agreement_no_receipt"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": 1819,
+      "field_name": "preparation_unaware_of_process"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": 1820,
+      "field_name": "preparation_did_not_complete"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": 1821,
+      "field_name": "preparation_other"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": 1822,
+      "field_name": "control_visa_misuse"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": 1823,
+      "field_name": "control_facilitated_via_third_country"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": 1824,
+      "field_name": "control_women_enticed_unsave_area"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": 1825,
+      "field_name": "control_enticed_banned_area"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": 1829,
+      "field_name": "control_enticed_non_seasonal"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": 1826,
+      "field_name": "control_agreement_prepermission_mismatch"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": 1827,
+      "field_name": "control_invalid_mpa"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": 1828,
+      "field_name": "control_invalid_lt"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": 1830,
+      "field_name": "pv_lt_number_before_counsel"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": 1831,
+      "field_name": "pv_lt_number_after_counsel"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": 1832,
+      "field_name": "pv_closest_contact"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": 1833,
+      "field_name": "mpa_agent_not_used"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": 1834,
+      "field_name": "mpa_name"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": 1835,
+      "field_name": "mpa_phone"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": 1836,
+      "field_name": "mpa_who_initiated_contact"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": 1837,
+      "field_name": "mpa_how_contacted"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": 1838,
+      "field_name": "result_pv_tech_training"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": 1839,
+      "field_name": "result_pv_other_education"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": 1840,
+      "field_name": "result_pv_changed_plans"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": 1841,
+      "field_name": "result_pv_local_job"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": 2078,
+      "field_name": "agent_who_initiated_contact"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": 2079,
+      "field_name": "agent_how_contacted"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": 2080,
+      "field_name": "mpa_is_suspect"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": 2081,
+      "field_name": "agent_is_suspect"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": 1082,
+      "field_name": "control_under_18_recruited_for_work"
+   }
+},
+{
+   "model": "dataentry.questionstorage",
+   "fields": {
+      "question": 1571,
+      "field_name": "vulnerability_different_last_name"
    }
 },
 {
@@ -47846,6 +48528,7 @@
          69,
          70,
          92,
+         129,
          147
       ]
    }
@@ -47979,6 +48662,7 @@
          69,
          70,
          92,
+         129,
          147
       ]
    }
@@ -48023,6 +48707,7 @@
          69,
          70,
          92,
+         129,
          147
       ]
    }
@@ -48068,32 +48753,6 @@
          70,
          92,
          147
-      ]
-   }
-},
-{
-   "model": "dataentry.formvalidation",
-   "pk": 9,
-   "fields": {
-      "form_tag": "irfPrimaryReasonEntered",
-      "level": 2,
-      "trigger": null,
-      "trigger_value": null,
-      "validation_type": 1,
-      "error_warning_message": "The primary reason for interception must be entered",
-      "params": null,
-      "retrieve": false,
-      "update": true,
-      "forms": [
-         1,
-         8,
-         26,
-         28,
-         35,
-         37,
-         46,
-         54,
-         65
       ]
    }
 },
@@ -48183,6 +48842,7 @@
          69,
          70,
          92,
+         129,
          147
       ]
    }
@@ -48229,6 +48889,7 @@
          69,
          70,
          92,
+         129,
          147
       ]
    }
@@ -48317,6 +48978,7 @@
          69,
          70,
          92,
+         129,
          147
       ]
    }
@@ -48363,6 +49025,7 @@
          69,
          70,
          92,
+         129,
          147
       ]
    }
@@ -48407,6 +49070,7 @@
          69,
          70,
          92,
+         129,
          147
       ]
    }
@@ -48632,6 +49296,7 @@
          69,
          70,
          92,
+         129,
          147
       ]
    }
@@ -48715,6 +49380,7 @@
          69,
          70,
          92,
+         129,
          147
       ]
    }
@@ -48759,6 +49425,7 @@
          69,
          70,
          92,
+         129,
          147
       ]
    }
@@ -48803,6 +49470,7 @@
          69,
          70,
          92,
+         129,
          147
       ]
    }
@@ -51024,6 +51692,161 @@
    }
 },
 {
+   "model": "dataentry.formvalidation",
+   "pk": 424,
+   "fields": {
+      "form_tag": "irfPeopleNoMpaAgent",
+      "level": 3,
+      "trigger": 1833,
+      "trigger_value": null,
+      "validation_type": 8,
+      "error_warning_message": "MPA and Agent data should not be entered when N/A checkbox is selected",
+      "params": null,
+      "retrieve": false,
+      "update": true,
+      "forms": [
+         129
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "pk": 425,
+   "fields": {
+      "form_tag": "irfSfeOnlyPVcard",
+      "level": 3,
+      "trigger": 1833,
+      "trigger_value": null,
+      "validation_type": 7,
+      "error_warning_message": "Agent information should not be present when the N/A checkbox is selected",
+      "params": {
+         "max_count": 1,
+         "category_name": "People"
+      },
+      "retrieve": false,
+      "update": true,
+      "forms": [
+         129
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "pk": 427,
+   "fields": {
+      "form_tag": "irfSfeAreaInfoShouldBeEntered",
+      "level": 3,
+      "trigger": null,
+      "trigger_value": null,
+      "validation_type": 2,
+      "error_warning_message": "Area information should be provided",
+      "params": null,
+      "retrieve": false,
+      "update": true,
+      "forms": [
+         129
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "pk": 428,
+   "fields": {
+      "form_tag": "irfIndustrynfoShouldBeEntered",
+      "level": 3,
+      "trigger": null,
+      "trigger_value": null,
+      "validation_type": 2,
+      "error_warning_message": "Industry information should be provided",
+      "params": null,
+      "retrieve": false,
+      "update": true,
+      "forms": [
+         129
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "pk": 429,
+   "fields": {
+      "form_tag": "irfVerificationFollowUp",
+      "level": 2,
+      "trigger": 1089,
+      "trigger_value": "Yes",
+      "validation_type": 13,
+      "error_warning_message": "Follow-up call facts must be entered when follow-up call has been completed",
+      "params": null,
+      "retrieve": false,
+      "update": true,
+      "forms": [
+         1,
+         2,
+         4,
+         8,
+         9,
+         17,
+         18,
+         19,
+         26,
+         27,
+         28,
+         32,
+         37,
+         44,
+         46,
+         55,
+         59,
+         60,
+         64,
+         65,
+         66,
+         69,
+         70,
+         71,
+         92,
+         129,
+         147
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "pk": 430,
+   "fields": {
+      "form_tag": "gospelVerificationConfirmationDetailsMustBeEntered",
+      "level": 2,
+      "trigger": 1060,
+      "trigger_value": "No",
+      "validation_type": 1,
+      "error_warning_message": "Gospel sharing details must be entered",
+      "params": null,
+      "retrieve": false,
+      "update": true,
+      "forms": [
+         58
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "pk": 431,
+   "fields": {
+      "form_tag": "gospelVerificationChangeDetailsMustBeEntered",
+      "level": 2,
+      "trigger": 1060,
+      "trigger_value": "Yes",
+      "validation_type": 1,
+      "error_warning_message": "Reason for changing gospel verification must be entered",
+      "params": null,
+      "retrieve": false,
+      "update": true,
+      "forms": [
+         58
+      ]
+   }
+},
+{
    "model": "dataentry.formvalidationquestion",
    "fields": {
       "validation": 1,
@@ -51063,13 +51886,6 @@
    "fields": {
       "validation": 7,
       "question": 91
-   }
-},
-{
-   "model": "dataentry.formvalidationquestion",
-   "fields": {
-      "validation": 9,
-      "question": 142
    }
 },
 {
@@ -51934,6 +52750,139 @@
    }
 },
 {
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": 341,
+      "question": 1826
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": 342,
+      "question": 1826
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": 343,
+      "question": 1826
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": 424,
+      "question": 1834
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": 424,
+      "question": 1835
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": 424,
+      "question": 1836
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": 424,
+      "question": 1837
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": 427,
+      "question": 245
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": 428,
+      "question": 924
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": 424,
+      "question": 2078
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": 424,
+      "question": 2079
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": 424,
+      "question": 2080
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": 424,
+      "question": 2081
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": 429,
+      "question": 1090
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": 431,
+      "question": 1061
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": 430,
+      "question": 1062
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": 430,
+      "question": 1063
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": 430,
+      "question": 1064
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": 430,
+      "question": 1065
+   }
+},
+{
    "model": "dataentry.exportimport",
    "pk": 1,
    "fields": {
@@ -52638,10 +53587,21 @@
    }
 },
 {
+   "model": "dataentry.exportimport",
+   "pk": 66,
+   "fields": {
+      "form_tag": "irfSfeNepal",
+      "description": "Export Nepal SFE IRF",
+      "implement_module": "export_import.irf_google_sheet",
+      "implement_class_name": "IrfGoogleSheet",
+      "form": 129
+   }
+},
+{
    "model": "dataentry.exportimportcard",
    "fields": {
       "export_import": 1,
-      "category": 184,
+      "category": 286,
       "prefix": "Victim ",
       "max_instances": 1,
       "index_field_name": null
@@ -52651,7 +53611,7 @@
    "model": "dataentry.exportimportcard",
    "fields": {
       "export_import": 1,
-      "category": 184,
+      "category": 286,
       "prefix": "Trafficker %d ",
       "max_instances": 5,
       "index_field_name": null
@@ -52681,7 +53641,7 @@
    "model": "dataentry.exportimportcard",
    "fields": {
       "export_import": 3,
-      "category": 184,
+      "category": 286,
       "prefix": "Victim ",
       "max_instances": 1,
       "index_field_name": null
@@ -52691,7 +53651,7 @@
    "model": "dataentry.exportimportcard",
    "fields": {
       "export_import": 3,
-      "category": 184,
+      "category": 286,
       "prefix": "Trafficker %d ",
       "max_instances": 5,
       "index_field_name": null
@@ -53001,7 +53961,7 @@
    "model": "dataentry.exportimportcard",
    "fields": {
       "export_import": 23,
-      "category": 184,
+      "category": 286,
       "prefix": "Victim ",
       "max_instances": 1,
       "index_field_name": null
@@ -53011,7 +53971,7 @@
    "model": "dataentry.exportimportcard",
    "fields": {
       "export_import": 23,
-      "category": 184,
+      "category": 286,
       "prefix": "Trafficker %d ",
       "max_instances": 5,
       "index_field_name": null
@@ -53041,7 +54001,7 @@
    "model": "dataentry.exportimportcard",
    "fields": {
       "export_import": 25,
-      "category": 184,
+      "category": 286,
       "prefix": "Victim ",
       "max_instances": 1,
       "index_field_name": null
@@ -53051,7 +54011,7 @@
    "model": "dataentry.exportimportcard",
    "fields": {
       "export_import": 25,
-      "category": 184,
+      "category": 286,
       "prefix": "Trafficker %d ",
       "max_instances": 5,
       "index_field_name": null
@@ -53481,7 +54441,7 @@
    "model": "dataentry.exportimportcard",
    "fields": {
       "export_import": 32,
-      "category": 184,
+      "category": 286,
       "prefix": "Victim ",
       "max_instances": 1,
       "index_field_name": null
@@ -53491,7 +54451,7 @@
    "model": "dataentry.exportimportcard",
    "fields": {
       "export_import": 32,
-      "category": 184,
+      "category": 286,
       "prefix": "Trafficker %d ",
       "max_instances": 5,
       "index_field_name": null
@@ -53501,7 +54461,7 @@
    "model": "dataentry.exportimportcard",
    "fields": {
       "export_import": 34,
-      "category": 184,
+      "category": 286,
       "prefix": "Victim ",
       "max_instances": 1,
       "index_field_name": null
@@ -53511,7 +54471,7 @@
    "model": "dataentry.exportimportcard",
    "fields": {
       "export_import": 34,
-      "category": 184,
+      "category": 286,
       "prefix": "Trafficker %d ",
       "max_instances": 5,
       "index_field_name": null
@@ -53591,7 +54551,7 @@
    "model": "dataentry.exportimportcard",
    "fields": {
       "export_import": 43,
-      "category": 184,
+      "category": 286,
       "prefix": "Victim ",
       "max_instances": 1,
       "index_field_name": null
@@ -53601,7 +54561,7 @@
    "model": "dataentry.exportimportcard",
    "fields": {
       "export_import": 43,
-      "category": 184,
+      "category": 286,
       "prefix": "Trafficker %d ",
       "max_instances": 5,
       "index_field_name": null
@@ -53761,7 +54721,7 @@
    "model": "dataentry.exportimportcard",
    "fields": {
       "export_import": 50,
-      "category": 184,
+      "category": 286,
       "prefix": "Victim ",
       "max_instances": 1,
       "index_field_name": null
@@ -53771,7 +54731,7 @@
    "model": "dataentry.exportimportcard",
    "fields": {
       "export_import": 50,
-      "category": 184,
+      "category": 286,
       "prefix": "Trafficker %d ",
       "max_instances": 5,
       "index_field_name": null
@@ -53951,6 +54911,26 @@
    "model": "dataentry.exportimportcard",
    "fields": {
       "export_import": 65,
+      "category": 286,
+      "prefix": "Trafficker %d ",
+      "max_instances": 5,
+      "index_field_name": null
+   }
+},
+{
+   "model": "dataentry.exportimportcard",
+   "fields": {
+      "export_import": 66,
+      "category": 286,
+      "prefix": "Victim ",
+      "max_instances": 1,
+      "index_field_name": null
+   }
+},
+{
+   "model": "dataentry.exportimportcard",
+   "fields": {
+      "export_import": 66,
       "category": 286,
       "prefix": "Trafficker %d ",
       "max_instances": 5,
@@ -55733,6 +56713,41 @@
    "model": "dataentry.exportimportfield",
    "fields": {
       "export_import": 65,
+      "card": null,
+      "field_name": "status",
+      "answer_type": 1,
+      "export_name": "Status",
+      "arguments_json": null
+   }
+},
+{
+   "model": "dataentry.exportimportfield",
+   "fields": {
+      "export_import": 66,
+      "card": null,
+      "field_name": "station",
+      "answer_type": 1,
+      "export_name": "Station",
+      "arguments_json": {
+         "part": "station_name"
+      }
+   }
+},
+{
+   "model": "dataentry.exportimportfield",
+   "fields": {
+      "export_import": 66,
+      "card": null,
+      "field_name": "date_time_entered_into_system",
+      "answer_type": 10,
+      "export_name": "Date/Time Entered into System",
+      "arguments_json": null
+   }
+},
+{
+   "model": "dataentry.exportimportfield",
+   "fields": {
+      "export_import": 66,
       "card": null,
       "field_name": "status",
       "answer_type": 1,
@@ -56552,6 +57567,19 @@
       "export_import": 65,
       "export_or_import": "export",
       "spreadsheet_name": "Argentina IRF",
+      "sheet_name": "IRF Export",
+      "key_field_name": "IRF Number",
+      "import_status_column": null,
+      "import_issue_column": null,
+      "suppress_column_warnings": true
+   }
+},
+{
+   "model": "dataentry.googlesheetconfig",
+   "fields": {
+      "export_import": 66,
+      "export_or_import": "export",
+      "spreadsheet_name": "Nepal SFE IRF",
       "sheet_name": "IRF Export",
       "key_field_name": "IRF Number",
       "import_status_column": null,
