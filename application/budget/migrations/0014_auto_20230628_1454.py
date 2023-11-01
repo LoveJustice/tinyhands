@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('dataentry', '0254_auto_20230509_1844'),
+        ('dataentry', '0258_auto_20230509_1844'),
         ('static_border_stations', '0006_auto_20230509_1733'),
         ('budget', '0013_borderstationbudgetcalculation_past_sent_approved'),
     ]
