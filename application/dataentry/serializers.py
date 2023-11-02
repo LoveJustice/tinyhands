@@ -1103,6 +1103,12 @@ class IncidentSerializer(serializers.ModelSerializer):
         else:
             return None
     
+    def get_country_id (self, obj):
+        if obj.station is not None:
+            return obj.station.operating_country.id;
+        else:
+            return None
+    
     def create(self, validated_data):
         #incident_number comes in with just the station code.  Add date and sequence number
         date_match = self.context['request'].data['incident_number'] + self.context['request'].data['incident_date'].replace('-','') + "_"

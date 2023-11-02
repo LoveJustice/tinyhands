@@ -12,7 +12,7 @@ jobs:
   push-image-tinyhands:
     runs-on: ubuntu-latest
     needs: [build-test-tinyhands]
-    if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop'
+    if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/staging'
     steps:
       - uses: actions/checkout@v3
       - run: mkdir -p ~/.ssh/
@@ -26,7 +26,7 @@ jobs:
   deploy-staging-tinyhands:
     runs-on: ubuntu-latest
     needs: [push-image-tinyhands]
-    if: github.ref == 'refs/heads/develop'
+    if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/staging'
     steps:
       - run: echo ${{ github.sha }} > ../dreamsuite_tag
       - name: Install SSH key
