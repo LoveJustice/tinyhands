@@ -100,7 +100,7 @@ class PhotoExporter(viewsets.GenericViewSet):
                 continue
             tmp_qs = card_model.objects.filter(interception_record__verified_date__gte=start,
                                           interception_record__verified_date__lte=end,
-                                          interception_record__status='second-verification').exclude(person__photo="")
+                                          interception_record__status='verified').exclude(person__photo="")
             if station_filter is not None:
                 tmp_qs = tmp_qs.filter(station_filter)
                 
