@@ -49,8 +49,5 @@ def get_personids_facematch(person_id1, person_id2):
         return None
 
 
-person_id1 = 95245
-person_id2 = 102595
-personids_facematch = get_personids_facematch(person_id1, person_id2)
 
 
