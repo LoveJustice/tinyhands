@@ -23,7 +23,7 @@ def init_adjustments(adjustments):
     adjustments[QuestionStorage] = {'dropId': True, 'fk':{'question_id':Question}}
     adjustments[Answer] = {'dropId': True, 'fk':{'question_id':Question}}
     adjustments[FormValidation] = {'dropId': True, 'fk':{'trigger_id':Question}, 'm2m':{'forms':Form}}
-    adjustments[FormValidationQuestion] = {'dropId': True, 'fk':{'trigger_id':Question, 'validation_id':FormValidation}}
+    adjustments[FormValidationQuestion] = {'dropId': True, 'fk':{'question_id':Question, 'validation_id':FormValidation}}
     adjustments[ExportImport] = {'dropId': True, 'fk':{'form_id':Form}}
     adjustments[ExportImportCard] = {'dropId': True, 'fk':{'export_import_id':ExportImport, 'category_id':Category}}
     adjustments[ExportImportField] = {'dropId': True, 'fk':{'export_import_id':ExportImport, 'card_id':ExportImportCard}}
@@ -96,8 +96,8 @@ def PythonDeserializer(object_list, **options):
                 """
                     Get class object for m2m reference
                 """
-                if Model in adjustments and 'm2m' in adjustments[Model] and field.name in adjustments[Model]['msm']:
-                    cls = djustments[Model]['m2m']
+                if Model in adjustments and 'm2m' in adjustments[Model] and field.name in adjustments[Model]['m2m']:
+                    cls = adjustments[Model]['m2m'][field.name]
                 else:
                     cls = None
                     

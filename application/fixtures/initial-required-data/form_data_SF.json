@@ -360,6 +360,54 @@
    }
 },
 {
+   "model": "dataentry.form",
+   "fields": {
+      "form_type": 11,
+      "storage": "Sf",
+      "start_date": "2022-10-08T04:00:00Z",
+      "end_date": "2118-12-31T00:00:00Z",
+      "form_name": "sfBangladesh",
+      "version": "V2022.6",
+      "stations": []
+   }
+},
+{
+   "model": "dataentry.form",
+   "fields": {
+      "form_type": 11,
+      "storage": "Sf",
+      "start_date": "2022-10-08T04:00:00Z",
+      "end_date": "2118-12-31T00:00:00Z",
+      "form_name": "sfCambodia",
+      "version": "V2022.6",
+      "stations": []
+   }
+},
+{
+   "model": "dataentry.form",
+   "fields": {
+      "form_type": 11,
+      "storage": "Sf",
+      "start_date": "2022-10-08T04:00:00Z",
+      "end_date": "2118-12-31T00:00:00Z",
+      "form_name": "sfUSA",
+      "version": "V2022.6",
+      "stations": []
+   }
+},
+{
+   "model": "dataentry.form",
+   "fields": {
+      "form_type": 11,
+      "storage": "Sf",
+      "start_date": "2022-10-08T04:00:00Z",
+      "end_date": "2118-12-31T00:00:00Z",
+      "form_name": "sfOpenSource",
+      "version": "V2022.6",
+      "stations": []
+   }
+},
+{
    "model": "dataentry.category",
    "fields": {
       "form_tag": "sfCompliance",
@@ -2264,6 +2312,314 @@
    }
 },
 {
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfBangladesh",
+      "category": "sfTop",
+      "name": "Top",
+      "order": 1,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfBangladesh",
+      "category": "sfInformation",
+      "name": "Information",
+      "order": 2,
+      "form_category_question_config": null,
+      "storage": "SfInformation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfBangladesh",
+      "category": "sfAssociation",
+      "name": "Association",
+      "order": 3,
+      "form_category_question_config": null,
+      "storage": "SfAssociation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfBangladesh",
+      "category": "sfEvaluation",
+      "name": "Evaluation",
+      "order": 4,
+      "form_category_question_config": null,
+      "storage": "SfEvaluation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfBangladesh",
+      "category": "sfLegal",
+      "name": "Legal",
+      "order": 5,
+      "form_category_question_config": null,
+      "storage": "SfLegal"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfBangladesh",
+      "category": "sfAttachment",
+      "name": "Attachments",
+      "order": 6,
+      "form_category_question_config": null,
+      "storage": "SfAttachment"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfBangladesh",
+      "category": "sfCompliance",
+      "name": "Compliance",
+      "order": 7,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfCambodia",
+      "category": "sfTop",
+      "name": "Top",
+      "order": 1,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfCambodia",
+      "category": "sfInformation",
+      "name": "Information",
+      "order": 2,
+      "form_category_question_config": null,
+      "storage": "SfInformation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfCambodia",
+      "category": "sfAssociation",
+      "name": "Association",
+      "order": 3,
+      "form_category_question_config": null,
+      "storage": "SfAssociation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfCambodia",
+      "category": "sfEvaluation",
+      "name": "Evaluation",
+      "order": 4,
+      "form_category_question_config": null,
+      "storage": "SfEvaluation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfCambodia",
+      "category": "sfLegal",
+      "name": "Legal",
+      "order": 5,
+      "form_category_question_config": null,
+      "storage": "SfLegal"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfCambodia",
+      "category": "sfAttachment",
+      "name": "Attachments",
+      "order": 6,
+      "form_category_question_config": null,
+      "storage": "SfAttachment"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfCambodia",
+      "category": "sfCompliance",
+      "name": "Compliance",
+      "order": 7,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfUSA",
+      "category": "sfTop",
+      "name": "Top",
+      "order": 1,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfUSA",
+      "category": "sfInformation",
+      "name": "Information",
+      "order": 2,
+      "form_category_question_config": null,
+      "storage": "SfInformation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfUSA",
+      "category": "sfAssociation",
+      "name": "Association",
+      "order": 3,
+      "form_category_question_config": null,
+      "storage": "SfAssociation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfUSA",
+      "category": "sfEvaluation",
+      "name": "Evaluation",
+      "order": 4,
+      "form_category_question_config": null,
+      "storage": "SfEvaluation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfUSA",
+      "category": "sfLegal",
+      "name": "Legal",
+      "order": 5,
+      "form_category_question_config": null,
+      "storage": "SfLegal"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfUSA",
+      "category": "sfAttachment",
+      "name": "Attachments",
+      "order": 6,
+      "form_category_question_config": null,
+      "storage": "SfAttachment"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfUSA",
+      "category": "sfCompliance",
+      "name": "Compliance",
+      "order": 7,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfOpenSource",
+      "category": "sfTop",
+      "name": "Top",
+      "order": 1,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfOpenSource",
+      "category": "sfInformation",
+      "name": "Information",
+      "order": 2,
+      "form_category_question_config": null,
+      "storage": "SfInformation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfOpenSource",
+      "category": "sfAssociation",
+      "name": "Association",
+      "order": 3,
+      "form_category_question_config": null,
+      "storage": "SfAssociation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfOpenSource",
+      "category": "sfEvaluation",
+      "name": "Evaluation",
+      "order": 4,
+      "form_category_question_config": null,
+      "storage": "SfEvaluation"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfOpenSource",
+      "category": "sfLegal",
+      "name": "Legal",
+      "order": 5,
+      "form_category_question_config": null,
+      "storage": "SfLegal"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfOpenSource",
+      "category": "sfAttachment",
+      "name": "Attachments",
+      "order": 6,
+      "form_category_question_config": null,
+      "storage": "SfAttachment"
+   }
+},
+{
+   "model": "dataentry.formcategory",
+   "fields": {
+      "form": "sfOpenSource",
+      "category": "sfCompliance",
+      "name": "Compliance",
+      "order": 7,
+      "form_category_question_config": null,
+      "storage": null
+   }
+},
+{
    "model": "dataentry.question",
    "fields": {
       "form_tag": "sfComplianceDateComplete",
@@ -2800,7 +3156,9 @@
       "prompt": "Interview Date",
       "description": null,
       "answer_type": 9,
-      "params": null,
+      "params": {
+         "card_date": "True"
+      },
       "export_name": "Interview Date",
       "export_params": null
    }
@@ -3665,6 +4023,53 @@
    "fields": {
       "question": "sfTopMergedPlateNumber",
       "field_name": "merged_plate_number"
+   }
+},
+{
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "legalCaseArrested",
+      "level": 2,
+      "trigger": null,
+      "trigger_value": null,
+      "validation_type": 1,
+      "error_warning_message": "Legal Case arrested must be entered",
+      "params": null,
+      "retrieve": true,
+      "update": true,
+      "forms": [
+         "sfNepal",
+         "sfIndia",
+         "sfIndiaNetwork",
+         "sfGhana",
+         "sfKenya",
+         "sfSouthAfrica",
+         "sfNamibia",
+         "sfLiberia",
+         "sfEthiopia",
+         "sfBenin",
+         "sfMalawi",
+         "sfBurkinaFaso",
+         "sfBurundi",
+         "sfIndonesia",
+         "sfLesotho",
+         "sfMozambique",
+         "sfUganda",
+         "sfZambia",
+         "sfEcuador",
+         "sfArgentina",
+         "sfZimbabwe",
+         "sfSierraLeone",
+         "sfRwanda",
+         "sfTanzania"
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": "legalCaseArrested",
+      "question": "sfLegalArrested"
    }
 }
 ]
