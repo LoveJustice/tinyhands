@@ -2,11 +2,14 @@ from rest_framework import viewsets
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from datetime import date
+import json
 
-from dataentry.models import Incident, IntercepteeCommon, IrfCommon, LocationForm, MasterPerson, Person, Suspect, VdfCommon
+from dataentry.models import Incident, IntercepteeCommon, IrfCommon, LocationForm, MasterPerson, Person, Suspect, VdfCommon, BorderStation, IrfAttachmentCommon
+from django.core.files.storage import default_storage
 
 class MonitorAppViewSet(viewsets.GenericViewSet):
-    permission_classes = (IsAuthenticated)
+    permission_classes = (IsAuthenticated,)
     
     def create(self, request):
         form_type = request.data['formType']
@@ -23,14 +26,15 @@ class MonitorAppViewSet(viewsets.GenericViewSet):
         else:
             pass
     
-    def add_file(request, name, path):
+    def add_file(self, request, name, path):
         if name is not None:
-            file_obj = request[name]
-            with default_storage.open(path + name, 'wb+') as destination:
-                for chunk in file_obj.chunks():
-                    destination.write(chunk)
+            file_obj = request.FILES.get(name)
+            if file_obj:
+                with default_storage.open(path, 'wb+') as destination:
+                    for chunk in file_obj.chunks():
+                        destination.write(chunk)
     
-    def incident_from_form_number(self, form_number):
+    def incident_from_form_number(self, form_number, station):
         base_number = form_number
         for idx in range(len(station.station_code), len(form_number)):
             if (form_number[idx] < '0' or form_number[idx] > '9') and form_number[idx] != '_':
@@ -42,8 +46,7 @@ class MonitorAppViewSet(viewsets.GenericViewSet):
     def create_irf(self, request, request_json):
         form_number = request_json['formNumber']
         border_station = BorderStation.objects.get(station_code=form_number[0:3])
-        incident_number = self.incident_from_form_number(form_number)
-        
+        incident_number = self.incident_from_form_number(form_number, border_station)
         try:
             incident = Incident.objects.get(incident_number=incident_number)
         except:
@@ -51,34 +54,40 @@ class MonitorAppViewSet(viewsets.GenericViewSet):
             incident.incident_number = form_number
             incident.incident_date = date.today()
             incident.summary = 'Created by Monitor App'
+            incident.station = border_station
             incident.save()
-            
+
         irf = IrfCommon()
         irf.station = border_station
+        irf.station_id = 58
         irf.irf_number = form_number
         irf.date_of_interception = date.today()
         irf.status = 'in-progress'
         irf.save()
         
         people = request_json['people']
-        for person in people:
+        for index, person in enumerate(people):
             name = person['name']
             person_type = person['personType']
-            file = person['file']
-            if file == 'null':
-                file = None
-            self.add_file(request, file, 'interceptee_photos/')
+
+            file_name = person['file']
+            if file_name == 'null':
+                file_path = None
+            else:
+                file_path = 'interceptee_photos/' + file_name
+                file_key = f'people[{index}][file]'
+                self.add_file(request, file_key, file_path)
             
-            master = Person()
+            master = MasterPerson()
             master.full_name = name
             master.kind = person_type
             master.save()
             
-            person_object = Person()
+            person = Person()
             person.full_name = name
-            person.kind = person_type
-            person.photo = file
-            person.master_person = person
+            person.role = person_type
+            person.photo = file_path
+            person.master_person = master
             person.save()
             
             interceptee = IntercepteeCommon()
@@ -88,16 +97,22 @@ class MonitorAppViewSet(viewsets.GenericViewSet):
         
         next_number = 0
         pdfs = request_json['pdfs']
-        for pdf in pdfs:
+        for index, pdf in enumerate(pdfs):
             document_type = pdf['documentType']
-            file = pdf['file']
-            self.add_file(request, file, 'scanned_irf_forms/')
+
+            file_name = pdf['file']
+            if file_name == 'null':
+                file_path = None
+            else:
+                file_path = 'scanned_irf_forms/' + file_name
+                file_key = f'pdfs[{index}][file]'
+                self.add_file(request, file_key, file_path)
             next_number += 1
             
             attach = IrfAttachmentCommon()
-            attach.interception_record= irf
+            attach.interception_record = irf
             attach.option = document_type
-            attach.attachment = file
+            attach.attachment = file_path
             attach.attachment_number = next_number
             attach.save()
         
@@ -135,7 +150,7 @@ class MonitorAppViewSet(viewsets.GenericViewSet):
     def create_sf(self, request, request_json):
         form_number = request_json['formNumber']
         border_station = BorderStation.objects.get(station_code=form_number[0:3])
-        incident_number = self.incident_from_form_number(form_number)
+        incident_number = self.incident_from_form_number(form_number, border_station)
         incident = Incident.objects.get(incident_number=incident_number)
         
         sf = Suspect()
@@ -166,7 +181,7 @@ class MonitorAppViewSet(viewsets.GenericViewSet):
     def create_lf(self, request, request_json):
         form_number = request_json['formNumber']
         border_station = BorderStation.objects.get(station_code=form_number[0:3])
-        incident_number = self.incident_from_form_number(form_number)
+        incident_number = self.incident_from_form_number(form_number, border_station)
         incident = Incident.objects.get(incident_number=incident_number)
         
         lf = LocationForm()
