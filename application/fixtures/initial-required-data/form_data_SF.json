@@ -4066,10 +4066,63 @@
    }
 },
 {
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "sfDateRecived",
+      "level": 2,
+      "trigger": null,
+      "trigger_value": null,
+      "validation_type": 1,
+      "error_warning_message": "Date SF received must be populated",
+      "params": {
+         "starting_submission_date": "20231120"
+      },
+      "retrieve": false,
+      "update": true,
+      "forms": [
+         "sfNepal",
+         "sfIndia",
+         "sfIndiaNetwork",
+         "sfGhana",
+         "sfKenya",
+         "sfSouthAfrica",
+         "sfNamibia",
+         "sfLiberia",
+         "sfEthiopia",
+         "sfBenin",
+         "sfMalawi",
+         "sfBurkinaFaso",
+         "sfBurundi",
+         "sfIndonesia",
+         "sfLesotho",
+         "sfMozambique",
+         "sfUganda",
+         "sfZambia",
+         "sfEcuador",
+         "sfArgentina",
+         "sfZimbabwe",
+         "sfSierraLeone",
+         "sfRwanda",
+         "sfTanzania",
+         "sfBangladesh",
+         "sfCambodia",
+         "sfUSA",
+         "sfOpenSource"
+      ]
+   }
+},
+{
    "model": "dataentry.formvalidationquestion",
    "fields": {
       "validation": "legalCaseArrested",
       "question": "sfLegalArrested"
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": "sfDateRecived",
+      "question": "sfComplianceDateReceived"
    }
 }
 ]
