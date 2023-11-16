@@ -7,8 +7,8 @@ from django.core.serializers.base import DeserializationError
 from django.core.serializers import base
 from django.core.serializers.python import _get_model
 from django.db import DEFAULT_DB_ALIAS, models
-from django.utils import six
-from django.utils.encoding import force_text, is_protected_type
+import six
+from django.utils.encoding import force_str, is_protected_type
 
 from export_import import form_data_serializer
 from dataentry.models.form import *
@@ -85,7 +85,7 @@ def PythonDeserializer(object_list, **options):
                 continue
 
             if isinstance(field_value, str):
-                field_value = force_text(
+                field_value = force_str(
                     field_value, options.get("encoding", settings.DEFAULT_CHARSET), strings_only=True
                 )
 
@@ -107,10 +107,10 @@ def PythonDeserializer(object_list, **options):
                         if hasattr(value, '__iter__') and not isinstance(value, six.text_type):
                             return model._default_manager.db_manager(db).get_by_natural_key(*value).pk
                         else:
-                            return force_text(model._meta.pk.to_python(value), strings_only=True)
+                            return force_str(model._meta.pk.to_python(value), strings_only=True)
                 else:
                     def m2m_convert(v):
-                        return force_text(model._meta.pk.to_python(v), strings_only=True)
+                        return force_str(model._meta.pk.to_python(v), strings_only=True)
 
                 try:
                     m2m_data[field.name] = []

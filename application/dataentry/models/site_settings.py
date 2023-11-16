@@ -1,9 +1,8 @@
 from django.db import models
-from django.contrib.postgres.fields import JSONField
 
 
 class SiteSettings(models.Model):
-    data = JSONField()
+    data = models.JSONField()
     date_time_last_updated = models.DateTimeField(auto_now=True)
 
     def get_setting_value_by_name(self, setting_name):

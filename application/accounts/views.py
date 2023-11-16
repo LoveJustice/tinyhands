@@ -5,7 +5,7 @@ from django.contrib.auth import login
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
 from rest_framework import status
-from rest_framework.decorators import list_route, api_view
+from rest_framework.decorators import action, api_view
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.status import *
@@ -58,7 +58,7 @@ class AccountViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated, HasPermission]
     permissions_required = ['permission_accounts_manage']
 
-    @list_route()
+    @action(detail=False)
     def list_all(self, request):
         accounts = Account.objects.all()
         serializer = self.get_serializer(accounts, many=True)
