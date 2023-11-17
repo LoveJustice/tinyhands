@@ -49032,51 +49032,6 @@
 },
 {
    "model": "dataentry.formvalidation",
-   "pk": 185,
-   "fields": {
-      "form_tag": "irfDateReceivedMustBeCurrentOrPriorDate",
-      "level": 3,
-      "trigger": null,
-      "trigger_value": null,
-      "validation_type": 1,
-      "error_warning_message": "Date IRF Received must be entered",
-      "params": null,
-      "retrieve": true,
-      "update": true,
-      "forms": [
-         1,
-         2,
-         4,
-         8,
-         9,
-         17,
-         18,
-         19,
-         26,
-         27,
-         28,
-         32,
-         35,
-         37,
-         44,
-         46,
-         54,
-         55,
-         59,
-         60,
-         64,
-         65,
-         66,
-         69,
-         70,
-         92,
-         129,
-         147
-      ]
-   }
-},
-{
-   "model": "dataentry.formvalidation",
    "pk": 214,
    "fields": {
       "form_tag": "cifFormNumberInvalid",
@@ -51847,6 +51802,52 @@
    }
 },
 {
+   "model": "dataentry.formvalidation",
+   "pk": 433,
+   "fields": {
+      "form_tag": "irfDateRecived",
+      "level": 2,
+      "trigger": null,
+      "trigger_value": null,
+      "validation_type": 1,
+      "error_warning_message": "Date IRF received must be populated",
+      "params": {
+         "starting_submission_date": "20231120"
+      },
+      "retrieve": false,
+      "update": true,
+      "forms": [
+         1,
+         2,
+         4,
+         8,
+         9,
+         17,
+         18,
+         19,
+         26,
+         27,
+         28,
+         32,
+         35,
+         37,
+         44,
+         46,
+         54,
+         55,
+         59,
+         60,
+         64,
+         65,
+         66,
+         69,
+         70,
+         92,
+         147
+      ]
+   }
+},
+{
    "model": "dataentry.formvalidationquestion",
    "fields": {
       "validation": 1,
@@ -51949,13 +51950,6 @@
    "fields": {
       "validation": 177,
       "question": 9
-   }
-},
-{
-   "model": "dataentry.formvalidationquestion",
-   "fields": {
-      "validation": 185,
-      "question": 861
    }
 },
 {
@@ -52880,6 +52874,13 @@
    "fields": {
       "validation": 430,
       "question": 1065
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": 433,
+      "question": 861
    }
 },
 {
