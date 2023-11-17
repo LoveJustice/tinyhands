@@ -26,6 +26,7 @@ class BorderStationViewSet(viewsets.ModelViewSet):
     ordering_fields = (
         'station_name', 'station_code', 'operating_country__name', 'project_category__name', )
     ordering = ('station_name',)
+    search_fields = ('station_name', 'station_code',)
     
     @action(detail=False)
     def list_all(self, request):

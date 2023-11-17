@@ -27,3 +27,4 @@ from .pvf_form import *
 from .incident import *
 from .sf_form import *
 from .lf_form import *
+from .monitor_app import *
