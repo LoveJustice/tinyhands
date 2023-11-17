@@ -3,7 +3,7 @@ import datetime
 
 from django.conf import settings
 from django.core.management import call_command
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITransactionTestCase
 from accounts.tests.factories import BadIrfUserFactory, SuperUserFactory

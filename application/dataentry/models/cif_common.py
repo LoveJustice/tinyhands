@@ -1,5 +1,4 @@
 from django.db import models
-from django.contrib.postgres.fields import JSONField
 
 from .person import Person
 from .form import BaseCard, BaseForm
@@ -26,7 +25,7 @@ class CifCommon(BaseForm):
     article_date  = models.DateField(null=True)
     
     # Main PV
-    main_pv = models.ForeignKey(Person, null=True, blank=True)
+    main_pv = models.ForeignKey(Person, null=True, blank=True, on_delete=models.CASCADE)
     other_possible_victims = models.CharField(max_length=126, null=True)
     
     # Recruitment
@@ -220,9 +219,9 @@ class CifCommon(BaseForm):
 
 
 class PotentialVictimCommon(BaseCard):
-    person = models.ForeignKey(Person)
+    person = models.ForeignKey(Person, on_delete=models.CASCADE)
     flag_count = models.PositiveIntegerField(null=True, blank=True)
-    cif = models.ForeignKey(CifCommon)
+    cif = models.ForeignKey(CifCommon, on_delete=models.CASCADE)
     
     def set_parent(self, the_parent):
         self.cif = the_parent
@@ -233,7 +232,7 @@ class TransportationCommon(BaseCard):
     transportation_date  = models.DateField('Date:', null=True)
     transportation_crossing = models.CharField(max_length=126, null=True)
     flag_count = models.PositiveIntegerField(null=True, blank=True)
-    cif = models.ForeignKey(CifCommon)
+    cif = models.ForeignKey(CifCommon, on_delete=models.CASCADE)
     
     def set_parent(self, the_parent):
         self.cif = the_parent
@@ -241,11 +240,11 @@ class TransportationCommon(BaseCard):
 
 class PersonBoxCommon(BaseCard):
     pb_number = models.PositiveIntegerField(null=True, blank=True)
-    person = models.ForeignKey(Person)
+    person = models.ForeignKey(Person, on_delete=models.CASCADE)
     relation_to_pv = models.CharField(max_length=126, null=True)
     associated_lb = models.CharField(max_length=126, null=True)
     flag_count = models.PositiveIntegerField(null=True, blank=True)
-    cif = models.ForeignKey(CifCommon)
+    cif = models.ForeignKey(CifCommon, on_delete=models.CASCADE)
     
     how_well_does_pv_know = models.CharField(max_length=126, null=True)
     
@@ -257,8 +256,8 @@ class LocationBoxCommon(BaseCard):
     place = models.CharField(max_length=126, null=True)
     place_kind = models.CharField(max_length=126, null=True)
     country = models.CharField(max_length=126, null=True)
-    address2 = models.ForeignKey(Address2, null=True)
-    address = JSONField(null=True)
+    address2 = models.ForeignKey(Address2, null=True, on_delete=models.CASCADE)
+    address = models.JSONField(null=True)
     latitude = models.FloatField(null=True)
     longitude = models.FloatField(null=True)
     address_notes = models.TextField('Address Notes', blank=True)
@@ -283,7 +282,7 @@ class LocationBoxCommon(BaseCard):
     number_other_pvs_at_location = models.CharField(max_length=126, null=True)
     associated_pb = models.CharField(max_length=126, null=True)
     flag_count = models.PositiveIntegerField(null=True, blank=True)
-    cif = models.ForeignKey(CifCommon)
+    cif = models.ForeignKey(CifCommon, on_delete=models.CASCADE)
     
     def set_parent(self, the_parent):
         self.cif = the_parent
@@ -295,7 +294,7 @@ class VehicleBoxCommon(BaseCard):
     description = models.CharField(max_length=126, null=True)
     associated_pb = models.CharField(max_length=126, null=True)
     flag_count = models.PositiveIntegerField(null=True, blank=True)
-    cif = models.ForeignKey(CifCommon)
+    cif = models.ForeignKey(CifCommon, on_delete=models.CASCADE)
     
     def set_parent(self, the_parent):
         self.cif = the_parent
@@ -306,7 +305,7 @@ class CifAttachmentCommon(BaseCard):
     attachment = models.FileField('Attach scanned copy of form (pdf or image)', upload_to='cif_attachments')
     private_card = models.BooleanField(default=True)
     option = models.CharField(max_length=126, null=True)
-    cif = models.ForeignKey(CifCommon)
+    cif = models.ForeignKey(CifCommon, on_delete=models.CASCADE)
     
     def set_parent(self, the_parent):
         self.cif = the_parent

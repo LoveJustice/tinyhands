@@ -1,6 +1,6 @@
 from django.core.serializers import json
 from collections import OrderedDict
-from django.utils.encoding import force_text, is_protected_type
+from django.utils.encoding import force_str, is_protected_type
 
 """
     Override python serializer methods modify the values produced when indicated in the adjustments
@@ -13,10 +13,10 @@ class Serializer(json.Serializer):
         self.adjustments = {}
 
     def get_dump_object(self, obj):
-        data = OrderedDict([('model', force_text(obj._meta))])
+        data = OrderedDict([('model', force_str(obj._meta))])
         if not self.use_natural_primary_keys or not hasattr(obj, 'natural_key'):
             if obj.__class__ in self.adjustments and not self.adjustments[obj.__class__]['dropId']:  
-                data["pk"] = force_text(obj._get_pk_val(), strings_only=True)
+                data["pk"] = force_str(obj._get_pk_val(), strings_only=True)
         data['fields'] = self._current
         return data
     

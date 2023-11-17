@@ -1,7 +1,5 @@
 from django.db import models
-from django.contrib.postgres.fields import JSONField
 from datetime import date
-from django.contrib.postgres.fields import JSONField
 
 from accounts.models import Account
 
@@ -49,49 +47,49 @@ class AddressType (models.Model):
     name = models.CharField(max_length=255, null=True, blank=True)
     
 class PersonAddress (models.Model):
-    master_person = models.ForeignKey(MasterPerson)
-    address = JSONField(null=True)
+    master_person = models.ForeignKey(MasterPerson, on_delete=models.CASCADE)
+    address = models.JSONField(null=True)
     latitude = models.FloatField(null=True)
     longitude = models.FloatField(null=True)
     address_notes = models.TextField('Address Notes', blank=True)
     address_verified = models.BooleanField('Address Verified', default=False)
-    address_type = models.ForeignKey(AddressType, null=True)
+    address_type = models.ForeignKey(AddressType, null=True, on_delete=models.SET_NULL)
 
 class PhoneType (models.Model):
     name = models.CharField(max_length=255, null=True, blank=True)
     
 class PersonPhone (models.Model):
-    master_person = models.ForeignKey(MasterPerson)
+    master_person = models.ForeignKey(MasterPerson, on_delete=models.CASCADE)
     number = models.CharField(max_length=255, blank=True)
     phone_verified = models.BooleanField('Phone Verified', default=False)
-    phone_type = models.ForeignKey(PhoneType, null=True)
+    phone_type = models.ForeignKey(PhoneType, null=True, on_delete=models.SET_NULL)
     
 class SocialMediaType (models.Model):
     name = models.CharField(max_length=255, null=True, blank=True)
 
 class PersonSocialMedia (models.Model):
-    master_person = models.ForeignKey(MasterPerson)
+    master_person = models.ForeignKey(MasterPerson, on_delete=models.CASCADE)
     social_media = models.CharField(max_length=1024, blank=True)
     social_media_verified = models.BooleanField('Social Media Verified', default=False)
-    social_media_type = models.ForeignKey(SocialMediaType, null=True)
+    social_media_type = models.ForeignKey(SocialMediaType, null=True, on_delete=models.SET_NULL)
 
 class DocumentType (models.Model):
     name = models.CharField(max_length=255, null=True, blank=True)
 
 class PersonDocument (models.Model):
-    master_person = models.ForeignKey(MasterPerson)
+    master_person = models.ForeignKey(MasterPerson, on_delete=models.CASCADE)
     file_location = models.FileField('Attach scanned copy of form (pdf or image)', upload_to='person_documents')
-    document_type = models.ForeignKey(DocumentType, null=True)
+    document_type = models.ForeignKey(DocumentType, null=True, on_delete=models.SET_NULL)
 
 class MatchType (models.Model):
     name = models.CharField(max_length=255, null=True, blank=True)
     
 class PersonMatch (models.Model):
-    match_type = models.ForeignKey(MatchType)
-    master1 = models.ForeignKey(MasterPerson, related_name='master1')
-    master2 = models.ForeignKey(MasterPerson, related_name='master2')
+    match_type = models.ForeignKey(MatchType, on_delete=models.CASCADE)
+    master1 = models.ForeignKey(MasterPerson, related_name='master1', on_delete=models.CASCADE)
+    master2 = models.ForeignKey(MasterPerson, related_name='master2', on_delete=models.CASCADE)
     notes = models.TextField('Notes', blank=True)
     match_date = models.DateField(auto_now=True)
     matched_by = models.ForeignKey(Account, null=True, on_delete=models.SET_NULL)
-    match_results = JSONField(null=True)
+    match_results = models.JSONField(null=True)
     

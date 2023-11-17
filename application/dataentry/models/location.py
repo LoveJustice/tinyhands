@@ -1,5 +1,4 @@
 from django.db import models
-from django.contrib.postgres.fields import JSONField
 from .form import BaseCard
 from .form import BaseForm
 from .incident import Incident
@@ -18,7 +17,7 @@ class LocationForm(BaseForm):
     merged_place = models.CharField(max_length=126, null=True)
     merged_place_detail = models.CharField(max_length=126, null=True)
     merged_place_kind = models.CharField(max_length=126, null=True)
-    merged_address = JSONField(null=True)
+    merged_address = models.JSONField(null=True)
     merged_latitude = models.FloatField(null=True)
     merged_longitude = models.FloatField(null=True)
     merged_phone = models.CharField(max_length=126, null=True)
@@ -64,7 +63,7 @@ class LocationInformation(BaseCard):
     place = models.CharField(max_length=126, null=True)
     place_detail = models.CharField(max_length=126, null=True)
     place_kind = models.CharField(max_length=126, null=True)
-    address = JSONField(null=True)
+    address = models.JSONField(null=True)
     latitude = models.FloatField(null=True)
     longitude = models.FloatField(null=True)
     phone = models.CharField(max_length=126, null=True)

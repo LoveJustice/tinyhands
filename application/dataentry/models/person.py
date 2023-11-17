@@ -2,7 +2,6 @@ from datetime import date
 from collections import namedtuple
 from django.db import models
 from django.db import transaction
-from django.contrib.postgres.fields import JSONField
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 
@@ -19,7 +18,7 @@ class PersonFormData:
 class Person(models.Model):
     GENDER_CHOICES = [('M', 'm'), ('F', 'f')]
     
-    master_person = models.ForeignKey(MasterPerson)
+    master_person = models.ForeignKey(MasterPerson, on_delete=models.CASCADE)
     master_set_by = models.ForeignKey(Account, related_name='%(class)s_entered_by', null=True, on_delete=models.SET_NULL)
     master_set_date = models.DateField(auto_now_add=True)
     master_set_notes = models.TextField('Match Notes', blank=True)
@@ -27,18 +26,18 @@ class Person(models.Model):
     full_name = models.CharField(max_length=255, null=True, blank=True)
     gender = models.CharField(max_length=4, choices=GENDER_CHOICES, blank=True)
     age = models.PositiveIntegerField(null=True, blank=True)
-    address1 = models.ForeignKey(Address1, null=True, blank=True)
-    address2 = models.ForeignKey(Address2, null=True, blank=True)
-    address = JSONField(null=True)
+    address1 = models.ForeignKey(Address1, null=True, blank=True, on_delete=models.CASCADE)
+    address2 = models.ForeignKey(Address2, null=True, blank=True, on_delete=models.CASCADE)
+    address = models.JSONField(null=True)
     latitude = models.FloatField(null=True)
     longitude = models.FloatField(null=True)
     address_notes = models.TextField('Address Notes', blank=True)
     address_verified = models.BooleanField('Address Verified', default=False)
-    address_type = models.ForeignKey(AddressType, null=True)
+    address_type = models.ForeignKey(AddressType, null=True, on_delete=models.CASCADE)
     phone_contact = models.CharField(max_length=255, blank=True)
     phone_verified = models.BooleanField('Phone Verified', default=False)
-    phone_type = models.ForeignKey(PhoneType, null=True)
-    alias_group = models.ForeignKey(AliasGroup, null=True)
+    phone_type = models.ForeignKey(PhoneType, null=True, on_delete=models.CASCADE)
+    alias_group = models.ForeignKey(AliasGroup, null=True, on_delete=models.CASCADE)
     birthdate = models.DateField(null=True)
     estimated_birthdate= models.DateField(null=True)
     nationality = models.CharField(max_length=127, blank=True, default='')
@@ -52,7 +51,7 @@ class Person(models.Model):
     social_media = models.CharField(max_length=1024, null=True)
     social_media_platform = models.CharField(max_length=1024, null=True)
     social_media_verified = models.BooleanField('Social Media Verified', default=False)
-    social_media_type = models.ForeignKey(SocialMediaType, null=True)
+    social_media_type = models.ForeignKey(SocialMediaType, null=True, on_delete=models.CASCADE)
     whatsApp = models.CharField(max_length=1024, null=True)
     role = models.CharField(max_length=126, null=True)
     appearance = models.CharField(max_length=126, null=True)
@@ -188,8 +187,8 @@ class Person(models.Model):
         return val
         
 class PersonForm(models.Model):
-    person = models.ForeignKey(Person)
-    content_type = models.ForeignKey(ContentType, null=True)
+    person = models.ForeignKey(Person, on_delete=models.CASCADE)
+    content_type = models.ForeignKey(ContentType, null=True, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField(null=True)
     content_object=GenericForeignKey('content_type', 'object_id')
     creation_time = models.DateTimeField(auto_now_add=True)
