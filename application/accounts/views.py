@@ -6,7 +6,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
 from rest_framework import filters as fs
 from rest_framework import status
-from rest_framework.decorators import action, api_view
+from rest_framework.decorators import list_route, api_view
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.status import *
@@ -63,7 +63,7 @@ class AccountViewSet(ModelViewSet):
     ordering_fields = ('last_name', 'first_name',)
     ordering = ('first_name','last_name')
 
-    @action(detail=False)
+    @list_route()
     def list_all(self, request):
         accounts = Account.objects.all()
         serializer = self.get_serializer(accounts, many=True)

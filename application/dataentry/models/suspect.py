@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.postgres.fields import JSONField
 from .person import Person
 from .form import BaseCard
 from .form import BaseForm
@@ -17,7 +18,7 @@ class Suspect(BaseForm):
     
     # Merged version of suspect information cards
     # in main form so that list can access for ordering/filtering
-    merged_person = models.ForeignKey(Person, null=True, on_delete=models.CASCADE)
+    merged_person = models.ForeignKey(Person, null=True)
     merged_vehicle = models.CharField(max_length=126, null=True)
     merged_plate_number = models.CharField(max_length=126, null=True)
     
@@ -66,7 +67,7 @@ class SuspectInformation(BaseCard):
     interviewer_name = models.CharField(max_length=126, blank=True)
     interview_date = models.DateField(null=True, default=None)
     location = models.CharField(max_length=255, blank=True)
-    person = models.ForeignKey(Person, null=True, blank=True, on_delete=models.CASCADE)
+    person = models.ForeignKey(Person, null=True, blank=True)
     vehicle = models.CharField(max_length=126, null=True)
     plate_number = models.CharField(max_length=126, null=True)
     
@@ -119,7 +120,7 @@ class SuspectLegal(BaseCard):
     pv_unable = models.CharField(max_length=126, null=True)
     location_attempt = models.CharField(max_length=126, null=True)
     location_unable = models.CharField(max_length=126, null=True)
-    location_last_address = models.JSONField(null=True)
+    location_last_address = JSONField(null=True)
     location_last_latitude = models.FloatField(null=True)
     location_last_longitude = models.FloatField(null=True)
     location_last_address_notes = models.TextField('Address Notes', blank=True)

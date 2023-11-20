@@ -1,6 +1,6 @@
-from django.urls import re_path
+from django.conf.urls import url
 from portal.views import TallyDaysView
 
 urlpatterns = [
-    re_path(r'^portal/tally/days/$', TallyDaysView.as_view(), name='tally_day_api'),
+    url(r'^portal/tally/days/$', TallyDaysView.as_view(), name='tally_day_api'),
 ]

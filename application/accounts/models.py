@@ -4,7 +4,7 @@ import random
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
 from django.utils import timezone
-from django.urls import reverse
+from django.core.urlresolvers import reverse
 
 from rest_framework.authtoken.models import Token
 from datetime import timedelta

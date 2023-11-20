@@ -197,7 +197,7 @@ class GroupBooleanCsv:
         if value is not None:
             for field in instance._meta.fields:
                 if field.name.startswith(self.data_name) and (
-                        isinstance(field, models.BooleanField)):
+                        isinstance(field, models.BooleanField) or isinstance(field, models.NullBooleanField)):
                     if field.verbose_name == value:
                         setattr(instance, field.name, True)
                         return
@@ -214,7 +214,7 @@ class GroupBooleanCsv:
             if field.name.startswith(self.data_name):
                 value = getattr(instance, field.name)
                 if value:
-                    if isinstance(field, models.BooleanField):
+                    if isinstance(field, models.BooleanField) or isinstance(field, models.NullBooleanField):
                         return field.verbose_name
         return ""
 
@@ -699,7 +699,7 @@ class VictimWhereGoingCsv:
             if field.name.startswith(prefix):
                 value = getattr(instance, field.name)
                 if value:
-                    if isinstance(field, models.BooleanField):
+                    if isinstance(field, models.BooleanField) or isinstance(field, models.NullBooleanField):
                         return field.verbose_name
         return default
     

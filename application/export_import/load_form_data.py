@@ -4,7 +4,6 @@ import glob
 import gzip
 import os
 import warnings
-import re
 import zipfile
 from itertools import product
 
@@ -18,8 +17,11 @@ from django.core.management.utils import parse_apps_and_model_labels
 from django.db import (
     DEFAULT_DB_ALIAS, DatabaseError, IntegrityError, connections, router
 )
-from django.utils.encoding import force_str
+from django.utils import lru_cache
+from django.utils._os import upath
+from django.utils.encoding import force_text
 from django.utils.functional import cached_property
+from django.utils.glob import glob_escape
 import json
 
 from dataentry.models.form import FormType, Category, Storage
@@ -29,13 +31,6 @@ try:
     has_bz2 = True
 except ImportError:
     has_bz2 = False
-
-_magic_check = re.compile('([*?[])')
-
-def glob_escape(pathname):
-    drive, pathname = os.path.splitdrive(pathname)
-    pathname = _magic_check.sub(r'[\1]', pathname)
-    return drive + pathname
 
 
 class LoadFormData:
@@ -178,7 +173,7 @@ class LoadFormData:
                                 'app_label': obj.object._meta.app_label,
                                 'object_name': obj.object._meta.object_name,
                                 'pk': obj.object.pk,
-                                'error_msg': force_str(e)
+                                'error_msg': force_text(e)
                             },)
                             raise
                 if objects and show_progress:
@@ -200,7 +195,7 @@ class LoadFormData:
                     RuntimeWarning
                 )
 
-    #@lru_cache.lru_cache(maxsize=None)
+    @lru_cache.lru_cache(maxsize=None)
     def find_fixtures(self, fixture_label):
         """
         Finds fixture files for a given label.
@@ -285,7 +280,7 @@ class LoadFormData:
                 dirs.append(app_dir)
         dirs.extend(list(fixture_dirs))
         dirs.append('')
-        dirs = [os.path.abspath(os.path.realpath(d)) for d in dirs]
+        dirs = [upath(os.path.abspath(os.path.realpath(d))) for d in dirs]
         return dirs
 
     def parse_name(self, fixture_name):

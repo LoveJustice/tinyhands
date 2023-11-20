@@ -3,7 +3,7 @@ from .border_station import BorderStation
 
 
 class Gospel(models.Model):
-    station = models.ForeignKey(BorderStation, on_delete=models.CASCADE)
+    station = models.ForeignKey(BorderStation)
     date_time_entered_into_system = models.DateTimeField(auto_now_add=True)
     date_time_last_updated = models.DateTimeField(auto_now=True)
     

@@ -6,8 +6,8 @@ from dataentry.models import BorderStation, FormType
 from django.core.exceptions import ObjectDoesNotExist
 
 class AutoNumber(models.Model):
-    station = models.ForeignKey(BorderStation, on_delete=models.CASCADE)
-    form_type = models.ForeignKey(FormType, on_delete=models.CASCADE)
+    station = models.ForeignKey(BorderStation)
+    form_type = models.ForeignKey(FormType)
     last_allocated = models.PositiveIntegerField()
     
     @staticmethod
