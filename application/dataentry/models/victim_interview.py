@@ -29,7 +29,7 @@ class VictimInterview(models.Model):
 
     # 1. Victim & Family Information
 
-    victim = models.ForeignKey(Person, null=True, blank=True, on_delete=models.CASCADE)
+    victim = models.ForeignKey(Person, null=True, blank=True)
 
     victim_address_ward = models.CharField('Ward #', max_length=255, blank=True)
 
@@ -111,7 +111,7 @@ class VictimInterview(models.Model):
     victim_education_level_bachelors = models.BooleanField('Bachelors', default=False)
     victim_education_level_masters = models.BooleanField('Masters', default=False)
 
-    victim_is_literate = models.BooleanField('Is the victim literate?', null=True)
+    victim_is_literate = models.NullBooleanField('Is the victim literate?', null=True)
 
     # 2. Migration Plans
     migration_plans_education = models.BooleanField('Education', default=False)
@@ -147,33 +147,33 @@ class VictimInterview(models.Model):
     primary_motivation_other = models.BooleanField('Other', default=False)
     primary_motivation_other_value = models.CharField(max_length=255, blank=True)
 
-    victim_where_going_region_india = models.BooleanField('India', null=True)
-    victim_where_going_region_gulf = models.BooleanField('Gulf / Other', null=True)
+    victim_where_going_region_india = models.NullBooleanField('India', null=True)
+    victim_where_going_region_gulf = models.NullBooleanField('Gulf / Other', null=True)
 
-    victim_where_going_india_delhi = models.BooleanField('Delhi', null=True)
-    victim_where_going_india_mumbai = models.BooleanField('Mumbai', null=True)
-    victim_where_going_india_surat = models.BooleanField('Surat', null=True)
-    victim_where_going_india_rajastan = models.BooleanField('Rajastan', null=True)
-    victim_where_going_india_kolkata = models.BooleanField('Kolkata', null=True)
-    victim_where_going_india_pune = models.BooleanField('Pune', null=True)
-    victim_where_going_india_jaipur = models.BooleanField('Jaipur', null=True)
-    victim_where_going_india_bihar = models.BooleanField('Bihar', null=True)
-    victim_where_going_india_didnt_know = models.BooleanField('Did Not Know', null=True)
-    victim_where_going_india_other = models.BooleanField('Other', null=True)
+    victim_where_going_india_delhi = models.NullBooleanField('Delhi', null=True)
+    victim_where_going_india_mumbai = models.NullBooleanField('Mumbai', null=True)
+    victim_where_going_india_surat = models.NullBooleanField('Surat', null=True)
+    victim_where_going_india_rajastan = models.NullBooleanField('Rajastan', null=True)
+    victim_where_going_india_kolkata = models.NullBooleanField('Kolkata', null=True)
+    victim_where_going_india_pune = models.NullBooleanField('Pune', null=True)
+    victim_where_going_india_jaipur = models.NullBooleanField('Jaipur', null=True)
+    victim_where_going_india_bihar = models.NullBooleanField('Bihar', null=True)
+    victim_where_going_india_didnt_know = models.NullBooleanField('Did Not Know', null=True)
+    victim_where_going_india_other = models.NullBooleanField('Other', null=True)
     victim_where_going_india_other_value = models.CharField(max_length=255, blank=True)
 
-    victim_where_going_gulf_lebanon = models.BooleanField('Lebanon', null=True)
-    victim_where_going_gulf_dubai = models.BooleanField('Dubai', null=True)
-    victim_where_going_gulf_malaysia = models.BooleanField('Malaysia', null=True)
-    victim_where_going_gulf_oman = models.BooleanField('Oman', null=True)
-    victim_where_going_gulf_saudi_arabia = models.BooleanField('Saudi Arabia', null=True)
-    victim_where_going_gulf_kuwait = models.BooleanField('Kuwait', null=True)
-    victim_where_going_gulf_qatar = models.BooleanField('Qatar', null=True)
-    victim_where_going_gulf_didnt_know = models.BooleanField('Did Not Know', null=True)
-    victim_where_going_gulf_other = models.BooleanField('Other', null=True)
+    victim_where_going_gulf_lebanon = models.NullBooleanField('Lebanon', null=True)
+    victim_where_going_gulf_dubai = models.NullBooleanField('Dubai', null=True)
+    victim_where_going_gulf_malaysia = models.NullBooleanField('Malaysia', null=True)
+    victim_where_going_gulf_oman = models.NullBooleanField('Oman', null=True)
+    victim_where_going_gulf_saudi_arabia = models.NullBooleanField('Saudi Arabia', null=True)
+    victim_where_going_gulf_kuwait = models.NullBooleanField('Kuwait', null=True)
+    victim_where_going_gulf_qatar = models.NullBooleanField('Qatar', null=True)
+    victim_where_going_gulf_didnt_know = models.NullBooleanField('Did Not Know', null=True)
+    victim_where_going_gulf_other = models.NullBooleanField('Other', null=True)
     victim_where_going_gulf_other_value = models.CharField(max_length=255, blank=True)
 
-    manpower_involved = models.BooleanField('Was a manpower involved?', null=True)
+    manpower_involved = models.NullBooleanField('Was a manpower involved?', null=True)
     victim_recruited_in_village = models.BooleanField('Did someone recruit you in your village and persuade you to abroad?', default="False")
 
     brokers_relation_to_victim_own_dad = models.BooleanField('Own dad', default=False)
@@ -232,7 +232,7 @@ class VictimInterview(models.Model):
 
     # Section 4
 
-    victim_first_time_crossing_border = models.BooleanField(null=True)
+    victim_first_time_crossing_border = models.NullBooleanField(null=True)
 
     victim_primary_means_of_travel_tourist_bus = models.BooleanField('Tourist Bus', default=False)
     victim_primary_means_of_travel_motorbike = models.BooleanField('Motorbike', default=False)
@@ -248,10 +248,10 @@ class VictimInterview(models.Model):
     victim_how_long_stayed_between_days = models.PositiveIntegerField('Days', null=True, blank=True)
     victim_how_long_stayed_between_start_date = models.DateField('Start Date', null=True, blank=True)
 
-    victim_was_hidden = models.BooleanField(null=True)
+    victim_was_hidden = models.NullBooleanField(null=True)
     victim_was_hidden_explanation = models.TextField(blank=True)
 
-    victim_was_free_to_go_out = models.BooleanField(null=True)
+    victim_was_free_to_go_out = models.NullBooleanField(null=True)
     victim_was_free_to_go_out_explanation = models.TextField(blank=True)
 
     how_many_others_in_situation = models.PositiveIntegerField(null=True, blank=True)
@@ -264,7 +264,7 @@ class VictimInterview(models.Model):
     passport_made_passport_included_other_false_info = models.BooleanField('Passport included other false info', default=False).set_weight(3)
     passport_made_passport_was_fake = models.BooleanField('Passport was fake', default=False).set_weight(5)
 
-    victim_passport_with_broker = models.BooleanField(null=True)
+    victim_passport_with_broker = models.NullBooleanField(null=True)
 
     abuse_happened_sexual_harassment = models.BooleanField('Sexual Harassment', default=False).set_weight(5)
     abuse_happened_sexual_abuse = models.BooleanField('Sexual Abuse', default=False).set_weight(9)
@@ -279,8 +279,8 @@ class VictimInterview(models.Model):
     victim_traveled_with_broker_companion_no = models.BooleanField('No', default=False)
     victim_traveled_with_broker_companion_broker_took_me_to_border = models.BooleanField('Broker took me to border', default=False)
 
-    companion_with_when_intercepted = models.BooleanField(null=True)
-    planning_to_meet_companion_later = models.BooleanField(null=True)
+    companion_with_when_intercepted = models.NullBooleanField(null=True)
+    planning_to_meet_companion_later = models.NullBooleanField(null=True)
 
     money_changed_hands_broker_companion_no = models.BooleanField('No', default=False)
     money_changed_hands_broker_companion_dont_know = models.BooleanField('Don\'t know', default=False)
@@ -296,13 +296,13 @@ class VictimInterview(models.Model):
 
     victim_knew_details_about_destination = models.BooleanField(default=False)
 
-    other_involved_person_in_india = models.BooleanField(null=True)
-    other_involved_husband_trafficker = models.BooleanField(null=True)
-    other_involved_someone_met_along_the_way = models.BooleanField(null=True)
-    other_involved_someone_involved_in_trafficking = models.BooleanField(null=True)
-    other_involved_place_involved_in_trafficking = models.BooleanField(null=True)
-    victim_has_worked_in_sex_industry = models.BooleanField(null=True)
-    victim_place_worked_involved_sending_girls_overseas = models.BooleanField(null=True)
+    other_involved_person_in_india = models.NullBooleanField(null=True)
+    other_involved_husband_trafficker = models.NullBooleanField(null=True)
+    other_involved_someone_met_along_the_way = models.NullBooleanField(null=True)
+    other_involved_someone_involved_in_trafficking = models.NullBooleanField(null=True)
+    other_involved_place_involved_in_trafficking = models.NullBooleanField(null=True)
+    victim_has_worked_in_sex_industry = models.NullBooleanField(null=True)
+    victim_place_worked_involved_sending_girls_overseas = models.NullBooleanField(null=True)
 
     # 6. Awareness & Assessment
 
@@ -333,11 +333,11 @@ class VictimInterview(models.Model):
 
     # Section 7
 
-    guardian_knew_was_travelling_to_india = models.BooleanField(null=True)
-    family_pressured_victim = models.BooleanField(null=True)
-    family_will_try_sending_again = models.BooleanField(null=True)
-    victim_feels_safe_at_home = models.BooleanField(null=True)
-    victim_wants_to_go_home = models.BooleanField(null=True)
+    guardian_knew_was_travelling_to_india = models.NullBooleanField(null=True)
+    family_pressured_victim = models.NullBooleanField(null=True)
+    family_will_try_sending_again = models.NullBooleanField(null=True)
+    victim_feels_safe_at_home = models.NullBooleanField(null=True)
+    victim_wants_to_go_home = models.NullBooleanField(null=True)
 
     victim_home_had_sexual_abuse_never = models.BooleanField('Never', default=False)
     victim_home_had_sexual_abuse_rarely = models.BooleanField('Rarely / Minor', default=False)
@@ -364,7 +364,7 @@ class VictimInterview(models.Model):
     victim_family_economic_situation_comfortable_basic_needs = models.BooleanField('Comfortably meet basic needs, and can afford to buy some non-essential goods/services', default=False)
     victim_family_economic_situation_wealthy = models.BooleanField('Wealthy', default=False)
 
-    victim_had_suicidal_thoughts = models.BooleanField(null=True)
+    victim_had_suicidal_thoughts = models.NullBooleanField(null=True)
 
     reported_total_situational_alarms = models.PositiveIntegerField(blank=True, null=True)
 
@@ -512,7 +512,7 @@ class VictimInterview(models.Model):
     interviewer_recommendation_send_to_other_relatives = models.BooleanField('Plan to send the girl to stay with other relatives', default=False)
     interviewer_recommendation_find_other_place = models.BooleanField('Tiny Hands needs to help her find another place to go', default=False)
 
-    other_people_and_places_involved = models.BooleanField(null=True)
+    other_people_and_places_involved = models.NullBooleanField(null=True)
 
     has_signature = models.BooleanField('Scanned form has signature', default=False)
 

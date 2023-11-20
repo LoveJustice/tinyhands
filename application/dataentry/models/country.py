@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.postgres.fields import JSONField
 
 from .region import Region
 
@@ -11,9 +12,9 @@ class Country(models.Model):
     mdf_sender_email = models.CharField(max_length=127)
     verification_start_year = models.PositiveIntegerField(null=True)
     verification_start_month = models.PositiveIntegerField(null=True)
-    verification_goals = models.JSONField(null=True)
-    options = models.JSONField(null=True)
-    region = models.ForeignKey(Region, on_delete=models.CASCADE)
+    verification_goals = JSONField(null=True)
+    options = JSONField(null=True)
+    region = models.ForeignKey(Region)
     prior_intercepts = models.IntegerField(default=0)
     prior_arrests = models.IntegerField(default=0)
     prior_convictions = models.IntegerField(default=0)
@@ -25,7 +26,7 @@ class Country(models.Model):
 
 class CountryExchange(models.Model):
     year_month = models.PositiveIntegerField()
-    country = models.ForeignKey(Country, on_delete=models.CASCADE)
+    country = models.ForeignKey(Country)
     exchange_rate = models.FloatField(default=1)
     
     

@@ -13,7 +13,7 @@ from django.core import serializers
 from django.core.exceptions import PermissionDenied
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
-from django.urls import reverse_lazy
+from django.core.urlresolvers import reverse_lazy
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import redirect, render
 from django.template.loader import render_to_string
@@ -27,7 +27,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import viewsets
 
-from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSetView
+from extra_views import CreateWithInlinesView, UpdateWithInlinesView, InlineFormSet
 from braces.views import LoginRequiredMixin
 from fuzzywuzzy import process
 
@@ -92,7 +92,7 @@ class SearchFormsMixin(object):
         return context
 
 
-class IntercepteeInline(InlineFormSetView):
+class IntercepteeInline(InlineFormSet):
     model = Interceptee
     factory_kwargs = {
         'extra': 12,
@@ -214,7 +214,7 @@ class InterceptionRecordDetailView(InterceptionRecordUpdateView):
         raise PermissionDenied
 
 
-class PersonBoxInline(InlineFormSetView):
+class PersonBoxInline(InlineFormSet):
     model = VictimInterviewPersonBox
     factory_kwargs = {
         'extra': 12
@@ -226,7 +226,7 @@ class PersonBoxInline(InlineFormSetView):
         return kwargs
 
 
-class LocationBoxInline(InlineFormSetView):
+class LocationBoxInline(InlineFormSet):
     model = VictimInterviewLocationBox
     factory_kwargs = {
         'extra': 8

@@ -25,7 +25,7 @@ class VictimInterviewPersonBox(models.Model):
     who_is_this_role_passport = models.BooleanField('Passport', default=False)
     who_is_this_role_sex_industry = models.BooleanField('Sex Industry', default=False)
 
-    person = models.ForeignKey(Person, null=True, blank=True, on_delete=models.CASCADE)
+    person = models.ForeignKey(Person, null=True, blank=True)
 
     address_ward = models.CharField('Ward #', max_length=255, blank=True)
 
@@ -84,7 +84,7 @@ class VictimInterviewPersonBox(models.Model):
     victim_believes_suspects_trafficked = models.BooleanField('Victim suspects they are a trafficker', default=False).set_weight(2)
     victim_believes_not_trafficker = models.BooleanField('Victim doesn\'t believe they are a trafficker', default=False)
 
-    associated_with_place = models.BooleanField(null=True)
+    associated_with_place = models.NullBooleanField(null=True)
     associated_with_place_value = models.IntegerField(blank=True, null=True)
 
     def __str__(self):

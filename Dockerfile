@@ -1,4 +1,4 @@
-FROM amunn/searchlight-base:V20231117
+FROM amunn/searchlight-base:latest
 MAINTAINER amunn33
 
 COPY application/ /data/

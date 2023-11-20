@@ -20,7 +20,7 @@ class Interceptee(models.Model):
     interception_record = models.ForeignKey(InterceptionRecord, related_name='interceptees', on_delete=models.CASCADE)
     kind = models.CharField(max_length=4, choices=KIND_CHOICES)
     relation_to = models.CharField(max_length=255, blank=True)
-    person = models.ForeignKey(Person, null=True, blank=True, on_delete=models.CASCADE)
+    person = models.ForeignKey(Person, null=True, blank=True)
 
     class Meta:
         ordering = ['id']

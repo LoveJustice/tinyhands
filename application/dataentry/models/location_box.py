@@ -50,7 +50,7 @@ class VictimInterviewLocationBox(models.Model):
     victim_believes_suspect_used_for_trafficking = models.BooleanField('Victim suspects this location has been used for trafficking', default=False).set_weight(2)
     victim_believes_not_used_for_trafficking = models.BooleanField('Victim does not believe this location is used for trafficking', default=False)
 
-    associated_with_person = models.BooleanField(null=True)
+    associated_with_person = models.NullBooleanField(null=True)
     associated_with_person_value = models.IntegerField(blank=True, null=True)
 
     def __str__(self):

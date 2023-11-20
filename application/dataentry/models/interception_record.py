@@ -118,7 +118,7 @@ class InterceptionRecord(models.Model):
     which_contact_other_value = models.CharField(max_length=255, blank=True)
 
     # Did you pay this contact for the information?
-    contact_paid = models.BooleanField(null=True)
+    contact_paid = models.NullBooleanField(null=True)
     contact_paid_how_much = models.CharField('How much?', max_length=255, blank=True)
 
     staff_noticed = models.BooleanField('Staff', default=False)
@@ -162,7 +162,7 @@ class InterceptionRecord(models.Model):
     # Procedures
     call_subcommittee_chair = models.BooleanField('Call Subcommittee Chair', default=False)
     call_thn_to_cross_check = models.BooleanField('Call THN to cross-check the names (6223856)', default=False)
-    name_came_up_before = models.BooleanField(null=True)
+    name_came_up_before = models.NullBooleanField(null=True)
     name_came_up_before_value = models.PositiveIntegerField('If yes, write the # from the table above:', null=True, blank=True)
     scan_and_submit_same_day = models.BooleanField('Scan and submit to THN the same day', default=False)
 

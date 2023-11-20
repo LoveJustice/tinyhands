@@ -1,6 +1,6 @@
 import datetime
 from django.core import mail
-from django.urls import reverse
+from django.core.urlresolvers import reverse
 from django.test.testcases import TestCase
 from django_webtest import WebTest
 from rest_framework.test import APIClient

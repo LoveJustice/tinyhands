@@ -2,7 +2,7 @@ import logging
 import datetime
 
 from django.conf import settings
-from django.urls import reverse
+from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from rest_framework import viewsets
 from rest_framework import status

@@ -2,6 +2,7 @@ import pytz
 import datetime
 from django.db import models
 from django.db.models import Q
+from django.contrib.postgres.fields import JSONField
 from django.utils.timezone import make_aware
 
 from accounts.models import Account
@@ -23,7 +24,7 @@ class Storage(models.Model):
     module_name = models.CharField(max_length=126)
     form_model_name = models.CharField(max_length=126)
     response_model_name = models.CharField(max_length=126, null=True)
-    parent_storage = models.ForeignKey('self', null=True, on_delete=models.SET_NULL)
+    parent_storage = models.ForeignKey('self', null=True)
     foreign_key_field_parent = models.CharField(max_length=126, null=True)
     foreign_key_field_child = models.CharField(max_length=126, null=True)
     
@@ -52,8 +53,8 @@ class FormType(models.Model):
     tag_enabled = models.BooleanField(default=False)
 
 class Form(models.Model):
-    form_type = models.ForeignKey(FormType, on_delete=models.CASCADE)
-    storage = models.ForeignKey(Storage, on_delete=models.CASCADE)
+    form_type = models.ForeignKey(FormType)
+    storage = models.ForeignKey(Storage)
     start_date = models.DateTimeField(auto_now_add=True)
     end_date = models.DateTimeField(null=True)
     form_name = models.CharField(max_length=126, unique=True)
@@ -96,7 +97,7 @@ class CategoryType(models.Model):
 
 class Category(models.Model):
     form_tag = models.CharField(max_length=126, unique=True)
-    category_type = models.ForeignKey(CategoryType, on_delete=models.CASCADE)
+    category_type = models.ForeignKey(CategoryType)
     description = models.CharField(max_length=126)
     
     @staticmethod
@@ -108,8 +109,8 @@ class Category(models.Model):
         return qs
         
 class FormCategory(models.Model):
-    form = models.ForeignKey(Form, on_delete=models.CASCADE)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    form = models.ForeignKey(Form)
+    category = models.ForeignKey(Category)
     name = models.CharField(max_length=126)
     order = models.PositiveIntegerField(null=True, blank=True)
     # Json list for helping format the question, all properties will be added to the model on serialization
@@ -155,10 +156,10 @@ class FormCategory(models.Model):
     #         }
     #     ]
     # }
-    form_category_question_config = models.JSONField(null=True)
+    form_category_question_config = JSONField(null=True)
     
     # Only needed for card type category
-    storage = models.ForeignKey(Storage, null=True, on_delete=models.CASCADE)
+    storage = models.ForeignKey(Storage, null=True)
     
     @staticmethod
     def get_objects_by_form_type(form_type_list):
@@ -173,10 +174,10 @@ class Question(models.Model):
     form_tag = models.CharField(max_length=126, unique=True)
     prompt = models.CharField(max_length=126, blank=True)
     description = models.CharField(max_length=126, null=True)
-    answer_type = models.ForeignKey(AnswerType, on_delete=models.CASCADE)
-    params=models.JSONField(null=True)   # custom parameters for this question type
+    answer_type = models.ForeignKey(AnswerType)
+    params=JSONField(null=True)   # custom parameters for this question type
     export_name = models.CharField(max_length=126, null=True)
-    export_params = models.JSONField(null=True)
+    export_params = JSONField(null=True)
     
     def export_header_Address(self, prefix):
         if self.export_name is not None and  self.export_name != '':
@@ -352,10 +353,10 @@ class Question(models.Model):
         return qs
 
 class QuestionLayout(models.Model):
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question)
+    category = models.ForeignKey(Category)
     weight = models.IntegerField(default=0)
-    form_config = models.JSONField(null=True)
+    form_config = JSONField(null=True)
     
     @staticmethod
     def get_objects_by_form_type(form_type_list):
@@ -364,10 +365,10 @@ class QuestionLayout(models.Model):
         return qs
 
 class Answer(models.Model):
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question)
     value = models.CharField(max_length=100000, null=True)
     code = models.CharField(max_length=125, null=True)
-    params=models.JSONField(null=True)   # custom parameters for this answer type
+    params=JSONField(null=True)   # custom parameters for this answer type
     
     @staticmethod
     def get_objects_by_form_type(form_type_list):
@@ -401,12 +402,12 @@ class FormValidationLevel(models.Model):
 # error_warning_message - message returned to client when validation fails
 class FormValidation(models.Model):
     form_tag = models.CharField(max_length=126, unique=True)
-    level = models.ForeignKey(FormValidationLevel, on_delete=models.CASCADE)
-    trigger = models.ForeignKey(Question, null=True, on_delete=models.CASCADE)
+    level = models.ForeignKey(FormValidationLevel)
+    trigger = models.ForeignKey(Question, null=True)
     trigger_value = models.CharField(max_length=126, null=True)
-    validation_type = models.ForeignKey(FormValidationType, on_delete=models.CASCADE)
+    validation_type = models.ForeignKey(FormValidationType)
     error_warning_message = models.CharField(max_length=126)
-    params=models.JSONField(null=True)
+    params=JSONField(null=True)
     forms = models.ManyToManyField(Form)
     retrieve = models.BooleanField()
     update = models.BooleanField()
@@ -419,8 +420,8 @@ class FormValidation(models.Model):
 
 # Set of questions to be validated for the FormValidation
 class FormValidationQuestion(models.Model):
-    validation = models.ForeignKey(FormValidation, on_delete=models.CASCADE)
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    validation = models.ForeignKey(FormValidation)
+    question = models.ForeignKey(Question)
     
     @staticmethod
     def get_objects_by_form_type(form_type_list):
@@ -429,7 +430,7 @@ class FormValidationQuestion(models.Model):
         return qs
 
 class Condition(models.Model):
-    condition = models.JSONField() 
+    condition = JSONField() 
     # {"type":"red", {12: "true", 14: "false"}, points: 10}
     # Type determines red flag,warning,home situation, etc.
     # Second dictionary associates question with answer (dereferenced to use value in this example)
@@ -442,7 +443,7 @@ class Condition(models.Model):
 # For example, an entry could specify that the response to the 'IRF Number'
 # question would be stored in the field name 'irf_number'
 class QuestionStorage(models.Model):
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question)
     field_name = models.CharField(max_length=100)
     
     @staticmethod
@@ -459,7 +460,7 @@ class ExportImport(models.Model):
     description = models.CharField(max_length=126, null = True)
     implement_module = models.CharField(max_length=126, null=True)
     implement_class_name = models.CharField(max_length=126, null=True)
-    form = models.ForeignKey(Form, on_delete=models.CASCADE)
+    form = models.ForeignKey(Form)
     
     @staticmethod
     def get_objects_by_form_type(form_type_list):
@@ -468,7 +469,7 @@ class ExportImport(models.Model):
         return qs
 
 class GoogleSheetConfig(models.Model):
-    export_import = models.ForeignKey(ExportImport, on_delete=models.CASCADE)
+    export_import = models.ForeignKey(ExportImport)
     export_or_import = models.CharField(max_length=10)
     spreadsheet_name = models.CharField(max_length=126)
     sheet_name = models.CharField(max_length=126)
@@ -484,8 +485,8 @@ class GoogleSheetConfig(models.Model):
         return qs
     
 class ExportImportCard(models.Model):
-    export_import = models.ForeignKey(ExportImport, related_name='export_import_base', on_delete=models.CASCADE)
-    category = models.ForeignKey(Category, related_name='export_import_card', on_delete=models.CASCADE)
+    export_import = models.ForeignKey(ExportImport, related_name='export_import_base')
+    category = models.ForeignKey(Category, related_name='export_import_card')
     prefix = models.CharField(max_length=126)
     max_instances = models.PositiveIntegerField()
     index_field_name = models.CharField(max_length=126, null=True)
@@ -498,12 +499,12 @@ class ExportImportCard(models.Model):
 
 # data fields to be exported for which there is no question
 class ExportImportField(models.Model):
-    export_import = models.ForeignKey(ExportImport, on_delete=models.CASCADE)
-    card = models.ForeignKey(ExportImportCard, null=True, on_delete=models.CASCADE)
+    export_import = models.ForeignKey(ExportImport)
+    card = models.ForeignKey(ExportImportCard, null=True)
     field_name = models.CharField(max_length=126)
-    answer_type = models.ForeignKey(AnswerType, related_name='field_answer_type', on_delete=models.CASCADE)
+    answer_type = models.ForeignKey(AnswerType, related_name='field_answer_type')
     export_name = models.CharField(max_length=126)
-    arguments_json = models.JSONField(null=True)
+    arguments_json = JSONField(null=True)
     
     def format_DateTime(self, answer, station):
         tz = pytz.timezone(station.time_zone)
@@ -555,7 +556,7 @@ class ExportImportField(models.Model):
 
 class BaseForm(models.Model):
     status = models.CharField('Status', max_length=20, default='pending')
-    station = models.ForeignKey(BorderStation, on_delete=models.CASCADE)
+    station = models.ForeignKey(BorderStation)
     date_time_entered_into_system = models.DateTimeField(auto_now_add=True)
     date_time_last_updated = models.DateTimeField(auto_now=True)
     form_entered_by = models.ForeignKey(Account, related_name='%(class)s_entered_by', null=True, on_delete=models.SET_NULL)
@@ -580,7 +581,7 @@ class BaseForm(models.Model):
         pass
         
 class BaseResponse(models.Model):
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question)
     value = models.CharField(max_length=100000, null=True)
     
     class Meta:

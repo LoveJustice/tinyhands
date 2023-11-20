@@ -13,7 +13,7 @@ class VdfCommon(BaseForm):
     location = models.CharField('Location:', max_length=255)
     
     # Victim/Family Info
-    victim = models.ForeignKey(Person, null=True, blank=True, on_delete=models.CASCADE)
+    victim = models.ForeignKey(Person, null=True, blank=True)
     relationship_to_guardian = models.CharField(max_length=126, null=True)
     
     # Recruitment for PVF
@@ -189,7 +189,7 @@ class VdfAttachmentCommon(BaseCard):
     attachment = models.FileField('Attach scanned copy of form (pdf or image)', upload_to='vdf_attachments')
     private_card = models.BooleanField(default=True)
     option = models.CharField(max_length=126, null=True)
-    vdf = models.ForeignKey(VdfCommon, on_delete=models.CASCADE)
+    vdf = models.ForeignKey(VdfCommon)
     
     def set_parent(self, the_parent):
         self.vdf = the_parent
@@ -198,7 +198,7 @@ class VdfAttachmentCommon(BaseCard):
         return self.private_card
     
 class GospelVerification(BaseForm):
-    vdf = models.ForeignKey(VdfCommon, on_delete=models.CASCADE)
+    vdf = models.ForeignKey(VdfCommon)
     searchlight_edited = models.CharField(max_length=126, null=True)
     form_changes = models.CharField(max_length=126, null=True)
     reason_for_change = models.TextField(null=True)

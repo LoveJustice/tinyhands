@@ -3,7 +3,6 @@ MAINTAINER bradleo99
 ENV PYTHONUNBUFFERED 1
 
 ADD requirements.txt /requirements.txt
-RUN python --version
 RUN apt-get update
 RUN pip install --upgrade pip
 # Numpy and pandas are needed for matplotlib, not sure why they are in an earlier build step, though
@@ -24,7 +23,6 @@ RUN apt-get -y install \
     && pip install pandas==1.1.5
 
 RUN apt-get update && apt-get install ffmpeg libsm6 libxext6  -y
-RUN apt install libcairo2-dev -y
 RUN pip install opencv-python==3.4.18.65
 
 # IDEALLY - Install build deps, then run `pip install`, then remove unneeded build deps all in a single step.
@@ -43,7 +41,7 @@ RUN set -ex \
     && pip install -U pip \
     && LIBRARY_PATH=/lib:/usr/lib /bin/sh -c "pip install --no-cache-dir -r /requirements.txt"
 #    && runDeps="$( \
-#            scanelf --needed --nobanner --recursive /usr/local/lib/python3.8/ \
+#            scanelf --needed --nobanner --recursive /usr/local/lib/python3.6/ \
 #                    | awk '{ gsub(/,/, "\nso:", $2); print "so:" $2 }' \
 #                    | sort -u \
 #                    | xargs -r apk info --installed \
