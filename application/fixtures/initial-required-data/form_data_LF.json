@@ -4270,5 +4270,58 @@
       "question": "lfComplianceNotes",
       "field_name": "logbook_notes"
    }
+},
+{
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "lfDateRecived",
+      "level": 2,
+      "trigger": null,
+      "trigger_value": null,
+      "validation_type": 1,
+      "error_warning_message": "Date LF received must be populated",
+      "params": {
+         "starting_submission_date": "20231120"
+      },
+      "retrieve": false,
+      "update": true,
+      "forms": [
+         "lfNepal",
+         "lfIndia",
+         "lfIndiaNetwork",
+         "lfGhana",
+         "lfKenya",
+         "lfSouthAfrica",
+         "lfNamibia",
+         "lfLiberia",
+         "lfEthiopia",
+         "lfBenin",
+         "lfMalawi",
+         "lfBurkinaFaso",
+         "lfBurundi",
+         "lfIndonesia",
+         "lfLesotho",
+         "lfMozambique",
+         "lfUganda",
+         "lfZambia",
+         "lfEcuador",
+         "lfArgentina",
+         "lfZimbabwe",
+         "lfSierraLeone",
+         "lfRwanda",
+         "lfTanzania",
+         "lfBangladesh",
+         "lfCambodia",
+         "lfUSA",
+         "lfOpenSource"
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": "lfDateRecived",
+      "question": "lfComplianceDateComplete"
+   }
 }
 ]

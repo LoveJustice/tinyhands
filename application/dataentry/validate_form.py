@@ -53,6 +53,30 @@ class ValidateForm:
                         break
         
         return answer
+    
+    def should_do_validation(self, form_data, validation):
+        should_do = True
+        try:
+            if validation.params is not None and 'starting_submission_date' in validation.params:
+                    year = int(validation.params['starting_submission_date'][0:4])
+                    month = int(validation.params['starting_submission_date'][4:6])
+                    day = int(validation.params['starting_submission_date'][6:])
+                    start_date = date(year,month,day)
+                    questions = QuestionStorage.objects.filter(field_name='logbook_submitted').values_list('question', flat=True)
+                    categories = FormCategory.objects.filter(form=form_data.form).values_list('category', flat=True)
+                    layouts = QuestionLayout.objects.filter(question__in=questions, category__in=categories)
+                    
+                    if len(layouts) > 0:
+                        submission_date = form_data.get_answer(layouts[0].question)
+                        if submission_date is None or submission_date < start_date:
+                            print('do not check')
+                            should_do = False
+        except:
+            pass
+        
+        
+        
+        return should_do
         
 
     def not_blank_or_null(self, form_data, validation, validation_questions, category_index, general):
@@ -61,12 +85,13 @@ class ValidateForm:
             full_answer = form_data.get_answer(question)
             answer = self.get_answer_part(full_answer, validation, 'part')
                 
-            if answer is None or isinstance(answer, str) and answer.strip() == '':
-                if general:
-                    category_name = ''
-                else:
-                    category_name = self.question_map[question.id]
-                self.add_error_or_warning(category_name, category_index, validation)
+            if self.should_do_validation(form_data, validation):  
+                if answer is None or isinstance(answer, str) and answer.strip() == '':
+                    if general:
+                        category_name = ''
+                    else:
+                        category_name = self.question_map[question.id]
+                    self.add_error_or_warning(category_name, category_index, validation)
             
     
     def at_least_one_true(self, form_data, validation, validation_questions, category_index, general):

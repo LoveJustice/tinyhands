@@ -19,4 +19,6 @@ urlpatterns = [
 
         url(r'^defaultPermissionsSet/$', DefaultPermissionsSetViewSet.as_view(list), name="DefaultPermissionsSets"),
         url(r'^defaultPermissionsSet/(?P<pk>\d+)/$', DefaultPermissionsSetViewSet.as_view(detail), name="DefaultPermissionsSet"),
+
+        url(r'^account/sync-django-accounts-with-auth0-users/$', sync_django_accounts_with_auth0_users, name='SyncDjangoAccountsWithAuth0Users')
 ]
