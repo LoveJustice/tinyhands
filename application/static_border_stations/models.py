@@ -63,6 +63,26 @@ class Staff(Person):
     first_date = models.DateField(default=date.today)
     last_date = models.DateField(null=True)
     
+    #start new fields
+    birth_date = models.DateField(null=True)
+    education = models.CharField(max_length=127, null=True)
+    id_card = models.BooleanField(default=False)
+    
+    #contract
+    agreement = models.ImageField(upload_to='staff/agreement', default='', blank=True)
+    contract = models.ImageField(upload_to='staff/contract', default='', blank=True)
+    contract_expiration = models.DateField(null=True)
+    
+    #knowledge
+    general = models.DateField(null=True)
+    awareness = models.DateField(null=True)
+    security = models.DateField(null=True)
+    accounting = models.DateField(null=True)
+    pv_care = models.DateField(null=True)
+    paralegal = models.DateField(null=True)
+    records = models.DateField(null=True)
+    
+    
     general_staff = '__general_staff'
     
     @staticmethod 
@@ -78,6 +98,32 @@ class Staff(Person):
             general.save()
         
         return general
+
+class StaffKnowledgeAttachment(models.Model):
+    staff = models.ForeignKey(Staff, on_delete=models.CASCADE)
+    attachment_number = models.PositiveIntegerField(null=True, blank=True)
+    description = models.CharField(max_length=126, null=True)
+    attachment = models.FileField('Attach scanned copy of form (pdf or image)', upload_to='staff/knowledge')
+    option = models.CharField(max_length=126, null=True)
+
+class StaffReview(models.Model):
+    staff = models.ForeignKey(Staff, on_delete=models.CASCADE)
+    review_date = models.DateField()
+    leadership = models.FloatField(null=True)
+    obedience = models.FloatField(null=True)
+    faithfulness = models.FloatField(null=True)
+    alertness = models.FloatField(null=True)
+    questioning = models.FloatField(null=True)
+    awareness = models.FloatField(null=True)
+
+class StaffReviewAttachment(models.Model):
+    review = models.ForeignKey(StaffReview, on_delete=models.CASCADE)
+    attachment_number = models.PositiveIntegerField(null=True, blank=True)
+    description = models.CharField(max_length=126, null=True)
+    attachment = models.FileField('Attach scanned copy of form (pdf or image)', upload_to='staff/knowledge')
+    option = models.CharField(max_length=126, null=True)
+    
+    
 
 class CommitteeMember(Person):
     class Meta:

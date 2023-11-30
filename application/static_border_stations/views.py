@@ -127,6 +127,10 @@ class StaffViewSet(BorderStationRestAPI):
         'first_name', 'last_name', )
     ordering = ('first_name',)
     
+    #def list(self, request):
+    #    serializer = self.serializer_class(self.queryset, many=True, context={"request":request} )
+    #    return Response(serializer.data)
+    
     def update(self, request, pk=None):
         staff = Staff.objects.get(id=pk)
         serializer = self.serializer_class(staff, request.data)
