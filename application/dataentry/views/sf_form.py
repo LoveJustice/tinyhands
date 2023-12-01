@@ -35,26 +35,32 @@ class SfListSerializer(serializers.Serializer):
         return obj.sf_number
     
     def get_name(self, obj):
-        return obj.merged_person.full_name
+        if obj.merged_person is not None:
+            return obj.merged_person.full_name
+        else:
+            return ''
     
     def get_gender(self, obj):
-       return obj.merged_person.gender
+        if obj.merged_person is not None:
+             return obj.merged_person.gender
+        else:
+             return ''
        
     def get_age(self, obj):
         age = None
         estimated = False
-       
-        birthdate = obj.merged_person.birthdate
-        if birthdate is None:
-            birthdate = obj.merged_person.estimated_birthdate
-            estimated = True
-        if birthdate is not None:
-            current = datetime.datetime.now()
-            age = current.year - birthdate.year
-            if current.timetuple().tm_yday < birthdate.timetuple().tm_yday:
-                age -= 1
-            if estimated:
-                age = str(age) + '(est)'
+        if obj.merged_person is not None:
+            birthdate = obj.merged_person.birthdate
+            if birthdate is None:
+                birthdate = obj.merged_person.estimated_birthdate
+                estimated = True
+            if birthdate is not None:
+                current = datetime.datetime.now()
+                age = current.year - birthdate.year
+                if current.timetuple().tm_yday < birthdate.timetuple().tm_yday:
+                    age -= 1
+                if estimated:
+                    age = str(age) + '(est)'
                 
         return age
     

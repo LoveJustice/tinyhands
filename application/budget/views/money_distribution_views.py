@@ -11,10 +11,10 @@ from rest_framework.response import Response
 from django.db.models import Q, Exists, OuterRef
 from templated_email import send_templated_mail
 
-from budget.models import BorderStationBudgetCalculation
+from budget.models import BorderStationBudgetCalculation, MonthlyDistributionForm
 from dataentry.models import BorderStation, UserLocationPermission
 from rest_api.authentication_expansion import HasPermission
-from static_border_stations.models import Staff, CommitteeMember
+from static_border_stations.models import Staff, CommitteeMember, StaffProject
 from static_border_stations.serializers import StaffSerializer, CommitteeMemberSerializer
 from accounts.models import Account
 from accounts.serializers import AccountMDFSerializer
@@ -28,9 +28,25 @@ class MoneyDistribution(viewsets.ViewSet):
     permissions_required = [{'permission_group':'BUDGETS', 'action':'VIEW'},]
 
     def retrieve(self, request, pk):
-        budget = BorderStationBudgetCalculation.objects.get(pk=pk)
-        border_station = budget.border_station
-        staff = border_station.staff_set.exclude(email__isnull=True)
+        mdf_type = request.GET.get('mdf_type')
+        if mdf_type is None:
+            mdf_type = 'budget'
+        
+        if mdf_type == 'budget':
+            budget = BorderStationBudgetCalculation.objects.get(pk=pk)
+            border_station = budget.border_station
+            staff = border_station.staff_set.exclude(email__isnull=True)
+            the_id = budget.mdf_uuid
+        else:
+            budget = MonthlyDistributionForm.objects.get(pk=pk)
+            border_station = budget.border_station
+            staff_projects = StaffProject.objects.filter(border_station=border_station).exclude(staff__email__isnull=True)
+            staff = []
+            for staff_project in staff_projects:
+                staff.append(staff_project.staff)
+            the_id = '0' + str(budget.id)
+       
+        
         committee_members = border_station.committeemember_set.exclude(email__isnull=True)
         
         # find all permissions for MDF Notification for the specified border station
@@ -48,18 +64,26 @@ class MoneyDistribution(viewsets.ViewSet):
         committee_members_serializer = CommitteeMemberSerializer(committee_members, many=True)
         national_staff_serializer = AccountMDFSerializer(national_staff, many=True)
 
-        pdf_url = settings.SITE_DOMAIN + reverse('MdfPdf', kwargs={"uuid": budget.mdf_uuid})
+        pdf_url = settings.SITE_DOMAIN + reverse('MdfPdf', kwargs={"uuid": the_id, "mdf_type":mdf_type})
 
         return Response({"staff_members": staff_serializer.data, "committee_members": committee_members_serializer.data, "national_staff_members": national_staff_serializer.data, "pdf_url": pdf_url})
 
     def send_emails(self, request, pk):
-        budget_calc_id = pk
+        mdf_type = request.data['mdf_type']
+        if mdf_type is None:
+            mdf_type = 'budget'
+        if mdf_type == 'budget':
+            budget = BorderStationBudgetCalculation.objects.get(pk=pk)
+            border_station = budget.border_station
+            the_id = budget.mdf_uuid
+        else:
+            budget = MonthlyDistributionForm.objects.get(pk=pk)
+            border_station = budget.border_station
+            the_id = '0' + str(budget.id)
+            
         staff_ids = request.data['staff_ids']
         committee_ids = request.data['committee_ids']
         national_staff_ids = request.data['national_staff_ids']
-
-        budget_calc = BorderStationBudgetCalculation.objects.get(pk=budget_calc_id)
-        border_station = BorderStation.objects.get(pk=budget_calc.border_station.id)
         
         email_sender = border_station.operating_country.mdf_sender_email
 
@@ -67,32 +91,33 @@ class MoneyDistribution(viewsets.ViewSet):
         committee_members = border_station.committeemember_set.all()
         national_staff = Account.objects.filter(permission_can_receive_mdf=True, id__in=national_staff_ids)
 
-        self.save_recipients_and_email(staff, staff_ids, budget_calc, email_sender)
-        self.save_recipients_and_email(committee_members, committee_ids, budget_calc, email_sender)
+        self.save_recipients_and_email(staff, staff_ids, the_id, mdf_type, border_station, email_sender)
+        self.save_recipients_and_email(committee_members, committee_ids, the_id, mdf_type, border_station, email_sender)
 
-        self.email_national_staff(national_staff, budget_calc, email_sender)
+        self.email_national_staff(national_staff, the_id, mdf_type, border_station, email_sender)
         return Response("Emails Sent!", status=200)
 
-    def save_recipients_and_email(self, person_list, recipient_ids, budget_calc, email_sender):
+    def save_recipients_and_email(self, person_list, recipient_ids, budget_id, mdf_type, border_station, email_sender):
         for person in person_list:
             if person.id in recipient_ids:
                 if person.receives_money_distribution_form == False:
                     person.receives_money_distribution_form = True
                     person.save()
-                self.email_staff_and_committee_members(person, budget_calc, 'money_distribution_form', email_sender)
+                self.email_staff_and_committee_members(person, budget_id, mdf_type, border_station, 'money_distribution_form', email_sender)
             else:
                 person.receives_money_distribution_form = False
                 person.save()
 
-    def email_national_staff(self, staff_list, budget_calc, email_sender):
+    def email_national_staff(self, staff_list, budget_id, mdf_type, border_station, email_sender):
         for staff in staff_list:
-            self.email_staff_and_committee_members(staff, budget_calc, 'money_distribution_form', email_sender)
+            self.email_staff_and_committee_members(staff, budget_id, mdf_type, border_station, 'money_distribution_form', email_sender)
 
-    def email_staff_and_committee_members(self, person, budget_calc, template, email_sender, context={}):
-        logger.info("Sending MDF - %s for %s to %s", budget_calc.border_station.station_code, budget_calc.month_year.strftime("%B %Y"), person.email)
+    def email_staff_and_committee_members(self, person, budget_id, mdf_type, border_station, template, email_sender, context={}):
+        logger.info("Sending MDF - %s for %s to %s", border_station.station_code, mdf_type, person.email)
         context['person'] = person
-        context['mdf_uuid'] = budget_calc.mdf_uuid
-        context['station_name'] = budget_calc.border_station.station_name
+        context['mdf_uuid'] = budget_id
+        context['station_name'] = border_station.station_name
+        context['mdf_type'] = mdf_type
         context['site'] = settings.SITE_DOMAIN
         send_templated_mail(
             template_name=template,
@@ -106,8 +131,11 @@ class MDFExportViewSet(viewsets.GenericViewSet):
     permission_classes = (IsAuthenticated, HasPermission)
     permissions_required = [{'permission_group':'BUDGETS', 'action':'VIEW'},]
 
-    def get_mdf_pdf(self, request, uuid):
-        budget = BorderStationBudgetCalculation.objects.get(mdf_uuid=uuid)
+    def get_mdf_pdf(self, request, uuid, mdf_type):
+        if mdf_type == 'budget':
+            budget = BorderStationBudgetCalculation.objects.get(mdf_uuid=uuid)
+        else:
+            budget = MonthlyDistributionForm.objects.get(id=uuid)
 
         logger.info("Generating MDF PDF %s for %s", budget.mdf_file_name(), request.user)
         pdf_buffer = MDFExporter(budget).create()
@@ -129,7 +157,10 @@ class MDFExportViewSet(viewsets.GenericViewSet):
     def get_budgets(self, month, year, country_id):
         startDate = datetime.date(int(year), int(month), 1)
         endDate = datetime.date(int(year), int(month), 28)
-        return BorderStationBudgetCalculation.objects.filter(month_year__gte=startDate, month_year__lte=endDate, border_station__operating_country__id = country_id)
+        budgets = MonthlyDistributionForm.objects.filter(month_year__gte=startDate, month_year__lte=endDate, border_station__operating_country__id = country_id)
+        if len(budgets) == 0:
+            budgets = BorderStationBudgetCalculation.objects.filter(month_year__gte=startDate, month_year__lte=endDate, border_station__operating_country__id = country_id)
+        return budgets
         
 
     def create_response(self, content_type, filename, buffer):

@@ -364,7 +364,7 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
             if stats.staff not in staff:
                 staff.append(stats.staff)
         # Get active staff currently assigned on the project
-        works_on_list = WorksOnProject.objects.filter(border_station__id=station_id)
+        works_on_list = StaffProject.objects.filter(border_station__id=station_id)
         for works_on in works_on_list:
             if works_on.staff not in staff and works_on.staff.last_date is None:
                 staff.append(works_on.staff)
@@ -374,7 +374,25 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
     
     def retrieve_location_staff(self, request, station_id, year_month):
         station = BorderStation.objects.get(id=station_id)
-        results = LocationStaff.objects.filter(location__border_station__id=station_id, year_month=year_month)
+        location_staff_project = LocationStaff.objects.filter(location__border_station__id=station_id, year_month=year_month)
+        all_project_staff = Staff.objects.filter(staffproject__border_station=station)
+        location_staff_other = LocationStaff.objects.filter(staff__in=all_project_staff, year_month=year_month).exclude(location__border_station__id=station_id)
+        other_total = {}
+        for staff_other in location_staff_other:
+            if staff_other.staff in other_total:
+                other_total[location_staff.staff].work_fraction += staff_other.work_fraction
+            else:
+                location_staff = LocationStaff()
+                location_staff.year_month = year_month
+                location_staff.location = None
+                location_staff.staff = staff_other.staff
+                location_staff.work_fraction = staff_other.work_fraction
+                other_total[location_staff.staff] = location_staff
+        results = []
+        for entry in location_staff_project:
+            results.append(entry)
+        for entry in other_total.values():
+            results.append(entry)
         serializer = LocationStaffSerializer(results, many=True, context={'request': request})
         return Response(serializer.data)
 

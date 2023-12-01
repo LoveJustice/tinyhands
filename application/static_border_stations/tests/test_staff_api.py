@@ -3,7 +3,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase, APIClient
 
 from static_border_stations.tests.factories import *
-from static_border_stations.models import WorksOnProject
+from static_border_stations.models import WorksOnProject, Staff
 
 
 class RestApiTestCase(APITestCase):

@@ -17,6 +17,7 @@ from dataentry.views import ClientDiagnosticViewSet
 from dataentry.views import EmpowermentViewSet
 from dataentry.views import GospelViewSet
 from dataentry.views import IncidentViewSet
+from dataentry.views import MonitorAppViewSet
 from help.views import VideoViewSet
 
 list = {'get': 'list', 'post': 'create'}

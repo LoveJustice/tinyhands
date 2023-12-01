@@ -216,5 +216,33 @@ class UserLocationPermission(models.Model):
 
         return has_permission
     
+    @staticmethod
+    def get_stations_with_permission(account_id, group, action):
+        qs = BorderStation.objects.none()
+        perm_list = UserLocationPermission.objects.filter(account__id=account_id, permission__permission_group=group, permission__action=action)
+        for perm in perm_list:
+            if perm.country is None and perm.station is None:
+                qs = BorderStation.objects.all()
+                break
+            elif perm.station is not None:
+                qs = qs | BorderStation.objects.filter(id=perm.station.id)
+            elif perm.country is not None:
+                qs = qs | BorderStation.objects.filter(operating_country=perm.country)
+
+        return qs
+    
+    @staticmethod
+    def get_countries_with_permission(account_id, group, action):
+        qs = Country.objects.none()
+        perm_list = UserLocationPermission.objects.filter(account__id=account_id, permission__permission_group=group, permission__action=action)
+        for perm in perm_list:
+            if perm.country is None and perm.station is None:
+                qs = Country.objects.all()
+                break
+            elif perm.country is not None:
+                qs = qs | Country.objects.filter(id=perm.country.id)
+        
+        return qs
+    
     def __str__(self):
         return str(self.account) + "," + str(self.country) + "," + str(self.station) + "," + str(self.permission)

@@ -95,10 +95,7 @@ class BudgetViewSet(viewsets.ModelViewSet):
             mdf_data = mdf_exporter.get_mdf_data(budget)
             x = budget.month_year
             year_month = budget.month_year.year * 100 + budget.month_year.month
-            print('year_month', year_month)
-            print('mdfs len', len(mdf_data['mdfs']))
             for mdf in mdf_data['mdfs']:
-                print('loop', mdf.project.id, mdf.full_total)
                 try:
                     stats = StationStatistics.objects.get(station=mdf.project, year_month=year_month)
                 except:
@@ -187,7 +184,7 @@ def top_table_data(pk, month, year, budget_sheets):
         all_interception_records_count_divide = all_interception_records_count if all_interception_records_count != 0 else 1
 
         last_months_sheets = budget_sheets.filter(month_year__gte=date+relativedelta(months=-1))
-        last_months_cost = last_months_sheets[0].station_total(last_months_sheets[0].border_station) if last_months_sheets.count() > 0 else 0
+        last_months_cost = last_months_sheets[0].station_total(last_months_sheets[0].border_station) - last_months_sheets[0].money_not_spent_to_deduct_total(last_months_sheets[0].border_station)  if last_months_sheets.count() > 0 else 0
 
         last_3_months_cost = 0
         last_3_months_sheets = budget_sheets.filter(month_year__gte=date+relativedelta(months=-3))

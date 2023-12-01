@@ -2,10 +2,15 @@ import uuid
 from datetime import datetime
 
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
+from django.contrib.contenttypes.models import ContentType
 
+from accounts.models import Account
 from dataentry.models import BorderStation
 from static_border_stations.models import Staff
-
+import budget.mdf_constants as constants
 
 class BorderStationBudgetCalculation(models.Model):
     TRAVEL = 1
@@ -30,6 +35,7 @@ class BorderStationBudgetCalculation(models.Model):
     month_year = models.DateTimeField(default=datetime.now)
 
     border_station = models.ForeignKey(BorderStation, on_delete=models.CASCADE)
+    mdf_combined = GenericRelation('MdfCombined')
 
     def other_project_items_total(self, section, project):
         items = self.otherbudgetitemcost_set.filter(form_section=section, work_project=project).exclude(cost__isnull=True)
@@ -293,6 +299,378 @@ class StaffBudgetItem(models.Model):
         if self.budget_calc_sheet is None or self.budget_calc_sheet.border_station is None:
             return None
         return self.budget_calc_sheet.border_station.id
+
+
+
+class MonthlyDistributionMultipliers(models.Model):
+    name = models.CharField(max_length=127)             # name/description to identify in Project Request
+    category = models.IntegerField(constants.CATEGORY_CHOICES)    # MDF category in which it appears 
+    
+class ProjectRequest(models.Model):
+    date_time_entered = models.DateTimeField(auto_now_add=True)
+    date_time_last_updated = models.DateTimeField(auto_now=True)
+    author = models.ForeignKey(Account, null=True, on_delete=models.SET_NULL)  # Original author
+    
+    project = models.ForeignKey(BorderStation, on_delete=models.CASCADE)
+    status = models.CharField(max_length=127, default='Submitted')
+    category = models.IntegerField(constants.REQUEST_CATEGORY_CHOICES_MDF)
+    original_cost = models.DecimalField(max_digits=17, decimal_places=2, default=0, blank=False)
+    cost = models.DecimalField(max_digits=17, decimal_places=2, default=0, blank=False)
+    description = models.TextField('Description', blank=True)
+    monthly = models.BooleanField('Monthly', default=False)
+    staff = models.ForeignKey(Staff, null=True, on_delete=models.SET_NULL)
+    benefit_type_name = models.CharField(max_length=127, blank=True)
+    discussion_status =  models.CharField(max_length=127, default='None')
+    prior_request = models.ForeignKey('self', null=True)
+    override_mdf_project = models.ForeignKey(BorderStation, null=True, on_delete=models.CASCADE,
+                                             related_name="override_mdf")
+    completed_date_time = models.DateTimeField(null=True)
+    
+    def get_country_id(self):
+        return self.project.operating_country.id
+    
+    def get_border_station_id(self):
+        return self.project.id
+    
+    @property
+    def category_name(self):
+        name='Unknown'
+        for category in constants.CATEGORY_CHOICES:
+            if self.category == category[0]:
+                name = category[1]
+        return name
+    
+    @property
+    def monthly_string(self):
+        if self.monthly:
+            return 'Y'
+        else:
+            return 'N'
+        
+
+class ProjectRequestDiscussion(models.Model):
+    request = models.ForeignKey(ProjectRequest, on_delete=models.CASCADE)
+    author = models.ForeignKey(Account, null=True, on_delete=models.SET_NULL)
+    date_time_entered = models.DateTimeField(auto_now_add=True)
+    text = models.TextField('Discussion text', blank=True)
+    notify = models.ManyToManyField(Account, related_name="discussion_notify")
+    response = models.ManyToManyField(Account, related_name="discussion_response") # notified accounts that have responded
+    
+    def get_country_id(self):
+        return self.request.project.operating_country.id
+    
+    def get_border_station_id(self):
+        return self.request.project.id
+    
+class ProjectRequestAttachment(models.Model):
+    request = models.ForeignKey(ProjectRequest, on_delete=models.CASCADE)
+    description = models.CharField(max_length=126, null=True)
+    attachment = models.FileField(upload_to='project_request_attachments')
+    option = models.CharField(max_length=127, null=True)    # Type of attachment
+    
+    def get_country_id(self):
+        return self.request.project.operating_country.id
+    
+    def get_border_station_id(self):
+        return self.request.project.id
+
+
+    
+class MonthlyDistributionForm(models.Model):
+    date_time_entered = models.DateTimeField(auto_now_add=True)
+    date_time_last_updated = models.DateTimeField(auto_now=True)
+    status = models.CharField(max_length=127, default='Submitted')
+    # Don't really need date time object, but need the same filed type as
+    # BorderStationBudgetCalculation to be able to sort them together
+    month_year = models.DateTimeField(default=datetime.now)
+    border_station = models.ForeignKey(BorderStation, on_delete=models.CASCADE)
+    
+    last_month_number_of_intercepted_pvs = models.PositiveIntegerField('# last month PVs', default=0)
+    number_of_pv_days = models.PositiveIntegerField(default=0)
+    past_sent_approved = models.CharField(max_length=127, blank=True)
+    
+    requests = models.ManyToManyField(ProjectRequest)
+    mdf_combined = GenericRelation('MdfCombined')
+    
+    def include_request(self, request):
+        result = False
+        if request.status == 'Approved':
+            result = True
+        elif request.status =='Approved-Completed' and request.completed_date_time > self.month_year:
+            result = True
+        return result
+        
+    
+    def salary_and_benefits_total(self, project):
+        total = 0
+        requests = self.requests.filter(project=project, category=constants.STAFF_BENEFITS).exclude(cost__isnull=True)
+        for request in requests:
+            if self.include_request(request):
+                if request.benefit_type_name == 'Deductions':
+                    total -= request.cost
+                else:
+                    total += request.cost
+            
+        return total
+    
+    def staff_salary_and_benefits_deductions(self, project):
+        total = 0
+        requests = self.requests.filter(project=project, category=constants.STAFF_BENEFITS, benefit_type_name='Deductions').exclude(cost__isnull=True)
+        for request in requests:
+            total += request.cost
+            
+        return total
+        
+    
+    def rent_and_utilities_total(self):
+        total = 0
+        requests = self.requests.filter(project=self.border_station, category=constants.RENT_UTILITIES).exclude(cost__isnull=True)
+        for request in requests:
+            if self.include_request(request):
+                total += request.cost
+        return total
+    
+    def administration_total(self):
+        total = 0
+        requests = self.requests.filter(project=self.border_station, category=constants.ADMINISTRATION).exclude(cost__isnull=True)
+        for request in requests:
+            if self.include_request(request):
+                total += request.cost
+        return total
+    
+    def stationary_total(self):
+        total = 0
+        multiplier_type = MonthlyDistributionMultipliers.objects.get(category=constants.AWARENESS)
+        
+        multipliers = self.requests.filter(project=self.border_station, category=constants.MULTIPLIERS,
+                                          description=multiplier_type.name).exclude(cost__isnull=True)
+        for multiplier in multipliers:
+            if self.include_request(multiplier):
+                total += multiplier.cost * self.last_month_number_of_intercepted_pvs
+                break
+        return total  
+        
+    
+    def awareness_total(self):
+        total = 0
+        requests = self.requests.filter(project=self.border_station, category=constants.AWARENESS).exclude(cost__isnull=True)
+        for request in requests:
+            if self.include_request(request):
+                total += request.cost
+        
+        total += self.stationary_total()
+        return total  
+    
+    def travel_total(self):
+        total = 0
+        requests = self.requests.filter(project=self.border_station, category=constants.TRAVEL).exclude(cost__isnull=True)
+        for request in requests:
+            if self.include_request(request):
+                total += request.cost
+        return total
+    
+    def food_and_snacks_intercepted_pv_total(self):
+        total = 0
+        
+        if self.number_of_pv_days > 0:
+            pv_multiplier_type = MonthlyDistributionMultipliers.objects.get(category=constants.POTENTIAL_VICTIM_CARE)
+            multipliers = self.requests.filter(project=self.border_station, category=constants.MULTIPLIERS,
+                                          description=pv_multiplier_type.name).exclude(cost__isnull=True)
+            for multiplier in multipliers:
+                if self.include_request(multiplier):
+                    total += multiplier.cost * self.number_of_pv_days
+                    break
+        return total
+    
+    @property
+    def limbo_girls_multiplier(self):
+        multiplier_value = 0
+        limbo_multiplier_type = MonthlyDistributionMultipliers.objects.get(category=constants.LIMBO)
+        multipliers = self.requests.filter(project=self.border_station, category=constants.MULTIPLIERS,
+                                          description=limbo_multiplier_type.name).exclude(cost__isnull=True)
+        for multiplier in multipliers:
+            if self.include_request(multiplier):
+                multiplier_value = multiplier.cost
+                break
+        return multiplier_value
+    
+    def limbo_total(self):
+        total = 0
+        
+        limbo_pvs = self.mdfitem_set.filter(work_project=self.border_station, category=constants.LIMBO).exclude(cost__isnull=True)
+        limbo_pv_days = 0
+        for limbo_pv in limbo_pvs:
+            limbo_pv_days += limbo_pv.cost
+            
+        if limbo_pv_days > 0:
+            total += self.limbo_girls_multiplier * limbo_pv_days
+                    
+        return total
+    
+    def pv_total(self):
+        total = 0
+        total += self.food_and_snacks_intercepted_pv_total()
+        total += self.limbo_total()
+        requests = self.requests.filter(project=self.border_station, category=constants.POTENTIAL_VICTIM_CARE).exclude(cost__isnull=True)
+        for request in requests:
+            if self.include_request(request):
+                total += request.cost
+            
+        return total
+    
+    def impact_multiplying_total(self, project):
+        total = 0
+        requests = self.requests.filter(project=project, category=constants.IMPACT_MULTIPLYING).exclude(cost__isnull=True)
+        for request in requests:
+            if self.include_request(request):
+                total += request.cost
+        return total
+    
+    def money_not_spent_to_deduct_total(self, project):
+        total = 0
+        to_deduct_qs = self.mdfitem_set.filter(work_project=project, category=constants.MONEY_NOT_SPENT, deduct='Yes').exclude(cost__isnull=True)
+        for to_deduct in to_deduct_qs:
+            total += to_deduct.cost
+        return total
+    
+    def money_not_spent_not_deduct_total(self, project):
+        total = 0
+        to_deduct_qs = self.mdfitem_set.filter(work_project=project, category=constants.MONEY_NOT_SPENT, deduct='No').exclude(cost__isnull=True)
+        for to_deduct in to_deduct_qs:
+            total += to_deduct.cost
+        return total
+
+    
+    def station_total(self, project):
+        total = 0
+        total += self.salary_and_benefits_total(project)
+        if project == self.border_station:
+            total += self.rent_and_utilities_total()
+            total += self.administration_total()
+            total += self.awareness_total()
+            total += self.travel_total()
+            total += self.pv_total()
+        else:
+            total += self.impact_multiplying_total(project)
+            
+        return total
+    
+    def distribution_total(self, project):
+        return self.station_total(project) - self.money_not_spent_to_deduct_total(project)
+    
+    def full_total(self, project):
+        total = self.distribution_total(project) + self.staff_salary_and_benefits_deductions(project)
+        past_sent_list = self.mdfitem_set.filter(work_project=project, category=constants.PAST_MONTH_SENT)
+        for past_sent in past_sent_list:
+            total += past_sent.cost
+        return total
+    
+    def get_country_id(self):
+        return self.project.operating_country.id
+    
+    def get_border_station_id(self):
+        return self.project.id
+    
+    def mdf_file_name(self):
+        return '{}-{}-{}-MDF.pdf'.format(self.border_station.station_code, self.month_year.month, self.month_year.year)
+
+class MdfCombined(models.Model):
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey("content_type", "object_id")
+    
+    month_year = models.DateTimeField(default=datetime.now)
+    border_station = models.ForeignKey(BorderStation, on_delete=models.CASCADE)
+    status = models.CharField(max_length=127, default='Submitted')
+    date_time_entered = models.DateTimeField(auto_now_add=True)
+    date_time_last_updated = models.DateTimeField(auto_now=True)
+    
+@receiver(post_save, sender=MonthlyDistributionForm)
+def handle_new_monthly_distribution_form(sender, **kwargs):
+    instance = kwargs.get('instance')
+    content_type = ContentType.objects.get_for_model(instance)
+    try:
+        mdf = MdfCombined.objects.get(content_type=content_type, object_id=instance.id)
+    except:
+        mdf =  MdfCombined()
+        mdf.content_type = content_type
+        mdf.object_id = instance.id
+    
+    mdf.month_year = instance.month_year
+    mdf.border_station = instance.border_station
+    mdf.status = instance.status
+    mdf.date_time_entered = instance.date_time_entered
+    mdf.date_time_last_updated = instance.date_time_last_updated
+    mdf.save()
+
+@receiver(post_save, sender=BorderStationBudgetCalculation)
+def handle_new_budget_calculation(sender, **kwargs):
+    instance = kwargs.get('instance')
+    content_type = ContentType.objects.get_for_model(instance)
+    try:
+        mdf = MdfCombined.objects.get(content_type=content_type, object_id=instance.id)
+    except:
+        mdf =  MdfCombined()
+        mdf.content_type = content_type
+        mdf.object_id = instance.id
+    
+    mdf.month_year = instance.month_year
+    mdf.border_station = instance.border_station
+    mdf.date_time_entered = instance.date_time_entered
+    mdf.date_time_last_updated = instance.date_time_last_updated
+    if instance.date_finalized is None:
+        mdf.status = 'Submitted'
+    else:
+        mdf.status = 'Final'
+    mdf.save()
+        
+    
+    
+
+class ProjectRequestComment(models.Model):
+    request = models.ForeignKey(ProjectRequest, on_delete=models.CASCADE)
+    mdf = models.ForeignKey(MonthlyDistributionForm, on_delete=models.SET_NULL, null=True)
+    type =  models.CharField(max_length=127)
+    comment = models.TextField('Description', blank=True)
+    
+
+# MDF items that are not ProjectRequest items
+# e.g. categories PAST_MONTH_SENT, MONEY_NOT_SPENT and LIMBO
+class MdfItem(models.Model):
+    mdf = models.ForeignKey(MonthlyDistributionForm, on_delete=models.CASCADE)
+    
+    category = models.IntegerField(constants.MANUAL_CATEGORY_CHOICES)
+    cost = models.DecimalField(max_digits=17, decimal_places=2, default=0, blank=False)
+    description = models.TextField('Description', blank=True)
+    associated_section = models.IntegerField(constants.CATEGORY_CHOICES, blank=True, null=True)
+    deduct = models.CharField(max_length=127, blank=True, null=True)
+    reason_not_deduct = models.TextField('Reason to not deduct', blank=True)
+    work_project = models.ForeignKey(BorderStation)
+    
+    def get_country_id(self):
+        return self.mdf.project.operating_country.id
+    
+    def get_border_station_id(self):
+        return self.mdf.project.id
+    
+    def category_name_string(self, category_number):
+        name='Unknown'
+        for category in constants.CATEGORY_CHOICES:
+            if category_number == category[0]:
+                name = category[1]
+        return name
+        
+    @property
+    def category_name(self):
+        return self.category_name_string(self.category)
+    
+    @property
+    def associated_section_name(self):
+        name = ''
+        if self.associated_section is not None and self.associated_section != '':
+            name = self.category_name_string(self.associated_section)
+        
+        return name
 
     
     

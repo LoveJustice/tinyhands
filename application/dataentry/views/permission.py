@@ -215,6 +215,11 @@ class UserLocationPermissionViewSet(viewsets.ModelViewSet):
         else:
             perms = self.queryset.filter(Q(country__isnull=True) & Q(station__isnull=True))
         
+        if 'permission_group' in request.GET:
+            perms = perms.filter(permission__permission_group = request.GET['permission_group'])
+            if 'action' in request.GET:
+                perms = perms.filter(permission__action = request.GET['action'])
+        
         perms = perms.order_by('account__first_name', 'account__last_name', 'account__id')
         
         last_id = None
