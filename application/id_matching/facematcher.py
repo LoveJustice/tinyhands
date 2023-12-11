@@ -1,5 +1,5 @@
 import face_recognition as fr
-from libraries.google_lib import DB_Conn
+from .db_conn import DB_Conn
 import numpy as np
 
 
