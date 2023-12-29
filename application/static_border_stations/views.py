@@ -1,19 +1,29 @@
+import json
 import pytz
+import time
 
+from PIL import Image
 from rest_framework import viewsets, status
 from rest_framework.decorators import list_route, api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 
+from django.db.models import Q
 from django_filters import rest_framework as filters
+from django.core.files.storage import default_storage
 from rest_framework import filters as fs
+from dateutil import parser
 
-from dataentry.models import BorderStation, UserLocationPermission
+from dataentry.models import BorderStation, CountryExchange, UserLocationPermission
 from dataentry.serializers import BorderStationSerializer
 from rest_api.authentication_expansion import HasPermission, HasPostPermission, HasPutPermission
-from static_border_stations.models import Staff, CommitteeMember, Location, StaffProject, WorksOnProject
-from static_border_stations.serializers import StaffSerializer, CommitteeMemberSerializer, LocationSerializer
-
+from static_border_stations.models import Staff, CommitteeMember, Location, StaffProject, WorksOnProject, StaffReview, StaffMiscellaneous, StaffMiscellaneousTypes
+from static_border_stations.serializers import StaffSerializer, StaffContractSerializer, StaffKnowledgeSerializer, StaffReviewSerializer, CommitteeMemberSerializer, LocationSerializer
+from static_border_stations.serializers import StaffMiscellaneousSerializer, StaffMiscellaneousTypesSerializer
+from budget.models import ProjectRequest, StaffBudgetItem
+import budget.mdf_constants as constants
+import xxlimited
 
 class BorderStationViewSet(viewsets.ModelViewSet):
     queryset = BorderStation.objects.all()
@@ -127,31 +137,11 @@ class StaffViewSet(BorderStationRestAPI):
         'first_name', 'last_name', )
     ordering = ('first_name',)
     
-    #def list(self, request):
-    #    serializer = self.serializer_class(self.queryset, many=True, context={"request":request} )
-    #    return Response(serializer.data)
-    
-    def update(self, request, pk=None):
-        staff = Staff.objects.get(id=pk)
-        serializer = self.serializer_class(staff, request.data)
-        if serializer.is_valid():
-            serializer.save()
-            staff = Staff.objects.get(id=pk)
-            serializer = self.serializer_class(staff)
-            ret = serializer.data
-            rtn_status = status.HTTP_200_OK
-        else:
-            ret = {}
-            rtn_status = status.HTTP_400_BAD_REQUEST
-            
-        return Response (ret, status=rtn_status)
-    
     def get_queryset(self):
-        countries = UserLocationPermission.get_countries_with_permission(self.request.user.id, 'STAFF','VIEW')
-        country_ids = []
-        for country in countries:
-            country_ids.append(country.id)
-        queryset = self.queryset.filter(last_date__isnull=True, country__id__in=country_ids)
+        countries = UserLocationPermission.get_countries_with_permission(self.request.user.id, 'STAFF','VIEW_BASIC')
+        stations = UserLocationPermission.get_stations_with_permission(self.request.user.id, 'STAFF','VIEW_BASIC')
+        
+        queryset = self.queryset.filter(Q(country__in=countries) | Q(staffproject__border_station__in=stations), last_date__isnull=True).distinct()
         in_country = self.request.GET.get('country_ids')
         if in_country is not None and in_country != '':
             queryset = queryset.filter(country__id__in=in_country.split(','))
@@ -161,13 +151,19 @@ class StaffViewSet(BorderStationRestAPI):
             queryset = queryset.filter(staffproject__border_station__id=project_id)
 
         return queryset
-
+    
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        if ('request' in context):
+            user_permissions = UserLocationPermission.objects.filter(account=context['request'].user, permission__permission_group='STAFF')
+            context['user_permissions'] = user_permissions
+        return context
 
     def retrieve_border_station_staff(self, request, *args, **kwargs):
         """
             retrieve all the staff for a particular border_station
         """
-        self.object_list = self.filter_queryset(self.get_queryset().filter(border_station=self.kwargs['pk']))
+        self.object_list = self.get_queryset().filter(staffproject__border_station__id=self.kwargs['pk'])
         if request.GET.get('include_inactive') is None:
             self.object_list = self.object_list.filter(last_date__isnull=True)
         serializer = self.get_serializer(self.object_list, many=True)
@@ -192,25 +188,6 @@ class StaffViewSet(BorderStationRestAPI):
         staff = Staff()
                 
         serializer = StaffSerializer(staff)
-        return Response(serializer.data)
-    
-    def retrieve_border_station_staff(self, request, *args, **kwargs):
-        """
-            retrieve all the staff for a particular border_station
-        """
-        staff = []
-        if request.GET.get('include_inactive') is not None:
-            include_inactive = True
-        else:
-            include_inactive = False
-        if request.GET.get('include_financial'):
-            include_financial = True
-        else:
-            include_financial = False
-        
-        staff = self.getStaff(include_inactive, include_financial)
-                    
-        serializer = self.get_serializer(staff, many=True)
         return Response(serializer.data)
     
     def getValue(self, data, path):
@@ -254,6 +231,123 @@ class StaffViewSet(BorderStationRestAPI):
                     
         serializer = self.get_serializer(staff, many=True)
         return Response(serializer.data)
+    
+    def retrieve_contract(self, request, pk):
+        staff = Staff.objects.get(id=pk)
+        user_permissions = UserLocationPermission.objects.filter(account=request.user, permission__permission_group='STAFF')
+        serializer = StaffContractSerializer(staff, context={'request':request, 'user_permissions':user_permissions})
+        return Response(serializer.data)
+    
+    def save_file(self, file_obj, subdirectory):
+        with default_storage.open(subdirectory + file_obj.name, 'wb+') as destination:
+            for chunk in file_obj.chunks():
+                destination.write(chunk)
+        
+        return  subdirectory + file_obj.name
+    
+    def put_contract(self, request, pk):
+        request_string = request.data['contract']
+        request_json = json.loads(request_string)
+        staff = Staff.objects.get(id=pk)
+        if 'contract_file' in request.data:
+            file_obj = request.data['contract_file']
+            contract_file = self.save_file(file_obj, 'staff/contract/')
+        else:
+            contract_file = None
+        
+        if 'agreement_file' in request.data:
+            file_obj = request.data['agreement_file']
+            agreement_file = self.save_file(file_obj, 'staff/agreement/')
+        else:
+             agreement_file = None
+        
+        if request_json['contract_expiration'] is not None and request_json['contract_expiration'] != '':
+            staff.contract_expiration = parser.parse(request_json['contract_expiration']).date()
+        if contract_file:
+            staff.contract.name = contract_file
+        if agreement_file:
+            staff.agreement.name = agreement_file
+        staff.save()
+        
+        user_permissions = UserLocationPermission.objects.filter(account=request.user, permission__permission_group='STAFF')
+        serializer_new = StaffContractSerializer(staff, context={'request':request, 'user_permissions':user_permissions})
+        return Response(serializer_new.data)
+        
+    
+    def get_contract_project_requests(self, request, pk, project_id, year, month):
+        result = {'exchange_rate':1, 'year':year, 'month':month, 'project_request':[]}
+        project = BorderStation.objects.get(id=project_id)
+        year_month = int(year)*100 + int(month)
+        exchange = CountryExchange.objects.filter(country=project.operating_country, year_month__lte=year_month).order_by('-year_month')
+        if len(exchange) > 0:
+            result['exchange_rate'] = exchange[0].exchange_rate
+        else:
+            result['exchange_rate'] = 1.0
+            
+        staff = Staff.objects.get(id=pk)
+        if not UserLocationPermission.has_session_permission(request, 'STAFF', 'VIEW_CONTRACT', staff.country.id, project_id):
+            return Response()
+        
+        queryset = ProjectRequest.objects.filter(staff=staff,
+                                                project=project,
+                                                category=constants.STAFF_BENEFITS,
+                                                monthlydistributionform__month_year__month = month,
+                                                monthlydistributionform__month_year__year = year)
+        for item in queryset:
+            result['project_request'].append({'benefit_type_name':item.benefit_type_name, 'cost':str(item.cost)})
+        
+        if len(result['project_request']) < 1:
+            queryset = StaffBudgetItem.objects.filter(staff_person=staff,
+                                                      work_project = project,
+                                                      cost__isnull=False,
+                                                      budget_calc_sheet__month_year__month = month,
+                                                      budget_calc_sheet__month_year__year = year)
+            for item in queryset:
+                result['project_request'].append({'benefit_type_name':item.type_name.replace('~',''), 'cost':str(item.cost)})
+                
+        return Response(result)
+        
+    
+    def retrieve_knowledge(self, request, pk):
+        staff = Staff.objects.get(id=pk)
+        serializer = StaffKnowledgeSerializer(staff)
+        return Response(serializer.data)
+    
+    def put_knowledge(self, request, pk):
+        staff = Staff.objects.get(id=pk)
+        serializer = StaffKnowledgeSerializer(staff, request.data)
+        serializer.is_valid(raise_exception=True)
+        staff = serializer.save()
+        serializer = StaffKnowledgeSerializer(staff)
+        return Response(serializer.data)
+
+class StaffMiscellaneousViewSet(viewsets.ModelViewSet):
+    queryset = StaffMiscellaneous.objects.all()
+    serializer_class = StaffMiscellaneousSerializer
+    permission_classes = (IsAuthenticated, )
+    filter_backends = (fs.OrderingFilter,) 
+    ordering_fields = ('id', )
+    ordering = ('id',)
+        
+
+class StaffReviewViewSet(viewsets.ModelViewSet):
+    queryset = StaffReview.objects.all()
+    serializer_class = StaffReviewSerializer
+    permission_classes = (IsAuthenticated, )
+    filter_backends = (fs.OrderingFilter,) 
+    ordering_fields = ('id', )
+    ordering = ('id',)
+    
+    def get_queryset(self):
+        if (self.action == 'list'):
+            staff_id = self.request.GET.get('staff_id')
+            if staff_id is not None and staff_id != '':
+                queryset = StaffReview.objects.filter(staff__id = staff_id)
+        else:
+            queryset = StaffReview.objects.all()
+
+        return queryset
+    
 
 class TimeZoneViewSet(viewsets.ViewSet):
     def get_time_zones(self, request):

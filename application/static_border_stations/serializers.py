@@ -4,24 +4,46 @@ from rest_framework import serializers
 from django.conf import settings
 from budget.models import ProjectRequest
 import budget.mdf_constants as constants
-from dataentry.models import BorderStation, CountryExchange
-from static_border_stations.models import Staff, StaffProject, StaffReview, CommitteeMember, Location, WorksOnProject
+from dataentry.models import BorderStation, CountryExchange, UserLocationPermission
+from static_border_stations.models import Staff, StaffProject, StaffReview, CommitteeMember, Location, StaffMiscellaneous, StaffMiscellaneousTypes, WorksOnProject
+from budget.models import ProjectRequest, StaffBudgetItem
+import budget.mdf_constants as constants
 
 class StaffProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = StaffProject
         fields = [field.name for field in model._meta.fields] # all the model fields
-        fields = fields + ['project_code']
+        fields = fields + ['project_code', 'country_id']
         
     project_code = serializers.SerializerMethodField(read_only=True)
+    country_id = serializers.SerializerMethodField(read_only=True)
     
     def get_project_code (self, obj):
         return obj.border_station.station_code
+    
+    def get_country_id (self, obj):
+        return obj.border_station.operating_country.id
 
-class SttaffReviewSerializer(serializers.ModelSerializer):
+class StaffReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = StaffReview
         fields = [field.name for field in model._meta.fields] # all the model fields
+        fields = fields + ['total']
+    
+    total = serializers.SerializerMethodField(read_only=True)
+    
+    def get_total(self, obj):
+        result = '';
+        total = 0;
+        for fld in ['leadership', 'obedience', 'faithfulness', 'alertness', 'questioning', 'awareness']:
+            value = getattr(obj, fld, None)
+            if value is not None:
+                total += value
+        
+        if total != 0:
+            result = total
+        
+        return result;
 
 class StaffSerializer(serializers.ModelSerializer):
     class Meta:
@@ -29,41 +51,43 @@ class StaffSerializer(serializers.ModelSerializer):
         fields = ['id', 'email', 'first_name', 'last_name', 'phone', 'position',
                   'receives_money_distribution_form', 'border_station', 'country',
                   'first_date', 'last_date', 'birth_date', 'total_years',
-                  'education', 'id_card', 'works_on', 'staffproject_set',
+                  'education', 'id_card', 'staffproject_set', 'miscellaneous',
                   'contract_data', 'knowledge_data', 'review_data']
     
     total_years = serializers.SerializerMethodField(read_only=True)
-    works_on = serializers.SerializerMethodField(read_only=True)
     staffproject_set = StaffProjectSerializer(many=True)
     contract_data = serializers.SerializerMethodField(read_only=True)
     knowledge_data = serializers.SerializerMethodField(read_only=True)
     review_data = serializers.SerializerMethodField(read_only=True)
+    miscellaneous = serializers.SerializerMethodField(read_only=True)
     
     def view_section(self, obj, data_type):
         result = False
-        if 'request' in self.context:
+        if 'user_permissions' in self.context and 'request' in self.context:
+            user_permissions = self.context['user_permissions']
             request = self.context['request']
         else:
-            request = None
-        if request is None:
-            request_types = ''
-        else:
+            user_permissions = None
+        if user_permissions is not None:
             request_types = request.GET.get('include')
             if request_types is None:
                 request_types = ''
-        if request_types is not None and data_type in request_types:
-            result = True
+            if request_types is not None and data_type in request_types:
+                if UserLocationPermission.has_permission_in_list(user_permissions, 'STAFF', data_type,
+                                obj.country.id,
+                                None):
+                    result = True
+                else:
+                    for staff_project in obj.get_staff_benefits_projects():
+                        if UserLocationPermission.has_permission_in_list(user_permissions, 'STAFF', data_type,
+                                    staff_project.operating_country.id,
+                                    staff_project.id):
+                            result = True
+                        else:
+                            # if they do not have permissions for one project, then they are not allowed to view
+                            result = False
+                            break
             
-        return result
-    
-    def has_permission(self, request):
-        return True
-    
-    def file_value(self, instance):
-        result = ''
-        if instance is not None and instance.name != '':
-            result = settings.MEDIA_URL + instance.name
-        
         return result
     
     def get_total_years(self, obj):
@@ -74,109 +98,20 @@ class StaffSerializer(serializers.ModelSerializer):
             years = None
         return years
     
-    def get_works_on (self, obj):
-        rtn = []
-        works_on_list = WorksOnProject.objects.filter(staff=obj)
-        for works_on in works_on_list:
-            rtn.append({
-                'id': works_on.id,
-                'financial': {
-                    'project_id': obj.border_station.id,
-                    'project_name': obj.border_station.station_name,
-                    'project_code': obj.border_station.station_code
-                },
-                'works_on':{
-                    'project_id': works_on.border_station.id,
-                    'project_name': works_on.border_station.station_name,
-                    'project_code': works_on.border_station.station_code
-                },
-                'percent':works_on.work_percent})
-        return rtn
-    
-    def get_contract_month_sum(self, requests, year_month):
-        result = {
-                "local":0,
-                "usd":0
-            }
-        
-        if len(requests) > 0:
-            exchanges = CountryExchange.objects.filter(country=requests[0].project.operating_country, year_month__lte=year_month).order_by('-year_month')
-            exchange_rate = Decimal(exchanges[0].exchange_rate)
-        else:
-            exchange_rate = Decimal(1.0)
-            
-        for project_request in requests:
-            if not self.has_permission(project_request):
-                continue
-            if project_request.benefit_type_name == 'deduct':
-                result['local'] -= project_request.cost
-            else:
-                result['local'] += project_request.cost
-        
-        result['usd'] = result['local'] * exchange_rate
-            
-            
-        return result
-    
     def get_contract_data(self, obj):
         if  not self.view_section(obj, 'VIEW_CONTRACT'):
             return None
         
-        today = datetime.datetime.today()
-        month = today.month
-        year = today.year
-        
-        if month == 1:
-            month = 12
-            year -= 1
-        else:
-            month -= 1
-        
-        last_month_local = 0
-        last_month_usd = 0
-        year_total_local = 0
-        year_total_usd = 0
-        
-        requests = ProjectRequest.objects.filter(
-                staff = obj,
-                category=constants.STAFF_BENEFITS,
-                monthlydistributionform__month_year__month=month,
-                monthlydistributionform__month_year__year=year,
-            )
-        result = self.get_contract_month_sum(requests, year*100 + month)
-        last_month_local = result['local']
-        last_month_usd = result['usd']
-        year_total_local = result['local']
-        year_total_usd = result['usd']
-        
-        for months in range(0,11):
-            if month == 1:
-                month = 12
-                year -= 1
-            else:
-                month -= 1
-            requests = ProjectRequest.objects.filter(
-                    staff = obj,
-                    category=constants.STAFF_BENEFITS,
-                    monthlydistributionform__month_year__month=month,
-                    monthlydistributionform__month_year__year=year,
-                )
-            result = self.get_contract_month_sum(requests, year*100 + month)
-            year_total_local += result['local']
-            year_total_usd += result['usd']         
-        
         result = {
-                "agreement":self.file_value(obj.agreement),
-                "contract":self.file_value(obj.contract),
-                "contract_expiration":self.file_value(obj.contract_expiration),
-                "last_month":{"local":last_month_local, "USD": last_month_usd},
-                "twelve_month":{"local":year_total_local, "USD": year_total_usd}
+                "agreement":obj.agreement.name != '',
+                "contract":obj.contract.name != '',
+                "contract_expiration": obj.contract_expiration,
+                "last_month":{"local":obj.last_month_local, "USD": obj.last_month_usd},
+                "twelve_month":{"local":obj.twelve_month_local, "USD": obj.twelve_month_usd}
             }
         return result
     
     def get_knowledge_data(self, obj):
-        if  not self.view_section(obj, 'VIEW_KNOWLEDGE'):
-            return None
         result = {
             "general":obj.general,
             "awareness":obj.awareness,
@@ -184,18 +119,43 @@ class StaffSerializer(serializers.ModelSerializer):
             "accounting":obj.accounting,
             "pv_care":obj.pv_care,
             "paralegal":obj.paralegal,
-            "records":obj.records
+            "records":obj.records,
+            "shelter":obj.shelter
             }
         return result
     
     def get_review_data(self, obj):
         if  not self.view_section(obj, 'VIEW_REVIEW'):
             return None
+        result = {
+            "review_count":0
+            }
         reviews = StaffReview.objects.filter(staff=obj).order_by('-review_date')
         if len(reviews) > 0 :
             reviewSerializer=StaffReviewSerializer(reviews[0])
-            return [reviewSerializer.data]
-        return []
+            result = reviewSerializer.data
+            result["review_count"] = len(reviews)
+            
+        return result
+    
+    def get_miscellaneous(self, obj):
+        if 'request' not in self.context or self.context['request'].GET.get('include') != 'miscellaneous':
+            return []
+        
+        misc_items = []
+        misc_types = StaffMiscellaneousTypes.objects.filter(countries=obj.country).order_by('name')
+        for misc_type in misc_types:
+            try:
+                item = StaffMiscellaneous.objects.get(staff=obj, type=misc_type)
+            except:
+                item = StaffMiscellaneous()
+                item.staff = obj
+                item.type = misc_type
+            misc_items.append(item)
+        
+        serializer = StaffMiscellaneousSerializer(misc_items, many=True)
+        return serializer.data
+       
     
     def to_internal_value(self, data):
         if 'staffproject_set' in data:
@@ -255,7 +215,76 @@ class StaffSerializer(serializers.ModelSerializer):
         
         return obj
 
+class MiniBorderStationSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = ['id','station_code','station_name', 'operating_country']
+        model = BorderStation
+    
+class StaffContractSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Staff
+        fields = ['id', 'agreement', 'contract', 'contract_expiration']
+        fields = fields + ['projects']
+    
+    projects = serializers.SerializerMethodField(read_only=True)
+    
+    def get_projects(self, obj):
+        if 'user_permissions' in self.context:
+            user_permissions = self.context['user_permissions']
+        else:
+            return [];
+        project_requests = ProjectRequest.objects.filter(staff=obj, category=constants.STAFF_BENEFITS)
+        border_stations = []
+        for project_request in project_requests:
+            if UserLocationPermission.has_permission_in_list(user_permissions, 'STAFF', 'VIEW_CONTRACT',
+                                project_request.project.operating_country.id,
+                                project_request.project.id):
+                if project_request.project not in border_stations:
+                    border_stations.append(project_request.project)
+        
+        items = StaffBudgetItem.objects.filter(staff_person=obj)
+        for item in items:
+            if UserLocationPermission.has_permission_in_list(user_permissions, 'STAFF', 'VIEW_CONTRACT',
+                                item.work_project.operating_country.id,
+                                item.work_project.id):
+                if item.work_project not in border_stations:
+                    border_stations.append(item.work_project)
+            
+            
+        for staff_project in obj.staffproject_set.all():
+            if UserLocationPermission.has_permission_in_list(user_permissions, 'STAFF', 'VIEW_CONTRACT',
+                                staff_project.border_station.operating_country.id,
+                                staff_project.border_station.id):
+                if staff_project.border_station not in border_stations:
+                    border_stations.append(staff_project.border_station)
+        
+        serializer = MiniBorderStationSerializer(border_stations, many=True)
+        return serializer.data
+        
+                                         
 
+class StaffKnowledgeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Staff
+        fields = ['id', 'general', 'awareness', 'security', 'accounting',
+                  'pv_care', 'paralegal', 'records', 'shelter']
+
+class StaffMiscellaneousTypesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StaffMiscellaneousTypes
+        fields = [field.name for field in model._meta.fields] # all the model fields
+
+class StaffMiscellaneousSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StaffMiscellaneous
+        fields = [field.name for field in model._meta.fields] # all the model fields
+        fields = fields + ['type_detail']
+        
+    type_detail = serializers.SerializerMethodField(read_only=True)
+    
+    def get_type_detail(self, obj):
+       serializer = StaffMiscellaneousTypesSerializer(obj.type)
+       return serializer.data
 
 class CommitteeMemberSerializer(serializers.ModelSerializer):
     class Meta:

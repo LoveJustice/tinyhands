@@ -4,6 +4,7 @@ from static_border_stations.views import *
 
 list_methods = {'get': 'list', 'post': 'create'}
 detail_methods = {'get': 'retrieve', 'put': 'update'}
+full_detail_methods = {'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}
 
 
 urlpatterns = [
@@ -24,7 +25,13 @@ urlpatterns = [
         url(r'^staff/$', StaffViewSet.as_view(list_methods), name="Staff"),
         url(r'^staff/(?P<pk>\d+)/$', StaffViewSet.as_view(detail_methods), name="StaffDetail"),
         url(r'^staff/blank/$', StaffViewSet.as_view({'get':'retrieve_blank'}), name="StaffBlank"),
-        
+        url(r'^staff/contract/(?P<pk>\d+)/$', StaffViewSet.as_view({'get':'retrieve_contract', 'put':'put_contract'}), name="StaffContract"), 
+        url(r'^staff/contract/requests/(?P<pk>\d+)/(?P<project_id>\d+)/(?P<year>\d+)/(?P<month>\d+)/$', StaffViewSet.as_view({'get':'get_contract_project_requests'}), name="StaffContractRequests"), 
+        url(r'^staff/knowledge/(?P<pk>\d+)/$', StaffViewSet.as_view({'get':'retrieve_knowledge', 'put':'put_knowledge'}), name="StaffKnowledge"), 
+        url(r'^staff/miscellaneous/$', StaffMiscellaneousViewSet.as_view({'post': 'create'}), name="StaffMiscellaneous"),
+        url(r'^staff/miscellaneous/(?P<pk>\d+)/$', StaffMiscellaneousViewSet.as_view(detail_methods), name="StaffMiscellaneousDetail"),
+        url(r'^staff-review/$', StaffReviewViewSet.as_view(list_methods), name="StaffReview"),
+        url(r'^staff-review/(?P<pk>\d+)/$', StaffReviewViewSet.as_view(full_detail_methods), name="StaffReviewDetail"),
                 
         url(r'^timezones/$', TimeZoneViewSet.as_view({'get':'get_time_zones'}), name='TimeZones'),
 ]
