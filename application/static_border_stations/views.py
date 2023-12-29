@@ -124,13 +124,13 @@ class CommitteeMemberViewSet(BorderStationRestAPI):
     serializer_class = CommitteeMemberSerializer
 
 
-class StaffViewSet(BorderStationRestAPI):
+class StaffViewSet(viewsets.ModelViewSet):
     queryset = Staff.objects.all()
     serializer_class = StaffSerializer
     permission_classes = (IsAuthenticated, HasPermission, HasPostPermission, HasPutPermission)
-    #permissions_required = [{'permission_group':'STAFF', 'action':'VIEW'},]
-    #post_permissions_required = [{'permission_group':'STAFF', 'action':'ADD'},]  
-    #put_permissions_required = [{'permission_group':'STAFF', 'action':'EDIT'},]
+    permissions_required = [{'permission_group':'STAFF', 'action':'VIEW_BASIC'},]
+    post_permissions_required = [{'permission_group':'STAFF', 'action':'ADD'},]  
+    put_permissions_required = [{'permission_group':'STAFF', 'action':'EDIT_BASIC'},]
     filter_backends = (fs.SearchFilter, fs.OrderingFilter,) 
     search_fields = ('first_name', 'last_name',)
     ordering_fields = (

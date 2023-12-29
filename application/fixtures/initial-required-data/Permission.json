@@ -6,7 +6,8 @@
             "permission_group": "IRF",
             "action": "VIEW",
             "min_level": "PROJECT",
-            "account_permission_name": "permission_irf_view"
+            "account_permission_name": "permission_irf_view",
+            "display_order": 1
         }
     },
     {
@@ -16,7 +17,8 @@
             "permission_group": "IRF",
             "action": "ADD",
             "min_level": "PROJECT",
-            "account_permission_name": "permission_irf_add"
+            "account_permission_name": "permission_irf_add",
+            "display_order": 4
         }
     },
     {
@@ -26,7 +28,8 @@
             "permission_group": "IRF",
             "action": "EDIT",
             "min_level": "PROJECT",
-            "account_permission_name": "permission_irf_edit"
+            "account_permission_name": "permission_irf_edit",
+            "display_order": 3
         }
     },
     {
@@ -36,67 +39,8 @@
             "permission_group": "IRF",
             "action": "DELETE",
             "min_level": "PROJECT",
-            "account_permission_name": "permission_irf_delete"
-        }
-    },
-    {
-        "model": "dataentry.permission",
-        "pk": 5,
-        "fields": {
-            "permission_group": "IRF",
-            "action": "APPROVE",
-            "min_level": "PROJECT",
-            "account_permission_name": null
-        }
-    },
-    {
-        "model": "dataentry.permission",
-        "pk": 6,
-        "fields": {
-            "permission_group": "VIF",
-            "action": "VIEW",
-            "min_level": "GLOBAL",
-            "account_permission_name": "permission_vif_view"
-        }
-    },
-    {
-        "model": "dataentry.permission",
-        "pk": 7,
-        "fields": {
-            "permission_group": "VIF",
-            "action": "ADD",
-            "min_level": "GLOBAL",
-            "account_permission_name": "permission_vif_add"
-        }
-    },
-    {
-        "model": "dataentry.permission",
-        "pk": 8,
-        "fields": {
-            "permission_group": "VIF",
-            "action": "EDIT",
-            "min_level": "GLOBAL",
-            "account_permission_name": "permission_vif_edit"
-        }
-    },
-    {
-        "model": "dataentry.permission",
-        "pk": 9,
-        "fields": {
-            "permission_group": "VIF",
-            "action": "DELETE",
-            "min_level": "GLOBAL",
-            "account_permission_name": "permission_vif_delete"
-        }
-    },
-    {
-        "model": "dataentry.permission",
-        "pk": 10,
-        "fields": {
-            "permission_group": "VIF",
-            "action": "APPROVE",
-            "min_level": "GLOBAL",
-            "account_permission_name": null
+            "account_permission_name": "permission_irf_delete",
+            "display_order": 5
         }
     },
     {
@@ -106,7 +50,8 @@
             "permission_group": "PROJECTS",
             "action": "VIEW",
             "min_level": "PROJECT",
-            "account_permission_name": "permission_border_stations_view"
+            "account_permission_name": "permission_border_stations_view",
+            "display_order": 1
         }
     },
     {
@@ -116,7 +61,8 @@
             "permission_group": "PROJECTS",
             "action": "ADD",
             "min_level": "COUNTRY",
-            "account_permission_name": "permission_border_stations_add"
+            "account_permission_name": "permission_border_stations_add",
+            "display_order": 4
         }
     },
     {
@@ -126,7 +72,8 @@
             "permission_group": "PROJECTS",
             "action": "EDIT",
             "min_level": "PROJECT",
-            "account_permission_name": "permission_border_stations_edit"
+            "account_permission_name": "permission_border_stations_edit",
+            "display_order": 3
         }
     },
     {
@@ -136,7 +83,8 @@
             "permission_group": "BUDGETS",
             "action": "VIEW",
             "min_level": "PROJECT",
-            "account_permission_name": "permission_budget_view"
+            "account_permission_name": "permission_budget_view",
+            "display_order": 1
         }
     },
     {
@@ -146,7 +94,8 @@
             "permission_group": "BUDGETS",
             "action": "ADD",
             "min_level": "PROJECT",
-            "account_permission_name": "permission_budget_add"
+            "account_permission_name": "permission_budget_add",
+            "display_order": 4
         }
     },
     {
@@ -156,7 +105,8 @@
             "permission_group": "BUDGETS",
             "action": "EDIT",
             "min_level": "PROJECT",
-            "account_permission_name": "permission_budget_edit"
+            "account_permission_name": "permission_budget_edit",
+            "display_order": 3
         }
     },
     {
@@ -166,7 +116,8 @@
             "permission_group": "BUDGETS",
             "action": "DELETE",
             "min_level": "PROJECT",
-            "account_permission_name": "permission_budget_delete"
+            "account_permission_name": "permission_budget_delete",
+            "display_order": 5
         }
     },
     {
@@ -176,7 +127,8 @@
             "permission_group": "NOTIFICATIONS",
             "action": "INVESTIGATION",
             "min_level": "GLOBAL",
-            "account_permission_name": "permission_receive_investigation_alert"
+            "account_permission_name": "permission_receive_investigation_alert",
+            "display_order": -1
         }
     },
     {
@@ -185,8 +137,9 @@
         "fields": {
             "permission_group": "NOTIFICATIONS",
             "action": "LEGAL",
-            "min_level": "GLOBAL",
-            "account_permission_name": "permission_receive_legal_alert"
+            "min_level": "COUNTRY",
+            "account_permission_name": null,
+            "display_order": -1
         }
     },
     {
@@ -196,7 +149,8 @@
             "permission_group": "NOTIFICATIONS",
             "action": "MDF",
             "min_level": "COUNTRY",
-            "account_permission_name": "permission_can_receive_mdf"
+            "account_permission_name": "permission_can_receive_mdf",
+            "display_order": -1
         }
     },
     {
@@ -206,7 +160,8 @@
             "permission_group": "PERSONS",
             "action": "TRAFFICKER MATCH",
             "min_level": "GLOBAL",
-            "account_permission_name": "permission_person_match"
+            "account_permission_name": "permission_person_match",
+            "display_order": -1
         }
     },
     {
@@ -216,7 +171,8 @@
             "permission_group": "ACCOUNTS",
             "action": "MANAGE",
             "min_level": "PROJECT",
-            "account_permission_name": "permission_accounts_manage"
+            "account_permission_name": "permission_accounts_manage",
+            "display_order": -1
         }
     },
     {
@@ -226,7 +182,8 @@
             "permission_group": "ADDRESSES",
             "action": "MANAGE",
             "min_level": "GLOBAL",
-            "account_permission_name": "permission_address2_manage"
+            "account_permission_name": "permission_address2_manage",
+            "display_order": -1
         }
     },
     {
@@ -236,7 +193,8 @@
             "permission_group": "IRF",
             "action": "VIEW PI",
             "min_level": "PROJECT",
-            "account_permission_name": null
+            "account_permission_name": null,
+            "display_order": 2
         }
     },
     {
@@ -246,7 +204,8 @@
             "permission_group": "PROJECTS",
             "action": "SET_FORMS",
             "min_level": "GLOBAL",
-            "account_permission_name": null
+            "account_permission_name": null,
+            "display_order": 6
         }
     },
     {
@@ -256,7 +215,8 @@
             "permission_group": "CIF",
             "action": "VIEW",
             "min_level": "PROJECT",
-            "account_permission_name": null
+            "account_permission_name": null,
+            "display_order": 1
         }
     },
     {
@@ -266,7 +226,8 @@
             "permission_group": "CIF",
             "action": "ADD",
             "min_level": "PROJECT",
-            "account_permission_name": null
+            "account_permission_name": null,
+            "display_order": 4
         }
     },
     {
@@ -276,7 +237,8 @@
             "permission_group": "CIF",
             "action": "EDIT",
             "min_level": "PROJECT",
-            "account_permission_name": null
+            "account_permission_name": null,
+            "display_order": 3
         }
     },
     {
@@ -286,7 +248,8 @@
             "permission_group": "CIF",
             "action": "DELETE",
             "min_level": "PROJECT",
-            "account_permission_name": null
+            "account_permission_name": null,
+            "display_order": 5
         }
     },
     {
@@ -296,7 +259,8 @@
             "permission_group": "VDF",
             "action": "VIEW",
             "min_level": "PROJECT",
-            "account_permission_name": null
+            "account_permission_name": null,
+            "display_order": 1
         }
     },
     {
@@ -306,7 +270,8 @@
             "permission_group": "VDF",
             "action": "ADD",
             "min_level": "PROJECT",
-            "account_permission_name": null
+            "account_permission_name": null,
+            "display_order": 4
         }
     },
     {
@@ -316,7 +281,8 @@
             "permission_group": "VDF",
             "action": "EDIT",
             "min_level": "PROJECT",
-            "account_permission_name": null
+            "account_permission_name": null,
+            "display_order": 3
         }
     },
     {
@@ -326,7 +292,8 @@
             "permission_group": "VDF",
             "action": "DELETE",
             "min_level": "PROJECT",
-            "account_permission_name": null
+            "account_permission_name": null,
+            "display_order": 5
         }
     },
     {
@@ -336,7 +303,8 @@
             "permission_group": "VDF",
             "action": "VIEW PI",
             "min_level": "PROJECT",
-            "account_permission_name": null
+            "account_permission_name": null,
+            "display_order": 2
         }
     },
     {
@@ -346,7 +314,8 @@
             "permission_group": "CIF",
             "action": "VIEW PI",
             "min_level": "PROJECT",
-            "account_permission_name": null
+            "account_permission_name": null,
+            "display_order": 2
         }
     },
     {
@@ -356,7 +325,8 @@
             "permission_group": "MONTHLY_REPORT",
             "action": "VIEW",
             "min_level": "PROJECT",
-            "account_permission_name": null
+            "account_permission_name": null,
+            "display_order": 1
         }
     },
     {
@@ -366,7 +336,8 @@
             "permission_group": "MONTHLY_REPORT",
             "action": "ADD",
             "min_level": "PROJECT",
-            "account_permission_name": null
+            "account_permission_name": null,
+            "display_order": 4
         }
     },
     {
@@ -376,7 +347,8 @@
             "permission_group": "MONTHLY_REPORT",
             "action": "EDIT",
             "min_level": "PROJECT",
-            "account_permission_name": null
+            "account_permission_name": null,
+            "display_order": 3
         }
     },
     {
@@ -386,7 +358,8 @@
             "permission_group": "MONTHLY_REPORT",
             "action": "DELETE",
             "min_level": "PROJECT",
-            "account_permission_name": null
+            "account_permission_name": null,
+            "display_order": 5
         }
     },
     {
@@ -396,7 +369,8 @@
             "permission_group": "NOTIFICATIONS",
             "action": "IRF_SUBMITTED",
             "min_level": "PROJECT",
-            "account_permission_name": null
+            "account_permission_name": null,
+            "display_order": -1
         }
     },
     {
@@ -406,7 +380,8 @@
             "permission_group": "NOTIFICATIONS",
             "action": "IRF_VERIFIED",
             "min_level": "PROJECT",
-            "account_permission_name": null
+            "account_permission_name": null,
+            "display_order": -1
         }
     },
     {
@@ -416,7 +391,635 @@
             "permission_group": "PERSON_MANAGEMENT",
             "action": "EDIT",
             "min_level": "GLOBAL",
-            "account_permission_name": null
+            "account_permission_name": null,
+            "display_order": 3
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 45,
+        "fields": {
+            "permission_group": "PROJECT_STATISTICS",
+            "action": "VIEW",
+            "min_level": "COUNTRY",
+            "account_permission_name": null,
+            "display_order": 1
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 46,
+        "fields": {
+            "permission_group": "PROJECT_STATISTICS",
+            "action": "EDIT",
+            "min_level": "COUNTRY",
+            "account_permission_name": null,
+            "display_order": 3
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 47,
+        "fields": {
+            "permission_group": "AUDIT",
+            "action": "VIEW",
+            "min_level": "COUNTRY",
+            "account_permission_name": null,
+            "display_order": 1
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 48,
+        "fields": {
+            "permission_group": "AUDIT",
+            "action": "EDIT",
+            "min_level": "GLOBAL",
+            "account_permission_name": null,
+            "display_order": 3
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 49,
+        "fields": {
+            "permission_group": "AUDIT",
+            "action": "ADD",
+            "min_level": "GLOBAL",
+            "account_permission_name": null,
+            "display_order": 4
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 50,
+        "fields": {
+            "permission_group": "AUDIT",
+            "action": "SUBMIT_SAMPLE",
+            "min_level": "COUNTRY",
+            "account_permission_name": null,
+            "display_order": 2
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 51,
+        "fields": {
+            "permission_group": "LEGAL_CASE",
+            "action": "VIEW",
+            "min_level": "COUNTRY",
+            "account_permission_name": null,
+            "display_order": 1
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 52,
+        "fields": {
+            "permission_group": "LEGAL_CASE",
+            "action": "EDIT",
+            "min_level": "COUNTRY",
+            "account_permission_name": null,
+            "display_order": 3
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 53,
+        "fields": {
+            "permission_group": "LEGAL_CASE",
+            "action": "ADD",
+            "min_level": "COUNTRY",
+            "account_permission_name": null,
+            "display_order": 4
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 54,
+        "fields": {
+            "permission_group": "LEGAL_CASE",
+            "action": "DELETE",
+            "min_level": "COUNTRY",
+            "account_permission_name": null,
+            "display_order": 5
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 55,
+        "fields": {
+            "permission_group": "NOTIFICATIONS",
+            "action": "HSA",
+            "min_level": "COUNTRY",
+            "account_permission_name": null,
+            "display_order": -1
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 56,
+        "fields": {
+            "permission_group": "GOSPEL_VERIFICATION",
+            "action": "VIEW",
+            "min_level": "PROJECT",
+            "account_permission_name": null,
+            "display_order": 1
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 57,
+        "fields": {
+            "permission_group": "GOSPEL_VERIFICATION",
+            "action": "EDIT",
+            "min_level": "PROJECT",
+            "account_permission_name": null,
+            "display_order": 3
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 58,
+        "fields": {
+            "permission_group": "PROJECT_STATISTICS",
+            "action": "EDIT_ALL",
+            "min_level": "GLOBAL",
+            "account_permission_name": null,
+            "display_order": 4
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 59,
+        "fields": {
+            "permission_group": "NOTIFICATIONS",
+            "action": "COMMITTEE",
+            "min_level": "PROJECT",
+            "account_permission_name": null,
+            "display_order": -1
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 60,
+        "fields": {
+            "permission_group": "PROJECTS",
+            "action": "SET_FEATURES",
+            "min_level": "GLOBAL",
+            "account_permission_name": null,
+            "display_order": 7
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 61,
+        "fields": {
+            "permission_group": "NOTIFICATIONS",
+            "action": "CONFIRMED_MATCH",
+            "min_level": "COUNTRY",
+            "account_permission_name": null,
+            "display_order": -1
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 62,
+        "fields": {
+            "permission_group": "EMP",
+            "action": "VIEW",
+            "min_level": "STATION",
+            "account_permission_name": null,
+            "display_order": 1
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 63,
+        "fields": {
+            "permission_group": "EMP",
+            "action": "EDIT",
+            "min_level": "STATION",
+            "account_permission_name": null,
+            "display_order": 3
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 64,
+        "fields": {
+            "permission_group": "EMP",
+            "action": "ADD",
+            "min_level": "STATION",
+            "account_permission_name": null,
+            "display_order": 4
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 65,
+        "fields": {
+            "permission_group": "NOTIFICATIONS",
+            "action": "SUGGESTED_MATCH",
+            "min_level": "COUNTRY",
+            "account_permission_name": null,
+            "display_order": -1
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 66,
+        "fields": {
+            "permission_group": "GSP",
+            "action": "VIEW",
+            "min_level": "STATION",
+            "account_permission_name": null,
+            "display_order": 1
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 67,
+        "fields": {
+            "permission_group": "GSP",
+            "action": "EDIT",
+            "min_level": "STATION",
+            "account_permission_name": null,
+            "display_order": 3
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 68,
+        "fields": {
+            "permission_group": "GSP",
+            "action": "ADD",
+            "min_level": "STATION",
+            "account_permission_name": null,
+            "display_order": 4
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 69,
+        "fields": {
+            "permission_group": "NOTIFICATIONS",
+            "action": "IRF_TIE_RESOLVED",
+            "min_level": "STATION",
+            "account_permission_name": null,
+            "display_order": -1
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 70,
+        "fields": {
+            "permission_group": "PVF",
+            "action": "VIEW",
+            "min_level": "PROJECT",
+            "account_permission_name": null,
+            "display_order": 1
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 71,
+        "fields": {
+            "permission_group": "PVF",
+            "action": "VIEW PI",
+            "min_level": "PROJECT",
+            "account_permission_name": null,
+            "display_order": 2
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 72,
+        "fields": {
+            "permission_group": "PVF",
+            "action": "EDIT",
+            "min_level": "PROJECT",
+            "account_permission_name": null,
+            "display_order": 3
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 73,
+        "fields": {
+            "permission_group": "PVF",
+            "action": "ADD",
+            "min_level": "PROJECT",
+            "account_permission_name": null,
+            "display_order": 4
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 74,
+        "fields": {
+            "permission_group": "PVF",
+            "action": "DELETE",
+            "min_level": "PROJECT",
+            "account_permission_name": null,
+            "display_order": 5
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 75,
+        "fields": {
+            "permission_group": "SF",
+            "action": "VIEW",
+            "min_level": "PROJECT",
+            "account_permission_name": null,
+            "display_order": 1
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 76,
+        "fields": {
+            "permission_group": "SF",
+            "action": "VIEW PI",
+            "min_level": "PROJECT",
+            "account_permission_name": null,
+            "display_order": 2
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 77,
+        "fields": {
+            "permission_group": "SF",
+            "action": "EDIT",
+            "min_level": "PROJECT",
+            "account_permission_name": null,
+            "display_order": 3
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 78,
+        "fields": {
+            "permission_group": "SF",
+            "action": "ADD",
+            "min_level": "PROJECT",
+            "account_permission_name": null,
+            "display_order": 4
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 79,
+        "fields": {
+            "permission_group": "SF",
+            "action": "DELETE",
+            "min_level": "PROJECT",
+            "account_permission_name": null,
+            "display_order": 5
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 80,
+        "fields": {
+            "permission_group": "LF",
+            "action": "VIEW",
+            "min_level": "PROJECT",
+            "account_permission_name": null,
+            "display_order": 1
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 81,
+        "fields": {
+            "permission_group": "LF",
+            "action": "VIEW PI",
+            "min_level": "PROJECT",
+            "account_permission_name": null,
+            "display_order": 2
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 82,
+        "fields": {
+            "permission_group": "LF",
+            "action": "EDIT",
+            "min_level": "PROJECT",
+            "account_permission_name": null,
+            "display_order": 3
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 83,
+        "fields": {
+            "permission_group": "LF",
+            "action": "ADD",
+            "min_level": "PROJECT",
+            "account_permission_name": null,
+            "display_order": 4
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 84,
+        "fields": {
+            "permission_group": "LF",
+            "action": "DELETE",
+            "min_level": "PROJECT",
+            "account_permission_name": null,
+            "display_order": 5
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 85,
+        "fields": {
+            "permission_group": "STAFF",
+            "action": "VIEW_BASIC",
+            "min_level": "PROJECT",
+            "account_permission_name": null,
+            "display_order": 1
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 86,
+        "fields": {
+            "permission_group": "STAFF",
+            "action": "EDIT_BASIC",
+            "min_level": "PROJECT",
+            "account_permission_name": null,
+            "display_order": 2
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 87,
+        "fields": {
+            "permission_group": "STAFF",
+            "action": "ADD",
+            "min_level": "PROJECT",
+            "account_permission_name": null,
+            "display_order": 5
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 88,
+        "fields": {
+            "permission_group": "STAFF",
+            "action": "DELETE",
+            "min_level": "COUNTRY",
+            "account_permission_name": null,
+            "display_order": 8
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 89,
+        "fields": {
+            "permission_group": "PROJECT_REQUEST",
+            "action": "VIEW",
+            "min_level": "PROJECT",
+            "account_permission_name": null,
+            "display_order": 1
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 90,
+        "fields": {
+            "permission_group": "PROJECT_REQUEST",
+            "action": "ADD",
+            "min_level": "PROJECT",
+            "account_permission_name": null,
+            "display_order": 2
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 91,
+        "fields": {
+            "permission_group": "PROJECT_REQUEST",
+            "action": "APPROVE",
+            "min_level": "PROJECT",
+            "account_permission_name": null,
+            "display_order": 3
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 92,
+        "fields": {
+            "permission_group": "MDF",
+            "action": "VIEW",
+            "min_level": "PROJECT",
+            "account_permission_name": null,
+            "display_order": 1
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 93,
+        "fields": {
+            "permission_group": "MDF",
+            "action": "EDIT",
+            "min_level": "PROJECT",
+            "account_permission_name": null,
+            "display_order": 2
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 94,
+        "fields": {
+            "permission_group": "MDF",
+            "action": "ADD",
+            "min_level": "PROJECT",
+            "account_permission_name": null,
+            "display_order": 3
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 95,
+        "fields": {
+            "permission_group": "MDF",
+            "action": "DELETE",
+            "min_level": "PROJECT",
+            "account_permission_name": null,
+            "display_order": 4
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 96,
+        "fields": {
+            "permission_group": "MDF",
+            "action": "INITIAL_REVIEW",
+            "min_level": "PROJECT",
+            "account_permission_name": null,
+            "display_order": 5
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 97,
+        "fields": {
+            "permission_group": "MDF",
+            "action": "FINAL_REVIEW",
+            "min_level": "PROJECT",
+            "account_permission_name": null,
+            "display_order": 6
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 118,
+        "fields": {
+            "permission_group": "STAFF",
+            "action": "VIEW_REVIEW",
+            "min_level": "PROJECT",
+            "account_permission_name": null,
+            "display_order": 3
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 119,
+        "fields": {
+            "permission_group": "STAFF",
+            "action": "EDIT_REVIEW",
+            "min_level": "PROJECT",
+            "account_permission_name": null,
+            "display_order": 4
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 120,
+        "fields": {
+            "permission_group": "STAFF",
+            "action": "VIEW_CONTRACT",
+            "min_level": "PROJECT",
+            "account_permission_name": null,
+            "display_order": 6
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 121,
+        "fields": {
+            "permission_group": "STAFF",
+            "action": "EDIT_CONTRACT",
+            "min_level": "PROJECT",
+            "account_permission_name": null,
+            "display_order": 7
         }
     }
 ]
