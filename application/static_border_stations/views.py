@@ -274,36 +274,45 @@ class StaffViewSet(viewsets.ModelViewSet):
         return Response(serializer_new.data)
         
     
-    def get_contract_project_requests(self, request, pk, project_id, year, month):
+    def get_contract_project_requests(self, request, pk, year, month):
         result = {'exchange_rate':1, 'year':year, 'month':month, 'project_request':[]}
-        project = BorderStation.objects.get(id=project_id)
+        staff = Staff.objects.get(id=pk)
         year_month = int(year)*100 + int(month)
-        exchange = CountryExchange.objects.filter(country=project.operating_country, year_month__lte=year_month).order_by('-year_month')
+        exchange = CountryExchange.objects.filter(country=staff.country, year_month__lte=year_month).order_by('-year_month')
         if len(exchange) > 0:
             result['exchange_rate'] = exchange[0].exchange_rate
         else:
             result['exchange_rate'] = 1.0
             
-        staff = Staff.objects.get(id=pk)
-        if not UserLocationPermission.has_session_permission(request, 'STAFF', 'VIEW_CONTRACT', staff.country.id, project_id):
-            return Response()
+        projects = UserLocationPermission.get_stations_with_permission(self.request.user.id, 'STAFF','VIEW_CONTRACT')
+        
+        request_totals = {}
         
         queryset = ProjectRequest.objects.filter(staff=staff,
-                                                project=project,
+                                                project__in=projects,
                                                 category=constants.STAFF_BENEFITS,
                                                 monthlydistributionform__month_year__month = month,
                                                 monthlydistributionform__month_year__year = year)
         for item in queryset:
-            result['project_request'].append({'benefit_type_name':item.benefit_type_name, 'cost':str(item.cost)})
+            if item.benefit_type_name in request_totals:
+                request_totals[item.benefit_type_name] += item.cost
+            else:
+                request_totals[item.benefit_type_name] = item.cost
         
-        if len(result['project_request']) < 1:
-            queryset = StaffBudgetItem.objects.filter(staff_person=staff,
-                                                      work_project = project,
-                                                      cost__isnull=False,
-                                                      budget_calc_sheet__month_year__month = month,
-                                                      budget_calc_sheet__month_year__year = year)
-            for item in queryset:
-                result['project_request'].append({'benefit_type_name':item.type_name.replace('~',''), 'cost':str(item.cost)})
+        queryset = StaffBudgetItem.objects.filter(staff_person=staff,
+                                                  work_project__in = projects,
+                                                  cost__isnull=False,
+                                                  budget_calc_sheet__month_year__month = month,
+                                                  budget_calc_sheet__month_year__year = year)
+        for item in queryset:
+            type_name = item.type_name.replace('~','')
+            if type_name in request_totals:
+                request_totals[item.type_name] += item.cost
+            else:
+                request_totals[item.type_name] = item.cost
+        
+        for key in request_totals:
+            result['project_request'].append({'benefit_type_name':key, 'cost':str(request_totals[key])})
                 
         return Response(result)
         

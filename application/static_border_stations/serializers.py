@@ -224,44 +224,6 @@ class StaffContractSerializer(serializers.ModelSerializer):
     class Meta:
         model = Staff
         fields = ['id', 'agreement', 'contract', 'contract_expiration']
-        fields = fields + ['projects']
-    
-    projects = serializers.SerializerMethodField(read_only=True)
-    
-    def get_projects(self, obj):
-        if 'user_permissions' in self.context:
-            user_permissions = self.context['user_permissions']
-        else:
-            return [];
-        project_requests = ProjectRequest.objects.filter(staff=obj, category=constants.STAFF_BENEFITS)
-        border_stations = []
-        for project_request in project_requests:
-            if UserLocationPermission.has_permission_in_list(user_permissions, 'STAFF', 'VIEW_CONTRACT',
-                                project_request.project.operating_country.id,
-                                project_request.project.id):
-                if project_request.project not in border_stations:
-                    border_stations.append(project_request.project)
-        
-        items = StaffBudgetItem.objects.filter(staff_person=obj)
-        for item in items:
-            if UserLocationPermission.has_permission_in_list(user_permissions, 'STAFF', 'VIEW_CONTRACT',
-                                item.work_project.operating_country.id,
-                                item.work_project.id):
-                if item.work_project not in border_stations:
-                    border_stations.append(item.work_project)
-            
-            
-        for staff_project in obj.staffproject_set.all():
-            if UserLocationPermission.has_permission_in_list(user_permissions, 'STAFF', 'VIEW_CONTRACT',
-                                staff_project.border_station.operating_country.id,
-                                staff_project.border_station.id):
-                if staff_project.border_station not in border_stations:
-                    border_stations.append(staff_project.border_station)
-        
-        serializer = MiniBorderStationSerializer(border_stations, many=True)
-        return serializer.data
-        
-                                         
 
 class StaffKnowledgeSerializer(serializers.ModelSerializer):
     class Meta:
