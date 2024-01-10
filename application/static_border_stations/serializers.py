@@ -295,7 +295,7 @@ class CommitteeMemberSerializer(serializers.ModelSerializer):
     def get_member_projects(self, obj):
         result = []
         if obj.id is not None:
-            for member in obj.member_projects.all():
+            for member in obj.member_projects.all().order_by('station_name'):
                 result.append(member.id)
         return result
     
@@ -303,7 +303,7 @@ class CommitteeMemberSerializer(serializers.ModelSerializer):
         result = ''
         if obj.id is not None:
             sep = ''
-            for member in obj.member_projects.all():
+            for member in obj.member_projects.all().order_by('station_name'):
                 result += sep + member.station_name
                 sep = '/'
         return result
