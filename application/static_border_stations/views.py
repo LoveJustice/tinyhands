@@ -119,10 +119,108 @@ class LocationViewSet(BorderStationRestAPI):
         return Response(serializer.data)
 
 
-class CommitteeMemberViewSet(BorderStationRestAPI):
+class CommitteeMemberViewSet(viewsets.ModelViewSet):
     queryset = CommitteeMember.objects.all()
     serializer_class = CommitteeMemberSerializer
+    permission_classes = (IsAuthenticated, HasPermission, HasPostPermission, HasPutPermission)
+    permissions_required = [{'permission_group':'SUBCOMMITTEE', 'action':'VIEW_BASIC'},]
+    post_permissions_required = [{'permission_group':'SUBCOMMITTEE', 'action':'ADD'},]  
+    put_permissions_required = [{'permission_group':'SUBCOMMITTEE', 'action':'EDIT_BASIC'},]
+    filter_backends = (fs.SearchFilter, fs.OrderingFilter,) 
+    ordering_fields = ('first_name', 'last_name', )
+    ordering = ('first_name',)
+    search_fields = ('first_name', 'last_name', 'phone',)
+    
+    def get_queryset(self):
+        countries = UserLocationPermission.get_countries_with_permission(self.request.user.id, 'SUBCOMMITTEE','VIEW_BASIC')
+        
+        queryset = self.queryset.filter(country__in=countries)
+        in_country = self.request.GET.get('country_ids')
+        if in_country is not None and in_country != '':
+            queryset = queryset.filter(country__id__in=in_country.split(','))
+        
+        in_project = self.request.GET.get('project_id')
+        if in_project is not None and in_project != '':
+            queryset = queryset.filter(member_projects__id=in_project)
 
+        return queryset
+    
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        if ('request' in context):
+            user_permissions = UserLocationPermission.objects.filter(account=context['request'].user, permission__permission_group='SUBCOMMITTEE')
+            context['user_permissions'] = user_permissions
+        return context
+    
+    def retrieve_blank(self, request):
+        committee_member = CommitteeMember()
+                
+        serializer = CommitteeMemberSerializer(committee_member)
+        return Response(serializer.data)
+    
+    def save_file(self, file_obj, subdirectory):
+        with default_storage.open(subdirectory + file_obj.name, 'wb+') as destination:
+            for chunk in file_obj.chunks():
+                destination.write(chunk)
+        
+        return  subdirectory + file_obj.name
+    
+    def create(self, request):
+        request_string = request.data['member']
+        request_json = json.loads(request_string)
+        if 'sc_agreement' in request.data:
+            file_obj = request.data['sc_agreement']
+            sc_agreement_file = self.save_file(file_obj, 'committee/sc_agreement/')
+        else:
+            sc_agreement_file = None
+        
+        if 'misconduct_agreement' in request.data:
+            file_obj = request.data['misconduct_agreement']
+            misconduct_agreement_file = self.save_file(file_obj, 'committee/misconduct/')
+        else:
+             misconduct_agreement_file = None
+        
+        serializer = self.get_serializer(data=request_json)
+        serializer.is_valid(raise_exception=True)
+        committee_member = serializer.save()
+        if committee_member.country is not None and UserLocationPermission.has_session_permission(request, 'SUBCOMMITTEE', 'EDIT_CONTRACT', committee_member.country.id, None):
+            if sc_agreement_file:
+                committee_member.sc_agreement.name = sc_agreement_file
+            if misconduct_agreement_file:
+                committee_member.misconduct_agreement.name = misconduct_agreement_file
+            committee_member.save()
+        
+        self.get_serializer_context()
+        serializer_new =  self.get_serializer(committee_member)
+        return Response(serializer_new.data)       
+    
+    def update(self, request, pk):
+        request_string = request.data['member']
+        request_json = json.loads(request_string)
+        committee_member = CommitteeMember.objects.get(id=pk)
+        if 'sc_agreement_file' in request.data:
+            file_obj = request.data['sc_agreement_file']
+            sc_agreement_file = self.save_file(file_obj, 'committee/sc_agreement/')
+        else:
+            sc_agreement_file = None
+        
+        if 'misconduct_agreement_file' in request.data:
+            file_obj = request.data['misconduct_agreement_file']
+            misconduct_agreement_file = self.save_file(file_obj, 'committee/misconduct/')
+        else:
+             misconduct_agreement_file = None
+        
+        serializer = self.get_serializer(committee_member, data=request_json)
+        serializer.is_valid(raise_exception=True)
+        committee_member = serializer.save()
+        if UserLocationPermission.has_session_permission(request, 'SUBCOMMITTEE', 'EDIT_CONTRACT', committee_member.country.id, None):
+            if sc_agreement_file:
+                committee_member.sc_agreement.name = sc_agreement_file
+            if misconduct_agreement_file:
+                committee_member.misconduct_agreement.name = misconduct_agreement_file
+            committee_member.save()
+        serializer_new =  self.get_serializer(committee_member)
+        return Response(serializer_new.data)   
 
 class StaffViewSet(viewsets.ModelViewSet):
     queryset = Staff.objects.all()

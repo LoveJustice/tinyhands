@@ -1021,5 +1021,71 @@
             "account_permission_name": null,
             "display_order": 7
         }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 122,
+        "fields": {
+            "permission_group": "SUBCOMMITTEE",
+            "action": "VIEW_BASIC",
+            "min_level": "COUNTRY",
+            "account_permission_name": null,
+            "display_order": 7
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 123,
+        "fields": {
+            "permission_group": "SUBCOMMITTEE",
+            "action": "EDIT_BASIC",
+            "min_level": "COUNTRY",
+            "account_permission_name": null,
+            "display_order": 7
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 124,
+        "fields": {
+            "permission_group": "SUBCOMMITTEE",
+            "action": "ADD",
+            "min_level": "COUNTRY",
+            "account_permission_name": null,
+            "display_order": 7
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 125,
+        "fields": {
+            "permission_group": "SUBCOMMITTEE",
+            "action": "VIEW_CONTRACT",
+            "min_level": "COUNTRY",
+            "account_permission_name": null,
+            "display_order": 7
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 126,
+        "fields": {
+            "permission_group": "SUBCOMMITTEE",
+            "action": "EDIT_CONTRACT",
+            "min_level": "COUNTRY",
+            "account_permission_name": null,
+            "display_order": 7
+        }
+    },
+    {
+        "model": "dataentry.permission",
+        "pk": 127,
+        "fields": {
+            "permission_group": "SUBCOMMITTEE",
+            "action": "DELETE",
+            "min_level": "COUNTRY",
+            "account_permission_name": null,
+            "display_order": 7
+        }
     }
 ]

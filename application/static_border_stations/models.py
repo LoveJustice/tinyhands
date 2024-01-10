@@ -244,6 +244,10 @@ class StaffMiscellaneous(models.Model):
 class CommitteeMember(Person):
     class Meta:
         abstract = False
+    
+    member_projects = models.ManyToManyField(BorderStation, related_name='member_projects')
+    sc_agreement = models.ImageField(upload_to='committee/sc_agreement', default='', blank=True)
+    misconduct_agreement = models.ImageField(upload_to='committee/misconduct', default='', blank=True)
 
 class Location(models.Model):
     name = models.CharField(max_length=255, blank=True)

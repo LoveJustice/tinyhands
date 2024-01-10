@@ -17,7 +17,8 @@ urlpatterns = [
         url(r'^get_station_id/', get_station_id, name='get_station_id'),
 
         url(r'^committee-member/$', CommitteeMemberViewSet.as_view(list_methods), name="CommitteeMember"),
-        url(r'^committee-member/(?P<pk>\d+)/$', CommitteeMemberViewSet.as_view(detail_methods), name="CommitteeMemberDetail"),
+        url(r'^committee-member/blank/$', CommitteeMemberViewSet.as_view({'get':'retrieve_blank'}), name="CommitteeMemberBlank"),
+        url(r'^committee-member/(?P<pk>\d+)/$', CommitteeMemberViewSet.as_view(full_detail_methods), name="CommitteeMemberDetail"),
 
         url(r'^location/$', LocationViewSet.as_view(list_methods), name="Location"),
         url(r'^location/(?P<pk>\d+)/$', LocationViewSet.as_view(detail_methods), name="LocationDetail"),

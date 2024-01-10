@@ -247,13 +247,103 @@ class StaffMiscellaneousSerializer(serializers.ModelSerializer):
     def get_type_detail(self, obj):
        serializer = StaffMiscellaneousTypesSerializer(obj.type)
        return serializer.data
-
+    
 class CommitteeMemberSerializer(serializers.ModelSerializer):
     class Meta:
-        fields = '__all__'
         model = CommitteeMember
+        fields = [field.name for field in model._meta.fields] # all the model fields
+        fields = fields + ['member_projects', 'project_text']
+       
+    
+    sc_agreement = serializers.SerializerMethodField(read_only=True)
+    misconduct_agreement = serializers.SerializerMethodField(read_only=True)
+    member_projects = serializers.SerializerMethodField()
+    project_text = serializers.SerializerMethodField(read_only=True)
+    
+    def can_view_contract(self, obj):
+        result = False
+        if 'user_permissions' in self.context and 'request' in self.context:
+            user_permissions = self.context['user_permissions']
+            request = self.context['request']
+        else:
+            user_permissions = None
+        if user_permissions is not None:
+            if obj.country is not None and UserLocationPermission.has_permission_in_list(user_permissions,
+                    'SUBCOMMITTEE', 'VIEW_CONTRACT', obj.country.id,  None):
+                result = True
+            
+        return result
+    
+    def get_sc_agreement(self, obj):
+        result = None
+        if self.can_view_contract(obj):
+            result=serializers.ImageField(use_url=True).to_representation(obj.sc_agreement)
+            if 'request' in self.context:
+                result = self.context['request'].build_absolute_uri(result)
+ 
+        return result
+    
+    def get_misconduct_agreement(self, obj):
+        result = None
+        if self.can_view_contract(obj):
+            result =serializers.ImageField().to_representation(obj.misconduct_agreement)
+            if 'request' in self.context:
+                result = self.context['request'].build_absolute_uri(result)
+        
+        return result
+    
+    def get_member_projects(self, obj):
+        result = []
+        if obj.id is not None:
+            for member in obj.member_projects.all():
+                result.append(member.id)
+        return result
+    
+    def get_project_text(self, obj):
+        result = ''
+        if obj.id is not None:
+            sep = ''
+            for member in obj.member_projects.all():
+                result += sep + member.station_name
+                sep = '/'
+        return result
+    
+    def to_internal_value(self, data):
+        if 'member_projects' in data:
+            member_projects = data['member_projects']
+            data['member_projects'] = []
+        else:
+            data['member_projects'] = []
+            member_projects = []
+        validated = super().to_internal_value(data)
+        validated['member_projects'] = member_projects
+        return validated
+    
+    def update(self, instance, validated_data):
+        member_projects = validated_data['member_projects']
+        del validated_data['member_projects']
+        obj = super().update(instance, validated_data)
 
+        obj.member_projects.clear()
+        for project_id in member_projects:
+            border_station = BorderStation.objects.get(id=project_id)
+            obj.member_projects.add(border_station)
+        obj.save()
+        
+        return obj
 
+    def create(self, validated_data):
+        member_projects = validated_data['member_projects']
+        del validated_data['member_projects']
+        obj = super().create(validated_data)
+        for project_id in member_projects:
+            border_station = BorderStation.objects.get(id=project_id)
+            obj.member_projects.add(border_station)
+        obj.save()
+        
+        return obj
+
+    
 class LocationSerializer(serializers.ModelSerializer):
     class Meta:
         fields = '__all__'

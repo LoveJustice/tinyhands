@@ -63,6 +63,7 @@ class LocationFactory(DjangoModelFactory):
     latitude = FuzzyFloat(0, 20)
     longitude = FuzzyFloat(0, 20)
     border_station = factory.SubFactory(BorderStationFactory)
+    
 
 
 class CommitteeMemberFactory(DjangoModelFactory):
@@ -73,6 +74,7 @@ class CommitteeMemberFactory(DjangoModelFactory):
     first_name = factory.Sequence(lambda n: "committee_first_%d" % n)
     last_name = factory.Sequence(lambda n: "committee_last_%d" % n)
     receives_money_distribution_form = True
+    country = factory.SubFactory(CountryFactory)
     border_station = factory.SubFactory(BorderStationFactory)
 
 class GenericUser(UserFactory):
