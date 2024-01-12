@@ -85,7 +85,7 @@ class LegalChargeVictim(BaseCard):
     alternate_phone = models.CharField(max_length=255, null=True)
     last_contact_date = models.DateField(null=True)
     last_attempted_contact_date = models.DateField(null=True)
-    victim_status = models.CharField(max_length=255, null=True)
+    victim_status = models.TextField(null=True)
     court_cases = models.CharField(max_length=255, null=True) # delimited list of CourtCase sequence numbers
     
     def set_parent(self, the_parent):

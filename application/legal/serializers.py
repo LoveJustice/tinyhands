@@ -54,8 +54,9 @@ class LegalChargeSerializer(serializers.ModelSerializer):
         sep = ''
         cases = CourtCase.objects.filter(legal_charge=obj)
         for case in cases:
-            charges += sep + case.charges
-            sep = ', '
+            if case.charges is not None:
+                charges += sep + case.charges
+                sep = ', '
         
         return charges
     
