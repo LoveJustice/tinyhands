@@ -2219,6 +2219,23 @@
    }
 },
 {
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "lcCaseSummary",
+      "level": 2,
+      "trigger": null,
+      "trigger_value": null,
+      "validation_type": 1,
+      "error_warning_message": "Case Summary must be populated",
+      "params": null,
+      "retrieve": true,
+      "update": true,
+      "forms": [
+         "legalCaseCommon"
+      ]
+   }
+},
+{
    "model": "dataentry.formvalidationquestion",
    "fields": {
       "validation": "lcLocation",
@@ -2314,6 +2331,13 @@
    "fields": {
       "validation": "legalCaseSuspectChargeLegalStatus",
       "question": "lcSuspectChargeLegalStatus"
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": "lcCaseSummary",
+      "question": "lcCaseSummary"
    }
 }
 ]

@@ -99,10 +99,8 @@ def migrate_legal_charge(apps, schema_editor):
             incident.save()
             
         legal_charge = LegalCharge()
-        if case.status == 'inactive':
-            legal_charge.status = 'active'
-        else:
-            legal_charge.status = case.status
+        # status will be updated below if court case is still active
+        legal_charge.status = 'closed'
         legal_charge.station = case.station
         legal_charge.form_version = 'Migrated'
         legal_charge.incident = incident
@@ -115,6 +113,8 @@ def migrate_legal_charge(apps, schema_editor):
         legal_charge.date_last_contacted = case.date_last_contacted
         legal_charge.missing_data_count = case.missing_data_count
         legal_charge.save()
+        
+        legal_case_still_active = False
         
         court_case = CourtCase()
         court_case.legal_charge = legal_charge
@@ -190,6 +190,8 @@ def migrate_legal_charge(apps, schema_editor):
         
         if still_open:
             court_case.status = 'active'
+            legal_charge.status = 'active'
+            legal_charge.save()
         else:
             court_case.status = 'closed'
         court_case.save()
