@@ -44,7 +44,7 @@ class LegalChargeSerializer(serializers.ModelSerializer):
         return LegalChargeSuspect.objects.filter(legal_charge=obj).count()
     
     def get_number_arrests(self, obj):
-        return LegalChargeSuspect.objects.filter(legal_charge=obj, arrest_status__startswith="Yes").count()
+        return LegalChargeSuspect.objects.filter(legal_charge=obj, arrested="Yes").count()
     
     def get_number_cases(self, obj):
         return CourtCase.objects.filter(legal_charge=obj).count()
