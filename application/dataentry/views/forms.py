@@ -6,9 +6,11 @@ from rest_framework import filters as fs
 from rest_framework import serializers
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
+from django.http import HttpResponse
 
-from dataentry.models import BaseForm, BorderStation, Country, FormCategory, Form, FormType, Incident, QuestionLayout
+from dataentry.models import BaseForm, BorderStation, Country, FormCategory, Form, FormType, Incident, QuestionLayout, UserLocationPermission
 from dataentry.serializers import FormSerializer, FormTypeSerializer, CountrySerializer
+from export_import.export_form_csv import IrfCsv, PvfCsv
 
 class RelatedForm:
     def __init__(self, id, form_number, form_type, form_name, staff_name, station_id, country_id, time_entered, time_last_edited):
@@ -300,5 +302,78 @@ class FormViewSet(viewsets.ModelViewSet):
         version_set.remove(None)
         return Response(sorted(version_set))
         
-            
+class FormExportCsv (viewsets.ViewSet):
+    def export_csv(self, request):
+        form = request.GET.get('form')
+        country = request.GET.get('country')
+        start = request.GET.get('start')
+        end = request.GET.get('end')
+        if form is None or start is None or end is None:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        
+        form_status = request.GET.get('status')
+        if form_status is None:
+            form_status = 'all'
+        tmp = request.GET.get('include_pi')
+        if tmp is None or tmp != 'Yes':
+            remove_pi = True
+        else:
+            remove_pi = False
+        tmp = request.GET.get('sample')
+        if tmp is not None:
+            sample = int(tmp)
+        else:
+            sample = 100
+        tmp = request.GET.get('remove_suspects')
+        if tmp is not None and tmp == 'No':
+            remove_suspects = False
+        else:
+            remove_suspects = True
+        tmp = request.GET.get('red_flags')
+        if tmp is not None:
+            red_flags = int(tmp)
+        else:
+            red_flags = 0
+        tmp = request.GET.get('case_notes')
+        if tmp is None or tmp != 'Yes':
+            case_notes = False
+        else:
+            case_notes = True
+        tmp = request.GET.get('evidence_category')
+        if tmp is not None and tmp == 'Yes':
+            verification_category = True
+        else:
+            verification_category = False
+        tmp = request.GET.get('follow_up')
+        if tmp is not None and tmp == 'Yes':
+            follow_up = True
+        else:
+            follow_up = False
+        
+        if remove_pi:
+            action = 'VIEW'
+        else:
+            action = 'VIEW PI'
+        
+        if country is None or country == 'all':
+            country_list = UserLocationPermission.get_countries_with_permission(request.user.id, form, action)
+        else:
+            tmp = Country.objects.get(id=country)
+            if UserLocationPermission.has_session_permission(request, form, action, tmp.id, None):
+                country_list = [tmp]
+            else:
+                Response(status=status.HTTP_401_UNAUTHORIZED)
+        
+        if form == 'IRF':
+            irf_csv = IrfCsv(country_list, start, end, form_status, remove_pi, sample, remove_suspects, red_flags, case_notes)
+            result = irf_csv.perform_export()
+        elif form == 'PVF':
+            pvf_csv = PvfCsv(country_list, start, end, form_status, remove_pi, sample, verification_category, follow_up)
+            result = pvf_csv.perform_export()
+        
+        
+        response = HttpResponse(result['file'].getvalue(), content_type="application/zip")
+        response['Content-Disposition'] = 'attachment; filename=' + result['name']
+        return response
+        
         

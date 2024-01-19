@@ -63,7 +63,7 @@ class PhotoExporter(viewsets.GenericViewSet):
         all_stations = False
         stations_with_perms = []
         irf_view_perms = UserLocationPermission.objects.filter(account=request.user, permission__permission_group='IRF',
-                                                               permission__action='VIEW')
+                                                               permission__action='VIEW PI')
         for perm in irf_view_perms:
             if perm.country is None and perm.station is None:
                 all_stations = True
