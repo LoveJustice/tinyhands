@@ -372,7 +372,7 @@ class FormExportCsv (viewsets.ViewSet):
             result = pvf_csv.perform_export()
         
         
-        response = HttpResponse(result['file'].getvalue(), content_type="application/zip")
+        response = HttpResponse(result['file'].read(), content_type="text/csv")
         response['Content-Disposition'] = 'attachment; filename=' + result['name']
         return response
         

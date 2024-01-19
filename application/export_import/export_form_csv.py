@@ -1,6 +1,5 @@
 import csv
 import io
-import zipfile
 import math
 
 from django.db.models import Q
@@ -268,12 +267,7 @@ class IrfCsv (ExportFormCsv):
             exported += 1
         
         csv_file.seek(0)
-        zip_bytes = io.BytesIO()
-        zip_file = zipfile.ZipFile(zip_bytes, 'w')
-        zip_file.writestr(export_name + '.csv', csv_file.read())
-        zip_file.close()
-            
-        return {'name': export_name + '.zip', 'file': zip_bytes}
+        return {'name': export_name + '.csv', 'file': csv_file}
 
 class PvfCsv (ExportFormCsv):
     
@@ -464,8 +458,6 @@ class PvfCsv (ExportFormCsv):
             other_pvfs = pvfs
             rate = self.sample / 100.0
         
-        zip_bytes = io.BytesIO()
-        zip_file = zipfile.ZipFile(zip_bytes, 'w')
         csv_file = io.StringIO()
         
         writer = csv.writer(csv_file)
@@ -477,11 +469,6 @@ class PvfCsv (ExportFormCsv):
             self.export_rows(writer, other_pvfs, rate)
         
         csv_file.seek(0)
-        zip_bytes = io.BytesIO()
-        zip_file = zipfile.ZipFile(zip_bytes, 'w')
-        zip_file.writestr(export_name + '.csv', csv_file.read())
-        zip_file.close()
-        
-        return {'name': export_name + '.zip', 'file': zip_bytes}
+        return {'name': export_name + '.csv', 'file': csv_file}
                 
         
