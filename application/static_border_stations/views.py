@@ -1,6 +1,7 @@
 import json
 import pytz
 import time
+from datetime import date
 
 from PIL import Image
 from rest_framework import viewsets, status
@@ -18,8 +19,8 @@ from dateutil import parser
 from dataentry.models import BorderStation, CountryExchange, UserLocationPermission
 from dataentry.serializers import BorderStationSerializer
 from rest_api.authentication_expansion import HasPermission, HasPostPermission, HasPutPermission
-from static_border_stations.models import Staff, CommitteeMember, Location, StaffProject, WorksOnProject, StaffReview, StaffMiscellaneous, StaffMiscellaneousTypes
-from static_border_stations.serializers import StaffSerializer, StaffContractSerializer, StaffKnowledgeSerializer, StaffReviewSerializer, CommitteeMemberSerializer, LocationSerializer
+from static_border_stations.models import Staff, CommitteeMember, Location, StaffProject, WorksOnProject, StaffReview, StaffMiscellaneous, StaffMiscellaneousTypes, StaffAttachment
+from static_border_stations.serializers import StaffSerializer, StaffKnowledgeSerializer, StaffReviewSerializer, StaffAttachmentSerializer, CommitteeMemberSerializer, LocationSerializer
 from static_border_stations.serializers import StaffMiscellaneousSerializer, StaffMiscellaneousTypesSerializer
 from budget.models import ProjectRequest, StaffBudgetItem
 import budget.mdf_constants as constants
@@ -158,12 +159,7 @@ class CommitteeMemberViewSet(viewsets.ModelViewSet):
         serializer = CommitteeMemberSerializer(committee_member)
         return Response(serializer.data)
     
-    def save_file(self, file_obj, subdirectory):
-        with default_storage.open(subdirectory + file_obj.name, 'wb+') as destination:
-            for chunk in file_obj.chunks():
-                destination.write(chunk)
-        
-        return  subdirectory + file_obj.name
+    
     
     def create(self, request):
         request_string = request.data['member']
@@ -330,12 +326,6 @@ class StaffViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(staff, many=True)
         return Response(serializer.data)
     
-    def retrieve_contract(self, request, pk):
-        staff = Staff.objects.get(id=pk)
-        user_permissions = UserLocationPermission.objects.filter(account=request.user, permission__permission_group='STAFF')
-        serializer = StaffContractSerializer(staff, context={'request':request, 'user_permissions':user_permissions})
-        return Response(serializer.data)
-    
     def save_file(self, file_obj, subdirectory):
         with default_storage.open(subdirectory + file_obj.name, 'wb+') as destination:
             for chunk in file_obj.chunks():
@@ -454,7 +444,82 @@ class StaffReviewViewSet(viewsets.ModelViewSet):
             queryset = StaffReview.objects.all()
 
         return queryset
+ 
+class StaffAttachmentViewSet(viewsets.ModelViewSet):
+    queryset = StaffAttachment.objects.all()
+    serializer_class = StaffAttachmentSerializer
+    permission_classes = (IsAuthenticated, )
+    filter_backends = (fs.OrderingFilter,) 
+    ordering_fields = ('attach_date', )
+    ordering = ('-attach_date',)
     
+    def save_file(self, file_obj, subdirectory):
+        with default_storage.open(subdirectory + file_obj.name, 'wb+') as destination:
+            for chunk in file_obj.chunks():
+                destination.write(chunk)
+        
+        return  subdirectory + file_obj.name
+    
+    def get_queryset(self):
+        stations = UserLocationPermission.get_stations_with_permission(self.request.user.id, 'STAFF','VIEW_CONTRACT')
+        if (self.action == 'list'):
+            staff_id = self.request.GET.get('staff_id')
+            if staff_id is not None and staff_id != '':
+                staff_projects = StaffProject.objects.filter(staff__id = staff_id, border_station__in=stations)
+                if len(staff_projects) > 0:
+                    queryset = StaffAttachment.objects.filter(staff__id = staff_id)
+                else:
+                    queryset = StaffAttachment.objects.none()
+        else:
+            queryset = StaffAttachment.objects.all()
+
+        return queryset
+    
+    def create(self, request):
+        request_string = request.data['attachment']
+        request_json = json.loads(request_string)
+        
+        attachment_file = None
+        if 'attachment_file' in request.data:
+            file_obj = request.data['attachment_file']
+            attachment_file = self.save_file(file_obj, 'staff_attachment/')
+        else:
+            contract_file = None
+        
+        del request_json['attachment']
+        del request_json['attach_date'] 
+        serializer = StaffAttachmentSerializer(data=request_json)
+        serializer.is_valid(raise_exception=True)
+        attachment = serializer.save()
+        if attachment_file is not None:
+            attachment.attachment.name = attachment_file
+            attachment.save()
+        serializer_new = StaffAttachmentSerializer(attachment)
+        return Response(serializer_new.data)
+
+    def update(self, request, pk):
+        old_attachment = StaffAttachment.objects.get(id=pk)
+        request_string = request.data['attachment']
+        request_json = json.loads(request_string)
+        attachment_file = None
+        if 'attachment_file' in request.data:
+            file_obj = request.data['attachment_file']
+            attachment_file = self.save_file(file_obj, 'staff_attachment/')
+        else:
+            contract_file = None
+        
+        del request_json['attachment']
+        if request_json['attach_date'] is None:
+            del request_json['attach_date']
+        
+        serializer = StaffAttachmentSerializer(old_attachment, data=request_json)
+        serializer.is_valid(raise_exception=True)
+        attachment = serializer.save()
+        if attachment_file is not None:
+            attachment.attachment.name = attachment_file
+            attachment.save()
+        serializer_new = StaffAttachmentSerializer(attachment)
+        return Response(serializer_new.data)
 
 class TimeZoneViewSet(viewsets.ViewSet):
     def get_time_zones(self, request):

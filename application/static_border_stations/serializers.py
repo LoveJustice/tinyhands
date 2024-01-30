@@ -5,7 +5,7 @@ from django.conf import settings
 from budget.models import ProjectRequest
 import budget.mdf_constants as constants
 from dataentry.models import BorderStation, CountryExchange, UserLocationPermission
-from static_border_stations.models import Staff, StaffProject, StaffReview, CommitteeMember, Location, StaffMiscellaneous, StaffMiscellaneousTypes, WorksOnProject
+from static_border_stations.models import Staff, StaffAttachment, StaffProject, StaffReview, CommitteeMember, Location, StaffMiscellaneous, StaffMiscellaneousTypes, WorksOnProject
 from budget.models import ProjectRequest, StaffBudgetItem
 import budget.mdf_constants as constants
 
@@ -51,7 +51,7 @@ class StaffSerializer(serializers.ModelSerializer):
         fields = ['id', 'email', 'first_name', 'last_name', 'phone', 'position',
                   'receives_money_distribution_form', 'border_station', 'country',
                   'first_date', 'last_date', 'birth_date', 'total_years',
-                  'education', 'id_card', 'staffproject_set', 'miscellaneous',
+                  'education', 'id_card_expiration', 'staffproject_set', 'miscellaneous',
                   'contract_data', 'knowledge_data', 'review_data']
     
     total_years = serializers.SerializerMethodField(read_only=True)
@@ -102,10 +102,21 @@ class StaffSerializer(serializers.ModelSerializer):
         if  not self.view_section(obj, 'VIEW_CONTRACT'):
             return None
         
+        contract = False
+        contract_date = None
+        agreement = False
+        attachments = StaffAttachment.objects.filter(staff=obj).order_by('-attach_date')
+        for attachment in attachments:
+            if contract is None and attachment.option == 'Contract':
+                contract = True
+                contract_date = attachment.attach_date
+            if agreement is None and attachment.option == 'C&M':
+                agreement = True
+        
         result = {
-                "agreement":obj.agreement.name != '',
-                "contract":obj.contract.name != '',
-                "contract_expiration": obj.contract_expiration,
+                "agreement":agreement,
+                "contract":contract,
+                "contract_expiration":contract_date,
                 "last_month":{"local":obj.last_month_local, "USD": obj.last_month_usd},
                 "twelve_month":{"local":obj.twelve_month_local, "USD": obj.twelve_month_usd}
             }
@@ -219,11 +230,6 @@ class MiniBorderStationSerializer(serializers.ModelSerializer):
     class Meta:
         fields = ['id','station_code','station_name', 'operating_country']
         model = BorderStation
-    
-class StaffContractSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Staff
-        fields = ['id', 'agreement', 'contract', 'contract_expiration']
 
 class StaffKnowledgeSerializer(serializers.ModelSerializer):
     class Meta:
@@ -247,6 +253,11 @@ class StaffMiscellaneousSerializer(serializers.ModelSerializer):
     def get_type_detail(self, obj):
        serializer = StaffMiscellaneousTypesSerializer(obj.type)
        return serializer.data
+
+class StaffAttachmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StaffAttachment
+        fields = [field.name for field in model._meta.fields] # all the model fields
     
 class CommitteeMemberSerializer(serializers.ModelSerializer):
     class Meta:

@@ -70,12 +70,9 @@ class Staff(Person):
     #start new fields
     birth_date = models.CharField(max_length=127, blank=True)
     education = models.CharField(max_length=127, null=True)
-    id_card = models.BooleanField(default=False)
+    id_card_expiration = models.DateField(null=True)
     
     #contract
-    agreement = models.ImageField(upload_to='staff/agreement', default='', blank=True)
-    contract = models.ImageField(upload_to='staff/contract', default='', blank=True)
-    contract_expiration = models.DateField(null=True)
     last_month_local = models.DecimalField(max_digits=17, decimal_places=2, default=0, blank=False)
     last_month_usd = models.DecimalField(max_digits=17, decimal_places=2, default=0, blank=False)
     twelve_month_local = models.DecimalField(max_digits=17, decimal_places=2, default=0, blank=False)
@@ -327,5 +324,14 @@ class StaffProject(models.Model):
     
     def set_parent(self, parent):
         self.staff = parent
+
+class StaffAttachment(models.Model):
+    staff = models.ForeignKey(Staff)
+    attachment = models.FileField(upload_to='staff_attachment', default='', blank=True)
+    option = models.CharField(max_length=126, null=True)
+    attach_date = models.DateField(auto_now_add=True)
+    expiration_date = models.DateField(null=True)
+    description = models.CharField(max_length=126, null=True)
+    
 
 
