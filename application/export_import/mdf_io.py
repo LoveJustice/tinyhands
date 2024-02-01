@@ -2,11 +2,16 @@ from django.conf import settings
 
 from .google_sheet import GoogleSheet
 from dataentry.models import Country
-from budget.models import MonthlyDistributionForm
+from budget.models import MonthlyDistributionForm, MdfItem
 from budget.pdfexports.mdf_exports import MDFExporter
+import budget.mdf_constants as constants
 
 def get_mdf_export_rows(keys):
     parts = keys[0].split('-')
+    
+    category = {}
+    for item in constants.CATEGORY_CHOICES:
+        category[item[0]] = item[1]
     
     country  = Country.objects.get(id=parts[1])
     mdfs = MonthlyDistributionForm.objects.filter(
@@ -24,10 +29,19 @@ def get_mdf_export_rows(keys):
         for mdf_helper in mdf_data['mdfs']:
             for section in mdf_helper.sections:
                 rows.append([keys[0], country.name, parts[0], mdf.border_station.station_code, mdf_helper.project.station_code, section.title, section.total])
-            rows.append([keys[0], country.name, parts[0], mdf.border_station.station_code, mdf_helper.project.station_code, 'Past Month Sent Money', mdf_helper.past_money_sent_total])
-            rows.append([keys[0], country.name, parts[0], mdf.border_station.station_code, mdf_helper.project.station_code, 'Money Not Spent (To Deduct)', mdf_helper.money_not_spent_total])
-            rows.append([keys[0], country.name, parts[0], mdf.border_station.station_code, mdf_helper.project.station_code, 'Money Not Spent (Not Deduct)',
-                         mdf.money_not_spent_not_deduct_total(mdf_helper.project)])
+            mdf_items = MdfItem.objects.filter(mdf=mdf)
+            for mdf_item in mdf_items:
+                if mdf_helper.project.id == mdf_item.work_project.id:
+                    if mdf_item.category == constants.MONEY_NOT_SPENT:
+                        if mdf_item.deduct == 'Yes':
+                            rows.append([keys[0], country.name, parts[0], mdf.border_station.station_code, mdf_helper.project.station_code,
+                                          'Money Not Spent (To Deduct) - ' + category[mdf_item.associated_section], mdf_item.cost])
+                        else:
+                            rows.append([keys[0], country.name, parts[0], mdf.border_station.station_code, mdf_helper.project.station_code,
+                                         'Money Not Spent (Not Deduct) - ' + category[mdf_item.associated_section], mdf_item.cost])           
+                    elif mdf_item.category == constants.PAST_MONTH_SENT:
+                        rows.append([keys[0], country.name, parts[0], mdf.border_station.station_code, mdf_helper.project.station_code,
+                                     'Past Month Sent Money - ' + category[mdf_item.associated_section], mdf_item.cost])
     
     return rows
 
