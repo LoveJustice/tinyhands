@@ -1330,7 +1330,9 @@
       "question": "lcAttachmentNumber",
       "category": "legalAttachment",
       "weight": 0,
-      "form_config": null
+      "form_config": {
+         "IndexQuestion": "lcAttachmentNumber"
+      }
    }
 },
 {
