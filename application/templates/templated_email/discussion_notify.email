@@ -1,0 +1,5 @@
+{% block subject %}Project request discussion invite{% endblock %}
+
+{% block html %}
+	<p>You have been invited to participate in a discussion concerning a <a href="{{ url }}">project request/a></p>
+{% endblock %}

@@ -281,7 +281,7 @@ class ProjectRequestDiscussionViewSet(viewsets.ModelViewSet):
     permissions_required = [{'permission_group':'PROJECT_REQUEST', 'action':'VIEW'},]
     delete_permissions_required = [{'permission_group':'PROJECT_REQUEST', 'action':'DELETE'},]
     post_permissions_required = [{'permission_group':'PROJECT_REQUEST', 'action':'VIEW'},]
-    put_permissions_required = [{'permission_group':'PROJECT_REQUEST', 'action':'EDIT'},]
+    put_permissions_required = [{'permission_group':'PROJECT_REQUEST', 'action':'VIEW'},]
     filter_backends = (fs.SearchFilter, fs.OrderingFilter,)
     search_fields = []
     ordering_fields = ['date_time_entered']
