@@ -1,5 +1,10 @@
 {% block subject %}Project request discussion invite{% endblock %}
 
 {% block html %}
-	<p>You have been invited to participate in a discussion concerning a <a href="{{ url }}">project request/a></p>
+	<p>Hey {{staff}},</p>
+	<p>{{Comment_user}} has requested your input on <a href="{{ url }}">this</a> request.</p>
+	<p>{{Project}} - {{Category}}: {{Description}}</p>
+	<p>Comment: {{Comment}}</p>
+	<p>Cheers,</p>
+	<p>Searchlight Team</p>
 {% endblock %}
