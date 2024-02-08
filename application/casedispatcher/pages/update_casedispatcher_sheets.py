@@ -1,0 +1,461 @@
+import streamlit as st
+import json
+import pandas as pd
+import numpy as np
+from datetime import date
+from googleapiclient.discovery import build
+from copy import deepcopy
+from oauth2client.client import OAuth2Credentials
+import libraries.data_prep as data_prep
+import pickle
+from libraries.case_dispatcher_model import (
+    check_grid_search_cv,
+    save_results,
+    make_new_predictions,
+)
+from libraries.data_prep import remove_non_numeric, process_columns
+from libraries.entity_model import EntityGroup
+from libraries.case_dispatcher_model import TypeSelector
+from libraries.case_dispatcher_data import (
+    get_vdf,
+    get_suspects,
+    get_irf,
+    get_suspect_evaluations,
+    get_countries,
+)
+from libraries.google_lib import (
+    get_gsheets,
+    get_dfs,
+    attrdict_to_dict,
+    make_file_bytes,
+    save_to_cloud,
+    load_data,
+    get_matching_spreadsheets,
+)
+
+countries = get_countries()
+country_list = ["Select a country..."] + ["Nepal", "Uganda", "Malawi", "Namibia"]
+case_dispatcher = st.secrets["case_dispatcher"]
+access_token = case_dispatcher["access_token"]
+sheet_names = case_dispatcher["sheet_names"]
+
+toml_config_dict = attrdict_to_dict(access_token)
+creds_json = json.dumps(toml_config_dict)
+credentials = OAuth2Credentials.from_json(creds_json)
+drive_service = build("drive", "v3", credentials=credentials)
+
+
+links = {
+    "Uganda": "https://docs.google.com/spreadsheets/d/14hqbt082EHYklnFUSksNDXmSNllYoL66okvXweU1FRQ/edit?usp=drive_link",
+    "Nepal": "https://docs.google.com/spreadsheets/d/1OA98ZiDuSTa3KaQwiRCMEg8ZRXWHcAycN9JgSeqpGb0/edit?usp=drive_link",
+    "Malawi": "https://docs.google.com/spreadsheets/d/1ytp8dJzEO1jMXRt_J7LEkW3K4RJgiEboLKMH9hJFfTA/edit?usp=drive_link",
+    "Namibia": "https://docs.google.com/spreadsheets/d/1x-TycO5lQtuTysdqYGOPVweZ-bJ9OBQ7jAnauhiDbpY/edit?usp=drive_link",
+}
+
+
+def get_country_id(df, country_name):
+    # Normalize the case for comparison
+    normalized_country_name = country_name.strip().lower()
+    df['name_normalized'] = df['name'].str.lower()
+
+    # Find the matching country_id
+    matching_id = df.loc[df['name_normalized'] == normalized_country_name, 'id']
+
+    if not matching_id.empty:
+        return matching_id.values[0]
+    else:
+        st.write(f"Country not found: {country_name}")
+        return "Country not found"
+
+
+
+def make_predictions(model, X):
+    best_pipeline = model.best_estimator_
+
+    # Extract the RandomForestClassifier from the pipeline
+    clf = best_pipeline.named_steps["clf"]
+
+    # Transform the user input data with all pipeline steps except the classifier
+    X_transformed = best_pipeline[:-1].transform(X)
+
+    # Make a prediction using only the classifier
+    prediction = clf.predict_proba(X_transformed)[:, 1]
+    return prediction
+
+
+def get_pv_believes_settings():
+    pv_believes = case_dispatcher["pv_believes"]
+    if st.checkbox("Adjust PV Believes"):
+        pv_believes_text = case_dispatcher["pv_believes_text"]["text"]
+        # Using st.expander to create a collapsible section for the variable description
+        with st.expander("The PV believes settings"):
+            st.markdown(pv_believes_text)
+        st.subheader("Adjust PV Believes")
+        # Assume pv_believes are fetched from case_dispatcher, initialize if not available
+
+        pv_believes_definitely_trafficked_many = st.slider(
+            "pv_believes_definitely_trafficked_many",
+            0,
+            1,
+            int(pv_believes["pv_believes_definitely_trafficked_many"]),
+        )
+        pv_believes_not_a_trafficker = st.slider(
+            "pv_believes_not_a_trafficker",
+            0,
+            1,
+            int(pv_believes["pv_believes_not_a_trafficker"]),
+        )
+        pv_believes_trafficked_some = st.slider(
+            "pv_believes_trafficked_some",
+            0,
+            1,
+            int(pv_believes["pv_believes_trafficked_some"]),
+        )
+        pv_believes_suspect_trafficker = st.slider(
+            "pv_believes_suspect_trafficker",
+            0,
+            1,
+            int(pv_believes["pv_believes_suspect_trafficker"]),
+        )
+
+        # Update pv_believes based on slider input
+        pv_believes = {
+            "pv_believes_definitely_trafficked_many": pv_believes_definitely_trafficked_many,
+            "pv_believes_not_a_trafficker": pv_believes_not_a_trafficker,
+            "pv_believes_trafficked_some": pv_believes_trafficked_some,
+            "pv_believes_suspect_trafficker": pv_believes_suspect_trafficker,
+        }
+    return pv_believes
+
+
+def get_recency_settings():
+    recency_vars = case_dispatcher["recency_vars"]
+    if st.checkbox("Adjust Recency Variables"):
+        recency_text = case_dispatcher["recency_text"]["text"]
+        # Using st.expander to create a collapsible section for the variable description
+        with st.expander("The recency settings"):
+            st.markdown(recency_text)
+        st.subheader("Adjust Recency Variables")
+        # Assume recency_vars are fetched from case_dispatcher, initialize if not available
+
+        discount_coef = st.slider(
+            "Discount Coefficient (discount_coef)",
+            0.00,
+            0.10,
+            recency_vars["discount_coef"],
+        )
+        discount_exp = st.slider(
+            "Discount Exponent (discount_exp)", 0, 5, recency_vars["discount_exp"]
+        )
+
+        # Update recency_vars based on slider input
+        recency_vars = {"discount_coef": discount_coef, "discount_exp": discount_exp}
+    return recency_vars
+
+
+def get_exploitation_settings():
+    exploitation_type = case_dispatcher["exploitation_type"]
+    if st.checkbox("Adjust Exploitation Variables"):
+        exploitation_type_text = case_dispatcher["exploitation_type_text"]["text"]
+        # Using st.expander to create a collapsible section for the variable description
+        with st.expander("The exploitation settings"):
+            st.markdown(exploitation_type_text)
+        st.subheader("Adjust Exploitation Variables")
+        # Assume recency_vars are fetched from case_dispatcher, initialize if not available
+
+        exploit_prostitution = st.slider(
+            "exploit_prostitution",
+            0.00,
+            1.00,
+            exploitation_type["exploit_prostitution"],
+        )
+        exploit_sexual_abuse = st.slider(
+            "exploit_sexual_abuse",
+            0.00,
+            1.00,
+            exploitation_type["exploit_sexual_abuse"],
+        )
+        exploit_physical_abuse = st.slider(
+            "exploit_physical_abuse",
+            0.00,
+            1.00,
+            exploitation_type["exploit_physical_abuse"],
+        )
+        exploit_debt_bondage = st.slider(
+            "exploit_debt_bondage",
+            0.00,
+            1.00,
+            exploitation_type["exploit_debt_bondage"],
+        )
+        exploit_forced_labor = st.slider(
+            "exploit_forced_labor",
+            0.00,
+            1.00,
+            exploitation_type["exploit_forced_labor"],
+        )
+        # Update recency_vars based on slider input
+        exploitation_type = {
+            "exploit_prostitution": exploit_prostitution,
+            "exploit_sexual_abuse": exploit_sexual_abuse,
+            "exploit_physical_abuse": exploit_physical_abuse,
+            "exploit_debt_bondage": exploit_forced_labor,
+            "exploit_forced_labor": exploit_forced_labor,
+        }
+    return exploitation_type
+
+def get_solvability_weights():
+    solvability_weights = case_dispatcher['solvability_weights']
+    if st.checkbox("Adjust Solvability Weights"):
+        solvability_weights_text = case_dispatcher['solvability_weights_text']['text']
+        # Using st.expander to create a collapsible section for the variable description
+        with st.expander("The solvability weights"):
+            st.markdown(solvability_weights_text)
+        st.subheader("Adjust Solvability Weights")
+        # Assume solvability_weights are fetched from case_dispatcher, initialize if not available
+
+        victim_willing_to_testify = st.slider("victim_willing_to_testify", 0.00, 10.00, solvability_weights['victim_willing_to_testify'])
+        bio_and_location_of_suspect = st.slider("bio_and_location_of_suspect", 0.00, 10.00, solvability_weights['bio_and_location_of_suspect'])
+        other_suspect_arrested = st.slider("other_suspect(s)_arrested", 0.00, 10.00, solvability_weights['other_suspect(s)_arrested'])
+        police_willing_to_arrest = st.slider("police_willing_to_arrest", 0.00, 10.00, solvability_weights['police_willing_to_arrest'])
+        recency_of_case = st.slider("recency_of_case", 0.00, 10.00, solvability_weights['recency_of_case'])
+        exploitation_reported = st.slider("exploitation_reported", 0.00, 10.00, solvability_weights['exploitation_reported'])
+        pv_believes = st.slider("pv_believes", 0.00, 10.00, solvability_weights['pv_believes'])
+        # Update solvability_weights based on slider input
+        solvability_weights = {
+            "victim_willing_to_testify": victim_willing_to_testify,
+            "bio_and_location_of_suspect": bio_and_location_of_suspect,
+            "other_suspect(s)_arrested": other_suspect_arrested,
+            "police_willing_to_arrest": police_willing_to_arrest,
+            "recency_of_case": recency_of_case,
+            "exploitation_reported": exploitation_reported,
+            "pv_believes": pv_believes
+        }
+    return solvability_weights
+
+def get_priority_weights():
+    priority_weights = case_dispatcher['priority_weights']
+    if st.checkbox("Adjust Priority Weights"):
+        priority_weights_text = case_dispatcher['priority_weights_text']['text']
+        # Using st.expander to create a collapsible section for the variable description
+        with st.expander("The priority weights"):
+            st.markdown(priority_weights_text)
+        st.subheader("Adjust Priority Weights")
+        # Assume priority_weights are fetched from case_dispatcher, initialize if not available
+
+        eminence = st.slider("eminence", 0.0, 1.0, priority_weights['eminence'])
+        solvability = st.slider("solvability", 0.0, 1.00, priority_weights['solvability'])
+        strength_of_case = st.slider("strength_of_case", 0.00, 1.00, priority_weights['strength_of_case'])
+        # Update priority_weights based on slider input
+
+        priority_weights = {
+            "eminence": eminence,
+            "solvability": solvability,
+            "strength_of_case": strength_of_case
+        }
+    return priority_weights
+
+
+def main():
+    # Initialize session state variables if they don't exist
+    if "country" not in st.session_state:
+        st.session_state["country"] = None
+
+    if "spreadsheet_name" not in st.session_state:
+        st.session_state["spreadsheet_name"] = None
+
+    if "case_dispatcher_soc_df" not in st.session_state:
+        st.session_state['case_dispatcher_soc_df'] = load_data(drive_service, 'case_dispatcher_soc_df.pkl')
+
+    exploitation_type = get_exploitation_settings()
+    recency_vars = get_recency_settings()
+    pv_believes = get_pv_believes_settings()
+    solvability_weights = get_solvability_weights()
+    priority_weights = get_priority_weights()
+
+    # Now recency_vars is updated, you can proceed to construct weights
+    weights = {
+        **solvability_weights,
+        **recency_vars,
+        **exploitation_type,
+        **pv_believes,
+        **priority_weights,
+    }
+
+    # Country selection
+    country_list = ["Select a country..."] + list(links.keys())
+    country = st.selectbox("Select a country to update", country_list, index=0)
+
+    # Proceed only if a country has been selected
+    if country and country != "Select a country...":
+        operating_country_id = get_country_id(countries, country)
+        if operating_country_id == "Country not found":
+            st.write(f"Country not found: {country}")
+            return
+        st.write(f"Selected {country} has operating_country_id: {operating_country_id}, continuing...")
+        case_dispatcher_soc_df = st.session_state['case_dispatcher_soc_df'][st.session_state['case_dispatcher_soc_df'].operating_country_id==operating_country_id]
+        st.session_state["country"] = country
+        st.write("You selected:", country)
+        st.session_state["spreadsheet_name"] = f"Case Dispatcher 6.0 - {country}"
+        url = links[country]
+        st.markdown(f"[Open {country} Google Sheet]({url})")
+    else:
+        st.session_state["spreadsheet_name"] = None
+
+    # Proceed only if a spreadsheet has been selected
+    if st.session_state["spreadsheet_name"]:
+        st.write(
+            f"Get the sheets from the selected spreadsheet {st.session_state['spreadsheet_name']}"
+        )
+
+        # Only execute this part if the "Update" button hasn't been clicked yet
+        if st.button("Update"):
+            # Assuming get_gsheets and get_dfs are defined and take the necessary arguments
+            sheets, file_url, file_id = get_gsheets(
+                credentials, st.session_state["spreadsheet_name"], sheet_names
+            )
+            st.write(f"Found the following sheets {sheets}")
+            st.write(f"Found the following file_url {file_url}")
+            dfs = get_dfs(sheets)
+
+            db_vics = load_data(drive_service, 'new_victims.pkl')
+            db_vics= db_vics[db_vics['operating_country_id'] == operating_country_id].drop(columns=['operating_country_id'])
+            db_sus = load_data(drive_service, 'new_suspects.pkl')
+            db_sus = db_sus[db_sus['operating_country_id'] == operating_country_id].drop(columns=['operating_country_id'])
+            irf_case_notes = load_data(drive_service, 'irf_case_notes.pkl')
+            irf_case_notes = irf_case_notes[irf_case_notes['operating_country_id'] == operating_country_id].drop(columns=['operating_country_id'])
+
+
+            case_dispatcher_model = load_data(drive_service, 'case_dispatcher_model.pkl')
+            case_dispatcher_model_cols = load_data(drive_service, 'case_dispatcher_model_cols.pkl')
+
+            st.write(f"Predict likelihood of arrest and add prediction to dataframe")
+            # st.dataframe(soc_df[model_cols])
+            case_dispatcher_soc_df["soc"] = make_predictions(case_dispatcher_model, case_dispatcher_soc_df[case_dispatcher_model_cols])
+            # ===========================================================================================================
+            st.write(f"Create the victims_entity from db_vics")
+            new_victims = db_vics.copy()
+            EntityGroup.sheets = []
+            victims_entity = EntityGroup(
+                "victim_id", new_victims, "victims", "closed_victims", dfs
+            )
+
+            victims_entity.new = data_prep.set_vic_id(victims_entity.new)
+
+            st.write(f"Create the suspects entity from db_sus")
+            new_suspects = db_sus.copy()
+
+            suspects_entity = EntityGroup(
+                "suspect_id", new_suspects, "suspects", "closed_suspects", dfs
+            )
+            suspects_entity.new = data_prep.set_suspect_id(suspects_entity.new, db_sus)
+
+            EntityGroup.set_case_id()
+
+            st.write(
+                f"Create the police entity from a  copy of the suspects_entity.new"
+            )
+            new_police = deepcopy(x=suspects_entity.new)
+            new_police.rename(columns={"name": "suspect_name"}, inplace=True)
+            police = EntityGroup(
+                "suspect_id", new_police, "police", "closed_police", dfs
+            )
+
+            EntityGroup.combine_sheets()
+            st.write(f"Add irf_case_notes")
+            EntityGroup.add_irf_notes(irf_case_notes)
+            st.write(f"Move closed cases")
+            st.write("""Before EntityGroup.move_closed(soc_df): """)
+
+            EntityGroup.move_closed(case_dispatcher_soc_df)
+
+            EntityGroup.move_other_closed(suspects_entity, police, victims_entity)
+            st.write(f"Get victims willing to testify")
+            vics_willing = data_prep.get_vics_willing_to_testify(victims_entity.active)
+            st.write(f"Add victim names")
+            police.active = data_prep.add_vic_names(police.active, vics_willing)
+            suspects_entity.active = data_prep.add_vic_names(
+                suspects_entity.active, vics_willing
+            )
+            st.write(f"Get located suspects")
+            sus_located = data_prep.get_sus_located(suspects_entity.active)
+            victims_entity.active = data_prep.add_sus_located(
+                victims_entity.active, sus_located
+            )
+
+            police.active["case_status"] = police.active["case_status"].astype(str)
+            suspects_entity.active["case_status"] = suspects_entity.active[
+                "case_status"
+            ].astype(str)
+            suspects_entity.active[
+                "victims_willing_to_testify"
+            ] = suspects_entity.active["victims_willing_to_testify"].astype(str)
+
+            # Suspects = dfs["suspects"].copy()
+            # sus = suspects_entity.active.copy()
+
+            # -------------------------------------------------------------------------------------
+            st.write(f"Calculate all suspect scores")
+            suspects_entity.active = data_prep.calc_all_sus_scores(
+                suspects_entity.active,
+                vics_willing,
+                police.active,
+                weights,
+                case_dispatcher_soc_df,
+                dfs["suspects"],
+            )
+            st.write(
+                """At data_prep.calc_all_sus_scores(
+                suspects_entity.active,
+                vics_willing,
+                police.active,
+                weights,
+                soc_df,
+                dfs["suspects"],
+            )"""
+            )
+
+            st.write(f"Add priorities to victims")
+            victims_entity.active = data_prep.add_priority_to_others(
+                suspects_entity.active,
+                victims_entity.active,
+                "case_id",
+                dfs["victims"],
+                "victim_id",
+            )
+            st.write(f"Add priorities to police")
+            police.active = data_prep.add_priority_to_others(
+                suspects_entity.active,
+                police.active,
+                "suspect_id",
+                dfs["police"],
+                "suspect_id",
+            )
+            # -------------------------------------------------------------------------------------
+            st.write(f"Derive active cases")
+            active_cases = data_prep.update_active_cases(
+                suspects_entity.active, police.active
+            )
+            EntityGroup.add_case_name_formula()
+            # st.dataframe(soc_df[["irf_number", "days"]])
+            st.write("Update Case Dispatcher Google Sheet")
+            # active_cases["priority"] = (
+            #     active_cases["priority"] - active_cases["priority"].min()
+            # ) / (active_cases["priority"].max() - active_cases["priority"].min())
+            active_cases = active_cases.merge(
+                case_dispatcher_soc_df[["irf_number", "days"]].drop_duplicates(),
+                left_on="case_id",
+                right_on="irf_number",
+                how="left",
+            ).drop(columns=["irf_number"])
+            EntityGroup.update_gsheets(
+                credentials, st.session_state["spreadsheet_name"], active_cases
+            )
+            # st.dataframe(active_cases)
+            st.write(
+                f"Success! {st.session_state['spreadsheet_name']} has been updated."
+            )
+            st.dataframe(active_cases)
+
+
+if __name__ == "__main__":
+    main()
