@@ -46,6 +46,7 @@ urlpatterns = [
         url(r'^project-request/discussion-status/(?P<pk>\d+)/$', ProjectRequestViewSet.as_view({'put':'update_discussion_status'}), name='ProjectDiscussionStatus'),
         
         url(r'^project-request/discussion/$', ProjectRequestDiscussionViewSet.as_view(list_methods), name='ProjectDiscussion'),
+        url(r'^project-request/discussion/(?P<pk>\d+)/$', ProjectRequestDiscussionViewSet.as_view({'put':'update'}), name='ProjectDiscussionDetail'),
         url(r'^project-request/account/(?P<id>\d+)/$', ProjectRequestDiscussionViewSet.as_view({'get':'get_notify_accounts'}), name='ProjectAccount'),
         
         url(r'^project-request/attachment/$', ProjectRequestAttachmentViewSet.as_view(list_methods), name='ProjectRequestAttachment'),
