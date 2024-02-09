@@ -35,7 +35,7 @@ class StaffReviewSerializer(serializers.ModelSerializer):
     def get_total(self, obj):
         result = '';
         total = 0;
-        for fld in ['leadership', 'obedience', 'faithfulness', 'alertness', 'questioning', 'awareness']:
+        for fld in ['networking', 'compliance', 'dependability', 'alertness', 'boldness', 'questioning', 'teamwork']:
             value = getattr(obj, fld, None)
             if value is not None:
                 total += value

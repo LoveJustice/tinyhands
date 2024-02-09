@@ -220,12 +220,13 @@ class Staff(Person):
 class StaffReview(models.Model):
     staff = models.ForeignKey(Staff, on_delete=models.CASCADE)
     review_date = models.DateField()
-    leadership = models.FloatField(null=True)
-    obedience = models.FloatField(null=True)
-    faithfulness = models.FloatField(null=True)
+    networking = models.FloatField(null=True)
+    compliance = models.FloatField(null=True)
+    dependability = models.FloatField(null=True)
     alertness = models.FloatField(null=True)
+    boldness = models.FloatField(null=True)
     questioning = models.FloatField(null=True)
-    awareness = models.FloatField(null=True)
+    teamwork = models.FloatField(null=True)
 
 class StaffMiscellaneousTypes(models.Model):
     name = models.CharField(max_length=127)

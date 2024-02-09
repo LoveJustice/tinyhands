@@ -52,12 +52,13 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('review_date', models.DateField()),
-                ('leadership', models.FloatField(null=True)),
-                ('obedience', models.FloatField(null=True)),
-                ('faithfulness', models.FloatField(null=True)),
+                ('networking', models.FloatField(null=True)),
+                ('compliance', models.FloatField(null=True)),
+                ('dependability', models.FloatField(null=True)),
                 ('alertness', models.FloatField(null=True)),
+                ('boldness', models.FloatField(null=True)),
                 ('questioning', models.FloatField(null=True)),
-                ('awareness', models.FloatField(null=True)),
+                ('teamwork', models.FloatField(null=True)),
             ],
         ),
         migrations.AddField(
