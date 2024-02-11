@@ -379,6 +379,8 @@ class StationStatisticsViewSet(viewsets.ModelViewSet):
         location_staff_other = LocationStaff.objects.filter(staff__in=all_project_staff, year_month=year_month).exclude(location__border_station__id=station_id)
         other_total = {}
         for staff_other in location_staff_other:
+            if staff_other.work_fraction is None:
+                continue
             if staff_other.staff in other_total:
                 other_total[location_staff.staff].work_fraction += staff_other.work_fraction
             else:
