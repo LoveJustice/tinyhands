@@ -13,16 +13,20 @@ class StaffProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = StaffProject
         fields = [field.name for field in model._meta.fields] # all the model fields
-        fields = fields + ['project_code', 'country_id']
+        fields = fields + ['project_code', 'country_id', 'project_category']
         
     project_code = serializers.SerializerMethodField(read_only=True)
     country_id = serializers.SerializerMethodField(read_only=True)
+    project_category = serializers.SerializerMethodField(read_only=True)
     
     def get_project_code (self, obj):
         return obj.border_station.station_code
     
     def get_country_id (self, obj):
         return obj.border_station.operating_country.id
+    
+    def get_project_category (self, obj):
+        return obj.border_station.project_category.name
 
 class StaffReviewSerializer(serializers.ModelSerializer):
     class Meta:

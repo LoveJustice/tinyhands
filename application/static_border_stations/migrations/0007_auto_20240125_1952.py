@@ -171,6 +171,16 @@ class Migration(migrations.Migration):
             name='staff',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='static_border_stations.Staff'),
         ),
+        migrations.AlterField(
+            model_name='committeemember',
+            name='position',
+            field=models.CharField(blank=True, max_length=2048, null=True),
+        ),
+        migrations.AlterField(
+            model_name='staff',
+            name='position',
+            field=models.CharField(blank=True, max_length=2048, null=True),
+        ),
         
         migrations.RunSQL("update dataentry_permission set action='VIEW_BASIC', min_level='PROJECT' where permission_group = 'STAFF' and action='VIEW'"),
         migrations.RunSQL("update dataentry_permission set action='EDIT_BASIC', min_level='PROJECT' where permission_group = 'STAFF' and action='EDIT'"), 

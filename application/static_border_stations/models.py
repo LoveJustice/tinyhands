@@ -29,7 +29,7 @@ class Person(models.Model):
     first_name = models.CharField(max_length=255, blank=True)
     last_name = models.CharField(max_length=255, blank=True)
     phone = models.CharField(max_length=255, blank=True, null=True)
-    position = models.CharField(max_length=255, blank=True, null=True)
+    position = models.CharField(max_length=2048, blank=True, null=True)
     receives_money_distribution_form = models.BooleanField(default=False)
     border_station = models.ForeignKey(BorderStation, null=True)
     country = models.ForeignKey('dataentry.Country', null=True)
