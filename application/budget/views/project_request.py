@@ -185,8 +185,6 @@ class ProjectRequestViewSet(viewsets.ModelViewSet):
                 project_request.save()
             
             if len(pending_mdf_list) > 0:
-                print('Here')
-                print(pending_mdf_list)
                 if project_request.status == 'Submitted':
                     try:
                         pending_mdf_list[0].requests.remove(project_request)
