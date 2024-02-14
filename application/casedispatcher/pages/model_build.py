@@ -12,7 +12,7 @@ import streamlit as st
 from sklearn.tree import export_text
 from googleapiclient.discovery import build
 import altair as alt
-import seaborn as sns
+import io
 import matplotlib.pyplot as plt
 from sklearn.metrics import roc_curve, auc
 from datetime import datetime
@@ -34,6 +34,7 @@ from libraries.google_lib import (
     save_to_cloud,
     get_file_id,
     load_from_cloud,
+    save_chart_to_cloud,
 )
 from sklearn.metrics import (
     roc_auc_score,
@@ -223,13 +224,13 @@ def do_gridsearch(cls_pipeline, X_train, y_train):
     # Define the parameter grid for the grid search
     search_space = [
         {
-            "clf": [RandomForestClassifier()],
+            "clf": [RandomForestClassifier(random_state=42)],
             "clf__bootstrap": [False, True],
-            "clf__n_estimators": [10, 100],
+            "clf__n_estimators": [10, 50, 100],
             #'clf__max_depth': [5, 10, 20, 30, 40, 50, None],
-            "clf__max_depth": [20, 30],
+            "clf__max_depth": [10, 20, 30],
             #'clf__max_features': [0.5, 0.6, 0.7, 0.8, 1],
-            "clf__max_features": [0.5, 0.6],
+            "clf__max_features": [0.5, 0.6, 0.7],
             "clf__class_weight": ["balanced", None],
         }
     ]
@@ -237,7 +238,7 @@ def do_gridsearch(cls_pipeline, X_train, y_train):
     #                      "balanced_subsample", None]}]
 
     # Create a grid search object using the classifier pipeline and parameter grid
-    grid_search = GridSearchCV(cls_pipeline, search_space, cv=4, n_jobs=-1, verbose=1)
+    grid_search = GridSearchCV(cls_pipeline, search_space, cv=10, n_jobs=-1, verbose=1)
 
     # Print the parameters being searched
     print("Performing grid search...")
@@ -367,6 +368,44 @@ def build_and_train_model(model_data, day_limit):
         x_validation,
         y_validation,
     )
+
+def get_sorted_feature_importances(model, feature_names):
+    feature_importances = model.best_estimator_.named_steps["clf"].feature_importances_
+    importance_df = pd.DataFrame({"Feature": feature_names, "Importance": feature_importances})
+    sorted_importance_df = importance_df.sort_values(by="Importance", ascending=False)
+    return sorted_importance_df
+
+
+def create_feature_importance_chart(importance_df):
+    chart_height = 20 * len(importance_df) + 100
+    chart = (
+        alt.Chart(importance_df)
+        .mark_bar()
+        .encode(
+            x=alt.X("Importance", sort=None),
+            y=alt.Y("Feature", sort="-x", axis=alt.Axis(title="Feature")),
+            tooltip=["Feature", "Importance"],
+        )
+        .properties(height=chart_height)
+    )
+    return chart
+
+
+
+def display_feature_importances_and_save(model, feature_names, drive_service, file_metadata):
+    # Step 1: Extract and sort feature importances
+    sorted_importance_df = get_sorted_feature_importances(model, feature_names)
+
+    # Step 2: Create the chart
+    chart = create_feature_importance_chart(sorted_importance_df)
+
+    # Step 3: Save the chart to a BytesIO object
+    chart_bytes = io.BytesIO()
+    chart.save(chart_bytes, format='png')
+    chart_bytes.seek(0)  # Rewind to the beginning of the BytesIO object
+
+    # Step 4: Save the chart to Google Drive
+    save_chart_to_cloud(chart_bytes, drive_service, file_metadata)
 
 
 def display_feature_importances(model, feature_names):

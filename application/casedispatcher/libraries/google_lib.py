@@ -13,6 +13,8 @@ import pickle
 import io
 from googleapiclient.http import MediaIoBaseUpload, MediaIoBaseDownload
 
+
+
 logger = setup_logger("google_logging", "cloud")
 DB_CREDENTIALS = st.secrets["postgresql"]
 CREDS_DICT = st.secrets["gs_cred"]
@@ -20,6 +22,74 @@ SCOPE = st.secrets["google"]["SCOPE"]
 CLIENT_ID = st.secrets["google"]["CLIENT_ID"]
 CLIENT_SECRET = st.secrets["google"]["CLIENT_SECRET"]
 REDIRECT_URI = st.secrets["google"]["REDIRECT_URI"]
+
+
+
+def create_chart_metadata(chart_name, parent_id=None):
+    """
+    Create file metadata for a chart image to be uploaded to Google Drive.
+
+    Args:
+        chart_name (str): The name of the chart file (e.g., "sales_chart.png").
+        parent_id (str, optional): The ID of the folder to save the file in.
+
+    Returns:
+        dict: File metadata for the chart.
+    """
+    file_metadata = {
+        'name': chart_name,
+        'mimeType': 'image/png',  # MIME type for PNG images
+    }
+
+    if parent_id:
+        file_metadata['parents'] = [parent_id]
+
+    return file_metadata
+
+# Assuming other necessary Google Drive API setup is done elsewhere
+
+def save_chart_to_cloud(chart, drive_service, file_metadata, chart_format="png"):
+    """
+    Save a matplotlib chart to Google Drive.
+
+    Args:
+        chart (matplotlib.figure.Figure): The chart to save.
+        drive_service: Authenticated Google Drive service instance.
+        file_metadata (dict): Metadata for the file, including 'name'.
+        chart_format (str): Format of the chart ('png', 'pdf', etc.).
+
+    Returns:
+        The ID of the file on Google Drive.
+    """
+    # Serialize the chart to a bytes-like object
+    buffer = io.BytesIO()
+    chart.savefig(buffer, format=chart_format)
+    buffer.seek(0)  # Rewind the buffer to the beginning
+
+    # Set the correct MIME type
+    mime_type = f"image/{chart_format}"
+
+    # Upload logic as in the original save_to_cloud function
+    file_name = file_metadata["name"]
+    file_id = get_file_id(file_name, drive_service)  # Ensure this function is defined
+    media = MediaIoBaseUpload(buffer, mimetype=mime_type, resumable=True)
+
+    if file_id:
+        file = (
+            drive_service.files()
+            .update(fileId=file_id, body=file_metadata, media_body=media, fields="id")
+            .execute()
+        )
+        print(f"Updated file: {file_name} (ID: {file_id})")
+    else:
+        file = (
+            drive_service.files()
+            .create(body=file_metadata, media_body=media, fields="id")
+            .execute()
+        )
+        print(f"Created file: {file_name} (ID: {file.get('id')})")
+
+    return file.get("id")
 
 
 def get_matching_spreadsheets(credentials, country):

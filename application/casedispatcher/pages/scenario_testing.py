@@ -3,9 +3,8 @@ import json
 import pandas as pd
 import shap
 import matplotlib.pyplot as plt
-from datetime import date
 from googleapiclient.discovery import build
-from copy import deepcopy
+from sklearn.tree import export_text
 from oauth2client.client import OAuth2Credentials
 import libraries.data_prep as data_prep
 import pickle
@@ -24,6 +23,8 @@ from libraries.case_dispatcher_data import (
     get_suspect_evaluations,
     get_countries,
 )
+from model_build import display_feature_importances
+
 from libraries.google_lib import (
     get_gsheets,
     get_dfs,
@@ -109,6 +110,7 @@ def main():
             "case_dispatcher_model_cols.pkl",
             "case_dispatcher_soc_df.pkl",
         )
+        st.session_state['tree'] = st.session_state["case_dispatcher_model"].best_estimator_.named_steps["clf"].estimators_[0]
         st.session_state["best_pipeline"] = st.session_state[
             "case_dispatcher_model"
         ].best_estimator_
@@ -121,6 +123,15 @@ def main():
             ]
         )
         st.write(st.session_state["case_dispatcher_model_cols"])
+
+        with st.expander("See decision tree rules:"):
+            tree = st.session_state['tree'].best_estimator_.named_steps["clf"].estimators_[0]
+            tree_rules = export_text(tree, feature_names=st.session_state["case_dispatcher_model_cols"])
+            st.text(tree_rules)
+
+        with st.expander("See feature importances:"):
+            display_feature_importances(st.session_state["case_dispatcher_model"], st.session_state["case_dispatcher_model_cols"])
+
     # Initialize the country list and selected country only once
     if "countries" not in st.session_state:
         st.session_state["countries"] = get_countries()
