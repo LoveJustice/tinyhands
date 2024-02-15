@@ -128,9 +128,9 @@ class ProjectRequestViewSet(viewsets.ModelViewSet):
             current.completed_date_time = mdf_list[0].month_year + relativedelta(days=1)
         
             if request.data['status'] != 'Declined':
-                try:
+                if pending_mdf_list.exists():
                     pending_mdf_list[0].requests.remove(current)
-                except ObjectDoesNotExist:
+                else:
                     pass
                 project_request = ProjectRequest.objects.get(id=pk)
                 project_request.id = None
