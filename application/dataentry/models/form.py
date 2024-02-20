@@ -2,6 +2,7 @@ import pytz
 import datetime
 from django.db import models
 from django.db.models import Q
+from django.db.models import JSONField
 from django.utils.timezone import make_aware
 
 from accounts.models import Account
@@ -23,7 +24,7 @@ class Storage(models.Model):
     module_name = models.CharField(max_length=126)
     form_model_name = models.CharField(max_length=126)
     response_model_name = models.CharField(max_length=126, null=True)
-    parent_storage = models.ForeignKey('self', null=True, on_delete=models.SET_NULL)
+    parent_storage = models.ForeignKey('self', null=True, on_delete=models.CASCADE)
     foreign_key_field_parent = models.CharField(max_length=126, null=True)
     foreign_key_field_child = models.CharField(max_length=126, null=True)
     
@@ -155,7 +156,7 @@ class FormCategory(models.Model):
     #         }
     #     ]
     # }
-    form_category_question_config = models.JSONField(null=True)
+    form_category_question_config = JSONField(null=True)
     
     # Only needed for card type category
     storage = models.ForeignKey(Storage, null=True, on_delete=models.CASCADE)
@@ -174,9 +175,9 @@ class Question(models.Model):
     prompt = models.CharField(max_length=126, blank=True)
     description = models.CharField(max_length=126, null=True)
     answer_type = models.ForeignKey(AnswerType, on_delete=models.CASCADE)
-    params=models.JSONField(null=True)   # custom parameters for this question type
+    params=JSONField(null=True)   # custom parameters for this question type
     export_name = models.CharField(max_length=126, null=True)
-    export_params = models.JSONField(null=True)
+    export_params = JSONField(null=True)
     
     def export_header_Address(self, prefix):
         if self.export_name is not None and  self.export_name != '':
@@ -355,7 +356,7 @@ class QuestionLayout(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     weight = models.IntegerField(default=0)
-    form_config = models.JSONField(null=True)
+    form_config = JSONField(null=True)
     
     @staticmethod
     def get_objects_by_form_type(form_type_list):
@@ -367,7 +368,7 @@ class Answer(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     value = models.CharField(max_length=100000, null=True)
     code = models.CharField(max_length=125, null=True)
-    params=models.JSONField(null=True)   # custom parameters for this answer type
+    params=JSONField(null=True)   # custom parameters for this answer type
     
     @staticmethod
     def get_objects_by_form_type(form_type_list):
@@ -406,7 +407,7 @@ class FormValidation(models.Model):
     trigger_value = models.CharField(max_length=126, null=True)
     validation_type = models.ForeignKey(FormValidationType, on_delete=models.CASCADE)
     error_warning_message = models.CharField(max_length=126)
-    params=models.JSONField(null=True)
+    params=JSONField(null=True)
     forms = models.ManyToManyField(Form)
     retrieve = models.BooleanField()
     update = models.BooleanField()
@@ -429,7 +430,7 @@ class FormValidationQuestion(models.Model):
         return qs
 
 class Condition(models.Model):
-    condition = models.JSONField() 
+    condition = JSONField() 
     # {"type":"red", {12: "true", 14: "false"}, points: 10}
     # Type determines red flag,warning,home situation, etc.
     # Second dictionary associates question with answer (dereferenced to use value in this example)
@@ -503,7 +504,7 @@ class ExportImportField(models.Model):
     field_name = models.CharField(max_length=126)
     answer_type = models.ForeignKey(AnswerType, related_name='field_answer_type', on_delete=models.CASCADE)
     export_name = models.CharField(max_length=126)
-    arguments_json = models.JSONField(null=True)
+    arguments_json = JSONField(null=True)
     
     def format_DateTime(self, answer, station):
         tz = pytz.timezone(station.time_zone)

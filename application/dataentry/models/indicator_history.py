@@ -5,6 +5,7 @@ import pytz
 from django.db import models
 from django.db.models import Q
 from django.conf import settings
+from django.db.models import JSONField
 
 from .border_station import BorderStation
 from .country import Country
@@ -16,7 +17,7 @@ class IndicatorHistory(models.Model):
     country = models.ForeignKey(Country, on_delete=models.CASCADE)
     year = models.PositiveIntegerField('Year')
     month = models.PositiveIntegerField('Month')
-    indicators = models.JSONField()
+    indicators = JSONField()
     
     @staticmethod
     def work_days (start_date, end_date, country):

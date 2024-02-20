@@ -2,6 +2,7 @@ from datetime import date
 from collections import namedtuple
 from django.db import models
 from django.db import transaction
+from django.db.models import JSONField
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 
@@ -26,9 +27,9 @@ class Person(models.Model):
     full_name = models.CharField(max_length=255, null=True, blank=True)
     gender = models.CharField(max_length=4, choices=GENDER_CHOICES, blank=True)
     age = models.PositiveIntegerField(null=True, blank=True)
-    address1 = models.ForeignKey(Address1, null=True, blank=True, on_delete=models.CASCADE)
-    address2 = models.ForeignKey(Address2, null=True, blank=True, on_delete=models.CASCADE)
-    address = models.JSONField(null=True)
+    address1 = models.ForeignKey(Address1, null=True, blank=True, on_delete=models.SET_NULL)
+    address2 = models.ForeignKey(Address2, null=True, blank=True, on_delete=models.SET_NULL)
+    address = JSONField(null=True)
     latitude = models.FloatField(null=True)
     longitude = models.FloatField(null=True)
     address_notes = models.TextField('Address Notes', blank=True)

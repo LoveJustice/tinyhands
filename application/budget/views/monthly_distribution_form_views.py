@@ -60,7 +60,10 @@ class MdfCombinedViewSet(viewsets.ModelViewSet):
             country_list = []
             for cntry in in_country.split(','):
                 country_list.append(int(cntry))
-            queryset = queryset.filter(border_station__operating_country__id__in=country_list)   
+            queryset = queryset.filter(border_station__operating_country__id__in=country_list)
+        status = self.request.GET.get('status')
+        if status is not None and status != '':
+            queryset = queryset.filter(status=status)
         
         return queryset
 

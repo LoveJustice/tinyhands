@@ -18,6 +18,7 @@ from dataentry.views import EmpowermentViewSet
 from dataentry.views import GospelViewSet
 from dataentry.views import IncidentViewSet
 from dataentry.views import MonitorAppViewSet
+from dataentry.views import FormExportCsv
 from help.views import VideoViewSet
 
 list = {'get': 'list', 'post': 'create'}
@@ -102,7 +103,7 @@ urlpatterns = [
        re_path(r'^user_permission/(?P<pk>\d+)/$', UserLocationPermissionViewSet.as_view({'get':'user_permissions', 'put':'update_permissions'}), name='UserLocationPermission'),
        re_path(r'^user_permission/countries/(?P<pk>\d+)/$', UserLocationPermissionViewSet.as_view({'get':'user_countries'}), name='UserPermissionCountries'),
        re_path(r'^user_permission/countries/current-user/$', UserLocationPermissionViewSet.as_view({'get':'user_countries_current_user'}), name='UserPermissionCountriesCurrent'),
-        re_path(r'^user_permission/stations/(?P<pk>\d+)/$', UserLocationPermissionViewSet.as_view({'get':'user_stations'}), name='UserPermissionStations'),
+       re_path(r'^user_permission/stations/(?P<pk>\d+)/$', UserLocationPermissionViewSet.as_view({'get':'user_stations'}), name='UserPermissionStations'),
         
         re_path(r'^irfNew/$', IrfFormViewSet.as_view(list), name='irfNew'),
         re_path(r'^irfNew/(?P<station_id>\d+)/(?P<pk>\d+)', IrfFormViewSet.as_view({'get': 'my_retrieve', 'put': 'update', 'delete': 'destroy'}), name='irfNewDetail'),
@@ -120,6 +121,7 @@ urlpatterns = [
         re_path(r'^forms/related/(?P<station_id>\d+)/(?P<form_number>[^/]+)/$', FormViewSet.as_view({'get':'related_forms'}), name='relatedForms'),
         re_path(r'^forms/countries/(?P<form_id>\d+)/$', FormViewSet.as_view({'get':'get_form_countries'}), name='formCountries'),
         re_path(r'^forms/versions/(?P<form_id>\d+)/(?P<country_id>\d+)/$', FormViewSet.as_view({'get':'get_form_versions'}), name='formVersions'),
+        re_path(r'^forms/csv/$', FormExportCsv.as_view({'get':'export_csv'}), name='formCsv'),
         
         
         re_path(r'^cif/$', CifFormViewSet.as_view(list), name='cif'),

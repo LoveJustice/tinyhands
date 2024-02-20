@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import JSONField
 
 from .person import Person
 from .form import BaseCard, BaseForm
@@ -257,7 +258,7 @@ class LocationBoxCommon(BaseCard):
     place_kind = models.CharField(max_length=126, null=True)
     country = models.CharField(max_length=126, null=True)
     address2 = models.ForeignKey(Address2, null=True, on_delete=models.CASCADE)
-    address = models.JSONField(null=True)
+    address = JSONField(null=True)
     latitude = models.FloatField(null=True)
     longitude = models.FloatField(null=True)
     address_notes = models.TextField('Address Notes', blank=True)

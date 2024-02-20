@@ -3,10 +3,11 @@ from django.db import models
 from dataentry.models import BorderStation
 from django.core.exceptions import ObjectDoesNotExist
 
+
 class NullableEmailField(models.EmailField):
     description = "EmailField that stores NULL but returns ''"
 
-    def from_db_value(self, value, expression, connection):
+    def from_db_value(self, value, expression, connection, context):
         if value is None:
             return ''
         return value
@@ -18,9 +19,10 @@ class NullableEmailField(models.EmailField):
 
     def get_prep_value(self, value):
         return value or None
-    
+
+
 class Person(models.Model):
-    email = email = NullableEmailField(blank=True, null=True, default=None, unique=False)
+    email = NullableEmailField(blank=True, null=True, default=None, unique=False)
     first_name = models.CharField(max_length=255, blank=True)
     last_name = models.CharField(max_length=255, blank=True)
     phone = models.CharField(max_length=255, blank=True, null=True)

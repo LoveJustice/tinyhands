@@ -644,7 +644,9 @@ class MdfItem(models.Model):
     description = models.TextField('Description', blank=True)
     associated_section = models.IntegerField(constants.CATEGORY_CHOICES, blank=True, null=True)
     deduct = models.CharField(max_length=127, blank=True, null=True)
+    reason_not_deduct = models.TextField('Reason to not deduct', blank=True)
     work_project = models.ForeignKey(BorderStation, on_delete=models.CASCADE)
+    approved_by = models.CharField(max_length=127, blank=True)
     
     def get_country_id(self):
         return self.mdf.project.operating_country.id

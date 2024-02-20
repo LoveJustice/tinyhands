@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import JSONField
 
 from .form import Form
 from .country import Country
@@ -13,7 +14,7 @@ class Audit(models.Model):
     author = models.ForeignKey(Account, null=True, on_delete=models.SET_NULL)
     notes = models.TextField(blank=True)
     forms_in_range = models.PositiveIntegerField(null=True)
-    template = models.JSONField(null=True)
+    template = JSONField(null=True)
     form_version = models.CharField(max_length=126, blank=True)
         # contains array of objects with section name and question count
         
@@ -59,7 +60,7 @@ class AuditSample(models.Model):
     high_level_notes = models.TextField(blank=True)
     monitor_notes = models.TextField(blank=True)
     completion_date = models.DateField(null=True)
-    results = models.JSONField(null=True)
+    results = JSONField(null=True)
         # contains array of objects with section name incorrect count
     corrected = models.CharField(max_length=126)
     no_paper_form = models.BooleanField('No Paper form', default=False)
