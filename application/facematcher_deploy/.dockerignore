@@ -1,0 +1,18 @@
+.git
+*.log
+*.md
+tests/
+env.list
+*.toml
+.streamlit/secrets.toml
+
+# Ignore git directory
+.git/
+
+# Ignore all markdown files
+*.md
+
+# Ignore cache directory
+__pycache__/
+*.pyc
+*.pyo

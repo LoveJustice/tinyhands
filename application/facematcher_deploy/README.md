@@ -1,0 +1,1 @@
+docker buildx build --platform linux/amd64 -t christodocker/facematcher-app:normalizeimages . --push

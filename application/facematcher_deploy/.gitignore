@@ -1,0 +1,71 @@
+# .gitignore
+venv/
+secrets.toml
+.streamlit/
+
+# JetBrains IDEs (like PyCharm)
+.idea/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+*.egg
+*.log
+*.pot
+*.db
+*.sqlite3
+*.db-journal
+
+# Virtual environments
+venv/
+*.venv/
+env/
+ENV/
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# Streamlit cache
+.streamlit/
+
+# Other common tools
+*.swo
+*.swp
+.DS_Store
+*.sage.py
+
+# Logs
+logs/
+
+# OS generated
+*.DS_Store
+*.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+*.tar
+*.zip
+
+env.list
