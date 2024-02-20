@@ -24,6 +24,19 @@ CLIENT_SECRET = st.secrets["google"]["CLIENT_SECRET"]
 REDIRECT_URI = st.secrets["google"]["REDIRECT_URI"]
 
 
+def load_model_and_columns(drive_service, model_name, cols_name, data_name):
+    model_file_id = get_file_id(model_name, drive_service)
+    model = load_from_cloud(drive_service, model_file_id)
+    st.write(f"Fetch {model_name} with file_id: {model_file_id}")
+
+    cols_file_id = get_file_id(cols_name, drive_service)
+    cols = load_from_cloud(drive_service, cols_file_id)
+
+    data_file_id = get_file_id(data_name, drive_service)
+    data = load_from_cloud(drive_service, data_file_id)
+
+    return model, cols, data
+
 
 def create_chart_metadata(chart_name, parent_id=None):
     """

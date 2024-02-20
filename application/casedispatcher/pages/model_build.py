@@ -187,7 +187,9 @@ def train_test_val_split(sub_df, te_size=0.2, val_size=0.1):
             "social_media",
             "master_person_id",
             "irf_number",
+            "operating_country_id",
             "country",
+            "gender",
             "sf_number_group",
         ]
     )
@@ -499,6 +501,15 @@ def main():
         file_id = save_model_to_cloud(
             case_dispatcher_model, "case_dispatcher_model.pkl", drive_service
         )
+        file_bytes = make_file_bytes(x_validation)
+        file_metadata = {"name": "x_validation.pkl"}
+        file_id = save_to_cloud(file_bytes, drive_service, file_metadata)
+        st.write(f"Save x_validation to cloud with file_id: {file_id}")
+
+        file_bytes = make_file_bytes(y_validation)
+        file_metadata = {"name": "y_validation.pkl"}
+        file_id = save_to_cloud(file_bytes, drive_service, file_metadata)
+        st.write(f"Save y_validation to cloud with file_id: {file_id}")
 
         # Allowing user to select a feature to see its correlation with the target
         feature_to_correlate = st.selectbox(

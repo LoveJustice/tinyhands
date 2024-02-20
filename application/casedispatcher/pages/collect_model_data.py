@@ -77,7 +77,6 @@ num_features = [
     "arrested",
     "job_promised_amount",
     "days",
-    "gender",
     "age",
 ]
 
@@ -94,6 +93,7 @@ non_boolean_features = [
     "operating_country_id",
     "social_media",
     "irf_number",
+    "gender"
 ]
 
 
@@ -287,9 +287,33 @@ def main():
         db_sus["arrested"] = (
             db_sus["arrested"].fillna("No").replace({"Yes": 1, "No": 0}).astype(int)
         )
-        db_sus["gender"] = (
-            db_sus["gender"].replace({"F": 1, "M": 0, "U": 2}).fillna(-1).astype(int)
-        )
+
+        gender_dummies = pd.get_dummies(db_sus['gender'], prefix='gender')
+
+        # Rename the columns to the desired names
+        gender_dummies.columns = ['gender_F', 'gender_M', 'gender_U']
+
+        # If you prefer specific column names like male, female, unknown_gender, you can rename them:
+        gender_dummies.rename(columns={'gender_F': 'female', 'gender_M': 'male', 'gender_U': 'unknown_gender'},
+                              inplace=True)
+
+        # Now, concatenate these new columns back to the original DataFrame
+        db_sus = pd.concat([db_sus, gender_dummies], axis=1)
+
+
+        # Determine the top N countries to keep
+        top_n_countries = db_sus['country'].value_counts().nlargest(10).index
+
+        # Create a new column where less common countries are labeled as 'Other'
+        db_sus['country_reduced'] = db_sus['country'].apply(
+            lambda x: x if x in top_n_countries else 'Other')
+
+        # Apply one-hot encoding to the reduced country column
+        country_dummies = pd.get_dummies(db_sus['country_reduced'], prefix='country')
+
+        # Concatenate these new columns back to the original DataFrame
+        db_sus = pd.concat([db_sus, country_dummies], axis=1)
+
         db_sus["age"] = db_sus["age"].fillna(-99)  # Fill missing values with -99
 
         # Copy the dataframe

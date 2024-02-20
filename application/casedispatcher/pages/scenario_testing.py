@@ -6,28 +6,16 @@ import matplotlib.pyplot as plt
 from googleapiclient.discovery import build
 from sklearn.tree import export_text
 from oauth2client.client import OAuth2Credentials
-import libraries.data_prep as data_prep
-import pickle
-from libraries.case_dispatcher_model import (
-    check_grid_search_cv,
-    save_results,
-    make_new_predictions,
-)
-from libraries.data_prep import remove_non_numeric, process_columns
-from libraries.entity_model import EntityGroup
-from libraries.case_dispatcher_model import TypeSelector
 from libraries.case_dispatcher_data import (
-    get_vdf,
-    get_suspects,
-    get_irf,
-    get_suspect_evaluations,
+
     get_countries,
 )
-from model_build import display_feature_importances
+from pages.model_build import display_feature_importances
 
 from libraries.google_lib import (
     get_gsheets,
     get_dfs,
+    load_model_and_columns,
     attrdict_to_dict,
     make_file_bytes,
     save_to_cloud,
