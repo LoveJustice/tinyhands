@@ -7,7 +7,7 @@ from django.core.exceptions import ObjectDoesNotExist
 class NullableEmailField(models.EmailField):
     description = "EmailField that stores NULL but returns ''"
 
-    def from_db_value(self, value, expression, connection, context):
+    def from_db_value(self, value, expression, connection):
         if value is None:
             return ''
         return value

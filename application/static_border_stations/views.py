@@ -112,14 +112,6 @@ class LocationViewSet(BorderStationRestAPI):
 class CommitteeMemberViewSet(BorderStationRestAPI):
     queryset = CommitteeMember.objects.all()
     serializer_class = CommitteeMemberSerializer
-    
-    def retrieve(self, request, pk):
-        print('CommitteeMemberViewSet.CommitteeMemberViewSet', pk)
-        try:
-            CommitteeMember.object.get(id=pk)
-        except:
-            print('CommitteeMemberViewSet.CommitteeMemberViewSet could not find')
-        return super().retrieve(request, pk)
 
 
 class StaffViewSet(BorderStationRestAPI):

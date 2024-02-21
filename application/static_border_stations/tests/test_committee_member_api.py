@@ -63,7 +63,6 @@ class CommitteeMemberTests(RestApiTestCase):
         self.login(usr)
         url = reverse('CommitteeMemberDetail', args=[self.committee_member.id])
         self.committee_member.save()
-        print("=====", self.committee_member.id)
 
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
