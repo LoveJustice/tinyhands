@@ -532,6 +532,13 @@ class MonthlyDistributionForm(models.Model):
         for to_deduct in to_deduct_qs:
             total += to_deduct.cost
         return total
+    
+    def money_not_spent_not_deduct_total(self, project):
+        total = 0
+        to_deduct_qs = self.mdfitem_set.filter(work_project=project, category=constants.MONEY_NOT_SPENT, deduct='No').exclude(cost__isnull=True)
+        for to_deduct in to_deduct_qs:
+            total += to_deduct.cost
+        return total
 
     
     def station_total(self, project):
@@ -637,7 +644,9 @@ class MdfItem(models.Model):
     description = models.TextField('Description', blank=True)
     associated_section = models.IntegerField(constants.CATEGORY_CHOICES, blank=True, null=True)
     deduct = models.CharField(max_length=127, blank=True, null=True)
+    reason_not_deduct = models.TextField('Reason to not deduct', blank=True)
     work_project = models.ForeignKey(BorderStation)
+    approved_by = models.CharField(max_length=127, blank=True)
     
     def get_country_id(self):
         return self.mdf.project.operating_country.id

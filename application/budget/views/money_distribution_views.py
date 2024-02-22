@@ -69,13 +69,21 @@ class MoneyDistribution(viewsets.ViewSet):
         return Response({"staff_members": staff_serializer.data, "committee_members": committee_members_serializer.data, "national_staff_members": national_staff_serializer.data, "pdf_url": pdf_url})
 
     def send_emails(self, request, pk):
-        budget_calc_id = pk
+        mdf_type = request.data['mdf_type']
+        if mdf_type is None:
+            mdf_type = 'budget'
+        if mdf_type == 'budget':
+            budget = BorderStationBudgetCalculation.objects.get(pk=pk)
+            border_station = budget.border_station
+            the_id = budget.mdf_uuid
+        else:
+            budget = MonthlyDistributionForm.objects.get(pk=pk)
+            border_station = budget.border_station
+            the_id = '0' + str(budget.id)
+            
         staff_ids = request.data['staff_ids']
         committee_ids = request.data['committee_ids']
         national_staff_ids = request.data['national_staff_ids']
-
-        budget_calc = BorderStationBudgetCalculation.objects.get(pk=budget_calc_id)
-        border_station = BorderStation.objects.get(pk=budget_calc.border_station.id)
         
         email_sender = border_station.operating_country.mdf_sender_email
 
@@ -83,32 +91,33 @@ class MoneyDistribution(viewsets.ViewSet):
         committee_members = border_station.committeemember_set.all()
         national_staff = Account.objects.filter(permission_can_receive_mdf=True, id__in=national_staff_ids)
 
-        self.save_recipients_and_email(staff, staff_ids, budget_calc, email_sender)
-        self.save_recipients_and_email(committee_members, committee_ids, budget_calc, email_sender)
+        self.save_recipients_and_email(staff, staff_ids, the_id, mdf_type, border_station, email_sender)
+        self.save_recipients_and_email(committee_members, committee_ids, the_id, mdf_type, border_station, email_sender)
 
-        self.email_national_staff(national_staff, budget_calc, email_sender)
+        self.email_national_staff(national_staff, the_id, mdf_type, border_station, email_sender)
         return Response("Emails Sent!", status=200)
 
-    def save_recipients_and_email(self, person_list, recipient_ids, budget_calc, email_sender):
+    def save_recipients_and_email(self, person_list, recipient_ids, budget_id, mdf_type, border_station, email_sender):
         for person in person_list:
             if person.id in recipient_ids:
                 if person.receives_money_distribution_form == False:
                     person.receives_money_distribution_form = True
                     person.save()
-                self.email_staff_and_committee_members(person, budget_calc, 'money_distribution_form', email_sender)
+                self.email_staff_and_committee_members(person, budget_id, mdf_type, border_station, 'money_distribution_form', email_sender)
             else:
                 person.receives_money_distribution_form = False
                 person.save()
 
-    def email_national_staff(self, staff_list, budget_calc, email_sender):
+    def email_national_staff(self, staff_list, budget_id, mdf_type, border_station, email_sender):
         for staff in staff_list:
-            self.email_staff_and_committee_members(staff, budget_calc, 'money_distribution_form', email_sender)
+            self.email_staff_and_committee_members(staff, budget_id, mdf_type, border_station, 'money_distribution_form', email_sender)
 
-    def email_staff_and_committee_members(self, person, budget_calc, template, email_sender, context={}):
-        logger.info("Sending MDF - %s for %s to %s", budget_calc.border_station.station_code, budget_calc.month_year.strftime("%B %Y"), person.email)
+    def email_staff_and_committee_members(self, person, budget_id, mdf_type, border_station, template, email_sender, context={}):
+        logger.info("Sending MDF - %s for %s to %s", border_station.station_code, mdf_type, person.email)
         context['person'] = person
-        context['mdf_uuid'] = budget_calc.mdf_uuid
-        context['station_name'] = budget_calc.border_station.station_name
+        context['mdf_uuid'] = budget_id
+        context['station_name'] = border_station.station_name
+        context['mdf_type'] = mdf_type
         context['site'] = settings.SITE_DOMAIN
         send_templated_mail(
             template_name=template,

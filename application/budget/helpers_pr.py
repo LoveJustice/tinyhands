@@ -348,7 +348,7 @@ class MoneyDistributionFormProjectRequestHelper:
         
         if self.budget.stationary_total() > 0:
             items.append(BudgetLineItem('Stationary', self.budget.stationary_total(),''))
-        return items + self.get_other_items(constants.AWARENESS, self.project)
+        return items + self.get_request_items(constants.AWARENESS, self.project)
     
     @property
     def money_not_spent_total(self):

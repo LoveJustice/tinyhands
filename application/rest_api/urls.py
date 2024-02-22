@@ -17,6 +17,8 @@ from dataentry.views import ClientDiagnosticViewSet
 from dataentry.views import EmpowermentViewSet
 from dataentry.views import GospelViewSet
 from dataentry.views import IncidentViewSet
+from dataentry.views import MonitorAppViewSet
+from dataentry.views import FormExportCsv
 from help.views import VideoViewSet
 
 list = {'get': 'list', 'post': 'create'}
@@ -119,6 +121,7 @@ urlpatterns = [
         url(r'^forms/related/(?P<station_id>\d+)/(?P<form_number>[^/]+)/$', FormViewSet.as_view({'get':'related_forms'}), name='relatedForms'),
         url(r'^forms/countries/(?P<form_id>\d+)/$', FormViewSet.as_view({'get':'get_form_countries'}), name='formCountries'),
         url(r'^forms/versions/(?P<form_id>\d+)/(?P<country_id>\d+)/$', FormViewSet.as_view({'get':'get_form_versions'}), name='formVersions'),
+        url(r'^forms/csv/$', FormExportCsv.as_view({'get':'export_csv'}), name='formCsv'),
         
         
         url(r'^cif/$', CifFormViewSet.as_view(list), name='cif'),
@@ -201,4 +204,5 @@ urlpatterns = [
         url(r'^incident/names/$', IncidentViewSet.as_view({'get':'get_names_and_addresses'}), name='IncidentNames'),
         
         url(r'^diagnostic/$', ClientDiagnosticViewSet.as_view(list), name='Diagnostic'),
+        url(r'^monitor-form/$', MonitorAppViewSet.as_view({'post':'create'}), name='MonitorApp'),
 ]

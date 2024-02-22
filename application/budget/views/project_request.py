@@ -128,9 +128,9 @@ class ProjectRequestViewSet(viewsets.ModelViewSet):
             current.completed_date_time = mdf_list[0].month_year + relativedelta(days=1)
         
             if request.data['status'] != 'Declined':
-                try:
+                if pending_mdf_list.exists():
                     pending_mdf_list[0].requests.remove(current)
-                except ObjectDoesNotExist:
+                else:
                     pass
                 project_request = ProjectRequest.objects.get(id=pk)
                 project_request.id = None
@@ -281,7 +281,7 @@ class ProjectRequestDiscussionViewSet(viewsets.ModelViewSet):
     permissions_required = [{'permission_group':'PROJECT_REQUEST', 'action':'VIEW'},]
     delete_permissions_required = [{'permission_group':'PROJECT_REQUEST', 'action':'DELETE'},]
     post_permissions_required = [{'permission_group':'PROJECT_REQUEST', 'action':'VIEW'},]
-    put_permissions_required = [{'permission_group':'PROJECT_REQUEST', 'action':'EDIT'},]
+    put_permissions_required = [{'permission_group':'PROJECT_REQUEST', 'action':'VIEW'},]
     filter_backends = (fs.SearchFilter, fs.OrderingFilter,)
     search_fields = []
     ordering_fields = ['date_time_entered']
@@ -302,12 +302,24 @@ class ProjectRequestDiscussionViewSet(viewsets.ModelViewSet):
             return Response(status=status.HTTP_400_BAD_REQUEST)
         
         discussion = serializer.save()
+        
+        category_name = ''
+        for category in constants.CATEGORY_CHOICES:
+            if category[0] == discussion.request.category:
+                category_name = category[1]
+                
         for account_id in request.data['notify']:
             account = Account.objects.get(id=account_id)
             discussion.notify.add(account)
         
             context = {}
+            context['staff'] = account.get_full_name()
+            context['Comment_user'] = request.user.get_full_name()
             context['url'] = settings.CLIENT_DOMAIN +'/reviewProjectRequests?id=' + str(discussion.request.id)
+            context['Project'] = discussion.request.project.station_name
+            context['Category'] = category_name
+            context['Description'] = discussion.request.description
+            context['Comment'] = discussion.text
             send_templated_mail(
                 template_name='discussion_notify',
                 from_email=settings.ADMIN_EMAIL_SENDER,

@@ -7002,5 +7002,58 @@
       "question": "pvfPvGuardianKnowDest",
       "field_name": "guardian_know_destination"
    }
+},
+{
+   "model": "dataentry.formvalidation",
+   "fields": {
+      "form_tag": "pvfDateRecived",
+      "level": 2,
+      "trigger": null,
+      "trigger_value": null,
+      "validation_type": 1,
+      "error_warning_message": "Date PVF received must be populated",
+      "params": {
+         "starting_submission_date": "20231120"
+      },
+      "retrieve": false,
+      "update": true,
+      "forms": [
+         "pvfNepal",
+         "pvfIndia",
+         "pvfIndiaNetwork",
+         "pvfGhana",
+         "pvfKenya",
+         "pvfSouthAfrica",
+         "pvfNamibia",
+         "pvfLiberia",
+         "pvfEthiopia",
+         "pvfBenin",
+         "pvfMalawi",
+         "pvfBurkinaFaso",
+         "pvfBurundi",
+         "pvfIndonesia",
+         "pvfLesotho",
+         "pvfMozambique",
+         "pvfUganda",
+         "pvfZambia",
+         "pvfEcuador",
+         "pvfArgentina",
+         "pvfZimbabwe",
+         "pvfSierraLeone",
+         "pvfRwanda",
+         "pvfTanzania",
+         "pvfBangladesh",
+         "pvfCambodia",
+         "pvfUSA",
+         "pvfOpenSource"
+      ]
+   }
+},
+{
+   "model": "dataentry.formvalidationquestion",
+   "fields": {
+      "validation": "pvfDateRecived",
+      "question": "pvfComplianceDateReceived"
+   }
 }
 ]

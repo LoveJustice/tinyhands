@@ -65,13 +65,14 @@ INSTALLED_APPS = [
     'django_extensions',
     'rest_framework.authtoken',
     'django_filters',
-    'help'
+    'help',
+    'rest_framework_jwt',  # Security tokens for auth0
 ]
-
 
 MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.auth.middleware.RemoteUserMiddleware',  # Auth0
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -157,6 +158,7 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.AllowAny',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',  # Auth0
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'accounts.expiring_token_authentication.ExpiringTokenAuthentication',
@@ -167,21 +169,37 @@ REST_FRAMEWORK = {
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
 }
 
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',  # Default
+    'django.contrib.auth.backends.RemoteUserBackend',  # Auth0
+]
+# Auth0
+JWT_AUTH = {
+    'JWT_PAYLOAD_GET_USERNAME_HANDLER':
+        'util.auth0.jwt_get_username_from_payload_handler',
+    'JWT_DECODE_HANDLER':
+        'util.auth0.jwt_decode_token',
+    'JWT_ALGORITHM': 'RS256',
+    'JWT_AUDIENCE': os.environ.get('AUTH0_AUDIENCE_ID', 'UNSET_AUTH0_AUDIENCE_ID'),
+    'JWT_ISSUER': os.environ.get('AUTH0_DOMAIN', 'UNSET_AUTH0_DOMAIN'),
+    'JWT_AUTH_HEADER_PREFIX': 'Bearer',
+}
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'formatters': {
         'verbose': {
             'format':
-              '%(levelname)s|%(asctime)s|%(name)s[%(lineno)s-%(funcName)s]>> %(message)s',
+                '%(levelname)s|%(asctime)s|%(name)s[%(lineno)s-%(funcName)s]>> %(message)s',
         },
     },
     'handlers': {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename':os.environ['DREAMSUITE_LOG'],
-            'formatter':'verbose',
+            'filename': os.environ['DREAMSUITE_LOG'],
+            'formatter': 'verbose',
         },
     },
     'loggers': {
@@ -210,12 +228,12 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': False,
         },
-        'googleapiclient':{
+        'googleapiclient': {
             'handlers': ['file'],
             'level': 'ERROR',
             'propagate': True,
         },
-        'recordlinkage':{
+        'recordlinkage': {
             'handlers': ['file'],
             'level': 'ERROR',
             'propagate': True,
