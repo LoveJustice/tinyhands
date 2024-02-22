@@ -20,6 +20,7 @@ urlpatterns = [
     url(r'^api/', include('accounts.urls')),
     url(r'^api/', include('budget.urls')),
     url(r'^api/', include('events.urls')),
+    url(r'^api/', include('face_matching.urls')),
     url(r'^api/', include('rest_api.urls')),
     url(r'^api/', include('portal.urls')),
     url(r'^api/', include('static_border_stations.urls')),
