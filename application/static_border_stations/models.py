@@ -327,7 +327,7 @@ class StaffProject(models.Model):
         self.staff = parent
 
 class StaffAttachment(models.Model):
-    staff = models.ForeignKey(Staff)
+    staff = models.ForeignKey(Staff, on_delete=models.CASCADE)
     attachment = models.FileField(upload_to='staff_attachment', default='', blank=True)
     option = models.CharField(max_length=126, null=True)
     attach_date = models.DateField(auto_now_add=True)
