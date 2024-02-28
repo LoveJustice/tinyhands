@@ -18,7 +18,6 @@ class CommitteeMemberTests(RestApiTestCase):
         self.committee_member = CommitteeMemberFactory.create()
         border_station = self.committee_member.border_station
         self.committee_member.member_projects.add(border_station)
-        self.comittee_member.save()
         self.other_committee_members = CommitteeMemberFactory.create_batch(4)
         for member in self.other_committee_members:
             member.member_projects.add(border_station)
