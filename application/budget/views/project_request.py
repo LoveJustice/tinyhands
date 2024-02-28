@@ -177,7 +177,6 @@ class ProjectRequestViewSet(viewsets.ModelViewSet):
             else:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
             
-            print('before', project_request.status, is_author, project_request.cost, project_request.original_cost)
             if is_author:
                 project_request.cost = project_request.original_cost
                 if project_request.status != 'Submitted':
@@ -281,7 +280,7 @@ class ProjectRequestDiscussionViewSet(viewsets.ModelViewSet):
     permissions_required = [{'permission_group':'PROJECT_REQUEST', 'action':'VIEW'},]
     delete_permissions_required = [{'permission_group':'PROJECT_REQUEST', 'action':'DELETE'},]
     post_permissions_required = [{'permission_group':'PROJECT_REQUEST', 'action':'VIEW'},]
-    put_permissions_required = [{'permission_group':'PROJECT_REQUEST', 'action':'EDIT'},]
+    put_permissions_required = [{'permission_group':'PROJECT_REQUEST', 'action':'VIEW'},]
     filter_backends = (fs.SearchFilter, fs.OrderingFilter,)
     search_fields = []
     ordering_fields = ['date_time_entered']
@@ -302,12 +301,24 @@ class ProjectRequestDiscussionViewSet(viewsets.ModelViewSet):
             return Response(status=status.HTTP_400_BAD_REQUEST)
         
         discussion = serializer.save()
+        
+        category_name = ''
+        for category in constants.CATEGORY_CHOICES:
+            if category[0] == discussion.request.category:
+                category_name = category[1]
+                
         for account_id in request.data['notify']:
             account = Account.objects.get(id=account_id)
             discussion.notify.add(account)
         
             context = {}
+            context['staff'] = account.get_full_name()
+            context['Comment_user'] = request.user.get_full_name()
             context['url'] = settings.CLIENT_DOMAIN +'/reviewProjectRequests?id=' + str(discussion.request.id)
+            context['Project'] = discussion.request.project.station_name
+            context['Category'] = category_name
+            context['Description'] = discussion.request.description
+            context['Comment'] = discussion.text
             send_templated_mail(
                 template_name='discussion_notify',
                 from_email=settings.ADMIN_EMAIL_SENDER,

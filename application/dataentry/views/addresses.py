@@ -3,7 +3,7 @@ import logging
 from rest_framework import filters as fs
 from rest_framework import status
 from rest_framework import viewsets
-from rest_framework.decorators import detail_route, list_route
+from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
@@ -26,7 +26,7 @@ class Address2ViewSet(viewsets.ModelViewSet):
     ordering_fields = ('name', 'address1__name', 'longitude', 'latitude', 'level', 'verified', 'canonical_name__name')
     ordering = ('name',)
 
-    @detail_route()
+    @action(detail=True)
     def related_items(self, request, pk):
         try:
             address = Address2.objects.get(pk=pk)
@@ -59,7 +59,7 @@ class Address2ViewSet(viewsets.ModelViewSet):
             logger.debug('Address2 could not be deleted due to related items on the following address1: ' + pk)
             return Response({'detail': "This Address 2 could not be deleted because it is being used by other resources"}, status=status.HTTP_409_CONFLICT)
 
-    @detail_route()
+    @action(detail=False)
     def swap_addresses(self, request, pk, pk2):
         try:
             address = Address2.objects.get(pk=pk)
@@ -113,13 +113,13 @@ class Address1ViewSet(viewsets.ModelViewSet):
     ordering_fields = ('name', 'longitude', 'latitude', 'level', 'completed')
     ordering = ('name',)
 
-    @list_route()
+    @action(detail=False)
     def list_all(self, request):
         address1s = Address1.objects.all()
         serializer = self.get_serializer(address1s, many=True)
         return Response(serializer.data)
 
-    @detail_route()
+    @action(detail=True)
     def related_items(self, request, pk):
         try:
             address = Address1.objects.get(pk=pk)
@@ -130,7 +130,7 @@ class Address1ViewSet(viewsets.ModelViewSet):
         serializer = Address1RelatedItemsSerializer(address)
         return Response(serializer.data)
 
-    @detail_route()
+    @action(detail=True)
     def swap_addresses(self, request, pk, pk2):
         try:
             address = Address1.objects.get(pk=pk)

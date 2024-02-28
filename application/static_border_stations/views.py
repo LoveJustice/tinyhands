@@ -5,7 +5,7 @@ from datetime import date
 
 from PIL import Image
 from rest_framework import viewsets, status
-from rest_framework.decorators import list_route, api_view, permission_classes
+from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
@@ -39,7 +39,7 @@ class BorderStationViewSet(viewsets.ModelViewSet):
     ordering = ('station_name',)
     search_fields = ('station_name', 'station_code',)
     
-    @list_route()
+    @action(detail=False)
     def list_all(self, request):
         border_stations = BorderStation.objects.all().order_by('station_name')
         country_param = request.query_params.get('operating_country', None)

@@ -53,6 +53,7 @@ class StaffFactory(DjangoModelFactory):
     last_name = factory.Sequence(lambda n: "staff_last_%d" % n)
     receives_money_distribution_form = True
     border_station = factory.SubFactory(BorderStationFactory)
+    country = factory.SubFactory(CountryFactory)
 
 
 class LocationFactory(DjangoModelFactory):

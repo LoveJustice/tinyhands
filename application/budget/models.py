@@ -266,7 +266,7 @@ class OtherBudgetItemCost(models.Model):
     budget_item_parent = models.ForeignKey(BorderStationBudgetCalculation, blank=True, null=True, on_delete=models.CASCADE)
     associated_section = models.IntegerField(BUDGET_FORM_SECTION_CHOICES, blank=True, null=True)
     deduct = models.CharField(max_length=255, blank=True, null=True)
-    work_project = models.ForeignKey(BorderStation, null=True)
+    work_project = models.ForeignKey(BorderStation, null=True, on_delete=models.CASCADE)
     
     def get_country_id(self):
         if self.budget_item_parent is None or self.budget_item_parent.border_station is None or self.budget_item_parent.border_station.operating_country is None:
@@ -285,7 +285,7 @@ class StaffBudgetItem(models.Model):
     type_name = models.CharField(max_length=255, blank=False)
     description = models.TextField('Description', blank=True)
     cost = models.DecimalField(max_digits=17, decimal_places=2, default=0, blank=True, null=True)
-    work_project = models.ForeignKey(BorderStation, null=True)
+    work_project = models.ForeignKey(BorderStation, null=True, on_delete=models.CASCADE)
     
     class Meta:
        unique_together = ("budget_calc_sheet", "staff_person", 'type_name', 'work_project')
@@ -321,7 +321,7 @@ class ProjectRequest(models.Model):
     staff = models.ForeignKey(Staff, null=True, on_delete=models.SET_NULL)
     benefit_type_name = models.CharField(max_length=127, blank=True)
     discussion_status =  models.CharField(max_length=127, default='None')
-    prior_request = models.ForeignKey('self', null=True)
+    prior_request = models.ForeignKey('self', null=True, on_delete=models.CASCADE)
     override_mdf_project = models.ForeignKey(BorderStation, null=True, on_delete=models.CASCADE,
                                              related_name="override_mdf")
     completed_date_time = models.DateTimeField(null=True)
@@ -645,7 +645,8 @@ class MdfItem(models.Model):
     associated_section = models.IntegerField(constants.CATEGORY_CHOICES, blank=True, null=True)
     deduct = models.CharField(max_length=127, blank=True, null=True)
     reason_not_deduct = models.TextField('Reason to not deduct', blank=True)
-    work_project = models.ForeignKey(BorderStation)
+    work_project = models.ForeignKey(BorderStation, on_delete=models.CASCADE)
+    approved_by = models.CharField(max_length=127, blank=True)
     
     def get_country_id(self):
         return self.mdf.project.operating_country.id
