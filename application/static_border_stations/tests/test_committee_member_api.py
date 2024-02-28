@@ -1,4 +1,4 @@
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase, APIClient
 
@@ -15,6 +15,7 @@ class CommitteeMemberTests(RestApiTestCase):
     fixtures = ['initial-required-data/Region.json','initial-required-data/Country.json', 'initial-required-data/Permission.json']
     def setUp(self):
         self.committee_member = CommitteeMemberFactory.create()
+        self.committee_member.save()
         self.other_committee_members = CommitteeMemberFactory.create_batch(4)
 
     # Authentication Methods
@@ -61,6 +62,7 @@ class CommitteeMemberTests(RestApiTestCase):
         usr = GenericUserWithPermissions.create([{'group':'PROJECTS', 'action':'VIEW', 'country': None, 'station': None},])
         self.login(usr)
         url = reverse('CommitteeMemberDetail', args=[self.committee_member.id])
+        self.committee_member.save()
 
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)

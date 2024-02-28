@@ -1,4 +1,4 @@
-FROM python:3.8-slim
+FROM python:3.9-slim
 MAINTAINER bradleo99
 ENV PYTHONUNBUFFERED 1
 
@@ -19,11 +19,14 @@ RUN apt-get -y install \
      cmake \
 #     linux-headers \
     && update-ca-certificates \
-    && pip install numpy==1.19.5 \
-    && pip install pandas==1.1.5
+    && pip install numpy==1.26.0 \
+    && pip install pandas==2.1.1
 
 RUN apt-get update && apt-get install ffmpeg libsm6 libxext6  -y
 RUN pip install opencv-python==3.4.18.65
+
+RUN apt install libcairo2-dev pkg-config python3-dev -y
+RUN pip install pycairo
 
 # IDEALLY - Install build deps, then run `pip install`, then remove unneeded build deps all in a single step.
 # Not sure how to do that with apt-get

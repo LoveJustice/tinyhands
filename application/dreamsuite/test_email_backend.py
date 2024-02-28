@@ -3,7 +3,7 @@ import smtplib
 import threading
 import ipdb
 from django.core.mail.backends.base import BaseEmailBackend
-from django.utils import six
+import six
 
 SMTP_ERROR_EMAIL = "fail@smtperror.com"
 
