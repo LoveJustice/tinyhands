@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.postgres.fields import JSONField
+from django.db.models import JSONField
 
 from .form import Form
 from .country import Country
@@ -7,7 +7,7 @@ from accounts.models import Account
 
 class Audit(models.Model):
     form_name = models.CharField(max_length=126)
-    country = models.ForeignKey(Country)
+    country = models.ForeignKey(Country, on_delete=models.CASCADE)
     start_date = models.DateField()
     end_date = models.DateField()
     percent_to_sample = models.FloatField(100)
@@ -52,7 +52,7 @@ class Audit(models.Model):
         return result
     
 class AuditSample(models.Model):
-    audit = models.ForeignKey(Audit)
+    audit = models.ForeignKey(Audit, on_delete=models.CASCADE)
     form_id = models.PositiveIntegerField()
     form_number = models.CharField(max_length=126)
     auditor = models.ForeignKey(Account, null=True, on_delete=models.SET_NULL)

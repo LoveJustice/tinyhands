@@ -25,7 +25,7 @@ class BorderStation(models.Model):
     auto_number= models.CharField(max_length=127, null=True)
     project_category = models.ForeignKey(ProjectCategory, models.SET_NULL, null=True, default=get_border_station_default_category)
     features = models.CharField(max_length=512, default='hasStaff;hasSubcommittee;hasProjectStats;hasLocations;hasLocationStaffing;hasForms')
-    mdf_project = models.ForeignKey('self', null=True)
+    mdf_project = models.ForeignKey('self', null=True, on_delete=models.CASCADE)
     
     def get_country_id(self):
         if self.operating_country is None:

@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.postgres.fields import JSONField
+from django.db.models import JSONField
 from .person import Person
 from .form import BaseCard
 from .form import BaseForm
@@ -18,7 +18,7 @@ class Suspect(BaseForm):
     
     # Merged version of suspect information cards
     # in main form so that list can access for ordering/filtering
-    merged_person = models.ForeignKey(Person, null=True)
+    merged_person = models.ForeignKey(Person, null=True, on_delete=models.CASCADE)
     merged_vehicle = models.CharField(max_length=126, null=True)
     merged_plate_number = models.CharField(max_length=126, null=True)
     
@@ -67,7 +67,7 @@ class SuspectInformation(BaseCard):
     interviewer_name = models.CharField(max_length=126, blank=True)
     interview_date = models.DateField(null=True, default=None)
     location = models.CharField(max_length=255, blank=True)
-    person = models.ForeignKey(Person, null=True, blank=True)
+    person = models.ForeignKey(Person, null=True, blank=True, on_delete=models.CASCADE)
     vehicle = models.CharField(max_length=126, null=True)
     plate_number = models.CharField(max_length=126, null=True)
     

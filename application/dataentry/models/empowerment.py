@@ -3,7 +3,7 @@ from django.db import models
 from .border_station import BorderStation
 
 class Empowerment(models.Model):
-    station = models.ForeignKey(BorderStation)
+    station = models.ForeignKey(BorderStation, on_delete=models.CASCADE)
     date_time_entered_into_system = models.DateTimeField(auto_now_add=True)
     date_time_last_updated = models.DateTimeField(auto_now=True)
     
