@@ -1,4 +1,5 @@
 import streamlit as st
+import altair as alt
 import json
 from googleapiclient.discovery import build
 from sklearn.tree import export_text
@@ -108,6 +109,36 @@ def main():
         st.metric("Recall", f"{recall_rf:.3f}")
 
     st.metric("F1 Score", f"{f1_rf:.3f}")
+
+    df_arrested = st.session_state["case_dispatcher_soc_df"][st.session_state["case_dispatcher_soc_df"]['arrested'] == 1]
+
+    # Define a range slider for selecting the range of days to display
+    day_range = st.slider(
+        'Select range of days:',
+        min_value=int(df_arrested['days'].min()),
+        max_value=int(df_arrested['days'].max()),
+        value=(int(df_arrested['days'].min()), int(df_arrested['days'].max())),
+        step=5
+    )
+
+    # Filter the dataframe based on the selected range of days
+    df_filtered = df_arrested[(df_arrested['days'] >= day_range[0]) & (df_arrested['days'] <= day_range[1])]
+
+    # Adjust the chart height here. You might set a fixed height or a maximum height as desired.
+    # For example, setting a fixed height:
+    fixed_height = 300  # You can adjust this value as needed
+
+    # Create a histogram of days using Altair
+    chart = alt.Chart(df_filtered).mark_bar().encode(
+        x=alt.X('days:Q', bin=alt.Bin(maxbins=50), title='Days Lapsed between Incident and Arrest'),
+        y=alt.Y('count()', title='Number of Arrests'),
+        tooltip=['days', 'count()']
+    ).properties(
+        height=fixed_height,  # Use the fixed height for the chart
+        width=600  # Or use_container_width=True for a responsive width
+    )
+
+    st.altair_chart(chart, use_container_width=True)
 
 if __name__ == "__main__":
     main()
