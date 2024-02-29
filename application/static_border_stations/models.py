@@ -7,7 +7,7 @@ from django.core.exceptions import ObjectDoesNotExist
 class NullableEmailField(models.EmailField):
     description = "EmailField that stores NULL but returns ''"
 
-    def from_db_value(self, value, expression, connection, context):
+    def from_db_value(self, value, expression, connection):
         if value is None:
             return ''
         return value
@@ -28,8 +28,8 @@ class Person(models.Model):
     phone = models.CharField(max_length=255, blank=True, null=True)
     position = models.CharField(max_length=255, blank=True, null=True)
     receives_money_distribution_form = models.BooleanField(default=False)
-    border_station = models.ForeignKey(BorderStation, null=True)
-    country = models.ForeignKey('dataentry.Country', null=True)
+    border_station = models.ForeignKey(BorderStation, null=True, on_delete=models.CASCADE)
+    country = models.ForeignKey('dataentry.Country', null=True, on_delete=models.CASCADE)
 
     class Meta:
         abstract = True
@@ -87,7 +87,7 @@ class Location(models.Model):
     name = models.CharField(max_length=255, blank=True)
     latitude = models.FloatField(null=True)
     longitude = models.FloatField(null=True)
-    border_station = models.ForeignKey(BorderStation, null=True)
+    border_station = models.ForeignKey(BorderStation, null=True, on_delete=models.CASCADE)
     location_type = models.CharField(max_length=255)
     active = models.BooleanField(default=True)
     
@@ -139,8 +139,8 @@ class Location(models.Model):
         return location
   
 class WorksOnProject(models.Model):
-    staff = models.ForeignKey(Staff)
-    border_station = models.ForeignKey(BorderStation)
+    staff = models.ForeignKey(Staff, on_delete=models.CASCADE)
+    border_station = models.ForeignKey(BorderStation, on_delete=models.CASCADE)
     work_percent = models.PositiveIntegerField()
     
     class Meta:
@@ -150,8 +150,8 @@ class WorksOnProject(models.Model):
         self.staff = parent
 
 class StaffProject(models.Model):
-    staff = models.ForeignKey(Staff)
-    border_station = models.ForeignKey(BorderStation)
+    staff = models.ForeignKey(Staff, on_delete=models.CASCADE)
+    border_station = models.ForeignKey(BorderStation, on_delete=models.CASCADE)
     coordinator = models.CharField(max_length=127, blank=True)
     receives_money_distribution_form = models.BooleanField(default=False)
     

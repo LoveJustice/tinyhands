@@ -5,7 +5,7 @@ import pytz
 from django.db import models
 from django.db.models import Q
 from django.conf import settings
-from django.contrib.postgres.fields import JSONField
+from django.db.models import JSONField
 
 from .border_station import BorderStation
 from .country import Country
@@ -14,7 +14,7 @@ from .holiday import Holiday
 from dataentry.models import BorderStation, Form, FormCategory, IntercepteeCommon, IrfCommon, IrfVerification
 
 class IndicatorHistory(models.Model):
-    country = models.ForeignKey(Country)
+    country = models.ForeignKey(Country, on_delete=models.CASCADE)
     year = models.PositiveIntegerField('Year')
     month = models.PositiveIntegerField('Month')
     indicators = JSONField()

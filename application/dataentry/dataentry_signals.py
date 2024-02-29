@@ -1,9 +1,9 @@
 import django.dispatch
 
-irf_done = django.dispatch.Signal(providing_args=["irf_number", "irf", "interceptees", "interception_alert"])
+irf_done = django.dispatch.Signal()
 
-vif_done = django.dispatch.Signal(providing_args=["vif_number", "vif"])
+vif_done = django.dispatch.Signal()
 
-form_done = django.dispatch.Signal(providing_args=["form_data", "remove"])
+form_done = django.dispatch.Signal()
 
-background_form_done = django.dispatch.Signal(providing_args=["form_data", "remove"])
+background_form_done = django.dispatch.Signal()
