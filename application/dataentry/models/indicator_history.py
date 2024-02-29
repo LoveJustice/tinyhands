@@ -166,7 +166,10 @@ class IndicatorHistory(models.Model):
             }
         
         if check_photos is None:
-            check_photos = IndicatorHistory.get_modified_photos(start_date, end_date)
+            # check_photos = IndicatorHistory.get_modified_photos(start_date, end_date)
+            # consider adding this back in after Mar 9, 2024 -- we moved files over to new server on Feb 9 and this slowed down server during that time even though the photo lag times weren't being used
+            check_photos = {}
+            pass
                
         forms_processed = []
         class_cache = {
