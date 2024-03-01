@@ -47,7 +47,8 @@ class MoneyDistribution(viewsets.ViewSet):
             the_id = '0' + str(budget.id)
        
         
-        committee_members = border_station.committeemember_set.exclude(email__isnull=True)
+        #committee_members = border_station.committeemember_set.exclude(email__isnull=True)
+        committee_members = CommitteeMember.objects.filter(member_projects=border_station).exclude(email__isnull=True)
         
         # find all permissions for MDF Notification for the specified border station
         can_receive_mdf = UserLocationPermission.objects.filter(
