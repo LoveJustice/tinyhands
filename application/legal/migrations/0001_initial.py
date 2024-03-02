@@ -134,14 +134,18 @@ def migrate_legal_charge(apps, schema_editor):
         suspects = case.legalcasesuspect_set.all()
         for suspect in suspects:
             sf = None
+            if suspect.person is None or suspect.person.full_name is None:
+                continue
             find_name = suspect.person.full_name.lower().strip()
-            infos = SuspectInformation.objects.filter(suspect__incidents=incident)
+            infos = SuspectInformation.objects.filter(incident=incident)
             for info in infos:
+                if info.person is None or info.person.full_name is None:
+                    continue
                 if find_name == info.person.full_name.lower().strip():
                     sf = info.suspect
                     break
             if sf is None:
-                print ('Suspect for case', case.legal_case_number, 'name', suspect.person.full_name)
+                print ('Suspect for case', case.legal_case_number, incident.incident_number, 'name', suspect.person.full_name, len(infos))
                 continue
             
             lc_suspect = LegalChargeSuspect()
