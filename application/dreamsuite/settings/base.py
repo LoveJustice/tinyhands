@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'dataentry',
     'firebase',
     'accounts',
+    'legal',
     'events',
     'portal',
     'budget',

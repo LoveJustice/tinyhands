@@ -5,6 +5,7 @@ from rest_framework import serializers
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import filters as fs
 from rest_framework.response import Response
+from django.apps import apps
 from django.db.models import Value, IntegerField, Q
 from django.contrib.contenttypes.models import ContentType
 
@@ -180,6 +181,8 @@ class MonthlyDistributionFormViewSet(viewsets.ModelViewSet):
                 comment.mdf = mdf 
                 comment.save()
             mdf.save()
+            staff_class = apps.get_model('static_border_stations', 'Staff')
+            staff_class.set_mdf_totals(mdf)
             self.check_update_stats(mdf)
        
         serializer = self.serializer_class(mdf)

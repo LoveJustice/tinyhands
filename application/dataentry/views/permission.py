@@ -194,7 +194,7 @@ class UserLocationPermissionViewSet(viewsets.ModelViewSet):
                     results |= stations.filter(id = perm.station.id)
                 else:
                     results = stations.filter(id = perm.station.id)
-        
+
         if results != None:
             if 'form_present' in request.GET:
                 results = results.filter(id__in=self.get_station_ids_with_form(request, results))

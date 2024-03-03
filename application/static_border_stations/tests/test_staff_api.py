@@ -38,7 +38,7 @@ class StaffTests(RestApiTestCase):
     # Viewset Methods
 
     def test_create_Staff(self):
-        usr = GenericUserWithPermissions.create([{'group':'PROJECTS', 'action':'VIEW', 'country': None, 'station': None},{'group':'PROJECTS', 'action':'ADD', 'country': None, 'station': None}])
+        usr = GenericUserWithPermissions.create([{'group':'STAFF', 'action':'VIEW_BASIC', 'country': None, 'station': None},{'group':'STAFF', 'action':'ADD', 'country': None, 'station': None}])
         self.login(usr)
         url = reverse('Staff')
 
@@ -60,7 +60,7 @@ class StaffTests(RestApiTestCase):
         self.assertEqual(data['email'], response.data['email'])
 
     def test_get_Staff(self):
-        usr = GenericUserWithPermissions.create([{'group':'PROJECTS', 'action':'VIEW', 'country': None, 'station': None},{'group':'STAFF', 'action':'VIEW', 'country': None, 'station': None},])
+        usr = GenericUserWithPermissions.create([{'group':'STAFF', 'action':'VIEW_BASIC', 'country': None, 'station': None},])
         self.login(usr)
         url = reverse('StaffForBorderStation', args=[self.staff.border_station.id])
 
@@ -69,7 +69,7 @@ class StaffTests(RestApiTestCase):
         self.assertEqual(self.staff.email, response.data[0]['email'])
 
     def test_update_Staff(self):
-        usr = GenericUserWithPermissions.create([{'group':'PROJECTS', 'action':'VIEW', 'country': None, 'station': None},{'group':'PROJECTS', 'action':'EDIT', 'country': None, 'station': None}])
+        usr = GenericUserWithPermissions.create([{'group':'STAFF', 'action':'VIEW_BASIC', 'country': None, 'station': None},{'group':'STAFF', 'action':'EDIT_BASIC', 'country': None, 'station': None}])
         self.login(usr)
         url = reverse('StaffDetail', args=[self.staff.id])
 
@@ -88,7 +88,7 @@ class StaffTests(RestApiTestCase):
         self.assertEqual(data['email'], response.data['email'])
 
     def test_delete_Staff(self):
-        usr = GenericUserWithPermissions.create([{'group':'PROJECTS', 'action':'VIEW', 'country': None, 'station': None},{'group':'PROJECTS', 'action':'EDIT', 'country': None, 'station': None}])
+        usr = GenericUserWithPermissions.create([{'group':'STAFF', 'action':'VIEW_BASIC', 'country': None, 'station': None},{'group':'STAFF', 'action':'DELETE', 'country': None, 'station': None}])
         self.login(usr)
         delete_url = reverse('StaffDetail', args=[self.staff.id])
         url = reverse('StaffForBorderStation', args=[self.staff.border_station.id])
@@ -99,7 +99,7 @@ class StaffTests(RestApiTestCase):
         self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
     def test_get_Staff_by_border_station(self):
-        usr = GenericUserWithPermissions.create([{'group':'PROJECTS', 'action':'VIEW', 'country': None, 'station': None},{'group':'STAFF', 'action':'VIEW', 'country': None, 'station': None},])
+        usr = GenericUserWithPermissions.create([{'group':'STAFF', 'action':'VIEW_BASIC', 'country': None, 'station': None},])
         for mem in self.other_staff:
             mem.border_station = self.staff.border_station
             mem.save()
