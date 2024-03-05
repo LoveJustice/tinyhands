@@ -111,10 +111,10 @@ class StaffSerializer(serializers.ModelSerializer):
         agreement = False
         attachments = StaffAttachment.objects.filter(staff=obj).order_by('-attach_date')
         for attachment in attachments:
-            if contract is None and attachment.option == 'Contract':
+            if contract is False and attachment.option == 'Contract':
                 contract = True
                 contract_date = attachment.attach_date
-            if agreement is None and attachment.option == 'C&M':
+            if agreement is False and attachment.option == 'C & M':
                 agreement = True
         
         result = {
