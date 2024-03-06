@@ -1,4 +1,4 @@
-from django.conf.urls import url
+from django.urls import re_path
 from .views import FaceMatchingViewSet
 from . import views
 
@@ -11,5 +11,5 @@ urlpatterns = [
 
     #  Get list of person_ids with face_encodings
     #  Get matches for encoded 
-    url(r'^face-matching/upload/$', FaceMatchingViewSet.as_view({'post': 'get_upload_matches'}), name='FaceMatchesList'),
+    re_path(r'^face-matching/upload/$', FaceMatchingViewSet.as_view({'post': 'get_upload_matches'}), name='FaceMatchesList'),
 ]

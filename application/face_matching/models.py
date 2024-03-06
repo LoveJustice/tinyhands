@@ -42,5 +42,5 @@ class MatchingPerson(models.Model):
 
 
 class MatchingData(models.Model):
-    analyzedPerson = models.OneToOneField(AnalyzedPerson)
-    matchingPersons = models.ForeignKey(MatchingPerson)
+    analyzedPerson = models.OneToOneField(AnalyzedPerson, on_delete=models.CASCADE)
+    matchingPersons = models.ForeignKey(MatchingPerson, on_delete=models.CASCADE)
