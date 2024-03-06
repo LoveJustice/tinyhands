@@ -4,7 +4,7 @@ import random
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
 from django.utils import timezone
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 from rest_framework.authtoken.models import Token
 from datetime import timedelta
@@ -85,6 +85,7 @@ def make_activation_key():
 
 class Account(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=255, unique=True)
+    auth0_id = models.CharField(max_length=255, unique=True, null=True)
     first_name = models.CharField(max_length=255, blank=True)
     last_name = models.CharField(max_length=255, blank=True)
 

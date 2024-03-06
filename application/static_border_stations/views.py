@@ -1,7 +1,7 @@
 import pytz
 
 from rest_framework import viewsets, status
-from rest_framework.decorators import list_route, api_view, permission_classes
+from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
@@ -26,8 +26,9 @@ class BorderStationViewSet(viewsets.ModelViewSet):
     ordering_fields = (
         'station_name', 'station_code', 'operating_country__name', 'project_category__name', )
     ordering = ('station_name',)
+    search_fields = ('station_name', 'station_code',)
     
-    @list_route()
+    @action(detail=False)
     def list_all(self, request):
         border_stations = BorderStation.objects.all().order_by('station_name')
         country_param = request.query_params.get('operating_country', None)
@@ -162,7 +163,7 @@ class StaffViewSet(BorderStationRestAPI):
         """
             retrieve all the staff for a particular border_station
         """
-        self.object_list = self.filter_queryset(self.get_queryset().filter(border_station=self.kwargs['pk']))
+        self.object_list = self.get_queryset().filter(staffproject__border_station__id=self.kwargs['pk'])
         if request.GET.get('include_inactive') is None:
             self.object_list = self.object_list.filter(last_date__isnull=True)
         serializer = self.get_serializer(self.object_list, many=True)
@@ -187,25 +188,6 @@ class StaffViewSet(BorderStationRestAPI):
         staff = Staff()
                 
         serializer = StaffSerializer(staff)
-        return Response(serializer.data)
-    
-    def retrieve_border_station_staff(self, request, *args, **kwargs):
-        """
-            retrieve all the staff for a particular border_station
-        """
-        staff = []
-        if request.GET.get('include_inactive') is not None:
-            include_inactive = True
-        else:
-            include_inactive = False
-        if request.GET.get('include_financial'):
-            include_financial = True
-        else:
-            include_financial = False
-        
-        staff = self.getStaff(include_inactive, include_financial)
-                    
-        serializer = self.get_serializer(staff, many=True)
         return Response(serializer.data)
     
     def getValue(self, data, path):

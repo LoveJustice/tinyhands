@@ -2,7 +2,7 @@ version: "3"
 
 services:
   db:
-    image: postgres:9.6
+    image: postgres:16.0
     container_name: db
     volumes:
       - ./backups:/backups
@@ -27,6 +27,8 @@ services:
     depends_on:
       - db
 
+  # On windows, is this exiting with code 127?
+  # Change line endings to LF for env files, Dockerfile, run.sh, etc and rebuild with 'docker-compose up nginx --build'
   nginx:
     build: build/nginx
     depends_on:

@@ -158,7 +158,7 @@ class IrfCommon(BaseForm):
     
     #Contact/Staff
     case_notes = models.TextField('Case Notes', blank=True)
-    contact_paid = models.NullBooleanField(null=True)
+    contact_paid = models.BooleanField(null=True)
     contact_paid_how_much = models.CharField('How much?', max_length=255, blank=True)
     rescue = models.BooleanField('Rescue', default=False)
     staff_who_noticed = models.CharField('Staff who noticed:', max_length=255, blank=True)
@@ -257,7 +257,7 @@ class IrfCommon(BaseForm):
 class IntercepteeCommon(BaseCard):
     interception_record = models.ForeignKey(IrfCommon, related_name='interceptees', on_delete=models.CASCADE)
     relation_to = models.CharField(max_length=255, blank=True)
-    person = models.ForeignKey(Person, null=True, blank=True)
+    person = models.ForeignKey(Person, null=True, blank=True, on_delete=models.CASCADE)
     not_physically_present = models.CharField(max_length=127, blank=True)
     consent_to_use_photo = models.CharField(max_length=255, null=True)
     consent_to_use_information = models.CharField(max_length=255, null=True)
@@ -287,7 +287,7 @@ class IntercepteeCommon(BaseCard):
         self.interception_record = the_parent
 
 class IrfAttachmentCommon(BaseCard):
-    interception_record = models.ForeignKey(IrfCommon)
+    interception_record = models.ForeignKey(IrfCommon, on_delete=models.CASCADE)
     attachment_number = models.PositiveIntegerField(null=True, blank=True)
     description = models.CharField(max_length=126, null=True)
     attachment = models.FileField('Attach scanned copy of form (pdf or image)', upload_to='scanned_irf_forms')
@@ -313,7 +313,7 @@ class IrfVerification(BaseCard):
         (OVERRIDE, 'Override'),
     ]
     
-    interception_record = models.ForeignKey(IrfCommon)
+    interception_record = models.ForeignKey(IrfCommon, on_delete=models.CASCADE)
     
     verification_type = models.IntegerField(VERIFICATION_TYPE_CHOICES)
     followup_call = models.CharField(max_length=127, blank=True)

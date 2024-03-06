@@ -12,6 +12,7 @@ from dataentry.models import BorderStation, IntercepteeCommon, StationStatistics
 from dataentry.serializers import CountrySerializer
 from budget.models import BorderStationBudgetCalculation, MonthlyDistributionForm, MdfCombined, MdfItem, ProjectRequest, ProjectRequestComment, ProjectRequestDiscussion
 from budget.serializers import MonthlyDistributionFormSerializer, MdfItemSerializer
+from export_import.mdf_io import export_mdf_sheet
 from mailbox import MMDF
 
 class BorderStationOverviewSerializer(serializers.ModelSerializer):
@@ -59,7 +60,10 @@ class MdfCombinedViewSet(viewsets.ModelViewSet):
             country_list = []
             for cntry in in_country.split(','):
                 country_list.append(int(cntry))
-            queryset = queryset.filter(border_station__operating_country__id__in=country_list)   
+            queryset = queryset.filter(border_station__operating_country__id__in=country_list)
+        status = self.request.GET.get('status')
+        if status is not None and status != '':
+            queryset = queryset.filter(status=status)
         
         return queryset
 
@@ -214,6 +218,8 @@ class MonthlyDistributionFormViewSet(viewsets.ModelViewSet):
             
             stats.budget = total_budget
             stats.save()
+        
+        export_mdf_sheet(mdf.border_station.operating_country, year_month)
         
         return True
     

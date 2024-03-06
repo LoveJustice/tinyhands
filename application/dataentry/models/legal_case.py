@@ -48,7 +48,7 @@ class LegalCaseTimeline(BaseCard):
     
 class LegalCaseSuspect(BaseCard):
     legal_case = models.ForeignKey(LegalCase, on_delete=models.CASCADE)
-    person = models.ForeignKey(Person, null=True)
+    person = models.ForeignKey(Person, null=True, on_delete=models.CASCADE)
     named_on_charge_sheet = models.CharField(max_length=255, null=True)
     arrest_date = models.DateField(null=True)
     arrest_submitted_date = models.DateField(null=True)
@@ -70,7 +70,7 @@ class LegalCaseSuspect(BaseCard):
 
 class LegalCaseVictim(BaseCard):
     legal_case = models.ForeignKey(LegalCase, on_delete=models.CASCADE)
-    person = models.ForeignKey(Person, null=True)
+    person = models.ForeignKey(Person, null=True, on_delete=models.CASCADE)
     alternate_phone = models.CharField(max_length=255, null=True)
     last_contact_date = models.DateField(null=True)
     last_attempted_contact_date = models.DateField(null=True)

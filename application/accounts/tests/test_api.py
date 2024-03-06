@@ -1,4 +1,4 @@
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase, APIClient
 
@@ -538,6 +538,8 @@ class ResendActivationEmailTests(RestApiTestCase):
     def test_when_logged_in_and_account_has_not_been_activated_should_return_True(self):
         user = SuperUserFactory.create()
         activated_user = ViewUserFactory.create()
+        activated_user.set_unusable_password()
+        activated_user.save()
         self.login(user)
         url = reverse('ResendActivationEmail', args=[activated_user.id])
 
