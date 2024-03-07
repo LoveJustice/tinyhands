@@ -125,6 +125,17 @@ class SfFormViewSet(BaseFormViewSet):
     def filter_key(self, queryset, search):
         return queryset.filter(sf_number__contains=search)
     
+    def post_create(self, form_data):
+        sf_number = form_data.form_object.sf_number
+        incident_number = ''
+        for idx in range(len(sf_number)-1,2,-1):
+            if sf_number[idx] >= '0' and sf_number[idx] <= '9':
+                incident_number = sf_number[0:idx+1]
+                break
+        
+        incident = Incident.objects.get(incident_number=incident_number)
+        form_data.form_object.incidents.add(incident)
+    
     def custom_create_blank(self, form_object):
         form_object.victim = Person()
         
@@ -137,6 +148,7 @@ class SfFormViewSet(BaseFormViewSet):
     def get_associated_incidents(self, request, pk):
         sf = Suspect.objects.get(id=pk)
         associated_incidents = sf.associated_incidents.all();
+        print('get_associated', pk, len(associated_incidents))
         serializer = IncidentSerializer(associated_incidents, many=True, context={'request': request})
         return Response(serializer.data)
     

@@ -100,6 +100,17 @@ class LfFormViewSet(BaseFormViewSet):
     def filter_key(self, queryset, search):
         return queryset.filter(lf_number__contains=search)
     
+    def post_create(self, form_data):
+        lf_number = form_data.form_object.lf_number
+        incident_number = ''
+        for idx in range(len(lf_number)-1,2,-1):
+            if lf_number[idx] >= '0' and lf_number[idx] <= '9':
+                incident_number = lf_number[0:idx+1]
+                break
+        
+        incident = Incident.objects.get(incident_number=incident_number)
+        form_data.form_object.incidents.add(incident)
+    
     def custom_create_blank(self, form_object):
         form_object.victim = Person()
     
