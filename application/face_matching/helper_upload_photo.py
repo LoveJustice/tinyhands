@@ -1,8 +1,8 @@
-# import fitz
-# import numpy as np
-# from io import BytesIO
-# from PIL import Image
-# # import face_recognition
+import fitz
+import numpy as np
+from io import BytesIO
+from PIL import Image
+import face_recognition
 
 from . import helper
 
@@ -50,34 +50,34 @@ def get_image_formats_from_file(uploaded_file):
 
     # TODO: Validate file extension
 
-    # if uploaded_file:
-    #     try:
-    #         if uploaded_file.content_type == 'application/pdf':
-    #             given_encoding, selected_person_image, selected_person_np, face_locations = get_image_from_pdf(
-    #                 uploaded_file)
+    if uploaded_file:
+        try:
+            if uploaded_file.content_type == 'application/pdf':
+                given_encoding, selected_person_image, selected_person_np, face_locations = get_image_from_pdf(
+                    uploaded_file)
 
-    #         else:
-    #             # It's an image file, not a PDF
-    #             selected_person_image = Image.open(
-    #                 uploaded_file).convert("RGB")
-    #             selected_person_np = np.array(selected_person_image)
-    #             face_locations = face_recognition.face_locations(
-    #                 selected_person_np, model="hog"
-    #             )
+            else:
+                # It's an image file, not a PDF
+                selected_person_image = Image.open(
+                    uploaded_file).convert("RGB")
+                selected_person_np = np.array(selected_person_image)
+                face_locations = face_recognition.face_locations(
+                    selected_person_np, model="hog"
+                )
 
-    #         # If an image is loaded, process it
-    #         if selected_person_image:
-    #             if face_locations:
-    #                 encodings = face_recognition.face_encodings(
-    #                     selected_person_np, known_face_locations=face_locations
-    #                 )
-    #                 if encodings:
-    #                     given_encoding = encodings[0]
-    #             else:
-    #                 print(
-    #                     "No face detected in the uploaded image. Please upload a different image."
-    #                 )
-    #     except Exception as e:  # Catch any other exceptions
-    #         print(f"An error occurred: {e}")
+            # If an image is loaded, process it
+            if selected_person_image:
+                if face_locations:
+                    encodings = face_recognition.face_encodings(
+                        selected_person_np, known_face_locations=face_locations
+                    )
+                    if encodings:
+                        given_encoding = encodings[0]
+                else:
+                    print(
+                        "No face detected in the uploaded image. Please upload a different image."
+                    )
+        except Exception as e:  # Catch any other exceptions
+            print(f"An error occurred: {e}")
 
     return given_encoding, selected_person_image, selected_person_np

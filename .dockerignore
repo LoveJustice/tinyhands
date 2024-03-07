@@ -3,6 +3,7 @@
 Vagrantfile
 local.env
 common.env
+face_matching.env
 .codeship.aes
 deploybot_args.env
 

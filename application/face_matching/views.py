@@ -1,3 +1,4 @@
+import json
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -33,6 +34,7 @@ class FaceMatchingViewSet(viewsets.ModelViewSet):
         if request.body:
             params = request.data.get('params')
             file = request.FILES.get('file')
+            params = json.loads(params)
 
             # 1. Get matching records for given parameters
             matching_records = helper.get_matching_records(params)
