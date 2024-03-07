@@ -196,7 +196,6 @@ class MdfPending:
     
     @property
     def has_data(self):
-        print('MdfPending has_data', self.budget.border_station.id, self.project, len(self.items))
         return len(self.items) > 0
     
     @property

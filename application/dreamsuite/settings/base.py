@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'dataentry',
     'firebase',
     'accounts',
+    'legal',
     'events',
     'portal',
     'budget',
@@ -73,7 +74,6 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.RemoteUserMiddleware',  # Auth0
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -242,3 +242,4 @@ LOGGING = {
 }
 
 logging.config.dictConfig(LOGGING)
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
